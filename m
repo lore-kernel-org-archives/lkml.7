@@ -2,64 +2,121 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07142C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 19:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B54DC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 19:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7FFF21721
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 19:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D09721721
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 19:26:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AUlgN/Zg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbfK2TWi convert rfc822-to-8bit (ORCPT
+        id S1727116AbfK2T0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 14:22:38 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:59120 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbfK2TWh (ORCPT
+        Fri, 29 Nov 2019 14:26:12 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38077 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbfK2T0L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 14:22:37 -0500
-Received: from [192.168.1.91] (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 923A2CECDE;
-        Fri, 29 Nov 2019 20:31:44 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
-Subject: Re: [PATCH] Bluetooth: btusb: fix memory leak on fw
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20191129173635.87479-1-colin.king@canonical.com>
-Date:   Fri, 29 Nov 2019 20:22:05 +0100
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <F011BBCD-8D95-4934-AB3E-0F264990D4F2@holtmann.org>
-References: <20191129173635.87479-1-colin.king@canonical.com>
-To:     Colin King <colin.king@canonical.com>
-X-Mailer: Apple Mail (2.3601.0.10)
+        Fri, 29 Nov 2019 14:26:11 -0500
+Received: by mail-io1-f68.google.com with SMTP id u24so31770182iob.5;
+        Fri, 29 Nov 2019 11:26:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0wi1DGf1/w4RbfpCoKGiIXoKmj2YRN9qTSNLJ8b+j9A=;
+        b=AUlgN/ZgY5290u6RblB7c6Z1xjJFoazskwQxrUBYQ3lFnIOz5JxPm6UpoKUenad0E3
+         z/6eRJrcrd0DseAi14lvOyGQWVjTtQ2vc8qg3/ioASaz/PIrHFshXS+26Cz1GhoYNnQh
+         dC4+cPSV3SIjNXr4JUqvJ1nsLN7kKxZyzMnr6kf25LI3yMzgNVOoWPqO+fJb4hS3eVly
+         rfd3KvD9+ux0B9TTpbLfZPONqKaKqTbE6A+coVwv6K31n3uF8gSqo0ebNRVvcLworXTc
+         OJtNZaumdE9X5xFk4TVczWqVYfQcV6c3Z9/qoij2SbKGkIR5tzBQlF6KL3Hxa8S6njJ4
+         eDQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0wi1DGf1/w4RbfpCoKGiIXoKmj2YRN9qTSNLJ8b+j9A=;
+        b=rEd17QyL4ww4DdFGaCSrRsjpT0CsGqmwX0cwWrFwmloupSukvucdO1PrVL6BZ0oOnH
+         usFLaaDP9i4+AzvPexuf1bPO0Wv/4q7OqsAYzRL2n/OOxIb2WEqItF7Fm8zmWxo5q996
+         n4kYQa78muBnE8vc4Bnjy+s7kdCV1lZQ/s+IcKpKS0i1mTTemOMFZ1n5VdU+O/cwwoI7
+         e8sgWYqQpaIAP+fTifnNLN2XAJX6Bk3uMN8hEsXF72OVUtaoeBy7zUF3GeRY/V+QV7OC
+         k/YiTjvLlzi+vafCyw6mnmmBcqGD1mOo+TKHXriTRASmSaHz1wCpaqERbvT9mn+T2vBz
+         s/Pw==
+X-Gm-Message-State: APjAAAUasWFVO6g99z0KIYuYqG07IMFAgiEoxHKbEB85qx0EBtjhQIOp
+        PB9xE2iXpP4L3Mj1CODDdoVD4ediGk0EoSaJ4pU=
+X-Google-Smtp-Source: APXvYqw8Sn8urET5gD2wFd/upLZDQLG5v+z8uZXczZRd9PFA1AKXcUNY4ZSqQPaI78bevTsdKO25a801EwSx7xuUAX0=
+X-Received: by 2002:a5d:8789:: with SMTP id f9mr47221896ion.237.1575055570835;
+ Fri, 29 Nov 2019 11:26:10 -0800 (PST)
+MIME-Version: 1.0
+References: <20191119214454.24996.66289.stgit@localhost.localdomain>
+ <20191119214633.24996.46821.stgit@localhost.localdomain> <20191127152422.GE3016@techsingularity.net>
+ <0ec9b67cb45cd30f0ff0b2e9dcbc41602de1c178.camel@linux.intel.com>
+ <20191127183524.GF3016@techsingularity.net> <6aae7be8a84e7f0622c1f7fd362e4f213aea383d.camel@linux.intel.com>
+ <20191128092231.GH3016@techsingularity.net>
+In-Reply-To: <20191128092231.GH3016@techsingularity.net>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Fri, 29 Nov 2019 11:25:59 -0800
+Message-ID: <CAKgT0Ue_r8WFqjRubWUAdJnOBVwxRTs32P99ksnM0NabHawyvA@mail.gmail.com>
+Subject: Re: [PATCH v14 3/6] mm: Introduce Reported pages
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        kvm list <kvm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        David Hildenbrand <david@redhat.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Oscar Salvador <osalvador@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Colin,
+On Thu, Nov 28, 2019 at 1:22 AM Mel Gorman <mgorman@techsingularity.net> wrote:
+>
+> On Wed, Nov 27, 2019 at 01:55:02PM -0800, Alexander Duyck wrote:
 
-> Currently the error return path when the call to btusb_mtk_hci_wmt_sync
-> fails does not free fw.  Fix this by returning via the error_release_fw
-> label that performs the free'ing.
-> 
-> Addresses-Coverity: ("Resource leak")
-> Fixes: a1c49c434e15 ("Bluetooth: btusb: Add protocol support for MediaTek MT7668U USB devices")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
-> drivers/bluetooth/btusb.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
+< snip >
 
-patch has been applied to bluetooth-next tree.
+> > >
+> > > Which in itself could be an optimisation patch. Maybe it'll be enough that
+> > > keeping track of the count is not worthwhile. Either way, the separate
+> > > patch could have supporting data on how much it improves the speed of
+> > > reporting pages so it can be compared to any other optimisation that
+> > > may be proposed. Supporting data would also help make the case that any
+> > > complexity introduced by the optimisation is worthwhile.
+> >
+> > I'll see what I can do to break this apart. I'm just not a fan of redoing
+> > the work multiple times so that I can have a non-optimized version versus
+> > an optimized one.
+> >
+>
+> While I understand that, right now the optimisations are blocking the
+> feature itself which is also not a situation you want to be in.
 
-Regards
-
-Marcel
-
+I'll see what I can do. I can probably replace the reference count and
+zone flags with an atomic state in the prdev that cycles between
+inactive, requested, and active. With that I can at least guarantee
+that we shouldn't have any races that result in us missing freed
+pages. The only downside is that I have to keep a boolean in the
+__free_one_page call so that when we free back the reported pages we
+don't retrigger the reporting and cause an infinite loop.
