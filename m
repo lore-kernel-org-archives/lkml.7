@@ -7,43 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C18FC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 06:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A68C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 06:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9AEC21845
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 06:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5C0E21887
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 06:03:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfK2GC6 (ORCPT
+        id S1726876AbfK2GDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 01:02:58 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:47997 "EHLO
+        Fri, 29 Nov 2019 01:03:00 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:47999 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbfK2GC6 (ORCPT
+        with ESMTP id S1726164AbfK2GC7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 01:02:58 -0500
+        Fri, 29 Nov 2019 01:02:59 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iaZMh-0008Hm-0T; Fri, 29 Nov 2019 07:02:51 +0100
+        id 1iaZMg-0008Hg-KR; Fri, 29 Nov 2019 07:02:50 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A9A3B1C1D25;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 49F741C2101;
         Fri, 29 Nov 2019 07:02:50 +0100 (CET)
 Date:   Fri, 29 Nov 2019 06:02:50 -0000
-From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
+From:   "tip-bot2 for Andi Kleen" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf regs: Make perf_reg_name() return "unknown"
- instead of NULL
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+Subject: [tip: perf/urgent] perf affinity: Add infrastructure to save/restore affinity
+Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <tip-95wjyv4o65nuaeweq31t7l1s@git.kernel.org>
-References: <tip-95wjyv4o65nuaeweq31t7l1s@git.kernel.org>
+In-Reply-To: <20191121001522.180827-3-andi@firstfloor.org>
+References: <20191121001522.180827-3-andi@firstfloor.org>
 MIME-Version: 1.0
-Message-ID: <157500737059.21853.15701174489164157405.tip-bot2@tip-bot2>
+Message-ID: <157500737022.21853.11846076998782240627.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,85 +56,163 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     5b596e0ff0e1852197d4c82d3314db5e43126bf7
-Gitweb:        https://git.kernel.org/tip/5b596e0ff0e1852197d4c82d3314db5e43126bf7
-Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Wed, 27 Nov 2019 10:13:34 -03:00
+Commit-ID:     267ed5d8593cedd6146eabe00d270629c9cff771
+Gitweb:        https://git.kernel.org/tip/267ed5d8593cedd6146eabe00d270629c9cff771
+Author:        Andi Kleen <ak@linux.intel.com>
+AuthorDate:    Wed, 20 Nov 2019 16:15:12 -08:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Thu, 28 Nov 2019 08:08:38 -03:00
 
-perf regs: Make perf_reg_name() return "unknown" instead of NULL
+perf affinity: Add infrastructure to save/restore affinity
 
-To avoid breaking the build on arches where this is not wired up, at
-least all the other features should be made available and when using
-this specific routine, the "unknown" should point the user/developer to
-the need to wire this up on this particular hardware architecture.
+The kernel perf subsystem has to IPI to the target CPU for many
+operations. On systems with many CPUs and when managing many events the
+overhead can be dominated by lots of IPIs.
 
-Detected in a container mipsel debian cross build environment, where it
-shows up as:
+An alternative is to set up CPU affinity in the perf tool, then set up
+all the events for that CPU, and then move on to the next CPU.
 
-  In file included from /usr/mipsel-linux-gnu/include/stdio.h:867,
-                   from /git/linux/tools/perf/lib/include/perf/cpumap.h:6,
-                   from util/session.c:13:
-  In function 'printf',
-      inlined from 'regs_dump__printf' at util/session.c:1103:3,
-      inlined from 'regs__printf' at util/session.c:1131:2:
-  /usr/mipsel-linux-gnu/include/bits/stdio2.h:107:10: error: '%-5s' directive argument is null [-Werror=format-overflow=]
-    107 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
-        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Add some affinity management infrastructure to enable such a model.
+Used in followon patches.
 
-cross compiler details:
+Committer notes:
 
-  mipsel-linux-gnu-gcc (Debian 9.2.1-8) 9.2.1 20190909
+Use zfree() in some places, add missing stdbool.h header, some minor
+coding style changes.
 
-Also on mips64:
-
-  In file included from /usr/mips64-linux-gnuabi64/include/stdio.h:867,
-                   from /git/linux/tools/perf/lib/include/perf/cpumap.h:6,
-                   from util/session.c:13:
-  In function 'printf',
-      inlined from 'regs_dump__printf' at util/session.c:1103:3,
-      inlined from 'regs__printf' at util/session.c:1131:2,
-      inlined from 'regs_user__printf' at util/session.c:1139:3,
-      inlined from 'dump_sample' at util/session.c:1246:3,
-      inlined from 'machines__deliver_event' at util/session.c:1421:3:
-  /usr/mips64-linux-gnuabi64/include/bits/stdio2.h:107:10: error: '%-5s' directive argument is null [-Werror=format-overflow=]
-    107 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
-        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  In function 'printf',
-      inlined from 'regs_dump__printf' at util/session.c:1103:3,
-      inlined from 'regs__printf' at util/session.c:1131:2,
-      inlined from 'regs_intr__printf' at util/session.c:1147:3,
-      inlined from 'dump_sample' at util/session.c:1249:3,
-      inlined from 'machines__deliver_event' at util/session.c:1421:3:
-  /usr/mips64-linux-gnuabi64/include/bits/stdio2.h:107:10: error: '%-5s' directive argument is null [-Werror=format-overflow=]
-    107 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
-        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-cross compiler details:
-
-  mips64-linux-gnuabi64-gcc (Debian 9.2.1-8) 9.2.1 20190909
-
-Fixes: 2bcd355b71da ("perf tools: Add interface to arch registers sets")
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-95wjyv4o65nuaeweq31t7l1s@git.kernel.org
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Link: http://lore.kernel.org/lkml/20191121001522.180827-3-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/perf_regs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/Build              |  1 +-
+ tools/perf/util/affinity.c         | 73 +++++++++++++++++++++++++++++-
+ tools/perf/util/affinity.h         | 17 +++++++-
+ tools/perf/util/python-ext-sources |  1 +-
+ 4 files changed, 92 insertions(+)
+ create mode 100644 tools/perf/util/affinity.c
+ create mode 100644 tools/perf/util/affinity.h
 
-diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
-index e014c2c..a454991 100644
---- a/tools/perf/util/perf_regs.h
-+++ b/tools/perf/util/perf_regs.h
-@@ -41,7 +41,7 @@ int perf_reg_value(u64 *valp, struct regs_dump *regs, int id);
- 
- static inline const char *perf_reg_name(int id __maybe_unused)
- {
--	return NULL;
-+	return "unknown";
- }
- 
- static inline int perf_reg_value(u64 *valp __maybe_unused,
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index aab05e2..07da6c7 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -77,6 +77,7 @@ perf-y += sort.o
+ perf-y += hist.o
+ perf-y += util.o
+ perf-y += cpumap.o
++perf-y += affinity.o
+ perf-y += cputopo.o
+ perf-y += cgroup.o
+ perf-y += target.o
+diff --git a/tools/perf/util/affinity.c b/tools/perf/util/affinity.c
+new file mode 100644
+index 0000000..a5e31f8
+--- /dev/null
++++ b/tools/perf/util/affinity.c
+@@ -0,0 +1,73 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Manage affinity to optimize IPIs inside the kernel perf API. */
++#define _GNU_SOURCE 1
++#include <sched.h>
++#include <stdlib.h>
++#include <linux/bitmap.h>
++#include <linux/zalloc.h>
++#include "perf.h"
++#include "cpumap.h"
++#include "affinity.h"
++
++static int get_cpu_set_size(void)
++{
++	int sz = cpu__max_cpu() + 8 - 1;
++	/*
++	 * sched_getaffinity doesn't like masks smaller than the kernel.
++	 * Hopefully that's big enough.
++	 */
++	if (sz < 4096)
++		sz = 4096;
++	return sz / 8;
++}
++
++int affinity__setup(struct affinity *a)
++{
++	int cpu_set_size = get_cpu_set_size();
++
++	a->orig_cpus = bitmap_alloc(cpu_set_size * 8);
++	if (!a->orig_cpus)
++		return -1;
++	sched_getaffinity(0, cpu_set_size, (cpu_set_t *)a->orig_cpus);
++	a->sched_cpus = bitmap_alloc(cpu_set_size * 8);
++	if (!a->sched_cpus) {
++		zfree(&a->orig_cpus);
++		return -1;
++	}
++	bitmap_zero((unsigned long *)a->sched_cpus, cpu_set_size);
++	a->changed = false;
++	return 0;
++}
++
++/*
++ * perf_event_open does an IPI internally to the target CPU.
++ * It is more efficient to change perf's affinity to the target
++ * CPU and then set up all events on that CPU, so we amortize
++ * CPU communication.
++ */
++void affinity__set(struct affinity *a, int cpu)
++{
++	int cpu_set_size = get_cpu_set_size();
++
++	if (cpu == -1)
++		return;
++	a->changed = true;
++	set_bit(cpu, a->sched_cpus);
++	/*
++	 * We ignore errors because affinity is just an optimization.
++	 * This could happen for example with isolated CPUs or cpusets.
++	 * In this case the IPIs inside the kernel's perf API still work.
++	 */
++	sched_setaffinity(0, cpu_set_size, (cpu_set_t *)a->sched_cpus);
++	clear_bit(cpu, a->sched_cpus);
++}
++
++void affinity__cleanup(struct affinity *a)
++{
++	int cpu_set_size = get_cpu_set_size();
++
++	if (a->changed)
++		sched_setaffinity(0, cpu_set_size, (cpu_set_t *)a->orig_cpus);
++	zfree(&a->sched_cpus);
++	zfree(&a->orig_cpus);
++}
+diff --git a/tools/perf/util/affinity.h b/tools/perf/util/affinity.h
+new file mode 100644
+index 0000000..0ad6a18
+--- /dev/null
++++ b/tools/perf/util/affinity.h
+@@ -0,0 +1,17 @@
++// SPDX-License-Identifier: GPL-2.0
++#ifndef PERF_AFFINITY_H
++#define PERF_AFFINITY_H 1
++
++#include <stdbool.h>
++
++struct affinity {
++	unsigned long *orig_cpus;
++	unsigned long *sched_cpus;
++	bool changed;
++};
++
++void affinity__cleanup(struct affinity *a);
++void affinity__set(struct affinity *a, int cpu);
++int affinity__setup(struct affinity *a);
++
++#endif // PERF_AFFINITY_H
+diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
+index 9af1838..e7279ea 100644
+--- a/tools/perf/util/python-ext-sources
++++ b/tools/perf/util/python-ext-sources
+@@ -33,3 +33,4 @@ util/trace-event.c
+ util/string.c
+ util/symbol_fprintf.c
+ util/units.c
++util/affinity.c
