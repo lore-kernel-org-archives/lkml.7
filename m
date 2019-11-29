@@ -2,70 +2,99 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F539C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 072E5C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20CDD2176D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:53:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D17642176D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:53:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575017636;
+	bh=FaLt063ps0r2TDZh/6nM5rFKY9ZL0JOEXJ+AjH+ZB3Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=F/Fa2xMOGMLruwIt5+X5L/jB5T9s73UcQ0Xd9qBLhW1HcZQpN/SL56cidEXB5r8Ir
+	 KP7uAmcj7n/p4RUxYPBNyGKsqhasHLHWub38KoFaZAu296CJ8IdBSQpdyQgKFkD+30
+	 m2NkYJFeSXjxe07BnEA8QHPGPJSAuGha+LVQqT7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfK2Ixx (ORCPT
+        id S1727149AbfK2Ixz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 03:53:53 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:52736 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726215AbfK2Ixx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 03:53:53 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id BB507169AF5DDB851819;
-        Fri, 29 Nov 2019 16:53:50 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Fri, 29 Nov 2019
- 16:53:41 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] gpiolib: of: Make of_gpio_spi_cs_get_count static
-Date:   Fri, 29 Nov 2019 16:53:36 +0800
-Message-ID: <20191129085336.15968-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 29 Nov 2019 03:53:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55080 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726215AbfK2Ixy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 03:53:54 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01B9120833;
+        Fri, 29 Nov 2019 08:53:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575017632;
+        bh=FaLt063ps0r2TDZh/6nM5rFKY9ZL0JOEXJ+AjH+ZB3Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AH1YRd1B1nBPMXHaP/RmFAAE44jWmZBMJIuvOMVJGJIn7vTEIL0zYWdODg5CmsEwD
+         rcPnlp4z1vM3IoPzlU9ODlsP5XSe9alSi+5cnCnwumJZSKhp8Z1PXtJgbUIpNf8paS
+         6lA7QXyj8Bwf6sZEZ/XRtt0LQZFMW3j7Z4RskrvE=
+Date:   Fri, 29 Nov 2019 09:53:50 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 4.4 000/132] 4.4.204-stable review
+Message-ID: <20191129085350.GE3584430@kroah.com>
+References: <20191127202857.270233486@linuxfoundation.org>
+ <CA+G9fYs-ugvOrYBZbmieSK1rQrcRh6R9cL3Vz8xK59sB3aAqyg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYs-ugvOrYBZbmieSK1rQrcRh6R9cL3Vz8xK59sB3aAqyg@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warning:
+On Thu, Nov 28, 2019 at 06:59:17PM +0530, Naresh Kamboju wrote:
+> On Thu, 28 Nov 2019 at 02:04, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 4.4.204 release.
+> > There are 132 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Fri, 29 Nov 2019 20:18:09 +0000.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.204-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
+> >
+> 
+> Results from Linaro’s test farm.
+> No regressions on arm64, arm, x86_64, and i386.
 
-drivers/gpio/gpiolib-of.c:35:5: warning: symbol 'of_gpio_spi_cs_get_count' was not declared. Should it be static?
+As you all are doing run-time tests, it would be interesting to see why
+I saw failures in the Android networking tests with this and the 4.9
+queue, but they did not show up in your testing :(
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/gpio/gpiolib-of.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+thanks,
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 610c6622f62d..b696e4598a24 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -32,7 +32,7 @@
-  * the counting of "cs-gpios" to count "gpios" transparent to the
-  * driver.
-  */
--int of_gpio_spi_cs_get_count(struct device *dev, const char *con_id)
-+static int of_gpio_spi_cs_get_count(struct device *dev, const char *con_id)
- {
- 	struct device_node *np = dev->of_node;
- 
--- 
-2.20.1
-
-
+greg k-h
