@@ -2,194 +2,149 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 169F4C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 10:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A93EDC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 10:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE98520869
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 10:43:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nBYMKIdo"
+	by mail.kernel.org (Postfix) with ESMTP id 7F42C2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 10:45:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfK2Knt (ORCPT
+        id S1726808AbfK2KpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 05:43:49 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46902 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbfK2Kns (ORCPT
+        Fri, 29 Nov 2019 05:45:08 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:41353 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726360AbfK2KpI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 05:43:48 -0500
-Received: by mail-qk1-f194.google.com with SMTP id f5so6747222qkm.13
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 02:43:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WNKcPwP14dCsuwOlqDsykLyVDhKlBHISB9+4LszAs1E=;
-        b=nBYMKIdo4bN34E3EPIXgQc5YN+71lf9DS22Yw2lMbp8we2gbCASP73qbMD/4ihM4q7
-         VAsomzecOXGlDupxMxxVddm/OYWJT/9uDi2QqFgF6UWCj/maXYqrIKPCoWE/FF7VYHle
-         PKO8tb43mG8X29mBNDhNhimCTrBPPQYYAEyX57WqcODF6XE0ypzVzAhNjLQ8mMDsqFNJ
-         Ye8fYaw/uOIFHtWP6FN9P3SgyulmzCtbk0wfmL9cU7ca62S0Z9POgea7TtMmH9AqcV7N
-         MZMvD4jmrgwI/dnqseW9KNFZGzuVKAwRCly/NWEjPNnq/TYhCnpxw6Vui0aO7gKZDqds
-         Z2Ew==
+        Fri, 29 Nov 2019 05:45:08 -0500
+Received: by mail-il1-f200.google.com with SMTP id o185so24375742ila.8
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 02:45:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WNKcPwP14dCsuwOlqDsykLyVDhKlBHISB9+4LszAs1E=;
-        b=MOxPmoux/pKmMX1Krl59JddBaJhLfIrkvgeasX/F2T++Y1BxmX1hIj/0B89uYkc+HZ
-         BhMcOamDP+DdLyAhIniP4a58HSko/JexjalzKjZ/XyGe9jDbd7dwKtMuMkxjp7ywd53M
-         ZfQgrxS+ospnFMJaGFGfvDmFcyusHVo+4JmfTh1/a7bzIZZ8QNohDrGK0KS9wbvMKxUO
-         260g+AkdvimHN3aOu36/zHq+IjUQr4r1nhZ6KrTd3XzcLH/1FQwxnMSllnQZtfnKr4ga
-         2P0BRidC6ZeokKrBmHvlppW9ot/gRiG47H/Vzx/COpLTAhYRi5R6RpzRXpOaDyobHbjz
-         wzWA==
-X-Gm-Message-State: APjAAAUinQR587NGk10OYU4t2G9MfI498ZwsHrnHBq0S+ttKuM+Dp+A8
-        UVEZptoeelIH/qXBvBgek5BTlAPlv7cTUVtOlxCD8Q==
-X-Google-Smtp-Source: APXvYqzOGamI1EY7SZL+szo1Y+msRsEDDsuPt89l2GqXlbXKeTf5q7E5hiDfxSk8eOZJVviOV1hYzHE3GXZCDDMX3U0=
-X-Received: by 2002:a37:e312:: with SMTP id y18mr11683779qki.250.1575024226915;
- Fri, 29 Nov 2019 02:43:46 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Bw33hhNzZEtxI5gaN0FGG4Keg1bv9uMPlinqIyGbtFw=;
+        b=AKm1NQ6iYkfwzi1twHFjcZVO2A2tjjwSl3sLKlyhFI+6tCnMLYjd1+fOKCcF1+WrXr
+         lxooZbej3UTw75tgrW848c4iGuD75zQ7raHxxOcruiE6k0kCRtv+G3zkKGLYo7MClutU
+         W/4RASY1X6yzg+dTjJhS8awo2pT6oGiL0dqLK8LazqY2eV0r3OdjMSC4WE2Ox7i1/Kzl
+         KnRcMRy+B4DK04MUZ4+oSygKt1ELw3hnJbzyBUajcBNlCFxFXMK3bWmG5WzyyAgM6fBR
+         h42tEJGRvK0N4fwuzSP7IIz+wQprhaAk66WRJcv/M+8UoY9dxQo6bHVVGgXWxYIlhV/h
+         ULEg==
+X-Gm-Message-State: APjAAAWy9/eT09Z/I+FSt2iVCULNfpcsgIzbfdtMdsxIeSJWf3v9aaVz
+        SVBmjaDuFB5Yf1dNFA6Lt/GbwOxrbUuY1OauOWl2wqZTCd9F
+X-Google-Smtp-Source: APXvYqzdXhARdHUXX+6Lh4o76WapDekObV1V0y7Not6A1Zwb11zfXS/Q7Qhfzur3k2GD9C9hlWQpP7WtQr3FTKcisTjDADpSgZ7e
 MIME-Version: 1.0
-References: <20191031093909.9228-1-dja@axtens.net> <20191031093909.9228-2-dja@axtens.net>
- <1573835765.5937.130.camel@lca.pw> <871ru5hnfh.fsf@dja-thinkpad.axtens.net> <952ec26a-9492-6f71-bab1-c1def887e528@virtuozzo.com>
-In-Reply-To: <952ec26a-9492-6f71-bab1-c1def887e528@virtuozzo.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 29 Nov 2019 11:43:35 +0100
-Message-ID: <CACT4Y+ZGO8b88fUyFe-WtV3Ubr11ChLY2mqk8YKWN9o0meNtXA@mail.gmail.com>
-Subject: Re: [PATCH v11 1/4] kasan: support backing vmalloc space with real
- shadow memory
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc:     Daniel Axtens <dja@axtens.net>, Qian Cai <cai@lca.pw>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a92:601:: with SMTP id x1mr15052392ilg.35.1575024307211;
+ Fri, 29 Nov 2019 02:45:07 -0800 (PST)
+Date:   Fri, 29 Nov 2019 02:45:07 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000581524059879ecad@google.com>
+Subject: general protection fault in timer_is_static_object
+From:   syzbot <syzbot+76f3a30e88d256644c78@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, dmitry.torokhov@gmail.com,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, rydberg@bitmath.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 10:54 AM Andrey Ryabinin
-<aryabinin@virtuozzo.com> wrote:
-> On 11/18/19 6:29 AM, Daniel Axtens wrote:
-> > Qian Cai <cai@lca.pw> writes:
-> >
-> >> On Thu, 2019-10-31 at 20:39 +1100, Daniel Axtens wrote:
-> >>>     /*
-> >>>      * In this function, newly allocated vm_struct has VM_UNINITIALIZED
-> >>>      * flag. It means that vm_struct is not fully initialized.
-> >>> @@ -3377,6 +3411,9 @@ struct vm_struct **pcpu_get_vm_areas(const unsigned long *offsets,
-> >>>
-> >>>             setup_vmalloc_vm_locked(vms[area], vas[area], VM_ALLOC,
-> >>>                              pcpu_get_vm_areas);
-> >>> +
-> >>> +           /* assume success here */
-> >>> +           kasan_populate_vmalloc(sizes[area], vms[area]);
-> >>>     }
-> >>>     spin_unlock(&vmap_area_lock);
-> >>
-> >> Here it is all wrong. GFP_KERNEL with in_atomic().
-> >
-> > I think this fix will work, I will do a v12 with it included.
->
-> You can send just the fix. Andrew will fold it into the original patch before sending it to Linus.
->
->
->
-> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> > index a4b950a02d0b..bf030516258c 100644
-> > --- a/mm/vmalloc.c
-> > +++ b/mm/vmalloc.c
-> > @@ -3417,11 +3417,14 @@ struct vm_struct **pcpu_get_vm_areas(const unsigned long *offsets,
-> >
-> >                 setup_vmalloc_vm_locked(vms[area], vas[area], VM_ALLOC,
-> >                                  pcpu_get_vm_areas);
-> > +       }
-> > +       spin_unlock(&vmap_area_lock);
-> >
-> > +       /* populate the shadow space outside of the lock */
-> > +       for (area = 0; area < nr_vms; area++) {
-> >                 /* assume success here */
-> >                 kasan_populate_vmalloc(sizes[area], vms[area]);
-> >         }
-> > -       spin_unlock(&vmap_area_lock);
-> >
-> >         kfree(vas);
-> >         return vms;
+Hello,
 
-Hi,
+syzbot found the following crash on:
 
-I am testing this support on next-20191129 and seeing the following warnings:
+HEAD commit:    da06441b usb: gadget: add raw-gadget interface
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=150eedeee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=99c88c44660624e7
+dashboard link: https://syzkaller.appspot.com/bug?extid=76f3a30e88d256644c78
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1205c8a2e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1107b76ae00000
 
-BUG: sleeping function called from invalid context at mm/page_alloc.c:4681
-in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 44, name: kworker/1:1
-4 locks held by kworker/1:1/44:
- #0: ffff888067c26d28 ((wq_completion)events){+.+.}, at:
-__write_once_size include/linux/compiler.h:247 [inline]
- #0: ffff888067c26d28 ((wq_completion)events){+.+.}, at:
-arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
- #0: ffff888067c26d28 ((wq_completion)events){+.+.}, at: atomic64_set
-include/asm-generic/atomic-instrumented.h:868 [inline]
- #0: ffff888067c26d28 ((wq_completion)events){+.+.}, at:
-atomic_long_set include/asm-generic/atomic-long.h:40 [inline]
- #0: ffff888067c26d28 ((wq_completion)events){+.+.}, at: set_work_data
-kernel/workqueue.c:615 [inline]
- #0: ffff888067c26d28 ((wq_completion)events){+.+.}, at:
-set_work_pool_and_clear_pending kernel/workqueue.c:642 [inline]
- #0: ffff888067c26d28 ((wq_completion)events){+.+.}, at:
-process_one_work+0x88b/0x1750 kernel/workqueue.c:2235
- #1: ffffc900002afdf0 (pcpu_balance_work){+.+.}, at:
-process_one_work+0x8c0/0x1750 kernel/workqueue.c:2239
- #2: ffffffff8943f080 (pcpu_alloc_mutex){+.+.}, at:
-pcpu_balance_workfn+0xcc/0x13e0 mm/percpu.c:1845
- #3: ffffffff89450c78 (vmap_area_lock){+.+.}, at: spin_lock
-include/linux/spinlock.h:338 [inline]
- #3: ffffffff89450c78 (vmap_area_lock){+.+.}, at:
-pcpu_get_vm_areas+0x1449/0x3df0 mm/vmalloc.c:3431
-Preemption disabled at:
-[<ffffffff81a84199>] spin_lock include/linux/spinlock.h:338 [inline]
-[<ffffffff81a84199>] pcpu_get_vm_areas+0x1449/0x3df0 mm/vmalloc.c:3431
-CPU: 1 PID: 44 Comm: kworker/1:1 Not tainted 5.4.0-next-20191129+ #5
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.12.0-1 04/01/2014
-Workqueue: events pcpu_balance_workfn
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+76f3a30e88d256644c78@syzkaller.appspotmail.com
+
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] SMP KASAN
+CPU: 0 PID: 1713 Comm: syz-executor493 Not tainted 5.4.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:timer_is_static_object+0x20/0x90 kernel/time/timer.c:612
+Code: 66 2e 0f 1f 84 00 00 00 00 00 41 54 53 48 89 fb e8 b5 50 0f 00 48 8d  
+7b 08 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75  
+4f 45 31 e4 48 83 7b 08 00 74 0c e8 8b 50 0f 00 44
+RSP: 0018:ffff8881d0397af8 EFLAGS: 00010002
+RAX: dffffc0000000000 RBX: 0000000000004060 RCX: 0000000000000000
+RDX: 000000000000080d RSI: ffffffff812ed5ab RDI: 0000000000004068
+RBP: ffff8881d0397c00 R08: ffff8881d1bdc800 R09: fffffbfff1230886
+R10: fffffbfff1230885 R11: ffffffff8918442b R12: 0000000000000003
+R13: dffffc0000000000 R14: 1ffff1103a072f66 R15: 0000000000004060
+FS:  0000000001020880(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000043ff90 CR3: 00000001d1ac0000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x199/0x216 lib/dump_stack.c:118
- ___might_sleep.cold.97+0x1f5/0x238 kernel/sched/core.c:6800
- __might_sleep+0x95/0x190 kernel/sched/core.c:6753
- prepare_alloc_pages mm/page_alloc.c:4681 [inline]
- __alloc_pages_nodemask+0x3cd/0x890 mm/page_alloc.c:4730
- alloc_pages_current+0x10c/0x210 mm/mempolicy.c:2211
- alloc_pages include/linux/gfp.h:532 [inline]
- __get_free_pages+0xc/0x40 mm/page_alloc.c:4786
- kasan_populate_vmalloc_pte mm/kasan/common.c:762 [inline]
- kasan_populate_vmalloc_pte+0x2f/0x1b0 mm/kasan/common.c:753
- apply_to_pte_range mm/memory.c:2041 [inline]
- apply_to_pmd_range mm/memory.c:2068 [inline]
- apply_to_pud_range mm/memory.c:2088 [inline]
- apply_to_p4d_range mm/memory.c:2108 [inline]
- apply_to_page_range+0x5ca/0xa00 mm/memory.c:2133
- kasan_populate_vmalloc+0x69/0xa0 mm/kasan/common.c:791
- pcpu_get_vm_areas+0x1596/0x3df0 mm/vmalloc.c:3439
- pcpu_create_chunk+0x240/0x7f0 mm/percpu-vm.c:340
- pcpu_balance_workfn+0x1033/0x13e0 mm/percpu.c:1934
- process_one_work+0x9b5/0x1750 kernel/workqueue.c:2264
- worker_thread+0x8b/0xd20 kernel/workqueue.c:2410
- kthread+0x365/0x450 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+  debug_object_assert_init lib/debugobjects.c:862 [inline]
+  debug_object_assert_init+0x1f9/0x2f0 lib/debugobjects.c:837
+  debug_timer_assert_init kernel/time/timer.c:729 [inline]
+  debug_assert_init kernel/time/timer.c:774 [inline]
+  del_timer+0x6d/0x100 kernel/time/timer.c:1196
+  try_to_grab_pending+0x67/0x7b0 kernel/workqueue.c:1251
+  __cancel_work_timer+0xa6/0x460 kernel/workqueue.c:3086
+  input_close_device+0xd2/0x1a0 drivers/input/input.c:679
+  evdev_close_device drivers/input/evdev.c:428 [inline]
+  evdev_release+0x188/0x1c0 drivers/input/evdev.c:466
+  __fput+0x2d7/0x840 fs/file_table.c:280
+  task_work_run+0x13f/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:163
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x45f/0x580 arch/x86/entry/common.c:300
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4022c0
+Code: 01 f0 ff ff 0f 83 40 0d 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f  
+44 00 00 83 3d 6d aa 2d 00 00 75 14 b8 03 00 00 00 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 14 0d 00 00 c3 48 83 ec 08 e8 7a 02 00 00
+RSP: 002b:00007ffc860c7068 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000005 RCX: 00000000004022c0
+RDX: 00000000200000c0 RSI: 0000000040284504 RDI: 0000000000000004
+RBP: 00007ffc860c7090 R08: 7d03000000008300 R09: 0000000000000000
+R10: 000000000000000f R11: 0000000000000246 R12: 0000000000000003
+R13: 0000000000000004 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace cf0e86e9ac328099 ]---
+RIP: 0010:timer_is_static_object+0x20/0x90 kernel/time/timer.c:612
+Code: 66 2e 0f 1f 84 00 00 00 00 00 41 54 53 48 89 fb e8 b5 50 0f 00 48 8d  
+7b 08 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75  
+4f 45 31 e4 48 83 7b 08 00 74 0c e8 8b 50 0f 00 44
+RSP: 0018:ffff8881d0397af8 EFLAGS: 00010002
+RAX: dffffc0000000000 RBX: 0000000000004060 RCX: 0000000000000000
+RDX: 000000000000080d RSI: ffffffff812ed5ab RDI: 0000000000004068
+RBP: ffff8881d0397c00 R08: ffff8881d1bdc800 R09: fffffbfff1230886
+R10: fffffbfff1230885 R11: ffffffff8918442b R12: 0000000000000003
+R13: dffffc0000000000 R14: 1ffff1103a072f66 R15: 0000000000004060
+FS:  0000000001020880(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000043ff90 CR3: 00000001d1ac0000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
-Not sure if it's the same or not. Is it addressed by something in flight?
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-My config:
-https://gist.githubusercontent.com/dvyukov/36c7be311fdec9cd51c649f7c3cb2ddb/raw/39c6f864fdd0ffc53f0822b14c354a73c1695fa1/gistfile1.txt
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
