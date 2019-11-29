@@ -2,95 +2,87 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2E3C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C99C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3983021721
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF56D21774
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:04:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfK2IBl convert rfc822-to-8bit (ORCPT
+        id S1726843AbfK2IEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 03:01:41 -0500
-Received: from mx1.emlix.com ([188.40.240.192]:38192 "EHLO mx1.emlix.com"
+        Fri, 29 Nov 2019 03:04:36 -0500
+Received: from correo.us.es ([193.147.175.20]:36748 "EHLO mail.us.es"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726360AbfK2IBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 03:01:41 -0500
-X-Greylist: delayed 304 seconds by postgrey-1.27 at vger.kernel.org; Fri, 29 Nov 2019 03:01:40 EST
-Received: from mailer.emlix.com (unknown [81.20.119.6])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        id S1726768AbfK2IEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 03:04:36 -0500
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id 2A19627F8D2
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 09:04:33 +0100 (CET)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 1C737DA729
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 09:04:33 +0100 (CET)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id 0F5B4DA711; Fri, 29 Nov 2019 09:04:33 +0100 (CET)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 0C517DA70E;
+        Fri, 29 Nov 2019 09:04:31 +0100 (CET)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Fri, 29 Nov 2019 09:04:31 +0100 (CET)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (sys.soleta.eu [212.170.55.40])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.emlix.com (Postfix) with ESMTPS id A0895602E7;
-        Fri, 29 Nov 2019 08:56:34 +0100 (CET)
-From:   Rolf Eike Beer <eb@emlix.com>
-To:     David Woodhouse <dwmw2@infradead.org>
-Cc:     Linux Kernel Developers List <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>, keyrings@vger.kernel.org
-Subject: [PATCH v3][RESEND #2] scripts: use pkg-config to locate libcrypto
-Date:   Fri, 29 Nov 2019 08:56:34 +0100
-Message-ID: <3291155.4g3vBG3qv5@devpool35>
-Organization: emlix GmbH
-In-Reply-To: <2010898.sAvVGPNi7W@devpool35>
-References: <20538915.Wj2CyUsUYa@devpool35> <2010898.sAvVGPNi7W@devpool35>
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id D0C0041E4802;
+        Fri, 29 Nov 2019 09:04:30 +0100 (CET)
+Date:   Fri, 29 Nov 2019 09:04:32 +0100
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] netfilter: nf_flow_table_offload: Don't use offset
+ uninitialized in flow_offload_port_{d,s}nat
+Message-ID: <20191129080432.jnsghajoenturr7v@salvia>
+References: <20191126201226.51857-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191126201226.51857-1-natechancellor@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Otherwise build fails if the headers are not in the default location. While at
-it also ask pkg-config for the libs, with fallback to the existing value.
+On Tue, Nov 26, 2019 at 01:12:26PM -0700, Nathan Chancellor wrote:
+> Clang warns (trimmed the second warning for brevity):
+> 
+> ../net/netfilter/nf_flow_table_offload.c:342:2: warning: variable
+> 'offset' is used uninitialized whenever switch default is taken
+> [-Wsometimes-uninitialized]
+>         default:
+>         ^~~~~~~
+> ../net/netfilter/nf_flow_table_offload.c:346:57: note: uninitialized use
+> occurs here
+>         flow_offload_mangle(entry, flow_offload_l4proto(flow), offset,
+>                                                                ^~~~~~
+> ../net/netfilter/nf_flow_table_offload.c:331:12: note: initialize the
+> variable 'offset' to silence this warning
+>         u32 offset;
+>                   ^
+>                    = 0
+> 
+> Match what was done in the flow_offload_ipv{4,6}_{d,s}nat functions and
+> just return in the default case, since port would also be uninitialized.
 
-Signed-off-by: Rolf Eike Beer <eb@emlix.com>
-Cc: stable@vger.kernel.org
----
- scripts/Makefile | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/scripts/Makefile b/scripts/Makefile
-index 3e86b300f5a1..034789783317 100644
---- a/scripts/Makefile
-+++ b/scripts/Makefile
-@@ -8,7 +8,11 @@
- # conmakehash:   Create chartable
- # conmakehash:	 Create arrays for initializing the kernel console tables
- 
-+PKG_CONFIG?= pkg-config
-+
- HOST_EXTRACFLAGS += -I$(srctree)/tools/include
-+CRYPTO_LIBS = $(shell $(PKG_CONFIG) --libs libcrypto 2> /dev/null || echo -lcrypto)
-+CRYPTO_CFLAGS = $(shell $(PKG_CONFIG) --cflags libcrypto 2> /dev/null)
- 
- hostprogs-$(CONFIG_BUILD_BIN2C)  += bin2c
- hostprogs-$(CONFIG_KALLSYMS)     += kallsyms
-@@ -23,8 +27,9 @@ hostprogs-$(CONFIG_SYSTEM_EXTRA_CERTIFICATE) += insert-sys-cert
- 
- HOSTCFLAGS_sortextable.o = -I$(srctree)/tools/include
- HOSTCFLAGS_asn1_compiler.o = -I$(srctree)/include
--HOSTLDLIBS_sign-file = -lcrypto
--HOSTLDLIBS_extract-cert = -lcrypto
-+HOSTLDLIBS_sign-file = $(CRYPTO_LIBS)
-+HOSTCFLAGS_extract-cert.o = $(CRYPTO_CFLAGS)
-+HOSTLDLIBS_extract-cert = $(CRYPTO_LIBS)
- 
- always		:= $(hostprogs-y) $(hostprogs-m)
- 
--- 
-2.24.0
-
-
--- 
-Rolf Eike Beer, emlix GmbH, http://www.emlix.com
-Fon +49 551 30664-0, Fax +49 551 30664-11
-Gothaer Platz 3, 37083 Göttingen, Germany
-Sitz der Gesellschaft: Göttingen, Amtsgericht Göttingen HR B 3160
-Geschäftsführung: Heike Jordan, Dr. Uwe Kracke – Ust-IdNr.: DE 205 198 055
-
-emlix - smart embedded open source
-
-
+Applied, thanks.
