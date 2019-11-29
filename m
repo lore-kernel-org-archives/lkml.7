@@ -2,233 +2,112 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A26D3C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 10:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B23DC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 10:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73B59217AB
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 10:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B2D3217BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 10:06:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfK2KFb (ORCPT
+        id S1726877AbfK2KGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 05:05:31 -0500
-Received: from mga05.intel.com ([192.55.52.43]:29005 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726215AbfK2KFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 05:05:31 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Nov 2019 02:05:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,257,1571727600"; 
-   d="scan'208";a="203689421"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 29 Nov 2019 02:05:29 -0800
-Received: from [10.125.252.110] (abudanko-mobl.ccr.corp.intel.com [10.125.252.110])
-        by linux.intel.com (Postfix) with ESMTP id F3BDA5802E4;
-        Fri, 29 Nov 2019 02:05:27 -0800 (PST)
-Subject: [PATCH v3 3/3] perf record: adapt affinity to machines with #CPUs >
- 1K
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Fri, 29 Nov 2019 05:06:44 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35702 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725892AbfK2KGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 05:06:44 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D7179B1AD;
+        Fri, 29 Nov 2019 10:06:41 +0000 (UTC)
+Date:   Fri, 29 Nov 2019 11:06:39 +0100
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     =?utf-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Cc:     Mel Gorman <mgorman@suse.de>, Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <908dbe98-7d8d-0ec1-d4ae-242f3e104979@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <21bc3ad7-e1f2-68da-f004-36354a6e40ea@linux.intel.com>
-Date:   Fri, 29 Nov 2019 13:05:26 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: Re: [PATCH v2 1/3] sched/numa: advanced per-cgroup numa statistic
+Message-ID: <20191129100639.GI831@blackbody.suse.cz>
+References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
+ <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
+ <9354ffe8-81ba-9e76-e0b3-222bc942b3fc@linux.alibaba.com>
+ <20191127101932.GN28938@suse.de>
+ <3ff78d18-fa29-13f3-81e5-a05537a2e344@linux.alibaba.com>
+ <20191128123924.GD831@blackbody.suse.cz>
+ <e008fef6-06d2-28d3-f4d3-229f4b181b4f@linux.alibaba.com>
+ <20191128155818.GE831@blackbody.suse.cz>
+ <b97ce489-c5c5-0670-a553-0e45d593de2c@linux.alibaba.com>
+ <f9da5ce8-519e-62b4-36f7-8e5bbf0485fd@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <908dbe98-7d8d-0ec1-d4ae-242f3e104979@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tctmm6wHVGT/P6vA"
+Content-Disposition: inline
+In-Reply-To: <f9da5ce8-519e-62b4-36f7-8e5bbf0485fd@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Use struct mmap_cpu_mask type for tool's thread and mmap data
-buffers to overcome current 1024 CPUs mask size limitation of
-cpu_set_t type.
+--tctmm6wHVGT/P6vA
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Currently glibc cpu_set_t type has internal mask size limit
-of 1024 CPUs. Moving to struct mmap_cpu_mask type allows
-overcoming that limit. tools bitmap API is used to manipulate
-objects of struct mmap_cpu_mask type.
+On Fri, Nov 29, 2019 at 01:19:33PM +0800, =E7=8E=8B=E8=B4=87 <yun.wang@linu=
+x.alibaba.com> wrote:
+> I did some research regarding cpuacct, and find cpuacct_charge() is a good
+> place to do hierarchical update, however, what we get there is the execut=
+ion
+> time delta since last update_curr().
+I wouldn't extend cpuacct, I'd like to look into using the rstat
+mechanism for per-CPU runtime collection. (Most certainly I won't get
+down to this until mid December though.)
 
-Reported-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/builtin-record.c | 27 +++++++++++++++++++++------
- tools/perf/util/mmap.c      | 28 ++++++++++++++++++++++------
- tools/perf/util/mmap.h      |  2 +-
- 3 files changed, 44 insertions(+), 13 deletions(-)
-
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index fb19ef63cc35..b803908c03f8 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -62,6 +62,7 @@
- #include <linux/string.h>
- #include <linux/time64.h>
- #include <linux/zalloc.h>
-+#include <linux/bitmap.h>
- 
- struct switch_output {
- 	bool		 enabled;
-@@ -93,7 +94,7 @@ struct record {
- 	bool			timestamp_boundary;
- 	struct switch_output	switch_output;
- 	unsigned long long	samples;
--	cpu_set_t		affinity_mask;
-+	struct mmap_cpu_mask	affinity_mask;
- 	unsigned long		output_max_size;	/* = 0: unlimited */
- };
- 
-@@ -961,10 +962,15 @@ static struct perf_event_header finished_round_event = {
- static void record__adjust_affinity(struct record *rec, struct mmap *map)
- {
- 	if (rec->opts.affinity != PERF_AFFINITY_SYS &&
--	    !CPU_EQUAL(&rec->affinity_mask, &map->affinity_mask)) {
--		CPU_ZERO(&rec->affinity_mask);
--		CPU_OR(&rec->affinity_mask, &rec->affinity_mask, &map->affinity_mask);
--		sched_setaffinity(0, sizeof(rec->affinity_mask), &rec->affinity_mask);
-+	    !bitmap_equal(rec->affinity_mask.bits, map->affinity_mask.bits,
-+			  rec->affinity_mask.nbits)) {
-+		bitmap_zero(rec->affinity_mask.bits, rec->affinity_mask.nbits);
-+		bitmap_or(rec->affinity_mask.bits, rec->affinity_mask.bits,
-+			  map->affinity_mask.bits, rec->affinity_mask.nbits);
-+		sched_setaffinity(0, MMAP_CPU_MASK_BYTES(&rec->affinity_mask),
-+				  (cpu_set_t *)rec->affinity_mask.bits);
-+		if (verbose == 2)
-+			perf_mmap__print_cpu_mask(&rec->affinity_mask, "thread");
- 	}
- }
- 
-@@ -2433,7 +2439,6 @@ int cmd_record(int argc, const char **argv)
- # undef REASON
- #endif
- 
--	CPU_ZERO(&rec->affinity_mask);
- 	rec->opts.affinity = PERF_AFFINITY_SYS;
- 
- 	rec->evlist = evlist__new();
-@@ -2499,6 +2504,14 @@ int cmd_record(int argc, const char **argv)
- 
- 	symbol__init(NULL);
- 
-+	rec->affinity_mask.nbits = cpu__max_cpu();
-+	rec->affinity_mask.bits = bitmap_alloc(rec->affinity_mask.nbits);
-+	if (!rec->affinity_mask.bits) {
-+		pr_err("Failed to allocate thread mask for %ld cpus\n", rec->affinity_mask.nbits);
-+		return -ENOMEM;
-+	}
-+	pr_debug2("thread mask[%ld]: empty\n", rec->affinity_mask.nbits);
-+
- 	err = record__auxtrace_init(rec);
- 	if (err)
- 		goto out;
-@@ -2613,6 +2626,8 @@ int cmd_record(int argc, const char **argv)
- 
- 	err = __cmd_record(&record, argc, argv);
- out:
-+	if (rec->affinity_mask.bits)
-+		bitmap_free(rec->affinity_mask.bits);
- 	evlist__delete(rec->evlist);
- 	symbol__exit();
- 	auxtrace_record__free(rec->itr);
-diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index 30ff7aef06f2..615d05870849 100644
---- a/tools/perf/util/mmap.c
-+++ b/tools/perf/util/mmap.c
-@@ -219,6 +219,9 @@ static void perf_mmap__aio_munmap(struct mmap *map __maybe_unused)
- 
- void mmap__munmap(struct mmap *map)
- {
-+	if (map->affinity_mask.bits)
-+		bitmap_free(map->affinity_mask.bits);
-+
- 	perf_mmap__aio_munmap(map);
- 	if (map->data != NULL) {
- 		munmap(map->data, mmap__mmap_len(map));
-@@ -227,7 +230,7 @@ void mmap__munmap(struct mmap *map)
- 	auxtrace_mmap__munmap(&map->auxtrace_mmap);
- }
- 
--static void build_node_mask(int node, cpu_set_t *mask)
-+static void build_node_mask(int node, struct mmap_cpu_mask *mask)
- {
- 	int c, cpu, nr_cpus;
- 	const struct perf_cpu_map *cpu_map = NULL;
-@@ -240,17 +243,23 @@ static void build_node_mask(int node, cpu_set_t *mask)
- 	for (c = 0; c < nr_cpus; c++) {
- 		cpu = cpu_map->map[c]; /* map c index to online cpu index */
- 		if (cpu__get_node(cpu) == node)
--			CPU_SET(cpu, mask);
-+			set_bit(cpu, mask->bits);
- 	}
- }
- 
--static void perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_params *mp)
-+static int perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_params *mp)
- {
--	CPU_ZERO(&map->affinity_mask);
-+	map->affinity_mask.nbits = cpu__max_cpu();
-+	map->affinity_mask.bits = bitmap_alloc(map->affinity_mask.nbits);
-+	if (!map->affinity_mask.bits)
-+		return -1;
-+
- 	if (mp->affinity == PERF_AFFINITY_NODE && cpu__max_node() > 1)
- 		build_node_mask(cpu__get_node(map->core.cpu), &map->affinity_mask);
- 	else if (mp->affinity == PERF_AFFINITY_CPU)
--		CPU_SET(map->core.cpu, &map->affinity_mask);
-+		set_bit(map->core.cpu, map->affinity_mask.bits);
-+
-+	return 0;
- }
- 
- int mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu)
-@@ -261,7 +270,14 @@ int mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu)
- 		return -1;
- 	}
- 
--	perf_mmap__setup_affinity_mask(map, mp);
-+	if (perf_mmap__setup_affinity_mask(map, mp)) {
-+		pr_debug2("failed to alloc mmap affinity mask, error %d\n",
-+			  errno);
-+		return -1;
-+	}
-+
-+	if (verbose == 2)
-+		perf_mmap__print_cpu_mask(&map->affinity_mask, "mmap");
- 
- 	map->core.flush = mp->flush;
- 
-diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
-index 598e2def8a48..ab6449675d5b 100644
---- a/tools/perf/util/mmap.h
-+++ b/tools/perf/util/mmap.h
-@@ -40,7 +40,7 @@ struct mmap {
- 		int		 nr_cblocks;
- 	} aio;
- #endif
--	cpu_set_t	affinity_mask;
-+	struct mmap_cpu_mask	affinity_mask;
- 	void		*data;
- 	int		comp_level;
- };
--- 
-2.20.1
+> I'm afraid we can't just do local/remote accumulation since the sample pe=
+riod
+> now is changing, still have to accumulate the execution time into locality
+> regions.
+My idea was to decouple time from the locality counters completely. It'd
+be up to the monitoring application to normalize differences wrt
+sampling rate (and handle wrap arounds).
 
 
+Michal
+
+--tctmm6wHVGT/P6vA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl3g7aoACgkQia1+riC5
+qSj6ihAAjGL+AfasV1mBclWNhpl6+ocgSIbO11onVPt4IbQHizY925prKB3WfEqc
+n/rv5OykoWSLCtZsSQAzqN7th9XYzqaALVJ7/CDfQP4QBIlPxBQ/nSQvE1mg5f5e
+Dyon80A94xAxWScMCXhpL1BgmNJH9PxgI/1rVq0RuAn2OE5XN/95xzesZh89SWLa
+A8iJ/4rvUwF7aQZLpG75U03Kejo16aBPcaSh8M9dqCPTa9R0/iXMc20bzVBhpqZq
+GvT+V5NjgOmM4mxwa1atcOXdsb5w+J3NRTxl4fl8rwr01WTwR6OiU2ZTV3+OMqwe
+DK0UaLdwKc9X7uzioPiVZlICOz8lBccd19ZvmMUVPgZdwIfXLT52S30dp38gq6vd
+RVOGf68MWI0swndpgnVcSHpSyIgMOvQBdWaA0Yv8GkfIcADwCceeFQ0joyhm+SbU
+wnhfEB6/gwWn5CU9bhhNJF2yILxxmQYfjE4hgkMg4fvdddisAvha7AVDYS5dXadW
+xSnvCXgI1gRXm4SmF8SmuLDVsLdmFJf2OIjKBbOZ2lY1yxnO66bc/cSKQZlYGyVg
+7cFZDhjUCKPEys1sn7SwV4KGpa9AQVBL18D6AvAAwnWRxJxPdSJP2lKB0u4sIDJQ
+kqGtI30Ny4C8ClB1XqB1YAMHYjObuuGfBG0NtCLap6bOxI0hdc0=
+=+0n3
+-----END PGP SIGNATURE-----
+
+--tctmm6wHVGT/P6vA--
