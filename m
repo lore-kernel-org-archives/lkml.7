@@ -2,154 +2,125 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A30C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C4CC43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E6FC208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 933612176D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:27:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbfK2RZc (ORCPT
+        id S1727508AbfK2R1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 12:25:32 -0500
-Received: from mga14.intel.com ([192.55.52.115]:64170 "EHLO mga14.intel.com"
+        Fri, 29 Nov 2019 12:27:04 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:35734 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727092AbfK2RZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 12:25:31 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Nov 2019 09:25:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,257,1571727600"; 
-   d="scan'208";a="241108967"
-Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
-  by fmsmga002.fm.intel.com with ESMTP; 29 Nov 2019 09:25:29 -0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, jmattson@google.com,
-        sean.j.christopherson@intel.com
-Cc:     yu.c.zhang@linux.intel.com, alazar@bitdefender.com,
-        edwin.zhai@intel.com, Yang Weijiang <weijiang.yang@intel.com>
-Subject: [PATCH v8 02/10] vmx: spp: Add control flags for Sub-Page Protection(SPP)
-Date:   Sat, 30 Nov 2019 01:27:01 +0800
-Message-Id: <20191129172709.11347-3-weijiang.yang@intel.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20191129172709.11347-1-weijiang.yang@intel.com>
-References: <20191129172709.11347-1-weijiang.yang@intel.com>
+        id S1726957AbfK2R1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 12:27:04 -0500
+Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1iak2k-0008Lo-N5; Fri, 29 Nov 2019 10:26:59 -0700
+To:     James Sewart <jamessewart@arista.com>
+Cc:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <dima@arista.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+References: <20191120193228.GA103670@google.com>
+ <6A902F0D-FE98-4760-ADBB-4D5987D866BE@arista.com>
+ <20191126173833.GA16069@infradead.org>
+ <547214A9-9FD0-4DD5-80E1-1F5A467A0913@arista.com>
+ <9c54c5dd-702c-a19b-38ba-55ab73b24729@deltatee.com>
+ <435064D4-00F0-47F5-94D2-2C354F6B1206@arista.com>
+ <058383d9-69fe-65e3-e410-eebd99840261@deltatee.com>
+ <F26CC19F-66C2-466B-AE30-D65E10BA3022@arista.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <d811576e-0f89-2303-a554-2701af5c5647@deltatee.com>
+Date:   Fri, 29 Nov 2019 10:26:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <F26CC19F-66C2-466B-AE30-D65E10BA3022@arista.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 70.73.163.230
+X-SA-Exim-Rcpt-To: helgaas@kernel.org, alex.williamson@redhat.com, dima@arista.com, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, 0x7f454c46@gmail.com, hch@infradead.org, linux-pci@vger.kernel.org, jamessewart@arista.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v4 1/2] PCI: Add parameter nr_devfns to pci_add_dma_alias
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check SPP capability in MSR_IA32_VMX_PROCBASED_CTLS2, its 23-bit
-indicates SPP capability. Enable SPP feature bit in CPU capabilities
-bitmap if it's supported.
 
-Co-developed-by: He Chen <he.chen@linux.intel.com>
-Signed-off-by: He Chen <he.chen@linux.intel.com>
-Co-developed-by: Zhang Yi <yi.z.zhang@linux.intel.com>
-Signed-off-by: Zhang Yi <yi.z.zhang@linux.intel.com>
-Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
----
- arch/x86/include/asm/vmx.h      | 1 +
- arch/x86/kvm/mmu.h              | 2 ++
- arch/x86/kvm/vmx/capabilities.h | 5 +++++
- arch/x86/kvm/vmx/vmx.c          | 9 +++++++++
- 4 files changed, 17 insertions(+)
 
-diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
-index a39136b0d509..e1137807affc 100644
---- a/arch/x86/include/asm/vmx.h
-+++ b/arch/x86/include/asm/vmx.h
-@@ -68,6 +68,7 @@
- #define SECONDARY_EXEC_XSAVES			0x00100000
- #define SECONDARY_EXEC_PT_USE_GPA		0x01000000
- #define SECONDARY_EXEC_MODE_BASED_EPT_EXEC	0x00400000
-+#define SECONDARY_EXEC_ENABLE_SPP		0x00800000
- #define SECONDARY_EXEC_TSC_SCALING              0x02000000
- 
- #define PIN_BASED_EXT_INTR_MASK                 0x00000001
-diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
-index 54c2a377795b..3c1423526a98 100644
---- a/arch/x86/kvm/mmu.h
-+++ b/arch/x86/kvm/mmu.h
-@@ -26,6 +26,8 @@
- #define PT_PAGE_SIZE_MASK (1ULL << PT_PAGE_SIZE_SHIFT)
- #define PT_PAT_MASK (1ULL << 7)
- #define PT_GLOBAL_MASK (1ULL << 8)
-+#define PT_SPP_SHIFT 61
-+#define PT_SPP_MASK (1ULL << PT_SPP_SHIFT)
- #define PT64_NX_SHIFT 63
- #define PT64_NX_MASK (1ULL << PT64_NX_SHIFT)
- 
-diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
-index d6664ee3d127..e3bde7a32123 100644
---- a/arch/x86/kvm/vmx/capabilities.h
-+++ b/arch/x86/kvm/vmx/capabilities.h
-@@ -241,6 +241,11 @@ static inline bool cpu_has_vmx_pml(void)
- 	return vmcs_config.cpu_based_2nd_exec_ctrl & SECONDARY_EXEC_ENABLE_PML;
- }
- 
-+static inline bool cpu_has_vmx_ept_spp(void)
-+{
-+	return vmcs_config.cpu_based_2nd_exec_ctrl & SECONDARY_EXEC_ENABLE_SPP;
-+}
-+
- static inline bool vmx_xsaves_supported(void)
- {
- 	return vmcs_config.cpu_based_2nd_exec_ctrl &
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index c030c96fc81a..9d1a7e624c5b 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -60,6 +60,7 @@
- #include "vmcs12.h"
- #include "vmx.h"
- #include "x86.h"
-+#include "../mmu/spp.h"
- 
- MODULE_AUTHOR("Qumranet");
- MODULE_LICENSE("GPL");
-@@ -113,6 +114,7 @@ module_param_named(pml, enable_pml, bool, S_IRUGO);
- 
- static bool __read_mostly dump_invalid_vmcs = 0;
- module_param(dump_invalid_vmcs, bool, 0644);
-+static bool __read_mostly spp_supported = 0;
- 
- #define MSR_BITMAP_MODE_X2APIC		1
- #define MSR_BITMAP_MODE_X2APIC_APICV	2
-@@ -2279,6 +2281,7 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
- 			SECONDARY_EXEC_RDSEED_EXITING |
- 			SECONDARY_EXEC_RDRAND_EXITING |
- 			SECONDARY_EXEC_ENABLE_PML |
-+			SECONDARY_EXEC_ENABLE_SPP |
- 			SECONDARY_EXEC_TSC_SCALING |
- 			SECONDARY_EXEC_PT_USE_GPA |
- 			SECONDARY_EXEC_PT_CONCEAL_VMX |
-@@ -3931,6 +3934,9 @@ static void vmx_compute_secondary_exec_control(struct vcpu_vmx *vmx)
- 	if (!enable_pml)
- 		exec_control &= ~SECONDARY_EXEC_ENABLE_PML;
- 
-+	if (!spp_supported)
-+		exec_control &= ~SECONDARY_EXEC_ENABLE_SPP;
-+
- 	if (vmx_xsaves_supported()) {
- 		/* Exposing XSAVES only when XSAVE is exposed */
- 		bool xsaves_enabled =
-@@ -7521,6 +7527,9 @@ static __init int hardware_setup(void)
- 	if (!cpu_has_vmx_flexpriority())
- 		flexpriority_enabled = 0;
- 
-+	if (cpu_has_vmx_ept_spp() && enable_ept)
-+		spp_supported = 1;
-+
- 	if (!cpu_has_virtual_nmis())
- 		enable_vnmi = 0;
- 
--- 
-2.17.2
+On 2019-11-29 10:19 a.m., James Sewart wrote:
+> 
+> 
+>> On 29 Nov 2019, at 16:50, Logan Gunthorpe <logang@deltatee.com> wrote:
+>>
+>>
+>>
+>> On 2019-11-29 5:49 a.m., James Sewart wrote:
+>>> pci_add_dma_alias can now be used to create a dma alias for a range of
+>>> devfns.
+>>>
+>>> Signed-off-by: James Sewart <jamessewart@arista.com>
+>>> ---
+>>> drivers/pci/pci.c    | 23 ++++++++++++++++++-----
+>>> drivers/pci/quirks.c | 14 +++++++-------
+>>> include/linux/pci.h  |  2 +-
+>>> 3 files changed, 26 insertions(+), 13 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>>> index a97e2571a527..9b0e3481fe17 100644
+>>> --- a/drivers/pci/pci.c
+>>> +++ b/drivers/pci/pci.c
+>>> @@ -5857,7 +5857,8 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
+>>> /**
+>>>  * pci_add_dma_alias - Add a DMA devfn alias for a device
+>>>  * @dev: the PCI device for which alias is added
+>>> - * @devfn: alias slot and function
+>>> + * @devfn_from: alias slot and function
+>>> + * @nr_devfns: Number of subsequent devfns to alias
+>>>  *
+>>>  * This helper encodes an 8-bit devfn as a bit number in dma_alias_mask
+>>>  * which is used to program permissible bus-devfn source addresses for DMA
+>>> @@ -5873,8 +5874,14 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
+>>>  * cannot be left as a userspace activity).  DMA aliases should therefore
+>>>  * be configured via quirks, such as the PCI fixup header quirk.
+>>>  */
+>>> -void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
+>>> +void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, unsigned nr_devfns)
+>>> {
+>>> +	int devfn_to;
+>>> +
+>>> +	if (nr_devfns > U8_MAX+1)
+>>> +		nr_devfns = U8_MAX+1;
+>>
+>> Why +1? That doesn't seem right to me….
+> 
+> U8_MAX is the max number U8 can represent(255) but is one less than the number 
+> of values it can represent(256). devfns can be 0.0 to 1f.7 inclusive(I think) 
+> so the number of possible devfns is 256. Thinking about it, maybe the 
+> zalloc should be U8_MAX+1 too?
+> 
+> I might be wrong though, what do you reckon?
 
+Right, yes, but I actually think the original code is wrong. It's only
+allocating a bitmap that holds 255 values and you're trying to insert
+256 ones into that bitmap. It's probably ok, because there's no way to
+allocate an odd sized bitmap, but it's probably worth fixing for clarity.
+
+It also looks wrong in pci_for_each_dma_alias() as well, so I'd probably
+fix both those up in a separate prep-patch.
+
+Logan
