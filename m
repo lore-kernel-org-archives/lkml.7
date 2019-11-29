@@ -2,185 +2,125 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A312CC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 22:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C411C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 22:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FFC9208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 22:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65292215E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 22:51:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575067910;
+	bh=hbGhiafV9JzvT630X1Ah0m7sU44x5bb3bEL8Z3f5FxE=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=vPgBsI8CCUwxriTdVG9ZT0hF/8NhhRrRvOr4XWlVAV7aIsoDM+eY4OrmxGj9Hx07r
+	 Kvu31/PhHv/iziTYiSoP1wwkcHNdTGUpm19uVun/06Iq7ERttPoB8YY700DB1nAYpf
+	 EYd2lqw6ljyBKsPe2vOx/6OZ3A8Qp6vHxSj1Uz2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387401AbfK2WtY (ORCPT
+        id S1727231AbfK2Wvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 17:49:24 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:42180 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727116AbfK2WtY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 17:49:24 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 277DE28A5AE
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Collabora Kernel ML <kernel@collabora.com>, groeck@chromium.org,
-        bleung@chromium.org, dtor@chromium.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Joel Stanley <joel@jms.id.au>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        linux-samsung-soc@vger.kernel.org, Olof Johansson <olof@lixom.net>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Bastien Nocera <hadess@hadess.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-tegra@vger.kernel.org,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Anson Huang <Anson.Huang@nxp.com>
-Subject: [RESEND PATCH] arm/arm64: defconfig: Update configs to use the new CROS_EC options
-Date:   Fri, 29 Nov 2019 23:49:12 +0100
-Message-Id: <20191129224912.32087-1-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 29 Nov 2019 17:51:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49900 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727124AbfK2Wvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 17:51:48 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BE372086A;
+        Fri, 29 Nov 2019 22:51:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575067907;
+        bh=hbGhiafV9JzvT630X1Ah0m7sU44x5bb3bEL8Z3f5FxE=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=AiE5Mys78qpEq49jzGC7em73f1tV08A5OIQmyyZkMrXtwUnYOZ+BD0Lb6E/GzOQ9y
+         LH4bfrUUguh5dgvOoMIE1AMlW3x/kDYgvOiONpWMq6XQ1Fz9eZ2snf51Rb11NOJHMq
+         EKn30bpXwppM3UCsNXn22oNq912Q6FLR8bDEvdNI=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 3BAE835227A4; Fri, 29 Nov 2019 14:51:47 -0800 (PST)
+Date:   Fri, 29 Nov 2019 14:51:47 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH RT] locking: Make spinlock_t and rwlock_t a RCU section
+ on RT
+Message-ID: <20191129225147.GO2889@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191119084640.wgsxghvc62mxlqc3@linutronix.de>
+ <20191119092149.06fd8f87@gandalf.local.home>
+ <20191122180140.bspcwv6xtrwqhmu7@linutronix.de>
+ <20191125122545.20e721d7@gandalf.local.home>
+ <20191129154535.sla5s54xd7rfty2u@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191129154535.sla5s54xd7rfty2u@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Recently we refactored the CrOS EC drivers moving part of the code from
-the MFD subsystem to the platform chrome subsystem. During this change
-we needed to rename some config options, so, update the defconfigs
-accordingly.
+On Fri, Nov 29, 2019 at 04:45:35PM +0100, Sebastian Andrzej Siewior wrote:
+> On 2019-11-25 12:25:45 [-0500], Steven Rostedt wrote:
+> > On Fri, 22 Nov 2019 19:01:40 +0100
+> > Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+> > 
+> > > Let me give you an example how I got into this:
+> > > 
+> > > do_sigaction() acquires p->sighand->siglock and then iterates over list
+> > > via for_each_thread() which is a list_for_each_entry_rcu(). No RCU lock
+> > > is held, just the siglock.
+> > > On removal side, __unhash_process() removes a task from the list but
+> > > while doing so it holds the siglock and tasklist_lock. So it is
+> > > perfectly fine.
+> > > Later, we have:
+> > > |do_exit()
+> > > | -> exit_notify()
+> > > |   -> write_lock_irq(&tasklist_lock);
+> > > |   -> forget_original_parent()
+> > > |      -> find_child_reaper()
+> > > |        -> find_alive_thread()
+> > > |           -> for_each_thread()
+> > > 
+> > > find_alive_thread() does the for_each_thread() and checks PF_EXITING.
+> > > it might be enough for not operating on "removed" task_struct. It
+> > > dereferences task_struct->flags while looking for PF_EXITING. At this
+> > > point only tasklist_lock is acquired.
+> > > I have *no* idea if the whole synchronisation based on siglock/
+> > > PF_EXITING/ tasklist_lock is enough and RCU simply doesn't matter. It
+> > > seems so.
+> > > 
+> > > I am a little worried if this construct here (or somewhere else) assumes
+> > > that holding one of those locks, which disable preemption, is the same
+> > > as rcu_read_lock() (or rcu_read_lock_sched()).
+> > 
+> > I'm wondering if instead, we should start throwing in rcu_read_lock()
+> > and explicitly have the preempt disabled rcu use that as well, since
+> > today it's basically one and the same.
+> 
+> Any comment from the RCU camp on this?
+> Maybe just adding the missing RCU annotation for the list annotation is
+> enough (like if lock X or Y is held then everything fine). !RT gets this
+> implicit via preempt_disable(). I'm just worried if someone expects
+> this kind of behaviour.
+> If I remember correctly, Scott added rcu_read_lock() recently to
+> local_bh_disable() because RCU-torture expected it.
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
-Tested-by: Gwendal Grignou <gwendal@chromium.org>
-Acked-by: Lee Jones <lee.jones@linaro.org>
----
+Adding an explicit rcu_read_lock()/rcu_read_unlock() pair to the various
+spinlock primitives for -rt seems quite sensible to me.  My guess is
+that non-rt CONFIG_PREEMPT=y uses in mainline might not like the extra
+overhead.
 
- arch/arm/configs/exynos_defconfig   | 6 +++++-
- arch/arm/configs/multi_v7_defconfig | 6 ++++--
- arch/arm/configs/pxa_defconfig      | 4 +++-
- arch/arm/configs/tegra_defconfig    | 2 +-
- arch/arm64/configs/defconfig        | 6 ++++--
- 5 files changed, 17 insertions(+), 7 deletions(-)
+For the trylock primitives, would it make more sense to do the
+rcu_read_lock() only after successful acquisition, or to do the
+rcu_read_lock() to begin with and then do rcu_read_unlock() upon failure?
+I would guess the latter, but don't feel strongly about it.
 
-diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
-index 08db1c83eb2d..e09bb7642272 100644
---- a/arch/arm/configs/exynos_defconfig
-+++ b/arch/arm/configs/exynos_defconfig
-@@ -157,7 +157,11 @@ CONFIG_CPU_THERMAL=y
- CONFIG_THERMAL_EMULATION=y
- CONFIG_WATCHDOG=y
- CONFIG_S3C2410_WATCHDOG=y
--CONFIG_MFD_CROS_EC=y
-+CONFIG_MFD_CROS_EC_DEV=y
-+CONFIG_CHROME_PLATFORMS=y
-+CONFIG_CROS_EC=y
-+CONFIG_CROS_EC_I2C=y
-+CONFIG_CROS_EC_SPI=y
- CONFIG_MFD_MAX14577=y
- CONFIG_MFD_MAX77686=y
- CONFIG_MFD_MAX77693=y
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index e4c8def9a0a5..fd9a3ba3a88f 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -525,10 +525,12 @@ CONFIG_MFD_BCM590XX=y
- CONFIG_MFD_AC100=y
- CONFIG_MFD_AXP20X_I2C=y
- CONFIG_MFD_AXP20X_RSB=y
--CONFIG_MFD_CROS_EC=m
-+CONFIG_MFD_CROS_EC_DEV=m
-+CONFIG_CHROME_PLATFORMS=y
-+CONFIG_CROS_EC=m
- CONFIG_CROS_EC_I2C=m
- CONFIG_CROS_EC_SPI=m
--CONFIG_MFD_CROS_EC_CHARDEV=m
-+CONFIG_CROS_EC_CHARDEV=m
- CONFIG_MFD_DA9063=m
- CONFIG_MFD_MAX14577=y
- CONFIG_MFD_MAX77686=y
-diff --git a/arch/arm/configs/pxa_defconfig b/arch/arm/configs/pxa_defconfig
-index b817c57f05f1..f1b084ace88d 100644
---- a/arch/arm/configs/pxa_defconfig
-+++ b/arch/arm/configs/pxa_defconfig
-@@ -393,7 +393,9 @@ CONFIG_SA1100_WATCHDOG=m
- CONFIG_MFD_AS3711=y
- CONFIG_MFD_BCM590XX=m
- CONFIG_MFD_AXP20X=y
--CONFIG_MFD_CROS_EC=m
-+CONFIG_MFD_CROS_EC_DEV=m
-+CONFIG_CHROME_PLATFORMS=y
-+CONFIG_CROS_EC=m
- CONFIG_CROS_EC_I2C=m
- CONFIG_CROS_EC_SPI=m
- CONFIG_MFD_ASIC3=y
-diff --git a/arch/arm/configs/tegra_defconfig b/arch/arm/configs/tegra_defconfig
-index 8f5c6a5b444c..061037012335 100644
---- a/arch/arm/configs/tegra_defconfig
-+++ b/arch/arm/configs/tegra_defconfig
-@@ -147,7 +147,7 @@ CONFIG_SENSORS_LM95245=y
- CONFIG_WATCHDOG=y
- CONFIG_TEGRA_WATCHDOG=y
- CONFIG_MFD_AS3722=y
--CONFIG_MFD_CROS_EC=y
-+CONFIG_MFD_CROS_EC_DEV=y
- CONFIG_MFD_MAX8907=y
- CONFIG_MFD_STMPE=y
- CONFIG_MFD_PALMAS=y
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index c9a867ac32d4..952d4b915430 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -466,8 +466,7 @@ CONFIG_MFD_ALTERA_SYSMGR=y
- CONFIG_MFD_BD9571MWV=y
- CONFIG_MFD_AXP20X_I2C=y
- CONFIG_MFD_AXP20X_RSB=y
--CONFIG_MFD_CROS_EC=y
--CONFIG_MFD_CROS_EC_CHARDEV=m
-+CONFIG_MFD_CROS_EC_DEV=y
- CONFIG_MFD_EXYNOS_LPASS=m
- CONFIG_MFD_HI6421_PMIC=y
- CONFIG_MFD_HI655X_PMIC=y
-@@ -683,8 +682,11 @@ CONFIG_VIRTIO_BALLOON=y
- CONFIG_VIRTIO_MMIO=y
- CONFIG_XEN_GNTDEV=y
- CONFIG_XEN_GRANT_DEV_ALLOC=y
-+CONFIG_CHROME_PLATFORMS=y
-+CONFIG_CROS_EC=y
- CONFIG_CROS_EC_I2C=y
- CONFIG_CROS_EC_SPI=y
-+CONFIG_CROS_EC_CHARDEV=m
- CONFIG_COMMON_CLK_RK808=y
- CONFIG_COMMON_CLK_SCPI=y
- CONFIG_COMMON_CLK_CS2000_CP=y
--- 
-2.20.1
-
+							Thanx, Paul
