@@ -2,124 +2,126 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F45BC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 20:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FD5C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 20:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D7BF21721
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 20:05:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="IU0LNMh0"
+	by mail.kernel.org (Postfix) with ESMTP id BCD9E2176D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 20:05:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbfK2UFZ (ORCPT
+        id S1727166AbfK2UFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 15:05:25 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:38923 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727043AbfK2UFZ (ORCPT
+        Fri, 29 Nov 2019 15:05:30 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:5738 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727040AbfK2UF3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 15:05:25 -0500
-Received: by mail-pj1-f66.google.com with SMTP id v93so10470144pjb.6
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 12:05:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5ipR+DrBtOJQIudnRaII7nJ3+mq7nKbRqBwicLRMc3w=;
-        b=IU0LNMh0TWniaggb1y5v7B/hYj06AGeQ6rFf4JXFP3ecy8Snmq/f80SwI5lmzFWIrJ
-         tWeJyOxzIUhXa6LVLo+l/RdrzAEalAseSjkKIbR+FPLLc9VzYIasV3qKMRq0GnJU0azI
-         ZcBiRNEHd7jjx1UEILokbjyRcOPFK6vVOXhrA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5ipR+DrBtOJQIudnRaII7nJ3+mq7nKbRqBwicLRMc3w=;
-        b=R6Xv595X33LBmjnyO+3j8M7dT0QuWpRQsZIwhZbgwqeh2+kxlQgTz0Mo4QHduRcASL
-         oZJe3FfLtmb3vUsue0kMPwzy3ajeHIxivcyQjSsuJJ0tw/U4Wx9h1/MBo+5Pd999JfUo
-         X6KZ85v1xV/Hzz4whtaamKKiOfPbRlNiFLsKmI8pSK6PV01KuEXQfVHzRHI9Nl6YwXQy
-         SrZGNX03XgBl/rI5P3gyHvRJ9BijjMz1X1AzhcgLBOXuBHIJz6Lgn5S6EXFdgfR+hVCb
-         YsHBKJeCf7ztsvn21a2J/GMYyK8Tx0A29dyWE4Tcm//pshx665aV56c5R5SC60AQsrL8
-         Egcg==
-X-Gm-Message-State: APjAAAWQFGvE/IJHybviU2HeRFyrt+rNKLqGYF1EqaFUHOmn9eoB9Te5
-        fjA2pBJWjJQGpLCWv0qeYxpbk4A76ac=
-X-Google-Smtp-Source: APXvYqzv+PIer9ks5zR5Vza4ROybRs9nR2wonFy59tez+ucGy/ExMOXQl27Izq38p0bVRbv+ekYwvw==
-X-Received: by 2002:a17:90a:aa96:: with SMTP id l22mr19758027pjq.112.1575057924147;
-        Fri, 29 Nov 2019 12:05:24 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id 83sm25542605pgh.12.2019.11.29.12.05.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Nov 2019 12:05:23 -0800 (PST)
-Date:   Fri, 29 Nov 2019 15:05:22 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] perf/core: Add SRCU annotation for pmus list walk
-Message-ID: <20191129200522.GA239292@google.com>
-References: <20191119121429.zhcubzdhm672zasg@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191119121429.zhcubzdhm672zasg@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 29 Nov 2019 15:05:29 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xATK23gC007032;
+        Fri, 29 Nov 2019 15:05:20 -0500
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2wjym5bx1h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 29 Nov 2019 15:05:20 -0500
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xATK5CCg004672;
+        Fri, 29 Nov 2019 20:05:19 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma03dal.us.ibm.com with ESMTP id 2wevd7pgmf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 29 Nov 2019 20:05:19 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xATK5Imu30671340
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 Nov 2019 20:05:18 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6CFF5B2066;
+        Fri, 29 Nov 2019 20:05:18 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1CC21B2064;
+        Fri, 29 Nov 2019 20:05:17 +0000 (GMT)
+Received: from jarvis.ext.hansenpartnership.com (unknown [9.85.134.245])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 29 Nov 2019 20:05:16 +0000 (GMT)
+Message-ID: <1575057916.6220.7.camel@linux.ibm.com>
+Subject: Re: One question about trusted key of keyring in Linux kernel.
+From:   James Bottomley <jejb@linux.ibm.com>
+To:     "Zhao, Shirley" <shirley.zhao@intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
+        "Zhu, Bing" <bing.zhu@intel.com>,
+        "Chen, Luhai" <luhai.chen@intel.com>
+Date:   Fri, 29 Nov 2019 12:05:16 -0800
+In-Reply-To: <A888B25CD99C1141B7C254171A953E8E49096521@shsmsx102.ccr.corp.intel.com>
+References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
+         <1573659978.17949.83.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
+         <1574877977.3551.5.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E49096521@shsmsx102.ccr.corp.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-29_07:2019-11-29,2019-11-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ mlxlogscore=999 spamscore=0 lowpriorityscore=0 suspectscore=0
+ priorityscore=1501 malwarescore=0 impostorscore=0 adultscore=0
+ clxscore=1011 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911290174
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 01:14:29PM +0100, Sebastian Andrzej Siewior wrote:
-> Since commit
->    28875945ba98d ("rcu: Add support for consolidated-RCU reader checking")
+On Fri, 2019-11-29 at 01:40 +0000, Zhao, Shirley wrote:
+> Hi, James, 
 > 
-> there is an additional check to ensure that a RCU related lock is held
-> while the RCU list is iterated.
-> This section holds the SRCU reader lock instead.
-> 
-> Add annotation to list_for_each_entry_rcu() that pmus_srcu must be
-> acquired during the list traversal.
-> 
+> Maybe the TPM command confused you. 
 
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Well you did seem to be saying we had a problem in the TPM sealed key
+subsystem.
 
-thanks,
+> The question is I use keyctl command sealed a trusted key with PCR
+> policy, but load it failed after reboot. 
+> I don't know why it was loaded failed. I use TPM command to help find
+> it, it report policy check failed. 
 
- - Joel
+Right, so your question seems to be why after a reboot, the TPM policy
+no longer works to authorize the key even from user space?  My best
+guess would be the PCR value you've sealed it to changed over the
+reboot for some reason.
 
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
-> 
-> I see the warning in in v5.4-rc during boot. For some reason I don't see
-> it in tip/master during boot but "perf stat w" triggers it again (among
-> other things).
-> 
->  kernel/events/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 5224388872069..dbb3b26a55612 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -10497,7 +10497,7 @@ static struct pmu *perf_init_event(struct perf_event *event)
->  		goto unlock;
->  	}
->  
-> -	list_for_each_entry_rcu(pmu, &pmus, entry) {
-> +	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
->  		ret = perf_try_init_event(pmu, event);
->  		if (!ret)
->  			goto unlock;
-> -- 
-> 2.24.0
-> 
+> So my question is how to load the PCR policy sealed trusted key
+> correctly?
+
+You have to set the sealing release policy to something you know will
+be invariant across reboots for an unseal to happen reliably.  However,
+usually you also want the unseal to fail if something you don't like
+changes, so you set the policy to be something that's invariant unless
+that happens.  Not really knowing what your conditions are we can't
+really tell you what your policy should look like.
+
+> How to use policydigest and policyhandle correctly. 
+
+I've no real idea how the tpm2_ commands work, but the tsspolicy
+commands all have man pages which do a pretty good explanation.  If I
+infer how your tpm2_ commands seem to be working, I think
+you're sealing to a pcr7 hash?  pcr7 is the one that's supposed to
+measure the secure boot path and properties and as such shouldn't
+change across reboots, so I think your problem becomes finding out why
+it changed.
+
+James
+
