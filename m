@@ -2,65 +2,66 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE32AC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54362C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1E0217BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27EFE217C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:52:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575017515;
-	bh=hD42nUg99Rz/8HdFyMo6SgfAxJfUWnVYcASfacCMKek=;
+	s=default; t=1575017526;
+	bh=a2gXV0Y9r/sziEevLu0eEMI6cg/pB6OcEoU21Emm4eI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iqYB5vJf96AFsQipGrrjvbGq0bsu7NW5sDuYi+j0QjkhD+91z4RFVsX7KGOuPQUBD
-	 adfL9dg7KVnaY11iT1rNVKJIsrwtSskjF3Ic5NHKDuuPNdpekNpCidYc57uXVWqZQW
-	 u1S6axuGpXyJLLuI2G/YooMqJH+8Hepa5P1yV1kk=
+	b=eQ7DltpMnpLGUaGRRP7ilHmq8NPMqyfHbuC39lWp4BRrlwzDSXrwCGBErKsmKUofC
+	 k4p1vWA+hO3/mj1LKzqP5jLTFqRAcHV5iNttR7xtSAkQkJ7yCnHZrjcvwaefL0U9fH
+	 QCjcfW/Fv+Bq5cn0rHxggW9XNOkiYWSEjqnswhFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbfK2Ivy (ORCPT
+        id S1726970AbfK2IwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 03:51:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54320 "EHLO mail.kernel.org"
+        Fri, 29 Nov 2019 03:52:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725892AbfK2Ivy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 03:51:54 -0500
+        id S1725892AbfK2IwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 03:52:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2B9A2176D;
-        Fri, 29 Nov 2019 08:51:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02E26217BC;
+        Fri, 29 Nov 2019 08:52:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575017512;
-        bh=hD42nUg99Rz/8HdFyMo6SgfAxJfUWnVYcASfacCMKek=;
+        s=default; t=1575017524;
+        bh=a2gXV0Y9r/sziEevLu0eEMI6cg/pB6OcEoU21Emm4eI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=c0BXQV5fg0S2pmGMs8hI9v4+xRv5gAXLH8OFmtyzHnmQ4LjOWlS0ZLkZzQtP63YyD
-         p86nCAWtz8eP1UnvNntBX5cTRdMBa7Rv5VvSuo6437do921V7PSbSou0Ajavdk0nWf
-         Uq9Sm5rRJAKj6kVyTm3RLU3ydagpGjV98L4FrtBM=
-Date:   Fri, 29 Nov 2019 09:51:50 +0100
+        b=RdlkLZWG3mVweXi4I+tOXH9UxYu5/160Q7iHZ6zHpdhm+Rx5hXn5dVyhtgk9Z6oQJ
+         pmT8gyKgQkieDiiS+m0G36nMdyIUvsOqL0tfZ5VPq6Xg8iXIKMx+EW4c3N2k+Uadsx
+         iUuNyv80IY2YFymTs1TOXlC5NjaKNDaeUWqofjxI=
+Date:   Fri, 29 Nov 2019 09:52:02 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
+To:     shuah <shuah@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
 Subject: Re: [PATCH 5.4 00/66] 5.4.1-stable review
-Message-ID: <20191129085150.GA3584430@kroah.com>
+Message-ID: <20191129085202.GB3584430@kroah.com>
 References: <20191127202632.536277063@linuxfoundation.org>
- <ee4a83ba-e746-42f9-34c1-18caf2e369c8@roeck-us.net>
+ <1d97b6c7-6fa0-4a74-b48a-c54ef120148b@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ee4a83ba-e746-42f9-34c1-18caf2e369c8@roeck-us.net>
+In-Reply-To: <1d97b6c7-6fa0-4a74-b48a-c54ef120148b@kernel.org>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 10:47:54AM -0800, Guenter Roeck wrote:
-> On 11/27/19 12:31 PM, Greg Kroah-Hartman wrote:
+On Thu, Nov 28, 2019 at 08:40:04AM -0700, shuah wrote:
+> On 11/27/19 1:31 PM, Greg Kroah-Hartman wrote:
 > > This is the start of the stable review cycle for the 5.4.1 release.
 > > There are 66 patches in this series, all will be posted as a response
 > > to this one.  If anyone has any issues with these being applied, please
@@ -69,16 +70,19 @@ On Thu, Nov 28, 2019 at 10:47:54AM -0800, Guenter Roeck wrote:
 > > Responses should be made by Fri, 29 Nov 2019 20:18:09 +0000.
 > > Anything received after that time might be too late.
 > > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.1-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
 > 
-> Build results:
-> 	total: 158 pass: 157 fail: 1
-> Failed builds:
-> 	mips:allmodconfig
-> Qemu test results:
-> 	total: 394 pass: 394 fail: 0
-> 
-> The mips build failure is well known and inherited from mainline.
+> Compiled and booted on my test system. No dmesg regressions.
 
-Thanks for testing all of these and letting me know.
+Great, thanks for testing these and letting me know.
 
 greg k-h
