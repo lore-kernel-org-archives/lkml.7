@@ -2,52 +2,53 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C10C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5073AC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AD8521774
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:50:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CC8D217BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:50:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="VDiGucZv"
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="RZUU7g2H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbfK2IuD (ORCPT
+        id S1726824AbfK2Iue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 03:50:03 -0500
-Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25897 "EHLO
+        Fri, 29 Nov 2019 03:50:34 -0500
+Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25814 "EHLO
         sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbfK2IuC (ORCPT
+        with ESMTP id S1726143AbfK2Iud (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 03:50:02 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1575017364; cv=none; 
+        Fri, 29 Nov 2019 03:50:33 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1575017386; cv=none; 
         d=zohomail.com; s=zohoarc; 
-        b=dxV8WAwivGXjeWfqioCPaV4jG3GTTSpwBTv/BbIpekDWCiwyHOxsmz56Ukrrlwgf53oqp9F13uT/AmZl7keYL33mHTvpIBDPV81Ykp3gJ2RVq5hSIhrX/3Ze5VA8cSsOkKDdPmPZf+iWtPUn5A/vXUzkEJjFI/1TPzopWvGsKPw=
+        b=dLja4iDbdo0DGhlXJfR+2cCcXqgMQTmYPYi+tFzOabefYY01dtEoRIn5iwHxFT5SHv7bT46xU6xA3CU8DZl159p46L6eJ5lK4heKy9rnKAY6e17K6mQcgeSxJHU6S6Yr2LWbqQ5Q7jzZvGfhnxmN1AwfmUN4/aGvr6cxW1a8/PI=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1575017364; h=Cc:Date:From:Message-ID:Subject:To; 
-        bh=XqQQbl9IG+MgujWf5gYJVBmWox/39o+UThQ2/GDWy54=; 
-        b=ni+NF8Jh5cIkiRbM0Zm7bhZtQuIDChIeU/HuooO+cs+1vsHHFTYsuNA0QUzxSy6fSbZhpVlIg8X8fSMm7gYWGs9IX89Rcv6sKNsUBLBqoZ/Z/DTlt+gFT8MOGlwszDkhDAGudO8I/nCj6HJLHMIcOxnuO67EpVEx8z8P32TVmXc=
+        t=1575017386; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To; 
+        bh=BHyThfnol8fhXd5mJuF3LT91Vd9/nF2qNlUB2KTGsF8=; 
+        b=OT83HCUmckSNtXCyDzAglp54mNxD24vY2gMftn4B87mvPTt4x8gjoUZMdmAXS+9u3hDUnl4ua5I4H7SNUEHXacuggGn7qCkFmR5pZKMYCjrgrv+8sEWo8JWi6lO9OXthBV8ptyisNdpS90J1fW3dOXQVEAYWUl4+u3Z/dqdETK4=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
         dkim=pass  header.i=zoho.com;
         spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
         dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
 DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
   s=zapps768; d=zoho.com; 
-  h=from:to:cc:subject:date:message-id; 
-  b=lwfOQwEp8AWBdSh73JAwYTYipV3+ABcfW/bNiCa/hzwbnyZMmrn5sVU2vSvp8cKB3STUMdMPhMbo
-    CHlrqZxuc+jhbPZxj6c5494eCb2uOspa0mjeh291JlfPf8n8p7r1  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1575017364;
+  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
+  b=uS9HD9na59Y+h3wlc254QVHlEmXeE0+8VLzKmu9Pz0fxjo8+8eLtaJxJaJUerSLinrMEosvrYwMZ
+    NIl8U6iCr4sfjHUme954uns6bYGFLrLYopKyFh6fl7ou4f8ACSkl  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1575017386;
         s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=From:To:Cc:Subject:Date:Message-Id;
-        bh=XqQQbl9IG+MgujWf5gYJVBmWox/39o+UThQ2/GDWy54=;
-        b=VDiGucZvO2jj9hBFgl6PeFHut4+xry2kWHknH1N902DZvAUYd/TuYB2gQPEky6fe
-        tmSZwnA55E2GKdyYNbjeVrDNcR5z2fhJ3sTE1CvvkpSQph33F0zd3HwVg7NJxfn206m
-        xyecWPuk5QWUFF5AEpUz43jeBMOnxqwgzvfuW5Z8=
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
+        bh=BHyThfnol8fhXd5mJuF3LT91Vd9/nF2qNlUB2KTGsF8=;
+        b=RZUU7g2HPSYqNNzhOsoMatJ1oN8p8TPeCD8ywM0QZ4I4+oevqwIlEiYXwdLfGA/W
+        3drTvS2I+vPJzRJNvAwSStcMflKN+XSN7UFxGo1hDTKe6x7rNtrT8Efy3RPTTFrgOZ4
+        sbMgkSDE9BFusrIXn38BrtuEKZ+DyjhVMznVPO4I=
 Received: from zhouyanjie-virtual-machine.localdomain (139.207.146.46 [139.207.146.46]) by mx.zohomail.com
-        with SMTPS id 1575017363957466.0876378330212; Fri, 29 Nov 2019 00:49:23 -0800 (PST)
+        with SMTPS id 1575017384522253.80501101504683; Fri, 29 Nov 2019 00:49:44 -0800 (PST)
 From:   Zhou Yanjie <zhouyanjie@zoho.com>
 To:     linux-mips@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
@@ -59,19 +60,245 @@ Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         geert+renesas@glider.be, paul@crapouillou.net,
         prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
         zhenwenjin@gmail.com, 772753199@qq.com
-Subject: Add initial support for Ingenic X1000 SoC and Y&A CU Neo board v6.
-Date:   Fri, 29 Nov 2019 16:48:41 +0800
-Message-Id: <1575017333-29020-1-git-send-email-zhouyanjie@zoho.com>
+Subject: [PATCH v6 01/12] MIPS: Ingenic: Initial X1000 support.
+Date:   Fri, 29 Nov 2019 16:48:42 +0800
+Message-Id: <1575017333-29020-2-git-send-email-zhouyanjie@zoho.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1575017333-29020-1-git-send-email-zhouyanjie@zoho.com>
+References: <1575017333-29020-1-git-send-email-zhouyanjie@zoho.com>
 X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v5->v6:
-1.Use "stdout-path = "serial2:115200n8"" instead "stdout-path = &uart2" in DT.
-2.Remove "console=ttyS2,115200n8" and "CONFIG_CMDLINE_OVERRIDE=y" from defconfg.
-3.Add watchdog timer DT node, and update defconfig for watchdog timer.
+Support the Ingenic X1000 SoC using the code under arch/mips/jz4740.
+This is left unselectable in Kconfig until a X1000 based board is
+added in a later commit.
+
+Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+---
+
+Notes:
+    v1->v2:
+    Rebase on top of mips-next, use ingenic-timer driver
+    for system timer and clocksource.
+    
+    v2->v3:
+    Drop the 'apb' node.
+    
+    v3->v4:
+    Adjust the node order to make it consistent with
+    other Ingenic boards.
+    
+    v4->v5:
+    No change.
+    
+    v5->v6:
+    No change.
+
+ arch/mips/boot/dts/ingenic/x1000.dtsi | 176 ++++++++++++++++++++++++++++++++++
+ arch/mips/jz4740/Kconfig              |   6 ++
+ 2 files changed, 182 insertions(+)
+ create mode 100644 arch/mips/boot/dts/ingenic/x1000.dtsi
+
+diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi b/arch/mips/boot/dts/ingenic/x1000.dtsi
+new file mode 100644
+index 00000000..13a6c9ff
+--- /dev/null
++++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
+@@ -0,0 +1,176 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <dt-bindings/clock/x1000-cgu.h>
++
++/ {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "ingenic,x1000", "ingenic,x1000e";
++
++	cpuintc: interrupt-controller {
++		#address-cells = <0>;
++		#interrupt-cells = <1>;
++		interrupt-controller;
++		compatible = "mti,cpu-interrupt-controller";
++	};
++
++	intc: interrupt-controller@10001000 {
++		compatible = "ingenic,x1000-intc", "ingenic,jz4780-intc";
++		reg = <0x10001000 0x50>;
++
++		interrupt-controller;
++		#interrupt-cells = <1>;
++
++		interrupt-parent = <&cpuintc>;
++		interrupts = <2>;
++	};
++
++	exclk: ext {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++	};
++
++	rtclk: rtc {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <32768>;
++	};
++
++	cgu: x1000-cgu@10000000 {
++		compatible = "ingenic,x1000-cgu";
++		reg = <0x10000000 0x100>;
++
++		#clock-cells = <1>;
++
++		clocks = <&exclk>, <&rtclk>;
++		clock-names = "ext", "rtc";
++	};
++
++	tcu: timer@10002000 {
++		compatible = "ingenic,x1000-tcu",
++				 "ingenic,jz4770-tcu",
++				 "simple-mfd";
++		reg = <0x10002000 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x0 0x10002000 0x1000>;
++
++		#clock-cells = <1>;
++
++		clocks = <&cgu X1000_CLK_RTCLK
++			  &cgu X1000_CLK_EXCLK
++			  &cgu X1000_CLK_PCLK>;
++		clock-names = "rtc", "ext", "pclk";
++
++		interrupt-controller;
++		#interrupt-cells = <1>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <27 26 25>;
++	};
++
++	pinctrl: pin-controller@10010000 {
++		compatible = "ingenic,x1000-pinctrl";
++		reg = <0x10010000 0x800>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		gpa: gpio@0 {
++			compatible = "ingenic,x1000-gpio";
++			reg = <0>;
++
++			gpio-controller;
++			gpio-ranges = <&pinctrl 0 0 32>;
++			#gpio-cells = <2>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++
++			interrupt-parent = <&intc>;
++			interrupts = <17>;
++		};
++
++		gpb: gpio@1 {
++			compatible = "ingenic,x1000-gpio";
++			reg = <1>;
++
++			gpio-controller;
++			gpio-ranges = <&pinctrl 0 32 32>;
++			#gpio-cells = <2>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++
++			interrupt-parent = <&intc>;
++			interrupts = <16>;
++		};
++
++		gpc: gpio@2 {
++			compatible = "ingenic,x1000-gpio";
++			reg = <2>;
++
++			gpio-controller;
++			gpio-ranges = <&pinctrl 0 64 32>;
++			#gpio-cells = <2>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++
++			interrupt-parent = <&intc>;
++			interrupts = <15>;
++		};
++
++		gpd: gpio@3 {
++			compatible = "ingenic,x1000-gpio";
++			reg = <3>;
++
++			gpio-controller;
++			gpio-ranges = <&pinctrl 0 96 32>;
++			#gpio-cells = <2>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++
++			interrupt-parent = <&intc>;
++			interrupts = <14>;
++		};
++	};
++
++	uart0: serial@10030000 {
++		compatible = "ingenic,x1000-uart";
++		reg = <0x10030000 0x100>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <51>;
++
++		clocks = <&exclk>, <&cgu X1000_CLK_UART0>;
++		clock-names = "baud", "module";
++
++		status = "disabled";
++	};
++
++	uart1: serial@10031000 {
++		compatible = "ingenic,x1000-uart";
++		reg = <0x10031000 0x100>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <50>;
++
++		clocks = <&exclk>, <&cgu X1000_CLK_UART1>;
++		clock-names = "baud", "module";
++
++		status = "disabled";
++	};
++
++	uart2: serial@10032000 {
++		compatible = "ingenic,x1000-uart";
++		reg = <0x10032000 0x100>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <49>;
++
++		clocks = <&exclk>, <&cgu X1000_CLK_UART2>;
++		clock-names = "baud", "module";
++
++		status = "disabled";
++	};
++};
+diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
+index 4dd0c44..6b96844 100644
+--- a/arch/mips/jz4740/Kconfig
++++ b/arch/mips/jz4740/Kconfig
+@@ -33,3 +33,9 @@ config MACH_JZ4780
+ 	select MIPS_CPU_SCACHE
+ 	select SYS_HAS_CPU_MIPS32_R2
+ 	select SYS_SUPPORTS_HIGHMEM
++
++config MACH_X1000
++	bool
++	select MIPS_CPU_SCACHE
++	select SYS_HAS_CPU_MIPS32_R2
++	select SYS_SUPPORTS_HIGHMEM
+-- 
+2.7.4
 
 
