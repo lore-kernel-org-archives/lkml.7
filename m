@@ -2,208 +2,129 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 614B6C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9D1C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23A3D21774
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:23:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Q1QlqQj9"
+	by mail.kernel.org (Postfix) with ESMTP id A2ADA20869
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:24:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbfK2NXC (ORCPT
+        id S1726971AbfK2NYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 08:23:02 -0500
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:19963 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbfK2NXB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 08:23:01 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5de11bb20000>; Fri, 29 Nov 2019 05:22:58 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 29 Nov 2019 05:22:54 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 29 Nov 2019 05:22:54 -0800
-Received: from [10.25.75.74] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 29 Nov
- 2019 13:22:50 +0000
-Subject: Re: [PATCH 3/6] PCI: tegra: Add support for PCIe endpoint mode in
- Tegra194
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <lorenzo.pieralisi@arm.com>, <robh+dt@kernel.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <andrew.murray@arm.com>, <kishon@ti.com>,
-        <gustavo.pimentel@synopsys.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20191126213718.GA185422@google.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <7298f15d-1745-e5c9-2d08-1235a27244ae@nvidia.com>
-Date:   Fri, 29 Nov 2019 18:52:47 +0530
+        Fri, 29 Nov 2019 08:24:44 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2140 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726871AbfK2NYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 08:24:44 -0500
+Received: from lhreml704-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id A7AAE7649D4BA4D02AB0;
+        Fri, 29 Nov 2019 13:24:42 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml704-cah.china.huawei.com (10.201.108.45) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 29 Nov 2019 13:24:42 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 29 Nov
+ 2019 13:24:42 +0000
+Subject: Re: [Patch v2 2/3] iommu: optimize iova_magazine_free_pfns()
+To:     Cong Wang <xiyou.wangcong@gmail.com>,
+        <iommu@lists.linux-foundation.org>
+CC:     <linux-kernel@vger.kernel.org>
+References: <20191129004855.18506-1-xiyou.wangcong@gmail.com>
+ <20191129004855.18506-3-xiyou.wangcong@gmail.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <dc182be3-be98-9a8e-013c-16df0e529ed2@huawei.com>
+Date:   Fri, 29 Nov 2019 13:24:41 +0000
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-In-Reply-To: <20191126213718.GA185422@google.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
+In-Reply-To: <20191129004855.18506-3-xiyou.wangcong@gmail.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1575033778; bh=7gO/CXj0wvWwogWev3Z+fNC4tNy+uDv47vsz0nrrl5w=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Q1QlqQj9jsPpnd6pf7C27/BelCW4RWZRzBi2KaiDdVgmQRtcmInnvBKkDE6Iq/jDa
-         3eEtcoGbjwFqH0XNmV+7oElfREV+vkp/uQUYaFN8MjIiVD/X1ZjwDEQWOShO+R+Krd
-         s0ELF/Yf578H0G6uMulK4hnMAXda5t1DwKz4j+AyJA5/sbYgIY6KVH82ppVtNN3ybN
-         MfmKAM5lE7RX5Q85hZMaus6bD4MIEM+bTbL5jSUereIJm5FxCXk9FLvlqSi6B8mzHc
-         KblxQObo77nRmb3bfFCnDhQUKusMgt67Q1Qdqvaia3kHhyOEpzmxYR5NVWzR0n67XT
-         YH7xjnMHHJ/JA==
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/27/2019 3:07 AM, Bjorn Helgaas wrote:
-> On Fri, Nov 22, 2019 at 04:15:02PM +0530, Vidya Sagar wrote:
->> Add support for the endpoint mode of Synopsys DesignWare core based
->> dual mode PCIe controllers present in Tegra194 SoC.
-> 
->> +static irqreturn_t tegra_pcie_ep_irq_handler(struct tegra_pcie_dw *pcie)
->> +{
->> +	struct dw_pcie_ep *ep = &pcie->pci.ep;
->> +	u32 val, tmp;
->> +
->> +	val = appl_readl(pcie, APPL_INTR_STATUS_L0);
->> +	if (val & APPL_INTR_STATUS_L0_LINK_STATE_INT) {
->> +		val = appl_readl(pcie, APPL_INTR_STATUS_L1_0_0);
->> +		appl_writel(pcie, val, APPL_INTR_STATUS_L1_0_0);
->> +		if (val & APPL_INTR_STATUS_L1_0_0_HOT_RESET_DONE) {
->> +			/* clear any stale PEX_RST interrupt */
->> +			if (!kfifo_put(&pcie->event_fifo, EP_HOT_RST_DONE)) {
->> +				dev_err(pcie->dev, "EVENT FIFO is full\n");
->> +				return IRQ_HANDLED;
->> +			}
->> +			wake_up(&pcie->wq);
->> +		}
->> +		if (val & APPL_INTR_STATUS_L1_0_0_RDLH_LINK_UP_CHGED) {
->> +			tmp = appl_readl(pcie, APPL_LINK_STATUS);
->> +			if (tmp & APPL_LINK_STATUS_RDLH_LINK_UP) {
->> +				dev_info(pcie->dev, "Link is up with Host\n");
->> +				dw_pcie_ep_linkup(ep);
->> +			}
->> +		}
->> +	} else if (val & APPL_INTR_STATUS_L0_PCI_CMD_EN_INT) {
-> 
-> Is it really the case that only one of
-> APPL_INTR_STATUS_L0_LINK_STATE_INT and
-> APPL_INTR_STATUS_L0_PCI_CMD_EN_INT can be set?
-Not really.
+On 29/11/2019 00:48, Cong Wang wrote:
+> If the maganize is empty, iova_magazine_free_pfns() should
 
-> 
-> If it's possible that both could be set, maybe this should be
-> something like this?
-> 
->    int spurious = 1;
-> 
->    if (val & APPL_INTR_STATUS_L0_LINK_STATE_INT) {
->      ...
->      spurious = 0;
->    }
->    if (val & APPL_INTR_STATUS_L0_PCI_CMD_EN_INT) {
->      ...
->      spurious = 0;
->    }
-> 
->    if (spurious) {
->      dev_warn(...)
->    }
-I'll take care of this in the next patch series.
+magazine
 
+> be a nop, however it misses the case of mag->size==0. So we
+> should just call iova_magazine_empty().
 > 
->> +		val = appl_readl(pcie, APPL_INTR_STATUS_L1_15);
->> +		appl_writel(pcie, val, APPL_INTR_STATUS_L1_15);
->> +		if (val & APPL_INTR_STATUS_L1_15_CFG_BME_CHGED) {
->> +			if (!kfifo_put(&pcie->event_fifo, EP_BME_CHANGE)) {
->> +				dev_err(pcie->dev, "EVENT FIFO is full\n");
->> +				return IRQ_HANDLED;
->> +			}
->> +			wake_up(&pcie->wq);
->> +		}
->> +	} else {
->> +		dev_warn(pcie->dev, "Random interrupt (STATUS = 0x%08X)\n",
->> +			 val);
->> +		appl_writel(pcie, val, APPL_INTR_STATUS_L0);
->> +	}
->> +
->> +	return IRQ_HANDLED;
->> +}
+> This should reduce the contention on iovad->iova_rbtree_lock
+> a little bit.
 > 
->> +static int tegra_pcie_ep_work_thread(void *p)
->> +{
->> +	struct tegra_pcie_dw *pcie = (struct tegra_pcie_dw *)p;
->> +	u32 event;
->> +
->> +	while (true) {
->> +		wait_event_interruptible(pcie->wq,
->> +					 !kfifo_is_empty(&pcie->event_fifo));
->> +
->> +		if (kthread_should_stop())
->> +			break;
->> +
->> +		if (!kfifo_get(&pcie->event_fifo, &event)) {
->> +			dev_warn(pcie->dev, "EVENT FIFO is empty\n");
->> +			continue;
->> +		}
->> +
->> +		switch (event) {
->> +		case EP_PEX_RST_DEASSERT:
->> +			dev_info(pcie->dev, "EVENT: EP_PEX_RST_DEASSERT\n");
->> +			pex_ep_event_pex_rst_deassert(pcie);
->> +			break;
->> +
->> +		case EP_PEX_RST_ASSERT:
->> +			dev_info(pcie->dev, "EVENT: EP_PEX_RST_ASSERT\n");
->> +			pex_ep_event_pex_rst_assert(pcie);
->> +			break;
->> +
->> +		case EP_HOT_RST_DONE:
->> +			dev_info(pcie->dev, "EVENT: EP_HOT_RST_DONE\n");
->> +			pex_ep_event_hot_rst_done(pcie);
->> +			break;
->> +
->> +		case EP_BME_CHANGE:
->> +			dev_info(pcie->dev, "EVENT: EP_BME_CHANGE\n");
->> +			pex_ep_event_bme_change(pcie);
->> +			break;
->> +
->> +		case EP_EVENT_EXIT:
->> +			dev_info(pcie->dev, "EVENT: EP_EVENT_EXIT\n");
->> +			return 0;
->> +
->> +		default:
->> +			dev_warn(pcie->dev, "Invalid PCIe EP event\n");
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+> ---
+>   drivers/iommu/iova.c | 22 +++++++++++-----------
+>   1 file changed, 11 insertions(+), 11 deletions(-)
 > 
-> Maybe include the invalid event value in the message?
-I'll take care of this in the next patch series
+> diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+> index cb473ddce4cf..184d4c0e20b5 100644
+> --- a/drivers/iommu/iova.c
+> +++ b/drivers/iommu/iova.c
+> @@ -797,13 +797,23 @@ static void iova_magazine_free(struct iova_magazine *mag)
+>   	kfree(mag);
+>   }
+>   
+> +static bool iova_magazine_full(struct iova_magazine *mag)
+> +{
+> +	return (mag && mag->size == IOVA_MAG_SIZE);
+> +}
+> +
+> +static bool iova_magazine_empty(struct iova_magazine *mag)
+> +{
+> +	return (!mag || mag->size == 0);
+> +}
+> +
+>   static void
+>   iova_magazine_free_pfns(struct iova_magazine *mag, struct iova_domain *iovad)
+>   {
+>   	unsigned long flags;
+>   	int i;
+>   
+> -	if (!mag)
+> +	if (iova_magazine_empty(mag))
 
+The only hot path we this call is 
+__iova_rcache_insert()->iova_magazine_free_pfns(mag_to_free) and 
+mag_to_free is full in this case, so I am sure how the additional check 
+helps, right?
+
+Thanks,
+John
+
+>   		return;
+>   
+>   	spin_lock_irqsave(&iovad->iova_rbtree_lock, flags);
+> @@ -820,16 +830,6 @@ iova_magazine_free_pfns(struct iova_magazine *mag, struct iova_domain *iovad)
+>   	mag->size = 0;
+>   }
+>   
+> -static bool iova_magazine_full(struct iova_magazine *mag)
+> -{
+> -	return (mag && mag->size == IOVA_MAG_SIZE);
+> -}
+> -
+> -static bool iova_magazine_empty(struct iova_magazine *mag)
+> -{
+> -	return (!mag || mag->size == 0);
+> -}
+> -
+>   static unsigned long iova_magazine_pop(struct iova_magazine *mag,
+>   				       unsigned long limit_pfn)
+>   {
 > 
->> +			break;
->> +		}
->> +	}
->> +
->> +	return 0;
->> +}
 
