@@ -2,185 +2,99 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6217C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 12:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5615EC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 12:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E205217BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 12:29:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="SNCyuNH+"
+	by mail.kernel.org (Postfix) with ESMTP id 3216620869
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 12:39:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfK2M3m (ORCPT
+        id S1726791AbfK2Mjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 07:29:42 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36137 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfK2M3m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 07:29:42 -0500
-Received: by mail-pf1-f196.google.com with SMTP id b19so14604858pfd.3
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 04:29:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=lnTkdY6JVf48jCKaReWad7d/qEHhWQwMJZ+Le786aD8=;
-        b=SNCyuNH+lmNdFMtvn3hhTqO5zWCOV0d/A+BEBsFoA0Z6/aS0i5eqOsuEHN6x9myuKN
-         YmZLa/PjSHSf+jWF9QDdA+rPRA5EKag1KLopEqliyi1QDCxajXh0Ej1RJ109GL+pJSe/
-         TUTxSVFU8h0g4xmRAa7MpSZeQmdPTIodb2UP4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=lnTkdY6JVf48jCKaReWad7d/qEHhWQwMJZ+Le786aD8=;
-        b=Y2i5fdEyTgbrJp9y/1VcXxkUWS8JojbSZYQFIiMjqjZCiUshqZm+qUZkN6nuKx29WK
-         dpifUHibhsYH0uTDicP5OYS4GmoQTb8niKFnUkBNy2kyk45Aj9RZlzMIWo+CMc5piT+n
-         88wBcRRV/lRLJgNhmxmZ49qAuzTehs9O8T924M51ilZ6C3zHv3M1txlWDMpI6uBkCzOO
-         uGrbUMEce/lMD9uDuELT+0WihOE5L5UDH4K3E6MJyPlWkRygH/wPFdJE8amx0OUvIGnG
-         ik2kR1EecloWdIY3BjjSeNWe61XrFmlb/egf5ryOXb5vgZiqPbh9fTPDZJ978NEKmzg1
-         14sQ==
-X-Gm-Message-State: APjAAAWXmjTchosBuBAxZlww+9UTYcnAJbLJWmr6RwRwIsY1vEOsqJVp
-        OOEA081AAyn1B3EJSQg8NEQyzg==
-X-Google-Smtp-Source: APXvYqxkjjxpRxx8ObUyCKyWmKC8o0q+4ERGDnAe9MyV+XIb1ure1q+BP3hhk2gXh2T4EsYBmmr6MA==
-X-Received: by 2002:a65:66d7:: with SMTP id c23mr13939244pgw.40.1575030581240;
-        Fri, 29 Nov 2019 04:29:41 -0800 (PST)
-Received: from localhost (2001-44b8-111e-5c00-4092-39f5-bb9d-b59a.static.ipv6.internode.on.net. [2001:44b8:111e:5c00:4092:39f5:bb9d:b59a])
-        by smtp.gmail.com with ESMTPSA id b7sm14724610pjo.3.2019.11.29.04.29.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Nov 2019 04:29:40 -0800 (PST)
-From:   Daniel Axtens <dja@axtens.net>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-Cc:     Qian Cai <cai@lca.pw>, kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH v11 1/4] kasan: support backing vmalloc space with real shadow memory
-In-Reply-To: <56cf8aab-c61b-156c-f681-d2354aed22bb@virtuozzo.com>
-References: <20191031093909.9228-1-dja@axtens.net> <20191031093909.9228-2-dja@axtens.net> <1573835765.5937.130.camel@lca.pw> <871ru5hnfh.fsf@dja-thinkpad.axtens.net> <952ec26a-9492-6f71-bab1-c1def887e528@virtuozzo.com> <CACT4Y+ZGO8b88fUyFe-WtV3Ubr11ChLY2mqk8YKWN9o0meNtXA@mail.gmail.com> <CACT4Y+Z+VhfVpkfg-WFq_kFMY=DE+9b_DCi-mCSPK-udaf_Arg@mail.gmail.com> <CACT4Y+Yog=PHF1SsLuoehr2rcbmfvLUW+dv7Vo+1RfdTOx7AUA@mail.gmail.com> <2297c356-0863-69ce-85b6-8608081295ed@virtuozzo.com> <CACT4Y+ZNAfkrE0M=eCHcmy2LhPG_kKbg4mOh54YN6Bgb4b3F5w@mail.gmail.com> <56cf8aab-c61b-156c-f681-d2354aed22bb@virtuozzo.com>
-Date:   Fri, 29 Nov 2019 23:29:37 +1100
-Message-ID: <871rtqg91q.fsf@dja-thinkpad.axtens.net>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Fri, 29 Nov 2019 07:39:45 -0500
+Received: from mx2.suse.de ([195.135.220.15]:45554 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726360AbfK2Mjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 07:39:45 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BCA62ACE0;
+        Fri, 29 Nov 2019 12:39:43 +0000 (UTC)
+From:   Juergen Gross <jgross@suse.com>
+To:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+Cc:     Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
+Subject: [PATCH v3] xen/events: remove event handling recursion detection
+Date:   Fri, 29 Nov 2019 13:39:41 +0100
+Message-Id: <20191129123941.11975-1-jgross@suse.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+__xen_evtchn_do_upcall() contains guards against being called
+recursively. This mechanism was introduced in the early pvops times
+(kernel 2.6.26) when there were all the Xen backend drivers missing
+from the upstream kernel, and some of those out-of-tree drivers were
+enabling interrupts in their event handlers (which was explicitly
+allowed in the initial XenoLinux).
 
->>> Nope, it's vm_map_ram() not being handled
->> 
->> 
->> Another suspicious one. Related to kasan/vmalloc?
->
-> Very likely the same as with ion:
->
-> # git grep vm_map_ram|grep xfs
-> fs/xfs/xfs_buf.c:                * vm_map_ram() will allocate auxiliary structures (e.g.
-> fs/xfs/xfs_buf.c:                       bp->b_addr = vm_map_ram(bp->b_pages, bp->b_page_count,
+Nowadays we don't need to support those old drivers any more and the
+capability to allow recursive calls of __xen_evtchn_do_upcall() can
+be removed.
 
-Aaargh, that's an embarassing miss.
+Signed-off-by: Juergen Gross <jgross@suse.com>
+---
+V2: adapt commit message (Jan Beulich)
+V3: rmb() -> virt_rmb() (Boris Ostrovsky)
+---
+ drivers/xen/events/events_base.c | 16 +++-------------
+ 1 file changed, 3 insertions(+), 13 deletions(-)
 
-It's a bit intricate because kasan_vmalloc_populate function is
-currently set up to take a vm_struct not a vmap_area, but I'll see if I
-can get something simple out this evening - I'm away for the first part
-of next week.
+diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/events_base.c
+index 6c8843968a52..499eff7d3f65 100644
+--- a/drivers/xen/events/events_base.c
++++ b/drivers/xen/events/events_base.c
+@@ -1213,31 +1213,21 @@ void xen_send_IPI_one(unsigned int cpu, enum ipi_vector vector)
+ 	notify_remote_via_irq(irq);
+ }
+ 
+-static DEFINE_PER_CPU(unsigned, xed_nesting_count);
+-
+ static void __xen_evtchn_do_upcall(void)
+ {
+ 	struct vcpu_info *vcpu_info = __this_cpu_read(xen_vcpu);
+-	int cpu = get_cpu();
+-	unsigned count;
++	int cpu = smp_processor_id();
+ 
+ 	do {
+ 		vcpu_info->evtchn_upcall_pending = 0;
+ 
+-		if (__this_cpu_inc_return(xed_nesting_count) - 1)
+-			goto out;
+-
+ 		xen_evtchn_handle_events(cpu);
+ 
+ 		BUG_ON(!irqs_disabled());
+ 
+-		count = __this_cpu_read(xed_nesting_count);
+-		__this_cpu_write(xed_nesting_count, 0);
+-	} while (count != 1 || vcpu_info->evtchn_upcall_pending);
+-
+-out:
++		virt_rmb(); /* Hypervisor can set upcall pending. */
+ 
+-	put_cpu();
++	} while (vcpu_info->evtchn_upcall_pending);
+ }
+ 
+ void xen_evtchn_do_upcall(struct pt_regs *regs)
+-- 
+2.16.4
 
-Do you have to do anything interesting to get it to explode with xfs? Is
-it as simple as mounting a drive and doing some I/O? Or do you need to
-do something more involved?
-
-Regards,
-Daniel
-
->  
->> 
->> BUG: unable to handle page fault for address: fffff52005b80000
->> #PF: supervisor read access in kernel mode
->> #PF: error_code(0x0000) - not-present page
->> PGD 7ffcd067 P4D 7ffcd067 PUD 2cd10067 PMD 66d76067 PTE 0
->> Oops: 0000 [#1] PREEMPT SMP KASAN
->> CPU: 2 PID: 9211 Comm: syz-executor.2 Not tainted 5.4.0-next-20191129+ #6
->> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS
->> rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
->> RIP: 0010:xfs_sb_read_verify+0xe9/0x540 fs/xfs/libxfs/xfs_sb.c:691
->> Code: fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 1e 04 00 00 4d 8b ac 24
->> 30 01 00 00 48 b8 00 00 00 00 00 fc ff df 4c 89 ea 48 c1 ea 03 <0f> b6
->> 04 02 84 c0 74 08 3c 03 0f 8e ad 03 00 00 41 8b 45 00 bf 58
->> RSP: 0018:ffffc9000a58f8d0 EFLAGS: 00010a06
->> RAX: dffffc0000000000 RBX: 1ffff920014b1f1d RCX: ffffc9000af42000
->> RDX: 1ffff92005b80000 RSI: ffffffff82914404 RDI: ffff88805cdb1460
->> RBP: ffffc9000a58fab0 R08: ffff8880610cd380 R09: ffffed1005a87045
->> R10: ffffed1005a87044 R11: ffff88802d438223 R12: ffff88805cdb1340
->> R13: ffffc9002dc00000 R14: ffffc9000a58fa88 R15: ffff888061b5c000
->> FS:  00007fb49bda9700(0000) GS:ffff88802d400000(0000) knlGS:0000000000000000
->> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> CR2: fffff52005b80000 CR3: 0000000060769006 CR4: 0000000000760ee0
->> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->> PKRU: 55555554
->> Call Trace:
->>  xfs_buf_ioend+0x228/0xdc0 fs/xfs/xfs_buf.c:1162
->>  __xfs_buf_submit+0x38b/0xe50 fs/xfs/xfs_buf.c:1485
->>  xfs_buf_submit fs/xfs/xfs_buf.h:268 [inline]
->>  xfs_buf_read_uncached+0x15c/0x560 fs/xfs/xfs_buf.c:897
->>  xfs_readsb+0x2d0/0x540 fs/xfs/xfs_mount.c:298
->>  xfs_fc_fill_super+0x3e6/0x11f0 fs/xfs/xfs_super.c:1415
->>  get_tree_bdev+0x444/0x620 fs/super.c:1340
->>  xfs_fc_get_tree+0x1c/0x20 fs/xfs/xfs_super.c:1550
->>  vfs_get_tree+0x8e/0x300 fs/super.c:1545
->>  do_new_mount fs/namespace.c:2822 [inline]
->>  do_mount+0x152d/0x1b50 fs/namespace.c:3142
->>  ksys_mount+0x114/0x130 fs/namespace.c:3351
->>  __do_sys_mount fs/namespace.c:3365 [inline]
->>  __se_sys_mount fs/namespace.c:3362 [inline]
->>  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3362
->>  do_syscall_64+0xfa/0x780 arch/x86/entry/common.c:294
->>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
->> RIP: 0033:0x46736a
->> Code: 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f
->> 84 00 00 00 00 00 0f 1f 44 00 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d
->> 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
->> RSP: 002b:00007fb49bda8a78 EFLAGS: 00000202 ORIG_RAX: 00000000000000a5
->> RAX: ffffffffffffffda RBX: 00007fb49bda8af0 RCX: 000000000046736a
->> RDX: 00007fb49bda8ad0 RSI: 0000000020000140 RDI: 00007fb49bda8af0
->> RBP: 00007fb49bda8ad0 R08: 00007fb49bda8b30 R09: 00007fb49bda8ad0
->> R10: 0000000000000000 R11: 0000000000000202 R12: 00007fb49bda8b30
->> R13: 00000000004b1c60 R14: 00000000004b006d R15: 00007fb49bda96bc
->> Modules linked in:
->> Dumping ftrace buffer:
->>    (ftrace buffer empty)
->> CR2: fffff52005b80000
->> ---[ end trace eddd8949d4c898df ]---
->> RIP: 0010:xfs_sb_read_verify+0xe9/0x540 fs/xfs/libxfs/xfs_sb.c:691
->> Code: fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 1e 04 00 00 4d 8b ac 24
->> 30 01 00 00 48 b8 00 00 00 00 00 fc ff df 4c 89 ea 48 c1 ea 03 <0f> b6
->> 04 02 84 c0 74 08 3c 03 0f 8e ad 03 00 00 41 8b 45 00 bf 58
->> RSP: 0018:ffffc9000a58f8d0 EFLAGS: 00010a06
->> RAX: dffffc0000000000 RBX: 1ffff920014b1f1d RCX: ffffc9000af42000
->> RDX: 1ffff92005b80000 RSI: ffffffff82914404 RDI: ffff88805cdb1460
->> RBP: ffffc9000a58fab0 R08: ffff8880610cd380 R09: ffffed1005a87045
->> R10: ffffed1005a87044 R11: ffff88802d438223 R12: ffff88805cdb1340
->> R13: ffffc9002dc00000 R14: ffffc9000a58fa88 R15: ffff888061b5c000
->> FS:  00007fb49bda9700(0000) GS:ffff88802d400000(0000) knlGS:0000000000000000
->> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> CR2: fffff52005b80000 CR3: 0000000060769006 CR4: 0000000000760ee0
->> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->> PKRU: 55555554
->> 
->
-> -- 
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/56cf8aab-c61b-156c-f681-d2354aed22bb%40virtuozzo.com.
