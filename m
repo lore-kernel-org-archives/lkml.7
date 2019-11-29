@@ -2,71 +2,74 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE29C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E475C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D294F24649
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 569982464E
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:39:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XhymOJiD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BavR3UpT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbfK2VjW (ORCPT
+        id S2387410AbfK2Vj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 16:39:22 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36718 "EHLO
+        Fri, 29 Nov 2019 16:39:27 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39413 "EHLO
         mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727171AbfK2VjW (ORCPT
+        with ESMTP id S1727236AbfK2VjY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 16:39:22 -0500
-Received: by mail-lj1-f196.google.com with SMTP id k15so33350604lja.3
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 13:39:21 -0800 (PST)
+        Fri, 29 Nov 2019 16:39:24 -0500
+Received: by mail-lj1-f196.google.com with SMTP id e10so24144083ljj.6
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 13:39:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HoCIkfIpHUEqxrpa5VNin8a9xzNcml7RJzBZOqUbMCI=;
-        b=XhymOJiD3Z2aYsBi1GtNTmqv4cD8lZuV3n18svaQOYIQckWoHxOiES3GCLPpqqi9xF
-         ElUzyTYZ/VPe8tY/gh9Fc7J0JDEg7fGZDsQji6Gy+g9cPS7yVWGpavdASwkXBmAJDo9M
-         6DcZDgXVWSJDqEztf2bZcl8ELnuyOlYW7n1Jk8FnLYoK03OBlPNvo6Ycbn3HBeGzBtHm
-         7r5nNgT4uFYwy6SdusagmXvIC8XfXg2xFDBtKfsLYtVnFoSblrT1l8DZD9NgPZNUGTpB
-         7XNcVK1xyUEjbSFuaQUFZ2T/bWzgDCdIlWlzBqhDIOGiS/yhprw/RB1CRSLOHSV9KDgP
-         Y6Bg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=CtdLO3BiiDckbba/jOWuHZ5pqirfCEByMIQAzPx8214=;
+        b=BavR3UpTHnmbsDK2KKPSRwZ1J4zVQ4D9SJo7FVC2DWk/t6FLi/mkuWgkmBB1qTQ5yh
+         +1SDnUN3O+XZwOp1TqgmEnxDp7+txVWorIAYaY4vntKki6gAV7rfIQ9zzyCpoGEESFzR
+         DyTjAno3NjZfg3Msn2RebkvTRE+YCRtr9DSya5bGCcoyH+P0UkUKDJdxxbpnXz65b147
+         SeEjCiBa3XuWIU/ahYSBiJHpsq0n74aLjsDjdHzdqNGjtgrMx403HBUiIZYq345g4ivC
+         OM4hDXN+Ugh92XtVX0NheTKs/ZDQt1AHsZL0CNvlrJoeXoV4p93bdwbKxi/HdOvhmfVb
+         oWWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HoCIkfIpHUEqxrpa5VNin8a9xzNcml7RJzBZOqUbMCI=;
-        b=NfQOQPWaww2x9OaJhkgNSxNmKldGFgBcXCdVpvclkvEWF/13lkXY7AgTyX+jE06AKP
-         8Sk7G+OQm7nQzfy6se1pAXsLwsS7lkSl0sL43V9IhUinm4mRozZzUwst9XN/coxakVXK
-         R+ccPisDmh7G7dpU+QOR+m6/VLYsaooDi995wzMmU+TAKRzfP7L4xu9pzYdW7AmQyfkb
-         IHIA7K7ZPzaz23rhkUAdQJfwa+XG2veHvUAbeOUfUXcQ/OYmbB2dA/5CF96kklswn1Bh
-         ILzpSC3YqtJpipWXC6VwgwjRRl/Yh9Ii+sxspkXcRofn+Ks++Mcky14R/N4qOYtzajhF
-         MHKw==
-X-Gm-Message-State: APjAAAUvUWiYuq2SkDzjc9cMeGLorl2d776boGVYUPFbHK2dzBhYjpMJ
-        wZJIZnQo7olyMl7rcP4VcXX7bQ==
-X-Google-Smtp-Source: APXvYqzNEPzDYPTg7B0zYEoaYUWO6O51RXUBdgXRZrq4wpucNmLYPHPSkvc02v5pkenXgOWZn5z0ng==
-X-Received: by 2002:a2e:9549:: with SMTP id t9mr2600851ljh.148.1575063560250;
-        Fri, 29 Nov 2019 13:39:20 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=CtdLO3BiiDckbba/jOWuHZ5pqirfCEByMIQAzPx8214=;
+        b=VezHF9mMC0GVTg84nX9JScW24D/bEoAFvOcWcS+fUn+3ocw0AXmeSaS6CI6/DYoUnn
+         ITYhJ1ipyXnNBAUn6aH8JCSP5IR+j0+Bt4zbBtGErFKq9/BoodheKVCjtQdg9nfR+A6X
+         9Tkfuyvisoqf5Y7RcsRAA2tzNEJaRpfzJz6/PyGKTjlSmD0ZqTzMqPh7iJ09W3BqcCtz
+         nmm5Lv90Dbr571PiYAwCrcguG527qOz4Sj17/H6R5a1GyN35xWrlk0jM+NUnoXPPtxOk
+         /CL9XGkxTZanoxRWJuYGwmpU/M19SFsUuqzcPrcgJIhP5TCK1PWG2JcWrDmj2AN4Dm7O
+         gkBQ==
+X-Gm-Message-State: APjAAAXzJ0dl9CHrpjETVAeHCblDU1mKqtTIuZXbaJ0obtWgEA4ruhmw
+        TK2kwV4XRwO4nZEs00sYV6HN2A==
+X-Google-Smtp-Source: APXvYqyqblJ2FJP/SevCJojPYdPTRR326gd3foy65sWXVr9DxWlG3H9Luhg3u5z/v0JPV6hE/GfQQQ==
+X-Received: by 2002:a2e:a304:: with SMTP id l4mr38293021lje.178.1575063562136;
+        Fri, 29 Nov 2019 13:39:22 -0800 (PST)
 Received: from centauri.lan (ua-84-217-220-205.bbcust.telenor.se. [84.217.220.205])
-        by smtp.gmail.com with ESMTPSA id b190sm10742234lfd.39.2019.11.29.13.39.18
+        by smtp.gmail.com with ESMTPSA id b190sm10742234lfd.39.2019.11.29.13.39.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Nov 2019 13:39:19 -0800 (PST)
+        Fri, 29 Nov 2019 13:39:21 -0800 (PST)
 From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Cc:     amit.kucheria@linaro.org, sboyd@kernel.org, vireshk@kernel.org,
-        bjorn.andersson@linaro.org, ulf.hansson@linaro.org,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v7 0/5] Add support for QCOM Core Power Reduction
-Date:   Fri, 29 Nov 2019 22:39:10 +0100
-Message-Id: <20191129213917.1301110-1-niklas.cassel@linaro.org>
+To:     Niklas Cassel <nks@flawful.org>
+Cc:     linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org,
+        sboyd@kernel.org, vireshk@kernel.org, bjorn.andersson@linaro.org,
+        ulf.hansson@linaro.org, Niklas Cassel <niklas.cassel@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v7 1/5] dt-bindings: power: avs: Add support for CPR (Core Power Reduction)
+Date:   Fri, 29 Nov 2019 22:39:11 +0100
+Message-Id: <20191129213917.1301110-2-niklas.cassel@linaro.org>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191129213917.1301110-1-niklas.cassel@linaro.org>
+References: <20191129213917.1301110-1-niklas.cassel@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,68 +77,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds support for Core Power Reduction (CPR), a form of
-Adaptive Voltage Scaling (AVS), found on certain Qualcomm SoCs.
+Add DT bindings to describe the CPR HW found on certain Qualcomm SoCs.
 
-This series is based on top of the qcs404 cpufreq patch series that
-hasn't landed yet:
-https://patchwork.kernel.org/project/linux-arm-msm/list/?series=207821
-as well as that series' matching device tree changes:
-https://patchwork.kernel.org/project/linux-arm-msm/list/?series=207831
-
-For testing purposes, this patch series, including the dependencies
-listed above, is available on the following git tag:
-https://git.linaro.org/people/niklas.cassel/kernel.git/log/?h=cpr-v7
-
-CPR is a technology that reduces core power on a CPU or on other device.
-It reads voltage settings from efuses (that have been written in
-production), it uses these voltage settings as initial values, for each
-OPP.
-
-After moving to a certain OPP, CPR monitors dynamic factors such as
-temperature, etc. and adjusts the voltage for that frequency accordingly
-to save power and meet silicon characteristic requirements.
-
-This driver has been developed together with Jorge Ramirez-Ortiz, and
-is based on an RFC by Stephen Boyd[1], which in turn is based on work
-by others on codeaurora.org[2].
-
-[1] https://lkml.org/lkml/2015/9/18/833
-[2] https://source.codeaurora.org/quic/la/kernel/msm-4.14/tree/drivers/regulator/cpr-regulator.c?h=msm-4.14
-
+Co-developed-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+---
 Changes since v6:
-(Addressed comments from Ulf Hansson)
--Initialize mutex later.
--Take the mutex in cpr_pd_attach_dev(), in case we ever
-implement async attach in the future.
--Add comment regarding why we get the cpu clock rate.
--Add comment how we handle unlisted frequencies.
--Clarify comment regarding why things related to virtual corners
-are performed in cpr_pd_attach_dev().
--Removed the internal performance_state variable, the performance
-state is instead calculated using the current corner pointer.
--Save a pointer to the first genpd dev that gets attached,
-and use that rather than get_cpu_device(0), when getting the CPU
-OPP table.
+-Picked up Bjorn's and Ulf's Reviewed-by.
 
-Niklas Cassel (5):
-  dt-bindings: power: avs: Add support for CPR (Core Power Reduction)
-  power: avs: Add support for CPR (Core Power Reduction)
-  arm64: dts: qcom: qcs404: Add CPR and populate OPP table
-  arm64: defconfig: enable CONFIG_QCOM_CPR
-  arm64: defconfig: enable CONFIG_ARM_QCOM_CPUFREQ_NVMEM
-
- .../bindings/power/avs/qcom,cpr.txt           |  130 ++
- MAINTAINERS                                   |    8 +
- arch/arm64/boot/dts/qcom/qcs404.dtsi          |  132 +-
- arch/arm64/configs/defconfig                  |    2 +
- drivers/power/avs/Kconfig                     |   15 +
- drivers/power/avs/Makefile                    |    1 +
- drivers/power/avs/qcom-cpr.c                  | 1792 +++++++++++++++++
- 7 files changed, 2072 insertions(+), 8 deletions(-)
+ .../bindings/power/avs/qcom,cpr.txt           | 130 ++++++++++++++++++
+ 1 file changed, 130 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
- create mode 100644 drivers/power/avs/qcom-cpr.c
 
+diff --git a/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt b/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
+new file mode 100644
+index 000000000000..ab0d5ebbad4e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
+@@ -0,0 +1,130 @@
++QCOM CPR (Core Power Reduction)
++
++CPR (Core Power Reduction) is a technology to reduce core power on a CPU
++or other device. Each OPP of a device corresponds to a "corner" that has
++a range of valid voltages for a particular frequency. While the device is
++running at a particular frequency, CPR monitors dynamic factors such as
++temperature, etc. and suggests adjustments to the voltage to save power
++and meet silicon characteristic requirements.
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: should be "qcom,qcs404-cpr", "qcom,cpr" for qcs404
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: base address and size of the rbcpr register region
++
++- interrupts:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify the CPR interrupt
++
++- clocks:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: phandle to the reference clock
++
++- clock-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be "ref"
++
++- vdd-apc-supply:
++	Usage: required
++	Value type: <phandle>
++	Definition: phandle to the vdd-apc-supply regulator
++
++- #power-domain-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: should be 0
++
++- operating-points-v2:
++	Usage: required
++	Value type: <phandle>
++	Definition: A phandle to the OPP table containing the
++		    performance states supported by the CPR
++		    power domain
++
++- acc-syscon:
++	Usage: optional
++	Value type: <phandle>
++	Definition: phandle to syscon for writing ACC settings
++
++- nvmem-cells:
++	Usage: required
++	Value type: <phandle>
++	Definition: phandle to nvmem cells containing the data
++		    that makes up a fuse corner, for each fuse corner.
++		    As well as the CPR fuse revision.
++
++- nvmem-cell-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: should be "cpr_quotient_offset1", "cpr_quotient_offset2",
++		    "cpr_quotient_offset3", "cpr_init_voltage1",
++		    "cpr_init_voltage2", "cpr_init_voltage3", "cpr_quotient1",
++		    "cpr_quotient2", "cpr_quotient3", "cpr_ring_osc1",
++		    "cpr_ring_osc2", "cpr_ring_osc3", "cpr_fuse_revision"
++		    for qcs404.
++
++Example:
++
++	cpr_opp_table: cpr-opp-table {
++		compatible = "operating-points-v2-qcom-level";
++
++		cpr_opp1: opp1 {
++			opp-level = <1>;
++			qcom,opp-fuse-level = <1>;
++		};
++		cpr_opp2: opp2 {
++			opp-level = <2>;
++			qcom,opp-fuse-level = <2>;
++		};
++		cpr_opp3: opp3 {
++			opp-level = <3>;
++			qcom,opp-fuse-level = <3>;
++		};
++	};
++
++	power-controller@b018000 {
++		compatible = "qcom,qcs404-cpr", "qcom,cpr";
++		reg = <0x0b018000 0x1000>;
++		interrupts = <0 15 IRQ_TYPE_EDGE_RISING>;
++		clocks = <&xo_board>;
++		clock-names = "ref";
++		vdd-apc-supply = <&pms405_s3>;
++		#power-domain-cells = <0>;
++		operating-points-v2 = <&cpr_opp_table>;
++		acc-syscon = <&tcsr>;
++
++		nvmem-cells = <&cpr_efuse_quot_offset1>,
++			<&cpr_efuse_quot_offset2>,
++			<&cpr_efuse_quot_offset3>,
++			<&cpr_efuse_init_voltage1>,
++			<&cpr_efuse_init_voltage2>,
++			<&cpr_efuse_init_voltage3>,
++			<&cpr_efuse_quot1>,
++			<&cpr_efuse_quot2>,
++			<&cpr_efuse_quot3>,
++			<&cpr_efuse_ring1>,
++			<&cpr_efuse_ring2>,
++			<&cpr_efuse_ring3>,
++			<&cpr_efuse_revision>;
++		nvmem-cell-names = "cpr_quotient_offset1",
++			"cpr_quotient_offset2",
++			"cpr_quotient_offset3",
++			"cpr_init_voltage1",
++			"cpr_init_voltage2",
++			"cpr_init_voltage3",
++			"cpr_quotient1",
++			"cpr_quotient2",
++			"cpr_quotient3",
++			"cpr_ring_osc1",
++			"cpr_ring_osc2",
++			"cpr_ring_osc3",
++			"cpr_fuse_revision";
++	};
 -- 
 2.23.0
 
