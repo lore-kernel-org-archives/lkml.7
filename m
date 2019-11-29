@@ -2,146 +2,162 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 248A1C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 01:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0A0C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 01:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01DC621721
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 01:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA0AB2075C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 01:54:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfK2BwP (ORCPT
+        id S1726937AbfK2ByE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 20:52:15 -0500
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:46262 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726716AbfK2BwO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 20:52:14 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R221e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0TjLLnsg_1574992327;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TjLLnsg_1574992327)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 29 Nov 2019 09:52:09 +0800
-Subject: Re: [PATCH v2 1/3] sched/numa: advanced per-cgroup numa statistic
-To:     =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>
-Cc:     Mel Gorman <mgorman@suse.de>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
- <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
- <9354ffe8-81ba-9e76-e0b3-222bc942b3fc@linux.alibaba.com>
- <20191127101932.GN28938@suse.de>
- <3ff78d18-fa29-13f3-81e5-a05537a2e344@linux.alibaba.com>
- <20191128123924.GD831@blackbody.suse.cz>
- <e008fef6-06d2-28d3-f4d3-229f4b181b4f@linux.alibaba.com>
- <20191128155818.GE831@blackbody.suse.cz>
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Message-ID: <b97ce489-c5c5-0670-a553-0e45d593de2c@linux.alibaba.com>
-Date:   Fri, 29 Nov 2019 09:52:07 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191128155818.GE831@blackbody.suse.cz>
-Content-Type: text/plain; charset=utf-8
+        Thu, 28 Nov 2019 20:54:04 -0500
+Received: from mga11.intel.com ([192.55.52.93]:51505 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726716AbfK2ByE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 20:54:04 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Nov 2019 17:54:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,255,1571727600"; 
+   d="scan'208";a="359938553"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by orsmga004.jf.intel.com with ESMTP; 28 Nov 2019 17:54:03 -0800
+Received: from fmsmsx121.amr.corp.intel.com (10.18.125.36) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 28 Nov 2019 17:54:03 -0800
+Received: from shsmsx104.ccr.corp.intel.com (10.239.4.70) by
+ fmsmsx121.amr.corp.intel.com (10.18.125.36) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 28 Nov 2019 17:54:02 -0800
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.108]) by
+ SHSMSX104.ccr.corp.intel.com ([169.254.5.127]) with mapi id 14.03.0439.000;
+ Fri, 29 Nov 2019 09:54:01 +0800
+From:   "Zhao, Shirley" <shirley.zhao@intel.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>
+CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
+        "Zhu, Bing" <bing.zhu@intel.com>,
+        "Chen, Luhai" <luhai.chen@intel.com>
+Subject: RE: One question about trusted key of keyring in Linux kernel.
+Thread-Topic: One question about trusted key of keyring in Linux kernel.
+Thread-Index: AdWZwFKzDBwFOydYTGGk+Aqs+6BIxAANhxEAAoxRZMAACTMHAAAdE3MAAA0/ewAAWA260A==
+Date:   Fri, 29 Nov 2019 01:54:00 +0000
+Message-ID: <A888B25CD99C1141B7C254171A953E8E49096540@shsmsx102.ccr.corp.intel.com>
+References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
+         <1573659978.17949.83.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
+         <1574796456.4793.248.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E490961E5@shsmsx102.ccr.corp.intel.com>
+ <1574869168.4793.282.camel@linux.ibm.com>
+In-Reply-To: <1574869168.4793.282.camel@linux.ibm.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNjBkMDY4ZmUtOGYyOC00ODY3LTk2ZDUtODk1ZTU1MGQ4MDgxIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiRnVIVTd0YVRFdExGWFQ1MktiQzE2WHBmZkNTZ1VBM2gwRlQ0VTFPVWg2aTMrOTVWM3ZnYTNYQkc2T2hiSVFJWSJ9
+x-ctpclassification: CTP_NT
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/11/28 下午11:58, Michal Koutný wrote:
-> On Thu, Nov 28, 2019 at 09:41:37PM +0800, 王贇 <yun.wang@linux.alibaba.com> wrote:
->> There are used to be a discussion on this, Peter mentioned we no longer
->> expose raw ticks into userspace and micro seconds could be fine.
-> I don't mean the unit presented but the precision.
-> 
->> Basically we use this to calculate percentages, for which jiffy could be
->> accurate enough :-)
-> You also report the raw times.>
-> Ad percentages (or raw times precision), on average, it should be fine
-> but can't there be any "aliasing" artifacts when only an unimportant
-> task is regularly sampled, hence not capturing the real pattern on the
-> CPU? (Again, I'm not confident I'm not missing anything that prevents
-> that behavior.)
-
-Hmm.. I think I get your point now, so the concern is about the missing
-situation between each ticks, correct?
-
-It could be, like one tick hit task A running, then A switched to B, B
-switched back to A before next tick, then we missing the exectime of B
-in next tick, since it hit A again.
-
-Actually we have the same issue for those data in /proc/stat too, don't
-we? The user, sys, iowait was sampled in the similar way.
-
-So if we have to pick a precision, I may still pick jiffy since the
-exectime is some thing similar to user/sys time IMHO.
-
-> 
->> But still, what if folks don't use v2... any good suggestions?
-> (Note this applies to exectimes not locality.) On v1, they can add up
-> per CPU values from cpuacct. (So it's v2 that's missing the records.)
-
-Whatabout move the whole stuff into cpuacct cgroup?
-
-I'm not sure but maybe we could use some data there to save the sample
-of jiffies, for those v1 user who need these statistics, they should have
-cpuacct enabled.
-
-> 
-> 
->> Yes, since they don't have NUMA balancing to do optimization, and
->> generally they are not that much.
-> Aha, I didn't realize that.
-> 
->> Sorry but I don't get it... at first it was 10 regions, as Peter suggested
->> we pick 8, but now to insert member 'jiffies' it become 7,
-> See, there are various arguments for different values :-)
-> 
-> I meant that the currently chosen one is imprinted into the API file.
-> That is IMO fixable by documenting (e.g. the number of bands may change,
-> assume uniform division) or making all this just a debug API. Or, see
-> below.
-> 
->> Yes, here what I try to highlight is the similar usage, but not the way of
->> monitoring ;-) as the docs tell, we monitoring increments.
-> I see, the docs give me an idea what's the supposed use case.
-> 
-> What about exposing only the counters for local, remote and let the user
-> do their monitoring based on Δlocal/(Δlocal + Δremote)?
-> 
-> That would avoid the partitioning question completely, exposed values
-> would be simple numbers and provided information should be equal. A
-> drawback is that such a sampling would be slower (but sufficient for the
-> illustrating example).
-
-You mean the cgroup numa stat just give the accumulated local/remote access?
-
-As long as the counter won't overflow, maybe... sounds easier to explain too.
-
-So user tracing locality will then get just one percentage (calculated on
-their own) from a cgroup, but one should be enough to represent the situation.
-
-Sounds like a good idea to me :-) will try to do that in next version.
-
-Regards,
-Michael Wang
-
-> 
-> Michal
-> 
+SGksIE1pbWksIA0KDQpNeSB0ZXN0IGVudmlyb25tZW50IGlzIFVidW50dSAxOC4wNC4zLCBrZXJu
+ZWwgdmVyc2lvbiBpcyA1LjAuMC0zNi1nZW5lcmljLiANCiQgY2F0IC9wcm9jL3ZlcnNpb24NCkxp
+bnV4IHZlcnNpb24gNS4wLjAtMzYtZ2VuZXJpYyAoYnVpbGRkQGxndzAxLWFtZDY0LTA2MCkgKGdj
+YyB2ZXJzaW9uIDcuNC4wIChVYnVudHUgNy40LjAtMXVidW50dTF+MTguMDQuMSkpICMzOX4xOC4w
+NC4xLVVidW50dSBTTVAgVHVlIE5vdiAxMiAxMTowOTo1MCBVVEMgMjAxOQ0KJCBsc2JfcmVsZWFz
+ZSAtYQ0KTm8gTFNCIG1vZHVsZXMgYXJlIGF2YWlsYWJsZS4NCkRpc3RyaWJ1dG9yIElEOiBVYnVu
+dHUNCkRlc2NyaXB0aW9uOiAgICBVYnVudHUgMTguMDQuMyBMVFMNClJlbGVhc2U6ICAgICAgICAx
+OC4wNA0KQ29kZW5hbWU6ICAgICAgIGJpb25pYw0KDQpJdCBpcyBUUE0yLjAsIGRUUE0uIA0KDQpB
+bmQgSSBkaWRu4oCZdCBydW4gaXQgb24gb3RoZXIgdmVyc2lvbi4gDQoNCkl0IGhhcyBubyByZWxh
+dGlvbnNoaXAgd2l0aCBUUE0gY29tbWFuZCwgaXQgaXMganVzdCB1c2VkIHRvIGhlbHAgZmluZCB0
+aGUgZmFpbCByZWFzb24uIA0KTXkgcXVlc3Rpb24gaXMgaG93IHRvIGxvYWQgYSB0cnVzdGVkIGtl
+eSB3aGljaCBpcyBzZWFsZWQgd2l0aCBQQ1IgcG9saWN5IGNvcnJlY3RseSBhZnRlciByZWJvb3Qu
+DQpUaGF0IGlzIGJldHRlciBpZiB0aGVyZSBpcyBzb21lIGV4YW1wbGUgYWJvdXQgaG93IHRvIHVz
+ZSAicG9saWN5ZGlnZXN0IiwgInBvbGljeWhhbmRsZSIgdG8gc2VhbC91bnNlYWwgYSB0cnVzdGVk
+IGtleS4gDQoNClRoYW5rcy4gDQoNCi0gU2hpcmxleSANCg0KDQoNCi0tLS0tT3JpZ2luYWwgTWVz
+c2FnZS0tLS0tDQpGcm9tOiBNaW1pIFpvaGFyIDx6b2hhckBsaW51eC5pYm0uY29tPiANClNlbnQ6
+IFdlZG5lc2RheSwgTm92ZW1iZXIgMjcsIDIwMTkgMTE6MzkgUE0NClRvOiBaaGFvLCBTaGlybGV5
+IDxzaGlybGV5LnpoYW9AaW50ZWwuY29tPjsgSmFtZXMgQm90dG9tbGV5IDxqZWpiQGxpbnV4Lmli
+bS5jb20+OyBKYXJra28gU2Fra2luZW4gPGphcmtrby5zYWtraW5lbkBsaW51eC5pbnRlbC5jb20+
+OyBKb25hdGhhbiBDb3JiZXQgPGNvcmJldEBsd24ubmV0Pg0KQ2M6IGxpbnV4LWludGVncml0eUB2
+Z2VyLmtlcm5lbC5vcmc7IGtleXJpbmdzQHZnZXIua2VybmVsLm9yZzsgbGludXgtZG9jQHZnZXIu
+a2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgJ01hdXJvIENhcnZhbGhv
+IENoZWhhYicgPG1jaGVoYWIrc2Ftc3VuZ0BrZXJuZWwub3JnPjsgWmh1LCBCaW5nIDxiaW5nLnpo
+dUBpbnRlbC5jb20+OyBDaGVuLCBMdWhhaSA8bHVoYWkuY2hlbkBpbnRlbC5jb20+DQpTdWJqZWN0
+OiBSZTogT25lIHF1ZXN0aW9uIGFib3V0IHRydXN0ZWQga2V5IG9mIGtleXJpbmcgaW4gTGludXgg
+a2VybmVsLg0KDQpIaSBTaGlybGV5LA0KDQpPbiBXZWQsIDIwMTktMTEtMjcgYXQgMDI6NDYgKzAw
+MDAsIFpoYW8sIFNoaXJsZXkgd3JvdGU6DQo+IEhpLCBNaW1pLA0KPiANCj4gQW5zd2VyIHlvdXIg
+dHdvIHF1ZXN0aW9uczoNCj4gDQo+IDEuIFllcywgSSBoYXZlIHZlcmlmaWVkIHRydXN0ZWQga2V5
+IHdvcmtzIHdlbGwgd2l0aG91dCBQQ1IgcG9saWN5IA0KPiBwcm90ZWN0aW9uIGFzIGJlbG93Og0K
+PiAkIGtleWN0bCBhZGQgdHJ1c3RlZCBrbWsgIm5ldyAzMiBrZXloYW5kbGU9MHg4MTAwMDAwMSIg
+QHUNCj4gMTA1NTI0MDkyOA0KPiAkIGtleWN0bCBsaXN0IEB1DQo+IDEga2V5cyBpbiBrZXlyaW5n
+Og0KPiAxMDU1MjQwOTI4OiAtLWFsc3dydiAgICAgMCAgICAgMCB0cnVzdGVkOiBrbWsNCj4gJCBr
+ZXljdGwgcGlwZSAxMDU1MjQwOTI4ID4ga21rLmJsb2INCj4gJCBjYXQga21rLmJsb2INCj4gMDA3
+ZjAwMjBmZjgwOGJkOGI3MjM5MTk0ZTg5YWFjNmE5NWI0ZDIxMDExNDc0MmMyMGFmYTMzNDkzZjAw
+MmRmZmQwNjgNCj4gNWQ1MTAwMTBjMTJkN2FkNTFlYjgzZDZkOTM4OTVkZTA2NmJmM2QzOTcxOGNj
+NTAzYWRiNDgwMmNiMDg3Yjg4YjJmZmYNCj4gNGIwNDBmZTNhMmJlNmEzZjg3YzY3NDlkMDg3Yzlm
+YjZlODczNGNiMjNmNDM4ZDY0MDg3NTgxYTEzYmM4M2Q1ZGMzYjANCj4gMjZlNzdhODk0ZWNlNjYy
+MGQwZWI4NWRmNjQ0OWZmM2M2MDlmZDc3ZDVmMGNhZjc5YjQ1MzViMDAyZTAwMDgwMDBiMDANCj4g
+MDAwMDQwMDAwMDAwMTAwMDIwOWE1YjAwYjBkNTU4ZmNmOWU4YzAyOTUyMjcxNWU2YjU5MDYzNjZl
+YWVjNWYzNDM2N2INCj4gOGFiMTZjMGZiOTAwOWEwMDczMDAwMDAwMDAwMDIwZTNiMGM0NDI5OGZj
+MWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDENCj4gZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUw
+MTAwMGIwMDIyMDAwYmRjZGI2OTRlMTAyZTEzYTBmYmE1MTExMDgxY2INCj4gNmNmNjE2YzExOGQ0
+MDQ5MzZjYWMzZTg0ZGIyNGM3MWU0N2Q1MDAyMjAwMGIwNGI1ZGIxYWE1MjYzNWRmYjI0MmU3NmYN
+Cj4gNmJkZThlMjE3NmFlNDhmYzY4Mjk0NmM2Yzc2ZDk2ZjYwODA3OWQxZjAwMDAwMDIwMzZiNmZj
+Y2E4MjA2YzdmNzIyZGUNCj4gODU4MjFkN2VjYjQ3ODU5NzZmZGQ2NDJiYzc1Mzg1MDVhMmE4MThj
+OGEyMzg4MDIxNDAwMDAwMDEwMDIwMmFlZGRlNDUNCj4gMDhmNTQ4ZDEwODE5M2VjOGZlMTY2YTdi
+ZWZkZTE5MTEzZmU3MjdhZTJiMjk5MDFiZGVjZTk2ZTUNCj4gJCBrZXljdGwgY2xlYXIgQHUNCj4g
+JCBrZXljdGwgbGlzdCBAdQ0KPiBrZXlyaW5nIGlzIGVtcHR5DQo+ICQga2V5Y3RsIGFkZCB0cnVz
+dGVkIGttayAibG9hZCBgY2F0IGttay5ibG9iYCBrZXloYW5kbGU9MHg4MTAwMDAwMSINCj4gQHUN
+Cj4gMTAyMjk2MzczMQ0KPiAkIGtleWN0bCBwcmludCAxMDIyOTYzNzMxDQo+IDAwN2YwMDIwZmY4
+MDhiZDhiNzIzOTE5NGU4OWFhYzZhOTViNGQyMTAxMTQ3NDJjMjBhZmEzMzQ5M2YwMDJkZmZkMDY4
+DQo+IDVkNTEwMDEwYzEyZDdhZDUxZWI4M2Q2ZDkzODk1ZGUwNjZiZjNkMzk3MThjYzUwM2FkYjQ4
+MDJjYjA4N2I4OGIyZmZmDQo+IDRiMDQwZmUzYTJiZTZhM2Y4N2M2NzQ5ZDA4N2M5ZmI2ZTg3MzRj
+YjIzZjQzOGQ2NDA4NzU4MWExM2JjODNkNWRjM2IwDQo+IDI2ZTc3YTg5NGVjZTY2MjBkMGViODVk
+ZjY0NDlmZjNjNjA5ZmQ3N2Q1ZjBjYWY3OWI0NTM1YjAwMmUwMDA4MDAwYjAwDQo+IDAwMDA0MDAw
+MDAwMDEwMDAyMDlhNWIwMGIwZDU1OGZjZjllOGMwMjk1MjI3MTVlNmI1OTA2MzY2ZWFlYzVmMzQz
+NjdiDQo+IDhhYjE2YzBmYjkwMDlhMDA3MzAwMDAwMDAwMDAyMGUzYjBjNDQyOThmYzFjMTQ5YWZi
+ZjRjODk5NmZiOTI0MjdhZTQxDQo+IGU0NjQ5YjkzNGNhNDk1OTkxYjc4NTJiODU1MDEwMDBiMDAy
+MjAwMGJkY2RiNjk0ZTEwMmUxM2EwZmJhNTExMTA4MWNiDQo+IDZjZjYxNmMxMThkNDA0OTM2Y2Fj
+M2U4NGRiMjRjNzFlNDdkNTAwMjIwMDBiMDRiNWRiMWFhNTI2MzVkZmIyNDJlNzZmDQo+IDZiZGU4
+ZTIxNzZhZTQ4ZmM2ODI5NDZjNmM3NmQ5NmY2MDgwNzlkMWYwMDAwMDAyMDM2YjZmY2NhODIwNmM3
+ZjcyMmRlDQo+IDg1ODIxZDdlY2I0Nzg1OTc2ZmRkNjQyYmM3NTM4NTA1YTJhODE4YzhhMjM4ODAy
+MTQwMDAwMDAxMDAyMDJhZWRkZTQ1DQo+IDA4ZjU0OGQxMDgxOTNlYzhmZTE2NmE3YmVmZGUxOTEx
+M2ZlNzI3YWUyYjI5OTAxYmRlY2U5NmU1DQo+IA0KPiAyLiBUaGUgZm9sbG93aW5nIGtlcm5lbCBm
+aWxlIGlzIHJlbGF0ZWQgd2l0aCB0aGlzIHByb2JsZW0uIA0KPiAvc2VjdXJpdHkva2V5cy9rZXlj
+dGwuYyAvc2VjdXJpdHkva2V5cy9rZXkuYyANCj4gL3NlY3VyaXR5L2tleXMvdHJ1c3RlZC1rZXlz
+L3RydXN0ZWRfdHBtMS5jDQo+IC9zZWN1cml0eS9rZXlzL3RydXN0ZWQta2V5cy90cnVzdGVkX3Rw
+bTIuYw0KPiANCj4gVG8gbG9hZCB0aGUgUENSIHBvbGljeSBwcm90ZWN0aW9uIHRydXN0ZWQga2V5
+LCB0aGUgY2FsbCBzdGFjayBpczoNCj4gU1lTQ0FMTF9ERUZJTkU1KGFkZF9rZXksLi4uKSAtLT4g
+a2V5X2NyZWF0ZV9vcl91cGRhdGUoKSAtLT4NCj4gX19rZXlfaW5zdGFudGlhdGVfYW5kX2xpbmso
+KSAtLT4gIHRydXN0ZWRfaW5zdGFudGlhdGUoKSAtLT4NCj4gdHBtMl91bnNlYWxfdHJ1c3RlZCgp
+IC0tPiB0cG0yX3Vuc2VhbF9jbWQoKS4NCj4gDQo+IENoZWNrIGRtZXNnLCB0aGVyZSB3aWxsIGJl
+IGVycm9yOg0KPiBbNzMzMzYuMzUxNTk2XSB0cnVzdGVkX2tleToga2V5X3Vuc2VhbCBmYWlsZWQg
+KC0xKQ0KDQpMaWtlIHRoZSBvdGhlciBrZXJuZWwgbWFpbGluZyBsaXN0cywgcGxlYXNlIGJvdHRv
+bSBwb3N0LiDCoFdoZW4gcmVwb3J0aW5nIGEgcHJvYmxlbSwgcGxlYXNlIGluY2x1ZGUgdGhlIGtl
+cm5lbCB2ZXJzaW9uIGFuZCBvdGhlciByZWxldmFudCBkZXRhaWxzLiDCoEZvciBleGFtcGxlLCB0
+aGUgVFBNIHZlcnNpb24gYW5kIHR5cGUgKGVnLiBoYXJkd2FyZSB2ZW5kb3IsIHNvZnR3YXJlIFRQ
+TSwgZXRjKS4gwqBQbGVhc2UgaW5kaWNhdGUgaWYgdGhpcyBpcyBhIG5ldyBwcm9ibGVtIGFuZCB3
+aGljaCBrZXJuZWwgcmVsZWFzZSBpdCBmaXJzdCBzdGFydCBoYXBwZW5pbmc/DQoNCkkgaGF2ZSBu
+byBleHBlcmllbmNlIHdpdGggdGhlIHRwbTJfIGNvbW1hbmRzLCDCoEkgc3VnZ2VzdCB0cnlpbmcg
+dG8gZXh0ZW5kIGEgc2luZ2xlIG1lYXN1cmVtZW50IHRvIGEgUENSIGFuZCBzZWFsaW5nIHRvIHRo
+YXQgdmFsdWUuDQoNCk1pbWkNCg0K
