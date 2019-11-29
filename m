@@ -2,110 +2,99 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D7EC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 05:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CD9C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 05:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A6762077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 05:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DF21215F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 05:54:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rdmEkGmN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="drRBrsLJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfK2FwB (ORCPT
+        id S1726821AbfK2Fyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 00:52:01 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45909 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbfK2FwA (ORCPT
+        Fri, 29 Nov 2019 00:54:55 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37091 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726164AbfK2Fyy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 00:52:00 -0500
-Received: by mail-lj1-f194.google.com with SMTP id d20so827474ljc.12;
-        Thu, 28 Nov 2019 21:51:57 -0800 (PST)
+        Fri, 29 Nov 2019 00:54:54 -0500
+Received: by mail-io1-f65.google.com with SMTP id k24so20511450ioc.4;
+        Thu, 28 Nov 2019 21:54:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SZpOjVOBEWa5QEebmVIj3lCqVSR7NBCDtDVquQ2awsU=;
-        b=rdmEkGmNXhSrrSCnLtL5scTcy/manrkI/KCLkqqwqOPnujZt5knlhlRIejGhp2P9xD
-         54ANaSexDgR5PmO2lFzG8tGEmz8ww5hn9N5FIk/GhDOKQFQRq7hnzZdW45FKXnHjn2Wv
-         kAXWzexI2B58j8yPPs+6yanFvUkDoJwD9yGwls6hXVvADMLWgP6KJim7r2nDiGXg3E0F
-         k+StnmXrGOjM9/V2gw6G5BdWN5MmHo6N6Ajp5BgiPauggUI0EaHAKkj1p6NsEMn1nM5d
-         e2KwNBKAWpDjsqHBIKfL+CGwINRdnKEBPaegcnGGRWQHKdLsW/YHDMc/1QYQkOFPw/bW
-         Aoqw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jmqoLt1Ipq80GEdpA7uVx5mVDtS/SHGillzYT51kWkE=;
+        b=drRBrsLJwOsSDbcgTdjYnL5YhMtimm45cqMj6s4jIv1ZiQMoJ+n2QJ7Y4N2fpxng+k
+         Av+QFRIqa3MGfDJvB6fXNrrtHwh/kKJkEwpY9NxTP5WdivkgkRF61Ef6lL7lkGNhzDUn
+         mBh9Eabz7V+PMQcprEOS3wCgTBqMtOwzW53Da7vf+dbdon4HexOvCTcVAdFWAV/fyDQQ
+         KvrRpmTc4IPAcG2Rmqyz5DUUXcMHWsyn6PctBCfMdcRQtValX9jxUzw/OogRD1nIfNKC
+         zghJpMGqLmvnXVts6NHiYcNaN/WiKBs/svtV0BjUNRC61e+3CXOCi/kv/X5GG9ScEWIR
+         Wlww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SZpOjVOBEWa5QEebmVIj3lCqVSR7NBCDtDVquQ2awsU=;
-        b=swSouhz7nlImPDZ8Y4kUt4XTn5JogvJgukXJ7FUhaAdQ6HKcEMY8rcilJTMOV2+Sv5
-         /BaMpvZ6FJW1JKSNYYf8OK6RFA5H+pCJ3iR1Pdz/yU+vlZVrZATwn3Eo4Bonl6EYn4J8
-         iPMINNLVyxWJwHEWADKt6uTyYgRNFM6Yp/GksFJoR+2wyb0gu+CZ9SLOBLiiOitDiOAD
-         /uHhdboyagghSohLPOM1+w/oNZF6S4fq1xdVb4a4PYMEkhpQ4YBrPg5riQJMsOQnzKcf
-         bTJJ/QFB7oxCPPpGxFmxIZAF2J80KCxvhXVC/huUOJnWdm1KJ511VjYLKyqcEEHeZ/uZ
-         3Suw==
-X-Gm-Message-State: APjAAAV2671VdeSdPq3dbV7yVl+7CirJoVAUwH9Tl5BoYXy2ACHhWg3l
-        aMgh79pTo042I6bdBIe2XskXm7sW
-X-Google-Smtp-Source: APXvYqxS34TDkOASGRrtqZPgAYcCDvME02nHh565x/b/A1YYSaMqNNJSShvSF4t0QLHQTJSaMbV1Dw==
-X-Received: by 2002:a2e:9a04:: with SMTP id o4mr3961237lji.214.1575006716470;
-        Thu, 28 Nov 2019 21:51:56 -0800 (PST)
-Received: from octofox.hsd1.ca.comcast.net (jcmvbkbc-1-pt.tunnel.tserv24.sto1.ipv6.he.net. [2001:470:27:1fa::2])
-        by smtp.gmail.com with ESMTPSA id e14sm11007948ljj.36.2019.11.28.21.51.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 21:51:55 -0800 (PST)
-From:   Max Filippov <jcmvbkbc@gmail.com>
-To:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PATCH] tools/testing/selftests/seccomp: change USER_NOTIF_MAGIC definition
-Date:   Thu, 28 Nov 2019 21:51:28 -0800
-Message-Id: <20191129055128.25952-1-jcmvbkbc@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jmqoLt1Ipq80GEdpA7uVx5mVDtS/SHGillzYT51kWkE=;
+        b=XdJU8TheBbhTC+up6Wx+DJOmJgBlo32F3IPJ3Jgaiq9PqdxKwBlUbYNdCUdyxKiZdq
+         bU+Rmg18OhpttAc91ViAheUjsFePQxBiRJcPY5Nmq/++aeOdUThqILzps7YATSnYsUeS
+         8V+c7HRA+zmgvyVv0louhi3/1l7HPzE/gqZauhPifxUFCf/7eRLCt7mB3HCZyvmW2eT0
+         kc10p3y8+UXkVC2BwszKfqOaaXPuEjVj+OKY/u1oXLNiG19uVfx+hsNIcNN/s2aaMLCP
+         jk0dh3W+vNUZ/Kt6dzr/vdVcplg+FmDs0MGqCNvqUhQK06WSgpO5iA6ucSxBpVzETqRx
+         gZ6w==
+X-Gm-Message-State: APjAAAVJCs9ifF4MWHI0cvs6P+gRJydiISXO03DjK/x6AG6bcZ3qMCTt
+        KRUlPRljM4cwcSuOM8+nExsg7TbsmzbiWfIwZ3E=
+X-Google-Smtp-Source: APXvYqwV3CFFzruKf9Fkvty9F4uglgcC+7qYiLkkXVZIkvaTCtnY+i383rzfNHnGK2g/uDxWCVCXSbrggK+AdFMZcrU=
+X-Received: by 2002:a02:a08:: with SMTP id 8mr8538761jaw.98.1575006893958;
+ Thu, 28 Nov 2019 21:54:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <0000000000007d22100573d66078@google.com> <alpine.LFD.2.20.1808201527230.2758@ja.home.ssi.bg>
+ <ace19af4-7cae-babd-bac5-cd3505dcd874@I-love.SAKURA.ne.jp>
+In-Reply-To: <ace19af4-7cae-babd-bac5-cd3505dcd874@I-love.SAKURA.ne.jp>
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Date:   Fri, 29 Nov 2019 06:54:47 +0100
+Message-ID: <CAKXUXMwwxvJYjB0BkcmYg=AkzxW37SPiEuhyFPoATzEVY-MC7g@mail.gmail.com>
+Subject: Re: unregister_netdevice: waiting for DEV to become free (2)
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     syzbot <syzbot+30209ea299c09d8785c9@syzkaller.appspotmail.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Jouni Hogander <jouni.hogander@unikie.com>,
+        Julian Anastasov <ja@ssi.bg>, ddstreet@ieee.org,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>, syzkaller-bugs@googlegroups.com,
+        Hulk Robot <hulkci@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-USER_NOTIF_MAGIC is used to both initialize seccomp_notif_resp::val and
-verify syscall resturn value. On 32-bit architectures syscall return
-value has type long, but the value of USER_NOTIF_MAGIC has type long
-long because it doesn't fit into long. As a result all syscall return
-value comparisons with USER_NOTIF_MAGIC are false. This is also reported
-by the compiler when '-W' is added to CFLAGS.
+On Thu, Nov 28, 2019 at 10:56 AM Tetsuo Handa
+<penguin-kernel@i-love.sakura.ne.jp> wrote:
+>
+> Hello people involved in commit a3e23f719f5c4a38 ("net-sysfs: call dev_hold if kobject_init_and_add success")
+> and commit b8eb718348b8fb30 ("net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject").
+>
+> syzbot is reporting that unregister_netdevice() hangs due to underflowing
+> device refcount when kobject_init_and_add() failed due to -ENOMEM.
+>
 
-Add explicit type cast to USER_NOTIF_MAGIC definition.
-This fixes the following seccomp_bpf tests on 32-bit architectures:
- global.user_notification_basic
- global.user_notification_child_pid_ns
- global.user_notification_sibling_pid_ns
- global.user_notification_fault_recv
+Tetsuo, would you happen to have a C reproducer program that creates
+the trace you reported?
 
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
----
- tools/testing/selftests/seccomp/seccomp_bpf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I could not quickly find one that by the date would fit to when we
+included our change on this syzbot page:
+https://syzkaller.appspot.com/bug?id=bae9a2236bfede42cf3d219e6bf6740c583568a4
 
-diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-index 7f8b5c8982e3..16cc30e2ade4 100644
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -3077,7 +3077,7 @@ static int user_trap_syscall(int nr, unsigned int flags)
- 	return seccomp(SECCOMP_SET_MODE_FILTER, flags, &prog);
- }
- 
--#define USER_NOTIF_MAGIC 116983961184613L
-+#define USER_NOTIF_MAGIC ((unsigned long)116983961184613L)
- TEST(user_notification_basic)
- {
- 	pid_t pid;
--- 
-2.20.1
+Jouni, can you please follow up on this report.
 
+Thanks.
+
+Lukas
