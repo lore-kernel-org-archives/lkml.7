@@ -2,162 +2,135 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0A0C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 01:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE71C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 01:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA0AB2075C
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 01:54:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FE112075C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 01:58:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="YhKxk9Bm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfK2ByE (ORCPT
+        id S1726800AbfK2B6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 20:54:04 -0500
-Received: from mga11.intel.com ([192.55.52.93]:51505 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726716AbfK2ByE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 20:54:04 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Nov 2019 17:54:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,255,1571727600"; 
-   d="scan'208";a="359938553"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by orsmga004.jf.intel.com with ESMTP; 28 Nov 2019 17:54:03 -0800
-Received: from fmsmsx121.amr.corp.intel.com (10.18.125.36) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 28 Nov 2019 17:54:03 -0800
-Received: from shsmsx104.ccr.corp.intel.com (10.239.4.70) by
- fmsmsx121.amr.corp.intel.com (10.18.125.36) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 28 Nov 2019 17:54:02 -0800
-Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.108]) by
- SHSMSX104.ccr.corp.intel.com ([169.254.5.127]) with mapi id 14.03.0439.000;
- Fri, 29 Nov 2019 09:54:01 +0800
-From:   "Zhao, Shirley" <shirley.zhao@intel.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>
-CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
-        "Zhu, Bing" <bing.zhu@intel.com>,
-        "Chen, Luhai" <luhai.chen@intel.com>
-Subject: RE: One question about trusted key of keyring in Linux kernel.
-Thread-Topic: One question about trusted key of keyring in Linux kernel.
-Thread-Index: AdWZwFKzDBwFOydYTGGk+Aqs+6BIxAANhxEAAoxRZMAACTMHAAAdE3MAAA0/ewAAWA260A==
-Date:   Fri, 29 Nov 2019 01:54:00 +0000
-Message-ID: <A888B25CD99C1141B7C254171A953E8E49096540@shsmsx102.ccr.corp.intel.com>
-References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
-         <1573659978.17949.83.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
-         <1574796456.4793.248.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E490961E5@shsmsx102.ccr.corp.intel.com>
- <1574869168.4793.282.camel@linux.ibm.com>
-In-Reply-To: <1574869168.4793.282.camel@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNjBkMDY4ZmUtOGYyOC00ODY3LTk2ZDUtODk1ZTU1MGQ4MDgxIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiRnVIVTd0YVRFdExGWFQ1MktiQzE2WHBmZkNTZ1VBM2gwRlQ0VTFPVWg2aTMrOTVWM3ZnYTNYQkc2T2hiSVFJWSJ9
-x-ctpclassification: CTP_NT
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 28 Nov 2019 20:58:06 -0500
+Received: from mail-eopbgr760088.outbound.protection.outlook.com ([40.107.76.88]:49345
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726716AbfK2B6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 20:58:05 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=N21cpKkO0ISPXNIQp7P4FVOnFwYW640PTMkK9Mnl7XA3XMG0OWCghaHz3U5MJhQZE7N38AoOOumE+kkQiUcBCHgcItREIER+Znu86MORTHqyTgLENBFN38lP5S0t42EGkFePzDrUaPsLuqLxg0tCMSdtihk2CyCF9o92cQOy2GR3A6DQzB+K0v+vJtYWLktNV//hZXlDlKCVuul86wXnQESBncUD0O4FV+ezyuiwuyJmmknR52h68lB339Uklxcd2FPjOIJ7FydfQdv788S7V4mR9wz4aBBBNHL25noxKFRPwsvurYWrVG2IsNPIv3IMihJZVmvC9vyR6BRKOY522g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/jseS7COUUvsIGqfI0wiDkwMn+nimDDi4LQCVc/rLbY=;
+ b=CW6ttAt0dwz/TgNCdzOJHAxqq9YfNIxU1cCoHYBuXNwX5kX3eiKlAc2I/Fn6qJ+LlqXCBU4dUAP8ZDd23JFjZ1RPOQYMxyirKS7bOlpEoD4oYcE71qyQYLuFNMt1MnFQeVFTHnIv+w5x9v/SNy1eYRbo20wghJZ+8WwP5ItOLiovq0EmcUttpIjYU2ev3YYYv5s56r7kc0b3OBZ8FmL92yNmOmpGOFhYaFzJo1BcVWd8BrczoHjyNceKDLclHrBJb1Iu7/FRYaQQwko+rw141aS7HUtIjtJv7i/jIctT/pPsLUI5kEmQrWxmOZDWr7sMBEeI479Y1nxhWKV7loTv0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/jseS7COUUvsIGqfI0wiDkwMn+nimDDi4LQCVc/rLbY=;
+ b=YhKxk9BmjA5PoVJwrRUzZNr/2KelJRnZigUCogz3H6fHBticm1PGL7IRfni8KNauCVXSsEAOXukG6ay1XAufabVdGDxDKtgDt5ABnN6V+8QiEPJ6n0Gx9QLW2UzVID6VwVDmhFYAwEhYIprY4o8zRP1LTQjAdGGXzeDd0FzHyLw=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Ashish.Kalra@amd.com; 
+Received: from DM6PR12MB3610.namprd12.prod.outlook.com (20.178.198.149) by
+ DM6PR12MB4075.namprd12.prod.outlook.com (10.141.187.72) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.20; Fri, 29 Nov 2019 01:58:02 +0000
+Received: from DM6PR12MB3610.namprd12.prod.outlook.com
+ ([fe80::5dfd:e70f:379a:98c9]) by DM6PR12MB3610.namprd12.prod.outlook.com
+ ([fe80::5dfd:e70f:379a:98c9%5]) with mapi id 15.20.2474.023; Fri, 29 Nov 2019
+ 01:58:02 +0000
+Date:   Fri, 29 Nov 2019 01:57:55 +0000
+From:   Ashish Kalra <ashish.kalra@amd.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        linux-s390@vger.kernel.org, Michael Mueller <mimu@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Brijesh Singh <brijesh.singh@amd.com>
+Subject: Re: [PATCH 1/1] virtio_ring: fix return code on DMA mapping fails
+Message-ID: <20191129015730.GA13084@ashkalra_ubuntu_server>
+References: <20191114124646.74790-1-pasic@linux.ibm.com>
+ <20191119121022.03aed69a.pasic@linux.ibm.com>
+ <20191119080420-mutt-send-email-mst@kernel.org>
+ <20191122140827.0ead345c.pasic@linux.ibm.com>
+ <1ec7c229-6c4f-9351-efda-ed2df20f95f6@amd.com>
+ <20191126184527.GA10481@lst.de>
+ <20191128004225.GA11539@ashkalra_ubuntu_server>
+ <20191128070538.GB20274@lst.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191128070538.GB20274@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: SN1PR12CA0066.namprd12.prod.outlook.com
+ (2603:10b6:802:20::37) To DM6PR12MB3610.namprd12.prod.outlook.com
+ (2603:10b6:5:3a::21)
 MIME-Version: 1.0
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: d3d0f977-799b-4732-5b91-08d7746f90db
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4075:|DM6PR12MB4075:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB40750FC1E600AFCE5BA482C78E460@DM6PR12MB4075.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2887;
+X-Forefront-PRVS: 0236114672
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(366004)(396003)(39860400002)(136003)(346002)(376002)(189003)(199004)(6512007)(33716001)(7736002)(6486002)(6246003)(6436002)(81166006)(9686003)(8676002)(4326008)(81156014)(8936002)(2906002)(76176011)(52116002)(99286004)(26005)(44832011)(386003)(23726003)(6116002)(16586007)(58126008)(316002)(5660300002)(6506007)(54906003)(446003)(11346002)(7416002)(14454004)(3846002)(1076003)(86362001)(478600001)(6916009)(6666004)(47776003)(66066001)(25786009)(50466002)(186003)(66556008)(66476007)(305945005)(66946007)(33656002)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB4075;H:DM6PR12MB3610.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 3h0zwu9ANicvvNt1q+K6LTqWxg7XkVRdiC3bTbTL74PKiUi2muvb+l8/j76OTWyfnNNQFXb8WX5mHGzfof4BTeDrmsXpLD4kcCLY29iHOKcjVFSz4MGTRukuUplzaS+ToCRezqwrSp9zwhNU5b4M3zfiheeF7ttMh+SHwMPv1Mpif2/UQvN18g4UoMfD+123UXXtRx4JzORqEW2ud0S3JlZ+R9i+TSfmbitF9V40d8Np2BXI+6YP2FjBJ+VcAc80ZrQ4xRgx6r0BJFVJqqLjpcujpS6LT5z2o+VmEDqa2gSda3scfoHoNawDyp176z9gh1HwHZrsj3G9xgtoqHUQRXV/dBQqUik6dLTRwnoFdhq7j7hGVyWR8IM5TNAaA6bJESyPwRAyz/5GZ2IEfPJSMfHa3bid97C6VRtKhHZGh8T+j/PRu1KrStB08rHRG+Kh
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d3d0f977-799b-4732-5b91-08d7746f90db
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Nov 2019 01:58:02.0689
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RJDv0xbU4KCNcZpWwcwhdJQlmiYY9o8L2MuCEE6s+9KZfCzu/kcw57Jv3x9uQEBzaNxZSDEWp1FktRF76Ck5IQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4075
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIE1pbWksIA0KDQpNeSB0ZXN0IGVudmlyb25tZW50IGlzIFVidW50dSAxOC4wNC4zLCBrZXJu
-ZWwgdmVyc2lvbiBpcyA1LjAuMC0zNi1nZW5lcmljLiANCiQgY2F0IC9wcm9jL3ZlcnNpb24NCkxp
-bnV4IHZlcnNpb24gNS4wLjAtMzYtZ2VuZXJpYyAoYnVpbGRkQGxndzAxLWFtZDY0LTA2MCkgKGdj
-YyB2ZXJzaW9uIDcuNC4wIChVYnVudHUgNy40LjAtMXVidW50dTF+MTguMDQuMSkpICMzOX4xOC4w
-NC4xLVVidW50dSBTTVAgVHVlIE5vdiAxMiAxMTowOTo1MCBVVEMgMjAxOQ0KJCBsc2JfcmVsZWFz
-ZSAtYQ0KTm8gTFNCIG1vZHVsZXMgYXJlIGF2YWlsYWJsZS4NCkRpc3RyaWJ1dG9yIElEOiBVYnVu
-dHUNCkRlc2NyaXB0aW9uOiAgICBVYnVudHUgMTguMDQuMyBMVFMNClJlbGVhc2U6ICAgICAgICAx
-OC4wNA0KQ29kZW5hbWU6ICAgICAgIGJpb25pYw0KDQpJdCBpcyBUUE0yLjAsIGRUUE0uIA0KDQpB
-bmQgSSBkaWRu4oCZdCBydW4gaXQgb24gb3RoZXIgdmVyc2lvbi4gDQoNCkl0IGhhcyBubyByZWxh
-dGlvbnNoaXAgd2l0aCBUUE0gY29tbWFuZCwgaXQgaXMganVzdCB1c2VkIHRvIGhlbHAgZmluZCB0
-aGUgZmFpbCByZWFzb24uIA0KTXkgcXVlc3Rpb24gaXMgaG93IHRvIGxvYWQgYSB0cnVzdGVkIGtl
-eSB3aGljaCBpcyBzZWFsZWQgd2l0aCBQQ1IgcG9saWN5IGNvcnJlY3RseSBhZnRlciByZWJvb3Qu
-DQpUaGF0IGlzIGJldHRlciBpZiB0aGVyZSBpcyBzb21lIGV4YW1wbGUgYWJvdXQgaG93IHRvIHVz
-ZSAicG9saWN5ZGlnZXN0IiwgInBvbGljeWhhbmRsZSIgdG8gc2VhbC91bnNlYWwgYSB0cnVzdGVk
-IGtleS4gDQoNClRoYW5rcy4gDQoNCi0gU2hpcmxleSANCg0KDQoNCi0tLS0tT3JpZ2luYWwgTWVz
-c2FnZS0tLS0tDQpGcm9tOiBNaW1pIFpvaGFyIDx6b2hhckBsaW51eC5pYm0uY29tPiANClNlbnQ6
-IFdlZG5lc2RheSwgTm92ZW1iZXIgMjcsIDIwMTkgMTE6MzkgUE0NClRvOiBaaGFvLCBTaGlybGV5
-IDxzaGlybGV5LnpoYW9AaW50ZWwuY29tPjsgSmFtZXMgQm90dG9tbGV5IDxqZWpiQGxpbnV4Lmli
-bS5jb20+OyBKYXJra28gU2Fra2luZW4gPGphcmtrby5zYWtraW5lbkBsaW51eC5pbnRlbC5jb20+
-OyBKb25hdGhhbiBDb3JiZXQgPGNvcmJldEBsd24ubmV0Pg0KQ2M6IGxpbnV4LWludGVncml0eUB2
-Z2VyLmtlcm5lbC5vcmc7IGtleXJpbmdzQHZnZXIua2VybmVsLm9yZzsgbGludXgtZG9jQHZnZXIu
-a2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgJ01hdXJvIENhcnZhbGhv
-IENoZWhhYicgPG1jaGVoYWIrc2Ftc3VuZ0BrZXJuZWwub3JnPjsgWmh1LCBCaW5nIDxiaW5nLnpo
-dUBpbnRlbC5jb20+OyBDaGVuLCBMdWhhaSA8bHVoYWkuY2hlbkBpbnRlbC5jb20+DQpTdWJqZWN0
-OiBSZTogT25lIHF1ZXN0aW9uIGFib3V0IHRydXN0ZWQga2V5IG9mIGtleXJpbmcgaW4gTGludXgg
-a2VybmVsLg0KDQpIaSBTaGlybGV5LA0KDQpPbiBXZWQsIDIwMTktMTEtMjcgYXQgMDI6NDYgKzAw
-MDAsIFpoYW8sIFNoaXJsZXkgd3JvdGU6DQo+IEhpLCBNaW1pLA0KPiANCj4gQW5zd2VyIHlvdXIg
-dHdvIHF1ZXN0aW9uczoNCj4gDQo+IDEuIFllcywgSSBoYXZlIHZlcmlmaWVkIHRydXN0ZWQga2V5
-IHdvcmtzIHdlbGwgd2l0aG91dCBQQ1IgcG9saWN5IA0KPiBwcm90ZWN0aW9uIGFzIGJlbG93Og0K
-PiAkIGtleWN0bCBhZGQgdHJ1c3RlZCBrbWsgIm5ldyAzMiBrZXloYW5kbGU9MHg4MTAwMDAwMSIg
-QHUNCj4gMTA1NTI0MDkyOA0KPiAkIGtleWN0bCBsaXN0IEB1DQo+IDEga2V5cyBpbiBrZXlyaW5n
-Og0KPiAxMDU1MjQwOTI4OiAtLWFsc3dydiAgICAgMCAgICAgMCB0cnVzdGVkOiBrbWsNCj4gJCBr
-ZXljdGwgcGlwZSAxMDU1MjQwOTI4ID4ga21rLmJsb2INCj4gJCBjYXQga21rLmJsb2INCj4gMDA3
-ZjAwMjBmZjgwOGJkOGI3MjM5MTk0ZTg5YWFjNmE5NWI0ZDIxMDExNDc0MmMyMGFmYTMzNDkzZjAw
-MmRmZmQwNjgNCj4gNWQ1MTAwMTBjMTJkN2FkNTFlYjgzZDZkOTM4OTVkZTA2NmJmM2QzOTcxOGNj
-NTAzYWRiNDgwMmNiMDg3Yjg4YjJmZmYNCj4gNGIwNDBmZTNhMmJlNmEzZjg3YzY3NDlkMDg3Yzlm
-YjZlODczNGNiMjNmNDM4ZDY0MDg3NTgxYTEzYmM4M2Q1ZGMzYjANCj4gMjZlNzdhODk0ZWNlNjYy
-MGQwZWI4NWRmNjQ0OWZmM2M2MDlmZDc3ZDVmMGNhZjc5YjQ1MzViMDAyZTAwMDgwMDBiMDANCj4g
-MDAwMDQwMDAwMDAwMTAwMDIwOWE1YjAwYjBkNTU4ZmNmOWU4YzAyOTUyMjcxNWU2YjU5MDYzNjZl
-YWVjNWYzNDM2N2INCj4gOGFiMTZjMGZiOTAwOWEwMDczMDAwMDAwMDAwMDIwZTNiMGM0NDI5OGZj
-MWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDENCj4gZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUw
-MTAwMGIwMDIyMDAwYmRjZGI2OTRlMTAyZTEzYTBmYmE1MTExMDgxY2INCj4gNmNmNjE2YzExOGQ0
-MDQ5MzZjYWMzZTg0ZGIyNGM3MWU0N2Q1MDAyMjAwMGIwNGI1ZGIxYWE1MjYzNWRmYjI0MmU3NmYN
-Cj4gNmJkZThlMjE3NmFlNDhmYzY4Mjk0NmM2Yzc2ZDk2ZjYwODA3OWQxZjAwMDAwMDIwMzZiNmZj
-Y2E4MjA2YzdmNzIyZGUNCj4gODU4MjFkN2VjYjQ3ODU5NzZmZGQ2NDJiYzc1Mzg1MDVhMmE4MThj
-OGEyMzg4MDIxNDAwMDAwMDEwMDIwMmFlZGRlNDUNCj4gMDhmNTQ4ZDEwODE5M2VjOGZlMTY2YTdi
-ZWZkZTE5MTEzZmU3MjdhZTJiMjk5MDFiZGVjZTk2ZTUNCj4gJCBrZXljdGwgY2xlYXIgQHUNCj4g
-JCBrZXljdGwgbGlzdCBAdQ0KPiBrZXlyaW5nIGlzIGVtcHR5DQo+ICQga2V5Y3RsIGFkZCB0cnVz
-dGVkIGttayAibG9hZCBgY2F0IGttay5ibG9iYCBrZXloYW5kbGU9MHg4MTAwMDAwMSINCj4gQHUN
-Cj4gMTAyMjk2MzczMQ0KPiAkIGtleWN0bCBwcmludCAxMDIyOTYzNzMxDQo+IDAwN2YwMDIwZmY4
-MDhiZDhiNzIzOTE5NGU4OWFhYzZhOTViNGQyMTAxMTQ3NDJjMjBhZmEzMzQ5M2YwMDJkZmZkMDY4
-DQo+IDVkNTEwMDEwYzEyZDdhZDUxZWI4M2Q2ZDkzODk1ZGUwNjZiZjNkMzk3MThjYzUwM2FkYjQ4
-MDJjYjA4N2I4OGIyZmZmDQo+IDRiMDQwZmUzYTJiZTZhM2Y4N2M2NzQ5ZDA4N2M5ZmI2ZTg3MzRj
-YjIzZjQzOGQ2NDA4NzU4MWExM2JjODNkNWRjM2IwDQo+IDI2ZTc3YTg5NGVjZTY2MjBkMGViODVk
-ZjY0NDlmZjNjNjA5ZmQ3N2Q1ZjBjYWY3OWI0NTM1YjAwMmUwMDA4MDAwYjAwDQo+IDAwMDA0MDAw
-MDAwMDEwMDAyMDlhNWIwMGIwZDU1OGZjZjllOGMwMjk1MjI3MTVlNmI1OTA2MzY2ZWFlYzVmMzQz
-NjdiDQo+IDhhYjE2YzBmYjkwMDlhMDA3MzAwMDAwMDAwMDAyMGUzYjBjNDQyOThmYzFjMTQ5YWZi
-ZjRjODk5NmZiOTI0MjdhZTQxDQo+IGU0NjQ5YjkzNGNhNDk1OTkxYjc4NTJiODU1MDEwMDBiMDAy
-MjAwMGJkY2RiNjk0ZTEwMmUxM2EwZmJhNTExMTA4MWNiDQo+IDZjZjYxNmMxMThkNDA0OTM2Y2Fj
-M2U4NGRiMjRjNzFlNDdkNTAwMjIwMDBiMDRiNWRiMWFhNTI2MzVkZmIyNDJlNzZmDQo+IDZiZGU4
-ZTIxNzZhZTQ4ZmM2ODI5NDZjNmM3NmQ5NmY2MDgwNzlkMWYwMDAwMDAyMDM2YjZmY2NhODIwNmM3
-ZjcyMmRlDQo+IDg1ODIxZDdlY2I0Nzg1OTc2ZmRkNjQyYmM3NTM4NTA1YTJhODE4YzhhMjM4ODAy
-MTQwMDAwMDAxMDAyMDJhZWRkZTQ1DQo+IDA4ZjU0OGQxMDgxOTNlYzhmZTE2NmE3YmVmZGUxOTEx
-M2ZlNzI3YWUyYjI5OTAxYmRlY2U5NmU1DQo+IA0KPiAyLiBUaGUgZm9sbG93aW5nIGtlcm5lbCBm
-aWxlIGlzIHJlbGF0ZWQgd2l0aCB0aGlzIHByb2JsZW0uIA0KPiAvc2VjdXJpdHkva2V5cy9rZXlj
-dGwuYyAvc2VjdXJpdHkva2V5cy9rZXkuYyANCj4gL3NlY3VyaXR5L2tleXMvdHJ1c3RlZC1rZXlz
-L3RydXN0ZWRfdHBtMS5jDQo+IC9zZWN1cml0eS9rZXlzL3RydXN0ZWQta2V5cy90cnVzdGVkX3Rw
-bTIuYw0KPiANCj4gVG8gbG9hZCB0aGUgUENSIHBvbGljeSBwcm90ZWN0aW9uIHRydXN0ZWQga2V5
-LCB0aGUgY2FsbCBzdGFjayBpczoNCj4gU1lTQ0FMTF9ERUZJTkU1KGFkZF9rZXksLi4uKSAtLT4g
-a2V5X2NyZWF0ZV9vcl91cGRhdGUoKSAtLT4NCj4gX19rZXlfaW5zdGFudGlhdGVfYW5kX2xpbmso
-KSAtLT4gIHRydXN0ZWRfaW5zdGFudGlhdGUoKSAtLT4NCj4gdHBtMl91bnNlYWxfdHJ1c3RlZCgp
-IC0tPiB0cG0yX3Vuc2VhbF9jbWQoKS4NCj4gDQo+IENoZWNrIGRtZXNnLCB0aGVyZSB3aWxsIGJl
-IGVycm9yOg0KPiBbNzMzMzYuMzUxNTk2XSB0cnVzdGVkX2tleToga2V5X3Vuc2VhbCBmYWlsZWQg
-KC0xKQ0KDQpMaWtlIHRoZSBvdGhlciBrZXJuZWwgbWFpbGluZyBsaXN0cywgcGxlYXNlIGJvdHRv
-bSBwb3N0LiDCoFdoZW4gcmVwb3J0aW5nIGEgcHJvYmxlbSwgcGxlYXNlIGluY2x1ZGUgdGhlIGtl
-cm5lbCB2ZXJzaW9uIGFuZCBvdGhlciByZWxldmFudCBkZXRhaWxzLiDCoEZvciBleGFtcGxlLCB0
-aGUgVFBNIHZlcnNpb24gYW5kIHR5cGUgKGVnLiBoYXJkd2FyZSB2ZW5kb3IsIHNvZnR3YXJlIFRQ
-TSwgZXRjKS4gwqBQbGVhc2UgaW5kaWNhdGUgaWYgdGhpcyBpcyBhIG5ldyBwcm9ibGVtIGFuZCB3
-aGljaCBrZXJuZWwgcmVsZWFzZSBpdCBmaXJzdCBzdGFydCBoYXBwZW5pbmc/DQoNCkkgaGF2ZSBu
-byBleHBlcmllbmNlIHdpdGggdGhlIHRwbTJfIGNvbW1hbmRzLCDCoEkgc3VnZ2VzdCB0cnlpbmcg
-dG8gZXh0ZW5kIGEgc2luZ2xlIG1lYXN1cmVtZW50IHRvIGEgUENSIGFuZCBzZWFsaW5nIHRvIHRo
-YXQgdmFsdWUuDQoNCk1pbWkNCg0K
+On Thu, Nov 28, 2019 at 08:05:38AM +0100, Christoph Hellwig wrote:
+> On Thu, Nov 28, 2019 at 12:42:25AM +0000, Ashish Kalra wrote:
+> > Why can't we leverage CMA instead of SWIOTLB for DMA when SEV is
+> > enabled, CMA is well integerated with the DMA subsystem and handles
+> > encrypted pages when force_dma_unencrypted() returns TRUE. 
+> > 
+> > Though, CMA might face the same issues as SWIOTLB bounce buffers, it's
+> > size is similarly setup statically as SWIOTLB does or can be set as a 
+> > percentage of the available system memory.
+> 
+> How is CMA integrated with SEV?  CMA just gives a contiguous chunk
+> of memory, which still needs to be remapped as unencrypted before
+> returning it to the user.
+
+Looking at the implementation, i see that CMA is accessible using
+dma_alloc_coherent() and the buffer allocated by dma_alloc_coherent()
+either using the CMA or the page allocator, will be marked/tagged as
+unencrypted and returned to the user.
+
+But for dma_map_xx() interfaces, the memory will need be remapped as
+unencrypted memory (as you mentioned).
+
+Thanks,
+Ashish
