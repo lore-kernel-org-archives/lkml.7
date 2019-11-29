@@ -2,106 +2,64 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CEDBC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 19:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07142C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 19:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D5A0208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 19:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7FFF21721
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 19:22:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbfK2TKw (ORCPT
+        id S1727076AbfK2TWi convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 14:10:52 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40726 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727111AbfK2TKw (ORCPT
+        Fri, 29 Nov 2019 14:22:38 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:59120 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbfK2TWh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 14:10:52 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id B1BE6292BA4
-Received: by earth.universe (Postfix, from userid 1000)
-        id 990293C0C77; Fri, 29 Nov 2019 15:06:01 +0100 (CET)
-Date:   Fri, 29 Nov 2019 15:06:01 +0100
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     linux@armlinux.org.uk, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 04/17] power: reset: Kconfig: select
- POWER_RESET_AT91_RESET for sam9x60
-Message-ID: <20191129140601.fgbxwhk2c7rlvvyz@earth.universe>
-References: <1574773941-20649-1-git-send-email-claudiu.beznea@microchip.com>
- <1574773941-20649-5-git-send-email-claudiu.beznea@microchip.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qqra4xv2pgsrtjif"
-Content-Disposition: inline
-In-Reply-To: <1574773941-20649-5-git-send-email-claudiu.beznea@microchip.com>
+        Fri, 29 Nov 2019 14:22:37 -0500
+Received: from [192.168.1.91] (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 923A2CECDE;
+        Fri, 29 Nov 2019 20:31:44 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
+Subject: Re: [PATCH] Bluetooth: btusb: fix memory leak on fw
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20191129173635.87479-1-colin.king@canonical.com>
+Date:   Fri, 29 Nov 2019 20:22:05 +0100
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <F011BBCD-8D95-4934-AB3E-0F264990D4F2@holtmann.org>
+References: <20191129173635.87479-1-colin.king@canonical.com>
+To:     Colin King <colin.king@canonical.com>
+X-Mailer: Apple Mail (2.3601.0.10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Colin,
 
---qqra4xv2pgsrtjif
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Tue, Nov 26, 2019 at 03:12:08PM +0200, Claudiu Beznea wrote:
-> Select POWER_RESET_AT91_RESET for SAM9X60 SoC.
->=20
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> Currently the error return path when the call to btusb_mtk_hci_wmt_sync
+> fails does not free fw.  Fix this by returning via the error_release_fw
+> label that performs the free'ing.
+> 
+> Addresses-Coverity: ("Resource leak")
+> Fixes: a1c49c434e15 ("Bluetooth: btusb: Add protocol support for MediaTek MT7668U USB devices")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 > ---
->  drivers/power/reset/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-> index c721939767eb..886e60017f4d 100644
-> --- a/drivers/power/reset/Kconfig
-> +++ b/drivers/power/reset/Kconfig
-> @@ -26,7 +26,7 @@ config POWER_RESET_AT91_POWEROFF
->  config POWER_RESET_AT91_RESET
->  	tristate "Atmel AT91 reset driver"
->  	depends on ARCH_AT91
-> -	default SOC_AT91SAM9 || SOC_SAMA5
-> +	default SOC_AT91SAM9 || SOC_SAM9X60 || SOC_SAMA5
->  	help
->  	  This driver supports restart for Atmel AT91SAM9 and SAMA5
->  	  SoCs
+> drivers/bluetooth/btusb.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I suppose this will go through ARM:
+patch has been applied to bluetooth-next tree.
 
-Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Regards
 
--- Sebastian
+Marcel
 
---qqra4xv2pgsrtjif
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl3hJckACgkQ2O7X88g7
-+pqhDQ//WNmLXqjre475NYvywJrUR10v2JH2NyVYPBlYw5NtMdaj/2qgjlOOA5by
-KaHTlh1gsCthLa5RF+xVpKc9QnKEPnt3ZIHys+QO1vBl50CA4uSdP7SJ0X8pqhSm
-s/KfSa5dlkGF0z3cu6XXJg4c/oG4HSsCGPnGrbwVIaCN1kQBA8ESEBhwyggIu59J
-DjBw092F4Wp+o+McqZW+xR/ILbNhqkqzz5OkJdg5r3XcWr+K3ubNUrfEIKn60+C6
-49PI6hvkvbZHtHRtJgkcxW7TX/IsmFNWGWO0VSPLh7sa5DiD9Pf4Mux3mHAU6uk6
-QaFfWZahcRqNvpwxcqJUqntwawnpIzYmoJfzDoqScHEfU1kZ+p3U/RenNfHBHioQ
-SPO/15E2hC5Anb7JNYbxS4JccBF+0xRmpVIGRqmNJFFRaVvEhRgYuH/LWZqdgQEn
-K/ZPHCXsYS/5cTMNOJ/Ma1FfgVaEbeCXv5r89ExS2/JuHtDXCD3KdC7eIYnwEvJn
-9nYnHxRdBJRH92QpooEUOJI0fXKgBsGBn2lcAwqlt7ctfVNG3fL/aK8E7SuXNomw
-LQyahophFRjRjCKT8ZscFperzBF70gMVXws0eiV2u55ZHVtvXBIEF7BapxxjgI6a
-dg22CtqsGb4xQGY2srR7qjL4rJd9JJuQrQcuRYBwxsRnDG80Wto=
-=HxsT
------END PGP SIGNATURE-----
-
---qqra4xv2pgsrtjif--
