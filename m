@@ -2,126 +2,76 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE855C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C10C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 944DB21721
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AD8521774
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:50:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="nmL+CR9H"
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="VDiGucZv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfK2IrP (ORCPT
+        id S1726770AbfK2IuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 03:47:15 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:38777 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbfK2IrO (ORCPT
+        Fri, 29 Nov 2019 03:50:03 -0500
+Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25897 "EHLO
+        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbfK2IuC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 03:47:14 -0500
-Received: by mail-il1-f194.google.com with SMTP id u17so26328991ilq.5
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 00:47:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=0bhuQ93HttrTxTAhNw8aS9QwCDZ8sDxBTo3J1Rx58OQ=;
-        b=nmL+CR9HMsMNScs9eViOCbnO2FWwFdw745UQjYogtV77gctBJkqPqj76RfwR2XEbXG
-         cHdusrKDuZlkEx5hdGEJpuVZlKR6Sf999e0lkGi8FKcZKcBvVE/k8jx6pzKcTa9t0kO9
-         PETk1FIMTjdixL8ZyOIHXt/vpjmry7r2RfyV+Tf4YgRYw+SWSKcYESMaf8FB5cvcutLU
-         jIUd1Vga11L0qXBh8B+8jufdrYUQtFJ4qO25gih85ryz2HJt27DEd/M6O+gtz8GP5W1e
-         lpzrFo+U/GwDqq6t4uYNjf2KlC2lHKrGHbFg+2gt6JwJ7yFIqB40gL1TPQCudvfOzhxo
-         bRJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=0bhuQ93HttrTxTAhNw8aS9QwCDZ8sDxBTo3J1Rx58OQ=;
-        b=mS+hmyWlYEUaTFe2alAdMnK2UESYNjqKlNN7QVxiv1i+uOobkzwfYtPdohy1CLY4yW
-         VUDGT1IyRaJ54OaPOqrwTO8aVQxvFzKOtQDdZmlsP3X/MiXZ/B+XV8NCln1J6zQ+85Su
-         tBxOAKZbxlKhAV5G9p6Rbs0VClZJI3q5FECJuyM7fTldzy56u8mn+2tLKNSEN6Q2njHK
-         8SjuXJaAi9pu+TSbAonfXbwzc8ELV632CYS3e9nMXFSLilmwTrjdzqpI3rDVilAXn6bJ
-         jKpK0uY8LpAkXNZ8MklA3BhYG6rQ2DPEYwyOEgF8ubLuy4phCvRPjxYlBsHSumFFeAWW
-         yozg==
-X-Gm-Message-State: APjAAAUuY9K878SmXzm6IHyPUUrcacaYC0p3j1YY42x5Y6cI9qyCpBvU
-        AVAhc5gWCNDGqpDCWrr4k2KYAYdnxhbmwXmR+ZXeNA==
-X-Google-Smtp-Source: APXvYqy7SGubfXXTIwTKtjbr11EdnB50yfatCvnFFOvYEf0wubLbCixqeKYSolhozuG80EcW0JpH7nBbCalVHHTxZAY=
-X-Received: by 2002:a05:6e02:5c8:: with SMTP id l8mr2541678ils.287.1575017232331;
- Fri, 29 Nov 2019 00:47:12 -0800 (PST)
-MIME-Version: 1.0
-References: <20191120142038.30746-1-ktouil@baylibre.com> <20191120142038.30746-2-ktouil@baylibre.com>
- <CACRpkdaZrvPObjyN4kasARzKZ9=PiAcvTzXzWkmC7R+Ay5tU8w@mail.gmail.com>
- <CAMpxmJWSgYjcGdR7Zrj-=nA+H8cYfZUriHQPxN=8zgPDvD-wTA@mail.gmail.com>
- <CACRpkdaW82pgQivc0VVgqqVv4fgXxMyGD3Lo8YHcMK7aGPDKaw@mail.gmail.com>
- <CAMpxmJU_0MzroyD_ZF5WOxpZz3dkADLOmW7aKpWdJ7GCvo-RnA@mail.gmail.com>
- <CACRpkdaPQKxfC66yhG=xdmCOGGd9PjDVCwZquKb+4HmuS_=kNA@mail.gmail.com>
- <CALL1Z1xpcGyh_f3ooRT+gGApoAnS7YBMd2hUKqnt+pTcAFoeAg@mail.gmail.com> <CACRpkdYEEypRZOaO3Ta9aDgizNeLyUOSraBEhKaZcHaJV+o0gQ@mail.gmail.com>
-In-Reply-To: <CACRpkdYEEypRZOaO3Ta9aDgizNeLyUOSraBEhKaZcHaJV+o0gQ@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 29 Nov 2019 09:47:01 +0100
-Message-ID: <CAMRc=MfVod5ODvsQbVBny1+Yvre1F971uR_DqsvoiYATvUfoXw@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: nvmem: new optional property write-protect-gpios
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Khouloud Touil <ktouil@baylibre.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        baylibre-upstreaming@groups.io,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 29 Nov 2019 03:50:02 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1575017364; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=dxV8WAwivGXjeWfqioCPaV4jG3GTTSpwBTv/BbIpekDWCiwyHOxsmz56Ukrrlwgf53oqp9F13uT/AmZl7keYL33mHTvpIBDPV81Ykp3gJ2RVq5hSIhrX/3Ze5VA8cSsOkKDdPmPZf+iWtPUn5A/vXUzkEJjFI/1TPzopWvGsKPw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1575017364; h=Cc:Date:From:Message-ID:Subject:To; 
+        bh=XqQQbl9IG+MgujWf5gYJVBmWox/39o+UThQ2/GDWy54=; 
+        b=ni+NF8Jh5cIkiRbM0Zm7bhZtQuIDChIeU/HuooO+cs+1vsHHFTYsuNA0QUzxSy6fSbZhpVlIg8X8fSMm7gYWGs9IX89Rcv6sKNsUBLBqoZ/Z/DTlt+gFT8MOGlwszDkhDAGudO8I/nCj6HJLHMIcOxnuO67EpVEx8z8P32TVmXc=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:subject:date:message-id; 
+  b=lwfOQwEp8AWBdSh73JAwYTYipV3+ABcfW/bNiCa/hzwbnyZMmrn5sVU2vSvp8cKB3STUMdMPhMbo
+    CHlrqZxuc+jhbPZxj6c5494eCb2uOspa0mjeh291JlfPf8n8p7r1  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1575017364;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=From:To:Cc:Subject:Date:Message-Id;
+        bh=XqQQbl9IG+MgujWf5gYJVBmWox/39o+UThQ2/GDWy54=;
+        b=VDiGucZvO2jj9hBFgl6PeFHut4+xry2kWHknH1N902DZvAUYd/TuYB2gQPEky6fe
+        tmSZwnA55E2GKdyYNbjeVrDNcR5z2fhJ3sTE1CvvkpSQph33F0zd3HwVg7NJxfn206m
+        xyecWPuk5QWUFF5AEpUz43jeBMOnxqwgzvfuW5Z8=
+Received: from zhouyanjie-virtual-machine.localdomain (139.207.146.46 [139.207.146.46]) by mx.zohomail.com
+        with SMTPS id 1575017363957466.0876378330212; Fri, 29 Nov 2019 00:49:23 -0800 (PST)
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
+        jhogan@kernel.org, mripard@kernel.org, shawnguo@kernel.org,
+        mark.rutland@arm.com, syq@debian.org, ralf@linux-mips.org,
+        heiko@sntech.de, icenowy@aosc.io,
+        laurent.pinchart@ideasonboard.com, krzk@kernel.org,
+        geert+renesas@glider.be, paul@crapouillou.net,
+        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, 772753199@qq.com
+Subject: Add initial support for Ingenic X1000 SoC and Y&A CU Neo board v6.
+Date:   Fri, 29 Nov 2019 16:48:41 +0800
+Message-Id: <1575017333-29020-1-git-send-email-zhouyanjie@zoho.com>
+X-Mailer: git-send-email 2.7.4
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 28 lis 2019 o 14:45 Linus Walleij <linus.walleij@linaro.org> napisa=
-=C5=82(a):
->
-> On Tue, Nov 26, 2019 at 4:18 PM Khouloud Touil <ktouil@baylibre.com> wrot=
-e:
->
-> > [Me]
-> >> 4. The code still need to be modified to set the value
-> >>    to "1" to assert the line since the gpiolib now handles
-> >>    the inversion semantics.
->
-> > By saying "assert the wp" do you mean enable the write operation or
-> > block it ?
->
-> Yeah one more layer of confusion, sorry :/
->
-> By "asserting WP" I mean driving the line to a state where
-> writing to the EEPROM is enabled, i.e. the default state is
-> that the EEPROM is write protected and when you "assert"
-> WP it becomes writable.
->
-> If you feel the inverse semantics are more intuitive (such that
-> WP comes up asserted and thus write protected), be my
-> guest :D
->
+v5->v6:
+1.Use "stdout-path = "serial2:115200n8"" instead "stdout-path = &uart2" in DT.
+2.Remove "console=ttyS2,115200n8" and "CONFIG_CMDLINE_OVERRIDE=y" from defconfg.
+3.Add watchdog timer DT node, and update defconfig for watchdog timer.
 
-Ha! I've always assumed that "to assert the write-protect pin" means
-to *protect* the EEPROM from writing. That's why it comes up as
-asserted (logical '1' in the driver) and we need to deassert it (drive
-it low, logical '0' in the driver) to enable writing. This is the
-current behavior and I'd say in this case it's just a matter of very
-explicit statement that this is how it works in the DT binding?
 
-Rob: any thoughts on this?
-
-Bartosz
-
-> As long as it is unambiguously documented in the bindings
-> and with comments in the code I'm game for whatever the
-> at24 people feel is most appropriate. (You will set the standard
-> for everyone else.)
->
-> Yours.
-> Linus Walleij
