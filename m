@@ -2,92 +2,95 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4602FC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2E3C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B8D7215F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:51:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F1sUJA6C"
+	by mail.kernel.org (Postfix) with ESMTP id 3983021721
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:01:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbfK2HvD (ORCPT
+        id S1726819AbfK2IBl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 02:51:03 -0500
-Received: from mail-lj1-f180.google.com ([209.85.208.180]:43042 "EHLO
-        mail-lj1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfK2HvC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 02:51:02 -0500
-Received: by mail-lj1-f180.google.com with SMTP id a13so7765913ljm.10;
-        Thu, 28 Nov 2019 23:50:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=G7htS148MLHne5gcdg1L2MpYQYz/l/iKEwv8PYFcG2E=;
-        b=F1sUJA6CQo0FU6YJTe8zF3XS9wn1GdYIGYKKW0FkH1WZjpFUNLduWY7619x4knvYuL
-         II29bxpBYNCe1WTppKZPD3gWAjLNZvPN8OYY+bRDbydx8UvRceDBEacyqW7eHUDwYexn
-         TeX/cu4QgfvFSzOQo2tyqLXKl6WzzWLcts+u+DBj+apKQ0DLv2jyN1R6JN4TwG89ZHNM
-         yuCv43rlcM8ImNJ/JymVpNIGiWmBNW8ivSjHfB+WQ3C8K+rDH6OoA1h1H+YcuX6fiPn1
-         8ODbdSJiZdXp3rJ/vf1zqTG3Tv7a/o7gxl+QC/JTulZCeDkOil1FNdS/SAYXzfr5txH9
-         wiYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=G7htS148MLHne5gcdg1L2MpYQYz/l/iKEwv8PYFcG2E=;
-        b=WERmLLP1De0aqa6XNds/ch61d1gpqSQQNwVWrJGYNYCWOu1JlPyyJBH91vY1Hwz0rp
-         NMClHvRIS1g6vAi1YgkRQDeQmrQIWV3LY6Pw6kWGJppulS+LBuF8gkstqbG/qBoGu6kU
-         FcyIWpkg/FuTCfTNaPd/EiE8bWpvevtx3WV698FuTXhLtmeDU5+GAfp8kPcxRivTs6w3
-         U8gkul+4SHcnwVAYsA6QBXZQTkJQqHwmKNXTMZ2Dt3zl1cSbybqSYZFGW+unM+fOsZ6x
-         Ak67SX3VGMD4N6tdCndXDU5xKBu894V648qE05TlyvQSvupjwHFrCY8OUF0h6ueWyMnF
-         ranw==
-X-Gm-Message-State: APjAAAUSY7cg+zu+RC7eR0R9ZY1yYwn49HTcSGUQrlkwr/ldhyM+FuRB
-        DOMlkrueBErC0sUeEZINRgWYGM6rYBZTIVIMdCc3pujz
-X-Google-Smtp-Source: APXvYqzTIyrUoGUmL075z/BU7X+QXiOWAeMrU+mvmklSZUzJDlwkcaucXHnotp5Tm7JwlrZBFFBcw/VvT1SXB0VSACM=
-X-Received: by 2002:a2e:984f:: with SMTP id e15mr36803147ljj.109.1575013858719;
- Thu, 28 Nov 2019 23:50:58 -0800 (PST)
+        Fri, 29 Nov 2019 03:01:41 -0500
+Received: from mx1.emlix.com ([188.40.240.192]:38192 "EHLO mx1.emlix.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726360AbfK2IBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 03:01:41 -0500
+X-Greylist: delayed 304 seconds by postgrey-1.27 at vger.kernel.org; Fri, 29 Nov 2019 03:01:40 EST
+Received: from mailer.emlix.com (unknown [81.20.119.6])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1.emlix.com (Postfix) with ESMTPS id A0895602E7;
+        Fri, 29 Nov 2019 08:56:34 +0100 (CET)
+From:   Rolf Eike Beer <eb@emlix.com>
+To:     David Woodhouse <dwmw2@infradead.org>
+Cc:     Linux Kernel Developers List <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>, keyrings@vger.kernel.org
+Subject: [PATCH v3][RESEND #2] scripts: use pkg-config to locate libcrypto
+Date:   Fri, 29 Nov 2019 08:56:34 +0100
+Message-ID: <3291155.4g3vBG3qv5@devpool35>
+Organization: emlix GmbH
+In-Reply-To: <2010898.sAvVGPNi7W@devpool35>
+References: <20538915.Wj2CyUsUYa@devpool35> <2010898.sAvVGPNi7W@devpool35>
 MIME-Version: 1.0
-From:   Jason Xing <kerneljasonxing@gmail.com>
-Date:   Fri, 29 Nov 2019 15:50:22 +0800
-Message-ID: <CAL+tcoD8o5A4vgLHHp8dyFV5PmJVL5tu0h-XQavLOiAexmVLRQ@mail.gmail.com>
-Subject: About whether we should support the alignment in the
- generic_file_splice_read() ?
-To:     viro@zeniv.linux.org.uk
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Otherwise build fails if the headers are not in the default location. While at
+it also ask pkg-config for the libs, with fallback to the existing value.
 
-Sorry to send this email to you all. I recently noticed there're some
-incompatibilities existing in the generic_file_splice_read() function
-between 3.X and 4.X kernel. The result will goes wrong if we're using
-sendfile() with unaligned offset in 4.X/5.X kernel. But if we do the
-same in 3.X kernel, it will surely return success.
+Signed-off-by: Rolf Eike Beer <eb@emlix.com>
+Cc: stable@vger.kernel.org
+---
+ scripts/Makefile | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-Here is the call trace:
-1. Using sendfile() with unaligned offset
-2. Then it runs into the kernel:
-sendfile64()->do_sendfile()->do_splice_direct()->splice_direct_to_actor()->do_splice_to()->splice_read()
-3. splice_read() calls the __generic_file_splice_read() in 3.X kernel,
-generic_file_splice_read() in 4.X kernel.
+diff --git a/scripts/Makefile b/scripts/Makefile
+index 3e86b300f5a1..034789783317 100644
+--- a/scripts/Makefile
++++ b/scripts/Makefile
+@@ -8,7 +8,11 @@
+ # conmakehash:   Create chartable
+ # conmakehash:	 Create arrays for initializing the kernel console tables
+ 
++PKG_CONFIG?= pkg-config
++
+ HOST_EXTRACFLAGS += -I$(srctree)/tools/include
++CRYPTO_LIBS = $(shell $(PKG_CONFIG) --libs libcrypto 2> /dev/null || echo -lcrypto)
++CRYPTO_CFLAGS = $(shell $(PKG_CONFIG) --cflags libcrypto 2> /dev/null)
+ 
+ hostprogs-$(CONFIG_BUILD_BIN2C)  += bin2c
+ hostprogs-$(CONFIG_KALLSYMS)     += kallsyms
+@@ -23,8 +27,9 @@ hostprogs-$(CONFIG_SYSTEM_EXTRA_CERTIFICATE) += insert-sys-cert
+ 
+ HOSTCFLAGS_sortextable.o = -I$(srctree)/tools/include
+ HOSTCFLAGS_asn1_compiler.o = -I$(srctree)/include
+-HOSTLDLIBS_sign-file = -lcrypto
+-HOSTLDLIBS_extract-cert = -lcrypto
++HOSTLDLIBS_sign-file = $(CRYPTO_LIBS)
++HOSTCFLAGS_extract-cert.o = $(CRYPTO_CFLAGS)
++HOSTLDLIBS_extract-cert = $(CRYPTO_LIBS)
+ 
+ always		:= $(hostprogs-y) $(hostprogs-m)
+ 
+-- 
+2.24.0
 
-In 3.X kernel, this function handles the alignment by using the
-PAGE_SHIFT and PAGE_MASK. However, after applying this
-commit(82c156f853840645604acd7c2cebcb75ed1b6652) the 4.X no longer
-supports the unaligned data.
 
-I'm wondering should we add the alignment process code back again?
-Does anyone have idea about why this part got removed? Any information
-and suggestions are welcome:-)
+-- 
+Rolf Eike Beer, emlix GmbH, http://www.emlix.com
+Fon +49 551 30664-0, Fax +49 551 30664-11
+Gothaer Platz 3, 37083 Göttingen, Germany
+Sitz der Gesellschaft: Göttingen, Amtsgericht Göttingen HR B 3160
+Geschäftsführung: Heike Jordan, Dr. Uwe Kracke – Ust-IdNr.: DE 205 198 055
 
-Thanks,
-Jason
+emlix - smart embedded open source
+
+
