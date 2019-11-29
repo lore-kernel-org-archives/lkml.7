@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D50D7C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86353C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B09FA21736
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 545B021736
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:26:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbfK2R0b (ORCPT
+        id S1727198AbfK2RZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 12:26:31 -0500
+        Fri, 29 Nov 2019 12:25:38 -0500
 Received: from mga14.intel.com ([192.55.52.115]:64172 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727227AbfK2RZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 12:25:39 -0500
+        id S1727092AbfK2RZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 12:25:33 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Nov 2019 09:25:39 -0800
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Nov 2019 09:25:32 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,257,1571727600"; 
-   d="scan'208";a="241109002"
+   d="scan'208";a="241108973"
 Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
-  by fmsmga002.fm.intel.com with ESMTP; 29 Nov 2019 09:25:38 -0800
+  by fmsmga002.fm.intel.com with ESMTP; 29 Nov 2019 09:25:31 -0800
 From:   Yang Weijiang <weijiang.yang@intel.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         pbonzini@redhat.com, jmattson@google.com,
         sean.j.christopherson@intel.com
 Cc:     yu.c.zhang@linux.intel.com, alazar@bitdefender.com,
         edwin.zhai@intel.com, Yang Weijiang <weijiang.yang@intel.com>
-Subject: [PATCH v8 07/10] mmu: spp: Enable Lazy mode SPP protection
-Date:   Sat, 30 Nov 2019 01:27:06 +0800
-Message-Id: <20191129172709.11347-8-weijiang.yang@intel.com>
+Subject: [PATCH v8 03/10] mmu: spp: Add SPP Table setup functions
+Date:   Sat, 30 Nov 2019 01:27:02 +0800
+Message-Id: <20191129172709.11347-4-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20191129172709.11347-1-weijiang.yang@intel.com>
 References: <20191129172709.11347-1-weijiang.yang@intel.com>
@@ -45,116 +45,298 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To deal with SPP protected 4KB pages within hugepage(2MB,1GB etc),
-the hugepage entry is first zapped when set subpage permission, then
-in tdp_page_fault(), it checks whether the gfn should be mapped to
-PT_PAGE_TABLE_LEVEL or PT_DIRECTORY_LEVEL level depending on gfn
-inclusion of SPP protected page range.
+SPPT is a 4-level paging structure similar to EPT, when SPP is
+armed for target physical page, bit 61 of the corresponding
+EPT entry is flaged, then SPPT is traversed with the gfn,
+the leaf entry of SPPT contains the access bitmap of subpages
+inside the target 4KB physical page, one bit per 128-byte subpage.
 
-Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+Co-developed-by: He Chen <he.chen@linux.intel.com>
+Signed-off-by: He Chen <he.chen@linux.intel.com>
+Co-developed-by: Zhang Yi <yi.z.zhang@linux.intel.com>
+Signed-off-by: Zhang Yi <yi.z.zhang@linux.intel.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
 ---
- arch/x86/kvm/mmu/mmu.c | 11 +++++++++++
- arch/x86/kvm/mmu/spp.c | 43 ++++++++++++++++++++++++++++++++++++++++++
- arch/x86/kvm/mmu/spp.h |  2 ++
- 3 files changed, 56 insertions(+)
+ arch/x86/include/asm/kvm_host.h |   5 +-
+ arch/x86/kvm/mmu/spp.c          | 228 ++++++++++++++++++++++++++++++++
+ arch/x86/kvm/mmu/spp.h          |  10 ++
+ 3 files changed, 242 insertions(+), 1 deletion(-)
+ create mode 100644 arch/x86/kvm/mmu/spp.c
+ create mode 100644 arch/x86/kvm/mmu/spp.h
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 7c1118b81911..2a407c74427d 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -3240,6 +3240,14 @@ static int __direct_map(struct kvm_vcpu *vcpu, gpa_t gpa, int write,
- 			   map_writable);
- 	direct_pte_prefetch(vcpu, it.sptep);
- 	++vcpu->stat.pf_fixed;
-+	if (level == PT_PAGE_TABLE_LEVEL) {
-+		int ret;
-+		u32 access;
-+		ret = kvm_spp_get_permission(vcpu->kvm, gfn, 1, &access);
-+		if (ret == 1  && access != FULL_SPP_ACCESS)
-+			kvm_spp_mark_protection(vcpu->kvm, gfn, access);
-+	}
-+
- 	return ret;
- }
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index bdc16b0aa7c6..f49b807ce3d3 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -270,7 +270,8 @@ union kvm_mmu_page_role {
+ 		unsigned smap_andnot_wp:1;
+ 		unsigned ad_disabled:1;
+ 		unsigned guest_mode:1;
+-		unsigned :6;
++		unsigned spp:1;
++		unsigned reserved:5;
  
-@@ -4185,6 +4193,9 @@ static int tdp_page_fault(struct kvm_vcpu *vcpu, gva_t gpa, u32 error_code,
- 		if (level > PT_DIRECTORY_LEVEL &&
- 		    !check_hugepage_cache_consistency(vcpu, gfn, level))
- 			level = PT_DIRECTORY_LEVEL;
-+
-+		check_spp_protection(vcpu, gfn, &force_pt_level, &level);
-+
- 		gfn &= ~(KVM_PAGES_PER_HPAGE(level) - 1);
- 	}
+ 		/*
+ 		 * This is left at the top of the word so that
+@@ -937,6 +938,8 @@ struct kvm_arch {
+ 	bool exception_payload_enabled;
  
+ 	struct kvm_pmu_event_filter *pmu_event_filter;
++
++	hpa_t sppt_root;
+ };
+ 
+ struct kvm_vm_stat {
 diff --git a/arch/x86/kvm/mmu/spp.c b/arch/x86/kvm/mmu/spp.c
-index 0c72bb56ecb9..b8aa52c3d16e 100644
---- a/arch/x86/kvm/mmu/spp.c
+new file mode 100644
+index 000000000000..7713f34dcc8d
+--- /dev/null
 +++ b/arch/x86/kvm/mmu/spp.c
-@@ -522,6 +522,49 @@ inline u64 construct_spptp(unsigned long root_hpa)
- }
- EXPORT_SYMBOL_GPL(construct_spptp);
- 
-+bool is_spp_protected(struct kvm_memory_slot *slot, gfn_t gfn, int level)
-+{
-+	int page_num = KVM_PAGES_PER_HPAGE(level);
-+	u32 *access;
-+	gfn_t gfn_max;
+@@ -0,0 +1,228 @@
++// SPDX-License-Identifier: GPL-2.0
 +
-+	gfn &= ~(page_num - 1);
-+	gfn_max = gfn + page_num - 1;
-+	for (; gfn <= gfn_max; gfn++) {
-+		access = gfn_to_subpage_wp_info(slot, gfn);
-+		if (access && *access != FULL_SPP_ACCESS)
-+			return true;
++#include "spp.h"
++
++#define for_each_shadow_spp_entry(_vcpu, _addr, _walker)    \
++	for (shadow_spp_walk_init(&(_walker), _vcpu, _addr);	\
++	     shadow_walk_okay(&(_walker));			\
++	     shadow_walk_next(&(_walker)))
++
++static void shadow_spp_walk_init(struct kvm_shadow_walk_iterator *iterator,
++				 struct kvm_vcpu *vcpu, u64 addr)
++{
++	iterator->addr = addr;
++	iterator->shadow_addr = vcpu->kvm->arch.sppt_root;
++
++	/* SPP Table is a 4-level paging structure */
++	iterator->level = PT64_ROOT_4LEVEL;
++}
++
++static bool __rmap_open_subpage_bit(struct kvm *kvm,
++				    struct kvm_rmap_head *rmap_head)
++{
++	struct rmap_iterator iter;
++	bool flush = false;
++	u64 *sptep;
++	u64 spte;
++
++	for_each_rmap_spte(rmap_head, &iter, sptep) {
++		/*
++		 * SPP works only when the page is write-protected
++		 * and SPP bit is set in EPT leaf entry.
++		 */
++		flush |= spte_write_protect(sptep, false);
++		spte = *sptep | PT_SPP_MASK;
++		flush |= mmu_spte_update(sptep, spte);
 +	}
-+	return false;
++
++	return flush;
 +}
 +
-+bool check_spp_protection(struct kvm_vcpu *vcpu, gfn_t gfn,
-+			  bool *force_pt_level, int *level)
++static int kvm_spp_open_write_protect(struct kvm *kvm,
++				      struct kvm_memory_slot *slot,
++				      gfn_t gfn)
 +{
-+	struct kvm *kvm = vcpu->kvm;
-+	struct kvm_memory_slot *slot;
-+	bool protected;
-+	int old_level = *level;
++	struct kvm_rmap_head *rmap_head;
++	bool flush = false;
 +
-+	if (!kvm->arch.spp_active)
-+		return false;
++	/*
++	 * SPP is only supported with 4KB level1 memory page, check
++	 * if the page is mapped in EPT leaf entry.
++	 */
++	rmap_head = __gfn_to_rmap(gfn, PT_PAGE_TABLE_LEVEL, slot);
 +
-+	slot = gfn_to_memslot(kvm, gfn);
++	if (!rmap_head->val)
++		return -EFAULT;
 +
-+	if (!slot)
-+		return false;
-+	protected = is_spp_protected(slot, gfn, PT_DIRECTORY_LEVEL);
++	flush |= __rmap_open_subpage_bit(kvm, rmap_head);
 +
-+	if (protected) {
-+		*level = PT_PAGE_TABLE_LEVEL;
-+		*force_pt_level = true;
-+	} else if (*level == PT_PDPE_LEVEL &&
-+		   is_spp_protected(slot, gfn, PT_PDPE_LEVEL))
-+		*level = PT_DIRECTORY_LEVEL;
++	if (flush)
++		kvm_flush_remote_tlbs(kvm);
 +
-+	return (old_level != *level);
++	return 0;
 +}
 +
- int kvm_vm_ioctl_get_subpages(struct kvm *kvm,
- 			      u64 gfn,
- 			      u32 npages,
++static bool __rmap_clear_subpage_bit(struct kvm *kvm,
++				     struct kvm_rmap_head *rmap_head)
++{
++	struct rmap_iterator iter;
++	bool flush = false;
++	u64 *sptep;
++	u64 spte;
++
++	for_each_rmap_spte(rmap_head, &iter, sptep) {
++		spte = (*sptep & ~PT_SPP_MASK);
++		flush |= mmu_spte_update(sptep, spte);
++	}
++
++	return flush;
++}
++
++static int kvm_spp_clear_write_protect(struct kvm *kvm,
++				       struct kvm_memory_slot *slot,
++				       gfn_t gfn)
++{
++	struct kvm_rmap_head *rmap_head;
++	bool flush = false;
++
++	rmap_head = __gfn_to_rmap(gfn, PT_PAGE_TABLE_LEVEL, slot);
++
++	if (!rmap_head->val)
++		return -EFAULT;
++
++	flush |= __rmap_clear_subpage_bit(kvm, rmap_head);
++
++	if (flush)
++		kvm_flush_remote_tlbs(kvm);
++
++	return 0;
++}
++
++struct kvm_mmu_page *kvm_spp_get_page(struct kvm_vcpu *vcpu,
++				      gfn_t gfn,
++				      unsigned int level)
++{
++	struct kvm_mmu_page *sp;
++	union kvm_mmu_page_role role;
++
++	role = vcpu->arch.mmu->mmu_role.base;
++	role.level = level;
++	role.direct = true;
++	role.spp = true;
++
++	for_each_valid_sp(vcpu->kvm, sp, gfn) {
++		if (sp->gfn != gfn)
++			continue;
++		if (sp->role.word != role.word)
++			continue;
++		if (sp->role.spp && sp->role.level == level)
++			goto out;
++	}
++
++	sp = kvm_mmu_alloc_page(vcpu, true);
++	sp->gfn = gfn;
++	sp->role = role;
++	hlist_add_head(&sp->hash_link,
++		       &vcpu->kvm->arch.mmu_page_hash
++		       [kvm_page_table_hashfn(gfn)]);
++	sp->mmu_valid_gen = vcpu->kvm->arch.mmu_valid_gen;
++	clear_page(sp->spt);
++out:
++	return sp;
++}
++EXPORT_SYMBOL_GPL(kvm_spp_get_page);
++
++static void link_spp_shadow_page(struct kvm_vcpu *vcpu, u64 *sptep,
++				 struct kvm_mmu_page *sp)
++{
++	u64 spte;
++
++	spte = __pa(sp->spt) | PT_PRESENT_MASK;
++
++	mmu_spte_set(sptep, spte);
++
++	mmu_page_add_parent_pte(vcpu, sp, sptep);
++}
++
++static u64 format_spp_spte(u32 spp_wp_bitmap)
++{
++	u64 new_spte = 0;
++	int i = 0;
++
++	/*
++	 * One 4K page contains 32 sub-pages, in SPP table L4E, old bits
++	 * are reserved, so we need to transfer u32 subpage write
++	 * protect bitmap to u64 SPP L4E format.
++	 */
++	while (i < 32) {
++		if (spp_wp_bitmap & (1ULL << i))
++			new_spte |= 1ULL << (i * 2);
++		i++;
++	}
++
++	return new_spte;
++}
++
++static void spp_spte_set(u64 *sptep, u64 new_spte)
++{
++	__set_spte(sptep, new_spte);
++}
++
++bool is_spp_spte(struct kvm_mmu_page *sp)
++{
++	return sp->role.spp;
++}
++
++#define SPPT_ENTRY_PHA_MASK (0xFFFFFFFFFF << 12)
++
++int kvm_spp_setup_structure(struct kvm_vcpu *vcpu,
++			    u32 access_map, gfn_t gfn)
++{
++	struct kvm_shadow_walk_iterator iter;
++	struct kvm_mmu_page *sp;
++	gfn_t pseudo_gfn;
++	u64 old_spte, spp_spte;
++	int ret = -EFAULT;
++
++	/* direct_map spp start */
++	if (!VALID_PAGE(vcpu->kvm->arch.sppt_root))
++		return -EFAULT;
++
++	for_each_shadow_spp_entry(vcpu, (u64)gfn << PAGE_SHIFT, iter) {
++		if (iter.level == PT_PAGE_TABLE_LEVEL) {
++			spp_spte = format_spp_spte(access_map);
++			old_spte = mmu_spte_get_lockless(iter.sptep);
++			if (old_spte != spp_spte)
++				spp_spte_set(iter.sptep, spp_spte);
++			ret = 0;
++			break;
++		}
++
++		if (!is_shadow_present_pte(*iter.sptep)) {
++			u64 base_addr = iter.addr;
++
++			base_addr &= PT64_LVL_ADDR_MASK(iter.level);
++			pseudo_gfn = base_addr >> PAGE_SHIFT;
++
++			spp_spte = *iter.sptep;
++			sp = kvm_spp_get_page(vcpu, pseudo_gfn,
++					      iter.level - 1);
++			link_spp_shadow_page(vcpu, iter.sptep, sp);
++		} else if (iter.level == PT_DIRECTORY_LEVEL  &&
++			    !(spp_spte & PT_PRESENT_MASK) &&
++			    (spp_spte & SPPT_ENTRY_PHA_MASK)) {
++				spp_spte |= PT_PRESENT_MASK;
++				spp_spte_set(iter.sptep, spp_spte);
++			}
++	}
++	kvm_flush_remote_tlbs(vcpu->kvm);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(kvm_spp_setup_structure);
++
++inline u64 construct_spptp(unsigned long root_hpa)
++{
++	return root_hpa & PAGE_MASK;
++}
++EXPORT_SYMBOL_GPL(construct_spptp);
++
 diff --git a/arch/x86/kvm/mmu/spp.h b/arch/x86/kvm/mmu/spp.h
-index 3a2a71cea276..6b2810965d6a 100644
---- a/arch/x86/kvm/mmu/spp.h
+new file mode 100644
+index 000000000000..25a23a4277eb
+--- /dev/null
 +++ b/arch/x86/kvm/mmu/spp.h
-@@ -13,6 +13,8 @@ int kvm_spp_mark_protection(struct kvm *kvm, u64 gfn, u32 access);
- bool is_spp_spte(struct kvm_mmu_page *sp);
- void restore_spp_bit(u64 *spte);
- bool was_spp_armed(u64 spte);
-+bool check_spp_protection(struct kvm_vcpu *vcpu, gfn_t gfn,
-+			  bool *force_pt_level, int *level);
- inline u64 construct_spptp(unsigned long root_hpa);
- int kvm_vm_ioctl_get_subpages(struct kvm *kvm,
- 			      u64 gfn,
+@@ -0,0 +1,10 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __KVM_X86_VMX_SPP_H
++#define __KVM_X86_VMX_SPP_H
++
++bool is_spp_spte(struct kvm_mmu_page *sp);
++inline u64 construct_spptp(unsigned long root_hpa);
++int kvm_spp_setup_structure(struct kvm_vcpu *vcpu,
++			    u32 access_map, gfn_t gfn);
++
++#endif /* __KVM_X86_VMX_SPP_H */
 -- 
 2.17.2
 
