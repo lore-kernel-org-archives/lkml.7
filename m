@@ -6,20 +6,20 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CABC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE620C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A079D217BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E933217BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:52:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbfK2NwS (ORCPT
+        id S1727059AbfK2NwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 08:52:18 -0500
+        Fri, 29 Nov 2019 08:52:17 -0500
 Received: from esa3.microchip.iphmx.com ([68.232.153.233]:63849 "EHLO
         esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726876AbfK2NwR (ORCPT
+        with ESMTP id S1726877AbfK2NwN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 08:52:17 -0500
+        Fri, 29 Nov 2019 08:52:13 -0500
 Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
   Claudiu.Beznea@microchip.com designates 198.175.253.82 as
   permitted sender) identity=mailfrom;
@@ -39,22 +39,22 @@ Received-SPF: None (esa3.microchip.iphmx.com: no sender
   x-sender="postmaster@email.microchip.com";
   x-conformance=spf_only
 Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: NIbqskJ7xCKVI4rhj52SC31OAD8/i8eHtfW8Mey03wd5ZRhrHVXUmMPd2YKkqhuQSK9ZZOvx/2
- Y/szPuXAbzFTuRV1J/kf64zEO9afUAiM/uwvmaBVs5rV/W5EW83mJreK3cW+TxqLI1I/GnhJU1
- 7P1Jk8iPb7Gc+XkU9hI5GreVHup0BQlYgLbDynn24rESxqeDxG5R2aE0D2cxmJQ1SCOv0xP5KE
- gBmU4ZrPxS6sp86PgQpWl1Z+MKl3WaCBa+BEVMSHp/GcoZB2QVrqpJs6T5Y/Jjv5WcYi6qeefY
- 4sM=
+IronPort-SDR: xvlMphDs0TlfNu/RfTZx44E1DcmsQqjkS73YDt210XqSOpykm7FLW1dvxtqR9+UmNqghUvZuu7
+ CAz5U5VqJgbku/HFjaewXQWAdGZnrrnmS54i0JZRlMggMrdBq6yWVPn16OyOOalYknyprHQdX6
+ FqwE30ZDzms8tc+oVfJK31tWaKHu2MJBMHpkCUgxpln6exaaULNKMNlXMhLh7tWgrLdshc6Xux
+ WWA5hc03Ui2xq4sI8LW2sqHNCW8R3Du073zpSRARbWj1wUxUiGJiHW8LVn7n6MC9iBTq4EZrv2
+ uIw=
 X-IronPort-AV: E=Sophos;i="5.69,257,1571727600"; 
-   d="scan'208";a="58778689"
+   d="scan'208";a="58778682"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Nov 2019 06:52:16 -0700
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Nov 2019 06:52:12 -0700
 Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 29 Nov 2019 06:52:00 -0700
+ 15.1.1713.5; Fri, 29 Nov 2019 06:52:12 -0700
 Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Fri, 29 Nov 2019 06:51:56 -0700
+ 15.1.1713.5 via Frontend Transport; Fri, 29 Nov 2019 06:52:10 -0700
 From:   Claudiu Beznea <claudiu.beznea@microchip.com>
 To:     <linux@armlinux.org.uk>, <nicolas.ferre@microchip.com>,
         <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
@@ -62,9 +62,9 @@ To:     <linux@armlinux.org.uk>, <nicolas.ferre@microchip.com>,
 CC:     <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
         Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v3 2/9] ARM: at91: Kconfig: add config flag for SAM9X60 SoC
-Date:   Fri, 29 Nov 2019 15:51:38 +0200
-Message-ID: <1575035505-6310-3-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH v3 7/9] ARM: debug-ll: select DEBUG_AT91_RM9200_DBGU for sam9x60
+Date:   Fri, 29 Nov 2019 15:51:43 +0200
+Message-ID: <1575035505-6310-8-git-send-email-claudiu.beznea@microchip.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1575035505-6310-1-git-send-email-claudiu.beznea@microchip.com>
 References: <1575035505-6310-1-git-send-email-claudiu.beznea@microchip.com>
@@ -75,57 +75,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add config flag for SAM9X60 SoC.
+Select DEBUG_AT91_RM9200_DBGU for SAM9X60 SoC.
 
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 ---
- arch/arm/mach-at91/Kconfig | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+ arch/arm/Kconfig.debug | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/mach-at91/Kconfig b/arch/arm/mach-at91/Kconfig
-index 262b550d7329..7979420bd48b 100644
---- a/arch/arm/mach-at91/Kconfig
-+++ b/arch/arm/mach-at91/Kconfig
-@@ -105,11 +105,28 @@ config SOC_AT91SAM9
- 	    AT91SAM9X35
- 	    AT91SAM9XE
+diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+index 8bcbd0cd739b..b70d7debf5ca 100644
+--- a/arch/arm/Kconfig.debug
++++ b/arch/arm/Kconfig.debug
+@@ -147,14 +147,14 @@ choice
+ 		    0x80024000      | 0xf0024000     | UART9
  
-+config SOC_SAM9X60
-+	bool "SAM9X60"
-+	depends on ARCH_MULTI_V5
-+	select ATMEL_AIC5_IRQ
-+	select ATMEL_PM if PM
-+	select ATMEL_SDRAMC
-+	select CPU_ARM926T
-+	select HAVE_AT91_USB_CLK
-+	select HAVE_AT91_GENERATED_CLK
-+	select HAVE_AT91_SAM9X60_PLL
-+	select MEMORY
-+	select PINCTRL_AT91
-+	select SOC_SAM_V4_V5
-+	select SRAM if PM
-+	help
-+	  Select this if you are using Microchip's SAM9X60 SoC
-+
- comment "Clocksource driver selection"
+ 	config DEBUG_AT91_RM9200_DBGU
+-		bool "Kernel low-level debugging on AT91RM9200, AT91SAM9 DBGU"
++		bool "Kernel low-level debugging on AT91RM9200, AT91SAM9, SAM9X60 DBGU"
+ 		select DEBUG_AT91_UART
+-		depends on SOC_AT91RM9200 || SOC_AT91SAM9
++		depends on SOC_AT91RM9200 || SOC_AT91SAM9 || SOC_SAM9X60
+ 		help
+ 		  Say Y here if you want kernel low-level debugging support
+ 		  on the DBGU port of:
+ 		    at91rm9200, at91sam9260, at91sam9g20, at91sam9261,
+-		    at91sam9g10, at91sam9n12, at91sam9rl64, at91sam9x5
++		    at91sam9g10, at91sam9n12, at91sam9rl64, at91sam9x5, sam9x60
  
- config ATMEL_CLOCKSOURCE_PIT
- 	bool "Periodic Interval Timer (PIT) support"
--	depends on SOC_AT91SAM9 || SOC_SAMA5
-+	depends on SOC_AT91SAM9 || SOC_SAM9X60 || SOC_SAMA5
- 	default SOC_AT91SAM9 || SOC_SAMA5
- 	select ATMEL_PIT
- 	help
-@@ -119,7 +136,7 @@ config ATMEL_CLOCKSOURCE_PIT
- 
- config ATMEL_CLOCKSOURCE_TCB
- 	bool "Timer Counter Blocks (TCB) support"
--	default SOC_AT91RM9200 || SOC_AT91SAM9 || SOC_SAMA5
-+	default SOC_AT91RM9200 || SOC_AT91SAM9 || SOC_SAM9X60 || SOC_SAMA5
- 	select ATMEL_TCB_CLKSRC
- 	help
- 	  Select this to get a high precision clocksource based on a
+ 	config DEBUG_AT91_SAM9263_DBGU
+ 		bool "Kernel low-level debugging on AT91SAM{9263,9G45,A5D3} DBGU"
 -- 
 2.7.4
 
