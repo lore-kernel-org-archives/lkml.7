@@ -2,147 +2,175 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE6BC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 12:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A90C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 12:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 734C420833
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 12:08:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sLGJCHQh"
+	by mail.kernel.org (Postfix) with ESMTP id ED0BC217AB
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 12:09:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575029370;
+	bh=jGaMu88zl6ED3WverAr02i8/B4AFL3F/8VtWk2oAvco=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=trclSwrlEWpx111qsPCQ85GSptRrNJR+ko7TSo+Uy/mQjrZB+zchkVDhoF9fjA+iP
+	 DHA8kGxuP8oFsnyZ6gp0lyeuIYJt/7TuSkDnrxzsN7MZEOBj6W7A0ll+zLU5VhbUDT
+	 epWQLiM21Y5/fSPhg2Fx5k41qMszFbYFib9/sZV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbfK2MIM (ORCPT
+        id S1726857AbfK2MJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 07:08:12 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:35882 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbfK2MIM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 07:08:12 -0500
-Received: by mail-ed1-f67.google.com with SMTP id j17so9183467edp.3;
-        Fri, 29 Nov 2019 04:08:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pYh4OF7fVecpJQShy7dlLTgKEjADRLBZ2wMKeIZnp+c=;
-        b=sLGJCHQh1Ii00vfaWvxz8zLwdfABNxTItE+up4RY4ik3cKyLshn4OlAOTXbemurpTg
-         S8xxiFrVKISJPTDbFVqFgE8KyiCPlEFXizAzNK7lrtxtOFyAmG+9OfLl2erO0zijnBCo
-         5zWqTsJiz4sOzngC0wSe18Lzn/HMBG+V+c9Sr9b8ZPlIgExtaSxbdw+jcgEAVzwT3tFO
-         +bW1uMMRWrHEg4sBhJ582rYkW0GyDfXn0FWn0H2bQseX79SXZbxMe9ZlA+s5mW5EkgUv
-         2iyToHoCYRW8uUHFUgRdyR4QBo14hjtJcEbiKDT4i96Y2WIFflnPzYLFwsMad6VsWwdJ
-         94YQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pYh4OF7fVecpJQShy7dlLTgKEjADRLBZ2wMKeIZnp+c=;
-        b=fodT1VWHIoAPtAajtEte6OFnuTXhWwZ0SOarQ5TUYnJFby+hNZMyiBSnVpu811g1l1
-         OQjUGr6vedqEe9TnNwmgwO5+dxPcrbvO7RljqF51BFlfiMfUQ17GsjXGKTX3TA08m4Oj
-         eTIFmu7DlXg0spwbELiziQ02g2/ovOhYQZKcsTV0RTjGoYOV8ExBwJ9qs4hwM+RK/I+r
-         HWFZJeV41YLakxhNBVZTs80z+FlKb8280St8iJkqL0kv9DLT4g2ObTNejkvQSX3QyOiR
-         VLFJZCXujgL84LaP8qFpl+uZ59Ze90IkdL4M7tF8tKMuJA3yAI39QTbQ5bfLhIuj80vN
-         SQuw==
-X-Gm-Message-State: APjAAAUactJQSRuiZoBE9TGGo80B9hiJ3KnHC2T28Ld7J4Ccaz5RW+Ig
-        oATkbVu8U4DypkzC+dG3PnWidL58g/yqoCEGmZ8=
-X-Google-Smtp-Source: APXvYqzfF1cK0U5U4Uai+ex5wb5S/gF/3ZFT9boQhMY2iqy9QLvZz4J6Rmjpttfz4SalMl4mp+5Jg61VsKdLCcxqE78=
-X-Received: by 2002:a17:907:2099:: with SMTP id pv25mr40555706ejb.144.1575029289991;
- Fri, 29 Nov 2019 04:08:09 -0800 (PST)
+        Fri, 29 Nov 2019 07:09:29 -0500
+Received: from foss.arm.com ([217.140.110.172]:46922 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726360AbfK2MJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 07:09:28 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8653C1FB;
+        Fri, 29 Nov 2019 04:09:27 -0800 (PST)
+Received: from localhost (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B4ED3F52E;
+        Fri, 29 Nov 2019 04:09:27 -0800 (PST)
+Date:   Fri, 29 Nov 2019 12:09:25 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "corbet@lwn.net" <corbet@lwn.net>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "hofrat@osadl.org" <hofrat@osadl.org>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>
+Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
+ regulator bindings
+Message-ID: <20191129120925.GA5747@sirena.org.uk>
+References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+ <d29e0eb587b764f3ea77647392e45fac67bbd757.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+ <20191118162502.GJ9761@sirena.org.uk>
+ <fd1e4e652840346bd990c769eabe2f966bda4ed6.camel@fi.rohmeurope.com>
+ <20191119181325.GD3634@sirena.org.uk>
+ <fa69d01504817e3260d2b023ae2637aa2f1b2862.camel@fi.rohmeurope.com>
+ <20191119193636.GH3634@sirena.org.uk>
+ <eb685cc78b936bc61ed9f7fbfa18c96398b00909.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-References: <cover.1574922435.git.shubhrajyoti.datta@xilinx.com>
- <d9277db2692bb77a41dfed927cfb791bdcced17d.1574922435.git.shubhrajyoti.datta@xilinx.com>
- <20191128074505.GC1781@kadam>
-In-Reply-To: <20191128074505.GC1781@kadam>
-From:   Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
-Date:   Fri, 29 Nov 2019 17:37:57 +0530
-Message-ID: <CAKfKVtHpP4j32CNA8ioET=wqYPWtzrQvH-A+4n-pcvj1KZy=fg@mail.gmail.com>
-Subject: Re: [PATCH v3 08/10] clk: clock-wizard: Make the output names unique
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     linux-clk@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devel@driverdev.osuosl.org, Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
+Content-Disposition: inline
+In-Reply-To: <eb685cc78b936bc61ed9f7fbfa18c96398b00909.camel@fi.rohmeurope.com>
+X-Cookie: To love is good, love being difficult.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 1:15 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
->
-> On Thu, Nov 28, 2019 at 12:06:15PM +0530, shubhrajyoti.datta@gmail.com wrote:
-> > From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> >
-> > Incase there are more than one instance of the clocking wizard.
-> > And if the output name given is the same then the probe fails.
-> > Fix the same by appending the device name to the output name to
-> > make it unique.
-> >
-> > Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> > ---
-> >  drivers/clk/clk-xlnx-clock-wizard.c | 13 ++++++++-----
-> >  1 file changed, 8 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/clk/clk-xlnx-clock-wizard.c b/drivers/clk/clk-xlnx-clock-wizard.c
-> > index 75ea745..9993543 100644
-> > --- a/drivers/clk/clk-xlnx-clock-wizard.c
-> > +++ b/drivers/clk/clk-xlnx-clock-wizard.c
-> > @@ -555,6 +555,9 @@ static int clk_wzrd_probe(struct platform_device *pdev)
-> >               ret = -ENOMEM;
-> >               goto err_disable_clk;
-> >       }
-> > +     outputs = of_property_count_strings(np, "clock-output-names");
-> > +     if (outputs == 1)
-> > +             flags = CLK_SET_RATE_PARENT;
-> >       clk_wzrd->clks_internal[wzrd_clk_mul] = clk_register_fixed_factor
-> >                       (&pdev->dev, clk_name,
-> >                        __clk_get_name(clk_wzrd->clk_in1),
-> > @@ -566,9 +569,6 @@ static int clk_wzrd_probe(struct platform_device *pdev)
-> >               goto err_disable_clk;
-> >       }
-> >
-> > -     outputs = of_property_count_strings(np, "clock-output-names");
-> > -     if (outputs == 1)
-> > -             flags = CLK_SET_RATE_PARENT;
-> >       clk_name = kasprintf(GFP_KERNEL, "%s_mul_div", dev_name(&pdev->dev));
-> >       if (!clk_name) {
-> >               ret = -ENOMEM;
-> > @@ -591,6 +591,7 @@ static int clk_wzrd_probe(struct platform_device *pdev)
-> >       /* register div per output */
-> >       for (i = outputs - 1; i >= 0 ; i--) {
-> >               const char *clkout_name;
-> > +             const char *clkout_name_wiz;
-> >
-> >               if (of_property_read_string_index(np, "clock-output-names", i,
-> >                                                 &clkout_name)) {
-> > @@ -599,9 +600,11 @@ static int clk_wzrd_probe(struct platform_device *pdev)
-> >                       ret = -EINVAL;
-> >                       goto err_rm_int_clks;
-> >               }
-> > +             clkout_name_wiz = kasprintf(GFP_KERNEL, "%s_%s",
-> > +                                         dev_name(&pdev->dev), clkout_name);
->
-> If this kasprintf() crashes then clk_wzrd_register_divf() will fail.
-> But that was a headache to review.  Just add a check for NULL.  We need
-> a kfree() as well.
->
-> One alternative would be to just declare a buffer on the stack and use
-> snprintf().  We don't need to keep the name around after the call to
-> clk_wzrd_register_divf().
 
-Will fix in next version.
+--tThc/1wpZn/ma/RB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
-> regards,
-> dan carpenter
->
+On Fri, Nov 29, 2019 at 07:48:13AM +0000, Vaittinen, Matti wrote:
+> On Tue, 2019-11-19 at 19:36 +0000, Mark Brown wrote:
+
+> > The driver interface was added in "regulator: add PM suspend and
+> > resume
+> > hooks".
+
+> I looked through the set but didn't spot any new interface towards the
+> regulator driver (which accesses the HW). I saw interface towards
+> regulator consumer driver which can be used to set the constrains
+> though.
+
+The regulator driver has a bunch fo set_suspend_ operations.
+
+> Specifically, I don't see voltage setting callback for different run-
+> modes. Nor do I see voltage setting (or differentiation) of more than
+> one suspend state.
+
+set_suspend_voltage.
+
+> To explain it further - my assumption is that the BD71828 'run-levels'
+> (RUN0, ... RUN3) could be mapped to regulator modes
+> REGULATOR_MODE_FAST, REGULATOR_MODE_NORMAL, REGULATOR_MODE_IDLE and=20
+> REGULATOR_MODE_STANDBY. But regulators which are controlled by these
+
+That doesn't make sense at all, the modes affect the quality of
+regulation not the voltage that is set.
+
+> run-levels, can't be individually controlled. If state for one is
+> changed, the state is changed for all of them. The DVS bucks 1,2,6 and
+
+We don't really have anything that'd only work for group configuration
+except for the suspend modes.
+
+> > Ah, that's actually better.  It opens up possiblities for making use
+> > of
+> > the feature without encoding voltages in DT.  For example, you can
+> > cache
+> > the last however many voltages that were set and jump quickly to them
+> > or
+> > do something like put the top of the constraints in to help with
+> > governors like ondemand.  I'd recommend trying for something like
+> > that
+> > rather than encoding in DT, it'll probably be more robust with things
+> > like cpufreq changing.
+
+> I wish I was working with the full product so that I could see and
+> learn a proper example on how the cpufreq actually uses these
+> interfaces :) I'd really like to understand this much better. Maybe
+> this could be a topic for you to present in some Linux conference ;)
+> Just please ping me when you are doing that and I'll be listening there
+> for sure ;)
+
+The cpufreq code is all there in kernel - drivers/cpufreq.  I can't
+remember if Android still has a custom governor in their trees but it
+doesn't really make much difference in terms of how it interacts with
+the regulator drivers.
+
+> Anyways, my idea was to set the inital voltage values for these states
+> via DT - but allow the voltages to be changed at run-time too (I guess
+> this idea is visible in the patch 12).
+
+It'd be much better if you could avoid putting the voltages in the
+binding if they're not strictly required.
+
+--tThc/1wpZn/ma/RB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3hCnMACgkQJNaLcl1U
+h9DYngf+IXV00SV4baSzbbPD499t+tcmC50xm6QHtyWWK8Cp9civk8HKVm+I8Hq4
+QD4QuFuR+eqK2qDTm+BAX6fTA64j0WeXKdEzN7PL83q4TlUI+f6n3l7baWyikfS+
+jvtHyZGD6QeSMlTBIpR3pDt4u61HM7aFgSH6m86zZX/trPBDfMqk5AynMT4kePZ1
+/F2ygmNUUbuZKkS1NLLKsQxr7nvtNvGyR+4HbQbNBuLlMN9BZaFGnQPmVzeksPe4
+PnJgOV90Ka3VvoJfRUKKs2z2hvdUP7j+NVjib9COrIhiz987HedXU52OxS/Ae90c
+08uWP7tcnqokEsVNIdA6qRO5Jn/lug==
+=D2yP
+-----END PGP SIGNATURE-----
+
+--tThc/1wpZn/ma/RB--
