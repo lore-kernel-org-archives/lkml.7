@@ -2,107 +2,89 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D22C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 18:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 953B2C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 18:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCEEE21721
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 18:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E8482158A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 18:17:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C7aewtxB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbfK2SQz (ORCPT
+        id S1727205AbfK2SRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 13:16:55 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44892 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727107AbfK2SQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 13:16:53 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 79ED4B469;
-        Fri, 29 Nov 2019 18:16:51 +0000 (UTC)
-Date:   Fri, 29 Nov 2019 19:16:50 +0100 (CET)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Vasily Gorbik <gor@linux.ibm.com>
-cc:     heiko.carstens@de.ibm.com, borntraeger@de.ibm.com,
-        jpoimboe@redhat.com, joe.lawrence@redhat.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jikos@kernel.org, pmladek@suse.com, nstange@suse.de,
-        live-patching@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] s390/livepatch: Implement reliable stack tracing
- for the consistency model
-In-Reply-To: <patch-2.thread-a0061f.git-a0061fcad34d.your-ad-here.call-01575012971-ext-9115@work.hours>
-Message-ID: <alpine.LSU.2.21.1911291533450.23789@pobox.suse.cz>
-References: <20191106095601.29986-5-mbenes@suse.cz> <cover.thread-a0061f.your-ad-here.call-01575012971-ext-9115@work.hours> <patch-2.thread-a0061f.git-a0061fcad34d.your-ad-here.call-01575012971-ext-9115@work.hours>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Fri, 29 Nov 2019 13:17:41 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46300 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727022AbfK2SRl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 13:17:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575051459;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=0JsvcP5JjavRLN7Eg1l3dqgu/7OBAuKTZlpK2fEtMVA=;
+        b=C7aewtxB3YYzazt04QJyJZwuDmDjTa5UXQZ4R83Mu9IwbFwZE/BLZtKg3ovwDfaCF7gF32
+        z2ubrO2A+hQqpDvVvZg1vGIox6Dpzh/9lcN7GxvMWtFtwGtPF8izYMTVLBc8OwVSclg9qP
+        1DDZdaKj0OY13qakclOMnEPZ5mC8DTw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-206-Vn0Ttw11NB63YmMzg0Xfcw-1; Fri, 29 Nov 2019 13:17:36 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B413118AAFA3;
+        Fri, 29 Nov 2019 18:17:35 +0000 (UTC)
+Received: from virtlab501.virt.lab.eng.bos.redhat.com (virtlab501.virt.lab.eng.bos.redhat.com [10.19.152.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4B3D15C1BB;
+        Fri, 29 Nov 2019 18:17:31 +0000 (UTC)
+From:   Wainer dos Santos Moschetta <wainersm@redhat.com>
+To:     pbonzini@redhat.com, rkrcmar@redhat.com
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: [PATCH] Documentation: kvm: Fix mention to number of ioctls classes
+Date:   Fri, 29 Nov 2019 13:17:30 -0500
+Message-Id: <20191129181730.15037-1-wainersm@redhat.com>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: Vn0Ttw11NB63YmMzg0Xfcw-1
+X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 29 Nov 2019, Vasily Gorbik wrote:
+In api.txt it is said that KVM ioctls belong to three classes
+but in reality it is four. Fixed this, but do not count categories
+anymore to avoid such as outdated information in the future.
 
-> From: Miroslav Benes <mbenes@suse.cz>
-> 
-> The livepatch consistency model requires reliable stack tracing
-> architecture support in order to work properly. In order to achieve
-> this, two main issues have to be solved. First, reliable and consistent
-> call chain backtracing has to be ensured. Second, the unwinder needs to
-> be able to detect stack corruptions and return errors.
-> 
-> The "zSeries ELF Application Binary Interface Supplement" says:
-> 
->   "The stack pointer points to the first word of the lowest allocated
->   stack frame. If the "back chain" is implemented this word will point to
->   the previously allocated stack frame (towards higher addresses), except
->   for the first stack frame, which shall have a back chain of zero (NULL).
->   The stack shall grow downwards, in other words towards lower addresses."
-> 
-> "back chain" is optional. GCC option -mbackchain enables it. Quoting
-> Martin Schwidefsky [1]:
-> 
->   "The compiler is called with the -mbackchain option, all normal C
->   function will store the backchain in the function prologue. All
->   functions written in assembler code should do the same, if you find one
->   that does not we should fix that. The end result is that a task that
->   *voluntarily* called schedule() should have a proper backchain at all
->   times.
-> 
->   Dependent on the use case this may or may not be enough. Asynchronous
->   interrupts may stop the CPU at the beginning of a function, if kernel
->   preemption is enabled we can end up with a broken backchain.  The
->   production kernels for IBM Z are all compiled *without* kernel
->   preemption. So yes, we might get away without the objtool support.
-> 
->   On a side-note, we do have a line item to implement the ORC unwinder for
->   the kernel, that includes the objtool support. Once we have that we can
->   drop the -mbackchain option for the kernel build. That gives us a nice
->   little performance benefit. I hope that the change from backchain to the
->   ORC unwinder will not be too hard to implement in the livepatch tools."
-> 
-> Since -mbackchain is enabled by default when the kernel is compiled, the
-> call chain backtracing should be currently ensured and objtool should
-> not be necessary for livepatch purposes.
-> 
-> Regarding the second issue, stack corruptions and non-reliable states
-> have to be recognized by the unwinder. Mainly it means to detect
-> preemption or page faults, the end of the task stack must be reached,
-> return addresses must be valid text addresses and hacks like function
-> graph tracing and kretprobes must be properly detected.
-> 
-> Unwinding a running task's stack is not a problem, because there is a
-> livepatch requirement that every checked task is blocked, except for the
-> current task. Due to that, we can consider a task's kernel/thread stack
-> only and skip the other stacks.
-> 
-> [1] 20180912121106.31ffa97c@mschwideX1 [not archived on lore.kernel.org]
-> 
-> Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Wainer dos Santos Moschetta <wainersm@redhat.com>
+---
+ Documentation/virt/kvm/api.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+diff --git a/Documentation/virt/kvm/api.txt b/Documentation/virt/kvm/api.tx=
+t
+index 4833904d32a5..4e3d22429b19 100644
+--- a/Documentation/virt/kvm/api.txt
++++ b/Documentation/virt/kvm/api.txt
+@@ -5,7 +5,7 @@ The Definitive KVM (Kernel-based Virtual Machine) API Docum=
+entation
+ ----------------------
+=20
+ The kvm API is a set of ioctls that are issued to control various aspects
+-of a virtual machine.  The ioctls belong to three classes:
++of a virtual machine.  The ioctls belong to the following classes:
+=20
+  - System ioctls: These query and set global attributes which affect the
+    whole kvm subsystem.  In addition a system ioctl is used to create
+--=20
+2.21.0
 
-M
