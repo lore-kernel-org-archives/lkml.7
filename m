@@ -2,109 +2,117 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC0FC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E247FC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94733215A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8A0A215F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:12:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575018742;
+	bh=D7C4w+4s2X0XNpRConTGLaydGNgZ/tefnnJz0BmjCbQ=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=suMi0DYUmslx5ACNZc0ppPWHBVUlCI+DWvvOsJjArXL1TDmypkhudlMH889BHqL8N
+	 YfSkfKpBk9P7pwESge394Y1sxOYw1wGfLxnQa2ckIEyEN6k8nhVqarbYGozzj/kxcy
+	 S+fKoOugc6Cfc7UPhbCcIPEtbDsStGDNlUMULIHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbfK2JL0 (ORCPT
+        id S1726823AbfK2JMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 04:11:26 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:38037 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbfK2JL0 (ORCPT
+        Fri, 29 Nov 2019 04:12:22 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:47315 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726143AbfK2JMV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 04:11:26 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iacJ6-0003Rw-Em; Fri, 29 Nov 2019 10:11:20 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iacJ5-0005iC-TE; Fri, 29 Nov 2019 10:11:19 +0100
-Date:   Fri, 29 Nov 2019 10:11:19 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, stwiss.opensource@diasemi.com,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
-Subject: Re: [PATCH v2 5/5] regulator: da9062: add gpio based regulator
- dis-/enable support
-Message-ID: <20191129091119.wqwpr4jklj27hdfp@pengutronix.de>
-References: <20191127135932.7223-1-m.felsch@pengutronix.de>
- <20191127135932.7223-6-m.felsch@pengutronix.de>
- <CACRpkdb9iXneW3BUj6RfODYnL7DwMwbGbPwXgQ4Z5YTj7MgGcw@mail.gmail.com>
+        Fri, 29 Nov 2019 04:12:21 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iacJu-00053w-Nt; Fri, 29 Nov 2019 10:12:10 +0100
+To:     Yash Shah <yash.shah@sifive.com>
+Subject: RE: [PATCH v3 5/6] gpio: sifive: Add GPIO driver for SiFive SoCs
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdb9iXneW3BUj6RfODYnL7DwMwbGbPwXgQ4Z5YTj7MgGcw@mail.gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:09:27 up 14 days, 28 min, 29 users,  load average: 0.06, 0.05,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 29 Nov 2019 09:12:10 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        <bgolaszewski@baylibre.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <palmer@dabbelt.com>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        <aou@eecs.berkeley.edu>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <bmeng.cn@gmail.com>,
+        <atish.patra@wdc.com>, Sagar Kadam <sagar.kadam@sifive.com>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+In-Reply-To: <CH2PR13MB33682C26386CB4EE8A7EA1C98C460@CH2PR13MB3368.namprd13.prod.outlook.com>
+References: <1574661437-28486-1-git-send-email-yash.shah@sifive.com>
+ <1574661437-28486-6-git-send-email-yash.shah@sifive.com>
+ <CACRpkdY7fGvTPcwwC0XU+XN2w_QUCj0MmOYhp183P3Lj7Qw8WA@mail.gmail.com>
+ <CH2PR13MB33682C26386CB4EE8A7EA1C98C460@CH2PR13MB3368.namprd13.prod.outlook.com>
+Message-ID: <208a63e8819b84f9dc03f270f2606294@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: yash.shah@sifive.com, linus.walleij@linaro.org, bgolaszewski@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, palmer@dabbelt.com, paul.walmsley@sifive.com, aou@eecs.berkeley.edu, tglx@linutronix.de, jason@lakedaemon.net, bmeng.cn@gmail.com, atish.patra@wdc.com, sagar.kadam@sifive.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-11-29 09:25, Linus Walleij wrote:
-> On Wed, Nov 27, 2019 at 2:59 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
-> 
-> > Each regulator can be enabeld/disabled by the internal pmic state
-> > machine or by a gpio input signal. Typically the OTP configures the
-> > regulators to be enabled/disabled on a specific sequence number which is
-> > most the time fine. Sometimes we need to reconfigure that due to a PCB
-> > bug. This patch adds the support to disable/enable the regulator based
-> > on a gpio input signal.
-> >
-> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> 
-> Overall I think this is fine, it's a solid use case that need to be
-> supported.
-> 
-> > +       struct reg_field ena_gpi;
-> 
-> Maybe just add some doc comment to this struct member?
+On 2019-11-29 06:27, Yash Shah wrote:
+>> -----Original Message-----
+>> From: Linus Walleij <linus.walleij@linaro.org>
+>> Sent: 28 November 2019 17:50
+>> To: Yash Shah <yash.shah@sifive.com>
+>> Cc: bgolaszewski@baylibre.com; robh+dt@kernel.org;
+>> mark.rutland@arm.com; palmer@dabbelt.com; Paul Walmsley ( Sifive)
+>> <paul.walmsley@sifive.com>; aou@eecs.berkeley.edu; 
+>> tglx@linutronix.de;
+>> jason@lakedaemon.net; maz@kernel.org; bmeng.cn@gmail.com;
+>> atish.patra@wdc.com; Sagar Kadam <sagar.kadam@sifive.com>; linux-
+>> gpio@vger.kernel.org; devicetree@vger.kernel.org; linux-
+>> riscv@lists.infradead.org; linux-kernel@vger.kernel.org; Sachin 
+>> Ghadi
+>> <sachin.ghadi@sifive.com>
+>> Subject: Re: [PATCH v3 5/6] gpio: sifive: Add GPIO driver for SiFive 
+>> SoCs
+>>
+>> On Mon, Nov 25, 2019 at 6:58 AM Yash Shah <yash.shah@sifive.com> 
+>> wrote:
+>>
+>> > Adds the GPIO driver for SiFive RISC-V SoCs.
+>> >
+>> > Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
+>> > [Atish: Various fixes and code cleanup]
+>> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+>> > Signed-off-by: Yash Shah <yash.shah@sifive.com>
+>>
+>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>>
+>> I suppose Marc will merge all patches into the irqchip tree as they 
+>> are logically
+>> dependent? If you want the GPIO bindings and this driver directly 
+>> merged
+>> (no deps) then I can do that as well.
+>
+> Yes, the GPIO driver have logical dependency on irqchip patches. It
+> is best if Marc merges all the patches into the irqchip tree.
+>
+> @Marc Zyngier, Are you going to merge all the patches into the 
+> irqchip tree?
 
-Yes, I can do that.
+I'm happy to pick this up, but that's definitely 5.6 material as
+I stopped collecting new 5.5 features a couple of weeks ago.
 
-> IIUC it is a general purpose input that can be configured
-> such that it will enable one of the DA9062 regulators when
-> asserted. (Correct?)
+Thanks,
 
-Yes that's correct.
-
-Regards,
-  Marco
-
-> Yours,
-> Linus Walleij
-> 
-
+         M.
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Jazz is not dead. It just smells funny...
