@@ -2,85 +2,146 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C72F0C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 01:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 935B6C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 01:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92C23217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 01:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 605902158A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 01:37:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="dTehSbOk"
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="erTACxUD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfK2BW4 (ORCPT
+        id S1726754AbfK2Bhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 20:22:56 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:41834 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbfK2BWz (ORCPT
+        Thu, 28 Nov 2019 20:37:53 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:36066 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726696AbfK2Bhw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 20:22:55 -0500
-Received: by mail-qk1-f194.google.com with SMTP id m125so24176444qkd.8;
-        Thu, 28 Nov 2019 17:22:54 -0800 (PST)
+        Thu, 28 Nov 2019 20:37:52 -0500
+Received: by mail-pj1-f66.google.com with SMTP id n96so1342701pjc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 17:37:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i702aI34Ezre+0jrw+L6vx9jKRLYCS8yu6Eoq+4nGJE=;
-        b=dTehSbOkY05Dr9nkgHtoKE1xSiDuW5wG/Ajt1b3KazxlRGS9m76EmQ0EGoKnsfLbPb
-         Duue+a7zkw1MO0Gzq2mA7tdyiQd1nS3VT3d3UkK3yXBnNGvLy/ZTkLPilzlW40pp3+me
-         NlZ4IVSvcbXLRiRtthWxx0lEasUQXG07FUQkQ=
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=k3v9fPmWBvPWOvk0SjUoi4f+APOY7zLlhiQMCyWJoH8=;
+        b=erTACxUD1Kt3C9eaiEpltWhj1WInSir/xn0VsOuiEQX/pyXUZ7DuQzxBRnMdhH4evB
+         NLUKZ45k7V+j8TbI4mhm/4AVtGxnR7M16uLkyfVv8zF2a8swgCYUpRwphykj1uhdPZyc
+         LQ2hFAbKEttOytooysFhBXcQiVMkt8xT5oOQ0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i702aI34Ezre+0jrw+L6vx9jKRLYCS8yu6Eoq+4nGJE=;
-        b=LxhWmQQKeLDEsxGvvkS72xTVcDAf4JK6apNvFXxxfDJSUnbnMNpsmVV83v0i91PNQf
-         f+J2EuPFnyYKcEF/ymfACdVvA7dDv/3+EJAvNlVcZW7p3CKdDoBVur8wI4YCVtWGaQoC
-         FP0iHIQ8BavQBzHSNTr7lG/d8KAaUc8ocnzFD6DsxPG0b+IgdD+3G5zX2LBIZnqEGuhG
-         tviJppgcZ/G6pytcCOZN2o0Xvisl9JuWPgrWiInN/y2dm5XkvhY1NvzehDFlt/6m89KN
-         iSA14fK9s3+DeD6StVkAgy729IOTX7CfUzj8rsQMtx3oigmc4dJL05GdsBqgiWF2A73E
-         Nj3A==
-X-Gm-Message-State: APjAAAVq47CSbEiA7DkJSruc6vfNTtOugTAH2eiLQ875h5A7v+uiSOLw
-        nrnvHYb9LxRDIzYs54cfU4AE6DvouvYQGO1BOSs=
-X-Google-Smtp-Source: APXvYqzz9CXdrxz6xF/zS1AxHhxumwbTlTDCuJZgIlcJE1zBHaC5e91x03jmrOXsqeNZRVN0YWwsyRZ5BX10t1m375k=
-X-Received: by 2002:a37:dcc7:: with SMTP id v190mr13463552qki.330.1574990574036;
- Thu, 28 Nov 2019 17:22:54 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=k3v9fPmWBvPWOvk0SjUoi4f+APOY7zLlhiQMCyWJoH8=;
+        b=rQ2lSmAP1PT17mFtUlzc/JpHrnIPMC/RgugtZqjeo2XJsvrPiaStFTikAKyYASSONB
+         HR/cwp4JD4BvgkRvzenWL4TgMWz+Fi6/I6C2aZdR/Hc4Jed4PQn0QaS8y08YUgRBV2GM
+         MLEz22tJYFsW8AW9qMdoA996bZ9HuqJ9xfIyQkgxyMR9EfaBA7TXNFW5lyTn43hSaUpT
+         hJrzLwAFiqBRtFQDEmppiN7PD+uw8RMGGXS9EB7swwdobwDHSgXZHYTnQ05Hn5D3Vtah
+         ludoPriLpE1FDdXI0EIwMnc6Xny3gUULivlWqTtMnthkpKza/eVTCDlZTvA2okd3FY4v
+         TfPQ==
+X-Gm-Message-State: APjAAAVHMtwmtpQpDy+DmQkfWlvYXL6AM/eL0+rbAPi7mWyVozVtIXs8
+        ym7rvJYu2mW06IOIgYMwtKgRZHOYhg8=
+X-Google-Smtp-Source: APXvYqw559/nrItIpXQo+aum94P8JTRI4qBdChHdQQz6QBllmcOTS5Kgy+G3u+tLSdbfyoBFXfeZtg==
+X-Received: by 2002:a17:902:8f98:: with SMTP id z24mr12544679plo.35.1574991470396;
+        Thu, 28 Nov 2019 17:37:50 -0800 (PST)
+Received: from localhost (2001-44b8-111e-5c00-a4ac-b85f-e5f8-ea9e.static.ipv6.internode.on.net. [2001:44b8:111e:5c00:a4ac:b85f:e5f8:ea9e])
+        by smtp.gmail.com with ESMTPSA id h5sm5418014pfk.30.2019.11.28.17.37.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Nov 2019 17:37:49 -0800 (PST)
+From:   Daniel Axtens <dja@axtens.net>
+To:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk
+Cc:     akash.goel@intel.com, ajd@linux.ibm.com,
+        Daniel Axtens <dja@axtens.net>,
+        syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com,
+        syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com,
+        syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com,
+        syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com
+Subject: [PATCH] relay: handle alloc_percpu returning NULL in relay_open
+Date:   Fri, 29 Nov 2019 12:37:45 +1100
+Message-Id: <20191129013745.7168-1-dja@axtens.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191010020655.3776-1-andrew@aj.id.au> <20191010020655.3776-3-andrew@aj.id.au>
- <20191126180320.1A2132071A@mail.kernel.org>
-In-Reply-To: <20191126180320.1A2132071A@mail.kernel.org>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Fri, 29 Nov 2019 01:22:41 +0000
-Message-ID: <CACPK8Xd73GokmT=6ABDQSJoumHL4aMLx3R2qkp9PqGThRExz8A@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] clk: aspeed: Add RMII RCLK gates for both AST2500 MACs
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Andrew Jeffery <andrew@aj.id.au>, linux-clk@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Nov 2019 at 18:03, Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Andrew Jeffery (2019-10-09 19:06:55)
-> > RCLK is a fixed 50MHz clock derived from HPLL that is described by a
-> > single gate for each MAC.
-> >
-> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> > ---
->
-> Applied to clk-next
->
+alloc_percpu() may return NULL, which means chan->buf may be set to
+NULL. In that case, when we do *per_cpu_ptr(chan->buf, ...), we
+dereference an invalid pointer:
 
-Thanks!
+BUG: Unable to handle kernel data access at 0x7dae0000
+Faulting instruction address: 0xc0000000003f3fec
+...
+NIP [c0000000003f3fec] relay_open+0x29c/0x600
+LR [c0000000003f3fc0] relay_open+0x270/0x600
+Call Trace:
+[c000000054353a70] [c0000000003f3fb4] relay_open+0x264/0x600 (unreliable)
+[c000000054353b00] [c000000000451764] __blk_trace_setup+0x254/0x600
+[c000000054353bb0] [c000000000451b78] blk_trace_setup+0x68/0xa0
+[c000000054353c10] [c0000000010da77c] sg_ioctl+0x7bc/0x2e80
+[c000000054353cd0] [c000000000758cbc] do_vfs_ioctl+0x13c/0x1300
+[c000000054353d90] [c000000000759f14] ksys_ioctl+0x94/0x130
+[c000000054353de0] [c000000000759ff8] sys_ioctl+0x48/0xb0
+[c000000054353e20] [c00000000000bcd0] system_call+0x5c/0x68
+
+Check if alloc_percpu returns NULL. Because we can readily catch and
+handle this situation, switch to alloc_cpu_gfp and pass in __GFP_NOWARN.
+
+This was found by syzkaller both on x86 and powerpc, and the reproducer
+it found on powerpc is capable of hitting the issue as an unprivileged
+user.
+
+Fixes: 017c59c042d0 ("relay: Use per CPU constructs for the relay channel buffer pointers")
+Reported-by: syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com
+Reported-by: syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com
+Reported-by: syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com
+Reported-by: syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com
+Cc: Akash Goel <akash.goel@intel.com>
+Cc: Andrew Donnellan <ajd@linux.ibm.com> # syzkaller-ppc64
+Cc: stable@vger.kernel.org # v4.10+
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+
+--
+
+There's a syz reproducer on the powerpc syzbot that eventually hits
+the bug, but it can take up to an hour or so before it keels over on a
+kernel with all the syzkaller debugging on, and even longer on a
+production kernel. I have been able to reproduce it once on a stock
+Ubuntu 5.0 ppc64le kernel.
+
+I will ask MITRE for a CVE - while only the process doing the syscall
+gets killed, it gets killed while holding the relay_channels_mutex,
+so it blocks all future relay activity.
+---
+ kernel/relay.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/relay.c b/kernel/relay.c
+index ade14fb7ce2e..a376cc6b54ec 100644
+--- a/kernel/relay.c
++++ b/kernel/relay.c
+@@ -580,7 +580,13 @@ struct rchan *relay_open(const char *base_filename,
+ 	if (!chan)
+ 		return NULL;
+ 
+-	chan->buf = alloc_percpu(struct rchan_buf *);
++	chan->buf = alloc_percpu_gfp(struct rchan_buf *,
++				     GFP_KERNEL | __GFP_NOWARN);
++	if (!chan->buf) {
++		kfree(chan);
++		return NULL;
++	}
++
+ 	chan->version = RELAYFS_CHANNEL_VERSION;
+ 	chan->n_subbufs = n_subbufs;
+ 	chan->subbuf_size = subbuf_size;
+-- 
+2.20.1
+
