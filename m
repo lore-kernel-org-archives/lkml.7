@@ -2,145 +2,105 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB53CC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BCDC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DE36208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:13:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="trnSGb+S"
+	by mail.kernel.org (Postfix) with ESMTP id EC508215A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:20:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfK2ON1 (ORCPT
+        id S1726926AbfK2OUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 09:13:27 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:1502 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726824AbfK2ON1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 09:13:27 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47Pc1H5RW3z9vBmM;
-        Fri, 29 Nov 2019 15:13:23 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=trnSGb+S; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id TdWezx36oXmJ; Fri, 29 Nov 2019 15:13:23 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47Pc1H4LKsz9vBmK;
-        Fri, 29 Nov 2019 15:13:23 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1575036803; bh=wKDL0HqjaEMsTPg5depm0Atm4aPOV97ucMBSnnNc5Vc=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=trnSGb+S5bC20Icn9ePmvud+bTfYeXEvsmtjf/wPLHkzVh/eBkLxhbbmAjMkCBLHH
-         /ql/4m27t4p9o0PtQNnLYBjyvBJ5HbPJjX4nXL3wChS3osnJ1qj22GUvmCfdC+YTIR
-         OLIRSmJVnuWtZ1wDOofETX9ctzRTQi/xKR5bJv+8=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E61048B8DA;
-        Fri, 29 Nov 2019 15:13:24 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id xQuiQxPF79F6; Fri, 29 Nov 2019 15:13:24 +0100 (CET)
-Received: from [172.25.230.103] (po15451.idsi0.si.c-s.fr [172.25.230.103])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B13D68B8D2;
-        Fri, 29 Nov 2019 15:13:24 +0100 (CET)
-Subject: Re: [PATCH] powerpc/kasan: KASAN is not supported on RELOCATABLE &&
- FSL_BOOKE
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-To:     Lexi Shao <shaolexi@huawei.com>, benh@kernel.crashing.org,
-        paulus@samba.org, mpe@ellerman.id.au
-Cc:     linux-kernel@vger.kernel.org, wangkefeng.wang@huawei.com,
-        linuxppc-dev@lists.ozlabs.org, liucheng32@huawei.com,
-        yi.zhang@huawei.com
-References: <20191129070455.62084-1-shaolexi@huawei.com>
- <fc48b5bc-45c1-e4e0-7b56-a23cc045ee0e@c-s.fr>
-Message-ID: <e1b2b106-aa8b-2f3d-2109-985a5c672f85@c-s.fr>
-Date:   Fri, 29 Nov 2019 15:13:24 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Fri, 29 Nov 2019 09:20:36 -0500
+Received: from mout.kundenserver.de ([217.72.192.75]:44877 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726608AbfK2OUg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 09:20:36 -0500
+Received: from mail-qt1-f171.google.com ([209.85.160.171]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MKKpV-1iMjin0mhb-00Ln5s; Fri, 29 Nov 2019 15:20:34 +0100
+Received: by mail-qt1-f171.google.com with SMTP id g1so23258830qtj.6;
+        Fri, 29 Nov 2019 06:20:33 -0800 (PST)
+X-Gm-Message-State: APjAAAVeIxuyG3arKOOpff/wBt4fufMFQaJR36pToBgDvGlcl+PwWGR6
+        rIs6xxFXDF8RKMfxOyD6nq053DuH42W0tWhoApw=
+X-Google-Smtp-Source: APXvYqzuj1g3/GU3W0Lff3sjm4Lv42/6ORZFJ6s5TNnb+zf08goAKPnWFeOteSaiZYTfp9N207PDOibr4xIs9S0H9Os=
+X-Received: by 2002:ac8:27ab:: with SMTP id w40mr923393qtw.18.1575037232961;
+ Fri, 29 Nov 2019 06:20:32 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <fc48b5bc-45c1-e4e0-7b56-a23cc045ee0e@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <20191120144109.25321-1-alexandre.torgue@st.com> <20191120144109.25321-6-alexandre.torgue@st.com>
+In-Reply-To: <20191120144109.25321-6-alexandre.torgue@st.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 29 Nov 2019 15:20:17 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2Bg9KwfEqEE3_NUHxVv=svFGuj--Tnq-w-xFg63cfqAA@mail.gmail.com>
+Message-ID: <CAK8P3a2Bg9KwfEqEE3_NUHxVv=svFGuj--Tnq-w-xFg63cfqAA@mail.gmail.com>
+Subject: Re: [PATCH 5/6] ARM: dts: stm32: Adapt STM32MP157 DK boards to stm32
+ DT diversity
+To:     Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:NLvHyL+xPM210KGzaFmfQUilyszQKsVCq0rRB+YIq5LrCHU9WQA
+ pCT8E4l4MQ/OP9uxya3h4OyXD3F2m4ULoMvsAPtrHxeaq4W8eyGhKa49jzX2J0zlOzPvny7
+ iT/eu9rIsz2LCduZww9Hwfk40A1A/QBR8aX0Wr8WbmwBWRncps/TtWXuUOwY/yUc3FKwCu0
+ 7Ja2/21WE2cdd1J5ymQVA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:MYtAM4pt8kk=:yKpuwmxdfDAm+eV3XXctxq
+ j8ugWM++Q5TJbQ4ax+2qKJ+OSnBV7Rk6XuEUBWlZy+H/8f28LCqsGfMZVdBiCwTfb3qMowl7e
+ EOifNHddK6UzKpWhnYNHvyyuWxfFfeW1Ur+5D/hpDSLwMR1D+k4IRzKKa90aaEBg1wJwEnG4x
+ gZYjGzeI8dVwcvtNLu/mlw9EVqJJT8adqGt60ma5IeroGxTFbOqPls4LyXxoAQWhVFSywp5Ai
+ PUl6FbqRHBdORgGLxYbLdYgw8fkd+19S4hpERiD2tK11oHHG5MC3/HU/19nIA4znb/n+jql7n
+ mdRfuGJd3eBcQOcq29Y0qxornamU0DSlC9xnAxLtB0xdONUL61RkqC5nv8+IQJFWpLS6jVAej
+ 7eG981M4KS7dhm0gi9PyUr01loIewX5bdrht5iFAdRBaiBqeYC+8si0Rx1ovX+W/Hhi47Pi2G
+ LtscDhoWDCDFIl4peisvyS2mLqYFFsUDEBUo8BZSr/e9+peOvSZ9agffe+S9jWzzDgZxYvaGB
+ O5dwcNo9XHOZGHvFdm5MDTux3qUEfmnckS9Ag3JleRnGpqmowDJlOrhOCMWPfBrhkyDxooWXr
+ Ac8HTHy59a7lAjhi6Vmf6wJkmbhxpRpJVwA0OOtUH4lfgw8PhVi++PZ3SPuRCAyhNYLYDfzo0
+ xiVPf3ezMVdsl3mqfsFYcThhUt2KgiuT89FvKyMCVhKx21sagKkTaXwKoIG2g5T7TBYe/MaAN
+ RR/dqlEfr2K4+Jg9inmEhWx4AsZbS+UQdK3PfUBo5HpcgzgBPBMZbtHQDF32myxkw8aih5zVB
+ W/BsqbH9YCzAXtot2oLpZ5NjrFbW9UeZA+EnH4S/h4JBrz3KfDZP6KoJndmbxhpl4nguNAP7s
+ 4/Qh0uYpEbvdCpwlqWkQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Nov 20, 2019 at 3:41 PM Alexandre Torgue
+<alexandre.torgue@st.com> wrote:
+>
+> To handle STM32MP15 SOCs diversity, some updates have to been done.
+> This commit mainly adapt dk1 board to include the correct package and the
+> correct SOC version. A new file has been created to factorize common parts.
+>
+> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+>
+> diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+> index 3f869bd67082..1292ac3b6890 100644
+> --- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
+> +++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+>         model = "STMicroelectronics STM32MP157A-DK1 Discovery Board";
+>         compatible = "st,stm32mp157a-dk1", "st,stm32mp157";
+> -
+> -       aliases {
+> -               ethernet0 = &ethernet0;
+> -               serial0 = &uart4;
+> -       };
+> -
+> -       chosen {
+> -               stdout-path = "serial0:115200n8";
+> -       };
+> -
 
+As a rule, I would leave aliases and chosen nodes in the .dts file and not
+move them into a shared .dtsi, since they tend to be board specific.
 
-Le 29/11/2019 à 08:46, Christophe Leroy a écrit :
-> 
-> 
-> Le 29/11/2019 à 08:04, Lexi Shao a écrit :
->> CONFIG_RELOCATABLE and CONFIG_KASAN cannot be enabled at the same time
->> on ppce500 fsl_booke. All functions called before kasan_early_init()
->> should be disabled with kasan check. When CONFIG_RELOCATABLE is enabled
->> on ppce500 fsl_booke, relocate_init() is called before kasan_early_init()
->> which triggers kasan check and results in boot failure.
->> Call trace and functions which triggers kasan check(*):
->>    - _start
->>     - set_ivor
->>      - relocate_init(*)
->>       - early_get_first_memblock_info(*)
->>        - of_scan_flat_dt(*)
->>     ...
->>      - kasan_early_init
->>
->> Potential solutions could be 1. implement relocate_init and all its 
->> children
->> function in a seperate file or 2. introduce a global vairable in 
->> KASAN, only
->> enable KASAN check when init is done.
-> 
-> Solution 1 seems uneasy. of_scan_flat_dt() and children are general 
-> functions that can't be set aside.
-> Solution 2 would destroy performance, and would anyway not work with 
-> inline instrumentation.
-> 
-> Have you tried moving the call to kasan_early_init() before the call of 
-> relocate_init() ?
+(even if that may not be the case in this particular file)
 
-I just tried it with QEMU, it works. I'll send a patch out soon.
-
-Christophe
-
-
-> On other PPC32, kasan_early_init() is the first thing done after 
-> activating the MMU. But AFAIU, MMU is always active on BOOKE though.
-> 
-> Christophe
-> 
->>
->> Disable KASAN when RELOCATABLE is selected on fsl_booke for now until
->> it is supported.
->>
->> Signed-off-by: Lexi Shao <shaolexi@huawei.com>
->> ---
->>   arch/powerpc/Kconfig | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
->> index 3e56c9c2f16e..14f3da63c088 100644
->> --- a/arch/powerpc/Kconfig
->> +++ b/arch/powerpc/Kconfig
->> @@ -171,7 +171,7 @@ config PPC
->>       select HAVE_ARCH_AUDITSYSCALL
->>       select HAVE_ARCH_HUGE_VMAP        if PPC_BOOK3S_64 && PPC_RADIX_MMU
->>       select HAVE_ARCH_JUMP_LABEL
->> -    select HAVE_ARCH_KASAN            if PPC32
->> +    select HAVE_ARCH_KASAN            if PPC32 && !(RELOCATABLE && 
->> FSL_BOOKE)
->>       select HAVE_ARCH_KGDB
->>       select HAVE_ARCH_MMAP_RND_BITS
->>       select HAVE_ARCH_MMAP_RND_COMPAT_BITS    if COMPAT
->>
+      Arnd
