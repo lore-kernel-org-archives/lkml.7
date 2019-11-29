@@ -2,116 +2,121 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB7DC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 18:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75461C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 18:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0BBA20869
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 18:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 458BC2158A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 18:20:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UOujqduo"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="LTNVu137"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbfK2STE (ORCPT
+        id S1727165AbfK2SUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 13:19:04 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35501 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726985AbfK2STE (ORCPT
+        Fri, 29 Nov 2019 13:20:03 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39756 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726985AbfK2SUD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 13:19:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575051542;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FiyrhdgENs34vIhSRSTGRDggmyyimwC96XAb9yeIB6k=;
-        b=UOujqduoFl5F6cHcKxnZjs1qcby4eEY4Tt0in3X1YCGHUodQrG5w4h/blIJTOOevuSO6OP
-        b0VRJttUgq9awq/cWbkfdCln2xGDVo2riC3QUx+HdvwEi9HCKQpexl5zerfFM9gQnZ9gYi
-        vhe5CrIxKNKL6JWE74mPzjpHxl8tzPI=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-322-1ElAC_rqPYePiuniWpSP8w-1; Fri, 29 Nov 2019 13:19:01 -0500
-Received: by mail-wr1-f70.google.com with SMTP id y1so16043576wrl.0
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 10:19:01 -0800 (PST)
+        Fri, 29 Nov 2019 13:20:03 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 77so4309981oty.6
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 10:20:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=urZfuzsCbzoczupKQe+p+P3/97PDZQ+qT28ZuADLov8=;
+        b=LTNVu1373ngJ+alF4Bv5H5tJCyLBv1vtDp5N8j58OukvwSImXQypoNFj4NxCRjgP2A
+         m2jy9yqyEYh89uldLvLptppmClOQ0n6Uz0TEG1Wq2gEMmqdhcR4Ob146N7Q30m2BdFa9
+         wqDpWAcBJkX/g9Ad1hhw2nYOyEUYXfyMagSikKjIbmdfoMo2zQ+P2n2Zb7FRAe2qfFJb
+         EDU/XXZflZcb5XEOeXbVicR4wq/qoI+eMeL93b73wiBdlVqUGo4mn/XQ92oS6u3CRfoy
+         ymh46fk8Gkk/XuTcyT/ersdbKgP34RoJHAfIl1IwoxtFGGjj+gfILywqPMtQ0QXYAbPL
+         RMQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FiyrhdgENs34vIhSRSTGRDggmyyimwC96XAb9yeIB6k=;
-        b=W+mYRNl4EHIJHS86W/aI5wRX6kbiK+DvGIhYcE8uNTgUOG3ws+3bhB9z5nGBksiohO
-         c5gVSfhbt03xFZAIPf8/RN1V2XdILye34c8x+f+JtuoQj9PoyGB9QzDVH73bJ7Q3LA9F
-         tv5CbUnVhGGJJx9d9wcnAvsFYs3UYSDtvJVSvh/Z4Bx1VaGQPpHP+C/Ee3fT8oJxfmg2
-         wu23X2oKrNM5yGuM8Wlb4za7GWJZ8fqn9fjsX5IEAfDeYYXbIPJOoSeJMETzcjfoAEIo
-         LvpNVo40e3ScK9Y0fdzECoAZgi2u9XaoYBhHxf4m/AQglwNV91QHFx3s/1fDazZa+Z0z
-         PEcw==
-X-Gm-Message-State: APjAAAVaLDKv62i1KJyFgONU8STypAYnW+tlEkfI4+YOXKPRw85yuSQI
-        tVNQbUtELKIb9rloyMcUq+T8R7nn7Sl2joCsWAaBeI/jxGbsANFa4nstgxiAKtW4fbNNdckmGab
-        47c1lTzGUWHhB0Zkt8pQAhXkb
-X-Received: by 2002:adf:ea4e:: with SMTP id j14mr7028874wrn.101.1575051540404;
-        Fri, 29 Nov 2019 10:19:00 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzBCDg/+xrc9KqzOZsoX1fdWUXz3f/n/RYBgMN+X+O1eMFce6efVhgwcEb8hu7gTdmmmfm3sg==
-X-Received: by 2002:adf:ea4e:: with SMTP id j14mr7028844wrn.101.1575051540104;
-        Fri, 29 Nov 2019 10:19:00 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:56e1:adff:fed9:caf0? ([2001:b07:6468:f312:56e1:adff:fed9:caf0])
-        by smtp.gmail.com with ESMTPSA id m3sm13546140wrs.53.2019.11.29.10.18.59
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=urZfuzsCbzoczupKQe+p+P3/97PDZQ+qT28ZuADLov8=;
+        b=DmS8Newb4YVAvZzcy9iD7AkH066xQWjNV2huBfznajPunZfykbjuKyrvqn++oUgo2h
+         iAiWsaOU9HjOJgyJItUYUZ8LI/vTPpweOF9kspB9uRgB/C1fgdIySImqg1ogY9pzlgH7
+         lJsIRhrh4zIOHS6zBPtYIB/5j71fNLUgsqt1kvGWBU8i2KLs6lXzPtwcGM+xYoGO3KQ1
+         aerGl8vOHxQPuY4tyJTA6qyGzB4lFlRIp+ZAEhvktkv+vXBjZP6c8W3zDFvMIngwpJA+
+         T8Rl2eQKtGKpagoOHUtYJ6Lo2ZSKeqgxXnLjxR6axNW5MhKrAFqCmtYmO5101h2u3c3s
+         p2RA==
+X-Gm-Message-State: APjAAAVRA3y4fLiTSyRI+4mIF3KgITlXXWqp+UIp9HF04fSi27SCWyYm
+        w1tSrOKGTQzwjUZxIQK5EMzdVg==
+X-Google-Smtp-Source: APXvYqwOjKk2bD4Oy/MikCZ0/keVW04owHgDCN4GtvjWMzR5gf7oK1DVmrF8aQ8xVeRzJqbunkGhLg==
+X-Received: by 2002:a05:6830:1e7c:: with SMTP id m28mr3274846otr.131.1575051601917;
+        Fri, 29 Nov 2019 10:20:01 -0800 (PST)
+Received: from ?IPv6:2600:1702:1be0:ec0:d960:3a5:a5de:158a? ([2600:1702:1be0:ec0:d960:3a5:a5de:158a])
+        by smtp.gmail.com with ESMTPSA id l73sm3963160oib.0.2019.11.29.10.20.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 Nov 2019 10:18:59 -0800 (PST)
-Subject: Re: [PATCH] Documentation: kvm: Fix mention to number of ioctls
- classes
-To:     Wainer dos Santos Moschetta <wainersm@redhat.com>,
-        rkrcmar@redhat.com
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <20191129181730.15037-1-wainersm@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <67bb9781-98a5-fcad-b958-04abe42b37fb@redhat.com>
-Date:   Fri, 29 Nov 2019 19:18:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <20191129181730.15037-1-wainersm@redhat.com>
-Content-Language: en-US
-X-MC-Unique: 1ElAC_rqPYePiuniWpSP8w-1
-X-Mimecast-Spam-Score: 0
+        Fri, 29 Nov 2019 10:20:01 -0800 (PST)
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] ptrace/x86: introduce TS_COMPAT_RESTART to fix get_nr_restart_syscall()
+Date:   Fri, 29 Nov 2019 10:19:59 -0800
+Message-Id: <CBC57AB1-D92D-44B1-9428-B84B17429C8F@amacapital.net>
+References: <20191129173213.GB3992@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+        Jan Kratochvil <jan.kratochvil@redhat.com>,
+        Pedro Alves <palves@redhat.com>, Peter Anvin <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+In-Reply-To: <20191129173213.GB3992@redhat.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+X-Mailer: iPhone Mail (17A878)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/11/19 19:17, Wainer dos Santos Moschetta wrote:
-> In api.txt it is said that KVM ioctls belong to three classes
-> but in reality it is four. Fixed this, but do not count categories
-> anymore to avoid such as outdated information in the future.
-> 
-> Signed-off-by: Wainer dos Santos Moschetta <wainersm@redhat.com>
-> ---
->  Documentation/virt/kvm/api.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/virt/kvm/api.txt b/Documentation/virt/kvm/api.txt
-> index 4833904d32a5..4e3d22429b19 100644
-> --- a/Documentation/virt/kvm/api.txt
-> +++ b/Documentation/virt/kvm/api.txt
-> @@ -5,7 +5,7 @@ The Definitive KVM (Kernel-based Virtual Machine) API Documentation
->  ----------------------
->  
->  The kvm API is a set of ioctls that are issued to control various aspects
-> -of a virtual machine.  The ioctls belong to three classes:
-> +of a virtual machine.  The ioctls belong to the following classes:
->  
->   - System ioctls: These query and set global attributes which affect the
->     whole kvm subsystem.  In addition a system ioctl is used to create
-> 
 
-Queued, thanks.
 
-Paolo
+> On Nov 29, 2019, at 9:32 AM, Oleg Nesterov <oleg@redhat.com> wrote:
+>=20
+> =EF=BB=BFOn 11/28, Andy Lutomirski wrote:
+>>=20
+>> I think this doesn=E2=80=99t work for x32.
+>=20
+> Why? get_nr_restart_syscall() can still rely on the "orig_ax & __X32_SYSCA=
+LL_BIT"
+> check, debugger should restore regs->orig_ax correctly.
 
+Right. Although relying on this is IMO a ridiculous bit of ABI.
+
+>=20
+>> Let=E2=80=99s either save the result of syscall_get_arch()
+>=20
+> We can save the result of syscall_get_arch(), but it doesn't distinguish
+> x32/x86_64 tasks, so it doesn't really differ from TS_COMPAT.
+
+Duh. Never mind.
+
+>=20
+>> or just actually calculate and save the restart_syscall nr here.
+>=20
+> sure, we we can do this.
+
+I like this the best unless we can renumber the syscalls.
+
+>=20
+>> Before we commit to this, Kees, do you think we can manage to just renumb=
+er
+>> restart_syscall()?  That=E2=80=99s a much better solution if we can pull i=
+t off.
+>=20
+> Agreed.
+>=20
+> Oleg.
+>=20
