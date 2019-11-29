@@ -2,245 +2,554 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D36FC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E296C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 538C9217BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:55:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA4872176D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:59:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JLcHtY7e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbfK2NzO (ORCPT
+        id S1726903AbfK2N7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 08:55:14 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58888 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726778AbfK2NzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 08:55:13 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AE6FCAC68;
-        Fri, 29 Nov 2019 13:55:10 +0000 (UTC)
-Subject: Re: [PATCH] mm: Proactive compaction
-To:     Nitin Gupta <nigupta@nvidia.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Yu Zhao <yuzhao@google.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20191115222148.2666-1-nigupta@nvidia.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <1deccc9c-0aea-880e-772b-9b965a457d0a@suse.cz>
-Date:   Fri, 29 Nov 2019 14:55:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Fri, 29 Nov 2019 08:59:19 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45345 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726834AbfK2N7S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 08:59:18 -0500
+Received: by mail-lf1-f65.google.com with SMTP id 203so22691976lfa.12
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 05:59:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=W2P5af099ltrVUAPxfWBA4J6UnuLIYO2S9bAuMh3XmI=;
+        b=JLcHtY7eVTRgzZ+llg0nbC/rMMjIJVej57fj341srHdfxPh7XHVN8VIKxDjSRybCJD
+         h3TB2NylO7QljBfCb9ZN8GlrTA322LhVmPmoWoozajSJEYgVzdvBevTIM7hpjRJ+sbA6
+         3/oWuOr0IddFMoy1EYJueK1zV2g8ROHgh9IecR45iV90FPNoxthDEujqe2q/2KNFAgyQ
+         bziJ8n+5dLxsi6UqtDy94USNE3Q/JL6IcLpmzIzMnZ1SGfXxJ9lFpGL1uED+jZKih/CM
+         lb0VkrDYwftVnT4DMOLqQ+hg45LtL9+vGv/txnCGCm2xO9UoROGjygkMBje4JBV71Gvi
+         2h6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=W2P5af099ltrVUAPxfWBA4J6UnuLIYO2S9bAuMh3XmI=;
+        b=ncHpDNJ8QdkRNMltrhtFzZj7iWgt4pU9EYujT8lii3Soq3ooOoEqk51Lt+3wPR0QJz
+         +iFFndnzlG+wrwQqeFp+X9SDUgUchHA3QDvSe5Z/sXoRIAgwj8jDO/y+ZUn8mYfPX0ON
+         XvlRLa6Om3Uu+PE1UeTck7MvgY+mGi4NYocUrTNo/ODli+fCMWKMzVplB4+hgh5NXfQB
+         E6IM0aam1BVwI+dWkgxJU6VDKgBDDjI/WHGyeTo5UA3vwlv25FOLE1V/7sm/JQ4qCplG
+         YE3rF/l4E9kvAJzrYUh6ggkGDYiekTo4wPYzX5GkXXxaNxU18fLaGZ75ctmh3MiK3yFN
+         Zg8w==
+X-Gm-Message-State: APjAAAUmi0GxpO8FGdoxnwCLEy6uDMkEidrsf3ObjYViKzOeNKkUyape
+        lRki8GDPeBmYYjT4GjBezCwhpK8VPsgZbBdd6t1JzQ==
+X-Google-Smtp-Source: APXvYqzwq2ZIh6TDFk+Fl2nz6p4dMvUG2nVwRp0fQ39/HxYM1sscpULAX8aasWvLmAsIjG8Ph7R179n6GqtJ+v9Xkb4=
+X-Received: by 2002:a19:f701:: with SMTP id z1mr30364055lfe.133.1575035953786;
+ Fri, 29 Nov 2019 05:59:13 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191115222148.2666-1-nigupta@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 29 Nov 2019 14:59:02 +0100
+Message-ID: <CACRpkdbJxcfj6pK=1qjXxffFn0RUH9VD0HRFXX0RoZJDi=hfRw@mail.gmail.com>
+Subject: [GIT PULL] GPIO changes for v5.5
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/15/19 11:21 PM, Nitin Gupta wrote:
-> For some applications we need to allocate almost all memory as
-> hugepages. However, on a running system, higher order allocations can
-> fail if the memory is fragmented. Linux kernel currently does on-demand
-> compaction as we request more hugepages but this style of compaction
-> incurs very high latency. Experiments with one-time full memory
-> compaction (followed by hugepage allocations) shows that kernel is able
-> to restore a highly fragmented memory state to a fairly compacted memory
-> state within <1 sec for a 32G system. Such data suggests that a more
-> proactive compaction can help us allocate a large fraction of memory as
-> hugepages keeping allocation latencies low.
-> 
-> For a more proactive compaction, the approach taken here is to define
-> per page-node tunable called ‘hpage_compaction_effort’ which dictates
-> bounds for external fragmentation for HPAGE_PMD_ORDER pages which
-> kcompactd should try to maintain.
-> 
-> The tunable is exposed through sysfs:
->   /sys/kernel/mm/compaction/node-n/hpage_compaction_effort
-> 
-> The value of this tunable is used to determine low and high thresholds
-> for external fragmentation wrt HPAGE_PMD_ORDER order.
+Hi Linus,
 
-Could we instead start with a non-tunable value that would be linked to
- to e.g. the number of THP allocations between kcompactd cycles?
-Anything we expose will inevitably get set to stone, I'm afraid, so I
-would introduce it only as a last resort.
+here is the big pull request for the GPIO subsystem for
+the v5.5 kernel cycle.
 
-> Note that previous version of this patch [1] was found to introduce too
-> many tunables (per-order, extfrag_{low, high}) but this one reduces them
-> to just (per-node, hpage_compaction_effort). Also, the new tunable is an
-> opaque value instead of asking for specific bounds of “external
-> fragmentation” which would have been difficult to estimate. The internal
-> interpretation of this opaque value allows for future fine-tuning.
-> 
-> Currently, we use a simple translation from this tunable to [low, high]
-> extfrag thresholds (low=100-hpage_compaction_effort, high=low+10%). To
-> periodically check per-node extfrag status, we reuse per-node kcompactd
-> threads which are woken up every few milliseconds to check the same. If
-> any zone on its corresponding node has extfrag above the high threshold
-> for the HPAGE_PMD_ORDER order, the thread starts compaction in
-> background till all zones are below the low extfrag level for this
-> order. By default. By default, the tunable is set to 0 (=> low=100%,
-> high=100%).
-> 
-> This patch is largely based on ideas from Michal Hocko posted here:
-> https://lore.kernel.org/linux-mm/20161230131412.GI13301@dhcp22.suse.cz/
-> 
-> * Performance data
-> 
-> System: x64_64, 32G RAM, 12-cores.
-> 
-> I made a small driver that allocates as many hugepages as possible and
-> measures allocation latency:
-> 
-> The driver first tries to allocate hugepage using GFP_TRANSHUGE_LIGHT
-> and if that fails, tries to allocate with `GFP_TRANSHUGE |
-> __GFP_RETRY_MAYFAIL`. The drives stops when both methods fail for a
-> hugepage allocation.
-> 
-> Before starting the driver, the system was fragmented from a userspace
-> program that allocates all memory and then for each 2M aligned section,
-> frees 3/4 of base pages using munmap. The workload is mainly anonymous
-> userspace pages which are easy to move around. I intentionally avoided
-> unmovable pages in this test to see how much latency we incur just by
-> hitting the slow path for most allocations.
-> 
-> (all latency values are in microseconds)
-> 
-> - With vanilla kernel 5.4.0-rc5:
-> 
-> percentile latency
-> ---------- -------
->          5       7
->         10       7
->         25       8
->         30       8
->         40       8
->         50       8
->         60       9
->         75     215
->         80     222
->         90     323
->         95     429
-> 
-> Total 2M hugepages allocated = 1829 (3.5G worth of hugepages out of 25G
-> total free => 14% of free memory could be allocated as hugepages)
-> 
-> - Now with kernel 5.4.0-rc5 + this patch:
-> (hpage_compaction_effort = 60)
-> 
-> percentile latency
-> ---------- -------
->          5       3
->         10       3
->         25       4
->         30       4
->         40       4
->         50       4
->         60       5
->         75       6
->         80       9
->         90     370
->         95     652
-> 
-> Total 2M hugepages allocated = 11120 (21.7G worth of hugepages out of
-> 25G total free => 86% of free memory could be allocated as hugepages)
+Notices:
 
-I wonder about the 14->86% improvement. As you say, this kind of
-fragmentation is easy to compact. Why wouldn't GFP_TRANSHUGE |
-__GFP_RETRY_MAYFAIL attempts succeed?
+At one point the tree became dependent on device core
+and Greg simply suggested we pull the HEAD of device
+core into the GPIO tree so I did. It had the interesting
+side effect of adding a lot of device core cruft to my shortlog
+below (possibly there is a way to avoid that, I'm not the
+best with git options). If you diff it against your tree or
+as a result of pulling it in, it should result in a shorter
+shortstat.
 
-Thanks,
-Vlastimil
+After missing an embarrassing problem in the pin control tree
+I double-checked that I had builds from zeroday and
+the code has sit in linux-next before I compiled this pull
+request.
 
-> Above workload produces a memory state which is easy to compact.
-> However, if memory is filled with unmovable pages, pro-active compaction
-> should essentially back off. To test this aspect, I ran a mix of this
-> workload (thanks to Matthew Wilcox for suggesting these):
-> 
-> - dentry_thrash: it opens /tmp/missing.x for x in [1, 1000000] where
-> first 10000 files actually exist.
-> - pagecache_thrash: it opens a 128G file (on a 32G system) and then
-> reads at random offsets.
-> 
-> With this mix of workload, system quickly reaches 90-100% fragmentation
-> wrt order-9. Trace of compaction events shows that we keep hitting
-> compaction_deferred event, as expected.
-> 
-> After terminating dentry_thrash and dropping denty caches, the system
-> could proceed with compaction according to set value of
-> hpage_compaction_effort (60).
-> 
-> [1] https://patchwork.kernel.org/patch/11098289/
-> 
-> Signed-off-by: Nitin Gupta <nigupta@nvidia.com>
+One commit to the DRM subsystem is ACKed by the
+DRM maintainers.
+
+One commit to ATA
+"ata: ahci-imx: Covert to use GPIO descriptor"  has failed
+to get the attention of the maintainers for so long that I just
+merged it. I suppose they don't care, also it only
+concerns GPIO.
+
+Please pull it in!
+
+Yours,
+Linus Walleij
+
+
+The following changes since commit a99d8080aaf358d5d23581244e5da23b35e340b9=
+:
+
+  Linux 5.4-rc6 (2019-11-03 14:07:26 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+tags/gpio-v5.5-1
+
+for you to fetch changes up to 41c4616bb81ff9b2efd981453f2c5d8f57d0c0b8:
+
+  gpio: Add TODO item for regmap helper (2019-11-22 14:46:52 +0100)
+
+----------------------------------------------------------------
+This is the bulk of GPIO changes for the v5.5 kernel cycle
+
+Core changes:
+
+- Expose pull up/down flags for the GPIO character device to
+  userspace. After clear input from the RaspberryPi and Beagle
+  communities, it has been established that prototyping,
+  industrial automation and make communities strongly need
+  this feature, and as we want people to use the character
+  device, we have implemented the simple pull up/down
+  interface for GPIO lines. This means we can specify that
+  a (chip-specific) pull up/down resistor can be enabled,
+  but does not offer fine-grained control such as cases
+  where the resistance of the same pull resistor can be
+  controlled (yet).
+
+- Introduce devm_fwnode_gpiod_get_index() and start to phase out
+  the old symbol devm_fwnode_get_index_gpiod_from_child().
+
+- A bit of documentation clean-up work.
+
+- Introduce a define for GPIO line directions and deploy it
+  in all GPIO drivers in the drivers/gpio directory.
+
+- Add a special callback to populate pin ranges when
+  cooperating with the pin control subsystem and registering
+  ranges as part of adding a gpiolib driver and a
+  gpio_irq_chip driver at the same time. This is also
+  deployed in the Intel Merrifield driver.
+
+New drivers:
+
+- RDA Micro GPIO controller.
+
+- XGS-iproc GPIO driver.
+
+Driver improvements:
+
+- Wake event and debounce support on the Tegra 186 driver.
+
+- Finalize the Aspeed SGPIO driver.
+
+- MPC8xxx uses a normal IRQ handler rather than a chained
+  handler.
+
+----------------------------------------------------------------
+Andy Shevchenko (6):
+      gpiolib: No need to call gpiochip_remove_pin_ranges() twice
+      gpiolib: Introduce ->add_pin_ranges() callback
+      gpio: merrifield: Add GPIO <-> pin mapping ranges via callback
+      gpio: merrifield: Pass irqchip when adding gpiochip
+      MAINTAINERS: Replace my email by one @kernel.org
+      gpio: lynxpoint: Setup correct IRQ handlers
+
+Anson Huang (1):
+      gpio: mxc: Only get the second IRQ when there is more than one IRQ
+
+Arkadiusz Drabczyk (1):
+      firmware: Update pointer to documentation
+
+Bartosz Golaszewski (21):
+      gpiolib: sanitize flags before allocating memory in lineevent_create(=
+)
+      drivers: move the early platform device support to arch/sh
+      sh: add the sh_ prefix to early platform symbols
+      gpio: xgene: remove redundant error message
+      gpio: xgene: use devm_platform_ioremap_resource()
+      gpio: em: use devm_platform_ioremap_resource()
+      gpio: ath79: use devm_platform_ioremap_resource()
+      gpio: htc-egpio: use devm_platform_ioremap_resource()
+      gpio: htc-egpio: remove redundant error message
+      Documentation: devres: add missing entry for
+devm_platform_ioremap_resource()
+      lib: devres: prepare devm_ioremap_resource() for more variants
+      lib: devres: provide devm_ioremap_resource_wc()
+      drivers: platform: provide devm_platform_ioremap_resource_wc()
+      misc: sram: use devm_platform_ioremap_resource_wc()
+      drivers: provide devm_platform_ioremap_resource_byname()
+      gpio: mvebu: use devm_platform_ioremap_resource_byname()
+      gpio: tegra186: use devm_platform_ioremap_resource_byname()
+      Merge tag 'v5.4-rc6' into gpio/for-next
+      Merge remote-tracking branch 'linusw/for-next' into gpio/for-next
+      Merge remote-tracking branch 'driver-core/driver-core-next' into
+gpio/for-next
+      gpiolib: fix coding style in gpiod_hog()
+
+Biju Das (1):
+      dt-bindings: gpio: rcar: Add DT binding for r8a774b1
+
+Chris Packham (2):
+      dt-bindings: gpio: brcm: Add bindings for xgs-iproc
+      gpio: Add xgs-iproc driver
+
+Colin Ian King (1):
+      gpio: 104-idi-48e: make array register_offset static, makes object sm=
+aller
+
+Daniel W. S. Almeida (1):
+      Documentation: gpio: driver.rst: Fix warnings
+
+Dmitry Torokhov (3):
+      gpiolib: introduce devm_fwnode_gpiod_get_index()
+      gpiolib: introduce fwnode_gpiod_get_index()
+      drm/bridge: ti-tfp410: switch to using fwnode_gpiod_get_index()
+
+Drew DeVault (1):
+      firmware loader: log path to loaded firmwares
+
+Drew Fustini (2):
+      gpio: expose pull-up/pull-down line flags to userspace
+      gpio: expose pull-up/pull-down line flags to userspace
+
+Geert Uytterhoeven (13):
+      Documentation: debugfs: Document debugfs helper for unsigned long val=
+ues
+      debugfs: Add debugfs_create_xul() for hexadecimal unsigned long
+      mmc: atmel-mci: Fix debugfs on 64-bit platforms
+      mmc: atmel-mci: Remove superfluous cast in debugfs_create_u32() call
+      mmc: dw_mmc: Fix debugfs on 64-bit platforms
+      mmc: dw_mmc: Remove superfluous cast in debugfs_create_u32() call
+      mac80211: Use debugfs_create_xul() helper
+      net: caif: Fix debugfs on 64-bit platforms
+      gpio: em: Use proper irq_chip name
+      gpio: rcar: Use proper irq_chip name
+      gpio: em: Use platform_get_irq() to obtain interrupts
+      gpiolib: Grammar s/manager/managed/
+      gpio: of: Fix bogus reference to gpiod_get_count()
+
+Greg Kroah-Hartman (14):
+      debugfs: remove return value of debugfs_create_u8()
+      debugfs: remove return value of debugfs_create_u16()
+      debugfs: remove return value of debugfs_create_u64()
+      debugfs: remove return value of debugfs_create_size_t()
+      ntb: ntb_pingpong: no need to check the return value of debugfs calls
+      debugfs: remove return value of debugfs_create_x16()
+      debugfs: remove return value of debugfs_create_x32()
+      debugfs: remove return value of debugfs_create_x64()
+      Merge 5.4-rc5 into driver-core-next
+      powerpc: pseries: no need to check return value of
+debugfs_create functions
+      debugfs: remove return value of debugfs_create_x8()
+      debugfs: remove return value of debugfs_create_atomic_t()
+      IB: mlx5: no need to check return value of debugfs_create functions
+      media: c8sectpfe: no need to check return value of
+debugfs_create functions
+
+Hans de Goede (2):
+      gpiolib: acpi: Print pin number on acpi_gpiochip_alloc_event errors
+      gpiolib: acpi: Make acpi_gpiochip_alloc_event always return AE_OK
+
+Jonathan Neusch=C3=A4fer (3):
+      Documentation: gpio: driver: Format code blocks properly
+      docs: driver-api: Move bt8xxgpio to the gpio directory
+      docs: driver-api: bt8xxgpio: Revive dead link
+
+Kent Gibson (6):
+      gpiolib: add support for pull up/down to lineevent_create
+      gpiolib: add support for disabling line bias
+      gpiolib: add support for biasing output lines
+      gpio: mockup: add set_config to support pull up/down
+      gpiolib: move validation of line handle flags into helper function
+      gpio: add new SET_CONFIG ioctl() to gpio chardev
+
+Linus Walleij (15):
+      gpio: aspeed-sgpio: Rename and add Kconfig/Makefile
+      Merge branch 'ib-fwnode-gpiod-get-index' into devel
+      Merge tag 'gpio-v5.4-rc5-fixes-for-linus' of
+git://git.kernel.org/.../brgl/linux into fixes
+      Merge tag 'gpio-v5.5-updates-for-linus-part-1' of
+git://git.kernel.org/.../brgl/linux into devel
+      ata: ahci-imx: Covert to use GPIO descriptor
+      Revert "gpio: merrifield: Move hardware initialization to callback"
+      Revert "gpio: merrifield: Restore use of irq_base"
+      Revert "gpio: merrifield: Pass irqchip when adding gpiochip"
+      Merge tag 'v5.4-rc6' into devel
+      gpiolib: Switch order of valid mask and hw init
+      Revert "gpio: expose pull-up/pull-down line flags to userspace"
+      Merge branch 'devel' into for-next
+      Merge tag 'gpio-v5.5-updates-for-linus-part-2' of
+git://git.kernel.org/.../brgl/linux into devel
+      Merge tag 'intel-gpio-v5.5-1' of
+git://git.kernel.org/.../andy/linux-gpio-intel into devel
+      gpio: Add TODO item for regmap helper
+
+Lucas Stach (1):
+      gpio: of: don't warn if ignored GPIO flag matches the behavior
+
+Manivannan Sadhasivam (3):
+      dt-bindings: gpio: Add devicetree binding for RDA Micro GPIO controll=
+er
+      gpio: Add RDA Micro GPIO controller support
+      MAINTAINERS: Add entry for RDA Micro GPIO driver and binding
+
+Mark Brown (1):
+      gpio: xgs-iproc: Fix section mismatch on device tree match table
+
+Matti Vaittinen (4):
+      gpio: Add definition for GPIO direction
+      gpio: Use new GPIO_LINE_DIRECTION
+      gpio: bd70528: Add MODULE ALIAS to autoload module
+      gpio: mmio: remove untrue leftover comment
+
+Murali Nalajala (1):
+      base: soc: Handle custom soc information sysfs entries
+
+Randy Dunlap (1):
+      gpio: fix kernel-doc for of_gpio_need_valid_mask()
+
+Russell King (1):
+      gpio/mpc8xxx: fix qoriq GPIO reading
+
+Saravana Kannan (17):
+      driver core: Add fwnode_to_dev() to look up device from fwnode
+      driver core: Add support for linking devices during device addition
+      of: property: Add functional dependency link from DT bindings
+      driver core: Add sync_state driver/bus callback
+      of/platform: Pause/resume sync state during init and
+of_platform_populate()
+      of: property: Create device links for all child-supplier depencencies
+      of: property: Minor code formatting/style clean ups
+      driver: core: Improve documentation for fwnode_operations.add_links()
+      docs: driver-model: Add documentation for sync_state
+      driver core: Add device link support for SYNC_STATE_ONLY flag
+      driver core: Allow a device to wait on optional suppliers
+      driver core: Allow fwnode_operations.add_links to differentiate error=
+s
+      of: property: Make sure child dependencies don't block probing of par=
+ent
+      of: property: Skip adding device links to suppliers that aren't devic=
+es
+      of: property: Minor style clean up of of_link_to_phandle()
+      of: property: Make it easy to add device links from DT properties
+      of: property: Add device link support for iommus, mboxes and io-chann=
+els
+
+Shuah Khan (1):
+      tools: gpio: Use !building_out_of_srctree to determine srctree
+
+Song Hui (1):
+      gpio/mpc8xxx: change irq handler from chained to normal
+
+Thierry Reding (5):
+      gpio: max77620: Do not allocate IRQs upfront
+      gpio: tegra186: Implement wake event support
+      gpio: tegra186: Derive register offsets from bank/port
+      gpio: tegra186: Program interrupt route mapping
+      gpio: tegra186: Add debounce support
+
+Timo Alho (1):
+      gpio: max77620: Fix interrupt handling
+
+Uwe Kleine-K=C3=B6nig (1):
+      driver core: simplify definitions of platform_get_irq*
+
+Vladimir Oltean (1):
+      gpio: mpc8xxx: Don't overwrite default irq_set_type callback
+
+YueHaibing (1):
+      gpio: xgs-iproc: Fix platform_no_drv_owner.cocci warnings
+
+ Documentation/admin-guide/kernel-parameters.rst    |   1 +
+ Documentation/admin-guide/kernel-parameters.txt    |   6 +
+ .../bindings/gpio/brcm,xgs-iproc-gpio.yaml         |  70 ++++
+ .../devicetree/bindings/gpio/gpio-rda.yaml         |  50 +++
+ .../devicetree/bindings/gpio/renesas,gpio-rcar.txt |   1 +
+ Documentation/driver-api/device_link.rst           |   3 +-
+ Documentation/driver-api/driver-model/devres.rst   |   4 +
+ Documentation/driver-api/driver-model/driver.rst   |  43 +++
+ Documentation/driver-api/{ =3D> gpio}/bt8xxgpio.rst  |   2 +-
+ Documentation/driver-api/gpio/driver.rst           |  25 +-
+ Documentation/driver-api/gpio/index.rst            |   1 +
+ Documentation/driver-api/index.rst                 |   1 -
+ Documentation/filesystems/debugfs.txt              |  50 +--
+ MAINTAINERS                                        |   6 +-
+ arch/powerpc/platforms/pseries/dtl.c               |  38 +-
+ arch/powerpc/platforms/pseries/hvCall_inst.c       |  12 +-
+ arch/powerpc/platforms/pseries/lpar.c              |  15 +-
+ arch/sh/drivers/Makefile                           |   2 +-
+ arch/sh/drivers/platform_early.c                   | 347 +++++++++++++++++=
+++
+ arch/sh/include/asm/platform_early.h               |  61 ++++
+ arch/sh/kernel/cpu/sh2/setup-sh7619.c              |   3 +-
+ arch/sh/kernel/cpu/sh2a/setup-mxg.c                |   3 +-
+ arch/sh/kernel/cpu/sh2a/setup-sh7201.c             |   3 +-
+ arch/sh/kernel/cpu/sh2a/setup-sh7203.c             |   3 +-
+ arch/sh/kernel/cpu/sh2a/setup-sh7206.c             |   3 +-
+ arch/sh/kernel/cpu/sh2a/setup-sh7264.c             |   3 +-
+ arch/sh/kernel/cpu/sh2a/setup-sh7269.c             |   3 +-
+ arch/sh/kernel/cpu/sh3/setup-sh3.c                 |   1 +
+ arch/sh/kernel/cpu/sh3/setup-sh7705.c              |   3 +-
+ arch/sh/kernel/cpu/sh3/setup-sh770x.c              |   3 +-
+ arch/sh/kernel/cpu/sh3/setup-sh7710.c              |   3 +-
+ arch/sh/kernel/cpu/sh3/setup-sh7720.c              |   3 +-
+ arch/sh/kernel/cpu/sh4/setup-sh4-202.c             |   3 +-
+ arch/sh/kernel/cpu/sh4/setup-sh7750.c              |   9 +-
+ arch/sh/kernel/cpu/sh4/setup-sh7760.c              |   3 +-
+ arch/sh/kernel/cpu/sh4a/setup-sh7343.c             |   3 +-
+ arch/sh/kernel/cpu/sh4a/setup-sh7366.c             |   3 +-
+ arch/sh/kernel/cpu/sh4a/setup-sh7722.c             |   3 +-
+ arch/sh/kernel/cpu/sh4a/setup-sh7723.c             |   3 +-
+ arch/sh/kernel/cpu/sh4a/setup-sh7724.c             |   3 +-
+ arch/sh/kernel/cpu/sh4a/setup-sh7734.c             |   3 +-
+ arch/sh/kernel/cpu/sh4a/setup-sh7757.c             |   3 +-
+ arch/sh/kernel/cpu/sh4a/setup-sh7763.c             |   3 +-
+ arch/sh/kernel/cpu/sh4a/setup-sh7770.c             |   3 +-
+ arch/sh/kernel/cpu/sh4a/setup-sh7780.c             |   3 +-
+ arch/sh/kernel/cpu/sh4a/setup-sh7785.c             |   3 +-
+ arch/sh/kernel/cpu/sh4a/setup-sh7786.c             |   3 +-
+ arch/sh/kernel/cpu/sh4a/setup-shx3.c               |   3 +-
+ arch/sh/kernel/cpu/sh5/setup-sh5.c                 |   3 +-
+ arch/sh/kernel/setup.c                             |   3 +-
+ arch/sh/kernel/time.c                              |   5 +-
+ drivers/ata/ahci_imx.c                             |  25 +-
+ drivers/base/core.c                                | 245 ++++++++++++-
+ drivers/base/firmware_loader/main.c                |   3 +-
+ drivers/base/platform.c                            | 374 ++++-------------=
+---
+ drivers/base/soc.c                                 |  30 +-
+ drivers/clocksource/sh_cmt.c                       |  13 +-
+ drivers/clocksource/sh_mtu2.c                      |  13 +-
+ drivers/clocksource/sh_tmu.c                       |  14 +-
+ drivers/gpio/Kconfig                               |  29 +-
+ drivers/gpio/Makefile                              |   3 +
+ drivers/gpio/TODO                                  |   4 +
+ drivers/gpio/gpio-104-dio-48e.c                    |   5 +-
+ drivers/gpio/gpio-104-idi-48.c                     |   4 +-
+ drivers/gpio/gpio-104-idio-16.c                    |   4 +-
+ drivers/gpio/gpio-74xx-mmio.c                      |   5 +-
+ drivers/gpio/gpio-amd-fch.c                        |   2 +-
+ .../gpio/{sgpio-aspeed.c =3D> gpio-aspeed-sgpio.c}   |   0
+ drivers/gpio/gpio-aspeed.c                         |   7 +-
+ drivers/gpio/gpio-ath79.c                          |  10 +-
+ drivers/gpio/gpio-bcm-kona.c                       |   6 +-
+ drivers/gpio/gpio-bd70528.c                        |   9 +-
+ drivers/gpio/gpio-bd9571mwv.c                      |   4 +-
+ drivers/gpio/gpio-dln2.c                           |   6 +-
+ drivers/gpio/gpio-em.c                             |  39 +--
+ drivers/gpio/gpio-exar.c                           |   5 +-
+ drivers/gpio/gpio-f7188x.c                         |   5 +-
+ drivers/gpio/gpio-gpio-mm.c                        |   5 +-
+ drivers/gpio/gpio-htc-egpio.c                      |  42 +--
+ drivers/gpio/gpio-ich.c                            |   5 +-
+ drivers/gpio/gpio-kempld.c                         |   5 +-
+ drivers/gpio/gpio-lp873x.c                         |   2 +-
+ drivers/gpio/gpio-lp87565.c                        |   5 +-
+ drivers/gpio/gpio-lynxpoint.c                      |   6 +
+ drivers/gpio/gpio-madera.c                         |   5 +-
+ drivers/gpio/gpio-max3191x.c                       |   2 +-
+ drivers/gpio/gpio-max77620.c                       | 231 +++++++------
+ drivers/gpio/gpio-merrifield.c                     |  50 +--
+ drivers/gpio/gpio-mmio.c                           |  22 +-
+ drivers/gpio/gpio-mockup.c                         | 105 +++---
+ drivers/gpio/gpio-moxtet.c                         |   4 +-
+ drivers/gpio/gpio-mpc8xxx.c                        |  36 +-
+ drivers/gpio/gpio-mvebu.c                          |  24 +-
+ drivers/gpio/gpio-mxc.c                            |  13 +-
+ drivers/gpio/gpio-mxs.c                            |   5 +-
+ drivers/gpio/gpio-omap.c                           |   6 +-
+ drivers/gpio/gpio-pca953x.c                        |   5 +-
+ drivers/gpio/gpio-pci-idio-16.c                    |   4 +-
+ drivers/gpio/gpio-pcie-idio-24.c                   |   9 +-
+ drivers/gpio/gpio-pisosr.c                         |   2 +-
+ drivers/gpio/gpio-pl061.c                          |   5 +-
+ drivers/gpio/gpio-raspberrypi-exp.c                |   5 +-
+ drivers/gpio/gpio-rcar.c                           |   7 +-
+ drivers/gpio/gpio-rda.c                            | 294 ++++++++++++++++
+ drivers/gpio/gpio-reg.c                            |   3 +-
+ drivers/gpio/gpio-sa1100.c                         |   5 +-
+ drivers/gpio/gpio-sama5d2-piobu.c                  |   7 +-
+ drivers/gpio/gpio-sch.c                            |   5 +-
+ drivers/gpio/gpio-sch311x.c                        |   5 +-
+ drivers/gpio/gpio-siox.c                           |   4 +-
+ drivers/gpio/gpio-stmpe.c                          |   5 +-
+ drivers/gpio/gpio-tc3589x.c                        |   5 +-
+ drivers/gpio/gpio-tegra.c                          |   5 +-
+ drivers/gpio/gpio-tegra186.c                       | 384 ++++++++++++++---=
+----
+ drivers/gpio/gpio-thunderx.c                       |   5 +-
+ drivers/gpio/gpio-tpic2810.c                       |   2 +-
+ drivers/gpio/gpio-tps65086.c                       |   2 +-
+ drivers/gpio/gpio-tps65912.c                       |   4 +-
+ drivers/gpio/gpio-tps68470.c                       |   6 +-
+ drivers/gpio/gpio-tqmx86.c                         |   5 +-
+ drivers/gpio/gpio-ts4900.c                         |   5 +-
+ drivers/gpio/gpio-twl4030.c                        |  10 +-
+ drivers/gpio/gpio-twl6040.c                        |   3 +-
+ drivers/gpio/gpio-uniphier.c                       |   5 +-
+ drivers/gpio/gpio-wcove.c                          |   7 +-
+ drivers/gpio/gpio-ws16c48.c                        |   5 +-
+ drivers/gpio/gpio-xgene.c                          |  32 +-
+ drivers/gpio/gpio-xgs-iproc.c                      | 320 +++++++++++++++++
+ drivers/gpio/gpio-xra1403.c                        |   5 +-
+ drivers/gpio/gpio-xtensa.c                         |   4 +-
+ drivers/gpio/gpio-zynq.c                           |   7 +-
+ drivers/gpio/gpiolib-acpi.c                        |  17 +-
+ drivers/gpio/gpiolib-devres.c                      |  33 +-
+ drivers/gpio/gpiolib-of.c                          |  18 +-
+ drivers/gpio/gpiolib.c                             | 330 ++++++++++++++---=
+-
+ drivers/gpio/gpiolib.h                             |   1 +
+ drivers/gpu/drm/bridge/ti-tfp410.c                 |   4 +-
+ drivers/infiniband/hw/mlx5/main.c                  |  62 +---
+ drivers/infiniband/hw/mlx5/mlx5_ib.h               |   9 +-
+ .../platform/sti/c8sectpfe/c8sectpfe-debugfs.c     |  26 +-
+ drivers/misc/sram.c                                |  28 +-
+ drivers/mmc/host/atmel-mci.c                       |  10 +-
+ drivers/mmc/host/dw_mmc.c                          |  10 +-
+ drivers/net/caif/caif_serial.c                     |   4 +-
+ drivers/ntb/test/ntb_pingpong.c                    |   5 +-
+ drivers/of/platform.c                              |  12 +
+ drivers/of/property.c                              | 298 ++++++++++++++++
+ drivers/tty/serial/sh-sci.c                        |  11 +-
+ fs/debugfs/file.c                                  |  87 ++---
+ include/linux/debugfs.h                            | 131 ++++---
+ include/linux/device.h                             |  33 ++
+ include/linux/fwnode.h                             |  41 +++
+ include/linux/gpio/consumer.h                      |  54 ++-
+ include/linux/gpio/driver.h                        |   8 +
+ include/linux/platform_device.h                    |  70 +---
+ include/linux/sys_soc.h                            |   1 +
+ include/uapi/linux/gpio.h                          |  24 ++
+ lib/devres.c                                       |  62 ++--
+ net/mac80211/debugfs_sta.c                         |  17 +-
+ tools/gpio/Makefile                                |   6 +-
+ 160 files changed, 3443 insertions(+), 1429 deletions(-)
+ create mode 100644
+Documentation/devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-rda.yaml
+ rename Documentation/driver-api/{ =3D> gpio}/bt8xxgpio.rst (98%)
+ create mode 100644 arch/sh/drivers/platform_early.c
+ create mode 100644 arch/sh/include/asm/platform_early.h
+ rename drivers/gpio/{sgpio-aspeed.c =3D> gpio-aspeed-sgpio.c} (100%)
+ create mode 100644 drivers/gpio/gpio-rda.c
+ create mode 100644 drivers/gpio/gpio-xgs-iproc.c
