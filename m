@@ -2,213 +2,2655 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B453DC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 020F9C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 887A3217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95BBB21736
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:38:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="pGiAdvSh";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="VMlf4bxt"
+	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="hwPHEk/+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbfK2Hed (ORCPT
+        id S1726805AbfK2HiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 02:34:33 -0500
-Received: from a27-11.smtp-out.us-west-2.amazonses.com ([54.240.27.11]:39556
-        "EHLO a27-11.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726360AbfK2Hed (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 02:34:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575012872;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=rhr7M/9VQSLL9ItyaTuW8gPDFzO9OiKg/pTfRZGl9ZI=;
-        b=pGiAdvShf1ywSsWV4nL+/IGFbc04fRtHhMX/XAsxsnPsBG1Nz/gG/zmJ1ldctHyz
-        kzOt96S5/b20z7GINQao+gwh8X28w5tlWO9RRGhW/wwumjJ5qIoYD0/4R44JlL82/zS
-        PDK+pqkiC8CRMsMuOMEMNHIrm3u6N4/eeXCEfhqo=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575012872;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=rhr7M/9VQSLL9ItyaTuW8gPDFzO9OiKg/pTfRZGl9ZI=;
-        b=VMlf4bxtgZh3pn7RXe36jmGsEtn3Dc7ECNWHWRRcVw9bZHXCmwlKQZe9dkqR8w5S
-        rPemt/CDkv2i8m/AR0ZdL3UZ+a5u1GmOcXIdzYx4TDelkOeOvbaXSimnmPbanQomMb/
-        imd22SD5cwFZL3oOZqEK0O7A4RzfNyfw7+Qqtlzw=
+        Fri, 29 Nov 2019 02:38:13 -0500
+Received: from mail-eopbgr730138.outbound.protection.outlook.com ([40.107.73.138]:38067
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726360AbfK2HiN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 02:38:13 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aAXFNtndEnSPUMvC5dVFXtopV/h0SvyXy/CbzqyswXcgTsy3Kb/661TNf3f8n1gPHz7eCcZZG3Yb97abrTvZIZfnVo5ofZOhNYKzvBuJ7N0l/20cEfgpQiwT324UNV86BJCErrsurz+P5y+cvSl9xwAWgf+be56ea/l9NhptHpdsOm9GdF4+Q07mm7dS/+ypo26CpjN+jVHr4iz5Bqc/0UI01C+Gd2eYZnJoR7ne+OWiWFmtbFlB+BUgFaNOUZ8u34Quwzwt8gMR6grYxTYzHZQkmwMTnPofyMLaIgJmg8CI4hs6nflM1jurcPBm6TzxmEC1ym87QrBHaC6xDzxCAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ccEjU4Go9gBHEZcrcru5Fj/zz6u81WrSa7H23C8yWUs=;
+ b=QbJCWBfErrvhAN4r8AtoG+4mXLWcM1kckduQg2UUnLjvGX6r9/qnrvhhy7lTcKvkLwB4FjcTLM0Rp9ajZeOcF+y67wYE84NzBpDGGlQ22FeeCcm+tPJ4EHs7nlATt8SVjJs9XrJ5H1wvIk3Vy1TCafRAnl/3GdEIowOfndmHZwMTlprX2EvSYk28XHcEFJB0WvFtFKDvkxZ5C4WR9kFtK7hkQdUxtAu7Llc9lRxyMwdHX79I7MgSNsEHCldKd/EMDdrzJVjkHw4BvYrjK5Cwbj1Ykx0bWO1jEhODJ+nNPWVXorYJrDQgLeZPCjCf1GA9qvyi1vMIs9Bywj0WXvXB4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
+ header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ccEjU4Go9gBHEZcrcru5Fj/zz6u81WrSa7H23C8yWUs=;
+ b=hwPHEk/+dYbtmoVZ+k1YTB2MOQPF55aKgFAkC8LpGw0c3waT0O2JV1as7OQhxtxhbg7LSgnpRpqWMQwRz5yYq2Y/7WkLkRpLNEFrNZ+IrTJcRmcTK5qtaiZb70rzyV4HoDH07de4GvfLfQbF9JAn2NUifTpvC1iGmf+sqb6STcY=
+Received: from SN6PR04MB4543.namprd04.prod.outlook.com (52.135.120.29) by
+ SN6PR04MB4606.namprd04.prod.outlook.com (52.135.120.84) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.19; Fri, 29 Nov 2019 07:35:10 +0000
+Received: from SN6PR04MB4543.namprd04.prod.outlook.com
+ ([fe80::859:2d31:1f00:fa16]) by SN6PR04MB4543.namprd04.prod.outlook.com
+ ([fe80::859:2d31:1f00:fa16%5]) with mapi id 15.20.2495.014; Fri, 29 Nov 2019
+ 07:35:10 +0000
+From:   Xin Ji <xji@analogixsemi.com>
+To:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>
+CC:     Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: [PATCH v6 2/2] drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to DP
+ bridge driver
+Thread-Topic: [PATCH v6 2/2] drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to
+ DP bridge driver
+Thread-Index: AQHVpoeHgiMtFa2mg0uI4bX9jPxvXg==
+Date:   Fri, 29 Nov 2019 07:35:10 +0000
+Message-ID: <a5b5d2911a69dfb59c784c957bdb638a3da3c35b.1575012508.git.xji@analogixsemi.com>
+References: <cover.1575012508.git.xji@analogixsemi.com>
+In-Reply-To: <cover.1575012508.git.xji@analogixsemi.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HK2P15301CA0022.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:202:1::32) To SN6PR04MB4543.namprd04.prod.outlook.com
+ (2603:10b6:805:a8::29)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xji@analogixsemi.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [114.247.245.252]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 27c58f31-5946-450e-2459-08d7749ea9eb
+x-ms-traffictypediagnostic: SN6PR04MB4606:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR04MB46065822F9E1E49F083A340AC7460@SN6PR04MB4606.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 0236114672
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(366004)(346002)(39850400004)(396003)(136003)(189003)(199004)(76176011)(6512007)(478600001)(36756003)(5660300002)(25786009)(107886003)(6486002)(256004)(6506007)(14444005)(446003)(186003)(5024004)(2501003)(8936002)(561924002)(11346002)(30864003)(4326008)(2616005)(99286004)(86362001)(81156014)(81166006)(8676002)(52116002)(110136005)(2906002)(7416002)(66476007)(64756008)(3846002)(54906003)(305945005)(66946007)(66446008)(102836004)(66066001)(71190400001)(6436002)(316002)(6116002)(14454004)(66556008)(386003)(118296001)(26005)(7736002)(71200400001)(569006);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB4606;H:SN6PR04MB4543.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: analogixsemi.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 1nxFIQwQWa8GGnURv0DSDDzKEVCtlIFGhAlt4q5MnLFRHHepUOBCzbTVkgq21Xe8Lo91OfjwXeRwWSh2d0WWoTywqb/2sR6Akj1FUNgQoWHWZ2C+1CMLZYFLPZldWn+pjI6oL3AY+QVPZE7EXkQuK5L8nrxcQbEDwWAfixrz8LkganLBjw4ZECD8XP7xzeUJ9Wb1rbi08hP2XHDigyLwIUP0ircPGMeBvm4puDhoPNLYym8fxC6j6wQleEeWv4v9f8gAPmbak5cQW37ZGOJk6NC4H0Yj/2N7DwX0J4hX2J+uqHfHdDtOnVRXeQ/1M6aIOxt+e0YWEfe7eQQ1V9tlUdHQkRqiji2SlOe8HI+/YVqx2rTCdjvDQ+c4938mn4wJ5cTngC/l9edW4bNU0NUCvQQhLDeCwSpQSoKZ6/jnP7WMi5O/cwkCoCqXQWToS65r
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1472822FFFA36544B68A4B5D16507A01@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 29 Nov 2019 07:34:32 +0000
-From:   rampraka@codeaurora.org
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Asutosh Das <asutoshd@codeaurora.org>,
-        Sahitya Tummala <stummala@codeaurora.org>,
-        Sayali Lokhande <sayalil@codeaurora.org>,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        cang@codeaurora.org, ppvk@codeaurora.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>, dianders@google.com
-Subject: Re: [RFC 0/6] mmc: Add clock scaling support for mmc driver
-In-Reply-To: <CAPDyKFoZEc-m7NMnaAa5bjtCSp4wyJqic3cLHk95xracoWcCUA@mail.gmail.com>
-References: <1571668177-3766-1-git-send-email-rampraka@codeaurora.org>
- <CAPDyKFoZEc-m7NMnaAa5bjtCSp4wyJqic3cLHk95xracoWcCUA@mail.gmail.com>
-Message-ID: <0101016eb6152f28-3f0e44c8-2cc5-4ed2-a9a3-f830ef6e3adf-000000@us-west-2.amazonses.com>
-X-Sender: rampraka@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2019.11.29-54.240.27.11
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+X-OriginatorOrg: analogixsemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 27c58f31-5946-450e-2459-08d7749ea9eb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Nov 2019 07:35:10.6345
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jt/8WXV/d7pI5T4uphwNUNZtLSLrjOtzQkaRfSf7AH7alHgW+JIZOAEL3TuE3iZxxPbNuAxu054DoLTqkNHGNg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4606
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ulf,
+The ANX7625 is an ultra-low power 4K Mobile HD Transmitter designed
+for portable device. It converts MIPI DSI/DPI to DisplayPort 1.3 4K.
 
-Seems some setting issue with my thunderbird application.
-Sorry for spams, please ignore my last responses as unsupported
-characters got added.
+The ANX7625 can support both USB Type-C PD feature and MIPI DSI/DPI
+to DP feature. This driver only enabled MIPI DSI/DPI to DP feature.
 
-Typing my response again from browser and re-sending.
+Signed-off-by: Xin Ji <xji@analogixsemi.com>
+---
+ drivers/gpu/drm/bridge/Makefile           |    2 +-
+ drivers/gpu/drm/bridge/analogix/Kconfig   |    6 +
+ drivers/gpu/drm/bridge/analogix/Makefile  |    1 +
+ drivers/gpu/drm/bridge/analogix/anx7625.c | 2045 +++++++++++++++++++++++++=
+++++
+ drivers/gpu/drm/bridge/analogix/anx7625.h |  406 ++++++
+ 5 files changed, 2459 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.c
+ create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.h
 
-Thanks,
-Ram
+diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makef=
+ile
+index 4934fcf..bcd388a 100644
+--- a/drivers/gpu/drm/bridge/Makefile
++++ b/drivers/gpu/drm/bridge/Makefile
+@@ -12,8 +12,8 @@ obj-$(CONFIG_DRM_SII9234) +=3D sii9234.o
+ obj-$(CONFIG_DRM_THINE_THC63LVD1024) +=3D thc63lvd1024.o
+ obj-$(CONFIG_DRM_TOSHIBA_TC358764) +=3D tc358764.o
+ obj-$(CONFIG_DRM_TOSHIBA_TC358767) +=3D tc358767.o
+-obj-$(CONFIG_DRM_ANALOGIX_DP) +=3D analogix/
+ obj-$(CONFIG_DRM_I2C_ADV7511) +=3D adv7511/
+ obj-$(CONFIG_DRM_TI_SN65DSI86) +=3D ti-sn65dsi86.o
+ obj-$(CONFIG_DRM_TI_TFP410) +=3D ti-tfp410.o
++obj-y +=3D analogix/
+ obj-y +=3D synopsys/
+diff --git a/drivers/gpu/drm/bridge/analogix/Kconfig b/drivers/gpu/drm/brid=
+ge/analogix/Kconfig
+index e930ff9..b2f127e 100644
+--- a/drivers/gpu/drm/bridge/analogix/Kconfig
++++ b/drivers/gpu/drm/bridge/analogix/Kconfig
+@@ -2,3 +2,9 @@
+ config DRM_ANALOGIX_DP
+ 	tristate
+ 	depends on DRM
++
++config ANALOGIX_ANX7625
++	tristate "Analogix MIPI to DP interface support"
++	help
++		ANX7625 is an ultra-low power 4K mobile HD transmitter designed
++		for portable devices. It converts MIPI/DPI to DisplayPort1.3 4K.
+diff --git a/drivers/gpu/drm/bridge/analogix/Makefile b/drivers/gpu/drm/bri=
+dge/analogix/Makefile
+index fdbf3fd..8a52867 100644
+--- a/drivers/gpu/drm/bridge/analogix/Makefile
++++ b/drivers/gpu/drm/bridge/analogix/Makefile
+@@ -1,3 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
++obj-$(CONFIG_ANALOGIX_ANX7625) +=3D anx7625.o
+ analogix_dp-objs :=3D analogix_dp_core.o analogix_dp_reg.o
+ obj-$(CONFIG_DRM_ANALOGIX_DP) +=3D analogix_dp.o
+diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.c b/drivers/gpu/drm/br=
+idge/analogix/anx7625.c
+new file mode 100644
+index 0000000..737f4a3
+--- /dev/null
++++ b/drivers/gpu/drm/bridge/analogix/anx7625.c
+@@ -0,0 +1,2045 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright(c) 2016, Analogix Semiconductor. All rights reserved.
++ *
++ */
++#include <linux/extcon.h>
++#include <linux/gcd.h>
++#include <linux/gpio/consumer.h>
++#include <linux/i2c.h>
++#include <linux/interrupt.h>
++#include <linux/iopoll.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/slab.h>
++#include <linux/types.h>
++#include <linux/workqueue.h>
++
++#include <linux/of_gpio.h>
++#include <linux/of_graph.h>
++#include <linux/of_platform.h>
++
++#include <drm/drm_atomic_helper.h>
++#include <drm/drm_bridge.h>
++#include <drm/drm_crtc_helper.h>
++#include <drm/drm_dp_helper.h>
++#include <drm/drm_edid.h>
++#include <drm/drm_mipi_dsi.h>
++#include <drm/drm_panel.h>
++#include <drm/drm_print.h>
++#include <drm/drm_probe_helper.h>
++
++#include <video/display_timing.h>
++
++#include "anx7625.h"
++
++/*
++ * there is a sync issue while access I2C register between AP(CPU) and
++ * internal firmware(OCM), to avoid the race condition, AP should access
++ * the reserved slave address before slave address occurs changes.
++ */
++static int i2c_access_workaround(struct anx7625_data *ctx,
++				 struct i2c_client *client)
++{
++	u8 offset;
++	struct device *dev =3D &client->dev;
++	int ret;
++
++	if (client =3D=3D ctx->last_client)
++		return 0;
++
++	ctx->last_client =3D client;
++
++	if (client =3D=3D ctx->i2c.tcpc_client)
++		offset =3D RSVD_00_ADDR;
++	else if (client =3D=3D ctx->i2c.tx_p0_client)
++		offset =3D RSVD_D1_ADDR;
++	else if (client =3D=3D ctx->i2c.tx_p1_client)
++		offset =3D RSVD_60_ADDR;
++	else if (client =3D=3D ctx->i2c.rx_p0_client)
++		offset =3D RSVD_39_ADDR;
++	else if (client =3D=3D ctx->i2c.rx_p1_client)
++		offset =3D RSVD_7F_ADDR;
++	else
++		offset =3D RSVD_00_ADDR;
++
++	ret =3D i2c_smbus_write_byte_data(client, offset, 0x00);
++	if (ret < 0)
++		DRM_DEV_ERROR(dev,
++			      "failed to access i2c id=3D%x\n:%x",
++			      client->addr, offset);
++
++	return ret;
++}
++
++static int anx7625_reg_read(struct anx7625_data *ctx,
++			    struct i2c_client *client, u8 reg_addr)
++{
++	int ret;
++	struct device *dev =3D &client->dev;
++
++	i2c_access_workaround(ctx, client);
++
++	ret =3D i2c_smbus_read_byte_data(client, reg_addr);
++	if (ret < 0)
++		DRM_DEV_ERROR(dev, "read i2c failed id=3D%x:%x\n",
++			      client->addr, reg_addr);
++
++	return ret;
++}
++
++static int anx7625_reg_block_read(struct anx7625_data *ctx,
++				  struct i2c_client *client,
++				  u8 reg_addr, u8 len, u8 *buf)
++{
++	int ret;
++	struct device *dev =3D &client->dev;
++
++	i2c_access_workaround(ctx, client);
++
++	ret =3D i2c_smbus_read_i2c_block_data(client, reg_addr, len, buf);
++	if (ret < 0)
++		DRM_DEV_ERROR(dev, "read i2c block failed id=3D%x:%x\n",
++			      client->addr, reg_addr);
++
++	return ret;
++}
++
++static int anx7625_reg_write(struct anx7625_data *ctx,
++			     struct i2c_client *client,
++			     u8 reg_addr, u8 reg_val)
++{
++	int ret;
++	struct device *dev =3D &client->dev;
++
++	i2c_access_workaround(ctx, client);
++
++	ret =3D i2c_smbus_write_byte_data(client, reg_addr, reg_val);
++
++	if (ret < 0)
++		DRM_DEV_ERROR(dev, "failed to write i2c id=3D%x\n:%x",
++			      client->addr, reg_addr);
++
++	return ret;
++}
++
++static int anx7625_write_or(struct anx7625_data *ctx,
++			    struct i2c_client *client,
++			    u8 offset, u8 mask)
++{
++	int val;
++
++	val =3D anx7625_reg_read(ctx, client, offset);
++	if (val < 0)
++		return val;
++
++	return anx7625_reg_write(ctx, client, offset, (val | (mask)));
++}
++
++static int anx7625_write_and(struct anx7625_data *ctx,
++			     struct i2c_client *client,
++			     u8 offset, u8 mask)
++{
++	int val;
++
++	val =3D anx7625_reg_read(ctx, client, offset);
++	if (val < 0)
++		return val;
++
++	return anx7625_reg_write(ctx, client, offset, (val & (mask)));
++}
++
++static int anx7625_write_and_or(struct anx7625_data *ctx,
++				struct i2c_client *client,
++				u8 offset, u8 and_mask, u8 or_mask)
++{
++	int val;
++
++	val =3D anx7625_reg_read(ctx, client, offset);
++	if (val < 0)
++		return val;
++
++	return anx7625_reg_write(ctx, client,
++				 offset, (val & and_mask) | (or_mask));
++}
++
++static int anx7625_config_bit_matrix(struct anx7625_data *ctx)
++{
++	int i, ret;
++
++	ret =3D anx7625_reg_write(ctx, ctx->i2c.tx_p2_client,
++				AUDIO_CONTROL_REGISTER, 0x80);
++	for (i =3D 0; i < 13; i++)
++		ret |=3D anx7625_reg_write(ctx, ctx->i2c.tx_p2_client,
++					 VIDEO_BIT_MATRIX_12 + i,
++					 0x18 + i);
++
++	return ret;
++}
++
++static int anx7625_read_ctrl_status_p0(struct anx7625_data *ctx)
++{
++	return anx7625_reg_read(ctx, ctx->i2c.rx_p0_client, AP_AUX_CTRL_STATUS);
++}
++
++static int wait_aux_op_finish(struct anx7625_data *ctx)
++{
++	int val;
++	int ret;
++	struct device *dev =3D &ctx->client->dev;
++
++	ret =3D readx_poll_timeout(anx7625_read_ctrl_status_p0,
++				 ctx, val,
++				 (!(val & AP_AUX_CTRL_OP_EN) || (val < 0)),
++				 2000,
++				 2000 * 150);
++	if (ret) {
++		DRM_DEV_ERROR(dev, "aux operation failed!\n");
++		return -EIO;
++	}
++
++	val =3D anx7625_reg_read(ctx, ctx->i2c.rx_p0_client,
++			       AP_AUX_CTRL_STATUS);
++	if (val < 0 || (val & 0x0F)) {
++		DRM_DEV_ERROR(dev, "aux status %02x\n", val);
++		val =3D -EIO;
++	}
++
++	return val;
++}
++
++static int anx7625_video_mute_control(struct anx7625_data *ctx,
++				      u8 status)
++{
++	int ret;
++
++	if (status) { /* mute on */
++		/* set mute flag */
++		ret =3D anx7625_write_or(ctx, ctx->i2c.rx_p0_client,
++				       AP_AV_STATUS, AP_MIPI_MUTE);
++		/* clear mipi RX en */
++		ret |=3D anx7625_write_and(ctx, ctx->i2c.rx_p0_client,
++					 AP_AV_STATUS, (u8)~AP_MIPI_RX_EN);
++	} else { /* mute off */
++		/* clear mute flag */
++		ret =3D anx7625_write_and(ctx, ctx->i2c.rx_p0_client,
++					AP_AV_STATUS, (u8)~AP_MIPI_MUTE);
++		/* set MIPI RX EN */
++		ret |=3D anx7625_write_or(ctx, ctx->i2c.rx_p0_client,
++					AP_AV_STATUS, AP_MIPI_RX_EN);
++	}
++
++	return ret;
++}
++
++static int anx7625_config_audio_input(struct anx7625_data *ctx)
++{
++	int ret;
++
++	/* channel num */
++	ret =3D anx7625_reg_write(ctx, ctx->i2c.tx_p2_client,
++				AUDIO_CHANNEL_STATUS_6, I2S_CH_2 << 5);
++	/* layout */
++	/* as I2S channel is 2, no need to set layout */
++
++	/* FS */
++	ret |=3D anx7625_write_and_or(ctx, ctx->i2c.tx_p2_client,
++				    AUDIO_CHANNEL_STATUS_4,
++				    0xf0, AUDIO_FS_48K);
++	/* word length */
++	ret |=3D anx7625_write_and_or(ctx, ctx->i2c.tx_p2_client,
++				    AUDIO_CHANNEL_STATUS_5,
++				    0xf0, AUDIO_W_LEN_24_24MAX);
++	/* I2S */
++	ret |=3D anx7625_write_or(ctx, ctx->i2c.tx_p2_client,
++				AUDIO_CHANNEL_STATUS_6, I2S_SLAVE_MODE);
++	ret |=3D anx7625_write_and(ctx, ctx->i2c.tx_p2_client,
++				 AUDIO_CONTROL_REGISTER, ~TDM_TIMING_MODE);
++	/* audio change flag */
++	ret |=3D anx7625_write_or(ctx, ctx->i2c.rx_p0_client,
++				AP_AV_STATUS, AP_AUDIO_CHG);
++
++	if (ret < 0)
++		DRM_ERROR("failed to config audio.\n");
++
++	return ret;
++}
++
++/* reduction of fraction a/b */
++static void anx7625_reduction_of_a_fraction(unsigned long *a, unsigned lon=
+g *b)
++{
++	unsigned long gcd_num;
++	unsigned long tmp_a, tmp_b;
++	u32 i =3D 1;
++
++	gcd_num =3D gcd(*a, *b);
++	*a /=3D gcd_num;
++	*b /=3D gcd_num;
++
++	tmp_a =3D *a;
++	tmp_b =3D *b;
++
++	while ((*a > MAX_UNSIGNED_24BIT) || (*b > MAX_UNSIGNED_24BIT)) {
++		i++;
++		*a =3D tmp_a / i;
++		*b =3D tmp_b / i;
++	}
++
++	/*
++	 * in the end, make a, b larger to have higher ODFC PLL
++	 * output frequency accuracy
++	 */
++	while ((*a < MAX_UNSIGNED_24BIT) && (*b < MAX_UNSIGNED_24BIT)) {
++		*a <<=3D 1;
++		*b <<=3D 1;
++	}
++
++	*a >>=3D 1;
++	*b >>=3D 1;
++}
++
++static int anx7625_calculate_m_n(u32 pixelclock,
++				 unsigned long *m,
++				 unsigned long *n,
++				 u8 *post_divider)
++{
++	if (pixelclock > PLL_OUT_FREQ_ABS_MAX / POST_DIVIDER_MIN) {
++		/* pixel clock frequency is too high */
++		DRM_ERROR("pixelclock too high, act(%d), maximum(%lu)\n",
++			  pixelclock,
++			  PLL_OUT_FREQ_ABS_MAX / POST_DIVIDER_MIN);
++		return -EINVAL;
++	}
++
++	if (pixelclock < PLL_OUT_FREQ_ABS_MIN / POST_DIVIDER_MAX) {
++		/* pixel clock frequency is too low */
++		DRM_ERROR("pixelclock too low, act(%d), maximum(%lu)\n",
++			  pixelclock,
++			  PLL_OUT_FREQ_ABS_MIN / POST_DIVIDER_MAX);
++		return -EINVAL;
++	}
++
++	for (*post_divider =3D 1;
++		pixelclock < (PLL_OUT_FREQ_MIN / (*post_divider));)
++		*post_divider +=3D 1;
++
++	if (*post_divider > POST_DIVIDER_MAX) {
++		for (*post_divider =3D 1;
++			(pixelclock <
++			 (PLL_OUT_FREQ_ABS_MIN / (*post_divider)));)
++			*post_divider +=3D 1;
++
++		if (*post_divider > POST_DIVIDER_MAX) {
++			DRM_ERROR("cannot find property post_divider(%d)\n",
++				  *post_divider);
++			return -EDOM;
++		}
++	}
++
++	/* patch to improve the accuracy */
++	if (*post_divider =3D=3D 7) {
++		/* 27,000,000 is not divisible by 7 */
++		*post_divider =3D 8;
++	} else if (*post_divider =3D=3D 11) {
++		/* 27,000,000 is not divisible by 11 */
++		*post_divider =3D 12;
++	} else if ((*post_divider =3D=3D 13) || (*post_divider =3D=3D 14)) {
++		/*27,000,000 is not divisible by 13 or 14*/
++		*post_divider =3D 15;
++	}
++
++	if (pixelclock * (*post_divider) > PLL_OUT_FREQ_ABS_MAX) {
++		DRM_ERROR("act clock(%u) large than maximum(%lu)\n",
++			  pixelclock * (*post_divider),
++			  PLL_OUT_FREQ_ABS_MAX);
++		return -EDOM;
++	}
++
++	*m =3D pixelclock;
++	*n =3D XTAL_FRQ / (*post_divider);
++
++	anx7625_reduction_of_a_fraction(m, n);
++
++	return 0;
++}
++
++static int anx7625_odfc_config(struct anx7625_data *ctx,
++			       u8 post_divider)
++{
++	int ret;
++
++	/* config input reference clock frequency 27MHz/19.2MHz */
++	ret =3D anx7625_write_and(ctx, ctx->i2c.rx_p1_client, MIPI_DIGITAL_PLL_16=
+,
++				~(REF_CLK_27000KHZ << MIPI_FREF_D_IND));
++	ret |=3D anx7625_write_or(ctx, ctx->i2c.rx_p1_client, MIPI_DIGITAL_PLL_16=
+,
++				(REF_CLK_27000KHZ << MIPI_FREF_D_IND));
++	/* post divider */
++	ret |=3D anx7625_write_and(ctx, ctx->i2c.rx_p1_client,
++				 MIPI_DIGITAL_PLL_8, 0x0f);
++	ret |=3D anx7625_write_or(ctx, ctx->i2c.rx_p1_client, MIPI_DIGITAL_PLL_8,
++				post_divider << 4);
++
++	/* add patch for MIS2-125 (5pcs ANX7625 fail ATE MBIST test) */
++	ret |=3D anx7625_write_and(ctx, ctx->i2c.rx_p1_client, MIPI_DIGITAL_PLL_7=
+,
++				 ~MIPI_PLL_VCO_TUNE_REG_VAL);
++
++	/* reset ODFC PLL */
++	ret |=3D anx7625_write_and(ctx, ctx->i2c.rx_p1_client, MIPI_DIGITAL_PLL_7=
+,
++				 ~MIPI_PLL_RESET_N);
++	ret |=3D anx7625_write_or(ctx, ctx->i2c.rx_p1_client, MIPI_DIGITAL_PLL_7,
++				MIPI_PLL_RESET_N);
++
++	if (ret < 0)
++		DRM_ERROR("IO error.\n");
++
++	return ret;
++}
++
++static int anx7625_dsi_video_timing_config(struct anx7625_data *ctx)
++{
++	struct device *dev =3D &ctx->client->dev;
++	unsigned long m, n;
++	u16 htotal;
++	int ret;
++	u8 post_divider =3D 0;
++
++	ret =3D anx7625_calculate_m_n(ctx->dt.pixelclock.min * 1000,
++				    &m, &n, &post_divider);
++
++	if (ret) {
++		DRM_ERROR("cannot get property m n value.\n");
++		return ret;
++	}
++
++	DRM_DEV_DEBUG_DRIVER(dev, "compute M(%lu), N(%lu), divider(%d).\n",
++			     m, n, post_divider);
++
++	/* configure pixel clock */
++	ret =3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client, PIXEL_CLOCK_L,
++				(ctx->dt.pixelclock.min / 1000) & 0xFF);
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client, PIXEL_CLOCK_H,
++				 (ctx->dt.pixelclock.min / 1000) >> 8);
++	/* lane count */
++	ret |=3D anx7625_write_and(ctx, ctx->i2c.rx_p1_client,
++			MIPI_LANE_CTRL_0, 0xfc);
++	ret |=3D anx7625_write_or(ctx, ctx->i2c.rx_p1_client,
++				MIPI_LANE_CTRL_0, 3);
++
++	/* Htotal */
++	htotal =3D ctx->dt.hactive.min + ctx->dt.hfront_porch.min +
++		ctx->dt.hback_porch.min + ctx->dt.hsync_len.min;
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
++			HORIZONTAL_TOTAL_PIXELS_L, htotal & 0xFF);
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
++			HORIZONTAL_TOTAL_PIXELS_H, htotal >> 8);
++	/* Hactive */
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
++			HORIZONTAL_ACTIVE_PIXELS_L, ctx->dt.hactive.min & 0xFF);
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
++			HORIZONTAL_ACTIVE_PIXELS_H, ctx->dt.hactive.min >> 8);
++	/* HFP */
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
++			HORIZONTAL_FRONT_PORCH_L, ctx->dt.hfront_porch.min);
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
++			HORIZONTAL_FRONT_PORCH_H,
++			ctx->dt.hfront_porch.min >> 8);
++	/* HWS */
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
++			HORIZONTAL_SYNC_WIDTH_L, ctx->dt.hsync_len.min);
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
++			HORIZONTAL_SYNC_WIDTH_H, ctx->dt.hsync_len.min >> 8);
++	/* HBP */
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
++			HORIZONTAL_BACK_PORCH_L, ctx->dt.hback_porch.min);
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
++			HORIZONTAL_BACK_PORCH_H, ctx->dt.hback_porch.min >> 8);
++	/* Vactive */
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client, ACTIVE_LINES_L,
++			ctx->dt.vactive.min);
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client, ACTIVE_LINES_H,
++			ctx->dt.vactive.min >> 8);
++	/* VFP */
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
++			VERTICAL_FRONT_PORCH, ctx->dt.vfront_porch.min);
++	/* VWS */
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
++			VERTICAL_SYNC_WIDTH, ctx->dt.vsync_len.min);
++	/* VBP */
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
++			VERTICAL_BACK_PORCH, ctx->dt.vback_porch.min);
++	/* M value */
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
++			MIPI_PLL_M_NUM_23_16, (m >> 16) & 0xff);
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
++			MIPI_PLL_M_NUM_15_8, (m >> 8) & 0xff);
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
++			MIPI_PLL_M_NUM_7_0, (m & 0xff));
++	/* N value */
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
++			MIPI_PLL_N_NUM_23_16, (n >> 16) & 0xff);
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
++			MIPI_PLL_N_NUM_15_8, (n >> 8) & 0xff);
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p1_client, MIPI_PLL_N_NUM_7_0=
+,
++			(n & 0xff));
++	/* diff */
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
++			MIPI_DIGITAL_ADJ_1, 0x37);
++
++	ret |=3D anx7625_odfc_config(ctx, post_divider - 1);
++
++	if (ret < 0)
++		DRM_ERROR("mipi dsi setup IO error.\n");
++
++	return ret;
++}
++
++static int anx7625_swap_dsi_lane3(struct anx7625_data *ctx)
++{
++	int val;
++
++	/* swap MIPI-DSI data lane 3 P and N */
++	val =3D anx7625_reg_read(ctx, ctx->i2c.rx_p1_client, MIPI_SWAP);
++	if (val < 0) {
++		DRM_ERROR("IO error : access MIPI_SWAP.\n");
++		return -EIO;
++	}
++
++	val |=3D (1 << MIPI_SWAP_CH3);
++	return anx7625_reg_write(ctx, ctx->i2c.rx_p1_client, MIPI_SWAP, val);
++}
++
++static int anx7625_api_dsi_config(struct anx7625_data *ctx)
++
++{
++	int val, ret;
++
++	/* swap MIPI-DSI data lane 3 P and N */
++	ret =3D anx7625_swap_dsi_lane3(ctx);
++	if (ret < 0) {
++		DRM_ERROR("IO error : swap dsi lane 3 failed.\n");
++		return ret;
++	}
++
++	/* DSI clock settings */
++	val =3D (0 << MIPI_HS_PWD_CLK)		|
++		(0 << MIPI_HS_RT_CLK)		|
++		(0 << MIPI_PD_CLK)		|
++		(1 << MIPI_CLK_RT_MANUAL_PD_EN)	|
++		(1 << MIPI_CLK_HS_MANUAL_PD_EN)	|
++		(0 << MIPI_CLK_DET_DET_BYPASS)	|
++		(0 << MIPI_CLK_MISS_CTRL)	|
++		(0 << MIPI_PD_LPTX_CH_MANUAL_PD_EN);
++	ret =3D anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
++				MIPI_PHY_CONTROL_3, val);
++
++	/*
++	 * Decreased HS prepare timing delay from 160ns to 80ns work with
++	 *     a) Dragon board 810 series (Qualcomm AP)
++	 *     b) Moving Pixel DSI source (PG3A pattern generator +
++	 *	P332 D-PHY Probe) default D-PHY timing
++	 *	5ns/step
++	 */
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
++				 MIPI_TIME_HS_PRPR, 0x10);
++
++	/* enable DSI mode*/
++	ret |=3D anx7625_write_or(ctx, ctx->i2c.rx_p1_client, MIPI_DIGITAL_PLL_18=
+,
++				SELECT_DSI << MIPI_DPI_SELECT);
++
++	ret |=3D anx7625_dsi_video_timing_config(ctx);
++	if (ret < 0) {
++		DRM_ERROR("dsi video timing config failed\n");
++		return ret;
++	}
++
++	/* toggle m, n ready */
++	ret =3D anx7625_write_and(ctx, ctx->i2c.rx_p1_client, MIPI_DIGITAL_PLL_6,
++				~(MIPI_M_NUM_READY | MIPI_N_NUM_READY));
++	usleep_range(1000, 1100);
++	ret |=3D anx7625_write_or(ctx, ctx->i2c.rx_p1_client, MIPI_DIGITAL_PLL_6,
++				MIPI_M_NUM_READY | MIPI_N_NUM_READY);
++
++	/* configure integer stable register */
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
++				 MIPI_VIDEO_STABLE_CNT, 0x02);
++	/* power on MIPI RX */
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
++				 MIPI_LANE_CTRL_10, 0x00);
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
++				 MIPI_LANE_CTRL_10, 0x80);
++
++	if (ret < 0)
++		DRM_ERROR("IO error : mipi dsi enable init failed.\n");
++
++	return ret;
++}
++
++static int anx7625_dsi_config(struct anx7625_data *ctx)
++{
++	struct device *dev =3D &ctx->client->dev;
++	int ret;
++
++	DRM_DEV_DEBUG_DRIVER(dev, "config dsi.\n");
++
++	/* DSC disable */
++	ret =3D anx7625_write_and(ctx, ctx->i2c.rx_p0_client,
++				R_DSC_CTRL_0, ~DSC_EN);
++
++	ret |=3D anx7625_api_dsi_config(ctx);
++
++	if (ret < 0) {
++		DRM_ERROR("IO error : api dsi config error.\n");
++		return ret;
++	}
++
++	/* set MIPI RX EN */
++	ret =3D anx7625_write_or(ctx, ctx->i2c.rx_p0_client,
++			       AP_AV_STATUS, AP_MIPI_RX_EN);
++	/* clear mute flag */
++	ret |=3D anx7625_write_and(ctx, ctx->i2c.rx_p0_client,
++				 AP_AV_STATUS, (u8)~AP_MIPI_MUTE);
++	if (ret < 0)
++		DRM_ERROR("IO error : enable mipi rx failed.\n");
++	else
++		DRM_DEV_DEBUG_DRIVER(dev, "success to config DSI\n");
++
++	return ret;
++}
++
++static int anx7625_api_dpi_config(struct anx7625_data *ctx)
++{
++	u16 freq =3D ctx->dt.pixelclock.min / 1000;
++	int ret;
++
++	/* configure pixel clock */
++	ret =3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
++				PIXEL_CLOCK_L, freq & 0xFF);
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
++				 PIXEL_CLOCK_H, (freq >> 8));
++
++	/* set DPI mode */
++	/* set to DPI PLL module sel */
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
++				 MIPI_DIGITAL_PLL_9, 0x20);
++	/* power down MIPI */
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
++				 MIPI_LANE_CTRL_10, 0x08);
++	/* enable DPI mode */
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
++				 MIPI_DIGITAL_PLL_18, 0x1C);
++	/* set first edge */
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.tx_p2_client,
++				 VIDEO_CONTROL_0, 0x05);
++	if (ret < 0)
++		DRM_ERROR("IO error : dpi phy set failed.\n");
++
++	return ret;
++}
++
++static int anx7625_dpi_config(struct anx7625_data *ctx)
++{
++	struct device *dev =3D &ctx->client->dev;
++	int ret;
++
++	DRM_DEV_DEBUG_DRIVER(dev, "config dpi\n");
++
++	/* DSC disable */
++	ret =3D anx7625_write_and(ctx, ctx->i2c.rx_p0_client,
++				R_DSC_CTRL_0, ~DSC_EN);
++	if (ret < 0) {
++		DRM_ERROR("IO error : disable dsc failed.\n");
++		return ret;
++	}
++
++	ret =3D anx7625_config_bit_matrix(ctx);
++	if (ret < 0) {
++		DRM_ERROR("config bit matrix failed.\n");
++		return ret;
++	}
++
++	ret =3D anx7625_api_dpi_config(ctx);
++	if (ret < 0) {
++		DRM_ERROR("mipi phy(dpi) setup failed.\n");
++		return ret;
++	}
++
++	/* set MIPI RX EN */
++	ret =3D anx7625_write_or(ctx, ctx->i2c.rx_p0_client,
++			       AP_AV_STATUS, AP_MIPI_RX_EN);
++	/* clear mute flag */
++	ret |=3D anx7625_write_and(ctx, ctx->i2c.rx_p0_client,
++				 AP_AV_STATUS, (u8)~AP_MIPI_MUTE);
++	if (ret < 0)
++		DRM_ERROR("IO error : enable mipi rx failed.\n");
++
++	return ret;
++}
++
++static void anx7625_dp_start(struct anx7625_data *ctx)
++{
++	int ret;
++
++	if (!ctx->display_timing_valid) {
++		DRM_ERROR("mipi drm haven't set display timing yet.\n");
++		return;
++	}
++
++	anx7625_config_audio_input(ctx);
++
++	if (ctx->pdata.dsi_supported)
++		ret =3D anx7625_dsi_config(ctx);
++	else
++		ret =3D anx7625_dpi_config(ctx);
++
++	if (ret < 0)
++		DRM_ERROR("MIPI phy setup error.\n");
++}
++
++static void anx7625_dp_stop(struct anx7625_data *ctx)
++{
++	struct device *dev =3D &ctx->client->dev;
++	int ret;
++
++	DRM_DEV_DEBUG_DRIVER(dev, "stop dp output\n");
++
++	/*
++	 * video disable: 0x72:08 bit 7 =3D 0;
++	 * audio disable: 0x70:87 bit 0 =3D 0;
++	 */
++	ret =3D anx7625_write_and(ctx, ctx->i2c.tx_p0_client, 0x87, 0xfe);
++	ret |=3D anx7625_write_and(ctx, ctx->i2c.tx_p2_client, 0x08, 0x7f);
++
++	ret |=3D anx7625_video_mute_control(ctx, 1);
++	if (ret < 0)
++		DRM_ERROR("IO error : mute video failed\n");
++}
++
++static int sp_tx_rst_aux(struct anx7625_data *ctx)
++{
++	int ret;
++
++	ret =3D anx7625_write_or(ctx, ctx->i2c.tx_p2_client, RST_CTRL2,
++			       AUX_RST);
++	ret |=3D anx7625_write_and(ctx, ctx->i2c.tx_p2_client, RST_CTRL2,
++				 ~AUX_RST);
++	return ret;
++}
++
++static int sp_tx_aux_wr(struct anx7625_data *ctx, u8 offset)
++{
++	int ret;
++
++	ret =3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
++				AP_AUX_BUFF_START, offset);
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
++				 AP_AUX_COMMAND, 0x04);
++	ret |=3D anx7625_write_or(ctx, ctx->i2c.rx_p0_client,
++				AP_AUX_CTRL_STATUS, AP_AUX_CTRL_OP_EN);
++	return (ret | wait_aux_op_finish(ctx));
++}
++
++static int sp_tx_aux_rd(struct anx7625_data *ctx, u8 len_cmd)
++{
++	int ret;
++
++	ret =3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
++				AP_AUX_COMMAND, len_cmd);
++	ret |=3D anx7625_write_or(ctx, ctx->i2c.rx_p0_client,
++				AP_AUX_CTRL_STATUS, AP_AUX_CTRL_OP_EN);
++	return (ret | wait_aux_op_finish(ctx));
++}
++
++static int sp_tx_get_edid_block(struct anx7625_data *ctx)
++{
++	int c =3D 0;
++	struct device *dev =3D &ctx->client->dev;
++
++	sp_tx_aux_wr(ctx, 0x7e);
++	sp_tx_aux_rd(ctx, 0x01);
++	c =3D anx7625_reg_read(ctx, ctx->i2c.rx_p0_client, AP_AUX_BUFF_START);
++	if (c < 0) {
++		DRM_ERROR("IO error : access AUX BUFF.\n");
++		return -EIO;
++	}
++
++	DRM_DEV_DEBUG_DRIVER(dev, " EDID Block =3D %d\n", c + 1);
++
++	if (c > MAX_EDID_BLOCK)
++		c =3D 1;
++
++	return c;
++}
++
++static int edid_read(struct anx7625_data *ctx,
++		     u8 offset, u8 *pblock_buf)
++{
++	int ret, cnt;
++	struct device *dev =3D &ctx->client->dev;
++
++	for (cnt =3D 0; cnt <=3D EDID_TRY_CNT; cnt++) {
++		sp_tx_aux_wr(ctx, offset);
++		/* set I2C read com 0x01 mot =3D 0 and read 16 bytes */
++		ret =3D sp_tx_aux_rd(ctx, 0xf1);
++
++		if (ret) {
++			sp_tx_rst_aux(ctx);
++			DRM_DEV_DEBUG_DRIVER(dev, "edid read failed, reset!\n");
++		} else {
++			ret =3D anx7625_reg_block_read(ctx, ctx->i2c.rx_p0_client,
++						     AP_AUX_BUFF_START,
++						     MAX_DPCD_BUFFER_SIZE,
++						     pblock_buf);
++			if (ret > 0)
++				break;
++		}
++	}
++
++	if (cnt > EDID_TRY_CNT)
++		return -EIO;
++
++	return 0;
++}
++
++static int segments_edid_read(struct anx7625_data *ctx,
++			      u8 segment, u8 *buf, u8 offset)
++{
++	u8 cnt;
++	int ret;
++	struct device *dev =3D &ctx->client->dev;
++
++	/* write address only */
++	ret =3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
++				AP_AUX_ADDR_7_0, 0x30);
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
++				 AP_AUX_COMMAND, 0x04);
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
++				 AP_AUX_CTRL_STATUS,
++				 AP_AUX_CTRL_ADDRONLY | AP_AUX_CTRL_OP_EN);
++
++	ret |=3D wait_aux_op_finish(ctx);
++	/* write segment address */
++	ret |=3D sp_tx_aux_wr(ctx, segment);
++	/* data read */
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
++				 AP_AUX_ADDR_7_0, 0x50);
++	if (ret) {
++		DRM_ERROR("IO error : aux initial failed.\n");
++		return ret;
++	}
++
++	for (cnt =3D 0; cnt <=3D EDID_TRY_CNT; cnt++) {
++		sp_tx_aux_wr(ctx, offset);
++		/* set I2C read com 0x01 mot =3D 0 and read 16 bytes */
++		ret =3D sp_tx_aux_rd(ctx, 0xf1);
++
++		if (ret) {
++			ret =3D sp_tx_rst_aux(ctx);
++			DRM_DEV_ERROR(dev, "segment read failed, reset!\n");
++		} else {
++			ret =3D anx7625_reg_block_read(ctx, ctx->i2c.rx_p0_client,
++						     AP_AUX_BUFF_START,
++						     MAX_DPCD_BUFFER_SIZE, buf);
++			if (ret > 0)
++				break;
++		}
++	}
++
++	if (cnt > EDID_TRY_CNT)
++		return -EIO;
++
++	return 0;
++}
++
++static int sp_tx_edid_read(struct anx7625_data *ctx,
++			   u8 *pedid_blocks_buf)
++{
++	u8 offset, edid_pos;
++	int count, blocks_num;
++	u8 pblock_buf[MAX_DPCD_BUFFER_SIZE];
++	u8 i, j;
++	u8 g_edid_break =3D 0;
++	int ret;
++	struct device *dev =3D &ctx->client->dev;
++
++	/* address initial */
++	ret =3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
++				AP_AUX_ADDR_7_0, 0x50);
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
++				 AP_AUX_ADDR_15_8, 0);
++	ret |=3D anx7625_write_and(ctx, ctx->i2c.rx_p0_client,
++				 AP_AUX_ADDR_19_16, 0xf0);
++	if (ret < 0) {
++		DRM_ERROR("access aux channel IO error.\n");
++		return -EIO;
++	}
++
++	blocks_num =3D sp_tx_get_edid_block(ctx);
++	if (blocks_num < 0)
++		return blocks_num;
++
++	count =3D 0;
++
++	do {
++		switch (count) {
++		case 0:
++		case 1:
++			for (i =3D 0; i < 8; i++) {
++				offset =3D (i + count * 8) * MAX_DPCD_BUFFER_SIZE;
++				g_edid_break =3D edid_read(ctx, offset,
++							 pblock_buf);
++
++				if (g_edid_break)
++					break;
++
++				memcpy(&pedid_blocks_buf[offset],
++				       pblock_buf,
++				       MAX_DPCD_BUFFER_SIZE);
++			}
++
++			break;
++		case 2:
++			offset =3D 0x00;
++
++			for (j =3D 0; j < 8; j++) {
++				edid_pos =3D (j + count * 8) *
++					MAX_DPCD_BUFFER_SIZE;
++
++				if (g_edid_break =3D=3D 1)
++					break;
++
++				segments_edid_read(ctx, count / 2,
++						   pblock_buf, offset);
++				memcpy(&pedid_blocks_buf[edid_pos],
++				       pblock_buf,
++				       MAX_DPCD_BUFFER_SIZE);
++				offset =3D offset + 0x10;
++			}
++
++			break;
++		case 3:
++			offset =3D 0x80;
++
++			for (j =3D 0; j < 8; j++) {
++				edid_pos =3D (j + count * 8) *
++					MAX_DPCD_BUFFER_SIZE;
++				if (g_edid_break =3D=3D 1)
++					break;
++
++				segments_edid_read(ctx, count / 2,
++						   pblock_buf, offset);
++				memcpy(&pedid_blocks_buf[edid_pos],
++				       pblock_buf,
++				       MAX_DPCD_BUFFER_SIZE);
++				offset =3D offset + 0x10;
++			}
++
++			break;
++		default:
++			break;
++		}
++
++		count++;
++
++	} while (blocks_num >=3D count);
++
++	/* check edid data */
++	if (!drm_edid_is_valid((struct edid *)pedid_blocks_buf)) {
++		DRM_DEV_ERROR(dev, "WARNING! edid check failed!\n");
++		return -EINVAL;
++	}
++
++	/* reset aux channel */
++	sp_tx_rst_aux(ctx);
++
++	return (blocks_num + 1);
++}
++
++static void anx7625_power_on(struct anx7625_data *ctx)
++{
++	struct device *dev =3D &ctx->client->dev;
++
++	if (!ctx->pdata.low_power_mode) {
++		DRM_DEV_DEBUG_DRIVER(dev, "Anx7625 not low power mode!\n");
++		return;
++	}
++
++	/* power on pin enable */
++	gpiod_set_value(ctx->pdata.gpio_p_on, 1);
++	usleep_range(10000, 11000);
++	/* power reset pin enable */
++	gpiod_set_value(ctx->pdata.gpio_reset, 1);
++	usleep_range(10000, 11000);
++
++	DRM_DEV_DEBUG_DRIVER(dev, "Anx7625 power on !\n");
++}
++
++static void anx7625_power_standby(struct anx7625_data *ctx)
++{
++	struct device *dev =3D &ctx->client->dev;
++
++	if (!ctx->pdata.low_power_mode) {
++		DRM_DEV_DEBUG_DRIVER(dev, "anx7625 not low power mode!\n");
++		return;
++	}
++
++	gpiod_set_value(ctx->pdata.gpio_reset, 0);
++	usleep_range(1000, 1100);
++	gpiod_set_value(ctx->pdata.gpio_p_on, 0);
++	usleep_range(1000, 1100);
++	DRM_DEV_DEBUG_DRIVER(dev, "anx7625 power down\n");
++}
++
++/* basic configurations of ANX7625 */
++static void anx7625_config(struct anx7625_data *ctx)
++{
++	anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
++			  XTAL_FRQ_SEL, XTAL_FRQ_27M);
++}
++
++static void anx7625_disable_pd_protocol(struct anx7625_data *ctx)
++{
++	struct device *dev =3D &ctx->client->dev;
++	int ret;
++
++	/* reset main ocm */
++	ret =3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client, 0x88, 0x40);
++	/* Disable PD */
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
++				 AP_AV_STATUS, AP_DISABLE_PD);
++	/* release main ocm */
++	ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client, 0x88, 0x00);
++
++	if (ret < 0)
++		DRM_DEV_DEBUG_DRIVER(dev, "disable PD feature failed.\n");
++	else
++		DRM_DEV_DEBUG_DRIVER(dev, "disable PD feature succeeded.\n");
++}
++
++static void anx7625_power_on_init(struct anx7625_data *ctx)
++{
++	int retry_count, i;
++	int ret;
++	struct device *dev =3D &ctx->client->dev;
++
++	for (retry_count =3D 0; retry_count < 3; retry_count++) {
++		anx7625_power_on(ctx);
++		anx7625_config(ctx);
++
++		for (i =3D 0; i < OCM_LOADING_TIME; i++) {
++			/* check interface workable */
++			ret =3D anx7625_reg_read(ctx, ctx->i2c.rx_p0_client,
++					       FLASH_LOAD_STA);
++			if (ret < 0) {
++				DRM_ERROR("IO error : access flash load.\n");
++				return;
++			}
++			if ((ret & FLASH_LOAD_STA_CHK) =3D=3D FLASH_LOAD_STA_CHK) {
++				anx7625_disable_pd_protocol(ctx);
++				DRM_DEV_DEBUG_DRIVER(dev,
++						     "Firmware ver %02x%02x,",
++					anx7625_reg_read(ctx,
++							 ctx->i2c.rx_p0_client,
++							 OCM_FW_VERSION),
++					anx7625_reg_read(ctx,
++							 ctx->i2c.rx_p0_client,
++							 OCM_FW_REVERSION));
++				DRM_DEV_DEBUG_DRIVER(dev, "Driver version %s\n",
++						     ANX7625_DRV_VERSION);
++
++				return;
++			}
++			usleep_range(1000, 1100);
++		}
++		anx7625_power_standby(ctx);
++	}
++}
++
++static int anx7625_extcon_notifier(struct notifier_block *nb,
++				   unsigned long event, void *ptr)
++{
++	struct anx7625_data *ctx =3D
++		container_of(nb, struct anx7625_data, event_nb);
++
++	schedule_work(&ctx->extcon_wq);
++	return NOTIFY_DONE;
++}
++
++static void anx7625_chip_control(struct anx7625_data *ctx, int state)
++{
++	struct device *dev =3D &ctx->client->dev;
++
++	DRM_DEV_DEBUG_DRIVER(dev, "before set, power_state(%d).\n",
++			     atomic_read(&ctx->power_status));
++
++	if (!ctx->pdata.low_power_mode)
++		return;
++
++	if (state) {
++		atomic_inc(&ctx->power_status);
++		if (atomic_read(&ctx->power_status) =3D=3D 1)
++			anx7625_power_on_init(ctx);
++	} else {
++		if (atomic_read(&ctx->power_status)) {
++			atomic_dec(&ctx->power_status);
++
++			if (atomic_read(&ctx->power_status) =3D=3D 0)
++				anx7625_power_standby(ctx);
++		}
++	}
++
++	DRM_DEV_DEBUG_DRIVER(dev, "after set, power_state(%d).\n",
++			     atomic_read(&ctx->power_status));
++}
++
++static void anx7625_extcon_work(struct work_struct *work)
++{
++	struct anx7625_data *ctx =3D
++		container_of(work, struct anx7625_data, extcon_wq);
++	int state =3D extcon_get_state(ctx->extcon, EXTCON_DISP_DP);
++
++	mutex_lock(&ctx->lock);
++	anx7625_chip_control(ctx, state);
++	mutex_unlock(&ctx->lock);
++}
++
++static int anx7625_extcon_notifier_init(struct anx7625_data *ctx)
++{
++	int ret;
++	struct device *dev =3D &ctx->client->dev;
++
++	ctx->event_nb.notifier_call =3D anx7625_extcon_notifier;
++	INIT_WORK(&ctx->extcon_wq, anx7625_extcon_work);
++	ret =3D devm_extcon_register_notifier(&ctx->client->dev, ctx->extcon,
++					    EXTCON_DISP_DP, &ctx->event_nb);
++	if (ret) {
++		DRM_DEV_ERROR(dev, "failed to register notifier for DP");
++		return ret;
++	}
++	return 0;
++}
++
++static void anx7625_init_gpio(struct anx7625_data *platform)
++{
++	struct device *dev =3D &platform->client->dev;
++
++	DRM_DEV_DEBUG_DRIVER(dev, "anx7625 init gpio\n");
++
++	/* gpio for chip power enable */
++	platform->pdata.gpio_p_on =3D
++		devm_gpiod_get_optional(dev, "enable", GPIOD_OUT_LOW);
++	/* gpio for chip reset */
++	platform->pdata.gpio_reset =3D
++		devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
++
++	if (platform->pdata.gpio_p_on && platform->pdata.gpio_reset) {
++		platform->pdata.low_power_mode =3D 1;
++		DRM_DEV_DEBUG_DRIVER(dev, "low power mode, pon %d, reset %d.\n",
++				     desc_to_gpio(platform->pdata.gpio_p_on),
++				     desc_to_gpio(platform->pdata.gpio_reset));
++	} else {
++		platform->pdata.low_power_mode =3D 0;
++		DRM_DEV_DEBUG_DRIVER(dev, "not low power mode.\n");
++	}
++}
++
++static void anx7625_stop_dp_work(struct anx7625_data *ctx)
++{
++	ctx->hpd_status =3D 0;
++	ctx->hpd_high_cnt =3D 0;
++	ctx->display_timing_valid =3D 0;
++
++	ctx->slimport_edid_p.edid_block_num =3D -1;
++
++	if (ctx->pdata.low_power_mode =3D=3D 0)
++		anx7625_disable_pd_protocol(ctx);
++}
++
++static void anx7625_start_dp_work(struct anx7625_data *ctx)
++{
++	int ret;
++	struct device *dev =3D &ctx->client->dev;
++
++	if (ctx->hpd_high_cnt >=3D 2) {
++		DRM_DEV_DEBUG_DRIVER(dev, "anx7625 filter useless HPD\n");
++		return;
++	}
++
++	ctx->hpd_high_cnt++;
++
++	/* not support HDCP */
++	ret =3D anx7625_write_and(ctx, ctx->i2c.rx_p1_client, 0xee, 0x9f);
++
++	/* try auth flag */
++	ret |=3D anx7625_write_or(ctx, ctx->i2c.rx_p1_client, 0xec, 0x10);
++	/* interrupt for DRM */
++	ret |=3D anx7625_write_or(ctx, ctx->i2c.rx_p1_client, 0xff, 0x01);
++	if (ret < 0)
++		return;
++
++	ret =3D anx7625_reg_read(ctx, ctx->i2c.rx_p1_client, 0x86);
++	if (ret < 0)
++		return;
++
++	DRM_DEV_DEBUG_DRIVER(dev, "Secure OCM version=3D%02x\n", ret);
++}
++
++static int anx7625_read_hpd_status_p0(struct anx7625_data *ctx)
++{
++	return anx7625_reg_read(ctx, ctx->i2c.rx_p0_client, SYSTEM_STSTUS);
++}
++
++static void anx7625_hpd_polling(struct anx7625_data *ctx)
++{
++	int ret, val;
++	struct device *dev =3D &ctx->client->dev;
++
++	if (atomic_read(&ctx->power_status) !=3D 1) {
++		DRM_DEV_DEBUG_DRIVER(dev, "No need to poling HPD status.\n");
++		return;
++	}
++
++	ret =3D readx_poll_timeout(anx7625_read_hpd_status_p0,
++				 ctx, val,
++				 ((val & HPD_STATUS) || (val < 0)),
++				 5000,
++				 5000 * 100);
++	if (ret) {
++		DRM_DEV_ERROR(dev, "HPD polling timeout!\n");
++	} else {
++		DRM_DEV_DEBUG_DRIVER(dev, "HPD raise up.\n");
++		anx7625_reg_write(ctx, ctx->i2c.tcpc_client,
++				  INTR_ALERT_1, 0xFF);
++		anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
++				  INTERFACE_CHANGE_INT, 0);
++	}
++
++	anx7625_start_dp_work(ctx);
++}
++
++static void anx7625_disconnect_check(struct anx7625_data *ctx)
++{
++	if (atomic_read(&ctx->power_status) =3D=3D 0)
++		anx7625_stop_dp_work(ctx);
++}
++
++static void anx7625_low_power_mode_check(struct anx7625_data *ctx,
++					 int state)
++{
++	struct device *dev =3D &ctx->client->dev;
++
++	DRM_DEV_DEBUG_DRIVER(dev, "low power mode check, state(%d).\n", state);
++
++	if (ctx->pdata.low_power_mode) {
++		anx7625_chip_control(ctx, state);
++		if (state)
++			anx7625_hpd_polling(ctx);
++		else
++			anx7625_disconnect_check(ctx);
++	}
++}
++
++static void dp_hpd_change_handler(struct anx7625_data *ctx, bool on)
++{
++	struct device *dev =3D &ctx->client->dev;
++
++	/* hpd changed */
++	DRM_DEV_DEBUG_DRIVER(dev, "dp_hpd_change_default_func: %d\n",
++			     (u32)on);
++
++	if (on =3D=3D 0) {
++		DRM_DEV_DEBUG_DRIVER(dev, " HPD low\n");
++		anx7625_stop_dp_work(ctx);
++	} else {
++		DRM_DEV_DEBUG_DRIVER(dev, " HPD high\n");
++		anx7625_start_dp_work(ctx);
++	}
++
++	ctx->hpd_status =3D 1;
++}
++
++static int anx7625_hpd_change_detect(struct anx7625_data *ctx)
++{
++	int intr_vector, status;
++	struct device *dev =3D &ctx->client->dev;
++
++	DRM_DEV_DEBUG_DRIVER(dev, "power_status=3D%d\n",
++			     (u32)atomic_read(&ctx->power_status));
++
++	status =3D anx7625_reg_write(ctx, ctx->i2c.tcpc_client,
++				   INTR_ALERT_1, 0xFF);
++	if (status < 0) {
++		DRM_ERROR("IO error : clear alert register.\n");
++		return status;
++	}
++
++	intr_vector =3D anx7625_reg_read(ctx, ctx->i2c.rx_p0_client,
++				       INTERFACE_CHANGE_INT);
++	if (intr_vector < 0) {
++		DRM_ERROR("IO error : access interrupt change register.\n");
++		return intr_vector;
++	}
++	DRM_DEV_DEBUG_DRIVER(dev, "0x7e:0x44=3D%x\n", intr_vector);
++	status =3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
++				   INTERFACE_CHANGE_INT,
++				   intr_vector & (~intr_vector));
++	if (status < 0) {
++		DRM_ERROR("IO error : clear interrupt change register.\n");
++		return status;
++	}
++
++	if (!(intr_vector & HPD_STATUS_CHANGE))
++		return -ENOENT;
++
++	status =3D anx7625_reg_read(ctx, ctx->i2c.rx_p0_client,
++				  SYSTEM_STSTUS);
++	if (status < 0) {
++		DRM_ERROR("IO error : clear interrupt status.\n");
++		return status;
++	}
++
++	DRM_DEV_DEBUG_DRIVER(dev, "0x7e:0x45=3D%x\n", status);
++	dp_hpd_change_handler(ctx, status & HPD_STATUS);
++
++	return 0;
++}
++
++static void anx7625_work_func(struct work_struct *work)
++{
++	int event;
++	struct anx7625_data *ctx =3D container_of(work,
++						struct anx7625_data, work);
++
++	mutex_lock(&ctx->lock);
++	event =3D anx7625_hpd_change_detect(ctx);
++	mutex_unlock(&ctx->lock);
++
++	if (event < 0)
++		return;
++
++	if (ctx->bridge_attached)
++		drm_helper_hpd_irq_event(ctx->connector.dev);
++}
++
++static irqreturn_t anx7625_intr_hpd_isr(int irq, void *data)
++{
++	struct anx7625_data *ctx =3D (struct anx7625_data *)data;
++
++	if (atomic_read(&ctx->power_status) !=3D 1)
++		return IRQ_NONE;
++
++	queue_work(ctx->workqueue, &ctx->work);
++
++	return IRQ_HANDLED;
++}
++
++#ifdef CONFIG_OF
++static int anx7625_parse_dt(struct device *dev,
++			    struct anx7625_platform_data *pdata)
++{
++	struct device_node *np =3D dev->of_node;
++	struct device_node *panel_node, *out_ep;
++
++	of_property_read_u32(dev->of_node, "panel_flags",
++			     &pdata->panel_flags);
++	DRM_DEV_DEBUG_DRIVER(dev, "panel_flags : %d\n", pdata->panel_flags);
++
++	if (pdata->panel_flags =3D=3D 1)
++		pdata->internal_panel =3D 1;
++	else if (pdata->panel_flags =3D=3D 2)
++		pdata->extcon_supported =3D 1;
++	DRM_DEV_DEBUG_DRIVER(dev, "%s support extcon, %s internal panel\n",
++			     pdata->extcon_supported ? "" : "not",
++			     pdata->internal_panel ? "has" : "no");
++
++	pdata->node.mipi_dsi_host_node =3D of_graph_get_remote_node(np, 0, 0);
++	if (pdata->node.mipi_dsi_host_node) {
++		of_node_put(pdata->node.mipi_dsi_host_node);
++		pdata->dsi_supported =3D 1;
++		DRM_DEV_DEBUG_DRIVER(dev, "found dsi host node.\n");
++	} else {
++		pdata->node.mipi_dpi_host_node =3D
++			of_graph_get_remote_node(np, 1, 0);
++
++		if (pdata->node.mipi_dpi_host_node) {
++			of_node_put(pdata->node.mipi_dpi_host_node);
++			DRM_DEV_DEBUG_DRIVER(dev, "found dpi host node.\n");
++		}
++	}
++
++	DRM_DEV_DEBUG_DRIVER(dev, "dsi_supported : %d\n", pdata->dsi_supported);
++
++	pdata->node.panel_node =3D of_graph_get_port_by_id(np, 2);
++	if (pdata->node.panel_node) {
++		of_node_put(pdata->node.panel_node);
++		out_ep =3D of_get_child_by_name(pdata->node.panel_node,
++					      "endpoint");
++		if (!out_ep) {
++			DRM_DEV_DEBUG_DRIVER(dev, "cannot get endpoint.\n");
++			return -EPROBE_DEFER;
++		}
++
++		panel_node =3D of_graph_get_remote_port_parent(out_ep);
++		of_node_put(out_ep);
++
++		pdata->panel =3D of_drm_find_panel(panel_node);
++		DRM_DEV_DEBUG_DRIVER(dev, "get panel node.\n");
++		of_node_put(panel_node);
++		if (IS_ERR_OR_NULL(pdata->panel))
++			return -EPROBE_DEFER;
++	} else {
++		if (pdata->internal_panel) {
++			DRM_ERROR("failed to get internal panel.\n");
++			return -EPROBE_DEFER;
++		}
++	}
++
++	return 0;
++}
++#else
++static int anx7625_parse_dt(struct device *dev,
++			    struct anx7625_platform_data *pdata)
++{
++	return -ENODEV;
++}
++#endif
++
++static inline struct anx7625_data *connector_to_anx7625(struct drm_connect=
+or *c)
++{
++	return container_of(c, struct anx7625_data, connector);
++}
++
++static inline struct anx7625_data *bridge_to_anx7625(struct drm_bridge *br=
+idge)
++{
++	return container_of(bridge, struct anx7625_data, bridge);
++}
++
++static void anx7625_post_disable(struct drm_bridge *bridge)
++{
++	struct anx7625_data *ctx =3D bridge_to_anx7625(bridge);
++	struct device *dev =3D &ctx->client->dev;
++	int ret;
++
++	DRM_DEV_DEBUG_DRIVER(dev, "post disable\n");
++
++	if (!ctx->pdata.panel)
++		return;
++
++	ret =3D drm_panel_unprepare(ctx->pdata.panel);
++	if (ret)
++		DRM_ERROR("failed to unprepare panel: %d\n", ret);
++	else
++		DRM_DEV_DEBUG_DRIVER(dev, "backlight unprepared.\n");
++
++	atomic_set(&ctx->panel_power, 0);
++}
++
++static void anx7625_pre_enable(struct drm_bridge *bridge)
++{
++	struct anx7625_data *ctx =3D bridge_to_anx7625(bridge);
++	struct device *dev =3D &ctx->client->dev;
++	int ret;
++
++	DRM_DEV_DEBUG_DRIVER(dev, "pre enable\n");
++
++	if (!ctx->pdata.panel)
++		return;
++
++	ret =3D drm_panel_prepare(ctx->pdata.panel);
++	if (ret < 0)
++		DRM_ERROR("failed to prepare panel: %d\n", ret);
++	else
++		DRM_DEV_DEBUG_DRIVER(dev, "backlight prepared.\n");
++	atomic_set(&ctx->panel_power, 1);
++}
++
++static int anx7625_get_modes(struct drm_connector *connector)
++{
++	struct anx7625_data *ctx =3D connector_to_anx7625(connector);
++	int err, num_modes =3D 0;
++	int turn_off_flag =3D 0;
++	struct s_edid_data *p_edid =3D &ctx->slimport_edid_p;
++	struct device *dev =3D &ctx->client->dev;
++
++	DRM_DEV_DEBUG_DRIVER(dev, "drm get modes\n");
++
++	if (ctx->slimport_edid_p.edid_block_num > 0)
++		goto out;
++
++	mutex_lock(&ctx->lock);
++
++	if (ctx->pdata.panel && atomic_read(&ctx->panel_power) =3D=3D 0) {
++		turn_off_flag =3D 1;
++		anx7625_pre_enable(&ctx->bridge);
++	}
++
++	anx7625_low_power_mode_check(ctx, 1);
++
++	p_edid->edid_block_num =3D sp_tx_edid_read(ctx, p_edid->edid_raw_data);
++
++	err =3D -EIO;
++	if (p_edid->edid_block_num < 0) {
++		DRM_ERROR("Failed to read EDID.\n");
++		goto fail;
++	}
++
++	err =3D drm_connector_update_edid_property(connector,
++						 (struct edid *)
++						 &p_edid->edid_raw_data);
++
++	if (err)
++		DRM_ERROR("Failed to update EDID property: %d\n", err);
++
++fail:
++	mutex_unlock(&ctx->lock);
++	anx7625_low_power_mode_check(ctx, 0);
++	if (ctx->pdata.panel && turn_off_flag =3D=3D 1)
++		anx7625_post_disable(&ctx->bridge);
++
++	if (err)
++		return err;
++
++out:
++	num_modes =3D drm_add_edid_modes(connector,
++				       (struct edid *)&p_edid->edid_raw_data);
++	DRM_DEV_DEBUG_DRIVER(dev, "num_modes(%d)\n", num_modes);
++
++	return num_modes;
++}
++
++static enum drm_mode_status
++anx7625_connector_mode_valid(struct drm_connector *connector,
++			     struct drm_display_mode *mode)
++{
++	struct anx7625_data *ctx =3D connector_to_anx7625(connector);
++	struct device *dev =3D &ctx->client->dev;
++
++	DRM_DEV_DEBUG_DRIVER(dev, "drm modes valid verify\n");
++
++	if (mode->clock > SUPPORT_PIXEL_CLOCK)
++		return MODE_CLOCK_HIGH;
++
++	return MODE_OK;
++}
++
++static struct drm_connector_helper_funcs anx7625_connector_helper_funcs =
+=3D {
++	.get_modes =3D anx7625_get_modes,
++	.mode_valid =3D anx7625_connector_mode_valid,
++};
++
++static enum drm_connector_status anx7625_detect(struct drm_connector *conn=
+ector,
++						bool force)
++{
++	struct anx7625_data *ctx =3D connector_to_anx7625(connector);
++	struct device *dev =3D &ctx->client->dev;
++
++	DRM_DEV_DEBUG_DRIVER(dev, "drm detect\n");
++
++	if (ctx->pdata.internal_panel)
++		return connector_status_connected;
++
++	if (!ctx->hpd_status)
++		return connector_status_disconnected;
++
++	return connector_status_connected;
++}
++
++static const struct drm_connector_funcs anx7625_connector_funcs =3D {
++	.fill_modes =3D drm_helper_probe_single_connector_modes,
++	.detect =3D anx7625_detect,
++	.destroy =3D drm_connector_cleanup,
++	.reset =3D drm_atomic_helper_connector_reset,
++	.atomic_duplicate_state =3D drm_atomic_helper_connector_duplicate_state,
++	.atomic_destroy_state =3D drm_atomic_helper_connector_destroy_state,
++};
++
++static int anx7625_attach_dsi(struct anx7625_data *ctx)
++{
++	struct mipi_dsi_host *host;
++	struct mipi_dsi_device *dsi;
++	struct device_node *mipi_host_node;
++	struct device *dev =3D &ctx->client->dev;
++	const struct mipi_dsi_device_info info =3D {
++		.type =3D "anx7625",
++		.channel =3D 0,
++		.node =3D NULL,
++	};
++
++	DRM_DEV_DEBUG_DRIVER(dev, "attach dsi\n");
++
++	if (ctx->pdata.dsi_supported)
++		mipi_host_node =3D ctx->pdata.node.mipi_dsi_host_node;
++	else
++		mipi_host_node =3D ctx->pdata.node.mipi_dpi_host_node;
++
++	if (!mipi_host_node) {
++		DRM_ERROR("dsi host is not configured.\n");
++		return -EINVAL;
++	}
++
++	host =3D of_find_mipi_dsi_host_by_node(mipi_host_node);
++	if (!host) {
++		DRM_ERROR("failed to find dsi host.\n");
++		return -EINVAL;
++	}
++
++	dsi =3D mipi_dsi_device_register_full(host, &info);
++	if (IS_ERR(dsi)) {
++		DRM_ERROR("failed to create dsi device.\n");
++		return -EINVAL;
++	}
++
++	dsi->lanes =3D 4;
++	dsi->format =3D MIPI_DSI_FMT_RGB888;
++	dsi->mode_flags =3D MIPI_DSI_MODE_VIDEO	|
++		MIPI_DSI_MODE_VIDEO_SYNC_PULSE	|
++		MIPI_DSI_MODE_EOT_PACKET	|
++		MIPI_DSI_MODE_VIDEO_HSE;
++
++	if (mipi_dsi_attach(dsi) < 0) {
++		DRM_ERROR("failed to attach dsi to host.\n");
++		mipi_dsi_device_unregister(dsi);
++		return -EINVAL;
++	}
++
++	ctx->dsi =3D dsi;
++
++	DRM_DEV_DEBUG_DRIVER(dev, "attach dsi succeeded.\n");
++
++	return 0;
++}
++
++static void anx7625_bridge_detach(struct drm_bridge *bridge)
++{
++	struct anx7625_data *ctx =3D bridge_to_anx7625(bridge);
++
++	if (ctx->dsi) {
++		mipi_dsi_detach(ctx->dsi);
++		mipi_dsi_device_unregister(ctx->dsi);
++	}
++
++	if (ctx->bridge_attached)
++		drm_connector_unregister(&ctx->connector);
++}
++
++static int anx7625_bridge_attach(struct drm_bridge *bridge)
++{
++	struct anx7625_data *ctx =3D bridge_to_anx7625(bridge);
++	int err;
++	struct device *dev =3D &ctx->client->dev;
++
++	DRM_DEV_DEBUG_DRIVER(dev, "drm attach\n");
++	if (!bridge->encoder) {
++		DRM_ERROR("Parent encoder object not found");
++		return -ENODEV;
++	}
++
++	err =3D drm_connector_init(bridge->dev, &ctx->connector,
++				 &anx7625_connector_funcs,
++				  ctx->pdata.internal_panel ?
++					DRM_MODE_CONNECTOR_eDP :
++					DRM_MODE_CONNECTOR_DisplayPort);
++	if (err) {
++		DRM_ERROR("Failed to initialize connector: %d\n", err);
++		return err;
++	}
++
++	drm_connector_helper_add(&ctx->connector,
++				 &anx7625_connector_helper_funcs);
++
++	err =3D drm_connector_register(&ctx->connector);
++	if (err) {
++		DRM_ERROR("Failed to register connector: %d\n", err);
++		return err;
++	}
++
++	ctx->connector.polled =3D DRM_CONNECTOR_POLL_HPD;
++
++	err =3D drm_connector_attach_encoder(&ctx->connector, bridge->encoder);
++	if (err) {
++		DRM_ERROR("Failed to link up connector to encoder: %d\n", err);
++		drm_connector_unregister(&ctx->connector);
++		return err;
++	}
++
++	err =3D anx7625_attach_dsi(ctx);
++	if (err) {
++		DRM_ERROR("Failed to attach to dsi : %d\n", err);
++		drm_connector_unregister(&ctx->connector);
++		return err;
++	}
++
++	ctx->bridge_attached =3D 1;
++
++	return 0;
++}
++
++static enum drm_mode_status
++anx7625_bridge_mode_valid(struct drm_bridge *bridge,
++			  const struct drm_display_mode *mode)
++{
++	struct anx7625_data *ctx =3D bridge_to_anx7625(bridge);
++	struct device *dev =3D &ctx->client->dev;
++
++	DRM_DEV_DEBUG_DRIVER(dev, "drm mode checking\n");
++
++	/* Max 1200p at 5.4 Ghz, one lane, pixel clock 300M */
++	if (mode->clock > SUPPORT_PIXEL_CLOCK) {
++		DRM_DEV_DEBUG_DRIVER(dev,
++				     "drm mode invalid, pixelclock too high.\n");
++		return MODE_CLOCK_HIGH;
++	}
++
++	DRM_DEV_DEBUG_DRIVER(dev, "drm mode valid.\n");
++
++	return MODE_OK;
++}
++
++static void anx7625_bridge_mode_set(struct drm_bridge *bridge,
++				    const struct drm_display_mode *old_mode,
++				    const struct drm_display_mode *mode)
++{
++	struct anx7625_data *ctx =3D bridge_to_anx7625(bridge);
++	struct device *dev =3D &ctx->client->dev;
++
++	DRM_DEV_DEBUG_DRIVER(dev, "drm mode set\n");
++
++	mutex_lock(&ctx->lock);
++
++	ctx->dt.pixelclock.min =3D mode->clock;
++	ctx->dt.hactive.min =3D mode->hdisplay;
++	ctx->dt.hsync_len.min =3D mode->hsync_end - mode->hsync_start;
++	ctx->dt.hfront_porch.min =3D mode->hsync_start - mode->hdisplay;
++	ctx->dt.hback_porch.min =3D mode->htotal - mode->hsync_end;
++	ctx->dt.vactive.min =3D mode->vdisplay;
++	ctx->dt.vsync_len.min =3D mode->vsync_end - mode->vsync_start;
++	ctx->dt.vfront_porch.min =3D mode->vsync_start - mode->vdisplay;
++	ctx->dt.vback_porch.min =3D mode->vtotal - mode->vsync_end;
++
++	ctx->display_timing_valid =3D 1;
++
++	DRM_DEV_DEBUG_DRIVER(dev, "pixelclock(%d).\n", ctx->dt.pixelclock.min);
++	DRM_DEV_DEBUG_DRIVER(dev, "hactive(%d), hsync(%d), hfp(%d), hbp(%d)\n",
++			     ctx->dt.hactive.min,
++			     ctx->dt.hsync_len.min,
++			     ctx->dt.hfront_porch.min,
++			     ctx->dt.hback_porch.min);
++	DRM_DEV_DEBUG_DRIVER(dev, "vactive(%d), vsync(%d), vfp(%d), vbp(%d)\n",
++			     ctx->dt.vactive.min,
++			     ctx->dt.vsync_len.min,
++			     ctx->dt.vfront_porch.min,
++			     ctx->dt.vback_porch.min);
++	DRM_DEV_DEBUG_DRIVER(dev, "hdisplay(%d),hsync_start(%d).\n",
++			     mode->hdisplay,
++			     mode->hsync_start);
++	DRM_DEV_DEBUG_DRIVER(dev, "hsync_end(%d),htotal(%d).\n",
++			     mode->hsync_end,
++			     mode->htotal);
++	DRM_DEV_DEBUG_DRIVER(dev, "vdisplay(%d),vsync_start(%d).\n",
++			     mode->vdisplay,
++			     mode->vsync_start);
++	DRM_DEV_DEBUG_DRIVER(dev, "vsync_end(%d),vtotal(%d).\n",
++			     mode->vsync_end,
++			     mode->vtotal);
++
++	mutex_unlock(&ctx->lock);
++}
++
++static void anx7625_bridge_enable(struct drm_bridge *bridge)
++{
++	struct anx7625_data *ctx =3D bridge_to_anx7625(bridge);
++	struct device *dev =3D &ctx->client->dev;
++	int ret;
++
++	DRM_DEV_DEBUG_DRIVER(dev, "drm enable\n");
++
++	anx7625_low_power_mode_check(ctx, 1);
++
++	if (WARN_ON(!atomic_read(&ctx->power_status)))
++		return;
++
++	if (ctx->pdata.panel) {
++		ret =3D drm_panel_enable(ctx->pdata.panel);
++		if (ret < 0) {
++			DRM_ERROR("failed to enable panel: %d.\n", ret);
++			return;
++		}
++	}
++
++	mutex_lock(&ctx->lock);
++	anx7625_dp_start(ctx);
++	mutex_unlock(&ctx->lock);
++}
++
++static void anx7625_bridge_disable(struct drm_bridge *bridge)
++{
++	struct anx7625_data *ctx =3D bridge_to_anx7625(bridge);
++	struct device *dev =3D &ctx->client->dev;
++	int ret;
++
++	if (WARN_ON(!atomic_read(&ctx->power_status)))
++		return;
++
++	DRM_DEV_DEBUG_DRIVER(dev, "drm disable\n");
++
++	if (ctx->pdata.panel) {
++		ret =3D drm_panel_disable(ctx->pdata.panel);
++		if (ret < 0)
++			DRM_ERROR("failed to disable panel: %d.\n", ret);
++	}
++
++	DRM_DEV_DEBUG_DRIVER(dev, "drm disable\n");
++	mutex_lock(&ctx->lock);
++
++	anx7625_dp_stop(ctx);
++
++	anx7625_low_power_mode_check(ctx, 0);
++
++	mutex_unlock(&ctx->lock);
++}
++
++static const struct drm_bridge_funcs anx7625_bridge_funcs =3D {
++	.attach =3D anx7625_bridge_attach,
++	.detach =3D anx7625_bridge_detach,
++	.disable =3D anx7625_bridge_disable,
++	.post_disable =3D anx7625_post_disable,
++	.pre_enable =3D anx7625_pre_enable,
++	.mode_valid =3D anx7625_bridge_mode_valid,
++	.mode_set =3D anx7625_bridge_mode_set,
++	.enable =3D anx7625_bridge_enable,
++};
++
++static int anx7625_register_i2c_dummy_clients(struct anx7625_data *ctx,
++					      struct i2c_client *client)
++{
++	ctx->i2c.tx_p0_client =3D i2c_new_dummy(client->adapter,
++					      TX_P0_ADDR >> 1);
++	if (!ctx->i2c.tx_p0_client)
++		return -ENOMEM;
++
++	ctx->i2c.tx_p1_client =3D i2c_new_dummy(client->adapter,
++					      TX_P1_ADDR >> 1);
++	if (!ctx->i2c.tx_p1_client)
++		goto free_tx_p0;
++
++	ctx->i2c.tx_p2_client =3D i2c_new_dummy(client->adapter,
++					      TX_P2_ADDR >> 1);
++	if (!ctx->i2c.tx_p2_client)
++		goto free_tx_p1;
++
++	ctx->i2c.rx_p0_client =3D i2c_new_dummy(client->adapter,
++					      RX_P0_ADDR >> 1);
++	if (!ctx->i2c.rx_p0_client)
++		goto free_tx_p2;
++
++	ctx->i2c.rx_p1_client =3D i2c_new_dummy(client->adapter,
++					      RX_P1_ADDR >> 1);
++	if (!ctx->i2c.rx_p1_client)
++		goto free_rx_p0;
++
++	ctx->i2c.rx_p2_client =3D i2c_new_dummy(client->adapter,
++					      RX_P2_ADDR >> 1);
++	if (!ctx->i2c.rx_p2_client)
++		goto free_rx_p1;
++
++	ctx->i2c.tcpc_client =3D i2c_new_dummy(client->adapter,
++					     TCPC_INTERFACE_ADDR >> 1);
++	if (!ctx->i2c.tcpc_client)
++		goto free_rx_p2;
++
++	return 0;
++
++free_rx_p2:
++	i2c_unregister_device(ctx->i2c.rx_p2_client);
++free_rx_p1:
++	i2c_unregister_device(ctx->i2c.rx_p1_client);
++free_rx_p0:
++	i2c_unregister_device(ctx->i2c.rx_p0_client);
++free_tx_p2:
++	i2c_unregister_device(ctx->i2c.tx_p2_client);
++free_tx_p1:
++	i2c_unregister_device(ctx->i2c.tx_p1_client);
++free_tx_p0:
++	i2c_unregister_device(ctx->i2c.tx_p0_client);
++
++	return -ENOMEM;
++}
++
++static void anx7625_unregister_i2c_dummy_clients(struct anx7625_data *ctx)
++{
++	i2c_unregister_device(ctx->i2c.tx_p0_client);
++	i2c_unregister_device(ctx->i2c.tx_p1_client);
++	i2c_unregister_device(ctx->i2c.tx_p2_client);
++	i2c_unregister_device(ctx->i2c.rx_p0_client);
++	i2c_unregister_device(ctx->i2c.rx_p1_client);
++	i2c_unregister_device(ctx->i2c.rx_p2_client);
++	i2c_unregister_device(ctx->i2c.tcpc_client);
++}
++
++static int anx7625_i2c_probe(struct i2c_client *client,
++			     const struct i2c_device_id *id)
++{
++	struct anx7625_data *platform;
++	struct anx7625_platform_data *pdata;
++	int ret =3D 0;
++	struct device *dev =3D &client->dev;
++
++	if (!i2c_check_functionality(client->adapter,
++				     I2C_FUNC_SMBUS_I2C_BLOCK)) {
++		DRM_DEV_ERROR(dev, "anx7625's i2c bus doesn't support\n");
++		return -ENODEV;
++	}
++
++	platform =3D kzalloc(sizeof(*platform), GFP_KERNEL);
++	if (!platform) {
++		DRM_DEV_ERROR(dev, "failed to allocate driver data\n");
++		return -ENOMEM;
++	}
++
++	pdata =3D &platform->pdata;
++
++	ret =3D anx7625_parse_dt(dev, pdata);
++	if (ret) {
++		if (ret !=3D -EPROBE_DEFER)
++			DRM_DEV_ERROR(dev, "failed to parse devicetree.\n");
++		goto free_platform;
++	}
++
++	platform->client =3D client;
++	i2c_set_clientdata(client, platform);
++
++	anx7625_init_gpio(platform);
++
++	if (platform->pdata.extcon_supported) {
++		/* get extcon device from DTS */
++		ret =3D -EINVAL;
++		platform->extcon =3D extcon_get_edev_by_phandle(dev, 0);
++		if (PTR_ERR(platform->extcon) =3D=3D -EPROBE_DEFER)
++			goto free_platform;
++
++		if (IS_ERR(platform->extcon)) {
++			DRM_DEV_ERROR(dev,
++				      "can not get extcon device!");
++			goto free_platform;
++		}
++
++		ret =3D anx7625_extcon_notifier_init(platform);
++		if (ret)
++			goto free_platform;
++	}
++
++	atomic_set(&platform->power_status, 0);
++
++	mutex_init(&platform->lock);
++
++	platform->pdata.intp_irq =3D client->irq;
++	if (platform->pdata.intp_irq) {
++		INIT_WORK(&platform->work, anx7625_work_func);
++		platform->workqueue =3D create_workqueue("anx7625_work");
++		if (!platform->workqueue) {
++			DRM_DEV_ERROR(dev, "failed to create work queue\n");
++			ret =3D -ENOMEM;
++			goto free_platform;
++		}
++
++		ret =3D devm_request_threaded_irq(dev, platform->pdata.intp_irq,
++						NULL, anx7625_intr_hpd_isr,
++						IRQF_TRIGGER_FALLING |
++						IRQF_ONESHOT,
++						"anx7625-intp", platform);
++		if (ret) {
++			DRM_DEV_ERROR(dev, "failed to request irq\n");
++			goto free_wq;
++		}
++	}
++
++	if (anx7625_register_i2c_dummy_clients(platform, client) !=3D 0) {
++		ret =3D -ENOMEM;
++		DRM_ERROR("Failed to reserve I2C bus.\n");
++		goto free_wq;
++	}
++
++	if (platform->pdata.low_power_mode =3D=3D 0) {
++		anx7625_disable_pd_protocol(platform);
++		atomic_set(&platform->power_status, 1);
++	}
++
++	/* add work function */
++	if (platform->pdata.intp_irq)
++		queue_work(platform->workqueue, &platform->work);
++
++	platform->bridge.funcs =3D &anx7625_bridge_funcs;
++	if (IS_ENABLED(CONFIG_OF))
++		platform->bridge.of_node =3D client->dev.of_node;
++	drm_bridge_add(&platform->bridge);
++
++	DRM_DEV_DEBUG_DRIVER(dev, "probe done\n");
++
++	return 0;
++
++free_wq:
++	if (platform->workqueue)
++		destroy_workqueue(platform->workqueue);
++
++free_platform:
++	kfree(platform);
++
++	return ret;
++}
++
++static int anx7625_i2c_remove(struct i2c_client *client)
++{
++	struct anx7625_data *platform =3D i2c_get_clientdata(client);
++
++	drm_bridge_remove(&platform->bridge);
++
++	if (platform->pdata.intp_irq)
++		destroy_workqueue(platform->workqueue);
++
++	if (platform->pdata.extcon_supported) {
++		devm_extcon_unregister_notifier(&platform->client->dev,
++						platform->extcon,
++						EXTCON_DISP_DP,
++						&platform->event_nb);
++		flush_work(&platform->extcon_wq);
++	}
++
++	anx7625_unregister_i2c_dummy_clients(platform);
++
++	kfree(platform);
++	return 0;
++}
++
++static const struct i2c_device_id anx7625_id[] =3D {
++	{"anx7625", 0},
++	{}
++};
++
++MODULE_DEVICE_TABLE(i2c, anx7625_id);
++
++#ifdef CONFIG_OF
++static const struct of_device_id anx_match_table[] =3D {
++	{.compatible =3D "analogix,anx7625",},
++	{},
++};
++#endif
++
++static struct i2c_driver anx7625_driver =3D {
++	.driver =3D {
++		.name =3D "anx7625",
++#ifdef CONFIG_OF
++		.of_match_table =3D anx_match_table,
++#endif
++	},
++	.probe =3D anx7625_i2c_probe,
++	.remove =3D anx7625_i2c_remove,
++
++	.id_table =3D anx7625_id,
++};
++
++module_i2c_driver(anx7625_driver);
++
++MODULE_DESCRIPTION("MIPI2DP anx7625 driver");
++MODULE_AUTHOR("Xin Ji <xji@analogixsemi.com>");
++MODULE_LICENSE("GPL v2");
++MODULE_VERSION(ANX7625_DRV_VERSION);
+diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.h b/drivers/gpu/drm/br=
+idge/analogix/anx7625.h
+new file mode 100644
+index 0000000..c871a6c
+--- /dev/null
++++ b/drivers/gpu/drm/bridge/analogix/anx7625.h
+@@ -0,0 +1,406 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright(c) 2016, Analogix Semiconductor. All rights reserved.
++ *
++ */
++
++#ifndef __ANX7625_H__
++#define __ANX7625_H__
++
++#ifndef LOG_TAG
++#define LOG_TAG "anx7625dp"
++#endif
++
++#define ANX7625_DRV_VERSION "0.1.04"
++
++/* Loading OCM re-trying times */
++#define OCM_LOADING_TIME 10
++
++/*********  ANX7625 Register  **********/
++#define TX_P0_ADDR				0x70
++#define TX_P1_ADDR				0x7A
++#define TX_P2_ADDR				0x72
++
++#define RX_P0_ADDR				0x7e
++#define RX_P1_ADDR				0x84
++#define RX_P2_ADDR				0x54
++
++#define RSVD_00_ADDR				0x00
++#define RSVD_D1_ADDR				0xD1
++#define RSVD_60_ADDR				0x60
++#define RSVD_39_ADDR				0x39
++#define RSVD_7F_ADDR				0x7F
++
++#define TCPC_INTERFACE_ADDR			0x58
++
++/* anx7625 clock frequency in Hz */
++#define XTAL_FRQ        (27 * 1000000)
++
++#define  POST_DIVIDER_MIN	1
++#define  POST_DIVIDER_MAX	16
++#define  PLL_OUT_FREQ_MIN	520000000UL
++#define  PLL_OUT_FREQ_MAX	730000000UL
++#define  PLL_OUT_FREQ_ABS_MIN	300000000UL
++#define  PLL_OUT_FREQ_ABS_MAX	800000000UL
++#define  MAX_UNSIGNED_24BIT	16777215UL
++
++/***************************************************************/
++/* Register definition of device address 0x58 */
++
++#define PRODUCT_ID_L 0x02
++#define PRODUCT_ID_H 0x03
++
++#define INTR_ALERT_1  0xCC
++#define INTR_SOFTWARE_INT BIT(3)
++#define INTR_RECEIVED_MSG BIT(5)
++
++#define SYSTEM_STSTUS 0x45
++#define INTERFACE_CHANGE_INT 0x44
++#define HPD_STATUS_CHANGE 0x80
++#define HPD_STATUS 0x80
++
++/******** END of I2C Address 0x58 ********/
++
++/***************************************************************/
++/* Register definition of device address 0x70 */
++#define  I2C_ADDR_70_DPTX              0x70
++
++#define SP_TX_LINK_BW_SET_REG 0xA0
++#define SP_TX_LANE_COUNT_SET_REG 0xA1
++
++#define M_VID_0 0xC0
++#define M_VID_1 0xC1
++#define M_VID_2 0xC2
++#define N_VID_0 0xC3
++#define N_VID_1 0xC4
++#define N_VID_2 0xC5
++
++/***************************************************************/
++/* Register definition of device address 0x72 */
++#define AUX_RST	0x04
++#define RST_CTRL2 0x07
++
++#define SP_TX_TOTAL_LINE_STA_L 0x24
++#define SP_TX_TOTAL_LINE_STA_H 0x25
++#define SP_TX_ACT_LINE_STA_L 0x26
++#define SP_TX_ACT_LINE_STA_H 0x27
++#define SP_TX_V_F_PORCH_STA 0x28
++#define SP_TX_V_SYNC_STA 0x29
++#define SP_TX_V_B_PORCH_STA 0x2A
++#define SP_TX_TOTAL_PIXEL_STA_L 0x2B
++#define SP_TX_TOTAL_PIXEL_STA_H 0x2C
++#define SP_TX_ACT_PIXEL_STA_L 0x2D
++#define SP_TX_ACT_PIXEL_STA_H 0x2E
++#define SP_TX_H_F_PORCH_STA_L 0x2F
++#define SP_TX_H_F_PORCH_STA_H 0x30
++#define SP_TX_H_SYNC_STA_L 0x31
++#define SP_TX_H_SYNC_STA_H 0x32
++#define SP_TX_H_B_PORCH_STA_L 0x33
++#define SP_TX_H_B_PORCH_STA_H 0x34
++
++#define SP_TX_VID_CTRL 0x84
++#define SP_TX_BPC_MASK 0xE0
++#define SP_TX_BPC_6    0x00
++#define SP_TX_BPC_8    0x20
++#define SP_TX_BPC_10   0x40
++#define SP_TX_BPC_12   0x60
++
++#define VIDEO_BIT_MATRIX_12 0x4c
++
++#define AUDIO_CHANNEL_STATUS_1 0xd0
++#define AUDIO_CHANNEL_STATUS_2 0xd1
++#define AUDIO_CHANNEL_STATUS_3 0xd2
++#define AUDIO_CHANNEL_STATUS_4 0xd3
++#define AUDIO_CHANNEL_STATUS_5 0xd4
++#define AUDIO_CHANNEL_STATUS_6 0xd5
++#define TDM_SLAVE_MODE 0x10
++#define I2S_SLAVE_MODE 0x08
++
++#define AUDIO_CONTROL_REGISTER 0xe6
++#define TDM_TIMING_MODE 0x08
++
++#define  I2C_ADDR_72_DPTX              0x72
++
++#define  VIDEO_CONTROL_0  0x08
++
++#define  ACTIVE_LINES_L         0x14
++#define  ACTIVE_LINES_H         0x15  /* note: bit[7:6] are reserved */
++#define  VERTICAL_FRONT_PORCH   0x16
++#define  VERTICAL_SYNC_WIDTH    0x17
++#define  VERTICAL_BACK_PORCH    0x18
++
++#define  HORIZONTAL_TOTAL_PIXELS_L    0x19
++#define  HORIZONTAL_TOTAL_PIXELS_H    0x1A  /* note: bit[7:6] are reserved=
+ */
++#define  HORIZONTAL_ACTIVE_PIXELS_L   0x1B
++#define  HORIZONTAL_ACTIVE_PIXELS_H   0x1C  /* note: bit[7:6] are reserved=
+ */
++#define  HORIZONTAL_FRONT_PORCH_L     0x1D
++#define  HORIZONTAL_FRONT_PORCH_H     0x1E  /* note: bit[7:4] are reserved=
+ */
++#define  HORIZONTAL_SYNC_WIDTH_L      0x1F
++#define  HORIZONTAL_SYNC_WIDTH_H      0x20  /* note: bit[7:4] are reserved=
+ */
++#define  HORIZONTAL_BACK_PORCH_L      0x21
++#define  HORIZONTAL_BACK_PORCH_H      0x22  /* note: bit[7:4] are reserved=
+ */
++
++/******** END of I2C Address 0x72 *********/
++/***************************************************************/
++/* Register definition of device address 0x7e */
++
++#define  I2C_ADDR_7E_FLASH_CONTROLLER  0x7E
++
++#define FLASH_LOAD_STA 0x05
++#define FLASH_LOAD_STA_CHK	BIT(7)
++
++#define  XTAL_FRQ_SEL    0x3F
++/* bit field positions */
++#define  XTAL_FRQ_SEL_POS    5
++/* bit field values */
++#define  XTAL_FRQ_19M2   (0 << XTAL_FRQ_SEL_POS)
++#define  XTAL_FRQ_27M    (4 << XTAL_FRQ_SEL_POS)
++
++#define  R_DSC_CTRL_0    0x40
++#define  READ_STATUS_EN  7
++#define  CLK_1MEG_RB     6  /* 1MHz clock reset; 0=3Dreset, 0=3Dreset rele=
+ase */
++#define  DSC_BIST_DONE   1  /* bit[5:1]: 1=3DDSC MBIST pass */
++#define  DSC_EN          0x01  /* 1=3DDSC enabled, 0=3DDSC disabled */
++
++#define OCM_FW_VERSION   0x31
++#define OCM_FW_REVERSION 0x32
++
++#define AP_AUX_ADDR_7_0   0x11
++#define AP_AUX_ADDR_15_8  0x12
++#define AP_AUX_ADDR_19_16 0x13
++
++/* note: bit[0:3] AUX status, bit 4 op_en, bit 5 address only */
++#define AP_AUX_CTRL_STATUS 0x14
++#define AP_AUX_CTRL_OP_EN 0x10
++#define AP_AUX_CTRL_ADDRONLY 0x20
++
++#define AP_AUX_BUFF_START 0x15
++#define PIXEL_CLOCK_L 0x25
++#define PIXEL_CLOCK_H 0x26
++
++#define AP_AUX_COMMAND 0x27  /* com+len */
++/* bit 0&1: 3D video structure */
++/* 0x01: frame packing,  0x02:Line alternative, 0x03:Side-by-side(full) */
++#define AP_AV_STATUS 0x28
++#define AP_VIDEO_CHG  BIT(2)
++#define AP_AUDIO_CHG  BIT(3)
++#define AP_MIPI_MUTE  BIT(4) /* 1:MIPI input mute, 0: ummute */
++#define AP_MIPI_RX_EN BIT(5) /* 1: MIPI RX input in  0: no RX in */
++#define AP_DISABLE_PD BIT(6)
++#define AP_DISABLE_DISPLAY BIT(7)
++/***************************************************************/
++/* Register definition of device address 0x84 */
++#define  MIPI_PHY_CONTROL_3            0x03
++#define  MIPI_HS_PWD_CLK               7
++#define  MIPI_HS_RT_CLK                6
++#define  MIPI_PD_CLK                   5
++#define  MIPI_CLK_RT_MANUAL_PD_EN      4
++#define  MIPI_CLK_HS_MANUAL_PD_EN      3
++#define  MIPI_CLK_DET_DET_BYPASS       2
++#define  MIPI_CLK_MISS_CTRL            1
++#define  MIPI_PD_LPTX_CH_MANUAL_PD_EN  0
++
++#define  MIPI_LANE_CTRL_0		0x05
++#define  MIPI_TIME_HS_PRPR		0x08
++
++/* After MIPI RX protocol layer received this many video frames, */
++/* protocol layer starts to reconstruct video stream from PHY */
++#define  MIPI_VIDEO_STABLE_CNT           0x0A
++
++#define  MIPI_LANE_CTRL_10               0x0F
++#define  MIPI_DIGITAL_ADJ_1   0x1B
++
++#define  MIPI_PLL_M_NUM_23_16   0x1E
++#define  MIPI_PLL_M_NUM_15_8    0x1F
++#define  MIPI_PLL_M_NUM_7_0     0x20
++#define  MIPI_PLL_N_NUM_23_16   0x21
++#define  MIPI_PLL_N_NUM_15_8    0x22
++#define  MIPI_PLL_N_NUM_7_0     0x23
++
++#define  MIPI_DIGITAL_PLL_6     0x2A
++/* bit[7:6]: VCO band control, only effective */
++/* when MIPI_PLL_FORCE_BAND_EN (0x84:0x2B[6]) is 1 */
++#define  MIPI_M_NUM_READY        0x10
++#define  MIPI_N_NUM_READY        0x08
++#define  STABLE_INTEGER_CNT_EN   0x04
++#define  MIPI_PLL_TEST_BIT       0
++/* bit[1:0]: test point output select - */
++/* 00: VCO power, 01: dvdd_pdt, 10: dvdd, 11: vcox */
++
++#define  MIPI_DIGITAL_PLL_7      0x2B
++#define  MIPI_PLL_FORCE_N_EN     7
++#define  MIPI_PLL_FORCE_BAND_EN  6
++
++#define  MIPI_PLL_VCO_TUNE_REG   4
++/* bit[5:4]: VCO metal capacitance - */
++/* 00: +20% fast, 01: +10% fast (default), 10: typical, 11: -10% slow */
++#define  MIPI_PLL_VCO_TUNE_REG_VAL   0x30
++
++#define  MIPI_PLL_PLL_LDO_BIT    2
++/* bit[3:2]: vco_v2i power - */
++/* 00: 1.40V, 01: 1.45V (default), 10: 1.50V, 11: 1.55V */
++#define  MIPI_PLL_RESET_N        0x02
++#define  MIPI_FRQ_FORCE_NDET     0
++
++#define  MIPI_ALERT_CLR_0        0x2D
++#define  HS_link_error_clear     7
++/* This bit itself is S/C, and it clears 0x84:0x31[7] */
++
++#define  MIPI_ALERT_OUT_0        0x31
++#define  check_sum_err_hs_sync   7
++/* This bit is cleared by 0x84:0x2D[7] */
++
++#define  MIPI_DIGITAL_PLL_8    0x33
++#define  MIPI_POST_DIV_VAL     4
++/* n means divided by (n+1), n =3D 0~15 */
++#define  MIPI_EN_LOCK_FRZ      3
++#define  MIPI_FRQ_COUNTER_RST  2
++#define  MIPI_FRQ_SET_REG_8    1
++/* bit 0 is reserved */
++
++#define  MIPI_DIGITAL_PLL_9    0x34
++
++#define  MIPI_DIGITAL_PLL_16   0x3B
++#define  MIPI_FRQ_FREEZE_NDET          7
++#define  MIPI_FRQ_REG_SET_ENABLE       6
++#define  MIPI_REG_FORCE_SEL_EN         5
++#define  MIPI_REG_SEL_DIV_REG          4
++#define  MIPI_REG_FORCE_PRE_DIV_EN     3
++/* bit 2 is reserved */
++#define  MIPI_FREF_D_IND               1
++#define  REF_CLK_27000KHZ    1
++#define  REF_CLK_19200KHZ    0
++#define  MIPI_REG_PLL_PLL_TEST_ENABLE  0
++
++#define  MIPI_DIGITAL_PLL_18  0x3D
++#define  FRQ_COUNT_RB_SEL       7
++#define  REG_FORCE_POST_DIV_EN  6
++#define  MIPI_DPI_SELECT        5
++#define  SELECT_DSI  1
++#define  SELECT_DPI  0
++#define  REG_BAUD_DIV_RATIO     0
++
++#define  H_BLANK_L            0x3E
++/* for DSC only */
++#define  H_BLANK_H            0x3F
++/* for DSC only; note: bit[7:6] are reserved */
++#define  MIPI_SWAP  0x4A
++#define  MIPI_SWAP_CH0    7
++#define  MIPI_SWAP_CH1    6
++#define  MIPI_SWAP_CH2    5
++#define  MIPI_SWAP_CH3    4
++#define  MIPI_SWAP_CLK    3
++/* bit[2:0] are reserved */
++
++/******** END of I2C Address 0x84 *********/
++
++/* DPCD regs */
++#define DPCD_DPCD_REV                  0x00
++#define DPCD_MAX_LINK_RATE             0x01
++#define DPCD_MAX_LANE_COUNT            0x02
++
++/*********  ANX7625 Register End  **********/
++
++/*****************  Display *****************/
++enum audio_fs {
++	AUDIO_FS_441K  =3D 0x00,
++	AUDIO_FS_48K   =3D 0x02,
++	AUDIO_FS_32K   =3D 0x03,
++	AUDIO_FS_882K  =3D 0x08,
++	AUDIO_FS_96K   =3D 0x0a,
++	AUDIO_FS_1764K =3D 0x0c,
++	AUDIO_FS_192K  =3D 0x0e
++};
++
++enum audio_wd_len {
++	AUDIO_W_LEN_16_20MAX =3D 0x02,
++	AUDIO_W_LEN_18_20MAX =3D 0x04,
++	AUDIO_W_LEN_17_20MAX =3D 0x0c,
++	AUDIO_W_LEN_19_20MAX =3D 0x08,
++	AUDIO_W_LEN_20_20MAX =3D 0x0a,
++	AUDIO_W_LEN_20_24MAX =3D 0x03,
++	AUDIO_W_LEN_22_24MAX =3D 0x05,
++	AUDIO_W_LEN_21_24MAX =3D 0x0d,
++	AUDIO_W_LEN_23_24MAX =3D 0x09,
++	AUDIO_W_LEN_24_24MAX =3D 0x0b
++};
++
++#define I2S_CH_2	0x01
++#define TDM_CH_4	0x03
++#define TDM_CH_6	0x05
++#define TDM_CH_8	0x07
++
++#define MAX_DPCD_BUFFER_SIZE	16
++
++#define ONE_BLOCK_SIZE      128
++#define FOUR_BLOCK_SIZE     (128 * 4)
++
++#define MAX_EDID_BLOCK	3
++#define EDID_TRY_CNT	3
++#define SUPPORT_PIXEL_CLOCK	300000
++
++struct s_edid_data {
++	int edid_block_num;
++	u8 edid_raw_data[FOUR_BLOCK_SIZE];
++};
++
++/*****************  Display End *****************/
++
++struct anx7625_device_node {
++	struct device_node *mipi_dsi_host_node;
++	struct device_node *mipi_dpi_host_node;
++	struct device_node *panel_node;
++};
++
++struct anx7625_platform_data {
++	struct gpio_desc *gpio_p_on;
++	struct gpio_desc *gpio_reset;
++	struct drm_panel *panel;
++	int intp_irq;
++	u32 panel_flags;
++	u32 low_power_mode;
++	u32 dsi_supported;
++	u32 internal_panel;
++	u32 extcon_supported;
++	struct anx7625_device_node node;
++};
++
++struct anx7625_i2c_client {
++	struct i2c_client *tx_p0_client;
++	struct i2c_client *tx_p1_client;
++	struct i2c_client *tx_p2_client;
++	struct i2c_client *rx_p0_client;
++	struct i2c_client *rx_p1_client;
++	struct i2c_client *rx_p2_client;
++	struct i2c_client *tcpc_client;
++};
++
++struct anx7625_data {
++	struct anx7625_platform_data pdata;
++	atomic_t power_status;
++	atomic_t panel_power;
++	int hpd_status;
++	int hpd_high_cnt;
++	struct i2c_client *client;
++	struct anx7625_i2c_client i2c;
++	struct i2c_client *last_client;
++	struct s_edid_data slimport_edid_p;
++	struct work_struct work;
++	struct workqueue_struct *workqueue;
++	/* drm bridge mutex lock */
++	struct mutex lock;
++	char edid_block;
++	struct display_timing dt;
++	u8 display_timing_valid;
++	struct drm_bridge bridge;
++	u8 bridge_attached;
++	struct drm_connector connector;
++	struct mipi_dsi_device *dsi;
++	struct drm_dp_link link;
++	struct drm_display_mode vid_info;
++	struct notifier_block event_nb;
++	struct extcon_dev *extcon;
++	struct work_struct extcon_wq;
++};
++
++#endif  /* __ANX7625_H__ */
+--=20
+2.7.4
 
-On 2019-10-22 14:10, Ulf Hansson wrote:
-> On Mon, 21 Oct 2019 at 16:30, Ram Prakash Gupta 
-> <rampraka@codeaurora.org> wrote:
->> 
->> This change adds the use of devfreq based clock scaling to MMC.
->> This applicable for eMMC and SDCard.
->> For some workloads, such as video playback, it isn't necessary
->> for these cards to run at high speed. Running at lower
->> frequency, in such cases can still meet the deadlines for data
->> transfers.
->> 
->> Scaling down the clock frequency dynamically has power savings
->> not only because the bus is running at lower frequency but also
->> has an advantage of scaling down the system core voltage, if
->> supported. Provide an ondemand clock scaling support similar
->> to the cpufreq ondemand governor having two thresholds,
->> up_threshold and down_threshold to decide whether to increase
->> the frequency or scale it down respectively as per load.
-> 
-> This sounds simple, but what the series is doing is far more
-> complicated but scaling the bus clock, as it also re-negotiates the
-> bus speed mode.
-> 
-> Each time the triggering point for scaling up/down is hit, then a
-> series of commands needs to be sent to the card, including running the
-> tuning procedure. The point is, for sure, this doesn't come for free,
-> both from a latency point of view, but also from an energy cost point
-> of view. So, whether this really improves the behaviour, seems like
-> very use case sensitive, right!?
-
-Switching modes would incur some latency for sending commands to switch
-modes, but tuning is not needed as most of the emmc devices used now a
-days are with enhanced strobe support, so tuning would not add up any
-latency as it is not required in hs400 enhanced strobe mode.
-
-This feature is implemented for video playback case, where data transfer
-request is less, where this feature helps with saving power consumption.
-
-And when there is burst of data transfer request, load will remain 
-_high_
-so there won't be any switching and hence it won't affect any existing
-use cases from latency point of view.
-
-Also if hw supports to switch clk frequency without changing mode. I 
-will
-make change in code. For this I have seek input from hw team.
-
- From collected data, I see this feature is helping in saving power
-consumption. And no energy penalty is observed. Please share if I am
-missing any specific. Power saving using this feature is quite good
-and considerable. Please find the data below.
-
-Use Case                             Delta at Battery  Power Impact
-30 fps at HD 1080p decode 20Mbps       10 mA               11%
-30 fps at UHD 8b H.264 42 Mbps         20.93 mA            19%
-
-> 
-> Overall, when it comes to use cases, we have very limited knowledge
-> about them at the mmc block layer level. I think it should remain like
-> that. If at any place at all, this information is better maintained by
-> the generic block layer and potentially the configured I/O scheduler.
-
-I think, generic block layer do not have knowledge of use case for data
-transfer request. And devfreq framework have been used to implement this
-feature, which should be same in any layer.
-
-Also mobile platforms comes mostly with emmc and ufs as storage media.
-And clock scaling is already implemented in upstream ufs driver using
-devfreq framework. On similar line, this feature is implemented for mmc
-driver. So I believe, clk scaling implementation is better placed in mmc
-driver rather in generic block layer.
-
-> 
-> This brings me to a question about the tests you have you run. Can you
-> share some information and data about that?
-
-Test case used are 1080p and 4k video playback use case. As this feature
-is implemented specifically for video playback use case.
-> 
->> 
->> 
->> Ram Prakash Gupta (6):
->>   mmc: core: Parse clk scaling dt entries
->>   mmc: core: Add core scaling support in driver
->>   mmc: core: Initialize clk scaling for mmc and SDCard
->>   mmc: core: Add debugfs entries for scaling support
->>   mmc: sdhci-msm: Add capability in platfrom host
->>   dt-bindings: mmc: sdhci-msm: Add clk scaling dt parameters
->> 
->>  .../devicetree/bindings/mmc/sdhci-msm.txt          |  19 +
-> 
-> I noticed that the DT patch was put last in the series, but the
-> parsing is implemented in the first patch. Please flip this around. If
-> you want to implement DT parsing of new bindings, please make sure to
-> discuss the new bindings first.
-
-I will update in next post.
-
-> 
->>  drivers/mmc/core/block.c                           |  19 +-
->>  drivers/mmc/core/core.c                            | 777 
->> +++++++++++++++++++++
->>  drivers/mmc/core/core.h                            |  17 +
->>  drivers/mmc/core/debugfs.c                         |  90 +++
->>  drivers/mmc/core/host.c                            | 226 ++++++
->>  drivers/mmc/core/mmc.c                             | 246 ++++++-
->>  drivers/mmc/core/queue.c                           |   2 +
->>  drivers/mmc/core/sd.c                              |  84 ++-
->>  drivers/mmc/host/sdhci-msm.c                       |   2 +
->>  include/linux/mmc/card.h                           |   7 +
->>  include/linux/mmc/host.h                           |  66 ++
->>  12 files changed, 1550 insertions(+), 5 deletions(-)
-> 
-> This is a lot of new code in the mmc core, which I would then need to
-> maintain, of course. I have to admit, I am a bit concerned about that,
-> so you have to convince me that there are good reasons for me to apply
-> this.
-> 
-> As I stated above, I think the approach looks quite questionable in
-> general. And even if you can share measurement, that it improves the
-> behaviour, I suspect (without a deeper code review) that some of the
-> code better belongs in common block device layer.
-
- From the collected power data, I see this as good reason to have this
-feature in mmc driver as number is quite considerable.
-
-For approach, it would be helpful if you share your inputs regarding 
-this
-approach. And as you have stated, this can be further discussed after a
-review from you.
-
-> 
-> Kind regards
-> Uffe
