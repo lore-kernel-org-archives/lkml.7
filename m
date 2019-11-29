@@ -2,149 +2,199 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A93EDC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 10:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5A0C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 10:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F42C2084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 10:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2B692084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 10:51:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfK2KpI (ORCPT
+        id S1726763AbfK2Ku7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 05:45:08 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:41353 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfK2KpI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 05:45:08 -0500
-Received: by mail-il1-f200.google.com with SMTP id o185so24375742ila.8
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 02:45:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Bw33hhNzZEtxI5gaN0FGG4Keg1bv9uMPlinqIyGbtFw=;
-        b=AKm1NQ6iYkfwzi1twHFjcZVO2A2tjjwSl3sLKlyhFI+6tCnMLYjd1+fOKCcF1+WrXr
-         lxooZbej3UTw75tgrW848c4iGuD75zQ7raHxxOcruiE6k0kCRtv+G3zkKGLYo7MClutU
-         W/4RASY1X6yzg+dTjJhS8awo2pT6oGiL0dqLK8LazqY2eV0r3OdjMSC4WE2Ox7i1/Kzl
-         KnRcMRy+B4DK04MUZ4+oSygKt1ELw3hnJbzyBUajcBNlCFxFXMK3bWmG5WzyyAgM6fBR
-         h42tEJGRvK0N4fwuzSP7IIz+wQprhaAk66WRJcv/M+8UoY9dxQo6bHVVGgXWxYIlhV/h
-         ULEg==
-X-Gm-Message-State: APjAAAWy9/eT09Z/I+FSt2iVCULNfpcsgIzbfdtMdsxIeSJWf3v9aaVz
-        SVBmjaDuFB5Yf1dNFA6Lt/GbwOxrbUuY1OauOWl2wqZTCd9F
-X-Google-Smtp-Source: APXvYqzdXhARdHUXX+6Lh4o76WapDekObV1V0y7Not6A1Zwb11zfXS/Q7Qhfzur3k2GD9C9hlWQpP7WtQr3FTKcisTjDADpSgZ7e
+        Fri, 29 Nov 2019 05:50:59 -0500
+Received: from foss.arm.com ([217.140.110.172]:46030 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725892AbfK2Ku6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 05:50:58 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A2051FB;
+        Fri, 29 Nov 2019 02:50:58 -0800 (PST)
+Received: from [10.37.10.52] (unknown [10.37.10.52])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 315A23F52E;
+        Fri, 29 Nov 2019 02:50:56 -0800 (PST)
+Subject: Re: MIPS: bug: gettimeofday syscall broken on CI20 board
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Maarten ter Huurne <maarten@treewalker.org>,
+        mips-creator-ci20-dev@googlegroups.com,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>
+References: <18788C50-F29B-4BD7-89F6-B056FF490214@goldelico.com>
+ <7b6275c7-ab2b-a647-6bf7-d5e1c4523c98@arm.com>
+ <D1CE4D1E-9A42-4FAE-90A9-615C38B979C0@goldelico.com>
+ <4807842.gtHLO0kk0V@hyperion>
+ <01D75E67-EC2E-4C74-B9BB-752773C481A9@goldelico.com>
+ <20191128150721.GA20142@alpha.franken.de>
+ <4F75970F-81DA-4727-8ADC-17CF6D77829B@goldelico.com>
+ <04b509b4-b1ef-3bcb-433e-8eed5772288f@arm.com>
+ <BF04DB35-9DBA-4297-8FCA-BB422A56DFEC@goldelico.com>
+ <9ee8cbab-0655-f4d5-6699-fbe34fbe4d60@arm.com>
+Message-ID: <183faf2b-247b-7a1f-a45c-4ae6bbff4320@arm.com>
+Date:   Fri, 29 Nov 2019 10:53:24 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:601:: with SMTP id x1mr15052392ilg.35.1575024307211;
- Fri, 29 Nov 2019 02:45:07 -0800 (PST)
-Date:   Fri, 29 Nov 2019 02:45:07 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000581524059879ecad@google.com>
-Subject: general protection fault in timer_is_static_object
-From:   syzbot <syzbot+76f3a30e88d256644c78@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, dmitry.torokhov@gmail.com,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, rydberg@bitmath.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <9ee8cbab-0655-f4d5-6699-fbe34fbe4d60@arm.com>
+Content-Type: multipart/mixed;
+ boundary="------------B6767A12C8E3216B1F5C5EE3"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+This is a multi-part message in MIME format.
+--------------B6767A12C8E3216B1F5C5EE3
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-syzbot found the following crash on:
+Hi Nikolaus,
 
-HEAD commit:    da06441b usb: gadget: add raw-gadget interface
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=150eedeee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=99c88c44660624e7
-dashboard link: https://syzkaller.appspot.com/bug?extid=76f3a30e88d256644c78
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1205c8a2e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1107b76ae00000
+On 11/29/19 8:57 AM, Vincenzo Frascino wrote:
+> On 11/28/19 4:47 PM, H. Nikolaus Schaller wrote:
+>> Well, it does not immediately compile because CONFIG_MIPS_CLOCK_VSYSCALL is not
+>> set and can not be configured by normal means:
+>>
+>> Error:
+>>
+>> /Volumes/CaseSensitive/master/lib/vdso/gettimeofday.c: In function '__cvdso_gettimeofday':
+>> /Volumes/CaseSensitive/master/lib/vdso/gettimeofday.c:152:4: error: implicit declaration of function 'gettimeofday_fallback' [-Werror=implicit-function-declaration]
+>>     return gettimeofday_fallback(tv, tz);
+> 
+> Oops, I just realized that I had other changes not committed that's why it does
+> not build for you directly. Sometimes I get so excited for fixing a problem that
+> I forget bits and peaces :) Sorry about that.
+> 
+> I am happy to hear that this sorts out the issue though. I will send out a new
+> series to test.
+> 
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+76f3a30e88d256644c78@syzkaller.appspotmail.com
+Could you please try the patch in attachment? It should be all this time.
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN
-CPU: 0 PID: 1713 Comm: syz-executor493 Not tainted 5.4.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:timer_is_static_object+0x20/0x90 kernel/time/timer.c:612
-Code: 66 2e 0f 1f 84 00 00 00 00 00 41 54 53 48 89 fb e8 b5 50 0f 00 48 8d  
-7b 08 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75  
-4f 45 31 e4 48 83 7b 08 00 74 0c e8 8b 50 0f 00 44
-RSP: 0018:ffff8881d0397af8 EFLAGS: 00010002
-RAX: dffffc0000000000 RBX: 0000000000004060 RCX: 0000000000000000
-RDX: 000000000000080d RSI: ffffffff812ed5ab RDI: 0000000000004068
-RBP: ffff8881d0397c00 R08: ffff8881d1bdc800 R09: fffffbfff1230886
-R10: fffffbfff1230885 R11: ffffffff8918442b R12: 0000000000000003
-R13: dffffc0000000000 R14: 1ffff1103a072f66 R15: 0000000000004060
-FS:  0000000001020880(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000043ff90 CR3: 00000001d1ac0000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  debug_object_assert_init lib/debugobjects.c:862 [inline]
-  debug_object_assert_init+0x1f9/0x2f0 lib/debugobjects.c:837
-  debug_timer_assert_init kernel/time/timer.c:729 [inline]
-  debug_assert_init kernel/time/timer.c:774 [inline]
-  del_timer+0x6d/0x100 kernel/time/timer.c:1196
-  try_to_grab_pending+0x67/0x7b0 kernel/workqueue.c:1251
-  __cancel_work_timer+0xa6/0x460 kernel/workqueue.c:3086
-  input_close_device+0xd2/0x1a0 drivers/input/input.c:679
-  evdev_close_device drivers/input/evdev.c:428 [inline]
-  evdev_release+0x188/0x1c0 drivers/input/evdev.c:466
-  __fput+0x2d7/0x840 fs/file_table.c:280
-  task_work_run+0x13f/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:163
-  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
-  do_syscall_64+0x45f/0x580 arch/x86/entry/common.c:300
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4022c0
-Code: 01 f0 ff ff 0f 83 40 0d 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f  
-44 00 00 83 3d 6d aa 2d 00 00 75 14 b8 03 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 14 0d 00 00 c3 48 83 ec 08 e8 7a 02 00 00
-RSP: 002b:00007ffc860c7068 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000005 RCX: 00000000004022c0
-RDX: 00000000200000c0 RSI: 0000000040284504 RDI: 0000000000000004
-RBP: 00007ffc860c7090 R08: 7d03000000008300 R09: 0000000000000000
-R10: 000000000000000f R11: 0000000000000246 R12: 0000000000000003
-R13: 0000000000000004 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace cf0e86e9ac328099 ]---
-RIP: 0010:timer_is_static_object+0x20/0x90 kernel/time/timer.c:612
-Code: 66 2e 0f 1f 84 00 00 00 00 00 41 54 53 48 89 fb e8 b5 50 0f 00 48 8d  
-7b 08 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75  
-4f 45 31 e4 48 83 7b 08 00 74 0c e8 8b 50 0f 00 44
-RSP: 0018:ffff8881d0397af8 EFLAGS: 00010002
-RAX: dffffc0000000000 RBX: 0000000000004060 RCX: 0000000000000000
-RDX: 000000000000080d RSI: ffffffff812ed5ab RDI: 0000000000004068
-RBP: ffff8881d0397c00 R08: ffff8881d1bdc800 R09: fffffbfff1230886
-R10: fffffbfff1230885 R11: ffffffff8918442b R12: 0000000000000003
-R13: dffffc0000000000 R14: 1ffff1103a072f66 R15: 0000000000004060
-FS:  0000000001020880(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000043ff90 CR3: 00000001d1ac0000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Thanks!
 
+-- 
+Regards,
+Vincenzo
 
+--------------B6767A12C8E3216B1F5C5EE3
+Content-Type: text/x-patch;
+ name="0001-mips32-gettimeofday-fix.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="0001-mips32-gettimeofday-fix.patch"
+
+From 6ee7d583444f7edb1b5b8e834253b34efe4ff257 Mon Sep 17 00:00:00 2001
+From: Vincenzo Frascino <vinfra01@e120585-lin.cambridge.arm.com>
+Date: Fri, 29 Nov 2019 10:01:18 +0000
+Subject: [PATCH] mips32 gettimeofday fix
+
+Signed-off-by: Vincenzo Frascino <vinfra01@e120585-lin.cambridge.arm.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ arch/mips/include/asm/vdso/gettimeofday.h | 13 -------------
+ arch/mips/vdso/vgettimeofday.c            | 20 ++++++++++++++++++++
+ 2 files changed, 20 insertions(+), 13 deletions(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/arch/mips/include/asm/vdso/gettimeofday.h b/arch/mips/include/asm/vdso/gettimeofday.h
+index b08825531e9f..0ae9b4cbc153 100644
+--- a/arch/mips/include/asm/vdso/gettimeofday.h
++++ b/arch/mips/include/asm/vdso/gettimeofday.h
+@@ -26,8 +26,6 @@
+ 
+ #define __VDSO_USE_SYSCALL		ULLONG_MAX
+ 
+-#ifdef CONFIG_MIPS_CLOCK_VSYSCALL
+-
+ static __always_inline long gettimeofday_fallback(
+ 				struct __kernel_old_timeval *_tv,
+ 				struct timezone *_tz)
+@@ -48,17 +46,6 @@ static __always_inline long gettimeofday_fallback(
+ 	return error ? -ret : ret;
+ }
+ 
+-#else
+-
+-static __always_inline long gettimeofday_fallback(
+-				struct __kernel_old_timeval *_tv,
+-				struct timezone *_tz)
+-{
+-	return -1;
+-}
+-
+-#endif
+-
+ static __always_inline long clock_gettime_fallback(
+ 					clockid_t _clkid,
+ 					struct __kernel_timespec *_ts)
+diff --git a/arch/mips/vdso/vgettimeofday.c b/arch/mips/vdso/vgettimeofday.c
+index 6ebdc37c89fc..6b83b6376a4b 100644
+--- a/arch/mips/vdso/vgettimeofday.c
++++ b/arch/mips/vdso/vgettimeofday.c
+@@ -17,12 +17,22 @@ int __vdso_clock_gettime(clockid_t clock,
+ 	return __cvdso_clock_gettime32(clock, ts);
+ }
+ 
++#ifdef CONFIG_MIPS_CLOCK_VSYSCALL
++
++/*
++ * This is behind the ifdef so that we don't provide the symbol when there's no
++ * possibility of there being a usable clocksource, because there's nothing we
++ * can do without it. When libc fails the symbol lookup it should fall back on
++ * the standard syscall path.
++ */
+ int __vdso_gettimeofday(struct __kernel_old_timeval *tv,
+ 			struct timezone *tz)
+ {
+ 	return __cvdso_gettimeofday(tv, tz);
+ }
+ 
++#endif /* CONFIG_MIPS_CLOCK_VSYSCALL */
++
+ int __vdso_clock_getres(clockid_t clock_id,
+ 			struct old_timespec32 *res)
+ {
+@@ -43,12 +53,22 @@ int __vdso_clock_gettime(clockid_t clock,
+ 	return __cvdso_clock_gettime(clock, ts);
+ }
+ 
++#ifdef CONFIG_MIPS_CLOCK_VSYSCALL
++
++/*
++ * This is behind the ifdef so that we don't provide the symbol when there's no
++ * possibility of there being a usable clocksource, because there's nothing we
++ * can do without it. When libc fails the symbol lookup it should fall back on
++ * the standard syscall path.
++ */
+ int __vdso_gettimeofday(struct __kernel_old_timeval *tv,
+ 			struct timezone *tz)
+ {
+ 	return __cvdso_gettimeofday(tv, tz);
+ }
+ 
++#endif /* CONFIG_MIPS_CLOCK_VSYSCALL */
++
+ int __vdso_clock_getres(clockid_t clock_id,
+ 			struct __kernel_timespec *res)
+ {
+-- 
+2.24.0
+
+
+--------------B6767A12C8E3216B1F5C5EE3--
