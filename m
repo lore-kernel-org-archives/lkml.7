@@ -2,139 +2,197 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EB6C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFE5C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ECEC21736
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:13:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g7Wj6BBI"
+	by mail.kernel.org (Postfix) with ESMTP id B9CDB21736
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:16:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbfK2INP (ORCPT
+        id S1726800AbfK2IQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 03:13:15 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:35625 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726804AbfK2INL (ORCPT
+        Fri, 29 Nov 2019 03:16:09 -0500
+Received: from mail-io1-f69.google.com ([209.85.166.69]:54865 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726604AbfK2IQI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 03:13:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575015190;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+ifxEBGz5Za3713/6wxZ5x5c+04Mqb6wSjHpoWmP22g=;
-        b=g7Wj6BBIoFQeyH3YewWFPa3nMMEKO14Z2kuZDOel3ZyxHOBjFZNggnw7J5uVbcfnY13tVJ
-        4C4c2ICH0Dz6NfRGjqS5pXlns3Gb/2Dyb57Os4kukOzwxzX4qaGhPyC6i1cp9wlrEuGNQi
-        ShfGVKoOC1rtlkEH1WNleR1e3QkpW1c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-409-jxWKkpjJN2aIP2zyAxxTJg-1; Fri, 29 Nov 2019 03:13:06 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2734C8024E7;
-        Fri, 29 Nov 2019 08:13:04 +0000 (UTC)
-Received: from krava (ovpn-205-32.brq.redhat.com [10.40.205.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 90C7461F37;
-        Fri, 29 Nov 2019 08:12:52 +0000 (UTC)
-Date:   Fri, 29 Nov 2019 09:12:51 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH bpf v3] bpftool: Allow to link libbpf dynamically
-Message-ID: <20191129081251.GA14169@krava>
-References: <20191128145316.1044912-1-toke@redhat.com>
- <20191128160712.1048793-1-toke@redhat.com>
+        Fri, 29 Nov 2019 03:16:08 -0500
+Received: by mail-io1-f69.google.com with SMTP id f15so4450470iol.21
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 00:16:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=AwcCGb7KsCpa79UEtOA464CD/IKJAmHuJiBH6WO8loY=;
+        b=W7VbgLJjcUFZ/8P6Vf1JwM6cFn7zI75nTd+C6PE7tktkfHWTGrTTaCQmYI3edZes3q
+         T68cdDy4k9b1ArGQxoBeP3XvRcDShmlXHaSUTJztuT47fI/g6PnpZnmXzvK3MOQ6j5+o
+         tMoqVYPJEUIkuThv2+xR3QYgCih7fuqO7RnTb8mQRAazaedIbz/rjElKD9+M8cDi04Uj
+         oCb40c+3jbpdFWu5RfYP1SgzRfPH2xLYwZQgWRZGX7LveKvgsYAtXNEkjj+4Gv2bmrGt
+         LSNkJSb60NyiUml7xVPW2HEfQ8iMTqhdHscm31fcWgt7YFU3+Y8Ccc5bNitMEV8Nz5sj
+         6bDg==
+X-Gm-Message-State: APjAAAU5t/mCbyicFJqb096CuBfbiP7yGHs7GTVTqugXXkhqFy0zGU0T
+        COF4sQZLg9S/uGywecSacWw+/T3LrAikeJFU9pLnHzh8+dQs
+X-Google-Smtp-Source: APXvYqwFHk6mxg2Lu7CRNOnD1s8Ows1XQz2PxL+0+NcYkpVSNXDEpE1frZBQ2NJoHouaLAxAdZqR3W2tJb7p9vHct1Hh6EvHQeFH
 MIME-Version: 1.0
-In-Reply-To: <20191128160712.1048793-1-toke@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: jxWKkpjJN2aIP2zyAxxTJg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+X-Received: by 2002:a5d:9b08:: with SMTP id y8mr7598324ion.108.1575015367819;
+ Fri, 29 Nov 2019 00:16:07 -0800 (PST)
+Date:   Fri, 29 Nov 2019 00:16:07 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000083c858059877d77c@google.com>
+Subject: KASAN: use-after-free Write in nr_release
+From:   syzbot <syzbot+caa188bdfc1eeafeb418@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, linux-hams@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        ralf@linux-mips.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 05:07:12PM +0100, Toke H=F8iland-J=F8rgensen wrote:
+Hello,
 
-SNIP
+syzbot found the following crash on:
 
->  ifeq ($(srctree),)
->  srctree :=3D $(patsubst %/,%,$(dir $(CURDIR)))
-> @@ -63,6 +72,19 @@ RM ?=3D rm -f
->  FEATURE_USER =3D .bpftool
->  FEATURE_TESTS =3D libbfd disassembler-four-args reallocarray zlib
->  FEATURE_DISPLAY =3D libbfd disassembler-four-args zlib
-> +ifdef LIBBPF_DYNAMIC
-> +  FEATURE_TESTS   +=3D libbpf
-> +  FEATURE_DISPLAY +=3D libbpf
-> +
-> +  # for linking with debug library run:
-> +  # make LIBBPF_DYNAMIC=3D1 LIBBPF_DIR=3D/opt/libbpf
-> +  ifdef LIBBPF_DIR
-> +    LIBBPF_CFLAGS  :=3D -I$(LIBBPF_DIR)/include
-> +    LIBBPF_LDFLAGS :=3D -L$(LIBBPF_DIR)/$(libdir_relative)
-> +    FEATURE_CHECK_CFLAGS-libbpf  :=3D $(LIBBPF_CFLAGS)
-> +    FEATURE_CHECK_LDFLAGS-libbpf :=3D $(LIBBPF_LDFLAGS)
-> +  endif
-> +endif
-> =20
->  check_feat :=3D 1
->  NON_CHECK_FEAT_TARGETS :=3D clean uninstall doc doc-clean doc-install do=
-c-uninstall
-> @@ -88,6 +110,18 @@ ifeq ($(feature-reallocarray), 0)
->  CFLAGS +=3D -DCOMPAT_NEED_REALLOCARRAY
->  endif
-> =20
-> +ifdef LIBBPF_DYNAMIC
-> +  ifeq ($(feature-libbpf), 1)
-> +    # bpftool uses non-exported functions from libbpf, so just add the d=
-ynamic
-> +    # version of libbpf and let the linker figure it out
-> +    LIBS    :=3D -lbpf $(LIBS)
+HEAD commit:    81b6b964 Merge branch 'master' of git://git.kernel.org/pub..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1553197ae00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6349516b24252b37
+dashboard link: https://syzkaller.appspot.com/bug?extid=caa188bdfc1eeafeb418
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-nice, so linker will pick up the missing symbols and we
-don't need to check on particular libbpf version then
+Unfortunately, I don't have any reproducer for this crash yet.
 
-thanks,
-jirka
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+caa188bdfc1eeafeb418@syzkaller.appspotmail.com
 
-> +    CFLAGS  +=3D $(LIBBPF_CFLAGS)
-> +    LDFLAGS +=3D $(LIBBPF_LDFLAGS)
-> +  else
-> +    dummy :=3D $(error Error: No libbpf devel library found, please inst=
-all libbpf-devel or libbpf-dev.)
-> +  endif
-> +endif
-> +
->  include $(wildcard $(OUTPUT)*.d)
-> =20
->  all: $(OUTPUT)bpftool
-> --=20
-> 2.24.0
->=20
+==================================================================
+BUG: KASAN: use-after-free in atomic_fetch_add  
+include/asm-generic/atomic-instrumented.h:111 [inline]
+BUG: KASAN: use-after-free in refcount_add include/linux/refcount.h:188  
+[inline]
+BUG: KASAN: use-after-free in refcount_inc include/linux/refcount.h:228  
+[inline]
+BUG: KASAN: use-after-free in sock_hold include/net/sock.h:648 [inline]
+BUG: KASAN: use-after-free in nr_release+0x65/0x4c0  
+net/netrom/af_netrom.c:498
+Write of size 4 at addr ffff88805abb0080 by task syz-executor.1/8686
 
+CPU: 1 PID: 8686 Comm: syz-executor.1 Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:634
+  check_memory_region_inline mm/kasan/generic.c:185 [inline]
+  check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
+  __kasan_check_write+0x14/0x20 mm/kasan/common.c:98
+  atomic_fetch_add include/asm-generic/atomic-instrumented.h:111 [inline]
+  refcount_add include/linux/refcount.h:188 [inline]
+  refcount_inc include/linux/refcount.h:228 [inline]
+  sock_hold include/net/sock.h:648 [inline]
+  nr_release+0x65/0x4c0 net/netrom/af_netrom.c:498
+  __sock_release+0xce/0x280 net/socket.c:591
+  sock_close+0x1e/0x30 net/socket.c:1269
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:164
+  prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+  do_syscall_64+0x676/0x790 arch/x86/entry/common.c:304
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x414211
+Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48  
+83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48  
+89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:00007ffdfe3cb280 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 000000000000000a RCX: 0000000000414211
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000009
+RBP: 0000000000000001 R08: 000000008135072a R09: ffffffffffffffff
+R10: 00007ffdfe3cb360 R11: 0000000000000293 R12: 000000000075c9a0
+R13: 000000000075c9a0 R14: 0000000000761a30 R15: 000000000075bf2c
+
+Allocated by task 8697:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:510 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
+  __do_kmalloc mm/slab.c:3655 [inline]
+  __kmalloc+0x163/0x770 mm/slab.c:3664
+  kmalloc include/linux/slab.h:561 [inline]
+  sk_prot_alloc+0x23a/0x310 net/core/sock.c:1603
+  sk_alloc+0x39/0xfd0 net/core/sock.c:1657
+  nr_create+0xb9/0x5e0 net/netrom/af_netrom.c:411
+  __sock_create+0x3ce/0x730 net/socket.c:1419
+  sock_create net/socket.c:1470 [inline]
+  __sys_socket+0x103/0x220 net/socket.c:1512
+  __do_sys_socket net/socket.c:1521 [inline]
+  __se_sys_socket net/socket.c:1519 [inline]
+  __x64_sys_socket+0x73/0xb0 net/socket.c:1519
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 8686:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  kasan_set_free_info mm/kasan/common.c:332 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:471
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
+  __cache_free mm/slab.c:3425 [inline]
+  kfree+0x10a/0x2c0 mm/slab.c:3756
+  sk_prot_free net/core/sock.c:1640 [inline]
+  __sk_destruct+0x4fc/0x6f0 net/core/sock.c:1724
+  sk_destruct+0xd5/0x110 net/core/sock.c:1739
+  __sk_free+0xfb/0x360 net/core/sock.c:1750
+  sk_free+0x83/0xb0 net/core/sock.c:1761
+  sock_put include/net/sock.h:1729 [inline]
+  nr_release+0x3f4/0x4c0 net/netrom/af_netrom.c:532
+  __sock_release+0xce/0x280 net/socket.c:591
+  sock_close+0x1e/0x30 net/socket.c:1269
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:164
+  prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+  do_syscall_64+0x676/0x790 arch/x86/entry/common.c:304
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff88805abb0000
+  which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 128 bytes inside of
+  2048-byte region [ffff88805abb0000, ffff88805abb0800)
+The buggy address belongs to the page:
+page:ffffea00016aec00 refcount:1 mapcount:0 mapping:ffff8880aa400e00  
+index:0x0
+raw: 01fffc0000000200 ffffea00016eaa48 ffffea000276f1c8 ffff8880aa400e00
+raw: 0000000000000000 ffff88805abb0000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff88805abaff80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff88805abb0000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff88805abb0080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                    ^
+  ffff88805abb0100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff88805abb0180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
