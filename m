@@ -2,126 +2,133 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FD5C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 20:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 953DCC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 20:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCD9E2176D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 20:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6993221736
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 20:05:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hrUHVKWM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727166AbfK2UFa (ORCPT
+        id S1727184AbfK2UFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 15:05:30 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:5738 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727040AbfK2UF3 (ORCPT
+        Fri, 29 Nov 2019 15:05:55 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59637 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726926AbfK2UFz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 15:05:29 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xATK23gC007032;
-        Fri, 29 Nov 2019 15:05:20 -0500
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wjym5bx1h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 29 Nov 2019 15:05:20 -0500
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xATK5CCg004672;
-        Fri, 29 Nov 2019 20:05:19 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma03dal.us.ibm.com with ESMTP id 2wevd7pgmf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 29 Nov 2019 20:05:19 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xATK5Imu30671340
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 Nov 2019 20:05:18 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6CFF5B2066;
-        Fri, 29 Nov 2019 20:05:18 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1CC21B2064;
-        Fri, 29 Nov 2019 20:05:17 +0000 (GMT)
-Received: from jarvis.ext.hansenpartnership.com (unknown [9.85.134.245])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 29 Nov 2019 20:05:16 +0000 (GMT)
-Message-ID: <1575057916.6220.7.camel@linux.ibm.com>
-Subject: Re: One question about trusted key of keyring in Linux kernel.
-From:   James Bottomley <jejb@linux.ibm.com>
-To:     "Zhao, Shirley" <shirley.zhao@intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
-        "Zhu, Bing" <bing.zhu@intel.com>,
-        "Chen, Luhai" <luhai.chen@intel.com>
-Date:   Fri, 29 Nov 2019 12:05:16 -0800
-In-Reply-To: <A888B25CD99C1141B7C254171A953E8E49096521@shsmsx102.ccr.corp.intel.com>
-References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
-         <1573659978.17949.83.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
-         <1574877977.3551.5.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E49096521@shsmsx102.ccr.corp.intel.com>
+        Fri, 29 Nov 2019 15:05:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575057953;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RP2PHwp5wZl3ztgeJTb35J2c98KyKZ9pDDlofVv46EI=;
+        b=hrUHVKWMIHROTUGhPXm+0v868zAudvzVEXurJaR8hifulObOGO+9qc+KjZkIE5ewHMg7p3
+        usJEIHYqXDz4rf8yt3yzHBMiHSLk1XL/zskhK6NN3eMSjM5uPGq5BVB//B7sup8LVlVNh+
+        Vdhq1aslXHmCjzECr9NT2GZ9x2gzbNQ=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-281-gag-o1OlNwOMuEHnQhiwSw-1; Fri, 29 Nov 2019 15:05:52 -0500
+Received: by mail-lf1-f72.google.com with SMTP id j16so6446259lfk.2
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 12:05:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zCyHxNb/EFCllk+iZMx0l93yQzrOq+uBxpToCPQHS9k=;
+        b=DUqiIv6QOaYBcUj6lANGWAEN7j9e6Lm/zP6WNxsot0RenxHC13Hg8nonjYu/30O2z1
+         lJQ5skj02cpxc0N+1wwgbqfVhy7NH544FY3krwqHluwxMUYIrkJZIj3YE7/C2AZD7vRN
+         ITinlmZHWXevEiAHYgUiIqih0d91Vbhr6xIkl4dZkpMRtkX6TbicxaIN9XKGvwWtg+dg
+         GLVU/pI1ZtQc93tTwGTIJs+HvMVHlc2GKdR3Ix5Vnskqv5DdWl8CEZLFmncmVAR3T/tx
+         UCHuUg7BnlsVwZ1Lbj49FJXnqHsbu6ylGP/jXfKa2BKxqEwGcnlptFPHk9Ma4iGDDixn
+         NLpQ==
+X-Gm-Message-State: APjAAAXbB3hLZGNYwC6TI5Sspso0Mc3XPHRS/SzEQ8RcURbJA1KMk5Sw
+        xsViQ/jPPxO8ZkHEF4L7ni33AYYZt1MBRbOR8F6BfdVnxO4V2V2gAvxxjgxXS+cZ7U8PiIWL1Sn
+        sdajLEdyEKJ0eGHEFgG2xLQ0wOlrlSQKyoaOnDNYL
+X-Received: by 2002:a2e:9a41:: with SMTP id k1mr12682048ljj.235.1575057949817;
+        Fri, 29 Nov 2019 12:05:49 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz0eILOnKMVbbahC3Rp/NyuV7+7BmZiagne10VkRMygf99/om+7iSrw3qCYWoCJXV2cv5Un/9KS0XCSQp5JswM=
+X-Received: by 2002:a2e:9a41:: with SMTP id k1mr12682025ljj.235.1575057949585;
+ Fri, 29 Nov 2019 12:05:49 -0800 (PST)
+MIME-Version: 1.0
+References: <1574972621-25750-1-git-send-email-bhsharma@redhat.com> <20191129102421.GA28322@willie-the-truck>
+In-Reply-To: <20191129102421.GA28322@willie-the-truck>
+From:   Bhupesh Sharma <bhsharma@redhat.com>
+Date:   Sat, 30 Nov 2019 01:35:36 +0530
+Message-ID: <CACi5LpNQPw41kGsW+d0PyZaC7gSrbgwT2VxwyO5r3j83h-mkEQ@mail.gmail.com>
+Subject: Re: [PATCH v5 0/5] Append new variables to vmcoreinfo (TCR_EL1.T1SZ
+ for arm64 and MAX_PHYSMEM_BITS for all archs)
+To:     Will Deacon <will@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bhupesh SHARMA <bhupesh.linux@gmail.com>, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        kexec mailing list <kexec@lists.infradead.org>,
+        Boris Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Steve Capper <steve.capper@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Dave Anderson <anderson@redhat.com>,
+        Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+X-MC-Unique: gag-o1OlNwOMuEHnQhiwSw-1
+X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-29_07:2019-11-29,2019-11-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- mlxlogscore=999 spamscore=0 lowpriorityscore=0 suspectscore=0
- priorityscore=1501 malwarescore=0 impostorscore=0 adultscore=0
- clxscore=1011 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911290174
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-11-29 at 01:40 +0000, Zhao, Shirley wrote:
-> Hi, James, 
-> 
-> Maybe the TPM command confused you. 
+Hi Will,
 
-Well you did seem to be saying we had a problem in the TPM sealed key
-subsystem.
+On Fri, Nov 29, 2019 at 3:54 PM Will Deacon <will@kernel.org> wrote:
+>
+> On Fri, Nov 29, 2019 at 01:53:36AM +0530, Bhupesh Sharma wrote:
+> > Changes since v4:
+> > ----------------
+> > - v4 can be seen here:
+> >   http://lists.infradead.org/pipermail/kexec/2019-November/023961.html
+> > - Addressed comments from Dave and added patches for documenting
+> >   new variables appended to vmcoreinfo documentation.
+> > - Added testing report shared by Akashi for PATCH 2/5.
+>
+> Please can you fix your mail setup? The last two times you've sent this
+> series it seems to get split into two threads, which is really hard to
+> track in my inbox:
+>
+> First thread:
+>
+> https://lore.kernel.org/lkml/1574972621-25750-1-git-send-email-bhsharma@r=
+edhat.com/
+>
+> Second thread:
+>
+> https://lore.kernel.org/lkml/1574972716-25858-1-git-send-email-bhsharma@r=
+edhat.com/
 
-> The question is I use keyctl command sealed a trusted key with PCR
-> policy, but load it failed after reboot. 
-> I don't know why it was loaded failed. I use TPM command to help find
-> it, it report policy check failed. 
+There seems to be some issue with my server's msmtp settings. I have
+tried resending the v5 (see
+<http://lists.infradead.org/pipermail/linux-arm-kernel/2019-November/696833=
+.html>).
 
-Right, so your question seems to be why after a reboot, the TPM policy
-no longer works to authorize the key even from user space?  My best
-guess would be the PCR value you've sealed it to changed over the
-reboot for some reason.
+I hope the threading is ok this time.
 
-> So my question is how to load the PCR policy sealed trusted key
-> correctly?
+Thanks for your patience.
 
-You have to set the sealing release policy to something you know will
-be invariant across reboots for an unseal to happen reliably.  However,
-usually you also want the unseal to fail if something you don't like
-changes, so you set the policy to be something that's invariant unless
-that happens.  Not really knowing what your conditions are we can't
-really tell you what your policy should look like.
-
-> How to use policydigest and policyhandle correctly. 
-
-I've no real idea how the tpm2_ commands work, but the tsspolicy
-commands all have man pages which do a pretty good explanation.  If I
-infer how your tpm2_ commands seem to be working, I think
-you're sealing to a pcr7 hash?  pcr7 is the one that's supposed to
-measure the secure boot path and properties and as such shouldn't
-change across reboots, so I think your problem becomes finding out why
-it changed.
-
-James
+Regards,
+Bhupesh
 
