@@ -2,108 +2,106 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	TRACKER_ID autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D07C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 15:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BB2C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 15:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 584C2216F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 15:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2525C216F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 15:13:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Uxyrhx29"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dd8tlyCb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbfK2PJy (ORCPT
+        id S1726963AbfK2PN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 10:09:54 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:31896 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbfK2PJx (ORCPT
+        Fri, 29 Nov 2019 10:13:29 -0500
+Received: from mail-qk1-f178.google.com ([209.85.222.178]:37331 "EHLO
+        mail-qk1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726608AbfK2PN2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 10:09:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1575040192;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=0WKSQYG0YP5GIwNWknC0InKQVJvBVr74yYBpeas3RNM=;
-        b=Uxyrhx294kdS1ofE8vxCwKw+LJs9d7S++dU237OTHePzyLZ2MVdQvl8yob9IU6SfCm
-        2Hx7rerm+w72XgfBH/VZP0pryXdVbZYrhXKlf5WLEU8quc1v9BLYN5757sNh1LLvuCoB
-        //Wv3A6+agIuojUt6jUKYmt9Garp2rsFAunWJHLdeyq5BTOIq+RKr7IciQ9dGfV8XxBK
-        +HHNeTfkvrBEq9DZzpFYEr0sRjHXJUuBomTU3pKewL9eoSYK6TUviOWOCODC+d7nvvZw
-        s+rOPuNGDZzBbIhO50pLW6JSN89iJIRfsVUuA0bh858IC5RHrGJ8RgdCMUNWrQPJRyfj
-        nAnQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/vgwDeoHw=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 45.0.2 DYNA|AUTH)
-        with ESMTPSA id y07703vATF9pTbf
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Fri, 29 Nov 2019 16:09:51 +0100 (CET)
+        Fri, 29 Nov 2019 10:13:28 -0500
+Received: by mail-qk1-f178.google.com with SMTP id e187so25829161qkf.4
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 07:13:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=W6egdRMGiTO6yhu5AX3v9UKGMgKCZYWtWcMTq1xiguc=;
+        b=dd8tlyCbL0MV/jdCFG+gVtyZoNki0wz9bCiO9PYILiolX0HJwMUTpCILRsKT0VfFMD
+         9a7a4+hepOHL6TfYW7wDA8PGRZfI07VJ4LjKudFEh614ssIIbOcLRDKDGZWoQlmwiOPo
+         VN5BIOORVVd+U8CtOCgqNLLQZ9i5HGslnPIu+wEG0XjqAOItC9hacvr61Vmwuxgj1as8
+         dw7+x2rd6cPCFKY2i9OzTGZJat0KuNWayEVxE31PCG3iQAg+tOm4Mt2z7Drz2gfqC0Yr
+         uHrJuLlbkepCWFqztmEjKCF1Ud7kKzyfQAPbzWYQ4Rl/JDfIJw5Si4EeXGVJcDMwRb4f
+         ne8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=W6egdRMGiTO6yhu5AX3v9UKGMgKCZYWtWcMTq1xiguc=;
+        b=iAqsF7vFl2bLbIxNJ5pbW3g+aT+x28G3qMlZHFLe3DfBhfVnKxc9iIDRH/LImZlGqQ
+         2HYH9LQ2nyZIG2CNjlEGvhDtm8vTejFxjuI25x8NcBDwcnmkkOeU4rSPV3Yb4U5EvNK9
+         YJfvUEcDydIfgMibXN7pzDFW0wzVrysanCVL13KCW9a5kNGe3RofMHmBYQjJ7Aj5iweo
+         2JBTUrofncsZGoBTaoAZ2w6GQymRmF+oBZXNtSTVga8AAK0/2xrrU6Us43oMnBebljn6
+         pI8WIfdMwazOIinAOzO38jp3P5sIdcgAgVzUheToj6HmoHQxKH3QMDecnJH2D10Lks+m
+         fEkQ==
+X-Gm-Message-State: APjAAAVMFrnNUtjSl0yt10zo3RxAmvZT7DqafO+C3f4kyXWXRGF33Soz
+        OfLg/9TI9+7xAEWXxx0BaL8=
+X-Google-Smtp-Source: APXvYqwOBURrykCZNgLFpWJqdA6UhD0rgc/KnvgW09ESJk9X2ZsmBeCEKUSqTwF/+wM2U/cnRAczmg==
+X-Received: by 2002:a37:bdc4:: with SMTP id n187mr16934395qkf.376.1575040407639;
+        Fri, 29 Nov 2019 07:13:27 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id y91sm11760529qtd.28.2019.11.29.07.13.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Nov 2019 07:13:26 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 234A4405B6; Fri, 29 Nov 2019 12:13:24 -0300 (-03)
+Date:   Fri, 29 Nov 2019 12:13:24 -0300
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: perf probe -d failing to delete probes
+Message-ID: <20191129151324.GA26963@kernel.org>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH] mips: Fix gettimeofday() in the vdso library
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <0b64c6bb-ffc7-059d-3cb3-012092e0fcf0@arm.com>
-Date:   Fri, 29 Nov 2019 16:09:51 +0100
-Cc:     Paul Burton <paulburton@kernel.org>,
-        mips-creator-ci20-dev@googlegroups.com,
-        letux-kernel@openphoenux.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <DCD7A17F-B045-440E-AB66-7F8AB72A19CA@goldelico.com>
-References: <20191129143658.12224-1-vincenzo.frascino@arm.com> <307717BD-3233-4313-BAA8-7431F4C78773@goldelico.com> <0b64c6bb-ffc7-059d-3cb3-012092e0fcf0@arm.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-X-Mailer: Apple Mail (2.3124)
+Content-Disposition: inline
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-> Am 29.11.2019 um 15:58 schrieb Vincenzo Frascino =
-<vincenzo.frascino@arm.com>:
->=20
-> On 11/29/19 2:52 PM, H. Nikolaus Schaller wrote:
->>=20
->>> Am 29.11.2019 um 15:36 schrieb Vincenzo Frascino =
-<vincenzo.frascino@arm.com>:
->>>=20
->>> The libc provides a discovery mechanism for vDSO library and its
->>> symbols. When a symbol is not exposed by the vDSOs the libc falls =
-back
->>> on the system calls.
->>>=20
->>> With the introduction of the unified vDSO library on mips this =
-behavior
->>> is not honored anymore by the kernel in the case of gettimeofday().
->>>=20
->>> The issue has been noticed and reported due to a dhclient failure on =
-the
->>> CI20 board:
->>>=20
->>> root@letux:~# dhclient
->>> ../../../../lib/isc/unix/time.c:200: Operation not permitted
->>> root@letux:~#
->>>=20
->>> Restore the original behavior fixing gettimeofday() in the vDSO =
-library.
->>>=20
->>> Cc: Paul Burton <paulburton@kernel.org>
->>> Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
->>> Testes-by: H. Nikolaus Schaller <hns@goldelico.com> # CI20 with =
-JZ4780
->> ^^^ funny typo... -> Tested-by:
->=20
-> Ops, I copy-pasted it from your email ;) Can't trust you ;)
+Hi Masami,
 
-No :)
+   Can you please take a look at this?
 
-Well, typos happen and nobody seems to notice. My favourite:
+[root@quaco perf]# perf probe -l
+  probe_perf:map__map_ip (on ui__warn_map_erange+222@perf/tools/perf/builtin-top.c in /home/acme/bin/perf)
+  probe_perf:map__map_ip (on ui__warn_map_erange+222@perf/tools/perf/builtin-top.c in /home/acme/bin/perf)
+  probe_perf:map__map_ip (on perf_evlist__set_paused+222@util/evlist.c in /home/acme/bin/perf)
+  probe_perf:map__map_ip (on perf_evlist__resume+222@util/evlist.c in /home/acme/bin/perf)
+  probe_perf:map__map_ip (on perf_evsel__group_desc+222@util/evsel.c in /home/acme/bin/perf)
+  probe_perf:map__map_ip (on svg_partial_wakeline+222@util/svghelper.c in /home/acme/bin/perf)
+[root@quaco perf]# perf probe -d probe_perf:map_*
+"probe_perf:map_*" does not hit any event.
+  Error: Failed to delete events.
+[root@quaco perf]# perf probe -d probe_perf:*
+"probe_perf:*" does not hit any event.
+  Error: Failed to delete events.
+[root@quaco perf]# perf probe -d probe*:*
+"probe*:*" does not hit any event.
+  Error: Failed to delete events.
+[root@quaco perf]# perf probe -d '*:*'
+"*:*" does not hit any event.
+  Error: Failed to delete events.
+[root@quaco perf]#
 
-5f9e832c137075045d15cd6899ab0505cfb2ca4b
-
-BR,
-Nikolaus
-
+- Arnaldo
