@@ -2,146 +2,110 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13ADBC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 05:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D7EC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 05:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4BC820833
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 05:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A6762077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 05:52:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jBqgi2OX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rdmEkGmN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfK2Fqb (ORCPT
+        id S1726819AbfK2FwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 00:46:31 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:34184 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbfK2Fqb (ORCPT
+        Fri, 29 Nov 2019 00:52:01 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45909 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbfK2FwA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 00:46:31 -0500
-Received: by mail-il1-f196.google.com with SMTP id p6so26010831ilp.1;
-        Thu, 28 Nov 2019 21:46:30 -0800 (PST)
+        Fri, 29 Nov 2019 00:52:00 -0500
+Received: by mail-lj1-f194.google.com with SMTP id d20so827474ljc.12;
+        Thu, 28 Nov 2019 21:51:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UeukSdDwiiSgiJFebwv7o38ymarkZLCclxi9kT/TLJY=;
-        b=jBqgi2OXhM53PJuTTmroI75k72bCJvOHMHV08+HLesmvLcf18N2XkDVZzREOvbqnhj
-         WREf6z8VvKHVJjKsia7IhwSv9I1iVh28cArodmOgq9Mye7SOXK7omsqhvnIVlKPSWzaK
-         Anf/SClsiR7/m9uIPQ8i2abUzGeoguiF9FQTWmbbHQsjX06bkoG0cOVGgowF5bt8TFvc
-         Rt0LYK0rKIcehlGh6W/rtE7gwvdmQnTEI9mqvmOPmGe/wIXNPbJKt92n05tnq2rSjZTE
-         BOeEuFbuV7canqF58bE/pVaQFDCve77ktRTtR9+ue2FE2zGxI9h0K/v3sOhtgdln8El8
-         zssQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SZpOjVOBEWa5QEebmVIj3lCqVSR7NBCDtDVquQ2awsU=;
+        b=rdmEkGmNXhSrrSCnLtL5scTcy/manrkI/KCLkqqwqOPnujZt5knlhlRIejGhp2P9xD
+         54ANaSexDgR5PmO2lFzG8tGEmz8ww5hn9N5FIk/GhDOKQFQRq7hnzZdW45FKXnHjn2Wv
+         kAXWzexI2B58j8yPPs+6yanFvUkDoJwD9yGwls6hXVvADMLWgP6KJim7r2nDiGXg3E0F
+         k+StnmXrGOjM9/V2gw6G5BdWN5MmHo6N6Ajp5BgiPauggUI0EaHAKkj1p6NsEMn1nM5d
+         e2KwNBKAWpDjsqHBIKfL+CGwINRdnKEBPaegcnGGRWQHKdLsW/YHDMc/1QYQkOFPw/bW
+         Aoqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UeukSdDwiiSgiJFebwv7o38ymarkZLCclxi9kT/TLJY=;
-        b=MEqxLje1MTLdWyDyGANbaXhI2BCwu2XP76BQ+e87L3BGjjmAYoZ5nvB/biLcGfZY0X
-         DZqCwLhVUe5V/pKEvHiGZlVBCZhAZECjIRZf418eD1qfDB+QcUA6ReX551+AKEhKSxzE
-         fWaVVsqdBN9IIpoKgOEvG1f/Lsz+P1G9sKV3fAjWnkKvDF48BvtXE62C4TrJkyNm/PW9
-         SRiB18u0ekjbBs+3jbNLpxUHGsWWItuAGotqZlUe48N+9uph9vVpwkliVOnAUFquLn/U
-         UV/eZLa6KrwHq16p+gLu4DZ1s2YOe8+KAZKhNkU6I3CvYPPiA3LQZdle3ZEotAWux6Fz
-         JSNg==
-X-Gm-Message-State: APjAAAVGA9zDFM4hpj4b31wWorTs5HDD8TCWpcXsW765sy2CI+uKckM/
-        iXHmq7L7SDgtqDwVj9zP5ZJi2aX6lB1kRnHGw+w=
-X-Google-Smtp-Source: APXvYqx9/KH+KOpP7pYSBhLZwgrvZVqIKBHf0wQdTXvrM6coKa20viLyZHeeJfy0W9pcVdtF96C02BM82HTYDbiKKV4=
-X-Received: by 2002:a92:d450:: with SMTP id r16mr8533331ilm.147.1575006390301;
- Thu, 28 Nov 2019 21:46:30 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SZpOjVOBEWa5QEebmVIj3lCqVSR7NBCDtDVquQ2awsU=;
+        b=swSouhz7nlImPDZ8Y4kUt4XTn5JogvJgukXJ7FUhaAdQ6HKcEMY8rcilJTMOV2+Sv5
+         /BaMpvZ6FJW1JKSNYYf8OK6RFA5H+pCJ3iR1Pdz/yU+vlZVrZATwn3Eo4Bonl6EYn4J8
+         iPMINNLVyxWJwHEWADKt6uTyYgRNFM6Yp/GksFJoR+2wyb0gu+CZ9SLOBLiiOitDiOAD
+         /uHhdboyagghSohLPOM1+w/oNZF6S4fq1xdVb4a4PYMEkhpQ4YBrPg5riQJMsOQnzKcf
+         bTJJ/QFB7oxCPPpGxFmxIZAF2J80KCxvhXVC/huUOJnWdm1KJ511VjYLKyqcEEHeZ/uZ
+         3Suw==
+X-Gm-Message-State: APjAAAV2671VdeSdPq3dbV7yVl+7CirJoVAUwH9Tl5BoYXy2ACHhWg3l
+        aMgh79pTo042I6bdBIe2XskXm7sW
+X-Google-Smtp-Source: APXvYqxS34TDkOASGRrtqZPgAYcCDvME02nHh565x/b/A1YYSaMqNNJSShvSF4t0QLHQTJSaMbV1Dw==
+X-Received: by 2002:a2e:9a04:: with SMTP id o4mr3961237lji.214.1575006716470;
+        Thu, 28 Nov 2019 21:51:56 -0800 (PST)
+Received: from octofox.hsd1.ca.comcast.net (jcmvbkbc-1-pt.tunnel.tserv24.sto1.ipv6.he.net. [2001:470:27:1fa::2])
+        by smtp.gmail.com with ESMTPSA id e14sm11007948ljj.36.2019.11.28.21.51.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Nov 2019 21:51:55 -0800 (PST)
+From:   Max Filippov <jcmvbkbc@gmail.com>
+To:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        Max Filippov <jcmvbkbc@gmail.com>
+Subject: [PATCH] tools/testing/selftests/seccomp: change USER_NOTIF_MAGIC definition
+Date:   Thu, 28 Nov 2019 21:51:28 -0800
+Message-Id: <20191129055128.25952-1-jcmvbkbc@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191127203114.766709977@linuxfoundation.org> <CA+G9fYuAY+14aPiRVUcXLbsr5zJ-GLjULX=s9jcGWcw_vb5Kzw@mail.gmail.com>
- <20191128073623.GE3317872@kroah.com>
-In-Reply-To: <20191128073623.GE3317872@kroah.com>
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Date:   Fri, 29 Nov 2019 06:46:23 +0100
-Message-ID: <CAKXUXMy_=gVVw656AL5Rih_DJrdrFLoURS-et0+dpJ2cKaw6SQ@mail.gmail.com>
-Subject: Re: [PATCH 4.19 000/306] 4.19.87-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        =?UTF-8?Q?Jouni_H=C3=B6gander?= <jouni.hogander@unikie.com>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 8:37 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Nov 28, 2019 at 12:23:41PM +0530, Naresh Kamboju wrote:
-> > On Thu, 28 Nov 2019 at 02:25, Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > This is the start of the stable review cycle for the 4.19.87 release.
-> > > There are 306 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> > >
-> > > Responses should be made by Fri, 29 Nov 2019 20:18:09 +0000.
-> > > Anything received after that time might be too late.
-> > >
-> > > The whole patch series can be found in one patch at:
-> > >         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.87-rc1.gz
-> > > or in the git tree and branch at:
-> > >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> > > and the diffstat can be found below.
-> > >
-> > > thanks,
-> > >
-> > > greg k-h
-> >
-> > Kernel BUG noticed on x86_64 device while booting 4.19.87-rc1 kernel.
-> >
-> > The problematic patch is,
-> >
-> > > Jouni Hogander <jouni.hogander@unikie.com>
-> > >     net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject
-> >
-> > And this kernel panic is been fixed by below patch,
-> >
-> > commit 48a322b6f9965b2f1e4ce81af972f0e287b07ed0
-> > Author: Eric Dumazet <edumazet@google.com>
-> > Date:   Wed Nov 20 19:19:07 2019 -0800
-> >
-> >     net-sysfs: fix netdev_queue_add_kobject() breakage
-> >
-> >     kobject_put() should only be called in error path.
-> >
-> >     Fixes: b8eb718348b8 ("net-sysfs: Fix reference count leak in
-> > rx|netdev_queue_add_kobject")
-> >     Signed-off-by: Eric Dumazet <edumazet@google.com>
-> >     Cc: Jouni Hogander <jouni.hogander@unikie.com>
-> >     Signed-off-by: David S. Miller <davem@davemloft.net>
->
-> Now queued up, I'll push out -rc2 versions with this fix.
->
-> greg k-h
+USER_NOTIF_MAGIC is used to both initialize seccomp_notif_resp::val and
+verify syscall resturn value. On 32-bit architectures syscall return
+value has type long, but the value of USER_NOTIF_MAGIC has type long
+long because it doesn't fit into long. As a result all syscall return
+value comparisons with USER_NOTIF_MAGIC are false. This is also reported
+by the compiler when '-W' is added to CFLAGS.
 
-We have also been informed about another regression these two commits
-are causing:
+Add explicit type cast to USER_NOTIF_MAGIC definition.
+This fixes the following seccomp_bpf tests on 32-bit architectures:
+ global.user_notification_basic
+ global.user_notification_child_pid_ns
+ global.user_notification_sibling_pid_ns
+ global.user_notification_fault_recv
 
-https://lore.kernel.org/lkml/ace19af4-7cae-babd-bac5-cd3505dcd874@I-love.SAKURA.ne.jp/
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+---
+ tools/testing/selftests/seccomp/seccomp_bpf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I suggest to drop these two patches from this queue, and give us a
-week to shake out the regressions of the change, and once ready, we
-can include the complete set of fixes to stable (probably in a week or
-two).
+diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+index 7f8b5c8982e3..16cc30e2ade4 100644
+--- a/tools/testing/selftests/seccomp/seccomp_bpf.c
++++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+@@ -3077,7 +3077,7 @@ static int user_trap_syscall(int nr, unsigned int flags)
+ 	return seccomp(SECCOMP_SET_MODE_FILTER, flags, &prog);
+ }
+ 
+-#define USER_NOTIF_MAGIC 116983961184613L
++#define USER_NOTIF_MAGIC ((unsigned long)116983961184613L)
+ TEST(user_notification_basic)
+ {
+ 	pid_t pid;
+-- 
+2.20.1
 
-Lukas
