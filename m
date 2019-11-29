@@ -4,306 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDE1C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC64C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92F1221771
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E14C21736
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:26:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbfK2R0N (ORCPT
+        id S1727287AbfK2RZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 12:26:13 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58885 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727355AbfK2RZr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 12:25:47 -0500
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iak1U-0003DC-N6; Fri, 29 Nov 2019 18:25:40 +0100
-Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iak1S-0003Ae-Nq; Fri, 29 Nov 2019 18:25:38 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     support.opensource@diasemi.com, lee.jones@linaro.org,
-        robh+dt@kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, joel@jms.id.au, andrew@aj.id.au,
-        lgirdwood@gmail.com, broonie@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
-Subject: [PATCH v3 6/6] regulator: da9062: add gpio based regulator dis-/enable support
-Date:   Fri, 29 Nov 2019 18:25:37 +0100
-Message-Id: <20191129172537.31410-7-m.felsch@pengutronix.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191129172537.31410-1-m.felsch@pengutronix.de>
-References: <20191129172537.31410-1-m.felsch@pengutronix.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Fri, 29 Nov 2019 12:25:43 -0500
+Received: from mga14.intel.com ([192.55.52.115]:64172 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727244AbfK2RZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 12:25:41 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Nov 2019 09:25:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,257,1571727600"; 
+   d="scan'208";a="241109008"
+Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
+  by fmsmga002.fm.intel.com with ESMTP; 29 Nov 2019 09:25:39 -0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, jmattson@google.com,
+        sean.j.christopherson@intel.com
+Cc:     yu.c.zhang@linux.intel.com, alazar@bitdefender.com,
+        edwin.zhai@intel.com, Yang Weijiang <weijiang.yang@intel.com>
+Subject: [PATCH v8 08/10] mmu: spp: Handle SPP protected pages when VM memory changes
+Date:   Sat, 30 Nov 2019 01:27:07 +0800
+Message-Id: <20191129172709.11347-9-weijiang.yang@intel.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20191129172709.11347-1-weijiang.yang@intel.com>
+References: <20191129172709.11347-1-weijiang.yang@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Each regulator can be enabeld/disabled by the internal pmic state
-machine or by a gpio input signal. Typically the OTP configures the
-regulators to be enabled/disabled on a specific sequence number which is
-most the time fine. Sometimes we need to reconfigure that due to a PCB
-bug. This patch adds the support to disable/enable the regulator based
-on a gpio input signal.
+Host page swapping/migration may change the translation in
+EPT leaf entry, if the target page is SPP protected,
+re-enable SPP protection in MMU notifier. If SPPT shadow
+page is reclaimed, the level1 pages don't have rmap to clear.
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
 ---
-v3:
-- add comment on reg_field
-- append ena_gpi to da9062_regulator_info instead of insert it in the
-  middle
----
- drivers/regulator/da9062-regulator.c | 88 +++++++++++++++++++++++++++-
- 1 file changed, 86 insertions(+), 2 deletions(-)
+ arch/x86/kvm/mmu/mmu.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9062-regulator.c
-index 6117e631236b..79b08029282a 100644
---- a/drivers/regulator/da9062-regulator.c
-+++ b/drivers/regulator/da9062-regulator.c
-@@ -62,8 +62,13 @@ struct da9062_regulator_info {
- 	 * vsel_gpi:
- 	 * The input port which is used by a regulator to select between
- 	 * voltage-a/b settings.
-+	 *
-+	 * ena_gpi:
-+	 * The input port which is used by a regulator to en-/disable its
-+	 * output.
- 	 */
- 	struct reg_field vsel_gpi;
-+	struct reg_field ena_gpi;
- };
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 2a407c74427d..410ddc234b46 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -1828,6 +1828,19 @@ static int kvm_set_pte_rmapp(struct kvm *kvm, struct kvm_rmap_head *rmap_head,
+ 			new_spte &= ~PT_WRITABLE_MASK;
+ 			new_spte &= ~SPTE_HOST_WRITEABLE;
  
- /* Single regulator settings */
-@@ -78,6 +83,7 @@ struct da9062_regulator {
- 	struct regmap_field			*sleep;
- 	struct regmap_field			*suspend_sleep;
- 	struct regmap_field			*vsel_gpi;
-+	struct regmap_field			*ena_gpi;
- };
- 
- /* Encapsulates all information for the regulators driver */
-@@ -423,7 +429,10 @@ static int da9062_config_gpi(struct device_node *np,
- 		goto free;
- 	}
- 
--	ret = regmap_field_write(regl->vsel_gpi, nr);
-+	if (!strncmp(gpi_id, "ena", 3))
-+		ret = regmap_field_write(regl->ena_gpi, nr);
-+	else
-+		ret = regmap_field_write(regl->vsel_gpi, nr);
- 
- free:
- 	kfree(prop);
-@@ -436,7 +445,13 @@ static int da9062_parse_dt(struct device_node *np,
- 			   const struct regulator_desc *desc,
- 			   struct regulator_config *cfg)
- {
--	return da9062_config_gpi(np, desc, cfg, "vsel");
-+	int error;
++			/*
++			 * if it's EPT leaf entry and the physical page is
++			 * SPP protected, then re-enable SPP protection for
++			 * the page.
++			 */
++			if (kvm->arch.spp_active &&
++			    level == PT_PAGE_TABLE_LEVEL) {
++				u32 *access = gfn_to_subpage_wp_info(slot, gfn);
 +
-+	error = da9062_config_gpi(np, desc, cfg, "vsel");
-+	if (error)
-+		return error;
++				if (access && *access != FULL_SPP_ACCESS)
++					new_spte |= PT_SPP_MASK;
++			}
 +
-+	return da9062_config_gpi(np, desc, cfg, "ena");
- }
+ 			new_spte = mark_spte_for_access_track(new_spte);
  
- /* DA9061 Regulator information */
-@@ -481,6 +496,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_VBUCK1_GPI_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_VBUCK1_GPI_MASK) - 1),
-+		.ena_gpi = REG_FIELD(DA9062AA_BUCK1_CONT,
-+			__builtin_ffs((int)DA9062AA_BUCK1_GPI_MASK) - 1,
-+			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_BUCK1_GPI_MASK) - 1),
- 	},
- 	{
- 		.desc.id = DA9061_ID_BUCK2,
-@@ -522,6 +541,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_VBUCK3_GPI_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_VBUCK3_GPI_MASK) - 1),
-+		.ena_gpi = REG_FIELD(DA9062AA_BUCK3_CONT,
-+			__builtin_ffs((int)DA9062AA_BUCK3_GPI_MASK) - 1,
-+			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_BUCK3_GPI_MASK) - 1),
- 	},
- 	{
- 		.desc.id = DA9061_ID_BUCK3,
-@@ -563,6 +586,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_VBUCK4_GPI_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_VBUCK4_GPI_MASK) - 1),
-+		.ena_gpi = REG_FIELD(DA9062AA_BUCK4_CONT,
-+			__builtin_ffs((int)DA9062AA_BUCK4_GPI_MASK) - 1,
-+			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_BUCK4_GPI_MASK) - 1),
- 	},
- 	{
- 		.desc.id = DA9061_ID_LDO1,
-@@ -597,6 +624,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_VLDO1_GPI_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_VLDO1_GPI_MASK) - 1),
-+		.ena_gpi = REG_FIELD(DA9062AA_LDO1_CONT,
-+			__builtin_ffs((int)DA9062AA_LDO1_GPI_MASK) - 1,
-+			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_LDO1_GPI_MASK) - 1),
- 		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
- 			__builtin_ffs((int)DA9062AA_LDO1_ILIM_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -635,6 +666,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_VLDO2_GPI_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_VLDO2_GPI_MASK) - 1),
-+		.ena_gpi = REG_FIELD(DA9062AA_LDO2_CONT,
-+			__builtin_ffs((int)DA9062AA_LDO2_GPI_MASK) - 1,
-+			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_LDO2_GPI_MASK) - 1),
- 		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
- 			__builtin_ffs((int)DA9062AA_LDO2_ILIM_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -673,6 +708,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_VLDO3_GPI_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_VLDO3_GPI_MASK) - 1),
-+		.ena_gpi = REG_FIELD(DA9062AA_LDO3_CONT,
-+			__builtin_ffs((int)DA9062AA_LDO3_GPI_MASK) - 1,
-+			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_LDO3_GPI_MASK) - 1),
- 		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
- 			__builtin_ffs((int)DA9062AA_LDO3_ILIM_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -711,6 +750,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_VLDO4_GPI_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_VLDO4_GPI_MASK) - 1),
-+		.ena_gpi = REG_FIELD(DA9062AA_LDO4_CONT,
-+			__builtin_ffs((int)DA9062AA_LDO4_GPI_MASK) - 1,
-+			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_LDO4_GPI_MASK) - 1),
- 		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
- 			__builtin_ffs((int)DA9062AA_LDO4_ILIM_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -760,6 +803,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_VBUCK1_GPI_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_VBUCK1_GPI_MASK) - 1),
-+		.ena_gpi = REG_FIELD(DA9062AA_BUCK1_CONT,
-+			__builtin_ffs((int)DA9062AA_BUCK1_GPI_MASK) - 1,
-+			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_BUCK1_GPI_MASK) - 1),
- 	},
- 	{
- 		.desc.id = DA9062_ID_BUCK2,
-@@ -801,6 +848,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_VBUCK2_GPI_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_VBUCK2_GPI_MASK) - 1),
-+		.ena_gpi = REG_FIELD(DA9062AA_BUCK2_CONT,
-+			__builtin_ffs((int)DA9062AA_BUCK2_GPI_MASK) - 1,
-+			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_BUCK2_GPI_MASK) - 1),
- 	},
- 	{
- 		.desc.id = DA9062_ID_BUCK3,
-@@ -842,6 +893,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_VBUCK3_GPI_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_VBUCK3_GPI_MASK) - 1),
-+		.ena_gpi = REG_FIELD(DA9062AA_BUCK3_CONT,
-+			__builtin_ffs((int)DA9062AA_BUCK3_GPI_MASK) - 1,
-+			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_BUCK3_GPI_MASK) - 1),
- 	},
- 	{
- 		.desc.id = DA9062_ID_BUCK4,
-@@ -883,6 +938,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_VBUCK4_GPI_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_VBUCK4_GPI_MASK) - 1),
-+		.ena_gpi = REG_FIELD(DA9062AA_BUCK4_CONT,
-+			__builtin_ffs((int)DA9062AA_BUCK4_GPI_MASK) - 1,
-+			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_BUCK4_GPI_MASK) - 1),
- 	},
- 	{
- 		.desc.id = DA9062_ID_LDO1,
-@@ -917,6 +976,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_VLDO1_GPI_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_VLDO1_GPI_MASK) - 1),
-+		.ena_gpi = REG_FIELD(DA9062AA_LDO1_CONT,
-+			__builtin_ffs((int)DA9062AA_LDO1_GPI_MASK) - 1,
-+			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_LDO1_GPI_MASK) - 1),
- 		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
- 			__builtin_ffs((int)DA9062AA_LDO1_ILIM_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -955,6 +1018,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_VLDO2_GPI_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_VLDO2_GPI_MASK) - 1),
-+		.ena_gpi = REG_FIELD(DA9062AA_LDO2_CONT,
-+			__builtin_ffs((int)DA9062AA_LDO2_GPI_MASK) - 1,
-+			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_LDO2_GPI_MASK) - 1),
- 		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
- 			__builtin_ffs((int)DA9062AA_LDO2_ILIM_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -993,6 +1060,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_VLDO3_GPI_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_VLDO3_GPI_MASK) - 1),
-+		.ena_gpi = REG_FIELD(DA9062AA_LDO3_CONT,
-+			__builtin_ffs((int)DA9062AA_LDO3_GPI_MASK) - 1,
-+			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_LDO3_GPI_MASK) - 1),
- 		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
- 			__builtin_ffs((int)DA9062AA_LDO3_ILIM_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -1031,6 +1102,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_VLDO4_GPI_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_VLDO4_GPI_MASK) - 1),
-+		.ena_gpi = REG_FIELD(DA9062AA_LDO4_CONT,
-+			__builtin_ffs((int)DA9062AA_LDO4_GPI_MASK) - 1,
-+			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_LDO4_GPI_MASK) - 1),
- 		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
- 			__builtin_ffs((int)DA9062AA_LDO4_ILIM_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -1160,6 +1235,15 @@ static int da9062_regulator_probe(struct platform_device *pdev)
- 				return PTR_ERR(regl->vsel_gpi);
- 		}
- 
-+		if (regl->info->ena_gpi.reg) {
-+			regl->ena_gpi = devm_regmap_field_alloc(
-+					&pdev->dev,
-+					chip->regmap,
-+					regl->info->ena_gpi);
-+			if (IS_ERR(regl->ena_gpi))
-+				return PTR_ERR(regl->ena_gpi);
-+		}
-+
- 		/* Register regulator */
- 		memset(&config, 0, sizeof(config));
- 		config.dev = chip->dev;
+ 			mmu_spte_clear_track_bits(sptep);
+@@ -2677,6 +2690,10 @@ static bool mmu_page_zap_pte(struct kvm *kvm, struct kvm_mmu_page *sp,
+ 	pte = *spte;
+ 	if (is_shadow_present_pte(pte)) {
+ 		if (is_last_spte(pte, sp->role.level)) {
++			/* SPPT leaf entries don't have rmaps*/
++			if (sp->role.level == PT_PAGE_TABLE_LEVEL &&
++			    is_spp_spte(sp))
++				return true;
+ 			drop_spte(kvm, spte);
+ 			if (is_large_pte(pte))
+ 				--kvm->stat.lpages;
 -- 
-2.20.1
+2.17.2
 
