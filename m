@@ -2,168 +2,176 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 788FBC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 16:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB13C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 16:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F335208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 16:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B357821774
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 16:49:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b="T3nzqIBx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pY9tvyaz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfK2QqV (ORCPT
+        id S1727107AbfK2Qsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 11:46:21 -0500
-Received: from www.linux-watchdog.org ([185.87.125.42]:45454 "EHLO
-        www.linux-watchdog.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726909AbfK2QqV (ORCPT
+        Fri, 29 Nov 2019 11:48:51 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33443 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726909AbfK2Qsu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 11:46:21 -0500
-Received: by www.linux-watchdog.org (Postfix, from userid 500)
-        id D55BD40982; Fri, 29 Nov 2019 17:00:45 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 www.linux-watchdog.org D55BD40982
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-watchdog.org;
-        s=odk20180602; t=1575043245;
-        bh=UUAnjyGizUx/JWccsMa20s8W2efB6yHvwHkFZXoG49Q=;
-        h=Date:From:To:Cc:Subject:From;
-        b=T3nzqIBxiGeuvNMCtOAx3DR4Q7m3DtAbCTwA841PjaLPXzlkHT86rDBFOmiv6EySS
-         TW2X2WRNudkmV7mbDa76eG3DEc4iablTr5eFKcwo4sTJTU95+x7pJ0AvdR+66QdA3E
-         PhVFJrpiBYPVVhM8QKkhcdhTZyibCm07JooPo2XQ=
-Date:   Fri, 29 Nov 2019 17:00:45 +0100
-From:   Wim Van Sebroeck <wim@linux-watchdog.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Borislav Petkov <bp@suse.de>,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Joel Stanley <joel@jms.id.au>, Julia Cartwright <julia@ni.com>,
-        Kevin Hao <haokexin@gmail.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Shuiqing Li <shuiqing.li@unisoc.com>,
-        Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>
-Subject: [GIT PULL REQUEST] watchdog - v5.5 Merge window
-Message-ID: <20191129160045.GA1996@www.linux-watchdog.org>
+        Fri, 29 Nov 2019 11:48:50 -0500
+Received: by mail-ed1-f68.google.com with SMTP id a24so26228950edt.0;
+        Fri, 29 Nov 2019 08:48:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UufnYlf2GsYCPyzbkkHk/dTVOPXtueY9E5VYzdhLqUs=;
+        b=pY9tvyazS85bTfSIan9LQaMzwCiangviUqIczyltzkqih6hrGj2G5d8O0oWBBg2DVo
+         YKL90Vfw4gTHQYAwP3UzR3vqm8iE1gjZADNDnRVnfzBsdv7S2hS7H4QX3kkiPzhGnmzY
+         4wVayL16J93zLdJ15b7j5ISMap+5xu91iJFnxOgsNWTBlyKkzkb0JON4vI+PZXXNupXi
+         PhYlFRfJpxg07Skq3LYOGnO4bnMpne6RmIJFZKxdNwJ0Ycwf0YsGBmfrefQDDtfIGyM3
+         taNJpZYsFQkWfAI3yksn8Bv0Z/bQeLW6vRY8dZnZlZyeMd3MJHGO6Idu2N0NWjYEbmSU
+         9u4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UufnYlf2GsYCPyzbkkHk/dTVOPXtueY9E5VYzdhLqUs=;
+        b=BgRrdsTE+YYd25k8RU1bZuTcqyoEY2cXqsJjNfWhFuKVmCZAn7PXhn7rdnsca8aM57
+         d1ylgStbPm0NKBQ4me2pbPJqp9Pi1TDCTtOi4+XMwzhg0wZzzsB9sfVnoPo/hudBp8Cn
+         KFYHHXXWw4HSo27aWUD/p1hJ6tS+pnx2xSw3bZtQOxeCP8IATbx32gcWLAks1K79Weu6
+         Xr3yCz8i0LMYLsAvz4xu1aSpllDaKyH5A681pnHiLNfgSxmuptsZelEIV2T7gaD+unnW
+         NO0MSwhKd64xrSgucAYkpwoeGHWo0rHFRuox3TYqiq/Pr6PjItvlLm9xeDNdaNZJHwDH
+         sbzg==
+X-Gm-Message-State: APjAAAWhvl/a04HDuFN9vnTNWXtHbOouAl7B7lLanNNiVokSDihQC5Pp
+        F53FRU1Zzb1uSyC30G6hXWjrRk+5blRrWbvXzeQfarY2
+X-Google-Smtp-Source: APXvYqxMCZ12ZTAFseqpRkfanwT5QgN0HgMTMYKPNJBhwzpA+ToKqjaShI3w7o9le0g6Sk6wWYbkA/1kj05qoecE0lo=
+X-Received: by 2002:a50:9fcb:: with SMTP id c69mr46409317edf.163.1575046127828;
+ Fri, 29 Nov 2019 08:48:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.20 (2009-12-10)
+References: <1575010545-25971-1-git-send-email-harigovi@codeaurora.org> <1575010545-25971-2-git-send-email-harigovi@codeaurora.org>
+In-Reply-To: <1575010545-25971-2-git-send-email-harigovi@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Fri, 29 Nov 2019 08:48:34 -0800
+Message-ID: <CAF6AEGt8zuKWz-e_yRS_hbn6HV6DAXDvK4zwjJ-naQtEoe7uuA@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH v1 1/2] dt-bindings: display: add sc7180 panel variant
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        nganji@codeaurora.org, Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Thu, Nov 28, 2019 at 10:56 PM Harigovindan P <harigovi@codeaurora.org> wrote:
+>
+> Add a compatible string to support sc7180 panel version.
+>
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+> ---
+>  .../bindings/display/visionox,rm69299.txt          | 68 ++++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+>  create mode 100755 Documentation/devicetree/bindings/display/visionox,rm69299.txt
+>
+> diff --git a/Documentation/devicetree/bindings/display/visionox,rm69299.txt b/Documentation/devicetree/bindings/display/visionox,rm69299.txt
+> new file mode 100755
+> index 0000000..4622191
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/visionox,rm69299.txt
+> @@ -0,0 +1,68 @@
+> +Visionox model RM69299 DSI display driver
+> +
+> +The Visionox RM69299 is a generic display driver, currently only configured
+> +for use in the 1080p display on the Qualcomm SC7180 MTP board.
+> +
+> +Required properties:
+> +- compatible: should be "visionox,rm69299-1080p-display"
+> +- vdda-supply: phandle of the regulator that provides the supply voltage
+> +  Power IC supply
+> +- vdd3p3-supply: phandle of the regulator that provides the supply voltage
+> +  Power IC supply
+> +- reset-gpios: phandle of gpio for reset line
+> +  This should be 8mA, gpio can be configured using mux, pinctrl, pinctrl-names
+> +  (active low)
+> +- mode-gpios: phandle of the gpio for choosing the mode of the display
+> +  for single DSI
+> +- ports: This device has one video port driven by one DSI. Their connections
+> +  are modeled using the OF graph bindings specified in
+> +  Documentation/devicetree/bindings/graph.txt.
+> +  - port@0: DSI input port driven by master DSI
+> +
+> +Example:
+> +
+> +       dsi@ae94000 {
+> +               panel@0 {
+> +                       compatible = "visionox,rm69299-1080p-display";
+> +                       reg = <0>;
+> +
+> +                       vdda-supply = <&src_pp1800_l8c>;
+> +                       vdd3p3-supply = <&src_pp2800_l18a>;
+> +
+> +                       pinctrl-names = "default", "suspend";
+> +                       pinctrl-0 = <&disp_pins_default>;
+> +                       pinctrl-1 = <&disp_pins_default>;
+> +
+> +                       reset-gpios = <&pm6150l_gpios 3 0>;
+> +
+> +                       display-timings {
+> +                               timing0: timing-0 {
+> +                                       /* originally
+> +                                        * 268316160 Mhz,
+> +                                        * but value below fits
+> +                                        * better w/ downstream
+> +                                        */
+> +                                       clock-frequency = <158695680>;
+> +                                       hactive = <1080>;
+> +                                       vactive = <2248>;
+> +                                       hfront-porch = <26>;
+> +                                       hback-porch = <36>;
+> +                                       hsync-len = <2>;
+> +                                       vfront-porch = <56>;
+> +                                       vback-porch = <4>;
+> +                                       vsync-len = <4>;
+> +                               };
 
-Please pull the watchdog changes for the v5.5 release cycle.
+why do we specify timings in dt?  Would the panel use different
+timings on a different board?
 
-This series contains:
-* Support for NCT6116D
-* Several small fixes and improvements
+BR,
+-R
 
-The output from git request-pull:
-----------------------------------------------------------------
-The following changes since commit 31f4f5b495a62c9a8b15b1c3581acd5efeb9af8c:
-
-  Linux 5.4-rc7 (2019-11-10 16:17:15 -0800)
-
-are available in the git repository at:
-
-  git://www.linux-watchdog.org/linux-watchdog.git tags/linux-watchdog-5.5-rc1
-
-for you to fetch changes up to 33c26ab4d6beec44bd5f525ffba1c23bf962d4a7:
-
-  watchdog: jz4740: Drop dependency on MACH_JZ47xx (2019-11-18 20:14:47 +0100)
-
-----------------------------------------------------------------
-linux-watchdog 5.5-rc1 tag
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      watchdog: intel-mid_wdt: Add WATCHDOG_NOWAYOUT support
-
-Anson Huang (3):
-      watchdog: imx2_wdt: Remove unnecessary blank line
-      watchdog: imx2_wdt: Use __maybe_unused instead of #if CONFIG_PM_SLEEP
-      watchdog: imx2_wdt: Use 'dev' instead of dereferencing it repeatedly
-
-Borislav Petkov (1):
-      watchdog: sbc7240_wdt: Fix yet another -Wimplicit-fallthrough warning
-
-Eugen Hristev (2):
-      watchdog: sama5d4_wdt: cleanup the bit definitions
-      dt-bindings: watchdog: sama5d4_wdt: add microchip,sam9x60-wdt compatible
-
-Fabio Estevam (5):
-      watchdog: imx7ulp: Pass the wdog instance inimx7ulp_wdt_enable()
-      watchdog: imx7ulp: Remove unused structure member
-      watchdog: imx7ulp: Remove inline annotations
-      watchdog: imx7ulp: Use definitions instead of magic values
-      watchdog: imx7ulp: Fix reboot hang
-
-Geert Uytterhoeven (1):
-      watchdog: wdat_wdt: Spelling s/configrable/configurable/
-
-Joel Stanley (1):
-      watchdog: aspeed: Fix clock behaviour for ast2600
-
-Julia Cartwright (1):
-      watchdog: prevent deferral of watchdogd wakeup on RT
-
-Kevin Hao (1):
-      watchdog: Fix the race between the release of watchdog_core_data and cdev
-
-Matti Vaittinen (1):
-      watchdog: bd70528: Trivial function documentation fix
-
-Michal Simek (1):
-      watchdog: cadence: Do not show error in case of deferred probe
-
-Paul Cercueil (3):
-      watchdog: jz4740: Use WDT clock provided by TCU driver
-      watchdog: jz4740: Use regmap provided by TCU driver
-      watchdog: jz4740: Drop dependency on MACH_JZ47xx
-
-Rasmus Villemoes (1):
-      watchdog: make nowayout sysfs file writable
-
-Shuiqing Li (1):
-      watchdog: sprd: Fix the incorrect pointer getting from driver data
-
-Srikanth Krishnakar (1):
-      watchdog: w83627hf_wdt: Support NCT6116D
-
- Documentation/ABI/testing/sysfs-class-watchdog     |   9 +-
- .../bindings/watchdog/atmel-sama5d4-wdt.txt        |   2 +-
- drivers/watchdog/Kconfig                           |   5 +-
- drivers/watchdog/aspeed_wdt.c                      |  16 +--
- drivers/watchdog/at91sam9_wdt.h                    |  34 ++++---
- drivers/watchdog/bd70528_wdt.c                     |   4 +-
- drivers/watchdog/cadence_wdt.c                     |   6 +-
- drivers/watchdog/imx2_wdt.c                        |  30 +++---
- drivers/watchdog/imx7ulp_wdt.c                     |  45 ++++++---
- drivers/watchdog/intel-mid_wdt.c                   |   1 +
- drivers/watchdog/jz4740_wdt.c                      | 108 ++++++++++-----------
- drivers/watchdog/sbc7240_wdt.c                     |   3 +-
- drivers/watchdog/sprd_wdt.c                        |   6 +-
- drivers/watchdog/w83627hf_wdt.c                    |  11 ++-
- drivers/watchdog/watchdog_dev.c                    | 101 +++++++++++--------
- drivers/watchdog/wdat_wdt.c                        |   2 +-
- 16 files changed, 214 insertions(+), 169 deletions(-)
-----------------------------------------------------------------
-
-Kind regards,
-Wim.
-
+> +                       };
+> +
+> +                       ports {
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +                               port@0 {
+> +                                       reg = <0>;
+> +                                       panel0_in: endpoint {
+> +                                               remote-endpoint = <&dsi0_out>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +       };
+> --
+> 2.7.4
+>
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
