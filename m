@@ -2,24 +2,24 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A24C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A45C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32C2A21736
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F53421736
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:46:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfK2OqR (ORCPT
+        id S1727076AbfK2OqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 09:46:17 -0500
+        Fri, 29 Nov 2019 09:46:23 -0500
 Received: from mail-sz.amlogic.com ([211.162.65.117]:43435 "EHLO
         mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbfK2OqR (ORCPT
+        with ESMTP id S1727005AbfK2OqW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 09:46:17 -0500
+        Fri, 29 Nov 2019 09:46:22 -0500
 Received: from droid15-sz.amlogic.com (10.28.8.25) by mail-sz.amlogic.com
  (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 29 Nov 2019
  22:46:36 +0800
@@ -38,10 +38,12 @@ CC:     Jian Hu <jian.hu@amlogic.com>, Kevin Hilman <khilman@baylibre.com>,
         <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v3 0/7] add Amlogic A1 clock controller driver
-Date:   Fri, 29 Nov 2019 22:45:58 +0800
-Message-ID: <20191129144605.182774-1-jian.hu@amlogic.com>
+Subject: [PATCH v3 1/7] dt-bindings: clock: meson: add A1 PLL clock controller bindings
+Date:   Fri, 29 Nov 2019 22:45:59 +0800
+Message-ID: <20191129144605.182774-2-jian.hu@amlogic.com>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191129144605.182774-1-jian.hu@amlogic.com>
+References: <20191129144605.182774-1-jian.hu@amlogic.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -51,64 +53,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add support for Amlogic A1 clock driver, the clock includes 
-three parts: peripheral clocks, pll clocks, CPU clocks.
-sys pll and CPU clocks will be sent in next patch.
+Add the documentation to support Amlogic A1 PLL clock driver,
+and add A1 PLL clock controller bindings.
 
-Changes since v1 at [2]:
--add probe function for A1
--seperate the clock driver into two patch
--change some clock flags and ops
--add support for a1 PLL ops
--add A1 clock node
-
-Changes since v1 at [1]:
--place A1 config alphabetically
--add actual reason for RO ops, CLK_IS_CRITICAL, CLK_IGNORE_UNUSED
--separate the driver into two driver: peripheral and pll driver
--delete CLK_IGNORE_UNUSED flag for pwm b/c/d/e/f clock, dsp clock
--delete the change in Kconfig.platforms, address to Kevin alone
--remove the useless comments
--modify the meson pll driver to support A1 PLLs
-
-[1] https://lkml.kernel.org/r/1569411888-98116-1-git-send-email-jian.hu@amlogic.com
-[2] https://lkml.kernel.org/r/1571382865-41978-1-git-send-email-jian.hu@amlogic.com
-
-Jian Hu (7):
-  dt-bindings: clock: meson: add A1 PLL clock controller bindings
-  clk: meson: add support for A1 PLL clock ops
-  clk: meson: eeclk: refactor eeclk common driver to support A1
-  clk: meson: a1: add support for Amlogic A1 PLL clock driver
-  dt-bindings: clock: meson: add A1 peripheral clock controller bindings
-  clk: meson: a1: add support for Amlogic A1 Peripheral clock driver
-  arm64: dts: meson: add A1 PLL and periphs clock controller
-
- .../bindings/clock/amlogic,a1-clkc.yaml       |   70 +
- .../bindings/clock/amlogic,a1-pll-clkc.yaml   |   56 +
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi     |   26 +
- drivers/clk/meson/Kconfig                     |   20 +
- drivers/clk/meson/Makefile                    |    2 +
- drivers/clk/meson/a1-pll.c                    |  334 +++
- drivers/clk/meson/a1-pll.h                    |   56 +
- drivers/clk/meson/a1.c                        | 2309 +++++++++++++++++
- drivers/clk/meson/a1.h                        |  120 +
- drivers/clk/meson/clk-pll.c                   |   21 +
- drivers/clk/meson/clk-pll.h                   |    1 +
- drivers/clk/meson/meson-eeclk.c               |   59 +-
- drivers/clk/meson/meson-eeclk.h               |    2 +
- drivers/clk/meson/parm.h                      |    1 +
- include/dt-bindings/clock/a1-clkc.h           |   98 +
- include/dt-bindings/clock/a1-pll-clkc.h       |   16 +
- 16 files changed, 3181 insertions(+), 10 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
+Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+---
+ .../bindings/clock/amlogic,a1-pll-clkc.yaml   | 56 +++++++++++++++++++
+ include/dt-bindings/clock/a1-pll-clkc.h       | 16 ++++++
+ 2 files changed, 72 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
- create mode 100644 drivers/clk/meson/a1-pll.c
- create mode 100644 drivers/clk/meson/a1-pll.h
- create mode 100644 drivers/clk/meson/a1.c
- create mode 100644 drivers/clk/meson/a1.h
- create mode 100644 include/dt-bindings/clock/a1-clkc.h
  create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
 
+diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+new file mode 100644
+index 000000000000..d008bfeb3c3a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+@@ -0,0 +1,56 @@
++/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
++/*
++ * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
++ */
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/clock/amlogic,a1-pll-clkc.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Amlogic Meson A/C serials PLL Clock Control Unit Device Tree Bindings
++
++maintainers:
++  - Neil Armstrong <narmstrong@baylibre.com>
++  - Jerome Brunet <jbrunet@baylibre.com>
++  - Jian Hu <jian.hu@jian.hu.com>
++
++properties:
++  compatible:
++    - enum:
++        - amlogic,a1-pll-clkc
++  "#clock-cells":
++    const: 1
++
++  reg:
++    maxItems: 1
++
++clocks:
++  minItems: 2
++  maxItems: 2
++  items:
++   - description: Input xtal_fixpll
++   - description: Input xtal_hifipll
++
++clock-names:
++  minItems: 2
++  maxItems: 2
++  items:
++     - const: xtal_fixpll
++     - const: xtal_hifipll
++
++required:
++  - compatible
++  - "#clock-cells"
++  - reg
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    clkc_pll: pll-clock-controller {
++                compatible = "amlogic,a1-pll-clkc";
++                reg = <0 0x7c80 0 0x18c>;
++                #clock-cells = <1>;
++    };
+diff --git a/include/dt-bindings/clock/a1-pll-clkc.h b/include/dt-bindings/clock/a1-pll-clkc.h
+new file mode 100644
+index 000000000000..58eae237e503
+--- /dev/null
++++ b/include/dt-bindings/clock/a1-pll-clkc.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
++/*
++ * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
++ */
++
++#ifndef __A1_PLL_CLKC_H
++#define __A1_PLL_CLKC_H
++
++#define CLKID_FIXED_PLL				1
++#define CLKID_FCLK_DIV2				6
++#define CLKID_FCLK_DIV3				7
++#define CLKID_FCLK_DIV5				8
++#define CLKID_FCLK_DIV7				9
++#define CLKID_HIFI_PLL				10
++
++#endif /* __A1_PLL_CLKC_H */
 -- 
 2.24.0
 
