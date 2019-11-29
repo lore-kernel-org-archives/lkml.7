@@ -2,157 +2,122 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A897BC432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 00:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC37BC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 00:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73A182084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 00:00:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OrFT8zpE"
+	by mail.kernel.org (Postfix) with ESMTP id 9AD412464E
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 00:13:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfK3AAn (ORCPT
+        id S1727208AbfK3AM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 19:00:43 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53126 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727097AbfK3AAn (ORCPT
+        Fri, 29 Nov 2019 19:12:58 -0500
+Received: from www62.your-server.de ([213.133.104.62]:43690 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727130AbfK3AM6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 19:00:43 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p9so661464wmc.2;
-        Fri, 29 Nov 2019 16:00:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=UHVrDc4hE+bdlqMttAIsSmzHC+8hrXCIgOJb3P4TvLg=;
-        b=OrFT8zpE3v3GDudv1Fk+4KcLjatZs0qg4OT7XnUw4f7XTSAS8lf3fB4EwXwNvRd87M
-         TNyOujOVySBZ6fGDh3kt/yfM1c6Ns7kyNuFwKXn3leFnkQbnSYDjVDHPkHW3Ws3z0z0U
-         dZIMoadJtqb9YgrDuRxsq6ywjuQBeRCG+Q6RA9QuO+AWgIoy2f/MZvJv60xm8RopSHBC
-         xL98JOdwfMLX6sxHW4qXzLS0F43JBtgTtYWgERCRHuTycvFlhPPu8/Mtf+Vb0FjjQTy8
-         RursYHl7JSWKp48tfjmpb5huxFSrg9czRE/926dw2tpeS4Wbqjbut+D1LRpF8NY91jeR
-         2QtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UHVrDc4hE+bdlqMttAIsSmzHC+8hrXCIgOJb3P4TvLg=;
-        b=sWHEABQUCKH5hQQfMWgUxDat4WJ+tNuFX57PC/ZIsTAT/dMGPG2ZBNdaKjIz71PA21
-         oDmQmBTULa3ZTPTzLbDGD8/gr3XuBAgs9w4Hl1UHfFZ+Y38oeIvFvdb5wy6VBFjf++cF
-         9ZOe2c/AzP61mFUzaBf9bFLH3vmORAZpGCy0hS9CHRmfmhOFsyeKamyBc2p61pskH1vQ
-         qjVhhC9VtdrCplkWmFGI+lffNWpnCw81QzcXAVdFwyY6mR3ndebQIrYyvIq1qs4q5BmM
-         g9yY/TDWUP17mu4cEijaKBuhzxPUot5XxNkbU7IY8I2WX93FBhgev26S//fUySSHo9JS
-         vGyQ==
-X-Gm-Message-State: APjAAAUSR9q0ECxIln2ARAmYTusBO9cNu/5Jxrn3/eLdH+PHezqYf5dz
-        6ncoChA3SHu91w3Ii5ka7As=
-X-Google-Smtp-Source: APXvYqz5KzQ+FZoAA4g+4din9ZXFVuMvaxxxUIEVPzdxknXGtDPaFdjeBr1kYaadZpvw3f2LjBUtiA==
-X-Received: by 2002:a1c:9d8d:: with SMTP id g135mr13328699wme.114.1575072040868;
-        Fri, 29 Nov 2019 16:00:40 -0800 (PST)
-Received: from ltop.local ([2a02:a03f:404e:f500:cdc6:e155:f3db:f2f3])
-        by smtp.gmail.com with ESMTPSA id n14sm2755045wmi.26.2019.11.29.16.00.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Nov 2019 16:00:39 -0800 (PST)
-Date:   Sat, 30 Nov 2019 01:00:37 +0100
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Christopher Lameter <cl@linux.com>
-Cc:     Dennis Zhou <dennis@kernel.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tejun Heo <tj@kernel.org>, Nicholas Piggin <npiggin@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] fix __percpu annotation in asm-generic
-Message-ID: <20191130000037.zsendu5pk7p75xqf@ltop.local>
-References: <20191126200619.63348-1-luc.vanoostenryck@gmail.com>
- <alpine.DEB.2.21.1911271553560.16980@www.lameter.com>
- <20191127175350.GA52308@dennisz-mbp.dhcp.thefacebook.com>
- <20191127225432.ttwxm3hxtg5utfaz@ltop.local>
- <alpine.DEB.2.21.1911291808530.1365@www.lameter.com>
+        Fri, 29 Nov 2019 19:12:58 -0500
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1iaq82-0002ph-Pq; Sat, 30 Nov 2019 00:56:50 +0100
+Received: from [178.197.249.29] (helo=pc-9.home)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1iaq82-000WjV-90; Sat, 30 Nov 2019 00:56:50 +0100
+Subject: Re: [PATCH bpf v3] bpftool: Allow to link libbpf dynamically
+To:     =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>, kubakici@wp.pl
+References: <20191128160712.1048793-1-toke@redhat.com>
+ <f6e8f6d2-6155-3b20-9975-81e29e460915@iogearbox.net> <87a78evl2v.fsf@toke.dk>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <9853054b-dc1f-35ba-ba3c-4d0ab01c8f14@iogearbox.net>
+Date:   Sat, 30 Nov 2019 00:56:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1911291808530.1365@www.lameter.com>
+In-Reply-To: <87a78evl2v.fsf@toke.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25648/Fri Nov 29 10:44:54 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 06:11:59PM +0000, Christopher Lameter wrote:
-> On Wed, 27 Nov 2019, Luc Van Oostenryck wrote:
+On 11/29/19 3:00 PM, Toke Høiland-Jørgensen wrote:
+> Daniel Borkmann <daniel@iogearbox.net> writes:
+>> On 11/28/19 5:07 PM, Toke Høiland-Jørgensen wrote:
+>>> From: Jiri Olsa <jolsa@kernel.org>
+[...]
+>>>    ifeq ($(srctree),)
+>>>    srctree := $(patsubst %/,%,$(dir $(CURDIR)))
+>>> @@ -63,6 +72,19 @@ RM ?= rm -f
+>>>    FEATURE_USER = .bpftool
+>>>    FEATURE_TESTS = libbfd disassembler-four-args reallocarray zlib
+>>>    FEATURE_DISPLAY = libbfd disassembler-four-args zlib
+>>> +ifdef LIBBPF_DYNAMIC
+>>> +  FEATURE_TESTS   += libbpf
+>>> +  FEATURE_DISPLAY += libbpf
+>>> +
+>>> +  # for linking with debug library run:
+>>> +  # make LIBBPF_DYNAMIC=1 LIBBPF_DIR=/opt/libbpf
+>>
+>> The Makefile already has BPF_DIR which points right now to
+>> '$(srctree)/tools/lib/bpf/' and LIBBPF_PATH for the final one and
+>> where $(LIBBPF_PATH)libbpf.a is expected to reside. Can't we improve
+>> the Makefile to reuse and work with these instead of adding yet
+>> another LIBBPF_DIR var which makes future changes in this area more
+>> confusing? The libbpf build spills out libbpf.{a,so*} by default
+>> anyway.
 > 
-> > 1) it would strip any address space, not just __percpu, so:
-> >    it would need to be combined with __verify_pcpu_ptr() or,
-> >    * a better name should be used,
+> I see what you mean; however, LIBBPF_DIR is meant to be specifically an
+> override for the dynamic library, not just the path to libbpf.
 > 
-> typeof_cast_kernel() to express the fact that it creates a kernel pointer
-> and ignored the attributes??
-
-typeof_strip_address_space() would, I think, express this better. 
-It's not obvious at all to me that 'kernel' in 'typeof_cast_kernel()'
-relates to the (default) kernel address space.
-Maybe it's just me. I don't know.
-
-> >    * it should be defined in a generic header, any idea where?
+> Would it be less confusing to overload the LIBBPF_DYNAMIC variable
+> instead? I.e.,
 > 
-> include/linux/compiler-types.h
-
-Yes, OK.
-
-> > 2) while I find the current solution:
-> > 	typeof(T) __kernel __force *ptr = ...;
+> make LIBBPF_DYNAMIC=1
 > 
-> It would be
+> would dynamically link against the libbpf installed in the system, but
 > 
->    typeof_cast_kernel(&T) *xx = xxx
+> make LIBBPF_DYNAMIC=/opt/libbpf
 > 
-> or so?
+> would override that and link against whatever is in /opt/libbpf instead?
+> WDYT?
 
-No, it would not. __percpu, and more generally, the address space
-is a property of the object, not of its address.
-For example, let's say T is a __percpu object:
-	int __percpu obj;
-then '&T' is just a 'normal'/__kernel pointer to it:
-	int __percpu *;
-There is nothing to strip (it would be if the __percpu
-would be 'on the other side of the *': int * __percpu).
-It's exactly the same as with 'const': a 'const char *'
-is not const, only a pointer to const.
+Hm, given perf tool has similar LIB*_DIR vars in place for its libs, it probably
+makes sense to stick with this convention as well then. Perhaps better in this
+case to just rename s/BPF_DIR/BPF_SRC_DIR/, s/LIBBPF_OUTPUT/LIBBPF_BUILD_OUTPUT/,
+and s/LIBBPF_PATH/LIBBPF_BUILD_PATH/ to make their purpose more clear.
 
-The situation with raw_cpu_generic_add_return() is:
-- pcp is a lvalue of of a __percpu object of type T, so:
-	typeof(pcp)  := T __percpu
-- pcp's address is given to raw_cpu_ptr(), so
-	typeof(&pcp) := T __percpu *
-- raw_cpu_ptr() return the corresponding __kernel pointer
-  (adjusted for the current percu offset), so:
-	typeof(raw_cpu_ptr(&pcp)) := T *
-- so, the macro needs to declare a variable __p of type T*
-  hence:
-	typeof(pcp) __kernel __force *__p;
-  or, with this new macro:
-	typeof_cast_kernel(pcp) *__p;
+One thing that would be good to do as well for this patch is to:
 
-Maybe a better solution would be to directly play at pointer
-level and thus have something like this:
-	typeof_<some good name>(&pcp) __p = raw_cpu_ptr(&pcp);
-or even:
-	__kernel_pointer(&pcp) __p = raw_cpu_ptr(&pcp);
-I dunno.
+  i) Document both LIBBPF_DYNAMIC and LIBBPF_DIR in the Makefile comment you
+     added at the top along with a simple usage example.
 
-Note: at implementation level, it complicates things slightly
-      to want this 'strip_percpu' macro to behaves like typeof()
-      because it means that it can take in argument either an
-      expression or a type. And if it's a type, you can't do a
-      simple cast on it, you need to declare an intermediate
-      variable, hence the horrible:
-	  typeof(({ typeof(T) __kernel __force __fakename; __fakename; }))
+ii) Extend tools/testing/selftests/bpf/test_bpftool_build.sh with a dynamic
+     linking test case, e.g. building libbpf into a temp dir and pointing
+     LIBBPF_DIR to it for bpftool LIBBPF_DYNAMIC=1 build.
 
-Note: it would be much much nicer to do all these type generic
-      macros with '__auto_type' (only supported in GCC 4.9 IIUC
-      and supported in sparse but it shouldn't be very hard to do)..
-
-
--- Luc
+Thanks,
+Daniel
