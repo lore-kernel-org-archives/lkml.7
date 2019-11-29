@@ -2,115 +2,206 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFFADC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 03:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03BE7C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 03:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A747E21774
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 03:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDB37208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 03:35:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="XWR//nIp"
+	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="QfkEgP0L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfK2DcK (ORCPT
+        id S1726975AbfK2DfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 22:32:10 -0500
-Received: from frisell.zx2c4.com ([192.95.5.64]:50913 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726764AbfK2DcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 22:32:10 -0500
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 261fdee4;
-        Fri, 29 Nov 2019 02:38:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=date:from:to
-        :cc:subject:message-id:references:mime-version:content-type
-        :in-reply-to; s=mail; bh=QnhIEK3n2PL2veutrTDB1byHOuI=; b=XWR//nI
-        pUhfZoUNt+GgvwJFxvAY0gNHPOXOUsdaCoQPsZX7gInLGeIkZDSlga06X6SnEFWp
-        GYJxTuWwbiLsN8bMhbiftR3C+4WDJUebO2e33TpH/7fKUmAS1K57ulmd5k/GWaHh
-        zA2rAcofYYiaSSgGdlGpaUV01mZQtEZhyiv7xhvMfsXqrtRd14FaIllBmyyGzYTq
-        eWcuIGkWvO1laLhLfNoB2KDaA+nKokoyl4MdkccjUnP4Vqe9wmwC3J7ANaLRZinn
-        7jbxT8/M318CcQq6g5/VV328oJac7dNU0RAwO71ghpCdfvHw15StHblWVRWQiwn4
-        gxUMZKPbxvkHpSA==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 44972ea7 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Fri, 29 Nov 2019 02:38:04 +0000 (UTC)
-Date:   Fri, 29 Nov 2019 04:32:05 +0100
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, torvalds@linux-foundation.org,
-        herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org
-Subject: Re: [PATCH v1] net: WireGuard secure network tunnel
-Message-ID: <20191129033205.GA67257@zx2c4.com>
-References: <20191127112643.441509-1-Jason@zx2c4.com>
- <20191128.133023.1503723038764717212.davem@davemloft.net>
+        Thu, 28 Nov 2019 22:35:21 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40694 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726788AbfK2DfV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 22:35:21 -0500
+Received: by mail-wm1-f67.google.com with SMTP id y5so13425906wmi.5
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 19:35:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=QJ0BehjFJkWJyP8RtCONd9xszCsERb/O9WmeExTQd5k=;
+        b=QfkEgP0LSNnXnXJcK7sI02htl820DB5bfsY47OwRNyzmGbQX/PzK/FxsZx3bI28akq
+         LeDtDTO+1gBXwVGMvLEnATIxv7qa7CjbeB0ls0dcWEM78aKuIiAPgr2fcnEL7efCNIgQ
+         KsbuiUjKC4h/6cCfw7Y+LWD+RHGWQS35wN2Dlb/F+3qx7SbAInmdwnRtQgCF33LeVFby
+         RmHDDK6gVQpiZb+mqxjyG4hYbCTcncu3C3OlFxGou2TT8n/6sBG6aWB0dsQ5+iMuy8Jo
+         Sa924LLfQY3/gWJ5RWOzAjTBjsgu5fS7Ti1KvcBpxmvI6r8ackcKQW+IabakzoOM3mZx
+         ZSIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=QJ0BehjFJkWJyP8RtCONd9xszCsERb/O9WmeExTQd5k=;
+        b=SxlsDpXvoAIEQjZmvZ94X9CnhY04XIAXCKlephyfIghBp1JHZmwRxGbjYqea36yj65
+         DZTI4Psa1p2hBVjDN7QLhX2kYF4hkCwy2jc+ZIESudcSIeYLqJC9z/+5DHrwvdrYRg0m
+         /qBrG1qltMt9puMkm8H1UaRod7wBfj3P5pRiAMRGKOkKshuLF5wggjBAFfOvH4KpHhUq
+         QdTLE1TpCpc47Won2xTPTf58yZ2p8LCao/FiXU4UzcgtKC7wdB+JHbBZX0W8MNUK40OJ
+         jQcJAD/kwXnD5FW3FFAiQzm9g1iQFCbDO1wRDCzUnVxC37GdAHDyT6F3Fi0bjBMo0aG6
+         BB7g==
+X-Gm-Message-State: APjAAAUm8TF/nsTarv6tO4erHFD91ZJGnoofIhE7jkscpqFvkWVmjl0b
+        4i05366b6FRtpzX0hCVgBXiIPQ==
+X-Google-Smtp-Source: APXvYqyY5Ag9efnLxT+G22Uef6sbiZvKYbuON7L6+paT+DCwuPK/MrDIWZduK2bBn25khLS06VtYyA==
+X-Received: by 2002:a1c:3941:: with SMTP id g62mr11971950wma.165.1574998517292;
+        Thu, 28 Nov 2019 19:35:17 -0800 (PST)
+Received: from localhost (ip-5-186-122-168.cgn.fibianet.dk. [5.186.122.168])
+        by smtp.gmail.com with ESMTPSA id x9sm25131773wru.32.2019.11.28.19.35.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Nov 2019 19:35:16 -0800 (PST)
+Date:   Fri, 29 Nov 2019 04:35:15 +0100
+From:   Javier Gonzalez <javier@javigon.com>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        linux-fsdevel@vger.kernel.org,
+        Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Subject: Re: [PATCH] f2fs: Fix direct IO handling
+Message-ID: <20191129033515.ehkdf65toblntkrq@MacBook-Pro.gnusmas>
+References: <20191126075719.1046485-1-damien.lemoal@wdc.com>
+ <20191126234428.GB20652@jaegeuk-macbookpro.roam.corp.google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20191128.133023.1503723038764717212.davem@davemloft.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191126234428.GB20652@jaegeuk-macbookpro.roam.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Dave,
+On 26.11.2019 15:44, Jaegeuk Kim wrote:
+>On 11/26, Damien Le Moal wrote:
+>> f2fs_preallocate_blocks() identifies direct IOs using the IOCB_DIRECT
+>> flag for a kiocb structure. However, the file system direct IO handler
+>> function f2fs_direct_IO() may have decided that a direct IO has to be
+>> exececuted as a buffered IO using the function f2fs_force_buffered_io().
+>> This is the case for instance for volumes including zoned block device
+>> and for unaligned write IOs with LFS mode enabled.
+>>
+>> These 2 different methods of identifying direct IOs can result in
+>> inconsistencies generating stale data access for direct reads after a
+>> direct IO write that is treated as a buffered write. Fix this
+>> inconsistency by combining the IOCB_DIRECT flag test with the result
+>> of f2fs_force_buffered_io().
+>>
+>> Reported-by: Javier Gonzalez <javier@javigon.com>
+>> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+>> ---
+>>  fs/f2fs/data.c | 4 +++-
+>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+>> index 5755e897a5f0..8ac2d3b70022 100644
+>> --- a/fs/f2fs/data.c
+>> +++ b/fs/f2fs/data.c
+>> @@ -1073,6 +1073,8 @@ int f2fs_preallocate_blocks(struct kiocb *iocb, struct iov_iter *from)
+>>  	int flag;
+>>  	int err = 0;
+>>  	bool direct_io = iocb->ki_flags & IOCB_DIRECT;
+>> +	bool do_direct_io = direct_io &&
+>> +		!f2fs_force_buffered_io(inode, iocb, from);
+>>
+>>  	/* convert inline data for Direct I/O*/
+>>  	if (direct_io) {
+>> @@ -1081,7 +1083,7 @@ int f2fs_preallocate_blocks(struct kiocb *iocb, struct iov_iter *from)
+>>  			return err;
+>>  	}
+>>
+>> -	if (direct_io && allow_outplace_dio(inode, iocb, from))
+>> +	if (do_direct_io && allow_outplace_dio(inode, iocb, from))
+>
+>It seems f2fs_force_buffered_io() includes allow_outplace_dio().
+>
+>How about this?
+>---
+> fs/f2fs/data.c | 13 -------------
+> fs/f2fs/file.c | 35 +++++++++++++++++++++++++----------
+> 2 files changed, 25 insertions(+), 23 deletions(-)
+>
+>diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+>index a034cd0ce021..fc40a72f7827 100644
+>--- a/fs/f2fs/data.c
+>+++ b/fs/f2fs/data.c
+>@@ -1180,19 +1180,6 @@ int f2fs_preallocate_blocks(struct kiocb *iocb, struct iov_iter *from)
+> 	int err = 0;
+> 	bool direct_io = iocb->ki_flags & IOCB_DIRECT;
+>
+>-	/* convert inline data for Direct I/O*/
+>-	if (direct_io) {
+>-		err = f2fs_convert_inline_inode(inode);
+>-		if (err)
+>-			return err;
+>-	}
+>-
+>-	if (direct_io && allow_outplace_dio(inode, iocb, from))
+>-		return 0;
+>-
+>-	if (is_inode_flag_set(inode, FI_NO_PREALLOC))
+>-		return 0;
+>-
+> 	map.m_lblk = F2FS_BLK_ALIGN(iocb->ki_pos);
+> 	map.m_len = F2FS_BYTES_TO_BLK(iocb->ki_pos + iov_iter_count(from));
+> 	if (map.m_len > map.m_lblk)
+>diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>index c0560d62dbee..6b32ac6c3382 100644
+>--- a/fs/f2fs/file.c
+>+++ b/fs/f2fs/file.c
+>@@ -3386,18 +3386,33 @@ static ssize_t f2fs_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
+> 				ret = -EAGAIN;
+> 				goto out;
+> 			}
+>-		} else {
+>-			preallocated = true;
+>-			target_size = iocb->ki_pos + iov_iter_count(from);
+>+			goto write;
+>+		}
+>
+>-			err = f2fs_preallocate_blocks(iocb, from);
+>-			if (err) {
+>-				clear_inode_flag(inode, FI_NO_PREALLOC);
+>-				inode_unlock(inode);
+>-				ret = err;
+>-				goto out;
+>-			}
+>+		if (is_inode_flag_set(inode, FI_NO_PREALLOC))
+>+			goto write;
+>+
+>+		if (iocb->ki_flags & IOCB_DIRECT) {
+>+			/* convert inline data for Direct I/O*/
+>+			err = f2fs_convert_inline_inode(inode);
+>+			if (err)
+>+				goto out_err;
+>+
+>+			if (!f2fs_force_buffered_io(inode, iocb, from))
+>+				goto write;
+>+		}
+>+		preallocated = true;
+>+		target_size = iocb->ki_pos + iov_iter_count(from);
+>+
+>+		err = f2fs_preallocate_blocks(iocb, from);
+>+		if (err) {
+>+out_err:
+>+			clear_inode_flag(inode, FI_NO_PREALLOC);
+>+			inode_unlock(inode);
+>+			ret = err;
+>+			goto out;
+> 		}
+>+write:
+> 		ret = __generic_file_write_iter(iocb, from);
+> 		clear_inode_flag(inode, FI_NO_PREALLOC);
+>
+>-- 
+>2.19.0.605.g01d371f741-goog
+>
+This also addresses the original problem.
 
-On Thu, Nov 28, 2019 at 01:30:23PM -0800, David Miller wrote:
-> From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-> Date: Wed, 27 Nov 2019 12:26:43 +0100
-> 
-> > +	do {
-> > +		next = skb->next;
-> 
-> I've been trying desperately to remove all direct references to the SKB list
-> implementation details so that we can convert it over to list_head.  This
-> means no direct references to skb->next nor skb->prev.
-> 
-> Please rearrange this using appropriate helpers and abstractions from skbuff.h
-
-I'm not a huge fan of doing manual skb surgery either. The annoying
-thing here is that skb_gso_segment returns a list of skbs that's
-terminated by the last one's next pointer being NULL. I assume it's this
-way so that the GSO code doesn't have to pass a head around. I went to
-see what other drivers are doing to deal with the return value of
-skb_gso_segment, and found that every place without fail does pretty
-much the same thing as me, whether it's wifi drivers, ethernet drivers,
-qdiscs, ipsec, etc. Here's (one of) IPsec's usage, for example:
-
-	segs = skb_gso_segment(skb, 0);
-	kfree_skb(skb);
-	if (IS_ERR(segs))
-		return PTR_ERR(segs);
-	if (segs == NULL)
-		return -EINVAL;
-
-	do {
-		struct sk_buff *nskb = segs->next;
-		int err;
-
-		skb_mark_not_on_list(segs);
-		err = xfrm_output2(net, sk, segs);
-
-		if (unlikely(err)) {
-			kfree_skb_list(nskb);
-			return err;
-		}
-
-		segs = nskb;
-	} while (segs);
-
-Given that so much code does the same skb surgery, this seems like it
-would be a good opportunity for actually adding the right helper /
-abstraction around this. If that sounds good to you, I'll send a commit
-adding something like the below, along with fixing up a couple of the
-more straight-forward existing places to use the new helper:
-
-#define skb_walk_null_list_safe(first, skb, next)                          \
-        for (skb = first, next = skb->next; skb;                           \
-             skb = next, next = skb ? skb->next : NULL)
-
-Does this sound good to you? If so, would you like this as lead-up
-commits to WireGuard, or just a new independent series all together?
-
-Regards,
-Jason
+Tested-by: Javier González <javier@javigon.com>
