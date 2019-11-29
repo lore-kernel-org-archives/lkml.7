@@ -2,183 +2,126 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5E3C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE855C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45CD421721
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:43:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575017033;
-	bh=k90HFXx9wVNGroxNpk6t4BKewMFDZAgXPX+a564T9Xk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TZZ33c2pXbIP3qnIP1nA4Tf+xbOVoPiD9r4bXPpindCbCsbFT1mSz+9D4ZCN5WdOl
-	 CRVQ/F4+4BDzQQJ7FUprwlCy246OInv5T3XAl2Rw1Kb4cdMwFFmfB/tQJ/+vHleQLq
-	 5p8CzmQngvTM3iJ/qmMd4EFhCqYoZBeQWpiDHpN4=
+	by mail.kernel.org (Postfix) with ESMTP id 944DB21721
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:47:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="nmL+CR9H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbfK2Inw (ORCPT
+        id S1726808AbfK2IrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 03:43:52 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46629 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbfK2Inw (ORCPT
+        Fri, 29 Nov 2019 03:47:15 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:38777 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726604AbfK2IrO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 03:43:52 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z7so30591869wrl.13;
-        Fri, 29 Nov 2019 00:43:49 -0800 (PST)
+        Fri, 29 Nov 2019 03:47:14 -0500
+Received: by mail-il1-f194.google.com with SMTP id u17so26328991ilq.5
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 00:47:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=0bhuQ93HttrTxTAhNw8aS9QwCDZ8sDxBTo3J1Rx58OQ=;
+        b=nmL+CR9HMsMNScs9eViOCbnO2FWwFdw745UQjYogtV77gctBJkqPqj76RfwR2XEbXG
+         cHdusrKDuZlkEx5hdGEJpuVZlKR6Sf999e0lkGi8FKcZKcBvVE/k8jx6pzKcTa9t0kO9
+         PETk1FIMTjdixL8ZyOIHXt/vpjmry7r2RfyV+Tf4YgRYw+SWSKcYESMaf8FB5cvcutLU
+         jIUd1Vga11L0qXBh8B+8jufdrYUQtFJ4qO25gih85ryz2HJt27DEd/M6O+gtz8GP5W1e
+         lpzrFo+U/GwDqq6t4uYNjf2KlC2lHKrGHbFg+2gt6JwJ7yFIqB40gL1TPQCudvfOzhxo
+         bRJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mEnIisdjimHf8Vq+Pdn+jaQWPmoV6hp0tVKP943mDWE=;
-        b=Ue6A5aM6Zt3sBEaWCXKWSfCAr9DN9h8EqhyPlmYRloiQVWmGRF6u8083T7EUMG/Hxh
-         VLf8rFedHVwrx3dzInFxCw3SNs6EJ1ylJpsRxxoSuBPGwh9YhI2Ghdoxok2vni8kwmna
-         1O7snnDyDwTOPvUxFzoTkeS/HGrIc5IIAkMi1gYi/g7zzfetABY2SnvhBfKrNACR79qV
-         4YEe08sAMF0kqvwwWGNDk06LbuE9Ty81g8WaTZM1tPV6ALq+MNqdEyD6XBp2LRLXmQSE
-         5VVa7rysRT8TR5Em1gyr6/rikXBUm+dPmRIxiZNp6p1LJmgxk5gMDcGMGV6ANVJZqNCz
-         JqXw==
-X-Gm-Message-State: APjAAAVwu21B1uVTwM67zg812Hkev/jiS4nLdnGpdPnI8NVbwlMLYmVa
-        NLCfRyzgbh6zdKR4RnlOg6I=
-X-Google-Smtp-Source: APXvYqzA6Tb0oWOvbCsUl15MoIdYEwYDa0E/Gxqb9g8lz2MEU4NLiSIVJWvzoJEuB105Qvce1NfqUQ==
-X-Received: by 2002:adf:e40e:: with SMTP id g14mr31743371wrm.264.1575017028811;
-        Fri, 29 Nov 2019 00:43:48 -0800 (PST)
-Received: from localhost (ip-37-188-177-133.eurotel.cz. [37.188.177.133])
-        by smtp.gmail.com with ESMTPSA id c144sm12772572wmd.1.2019.11.29.00.43.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Nov 2019 00:43:47 -0800 (PST)
-Date:   Fri, 29 Nov 2019 09:43:46 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Shakeel Butt <shakeelb@google.com>, stable@vger.kernel.org
-Subject: Re: [PATCH v2] mm: memcg/slab: wait for !root kmem_cache refcnt
- killing on root kmem_cache destruction
-Message-ID: <20191129084346.GB20173@dhcp22.suse.cz>
-References: <20191129025011.3076017-1-guro@fb.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0bhuQ93HttrTxTAhNw8aS9QwCDZ8sDxBTo3J1Rx58OQ=;
+        b=mS+hmyWlYEUaTFe2alAdMnK2UESYNjqKlNN7QVxiv1i+uOobkzwfYtPdohy1CLY4yW
+         VUDGT1IyRaJ54OaPOqrwTO8aVQxvFzKOtQDdZmlsP3X/MiXZ/B+XV8NCln1J6zQ+85Su
+         tBxOAKZbxlKhAV5G9p6Rbs0VClZJI3q5FECJuyM7fTldzy56u8mn+2tLKNSEN6Q2njHK
+         8SjuXJaAi9pu+TSbAonfXbwzc8ELV632CYS3e9nMXFSLilmwTrjdzqpI3rDVilAXn6bJ
+         jKpK0uY8LpAkXNZ8MklA3BhYG6rQ2DPEYwyOEgF8ubLuy4phCvRPjxYlBsHSumFFeAWW
+         yozg==
+X-Gm-Message-State: APjAAAUuY9K878SmXzm6IHyPUUrcacaYC0p3j1YY42x5Y6cI9qyCpBvU
+        AVAhc5gWCNDGqpDCWrr4k2KYAYdnxhbmwXmR+ZXeNA==
+X-Google-Smtp-Source: APXvYqy7SGubfXXTIwTKtjbr11EdnB50yfatCvnFFOvYEf0wubLbCixqeKYSolhozuG80EcW0JpH7nBbCalVHHTxZAY=
+X-Received: by 2002:a05:6e02:5c8:: with SMTP id l8mr2541678ils.287.1575017232331;
+ Fri, 29 Nov 2019 00:47:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191129025011.3076017-1-guro@fb.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191120142038.30746-1-ktouil@baylibre.com> <20191120142038.30746-2-ktouil@baylibre.com>
+ <CACRpkdaZrvPObjyN4kasARzKZ9=PiAcvTzXzWkmC7R+Ay5tU8w@mail.gmail.com>
+ <CAMpxmJWSgYjcGdR7Zrj-=nA+H8cYfZUriHQPxN=8zgPDvD-wTA@mail.gmail.com>
+ <CACRpkdaW82pgQivc0VVgqqVv4fgXxMyGD3Lo8YHcMK7aGPDKaw@mail.gmail.com>
+ <CAMpxmJU_0MzroyD_ZF5WOxpZz3dkADLOmW7aKpWdJ7GCvo-RnA@mail.gmail.com>
+ <CACRpkdaPQKxfC66yhG=xdmCOGGd9PjDVCwZquKb+4HmuS_=kNA@mail.gmail.com>
+ <CALL1Z1xpcGyh_f3ooRT+gGApoAnS7YBMd2hUKqnt+pTcAFoeAg@mail.gmail.com> <CACRpkdYEEypRZOaO3Ta9aDgizNeLyUOSraBEhKaZcHaJV+o0gQ@mail.gmail.com>
+In-Reply-To: <CACRpkdYEEypRZOaO3Ta9aDgizNeLyUOSraBEhKaZcHaJV+o0gQ@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 29 Nov 2019 09:47:01 +0100
+Message-ID: <CAMRc=MfVod5ODvsQbVBny1+Yvre1F971uR_DqsvoiYATvUfoXw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: nvmem: new optional property write-protect-gpios
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Khouloud Touil <ktouil@baylibre.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        baylibre-upstreaming@groups.io,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 28-11-19 18:50:11, Roman Gushchin wrote:
-> Christian reported a warning like the following obtained during running some
-> KVM-related tests on s390:
-> 
-> WARNING: CPU: 8 PID: 208 at lib/percpu-refcount.c:108 percpu_ref_exit+0x50/0x58
-> Modules linked in: kvm(-) xt_CHECKSUM xt_MASQUERADE bonding xt_tcpudp ip6t_rpfilter ip6t_REJECT nf_reject_ipv6 ipt_REJECT nf_reject_ipv4 xt_conntrack ip6table_na>
-> CPU: 8 PID: 208 Comm: kworker/8:1 Not tainted 5.2.0+ #66
-> Hardware name: IBM 2964 NC9 712 (LPAR)
-> Workqueue: events sysfs_slab_remove_workfn
-> Krnl PSW : 0704e00180000000 0000001529746850 (percpu_ref_exit+0x50/0x58)
->            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI:0 EA:3
-> Krnl GPRS: 00000000ffff8808 0000001529746740 000003f4e30e8e18 0036008100000000
->            0000001f00000000 0035008100000000 0000001fb3573ab8 0000000000000000
->            0000001fbdb6de00 0000000000000000 0000001529f01328 0000001fb3573b00
->            0000001fbb27e000 0000001fbdb69300 000003e009263d00 000003e009263cd0
-> Krnl Code: 0000001529746842: f0a0000407fe        srp        4(11,%r0),2046,0
->            0000001529746848: 47000700            bc         0,1792
->           #000000152974684c: a7f40001            brc        15,152974684e
->           >0000001529746850: a7f4fff2            brc        15,1529746834
->            0000001529746854: 0707                bcr        0,%r7
->            0000001529746856: 0707                bcr        0,%r7
->            0000001529746858: eb8ff0580024        stmg       %r8,%r15,88(%r15)
->            000000152974685e: a738ffff            lhi        %r3,-1
-> Call Trace:
-> ([<000003e009263d00>] 0x3e009263d00)
->  [<00000015293252ea>] slab_kmem_cache_release+0x3a/0x70
->  [<0000001529b04882>] kobject_put+0xaa/0xe8
->  [<000000152918cf28>] process_one_work+0x1e8/0x428
->  [<000000152918d1b0>] worker_thread+0x48/0x460
->  [<00000015291942c6>] kthread+0x126/0x160
->  [<0000001529b22344>] ret_from_fork+0x28/0x30
->  [<0000001529b2234c>] kernel_thread_starter+0x0/0x10
-> Last Breaking-Event-Address:
->  [<000000152974684c>] percpu_ref_exit+0x4c/0x58
-> ---[ end trace b035e7da5788eb09 ]---
-> 
-> The problem occurs because kmem_cache_destroy() is called immediately
-> after deleting of a memcg, so it races with the memcg kmem_cache
-> deactivation.
-> 
-> flush_memcg_workqueue() at the beginning of kmem_cache_destroy()
-> is supposed to guarantee that all deactivation processes are finished,
-> but failed to do so. It waits for an rcu grace period, after which all
-> children kmem_caches should be deactivated. During the deactivation
-> percpu_ref_kill() is called for non root kmem_cache refcounters,
-> but it requires yet another rcu grace period to finish the transition
-> to the atomic (dead) state.
-> 
-> So in a rare case when not all children kmem_caches are destroyed
-> at the moment when the root kmem_cache is about to be gone, we need
-> to wait another rcu grace period before destroying the root
-> kmem_cache.
-> 
-> This issue can be triggered only with dynamically created kmem_caches
-> which are used with memcg accounting. In this case per-memcg child
-> kmem_caches are created. They are deactivated from the cgroup removing
-> path. If the destruction of the root kmem_cache is racing with the
-> removal of the cgroup (both are quite complicated multi-stage
-> processes), the described issue can occur. The only known way to
-> trigger it in the real life, is to unload some kernel module which
-> creates a dedicated kmem_cache, used from different memory cgroups
-> with GFP_ACCOUNT flag. If the unloading happens immediately after
-> calling rmdir on the corresponding cgroup, there is some chance to
-> trigger the issue.
-> 
-> v2: added a note to the commit log, proposed by Michal Hocko
-> 
-> Reported-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> Tested-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> Fixes: f0a3a24b532d ("mm: memcg/slab: rework non-root kmem_cache lifecycle management")
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> Reviewed-by: Shakeel Butt <shakeelb@google.com>
-> Cc: stable@vger.kernel.org
+czw., 28 lis 2019 o 14:45 Linus Walleij <linus.walleij@linaro.org> napisa=
+=C5=82(a):
+>
+> On Tue, Nov 26, 2019 at 4:18 PM Khouloud Touil <ktouil@baylibre.com> wrot=
+e:
+>
+> > [Me]
+> >> 4. The code still need to be modified to set the value
+> >>    to "1" to assert the line since the gpiolib now handles
+> >>    the inversion semantics.
+>
+> > By saying "assert the wp" do you mean enable the write operation or
+> > block it ?
+>
+> Yeah one more layer of confusion, sorry :/
+>
+> By "asserting WP" I mean driving the line to a state where
+> writing to the EEPROM is enabled, i.e. the default state is
+> that the EEPROM is write protected and when you "assert"
+> WP it becomes writable.
+>
+> If you feel the inverse semantics are more intuitive (such that
+> WP comes up asserted and thus write protected), be my
+> guest :D
+>
 
-Thanks for extending the changelog. This is easier to digest.
-Acked-by: Michal Hocko <mhocko@suse.com>
+Ha! I've always assumed that "to assert the write-protect pin" means
+to *protect* the EEPROM from writing. That's why it comes up as
+asserted (logical '1' in the driver) and we need to deassert it (drive
+it low, logical '0' in the driver) to enable writing. This is the
+current behavior and I'd say in this case it's just a matter of very
+explicit statement that this is how it works in the DT binding?
 
-> ---
->  mm/slab_common.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/mm/slab_common.c b/mm/slab_common.c
-> index 8afa188f6e20..f0ab6d4ceb4c 100644
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -904,6 +904,18 @@ static void flush_memcg_workqueue(struct kmem_cache *s)
->  	 * previous workitems on workqueue are processed.
->  	 */
->  	flush_workqueue(memcg_kmem_cache_wq);
-> +
-> +	/*
-> +	 * If we're racing with children kmem_cache deactivation, it might
-> +	 * take another rcu grace period to complete their destruction.
-> +	 * At this moment the corresponding percpu_ref_kill() call should be
-> +	 * done, but it might take another rcu grace period to complete
-> +	 * switching to the atomic mode.
-> +	 * Please, note that we check without grabbing the slab_mutex. It's safe
-> +	 * because at this moment the children list can't grow.
-> +	 */
-> +	if (!list_empty(&s->memcg_params.children))
-> +		rcu_barrier();
->  }
->  #else
->  static inline int shutdown_memcg_caches(struct kmem_cache *s)
-> -- 
-> 2.17.1
+Rob: any thoughts on this?
 
--- 
-Michal Hocko
-SUSE Labs
+Bartosz
+
+> As long as it is unambiguously documented in the bindings
+> and with comments in the code I'm game for whatever the
+> at24 people feel is most appropriate. (You will set the standard
+> for everyone else.)
+>
+> Yours.
+> Linus Walleij
