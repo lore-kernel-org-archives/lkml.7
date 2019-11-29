@@ -2,97 +2,151 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFA0C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 10:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AF4C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 10:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2161E2176D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 10:03:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bofh-nu.20150623.gappssmtp.com header.i=@bofh-nu.20150623.gappssmtp.com header.b="jJ1yhaLn"
+	by mail.kernel.org (Postfix) with ESMTP id 416BD217BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 10:03:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbfK2KC7 (ORCPT
+        id S1726917AbfK2KDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 29 Nov 2019 05:03:01 -0500
+Received: from mga09.intel.com ([134.134.136.24]:43356 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726881AbfK2KC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 Nov 2019 05:02:59 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52920 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbfK2KC6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 05:02:58 -0500
-Received: by mail-wm1-f68.google.com with SMTP id l1so13549314wme.2
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 02:02:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bofh-nu.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5UrKqSRJKoGBPMgO2/jdCKMQcuQ7A1Ss66dwsiix9b0=;
-        b=jJ1yhaLnNR0CYGklrHbhvyokqlCl72QlSTMfSa4E21afa0fYB8h7HwmCoSh8aVQe6U
-         iu5bAl6x2CbffFH/bawfVtQgwanXgHO+iS1Gb+OOA06PXIu/PIpL/HJn6LjoQyAkRO70
-         fxLYUtGpmfos2QR3CnLxgKJc59EDfltbblF2X6VKh+1o5HkGi+iyOiEa1L1YEFNfaPVi
-         Ni5VDKVwx/4bFy8RwrxZNNrw86cFlsDODmaLZv0yCr5qRZSmRt10SSWPFopZ4auPDcDq
-         dY3UsZ//d3BFZG6YSXWhh0M8Id1A0ugvSDqZdrW2smTbAWpG+H1lgDdlT80mzZ4SNjNj
-         /cPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5UrKqSRJKoGBPMgO2/jdCKMQcuQ7A1Ss66dwsiix9b0=;
-        b=aP5GM5AirXB/x4jkEtvikaljuvGxdE97c5DsDAObPYg8iH/zC48b3NvUk0r8u2Pnvo
-         VBmbag5v0IDj/f/4vhqnh23e3uRaZjSARzq2FxaUvjZc8IeMc6WJ+sMmmjlR9qZfvye5
-         y5GejZliHsD49Htua85LdYWOpNJ9/ePVocQfh2Il8jNc10vl0VuKqncebNRcFlCd/AnE
-         QT0/wPfDWarKZ+Y/Qhch2yfIks29jRCyJKxK6FJbpc2y0eO0TQN/dk/ilFtF/UPenloy
-         +5mn31E/OWyH2xiEPFgUwmJs4zrDeEMRihCVkn7c+q0rRzDSHYP19/PLA+Omy3uMRika
-         W/Aw==
-X-Gm-Message-State: APjAAAXvNZTJjR58k6gqGO3iRtxMNz4fGq4YbXtrSSIVTxIxWd0ajhg4
-        vj0qlXwkEL0rNTnFKg7vyD+7ve1ApZpmAf+lkJ89vw==
-X-Google-Smtp-Source: APXvYqzTAFXNZGcwafQIeJec73W3RgozsYABeK30eaJTije1g+7R6/B3hF2p2eSWHt317C9cAPOBhlSgllb4GK9GIO4=
-X-Received: by 2002:a1c:7708:: with SMTP id t8mr13713623wmi.29.1575021776664;
- Fri, 29 Nov 2019 02:02:56 -0800 (PST)
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Nov 2019 02:02:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,257,1571727600"; 
+   d="scan'208";a="217758797"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 29 Nov 2019 02:02:58 -0800
+Received: from [10.125.252.110] (abudanko-mobl.ccr.corp.intel.com [10.125.252.110])
+        by linux.intel.com (Postfix) with ESMTP id D614F5802E4;
+        Fri, 29 Nov 2019 02:02:55 -0800 (PST)
+Subject: [PATCH v3 1/3] tools bitmap: implement bitmap_equal() operation at
+ bitmap API
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <908dbe98-7d8d-0ec1-d4ae-242f3e104979@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <e6e9a088-7421-a6fc-8024-2c30e1c54129@linux.intel.com>
+Date:   Fri, 29 Nov 2019 13:02:54 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-References: <1574864578-467-1-git-send-email-neal.liu@mediatek.com> <1574864578-467-4-git-send-email-neal.liu@mediatek.com>
-In-Reply-To: <1574864578-467-4-git-send-email-neal.liu@mediatek.com>
-From:   Lars Persson <lists@bofh.nu>
-Date:   Fri, 29 Nov 2019 11:02:45 +0100
-Message-ID: <CADnJP=uhD=J2NrpSwiX8oCTd-u_q05=HhsAV-ErCsXNDwVS0rA@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] hwrng: add mtk-sec-rng driver
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Crystal Guo <Crystal.Guo@mediatek.com>,
-        linux-crypto@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        wsd_upstream@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <908dbe98-7d8d-0ec1-d4ae-242f3e104979@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neal,
 
-On Wed, Nov 27, 2019 at 3:23 PM Neal Liu <neal.liu@mediatek.com> wrote:
->
-> For MediaTek SoCs on ARMv8 with TrustZone enabled, peripherals like
-> entropy sources is not accessible from normal world (linux) and
-> rather accessible from secure world (ATF/TEE) only. This driver aims
-> to provide a generic interface to ATF rng service.
->
+Extend tools bitmap API with bitmap_equal() implementation.
+The implementation has been derived from the kernel.
 
-I am working on several SoCs that also will need this kind of driver
-to get entropy from Arm trusted firmware.
-If you intend to make this a generic interface, please clean up the
-references to MediaTek and give it a more generic name. For example
-"Arm Trusted Firmware random number driver".
+Extend tools bitmap API with bitmap_free() implementation for
+symmetry with bitmap_alloc() function.
 
-It will also be helpful if the SMC call number is configurable.
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/include/linux/bitmap.h | 30 ++++++++++++++++++++++++++++++
+ tools/lib/bitmap.c           | 15 +++++++++++++++
+ 2 files changed, 45 insertions(+)
 
-- Lars
+diff --git a/tools/include/linux/bitmap.h b/tools/include/linux/bitmap.h
+index 05dca5c203f3..477a1cae513f 100644
+--- a/tools/include/linux/bitmap.h
++++ b/tools/include/linux/bitmap.h
+@@ -15,6 +15,8 @@ void __bitmap_or(unsigned long *dst, const unsigned long *bitmap1,
+ 		 const unsigned long *bitmap2, int bits);
+ int __bitmap_and(unsigned long *dst, const unsigned long *bitmap1,
+ 		 const unsigned long *bitmap2, unsigned int bits);
++int __bitmap_equal(const unsigned long *bitmap1,
++		   const unsigned long *bitmap2, unsigned int bits);
+ void bitmap_clear(unsigned long *map, unsigned int start, int len);
+ 
+ #define BITMAP_FIRST_WORD_MASK(start) (~0UL << ((start) & (BITS_PER_LONG - 1)))
+@@ -123,6 +125,15 @@ static inline unsigned long *bitmap_alloc(int nbits)
+ 	return calloc(1, BITS_TO_LONGS(nbits) * sizeof(unsigned long));
+ }
+ 
++/*
++ * bitmap_free - Free bitmap
++ * @bitmap: pointer to bitmap
++ */
++static inline void bitmap_free(unsigned long *bitmap)
++{
++	free(bitmap);
++}
++
+ /*
+  * bitmap_scnprintf - print bitmap list into buffer
+  * @bitmap: bitmap
+@@ -148,4 +159,23 @@ static inline int bitmap_and(unsigned long *dst, const unsigned long *src1,
+ 	return __bitmap_and(dst, src1, src2, nbits);
+ }
+ 
++#ifdef __LITTLE_ENDIAN
++#define BITMAP_MEM_ALIGNMENT 8
++#else
++#define BITMAP_MEM_ALIGNMENT (8 * sizeof(unsigned long))
++#endif
++#define BITMAP_MEM_MASK (BITMAP_MEM_ALIGNMENT - 1)
++#define IS_ALIGNED(x, a) (((x) & ((typeof(x))(a) - 1)) == 0)
++
++static inline int bitmap_equal(const unsigned long *src1,
++			const unsigned long *src2, unsigned int nbits)
++{
++	if (small_const_nbits(nbits))
++		return !((*src1 ^ *src2) & BITMAP_LAST_WORD_MASK(nbits));
++	if (__builtin_constant_p(nbits & BITMAP_MEM_MASK) &&
++	    IS_ALIGNED(nbits, BITMAP_MEM_ALIGNMENT))
++		return !memcmp(src1, src2, nbits / 8);
++	return __bitmap_equal(src1, src2, nbits);
++}
++
+ #endif /* _PERF_BITOPS_H */
+diff --git a/tools/lib/bitmap.c b/tools/lib/bitmap.c
+index 38494782be06..5043747ef6c5 100644
+--- a/tools/lib/bitmap.c
++++ b/tools/lib/bitmap.c
+@@ -71,3 +71,18 @@ int __bitmap_and(unsigned long *dst, const unsigned long *bitmap1,
+ 			   BITMAP_LAST_WORD_MASK(bits));
+ 	return result != 0;
+ }
++
++int __bitmap_equal(const unsigned long *bitmap1,
++		const unsigned long *bitmap2, unsigned int bits)
++{
++	unsigned int k, lim = bits/BITS_PER_LONG;
++	for (k = 0; k < lim; ++k)
++		if (bitmap1[k] != bitmap2[k])
++			return 0;
++
++	if (bits % BITS_PER_LONG)
++		if ((bitmap1[k] ^ bitmap2[k]) & BITMAP_LAST_WORD_MASK(bits))
++			return 0;
++
++	return 1;
++}
+-- 
+2.20.1
+
+
