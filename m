@@ -2,117 +2,96 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E247FC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8625C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8A0A215F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:12:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575018742;
-	bh=D7C4w+4s2X0XNpRConTGLaydGNgZ/tefnnJz0BmjCbQ=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=suMi0DYUmslx5ACNZc0ppPWHBVUlCI+DWvvOsJjArXL1TDmypkhudlMH889BHqL8N
-	 YfSkfKpBk9P7pwESge394Y1sxOYw1wGfLxnQa2ckIEyEN6k8nhVqarbYGozzj/kxcy
-	 S+fKoOugc6Cfc7UPhbCcIPEtbDsStGDNlUMULIHs=
+	by mail.kernel.org (Postfix) with ESMTP id AF382215A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 09:13:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfK2JMW (ORCPT
+        id S1726834AbfK2JNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 04:12:22 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:47315 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726143AbfK2JMV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 04:12:21 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iacJu-00053w-Nt; Fri, 29 Nov 2019 10:12:10 +0100
-To:     Yash Shah <yash.shah@sifive.com>
-Subject: RE: [PATCH v3 5/6] gpio: sifive: Add GPIO driver for SiFive SoCs
-X-PHP-Originating-Script: 0:main.inc
+        Fri, 29 Nov 2019 04:13:49 -0500
+Received: from foss.arm.com ([217.140.110.172]:45060 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725892AbfK2JNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 04:13:49 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB2BE30E;
+        Fri, 29 Nov 2019 01:13:48 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C57BB3F68E;
+        Fri, 29 Nov 2019 01:13:47 -0800 (PST)
+Date:   Fri, 29 Nov 2019 09:13:45 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 12/14] torture: Replace cpu_up/down with
+ device_online/offline
+Message-ID: <20191129091344.hf5demtjytv5dw5q@e107158-lin.cambridge.arm.com>
+References: <20191125112754.25223-1-qais.yousef@arm.com>
+ <20191125112754.25223-13-qais.yousef@arm.com>
+ <20191127214725.GG2889@paulmck-ThinkPad-P72>
+ <20191128165611.7lmjaszjl4gbo7u2@e107158-lin.cambridge.arm.com>
+ <20191128170025.ii3vqbj4jpcyghut@e107158-lin.cambridge.arm.com>
+ <20191128210246.GJ2889@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 29 Nov 2019 09:12:10 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        <bgolaszewski@baylibre.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <palmer@dabbelt.com>,
-        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
-        <aou@eecs.berkeley.edu>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <bmeng.cn@gmail.com>,
-        <atish.patra@wdc.com>, Sagar Kadam <sagar.kadam@sifive.com>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Sachin Ghadi <sachin.ghadi@sifive.com>
-In-Reply-To: <CH2PR13MB33682C26386CB4EE8A7EA1C98C460@CH2PR13MB3368.namprd13.prod.outlook.com>
-References: <1574661437-28486-1-git-send-email-yash.shah@sifive.com>
- <1574661437-28486-6-git-send-email-yash.shah@sifive.com>
- <CACRpkdY7fGvTPcwwC0XU+XN2w_QUCj0MmOYhp183P3Lj7Qw8WA@mail.gmail.com>
- <CH2PR13MB33682C26386CB4EE8A7EA1C98C460@CH2PR13MB3368.namprd13.prod.outlook.com>
-Message-ID: <208a63e8819b84f9dc03f270f2606294@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: yash.shah@sifive.com, linus.walleij@linaro.org, bgolaszewski@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, palmer@dabbelt.com, paul.walmsley@sifive.com, aou@eecs.berkeley.edu, tglx@linutronix.de, jason@lakedaemon.net, bmeng.cn@gmail.com, atish.patra@wdc.com, sagar.kadam@sifive.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191128210246.GJ2889@paulmck-ThinkPad-P72>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-29 06:27, Yash Shah wrote:
->> -----Original Message-----
->> From: Linus Walleij <linus.walleij@linaro.org>
->> Sent: 28 November 2019 17:50
->> To: Yash Shah <yash.shah@sifive.com>
->> Cc: bgolaszewski@baylibre.com; robh+dt@kernel.org;
->> mark.rutland@arm.com; palmer@dabbelt.com; Paul Walmsley ( Sifive)
->> <paul.walmsley@sifive.com>; aou@eecs.berkeley.edu; 
->> tglx@linutronix.de;
->> jason@lakedaemon.net; maz@kernel.org; bmeng.cn@gmail.com;
->> atish.patra@wdc.com; Sagar Kadam <sagar.kadam@sifive.com>; linux-
->> gpio@vger.kernel.org; devicetree@vger.kernel.org; linux-
->> riscv@lists.infradead.org; linux-kernel@vger.kernel.org; Sachin 
->> Ghadi
->> <sachin.ghadi@sifive.com>
->> Subject: Re: [PATCH v3 5/6] gpio: sifive: Add GPIO driver for SiFive 
->> SoCs
->>
->> On Mon, Nov 25, 2019 at 6:58 AM Yash Shah <yash.shah@sifive.com> 
->> wrote:
->>
->> > Adds the GPIO driver for SiFive RISC-V SoCs.
->> >
->> > Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
->> > [Atish: Various fixes and code cleanup]
->> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
->> > Signed-off-by: Yash Shah <yash.shah@sifive.com>
->>
->> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->>
->> I suppose Marc will merge all patches into the irqchip tree as they 
->> are logically
->> dependent? If you want the GPIO bindings and this driver directly 
->> merged
->> (no deps) then I can do that as well.
->
-> Yes, the GPIO driver have logical dependency on irqchip patches. It
-> is best if Marc merges all the patches into the irqchip tree.
->
-> @Marc Zyngier, Are you going to merge all the patches into the 
-> irqchip tree?
+On 11/28/19 13:02, Paul E. McKenney wrote:
+> On Thu, Nov 28, 2019 at 05:00:26PM +0000, Qais Yousef wrote:
+> > On 11/28/19 16:56, Qais Yousef wrote:
+> > > On 11/27/19 13:47, Paul E. McKenney wrote:
+> > > > On Mon, Nov 25, 2019 at 11:27:52AM +0000, Qais Yousef wrote:
+> > > > > The core device API performs extra housekeeping bits that are missing
+> > > > > from directly calling cpu_up/down.
+> > > > > 
+> > > > > See commit a6717c01ddc2 ("powerpc/rtas: use device model APIs and
+> > > > > serialization during LPM") for an example description of what might go
+> > > > > wrong.
+> > > > > 
+> > > > > This also prepares to make cpu_up/down a private interface for anything
+> > > > > but the cpu subsystem.
+> > > > > 
+> > > > > Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+> > > > > CC: Davidlohr Bueso <dave@stgolabs.net>
+> > > > > CC: "Paul E. McKenney" <paulmck@kernel.org>
+> > > > > CC: Josh Triplett <josh@joshtriplett.org>
+> > > > > CC: linux-kernel@vger.kernel.org
+> > > > 
+> > > > Looks fine from an rcutorture viewpoint, but why not provide an API
+> > > > that pulled lock_device_hotplug() and unlock_device_hotplug() into the
+> > > > online/offline calls?
+> > > 
+> > > I *think* the right way to do what you say is by doing lock_device_hotplug()
+> > > inside device_{online, offline}() - which affects all drivers not just the CPU.
+> 
+> Or there could be a CPU-specific wrapper function that did the needed
+> locking.  (Whether this is worth it or not of course depends on the
+> number of invocations.)
 
-I'm happy to pick this up, but that's definitely 5.6 material as
-I stopped collecting new 5.5 features a couple of weeks ago.
+Okay I see what you mean now. driver/base/memory.c have {add,remove}_memory()
+that does what you say. I think we can replicate this in driver/base/cpu.c too.
 
-Thanks,
+I can certainly do that, better as an improvement on top as I need to audit the
+code to make sure the critical sections weren't relying on this lock to protect
+something else beside the online/offline operation.
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Thanks!
+
+--
+Qais Yousef
