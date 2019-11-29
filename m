@@ -2,177 +2,112 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3D2C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 00:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 600F0C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 00:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B56922158A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 00:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 360852158A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 00:19:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hVlmWmpz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bv85t85R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfK2ARN (ORCPT
+        id S1726703AbfK2ATx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 19:17:13 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:45396 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726610AbfK2ARM (ORCPT
+        Thu, 28 Nov 2019 19:19:53 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:39564 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726616AbfK2ATw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 19:17:12 -0500
-Received: by mail-ed1-f68.google.com with SMTP id b5so24228894eds.12
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 16:17:11 -0800 (PST)
+        Thu, 28 Nov 2019 19:19:52 -0500
+Received: by mail-pj1-f67.google.com with SMTP id v93so9233577pjb.6;
+        Thu, 28 Nov 2019 16:19:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=hKdxAEvC9giOVo+5fI8UhBseDYEwGbYsXK3mw9tmIQY=;
-        b=hVlmWmpzm8h9AJJ3dV8J/Vq5S3tr8XdfS5TULH7gtd+QDlFhFvJl5GIs3pVRxbpuAr
-         vb1xpQaVDVwJEn8ubFxWrx0Sy+N9ZDlY0LzWfmLkB4krIK6/YmWQQ+vvqvlvkaGE6nAX
-         DPJPCbcwVfWu0Kox3IVCt7MSklSiOlMkMdfDc=
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=h53cQjZSibuH3tAJSYGep55eMe8Vd0lhXfafS/71YMc=;
+        b=Bv85t85R3UvENEoNM1z9LUb+cWEgsm9+BUi6Z6TY45q7P4tPHrTkzmbq19ZyKt3gaY
+         4Y7b1GC07f6G3J9lhtrt1nyCJUz91Vr1W2Zz7WfhKYP89Y1e+CepLYa/Fd3ILNkgJBYm
+         HXkFZ33yEKBBype4wxBkYrsItVCCwAL4ez8pa2iagti25qmNm1/7arPwnqs0LjBvPk/a
+         HcOWyYq2ZMG0wlTN87SrVWqCrlFKwRYxUDQ1pE9TplPwkhzvnEg5teYfGGf3zSega9/A
+         2n83v1OcpOZr1pKNmtVs5LQQ3sLA7oD9FUEar9wbLLo7EXJLaDtOv+EpKnCuO6o92m7i
+         Udsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hKdxAEvC9giOVo+5fI8UhBseDYEwGbYsXK3mw9tmIQY=;
-        b=F7ZYe5JJ26aRmH9RE+bmPJbwYX6uF9u9KtxfSubLBiHgxyUtp/e6yCxAfa2+N+4f+B
-         iFx6Wxmd0p8Oie0yF50ldsvW1CRCwDMjHX/Q+i55zoU636BIyvzOPewylayDoOzE+9Up
-         ZBAMSn8xFqTjxp90BzdIULfwSin1FFlN2pd9tgaQJjN3Yz10sBVSY9EH68BtsyhFW1XM
-         5q2eoc7gH7PjatC+GYAHYOu9rb0+g5OF/Q+ZJS0lptJ66/GbMoqFoFQz3QUUnF0erB+U
-         lUd9DoMmTm9+CFMSFxjX0CDunvwWCMBUCLFNeAmhL7q7CXvGOWMAI6GB+94jd3xx5EQG
-         l6QA==
-X-Gm-Message-State: APjAAAUoR/ix/ifzDN6Pob7Fqqv09icNFId905U6ykvYf/VqKeqfCCI0
-        cQtP99rqne8LS/5VXC4KA8Yme5bLlfZbpA==
-X-Google-Smtp-Source: APXvYqzMjNqE6KEQnqr1PkdSrhafKfeQFLmAjwodr9THwlfypzXpEPPcdqH/ubkARhhimEJQZJfP0w==
-X-Received: by 2002:a05:6402:1841:: with SMTP id v1mr1067477edy.290.1574986630191;
-        Thu, 28 Nov 2019 16:17:10 -0800 (PST)
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com. [209.85.128.41])
-        by smtp.gmail.com with ESMTPSA id i7sm886939edr.28.2019.11.28.16.17.09
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Nov 2019 16:17:09 -0800 (PST)
-Received: by mail-wm1-f41.google.com with SMTP id y23so3958296wma.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 16:17:09 -0800 (PST)
-X-Received: by 2002:a1c:3c42:: with SMTP id j63mr12611006wma.90.1574986628632;
- Thu, 28 Nov 2019 16:17:08 -0800 (PST)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=h53cQjZSibuH3tAJSYGep55eMe8Vd0lhXfafS/71YMc=;
+        b=Hbc8GTR+F11fK97IH198Du+vIq0CbVSZQ4h3RYE46wCQuPEfqDoCXejrwQOUFx5bq2
+         0T/7dwBMyKnHlyVESVwXiQ5VH2XFdOYqAmyn1HJ0WkoxwtJHsXCTe1tPkZq9q/ir/779
+         3Cx90518HkSfCOD1O7OsdLoUUPNGMVoMn4ht5d3L4Krg0bljfSFB+3ckvljRm2Bkxmyr
+         gvAAu+qSZ0laG6u5LrbiB/Jr2niqjc2gRPcor76pwHut4hCswrhCdsWxTNpHVaSDxcmj
+         exm3vy5ccNj0qY35zBBegBJUggu6vNkJT9X2jZ7Nth5dzNyEvTfV9hRl6fdGYrMo4OaD
+         Nn+g==
+X-Gm-Message-State: APjAAAWbvCYNVYuzUFawhyVTX/ma2N2BVtfnqtRAPQATA1hrPBEIodz3
+        cbv1x35OW/GgzMkBY9XxO+w=
+X-Google-Smtp-Source: APXvYqydSlcywgyu28ko3Or1LMj946GqVhi84pXtfb+mGorPFT5tefwcV+ieBvVCZA+weqO0Y7JsjQ==
+X-Received: by 2002:a17:902:a408:: with SMTP id p8mr12227465plq.266.1574986791930;
+        Thu, 28 Nov 2019 16:19:51 -0800 (PST)
+Received: from localhost.localdomain ([45.124.203.14])
+        by smtp.gmail.com with ESMTPSA id c2sm21717929pfn.55.2019.11.28.16.19.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Nov 2019 16:19:50 -0800 (PST)
+From:   Joel Stanley <joel@jms.id.au>
+To:     David Woodhouse <dwmw2@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, openbmc@lists.ozlabs.org,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>
+Subject: [PATCH] Revert "jffs2: Fix possible null-pointer dereferences in jffs2_add_frag_to_fragtree()"
+Date:   Fri, 29 Nov 2019 10:49:30 +1030
+Message-Id: <20191129001930.651128-1-joel@jms.id.au>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20191122051608.128717-1-hiroh@chromium.org> <767528be59275265072896e5c679e97575615fdd.camel@ndufresne.ca>
- <CAAFQd5D3OpAAtX7_0ktz4-aAgWN_G4YBQMR=Vwp7JPopjvRkRA@mail.gmail.com> <f5341ed837529bd38d466d4b655e261d64065912.camel@ndufresne.ca>
-In-Reply-To: <f5341ed837529bd38d466d4b655e261d64065912.camel@ndufresne.ca>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Fri, 29 Nov 2019 09:16:57 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5Cpk8qG+VgE6+aznBmXu11YG0gNQyCRanZghds-TPKvyg@mail.gmail.com>
-Message-ID: <CAAFQd5Cpk8qG+VgE6+aznBmXu11YG0gNQyCRanZghds-TPKvyg@mail.gmail.com>
-Subject: Re: [PATCH] media: hantro: Support H264 profile control
-To:     Nicolas Dufresne <nicolas@ndufresne.ca>
-Cc:     Hirokazu Honda <hiroh@chromium.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        devel@driverdev.osuosl.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 23, 2019 at 1:52 AM Nicolas Dufresne <nicolas@ndufresne.ca> wro=
-te:
->
-> Le samedi 23 novembre 2019 =C3=A0 01:00 +0900, Tomasz Figa a =C3=A9crit :
-> > On Sat, Nov 23, 2019 at 12:09 AM Nicolas Dufresne <nicolas@ndufresne.ca=
-> wrote:
-> > > Le vendredi 22 novembre 2019 =C3=A0 14:16 +0900, Hirokazu Honda a =C3=
-=A9crit :
-> > > > The Hantro G1 decoder supports H.264 profiles from Baseline to High=
-, with
-> > > > the exception of the Extended profile.
-> > > >
-> > > > Expose the V4L2_CID_MPEG_VIDEO_H264_PROFILE control, so that the
-> > > > applications can query the driver for the list of supported profile=
-s.
-> > >
-> > > Thanks for this patch. Do you think we could also add the LEVEL contr=
-ol
-> > > so the profile/level enumeration becomes complete ?
-> > >
-> > > I'm thinking it would be nice if the v4l2 compliance test make sure
-> > > that codecs do implement these controls (both stateful and stateless)=
-,
-> > > it's essential for stack with software fallback, or multiple capable
-> > > codec hardware but with different capabilities.
-> > >
-> >
-> > Level is a difficult story, because it also specifies the number of
-> > macroblocks per second, but for decoders like this the number of
-> > macroblocks per second it can handle depends on things the driver
-> > might be not aware of - clock frequencies, DDR throughput, system
-> > load, etc.
-> >
-> > My take on this is that the decoder driver should advertise the
-> > highest resolution the decoder can handle due to hardware constraints.
-> > Performance related things depend on the integration details and
-> > should be managed elsewhere. For example Android and Chrome OS manage
-> > expected decoding performance in per-board configuration files.
->
-> When you read datasheet, the HW is always rated to maximum level (and
-> it's a range) with the assumption of a single stream. It seems much
-> easier to expose this as-is, statically then to start doing some math
-> with data that isn't fully exposed to the user. This is about filtering
-> of multiple CODEC instances, it does not need to be rocket science,
-> specially that the amount of missing data is important (e.g. usage of
-> tiles, compression, IPP all have an impact on the final performance).
-> All we want to know in userspace is if this HW is even possibly capable
-> of LEVEL X, and if not, we'll look for another one.
->
+This reverts commit f2538f999345405f7d2e1194c0c8efa4e11f7b3a. The patch
+stopped JFFS2 from being able to mount an existing filesystem with the
+following errors:
 
-Agreed, one could potentially define it this way, but would it be
-really useful for the userspace and the users? I guess it could enable
-slightly faster fallback to software decoding in the extreme case of
-the hardware not supporting the level at all, but I suspect that the
-majority of cases would be the hardware just being unusably slow.
+ jffs2: error: (77) jffs2_build_inode_fragtree: Add node to tree failed -22
+ jffs2: error: (77) jffs2_do_read_inode_internal: Failed to build final fragtree for inode #5377: error -22
 
-Also, as I mentioned before, we already return the range of supported
-resolutions, which in practice should map to the part of the level
-that may depend on hardware capabilities rather than performance, so
-exposing levels as well would add redundancy to the information
-exposed.
+Fixes: f2538f999345 ("jffs2: Fix possible null-pointer dereferences...")
+Cc: stable@vger.kernel.org
+Suggested-by: Hou Tao <houtao1@huawei.com>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+---
+5.4 cannot mount (some?) jffs2 filesystems without this fix. Hou pointed
+this out[1] a while back but the fix didn't make it in. It's still
+broken in -next.
 
-> >
-> > > > Signed-off-by: Hirokazu Honda <hiroh@chromium.org>
-> > > > ---
-> > > >  drivers/staging/media/hantro/hantro_drv.c | 10 ++++++++++
-> > > >  1 file changed, 10 insertions(+)
-> > > >
-> > > > diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/st=
-aging/media/hantro/hantro_drv.c
-> > > > index 6d9d41170832..9387619235d8 100644
-> > > > --- a/drivers/staging/media/hantro/hantro_drv.c
-> > > > +++ b/drivers/staging/media/hantro/hantro_drv.c
-> > > > @@ -355,6 +355,16 @@ static const struct hantro_ctrl controls[] =3D=
- {
-> > > >                       .def =3D V4L2_MPEG_VIDEO_H264_START_CODE_ANNE=
-X_B,
-> > > >                       .max =3D V4L2_MPEG_VIDEO_H264_START_CODE_ANNE=
-X_B,
-> > > >               },
-> > > > +     }, {
-> > > > +             .codec =3D HANTRO_H264_DECODER,
-> > > > +             .cfg =3D {
-> > > > +                     .id =3D V4L2_CID_MPEG_VIDEO_H264_PROFILE,
-> > > > +                     .min =3D V4L2_MPEG_VIDEO_H264_PROFILE_BASELIN=
-E,
-> > > > +                     .max =3D V4L2_MPEG_VIDEO_H264_PROFILE_HIGH,
-> > > > +                     .menu_skip_mask =3D
-> > > > +                     BIT(V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED),
-> > > > +                     .def =3D V4L2_MPEG_VIDEO_H264_PROFILE_MAIN,
-> > > > +             }
-> > > >       }, {
-> > > >       },
-> > > >  };
+[1] https://lore.kernel.org/lkml/2758feea-8d6e-c690-5cac-d42213f2024b@huawei.com/
+
+ fs/jffs2/nodelist.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/jffs2/nodelist.c b/fs/jffs2/nodelist.c
+index 021a4a2190ee..b86c78d178c6 100644
+--- a/fs/jffs2/nodelist.c
++++ b/fs/jffs2/nodelist.c
+@@ -226,7 +226,7 @@ static int jffs2_add_frag_to_fragtree(struct jffs2_sb_info *c, struct rb_root *r
+ 		lastend = this->ofs + this->size;
+ 	} else {
+ 		dbg_fragtree2("lookup gave no frag\n");
+-		return -EINVAL;
++		lastend = 0;
+ 	}
+ 
+ 	/* See if we ran off the end of the fragtree */
+-- 
+2.24.0
+
