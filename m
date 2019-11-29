@@ -2,125 +2,114 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB016C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 15:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B757FC43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 15:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A528421736
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 15:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84850217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 15:50:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="lUT1A0bJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfK2Pt3 (ORCPT
+        id S1727034AbfK2Put (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 10:49:29 -0500
-Received: from mga11.intel.com ([192.55.52.93]:45899 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726608AbfK2Pt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 10:49:29 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Nov 2019 07:49:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,257,1571727600"; 
-   d="scan'208";a="234742526"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 29 Nov 2019 07:49:28 -0800
-Received: from [10.252.8.148] (abudanko-mobl.ccr.corp.intel.com [10.252.8.148])
-        by linux.intel.com (Postfix) with ESMTP id 686C45802B9;
-        Fri, 29 Nov 2019 07:49:26 -0800 (PST)
-Subject: Re: [PATCH v3 3/3] perf record: adapt affinity to machines with #CPUs
- > 1K
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <908dbe98-7d8d-0ec1-d4ae-242f3e104979@linux.intel.com>
- <21bc3ad7-e1f2-68da-f004-36354a6e40ea@linux.intel.com>
- <20191129130710.GB14169@krava>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <d11eb388-2a66-c791-3ad3-40eed930480a@linux.intel.com>
-Date:   Fri, 29 Nov 2019 18:49:25 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Fri, 29 Nov 2019 10:50:49 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34894 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726920AbfK2Put (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 10:50:49 -0500
+Received: by mail-pg1-f195.google.com with SMTP id l24so6076763pgk.2
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 07:50:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=zqzmkmsTqqNqAEU6sqwGU4uvEVY7myANFxGbhNa8Thk=;
+        b=lUT1A0bJvuFzw968HjdP/fl9rNWARwc0PM4vYA/8yJCbJ/uaimus9hTdblQmfxlQKV
+         Hk3pTRvXK/sBwKVtqmUD9m1Hj5DCnk2axhfyw3w3c/3Smxd9sx0XjgiViLi9GAWsZgST
+         ImILVq57QBkrCOTfxSwjUOt8pRnJQmvRe1mYU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=zqzmkmsTqqNqAEU6sqwGU4uvEVY7myANFxGbhNa8Thk=;
+        b=FddUWicUmO35ObGDePrVnmdIw3MDO2o2eMPV9/ffloJFJBKtRPiSnMepdD0IFyykFZ
+         TzIIS3b337toAVrIlq5GPylbL6aVGLBl9xQAaPvz5uYWLJ8odTz8giKaBUEuu7bQGYtF
+         T/gNmOcYDCWDeaIbs3G4hQDRtei5qqGcKg1FsPVMpk27er2Mr9kXmHljMmH5kGjbzig+
+         Rbw128VQZMo2fXkNewYn+Ksle0aEPgogE4maYsb9jytnyc+qhrHeWbMDbX0FC0mrwzQG
+         dZL072WBqKYiNy6swytWBR55oAXSOPmXyAzizCOqC2iS9fUp1ZE8E0+LsfIScWEs1vXJ
+         hphw==
+X-Gm-Message-State: APjAAAXbv1q4AxIv/Y9se2kcnrMrsXvweADTJ6aLuxgCdAGHuzVeSC/Z
+        pKyPdLR5mzitEGKDzHhUW5esOw==
+X-Google-Smtp-Source: APXvYqyyUukfPuCBk8nUZGZ0bnjEmJYzBWHD+mlTLp6d97G4LvWRCazYGdcctIJCVgDXHXDcuWz1Gg==
+X-Received: by 2002:aa7:93a7:: with SMTP id x7mr57797282pff.36.1575042647113;
+        Fri, 29 Nov 2019 07:50:47 -0800 (PST)
+Received: from localhost (2001-44b8-111e-5c00-4092-39f5-bb9d-b59a.static.ipv6.internode.on.net. [2001:44b8:111e:5c00:4092:39f5:bb9d:b59a])
+        by smtp.gmail.com with ESMTPSA id a22sm1465829pfk.108.2019.11.29.07.50.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Nov 2019 07:50:46 -0800 (PST)
+From:   Daniel Axtens <dja@axtens.net>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-xfs@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Subject: Re: XFS check crash (WAS Re: [PATCH v11 1/4] kasan: support backing vmalloc space with real shadow memory)
+In-Reply-To: <27B18BF6-757C-4CA3-A852-1EE20D4D10A9@lca.pw>
+References: <20191031093909.9228-1-dja@axtens.net> <20191031093909.9228-2-dja@axtens.net> <1573835765.5937.130.camel@lca.pw> <871ru5hnfh.fsf@dja-thinkpad.axtens.net> <952ec26a-9492-6f71-bab1-c1def887e528@virtuozzo.com> <CACT4Y+ZGO8b88fUyFe-WtV3Ubr11ChLY2mqk8YKWN9o0meNtXA@mail.gmail.com> <CACT4Y+Z+VhfVpkfg-WFq_kFMY=DE+9b_DCi-mCSPK-udaf_Arg@mail.gmail.com> <CACT4Y+Yog=PHF1SsLuoehr2rcbmfvLUW+dv7Vo+1RfdTOx7AUA@mail.gmail.com> <2297c356-0863-69ce-85b6-8608081295ed@virtuozzo.com> <CACT4Y+ZNAfkrE0M=eCHcmy2LhPG_kKbg4mOh54YN6Bgb4b3F5w@mail.gmail.com> <56cf8aab-c61b-156c-f681-d2354aed22bb@virtuozzo.com> <871rtqg91q.fsf@dja-thinkpad.axtens.net> <27B18BF6-757C-4CA3-A852-1EE20D4D10A9@lca.pw>
+Date:   Sat, 30 Nov 2019 02:50:43 +1100
+Message-ID: <87y2vyel64.fsf@dja-thinkpad.axtens.net>
 MIME-Version: 1.0
-In-Reply-To: <20191129130710.GB14169@krava>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+>>>>> 
+>>>>> Nope, it's vm_map_ram() not being handled
+>>>> 
+>>>> 
+>>>> Another suspicious one. Related to kasan/vmalloc?
+>>> 
+>>> Very likely the same as with ion:
+>>> 
+>>> # git grep vm_map_ram|grep xfs
+>>> fs/xfs/xfs_buf.c:                * vm_map_ram() will allocate auxiliary structures (e.g.
+>>> fs/xfs/xfs_buf.c:                       bp->b_addr = vm_map_ram(bp->b_pages, bp->b_page_count,
+>> 
+>> Aaargh, that's an embarassing miss.
+>> 
+>> It's a bit intricate because kasan_vmalloc_populate function is
+>> currently set up to take a vm_struct not a vmap_area, but I'll see if I
+>> can get something simple out this evening - I'm away for the first part
+>> of next week.
 
-On 29.11.2019 16:07, Jiri Olsa wrote:
-> On Fri, Nov 29, 2019 at 01:05:26PM +0300, Alexey Budankov wrote:
-> 
-> SNIP
-> 
->>  # undef REASON
->>  #endif
->>  
->> -	CPU_ZERO(&rec->affinity_mask);
->>  	rec->opts.affinity = PERF_AFFINITY_SYS;
->>  
->>  	rec->evlist = evlist__new();
->> @@ -2499,6 +2504,14 @@ int cmd_record(int argc, const char **argv)
->>  
->>  	symbol__init(NULL);
->>  
->> +	rec->affinity_mask.nbits = cpu__max_cpu();
->> +	rec->affinity_mask.bits = bitmap_alloc(rec->affinity_mask.nbits);
->> +	if (!rec->affinity_mask.bits) {
->> +		pr_err("Failed to allocate thread mask for %ld cpus\n", rec->affinity_mask.nbits);
->> +		return -ENOMEM;
->> +	}
->> +	pr_debug2("thread mask[%ld]: empty\n", rec->affinity_mask.nbits);
-> 
-> above can be done only for (rec->opts.affinity != PERF_AFFINITY_SYS)
+For crashes in XFS, binder etc that implicate vm_map_ram, see:
+https://lore.kernel.org/linux-mm/20191129154519.30964-1-dja@axtens.net/
 
-Indeed. Corrected in v4.
+The easiest way I found to repro the bug is
+sudo modprobe i915 mock_selftest=-1
 
-> 
-> 
->> +
->>  	err = record__auxtrace_init(rec);
->>  	if (err)
->>  		goto out;
->> @@ -2613,6 +2626,8 @@ int cmd_record(int argc, const char **argv)
->>  
->>  	err = __cmd_record(&record, argc, argv);
->>  out:
->> +	if (rec->affinity_mask.bits)
->> +		bitmap_free(rec->affinity_mask.bits);
->>  	evlist__delete(rec->evlist);
->>  	symbol__exit();
->>  	auxtrace_record__free(rec->itr);
->> diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
->> index 30ff7aef06f2..615d05870849 100644
->> --- a/tools/perf/util/mmap.c
->> +++ b/tools/perf/util/mmap.c
->> @@ -219,6 +219,9 @@ static void perf_mmap__aio_munmap(struct mmap *map __maybe_unused)
->>  
->>  void mmap__munmap(struct mmap *map)
->>  {
->> +	if (map->affinity_mask.bits)
->> +		bitmap_free(map->affinity_mask.bits);
-> 
-> you don't need to check map->affinity_mask.bits, it's checked in free
+For lock warns, one that goes through the percpu alloc path, the patch
+is already queued in mmots.
 
-Makes sense. Corrected in v4.
+For Dmitry's latest one where there's an allocation in the
+purge_vmap_area_lazy path that triggers a locking warning, you'll have
+to wait until next week, sorry.
 
-> 
-> jirka
-
-Thanks,
-Alexey
+Regards,
+Daniel
