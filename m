@@ -2,76 +2,79 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31236C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B884EC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1FEE206B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76EF6206B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:32:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YIJ7zRms"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S9YH7tZu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbfK2Vct (ORCPT
+        id S1727219AbfK2Vcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 16:32:49 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20874 "EHLO
+        Fri, 29 Nov 2019 16:32:51 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34670 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727073AbfK2Vct (ORCPT
+        with ESMTP id S1727111AbfK2Vcu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 16:32:49 -0500
+        Fri, 29 Nov 2019 16:32:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575063167;
+        s=mimecast20190719; t=1575063168;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=peI3w5GhWEX1JieJHH29KyaSX4w2AsTjOin5SLB/5Gw=;
-        b=YIJ7zRmsPXQFH+2eN/+Aji+11/IoCO5xwgtBsxw4VK1pwNXnOwWkRPut/KfBaK9BHs6QqN
-        MVKOoYJelD+Ng4tMnkXR2qyI+J7Fa/uV1l1bKqx9Xgf2mtZhCPP6AyMfIRQptgGzzUZJNk
-        U6iqKRQwoms1ZDD33nPUjhwX3mwanso=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-375-y8RH9lZqM-mT44LQjoAKFQ-1; Fri, 29 Nov 2019 16:32:45 -0500
-Received: by mail-qv1-f70.google.com with SMTP id bt18so2769268qvb.19
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 13:32:45 -0800 (PST)
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eAG5Jn3OuAFdTylu6pJu+NV01EXcH/0EJLHVxQXwkPc=;
+        b=S9YH7tZujrtEQyHEghhDA3tjthsgH6nvi9VaLLR26VYGxlXXdt9MX+AU4S46er0eWZIMzc
+        3B6Cw3/JfCC0cKE3cw6Swc7RAinBg/3cIdDrKtZHQhk00hHQ2/PWSy9zlRxG9ohETbX6xo
+        vcF2o+gFWTOd6RRXhLxP1LWpp0wPGxc=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-385-vb71_ve5MLm4Vv2LormZKg-1; Fri, 29 Nov 2019 16:32:46 -0500
+Received: by mail-qt1-f199.google.com with SMTP id v92so19632378qtd.18
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 13:32:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cn7j7/8SJgeM/ER61fZ1AdZGSd2mYCJ7pUgcBKPF2KQ=;
-        b=ZTlHubTVRQq6C7dndRNhjYY7UNgmmSzz6b7h4SLnI6DkR0EFpgShldAdnTIYhqGyMu
-         cd2kLGV5qimb5H6Au7X1Zt9wypKTCmXyivjbw1A6MlOwVfU19FQbkDKV92SlJa0ulF4u
-         se+TUSY8V/GOdWsOtAOT5wwigjpkygHhLAxIJuqkT41pTatr5HAgLI5gjcFTaY2VeffB
-         C0JmmcDECRPybLkOJn6W3GFyFqHvGFm1EnJTS0ATet7TbZcm7Wfw0kdQ5mBiKx0b4I93
-         29JL5aWWARnX3PAweyYWlQ59ChI9NpVSrDzdO9uwcziaVH3qv1mAaW4UG93vaqE5wMpZ
-         qZsA==
-X-Gm-Message-State: APjAAAWsVVVG+7BnkyTMOdHYIlOF72G/EDLmQIPjTpBzFxwraOseGIE9
-        IAaFoqaWuweBvCJ9oK20rnQsgTs1n3d1ooP7qF0Jh6VmzZo2pM1xIJQOpQW5m4+0xm26zxF1FNl
-        5DUTumBvlUNXcd2s0WQOINIAd
-X-Received: by 2002:ad4:588d:: with SMTP id dz13mr19982301qvb.86.1575063164828;
-        Fri, 29 Nov 2019 13:32:44 -0800 (PST)
-X-Google-Smtp-Source: APXvYqy5eIATWxerwmd03ez0vmrXtvk2z5PAQi557Z+8gFzf+IEvRetJH80wrZlItjYLRMnxc+PPpA==
-X-Received: by 2002:ad4:588d:: with SMTP id dz13mr19982258qvb.86.1575063164469;
-        Fri, 29 Nov 2019 13:32:44 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1QV5ryCIGq2QV/eZOsMqVJWdaldoWJG8mcfxAcgQq7Q=;
+        b=d2B751u5X6BwE4i04y/AFH6Bd5AKV7VREUxNAKEFRAenn3WJUJla1YRpqdneacwyRg
+         Itt2JRg0trSi5POEOQFsTkekzmPAwGANN/Jw+7tqiQ+pLcZtMZJBKLGfIPXQq6jPIrP0
+         PDonSU3k2Xr9EX6S6kVuiMp4rRqiFJ1RyQj94xhPTKamGxQ4Z3xvgtQCIwsPSpgL71T3
+         Zj1pbWj6POqYhzle+8JnvZC3sSz20KWIxoufdW5GBWDY3oVCIXEGPaEB+UxsjVDIJbIj
+         CyKy0uuxwg2BvZQczCxDrkCETtpp/McBLqMQAdYeur2gA65GF2pX1ypf5/KfEolwU+hM
+         KkOA==
+X-Gm-Message-State: APjAAAU4/nt+CcJDhJNI+deHhLW/xPdHthCxKgvARfCJVR4ENFCopy6I
+        Bo5h5Sl/QxID4MZUhcEciMQdjkyaEdYQCbhn/86HeKAr95O50ywfSH2/IcWb+LIFv8QbJMB7341
+        VqeYhIi6NMlKPT6iDAe6oS77R
+X-Received: by 2002:ac8:163c:: with SMTP id p57mr34693389qtj.106.1575063165961;
+        Fri, 29 Nov 2019 13:32:45 -0800 (PST)
+X-Google-Smtp-Source: APXvYqw+c4hSEAWhEg5Qw6P8scV1dsSyfnHKBqTlu0/32I1c4Invo+lKJ5rpxZioPxQcpCt/V/UY5Q==
+X-Received: by 2002:ac8:163c:: with SMTP id p57mr34693345qtj.106.1575063165630;
+        Fri, 29 Nov 2019 13:32:45 -0800 (PST)
 Received: from xz-x1.yyz.redhat.com ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id n5sm10634817qkf.48.2019.11.29.13.32.43
+        by smtp.gmail.com with ESMTPSA id n5sm10634817qkf.48.2019.11.29.13.32.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Nov 2019 13:32:43 -0800 (PST)
+        Fri, 29 Nov 2019 13:32:45 -0800 (PST)
 From:   Peter Xu <peterx@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     Paolo Bonzini <pbonzini@redhat.com>, Cao Lei <Lei.Cao@stratus.com>,
         peterx@redhat.com, "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: [PATCH RFC 00/15] KVM: Dirty ring interface
-Date:   Fri, 29 Nov 2019 16:32:27 -0500
-Message-Id: <20191129213242.17144-1-peterx@redhat.com>
+Subject: [PATCH RFC 01/15] KVM: Move running VCPU from ARM to common code
+Date:   Fri, 29 Nov 2019 16:32:28 -0500
+Message-Id: <20191129213242.17144-2-peterx@redhat.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191129213242.17144-1-peterx@redhat.com>
+References: <20191129213242.17144-1-peterx@redhat.com>
 MIME-Version: 1.0
-X-MC-Unique: y8RH9lZqM-mT44LQjoAKFQ-1
+X-MC-Unique: vb71_ve5MLm4Vv2LormZKg-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
@@ -80,148 +83,294 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Branch is here: https://github.com/xzpeter/linux/tree/kvm-dirty-ring
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-Overview
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+For ring-based dirty log tracking, it will be more efficient to account
+writes during schedule-out or schedule-in to the currently running VCPU.
+We would like to do it even if the write doesn't use the current VCPU's
+address space, as is the case for cached writes (see commit 4e335d9e7ddb,
+"Revert "KVM: Support vCPU-based gfn->hva cache"", 2017-05-02).
 
-This is a continued work from Lei Cao <lei.cao@stratus.com> and Paolo
-on the KVM dirty ring interface.  To make it simple, I'll still start
-with version 1 as RFC.
+Therefore, add a mechanism to track the currently-loaded kvm_vcpu struct.
+There is already something similar in KVM/ARM; one important difference
+is that kvm_arch_vcpu_{load,put} have two callers in virt/kvm/kvm_main.c:
+we have to update both the architecture-independent vcpu_{load,put} and
+the preempt notifiers.
 
-The new dirty ring interface is another way to collect dirty pages for
-the virtual machine, but it is different from the existing dirty
-logging interface in a few ways, majorly:
+Another change made in the process is to allow using kvm_get_running_vcpu()
+in preemptible code.  This is allowed because preempt notifiers ensure
+that the value does not change even after the VCPU thread is migrated.
 
-  - Data format: The dirty data was in a ring format rather than a
-    bitmap format, so the size of data to sync for dirty logging does
-    not depend on the size of guest memory any more, but speed of
-    dirtying.  Also, the dirty ring is per-vcpu (currently plus
-    another per-vm ring, so total ring number is N+1), while the dirty
-    bitmap is per-vm.
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ arch/arm/include/asm/kvm_host.h   |  2 --
+ arch/arm64/include/asm/kvm_host.h |  2 --
+ include/linux/kvm_host.h          |  3 +++
+ virt/kvm/arm/arm.c                | 29 -----------------------------
+ virt/kvm/arm/perf.c               |  6 +++---
+ virt/kvm/arm/vgic/vgic-mmio.c     | 15 +++------------
+ virt/kvm/kvm_main.c               | 25 ++++++++++++++++++++++++-
+ 7 files changed, 33 insertions(+), 49 deletions(-)
 
-  - Data copy: The sync of dirty pages does not need data copy any more,
-    but instead the ring is shared between the userspace and kernel by
-    page sharings (mmap() on either the vm fd or vcpu fd)
-
-  - Interface: Instead of using the old KVM_GET_DIRTY_LOG,
-    KVM_CLEAR_DIRTY_LOG interfaces, the new ring uses a new interface
-    called KVM_RESET_DIRTY_RINGS when we want to reset the collected
-    dirty pages to protected mode again (works like
-    KVM_CLEAR_DIRTY_LOG, but ring based)
-
-And more.
-
-I would appreciate if the reviewers can start with patch "KVM:
-Implement ring-based dirty memory tracking", especially the document
-update part for the big picture.  Then I'll avoid copying into most of
-them into cover letter again.
-
-I marked this series as RFC because I'm at least uncertain on this
-change of vcpu_enter_guest():
-
-        if (kvm_check_request(KVM_REQ_DIRTY_RING_FULL, vcpu)) {
-                vcpu->run->exit_reason =3D KVM_EXIT_DIRTY_RING_FULL;
-                /*
-                        * If this is requested, it means that we've
-                        * marked the dirty bit in the dirty ring BUT
-                        * we've not written the date.  Do it now.
-                        */
-                r =3D kvm_emulate_instruction(vcpu, 0);
-                r =3D r >=3D 0 ? 0 : r;
-                goto out;
-        }
-
-I did a kvm_emulate_instruction() when dirty ring reaches softlimit
-and want to exit to userspace, however I'm not really sure whether
-there could have any side effect.  I'd appreciate any comment of
-above, or anything else.
-
-Tests
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
-I wanted to continue work on the QEMU part, but after I noticed that
-the interface might still prone to change, I posted this series first.
-However to make sure it's at least working, I've provided unit tests
-together with the series.  The unit tests should be able to test the
-series in at least three major paths:
-
-  (1) ./dirty_log_test -M dirty-ring
-
-      This tests async ring operations: this should be the major work
-      mode for the dirty ring interface, say, when the kernel is
-      queuing more data, the userspace is collecting too.  Ring can
-      hardly reaches full when working like this, because in most
-      cases the collection could be fast.
-
-  (2) ./dirty_log_test -M dirty-ring -c 1024
-
-      This set the ring size to be very small so that ring soft-full
-      always triggers (soft-full is a soft limit of the ring state,
-      when the dirty ring reaches the soft limit it'll do a userspace
-      exit and let the userspace to collect the data).
-
-  (3) ./dirty_log_test -M dirty-ring-wait-queue
-
-      This sololy test the extreme case where ring is full.  When the
-      ring is completely full, the thread (no matter vcpu or not) will
-      be put onto a per-vm waitqueue, and KVM_RESET_DIRTY_RINGS will
-      wake the threads up (assuming until which the ring will not be
-      full any more).
-
-Thanks,
-
-Cao, Lei (2):
-  KVM: Add kvm/vcpu argument to mark_dirty_page_in_slot
-  KVM: X86: Implement ring-based dirty memory tracking
-
-Paolo Bonzini (1):
-  KVM: Move running VCPU from ARM to common code
-
-Peter Xu (12):
-  KVM: Add build-time error check on kvm_run size
-  KVM: Implement ring-based dirty memory tracking
-  KVM: Make dirty ring exclusive to dirty bitmap log
-  KVM: Introduce dirty ring wait queue
-  KVM: selftests: Always clear dirty bitmap after iteration
-  KVM: selftests: Sync uapi/linux/kvm.h to tools/
-  KVM: selftests: Use a single binary for dirty/clear log test
-  KVM: selftests: Introduce after_vcpu_run hook for dirty log test
-  KVM: selftests: Add dirty ring buffer test
-  KVM: selftests: Let dirty_log_test async for dirty ring test
-  KVM: selftests: Add "-c" parameter to dirty log test
-  KVM: selftests: Test dirty ring waitqueue
-
- Documentation/virt/kvm/api.txt                | 116 +++++
- arch/arm/include/asm/kvm_host.h               |   2 -
- arch/arm64/include/asm/kvm_host.h             |   2 -
- arch/x86/include/asm/kvm_host.h               |   5 +
- arch/x86/include/uapi/asm/kvm.h               |   1 +
- arch/x86/kvm/Makefile                         |   3 +-
- arch/x86/kvm/mmu/mmu.c                        |   6 +
- arch/x86/kvm/vmx/vmx.c                        |   7 +
- arch/x86/kvm/x86.c                            |  12 +
- include/linux/kvm_dirty_ring.h                |  67 +++
- include/linux/kvm_host.h                      |  37 ++
- include/linux/kvm_types.h                     |   1 +
- include/uapi/linux/kvm.h                      |  36 ++
- tools/include/uapi/linux/kvm.h                |  47 ++
- tools/testing/selftests/kvm/Makefile          |   2 -
- .../selftests/kvm/clear_dirty_log_test.c      |   2 -
- tools/testing/selftests/kvm/dirty_log_test.c  | 452 ++++++++++++++++--
- .../testing/selftests/kvm/include/kvm_util.h  |   6 +
- tools/testing/selftests/kvm/lib/kvm_util.c    | 103 ++++
- .../selftests/kvm/lib/kvm_util_internal.h     |   5 +
- virt/kvm/arm/arm.c                            |  29 --
- virt/kvm/arm/perf.c                           |   6 +-
- virt/kvm/arm/vgic/vgic-mmio.c                 |  15 +-
- virt/kvm/dirty_ring.c                         | 156 ++++++
- virt/kvm/kvm_main.c                           | 315 +++++++++++-
- 25 files changed, 1329 insertions(+), 104 deletions(-)
- create mode 100644 include/linux/kvm_dirty_ring.h
- delete mode 100644 tools/testing/selftests/kvm/clear_dirty_log_test.c
- create mode 100644 virt/kvm/dirty_ring.c
-
+diff --git a/arch/arm/include/asm/kvm_host.h b/arch/arm/include/asm/kvm_hos=
+t.h
+index 556cd818eccf..abc3f6f3ad76 100644
+--- a/arch/arm/include/asm/kvm_host.h
++++ b/arch/arm/include/asm/kvm_host.h
+@@ -284,8 +284,6 @@ int kvm_arm_copy_reg_indices(struct kvm_vcpu *vcpu, u64=
+ __user *indices);
+ int kvm_age_hva(struct kvm *kvm, unsigned long start, unsigned long end);
+ int kvm_test_age_hva(struct kvm *kvm, unsigned long hva);
+=20
+-struct kvm_vcpu *kvm_arm_get_running_vcpu(void);
+-struct kvm_vcpu __percpu **kvm_get_running_vcpus(void);
+ void kvm_arm_halt_guest(struct kvm *kvm);
+ void kvm_arm_resume_guest(struct kvm *kvm);
+=20
+diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm=
+_host.h
+index b36dae9ee5f9..d97855e41469 100644
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -446,8 +446,6 @@ int kvm_set_spte_hva(struct kvm *kvm, unsigned long hva=
+, pte_t pte);
+ int kvm_age_hva(struct kvm *kvm, unsigned long start, unsigned long end);
+ int kvm_test_age_hva(struct kvm *kvm, unsigned long hva);
+=20
+-struct kvm_vcpu *kvm_arm_get_running_vcpu(void);
+-struct kvm_vcpu * __percpu *kvm_get_running_vcpus(void);
+ void kvm_arm_halt_guest(struct kvm *kvm);
+ void kvm_arm_resume_guest(struct kvm *kvm);
+=20
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 7ed1e2f8641e..498a39462ac1 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -1342,6 +1342,9 @@ static inline void kvm_vcpu_set_dy_eligible(struct kv=
+m_vcpu *vcpu, bool val)
+ }
+ #endif /* CONFIG_HAVE_KVM_CPU_RELAX_INTERCEPT */
+=20
++struct kvm_vcpu *kvm_get_running_vcpu(void);
++struct kvm_vcpu __percpu **kvm_get_running_vcpus(void);
++
+ #ifdef CONFIG_HAVE_KVM_IRQ_BYPASS
+ bool kvm_arch_has_irq_bypass(void);
+ int kvm_arch_irq_bypass_add_producer(struct irq_bypass_consumer *,
+diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+index 12e0280291ce..1df9c39024fa 100644
+--- a/virt/kvm/arm/arm.c
++++ b/virt/kvm/arm/arm.c
+@@ -51,9 +51,6 @@ __asm__(".arch_extension=09virt");
+ DEFINE_PER_CPU(kvm_host_data_t, kvm_host_data);
+ static DEFINE_PER_CPU(unsigned long, kvm_arm_hyp_stack_page);
+=20
+-/* Per-CPU variable containing the currently running vcpu. */
+-static DEFINE_PER_CPU(struct kvm_vcpu *, kvm_arm_running_vcpu);
+-
+ /* The VMID used in the VTTBR */
+ static atomic64_t kvm_vmid_gen =3D ATOMIC64_INIT(1);
+ static u32 kvm_next_vmid;
+@@ -62,31 +59,8 @@ static DEFINE_SPINLOCK(kvm_vmid_lock);
+ static bool vgic_present;
+=20
+ static DEFINE_PER_CPU(unsigned char, kvm_arm_hardware_enabled);
+-
+-static void kvm_arm_set_running_vcpu(struct kvm_vcpu *vcpu)
+-{
+-=09__this_cpu_write(kvm_arm_running_vcpu, vcpu);
+-}
+-
+ DEFINE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
+=20
+-/**
+- * kvm_arm_get_running_vcpu - get the vcpu running on the current CPU.
+- * Must be called from non-preemptible context
+- */
+-struct kvm_vcpu *kvm_arm_get_running_vcpu(void)
+-{
+-=09return __this_cpu_read(kvm_arm_running_vcpu);
+-}
+-
+-/**
+- * kvm_arm_get_running_vcpus - get the per-CPU array of currently running =
+vcpus.
+- */
+-struct kvm_vcpu * __percpu *kvm_get_running_vcpus(void)
+-{
+-=09return &kvm_arm_running_vcpu;
+-}
+-
+ int kvm_arch_vcpu_should_kick(struct kvm_vcpu *vcpu)
+ {
+ =09return kvm_vcpu_exiting_guest_mode(vcpu) =3D=3D IN_GUEST_MODE;
+@@ -406,7 +380,6 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+ =09vcpu->cpu =3D cpu;
+ =09vcpu->arch.host_cpu_context =3D &cpu_data->host_ctxt;
+=20
+-=09kvm_arm_set_running_vcpu(vcpu);
+ =09kvm_vgic_load(vcpu);
+ =09kvm_timer_vcpu_load(vcpu);
+ =09kvm_vcpu_load_sysregs(vcpu);
+@@ -432,8 +405,6 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
+ =09kvm_vcpu_pmu_restore_host(vcpu);
+=20
+ =09vcpu->cpu =3D -1;
+-
+-=09kvm_arm_set_running_vcpu(NULL);
+ }
+=20
+ static void vcpu_power_off(struct kvm_vcpu *vcpu)
+diff --git a/virt/kvm/arm/perf.c b/virt/kvm/arm/perf.c
+index 918cdc3839ea..d45b8b9a4415 100644
+--- a/virt/kvm/arm/perf.c
++++ b/virt/kvm/arm/perf.c
+@@ -13,14 +13,14 @@
+=20
+ static int kvm_is_in_guest(void)
+ {
+-        return kvm_arm_get_running_vcpu() !=3D NULL;
++        return kvm_get_running_vcpu() !=3D NULL;
+ }
+=20
+ static int kvm_is_user_mode(void)
+ {
+ =09struct kvm_vcpu *vcpu;
+=20
+-=09vcpu =3D kvm_arm_get_running_vcpu();
++=09vcpu =3D kvm_get_running_vcpu();
+=20
+ =09if (vcpu)
+ =09=09return !vcpu_mode_priv(vcpu);
+@@ -32,7 +32,7 @@ static unsigned long kvm_get_guest_ip(void)
+ {
+ =09struct kvm_vcpu *vcpu;
+=20
+-=09vcpu =3D kvm_arm_get_running_vcpu();
++=09vcpu =3D kvm_get_running_vcpu();
+=20
+ =09if (vcpu)
+ =09=09return *vcpu_pc(vcpu);
+diff --git a/virt/kvm/arm/vgic/vgic-mmio.c b/virt/kvm/arm/vgic/vgic-mmio.c
+index 0d090482720d..d656ebd5f9d4 100644
+--- a/virt/kvm/arm/vgic/vgic-mmio.c
++++ b/virt/kvm/arm/vgic/vgic-mmio.c
+@@ -190,15 +190,6 @@ unsigned long vgic_mmio_read_pending(struct kvm_vcpu *=
+vcpu,
+  * value later will give us the same value as we update the per-CPU variab=
+le
+  * in the preempt notifier handlers.
+  */
+-static struct kvm_vcpu *vgic_get_mmio_requester_vcpu(void)
+-{
+-=09struct kvm_vcpu *vcpu;
+-
+-=09preempt_disable();
+-=09vcpu =3D kvm_arm_get_running_vcpu();
+-=09preempt_enable();
+-=09return vcpu;
+-}
+=20
+ /* Must be called with irq->irq_lock held */
+ static void vgic_hw_irq_spending(struct kvm_vcpu *vcpu, struct vgic_irq *i=
+rq,
+@@ -221,7 +212,7 @@ void vgic_mmio_write_spending(struct kvm_vcpu *vcpu,
+ =09=09=09      gpa_t addr, unsigned int len,
+ =09=09=09      unsigned long val)
+ {
+-=09bool is_uaccess =3D !vgic_get_mmio_requester_vcpu();
++=09bool is_uaccess =3D !kvm_get_running_vcpu();
+ =09u32 intid =3D VGIC_ADDR_TO_INTID(addr, 1);
+ =09int i;
+ =09unsigned long flags;
+@@ -274,7 +265,7 @@ void vgic_mmio_write_cpending(struct kvm_vcpu *vcpu,
+ =09=09=09      gpa_t addr, unsigned int len,
+ =09=09=09      unsigned long val)
+ {
+-=09bool is_uaccess =3D !vgic_get_mmio_requester_vcpu();
++=09bool is_uaccess =3D !kvm_get_running_vcpu();
+ =09u32 intid =3D VGIC_ADDR_TO_INTID(addr, 1);
+ =09int i;
+ =09unsigned long flags;
+@@ -335,7 +326,7 @@ static void vgic_mmio_change_active(struct kvm_vcpu *vc=
+pu, struct vgic_irq *irq,
+ =09=09=09=09    bool active)
+ {
+ =09unsigned long flags;
+-=09struct kvm_vcpu *requester_vcpu =3D vgic_get_mmio_requester_vcpu();
++=09struct kvm_vcpu *requester_vcpu =3D kvm_get_running_vcpu();
+=20
+ =09raw_spin_lock_irqsave(&irq->irq_lock, flags);
+=20
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 00268290dcbd..fac0760c870e 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -108,6 +108,7 @@ struct kmem_cache *kvm_vcpu_cache;
+ EXPORT_SYMBOL_GPL(kvm_vcpu_cache);
+=20
+ static __read_mostly struct preempt_ops kvm_preempt_ops;
++static DEFINE_PER_CPU(struct kvm_vcpu *, kvm_running_vcpu);
+=20
+ struct dentry *kvm_debugfs_dir;
+ EXPORT_SYMBOL_GPL(kvm_debugfs_dir);
+@@ -197,6 +198,8 @@ bool kvm_is_reserved_pfn(kvm_pfn_t pfn)
+ void vcpu_load(struct kvm_vcpu *vcpu)
+ {
+ =09int cpu =3D get_cpu();
++
++=09__this_cpu_write(kvm_running_vcpu, vcpu);
+ =09preempt_notifier_register(&vcpu->preempt_notifier);
+ =09kvm_arch_vcpu_load(vcpu, cpu);
+ =09put_cpu();
+@@ -208,6 +211,7 @@ void vcpu_put(struct kvm_vcpu *vcpu)
+ =09preempt_disable();
+ =09kvm_arch_vcpu_put(vcpu);
+ =09preempt_notifier_unregister(&vcpu->preempt_notifier);
++=09__this_cpu_write(kvm_running_vcpu, NULL);
+ =09preempt_enable();
+ }
+ EXPORT_SYMBOL_GPL(vcpu_put);
+@@ -4304,8 +4308,8 @@ static void kvm_sched_in(struct preempt_notifier *pn,=
+ int cpu)
+ =09WRITE_ONCE(vcpu->preempted, false);
+ =09WRITE_ONCE(vcpu->ready, false);
+=20
++=09__this_cpu_write(kvm_running_vcpu, vcpu);
+ =09kvm_arch_sched_in(vcpu, cpu);
+-
+ =09kvm_arch_vcpu_load(vcpu, cpu);
+ }
+=20
+@@ -4319,6 +4323,25 @@ static void kvm_sched_out(struct preempt_notifier *p=
+n,
+ =09=09WRITE_ONCE(vcpu->ready, true);
+ =09}
+ =09kvm_arch_vcpu_put(vcpu);
++=09__this_cpu_write(kvm_running_vcpu, NULL);
++}
++
++/**
++ * kvm_get_running_vcpu - get the vcpu running on the current CPU.
++ * Thanks to preempt notifiers, this can also be called from
++ * preemptible context.
++ */
++struct kvm_vcpu *kvm_get_running_vcpu(void)
++{
++        return __this_cpu_read(kvm_running_vcpu);
++}
++
++/**
++ * kvm_get_running_vcpus - get the per-CPU array of currently running vcpu=
+s.
++ */
++struct kvm_vcpu * __percpu *kvm_get_running_vcpus(void)
++{
++        return &kvm_running_vcpu;
+ }
+=20
+ static void check_processor_compat(void *rtn)
 --=20
 2.21.0
 
