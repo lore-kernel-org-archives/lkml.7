@@ -2,172 +2,128 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 753D7C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 576E3C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C980216F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:56:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575050173;
-	bh=NB5Gf1Q3vSZTblBj+r+anX1Gd6+985MhbvLhEw+wH68=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=es7wbeiaQ3Nwn0aEVcJ3wYRCkjZxJMY3xCZ5I8h38duKRXxZtG3sKfBCUBfABcaov
-	 2MJniDug2Bb70Q2tdyPVjOX854F5nJo1A3gQr1epRYp98wenUhT+MujjD6s/KKfOm1
-	 IpEyvnsG3au2ZFyJzyPRDrq62CGsvT9v1tIQjrLk=
+	by mail.kernel.org (Postfix) with ESMTP id 254712158A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:56:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="Sx3AvPOr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbfK2R4M (ORCPT
+        id S1727091AbfK2R4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 12:56:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48032 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726970AbfK2R4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 12:56:12 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B69242158A;
-        Fri, 29 Nov 2019 17:56:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575050170;
-        bh=NB5Gf1Q3vSZTblBj+r+anX1Gd6+985MhbvLhEw+wH68=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SRXGlV5RVcc+XmFeQm3pDrl7JXNeolayQezj9ZbtKE0XVQBPKE7YLSYtvNXvLEWqI
-         zJuURxnHYvQT7mewsRGOYFJu2UHO2Lrzg4E9KZmEeEuYRNwfRgJLyGITiHQCLyt3h0
-         jF4+weFrW/rmQdpVPFVBBqUMajzeyfaKARGv6Pio=
-Date:   Fri, 29 Nov 2019 17:56:05 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-kernel@vger.kernel.org, bsingharora@gmail.com,
-        dvyukov@google.com, elver@google.com, parri.andrea@gmail.com,
-        stable@vger.kernel.org,
-        syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH v6] taskstats: fix data-race
-Message-ID: <20191129175604.GA29789@willie-the-truck>
-References: <20191009114809.8643-1-christian.brauner@ubuntu.com>
- <20191021113327.22365-1-christian.brauner@ubuntu.com>
- <efaecf5d-b528-24ba-1955-e1b190ece98c@rasmusvillemoes.dk>
- <20191021130417.5yi7pxpigsydz5po@wittgenstein>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021130417.5yi7pxpigsydz5po@wittgenstein>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 29 Nov 2019 12:56:25 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43383 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726970AbfK2R4Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 12:56:24 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b1so14679969pgq.10
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 09:56:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=jPr5t/QGIk3dEsOl9u9M5NSjMqP5apTW3OFqc5H9bGg=;
+        b=Sx3AvPOr6oH6nNcHg0XUMPQpmiIJP7Q/U/kiGocKGDuWxO4R+IjAXi9N/72XkHjjGE
+         Uv5EZUMHijnKJkaoTxfO4oH9jxNVgkWtmtkNN8xKDL+UWCk2WayHJxC3Wbi1pvncWVIa
+         zfjxSh6XMAX6ZIRuSj8sXl6i+dOHsbaAfxwr6JTXOM3g5lVe6KCuOgJYt34TQt9tu5JQ
+         EoyiFuznkiQOIETC7NKnFkeS+G6U4NKWKqhbBdOS72SPyJ5gvQBlAwR6rge3tFOqKEKj
+         g1xNLMLRgHqrTlOjW/9ELQ3oQe8UaNdpxmAvgzgfGCmdG82FHpCxdIYxyioESCqe7uXq
+         Hagw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=jPr5t/QGIk3dEsOl9u9M5NSjMqP5apTW3OFqc5H9bGg=;
+        b=Oh1eBggtiHROE2NNzI8PXoofmT0HCAYAqOV/k49RmOq8EagIyv+JWZndTKwtAQaMOt
+         SIRCcXW0ziF3Nq/FlnMePDC0O5CrJbunhsvMFRLhgmTUI6QOZqx0bB2cTEoIrzQTvuhH
+         R4ul/m1iqoO9MxiPWNnPJChofXd+8QkSQpUE3dPVf8t0DkhW6xcoy1F9VpBGbzEQPXoP
+         DckFeQs/gGcj9WeI/2JL18pz2M01tNRPJbW9Y39BJfpM80yGvO89hThAYh4pZnjkjqsW
+         Gk19u288s5TXrV0vwtSZEdsNyxqXWu+Eo3YJMZOwwn7zxe8FK8Qgt+l/sPOcgvpHYLAX
+         WoTg==
+X-Gm-Message-State: APjAAAWes3muhhTJORYdH6T9w7cY+v/zdnLKs3EnRyLapePTvtRaH6kt
+        HThi+3Zc2+y5nP7AlyanQvT8fA==
+X-Google-Smtp-Source: APXvYqz1sCR0hMaSTGt0Lcx6/V0omL2CwbAr16Ima8v95egYPkJJoY5hGsmY7XgRYbKLbpl/9vtKwQ==
+X-Received: by 2002:aa7:90d0:: with SMTP id k16mr59548674pfk.131.1575050183849;
+        Fri, 29 Nov 2019 09:56:23 -0800 (PST)
+Received: from [10.83.36.220] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id s7sm9962922pfe.22.2019.11.29.09.56.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 29 Nov 2019 09:56:23 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: [PATCH v5 1/3] PCI: Fix off by one in dma_alias_mask allocation size
+From:   James Sewart <jamessewart@arista.com>
+In-Reply-To: <d811576e-0f89-2303-a554-2701af5c5647@deltatee.com>
+Date:   Fri, 29 Nov 2019 17:56:19 +0000
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <dima@arista.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <9DD82D05-6B9E-4AF5-9A3C-D459B75C0089@arista.com>
+References: <20191120193228.GA103670@google.com>
+ <6A902F0D-FE98-4760-ADBB-4D5987D866BE@arista.com>
+ <20191126173833.GA16069@infradead.org>
+ <547214A9-9FD0-4DD5-80E1-1F5A467A0913@arista.com>
+ <9c54c5dd-702c-a19b-38ba-55ab73b24729@deltatee.com>
+ <435064D4-00F0-47F5-94D2-2C354F6B1206@arista.com>
+ <058383d9-69fe-65e3-e410-eebd99840261@deltatee.com>
+ <F26CC19F-66C2-466B-AE30-D65E10BA3022@arista.com>
+ <d811576e-0f89-2303-a554-2701af5c5647@deltatee.com>
+To:     linux-pci@vger.kernel.org
+X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 03:04:18PM +0200, Christian Brauner wrote:
-> On Mon, Oct 21, 2019 at 02:19:01PM +0200, Rasmus Villemoes wrote:
-> > On 21/10/2019 13.33, Christian Brauner wrote:
-> > > The first approach used smp_load_acquire() and smp_store_release().
-> > > However, after having discussed this it seems that the data dependency
-> > > for kmem_cache_alloc() would be fixed by WRITE_ONCE().
-> > > Furthermore, the smp_load_acquire() would only manage to order the stats
-> > > check before the thread_group_empty() check. So it seems just using
-> > > READ_ONCE() and WRITE_ONCE() will do the job and I wanted to bring this
-> > > up for discussion at least.
-> > > 
-> > > /* v6 */
-> > > - Christian Brauner <christian.brauner@ubuntu.com>:
-> > >   - bring up READ_ONCE()/WRITE_ONCE() approach for discussion
-> > > ---
-> > >  kernel/taskstats.c | 26 +++++++++++++++-----------
-> > >  1 file changed, 15 insertions(+), 11 deletions(-)
-> > > 
-> > > diff --git a/kernel/taskstats.c b/kernel/taskstats.c
-> > > index 13a0f2e6ebc2..111bb4139aa2 100644
-> > > --- a/kernel/taskstats.c
-> > > +++ b/kernel/taskstats.c
-> > > @@ -554,25 +554,29 @@ static int taskstats_user_cmd(struct sk_buff *skb, struct genl_info *info)
-> > >  static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
-> > >  {
-> > >  	struct signal_struct *sig = tsk->signal;
-> > > -	struct taskstats *stats;
-> > > +	struct taskstats *stats_new, *stats;
-> > >  
-> > > -	if (sig->stats || thread_group_empty(tsk))
-> > > -		goto ret;
-> > > +	/* Pairs with WRITE_ONCE() below. */
-> > > +	stats = READ_ONCE(sig->stats);
-> > > +	if (stats || thread_group_empty(tsk))
-> > > +		return stats;
-> > >  
-> > >  	/* No problem if kmem_cache_zalloc() fails */
-> > > -	stats = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
-> > > +	stats_new = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
-> > >  
-> > >  	spin_lock_irq(&tsk->sighand->siglock);
-> > > -	if (!sig->stats) {
-> > > -		sig->stats = stats;
-> > > -		stats = NULL;
-> > > +	if (!stats) {
-> > > +		stats = stats_new;
-> > > +		/* Pairs with READ_ONCE() above. */
-> > > +		WRITE_ONCE(sig->stats, stats_new);
-> > > +		stats_new = NULL;
-> > 
-> > No idea about the memory ordering issues, but don't you need to
-> > load/check sig->stats again? Otherwise it seems that two threads might
-> > both see !sig->stats, both allocate a stats_new, and both
-> > unconditionally in turn assign their stats_new to sig->stats. Then the
-> > first assignment ends up becoming a memory leak (and any writes through
-> > that pointer done by the caller end up in /dev/null...)
-> 
-> Trigger hand too fast. I guess you're thinking sm like:
-> 
-> diff --git a/kernel/taskstats.c b/kernel/taskstats.c
-> index 13a0f2e6ebc2..c4e1ed11e785 100644
-> --- a/kernel/taskstats.c
-> +++ b/kernel/taskstats.c
-> @@ -554,25 +554,27 @@ static int taskstats_user_cmd(struct sk_buff *skb, struct genl_info *info)
->  static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
->  {
->  	struct signal_struct *sig = tsk->signal;
-> -	struct taskstats *stats;
-> +	struct taskstats *stats_new, *stats;
->  
-> -	if (sig->stats || thread_group_empty(tsk))
-> -		goto ret;
-> +	stats = READ_ONCE(sig->stats);
+The number of possible devfns is 256 so the size of the bitmap for
+allocations should be U8_MAX+1.
 
-This probably wants to be an acquire, since both the memcpy() later on
-in taskstats_exit() and the accesses in {b,x}acct_add_tsk() appear to
-read from the taskstats structure without the sighand->siglock held and
-therefore may miss zeroed allocation from the zalloc() below, I think.
+Signed-off-by: James Sewart <jamessewart@arista.com>
+---
+ drivers/pci/pci.c    | 2 +-
+ drivers/pci/search.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-> +	if (stats || thread_group_empty(tsk))
-> +		return stats;
->  
-> -	/* No problem if kmem_cache_zalloc() fails */
-> -	stats = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
-> +	stats_new = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
->  
->  	spin_lock_irq(&tsk->sighand->siglock);
-> -	if (!sig->stats) {
-> -		sig->stats = stats;
-> -		stats = NULL;
-> +	stats = READ_ONCE(sig->stats);
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index a97e2571a527..0a4449a30ace 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5876,7 +5876,7 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
+ void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
+ {
+ 	if (!dev->dma_alias_mask)
+-		dev->dma_alias_mask = bitmap_zalloc(U8_MAX, GFP_KERNEL);
++		dev->dma_alias_mask = bitmap_zalloc(U8_MAX+1, GFP_KERNEL);
+ 	if (!dev->dma_alias_mask) {
+ 		pci_warn(dev, "Unable to allocate DMA alias mask\n");
+ 		return;
+diff --git a/drivers/pci/search.c b/drivers/pci/search.c
+index bade14002fd8..b3633af1743b 100644
+--- a/drivers/pci/search.c
++++ b/drivers/pci/search.c
+@@ -43,7 +43,7 @@ int pci_for_each_dma_alias(struct pci_dev *pdev,
+ 	if (unlikely(pdev->dma_alias_mask)) {
+ 		u8 devfn;
+ 
+-		for_each_set_bit(devfn, pdev->dma_alias_mask, U8_MAX) {
++		for_each_set_bit(devfn, pdev->dma_alias_mask, U8_MAX+1) {
+ 			ret = fn(pdev, PCI_DEVID(pdev->bus->number, devfn),
+ 				 data);
+ 			if (ret)
+-- 
+2.24.0
 
-You hold the spinlock here, so I don't think you need the READ_ONCE().
 
-> +	if (!stats) {
-> +		stats = stats_new;
-> +		WRITE_ONCE(sig->stats, stats_new);
-
-You probably want a release here to publish the zeroes from the zalloc()
-(back to my first comment). With those changes:
-
-Reviewed-by: Will Deacon <will@kernel.org>
-
-However, this caused me to look at do_group_exit() and we appear to have
-racy accesses on sig->flags there thanks to signal_group_exit(). I worry
-that might run quite deep, and can probably be looked at separately.
-
-Will
