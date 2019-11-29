@@ -2,133 +2,124 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5F9C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 20:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F45BC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 20:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA4F2176D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 20:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D7BF21721
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 20:05:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eSnlCUHm"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="IU0LNMh0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfK2T77 (ORCPT
+        id S1727113AbfK2UFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 14:59:59 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22895 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727192AbfK2T74 (ORCPT
+        Fri, 29 Nov 2019 15:05:25 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:38923 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727043AbfK2UFZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 14:59:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575057595;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=41xNMejmkDpiENDKO7RxAxz9cPSeln8z2A1ifqUYAvQ=;
-        b=eSnlCUHmkBomuF/vxFsJ0+fCjkEQ0dZln+XWIQioOtpWacn2lHXNopm44T+Zp6IhF/1uZ5
-        SKX1UPhWtNKA23nqtG0/y3CkIh5ZYfBBVE2nj4S8zlR2vMUDOjftKJjQNHn90vXQqJlCIZ
-        T1FnP0jJhdqecHf1/eVTI1Xq6iMMZPA=
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
- [209.85.214.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-306-WSDX7vWTONSCkJVys4z3BQ-1; Fri, 29 Nov 2019 14:59:53 -0500
-Received: by mail-pl1-f200.google.com with SMTP id p2so13209846plr.20
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 11:59:53 -0800 (PST)
+        Fri, 29 Nov 2019 15:05:25 -0500
+Received: by mail-pj1-f66.google.com with SMTP id v93so10470144pjb.6
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 12:05:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5ipR+DrBtOJQIudnRaII7nJ3+mq7nKbRqBwicLRMc3w=;
+        b=IU0LNMh0TWniaggb1y5v7B/hYj06AGeQ6rFf4JXFP3ecy8Snmq/f80SwI5lmzFWIrJ
+         tWeJyOxzIUhXa6LVLo+l/RdrzAEalAseSjkKIbR+FPLLc9VzYIasV3qKMRq0GnJU0azI
+         ZcBiRNEHd7jjx1UEILokbjyRcOPFK6vVOXhrA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=TnU1CF4ydXp0Re/7xQPqByhi17OoIqWu96aUm7ilAL8=;
-        b=QNDrAVNuL8Z/aj5Qaq8nNncSRNKt9JHrKzta73AwrAlnKoaz864ONIrIBafvAMI9P4
-         k2l2OJ9sq6V8t2aLdJ5yobsWLyQGjon9G/Sl6Km2fc+0GAjsjo/zWcnCtbHdP/xyRSZM
-         xWlvT+KhiQLI9CO2y9IhfRtO2ue4tA2p3Vgl7VJRZnHNgMjTKu2cU/Nh4cTS/J265kZj
-         l9g/BfaDFf6vBk0LFSKV1gwOMWkWoUDD5sO/DHkJDjUv4fDKe0J/SUJvr+ZCim/ojKZT
-         I6uZJaVmB8Y3SFOWLqWst0BMeMi+dIOUiJR1b5PreDorXDR+77gX3IhOLAFHQ+ND8aaa
-         wOUA==
-X-Gm-Message-State: APjAAAUZJ8XSnvxMKNCY/6ubJPwXrQzAkyJrfW4x6VAq3eSUxl4nh/0I
-        S8q5BOQj5BVN4nBzIrU9uw3Juec1QnlypUCNh4YXU+XWStFrn2HrYuihoYL9TsZ0WpQjolDCqTX
-        OSuHZrbPaYvC3bYn0mykIGO9c
-X-Received: by 2002:a17:90a:1a8a:: with SMTP id p10mr19841457pjp.6.1575057592018;
-        Fri, 29 Nov 2019 11:59:52 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxSY3AQtQ2n98lr5W53/GVJZRJxpVnInAVeYWNmyeuMXseeTDPCBIIN9JR01+Ft/5q0+acg9Q==
-X-Received: by 2002:a17:90a:1a8a:: with SMTP id p10mr19841443pjp.6.1575057591861;
-        Fri, 29 Nov 2019 11:59:51 -0800 (PST)
-Received: from localhost ([122.177.85.74])
-        by smtp.gmail.com with ESMTPSA id v10sm23928968pgr.37.2019.11.29.11.59.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 29 Nov 2019 11:59:51 -0800 (PST)
-From:   Bhupesh Sharma <bhsharma@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     bhsharma@redhat.com, bhupesh.linux@gmail.com, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        kexec@lists.infradead.org, James Morse <james.morse@arm.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5ipR+DrBtOJQIudnRaII7nJ3+mq7nKbRqBwicLRMc3w=;
+        b=R6Xv595X33LBmjnyO+3j8M7dT0QuWpRQsZIwhZbgwqeh2+kxlQgTz0Mo4QHduRcASL
+         oZJe3FfLtmb3vUsue0kMPwzy3ajeHIxivcyQjSsuJJ0tw/U4Wx9h1/MBo+5Pd999JfUo
+         X6KZ85v1xV/Hzz4whtaamKKiOfPbRlNiFLsKmI8pSK6PV01KuEXQfVHzRHI9Nl6YwXQy
+         SrZGNX03XgBl/rI5P3gyHvRJ9BijjMz1X1AzhcgLBOXuBHIJz6Lgn5S6EXFdgfR+hVCb
+         YsHBKJeCf7ztsvn21a2J/GMYyK8Tx0A29dyWE4Tcm//pshx665aV56c5R5SC60AQsrL8
+         Egcg==
+X-Gm-Message-State: APjAAAWQFGvE/IJHybviU2HeRFyrt+rNKLqGYF1EqaFUHOmn9eoB9Te5
+        fjA2pBJWjJQGpLCWv0qeYxpbk4A76ac=
+X-Google-Smtp-Source: APXvYqzv+PIer9ks5zR5Vza4ROybRs9nR2wonFy59tez+ucGy/ExMOXQl27Izq38p0bVRbv+ekYwvw==
+X-Received: by 2002:a17:90a:aa96:: with SMTP id l22mr19758027pjq.112.1575057924147;
+        Fri, 29 Nov 2019 12:05:24 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id 83sm25542605pgh.12.2019.11.29.12.05.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Nov 2019 12:05:23 -0800 (PST)
+Date:   Fri, 29 Nov 2019 15:05:22 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Steve Capper <steve.capper@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Anderson <anderson@redhat.com>,
-        Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: [RESEND PATCH v5 5/5] Documentation/vmcoreinfo: Add documentation for 'TCR_EL1.T1SZ'
-Date:   Sat, 30 Nov 2019 01:29:19 +0530
-Message-Id: <1575057559-25496-6-git-send-email-bhsharma@redhat.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1575057559-25496-1-git-send-email-bhsharma@redhat.com>
-References: <1575057559-25496-1-git-send-email-bhsharma@redhat.com>
-X-MC-Unique: WSDX7vWTONSCkJVys4z3BQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] perf/core: Add SRCU annotation for pmus list walk
+Message-ID: <20191129200522.GA239292@google.com>
+References: <20191119121429.zhcubzdhm672zasg@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191119121429.zhcubzdhm672zasg@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation for TCR_EL1.T1SZ variable being added to
-vmcoreinfo.
+On Tue, Nov 19, 2019 at 01:14:29PM +0100, Sebastian Andrzej Siewior wrote:
+> Since commit
+>    28875945ba98d ("rcu: Add support for consolidated-RCU reader checking")
+> 
+> there is an additional check to ensure that a RCU related lock is held
+> while the RCU list is iterated.
+> This section holds the SRCU reader lock instead.
+> 
+> Add annotation to list_for_each_entry_rcu() that pmus_srcu must be
+> acquired during the list traversal.
+> 
 
-It indicates the size offset of the memory region addressed by TTBR1_EL1
-and hence can be used for determining the vabits_actual value.
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-Cc: James Morse <james.morse@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Steve Capper <steve.capper@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Dave Anderson <anderson@redhat.com>
-Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: kexec@lists.infradead.org
-Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
----
- Documentation/admin-guide/kdump/vmcoreinfo.rst | 6 ++++++
- 1 file changed, 6 insertions(+)
+thanks,
 
-diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation=
-/admin-guide/kdump/vmcoreinfo.rst
-index 447b64314f56..f9349f9d3345 100644
---- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
-+++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-@@ -398,6 +398,12 @@ KERNELOFFSET
- The kernel randomization offset. Used to compute the page offset. If
- KASLR is disabled, this value is zero.
-=20
-+TCR_EL1.T1SZ
-+------------
-+
-+Indicates the size offset of the memory region addressed by TTBR1_EL1
-+and hence can be used for determining the vabits_actual value.
-+
- arm
- =3D=3D=3D
-=20
---=20
-2.7.4
+ - Joel
 
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+> 
+> I see the warning in in v5.4-rc during boot. For some reason I don't see
+> it in tip/master during boot but "perf stat w" triggers it again (among
+> other things).
+> 
+>  kernel/events/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 5224388872069..dbb3b26a55612 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -10497,7 +10497,7 @@ static struct pmu *perf_init_event(struct perf_event *event)
+>  		goto unlock;
+>  	}
+>  
+> -	list_for_each_entry_rcu(pmu, &pmus, entry) {
+> +	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
+>  		ret = perf_try_init_event(pmu, event);
+>  		if (!ret)
+>  			goto unlock;
+> -- 
+> 2.24.0
+> 
