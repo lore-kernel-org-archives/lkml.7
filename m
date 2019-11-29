@@ -2,117 +2,262 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB16C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAF2C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A03F9216F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2747D216F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 17:19:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ubBm2VrL"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="Q6Td1VXN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfK2RQ3 (ORCPT
+        id S1727073AbfK2RTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 12:16:29 -0500
-Received: from mail-pf1-f176.google.com ([209.85.210.176]:42169 "EHLO
-        mail-pf1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbfK2RQ3 (ORCPT
+        Fri, 29 Nov 2019 12:19:49 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38821 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726909AbfK2RTs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 12:16:29 -0500
-Received: by mail-pf1-f176.google.com with SMTP id l22so2423729pff.9
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 09:16:28 -0800 (PST)
+        Fri, 29 Nov 2019 12:19:48 -0500
+Received: by mail-pf1-f193.google.com with SMTP id x185so2169803pfc.5
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 09:19:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cJUqaft98JUbJoAJGvOcDoZ/xfTmcquNmc0PZ2Qp0uM=;
-        b=ubBm2VrLVzUJImie+uq75o/+w+tTc6Z0mrIfJ5WIoRKYN4Pp8UgmXdvLJ0PB+K9IhA
-         6HUT780D+oJvXsK4Es3SKuPMCTJ+bOPIxsCqanMKRKhEOgvyTWRTLsgZMTGntNWluwM/
-         sQSlPJU7T/UAGC+4gs3t94QQhF6xK6ewMvgJnrFdie8m4ZnRAOC1hjxofhhLNmOj72zP
-         ALJLfymTQTKWVuPeIwpJbgFpdCt4C/X+ouBZ2Rdk8NY0VGFuC1qCPqZxFYjFmkVOPkmY
-         FhKWyM2KHapwRofvaaFr5pXTPrXWBqblmVbYiI+wa7LRqdAoktrqqnTdSiXEi5NtbYIW
-         p77A==
+        d=arista.com; s=googlenew;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=PluLd8iVD+LLnEDvxxVn2n44IA0azS1nHZX7RCBx5eI=;
+        b=Q6Td1VXNltrpwRpv76nKV38tc62evrFFzSGrUcrypWz1p/dZYd7Tvgm9kkwS5vYrW6
+         2yo1d+vpi00Ccj6TOPCn+wYZJnXWyVHNmalLJJQXzihXO5D0eP6m1w2Sr0sk7can3QuP
+         SpQelYK6CV6hs6qkENnbI0vvvLx1AwzVIN4MMAkXP8T4mUwjMDbk3q7F9g7A41LWJui2
+         aQljwixEwE+If4dd3bR5r9ZqFRXJmHUQCxQ2lzr51QRcEivbOCXS6RUxPdE2V+ispsoa
+         QR2Y9zxqMJ7umkhrOLxrf1Creueo1e7BKX3ynvTpOlt1jBqCRCcVIT9mW7eF81es4+9I
+         9OsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cJUqaft98JUbJoAJGvOcDoZ/xfTmcquNmc0PZ2Qp0uM=;
-        b=YkcC+Bx+rJ4cFP3W5usq7p60RMEiLCiV7zDFJ1NR0RW+LjROzt41dK0PVykHmEjT7+
-         m31fddRnLRK9e0sGoZPmq2q40oSQLQ7ECDZYpMc8vFZH4VlHIWN6/28+vFp8psAb8YMt
-         ENmCOt07pYgCQ871UOH8ge9YKdug79UNzzOaHZSXXpPQ0Sqb96j0JKO1iAKC2zgoqA3y
-         ILEXiMRYQoIrycoBWBIUhZKfzPfz6uhxMEooNqOwaVWTp/cd6bvzKKDpQStG9y12M5ld
-         r+DOiFr5mgsLYn2pNtMKikUEcN21nzqFAItns1pFSRFUT3nynrp3nTOkkohFJqW9MnMX
-         llSg==
-X-Gm-Message-State: APjAAAVkVlUMCrZ5rqYfo9ssCyhzywvZ1dnqvGh1exiJZHOSUCsTzWaA
-        gzxYcmZqT3falfNn5p4xR5ILEzf6IZcyug==
-X-Google-Smtp-Source: APXvYqyuqCP95Pu9EWWsAQwExBzqJ/fW152qbXSCL38YrvQ4EciwmTcFOdOzX21DBAqwizS113OH6Q==
-X-Received: by 2002:a63:5104:: with SMTP id f4mr17722304pgb.192.1575047787014;
-        Fri, 29 Nov 2019 09:16:27 -0800 (PST)
-Received: from ?IPv6:2605:e000:100e:8c61:c457:26a3:bdc5:9aed? ([2605:e000:100e:8c61:c457:26a3:bdc5:9aed])
-        by smtp.gmail.com with ESMTPSA id s2sm26042860pfb.109.2019.11.29.09.16.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 Nov 2019 09:16:20 -0800 (PST)
-Subject: Re: Build failure on latest powerpc/merge (311ae9e159d8 io_uring: fix
- dead-hung for non-iter fixed rw)
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Pavel Begunkov <asml.silence@gmail.com>
-Cc:     stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <71cf82d5-5986-43b7-cf1c-acba429a89d6@c-s.fr>
- <3a95d445-1f5c-7750-f0de-ddc427800b3b@kernel.dk>
- <4ef71e74-848f-59d4-6b0b-d3a3c52095a0@c-s.fr>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <5389b43a-259d-997c-41e6-5e84a91b012a@kernel.dk>
-Date:   Fri, 29 Nov 2019 09:16:18 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <4ef71e74-848f-59d4-6b0b-d3a3c52095a0@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=PluLd8iVD+LLnEDvxxVn2n44IA0azS1nHZX7RCBx5eI=;
+        b=qpZgovEe7jJRfhfQUDZmoDxeKHPotbcPyOPaI1pQCDqC8wi0xigf/P/fMqucRGSHBJ
+         /Q8GdFXnHRJajQTf998Byjv7KBidiobnPo8arjDvY+ktZTkoXXJlRvc8mf8y99Z669tp
+         tQZmM146C5CTttxIcioM0UBXFgp/gfvOkBKJCdEj2EpaRrY508Qj+UYcT2QA/xKEoz11
+         UED8f8W8AJFQROQ8/5ixP1aevn7amnX2Xg+KJkD3Mi8wqnJKdX81mvNGofYBdOKJ/gIW
+         zY7CybiRBx41Vabc3G1QJOfkggK6DpXKAxWaue0Iai6q2d3Z54ZHLIK35sY4Iv1SLhEL
+         Mx4Q==
+X-Gm-Message-State: APjAAAV3uOVSWSKRL+tjFg4Uf9bEMdo+XYi0lJioMblk7PzGkPSjBGE3
+        KfU5FXdRYaqi4ZJ1vP97he0S4A==
+X-Google-Smtp-Source: APXvYqyumM5ZLIy9Nuo5UT+YMh25eg7v2oDAI8y12wtwJbV1TUFp0Kv4HPEdAHhSSgvMjjWjWSgzVg==
+X-Received: by 2002:aa7:8699:: with SMTP id d25mr3925340pfo.139.1575047988000;
+        Fri, 29 Nov 2019 09:19:48 -0800 (PST)
+Received: from [10.83.36.220] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id q66sm25520301pfb.150.2019.11.29.09.19.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 29 Nov 2019 09:19:47 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: Re: [PATCH v4 1/2] PCI: Add parameter nr_devfns to pci_add_dma_alias
+From:   James Sewart <jamessewart@arista.com>
+In-Reply-To: <058383d9-69fe-65e3-e410-eebd99840261@deltatee.com>
+Date:   Fri, 29 Nov 2019 17:19:42 +0000
+Cc:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <dima@arista.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <F26CC19F-66C2-466B-AE30-D65E10BA3022@arista.com>
+References: <20191120193228.GA103670@google.com>
+ <6A902F0D-FE98-4760-ADBB-4D5987D866BE@arista.com>
+ <20191126173833.GA16069@infradead.org>
+ <547214A9-9FD0-4DD5-80E1-1F5A467A0913@arista.com>
+ <9c54c5dd-702c-a19b-38ba-55ab73b24729@deltatee.com>
+ <435064D4-00F0-47F5-94D2-2C354F6B1206@arista.com>
+ <058383d9-69fe-65e3-e410-eebd99840261@deltatee.com>
+To:     Logan Gunthorpe <logang@deltatee.com>
+X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/29/19 8:14 AM, Christophe Leroy wrote:
-> 
-> 
-> Le 29/11/2019 à 17:04, Jens Axboe a écrit :
->> On 11/29/19 6:53 AM, Christophe Leroy wrote:
->>>      CC      fs/io_uring.o
->>> fs/io_uring.c: In function ‘loop_rw_iter’:
->>> fs/io_uring.c:1628:21: error: implicit declaration of function ‘kmap’
->>> [-Werror=implicit-function-declaration]
->>>        iovec.iov_base = kmap(iter->bvec->bv_page)
->>>                         ^
->>> fs/io_uring.c:1628:19: warning: assignment makes pointer from integer
->>> without a cast [-Wint-conversion]
->>>        iovec.iov_base = kmap(iter->bvec->bv_page)
->>>                       ^
->>> fs/io_uring.c:1643:4: error: implicit declaration of function ‘kunmap’
->>> [-Werror=implicit-function-declaration]
->>>        kunmap(iter->bvec->bv_page);
->>>        ^
->>>
->>>
->>> Reverting commit 311ae9e159d8 ("io_uring: fix dead-hung for non-iter
->>> fixed rw") clears the failure.
->>>
->>> Most likely an #include is missing.
->>
->> Huh weird how the build bots didn't catch that. Does the below work?
-> 
-> Yes it works, thanks.
 
-Thanks for reporting and testing, I've queued it up with your reported
-and tested-by.
 
--- 
-Jens Axboe
+> On 29 Nov 2019, at 16:50, Logan Gunthorpe <logang@deltatee.com> wrote:
+>=20
+>=20
+>=20
+> On 2019-11-29 5:49 a.m., James Sewart wrote:
+>> pci_add_dma_alias can now be used to create a dma alias for a range =
+of
+>> devfns.
+>>=20
+>> Signed-off-by: James Sewart <jamessewart@arista.com>
+>> ---
+>> drivers/pci/pci.c    | 23 ++++++++++++++++++-----
+>> drivers/pci/quirks.c | 14 +++++++-------
+>> include/linux/pci.h  |  2 +-
+>> 3 files changed, 26 insertions(+), 13 deletions(-)
+>>=20
+>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>> index a97e2571a527..9b0e3481fe17 100644
+>> --- a/drivers/pci/pci.c
+>> +++ b/drivers/pci/pci.c
+>> @@ -5857,7 +5857,8 @@ int pci_set_vga_state(struct pci_dev *dev, bool =
+decode,
+>> /**
+>>  * pci_add_dma_alias - Add a DMA devfn alias for a device
+>>  * @dev: the PCI device for which alias is added
+>> - * @devfn: alias slot and function
+>> + * @devfn_from: alias slot and function
+>> + * @nr_devfns: Number of subsequent devfns to alias
+>>  *
+>>  * This helper encodes an 8-bit devfn as a bit number in =
+dma_alias_mask
+>>  * which is used to program permissible bus-devfn source addresses =
+for DMA
+>> @@ -5873,8 +5874,14 @@ int pci_set_vga_state(struct pci_dev *dev, =
+bool decode,
+>>  * cannot be left as a userspace activity).  DMA aliases should =
+therefore
+>>  * be configured via quirks, such as the PCI fixup header quirk.
+>>  */
+>> -void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
+>> +void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, unsigned =
+nr_devfns)
+>> {
+>> +	int devfn_to;
+>> +
+>> +	if (nr_devfns > U8_MAX+1)
+>> +		nr_devfns =3D U8_MAX+1;
+>=20
+> Why +1? That doesn't seem right to me=E2=80=A6.
+
+U8_MAX is the max number U8 can represent(255) but is one less than the =
+number=20
+of values it can represent(256). devfns can be 0.0 to 1f.7 inclusive(I =
+think)=20
+so the number of possible devfns is 256. Thinking about it, maybe the=20
+zalloc should be U8_MAX+1 too?
+
+I might be wrong though, what do you reckon?
+
+>=20
+>> +	devfn_to =3D devfn_from + nr_devfns - 1;
+>> +
+>> 	if (!dev->dma_alias_mask)
+>> 		dev->dma_alias_mask =3D bitmap_zalloc(U8_MAX, =
+GFP_KERNEL);
+>> 	if (!dev->dma_alias_mask) {
+>> @@ -5882,9 +5889,15 @@ void pci_add_dma_alias(struct pci_dev *dev, u8 =
+devfn)
+>> 		return;
+>> 	}
+>>=20
+>> -	set_bit(devfn, dev->dma_alias_mask);
+>> -	pci_info(dev, "Enabling fixed DMA alias to %02x.%d\n",
+>> -		 PCI_SLOT(devfn), PCI_FUNC(devfn));
+>> +	bitmap_set(dev->dma_alias_mask, devfn_from, nr_devfns);
+>> +
+>> +	if (nr_devfns =3D=3D 1)
+>> +		pci_info(dev, "Enabling fixed DMA alias to %02x.%d\n",
+>> +				PCI_SLOT(devfn_from), =
+PCI_FUNC(devfn_from));
+>> +	else if(nr_devfns > 1)
+>> +		pci_info(dev, "Enabling fixed DMA alias for devfn range =
+from %02x.%d to %02x.%d\n",
+>> +				PCI_SLOT(devfn_from), =
+PCI_FUNC(devfn_from),
+>> +				PCI_SLOT(devfn_to), PCI_FUNC(devfn_to));
+>> }
+>>=20
+>> bool pci_devs_are_dma_aliases(struct pci_dev *dev1, struct pci_dev =
+*dev2)
+>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>> index 320255e5e8f8..0f3f5afc73fd 100644
+>> --- a/drivers/pci/quirks.c
+>> +++ b/drivers/pci/quirks.c
+>> @@ -3932,7 +3932,7 @@ int pci_dev_specific_reset(struct pci_dev *dev, =
+int probe)
+>> static void quirk_dma_func0_alias(struct pci_dev *dev)
+>> {
+>> 	if (PCI_FUNC(dev->devfn) !=3D 0)
+>> -		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), =
+0));
+>> +		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), =
+0), 1);
+>> }
+>>=20
+>> /*
+>> @@ -3946,7 +3946,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_RICOH, =
+0xe476, quirk_dma_func0_alias);
+>> static void quirk_dma_func1_alias(struct pci_dev *dev)
+>> {
+>> 	if (PCI_FUNC(dev->devfn) !=3D 1)
+>> -		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), =
+1));
+>> +		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), =
+1), 1);
+>> }
+>>=20
+>> /*
+>> @@ -4031,7 +4031,7 @@ static void quirk_fixed_dma_alias(struct =
+pci_dev *dev)
+>>=20
+>> 	id =3D pci_match_id(fixed_dma_alias_tbl, dev);
+>> 	if (id)
+>> -		pci_add_dma_alias(dev, id->driver_data);
+>> +		pci_add_dma_alias(dev, id->driver_data, 1);
+>> }
+>>=20
+>> DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ADAPTEC2, 0x0285, =
+quirk_fixed_dma_alias);
+>> @@ -4073,9 +4073,9 @@ DECLARE_PCI_FIXUP_HEADER(0x8086, 0x244e, =
+quirk_use_pcie_bridge_dma_alias);
+>>  */
+>> static void quirk_mic_x200_dma_alias(struct pci_dev *pdev)
+>> {
+>> -	pci_add_dma_alias(pdev, PCI_DEVFN(0x10, 0x0));
+>> -	pci_add_dma_alias(pdev, PCI_DEVFN(0x11, 0x0));
+>> -	pci_add_dma_alias(pdev, PCI_DEVFN(0x12, 0x3));
+>> +	pci_add_dma_alias(pdev, PCI_DEVFN(0x10, 0x0), 1);
+>> +	pci_add_dma_alias(pdev, PCI_DEVFN(0x11, 0x0), 1);
+>> +	pci_add_dma_alias(pdev, PCI_DEVFN(0x12, 0x3), 1);
+>> }
+>> DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2260, =
+quirk_mic_x200_dma_alias);
+>> DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2264, =
+quirk_mic_x200_dma_alias);
+>> @@ -5273,7 +5273,7 @@ static void =
+quirk_switchtec_ntb_dma_alias(struct pci_dev *pdev)
+>> 			pci_dbg(pdev,
+>> 				"Aliasing Partition %d Proxy ID =
+%02x.%d\n",
+>> 				pp, PCI_SLOT(devfn), PCI_FUNC(devfn));
+>> -			pci_add_dma_alias(pdev, devfn);
+>> +			pci_add_dma_alias(pdev, devfn, 1);
+>> 		}
+>> 	}
+>>=20
+>> diff --git a/include/linux/pci.h b/include/linux/pci.h
+>> index 1a6cf19eac2d..84a8d4c2b24e 100644
+>> --- a/include/linux/pci.h
+>> +++ b/include/linux/pci.h
+>> @@ -2323,7 +2323,7 @@ static inline struct eeh_dev =
+*pci_dev_to_eeh_dev(struct pci_dev *pdev)
+>> }
+>> #endif
+>>=20
+>> -void pci_add_dma_alias(struct pci_dev *dev, u8 devfn);
+>> +void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, unsigned =
+nr_devfns);
+>> bool pci_devs_are_dma_aliases(struct pci_dev *dev1, struct pci_dev =
+*dev2);
+>> int pci_for_each_dma_alias(struct pci_dev *pdev,
+>> 			   int (*fn)(struct pci_dev *pdev,
+>>=20
 
