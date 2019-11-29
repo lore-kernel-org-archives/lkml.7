@@ -2,128 +2,107 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F6BC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92978C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0B6021736
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6543C21774
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:29:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JYgDLrUj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbfK2I3X (ORCPT
+        id S1726878AbfK2I3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 03:29:23 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:48314 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbfK2I3X (ORCPT
+        Fri, 29 Nov 2019 03:29:30 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34603 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbfK2I3a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 03:29:23 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iabeI-0001FB-3B; Fri, 29 Nov 2019 09:29:10 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A7B7C1C2114;
-        Fri, 29 Nov 2019 09:29:09 +0100 (CET)
-Date:   Fri, 29 Nov 2019 08:29:09 -0000
-From:   "tip-bot2 for Srinivas Pandruvada" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: ras/urgent] x86/mce/therm_throt: Mask out read-only and
- reserved MSR bits
-Cc:     Dominik Brodowski <linux@dominikbrodowski.net>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        "linux-edac" <linux-edac@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>, "x86-ml" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191128150824.22413-1-srinivas.pandruvada@linux.intel.com>
-References: <20191128150824.22413-1-srinivas.pandruvada@linux.intel.com>
+        Fri, 29 Nov 2019 03:29:30 -0500
+Received: by mail-lj1-f195.google.com with SMTP id m6so23671423ljc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 00:29:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cWGIyDGedrBpqvnGEcfpuSqDBvTplOuqKnHOt1z2nZY=;
+        b=JYgDLrUje5DKLKp+k3Oade2QQs94WUDe1/8QVxUb7fsNTk/l6626+oRlXD3e/bpqq8
+         3rXVOCn0W8WeVVi211CVf31RgRAvuuS0547r4rO7b8Qtqnt42ewe9w+v0yZ6ApeYS/pT
+         AhaSF/3el3gdmRajOhieiokp6NWpp5KDmsg4Vy+O4Ndx/X8ZiUvvtr9MvUBytVXKX6nq
+         4lzl2ls4ows7n0x+hLyiowSg7RcF2HUUiqvfF/iFHV13scJqOdo55G8+ne3TV9wbPt7D
+         i4KUysQTFkRwCs7GHaAge7IXW0GhQ3iI5+IFlsuloczcM77XNCDWJsEqmETJcstMZeix
+         tDAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cWGIyDGedrBpqvnGEcfpuSqDBvTplOuqKnHOt1z2nZY=;
+        b=fbLldQ7G0Z34nkZlnxo6Z2PZVJA3yuXPdVsoXjGW3pQaFkip1cCj6XmT01w6Fpf/pw
+         SEq8L4U+dC83gZpq+vOXTDRvut81ZRkqGqbPdHJcLLOritDfC0ro6R0OJPyeLy6FXjiB
+         lY4fyjn3L4ztFiLKmTIhrAqMyztUJ8e5J74MNAFia0jOMgPj8N8OjYsKXoqn9atwmi08
+         IMfkKNli77053/1c9IcbKc3g6XmhWZSxy/pWBSPXwQhSVsHp0OHArSNuJWkxUoYbjREa
+         mlBDv/THQY8ZmqGtrQPGJp2NmOwxQ6lBgd92jGVipe+gb77YGQw8kI27qK7N7R2N/T2u
+         767g==
+X-Gm-Message-State: APjAAAVX5mbn/63Sijl78ZYFQkPi+8i6fbV0JZWmYl/QIRUGTSdDAhcF
+        B62QGOe2SfEEllMpXnkJOAwYY7I9ZCmAk2ftfH0A0Q==
+X-Google-Smtp-Source: APXvYqyFVu1QDHRAEXN8klwjdP572QLZkNK+IG5v4PcKoUa4g8y93kq9uXa8jHwJNaDlWusiqugi2HpACqmUZgN4wsY=
+X-Received: by 2002:a2e:9a12:: with SMTP id o18mr36798466lji.191.1575016168447;
+ Fri, 29 Nov 2019 00:29:28 -0800 (PST)
 MIME-Version: 1.0
-Message-ID: <157501614949.21853.15507465165565649871.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20191127135932.7223-1-m.felsch@pengutronix.de> <20191127135932.7223-4-m.felsch@pengutronix.de>
+In-Reply-To: <20191127135932.7223-4-m.felsch@pengutronix.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 29 Nov 2019 09:29:16 +0100
+Message-ID: <CACRpkdbw_R2Lu1G8ZqV8vMCQL+A7XUV7qAb=gC-je6dzPC2rzw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] regulator: da9062: add voltage selection gpio support
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, stwiss.opensource@diasemi.com,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the ras/urgent branch of tip:
+On Wed, Nov 27, 2019 at 2:59 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
 
-Commit-ID:     5a43b87b3c62ad149ba6e9d0d3e5c0e5da02a5ca
-Gitweb:        https://git.kernel.org/tip/5a43b87b3c62ad149ba6e9d0d3e5c0e5da02a5ca
-Author:        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-AuthorDate:    Thu, 28 Nov 2019 07:08:24 -08:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Fri, 29 Nov 2019 09:17:52 +01:00
+> The DA9062/1 devices can switch their regulator voltages between
+> voltage-A (active) and voltage-B (suspend) settings. Switching the
+> voltages can be controlled by ther internal state-machine or by a gpio
+> input signal and can be configured for each individual regulator. This
+> commit adds the gpio-based voltage switching support.
+>
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> ---
+> Changelog:
+>
+> v2:
+> - use new public api gpiod_to_offset()
 
-x86/mce/therm_throt: Mask out read-only and reserved MSR bits
+OK this is better in my opinion, at least it is a lesser evil than
+the hacks I've seen.
 
-While writing to MSR IA32_THERM_STATUS/IA32_PKG_THERM_STATUS, avoid
-writing 1 to read only and reserved fields because updating some fields
-generates exception.
+> +       struct reg_field vsel_gpi;
 
- [ bp: Vertically align for better readability. ]
+Again add some comments to the code describing what this is
+about please. A general purpose input that can be configured
+such that it is not a general purpose input anymore, but instead
+looped back internally to control a voltage on the DA9062.
 
-Fixes: f6656208f04e ("x86/mce/therm_throt: Optimize notifications of thermal throttle")
-Reported-by: Dominik Brodowski <linux@dominikbrodowski.net>
-Tested-by: Dominik Brodowski <linux@dominikbrodowski.net>
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20191128150824.22413-1-srinivas.pandruvada@linux.intel.com
----
- arch/x86/kernel/cpu/mce/therm_throt.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+Part of me wonder if these lines are really "general purpose"
+but I suppose software could use them.
 
-diff --git a/arch/x86/kernel/cpu/mce/therm_throt.c b/arch/x86/kernel/cpu/mce/therm_throt.c
-index d01e0da..b38010b 100644
---- a/arch/x86/kernel/cpu/mce/therm_throt.c
-+++ b/arch/x86/kernel/cpu/mce/therm_throt.c
-@@ -195,17 +195,24 @@ static const struct attribute_group thermal_attr_group = {
- #define THERM_THROT_POLL_INTERVAL	HZ
- #define THERM_STATUS_PROCHOT_LOG	BIT(1)
- 
-+#define THERM_STATUS_CLEAR_CORE_MASK (BIT(1) | BIT(3) | BIT(5) | BIT(7) | BIT(9) | BIT(11) | BIT(13) | BIT(15))
-+#define THERM_STATUS_CLEAR_PKG_MASK  (BIT(1) | BIT(3) | BIT(5) | BIT(7) | BIT(9) | BIT(11))
-+
- static void clear_therm_status_log(int level)
- {
- 	int msr;
--	u64 msr_val;
-+	u64 mask, msr_val;
- 
--	if (level == CORE_LEVEL)
--		msr = MSR_IA32_THERM_STATUS;
--	else
--		msr = MSR_IA32_PACKAGE_THERM_STATUS;
-+	if (level == CORE_LEVEL) {
-+		msr  = MSR_IA32_THERM_STATUS;
-+		mask = THERM_STATUS_CLEAR_CORE_MASK;
-+	} else {
-+		msr  = MSR_IA32_PACKAGE_THERM_STATUS;
-+		mask = THERM_STATUS_CLEAR_PKG_MASK;
-+	}
- 
- 	rdmsrl(msr, msr_val);
-+	msr_val &= mask;
- 	wrmsrl(msr, msr_val & ~THERM_STATUS_PROCHOT_LOG);
- }
- 
+Yours,
+Linus Walleij
