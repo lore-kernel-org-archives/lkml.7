@@ -2,95 +2,108 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9132BC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9423C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D77A217BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:53:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575017582;
-	bh=rfLlSLEgtmmMX1xKzGEwXMRDmRX90YsWzTqfkUgFeRM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HOmen8uk/+D2YwHAy6iORSKnHXE6/tBH5Zmp27Vws83P6Yn6XH+cEO4Ba4SHp1DQZ
-	 7TLstIt5JlH6Sf+4t9zHAWa3Q6hYq/ShCt+ifcouFwHGuu1BeyFWVS4a5fhHAQ6rqI
-	 hzT8MSlQR0GP7LOgFOseNcI24Jvj9yo6DLYDufEc=
+	by mail.kernel.org (Postfix) with ESMTP id 9EC8D2176D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:53:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="XjWv1Ylt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbfK2IxB (ORCPT
+        id S1727104AbfK2IxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 03:53:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54764 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726808AbfK2IxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 03:53:01 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A13D5217BA;
-        Fri, 29 Nov 2019 08:52:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575017580;
-        bh=rfLlSLEgtmmMX1xKzGEwXMRDmRX90YsWzTqfkUgFeRM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=J1y0d0IEoNAVMPTrlMOtFz+ja34sii0Xpt33KFe9FLiMiTiUXUM618C2DwbMxtHU0
-         s9QvNVi8x6hG9bdIamojKGCXAIRkNMdCwnTmbcbNd8EYYmPSACq8Nazy/wdlWlynJv
-         69+UUYW3Ac9vkTGgnQgx+OJMUR9Iz3sPBVg6KYjA=
-Date:   Fri, 29 Nov 2019 09:52:57 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Subject: Re: [PATCH 5.4 00/66] 5.4.1-stable review
-Message-ID: <20191129085257.GD3584430@kroah.com>
-References: <20191127202632.536277063@linuxfoundation.org>
- <CA+G9fYt8UCoKYnemrGFX4btoNukF0FFTsppzePKDbGbV5sQrtg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYt8UCoKYnemrGFX4btoNukF0FFTsppzePKDbGbV5sQrtg@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Fri, 29 Nov 2019 03:53:11 -0500
+Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25894 "EHLO
+        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726215AbfK2IxL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 03:53:11 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1575017542; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=KBMROfByYRekKn9mQBqxvWB0j2G6dico4/BeBPn3MQ6lHJTCoigh4v8CEyfyEQ9NoH44hf6z1vNZ/c7X+3K6LoXS0iSn8cInEr9qMuiH1fxbvyOW05+oZjk5KZ8iPcEJXPd6oUvAEaDBIB/7rGmGzcm04dwXukbPEti+L60DDpQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1575017542; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To; 
+        bh=2jw2edLK6aL3mkL6+0431XgLWupYHzieHeZv4eaRA0M=; 
+        b=MZxMyXPsjaGyMtxpkeOfqxK5zJoRUYQoGA6f9Ar0jZkMbWrR5m2bKdZ1HDPlC0cShSM2jW9WkH1HxtyDs3tBB03hUhd/jF9GSmKo2RfLqcrujYBWs85DRE7HLz6Q1vaZoqKmFumSI+Elge+PP83+AhKAp4Qc9R87sPHnM116tuE=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
+  b=i6lWgobW2Ya6wgEznpq/D8wxhMnmJxSDFPD5vKujxQGvkaAVTWzBZBF+DwMJJv90BD+qVUs8eEpT
+    bDlYqoSJ388ACFVkT7t9YTZ5hUTTKqewfC/ssnsE1FIReEqwL4DJ  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1575017542;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
+        bh=2jw2edLK6aL3mkL6+0431XgLWupYHzieHeZv4eaRA0M=;
+        b=XjWv1YltmRmvRvwptYqe8LhCLvw5xvIF8RAnbXT9Etqvx6QU89UlJAHbf995ziI4
+        noNSxPbIJ2mkTKhFxX4n+sp0Z0Yt6J/qlhZPBKBKOFfovJvFwxHmSoPTd5/lUkP8zSr
+        HpIaekEuDBrw5sQJKGqCbAeiL4Qoi/R6R9cLn0H8=
+Received: from zhouyanjie-virtual-machine.localdomain (139.207.146.46 [139.207.146.46]) by mx.zohomail.com
+        with SMTPS id 1575017541659799.7629197379202; Fri, 29 Nov 2019 00:52:21 -0800 (PST)
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
+        jhogan@kernel.org, mripard@kernel.org, shawnguo@kernel.org,
+        mark.rutland@arm.com, syq@debian.org, ralf@linux-mips.org,
+        heiko@sntech.de, icenowy@aosc.io,
+        laurent.pinchart@ideasonboard.com, krzk@kernel.org,
+        geert+renesas@glider.be, paul@crapouillou.net,
+        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, 772753199@qq.com
+Subject: [PATCH v6 06/12] MIPS: CU1000: Update defconfig for pdma controller.
+Date:   Fri, 29 Nov 2019 16:48:47 +0800
+Message-Id: <1575017333-29020-7-git-send-email-zhouyanjie@zoho.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1575017333-29020-1-git-send-email-zhouyanjie@zoho.com>
+References: <1575017333-29020-1-git-send-email-zhouyanjie@zoho.com>
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 02:26:27PM +0530, Naresh Kamboju wrote:
-> On Thu, 28 Nov 2019 at 02:47, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.4.1 release.
-> > There are 66 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Fri, 29 Nov 2019 20:18:09 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.1-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> >
-> 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
+Selected pdma controller support by default.
 
-Great, thanks for testing and letting me know.
+Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+---
 
-greg k-h
+Notes:
+    v4:
+    New patch.
+    
+    v4->v5:
+    No change.
+    
+    v5->v6:
+    No change.
+
+ arch/mips/configs/cu1000-neo_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/mips/configs/cu1000-neo_defconfig b/arch/mips/configs/cu1000-neo_defconfig
+index 4fafe92..6ac51ec 100644
+--- a/arch/mips/configs/cu1000-neo_defconfig
++++ b/arch/mips/configs/cu1000-neo_defconfig
+@@ -61,6 +61,8 @@ CONFIG_GPIO_SYSFS=y
+ # CONFIG_VGA_CONSOLE is not set
+ # CONFIG_HID is not set
+ # CONFIG_USB_SUPPORT is not set
++CONFIG_DMADEVICES=y
++CONFIG_DMA_JZ4780=y
+ # CONFIG_IOMMU_SUPPORT is not set
+ CONFIG_NVMEM=y
+ CONFIG_NVMEM_SYSFS=y
+-- 
+2.7.4
+
+
