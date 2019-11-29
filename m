@@ -2,206 +2,82 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03BE7C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 03:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A9FC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 03:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDB37208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 03:35:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="QfkEgP0L"
+	by mail.kernel.org (Postfix) with ESMTP id 05B88215A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 03:37:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfK2DfV (ORCPT
+        id S1727010AbfK2Dhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 22:35:21 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40694 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726788AbfK2DfV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 22:35:21 -0500
-Received: by mail-wm1-f67.google.com with SMTP id y5so13425906wmi.5
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 19:35:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=javigon-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=QJ0BehjFJkWJyP8RtCONd9xszCsERb/O9WmeExTQd5k=;
-        b=QfkEgP0LSNnXnXJcK7sI02htl820DB5bfsY47OwRNyzmGbQX/PzK/FxsZx3bI28akq
-         LeDtDTO+1gBXwVGMvLEnATIxv7qa7CjbeB0ls0dcWEM78aKuIiAPgr2fcnEL7efCNIgQ
-         KsbuiUjKC4h/6cCfw7Y+LWD+RHGWQS35wN2Dlb/F+3qx7SbAInmdwnRtQgCF33LeVFby
-         RmHDDK6gVQpiZb+mqxjyG4hYbCTcncu3C3OlFxGou2TT8n/6sBG6aWB0dsQ5+iMuy8Jo
-         Sa924LLfQY3/gWJ5RWOzAjTBjsgu5fS7Ti1KvcBpxmvI6r8ackcKQW+IabakzoOM3mZx
-         ZSIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=QJ0BehjFJkWJyP8RtCONd9xszCsERb/O9WmeExTQd5k=;
-        b=SxlsDpXvoAIEQjZmvZ94X9CnhY04XIAXCKlephyfIghBp1JHZmwRxGbjYqea36yj65
-         DZTI4Psa1p2hBVjDN7QLhX2kYF4hkCwy2jc+ZIESudcSIeYLqJC9z/+5DHrwvdrYRg0m
-         /qBrG1qltMt9puMkm8H1UaRod7wBfj3P5pRiAMRGKOkKshuLF5wggjBAFfOvH4KpHhUq
-         QdTLE1TpCpc47Won2xTPTf58yZ2p8LCao/FiXU4UzcgtKC7wdB+JHbBZX0W8MNUK40OJ
-         jQcJAD/kwXnD5FW3FFAiQzm9g1iQFCbDO1wRDCzUnVxC37GdAHDyT6F3Fi0bjBMo0aG6
-         BB7g==
-X-Gm-Message-State: APjAAAUm8TF/nsTarv6tO4erHFD91ZJGnoofIhE7jkscpqFvkWVmjl0b
-        4i05366b6FRtpzX0hCVgBXiIPQ==
-X-Google-Smtp-Source: APXvYqyY5Ag9efnLxT+G22Uef6sbiZvKYbuON7L6+paT+DCwuPK/MrDIWZduK2bBn25khLS06VtYyA==
-X-Received: by 2002:a1c:3941:: with SMTP id g62mr11971950wma.165.1574998517292;
-        Thu, 28 Nov 2019 19:35:17 -0800 (PST)
-Received: from localhost (ip-5-186-122-168.cgn.fibianet.dk. [5.186.122.168])
-        by smtp.gmail.com with ESMTPSA id x9sm25131773wru.32.2019.11.28.19.35.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 19:35:16 -0800 (PST)
-Date:   Fri, 29 Nov 2019 04:35:15 +0100
-From:   Javier Gonzalez <javier@javigon.com>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        linux-fsdevel@vger.kernel.org,
-        Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Subject: Re: [PATCH] f2fs: Fix direct IO handling
-Message-ID: <20191129033515.ehkdf65toblntkrq@MacBook-Pro.gnusmas>
-References: <20191126075719.1046485-1-damien.lemoal@wdc.com>
- <20191126234428.GB20652@jaegeuk-macbookpro.roam.corp.google.com>
+        Thu, 28 Nov 2019 22:37:40 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7176 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726773AbfK2Dhk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 22:37:40 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 5F1338584C3E47A3F3DE;
+        Fri, 29 Nov 2019 11:37:38 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 29 Nov 2019 11:37:31 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        "Michael Turquette" <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC:     YueHaibing <yuehaibing@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH -next] clk: bm1800: Remove set but not used variable 'fref'
+Date:   Fri, 29 Nov 2019 03:35:34 +0000
+Message-ID: <20191129033534.188257-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191126234428.GB20652@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.11.2019 15:44, Jaegeuk Kim wrote:
->On 11/26, Damien Le Moal wrote:
->> f2fs_preallocate_blocks() identifies direct IOs using the IOCB_DIRECT
->> flag for a kiocb structure. However, the file system direct IO handler
->> function f2fs_direct_IO() may have decided that a direct IO has to be
->> exececuted as a buffered IO using the function f2fs_force_buffered_io().
->> This is the case for instance for volumes including zoned block device
->> and for unaligned write IOs with LFS mode enabled.
->>
->> These 2 different methods of identifying direct IOs can result in
->> inconsistencies generating stale data access for direct reads after a
->> direct IO write that is treated as a buffered write. Fix this
->> inconsistency by combining the IOCB_DIRECT flag test with the result
->> of f2fs_force_buffered_io().
->>
->> Reported-by: Javier Gonzalez <javier@javigon.com>
->> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
->> ---
->>  fs/f2fs/data.c | 4 +++-
->>  1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
->> index 5755e897a5f0..8ac2d3b70022 100644
->> --- a/fs/f2fs/data.c
->> +++ b/fs/f2fs/data.c
->> @@ -1073,6 +1073,8 @@ int f2fs_preallocate_blocks(struct kiocb *iocb, struct iov_iter *from)
->>  	int flag;
->>  	int err = 0;
->>  	bool direct_io = iocb->ki_flags & IOCB_DIRECT;
->> +	bool do_direct_io = direct_io &&
->> +		!f2fs_force_buffered_io(inode, iocb, from);
->>
->>  	/* convert inline data for Direct I/O*/
->>  	if (direct_io) {
->> @@ -1081,7 +1083,7 @@ int f2fs_preallocate_blocks(struct kiocb *iocb, struct iov_iter *from)
->>  			return err;
->>  	}
->>
->> -	if (direct_io && allow_outplace_dio(inode, iocb, from))
->> +	if (do_direct_io && allow_outplace_dio(inode, iocb, from))
->
->It seems f2fs_force_buffered_io() includes allow_outplace_dio().
->
->How about this?
->---
-> fs/f2fs/data.c | 13 -------------
-> fs/f2fs/file.c | 35 +++++++++++++++++++++++++----------
-> 2 files changed, 25 insertions(+), 23 deletions(-)
->
->diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
->index a034cd0ce021..fc40a72f7827 100644
->--- a/fs/f2fs/data.c
->+++ b/fs/f2fs/data.c
->@@ -1180,19 +1180,6 @@ int f2fs_preallocate_blocks(struct kiocb *iocb, struct iov_iter *from)
-> 	int err = 0;
-> 	bool direct_io = iocb->ki_flags & IOCB_DIRECT;
->
->-	/* convert inline data for Direct I/O*/
->-	if (direct_io) {
->-		err = f2fs_convert_inline_inode(inode);
->-		if (err)
->-			return err;
->-	}
->-
->-	if (direct_io && allow_outplace_dio(inode, iocb, from))
->-		return 0;
->-
->-	if (is_inode_flag_set(inode, FI_NO_PREALLOC))
->-		return 0;
->-
-> 	map.m_lblk = F2FS_BLK_ALIGN(iocb->ki_pos);
-> 	map.m_len = F2FS_BYTES_TO_BLK(iocb->ki_pos + iov_iter_count(from));
-> 	if (map.m_len > map.m_lblk)
->diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
->index c0560d62dbee..6b32ac6c3382 100644
->--- a/fs/f2fs/file.c
->+++ b/fs/f2fs/file.c
->@@ -3386,18 +3386,33 @@ static ssize_t f2fs_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
-> 				ret = -EAGAIN;
-> 				goto out;
-> 			}
->-		} else {
->-			preallocated = true;
->-			target_size = iocb->ki_pos + iov_iter_count(from);
->+			goto write;
->+		}
->
->-			err = f2fs_preallocate_blocks(iocb, from);
->-			if (err) {
->-				clear_inode_flag(inode, FI_NO_PREALLOC);
->-				inode_unlock(inode);
->-				ret = err;
->-				goto out;
->-			}
->+		if (is_inode_flag_set(inode, FI_NO_PREALLOC))
->+			goto write;
->+
->+		if (iocb->ki_flags & IOCB_DIRECT) {
->+			/* convert inline data for Direct I/O*/
->+			err = f2fs_convert_inline_inode(inode);
->+			if (err)
->+				goto out_err;
->+
->+			if (!f2fs_force_buffered_io(inode, iocb, from))
->+				goto write;
->+		}
->+		preallocated = true;
->+		target_size = iocb->ki_pos + iov_iter_count(from);
->+
->+		err = f2fs_preallocate_blocks(iocb, from);
->+		if (err) {
->+out_err:
->+			clear_inode_flag(inode, FI_NO_PREALLOC);
->+			inode_unlock(inode);
->+			ret = err;
->+			goto out;
-> 		}
->+write:
-> 		ret = __generic_file_write_iter(iocb, from);
-> 		clear_inode_flag(inode, FI_NO_PREALLOC);
->
->-- 
->2.19.0.605.g01d371f741-goog
->
-This also addresses the original problem.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Tested-by: Javier González <javier@javigon.com>
+drivers/clk/clk-bm1880.c: In function 'bm1880_pll_rate_calc':
+drivers/clk/clk-bm1880.c:477:13: warning:
+ variable 'fref' set but not used [-Wunused-but-set-variable]
+
+It is never used, so remove it.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/clk/clk-bm1880.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/clk/clk-bm1880.c b/drivers/clk/clk-bm1880.c
+index 4cd175afce9b..e6d6599d310a 100644
+--- a/drivers/clk/clk-bm1880.c
++++ b/drivers/clk/clk-bm1880.c
+@@ -474,11 +474,10 @@ static struct bm1880_composite_clock bm1880_composite_clks[] = {
+ static unsigned long bm1880_pll_rate_calc(u32 regval, unsigned long parent_rate)
+ {
+ 	u64 numerator;
+-	u32 fbdiv, fref, refdiv;
++	u32 fbdiv, refdiv;
+ 	u32 postdiv1, postdiv2, denominator;
+ 
+ 	fbdiv = (regval >> 16) & 0xfff;
+-	fref = parent_rate;
+ 	refdiv = regval & 0x1f;
+ 	postdiv1 = (regval >> 8) & 0x7;
+ 	postdiv2 = (regval >> 12) & 0x7;
+
+
+
