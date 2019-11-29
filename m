@@ -2,107 +2,141 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92978C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B20C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6543C21774
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:29:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JYgDLrUj"
+	by mail.kernel.org (Postfix) with ESMTP id A7A8221774
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 08:30:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbfK2I3a (ORCPT
+        id S1726888AbfK2IaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 03:29:30 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34603 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbfK2I3a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 03:29:30 -0500
-Received: by mail-lj1-f195.google.com with SMTP id m6so23671423ljc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 00:29:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cWGIyDGedrBpqvnGEcfpuSqDBvTplOuqKnHOt1z2nZY=;
-        b=JYgDLrUje5DKLKp+k3Oade2QQs94WUDe1/8QVxUb7fsNTk/l6626+oRlXD3e/bpqq8
-         3rXVOCn0W8WeVVi211CVf31RgRAvuuS0547r4rO7b8Qtqnt42ewe9w+v0yZ6ApeYS/pT
-         AhaSF/3el3gdmRajOhieiokp6NWpp5KDmsg4Vy+O4Ndx/X8ZiUvvtr9MvUBytVXKX6nq
-         4lzl2ls4ows7n0x+hLyiowSg7RcF2HUUiqvfF/iFHV13scJqOdo55G8+ne3TV9wbPt7D
-         i4KUysQTFkRwCs7GHaAge7IXW0GhQ3iI5+IFlsuloczcM77XNCDWJsEqmETJcstMZeix
-         tDAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cWGIyDGedrBpqvnGEcfpuSqDBvTplOuqKnHOt1z2nZY=;
-        b=fbLldQ7G0Z34nkZlnxo6Z2PZVJA3yuXPdVsoXjGW3pQaFkip1cCj6XmT01w6Fpf/pw
-         SEq8L4U+dC83gZpq+vOXTDRvut81ZRkqGqbPdHJcLLOritDfC0ro6R0OJPyeLy6FXjiB
-         lY4fyjn3L4ztFiLKmTIhrAqMyztUJ8e5J74MNAFia0jOMgPj8N8OjYsKXoqn9atwmi08
-         IMfkKNli77053/1c9IcbKc3g6XmhWZSxy/pWBSPXwQhSVsHp0OHArSNuJWkxUoYbjREa
-         mlBDv/THQY8ZmqGtrQPGJp2NmOwxQ6lBgd92jGVipe+gb77YGQw8kI27qK7N7R2N/T2u
-         767g==
-X-Gm-Message-State: APjAAAVX5mbn/63Sijl78ZYFQkPi+8i6fbV0JZWmYl/QIRUGTSdDAhcF
-        B62QGOe2SfEEllMpXnkJOAwYY7I9ZCmAk2ftfH0A0Q==
-X-Google-Smtp-Source: APXvYqyFVu1QDHRAEXN8klwjdP572QLZkNK+IG5v4PcKoUa4g8y93kq9uXa8jHwJNaDlWusiqugi2HpACqmUZgN4wsY=
-X-Received: by 2002:a2e:9a12:: with SMTP id o18mr36798466lji.191.1575016168447;
- Fri, 29 Nov 2019 00:29:28 -0800 (PST)
+        Fri, 29 Nov 2019 03:30:13 -0500
+Received: from mga03.intel.com ([134.134.136.65]:36760 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725892AbfK2IaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 03:30:13 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Nov 2019 00:30:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,256,1571727600"; 
+   d="scan'208";a="234645172"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga004.fm.intel.com with ESMTP; 29 Nov 2019 00:30:10 -0800
+Date:   Fri, 29 Nov 2019 16:30:02 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] mm/page_vma_mapped: page table boundary is already
+ guaranteed
+Message-ID: <20191129083002.GA1669@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20191128010321.21730-1-richardw.yang@linux.intel.com>
+ <20191128010321.21730-2-richardw.yang@linux.intel.com>
+ <20191128083143.kwih655snxqa2qnm@box.shutemov.name>
+ <20191128210945.6gtt7wlygsvxip4n@master>
+ <20191128223904.GG20752@bombadil.infradead.org>
 MIME-Version: 1.0
-References: <20191127135932.7223-1-m.felsch@pengutronix.de> <20191127135932.7223-4-m.felsch@pengutronix.de>
-In-Reply-To: <20191127135932.7223-4-m.felsch@pengutronix.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 29 Nov 2019 09:29:16 +0100
-Message-ID: <CACRpkdbw_R2Lu1G8ZqV8vMCQL+A7XUV7qAb=gC-je6dzPC2rzw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] regulator: da9062: add voltage selection gpio support
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, stwiss.opensource@diasemi.com,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191128223904.GG20752@bombadil.infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 2:59 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
-
-> The DA9062/1 devices can switch their regulator voltages between
-> voltage-A (active) and voltage-B (suspend) settings. Switching the
-> voltages can be controlled by ther internal state-machine or by a gpio
-> input signal and can be configured for each individual regulator. This
-> commit adds the gpio-based voltage switching support.
+On Thu, Nov 28, 2019 at 02:39:04PM -0800, Matthew Wilcox wrote:
+>On Thu, Nov 28, 2019 at 09:09:45PM +0000, Wei Yang wrote:
+>> On Thu, Nov 28, 2019 at 11:31:43AM +0300, Kirill A. Shutemov wrote:
+>> >On Thu, Nov 28, 2019 at 09:03:21AM +0800, Wei Yang wrote:
+>> >> The check here is to guarantee pvmw->address iteration is limited in one
+>> >> page table boundary. To be specific, here the address range should be in
+>> >> one PMD_SIZE.
+>> >> 
+>> >> If my understanding is correct, this check is already done in the above
+>> >> check:
+>> >> 
+>> >>     address >= __vma_address(page, vma) + PMD_SIZE
+>> >> 
+>> >> The boundary check here seems not necessary.
+>> >> 
+>> >> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>> >
+>> >NAK.
+>> >
+>> >THP can be mapped with PTE not aligned to PMD_SIZE. Consider mremap().
+>> >
+>> 
+>> Hi, Kirill
+>> 
+>> Thanks for your comment during Thanks Giving Day. Happy holiday:-)
+>> 
+>> I didn't think about this case before, thanks for reminding. Then I tried to
+>> understand your concern.
+>> 
+>> mremap() would expand/shrink a memory mapping. In this case, probably shrink
+>> is in concern. Since pvmw->page and pvmw->vma are not changed in the loop, the
+>> case you mentioned maybe pvmw->page is the head of a THP but part of it is
+>> unmapped.
 >
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> ---
-> Changelog:
+>mremap() can also move a mapping, see MREMAP_FIXED.
+
+Hi, Matthew
+
+Thanks for your comment.
+
+I took a look into the MREMAP_FIXED case, but still not clear in which case it
+fall into the situation Kirill mentioned.
+
+Per my understanding, move mapping is achieved in two steps:
+
+    * unmap some range in old vma if old_len >= new_len
+    * move vma
+
+If the length doesn't change, we are expecting to have the "copy" of old
+vma. This doesn't change the THP PMD mapping.
+
+So the change still happens in the unmap step, if I am correct.
+
+Would you mind giving me more hint on the case when we would have the
+situation as Kirill mentioned?
+
 >
-> v2:
-> - use new public api gpiod_to_offset()
+>> This means the following condition stands:
+>> 
+>>     vma->vm_start <= vma_address(page) 
+>>     vma->vm_end <=   vma_address(page) + page_size(page)
+>> 
+>> Since we have checked address with vm_end, do you think this case is also
+>> guarded?
+>> 
+>> Not sure my understanding is correct, look forward your comments.
+>> 
+>> >> Test:
+>> >>    more than 48 hours kernel build test shows this code is not touched.
+>> >
+>> >Not an argument. I doubt mremap(2) is ever called in kernel build
+>> >workload.
+>> >
+>> >-- 
+>> > Kirill A. Shutemov
+>> 
+>> -- 
+>> Wei Yang
+>> Help you, Help me
+>> 
 
-OK this is better in my opinion, at least it is a lesser evil than
-the hacks I've seen.
-
-> +       struct reg_field vsel_gpi;
-
-Again add some comments to the code describing what this is
-about please. A general purpose input that can be configured
-such that it is not a general purpose input anymore, but instead
-looped back internally to control a voltage on the DA9062.
-
-Part of me wonder if these lines are really "general purpose"
-but I suppose software could use them.
-
-Yours,
-Linus Walleij
+-- 
+Wei Yang
+Help you, Help me
