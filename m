@@ -2,191 +2,191 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE13C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 16:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA79DC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 16:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 307EE208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 16:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7318021774
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 16:52:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575046326;
+	bh=KI3uxiq4vgVfVkbvGeaNtNf9vb3FxFoBDHBuP3alHnI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=c9fCM3DeA+zqKyYWMd7diJ3Qp5BEJLM3FOsqZhtLb9WMg7g1s5HyyfE7F4bONo8Qw
+	 nJUZRlpuvthPwZhyOrYelzDkKhStrKlGuYx/jcxcDhlg63v08JFGOg4dnLUAbny8K/
+	 nShVrDi6yqmKJnZDNZ5Nvhec3i+ZH6a/4vfHi9jI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbfK2Que (ORCPT
+        id S1727127AbfK2QwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 11:50:34 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:35114 "EHLO ale.deltatee.com"
+        Fri, 29 Nov 2019 11:52:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726909AbfK2Qud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 11:50:33 -0500
-Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1iajTD-0007PZ-KQ; Fri, 29 Nov 2019 09:50:16 -0700
-To:     James Sewart <jamessewart@arista.com>, linux-pci@vger.kernel.org
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <dima@arista.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-References: <20191120193228.GA103670@google.com>
- <6A902F0D-FE98-4760-ADBB-4D5987D866BE@arista.com>
- <20191126173833.GA16069@infradead.org>
- <547214A9-9FD0-4DD5-80E1-1F5A467A0913@arista.com>
- <9c54c5dd-702c-a19b-38ba-55ab73b24729@deltatee.com>
- <435064D4-00F0-47F5-94D2-2C354F6B1206@arista.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <058383d9-69fe-65e3-e410-eebd99840261@deltatee.com>
-Date:   Fri, 29 Nov 2019 09:50:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726943AbfK2QwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 11:52:04 -0500
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00BCA217D6
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 16:52:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575046323;
+        bh=KI3uxiq4vgVfVkbvGeaNtNf9vb3FxFoBDHBuP3alHnI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JQuk2XzlczKnZk615EiIIEqrGL6jtjLFjrNQiW5vz7RG0O1zsFeFV3JO/FSh8vyab
+         OfAoB+NHYIyxjCiq0GzqqoDJ+7ZrIq3CLZ+0+HNIPuv/Aglv2LmzWLE5DAlEX7XcbZ
+         MqBz1ZI8r1H1z5O4UOP784UN8CojmRJ/nbdl3tbE=
+Received: by mail-wr1-f53.google.com with SMTP id n1so36009657wra.10
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 08:52:02 -0800 (PST)
+X-Gm-Message-State: APjAAAXUFElcnXRAATSCRbD9MZ7WWkjrC2pBjauhs0+eSmGw8p01bkho
+        mn5W4d0voGuDkg3y+8r0O+cc/PAgDsqJFjuturCX7g==
+X-Google-Smtp-Source: APXvYqySVoFzuLEO3oO3co1aaIbt8yk2TeBtXkuz07Sp4DVXsjReprZWYpv4VdqlV7epxEjme3/3bbIDzH7Xne8LNsQ=
+X-Received: by 2002:adf:f20b:: with SMTP id p11mr43830730wro.195.1575046321380;
+ Fri, 29 Nov 2019 08:52:01 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <435064D4-00F0-47F5-94D2-2C354F6B1206@arista.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.73.163.230
-X-SA-Exim-Rcpt-To: helgaas@kernel.org, alex.williamson@redhat.com, dima@arista.com, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, 0x7f454c46@gmail.com, hch@infradead.org, linux-pci@vger.kernel.org, jamessewart@arista.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v4 1/2] PCI: Add parameter nr_devfns to pci_add_dma_alias
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <1570212969-21888-1-git-send-email-chang.seok.bae@intel.com>
+ <alpine.DEB.2.21.1911151926380.28787@nanos.tec.linutronix.de>
+ <20191115191200.GD22747@tassilo.jf.intel.com> <A78C989F6D9628469189715575E55B236B50834A@IRSMSX104.ger.corp.intel.com>
+In-Reply-To: <A78C989F6D9628469189715575E55B236B50834A@IRSMSX104.ger.corp.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 29 Nov 2019 08:51:49 -0800
+X-Gmail-Original-Message-ID: <CALCETrXc=-k3fQyxjBok0npjTMr6-Ho7+pkvzDUdG=b52Qz=9g@mail.gmail.com>
+Message-ID: <CALCETrXc=-k3fQyxjBok0npjTMr6-Ho7+pkvzDUdG=b52Qz=9g@mail.gmail.com>
+Subject: Re: [PATCH v9 00/17] Enable FSGSBASE instructions
+To:     "Metzger, Markus T" <markus.t.metzger@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Bae, Chang Seok" <chang.seok.bae@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bp@alien8.de" <bp@alien8.de>, "luto@kernel.org" <luto@kernel.org>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        Pedro Alves <palves@redhat.com>,
+        Simon Marchi <simark@simark.ca>,
+        Andi Kleen <ak@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Nov 29, 2019 at 6:56 AM Metzger, Markus T
+<markus.t.metzger@intel.com> wrote:
+>
+> > On Fri, Nov 15, 2019 at 07:29:17PM +0100, Thomas Gleixner wrote:
+> > > On Fri, 4 Oct 2019, Chang S. Bae wrote:
+> > > >
+> > > > Updates from v8 [10]:
+> > > > * Internalized the interrupt check in the helper functions (Andy L.)
+> > > > * Simplified GS base helper functions (Tony L.)
+> > > > * Changed the patch order to put the paranoid path changes before the
+> > > >   context switch changes (Tony L.)
+> > > > * Fixed typos (Randy D.) and massaged a few sentences in the documentation
+> > > > * Massaged the FSGSBASE enablement message
+> > >
+> > > That still lacks what Andy requested quite some time ago in the V8 thread:
+> > >
+> > >      https://lore.kernel.org/lkml/034aaf3a-a93d-ec03-0bbd-
+> > 068e1905b774@kernel.org/
+> > >
+> > >   "I also think that, before this series can have my ack, it needs an
+> > >    actual gdb maintainer to chime in, publicly, and state that they have
+> > >    thought about and tested the ABI changes and that gdb still works on
+> > >    patched kernels with and without FSGSBASE enabled.  I realize that there
+> > >    were all kinds of discussions, but they were all quite theoretical, and
+> > >    I think that the actual patches need to be considered by people who
+> > >    understand the concerns.  Specific test cases would be nice, too."
+> > >
+> > > What's the state of this?
+>
+> On branch users/mmetzger/fsgs in sourceware.org/git/binutils-gdb.git,
+> there's a GDB test covering the behavior discussed theoretically back then.
+>
+> It covers modifying the selector as well as the base from GDB and using
+> the modified values for inferior calls as well as for resuming the inferior.
+>
+> Current kernels allow changing the selector and provide the resulting
+> base back to the ptracer.  They also allow changing the base as long as
+> the selector is zero.  That's the behavior we wanted to preserve IIRC.
 
+The general kernel rule is that we don't break working applications.
+Other than that, we're allowed to change the ABI if existing working
+applications don't break.  I can't tell whether you wrote a test that
+detects a behavior change or whether you wrote a test that tests
+behavior that gdb or other programs actually rely on.
 
-On 2019-11-29 5:49 a.m., James Sewart wrote:
-> pci_add_dma_alias can now be used to create a dma alias for a range of
-> devfns.
-> 
-> Signed-off-by: James Sewart <jamessewart@arista.com>
-> ---
->  drivers/pci/pci.c    | 23 ++++++++++++++++++-----
->  drivers/pci/quirks.c | 14 +++++++-------
->  include/linux/pci.h  |  2 +-
->  3 files changed, 26 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index a97e2571a527..9b0e3481fe17 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5857,7 +5857,8 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
->  /**
->   * pci_add_dma_alias - Add a DMA devfn alias for a device
->   * @dev: the PCI device for which alias is added
-> - * @devfn: alias slot and function
-> + * @devfn_from: alias slot and function
-> + * @nr_devfns: Number of subsequent devfns to alias
->   *
->   * This helper encodes an 8-bit devfn as a bit number in dma_alias_mask
->   * which is used to program permissible bus-devfn source addresses for DMA
-> @@ -5873,8 +5874,14 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
->   * cannot be left as a userspace activity).  DMA aliases should therefore
->   * be configured via quirks, such as the PCI fixup header quirk.
->   */
-> -void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
-> +void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, unsigned nr_devfns)
->  {
-> +	int devfn_to;
-> +
-> +	if (nr_devfns > U8_MAX+1)
-> +		nr_devfns = U8_MAX+1;
+Certainly, with a 32-bit *gdb*, writing a nonzero value to FS or GS
+using ptrace should change the base accordingly.  I think the current
+patches get this wrong.
 
-Why +1? That doesn't seem right to me....
+With a 64-bit gdb and a 32-bit inferior, in an ideal world, everything
+would work just like full 64-bit, since that's how the hardware works.
+But we don't necessary live in an ideal world.
 
-> +	devfn_to = devfn_from + nr_devfns - 1;
-> +
->  	if (!dev->dma_alias_mask)
->  		dev->dma_alias_mask = bitmap_zalloc(U8_MAX, GFP_KERNEL);
->  	if (!dev->dma_alias_mask) {
-> @@ -5882,9 +5889,15 @@ void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
->  		return;
->  	}
->  
-> -	set_bit(devfn, dev->dma_alias_mask);
-> -	pci_info(dev, "Enabling fixed DMA alias to %02x.%d\n",
-> -		 PCI_SLOT(devfn), PCI_FUNC(devfn));
-> +	bitmap_set(dev->dma_alias_mask, devfn_from, nr_devfns);
-> +
-> +	if (nr_devfns == 1)
-> +		pci_info(dev, "Enabling fixed DMA alias to %02x.%d\n",
-> +				PCI_SLOT(devfn_from), PCI_FUNC(devfn_from));
-> +	else if(nr_devfns > 1)
-> +		pci_info(dev, "Enabling fixed DMA alias for devfn range from %02x.%d to %02x.%d\n",
-> +				PCI_SLOT(devfn_from), PCI_FUNC(devfn_from),
-> +				PCI_SLOT(devfn_to), PCI_FUNC(devfn_to));
->  }
->  
->  bool pci_devs_are_dma_aliases(struct pci_dev *dev1, struct pci_dev *dev2)
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 320255e5e8f8..0f3f5afc73fd 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -3932,7 +3932,7 @@ int pci_dev_specific_reset(struct pci_dev *dev, int probe)
->  static void quirk_dma_func0_alias(struct pci_dev *dev)
->  {
->  	if (PCI_FUNC(dev->devfn) != 0)
-> -		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), 0));
-> +		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), 0), 1);
->  }
->  
->  /*
-> @@ -3946,7 +3946,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_RICOH, 0xe476, quirk_dma_func0_alias);
->  static void quirk_dma_func1_alias(struct pci_dev *dev)
->  {
->  	if (PCI_FUNC(dev->devfn) != 1)
-> -		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), 1));
-> +		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), 1), 1);
->  }
->  
->  /*
-> @@ -4031,7 +4031,7 @@ static void quirk_fixed_dma_alias(struct pci_dev *dev)
->  
->  	id = pci_match_id(fixed_dma_alias_tbl, dev);
->  	if (id)
-> -		pci_add_dma_alias(dev, id->driver_data);
-> +		pci_add_dma_alias(dev, id->driver_data, 1);
->  }
->  
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ADAPTEC2, 0x0285, quirk_fixed_dma_alias);
-> @@ -4073,9 +4073,9 @@ DECLARE_PCI_FIXUP_HEADER(0x8086, 0x244e, quirk_use_pcie_bridge_dma_alias);
->   */
->  static void quirk_mic_x200_dma_alias(struct pci_dev *pdev)
->  {
-> -	pci_add_dma_alias(pdev, PCI_DEVFN(0x10, 0x0));
-> -	pci_add_dma_alias(pdev, PCI_DEVFN(0x11, 0x0));
-> -	pci_add_dma_alias(pdev, PCI_DEVFN(0x12, 0x3));
-> +	pci_add_dma_alias(pdev, PCI_DEVFN(0x10, 0x0), 1);
-> +	pci_add_dma_alias(pdev, PCI_DEVFN(0x11, 0x0), 1);
-> +	pci_add_dma_alias(pdev, PCI_DEVFN(0x12, 0x3), 1);
->  }
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2260, quirk_mic_x200_dma_alias);
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2264, quirk_mic_x200_dma_alias);
-> @@ -5273,7 +5273,7 @@ static void quirk_switchtec_ntb_dma_alias(struct pci_dev *pdev)
->  			pci_dbg(pdev,
->  				"Aliasing Partition %d Proxy ID %02x.%d\n",
->  				pp, PCI_SLOT(devfn), PCI_FUNC(devfn));
-> -			pci_add_dma_alias(pdev, devfn);
-> +			pci_add_dma_alias(pdev, devfn, 1);
->  		}
->  	}
->  
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 1a6cf19eac2d..84a8d4c2b24e 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -2323,7 +2323,7 @@ static inline struct eeh_dev *pci_dev_to_eeh_dev(struct pci_dev *pdev)
->  }
->  #endif
->  
-> -void pci_add_dma_alias(struct pci_dev *dev, u8 devfn);
-> +void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, unsigned nr_devfns);
->  bool pci_devs_are_dma_aliases(struct pci_dev *dev1, struct pci_dev *dev2);
->  int pci_for_each_dma_alias(struct pci_dev *pdev,
->  			   int (*fn)(struct pci_dev *pdev,
-> 
+With a 64-bit gdb and a 64-bit inferior, the inferior can set FS to
+some nonzero value and then set FSBASE to an arbitrary 64-bit number,
+and FS will retain its value.  ptrace needs to give gdb some way to
+read, save, and restore this state.
+
+I think the ideal behavior is that 64-bit ptrace callers should
+control FS and FSBASE independently.  The question is: will that break
+things?  If it will, then we'll need to make sure that there is an API
+by which a debugger can independently control FS and FSBASE, and we'll
+also need to make sure that whatever existing API debuggers use to
+change FS and expect FSBASE to magically change as well continue to
+have that effect.
+
+>
+> The patch series on branch fsgs_tip_5.4-rc1_100319 at
+> github.com/changbae/Linux-kernel.git breaks tests that modify the
+> selector and expect that to change the base.
+>
+> That kernel allows changing the base via ptrace but ignores changes
+> to the selector.
+>
+
+I don't really understand your test, but I'm pretty sure I found a
+couple bugs in the test:
+
+  88 int
+  89 switch_fs_read (unsigned int fs)
+  90 {
+  91   __asm__ volatile ("mov %0, %%fs" :: "rm"(fs) : "memory");
+  92
+  93   return read_fs ();
+  94 }
+
+This has fundamentally inconsistent behavior on Intel vs AMD CPUs.
+Intel CPUs will clear FSBASE when you write 0 to FS.  Older AMD CPUs
+do *not* clear FSBASE when you write 0 to FS.  Very very new AMD CPUs
+behave more like Intel CPUs, I believe.
+
+  40     struct user_desc ud;
+  41     int errcode;
+  42
+  43     memset (&ud, 0, sizeof (ud));
+  44     ud.entry_number = entry;
+  45     ud.base_addr = (unsigned long) base;
+  46     ud.limit = (unsigned int) size;
+  47
+  48     /* Some 64-bit systems declare ud.base_addr 'unsigned int' instead of
+  49        'unsigned long'.
+  50
+  51        Combined with address space layout randomization, this might
+  52        truncate our base address and result in a crash when we try to read
+  53        segment-relative.
+  54
+  55        Checking the field size would exclude too many systems so we settle
+  56        for checking whether we actually truncated the address.  */
+  57
+  58     if (ud.base_addr != (unsigned long) base)
+  59       return 0u;
+
+The base of a segment in a descriptor table is 32 bits, full stop.
+This is a hardware limitation and has nothing to do with the kernel.
+base_addr is correctly unsigned int in the kernel headers.  If you
+actually find a system where base_addr is unsigned long and unsigned
+long is 64 bits, then your test will malfunction.
