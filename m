@@ -2,147 +2,100 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE9CC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 11:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C62C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 11:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 903A7217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 11:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 869EA2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 11:23:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbfK2LXX (ORCPT
+        id S1726985AbfK2LXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 06:23:23 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35050 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725892AbfK2LXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 06:23:22 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EA9F5AC82;
-        Fri, 29 Nov 2019 11:23:17 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 4E8A01E0B6A; Fri, 29 Nov 2019 12:23:15 +0100 (CET)
-Date:   Fri, 29 Nov 2019 12:23:15 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 17/19] powerpc: book3s64: convert to pin_user_pages()
- and put_user_page()
-Message-ID: <20191129112315.GB1121@quack2.suse.cz>
-References: <20191125231035.1539120-1-jhubbard@nvidia.com>
- <20191125231035.1539120-18-jhubbard@nvidia.com>
+        Fri, 29 Nov 2019 06:23:55 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:48624 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726702AbfK2LXy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 06:23:54 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iaeND-0004K9-PG; Fri, 29 Nov 2019 12:23:43 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5BB6C1C211A;
+        Fri, 29 Nov 2019 12:23:43 +0100 (CET)
+Date:   Fri, 29 Nov 2019 11:23:43 -0000
+From:   "tip-bot2 for Kai-Heng Feng" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/urgent] x86/intel: Disable HPET on Intel Ice Lake platforms
+Cc:     "Kai-Heng Feng" <kai.heng.feng@canonical.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
+        feng.tang@intel.com, harry.pan@intel.com, hpa@zytor.com,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191129062303.18982-2-kai.heng.feng@canonical.com>
+References: <20191129062303.18982-2-kai.heng.feng@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191125231035.1539120-18-jhubbard@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <157502662320.21853.1194845015436593183.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 25-11-19 15:10:33, John Hubbard wrote:
-> 1. Convert from get_user_pages() to pin_user_pages().
-> 
-> 2. As required by pin_user_pages(), release these pages via
-> put_user_page(). In this case, do so via put_user_pages_dirty_lock().
-> 
-> That has the side effect of calling set_page_dirty_lock(), instead
-> of set_page_dirty(). This is probably more accurate.
+The following commit has been merged into the timers/urgent branch of tip:
 
-Maybe more accurate but it doesn't work for mm_iommu_unpin(). As I'm
-checking mm_iommu_unpin() gets called from RCU callback which is executed
-interrupt context and you cannot lock pages from such context. So you need
-to queue work from the RCU callback and then do the real work from the
-workqueue...
+Commit-ID:     e0748539e3d594dd26f0d27a270f14720b22a406
+Gitweb:        https://git.kernel.org/tip/e0748539e3d594dd26f0d27a270f14720b22a406
+Author:        Kai-Heng Feng <kai.heng.feng@canonical.com>
+AuthorDate:    Fri, 29 Nov 2019 14:23:03 +08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 29 Nov 2019 12:17:58 +01:00
 
-								Honza
+x86/intel: Disable HPET on Intel Ice Lake platforms
 
-> 
-> As Christoph Hellwig put it, "set_page_dirty() is only safe if we are
-> dealing with a file backed page where we have reference on the inode it
-> hangs off." [1]
-> 
-> [1] https://lore.kernel.org/r/20190723153640.GB720@lst.de
-> 
-> Cc: Jan Kara <jack@suse.cz>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> ---
->  arch/powerpc/mm/book3s64/iommu_api.c | 12 +++++-------
->  1 file changed, 5 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/powerpc/mm/book3s64/iommu_api.c b/arch/powerpc/mm/book3s64/iommu_api.c
-> index 56cc84520577..fc1670a6fc3c 100644
-> --- a/arch/powerpc/mm/book3s64/iommu_api.c
-> +++ b/arch/powerpc/mm/book3s64/iommu_api.c
-> @@ -103,7 +103,7 @@ static long mm_iommu_do_alloc(struct mm_struct *mm, unsigned long ua,
->  	for (entry = 0; entry < entries; entry += chunk) {
->  		unsigned long n = min(entries - entry, chunk);
->  
-> -		ret = get_user_pages(ua + (entry << PAGE_SHIFT), n,
-> +		ret = pin_user_pages(ua + (entry << PAGE_SHIFT), n,
->  				FOLL_WRITE | FOLL_LONGTERM,
->  				mem->hpages + entry, NULL);
->  		if (ret == n) {
-> @@ -167,9 +167,8 @@ static long mm_iommu_do_alloc(struct mm_struct *mm, unsigned long ua,
->  	return 0;
->  
->  free_exit:
-> -	/* free the reference taken */
-> -	for (i = 0; i < pinned; i++)
-> -		put_page(mem->hpages[i]);
-> +	/* free the references taken */
-> +	put_user_pages(mem->hpages, pinned);
->  
->  	vfree(mem->hpas);
->  	kfree(mem);
-> @@ -212,10 +211,9 @@ static void mm_iommu_unpin(struct mm_iommu_table_group_mem_t *mem)
->  		if (!page)
->  			continue;
->  
-> -		if (mem->hpas[i] & MM_IOMMU_TABLE_GROUP_PAGE_DIRTY)
-> -			SetPageDirty(page);
-> +		put_user_pages_dirty_lock(&page, 1,
-> +				mem->hpas[i] & MM_IOMMU_TABLE_GROUP_PAGE_DIRTY);
->  
-> -		put_page(page);
->  		mem->hpas[i] = 0;
->  	}
->  }
-> -- 
-> 2.24.0
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Like CFL and CFL-H, ICL SoC has skewed HPET timer once it hits PC10.
+So let's disable HPET on ICL.
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: bp@alien8.de
+Cc: feng.tang@intel.com
+Cc: harry.pan@intel.com
+Cc: hpa@zytor.com
+Link: https://lkml.kernel.org/r/20191129062303.18982-2-kai.heng.feng@canonical.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/kernel/early-quirks.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+index 606711f..2f9ec14 100644
+--- a/arch/x86/kernel/early-quirks.c
++++ b/arch/x86/kernel/early-quirks.c
+@@ -714,6 +714,8 @@ static struct chipset early_qrk[] __initdata = {
+ 		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
+ 	{ PCI_VENDOR_ID_INTEL, 0x3ec4,
+ 		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
++	{ PCI_VENDOR_ID_INTEL, 0x8a12,
++		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
+ 	{ PCI_VENDOR_ID_BROADCOM, 0x4331,
+ 	  PCI_CLASS_NETWORK_OTHER, PCI_ANY_ID, 0, apple_airport_reset},
+ 	{}
