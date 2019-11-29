@@ -2,176 +2,104 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1207FC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 02:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB57CC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 03:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8EB621775
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 02:50:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="kf0mYkKH"
+	by mail.kernel.org (Postfix) with ESMTP id BDA9B2158A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 03:19:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfK2CuX (ORCPT
+        id S1726925AbfK2DT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 21:50:23 -0500
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:19768 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726742AbfK2CuX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 21:50:23 -0500
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAT2nXoR005610
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 18:50:21 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=5FJkgGgzCf1fgKCuaKhYHWk01hSQay6gqnMgij0j1qQ=;
- b=kf0mYkKH0z7KYevqMtSg8h6JwS2sQ2Q0Mh5dCW5JfjkZDBlYjfH4s18rDU7qohRftgm2
- 1lCNb8qIBO7WvN0rjWPTCSFVLhSGCegLvHsViL5rlXl+vWV0IDGIW6gS57rtQiUWFZPg
- 3pSR/2SrYR/MezKT2tJNPCefotLe39X3pF8= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2wj528waym-8
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 18:50:21 -0800
-Received: from 2401:db00:30:600c:face:0:39:0 (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Thu, 28 Nov 2019 18:50:17 -0800
-Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
-        id 15BFE1AFF72C0; Thu, 28 Nov 2019 18:50:17 -0800 (PST)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
-To:     <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>
-CC:     Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Roman Gushchin <guro@fb.com>, <stable@vger.kernel.org>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH v2] mm: memcg/slab: wait for !root kmem_cache refcnt killing on root kmem_cache destruction
-Date:   Thu, 28 Nov 2019 18:50:11 -0800
-Message-ID: <20191129025011.3076017-1-guro@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Thu, 28 Nov 2019 22:19:57 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6729 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726764AbfK2DT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 22:19:57 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 09800991634F43F95A93;
+        Fri, 29 Nov 2019 11:19:54 +0800 (CST)
+Received: from huawei.com (10.175.105.18) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 29 Nov 2019
+ 11:19:45 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     <maz@kernel.org>, <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
+        <james.morse@arm.com>, <julien.thierry.kdev@gmail.com>,
+        <suzuki.poulose@arm.com>, <christoffer.dall@arm.com>,
+        <catalin.marinas@arm.com>, <eric.auger@redhat.com>,
+        <gregkh@linuxfoundation.org>, <will@kernel.org>,
+        <andre.przywara@arm.com>, <tglx@linutronix.de>
+CC:     <linmiaohe@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
+        <kvm@vger.kernel.org>
+Subject: [PATCH] KVM: arm/arm64: Fix some obsolete comments
+Date:   Fri, 29 Nov 2019 11:19:47 +0800
+Message-ID: <1574997587-20842-1-git-send-email-linmiaohe@huawei.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-28_08:2019-11-28,2019-11-28 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 clxscore=1015
- malwarescore=0 adultscore=0 lowpriorityscore=0 mlxlogscore=986 spamscore=0
- bulkscore=0 suspectscore=0 phishscore=0 impostorscore=0 mlxscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911290024
-X-FB-Internal: deliver
+X-Originating-IP: [10.175.105.18]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christian reported a warning like the following obtained during running some
-KVM-related tests on s390:
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-WARNING: CPU: 8 PID: 208 at lib/percpu-refcount.c:108 percpu_ref_exit+0x50/0x58
-Modules linked in: kvm(-) xt_CHECKSUM xt_MASQUERADE bonding xt_tcpudp ip6t_rpfilter ip6t_REJECT nf_reject_ipv6 ipt_REJECT nf_reject_ipv4 xt_conntrack ip6table_na>
-CPU: 8 PID: 208 Comm: kworker/8:1 Not tainted 5.2.0+ #66
-Hardware name: IBM 2964 NC9 712 (LPAR)
-Workqueue: events sysfs_slab_remove_workfn
-Krnl PSW : 0704e00180000000 0000001529746850 (percpu_ref_exit+0x50/0x58)
-           R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI:0 EA:3
-Krnl GPRS: 00000000ffff8808 0000001529746740 000003f4e30e8e18 0036008100000000
-           0000001f00000000 0035008100000000 0000001fb3573ab8 0000000000000000
-           0000001fbdb6de00 0000000000000000 0000001529f01328 0000001fb3573b00
-           0000001fbb27e000 0000001fbdb69300 000003e009263d00 000003e009263cd0
-Krnl Code: 0000001529746842: f0a0000407fe        srp        4(11,%r0),2046,0
-           0000001529746848: 47000700            bc         0,1792
-          #000000152974684c: a7f40001            brc        15,152974684e
-          >0000001529746850: a7f4fff2            brc        15,1529746834
-           0000001529746854: 0707                bcr        0,%r7
-           0000001529746856: 0707                bcr        0,%r7
-           0000001529746858: eb8ff0580024        stmg       %r8,%r15,88(%r15)
-           000000152974685e: a738ffff            lhi        %r3,-1
-Call Trace:
-([<000003e009263d00>] 0x3e009263d00)
- [<00000015293252ea>] slab_kmem_cache_release+0x3a/0x70
- [<0000001529b04882>] kobject_put+0xaa/0xe8
- [<000000152918cf28>] process_one_work+0x1e8/0x428
- [<000000152918d1b0>] worker_thread+0x48/0x460
- [<00000015291942c6>] kthread+0x126/0x160
- [<0000001529b22344>] ret_from_fork+0x28/0x30
- [<0000001529b2234c>] kernel_thread_starter+0x0/0x10
-Last Breaking-Event-Address:
- [<000000152974684c>] percpu_ref_exit+0x4c/0x58
----[ end trace b035e7da5788eb09 ]---
-
-The problem occurs because kmem_cache_destroy() is called immediately
-after deleting of a memcg, so it races with the memcg kmem_cache
-deactivation.
-
-flush_memcg_workqueue() at the beginning of kmem_cache_destroy()
-is supposed to guarantee that all deactivation processes are finished,
-but failed to do so. It waits for an rcu grace period, after which all
-children kmem_caches should be deactivated. During the deactivation
-percpu_ref_kill() is called for non root kmem_cache refcounters,
-but it requires yet another rcu grace period to finish the transition
-to the atomic (dead) state.
-
-So in a rare case when not all children kmem_caches are destroyed
-at the moment when the root kmem_cache is about to be gone, we need
-to wait another rcu grace period before destroying the root
-kmem_cache.
-
-This issue can be triggered only with dynamically created kmem_caches
-which are used with memcg accounting. In this case per-memcg child
-kmem_caches are created. They are deactivated from the cgroup removing
-path. If the destruction of the root kmem_cache is racing with the
-removal of the cgroup (both are quite complicated multi-stage
-processes), the described issue can occur. The only known way to
-trigger it in the real life, is to unload some kernel module which
-creates a dedicated kmem_cache, used from different memory cgroups
-with GFP_ACCOUNT flag. If the unloading happens immediately after
-calling rmdir on the corresponding cgroup, there is some chance to
-trigger the issue.
-
-v2: added a note to the commit log, proposed by Michal Hocko
-
-Reported-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Tested-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Fixes: f0a3a24b532d ("mm: memcg/slab: rework non-root kmem_cache lifecycle management")
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-Cc: stable@vger.kernel.org
+Fix various comments, including comment typo, and obsolete comments
+no longer make sense.
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 ---
- mm/slab_common.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ virt/kvm/arm/arch_timer.c    | 5 ++---
+ virt/kvm/arm/arm.c           | 1 -
+ virt/kvm/arm/vgic/vgic-its.c | 2 +-
+ 3 files changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 8afa188f6e20..f0ab6d4ceb4c 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -904,6 +904,18 @@ static void flush_memcg_workqueue(struct kmem_cache *s)
- 	 * previous workitems on workqueue are processed.
+diff --git a/virt/kvm/arm/arch_timer.c b/virt/kvm/arm/arch_timer.c
+index 73867f97040c..d8d2f4bec935 100644
+--- a/virt/kvm/arm/arch_timer.c
++++ b/virt/kvm/arm/arch_timer.c
+@@ -322,9 +322,8 @@ static void timer_emulate(struct arch_timer_context *ctx)
+ 	}
+ 
+ 	/*
+-	 * If the timer can fire now, we don't need to have a soft timer
+-	 * scheduled for the future.  If the timer cannot fire at all,
+-	 * then we also don't need a soft timer.
++	 * If the timer cannot fire at all, we don't need to have a
++	 * soft timer scheduled for the future.
  	 */
- 	flush_workqueue(memcg_kmem_cache_wq);
-+
-+	/*
-+	 * If we're racing with children kmem_cache deactivation, it might
-+	 * take another rcu grace period to complete their destruction.
-+	 * At this moment the corresponding percpu_ref_kill() call should be
-+	 * done, but it might take another rcu grace period to complete
-+	 * switching to the atomic mode.
-+	 * Please, note that we check without grabbing the slab_mutex. It's safe
-+	 * because at this moment the children list can't grow.
-+	 */
-+	if (!list_empty(&s->memcg_params.children))
-+		rcu_barrier();
+ 	if (!kvm_timer_irq_can_fire(ctx)) {
+ 		soft_timer_cancel(&ctx->hrtimer);
+diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+index 8de4daf25097..7687663ab71b 100644
+--- a/virt/kvm/arm/arm.c
++++ b/virt/kvm/arm/arm.c
+@@ -525,7 +525,6 @@ static bool need_new_vmid_gen(struct kvm_vmid *vmid)
+ 
+ /**
+  * update_vmid - Update the vmid with a valid VMID for the current generation
+- * @kvm: The guest that struct vmid belongs to
+  * @vmid: The stage-2 VMID information struct
+  */
+ static void update_vmid(struct kvm_vmid *vmid)
+diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its.c
+index 98c7360d9fb7..d64569b30b5c 100644
+--- a/virt/kvm/arm/vgic/vgic-its.c
++++ b/virt/kvm/arm/vgic/vgic-its.c
+@@ -2564,7 +2564,7 @@ static int vgic_its_restore_collection_table(struct vgic_its *its)
  }
- #else
- static inline int shutdown_memcg_caches(struct kmem_cache *s)
+ 
+ /**
+- * vgic_its_save_tables_v0 - Save the ITS tables into guest ARM
++ * vgic_its_save_tables_v0 - Save the ITS tables into guest RAM
+  * according to v0 ABI
+  */
+ static int vgic_its_save_tables_v0(struct vgic_its *its)
 -- 
-2.17.1
+2.19.1
 
