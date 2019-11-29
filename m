@@ -2,188 +2,96 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8170AC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7960C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B544E215A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC2A2215A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:53:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="RwQSYvu1"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="hMUZ4aXd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbfK2Oww (ORCPT
+        id S1727085AbfK2OxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 09:52:52 -0500
-Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.25]:10655 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbfK2Owv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 09:52:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1575039166;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=o6PLBpFcvA6/3iSigPBPF7OgSgCT09xUz1+oH4ffcqg=;
-        b=RwQSYvu1PqyKGVAYUNSKqPUBH5aZa0tIVTKr39557PiQns/sa08/SIvEKfSoH72GGS
-        AEAc9y6w9CnGpWB70qr6je09PuZ+TKRrv6GhBgRc8vEqt4CwlRYAguP39F64+v7hla9a
-        JKMmbcp0EmAo4T0geW3vYoaSamLnDFdJvkmD3bV1m5swlFGtMYBXBK/c0Ntxej3gnvhU
-        AIUM+djn1Nu+obNAWOGA0oA5oRNsOMaHbSEuw9EhKeCB12cQnRYEEve5hy2FpTi9Izx9
-        1BTRt6B9qIbadk+Ld0ibJ76id8XZcCJondQf298xswDGq7qws7iZM/F3dVrJ/qLns0XP
-        lmew==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/vgwDeoHw=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 45.0.2 DYNA|AUTH)
-        with ESMTPSA id y07703vATEqjTL8
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Fri, 29 Nov 2019 15:52:45 +0100 (CET)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH] mips: Fix gettimeofday() in the vdso library
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20191129143658.12224-1-vincenzo.frascino@arm.com>
-Date:   Fri, 29 Nov 2019 15:52:45 +0100
-Cc:     Paul Burton <paulburton@kernel.org>,
-        mips-creator-ci20-dev@googlegroups.com,
-        letux-kernel@openphoenux.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <307717BD-3233-4313-BAA8-7431F4C78773@goldelico.com>
-References: <20191129143658.12224-1-vincenzo.frascino@arm.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-X-Mailer: Apple Mail (2.3124)
+        Fri, 29 Nov 2019 09:53:13 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:14388 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727004AbfK2OxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 09:53:13 -0500
+Received: from localhost (mailhub1-ext [192.168.12.233])
+        by localhost (Postfix) with ESMTP id 47PcvB6MnFzB09Zt;
+        Fri, 29 Nov 2019 15:53:10 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=hMUZ4aXd; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id XnpC7onj2i1L; Fri, 29 Nov 2019 15:53:10 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47PcvB52GTzB09Zq;
+        Fri, 29 Nov 2019 15:53:10 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1575039190; bh=C9qHRC2OmRsVO674EVzJC8ZRALO7qDaNoXi/6fn9Hv0=;
+        h=To:Cc:From:Subject:Date:From;
+        b=hMUZ4aXdvBS/0nRJH7MNGSgFKVDU/FPm1rUFedtxjbTOi060NfFdy8ouu8c7Eh5RI
+         ku9P+IGf6U/4bSXMaYifdoFxMl229B4jZrmpMpdKsCgS+Bj9xbc5BKnSwoVwShCIf+
+         DCF8P08TYsOZpBX2/TyaSGyIMuqRnaX0WZhVv54Q=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E14B78B8DE;
+        Fri, 29 Nov 2019 15:53:11 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 1lPhm1XL-pIn; Fri, 29 Nov 2019 15:53:11 +0100 (CET)
+Received: from po16098vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.103])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9894A8B8DC;
+        Fri, 29 Nov 2019 15:53:11 +0100 (CET)
+To:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: Build failure on latest powerpc/merge (311ae9e159d8 io_uring: fix
+ dead-hung for non-iter fixed rw)
+Message-ID: <71cf82d5-5986-43b7-cf1c-acba429a89d6@c-s.fr>
+Date:   Fri, 29 Nov 2019 14:53:10 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+   CC      fs/io_uring.o
+fs/io_uring.c: In function ‘loop_rw_iter’:
+fs/io_uring.c:1628:21: error: implicit declaration of function ‘kmap’ 
+[-Werror=implicit-function-declaration]
+     iovec.iov_base = kmap(iter->bvec->bv_page)
+                      ^
+fs/io_uring.c:1628:19: warning: assignment makes pointer from integer 
+without a cast [-Wint-conversion]
+     iovec.iov_base = kmap(iter->bvec->bv_page)
+                    ^
+fs/io_uring.c:1643:4: error: implicit declaration of function ‘kunmap’ 
+[-Werror=implicit-function-declaration]
+     kunmap(iter->bvec->bv_page);
+     ^
 
-> Am 29.11.2019 um 15:36 schrieb Vincenzo Frascino =
-<vincenzo.frascino@arm.com>:
->=20
-> The libc provides a discovery mechanism for vDSO library and its
-> symbols. When a symbol is not exposed by the vDSOs the libc falls back
-> on the system calls.
->=20
-> With the introduction of the unified vDSO library on mips this =
-behavior
-> is not honored anymore by the kernel in the case of gettimeofday().
->=20
-> The issue has been noticed and reported due to a dhclient failure on =
-the
-> CI20 board:
->=20
-> root@letux:~# dhclient
-> ../../../../lib/isc/unix/time.c:200: Operation not permitted
-> root@letux:~#
->=20
-> Restore the original behavior fixing gettimeofday() in the vDSO =
-library.
->=20
-> Cc: Paul Burton <paulburton@kernel.org>
-> Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Testes-by: H. Nikolaus Schaller <hns@goldelico.com> # CI20 with JZ4780
-^^^ funny typo... -> Tested-by:
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> ---
-> arch/mips/include/asm/vdso/gettimeofday.h | 13 -------------
-> arch/mips/vdso/vgettimeofday.c            | 20 ++++++++++++++++++++
-> 2 files changed, 20 insertions(+), 13 deletions(-)
->=20
-> diff --git a/arch/mips/include/asm/vdso/gettimeofday.h =
-b/arch/mips/include/asm/vdso/gettimeofday.h
-> index b08825531e9f..0ae9b4cbc153 100644
-> --- a/arch/mips/include/asm/vdso/gettimeofday.h
-> +++ b/arch/mips/include/asm/vdso/gettimeofday.h
-> @@ -26,8 +26,6 @@
->=20
-> #define __VDSO_USE_SYSCALL		ULLONG_MAX
->=20
-> -#ifdef CONFIG_MIPS_CLOCK_VSYSCALL
-> -
-> static __always_inline long gettimeofday_fallback(
-> 				struct __kernel_old_timeval *_tv,
-> 				struct timezone *_tz)
-> @@ -48,17 +46,6 @@ static __always_inline long gettimeofday_fallback(
-> 	return error ? -ret : ret;
-> }
->=20
-> -#else
-> -
-> -static __always_inline long gettimeofday_fallback(
-> -				struct __kernel_old_timeval *_tv,
-> -				struct timezone *_tz)
-> -{
-> -	return -1;
-> -}
-> -
-> -#endif
-> -
-> static __always_inline long clock_gettime_fallback(
-> 					clockid_t _clkid,
-> 					struct __kernel_timespec *_ts)
-> diff --git a/arch/mips/vdso/vgettimeofday.c =
-b/arch/mips/vdso/vgettimeofday.c
-> index 6ebdc37c89fc..6b83b6376a4b 100644
-> --- a/arch/mips/vdso/vgettimeofday.c
-> +++ b/arch/mips/vdso/vgettimeofday.c
-> @@ -17,12 +17,22 @@ int __vdso_clock_gettime(clockid_t clock,
-> 	return __cvdso_clock_gettime32(clock, ts);
-> }
->=20
-> +#ifdef CONFIG_MIPS_CLOCK_VSYSCALL
-> +
-> +/*
-> + * This is behind the ifdef so that we don't provide the symbol when =
-there's no
-> + * possibility of there being a usable clocksource, because there's =
-nothing we
-> + * can do without it. When libc fails the symbol lookup it should =
-fall back on
-> + * the standard syscall path.
-> + */
-> int __vdso_gettimeofday(struct __kernel_old_timeval *tv,
-> 			struct timezone *tz)
-> {
-> 	return __cvdso_gettimeofday(tv, tz);
-> }
->=20
-> +#endif /* CONFIG_MIPS_CLOCK_VSYSCALL */
-> +
-> int __vdso_clock_getres(clockid_t clock_id,
-> 			struct old_timespec32 *res)
-> {
-> @@ -43,12 +53,22 @@ int __vdso_clock_gettime(clockid_t clock,
-> 	return __cvdso_clock_gettime(clock, ts);
-> }
->=20
-> +#ifdef CONFIG_MIPS_CLOCK_VSYSCALL
-> +
-> +/*
-> + * This is behind the ifdef so that we don't provide the symbol when =
-there's no
-> + * possibility of there being a usable clocksource, because there's =
-nothing we
-> + * can do without it. When libc fails the symbol lookup it should =
-fall back on
-> + * the standard syscall path.
-> + */
-> int __vdso_gettimeofday(struct __kernel_old_timeval *tv,
-> 			struct timezone *tz)
-> {
-> 	return __cvdso_gettimeofday(tv, tz);
-> }
->=20
-> +#endif /* CONFIG_MIPS_CLOCK_VSYSCALL */
-> +
-> int __vdso_clock_getres(clockid_t clock_id,
-> 			struct __kernel_timespec *res)
-> {
-> --=20
-> 2.24.0
->=20
+
+Reverting commit 311ae9e159d8 ("io_uring: fix dead-hung for non-iter 
+fixed rw") clears the failure.
+
+Most likely an #include is missing.
+
+
+Christophe
 
