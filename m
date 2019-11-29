@@ -7,74 +7,74 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F258C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F33A0C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA1F4206B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:35:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFF18206B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 21:35:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DxKzqWEr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ffufnld/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387477AbfK2Vfq (ORCPT
+        id S2387485AbfK2Vfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 16:35:46 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52644 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387443AbfK2Vff (ORCPT
+        Fri, 29 Nov 2019 16:35:54 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50598 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387427AbfK2Vfd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 16:35:35 -0500
+        Fri, 29 Nov 2019 16:35:33 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575063334;
+        s=mimecast20190719; t=1575063332;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=J/6Vnhm3Bnof3G6qR9jmImN6Mxny1Mm+SQ/fRHV6cvM=;
-        b=DxKzqWEr0ZMlDD8rfE4RDzMIndpiJukKTU1yxvvpZo30VRsqfVfYqHa0XTQFprsJRoD9fV
-        NWemboZvktNGlqDTWIAOGY79L/Z/acXhlHrbV9g166QvQ/vaU9Pq2oDDgnZKHAGsvQERXd
-        VdYWV+PrABWYzshUbdhDqRIJ2pPQ7GA=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-335-M-7-q606P2m_R1HSQkMUqA-1; Fri, 29 Nov 2019 16:35:33 -0500
-Received: by mail-qv1-f69.google.com with SMTP id b15so19641200qvw.6
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 13:35:33 -0800 (PST)
+        bh=8QU/MqZQ7iCrQiVB69BeiYZxD7DRU81Tku8GelhIUiI=;
+        b=Ffufnld/AeEq7a0cSRlGw8PdJU9Oof6h2L/s/l/G5Uc9Fn7f01JxlOqk6WgX79MnCnlp+W
+        f3DWR65SH+Yl0iUJknPUSo9FCmhjYL7v5H/ds8PISj6H4b04znLpHdxOl3G/qjogUe9UDP
+        Z0vMTYcD2Sd9pCW/3OMOVGFRqqvA/DU=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-356-tgemr83MOR64C5Hi2xLn2w-1; Fri, 29 Nov 2019 16:35:31 -0500
+Received: by mail-qt1-f199.google.com with SMTP id q17so3842066qtc.8
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 13:35:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ABKV7wtXWm4O1KQ//VgIZzpF4hiWiXzcQGJHlUZJvqM=;
-        b=rx1K5giVjuYAAEw8k6RyXVmIg7CSpfjg4Yj4ZY7xQ+btefH2f6mnkrXVUXz+q4d3MF
-         MnMHd+2yEzIctprXUhUfZtoxu3iD11+Hsc4TwnnSTdooAQYQQXZu63Q17VjkPJhJd3NT
-         nWEdQjx78dgtHNueFo8gQWVpGlJ+zu/Fp2nSbHQSK3c3FBmzYLMYL8C1OOHZTHaI1Zuh
-         llMgWZEh6uoU3503GX0N6VJA6Z/xHvwaR0Q0g+2BOqa0idP7NhluFefkpbVXcSaOETEq
-         gi/ekRcKgR50h9QoY7eSctjCweh71PgXUlUxWaiR4tHUITekhhXQnMdOQRLmVuGbFjaS
-         ixjQ==
-X-Gm-Message-State: APjAAAWEBmysahCXOUCCJtYq3ZmqwGnmr8yjTDA9HK2Ce6jFd3WISaKV
-        NzbxOeIikZowE2axFIMm0xK/5X4bQqlaYJe6rDO8eQeRxAczDkndtYBHAopalKusf1v0qa46Eh1
-        i3OwOmBbuSJMQxZt41VUFqYfB
-X-Received: by 2002:a0c:baa5:: with SMTP id x37mr19072007qvf.228.1575063332544;
-        Fri, 29 Nov 2019 13:35:32 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx0gzwjNokztQZ2uGe1W03JAxQU4oiBDN2ekwESAnlau3v7lb+68GzvJT2MYI6UKslZ39yUvA==
-X-Received: by 2002:a0c:baa5:: with SMTP id x37mr19071983qvf.228.1575063332220;
-        Fri, 29 Nov 2019 13:35:32 -0800 (PST)
+        bh=ph8QPMVUt3TogI2QUxz0d6tIzYuPtW9qXzgfM49LbX4=;
+        b=fiKg6LIi1Pj8Y+tWN9ehrOvhgNOGp9SxDTqmpKx+QovmiDW6HC5NZ0rbotEsSSWnmS
+         acElyGYYAC0G1SwPuD+pxCnUM9lxxEr5oDIHKk8efks1MjIYsNtkWDj274tc62/0zOGT
+         q9cDMb8LmiL38ZVl9hwI+n3rwqg9n8Of9uc54wN5rg1J4mIkZYk+K4x6klFBgvm2tyQx
+         pE17sM7Ej6ekyzTyU+lOgi+g/9gG1MgM2qpxFnbhkz/UJ/aIjMMk6iKXLzMf8wgSoTqZ
+         JoQsabVVwCeaKvtQuTrKmEASlWHPf5usVeK2Jpr1SK7vdC3EWwdylrNyQH28t8Kpz49h
+         O/Nw==
+X-Gm-Message-State: APjAAAVbeFMbIpoZ7KM+WIEoaxbSMyK68ZrLsuizLhvhlfZp5vroTXG5
+        iGecy1SCVUCgPhhB+DYp+xepO84xj8HN4BHVPUoNUrP1E2UGJrP4Qh5nfnAtIIObCU8eiq7aAn8
+        N+LCpu9igMUE3P8FboovQcqcm
+X-Received: by 2002:a05:6214:82:: with SMTP id n2mr19784790qvr.199.1575063330859;
+        Fri, 29 Nov 2019 13:35:30 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx+kM+aluFDpDmrKxZEi1V2tHOv0XcDObShdoHe1wBVP230mj/s8I3XMHXPIKR24luMQ/sn5A==
+X-Received: by 2002:a05:6214:82:: with SMTP id n2mr19784772qvr.199.1575063330639;
+        Fri, 29 Nov 2019 13:35:30 -0800 (PST)
 Received: from xz-x1.yyz.redhat.com ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id h186sm10679046qkf.64.2019.11.29.13.35.30
+        by smtp.gmail.com with ESMTPSA id h186sm10679046qkf.64.2019.11.29.13.35.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Nov 2019 13:35:31 -0800 (PST)
+        Fri, 29 Nov 2019 13:35:30 -0800 (PST)
 From:   Peter Xu <peterx@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         "Dr . David Alan Gilbert" <dgilbert@redhat.com>, peterx@redhat.com,
         Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: [PATCH RFC 15/15] KVM: selftests: Test dirty ring waitqueue
-Date:   Fri, 29 Nov 2019 16:35:05 -0500
-Message-Id: <20191129213505.18472-16-peterx@redhat.com>
+Subject: [PATCH RFC 14/15] KVM: selftests: Add "-c" parameter to dirty log test
+Date:   Fri, 29 Nov 2019 16:35:04 -0500
+Message-Id: <20191129213505.18472-15-peterx@redhat.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191129213505.18472-1-peterx@redhat.com>
 References: <20191129213505.18472-1-peterx@redhat.com>
 MIME-Version: 1.0
-X-MC-Unique: M-7-q606P2m_R1HSQkMUqA-1
+X-MC-Unique: tgemr83MOR64C5Hi2xLn2w-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
@@ -83,179 +83,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a bit tricky, but should still be reasonable.
+It's only used to override the existing dirty ring size/count.  If
+with a bigger ring count, we test async of dirty ring.  If with a
+smaller ring count, we test ring full code path.
 
-Firstly we introduce a totally new dirty log test type, because we
-need to force vcpu to go into a blocked state by dead loop on vcpu_run
-even if it wants to quit to userspace.
-
-Here the tricky part is we need to read the procfs to make sure the
-vcpu thread is TASK_UNINTERRUPTIBLE.
-
-After that, we reset the ring and the reset should kick the vcpu again
-by moving out of that state.
+It has no use for non-dirty-ring tests.
 
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- tools/testing/selftests/kvm/dirty_log_test.c | 101 +++++++++++++++++++
- 1 file changed, 101 insertions(+)
+ tools/testing/selftests/kvm/dirty_log_test.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/s=
 elftests/kvm/dirty_log_test.c
-index c9db136a1f12..41bc015131e1 100644
+index 4799db91e919..c9db136a1f12 100644
 --- a/tools/testing/selftests/kvm/dirty_log_test.c
 +++ b/tools/testing/selftests/kvm/dirty_log_test.c
-@@ -16,6 +16,7 @@
- #include <sys/types.h>
- #include <signal.h>
- #include <errno.h>
-+#include <sys/syscall.h>
- #include <linux/bitmap.h>
- #include <linux/bitops.h>
- #include <asm/barrier.h>
-@@ -151,12 +152,16 @@ enum log_mode_t {
- =09/* Use dirty ring for logging */
- =09LOG_MODE_DIRTY_RING =3D 2,
-=20
-+=09/* Dirty ring test but tailored for the waitqueue */
-+=09LOG_MODE_DIRTY_RING_WP =3D 3,
-+
- =09LOG_MODE_NUM,
- };
-=20
+@@ -157,6 +157,7 @@ enum log_mode_t {
  /* Mode of logging.  Default is LOG_MODE_DIRTY_LOG */
  static enum log_mode_t host_log_mode;
  pthread_t vcpu_thread;
-+pid_t vcpu_thread_tid;
- static uint32_t test_dirty_ring_count =3D TEST_DIRTY_RING_COUNT;
++static uint32_t test_dirty_ring_count =3D TEST_DIRTY_RING_COUNT;
 =20
  /* Only way to pass this to the signal handler */
-@@ -221,6 +226,18 @@ static void dirty_ring_create_vm_done(struct kvm_vm *v=
-m)
+ struct kvm_vm *current_vm;
+@@ -216,7 +217,7 @@ static void dirty_ring_create_vm_done(struct kvm_vm *vm=
+)
+ =09 * Switch to dirty ring mode after VM creation but before any
+ =09 * of the vcpu creation.
+ =09 */
+-=09vm_enable_dirty_ring(vm, TEST_DIRTY_RING_COUNT *
++=09vm_enable_dirty_ring(vm, test_dirty_ring_count *
  =09=09=09     sizeof(struct kvm_dirty_gfn));
  }
 =20
-+static void dirty_ring_wq_create_vm_done(struct kvm_vm *vm)
-+{
-+=09/*
-+=09 * Force to use a relatively small ring size, so easier to get
-+=09 * full.  Better bigger than PML size, hence 1024.
-+=09 */
-+=09test_dirty_ring_count =3D 1024;
-+=09DEBUG("Forcing ring size: %u\n", test_dirty_ring_count);
-+=09vm_enable_dirty_ring(vm, test_dirty_ring_count *
-+=09=09=09     sizeof(struct kvm_dirty_gfn));
-+}
-+
- static uint32_t dirty_ring_collect_one(struct kvm_dirty_gfn *dirty_gfns,
- =09=09=09=09       struct kvm_dirty_ring_indexes *indexes,
- =09=09=09=09       int slot, void *bitmap,
-@@ -295,6 +312,81 @@ static void dirty_ring_collect_dirty_pages(struct kvm_=
-vm *vm, int slot,
- =09DEBUG("Iteration %ld collected %u pages\n", iteration, count);
- }
+@@ -658,6 +659,9 @@ static void help(char *name)
+ =09printf("usage: %s [-h] [-i iterations] [-I interval] "
+ =09       "[-p offset] [-m mode]\n", name);
+ =09puts("");
++=09printf(" -c: specify dirty ring size, in number of entries\n");
++=09printf("     (only useful for dirty-ring test; default: %"PRIu32")\n",
++=09       TEST_DIRTY_RING_COUNT);
+ =09printf(" -i: specify iteration counts (default: %"PRIu64")\n",
+ =09       TEST_HOST_LOOP_N);
+ =09printf(" -I: specify interval in ms (default: %"PRIu64" ms)\n",
+@@ -713,8 +717,11 @@ int main(int argc, char *argv[])
+ =09vm_guest_mode_params_init(VM_MODE_P40V48_4K, true, true);
+ #endif
 =20
-+/*
-+ * Return 'D' for uninterruptible, 'R' for running, 'S' for
-+ * interruptible, etc.
-+ */
-+static char read_tid_status_char(unsigned int tid)
-+{
-+=09int fd, ret, line =3D 0;
-+=09char buf[128], *c;
-+
-+=09snprintf(buf, sizeof(buf) - 1, "/proc/%u/status", tid);
-+=09fd =3D open(buf, O_RDONLY);
-+=09TEST_ASSERT(fd >=3D 0, "open status file failed: %s", buf);
-+=09ret =3D read(fd, buf, sizeof(buf) - 1);
-+=09TEST_ASSERT(ret > 0, "read status file failed: %d, %d", ret, errno);
-+=09close(fd);
-+
-+=09/* Skip 2 lines */
-+=09for (c =3D buf; c < buf + sizeof(buf) && line < 2; c++) {
-+=09=09if (*c =3D=3D '\n') {
-+=09=09=09line++;
-+=09=09=09continue;
-+=09=09}
-+=09}
-+
-+=09/* Skip "Status:  " */
-+=09while (*c !=3D ':') c++;
-+=09c++;
-+=09while (*c =3D=3D ' ') c++;
-+=09c++;
-+
-+=09return *c;
-+}
-+
-+static void dirty_ring_wq_collect_dirty_pages(struct kvm_vm *vm, int slot,
-+=09=09=09=09=09      void *bitmap, uint32_t num_pages)
-+{
-+=09uint32_t count =3D test_dirty_ring_count;
-+=09struct kvm_run *state =3D vcpu_state(vm, VCPU_ID);
-+=09struct kvm_dirty_ring_indexes *indexes =3D &state->vcpu_ring_indexes;
-+=09uint32_t avail;
-+
-+=09while (count--) {
-+=09=09/*
-+=09=09 * Force vcpu to run enough time to make sure we
-+=09=09 * trigger the ring full case
-+=09=09 */
-+=09=09sem_post(&dirty_ring_vcpu_cont);
-+=09}
-+
-+=09/* Make sure it's stuck */
-+=09TEST_ASSERT(vcpu_thread_tid, "TID not inited");
-+        /*
-+=09 * Wait for /proc/pid/status "Status:" changes to "D". "D"
-+=09 * stands for "D (disk sleep)", TASK_UNINTERRUPTIBLE
-+=09 */
-+=09while (read_tid_status_char(vcpu_thread_tid) !=3D 'D') {
-+=09=09usleep(1000);
-+=09}
-+=09DEBUG("Now VCPU thread dirty ring full\n");
-+
-+=09avail =3D READ_ONCE(indexes->avail_index);
-+=09/* Assuming we've consumed all */
-+=09WRITE_ONCE(indexes->fetch_index, avail);
-+
-+=09kvm_vm_reset_dirty_ring(vm);
-+
-+=09/* Wait for it to be awake */
-+=09while (read_tid_status_char(vcpu_thread_tid) =3D=3D 'D') {
-+=09=09usleep(1000);
-+=09}
-+=09DEBUG("VCPU Thread is successfully waked up\n");
-+
-+=09exit(0);
-+}
-+
- static void dirty_ring_after_vcpu_run(struct kvm_vm *vm, int ret, int err)
- {
- =09struct kvm_run *run =3D vcpu_state(vm, VCPU_ID);
-@@ -353,6 +445,12 @@ struct log_mode {
- =09=09.before_vcpu_join =3D dirty_ring_before_vcpu_join,
- =09=09.after_vcpu_run =3D dirty_ring_after_vcpu_run,
- =09},
-+=09{
-+=09=09.name =3D "dirty-ring-wait-queue",
-+=09=09.create_vm_done =3D dirty_ring_wq_create_vm_done,
-+=09=09.collect_dirty_pages =3D dirty_ring_wq_collect_dirty_pages,
-+=09=09.after_vcpu_run =3D dirty_ring_after_vcpu_run,
-+=09},
- };
-=20
- /*
-@@ -422,6 +520,9 @@ static void *vcpu_worker(void *data)
- =09uint64_t *guest_array;
- =09struct sigaction sigact;
-=20
-+=09vcpu_thread_tid =3D syscall(SYS_gettid);
-+=09printf("VCPU Thread ID: %u\n", vcpu_thread_tid);
-+
- =09current_vm =3D vm;
- =09memset(&sigact, 0, sizeof(sigact));
- =09sigact.sa_handler =3D vcpu_sig_handler;
+-=09while ((opt =3D getopt(argc, argv, "hi:I:p:m:M:")) !=3D -1) {
++=09while ((opt =3D getopt(argc, argv, "c:hi:I:p:m:M:")) !=3D -1) {
+ =09=09switch (opt) {
++=09=09case 'c':
++=09=09=09test_dirty_ring_count =3D strtol(optarg, NULL, 10);
++=09=09=09break;
+ =09=09case 'i':
+ =09=09=09iterations =3D strtol(optarg, NULL, 10);
+ =09=09=09break;
 --=20
 2.21.0
 
