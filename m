@@ -2,117 +2,60 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28468C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F90C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07BE921736
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43FB2215A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:06:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfK2HFO (ORCPT
+        id S1726975AbfK2HGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 02:05:14 -0500
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:26664 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726360AbfK2HFL (ORCPT
+        Fri, 29 Nov 2019 02:06:18 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:53738 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726360AbfK2HGS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 02:05:11 -0500
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 29 Nov 2019 12:35:08 +0530
-Received: from harigovi-linux.qualcomm.com ([10.204.66.147])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 29 Nov 2019 12:35:07 +0530
-Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
-        id CBBCC2346; Fri, 29 Nov 2019 12:35:06 +0530 (IST)
-From:   Harigovindan P <harigovi@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Harigovindan P <harigovi@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        abhinavk@codeaurora.org, jsanka@codeaurora.org,
-        chandanu@codeaurora.org, nganji@codeaurora.org
-Subject: [PATCH v1] drm/msm: add support for 2.4.1 DSI version for sc7180 soc
-Date:   Fri, 29 Nov 2019 12:35:05 +0530
-Message-Id: <1575011105-28172-1-git-send-email-harigovi@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Fri, 29 Nov 2019 02:06:18 -0500
+Received: from localhost (c-73-35-209-67.hsd1.wa.comcast.net [73.35.209.67])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 56D1A146A7863;
+        Thu, 28 Nov 2019 23:06:17 -0800 (PST)
+Date:   Thu, 28 Nov 2019 23:06:16 -0800 (PST)
+Message-Id: <20191128.230616.2298780502442519078.davem@davemloft.net>
+To:     hslester96@gmail.com
+Cc:     nicolas.ferre@microchip.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v4] net: macb: add missed tasklet_kill
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191128020021.23761-1-hslester96@gmail.com>
+References: <20191128020021.23761-1-hslester96@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 28 Nov 2019 23:06:17 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes in v1:
-	-Modify commit text to indicate DSI version and SOC detail(Jeffrey Hugo).
-	-Splitting visionox panel driver code out into a
-	 different patch(set), since panel drivers are merged into
-	 drm-next via a different tree(Rob Clark).
+From: Chuhong Yuan <hslester96@gmail.com>
+Date: Thu, 28 Nov 2019 10:00:21 +0800
 
-Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
----
- drivers/gpu/drm/msm/dsi/dsi_cfg.c | 21 +++++++++++++++++++++
- drivers/gpu/drm/msm/dsi/dsi_cfg.h |  1 +
- 2 files changed, 22 insertions(+)
+> This driver forgets to kill tasklet in remove.
+> Add the call to fix it.
+> 
+> Fixes: 032dc41ba6e2 ("net: macb: Handle HRESP error")
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> ---
+> Changes in v4:
+>   - Put tasklet_kill after unregister_netdev to ensure
+>     IRQs are disabled when killing tasklet.
 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.c b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-index b7b7c1a..7b967dd 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-@@ -133,6 +133,10 @@ static const char * const dsi_sdm845_bus_clk_names[] = {
- 	"iface", "bus",
- };
- 
-+static const char * const dsi_sc7180_bus_clk_names[] = {
-+	"iface", "bus",
-+};
-+
- static const struct msm_dsi_config sdm845_dsi_cfg = {
- 	.io_offset = DSI_6G_REG_SHIFT,
- 	.reg_cfg = {
-@@ -147,6 +151,20 @@ static const struct msm_dsi_config sdm845_dsi_cfg = {
- 	.num_dsi = 2,
- };
- 
-+static const struct msm_dsi_config sc7180_dsi_cfg = {
-+	.io_offset = DSI_6G_REG_SHIFT,
-+	.reg_cfg = {
-+		.num = 1,
-+		.regs = {
-+			{"vdda", 21800, 4 },	/* 1.2 V */
-+		},
-+	},
-+	.bus_clk_names = dsi_sc7180_bus_clk_names,
-+	.num_bus_clks = ARRAY_SIZE(dsi_sc7180_bus_clk_names),
-+	.io_start = { 0xae94000 },
-+	.num_dsi = 1,
-+};
-+
- const static struct msm_dsi_host_cfg_ops msm_dsi_v2_host_ops = {
- 	.link_clk_enable = dsi_link_clk_enable_v2,
- 	.link_clk_disable = dsi_link_clk_disable_v2,
-@@ -201,6 +219,9 @@ static const struct msm_dsi_cfg_handler dsi_cfg_handlers[] = {
- 		&msm8998_dsi_cfg, &msm_dsi_6g_v2_host_ops},
- 	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_2_1,
- 		&sdm845_dsi_cfg, &msm_dsi_6g_v2_host_ops},
-+	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_4_1,
-+		&sc7180_dsi_cfg, &msm_dsi_6g_v2_host_ops},
-+
- };
- 
- const struct msm_dsi_cfg_handler *msm_dsi_cfg_get(u32 major, u32 minor)
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.h b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
-index e2b7a7d..9919536 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_cfg.h
-+++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
-@@ -19,6 +19,7 @@
- #define MSM_DSI_6G_VER_MINOR_V1_4_1	0x10040001
- #define MSM_DSI_6G_VER_MINOR_V2_2_0	0x20000000
- #define MSM_DSI_6G_VER_MINOR_V2_2_1	0x20020001
-+#define MSM_DSI_6G_VER_MINOR_V2_4_1	0x20040001
- 
- #define MSM_DSI_V2_VER_MINOR_8064	0x0
- 
--- 
-2.7.4
-
+Applied and queued up for -stable, thanks.
