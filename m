@@ -2,206 +2,145 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADADAC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB53CC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 687CA208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DE36208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:13:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="t/fDwZOP"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="trnSGb+S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfK2OKr (ORCPT
+        id S1727072AbfK2ON1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 09:10:47 -0500
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:54903 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbfK2OKq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 09:10:46 -0500
-Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
-  Eugen.Hristev@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="Eugen.Hristev@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa1.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa1.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: NWCnZC+Owtemj8H6ubG8JTxTE7Dgb0Z/21xH6r8BSQ8/8ag8hmM5MuRML3Mnp9a7TTyEv/Mtwc
- VVba8NrlLOdZXXk2OH8fhyPch1+euvsfAV2jPpxlQVcYk1ndf/MvWDYyYOABZ2Hw0Qscql6SOl
- ZxGiMCwXMGAUEFfNO9rE9/5/S8qzw8poFVeG/qfkll6Wd3xCFFHpsA3si95v2w19BFvmSHOAhB
- eI4teC8F3tYuWWEtEzyNJv2ANX6JNZfUIeN7X4L4FWvT+nsK6bbKM7HBvaNme+M+xDLObR8L28
- tBE=
-X-IronPort-AV: E=Sophos;i="5.69,257,1571727600"; 
-   d="scan'208";a="60122557"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Nov 2019 07:10:45 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 29 Nov 2019 07:10:44 -0700
-Received: from NAM03-DM3-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Fri, 29 Nov 2019 07:10:46 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WNysA1hklrzR5Ad8eKA/T1fdBRoVo+5Pkk1nR1dRFvxOoH98xb9WyDbSEkiISKH9a/HgpOCRai75Z6SP/jqqZJgVWKMK9Us/2WQdjsthWJVVX2bsoh5sUbMfW4Jnl+rrnBj00MSo9xAE1h3vcTXsfp4uPfVclkLDmz7NhEi3p3FHR5mpWG289J4ih0I+HLe/49H1v6c+Zjnx+auw+VMHU/46bJnUTHwqCGmv//6Eu5FOc7mdwWW3u7oOtOUv8Ro2lK+Nf3MID7vhK3fENco6NVtjJwzrmlPehLIMKtGtLghMJ0VrTrjp2lsnCBvAesDscVV0swQtOXGdmpzTLGFh6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1KkVc6lk62KYhFeV+I3v24MIyQcFyg00iSxltRWJgAo=;
- b=C8IhIkr3Nx5iuKZ8HEgC/eHWL5eZxmF2M6AIPGxow28Wl8JhsXU+3XH1NI+uh6Cip8/eGBEM305NjHO4yBMMhzBKlAPBxqABZf5sKW1S8yr/mv8M0coVOgjMhnVHemLtZluLyR4yr+0wYLgZoP8N9ADdd1f+XRMG9aOLNhjrS7UiO13hGRRx7IWT/PL94XACTJaMc0xnZVZbOv2bZKR0LFSwdnGlN0AcaFEpimroAhk7LHrT6sV7p9hJH3a/ErZ6J62YUVKO6YKcYVcjv97J+f4suAzB3EPWGRNylSINxDEt9RlP1CxaU0ZHWer3UWdb8CSa+NAqqGWsK7RfIQSoRA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1KkVc6lk62KYhFeV+I3v24MIyQcFyg00iSxltRWJgAo=;
- b=t/fDwZOPXU+/U9a4hhXrPk476mj6qSDjyn/gTjyq/VYVY3ISrnwL8vIx90pplHpfuDVBO9MJob/Wgt7TYAG9u7ekjz8KNhT1z71l0Z8XWI74cbhmOyYhUYOkQIsJ6KFeVlaxi3Oyqblvm+sZhpfLXS+J8a3QT4xamEABgXvCgrw=
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
- DM5PR11MB1916.namprd11.prod.outlook.com (10.175.87.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.19; Fri, 29 Nov 2019 14:10:44 +0000
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::9039:e0e8:9032:20c1]) by DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::9039:e0e8:9032:20c1%12]) with mapi id 15.20.2495.014; Fri, 29 Nov
- 2019 14:10:44 +0000
-From:   <Eugen.Hristev@microchip.com>
-To:     <hverkuil@xs4all.nl>, <linux-media@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <Eugen.Hristev@microchip.com>
-Subject: [PATCH 3/3] media: atmel: atmel-isi: initialize the try_crop for the
- pads in try_fmt
-Thread-Topic: [PATCH 3/3] media: atmel: atmel-isi: initialize the try_crop for
- the pads in try_fmt
-Thread-Index: AQHVpr7JUSMCSfNkJEikm4+56J385w==
-Date:   Fri, 29 Nov 2019 14:10:43 +0000
-Message-ID: <1575036609-11381-3-git-send-email-eugen.hristev@microchip.com>
-References: <1575036609-11381-1-git-send-email-eugen.hristev@microchip.com>
-In-Reply-To: <1575036609-11381-1-git-send-email-eugen.hristev@microchip.com>
-Accept-Language: en-US, ro-RO
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM0PR07CA0017.eurprd07.prod.outlook.com
- (2603:10a6:208:ac::30) To DM5PR11MB1242.namprd11.prod.outlook.com
- (2603:10b6:3:14::8)
-x-mailer: git-send-email 2.7.4
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9a1aa854-65e3-4c5f-81e7-08d774d5ec2e
-x-ms-traffictypediagnostic: DM5PR11MB1916:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR11MB1916EBD3DF5002F13087B5C7E8460@DM5PR11MB1916.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0236114672
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(346002)(396003)(39860400002)(376002)(199004)(189003)(66446008)(102836004)(6506007)(36756003)(71190400001)(76176011)(386003)(316002)(99286004)(71200400001)(66946007)(6512007)(110136005)(66476007)(66556008)(64756008)(3846002)(5660300002)(6116002)(107886003)(14454004)(52116002)(186003)(256004)(26005)(66066001)(478600001)(50226002)(2201001)(6436002)(2906002)(11346002)(2501003)(8936002)(305945005)(2616005)(81156014)(81166006)(446003)(86362001)(6486002)(8676002)(4326008)(7736002)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1916;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: wvB0QvwsOWrnVLFzSNv0+HgiQhtlCbUM2nkYxBOe2SFPwMu15SKLOKvwbqKTV6kJTluChs9qs4SqMJpq30/51liVKw3OZyyKtBdoVS85BLt0fsBy4dhauxhtNIr1b/jNTfhnXIjXEzFGiKEb0U899P4O1uGiZ/4PqKSGyE7PfaOZXlEW3CSOrMFHy91td7iuhqLaySfEmUhWPRNtYvdyD6kTlTK1nUZ+Dh/HcjuYD1PeFUfTVayMCNayjuFdoueYFRK/+1NjKXW83wGqUh9YzGSDb3vpWtMn5mYAt43EWE8o9cEFHvvoPUrA+mzYfcz3tU8C4e4pACmPMYjXP85cW65sa7rj3HRADvtOlUBoyA6+Uz2yEv5GR2WBjheIQcvtrpcj70v5KVWcTHCmf3lp9Osye1eAbWIeSpfQWq/FfbdR6/Fe6aAxJSecYF6aGQz+
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 29 Nov 2019 09:13:27 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:1502 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726824AbfK2ON1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 09:13:27 -0500
+Received: from localhost (mailhub1-ext [192.168.12.233])
+        by localhost (Postfix) with ESMTP id 47Pc1H5RW3z9vBmM;
+        Fri, 29 Nov 2019 15:13:23 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=trnSGb+S; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id TdWezx36oXmJ; Fri, 29 Nov 2019 15:13:23 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47Pc1H4LKsz9vBmK;
+        Fri, 29 Nov 2019 15:13:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1575036803; bh=wKDL0HqjaEMsTPg5depm0Atm4aPOV97ucMBSnnNc5Vc=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=trnSGb+S5bC20Icn9ePmvud+bTfYeXEvsmtjf/wPLHkzVh/eBkLxhbbmAjMkCBLHH
+         /ql/4m27t4p9o0PtQNnLYBjyvBJ5HbPJjX4nXL3wChS3osnJ1qj22GUvmCfdC+YTIR
+         OLIRSmJVnuWtZ1wDOofETX9ctzRTQi/xKR5bJv+8=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E61048B8DA;
+        Fri, 29 Nov 2019 15:13:24 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id xQuiQxPF79F6; Fri, 29 Nov 2019 15:13:24 +0100 (CET)
+Received: from [172.25.230.103] (po15451.idsi0.si.c-s.fr [172.25.230.103])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B13D68B8D2;
+        Fri, 29 Nov 2019 15:13:24 +0100 (CET)
+Subject: Re: [PATCH] powerpc/kasan: KASAN is not supported on RELOCATABLE &&
+ FSL_BOOKE
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+To:     Lexi Shao <shaolexi@huawei.com>, benh@kernel.crashing.org,
+        paulus@samba.org, mpe@ellerman.id.au
+Cc:     linux-kernel@vger.kernel.org, wangkefeng.wang@huawei.com,
+        linuxppc-dev@lists.ozlabs.org, liucheng32@huawei.com,
+        yi.zhang@huawei.com
+References: <20191129070455.62084-1-shaolexi@huawei.com>
+ <fc48b5bc-45c1-e4e0-7b56-a23cc045ee0e@c-s.fr>
+Message-ID: <e1b2b106-aa8b-2f3d-2109-985a5c672f85@c-s.fr>
+Date:   Fri, 29 Nov 2019 15:13:24 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9a1aa854-65e3-4c5f-81e7-08d774d5ec2e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Nov 2019 14:10:43.8060
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1fUDriM36nwigRy3zOkXlJ8fIrzZPvaFPSMUPzMNQs5FS1r1uk64foOLxwvJX3f57X5KoH4NBmXqm/uE+bh6d4UFFlDuhrqPokhswfysP+8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1916
+In-Reply-To: <fc48b5bc-45c1-e4e0-7b56-a23cc045ee0e@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
 
-When requesting format from sensor, some sensors call the subdev_get_try_cr=
-op
-which for ISI was not properly initialized, and this causes errors in
-determining proper image resolutions.
-To accommodate for this, when trying a format (in try_fmt), first attempt t=
-o
-obtain the framesize for this format from sensor.
-In case this fails, use the maximum ISI width/height as try_crop, otherwise
-provide the first size height/width from the sensor.
 
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
----
- drivers/media/platform/atmel/atmel-isi.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+Le 29/11/2019 à 08:46, Christophe Leroy a écrit :
+> 
+> 
+> Le 29/11/2019 à 08:04, Lexi Shao a écrit :
+>> CONFIG_RELOCATABLE and CONFIG_KASAN cannot be enabled at the same time
+>> on ppce500 fsl_booke. All functions called before kasan_early_init()
+>> should be disabled with kasan check. When CONFIG_RELOCATABLE is enabled
+>> on ppce500 fsl_booke, relocate_init() is called before kasan_early_init()
+>> which triggers kasan check and results in boot failure.
+>> Call trace and functions which triggers kasan check(*):
+>>    - _start
+>>     - set_ivor
+>>      - relocate_init(*)
+>>       - early_get_first_memblock_info(*)
+>>        - of_scan_flat_dt(*)
+>>     ...
+>>      - kasan_early_init
+>>
+>> Potential solutions could be 1. implement relocate_init and all its 
+>> children
+>> function in a seperate file or 2. introduce a global vairable in 
+>> KASAN, only
+>> enable KASAN check when init is done.
+> 
+> Solution 1 seems uneasy. of_scan_flat_dt() and children are general 
+> functions that can't be set aside.
+> Solution 2 would destroy performance, and would anyway not work with 
+> inline instrumentation.
+> 
+> Have you tried moving the call to kasan_early_init() before the call of 
+> relocate_init() ?
 
-diff --git a/drivers/media/platform/atmel/atmel-isi.c b/drivers/media/platf=
-orm/atmel/atmel-isi.c
-index 59d4c9f..9b904f5 100644
---- a/drivers/media/platform/atmel/atmel-isi.c
-+++ b/drivers/media/platform/atmel/atmel-isi.c
-@@ -555,6 +555,30 @@ static const struct isi_format *find_format_by_fourcc(=
-struct atmel_isi *isi,
- 	return NULL;
- }
-=20
-+static void isi_try_fse(struct atmel_isi *isi, const struct isi_format *is=
-i_fmt,
-+			struct v4l2_subdev_pad_config *pad_cfg)
-+{
-+	int ret;
-+	struct v4l2_subdev_frame_size_enum fse =3D {
-+		.code =3D isi_fmt->mbus_code,
-+		.which =3D V4L2_SUBDEV_FORMAT_TRY,
-+	};
-+
-+	ret =3D v4l2_subdev_call(isi->entity.subdev, pad, enum_frame_size,
-+			       pad_cfg, &fse);
-+	/*
-+	 * Attempt to obtain format size from subdev. If not available,
-+	 * just use the maximum ISI can receive.
-+	 */
-+	if (ret) {
-+		pad_cfg->try_crop.width =3D MAX_SUPPORT_WIDTH;
-+		pad_cfg->try_crop.height =3D MAX_SUPPORT_HEIGHT;
-+	} else {
-+		pad_cfg->try_crop.width =3D fse.max_width;
-+		pad_cfg->try_crop.height =3D fse.max_height;
-+	}
-+}
-+
- static int isi_try_fmt(struct atmel_isi *isi, struct v4l2_format *f,
- 		       const struct isi_format **current_fmt)
- {
-@@ -577,6 +601,9 @@ static int isi_try_fmt(struct atmel_isi *isi, struct v4=
-l2_format *f,
- 	pixfmt->height =3D clamp(pixfmt->height, 0U, MAX_SUPPORT_HEIGHT);
-=20
- 	v4l2_fill_mbus_format(&format.format, pixfmt, isi_fmt->mbus_code);
-+
-+	isi_try_fse(isi, isi_fmt, &pad_cfg);
-+
- 	ret =3D v4l2_subdev_call(isi->entity.subdev, pad, set_fmt,
- 			       &pad_cfg, &format);
- 	if (ret < 0)
---=20
-2.7.4
+I just tried it with QEMU, it works. I'll send a patch out soon.
 
+Christophe
+
+
+> On other PPC32, kasan_early_init() is the first thing done after 
+> activating the MMU. But AFAIU, MMU is always active on BOOKE though.
+> 
+> Christophe
+> 
+>>
+>> Disable KASAN when RELOCATABLE is selected on fsl_booke for now until
+>> it is supported.
+>>
+>> Signed-off-by: Lexi Shao <shaolexi@huawei.com>
+>> ---
+>>   arch/powerpc/Kconfig | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+>> index 3e56c9c2f16e..14f3da63c088 100644
+>> --- a/arch/powerpc/Kconfig
+>> +++ b/arch/powerpc/Kconfig
+>> @@ -171,7 +171,7 @@ config PPC
+>>       select HAVE_ARCH_AUDITSYSCALL
+>>       select HAVE_ARCH_HUGE_VMAP        if PPC_BOOK3S_64 && PPC_RADIX_MMU
+>>       select HAVE_ARCH_JUMP_LABEL
+>> -    select HAVE_ARCH_KASAN            if PPC32
+>> +    select HAVE_ARCH_KASAN            if PPC32 && !(RELOCATABLE && 
+>> FSL_BOOKE)
+>>       select HAVE_ARCH_KGDB
+>>       select HAVE_ARCH_MMAP_RND_BITS
+>>       select HAVE_ARCH_MMAP_RND_COMPAT_BITS    if COMPAT
+>>
