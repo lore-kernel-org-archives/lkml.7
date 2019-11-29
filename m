@@ -2,111 +2,96 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5832C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 11:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA028C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 11:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96EAA20833
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 11:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B15BF2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 11:30:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="B0kGmm32"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbfK2L3v (ORCPT
+        id S1726909AbfK2Laz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 06:29:51 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:48918 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbfK2L3v (ORCPT
+        Fri, 29 Nov 2019 06:30:55 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:21979 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726215AbfK2Laz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 06:29:51 -0500
-Received: from 79.184.255.242.ipv4.supernova.orange.pl (79.184.255.242) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
- id b06a6a2dbb2630b1; Fri, 29 Nov 2019 12:29:49 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-pm@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v2] cpufreq: Fix Kconfig indentation
-Date:   Fri, 29 Nov 2019 12:29:48 +0100
-Message-ID: <2290445.U5tkkzJWrW@kreacher>
-In-Reply-To: <1574306355-29316-1-git-send-email-krzk@kernel.org>
-References: <1574306355-29316-1-git-send-email-krzk@kernel.org>
+        Fri, 29 Nov 2019 06:30:55 -0500
+X-UUID: 0463d9a3274143959e604d33b956bd31-20191129
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=PwCHJ/ylLxsFTolp1LFDT4a1s0102DjGPATz1zjtxA0=;
+        b=B0kGmm32hS6rMrCce03DSS9/I49LmnvX9Of9xHT/lE4Yysz5JkdCowVMOt2ZRII8RGPauflXRDTpVRv0T0+7II32lMHsf/zwEReNp4o9aO9ByBej+e2FzRcMbHI3TUv3pbabwCw7WTWibWCP3OwLzmF3DzwlF5paVrx67Xv1ZMU=;
+X-UUID: 0463d9a3274143959e604d33b956bd31-20191129
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1743712512; Fri, 29 Nov 2019 19:30:48 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 29 Nov 2019 19:30:42 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 29 Nov 2019 19:30:44 +0800
+Message-ID: <1575027046.24848.4.camel@mtkswgap22>
+Subject: Re: [PATCH v5 3/3] hwrng: add mtk-sec-rng driver
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Lars Persson <lists@bofh.nu>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Crystal Guo =?UTF-8?Q?=28=E9=83=AD=E6=99=B6=29?= 
+        <Crystal.Guo@mediatek.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Matt Mackall <mpm@selenic.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Fri, 29 Nov 2019 19:30:46 +0800
+In-Reply-To: <CADnJP=uhD=J2NrpSwiX8oCTd-u_q05=HhsAV-ErCsXNDwVS0rA@mail.gmail.com>
+References: <1574864578-467-1-git-send-email-neal.liu@mediatek.com>
+         <1574864578-467-4-git-send-email-neal.liu@mediatek.com>
+         <CADnJP=uhD=J2NrpSwiX8oCTd-u_q05=HhsAV-ErCsXNDwVS0rA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, November 21, 2019 4:19:15 AM CET Krzysztof Kozlowski wrote:
-> Adjust indentation from spaces to tab (+optional two spaces) as in
-> coding style with command like:
-> 	$ sed -e 's/^        /\t/' -i */Kconfig
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
-> 
-> Changes since v1:
-> 1. Fix also 7-space and tab+1 space indentation issues.
-> ---
->  drivers/cpufreq/Kconfig.powerpc |  8 ++++----
->  drivers/cpufreq/Kconfig.x86     | 16 ++++++++--------
->  2 files changed, 12 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/Kconfig.powerpc b/drivers/cpufreq/Kconfig.powerpc
-> index 35b4f700f054..58151ca56695 100644
-> --- a/drivers/cpufreq/Kconfig.powerpc
-> +++ b/drivers/cpufreq/Kconfig.powerpc
-> @@ -48,9 +48,9 @@ config PPC_PASEMI_CPUFREQ
->  	  PWRficient processors.
->  
->  config POWERNV_CPUFREQ
-> -       tristate "CPU frequency scaling for IBM POWERNV platform"
-> -       depends on PPC_POWERNV
-> -       default y
-> -       help
-> +	tristate "CPU frequency scaling for IBM POWERNV platform"
-> +	depends on PPC_POWERNV
-> +	default y
-> +	help
->  	 This adds support for CPU frequency switching on IBM POWERNV
->  	 platform
-> diff --git a/drivers/cpufreq/Kconfig.x86 b/drivers/cpufreq/Kconfig.x86
-> index dfa6457deaf6..a6528388952e 100644
-> --- a/drivers/cpufreq/Kconfig.x86
-> +++ b/drivers/cpufreq/Kconfig.x86
-> @@ -4,17 +4,17 @@
->  #
->  
->  config X86_INTEL_PSTATE
-> -       bool "Intel P state control"
-> -       depends on X86
-> -       select ACPI_PROCESSOR if ACPI
-> -       select ACPI_CPPC_LIB if X86_64 && ACPI && SCHED_MC_PRIO
-> -       help
-> -          This driver provides a P state for Intel core processors.
-> +	bool "Intel P state control"
-> +	depends on X86
-> +	select ACPI_PROCESSOR if ACPI
-> +	select ACPI_CPPC_LIB if X86_64 && ACPI && SCHED_MC_PRIO
-> +	help
-> +	  This driver provides a P state for Intel core processors.
->  	  The driver implements an internal governor and will become
-> -          the scaling driver and governor for Sandy bridge processors.
-> +	  the scaling driver and governor for Sandy bridge processors.
->  
->  	  When this driver is enabled it will become the preferred
-> -          scaling driver for Sandy bridge processors.
-> +	  scaling driver for Sandy bridge processors.
->  
->  	  If in doubt, say N.
->  
-> 
-
-Applied as 5.5 material, thanks!
-
-
+T24gRnJpLCAyMDE5LTExLTI5IGF0IDE4OjAyICswODAwLCBMYXJzIFBlcnNzb24gd3JvdGU6DQo+
+IEhpIE5lYWwsDQo+IA0KPiBPbiBXZWQsIE5vdiAyNywgMjAxOSBhdCAzOjIzIFBNIE5lYWwgTGl1
+IDxuZWFsLmxpdUBtZWRpYXRlay5jb20+IHdyb3RlOg0KPiA+DQo+ID4gRm9yIE1lZGlhVGVrIFNv
+Q3Mgb24gQVJNdjggd2l0aCBUcnVzdFpvbmUgZW5hYmxlZCwgcGVyaXBoZXJhbHMgbGlrZQ0KPiA+
+IGVudHJvcHkgc291cmNlcyBpcyBub3QgYWNjZXNzaWJsZSBmcm9tIG5vcm1hbCB3b3JsZCAobGlu
+dXgpIGFuZA0KPiA+IHJhdGhlciBhY2Nlc3NpYmxlIGZyb20gc2VjdXJlIHdvcmxkIChBVEYvVEVF
+KSBvbmx5LiBUaGlzIGRyaXZlciBhaW1zDQo+ID4gdG8gcHJvdmlkZSBhIGdlbmVyaWMgaW50ZXJm
+YWNlIHRvIEFURiBybmcgc2VydmljZS4NCj4gPg0KPiANCj4gSSBhbSB3b3JraW5nIG9uIHNldmVy
+YWwgU29DcyB0aGF0IGFsc28gd2lsbCBuZWVkIHRoaXMga2luZCBvZiBkcml2ZXINCj4gdG8gZ2V0
+IGVudHJvcHkgZnJvbSBBcm0gdHJ1c3RlZCBmaXJtd2FyZS4NCj4gSWYgeW91IGludGVuZCB0byBt
+YWtlIHRoaXMgYSBnZW5lcmljIGludGVyZmFjZSwgcGxlYXNlIGNsZWFuIHVwIHRoZQ0KPiByZWZl
+cmVuY2VzIHRvIE1lZGlhVGVrIGFuZCBnaXZlIGl0IGEgbW9yZSBnZW5lcmljIG5hbWUuIEZvciBl
+eGFtcGxlDQo+ICJBcm0gVHJ1c3RlZCBGaXJtd2FyZSByYW5kb20gbnVtYmVyIGRyaXZlciIuDQo+
+IA0KPiBJdCB3aWxsIGFsc28gYmUgaGVscGZ1bCBpZiB0aGUgU01DIGNhbGwgbnVtYmVyIGlzIGNv
+bmZpZ3VyYWJsZS4NCj4gDQo+IC0gTGFycw0KDQpZZXMsIEknbSB0cnlpbmcgdG8gbWFrZSB0aGlz
+IHRvIGEgZ2VuZXJpYyBpbnRlcmZhY2UuIEknbGwgdHJ5IHRvIG1ha2UNCkhXL3BsYXRmb3JtIHJl
+bGF0ZWQgZGVwZW5kZW5jeSB0byBiZSBjb25maWd1cmFibGUgYW5kIGxldCBpdCBtb3JlDQpnZW5l
+cmljLg0KVGhhbmtzIGZvciB5b3VyIHN1Z2dlc3Rpb24uDQoNCj4gDQo+IF9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+IExpbnV4LW1lZGlhdGVrIG1haWxp
+bmcgbGlzdA0KPiBMaW51eC1tZWRpYXRla0BsaXN0cy5pbmZyYWRlYWQub3JnDQo+IGh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbWVkaWF0ZWsNCg0K
 
