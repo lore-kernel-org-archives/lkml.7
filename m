@@ -2,150 +2,213 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB1BC33CB8
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B453DC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FB5A217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:34:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 887A3217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 07:34:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="pGiAdvSh";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="VMlf4bxt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfK2HeW (ORCPT
+        id S1726917AbfK2Hed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 02:34:22 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:43005 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfK2HeV (ORCPT
+        Fri, 29 Nov 2019 02:34:33 -0500
+Received: from a27-11.smtp-out.us-west-2.amazonses.com ([54.240.27.11]:39556
+        "EHLO a27-11.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726360AbfK2Hed (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 02:34:21 -0500
-Received: by mail-ed1-f67.google.com with SMTP id e10so4860682edv.9;
-        Thu, 28 Nov 2019 23:34:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GFt0Cmb0a1kRp5wwWCragfEc3sNuRvk3PTWifHDArig=;
-        b=Uap7SQHfc0sbWAmfcTq417dzCNiP9RnHAfzoMnydV32Ecg50AzRq4PCKz2lYc2E06e
-         5fJp18u+6B52SyAjpQzGBMF95iWOcqkwA7yIqNqRcEK9GmDYMhEHUnNahQDn3Be/au2i
-         uj1ctAEAr/sa1pNcc5dnSs6MJAM4uoY7F7dcj9QTb6DjTUQaoGQHcUspK4xm1/8gvKbD
-         WPDUwo9K1tlU8UR7g28lofecQp0W7KMKRvrcjerD/enujuvfgPAU6zb/B4mNCNYB96xr
-         efE7cKmR+36Opyd0TlpjLNBiDaicLduv7R+GkD7XSrNI4rhr8s+kzPmNJOsLB3GAQ+8A
-         vGxg==
-X-Gm-Message-State: APjAAAWnqvVhks8QHkDg3cm8FoQlytSKFRyO4ls06csDAvgsHjM+wDXl
-        zHLeYCyaVRGj8/ah0xx7GCSmIxrOFk0=
-X-Google-Smtp-Source: APXvYqy0+6aLRp42RkHD0ujD4B7a37asn//HKdn/MKrjaIxHS2BT5bdL9E7jRqg5jpENvBR7diqwAA==
-X-Received: by 2002:a17:906:f191:: with SMTP id gs17mr59511844ejb.207.1575012858688;
-        Thu, 28 Nov 2019 23:34:18 -0800 (PST)
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com. [209.85.221.45])
-        by smtp.gmail.com with ESMTPSA id df3sm1033861edb.1.2019.11.28.23.34.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Nov 2019 23:34:18 -0800 (PST)
-Received: by mail-wr1-f45.google.com with SMTP id b18so33810329wrj.8;
-        Thu, 28 Nov 2019 23:34:17 -0800 (PST)
-X-Received: by 2002:a05:6000:11c6:: with SMTP id i6mr2401488wrx.178.1575012857752;
- Thu, 28 Nov 2019 23:34:17 -0800 (PST)
+        Fri, 29 Nov 2019 02:34:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575012872;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=rhr7M/9VQSLL9ItyaTuW8gPDFzO9OiKg/pTfRZGl9ZI=;
+        b=pGiAdvShf1ywSsWV4nL+/IGFbc04fRtHhMX/XAsxsnPsBG1Nz/gG/zmJ1ldctHyz
+        kzOt96S5/b20z7GINQao+gwh8X28w5tlWO9RRGhW/wwumjJ5qIoYD0/4R44JlL82/zS
+        PDK+pqkiC8CRMsMuOMEMNHIrm3u6N4/eeXCEfhqo=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575012872;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=rhr7M/9VQSLL9ItyaTuW8gPDFzO9OiKg/pTfRZGl9ZI=;
+        b=VMlf4bxtgZh3pn7RXe36jmGsEtn3Dc7ECNWHWRRcVw9bZHXCmwlKQZe9dkqR8w5S
+        rPemt/CDkv2i8m/AR0ZdL3UZ+a5u1GmOcXIdzYx4TDelkOeOvbaXSimnmPbanQomMb/
+        imd22SD5cwFZL3oOZqEK0O7A4RzfNyfw7+Qqtlzw=
 MIME-Version: 1.0
-References: <20191126110508.15264-1-stefan@olimex.com> <20191126162721.qi7scp3vadxn7k2i@gilmour.lan>
- <0c1d7377-7064-f509-ffc5-bd1e8f2fbaa8@olimex.com> <20191128103301.vjpkvjscy45ycgwg@gilmour.lan>
- <1e0509cc-4afc-d46f-84a9-5e54c60c9d7b@olimex.com>
-In-Reply-To: <1e0509cc-4afc-d46f-84a9-5e54c60c9d7b@olimex.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Fri, 29 Nov 2019 15:34:04 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67Dt1=2PMg6mgn5OUumrtgmvwnTFxFqrWjD-VcxWyVwRA@mail.gmail.com>
-Message-ID: <CAGb2v67Dt1=2PMg6mgn5OUumrtgmvwnTFxFqrWjD-VcxWyVwRA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] arm64: dts: allwinner: a64: olinuxino: Add VCC-PG supply
-To:     Stefan Mavrodiev <stefan@olimex.com>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 29 Nov 2019 07:34:32 +0000
+From:   rampraka@codeaurora.org
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Asutosh Das <asutoshd@codeaurora.org>,
+        Sahitya Tummala <stummala@codeaurora.org>,
+        Sayali Lokhande <sayalil@codeaurora.org>,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        cang@codeaurora.org, ppvk@codeaurora.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>, dianders@google.com
+Subject: Re: [RFC 0/6] mmc: Add clock scaling support for mmc driver
+In-Reply-To: <CAPDyKFoZEc-m7NMnaAa5bjtCSp4wyJqic3cLHk95xracoWcCUA@mail.gmail.com>
+References: <1571668177-3766-1-git-send-email-rampraka@codeaurora.org>
+ <CAPDyKFoZEc-m7NMnaAa5bjtCSp4wyJqic3cLHk95xracoWcCUA@mail.gmail.com>
+Message-ID: <0101016eb6152f28-3f0e44c8-2cc5-4ed2-a9a3-f830ef6e3adf-000000@us-west-2.amazonses.com>
+X-Sender: rampraka@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2019.11.29-54.240.27.11
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 3:22 PM Stefan Mavrodiev <stefan@olimex.com> wrote:
->
->
-> On 11/28/19 12:33 PM, Maxime Ripard wrote:
-> Hi Maxime,
-> > Hi Stefan,
-> >
-> > On Wed, Nov 27, 2019 at 09:07:40AM +0200, Stefan Mavrodiev wrote:
-> >> On 11/26/19 6:27 PM, Maxime Ripard wrote:
-> >>> Hi Stefan,
-> >>>
-> >>> On Tue, Nov 26, 2019 at 01:05:08PM +0200, Stefan Mavrodiev wrote:
-> >>>> On A64-OLinuXino boards, PG9 is used for USB1 enable/disable. The
-> >>>> port is supplied by DLDO4, which is disabled by default. The patch
-> >>>> adds the regulator as vcc-pg, which is later used by the pinctrl.
-> >>>>
-> >>>> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
-> >>>> ---
-> >>>>    arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts | 4 ++++
-> >>>>    1 file changed, 4 insertions(+)
-> >>>>
-> >>>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-> >>>> index 01a9a52edae4..c9d8c9c4ef20 100644
-> >>>> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-> >>>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-> >>>> @@ -163,6 +163,10 @@
-> >>>>            status = "okay";
-> >>>>    };
-> >>>>
-> >>>> +&pio {
-> >>>> +  vcc-pg-supply=<&reg_dldo4>;
-> >>> The equal sign should have spaces around it.
-> >>>
-> >>> Also, can you please list all the bank supplies while you're at it?
-> >> Sure. Should the supplies defined as regulators names be added also to the
-> >> pio node?
-> >> For example reg_aldo1 is named "vcc-pe".
-> > As far as I can tell, the A64 has regulators for PC, PD, PE, PG and
-> > PL, so you should list those (PL being under r_pio)
->
-> After quick check I've found a bug (maybe?). It's not possible to specify
-> vcc-pl-supply, because of this:
->
-> https://elixir.bootlin.com/linux/latest/source/drivers/pinctrl/sunxi/pinctrl-sunxi.c#L778
->
-> During the probe of the pmu, the pinctrl tries to get a regulator, that
-> doesn't exist yet.
-> Because of this the system doesn't start (as expected).
+Hi Ulf,
 
-It's a circular dependency. The pinctrl driver requires a regulator, which
-is provided by the PMIC, which requires the pinctrl driver to mux a pin
-for the bus.
+Seems some setting issue with my thunderbird application.
+Sorry for spams, please ignore my last responses as unsupported
+characters got added.
 
-For now there's no way to fix it, other than breaking the dependency.
+Typing my response again from browser and re-sending.
 
-> I've tried to ignore -EPROBE_DEFER. This seems to work, but only because
-> the regulator for
-> PL is defined as "regulator-always-on". The problem is that the refcount
-> is not incremented.
-> So if you export one gpio and the unexport it, the regulator will be
-> disabled. I'm not sure
-> how this can be resolved.
->
-> Should I skip vcc-pl-supply for now and list the other bank supplies?
+Thanks,
+Ram
 
-Yes. That is the preferred and probably only way to deal with it.
-Please leave a comment saying why vcc-pl was skipped.
+On 2019-10-22 14:10, Ulf Hansson wrote:
+> On Mon, 21 Oct 2019 at 16:30, Ram Prakash Gupta 
+> <rampraka@codeaurora.org> wrote:
+>> 
+>> This change adds the use of devfreq based clock scaling to MMC.
+>> This applicable for eMMC and SDCard.
+>> For some workloads, such as video playback, it isn't necessary
+>> for these cards to run at high speed. Running at lower
+>> frequency, in such cases can still meet the deadlines for data
+>> transfers.
+>> 
+>> Scaling down the clock frequency dynamically has power savings
+>> not only because the bus is running at lower frequency but also
+>> has an advantage of scaling down the system core voltage, if
+>> supported. Provide an ondemand clock scaling support similar
+>> to the cpufreq ondemand governor having two thresholds,
+>> up_threshold and down_threshold to decide whether to increase
+>> the frequency or scale it down respectively as per load.
+> 
+> This sounds simple, but what the series is doing is far more
+> complicated but scaling the bus clock, as it also re-negotiates the
+> bus speed mode.
+> 
+> Each time the triggering point for scaling up/down is hit, then a
+> series of commands needs to be sent to the card, including running the
+> tuning procedure. The point is, for sure, this doesn't come for free,
+> both from a latency point of view, but also from an energy cost point
+> of view. So, whether this really improves the behaviour, seems like
+> very use case sensitive, right!?
 
-ChenYu
+Switching modes would incur some latency for sending commands to switch
+modes, but tuning is not needed as most of the emmc devices used now a
+days are with enhanced strobe support, so tuning would not add up any
+latency as it is not required in hs400 enhanced strobe mode.
 
-> >> Also, since the commit message will be different for better representation
-> >> of the changes, should I send the next
-> >> patch as v2 or as a new one?
-> > Either way works for me as long as the commit message matches the changes.
-> >
-> > Thanks!
-> > Maxime
+This feature is implemented for video playback case, where data transfer
+request is less, where this feature helps with saving power consumption.
+
+And when there is burst of data transfer request, load will remain 
+_high_
+so there won't be any switching and hence it won't affect any existing
+use cases from latency point of view.
+
+Also if hw supports to switch clk frequency without changing mode. I 
+will
+make change in code. For this I have seek input from hw team.
+
+ From collected data, I see this feature is helping in saving power
+consumption. And no energy penalty is observed. Please share if I am
+missing any specific. Power saving using this feature is quite good
+and considerable. Please find the data below.
+
+Use Case                             Delta at Battery  Power Impact
+30 fps at HD 1080p decode 20Mbps       10 mA               11%
+30 fps at UHD 8b H.264 42 Mbps         20.93 mA            19%
+
+> 
+> Overall, when it comes to use cases, we have very limited knowledge
+> about them at the mmc block layer level. I think it should remain like
+> that. If at any place at all, this information is better maintained by
+> the generic block layer and potentially the configured I/O scheduler.
+
+I think, generic block layer do not have knowledge of use case for data
+transfer request. And devfreq framework have been used to implement this
+feature, which should be same in any layer.
+
+Also mobile platforms comes mostly with emmc and ufs as storage media.
+And clock scaling is already implemented in upstream ufs driver using
+devfreq framework. On similar line, this feature is implemented for mmc
+driver. So I believe, clk scaling implementation is better placed in mmc
+driver rather in generic block layer.
+
+> 
+> This brings me to a question about the tests you have you run. Can you
+> share some information and data about that?
+
+Test case used are 1080p and 4k video playback use case. As this feature
+is implemented specifically for video playback use case.
+> 
+>> 
+>> 
+>> Ram Prakash Gupta (6):
+>>   mmc: core: Parse clk scaling dt entries
+>>   mmc: core: Add core scaling support in driver
+>>   mmc: core: Initialize clk scaling for mmc and SDCard
+>>   mmc: core: Add debugfs entries for scaling support
+>>   mmc: sdhci-msm: Add capability in platfrom host
+>>   dt-bindings: mmc: sdhci-msm: Add clk scaling dt parameters
+>> 
+>>  .../devicetree/bindings/mmc/sdhci-msm.txt          |  19 +
+> 
+> I noticed that the DT patch was put last in the series, but the
+> parsing is implemented in the first patch. Please flip this around. If
+> you want to implement DT parsing of new bindings, please make sure to
+> discuss the new bindings first.
+
+I will update in next post.
+
+> 
+>>  drivers/mmc/core/block.c                           |  19 +-
+>>  drivers/mmc/core/core.c                            | 777 
+>> +++++++++++++++++++++
+>>  drivers/mmc/core/core.h                            |  17 +
+>>  drivers/mmc/core/debugfs.c                         |  90 +++
+>>  drivers/mmc/core/host.c                            | 226 ++++++
+>>  drivers/mmc/core/mmc.c                             | 246 ++++++-
+>>  drivers/mmc/core/queue.c                           |   2 +
+>>  drivers/mmc/core/sd.c                              |  84 ++-
+>>  drivers/mmc/host/sdhci-msm.c                       |   2 +
+>>  include/linux/mmc/card.h                           |   7 +
+>>  include/linux/mmc/host.h                           |  66 ++
+>>  12 files changed, 1550 insertions(+), 5 deletions(-)
+> 
+> This is a lot of new code in the mmc core, which I would then need to
+> maintain, of course. I have to admit, I am a bit concerned about that,
+> so you have to convince me that there are good reasons for me to apply
+> this.
+> 
+> As I stated above, I think the approach looks quite questionable in
+> general. And even if you can share measurement, that it improves the
+> behaviour, I suspect (without a deeper code review) that some of the
+> code better belongs in common block device layer.
+
+ From the collected power data, I see this as good reason to have this
+feature in mmc driver as number is quite considerable.
+
+For approach, it would be helpful if you share your inputs regarding 
+this
+approach. And as you have stated, this can be further discussed after a
+review from you.
+
+> 
+> Kind regards
+> Uffe
