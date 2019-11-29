@@ -2,111 +2,105 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64295C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 16:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F39A4C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 16:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39A572176D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 16:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA149215A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 16:14:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="of9ZBTMb"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="MIp0XX8k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbfK2QJP (ORCPT
+        id S1727005AbfK2QOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 11:09:15 -0500
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:56521 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726909AbfK2QJO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 11:09:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1575043754; x=1606579754;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=vY3yNMWl4XxQ52Yeor3pYOFSHJJULyJ7C6zSK/m4n5c=;
-  b=of9ZBTMbGXnSVTtc4e4PX5s4zw2XL8sVrj46+9Ln7NBRThOuufR9iHZm
-   PK+ytev3iQkuZJPFxU8EaVAAo8xvu6JB86wEPr3lbAOFUxcFk2wKlfrYu
-   SCFsGyl8sWsylwMK2OOE0qWB0B5Yel/5MH3zcIfxpCi/zp+jrjWQUPo3H
-   8=;
-IronPort-SDR: 2urBnlx6vJFe4PyaljmGlh5Eq0qnF4U/v9BYgul+T5A8y+NZySfdY8CEwS8wDSZsKleKRG5Qxb
- 3dJ9FoBMDjgw==
-X-IronPort-AV: E=Sophos;i="5.69,257,1571702400"; 
-   d="scan'208";a="2195830"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 29 Nov 2019 16:09:01 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com (Postfix) with ESMTPS id C3443282274;
-        Fri, 29 Nov 2019 16:08:58 +0000 (UTC)
-Received: from EX13D32EUC002.ant.amazon.com (10.43.164.94) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 29 Nov 2019 16:08:57 +0000
-Received: from EX13D32EUC003.ant.amazon.com (10.43.164.24) by
- EX13D32EUC002.ant.amazon.com (10.43.164.94) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 29 Nov 2019 16:08:57 +0000
-Received: from EX13D32EUC003.ant.amazon.com ([10.43.164.24]) by
- EX13D32EUC003.ant.amazon.com ([10.43.164.24]) with mapi id 15.00.1367.000;
- Fri, 29 Nov 2019 16:08:57 +0000
-From:   "Durrant, Paul" <pdurrant@amazon.com>
-To:     Jan Beulich <jbeulich@suse.com>
-CC:     "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Stefano Stabellini" <sstabellini@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>
-Subject: RE: [PATCH v2 1/2] xen/xenbus: reference count registered modules
-Thread-Topic: [PATCH v2 1/2] xen/xenbus: reference count registered modules
-Thread-Index: AQHVprryE0ZNGXJKYUWnOWAGzywoqqeiTuoAgAABo6A=
-Date:   Fri, 29 Nov 2019 16:08:56 +0000
-Message-ID: <42cc372e0ada4267bdf4038a0202d95d@EX13D32EUC003.ant.amazon.com>
-References: <20191129134306.2738-1-pdurrant@amazon.com>
- <20191129134306.2738-2-pdurrant@amazon.com>
- <599c254c-035b-33a0-9f32-866ffe644ad5@suse.com>
-In-Reply-To: <599c254c-035b-33a0-9f32-866ffe644ad5@suse.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.165.244]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 29 Nov 2019 11:14:21 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:57527 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726909AbfK2QOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 11:14:20 -0500
+Received: from localhost (mailhub1-ext [192.168.12.233])
+        by localhost (Postfix) with ESMTP id 47Pfhn6hbbz9vBLm;
+        Fri, 29 Nov 2019 17:14:17 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=MIp0XX8k; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id czFo_DUix5Vc; Fri, 29 Nov 2019 17:14:17 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47Pfhn4lwGz9vBLl;
+        Fri, 29 Nov 2019 17:14:17 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1575044057; bh=FovemUvA6qctABDabS0NtDnUTnpAPHjSV1V8/RSSR9g=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=MIp0XX8k/I4wsfEgOYSzCsDkEXhTrmYqxehmxuBCm6XkDFcJq3T0hGxEYQ1Kz6NIG
+         M7TpVa13ygd3AwlIJXHrwq1iQnMaePGf8TUnA+J1BqgPr3u+6+v9CF3rnVnRUCz+98
+         lseISBglyZJmBfRPyJbcLqVhWJ//g3rACrqlq9/Y=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 42FDF8B8DE;
+        Fri, 29 Nov 2019 17:14:19 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 0j_ez_gOcD8Z; Fri, 29 Nov 2019 17:14:19 +0100 (CET)
+Received: from [172.25.230.103] (po15451.idsi0.si.c-s.fr [172.25.230.103])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 215048B8DC;
+        Fri, 29 Nov 2019 17:14:19 +0100 (CET)
+Subject: Re: Build failure on latest powerpc/merge (311ae9e159d8 io_uring: fix
+ dead-hung for non-iter fixed rw)
+To:     Jens Axboe <axboe@kernel.dk>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        Pavel Begunkov <asml.silence@gmail.com>
+Cc:     stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <71cf82d5-5986-43b7-cf1c-acba429a89d6@c-s.fr>
+ <3a95d445-1f5c-7750-f0de-ddc427800b3b@kernel.dk>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <4ef71e74-848f-59d4-6b0b-d3a3c52095a0@c-s.fr>
+Date:   Fri, 29 Nov 2019 17:14:18 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
+In-Reply-To: <3a95d445-1f5c-7750-f0de-ddc427800b3b@kernel.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBKYW4gQmV1bGljaCA8amJldWxp
-Y2hAc3VzZS5jb20+DQo+IFNlbnQ6IDI5IE5vdmVtYmVyIDIwMTkgMTY6MDENCj4gVG86IER1cnJh
-bnQsIFBhdWwgPHBkdXJyYW50QGFtYXpvbi5jb20+DQo+IENjOiB4ZW4tZGV2ZWxAbGlzdHMueGVu
-cHJvamVjdC5vcmc7IGxpbnV4LWJsb2NrQHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+IGtlcm5l
-bEB2Z2VyLmtlcm5lbC5vcmc7IFN0ZWZhbm8gU3RhYmVsbGluaSA8c3N0YWJlbGxpbmlAa2VybmVs
-Lm9yZz47IEJvcmlzDQo+IE9zdHJvdnNreSA8Ym9yaXMub3N0cm92c2t5QG9yYWNsZS5jb20+OyBK
-dWVyZ2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIg
-MS8yXSB4ZW4veGVuYnVzOiByZWZlcmVuY2UgY291bnQgcmVnaXN0ZXJlZCBtb2R1bGVzDQo+IA0K
-PiBPbiAyOS4xMS4yMDE5IDE0OjQzLCBQYXVsIER1cnJhbnQgd3JvdGU6DQo+ID4gVG8gcHJldmVu
-dCBhIG1vZHVsZSBiZWluZyByZW1vdmVkIHdoaWxzdCBhdHRhY2hlZCB0byBhIGZyb250ZW5kLCBh
-bmQNCj4gDQo+IFdoeSBvbmx5IGZyb250ZW5kPw0KPiANCg0KVHJ1ZS4gT3JpZ2luYWxseSB0aGlz
-IHdhcyBvbmx5IGludGVuZGVkIGZvciBiYWNrZW5kcywgYnV0IEkgZ3Vlc3MgdGhpcyBzaG91bGQg
-bm93IGJlICdvdGhlcmVuZCcgb3Igc29tZSBlcXVpdmFsZW50IGZvcm0gb2Ygd29yZHMuDQoNCj4g
-PiBoZW5jZSB4ZW5idXMgY2FsbGluZyBpbnRvIHBvdGVudGlhbGx5IGludmFsaWQgdGV4dCwgdGFr
-ZSBhIHJlZmVyZW5jZSBvbg0KPiA+IHRoZSBtb2R1bGUgYmVmb3JlIGNhbGxpbmcgdGhlIHByb2Jl
-KCkgbWV0aG9kIChkcm9wcGluZyBpdCBpZg0KPiB1bnN1Y2Nlc3NmdWwpDQo+ID4gYW5kIGRyb3Ag
-dGhlIHJlZmVyZW5jZSBhZnRlciByZXR1cm5pbmcgZnJvbSB0aGUgcmVtb3ZlKCkgbWV0aG9kLg0K
-PiA+DQo+ID4gTk9URTogVGhpcyBhbGxvd3MgdGhlIGFkLWhvYyByZWZlcmVuY2UgY291bnRpbmcg
-aW4geGVuLW5ldGJhY2sgdG8gYmUNCj4gPiAgICAgICByZW1vdmVkLiBUaGlzIHdpbGwgYmUgZG9u
-ZSBpbiBhIHN1YnNlcXVlbnQgcGF0Y2guDQo+ID4NCj4gPiBTdWdnZXN0ZWQtYnk6IEphbiBCZXVs
-aWNoIDxqYmV1bGljaEBzdXNlLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBQYXVsIER1cnJhbnQg
-PHBkdXJyYW50QGFtYXpvbi5jb20+DQo+ID4NCj4gPiAtLS0gYS9kcml2ZXJzL3hlbi94ZW5idXMv
-eGVuYnVzX3Byb2JlLmMNCj4gPiArKysgYi9kcml2ZXJzL3hlbi94ZW5idXMveGVuYnVzX3Byb2Jl
-LmMNCj4gPiBAQCAtMjMyLDkgKzIzMiwxMSBAQCBpbnQgeGVuYnVzX2Rldl9wcm9iZShzdHJ1Y3Qg
-ZGV2aWNlICpfZGV2KQ0KPiA+ICAJCXJldHVybiBlcnI7DQo+ID4gIAl9DQo+ID4NCj4gPiArCV9f
-bW9kdWxlX2dldChkcnYtPmRyaXZlci5vd25lcik7DQo+IA0KPiBJIGd1ZXNzIHlvdSByZWFsbHkg
-d2FudCB0cnlfbW9kdWxlX2dldCgpIGFuZCBkZWFsIHdpdGggaXQgcmV0dXJuaW5nDQo+IGZhbHNl
-Lg0KPiANCg0KUGVyaGFwcywgeWVzLg0KDQogIFBhdWwNCg0KPiBKYW4NCg==
+
+
+Le 29/11/2019 à 17:04, Jens Axboe a écrit :
+> On 11/29/19 6:53 AM, Christophe Leroy wrote:
+>>     CC      fs/io_uring.o
+>> fs/io_uring.c: In function ‘loop_rw_iter’:
+>> fs/io_uring.c:1628:21: error: implicit declaration of function ‘kmap’
+>> [-Werror=implicit-function-declaration]
+>>       iovec.iov_base = kmap(iter->bvec->bv_page)
+>>                        ^
+>> fs/io_uring.c:1628:19: warning: assignment makes pointer from integer
+>> without a cast [-Wint-conversion]
+>>       iovec.iov_base = kmap(iter->bvec->bv_page)
+>>                      ^
+>> fs/io_uring.c:1643:4: error: implicit declaration of function ‘kunmap’
+>> [-Werror=implicit-function-declaration]
+>>       kunmap(iter->bvec->bv_page);
+>>       ^
+>>
+>>
+>> Reverting commit 311ae9e159d8 ("io_uring: fix dead-hung for non-iter
+>> fixed rw") clears the failure.
+>>
+>> Most likely an #include is missing.
+> 
+> Huh weird how the build bots didn't catch that. Does the below work?
+
+Yes it works, thanks.
+
+Christophe
