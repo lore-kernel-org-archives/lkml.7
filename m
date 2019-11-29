@@ -2,146 +2,154 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 935B6C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 01:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E249C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 01:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 605902158A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 01:37:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="erTACxUD"
+	by mail.kernel.org (Postfix) with ESMTP id E78BB2158A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 01:40:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfK2Bhx (ORCPT
+        id S1726917AbfK2BkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 20:37:53 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:36066 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726696AbfK2Bhw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 20:37:52 -0500
-Received: by mail-pj1-f66.google.com with SMTP id n96so1342701pjc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 17:37:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=k3v9fPmWBvPWOvk0SjUoi4f+APOY7zLlhiQMCyWJoH8=;
-        b=erTACxUD1Kt3C9eaiEpltWhj1WInSir/xn0VsOuiEQX/pyXUZ7DuQzxBRnMdhH4evB
-         NLUKZ45k7V+j8TbI4mhm/4AVtGxnR7M16uLkyfVv8zF2a8swgCYUpRwphykj1uhdPZyc
-         LQ2hFAbKEttOytooysFhBXcQiVMkt8xT5oOQ0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=k3v9fPmWBvPWOvk0SjUoi4f+APOY7zLlhiQMCyWJoH8=;
-        b=rQ2lSmAP1PT17mFtUlzc/JpHrnIPMC/RgugtZqjeo2XJsvrPiaStFTikAKyYASSONB
-         HR/cwp4JD4BvgkRvzenWL4TgMWz+Fi6/I6C2aZdR/Hc4Jed4PQn0QaS8y08YUgRBV2GM
-         MLEz22tJYFsW8AW9qMdoA996bZ9HuqJ9xfIyQkgxyMR9EfaBA7TXNFW5lyTn43hSaUpT
-         hJrzLwAFiqBRtFQDEmppiN7PD+uw8RMGGXS9EB7swwdobwDHSgXZHYTnQ05Hn5D3Vtah
-         ludoPriLpE1FDdXI0EIwMnc6Xny3gUULivlWqTtMnthkpKza/eVTCDlZTvA2okd3FY4v
-         TfPQ==
-X-Gm-Message-State: APjAAAVHMtwmtpQpDy+DmQkfWlvYXL6AM/eL0+rbAPi7mWyVozVtIXs8
-        ym7rvJYu2mW06IOIgYMwtKgRZHOYhg8=
-X-Google-Smtp-Source: APXvYqw559/nrItIpXQo+aum94P8JTRI4qBdChHdQQz6QBllmcOTS5Kgy+G3u+tLSdbfyoBFXfeZtg==
-X-Received: by 2002:a17:902:8f98:: with SMTP id z24mr12544679plo.35.1574991470396;
-        Thu, 28 Nov 2019 17:37:50 -0800 (PST)
-Received: from localhost (2001-44b8-111e-5c00-a4ac-b85f-e5f8-ea9e.static.ipv6.internode.on.net. [2001:44b8:111e:5c00:a4ac:b85f:e5f8:ea9e])
-        by smtp.gmail.com with ESMTPSA id h5sm5418014pfk.30.2019.11.28.17.37.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 17:37:49 -0800 (PST)
-From:   Daniel Axtens <dja@axtens.net>
-To:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk
-Cc:     akash.goel@intel.com, ajd@linux.ibm.com,
-        Daniel Axtens <dja@axtens.net>,
-        syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com,
-        syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com,
-        syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com,
-        syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com
-Subject: [PATCH] relay: handle alloc_percpu returning NULL in relay_open
-Date:   Fri, 29 Nov 2019 12:37:45 +1100
-Message-Id: <20191129013745.7168-1-dja@axtens.net>
-X-Mailer: git-send-email 2.20.1
+        Thu, 28 Nov 2019 20:40:11 -0500
+Received: from mga12.intel.com ([192.55.52.136]:63234 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726756AbfK2BkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 20:40:10 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Nov 2019 17:40:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,255,1571727600"; 
+   d="scan'208";a="383951374"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by orsmga005.jf.intel.com with ESMTP; 28 Nov 2019 17:40:09 -0800
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 28 Nov 2019 17:40:08 -0800
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 28 Nov 2019 17:40:08 -0800
+Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 28 Nov 2019 17:40:07 -0800
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.108]) by
+ SHSMSX151.ccr.corp.intel.com ([169.254.3.149]) with mapi id 14.03.0439.000;
+ Fri, 29 Nov 2019 09:40:06 +0800
+From:   "Zhao, Shirley" <shirley.zhao@intel.com>
+To:     James Bottomley <jejb@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>
+CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
+        "Zhu, Bing" <bing.zhu@intel.com>,
+        "Chen, Luhai" <luhai.chen@intel.com>
+Subject: RE: One question about trusted key of keyring in Linux kernel.
+Thread-Topic: One question about trusted key of keyring in Linux kernel.
+Thread-Index: AdWZwFKzDBwFOydYTGGk+Aqs+6BIxAANhxEAAoxRZMAAOKaagABSSevw
+Date:   Fri, 29 Nov 2019 01:40:05 +0000
+Message-ID: <A888B25CD99C1141B7C254171A953E8E49096521@shsmsx102.ccr.corp.intel.com>
+References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
+         <1573659978.17949.83.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
+ <1574877977.3551.5.camel@linux.ibm.com>
+In-Reply-To: <1574877977.3551.5.camel@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNGI3ZjAwMWItZTVhYi00MzY4LWJmZGMtNjlkODE3OTk1YTMwIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiRWdcL1wvS2VcL1F2bUVpM0dZeE02YnUzNzFJN1dieWlQWHJQWFE0V0lyY3BVUVlvQjA2UzNkTXdqQ1pSYWV1Skw1SyJ9
+x-ctpclassification: CTP_NT
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-alloc_percpu() may return NULL, which means chan->buf may be set to
-NULL. In that case, when we do *per_cpu_ptr(chan->buf, ...), we
-dereference an invalid pointer:
-
-BUG: Unable to handle kernel data access at 0x7dae0000
-Faulting instruction address: 0xc0000000003f3fec
-...
-NIP [c0000000003f3fec] relay_open+0x29c/0x600
-LR [c0000000003f3fc0] relay_open+0x270/0x600
-Call Trace:
-[c000000054353a70] [c0000000003f3fb4] relay_open+0x264/0x600 (unreliable)
-[c000000054353b00] [c000000000451764] __blk_trace_setup+0x254/0x600
-[c000000054353bb0] [c000000000451b78] blk_trace_setup+0x68/0xa0
-[c000000054353c10] [c0000000010da77c] sg_ioctl+0x7bc/0x2e80
-[c000000054353cd0] [c000000000758cbc] do_vfs_ioctl+0x13c/0x1300
-[c000000054353d90] [c000000000759f14] ksys_ioctl+0x94/0x130
-[c000000054353de0] [c000000000759ff8] sys_ioctl+0x48/0xb0
-[c000000054353e20] [c00000000000bcd0] system_call+0x5c/0x68
-
-Check if alloc_percpu returns NULL. Because we can readily catch and
-handle this situation, switch to alloc_cpu_gfp and pass in __GFP_NOWARN.
-
-This was found by syzkaller both on x86 and powerpc, and the reproducer
-it found on powerpc is capable of hitting the issue as an unprivileged
-user.
-
-Fixes: 017c59c042d0 ("relay: Use per CPU constructs for the relay channel buffer pointers")
-Reported-by: syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com
-Reported-by: syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com
-Reported-by: syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com
-Reported-by: syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com
-Cc: Akash Goel <akash.goel@intel.com>
-Cc: Andrew Donnellan <ajd@linux.ibm.com> # syzkaller-ppc64
-Cc: stable@vger.kernel.org # v4.10+
-Signed-off-by: Daniel Axtens <dja@axtens.net>
-
---
-
-There's a syz reproducer on the powerpc syzbot that eventually hits
-the bug, but it can take up to an hour or so before it keels over on a
-kernel with all the syzkaller debugging on, and even longer on a
-production kernel. I have been able to reproduce it once on a stock
-Ubuntu 5.0 ppc64le kernel.
-
-I will ask MITRE for a CVE - while only the process doing the syscall
-gets killed, it gets killed while holding the relay_channels_mutex,
-so it blocks all future relay activity.
----
- kernel/relay.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/relay.c b/kernel/relay.c
-index ade14fb7ce2e..a376cc6b54ec 100644
---- a/kernel/relay.c
-+++ b/kernel/relay.c
-@@ -580,7 +580,13 @@ struct rchan *relay_open(const char *base_filename,
- 	if (!chan)
- 		return NULL;
- 
--	chan->buf = alloc_percpu(struct rchan_buf *);
-+	chan->buf = alloc_percpu_gfp(struct rchan_buf *,
-+				     GFP_KERNEL | __GFP_NOWARN);
-+	if (!chan->buf) {
-+		kfree(chan);
-+		return NULL;
-+	}
-+
- 	chan->version = RELAYFS_CHANNEL_VERSION;
- 	chan->n_subbufs = n_subbufs;
- 	chan->subbuf_size = subbuf_size;
--- 
-2.20.1
-
+SGksIEphbWVzLCANCg0KTWF5YmUgdGhlIFRQTSBjb21tYW5kIGNvbmZ1c2VkIHlvdS4gDQoNClRo
+ZSBxdWVzdGlvbiBpcyBJIHVzZSBrZXljdGwgY29tbWFuZCBzZWFsZWQgYSB0cnVzdGVkIGtleSB3
+aXRoIFBDUiBwb2xpY3ksIGJ1dCBsb2FkIGl0IGZhaWxlZCBhZnRlciByZWJvb3QuIA0KSSBkb24n
+dCBrbm93IHdoeSBpdCB3YXMgbG9hZGVkIGZhaWxlZC4gSSB1c2UgVFBNIGNvbW1hbmQgdG8gaGVs
+cCBmaW5kIGl0LCBpdCByZXBvcnQgcG9saWN5IGNoZWNrIGZhaWxlZC4gDQoNClNvIG15IHF1ZXN0
+aW9uIGlzIGhvdyB0byBsb2FkIHRoZSBQQ1IgcG9saWN5IHNlYWxlZCB0cnVzdGVkIGtleSBjb3Jy
+ZWN0bHk/IA0KSG93IHRvIHVzZSBwb2xpY3lkaWdlc3QgYW5kIHBvbGljeWhhbmRsZSBjb3JyZWN0
+bHkuIA0KDQpUaGFua3MuIA0KDQotIFNoaXJsZXkgDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
+LS0tDQpGcm9tOiBKYW1lcyBCb3R0b21sZXkgPGplamJAbGludXguaWJtLmNvbT4gDQpTZW50OiBU
+aHVyc2RheSwgTm92ZW1iZXIgMjgsIDIwMTkgMjowNiBBTQ0KVG86IFpoYW8sIFNoaXJsZXkgPHNo
+aXJsZXkuemhhb0BpbnRlbC5jb20+OyBNaW1pIFpvaGFyIDx6b2hhckBsaW51eC5pYm0uY29tPjsg
+SmFya2tvIFNha2tpbmVuIDxqYXJra28uc2Fra2luZW5AbGludXguaW50ZWwuY29tPjsgSm9uYXRo
+YW4gQ29yYmV0IDxjb3JiZXRAbHduLm5ldD4NCkNjOiBsaW51eC1pbnRlZ3JpdHlAdmdlci5rZXJu
+ZWwub3JnOyBrZXlyaW5nc0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWRvY0B2Z2VyLmtlcm5lbC5v
+cmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7ICdNYXVybyBDYXJ2YWxobyBDaGVoYWIn
+IDxtY2hlaGFiK3NhbXN1bmdAa2VybmVsLm9yZz47IFpodSwgQmluZyA8YmluZy56aHVAaW50ZWwu
+Y29tPjsgQ2hlbiwgTHVoYWkgPGx1aGFpLmNoZW5AaW50ZWwuY29tPg0KU3ViamVjdDogUmU6IE9u
+ZSBxdWVzdGlvbiBhYm91dCB0cnVzdGVkIGtleSBvZiBrZXlyaW5nIGluIExpbnV4IGtlcm5lbC4N
+Cg0KT24gVHVlLCAyMDE5LTExLTI2IGF0IDA3OjMyICswMDAwLCBaaGFvLCBTaGlybGV5IHdyb3Rl
+Og0KPiBUaGFua3MgZm9yIHlvdXIgZmVlZGJhY2ssIE1pbWkuIA0KPiBCdXQgdGhlIGRvY3VtZW50
+IG9mIGRyYWN1dCBjYW4ndCBzb2x2ZSBteSBwcm9ibGVtLiANCj4gDQo+IEkgZGlkIG1vcmUgdGVz
+dCB0aGVzZSBkYXlzIGFuZCB0cnkgdG8gZGVzY3JpcHQgbXkgcXVlc3Rpb24gaW4gbW9yZSANCj4g
+ZGV0YWlsLg0KPiANCj4gSW4gbXkgc2NlbmFyaW8sIHRoZSB0cnVzdGVkIGtleSB3aWxsIGJlIHNl
+YWxlZCBpbnRvIFRQTSB3aXRoIFBDUiANCj4gcG9saWN5Lg0KPiBBbmQgdGhlcmUgYXJlIHNvbWUg
+cmVsYXRlZCBvcHRpb25zIGluIG1hbnVhbCBsaWtlIA0KPiAgICAgICAgaGFzaD0gICAgICAgICBo
+YXNoIGFsZ29yaXRobSBuYW1lIGFzIGEgc3RyaW5nLiBGb3IgVFBNIDEueCB0aGUNCj4gb25seQ0K
+PiAgICAgICAgICAgICAgICAgICAgICBhbGxvd2VkIHZhbHVlIGlzIHNoYTEuIEZvciBUUE0gMi54
+IHRoZSBhbGxvd2VkIA0KPiB2YWx1ZXMNCj4gICAgICAgICAgICAgICAgICAgICAgYXJlIHNoYTEs
+IHNoYTI1Niwgc2hhMzg0LCBzaGE1MTIgYW5kIHNtMy0yNTYuDQo+ICAgICAgICBwb2xpY3lkaWdl
+c3Q9IGRpZ2VzdCBmb3IgdGhlIGF1dGhvcml6YXRpb24gcG9saWN5LiBtdXN0IGJlIA0KPiBjYWxj
+dWxhdGVkDQo+ICAgICAgICAgICAgICAgICAgICAgIHdpdGggdGhlIHNhbWUgaGFzaCBhbGdvcml0
+aG0gYXMgc3BlY2lmaWVkIGJ5IHRoZSANCj4gJ2hhc2g9Jw0KPiAgICAgICAgICAgICAgICAgICAg
+ICBvcHRpb24uDQo+ICAgICAgICBwb2xpY3loYW5kbGU9IGhhbmRsZSB0byBhbiBhdXRob3JpemF0
+aW9uIHBvbGljeSBzZXNzaW9uIHRoYXQgDQo+IGRlZmluZXMgdGhlDQo+ICAgICAgICAgICAgICAg
+ICAgICAgIHNhbWUgcG9saWN5IGFuZCB3aXRoIHRoZSBzYW1lIGhhc2ggYWxnb3JpdGhtIGFzIA0K
+PiB3YXMgdXNlZCB0bw0KPiAgICAgICAgICAgICAgICAgICAgICBzZWFsIHRoZSBrZXkuIA0KPiAN
+Cj4gSGVyZSBpcyBteSB0ZXN0IHN0ZXAuIA0KPiBGaXJzdGx5LCB0aGUgcGNyIHBvbGljeSBpcyBn
+ZW5lcmF0ZWQgYXMgYmVsb3c6IA0KPiAkIHRwbTJfY3JlYXRlcG9saWN5IC0tcG9saWN5LXBjciAt
+LXBjci1saXN0IHNoYTI1Njo3IC0tcG9saWN5IA0KPiBwY3I3X2Jpbi5wb2xpY3kgPiBwY3I3LnBv
+bGljeQ0KPiANCj4gUGNyNy5wb2xpY3kgaXMgdGhlIGFzY2lpIGhleCBvZiBwb2xpY3k6DQo+ICQg
+Y2F0IHBjcjcucG9saWN5DQo+IDMyMWZiZDI4YjYwZmNjMjMwMTdkNTAxYjEzM2JkNWRiZjI4ODk4
+MTQ1ODhlOGEyMzUxMGZlMTAxMDVjYjJjYzkNCj4gDQo+IFRoZW4gZ2VuZXJhdGUgdGhlIHRydXN0
+ZWQga2V5IGFuZCBjb25maWd1cmUgcG9saWN5ZGlnZXN0IGFuZCBnZXQgdGhlIA0KPiBrZXkgSUQ6
+DQo+ICQga2V5Y3RsIGFkZCB0cnVzdGVkIGttayAibmV3IDMyIGtleWhhbmRsZT0weDgxMDAwMDAx
+IGhhc2g9c2hhMjU2IA0KPiBwb2xpY3lkaWdlc3Q9YGNhdCBwY3I3LnBvbGljeWAiIEB1DQo+IDg3
+NDExNzA0NQ0KPiANCj4gU2F2ZSB0aGUgdHJ1c3RlZCBrZXkuIA0KPiAkIGtleWN0bCBwaXBlIDg3
+NDExNzA0NSA+IGttay5ibG9iDQo+IA0KPiBSZWJvb3QgYW5kIGxvYWQgdGhlIGtleS4gDQo+IFN0
+YXJ0IGEgYXV0aCBzZXNzaW9uIHRvIGdlbmVyYXRlIHRoZSBwb2xpY3k6DQo+ICQgdHBtMl9zdGFy
+dGF1dGhzZXNzaW9uIC1TIHNlc3Npb24uY3R4DQo+IHNlc3Npb24taGFuZGxlOiAweDMwMDAwMDAN
+Cj4gJCB0cG0yX3Bjcmxpc3QgLUwgc2hhMjU2OjcgLW8gcGNyNy5zaGEyNTYgJCB0cG0yX3BvbGlj
+eXBjciAtUyANCj4gc2Vzc2lvbi5jdHggLUwgc2hhMjU2OjcgLUYgcGNyNy5zaGEyNTYgLWYgcGNy
+Ny5wb2xpY3kNCj4gcG9saWN5LWRpZ2VzdDoNCj4gMHgzMjFGQkQyOEI2MEZDQzIzMDE3RDUwMUIx
+MzNCRDVEQkYyODg5ODE0NTg4RThBMjM1MTBGRTEwMTA1Q0IyQ0M5DQo+IA0KPiBJbnB1dCB0aGUg
+cG9saWN5IGhhbmRsZSB0byBsb2FkIHRydXN0ZWQga2V5Og0KPiAkIGtleWN0bCBhZGQgdHJ1c3Rl
+ZCBrbWsgImxvYWQgYGNhdCBrbWsuYmxvYmAga2V5aGFuZGxlPTB4ODEwMDAwMDEgDQo+IHBvbGlj
+eWhhbmRsZT0weDMwMDAwMDAiIEB1DQo+IGFkZF9rZXk6IE9wZXJhdGlvbiBub3QgcGVybWl0dGVk
+DQo+IA0KPiBUaGUgZXJyb3Igc2hvdWxkIGJlIHBvbGljeSBjaGVjayBmYWlsZWQsIGJlY2F1c2Ug
+SSB1c2UgVFBNIGNvbW1hbmQgdG8gDQo+IHVuc2VhbCBkaXJlY3RseSB3aXRoIGVycm9yIG9mIHBv
+bGljeSBjaGVjayBmYWlsZWQuDQo+ICQgdHBtMl91bnNlYWwgLWMgMHg4MTAwMDAwMSAtTCBzaGEy
+NTY6NyBFUlJPUiBvbiBsaW5lOiAiODEiIGluIGZpbGU6IA0KPiAiLi9saWIvbG9nLmgiOiBUc3My
+X1N5c19VbnNlYWwoMHg5OUQpIC0gdHBtOnNlc3Npb24oMSk6YSBwb2xpY3kgY2hlY2sgDQo+IGZh
+aWxlZCBFUlJPUiBvbiBsaW5lOiAiMjEzIiBpbiBmaWxlOiAidG9vbHMvdHBtMl91bnNlYWwuYyI6
+IFVuc2VhbCANCj4gZmFpbGVkIQ0KPiBFUlJPUiBvbiBsaW5lOiAiMTY2IiBpbiBmaWxlOiAidG9v
+bHMvdHBtMl90b29sLmMiOiBVbmFibGUgdG8gcnVuIA0KPiB0cG0yX3Vuc2VhbA0KDQpJIHRoaW5r
+IHRoZXJlJ3MgYSBtaXNjb21tdW5pY2F0aW9uIGhlcmU6IHlvdSdyZSBjb21wbGFpbmluZyBhYm91
+dCB0aGUgZXJyb3IgcmV0dXJuZWQgZnJvbSBhIHRydXN0ZWQga2V5IHVuc2VhbCBvcGVyYXRpb24g
+dGhhdCAqc2hvdWxkKiBmYWlsLCBjb3JyZWN0PyAgWW91IHRoaW5rIGl0IHNob3VsZCByZXR1cm4g
+YSBUUE0gZXJyb3IgYnV0IGluc3RlYWQgaXQgcmV0dXJucyAtRVBFUk0uICBUaGF0J3MgY29tcGxl
+dGVseSBjb3JyZWN0OiB3ZSB0cmFuc2xhdGUgYWxsIFRQTSBlcnJvcnMgaW50byBsaW51eCBvbmVz
+IGFzIHdlIHBhc3MgdGhlbSB1cCB0byB1c2Vyc3BhY2UsIHNvIHRoZSBiZXN0IHdlIGNhbiBkbyBp
+cyBvcGVyYXRpb24gbm90IHBlcm1pdHRlZC4NCg0KSmFtZXMNCg0K
