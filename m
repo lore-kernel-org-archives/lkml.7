@@ -2,82 +2,106 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A9FC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 03:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49408C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 04:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05B88215A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 03:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A4E92158A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 04:05:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z8aADKxY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfK2Dhk (ORCPT
+        id S1726985AbfK2EFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Nov 2019 22:37:40 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7176 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726773AbfK2Dhk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Nov 2019 22:37:40 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 5F1338584C3E47A3F3DE;
-        Fri, 29 Nov 2019 11:37:38 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 29 Nov 2019 11:37:31 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        "Michael Turquette" <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-CC:     YueHaibing <yuehaibing@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH -next] clk: bm1800: Remove set but not used variable 'fref'
-Date:   Fri, 29 Nov 2019 03:35:34 +0000
-Message-ID: <20191129033534.188257-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 28 Nov 2019 23:05:25 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:42850 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726800AbfK2EFZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Nov 2019 23:05:25 -0500
+Received: by mail-ed1-f65.google.com with SMTP id e10so4525724edv.9
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Nov 2019 20:05:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kSUVC3ggQB4xLQjsKBDHLkM4F4fy4M5PEtTRPWySnj4=;
+        b=Z8aADKxYdIrSSCBHE0WebFG2Y8sksQBDe+gJGDwWDNLDZLLWgUw0NbN/otBEPsWrCB
+         ksbD/tyyRmIBAgkLWB/wwjaPhT4CJ4PJdimwooAy6EAGK6ZSqrHsQRBG1+zHdrTLXX0l
+         Zo9jhdd2/cn0njSg1cj82rO5mz0+0Ujp8BCCM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kSUVC3ggQB4xLQjsKBDHLkM4F4fy4M5PEtTRPWySnj4=;
+        b=VeHbrnSIeHkjV6GqTq1UKGDxx7NtehuN7fVjU1wzSeJHEiSlGJBbPa2Ky5W2K96lA6
+         Sa3lOI/ij09a2HkUx3HRPN6tIyP90yokb+CyOmWUw8FKxa8tGwTljj206cHBSi+OHJb+
+         F6j3/Nv718wr/Yq3P9QetrQSoCQzXgzVHvU0AFE98JRPBZLDpxsUxaKKy07WZnMxptVq
+         OvBRmabjLt/dzvvxvNUsDYY91EsgFasZGVjztIn1CZKLNdoWnp8OtEWH+6aLuNDUJj9t
+         /jc1zGC2xRLbQh6Kyz0um8u4hF5ali3JTTLXSj1JIUGHGIHOhkmYFj9OwdOVyBaEQJX4
+         VWkw==
+X-Gm-Message-State: APjAAAWCBAKBpQHUo/TweAT96gOLScs3kAcFJNWDTLgEy1GoiDP68DJv
+        OEiLMB4l8niXsW4BStcoG/yQV47720d4/+5HJXutEQ==
+X-Google-Smtp-Source: APXvYqzJA0oarVNbcMx254Rxgm0ocDOJdIJTZOA0fppCRnNb/55GHaFez2T3pW6EU1cmssT3oMFxhwU7MDDuZHKDUmY=
+X-Received: by 2002:a17:906:57c3:: with SMTP id u3mr59264192ejr.254.1575000323169;
+ Thu, 28 Nov 2019 20:05:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+References: <20191128033959.87715-1-pihsun@chromium.org> <d02f4eef9aa674cb36c1d90069a13e7bd02b7e40.camel@perches.com>
+In-Reply-To: <d02f4eef9aa674cb36c1d90069a13e7bd02b7e40.camel@perches.com>
+From:   Pi-Hsun Shih <pihsun@chromium.org>
+Date:   Fri, 29 Nov 2019 12:04:47 +0800
+Message-ID: <CANdKZ0eYSdPC2y5QxN1B7FshewXumrETQohbXrnvbovXMkSe9Q@mail.gmail.com>
+Subject: Re: [PATCH RESEND] wireless: Use offsetof instead of custom macro.
+To:     Joe Perches <joe@perches.com>
+Cc:     linux-wireless@vger.kernel.org,
+        Johannes Berg <johannes@sipsolutions.net>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:CLANG/LLVM BUILD SUPPORT" 
+        <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+On Thu, Nov 28, 2019 at 11:54 AM Joe Perches <joe@perches.com> wrote:
+>
+> On Thu, 2019-11-28 at 11:39 +0800, Pi-Hsun Shih wrote:
+> > Use offsetof to calculate offset of a field to take advantage of
+> > compiler built-in version when possible, and avoid UBSAN warning when
+> > compiling with Clang:
+> []
+> > diff --git a/include/uapi/linux/wireless.h b/include/uapi/linux/wireless.h
+> []
+> > @@ -1090,8 +1090,7 @@ struct iw_event {
+> >  /* iw_point events are special. First, the payload (extra data) come at
+> >   * the end of the event, so they are bigger than IW_EV_POINT_LEN. Second,
+> >   * we omit the pointer, so start at an offset. */
+> > -#define IW_EV_POINT_OFF (((char *) &(((struct iw_point *) NULL)->length)) - \
+> > -                       (char *) NULL)
+> > +#define IW_EV_POINT_OFF offsetof(struct iw_point, length)
+> >  #define IW_EV_POINT_LEN      (IW_EV_LCP_LEN + sizeof(struct iw_point) - \
+> >                        IW_EV_POINT_OFF)
+>
+> This is uapi.  Is offsetof guaranteed to be available?
 
-drivers/clk/clk-bm1880.c: In function 'bm1880_pll_rate_calc':
-drivers/clk/clk-bm1880.c:477:13: warning:
- variable 'fref' set but not used [-Wunused-but-set-variable]
+offsetof is already used in other uapi headers
+(include/uapi/linux/fuse.h FUSE_NAME_OFFSET).
 
-It is never used, so remove it.
+Also offsetof is also defined back in C89 standard (in stddef.h), so
+it should be widely available and should be fine to use here?
+(Should I add a #ifndef __KERNEL__ #include <stddef.h> to the file?)
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/clk/clk-bm1880.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> Perhaps this is better without using another macro
+>
+> #define IW_EV_POINT_OFF ((size_t)&((struct iw_point *)NULL)->length)
 
-diff --git a/drivers/clk/clk-bm1880.c b/drivers/clk/clk-bm1880.c
-index 4cd175afce9b..e6d6599d310a 100644
---- a/drivers/clk/clk-bm1880.c
-+++ b/drivers/clk/clk-bm1880.c
-@@ -474,11 +474,10 @@ static struct bm1880_composite_clock bm1880_composite_clks[] = {
- static unsigned long bm1880_pll_rate_calc(u32 regval, unsigned long parent_rate)
- {
- 	u64 numerator;
--	u32 fbdiv, fref, refdiv;
-+	u32 fbdiv, refdiv;
- 	u32 postdiv1, postdiv2, denominator;
- 
- 	fbdiv = (regval >> 16) & 0xfff;
--	fref = parent_rate;
- 	refdiv = regval & 0x1f;
- 	postdiv1 = (regval >> 8) & 0x7;
- 	postdiv2 = (regval >> 12) & 0x7;
+Clang UBSAN would still complain about this, since it's the same
+pattern as the original one.
 
-
-
+>
