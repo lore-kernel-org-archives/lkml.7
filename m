@@ -2,554 +2,253 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E296C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 840E3C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA4872176D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CC2B217AB
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:00:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JLcHtY7e"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TIne5VQg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbfK2N7T (ORCPT
+        id S1726928AbfK2OAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 08:59:19 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:45345 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbfK2N7S (ORCPT
+        Fri, 29 Nov 2019 09:00:52 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52655 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726770AbfK2OAv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 08:59:18 -0500
-Received: by mail-lf1-f65.google.com with SMTP id 203so22691976lfa.12
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 05:59:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=W2P5af099ltrVUAPxfWBA4J6UnuLIYO2S9bAuMh3XmI=;
-        b=JLcHtY7eVTRgzZ+llg0nbC/rMMjIJVej57fj341srHdfxPh7XHVN8VIKxDjSRybCJD
-         h3TB2NylO7QljBfCb9ZN8GlrTA322LhVmPmoWoozajSJEYgVzdvBevTIM7hpjRJ+sbA6
-         3/oWuOr0IddFMoy1EYJueK1zV2g8ROHgh9IecR45iV90FPNoxthDEujqe2q/2KNFAgyQ
-         bziJ8n+5dLxsi6UqtDy94USNE3Q/JL6IcLpmzIzMnZ1SGfXxJ9lFpGL1uED+jZKih/CM
-         lb0VkrDYwftVnT4DMOLqQ+hg45LtL9+vGv/txnCGCm2xO9UoROGjygkMBje4JBV71Gvi
-         2h6Q==
+        Fri, 29 Nov 2019 09:00:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575036049;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+b1qvJKJMmgAGkM2d8KkALdWXaJTGyaCyZOeDvMEs3E=;
+        b=TIne5VQgFbTwGC4vDB8AMmUexEEx/atuHlZ9Bt7dq0K9QdkoWWhsntxLOU4RMNGI6ZeYLY
+        tOoc1awdYeo59xw/mBQRSSscjiwAmoYm/2wTOfanXJiInpWXbTdr+GyFyFni1gcl67s1Qz
+        D/nOb0gqHbz1Y+r8HOrvGDrxOr6qVYU=
+Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
+ [209.85.167.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-11-U9lMvnUiMxyo48S5VRgpFw-1; Fri, 29 Nov 2019 09:00:44 -0500
+Received: by mail-lf1-f69.google.com with SMTP id u17so6269939lfl.9
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 06:00:44 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=W2P5af099ltrVUAPxfWBA4J6UnuLIYO2S9bAuMh3XmI=;
-        b=ncHpDNJ8QdkRNMltrhtFzZj7iWgt4pU9EYujT8lii3Soq3ooOoEqk51Lt+3wPR0QJz
-         +iFFndnzlG+wrwQqeFp+X9SDUgUchHA3QDvSe5Z/sXoRIAgwj8jDO/y+ZUn8mYfPX0ON
-         XvlRLa6Om3Uu+PE1UeTck7MvgY+mGi4NYocUrTNo/ODli+fCMWKMzVplB4+hgh5NXfQB
-         E6IM0aam1BVwI+dWkgxJU6VDKgBDDjI/WHGyeTo5UA3vwlv25FOLE1V/7sm/JQ4qCplG
-         YE3rF/l4E9kvAJzrYUh6ggkGDYiekTo4wPYzX5GkXXxaNxU18fLaGZ75ctmh3MiK3yFN
-         Zg8w==
-X-Gm-Message-State: APjAAAUmi0GxpO8FGdoxnwCLEy6uDMkEidrsf3ObjYViKzOeNKkUyape
-        lRki8GDPeBmYYjT4GjBezCwhpK8VPsgZbBdd6t1JzQ==
-X-Google-Smtp-Source: APXvYqzwq2ZIh6TDFk+Fl2nz6p4dMvUG2nVwRp0fQ39/HxYM1sscpULAX8aasWvLmAsIjG8Ph7R179n6GqtJ+v9Xkb4=
-X-Received: by 2002:a19:f701:: with SMTP id z1mr30364055lfe.133.1575035953786;
- Fri, 29 Nov 2019 05:59:13 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=nznlG+jEmJBUCeGnvKlHOT18vQFcrvM/gSvDwhtrSfY=;
+        b=f+P6pMQwQGGAu5llg5XgxFWE1pwUuJzAb764IfVRuMMWAhfXFlaH4WGGOqSsp2r9jO
+         EgC/Z8B1qgGW/ak6sxUgYTE7v9iFnuJf+3W9TNyFZHJAd3Yi4Qohp6U+lZbnoJOI+iea
+         5J67IwN/DN3iF0pSoy8fp97xEhQNYUEMK8Sd7QqlDlHPVJUK648Mp9mIqfFyHKcOdSM1
+         L4fI+s468McU06ObfZZZ/IDV1axAju3SjzrXBbkQEXGNKRWorafXvw77sIk6qFf7bxR7
+         A4H8M/h4aZ05CmNkpnn0TTTLFb4tXFk9CP7do4a73dPOPSKcRJ4V25iFBAlnXfkhIaON
+         LOuA==
+X-Gm-Message-State: APjAAAXyoqhCWmMz4laU3PHcnm1iQU9NzFvegJGKOW0q55dtGacduGKS
+        5fKh+XpyasrQK+SMVQLTdkx6qPxgx30uBLz7tdiy52fqlSC61ZV7/iz1q/jEMD3EGUgo7VoKg0p
+        W2UKvIbINJYGZ7PfOWn8OEeex
+X-Received: by 2002:a2e:8855:: with SMTP id z21mr39422142ljj.212.1575036043050;
+        Fri, 29 Nov 2019 06:00:43 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz28Bd8f/J7BOBAW2B1uN/PHxldgbyIJWg1HRDOQRKNKQNE9kOVrRrKRXQ/FeMftWLjXGZeSA==
+X-Received: by 2002:a2e:8855:: with SMTP id z21mr39422099ljj.212.1575036042728;
+        Fri, 29 Nov 2019 06:00:42 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
+        by smtp.gmail.com with ESMTPSA id m9sm1211958lfj.57.2019.11.29.06.00.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Nov 2019 06:00:41 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 4ACC9181923; Fri, 29 Nov 2019 15:00:40 +0100 (CET)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>, kubakici@wp.pl
+Subject: Re: [PATCH bpf v3] bpftool: Allow to link libbpf dynamically
+In-Reply-To: <f6e8f6d2-6155-3b20-9975-81e29e460915@iogearbox.net>
+References: <20191128160712.1048793-1-toke@redhat.com> <f6e8f6d2-6155-3b20-9975-81e29e460915@iogearbox.net>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Fri, 29 Nov 2019 15:00:40 +0100
+Message-ID: <87a78evl2v.fsf@toke.dk>
 MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 29 Nov 2019 14:59:02 +0100
-Message-ID: <CACRpkdbJxcfj6pK=1qjXxffFn0RUH9VD0HRFXX0RoZJDi=hfRw@mail.gmail.com>
-Subject: [GIT PULL] GPIO changes for v5.5
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MC-Unique: U9lMvnUiMxyo48S5VRgpFw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Daniel Borkmann <daniel@iogearbox.net> writes:
 
-here is the big pull request for the GPIO subsystem for
-the v5.5 kernel cycle.
+> On 11/28/19 5:07 PM, Toke H=C3=B8iland-J=C3=B8rgensen wrote:
+>> From: Jiri Olsa <jolsa@kernel.org>
+>>=20
+>> Currently we support only static linking with kernel's libbpf
+>> (tools/lib/bpf). This patch adds LIBBPF_DYNAMIC compile variable
+>> that triggers libbpf detection and bpf dynamic linking:
+>>=20
+>>    $ make -C tools/bpf/bpftool make LIBBPF_DYNAMIC=3D1
+>>=20
+>> If libbpf is not installed, build (with LIBBPF_DYNAMIC=3D1) stops with:
+>>=20
+>>    $ make -C tools/bpf/bpftool LIBBPF_DYNAMIC=3D1
+>>      Auto-detecting system features:
+>>      ...                        libbfd: [ on  ]
+>>      ...        disassembler-four-args: [ on  ]
+>>      ...                          zlib: [ on  ]
+>>      ...                        libbpf: [ OFF ]
+>>=20
+>>    Makefile:102: *** Error: No libbpf devel library found, please instal=
+l libbpf-devel or libbpf-dev.
+>>=20
+>> Adding LIBBPF_DIR compile variable to allow linking with
+>> libbpf installed into specific directory:
+>>=20
+>>    $ make -C tools/lib/bpf/ prefix=3D/tmp/libbpf/ install_lib install_he=
+aders
+>>    $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=3D1 LIBBPF_DIR=3D/tmp/lib=
+bpf/
+>>=20
+>> It might be needed to clean build tree first because features
+>> framework does not detect the change properly:
+>>=20
+>>    $ make -C tools/build/feature clean
+>>    $ make -C tools/bpf/bpftool/ clean
+>>=20
+>> Since bpftool uses bits of libbpf that are not exported as public API in
+>> the .so version, we also pass in libbpf.a to the linker, which allows it=
+ to
+>> pick up the private functions from the static library without having to
+>> expose them as ABI.
+>>=20
+>> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+>> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+>> ---
+>> v3:
+>>    - Keep $(LIBBPF) in $LIBS, and just add -lbpf on top
+>>    - Fix typo in error message
+>> v2:
+>>    - Pass .a file to linker when dynamically linking, so bpftool can use
+>>      private functions from libbpf without exposing them as API.
+>>=20
+>>   tools/bpf/bpftool/Makefile | 34 ++++++++++++++++++++++++++++++++++
+>>   1 file changed, 34 insertions(+)
+>>=20
+>> diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
+>> index 39bc6f0f4f0b..15052dcaa39b 100644
+>> --- a/tools/bpf/bpftool/Makefile
+>> +++ b/tools/bpf/bpftool/Makefile
+>> @@ -1,6 +1,15 @@
+>>   # SPDX-License-Identifier: GPL-2.0-only
+>> +# LIBBPF_DYNAMIC to enable libbpf dynamic linking.
+>> +
+>>   include ../../scripts/Makefile.include
+>>   include ../../scripts/utilities.mak
+>> +include ../../scripts/Makefile.arch
+>> +
+>> +ifeq ($(LP64), 1)
+>> +  libdir_relative =3D lib64
+>> +else
+>> +  libdir_relative =3D lib
+>> +endif
+>>  =20
+>>   ifeq ($(srctree),)
+>>   srctree :=3D $(patsubst %/,%,$(dir $(CURDIR)))
+>> @@ -63,6 +72,19 @@ RM ?=3D rm -f
+>>   FEATURE_USER =3D .bpftool
+>>   FEATURE_TESTS =3D libbfd disassembler-four-args reallocarray zlib
+>>   FEATURE_DISPLAY =3D libbfd disassembler-four-args zlib
+>> +ifdef LIBBPF_DYNAMIC
+>> +  FEATURE_TESTS   +=3D libbpf
+>> +  FEATURE_DISPLAY +=3D libbpf
+>> +
+>> +  # for linking with debug library run:
+>> +  # make LIBBPF_DYNAMIC=3D1 LIBBPF_DIR=3D/opt/libbpf
+>
+> The Makefile already has BPF_DIR which points right now to
+> '$(srctree)/tools/lib/bpf/' and LIBBPF_PATH for the final one and
+> where $(LIBBPF_PATH)libbpf.a is expected to reside. Can't we improve
+> the Makefile to reuse and work with these instead of adding yet
+> another LIBBPF_DIR var which makes future changes in this area more
+> confusing? The libbpf build spills out libbpf.{a,so*} by default
+> anyway.
 
-Notices:
+I see what you mean; however, LIBBPF_DIR is meant to be specifically an
+override for the dynamic library, not just the path to libbpf.
 
-At one point the tree became dependent on device core
-and Greg simply suggested we pull the HEAD of device
-core into the GPIO tree so I did. It had the interesting
-side effect of adding a lot of device core cruft to my shortlog
-below (possibly there is a way to avoid that, I'm not the
-best with git options). If you diff it against your tree or
-as a result of pulling it in, it should result in a shorter
-shortstat.
+Would it be less confusing to overload the LIBBPF_DYNAMIC variable
+instead? I.e.,
 
-After missing an embarrassing problem in the pin control tree
-I double-checked that I had builds from zeroday and
-the code has sit in linux-next before I compiled this pull
-request.
+make LIBBPF_DYNAMIC=3D1
 
-One commit to the DRM subsystem is ACKed by the
-DRM maintainers.
+would dynamically link against the libbpf installed in the system, but
 
-One commit to ATA
-"ata: ahci-imx: Covert to use GPIO descriptor"  has failed
-to get the attention of the maintainers for so long that I just
-merged it. I suppose they don't care, also it only
-concerns GPIO.
+make LIBBPF_DYNAMIC=3D/opt/libbpf
 
-Please pull it in!
+would override that and link against whatever is in /opt/libbpf instead?
+WDYT?
 
-Yours,
-Linus Walleij
+> Was wondering whether we could drop LIBBPF_DYNAMIC altogether and have
+> some sort of auto detection, but given for perf the `make
+> LIBBPF_DYNAMIC=3D1` option was just applied to perf tree it's probably
+> better to stay consistent plus static linking would stay as-is for
+> preferred method for bpftool, so that part seems fine.
 
+When adding LIBBPF_DYNAMIC in a packaging script, we *want* the build to
+fail if it doesn't work, instead of just silently falling back to a
+statically linked version. Also, for something in the kernel tree like
+bpftool, I think it makes more sense to default to the in-tree version
+and make dynamic linking explicitly opt-in.
 
-The following changes since commit a99d8080aaf358d5d23581244e5da23b35e340b9=
-:
+>> +  ifdef LIBBPF_DIR
+>> +    LIBBPF_CFLAGS  :=3D -I$(LIBBPF_DIR)/include
+>> +    LIBBPF_LDFLAGS :=3D -L$(LIBBPF_DIR)/$(libdir_relative)
+>> +    FEATURE_CHECK_CFLAGS-libbpf  :=3D $(LIBBPF_CFLAGS)
+>> +    FEATURE_CHECK_LDFLAGS-libbpf :=3D $(LIBBPF_LDFLAGS)
+>> +  endif
+>> +endif
+>>  =20
+>>   check_feat :=3D 1
+>>   NON_CHECK_FEAT_TARGETS :=3D clean uninstall doc doc-clean doc-install =
+doc-uninstall
+>> @@ -88,6 +110,18 @@ ifeq ($(feature-reallocarray), 0)
+>>   CFLAGS +=3D -DCOMPAT_NEED_REALLOCARRAY
+>>   endif
+>>  =20
+>> +ifdef LIBBPF_DYNAMIC
+>> +  ifeq ($(feature-libbpf), 1)
+>> +    # bpftool uses non-exported functions from libbpf, so just add the =
+dynamic
+>> +    # version of libbpf and let the linker figure it out
+>> +    LIBS    :=3D -lbpf $(LIBS)
+>
+> Seems okay as a workaround for bpftool and avoids getting into the
+> realm of declaring libbpf as another half-baked netlink library if
+> we'd have exposed these. Ideally the netlink symbols shouldn't be
+> needed at all from libbpf, but I presume the rationale back then was
+> that given it's used internally in libbpf for some of the APIs and was
+> needed in bpftool's net subcommand as well later on, it avoided
+> duplicating the code given statically linked and both are in-tree
+> anyway.
 
-  Linux 5.4-rc6 (2019-11-03 14:07:26 -0800)
+Yeah, I do think it's a little odd that bpftool is using "private" parts
+of libbpf, but since we can solve it like this I think that is OK.
 
-are available in the Git repository at:
+-Toke
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
-tags/gpio-v5.5-1
-
-for you to fetch changes up to 41c4616bb81ff9b2efd981453f2c5d8f57d0c0b8:
-
-  gpio: Add TODO item for regmap helper (2019-11-22 14:46:52 +0100)
-
-----------------------------------------------------------------
-This is the bulk of GPIO changes for the v5.5 kernel cycle
-
-Core changes:
-
-- Expose pull up/down flags for the GPIO character device to
-  userspace. After clear input from the RaspberryPi and Beagle
-  communities, it has been established that prototyping,
-  industrial automation and make communities strongly need
-  this feature, and as we want people to use the character
-  device, we have implemented the simple pull up/down
-  interface for GPIO lines. This means we can specify that
-  a (chip-specific) pull up/down resistor can be enabled,
-  but does not offer fine-grained control such as cases
-  where the resistance of the same pull resistor can be
-  controlled (yet).
-
-- Introduce devm_fwnode_gpiod_get_index() and start to phase out
-  the old symbol devm_fwnode_get_index_gpiod_from_child().
-
-- A bit of documentation clean-up work.
-
-- Introduce a define for GPIO line directions and deploy it
-  in all GPIO drivers in the drivers/gpio directory.
-
-- Add a special callback to populate pin ranges when
-  cooperating with the pin control subsystem and registering
-  ranges as part of adding a gpiolib driver and a
-  gpio_irq_chip driver at the same time. This is also
-  deployed in the Intel Merrifield driver.
-
-New drivers:
-
-- RDA Micro GPIO controller.
-
-- XGS-iproc GPIO driver.
-
-Driver improvements:
-
-- Wake event and debounce support on the Tegra 186 driver.
-
-- Finalize the Aspeed SGPIO driver.
-
-- MPC8xxx uses a normal IRQ handler rather than a chained
-  handler.
-
-----------------------------------------------------------------
-Andy Shevchenko (6):
-      gpiolib: No need to call gpiochip_remove_pin_ranges() twice
-      gpiolib: Introduce ->add_pin_ranges() callback
-      gpio: merrifield: Add GPIO <-> pin mapping ranges via callback
-      gpio: merrifield: Pass irqchip when adding gpiochip
-      MAINTAINERS: Replace my email by one @kernel.org
-      gpio: lynxpoint: Setup correct IRQ handlers
-
-Anson Huang (1):
-      gpio: mxc: Only get the second IRQ when there is more than one IRQ
-
-Arkadiusz Drabczyk (1):
-      firmware: Update pointer to documentation
-
-Bartosz Golaszewski (21):
-      gpiolib: sanitize flags before allocating memory in lineevent_create(=
-)
-      drivers: move the early platform device support to arch/sh
-      sh: add the sh_ prefix to early platform symbols
-      gpio: xgene: remove redundant error message
-      gpio: xgene: use devm_platform_ioremap_resource()
-      gpio: em: use devm_platform_ioremap_resource()
-      gpio: ath79: use devm_platform_ioremap_resource()
-      gpio: htc-egpio: use devm_platform_ioremap_resource()
-      gpio: htc-egpio: remove redundant error message
-      Documentation: devres: add missing entry for
-devm_platform_ioremap_resource()
-      lib: devres: prepare devm_ioremap_resource() for more variants
-      lib: devres: provide devm_ioremap_resource_wc()
-      drivers: platform: provide devm_platform_ioremap_resource_wc()
-      misc: sram: use devm_platform_ioremap_resource_wc()
-      drivers: provide devm_platform_ioremap_resource_byname()
-      gpio: mvebu: use devm_platform_ioremap_resource_byname()
-      gpio: tegra186: use devm_platform_ioremap_resource_byname()
-      Merge tag 'v5.4-rc6' into gpio/for-next
-      Merge remote-tracking branch 'linusw/for-next' into gpio/for-next
-      Merge remote-tracking branch 'driver-core/driver-core-next' into
-gpio/for-next
-      gpiolib: fix coding style in gpiod_hog()
-
-Biju Das (1):
-      dt-bindings: gpio: rcar: Add DT binding for r8a774b1
-
-Chris Packham (2):
-      dt-bindings: gpio: brcm: Add bindings for xgs-iproc
-      gpio: Add xgs-iproc driver
-
-Colin Ian King (1):
-      gpio: 104-idi-48e: make array register_offset static, makes object sm=
-aller
-
-Daniel W. S. Almeida (1):
-      Documentation: gpio: driver.rst: Fix warnings
-
-Dmitry Torokhov (3):
-      gpiolib: introduce devm_fwnode_gpiod_get_index()
-      gpiolib: introduce fwnode_gpiod_get_index()
-      drm/bridge: ti-tfp410: switch to using fwnode_gpiod_get_index()
-
-Drew DeVault (1):
-      firmware loader: log path to loaded firmwares
-
-Drew Fustini (2):
-      gpio: expose pull-up/pull-down line flags to userspace
-      gpio: expose pull-up/pull-down line flags to userspace
-
-Geert Uytterhoeven (13):
-      Documentation: debugfs: Document debugfs helper for unsigned long val=
-ues
-      debugfs: Add debugfs_create_xul() for hexadecimal unsigned long
-      mmc: atmel-mci: Fix debugfs on 64-bit platforms
-      mmc: atmel-mci: Remove superfluous cast in debugfs_create_u32() call
-      mmc: dw_mmc: Fix debugfs on 64-bit platforms
-      mmc: dw_mmc: Remove superfluous cast in debugfs_create_u32() call
-      mac80211: Use debugfs_create_xul() helper
-      net: caif: Fix debugfs on 64-bit platforms
-      gpio: em: Use proper irq_chip name
-      gpio: rcar: Use proper irq_chip name
-      gpio: em: Use platform_get_irq() to obtain interrupts
-      gpiolib: Grammar s/manager/managed/
-      gpio: of: Fix bogus reference to gpiod_get_count()
-
-Greg Kroah-Hartman (14):
-      debugfs: remove return value of debugfs_create_u8()
-      debugfs: remove return value of debugfs_create_u16()
-      debugfs: remove return value of debugfs_create_u64()
-      debugfs: remove return value of debugfs_create_size_t()
-      ntb: ntb_pingpong: no need to check the return value of debugfs calls
-      debugfs: remove return value of debugfs_create_x16()
-      debugfs: remove return value of debugfs_create_x32()
-      debugfs: remove return value of debugfs_create_x64()
-      Merge 5.4-rc5 into driver-core-next
-      powerpc: pseries: no need to check return value of
-debugfs_create functions
-      debugfs: remove return value of debugfs_create_x8()
-      debugfs: remove return value of debugfs_create_atomic_t()
-      IB: mlx5: no need to check return value of debugfs_create functions
-      media: c8sectpfe: no need to check return value of
-debugfs_create functions
-
-Hans de Goede (2):
-      gpiolib: acpi: Print pin number on acpi_gpiochip_alloc_event errors
-      gpiolib: acpi: Make acpi_gpiochip_alloc_event always return AE_OK
-
-Jonathan Neusch=C3=A4fer (3):
-      Documentation: gpio: driver: Format code blocks properly
-      docs: driver-api: Move bt8xxgpio to the gpio directory
-      docs: driver-api: bt8xxgpio: Revive dead link
-
-Kent Gibson (6):
-      gpiolib: add support for pull up/down to lineevent_create
-      gpiolib: add support for disabling line bias
-      gpiolib: add support for biasing output lines
-      gpio: mockup: add set_config to support pull up/down
-      gpiolib: move validation of line handle flags into helper function
-      gpio: add new SET_CONFIG ioctl() to gpio chardev
-
-Linus Walleij (15):
-      gpio: aspeed-sgpio: Rename and add Kconfig/Makefile
-      Merge branch 'ib-fwnode-gpiod-get-index' into devel
-      Merge tag 'gpio-v5.4-rc5-fixes-for-linus' of
-git://git.kernel.org/.../brgl/linux into fixes
-      Merge tag 'gpio-v5.5-updates-for-linus-part-1' of
-git://git.kernel.org/.../brgl/linux into devel
-      ata: ahci-imx: Covert to use GPIO descriptor
-      Revert "gpio: merrifield: Move hardware initialization to callback"
-      Revert "gpio: merrifield: Restore use of irq_base"
-      Revert "gpio: merrifield: Pass irqchip when adding gpiochip"
-      Merge tag 'v5.4-rc6' into devel
-      gpiolib: Switch order of valid mask and hw init
-      Revert "gpio: expose pull-up/pull-down line flags to userspace"
-      Merge branch 'devel' into for-next
-      Merge tag 'gpio-v5.5-updates-for-linus-part-2' of
-git://git.kernel.org/.../brgl/linux into devel
-      Merge tag 'intel-gpio-v5.5-1' of
-git://git.kernel.org/.../andy/linux-gpio-intel into devel
-      gpio: Add TODO item for regmap helper
-
-Lucas Stach (1):
-      gpio: of: don't warn if ignored GPIO flag matches the behavior
-
-Manivannan Sadhasivam (3):
-      dt-bindings: gpio: Add devicetree binding for RDA Micro GPIO controll=
-er
-      gpio: Add RDA Micro GPIO controller support
-      MAINTAINERS: Add entry for RDA Micro GPIO driver and binding
-
-Mark Brown (1):
-      gpio: xgs-iproc: Fix section mismatch on device tree match table
-
-Matti Vaittinen (4):
-      gpio: Add definition for GPIO direction
-      gpio: Use new GPIO_LINE_DIRECTION
-      gpio: bd70528: Add MODULE ALIAS to autoload module
-      gpio: mmio: remove untrue leftover comment
-
-Murali Nalajala (1):
-      base: soc: Handle custom soc information sysfs entries
-
-Randy Dunlap (1):
-      gpio: fix kernel-doc for of_gpio_need_valid_mask()
-
-Russell King (1):
-      gpio/mpc8xxx: fix qoriq GPIO reading
-
-Saravana Kannan (17):
-      driver core: Add fwnode_to_dev() to look up device from fwnode
-      driver core: Add support for linking devices during device addition
-      of: property: Add functional dependency link from DT bindings
-      driver core: Add sync_state driver/bus callback
-      of/platform: Pause/resume sync state during init and
-of_platform_populate()
-      of: property: Create device links for all child-supplier depencencies
-      of: property: Minor code formatting/style clean ups
-      driver: core: Improve documentation for fwnode_operations.add_links()
-      docs: driver-model: Add documentation for sync_state
-      driver core: Add device link support for SYNC_STATE_ONLY flag
-      driver core: Allow a device to wait on optional suppliers
-      driver core: Allow fwnode_operations.add_links to differentiate error=
-s
-      of: property: Make sure child dependencies don't block probing of par=
-ent
-      of: property: Skip adding device links to suppliers that aren't devic=
-es
-      of: property: Minor style clean up of of_link_to_phandle()
-      of: property: Make it easy to add device links from DT properties
-      of: property: Add device link support for iommus, mboxes and io-chann=
-els
-
-Shuah Khan (1):
-      tools: gpio: Use !building_out_of_srctree to determine srctree
-
-Song Hui (1):
-      gpio/mpc8xxx: change irq handler from chained to normal
-
-Thierry Reding (5):
-      gpio: max77620: Do not allocate IRQs upfront
-      gpio: tegra186: Implement wake event support
-      gpio: tegra186: Derive register offsets from bank/port
-      gpio: tegra186: Program interrupt route mapping
-      gpio: tegra186: Add debounce support
-
-Timo Alho (1):
-      gpio: max77620: Fix interrupt handling
-
-Uwe Kleine-K=C3=B6nig (1):
-      driver core: simplify definitions of platform_get_irq*
-
-Vladimir Oltean (1):
-      gpio: mpc8xxx: Don't overwrite default irq_set_type callback
-
-YueHaibing (1):
-      gpio: xgs-iproc: Fix platform_no_drv_owner.cocci warnings
-
- Documentation/admin-guide/kernel-parameters.rst    |   1 +
- Documentation/admin-guide/kernel-parameters.txt    |   6 +
- .../bindings/gpio/brcm,xgs-iproc-gpio.yaml         |  70 ++++
- .../devicetree/bindings/gpio/gpio-rda.yaml         |  50 +++
- .../devicetree/bindings/gpio/renesas,gpio-rcar.txt |   1 +
- Documentation/driver-api/device_link.rst           |   3 +-
- Documentation/driver-api/driver-model/devres.rst   |   4 +
- Documentation/driver-api/driver-model/driver.rst   |  43 +++
- Documentation/driver-api/{ =3D> gpio}/bt8xxgpio.rst  |   2 +-
- Documentation/driver-api/gpio/driver.rst           |  25 +-
- Documentation/driver-api/gpio/index.rst            |   1 +
- Documentation/driver-api/index.rst                 |   1 -
- Documentation/filesystems/debugfs.txt              |  50 +--
- MAINTAINERS                                        |   6 +-
- arch/powerpc/platforms/pseries/dtl.c               |  38 +-
- arch/powerpc/platforms/pseries/hvCall_inst.c       |  12 +-
- arch/powerpc/platforms/pseries/lpar.c              |  15 +-
- arch/sh/drivers/Makefile                           |   2 +-
- arch/sh/drivers/platform_early.c                   | 347 +++++++++++++++++=
-++
- arch/sh/include/asm/platform_early.h               |  61 ++++
- arch/sh/kernel/cpu/sh2/setup-sh7619.c              |   3 +-
- arch/sh/kernel/cpu/sh2a/setup-mxg.c                |   3 +-
- arch/sh/kernel/cpu/sh2a/setup-sh7201.c             |   3 +-
- arch/sh/kernel/cpu/sh2a/setup-sh7203.c             |   3 +-
- arch/sh/kernel/cpu/sh2a/setup-sh7206.c             |   3 +-
- arch/sh/kernel/cpu/sh2a/setup-sh7264.c             |   3 +-
- arch/sh/kernel/cpu/sh2a/setup-sh7269.c             |   3 +-
- arch/sh/kernel/cpu/sh3/setup-sh3.c                 |   1 +
- arch/sh/kernel/cpu/sh3/setup-sh7705.c              |   3 +-
- arch/sh/kernel/cpu/sh3/setup-sh770x.c              |   3 +-
- arch/sh/kernel/cpu/sh3/setup-sh7710.c              |   3 +-
- arch/sh/kernel/cpu/sh3/setup-sh7720.c              |   3 +-
- arch/sh/kernel/cpu/sh4/setup-sh4-202.c             |   3 +-
- arch/sh/kernel/cpu/sh4/setup-sh7750.c              |   9 +-
- arch/sh/kernel/cpu/sh4/setup-sh7760.c              |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-sh7343.c             |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-sh7366.c             |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-sh7722.c             |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-sh7723.c             |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-sh7724.c             |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-sh7734.c             |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-sh7757.c             |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-sh7763.c             |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-sh7770.c             |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-sh7780.c             |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-sh7785.c             |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-sh7786.c             |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-shx3.c               |   3 +-
- arch/sh/kernel/cpu/sh5/setup-sh5.c                 |   3 +-
- arch/sh/kernel/setup.c                             |   3 +-
- arch/sh/kernel/time.c                              |   5 +-
- drivers/ata/ahci_imx.c                             |  25 +-
- drivers/base/core.c                                | 245 ++++++++++++-
- drivers/base/firmware_loader/main.c                |   3 +-
- drivers/base/platform.c                            | 374 ++++-------------=
----
- drivers/base/soc.c                                 |  30 +-
- drivers/clocksource/sh_cmt.c                       |  13 +-
- drivers/clocksource/sh_mtu2.c                      |  13 +-
- drivers/clocksource/sh_tmu.c                       |  14 +-
- drivers/gpio/Kconfig                               |  29 +-
- drivers/gpio/Makefile                              |   3 +
- drivers/gpio/TODO                                  |   4 +
- drivers/gpio/gpio-104-dio-48e.c                    |   5 +-
- drivers/gpio/gpio-104-idi-48.c                     |   4 +-
- drivers/gpio/gpio-104-idio-16.c                    |   4 +-
- drivers/gpio/gpio-74xx-mmio.c                      |   5 +-
- drivers/gpio/gpio-amd-fch.c                        |   2 +-
- .../gpio/{sgpio-aspeed.c =3D> gpio-aspeed-sgpio.c}   |   0
- drivers/gpio/gpio-aspeed.c                         |   7 +-
- drivers/gpio/gpio-ath79.c                          |  10 +-
- drivers/gpio/gpio-bcm-kona.c                       |   6 +-
- drivers/gpio/gpio-bd70528.c                        |   9 +-
- drivers/gpio/gpio-bd9571mwv.c                      |   4 +-
- drivers/gpio/gpio-dln2.c                           |   6 +-
- drivers/gpio/gpio-em.c                             |  39 +--
- drivers/gpio/gpio-exar.c                           |   5 +-
- drivers/gpio/gpio-f7188x.c                         |   5 +-
- drivers/gpio/gpio-gpio-mm.c                        |   5 +-
- drivers/gpio/gpio-htc-egpio.c                      |  42 +--
- drivers/gpio/gpio-ich.c                            |   5 +-
- drivers/gpio/gpio-kempld.c                         |   5 +-
- drivers/gpio/gpio-lp873x.c                         |   2 +-
- drivers/gpio/gpio-lp87565.c                        |   5 +-
- drivers/gpio/gpio-lynxpoint.c                      |   6 +
- drivers/gpio/gpio-madera.c                         |   5 +-
- drivers/gpio/gpio-max3191x.c                       |   2 +-
- drivers/gpio/gpio-max77620.c                       | 231 +++++++------
- drivers/gpio/gpio-merrifield.c                     |  50 +--
- drivers/gpio/gpio-mmio.c                           |  22 +-
- drivers/gpio/gpio-mockup.c                         | 105 +++---
- drivers/gpio/gpio-moxtet.c                         |   4 +-
- drivers/gpio/gpio-mpc8xxx.c                        |  36 +-
- drivers/gpio/gpio-mvebu.c                          |  24 +-
- drivers/gpio/gpio-mxc.c                            |  13 +-
- drivers/gpio/gpio-mxs.c                            |   5 +-
- drivers/gpio/gpio-omap.c                           |   6 +-
- drivers/gpio/gpio-pca953x.c                        |   5 +-
- drivers/gpio/gpio-pci-idio-16.c                    |   4 +-
- drivers/gpio/gpio-pcie-idio-24.c                   |   9 +-
- drivers/gpio/gpio-pisosr.c                         |   2 +-
- drivers/gpio/gpio-pl061.c                          |   5 +-
- drivers/gpio/gpio-raspberrypi-exp.c                |   5 +-
- drivers/gpio/gpio-rcar.c                           |   7 +-
- drivers/gpio/gpio-rda.c                            | 294 ++++++++++++++++
- drivers/gpio/gpio-reg.c                            |   3 +-
- drivers/gpio/gpio-sa1100.c                         |   5 +-
- drivers/gpio/gpio-sama5d2-piobu.c                  |   7 +-
- drivers/gpio/gpio-sch.c                            |   5 +-
- drivers/gpio/gpio-sch311x.c                        |   5 +-
- drivers/gpio/gpio-siox.c                           |   4 +-
- drivers/gpio/gpio-stmpe.c                          |   5 +-
- drivers/gpio/gpio-tc3589x.c                        |   5 +-
- drivers/gpio/gpio-tegra.c                          |   5 +-
- drivers/gpio/gpio-tegra186.c                       | 384 ++++++++++++++---=
-----
- drivers/gpio/gpio-thunderx.c                       |   5 +-
- drivers/gpio/gpio-tpic2810.c                       |   2 +-
- drivers/gpio/gpio-tps65086.c                       |   2 +-
- drivers/gpio/gpio-tps65912.c                       |   4 +-
- drivers/gpio/gpio-tps68470.c                       |   6 +-
- drivers/gpio/gpio-tqmx86.c                         |   5 +-
- drivers/gpio/gpio-ts4900.c                         |   5 +-
- drivers/gpio/gpio-twl4030.c                        |  10 +-
- drivers/gpio/gpio-twl6040.c                        |   3 +-
- drivers/gpio/gpio-uniphier.c                       |   5 +-
- drivers/gpio/gpio-wcove.c                          |   7 +-
- drivers/gpio/gpio-ws16c48.c                        |   5 +-
- drivers/gpio/gpio-xgene.c                          |  32 +-
- drivers/gpio/gpio-xgs-iproc.c                      | 320 +++++++++++++++++
- drivers/gpio/gpio-xra1403.c                        |   5 +-
- drivers/gpio/gpio-xtensa.c                         |   4 +-
- drivers/gpio/gpio-zynq.c                           |   7 +-
- drivers/gpio/gpiolib-acpi.c                        |  17 +-
- drivers/gpio/gpiolib-devres.c                      |  33 +-
- drivers/gpio/gpiolib-of.c                          |  18 +-
- drivers/gpio/gpiolib.c                             | 330 ++++++++++++++---=
--
- drivers/gpio/gpiolib.h                             |   1 +
- drivers/gpu/drm/bridge/ti-tfp410.c                 |   4 +-
- drivers/infiniband/hw/mlx5/main.c                  |  62 +---
- drivers/infiniband/hw/mlx5/mlx5_ib.h               |   9 +-
- .../platform/sti/c8sectpfe/c8sectpfe-debugfs.c     |  26 +-
- drivers/misc/sram.c                                |  28 +-
- drivers/mmc/host/atmel-mci.c                       |  10 +-
- drivers/mmc/host/dw_mmc.c                          |  10 +-
- drivers/net/caif/caif_serial.c                     |   4 +-
- drivers/ntb/test/ntb_pingpong.c                    |   5 +-
- drivers/of/platform.c                              |  12 +
- drivers/of/property.c                              | 298 ++++++++++++++++
- drivers/tty/serial/sh-sci.c                        |  11 +-
- fs/debugfs/file.c                                  |  87 ++---
- include/linux/debugfs.h                            | 131 ++++---
- include/linux/device.h                             |  33 ++
- include/linux/fwnode.h                             |  41 +++
- include/linux/gpio/consumer.h                      |  54 ++-
- include/linux/gpio/driver.h                        |   8 +
- include/linux/platform_device.h                    |  70 +---
- include/linux/sys_soc.h                            |   1 +
- include/uapi/linux/gpio.h                          |  24 ++
- lib/devres.c                                       |  62 ++--
- net/mac80211/debugfs_sta.c                         |  17 +-
- tools/gpio/Makefile                                |   6 +-
- 160 files changed, 3443 insertions(+), 1429 deletions(-)
- create mode 100644
-Documentation/devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-rda.yaml
- rename Documentation/driver-api/{ =3D> gpio}/bt8xxgpio.rst (98%)
- create mode 100644 arch/sh/drivers/platform_early.c
- create mode 100644 arch/sh/include/asm/platform_early.h
- rename drivers/gpio/{sgpio-aspeed.c =3D> gpio-aspeed-sgpio.c} (100%)
- create mode 100644 drivers/gpio/gpio-rda.c
- create mode 100644 drivers/gpio/gpio-xgs-iproc.c
