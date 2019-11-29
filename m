@@ -2,111 +2,151 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E208C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A40C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF9A62176D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:31:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575037874;
-	bh=ysU6Uvk9pdWPHQ/cwCM/Ngg0+69Q8qgputUIYrAH7Wo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rnVLYuqet4fFqo6yypb+h5e/0raf97vKB/m2H8dG5SaLtv2s9g9zRjOSvqV27vuou
-	 L58fxH3iTAt5FeBBOeOlzNqc4bwds+Q9KVZChDqHXYVyHHdJo8Aej7Bn2d55FjeYaY
-	 RydQnz69hMsE2/Y2hjtaKsiDXBb/nR8S4nrG8roM=
+	by mail.kernel.org (Postfix) with ESMTP id 45DF421736
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 14:37:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbfK2ObN (ORCPT
+        id S1726934AbfK2OhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 09:31:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56062 "EHLO mail.kernel.org"
+        Fri, 29 Nov 2019 09:37:14 -0500
+Received: from foss.arm.com ([217.140.110.172]:48610 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726808AbfK2ObM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 09:31:12 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F104B21736;
-        Fri, 29 Nov 2019 14:31:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575037870;
-        bh=ysU6Uvk9pdWPHQ/cwCM/Ngg0+69Q8qgputUIYrAH7Wo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=i2IJsT1ihvKIL3Kqavfsq8w03kPgzni7rgCWNxHl3r9fXueYHh2IivV7uUdF7o/vO
-         JQDuZo1GgwA0JwMII2VOUUvMmH+u758MLGh02T9fpTQiL9jO91Qpf5YxUbIJJL4o1z
-         TbucC0ZtByJ3k4Fx9CAdC8dag4wOc+hMfDL4aAbE=
-Date:   Fri, 29 Nov 2019 15:31:08 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 185/306] net: hns3: bugfix for buffer not free
- problem during resetting
-Message-ID: <20191129143108.GA3708972@kroah.com>
-References: <20191127203114.766709977@linuxfoundation.org>
- <20191127203128.798931840@linuxfoundation.org>
- <20191129110010.GA4313@amd>
+        id S1726808AbfK2OhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 09:37:13 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0CA971FB;
+        Fri, 29 Nov 2019 06:37:13 -0800 (PST)
+Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0C2A93F6C4;
+        Fri, 29 Nov 2019 06:37:11 -0800 (PST)
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+To:     vincenzo.frascino@arm.com, paulburton@kernel.org, hns@goldelico.com
+Cc:     mips-creator-ci20-dev@googlegroups.com,
+        letux-kernel@openphoenux.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mips: Fix gettimeofday() in the vdso library
+Date:   Fri, 29 Nov 2019 14:36:58 +0000
+Message-Id: <20191129143658.12224-1-vincenzo.frascino@arm.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191129110010.GA4313@amd>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 12:00:10PM +0100, Pavel Machek wrote:
-> Hi!
-> 
-> > From: Huazhong Tan <tanhuazhong@huawei.com>
-> > 
-> > [ Upstream commit 73b907a083b8a8c1c62cb494bc9fbe6ae086c460 ]
-> > 
-> > When hns3_get_ring_config()/hns3_queue_to_ring()/
-> > hns3_get_vector_ring_chain() failed during resetting, the allocated
-> > memory has not been freed before these three functions return. So
-> > this patch adds error handler in these functions to fix it.
-> 
-> Correct me if I'm wrong, but... this introduces use-after-free:
-> 
-> > @@ -2592,6 +2592,16 @@ static int hns3_get_vector_ring_chain(struct hns3_enet_tqp_vector *tqp_vector,
-> >  	}
-> >  
-> >  	return 0;
-> > +
-> > +err_free_chain:
-> > +	cur_chain = head->next;
-> > +	while (cur_chain) {
-> > +		chain = cur_chain->next;
-> > +		devm_kfree(&pdev->dev, chain);
-> > +		cur_chain = chain;
-> > +	}
-> 
-> Lets take two iterations:
-> 
-> > +		chain = cur_chain->next;
-> > +		devm_kfree(&pdev->dev, chain);
-> chain freed here.
-> > +		cur_chain = chain;
-> 
-> > +		chain = cur_chain->next;
-> chain->next accessed here, after free.
-> > +		devm_kfree(&pdev->dev, chain);
-> > +		cur_chain = chain;
-> 
-> Should it do devm_kfree(&pdev->dev, cur_chain); ?
+The libc provides a discovery mechanism for vDSO library and its
+symbols. When a symbol is not exposed by the vDSOs the libc falls back
+on the system calls.
 
-I think Sasha tried to backport a fix for this patch, but that fix broke
-the build :(
+With the introduction of the unified vDSO library on mips this behavior
+is not honored anymore by the kernel in the case of gettimeofday().
 
-If you want to provide a working backport, I'll be glad to take it.
+The issue has been noticed and reported due to a dhclient failure on the
+CI20 board:
 
-thanks,
+root@letux:~# dhclient
+../../../../lib/isc/unix/time.c:200: Operation not permitted
+root@letux:~#
 
-greg k-h
+Restore the original behavior fixing gettimeofday() in the vDSO library.
+
+Cc: Paul Burton <paulburton@kernel.org>
+Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
+Testes-by: H. Nikolaus Schaller <hns@goldelico.com> # CI20 with JZ4780
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+---
+ arch/mips/include/asm/vdso/gettimeofday.h | 13 -------------
+ arch/mips/vdso/vgettimeofday.c            | 20 ++++++++++++++++++++
+ 2 files changed, 20 insertions(+), 13 deletions(-)
+
+diff --git a/arch/mips/include/asm/vdso/gettimeofday.h b/arch/mips/include/asm/vdso/gettimeofday.h
+index b08825531e9f..0ae9b4cbc153 100644
+--- a/arch/mips/include/asm/vdso/gettimeofday.h
++++ b/arch/mips/include/asm/vdso/gettimeofday.h
+@@ -26,8 +26,6 @@
+ 
+ #define __VDSO_USE_SYSCALL		ULLONG_MAX
+ 
+-#ifdef CONFIG_MIPS_CLOCK_VSYSCALL
+-
+ static __always_inline long gettimeofday_fallback(
+ 				struct __kernel_old_timeval *_tv,
+ 				struct timezone *_tz)
+@@ -48,17 +46,6 @@ static __always_inline long gettimeofday_fallback(
+ 	return error ? -ret : ret;
+ }
+ 
+-#else
+-
+-static __always_inline long gettimeofday_fallback(
+-				struct __kernel_old_timeval *_tv,
+-				struct timezone *_tz)
+-{
+-	return -1;
+-}
+-
+-#endif
+-
+ static __always_inline long clock_gettime_fallback(
+ 					clockid_t _clkid,
+ 					struct __kernel_timespec *_ts)
+diff --git a/arch/mips/vdso/vgettimeofday.c b/arch/mips/vdso/vgettimeofday.c
+index 6ebdc37c89fc..6b83b6376a4b 100644
+--- a/arch/mips/vdso/vgettimeofday.c
++++ b/arch/mips/vdso/vgettimeofday.c
+@@ -17,12 +17,22 @@ int __vdso_clock_gettime(clockid_t clock,
+ 	return __cvdso_clock_gettime32(clock, ts);
+ }
+ 
++#ifdef CONFIG_MIPS_CLOCK_VSYSCALL
++
++/*
++ * This is behind the ifdef so that we don't provide the symbol when there's no
++ * possibility of there being a usable clocksource, because there's nothing we
++ * can do without it. When libc fails the symbol lookup it should fall back on
++ * the standard syscall path.
++ */
+ int __vdso_gettimeofday(struct __kernel_old_timeval *tv,
+ 			struct timezone *tz)
+ {
+ 	return __cvdso_gettimeofday(tv, tz);
+ }
+ 
++#endif /* CONFIG_MIPS_CLOCK_VSYSCALL */
++
+ int __vdso_clock_getres(clockid_t clock_id,
+ 			struct old_timespec32 *res)
+ {
+@@ -43,12 +53,22 @@ int __vdso_clock_gettime(clockid_t clock,
+ 	return __cvdso_clock_gettime(clock, ts);
+ }
+ 
++#ifdef CONFIG_MIPS_CLOCK_VSYSCALL
++
++/*
++ * This is behind the ifdef so that we don't provide the symbol when there's no
++ * possibility of there being a usable clocksource, because there's nothing we
++ * can do without it. When libc fails the symbol lookup it should fall back on
++ * the standard syscall path.
++ */
+ int __vdso_gettimeofday(struct __kernel_old_timeval *tv,
+ 			struct timezone *tz)
+ {
+ 	return __cvdso_gettimeofday(tv, tz);
+ }
+ 
++#endif /* CONFIG_MIPS_CLOCK_VSYSCALL */
++
+ int __vdso_clock_getres(clockid_t clock_id,
+ 			struct __kernel_timespec *res)
+ {
+-- 
+2.24.0
+
