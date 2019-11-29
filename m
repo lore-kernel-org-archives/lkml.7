@@ -2,130 +2,81 @@ Return-Path: <SRS0=nTU8=ZV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80013C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB47FC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50E0221736
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1EC321736
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Nov 2019 13:43:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ark2WRET"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="dT9eGUJg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfK2NlG (ORCPT
+        id S1726853AbfK2Nn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 08:41:06 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49443 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726741AbfK2NlG (ORCPT
+        Fri, 29 Nov 2019 08:43:26 -0500
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:26126 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726608AbfK2Nn0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 08:41:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575034865;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/3X8Mo2LacIErqf895aJZHB4pRGhzQ2jkuaJinfm0VE=;
-        b=ark2WRET03tj05EtuGbZ6g1M9NUvaZgvfL4O0ZxteUqFKVBdcuD9T/lE3xUV5GdAI9JN7v
-        BBNczNoUIAZPs4DuPODtmLu8claf6T87t+ttEnvha206fk043hoRlZkRNfrak3xy22ZPbk
-        v0eeoIeslNq8aXQcfO5LDWZhNpeibL8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-416-u8blKExWNIOKM8tb8tiPpw-1; Fri, 29 Nov 2019 08:41:00 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E9D51DB23;
-        Fri, 29 Nov 2019 13:40:58 +0000 (UTC)
-Received: from krava (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with SMTP id B44FA60BF1;
-        Fri, 29 Nov 2019 13:40:56 +0000 (UTC)
-Date:   Fri, 29 Nov 2019 14:40:56 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH 04/15] perf tools: Add map_groups to 'struct
- addr_location'
-Message-ID: <20191129134056.GE14169@krava>
-References: <20191112183757.28660-1-acme@kernel.org>
- <20191112183757.28660-5-acme@kernel.org>
+        Fri, 29 Nov 2019 08:43:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1575035007; x=1606571007;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=gGsSfx1myZMKWjLhcQmL/KhY8dJbxitTdWSORveJf/4=;
+  b=dT9eGUJgCoT24RFtw/nJDqzqWDC/mO6doUIKoG+HLdRls0waukBUOrCK
+   p/lCGsP/GThabldL79PNGSikY9HbD3Y/Dx02lPzLNQlCvW3RzqCD0g+Sn
+   +M0bWhLkydzleDYy7D43Bua1NVeLi/bcMYYvo7uihNfj76UG1leN033Tx
+   w=;
+IronPort-SDR: 9Z4VXqgUgl6ztGBfkyLWPSoDU8urendnEIqu7YDAXMvEkMG1OwI9fNzcf6m5u/cyRx7ldqWX8S
+ Dak3Kl206Eig==
+X-IronPort-AV: E=Sophos;i="5.69,257,1571702400"; 
+   d="scan'208";a="2174009"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 29 Nov 2019 13:43:15 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com (Postfix) with ESMTPS id 5235CA1F19;
+        Fri, 29 Nov 2019 13:43:12 +0000 (UTC)
+Received: from EX13D32EUC001.ant.amazon.com (10.43.164.159) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 29 Nov 2019 13:43:12 +0000
+Received: from EX13MTAUEE001.ant.amazon.com (10.43.62.200) by
+ EX13D32EUC001.ant.amazon.com (10.43.164.159) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 29 Nov 2019 13:43:10 +0000
+Received: from u2f063a87eabd5f.cbg10.amazon.com (10.125.106.135) by
+ mail-relay.amazon.com (10.43.62.226) with Microsoft SMTP Server id
+ 15.0.1367.3 via Frontend Transport; Fri, 29 Nov 2019 13:43:10 +0000
+From:   Paul Durrant <pdurrant@amazon.com>
+To:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <xen-devel@lists.xenproject.org>
+CC:     Paul Durrant <pdurrant@amazon.com>
+Subject: [PATCH v2 0/2] allow xen-blkback to be cleanly unloaded
+Date:   Fri, 29 Nov 2019 13:43:04 +0000
+Message-ID: <20191129134306.2738-1-pdurrant@amazon.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191112183757.28660-5-acme@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: u8blKExWNIOKM8tb8tiPpw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 03:37:46PM -0300, Arnaldo Carvalho de Melo wrote:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
->=20
-> From there we can get al->mg->machine, so replace that field with the
-> more useful 'struct map_groups' that for now we're obtaining from
-> al->map->groups, and that is one thing getting into the way of maps
-> being fully shareable.
->=20
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Link: https://lkml.kernel.org/n/tip-4qdducrm32tgrjupcp0kjh1e@git.kernel.o=
-rg
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/util/callchain.c                          |  6 +++---
->  tools/perf/util/db-export.c                          | 12 ++++++------
->  tools/perf/util/event.c                              |  6 +++---
->  .../perf/util/scripting-engines/trace-event-python.c |  2 +-
->  tools/perf/util/symbol.h                             |  2 +-
->  5 files changed, 14 insertions(+), 14 deletions(-)
->=20
-> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-> index 9a9b56ed3f0a..89faa644b0bc 100644
-> --- a/tools/perf/util/callchain.c
-> +++ b/tools/perf/util/callchain.c
-> @@ -1119,8 +1119,8 @@ int fill_callchain_info(struct addr_location *al, s=
-truct callchain_cursor_node *
->  =09=09=09goto out;
->  =09}
-> =20
-> -=09if (al->map->groups =3D=3D &al->machine->kmaps) {
-> -=09=09if (machine__is_host(al->machine)) {
-> +=09if (al->mg =3D=3D &al->mg->machine->kmaps) {
+Paul Durrant (2):
+  xen/xenbus: reference count registered modules
+  block/xen-blkback: allow module to be cleanly unloaded
 
-heya, I'm getting segfault because of this change
+ drivers/block/xen-blkback/blkback.c |  8 ++++++++
+ drivers/block/xen-blkback/common.h  |  3 +++
+ drivers/block/xen-blkback/xenbus.c  | 11 +++++++++++
+ drivers/xen/xenbus/xenbus_probe.c   |  8 +++++++-
+ 4 files changed, 29 insertions(+), 1 deletion(-)
 
-perf record --call-graph dwarf ./ex
-
-=09(gdb) r report --stdio
-=09Program received signal SIGSEGV, Segmentation fault.
-=09fill_callchain_info (al=3D0x7fffffffa1b0, node=3D0xcd2bd0, hide_unresolv=
-ed=3Dfalse) at util/callchain.c:1122
-=091122            if (al->maps =3D=3D &al->maps->machine->kmaps) {
-=09(gdb) p al->maps
-=09$1 =3D (struct maps *) 0x0
-
-I wish all those map changes would go through some review,
-I have no idea how the code works now ;-)
-
-thanks,
-jirka
+-- 
+2.20.1
 
