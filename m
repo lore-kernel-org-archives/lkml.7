@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3B6C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 07:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AD6C432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 07:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4171420833
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 07:19:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB67B2072C
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 07:19:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725947AbfK3HTJ (ORCPT
+        id S1726697AbfK3HTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Nov 2019 02:19:09 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:43710 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbfK3HTJ (ORCPT
+        Sat, 30 Nov 2019 02:19:11 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:44456 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbfK3HTK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Nov 2019 02:19:09 -0500
-Received: by mail-io1-f71.google.com with SMTP id b17so9282033ioh.10
+        Sat, 30 Nov 2019 02:19:10 -0500
+Received: by mail-il1-f199.google.com with SMTP id h4so8485004ilh.11
         for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 23:19:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=NH7tpAHELzxk/UfVmDatDAWXns7669WAP7vdJ5fhSaU=;
-        b=Wlp0NfEBhU41EnMmqp0eZFXr/8DFrDXk+ontBGke2S7Tg8UZd0tQZJ6smbUFGfE4yb
-         641SpQ0t/SK+GkMyb/cj1vMVyxUE1/G0CaVGiCZoJB4p5OfcNW2R3k5hbGVFNnXCRgT6
-         FbT0P978U3ENIoIFafN0lUcsQ+vIOFhX5quVUGdUHo1SECeYI7uWdWaAZD9PdH4tozMJ
-         fZWRCn13wagsjW7+3AuHqFG6FznB7RoDLOSqEqzZiQzLZgb6mseQv0QohaMkq6daRVfm
-         +rkIhsUy86A4GIkhYEjr3cEQuuz3X2hv/PWRNyv8jXC0y0Npw+3XNLDVV3p1NIT3SBeM
-         lVNg==
-X-Gm-Message-State: APjAAAX8L554MHMy9zv2pkpUf4vzwxP4UYEUfwSXDDDepGEq4NqzwWaX
-        5jOzvcfIVILM1c7koeWaDxjUVnwu9em2QAAwj8iLdahxEOPf
-X-Google-Smtp-Source: APXvYqyb+xnqjU7qMCYcbRW40EATfkt3T1JPj3hrphILwsgi10O9VY2aj0RLDbGgH95QnkFZUJaY4FVAzQcBla/ERhdPpdAN9r3i
+        bh=Iszxj3xslkgFiHBpTht8Zqpoj8q3iHoILKi1CRIqeFo=;
+        b=PYjVJCVQK55V84r4QT6SGQlkiS0G/CFhDOh0Gizef1pvcv28x1OrPigSed3N/ta7f5
+         hRZWnbFauMjS+NYosEB5CC37YxqRM9BP3KAAA0NLj2tadwXOAoec7U6pKLz0bdiA8UcT
+         miwxzMONLswQFHU4q1u6YIuAM7JPHZ29yIIexHY3NgedN/44nI45i8qsXnuSy2A80bwN
+         53EQgNYTf7TPsbU9CDrgCXZ+LdYO7M0VvG0+BLrOkXcSEjiasE+N9JR6gnOztYmOdhro
+         /+BOPEK1fkMj60UwVQfDdXJSU7Qif/klIig/9DAwi5j5Aue4a3tR3eRfxKWUZpMJUxtP
+         SDQQ==
+X-Gm-Message-State: APjAAAWofR08BP3sOBJ64x842e52kdFfOM5i8RiVOUzX64VVVVX75P1W
+        4SZGyxZMnvsawgaU5MquuxmVtt8MKZGuQjI5Ij8LdAJ4P21m
+X-Google-Smtp-Source: APXvYqxMt060BD8gSa++k51h6Fp7squipmwrA4vm7Riv4aIzuKEn/9cvlou91jaqXCGEVS2ftXaKCqBjw7WzXdD6/yYNsXYosfFh
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8184:: with SMTP id u4mr45057762ion.155.1575098348491;
+X-Received: by 2002:a6b:9302:: with SMTP id v2mr36196070iod.12.1575098348190;
  Fri, 29 Nov 2019 23:19:08 -0800 (PST)
 Date:   Fri, 29 Nov 2019 23:19:08 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008c5bfa05988b29dd@google.com>
-Subject: general protection fault in j1939_jsk_del (2)
-From:   syzbot <syzbot+99e9e1b200a1e363237d@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kernel@pengutronix.de,
-        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux@rempel-privat.de, mkl@pengutronix.de, netdev@vger.kernel.org,
-        robin@protonic.nl, socketcan@hartkopp.net,
-        syzkaller-bugs@googlegroups.com
+Message-ID: <00000000000087c51905988b297b@google.com>
+Subject: KASAN: use-after-free Read in xlog_alloc_log (2)
+From:   syzbot <syzbot+c732f8644185de340492@syzkaller.appspotmail.com>
+To:     darrick.wong@oracle.com, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -62,66 +59,132 @@ syzbot found the following crash on:
 
 HEAD commit:    81b6b964 Merge branch 'master' of git://git.kernel.org/pub..
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=134af786e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=13b27696e00000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=773597fe8d7cb41a
-dashboard link: https://syzkaller.appspot.com/bug?extid=99e9e1b200a1e363237d
+dashboard link: https://syzkaller.appspot.com/bug?extid=c732f8644185de340492
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-userspace arch: i386
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+99e9e1b200a1e363237d@syzkaller.appspotmail.com
+Reported-by: syzbot+c732f8644185de340492@syzkaller.appspotmail.com
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 18385 Comm: syz-executor.1 Not tainted 5.4.0-syzkaller #0
+==================================================================
+BUG: KASAN: use-after-free in xlog_alloc_log+0x1398/0x14b0  
+fs/xfs/xfs_log.c:1495
+Read of size 8 at addr ffff888068139890 by task syz-executor.3/32544
+
+CPU: 0 PID: 32544 Comm: syz-executor.3 Not tainted 5.4.0-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
-RIP: 0010:__lock_acquire+0x1254/0x4a00 kernel/locking/lockdep.c:3828
-Code: 00 0f 85 96 24 00 00 48 81 c4 f0 00 00 00 5b 41 5c 41 5d 41 5e 41 5f  
-5d c3 48 b8 00 00 00 00 00 fc ff df 4c 89 f2 48 c1 ea 03 <80> 3c 02 00 0f  
-85 0b 28 00 00 49 81 3e 20 59 2a 8a 0f 84 5f ee ff
-RSP: 0018:ffff8880a0397b38 EFLAGS: 00010006
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000218 RSI: 0000000000000000 RDI: 0000000000000001
-RBP: ffff8880a0397c50 R08: 0000000000000001 R09: 0000000000000001
-R10: fffffbfff13d4e58 R11: ffff888093b044c0 R12: 00000000000010c0
-R13: 0000000000000000 R14: 00000000000010c0 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8880ae800000(0063) knlGS:00000000f5dcfb40
-CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-CR2: 000000002e521000 CR3: 0000000097a51000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
-  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
-  _raw_spin_lock_bh+0x33/0x50 kernel/locking/spinlock.c:175
-  spin_lock_bh include/linux/spinlock.h:343 [inline]
-  j1939_jsk_del+0x32/0x210 net/can/j1939/socket.c:89
-  j1939_sk_bind+0x2ea/0x8f0 net/can/j1939/socket.c:448
-  __sys_bind+0x239/0x290 net/socket.c:1648
-  __do_sys_bind net/socket.c:1659 [inline]
-  __se_sys_bind net/socket.c:1657 [inline]
-  __ia32_sys_bind+0x72/0xb0 net/socket.c:1657
-  do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
-  do_fast_syscall_32+0x27b/0xe16 arch/x86/entry/common.c:408
-  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-RIP: 0023:0xf7ff4a39
-Code: 00 00 00 89 d3 5b 5e 5f 5d c3 b8 80 96 98 00 eb c4 8b 04 24 c3 8b 1c  
-24 c3 8b 34 24 c3 8b 3c 24 c3 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90  
-90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 002b:00000000f5dcf0cc EFLAGS: 00000296 ORIG_RAX: 0000000000000169
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000020000000
-RDX: 0000000000000018 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 18385 at kernel/locking/mutex.c:1419  
-mutex_trylock+0x279/0x2f0 kernel/locking/mutex.c:1427
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:634
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  xlog_alloc_log+0x1398/0x14b0 fs/xfs/xfs_log.c:1495
+  xfs_log_mount+0xdc/0x780 fs/xfs/xfs_log.c:599
+  xfs_mountfs+0xdb9/0x1be0 fs/xfs/xfs_mount.c:811
+  xfs_fs_fill_super+0xd24/0x1750 fs/xfs/xfs_super.c:1732
+  mount_bdev+0x304/0x3c0 fs/super.c:1415
+  xfs_fs_mount+0x35/0x40 fs/xfs/xfs_super.c:1806
+  legacy_get_tree+0x108/0x220 fs/fs_context.c:647
+  vfs_get_tree+0x8e/0x300 fs/super.c:1545
+  do_new_mount fs/namespace.c:2822 [inline]
+  do_mount+0x135a/0x1b50 fs/namespace.c:3142
+  ksys_mount+0xdb/0x150 fs/namespace.c:3351
+  __do_sys_mount fs/namespace.c:3365 [inline]
+  __se_sys_mount fs/namespace.c:3362 [inline]
+  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3362
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45d0ca
+Code: b8 a6 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 4d 8c fb ff c3 66 2e 0f  
+1f 84 00 00 00 00 00 66 90 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 2a 8c fb ff c3 66 0f 1f 84 00 00 00 00 00
+RSP: 002b:00007f525b430a88 EFLAGS: 00000206 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007f525b430b40 RCX: 000000000045d0ca
+RDX: 00007f525b430ae0 RSI: 0000000020000100 RDI: 00007f525b430b00
+RBP: 0000000000000001 R08: 00007f525b430b40 R09: 00007f525b430ae0
+R10: 0000000000000000 R11: 0000000000000206 R12: 0000000000000004
+R13: 00000000004ca258 R14: 00000000004e2870 R15: 00000000ffffffff
+
+Allocated by task 32544:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:510 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
+  __do_kmalloc mm/slab.c:3655 [inline]
+  __kmalloc+0x163/0x770 mm/slab.c:3664
+  kmalloc include/linux/slab.h:561 [inline]
+  kmem_alloc+0x15b/0x4d0 fs/xfs/kmem.c:21
+  kmem_zalloc fs/xfs/kmem.h:68 [inline]
+  xlog_alloc_log+0xcce/0x14b0 fs/xfs/xfs_log.c:1437
+  xfs_log_mount+0xdc/0x780 fs/xfs/xfs_log.c:599
+  xfs_mountfs+0xdb9/0x1be0 fs/xfs/xfs_mount.c:811
+  xfs_fs_fill_super+0xd24/0x1750 fs/xfs/xfs_super.c:1732
+  mount_bdev+0x304/0x3c0 fs/super.c:1415
+  xfs_fs_mount+0x35/0x40 fs/xfs/xfs_super.c:1806
+  legacy_get_tree+0x108/0x220 fs/fs_context.c:647
+  vfs_get_tree+0x8e/0x300 fs/super.c:1545
+  do_new_mount fs/namespace.c:2822 [inline]
+  do_mount+0x135a/0x1b50 fs/namespace.c:3142
+  ksys_mount+0xdb/0x150 fs/namespace.c:3351
+  __do_sys_mount fs/namespace.c:3365 [inline]
+  __se_sys_mount fs/namespace.c:3362 [inline]
+  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3362
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 32544:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  kasan_set_free_info mm/kasan/common.c:332 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:471
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
+  __cache_free mm/slab.c:3425 [inline]
+  kfree+0x10a/0x2c0 mm/slab.c:3756
+  kvfree+0x61/0x70 mm/util.c:593
+  kmem_free fs/xfs/kmem.h:61 [inline]
+  xlog_alloc_log+0xeb5/0x14b0 fs/xfs/xfs_log.c:1497
+  xfs_log_mount+0xdc/0x780 fs/xfs/xfs_log.c:599
+  xfs_mountfs+0xdb9/0x1be0 fs/xfs/xfs_mount.c:811
+  xfs_fs_fill_super+0xd24/0x1750 fs/xfs/xfs_super.c:1732
+  mount_bdev+0x304/0x3c0 fs/super.c:1415
+  xfs_fs_mount+0x35/0x40 fs/xfs/xfs_super.c:1806
+  legacy_get_tree+0x108/0x220 fs/fs_context.c:647
+  vfs_get_tree+0x8e/0x300 fs/super.c:1545
+  do_new_mount fs/namespace.c:2822 [inline]
+  do_mount+0x135a/0x1b50 fs/namespace.c:3142
+  ksys_mount+0xdb/0x150 fs/namespace.c:3351
+  __do_sys_mount fs/namespace.c:3365 [inline]
+  __se_sys_mount fs/namespace.c:3362 [inline]
+  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3362
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff888068139800
+  which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 144 bytes inside of
+  1024-byte region [ffff888068139800, ffff888068139c00)
+The buggy address belongs to the page:
+page:ffffea0001a04e40 refcount:1 mapcount:0 mapping:ffff8880aa400c40  
+index:0x0
+raw: 00fffe0000000200 ffffea0002728148 ffffea00015604c8 ffff8880aa400c40
+raw: 0000000000000000 ffff888068139000 0000000100000002 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff888068139780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff888068139800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff888068139880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                          ^
+  ffff888068139900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff888068139980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
 
 ---
