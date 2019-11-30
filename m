@@ -2,67 +2,121 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D501DC432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 08:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB0AC432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 08:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A80E520732
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 08:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F84D20732
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 08:46:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbfK3Iio (ORCPT
+        id S1726645AbfK3IqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Nov 2019 03:38:44 -0500
-Received: from szxga08-in.huawei.com ([45.249.212.255]:36210 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725792AbfK3Iio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Nov 2019 03:38:44 -0500
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 2271585DF4F9251C3CCD;
-        Sat, 30 Nov 2019 16:38:42 +0800 (CST)
-Received: from dggeme714-chm.china.huawei.com (10.1.199.110) by
- DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sat, 30 Nov 2019 16:38:41 +0800
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- dggeme714-chm.china.huawei.com (10.1.199.110) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Sat, 30 Nov 2019 16:38:41 +0800
-Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
- dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
- Sat, 30 Nov 2019 16:38:41 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     David Hildenbrand <david@redhat.com>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] mm: get rid of odd jump labels in
- find_mergeable_anon_vma()
-Thread-Topic: [PATCH v4] mm: get rid of odd jump labels in
- find_mergeable_anon_vma()
-Thread-Index: AdWnWSC4DFo9P44HRnWneBHBmfqvHA==
-Date:   Sat, 30 Nov 2019 08:38:41 +0000
-Message-ID: <c6be1499b0144cd8b5a8f9275c846e6e@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.184.189.20]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sat, 30 Nov 2019 03:46:09 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:47789 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725792AbfK3IqI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Nov 2019 03:46:08 -0500
+Received: by mail-io1-f72.google.com with SMTP id y16so21902708ior.14
+        for <linux-kernel@vger.kernel.org>; Sat, 30 Nov 2019 00:46:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=755V43H68p2tB3xp7z2VrFVq47sZugs1GcV9p/fBxfQ=;
+        b=T0YntzbCM/uMS5CxDgYVDQV5ZM+yLqJ3YO088J7vfxghoAkKZlndGmEeyZMJjdhnL4
+         y6qQUlgqx2EPwf+0MauDzCWM8J5zJWECF3HsbCx/SBKUUc1qMdcpgL92HQDPeSZywyUB
+         TOa9MXtLcw4BgA65Hxz6reqjxyRpEhag009Ungd0xHY1OmndGfMjkAOeykN/W/PJLWwB
+         x+xAi+FF/140Y/aaYzePw5NHKRt0rQkiccvBbWwTIkSH4b9jT8GybZQh7Jpe4Rux4mwM
+         ZQ2H2tc4BywviklCgEw+fr70eXZn/738kVZZ0lpzY6mrG3fx63Vf8d0h/0+9/CyAbNIv
+         QTZQ==
+X-Gm-Message-State: APjAAAXi4cl411Pj4wIzu1rr4inXzwQEWteBqjjJbBXgl+iDtck+QpI1
+        F7SaKzyhtgR1StbhniTxNdjxaWkjjgHlKo4jE4hmgg+MUhsL
+X-Google-Smtp-Source: APXvYqyjqt3aSbwdxMnttBcZrjWgclXwi32UoowlUZT0C8OBaP9a5TW7YFBcaq37TSB19/+USUg/7p122pZsv4arndgt52/T6xTI
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+X-Received: by 2002:a92:7981:: with SMTP id u123mr22876500ilc.138.1575103568232;
+ Sat, 30 Nov 2019 00:46:08 -0800 (PST)
+Date:   Sat, 30 Nov 2019 00:46:08 -0800
+In-Reply-To: <0000000000008c5bfa05988b29dd@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ab4c4b05988c6085@google.com>
+Subject: Re: general protection fault in j1939_jsk_del (2)
+From:   syzbot <syzbot+99e9e1b200a1e363237d@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kernel@pengutronix.de,
+        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux@rempel-privat.de, mkl@pengutronix.de, netdev@vger.kernel.org,
+        robin@protonic.nl, socketcan@hartkopp.net,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pg0KPj4gQW0gMzAuMTEuMjAxOSB1bSAwODoyMyBzY2hyaWViIGxpbm1pYW9oZSA8bGlubWlhb2hl
-QGh1YXdlaS5jb20+Og0KPj4gDQo+PiDvu78NCj4+PiANCj4+Pj4gRnJvbTogTWlhb2hlIExpbiA8
-bGlubWlhb2hlQGh1YXdlaS5jb20+DQo+Pj4+IA0KPj4+PiBUaGUganVtcCBsYWJlbHMgdHJ5X3By
-ZXYgYW5kIG5vbmUgYXJlIG5vdCByZWFsbHkgbmVlZGVkIGluIA0KPj4gZnJpZW5kbHkgcGluZyAu
-Li4NCj4+IA0KPg0KPldl4oCYcmUgY3VycmVudGx5IGluIHRoZSBtZXJnZSBwaGFzZSwgYW5kIFUu
-Uy5BLiBqdXN0IGhhZCBUaGFua3NnaXZpbmcgLSBzbyBpdCBtaWdodCB0YWtlIHNvbWUgdGltZSB0
-byBnZXQgcGlja2VkIHVwLiBDaGVlcnMhDQoNCkhpLA0KVGhhbmtzIGZvciB5b3VyIHJlbWluZC4g
-VGhpcyBwYXRjaCBoYXZlIGJlZW4gc2lsZW50IGZvciBhbG1vc3QgaGFsZiBhIG1vbnRoLCBzbw0K
-SSBzZW5kIHRoaXMgcGluZy4gVGhhbmtzIGFnYWluLg0KDQo=
+syzbot has found a reproducer for the following crash on:
+
+HEAD commit:    81b6b964 Merge branch 'master' of git://git.kernel.org/pub..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=14d2aabce00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=333b76551307b2a0
+dashboard link: https://syzkaller.appspot.com/bug?extid=99e9e1b200a1e363237d
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1671bcdae00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+99e9e1b200a1e363237d@syzkaller.appspotmail.com
+
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 9409 Comm: syz-executor.0 Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:__lock_acquire+0x1254/0x4a00 kernel/locking/lockdep.c:3828
+Code: 00 0f 85 96 24 00 00 48 81 c4 f0 00 00 00 5b 41 5c 41 5d 41 5e 41 5f  
+5d c3 48 b8 00 00 00 00 00 fc ff df 4c 89 f2 48 c1 ea 03 <80> 3c 02 00 0f  
+85 0b 28 00 00 49 81 3e 20 e9 77 8a 0f 84 5f ee ff
+RSP: 0018:ffff8880a393fb48 EFLAGS: 00010006
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000218 RSI: 0000000000000000 RDI: 0000000000000001
+RBP: ffff8880a393fc60 R08: 0000000000000001 R09: 0000000000000001
+R10: fffffbfff146dba0 R11: ffff8880a084e300 R12: 00000000000010c0
+R13: 0000000000000000 R14: 00000000000010c0 R15: 0000000000000000
+FS:  00007f996d50d700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000075c000 CR3: 000000008f718000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
+  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
+  _raw_spin_lock_bh+0x33/0x50 kernel/locking/spinlock.c:175
+  spin_lock_bh include/linux/spinlock.h:343 [inline]
+  j1939_jsk_del+0x32/0x210 net/can/j1939/socket.c:89
+  j1939_sk_bind+0x2ea/0x8f0 net/can/j1939/socket.c:448
+  __sys_bind+0x239/0x290 net/socket.c:1648
+  __do_sys_bind net/socket.c:1659 [inline]
+  __se_sys_bind net/socket.c:1657 [inline]
+  __x64_sys_bind+0x73/0xb0 net/socket.c:1657
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45a679
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f996d50cc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a679
+RDX: 0000000000000018 RSI: 00000000200000c0 RDI: 0000000000000003
+RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f996d50d6d4
+R13: 00000000004c09e9 R14: 00000000004d37d0 R15: 00000000ffffffff
+Modules linked in:
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 9409 at kernel/locking/mutex.c:1419  
+mutex_trylock+0x279/0x2f0 kernel/locking/mutex.c:1427
+
