@@ -2,134 +2,166 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C80CBC432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 23:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CBFC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 23:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 782B820725
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 23:11:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C3EE2082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 23:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575155486;
-	bh=jAZgwlkFITn9guffx1lS7YNxtuHHSSOb49lbGPlxLGA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ytFCP+cWWv2mxfKKiAWs021U6mlxmO5YJIp2yvQ47G4yQBUJB9COZd2XyGtCbrwqS
-	 +JC3PCla8g06RVJdgFqLeJSsB/9COtXMWB0QvgeLHThgM0lIEJxfpccbVDoPPl9yko
-	 3zhC0Q747QbMtzzkzCOp3WTX/rc8T6ZfXCDJs4Ms=
+	s=default; t=1575156457;
+	bh=Ig3hXYu5WjaJ0AvqWKk+t2xuR7KeWQIhrIUiuzLS2Hw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SLHqLrCf12hRsnFEN96r3y0WVeMy++PwRS986v3Ae+gYTJjc/mQ6/3uyfsXmh7HLV
+	 wybXnbkcPHT1tGb3M+i2ZDoSxzG9ku4PVby7cOQnIHnYj689jLcTCYbVvYnSbIi+KH
+	 96STgMHcX2Xj1jRaDLhA1Q3hgS+0JXtzPHbPXsXo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbfK3XLZ (ORCPT
+        id S1727377AbfK3X1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Nov 2019 18:11:25 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41956 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727025AbfK3XLZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Nov 2019 18:11:25 -0500
-Received: by mail-lj1-f193.google.com with SMTP id m4so35654040ljj.8
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Nov 2019 15:11:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UYTY0n3QsHBqZOy36tonEndwNoj7tohoLo0ZADDmXdI=;
-        b=gBaDTkp8NLxH62T6UURGOeViYXp6AKFU0DKORiZX14t7T4/suPUQTRa8CdMlMDdrNs
-         4xC6JGRELDoDK9nlQaZgkb3NwDJQT7MrbGKx3/x156kwSIekaUnczLiAdIfHQZkXi+MQ
-         U+YzULRrT+PXsMAHZCap3wQS93TGauVcU3Qg0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UYTY0n3QsHBqZOy36tonEndwNoj7tohoLo0ZADDmXdI=;
-        b=EE4Nlqnjk7O5RtZXiX1x0IOv+fU5ye+WPvSRjom1Vr0+XSGVq+Y5cyKdeNUp2w98+N
-         c0sCfgejbuZni9ZI6lMo9+nlosLCtTGWpgX6Ei8S189a9wFjHg1RkdWUKSFmSt+BpF3n
-         AiDITC8pjoxJ33iF/YwVWdE8i/Ekx0XejKW5mZXs8WHBG6K1u0d0Tv5fe1E2CxM3P848
-         5WXeOvKPYuCDl33uaduNPGg3odmFs2A34afDbTG6KKsHIoHIvFcTSwBquJ0NLh5XlR0Q
-         NByd6oJM9bRWMQZmn7m/WlSYAuXJTiHf04yhgG6fDJgpC+xyu/FwyWmdmaeQB4gOH6Nu
-         nzyQ==
-X-Gm-Message-State: APjAAAXD+NlyNmY/6J1V2hlRBH19GFvyrC28bydty8SO4jfyOIw4xP8T
-        6dmWTmQnz+b7ZP7GoAewnaydElUtBqk=
-X-Google-Smtp-Source: APXvYqzevXOZKedgWG46X6c7ylkcNLJCZv/MwE5VrZA9iC80TW/g1d3IrG8sOZLGlQ5ro2gs+XOGWQ==
-X-Received: by 2002:a05:651c:119b:: with SMTP id w27mr38296310ljo.221.1575155482357;
-        Sat, 30 Nov 2019 15:11:22 -0800 (PST)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id s20sm1115297lfc.8.2019.11.30.15.11.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 30 Nov 2019 15:11:21 -0800 (PST)
-Received: by mail-lj1-f178.google.com with SMTP id e9so35659831ljp.13
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Nov 2019 15:11:21 -0800 (PST)
-X-Received: by 2002:a2e:9549:: with SMTP id t9mr5158199ljh.148.1575155481093;
- Sat, 30 Nov 2019 15:11:21 -0800 (PST)
+        Sat, 30 Nov 2019 18:27:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52534 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727179AbfK3X1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Nov 2019 18:27:34 -0500
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D8662075A;
+        Sat, 30 Nov 2019 23:27:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575156453;
+        bh=Ig3hXYu5WjaJ0AvqWKk+t2xuR7KeWQIhrIUiuzLS2Hw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QAjfE5/HyuKMVUAoiD3P0PPeXvjG1yOVBToroY67MWQlABL/ilzdxWIf+Qi/abrlU
+         byv2SyjRTMwlA85hZJoKDQ0B3iGBd/BFHqLEZlcpF3SP2AwOgadMYKXPjjFPzze5/d
+         LaKkHeMb932QQ7Tl7M/aH3OSUaMqEDaiswZ6uPAY=
+Date:   Sat, 30 Nov 2019 15:27:31 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        jmattson@redhat.com, ehabkost@redhat.com, konrad.wilk@oracle.com
+Subject: Re: [PATCH 1/3] KVM: x86: fix reporting of AMD speculation bug CPUID
+ leaf
+Message-ID: <20191130232731.GA9495@sol.localdomain>
+References: <1566376002-17121-1-git-send-email-pbonzini@redhat.com>
+ <1566376002-17121-2-git-send-email-pbonzini@redhat.com>
 MIME-Version: 1.0
-References: <20191126093002.06ece6dd@lwn.net>
-In-Reply-To: <20191126093002.06ece6dd@lwn.net>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 30 Nov 2019 15:11:05 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whH-wrF7dx_+NgpYi8pK0vovE2mEFE3sgEYXAQZcPwBjA@mail.gmail.com>
-Message-ID: <CAHk-=whH-wrF7dx_+NgpYi8pK0vovE2mEFE3sgEYXAQZcPwBjA@mail.gmail.com>
-Subject: Re: [PULL] Documentation for 5.5
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1566376002-17121-2-git-send-email-pbonzini@redhat.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 8:30 AM Jonathan Corbet <corbet@lwn.net> wrote:
->
->   git://git.lwn.net/linux.git tags/docs-5.5
+Hi Paolo,
 
-You are doing something seriously wrong.
+On Wed, Aug 21, 2019 at 10:26:40AM +0200, Paolo Bonzini wrote:
+> The AMD_* bits have to be set from the vendor-independent
+> feature and bug flags, because KVM_GET_SUPPORTED_CPUID does not care
+> about the vendor and they should be set on Intel processors as well.
+> On top of this, SSBD, STIBP and AMD_SSB_NO bit were not set, and
+> VIRT_SSBD does not have to be added manually because it is a
+> cpufeature that comes directly from the host's CPUID bit.
+> 
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/x86/kvm/cpuid.c | 21 +++++++++++++--------
+>  1 file changed, 13 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 22c2720cd948..43caeb6059b9 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -729,18 +729,23 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
+>  			g_phys_as = phys_as;
+>  		entry->eax = g_phys_as | (virt_as << 8);
+>  		entry->edx = 0;
+> +		entry->ebx &= kvm_cpuid_8000_0008_ebx_x86_features;
+> +		cpuid_mask(&entry->ebx, CPUID_8000_0008_EBX);
+>  		/*
+> -		 * IBRS, IBPB and VIRT_SSBD aren't necessarily present in
+> -		 * hardware cpuid
+> +		 * AMD has separate bits for each SPEC_CTRL bit.
+> +		 * arch/x86/kernel/cpu/bugs.c is kind enough to
+> +		 * record that in cpufeatures so use them.
+>  		 */
+> -		if (boot_cpu_has(X86_FEATURE_AMD_IBPB))
+> +		if (boot_cpu_has(X86_FEATURE_IBPB))
+>  			entry->ebx |= F(AMD_IBPB);
+> -		if (boot_cpu_has(X86_FEATURE_AMD_IBRS))
+> +		if (boot_cpu_has(X86_FEATURE_IBRS))
+>  			entry->ebx |= F(AMD_IBRS);
+> -		if (boot_cpu_has(X86_FEATURE_VIRT_SSBD))
+> -			entry->ebx |= F(VIRT_SSBD);
+> -		entry->ebx &= kvm_cpuid_8000_0008_ebx_x86_features;
+> -		cpuid_mask(&entry->ebx, CPUID_8000_0008_EBX);
+> +		if (boot_cpu_has(X86_FEATURE_STIBP))
+> +			entry->ebx |= F(AMD_STIBP);
+> +		if (boot_cpu_has(X86_FEATURE_SSBD))
+> +			entry->ebx |= F(AMD_SSBD);
+> +		if (!boot_cpu_has_bug(X86_BUG_SPEC_STORE_BYPASS))
+> +			entry->ebx |= F(AMD_SSB_NO);
+>  		/*
+>  		 * The preference is to use SPEC CTRL MSR instead of the
+>  		 * VIRT_SPEC MSR.
 
-There are DOS line-endings now in some of the  patches, and I noticed
-because I got a conflict in
+This patch started causing a warning about an unchecked MSR access, when
+starting a VM.
 
-  Documentation/networking/device_drivers/intel/e100.rst
+Processor is: "AMD Ryzen Threadripper 1950X 16-Core Processor"
 
-where your version was identical to one I had merged elsewhere, but
-had ^M at the end of the new lines.
+The warning appears both in the host and guest kernel logs.
 
-There are other examples of the same in other places.
+On the host:
 
-I'm not going to pull this. I have no idea what you're doing and how
-many incorrect line endings you have that just didn't happen to
-conflict.
+	[   12.121802] unchecked MSR access error: RDMSR from 0x48 at rIP: 0xffffffff8b049765 (svm_vcpu_run+0x6a5/0x720)
+	[   12.121806] Call Trace:
+	[   12.121812]  ? kvm_arch_vcpu_ioctl_run+0x902/0x1b70
+	[   12.121814]  ? kvm_vm_ioctl_irq_line+0x1e/0x30
+	[   12.121817]  ? kvm_vcpu_ioctl+0x21e/0x560
+	[   12.121821]  ? vfs_writev+0xc0/0xf0
+	[   12.121824]  ? do_vfs_ioctl+0x41d/0x690
+	[   12.121826]  ? ksys_ioctl+0x59/0x90
+	[   12.121827]  ? __x64_sys_ioctl+0x11/0x20
+	[   12.121828]  ? do_syscall_64+0x43/0x130
+	[   12.121832]  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-You have some *serious* tooling issues. We don't do CRLF line endings.
+On the guest:
 
-You can do
+	[    0.799090] unchecked MSR access error: WRMSR to 0x48 (tried to write 0x0000000000000004) at rIP: 0xffffffff81028272 (speculation_ctrl_update+0x132/0x2c0)
+	[    0.801823] Call Trace:
+	[    0.801831]  ? seccomp_set_mode_filter+0x18d/0x800
+	[    0.801833]  speculation_ctrl_update_current+0x21/0x30
+	[    0.801837]  task_update_spec_tif+0x1d/0x20
+	[    0.801839]  ssb_prctl_set+0xb5/0xd0
+	[    0.801841]  arch_seccomp_spec_mitigate+0x2a/0x50
+	[    0.801843]  seccomp_set_mode_filter+0x788/0x800
+	[    0.801845]  do_seccomp+0x34/0x200
+	[    0.801849]  __x64_sys_seccomp+0x15/0x20
+	[    0.801852]  do_syscall_64+0x4a/0x1f0
+	[    0.809349]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+	[    0.810548] RIP: 0033:0x7f431db92e9d
+	[    0.811528] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d b3 5f 0c 00 f7 d8 64 89 01 48
+	[    0.814754] RSP: 002b:00007ffca5506788 EFLAGS: 00000246 ORIG_RAX: 000000000000013d
+	[    0.816075] RAX: ffffffffffffffda RBX: 0000556956c07580 RCX: 00007f431db92e9d
+	[    0.817367] RDX: 0000556956c023e0 RSI: 0000000000000000 RDI: 0000000000000001
+	[    0.818698] RBP: 0000556956c023e0 R08: 0000000000000007 R09: 0000556956b73730
+	[    0.819948] R10: 0000556956b7101a R11: 0000000000000246 R12: 000000000000002d
+	[    0.821184] R13: 0040000000002001 R14: 00007f431d9b4898 R15: 0000000000000000
 
-   git grep "^M"
+The VM still boots though.
 
-(where that ^M is obviously the CR character, not the two characters
-'^' and 'M" to see it. In a good tree, you'll see
+I've actually been seeing this for a while but haven't had a chance to bisect it
+until now.
 
-   [torvalds@i7 linux]$ git grep "^M"
-   Binary file Documentation/logo.gif matches
+Reverting the commit (4c6903a0f9d76) on mainline makes the warnings go away.
 
-but in your tree, you get an additional 59 lines of that bogus CRLF
-garbage in these files:
+Any ideas?  Presumably something isn't working as intended.
 
-  Documentation/admin-guide/dell_rbu.rst
-  Documentation/networking/device_drivers/intel/e100.rst
-  Documentation/networking/device_drivers/intel/e1000.rst
-  Documentation/networking/device_drivers/intel/e1000e.rst
-  Documentation/networking/device_drivers/intel/fm10k.rst
-  Documentation/networking/device_drivers/intel/i40e.rst
-  Documentation/networking/device_drivers/intel/iavf.rst
-  Documentation/networking/device_drivers/intel/ice.rst
-  Documentation/networking/device_drivers/intel/igb.rst
-  Documentation/networking/device_drivers/intel/igbvf.rst
-  Documentation/networking/device_drivers/intel/ixgbe.rst
-  Documentation/networking/device_drivers/intel/ixgbevf.rst
-  Documentation/networking/device_drivers/pensando/ionic.rst
-
-and I have no idea what you've done to make it do that, but I
-definitely don't want the end result in my tree.
-
-                Linus
+- Eric
