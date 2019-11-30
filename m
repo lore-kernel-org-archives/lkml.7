@@ -2,74 +2,93 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5D3C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 22:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D9BC43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 22:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B87FE2075C
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 22:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77FD22084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 22:25:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=plaes.org header.i=@plaes.org header.b="NIrWqzta"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pPNc87T/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727356AbfK3WWR (ORCPT
+        id S1727372AbfK3WZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Nov 2019 17:22:17 -0500
-Received: from plaes.org ([188.166.43.21]:36738 "EHLO plaes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727179AbfK3WWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Nov 2019 17:22:17 -0500
-Received: from localhost (unknown [IPv6:2001:1530:1000:7c6d:940e:6b9e:3deb:2])
-        by plaes.org (Postfix) with ESMTPSA id D0F654037F;
-        Sat, 30 Nov 2019 22:22:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=plaes.org; s=mail;
-        t=1575152535; bh=5vE+9+imtN9f4FnW9xL7E0O17/0rF12odZ5Z7xVWr8w=;
-        h=From:To:Cc:Subject:Date:From;
-        b=NIrWqztaHgJ0ibM/3SNjEY8irNbi7wAqcp/PMcwkW39khCWn9yOKgAr3Y+uAuJg+a
-         m39f/1fnouEuJI19smZukeOmMt4PGzs97a/Usu+e0JUyp26zOlpzc172pMm6j6V+qT
-         AcaS8MKbVXoFKfbZn2/tOLQiqsvcd5v6EeuII5Rx7ncdex3aY6uu2LaQnf2TMT74SF
-         4k8dKRu8DOs8udVF7KZWy7vBZAxD8rJmZXU2UaWqwgaSZBAd6a6GOI4zau96+ATpR8
-         fphGSmn00C9KUCl9K6IXtZMsZess9CjR+ROF5KoiV5Raghp5DX6lxor2vZmTmP9WT3
-         7Mnc5YRSqS4ng==
-From:   Priit Laes <plaes@plaes.org>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Priit Laes <plaes@plaes.org>
-Subject: [PATCH] HID: Add quirk for Xin-Mo Dual Controller
-Date:   Sun,  1 Dec 2019 00:22:09 +0200
-Message-Id: <20191130222209.5084-1-plaes@plaes.org>
-X-Mailer: git-send-email 2.23.0
+        Sat, 30 Nov 2019 17:25:19 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43440 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727179AbfK3WZS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Nov 2019 17:25:18 -0500
+Received: by mail-lj1-f195.google.com with SMTP id a13so12458650ljm.10;
+        Sat, 30 Nov 2019 14:25:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZLHndLy8wicZRQ8gUFmArG9klydMdpl0N2wfSSNkifI=;
+        b=pPNc87T/eg772s4w4CQ6sQaiOlN4v6fqemZr2tF99Xi5ajTigA9GFKGKmxPwo3+vay
+         ck0rnzF2b3gOq9ZeuKOZyCnrTSUqrxq3MyxthN6f0wBhcbCr+vwbVsuY8WQIqkbhul2a
+         WYm48k+Z7jcM+j+CsP/CPx+Ag1CxGfRBLU7g1PuCSexVqsHbqutElazUGJZqodWj96pz
+         ZwY27aZwdBcxI7jHvc8e8btd7tYjvCoaIiq61uko8UWCrmbpSsu6XLsFvogh+byPR+/B
+         pGgFWkZyWtuguvY5AaQmkESVl5tX2rLskekG7pUXWhcVk56p/BkZefMdQkoFSQi3WXvL
+         shjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZLHndLy8wicZRQ8gUFmArG9klydMdpl0N2wfSSNkifI=;
+        b=XsQbq56evCdwiEYYAtMLJNqR+W8uso1JpXURbsoB3oL0GmGokuaNBInLYNVciGZ+GU
+         u4Ce0A3cYQItO02j9OsVU0+W0WaFjq/g85Km9dTvxSrNzkC6b4ngBvkZUgxdlAcFHXZm
+         fBsa0dvhAQ52t2xL8f6l2ojb2HEYU0o8cAeLiU82+ZzEOpHe7U85Pn5+xIFkpyrdeYLC
+         gkIuax4dVUPdDupeedhb3U2DJcccRDDe2WMyl5Z/83LRDLrs/Ij5I0x2CJPqeKuK5t7j
+         mnUvlOKZ6Zq7X+LOkimWdTlsA+r+etBYbUzsGMvcnx9iUT7VARI7E8fJuc/upQkdgTku
+         Z95g==
+X-Gm-Message-State: APjAAAVlmThi4upsr2wGrfyr+W6R24FoyFsAzMlpnh6VKTW8OMNcskir
+        bbCpuBaQkDuvpIg5aJVOZAiKLgG7DcasLoRo0r/UdyaX
+X-Google-Smtp-Source: APXvYqw/vYVdKA0yQ23MEFQIuSuq0NyhafkG56sLhiNAnO62bt8QuHvZWQmIrvBfMTlVNGvFENOY82wRB8C1TAvf03s=
+X-Received: by 2002:a2e:844e:: with SMTP id u14mr28323396ljh.17.1575152716281;
+ Sat, 30 Nov 2019 14:25:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191129234108.12732-1-aford173@gmail.com> <20191129234108.12732-2-aford173@gmail.com>
+In-Reply-To: <20191129234108.12732-2-aford173@gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Sat, 30 Nov 2019 19:25:31 -0300
+Message-ID: <CAOMZO5AyLBrsxr5rqkWgf44X0CQdqHcdaCLRaWLC25b18bF+xw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: Add GPC Support
+To:     Adam Ford <aford173@gmail.com>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Without the quirk, joystick shows up as single controller
-for both first and second player pads/pins.
+Hi Adam,
 
-Signed-off-by: Priit Laes <plaes@plaes.org>
----
- drivers/hid/hid-quirks.c | 1 +
- 1 file changed, 1 insertion(+)
+On Fri, Nov 29, 2019 at 8:41 PM Adam Ford <aford173@gmail.com> wrote:
 
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index c50bcd967d99..2007e31837ad 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -173,6 +173,7 @@ static const struct hid_device_id hid_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_WALTOP, USB_DEVICE_ID_WALTOP_SIRIUS_BATTERY_FREE_TABLET), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP_LTD2, USB_DEVICE_ID_SMARTJOY_DUAL_PLUS), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP, USB_DEVICE_ID_QUAD_USB_JOYPAD), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_XIN_MO, USB_DEVICE_ID_XIN_MO_DUAL_ARCADE), HID_QUIRK_MULTI_INPUT },
- 
- 	{ 0 }
- };
--- 
-2.23.0
+> +
+> +                       gpc: gpc@303a0000 {
+> +                               compatible = "fsl,imx8mm-gpc";
 
+You could do like this instead:
+
+compatible = "fsl,imx8mm-gpc", "fsl,imx8mq-gpc";
+
+and then you don't need patch 1/2.
+
+Also, "fsl,imx8mm-gpc" needs to be documented.
