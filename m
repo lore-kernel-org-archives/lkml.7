@@ -2,97 +2,132 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9313DC432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 06:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3B6C432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 07:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66E4620725
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 06:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4171420833
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 07:19:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbfK3G60 (ORCPT
+        id S1725947AbfK3HTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Nov 2019 01:58:26 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6737 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725298AbfK3G60 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Nov 2019 01:58:26 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 98767B9740C456E26BB8;
-        Sat, 30 Nov 2019 14:58:24 +0800 (CST)
-Received: from [127.0.0.1] (10.133.216.73) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Sat, 30 Nov 2019
- 14:58:17 +0800
-Subject: Re: [PATCH] kvm/arm64: change gicv3_cpuif to static likely branch
-To:     Marc Zyngier <maz@kernel.org>
-References: <20191130031443.41696-1-guoheyi@huawei.com>
- <86mucdzx45.wl-maz@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
-        <wanghaibin.wang@huawei.com>, James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        "Suzuki K Poulose" <suzuki.poulose@arm.com>,
-        Will Deacon <will@kernel.org>
-From:   Guoheyi <guoheyi@huawei.com>
-Message-ID: <496cb45d-c312-295c-18f2-633ec5acc976@huawei.com>
-Date:   Sat, 30 Nov 2019 14:58:16 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Sat, 30 Nov 2019 02:19:09 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:43710 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbfK3HTJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Nov 2019 02:19:09 -0500
+Received: by mail-io1-f71.google.com with SMTP id b17so9282033ioh.10
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 23:19:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=NH7tpAHELzxk/UfVmDatDAWXns7669WAP7vdJ5fhSaU=;
+        b=Wlp0NfEBhU41EnMmqp0eZFXr/8DFrDXk+ontBGke2S7Tg8UZd0tQZJ6smbUFGfE4yb
+         641SpQ0t/SK+GkMyb/cj1vMVyxUE1/G0CaVGiCZoJB4p5OfcNW2R3k5hbGVFNnXCRgT6
+         FbT0P978U3ENIoIFafN0lUcsQ+vIOFhX5quVUGdUHo1SECeYI7uWdWaAZD9PdH4tozMJ
+         fZWRCn13wagsjW7+3AuHqFG6FznB7RoDLOSqEqzZiQzLZgb6mseQv0QohaMkq6daRVfm
+         +rkIhsUy86A4GIkhYEjr3cEQuuz3X2hv/PWRNyv8jXC0y0Npw+3XNLDVV3p1NIT3SBeM
+         lVNg==
+X-Gm-Message-State: APjAAAX8L554MHMy9zv2pkpUf4vzwxP4UYEUfwSXDDDepGEq4NqzwWaX
+        5jOzvcfIVILM1c7koeWaDxjUVnwu9em2QAAwj8iLdahxEOPf
+X-Google-Smtp-Source: APXvYqyb+xnqjU7qMCYcbRW40EATfkt3T1JPj3hrphILwsgi10O9VY2aj0RLDbGgH95QnkFZUJaY4FVAzQcBla/ERhdPpdAN9r3i
 MIME-Version: 1.0
-In-Reply-To: <86mucdzx45.wl-maz@kernel.org>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.216.73]
-X-CFilter-Loop: Reflected
+X-Received: by 2002:a5d:8184:: with SMTP id u4mr45057762ion.155.1575098348491;
+ Fri, 29 Nov 2019 23:19:08 -0800 (PST)
+Date:   Fri, 29 Nov 2019 23:19:08 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000008c5bfa05988b29dd@google.com>
+Subject: general protection fault in j1939_jsk_del (2)
+From:   syzbot <syzbot+99e9e1b200a1e363237d@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kernel@pengutronix.de,
+        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux@rempel-privat.de, mkl@pengutronix.de, netdev@vger.kernel.org,
+        robin@protonic.nl, socketcan@hartkopp.net,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    81b6b964 Merge branch 'master' of git://git.kernel.org/pub..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=134af786e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=773597fe8d7cb41a
+dashboard link: https://syzkaller.appspot.com/bug?extid=99e9e1b200a1e363237d
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+userspace arch: i386
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+99e9e1b200a1e363237d@syzkaller.appspotmail.com
+
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 18385 Comm: syz-executor.1 Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:__lock_acquire+0x1254/0x4a00 kernel/locking/lockdep.c:3828
+Code: 00 0f 85 96 24 00 00 48 81 c4 f0 00 00 00 5b 41 5c 41 5d 41 5e 41 5f  
+5d c3 48 b8 00 00 00 00 00 fc ff df 4c 89 f2 48 c1 ea 03 <80> 3c 02 00 0f  
+85 0b 28 00 00 49 81 3e 20 59 2a 8a 0f 84 5f ee ff
+RSP: 0018:ffff8880a0397b38 EFLAGS: 00010006
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000218 RSI: 0000000000000000 RDI: 0000000000000001
+RBP: ffff8880a0397c50 R08: 0000000000000001 R09: 0000000000000001
+R10: fffffbfff13d4e58 R11: ffff888093b044c0 R12: 00000000000010c0
+R13: 0000000000000000 R14: 00000000000010c0 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0063) knlGS:00000000f5dcfb40
+CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+CR2: 000000002e521000 CR3: 0000000097a51000 CR4: 00000000001426f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
+  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
+  _raw_spin_lock_bh+0x33/0x50 kernel/locking/spinlock.c:175
+  spin_lock_bh include/linux/spinlock.h:343 [inline]
+  j1939_jsk_del+0x32/0x210 net/can/j1939/socket.c:89
+  j1939_sk_bind+0x2ea/0x8f0 net/can/j1939/socket.c:448
+  __sys_bind+0x239/0x290 net/socket.c:1648
+  __do_sys_bind net/socket.c:1659 [inline]
+  __se_sys_bind net/socket.c:1657 [inline]
+  __ia32_sys_bind+0x72/0xb0 net/socket.c:1657
+  do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
+  do_fast_syscall_32+0x27b/0xe16 arch/x86/entry/common.c:408
+  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7ff4a39
+Code: 00 00 00 89 d3 5b 5e 5f 5d c3 b8 80 96 98 00 eb c4 8b 04 24 c3 8b 1c  
+24 c3 8b 34 24 c3 8b 3c 24 c3 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90  
+90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000f5dcf0cc EFLAGS: 00000296 ORIG_RAX: 0000000000000169
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000020000000
+RDX: 0000000000000018 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 18385 at kernel/locking/mutex.c:1419  
+mutex_trylock+0x279/0x2f0 kernel/locking/mutex.c:1427
 
 
-On 2019/11/30 14:39, Marc Zyngier wrote:
-> On Sat, 30 Nov 2019 03:14:43 +0000,
-> Heyi Guo <guoheyi@huawei.com> wrote:
->> Platforms running hypervisor nowadays are normally powerful servers
->> which at least support GICv3, so it should be better to switch
->> kvm_vgic_global_state.gicv3_cpuif to static likely branch, which can
->> reduce two "b" instructions to a single "nop" for GICv3 branches.
->>
->> We don't update arm32 specific code for they may still only have
->> GICv2.
-> There is a number of disputable statements here.
->
-> Out of the fairly large zoo of arm64 systems I have access to, 75% of
-> them are based on GICv2, so they are still the overwhelming majority.
-> Yes, they all run KVM (otherwise I would ignore them).
-Really? I'm surprised to know that... Sorry I didn't see such GICv2 
-platforms in my work, so I made the wrong assumption.
-I don't expect much performance improvement for GICv3 platforms. The 
-precondition for this patch is that few platforms running KVM are using 
-GICv2. If it is not right, please just ignore it.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Thanks,
-HG
-
->
-> Furthermore, I would expect that "powerful servers" are perfectly
-> capable to execute a couple of branches without breaking a sweat.
->
-> Finally, you don't provide any number supporting that:
->
-> - GICv3 systems see a performance improvement across the large variety
->    of CPU implementations
-> - GICv2 systems don't see a performance regression
->
-> Once you provide such numbers, I'll reevaluate my position. Until
-> then, I'm not considering this kind of change.
->
-> Thanks,
->
-> 	M.
->
-
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
