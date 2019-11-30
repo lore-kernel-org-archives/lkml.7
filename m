@@ -2,58 +2,80 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84265C43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 18:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E12FC43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 18:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F8E52082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 18:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 163952075A
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 18:58:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bEeUz/nI"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="VmZhy3nx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727305AbfK3S4z (ORCPT
+        id S1727326AbfK3S6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Nov 2019 13:56:55 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:58274 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726799AbfK3S4y (ORCPT
+        Sat, 30 Nov 2019 13:58:01 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:41089 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726936AbfK3S6B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Nov 2019 13:56:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=dtDNU5sJrpQrH2YZuWtZnAQZGfS/Szp5dKIJMLrH2NQ=; b=bEeUz/nIiuE8mV7phq5Zje58L
-        F52B0xp4sOqF2KbwO12ZLwt/L8jYT4xIBG7E7pOIEq118Aw5Szw36Q70sZimDGjoCge9T9gdrAiUx
-        sxo69Ft81pZGFQzOE5cKSmGT+gza4H7/F63XE1j7JNX1vX27RDV/s7AF6P5xc2AwZ57vESvhG0KC/
-        pJLBFu6XUNpKaARxLaK2cQjijzY9SVdKQ/k9q6Fb/yl7DqFRUk0utdzX2rnr5ayxtP05M9tDIVuLp
-        fegOXw6NzVHi+XVCFofCuSS8+iB6wmda7bsLY1WUH1dLXnefI7bpyvBc0PY1TytoT4NubG5SY/X4u
-        aFvb7Cg1w==;
-Received: from [2601:1c0:6280:3f0::5a22]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ib7vE-0006e1-Gi; Sat, 30 Nov 2019 18:56:48 +0000
-Subject: Re: Regression in squashfs mount option handling in v5.4
-To:     Jeremi Piotrowski <jeremi.piotrowski@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Phillip Lougher <phillip@squashfs.org.uk>
-References: <20191130181548.GA28459@gentoo-tp.home>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <6af16095-eab0-9e99-6782-374705d545e4@infradead.org>
-Date:   Sat, 30 Nov 2019 10:56:47 -0800
+        Sat, 30 Nov 2019 13:58:01 -0500
+Received: by mail-pl1-f195.google.com with SMTP id t8so14205926plr.8
+        for <linux-kernel@vger.kernel.org>; Sat, 30 Nov 2019 10:58:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OvgoncF/BW8ruOjQkaGF0zAXVY4+8jOiq2/xVo9e8UY=;
+        b=VmZhy3nxfoafybZoVQ8qeSTHrfazsp4MfV9RlGeA3Q4SOrTqnE0MKlT/gWK2eOhT/t
+         PI9BK4fjLzk274SiPXfDiMi+nPIsw3eK9WcaBFDFnF8Bd/3nqA1Ayy9gJ/XPAfG8QF5m
+         FstC4PyjnCgYvwKsAh4kEOfKK1HWJ83kIr7hUX56TUTzdpF3CLB4gZtJiIeYMhCxL6Zr
+         ON4bU8KAN2fDR/IgYRDh1dmBIFLjppAha24db+O6YkJlc+PCqC3sCGLBoGRRVmPUBh3K
+         ctudn7DFyQOtllMhOMjL7GW793VVFqMf9CM1c6c1NZFqMngERrPDmpV9VSWP//MeNRcq
+         xIzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OvgoncF/BW8ruOjQkaGF0zAXVY4+8jOiq2/xVo9e8UY=;
+        b=Axt8T3xaOavw4TePQwkqlBtmuyjomKUoatFgQtZ3qFvrHPD8nomLziUpv/mA8egw4T
+         7+SWeuO7aF+qBnTtRTyu/+9n2GSZOT2TcYdysbPdlPI5CqesRQOg+l3fvZ6aRPKD5WNI
+         n8A+Omj6kWydCYksbsbTRWElirEpwni4uBlx3JmQRz80TOQjEFJskqk49OxDpZTz9UU1
+         dXjX12wk+RfVO7qxVDKadhPDVz3/W8rawi1ui94nk0XPDDaVGhLZMud6P3ky8qF5DXOI
+         Xy3vftLNwkU9tRnefxgPzSjp0lEJDoiIR+weUoe2QezUZKMEPZRTLSKYQpum/SLLfRkj
+         qPmg==
+X-Gm-Message-State: APjAAAXECoNrU5VKvf3nzuPo0rUgbCOJ1lkayFyHymUUZ5mlP01qdNAk
+        VJ1/N8nM6OLwPgEA4Zs55dVVkQY70dqIOw==
+X-Google-Smtp-Source: APXvYqzRyYqQVcJ/yf9/FSDTc5ClPPqwdRQFU+kyyL3ihJie+/JNP3PjVCFBvkblgeAqKiG7CZx3zw==
+X-Received: by 2002:a17:90a:7bcc:: with SMTP id d12mr25759727pjl.63.1575140280387;
+        Sat, 30 Nov 2019 10:58:00 -0800 (PST)
+Received: from ?IPv6:2605:e000:100e:8c61:4c44:14f1:fc4c:1a31? ([2605:e000:100e:8c61:4c44:14f1:fc4c:1a31])
+        by smtp.gmail.com with ESMTPSA id e2sm18545781pja.3.2019.11.30.10.57.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 30 Nov 2019 10:57:59 -0800 (PST)
+Subject: Re: [PATCH] block: optimise bvec_iter_advance()
+To:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Pavel Begunkov <asml.silence@gmail.com>
+Cc:     Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1574974574.git.asml.silence@gmail.com>
+ <06b1b796b8d9bcaa6d5b325668525b7a5663035b.1574974574.git.asml.silence@gmail.com>
+ <20191129221709.GA1164864@rani.riverdale.lan>
+ <71864178-27d6-c6fb-a66b-395dc46041ac@gmail.com>
+ <20191129232445.GA1331087@rani.riverdale.lan>
+ <7be4b7fb-5c14-3c3a-e7f1-c5cc6c047f60@gmail.com>
+ <20191130185634.GA1848835@rani.riverdale.lan>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <42c183af-2fcf-7d72-70e1-a7a31ab541e5@kernel.dk>
+Date:   Sat, 30 Nov 2019 10:57:56 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <20191130181548.GA28459@gentoo-tp.home>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191130185634.GA1848835@rani.riverdale.lan>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,36 +83,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[adding Cc-s]
+On 11/30/19 10:56 AM, Arvind Sankar wrote:
+> On Sat, Nov 30, 2019 at 12:22:27PM +0300, Pavel Begunkov wrote:
+>> On 30/11/2019 02:24, Arvind Sankar wrote:
+>>> On Sat, Nov 30, 2019 at 01:47:16AM +0300, Pavel Begunkov wrote:
+>>>> On 30/11/2019 01:17, Arvind Sankar wrote:
+>>>>>
+>>>>> The loop can be simplified a bit further, as done has to be 0 once we go
+>>>>> beyond the current bio_vec. See below for the simplified version.
+>>>>>
+>>>>
+>>>> Thanks for the suggestion! I thought about it, and decided to not
+>>>> for several reasons. I prefer to not fine-tune and give compilers
+>>>> more opportunity to do their job. And it's already fast enough with
+>>>> modern architectures (MOVcc, complex addressing, etc).
+>>>>
+>>>> Also need to consider code clarity and the fact, that this is inline,
+>>>> so should be brief and register-friendly.
+>>>>
+>>>
+>>> It should be more register-friendly, as it uses fewer variables, and I
+>>> think it's easier to see what the loop is doing, i.e. that we advance
+>>> one bio_vec per iteration: in the existing code, it takes a bit of
+>>> thinking to see that we won't spend more than one iteration within the
+>>> same bio_vec.
+>>
+>> Yeah, may be. It's more the matter of preference then. I don't think
+>> it's simpler, and performance is entirely depends on a compiler and
+>> input. But, that's rather subjective and IMHO not worth of time.
+>>
+>> Anyway, thanks for thinking this through!
+>>
+> 
+> You don't find listing 1 simpler than listing 2? It does save one
+> register, as it doesn't have to keep track of done independently from
+> bytes. This is always going to be the case unless the compiler can
+> eliminate done by transforming Listing 2 into Listing 1. Unfortunately,
+> even if it gets much smarter, it's unlikely to be able to do that,
+> because they're equivalent only if there is no overflow, so it would
+> need to know that bytes + iter->bi_bvec_done cannot overflow, and that
+> iter->bi_bvec_done must be smaller than cur->bv_len initially.
+> 
+> Listing 1:
+> 
+> 	bytes += iter->bi_bvec_done;
+> 	while (bytes) {
+> 		const struct bio_vec *cur = bv + idx;
+> 
+> 		if (bytes < cur->bv_len)
+> 			break;
+> 		bytes -= cur->bv_len;
+> 		idx++;
+> 	}
+> 
+> 	iter->bi_idx = idx;
+> 	iter->bi_bvec_done = bytes;
+> 
+> Listing 2:
+> 
+> 	while (bytes) {
+> 		const struct bio_vec *cur = bv + idx;
+> 		unsigned int len = min(bytes, cur->bv_len - done);
+> 
+> 		bytes -= len;
+> 		done += len;
+> 		if (done == cur->bv_len) {
+> 			idx++;
+> 			done = 0;
+> 		}
+> 	}
+> 
+> 	iter->bi_idx = idx;
+> 	iter->bi_bvec_done = done;
 
-On 11/30/19 10:15 AM, Jeremi Piotrowski wrote:
-> Hi,
-> 
-> I'm working on an embedded project which uses 'rauc' as an updater. rauc mounts
-> a squashfs image using
-> 
->   mount -t squashfs -o ro,loop,sizelimit=xxx squashfs.img /mnt
-> 
-> On my system mount is busybox, and busybox does not know the sizelimit
-> parameter, so it simply passes it on to the mount syscall. The syscall
-> arguments end up being:
-> 
->   mount("/dev/loop0", "dir", "squashfs", MS_RDONLY|MS_SILENT, "sizelimit=xxx")
-> 
-> Until kernel 5.4 this worked, since 5.4 this returns EINVAL and dmesg contains
-> the line "squashfs: Unknown parameter 'sizelimit'". I believe this has to do
-> with the conversion of squashfs to the new mount api. 
-> 
-> This is an unfortunate regression, and it does not seem like this can be simply
-> reverted. What is the suggested course of action?
-> 
-> Please cc me on replies, I'm not subscribed to the list.
-> 
-> Thanks,
-> Jeremi
-> 
-
+Have yet to take a closer look (and benchmark) and the patches and
+the generated code, but fwiw I do agree that case #1 is easier to
+read.
 
 -- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Jens Axboe
+
