@@ -7,36 +7,34 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0AF8C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 01:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC5DC43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 01:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72238215E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 01:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55584215E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 01:51:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbfK3BuP (ORCPT
+        id S1727239AbfK3BvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 20:50:15 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:48724 "EHLO huawei.com"
+        Fri, 29 Nov 2019 20:51:23 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6732 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727171AbfK3BuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 20:50:15 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 756CDFABC129D1FBD040;
-        Sat, 30 Nov 2019 09:50:11 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Sat, 30 Nov 2019
- 09:50:03 +0800
+        id S1727171AbfK3BvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 20:51:23 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 0B342732A100D34C66C6;
+        Sat, 30 Nov 2019 09:51:21 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Sat, 30 Nov 2019
+ 09:51:10 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
-        <broonie@kernel.org>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2 -next] gpiolib: of: Make of_gpio_spi_cs_get_count static
-Date:   Sat, 30 Nov 2019 09:28:28 +0800
-Message-ID: <20191130012828.14504-1-yuehaibing@huawei.com>
+To:     <axboe@kernel.dk>, <viro@zeniv.linux.org.uk>,
+        <asml.silence@gmail.com>
+CC:     <io-uring@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] io_uring: Add missing include <linux/highmem.h>
+Date:   Sat, 30 Nov 2019 09:50:42 +0800
+Message-ID: <20191130015042.17020-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <CACRpkdbeKdEAEtoPZH8+fWcZEOqJ6cdGTRSkrKx8L9avxnPQQg@mail.gmail.com>
-References: <CACRpkdbeKdEAEtoPZH8+fWcZEOqJ6cdGTRSkrKx8L9avxnPQQg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.133.213.239]
@@ -46,35 +44,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warning:
+Fix build error:
 
-drivers/gpio/gpiolib-of.c:35:5: warning:
- symbol 'of_gpio_spi_cs_get_count' was not declared. Should it be static?
+fs/io_uring.c:1628:21: error: implicit declaration of function 'kmap' [-Werror=implicit-function-declaration]
+fs/io_uring.c:1643:4: error: implicit declaration of function 'kunmap' [-Werror=implicit-function-declaration]
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 311ae9e159d8 ("io_uring: fix dead-hung for non-iter fixed rw")
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
-v2: This is caused by commit 71b8f600b034 ("gpio: Handle counting of Freescale chipselects"),
-	should be applied to spi tree.
----
- drivers/gpio/gpiolib-of.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/io_uring.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 610c6622f62d..b696e4598a24 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -32,7 +32,7 @@
-  * the counting of "cs-gpios" to count "gpios" transparent to the
-  * driver.
-  */
--int of_gpio_spi_cs_get_count(struct device *dev, const char *con_id)
-+static int of_gpio_spi_cs_get_count(struct device *dev, const char *con_id)
- {
- 	struct device_node *np = dev->of_node;
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 2c2e8c2..745eb00 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -69,6 +69,7 @@
+ #include <linux/nospec.h>
+ #include <linux/sizes.h>
+ #include <linux/hugetlb.h>
++#include <linux/highmem.h>
  
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/io_uring.h>
 -- 
-2.20.1
+2.7.4
 
 
