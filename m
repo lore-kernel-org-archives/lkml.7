@@ -2,72 +2,112 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3D5C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 18:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B8CAC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 18:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92BA92084E
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 18:40:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575139216;
-	bh=HNyvNjPP8I7M7Zzgdj8BUUs4Bi4yHGX2THFPNKA6RUg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=awBaCEl54QTZJWejaCSYdRx24anXfkY3P9Z1iCIx//FD/pmpBBb2nd7Aud3y1PQyQ
-	 ay/QYCS4BFwNcsxxyC8EoxfFU0WEPyfbuLw5ns3WxB/KewJgnb00UK4GRUPJ7F78yD
-	 PD01wF295NfTjtbTtIRHWOxUUKDZ58TenFONC9rE=
+	by mail.kernel.org (Postfix) with ESMTP id 2F50D2075C
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 18:46:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbfK3SkP (ORCPT
+        id S1727219AbfK3Sq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Nov 2019 13:40:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32938 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726936AbfK3SkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Nov 2019 13:40:15 -0500
-Subject: Re: [git pull] mm + drm vmwgfx coherent
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575139214;
-        bh=HNyvNjPP8I7M7Zzgdj8BUUs4Bi4yHGX2THFPNKA6RUg=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=S/ACLge4+Q11OtN9Gnu7hsqxo9Pw7vSsOLKHVuSzy+IM98LGKJlCPVnM/FGKJ2uF3
-         Zls+4564gGkoeJ3lOGgPVSxVhuffjdL7JQToCl+zsheevyPHAE1HerreCUB/GfFWcv
-         uQFmZj6z73c+HVUVF3+qekENpQQ0nakmP8BN6V/E=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAPM=9txVpjxR1UAOPpXn-ZqMamAUdzfq_HOEav99A0A0sfFBUw@mail.gmail.com>
-References: <CAPM=9txVpjxR1UAOPpXn-ZqMamAUdzfq_HOEav99A0A0sfFBUw@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAPM=9txVpjxR1UAOPpXn-ZqMamAUdzfq_HOEav99A0A0sfFBUw@mail.gmail.com>
-X-PR-Tracked-Remote: git://anongit.freedesktop.org/drm/drm
- tags/drm-vmwgfx-coherent-2019-11-29
-X-PR-Tracked-Commit-Id: 0a6cad5df541108cfd3fbd79eef48eb824c89bdc
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d5bb349dbbe27537e90a03b9597deeb07723a86d
-Message-Id: <157513921458.25154.3957731534983081875.pr-tracker-bot@kernel.org>
-Date:   Sat, 30 Nov 2019 18:40:14 +0000
-To:     Dave Airlie <airlied@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas@shipmail.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Sat, 30 Nov 2019 13:46:27 -0500
+Received: from mx2.suse.de ([195.135.220.15]:38912 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726799AbfK3Sq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Nov 2019 13:46:27 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 475C6ADCF;
+        Sat, 30 Nov 2019 18:46:25 +0000 (UTC)
+Date:   Sat, 30 Nov 2019 19:46:12 +0100
+From:   Borislav Petkov <bp@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] RAS urgent for 5.5
+Message-ID: <20191130184612.GA17459@zn.tnic>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 29 Nov 2019 11:15:13 +1000:
+Hi Linus,
 
-> git://anongit.freedesktop.org/drm/drm tags/drm-vmwgfx-coherent-2019-11-29
+one urgent fix for the thermal throttling machinery: the recent change
+reworking the thermal notifications forgot to mask out read-only and
+reserved bits in the thermal status MSRs, leading to exceptions while
+writing those MSRs. The fix below takes care of masking out those bits
+first.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d5bb349dbbe27537e90a03b9597deeb07723a86d
+Please pull,
+thanks.
 
-Thank you!
+---
+The following changes since commit c2da5bdc66a377f0b82ee959f19f5a6774706b83:
 
+  Merge branch 'x86-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip (2019-11-26 17:12:12 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git ras-urgent-for-linus
+
+for you to fetch changes up to 5a43b87b3c62ad149ba6e9d0d3e5c0e5da02a5ca:
+
+  x86/mce/therm_throt: Mask out read-only and reserved MSR bits (2019-11-29 09:17:52 +0100)
+
+----------------------------------------------------------------
+Srinivas Pandruvada (1):
+      x86/mce/therm_throt: Mask out read-only and reserved MSR bits
+
+ arch/x86/kernel/cpu/mce/therm_throt.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/mce/therm_throt.c b/arch/x86/kernel/cpu/mce/therm_throt.c
+index d01e0da0163a..b38010b541d6 100644
+--- a/arch/x86/kernel/cpu/mce/therm_throt.c
++++ b/arch/x86/kernel/cpu/mce/therm_throt.c
+@@ -195,17 +195,24 @@ static const struct attribute_group thermal_attr_group = {
+ #define THERM_THROT_POLL_INTERVAL	HZ
+ #define THERM_STATUS_PROCHOT_LOG	BIT(1)
+ 
++#define THERM_STATUS_CLEAR_CORE_MASK (BIT(1) | BIT(3) | BIT(5) | BIT(7) | BIT(9) | BIT(11) | BIT(13) | BIT(15))
++#define THERM_STATUS_CLEAR_PKG_MASK  (BIT(1) | BIT(3) | BIT(5) | BIT(7) | BIT(9) | BIT(11))
++
+ static void clear_therm_status_log(int level)
+ {
+ 	int msr;
+-	u64 msr_val;
++	u64 mask, msr_val;
+ 
+-	if (level == CORE_LEVEL)
+-		msr = MSR_IA32_THERM_STATUS;
+-	else
+-		msr = MSR_IA32_PACKAGE_THERM_STATUS;
++	if (level == CORE_LEVEL) {
++		msr  = MSR_IA32_THERM_STATUS;
++		mask = THERM_STATUS_CLEAR_CORE_MASK;
++	} else {
++		msr  = MSR_IA32_PACKAGE_THERM_STATUS;
++		mask = THERM_STATUS_CLEAR_PKG_MASK;
++	}
+ 
+ 	rdmsrl(msr, msr_val);
++	msr_val &= mask;
+ 	wrmsrl(msr, msr_val & ~THERM_STATUS_PROCHOT_LOG);
+ }
+ 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Regards/Gruss,
+    Boris.
+
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
