@@ -2,124 +2,244 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15DC9C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 18:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E7DC43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 18:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA7262075C
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 18:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 490002075C
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 18:38:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X9NEjlyi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbfK3She (ORCPT
+        id S1727361AbfK3SiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Nov 2019 13:37:34 -0500
-Received: from asavdk4.altibox.net ([109.247.116.15]:38546 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726799AbfK3Shd (ORCPT
+        Sat, 30 Nov 2019 13:38:08 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:43757 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726799AbfK3SiI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Nov 2019 13:37:33 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 7FBE880563;
-        Sat, 30 Nov 2019 19:37:30 +0100 (CET)
-Date:   Sat, 30 Nov 2019 19:37:29 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] drm/panel: simple: Add support for the Frida
- FRD350H54004 panel
-Message-ID: <20191130183729.GD24722@ravnborg.org>
-References: <20191120171027.1102250-1-paul@crapouillou.net>
- <20191120171027.1102250-3-paul@crapouillou.net>
+        Sat, 30 Nov 2019 13:38:08 -0500
+Received: by mail-ed1-f66.google.com with SMTP id dc19so13604672edb.10;
+        Sat, 30 Nov 2019 10:38:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+RzBf8pyfU8Uny6H+3RqVINrtRhR3Xcel4/XXwTyvKg=;
+        b=X9NEjlyiZmhBelSb/ykZvMCcyCpdjWy4kbwJAFwk1mOs2o5b50LMBfVikEw09KAnsV
+         y3PVfSEH9zoqdVjQk5fBn/EJPNrXRpAYn+Yi39tHf+eMMjI83xQq9NlBnrvT1zc2htaw
+         y9mMAT1qMtFMV1L/s1ArQ3fr0mpiClaq1ZXgzlpWFSgakPDegZO+IPO3QKBeveMXAmMz
+         ZfCBbMD5+kZ9phTLaK5bMkrsi/xBgeTF4dAVUz2FrjLOzqj3LMowrrTR5hSO9S1CQ+2w
+         xxAyfJQ9EX+91VSU/MxidWnEwkcTU8x1ENLJKBq1L9kswfct5JYkHSgFMpxocmIi4ChK
+         0OQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+RzBf8pyfU8Uny6H+3RqVINrtRhR3Xcel4/XXwTyvKg=;
+        b=MIAOnr5Vs7Xts/Fhss/4Y0QhRBPnDgqPzT29WZiM3D9X5sSzn2nU6PmIoEpHJrtEm/
+         H8OryFbuH/lPpVHep1V2Xg9O3qBeI1Ek9LtwE2YwJskeJYlx3wX0zeleH1FK1PxMarzy
+         u/gO7IiHZOo/HY6LcV3QsqMSa3d6RCa65ibbS35quI+1V8lERrMHP06qcp34T8xK7tGY
+         lz68YDsoTmkj/wFxuQwpPFf06Q/hswdjIH7t1S8Fc18eW7TQQcZhC9sCp4TylBbS7bZO
+         3jLkPAD5WypFy0OZf4nAPnIhYU8BjO6lPEWrbysUEzO2h3Gptd9W58Vfobcsjz2udcfO
+         8hIg==
+X-Gm-Message-State: APjAAAWMBl8wZptRyB8UDWFmVjKcI0qN//naN4STd38GZft6hQImDwbr
+        +8Btxpc0Dq54ihHrVxXrQ4pQ0HAvHD5e6uZUyo8=
+X-Google-Smtp-Source: APXvYqz70UA24fvxB0wHGdwYaTBFNDo6CMy4Oq+5QXCbIwPFql2H/V6HV8+uwA8MlG1SHEi3WC1mtJo5AlAwE8BtT0c=
+X-Received: by 2002:a50:9fcb:: with SMTP id c69mr52950584edf.163.1575139085316;
+ Sat, 30 Nov 2019 10:38:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191120171027.1102250-3-paul@crapouillou.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8
-        a=4eiu5t_5MPiKWv0nutYA:9 a=CjuIK1q_8ugA:10 a=9LHmKk7ezEChjTCyhBa9:22
-        a=pHzHmUro8NiASowvMSCR:22 a=6VlIyEUom7LUIeUMNQJH:22
+References: <20190630203614.5290-1-robdclark@gmail.com> <20190630203614.5290-2-robdclark@gmail.com>
+ <CAL_JsqKMULJJ9CERRBpqd7Y2dtovEJ6jcDKy6J4yR6rAdjibUg@mail.gmail.com>
+In-Reply-To: <CAL_JsqKMULJJ9CERRBpqd7Y2dtovEJ6jcDKy6J4yR6rAdjibUg@mail.gmail.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Sat, 30 Nov 2019 10:37:52 -0800
+Message-ID: <CAF6AEGsAgUsKJjLQkRDdjZtSvX267Cz_m_P7_m6VeJ2u=Ozc1g@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: chosen: document panel-id binding
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        aarch64-laptops@lists.linaro.org,
+        Rob Clark <robdclark@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul.
+On Mon, Jul 1, 2019 at 7:03 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Sun, Jun 30, 2019 at 2:36 PM Rob Clark <robdclark@gmail.com> wrote:
+> >
+> > From: Rob Clark <robdclark@chromium.org>
+> >
+> > The panel-id property in chosen can be used to communicate which panel,
+> > of multiple possibilities, is installed.
+> >
+> > Signed-off-by: Rob Clark <robdclark@chromium.org>
+> > ---
+> >  Documentation/devicetree/bindings/chosen.txt | 69 ++++++++++++++++++++
+> >  1 file changed, 69 insertions(+)
+>
+> I need to update this file to say it's moved to the schema repository...
+>
+> But I don't think that will matter...
+>
+> > diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+> > index 45e79172a646..d502e6489b8b 100644
+> > --- a/Documentation/devicetree/bindings/chosen.txt
+> > +++ b/Documentation/devicetree/bindings/chosen.txt
+> > @@ -68,6 +68,75 @@ on PowerPC "stdout" if "stdout-path" is not found.  However, the
+> >  "linux,stdout-path" and "stdout" properties are deprecated. New platforms
+> >  should only use the "stdout-path" property.
+> >
+> > +panel-id
+> > +--------
+> > +
+> > +For devices that have multiple possible display panels (multi-sourcing the
+> > +display panels is common on laptops, phones, tablets), this allows the
+> > +bootloader to communicate which panel is installed, e.g.
+>
+> How does the bootloader figure out which panel? Why can't the kernel
+> do the same thing?
+>
+> > +
+> > +/ {
+> > +       chosen {
+> > +               panel-id = <0xc4>;
+> > +       };
+> > +
+> > +       ivo_panel {
+> > +               compatible = "ivo,m133nwf4-r0";
+> > +               power-supply = <&vlcm_3v3>;
+> > +               no-hpd;
+> > +
+> > +               ports {
+> > +                       port {
+> > +                               ivo_panel_in_edp: endpoint {
+> > +                                       remote-endpoint = <&sn65dsi86_out_ivo>;
+> > +                               };
+> > +                       };
+> > +               };
+> > +       };
+> > +
+> > +       boe_panel {
+> > +               compatible = "boe,nv133fhm-n61";
+>
+> Both panels are going to probe. So the bootloader needs to disable the
+> not populated panel setting 'status' (or delete the node). If you do
+> that, do you even need 'panel-id'?
+>
 
-I am not sure if I already wrote this...
+So, I'm finally having some time to revisit this proposal..  I have a
+few updates:
 
-On Wed, Nov 20, 2019 at 06:10:27PM +0100, Paul Cercueil wrote:
-> The FRD350H54004 is a simple 3.5" 320x240 24-bit TFT panel, found for
-> instance inside the Anbernic RG-350 handheld gaming console.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  drivers/gpu/drm/panel/panel-simple.c | 29 ++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index 28fa6ba7b767..8c03f7fe461c 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -1378,6 +1378,32 @@ static const struct panel_desc evervision_vgg804821 = {
->  	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_NEGEDGE,
->  };
->  
-> +static const struct drm_display_mode frida_frd350h54004_mode = {
-> +	.clock = 6777,
-> +	.hdisplay = 320,
-> +	.hsync_start = 320 + 70,
-> +	.hsync_end = 320 + 70 + 50,
-> +	.htotal = 320 + 70 + 50 + 10,
-> +	.vdisplay = 240,
-> +	.vsync_start = 240 + 5,
-> +	.vsync_end = 240 + 5 + 1,
-> +	.vtotal = 240 + 5 + 1 + 5,
-> +	.vrefresh = 60,
-> +	.flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
-> +};
-> +
-> +static const struct panel_desc frida_frd350h54004 = {
-> +	.modes = &frida_frd350h54004_mode,
-> +	.num_modes = 1,
-> +	.bpc = 8,
-> +	.size = {
-> +		.width = 77,
-> +		.height = 64,
-> +	},
-> +	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDGE,
-> +};
-> +
->  static const struct drm_display_mode foxlink_fl500wvr00_a0t_mode = {
->  	.clock = 32260,
->  	.hdisplay = 800,
++ Updated DtbLoader.efi to read UEFIDisplayInfo and get the panel-id
+  so I can drop the efi/libstub patch[1]
++ I can drop drm_of_find_panel_id() and fold the logic to look at
+  /chosen/panel-id into drm_of_find_panel_or_bridge() so that each
+  driver or bridge doesn't need an update
 
-In alphabetic order. frida comes after foxlink.
+This doesn't realy solve the issue that both panels will probe.  On
+the other hand, I really don't want to make the DtbLoader know enough
+about the dt structure of each laptop to patch dt, since that is not
+going to be scalable at all.  (Likewise, there is some interest for
+devices that use u-boot to take the panel-id from a uboot env var and
+patch dt, but again knowing enough to intelligently patch the dt is
+not going to be feasible.)
 
-> @@ -3186,6 +3212,9 @@ static const struct of_device_id platform_of_match[] = {
->  	}, {
->  		.compatible = "evervision,vgg804821",
->  		.data = &evervision_vgg804821,
-> +	}, {
-> +		.compatible = "frida,frd350h54004",
-> +		.data = &frida_frd350h54004,
->  	}, {
->  		.compatible = "foxlink,fl500wvr00-a0t",
->  		.data = &foxlink_fl500wvr00_a0t,
-In alphabetic order. frida comes after foxlink.
+But, an alternate solution could be, instead of adding a 'panel-id'
+node in chosen, I could add it as an optional property in the panel
+node.  So taking my original example of the yoga c630 laptops, with
+the two possible panel id's 0xc4 and 0xc5:
 
-	Sam
+    ivo_panel {
+        compatible = "ivo,m133nwf4-r0";
+        panel-id = <0xc4>;
+        status = "disabled";
+
+        ports {
+            port {
+                ivo_panel_in_edp: endpoint {
+                    remote-endpoint = <&sn65dsi86_out_ivo>;
+                };
+            };
+        };
+    };
+
+    boe_panel {
+        compatible = "boe,nv133fhm-n61";
+        panel-id = <0xc4>;
+        status = "disabled";
+
+        ports {
+            port {
+                boe_panel_in_edp: endpoint {
+                    remote-endpoint = <&sn65dsi86_out_boe>;
+                };
+            };
+        };
+    };
+
+    sn65dsi86: bridge@2c {
+        compatible = "ti,sn65dsi86";
+
+        ports {
+            #address-cells = <1>;
+            #size-cells = <0>;
+
+            port@0 {
+                reg = <0>;
+                sn65dsi86_in_a: endpoint {
+                    remote-endpoint = <&dsi0_out>;
+                };
+            };
+
+            port@1 {
+                reg = <1>;
+
+                sn65dsi86_out_boe: endpoint@c4 {
+                    remote-endpoint = <&boe_panel_in_edp>;
+                };
+
+                sn65dsi86_out_ivo: endpoint@c5 {
+                    remote-endpoint = <&ivo_panel_in_edp>;
+                };
+            };
+        };
+    };
+
+With this, the "firmware" (DtbLoader, u-boot, etc) could crawl the
+entire dt looking for a node with a panel-id that matches the one it's
+looking for, and change that node's status to enabled.
+
+The advantage would be that the other panel(s) that is not installed
+will not be probed.  The downsides are that (1) the drm drivers would
+have to loop over all the endpoints to find the active panel (some
+drivers do this already, most do not), and (2) the property name
+"panel-id" (or whatever we pick) will now be somehow special, you
+couldn't re-use that name elsewhere without potential to confuse the
+firmware.  And it is more complexity in the firmware (although at
+least it can be done generically) compared to just adding a property
+in chosen.
+
+Not sure if this is better, I thought my initial proposal was more
+elegant.  I am open to other suggestions, anything other than teaching
+DtbLoader/u-boot about the specific dt of each different device that
+would use this.
+
+BR,
+-R
+
+[1] https://github.com/robclark/edk2/commits/dtbloader
