@@ -2,164 +2,180 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A764BC432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 04:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F479C43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 04:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62A9020715
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 04:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 642C020715
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 04:45:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j9vy/S7L"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="KlB8vWTV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727219AbfK3EiL (ORCPT
+        id S1727230AbfK3Epl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 23:38:11 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40151 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727142AbfK3EiL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 23:38:11 -0500
-Received: by mail-pg1-f193.google.com with SMTP id e17so15430499pgd.7
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 20:38:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QOcATAytYdAUYAj61d6IpYGu6sX7w+eDXWKXj+6FQJQ=;
-        b=j9vy/S7L+YPvk/Jb7NxdDWzFdsJueZLTJ3U6EgdCpIk7hNzWDsues1GqszWHtonsMh
-         90b+SsPYMPNrhmrTZ5ADJkEQvzZSWVLx2iPo8Lur7LbeKSGx1IiKBEOs2ARaZe/VAZN4
-         W5ioSAgI1FEMGfkGprjvVZdnVtgdg32u4nhsR9PQ3FdBlaf0wZnG9toZUwDdtLx3+vTg
-         UOYOTPGUio45KoPlbZDOV9L82I2ZLtyVKfLAX1SkamZjfwzQKUTaCH5WbmP3mz5LtCD5
-         RYzB6/F3IXQvN0aIkUYGMHWFMAytc03Ws7fMsTS78uWy2PRvPwlgvq+tMvLsHoaFWrrs
-         Ucpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QOcATAytYdAUYAj61d6IpYGu6sX7w+eDXWKXj+6FQJQ=;
-        b=TLcuToIVkRyH38dbEn4WGpmL2Np//1F6VVtkbBX+Qs5aSUvdv9if69xwXXi1lbO5di
-         j4dR5gMIe2W4INHWbkzbHaSNAtjVCmvke6yM40qRxhqGCI9NEOUmneyZEpDFOBJaI1M9
-         yr6f2eNYiZPasTo1fc/EppKkPRvkLXhOhUp0VKMedZNWoF/I2QIFhfJ8zCFZ+tWK0QiK
-         HnYt0dOcS5XzHNaQYBNJLcLcgvn99YdY2NtezpPchevcuk46XXX1GB0IWlV/gvssitfl
-         Wx3hIxqBYwGHT7rpKOGN+7lSUrBybXfrt0ZeNDC3rbRFpoqjbsFeGUK34s/AETx4YLvk
-         Zbgw==
-X-Gm-Message-State: APjAAAV5EypEMZjL9EocTBn9y//NcMTN6ReDNHiLsrf9xhSAQAab9eBD
-        uEPV4HvBzeZlivjbnWnNMvUO3g==
-X-Google-Smtp-Source: APXvYqzl0nI0zkWWC3GyKCb6vZsvk9rxrHliKFgB87oUCzOLq1iKPzZZGPQRAsp0IfRBsqcqrmHOmQ==
-X-Received: by 2002:a63:2949:: with SMTP id p70mr20698711pgp.191.1575088686021;
-        Fri, 29 Nov 2019 20:38:06 -0800 (PST)
-Received: from google.com ([2620:0:1000:2511:b34b:87b6:d099:91b0])
-        by smtp.gmail.com with ESMTPSA id em16sm15839604pjb.21.2019.11.29.20.38.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Nov 2019 20:38:05 -0800 (PST)
-Date:   Fri, 29 Nov 2019 20:38:00 -0800
-From:   Tom Anderson <thomasanderson@google.com>
-To:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Cc:     Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Mario Kleiner <mario.kleiner.de@gmail.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/amd/display: Reduce HDMI pixel encoding if max clock
- is exceeded
-Message-ID: <20191130043800.GA217968@google.com>
-References: <20191123052900.77205-1-thomasanderson@google.com>
+        Fri, 29 Nov 2019 23:45:41 -0500
+Received: from mail-eopbgr820133.outbound.protection.outlook.com ([40.107.82.133]:62336
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727142AbfK3Epl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 23:45:41 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=E6FA+l2BVMzOnV5w97DGC7TeODjzt7uqOl1/C0Lz8FELScxh74kf30m5LBVXVJ9u8R7FZgSvqFfbZp3QPPycb6cfMqvSBo0bkYk/QOuMxISOjTaCrm9XiFuxPAPdypeKl/va+IL/OHqaO75/vFqwFTT24YzgIWpwqHuaa/F/PzV+KFVePMbDKYrypNEtLHrDXSjOE8mc6s5LCffvk8SRzMURE+x4z4rNb1GCxvUXuAymYHuuLLSKaVqSO5iY2KUBPbMnCOGfWIfakK/YROD6luGE9tK9zhfzcos+AYDzg0VQcduAwUcUDDIbKoP5KD57G/iscA7rGkfWNfhpdQ0Vew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0Co3l934DCYq+zxn8eiJTpMW9eC9dClm6JOgjJK0S34=;
+ b=C0Zy0wsmFFKe7ahxaIGIjlqgcyPAsCowqGP8QrJ/Z3OTh6z4ZGzeMQQz8wa0V7UeazVgOPtlOQmqnVKYZn1aoMv2QNizFCC8/6M69JBHCHfaL9BnwtjL/iFzifpqpElN1MRkxoBZfckqZlYReylKWhG+ujo31uwy2y42t8EivfgnVnObojAWDSRrGP8f4CY9aIs1rt1O+tnYwS6HRsZrCv6pySiQU669LKvKfGBjaaSRPyZXTKoYTj3N+xyySN3TpnSUASWabFat3RXIKWve/Apflh2Mnc0hg9wC7Vw7vxTISJXQrF2ZpdBN0wNit1FjH78qoqZ4pRwjq9Y2rIin2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0Co3l934DCYq+zxn8eiJTpMW9eC9dClm6JOgjJK0S34=;
+ b=KlB8vWTVKpg3AXlVszgVq29ZhC72a/344WeoyL7doJGDI9MFHPh2Os+syhH2SBrckRo6FDRiQllrJDopgugocnvaT7iZy7EW8mQniDsmHAqXAtFNwusmESW2QSNR88pcOP3jXRSWvgDe4NzZYx8yet+8w2DbGz5KM1+PvbrW+EY=
+Received: from CY4PR21MB0629.namprd21.prod.outlook.com (10.175.115.19) by
+ CY4PR21MB0469.namprd21.prod.outlook.com (10.172.121.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.8; Sat, 30 Nov 2019 04:45:36 +0000
+Received: from CY4PR21MB0629.namprd21.prod.outlook.com
+ ([fe80::ed94:4b6d:5371:285c]) by CY4PR21MB0629.namprd21.prod.outlook.com
+ ([fe80::ed94:4b6d:5371:285c%4]) with mapi id 15.20.2516.003; Sat, 30 Nov 2019
+ 04:45:36 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dexuan Cui <decui@microsoft.com>
+CC:     Long Li <longli@microsoft.com>
+Subject: RE: [EXTERNAL] [PATCH 2/2] PCI: hv: Add support for protocol 1.3 and
+ support PCI_BUS_RELATIONS2
+Thread-Topic: [EXTERNAL] [PATCH 2/2] PCI: hv: Add support for protocol 1.3 and
+ support PCI_BUS_RELATIONS2
+Thread-Index: AQHVoaFeiJWyuTLLsUiMTX6LeRJTSaejKm4Q
+Date:   Sat, 30 Nov 2019 04:45:36 +0000
+Message-ID: <CY4PR21MB0629300E161C5119D4714A64D7410@CY4PR21MB0629.namprd21.prod.outlook.com>
+References: <1574474229-44840-1-git-send-email-longli@linuxonhyperv.com>
+ <1574474229-44840-2-git-send-email-longli@linuxonhyperv.com>
+In-Reply-To: <1574474229-44840-2-git-send-email-longli@linuxonhyperv.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-11-30T04:45:34.1746665Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0f1b8475-7cee-41ba-9596-da3f0b1969db;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2e2c4505-ba3b-4ad6-3064-08d77550243a
+x-ms-traffictypediagnostic: CY4PR21MB0469:|CY4PR21MB0469:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR21MB04696F31075A2D89BAB6A4DFD7410@CY4PR21MB0469.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02379661A3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39860400002)(366004)(376002)(346002)(396003)(189003)(199004)(26005)(66446008)(6116002)(6436002)(316002)(5660300002)(81156014)(478600001)(6636002)(86362001)(7696005)(14454004)(33656002)(10290500003)(66556008)(66476007)(8936002)(52536014)(66946007)(64756008)(6246003)(76116006)(229853002)(3846002)(25786009)(8676002)(107886003)(4326008)(81166006)(102836004)(256004)(74316002)(71190400001)(22452003)(7736002)(110136005)(2201001)(99286004)(66066001)(10090500001)(76176011)(186003)(55016002)(6506007)(11346002)(8990500004)(2501003)(2906002)(446003)(1511001)(71200400001)(9686003)(305945005)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0469;H:CY4PR21MB0629.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: u7/18sKmb5VKQMckFMDPBtAtcLwcWgrioJCkjKwfH0iMnzKnJwlNQlD4uF8Sxx341DYC++ZYV8I+vkNvZutkx1g3v+dsTw1Xu2LzE5UtlrrnBjjQbkZx8AOjj0zmzHwYBCAcL4J6WtBfAYlJbIPYDT6ggtO1Ccot/FNVZgb5O29g1+YWWEWhjkmK+qn97yT3YxHhCUSQNc/US8Ja0TMqdwyE3bmctVJhrCCzuVGHxwu/jVwc67MoSwqpxJ3VDpkGTeLQEw0iLnuHLNY153NEP1yP8YcUxIbKTyBxcZNkNWtm2Zw3XUCRP3puWbQjIqt/ri2vqwZ9tliqkiSXgdrSRrbEUThaTIfapXtUkzijyOBuvnKl6RvLEMRAW7fLzaobtMWbZHReQxgir7UxUwhrcZNLnpq/K8WCVHOVoIYv7DaNx/rv1eTbL+ZV5UEyNG/e
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191123052900.77205-1-thomasanderson@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2e2c4505-ba3b-4ad6-3064-08d77550243a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Nov 2019 04:45:36.0331
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: APPH3jg5OEbrEfCdR5edo8kq2JbLwXgqzmd+yGpzUipzf1Va/I9ZiSlx48R6Xm9mBbyReuY7ZZDaBbqHgGKoqJE4Su0bvR37TbbhRP8h+6w=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0469
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I just realized that at 4:2:2, the pixel clock isn't actually decreased to 3/4
-of it's value at 4:4:4. I'll send a revised patch on Monday.
-
-On Fri, Nov 22, 2019 at 09:29:00PM -0800, Thomas Anderson wrote:
-> For high-res (8K) or HFR (4K120) displays, using uncompressed pixel
-> formats like YCbCr444 would exceed the bandwidth of HDMI 2.0, so the
-> "interesting" modes would be disabled, leaving only low-res or low
-> framerate modes.
-> 
-> This change lowers the pixel encoding to 4:2:2 or 4:2:0 if the max TMDS
-> clock is exceeded. Verified that 8K30 and 4K120 are now available and
-> working with a Samsung Q900R over an HDMI 2.0b link from a Radeon 5700.
-> 
-> Signed-off-by: Thomas Anderson <thomasanderson@google.com>
+From: longli@linuxonhyperv.com Sent: Friday, November 22, 2019 5:57 PM
+>=20
+> From: Long Li <longli@microsoft.com>
+>=20
+> Starting with Hyper-V PCI protocol version 1.3, the host VSP can send
+> PCI_BUS_RELATIONS2 and pass the vNUMA node information for devices on the=
+ bus.
+> The vNUMA node tells which guest NUMA node this device is on based on gue=
+st
+> VM configuration topology and physical device inforamtion.
+>=20
+> The patch adds code to negotiate v1.3 and process PCI_BUS_RELATIONS2.
+>=20
+> Signed-off-by: Long Li <longli@microsoft.com>
 > ---
->  .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 30 ++++++++++++++-----
->  1 file changed, 23 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> index 4139f129eafb..a507a6f04c82 100644
-> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> @@ -3269,13 +3269,15 @@ static void reduce_mode_colour_depth(struct dc_crtc_timing *timing_out)
->  	timing_out->display_color_depth--;
->  }
->  
-> -static void adjust_colour_depth_from_display_info(struct dc_crtc_timing *timing_out,
-> -						const struct drm_display_info *info)
-> +static void adjust_timing_from_display_info(
-> +	struct dc_crtc_timing *timing_out,
-> +	const struct drm_display_info *info,
-> +	const struct drm_display_mode *mode_in)
->  {
->  	int normalized_clk;
-> -	if (timing_out->display_color_depth <= COLOR_DEPTH_888)
-> +	if (timing_out->display_color_depth < COLOR_DEPTH_888)
->  		return;
-> -	do {
-> +	while (timing_out->display_color_depth > COLOR_DEPTH_888) {
->  		normalized_clk = timing_out->pix_clk_100hz / 10;
->  		/* YCbCr 4:2:0 requires additional adjustment of 1/2 */
->  		if (timing_out->pixel_encoding == PIXEL_ENCODING_YCBCR420)
-> @@ -3297,9 +3299,23 @@ static void adjust_colour_depth_from_display_info(struct dc_crtc_timing *timing_
->  		if (normalized_clk <= info->max_tmds_clock)
->  			return;
->  		reduce_mode_colour_depth(timing_out);
+>  drivers/pci/controller/pci-hyperv.c | 107 ++++++++++++++++++++++++++++
+>  1 file changed, 107 insertions(+)
+>=20
+
+[snip]
+
+> +/*
+> + * Set NUMA node for the devices on the bus
+> + */
+> +static void pci_assign_numa_node(struct hv_pcibus_device *hbus)
+> +{
+> +	struct pci_dev *dev;
+> +	struct pci_bus *bus =3D hbus->pci_bus;
+> +	struct hv_pci_dev *hv_dev;
+> +
+> +	list_for_each_entry(dev, &bus->devices, bus_list) {
+> +		hv_dev =3D get_pcichild_wslot(hbus, devfn_to_wslot(dev->devfn));
+> +		if (!hv_dev)
+> +			continue;
+> +
+> +		if (hv_dev->desc.flags & HV_PCI_DEVICE_FLAG_NUMA_AFFINITY)
+> +			set_dev_node(&dev->dev, hv_dev->desc.virtual_numa_node);
 > +	}
->  
-> -	} while (timing_out->display_color_depth > COLOR_DEPTH_888);
-> -
-> +	/* The color depth is 888 and cannot be reduced any further, but the
-> +	 * clock would still exceed the max tmds clock. Try reducing the pixel
-> +	 * encoding next.
-> +	 */
-> +	if (timing_out->pixel_encoding == PIXEL_ENCODING_RGB ||
-> +	    timing_out->pixel_encoding == PIXEL_ENCODING_YCBCR444) {
-> +		/* YCBCR422 is always supported. */
-> +		timing_out->pixel_encoding = PIXEL_ENCODING_YCBCR422;
-> +		normalized_clk = (timing_out->pix_clk_100hz * 3) / 40;
-> +		if (normalized_clk <= info->max_tmds_clock)
-> +			return;
-> +	}
-> +	/* YCBCR420 may only be supported on specific modes. */
-> +	if (drm_mode_is_420_also(info, mode_in))
-> +		timing_out->pixel_encoding = PIXEL_ENCODING_YCBCR420;
->  }
->  
->  static void fill_stream_properties_from_drm_display_mode(
-> @@ -3366,7 +3382,7 @@ static void fill_stream_properties_from_drm_display_mode(
->  	stream->out_transfer_func->type = TF_TYPE_PREDEFINED;
->  	stream->out_transfer_func->tf = TRANSFER_FUNCTION_SRGB;
->  	if (stream->signal == SIGNAL_TYPE_HDMI_TYPE_A)
-> -		adjust_colour_depth_from_display_info(timing_out, info);
-> +		adjust_timing_from_display_info(timing_out, info, mode_in);
->  }
->  
->  static void fill_audio_info(struct audio_info *audio_info,
-> -- 
-> 2.24.0.432.g9d3f5f5b63-goog
-> 
+> +}
+> +
+
+get_pcichild_wslot() gets a reference to the hv_dev, so a call to put_pcich=
+ild() is
+needed to balance.
+
+But more broadly, is the call to set_dev_node() operating on the correct
+struct device?  There's a struct device in the struct hv_device, and also o=
+ne in the
+struct pci_dev.  Everything in this module seems to be operating on the for=
+mer.
+For example, all the dev_err() calls identify the struct device in struct h=
+v_device.
+And enumerating all the devices on a virtual PCI bus is done by iterating t=
+hrough
+the hbus->children list, not the bus->devices list.  I don't completely und=
+erstand
+the interplay between the two struct device entries, but the difference mak=
+es
+me wonder if the above code should be setting the NUMA node on the struct
+device that's in struct hv_device.
+
+Michael
