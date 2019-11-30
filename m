@@ -2,137 +2,119 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE35C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 22:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30862C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 22:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72B462075A
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 22:48:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575154123;
-	bh=PajkUHGTsIy7Xbudo3QuQfdxSMNiov1zEcimXthc9yQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dCBeZJbGkNZutZZLO4IQGWV/A9WyNKoCd7DZYUwJKhoAgs/AO4GnxkV7CNt6h0KI/
-	 gF0WFo2nqddM8nQHLX2wxHllZ0kjeQwn97v+8Gj3sXhX3rqOd40EdesyaqXPRGKwgk
-	 zjAhIlhUapVzsv0/uiLyAqSR06QF6eGoHo0FeDVw=
+	by mail.kernel.org (Postfix) with ESMTP id E61712084E
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 22:50:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sUIEvkwx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727320AbfK3WsX (ORCPT
+        id S1727388AbfK3WuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Nov 2019 17:48:23 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43678 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727025AbfK3WsW (ORCPT
+        Sat, 30 Nov 2019 17:50:11 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:42718 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727025AbfK3WuK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Nov 2019 17:48:22 -0500
-Received: by mail-lf1-f66.google.com with SMTP id l14so25134413lfh.10
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Nov 2019 14:48:21 -0800 (PST)
+        Sat, 30 Nov 2019 17:50:10 -0500
+Received: by mail-io1-f65.google.com with SMTP id f25so10011974iog.9;
+        Sat, 30 Nov 2019 14:50:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DM1WaVRIUGvnQSzfAPiF4yttMdQv5XqK5t8psrz81pM=;
-        b=HVYZEgMZkuP4zDHaNbbobY2Dz+xMbjfGWVrxpFaPaoOTTjncL6tHFib/8GEOBxPSuE
-         bobVXDofhHspX5FipXsGJeCSgZOh3vVC1d+VZx3MOUIoHrkLzDvgFtBDLiqPgabxkxcs
-         jH9TUg0Xn8mfAS8wZ5/5Psk8+LFvcFuRpB8sE=
+        bh=aSm4m1BOCZlWJCq+mZdak/muf8CTMd2nru46ETkG3PE=;
+        b=sUIEvkwxjGipfViu4Qtq1qVaUr0TxcZhsiLEzUXr15FnsUoaakNu2cuQyav66wlCVB
+         1qKWWbdpUjpUuFQRk37jLudwTy1OaJsadey7XH41fDkawO2cxN/g2nI7kHvmdIbthwUF
+         zfe2X36M/asGIQbEj6ZcLmqrjh7uqiSRGY5/MN21gn5y2/Qr9eo2K/h5QFLVPLePFWbX
+         A9J6t86T+mng8f0gxzRmOy1C1xtJHaRSokEkSHD2GCjXBSPkc6vcUe9EgLiFC2xLHt3e
+         z46u/W9g4Po5VIurkkIjs7w8NZNKkJX8A1mkAgrguT5eM0Z83tY5so/gVFQZeCF4AI3v
+         0Vqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DM1WaVRIUGvnQSzfAPiF4yttMdQv5XqK5t8psrz81pM=;
-        b=F4WcLUx8NaicvZIsoDbWzA3om2miZdF95AJ+hmHly1LfjTA0pKde76c/4ydbqDhA5C
-         MdhlHhb6thI8K8Me5/SrNnawQqymvNNJLksY9ggzM9+nB3w/FiycmI2kYnhVyp/6P7NO
-         vVFbArd38dT2LBKo4u95Vqg8MsrbYoJOM6bP1HH04VThnwqGBb0w65hETdVymEC1ywJ4
-         jnKRL7DULqtbBDuwtLGOYjlmAYI6idhZdxjDeBh4ckuVPcpxWsmCf/3svPKpiLc8soYT
-         C1TopU/2WeH3tE4ZVZ9HhkI+CvTRcFJIjP+8sptcu2j0uzrPrQ6fWQLL0GVMkDeN212x
-         rSxQ==
-X-Gm-Message-State: APjAAAWNlSRPoz6LVSKrmalR0pcLH0bKjObCe0VIBMLqy+7zNTz/rsP2
-        0V0FxXSgNPjAZ/2VmWODSd3i9DOZPt0=
-X-Google-Smtp-Source: APXvYqyZzUYNCzRHMUccU32/3nPRca1x5J8vw4L68AruDseECi/PZESEX17QhU+tMai7hCwx+iFFlA==
-X-Received: by 2002:ac2:4a61:: with SMTP id q1mr29982023lfp.36.1575154100168;
-        Sat, 30 Nov 2019 14:48:20 -0800 (PST)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
-        by smtp.gmail.com with ESMTPSA id a18sm12360827ljp.33.2019.11.30.14.48.19
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 30 Nov 2019 14:48:19 -0800 (PST)
-Received: by mail-lf1-f42.google.com with SMTP id 203so25120393lfa.12
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Nov 2019 14:48:19 -0800 (PST)
-X-Received: by 2002:ac2:5a08:: with SMTP id q8mr39043729lfn.106.1575153781845;
- Sat, 30 Nov 2019 14:43:01 -0800 (PST)
+        bh=aSm4m1BOCZlWJCq+mZdak/muf8CTMd2nru46ETkG3PE=;
+        b=dWWFnlkXUSwobOJF6fJ2OOSDd/fXzkGqEaKK8q8rT1u0xHDNl6adi8T0GNBPW9pQH6
+         5qZreOkRldo70rwizH+UTF+j8/rDHx8HY2Wn5fqn0CqfM279PBj7NJ4xFZsHeUnLXwb4
+         pqVlMgO/r85SzfNeB4tJdxzaP/bpjGGwU886JcZMS5makG8KQXGkQbyBQxfUCewm3mUz
+         6cQ18ngaYLty87Q9zcUJEiNtKyOyWHMHxuXd7AEG0u33/QTg38kY5TeRf9Go5GCnO5Lb
+         wwMSNr6jhzRjm8TvzLxbhVkrR16W34DvcuWKE1K4287fYc50WPOV18T38+pTEskH/RWa
+         ZacA==
+X-Gm-Message-State: APjAAAVR8YPndJdizAi9IH69i/OxVWoDjsx4eWNQD4QWfAOEwNcXUPXf
+        SCmooRelfT4SClB/LdxxrYCPvJbtlTffQRjHVd1UBbBy4Fg=
+X-Google-Smtp-Source: APXvYqx9lxZ5l9irYpZzmpvtKFaAsoENmY6LFc6Y9ijpfal2ed8gNzhMRy9KR7bxZfhQZ3AoZPaQy5+d8qSSxHgrvBA=
+X-Received: by 2002:a02:5208:: with SMTP id d8mr9965664jab.55.1575154209616;
+ Sat, 30 Nov 2019 14:50:09 -0800 (PST)
 MIME-Version: 1.0
-References: <877e3hfxyq.fsf@mpe.ellerman.id.au>
-In-Reply-To: <877e3hfxyq.fsf@mpe.ellerman.id.au>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 30 Nov 2019 14:42:45 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wj-BW=C8mFr5mWEYyjgngLoq2N6PZ-RKtiL7X-e93poHw@mail.gmail.com>
-Message-ID: <CAHk-=wj-BW=C8mFr5mWEYyjgngLoq2N6PZ-RKtiL7X-e93poHw@mail.gmail.com>
-Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.5-1 tag
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Cc:     ajd@linux.ibm.com, alastair@d-silva.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        asteinhauser@google.com, Bjorn Helgaas <bhelgaas@google.com>,
-        Qian Cai <cai@lca.pw>, chris.packham@alliedtelesis.co.nz,
-        chris.smart@humanservices.gov.au,
-        Christophe Leroy <christophe.leroy@c-s.fr>, clg@kaod.org,
-        cmr@informatik.wtf, David Hildenbrand <david@redhat.com>,
-        debmc@linux.vnet.ibm.com,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        gwalbon@linux.ibm.com, harish@linux.ibm.com,
-        hbathini@linux.ibm.com, Christoph Hellwig <hch@lst.de>,
-        krzk@kernel.org, leonardo@linux.ibm.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linuxppc-dev@lists.ozlabs.org, linuxram@us.ibm.com,
-        madalin.bucur@nxp.com, Mathieu Malaterre <malat@debian.org>,
-        msuchanek@suse.de, Nathan Chancellor <natechancellor@gmail.com>,
-        nathanl@linux.ibm.com, Nayna Jain <nayna@linux.ibm.com>,
-        Nick Piggin <npiggin@gmail.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>, oss@buserror.net,
-        ravi.bangoria@linux.ibm.com, Russell Currey <ruscur@russell.cc>,
-        sbobroff@linux.ibm.com, thuth@redhat.com, tyreld@linux.ibm.com,
-        vaibhav@linux.ibm.com, valentin@longchamp.me, yanaijie@huawei.com,
-        YueHaibing <yuehaibing@huawei.com>
+References: <20191129234108.12732-1-aford173@gmail.com> <20191129234108.12732-2-aford173@gmail.com>
+ <CAOMZO5AyLBrsxr5rqkWgf44X0CQdqHcdaCLRaWLC25b18bF+xw@mail.gmail.com> <CAOMZO5ALQQxoWFC9J5ZwT6DtsuVg-FaWCcGbcPK=psokWWRF8Q@mail.gmail.com>
+In-Reply-To: <CAOMZO5ALQQxoWFC9J5ZwT6DtsuVg-FaWCcGbcPK=psokWWRF8Q@mail.gmail.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Sat, 30 Nov 2019 16:49:58 -0600
+Message-ID: <CAHCN7x+zJt3i=Yw=2HjdtQa-rR4yMMvCMf319+wgMW0XQ=nF4g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: Add GPC Support
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Only tangentially related to the power parts ]
-
-On Sat, Nov 30, 2019 at 2:41 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
+On Sat, Nov 30, 2019 at 4:30 PM Fabio Estevam <festevam@gmail.com> wrote:
 >
-> There's some changes in security/integrity as part of the secure boot work. They
-> were all either written by or acked/reviewed by Mimi.
+> On Sat, Nov 30, 2019 at 7:25 PM Fabio Estevam <festevam@gmail.com> wrote:
+> >
+> > Hi Adam,
+> >
+> > On Fri, Nov 29, 2019 at 8:41 PM Adam Ford <aford173@gmail.com> wrote:
+> >
+> > > +
+> > > +                       gpc: gpc@303a0000 {
+> > > +                               compatible = "fsl,imx8mm-gpc";
+> >
+> > You could do like this instead:
+> >
+> > compatible = "fsl,imx8mm-gpc", "fsl,imx8mq-gpc";
+> >
+> > and then you don't need patch 1/2.
 
-  -#if (defined(CONFIG_X86) && defined(CONFIG_EFI)) || defined(CONFIG_S390)
-  +#if (defined(CONFIG_X86) && defined(CONFIG_EFI)) || defined(CONFIG_S390) \
-  + || defined(CONFIG_PPC_SECURE_BOOT)
+I like that idea.
 
-This clearly should be its own CONFIG variable, and be generated by
-having the different architectures just select it.
+> >
+> > Also, "fsl,imx8mm-gpc" needs to be documented.
 
-IOW, IMA should probably have a
+I held off intentionally because of all the txt->yaml conversion, I
+didn't want to get stuck in the middle of that.
 
-   config IMA_SECURE_BOOT
+Would an tweak to the txt file be accepted?
 
-and then s390 would just do the select unconditionally, while x86 and
-ppc would do
+If not, should I just use the "fsl,imx8mq-gpc" and leave it alone?
 
-  select IMA_SECURE_BOOT if EFI
+>
+> One more thing: when you add a v2, please specify the SoC name in the
+> subject line:
+>
+> arm64: dts: imx8mm: Add GPC Support
 
-and
+Good catch.  Sorry about that.
 
-  select IMA_SECURE_BOOT if PPC_SECURE_BOOT
 
-respectively.
-
-And then we wouldn't have random architectures adding random "me me me
-tooo!!!" type code.
-
-               Linus
+adam
