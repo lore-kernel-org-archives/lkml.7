@@ -2,161 +2,145 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF810C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 07:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1276DC432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 07:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A79A20833
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 07:58:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X21jOhTV"
+	by mail.kernel.org (Postfix) with ESMTP id D624F20833
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 07:59:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbfK3H6o (ORCPT
+        id S1727201AbfK3H7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Nov 2019 02:58:44 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:40804 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfK3H6o (ORCPT
+        Sat, 30 Nov 2019 02:59:07 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:44761 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbfK3H7H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Nov 2019 02:58:44 -0500
-Received: by mail-qt1-f193.google.com with SMTP id z22so14242328qto.7
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 23:58:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4TuWJxEYOJBolLGVAjehyG+fbpPZ9w2ICQlbTaVLWXk=;
-        b=X21jOhTVfG4rSldUXFliRrhtQmiNahYFhEzH6Ub0RdVkIQPEAVFWVY/3cskKIq65Iw
-         dJWQZ+5SsWqVV6JJoNKbdfI7xgXZit2gF7IITI92wixJgv3AXvstkGE/CNA32Am7xXIS
-         ULWEDWViHW3p+zEIFS8hKiFW2f7ZnwbC7uxnCjEssDyQBFnocwlPpdrFQDGl5CAHNaCL
-         eD9gxs3Bu/Qlg2TlTvzeomP8s2U41b9/9Paj7rUyydnYwbnsnP4WO5T2YLPqwXBDs4hC
-         4+/qLWxGAbIsIgZ9z9DgUe4VWCU3T6LiSjx0LLardrhQDdjw9dPdcTeOATDH5wT7WkeW
-         5l5w==
+        Sat, 30 Nov 2019 02:59:07 -0500
+Received: by mail-il1-f199.google.com with SMTP id h4so8529567ilh.11
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 23:59:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4TuWJxEYOJBolLGVAjehyG+fbpPZ9w2ICQlbTaVLWXk=;
-        b=q4pR2gZEW1XvNb92ZNBkcWKOjDcqGCWV1tcq6TS/CqqPngDprCfIJfv5PNSVuTDD2N
-         CK/1E1F5Fi1i0sO8yrrOrV1p+9Usd7B4mhhHxzqkACeHj5dpwbD0YH4+5040M2l2sLwP
-         79wwxK4IQRv24N6b6KDTVqrUpZ9s0X1+iUpKk4UxMVq56tFp8b4KQmMwwms4zN1GCqRG
-         fnKrkcA8lkfQV3a9r2d/reRVcp4f2Uf8pcCswe5cQZNImSXA5lKb0FEfzc8oQ+65Kbu1
-         xUVn5eizIQhDGhcKqy0cfKTEDV9MqyZRtiFnSqk3eIr9m8eiGrC6c27o/wEJda91mffh
-         P2Iw==
-X-Gm-Message-State: APjAAAV6llPQ4qt3DbmEgatnhc9Yw1yMC0yrlYH7teiAu2/UHHCsWB0J
-        PFDGHj0LshI+p63z10kqNKBjrDDwnhVyHH8KwddT6A==
-X-Google-Smtp-Source: APXvYqzFDveP+FTJqRaDVb+/Y5b+tMjDMsS66lf6sO+u9rS/rsgkOt/kmF4vn80UKvXIk8KyTJq4U5o7E1cf0GvN8KQ=
-X-Received: by 2002:ac8:ccf:: with SMTP id o15mr56539039qti.380.1575100721993;
- Fri, 29 Nov 2019 23:58:41 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=OEwP3juOQOIj8SZQEkYShHXCOKBgtNHHcB5lfQay514=;
+        b=hwcc4skJ8I2lB2s4SOCL7feMUVX+VwQko6mt1XnaF2bDsL29jVn+8Rf7HAxRxxirJc
+         mYl+lct1LleqdRjQq2dZxbYGgokngQMCthfXLhyXXZQ9eriKuLeyH2zLp5rt8hof3JNp
+         MvuL9Xj/i39Ldy/9XUqScPb4eeGpNqStGmBIRMNV9RFPp1XVyFql3iuG5+/hHNuMmxgb
+         eug835mI6gJ3YP7DCd3STGlT+o+zOqx4PvASE2R16QArnJbGbbgnIUej1PxFdoVlnX0Z
+         x+1hI97icyvon0l36Y2bhmG3HLYWcnbpBGlKRkBRw5O/9sv1ASysizlAFWlTgegmizvz
+         7ydg==
+X-Gm-Message-State: APjAAAX4ldGtZn8wohAZdAQQD6bTv33c7kBKFAhA47pLLetAKoSKAGzK
+        m1JKNYi0o3QE3U6HYDnNeG/dlXnsdUvpJExGgUv3zNO4Irc9
+X-Google-Smtp-Source: APXvYqz44tFSSozQ6aOmSHPvoQvCIFfR7Ci/Go2rFhJpPROQrtn8VRnvcEMs93kydYMHi6y4S1JmqMMbMV+PXRXJZqbst7fvqyKB
 MIME-Version: 1.0
-References: <0000000000005f386305988bb15f@google.com>
-In-Reply-To: <0000000000005f386305988bb15f@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Sat, 30 Nov 2019 08:58:30 +0100
-Message-ID: <CACT4Y+aQic2aM1gPOp_1Nh0ydAeeJk=KVbRZJpo9S1Zdt7SuzQ@mail.gmail.com>
-Subject: Re: BUG: unable to handle kernel paging request in xfs_sb_read_verify
-To:     syzbot <syzbot+6be2cbddaad2e32b47a0@syzkaller.appspotmail.com>,
-        Daniel Axtens <dja@axtens.net>,
-        kasan-dev <kasan-dev@googlegroups.com>
-Cc:     allison.henderson@oracle.com, Brian Foster <bfoster@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>, dchinner@redhat.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>, sandeen@redhat.com,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a05:6638:3b6:: with SMTP id z22mr5496062jap.35.1575100746885;
+ Fri, 29 Nov 2019 23:59:06 -0800 (PST)
+Date:   Fri, 29 Nov 2019 23:59:06 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000080f1d305988bb8ba@google.com>
+Subject: BUG: unable to handle kernel paging request in ion_heap_clear_pages
+From:   syzbot <syzbot+be6ccf3081ce8afd1b56@syzkaller.appspotmail.com>
+To:     arve@android.com, christian@brauner.io, devel@driverdev.osuosl.org,
+        dri-devel@lists.freedesktop.org, gregkh@linuxfoundation.org,
+        joel@joelfernandes.org, labbott@redhat.com,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
+        maco@android.com, sumit.semwal@linaro.org,
+        syzkaller-bugs@googlegroups.com, tkjos@android.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 30, 2019 at 8:57 AM syzbot
-<syzbot+6be2cbddaad2e32b47a0@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    419593da Add linux-next specific files for 20191129
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10cecb36e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=7c04b0959e75c206
-> dashboard link: https://syzkaller.appspot.com/bug?extid=6be2cbddaad2e32b47a0
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->
-> Unfortunately, I don't have any reproducer for this crash yet.
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+6be2cbddaad2e32b47a0@syzkaller.appspotmail.com
+Hello,
 
-+Daniel, kasan-dev
-This is presumably from the new CONFIG_KASAN_VMALLOC
+syzbot found the following crash on:
+
+HEAD commit:    419593da Add linux-next specific files for 20191129
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=12bfd882e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7c04b0959e75c206
+dashboard link: https://syzkaller.appspot.com/bug?extid=be6ccf3081ce8afd1b56
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+be6ccf3081ce8afd1b56@syzkaller.appspotmail.com
+
+BUG: unable to handle page fault for address: fffff52002e00000
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD 21ffee067 P4D 21ffee067 PUD aa11c067 PMD 0
+Oops: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 3644 Comm: ion_system_heap Not tainted  
+5.4.0-next-20191129-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:memory_is_nonzero mm/kasan/generic.c:121 [inline]
+RIP: 0010:memory_is_poisoned_n mm/kasan/generic.c:135 [inline]
+RIP: 0010:memory_is_poisoned mm/kasan/generic.c:166 [inline]
+RIP: 0010:check_memory_region_inline mm/kasan/generic.c:182 [inline]
+RIP: 0010:check_memory_region+0x9c/0x1a0 mm/kasan/generic.c:192
+Code: c9 4d 0f 49 c1 49 c1 f8 03 45 85 c0 0f 84 10 01 00 00 41 83 e8 01 4e  
+8d 44 c0 08 eb 0d 48 83 c0 08 4c 39 c0 0f 84 a7 00 00 00 <48> 83 38 00 74  
+ed 4c 8d 40 08 eb 09 48 83 c0 01 49 39 c0 74 53 80
+RSP: 0018:ffffc9000c9f7ab8 EFLAGS: 00010212
+RAX: fffff52002e00000 RBX: fffff52002e01600 RCX: ffffffff85d5c229
+RDX: 0000000000000001 RSI: 000000000000b000 RDI: ffffc90017000000
+RBP: ffffc9000c9f7ad0 R08: fffff52002e01600 R09: 0000000000001600
+R10: fffff52002e015ff R11: ffffc9001700afff R12: fffff52002e00000
+R13: 000000000000b000 R14: 0000000000000000 R15: ffffc9000c9f7d08
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffff52002e00000 CR3: 00000000778bd000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  memset+0x24/0x40 mm/kasan/common.c:107
+  memset include/linux/string.h:410 [inline]
+  ion_heap_clear_pages+0x49/0x70 drivers/staging/android/ion/ion_heap.c:106
+  ion_heap_sglist_zero+0x245/0x270 drivers/staging/android/ion/ion_heap.c:130
+  ion_heap_buffer_zero+0xf5/0x150 drivers/staging/android/ion/ion_heap.c:145
+  ion_system_heap_free+0x1eb/0x250  
+drivers/staging/android/ion/ion_system_heap.c:163
+  ion_buffer_destroy+0x159/0x2d0 drivers/staging/android/ion/ion.c:93
+  ion_heap_deferred_free+0x29d/0x630  
+drivers/staging/android/ion/ion_heap.c:239
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Modules linked in:
+CR2: fffff52002e00000
+---[ end trace ee5c63907f1d6f00 ]---
+RIP: 0010:memory_is_nonzero mm/kasan/generic.c:121 [inline]
+RIP: 0010:memory_is_poisoned_n mm/kasan/generic.c:135 [inline]
+RIP: 0010:memory_is_poisoned mm/kasan/generic.c:166 [inline]
+RIP: 0010:check_memory_region_inline mm/kasan/generic.c:182 [inline]
+RIP: 0010:check_memory_region+0x9c/0x1a0 mm/kasan/generic.c:192
+Code: c9 4d 0f 49 c1 49 c1 f8 03 45 85 c0 0f 84 10 01 00 00 41 83 e8 01 4e  
+8d 44 c0 08 eb 0d 48 83 c0 08 4c 39 c0 0f 84 a7 00 00 00 <48> 83 38 00 74  
+ed 4c 8d 40 08 eb 09 48 83 c0 01 49 39 c0 74 53 80
+RSP: 0018:ffffc9000c9f7ab8 EFLAGS: 00010212
+RAX: fffff52002e00000 RBX: fffff52002e01600 RCX: ffffffff85d5c229
+RDX: 0000000000000001 RSI: 000000000000b000 RDI: ffffc90017000000
+RBP: ffffc9000c9f7ad0 R08: fffff52002e01600 R09: 0000000000001600
+R10: fffff52002e015ff R11: ffffc9001700afff R12: fffff52002e00000
+R13: 000000000000b000 R14: 0000000000000000 R15: ffffc9000c9f7d08
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffff52002e00000 CR3: 00000000778bd000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
-> BUG: unable to handle page fault for address: fffff52002e00000
-> #PF: supervisor read access in kernel mode
-> #PF: error_code(0x0000) - not-present page
-> PGD 21ffee067 P4D 21ffee067 PUD aa11c067 PMD 0
-> Oops: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 0 PID: 2938 Comm: kworker/0:2 Not tainted
-> 5.4.0-next-20191129-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Workqueue: xfs-buf/loop3 xfs_buf_ioend_work
-> RIP: 0010:xfs_sb_read_verify+0xf0/0x540 fs/xfs/libxfs/xfs_sb.c:691
-> Code: fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 18 04 00 00 4d 8b ac 24 30 01
-> 00 00 48 b8 00 00 00 00 00 fc ff df 4c 89 ea 48 c1 ea 03 <0f> b6 04 02 84
-> c0 74 08 3c 03 0f 8e a7 03 00 00 41 8b 75 00 bf 58
-> RSP: 0018:ffffc90007e5faf0 EFLAGS: 00010a06
-> RAX: dffffc0000000000 RBX: 1ffff92000fcbf61 RCX: ffffffff82acb516
-> RDX: 1ffff92002e00000 RSI: ffffffff82a97e3b RDI: ffff888091bada60
-> RBP: ffffc90007e5fcd0 R08: ffff88809f3c2040 R09: ffffed1015cc7045
-> R10: ffffed1015cc7044 R11: ffff8880ae638223 R12: ffff888091bad940
-> R13: ffffc90017000000 R14: ffffc90007e5fca8 R15: ffff88809feb8000
-> FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: fffff52002e00000 CR3: 0000000069ceb000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->   xfs_buf_ioend+0x3f9/0xde0 fs/xfs/xfs_buf.c:1162
->   xfs_buf_ioend_work+0x19/0x20 fs/xfs/xfs_buf.c:1183
->   process_one_work+0x9af/0x1740 kernel/workqueue.c:2264
->   worker_thread+0x98/0xe40 kernel/workqueue.c:2410
->   kthread+0x361/0x430 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> Modules linked in:
-> CR2: fffff52002e00000
-> ---[ end trace aef83d995322cc4a ]---
-> RIP: 0010:xfs_sb_read_verify+0xf0/0x540 fs/xfs/libxfs/xfs_sb.c:691
-> Code: fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 18 04 00 00 4d 8b ac 24 30 01
-> 00 00 48 b8 00 00 00 00 00 fc ff df 4c 89 ea 48 c1 ea 03 <0f> b6 04 02 84
-> c0 74 08 3c 03 0f 8e a7 03 00 00 41 8b 75 00 bf 58
-> RSP: 0018:ffffc90007e5faf0 EFLAGS: 00010a06
-> RAX: dffffc0000000000 RBX: 1ffff92000fcbf61 RCX: ffffffff82acb516
-> RDX: 1ffff92002e00000 RSI: ffffffff82a97e3b RDI: ffff888091bada60
-> RBP: ffffc90007e5fcd0 R08: ffff88809f3c2040 R09: ffffed1015cc7045
-> R10: ffffed1015cc7044 R11: ffff8880ae638223 R12: ffff888091bad940
-> R13: ffffc90017000000 R14: ffffc90007e5fca8 R15: ffff88809feb8000
-> FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: fffff52002e00000 CR3: 0000000069ceb000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/0000000000005f386305988bb15f%40google.com.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
