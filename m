@@ -2,146 +2,97 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C9EFC432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 06:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9313DC432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 06:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D276D20725
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 06:54:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575096864;
-	bh=Owmof5bmuLfVEDj3K9q/RGj0HhSKoIMoBaFGP2GhXPw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=WJGNw0vP/SuZ+f9Bntztni7lUPvgh1xemZ//S/NgEysKSvwpByLsQyt8aXL51jr8F
-	 70+lfqZTV08SActxMDjF51RCwY1wjoIlnd0g4XU8lMYpo4Zfag2uphED0HYPDqd+KO
-	 BVun3VTSt+0lbO2PcoS2w39OLbOCunxeDaDb0bTs=
+	by mail.kernel.org (Postfix) with ESMTP id 66E4620725
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 06:58:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbfK3GyX (ORCPT
+        id S1725985AbfK3G60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Nov 2019 01:54:23 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:42992 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbfK3GyX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Nov 2019 01:54:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jkdoSYUNZ89xuj/Bwl89piFhc4gKd3WFY89atXxPidA=; b=oPISDPzGcYsw9AyQhiH0DhPeQ
-        wZRlwujwV0gRp91PwLMfvIR2hDQpz7FU1K7oYPm5M3QyoLey9TqviBS5Uw/fbuwcvctTWodNSMnZ/
-        K07ExbsBkEugHn0wGVlICpFQHi4Wh3KP+uH+3XcS+zhab8Zx3Zi0tchwbDXLUjGPmJqIlVu+qEC1I
-        f3wzGHr+DVckAvU3q9GxMazc4Pw0IpOMMiMAxEbWIkkiVdvYY7C+5d/v4IxEDVMP9jr7O+VDxRkqV
-        5/MWMtBv7S4smCEbO2cmDttYGSoNs5VibUZfefy12B7YZSFnjLQTbkD0AsdZruXd7tKf56Rgj2MUU
-        pMz9f/2Jw==;
-Received: from [80.156.29.194] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iawe2-0002Ec-Rk; Sat, 30 Nov 2019 06:54:19 +0000
-Date:   Sat, 30 Nov 2019 07:54:15 +0100
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-Cc:     gregkh@linuxfoundation.org, rfontana@redhat.com,
-        kstewart@linuxfoundation.org, tglx@linutronix.de,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: dvb_dummy_fe: Add error messages in case of
- attach failure
-Message-ID: <20191130075415.5d7ac0b1@kernel.org>
-In-Reply-To: <20191107013745.22147-1-dwlsalmeida@gmail.com>
-References: <20191107013745.22147-1-dwlsalmeida@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Sat, 30 Nov 2019 01:58:26 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6737 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725298AbfK3G60 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Nov 2019 01:58:26 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 98767B9740C456E26BB8;
+        Sat, 30 Nov 2019 14:58:24 +0800 (CST)
+Received: from [127.0.0.1] (10.133.216.73) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Sat, 30 Nov 2019
+ 14:58:17 +0800
+Subject: Re: [PATCH] kvm/arm64: change gicv3_cpuif to static likely branch
+To:     Marc Zyngier <maz@kernel.org>
+References: <20191130031443.41696-1-guoheyi@huawei.com>
+ <86mucdzx45.wl-maz@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
+        <wanghaibin.wang@huawei.com>, James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        "Suzuki K Poulose" <suzuki.poulose@arm.com>,
+        Will Deacon <will@kernel.org>
+From:   Guoheyi <guoheyi@huawei.com>
+Message-ID: <496cb45d-c312-295c-18f2-633ec5acc976@huawei.com>
+Date:   Sat, 30 Nov 2019 14:58:16 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <86mucdzx45.wl-maz@kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.216.73]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed,  6 Nov 2019 22:37:45 -0300
-"Daniel W. S. Almeida" <dwlsalmeida@gmail.com> escreveu:
-
-> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-> 
-> Complain if the attach functions fail, for any reason. This is helpful
-> when debugging.
-> 
-> Suggested-by: Shuah Khan <skhan@linuxfoundation.org>
-> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
-
-Looks OK to me.
-
-> ---
->  drivers/media/dvb-frontends/dvb_dummy_fe.c | 18 +++++++++++++++---
->  1 file changed, 15 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/media/dvb-frontends/dvb_dummy_fe.c b/drivers/media/dvb-frontends/dvb_dummy_fe.c
-> index 4db679cb70ad..ca86857c3667 100644
-> --- a/drivers/media/dvb-frontends/dvb_dummy_fe.c
-> +++ b/drivers/media/dvb-frontends/dvb_dummy_fe.c
-> @@ -114,12 +114,16 @@ struct dvb_frontend* dvb_dummy_fe_ofdm_attach(void)
->  	/* allocate memory for the internal state */
->  	state = kzalloc(sizeof(struct dvb_dummy_fe_state), GFP_KERNEL);
->  	if (!state)
-> -		return NULL;
-> +		goto err;
->  
->  	/* create dvb_frontend */
->  	memcpy(&state->frontend.ops, &dvb_dummy_fe_ofdm_ops, sizeof(struct dvb_frontend_ops));
->  	state->frontend.demodulator_priv = state;
->  	return &state->frontend;
-> +
-> +err:
-> +	pr_err("%s: DVB Dummy frontend driver attach failed\n", __func__);
-> +	return NULL;
->  }
->  
->  static const struct dvb_frontend_ops dvb_dummy_fe_qpsk_ops;
-> @@ -131,12 +135,16 @@ struct dvb_frontend *dvb_dummy_fe_qpsk_attach(void)
->  	/* allocate memory for the internal state */
->  	state = kzalloc(sizeof(struct dvb_dummy_fe_state), GFP_KERNEL);
->  	if (!state)
-> -		return NULL;
-> +		goto err;
->  
->  	/* create dvb_frontend */
->  	memcpy(&state->frontend.ops, &dvb_dummy_fe_qpsk_ops, sizeof(struct dvb_frontend_ops));
->  	state->frontend.demodulator_priv = state;
->  	return &state->frontend;
-> +
-> +err:
-> +	pr_err("%s: DVB Dummy frontend driver attach failed\n", __func__);
-> +	return NULL;
->  }
->  
->  static const struct dvb_frontend_ops dvb_dummy_fe_qam_ops;
-> @@ -148,12 +156,16 @@ struct dvb_frontend *dvb_dummy_fe_qam_attach(void)
->  	/* allocate memory for the internal state */
->  	state = kzalloc(sizeof(struct dvb_dummy_fe_state), GFP_KERNEL);
->  	if (!state)
-> -		return NULL;
-> +		goto err;
->  
->  	/* create dvb_frontend */
->  	memcpy(&state->frontend.ops, &dvb_dummy_fe_qam_ops, sizeof(struct dvb_frontend_ops));
->  	state->frontend.demodulator_priv = state;
->  	return &state->frontend;
-> +
-> +err:
-> +	pr_err("%s: DVB Dummy frontend driver attach failed\n", __func__);
-> +	return NULL;
->  }
->  
->  static const struct dvb_frontend_ops dvb_dummy_fe_ofdm_ops = {
 
 
+On 2019/11/30 14:39, Marc Zyngier wrote:
+> On Sat, 30 Nov 2019 03:14:43 +0000,
+> Heyi Guo <guoheyi@huawei.com> wrote:
+>> Platforms running hypervisor nowadays are normally powerful servers
+>> which at least support GICv3, so it should be better to switch
+>> kvm_vgic_global_state.gicv3_cpuif to static likely branch, which can
+>> reduce two "b" instructions to a single "nop" for GICv3 branches.
+>>
+>> We don't update arm32 specific code for they may still only have
+>> GICv2.
+> There is a number of disputable statements here.
+>
+> Out of the fairly large zoo of arm64 systems I have access to, 75% of
+> them are based on GICv2, so they are still the overwhelming majority.
+> Yes, they all run KVM (otherwise I would ignore them).
+Really? I'm surprised to know that... Sorry I didn't see such GICv2 
+platforms in my work, so I made the wrong assumption.
+I don't expect much performance improvement for GICv3 platforms. The 
+precondition for this patch is that few platforms running KVM are using 
+GICv2. If it is not right, please just ignore it.
 
-Cheers,
-Mauro
+Thanks,
+HG
+
+>
+> Furthermore, I would expect that "powerful servers" are perfectly
+> capable to execute a couple of branches without breaking a sweat.
+>
+> Finally, you don't provide any number supporting that:
+>
+> - GICv3 systems see a performance improvement across the large variety
+>    of CPU implementations
+> - GICv2 systems don't see a performance regression
+>
+> Once you provide such numbers, I'll reevaluate my position. Until
+> then, I'm not considering this kind of change.
+>
+> Thanks,
+>
+> 	M.
+>
+
+
