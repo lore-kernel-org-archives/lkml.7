@@ -2,112 +2,96 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B80BC43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 01:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E70FDC432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 01:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EA8224249
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 01:39:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tnw3e+MO"
+	by mail.kernel.org (Postfix) with ESMTP id C1C3B215E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 01:41:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbfK3Bik (ORCPT
+        id S1727267AbfK3BlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 20:38:40 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:41710 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727196AbfK3Bij (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 20:38:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575077918;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bTnXbZFBBDmZUTH1cnw+0MqUeA0BptKMDT2UAmqfI5c=;
-        b=Tnw3e+MOinPU/XsdXlF1ybs6Bj/SmEWp59WcphZy5JT196zURuwgJF2kIhbCfhCMZWGA7M
-        aFGjS2dt/bXe4tMcKIuna2qjTJD5yaaE9SO3iMLPMAMaLb/VXpb1wVfQbaDJ8p3nK7F6bg
-        52Hxjn2597BUgv7Q6Tt2gX6fz5ZRqwc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-359-NZmw11r7ORmBOIciamsQcg-1; Fri, 29 Nov 2019 20:38:36 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CF9B580183C;
-        Sat, 30 Nov 2019 01:38:33 +0000 (UTC)
-Received: from hmswarspite.think-freely.org (ovpn-121-32.rdu2.redhat.com [10.10.121.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A128960BF1;
-        Sat, 30 Nov 2019 01:38:26 +0000 (UTC)
-Date:   Fri, 29 Nov 2019 20:38:24 -0500
-From:   Neil Horman <nhorman@redhat.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com
-Subject: Re: [PATCH v24 01/24] x86/sgx: Update MAINTAINERS
-Message-ID: <20191130013824.GA28617@hmswarspite.think-freely.org>
-References: <20191129231326.18076-1-jarkko.sakkinen@linux.intel.com>
- <20191129231326.18076-2-jarkko.sakkinen@linux.intel.com>
+        Fri, 29 Nov 2019 20:41:17 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:39660 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727231AbfK3BlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 20:41:17 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 658C6E2D7CCA17DD39D2;
+        Sat, 30 Nov 2019 09:41:15 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Sat, 30 Nov 2019
+ 09:41:09 +0800
+From:   yu kuai <yukuai3@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <rafael@kernel.org>,
+        <viro@zeniv.linux.org.uk>, <rostedt@goodmis.org>,
+        <oleg@redhat.com>, <mchehab+samsung@kernel.org>, <corbet@lwn.net>,
+        <tytso@mit.edu>, <jmorris@namei.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <yukuai3@huawei.com>, <zhengbin13@huawei.com>,
+        <yi.zhang@huawei.com>, <chenxiang66@hisilicon.com>,
+        <xiexiuqi@huawei.com>
+Subject: [PATCH 3/3] debugfs: fix potential infinite loop in debugfs_remove_recursive
+Date:   Sat, 30 Nov 2019 10:02:25 +0800
+Message-ID: <20191130020225.20239-4-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20191130020225.20239-1-yukuai3@huawei.com>
+References: <20191130020225.20239-1-yukuai3@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20191129231326.18076-2-jarkko.sakkinen@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: NZmw11r7ORmBOIciamsQcg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 30, 2019 at 01:13:03AM +0200, Jarkko Sakkinen wrote:
-> Add the maintainer information for the SGX subsystem.
->=20
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
->  MAINTAINERS | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 0154674cbad3..08a67272ed14 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8512,6 +8512,17 @@ F:=09Documentation/x86/intel_txt.rst
->  F:=09include/linux/tboot.h
->  F:=09arch/x86/kernel/tboot.c
-> =20
-> +INTEL SGX
-> +M:=09Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> +M:=09Sean Christopherson <sean.j.christopherson@intel.com>
-> +L:=09linux-sgx@vger.kernel.org
-> +S:=09Maintained
-> +Q:=09https://patchwork.kernel.org/project/intel-sgx/list/
-> +T:=09git https://github.com/jsakkine-intel/linux-sgx.git
-> +F:=09arch/x86/include/uapi/asm/sgx.h
-> +F:=09arch/x86/kernel/cpu/sgx/*
-> +K:=09\bSGX_
-> +
->  INTERCONNECT API
->  M:=09Georgi Djakov <georgi.djakov@linaro.org>
->  L:=09linux-pm@vger.kernel.org
-> --=20
-> 2.20.1
->=20
-Wheres patch 12/24?
-Neil
+debugfs_remove_recursive uses list_empty to judge weather a dentry has
+any subdentry or not. This can lead to infinite loop when any subdir is
+in use.
+
+The problem was discoverd by the following steps in the console.
+1. use debugfs_create_dir to create a dir and multiple subdirs(insmod);
+2. cd to the subdir with depth not less than 2;
+3. call debugfs_remove_recursive(rmmod).
+
+After removing the subdir, the infinite loop is triggered because
+debugfs_remove_recursive uses list_empty to judge if the current dir
+doesn't have any subdentry. However list_empty can't skip the subdentry
+that is not simple_positive(simple_positive() will return false).
+
+Fix the problem by using simple_empty instead of list_empty.
+
+Fixes: 776164c1faac ('debugfs: debugfs_remove_recursive() must not rely
+on list_empty(d_subdirs)')
+Reported-by: chenxiang66@hisilicon.com
+
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+---
+ fs/debugfs/inode.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
+index 7b975dbb2bb4..d5ef7a0a4410 100644
+--- a/fs/debugfs/inode.c
++++ b/fs/debugfs/inode.c
+@@ -773,8 +773,11 @@ void debugfs_remove_recursive(struct dentry *dentry)
+ 		if (!simple_positive(child))
+ 			continue;
+ 
+-		/* perhaps simple_empty(child) makes more sense */
+-		if (!list_empty(&child->d_subdirs)) {
++		/*
++		 * use simple_empty to prevent infinite loop when any
++		 * subdentry of child is in use
++		 */
++		if (!simple_empty(child)) {
+ 			spin_unlock(&parent->d_lock);
+ 			inode_unlock(d_inode(parent));
+ 			parent = child;
+-- 
+2.17.2
 
