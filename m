@@ -2,106 +2,291 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 864A3C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 15:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9B5C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 15:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 501892073C
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 15:41:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z0do+C6M"
+	by mail.kernel.org (Postfix) with ESMTP id D35812073C
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 15:44:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbfK3PiJ (ORCPT
+        id S1727101AbfK3Poz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Nov 2019 10:38:09 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33222 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbfK3PiJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Nov 2019 10:38:09 -0500
-Received: by mail-qk1-f196.google.com with SMTP id c124so23924900qkg.0
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Nov 2019 07:38:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oWJ16jxU4+iwSnWuytlpM5skSBZCFvJ07mOrWCdI8wc=;
-        b=Z0do+C6MX4UQUlXCJKKERLJS6qUjfvq9gStNXTZVBtJmE44YwC6lBYp1wp7nj4VVAF
-         h8Sr6i5gBvJ95H9Pier1R1Eqwkms5h8b40JjnLAJ2EJfmkch3gE/BfruftJym/5Ewqcv
-         v/bo5Hn7+WBUwHQHqmGModZzg/lEQLFnv/AH8aY6vKjQdZNmfCv1leg0jH/n9uuyEcTy
-         HQNGkvg+C1ZV1nEt0gMq7mc9J8VC4PQRWI57hoZsmf8e6Dvjy0Wzb0MBGqoexGuNL7io
-         39yg03NEPzERgNel4dOZvjz7I6irnsrA8hmpElXkXWe4oNks/sQypLZPYIta1B5liIsF
-         /hDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oWJ16jxU4+iwSnWuytlpM5skSBZCFvJ07mOrWCdI8wc=;
-        b=Hd6o3XJxFBdtjRAH7ldqcL0SXyTtfFxY71rzwWCMeA5VnU2y6AUZ+NlbFBgFeFxe/e
-         svkoTEc76TFZJrmWEwo0nJXnbBaGS3vvOS7YvKgX4+1Q7CPNWWXU23eplw0gexVYExc0
-         p+Khz+0mvj9621OLIjN1wCdLpkDeOOzZJ+XZB0DyEBkxdyfXnao1MGMZ+BhkxBoeJZTI
-         aOzYEUSjfGR5TXTRUA9Mpfxw9o1Z4426ybSqDPtKJghFJErJEA2xqPQOxQcqjJ5OCH+1
-         eWHqFjTS6iVha/giElCK3p4ft3H42wbNKqRcQwxLu81aIwBZIX4PL5GsP0S9kpf6uNWP
-         HkGA==
-X-Gm-Message-State: APjAAAW4GPe3FT/7POyAYZppC9ZKrq1A2Toy0Q+z/RjS0VZ2RWKnwj9z
-        tur9PDXzAOVOA/IbP7Ulx0BMsOQtAluHVs8R6lq4pg==
-X-Google-Smtp-Source: APXvYqyEw2xrZSw3JJwFJXLe27gK/0Ir6IeNXiYibz7PYq6PHaf/95WNzEkN7e7PnCW0Db8qMicOZezd1ddMCtfYpBY=
-X-Received: by 2002:a37:bdc3:: with SMTP id n186mr6568797qkf.407.1575128287383;
- Sat, 30 Nov 2019 07:38:07 -0800 (PST)
+        Sat, 30 Nov 2019 10:44:55 -0500
+Received: from sauhun.de ([88.99.104.3]:45816 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725985AbfK3Poz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Nov 2019 10:44:55 -0500
+Received: from localhost (p5486CF24.dip0.t-ipconnect.de [84.134.207.36])
+        by pokefinder.org (Postfix) with ESMTPSA id B4E002C05E1;
+        Sat, 30 Nov 2019 16:44:50 +0100 (CET)
+Date:   Sat, 30 Nov 2019 16:44:50 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PULL REQUEST] i2c for 5.5
+Message-ID: <20191130154442.GA7415@kunai>
 MIME-Version: 1.0
-References: <001a114372a6074e6505642b7f72@google.com> <000000000000039751059891760e@google.com>
-In-Reply-To: <000000000000039751059891760e@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Sat, 30 Nov 2019 16:37:56 +0100
-Message-ID: <CACT4Y+Yrg8JxWABi4CJgBG7GpBSCmT0DHr_eZhQA-ikLH-X5Yw@mail.gmail.com>
-Subject: Re: kernel BUG at net/core/skbuff.c:LINE! (3)
-To:     syzbot <syzbot+b2bf2652983d23734c5c@syzkaller.appspotmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        LKML <linux-kernel@vger.kernel.org>, linux-sctp@vger.kernel.org,
-        Xin Long <lucien.xin@gmail.com>, mvohra@vmware.com,
-        netdev <netdev@vger.kernel.org>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        William Tu <u9012063@gmail.com>,
-        Vladislav Yasevich <vyasevich@gmail.com>,
-        websitedesignservices4u@gmail.com,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="IS0zKkzwUGydFO0o"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 30, 2019 at 3:50 PM syzbot
-<syzbot+b2bf2652983d23734c5c@syzkaller.appspotmail.com> wrote:
->
-> syzbot has bisected this bug to:
->
-> commit 84e54fe0a5eaed696dee4019c396f8396f5a908b
-> Author: William Tu <u9012063@gmail.com>
-> Date:   Tue Aug 22 16:40:28 2017 +0000
->
->      gre: introduce native tunnel support for ERSPAN
->
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=158a2f86e00000
-> start commit:   f9f1e414 Merge tag 'for-linus-4.16-rc1-tag' of git://git.k..
-> git tree:       upstream
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=178a2f86e00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=138a2f86e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=34a80ee1ac29767b
-> dashboard link: https://syzkaller.appspot.com/bug?extid=b2bf2652983d23734c5c
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=147bfebd800000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13d8d543800000
->
-> Reported-by: syzbot+b2bf2652983d23734c5c@syzkaller.appspotmail.com
-> Fixes: 84e54fe0a5ea ("gre: introduce native tunnel support for ERSPAN")
->
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
-Humm... the repro contains syz_emit_ethernet, wonder if it's
-remote-triggerable...
+--IS0zKkzwUGydFO0o
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Linus,
+
+I2C has mostly driver updates for you this time. The few noteworthy
+changes are: the core has now support for analog and digital filters
+with at91 being the first user, a core addition to replace the NULL
+returning i2c_new_probed_device() with an ERR_PTR variant, and the pxa
+driver has finally being moved to use the generic I2C slave interface.
+We have quite a significant number of reviews per patch this time, so
+thank you to all involved!
+
+Please pull.
+
+Thanks,
+
+   Wolfram
+
+
+The following changes since commit 7d194c2100ad2a6dded545887d02754948ca5241:
+
+  Linux 5.4-rc4 (2019-10-20 15:56:22 -0400)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-5.5
+
+for you to fetch changes up to a72e27f7a47069b1b4942051bffa7dc77b4aee0c:
+
+  video: fbdev: matrox: convert to i2c_new_scanned_device (2019-11-28 17:19=
+:20 +0100)
+
+----------------------------------------------------------------
+Akshu Agrawal (1):
+      i2c: cros-ec-tunnel: Make the device acpi compatible
+
+Alain Volmat (4):
+      i2c: stm32f7: rework slave_id allocation
+      i2c: stm32f7: fix & reorder remove & probe error handling
+      i2c: stm32f7: report dma error during probe
+      i2c: i2c-stm32f7: fix 10-bits check in slave free id search loop
+
+Andy Shevchenko (1):
+      i2c: i801: Correct Intel Jasper Lake SOC naming
+
+Biju Das (2):
+      dt-bindings: i2c: rcar: Add r8a774b1 support
+      dt-bindings: i2c: sh_mobile: Add r8a774b1 support
+
+Corey Minyard (1):
+      i2c: smbus: Don't filter out duplicate alerts
+
+Eddie James (2):
+      dt-bindings: i2c: Aspeed: Add AST2600 compatible
+      i2c: Aspeed: Add AST2600 compatible
+
+Eugen Hristev (7):
+      dt-bindings: i2c: at91: add new compatible
+      dt-bindings: i2c: add bindings for i2c analog and digital filter
+      i2c: add support for filters optional properties
+      i2c: at91: add new platform support for sam9x60
+      i2c: at91: add support for digital filtering
+      i2c: at91: add support for advanced digital filtering
+      i2c: at91: add support for analog filtering
+
+Geert Uytterhoeven (1):
+      i2c: rcar: Remove superfluous call to clk_get_rate()
+
+Jarkko Nikula (2):
+      i2c: i801: Add support for Intel Jasper Lake
+      i2c: i801: Add support for Intel Comet Lake PCH-H
+
+Jean Delvare (1):
+      eeprom: at24: Improve confusing log message
+
+Krzysztof Kozlowski (1):
+      i2c: Fix Kconfig indentation
+
+Lori Hikichi (1):
+      i2c: iproc: Add i2c repeated start capability
+
+Neil Armstrong (1):
+      dt-bindings: i2c: meson: convert to yaml
+
+Patrick Williams (2):
+      i2c: pxa: migrate to new i2c_slave APIs
+      i2c: pxa: remove unused i2c-slave APIs
+
+Peter Ujfalusi (4):
+      i2c: at91: Use dma_request_chan() directly for channel request
+      i2c: qup: Use dma_request_chan() directly for channel request
+      i2c: sh_mobile: Use dma_request_chan() directly for channel request
+      i2c: tegra: Use dma_request_chan() directly for channel request
+
+Shubhrajyoti Datta (1):
+      i2c: xiic: Fix kerneldoc warnings
+
+Wolfram Sang (6):
+      i2c: icy: no need to populate address for scanned device
+      Merge tag 'at24-v5.5-updates-for-wolfram' of git://git.kernel.org/...=
+/brgl/linux into i2c/for-5.5
+      i2c: remove helpers for ref-counting clients
+      i2c: replace i2c_new_probed_device with an ERR_PTR variant
+      i2c: icy: convert to i2c_new_scanned_device
+      video: fbdev: matrox: convert to i2c_new_scanned_device
+
+
+with much appreciated quality assurance from
+----------------------------------------------------------------
+Benjamin Tissoires (1):
+      (Rev.) i2c: smbus: Don't filter out duplicate alerts
+
+Brendan Higgins (2):
+      (Rev.) i2c: Aspeed: Add AST2600 compatible
+      (Rev.) dt-bindings: i2c: Aspeed: Add AST2600 compatible
+
+Enric Balletbo i Serra (1):
+      (Rev.) i2c: cros-ec-tunnel: Make the device acpi compatible
+
+Geert Uytterhoeven (3):
+      (Rev.) i2c: remove helpers for ref-counting clients
+      (Rev.) dt-bindings: i2c: sh_mobile: Add r8a774b1 support
+      (Rev.) dt-bindings: i2c: rcar: Add r8a774b1 support
+
+Jarkko Nikula (1):
+      (Rev.) i2c: i801: Correct Intel Jasper Lake SOC naming
+
+Jean Delvare (4):
+      (Rev.) i2c: i801: Correct Intel Jasper Lake SOC naming
+      (Rev.) i2c: remove helpers for ref-counting clients
+      (Rev.) i2c: i801: Add support for Intel Comet Lake PCH-H
+      (Rev.) i2c: i801: Add support for Intel Jasper Lake
+
+Luca Ceresoli (5):
+      (Rev.) i2c: replace i2c_new_probed_device with an ERR_PTR variant
+      (Test) i2c: remove helpers for ref-counting clients
+      (Rev.) i2c: remove helpers for ref-counting clients
+      (Rev.) i2c: rcar: Remove superfluous call to clk_get_rate()
+      (Rev.) i2c: xiic: Fix kerneldoc warnings
+
+Max Staudt (3):
+      (Rev.) i2c: icy: convert to i2c_new_scanned_device
+      (Rev.) i2c: replace i2c_new_probed_device with an ERR_PTR variant
+      (Test) i2c: icy: no need to populate address for scanned device
+
+Niklas S=C3=B6derlund (2):
+      (Rev.) i2c: remove helpers for ref-counting clients
+      (Rev.) i2c: rcar: Remove superfluous call to clk_get_rate()
+
+Peter Rosin (7):
+      (Rev.) i2c: at91: add support for analog filtering
+      (Rev.) i2c: at91: add support for advanced digital filtering
+      (Rev.) i2c: at91: add support for digital filtering
+      (Rev.) i2c: at91: add new platform support for sam9x60
+      (Rev.) i2c: add support for filters optional properties
+      (Rev.) dt-bindings: i2c: add bindings for i2c analog and digital filt=
+er
+      (Rev.) dt-bindings: i2c: at91: add new compatible
+
+Pierre-Yves MORDRET (4):
+      (Rev.) i2c: i2c-stm32f7: fix 10-bits check in slave free id search lo=
+op
+      (Rev.) i2c: stm32f7: report dma error during probe
+      (Rev.) i2c: stm32f7: fix & reorder remove & probe error handling
+      (Rev.) i2c: stm32f7: rework slave_id allocation
+
+Rob Herring (3):
+      (Rev.) dt-bindings: i2c: meson: convert to yaml
+      (Rev.) dt-bindings: i2c: add bindings for i2c analog and digital filt=
+er
+      (Rev.) dt-bindings: i2c: at91: add new compatible
+
+Vinod Koul (4):
+      (Rev.) i2c: tegra: Use dma_request_chan() directly for channel request
+      (Rev.) i2c: sh_mobile: Use dma_request_chan() directly for channel re=
+quest
+      (Rev.) i2c: qup: Use dma_request_chan() directly for channel request
+      (Rev.) i2c: at91: Use dma_request_chan() directly for channel request
+
+Wolfram Sang (1):
+      (Rev.) eeprom: at24: Improve confusing log message
+
+ .../bindings/i2c/amlogic,meson6-i2c.yaml           | 53 +++++++++++++++
+ .../devicetree/bindings/i2c/i2c-aspeed.txt         |  3 +-
+ Documentation/devicetree/bindings/i2c/i2c-at91.txt |  3 +-
+ .../devicetree/bindings/i2c/i2c-meson.txt          | 30 ---------
+ Documentation/devicetree/bindings/i2c/i2c.txt      | 18 ++++++
+ .../devicetree/bindings/i2c/renesas,i2c.txt        |  1 +
+ .../devicetree/bindings/i2c/renesas,iic.txt        |  1 +
+ Documentation/i2c/busses/i2c-i801.rst              |  1 +
+ Documentation/i2c/instantiating-devices.rst        | 10 +--
+ Documentation/i2c/writing-clients.rst              |  8 +--
+ drivers/i2c/busses/Kconfig                         | 24 +++----
+ drivers/i2c/busses/i2c-aspeed.c                    |  4 ++
+ drivers/i2c/busses/i2c-at91-core.c                 | 38 +++++++++++
+ drivers/i2c/busses/i2c-at91-master.c               | 53 +++++++++++++--
+ drivers/i2c/busses/i2c-at91.h                      | 13 ++++
+ drivers/i2c/busses/i2c-bcm-iproc.c                 | 63 ++++++++++++++----
+ drivers/i2c/busses/i2c-cros-ec-tunnel.c            | 15 +++--
+ drivers/i2c/busses/i2c-i801.c                      |  8 +++
+ drivers/i2c/busses/i2c-icy.c                       |  9 ++-
+ drivers/i2c/busses/i2c-pxa.c                       | 75 +++++++++++++++++-=
+----
+ drivers/i2c/busses/i2c-qup.c                       |  4 +-
+ drivers/i2c/busses/i2c-rcar.c                      |  2 +-
+ drivers/i2c/busses/i2c-sh_mobile.c                 |  2 +-
+ drivers/i2c/busses/i2c-stm32.c                     | 16 ++---
+ drivers/i2c/busses/i2c-stm32f7.c                   | 32 ++++++---
+ drivers/i2c/busses/i2c-tegra.c                     |  4 +-
+ drivers/i2c/busses/i2c-xiic.c                      |  2 +
+ drivers/i2c/i2c-core-base.c                        | 63 ++++++++----------
+ drivers/i2c/i2c-smbus.c                            |  7 --
+ drivers/i2c/muxes/Kconfig                          | 18 +++---
+ drivers/misc/eeprom/at24.c                         |  9 ++-
+ drivers/video/fbdev/matrox/i2c-matroxfb.c          |  4 +-
+ include/linux/i2c-pxa.h                            | 18 ------
+ include/linux/i2c.h                                | 21 ++++--
+ include/linux/platform_data/i2c-pxa.h              |  4 --
+ 35 files changed, 431 insertions(+), 205 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/amlogic,meson6-i2=
+c.yaml
+ delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-meson.txt
+ delete mode 100644 include/linux/i2c-pxa.h
+
+--IS0zKkzwUGydFO0o
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl3ijmYACgkQFA3kzBSg
+KbYfZxAAlXQktz5qKkyqVKdpd+e52KdcvfsQn39BbCpLKlQXumpvkYUj+mftbIvW
+ZTLRhBLuLPW+bQ6VPydNRBLKUmwgNxHGBKqSDWxWR77yhw2qXu6Iie3dBCZFr3uU
+9Ewy+hK5HI06Mwrk2RyP2h8rpiCrBOY+qQ01B/tmy5i3LARaZiyIg7S7hhLyDsOF
+Ipnxzlyq/xA7FWA0mH0eH8HaFlR97wrO/cnWu/kAERtyUDISHs9HN+Xt0vJZLsOP
+/1soVG3R6+83nvDSG2WAl6Y3zX/YOZiXHQtUm6Ehk7E7pGTlEDMRoR4FCtyvqnSh
+E4YsJdLrkTrfCLMy9trpfudfNaA2UDS6f2ZfUoPhQE2IDqUkSBEkdi9DnptN6PNt
+W3NivA40Zx39ha8cEZRzacWQ2qIEAGFgMyLkV/aUgICtVnSFIGUgMDDFvqKlz6d0
+dA/45GK5HYNWXGA7xudeh9Zz+NlwYjwRd5UTpOaIPUdJY9u+Ku2nuiQH753ISN41
+FBXvUh8PePNawbPeUrw9ekiUdI54i1fuSlZSy9DJIC8TeP2jfqw8ySkrfctenRHA
+4jKsK7lj3J5TVveAhiR7ZQtcxw+I1q0sfWWYHeVVO5uPzQZM5W4c1KWbplzdWn9P
+ZAuma6FA2RoUDle07SGU21DDFDEuATtFCE6q/+5+xH6H5oJoZUo=
+=5EM3
+-----END PGP SIGNATURE-----
+
+--IS0zKkzwUGydFO0o--
