@@ -2,109 +2,152 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91980C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 18:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAACC43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 18:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A2E22075A
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 18:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36CF42075A
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 18:56:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="tBO5/eSa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PqIhJxKi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727219AbfK3Sx5 (ORCPT
+        id S1727244AbfK3S4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Nov 2019 13:53:57 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54134 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727025AbfK3Sx5 (ORCPT
+        Sat, 30 Nov 2019 13:56:38 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:43915 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726799AbfK3S4i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Nov 2019 13:53:57 -0500
-Received: by mail-wm1-f67.google.com with SMTP id u18so17270555wmc.3;
-        Sat, 30 Nov 2019 10:53:55 -0800 (PST)
+        Sat, 30 Nov 2019 13:56:38 -0500
+Received: by mail-qv1-f67.google.com with SMTP id p2so2574408qvo.10;
+        Sat, 30 Nov 2019 10:56:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+kgxHfmrLrW74snZZglbmg5V/YCpIUHU33YjewUkzMA=;
-        b=tBO5/eSaNaTn3qZ5phIDYDVnDD/KurOdupHxeZOSTuhWIP8nSsFhAm/g9TZ0MrOTty
-         N1qkRdu2uEu15LuO9FJnXJqk1y44ZBoz7uU6bpqfP2TJwRDdmGUEzBLoxukNyke6HTSa
-         YeJ8SbdVnjX6KTlHHDtBtHmqfAyWwR4xPF/kLZKjPI9HGtTZwx+RKsgEKzrqG5WmPFJ+
-         0kPEihJQsJvLZ+U9OaXyaxUv4GQCj2xX/Acro4FowuGOnyRGCoLdaLQRP1DVrLm/Uq6q
-         RJ9hjfDX81UtmVAOOJVIh/0hvyR4h5ZWaacb+Nw4Z5JpCaqU6p8e3ONvzpVA1aoakD7p
-         8ZMA==
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0UHRKhmLt5buFa6gOweNrq+UrUlF6bhjJjwMgeW4uPI=;
+        b=PqIhJxKij3aopu/sg/VlF9UH78PhXONkLROSSnUW1HD9S/4eBgKT3PaA1GG0n8vcKI
+         +WNkJxTCoUEfdTbcUG1DR0uFrRmbrVboff+KtMRzvA5JBBMx0aiwDlqVfRaZhUwLPxKb
+         myK0X3sGnVrWzBpY0DeBBRTXev+2PJ0q+IrRG5PPtB1h68O+C2DpaA1/J2omRptDmIq7
+         f317hUxmET+xBwvkjXBpF1jjjyENUbu5876u/c7VwIcygEhydyxk17A/6DKqQ4WhxmHb
+         BT7jLRZPfeqJxWf4ZfdD90rs3UA2M2MuCfkg5yqErxymo+yVbFZrBB/0ClH1HpXyyQ5X
+         u0cA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+kgxHfmrLrW74snZZglbmg5V/YCpIUHU33YjewUkzMA=;
-        b=Ec6ntE42lQOyIDW0M3brMVvNv8LGxVZGlOcwIrCpGX2KaMrtKMPXERWy/VEGIOF7k/
-         IYnSVy/2ECe7Fb1Fb5c4L3yRwbMmZ982IzA/G4FF3NNB92R4nWGt6OEGAGtZeN7i++dN
-         Lspb9Yft+7wNxhlsrRTDYy8rjAmx6uqc/3qCBkyAuQRaiRet0UUmTWoWRjAbfDxQTz/O
-         f3uqJx3d9GpHJL3rA81tigipW0Oex6uA42tmBI+9FvMIbhxTKvtdqZIuWLDVZj+5zQLB
-         0662lmVrneurJeBX4nhyzcBuOjbWC+pNJEvXjl5rx96jtNrsLoY4rtylIIBtfURPgZdi
-         YoLA==
-X-Gm-Message-State: APjAAAXq3DM7Y0dV8rTpgP+VUsIayNLn6ppg9BTzFEMQ0QF5SI/oYcHC
-        AlwwrU5vfSvs39XRnMbcd0E=
-X-Google-Smtp-Source: APXvYqy+AptLFvOg56oiPA3eBF+V/0bqwP6CitN+KxZd1XEwAi/fIeyCYGRVq/t79HRYvwAZ1FDOOg==
-X-Received: by 2002:a1c:a5c2:: with SMTP id o185mr19716529wme.35.1575140034761;
-        Sat, 30 Nov 2019 10:53:54 -0800 (PST)
-Received: from localhost.localdomain (p200300F1371CB100428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:371c:b100:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id r6sm19295637wrq.92.2019.11.30.10.53.53
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0UHRKhmLt5buFa6gOweNrq+UrUlF6bhjJjwMgeW4uPI=;
+        b=WZ+vtg0LN2NljXeF75+UyN6LNAqALiX6Jd5he9E+St9H1PjG9BSROu0uPiNSWDJO2t
+         BrIyZt3Wos0RWkUEds/esvoqyi13LOhoEHoYBUNBTgNX8IWgkVWD3nw3PnWlrWUBukJc
+         XDMBIrx3cFkUy35oPe1w/cLubaKZD5MVF6p5JS3eLRPRdx9tPfqbxmJE/c2TXR9G8955
+         819+5Ep8Ecekc9RyA4lHwopOpNMA4pPUBapPfwSTCcm5IwP0kcuQ3iRuBEMBme+wQ42y
+         KRHv6c0oy0R76QlVA2RnXboSxjXMrqmVoP93JppVLCcPCrQdnkgKtEmICQiTRF9IZits
+         A62w==
+X-Gm-Message-State: APjAAAUR2QVMEWqSLCWnpekThn6RHbQTZtRbQnpqPhe2TkE4jGY5i9H8
+        d0M9zXQQGMGz0mo6/EAh7uk=
+X-Google-Smtp-Source: APXvYqx8qU6RJnI325JY7MaQWh5O3CtZD6+mlYs4h1oB4FLIYP1JYPOoJ3yDaZJq/HN+vIAnUeoDsQ==
+X-Received: by 2002:a0c:9304:: with SMTP id d4mr14851306qvd.12.1575140197113;
+        Sat, 30 Nov 2019 10:56:37 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id 40sm13502875qtc.95.2019.11.30.10.56.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 Nov 2019 10:53:54 -0800 (PST)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     p.zabel@pengutronix.de, linux-amlogic@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, narmstrong@baylibre.com,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH] dt-bindings: reset: meson8b: fix duplicate reset IDs
-Date:   Sat, 30 Nov 2019 19:53:37 +0100
-Message-Id: <20191130185337.1757000-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.24.0
+        Sat, 30 Nov 2019 10:56:36 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Sat, 30 Nov 2019 13:56:35 -0500
+To:     Pavel Begunkov <asml.silence@gmail.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] block: optimise bvec_iter_advance()
+Message-ID: <20191130185634.GA1848835@rani.riverdale.lan>
+References: <cover.1574974574.git.asml.silence@gmail.com>
+ <06b1b796b8d9bcaa6d5b325668525b7a5663035b.1574974574.git.asml.silence@gmail.com>
+ <20191129221709.GA1164864@rani.riverdale.lan>
+ <71864178-27d6-c6fb-a66b-395dc46041ac@gmail.com>
+ <20191129232445.GA1331087@rani.riverdale.lan>
+ <7be4b7fb-5c14-3c3a-e7f1-c5cc6c047f60@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <7be4b7fb-5c14-3c3a-e7f1-c5cc6c047f60@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the public S805 datasheet the RESET2 register uses the
-following bits for the PIC_DC, PSC and NAND reset lines:
-- PIC_DC is at bit 3 (meaning: RESET_VD_RMEM + 3)
-- PSC is at bit 4 (meaning: RESET_VD_RMEM + 4)
-- NAND is at bit 5 (meaning: RESET_VD_RMEM + 4)
+On Sat, Nov 30, 2019 at 12:22:27PM +0300, Pavel Begunkov wrote:
+> On 30/11/2019 02:24, Arvind Sankar wrote:
+> > On Sat, Nov 30, 2019 at 01:47:16AM +0300, Pavel Begunkov wrote:
+> >> On 30/11/2019 01:17, Arvind Sankar wrote:
+> >>>
+> >>> The loop can be simplified a bit further, as done has to be 0 once we go
+> >>> beyond the current bio_vec. See below for the simplified version.
+> >>>
+> >>
+> >> Thanks for the suggestion! I thought about it, and decided to not
+> >> for several reasons. I prefer to not fine-tune and give compilers
+> >> more opportunity to do their job. And it's already fast enough with
+> >> modern architectures (MOVcc, complex addressing, etc).
+> >>
+> >> Also need to consider code clarity and the fact, that this is inline,
+> >> so should be brief and register-friendly.
+> >>
+> > 
+> > It should be more register-friendly, as it uses fewer variables, and I
+> > think it's easier to see what the loop is doing, i.e. that we advance
+> > one bio_vec per iteration: in the existing code, it takes a bit of
+> > thinking to see that we won't spend more than one iteration within the
+> > same bio_vec.
+> 
+> Yeah, may be. It's more the matter of preference then. I don't think
+> it's simpler, and performance is entirely depends on a compiler and 
+> input. But, that's rather subjective and IMHO not worth of time.
+> 
+> Anyway, thanks for thinking this through!
+> 
 
-Update the reset IDs of these three reset lines so they don't conflict
-with PIC_DC and map to the actual hardware reset lines.
+You don't find listing 1 simpler than listing 2? It does save one
+register, as it doesn't have to keep track of done independently from
+bytes. This is always going to be the case unless the compiler can
+eliminate done by transforming Listing 2 into Listing 1. Unfortunately,
+even if it gets much smarter, it's unlikely to be able to do that,
+because they're equivalent only if there is no overflow, so it would
+need to know that bytes + iter->bi_bvec_done cannot overflow, and that
+iter->bi_bvec_done must be smaller than cur->bv_len initially.
 
-Fixes: 79795e20a184eb ("dt-bindings: reset: Add bindings for the Meson SoC Reset Controller")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- include/dt-bindings/reset/amlogic,meson8b-reset.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Listing 1:
 
-diff --git a/include/dt-bindings/reset/amlogic,meson8b-reset.h b/include/dt-bindings/reset/amlogic,meson8b-reset.h
-index c614438bcbdb..fbc524a900da 100644
---- a/include/dt-bindings/reset/amlogic,meson8b-reset.h
-+++ b/include/dt-bindings/reset/amlogic,meson8b-reset.h
-@@ -46,9 +46,9 @@
- #define RESET_VD_RMEM			64
- #define RESET_AUDIN			65
- #define RESET_DBLK			66
--#define RESET_PIC_DC			66
--#define RESET_PSC			66
--#define RESET_NAND			66
-+#define RESET_PIC_DC			67
-+#define RESET_PSC			68
-+#define RESET_NAND			69
- #define RESET_GE2D			70
- #define RESET_PARSER_REG		71
- #define RESET_PARSER_FETCH		72
--- 
-2.24.0
+	bytes += iter->bi_bvec_done;
+	while (bytes) {
+		const struct bio_vec *cur = bv + idx;
 
+		if (bytes < cur->bv_len)
+			break;
+		bytes -= cur->bv_len;
+		idx++;
+	}
+
+	iter->bi_idx = idx;
+	iter->bi_bvec_done = bytes;
+
+Listing 2:
+
+	while (bytes) {
+		const struct bio_vec *cur = bv + idx;
+		unsigned int len = min(bytes, cur->bv_len - done);
+
+		bytes -= len;
+		done += len;
+		if (done == cur->bv_len) {
+			idx++;
+			done = 0;
+		}
+	}
+
+	iter->bi_idx = idx;
+	iter->bi_bvec_done = done;
