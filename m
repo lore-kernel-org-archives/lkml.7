@@ -2,152 +2,88 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F587C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 22:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45845C43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 23:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D8E82075C
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 22:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10B8C20880
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 23:01:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b="vO+WHnDz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t1ABPsjU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbfK3WyM (ORCPT
+        id S1727361AbfK3XBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Nov 2019 17:54:12 -0500
-Received: from rfvt.org.uk ([37.187.119.221]:49374 "EHLO rfvt.org.uk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727025AbfK3WyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Nov 2019 17:54:11 -0500
-Received: from wylie.me.uk (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by rfvt.org.uk (Postfix) with ESMTPS id 074BD80260;
-        Sat, 30 Nov 2019 22:54:09 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wylie.me.uk;
-        s=mydkim005; t=1575154449;
-        bh=sCORn2MAw0TG+WBgIwwZWALjHRYvQWJaKn2hxmwLojU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=vO+WHnDz+j6Oog/JSlgcz93NUFWToy9N2FtsN3fmP/2xIbIN5LQRdaNQvnwnRl+jm
-         BmrKbuqiLUvPdEc53/v5rLSuzRPmFhLP7YePb58BpQPiNlUJrRgQufmPJaBF4UmCH3
-         TWnOJrLdwjm1kPYu1BKE06LtyyIOB1KPJDkMxwdms/xPPU/M2/Uqkv4+lnnE0lI57e
-         1jfEWOpcixDYoWaZzoODt0MXtkJ7wDh0mBTEkALCN+9PgNqT3L27b63WwQRyEuGg3K
-         bZuUMoxtkHOI0Jfsna63beJI5KlW26OgWdRq6jswJPYAxSPCNHtFmNoK/uD6hDCCOG
-         CZGqB86xKeSwA==
+        Sat, 30 Nov 2019 18:01:38 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:33477 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727025AbfK3XBi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Nov 2019 18:01:38 -0500
+Received: by mail-lj1-f193.google.com with SMTP id 21so4030107ljr.0;
+        Sat, 30 Nov 2019 15:01:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Whzdku0abQpHBeeiCCZ3/aENDMafY9GI5DWjx/0lTkI=;
+        b=t1ABPsjUqCFayQUQ/mh4goARt5Cu4TxJ5iOeoPNSmlOc9/ayXPGSezb3QxxLYbZOZ2
+         yMqwEfo7sSI8jvnug83X/HEPthLQytSCjZNr/wu+dgb6JmuE/P0KHo9HoW/Py5FbAZSJ
+         aBUTBzIuqUOPubJ4muv0jSS40wmK/ZrtkZMRWytmIjo8/vAn/AYw+Qyh9aTcH9qcnqQm
+         lnc/C0V1I+0xpsG5BFwJAj4nsee4+ZQvo9Rs0cC66i8/HjYvt6f4eozeYfq6DYpC7r7d
+         2ThZEYamDDVRT8Cn4PjWdetgizSd6yp8/HR4AaWDsFfyD7ci37wAN4sUa5UFbtXgdjqG
+         DJdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Whzdku0abQpHBeeiCCZ3/aENDMafY9GI5DWjx/0lTkI=;
+        b=mEdhVEIyFbKmOt8FBVXSuUqCEgzeT7EYAp4ob7fBa55CtAYlEn54IuuQJbi/IbDoiy
+         YEtlohlVopGpQlwgEJms+E5AlUC4SBP+rp8wnFiqg9bySNPRSOmk5tshksGKHYExpDPu
+         pwtZGIwDVh4MaN4XqRxd4UnYE0/DqeYiR/7WkmLq6knF1RdGiIjYWJXnvxatC6y4edqM
+         W5r/9QKRBEDoEbmch8VnRPo07Ol5fasfugxX8+Km3qDQ1hiIEq1t2SLLiMgl30UYwoYC
+         ZfmivojcOrSwIXXC9G23ath3kgGh5jt+PGi90YcqKjWnAHWGg/VJzHemx/ndLZ4bsz/F
+         qSMA==
+X-Gm-Message-State: APjAAAUirqOjLAz8kg3A3bAZe0g1vC57wij3qJxHbVUojfC/PNLkah3X
+        4hVYeWgm+sO1UJmlx3aCxdSJV3JI4hCXkgDuZmI=
+X-Google-Smtp-Source: APXvYqwpO7e0hF0+Fk+TswWaGZIR50uVZZ3aI7Cg2frtlXcVMJ+36DwkMSSrB21yv88n1w1i2QPqtn6Vcp3q5WFrJUg=
+X-Received: by 2002:a2e:b5ac:: with SMTP id f12mr3379147ljn.0.1575154895735;
+ Sat, 30 Nov 2019 15:01:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Message-ID: <24034.62224.766635.808185@wylie.me.uk>
-Date:   Sat, 30 Nov 2019 22:54:08 +0000
-From:   "Alan J. Wylie" <alan@wylie.me.uk>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: 5.4 Regression in r8169 with jumbo frames - packet loss/delays
-In-Reply-To: <75146b50-9518-8588-81fa-f2811faf6cca@gmail.com>
-References: <24034.56114.248207.524177@wylie.me.uk>
-        <75146b50-9518-8588-81fa-f2811faf6cca@gmail.com>
-X-Mailer: VM 8.2.0b under 26.3 (x86_64-pc-linux-gnu)
+References: <20191129234108.12732-1-aford173@gmail.com> <20191129234108.12732-2-aford173@gmail.com>
+ <CAOMZO5AyLBrsxr5rqkWgf44X0CQdqHcdaCLRaWLC25b18bF+xw@mail.gmail.com>
+ <CAOMZO5ALQQxoWFC9J5ZwT6DtsuVg-FaWCcGbcPK=psokWWRF8Q@mail.gmail.com> <CAHCN7x+zJt3i=Yw=2HjdtQa-rR4yMMvCMf319+wgMW0XQ=nF4g@mail.gmail.com>
+In-Reply-To: <CAHCN7x+zJt3i=Yw=2HjdtQa-rR4yMMvCMf319+wgMW0XQ=nF4g@mail.gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Sat, 30 Nov 2019 20:01:50 -0300
+Message-ID: <CAOMZO5Czqqe0p1LEWt11S-zXnejg_9Zob5wPf2Df5ZJh2dT0qg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: Add GPC Support
+To:     Adam Ford <aford173@gmail.com>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-at 22:37 on Sat 30-Nov-2019 Heiner Kallweit (hkallweit1@gmail.com) wrote:
+On Sat, Nov 30, 2019 at 7:50 PM Adam Ford <aford173@gmail.com> wrote:
 
-> Thanks for the report. A jumbo fix for one chip version may have
-> revealed an issue with another chip version. Could you please try
-> the following?
+> I held off intentionally because of all the txt->yaml conversion, I
+> didn't want to get stuck in the middle of that.
+>
+> Would an tweak to the txt file be accepted?
 
-I'll do that in the morning.
-
-> I checked the vendor driver r8168 and there's no special sequence
-> to configure jumbo mode.
-> 
-> What would be interesting:
-> Do you set the (jumbo) MTU before bringing the device up?
-
-In the meantime here's some info: I use systemd/networkd, I'd suspect
-that it does the MTU in the link, before the network.
-
-$ for f in /etc/systemd/network/*; do echo "========== $f =========="; cat $f; done
-========== /etc/systemd/network/01br0.netdev ==========
-[NetDev]
-Name=br0
-Kind=bridge
-MACAddress=90:2b:34:9d:ed:6f
-========== /etc/systemd/network/02enp3s0.link ==========
-[Match]
-Driver=r8169
-
-[Link]
-MTUBytes=6000
-========== /etc/systemd/network/02enp3s0.network ==========
-[Match]
-Name=enp3s0
-
-[Network]
-Bridge=br0
-
-[Link]
-MTUBytes=6000
-========== /etc/systemd/network/03br0.network ==========
-[Match]
-Name=br0
-
-[Link]
-MTUBytes=6000
-
-[Network]
-DNS=192.168.21.1
-Address=192.168.21.2/24
-Gateway=192.168.21.1
-
-Also, here's a grep of the syslog, I'm not sure how much to trust the
-ordering though:
-
-Nov 30 20:02:10 frodo kernel: Linux version 5.4.0-rc1-00312-g4ebcb113edcc (alan@frodo) (gcc version 9.2.0 (Gentoo Hardened 9.2.0-r2 p3)) #4 SMP PREEMPT Sat Nov 30 19:59:34 GMT 2019
-Nov 30 20:02:10 frodo systemd-networkd[819]: br0: netdev ready
-Nov 30 20:02:10 frodo systemd-networkd[819]: Enumeration completed
-Nov 30 20:02:10 frodo systemd-networkd[819]: br0: rtnl: received neighbor message with invalid family, ignoring.
-Nov 30 20:02:10 frodo systemd-networkd[819]: br0: IPv6 successfully enabled
-Nov 30 20:02:10 frodo systemd-networkd[819]: br0: Gained carrier
-Nov 30 20:02:10 frodo systemd-networkd[819]: br0: Lost carrier
-Nov 30 20:02:10 frodo systemd-networkd[819]: br0: Gained IPv6LL
-Nov 30 20:02:10 frodo systemd-networkd[819]: enp3s0: Gained carrier
-Nov 30 20:02:10 frodo systemd-networkd[819]: enp3s0: Configured
-Nov 30 20:02:10 frodo systemd-networkd[819]: br0: Gained carrier
-Nov 30 20:02:10 frodo ntpd[1029]: 2019-11-30T20:02:10 ntpd[1029]: IO: Listen normally on 3 br0 192.168.21.2:123
-Nov 30 20:02:10 frodo ntpd[1029]: 2019-11-30T20:02:10 ntpd[1029]: IO: Listen normally on 5 br0 [fe80::922b:34ff:fe9d:ed6f%3]:123
-Nov 30 20:02:10 frodo ntpd[1029]: IO: Listen normally on 3 br0 192.168.21.2:123
-Nov 30 20:02:10 frodo ntpd[1029]: IO: Listen normally on 5 br0 [fe80::922b:34ff:fe9d:ed6f%3]:123
-Nov 30 20:02:10 frodo kernel: device: 'eth0': device_add
-Nov 30 20:02:10 frodo kernel: PM: Adding info for No Bus:eth0
-Nov 30 20:02:10 frodo kernel: r8169 0000:03:00.0 eth0: RTL8168evl/8111evl, 90:2b:34:9d:ed:6f, XID 2c9, IRQ 30
-Nov 30 20:02:10 frodo kernel: r8169 0000:03:00.0 eth0: jumbo features [frames: 9200 bytes, tx checksumming: ko]
-Nov 30 20:02:10 frodo kernel: r8169 0000:03:00.0 enp3s0: renamed from eth0
-Nov 30 20:02:10 frodo kernel: net eth0: renaming to enp3s0
-Nov 30 20:02:10 frodo kernel: device: 'br0': device_add
-Nov 30 20:02:10 frodo kernel: PM: Adding info for No Bus:br0
-Nov 30 20:02:10 frodo kernel: br0: port 1(enp3s0) entered blocking state
-Nov 30 20:02:10 frodo kernel: br0: port 1(enp3s0) entered disabled state
-Nov 30 20:02:10 frodo kernel: device enp3s0 entered promiscuous mode
-Nov 30 20:02:10 frodo kernel: br0: port 1(enp3s0) entered blocking state
-Nov 30 20:02:10 frodo kernel: br0: port 1(enp3s0) entered forwarding state
-Nov 30 20:02:10 frodo kernel: r8169 0000:03:00.0 enp3s0: Link is Down
-Nov 30 20:02:10 frodo kernel: IPv6: ADDRCONF(NETDEV_CHANGE): br0: link becomes ready
-Nov 30 20:02:10 frodo kernel: br0: port 1(enp3s0) entered disabled state
-Nov 30 20:02:10 frodo kernel: r8169 0000:03:00.0 enp3s0: Link is Up - 1Gbps/Full - flow control rx/tx
-Nov 30 20:02:10 frodo kernel: IPv6: ADDRCONF(NETDEV_CHANGE): enp3s0: link becomes ready
-Nov 30 20:02:10 frodo kernel: br0: port 1(enp3s0) entered blocking state
-Nov 30 20:02:10 frodo kernel: br0: port 1(enp3s0) entered forwarding state
-Nov 30 20:02:14 frodo systemd-networkd[819]: br0: Configured
-
--- 
-Alan J. Wylie                                          https://www.wylie.me.uk/
-
-Dance like no-one's watching. / Encrypt like everyone is.
-Security is inversely proportional to convenience
+Yes, a patch to the existing txt binding should be fine.
