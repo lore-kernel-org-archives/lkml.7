@@ -2,122 +2,137 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87727C43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 11:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D031CC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 11:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 606782075A
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 11:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AEA92084E
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 11:28:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zKRu7Rrh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbfK3LHG (ORCPT
+        id S1726924AbfK3L2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Nov 2019 06:07:06 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:59983 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725947AbfK3LHG (ORCPT
+        Sat, 30 Nov 2019 06:28:17 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40528 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfK3L2R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Nov 2019 06:07:06 -0500
-Received: from dimstar.local.net (n122-110-44-45.sun2.vic.optusnet.com.au [122.110.44.45])
-        by mail105.syd.optusnet.com.au (Postfix) with SMTP id 2FB5B3A2E4A
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Nov 2019 22:06:45 +1100 (AEDT)
-Received: (qmail 11625 invoked by uid 501); 30 Nov 2019 11:06:45 -0000
-Date:   Sat, 30 Nov 2019 22:06:45 +1100
-From:   Duncan Roe <duncan_roe@optusnet.com.au>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     cmetcalf@ezchip.com, coreteam@netfilter.org, davem@davemloft.net,
-        dvyukov@google.com, gang.chen.5i5j@gmail.com, kaber@trash.net,
-        kadlec@blackhole.kfki.hu, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: KASAN: use-after-free Read in blkdev_get
-Message-ID: <20191130110645.GA4405@dimstar.local.net>
-Mail-Followup-To: Al Viro <viro@zeniv.linux.org.uk>, cmetcalf@ezchip.com,
-        coreteam@netfilter.org, davem@davemloft.net, dvyukov@google.com,
-        gang.chen.5i5j@gmail.com, kaber@trash.net, kadlec@blackhole.kfki.hu,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        pablo@netfilter.org, syzkaller-bugs@googlegroups.com
-References: <000000000000e59aab056e8873ae@google.com>
- <0000000000000beff305981c5ac6@google.com>
- <20191124193035.GA4203@ZenIV.linux.org.uk>
+        Sat, 30 Nov 2019 06:28:17 -0500
+Received: by mail-pg1-f195.google.com with SMTP id e17so15749556pgd.7
+        for <linux-kernel@vger.kernel.org>; Sat, 30 Nov 2019 03:28:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=iai8gOE3z1MAnydfDZ/hmRICotLqvoUpCxmpbWuvdhk=;
+        b=zKRu7RrhrkiEUyF3rwVCcli7TCk2GVVka+2HLae++qjdDgoW5ghKokWGbfEKpWKDeE
+         IRO//NDvRDaIw17ehPbk139sjc5jOYG02HIePBbsIbdhv3CqZVl/bca9PDgqAxX4TNtm
+         3hw8q2Un1Bdv7oyXcuaphFIuqi4oTwHQRKMUN/Bxxi0MGj2v87zPVJdHeWQyz9RFhILw
+         Pv/iTTnxZnIxGQyq5db6gFK9EIDxDQHgsac7IFqK6ywlL0l/PZae9vAPvHJkvG8m7dp3
+         j2OgR4Z1Z5lt7OCqIcq52E5I7A/8mnYiTxMB3MHxeAW6V0Kmcx+9D35zVl/5foOVG1tq
+         J7lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iai8gOE3z1MAnydfDZ/hmRICotLqvoUpCxmpbWuvdhk=;
+        b=sjVci+2t/x+2H5AD9V6yL22UlOMf8sQNUqRiiAnaHK+8YRB4Ej4myLUZ7EHDIFcsEL
+         hu9ULveevcWKXyC/XqCcaCEC28ymss8YklHogJowU/wW5KjYrwDcKXu3ba4SjUPvQwab
+         rLJ4AJPLwlayXzvCYFmmV7PkudfnJ/fsib7OU/vaQjyCYoa8Clh0PuSnLqU8CdTtf2LR
+         6Z7Q1YdMysABzBRh8OBaIWBCrMXp5a1bjNrOsYTT4k18ozjBC7xkI/xyLvv66GdajGT4
+         DdJ10B6zymx0rMhA9VkfrSDvpQa0eL/KXAyftRSQyIO3yu+lCcPAF3tLrk0EuV7oLnXh
+         djWg==
+X-Gm-Message-State: APjAAAWUW6S9G3oaK0gWhJBoWlcWPlPda+SLxMll/gWiAE0oi801k1jJ
+        VXZFwV3n/YtKFYqGwdvMwWxbMg==
+X-Google-Smtp-Source: APXvYqyG+ZhxvFRKoPJOQAjOuPGebTseFZQpHs4mycCxOnX53ohMvPGcUywJyK7N+GOAVkAq+GTdAA==
+X-Received: by 2002:a63:1c5c:: with SMTP id c28mr21374323pgm.241.1575113295143;
+        Sat, 30 Nov 2019 03:28:15 -0800 (PST)
+Received: from Iliass-MacBook-Pro.local ([50.225.178.238])
+        by smtp.gmail.com with ESMTPSA id 39sm18732330pjo.7.2019.11.30.03.28.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 30 Nov 2019 03:28:14 -0800 (PST)
+Date:   Sat, 30 Nov 2019 03:28:12 -0800
+From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     netdev@vger.kernel.org, "David S . Miller" <davem@davemloft.net>,
+        Andrew Lunn <andrew@lunn.ch>, Sekhar Nori <nsekhar@ti.com>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH v2] net: ethernet: ti: ale: ensure vlan/mdb deleted when
+ no members
+Message-ID: <20191130112812.GA2779@Iliass-MacBook-Pro.local>
+References: <20191129175809.815-1-grygorii.strashko@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191124193035.GA4203@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
-        a=4DzML1vCOQ6Odsy8BUtSXQ==:117 a=4DzML1vCOQ6Odsy8BUtSXQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=MeAgGD-zjQ4A:10
-        a=RSmzAf-M6YYA:10 a=7QvuB2UPAAAA:8 a=edf1wS77AAAA:8 a=hSkVLCK3AAAA:8
-        a=mzoz-TVAAAAA:20 a=VwQbUJbxAAAA:8 a=kGbAZRCgAAAA:20
-        a=Vl-jczeOgfUYCQSrvD8A:9 a=CjuIK1q_8ugA:10 a=vVHabExCe68A:10
-        a=PyAPxfarwdVEPLbpdMBu:22 a=DcSpbTIhAlouE1Uv7lRv:22
-        a=cQPPKAXgyycSBL8etih5:22 a=AjGcO6oz07-iQ99wixmX:22
-        a=p-dnK0njbqwfn1k4-x12:22 a=rLkV7i5x5X597yo9dRWc:22
+In-Reply-To: <20191129175809.815-1-grygorii.strashko@ti.com>
+User-Agent: Mutt/1.9.5 (2018-04-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 24, 2019 at 07:30:35PM +0000, Al Viro wrote:
-> On Sun, Nov 24, 2019 at 11:07:00AM -0800, syzbot wrote:
-> > syzbot has bisected this bug to:
-> >
-> > commit 77ef8f5177599efd0cedeb52c1950c1bd73fa5e3
-> > Author: Chris Metcalf <cmetcalf@ezchip.com>
-> > Date:   Mon Jan 25 20:05:34 2016 +0000
-> >
-> >     tile kgdb: fix bug in copy to gdb regs, and optimize memset
-> >
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1131bc0ee00000
-> > start commit:   f5b7769e Revert "debugfs: inode: debugfs_create_dir uses m..
-> > git tree:       upstream
-> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=1331bc0ee00000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=1531bc0ee00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=709f8187af941e84
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=eaeb616d85c9a0afec7d
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=177f898f800000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=147eb85f800000
-> >
-> > Reported-by: syzbot+eaeb616d85c9a0afec7d@syzkaller.appspotmail.com
-> > Fixes: 77ef8f517759 ("tile kgdb: fix bug in copy to gdb regs, and optimize
-> > memset")
-> >
-> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
->
-> Seriously?  How can the commit in question (limited to arch/tile/kernel/kgdb.c)
-> possibly affect a bug that manages to produce a crash report with
-> RSP: 0018:ffffffff82e03eb8  EFLAGS: 00000282
-> RAX: 0000000000000000 RBX: ffffffff82e00000 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff81088779
-> RBP: ffffffff82e03eb8 R08: 0000000000000000 R09: 0000000000000001
-> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-> R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff82e00000
-> FS:  0000000000000000(0000) GS:ffff88021fc00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 000000c420447ff8 CR3: 0000000213184000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> in it?  Unless something very odd has happened to tile, this crash has
-> been observed on 64bit x86; the names of registers alone are enough
-> to be certain of that.
->
-> And the binaries produced by an x86 build should not be affected by any
-> changes in arch/tile; not unless something is very wrong with the build
-> system.  It's not even that this commit has fixed an earlier bug that
-> used to mask the one manifested here - it really should have had zero
-> impact on x86 builds, period.
->
-> So I'm sorry, but I'm calling bullshit.  Something's quite wrong with
-> the bot - either its build system or the bisection process.
+On Fri, Nov 29, 2019 at 07:58:09PM +0200, Grygorii Strashko wrote:
+> The recently updated ALE APIs cpsw_ale_del_mcast() and
+> cpsw_ale_del_vlan_modify() have an issue and will not delete ALE entry even
+> if VLAN/mcast group has no more members. Hence fix it here and delete ALE
+> entry if !port_mask.
+> 
+> The issue affected only new cpsw switchdev driver.
+> 
+> Fixes: e85c14370783 ("net: ethernet: ti: ale: modify vlan/mdb api for switchdev")
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> ---
+>  drivers/net/ethernet/ti/cpsw_ale.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
+> index 929f3d3354e3..ecdbde539eb7 100644
+> --- a/drivers/net/ethernet/ti/cpsw_ale.c
+> +++ b/drivers/net/ethernet/ti/cpsw_ale.c
+> @@ -384,7 +384,7 @@ int cpsw_ale_del_mcast(struct cpsw_ale *ale, const u8 *addr, int port_mask,
+>  		       int flags, u16 vid)
+>  {
+>  	u32 ale_entry[ALE_ENTRY_WORDS] = {0, 0, 0};
+> -	int mcast_members;
+> +	int mcast_members = 0;
+>  	int idx;
+>  
+>  	idx = cpsw_ale_match_addr(ale, addr, (flags & ALE_VLAN) ? vid : 0);
+> @@ -397,11 +397,13 @@ int cpsw_ale_del_mcast(struct cpsw_ale *ale, const u8 *addr, int port_mask,
+>  		mcast_members = cpsw_ale_get_port_mask(ale_entry,
+>  						       ale->port_mask_bits);
+>  		mcast_members &= ~port_mask;
+> +	}
+> +
+> +	if (mcast_members)
+>  		cpsw_ale_set_port_mask(ale_entry, mcast_members,
+>  				       ale->port_mask_bits);
+> -	} else {
+> +	else
+>  		cpsw_ale_set_entry_type(ale_entry, ALE_TYPE_FREE);
+> -	}
+>  
+>  	cpsw_ale_write(ale, idx, ale_entry);
+>  	return 0;
+> @@ -478,6 +480,10 @@ static void cpsw_ale_del_vlan_modify(struct cpsw_ale *ale, u32 *ale_entry,
+>  	members = cpsw_ale_get_vlan_member_list(ale_entry,
+>  						ale->vlan_field_bits);
+>  	members &= ~port_mask;
+> +	if (!members) {
+> +		cpsw_ale_set_entry_type(ale_entry, ALE_TYPE_FREE);
+> +		return;
+> +	}
+>  
+>  	untag = cpsw_ale_get_vlan_untag_force(ale_entry,
+>  					      ale->vlan_field_bits);
+> -- 
+> 2.17.1
+> 
 
-The acid test would be: does reverting that commit make the problem go away?
-
-See, for example, https://bugzilla.kernel.org/show_bug.cgi?id=203935
-
-Cheers ... Duncan.
+Acked-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
