@@ -2,117 +2,112 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 058F4C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 02:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F103C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 02:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8F98217BC
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 02:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DC4D20869
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 02:53:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="lfOifZix"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbfK3Cp3 (ORCPT
+        id S1727240AbfK3CxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 21:45:29 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50510 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727177AbfK3Cp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 21:45:28 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 96812B9628629FE8062D;
-        Sat, 30 Nov 2019 10:45:25 +0800 (CST)
-Received: from huawei.com (10.175.105.18) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Sat, 30 Nov 2019
- 10:45:17 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     <maz@kernel.org>, <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
-        <james.morse@arm.com>, <julien.thierry.kdev@gmail.com>,
-        <suzuki.poulose@arm.com>, <christoffer.dall@arm.com>,
-        <catalin.marinas@arm.com>, <eric.auger@redhat.com>,
-        <gregkh@linuxfoundation.org>, <will@kernel.org>,
-        <andre.przywara@arm.com>, <tglx@linutronix.de>
-CC:     <steven.price@arm.com>, <linmiaohe@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
-        <kvm@vger.kernel.org>
-Subject: [PATCH v3] KVM: vgic: Use wrapper function to lock/unlock all vcpus in kvm_vgic_create()
-Date:   Sat, 30 Nov 2019 10:45:18 +0800
-Message-ID: <1575081918-11401-1-git-send-email-linmiaohe@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
+        Fri, 29 Nov 2019 21:53:23 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38639 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727217AbfK3CxW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 21:53:22 -0500
+Received: by mail-pf1-f194.google.com with SMTP id x185so2831956pfc.5
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 18:53:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TFNXTUbKkQdsHGg8rEPwlJHNNcDiA6+VrC+v3kUz144=;
+        b=lfOifZixgeluiqt9HgkCHU543gbPmc7BLDzlBbbWKA1ABiSYw6UL8lLaPRaOjShWv1
+         JG8osba32bC9HTKN7Ztjtz0cEo5l25YLNy4X5NMHl9chdBgF5R81Uj+k60bJsyREy+J0
+         z+s5Zm3jLaCHp8vzVfJKAAgkSdAHMfh55hOrLI9OBZt1XCfdG2drmEbiY2OtluNUJl+2
+         ug9cwtTW2nSgBfaMjA+FfPl6oTD6H5c5AjqfOILuQc8+XxkRp9hIZGkxDES1+3OXmHG0
+         j7JuAJPV01wxz/PLlFvW9qtEDHnL7shZgGzWQQIbqRs5RXT4w40XGIZMUWmTpAgkXojD
+         djaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TFNXTUbKkQdsHGg8rEPwlJHNNcDiA6+VrC+v3kUz144=;
+        b=EemkuG/raH8+/aGe/i8tJzcL0cvkbScD5Qujx58QuPI14niKy0TSt5Dm67fX+Jusoh
+         FOnpc4qcCJvaAxVJTn32S6eeoA7dyZyyKYOFcfKvrYE1osv7tWxFOrIgde0T1T+ijn+H
+         oM9s8p87CLk+h2S1CGnAs08hwQ/xFZvND+4CJAyy1YrpkmD7YOBxGTFPj36HUJuPfIS6
+         lKlbE9IRbOMcDp4gzNmeEN5EiNVSl3S4YydeZxmDwHIzxqH9EQlnf/5bh9Lp/zaIslG0
+         nt1z32q3Lv8yktFJft+m9ob9lGF2DWuN5izdkGEVp4BWhLtLXRWZ7AAPyhSVzuTmEK55
+         8ECA==
+X-Gm-Message-State: APjAAAUO1DnI05eYEPbznvOGzViKvbCv8g2mbU/XNwfpFa3AXezAT8l9
+        P0IG1iU7v9B1efOdUgu3fHwNMx3q8KAOkg==
+X-Google-Smtp-Source: APXvYqyMx7MPL9ozDuQ/RDhHO1RF6Kj5cbHzID7wRax8WbQ7SuKgEtc14qT2e+/uyQnCoyp/y/U+Cw==
+X-Received: by 2002:a63:ff1e:: with SMTP id k30mr19533259pgi.273.1575082400382;
+        Fri, 29 Nov 2019 18:53:20 -0800 (PST)
+Received: from ?IPv6:2605:e000:100e:8c61:9062:6a04:387d:c19c? ([2605:e000:100e:8c61:9062:6a04:387d:c19c])
+        by smtp.gmail.com with ESMTPSA id a26sm25056083pff.155.2019.11.29.18.53.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 29 Nov 2019 18:53:19 -0800 (PST)
+Subject: Re: [PATCH -next] io_uring: Add missing include <linux/highmem.h>
+To:     YueHaibing <yuehaibing@huawei.com>, viro@zeniv.linux.org.uk,
+        asml.silence@gmail.com
+Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191130015042.17020-1-yuehaibing@huawei.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <70275fde-dbf8-4142-87bf-8d2e43564a45@kernel.dk>
+Date:   Fri, 29 Nov 2019 18:53:17 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.105.18]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20191130015042.17020-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+On 11/29/19 5:50 PM, YueHaibing wrote:
+> Fix build error:
+> 
+> fs/io_uring.c:1628:21: error: implicit declaration of function 'kmap' [-Werror=implicit-function-declaration]
+> fs/io_uring.c:1643:4: error: implicit declaration of function 'kunmap' [-Werror=implicit-function-declaration]
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: 311ae9e159d8 ("io_uring: fix dead-hung for non-iter fixed rw")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>   fs/io_uring.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index 2c2e8c2..745eb00 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -69,6 +69,7 @@
+>   #include <linux/nospec.h>
+>   #include <linux/sizes.h>
+>   #include <linux/hugetlb.h>
+> +#include <linux/highmem.h>
+>   
+>   #define CREATE_TRACE_POINTS
+>   #include <trace/events/io_uring.h>
 
-Use wrapper function lock_all_vcpus()/unlock_all_vcpus()
-in kvm_vgic_create() to remove duplicated code dealing
-with locking and unlocking all vcpus in a vm.
+Fix for this is already queued up, and now sent to Linus as well:
 
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Reviewed-by: Steven Price <steven.price@arm.com>
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
--v2:
-	Fix some spelling mistake in patch title and commit log.
--v3:
-	Remove the comment that no longer makes sense.
----
- virt/kvm/arm/vgic/vgic-init.c | 19 ++++---------------
- 1 file changed, 4 insertions(+), 15 deletions(-)
+https://git.kernel.dk/cgit/linux-block/commit/?h=for-linus&id=aa4c3967756c6c576a38a23ac511be211462a6b7
 
-diff --git a/virt/kvm/arm/vgic/vgic-init.c b/virt/kvm/arm/vgic/vgic-init.c
-index b3c5de48064c..22ff73ecac80 100644
---- a/virt/kvm/arm/vgic/vgic-init.c
-+++ b/virt/kvm/arm/vgic/vgic-init.c
-@@ -70,7 +70,7 @@ void kvm_vgic_early_init(struct kvm *kvm)
-  */
- int kvm_vgic_create(struct kvm *kvm, u32 type)
- {
--	int i, vcpu_lock_idx = -1, ret;
-+	int i, ret;
- 	struct kvm_vcpu *vcpu;
- 
- 	if (irqchip_in_kernel(kvm))
-@@ -86,17 +86,9 @@ int kvm_vgic_create(struct kvm *kvm, u32 type)
- 		!kvm_vgic_global_state.can_emulate_gicv2)
- 		return -ENODEV;
- 
--	/*
--	 * Any time a vcpu is run, vcpu_load is called which tries to grab the
--	 * vcpu->mutex.  By grabbing the vcpu->mutex of all VCPUs we ensure
--	 * that no other VCPUs are run while we create the vgic.
--	 */
- 	ret = -EBUSY;
--	kvm_for_each_vcpu(i, vcpu, kvm) {
--		if (!mutex_trylock(&vcpu->mutex))
--			goto out_unlock;
--		vcpu_lock_idx = i;
--	}
-+	if (!lock_all_vcpus(kvm))
-+		return ret;
- 
- 	kvm_for_each_vcpu(i, vcpu, kvm) {
- 		if (vcpu->arch.has_run_once)
-@@ -125,10 +117,7 @@ int kvm_vgic_create(struct kvm *kvm, u32 type)
- 		INIT_LIST_HEAD(&kvm->arch.vgic.rd_regions);
- 
- out_unlock:
--	for (; vcpu_lock_idx >= 0; vcpu_lock_idx--) {
--		vcpu = kvm_get_vcpu(kvm, vcpu_lock_idx);
--		mutex_unlock(&vcpu->mutex);
--	}
-+	unlock_all_vcpus(kvm);
- 	return ret;
- }
- 
 -- 
-2.19.1
+Jens Axboe
 
