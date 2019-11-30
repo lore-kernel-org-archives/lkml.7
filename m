@@ -2,138 +2,164 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71456C43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 04:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A764BC432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 04:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 442172071F
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 04:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62A9020715
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 04:38:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="K1kKnZI+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j9vy/S7L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbfK3EaJ (ORCPT
+        id S1727219AbfK3EiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 23:30:09 -0500
-Received: from mail-eopbgr760128.outbound.protection.outlook.com ([40.107.76.128]:23105
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727142AbfK3EaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 23:30:09 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LFoF2lOx/+6CKdThc6FxGMyi77v4mMQDbBLxbXudKiHVG3+BztWVvSxnnmHpmt8kM+ZTPKxPWaox6NNDgInZkHTmx6wd+nIvfDCzoCzhVf/8O7UyJ1WwOHUJfTXoqjk2+iergjAmOJW6TUHT1InSmvgoO15AaL5L7SS5y21gA1vNazRfPGPzzh9DPyqNDV7bU1K+g+t4cV3kb2D0iDQgFE316GuUlG+KM6hElQLvnNKNqPVSno3JR3+BImyiTfF8RF4oo78gbXQRBlBlFPN7tiaM6Kk4EOnrkHeR5QXJxpvmKTvnFsgVbUGQBYO6yCABDUkBcnvcchqMJpie2ssz6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ek599W0cnAadV7AeCqeQ+lVMhFk429fzqTmlmmlWTYs=;
- b=h+XMkjndxzd0/HQ9tAL8Iy62lnlRO1n+eq1X2X0hWbjXMAKNoL7a/YoebsA/NIpN2x4+zASnxeQYCTGhkpBWhwACLBatMWoiQPuwHw/xYltWw+CYkLmGyuILD6AVWR5n2bC8IbCtI1g6i/7K+GwYfITs5YcCU3eETcw7eFfWDpCALh90VYOR2wg0Zqwz+NYqZ6Yo1OprGkb+d0s5KAFrzC2YKM7pqCr6idx7eupUVXkDyQJJ65zIY6MVguHF5dXWp9O6Snp7LcHy6pLYWzR8EVdkDgzGZs4Ime78KC+7kwL5zJRcMMvKeKn9eiPj4LOu5KcwjToT+O55q+Sk6kecjw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ek599W0cnAadV7AeCqeQ+lVMhFk429fzqTmlmmlWTYs=;
- b=K1kKnZI+U8xGS6mdbGDVpxgsIUl90EQIkqciTzTCWF9YS4WVUGNKSKD2YgXPF4EfUkuFzCh7t1CfUXO+vIk0W5lK3/7Lw5D5tMwymCFFvu+VUDBtE0ZwHD5LY1vT/4f2tiRZCutnH/Dt69F743Q8sCPxyregijshb5t+9XTsD5U=
-Received: from CY4PR21MB0629.namprd21.prod.outlook.com (10.175.115.19) by
- CY4PR21MB0775.namprd21.prod.outlook.com (10.173.192.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.0; Sat, 30 Nov 2019 04:30:06 +0000
-Received: from CY4PR21MB0629.namprd21.prod.outlook.com
- ([fe80::ed94:4b6d:5371:285c]) by CY4PR21MB0629.namprd21.prod.outlook.com
- ([fe80::ed94:4b6d:5371:285c%4]) with mapi id 15.20.2516.003; Sat, 30 Nov 2019
- 04:30:06 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Long Li <longli@microsoft.com>
-Subject: RE: [EXTERNAL] [PATCH 1/2] PCI: hv: decouple the func definition in
- hv_dr_state from VSP message
-Thread-Topic: [EXTERNAL] [PATCH 1/2] PCI: hv: decouple the func definition in
- hv_dr_state from VSP message
-Thread-Index: AQHVoaFcWphb3zmlG0OqjmKFjc5K8qejKdTQ
-Date:   Sat, 30 Nov 2019 04:30:05 +0000
-Message-ID: <CY4PR21MB06293F8FB8A8A1ADD628A8B8D7410@CY4PR21MB0629.namprd21.prod.outlook.com>
-References: <1574474229-44840-1-git-send-email-longli@linuxonhyperv.com>
-In-Reply-To: <1574474229-44840-1-git-send-email-longli@linuxonhyperv.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-11-30T04:30:03.2842035Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=739473f4-27c9-42d2-9236-15eb823f680e;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: daf0c42b-df3d-40e5-f358-08d7754df9db
-x-ms-traffictypediagnostic: CY4PR21MB0775:|CY4PR21MB0775:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR21MB0775DBE1CC8737FBA3261135D7410@CY4PR21MB0775.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 02379661A3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(396003)(136003)(39860400002)(346002)(189003)(199004)(99286004)(107886003)(102836004)(33656002)(2201001)(6246003)(86362001)(2906002)(7696005)(6436002)(110136005)(76176011)(22452003)(6506007)(2501003)(1511001)(4326008)(8990500004)(10090500001)(55016002)(9686003)(71200400001)(15650500001)(26005)(256004)(71190400001)(25786009)(5660300002)(4744005)(316002)(52536014)(10290500003)(76116006)(81166006)(81156014)(8936002)(14454004)(229853002)(305945005)(7736002)(74316002)(66476007)(66066001)(478600001)(11346002)(446003)(66946007)(8676002)(66556008)(186003)(66446008)(3846002)(6116002)(64756008)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0775;H:CY4PR21MB0629.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Y3CI/vYqDyZ9YvqXh3pNqKTViSEmo0yOorS7eHCPI1SoCZqgVPx8WiAH/HUh7lg7utIc7byYehMTk6x7uTbmU4YPpquoaxgoSpJwFtd5e4dYvivDB87oR3pjzc6fPM68a6PXPcnd4/J8fM9xhrfrOPSW9NkNlPFZt1va9QsmevgQZ3TX9Y0cD7RDjHuidv4o/LPoQfjlDcS0LSp+TxNMQzGYo0mt+CsV06RPGJJhksiiJUfSJ8goszDvVH73v8oWC4AP4o7XXm/gGsIV9lk1nFpWCEfyZJHssDSS8pywaGd3u42bQY4YKvr3wGrC2MpgUgoX52AAISRLbe9xbFn1icdGVVxYl5wcN4Ffh3MEzlRAjIyLeyrRaepBCeiL79prR2CZ/2n254R4mluvigT6cBOSwGfvLYr7IcEPRW/AFgu9ZGRV6jsqZVnbggPa8XRA
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 29 Nov 2019 23:38:11 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40151 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727142AbfK3EiL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 23:38:11 -0500
+Received: by mail-pg1-f193.google.com with SMTP id e17so15430499pgd.7
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 20:38:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QOcATAytYdAUYAj61d6IpYGu6sX7w+eDXWKXj+6FQJQ=;
+        b=j9vy/S7L+YPvk/Jb7NxdDWzFdsJueZLTJ3U6EgdCpIk7hNzWDsues1GqszWHtonsMh
+         90b+SsPYMPNrhmrTZ5ADJkEQvzZSWVLx2iPo8Lur7LbeKSGx1IiKBEOs2ARaZe/VAZN4
+         W5ioSAgI1FEMGfkGprjvVZdnVtgdg32u4nhsR9PQ3FdBlaf0wZnG9toZUwDdtLx3+vTg
+         UOYOTPGUio45KoPlbZDOV9L82I2ZLtyVKfLAX1SkamZjfwzQKUTaCH5WbmP3mz5LtCD5
+         RYzB6/F3IXQvN0aIkUYGMHWFMAytc03Ws7fMsTS78uWy2PRvPwlgvq+tMvLsHoaFWrrs
+         Ucpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QOcATAytYdAUYAj61d6IpYGu6sX7w+eDXWKXj+6FQJQ=;
+        b=TLcuToIVkRyH38dbEn4WGpmL2Np//1F6VVtkbBX+Qs5aSUvdv9if69xwXXi1lbO5di
+         j4dR5gMIe2W4INHWbkzbHaSNAtjVCmvke6yM40qRxhqGCI9NEOUmneyZEpDFOBJaI1M9
+         yr6f2eNYiZPasTo1fc/EppKkPRvkLXhOhUp0VKMedZNWoF/I2QIFhfJ8zCFZ+tWK0QiK
+         HnYt0dOcS5XzHNaQYBNJLcLcgvn99YdY2NtezpPchevcuk46XXX1GB0IWlV/gvssitfl
+         Wx3hIxqBYwGHT7rpKOGN+7lSUrBybXfrt0ZeNDC3rbRFpoqjbsFeGUK34s/AETx4YLvk
+         Zbgw==
+X-Gm-Message-State: APjAAAV5EypEMZjL9EocTBn9y//NcMTN6ReDNHiLsrf9xhSAQAab9eBD
+        uEPV4HvBzeZlivjbnWnNMvUO3g==
+X-Google-Smtp-Source: APXvYqzl0nI0zkWWC3GyKCb6vZsvk9rxrHliKFgB87oUCzOLq1iKPzZZGPQRAsp0IfRBsqcqrmHOmQ==
+X-Received: by 2002:a63:2949:: with SMTP id p70mr20698711pgp.191.1575088686021;
+        Fri, 29 Nov 2019 20:38:06 -0800 (PST)
+Received: from google.com ([2620:0:1000:2511:b34b:87b6:d099:91b0])
+        by smtp.gmail.com with ESMTPSA id em16sm15839604pjb.21.2019.11.29.20.38.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Nov 2019 20:38:05 -0800 (PST)
+Date:   Fri, 29 Nov 2019 20:38:00 -0800
+From:   Tom Anderson <thomasanderson@google.com>
+To:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Cc:     Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Mario Kleiner <mario.kleiner.de@gmail.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/amd/display: Reduce HDMI pixel encoding if max clock
+ is exceeded
+Message-ID: <20191130043800.GA217968@google.com>
+References: <20191123052900.77205-1-thomasanderson@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: daf0c42b-df3d-40e5-f358-08d7754df9db
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Nov 2019 04:30:05.7819
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: SRuT7ChrdREyJLKwAC9yJJzwd73/GLtU7zDnjRI4XrM5SfAAjx1Yq8lKvikKzUQaWDAqSNN32qFB5xU4ZL1RUy3Icx7AApOHFvAJKXsrCYU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0775
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191123052900.77205-1-thomasanderson@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: longli@linuxonhyperv.com  Sent: Friday, November 22, 2019 5:57 PM
->=20
-> From: Long Li <longli@microsoft.com>
->=20
-> hv_dr_state is used to find present PCI devices on the bus. The structure
-> reuses struct pci_function_description from VSP message to describe a dev=
-ice.
->=20
-> To prepare support for pci_function_description v2, we need to decouple t=
-his
-> dependence in hv_dr_state so it can work with both v1 and v2 VSP messages=
-.
->=20
-> There is no functionality change.
->=20
-> Signed-off-by: Long Li <longli@microsoft.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 100 +++++++++++++++++++---------
->  1 file changed, 69 insertions(+), 31 deletions(-)
->=20
+I just realized that at 4:2:2, the pixel clock isn't actually decreased to 3/4
+of it's value at 4:4:4. I'll send a revised patch on Monday.
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+On Fri, Nov 22, 2019 at 09:29:00PM -0800, Thomas Anderson wrote:
+> For high-res (8K) or HFR (4K120) displays, using uncompressed pixel
+> formats like YCbCr444 would exceed the bandwidth of HDMI 2.0, so the
+> "interesting" modes would be disabled, leaving only low-res or low
+> framerate modes.
+> 
+> This change lowers the pixel encoding to 4:2:2 or 4:2:0 if the max TMDS
+> clock is exceeded. Verified that 8K30 and 4K120 are now available and
+> working with a Samsung Q900R over an HDMI 2.0b link from a Radeon 5700.
+> 
+> Signed-off-by: Thomas Anderson <thomasanderson@google.com>
+> ---
+>  .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 30 ++++++++++++++-----
+>  1 file changed, 23 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> index 4139f129eafb..a507a6f04c82 100644
+> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> @@ -3269,13 +3269,15 @@ static void reduce_mode_colour_depth(struct dc_crtc_timing *timing_out)
+>  	timing_out->display_color_depth--;
+>  }
+>  
+> -static void adjust_colour_depth_from_display_info(struct dc_crtc_timing *timing_out,
+> -						const struct drm_display_info *info)
+> +static void adjust_timing_from_display_info(
+> +	struct dc_crtc_timing *timing_out,
+> +	const struct drm_display_info *info,
+> +	const struct drm_display_mode *mode_in)
+>  {
+>  	int normalized_clk;
+> -	if (timing_out->display_color_depth <= COLOR_DEPTH_888)
+> +	if (timing_out->display_color_depth < COLOR_DEPTH_888)
+>  		return;
+> -	do {
+> +	while (timing_out->display_color_depth > COLOR_DEPTH_888) {
+>  		normalized_clk = timing_out->pix_clk_100hz / 10;
+>  		/* YCbCr 4:2:0 requires additional adjustment of 1/2 */
+>  		if (timing_out->pixel_encoding == PIXEL_ENCODING_YCBCR420)
+> @@ -3297,9 +3299,23 @@ static void adjust_colour_depth_from_display_info(struct dc_crtc_timing *timing_
+>  		if (normalized_clk <= info->max_tmds_clock)
+>  			return;
+>  		reduce_mode_colour_depth(timing_out);
+> +	}
+>  
+> -	} while (timing_out->display_color_depth > COLOR_DEPTH_888);
+> -
+> +	/* The color depth is 888 and cannot be reduced any further, but the
+> +	 * clock would still exceed the max tmds clock. Try reducing the pixel
+> +	 * encoding next.
+> +	 */
+> +	if (timing_out->pixel_encoding == PIXEL_ENCODING_RGB ||
+> +	    timing_out->pixel_encoding == PIXEL_ENCODING_YCBCR444) {
+> +		/* YCBCR422 is always supported. */
+> +		timing_out->pixel_encoding = PIXEL_ENCODING_YCBCR422;
+> +		normalized_clk = (timing_out->pix_clk_100hz * 3) / 40;
+> +		if (normalized_clk <= info->max_tmds_clock)
+> +			return;
+> +	}
+> +	/* YCBCR420 may only be supported on specific modes. */
+> +	if (drm_mode_is_420_also(info, mode_in))
+> +		timing_out->pixel_encoding = PIXEL_ENCODING_YCBCR420;
+>  }
+>  
+>  static void fill_stream_properties_from_drm_display_mode(
+> @@ -3366,7 +3382,7 @@ static void fill_stream_properties_from_drm_display_mode(
+>  	stream->out_transfer_func->type = TF_TYPE_PREDEFINED;
+>  	stream->out_transfer_func->tf = TRANSFER_FUNCTION_SRGB;
+>  	if (stream->signal == SIGNAL_TYPE_HDMI_TYPE_A)
+> -		adjust_colour_depth_from_display_info(timing_out, info);
+> +		adjust_timing_from_display_info(timing_out, info, mode_in);
+>  }
+>  
+>  static void fill_audio_info(struct audio_info *audio_info,
+> -- 
+> 2.24.0.432.g9d3f5f5b63-goog
+> 
