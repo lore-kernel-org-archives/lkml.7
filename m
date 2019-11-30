@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 989A9C43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 18:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15DC9C432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 18:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71B302082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 18:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA7262075C
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 18:37:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbfK3Sfw (ORCPT
+        id S1727345AbfK3She (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Nov 2019 13:35:52 -0500
-Received: from asavdk4.altibox.net ([109.247.116.15]:38428 "EHLO
+        Sat, 30 Nov 2019 13:37:34 -0500
+Received: from asavdk4.altibox.net ([109.247.116.15]:38546 "EHLO
         asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727231AbfK3Sfw (ORCPT
+        with ESMTP id S1726799AbfK3Shd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Nov 2019 13:35:52 -0500
+        Sat, 30 Nov 2019 13:37:33 -0500
 Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 6B3198062D;
-        Sat, 30 Nov 2019 19:35:49 +0100 (CET)
-Date:   Sat, 30 Nov 2019 19:35:48 +0100
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 7FBE880563;
+        Sat, 30 Nov 2019 19:37:30 +0100 (CET)
+Date:   Sat, 30 Nov 2019 19:37:29 +0100
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     Paul Cercueil <paul@crapouillou.net>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -36,21 +36,21 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] dt-bindings: panel: Document Frida FRD350H54004 LCD
- panel
-Message-ID: <20191130183548.GC24722@ravnborg.org>
+Subject: Re: [PATCH 3/3] drm/panel: simple: Add support for the Frida
+ FRD350H54004 panel
+Message-ID: <20191130183729.GD24722@ravnborg.org>
 References: <20191120171027.1102250-1-paul@crapouillou.net>
- <20191120171027.1102250-2-paul@crapouillou.net>
+ <20191120171027.1102250-3-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191120171027.1102250-2-paul@crapouillou.net>
+In-Reply-To: <20191120171027.1102250-3-paul@crapouillou.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-CMAE-Score: 0
 X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
         a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
         a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8
-        a=6sA7AJTnC8BI-8blUJYA:9 a=CjuIK1q_8ugA:10 a=9LHmKk7ezEChjTCyhBa9:22
+        a=4eiu5t_5MPiKWv0nutYA:9 a=CjuIK1q_8ugA:10 a=9LHmKk7ezEChjTCyhBa9:22
         a=pHzHmUro8NiASowvMSCR:22 a=6VlIyEUom7LUIeUMNQJH:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,38 +59,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Paul.
 
-On Wed, Nov 20, 2019 at 06:10:26PM +0100, Paul Cercueil wrote:
-> Add bindings documentation for the Frida 3.5" (320x240 pixels) 24-bit
-> TFT LCD panel.
+I am not sure if I already wrote this...
+
+On Wed, Nov 20, 2019 at 06:10:27PM +0100, Paul Cercueil wrote:
+> The FRD350H54004 is a simple 3.5" 320x240 24-bit TFT panel, found for
+> instance inside the Anbernic RG-350 handheld gaming console.
 > 
 > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  .../bindings/display/panel/frida,frd350h54004.txt    | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/frida,frd350h54004.txt
+>  drivers/gpu/drm/panel/panel-simple.c | 29 ++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/panel/frida,frd350h54004.txt b/Documentation/devicetree/bindings/display/panel/frida,frd350h54004.txt
-> new file mode 100644
-> index 000000000000..8428f8b05b93
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/frida,frd350h54004.txt
-> @@ -0,0 +1,12 @@
-> +Frida 3.5" (320x240 pixels) 24-bit TFT LCD panel
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> index 28fa6ba7b767..8c03f7fe461c 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -1378,6 +1378,32 @@ static const struct panel_desc evervision_vgg804821 = {
+>  	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_NEGEDGE,
+>  };
+>  
+> +static const struct drm_display_mode frida_frd350h54004_mode = {
+> +	.clock = 6777,
+> +	.hdisplay = 320,
+> +	.hsync_start = 320 + 70,
+> +	.hsync_end = 320 + 70 + 50,
+> +	.htotal = 320 + 70 + 50 + 10,
+> +	.vdisplay = 240,
+> +	.vsync_start = 240 + 5,
+> +	.vsync_end = 240 + 5 + 1,
+> +	.vtotal = 240 + 5 + 1 + 5,
+> +	.vrefresh = 60,
+> +	.flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
+> +};
 > +
-> +Required properties:
-> +- compatible: should be "frida,frd350h54004"
-> +- power-supply: as specified in the base binding
+> +static const struct panel_desc frida_frd350h54004 = {
+> +	.modes = &frida_frd350h54004_mode,
+> +	.num_modes = 1,
+> +	.bpc = 8,
+> +	.size = {
+> +		.width = 77,
+> +		.height = 64,
+> +	},
+> +	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDGE,
+> +};
 > +
-> +Optional properties:
-> +- backlight: as specified in the base binding
-> +- enable-gpios: as specified in the base binding
-> +
-> +This binding is compatible with the simple-panel binding, which is specified
-> +in simple-panel.txt in this directory.
+>  static const struct drm_display_mode foxlink_fl500wvr00_a0t_mode = {
+>  	.clock = 32260,
+>  	.hdisplay = 800,
 
-New bindings in meta-schma (yaml) format only.
-We are migrating away from the .txt based variants.
+In alphabetic order. frida comes after foxlink.
 
-Rob has a mega patch so we will soon have a lot of examples to look at.
+> @@ -3186,6 +3212,9 @@ static const struct of_device_id platform_of_match[] = {
+>  	}, {
+>  		.compatible = "evervision,vgg804821",
+>  		.data = &evervision_vgg804821,
+> +	}, {
+> +		.compatible = "frida,frd350h54004",
+> +		.data = &frida_frd350h54004,
+>  	}, {
+>  		.compatible = "foxlink,fl500wvr00-a0t",
+>  		.data = &foxlink_fl500wvr00_a0t,
+In alphabetic order. frida comes after foxlink.
 
 	Sam
