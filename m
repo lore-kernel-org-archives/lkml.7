@@ -2,241 +2,138 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06569C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 03:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71456C43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 04:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B78E320880
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 03:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 442172071F
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 04:30:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nuqW/nv5"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="K1kKnZI+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbfK3Doq (ORCPT
+        id S1727227AbfK3EaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 22:44:46 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:33954 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727175AbfK3Doq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 22:44:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=lV4uw+gaYRWbW1eWDpyMQCkqCu9PdBiUUsVW1HFSueI=; b=nuqW/nv5PpexoOa3FQ/20rync
-        nlnrQ7TY/5SK6OvPl12Wjou2bzDq0lMN1p6zUU1lCrFaakfcumxvZaPWPVRY+EiCFDsMkalJb5Ndn
-        nbjs1fCtFWrvLZiAh6bgX92rbbCDl0pBeMP+x0YrW/5kbXriWeuoW702VV8tSl+6ltgSxtVGJ/G31
-        stPmm0w3UKiwDLpRVZtBEt5/FP+mXTptK1TcoqU9roQHxILl16cPv+5ygUslS8Poaz2DlInKIIPSF
-        AlqrzYK4pZGkptZRiZtcVQhSorDnbOUCpxZUHPAJ5iglQhkUXCpCpveyasdHzWrO3AdDT7r1TCsu9
-        yyNC6jgLQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iatfX-0002t5-34; Sat, 30 Nov 2019 03:43:39 +0000
-Date:   Fri, 29 Nov 2019 19:43:39 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     yu kuai <yukuai3@huawei.com>
-Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        viro@zeniv.linux.org.uk, rostedt@goodmis.org, oleg@redhat.com,
-        mchehab+samsung@kernel.org, corbet@lwn.net, tytso@mit.edu,
-        jmorris@namei.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, zhengbin13@huawei.com,
-        yi.zhang@huawei.com, chenxiang66@hisilicon.com, xiexiuqi@huawei.com
-Subject: Re: [PATCH V2 1/3] dcache: add a new enum type for
- 'dentry_d_lock_class'
-Message-ID: <20191130034339.GI20752@bombadil.infradead.org>
-References: <20191130020225.20239-1-yukuai3@huawei.com>
- <20191130020225.20239-2-yukuai3@huawei.com>
+        Fri, 29 Nov 2019 23:30:09 -0500
+Received: from mail-eopbgr760128.outbound.protection.outlook.com ([40.107.76.128]:23105
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727142AbfK3EaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 23:30:09 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LFoF2lOx/+6CKdThc6FxGMyi77v4mMQDbBLxbXudKiHVG3+BztWVvSxnnmHpmt8kM+ZTPKxPWaox6NNDgInZkHTmx6wd+nIvfDCzoCzhVf/8O7UyJ1WwOHUJfTXoqjk2+iergjAmOJW6TUHT1InSmvgoO15AaL5L7SS5y21gA1vNazRfPGPzzh9DPyqNDV7bU1K+g+t4cV3kb2D0iDQgFE316GuUlG+KM6hElQLvnNKNqPVSno3JR3+BImyiTfF8RF4oo78gbXQRBlBlFPN7tiaM6Kk4EOnrkHeR5QXJxpvmKTvnFsgVbUGQBYO6yCABDUkBcnvcchqMJpie2ssz6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ek599W0cnAadV7AeCqeQ+lVMhFk429fzqTmlmmlWTYs=;
+ b=h+XMkjndxzd0/HQ9tAL8Iy62lnlRO1n+eq1X2X0hWbjXMAKNoL7a/YoebsA/NIpN2x4+zASnxeQYCTGhkpBWhwACLBatMWoiQPuwHw/xYltWw+CYkLmGyuILD6AVWR5n2bC8IbCtI1g6i/7K+GwYfITs5YcCU3eETcw7eFfWDpCALh90VYOR2wg0Zqwz+NYqZ6Yo1OprGkb+d0s5KAFrzC2YKM7pqCr6idx7eupUVXkDyQJJ65zIY6MVguHF5dXWp9O6Snp7LcHy6pLYWzR8EVdkDgzGZs4Ime78KC+7kwL5zJRcMMvKeKn9eiPj4LOu5KcwjToT+O55q+Sk6kecjw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ek599W0cnAadV7AeCqeQ+lVMhFk429fzqTmlmmlWTYs=;
+ b=K1kKnZI+U8xGS6mdbGDVpxgsIUl90EQIkqciTzTCWF9YS4WVUGNKSKD2YgXPF4EfUkuFzCh7t1CfUXO+vIk0W5lK3/7Lw5D5tMwymCFFvu+VUDBtE0ZwHD5LY1vT/4f2tiRZCutnH/Dt69F743Q8sCPxyregijshb5t+9XTsD5U=
+Received: from CY4PR21MB0629.namprd21.prod.outlook.com (10.175.115.19) by
+ CY4PR21MB0775.namprd21.prod.outlook.com (10.173.192.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.0; Sat, 30 Nov 2019 04:30:06 +0000
+Received: from CY4PR21MB0629.namprd21.prod.outlook.com
+ ([fe80::ed94:4b6d:5371:285c]) by CY4PR21MB0629.namprd21.prod.outlook.com
+ ([fe80::ed94:4b6d:5371:285c%4]) with mapi id 15.20.2516.003; Sat, 30 Nov 2019
+ 04:30:06 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Long Li <longli@microsoft.com>
+Subject: RE: [EXTERNAL] [PATCH 1/2] PCI: hv: decouple the func definition in
+ hv_dr_state from VSP message
+Thread-Topic: [EXTERNAL] [PATCH 1/2] PCI: hv: decouple the func definition in
+ hv_dr_state from VSP message
+Thread-Index: AQHVoaFcWphb3zmlG0OqjmKFjc5K8qejKdTQ
+Date:   Sat, 30 Nov 2019 04:30:05 +0000
+Message-ID: <CY4PR21MB06293F8FB8A8A1ADD628A8B8D7410@CY4PR21MB0629.namprd21.prod.outlook.com>
+References: <1574474229-44840-1-git-send-email-longli@linuxonhyperv.com>
+In-Reply-To: <1574474229-44840-1-git-send-email-longli@linuxonhyperv.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-11-30T04:30:03.2842035Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=739473f4-27c9-42d2-9236-15eb823f680e;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: daf0c42b-df3d-40e5-f358-08d7754df9db
+x-ms-traffictypediagnostic: CY4PR21MB0775:|CY4PR21MB0775:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR21MB0775DBE1CC8737FBA3261135D7410@CY4PR21MB0775.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 02379661A3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(396003)(136003)(39860400002)(346002)(189003)(199004)(99286004)(107886003)(102836004)(33656002)(2201001)(6246003)(86362001)(2906002)(7696005)(6436002)(110136005)(76176011)(22452003)(6506007)(2501003)(1511001)(4326008)(8990500004)(10090500001)(55016002)(9686003)(71200400001)(15650500001)(26005)(256004)(71190400001)(25786009)(5660300002)(4744005)(316002)(52536014)(10290500003)(76116006)(81166006)(81156014)(8936002)(14454004)(229853002)(305945005)(7736002)(74316002)(66476007)(66066001)(478600001)(11346002)(446003)(66946007)(8676002)(66556008)(186003)(66446008)(3846002)(6116002)(64756008)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0775;H:CY4PR21MB0629.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Y3CI/vYqDyZ9YvqXh3pNqKTViSEmo0yOorS7eHCPI1SoCZqgVPx8WiAH/HUh7lg7utIc7byYehMTk6x7uTbmU4YPpquoaxgoSpJwFtd5e4dYvivDB87oR3pjzc6fPM68a6PXPcnd4/J8fM9xhrfrOPSW9NkNlPFZt1va9QsmevgQZ3TX9Y0cD7RDjHuidv4o/LPoQfjlDcS0LSp+TxNMQzGYo0mt+CsV06RPGJJhksiiJUfSJ8goszDvVH73v8oWC4AP4o7XXm/gGsIV9lk1nFpWCEfyZJHssDSS8pywaGd3u42bQY4YKvr3wGrC2MpgUgoX52AAISRLbe9xbFn1icdGVVxYl5wcN4Ffh3MEzlRAjIyLeyrRaepBCeiL79prR2CZ/2n254R4mluvigT6cBOSwGfvLYr7IcEPRW/AFgu9ZGRV6jsqZVnbggPa8XRA
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191130020225.20239-2-yukuai3@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: daf0c42b-df3d-40e5-f358-08d7754df9db
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Nov 2019 04:30:05.7819
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SRuT7ChrdREyJLKwAC9yJJzwd73/GLtU7zDnjRI4XrM5SfAAjx1Yq8lKvikKzUQaWDAqSNN32qFB5xU4ZL1RUy3Icx7AApOHFvAJKXsrCYU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0775
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 30, 2019 at 10:02:23AM +0800, yu kuai wrote:
-> However, a single 'DENTRY_D_LOCK_NESTED' may not be enough if more than
-> two dentry are involed. So, add in 'DENTRY_D_LOCK_NESTED_TWICE'.
+From: longli@linuxonhyperv.com  Sent: Friday, November 22, 2019 5:57 PM
+>=20
+> From: Long Li <longli@microsoft.com>
+>=20
+> hv_dr_state is used to find present PCI devices on the bus. The structure
+> reuses struct pci_function_description from VSP message to describe a dev=
+ice.
+>=20
+> To prepare support for pci_function_description v2, we need to decouple t=
+his
+> dependence in hv_dr_state so it can work with both v1 and v2 VSP messages=
+.
+>=20
+> There is no functionality change.
+>=20
+> Signed-off-by: Long Li <longli@microsoft.com>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 100 +++++++++++++++++++---------
+>  1 file changed, 69 insertions(+), 31 deletions(-)
+>=20
 
-No.  These need meaningful names.  Indeed, I think D_LOCK_NESTED is
-a terrible name.
-
-Looking at the calls:
-
-$ git grep -n nested.*d_lock fs
-fs/autofs/expire.c:82:          spin_lock_nested(&child->d_lock, DENTRY_D_LOCK_NESTED);
-fs/dcache.c:619:                spin_lock_nested(&dentry->d_lock, DENTRY_D_LOCK_NESTED);
-fs/dcache.c:1086:       spin_lock_nested(&dentry->d_lock, DENTRY_D_LOCK_NESTED);
-fs/dcache.c:1303:               spin_lock_nested(&dentry->d_lock, DENTRY_D_LOCK_NESTED);
-fs/dcache.c:2822:               spin_lock_nested(&old_parent->d_lock, DENTRY_D_LOCK_NESTED);
-fs/dcache.c:2827:                       spin_lock_nested(&target->d_parent->d_lock,
-fs/dcache.c:2830:       spin_lock_nested(&dentry->d_lock, 2);
-fs/dcache.c:2831:       spin_lock_nested(&target->d_lock, 3);
-fs/dcache.c:3121:       spin_lock_nested(&dentry->d_lock, DENTRY_D_LOCK_NESTED);
-fs/libfs.c:112:                 spin_lock_nested(&d->d_lock, DENTRY_D_LOCK_NESTED);
-fs/libfs.c:341:         spin_lock_nested(&child->d_lock, DENTRY_D_LOCK_NESTED);
-fs/notify/fsnotify.c:129:                       spin_lock_nested(&child->d_lock, DENTRY_D_LOCK_NESTED);
-
-Most of these would be well-expressed by DENTRY_D_LOCK_CHILD.
-
-The exception is __d_move() where I think we should actually name the
-different lock classes instead of using a bare '2' and '3'.  Something
-like this, perhaps:
-
-diff --git a/fs/autofs/expire.c b/fs/autofs/expire.c
-index 2866fabf497f..f604175243eb 100644
---- a/fs/autofs/expire.c
-+++ b/fs/autofs/expire.c
-@@ -79,7 +79,7 @@ static struct dentry *positive_after(struct dentry *p, struct dentry *child)
- 		child = list_first_entry(&p->d_subdirs, struct dentry, d_child);
- 
- 	list_for_each_entry_from(child, &p->d_subdirs, d_child) {
--		spin_lock_nested(&child->d_lock, DENTRY_D_LOCK_NESTED);
-+		spin_lock_nested(&child->d_lock, DENTRY_D_LOCK_CHILD);
- 		if (simple_positive(child)) {
- 			dget_dlock(child);
- 			spin_unlock(&child->d_lock);
-diff --git a/fs/dcache.c b/fs/dcache.c
-index e88cf0554e65..c73b7d7bc785 100644
---- a/fs/dcache.c
-+++ b/fs/dcache.c
-@@ -616,7 +616,7 @@ static struct dentry *__lock_parent(struct dentry *dentry)
- 	}
- 	rcu_read_unlock();
- 	if (parent != dentry)
--		spin_lock_nested(&dentry->d_lock, DENTRY_D_LOCK_NESTED);
-+		spin_lock_nested(&dentry->d_lock, DENTRY_D_LOCK_CHILD);
- 	else
- 		parent = NULL;
- 	return parent;
-@@ -1083,7 +1083,7 @@ static bool shrink_lock_dentry(struct dentry *dentry)
- 		spin_lock(&dentry->d_lock);
- 		goto out;
- 	}
--	spin_lock_nested(&dentry->d_lock, DENTRY_D_LOCK_NESTED);
-+	spin_lock_nested(&dentry->d_lock, DENTRY_D_LOCK_CHILD);
- 	if (likely(!dentry->d_lockref.count))
- 		return true;
- 	spin_unlock(&parent->d_lock);
-@@ -1300,7 +1300,7 @@ static void d_walk(struct dentry *parent, void *data,
- 		if (unlikely(dentry->d_flags & DCACHE_DENTRY_CURSOR))
- 			continue;
- 
--		spin_lock_nested(&dentry->d_lock, DENTRY_D_LOCK_NESTED);
-+		spin_lock_nested(&dentry->d_lock, DENTRY_D_LOCK_CHILD);
- 
- 		ret = enter(data, dentry);
- 		switch (ret) {
-@@ -2819,16 +2819,16 @@ static void __d_move(struct dentry *dentry, struct dentry *target,
- 	} else if (!p) {
- 		/* target is not a descendent of dentry->d_parent */
- 		spin_lock(&target->d_parent->d_lock);
--		spin_lock_nested(&old_parent->d_lock, DENTRY_D_LOCK_NESTED);
-+		spin_lock_nested(&old_parent->d_lock, DENTRY_D_LOCK_PARENT_2);
- 	} else {
- 		BUG_ON(p == dentry);
- 		spin_lock(&old_parent->d_lock);
- 		if (p != target)
- 			spin_lock_nested(&target->d_parent->d_lock,
--					DENTRY_D_LOCK_NESTED);
-+					DENTRY_D_LOCK_PARENT_2);
- 	}
--	spin_lock_nested(&dentry->d_lock, 2);
--	spin_lock_nested(&target->d_lock, 3);
-+	spin_lock_nested(&dentry->d_lock, DENTRY_D_LOCK_CHILD);
-+	spin_lock_nested(&target->d_lock, DENTRY_D_LOCK_CHILD_2);
- 
- 	if (unlikely(d_in_lookup(target))) {
- 		dir = target->d_parent->d_inode;
-@@ -2837,7 +2837,7 @@ static void __d_move(struct dentry *dentry, struct dentry *target,
- 	}
- 
- 	write_seqcount_begin(&dentry->d_seq);
--	write_seqcount_begin_nested(&target->d_seq, DENTRY_D_LOCK_NESTED);
-+	write_seqcount_begin_nested(&target->d_seq, DENTRY_D_LOCK_CHILD);
- 
- 	/* unhash both */
- 	if (!d_unhashed(dentry))
-@@ -3118,7 +3118,7 @@ void d_tmpfile(struct dentry *dentry, struct inode *inode)
- 		!hlist_unhashed(&dentry->d_u.d_alias) ||
- 		!d_unlinked(dentry));
- 	spin_lock(&dentry->d_parent->d_lock);
--	spin_lock_nested(&dentry->d_lock, DENTRY_D_LOCK_NESTED);
-+	spin_lock_nested(&dentry->d_lock, DENTRY_D_LOCK_CHILD);
- 	dentry->d_name.len = sprintf(dentry->d_iname, "#%llu",
- 				(unsigned long long)inode->i_ino);
- 	spin_unlock(&dentry->d_lock);
-diff --git a/fs/libfs.c b/fs/libfs.c
-index 1463b038ffc4..c68dedbf4ad2 100644
---- a/fs/libfs.c
-+++ b/fs/libfs.c
-@@ -109,7 +109,7 @@ static struct dentry *scan_positives(struct dentry *cursor,
- 		if (d->d_flags & DCACHE_DENTRY_CURSOR)
- 			continue;
- 		if (simple_positive(d) && !--count) {
--			spin_lock_nested(&d->d_lock, DENTRY_D_LOCK_NESTED);
-+			spin_lock_nested(&d->d_lock, DENTRY_D_LOCK_CHILD);
- 			if (simple_positive(d))
- 				found = dget_dlock(d);
- 			spin_unlock(&d->d_lock);
-@@ -336,9 +336,9 @@ int simple_empty(struct dentry *dentry)
- 	struct dentry *child;
- 	int ret = 0;
- 
--	spin_lock(&dentry->d_lock);
-+	spin_lock_nested(&dentry->d_lock, DENTRY_D_LOCK_PARENT_2);
- 	list_for_each_entry(child, &dentry->d_subdirs, d_child) {
--		spin_lock_nested(&child->d_lock, DENTRY_D_LOCK_NESTED);
-+		spin_lock_nested(&child->d_lock, DENTRY_D_LOCK_CHILD_2);
- 		if (simple_positive(child)) {
- 			spin_unlock(&child->d_lock);
- 			goto out;
-diff --git a/fs/notify/fsnotify.c b/fs/notify/fsnotify.c
-index 2ecef6155fc0..23492f2e4915 100644
---- a/fs/notify/fsnotify.c
-+++ b/fs/notify/fsnotify.c
-@@ -126,7 +126,7 @@ void __fsnotify_update_child_dentry_flags(struct inode *inode)
- 			if (!child->d_inode)
- 				continue;
- 
--			spin_lock_nested(&child->d_lock, DENTRY_D_LOCK_NESTED);
-+			spin_lock_nested(&child->d_lock, DENTRY_D_LOCK_CHILD);
- 			if (watched)
- 				child->d_flags |= DCACHE_FSNOTIFY_PARENT_WATCHED;
- 			else
-diff --git a/include/linux/dcache.h b/include/linux/dcache.h
-index 10090f11ab95..6a497c63bd38 100644
---- a/include/linux/dcache.h
-+++ b/include/linux/dcache.h
-@@ -121,15 +121,20 @@ struct dentry {
- } __randomize_layout;
- 
- /*
-- * dentry->d_lock spinlock nesting subclasses:
-+ * dentry->d_lock spinlock nesting subclasses.  Always taken in increasing
-+ * order although some subclasses may be skipped.
-  *
-  * 0: normal
-- * 1: nested
-+ * 1: either a descendent of "normal" or a cousin.
-+ * 2: child of the "normal" dentry
-+ * 3: child of the "parent2" dentry
-  */
- enum dentry_d_lock_class
- {
--	DENTRY_D_LOCK_NORMAL, /* implicitly used by plain spin_lock() APIs. */
--	DENTRY_D_LOCK_NESTED
-+	DENTRY_D_LOCK_NORMAL,   /* implicitly used by plain spin_lock() APIs */
-+	DENTRY_D_LOCK_PARENT_2, /* not an ancestor of parent */
-+	DENTRY_D_LOCK_CHILD,    /* nests under parent's lock */
-+	DENTRY_D_LOCK_CHILD_2,  /* PARENT_2's child */
- };
- 
- struct dentry_operations {
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
