@@ -2,144 +2,258 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 058E2C432C0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AFEC432C3
 	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 01:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3A5C2086A
+	by mail.kernel.org (Postfix) with ESMTP id EF4E224649
 	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 01:18:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fnwNThTz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbfK3BNC (ORCPT
+        id S1727208AbfK3BSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 20:13:02 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:53894 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727130AbfK3BNC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 20:13:02 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAU1APRl050368;
-        Sat, 30 Nov 2019 01:12:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=IFxlITbGw8vwnb7mMHSbv7BJAzK0LJJ5LhdaylicfNQ=;
- b=fnwNThTz4Gqi+EFOY6unSJ33zmpBL1mHIMTC2U4jni+yNf78cK2j+74eB1yWnirfIXLy
- +ruSCU5t8ynxJTtc66+L7bEZmksHvmaDKPKpu0yZ3ATD9C/rjY1V6MG2s9hWEBIQNM6r
- /8irgSJIkllT9BUMW46sEWS8tg4MD/yHcvPbTCTsqkW0TkERTva88/rJgNWa6so6Bg37
- jVQgnqWP6KHvv/0/XOYIpzIZCCbkN2atE+tRYLT5xedLeITt3pUMyyoDyqtvwOQ3h10g
- tVg3oHlihAR0agJtm/QiEJ9m5nnLMnLqlmRRCGG+2UZv8dssafEmdx/7QXl+Z/YzmBto 2A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2wewdrxgfg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 30 Nov 2019 01:12:15 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAU18sw5133212;
-        Sat, 30 Nov 2019 01:12:14 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2wkdjp9ymh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 30 Nov 2019 01:12:14 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAU1CCPw001141;
-        Sat, 30 Nov 2019 01:12:12 GMT
-Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 29 Nov 2019 17:12:12 -0800
-Subject: Re: [PATCH v3] xen/events: remove event handling recursion detection
-To:     Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
-        linux-kernel@vger.kernel.org
-Cc:     Stefano Stabellini <sstabellini@kernel.org>
-References: <20191129123941.11975-1-jgross@suse.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
- 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
- Jg6OxFYd01z+a+oL
-Message-ID: <6b15f9b5-744e-1bb2-d4a2-6ce4fc745d64@oracle.com>
-Date:   Fri, 29 Nov 2019 20:11:47 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 29 Nov 2019 20:18:32 -0500
+Received: from mga11.intel.com ([192.55.52.93]:64009 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727142AbfK3BSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 20:18:32 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Nov 2019 17:18:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,259,1571727600"; 
+   d="gz'50?scan'50,208,50";a="261643047"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 29 Nov 2019 17:18:30 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iarP4-000D99-12; Sat, 30 Nov 2019 09:18:30 +0800
+Date:   Sat, 30 Nov 2019 09:17:33 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Pavel Begunkov <asml.silence@gmail.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>
+Subject: fs/io_uring.c:1632:21: error: implicit declaration of function
+ 'kmap'; did you mean 'vmap'?
+Message-ID: <201911300932.MIXukaXa%lkp@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191129123941.11975-1-jgross@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9456 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911300007
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9456 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911300007
+Content-Type: multipart/mixed; boundary="526vcb4jq5ul4al3"
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/29/19 7:39 AM, Juergen Gross wrote:
-> __xen_evtchn_do_upcall() contains guards against being called
-> recursively. This mechanism was introduced in the early pvops times
-> (kernel 2.6.26) when there were all the Xen backend drivers missing
-> from the upstream kernel, and some of those out-of-tree drivers were
-> enabling interrupts in their event handlers (which was explicitly
-> allowed in the initial XenoLinux).
->
-> Nowadays we don't need to support those old drivers any more and the
-> capability to allow recursive calls of __xen_evtchn_do_upcall() can
-> be removed.
->
-> Signed-off-by: Juergen Gross <jgross@suse.com>
 
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+--526vcb4jq5ul4al3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   81b6b96475ac7a4ebfceae9f16fb3758327adbfe
+commit: 311ae9e159d81a1ec1cf645daf40b39ae5a0bd84 io_uring: fix dead-hung for non-iter fixed rw
+date:   4 days ago
+config: h8300-h8300h-sim_defconfig (attached as .config)
+compiler: h8300-linux-gcc (GCC) 7.4.0
+reproduce:
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        git checkout 311ae9e159d81a1ec1cf645daf40b39ae5a0bd84
+        # save the attached .config to linux build tree
+        GCC_VERSION=7.4.0 make.cross ARCH=h8300 
 
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   fs/io_uring.c: In function 'loop_rw_iter':
+>> fs/io_uring.c:1632:21: error: implicit declaration of function 'kmap'; did you mean 'vmap'? [-Werror=implicit-function-declaration]
+       iovec.iov_base = kmap(iter->bvec->bv_page)
+                        ^~~~
+                        vmap
+   fs/io_uring.c:1632:19: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
+       iovec.iov_base = kmap(iter->bvec->bv_page)
+                      ^
+>> fs/io_uring.c:1647:4: error: implicit declaration of function 'kunmap'; did you mean 'vunmap'? [-Werror=implicit-function-declaration]
+       kunmap(iter->bvec->bv_page);
+       ^~~~~~
+       vunmap
+   cc1: some warnings being treated as errors
+
+vim +1632 fs/io_uring.c
+
+  1604	
+  1605	/*
+  1606	 * For files that don't have ->read_iter() and ->write_iter(), handle them
+  1607	 * by looping over ->read() or ->write() manually.
+  1608	 */
+  1609	static ssize_t loop_rw_iter(int rw, struct file *file, struct kiocb *kiocb,
+  1610				   struct iov_iter *iter)
+  1611	{
+  1612		ssize_t ret = 0;
+  1613	
+  1614		/*
+  1615		 * Don't support polled IO through this interface, and we can't
+  1616		 * support non-blocking either. For the latter, this just causes
+  1617		 * the kiocb to be handled from an async context.
+  1618		 */
+  1619		if (kiocb->ki_flags & IOCB_HIPRI)
+  1620			return -EOPNOTSUPP;
+  1621		if (kiocb->ki_flags & IOCB_NOWAIT)
+  1622			return -EAGAIN;
+  1623	
+  1624		while (iov_iter_count(iter)) {
+  1625			struct iovec iovec;
+  1626			ssize_t nr;
+  1627	
+  1628			if (!iov_iter_is_bvec(iter)) {
+  1629				iovec = iov_iter_iovec(iter);
+  1630			} else {
+  1631				/* fixed buffers import bvec */
+> 1632				iovec.iov_base = kmap(iter->bvec->bv_page)
+  1633							+ iter->iov_offset;
+  1634				iovec.iov_len = min(iter->count,
+  1635						iter->bvec->bv_len - iter->iov_offset);
+  1636			}
+  1637	
+  1638			if (rw == READ) {
+  1639				nr = file->f_op->read(file, iovec.iov_base,
+  1640						      iovec.iov_len, &kiocb->ki_pos);
+  1641			} else {
+  1642				nr = file->f_op->write(file, iovec.iov_base,
+  1643						       iovec.iov_len, &kiocb->ki_pos);
+  1644			}
+  1645	
+  1646			if (iov_iter_is_bvec(iter))
+> 1647				kunmap(iter->bvec->bv_page);
+  1648	
+  1649			if (nr < 0) {
+  1650				if (!ret)
+  1651					ret = nr;
+  1652				break;
+  1653			}
+  1654			ret += nr;
+  1655			if (nr != iovec.iov_len)
+  1656				break;
+  1657			iov_iter_advance(iter, nr);
+  1658		}
+  1659	
+  1660		return ret;
+  1661	}
+  1662	
+
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+
+--526vcb4jq5ul4al3
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
+
+H4sICLnB4V0AAy5jb25maWcAnVztc9s4j//+/BWa7sxNO8+2mybdtns3+UBLlM21JCqiZDv9
+onEdNfE0sXN+2d3eX38AKVmUBDq929eEACmQBIEfQLC//OsXjx0P26flYb1aPj7+8O6rTbVb
+Hqo779v6sfovL5BeInOPByJ/B8zRenP857eHz1cXF97v7z68u/Cm1W5TPXr+dvNtfX+Eruvt
+5l+//Av++QUan55hlN1/errH20fs/fZ+tfJej33/jfcJRwBOXyahGJe+XwpVAuX6R9MEv5Qz
+nikhk+tPFx8uLk68EUvGJ9KFNcSEqZKpuBzLXLYD1YQ5y5IyZrcjXhaJSEQuWCS+8KDDGAjF
+RhH/CWaR3ZRzmU2hRU94rFfv0dtXh+NzO7FRJqc8KWVSqji1esOQJU9mJcvGZSRikV9fXeKy
+1ZLIOBUgRs5V7q333mZ7wIFbhglnAc8G9JoaSZ9FzQK9etV2swklK3JJdB4VIgpKxaIcuzbf
+YzNeTnmW8KgcfxHWTGxK9MVa9i73SYSWlfh2wENWRHk5kSpPWMyvX73ebDfVG2sK6lbNROqT
+q1IoHomRTdJbA1vl7Y9f9z/2h+qp3ZoxT3gmfL2TaiLn3b0NZMxEoiWvNnfe9ltvmP4oPqzt
+lM94kqtGJfL1U7XbU5+efClT6CUD4dtrk0ikiCDi5PQ0mVYHMZ6UGVdlLmLY3S5PLf5AmkaY
+NOM8TnMYPuG2NE37TEZFkrPslvx0zTVYdD8tfsuX++/eAb7rLUGG/WF52HvL1Wp73BzWm/t2
+OXLhT0voUDLfl/AtkYxtQUYqgM9InyuFHPSJSJUgp/0Tcmh5M7/w1HCnQJbbEmi2PPBryRew
+gdTZU4bZ7q6a/rVI3U+144qp+YE80XgwQ9BTEebX7z+1eyeSfAqnNeR9niszL7V6qO6OYIm9
+b9XycNxVe91ci0JQLSs0zmSRKloX4XSqlMGekGR/wv1pKkE4VMtcZrRGK+ALtCHSnyJ5Mh4x
+WvVG0RQsxkwb0yyg5fBLmcKhANtdhjLDUwf/i1nic2KV+9wKfuhZukIE7z+2bUYNbOXQDMTY
+Mdg1AQYqs5nVmOcxU1O0amCZI3qRblWoKI6aHk5YAiajFSqVSixqU2C1alVpfx8V3UPGFEy6
+cMgQFjlfkBSeSpfcYpywKKQ3RkvnoGkr6qAxQfkNIcsi61kNFswETKleN0VtCY9HLMtEd0+m
+yH0b03o9SsMzOwHj8SDQKKG1S/77iw8D61hDp7TafdvunpabVeXxv6oN2CUGB9NHywTG2j6p
+P9mj/fAsNgtZapM68AoW0mA5wJQpvYcRGzkIxYiyfpEctSqGvWGVszFvPHtH+SdFGALISRnQ
+YUEBm4ChIL8WxyzVLPMuHHN4JBmKCLSB9AddnHY62whSLSQIvmiEG5oEgiUWJq2d/WTOwePm
+LQFcs5CpzHIAjemQ31dFbBmSL9fvWzibZPg5df3e/riWZ2J1gd8//tH+nsnYAKkGa6S77ara
+77c77/Dj2fi5jr2351kyDqN9ppGEZph8jhl93A19yhI+gr8JDTCSw+GP7b2efFYlD6SaXn78
+9MExsMJOrhE1LAVvWgb56PqVjikeyv366YRQZRgqnkM4cNrpc0vSgezL3ephfahWSHp7Vz1D
+fzhY3vYZA5p9iwVY5k/Kq8sRQHf4Wpn3XIMfWda1DjpUzsAPZjLnPuh2A7EarZZBEQFoA69Q
+8ijUns6y1+NchyIRnOJIXV92vqVFgQ9YKvLxAwqGdtWSwpxuI3OPBFoGWsvDUPgCzQSsXwfk
+8FAbjoFPMEvny9nbr8s9BIvfjWF63m0hbDSwrj1sZ9hO84yKMewrQn4I/17d//vfr4an9YUt
+Ovk0dGIqBksBx6m1HmadHRgCYDvlURKwIDBWCqIVCTJhVGAHcJqeQRxW08/RyL7zTOTc1dkm
+1r31wvJ/qtXxsPz6WOko3dPO4NA54yORhHEO2CoTKYVQG91pGMOIWar8UiNGrLMUY9dUR7Wo
+4DSjhDCSRXN2q8qMdaxBj4veGMPzBZnOMagJywBDvsQWC0XHjD5g06CIU9JZuFZbL3dcPW13
+P7x4uVneV0+kxUCpAGW066OnnMiAI/jo+gqVRnBI01zvuPYIf+i/GvpMgHfJJRhCZfudOC7K
+2iOWeSbA6S8wUGrdScJheQCl6hM/7eyDH3FAwgxAOLk0X1IpaWj3ZVQ4fC/P8DOgFTl93sZF
+Wo544k9i1occ9Zq7l9WKPvgw4Ayqv9YAioLd+q8GOp0gmM+68UFr/teruocnT5vXYnkDoCY8
+gnmR04HwI4/TkJ4rrEISsAhsvity1sOHIovnoMQm8zIQM1zvnv5e7irvcbu8q3a2fOEcgj5M
+BJEL2e9oQWONpDB0orX/NDmIEcogEzPn7DUDn2UO62oYMEtVDwNGMZYzCjecoBKoD4woQInt
+mNmxWXo1Rse9d6d3v4OY7WZLARNFyxrnASFWkFspSRnap0eGCEZzRw4OqHjY84xze4CSsyy6
+pUksCDI8unZbx3FIxAgQQs7gRBuzYgsD65q5QuWUZYhOB8qVzGLuqePz83Z3sNeu026s3Xq/
+6qxys0BFHN+imHQol/iRVAUoN4otXOkCBQ6CJCwQyC9KFYScNt/pLGWJcJj2S3LOnAMgi729
+NetGWk0p/7jyFx9pf9DtarJ81T/LvSc2+8Pu+KQDsv0DnLo777BbbvbI5wHeqbw7WMD1M/5o
+L/T/o7fuzh4h3Ft6YTpm4Jrqg363/XuDh9172mJSx3u9q/77uAa864lL/02TmhcQKT56MSza
+f3i76lFn/NvF6LHgITJnrqEpX4RE80ym3dY2EJUpOq1hWvb0kcl2f+gN1xL95e6OEsHJv30+
+AX91gNnZruS1L1X8xnISJ9ktuZt875l1snTGn0jaj9kHphZbibrFWvDmCAARkapt9KgO9Wyf
+j4fhUG0mMUmLoeJPYCW1nojfpIddOgdZYUKa9tks5v2TdJKRGrRdQUJM801Q8uUKVNgyKU1m
+KL+1DduMhnVgeRd/fAa4dEtblIiPmX/rpuNsATFBQGa8tCN/mGfMB9slEjo9kkBshAJTGdsA
+EKdObaKLbm04+Lae6YaWKTQNtkuBw4PQ5+6kq13RtSOBpk5KxZA+X/5+MTT1281bTdibcbVt
+IXSnHqNgWQ6AlHLVNYeCKN8XFoC1mzGtgUOo6yuaDo1K2lnLLtmaXZeOiIVstEbsz0WJUMwc
+Geiaw/eTBY2Cag4W5Txj5Z85G+O8foL1Jbbat6XqRU6I2M6RQxWVUfrSIJoLgqGIL15ihd/4
+ggE0DcRY+KDANMDsKehgGASYPcPfHqz8ts5Ik2SRxqI0eW0aek7mEFQmgaRhQ+7Dv6kTUkS3
+A7Ga26KBXbIyIvp7YBIKgLMjKfMh9jbG+dInbfKlT37SZre4rxxbngpHe0wTJv17sQY4pUOP
+nOapt3rcrr738QDf6Bg4ndzi/Spm0iACw9vvEpp0YgmsaJxizvWwhfEq7/BQecu7uzXCdNAR
+Per+ne1ehx+zhBOJn2d07DlOhezd8p5o8/f0XOUcQg82o1XRUBFYO24WNV0VaRrR4Hoyj2VC
+6+GEZzGj5zFnuT8JJHXbp9QIL3GUGPXMmaJy7iM/ZiQ7EgZ7HB8fD+tvx80Kd6bxzXfDoDkO
+gxKTF2A4wGL4joPWck0iP6BVFnliPCnMSZ6Ijx8u35dp7EDyk9yHEEYJ/8o5xJTHqSOVpAXI
+P1798clJVvHvF7TusNHi94sL7WHcvW+V79AAJOeiZPHV1e+LMlc+O7NK+U28+ExHHme3zbJR
+fFxE7msUHgimNZmKi8a75fPDerWnjFeQ0fsP7WWQln43OjMRCnQhonK72fD5qfeaHe/WW4Du
+p5z9m0FZUTvCT3UwuZPd8qnyvh6/fQOLHgyD13BELjbZzaQalqvvj+v7hwPEBKDwZyA4ULFS
+Sak6m0EnJ5k/jfAm6Qxrk8144cunREl/Fy3zIYuEynEUYG7kBEAX4L084oNbL6TXStO56Ybm
+IkpF38db5FOqeeIHva4DfcE2jUnvusEZtqcPP/ZYpeZFyx/om4fmKoEgE7+48LmYkQt4Zpzu
+nMYsGDtcQX6bOvIQ2DED9FmquQC77rjFdBx9HissgaFDDD6HYCagXRfzMdcrRoAkc9o3Zblv
+dIs+vmiXB2kZk06N2agIrZR2q0a3iV+Gol+kVC9zr58la7GAkCh1Zah0etskCSltQrKQsFRJ
+pxSnaY67oWudsVrttvvtt4M3+fFc7d7OvPtjte/GPKdY/TyrNXnA/72r5SbbFE0R8EZSTot+
+fRzQMN2bsqx7OQe4ob42bIomn8C6+xoVaSP093b33V57HGiiAlpV2gFhexaYI4z7EX0Dc+kP
+2ZAGb776d2NGEt1JbY+7DnBoTgjWdZhEaaclzeTIrqXRd7p5nH0m2nSBTSsr9T3r8DARjeRi
+IGZWPW0PFaaCKHOBaegck3k0Jic6m0Gfn/b35HhprBptpEfs9OzZ5LnoggsT/oNsr5WuEfMk
+7NXD+vmNt3+uVutvpzz4yUiyp8ftPTSrrd8Rr3GZBNn0gwGrO2e3IdV4wd12ebfaPrn6kXST
+hFikv4W7qtqDEa68m+1O3LgGeYlV867fxQvXAAOaJt4cl48gmlN2km7vlw8aPdisBd5p/zMY
+s5vFnvkFqRtU51OM/VNaYAUrMYKIMOOOfPwidyJVOBKOGk/hSAym82HWCm8CViDlMMMJFH/S
+LQbGtEQX8p/OZ8IV4gZTTSKS3O+X4nY+YmcOAFM50w46ysP8Rg7OOiKCd4hnO2WgbdhZ308h
+Awnl/LicyoQhErh0cmG4DCEAT3wOuPknWM6MgwkdAQFDfNPHUx22GFxBBP8FoHZ2uHTBysvP
+SYwZA8ddi82F0yS1ubuCvTDaZ/SkY5+eQMaGyIRt7nbb9Z29OSwJMikCUp6G3UI9jtomvPQa
+KvRkjncxq/XmnsyW5nRgBBoLq55PSJGIIa2YBK90qCFDRyZHCUnPR0Uidh0ElC+DnxPuqKeu
+qwZpjNe9aq+vqcFKm03v2L4Zi0TAcg7i4y2k6g55MksYXHQLkJo2U6JTSkchMgJRfNcwHRT8
+nZYNbyGz2xRcM235gANQpwtBB4nMRegwjIaGFVx0xB2yM71vCpnTW43XBqH6UDoKCwzZRQ2x
+nsxBq++Ie2SzX8vVQy86VkRtSIPKDLexmfvqeLfVFTKEAiDIcomjaeAUogAMPq3DWPzsUFD8
+H7EMjR0aSmXZG7ycQdWB8XPuKPZNIrq9SIQvA+pmBEKR+Y3tqDqnor7VWR1368MPKrKacudt
+lV+ggkLAxpX2Yjn4IlcO3/C6i1Ig1tQaG8MkhrUtjdrXT3HaTzOrEiJS8fUrBOZ45fzrj+XT
+8le8eH5eb37dL79VMM767tf15lDd41xfdYqeH5a7u2qDxq9dArugar1ZH9bLx/X/NJmf02ET
+uak3GzxV0SR80oRVxCfRHce9YQaQxJ283WKkvki9omxiRu0dSW+7LQVGmzQMW6P1190Svrnb
+Hg/rTfdEIraho8+RyLGcCOxrp8BLZgGNrxhaQxZ1mDM4i77IHf4g899/dFHK/P1FIEInWeRF
+SRXJAO3qsifD1SXoXBQ6ympqhkj4fHT7mehqKHSNcc3CsjnL6YSc4YDFdFE/Okd2EuiscyRG
++mOO0pXMp+uzzSWUY43agOMLKDa175iLE7JTkohNQWwVHsMv2Dti+k51wsE0d/J+SGeIJrG4
+i/hGg5RZLmMBC9Y5qNlN2X8w0i5IGFg1p4VJbmFc4qedkgA0fsnYsQL1uRucoq4FWn03lcq6
+9XkHluq7vta6e6r295Rprh9aYTLD4ck0HR+GkObUN5fT+EhLF3SfHkR8cnLcFILn1x/a1ypK
+4UuJwQgf2lk7Z9Kkl/BN7lv9Eg7c9+r7XrOu6re61LxNBZ9IQjoC5ImuUY/xSlS/+SKmHmYs
+Ni9qr99fXH7o7mOqH+w639tgDbX+AnDR6EzL5/B15pUsaDwWeZBKd3rupcuuey+IzNjgANFW
+ImSIWS+127rcDot5PiyT6LZVZ50Kn+OlulkP/Tiu80Cr0z6UI5QZRIRzzqZNNa8rtfdzm2yB
+ITaG4wpIqFvE1/n66bVJpxVhVJO8rF1lUH093t837wBOfgsUly9ynigXCDcDIqN24vQhw2Fg
+gZRMXGjfDCNHf8KWnKtJNTiiwBN1hmt2TulM7XXGxzClc58yiRUNOyjDYB6KTJliSWM6rUfU
+utkU2b8fwJJ2rfvPTljiy1ldvZT6hFJPehWbdQk1jOdFAOuOz0ZrJsvNfTf5L0NdoV6kMJJ5
+1eKYOhLLSQGGOmeKTljPb8hbcCvOpOWxNQKwOII52YsPKTrGogVv/8QAQ0STLgvzcqiZpH6W
+alSEJ8HQsvVWE4eYcp72lNLAOcxenzbKe70HjKyLIX71no6H6p8KfqgOq3fv3r0Z2l0qCd/X
+LnyZebb8OpsrV4RjGIyjBugEUzjDVgfZ2vc3vtdRfIcBO2hGjoW/TpAynxvhX3Dk/4f1s8ZG
+AwyGBGI1xXkAu3mmWqi2cMZonFsA4ZhJbbteoKtzFkunCYTrlabh8TOYSYIvPYbRO74pJ00v
+PlbHV8/ufUCOFzdLM6E5cVL5jRpCws6bd8tc9WYGhsC4t4xwbE00Xq9QybNMZmBO/zRe15F3
+waDuPM+0oC1yhn8CQWzWAvW9f+eonzPgXoMxdNTRaRYnFW/968JSfPbnXvMRPhE4Q8eXPYAZ
+Jd76Obk0nJjp10HnBmvQ+vnAQk9swhfONyNm5gagm9yCo/6v5lOA7d0MU+DIHdlNzaBhNx13
+ajpEcrEj5dzQQaccdUOaoyj6eWWbumBZ5rjQ1nTMt4WRnLs5MnzFqV96nllwYHFTReDIFwtw
+Xfjw0/HeqjPLwPmnLGg6BmEMlvvcXurchCNybgZxMgDNqXQa0SVlwHKGGY2scKdyFYvT3lPP
+U5jbPJudjoNR58E//E7n+UaAo4ihdDt4FzFO4iY27ieETID5v3S2lE1lSQAA
+
+--526vcb4jq5ul4al3--
