@@ -2,125 +2,111 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E04F6C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 02:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C438FC432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 02:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A475220869
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 02:07:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="p0VMc7Gv"
+	by mail.kernel.org (Postfix) with ESMTP id 90C7824249
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 02:11:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbfK3CHp (ORCPT
+        id S1727235AbfK3CJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Nov 2019 21:07:45 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45201 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727171AbfK3CHo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Nov 2019 21:07:44 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k1so15296909pgg.12
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 18:07:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QudVKO8PpHDY0QPRDjrLS+45fBA9fe2WvpbxZI2jQhM=;
-        b=p0VMc7GvAyQocYJ21HkYujY5ESSrqjlbOvCYQJANZQ82Vq/rwhHtcaq7g3t4V7tmqK
-         ltDD0ctybM+2zQKe7/dFqP9e6RASHLFtLM7gpg6IAWJ/50jZyvd0H/gGSzNDfN7dpskp
-         zFlfTf9BfAOjK+sXLw16ZTlBuoqATSAkV8gV8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QudVKO8PpHDY0QPRDjrLS+45fBA9fe2WvpbxZI2jQhM=;
-        b=UqHI09ZFjCCKBo6zNRY+nu99LlDaT6axQoOuD6Fadsk/w5SoH/qdVYEZ64+oUN65FH
-         DwIFjOpsGwP/3Y6L6xoVZ1r2wpw0aDjrTNQG3b1gTjuqUa4saNkFnOi67m99KDoYE5wQ
-         FZidvZAUP6he9Krzo2AVAUGBQ9Gq0b+wwn4Bfsz4s/8aXhVci+kcx0UR6nRx0lHRz0yV
-         YXtdtfJK+cXC0Tw93Msjd9jVLYquQjvPEhdwMPvqBo00IKBHX7MA4mVfM8vePaO1emt1
-         QtKql3OtYkLzWiR6nqnlI1GCRnJLWYHWvNV5P7b/dJI2cLhtH4XClZr/EtnRt2CGEQ7k
-         D5zw==
-X-Gm-Message-State: APjAAAUXfOhQdXUGMAsgkGu9WajlrSt7cv1JC2IOxtUQkfgpHsCNz6mc
-        PajKEqKpx5/PIu5e0x/KXQIgAA==
-X-Google-Smtp-Source: APXvYqxvrL7gQ4UHvGl0OH80nFnpTXbY9LyocxTQJ8pHkSe9LnSm6z/+3DuUedz0z8nb/MsLQYnEYQ==
-X-Received: by 2002:aa7:87c5:: with SMTP id i5mr59616561pfo.60.1575079664078;
-        Fri, 29 Nov 2019 18:07:44 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id s22sm15478745pjr.5.2019.11.29.18.07.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Nov 2019 18:07:43 -0800 (PST)
-Date:   Fri, 29 Nov 2019 21:07:42 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Amol Grover <frextrite@gmail.com>
-Cc:     Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-audit@redhat.com, linux-kernel@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH v2] kernel: audit.c: Add __rcu notation to RCU pointer
-Message-ID: <20191130020742.GF157739@google.com>
-References: <20191128153203.GA23803@workstation-kernel-dev>
+        Fri, 29 Nov 2019 21:09:49 -0500
+Received: from szxga03-in.huawei.com ([45.249.212.189]:2095 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727171AbfK3CJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Nov 2019 21:09:48 -0500
+Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 9E2AD20E91B7584E05B2;
+        Sat, 30 Nov 2019 10:09:46 +0800 (CST)
+Received: from dggeme752-chm.china.huawei.com (10.3.19.98) by
+ DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 30 Nov 2019 10:09:46 +0800
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ dggeme752-chm.china.huawei.com (10.3.19.98) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Sat, 30 Nov 2019 10:09:46 +0800
+Received: from dggeme762-chm.china.huawei.com ([10.8.68.53]) by
+ dggeme762-chm.china.huawei.com ([10.8.68.53]) with mapi id 15.01.1713.004;
+ Sat, 30 Nov 2019 10:09:46 +0800
+From:   shaolexi <shaolexi@huawei.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "paulus@samba.org" <paulus@samba.org>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wangkefeng (OS Kernel Lab)" <wangkefeng.wang@huawei.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "liucheng (G)" <liucheng32@huawei.com>,
+        "zhangyi (F)" <yi.zhang@huawei.com>
+Subject: Re: [PATCH] powerpc/kasan: KASAN is not supported on RELOCATABLE &&
+ FSL_BOOKE
+Thread-Topic: [PATCH] powerpc/kasan: KASAN is not supported on RELOCATABLE &&
+ FSL_BOOKE
+Thread-Index: AdWnHIDkM/vwrYwhTsCdrVcoI4ZaIw==
+Date:   Sat, 30 Nov 2019 02:09:45 +0000
+Message-ID: <448c0af8be2247a780ed42bc401ff50c@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.67.103.252]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191128153203.GA23803@workstation-kernel-dev>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 09:02:03PM +0530, Amol Grover wrote:
-> add __rcu notation to RCU protected global pointer auditd_conn
-
-Again, please use proper punctuation and captilization. This is unacceptable.
-Please put more effort into changelog.
-
-Otherwise the patch diff itself looks good to me, with the above nit
-corrected, you could add my tag to the next revision:
-
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-
-thanks,
-
- - Joel
-
-> 
-> Fixes multiple instances of sparse error:
-> error: incompatible types in comparison expression
-> (different address spaces)
-> 
-> Signed-off-by: Amol Grover <frextrite@gmail.com>
-> ---
-> v2:
-> - fix erroneous RCU pointer initialization
-> 
->  kernel/audit.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/audit.c b/kernel/audit.c
-> index da8dc0db5bd3..ff7cfc61f53d 100644
-> --- a/kernel/audit.c
-> +++ b/kernel/audit.c
-> @@ -102,12 +102,13 @@ struct audit_net {
->   * This struct is RCU protected; you must either hold the RCU lock for reading
->   * or the associated spinlock for writing.
->   */
-> -static struct auditd_connection {
-> +struct auditd_connection {
->  	struct pid *pid;
->  	u32 portid;
->  	struct net *net;
->  	struct rcu_head rcu;
-> -} *auditd_conn = NULL;
-> +};
-> +static struct auditd_connection __rcu *auditd_conn;
->  static DEFINE_SPINLOCK(auditd_conn_lock);
->  
->  /* If audit_rate_limit is non-zero, limit the rate of sending audit records
-> -- 
-> 2.24.0
-> 
+PkxlIDI5LzExLzIwMTkgw6AgMDg6NDYsIENocmlzdG9waGUgTGVyb3kgYSDDqWNyaXQgOg0KPj4N
+Cj4+DQo+PiBMZSAyOS8xMS8yMDE5IMOgIDA4OjA0LCBMZXhpIFNoYW8gYSDDqWNyaXQgOg0KPj4+
+IENPTkZJR19SRUxPQ0FUQUJMRSBhbmQgQ09ORklHX0tBU0FOIGNhbm5vdCBiZSBlbmFibGVkIGF0
+IHRoZSBzYW1lDQo+Pj4gdGltZSBvbiBwcGNlNTAwIGZzbF9ib29rZS4gQWxsIGZ1bmN0aW9ucyBj
+YWxsZWQgYmVmb3JlDQo+Pj4ga2FzYW5fZWFybHlfaW5pdCgpIHNob3VsZCBiZSBkaXNhYmxlZCB3
+aXRoIGthc2FuIGNoZWNrLiBXaGVuDQo+Pj4gQ09ORklHX1JFTE9DQVRBQkxFIGlzIGVuYWJsZWQg
+b24gcHBjZTUwMCBmc2xfYm9va2UsIHJlbG9jYXRlX2luaXQoKQ0KPj4+IGlzIGNhbGxlZCBiZWZv
+cmUga2FzYW5fZWFybHlfaW5pdCgpIHdoaWNoIHRyaWdnZXJzIGthc2FuIGNoZWNrIGFuZCByZXN1
+bHRzIGluIGJvb3QgZmFpbHVyZS4NCj4+PiBDYWxsIHRyYWNlIGFuZCBmdW5jdGlvbnMgd2hpY2gg
+dHJpZ2dlcnMga2FzYW4gY2hlY2soKik6DQo+Pj4gICAgLSBfc3RhcnQNCj4+PiAgICAgLSBzZXRf
+aXZvcg0KPj4+ICAgICAgLSByZWxvY2F0ZV9pbml0KCopDQo+Pj4gICAgICAgLSBlYXJseV9nZXRf
+Zmlyc3RfbWVtYmxvY2tfaW5mbygqKQ0KPj4+ICAgICAgICAtIG9mX3NjYW5fZmxhdF9kdCgqKQ0K
+Pj4+ICAgICAuLi4NCj4+PiAgICAgIC0ga2FzYW5fZWFybHlfaW5pdA0KPj4+DQo+Pj4gUG90ZW50
+aWFsIHNvbHV0aW9ucyBjb3VsZCBiZSAxLiBpbXBsZW1lbnQgcmVsb2NhdGVfaW5pdCBhbmQgYWxs
+IGl0cw0KPj4+IGNoaWxkcmVuIGZ1bmN0aW9uIGluIGEgc2VwZXJhdGUgZmlsZSBvciAyLiBpbnRy
+b2R1Y2UgYSBnbG9iYWwNCj4+PiB2YWlyYWJsZSBpbiBLQVNBTiwgb25seSBlbmFibGUgS0FTQU4g
+Y2hlY2sgd2hlbiBpbml0IGlzIGRvbmUuDQo+Pg0KPj4gU29sdXRpb24gMSBzZWVtcyB1bmVhc3ku
+IG9mX3NjYW5fZmxhdF9kdCgpIGFuZCBjaGlsZHJlbiBhcmUgZ2VuZXJhbA0KPj4gZnVuY3Rpb25z
+IHRoYXQgY2FuJ3QgYmUgc2V0IGFzaWRlLg0KPj4gU29sdXRpb24gMiB3b3VsZCBkZXN0cm95IHBl
+cmZvcm1hbmNlLCBhbmQgd291bGQgYW55d2F5IG5vdCB3b3JrIHdpdGgNCj4+IGlubGluZSBpbnN0
+cnVtZW50YXRpb24uDQo+Pg0KPj4gSGF2ZSB5b3UgdHJpZWQgbW92aW5nIHRoZSBjYWxsIHRvIGth
+c2FuX2Vhcmx5X2luaXQoKSBiZWZvcmUgdGhlIGNhbGwNCj4+IG9mDQo+PiByZWxvY2F0ZV9pbml0
+KCkgPw0KPg0KPkkganVzdCB0cmllZCBpdCB3aXRoIFFFTVUsIGl0IHdvcmtzLiBJJ2xsIHNlbmQg
+YSBwYXRjaCBvdXQgc29vbi4NCj4NCg0KWWVzIEkgdHJpZWQgYnV0IGNvdWxkbid0IGdldCBpdCB0
+byB3b3JrIG9uIGEgUDEwMTAuIFRoZXJlIG1pZ2h0IGJlIGNvbmZsaWN0DQpzb21ld2hlcmUgZWxz
+ZSB3aXRoIG15IGtlcm5lbCBjb25maWcuIFdpbGwga2VlcCBvbiBkZWJ1Z2dpbmcuDQpUaGFua3Mg
+Zm9yIHRoZSBwcm9tcHQgcmVwbHkgYW5kIHRyeWluZyBpdCBvdXQgb24gcWVtdS4NCg0KTGV4aQ0K
+DQo+DQo+DQo+PiBPbiBvdGhlciBQUEMzMiwga2FzYW5fZWFybHlfaW5pdCgpIGlzIHRoZSBmaXJz
+dCB0aGluZyBkb25lIGFmdGVyDQo+PiBhY3RpdmF0aW5nIHRoZSBNTVUuIEJ1dCBBRkFJVSwgTU1V
+IGlzIGFsd2F5cyBhY3RpdmUgb24gQk9PS0UgdGhvdWdoLg0KPj4NCj4+IENocmlzdG9waGUNCj4+
+DQo+Pj4NCj4+PiBEaXNhYmxlIEtBU0FOIHdoZW4gUkVMT0NBVEFCTEUgaXMgc2VsZWN0ZWQgb24g
+ZnNsX2Jvb2tlIGZvciBub3cgdW50aWwNCj4+PiBpdCBpcyBzdXBwb3J0ZWQuDQo+Pj4NCj4+PiBT
+aWduZWQtb2ZmLWJ5OiBMZXhpIFNoYW8gPHNoYW9sZXhpQGh1YXdlaS5jb20+DQo+Pj4gLS0tDQo+
+Pj4gICBhcmNoL3Bvd2VycGMvS2NvbmZpZyB8IDIgKy0NCj4+PiAgIDEgZmlsZSBjaGFuZ2VkLCAx
+IGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPj4+DQo+Pj4gZGlmZiAtLWdpdCBhL2FyY2gv
+cG93ZXJwYy9LY29uZmlnIGIvYXJjaC9wb3dlcnBjL0tjb25maWcgaW5kZXgNCj4+PiAzZTU2Yzlj
+MmYxNmUuLjE0ZjNkYTYzYzA4OCAxMDA2NDQNCj4+PiAtLS0gYS9hcmNoL3Bvd2VycGMvS2NvbmZp
+Zw0KPj4+ICsrKyBiL2FyY2gvcG93ZXJwYy9LY29uZmlnDQo+Pj4gQEAgLTE3MSw3ICsxNzEsNyBA
+QCBjb25maWcgUFBDDQo+Pj4gICAgICAgc2VsZWN0IEhBVkVfQVJDSF9BVURJVFNZU0NBTEwNCj4+
+PiAgICAgICBzZWxlY3QgSEFWRV9BUkNIX0hVR0VfVk1BUCAgICAgICAgaWYgUFBDX0JPT0szU182
+NCAmJg0KPj4+IFBQQ19SQURJWF9NTVUNCj4+PiAgICAgICBzZWxlY3QgSEFWRV9BUkNIX0pVTVBf
+TEFCRUwNCj4+PiAtICAgIHNlbGVjdCBIQVZFX0FSQ0hfS0FTQU4gICAgICAgICAgICBpZiBQUEMz
+Mg0KPj4+ICsgICAgc2VsZWN0IEhBVkVfQVJDSF9LQVNBTiAgICAgICAgICAgIGlmIFBQQzMyICYm
+ICEoUkVMT0NBVEFCTEUgJiYNCj4+PiBGU0xfQk9PS0UpDQo+Pj4gICAgICAgc2VsZWN0IEhBVkVf
+QVJDSF9LR0RCDQo+Pj4gICAgICAgc2VsZWN0IEhBVkVfQVJDSF9NTUFQX1JORF9CSVRTDQo+Pj4g
+ICAgICAgc2VsZWN0IEhBVkVfQVJDSF9NTUFQX1JORF9DT01QQVRfQklUUyAgICBpZiBDT01QQVQN
+Cj4+Pg0K
