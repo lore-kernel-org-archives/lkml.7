@@ -2,80 +2,121 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DA4C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 09:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE0DC432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 10:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC3F20732
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 09:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57DF42075A
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 10:28:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbfK3Jda (ORCPT
+        id S1726388AbfK3K2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Nov 2019 04:33:30 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:50427 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725811AbfK3Jda (ORCPT
+        Sat, 30 Nov 2019 05:28:07 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:39984 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725792AbfK3K2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Nov 2019 04:33:30 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R221e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TjSu.65_1575106399;
-Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0TjSu.65_1575106399)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 30 Nov 2019 17:33:26 +0800
-From:   Wen Yang <wenyang@linux.alibaba.com>
-To:     Richard Weinberger <richard@nod.at>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     xlpang@linux.alibaba.com, Wen Yang <wenyang@linux.alibaba.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] UBI: fix use after free in ubi_remove_volume()
-Date:   Sat, 30 Nov 2019 17:33:17 +0800
-Message-Id: <20191130093317.31352-1-wenyang@linux.alibaba.com>
-X-Mailer: git-send-email 2.23.0
+        Sat, 30 Nov 2019 05:28:06 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id B2AFF1C2566; Sat, 30 Nov 2019 11:28:04 +0100 (CET)
+Date:   Sat, 30 Nov 2019 11:28:04 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 030/306] synclink_gt(): fix compat_ioctl()
+Message-ID: <20191130102804.GA27380@duo.ucw.cz>
+References: <20191127203114.766709977@linuxfoundation.org>
+ <20191127203116.924730296@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="HlL+5n6rz5pIUxbD"
+Content-Disposition: inline
+In-Reply-To: <20191127203116.924730296@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can't use "vol" after it has been freed.
 
-Fixes: 493cfaeaa0c9 ("mtd: utilize new cdev_device_add helper function")
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>
-Cc: linux-mtd@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/mtd/ubi/vmt.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+--HlL+5n6rz5pIUxbD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/mtd/ubi/vmt.c b/drivers/mtd/ubi/vmt.c
-index 139ee13..8ff1478 100644
---- a/drivers/mtd/ubi/vmt.c
-+++ b/drivers/mtd/ubi/vmt.c
-@@ -375,7 +375,6 @@ int ubi_remove_volume(struct ubi_volume_desc *desc, int no_vtbl)
- 	}
- 
- 	cdev_device_del(&vol->cdev, &vol->dev);
--	put_device(&vol->dev);
- 
- 	spin_lock(&ubi->volumes_lock);
- 	ubi->rsvd_pebs -= reserved_pebs;
-@@ -388,6 +387,8 @@ int ubi_remove_volume(struct ubi_volume_desc *desc, int no_vtbl)
- 	if (!no_vtbl)
- 		self_check_volumes(ubi);
- 
-+	put_device(&vol->dev);
-+
- 	return 0;
- 
- out_err:
--- 
-1.8.3.1
+Hi!
 
+> From: Al Viro <viro@zeniv.linux.org.uk>
+>=20
+> [ Upstream commit 27230e51349fde075598c1b59d15e1ff802f3f6e ]
+>=20
+> compat_ptr() for pointer-taking ones...
+>=20
+> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+
+> +++ b/drivers/tty/synclink_gt.c
+> @@ -1186,14 +1186,13 @@ static long slgt_compat_ioctl(struct tty_struct *=
+tty,
+>  			 unsigned int cmd, unsigned long arg)
+>  {
+>  	struct slgt_info *info =3D tty->driver_data;
+> -	int rc =3D -ENOIOCTLCMD;
+> +	int rc;
+> =20
+>  	if (sanity_check(info, tty->name, "compat_ioctl"))
+>  		return -ENODEV;
+>  	DBGINFO(("%s compat_ioctl() cmd=3D%08X\n", info->device_name, cmd));
+> =20
+>  	switch (cmd) {
+> -
+>  	case MGSL_IOCSPARAMS32:
+>  		rc =3D set_params32(info, compat_ptr(arg));
+>  		break;
+> @@ -1213,18 +1212,11 @@ static long slgt_compat_ioctl(struct tty_struct *=
+tty,
+>  	case MGSL_IOCWAITGPIO:
+>  	case MGSL_IOCGXSYNC:
+>  	case MGSL_IOCGXCTRL:
+> -	case MGSL_IOCSTXIDLE:
+> -	case MGSL_IOCTXENABLE:
+> -	case MGSL_IOCRXENABLE:
+> -	case MGSL_IOCTXABORT:
+> -	case TIOCMIWAIT:
+> -	case MGSL_IOCSIF:
+> -	case MGSL_IOCSXSYNC:
+> -	case MGSL_IOCSXCTRL:
+> -		rc =3D ioctl(tty, cmd, arg);
+> +		rc =3D ioctl(tty, cmd, (unsigned long)compat_ptr(arg));
+>  		break;
+> +	default:
+> +		rc =3D ioctl(tty, cmd, arg);
+>  	}
+
+Ok, so this used to only pass select calls to ioctl() and now it
+passes everything thanks to default: marking. I guess that's suitable
+for mainline, but is it also suitable for -stable?
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--HlL+5n6rz5pIUxbD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXeJENAAKCRAw5/Bqldv6
+8lAmAKC3P9bd/9OUYHd8vx2WoqPxYOetnACdGo+Jm0+fwwF1UP5zdcy8M2a54+k=
+=Vs55
+-----END PGP SIGNATURE-----
+
+--HlL+5n6rz5pIUxbD--
