@@ -2,82 +2,115 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 884C0C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 19:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE07C432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 19:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 664D02075A
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 19:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7BA02073C
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 19:10:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575141020;
+	bh=Pg4KC5h6Rg9tRmbRhEwLEmIhPmGAkmPFgcwa4+3qAfw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fF1f+8AhjDQvXJoZeWvu1iQB10eUXX3+/rRSROn4C4mH1SSHidNqOqbGVdbEr/KY/
+	 F0yxmNp/ErVEtH3HzGP4j1MctBU/8bKhxr3o1ZgVVixSH0DkeyL7EjL5oN08wCgOWI
+	 c8H5HbX6O8JxMjg1BdM9KnOuPDh8K58uIB1X0rXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbfK3TDG (ORCPT
+        id S1727213AbfK3TKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Nov 2019 14:03:06 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:53969 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727025AbfK3TDF (ORCPT
+        Sat, 30 Nov 2019 14:10:20 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34272 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726799AbfK3TKT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Nov 2019 14:03:05 -0500
-Received: from callcc.thunk.org (ip-64-134-102-67.public.wayport.net [64.134.102.67])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id xAUJ2tch026831
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 30 Nov 2019 14:02:56 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 07A86421A48; Sat, 30 Nov 2019 12:50:47 -0500 (EST)
-Date:   Sat, 30 Nov 2019 12:50:46 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Daniel Phillips <daniel@phunq.net>
-Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Subject: Re: [RFC] Thing 1: Shardmap fox Ext4
-Message-ID: <20191130175046.GA6655@mit.edu>
-References: <176a1773-f5ea-e686-ec7b-5f0a46c6f731@phunq.net>
- <20191127142508.GB5143@mit.edu>
- <c3636a43-6ae9-25d4-9483-34770b6929d0@phunq.net>
- <20191128022817.GE22921@mit.edu>
- <3b5f28e5-2b88-47bb-1b32-5c2fed989f0b@phunq.net>
+        Sat, 30 Nov 2019 14:10:19 -0500
+Received: by mail-lj1-f194.google.com with SMTP id m6so27975596ljc.1
+        for <linux-kernel@vger.kernel.org>; Sat, 30 Nov 2019 11:10:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2QRHezkunwRrIMa14MxefFzwV3YRpouLMEO2wmjXPok=;
+        b=X015xVKVQrz9jE331+LcTdxT7VNHCtQzr/vjU3xYa4QlcG1JXeywX3xGEh0GNCNpi1
+         a9d2l9Wl+c3I+5dmpta0uvHpfuARxl96ZLsictnm6+giQbVx3OoDdMmNlHQ5psP1cENw
+         JiaESZKNPd622sJQjh2IClD6t70XnifDVj9H4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2QRHezkunwRrIMa14MxefFzwV3YRpouLMEO2wmjXPok=;
+        b=aNNRb2wrCDSNWbFh8SIvTV/oxuDacawQhINWq05s//JoSUDqgYksVyGqLmj50img9P
+         rc85ZEdT4bAM+427hlXsts3ICC4Qzg6exOrXhkb0lWWwvY7gJNvHaysFIvVpJ3zkpWGb
+         rXttng1d1sy1IpvmNW3OIq939vZ3HMWu6HXL+EMFTLUxupghHcBsifeXUju3tQPlFDFU
+         OF0dll2y4IQah6/flDwaUk+N+RIaxGx0zA+gtND1PBEvVRUhl18tlU6hqUvdbkBUFdQu
+         YnNgDdvcqnGOFC39/1KjgFGnNIDmEVLp/iaqGrAoL9zis+P8wGGnY2yy3QibCud07sX7
+         sjpQ==
+X-Gm-Message-State: APjAAAVofszG7/pDSnmSajcgGDCoq/UEtz4T6znbA3Gla2djyTiDrP1F
+        xP0bUMs46DNLbGr9OqlcFENyZ1LGfGY=
+X-Google-Smtp-Source: APXvYqwOucVIHVF/4cfTVjbj/2RBbaN8i8L4kBFgsVfVVpbGhXx3CvX2h8xd03pKXILvdQ240+SfQw==
+X-Received: by 2002:a2e:884c:: with SMTP id z12mr40416905ljj.41.1575141017203;
+        Sat, 30 Nov 2019 11:10:17 -0800 (PST)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id g26sm1699414ljn.89.2019.11.30.11.10.15
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 30 Nov 2019 11:10:16 -0800 (PST)
+Received: by mail-lj1-f180.google.com with SMTP id j6so26334322lja.2
+        for <linux-kernel@vger.kernel.org>; Sat, 30 Nov 2019 11:10:15 -0800 (PST)
+X-Received: by 2002:a2e:2c19:: with SMTP id s25mr2479024ljs.26.1575141015377;
+ Sat, 30 Nov 2019 11:10:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3b5f28e5-2b88-47bb-1b32-5c2fed989f0b@phunq.net>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191126125304.GA20746@mit.edu>
+In-Reply-To: <20191126125304.GA20746@mit.edu>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 30 Nov 2019 11:09:58 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whqR7T_UuKX0JvOFK48RdiViOTPkNxxfjwh70FxjoxE0Q@mail.gmail.com>
+Message-ID: <CAHk-=whqR7T_UuKX0JvOFK48RdiViOTPkNxxfjwh70FxjoxE0Q@mail.gmail.com>
+Subject: Re: [GIT PULL] ext4 updates for 5.5
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 08:27:59PM -0800, Daniel Phillips wrote:
-> You are right that Shardmap also must update the shard fifo tail block,
-> however there is only one index shard up to 64K entries, so all the new
-> index entries go into the same tail block(s).
+On Tue, Nov 26, 2019 at 4:53 AM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+>
+>  * Direct I/O via iomap (required the iomap-for-next branch from Darrick
+>    as a prereq).
 
-So how big is an index shard?  If it is 64k entries, and each entry is
-16 bytes (8 bytes hash, 8 bytes block number), then a shard is a
-megabyte, right?  Are entries in an index shard stored in sorted or
-unsorted manner?  If they are stored in an unsorted manner, then when
-trying to do a lookup, you need to search all of the index shard ---
-which means for a directory that is being frequently accessed, the
-entire index shard has to be kept in memory, no?  (Or paged in as
-necessary, if you are using mmap in userspace).
+I appreciate you telling me this, but why didn't you say anything at
+all in the merge?
 
-> Important example: how is atomic directory commit going to work for
-> Ext4?
+Ted, this merge commit message is simply not acceptable:
 
-The same way all metadata updates work in ext4.  Which is to say, you
-need to declare the maximum number of 4k metadata blocks that an
-operation might need to change when calling ext4_journal_start() to
-create a handle; and before modifying a 4k block, you need to call
-ext4_journal_get_write_access(), passing in the handle and the block's
-buffer_head.  After modifying the block, you must call
-ext4_handle_dirty_metadata() on the buffer_head.  And when you are
-doing with the changes in an atomic metadata operation, you call
-ext4_journal_stop() on the handle.
+    Merge branch 'iomap-for-next' into mb/dio
 
-This hasn't changed since the days of ext3 and htree.
+That's literally all you wrote about the iomap merge.
 
-     	    	    	      	      	   - Ted
+Not ok.
+
+Merges are commits too. And merges need commit messages too. They need
+an explanation of what they do - and why - the same way a normal
+commit does.
+
+You wouldn't make a one-liner "Do this" message for a regular commit
+that has big implications. Why do you think it's ok for a merge
+commit?
+
+When you merge something, the individual commits that get pulled in
+hopefully have their own explanations for each individual change -
+otherwise you definitely shouldn't merge them. So the merge doesn't
+need to replicate all of that.
+
+But the merge itself still needs a "why am I merging these commits" explanation.
+
+We pride ourselves on good commit messages. But that merge commit
+message is pure and utter garbage.
+
+               Linus
