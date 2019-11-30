@@ -2,117 +2,108 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A95FEC432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 19:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C16E2C432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 19:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B2692073C
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 19:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 962232082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 19:17:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n3bLAvu6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aTFmKs0g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfK3TOw (ORCPT
+        id S1727266AbfK3TRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Nov 2019 14:14:52 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:37872 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726981AbfK3TOw (ORCPT
+        Sat, 30 Nov 2019 14:17:10 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46883 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726981AbfK3TRK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Nov 2019 14:14:52 -0500
-Received: by mail-pj1-f68.google.com with SMTP id ep17so352181pjb.4
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Nov 2019 11:14:51 -0800 (PST)
+        Sat, 30 Nov 2019 14:17:10 -0500
+Received: by mail-pl1-f194.google.com with SMTP id k20so9813632pll.13
+        for <linux-kernel@vger.kernel.org>; Sat, 30 Nov 2019 11:17:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=PBLl0kGQgoYrFdeAWUlAxcj7qJOOfrAStPaEScVpRMU=;
-        b=n3bLAvu6YzI15zkqHwPU+arzD7OjNEiIMhVH5pb6HeHwgf1Hvt/pptO2tMo6elzCxs
-         C6Xr0Yv+ZFm8FtXp4rrzrbXo+PZFBmjzxKzpxTFPZqyY7YQOBXykcNdp8In5/IqqnIqj
-         NNyszJfxt1gOzsZOIv7MDoFc6FWZGJCZ9qDzzofOlUKs77lcevEwR4qdm5Sb0s/SQJq5
-         HLAwgSg6EGqA3+wpyx/KHMnrd7/Aj4x//apt0O2Qsp+2Q37JMFb2Zwpy4LOMatn5IPoU
-         PumQgmF0q1rYwjdYsiETXiUXcpQPSN9BvAgxaA/XAlI+5TsLWJcnwuzoy5jWv81dhPs+
-         pndQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=w6sz1koi+oWODmAL9BltmsOi1SxUB2G7IQOPMekJvLM=;
+        b=aTFmKs0g3k6pzTrYN3zZEUzHUufU4JIC7CQJPz9eZju5t4sxwgWAejCEfglHL7mra/
+         lQgPqw9MBSBCxAtgNuaNek1LIP+ZTbEduS1UpjWxH2FPi6OSTw4cFlHjX9eN9ioIRv8d
+         aqyqdEEBjiyOS+/2ap3RGbCVJVKwOtmAa74EO3iVm8Z7Msm2SS/q3BiLR3SgUBUyRSRq
+         vEhxDwXQocaTtqtW6yKzuYWaZhjpTeh0VWJcfGpaymXva1RzBZPzLcfxHq1EDaz7/L3Y
+         X6HTxCFIyHqF0W969RSj0aKmXjnT56yxjiJoVkmkQhhzk/ouUQPr2cRgnjc8agmnqUEb
+         Gn4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=PBLl0kGQgoYrFdeAWUlAxcj7qJOOfrAStPaEScVpRMU=;
-        b=fx7nYjlStGHy0/2oZN92vUEXtlM7cOhgVElivfgQZqXhnErETj5r1QIkUGpYldqU3f
-         oxoDiBzXjxYwK8lWMou2OUMgFeA+0rFMvDdnu6RESfzqR5GuEv0aUvnsqNGZi3eu3fPC
-         i60/t7dDcjjetA4ShYPZQ8rpwhlZOAO81REjzGmUXskX/G2m/fs1vZwQkHVhRFRP3xs9
-         HkUwcFywX/M81xt1B2EWG57FhgW9OUmId09RVLDSOHg5NlBb+DJbHuDtiRqfa3xzODz6
-         ZWoDf6lKDfXjgRzxCjhwMQqhmbeThBZGtOx2ZZ9zhvZpZT59VZ+dsgxpgaAG3gZK86S8
-         Zf+w==
-X-Gm-Message-State: APjAAAW3H7MrH5p4j/hzAccPetdd3MuSvkK7eZohsB0nkLrmpjzxE//i
-        ba9I5cONEycA2KgWn8ec6e71PQ==
-X-Google-Smtp-Source: APXvYqz0+V1mbsfP5WotQqQljxyUj7dIYMuraKlaXpwb87lXoUZtR9qkXz1dECcyA4nQ8fMgd83Sbw==
-X-Received: by 2002:a17:90a:26ec:: with SMTP id m99mr26421050pje.130.1575141291280;
-        Sat, 30 Nov 2019 11:14:51 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=w6sz1koi+oWODmAL9BltmsOi1SxUB2G7IQOPMekJvLM=;
+        b=nzqHlzNYAoU7PXbqITIyGL1uhDdQJLc5a10qp9hpsTiWrzW77wI6LaVNLneJtWwxh6
+         WG6aMB4COGnHV/JuB9RaCPjKoKnLX0JlOTiYTwTWPDKoxBTEB50RaT1d5oNtPB553SFe
+         7s9slgS4bkdZoeJ//E8qN2+uAe6susXGLiETm33ZE5O7Fwv0/pHzdetnZ+7SKwdeFY5T
+         o4yGcuIzEtFZFkAWZSRU5ndqeWg0XHTzRAqP9FuvWKXndqde404hVFJ4gEXLJpyGNmsW
+         pP/Ox/lkjgRnW+PHR4sb7y+TKELwDFOvLM2nAIhQxoxWr/0fitQ36FcV/cgjxBndPCNC
+         CbyA==
+X-Gm-Message-State: APjAAAVXcxDIHnfvExoY3cTaezYMzjGOpX290glBO4/shY63N0SpeabV
+        e7gfFpZqGnR7Fl5l+H6eGp+YhkaNxj0=
+X-Google-Smtp-Source: APXvYqz93OnGJHulHOb9jrNxJLT5EJYEPikxu37TX1FLVg8KouN4Nqquhrbj4x8PJeKWjZlhzUQ0bg==
+X-Received: by 2002:a17:902:8343:: with SMTP id z3mr20359336pln.200.1575141428121;
+        Sat, 30 Nov 2019 11:17:08 -0800 (PST)
 Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id e11sm12897591pgh.54.2019.11.30.11.14.50
+        by smtp.gmail.com with ESMTPSA id y128sm2660801pfg.17.2019.11.30.11.17.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 Nov 2019 11:14:50 -0800 (PST)
-Date:   Sat, 30 Nov 2019 11:14:48 -0800
+        Sat, 30 Nov 2019 11:17:07 -0800 (PST)
+Date:   Sat, 30 Nov 2019 11:17:05 -0800
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Baolin Wang <baolin.wang@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [GIT PULL] hwspinlock updates for v5.5
-Message-ID: <20191130191448.GC151303@yoga>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Rob Herring <robherring2@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Fabien Dessenne <fabien.dessenne@st.com>
+Subject: Re: linux-next: manual merge of the rpmsg tree with the devicetree
+ tree
+Message-ID: <20191130191705.GA133384@yoga>
+References: <20191122145018.5f8a3187@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191122145018.5f8a3187@canb.auug.org.au>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+On Thu 21 Nov 19:50 PST 2019, Stephen Rothwell wrote:
 
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
+> Hi all,
+> 
+> Today's linux-next merge of the rpmsg tree got a conflict in:
+> 
+>   Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
+> 
+> between commit:
+> 
+>   34376eb1b084 ("dt-bindings: remoteproc: convert stm32-rproc to json-schema")
+> 
+> from the devicetree tree and commit:
+> 
+>   14ea1d04ed0f ("dt-bindings: remoteproc: stm32: add wakeup-source")
+> 
+> from the rpmsg tree.
+> 
+> I fixed it up (I just deleted the file - more updates may be required)
+> and can carry the fix as necessary. This is now fixed as far as linux-next
+> is concerned, but any non trivial conflicts should be mentioned to your
+> upstream maintainer when your tree is submitted for merging.  You may
+> also want to consider cooperating with the maintainer of the conflicting
+> tree to minimise any particularly complex conflicts.
+> 
 
-are available in the Git repository at:
+Thanks for catching this Stephen!
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc.git tags/hwlock-v5.5
-
-for you to fetch changes up to 9d399f0c52951c1acf972bf98ea55ba8798fea7a:
-
-  hwspinlock: u8500_hsem: Remove redundant PM runtime implementation (2019-11-08 16:42:26 -0800)
-
-----------------------------------------------------------------
-hwspinlock updates for v5.5
-
-This contains a number of cleanups to the core and several drivers, in
-particular removing the requirement for drivers to implement pm_runtime.
-
-It also udpates the location of the git tree in MAINTAINERS.
-
-----------------------------------------------------------------
-Baolin Wang (11):
-      hwspinlock: u8500_hsem: Change to use devm_platform_ioremap_resource()
-      hwspinlock: u8500_hsem: Use devm_kzalloc() to allocate memory
-      hwspinlock: u8500_hsem: Use devm_hwspin_lock_register() to register hwlock controller
-      hwspinlock: sprd: Change to use devm_platform_ioremap_resource()
-      hwspinlock: sprd: Check the return value of clk_prepare_enable()
-      hwspinlock: sprd: Use devm_add_action_or_reset() for calls to clk_disable_unprepare()
-      hwspinlock: sprd: Use devm_hwspin_lock_register() to register hwlock controller
-      hwspinlock: Remove BUG_ON() from the hwspinlock core
-      hwspinlock: Let the PM runtime can be optional
-      hwspinlock: sprd: Remove redundant PM runtime implementation
-      hwspinlock: u8500_hsem: Remove redundant PM runtime implementation
-
-Bjorn Andersson (1):
-      MAINTAINERS: hwspinlock: update git tree location
-
- MAINTAINERS                          |  2 +-
- drivers/hwspinlock/hwspinlock_core.c | 16 +++++------
- drivers/hwspinlock/sprd_hwspinlock.c | 48 +++++++++++++++-----------------
- drivers/hwspinlock/u8500_hsem.c      | 53 ++++++++----------------------------
- 4 files changed, 42 insertions(+), 77 deletions(-)
-
+Regards,
+Bjorn
