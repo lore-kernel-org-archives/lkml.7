@@ -2,105 +2,153 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64CA4C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 21:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FF9C432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 21:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34CA52075C
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 21:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB6182082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 21:25:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="vryAB6gN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ly0yRe+o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727370AbfK3VUV (ORCPT
+        id S1727330AbfK3VZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Nov 2019 16:20:21 -0500
-Received: from mail-qk1-f169.google.com ([209.85.222.169]:46843 "EHLO
-        mail-qk1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727025AbfK3VUU (ORCPT
+        Sat, 30 Nov 2019 16:25:51 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:39601 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727201AbfK3VZv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Nov 2019 16:20:20 -0500
-Received: by mail-qk1-f169.google.com with SMTP id f5so10473270qkm.13
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Nov 2019 13:20:20 -0800 (PST)
+        Sat, 30 Nov 2019 16:25:51 -0500
+Received: by mail-io1-f66.google.com with SMTP id c16so10589209ioh.6;
+        Sat, 30 Nov 2019 13:25:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=YS0My93qs4wfTeVuLS4eG6rOWxdhL0NApXflYAKBZis=;
-        b=vryAB6gNcSJu81yvp6LI1tsPIlGq6zhpdTjjm0LSNTWQgaLLxCY6ujogIuJ1lVqILy
-         HsIuI3gxNnsGZXL6SkH2s02Rqk5tOUhseDJumrg8Y4Goned5eSnwXiOJ02FVwkLUpmq1
-         fy2dkQ4kGcJlW5IgkT8EkbzTjzSlppz3fGgGw=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xN2NEYgLxOLt/H9lUAJjUJ5JSxlsQ1fRNDxtHYCIblE=;
+        b=ly0yRe+o3kS13C86HWT4bTLzDRbrg56nDLSbbJgI5RE8dwkXyz7RlJQLBX1Y3PSiFH
+         kHUgmAQxTf7UN8cq3EGVKyrwTyW1JsrnzELs2A73ijoOWxiQk2AmV2JMpEubzu7t9dFx
+         itjAjf0evgPqLvZcJ4lEh3YntgyHDM+2Wu4rA9mDATcib4sdSq8Xn7Ska484rEuY5z40
+         nnoAr+QnQosoM/JTBfKp/sICBrzkMQ127tH/8AwrnVL8MI86MqXoFA4iDpoHDeOaJg2f
+         7p0AT5THqyylqPy5oknuLRYy7EB3HPon5/rlT8s8LGznyDaEFcxOK36BtJlWaupGFcLd
+         /pXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=YS0My93qs4wfTeVuLS4eG6rOWxdhL0NApXflYAKBZis=;
-        b=SkqdNZCpWQueAcVPTTTQF80ZJcbn6SUV4rXSfUyl9JugfGaRjXoeRHTwAt4HN/3lwx
-         8ReyV058spZYmKcKnZt2hAptnzrWP2ovJAIc6Oc80MOTEwgvlaYEVzmJMGG2abOIVJ9b
-         N/+EDTTaznao/NP7JKvsr4nzzZ35Dq71Gmv1lI43Tw8vSsK3UTVESLcwE5Nyr5MlTUny
-         GrQC9IhcjrIxkSrfaoE/3yX1s/mm+15Y9SGY2yzzxk8SCIMEZGZkCPNZHzYirmbZpw6a
-         tCSNQ/pIVqtzIPbaD7sRn5nWMCrX2vSJi97DQzLEtmGekBWJuJfUFGohRnpErAdgIrpX
-         I/4Q==
-X-Gm-Message-State: APjAAAXadevfWdzYlQBM+lqMaDcg6mbussuwgzqYJr1co7V2gS1EVQrk
-        Ay7aQE7dlCLhATxqoRHt7dzGzoPUu1N/Hsvt5w5xGeC4sgVmqw==
-X-Google-Smtp-Source: APXvYqyOli57ideDJnYA8Xot+9aJ3TPxPwSiAasZ7J/43lAH9KfvXVRK8W7FmYYXiP1p9TDBrbzrFpzcxz2UAKjaCfY=
-X-Received: by 2002:a37:bd06:: with SMTP id n6mr24400401qkf.286.1575148819181;
- Sat, 30 Nov 2019 13:20:19 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xN2NEYgLxOLt/H9lUAJjUJ5JSxlsQ1fRNDxtHYCIblE=;
+        b=pMgM0PpNi1T2O68XteZubh2gOEnTNfEBGtvK+jWwhNO+h0VMyDnGHNm+hnmGY93DUb
+         9ZGyk5D7tBMAFdnjBMz6lbkoVOunwiuxvD04kQXOpbl4SE0bDKW1en34BLyIsMKfrXlS
+         5RYVQU4D+OZ6XEdlFauaQ5yvjUPwEkOp7OZU++4fZYm09NerCS8DZqIdKUJHT5HKACZT
+         w2jZq6jVM0oJIQmZpjBEwR5Ilwl3LlJ8Jr8lUl58L2TJNDKr/3axLJRmBeTkRfNOD0mN
+         f8qY5QW/Z64WBM0bYunIcw4T8i7s86OV8k9ldyBV4YHy7HrqeR5fzU+a56sDLzu5T3wY
+         n81g==
+X-Gm-Message-State: APjAAAXl6DQRm8LfTzFLbnTD7C0LHcD2Wy6nM64hQrbjqH2W84VpWswy
+        /086SqNrjporP40Qh4Jh6N21egfnin8lVKJ9NolrZw==
+X-Google-Smtp-Source: APXvYqzUJmvy9Gmi9HiG+HIP45gcXxN9IhfEILjc3pjvRqFTaaUvdE5JM6DbKzVXAosomlkXF8r6wIJBuSEYss1HXTM=
+X-Received: by 2002:a5d:83c9:: with SMTP id u9mr5646687ior.272.1575149150175;
+ Sat, 30 Nov 2019 13:25:50 -0800 (PST)
 MIME-Version: 1.0
-From:   Ivan Babrou <ivan@cloudflare.com>
-Date:   Sat, 30 Nov 2019 13:20:08 -0800
-Message-ID: <CABWYdi32BXz4W0VyYR2hV5A58rcegCaF4Jk__QmyiTJsr7=b3A@mail.gmail.com>
-Subject: Misaligned output of perf stat --topdown
-To:     linux-kernel <linux-kernel@vger.kernel.org>
-Cc:     kernel-team <kernel-team@cloudflare.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
+References: <20191130053030.7868-1-deepa.kernel@gmail.com> <20191130053030.7868-4-deepa.kernel@gmail.com>
+In-Reply-To: <20191130053030.7868-4-deepa.kernel@gmail.com>
+From:   Steve French <smfrench@gmail.com>
+Date:   Sat, 30 Nov 2019 15:25:39 -0600
+Message-ID: <CAH2r5msrqokxHGr6c4N8=mOw6v1h9ZXDQFSVMRPHnTmV1n0L=w@mail.gmail.com>
+Subject: Re: [PATCH 3/7] fs: cifs: Delete usage of timespec64_trunc
+To:     Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Steve French <stfrench@microsoft.com>,
+        CIFS <linux-cifs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey,
+Is this intended to merge separately or do you want it merged through
+the cifs git tree?
 
-I'm observing misaligned output of perf stat --topdown:
+On Fri, Nov 29, 2019 at 11:33 PM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
+>
+> timestamp_truncate() is the replacement api for
+> timespec64_trunc. timestamp_truncate() additionally clamps
+> timestamps to make sure the timestamps lie within the
+> permitted range for the filesystem.
+>
+> Truncate the timestamps in the struct cifs_attr at the
+> site of assignment to inode times. This
+> helps us use the right fs api timestamp_trucate() to
+> perform the truncation.
+>
+> Also update the ktime_get_* api to match the one used in
+> current_time(). This allows for timestamps to be updated
+> the same way always.
+>
+> Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+> Cc: stfrench@microsoft.com
+> Cc: linux-cifs@vger.kernel.org
+> ---
+>  fs/cifs/inode.c | 13 +++++++------
+>  1 file changed, 7 insertions(+), 6 deletions(-)
+>
+> diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
+> index ca76a9287456..026ed49e8aa4 100644
+> --- a/fs/cifs/inode.c
+> +++ b/fs/cifs/inode.c
+> @@ -113,6 +113,7 @@ cifs_revalidate_cache(struct inode *inode, struct cifs_fattr *fattr)
+>         }
+>
+>          /* revalidate if mtime or size have changed */
+> +       fattr->cf_mtime = timestamp_truncate(fattr->cf_mtime, inode);
+>         if (timespec64_equal(&inode->i_mtime, &fattr->cf_mtime) &&
+>             cifs_i->server_eof == fattr->cf_eof) {
+>                 cifs_dbg(FYI, "%s: inode %llu is unchanged\n",
+> @@ -162,6 +163,9 @@ cifs_fattr_to_inode(struct inode *inode, struct cifs_fattr *fattr)
+>         cifs_revalidate_cache(inode, fattr);
+>
+>         spin_lock(&inode->i_lock);
+> +       fattr->cf_mtime = timestamp_truncate(fattr->cf_mtime, inode);
+> +       fattr->cf_atime = timestamp_truncate(fattr->cf_atime, inode);
+> +       fattr->cf_ctime = timestamp_truncate(fattr->cf_ctime, inode);
+>         /* we do not want atime to be less than mtime, it broke some apps */
+>         if (timespec64_compare(&fattr->cf_atime, &fattr->cf_mtime) < 0)
+>                 inode->i_atime = fattr->cf_mtime;
+> @@ -329,8 +333,7 @@ cifs_create_dfs_fattr(struct cifs_fattr *fattr, struct super_block *sb)
+>         fattr->cf_mode = S_IFDIR | S_IXUGO | S_IRWXU;
+>         fattr->cf_uid = cifs_sb->mnt_uid;
+>         fattr->cf_gid = cifs_sb->mnt_gid;
+> -       ktime_get_real_ts64(&fattr->cf_mtime);
+> -       fattr->cf_mtime = timespec64_trunc(fattr->cf_mtime, sb->s_time_gran);
+> +       ktime_get_coarse_real_ts64(&fattr->cf_mtime);
+>         fattr->cf_atime = fattr->cf_ctime = fattr->cf_mtime;
+>         fattr->cf_nlink = 2;
+>         fattr->cf_flags = CIFS_FATTR_DFS_REFERRAL;
+> @@ -609,10 +612,8 @@ cifs_all_info_to_fattr(struct cifs_fattr *fattr, FILE_ALL_INFO *info,
+>
+>         if (info->LastAccessTime)
+>                 fattr->cf_atime = cifs_NTtimeToUnix(info->LastAccessTime);
+> -       else {
+> -               ktime_get_real_ts64(&fattr->cf_atime);
+> -               fattr->cf_atime = timespec64_trunc(fattr->cf_atime, sb->s_time_gran);
+> -       }
+> +       else
+> +               ktime_get_coarse_real_ts64(&fattr->cf_atime);
+>
+>         fattr->cf_ctime = cifs_NTtimeToUnix(info->ChangeTime);
+>         fattr->cf_mtime = cifs_NTtimeToUnix(info->LastWriteTime);
+> --
+> 2.17.1
+>
 
-$ sudo perf stat --topdown --cpu 1 -a find /state > /dev/null
 
- Performance counter stats for 'system wide':
+-- 
+Thanks,
 
-                                    retiring      bad speculation
- frontend bound        backend bound
-S0-D0-C1           1                30.4%                        13.4%
-                       38.0%                18.2%
-
-$ sudo perf stat --topdown --cpu 1 -a find /state > /dev/null
-
- Performance counter stats for 'system wide':
-
-                                    retiring      bad speculation
- frontend bound        backend bound
-S0-D0-C1           1                27.5%                 6.5%
-               24.1%                        41.9%
-
-$ sudo perf stat --topdown --cpu 1 -a find /state > /dev/null
-
- Performance counter stats for 'system wide':
-
-                                    retiring      bad speculation
- frontend bound        backend bound
-S0-D0-C1           1                29.6%                        12.3%
-                       23.7%                        34.4%
-
-It may be hard to notice in narrow plaintext email, so here's a gist:
-
-* https://gist.github.com/bobrik/ea5ddd8eb1629c350c898093f39ac7ee
-
-I think there are two issues:
-
-* Sometimes output is misaligned, which may or may not depend on the
-length of the printed value (<10.0% is misaligned, >=10.0% is ok)
-* Values are never really aligned to headers (except for maybe the first column)
-
-This is on 5.4.0.
+Steve
