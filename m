@@ -2,195 +2,174 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AD6C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 07:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 141C5C43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 07:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB67B2072C
+	by mail.kernel.org (Postfix) with ESMTP id E7C2320833
 	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 07:19:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbfK3HTL (ORCPT
+        id S1726954AbfK3HTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Nov 2019 02:19:11 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:44456 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbfK3HTK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Nov 2019 02:19:10 -0500
-Received: by mail-il1-f199.google.com with SMTP id h4so8485004ilh.11
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Nov 2019 23:19:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Iszxj3xslkgFiHBpTht8Zqpoj8q3iHoILKi1CRIqeFo=;
-        b=PYjVJCVQK55V84r4QT6SGQlkiS0G/CFhDOh0Gizef1pvcv28x1OrPigSed3N/ta7f5
-         hRZWnbFauMjS+NYosEB5CC37YxqRM9BP3KAAA0NLj2tadwXOAoec7U6pKLz0bdiA8UcT
-         miwxzMONLswQFHU4q1u6YIuAM7JPHZ29yIIexHY3NgedN/44nI45i8qsXnuSy2A80bwN
-         53EQgNYTf7TPsbU9CDrgCXZ+LdYO7M0VvG0+BLrOkXcSEjiasE+N9JR6gnOztYmOdhro
-         /+BOPEK1fkMj60UwVQfDdXJSU7Qif/klIig/9DAwi5j5Aue4a3tR3eRfxKWUZpMJUxtP
-         SDQQ==
-X-Gm-Message-State: APjAAAWofR08BP3sOBJ64x842e52kdFfOM5i8RiVOUzX64VVVVX75P1W
-        4SZGyxZMnvsawgaU5MquuxmVtt8MKZGuQjI5Ij8LdAJ4P21m
-X-Google-Smtp-Source: APXvYqxMt060BD8gSa++k51h6Fp7squipmwrA4vm7Riv4aIzuKEn/9cvlou91jaqXCGEVS2ftXaKCqBjw7WzXdD6/yYNsXYosfFh
+        Sat, 30 Nov 2019 02:19:50 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:42362 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725811AbfK3HTu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Nov 2019 02:19:50 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B6418840280E0BEBEE0C;
+        Sat, 30 Nov 2019 15:19:47 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Sat, 30 Nov
+ 2019 15:19:45 +0800
+Subject: Re: [PATCH] f2fs: Fix direct IO handling
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Ritesh Harjani <riteshh@linux.ibm.com>,
+        "linux-f2fs-devel@lists.sourceforge.net" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     Javier Gonzalez <javier@javigon.com>,
+        Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+References: <20191126075719.1046485-1-damien.lemoal@wdc.com>
+ <20191126083443.F1FD5A405B@b06wcsmtp001.portsmouth.uk.ibm.com>
+ <BYAPR04MB5816C82F708612381216895BE7470@BYAPR04MB5816.namprd04.prod.outlook.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <d6c4ca45-5939-2517-776d-c3189f38cff1@huawei.com>
+Date:   Sat, 30 Nov 2019 15:19:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-X-Received: by 2002:a6b:9302:: with SMTP id v2mr36196070iod.12.1575098348190;
- Fri, 29 Nov 2019 23:19:08 -0800 (PST)
-Date:   Fri, 29 Nov 2019 23:19:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000087c51905988b297b@google.com>
-Subject: KASAN: use-after-free Read in xlog_alloc_log (2)
-From:   syzbot <syzbot+c732f8644185de340492@syzkaller.appspotmail.com>
-To:     darrick.wong@oracle.com, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <BYAPR04MB5816C82F708612381216895BE7470@BYAPR04MB5816.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+-Cc fsdevel mailing list
 
-syzbot found the following crash on:
+On 2019/11/28 10:10, Damien Le Moal wrote:
+> On 2019/11/26 17:34, Ritesh Harjani wrote:
+>> Hello Damien,
+>>
+>> IIUC, you are trying to fix a stale data read by DIO read for the case
+>> you explained in your patch w.r.t. DIO-write forced to write as buffIO.
+>>
+>> Coincidentally I was just looking at the same code path just now.
+>> So I do have a query to you/f2fs group. Below could be silly one, as I
+>> don't understand F2FS in great detail.
+>>
+>> How is the stale data by DIO read, is protected against a mmap
+>> writes via f2fs_vm_page_mkwrite?
+>>
+>> f2fs_vm_page_mkwrite()		 f2fs_direct_IO (read)
+>> 					filemap_write_and_wait_range()
+					 - writepages
+					  lock_page
+					  - writepage
+					  unlock_page
+	lock_page
+>> 	-> f2fs_get_blocks()				
 
-HEAD commit:    81b6b964 Merge branch 'master' of git://git.kernel.org/pub..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13b27696e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=773597fe8d7cb41a
-dashboard link: https://syzkaller.appspot.com/bug?extid=c732f8644185de340492
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+					- f2fs_map_blocks
 
-Unfortunately, I don't have any reproducer for this crash yet.
+>> 					 -> submit_bio()
+>>
+>> 	-> set_page_dirty()
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+c732f8644185de340492@syzkaller.appspotmail.com
+	unlock_page
 
-==================================================================
-BUG: KASAN: use-after-free in xlog_alloc_log+0x1398/0x14b0  
-fs/xfs/xfs_log.c:1495
-Read of size 8 at addr ffff888068139890 by task syz-executor.3/32544
+I guess lock range is as above, so the race can happen, however,
+1) If mkwrite() creates data in hole, direct_IO->f2fs_map_blocks should
+return NEW_ADDR, which means that is a hole of file, so direct_IO should
+read all zeroed data.
+2) If mkwrite() overwrite data in block, mkwrite->f2fs_get_blocks won't
+change old block address, then direct_IO->f2fs_map_blocks could get that
+block address, and won't read stale data.
 
-CPU: 0 PID: 32544 Comm: syz-executor.3 Not tainted 5.4.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
-  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-  kasan_report+0x12/0x20 mm/kasan/common.c:634
-  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
-  xlog_alloc_log+0x1398/0x14b0 fs/xfs/xfs_log.c:1495
-  xfs_log_mount+0xdc/0x780 fs/xfs/xfs_log.c:599
-  xfs_mountfs+0xdb9/0x1be0 fs/xfs/xfs_mount.c:811
-  xfs_fs_fill_super+0xd24/0x1750 fs/xfs/xfs_super.c:1732
-  mount_bdev+0x304/0x3c0 fs/super.c:1415
-  xfs_fs_mount+0x35/0x40 fs/xfs/xfs_super.c:1806
-  legacy_get_tree+0x108/0x220 fs/fs_context.c:647
-  vfs_get_tree+0x8e/0x300 fs/super.c:1545
-  do_new_mount fs/namespace.c:2822 [inline]
-  do_mount+0x135a/0x1b50 fs/namespace.c:3142
-  ksys_mount+0xdb/0x150 fs/namespace.c:3351
-  __do_sys_mount fs/namespace.c:3365 [inline]
-  __se_sys_mount fs/namespace.c:3362 [inline]
-  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3362
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45d0ca
-Code: b8 a6 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 4d 8c fb ff c3 66 2e 0f  
-1f 84 00 00 00 00 00 66 90 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 2a 8c fb ff c3 66 0f 1f 84 00 00 00 00 00
-RSP: 002b:00007f525b430a88 EFLAGS: 00000206 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007f525b430b40 RCX: 000000000045d0ca
-RDX: 00007f525b430ae0 RSI: 0000000020000100 RDI: 00007f525b430b00
-RBP: 0000000000000001 R08: 00007f525b430b40 R09: 00007f525b430ae0
-R10: 0000000000000000 R11: 0000000000000206 R12: 0000000000000004
-R13: 00000000004ca258 R14: 00000000004e2870 R15: 00000000ffffffff
+But I doubt could we read stale data with below race condition:
 
-Allocated by task 32544:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:510 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
-  __do_kmalloc mm/slab.c:3655 [inline]
-  __kmalloc+0x163/0x770 mm/slab.c:3664
-  kmalloc include/linux/slab.h:561 [inline]
-  kmem_alloc+0x15b/0x4d0 fs/xfs/kmem.c:21
-  kmem_zalloc fs/xfs/kmem.h:68 [inline]
-  xlog_alloc_log+0xcce/0x14b0 fs/xfs/xfs_log.c:1437
-  xfs_log_mount+0xdc/0x780 fs/xfs/xfs_log.c:599
-  xfs_mountfs+0xdb9/0x1be0 fs/xfs/xfs_mount.c:811
-  xfs_fs_fill_super+0xd24/0x1750 fs/xfs/xfs_super.c:1732
-  mount_bdev+0x304/0x3c0 fs/super.c:1415
-  xfs_fs_mount+0x35/0x40 fs/xfs/xfs_super.c:1806
-  legacy_get_tree+0x108/0x220 fs/fs_context.c:647
-  vfs_get_tree+0x8e/0x300 fs/super.c:1545
-  do_new_mount fs/namespace.c:2822 [inline]
-  do_mount+0x135a/0x1b50 fs/namespace.c:3142
-  ksys_mount+0xdb/0x150 fs/namespace.c:3351
-  __do_sys_mount fs/namespace.c:3365 [inline]
-  __se_sys_mount fs/namespace.c:3362 [inline]
-  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3362
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+kworker					DIO reader
+- writepages
+					- f2fs_map_blocks
+					 - get old block address
+ - writepage
+  trigger OPU, update old block address to new one
 
-Freed by task 32544:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  kasan_set_free_info mm/kasan/common.c:332 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:471
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
-  __cache_free mm/slab.c:3425 [inline]
-  kfree+0x10a/0x2c0 mm/slab.c:3756
-  kvfree+0x61/0x70 mm/util.c:593
-  kmem_free fs/xfs/kmem.h:61 [inline]
-  xlog_alloc_log+0xeb5/0x14b0 fs/xfs/xfs_log.c:1497
-  xfs_log_mount+0xdc/0x780 fs/xfs/xfs_log.c:599
-  xfs_mountfs+0xdb9/0x1be0 fs/xfs/xfs_mount.c:811
-  xfs_fs_fill_super+0xd24/0x1750 fs/xfs/xfs_super.c:1732
-  mount_bdev+0x304/0x3c0 fs/super.c:1415
-  xfs_fs_mount+0x35/0x40 fs/xfs/xfs_super.c:1806
-  legacy_get_tree+0x108/0x220 fs/fs_context.c:647
-  vfs_get_tree+0x8e/0x300 fs/super.c:1545
-  do_new_mount fs/namespace.c:2822 [inline]
-  do_mount+0x135a/0x1b50 fs/namespace.c:3142
-  ksys_mount+0xdb/0x150 fs/namespace.c:3351
-  __do_sys_mount fs/namespace.c:3365 [inline]
-  __se_sys_mount fs/namespace.c:3362 [inline]
-  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3362
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+someone trigger checkpoint, data in old block address becomes stale,
+then anyone else can write data into there.
+					 - submit_bio
+					  get stale data
 
-The buggy address belongs to the object at ffff888068139800
-  which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 144 bytes inside of
-  1024-byte region [ffff888068139800, ffff888068139c00)
-The buggy address belongs to the page:
-page:ffffea0001a04e40 refcount:1 mapcount:0 mapping:ffff8880aa400c40  
-index:0x0
-raw: 00fffe0000000200 ffffea0002728148 ffffea00015604c8 ffff8880aa400c40
-raw: 0000000000000000 ffff888068139000 0000000100000002 0000000000000000
-page dumped because: kasan: bad access detected
+Or am I missing something that maybe vfs has did such synchronization.
 
-Memory state around the buggy address:
-  ffff888068139780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff888068139800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff888068139880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                          ^
-  ffff888068139900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff888068139980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+Thanks,
 
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>>
+>> Is above race possible with current f2fs code?
+>> i.e. f2fs_direct_IO could read the stale data from the blocks
+>> which were allocated due to mmap fault?
+> 
+> The faulted page is locked until the fault is fully processed so direct
+> IO has to wait for that to complete first.
+> 
+>>
+>> Am I missing something here?
+>>
+>> -ritesh
+>>
+>> On 11/26/19 1:27 PM, Damien Le Moal wrote:
+>>> f2fs_preallocate_blocks() identifies direct IOs using the IOCB_DIRECT
+>>> flag for a kiocb structure. However, the file system direct IO handler
+>>> function f2fs_direct_IO() may have decided that a direct IO has to be
+>>> exececuted as a buffered IO using the function f2fs_force_buffered_io().
+>>> This is the case for instance for volumes including zoned block device
+>>> and for unaligned write IOs with LFS mode enabled.
+>>>
+>>> These 2 different methods of identifying direct IOs can result in
+>>> inconsistencies generating stale data access for direct reads after a
+>>> direct IO write that is treated as a buffered write. Fix this
+>>> inconsistency by combining the IOCB_DIRECT flag test with the result
+>>> of f2fs_force_buffered_io().
+>>>
+>>> Reported-by: Javier Gonzalez <javier@javigon.com>
+>>> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+>>> ---
+>>>   fs/f2fs/data.c | 4 +++-
+>>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+>>> index 5755e897a5f0..8ac2d3b70022 100644
+>>> --- a/fs/f2fs/data.c
+>>> +++ b/fs/f2fs/data.c
+>>> @@ -1073,6 +1073,8 @@ int f2fs_preallocate_blocks(struct kiocb *iocb, struct iov_iter *from)
+>>>   	int flag;
+>>>   	int err = 0;
+>>>   	bool direct_io = iocb->ki_flags & IOCB_DIRECT;
+>>> +	bool do_direct_io = direct_io &&
+>>> +		!f2fs_force_buffered_io(inode, iocb, from);
+>>>   
+>>>   	/* convert inline data for Direct I/O*/
+>>>   	if (direct_io) {
+>>> @@ -1081,7 +1083,7 @@ int f2fs_preallocate_blocks(struct kiocb *iocb, struct iov_iter *from)
+>>>   			return err;
+>>>   	}
+>>>   
+>>> -	if (direct_io && allow_outplace_dio(inode, iocb, from))
+>>> +	if (do_direct_io && allow_outplace_dio(inode, iocb, from))
+>>>   		return 0;
+>>>   
+>>>   	if (is_inode_flag_set(inode, FI_NO_PREALLOC))
+>>>
+>>
+>>
+> 
+> 
