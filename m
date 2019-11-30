@@ -2,93 +2,105 @@ Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD49C33CB5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 21:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64CA4C432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 21:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBD342075C
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 21:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34CA52075C
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 21:20:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X5WaM+IY"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="vryAB6gN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727350AbfK3VUQ (ORCPT
+        id S1727370AbfK3VUV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Nov 2019 16:20:16 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:42779 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727025AbfK3VUP (ORCPT
+        Sat, 30 Nov 2019 16:20:21 -0500
+Received: from mail-qk1-f169.google.com ([209.85.222.169]:46843 "EHLO
+        mail-qk1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727025AbfK3VUU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Nov 2019 16:20:15 -0500
-Received: by mail-io1-f67.google.com with SMTP id f25so9894744iog.9;
-        Sat, 30 Nov 2019 13:20:15 -0800 (PST)
+        Sat, 30 Nov 2019 16:20:20 -0500
+Received: by mail-qk1-f169.google.com with SMTP id f5so10473270qkm.13
+        for <linux-kernel@vger.kernel.org>; Sat, 30 Nov 2019 13:20:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NbOkOAsiiOjamOjJqITROUWM1WjDallWI/CL6nXDDWc=;
-        b=X5WaM+IYr0X8/nF6gmcecUSKqP61OObhlUcs61f+iELjVbB9YvqEHioXS3nouQxr/R
-         Jd98e1SLXedIb6Vg6bw8YS15jpGhRjw5D7e/ngcaj8DviIZ3/TIMlat3I8RiuyUcz4lS
-         klTNSoHNTFqrCnbYctMIZTzMs6QbI9SwASjsGqi3vaNSfR0yK2bxAbpBe+7RMsTl70D0
-         UYiSRz1jsP7tBf58+lol/JeaZ1qPKbBXy1xUgycZqCql1lgrsqJNhUR2wnLAcxlZP8Om
-         RRd2P0dgQzQwVGYvdLwHN9bUjplZ1CsCzL9QkiBsqgyhx05Bym9rqR4e8R5+EhGGOpAS
-         Xmrg==
+        d=cloudflare.com; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=YS0My93qs4wfTeVuLS4eG6rOWxdhL0NApXflYAKBZis=;
+        b=vryAB6gNcSJu81yvp6LI1tsPIlGq6zhpdTjjm0LSNTWQgaLLxCY6ujogIuJ1lVqILy
+         HsIuI3gxNnsGZXL6SkH2s02Rqk5tOUhseDJumrg8Y4Goned5eSnwXiOJ02FVwkLUpmq1
+         fy2dkQ4kGcJlW5IgkT8EkbzTjzSlppz3fGgGw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NbOkOAsiiOjamOjJqITROUWM1WjDallWI/CL6nXDDWc=;
-        b=oRLSDB+UvWhvVhEXtygFkQFt5K4jQ3uYpA+gqqMWv/D3Q2QeBKy11Z2ZLZxUodnIA3
-         6lBURrVNlqzoF2JGndKntpVCyNIN9xGsFuKmm1U+X8ybxfI66x/6V38n3kne4+13A6nJ
-         3mtI5aGPoEBCtRaiSPsF+zvNteMCv5j3vYPWCU7ti1vD35i3fwZWtN7/AbtbpQ2oJkri
-         jl306AYuvHS76f3WAtISQa/6v84ugUgyHqDMsRMpyJwOIibr0nutekJatmImRzNQ8ogc
-         VzOks557vZ4WxlX9cUyCmKQGK2cpu1mZw+MUe/aeukKDk9JIn2Cmg0Dii92i7SbDg+iK
-         m8ow==
-X-Gm-Message-State: APjAAAX30niO0QfVGBKOR8pzBc2ayinQRv5h0YOeu0FFioxVWhJYjN0Y
-        Zcc4lksyhFLCTAsjOAd0z0ncQeaFF5KBq7Qd7TOFLQ==
-X-Google-Smtp-Source: APXvYqwBORWr8IdF9/z/AmkxTIZedBNklTNEuFR4EgxV2ImrMwzl0FAnvT8no/nrr3x229YTK9alrK+CQX74QtKGCw8=
-X-Received: by 2002:a6b:8d11:: with SMTP id p17mr4258661iod.3.1575148814828;
- Sat, 30 Nov 2019 13:20:14 -0800 (PST)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=YS0My93qs4wfTeVuLS4eG6rOWxdhL0NApXflYAKBZis=;
+        b=SkqdNZCpWQueAcVPTTTQF80ZJcbn6SUV4rXSfUyl9JugfGaRjXoeRHTwAt4HN/3lwx
+         8ReyV058spZYmKcKnZt2hAptnzrWP2ovJAIc6Oc80MOTEwgvlaYEVzmJMGG2abOIVJ9b
+         N/+EDTTaznao/NP7JKvsr4nzzZ35Dq71Gmv1lI43Tw8vSsK3UTVESLcwE5Nyr5MlTUny
+         GrQC9IhcjrIxkSrfaoE/3yX1s/mm+15Y9SGY2yzzxk8SCIMEZGZkCPNZHzYirmbZpw6a
+         tCSNQ/pIVqtzIPbaD7sRn5nWMCrX2vSJi97DQzLEtmGekBWJuJfUFGohRnpErAdgIrpX
+         I/4Q==
+X-Gm-Message-State: APjAAAXadevfWdzYlQBM+lqMaDcg6mbussuwgzqYJr1co7V2gS1EVQrk
+        Ay7aQE7dlCLhATxqoRHt7dzGzoPUu1N/Hsvt5w5xGeC4sgVmqw==
+X-Google-Smtp-Source: APXvYqyOli57ideDJnYA8Xot+9aJ3TPxPwSiAasZ7J/43lAH9KfvXVRK8W7FmYYXiP1p9TDBrbzrFpzcxz2UAKjaCfY=
+X-Received: by 2002:a37:bd06:: with SMTP id n6mr24400401qkf.286.1575148819181;
+ Sat, 30 Nov 2019 13:20:19 -0800 (PST)
 MIME-Version: 1.0
-References: <CAH2r5mtDpwY=MrQ=yN29JeWUqf+ozgYvgnzbnb91VoK8Vg4Zmw@mail.gmail.com>
- <CAHk-=wiy3Bh5c6mCYSzxOL63oQWO40s1PNM9q6hD46M3wPKR_A@mail.gmail.com>
-In-Reply-To: <CAHk-=wiy3Bh5c6mCYSzxOL63oQWO40s1PNM9q6hD46M3wPKR_A@mail.gmail.com>
-From:   Steve French <smfrench@gmail.com>
-Date:   Sat, 30 Nov 2019 15:20:04 -0600
-Message-ID: <CAH2r5muv535qCrzLZ_ZiEa=nc1=pis=xX2nYLaUVLS59DdD7Lg@mail.gmail.com>
-Subject: Re: [GIT PULL] CIFS/SMB3 Fixes
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     CIFS <linux-cifs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+From:   Ivan Babrou <ivan@cloudflare.com>
+Date:   Sat, 30 Nov 2019 13:20:08 -0800
+Message-ID: <CABWYdi32BXz4W0VyYR2hV5A58rcegCaF4Jk__QmyiTJsr7=b3A@mail.gmail.com>
+Subject: Misaligned output of perf stat --topdown
+To:     linux-kernel <linux-kernel@vger.kernel.org>
+Cc:     kernel-team <kernel-team@cloudflare.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 30, 2019 at 1:13 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Wed, Nov 27, 2019 at 3:49 PM Steve French <smfrench@gmail.com> wrote:
-> >
-> > Various smb3 fixes (including 12 for stable) and also features
-> > (addition of multichannel support).
->
-> That's a _very_ weak explanation for many hundreds of lines of code changed:
->
-> >  23 files changed, 1340 insertions(+), 529 deletions(-)
->
-> Please spend more time explaining what you send me, so that I can
-> write better merge messages or what is actually going on.
+Hey,
 
-Sorry about leaving that out. Will have more detail in subsequent
-pull requests.
+I'm observing misaligned output of perf stat --topdown:
 
+$ sudo perf stat --topdown --cpu 1 -a find /state > /dev/null
 
--- 
-Thanks,
+ Performance counter stats for 'system wide':
 
-Steve
+                                    retiring      bad speculation
+ frontend bound        backend bound
+S0-D0-C1           1                30.4%                        13.4%
+                       38.0%                18.2%
+
+$ sudo perf stat --topdown --cpu 1 -a find /state > /dev/null
+
+ Performance counter stats for 'system wide':
+
+                                    retiring      bad speculation
+ frontend bound        backend bound
+S0-D0-C1           1                27.5%                 6.5%
+               24.1%                        41.9%
+
+$ sudo perf stat --topdown --cpu 1 -a find /state > /dev/null
+
+ Performance counter stats for 'system wide':
+
+                                    retiring      bad speculation
+ frontend bound        backend bound
+S0-D0-C1           1                29.6%                        12.3%
+                       23.7%                        34.4%
+
+It may be hard to notice in narrow plaintext email, so here's a gist:
+
+* https://gist.github.com/bobrik/ea5ddd8eb1629c350c898093f39ac7ee
+
+I think there are two issues:
+
+* Sometimes output is misaligned, which may or may not depend on the
+length of the printed value (<10.0% is misaligned, >=10.0% is ok)
+* Values are never really aligned to headers (except for maybe the first column)
+
+This is on 5.4.0.
