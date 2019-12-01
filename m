@@ -2,55 +2,84 @@ Return-Path: <SRS0=SILN=ZX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB94FC432C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 07:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFDCC432C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 07:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA8B02082E
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 07:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 248F020833
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 07:06:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbfLAHFJ (ORCPT
+        id S1726363AbfLAHGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 02:05:09 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:38015 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfLAHFJ (ORCPT
+        Sun, 1 Dec 2019 02:06:40 -0500
+Received: from pindarots.xs4all.nl ([82.161.210.87]:52976 "EHLO
+        pindarots.xs4all.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbfLAHGj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 02:05:09 -0500
-Received: by mail-il1-f200.google.com with SMTP id o18so24499055ilb.5
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Nov 2019 23:05:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=sVJfn8rJ2gIp74tK7+hxDmMwjF/b8IMnVIXNefmEtNQ=;
-        b=kvD3AlLDmLY1Fo9hBOp3aURt6uG3Ya71SNJcHXkovy9e6o5ykSy/ODroI4V/nbKfxP
-         y9o6zhpBlPX43DFSRaAn3rVuWDxemmqEjYxSUnrJz777iNZ+/V4LUlBwJMgTc6VhVC+F
-         vwvpx//Q5N9vT4j1kQYIsoWvAgNck5zFXfF8mVh0FBkKkSkMNIRi8tMCG3i68jz/LDFB
-         Z2o69QnJFkNXCafib8DUY7T7GI/u5XYQsbYrZjSrLiGsqbhMXBGaBEpqQFsoOjnDpYTN
-         6uynvicw1YsM2EO5/wdRnKaftedWLlVw0AvvasQiPFtJer1oA8VUDvlJfqzSTp7kNFeu
-         DhIQ==
-X-Gm-Message-State: APjAAAUFUiOVvGNrY3JQehccAeCL42tBx/QdiUmoOLpgjOC6ppuoaXtD
-        xL0pNA1C87RJdKkfMZDKAxdT485MPT4JGR4K3b0K5IsIyjbm
-X-Google-Smtp-Source: APXvYqxwNXgzb30H6/92ZMPnaVi7ngNCOj4QuO9fnKu8jDWRPc7FjkkXJPGHU7gfk4lUbxnBr4Kqbmg6EAC8kZCcY3Ay2tfovrOd
+        Sun, 1 Dec 2019 02:06:39 -0500
+Received: from surfplank2.hierzo (localhost.localdomain [127.0.0.1])
+        by pindarots.xs4all.nl (8.15.2/8.14.5) with ESMTPS id xB176bvK1290453
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO)
+        for <linux-kernel@vger.kernel.org>; Sun, 1 Dec 2019 08:06:37 +0100
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Udo van den Heuvel <udovdh@xs4all.nl>
+Subject: 5.4.1 WARNINGs
+Autocrypt: addr=udovdh@xs4all.nl; prefer-encrypt=mutual; keydata=
+ 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
+ JjyRAfO8kEkwCkTZ6/Mnrxsunx9VNLGDEw==
+Organization: hierzo
+Message-ID: <46e7dcf9-3c89-25c1-ccb8-336450047bec@xs4all.nl>
+Date:   Sun, 1 Dec 2019 08:06:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2806:: with SMTP id d6mr13018994ioe.299.1575183908296;
- Sat, 30 Nov 2019 23:05:08 -0800 (PST)
-Date:   Sat, 30 Nov 2019 23:05:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004f5ec705989f1585@google.com>
-Subject: BUG: unable to handle kernel paging request in __call_srcu
-From:   syzbot <syzbot+b16ea6c233022c222d63@syzkaller.appspotmail.com>
-To:     bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, pbonzini@redhat.com, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
-        x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,106 +87,142 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hello,
 
-syzbot found the following crash on:
-
-HEAD commit:    131b7b67 Add linux-next specific files for 20191126
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=12aa31f2e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=11aacf1d97714af4
-dashboard link: https://syzkaller.appspot.com/bug?extid=b16ea6c233022c222d63
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=174cbb5ee00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+b16ea6c233022c222d63@syzkaller.appspotmail.com
-
-BUG: unable to handle page fault for address: ffffc90009080868
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD aa54b067 P4D aa54b067 PUD aa54c067 PMD 99900067 PTE 0
-Oops: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 31521 Comm: syz-executor.4 Not tainted  
-5.4.0-next-20191126-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:__lock_acquire+0x125e/0x4a00 kernel/locking/lockdep.c:3828
-Code: f0 00 00 00 5b 41 5c 41 5d 41 5e 41 5f 5d c3 48 b8 00 00 00 00 00 fc  
-ff df 4c 89 f2 48 c1 ea 03 80 3c 02 00 0f 85 0b 28 00 00 <49> 81 3e e0 dc  
-08 8a 0f 84 5f ee ff ff 83 fe 01 0f 87 62 ee ff ff
-RSP: 0018:ffff88809727f7f0 EFLAGS: 00010046
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 1ffff9200121010d RSI: 0000000000000000 RDI: 0000000000000001
-RBP: ffff88809727f908 R08: 0000000000000001 R09: 0000000000000001
-R10: fffffbfff139ebd0 R11: ffff88808e750540 R12: ffffc90009080868
-R13: 0000000000000000 R14: ffffc90009080868 R15: 0000000000000001
-FS:  00007ffb1ae47700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffc90009080868 CR3: 000000009f42f000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
-  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-  _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
-  srcu_funnel_gp_start kernel/rcu/srcutree.c:643 [inline]
-  __call_srcu kernel/rcu/srcutree.c:871 [inline]
-  __call_srcu+0x53f/0xcc0 kernel/rcu/srcutree.c:834
-  __synchronize_srcu+0x18d/0x250 kernel/rcu/srcutree.c:920
-  synchronize_srcu_expedited kernel/rcu/srcutree.c:946 [inline]
-  synchronize_srcu+0x239/0x3e8 kernel/rcu/srcutree.c:997
-  kvm_page_track_unregister_notifier+0xe7/0x130  
-arch/x86/kvm/mmu/page_track.c:212
-  kvm_mmu_uninit_vm+0x1e/0x30 arch/x86/kvm/mmu/mmu.c:5928
-  kvm_arch_destroy_vm+0x4a2/0x5f0 arch/x86/kvm/x86.c:9666
-  kvm_create_vm arch/x86/kvm/../../../virt/kvm/kvm_main.c:758 [inline]
-  kvm_dev_ioctl_create_vm arch/x86/kvm/../../../virt/kvm/kvm_main.c:3519  
-[inline]
-  kvm_dev_ioctl+0x1167/0x1770 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3571
-  vfs_ioctl fs/ioctl.c:47 [inline]
-  file_ioctl fs/ioctl.c:545 [inline]
-  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
-  __do_sys_ioctl fs/ioctl.c:756 [inline]
-  __se_sys_ioctl fs/ioctl.c:754 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45a649
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffb1ae46c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a649
-RDX: 0000000000000000 RSI: 000000000000ae01 RDI: 0000000000000003
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffb1ae476d4
-R13: 00000000004c38f2 R14: 00000000004d7de8 R15: 00000000ffffffff
-Modules linked in:
-CR2: ffffc90009080868
----[ end trace e17de659c9276288 ]---
-RIP: 0010:__lock_acquire+0x125e/0x4a00 kernel/locking/lockdep.c:3828
-Code: f0 00 00 00 5b 41 5c 41 5d 41 5e 41 5f 5d c3 48 b8 00 00 00 00 00 fc  
-ff df 4c 89 f2 48 c1 ea 03 80 3c 02 00 0f 85 0b 28 00 00 <49> 81 3e e0 dc  
-08 8a 0f 84 5f ee ff ff 83 fe 01 0f 87 62 ee ff ff
-RSP: 0018:ffff88809727f7f0 EFLAGS: 00010046
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 1ffff9200121010d RSI: 0000000000000000 RDI: 0000000000000001
-RBP: ffff88809727f908 R08: 0000000000000001 R09: 0000000000000001
-R10: fffffbfff139ebd0 R11: ffff88808e750540 R12: ffffc90009080868
-R13: 0000000000000000 R14: ffffc90009080868 R15: 0000000000000001
-FS:  00007ffb1ae47700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffc90009080868 CR3: 000000009f42f000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+While booting into 5.4.1 I noticed these.
+Any advice please?
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Dec  1 07:59:28 vuurmuur named[1318]: resolver priming query complete
+Dec  1 07:59:34 vuurmuur kernel: ------------[ cut here ]------------
+Dec  1 07:59:34 vuurmuur kernel: NETDEV WATCHDOG: eth0 (r8169): transmit
+queue 0 timed out
+Dec  1 07:59:34 vuurmuur kernel: WARNING: CPU: 0 PID: 9 at
+net/sched/sch_generic.c:447 dev_watchdog+0x208/0x210
+Dec  1 07:59:34 vuurmuur kernel: Modules linked in: act_police
+sch_ingress cls_u32 sch_sfq sch_cbq pppoe pppox ip6table_raw nf_log_ipv6
+ip6table_mangle xt_u32 xt_CT xt_nat nf_log_ipv4 nf_log_common
+xt_statistic nf_nat_sip nf_conntrack_sip xt_recent xt_string xt_lscan(O)
+xt_TARPIT(O) iptable_raw nf_nat_h323 nf_conntrack_h323 xt_TCPMSS
+xt_length xt_hl xt_tcpmss xt_owner xt_mac xt_mark xt_multiport xt_limit
+nf_nat_irc nf_conntrack_irc xt_LOG xt_DSCP xt_REDIRECT xt_MASQUERADE
+xt_dscp nf_nat_ftp nf_conntrack_ftp iptable_mangle iptable_nat
+mq_deadline 8021q ipt_REJECT nf_reject_ipv4 iptable_filter ip6t_REJECT
+nf_reject_ipv6 xt_state xt_conntrack ip6table_filter nct6775 ip6_tables
+sunrpc amdgpu mfd_core gpu_sched drm_kms_helper syscopyarea sysfillrect
+sysimgblt fb_sys_fops ttm snd_hda_codec_realtek snd_hda_codec_generic
+drm snd_hda_codec_hdmi snd_hda_intel drm_panel_orientation_quirks
+cfbfillrect snd_intel_nhlt amd_freq_sensitivity cfbimgblt snd_hda_codec
+aesni_intel cfbcopyarea i2c_algo_bit fb glue_helper
+Dec  1 07:59:34 vuurmuur kernel: snd_hda_core crypto_simd fbdev snd_pcm
+cryptd pl2303 backlight snd_timer snd i2c_piix4 acpi_cpufreq sr_mod
+cdrom sd_mod autofs4
+Dec  1 07:59:34 vuurmuur kernel: CPU: 0 PID: 9 Comm: ksoftirqd/0
+Tainted: G           O      5.4.1 #2
+Dec  1 07:59:34 vuurmuur kernel: Hardware name: To Be Filled By O.E.M.
+To Be Filled By O.E.M./QC5000M-ITX/PH, BIOS P1.10 05/06/2015
+Dec  1 07:59:34 vuurmuur kernel: RIP: 0010:dev_watchdog+0x208/0x210
+Dec  1 07:59:34 vuurmuur kernel: Code: 63 54 24 e0 eb 8d 4c 89 f7 c6 05
+fc a0 b9 00 01 e8 6d fa fc ff 44 89 e9 48 89 c2 4c 89 f6 48 c7 c7 48 79
+dd 81 e8 98 5a b5 ff <0f> 0b eb bd 0f 1f 40 00 48 c7 47 08 00 00 00 00
+48 c7 07 00 00 00
+Dec  1 07:59:34 vuurmuur kernel: RSP: 0018:ffffc9000006fd68 EFLAGS: 00010286
+Dec  1 07:59:34 vuurmuur kernel: RAX: 0000000000000000 RBX:
+ffff88813a1d6400 RCX: 0000000000000006
+Dec  1 07:59:34 vuurmuur kernel: RDX: 0000000000000007 RSI:
+ffffffff8203aa58 RDI: ffff88813b216250
+Dec  1 07:59:34 vuurmuur kernel: RBP: ffff8881394ee460 R08:
+0000000000080001 R09: 0000000000000002
+Dec  1 07:59:34 vuurmuur kernel: R10: 0000000000000001 R11:
+0000000000000001 R12: ffff8881394ee4b8
+Dec  1 07:59:34 vuurmuur kernel: R13: 0000000000000000 R14:
+ffff8881394ee000 R15: ffff88813a1d6480
+Dec  1 07:59:34 vuurmuur kernel: FS:  0000000000000000(0000)
+GS:ffff88813b200000(0000) knlGS:0000000000000000
+Dec  1 07:59:34 vuurmuur kernel: CS:  0010 DS: 0000 ES: 0000 CR0:
+0000000080050033
+Dec  1 07:59:34 vuurmuur kernel: CR2: 00007f09b9c20a78 CR3:
+00000001385d4000 CR4: 00000000000406b0
+Dec  1 07:59:34 vuurmuur kernel: Call Trace:
+Dec  1 07:59:34 vuurmuur kernel: ? qdisc_put_unlocked+0x30/0x30
+Dec  1 07:59:34 vuurmuur kernel: ? qdisc_put_unlocked+0x30/0x30
+Dec  1 07:59:34 vuurmuur kernel: call_timer_fn.isra.0+0x78/0x110
+Dec  1 07:59:34 vuurmuur kernel: ? add_timer_on+0xd0/0xd0
+Dec  1 07:59:34 vuurmuur kernel: run_timer_softirq+0x19d/0x1c0
+Dec  1 07:59:34 vuurmuur kernel: ? _raw_spin_unlock_irq+0x1f/0x40
+Dec  1 07:59:34 vuurmuur kernel: ? finish_task_switch+0xb2/0x250
+Dec  1 07:59:34 vuurmuur kernel: ? finish_task_switch+0x81/0x250
+Dec  1 07:59:34 vuurmuur kernel: __do_softirq+0xcf/0x210
+Dec  1 07:59:34 vuurmuur kernel: run_ksoftirqd+0x15/0x20
+Dec  1 07:59:34 vuurmuur kernel: smpboot_thread_fn+0xe9/0x1f0
+Dec  1 07:59:34 vuurmuur kernel: kthread+0xf1/0x130
+Dec  1 07:59:34 vuurmuur kernel: ? sort_range+0x20/0x20
+Dec  1 07:59:34 vuurmuur kernel: ? kthread_park+0x80/0x80
+Dec  1 07:59:34 vuurmuur kernel: ret_from_fork+0x22/0x40
+Dec  1 07:59:34 vuurmuur kernel: ---[ end trace e771bca3c459d7f9 ]---
+Dec  1 07:59:34 vuurmuur kernel: ------------[ cut here ]------------
+Dec  1 07:59:34 vuurmuur kernel: WARNING: CPU: 0 PID: 9 at
+net/sched/sch_generic.c:447 dev_watchdog+0x208/0x210
+Dec  1 07:59:34 vuurmuur kernel: Modules linked in: act_police
+sch_ingress cls_u32 sch_sfq sch_cbq pppoe pppox ip6table_raw nf_log_ipv6
+ip6table_mangle xt_u32 xt_CT xt_nat nf_log_ipv4 nf_log_common
+xt_statistic nf_nat_sip nf_conntrack_sip xt_recent xt_string xt_lscan(O)
+xt_TARPIT(O) iptable_raw nf_nat_h323 nf_conntrack_h323 xt_TCPMSS
+xt_length xt_hl xt_tcpmss xt_owner xt_mac xt_mark xt_multiport xt_limit
+nf_nat_irc nf_conntrack_irc xt_LOG xt_DSCP xt_REDIRECT xt_MASQUERADE
+xt_dscp nf_nat_ftp nf_conntrack_ftp iptable_mangle iptable_nat
+mq_deadline 8021q ipt_REJECT nf_reject_ipv4 iptable_filter ip6t_REJECT
+nf_reject_ipv6 xt_state xt_conntrack ip6table_filter nct6775 ip6_tables
+sunrpc amdgpu mfd_core gpu_sched drm_kms_helper syscopyarea sysfillrect
+sysimgblt fb_sys_fops ttm snd_hda_codec_realtek snd_hda_codec_generic
+drm snd_hda_codec_hdmi snd_hda_intel drm_panel_orientation_quirks
+cfbfillrect snd_intel_nhlt amd_freq_sensitivity cfbimgblt snd_hda_codec
+aesni_intel cfbcopyarea i2c_algo_bit fb glue_helper
+Dec  1 07:59:34 vuurmuur kernel: snd_hda_core crypto_simd fbdev snd_pcm
+cryptd pl2303 backlight snd_timer snd i2c_piix4 acpi_cpufreq sr_mod
+cdrom sd_mod autofs4
+Dec  1 07:59:34 vuurmuur kernel: CPU: 0 PID: 9 Comm: ksoftirqd/0
+Tainted: G           O      5.4.1 #2
+Dec  1 07:59:34 vuurmuur kernel: Hardware name: To Be Filled By O.E.M.
+To Be Filled By O.E.M./QC5000M-ITX/PH, BIOS P1.10 05/06/2015
+Dec  1 07:59:34 vuurmuur kernel: RIP: 0010:dev_watchdog+0x208/0x210
+Dec  1 07:59:34 vuurmuur kernel: Code: 63 54 24 e0 eb 8d 4c 89 f7 c6 05
+fc a0 b9 00 01 e8 6d fa fc ff 44 89 e9 48 89 c2 4c 89 f6 48 c7 c7 48 79
+dd 81 e8 98 5a b5 ff <0f> 0b eb bd 0f 1f 40 00 48 c7 47 08 00 00 00 00
+48 c7 07 00 00 00
+Dec  1 07:59:34 vuurmuur kernel: RSP: 0018:ffffc9000006fd68 EFLAGS: 00010286
+Dec  1 07:59:34 vuurmuur kernel: RAX: 0000000000000000 RBX:
+ffff88813a1d6400 RCX: 0000000000000006
+Dec  1 07:59:34 vuurmuur kernel: RDX: 0000000000000007 RSI:
+ffffffff8203aa58 RDI: ffff88813b216250
+Dec  1 07:59:34 vuurmuur kernel: RBP: ffff8881394ee460 R08:
+0000000000080001 R09: 0000000000000002
+Dec  1 07:59:34 vuurmuur kernel: R10: 0000000000000001 R11:
+0000000000000001 R12: ffff8881394ee4b8
+Dec  1 07:59:34 vuurmuur kernel: R13: 0000000000000000 R14:
+ffff8881394ee000 R15: ffff88813a1d6480
+Dec  1 07:59:34 vuurmuur kernel: FS:  0000000000000000(0000)
+GS:ffff88813b200000(0000) knlGS:0000000000000000
+Dec  1 07:59:34 vuurmuur kernel: CS:  0010 DS: 0000 ES: 0000 CR0:
+0000000080050033
+Dec  1 07:59:34 vuurmuur kernel: CR2: 00007f09b9c20a78 CR3:
+00000001385d4000 CR4: 00000000000406b0
+Dec  1 07:59:34 vuurmuur kernel: Call Trace:
+Dec  1 07:59:34 vuurmuur kernel: ? qdisc_put_unlocked+0x30/0x30
+Dec  1 07:59:34 vuurmuur kernel: ? qdisc_put_unlocked+0x30/0x30
+Dec  1 07:59:34 vuurmuur kernel: call_timer_fn.isra.0+0x78/0x110
+Dec  1 07:59:34 vuurmuur kernel: ? add_timer_on+0xd0/0xd0
+Dec  1 07:59:34 vuurmuur kernel: run_timer_softirq+0x19d/0x1c0
+Dec  1 07:59:34 vuurmuur kernel: ? _raw_spin_unlock_irq+0x1f/0x40
+Dec  1 07:59:34 vuurmuur kernel: ? finish_task_switch+0xb2/0x250
+Dec  1 07:59:34 vuurmuur kernel: ? finish_task_switch+0x81/0x250
+Dec  1 07:59:34 vuurmuur kernel: __do_softirq+0xcf/0x210
+Dec  1 07:59:34 vuurmuur kernel: run_ksoftirqd+0x15/0x20
+Dec  1 07:59:34 vuurmuur kernel: smpboot_thread_fn+0xe9/0x1f0
+Dec  1 07:59:34 vuurmuur kernel: kthread+0xf1/0x130
+Dec  1 07:59:34 vuurmuur kernel: ? sort_range+0x20/0x20
+Dec  1 07:59:34 vuurmuur kernel: ? kthread_park+0x80/0x80
+Dec  1 07:59:34 vuurmuur kernel: ret_from_fork+0x22/0x40
+Dec  1 07:59:34 vuurmuur kernel: ---[ end trace e771bca3c459d7f9 ]---
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+
+Kind regards,
+Udo
