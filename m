@@ -2,145 +2,94 @@ Return-Path: <SRS0=SILN=ZX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4493EC432C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 20:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D44C432C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 20:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1411A20865
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 20:31:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575232265;
-	bh=t1iHUavp7iLrM+9d6MsiT6IoYSYVQKEtJThrp9Me9BU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ba62tEw0w7mJoHiUmwpTN8pdR3xIpCt3OsvCt2kdKoX4OkXzSjtQQaTS+yoi9ovRd
-	 ZNm2f6WmvbZ+afVZOqnrMXpKRkBUPNVfh9U4gqEptsFrBoT3IuZWbCJAoTgiJJfNXk
-	 ymAtdUVglUJSE4pPgwmOEPKRvpa05lj1EZUNZ4OI=
+	by mail.kernel.org (Postfix) with ESMTP id ABF622146E
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 20:52:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbfLAUbE (ORCPT
+        id S1727267AbfLAUwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 15:31:04 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40141 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726800AbfLAUbD (ORCPT
+        Sun, 1 Dec 2019 15:52:04 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:42677 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726982AbfLAUwD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 15:31:03 -0500
-Received: by mail-wr1-f68.google.com with SMTP id c14so17027269wrn.7
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Dec 2019 12:31:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=k0vP8O4laRZDcbfd6ubx4anqmuOGWDPrB2xGATS7dVE=;
-        b=Yb6qM1OMqo+1YcDltjALP4kv3ykDmgwIUI4nA5PumuzF91PWK3bgrkfn4crd4zmKmZ
-         B9+o2DtRqy7vXoid917HvrLqouXLCN3TXbgI/bYtqDb6xZswJI8lckg3xGyvofVgeqXF
-         KQele5QUACXWx0NQzfVQCh57FABpH9haToUb00KHjr/lO69CtXkotHEhXgtuplQsXN28
-         rvn8LVox6cVgFXJ8oNYa9zXl0e1t2wiMyqPNEbFAPMa7Wcz4GsfM+WJpckthc7/ScbTK
-         SQXv+ySU426qEhQe6goTIdts0gjSWLdn3sJtOc7k0ecvtLiB8x8XzcPBBaosd6eVHEkG
-         dxmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=k0vP8O4laRZDcbfd6ubx4anqmuOGWDPrB2xGATS7dVE=;
-        b=imCEpth3KGLyMGpuN/W3YRlAXdQIrlLcJ/DbGr1kf5WeUEzb97yLUZQ+2+CuD5/dkj
-         nLcq8MAlBplYzSHRjQvw0K8Ec09Od5JzlIzDFMTLSeAeCmOt+fPBrf4fISlD9OUGEJEM
-         e78UOwcAN56S9vXbAfik605x9QBZ74FTQa6hS6WBCchB5FK1hEOx8AJf5HyTHy2+G9RN
-         Tbz2Azb4naICf6qcnhC22fpVfjaa3JP1uGcWJ4RIo1WVw1lZAPb2DuaGUwSMT6Kc6EZZ
-         vEiQNX4B/YZPv6IQ2eF5XKAT4OkO7va+NARBSdCUEXGfLsCU0Y7EkUwEpAwGmu/e8USP
-         tAWA==
-X-Gm-Message-State: APjAAAUvWRzaiz9K2B//EZbkr6UBF4qbIUl4yYEohOnSgbb5RLbYVu0Q
-        2cfdFdaaQn0fd0RqNfNuZ8c=
-X-Google-Smtp-Source: APXvYqyr3BbUoX3tPng8PG0eUZIAdsBbMbqxgbOW46Yfui3fhHzohFE2lLXSzZfCBKozHTq8B1yBfQ==
-X-Received: by 2002:adf:ea42:: with SMTP id j2mr29023101wrn.270.1575232261532;
-        Sun, 01 Dec 2019 12:31:01 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id u14sm37571524wrm.51.2019.12.01.12.31.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Dec 2019 12:31:00 -0800 (PST)
-Date:   Sun, 1 Dec 2019 21:30:58 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     "Kenneth R. Crudup" <kenny@panix.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>, mceier@gmail.com,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Davidlohr Bueso <dbueso@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-Subject: Re: [PATCH] x86/pat: Fix off-by-one bugs in interval tree search
-Message-ID: <20191201203058.GA82131@gmail.com>
-References: <20191127005312.GD20422@shao2-debian>
- <CAJTyqKPstH9PYk1nMuRJWnXUPTf9wAkphPFi9Yfz6PApLVVE0Q@mail.gmail.com>
- <20191130212729.ykxstm5kj2p5ir6q@linux-p48b>
- <CAJTyqKOp+mV1CfpasschSDO4vEDbshE4GPCB6+aX4rJOYSF=7A@mail.gmail.com>
- <CAHk-=wh--xwpatv_Rcp3WtCPQtg-RVoXYQj8O+1TSw8os7Jtvw@mail.gmail.com>
- <20191201104624.GA51279@gmail.com>
- <20191201144947.GA4167@gmail.com>
- <alpine.DEB.2.21.1912010906030.2748@hp-x360n>
- <20191201195521.GC3615@gmail.com>
- <alpine.DEB.2.21.1912011205350.2748@hp-x360n>
+        Sun, 1 Dec 2019 15:52:03 -0500
+Received: from dread.disaster.area (pa49-179-150-192.pa.nsw.optusnet.com.au [49.179.150.192])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 8B1877EAA0C;
+        Mon,  2 Dec 2019 07:51:57 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1ibWCB-0004x6-QA; Mon, 02 Dec 2019 07:51:55 +1100
+Date:   Mon, 2 Dec 2019 07:51:55 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, arnd@arndb.de
+Subject: Re: [PATCH 7/7] fs: Do not overload update_time
+Message-ID: <20191201205155.GA2418@dread.disaster.area>
+References: <20191130053030.7868-1-deepa.kernel@gmail.com>
+ <20191130053030.7868-8-deepa.kernel@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1912011205350.2748@hp-x360n>
+In-Reply-To: <20191130053030.7868-8-deepa.kernel@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=ZXpxJgW8/q3NVgupyyvOCQ==:117 a=ZXpxJgW8/q3NVgupyyvOCQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pxVhFHJ0LMsA:10
+        a=drOt6m5kAAAA:8 a=pGLkceISAAAA:8 a=7-415B0cAAAA:8 a=0Q_S0N9JtFWJ8H0_tKkA:9
+        a=CjuIK1q_8ugA:10 a=RMMjzBEyIzXRtoq5n5K6:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Kenneth R. Crudup <kenny@panix.com> wrote:
-
-> > > write-combining @ 0x604a800000-0x604b000000
-> > > uncached-minus @ 0x604b100000-0x604b110000
+On Fri, Nov 29, 2019 at 09:30:30PM -0800, Deepa Dinamani wrote:
+> update_time() also has an internal function pointer
+> update_time. Even though this works correctly, it is
+> confusing to the readers.
 > 
-> > This WC region was probably unaffected by the bug.
+> Use a different name for the local variable.
 > 
-> For my education, and for completeness' sake, is there a proc/sys entry
-> that would tell me which device/module has reserved which PAT region?
+> Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+> Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+> ---
+>  fs/inode.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/inode.c b/fs/inode.c
+> index 12c9e38529c9..0be58a680457 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -1675,12 +1675,12 @@ EXPORT_SYMBOL(generic_update_time);
+>   */
+>  static int update_time(struct inode *inode, struct timespec64 *time, int flags)
+>  {
+> -	int (*update_time)(struct inode *, struct timespec64 *, int);
+> +	int (*cb)(struct inode *, struct timespec64 *, int);
+>  
+> -	update_time = inode->i_op->update_time ? inode->i_op->update_time :
+> +	cb = inode->i_op->update_time ? inode->i_op->update_time :
+>  		generic_update_time;
+>  
+> -	return update_time(inode, time, flags);
+> +	return cb(inode, time, flags);
 
-Not that I know of :-/
+What's wrong with a simple if() like we use everywhere else for this
+sort of thing?
 
-I suspect you could run the attached patch and run:
+	if (inode->i_op->update_time)
+		return inode->i_op->update_time(inode, time, flags);
+	return generic_update_time(inode, time, flags);
 
-  dmesg | grep -i 'x86/pat'
-
-To see all the ioremap() activities, with a symbolic name of the caller printed.
-
-I'm quite sure 0x604a800000 will be among them, pointing to somewhere 
-like i915_vma_pin_iomap(), ggtt_init_hw() or ggtt_probe_common() in the 
-i915 GPU driver?
-
-Another possibility is that this is the FB framebuffer, mapped by 
-efifb_probe() or so?
-
-Patch is untested though. :-)
-
-Thanks,
-
-	Ingo
-
-=================>
-
- arch/x86/mm/ioremap.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-index 1ff9c2030b4f..2f0a4f99471a 100644
---- a/arch/x86/mm/ioremap.c
-+++ b/arch/x86/mm/ioremap.c
-@@ -166,6 +166,8 @@ __ioremap_caller(resource_size_t phys_addr, unsigned long size,
- 	int retval;
- 	void __iomem *ret_addr;
- 
-+	printk("# x86/pat: ioremap(%016Lx, %08lx, pcm: %d), caller: %pS\n", phys_addr, size, pcm, caller);
-+
- 	/* Don't allow wraparound or zero size */
- 	last_addr = phys_addr + size - 1;
- 	if (!size || last_addr < phys_addr)
-
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
