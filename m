@@ -2,128 +2,92 @@ Return-Path: <SRS0=SILN=ZX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E9EC432C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 20:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFA5C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 20:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5E1920833
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 20:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A863720865
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 20:28:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727252AbfLAUSv (ORCPT
+        id S1727259AbfLAU2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 15:18:51 -0500
-Received: from lithops.sigma-star.at ([195.201.40.130]:51630 "EHLO
-        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726519AbfLAUSv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 15:18:51 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 2D70C6075EB6;
-        Sun,  1 Dec 2019 21:18:48 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 1qL7f3SkNBTT; Sun,  1 Dec 2019 21:18:47 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id A40D56126B4E;
-        Sun,  1 Dec 2019 21:18:47 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id CChYr051KwzE; Sun,  1 Dec 2019 21:18:47 +0100 (CET)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 7CBB56075EB6;
-        Sun,  1 Dec 2019 21:18:47 +0100 (CET)
-Date:   Sun, 1 Dec 2019 21:18:47 +0100 (CET)
-From:   Richard Weinberger <richard@nod.at>
-To:     torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>
-Message-ID: <1044415561.103245.1575231527451.JavaMail.zimbra@nod.at>
-Subject: [GIT PULL] UBI/UBIFS/JFFS2 changes for v5.5-rc1
+        Sun, 1 Dec 2019 15:28:05 -0500
+Received: from hall.aurel32.net ([195.154.113.88]:55868 "EHLO hall.aurel32.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726173AbfLAU2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Dec 2019 15:28:05 -0500
+X-Greylist: delayed 1806 seconds by postgrey-1.27 at vger.kernel.org; Sun, 01 Dec 2019 15:28:04 EST
+Received: from [2a01:e35:2fdd:a4e1:fe91:fc89:bc43:b814] (helo=ohm.rr44.fr)
+        by hall.aurel32.net with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <aurelien@aurel32.net>)
+        id 1ibVLh-0005Nk-30; Sun, 01 Dec 2019 20:57:41 +0100
+Received: from aurel32 by ohm.rr44.fr with local (Exim 4.92.3)
+        (envelope-from <aurelien@aurel32.net>)
+        id 1ibVLg-00HScO-Hs; Sun, 01 Dec 2019 20:57:40 +0100
+From:   Aurelien Jarno <aurelien@aurel32.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     linuxppc-dev@lists.ozlabs.org, debian-kernel@lists.debian.org,
+        Aurelien Jarno <aurelien@aurel32.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        netdev@vger.kernel.org (open list:BPF (Safe dynamic programs and tools)),
+        bpf@vger.kernel.org (open list:BPF (Safe dynamic programs and tools))
+Subject: [PATCH] libbpf: fix readelf output parsing on powerpc with recent binutils
+Date:   Sun,  1 Dec 2019 20:57:28 +0100
+Message-Id: <20191201195728.4161537-1-aurelien@aurel32.net>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [195.201.40.130]
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF68 (Linux)/8.8.12_GA_3809)
-Thread-Index: p5Yb5RXGCOXDDkhbu+z8eXKDdqTkQw==
-Thread-Topic: UBI/UBIFS/JFFS2 changes for v5.5-rc1
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On powerpc with recent versions of binutils, readelf outputs an extra
+field when dumping the symbols of an object file. For example:
 
-The following changes since commit ec5385196779fb927e7d8d5bf31bef14d7ce98ed:
+    35: 0000000000000838    96 FUNC    LOCAL  DEFAULT [<localentry>: 8]     1 btf_is_struct
 
-  Merge tag 'iommu-fixes-v5.4-rc7' of git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu (2019-11-17 11:27:44 -0800)
+The extra "[<localentry>: 8]" prevents the GLOBAL_SYM_COUNT variable to
+be computed correctly and causes the checkabi target to fail.
 
-are available in the Git repository at:
+Fix that by looking for the symbol name in the last field instead of the
+8th one. This way it should also cope with future extra fields.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rw/ubifs.git tags/upstream-5.5-rc1
+Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
+---
+ tools/lib/bpf/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-for you to fetch changes up to 6e78c01fde9023e0701f3af880c1fd9de6e4e8e3:
+diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+index 99425d0be6ff..333900cf3f4f 100644
+--- a/tools/lib/bpf/Makefile
++++ b/tools/lib/bpf/Makefile
+@@ -147,7 +147,7 @@ TAGS_PROG := $(if $(shell which etags 2>/dev/null),etags,ctags)
+ 
+ GLOBAL_SYM_COUNT = $(shell readelf -s --wide $(BPF_IN_SHARED) | \
+ 			   cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | \
+-			   awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$8}' | \
++			   awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$NF}' | \
+ 			   sort -u | wc -l)
+ VERSIONED_SYM_COUNT = $(shell readelf -s --wide $(OUTPUT)libbpf.so | \
+ 			      grep -Eo '[^ ]+@LIBBPF_' | cut -d@ -f1 | sort -u | wc -l)
+@@ -216,7 +216,7 @@ check_abi: $(OUTPUT)libbpf.so
+ 		     "versioned in $(VERSION_SCRIPT)." >&2;		 \
+ 		readelf -s --wide $(OUTPUT)libbpf-in.o |		 \
+ 		    cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' |	 \
+-		    awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$8}'|   \
++		    awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$NF}'|  \
+ 		    sort -u > $(OUTPUT)libbpf_global_syms.tmp;		 \
+ 		readelf -s --wide $(OUTPUT)libbpf.so |			 \
+ 		    grep -Eo '[^ ]+@LIBBPF_' | cut -d@ -f1 |		 \
+-- 
+2.24.0
 
-  Revert "jffs2: Fix possible null-pointer dereferences in jffs2_add_frag_to_fragtree()" (2019-11-29 11:29:58 +0100)
-
-----------------------------------------------------------------
-This pull request contains mostly fixes for UBI, UBIFS and JFFS2:
-
-UBI:
-- Fix a regression around producing a anchor PEB for fastmap.
-  Due to a change in our locking fastmap was unable to produce
-  fresh anchors an re-used the existing one a way to often.
-
-UBIFS:
-- Fixes for endianness. A few places blindly assumed little endian.
-- Fix for a memory leak in the orphan code.
-- Fix for a possible crash during a commit.
-- Revert a wrong bugfix.
-
-JFFS2:
-- Revert a bad bugfix in (false positive from a code checking
-  tool).
-
-----------------------------------------------------------------
-Ben Dooks (Codethink) (3):
-      ubifs: Force prandom result to __le32
-      ubifs: Fixed missed le64_to_cpu() in journal
-      ubifs: Fix type of sup->hash_algo
-
-Joel Stanley (1):
-      Revert "jffs2: Fix possible null-pointer dereferences in jffs2_add_frag_to_fragtree()"
-
-Richard Weinberger (2):
-      ubifs: Remove obsolete TODO from dfs_file_write()
-      Revert "ubifs: Fix memory leak bug in alloc_ubifs_info() error path"
-
-Rishi Gupta (1):
-      ubi: Fix warning static is not at beginning of declaration
-
-Sascha Hauer (1):
-      ubi: Fix producing anchor PEBs
-
-Stefan Roese (1):
-      ubi: Print skip_check in ubi_dump_vol_info()
-
-Zhihao Cheng (2):
-      ubifs: do_kill_orphans: Fix a memory leak bug
-      ubifs: ubifs_tnc_start_commit: Fix OOB in layout_in_gaps
-
- drivers/mtd/ubi/debug.c      |  1 +
- drivers/mtd/ubi/fastmap-wl.c | 31 ++++++++++++++++++-------------
- drivers/mtd/ubi/fastmap.c    | 14 +++++---------
- drivers/mtd/ubi/ubi.h        |  8 +++++---
- drivers/mtd/ubi/wl.c         | 32 ++++++++++++++------------------
- drivers/mtd/ubi/wl.h         |  1 -
- fs/jffs2/nodelist.c          |  2 +-
- fs/ubifs/debug.c             | 12 ------------
- fs/ubifs/journal.c           |  4 ++--
- fs/ubifs/orphan.c            | 17 ++++++++++-------
- fs/ubifs/sb.c                |  2 +-
- fs/ubifs/super.c             |  4 +---
- fs/ubifs/tnc_commit.c        | 34 +++++++++++++++++++++++++++-------
- 13 files changed, 85 insertions(+), 77 deletions(-)
