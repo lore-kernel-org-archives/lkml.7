@@ -1,167 +1,170 @@
-Return-Path: <SRS0=Z/Yg=ZW=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=SILN=ZX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CBFC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 23:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD33C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 00:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3EE2082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Nov 2019 23:27:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575156457;
-	bh=Ig3hXYu5WjaJ0AvqWKk+t2xuR7KeWQIhrIUiuzLS2Hw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SLHqLrCf12hRsnFEN96r3y0WVeMy++PwRS986v3Ae+gYTJjc/mQ6/3uyfsXmh7HLV
-	 wybXnbkcPHT1tGb3M+i2ZDoSxzG9ku4PVby7cOQnIHnYj689jLcTCYbVvYnSbIi+KH
-	 96STgMHcX2Xj1jRaDLhA1Q3hgS+0JXtzPHbPXsXo=
+	by mail.kernel.org (Postfix) with ESMTP id 3E88D2086A
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 00:04:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727377AbfK3X1f (ORCPT
+        id S1727113AbfLAAEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Nov 2019 18:27:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52534 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727179AbfK3X1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Nov 2019 18:27:34 -0500
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D8662075A;
-        Sat, 30 Nov 2019 23:27:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575156453;
-        bh=Ig3hXYu5WjaJ0AvqWKk+t2xuR7KeWQIhrIUiuzLS2Hw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QAjfE5/HyuKMVUAoiD3P0PPeXvjG1yOVBToroY67MWQlABL/ilzdxWIf+Qi/abrlU
-         byv2SyjRTMwlA85hZJoKDQ0B3iGBd/BFHqLEZlcpF3SP2AwOgadMYKXPjjFPzze5/d
-         LaKkHeMb932QQ7Tl7M/aH3OSUaMqEDaiswZ6uPAY=
-Date:   Sat, 30 Nov 2019 15:27:31 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        jmattson@redhat.com, ehabkost@redhat.com, konrad.wilk@oracle.com
-Subject: Re: [PATCH 1/3] KVM: x86: fix reporting of AMD speculation bug CPUID
- leaf
-Message-ID: <20191130232731.GA9495@sol.localdomain>
-References: <1566376002-17121-1-git-send-email-pbonzini@redhat.com>
- <1566376002-17121-2-git-send-email-pbonzini@redhat.com>
+        Sat, 30 Nov 2019 19:04:55 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:58216 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726212AbfLAAEy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Nov 2019 19:04:54 -0500
+Received: from dimstar.local.net (n122-110-44-45.sun2.vic.optusnet.com.au [122.110.44.45])
+        by mail105.syd.optusnet.com.au (Postfix) with SMTP id 9B4493A2ED8
+        for <linux-kernel@vger.kernel.org>; Sun,  1 Dec 2019 11:04:40 +1100 (AEDT)
+Received: (qmail 19400 invoked by uid 501); 1 Dec 2019 00:04:39 -0000
+Date:   Sun, 1 Dec 2019 11:04:39 +1100
+From:   Duncan Roe <duncan_roe@optusnet.com.au>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Chris Metcalf <cmetcalf@ezchip.com>, coreteam@netfilter.org,
+        David Miller <davem@davemloft.net>,
+        Chen Gang <gang.chen.5i5j@gmail.com>,
+        Patrick McHardy <kaber@trash.net>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        NetFilter <netfilter-devel@vger.kernel.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: KASAN: use-after-free Read in blkdev_get
+Message-ID: <20191201000439.GA15496@dimstar.local.net>
+Mail-Followup-To: Dmitry Vyukov <dvyukov@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Chris Metcalf <cmetcalf@ezchip.com>, coreteam@netfilter.org,
+        David Miller <davem@davemloft.net>,
+        Chen Gang <gang.chen.5i5j@gmail.com>,
+        Patrick McHardy <kaber@trash.net>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        NetFilter <netfilter-devel@vger.kernel.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+References: <000000000000e59aab056e8873ae@google.com>
+ <0000000000000beff305981c5ac6@google.com>
+ <20191124193035.GA4203@ZenIV.linux.org.uk>
+ <20191130110645.GA4405@dimstar.local.net>
+ <CACT4Y+bg7bZOSg0P9VXq8yG2odAJMg6b6N2fXxbamOmKiz3ohw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1566376002-17121-2-git-send-email-pbonzini@redhat.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <CACT4Y+bg7bZOSg0P9VXq8yG2odAJMg6b6N2fXxbamOmKiz3ohw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=4DzML1vCOQ6Odsy8BUtSXQ==:117 a=4DzML1vCOQ6Odsy8BUtSXQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pxVhFHJ0LMsA:10
+        a=RSmzAf-M6YYA:10 a=PO7r1zJSAAAA:8 a=7QvuB2UPAAAA:8 a=edf1wS77AAAA:8
+        a=hSkVLCK3AAAA:8 a=mzoz-TVAAAAA:20 a=VwQbUJbxAAAA:8 a=kGbAZRCgAAAA:20
+        a=EI3vZeS8J00HEDANUmYA:9 a=CjuIK1q_8ugA:10 a=vVHabExCe68A:10
+        a=PyAPxfarwdVEPLbpdMBu:22 a=DcSpbTIhAlouE1Uv7lRv:22
+        a=cQPPKAXgyycSBL8etih5:22 a=AjGcO6oz07-iQ99wixmX:22
+        a=pHzHmUro8NiASowvMSCR:22 a=Ew2E2A-JSTLzCXPT_086:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paolo,
+On Sat, Nov 30, 2019 at 04:53:12PM +0100, Dmitry Vyukov wrote:
+> On Sat, Nov 30, 2019 at 12:06 PM Duncan Roe <duncan_roe@optusnet.com.au> wrote:
+> > > > syzbot has bisected this bug to:
+> > > >
+> > > > commit 77ef8f5177599efd0cedeb52c1950c1bd73fa5e3
+> > > > Author: Chris Metcalf <cmetcalf@ezchip.com>
+> > > > Date:   Mon Jan 25 20:05:34 2016 +0000
+> > > >
+> > > >     tile kgdb: fix bug in copy to gdb regs, and optimize memset
+> > > >
+> > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1131bc0ee00000
+> > > > start commit:   f5b7769e Revert "debugfs: inode: debugfs_create_dir uses m..
+> > > > git tree:       upstream
+> > > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=1331bc0ee00000
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=1531bc0ee00000
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=709f8187af941e84
+> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=eaeb616d85c9a0afec7d
+> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=177f898f800000
+> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=147eb85f800000
+> > > >
+> > > > Reported-by: syzbot+eaeb616d85c9a0afec7d@syzkaller.appspotmail.com
+> > > > Fixes: 77ef8f517759 ("tile kgdb: fix bug in copy to gdb regs, and optimize
+> > > > memset")
+> > > >
+> > > > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> > >
+> > > Seriously?  How can the commit in question (limited to arch/tile/kernel/kgdb.c)
+> > > possibly affect a bug that manages to produce a crash report with
+> > > RSP: 0018:ffffffff82e03eb8  EFLAGS: 00000282
+> > > RAX: 0000000000000000 RBX: ffffffff82e00000 RCX: 0000000000000000
+> > > RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff81088779
+> > > RBP: ffffffff82e03eb8 R08: 0000000000000000 R09: 0000000000000001
+> > > R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+> > > R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff82e00000
+> > > FS:  0000000000000000(0000) GS:ffff88021fc00000(0000) knlGS:0000000000000000
+> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > CR2: 000000c420447ff8 CR3: 0000000213184000 CR4: 00000000001406f0
+> > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > in it?  Unless something very odd has happened to tile, this crash has
+> > > been observed on 64bit x86; the names of registers alone are enough
+> > > to be certain of that.
+> > >
+> > > And the binaries produced by an x86 build should not be affected by any
+> > > changes in arch/tile; not unless something is very wrong with the build
+> > > system.  It's not even that this commit has fixed an earlier bug that
+> > > used to mask the one manifested here - it really should have had zero
+> > > impact on x86 builds, period.
+> > >
+> > > So I'm sorry, but I'm calling bullshit.  Something's quite wrong with
+> > > the bot - either its build system or the bisection process.
+> >
+> > The acid test would be: does reverting that commit make the problem go away?
+> >
+> > See, for example, https://bugzilla.kernel.org/show_bug.cgi?id=203935
+> >
+> > Cheers ... Duncan.
+>
+> This is done as part of any bisection by definition, right? The test
+> was done on the previous commit (effectively this one reverted) and no
+> crash was observed. Otherwise bisection would have been pointed to a
+> different commit.
+>
+Agree that's what bisecting does. What I had in mind was to make a patch to
+remove the identified commit, and apply that to the most recent revision
+possible. Then see if that makes the problem go away.
 
-On Wed, Aug 21, 2019 at 10:26:40AM +0200, Paolo Bonzini wrote:
-> The AMD_* bits have to be set from the vendor-independent
-> feature and bug flags, because KVM_GET_SUPPORTED_CPUID does not care
-> about the vendor and they should be set on Intel processors as well.
-> On top of this, SSBD, STIBP and AMD_SSB_NO bit were not set, and
-> VIRT_SSBD does not have to be added manually because it is a
-> cpufeature that comes directly from the host's CPUID bit.
-> 
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  arch/x86/kvm/cpuid.c | 21 +++++++++++++--------
->  1 file changed, 13 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index 22c2720cd948..43caeb6059b9 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -729,18 +729,23 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
->  			g_phys_as = phys_as;
->  		entry->eax = g_phys_as | (virt_as << 8);
->  		entry->edx = 0;
-> +		entry->ebx &= kvm_cpuid_8000_0008_ebx_x86_features;
-> +		cpuid_mask(&entry->ebx, CPUID_8000_0008_EBX);
->  		/*
-> -		 * IBRS, IBPB and VIRT_SSBD aren't necessarily present in
-> -		 * hardware cpuid
-> +		 * AMD has separate bits for each SPEC_CTRL bit.
-> +		 * arch/x86/kernel/cpu/bugs.c is kind enough to
-> +		 * record that in cpufeatures so use them.
->  		 */
-> -		if (boot_cpu_has(X86_FEATURE_AMD_IBPB))
-> +		if (boot_cpu_has(X86_FEATURE_IBPB))
->  			entry->ebx |= F(AMD_IBPB);
-> -		if (boot_cpu_has(X86_FEATURE_AMD_IBRS))
-> +		if (boot_cpu_has(X86_FEATURE_IBRS))
->  			entry->ebx |= F(AMD_IBRS);
-> -		if (boot_cpu_has(X86_FEATURE_VIRT_SSBD))
-> -			entry->ebx |= F(VIRT_SSBD);
-> -		entry->ebx &= kvm_cpuid_8000_0008_ebx_x86_features;
-> -		cpuid_mask(&entry->ebx, CPUID_8000_0008_EBX);
-> +		if (boot_cpu_has(X86_FEATURE_STIBP))
-> +			entry->ebx |= F(AMD_STIBP);
-> +		if (boot_cpu_has(X86_FEATURE_SSBD))
-> +			entry->ebx |= F(AMD_SSBD);
-> +		if (!boot_cpu_has_bug(X86_BUG_SPEC_STORE_BYPASS))
-> +			entry->ebx |= F(AMD_SSB_NO);
->  		/*
->  		 * The preference is to use SPEC CTRL MSR instead of the
->  		 * VIRT_SPEC MSR.
+However when I look at my clone of
+git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git and compare
+77ef8f5177 with the previous commit a7d1357664, "git diff --stat" shows
 
-This patch started causing a warning about an unchecked MSR access, when
-starting a VM.
+> 745 files changed, 8192 insertions(+), 15408 deletions(-)
 
-Processor is: "AMD Ryzen Threadripper 1950X 16-Core Processor"
+The last few lines from a grep of "arch" are:
 
-The warning appears both in the host and guest kernel logs.
+> arch/s390/oprofile/backtrace.c                     |    8 +-
+> arch/tile/kernel/kgdb.c                            |    8 +-
+> arch/x86/Kconfig                                   |    5 +-
+> arch/x86/include/asm/livepatch.h                   |    2 +-
+> arch/x86/include/asm/processor.h                   |    2 +-
+> arch/x86/kernel/cpu/perf_event_amd_uncore.c        |    2 +
+> arch/x86/lib/copy_user_64.S                        |  142 ++-
+> arch/x86/mm/fault.c                                |   15 +-
+> arch/x86/mm/gup.c                                  |    2 +-
+> arch/x86/mm/numa.c                                 |    2 +-
 
-On the host:
+Enough said?
 
-	[   12.121802] unchecked MSR access error: RDMSR from 0x48 at rIP: 0xffffffff8b049765 (svm_vcpu_run+0x6a5/0x720)
-	[   12.121806] Call Trace:
-	[   12.121812]  ? kvm_arch_vcpu_ioctl_run+0x902/0x1b70
-	[   12.121814]  ? kvm_vm_ioctl_irq_line+0x1e/0x30
-	[   12.121817]  ? kvm_vcpu_ioctl+0x21e/0x560
-	[   12.121821]  ? vfs_writev+0xc0/0xf0
-	[   12.121824]  ? do_vfs_ioctl+0x41d/0x690
-	[   12.121826]  ? ksys_ioctl+0x59/0x90
-	[   12.121827]  ? __x64_sys_ioctl+0x11/0x20
-	[   12.121828]  ? do_syscall_64+0x43/0x130
-	[   12.121832]  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-On the guest:
-
-	[    0.799090] unchecked MSR access error: WRMSR to 0x48 (tried to write 0x0000000000000004) at rIP: 0xffffffff81028272 (speculation_ctrl_update+0x132/0x2c0)
-	[    0.801823] Call Trace:
-	[    0.801831]  ? seccomp_set_mode_filter+0x18d/0x800
-	[    0.801833]  speculation_ctrl_update_current+0x21/0x30
-	[    0.801837]  task_update_spec_tif+0x1d/0x20
-	[    0.801839]  ssb_prctl_set+0xb5/0xd0
-	[    0.801841]  arch_seccomp_spec_mitigate+0x2a/0x50
-	[    0.801843]  seccomp_set_mode_filter+0x788/0x800
-	[    0.801845]  do_seccomp+0x34/0x200
-	[    0.801849]  __x64_sys_seccomp+0x15/0x20
-	[    0.801852]  do_syscall_64+0x4a/0x1f0
-	[    0.809349]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-	[    0.810548] RIP: 0033:0x7f431db92e9d
-	[    0.811528] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d b3 5f 0c 00 f7 d8 64 89 01 48
-	[    0.814754] RSP: 002b:00007ffca5506788 EFLAGS: 00000246 ORIG_RAX: 000000000000013d
-	[    0.816075] RAX: ffffffffffffffda RBX: 0000556956c07580 RCX: 00007f431db92e9d
-	[    0.817367] RDX: 0000556956c023e0 RSI: 0000000000000000 RDI: 0000000000000001
-	[    0.818698] RBP: 0000556956c023e0 R08: 0000000000000007 R09: 0000556956b73730
-	[    0.819948] R10: 0000556956b7101a R11: 0000000000000246 R12: 000000000000002d
-	[    0.821184] R13: 0040000000002001 R14: 00007f431d9b4898 R15: 0000000000000000
-
-The VM still boots though.
-
-I've actually been seeing this for a while but haven't had a chance to bisect it
-until now.
-
-Reverting the commit (4c6903a0f9d76) on mainline makes the warnings go away.
-
-Any ideas?  Presumably something isn't working as intended.
-
-- Eric
+Cheers ... Duncan.
