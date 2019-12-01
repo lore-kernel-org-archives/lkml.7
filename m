@@ -2,138 +2,95 @@ Return-Path: <SRS0=SILN=ZX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F41C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 08:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31011C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 08:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C46B320718
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 08:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A48E02073C
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 08:57:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b="wAx4IxYL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbfLAIoi (ORCPT
+        id S1726256AbfLAI51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 03:44:38 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7184 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725847AbfLAIoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 03:44:38 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id EAA53EC975A9CF96E4D0;
-        Sun,  1 Dec 2019 16:44:35 +0800 (CST)
-Received: from [127.0.0.1] (10.184.213.217) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Sun, 1 Dec 2019
- 16:44:28 +0800
-Subject: Re: [PATCH] tmpfs: use ida to get inode number
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     Hugh Dickins <hughd@google.com>, <viro@zeniv.linux.org.uk>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <houtao1@huawei.com>, <yi.zhang@huawei.com>,
-        "J. R. Okajima" <hooanon05g@gmail.com>
-References: <1574259798-144561-1-git-send-email-zhengbin13@huawei.com>
- <20191120154552.GS20752@bombadil.infradead.org>
- <1c64e7c2-6460-49cf-6db0-ec5f5f7e09c4@huawei.com>
- <alpine.LSU.2.11.1911202026040.1825@eggly.anvils>
- <d22bcbcb-d507-7c8c-e946-704ffc499fa6@huawei.com>
- <alpine.LSU.2.11.1911211125190.1697@eggly.anvils>
- <5423a199-eefb-0a02-6e86-1f6210939c11@huawei.com>
- <20191122221327.GW20752@bombadil.infradead.org>
-From:   "zhengbin (A)" <zhengbin13@huawei.com>
-Message-ID: <f452bd64-c8ec-d7be-44e1-8585e146b5e1@huawei.com>
-Date:   Sun, 1 Dec 2019 16:44:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Sun, 1 Dec 2019 03:57:27 -0500
+Received: from rfvt.org.uk ([37.187.119.221]:34164 "EHLO rfvt.org.uk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725847AbfLAI51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Dec 2019 03:57:27 -0500
+Received: from wylie.me.uk (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by rfvt.org.uk (Postfix) with ESMTPS id 64D3D80260;
+        Sun,  1 Dec 2019 08:57:23 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wylie.me.uk;
+        s=mydkim005; t=1575190643;
+        bh=29cszX6aZLgHdNyNDyMwbejh5VGlamLD7vKvb4ThRiI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=wAx4IxYLS0NRDagp+wfH+Ag9ewx1jaGjViyA0ceH48zGpPHOgIYAWPWMhsqPGmG9j
+         C4422tU4U0jHjKPWN5hBK5Njab+muLKSRYMxPIC4EQiul7RozL8Ttvfi+YamSraLoJ
+         n0EJJF65aBA2sEMFp0a0hruw4yy/piadLBDBvNHuCBceI+PA8cddIb3+AzF2wLY8Nq
+         F4ObViihB0kVDB3zz1TAekWOS1g+j35p5+vijoUHmMixZSR8qxAS8abBkeTHlnnz87
+         jATGMSN8GkONGznKJ/M/g4OIL0ndp0ClhhXUVoWh1H3BoqR3BNzMMDb9GAU//qAUT3
+         X5R5O6/iNZmIA==
 MIME-Version: 1.0
-In-Reply-To: <20191122221327.GW20752@bombadil.infradead.org>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.184.213.217]
-X-CFilter-Loop: Reflected
+Message-ID: <24035.32883.173899.812456@wylie.me.uk>
+Date:   Sun, 1 Dec 2019 08:57:23 +0000
+From:   "Alan J. Wylie" <alan@wylie.me.uk>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: 5.4 Regression in r8169 with jumbo frames - packet loss/delays
+In-Reply-To: <75146b50-9518-8588-81fa-f2811faf6cca@gmail.com>
+References: <24034.56114.248207.524177@wylie.me.uk>
+        <75146b50-9518-8588-81fa-f2811faf6cca@gmail.com>
+X-Mailer: VM 8.2.0b under 26.3 (x86_64-pc-linux-gnu)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+at 22:37 on Sat 30-Nov-2019 Heiner Kallweit (hkallweit1@gmail.com) wrote:
 
-On 2019/11/23 6:13, Matthew Wilcox wrote:
-> On Fri, Nov 22, 2019 at 09:23:30AM +0800, zhengbin (A) wrote:
->> On 2019/11/22 3:53, Hugh Dickins wrote:
->>> On Thu, 21 Nov 2019, zhengbin (A) wrote:
->>>> On 2019/11/21 12:52, Hugh Dickins wrote:
->>>>> Just a rushed FYI without looking at your patch or comments.
->>>>>
->>>>> Internally (in Google) we do rely on good tmpfs inode numbers more
->>>>> than on those of other get_next_ino() filesystems, and carry a patch
->>>>> to mm/shmem.c for it to use 64-bit inode numbers (and separate inode
->>>>> number space for each superblock) - essentially,
->>>>>
->>>>> 	ino = sbinfo->next_ino++;
->>>>> 	/* Avoid 0 in the low 32 bits: might appear deleted */
->>>>> 	if (unlikely((unsigned int)ino == 0))
->>>>> 		ino = sbinfo->next_ino++;
->>>>>
->>>>> Which I think would be faster, and need less memory, than IDA.
->>>>> But whether that is of general interest, or of interest to you,
->>>>> depends upon how prevalent 32-bit executables built without
->>>>> __FILE_OFFSET_BITS=64 still are these days.
->>>> So how google think about this? inode number > 32-bit, but 32-bit executables
->>>> cat not handle this?
->>> Google is free to limit what executables are run on its machines,
->>> and how they are built, so little problem here.
->>>
->>> A general-purpose 32-bit Linux distribution does not have that freedom,
->>> does not want to limit what the user runs.  But I thought that by now
->>> they (and all serious users of 32-bit systems) were building their own
->>> executables with _FILE_OFFSET_BITS=64 (I was too generous with the
->>> underscores yesterday); and I thought that defined __USE_FILE_OFFSET64,
->>> and that typedef'd ino_t to be __ino64_t.  And the 32-bit kernel would
->>> have __ARCH_WANT_STAT64, which delivers st_ino as unsigned long long.
->>>
->>> So I thought that a modern, professional 32-bit executable would be
->>> dealing in 64-bit inode numbers anyway.  But I am not a system builder,
->>> so perhaps I'm being naive.  And of course some users may have to support
->>> some old userspace, or apps that assign inode numbers to "int" or "long"
->>> or whatever.  I have no insight into the extent of that problem.
->> So how to solve this problem?
->>
->> 1. tmpfs use ida or other data structure
->>
->> 2. tmpfs use 64-bit, each superblock a inode number space
->>
->> 3. do not do anything, If somebody hits this bug, let them solve for themselves
->>
->> 4. (last_ino change to 64-bit)get_next_ino -->other filesystems will be ok, but it was rejected before
-> 5. Extend the sbitmap API to allow for growing the bitmap.  I had a
-> look at doing that, and it looks hard.  There are a lot of things which
-> are set up at initialisation and changing them mid-use seems tricky.
-> Ccing Jens in case he has an opinion.
->
-> 6. Creating a percpu IDA.  This doesn't seem too hard.  We need a percpu
-> pointer to an IDA leaf (128 bytes), and a percpu integer which is the
-> current base for this CPU.  At allocation time, find and set the first
-> free bit in the leaf, and add on the current base.
->
-> If the percpu leaf is full, set the XA_MARK_1 bit on the entry in
-> the XArray.  Then look for any leaves which have both the XA_MARK_0
-> and XA_MARK_1 bits set; if there is one, claim it by clearing the
-> XA_MARK_1 bit.  If not, kzalloc a new one and find a free spot for it
-> in the underlying XArray.
->
-> Freeing an ID is simply ida_free().  That will involve changing the
-> users of get_next_ino() to call put_ino(), or something.
->
-> This should generally result in similar contention between threads as
-> the current scheme -- accessing a shared resource every 1024 allocations.
-> Maybe more often as we try to avoid leaving gaps in the data structure,
-> or maybe less as we reuse IDs.
->
-> (I've tried to explain what I want here, but appreciate it may be
-> inscrutable.  I can try to explain more, or maybe I should just write
-> the code myself)
-Hi willy, do you write this?
->
-> .
->
+> Thanks for the report. A jumbo fix for one chip version may have
+> revealed an issue with another chip version. Could you please try
+> the following?
+> I checked the vendor driver r8168 and there's no special sequence
+> to configure jumbo mode.
+> 
+> What would be interesting:
+> Do you set the (jumbo) MTU before bringing the device up?
+> 
+> diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+> index 0b47db2ff..38d212686 100644
+> --- a/drivers/net/ethernet/realtek/r8169_main.c
+> +++ b/drivers/net/ethernet/realtek/r8169_main.c
+> @@ -3873,7 +3873,7 @@ static void rtl_hw_jumbo_enable(struct rtl8169_private *tp)
+>  	case RTL_GIGA_MAC_VER_27 ... RTL_GIGA_MAC_VER_28:
+>  		r8168dp_hw_jumbo_enable(tp);
+>  		break;
+> -	case RTL_GIGA_MAC_VER_31 ... RTL_GIGA_MAC_VER_34:
+> +	case RTL_GIGA_MAC_VER_31 ... RTL_GIGA_MAC_VER_33:
+>  		r8168e_hw_jumbo_enable(tp);
+>  		break;
+>  	default:
+> -- 
+> 2.24.0
 
+That patch fixes the issue for me.
+
+Thanks
+
+Alan
+
+-- 
+Alan J. Wylie                                          https://www.wylie.me.uk/
+
+Dance like no-one's watching. / Encrypt like everyone is.
+Security is inversely proportional to convenience
