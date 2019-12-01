@@ -2,130 +2,187 @@ Return-Path: <SRS0=SILN=ZX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA48C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 17:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC78C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 17:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66AE12073C
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 17:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C0D32073C
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 17:11:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bV7II9jf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbfLARI4 (ORCPT
+        id S1727297AbfLARLl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 12:08:56 -0500
-Received: from mailbackend.panix.com ([166.84.1.89]:59065 "EHLO
-        mailbackend.panix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbfLARI4 (ORCPT
+        Sun, 1 Dec 2019 12:11:41 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22584 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726498AbfLARLl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 12:08:56 -0500
-Received: from hp-x360n.lan (cpe-108-185-41-56.socal.res.rr.com [108.185.41.56])
-        by mailbackend.panix.com (Postfix) with ESMTPSA id 47Qvpq3Cvxz1J7T;
-        Sun,  1 Dec 2019 12:08:51 -0500 (EST)
-Date:   Sun, 1 Dec 2019 09:08:50 -0800 (PST)
-From:   "Kenneth R. Crudup" <kenny@panix.com>
-Reply-To: "Kenneth R. Crudup" <kenny@panix.com>
-To:     Ingo Molnar <mingo@kernel.org>
-cc:     Linus Torvalds <torvalds@linux-foundation.org>, mceier@gmail.com,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Davidlohr Bueso <dbueso@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-Subject: Re: [PATCH] x86/pat: Fix off-by-one bugs in interval tree search
-In-Reply-To: <20191201144947.GA4167@gmail.com>
-Message-ID: <alpine.DEB.2.21.1912010906030.2748@hp-x360n>
-References: <20191127005312.GD20422@shao2-debian> <CAJTyqKPstH9PYk1nMuRJWnXUPTf9wAkphPFi9Yfz6PApLVVE0Q@mail.gmail.com> <20191130212729.ykxstm5kj2p5ir6q@linux-p48b> <CAJTyqKOp+mV1CfpasschSDO4vEDbshE4GPCB6+aX4rJOYSF=7A@mail.gmail.com>
- <CAHk-=wh--xwpatv_Rcp3WtCPQtg-RVoXYQj8O+1TSw8os7Jtvw@mail.gmail.com> <20191201104624.GA51279@gmail.com> <20191201144947.GA4167@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 1 Dec 2019 12:11:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575220299;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=vIboseq0fDMMwBbrkH9pSvbsR619q2chHbtWr6BrOkg=;
+        b=bV7II9jfTAGHiImmE6jtVBiUFyxz7j/1+9FUFliW+0r8fjVIxYkgG7X0WcXhTzq1VdtKp/
+        OulvvilX91tQafVb+BV+daXENp91GJ2vPcBI65boLDZ2KmhV3QENPPN0LlpEqib7fJuZ08
+        iV59eRoZHJtOTdr6+cg2e2FMZgc7jRU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-140-oE2aqEnnP_mRPMcbYHMNXA-1; Sun, 01 Dec 2019 12:11:36 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DD7110054E3;
+        Sun,  1 Dec 2019 17:11:33 +0000 (UTC)
+Received: from [10.10.121.37] (ovpn-121-37.rdu2.redhat.com [10.10.121.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7130B5D9E5;
+        Sun,  1 Dec 2019 17:11:32 +0000 (UTC)
+Subject: Re: [PATCH] nbd: fix potential deadlock in nbd_config_put()
+To:     Sun Ke <sunke32@huawei.com>, josef@toxicpanda.com
+References: <1574937951-92828-1-git-send-email-sunke32@huawei.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org, nbd@other.debian.org,
+        linux-kernel@vger.kernel.org
+From:   Mike Christie <mchristi@redhat.com>
+Message-ID: <5DE3F444.9080706@redhat.com>
+Date:   Sun, 1 Dec 2019 11:11:32 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1574937951-92828-1-git-send-email-sunke32@huawei.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: oE2aqEnnP_mRPMcbYHMNXA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: multipart/mixed;
+ boundary="------------080507070007010002020405"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is a multi-part message in MIME format.
+--------------080507070007010002020405
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 
-On Sun, 1 Dec 2019, Ingo Molnar wrote:
+On 11/28/2019 04:45 AM, Sun Ke wrote:
+> I got a deadlock report from syzkaller:
+> 
+> [  234.427696] ============================================
+> [  234.428327] WARNING: possible recursive locking detected
+> [  234.429011] 5.4.0-rc4+ #1 Not tainted
+> [  234.429528] --------------------------------------------
+> [  234.430162] kworker/u9:0/894 is trying to acquire lock:
+> [  234.430911] ffff0000d3aca128 ((wq_completion)knbd0-recv){+.+.}, at: flush_workqueue+0xbc/0xfe8
+> [  234.432330]
+> [  234.432330] but task is already holding lock:
+> [  234.432927] ffff0000d3aca128 ((wq_completion)knbd0-recv){+.+.}, at: process_one_work+0x6a0/0x17e8
+> [  234.433983]
+> [  234.433983] other info that might help us debug this:
+> [  234.434615]  Possible unsafe locking scenario:
+> [  234.434615]
+> [  234.435263]        CPU0
+> [  234.435613]        ----
+> [  234.436019]   lock((wq_completion)knbd0-recv);
+> [  234.436521]   lock((wq_completion)knbd0-recv);
+> [  234.437166]
+> [  234.437166]  *** DEADLOCK ***
+> [  234.437166]
+> [  234.437763]  May be due to missing lock nesting notation
+> [  234.437763]
+> [  234.438559] 3 locks held by kworker/u9:0/894:
+> [  234.439040]  #0: ffff0000d3aca128 ((wq_completion)knbd0-recv){+.+.}, at: process_one_work+0x6a0/0x17e8
+> [  234.440185]  #1: ffff0000d344fd50 ((work_completion)(&args->work)){+.+.}, at: process_one_work+0x6a0/0x17e8
+> [  234.442209]  #2: ffff0000d723cd78 (&nbd->config_lock){+.+.}, at: refcount_dec_and_mutex_lock+0x5c/0x128
+> [  234.443380]
+> [  234.443380] stack backtrace:
+> [  234.444271] CPU: 3 PID: 894 Comm: kworker/u9:0 Not tainted 5.4.0-rc4+ #1
+> [  234.444989] Hardware name: linux,dummy-virt (DT)
+> [  234.446077] Workqueue: knbd0-recv recv_work
+> [  234.446909] Call trace:
+> [  234.447372]  dump_backtrace+0x0/0x358
+> [  234.447877]  show_stack+0x28/0x38
+> [  234.448347]  dump_stack+0x15c/0x1ec
+> [  234.448838]  __lock_acquire+0x12ec/0x2f78
+> [  234.449474]  lock_acquire+0x180/0x590
+> [  234.450075]  flush_workqueue+0x104/0xfe8
+> [  234.450587]  drain_workqueue+0x164/0x390
+> [  234.451090]  destroy_workqueue+0x30/0x560
+> [  234.451598]  nbd_config_put+0x308/0x700
+> [  234.452093]  recv_work+0x198/0x1f0
+> [  234.452556]  process_one_work+0x7ac/0x17e8
+> [  234.453189]  worker_thread+0x36c/0xb70
+> [  234.453788]  kthread+0x2f4/0x378
+> [  234.454257]  ret_from_fork+0x10/0x18
+> 
+> The root cause is recv_work() is the last one to drop the config
+> ref and try to destroy the workqueue from inside the work queue.
+> 
+> There are two ways to fix the bug. The first way is flushing the
+> workqueue before dropping the initial refcount and making sure
+> recv_work() will not be the last owner of nbd_config. However it
+> is hard for ioctl interface. Because nbd_clear_sock_ioctl() may
+> not be invoked, so we need to flush the workqueue in nbd_release()
+> and that will lead to another deadlock because recv_work can not
+> exit from nbd_read_stat() loop.
+> 
+> The second way is using another work to put nbd_config asynchronously
+> for recv_work().
+> 
 
-> So it would be nice if everyone who is seeing this bug could test the
-> patch below against Linus's latest tree - does it fix the regression?
+Can we also increment the refcount before we do wait_event_interruptible
+in nbd_start_device_ioctl, always flush the workqueue then drop the
+refcount after the flush? See compile tested only patch.
 
-The patch fixes the issue for me.
+We will then also know the recv side has stopped after
+nbd_start_device_ioctl has returned, so new NBD_DO_IT calls for the same
+device do not race with shutdowns of previous uses.
 
-> If not then please send the before/after dump of
-> /sys/kernel/debug/x86/pat_memtype_list - and even if it works please send
-> the dumps so we can double check it all.
 
-I don't have the "before patch" (but could if it is absolutely needed) but
-here's the "after patch":
 
-----
-PAT memtype list:
-write-back @ 0x4c314000-0x4c35f000
-write-back @ 0x4c35e000-0x4c35f000
-write-back @ 0x4c35e000-0x4c364000
-write-back @ 0x4c363000-0x4c366000
-write-back @ 0x4c365000-0x4c369000
-write-back @ 0x4c368000-0x4c36b000
-write-back @ 0x4c36a000-0x4c36e000
-write-back @ 0x4c36d000-0x4c36f000
-write-back @ 0x4c36e000-0x4c370000
-write-back @ 0x4c36f000-0x4c371000
-write-back @ 0x4c370000-0x4c372000
-write-back @ 0x4c7eb000-0x4c7ec000
-write-back @ 0x4c7ec000-0x4c7ef000
-write-back @ 0x4c7ec000-0x4c7ed000
-write-back @ 0x4c7ef000-0x4c7f0000
-write-back @ 0x4c7f0000-0x4c7f1000
-write-back @ 0x4c867000-0x4c868000
-write-back @ 0x4c868000-0x4c869000
-write-back @ 0x4fa86000-0x4fa87000
-write-back @ 0x4fefc000-0x4fefd000
-uncached-minus @ 0x77f00000-0x77f10000
-uncached-minus @ 0x8e000000-0x8e040000
-uncached-minus @ 0x8e040000-0x8e041000
-uncached-minus @ 0x8e200000-0x8e202000
-uncached-minus @ 0x8e203000-0x8e204000
-uncached-minus @ 0x8e300000-0x8e301000
-uncached-minus @ 0xe0000000-0xf0000000
-uncached-minus @ 0xfd6a0000-0xfd6a1000
-uncached-minus @ 0xfd6a0000-0xfd6b0000
-uncached-minus @ 0xfd6d0000-0xfd6e0000
-uncached-minus @ 0xfd6e0000-0xfd6e1000
-uncached-minus @ 0xfd6e0000-0xfd6f0000
-uncached-minus @ 0xfe000000-0xfe002000
-uncached-minus @ 0xfe001000-0xfe002000
-uncached-minus @ 0xfed00000-0xfed01000
-uncached-minus @ 0xfed10000-0xfed16000
-uncached-minus @ 0xfed15000-0xfed16000
-uncached-minus @ 0xfed40000-0xfed45000
-uncached-minus @ 0xfed90000-0xfed91000
-uncached-minus @ 0xfed91000-0xfed92000
-uncached-minus @ 0xff340000-0xff341000
-write-combining @ 0x4000000000-0x4010000000
-uncached-minus @ 0x4010000000-0x4010001000
-uncached-minus @ 0x4010000000-0x4010001000
-uncached-minus @ 0x4010000000-0x4010001000
-uncached-minus @ 0x4010001000-0x4010002000
-uncached-minus @ 0x4010001000-0x4010002000
-uncached-minus @ 0x4010001000-0x4010002000
-uncached-minus @ 0x604a000000-0x604a200000
-write-combining @ 0x604a800000-0x604b000000
-uncached-minus @ 0x604b100000-0x604b110000
-uncached-minus @ 0x604b110000-0x604b118000
-uncached-minus @ 0x604b118000-0x604b11c000
-uncached-minus @ 0x604b11c000-0x604b120000
-uncached-minus @ 0x604b11e000-0x604b11f000
-uncached-minus @ 0x604b122000-0x604b124000
-uncached-minus @ 0x604b125000-0x604b126000
-uncached-minus @ 0x604b129000-0x604b12a000
-----
+--------------080507070007010002020405
+Content-Type: text/x-patch;
+ name="nbd-move-flush.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="nbd-move-flush.patch"
 
-	-Kenny
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index 57532465fb83..f8597d2fb365 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -1293,13 +1293,15 @@ static int nbd_start_device_ioctl(struct nbd_device *nbd, struct block_device *b
+ 
+ 	if (max_part)
+ 		bdev->bd_invalidated = 1;
++
++	refcount_inc(&nbd->config_refs);
+ 	mutex_unlock(&nbd->config_lock);
+ 	ret = wait_event_interruptible(config->recv_wq,
+ 					 atomic_read(&config->recv_threads) == 0);
+-	if (ret) {
++	if (ret)
+ 		sock_shutdown(nbd);
+-		flush_workqueue(nbd->recv_workq);
+-	}
++	flush_workqueue(nbd->recv_workq);
++
+ 	mutex_lock(&nbd->config_lock);
+ 	nbd_bdev_reset(bdev);
+ 	/* user requested, ignore socket errors */
+@@ -1307,6 +1309,7 @@ static int nbd_start_device_ioctl(struct nbd_device *nbd, struct block_device *b
+ 		ret = 0;
+ 	if (test_bit(NBD_RT_TIMEDOUT, &config->runtime_flags))
+ 		ret = -ETIMEDOUT;
++	nbd_config_put(nbd);
+ 	return ret;
+ }
+ 
 
--- 
-Kenneth R. Crudup  Sr. SW Engineer, Scott County Consulting, Silicon Valley
+--------------080507070007010002020405--
+
