@@ -2,95 +2,86 @@ Return-Path: <SRS0=SILN=ZX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31011C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 08:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45553C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 09:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A48E02073C
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 08:57:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b="wAx4IxYL"
+	by mail.kernel.org (Postfix) with ESMTP id 109F520715
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 09:10:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbfLAI51 (ORCPT
+        id S1726155AbfLAJKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 03:57:27 -0500
-Received: from rfvt.org.uk ([37.187.119.221]:34164 "EHLO rfvt.org.uk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725847AbfLAI51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 03:57:27 -0500
-Received: from wylie.me.uk (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        Sun, 1 Dec 2019 04:10:02 -0500
+Received: from asavdk4.altibox.net ([109.247.116.15]:34604 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfLAJKC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Dec 2019 04:10:02 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by rfvt.org.uk (Postfix) with ESMTPS id 64D3D80260;
-        Sun,  1 Dec 2019 08:57:23 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wylie.me.uk;
-        s=mydkim005; t=1575190643;
-        bh=29cszX6aZLgHdNyNDyMwbejh5VGlamLD7vKvb4ThRiI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=wAx4IxYLS0NRDagp+wfH+Ag9ewx1jaGjViyA0ceH48zGpPHOgIYAWPWMhsqPGmG9j
-         C4422tU4U0jHjKPWN5hBK5Njab+muLKSRYMxPIC4EQiul7RozL8Ttvfi+YamSraLoJ
-         n0EJJF65aBA2sEMFp0a0hruw4yy/piadLBDBvNHuCBceI+PA8cddIb3+AzF2wLY8Nq
-         F4ObViihB0kVDB3zz1TAekWOS1g+j35p5+vijoUHmMixZSR8qxAS8abBkeTHlnnz87
-         jATGMSN8GkONGznKJ/M/g4OIL0ndp0ClhhXUVoWh1H3BoqR3BNzMMDb9GAU//qAUT3
-         X5R5O6/iNZmIA==
+        by asavdk4.altibox.net (Postfix) with ESMTPS id A87B980656;
+        Sun,  1 Dec 2019 10:09:43 +0100 (CET)
+Date:   Sun, 1 Dec 2019 10:09:41 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Stefan Mavrodiev <stefan@olimex.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/panel: clean up indentation issue
+Message-ID: <20191201090941.GA8753@ravnborg.org>
+References: <20190925120357.10408-1-colin.king@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Message-ID: <24035.32883.173899.812456@wylie.me.uk>
-Date:   Sun, 1 Dec 2019 08:57:23 +0000
-From:   "Alan J. Wylie" <alan@wylie.me.uk>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: 5.4 Regression in r8169 with jumbo frames - packet loss/delays
-In-Reply-To: <75146b50-9518-8588-81fa-f2811faf6cca@gmail.com>
-References: <24034.56114.248207.524177@wylie.me.uk>
-        <75146b50-9518-8588-81fa-f2811faf6cca@gmail.com>
-X-Mailer: VM 8.2.0b under 26.3 (x86_64-pc-linux-gnu)
+Content-Disposition: inline
+In-Reply-To: <20190925120357.10408-1-colin.king@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=DfNHnWVPAAAA:8
+        a=X4VG-in_caqo2OVBQ50A:9 a=CjuIK1q_8ugA:10 a=rjTVMONInIDnV1a_A2c_:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-at 22:37 on Sat 30-Nov-2019 Heiner Kallweit (hkallweit1@gmail.com) wrote:
+Hi Colin.
 
-> Thanks for the report. A jumbo fix for one chip version may have
-> revealed an issue with another chip version. Could you please try
-> the following?
-> I checked the vendor driver r8168 and there's no special sequence
-> to configure jumbo mode.
+On Wed, Sep 25, 2019 at 01:03:57PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> What would be interesting:
-> Do you set the (jumbo) MTU before bringing the device up?
+> There is a continue statement that is indented one level too deeply,
+> remove the extraneous tab.
 > 
-> diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-> index 0b47db2ff..38d212686 100644
-> --- a/drivers/net/ethernet/realtek/r8169_main.c
-> +++ b/drivers/net/ethernet/realtek/r8169_main.c
-> @@ -3873,7 +3873,7 @@ static void rtl_hw_jumbo_enable(struct rtl8169_private *tp)
->  	case RTL_GIGA_MAC_VER_27 ... RTL_GIGA_MAC_VER_28:
->  		r8168dp_hw_jumbo_enable(tp);
->  		break;
-> -	case RTL_GIGA_MAC_VER_31 ... RTL_GIGA_MAC_VER_34:
-> +	case RTL_GIGA_MAC_VER_31 ... RTL_GIGA_MAC_VER_33:
->  		r8168e_hw_jumbo_enable(tp);
->  		break;
->  	default:
-> -- 
-> 2.24.0
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/gpu/drm/panel/panel-olimex-lcd-olinuxino.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-olimex-lcd-olinuxino.c b/drivers/gpu/drm/panel/panel-olimex-lcd-olinuxino.c
+> index 2bae1db3ff34..7dd67262a2ed 100644
+> --- a/drivers/gpu/drm/panel/panel-olimex-lcd-olinuxino.c
+> +++ b/drivers/gpu/drm/panel/panel-olimex-lcd-olinuxino.c
+> @@ -161,7 +161,7 @@ static int lcd_olinuxino_get_modes(struct drm_panel *panel)
+>  				lcd_mode->hactive,
+>  				lcd_mode->vactive,
+>  				lcd_mode->refresh);
+> -				continue;
+> +			continue;
+>  		}
+>  
+>  		mode->clock = lcd_mode->pixelclock;
 
-That patch fixes the issue for me.
+Thanks, this is the kind of issues that can fool one or take
+focus away when reading code.
 
-Thanks
+Applied to drm-misc-next.
 
-Alan
-
--- 
-Alan J. Wylie                                          https://www.wylie.me.uk/
-
-Dance like no-one's watching. / Encrypt like everyone is.
-Security is inversely proportional to convenience
+	Sam
