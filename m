@@ -2,208 +2,169 @@ Return-Path: <SRS0=SILN=ZX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CEAEC432C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 10:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C61D9C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 10:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D38F20725
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 10:46:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575197199;
-	bh=A+Rcr/pb0FA/XAvi8P4JsBjLhPn/5yCAibyT/b6FZgg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eAktAY4Hr7OrxtmsSjvrDn67qEAZRRUHs3zae3LtNxqihTSzPgcIRc1kY9Gm33TjW
-	 mvxsWhDcQ5HzAP4a4PWcZ/eJbUaYcSWesT3LwiSxm0Vi9Qs4GSio1TEA7ry3afdma3
-	 Roq1qXs4XHTYg4bksHhmkvb7uAhYycpUjHLEVUu8=
+	by mail.kernel.org (Postfix) with ESMTP id 931DA20833
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 10:52:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DfL709z0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726389AbfLAKqb (ORCPT
+        id S1726702AbfLAKw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 05:46:31 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33253 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbfLAKqa (ORCPT
+        Sun, 1 Dec 2019 05:52:29 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:45220 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726129AbfLAKw2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 05:46:30 -0500
-Received: by mail-wr1-f68.google.com with SMTP id b6so10872628wrq.0
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Dec 2019 02:46:28 -0800 (PST)
+        Sun, 1 Dec 2019 05:52:28 -0500
+Received: by mail-pj1-f65.google.com with SMTP id r11so7742547pjp.12
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Dec 2019 02:52:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=P0S0aNiZhUDcMgsUFhIruZb/8EnKELSIe5M3uXc7iyE=;
-        b=d1dp5FbskpIiq/Iltcoldq8H3LtOaBqEO5V50+j6IizbaQMBp8g66124ITLnJ6LIBG
-         NAvP+MMt7VLRJiN4So2jLc0DyRQ6r95TV6LrbEcndeVfjmb6bZ1w3kbY3aGIhiyJSI73
-         0CZEx72oCIrIEYOHpF2SW9fNS4Vn5uhgjbl5juzDKYmeXzB0DJhgaVxQSIszNmNddocR
-         HXIpDjK9lGKInTK7AAjEVfDZhUpUShRr4dOsM16yKiFITbiq6PAG1PTX6cCHchctm0k4
-         YfYfJW3MBZCK2BQlHZqy/WEYktws5nuJBlFYvD4J3PyILgchjdNjJH3ZaKSKxG/Ee+Mk
-         Jj7g==
+        bh=sW0LJ/G1N09LX4PKc59YIEDU3pRKgqLhiJhn7knkesE=;
+        b=DfL709z0SLbIWML1vezpr98p1iPrjbJ3wWQyCWrzHi3cqbzTEHstkEc9dfNh+8ldxx
+         mL7XncKkvF/cQYopJgexmJY/gMZI1Fk9gpW1Oo7P8ttdk6yy5yP7BFPQ8roGGRuwFLiS
+         Nf/n7Y8Aj6pqTf2CjP8fC2ZDRdG/5A+lc+BETVjwqe3qBjOTuM/1duYlu9gGzYHxTI/S
+         CkfFSg/9/6bXCkujZa4RfBBUvE6uueMd0QUt+N4YQbRva3zEIoSrMAyhIc4KpMCAo4tK
+         sJWaizdBR7R3+ZW2IVpR823QyVrfKnNw75VFIGMjad3wYKzpN7S6Zm17y5OifLN8wKA8
+         czmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=P0S0aNiZhUDcMgsUFhIruZb/8EnKELSIe5M3uXc7iyE=;
-        b=ESY4Mh6Bp5fNYKCBVSVNx8yawkY7O6u0ZWQ6xVlbrrn0LyY9AT5MhLtdyjjAQC//Ms
-         hqUiVdq7ZrCSizvBclnG1a46LkGG+PUMBGxKbEe2aBZZTS2oLXsw9tQbygRjsgwpLkpD
-         HZSRqBltFlKQYuTuIBnSOTBiH6OsdnvEdcC+LrbRAntOm+qfiRKyfqq7CWt752YCECma
-         PJNQ3Vk3DGUFxz09onysj6I1Wvu9DiXA+BvWCqIAufW4jcwwN56MwiDZFAVjiXNSuqcO
-         jg2DEU9w2Q6lTAq1D1n9x88VCbLa5OppQOL7n1Vt5KL/+g9t+HIhB+61TK1j7AK2l+A8
-         o2kQ==
-X-Gm-Message-State: APjAAAVQdiLRSBjYwlEt/XsZdZnp6NUGl9oK1b9RHaRcRc6Kespd2DM+
-        EPCQZwYdwy8F43mTArn+W2I=
-X-Google-Smtp-Source: APXvYqwgEwT2ws2iRHV1Mr6XLxunS2zC48v22OMkwGX+4VrB9qUX8E4SU8m9DjU3oRAJ8RDJPp7QwQ==
-X-Received: by 2002:adf:e6c6:: with SMTP id y6mr3574256wrm.284.1575197187829;
-        Sun, 01 Dec 2019 02:46:27 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id q5sm19624126wmc.27.2019.12.01.02.46.26
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sW0LJ/G1N09LX4PKc59YIEDU3pRKgqLhiJhn7knkesE=;
+        b=sKmdXHrwfUrvP5ZFAeVVDkHcI7RHplDWGFXayq+E7qjiqEbQ6vd5N/g1oSedtymJA/
+         eyromQC63UGbZtD9fmx0BQ7wMiAk6AAgY9AishhDigXYgerbKINny6QUe2rQgfJlfLLi
+         BtDgT3Aze6c7u1grFCV87fKxfCzio3+JidDEzFKqhh44r9yepoS70wIRnqTPfPXw8XN5
+         rEx8KWkO9j0vUwjdnpbY/AizthgmP84yTGn1sv5jO3911kGTNyfL7+QO4OcRtiYBsN8R
+         nPqExXKI9otv623WMzIqreuLX1r1W4XjXBZQpg9kjS609YiE8N/6Yg2kN3Cwe59uP1m1
+         Vsqg==
+X-Gm-Message-State: APjAAAXAkx5lTnePNYWCv8aQ4hdjSmphSDi0ZND6ppwjlwMX6UOp2/3w
+        DP2jUdwX+vRnKrJD6D1RdsI=
+X-Google-Smtp-Source: APXvYqyxVuV8zjAdItwyvKJoV2U+/pkaLi2yKTwOY8FDFgS6fgGPM76y/ho9TAGuiLJSSD4dYelxIw==
+X-Received: by 2002:a17:902:ab98:: with SMTP id f24mr22430142plr.257.1575197547889;
+        Sun, 01 Dec 2019 02:52:27 -0800 (PST)
+Received: from mail.google.com ([139.180.133.10])
+        by smtp.gmail.com with ESMTPSA id z26sm8595931pgu.80.2019.12.01.02.52.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Dec 2019 02:46:26 -0800 (PST)
-Date:   Sun, 1 Dec 2019 11:46:24 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     mceier@gmail.com, Davidlohr Bueso <dave@stgolabs.net>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Davidlohr Bueso <dbueso@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        "Kenneth R. Crudup" <kenny@panix.com>
-Subject: Re: [x86/mm/pat] 8d04a5f97a: phoronix-test-suite.glmark2.0.score
- -23.7% regression
-Message-ID: <20191201104624.GA51279@gmail.com>
-References: <20191127005312.GD20422@shao2-debian>
- <CAJTyqKPstH9PYk1nMuRJWnXUPTf9wAkphPFi9Yfz6PApLVVE0Q@mail.gmail.com>
- <20191130212729.ykxstm5kj2p5ir6q@linux-p48b>
- <CAJTyqKOp+mV1CfpasschSDO4vEDbshE4GPCB6+aX4rJOYSF=7A@mail.gmail.com>
- <CAHk-=wh--xwpatv_Rcp3WtCPQtg-RVoXYQj8O+1TSw8os7Jtvw@mail.gmail.com>
+        Sun, 01 Dec 2019 02:52:27 -0800 (PST)
+Date:   Sun, 1 Dec 2019 18:52:19 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        hpa@zytor.com, x86@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH] x86/nmi: remove the irqwork for long nmi handler
+ duration warning
+Message-ID: <20191201105218.2zcitogobsylytv2@mail.google.com>
+References: <20191116084835.3524-1-changbin.du@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wh--xwpatv_Rcp3WtCPQtg-RVoXYQj8O+1TSw8os7Jtvw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191116084835.3524-1-changbin.du@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+HI Thomas and Ingo,
+Could you check this one? Thanks!
 
-* Linus Torvalds <torvalds@linux-foundation.org> wrote:
-
-> On Sat, Nov 30, 2019 at 2:09 PM Mariusz Ceier <mceier@gmail.com> wrote:
-> >
-> > Contents of /sys/kernel/debug/x86/pat_memtype_list on master
-> > (32ef9553635ab1236c33951a8bd9b5af1c3b1646) where performance is
-> > degraded:
+On Sat, Nov 16, 2019 at 04:48:35PM +0800, Changbin Du wrote:
+> First, printk is NMI context safe now since the safe printk has been
+> implemented. The safe printk will help us to do such work in its irqwork.
 > 
-> Diff between good and bad case:
+> Second, the NMI irqwork actually does not work if a NMI handler causes
+> watchdog timeout panic. The NMI irqwork have no chance to run in such
+> case, while the safe printk will flush its per-cpu buffer before panic.
 > 
->     @@ -1,8 +1,8 @@
->      PAT memtype list:
->      write-back @ 0x55ba4000-0x55ba5000
->      write-back @ 0x5e88c000-0x5e8b5000
->     -write-back @ 0x5e8b4000-0x5e8b8000
->      write-back @ 0x5e8b4000-0x5e8b5000
->     +write-back @ 0x5e8b4000-0x5e8b8000
->      write-back @ 0x5e8b7000-0x5e8bb000
->      write-back @ 0x5e8ba000-0x5e8bc000
->      write-back @ 0x5e8bb000-0x5e8be000
->     @@ -21,15 +21,15 @@
->      uncached-minus @ 0xec260000-0xec264000
->      uncached-minus @ 0xec300000-0xec320000
->      uncached-minus @ 0xec326000-0xec327000
->     -uncached-minus @ 0xf0000000-0xf0001000
->      uncached-minus @ 0xf0000000-0xf8000000
->     +uncached-minus @ 0xf0000000-0xf0001000
->      uncached-minus @ 0xfdc43000-0xfdc44000
->      uncached-minus @ 0xfe000000-0xfe001000
->      uncached-minus @ 0xfed00000-0xfed01000
->      uncached-minus @ 0xfed10000-0xfed16000
->      uncached-minus @ 0xfed90000-0xfed91000
->     -write-combining @ 0x2000000000-0x2100000000
->     -write-combining @ 0x2000000000-0x2100000000
->     +uncached-minus @ 0x2000000000-0x2100000000
->     +uncached-minus @ 0x2000000000-0x2100000000
->      uncached-minus @ 0x2100000000-0x2100001000
->      uncached-minus @ 0x2100001000-0x2100002000
->      uncached-minus @ 0x2ffff10000-0x2ffff20000
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> ---
+>  arch/x86/include/asm/nmi.h |  1 -
+>  arch/x86/kernel/nmi.c      | 20 +++++++++-----------
+>  2 files changed, 9 insertions(+), 12 deletions(-)
 > 
-> the first two differences are just trivial ordering differences for
-> overlapping ranges (starting at 0x5e8b4000 and 0xf0000000)
-> respectively.
+> diff --git a/arch/x86/include/asm/nmi.h b/arch/x86/include/asm/nmi.h
+> index 75ded1d13d98..9d5d949e662e 100644
+> --- a/arch/x86/include/asm/nmi.h
+> +++ b/arch/x86/include/asm/nmi.h
+> @@ -41,7 +41,6 @@ struct nmiaction {
+>  	struct list_head	list;
+>  	nmi_handler_t		handler;
+>  	u64			max_duration;
+> -	struct irq_work		irq_work;
+>  	unsigned long		flags;
+>  	const char		*name;
+>  };
+> diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+> index 4df7705022b9..0fa51f80ad73 100644
+> --- a/arch/x86/kernel/nmi.c
+> +++ b/arch/x86/kernel/nmi.c
+> @@ -104,18 +104,22 @@ static int __init nmi_warning_debugfs(void)
+>  }
+>  fs_initcall(nmi_warning_debugfs);
+>  
+> -static void nmi_max_handler(struct irq_work *w)
+> +static void nmi_check_duration(struct nmiaction *action, u64 duration)
+>  {
+> -	struct nmiaction *a = container_of(w, struct nmiaction, irq_work);
+>  	int remainder_ns, decimal_msecs;
+> -	u64 whole_msecs = READ_ONCE(a->max_duration);
+> +	u64 whole_msecs = READ_ONCE(action->max_duration);
+> +
+> +	if (duration < nmi_longest_ns || duration < action->max_duration)
+> +		return;
+> +
+> +	action->max_duration = duration;
+>  
+>  	remainder_ns = do_div(whole_msecs, (1000 * 1000));
+>  	decimal_msecs = remainder_ns / 1000;
+>  
+>  	printk_ratelimited(KERN_INFO
+>  		"INFO: NMI handler (%ps) took too long to run: %lld.%03d msecs\n",
+> -		a->handler, whole_msecs, decimal_msecs);
+> +		action->handler, whole_msecs, decimal_msecs);
+>  }
+>  
+>  static int nmi_handle(unsigned int type, struct pt_regs *regs)
+> @@ -142,11 +146,7 @@ static int nmi_handle(unsigned int type, struct pt_regs *regs)
+>  		delta = sched_clock() - delta;
+>  		trace_nmi_handler(a->handler, (int)delta, thishandled);
+>  
+> -		if (delta < nmi_longest_ns || delta < a->max_duration)
+> -			continue;
+> -
+> -		a->max_duration = delta;
+> -		irq_work_queue(&a->irq_work);
+> +		nmi_check_duration(a, delta);
+>  	}
+>  
+>  	rcu_read_unlock();
+> @@ -164,8 +164,6 @@ int __register_nmi_handler(unsigned int type, struct nmiaction *action)
+>  	if (!action->handler)
+>  		return -EINVAL;
+>  
+> -	init_irq_work(&action->irq_work, nmi_max_handler);
+> -
+>  	raw_spin_lock_irqsave(&desc->lock, flags);
+>  
+>  	/*
+> -- 
+> 2.20.1
 > 
-> But the final difference is a real difference where it used to be WC,
-> and is now UC-:
-> 
->     -write-combining @ 0x2000000000-0x2100000000
->     -write-combining @ 0x2000000000-0x2100000000
->     +uncached-minus @ 0x2000000000-0x2100000000
->     +uncached-minus @ 0x2000000000-0x2100000000
-> 
-> which certainly could easily explain the huge performance degradation.
 
-Indeed, as two days ago I speculated to Kenneth R. Crudup who reported a 
-similar slowdown on i915:
-
-> * Ingo Molnar <mingo@kernel.org> wrote:
-> > > * Kenneth R. Crudup <kenny@panix.com> wrote:
-> > >
-> > > > As soon as the i915 driver module is loaded, it takes over the 
-> > > > EFI framebuffer on my machine (HP Spectre X360 with Intel UHD620 
-> > > > Graphics) and the subsequent text (as well as any VTs) is 
-> > > > rendered much more slowly. I don't know if the i915/DRM guys need 
-> > > > to do anything to their code to take advantage of this change to 
-> > > > the PATs, but reverting this change (after the associated 
-> > > > subseqent commits) has fixed that issue for me.
-> > > >
-> > > > Let me know if you need any further info.
-> > >
-> > > This is almost certainly the PAT bits being wrong in the 
-> > > pagetables, i.e. an x86 bug, not a GPU driver bug.
-> > >
-> > >
-> > > Davidlohr, any idea what's going on? The interval tree conversion went
-> > > bad. The slowdown symptoms are consistent with perhaps the framebuffer
-> > > not getting WC mapped, but uncacheable mapped:
-> > >
-> > >                ptr = io_mapping_map_wc(&i915_vm_to_ggtt(vma->vm)->iomap,
-> > >                                         vma->node.start,
-> > >                                         vma->node.size);
-> > > 
-> > > Which is a wrapper around ioremap_wc().
-> > > 
-> > > To debug this it would be useful to do a before/after comparison of the
-> > > kernel pagetables:
-> > > 
-> > >  - before: git checkout 8d04a5f97a^1
-> > >  - after:  git checkout 8d04a5f97a
-
-And yesterday:
-
-> [...]
->
-> There's another similar bugreport of a -20% GL performance drop, from 
-> the ktest automated benchmark suite:
->
->     https://lkml.kernel.org/r/20191127005312.GD20422@shao2-debian
->
-> My shot-in-the-dark hypothesis is that perhaps we somehow fail to find 
-> a newly mapped memtype and leave a key ioremap_wc() area uncached, 
-> instead of write-combining?
->
-> The order of magnitude of the slowdown would be roughly consistent with 
-> that, in GPU limited workloads - it would be more marked in 3D scenes 
-> with a lot of vertices or perhaps a lot of texture changes.
->
-> But this is really just a random guess.
-
-It's not an unconditional regression, as both Boris and me tried to 
-reproduce it on different systems that do ioremap_wc() as well and didn't 
-measure a slowdown, but something about the memory layout probably 
-triggers the tree management bug.
-
-Thanks,
-
-	Ingo
+-- 
+Cheers,
+Changbin Du
