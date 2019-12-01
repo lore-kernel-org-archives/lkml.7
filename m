@@ -2,267 +2,130 @@ Return-Path: <SRS0=SILN=ZX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC89AC43215
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 14:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B59C43215
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 14:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85678206E4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 14:29:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dZNGqzai"
+	by mail.kernel.org (Postfix) with ESMTP id 082F82082E
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 14:34:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575210881;
+	bh=K8rs8jjTNo+YjtPHch9ujxhFdvlkbw04xZ/DlEjvXmA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eql5LPl7S6kAVzxIX/Pp2ZqS0BxtqNHul+gKpvcM2YLNwXiBv7C3BSLWcXtCB+i4p
+	 MwhLAqlHkS4QVt+0B2iJwSGgs5s+tI4hIboPN1kDPwQKT0cwrEXT7RitmAcHoffnHH
+	 +2XM4XVqYDN/u5/t++8p85d93YQTZjnonpkW/WS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbfLAO30 (ORCPT
+        id S1727282AbfLAOek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 09:29:26 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:9539 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726489AbfLAO30 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 09:29:26 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5de3ce470000>; Sun, 01 Dec 2019 06:29:27 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 01 Dec 2019 06:29:23 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 01 Dec 2019 06:29:23 -0800
-Received: from [10.25.74.138] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 1 Dec
- 2019 14:29:19 +0000
-Subject: Re: [PATCH 4/4] PCI: pci-epf-test: Add support to defer core
- initialization
-To:     Kishon Vijay Abraham I <kishon@ti.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <lorenzo.pieralisi@arm.com>,
-        <andrew.murray@arm.com>, <bhelgaas@google.com>,
-        <thierry.reding@gmail.com>
-CC:     <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20191113090851.26345-1-vidyas@nvidia.com>
- <20191113090851.26345-5-vidyas@nvidia.com>
- <e8e3b8b6-d115-b4d4-19c5-1eae1d8abd0f@ti.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <958fcc14-6794-0328-5c31-0dcc845ee646@nvidia.com>
-Date:   Sun, 1 Dec 2019 19:59:17 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Sun, 1 Dec 2019 09:34:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49114 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726498AbfLAOej (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Dec 2019 09:34:39 -0500
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 098B120725;
+        Sun,  1 Dec 2019 14:34:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575210878;
+        bh=K8rs8jjTNo+YjtPHch9ujxhFdvlkbw04xZ/DlEjvXmA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X8LvnoV+ZPy/EFvVU0aJRwEOLjieEn833fKjD4mA1VvGWFWPgDzkbvmwPpedC01uS
+         4v5RBKw7xncGiVV7KGxzU4J231F8BfqeXGG69xfzgH/8kE1chbYSSl6hE7tPMqVnJT
+         Ke3CEUQp3PVqEw+u6cztQz1F1v+MEx6/EQdhXnhw=
+Date:   Sun, 1 Dec 2019 09:34:36 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     Ilya Dryomov <idryomov@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH AUTOSEL 4.19 140/219] libceph: drop last_piece logic from
+ write_partial_message_data()
+Message-ID: <20191201143436.GS5861@sasha-vm>
+References: <20191122054911.1750-1-sashal@kernel.org>
+ <20191122054911.1750-133-sashal@kernel.org>
+ <CAOi1vP9MCrPf44V2GMyODH185A0HJcuPsYfVkOAVGkcMRb+=iw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <e8e3b8b6-d115-b4d4-19c5-1eae1d8abd0f@ti.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1575210567; bh=R0xGxFOdur+CeguObMrwAo1cQvjZeJSyyOUZLz2IAp0=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=dZNGqzai/FKSRFv8UH3CuHk1nRWfvN7yIamCZKISnik8dmv8VuX5VPInG3vdGy4i9
-         Bapq+hTPVusDffht2ne+7hhkSljxEf5MT9279o1UNDDTECzQAEWVH0A6Ln83AJJ7tC
-         QtWinDl+cwEW9cWeVyM5Dd/C042gmgP8sagWCu/YNtOWkre9mHlr4bN/AoGQnzwJiC
-         zoJmsPz4wtOp+tbNV+nNwB6MoIdi3bn2+XrTOaG/bFYa9dpzLZS4anMsdKYI8XE5uj
-         iHaTp5rTiV6y50xgN5QyEaID0/ntwDw6I8dtH1eFHsxEjrXg2UXB1jskdMfr4msUYu
-         8036bE/qaF6DQ==
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAOi1vP9MCrPf44V2GMyODH185A0HJcuPsYfVkOAVGkcMRb+=iw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/27/2019 2:50 PM, Kishon Vijay Abraham I wrote:
-> Hi,
-> 
-> On 13/11/19 2:38 PM, Vidya Sagar wrote:
->> Add support to defer core initialization and to receive a notifier
->> when core is ready to accommodate platforms where core is not for
->> initialization untile reference clock from host is available.
+On Fri, Nov 22, 2019 at 03:00:43PM +0100, Ilya Dryomov wrote:
+>On Fri, Nov 22, 2019 at 6:51 AM Sasha Levin <sashal@kernel.org> wrote:
 >>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> From: Ilya Dryomov <idryomov@gmail.com>
+>>
+>> [ Upstream commit 1f6b821aef78e3d79e8d598ae59fc7e23fb6c563 ]
+>>
+>> last_piece is for the last piece in the current data item, not in the
+>> entire data payload of the message.  This is harmful for messages with
+>> multiple data items.  On top of that, we don't need to signal the end
+>> of a data payload either because it is always followed by a footer.
+>>
+>> We used to signal "more" unconditionally, until commit fe38a2b67bc6
+>> ("libceph: start defining message data cursor").  Part of a large
+>> series, it introduced cursor->last_piece and also mistakenly inverted
+>> the hint by passing last_piece for "more".  This was corrected with
+>> commit c2cfa1940097 ("libceph: Fix ceph_tcp_sendpage()'s more boolean
+>> usage").
+>>
+>> As it is, last_piece is not helping at all: because Nagle algorithm is
+>> disabled, for a simple message with two 512-byte data items we end up
+>> emitting three packets: front + first data item, second data item and
+>> footer.  Go back to the original pre-fe38a2b67bc6 behavior -- a single
+>> packet in most cases.
+>>
+>> Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
 >> ---
->>   drivers/pci/endpoint/functions/pci-epf-test.c | 114 ++++++++++++------
->>   1 file changed, 77 insertions(+), 37 deletions(-)
+>>  net/ceph/messenger.c | 8 +++-----
+>>  1 file changed, 3 insertions(+), 5 deletions(-)
 >>
->> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
->> index bddff15052cc..068024fab544 100644
->> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
->> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
->> @@ -360,18 +360,6 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
->>   			   msecs_to_jiffies(1));
->>   }
->>   
->> -static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
->> -				 void *data)
->> -{
->> -	struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
->> -	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
->> -
->> -	queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
->> -			   msecs_to_jiffies(1));
->> -
->> -	return NOTIFY_OK;
->> -}
->> -
->>   static void pci_epf_test_unbind(struct pci_epf *epf)
->>   {
->>   	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
->> @@ -428,6 +416,78 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
->>   	return 0;
->>   }
->>   
->> +static int pci_epf_test_core_init(struct pci_epf *epf)
->> +{
->> +	struct pci_epf_header *header = epf->header;
->> +	const struct pci_epc_features *epc_features;
->> +	struct pci_epc *epc = epf->epc;
->> +	struct device *dev = &epf->dev;
->> +	bool msix_capable = false;
->> +	bool msi_capable = true;
->> +	int ret;
->> +
->> +	epc_features = pci_epc_get_features(epc, epf->func_no);
->> +	if (epc_features) {
->> +		msix_capable = epc_features->msix_capable;
->> +		msi_capable = epc_features->msi_capable;
->> +	}
->> +
->> +	ret = pci_epc_write_header(epc, epf->func_no, header);
->> +	if (ret) {
->> +		dev_err(dev, "Configuration header write failed\n");
->> +		return ret;
->> +	}
->> +
->> +	ret = pci_epf_test_set_bar(epf);
->> +	if (ret)
->> +		return ret;
->> +
->> +	if (msi_capable) {
->> +		ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
->> +		if (ret) {
->> +			dev_err(dev, "MSI configuration failed\n");
->> +			return ret;
->> +		}
->> +	}
->> +
->> +	if (msix_capable) {
->> +		ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
->> +		if (ret) {
->> +			dev_err(dev, "MSI-X configuration failed\n");
->> +			return ret;
->> +		}
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
->> +				 void *data)
->> +{
->> +	struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
->> +	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
->> +	int ret;
->> +
->> +	switch (val) {
->> +	case CORE_INIT:
->> +		ret = pci_epf_test_core_init(epf);
->> +		if (ret)
->> +			return NOTIFY_BAD;
->> +		break;
->> +
->> +	case LINK_UP:
->> +		queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
->> +				   msecs_to_jiffies(1));
->> +		break;
->> +
->> +	default:
->> +		dev_err(&epf->dev, "Invalid EPF test notifier event\n");
->> +		return NOTIFY_BAD;
->> +	}
->> +
->> +	return NOTIFY_OK;
->> +}
->> +
->>   static int pci_epf_test_alloc_space(struct pci_epf *epf)
->>   {
->>   	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
->> @@ -496,12 +556,11 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->>   {
->>   	int ret;
->>   	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
->> -	struct pci_epf_header *header = epf->header;
->>   	const struct pci_epc_features *epc_features;
->>   	enum pci_barno test_reg_bar = BAR_0;
->>   	struct pci_epc *epc = epf->epc;
->> -	struct device *dev = &epf->dev;
->>   	bool linkup_notifier = false;
->> +	bool skip_core_init = false;
->>   	bool msix_capable = false;
->>   	bool msi_capable = true;
->>   
->> @@ -511,6 +570,7 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->>   	epc_features = pci_epc_get_features(epc, epf->func_no);
->>   	if (epc_features) {
->>   		linkup_notifier = epc_features->linkup_notifier;
->> +		skip_core_init = epc_features->skip_core_init;
->>   		msix_capable = epc_features->msix_capable;
->>   		msi_capable = epc_features->msi_capable;
-> 
-> Are these used anywhere in this function?
-Nope. I'll remove them.
+>> diff --git a/net/ceph/messenger.c b/net/ceph/messenger.c
+>> index f7d7f32ac673c..6514816947fbe 100644
+>> --- a/net/ceph/messenger.c
+>> +++ b/net/ceph/messenger.c
+>> @@ -1612,7 +1612,6 @@ static int write_partial_message_data(struct ceph_connection *con)
+>>                 struct page *page;
+>>                 size_t page_offset;
+>>                 size_t length;
+>> -               bool last_piece;
+>>                 int ret;
+>>
+>>                 if (!cursor->resid) {
+>> @@ -1620,10 +1619,9 @@ static int write_partial_message_data(struct ceph_connection *con)
+>>                         continue;
+>>                 }
+>>
+>> -               page = ceph_msg_data_next(cursor, &page_offset, &length,
+>> -                                         &last_piece);
+>> -               ret = ceph_tcp_sendpage(con->sock, page, page_offset,
+>> -                                       length, !last_piece);
+>> +               page = ceph_msg_data_next(cursor, &page_offset, &length, NULL);
+>> +               ret = ceph_tcp_sendpage(con->sock, page, page_offset, length,
+>> +                                       true);
+>>                 if (ret <= 0) {
+>>                         if (do_datacrc)
+>>                                 msg->footer.data_crc = cpu_to_le32(crc);
+>
+>Hi Sasha,
+>
+>This commit was part of a larger series and shouldn't be backported on
+>its own.  Please drop it.
 
->>   		test_reg_bar = pci_epc_get_first_free_bar(epc_features);
->> @@ -520,34 +580,14 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->>   	epf_test->test_reg_bar = test_reg_bar;
->>   	epf_test->epc_features = epc_features;
->>   
->> -	ret = pci_epc_write_header(epc, epf->func_no, header);
->> -	if (ret) {
->> -		dev_err(dev, "Configuration header write failed\n");
->> -		return ret;
->> -	}
->> -
->>   	ret = pci_epf_test_alloc_space(epf);
->>   	if (ret)
->>   		return ret;
->>   
->> -	ret = pci_epf_test_set_bar(epf);
->> -	if (ret)
->> -		return ret;
->> -
->> -	if (msi_capable) {
->> -		ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
->> -		if (ret) {
->> -			dev_err(dev, "MSI configuration failed\n");
->> -			return ret;
->> -		}
->> -	}
->> -
->> -	if (msix_capable) {
->> -		ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
->> -		if (ret) {
->> -			dev_err(dev, "MSI-X configuration failed\n");
->> +	if (!skip_core_init) {
->> +		ret = pci_epf_test_core_init(epf);
->> +		if (ret)
->>   			return ret;
->> -		}
->>   	}
->>   
->>   	if (linkup_notifier) {
-> 
-> This could as well be moved to pci_epf_test_core_init().
-Yes, but I would like to keep only the code that touches hardware in pci_epf_test_core_init()
-to minimize the time it takes to execute it. Is there any strong reason to move it? if not,
-I would prefer to leave it here in this function itself.
+Now dropped, thanks!
 
-> 
-> Thanks
-> Kishon
-> 
-
+-- 
+Thanks,
+Sasha
