@@ -2,83 +2,129 @@ Return-Path: <SRS0=SILN=ZX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8484C43141
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 19:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C75CAC432C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 19:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F8D32146E
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 19:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9316E2082E
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 19:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575230111;
-	bh=GVnqatJjkI2d785STQM/Hp3Qg4fwIew62MDkFU1VYf8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=erxphw+3dj1WJEy9e0YTwwU3z2cIWmcrZN/ROE2Vv4MOeXX7byieBDM8wB+TYFgZq
-	 XPHa756P3nHf23QLzx6ROm/37+Zw8b8Rm5pfWCbi0u3s2Rbe2OO/x/3MNq2stweoqn
-	 SmwA3QMV7GW0R1BXVKrXlJ87BMQ1855TbRhOo/2A=
+	s=default; t=1575230148;
+	bh=gcAay/Td/B8wDGu9UHnS72u/oJ0XHm0hBR7m7b2pQ9g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=muz/BVuIKjy8Sa3VN8t0hoYggLEL4P+rAVSWyDNhZkgq4WrHkgLu+0RL5H64Rz9+g
+	 1yTxaz/mnx/A43mF7aIIQGc5ViYwxIay/Qy7a4tNLlIU/D69ZNspZhjk4X3tfeOZux
+	 fZbSfzFIwgwLVMvrMhG3RQFEI7Gfx0rFYp/ab0B0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbfLATzK (ORCPT
+        id S1727312AbfLATz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 14:55:10 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42521 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727169AbfLATzK (ORCPT
+        Sun, 1 Dec 2019 14:55:26 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36700 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726173AbfLATzZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 14:55:10 -0500
-Received: by mail-oi1-f194.google.com with SMTP id j22so113861oij.9;
-        Sun, 01 Dec 2019 11:55:09 -0800 (PST)
+        Sun, 1 Dec 2019 14:55:25 -0500
+Received: by mail-wr1-f65.google.com with SMTP id z3so41516499wru.3
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Dec 2019 11:55:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dLwpOWTcWF86S2Iv3wfh3f6rj4Jop1Meml+bicoVLKI=;
+        b=Z2o1AhTkvHoJ1xg2unAn1vojTbwX2Obcu2UFlTokjoIN3jUDK/3qnU18GIvBHVWLND
+         b1R2I5RfD9hc4+aJ7KHghJuU2pohspZ+HQcggFAcKS+9dTOBljEXsjoripq1WjRs+74M
+         AzIIe+9BHATkFJT3BNihC7kg8E2z+zijbsKB19dVsw8UwxweunvhOY3LPVGSRTInE82V
+         Y9ppJhD3yRjEQ8cvPw5YSGyTTSDnVWyqaBLrvMsDSLfA23jTJ4U/DIv8QzDdqOPXzI5t
+         8JkeTfeLqKjRVMeJZGAZT8y3kA7jayaT/jUSDGMpFdzIjpPiGyZBvitoWMTLBn/ukFKH
+         SUdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GVnqatJjkI2d785STQM/Hp3Qg4fwIew62MDkFU1VYf8=;
-        b=U3EYuS1dxNyqC6fvDfyJSmYGUhKM+qULTL6KGwTzYw2vpowLgnslT2YQattbTQSvYh
-         Umu5OIVLuvmjJYGVhA5V1t35308+3Znj/yS0xk/DomYLPD4Imh5rdqWpzZP4vWwudULj
-         vQeBM1/KASYzJgMxDwBJeWN1LtDodhViXHC1gvfevDEhfo406hZHMJFGG2UmNnLnwF0n
-         EpRV/YX4spdUf7OYJTHUICl3OP1xZp5T31updUm9NmWNkvyq1uMyr2swqghWOQwHutha
-         EzWkt8r6BwprG1SUbmQ5LY9QuPPEajJQdQy2KnoPL4d9nozkSXKLYv7n4Tmht9Y98qiB
-         e4hg==
-X-Gm-Message-State: APjAAAWzGA+u8F+3w8ywfj/Cb38kW5vLV/pUtNGT/LeNHNyj/7a7O7eW
-        veSzXLV9jwNxUZkA4JE4GS/lQ4KtsoZs7Qpy447DIA==
-X-Google-Smtp-Source: APXvYqxYLEKiaOGbRHJtdfln7+8FKWBYWG4GovfMLAoWPyghhvhXxos1xzBDaToO1KvOAi52s9rIRcX4BB+nubxdKaU=
-X-Received: by 2002:a54:488d:: with SMTP id r13mr8948358oic.115.1575230109255;
- Sun, 01 Dec 2019 11:55:09 -0800 (PST)
-MIME-Version: 1.0
-References: <2787005.CsmIKtZlk9@kreacher> <alpine.DEB.2.21.1911291231510.6038@hp-x360n>
-In-Reply-To: <alpine.DEB.2.21.1911291231510.6038@hp-x360n>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Sun, 1 Dec 2019 20:54:54 +0100
-Message-ID: <CAJZ5v0hiSnjZ=ZuSqDsQK6CDxyFRMhUVWL+UP-QJoj9vkLo2vg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] ACPI: PM: s2idle: Fix possible suspend lock-up
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dLwpOWTcWF86S2Iv3wfh3f6rj4Jop1Meml+bicoVLKI=;
+        b=SQgzuTFGTQCefBakm6jwOTz7gfWRttBwOMQdx7k11GlaaLujO+jAOCPxd+30DlHQoR
+         mvQXwZo9wV6Yub/vvLiCC1SeX1elu/pMcSnzTsKARLgEPmr6b0T0netFaZfKJkoG4kYl
+         sdAHEw66gHt1oq//DWWI7DOSwKJ0oywd/lKDk5lVLgMBhGvNI6AWFUMGhYktxIzSeAmV
+         PRDzFbJ5pyl1+lWNWyuXmQ0QTRy8eV6DBmP+T/iAFyO4brz5hbEzsMUEESiVJ8e1PP52
+         2jg5joOYTSoFpSPA1scwcAXpwdxX2jb6GP43Y5SJWb4igZiQ5rmPU8nbbtEcDa+dgj1r
+         Y52w==
+X-Gm-Message-State: APjAAAWNzIEOulCcjnFLEdxa4N7BfVjfAguOP5oQAlN702m4sEIOqUoO
+        JkW1T+YffRZx1PalhORrzFA=
+X-Google-Smtp-Source: APXvYqwvQKTGhjwupIqogynM0sbD+miEneTaijeEf3zjyjIg8hgckOUvY6ZHR8nH4mNvuiC20xX5Sg==
+X-Received: by 2002:a5d:5306:: with SMTP id e6mr64183092wrv.187.1575230123657;
+        Sun, 01 Dec 2019 11:55:23 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id f67sm21519948wme.16.2019.12.01.11.55.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Dec 2019 11:55:23 -0800 (PST)
+Date:   Sun, 1 Dec 2019 20:55:21 +0100
+From:   Ingo Molnar <mingo@kernel.org>
 To:     "Kenneth R. Crudup" <kenny@panix.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>, mceier@gmail.com,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Davidlohr Bueso <dbueso@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+Subject: Re: [PATCH] x86/pat: Fix off-by-one bugs in interval tree search
+Message-ID: <20191201195521.GC3615@gmail.com>
+References: <20191127005312.GD20422@shao2-debian>
+ <CAJTyqKPstH9PYk1nMuRJWnXUPTf9wAkphPFi9Yfz6PApLVVE0Q@mail.gmail.com>
+ <20191130212729.ykxstm5kj2p5ir6q@linux-p48b>
+ <CAJTyqKOp+mV1CfpasschSDO4vEDbshE4GPCB6+aX4rJOYSF=7A@mail.gmail.com>
+ <CAHk-=wh--xwpatv_Rcp3WtCPQtg-RVoXYQj8O+1TSw8os7Jtvw@mail.gmail.com>
+ <20191201104624.GA51279@gmail.com>
+ <20191201144947.GA4167@gmail.com>
+ <alpine.DEB.2.21.1912010906030.2748@hp-x360n>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1912010906030.2748@hp-x360n>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 9:35 PM Kenneth R. Crudup <kenny@panix.com> wrote:
->
->
-> On Thu, 28 Nov 2019, Rafael J. Wysocki wrote:
->
-> > Please test this series and let me know if it works for you too.
->
-> I've tested this quite a few times against the issues reported on the Linux-PM
-> mailing list ("resume failures if the charger is plugged in while suspended
-> and the battery is at < 90%" and "spurious wakeups from the EC for non-power
-> events") and this patchset has fixed both of these issues (the latter is
-> especially surprising and welcome).
->
-> I'm pretty happy with it; it's been a while since I've had a consistently
-> cold laptop while suspended. Much thanks!
 
-Thanks a lot for the testing and feedback, much appreciated!
+* Kenneth R. Crudup <kenny@panix.com> wrote:
 
-I'll queue up this series for the next PM pull request.
+> 
+> On Sun, 1 Dec 2019, Ingo Molnar wrote:
+> 
+> > So it would be nice if everyone who is seeing this bug could test the
+> > patch below against Linus's latest tree - does it fix the regression?
+> 
+> The patch fixes the issue for me.
+
+Great, thanks!
+
+> > If not then please send the before/after dump of
+> > /sys/kernel/debug/x86/pat_memtype_list - and even if it works please send
+> > the dumps so we can double check it all.
+> 
+> I don't have the "before patch" (but could if it is absolutely needed) but
+> here's the "after patch":
+
+> uncached-minus @ 0xfed91000-0xfed92000
+> uncached-minus @ 0xff340000-0xff341000
+> write-combining @ 0x4000000000-0x4010000000
+> uncached-minus @ 0x4010000000-0x4010001000
+
+I believe this is the region that caused the problem, the 0x4010000000 
+'end' address of the WC region is the same as the 0x4010000000 'start' 
+address of the UC- region that follows it.
+
+> write-combining @ 0x604a800000-0x604b000000
+> uncached-minus @ 0x604b100000-0x604b110000
+
+This WC region was probably unaffected by the bug.
+
+Thanks,
+
+	Ingo
