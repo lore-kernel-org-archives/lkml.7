@@ -2,105 +2,267 @@ Return-Path: <SRS0=SILN=ZX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F403BC43215
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 14:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC89AC43215
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 14:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8C7C215E5
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 14:28:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575210527;
-	bh=23kRnY9l6hVzpnOefG+pIrRM6Q4rbbUBC993dsfYmbQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1t/YW9LLbafQfYtR54AE4fFqk63mnrzND2xe1R6U1LrapYnsIab3PcmwwFVGdNUiU
-	 RzAxKjIRTFy7DdclL3A3trpLE63rOVWCJkJzqX/tK+GDcda6PxNaKMApFHB4MyyYVU
-	 ujFRBhPU8ifpappxXfTagDw+HCDrJ0pLFZD7Hmmo=
+	by mail.kernel.org (Postfix) with ESMTP id 85678206E4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 14:29:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dZNGqzai"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbfLAO21 (ORCPT
+        id S1727198AbfLAO30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 09:28:27 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34744 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbfLAO21 (ORCPT
+        Sun, 1 Dec 2019 09:29:26 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:9539 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726489AbfLAO30 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 09:28:27 -0500
-Received: by mail-lj1-f193.google.com with SMTP id m6so29548776ljc.1
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Dec 2019 06:28:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=l+vQUnn8WZrN5mb0l4AFAbcnrvnGqD368BEzSK9vrjc=;
-        b=baMDvJB6x8ri1qgpZoRR0QipjSxPz0EEG55lu0LWWNDGxqXr35SvhtHnTdr0mqJtTZ
-         3XZYFpoAzcmAwtQ7IU63gh+QOVuRVOxxwtk+Bpp7Vxliv+9zRWXvpPLzbOFBknSXNohb
-         RpAk8a5uQkYnRxanRCUziu0yMVd0+EBWtyUL8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=l+vQUnn8WZrN5mb0l4AFAbcnrvnGqD368BEzSK9vrjc=;
-        b=XU0DGXT2ZU2T0C1cMj2pyrdOnUdmB5DYBrQloomT504ZZexEZqPlkWrrTMYwpUjrZ1
-         xNG5CqV9YGRU+3ELFeTD80fcVvhVJmYfhVfhEvTlP7pdGOYiP3HsbQXnaOEWTaqgBMzD
-         MU4tjsrjkgpF1XgYsBg3Zz6Lc9pMePaktJgH32ObcvF5tyyfm11YrTRrL4KDRUn5VIhy
-         h78vSSSeGHjb0Vy6KCR0OFyDnq/puUZeK1MAdmstJi1x663wGkeEIEkfxBITbCWtc19b
-         TQDg4FSPJdM0EEcOZK0Yz4N6E8DENR1Lht5lGbBng1HQLCgiZLSI6sYnBUcdjp90UXCJ
-         4FHw==
-X-Gm-Message-State: APjAAAXqp42F9j/L6Lnw7Yi5k0jFYsNM97oK8GWJ+ERl32Nr0hPS7kM8
-        GbbqQEy2OPH1pp7J7eeOzKtOJ78pcxc=
-X-Google-Smtp-Source: APXvYqwh+1EMVjesVwp4vp9zgbhSsWwcPt5nH7W998FlqrwDNdzIEEkJaOLiud275s31P9yi0qa3JQ==
-X-Received: by 2002:a2e:2e14:: with SMTP id u20mr2839624lju.120.1575210504415;
-        Sun, 01 Dec 2019 06:28:24 -0800 (PST)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id c22sm13413897ljk.43.2019.12.01.06.28.23
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 01 Dec 2019 06:28:23 -0800 (PST)
-Received: by mail-lj1-f176.google.com with SMTP id h23so485690ljc.8
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Dec 2019 06:28:23 -0800 (PST)
-X-Received: by 2002:a2e:63dd:: with SMTP id s90mr1932908lje.48.1575210502841;
- Sun, 01 Dec 2019 06:28:22 -0800 (PST)
+        Sun, 1 Dec 2019 09:29:26 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5de3ce470000>; Sun, 01 Dec 2019 06:29:27 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 01 Dec 2019 06:29:23 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 01 Dec 2019 06:29:23 -0800
+Received: from [10.25.74.138] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 1 Dec
+ 2019 14:29:19 +0000
+Subject: Re: [PATCH 4/4] PCI: pci-epf-test: Add support to defer core
+ initialization
+To:     Kishon Vijay Abraham I <kishon@ti.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <lorenzo.pieralisi@arm.com>,
+        <andrew.murray@arm.com>, <bhelgaas@google.com>,
+        <thierry.reding@gmail.com>
+CC:     <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20191113090851.26345-1-vidyas@nvidia.com>
+ <20191113090851.26345-5-vidyas@nvidia.com>
+ <e8e3b8b6-d115-b4d4-19c5-1eae1d8abd0f@ti.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <958fcc14-6794-0328-5c31-0dcc845ee646@nvidia.com>
+Date:   Sun, 1 Dec 2019 19:59:17 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20191130180301.5c39d8a4@lwn.net> <CAHk-=wj8tNhu76yxShwOfwVKk=qWznSFkAKyQfu6adcV8JzJkQ@mail.gmail.com>
- <20191130184512.23c6faaa@lwn.net> <xmqqblss1rjp.fsf@gitster-ct.c.googlers.com>
-In-Reply-To: <xmqqblss1rjp.fsf@gitster-ct.c.googlers.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 1 Dec 2019 06:28:06 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wj9P8ukXOuTUnpkPNwc8B683Z0Za=-WxpLygMbjEtNxgA@mail.gmail.com>
-Message-ID: <CAHk-=wj9P8ukXOuTUnpkPNwc8B683Z0Za=-WxpLygMbjEtNxgA@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: networking: device drivers: Remove stray asterisks
-To:     Junio C Hamano <gitster@pobox.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Git List Mailing <git@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <e8e3b8b6-d115-b4d4-19c5-1eae1d8abd0f@ti.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1575210567; bh=R0xGxFOdur+CeguObMrwAo1cQvjZeJSyyOUZLz2IAp0=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=dZNGqzai/FKSRFv8UH3CuHk1nRWfvN7yIamCZKISnik8dmv8VuX5VPInG3vdGy4i9
+         Bapq+hTPVusDffht2ne+7hhkSljxEf5MT9279o1UNDDTECzQAEWVH0A6Ln83AJJ7tC
+         QtWinDl+cwEW9cWeVyM5Dd/C042gmgP8sagWCu/YNtOWkre9mHlr4bN/AoGQnzwJiC
+         zoJmsPz4wtOp+tbNV+nNwB6MoIdi3bn2+XrTOaG/bFYa9dpzLZS4anMsdKYI8XE5uj
+         iHaTp5rTiV6y50xgN5QyEaID0/ntwDw6I8dtH1eFHsxEjrXg2UXB1jskdMfr4msUYu
+         8036bE/qaF6DQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 30, 2019 at 10:35 PM Junio C Hamano <gitster@pobox.com> wrote:
->
-> OK, so it appears that the tool is working as documented.
+On 11/27/2019 2:50 PM, Kishon Vijay Abraham I wrote:
+> Hi,
+> 
+> On 13/11/19 2:38 PM, Vidya Sagar wrote:
+>> Add support to defer core initialization and to receive a notifier
+>> when core is ready to accommodate platforms where core is not for
+>> initialization untile reference clock from host is available.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>>   drivers/pci/endpoint/functions/pci-epf-test.c | 114 ++++++++++++------
+>>   1 file changed, 77 insertions(+), 37 deletions(-)
+>>
+>> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+>> index bddff15052cc..068024fab544 100644
+>> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+>> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+>> @@ -360,18 +360,6 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
+>>   			   msecs_to_jiffies(1));
+>>   }
+>>   
+>> -static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
+>> -				 void *data)
+>> -{
+>> -	struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
+>> -	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>> -
+>> -	queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
+>> -			   msecs_to_jiffies(1));
+>> -
+>> -	return NOTIFY_OK;
+>> -}
+>> -
+>>   static void pci_epf_test_unbind(struct pci_epf *epf)
+>>   {
+>>   	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>> @@ -428,6 +416,78 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
+>>   	return 0;
+>>   }
+>>   
+>> +static int pci_epf_test_core_init(struct pci_epf *epf)
+>> +{
+>> +	struct pci_epf_header *header = epf->header;
+>> +	const struct pci_epc_features *epc_features;
+>> +	struct pci_epc *epc = epf->epc;
+>> +	struct device *dev = &epf->dev;
+>> +	bool msix_capable = false;
+>> +	bool msi_capable = true;
+>> +	int ret;
+>> +
+>> +	epc_features = pci_epc_get_features(epc, epf->func_no);
+>> +	if (epc_features) {
+>> +		msix_capable = epc_features->msix_capable;
+>> +		msi_capable = epc_features->msi_capable;
+>> +	}
+>> +
+>> +	ret = pci_epc_write_header(epc, epf->func_no, header);
+>> +	if (ret) {
+>> +		dev_err(dev, "Configuration header write failed\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = pci_epf_test_set_bar(epf);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (msi_capable) {
+>> +		ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
+>> +		if (ret) {
+>> +			dev_err(dev, "MSI configuration failed\n");
+>> +			return ret;
+>> +		}
+>> +	}
+>> +
+>> +	if (msix_capable) {
+>> +		ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
+>> +		if (ret) {
+>> +			dev_err(dev, "MSI-X configuration failed\n");
+>> +			return ret;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
+>> +				 void *data)
+>> +{
+>> +	struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
+>> +	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>> +	int ret;
+>> +
+>> +	switch (val) {
+>> +	case CORE_INIT:
+>> +		ret = pci_epf_test_core_init(epf);
+>> +		if (ret)
+>> +			return NOTIFY_BAD;
+>> +		break;
+>> +
+>> +	case LINK_UP:
+>> +		queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
+>> +				   msecs_to_jiffies(1));
+>> +		break;
+>> +
+>> +	default:
+>> +		dev_err(&epf->dev, "Invalid EPF test notifier event\n");
+>> +		return NOTIFY_BAD;
+>> +	}
+>> +
+>> +	return NOTIFY_OK;
+>> +}
+>> +
+>>   static int pci_epf_test_alloc_space(struct pci_epf *epf)
+>>   {
+>>   	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>> @@ -496,12 +556,11 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>>   {
+>>   	int ret;
+>>   	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>> -	struct pci_epf_header *header = epf->header;
+>>   	const struct pci_epc_features *epc_features;
+>>   	enum pci_barno test_reg_bar = BAR_0;
+>>   	struct pci_epc *epc = epf->epc;
+>> -	struct device *dev = &epf->dev;
+>>   	bool linkup_notifier = false;
+>> +	bool skip_core_init = false;
+>>   	bool msix_capable = false;
+>>   	bool msi_capable = true;
+>>   
+>> @@ -511,6 +570,7 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>>   	epc_features = pci_epc_get_features(epc, epf->func_no);
+>>   	if (epc_features) {
+>>   		linkup_notifier = epc_features->linkup_notifier;
+>> +		skip_core_init = epc_features->skip_core_init;
+>>   		msix_capable = epc_features->msix_capable;
+>>   		msi_capable = epc_features->msi_capable;
+> 
+> Are these used anywhere in this function?
+Nope. I'll remove them.
 
-Well, yes and no.
+>>   		test_reg_bar = pci_epc_get_first_free_bar(epc_features);
+>> @@ -520,34 +580,14 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>>   	epf_test->test_reg_bar = test_reg_bar;
+>>   	epf_test->epc_features = epc_features;
+>>   
+>> -	ret = pci_epc_write_header(epc, epf->func_no, header);
+>> -	if (ret) {
+>> -		dev_err(dev, "Configuration header write failed\n");
+>> -		return ret;
+>> -	}
+>> -
+>>   	ret = pci_epf_test_alloc_space(epf);
+>>   	if (ret)
+>>   		return ret;
+>>   
+>> -	ret = pci_epf_test_set_bar(epf);
+>> -	if (ret)
+>> -		return ret;
+>> -
+>> -	if (msi_capable) {
+>> -		ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
+>> -		if (ret) {
+>> -			dev_err(dev, "MSI configuration failed\n");
+>> -			return ret;
+>> -		}
+>> -	}
+>> -
+>> -	if (msix_capable) {
+>> -		ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
+>> -		if (ret) {
+>> -			dev_err(dev, "MSI-X configuration failed\n");
+>> +	if (!skip_core_init) {
+>> +		ret = pci_epf_test_core_init(epf);
+>> +		if (ret)
+>>   			return ret;
+>> -		}
+>>   	}
+>>   
+>>   	if (linkup_notifier) {
+> 
+> This could as well be moved to pci_epf_test_core_init().
+Yes, but I would like to keep only the code that touches hardware in pci_epf_test_core_init()
+to minimize the time it takes to execute it. Is there any strong reason to move it? if not,
+I would prefer to leave it here in this function itself.
 
-I think it's a mistake that --no-keep-cr (which is the default) only
-acts on the outer envelope.
+> 
+> Thanks
+> Kishon
+> 
 
-Now, *originally* the outer envelope was all that existed so it makes
-sense in a historical context of "CR removal happens when splitting
-emails in an mbox". And that's the behavior we have.
-
-But then git learnt to do MIME decoding and extracting things from
-base64 etc, and the CR removal wasn't updated to that change.
-
-I guess "documented" is arguable in the sense that the git
-documentation does talk about "git-mailsplit" as an implementation
-detail, but still..
-
-             Linus
