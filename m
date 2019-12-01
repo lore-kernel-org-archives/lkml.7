@@ -2,199 +2,434 @@ Return-Path: <SRS0=SILN=ZX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F76C432C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 11:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B330C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 11:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 507242146E
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 11:44:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575200644;
-	bh=tByoUwTMgZ8HHaQuYNzA3ZRZfBCczIoU/BZrjsO8QpI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DMspVPD/2XoeTJfxTlw8fDDgbvwqmgNUjXcpO2brd6v69X4jmZ9YSc3+cQS2Z2XYT
-	 Bz+NSKekTaY+/xe5te650/QxF88i80P5YaVJNZrsf0S9JX7CEFR1eU2uWP3vhKSXp8
-	 sMNymQypyObXYzI73ci3RwrMXUYp4AvoxwPe9Dk0=
+	by mail.kernel.org (Postfix) with ESMTP id 5CEED20705
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 11:46:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZNiGtZDo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfLALoD (ORCPT
+        id S1726789AbfLALqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 06:44:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44692 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726186AbfLALoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 06:44:03 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9316E20833;
-        Sun,  1 Dec 2019 11:44:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575200642;
-        bh=tByoUwTMgZ8HHaQuYNzA3ZRZfBCczIoU/BZrjsO8QpI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OmQSSthUUtjZTTWnVVYln12q7U1x6QAqW2igLruXI30M7xhPi3xWjSCzMD6EZFVtD
-         PhpAZlREjnDAhi6NsU5vhB8c0tUZ2UoJAaFqii4NQkl1zg/OZYUIlZ8cxLav0XhFyq
-         IXgvmOiODOPwNKDmsyqN3TpMWT+G+4nAJkD08jKM=
-Date:   Sun, 1 Dec 2019 11:43:57 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <pmeerw@pmeerw.net>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <biabeniamin@outlook.com>,
-        <knaack.h@gmx.de>
-Subject: Re: [PATCH v2] iio: adc: ad7887: Cleanup channel assignment
-Message-ID: <20191201114357.3c027077@archlinux>
-In-Reply-To: <20191125132137.4753-1-beniamin.bia@analog.com>
-References: <20191125132137.4753-1-beniamin.bia@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 1 Dec 2019 06:46:42 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:33322 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725993AbfLALqm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Dec 2019 06:46:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575200801;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8vZSTFTClz+gFYFT8rY2rqTrpX2zFmVovSigmWOJuME=;
+        b=ZNiGtZDoy/VThjByNEdEI7s0RMiF+mfoAPUHQ6czxAj64UHY4SrQQoPeWKEOKfxThlsfJs
+        UZrZm6qWkuwuDnQD9h3L6b/cD6YQQWM8O3t8UbzVobVmtw+rFR6qCybgku+a0rElu80jTp
+        +4H6CQmgmLhcdjFU2mZW4NLzTcL66kQ=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-389-nrPYn9J2N26VT_SWQxP1zw-1; Sun, 01 Dec 2019 06:46:38 -0500
+Received: by mail-qk1-f199.google.com with SMTP id 24so5582635qka.16
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Dec 2019 03:46:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GZ2K4EhFx9VSHnQ9Db4nl7lYmDIyd3raQqWfh0qOyio=;
+        b=Iylqh5FjQteO4llqRU5EMCx1EajKMiNDDWHPz6xGyLgpCirAgU6Wm9QunEL833d1Oe
+         K130KQ4Y/Lk/Mz5ql7XYTQ0dqMwxAu8fjzCJmV842NoPsJEcR9mRiq3Xw/ofNUMQ00+1
+         FwNHJgACT2qhHb6jWMIalVUTCzqbcz81wczVXr4iG8LvYFDD70dgCX/EHL2eqRpou7DP
+         GDxqFksbxjwfpEuEryZyhUIezm/nkGd+5KT++58VXvzjtV9kNu+8gkAgX76rMmLyQt9Z
+         V6iA7L6qWcAgTcB0mZDsPsoUWtkStXrHifLVsuGRHSheBkg53MRQL32IWqg/pvU8VhLb
+         9L2w==
+X-Gm-Message-State: APjAAAVQuR4ApCT3eSXHCzvCFXyurrQ12shumDK1U/V6gmTbxlSQutxf
+        w0eCB3KmZv1gFplCdtdfK7+1/fKRTBWrBavTVnybyYVIVKZqECsHwkv0dB3OnncLIQYNld9pbnY
+        /Obxk5AcVcrBne9JKfJTrig93
+X-Received: by 2002:a37:a08d:: with SMTP id j135mr12380012qke.455.1575200797466;
+        Sun, 01 Dec 2019 03:46:37 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyPDBK8mIuf+qYJn0qUoYQhep/CKiZhygPm3sID1S27ff8V+Dyzk82ZcylZj+dvRZgbwXJX3Q==
+X-Received: by 2002:a37:a08d:: with SMTP id j135mr12379977qke.455.1575200796970;
+        Sun, 01 Dec 2019 03:46:36 -0800 (PST)
+Received: from redhat.com (bzq-79-181-48-215.red.bezeqint.net. [79.181.48.215])
+        by smtp.gmail.com with ESMTPSA id d26sm2479811qka.28.2019.12.01.03.46.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Dec 2019 03:46:35 -0800 (PST)
+Date:   Sun, 1 Dec 2019 06:46:26 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH v14 6/6] virtio-balloon: Add support for providing unused
+ page reports to host
+Message-ID: <20191201041731-mutt-send-email-mst@kernel.org>
+References: <20191119214454.24996.66289.stgit@localhost.localdomain>
+ <20191119214653.24996.90695.stgit@localhost.localdomain>
+ <65de00cf-5969-ea2e-545b-2228a4c859b0@redhat.com>
+ <CAKgT0Uf8iebEXSovdWfXq1FvyGpqrF-X0VDrq-h8xavQkvA_9w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CAKgT0Uf8iebEXSovdWfXq1FvyGpqrF-X0VDrq-h8xavQkvA_9w@mail.gmail.com>
+X-MC-Unique: nrPYn9J2N26VT_SWQxP1zw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 Nov 2019 15:21:37 +0200
-Beniamin Bia <beniamin.bia@analog.com> wrote:
+On Fri, Nov 29, 2019 at 01:13:32PM -0800, Alexander Duyck wrote:
+> On Thu, Nov 28, 2019 at 7:26 AM David Hildenbrand <david@redhat.com> wrot=
+e:
+> >
+> > On 19.11.19 22:46, Alexander Duyck wrote:
+> > > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > >
+> > > Add support for the page reporting feature provided by virtio-balloon=
+.
+> > > Reporting differs from the regular balloon functionality in that is i=
+s
+> > > much less durable than a standard memory balloon. Instead of creating=
+ a
+> > > list of pages that cannot be accessed the pages are only inaccessible
+> > > while they are being indicated to the virtio interface. Once the
+> > > interface has acknowledged them they are placed back into their respe=
+ctive
+> > > free lists and are once again accessible by the guest system.
+> >
+> > Maybe add something like "In contrast to ordinary balloon
+> > inflation/deflation, the guest can reuse all reported pages immediately
+> > after reporting has finished, without having to notify the hypervisor
+> > about it (e.g., VIRTIO_BALLOON_F_MUST_TELL_HOST does not apply)."
+>=20
+> Okay. I'll make a note of it for next version.
 
-> The channels specification assignment in chip info was simplified.
-> This patch makes supporting other devices by this driver easier.
-> 
-> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
 
-Thanks,
+VIRTIO_BALLOON_F_MUST_TELL_HOST is IMHO misdocumented.
+It states:
+=09VIRTIO_BALLOON_F_MUST_TELL_HOST (0) Host has to be told before pages fro=
+m the balloon are
+=09used.
+but really balloon always told host. The difference is in timing,
+historically balloon gave up pages before sending the
+message and before waiting for the buffer to be used by host.
 
-Jonathan
+I think this feature can be the same if we want.
 
-> ---
-> Changes in v2:
-> -separate iio_chan_spec for dual mode
-> 
->  drivers/iio/adc/ad7887.c | 82 +++++++++++++++++++++-------------------
->  1 file changed, 43 insertions(+), 39 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ad7887.c b/drivers/iio/adc/ad7887.c
-> index 6223043e432b..c6a3428e950a 100644
-> --- a/drivers/iio/adc/ad7887.c
-> +++ b/drivers/iio/adc/ad7887.c
-> @@ -43,11 +43,17 @@ enum ad7887_channels {
->  /**
->   * struct ad7887_chip_info - chip specifc information
->   * @int_vref_mv:	the internal reference voltage
-> - * @channel:		channel specification
-> + * @channels:		channels specification
-> + * @num_channels:	number of channels
-> + * @dual_channels:	channels specification in dual mode
-> + * @num_dual_channels:	number of channels in dual mode
->   */
->  struct ad7887_chip_info {
->  	u16				int_vref_mv;
-> -	struct iio_chan_spec		channel[3];
-> +	const struct iio_chan_spec	*channels;
-> +	unsigned int			num_channels;
-> +	const struct iio_chan_spec	*dual_channels;
-> +	unsigned int			num_dual_channels;
->  };
->  
->  struct ad7887_state {
-> @@ -183,45 +189,43 @@ static int ad7887_read_raw(struct iio_dev *indio_dev,
->  	return -EINVAL;
->  }
->  
-> +#define AD7887_CHANNEL(x) { \
-> +	.type = IIO_VOLTAGE, \
-> +	.indexed = 1, \
-> +	.channel = (x), \
-> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
-> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
-> +	.address = (x), \
-> +	.scan_index = (x), \
-> +	.scan_type = { \
-> +		.sign = 'u', \
-> +		.realbits = 12, \
-> +		.storagebits = 16, \
-> +		.shift = 0, \
-> +		.endianness = IIO_BE, \
-> +	}, \
-> +}
-> +
-> +static const struct iio_chan_spec ad7887_channels[] = {
-> +	AD7887_CHANNEL(0),
-> +	IIO_CHAN_SOFT_TIMESTAMP(1),
-> +};
-> +
-> +static const struct iio_chan_spec ad7887_dual_channels[] = {
-> +	AD7887_CHANNEL(0),
-> +	AD7887_CHANNEL(1),
-> +	IIO_CHAN_SOFT_TIMESTAMP(2),
-> +};
->  
->  static const struct ad7887_chip_info ad7887_chip_info_tbl[] = {
->  	/*
->  	 * More devices added in future
->  	 */
->  	[ID_AD7887] = {
-> -		.channel[0] = {
-> -			.type = IIO_VOLTAGE,
-> -			.indexed = 1,
-> -			.channel = 1,
-> -			.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-> -			.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
-> -			.address = 1,
-> -			.scan_index = 1,
-> -			.scan_type = {
-> -				.sign = 'u',
-> -				.realbits = 12,
-> -				.storagebits = 16,
-> -				.shift = 0,
-> -				.endianness = IIO_BE,
-> -			},
-> -		},
-> -		.channel[1] = {
-> -			.type = IIO_VOLTAGE,
-> -			.indexed = 1,
-> -			.channel = 0,
-> -			.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-> -			.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
-> -			.address = 0,
-> -			.scan_index = 0,
-> -			.scan_type = {
-> -				.sign = 'u',
-> -				.realbits = 12,
-> -				.storagebits = 16,
-> -				.shift = 0,
-> -				.endianness = IIO_BE,
-> -			},
-> -		},
-> -		.channel[2] = IIO_CHAN_SOFT_TIMESTAMP(2),
-> +		.channels = ad7887_channels,
-> +		.num_channels = ARRAY_SIZE(ad7887_channels),
-> +		.dual_channels = ad7887_dual_channels,
-> +		.num_dual_channels = ARRAY_SIZE(ad7887_dual_channels),
->  		.int_vref_mv = 2500,
->  	},
->  };
-> @@ -306,11 +310,11 @@ static int ad7887_probe(struct spi_device *spi)
->  		spi_message_init(&st->msg[AD7887_CH1]);
->  		spi_message_add_tail(&st->xfer[3], &st->msg[AD7887_CH1]);
->  
-> -		indio_dev->channels = st->chip_info->channel;
-> -		indio_dev->num_channels = 3;
-> +		indio_dev->channels = st->chip_info->dual_channels;
-> +		indio_dev->num_channels = st->chip_info->num_dual_channels;
->  	} else {
-> -		indio_dev->channels = &st->chip_info->channel[1];
-> -		indio_dev->num_channels = 2;
-> +		indio_dev->channels = st->chip_info->channels;
-> +		indio_dev->num_channels = st->chip_info->num_channels;
->  	}
->  
->  	ret = iio_triggered_buffer_setup(indio_dev, &iio_pollfunc_store_time,
+
+> > [...]
+> >
+> > >  /*
+> > >   * Balloon device works in 4K page units.  So each page is pointed t=
+o by
+> > > @@ -37,6 +38,9 @@
+> > >  #define VIRTIO_BALLOON_FREE_PAGE_SIZE \
+> > >       (1 << (VIRTIO_BALLOON_FREE_PAGE_ORDER + PAGE_SHIFT))
+> > >
+> > > +/*  limit on the number of pages that can be on the reporting vq */
+> > > +#define VIRTIO_BALLOON_VRING_HINTS_MAX       16
+> >
+> > Maybe rename that from HINTS to REPORTS
+>=20
+> I'll fix it for the next version.
+>=20
+> > > +
+> > >  #ifdef CONFIG_BALLOON_COMPACTION
+> > >  static struct vfsmount *balloon_mnt;
+> > >  #endif
+> > > @@ -46,6 +50,7 @@ enum virtio_balloon_vq {
+> > >       VIRTIO_BALLOON_VQ_DEFLATE,
+> > >       VIRTIO_BALLOON_VQ_STATS,
+> > >       VIRTIO_BALLOON_VQ_FREE_PAGE,
+> > > +     VIRTIO_BALLOON_VQ_REPORTING,
+> > >       VIRTIO_BALLOON_VQ_MAX
+> > >  };
+> > >
+> > > @@ -113,6 +118,10 @@ struct virtio_balloon {
+> > >
+> > >       /* To register a shrinker to shrink memory upon memory pressure=
+ */
+> > >       struct shrinker shrinker;
+> > > +
+> > > +     /* Unused page reporting device */
+> >
+> > Sounds like the device is unused :D
+> >
+> > "Device info for reporting unused pages" ?
+> >
+> > I am in general wondering, should we rename "unused" to "free". I.e.,
+> > "free page reporting" instead of "unused page reporting"? Or what was
+> > the motivation behind using "unused" ?
+>=20
+> I honestly don't remember why I chose "unused" at this point. I can
+> switch over to "free" if that is what is preferred.
+>=20
+> Looking over the code a bit more I suspect the reason for avoiding it
+> is because free page hinting also mentioned reporting in a few spots.
+>=20
+> > > +     struct virtqueue *reporting_vq;
+> > > +     struct page_reporting_dev_info pr_dev_info;
+> > >  };
+> > >
+> > >  static struct virtio_device_id id_table[] =3D {
+> > > @@ -152,6 +161,32 @@ static void tell_host(struct virtio_balloon *vb,=
+ struct virtqueue *vq)
+> > >
+> > >  }
+> > >
+> > > +void virtballoon_unused_page_report(struct page_reporting_dev_info *=
+pr_dev_info,
+> > > +                                 unsigned int nents)
+> > > +{
+> > > +     struct virtio_balloon *vb =3D
+> > > +             container_of(pr_dev_info, struct virtio_balloon, pr_dev=
+_info);
+> > > +     struct virtqueue *vq =3D vb->reporting_vq;
+> > > +     unsigned int unused, err;
+> > > +
+> > > +     /* We should always be able to add these buffers to an empty qu=
+eue. */
+> >
+> > This comment somewhat contradicts the error handling (and comment)
+> > below. Maybe just drop it?
+> >
+> > > +     err =3D virtqueue_add_inbuf(vq, pr_dev_info->sg, nents, vb,
+> > > +                               GFP_NOWAIT | __GFP_NOWARN);
+> > > +
+> > > +     /*
+> > > +      * In the extremely unlikely case that something has changed an=
+d we
+> > > +      * are able to trigger an error we will simply display a warnin=
+g
+> > > +      * and exit without actually processing the pages.
+> > > +      */
+> > > +     if (WARN_ON(err))
+> > > +             return;
+> >
+> > Maybe WARN_ON_ONCE? (to not flood the log on recurring errors)
+>=20
+> Actually I might need to tweak things here a bit. It occurs to me that
+> this can fail for more than just there not being space in the ring. I
+> forgot that DMA mapping needs to also occur so in the case of a DMA
+> mapping failure we would also see an error.
+
+Balloon assumes DMA mapping is bypassed right now:
+
+static int virtballoon_validate(struct virtio_device *vdev)
+{
+        if (!page_poisoning_enabled())
+                __virtio_clear_bit(vdev, VIRTIO_BALLOON_F_PAGE_POISON);
+
+        __virtio_clear_bit(vdev, VIRTIO_F_IOMMU_PLATFORM);
+
+^^^^^^^^
+
+
+        return 0;
+}
+
+I don't think it can work with things like a bounce buffer.
+
+> I probably will switch it to a WARN_ON_ONCE. I may also need to add a
+> return value to the function so that we can indicate that an entire
+> batch has failed and that we need to abort.
+>=20
+> > > +
+> > > +     virtqueue_kick(vq);
+> > > +
+> > > +     /* When host has read buffer, this completes via balloon_ack */
+> > > +     wait_event(vb->acked, virtqueue_get_buf(vq, &unused));
+> >
+> > Is it safe to rely on the same ack-ing mechanism as the inflate/deflate
+> > queue? What if both mechanisms are used concurrently and race/both wait
+> > for the hypervisor?
+> >
+> > Maybe we need a separate vb->acked + callback function.
+>=20
+> So if I understand correctly what is actually happening is that the
+> wait event is simply a trigger that will wake us up, and at that point
+> we check to see if the buffer we submitted is done. If not we go back
+> to sleep. As such all we are really waiting on is the notification
+> that the buffers we submitted have been processed. So it is using the
+> same function but on a different virtual queue.
+>=20
+> > > +}
+> > > +
+> > >  static void set_page_pfns(struct virtio_balloon *vb,
+> > >                         __virtio32 pfns[], struct page *page)
+> > >  {
+> > > @@ -476,6 +511,7 @@ static int init_vqs(struct virtio_balloon *vb)
+> > >       names[VIRTIO_BALLOON_VQ_DEFLATE] =3D "deflate";
+> > >       names[VIRTIO_BALLOON_VQ_STATS] =3D NULL;
+> > >       names[VIRTIO_BALLOON_VQ_FREE_PAGE] =3D NULL;
+> > > +     names[VIRTIO_BALLOON_VQ_REPORTING] =3D NULL;
+> > >
+> > >       if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
+> > >               names[VIRTIO_BALLOON_VQ_STATS] =3D "stats";
+> > > @@ -487,11 +523,19 @@ static int init_vqs(struct virtio_balloon *vb)
+> > >               callbacks[VIRTIO_BALLOON_VQ_FREE_PAGE] =3D NULL;
+> > >       }
+> > >
+> > > +     if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING)) {
+> > > +             names[VIRTIO_BALLOON_VQ_REPORTING] =3D "reporting_vq";
+> > > +             callbacks[VIRTIO_BALLOON_VQ_REPORTING] =3D balloon_ack;
+> > > +     }
+> > > +
+> > >       err =3D vb->vdev->config->find_vqs(vb->vdev, VIRTIO_BALLOON_VQ_=
+MAX,
+> > >                                        vqs, callbacks, names, NULL, N=
+ULL);
+> > >       if (err)
+> > >               return err;
+> > >
+> > > +     if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING))
+> > > +             vb->reporting_vq =3D vqs[VIRTIO_BALLOON_VQ_REPORTING];
+> > > +
+> >
+> > I'd register these in the same order they are defined (IOW, move this
+> > further down)
+>=20
+> done.
+>=20
+> > >       vb->inflate_vq =3D vqs[VIRTIO_BALLOON_VQ_INFLATE];
+> > >       vb->deflate_vq =3D vqs[VIRTIO_BALLOON_VQ_DEFLATE];
+> > >       if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
+> > > @@ -932,12 +976,30 @@ static int virtballoon_probe(struct virtio_devi=
+ce *vdev)
+> > >               if (err)
+> > >                       goto out_del_balloon_wq;
+> > >       }
+> > > +
+> > > +     vb->pr_dev_info.report =3D virtballoon_unused_page_report;
+> > > +     if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING)) {
+> > > +             unsigned int capacity;
+> > > +
+> > > +             capacity =3D min_t(unsigned int,
+> > > +                              virtqueue_get_vring_size(vb->reporting=
+_vq),
+> > > +                              VIRTIO_BALLOON_VRING_HINTS_MAX);
+> > > +             vb->pr_dev_info.capacity =3D capacity;
+> > > +
+> > > +             err =3D page_reporting_register(&vb->pr_dev_info);
+> > > +             if (err)
+> > > +                     goto out_unregister_shrinker;
+> > > +     }
+> >
+> > It can happen here that we start reporting before marking the device
+> > ready. Can that be problematic?
+> >
+> > Maybe we have to ignore any reports in virtballoon_unused_page_report()
+> > until ready...
+>=20
+> I don't think there is an issue with us putting buffers on the ring
+> before it is ready. I think it will just cause our function to sleep.
+>=20
+> I'm guessing that is the case since init_vqs will add a buffer to the
+> stats vq and that happens even earlier in virtballoon_probe.
+>=20
+> > > +
+> > >       virtio_device_ready(vdev);
+> > >
+> > >       if (towards_target(vb))
+> > >               virtballoon_changed(vdev);
+> > >       return 0;
+> > >
+> > > +out_unregister_shrinker:
+> > > +     if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OO=
+M))
+> > > +             virtio_balloon_unregister_shrinker(vb);
+> >
+> > A sync is done implicitly, right? So after this call, we won't get any
+> > new callbacks/are stuck in a callback.
+>=20
+> >From what I can tell a read/write semaphore is used in
+> unregister_shrinker when we delete it from the list so it shouldn't be
+> an issue.
+>=20
+> > >  out_del_balloon_wq:
+> > >       if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
+> > >               destroy_workqueue(vb->balloon_wq);
+> > > @@ -966,6 +1028,8 @@ static void virtballoon_remove(struct virtio_dev=
+ice *vdev)
+> > >  {
+> > >       struct virtio_balloon *vb =3D vdev->priv;
+> > >
+> > > +     if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING))
+> > > +             page_reporting_unregister(&vb->pr_dev_info);
+> >
+> > Dito, same question regarding syncs.
+>=20
+> Yes, although for that one I was using pointer deletion, a barrier,
+> and a cancel_work_sync since I didn't support a list.
+>=20
+> > >       if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OO=
+M))
+> > >               virtio_balloon_unregister_shrinker(vb);
+> > >       spin_lock_irq(&vb->stop_update_lock);
+> > > @@ -1038,6 +1102,7 @@ static int virtballoon_validate(struct virtio_d=
+evice *vdev)
+> > >       VIRTIO_BALLOON_F_DEFLATE_ON_OOM,
+> > >       VIRTIO_BALLOON_F_FREE_PAGE_HINT,
+> > >       VIRTIO_BALLOON_F_PAGE_POISON,
+> > > +     VIRTIO_BALLOON_F_REPORTING,
+> > >  };
+> > >
+> > >  static struct virtio_driver virtio_balloon_driver =3D {
+> > > diff --git a/include/uapi/linux/virtio_balloon.h b/include/uapi/linux=
+/virtio_balloon.h
+> > > index a1966cd7b677..19974392d324 100644
+> > > --- a/include/uapi/linux/virtio_balloon.h
+> > > +++ b/include/uapi/linux/virtio_balloon.h
+> > > @@ -36,6 +36,7 @@
+> > >  #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM      2 /* Deflate balloon on=
+ OOM */
+> > >  #define VIRTIO_BALLOON_F_FREE_PAGE_HINT      3 /* VQ to report free =
+pages */
+> > >  #define VIRTIO_BALLOON_F_PAGE_POISON 4 /* Guest is using page poison=
+ing */
+> > > +#define VIRTIO_BALLOON_F_REPORTING   5 /* Page reporting virtqueue *=
+/
+> > >
+> > >  /* Size of a PFN in the balloon interface. */
+> > >  #define VIRTIO_BALLOON_PFN_SHIFT 12
+> > >
+> > >
+> >
+> > Small and powerful patch :)
+>=20
+> Agreed. Although we will have to see if we can keep it that way.
+> Ideally I want to leave this with the ability so specify what size
+> scatterlist we receive. However if we have to flip it around then it
+> will force us to add logic for chopping up the scatterlist for
+> processing in chunks.
+>=20
+> Thanks for the review.
+>=20
+> - Alex
 
