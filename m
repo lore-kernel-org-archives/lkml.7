@@ -2,138 +2,90 @@ Return-Path: <SRS0=SILN=ZX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6CFC432C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 16:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7C7C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 16:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F8B920718
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 16:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A6C32073C
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 16:52:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkFMC3mO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbfLAQos (ORCPT
+        id S1727285AbfLAQww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 11:44:48 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:56945 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbfLAQor (ORCPT
+        Sun, 1 Dec 2019 11:52:52 -0500
+Received: from mail-ua1-f54.google.com ([209.85.222.54]:41250 "EHLO
+        mail-ua1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727165AbfLAQww (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 11:44:47 -0500
-Received: from mail-qt1-f182.google.com ([209.85.160.182]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MJmbB-1iLhfb0JOj-00KBLo for <linux-kernel@vger.kernel.org>; Sun, 01 Dec
- 2019 17:44:46 +0100
-Received: by mail-qt1-f182.google.com with SMTP id 38so2681408qtb.13
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Dec 2019 08:44:45 -0800 (PST)
-X-Gm-Message-State: APjAAAVpzuYY5x/kW5CHLQOOwdt/ffNtxsbdG8rY7dicAxmYQ6PfwnNX
-        DwpodFV5+YBdMOPKhL1dRRRGHselOTK++0KlrOM=
-X-Google-Smtp-Source: APXvYqxvnxSj/66+/lDecdMwj6M8AFyXqy/26aPCnzwthmCG6oW0xv/BsNFL2aznxBZfoqspozN/VN3dgd/uaZZVSQs=
-X-Received: by 2002:ac8:47d3:: with SMTP id d19mr27264902qtr.142.1575218684964;
- Sun, 01 Dec 2019 08:44:44 -0800 (PST)
+        Sun, 1 Dec 2019 11:52:52 -0500
+Received: by mail-ua1-f54.google.com with SMTP id f7so5281368uaa.8
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Dec 2019 08:52:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=YZolA5TOydgjZXG0zKvKtYGWqcUHrYRyJA0cZJuzTsU=;
+        b=nkFMC3mOSVeM1tJqapo8Ii2kmRG69RCwNwySwu1zzl7Ny/OUkm5a0CncRZpXvKHdFl
+         3HQ2Tr9/oMVC8AkzNQ2AUXF+hfEpWmHX9tszRRKwI8oPf04E0/5a4rEmo9djcP8MNY7A
+         U5UhlOlFp6Uo2tGFDGwOa7BHLFXN3rrlXqDrZ92n4a9zbT7r5BmUt0U7pJ8LpfkrVc5g
+         E+Ok3pV7RNE6V4EsEySbz3bDAcQiLpONHqknekLBZRZFY4WSNugwsb1Lb6fze8BkZ0s8
+         MeQfxAnvmO4Ycbp/5bgvV8CSz8nTEGAWMmTlDTZbdZxsNDJkaGPZxVJmBXpN6nrkSUVE
+         ngbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=YZolA5TOydgjZXG0zKvKtYGWqcUHrYRyJA0cZJuzTsU=;
+        b=Ha6p3mbZDMVfz3J7kDICI+WyeWsvAH2ERWYQ3+HURvPhr5xEN7plu9OSmWMKas8f2I
+         ZapZc7ss3Vbi9Ntsx1IRuc/bOaHPWLgPYKRNs2xXyE2B7S8FCzbigWah01cHOsHkbtlh
+         nKOKv3c22qFzox6B7jYhR7Ao2SOeXNE8RM0r2a+iUsq3ZLyHVMc8k1woMqDAEtaWu0kz
+         fL+6aI0ZmWRvQH30vDuZir9Amjzv5nlpZuWEeN09DpmnjdwUDWwuLTNXk9ZhLy+JNCjB
+         LszRsWabJ996jYQIgBKgj6BLBm7HjsSLMiIdks7I+pabsg5I1SImqtcCn4vINUG/a84a
+         KXew==
+X-Gm-Message-State: APjAAAXjMRW7tzbdRM137pWAeGV2Hx50zlzinQpQ0R89vVO4aZgplww/
+        quI9yZuTMBs6mYr297HLK7qnGS3LiTFDc6/NQRD0ow==
+X-Google-Smtp-Source: APXvYqyVBpl/uLmcT61jwn06Tx0D0a8PZZmFu/CGJyZcTWNxbqhpovEQ8v1m8VL3Ieru4qtAN7HnHAQA+BHAywtFYAE=
+X-Received: by 2002:a9f:3ecc:: with SMTP id n12mr15598319uaj.45.1575219170438;
+ Sun, 01 Dec 2019 08:52:50 -0800 (PST)
 MIME-Version: 1.0
-References: <20191201151049.GH18573@shao2-debian>
-In-Reply-To: <20191201151049.GH18573@shao2-debian>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sun, 1 Dec 2019 17:44:28 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2rFb6RykcL3=4djkPgza=yi9hZE8w-Bu4-zUn5W9Pgvg@mail.gmail.com>
-Message-ID: <CAK8P3a2rFb6RykcL3=4djkPgza=yi9hZE8w-Bu4-zUn5W9Pgvg@mail.gmail.com>
-Subject: Re: 942437c97f ("y2038: allow disabling time32 system calls"): BUG:
- kernel hang in test stage
-To:     kernel test robot <lkp@intel.com>
-Cc:     LKP <lkp@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191201161542.69535-1-dwlsalmeida@gmail.com> <20191201161542.69535-5-dwlsalmeida@gmail.com>
+ <CAFzckaFfmVYV_baqV9bHrnguXfOKs42DJ2VgA4C1y2Ey-+99xQ@mail.gmail.com>
+In-Reply-To: <CAFzckaFfmVYV_baqV9bHrnguXfOKs42DJ2VgA4C1y2Ey-+99xQ@mail.gmail.com>
+From:   Amit Choudhary <amitchoudhary2305@gmail.com>
+Date:   Sun, 1 Dec 2019 22:22:14 +0530
+Message-ID: <CAFzckaGYZUac5JkwXtcdbZHtUgQyv_7oiHivi32ggYLR=9oT_w@mail.gmail.com>
+Subject: Fwd: [PATCH 4/6] media: dvb_dummy_fe: Fix long lines
+To:     linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Qe/AVritUqdg5kDYs5g4RO4Y3VWlbyxZkviapj5+HBezMS/QK8Q
- d7ZUAdoeWyFPsBe2JjXni+xC8g572rzo96LOiOyNWA1Hmx72JAGMyKaeBMZYHN+sR3oHdW2
- 6IaX2Cc3qU/HnGBQ04OaYI5b0SYXVj4Podv0i9q95rCLjcpea35N06p4mZNrX1mPSvrdnHh
- lPZ5Q2IVVQkbEJJ2xRaiw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:oFGmITc1nDA=:ntH/FEWTc0cW69siELE0xA
- ZdGFxI+XlSkUnEb10nd0KP9qvebvVQUfukEgwzf+MZjC49OWB+atE9zYI9rKj8Tb2n3hQYT8e
- J1iucDO4LPbYbPenpUsd7Q8J7/Zy9L2jnMppas3tXArzweRSh1OyMafELsLts0GjIrLUDEq53
- Jf24NNgVXJ25ks0XNaca2l915hshdU08vGa0QoaLjJaECAA0mJWN8X7CPtdGcFTYgcmwwrwYy
- 74425RBWTUuoT94tBTWGAEBhXFJeTyDhWdH+6avv5Rn9QR4ONuZ0k/IFnz5GZw6mI0+vkxZSl
- a5wB3XsoTxGFs3TFT9S6OXhTX3lw6NAFNAu6q0DXyUVwwL76Z35rVPfzbrPBcteqVpOC/8dS2
- p7haguxwk0v1i/iqhdH8uxMKPq+4WJZU+BRoVwiNyLLv6BMdvWeY7+APlITKPWuFHLmCVZzWa
- KGMjN6PHFexr4OxfHkS1X5vB77bu6Ssp9YR//jQyAE+g0S4Hi/h3hja04d6srzeFn/iWqG/rR
- zF7Dfc6ukEomFfjA9unmE2pfw7Eket8C+VD382xV0rbLNUJeRTETkOqmHJUb/cZJuOVdH0Eu7
- r3L24n8AyzD+VXRT7CGIWN5r3ks9zpN745+rycgF/ZlFZ6s7+4l8niyOk7OSPSO7xCDfZb54c
- eTaaeXf2dBB3io5/ddkjBgu88/Y4lTSninBYW99ngiPXN1ARafXHrcC3RBFhWAESsDtoINPYQ
- P826yP3HqofOixcA+67QBjygakQgrxa/wa918d40uoInrlHDboXHmcxti439TxsJ5Ca2gjPV0
- 5V3LYGOhZFCYc1N7pJBZfylhS0Lbp1tX6MzslOpCJBHzEyQ8PQMna8HKbT1Aw3yjvAugHA0np
- zQJDStexIV31wQekoMGg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 1, 2019 at 4:11 PM kernel test robot <lkp@intel.com> wrote:
++static int dvb_dummy_fe_read_signal_strength(struct dvb_frontend *fe,
 >
-> Greetings,
->
-> 0day kernel testing robot got the below dmesg and the first bad commit is
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
->
-> commit 942437c97fd9ff23a17c13118f50bd0490f6868c
-> Author:     Arnd Bergmann <arnd@arndb.de>
-> AuthorDate: Mon Jul 15 11:46:10 2019 +0200
-> Commit:     Arnd Bergmann <arnd@arndb.de>
-> CommitDate: Fri Nov 15 14:38:30 2019 +0100
->
->     y2038: allow disabling time32 system calls
->
->     At the moment, the compilation of the old time32 system calls depends
->     purely on the architecture. As systems with new libc based on 64-bit
->     time_t are getting deployed, even architectures that previously supported
->     these (notably x86-32 and arm32 but also many others) no longer depend on
->     them, and removing them from a kernel image results in a smaller kernel
->     binary, the same way we can leave out many other optional system calls.
->
->     More importantly, on an embedded system that needs to keep working
->     beyond year 2038, any user space program calling these system calls
->     is likely a bug, so removing them from the kernel image does provide
->     an extra debugging help for finding broken applications.
->
->     I've gone back and forth on hiding this option unless CONFIG_EXPERT
->     is set. This version leaves it visible based on the logic that
->     eventually it will be turned off indefinitely.
->
->     Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
->     Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> bd40a17576  y2038: itimer: change implementation to timespec64
-> 942437c97f  y2038: allow disabling time32 system calls
-> +-----------------------------------------------------------+------------+------------+
-> |                                                           | bd40a17576 | 942437c97f |
-> +-----------------------------------------------------------+------------+------------+
-> | boot_successes                                            | 38         | 0          |
-> | boot_failures                                             | 0          | 19         |
-> | BUG:kernel_hang_in_test_stage                             | 0          | 15         |
-> | Assertion_failed                                          | 0          | 4          |
-> | Kernel_panic-not_syncing:Attempted_to_kill_init!exitcode= | 0          | 4          |
-> +-----------------------------------------------------------+------------+------------+
->
-> If you fix the issue, kindly add following tag
-> Reported-by: kernel test robot <lkp@intel.com>
->
-> Press the [1], [2], [3] or [4] key and hit [enter] to select the debug level
-> [    3.739930] rm (184) used greatest stack depth: 6556 bytes left
-> [    5.754828] mount_root: mounting /dev/root
-> [    5.762906] urandom-seed: Seed file not found (/etc/urandom.seed)
-> [    5.767017] sh (172) used greatest stack depth: 6308 bytes left
-> BUG: kernel hang in test stage
+> +                                            u16 *strength)
 
-Thanks a lot for the report. As far as I can tell from the attached files, this
-is a randconfig test on a 32-bit platform with
-CONFIG_COMPAT_32BIT_TIME disabled, so this is expected
-to fail because the existing user space application actually requires
-the old system calls until it has been recompiled against a new
-C library using 64-bit time_t.
 
-We could probably make the failure more explicit and print an error
-message for these particular syscalls when they are disabled.
-Alternatively the configuration step would need to be changed that
-the 0day bot is unable to run into this case.
+In my opinion, the arguments on new line should be just below the
+start of arguments on top line. Like this:
++static int dvb_dummy_fe_read_signal_strength(struct dvb_frontend *fe,
++
+u16 *strength)
 
-      Arnd
+
+
+> +               .caps = FE_CAN_FEC_1_2 |
+> +                       FE_CAN_FEC_2_3 |
+
+
+Similarly, here too and other places too:
++               .caps = FE_CAN_FEC_1_2 |
++                           FE_CAN_FEC_2_3 |
+
+Regards,
+Amit
