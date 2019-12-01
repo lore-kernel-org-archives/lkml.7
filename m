@@ -2,100 +2,162 @@ Return-Path: <SRS0=SILN=ZX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1583C43215
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 06:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB94FC432C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 07:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77FC620867
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 06:36:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="G3pIG8hE"
+	by mail.kernel.org (Postfix) with ESMTP id AA8B02082E
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 07:05:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbfLAGf7 (ORCPT
+        id S1726129AbfLAHFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 01:35:59 -0500
-Received: from pb-smtp2.pobox.com ([64.147.108.71]:50986 "EHLO
-        pb-smtp2.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfLAGf6 (ORCPT
+        Sun, 1 Dec 2019 02:05:09 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:38015 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbfLAHFJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 01:35:58 -0500
-Received: from pb-smtp2.pobox.com (unknown [127.0.0.1])
-        by pb-smtp2.pobox.com (Postfix) with ESMTP id 440843A809;
-        Sun,  1 Dec 2019 01:35:56 -0500 (EST)
-        (envelope-from junio@pobox.com)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=from:to:cc
-        :subject:references:date:in-reply-to:message-id:mime-version
-        :content-type; s=sasl; bh=n/Df5C64M2CpHxkYeaExISAou+s=; b=G3pIG8
-        hEwEOKtzPtF5gHSRzLEVqkJY9CVXTKdr1w3vkDLF8MXM6z2NqPYDatL8XytoBzBS
-        Kdj3FeiilR2Ajy4jSAvdYjOIyfClQmkRayUdxGuav2toEpT9t11F8g+uQbKTCnXM
-        EjVE9ZNiVWyJAHsT6SfUmhXSajSZtFzWX20Vs=
-DomainKey-Signature: a=rsa-sha1; c=nofws; d=pobox.com; h=from:to:cc
-        :subject:references:date:in-reply-to:message-id:mime-version
-        :content-type; q=dns; s=sasl; b=XISB1K61RlNXk/xXjvW42uRI34x85Gwi
-        vs4MgJWQezdjZIvVkpcIL5vDh95VWtDiKCDOGiiMx+bceZwLOF2L5TTvRsgVeQAG
-        CMEtOlbEsd0xMvzS+Ojvh5BlwzuBthO725c8K/w3iEPR5Yt1eH9glU0RforXS9rk
-        tSUiRAl57eg=
-Received: from pb-smtp2.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp2.pobox.com (Postfix) with ESMTP id 3BBB13A807;
-        Sun,  1 Dec 2019 01:35:56 -0500 (EST)
-        (envelope-from junio@pobox.com)
-Received: from pobox.com (unknown [34.76.80.147])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp2.pobox.com (Postfix) with ESMTPSA id 8F5AE3A806;
-        Sun,  1 Dec 2019 01:35:55 -0500 (EST)
-        (envelope-from junio@pobox.com)
-From:   Junio C Hamano <gitster@pobox.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Git List Mailing <git@vger.kernel.org>,
-        Junio Hamano C <gitster@pobox.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list\:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: Re: [PATCH] Documentation: networking: device drivers: Remove stray asterisks
-References: <20191130180301.5c39d8a4@lwn.net>
-        <CAHk-=wj8tNhu76yxShwOfwVKk=qWznSFkAKyQfu6adcV8JzJkQ@mail.gmail.com>
-        <20191130184512.23c6faaa@lwn.net>
-Date:   Sat, 30 Nov 2019 22:35:54 -0800
-In-Reply-To: <20191130184512.23c6faaa@lwn.net> (Jonathan Corbet's message of
-        "Sat, 30 Nov 2019 18:45:12 -0700")
-Message-ID: <xmqqblss1rjp.fsf@gitster-ct.c.googlers.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Sun, 1 Dec 2019 02:05:09 -0500
+Received: by mail-il1-f200.google.com with SMTP id o18so24499055ilb.5
+        for <linux-kernel@vger.kernel.org>; Sat, 30 Nov 2019 23:05:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=sVJfn8rJ2gIp74tK7+hxDmMwjF/b8IMnVIXNefmEtNQ=;
+        b=kvD3AlLDmLY1Fo9hBOp3aURt6uG3Ya71SNJcHXkovy9e6o5ykSy/ODroI4V/nbKfxP
+         y9o6zhpBlPX43DFSRaAn3rVuWDxemmqEjYxSUnrJz777iNZ+/V4LUlBwJMgTc6VhVC+F
+         vwvpx//Q5N9vT4j1kQYIsoWvAgNck5zFXfF8mVh0FBkKkSkMNIRi8tMCG3i68jz/LDFB
+         Z2o69QnJFkNXCafib8DUY7T7GI/u5XYQsbYrZjSrLiGsqbhMXBGaBEpqQFsoOjnDpYTN
+         6uynvicw1YsM2EO5/wdRnKaftedWLlVw0AvvasQiPFtJer1oA8VUDvlJfqzSTp7kNFeu
+         DhIQ==
+X-Gm-Message-State: APjAAAUFUiOVvGNrY3JQehccAeCL42tBx/QdiUmoOLpgjOC6ppuoaXtD
+        xL0pNA1C87RJdKkfMZDKAxdT485MPT4JGR4K3b0K5IsIyjbm
+X-Google-Smtp-Source: APXvYqxwNXgzb30H6/92ZMPnaVi7ngNCOj4QuO9fnKu8jDWRPc7FjkkXJPGHU7gfk4lUbxnBr4Kqbmg6EAC8kZCcY3Ay2tfovrOd
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Pobox-Relay-ID: D3EB48C6-1404-11EA-9CBF-D1361DBA3BAF-77302942!pb-smtp2.pobox.com
+X-Received: by 2002:a05:6602:2806:: with SMTP id d6mr13018994ioe.299.1575183908296;
+ Sat, 30 Nov 2019 23:05:08 -0800 (PST)
+Date:   Sat, 30 Nov 2019 23:05:08 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000004f5ec705989f1585@google.com>
+Subject: BUG: unable to handle kernel paging request in __call_srcu
+From:   syzbot <syzbot+b16ea6c233022c222d63@syzkaller.appspotmail.com>
+To:     bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, pbonzini@redhat.com, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
+        x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jonathan Corbet <corbet@lwn.net> writes:
+Hello,
 
-> On Sat, 30 Nov 2019 17:20:10 -0800
-> Linus Torvalds <torvalds@linux-foundation.org> wrote:
->
->> Do you use some special options for git? Like --whitespace=nowarn or
->> --3way or something like that?
->
-> Sigh, that has to be it.  I have --ignore-whitespace in my script. When I
-> take that option out, the patch in question no longer applies.
+syzbot found the following crash on:
 
-OK, so it appears that the tool is working as documented.  The
-"ignore" stuff kicks in to fuzz the whitespace difference for the '
-' lines and '-' lines, but the option itself does not give "git
-apply" enough information to decide what to do with the extra
-whitespace that is CR at the end of the line on the '+' lines.
+HEAD commit:    131b7b67 Add linux-next specific files for 20191126
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=12aa31f2e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=11aacf1d97714af4
+dashboard link: https://syzkaller.appspot.com/bug?extid=b16ea6c233022c222d63
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=174cbb5ee00000
 
-I would also say it is doubtful that it is working as expected.
-Perhaps --ignore-whitespace and --whitespace=fix ought to work well
-together to allow matching preimage (i.e. ' ' and '-') lines, but
-still fix whitespace-broken material in postimage (i.e.  ' ' and
-'+') lines before replacing the preimage with the postimage, or
-something along that line?
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+b16ea6c233022c222d63@syzkaller.appspotmail.com
+
+BUG: unable to handle page fault for address: ffffc90009080868
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD aa54b067 P4D aa54b067 PUD aa54c067 PMD 99900067 PTE 0
+Oops: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 31521 Comm: syz-executor.4 Not tainted  
+5.4.0-next-20191126-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:__lock_acquire+0x125e/0x4a00 kernel/locking/lockdep.c:3828
+Code: f0 00 00 00 5b 41 5c 41 5d 41 5e 41 5f 5d c3 48 b8 00 00 00 00 00 fc  
+ff df 4c 89 f2 48 c1 ea 03 80 3c 02 00 0f 85 0b 28 00 00 <49> 81 3e e0 dc  
+08 8a 0f 84 5f ee ff ff 83 fe 01 0f 87 62 ee ff ff
+RSP: 0018:ffff88809727f7f0 EFLAGS: 00010046
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 1ffff9200121010d RSI: 0000000000000000 RDI: 0000000000000001
+RBP: ffff88809727f908 R08: 0000000000000001 R09: 0000000000000001
+R10: fffffbfff139ebd0 R11: ffff88808e750540 R12: ffffc90009080868
+R13: 0000000000000000 R14: ffffc90009080868 R15: 0000000000000001
+FS:  00007ffb1ae47700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffc90009080868 CR3: 000000009f42f000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
+  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+  _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
+  srcu_funnel_gp_start kernel/rcu/srcutree.c:643 [inline]
+  __call_srcu kernel/rcu/srcutree.c:871 [inline]
+  __call_srcu+0x53f/0xcc0 kernel/rcu/srcutree.c:834
+  __synchronize_srcu+0x18d/0x250 kernel/rcu/srcutree.c:920
+  synchronize_srcu_expedited kernel/rcu/srcutree.c:946 [inline]
+  synchronize_srcu+0x239/0x3e8 kernel/rcu/srcutree.c:997
+  kvm_page_track_unregister_notifier+0xe7/0x130  
+arch/x86/kvm/mmu/page_track.c:212
+  kvm_mmu_uninit_vm+0x1e/0x30 arch/x86/kvm/mmu/mmu.c:5928
+  kvm_arch_destroy_vm+0x4a2/0x5f0 arch/x86/kvm/x86.c:9666
+  kvm_create_vm arch/x86/kvm/../../../virt/kvm/kvm_main.c:758 [inline]
+  kvm_dev_ioctl_create_vm arch/x86/kvm/../../../virt/kvm/kvm_main.c:3519  
+[inline]
+  kvm_dev_ioctl+0x1167/0x1770 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3571
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:545 [inline]
+  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+  __do_sys_ioctl fs/ioctl.c:756 [inline]
+  __se_sys_ioctl fs/ioctl.c:754 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45a649
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffb1ae46c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a649
+RDX: 0000000000000000 RSI: 000000000000ae01 RDI: 0000000000000003
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffb1ae476d4
+R13: 00000000004c38f2 R14: 00000000004d7de8 R15: 00000000ffffffff
+Modules linked in:
+CR2: ffffc90009080868
+---[ end trace e17de659c9276288 ]---
+RIP: 0010:__lock_acquire+0x125e/0x4a00 kernel/locking/lockdep.c:3828
+Code: f0 00 00 00 5b 41 5c 41 5d 41 5e 41 5f 5d c3 48 b8 00 00 00 00 00 fc  
+ff df 4c 89 f2 48 c1 ea 03 80 3c 02 00 0f 85 0b 28 00 00 <49> 81 3e e0 dc  
+08 8a 0f 84 5f ee ff ff 83 fe 01 0f 87 62 ee ff ff
+RSP: 0018:ffff88809727f7f0 EFLAGS: 00010046
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 1ffff9200121010d RSI: 0000000000000000 RDI: 0000000000000001
+RBP: ffff88809727f908 R08: 0000000000000001 R09: 0000000000000001
+R10: fffffbfff139ebd0 R11: ffff88808e750540 R12: ffffc90009080868
+R13: 0000000000000000 R14: ffffc90009080868 R15: 0000000000000001
+FS:  00007ffb1ae47700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffc90009080868 CR3: 000000009f42f000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
