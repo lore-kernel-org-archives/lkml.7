@@ -2,104 +2,138 @@ Return-Path: <SRS0=SILN=ZX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F01DAC432C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 08:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F41C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 08:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C62C520718
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 08:41:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="hv/UedqK"
+	by mail.kernel.org (Postfix) with ESMTP id C46B320718
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 08:44:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbfLAIlD (ORCPT
+        id S1726338AbfLAIoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 03:41:03 -0500
-Received: from sonic302-20.consmr.mail.gq1.yahoo.com ([98.137.68.146]:42421
-        "EHLO sonic302-20.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726074AbfLAIlC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 03:41:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1575189661; bh=20PCjo9JU3Dbavb/3Bs50RDjpnVfQ55gM0PpKbtAZKw=; h=From:To:Cc:Subject:Date:References:From:Subject; b=hv/UedqKxnnbIWUmNyPa/jK9iZ2WTEskWopWv+sj8QgG9u+MeK1FsWO2mq5vSlXnOiu2SACHkxmgZdWJOtutSqDxt/2nh1qcgh9w17QDReba6SE/RoAJkkCv/99tb6pfjw1n3kGXGSzQOTiiLtj5HMrifKr+SQ/TWICNeHnqChziTVr5LyewrsI6J3OcP1fRBHpf5U1I5aRNFUYJ03XqVgK4YtvnJgYO+X+SMX+CPCVjsS2IoDhgntfcyAhwKA36+cLqpiANnqwqRwKZTALG8u2hN7YEyMUm7gj0fBDD7jON2xWuu55RsBOez/L0VZ3xM+FxEMOaP3JMy+LYBHwk0w==
-X-YMail-OSG: Qrj31G4VM1npeJnzm6hxNS.pUPN9c6Ic5eFuTgZvtIPMWnP.9I_m1zNKb8U9B3M
- Kfx1wP2YM4Wx1iswr6O0kUC2nKp1noVsK8tGxSN4uaBwW8ewaKg_PoYocEDIfhSBGasOZ6HPAQbW
- 0hKtdWxxw5QHgWY.lV2V_Apreypb_LtfsHU83ZXN.b5boe8CJ8jOWGZbaPwjeqVluRjoQlXes5uV
- dcy.sE0gfuuYIN_DXz.DEyX2S8tKVJHEoUxaMBDwpFXypu6Wk7WdpPMRmTbVxO7jRd1tSGQKHvQc
- Fbm2QORDlLnjw7SuMsZ7qVjC5TZue98ZiMP9bq1ZKm9IM2Q9.kVWYrkpRMMZPbMOqLklDAheTCH.
- F0wAqYOym56nKIcV9j7Gav8tHqHRlWCLGQcX9p6o5lIY6c.poClt9MPJv92H6Zwf98oJTzi0ifuj
- hsO8P302KT4aYi9UnJM.tWaXcRTjwGRj3sD.caDUrzdhhfyaXijrvTVpfdZ6QX6RoCYRIt8kAau_
- QO2nL45k3Su8aMNDqOcgdtPLS7hvQr.E1OYAd2YLQyhRE_vtv1b1HeNEm1ZeZwc4BKasscMdOGjl
- K1oGKUXKQQRt6KvnndJPNo_nsgc9II1Cl8fmGOSOJD8jwA4ZZOycne8pdrUs.jMrTBny1E8bgB1J
- Evcr9ZUDeVXNjV8ByPzIf6YzYJ6w41S0Kwb0_.7TgXwJzzEk0B3tCiP_GQpyzhKKYsksvYR_Sdhc
- DwZCVUrKDuv9q8ctK3Q4jmvTL.xREN7hb.KgiITwQl9r_xaIZoE663fkdOXouPRpjY8MQc_3U33_
- YrEkXMK69JZVkWfafztc7dRvfXx3erkvwI.nPxyUh.2JJqneMrS5AiXNgzmWlgo1pWIse81mFpyi
- xYJp3ajmgA0IVhhEXAf7aqNpN.axpHc6hwDoU3AqCiLM.QfVwtd8zu3D.scUbM6t3CAHKs624haF
- cMAsGoS7Ov540C7hVQ3bVJisOzvJeTqzfwL3pOKXTHTfeXQ52ULP9p0jZQS_YYjO43P5b3BNM6Vo
- Lc.O8GBE7XrnEHnMQtDwaWGsN8uh2KdZNtwQCQs1ILJIivk_hyF0ZHNTEWwbYtCbbcLff4C.Naf.
- D6as6drlAcY1ooFRMfs9nURjLHduFj93HP0Trff.jvNNecoFqE8uG6gYssgzHlOsNnS8b7Q5hHQh
- e29R69Lp0nIvqQWNHDKlU2xOy2dJ1VcK.C9dbSRLgE9iny8_FzlQ1VEYe3OcuVaaR1Z_zqJm.oxl
- qamABURZ2wER8h_0dJwZrpBxSWy58q8S8geXbHUSqdGBeNvRMo0RHf7Mi6SLj4Ca5hTRYqkCEDIP
- VXXcaivjZx8gmxBdRIac675gSuISCx1Rl5qGr5oW96UvQhJHEtC_xocKwkR_0FBcabZ2MdEamXVX
- 2VXaZVdA-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic302.consmr.mail.gq1.yahoo.com with HTTP; Sun, 1 Dec 2019 08:41:01 +0000
-Received: by smtp419.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID d0565019c54eecb6cc19d6eb884efcb1;
-          Sun, 01 Dec 2019 08:40:57 +0000 (UTC)
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Chao Yu <yuchao0@huawei.com>, linux-erofs@lists.ozlabs.org
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        David Michael <fedora.dm0@gmail.com>,
-        Miao Xie <miaoxie@huawei.com>, Fang Wei <fangwei1@huawei.com>,
-        Wang Li <wangli74@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>, stable@vger.kernel.org
-Subject: [PATCH] erofs: zero out when listxattr is called with no xattr
-Date:   Sun,  1 Dec 2019 16:40:40 +0800
-Message-Id: <20191201084040.29275-1-hsiangkao@aol.com>
-X-Mailer: git-send-email 2.20.1
+        Sun, 1 Dec 2019 03:44:38 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7184 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725847AbfLAIoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Dec 2019 03:44:38 -0500
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id EAA53EC975A9CF96E4D0;
+        Sun,  1 Dec 2019 16:44:35 +0800 (CST)
+Received: from [127.0.0.1] (10.184.213.217) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Sun, 1 Dec 2019
+ 16:44:28 +0800
+Subject: Re: [PATCH] tmpfs: use ida to get inode number
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     Hugh Dickins <hughd@google.com>, <viro@zeniv.linux.org.uk>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <houtao1@huawei.com>, <yi.zhang@huawei.com>,
+        "J. R. Okajima" <hooanon05g@gmail.com>
+References: <1574259798-144561-1-git-send-email-zhengbin13@huawei.com>
+ <20191120154552.GS20752@bombadil.infradead.org>
+ <1c64e7c2-6460-49cf-6db0-ec5f5f7e09c4@huawei.com>
+ <alpine.LSU.2.11.1911202026040.1825@eggly.anvils>
+ <d22bcbcb-d507-7c8c-e946-704ffc499fa6@huawei.com>
+ <alpine.LSU.2.11.1911211125190.1697@eggly.anvils>
+ <5423a199-eefb-0a02-6e86-1f6210939c11@huawei.com>
+ <20191122221327.GW20752@bombadil.infradead.org>
+From:   "zhengbin (A)" <zhengbin13@huawei.com>
+Message-ID: <f452bd64-c8ec-d7be-44e1-8585e146b5e1@huawei.com>
+Date:   Sun, 1 Dec 2019 16:44:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-References: <20191201084040.29275-1-hsiangkao.ref@aol.com>
+In-Reply-To: <20191122221327.GW20752@bombadil.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.184.213.217]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gao Xiang <gaoxiang25@huawei.com>
 
-As David reported [1], ENODATA returns when attempting
-to modify files by using EROFS as a overlayfs lower layer.
-
-The root cause is that listxattr could return unexpected
--ENODATA by mistake for inodes without xattr. That breaks
-listxattr return value convention and it can cause copy
-up failure when used with overlayfs.
-
-Resolve by zeroing out if no xattr is found for listxattr.
-
-[1] https://lore.kernel.org/r/CAEvUa7nxnby+rxK-KRMA46=exeOMApkDMAV08AjMkkPnTPV4CQ@mail.gmail.com
-Fixes: cadf1ccf1b00 ("staging: erofs: add error handling for xattr submodule")
-Cc: <stable@vger.kernel.org> # 4.19+
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
- fs/erofs/xattr.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
-index a13a78725c57..b766c3ee5fa8 100644
---- a/fs/erofs/xattr.c
-+++ b/fs/erofs/xattr.c
-@@ -649,6 +649,8 @@ ssize_t erofs_listxattr(struct dentry *dentry,
- 	struct listxattr_iter it;
- 
- 	ret = init_inode_xattrs(d_inode(dentry));
-+	if (ret == -ENOATTR)
-+		return 0;
- 	if (ret)
- 		return ret;
- 
--- 
-2.20.1
+On 2019/11/23 6:13, Matthew Wilcox wrote:
+> On Fri, Nov 22, 2019 at 09:23:30AM +0800, zhengbin (A) wrote:
+>> On 2019/11/22 3:53, Hugh Dickins wrote:
+>>> On Thu, 21 Nov 2019, zhengbin (A) wrote:
+>>>> On 2019/11/21 12:52, Hugh Dickins wrote:
+>>>>> Just a rushed FYI without looking at your patch or comments.
+>>>>>
+>>>>> Internally (in Google) we do rely on good tmpfs inode numbers more
+>>>>> than on those of other get_next_ino() filesystems, and carry a patch
+>>>>> to mm/shmem.c for it to use 64-bit inode numbers (and separate inode
+>>>>> number space for each superblock) - essentially,
+>>>>>
+>>>>> 	ino = sbinfo->next_ino++;
+>>>>> 	/* Avoid 0 in the low 32 bits: might appear deleted */
+>>>>> 	if (unlikely((unsigned int)ino == 0))
+>>>>> 		ino = sbinfo->next_ino++;
+>>>>>
+>>>>> Which I think would be faster, and need less memory, than IDA.
+>>>>> But whether that is of general interest, or of interest to you,
+>>>>> depends upon how prevalent 32-bit executables built without
+>>>>> __FILE_OFFSET_BITS=64 still are these days.
+>>>> So how google think about this? inode number > 32-bit, but 32-bit executables
+>>>> cat not handle this?
+>>> Google is free to limit what executables are run on its machines,
+>>> and how they are built, so little problem here.
+>>>
+>>> A general-purpose 32-bit Linux distribution does not have that freedom,
+>>> does not want to limit what the user runs.  But I thought that by now
+>>> they (and all serious users of 32-bit systems) were building their own
+>>> executables with _FILE_OFFSET_BITS=64 (I was too generous with the
+>>> underscores yesterday); and I thought that defined __USE_FILE_OFFSET64,
+>>> and that typedef'd ino_t to be __ino64_t.  And the 32-bit kernel would
+>>> have __ARCH_WANT_STAT64, which delivers st_ino as unsigned long long.
+>>>
+>>> So I thought that a modern, professional 32-bit executable would be
+>>> dealing in 64-bit inode numbers anyway.  But I am not a system builder,
+>>> so perhaps I'm being naive.  And of course some users may have to support
+>>> some old userspace, or apps that assign inode numbers to "int" or "long"
+>>> or whatever.  I have no insight into the extent of that problem.
+>> So how to solve this problem?
+>>
+>> 1. tmpfs use ida or other data structure
+>>
+>> 2. tmpfs use 64-bit, each superblock a inode number space
+>>
+>> 3. do not do anything, If somebody hits this bug, let them solve for themselves
+>>
+>> 4. (last_ino change to 64-bit)get_next_ino -->other filesystems will be ok, but it was rejected before
+> 5. Extend the sbitmap API to allow for growing the bitmap.  I had a
+> look at doing that, and it looks hard.  There are a lot of things which
+> are set up at initialisation and changing them mid-use seems tricky.
+> Ccing Jens in case he has an opinion.
+>
+> 6. Creating a percpu IDA.  This doesn't seem too hard.  We need a percpu
+> pointer to an IDA leaf (128 bytes), and a percpu integer which is the
+> current base for this CPU.  At allocation time, find and set the first
+> free bit in the leaf, and add on the current base.
+>
+> If the percpu leaf is full, set the XA_MARK_1 bit on the entry in
+> the XArray.  Then look for any leaves which have both the XA_MARK_0
+> and XA_MARK_1 bits set; if there is one, claim it by clearing the
+> XA_MARK_1 bit.  If not, kzalloc a new one and find a free spot for it
+> in the underlying XArray.
+>
+> Freeing an ID is simply ida_free().  That will involve changing the
+> users of get_next_ino() to call put_ino(), or something.
+>
+> This should generally result in similar contention between threads as
+> the current scheme -- accessing a shared resource every 1024 allocations.
+> Maybe more often as we try to avoid leaving gaps in the data structure,
+> or maybe less as we reuse IDs.
+>
+> (I've tried to explain what I want here, but appreciate it may be
+> inscrutable.  I can try to explain more, or maybe I should just write
+> the code myself)
+Hi willy, do you write this?
+>
+> .
+>
 
