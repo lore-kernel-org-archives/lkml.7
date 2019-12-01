@@ -2,90 +2,80 @@ Return-Path: <SRS0=SILN=ZX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE1AC43215
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 12:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3D8C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 12:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E01A2073C
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 12:19:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=kolabnow.com header.i=@kolabnow.com header.b="KhL7ekVk"
+	by mail.kernel.org (Postfix) with ESMTP id 5939C206F0
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 12:21:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbfLAMTs (ORCPT
+        id S1727085AbfLAMVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 07:19:48 -0500
-Received: from mx.kolabnow.com ([95.128.36.42]:44368 "EHLO mx.kolabnow.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725993AbfLAMTs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 07:19:48 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by ext-mx-out001.mykolab.com (Postfix) with ESMTP id E903CA6D;
-        Sun,  1 Dec 2019 13:19:44 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kolabnow.com; h=
-        content-transfer-encoding:mime-version:message-id:date:date
-        :subject:subject:from:from:received:received:received; s=
-        dkim20160331; t=1575202784; x=1577017185; bh=R+UEMDyeLPsDRtuZjih
-        kaFYJiJojTuJXmRqmn0YqSno=; b=KhL7ekVku6uVHrz1azEShg6SWUz7Eh7t0CB
-        RZUghx2VjgEMTGNfZdu45/ZrSev5UI14MOrifKlzWcl8HoE/aL9MzLi111u+f8zI
-        2QL7fe9dTi1nGX64ij/kvIwRawgDk8z4iIiZZrnL2TYLnO8uuPxp9pzrlEye0+39
-        ZsbSM5IigVgrbhEF28RbQCI92Vd6n1col++Fbf4Bh5vJco88ygh2J5H7FJNJqP1+
-        YqShE2cEC/5Wk0tbfTDPNBrjgQXPVFZ4NZoC+zsrje+Sc2W0YI72tkIFvc2Azr5K
-        0CEoUGttH86YVKstOkhs9de9CDpcANVvI1RuG/fPQAYZgBcjscpt0p/PwA88OkzA
-        rR9tiHLytkor1ohUccwDYXNC7/ZSXzP0lEp3Cboh8Z5woI5qRNxExaH4oYG7GZjA
-        0viEdkLPFOJIZKPajwEYO7kIBO+sQ7UY7q4Ll47GMNlpP+F8OPNJ0LXMCYt6wDg1
-        ZPrRMip2/O1T5QXd1DeXKCWguKrdM7fLj77ojwN1a+UcaGHUDIeKDvy9jSOMaK/S
-        FRD49RjrJQ3uTftkQGtMD2zOcjEPOi5ErSrgkOnqumb81YVfTvCz5i5VqSt2QtiN
-        Dscp8DVfb02BE7MrEg4tcjuC5Co+9bE0GWa78e9+WkBl/G5c0k0MM5hOYeXN2rAA
-        8nQDAeaw=
-X-Virus-Scanned: amavisd-new at mykolab.com
-Received: from mx.kolabnow.com ([127.0.0.1])
-        by localhost (ext-mx-out001.mykolab.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id DDS6U23BV9m5; Sun,  1 Dec 2019 13:19:44 +0100 (CET)
-Received: from int-mx001.mykolab.com (unknown [10.9.13.1])
-        by ext-mx-out001.mykolab.com (Postfix) with ESMTPS id 74850465;
-        Sun,  1 Dec 2019 13:19:44 +0100 (CET)
-Received: from ext-subm003.mykolab.com (unknown [10.9.6.3])
-        by int-mx001.mykolab.com (Postfix) with ESMTPS id 298FD1C1C;
-        Sun,  1 Dec 2019 13:19:44 +0100 (CET)
-From:   Federico Vaga <federico.vaga@vaga.pv.it>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        Federico Vaga <federico.vaga@vaga.pv.it>
-Subject: [PATCH] doc:locking: fix locktorture parameter description
-Date:   Sun,  1 Dec 2019 13:19:41 +0100
-Message-Id: <20191201121941.6971-1-federico.vaga@vaga.pv.it>
+        Sun, 1 Dec 2019 07:21:02 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:52267 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbfLAMVC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Dec 2019 07:21:02 -0500
+Received: by mail-il1-f198.google.com with SMTP id d28so21111902ill.19
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Dec 2019 04:21:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=GVY0UTUiXioZDjlRk/qecxkTZeBZDfVOMX99Ih6OaLc=;
+        b=EJli8nWS381tb7jqm22X4S2+E/ow9nexximY4krk9uX3xd/akdGIvY1v09VcJCIP9S
+         SMdHuW7Pwt8pLZGnNeSe6F82Ui8CFNCHiAT04otXvA7/lRIamUxf3X7oYaggm6MvOJJQ
+         pIqODQiVcRfEPOcezfOonlyQ3iWatYDykPNC/CtBqfr5xvLDHOLb/wXAygMebOYFqGPD
+         WHYy7S6DvM3/8dLMwoopguhEHKH3ZvMsixGHrGFJTonLXdhDzgesJG1CSzDzyKeZYlUA
+         27Sy/2OqE2bc47u+Q3XKVIoU09zOXxL6nD5ibIf1nFGGXbWMm0W2zXUlCmEoOGQtE44O
+         4SQw==
+X-Gm-Message-State: APjAAAUX3C3U1W6yaYlVdYZsyKwHRSixJerEVobB9DWE3aosQdVOEBAR
+        oeknHDPnrhiWFqoutc0ALU8/WxN6qz7OQKsBJxJ+xMLRg+am
+X-Google-Smtp-Source: APXvYqwLjsnwo03Ul2BYgUkun/p3JrCB6SxssAjMKsUkndmkq3uSYWsLeXnN03u+Z3ZugKktO5DrMm7z1HBb+XaIz9d6MA9i8PdJ
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:6c1:: with SMTP id p1mr19554105ils.217.1575202861317;
+ Sun, 01 Dec 2019 04:21:01 -0800 (PST)
+Date:   Sun, 01 Dec 2019 04:21:01 -0800
+In-Reply-To: <0000000000007cace40598282858@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ff87e40598a37ead@google.com>
+Subject: Re: WARNING: refcount bug in smc_release (2)
+From:   syzbot <syzbot+96d3f9ff6a86d37e44c8@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kgraul@linux.ibm.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        ubraun@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The description was talking about two default values: I removed the
-wrong one.
+syzbot has bisected this bug to:
 
-Signed-off-by: Federico Vaga <federico.vaga@vaga.pv.it>
----
- Documentation/locking/locktorture.rst | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+commit 50717a37db032ce783f50685a73bb2ac68471a5a
+Author: Ursula Braun <ubraun@linux.ibm.com>
+Date:   Fri Apr 12 10:57:23 2019 +0000
 
-diff --git a/Documentation/locking/locktorture.rst b/Documentation/locking/locktorture.rst
-index 54899c95e45e..e49da0a0bf94 100644
---- a/Documentation/locking/locktorture.rst
-+++ b/Documentation/locking/locktorture.rst
-@@ -105,8 +105,7 @@ stat_interval
- 		  Number of seconds between statistics-related printk()s.
- 		  By default, locktorture will report stats every 60 seconds.
- 		  Setting the interval to zero causes the statistics to
--		  be printed -only- when the module is unloaded, and this
--		  is the default.
-+		  be printed -only- when the module is unloaded.
- 
- stutter
- 		  The length of time to run the test before pausing for this
--- 
-2.23.0
+     net/smc: nonblocking connect rework
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10a234a2e00000
+start commit:   32ef9553 Merge tag 'fsnotify_for_v5.5-rc1' of git://git.ke..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=12a234a2e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=14a234a2e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ff560c3de405258c
+dashboard link: https://syzkaller.appspot.com/bug?extid=96d3f9ff6a86d37e44c8
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14b57336e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=149e357ae00000
+
+Reported-by: syzbot+96d3f9ff6a86d37e44c8@syzkaller.appspotmail.com
+Fixes: 50717a37db03 ("net/smc: nonblocking connect rework")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
