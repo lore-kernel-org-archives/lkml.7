@@ -7,71 +7,70 @@ X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D477C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 22:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7E8C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 22:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16A0620833
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 22:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DDDC20865
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 22:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575238535;
-	bh=TOxd3SlGVBC5GTVaBzg+iOAIIbZme4nhhW7ih8cbrAQ=;
+	s=default; t=1575238935;
+	bh=W0SYALR+gVbe+5ciHYtmLk2q9YczB+FZM78s6ZnMPoI=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=XPzPq/w6BiI5BQObH/U9S/G1ie6vURB3QaYeAhzrx9HrsNeq+VttFPaWERw/pIC0/
-	 Pgo75LOztwpTqtQyT3kflH1uBx7mAdRG3yQQSmqmpMo0Mlpn0gzXZd/hq6Pk54kMAi
-	 1U1p+/xgnb7aM2p2Olf+OlW+C9HpE2qJwVj28eGQ=
+	b=IDKdgY5XUI80lZ1fiP29lo1K7vwigcYwER+ROoKl+i3p7ARp/+8ZonKc1eiMq5aWN
+	 e5WgHi7RlZQckYSke+sQS5ftzTxpMJEUSEXaXkp6NPNHIvZl2JmbSROua073DoWNaN
+	 dX7gj1kIv3mWkkcBaDZOWqhg2yFz4EoLp8UZl6NA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbfLAWPd (ORCPT
+        id S1727317AbfLAWWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 17:15:33 -0500
-Received: from mail-wm1-f53.google.com ([209.85.128.53]:39741 "EHLO
-        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727167AbfLAWPd (ORCPT
+        Sun, 1 Dec 2019 17:22:14 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50515 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727218AbfLAWWO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 17:15:33 -0500
-Received: by mail-wm1-f53.google.com with SMTP id s14so14254357wmh.4
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Dec 2019 14:15:31 -0800 (PST)
+        Sun, 1 Dec 2019 17:22:14 -0500
+Received: by mail-wm1-f68.google.com with SMTP id l17so19763572wmh.0
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Dec 2019 14:22:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=OisUhr6PFkZU82S9m6283yhNXuH+N900GBKiMYrU9xk=;
-        b=XVRCsX6ZZDZMzyndIpwR4qJ6dQM+7vcUw0hIRLxz4PVL34KwS3SqgTNwzeDfFSLazp
-         wbIDV6aFPuSYu0A5CjC6TKb7C/t7maSkicIc1k/eUlcszGs3J808GIaVozCJc7BbtqD3
-         qZfkgLco8Ry9Yw9qPH3xRvkLYT3pM+hMH5Dp0OE+d+Y9t/6Bb2OpCpy8afR1RwRPJ03g
-         1IZzGyoa9wzXnhZUQ8xhrZ9Q1tn7Ma+WjAgh7UL0oIo41QakoAgTF8eFrk9W3puXVCE2
-         YPyg6scusUfJ7HdQViMNU8FvzrGTe28EfjsIb3PGAB5c/zMcPvNf6d1amjgaoMJJ8m0E
-         eOZg==
+        bh=BipLDQwj8/08vJKROQCDBTQtGOTsf5wIpOwEGjV4cQE=;
+        b=HSxquPvdNJVnxvh8rcgBEXB7vfXiz2CkRligGh+jTgDWFymXDdhYUA40ZoL2/QjJdA
+         hB+8S+O3mIB/oHlFRJxBo7/wbuNYWXW3YxLgnCWRdKIaZlqMwceN2x364uDBq5O/djfl
+         ZuFRDq2eybDbXRPYnC+2sZSAjYAdUPFwJg9d9TQ9A9t6uJ25O53ZnbvvNemAwh9g7vm7
+         TxqeMyOvVQuJUzaHRRupqRJAzI7YtwW+NMS8w3eVsfI7M2AFwGdvsArr8VNtmtv2Y5Av
+         Y/zZo+TkeL9VL3daMKvqKxDabyzAGuGgqCQQyTpmcQNzTDUhBSBuBB8iA/G5E+Uh7VD0
+         367g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :mime-version:content-disposition:user-agent;
-        bh=OisUhr6PFkZU82S9m6283yhNXuH+N900GBKiMYrU9xk=;
-        b=hMfvtPGbthnTGclKBedp3xhgtr6FwLYfg1rCrCjUottziL/s7AmG1X7qm0OQwNj+fw
-         6P+/U4r5jdAiArKy2MahABV8KIppPzY/5khQbuzTksO/gIEo5baGIkY6xYRcT6Lh2/+f
-         PznQhjwYmf1DxSkRAjQIV1iWjk5jwHmC6Xqu/8/Ief5FFvinNyftCZngqrBzzH+DmVj7
-         Ed/MYbroBPJru+D3pi/upsAun/Dgecbg7pQ1ISTKcltdpxNZRvq0ZLjNU4s3hwfeNGDF
-         0SbNIBuqCOdzLH3CvtEUMWbmed6q1KUyBOKB7fa4zkJSvq4ISphgv22h8tvNn9AlkVfa
-         gY5g==
-X-Gm-Message-State: APjAAAVZX65yILUac5xH5rVcAcM7NBkrLZdPSzr+Dno0TSp8ERm/Uftj
-        awxJa0vy0RxG4xyLtQNa1eg=
-X-Google-Smtp-Source: APXvYqx0ZaWpc4kv/GJcyXpRSi4kPAhxXaJ57/fy2YdIg5fSXEupNTVefzrq7hlXxfLjrbJF/MuyRw==
-X-Received: by 2002:a7b:c392:: with SMTP id s18mr12566646wmj.169.1575238530366;
-        Sun, 01 Dec 2019 14:15:30 -0800 (PST)
+        bh=BipLDQwj8/08vJKROQCDBTQtGOTsf5wIpOwEGjV4cQE=;
+        b=UhMIb8/jpSZRJmVpeHLhyO0JMqVOraXZ2kvFFFc7Ai7gPmqJ3GzDivg/xdgXEu8zvy
+         5toosaT+2i594LEEWoYDmqftE9j+hYwVwp43u2M59QkgVC8xfszqFtpbs5ibfpR0/TpK
+         s9PhJ8xpR0WVjQQTIsa0YAG9dPLbfMKHyOtG7Kzia6kPLuSuaUbdma9hrB1XxVf4dnHq
+         qIeXj8JJpLNeNB9DL86e5H6Qn2IZ0P7jWO4+zQEd5VL3zxeBHvmiM6IqwOlan7pTSWe+
+         EVUVtBA8vXGuLJOQ+CItUljDVWYj21gPEDL6v8pk1VA1A0Jn283B3DIb0yZ1JCP6IVfJ
+         5uEg==
+X-Gm-Message-State: APjAAAUhbTrM6RIzssO/k8TGYTNndcP3YZc7WrDU+pntGvj/uyBqPIAS
+        45HNQhAocd2bUaMETk96IqmCvSC0
+X-Google-Smtp-Source: APXvYqxHm2/dYSk5BGQplkArBJ9KGJAuIOP+5Vm6CmkuNc3mSZcgWaNV12/Eiee6uvBT3qvJsAAheg==
+X-Received: by 2002:a1c:2186:: with SMTP id h128mr25993134wmh.14.1575238931775;
+        Sun, 01 Dec 2019 14:22:11 -0800 (PST)
 Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id l3sm2783277wrt.29.2019.12.01.14.15.29
+        by smtp.gmail.com with ESMTPSA id c15sm10144452wrt.1.2019.12.01.14.22.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Dec 2019 14:15:29 -0800 (PST)
-Date:   Sun, 1 Dec 2019 23:15:22 +0100
+        Sun, 01 Dec 2019 14:22:10 -0800 (PST)
+Date:   Sun, 1 Dec 2019 23:22:08 +0100
 From:   Ingo Molnar <mingo@kernel.org>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@infradead.org>,
+Cc:     linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Jiri Olsa <jolsa@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] perf fixes
-Message-ID: <20191201221522.GA7267@gmail.com>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: [GIT PULL] x86 fixes
+Message-ID: <20191201222208.GA109470@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -83,135 +82,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Linus,
 
-Please pull the latest perf-urgent-for-linus git tree from:
+Please pull the latest x86-urgent-for-linus git tree from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-for-linus
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-for-linus
 
-   # HEAD: e680a41fcaf07ccac8817c589fc4824988b48eac Merge tag 'perf-core-for-mingo-5.5-20191128' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent
+   # HEAD: 91298f1a302dad0f0f630413c812818636faa8a0 x86/mm/pat: Fix off-by-one bugs in interval tree search
 
-Mostly fixes:
+Various fixes:
 
+ - Fix the PAT performance regression that downgraded write-combining 
+   device memory regions to uncached.
 
- - Make /sys/devices/cpu/rdpmc based RDPMC enforcement more instantaneous
+ - There's been a number of bugs in 32-bit double fault handling - 
+   hopefully all fixed now.
 
- - decoder: Update the Intel opcode map
+ - Fix an LDT crash
 
- - Various tooling fixes, including a few late optimizations and cleanups.
+ - Fix an FPU over-optimization that broke with GCC9 code optimizations.
+
+ - Misc cleanups
 
  Thanks,
 
 	Ingo
 
 ------------------>
-Adrian Hunter (4):
-      x86/insn: Add some more Intel instructions to the opcode map
-      x86/insn: perf tools: Add some more instructions to the new instructions test
-      perf script: Fix brstackinsn for AUXTRACE
-      perf script: Fix invalid LBR/binary mismatch error
+Andy Lutomirski (9):
+      selftests/x86/single_step_syscall: Check SYSENTER directly
+      lkdtm: Add a DOUBLE_FAULT crash type on x86
+      x86/traps: Disentangle the 32-bit and 64-bit doublefault code
+      x86/doublefault/32: Rename doublefault.c to doublefault_32.c
+      x86/doublefault/32: Move #DF stack and TSS to cpu_entry_area
+      x86/doublefault/32: Rewrite the x86_32 #DF handler and unify with 64-bit
+      x86/traps: die() instead of panicking on a double fault
+      x86/ptrace: Remove set_segment_reg() implementations for current
+      x86/ptrace: Document FSBASE and GSBASE ABI oddities
 
-Andi Kleen (2):
-      perf pmu: Use file system cache to optimize sysfs access
-      perf affinity: Add infrastructure to save/restore affinity
+Borislav Petkov (2):
+      x86/entry/32: Remove unused 'restore_all_notrace' local label
+      x86/ioperm: Save an indentation level in tss_update_io_bitmap()
 
-Anthony Steinhauser (1):
-      perf/x86: Implement immediate enforcement of /sys/devices/cpu/rdpmc value of 0
+Ingo Molnar (1):
+      x86/mm/pat: Fix off-by-one bugs in interval tree search
 
-Arnaldo Carvalho de Melo (15):
-      perf script: Move map__fprintf_srccode() to near its only user
-      perf map: Ditch leftover map__reloc_vmlinux() prototype
-      perf map: Remove needless struct forward declarations
-      perf map: Remove unused functions
-      perf maps: Merge 'struct maps' with 'struct map_groups'
-      perf thread: Rename thread->mg to thread->maps
-      perf addr_location: Rename al->mg to al->maps
-      perf map_symbol: Rename ms->mg to ms->maps
-      perf maps: Rename 'mg' variables to 'maps'
-      perf maps: Rename map_groups.h to maps.h
-      perf tests: Rename thread-mg-share to thread-maps-share
-      perf tests: Rename tests/map_groups.c to tests/maps.c
-      perf diff: Use llabs() with 64-bit values
-      perf diff: Use llabs() with 64-bit values
-      perf regs: Make perf_reg_name() return "unknown" instead of NULL
+Joerg Roedel (1):
+      x86/mm/32: Sync only to VMALLOC_END in vmalloc_sync_all()
 
-Jiri Olsa (1):
-      perf tools: Allow to link with libbpf dynamicaly
+Sebastian Andrzej Siewior (1):
+      x86/fpu: Don't cache access to fpu_fpregs_owner_ctx
 
 
- arch/x86/events/core.c                             |  18 +-
- arch/x86/include/asm/mmu_context.h                 |   4 +-
- arch/x86/lib/x86-opcode-map.txt                    |  44 +-
- tools/arch/x86/lib/x86-opcode-map.txt              |  44 +-
- tools/build/Makefile.feature                       |   3 +-
- tools/build/feature/Makefile                       |   4 +
- tools/build/feature/test-libbpf.c                  |   7 +
- tools/perf/Makefile.config                         |  10 +
- tools/perf/Makefile.perf                           |   6 +-
- tools/perf/arch/arm/tests/dwarf-unwind.c           |   4 +-
- tools/perf/arch/arm64/tests/dwarf-unwind.c         |   4 +-
- tools/perf/arch/powerpc/tests/dwarf-unwind.c       |   4 +-
- tools/perf/arch/s390/annotate/instructions.c       |   2 +-
- tools/perf/arch/x86/tests/dwarf-unwind.c           |   4 +-
- tools/perf/arch/x86/tests/insn-x86-dat-32.c        | 366 ++++++++++++
- tools/perf/arch/x86/tests/insn-x86-dat-64.c        | 484 +++++++++++++++
- tools/perf/arch/x86/tests/insn-x86-dat-src.c       | 655 +++++++++++++++++++++
- tools/perf/arch/x86/util/event.c                   |   5 +-
- tools/perf/builtin-diff.c                          |   6 +-
- tools/perf/builtin-report.c                        |   7 +-
- tools/perf/builtin-script.c                        |  46 +-
- tools/perf/tests/Build                             |   4 +-
- tools/perf/tests/builtin-test.c                    |   8 +-
- tools/perf/tests/code-reading.c                    |   2 +-
- tools/perf/tests/{map_groups.c => maps.c}          |  26 +-
- tools/perf/tests/tests.h                           |   4 +-
- .../{thread-mg-share.c => thread-maps-share.c}     |  36 +-
- tools/perf/tests/vmlinux-kallsyms.c                |   9 +-
- tools/perf/ui/browsers/annotate.c                  |   2 +-
- tools/perf/ui/stdio/hist.c                         |   4 +-
- tools/perf/util/Build                              |   2 +
- tools/perf/util/affinity.c                         |  73 +++
- tools/perf/util/affinity.h                         |  17 +
- tools/perf/util/annotate.c                         |   8 +-
- tools/perf/util/bpf-event.c                        |   4 +-
- tools/perf/util/callchain.c                        |   8 +-
- tools/perf/util/cs-etm.c                           |   2 +-
- tools/perf/util/db-export.c                        |  12 +-
- tools/perf/util/event.c                            |  14 +-
- tools/perf/util/fncache.c                          |  63 ++
- tools/perf/util/fncache.h                          |   7 +
- tools/perf/util/hist.c                             |   8 +-
- tools/perf/util/intel-pt.c                         |   2 +-
- tools/perf/util/machine.c                          |  80 ++-
- tools/perf/util/machine.h                          |  10 +-
- tools/perf/util/map.c                              | 223 ++-----
- tools/perf/util/map.h                              |  14 +-
- tools/perf/util/map_groups.h                       | 106 ----
- tools/perf/util/map_symbol.h                       |   4 +-
- tools/perf/util/maps.h                             |  87 +++
- tools/perf/util/perf_regs.h                        |   2 +-
- tools/perf/util/pmu.c                              |  34 +-
- tools/perf/util/probe-event.c                      |   4 +-
- tools/perf/util/python-ext-sources                 |   1 +
- .../util/scripting-engines/trace-event-python.c    |   2 +-
- tools/perf/util/srccode.c                          |   9 +-
- tools/perf/util/symbol-elf.c                       |  16 +-
- tools/perf/util/symbol.c                           |  91 ++-
- tools/perf/util/symbol.h                           |   6 +-
- tools/perf/util/synthetic-events.c                 |   2 +-
- tools/perf/util/thread-stack.c                     |   4 +-
- tools/perf/util/thread.c                           |  38 +-
- tools/perf/util/thread.h                           |   4 +-
- tools/perf/util/unwind-libdw.c                     |   4 +-
- tools/perf/util/unwind-libunwind-local.c           |  22 +-
- tools/perf/util/unwind-libunwind.c                 |  36 +-
- tools/perf/util/unwind.h                           |  27 +-
- tools/perf/util/vdso.c                             |   2 +-
- 68 files changed, 2245 insertions(+), 625 deletions(-)
- create mode 100644 tools/build/feature/test-libbpf.c
- rename tools/perf/tests/{map_groups.c => maps.c} (83%)
- rename tools/perf/tests/{thread-mg-share.c => thread-maps-share.c} (64%)
- create mode 100644 tools/perf/util/affinity.c
- create mode 100644 tools/perf/util/affinity.h
- create mode 100644 tools/perf/util/fncache.c
- create mode 100644 tools/perf/util/fncache.h
- delete mode 100644 tools/perf/util/map_groups.h
- create mode 100644 tools/perf/util/maps.h
+ arch/x86/Kconfig.debug                            |   2 +-
+ arch/x86/entry/entry_32.S                         |  43 ++++++-
+ arch/x86/include/asm/cpu_entry_area.h             |  12 ++
+ arch/x86/include/asm/doublefault.h                |  13 +++
+ arch/x86/include/asm/fpu/internal.h               |   2 +-
+ arch/x86/include/asm/pgtable_32_types.h           |   7 +-
+ arch/x86/include/asm/processor.h                  |   2 -
+ arch/x86/include/asm/traps.h                      |   3 +
+ arch/x86/kernel/Makefile                          |   4 +-
+ arch/x86/kernel/cpu/common.c                      |  12 +-
+ arch/x86/kernel/doublefault.c                     |  86 --------------
+ arch/x86/kernel/doublefault_32.c                  | 136 ++++++++++++++++++++++
+ arch/x86/kernel/dumpstack_32.c                    |  30 +++++
+ arch/x86/kernel/process.c                         |  52 ++++-----
+ arch/x86/kernel/ptrace.c                          |  36 ++++--
+ arch/x86/kernel/traps.c                           |  31 +++--
+ arch/x86/mm/cpu_entry_area.c                      |  14 ++-
+ arch/x86/mm/fault.c                               |   2 +-
+ arch/x86/mm/pat_interval.c                        |  12 +-
+ drivers/misc/lkdtm/bugs.c                         |  39 +++++++
+ drivers/misc/lkdtm/core.c                         |   3 +
+ drivers/misc/lkdtm/lkdtm.h                        |   3 +
+ tools/testing/selftests/x86/single_step_syscall.c |  94 +++++++++++++--
+ 23 files changed, 467 insertions(+), 171 deletions(-)
+ create mode 100644 arch/x86/include/asm/doublefault.h
+ delete mode 100644 arch/x86/kernel/doublefault.c
+ create mode 100644 arch/x86/kernel/doublefault_32.c
+
