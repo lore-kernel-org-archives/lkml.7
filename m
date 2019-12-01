@@ -6,63 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C1EC432C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 01:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EA3C432C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 01:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AC7D2086A
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 01:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15B1D2086A
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 01:40:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575164419;
-	bh=U5wyoC5b/9h2G1XvLUScDFCH+7A+o40+EW7kniU9gwg=;
+	s=default; t=1575164422;
+	bh=3jlGckcHgAZaUPAAPuHE7bUbtklXkvqHWWqPOkYygX4=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=PmbEjSGNS6IMqzkb77RtiRrgbQAkCN7Gc6h8dpmBprJA7xMj5MJjQhs28Tc52ZaRi
-	 GpBNRpxdjmkIVtr05AYfVdeh/1jRUUWc2e5rFaOandnU2Fx3L64sCtVEFxPgTno5xC
-	 R/OsxO6/MgQ8DBbXuHMHRvfWuEyzTwpYOYtQNeKc=
+	b=Ig0xLIm1xyXQwppOxkfXVmsMDUUQdBj4lfwt1WKAFHatyK5KeQ2GgZWdYtyGLdXTg
+	 VW0J21fAE0ryXCVFrCZ3jyPagKmOeUKA//+c9NYylbP50sr8/k3UnYOxdVHBga0GA7
+	 Crx1svrC2ldDL17zNjxGOxcbGekPDK27TiizAmzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727444AbfLABkS (ORCPT
+        id S1727464AbfLABkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Nov 2019 20:40:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46830 "EHLO mail.kernel.org"
+        Sat, 30 Nov 2019 20:40:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726906AbfLABkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Nov 2019 20:40:18 -0500
-Subject: Re: [GIT PULL] kgdb changes v5.5-rc1
+        id S1726906AbfLABkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Nov 2019 20:40:19 -0500
+Subject: Re: [GIT PULL] SELinux patches for v5.5
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575164417;
-        bh=U5wyoC5b/9h2G1XvLUScDFCH+7A+o40+EW7kniU9gwg=;
+        s=default; t=1575164419;
+        bh=3jlGckcHgAZaUPAAPuHE7bUbtklXkvqHWWqPOkYygX4=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=xw+NnUMwDIAsJMdBwrx7S3qaMZAKI6+EZIzAENPBt7PLv6VE+xaK84OMHrrImp8c/
-         cMnli4kYZnWx3f8ayTWsHAAkTMh8iwtqYdMWCU7IC+UPRyXcpo/R/EVP1v6TC+EKX6
-         5lIGyUgUl3f/VhZhEaCPQSGG1It0Yfdx9nb60I/s=
+        b=WWZCb7KMF4FjNOqemMeWDEhU1rGw/OfE86SSC7EK8jLW7UqzPHWoD9nmuAB8DzIXG
+         0V3IHpt/86XmPppYICx/vo3IpaIJx1HDwslH0zfIhZIjzQKNAMm5kDWyjOeacfrQcK
+         zKfTEauoj4MSvWy1U267hk6rN2nzqoj+pLHxwpwg=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191126153858.bclidzxinfjrtkl6@holly.lan>
-References: <20191126153858.bclidzxinfjrtkl6@holly.lan>
+In-Reply-To: <CAHC9VhRj-vx8AnP5tKcq9joNqWSHRv1bk+3e7DGU9mxjN+fVFg@mail.gmail.com>
+References: <CAHC9VhRj-vx8AnP5tKcq9joNqWSHRv1bk+3e7DGU9mxjN+fVFg@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191126153858.bclidzxinfjrtkl6@holly.lan>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/danielt/linux.git/
- tags/kgdb-5.5-rc1
-X-PR-Tracked-Commit-Id: c58ff643763c78bef12874ee39995c9f7f987bc2
+X-PR-Tracked-Message-Id: <CAHC9VhRj-vx8AnP5tKcq9joNqWSHRv1bk+3e7DGU9mxjN+fVFg@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
+ tags/selinux-pr-20191126
+X-PR-Tracked-Commit-Id: 42345b68c2e3e2b6549fc34b937ff44240dfc3b6
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8a99117f6e8793ab945d85db038f09e85703b97b
-Message-Id: <157516441755.28955.171624881662964797.pr-tracker-bot@kernel.org>
-Date:   Sun, 01 Dec 2019 01:40:17 +0000
-To:     Daniel Thompson <daniel.thompson@linaro.org>
+X-PR-Merge-Commit-Id: ba75082efc18ced6def42e8f85c494aa2578760e
+Message-Id: <157516441909.28955.6196919876049308492.pr-tracker-bot@kernel.org>
+Date:   Sun, 01 Dec 2019 01:40:19 +0000
+To:     Paul Moore <paul@paul-moore.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
+        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 26 Nov 2019 15:38:58 +0000:
+The pull request you sent on Tue, 26 Nov 2019 16:24:34 -0500:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/danielt/linux.git/ tags/kgdb-5.5-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git tags/selinux-pr-20191126
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8a99117f6e8793ab945d85db038f09e85703b97b
+https://git.kernel.org/torvalds/c/ba75082efc18ced6def42e8f85c494aa2578760e
 
 Thank you!
 
