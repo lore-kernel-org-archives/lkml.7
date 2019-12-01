@@ -2,169 +2,133 @@ Return-Path: <SRS0=SILN=ZX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C61D9C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 10:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B88C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 11:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 931DA20833
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 10:52:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DfL709z0"
+	by mail.kernel.org (Postfix) with ESMTP id B157920725
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 11:22:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbfLAKw3 (ORCPT
+        id S1726363AbfLALWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 05:52:29 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:45220 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbfLAKw2 (ORCPT
+        Sun, 1 Dec 2019 06:22:09 -0500
+Received: from mail-io1-f70.google.com ([209.85.166.70]:55350 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbfLALWJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 05:52:28 -0500
-Received: by mail-pj1-f65.google.com with SMTP id r11so7742547pjp.12
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Dec 2019 02:52:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sW0LJ/G1N09LX4PKc59YIEDU3pRKgqLhiJhn7knkesE=;
-        b=DfL709z0SLbIWML1vezpr98p1iPrjbJ3wWQyCWrzHi3cqbzTEHstkEc9dfNh+8ldxx
-         mL7XncKkvF/cQYopJgexmJY/gMZI1Fk9gpW1Oo7P8ttdk6yy5yP7BFPQ8roGGRuwFLiS
-         Nf/n7Y8Aj6pqTf2CjP8fC2ZDRdG/5A+lc+BETVjwqe3qBjOTuM/1duYlu9gGzYHxTI/S
-         CkfFSg/9/6bXCkujZa4RfBBUvE6uueMd0QUt+N4YQbRva3zEIoSrMAyhIc4KpMCAo4tK
-         sJWaizdBR7R3+ZW2IVpR823QyVrfKnNw75VFIGMjad3wYKzpN7S6Zm17y5OifLN8wKA8
-         czmg==
+        Sun, 1 Dec 2019 06:22:09 -0500
+Received: by mail-io1-f70.google.com with SMTP id z21so8098111iob.22
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Dec 2019 03:22:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sW0LJ/G1N09LX4PKc59YIEDU3pRKgqLhiJhn7knkesE=;
-        b=sKmdXHrwfUrvP5ZFAeVVDkHcI7RHplDWGFXayq+E7qjiqEbQ6vd5N/g1oSedtymJA/
-         eyromQC63UGbZtD9fmx0BQ7wMiAk6AAgY9AishhDigXYgerbKINny6QUe2rQgfJlfLLi
-         BtDgT3Aze6c7u1grFCV87fKxfCzio3+JidDEzFKqhh44r9yepoS70wIRnqTPfPXw8XN5
-         rEx8KWkO9j0vUwjdnpbY/AizthgmP84yTGn1sv5jO3911kGTNyfL7+QO4OcRtiYBsN8R
-         nPqExXKI9otv623WMzIqreuLX1r1W4XjXBZQpg9kjS609YiE8N/6Yg2kN3Cwe59uP1m1
-         Vsqg==
-X-Gm-Message-State: APjAAAXAkx5lTnePNYWCv8aQ4hdjSmphSDi0ZND6ppwjlwMX6UOp2/3w
-        DP2jUdwX+vRnKrJD6D1RdsI=
-X-Google-Smtp-Source: APXvYqyxVuV8zjAdItwyvKJoV2U+/pkaLi2yKTwOY8FDFgS6fgGPM76y/ho9TAGuiLJSSD4dYelxIw==
-X-Received: by 2002:a17:902:ab98:: with SMTP id f24mr22430142plr.257.1575197547889;
-        Sun, 01 Dec 2019 02:52:27 -0800 (PST)
-Received: from mail.google.com ([139.180.133.10])
-        by smtp.gmail.com with ESMTPSA id z26sm8595931pgu.80.2019.12.01.02.52.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Dec 2019 02:52:27 -0800 (PST)
-Date:   Sun, 1 Dec 2019 18:52:19 +0800
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, x86@kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH] x86/nmi: remove the irqwork for long nmi handler
- duration warning
-Message-ID: <20191201105218.2zcitogobsylytv2@mail.google.com>
-References: <20191116084835.3524-1-changbin.du@gmail.com>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=59tOo+S299CeDluWylHOhMRAIUwsgcblBa37pT8fvnY=;
+        b=GK+bBS8AfzxIim3MsssrxgtYSM+WFM5IIs3dGUyDQbMIBvMwi+xCicFub9gyq9lbBi
+         uESKLVWzh73Zq2HcMkpEH3pL4P425qFdPcbABNSXE5IWvogFqpL6c5kKNsaEbB56KecJ
+         bBaESvB/tlj0dwlJw1ABqYPDSAmhyesu2iFHQJDalqdu3Xhiz8vsR7EUpLwowUnQOdpV
+         dSJQFfFMAIKF+PIS77eFRs7+Pooa1UyZ7H5xZWV0uM8Lp1b1bNkNVfg2r73gYcKGfkgm
+         17HoVWg3DRI9GtusmnCyyIfZnAZlUbrEr6KnKYPHkGySafAQPj8TY29yjHXe+/HDKmBd
+         Gw9w==
+X-Gm-Message-State: APjAAAUC/hs8JPMsm940pi4ipJ/zO3jJO2Y3lo8TYvszXa8Evd7l+Dde
+        vjvMAIkn9P1eScfnHamMiXC5Od6tPYLNpOxR3DjqEcht3rRs
+X-Google-Smtp-Source: APXvYqynfcQBfOgYrkrqqPDgBYwx9zKE9tLCB7t7H1PnIUogaOAgC8mwyLxt4ea0tfpkI4/SmYdqJI9D2XlZFkvkztAKAbowp5Jt
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191116084835.3524-1-changbin.du@gmail.com>
-User-Agent: NeoMutt/20180716
+X-Received: by 2002:a6b:7a48:: with SMTP id k8mr7608690iop.138.1575199328570;
+ Sun, 01 Dec 2019 03:22:08 -0800 (PST)
+Date:   Sun, 01 Dec 2019 03:22:08 -0800
+In-Reply-To: <000000000000c280ba05988b6242@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006e19cd0598a2ac48@google.com>
+Subject: Re: BUG: sleeping function called from invalid context in __alloc_pages_nodemask
+From:   syzbot <syzbot+4925d60532bf4c399608@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, aryabinin@virtuozzo.com,
+        christophe.leroy@c-s.fr, dja@axtens.net, dvyukov@google.com,
+        glider@google.com, gor@linux.ibm.com, hdanton@sina.com,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, mark.rutland@arm.com,
+        penguin-kernel@I-love.SAKURA.ne.jp,
+        syzkaller-bugs@googlegroups.com, urezki@gmail.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI Thomas and Ingo,
-Could you check this one? Thanks!
+syzbot has found a reproducer for the following crash on:
 
-On Sat, Nov 16, 2019 at 04:48:35PM +0800, Changbin Du wrote:
-> First, printk is NMI context safe now since the safe printk has been
-> implemented. The safe printk will help us to do such work in its irqwork.
-> 
-> Second, the NMI irqwork actually does not work if a NMI handler causes
-> watchdog timeout panic. The NMI irqwork have no chance to run in such
-> case, while the safe printk will flush its per-cpu buffer before panic.
-> 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> ---
->  arch/x86/include/asm/nmi.h |  1 -
->  arch/x86/kernel/nmi.c      | 20 +++++++++-----------
->  2 files changed, 9 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/nmi.h b/arch/x86/include/asm/nmi.h
-> index 75ded1d13d98..9d5d949e662e 100644
-> --- a/arch/x86/include/asm/nmi.h
-> +++ b/arch/x86/include/asm/nmi.h
-> @@ -41,7 +41,6 @@ struct nmiaction {
->  	struct list_head	list;
->  	nmi_handler_t		handler;
->  	u64			max_duration;
-> -	struct irq_work		irq_work;
->  	unsigned long		flags;
->  	const char		*name;
->  };
-> diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-> index 4df7705022b9..0fa51f80ad73 100644
-> --- a/arch/x86/kernel/nmi.c
-> +++ b/arch/x86/kernel/nmi.c
-> @@ -104,18 +104,22 @@ static int __init nmi_warning_debugfs(void)
->  }
->  fs_initcall(nmi_warning_debugfs);
->  
-> -static void nmi_max_handler(struct irq_work *w)
-> +static void nmi_check_duration(struct nmiaction *action, u64 duration)
->  {
-> -	struct nmiaction *a = container_of(w, struct nmiaction, irq_work);
->  	int remainder_ns, decimal_msecs;
-> -	u64 whole_msecs = READ_ONCE(a->max_duration);
-> +	u64 whole_msecs = READ_ONCE(action->max_duration);
-> +
-> +	if (duration < nmi_longest_ns || duration < action->max_duration)
-> +		return;
-> +
-> +	action->max_duration = duration;
->  
->  	remainder_ns = do_div(whole_msecs, (1000 * 1000));
->  	decimal_msecs = remainder_ns / 1000;
->  
->  	printk_ratelimited(KERN_INFO
->  		"INFO: NMI handler (%ps) took too long to run: %lld.%03d msecs\n",
-> -		a->handler, whole_msecs, decimal_msecs);
-> +		action->handler, whole_msecs, decimal_msecs);
->  }
->  
->  static int nmi_handle(unsigned int type, struct pt_regs *regs)
-> @@ -142,11 +146,7 @@ static int nmi_handle(unsigned int type, struct pt_regs *regs)
->  		delta = sched_clock() - delta;
->  		trace_nmi_handler(a->handler, (int)delta, thishandled);
->  
-> -		if (delta < nmi_longest_ns || delta < a->max_duration)
-> -			continue;
-> -
-> -		a->max_duration = delta;
-> -		irq_work_queue(&a->irq_work);
-> +		nmi_check_duration(a, delta);
->  	}
->  
->  	rcu_read_unlock();
-> @@ -164,8 +164,6 @@ int __register_nmi_handler(unsigned int type, struct nmiaction *action)
->  	if (!action->handler)
->  		return -EINVAL;
->  
-> -	init_irq_work(&action->irq_work, nmi_max_handler);
-> -
->  	raw_spin_lock_irqsave(&desc->lock, flags);
->  
->  	/*
-> -- 
-> 2.20.1
-> 
+HEAD commit:    419593da Add linux-next specific files for 20191129
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=168e202ee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7c04b0959e75c206
+dashboard link: https://syzkaller.appspot.com/bug?extid=4925d60532bf4c399608
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=162234a2e00000
 
--- 
-Cheers,
-Changbin Du
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+4925d60532bf4c399608@syzkaller.appspotmail.com
+
+BUG: sleeping function called from invalid context at mm/page_alloc.c:4681
+in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 9071, name:  
+kworker/0:3
+4 locks held by kworker/0:3/9071:
+  #0: ffff8880aa026d28 ((wq_completion)events){+.+.}, at: __write_once_size  
+include/linux/compiler.h:247 [inline]
+  #0: ffff8880aa026d28 ((wq_completion)events){+.+.}, at: arch_atomic64_set  
+arch/x86/include/asm/atomic64_64.h:34 [inline]
+  #0: ffff8880aa026d28 ((wq_completion)events){+.+.}, at: atomic64_set  
+include/asm-generic/atomic-instrumented.h:868 [inline]
+  #0: ffff8880aa026d28 ((wq_completion)events){+.+.}, at: atomic_long_set  
+include/asm-generic/atomic-long.h:40 [inline]
+  #0: ffff8880aa026d28 ((wq_completion)events){+.+.}, at: set_work_data  
+kernel/workqueue.c:615 [inline]
+  #0: ffff8880aa026d28 ((wq_completion)events){+.+.}, at:  
+set_work_pool_and_clear_pending kernel/workqueue.c:642 [inline]
+  #0: ffff8880aa026d28 ((wq_completion)events){+.+.}, at:  
+process_one_work+0x88b/0x1740 kernel/workqueue.c:2235
+  #1: ffffc900021a7dc0 (pcpu_balance_work){+.+.}, at:  
+process_one_work+0x8c1/0x1740 kernel/workqueue.c:2239
+  #2: ffffffff8983ff20 (pcpu_alloc_mutex){+.+.}, at:  
+pcpu_balance_workfn+0xb7/0x1310 mm/percpu.c:1845
+  #3: ffffffff89851b18 (vmap_area_lock){+.+.}, at: spin_lock  
+include/linux/spinlock.h:338 [inline]
+  #3: ffffffff89851b18 (vmap_area_lock){+.+.}, at:  
+pcpu_get_vm_areas+0x3b27/0x3f00 mm/vmalloc.c:3431
+Preemption disabled at:
+[<ffffffff81a89ce7>] spin_lock include/linux/spinlock.h:338 [inline]
+[<ffffffff81a89ce7>] pcpu_get_vm_areas+0x3b27/0x3f00 mm/vmalloc.c:3431
+CPU: 0 PID: 9071 Comm: kworker/0:3 Not tainted  
+5.4.0-next-20191129-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: events pcpu_balance_workfn
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  ___might_sleep.cold+0x1fb/0x23e kernel/sched/core.c:6800
+  __might_sleep+0x95/0x190 kernel/sched/core.c:6753
+  prepare_alloc_pages mm/page_alloc.c:4681 [inline]
+  __alloc_pages_nodemask+0x523/0x910 mm/page_alloc.c:4730
+  alloc_pages_current+0x107/0x210 mm/mempolicy.c:2211
+  alloc_pages include/linux/gfp.h:532 [inline]
+  __get_free_pages+0xc/0x40 mm/page_alloc.c:4786
+  kasan_populate_vmalloc_pte mm/kasan/common.c:762 [inline]
+  kasan_populate_vmalloc_pte+0x2f/0x1c0 mm/kasan/common.c:753
+  apply_to_pte_range mm/memory.c:2041 [inline]
+  apply_to_pmd_range mm/memory.c:2068 [inline]
+  apply_to_pud_range mm/memory.c:2088 [inline]
+  apply_to_p4d_range mm/memory.c:2108 [inline]
+  apply_to_page_range+0x445/0x700 mm/memory.c:2133
+  kasan_populate_vmalloc+0x68/0x90 mm/kasan/common.c:791
+  pcpu_get_vm_areas+0x3c77/0x3f00 mm/vmalloc.c:3439
+  pcpu_create_chunk+0x24e/0x7f0 mm/percpu-vm.c:340
+  pcpu_balance_workfn+0xf1b/0x1310 mm/percpu.c:1934
+  process_one_work+0x9af/0x1740 kernel/workqueue.c:2264
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2410
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
