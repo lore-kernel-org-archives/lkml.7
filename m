@@ -2,129 +2,111 @@ Return-Path: <SRS0=SILN=ZX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA13C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 18:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E48F9C43215
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 18:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 798A520833
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 18:04:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575223494;
-	bh=pqAi1JkER9NfqM1LYzhsF4Je7X+u8Mh5AQt5yCTnw/Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=N2InHGHRqXy5W+01g7o3Ob1ETBquQFkJFAKnh3zh890jWmRXkTA6RceJDnqpuiEfT
-	 9AHDmxBNGXu7JUUUGm7jUCPcuOdm+X9GfLu2c8aCJzMQBGNlS1RoUt/ospFP02om8J
-	 ZEabn6QVuo/Vg+fdJifOFTRFs2KkMxzjGTXfB75w=
+	by mail.kernel.org (Postfix) with ESMTP id BCA7A20716
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 18:23:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sYEA8DkL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbfLASEj (ORCPT
+        id S1727308AbfLASXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 13:04:39 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:49445 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726155AbfLASEi (ORCPT
+        Sun, 1 Dec 2019 13:23:30 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40208 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727072AbfLASXa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 13:04:38 -0500
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1ibTaF-0003tt-MP; Sun, 01 Dec 2019 19:04:35 +0100
-Date:   Sun, 1 Dec 2019 18:04:34 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Heyi Guo <guoheyi@huawei.com>
-Cc:     <linux-kernel@vger.kernel.org>, <wanghaibin.wang@huawei.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH] irq/gic-its: gicv4: set VPENDING table as
- inner-shareable
-Message-ID: <20191201180434.1dba3116@why>
-In-Reply-To: <20191130073849.38378-1-guoheyi@huawei.com>
-References: <20191130073849.38378-1-guoheyi@huawei.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 1 Dec 2019 13:23:30 -0500
+Received: by mail-io1-f66.google.com with SMTP id x1so3850058iop.7;
+        Sun, 01 Dec 2019 10:23:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=t4fUTcYfY7mcYP+c65DBEIJpXiFt8LYo795Cww6uf7s=;
+        b=sYEA8DkLPgcYVj56eQRC2KgRU8mAoN0Y4yX4WPEted0p2cPvpxeHV6kFg1Bt5vkWpR
+         GD0qlbdEIpaWZvAAvuHJcVwHwdGgHp+rI6tCcxNpZOBLSnDspMKql9uh9YDIGXzJFuLn
+         fRMrIKvCs/W8X/WxPq6g7Rbh/7I6EhlodIl4g68EJyq840BDu84QIijfpeTtUl9rpecz
+         iJgNwA66nKwrlcf+NNK9mP4lhDdDOop/5mV3c3K9IKg2my0o5G4K0FuGQ4R2KT1yHhMm
+         G6KxM36Y3C2wav4jm4vPIVqowk/T1tRrtpCaxXOUeyNzKvlfdTyPQ5o0HhRYDioO4Lda
+         8H1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t4fUTcYfY7mcYP+c65DBEIJpXiFt8LYo795Cww6uf7s=;
+        b=pJ73YZz64BqgoddbW0oqG5n+UT/lY5L3SW+vITGNDD9uajt9kzuUBcU8T0yVpR28hG
+         lrbWqPlRXJrfTrdC+IYShStB6I3W6K+c20qJO87RfGTUahgj/tr7P+B7qpjfnVoicVDL
+         JF2yzBvFKnM7wsGQO60XA0DRsXYgo/KHb6dDUvkYKLWOJtl4my8ncSviOxBS7Vz9Q28h
+         C8VPWF1q5n8dB1ERMv6sQgQcZqrIJtq5UCHHmUTM8dfcPwJFwhja5uJMVgTbwv/qwJ2y
+         HCB+5PKZlGeuu8sbLf/Skw9fRE7kIO8mnLZ4SqI/XURaonQePIa+/xrJ3WqbCi3reI20
+         WjAQ==
+X-Gm-Message-State: APjAAAVGdG/1tyB5KbluKgltgSLEfKL0JxUZc2P1/tR1sy46+DL3mw0h
+        XqxxUSj57lISo6fbMouUNlUcBaAJndCeO0V6z9c=
+X-Google-Smtp-Source: APXvYqyanFaFt+dQgUwQsnQO62oDza8XXXGaXpcAuSWg6JdtXjyEKBLOhmjDYnWZuzkdL71TMBuMWyUH7OX6G5k4Dzw=
+X-Received: by 2002:a5d:83c9:: with SMTP id u9mr8142629ior.272.1575224609504;
+ Sun, 01 Dec 2019 10:23:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: guoheyi@huawei.com, linux-kernel@vger.kernel.org, wanghaibin.wang@huawei.com, tglx@linutronix.de, jason@lakedaemon.net
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+References: <20191130053030.7868-1-deepa.kernel@gmail.com> <20191130053030.7868-3-deepa.kernel@gmail.com>
+In-Reply-To: <20191130053030.7868-3-deepa.kernel@gmail.com>
+From:   Steve French <smfrench@gmail.com>
+Date:   Sun, 1 Dec 2019 12:23:18 -0600
+Message-ID: <CAH2r5mukfX6mSY0eHwm0wHnkaLPb2RLAKxnBrScgoZJhtdYZfQ@mail.gmail.com>
+Subject: Re: [PATCH 2/7] fs: cifs: Fix atime update check vs mtime
+To:     Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Steve French <stfrench@microsoft.com>,
+        CIFS <linux-cifs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 30 Nov 2019 15:38:49 +0800
-Heyi Guo <guoheyi@huawei.com> wrote:
+merged into cifs-2.6.git for-next
 
-> There is no special reason to set virtual LPI pending table as
-> non-shareable. If we choose to hard code the shareability without
-> probing, inner-shareable will be a better choice, for all the other
-> ITS/GICR tables prefer to be inner-shareable.
-
-One of the issues is that we have strictly no idea what the caches are
-Inner Shareable with (I've been asking for such clarification for years
-without getting anywhere). You can have as many disconnected inner
-shareable domains as you want!
-
-I suspect that in the grand scheme of things, the redistributors
-ought to be in the same inner shareable domain, and that with a bit of
-luck, the CPUs are there as well. Still, that's a massive guess.
-
-> What's more, on Hisilicon hip08 it will trigger some kind of bus
-> warning when mixing use of different shareabilities.
-
-Do you have more information about what the bus is complaining about?
-Is that because the CPUs have these pages mapped as inner shareable?
-
-I'll give it a go on D05 (HIP07) to find out what changes there.
-
-Thanks,
-
-	M.
-
-> Signed-off-by: Heyi Guo <guoheyi@huawei.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Jason Cooper <jason@lakedaemon.net>
-> Cc: Marc Zyngier <maz@kernel.org>
+On Fri, Nov 29, 2019 at 11:34 PM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
+>
+> According to the comment in the code and commit log, some apps
+> expect atime >= mtime; but the introduced code results in
+> atime==mtime.  Fix the comparison to guard against atime<mtime.
+>
+> Fixes: 9b9c5bea0b96 ("cifs: do not return atime less than mtime")
+> Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+> Cc: stfrench@microsoft.com
+> Cc: linux-cifs@vger.kernel.org
 > ---
->  drivers/irqchip/irq-gic-v3-its.c   | 2 +-
->  include/linux/irqchip/arm-gic-v3.h | 3 +++
->  2 files changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> index 787e8eec9a7f..d31e863bc9ef 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -2831,7 +2831,7 @@ static void its_vpe_schedule(struct its_vpe *vpe)
->  	val  = virt_to_phys(page_address(vpe->vpt_page)) &
->  		GENMASK_ULL(51, 16);
->  	val |= GICR_VPENDBASER_RaWaWb;
-> -	val |= GICR_VPENDBASER_NonShareable;
-> +	val |= GICR_VPENDBASER_InnerShareable;
->  	/*
->  	 * There is no good way of finding out if the pending table is
->  	 * empty as we can race against the doorbell interrupt very
-> diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
-> index 5cc10cf7cb3e..a184f875e451 100644
-> --- a/include/linux/irqchip/arm-gic-v3.h
-> +++ b/include/linux/irqchip/arm-gic-v3.h
-> @@ -289,6 +289,9 @@
->  #define GICR_VPENDBASER_NonShareable					\
->  	GIC_BASER_SHAREABILITY(GICR_VPENDBASER, NonShareable)
->  
-> +#define GICR_VPENDBASER_InnerShareable					\
-> +	GIC_BASER_SHAREABILITY(GICR_VPENDBASER, InnerShareable)
-> +
->  #define GICR_VPENDBASER_nCnB	GIC_BASER_CACHEABILITY(GICR_VPENDBASER, INNER, nCnB)
->  #define GICR_VPENDBASER_nC 	GIC_BASER_CACHEABILITY(GICR_VPENDBASER, INNER, nC)
->  #define GICR_VPENDBASER_RaWt	GIC_BASER_CACHEABILITY(GICR_VPENDBASER, INNER, RaWt)
-
+>  fs/cifs/inode.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
+> index 8a76195e8a69..ca76a9287456 100644
+> --- a/fs/cifs/inode.c
+> +++ b/fs/cifs/inode.c
+> @@ -163,7 +163,7 @@ cifs_fattr_to_inode(struct inode *inode, struct cifs_fattr *fattr)
+>
+>         spin_lock(&inode->i_lock);
+>         /* we do not want atime to be less than mtime, it broke some apps */
+> -       if (timespec64_compare(&fattr->cf_atime, &fattr->cf_mtime))
+> +       if (timespec64_compare(&fattr->cf_atime, &fattr->cf_mtime) < 0)
+>                 inode->i_atime = fattr->cf_mtime;
+>         else
+>                 inode->i_atime = fattr->cf_atime;
+> --
+> 2.17.1
+>
 
 
 -- 
-Jazz is not dead. It just smells funny...
+Thanks,
+
+Steve
