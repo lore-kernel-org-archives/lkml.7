@@ -2,148 +2,92 @@ Return-Path: <SRS0=SILN=ZX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C966C432C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 21:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30AB4C43215
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 21:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41A1521774
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 21:09:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575234595;
-	bh=KnH1X21TpcbK4yvu0f9o3XBV5xnJ8tgrWxBrMATOpqY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=kILsWL9T2GzTDqkFGCPwCYBvxog5HPd4a1qbuG9ONkfl/KPHnB4k5eePq2uBGZWCx
-	 BcqzDNgeJS75G5ELxYcQyzhCpUHx8OWAWxV1b82KpLOZv7qUO+zEbJROmN8055U4qL
-	 +FD7wO4ZPE9Lsz6laEimDPOreHJbwruxFVyez8OQ=
+	by mail.kernel.org (Postfix) with ESMTP id 044EC20865
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 21:10:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oLf35IhQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfLAVJy (ORCPT
+        id S1727327AbfLAVKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 16:09:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51522 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726965AbfLAVJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 16:09:54 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 928BC20865;
-        Sun,  1 Dec 2019 21:09:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575234592;
-        bh=KnH1X21TpcbK4yvu0f9o3XBV5xnJ8tgrWxBrMATOpqY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=xkMKfWxmIFHT2jP3YWh5y9FyReZPVvHXMRN/F6W0K7K3ibQV8dDj4o5J96EY7KOiH
-         wgZi8+QW3EwBzkmLtnOtMLQSi2ZfcAesaav0PBaPjbrGsn0seq2UkjRv+QYNEtxg8M
-         dcRElyuuGVvawxSyN3ekfim/AE6/15uGEcAQZxYM=
-Date:   Sun, 1 Dec 2019 21:09:47 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Olivier Moysan <olivier.moysan@st.com>
-Cc:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <mcoquelin.stm32@gmail.com>, <lars@metafoo.de>,
-        <devicetree@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <pmeerw@pmeerw.net>,
-        <knaack.h@gmx.de>, <fabrice.gasnier@st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] dt-bindings: iio: adc: convert sd modulator to
- json-schema
-Message-ID: <20191201210947.75b79f55@archlinux>
-In-Reply-To: <20191127171642.6014-1-olivier.moysan@st.com>
-References: <20191127171642.6014-1-olivier.moysan@st.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 1 Dec 2019 16:10:48 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37184 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726965AbfLAVKs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Dec 2019 16:10:48 -0500
+Received: by mail-lj1-f195.google.com with SMTP id u17so10223524lja.4;
+        Sun, 01 Dec 2019 13:10:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K6/nAJ7zRWy4qKArDtOklB/XBpnc4q8n7RTEqKD0nxA=;
+        b=oLf35IhQ2D095BBBi8WNjU8LKJG5D7kAgMegcF33QwoIOJC66xYI1ZGwNATONXYEOE
+         Vg+Ms8f5SaV+fMXWGAz5x6zLNurAtprVN5f4AyDGahxOBNgPxJF+G1eJvjA7vtyzgsT2
+         nosG37knd2kyq+ILkvs/5BO/ApsfPP1aCiKBGjMBgjkJhlhyn0OwQclwKiKBGMmsnwJC
+         RlVwePhLN6t5rmna5MEx6kN5xmMVk7zlxZaNsv/ELutPGbeXAc1RsPRimv2gxUHFFsco
+         TNhhl0BZ4ynJRe0ykYFXolqQrEzPSSEHaEUeSAITP87mbUl9Z8Wy9NeFhnMnOtNNT1IO
+         ivLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K6/nAJ7zRWy4qKArDtOklB/XBpnc4q8n7RTEqKD0nxA=;
+        b=OFZ0K+Rz1v6yLqj5nduqRd6kVnivf2tntS6cwEHLOMwXxJfcl9tA/vf8t6uBRyUYzv
+         S2nKe3saeQrkKXj6H0zrV7IiKzMrMKgTqhggY11tVyzZzTTrWy2a481I/Um19lUv4Fth
+         FltNBxIfU3HLNjAmu1QVZDf7RN6dQ+vb2RhACZmvWQlLwPJRG+KXpItj21nPVX43Q1F+
+         6vRO502D4I8QDpHq+j7YlnWMGWKe0Gy5plT/0AuEAlgBwOQ/wflD1Z7v0a3G7UokNkfp
+         8wQsCja/OrbvBLvF4vy5+ND1ya7eEKllq3Skh5GSzgs/L+Xzb1IPZVWQTI8BaeocCvvk
+         xwQw==
+X-Gm-Message-State: APjAAAVae2qiMIGePvK7/CF8kDtR3QaQ+4kP5fmKJHQvNK+QGO51HZZD
+        S8BN6u+mmqsnmm/5I4YOMT1KCgBz76OWu1MowP72RsGsyV0=
+X-Google-Smtp-Source: APXvYqyv5egh0CvwLiCaZRW7xONp7kzvGwnRIbz0FdAUGD+mjp2m58+YnCjWj/b/Q0OMmUUt7Y5wOVY81fwn86LVQo0=
+X-Received: by 2002:a2e:7816:: with SMTP id t22mr4851595ljc.161.1575234644720;
+ Sun, 01 Dec 2019 13:10:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20191127231926.162437-1-heidifahim@google.com> <CAMVcs3vKjd8XVku8VUq2R-OKKSq-X2L=h4niFxuoPBe_D63JAA@mail.gmail.com>
+In-Reply-To: <CAMVcs3vKjd8XVku8VUq2R-OKKSq-X2L=h4niFxuoPBe_D63JAA@mail.gmail.com>
+From:   SeongJae Park <sj38.park@gmail.com>
+Date:   Sun, 1 Dec 2019 22:10:18 +0100
+Message-ID: <CAEjAshrJy00VjDu3GY3gV6hu7J8PVcw=1jAeA_-GL02kvXTemQ@mail.gmail.com>
+Subject: Re: [PATCH] kunit: testing kunit: Bug fix in test_run_timeout function
+To:     Heidi Fahim <heidifahim@google.com>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        David Gow <davidgow@google.com>, Shuah Khan <shuah@kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 Nov 2019 18:16:42 +0100
-Olivier Moysan <olivier.moysan@st.com> wrote:
+On Thu, Nov 28, 2019 at 12:58 AM Heidi Fahim <heidifahim@google.com> wrote:
+>
+> On Wed, Nov 27, 2019 at 3:19 PM Heidi Fahim <heidifahim@google.com> wrote:
+> >
+> > Assert in test_run_timeout was not updated with the build_dir argument
+> > and caused the following error:
+> > AssertionError: Expected call: run_kernel(timeout=3453)
+> > Actual call: run_kernel(build_dir=None, timeout=3453)
+> >
+> > Needed to update kunit_tool_test to reflect this fix
+> > https://lkml.org/lkml/2019/9/6/3
+>
+> Wrong url, here is the correct link to the fix that caused this bug:
+> https://lkml.org/lkml/2019/9/6/351
 
-> Convert the sigma delta modulator bindings
-> to DT schema format using json-schema.
-> 
-> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-Looks fine to me, but I'd like to give plenty of time for others to have
-a chance to take a look.
+Reviewed-by: SeongJae Park <sjpark@amazon.de>
 
-If it looks like I've lost it in a week or two feel free to ping me.
 
 Thanks,
-
-Jonathan
-
-> ---
->  .../iio/adc/sigma-delta-modulator.txt         | 13 -------
->  .../iio/adc/sigma-delta-modulator.yaml        | 35 +++++++++++++++++++
->  2 files changed, 35 insertions(+), 13 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt b/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
-> deleted file mode 100644
-> index 59b92cd32552..000000000000
-> --- a/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
-> +++ /dev/null
-> @@ -1,13 +0,0 @@
-> -Device-Tree bindings for sigma delta modulator
-> -
-> -Required properties:
-> -- compatible: should be "ads1201", "sd-modulator". "sd-modulator" can be use
-> -	as a generic SD modulator if modulator not specified in compatible list.
-> -- #io-channel-cells = <0>: See the IIO bindings section "IIO consumers".
-> -
-> -Example node:
-> -
-> -	ads1202: adc {
-> -		compatible = "sd-modulator";
-> -		#io-channel-cells = <0>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml b/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml
-> new file mode 100644
-> index 000000000000..8967c6f06d9d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml
-> @@ -0,0 +1,35 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/sigma-delta-modulator.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Device-Tree bindings for sigma delta modulator
-> +
-> +maintainers:
-> +  - Arnaud Pouliquen <arnaud.pouliquen@st.com>
-> +
-> +properties:
-> +  compatible:
-> +    description: |
-> +      "sd-modulator" can be used as a generic SD modulator,
-> +      if the modulator is not specified in the compatible list.
-> +    enum:
-> +      - sd-modulator
-> +      - ads1201
-> +
-> +  '#io-channel-cells':
-> +    const: 0
-> +
-> +required:
-> +  - compatible
-> +  - '#io-channel-cells'
-> +
-> +examples:
-> +  - |
-> +    ads1202: adc@0 {
-> +      compatible = "sd-modulator";
-> +      #io-channel-cells = <0>;
-> +    };
-> +
-> +...
-
+SeongJae Park
