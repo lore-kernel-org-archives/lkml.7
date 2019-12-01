@@ -2,111 +2,208 @@ Return-Path: <SRS0=SILN=ZX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26703C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 10:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CEAEC432C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 10:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDF94215E5
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 10:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D38F20725
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 10:46:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575197199;
+	bh=A+Rcr/pb0FA/XAvi8P4JsBjLhPn/5yCAibyT/b6FZgg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eAktAY4Hr7OrxtmsSjvrDn67qEAZRRUHs3zae3LtNxqihTSzPgcIRc1kY9Gm33TjW
+	 mvxsWhDcQ5HzAP4a4PWcZ/eJbUaYcSWesT3LwiSxm0Vi9Qs4GSio1TEA7ry3afdma3
+	 Roq1qXs4XHTYg4bksHhmkvb7uAhYycpUjHLEVUu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbfLAK1P (ORCPT
+        id S1726389AbfLAKqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 05:27:15 -0500
-Received: from pindarots.xs4all.nl ([82.161.210.87]:34548 "EHLO
-        pindarots.xs4all.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbfLAK1O (ORCPT
+        Sun, 1 Dec 2019 05:46:31 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33253 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726129AbfLAKqa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 05:27:14 -0500
-Received: from surfplank2.hierzo (localhost.localdomain [127.0.0.1])
-        by pindarots.xs4all.nl (8.15.2/8.14.5) with ESMTPS id xB1ARC8L1349215
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Sun, 1 Dec 2019 11:27:12 +0100
-Subject: Re: 5.4.1 WARNINGs with r8169
-To:     =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-References: <46e7dcf9-3c89-25c1-ccb8-336450047bec@xs4all.nl>
- <aa3b11a5-eb7e-dc2c-e5b4-96e53942246d@applied-asynchrony.com>
-From:   Udo van den Heuvel <udovdh@xs4all.nl>
-Autocrypt: addr=udovdh@xs4all.nl; prefer-encrypt=mutual; keydata=
- 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
- JjyRAfO8kEkwCkTZ6/Mnrxsunx9VNLGDEw==
-Organization: hierzo
-Message-ID: <a278e33c-35ad-53c3-1ba4-df7ed973a2ac@xs4all.nl>
-Date:   Sun, 1 Dec 2019 11:27:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Sun, 1 Dec 2019 05:46:30 -0500
+Received: by mail-wr1-f68.google.com with SMTP id b6so10872628wrq.0
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Dec 2019 02:46:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=P0S0aNiZhUDcMgsUFhIruZb/8EnKELSIe5M3uXc7iyE=;
+        b=d1dp5FbskpIiq/Iltcoldq8H3LtOaBqEO5V50+j6IizbaQMBp8g66124ITLnJ6LIBG
+         NAvP+MMt7VLRJiN4So2jLc0DyRQ6r95TV6LrbEcndeVfjmb6bZ1w3kbY3aGIhiyJSI73
+         0CZEx72oCIrIEYOHpF2SW9fNS4Vn5uhgjbl5juzDKYmeXzB0DJhgaVxQSIszNmNddocR
+         HXIpDjK9lGKInTK7AAjEVfDZhUpUShRr4dOsM16yKiFITbiq6PAG1PTX6cCHchctm0k4
+         YfYfJW3MBZCK2BQlHZqy/WEYktws5nuJBlFYvD4J3PyILgchjdNjJH3ZaKSKxG/Ee+Mk
+         Jj7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=P0S0aNiZhUDcMgsUFhIruZb/8EnKELSIe5M3uXc7iyE=;
+        b=ESY4Mh6Bp5fNYKCBVSVNx8yawkY7O6u0ZWQ6xVlbrrn0LyY9AT5MhLtdyjjAQC//Ms
+         hqUiVdq7ZrCSizvBclnG1a46LkGG+PUMBGxKbEe2aBZZTS2oLXsw9tQbygRjsgwpLkpD
+         HZSRqBltFlKQYuTuIBnSOTBiH6OsdnvEdcC+LrbRAntOm+qfiRKyfqq7CWt752YCECma
+         PJNQ3Vk3DGUFxz09onysj6I1Wvu9DiXA+BvWCqIAufW4jcwwN56MwiDZFAVjiXNSuqcO
+         jg2DEU9w2Q6lTAq1D1n9x88VCbLa5OppQOL7n1Vt5KL/+g9t+HIhB+61TK1j7AK2l+A8
+         o2kQ==
+X-Gm-Message-State: APjAAAVQdiLRSBjYwlEt/XsZdZnp6NUGl9oK1b9RHaRcRc6Kespd2DM+
+        EPCQZwYdwy8F43mTArn+W2I=
+X-Google-Smtp-Source: APXvYqwgEwT2ws2iRHV1Mr6XLxunS2zC48v22OMkwGX+4VrB9qUX8E4SU8m9DjU3oRAJ8RDJPp7QwQ==
+X-Received: by 2002:adf:e6c6:: with SMTP id y6mr3574256wrm.284.1575197187829;
+        Sun, 01 Dec 2019 02:46:27 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id q5sm19624126wmc.27.2019.12.01.02.46.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Dec 2019 02:46:26 -0800 (PST)
+Date:   Sun, 1 Dec 2019 11:46:24 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     mceier@gmail.com, Davidlohr Bueso <dave@stgolabs.net>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Davidlohr Bueso <dbueso@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        "Kenneth R. Crudup" <kenny@panix.com>
+Subject: Re: [x86/mm/pat] 8d04a5f97a: phoronix-test-suite.glmark2.0.score
+ -23.7% regression
+Message-ID: <20191201104624.GA51279@gmail.com>
+References: <20191127005312.GD20422@shao2-debian>
+ <CAJTyqKPstH9PYk1nMuRJWnXUPTf9wAkphPFi9Yfz6PApLVVE0Q@mail.gmail.com>
+ <20191130212729.ykxstm5kj2p5ir6q@linux-p48b>
+ <CAJTyqKOp+mV1CfpasschSDO4vEDbshE4GPCB6+aX4rJOYSF=7A@mail.gmail.com>
+ <CAHk-=wh--xwpatv_Rcp3WtCPQtg-RVoXYQj8O+1TSw8os7Jtvw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <aa3b11a5-eb7e-dc2c-e5b4-96e53942246d@applied-asynchrony.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wh--xwpatv_Rcp3WtCPQtg-RVoXYQj8O+1TSw8os7Jtvw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-On 01-12-2019 10:52, Holger Hoffstätte wrote:
-> (cc:'ing netdev & Heiner)
+* Linus Torvalds <torvalds@linux-foundation.org> wrote:
+
+> On Sat, Nov 30, 2019 at 2:09 PM Mariusz Ceier <mceier@gmail.com> wrote:
+> >
+> > Contents of /sys/kernel/debug/x86/pat_memtype_list on master
+> > (32ef9553635ab1236c33951a8bd9b5af1c3b1646) where performance is
+> > degraded:
 > 
-> Are you using Jumbo packets? 
-
-On one of two interfaces, yes.
-
-> If so please check the thread at
-> https://lore.kernel.org/lkml/24034.56114.248207.524177@wylie.me.uk/
+> Diff between good and bad case:
 > 
-> Btw you should use a more descriptive Subject line, otherwise people might
-> miss your message..
+>     @@ -1,8 +1,8 @@
+>      PAT memtype list:
+>      write-back @ 0x55ba4000-0x55ba5000
+>      write-back @ 0x5e88c000-0x5e8b5000
+>     -write-back @ 0x5e8b4000-0x5e8b8000
+>      write-back @ 0x5e8b4000-0x5e8b5000
+>     +write-back @ 0x5e8b4000-0x5e8b8000
+>      write-back @ 0x5e8b7000-0x5e8bb000
+>      write-back @ 0x5e8ba000-0x5e8bc000
+>      write-back @ 0x5e8bb000-0x5e8be000
+>     @@ -21,15 +21,15 @@
+>      uncached-minus @ 0xec260000-0xec264000
+>      uncached-minus @ 0xec300000-0xec320000
+>      uncached-minus @ 0xec326000-0xec327000
+>     -uncached-minus @ 0xf0000000-0xf0001000
+>      uncached-minus @ 0xf0000000-0xf8000000
+>     +uncached-minus @ 0xf0000000-0xf0001000
+>      uncached-minus @ 0xfdc43000-0xfdc44000
+>      uncached-minus @ 0xfe000000-0xfe001000
+>      uncached-minus @ 0xfed00000-0xfed01000
+>      uncached-minus @ 0xfed10000-0xfed16000
+>      uncached-minus @ 0xfed90000-0xfed91000
+>     -write-combining @ 0x2000000000-0x2100000000
+>     -write-combining @ 0x2000000000-0x2100000000
+>     +uncached-minus @ 0x2000000000-0x2100000000
+>     +uncached-minus @ 0x2000000000-0x2100000000
+>      uncached-minus @ 0x2100000000-0x2100001000
+>      uncached-minus @ 0x2100001000-0x2100002000
+>      uncached-minus @ 0x2ffff10000-0x2ffff20000
+> 
+> the first two differences are just trivial ordering differences for
+> overlapping ranges (starting at 0x5e8b4000 and 0xf0000000)
+> respectively.
+> 
+> But the final difference is a real difference where it used to be WC,
+> and is now UC-:
+> 
+>     -write-combining @ 0x2000000000-0x2100000000
+>     -write-combining @ 0x2000000000-0x2100000000
+>     +uncached-minus @ 0x2000000000-0x2100000000
+>     +uncached-minus @ 0x2000000000-0x2100000000
+> 
+> which certainly could easily explain the huge performance degradation.
 
-Thanks, will try to remember for next time!
+Indeed, as two days ago I speculated to Kenneth R. Crudup who reported a 
+similar slowdown on i915:
 
-Kind regards,
-Udo
+> * Ingo Molnar <mingo@kernel.org> wrote:
+> > > * Kenneth R. Crudup <kenny@panix.com> wrote:
+> > >
+> > > > As soon as the i915 driver module is loaded, it takes over the 
+> > > > EFI framebuffer on my machine (HP Spectre X360 with Intel UHD620 
+> > > > Graphics) and the subsequent text (as well as any VTs) is 
+> > > > rendered much more slowly. I don't know if the i915/DRM guys need 
+> > > > to do anything to their code to take advantage of this change to 
+> > > > the PATs, but reverting this change (after the associated 
+> > > > subseqent commits) has fixed that issue for me.
+> > > >
+> > > > Let me know if you need any further info.
+> > >
+> > > This is almost certainly the PAT bits being wrong in the 
+> > > pagetables, i.e. an x86 bug, not a GPU driver bug.
+> > >
+> > >
+> > > Davidlohr, any idea what's going on? The interval tree conversion went
+> > > bad. The slowdown symptoms are consistent with perhaps the framebuffer
+> > > not getting WC mapped, but uncacheable mapped:
+> > >
+> > >                ptr = io_mapping_map_wc(&i915_vm_to_ggtt(vma->vm)->iomap,
+> > >                                         vma->node.start,
+> > >                                         vma->node.size);
+> > > 
+> > > Which is a wrapper around ioremap_wc().
+> > > 
+> > > To debug this it would be useful to do a before/after comparison of the
+> > > kernel pagetables:
+> > > 
+> > >  - before: git checkout 8d04a5f97a^1
+> > >  - after:  git checkout 8d04a5f97a
+
+And yesterday:
+
+> [...]
+>
+> There's another similar bugreport of a -20% GL performance drop, from 
+> the ktest automated benchmark suite:
+>
+>     https://lkml.kernel.org/r/20191127005312.GD20422@shao2-debian
+>
+> My shot-in-the-dark hypothesis is that perhaps we somehow fail to find 
+> a newly mapped memtype and leave a key ioremap_wc() area uncached, 
+> instead of write-combining?
+>
+> The order of magnitude of the slowdown would be roughly consistent with 
+> that, in GPU limited workloads - it would be more marked in 3D scenes 
+> with a lot of vertices or perhaps a lot of texture changes.
+>
+> But this is really just a random guess.
+
+It's not an unconditional regression, as both Boris and me tried to 
+reproduce it on different systems that do ioremap_wc() as well and didn't 
+measure a slowdown, but something about the memory layout probably 
+triggers the tree management bug.
+
+Thanks,
+
+	Ingo
