@@ -2,137 +2,107 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 199A5C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A32BBC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE20120833
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A6E218AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:56:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575276989;
+	bh=uxDPX9Wv9UMxaKJ4BPCyBDMxbLwdnEATm3Jevf284nA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Z+1Yj3vKO5u09B0yJU7ZVyCfRfCo3stnXtle/0BodlfNRJRdRk3hdrbzMXc5geGCC
+	 DZj+mqSoyuB0vyE/UoBq9xHMjV2uwWksHkNSzeK9/CE/vgcOPUw+aUbVbfOAdRILT3
+	 J+rhpo0D4NnS6lOx3poPDwDP6PLtSB0rj9q/gDkY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfLBIz6 (ORCPT
+        id S1727378AbfLBI42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 03:55:58 -0500
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:39280 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726350AbfLBIz5 (ORCPT
+        Mon, 2 Dec 2019 03:56:28 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38141 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726350AbfLBI42 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 03:55:57 -0500
-Received: from ramsan ([84.195.182.253])
-        by baptiste.telenet-ops.be with bizsmtp
-        id Ywvn2100Q5USYZQ01wvopW; Mon, 02 Dec 2019 09:55:54 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1ibhUh-0002ZA-RE; Mon, 02 Dec 2019 09:55:47 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1ibhUh-0005lK-Oo; Mon, 02 Dec 2019 09:55:47 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] iio: adc: max9611: Fix too short conversion time delay
-Date:   Mon,  2 Dec 2019 09:55:46 +0100
-Message-Id: <20191202085546.21655-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Mon, 2 Dec 2019 03:56:28 -0500
+Received: by mail-lf1-f68.google.com with SMTP id r14so11019859lfm.5;
+        Mon, 02 Dec 2019 00:56:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ZWtVf6zhlqG1yD0jYizMqYkj60ZxzCRmOI8BvxjssGc=;
+        b=Knz1xZSe1iJVHq2TCSXu1yQ3poBER6h7f0gDJfdOYBz6HiofdWdcYCDCmOG9BDEOIx
+         JCWAfzvjDGORqvL6k07wF8vNbW9btIvTe58vfMcR/myFOReGOysGdWkprWUTvkIGrzva
+         R5PibozIcRAgDzgvcBdMwNUuilNJhiAyJAeofxEYnee3w4kC2jwOYO7hkUvrAiLnMgEL
+         tKEvy6soJH52Thjn9lSgXyne0RNU/YB71h/hdNrbCcRjhQtsRqOp78SDHzE8UcXcx7xT
+         Qf41pVzVwc5Y2SrUcIyAm9jDb80MOIIUDU3C6Z8U+X12A9LrmHIQD2Q6zmiVpPcv8ZvV
+         MmeQ==
+X-Gm-Message-State: APjAAAUUtydqan1rLFEmAyZj2XzNb6t5+wd3ZqbSdglARI5dWNswI1Kx
+        +z506u4904Z9ISevWXyFcdE3K67S
+X-Google-Smtp-Source: APXvYqzREhhsAsgIzm5+gICb1rmMGnTb0RIdOXajU5DczHtNjJXi1ShKoCA4u5fHEgNMs5CaTblt0w==
+X-Received: by 2002:a19:7611:: with SMTP id c17mr733011lff.86.1575276985398;
+        Mon, 02 Dec 2019 00:56:25 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id c27sm4403154lfh.62.2019.12.02.00.56.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 00:56:24 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@xi.terra>)
+        id 1ibhVL-0003K0-VP; Mon, 02 Dec 2019 09:56:27 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        syzbot+35b1c403a14f5c89eba7@syzkaller.appspotmail.com,
+        stable <stable@vger.kernel.org>, Hansjoerg Lipp <hjlipp@web.de>,
+        Tilman Schmidt <tilman@imap.cc>
+Subject: [PATCH v2 1/3] staging: gigaset: fix general protection fault on probe
+Date:   Mon,  2 Dec 2019 09:56:08 +0100
+Message-Id: <20191202085610.12719-2-johan@kernel.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191202085610.12719-1-johan@kernel.org>
+References: <20191202085610.12719-1-johan@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As of commit b9ddd5091160793e ("iio: adc: max9611: Fix temperature
-reading in probe"), max9611 initialization sometimes fails on the
-Salvator-X(S) development board with:
+Fix a general protection fault when accessing the endpoint descriptors
+which could be triggered by a malicious device due to missing sanity
+checks on the number of endpoints.
 
-    max9611 4-007f: Invalid value received from ADC 0x8000: aborting
-    max9611: probe of 4-007f failed with error -5
-
-The max9611 driver tests communications with the chip by reading the die
-temperature during the probe function, which returns an invalid value.
-
-According to the datasheet, the typical ADC conversion time is 2 ms, but
-no minimum or maximum values are provided.  Maxim Technical Support
-confirmed this was tested with temperature Ta=25 degreeC, and promised
-to inform me if a maximum/minimum value is available (they didn't get
-back to me, so I assume it is not).
-
-However, the driver assumes a 1 ms conversion time.  Usually the
-usleep_range() call returns after more than 1.8 ms, hence it succeeds.
-When it returns earlier, the data register may be read too early, and
-the previous measurement value will be returned.  After boot, this is
-the temperature POR (power-on reset) value, causing the failure above.
-
-Fix this by increasing the delay from 1000-2000 µs to 3000-3300 µs.
-
-Note that this issue has always been present, but it was exposed by the
-aformentioned commit.
-
-Fixes: 69780a3bbc0b1e7e ("iio: adc: Add Maxim max9611 ADC driver")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Reported-by: syzbot+35b1c403a14f5c89eba7@syzkaller.appspotmail.com
+Fixes: 07dc1f9f2f80 ("[PATCH] isdn4linux: Siemens Gigaset drivers - M105 USB DECT adapter")
+Cc: stable <stable@vger.kernel.org>     # 2.6.17
+Cc: Hansjoerg Lipp <hjlipp@web.de>
+Cc: Tilman Schmidt <tilman@imap.cc>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
-After this patch, probing of the two max9611 sensors succeeded during
-ca. 3000 boot cycles on Salvator-X(S) boards, equipped with various
-R-Car H3/M3-W/M3-N SoCs.
+ drivers/staging/isdn/gigaset/usb-gigaset.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-v2:
-  - Add Reviewed-by,
-  - Add feedback from Maxim Technical Support,
-  - Increase delay from 2000-2200 µs to 3000-3300 µs to play safe.
----
- drivers/iio/adc/max9611.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
-index da073d72f649f829..135793db4fad6b2c 100644
---- a/drivers/iio/adc/max9611.c
-+++ b/drivers/iio/adc/max9611.c
-@@ -89,6 +89,12 @@
- #define MAX9611_TEMP_SCALE_NUM		1000000
- #define MAX9611_TEMP_SCALE_DIV		2083
- 
-+/*
-+ * Conversion time is 2 ms (typically) at Ta=25 degreeC
-+ * No maximum value is known, so play it safe.
-+ */
-+#define MAX9611_CONV_TIME_US_RANGE	3000, 3300
-+
- struct max9611_dev {
- 	struct device *dev;
- 	struct i2c_client *i2c_client;
-@@ -238,9 +244,9 @@ static int max9611_read_single(struct max9611_dev *max9611,
- 
- 	/*
- 	 * need a delay here to make register configuration
--	 * stabilize. 1 msec at least, from empirical testing.
-+	 * stabilize.
- 	 */
--	usleep_range(1000, 2000);
-+	usleep_range(MAX9611_CONV_TIME_US_RANGE);
- 
- 	ret = i2c_smbus_read_word_swapped(max9611->i2c_client, reg_addr);
- 	if (ret < 0) {
-@@ -507,7 +513,7 @@ static int max9611_init(struct max9611_dev *max9611)
- 			MAX9611_REG_CTRL2, 0);
- 		return ret;
+diff --git a/drivers/staging/isdn/gigaset/usb-gigaset.c b/drivers/staging/isdn/gigaset/usb-gigaset.c
+index 1b9b43659bdf..5e393e7dde45 100644
+--- a/drivers/staging/isdn/gigaset/usb-gigaset.c
++++ b/drivers/staging/isdn/gigaset/usb-gigaset.c
+@@ -685,6 +685,11 @@ static int gigaset_probe(struct usb_interface *interface,
+ 		return -ENODEV;
  	}
--	usleep_range(1000, 2000);
-+	usleep_range(MAX9611_CONV_TIME_US_RANGE);
  
- 	return 0;
- }
++	if (hostif->desc.bNumEndpoints < 2) {
++		dev_err(&interface->dev, "missing endpoints\n");
++		return -ENODEV;
++	}
++
+ 	dev_info(&udev->dev, "%s: Device matched ... !\n", __func__);
+ 
+ 	/* allocate memory for our device state and initialize it */
 -- 
-2.17.1
+2.24.0
 
