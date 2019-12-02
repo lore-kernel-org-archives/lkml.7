@@ -6,60 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29780C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D29C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE7F8206E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94511207DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:05:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575320729;
-	bh=kb8PGjziUHv/KkDLxOGSoaPrB+6nVxX9CyYMF71QW1M=;
+	s=default; t=1575320733;
+	bh=xMwdGCFXqgM6gGkXnnWfZyZRAeOwG5qQZN43h0679/4=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=lSyhNNZFk6UU9frzwVyK7NuTTdrSP/gGC1zKMOojpECBTdYop8AritWImHXzli/NQ
-	 JH+5jJE3K5Sx/W4C5ce5FtCqrW0Vj4S0YGJUg2Jz3AsARc5fikuD3jCO9+7Z4kJM4i
-	 7hDSFMK6onessS1zgYFbBoB2IIl1y7RI1zS7DEvo=
+	b=ozKWZH7RLCdZncBGufYddHQuE7KeaX++HXh62MrtiMOgfCARTayn/1LIBGawIHCSB
+	 MEI7ec6h08rQRtUgC6yDjbmi27gbe6Q6vLfo/uE3J4e9bcpDr/q9pbvV+jA18noWRy
+	 au3Tt+bcSHtMtxAb0QgNq0hXPZyAlQ3saaErdTT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727316AbfLBVF1 (ORCPT
+        id S1727332AbfLBVFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 16:05:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56932 "EHLO mail.kernel.org"
+        Mon, 2 Dec 2019 16:05:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727267AbfLBVFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 16:05:23 -0500
-Subject: Re: [GIT PULL] Documentation for 5.5, take 2
+        id S1727208AbfLBVFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 16:05:21 -0500
+Subject: Re: [git pull] IOMMU Updates for Linux v5.5
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575320723;
-        bh=kb8PGjziUHv/KkDLxOGSoaPrB+6nVxX9CyYMF71QW1M=;
+        s=default; t=1575320720;
+        bh=xMwdGCFXqgM6gGkXnnWfZyZRAeOwG5qQZN43h0679/4=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Z7F8UVQKR2fNxj3+sfYocVDCN5vYix494aVuD/BxymCAznbC/+/MZ4vGHGcoAhRFA
-         9mg+2TA0DLcqaui9SvllpbIImAAvy4S+n/tE42wtNkzNuBkeYZKrzuRS6jDrm3PbOa
-         FrgxkkD+MiOonLAZLDNWS1Pluua4grs3yDoVFaNU=
+        b=nLPdupFyuB4Ogeh/DKILu3yfl4TwqrwQNDa8oVfBJEHXFufcFHTQobLyuBNHBDMQz
+         icqgnmz0YnrvcZzj1lvcnhFftEisvWWpi0DHTb2zkAa128fa3yvBvnQJnK2DwkGv9l
+         DELDvSPvknys+r03ACjTOJzyU+qj3AHMBW2OeNQc=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191201090945.69c6aa4e@lwn.net>
-References: <20191201090945.69c6aa4e@lwn.net>
+In-Reply-To: <20191129120247.GA6874@8bytes.org>
+References: <20191129120247.GA6874@8bytes.org>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191201090945.69c6aa4e@lwn.net>
-X-PR-Tracked-Remote: git://git.lwn.net/linux.git tags/docs-5.5a
-X-PR-Tracked-Commit-Id: 36bb9778fd11173f2dd1484e4f6797365e18c1d8
+X-PR-Tracked-Message-Id: <20191129120247.GA6874@8bytes.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git
+ tags/iommu-updates-v5.5
+X-PR-Tracked-Commit-Id: 9b3a713feef8db41d4bcccb3b97e86ee906690c8
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 937d6eefc716a9071f0e3bada19200de1bb9d048
-Message-Id: <157532072337.29263.11064952657785957219.pr-tracker-bot@kernel.org>
-Date:   Mon, 02 Dec 2019 21:05:23 +0000
-To:     Jonathan Corbet <corbet@lwn.net>
+X-PR-Merge-Commit-Id: 1daa56bcfd8b329447e0c1b1e91c3925d08489b7
+Message-Id: <157532072053.29263.1440104284503498805.pr-tracker-bot@kernel.org>
+Date:   Mon, 02 Dec 2019 21:05:20 +0000
+To:     Joerg Roedel <joro@8bytes.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 1 Dec 2019 09:09:45 -0700:
+The pull request you sent on Fri, 29 Nov 2019 13:02:51 +0100:
 
-> git://git.lwn.net/linux.git tags/docs-5.5a
+> git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-updates-v5.5
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/937d6eefc716a9071f0e3bada19200de1bb9d048
+https://git.kernel.org/torvalds/c/1daa56bcfd8b329447e0c1b1e91c3925d08489b7
 
 Thank you!
 
