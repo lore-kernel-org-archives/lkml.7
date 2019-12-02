@@ -2,124 +2,135 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79505C43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 035CDC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59719206F0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:51:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C09B1206E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:51:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I7qqQUgI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbfLBNvM (ORCPT
+        id S1727535AbfLBNv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 08:51:12 -0500
-Received: from foss.arm.com ([217.140.110.172]:54724 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727451AbfLBNvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 08:51:11 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CED6130E;
-        Mon,  2 Dec 2019 05:51:10 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 598313F68E;
-        Mon,  2 Dec 2019 05:51:09 -0800 (PST)
-Subject: Re: [PATCH v1] clk: Convert managed get functions to devm_add_action
- API
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <3d8a58bf-0814-1ec1-038a-10a20b9646ad@free.fr>
- <20191128185630.GK82109@yoga> <20191202014237.GR248138@dtor-ws>
- <f177ef95-ef7e-cab0-1322-6de28f18ecdb@free.fr>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <c0ccca86-b7b1-b587-60c1-4794376fa789@arm.com>
-Date:   Mon, 2 Dec 2019 13:51:08 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 2 Dec 2019 08:51:57 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:32837 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727391AbfLBNv4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 08:51:56 -0500
+Received: by mail-lf1-f68.google.com with SMTP id n25so2997565lfl.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 05:51:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XtfrhDtdzCxL3Xb03lgcl6ONk0p14oDVPbfrCoLCTMU=;
+        b=I7qqQUgIRQI7EvMDT1n9KA9WL1pREVLQG4Gy1MMgNgkHkI6mI8NkY8tAcgJEyeN1EI
+         Tvq5XCwrx+YayBLix/B7JoMLMfsQRB6/o6h/nLbRqfAJHwo+l8pvb3nPInFItyzQahw0
+         yli8WLpCd1GTRxgD53W2iUjZMqHKZe7ZQ+czZDzMucz54z3ffRnxYB0nZ7sbpRHJ+N/b
+         kWXGgf7/+fkOY3JhmJSJ+XgnfO9HHj7XbJtv9udwWBff2Vg6vM34UY1VkZtFhG5T10lY
+         tJ0GZhsoTnhPdki/eZ7IhFt81RWn/95wb+MnTVxdjgWQ2Qwb6GAfhEwPFkzQWb4S6MLR
+         laLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XtfrhDtdzCxL3Xb03lgcl6ONk0p14oDVPbfrCoLCTMU=;
+        b=FXGXPg10ciG8S2l4tPUDQE8/b6x9FhB+GQJrhav1HQD4ujXS0YPQCPdTxeOPYU8/rR
+         7I0CScRUiKXVWTql8hEmfapJ8O5sfEbMqjeoB95Vi+LB1/uqWbVk9DCnAEhJ1PpIpEGZ
+         rbpwtBLIuju9Xl1RLWhkgfwwiSOQJw5Y8ZBfXO3rjbvxqy+H7MNawognq1L2TdMm566w
+         KhrvckhWuTZYn5tt32NrNcUQClhV9QqOIcRn5i0KREEbKFDNBXI7+ec7lzN0KHzxLit3
+         /ktv/jgQUfOHDGF3LDyinSDVWxyNs9CiC2hIToZ/zrOlM4d0mvhP3sL/ieEhcX+iFCJk
+         5bKA==
+X-Gm-Message-State: APjAAAVQtdR32OIGMj630LzalHTTesy3+qXowlsBdyNWfJ940J8nDr/B
+        oJ2qmBrw18uZg0C+YJ4ky5zc8g08Ng3D+AbahBd5lg==
+X-Google-Smtp-Source: APXvYqxv39zeUzBPjDccuBFGveDJk4YfxKmPUP3c+dQ3y0cUEEzwQitLsma2s/6tRgHQzP+bFJA9NMzIsOR96I5mLoc=
+X-Received: by 2002:ac2:4c8e:: with SMTP id d14mr37142463lfl.32.1575294714613;
+ Mon, 02 Dec 2019 05:51:54 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <f177ef95-ef7e-cab0-1322-6de28f18ecdb@free.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <1575036287-6052-1-git-send-email-vincent.guittot@linaro.org> <20191202132204.GK2844@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191202132204.GK2844@hirez.programming.kicks-ass.net>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Mon, 2 Dec 2019 14:51:43 +0100
+Message-ID: <CAKfTPtBgZZWUonqdkOMJCyJSxSkGtbiWji=bR4LaZZJ=mVW-zQ@mail.gmail.com>
+Subject: Re: [PATCH] sched/cfs: fix spurious active migration
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/12/2019 9:25 am, Marc Gonzalez wrote:
-> On 02/12/2019 02:42, Dmitry Torokhov wrote:
-> 
->> On Thu, Nov 28, 2019 at 10:56:30AM -0800, Bjorn Andersson wrote:
->>
->>> On Tue 26 Nov 08:13 PST 2019, Marc Gonzalez wrote:
->>>
->>>> Date: Tue, 26 Nov 2019 13:56:53 +0100
->>>>
->>>> Using devm_add_action_or_reset() produces simpler code and smaller
->>>> object size:
->>>>
->>>> 1 file changed, 16 insertions(+), 46 deletions(-)
->>>>
->>>>      text	   data	    bss	    dec	    hex	filename
->>>> -   1797	     80	      0	   1877	    755	drivers/clk/clk-devres.o
->>>> +   1499	     56	      0	   1555	    613	drivers/clk/clk-devres.o
->>>>
->>>> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
->>>
->>> Looks neat
->>>
->>> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->>
->> This however increases the runtime costs as each custom action cost us
->> an extra pointer. Given that in a system we likely have many clocks
->> managed by devres, I am not sure that this code savings is actually
->> gives us overall win. It might still, I just want to understand how we
->> are allocating/packing devres structures.
-> 
-> I'm not 100% sure what you are saying.
+On Mon, 2 Dec 2019 at 14:22, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Fri, Nov 29, 2019 at 03:04:47PM +0100, Vincent Guittot wrote:
+> > The load balance can fail to find a suitable task during the periodic check
+> > because  the imbalance is smaller than half of the load of the waiting
+> > tasks. This results in the increase of the number of failed load balance,
+> > which can end up to start an active migration. This active migration is
+> > useless because the current running task is not a better choice than the
+> > waiting ones. In fact, the current task was probably not running but
+> > waiting for the CPU during one of the previous attempts and it had already
+> > not been selected.
+> >
+> > When load balance fails too many times to migrate a task, we should relax
+> > the contraint on the maximum load of the tasks that can be migrated
+> > similarly to what is done with cache hotness.
+> >
+> > Before the rework, load balance used to set the imbalance to the average
+> > load_per_task in order to mitigate such situation. This increased the
+> > likelihood of migrating a task but also of selecting a larger task than
+> > needed while more appropriate ones were in the list.
+> >
+> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> > ---
+> >
+> > I haven't seen any noticable performance changes on the benchmarks that I
+> > usually run but the problem can be easily highlight with a simple test
+> > with 9 always running tasks on 8 cores.
+> >
+> >  kernel/sched/fair.c | 9 ++++++++-
+> >  1 file changed, 8 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index e0d662a..d1b4fa7 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -7433,7 +7433,14 @@ static int detach_tasks(struct lb_env *env)
+> >                           load < 16 && !env->sd->nr_balance_failed)
+> >                               goto next;
+> >
+> > -                     if (load/2 > env->imbalance)
+> > +                     /*
+> > +                      * Make sure that we don't migrate too much load.
+> > +                      * Nevertheless, let relax the constraint if
+> > +                      * scheduler fails to find a good waiting task to
+> > +                      * migrate.
+> > +                      */
+> > +                     if (load/2 > env->imbalance &&
+> > +                         env->sd->nr_balance_failed <= env->sd->cache_nice_tries)
+> >                               goto next;
+> >
+> >                       env->imbalance -= load;
+>
+> The alternative is carrying a flag that inhibits incrementing
+> nr_balance_failed.
+>
+> Not migrating anything when doing so would make the imbalance worse is
+> not a failure after all.
 
-You reduce the text size by a constant amount, at the cost of allocating 
-twice as much runtime data per clock (struct action_devres  vs. void*). 
-Assuming 64-bit pointers, that means that in principle your ~320-byte 
-saving would be cancelled out at ~40 managed clocks. However, that's 
-also assuming that the minimum allocation granularity is no larger than 
-a single pointer, which generally isn't true, so in reality it depends 
-on whether the difference in data pushes the total struct devres 
-allocation over the next ARCH_KMALLOC_MINALIGN boundary - if it doesn't, 
-the difference comes entirely for free; if it does, the memory cost 
-tradeoff gets even worse.
-
-Robin.
-
-> Are you arguing that the proposed patch increases the run-time cost of
-> devm_clk_put() so much that the listed improvements (simpler source code,
-> smaller object size) are not worth it?
-> 
-> AFAIU, the release action is only called
-> - explicitly, when devm_clk_put() is called
-> - implicitly, when the device is removed
-> 
-> How often are clocks removed?
-> 
-> In hot code-path (called hundreds of times per second) it makes sense to
-> write more complex code, to shave a few cycles every iteration. But in
-> cold code-path, I think it's better to write short/simple code.
-> 
-> Regards.
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+Yeah I thought about this possibility but this behavior will make a
+big difference compared to legacy load balance and i'm not sure about
+the impact on performance because we can generate significant
+unfairness with 2 tasks sharing a CPU while others have a full CPU in
+the example that I mentioned above.
