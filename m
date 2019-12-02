@@ -2,189 +2,100 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDE7C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F2BC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32E9920848
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F55121823
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:20:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="ZOtyJo+O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728225AbfLBUOq (ORCPT
+        id S1728039AbfLBUUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 15:14:46 -0500
-Received: from mga12.intel.com ([192.55.52.136]:59428 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728044AbfLBUOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 15:14:45 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 12:14:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,270,1571727600"; 
-   d="scan'208";a="222559928"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga002.jf.intel.com with ESMTP; 02 Dec 2019 12:14:44 -0800
-Date:   Mon, 2 Dec 2019 12:19:27 -0800
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        ashok.raj@intel.com, sanjay.k.kumar@intel.com,
-        kevin.tian@intel.com, yi.l.liu@intel.com, yi.y.sun@intel.com,
-        Peter Xu <peterx@redhat.com>, iommu@lists.linux-foundation.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v2 0/8] Use 1st-level for DMA remapping
-Message-ID: <20191202121927.2fef85ba@jacob-builder>
-In-Reply-To: <20191128022550.9832-1-baolu.lu@linux.intel.com>
-References: <20191128022550.9832-1-baolu.lu@linux.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Mon, 2 Dec 2019 15:20:43 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:40194 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727927AbfLBUUn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 15:20:43 -0500
+Received: by mail-lf1-f67.google.com with SMTP id y5so896221lfy.7
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 12:20:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=A7xwm8gC8IFcmIwrDFz1mUiBMU42HvgoLpPYOdX1CWQ=;
+        b=ZOtyJo+O+ea+CUdCTEPU394bFqI2NW2JOOFXR228offjrOPoiKp17JEx7YHrvCwtxL
+         ayfcNnftnWN18v0ZWzqlEVSXvl0U0g6v+VfVLIsH1m6m9VNtPL7xBsrJ0HhQ/HWCx51P
+         Zlt6UvKJNGWGnBcUfO9q/briMSRbhlOnfg3UU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=A7xwm8gC8IFcmIwrDFz1mUiBMU42HvgoLpPYOdX1CWQ=;
+        b=ZLbuTd1cuHY/8aPLPpGq1mfAtV2KQ6poKITNP7fRQxyEqAHCW0pMkf1DqkWweVc6AY
+         kBSErbHaWtOCBW/NNsMVwjEH3EGIrqynaX6kCSJdwuGHtDwMDCs0YuEKpbgSmkxlQ2rX
+         97R3ARWcaMgat+EKujp3fKrW4uSqGod8BHzMajfveiAVTOlz4LQ6kQpN/XDHQGQNRAmJ
+         +sDoqMlSmJdUfwQ3dv0FRGLJl1I6yxWj2b8GW9QGaYLkbjp6m0F56L4KxNX8m7GKd7eO
+         37Uz9QMcg3HLGXYvVQl8Uf6rpuFdr84zz2nbsryBuL1KDuYF3P8iQTZcQ/fSeMpyt9iY
+         OVPw==
+X-Gm-Message-State: APjAAAWyzJDflm6taFzLWVzu701fRVpMX6+Yfkn1h/oNlTNRMGqmOaNG
+        J+ahii8PoyM6FjXpnM/iGejXQQ==
+X-Google-Smtp-Source: APXvYqzYCEj2kZH16mtMuXRGmli0G8tPPG/NBLbJgg0WFCJMLXzE9JuYVqkrlEByD7jomy4ge/9QiA==
+X-Received: by 2002:ac2:5462:: with SMTP id e2mr522201lfn.181.1575318041077;
+        Mon, 02 Dec 2019 12:20:41 -0800 (PST)
+Received: from [192.168.0.107] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id r4sm272840ljn.64.2019.12.02.12.20.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Dec 2019 12:20:40 -0800 (PST)
+Subject: Re: memory leak in fdb_create (2)
+To:     syzbot <syzbot+2add91c08eb181fea1bf@syzkaller.appspotmail.com>,
+        bridge@lists.linux-foundation.org, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        roopa@cumulusnetworks.com, syzkaller-bugs@googlegroups.com
+References: <0000000000001821bf0598bb955c@google.com>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <76434004-ca0b-0917-78bd-a0332af2a716@cumulusnetworks.com>
+Date:   Mon, 2 Dec 2019 22:20:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <0000000000001821bf0598bb955c@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 Nov 2019 10:25:42 +0800
-Lu Baolu <baolu.lu@linux.intel.com> wrote:
+On 02/12/2019 19:05, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    ceb30747 Merge tag 'y2038-cleanups-5.5' of git://git.kerne..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=142b3e7ee00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=26f873e40f2b4134
+> dashboard link: https://syzkaller.appspot.com/bug?extid=2add91c08eb181fea1bf
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12976feee00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10604feee00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+2add91c08eb181fea1bf@syzkaller.appspotmail.com
+> 
+> BUG: memory leak
+> unreferenced object 0xffff888124fa7080 (size 128):
+>   comm "syz-executor163", pid 7170, jiffies 4294954254 (age 12.500s)
 
-> Intel VT-d in scalable mode supports two types of page talbes
-tables
-> for DMA translation: the first level page table and the second
-> level page table. The first level page table uses the same
-> format as the CPU page table, while the second level page table
-> keeps compatible with previous formats. The software is able
-> to choose any one of them for DMA remapping according to the use
-> case.
-> 
-> This patchset aims to move IOVA (I/O Virtual Address) translation
-move guest IOVA only, right?
-> to 1st-level page table in scalable mode. This will simplify vIOMMU
-> (IOMMU simulated by VM hypervisor) design by using the two-stage
-> translation, a.k.a. nested mode translation.
-> 
-> As Intel VT-d architecture offers caching mode, guest IOVA (GIOVA)
-> support is now implemented in a shadow page manner. The device
-> simulation software, like QEMU, has to figure out GIOVA->GPA mappings
-> and write them to a shadowed page table, which will be used by the
-> physical IOMMU. Each time when mappings are created or destroyed in
-> vIOMMU, the simulation software has to intervene. Hence, the changes
-> on GIOVA->GPA could be shadowed to host.
-> 
-> 
->      .-----------.
->      |  vIOMMU   |
->      |-----------|                 .--------------------.
->      |           |IOTLB flush trap |        QEMU        |
->      .-----------. (map/unmap)     |--------------------|
->      |GIOVA->GPA |---------------->|    .------------.  |
->      '-----------'                 |    | GIOVA->HPA |  |
->      |           |                 |    '------------'  |
->      '-----------'                 |                    |
->                                    |                    |
->                                    '--------------------'
->                                                 |
->             <------------------------------------
->             |
->             v VFIO/IOMMU API
->       .-----------.
->       |  pIOMMU   |
->       |-----------|
->       |           |
->       .-----------.
->       |GIOVA->HPA |
->       '-----------'
->       |           |
->       '-----------'
-> 
-> In VT-d 3.0, scalable mode is introduced, which offers two-level
-> translation page tables and nested translation mode. Regards to
-> GIOVA support, it can be simplified by 1) moving the GIOVA support
-> over 1st-level page table to store GIOVA->GPA mapping in vIOMMU,
-> 2) binding vIOMMU 1st level page table to the pIOMMU, 3) using pIOMMU
-> second level for GPA->HPA translation, and 4) enable nested (a.k.a.
-> dual-stage) translation in host. Compared with current shadow GIOVA
-> support, the new approach makes the vIOMMU design simpler and more
-> efficient as we only need to flush the pIOMMU IOTLB and possible
-> device-IOTLB when an IOVA mapping in vIOMMU is torn down.
-> 
->      .-----------.
->      |  vIOMMU   |
->      |-----------|                 .-----------.
->      |           |IOTLB flush trap |   QEMU    |
->      .-----------.    (unmap)      |-----------|
->      |GIOVA->GPA |---------------->|           |
->      '-----------'                 '-----------'
->      |           |                       |
->      '-----------'                       |
->            <------------------------------
->            |      VFIO/IOMMU          
->            |  cache invalidation and  
->            | guest gpd bind interfaces
->            v
->      .-----------.
->      |  pIOMMU   |
->      |-----------|
->      .-----------.
->      |GIOVA->GPA |<---First level
->      '-----------'
->      | GPA->HPA  |<---Scond level
->      '-----------'
->      '-----------'
-> 
-> This patch set includes two parts. The former part implements the
-> per-domain page table abstraction, which makes the page table
-> difference transparent to various map/unmap APIs. The later part
-s/later/latter/
-> applies the first level page table for IOVA translation unless the
-> DOMAIN_ATTR_NESTING domain attribution has been set, which indicates
-> nested mode in use.
-> 
-Maybe I am reading this wrong, but shouldn't it be the opposite?
-i.e. Use FL page table for IOVA if it is a nesting domain?
+I'll look into this tomorrow, I think see the issue.
 
-> Based-on-idea-by: Ashok Raj <ashok.raj@intel.com>
-> Based-on-idea-by: Kevin Tian <kevin.tian@intel.com>
-> Based-on-idea-by: Liu Yi L <yi.l.liu@intel.com>
-> Based-on-idea-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Based-on-idea-by: Sanjay Kumar <sanjay.k.kumar@intel.com>
-> Based-on-idea-by: Lu Baolu <baolu.lu@linux.intel.com>
-> 
-> Change log:
-> 
->  v1->v2
->  - The first series was posted here
->    https://lkml.org/lkml/2019/9/23/297
->  - Use per domain page table ops to handle different page tables.
->  - Use first level for DMA remapping by default on both bare metal
->    and vm guest.
->  - Code refine according to code review comments for v1.
-> 
-> Lu Baolu (8):
->   iommu/vt-d: Add per domain page table ops
->   iommu/vt-d: Move domain_flush_cache helper into header
->   iommu/vt-d: Implement second level page table ops
->   iommu/vt-d: Apply per domain second level page table ops
->   iommu/vt-d: Add first level page table interfaces
->   iommu/vt-d: Implement first level page table ops
->   iommu/vt-d: Identify domains using first level page table
->   iommu/vt-d: Add set domain DOMAIN_ATTR_NESTING attr
-> 
->  drivers/iommu/Makefile             |   2 +-
->  drivers/iommu/intel-iommu.c        | 412
-> +++++++++++++++++++++++------ drivers/iommu/intel-pgtable.c      |
-> 376 ++++++++++++++++++++++++++ include/linux/intel-iommu.h        |
-> 64 ++++- include/trace/events/intel_iommu.h |  60 +++++
->  5 files changed, 837 insertions(+), 77 deletions(-)
->  create mode 100644 drivers/iommu/intel-pgtable.c
-> 
-
-[Jacob Pan]
+Thanks!
