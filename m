@@ -2,245 +2,226 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3931AC43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B5BC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EAB5206F0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EB522070A
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:10:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C4CKBtxh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EtANF2Y2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbfLBXJx (ORCPT
+        id S1726791AbfLBXJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 18:09:53 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42866 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbfLBXJx (ORCPT
+        Mon, 2 Dec 2019 18:09:59 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43580 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725834AbfLBXJz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 18:09:53 -0500
-Received: by mail-wr1-f66.google.com with SMTP id a15so1316740wrf.9;
-        Mon, 02 Dec 2019 15:09:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3SiZHStHdNwKd4k0PA7yaGGj1hYm6GIulwshCwq+z2M=;
-        b=C4CKBtxhr3L5VZCFrol7SGLdY4e1Y+XuL4QvIo52BcPOgN48/0SmduYw14wcJb4aUl
-         6R12GOgzyNzse11S81iOxW+mEONFxqpDRT3ZGELxInoRMzP09YqD1fc3okAt57C1HXtC
-         kBF9ZCROg9Y/NOOKEeRY5uX6jOyHdP/v73oSpApjJOmGurRnwLxT2vWAQNn4qJK8tHpm
-         4khfsj6TA3qUcnb3QCEUCYLFwTu23nbQU2jrpl1VePESHFCGOmn5V5ARWiajT21smdUa
-         GYtluXksMpA1IaxAsW1tvgW4bPqpaYBKAD3F4j+QVrR+HIrA21PnfM/bAJMlPpuzGZpj
-         ByBg==
+        Mon, 2 Dec 2019 18:09:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575328193;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=oz1cQV94PxiM/G4Z+sfRgat5IvN2eDSa2rOtbBG/y8Q=;
+        b=EtANF2Y2tev7dGkNYfuZHO1XIzL73eQfoodfij3QnSoJksHfLuBcHK0doEqlzjhaQwpwpi
+        /7P145VXv0BleEotIHVZ3rIQ8WaEq5ke56fcSjS26V9zCKcOVkCcRhCllY/HXxyBvq2hlJ
+        7DWcIMcYfS2FveveDYg3nOyMLKgwnLQ=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-12-W0guguh8NA2vsL0R1NQ1Hg-1; Mon, 02 Dec 2019 18:09:52 -0500
+Received: by mail-qv1-f71.google.com with SMTP id y9so893875qvi.10
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 15:09:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3SiZHStHdNwKd4k0PA7yaGGj1hYm6GIulwshCwq+z2M=;
-        b=lFpND21I/qLEdd9lRpxvc2ASmpkzjj7TmLOkMNWBYmcQCMLXU91EysvhRdEtE6bxkT
-         BMdMHAXKepFm9+abfpo2kyAgC4tqsgTg5LIJGLy29yDLi1QUe1c86KR8PEbuHmzkpfaF
-         9XdDWuBhUGcSZ3Pe8Q1qQ0MU6zulETdscxICd6APDnCxAu6P1uD0Mq5037f9QYHAu3IM
-         Zz1fzbkd4+tSIWXOOsmfJhauHWHSTSqw+YI3CmIjHCGyBNsza5+D9vHt/TcrICaLABew
-         /p/7rZqGZHn1wwBX3jAb7AQv6FxoFPt2fYsDVG1TXVyZFC4ik+crdwK4eVD9b/UoEP7t
-         T1xA==
-X-Gm-Message-State: APjAAAW2ImiY9Q1KpBE9sS5Sx2PsCkhh0ub89in2bTsfaIOCPdxeTODb
-        IBlka51aMPi3P/2khtkWosA=
-X-Google-Smtp-Source: APXvYqxPN9gYozPb/44Uug0FGTi6qb6GARk0Vn4Twem59e6nqrP2WkS/Bvj1HMnHip9D/ncf5D4YrA==
-X-Received: by 2002:a5d:6ca1:: with SMTP id a1mr1619121wra.36.1575328189830;
-        Mon, 02 Dec 2019 15:09:49 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id z26sm922313wmk.33.2019.12.02.15.09.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Dec 2019 15:09:48 -0800 (PST)
-Date:   Tue, 3 Dec 2019 00:09:47 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        linux-input@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Kirill Smelkov <kirr@nexedi.com>
-Subject: Re: [PATCH] Input: uinput - Add UI_SET_UNIQ ioctl handler
-Message-ID: <20191202230947.ld5ibnczdpkekfcm@pali>
-References: <20191127185139.65048-1-abhishekpandit@chromium.org>
- <20191201145357.ybq5gfty4ulnfasq@pali>
- <20191202012305.GQ248138@dtor-ws>
- <20191202084750.k7lafzzrf3yq2tqs@pali>
- <20191202175440.GA50317@dtor-ws>
- <20191202185340.nae4lljten5jqp3y@pali>
- <20191202193628.GI50317@dtor-ws>
+        bh=U9BgLL41orfOTnHN7A5fR49RzpkIGJdIaBnfhTFr7uM=;
+        b=c/suXnYqXDs9AwGbXwoc+hFYpDw5IXqCOPOmCN1snhRgJCbR2cxOlUH18ImdtBRHRW
+         gOa8TND8dzHmmWitjpNBTZSWJmWAT74Gu2wh2A9R8jaB+8MyBJUx57KWw1KI35/f2NfM
+         Kzs/E/ir/6+kWbNSRkQkHshVOUHlONzEd1ZCvH0REjmF73LhzhmIAGAfF+kI5bc4/DXA
+         EgRGh1bB2oxwv2YBg28klDdGLOoTUCHXSJGxBUdiHap8Ukhf/9ccUdbkMACw7UBgao36
+         aobli8pFxjDCJmZyxMdE8jwxnCgyws/65IMoLBSf4cNITILqakoUqBeU7w37+7FwoQjb
+         +l2w==
+X-Gm-Message-State: APjAAAWxG5TJAWxZyEKLZgkoykMWX7/uPJ8cqG9v31kvKmIaFIL/rJxB
+        ERfS//KjbHmFJW3Xch0+IPGkyOq8Xz5DAjZS/wxDYmti0CIRNpKTczOivBkI2neD4D/+MdZrMLr
+        2zC2zBm1Ah84Y13IeuAb+57HO
+X-Received: by 2002:ae9:e704:: with SMTP id m4mr1728809qka.153.1575328191342;
+        Mon, 02 Dec 2019 15:09:51 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwJBdXbKG+70OVb9A6rS8j4VSkatuTLwLDrgfnPaKyofNW1dVPXpxed1YOlrLiBUcYsh8+ObQ==
+X-Received: by 2002:ae9:e704:: with SMTP id m4mr1728769qka.153.1575328190930;
+        Mon, 02 Dec 2019 15:09:50 -0800 (PST)
+Received: from xz-x1 ([2607:9880:19c0:3f::3])
+        by smtp.gmail.com with ESMTPSA id z62sm601538qtd.83.2019.12.02.15.09.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 15:09:50 -0800 (PST)
+Date:   Mon, 2 Dec 2019 18:09:48 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
+Message-ID: <20191202230948.GI31681@xz-x1>
+References: <20191129213505.18472-1-peterx@redhat.com>
+ <20191129213505.18472-5-peterx@redhat.com>
+ <20191202201036.GJ4063@linux.intel.com>
+ <20191202211640.GF31681@xz-x1>
+ <20191202215049.GB8120@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="7npjrcjeypf2arfk"
+In-Reply-To: <20191202215049.GB8120@linux.intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-MC-Unique: W0guguh8NA2vsL0R1NQ1Hg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191202193628.GI50317@dtor-ws>
-User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---7npjrcjeypf2arfk
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Monday 02 December 2019 11:36:28 Dmitry Torokhov wrote:
-> On Mon, Dec 02, 2019 at 07:53:40PM +0100, Pali Roh=C3=A1r wrote:
-> > On Monday 02 December 2019 09:54:40 Dmitry Torokhov wrote:
-> > > On Mon, Dec 02, 2019 at 09:47:50AM +0100, Pali Roh=C3=A1r wrote:
-> > > > On Sunday 01 December 2019 17:23:05 Dmitry Torokhov wrote:
-> > > > > Hi Pali,
-> > > > >=20
-> > > > > On Sun, Dec 01, 2019 at 03:53:57PM +0100, Pali Roh=C3=A1r wrote:
-> > > > > > Hello!
-> > > > > >=20
-> > > > > > On Wednesday 27 November 2019 10:51:39 Abhishek Pandit-Subedi w=
-rote:
-> > > > > > > Support setting the uniq attribute of the input device. The u=
-niq
-> > > > > > > attribute is used as a unique identifier for the connected de=
-vice.
-> > > > > > >=20
-> > > > > > > For example, uinput devices created by BlueZ will store the a=
-ddress of
-> > > > > > > the connected device as the uniq property.
-> > > > > > >=20
-> > > > > > > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromiu=
-m.org>
-> > > > > >=20
-> > > > > > ...
-> > > > > >=20
-> > > > > > > diff --git a/include/uapi/linux/uinput.h b/include/uapi/linux=
-/uinput.h
-> > > > > > > index c9e677e3af1d..d5b7767c1b02 100644
-> > > > > > > --- a/include/uapi/linux/uinput.h
-> > > > > > > +++ b/include/uapi/linux/uinput.h
-> > > > > > > @@ -145,6 +145,7 @@ struct uinput_abs_setup {
-> > > > > > >  #define UI_SET_PHYS		_IOW(UINPUT_IOCTL_BASE, 108, char*)
-> > > > > > >  #define UI_SET_SWBIT		_IOW(UINPUT_IOCTL_BASE, 109, int)
-> > > > > > >  #define UI_SET_PROPBIT		_IOW(UINPUT_IOCTL_BASE, 110, int)
-> > > > > > > +#define UI_SET_UNIQ		_IOW(UINPUT_IOCTL_BASE, 111, char*)
-> > > > > >=20
-> > > > > > I think that usage of char* as type in _IOW would cause compati=
-bility
-> > > > > > problems like it is for UI_SET_PHYS (there is UI_SET_PHYS_COMPA=
-T). Size
-> > > > > > of char* pointer depends on userspace (32 vs 64bit), so 32bit p=
-rocess on
-> > > > > > 64bit kernel would not be able to call this new UI_SET_UNIQ ioc=
-tl.
-> > > > > >=20
-> > > > > > I would suggest to define this ioctl as e.g.:
-> > > > > >=20
-> > > > > >   #define UI_SET_UNIQ		_IOW(_IOC_WRITE, UINPUT_IOCTL_BASE, 111,=
- 0)
-> > > > > >=20
-> > > > > > And then in uinput.c code handle it as:
-> > > > > >=20
-> > > > > >   case UI_SET_UNIQ & ~IOCSIZE_MASK:
-> > > > > >=20
-> > > > > > as part of section /* Now check variable-length commands */
-> > > > >=20
-> > > > > If we did not have UI_SET_PHYS in its current form, I'd agree wit=
-h you,
-> > > > > but I think there is benefit in having UI_SET_UNIQ be similar to
-> > > > > UI_SET_PHYS.
+On Mon, Dec 02, 2019 at 01:50:49PM -0800, Sean Christopherson wrote:
+> On Mon, Dec 02, 2019 at 04:16:40PM -0500, Peter Xu wrote:
+> > On Mon, Dec 02, 2019 at 12:10:36PM -0800, Sean Christopherson wrote:
+> > > On Fri, Nov 29, 2019 at 04:34:54PM -0500, Peter Xu wrote:
+> > > > Currently, we have N+1 rings for each VM of N vcpus:
 > > > >=20
-> > > > I thought that ioctl is just number, so we can define it as we want=
-=2E And
-> > > > because uinput.c has already switch for variable-length commands it
-> > > > would be easy to use it. Final handling can be in separate function=
- like
-> > > > for UI_SET_PHYS which can look like same.
+> > > >   - for each vcpu, we have 1 per-vcpu dirty ring,
+> > > >   - for each vm, we have 1 per-vm dirty ring
 > > >=20
-> > > Yes, we can define ioctl number as whatever we want. What I was trying
-> > > to say, right now users do this:
+> > > Why?  I assume the purpose of per-vcpu rings is to avoid contention b=
+etween
+> > > threads, but the motiviation needs to be explicitly stated.  And why =
+is a
+> > > per-vm fallback ring needed?
+> >=20
+> > Yes, as explained in previous reply, the problem is there could have
+> > guest memory writes without vcpu contexts.
+> >=20
 > > >=20
-> > > 	rc =3D ioctl(fd, UI_SET_PHYS, "whatever");
-> > > 	...
-> > >=20
-> > > and with UI_SET_UNIQ they expect the following to work:
-> > >=20
-> > > 	rc =3D ioctl(fd, UI_SET_UNIQ, "whatever");
-> > > 	...
+> > > If my assumption is correct, have other approaches been tried/profile=
+d?
+> > > E.g. using cmpxchg to reserve N number of entries in a shared ring.
 > >=20
-> > And would not following definition
-> >=20
-> >   #define UI_SET_UNIQ _IOW(_IOC_WRITE, UINPUT_IOCTL_BASE, 111, 0)
-> >=20
-> > allow userspace to call
-> >=20
-> >   rc =3D ioctl(fd, UI_SET_UNIQ, "whatever");
-> >=20
-> > as you want?
+> > Not yet, but I'd be fine to try anything if there's better
+> > alternatives.  Besides, could you help explain why sharing one ring
+> > and let each vcpu to reserve a region in the ring could be helpful in
+> > the pov of performance?
 >=20
-> OK, so what you are saying is that we can have whatever in the size
-> portion of ioctl number and simply ignore it in the driver
+> The goal would be to avoid taking a lock, or at least to avoid holding a
+> lock for an extended duration, e.g. some sort of multi-step process where
+> entries in the ring are first reserved, then filled, and finally marked
+> valid.  That'd allow the "fill" action to be done in parallel.
 
-Yes.
+Considering that per-vcpu ring should be no worst than this, so iiuc
+you prefer a single per-vm ring here, which is without per-vcpu ring.
+However I don't see a good reason to split a per-vm resource into
+per-vcpu manually somehow, instead of using the per-vcpu structure
+directly like what this series does...  Or could you show me what I've
+missed?
 
-> (and I do not
-> think we need to do any of "UI_SET_UNIQ & ~IOCSIZE_MASK" really).
+IMHO it's really a natural thought that we should use kvm_vcpu to
+split the ring as long as we still want to make it in parallel of the
+vcpus.
 
-You are right, we do not need to clear any IOCSIZE_MASK. As ioctl number
-would be always sam constant number. So it would be really simple. So
-original patch would work if UI_SET_UNIQ define would be changed to
-above with _IOW() macro.
-
-> While this would work, I am not sure it is the best option as I think
-> we'd have to comment extensively why we have arbitrary number in place
-> of the size.
-
-Comment can be added. But this is as ioctl is going to accept variable
-length array (not fixed array), zero value make sense for me (zero as we
-do not know exact size).
-
-> And we still do not really save anything, as we still have to go through
-> compat ioctl handler (since we have it already) and it is very simple to
-> add a case for UI_SET_UNIQ there...
-
-Yes, compat ioctl is still used. But my proposed solution does not
-involve to define a new compact ioctl number just for sizeof(char *).
-
-I'm looking at this particular problem from side, that there is no
-reason to define two new ioctl numbers for UI_SET_UNIQ (one normal
-number and one compat number), when one number is enough. It is one new
-ioctl call, so one ioctl number should be enough.
-
-And also with my proposed solution with ioctl size=3D0 it simplify
-implementation of UI_SET_UNIQ as it is not needed to implement also
-UI_SET_UNIQ_COMPAT ioctl nor touch compat ioct code path. Basically
-original patch (with changed UI_SET_UNIQ macro) is enough.
-
-But of of course, this is my view of this problem and I would not be
-against your decision from maintainer position. Both solutions would
-work correctly and bring same behavior for userspace applications.
-
-> Thanks.
 >=20
+> In case it isn't clear, I haven't thought through an actual solution :-).
+
+Feel free to shoot when the ideas come. :) I'd be glad to test your
+idea, especially where it could be better!
+
+>=20
+> My point is that I think it's worth exploring and profiling other
+> implementations because the dual per-vm and per-vcpu rings has a few wart=
+s
+> that we'd be stuck with forever.
+
+I do agree that the interface could be a bit awkward to keep these two
+rings.  Besides this, do you still have other concerns?
+
+And when you say about profiling, I hope I understand it right that it
+should be something unrelated to this specific issue that we're
+discussing (say, on whether to use per-vm ring, or per-vm + per-vcpu
+rings) because for performance imho it's really the layout of the ring
+that could matter more, and how the ring is shared and accessed
+between the userspace and kernel.
+
+For current implementation (I'm not sure whether that's initial
+version from Lei, or Paolo, anyway...), IMHO it's good enough from
+perf pov in that it at least supports:
+
+  (1) zero copy
+  (2) complete async model
+  (3) per-vcpu isolations
+
+None of these is there for KVM_GET_DIRTY_LOG.  Not to mention that
+tracking dirty bits are not really that "performance critical" - if
+you see in QEMU we have plenty of ways to explicitly turn down the CPU
+like cpu-throttle, just because dirtying pages and even with the whole
+tracking overhead is too fast already even using KVM_GET_DIRTY_LOG,
+and the slow thing is QEMU when collecting and sending the pages! :)
+
+>=20
+> > > IMO,
+> > > adding kvm_get_running_vcpu() is a hack that is just asking for futur=
+e
+> > > abuse and the vcpu/vm/as_id interactions in mark_page_dirty_in_ring()
+> > > look extremely fragile.
+> >=20
+> > I agree.  Another way is to put heavier traffic to the per-vm ring,
+> > but the downside could be that the per-vm ring could get full easier
+> > (but I haven't tested).
+>=20
+> There's nothing that prevents increasing the size of the common ring each
+> time a new vCPU is added.  Alternatively, userspace could explicitly
+> request or hint the desired ring size.
+
+Yeah I don't have strong opinion on this, but I just don't see it
+greatly helpful to explicitly expose this API to userspace.  IMHO for
+now a global ring size should be good enough.  If userspace wants to
+make it fast, the ring can hardly gets full (because the collection of
+the dirty ring can be really, really fast if the userspace wants).
+
+>=20
+> > > I also dislike having two different mechanisms
+> > > for accessing the ring (lock for per-vm, something else for per-vcpu)=
+.
+> >=20
+> > Actually I proposed to drop the per-vm ring (actually I had a version
+> > that implemented this.. and I just changed it back to the per-vm ring
+> > later on, see below) and when there's no vcpu context I thought about:
+> >=20
+> >   (1) use vcpu0 ring
+> >=20
+> >   (2) or a better algo to pick up a per-vcpu ring (like, the less full
+> >       ring, we can do many things here, e.g., we can easily maintain a
+> >       structure track this so we can get O(1) search, I think)
+> >=20
+> > I discussed this with Paolo, but I think Paolo preferred the per-vm
+> > ring because there's no good reason to choose vcpu0 as what (1)
+> > suggested.  While if to choose (2) we probably need to lock even for
+> > per-cpu ring, so could be a bit slower.
+>=20
+> Ya, per-vm is definitely better than dumping on vcpu0.  I'm hoping we can
+> find a third option that provides comparable performance without using an=
+y
+> per-vcpu rings.
+
+I'm still uncertain on whether it's a good idea to drop the per-vcpu
+ring (as stated above).  But I'm still open to any further thoughts
+as long as I can start to understand when the only-per-vm ring would
+be better.
+
+Thanks!
 
 --=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+Peter Xu
 
---7npjrcjeypf2arfk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXeWZugAKCRCL8Mk9A+RD
-UnTeAKCTUnr6gGjn/3NUTv/7PKhuAkV9mQCfbozrQ4bozHH1N5T69B0hkEw695E=
-=VymX
------END PGP SIGNATURE-----
-
---7npjrcjeypf2arfk--
