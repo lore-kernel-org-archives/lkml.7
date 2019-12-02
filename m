@@ -2,143 +2,140 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C280C43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A00C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C81820833
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:51:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575298271;
-	bh=nltjLLYixOrKRPkRTFLX6Xk/JRIw/DjlSVOlwBIbnHA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Kq4jScRbuLxHViGlRRd/0+lAc7GiPX5264bp1bGR78Ila5uQr3c/f/JlKZyYDJhl1
-	 SzJ+/an/Dl89zzOjTc2Pcigj4z5RmRA8aHDXunMd1xWPqOArmJMyt7WcDgxBleaIka
-	 3zj0ReURcki73b0naxykss9VnCUDkVCukXNolHwY=
+	by mail.kernel.org (Postfix) with ESMTP id A62DF217D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:55:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="UVU4JIQh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbfLBOvK (ORCPT
+        id S1727462AbfLBOzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 09:51:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39666 "EHLO mail.kernel.org"
+        Mon, 2 Dec 2019 09:55:01 -0500
+Received: from mout.gmx.net ([212.227.17.20]:47481 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727420AbfLBOvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 09:51:09 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6EAB2073C;
-        Mon,  2 Dec 2019 14:51:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575298268;
-        bh=nltjLLYixOrKRPkRTFLX6Xk/JRIw/DjlSVOlwBIbnHA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H5l/+NezE+LKWA0Y/Id4jNPzQT1d/LSLfUcx0AvcLAP7Rzw+78JrzgDO3CxdcCn51
-         nDt6HcGgFsRWxogXS8CQd3/MfzfMBsX2+V9CgITPfHTCXcqZHWQ21bK7NrekeLU9Ax
-         PJ1lcLxhiou5OaHvpU4wB2kGhP4MCT3mcsx9MR9A=
-Date:   Mon, 2 Dec 2019 15:51:05 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jack Wang <jack.wang.usish@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 067/306] KVM: nVMX: move check_vmentry_postreqs()
- call to nested_vmx_enter_non_root_mode()
-Message-ID: <20191202145105.GA571975@kroah.com>
-References: <20191127203114.766709977@linuxfoundation.org>
- <20191127203119.676489279@linuxfoundation.org>
- <CA+res+QKCAn8PsSgbkqXNAF0Ov5pOkj=732=M5seWj+-JFQOwQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+res+QKCAn8PsSgbkqXNAF0Ov5pOkj=732=M5seWj+-JFQOwQ@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        id S1727362AbfLBOzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 09:55:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1575298480;
+        bh=pO4twjMhFwzlu5BSTIRckttzQ5eUzZw5pVofzAEoACQ=;
+        h=X-UI-Sender-Class:From:To:In-reply-to:Subject:Reply-to:References:
+         Date;
+        b=UVU4JIQhpUVoYU6bGgXMVkPFAMDEq9g/YGU6WhUIZKkps3seqN4QT47SyTOQT4pki
+         GDlQYZgybPMD8nQvc80Ps0nRB1rG47y+QIDUzimH8EZY78e+sTRkrG2V8EexkO4x3a
+         LzMnJcS621O/980ACLGBXgwO00ZMuzpO/Um3PuNo=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from corona.crabdance.com ([173.228.106.103]) by mail.gmx.com
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1MjjCF-1hwNfH0rO7-00lAIR; Mon, 02 Dec 2019 15:54:40 +0100
+Received: by corona.crabdance.com (Postfix, from userid 1001)
+        id 78AA06E85603; Mon,  2 Dec 2019 06:52:56 -0800 (PST)
+From:   Stefan Schaeckeler <schaecsn@gmx.net>
+To:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        heiko@sntech.de, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+In-reply-to: <20191118052413.D729B6E85603@corona.crabdance.com> (message from
+        schaecsn on Sun, 17 Nov 2019 21:24:13 -0800 (PST))
+Subject: Re: [PATCH] thermal: rockchip: enable hwmon
+Reply-to: schaecsn@gmx.net
+References:  <20191118052413.D729B6E85603@corona.crabdance.com>
+Message-Id: <20191202145256.78AA06E85603@corona.crabdance.com>
+Date:   Mon,  2 Dec 2019 06:52:56 -0800 (PST)
+X-Provags-ID: V03:K1:DO9/n43e80iU6R7ZGRDJIullECdHSYKNtZWbFAGZOFzyMKqOXcB
+ 3bjfR4s2Fw/q9vOXCGVeIxffDi+d1jykW1BvMe3ZwtBMhxDGTpxg4T3AbaxriaeWAuaE3Eh
+ 63V/ipJy9muNtsXzTqjFxvQ75CwXjqyoFUxtsMjd7H3eTlEng5BZSbbZKuCxUIViF/jBsBC
+ kCjXydUflFH54BZx9JyQA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3psRJ6OuQo4=:j5kT/FDHk+toEgfFRieJZO
+ wMpJsAqg5CvsIPwcTskinP355X66zmnGFeiILP+cya1QEF3TPTjK5wniZ14t9b2d3CR4E/G4W
+ QoVaKKLcHZ2pmCJ2Y4M1zm3NEYZD7L1EWtn1HbS7lhi94HwtQcC8Dj8PDkSHb0lmGZl/XIPtX
+ cb4Z1nGEdyk2UESc2e8Tx8P9HQArwTm4NR52go+ohfw6KKpoiYMClMxGSbvcyNjn21QILzP2p
+ Z04F5m9o0+uwuDtUcpkU9/0cDsvkMjif8zf4B5HsgOVIMg7rHXre0In2zEOqJ1kQyy9IkfUKa
+ QeGEWAQ1OwZEqs6qLoSFNSjOI1EDU8eCYMY7mPgikA2fUk+YyAu7jtAt1nrif5Xrs5p6cyaoL
+ pzPeWU7vHwczFQUnKYBDSSaSsEAzRhqDHTMgbCAZHaxIuOa2x8PnKkut8Izo1jiWARUnC15+i
+ wKIh72bgSglmHQHVHCJIBUu+fIkAZsnYZrV9xVU+F7+NBDtlFx8+2JZ41XVdhGwtavNWFpK6p
+ jPyN+jSoZ2O8dadiE2ls2tsOuFC7DcdJMLcvTRkTUK08b/tktA4IeLgEphYrxHPw45Xol8zgC
+ Pbhcg1G5wqoyHckHWyVGTIodZoy73ttwIW0NUTbw5R7D5K6SfiwstOYQxBardySP+weH88GlJ
+ kaM7Ci9shzoCUL2Q5oT4+QDlOIe+mc1MGukCSsJRQSXn3cIZ+dtGcYZdcE3gRcpO1S10Hs4Lr
+ INgh5L+PJIpi7kDb+c3CFgeyMR3yoPXX2hYWPf89lSz2UHOUyx+JAT69E403myEDMcGMFfxG/
+ KDfdCzRcAbclv8d35+GwfRlRRAZ4h1YTQmuZxubXpIb0pSvYbSZd3ua9z54kYO3RTuTuDcDao
+ TAy9ErRGZAbSXpdeQ/VilM/9bUi59q0eosCSwaUPBVkPxMrylVmFO9Sb9bbgVIheuZGGWFxD6
+ bGJUJ/biKPp5KuC/kGDMOBiD5MtSHJ7uCjR4pvZzDhb2C7vwtE2IIh/7GDzINgnwaW0Ciez5S
+ uiAu7UuMYeWoGa6x8eoZvqjEoAU9YX/0wHeHPN3YsPGUfPl2SlvG4uZ8JEhjJaqISld0kmRVx
+ WT5f9WYWpTgcIZv8Jf/s3EbJVmvUc4EOZ7T41/VI9y5ybOnIg2kAj+OGoNEfiszwiZwvLIU6K
+ 0bzpZuDfRyNNue5nhxfLOcAgjNjFnQCYL0B63msjICE5zlHN+teRqur53GU/wWO9+JV7i5Dky
+ +XMASyu43OkLS2Y6SSqrp2H0v9Yu8bxijHwE9dQ==
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 03:40:04PM +0100, Jack Wang wrote:
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> 于2019年11月27日周三 下午10:30写道：
-> >
-> > From: Sean Christopherson <sean.j.christopherson@intel.com>
-> >
-> > [ Upstream commit 7671ce21b13b9596163a29f4712cb2451a9b97dc ]
-> >
-> > In preparation of supporting checkpoint/restore for nested state,
-> > commit ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vmx_run()")
-> > modified check_vmentry_postreqs() to only perform the guest EFER
-> > consistency checks when nested_run_pending is true.  But, in the
-> > normal nested VMEntry flow, nested_run_pending is only set after
-> > check_vmentry_postreqs(), i.e. the consistency check is being skipped.
-> >
-> > Alternatively, nested_run_pending could be set prior to calling
-> > check_vmentry_postreqs() in nested_vmx_run(), but placing the
-> > consistency checks in nested_vmx_enter_non_root_mode() allows us
-> > to split prepare_vmcs02() and interleave the preparation with
-> > the consistency checks without having to change the call sites
-> > of nested_vmx_enter_non_root_mode().  In other words, the rest
-> > of the consistency check code in nested_vmx_run() will be joining
-> > the postreqs checks in future patches.
-> >
-> > Fixes: ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vmx_run()")
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > Cc: Jim Mattson <jmattson@google.com>
-> > Reviewed-by: Jim Mattson <jmattson@google.com>
-> > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > ---
-> >  arch/x86/kvm/vmx.c | 10 +++-------
-> >  1 file changed, 3 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-> > index fe7fdd666f091..bdf019f322117 100644
-> > --- a/arch/x86/kvm/vmx.c
-> > +++ b/arch/x86/kvm/vmx.c
-> > @@ -12694,6 +12694,9 @@ static int enter_vmx_non_root_mode(struct kvm_vcpu *vcpu, u32 *exit_qual)
-> >         if (likely(!evaluate_pending_interrupts) && kvm_vcpu_apicv_active(vcpu))
-> >                 evaluate_pending_interrupts |= vmx_has_apicv_interrupt(vcpu);
-> >
-> > +       if (from_vmentry && check_vmentry_postreqs(vcpu, vmcs12, exit_qual))
-> > +               return EXIT_REASON_INVALID_STATE;
-> > +
-> >         enter_guest_mode(vcpu);
-> >
-> >         if (!(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CONTROLS))
-> > @@ -12836,13 +12839,6 @@ static int nested_vmx_run(struct kvm_vcpu *vcpu, bool launch)
-> >          */
-> >         skip_emulated_instruction(vcpu);
-> >
-> > -       ret = check_vmentry_postreqs(vcpu, vmcs12, &exit_qual);
-> > -       if (ret) {
-> > -               nested_vmx_entry_failure(vcpu, vmcs12,
-> > -                                        EXIT_REASON_INVALID_STATE, exit_qual);
-> > -               return 1;
-> > -       }
-> > -
-> >         /*
-> >          * We're finally done with prerequisite checking, and can start with
-> >          * the nested entry.
-> > --
-> > 2.20.1
-> >
-> >
-> >
-> Hi all,
-> 
-> This commit caused many kvm-unit-tests regression, cherry-pick
-> following commits from 4.20 fix the regression:
-> d63907dc7dd1 ("KVM: nVMX: rename enter_vmx_non_root_mode to
-> nested_vmx_enter_non_root_mode")
-> a633e41e7362 ("KVM: nVMX: assimilate nested_vmx_entry_failure() into
-> nested_vmx_enter_non_root_mode()")
+Hello linux power management mailing list and others,
 
-Now queued up, thanks!
+New month, new try. Could someone review this patch, please. I would reall=
+y
+like to see the Rockchip RK3399 temperature sensors hooked up to the hwmon=
+ API.
 
-greg k-h
+~ Stefan
+
+> Enable hwmon for the soc and gpu temperature sensors.
+>
+> Signed-off-by: Stefan Schaeckeler <schaecsn@gmx.net>
+>
+> ---
+>  drivers/thermal/rockchip_thermal.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockch=
+ip_thermal.c
+> index 343c2f5c5a25..e47c60010259 100644
+> --- a/drivers/thermal/rockchip_thermal.c
+> +++ b/drivers/thermal/rockchip_thermal.c
+> @@ -19,6 +19,8 @@
+>  #include <linux/mfd/syscon.h>
+>  #include <linux/pinctrl/consumer.h>
+>
+> +#include "thermal_hwmon.h"
+> +
+>  /**
+>   * If the temperature over a period of time High,
+>   * the resulting TSHUT gave CRU module,let it reset the entire chip,
+> @@ -1321,8 +1323,15 @@ static int rockchip_thermal_probe(struct platform=
+_device *pdev)
+>
+>  	thermal->chip->control(thermal->regs, true);
+>
+> -	for (i =3D 0; i < thermal->chip->chn_num; i++)
+> +	for (i =3D 0; i < thermal->chip->chn_num; i++) {
+>  		rockchip_thermal_toggle_sensor(&thermal->sensors[i], true);
+> +		thermal->sensors[i].tzd->tzp->no_hwmon =3D false;
+> +		error =3D thermal_add_hwmon_sysfs(thermal->sensors[i].tzd);
+> +		if (error)
+> +			dev_warn(&pdev->dev,
+> +				 "failed to register sensor %d with hwmon: %d\n",
+> +				 i, error);
+> +	}
+>
+>  	platform_set_drvdata(pdev, thermal);
+>
+> @@ -1344,6 +1353,7 @@ static int rockchip_thermal_remove(struct platform=
+_device *pdev)
+>  	for (i =3D 0; i < thermal->chip->chn_num; i++) {
+>  		struct rockchip_thermal_sensor *sensor =3D &thermal->sensors[i];
+>
+> +		thermal_remove_hwmon_sysfs(sensor->tzd);
+>  		rockchip_thermal_toggle_sensor(sensor, false);
+>  	}
+>
+> --
+> 2.24.0
+>
