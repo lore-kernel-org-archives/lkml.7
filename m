@@ -2,94 +2,157 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 574EEC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C44C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3089E214AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 206482070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:55:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WlefZGQN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728244AbfLBTzM (ORCPT
+        id S1728256AbfLBTzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 14:55:12 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:48812 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728228AbfLBTzM (ORCPT
+        Mon, 2 Dec 2019 14:55:54 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:34617 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727977AbfLBTzx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 14:55:12 -0500
-Received: by mail-il1-f200.google.com with SMTP id 4so653940ill.15
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 11:55:10 -0800 (PST)
+        Mon, 2 Dec 2019 14:55:53 -0500
+Received: by mail-ed1-f68.google.com with SMTP id cx19so696840edb.1;
+        Mon, 02 Dec 2019 11:55:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OMJrw1j/pvu1iTGY8pM0wCN2Z1+KfJ2O6ateeNGld0I=;
+        b=WlefZGQNVPxv1RDNohpw2YBv8o7ZCghZpIMAxbHdVopovNYnGv6BA1DTyWctuWWNAH
+         ezPN6ifqps0iyargYIqrDc1QWz+TCqaf4mK9BK7FJ1ugJyAyn6eUpkqqh4P9jMmEdOWQ
+         WbZjwGoSGGZBsfQCJHK4Q/XWfBPkgrewKudJdYG5IU4omAxdd0vBGz1OUcaOWcKr5gXX
+         qrv5OlklCc545GX9ZMp7pir/5AQt4D0t1dKsaVqZcYDWqja1qbX7OOkiW1cJsQ1Cf8lk
+         2zxcHI+bbAkV8lH8HN5OP2UMDvueBshl4YDl21e5rNOieZtV+oyr2LP9fRqeNgVoqNp8
+         OfRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=veCUUZlFB0NiOs09rx07Rdq8OaEllTTQeYc68mzDoxA=;
-        b=EVNASkoNC3noLR6O0j3r9G7pIAtCIWJCm58hRGVhdBdMKKW291SIfZzgnaBUaaHOtB
-         a8TVaraifRMSn1fZx1lvnMPDP4Spik+RuxsXRHRajGruZEZNNLeCJlNRGtvEO9PSvxuv
-         sU0Z201rUb4LSHR4XHEBI84gi+6EfM23yhOVEoD6tUJ3Wxi0j4muhtKwH6gVQLzPmnnD
-         GmMnflLl4tKeGeJnjeFbuRAPN2wC1z/V+z337mKowA6RzTR9fYJIIfRJLu0qgF4l4Fg6
-         aYRQlylv49yIEOfEXlNQWlhzfmc6LAnV0YdD4r+VPfkmR2le+B9oPL+p3xb++IXkRvaY
-         Mrtw==
-X-Gm-Message-State: APjAAAXkvEWx84T4ITD4K5MyeslIAAyJvv8r/6F5uVO3xFDbKsB4uLNV
-        vaSsGuaKThsY47k22vac6Vo7nnyPlo3QollW4eCv8/1mIBmD
-X-Google-Smtp-Source: APXvYqxkToWG8SBpIUiPD3SZB7zc9UpBocGZYL6i1TL7Y/1XHMYAC8iw0X8f2xGijHFowycYEd4MZ/bNQ4pVC2OZTwPGpkWe0nrd
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OMJrw1j/pvu1iTGY8pM0wCN2Z1+KfJ2O6ateeNGld0I=;
+        b=o7RCZAoqi6TK/G8vW0nSRcEFl//CDrNKIdIBNrPSdVVyL+c2W3FZbyQ+yrF9luJ7IF
+         pUAMojN0Wu2LEa/Kqs8HIJNxBKwE1YG5gc/S7Tkv8KXeZndoVICG7OBPvCcZc+nQik34
+         /seAaYSUUGNUDnofXSW1kgKeu+alrqH7L5lBSAoy7Q4tVDvl7RdMbUenqsMJb09H64KP
+         UEGxOf68/zQD0gHJj5hUBdH7Vm9UFSmmeg7b8tMMHRWFd6fqSg/92WxV4u3mfwkH0+/3
+         2TUOV1F1H7vh0foOjdcOIf7+WvxABWTGieAXiMv8nIzsI3MPc4maT3seyQ7QjKjwWM/f
+         /bdg==
+X-Gm-Message-State: APjAAAWKRJkTeM04t1sfnFlhknaU6Hau6ugR7GHwJ6Ax6+agXQx3hguQ
+        By6j29CnscdGYCBDw7JSj4K8WkoNFTSm5qwgLPg=
+X-Google-Smtp-Source: APXvYqzhBu0NZunAmV85IeuYNwR4VFGS6U/nWViEG3owaoouFkOXT76zHxBLe+Fv+kgzYb//3znvP/A636d5rkEOJ04=
+X-Received: by 2002:a17:906:b6c8:: with SMTP id ec8mr1133332ejb.64.1575316551333;
+ Mon, 02 Dec 2019 11:55:51 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:38f:: with SMTP id y15mr1488730jap.17.1575316509840;
- Mon, 02 Dec 2019 11:55:09 -0800 (PST)
-Date:   Mon, 02 Dec 2019 11:55:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000fa5c3d0598bdf44e@google.com>
-Subject: WARNING in corrupted (2)
-From:   syzbot <syzbot+c792a994cd965b2ac623@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, axboe@kernel.dk,
-        bpf@vger.kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <1575011105-28172-1-git-send-email-harigovi@codeaurora.org>
+In-Reply-To: <1575011105-28172-1-git-send-email-harigovi@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 2 Dec 2019 11:55:40 -0800
+Message-ID: <CAF6AEGuSb1p1=hPYwRgo8hWJc629ywK_qCg2vBLyXQKvjGvM3A@mail.gmail.com>
+Subject: Re: [PATCH v1] drm/msm: add support for 2.4.1 DSI version for sc7180 soc
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        nganji@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Nov 28, 2019 at 11:05 PM Harigovindan P <harigovi@codeaurora.org> wrote:
+>
+> Changes in v1:
+>         -Modify commit text to indicate DSI version and SOC detail(Jeffrey Hugo).
+>         -Splitting visionox panel driver code out into a
+>          different patch(set), since panel drivers are merged into
+>          drm-next via a different tree(Rob Clark).
+>
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
 
-syzbot found the following crash on:
+Reviewed-by: Rob Clark <robdclark@gmail.com>
 
-HEAD commit:    a6ed68d6 Merge tag 'drm-next-2019-11-27' of git://anongit...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=173ab832e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6349516b24252b37
-dashboard link: https://syzkaller.appspot.com/bug?extid=c792a994cd965b2ac623
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-userspace arch: i386
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=106bdb86e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+c792a994cd965b2ac623@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-generic_make_request: Trying to write to read-only block-device loop0  
-(partno 0)
-WARNING: CPU: 1 PID: 8854 at block/blk-core.c:800 bio_check_ro  
-block/blk-core.c:800 [inline]
-WARNING: CPU: 1 PID: 8854 at block/blk-core.c:800  
-generic_make_request_checks+0x1c78/0x2190 block/blk-core.c:901
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 8854 Comm: blkid Not tainted 5.4.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+> ---
+>  drivers/gpu/drm/msm/dsi/dsi_cfg.c | 21 +++++++++++++++++++++
+>  drivers/gpu/drm/msm/dsi/dsi_cfg.h |  1 +
+>  2 files changed, 22 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.c b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+> index b7b7c1a..7b967dd 100644
+> --- a/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+> +++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+> @@ -133,6 +133,10 @@ static const char * const dsi_sdm845_bus_clk_names[] = {
+>         "iface", "bus",
+>  };
+>
+> +static const char * const dsi_sc7180_bus_clk_names[] = {
+> +       "iface", "bus",
+> +};
+> +
+>  static const struct msm_dsi_config sdm845_dsi_cfg = {
+>         .io_offset = DSI_6G_REG_SHIFT,
+>         .reg_cfg = {
+> @@ -147,6 +151,20 @@ static const struct msm_dsi_config sdm845_dsi_cfg = {
+>         .num_dsi = 2,
+>  };
+>
+> +static const struct msm_dsi_config sc7180_dsi_cfg = {
+> +       .io_offset = DSI_6G_REG_SHIFT,
+> +       .reg_cfg = {
+> +               .num = 1,
+> +               .regs = {
+> +                       {"vdda", 21800, 4 },    /* 1.2 V */
+> +               },
+> +       },
+> +       .bus_clk_names = dsi_sc7180_bus_clk_names,
+> +       .num_bus_clks = ARRAY_SIZE(dsi_sc7180_bus_clk_names),
+> +       .io_start = { 0xae94000 },
+> +       .num_dsi = 1,
+> +};
+> +
+>  const static struct msm_dsi_host_cfg_ops msm_dsi_v2_host_ops = {
+>         .link_clk_enable = dsi_link_clk_enable_v2,
+>         .link_clk_disable = dsi_link_clk_disable_v2,
+> @@ -201,6 +219,9 @@ static const struct msm_dsi_cfg_handler dsi_cfg_handlers[] = {
+>                 &msm8998_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+>         {MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_2_1,
+>                 &sdm845_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+> +       {MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_4_1,
+> +               &sc7180_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+> +
+>  };
+>
+>  const struct msm_dsi_cfg_handler *msm_dsi_cfg_get(u32 major, u32 minor)
+> diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.h b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+> index e2b7a7d..9919536 100644
+> --- a/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+> +++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+> @@ -19,6 +19,7 @@
+>  #define MSM_DSI_6G_VER_MINOR_V1_4_1    0x10040001
+>  #define MSM_DSI_6G_VER_MINOR_V2_2_0    0x20000000
+>  #define MSM_DSI_6G_VER_MINOR_V2_2_1    0x20020001
+> +#define MSM_DSI_6G_VER_MINOR_V2_4_1    0x20040001
+>
+>  #define MSM_DSI_V2_VER_MINOR_8064      0x0
+>
+> --
+> 2.7.4
+>
