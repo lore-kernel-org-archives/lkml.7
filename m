@@ -2,143 +2,89 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A435AC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C1EC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D6E720865
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A92152071E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:39:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="E7f1kXLp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727544AbfLBUfD (ORCPT
+        id S1725865AbfLBUjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 15:35:03 -0500
-Received: from mga12.intel.com ([192.55.52.136]:60990 "EHLO mga12.intel.com"
+        Mon, 2 Dec 2019 15:39:25 -0500
+Received: from ozlabs.org ([203.11.71.1]:33811 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726673AbfLBUfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 15:35:03 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 12:35:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,270,1571727600"; 
-   d="scan'208";a="213174665"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 02 Dec 2019 12:35:02 -0800
-Received: from [10.251.15.70] (kliang2-mobl.ccr.corp.intel.com [10.251.15.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726673AbfLBUiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 15:38:20 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 683715800FF;
-        Mon,  2 Dec 2019 12:35:01 -0800 (PST)
-Subject: Re: [RFC PATCH 2/8] perf: Helpers for alloc/init/fini PMU specific
- data
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@redhat.com, acme@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, linux-kernel@vger.kernel.org, eranian@google.com,
-        alexey.budankov@linux.intel.com, vitaly.slobodskoy@intel.com,
-        ak@linux.intel.com
-References: <1574954071-6321-1-git-send-email-kan.liang@linux.intel.com>
- <1574954071-6321-2-git-send-email-kan.liang@linux.intel.com>
- <20191202131646.GD2827@hirez.programming.kicks-ass.net>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <2d036aa5-542a-8c01-762c-3b68136887f5@linux.intel.com>
-Date:   Mon, 2 Dec 2019 15:35:00 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47RcQ11brKz9sPT;
+        Tue,  3 Dec 2019 07:38:16 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1575319097;
+        bh=rhHd8s7nCE+B2Ro3ajMN45mURwMRXeZNXtYAQBqpDeU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=E7f1kXLpC1QYvXGGbQn+3ZNf4HrB2+D7MO4ip9pLjq4LPGocBUaKTTKAxin8NqvbN
+         eVqhjkFASvI0fLbXxgzA31JsEtouk+fcjv8PjoKSzsdh/JT4re4rKi8bo/ZQpGu4XJ
+         z61sC20WpErK523pfahN4oGTo1czfqUbK67RnRksXNPAWwt0HW/s6H2Y2BJDuUJ9+n
+         ogDUMiwsIQKsKAvljliAIV5OxIgkYyCYuUetOUOu8iaw90241gg9ImmeDZzSQvmpKC
+         jksya8U45O6hiyHoB3L8bJI8x9v5teciWZUE6FGzSWFaj8euN2d82guotNXJX6qshJ
+         yvTs5jC83Bl3g==
+Date:   Tue, 3 Dec 2019 07:38:15 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Andy Adamson <andros@netapp.com>,
+        Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Subject: linux-next: Signed-off-by missing for commit in the nfsd tree
+Message-ID: <20191203073815.78965ad1@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20191202131646.GD2827@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/qslm3ilGvqTnyko99/FU7FL";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/qslm3ilGvqTnyko99/FU7FL
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 12/2/2019 8:16 AM, Peter Zijlstra wrote:
-> On Thu, Nov 28, 2019 at 07:14:25AM -0800, kan.liang@linux.intel.com wrote:
-> 
->> +static int
->> +__alloc_task_ctx_data_rcu(struct task_struct *task,
->> +			  size_t ctx_size, gfp_t flags)
->> +{
->> +	struct perf_ctx_data *ctx_data = task->perf_ctx_data;
->> +	int ret;
->> +
->> +	lockdep_assert_held_once(&task->perf_ctx_data_lock);
->> +
->> +	ret = alloc_perf_ctx_data(ctx_size, flags, &ctx_data);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ctx_data->refcount = 1;
->> +
->> +	rcu_assign_pointer(task->perf_ctx_data, ctx_data);
->> +
->> +	return 0;
->> +}
-> 
->> +static int
->> +__init_task_ctx_data_rcu(struct task_struct *task, size_t ctx_size, gfp_t flags)
->> +{
->> +	struct perf_ctx_data *ctx_data = task->perf_ctx_data;
->> +
->> +	lockdep_assert_held_once(&task->perf_ctx_data_lock);
->> +
->> +	if (ctx_data) {
->> +		ctx_data->refcount++;
->> +		return 0;
->> +	}
->> +
->> +	return __alloc_task_ctx_data_rcu(task, ctx_size, flags);
->> +}
-> 
->> +/**
->> + * Free perf_ctx_data RCU pointer for a task
->> + * @task:        Target Task
->> + * @force:       Unconditionally free perf_ctx_data
->> + *
->> + * If force is set, free perf_ctx_data unconditionally.
->> + * Otherwise, free perf_ctx_data when there are no users.
->> + * Lock is required to sync the writers of perf_ctx_data RCU pointer
->> + * and refcount.
->> + */
->> +static void
->> +fini_task_ctx_data_rcu(struct task_struct *task, bool force)
->> +{
->> +	struct perf_ctx_data *ctx_data;
->> +	unsigned long flags;
->> +
->> +	raw_spin_lock_irqsave(&task->perf_ctx_data_lock, flags);
->> +
->> +	ctx_data = task->perf_ctx_data;
->> +	if (!ctx_data)
->> +		goto unlock;
->> +
->> +	if (!force && --ctx_data->refcount)
->> +		goto unlock;
->> +
->> +	RCU_INIT_POINTER(task->perf_ctx_data, NULL);
->> +	call_rcu(&ctx_data->rcu_head, free_perf_ctx_data);
->> +
->> +unlock:
->> +	raw_spin_unlock_irqrestore(&task->perf_ctx_data_lock, flags);
->> +}
-> 
-> All this refcount under lock is an anti-pattern. Also the naming is
-> insane.
-> 
+Commit
 
-Could you please give me an example?
+  dd4320a29d65 ("NFSD generalize nfsd4_compound_state flag names")
 
-I think we do need something to protect the refcount. Are you suggesting 
-atomic_*?
+is missing a Signed-off-by from its author and committer.
 
-Thanks,
-Kan
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/qslm3ilGvqTnyko99/FU7FL
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3ldjcACgkQAVBC80lX
+0GxXtAgAoruuKX7ZasWpH4XfafgKow1I+d+JH4MX9VBvyuaGBGFzAQBegZY6C1e3
+Yr05tOo11Kn54fBMBdGFJq7brJ94X34QD+yUoE9WfmbVfLjIzPrYvCggkW/2Onbp
+VWl2JmLpmXiZFUjC5EKKDphXRiheLyNCT4wSzYWr6F1ypgLDcLYVQmWDR207suLo
+aJR0OGFOoUMIEx7lQeWILJywdquXNFL27bJNNp3WRG39mXSOTthQtQyDBD8lxeZW
+9s1ojHFZ4QZhuOoVhp/yhx0vpd54Cs2yQDHLXLYzy8fxYP3AkLXmrx9OAwEO6F1f
+RQPg9Gm8OgWFBWDyDt7prl0Vb2b7FQ==
+=aIWY
+-----END PGP SIGNATURE-----
+
+--Sig_/qslm3ilGvqTnyko99/FU7FL--
