@@ -2,169 +2,162 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A9A9C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B03C43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CC1220718
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:39:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575297575;
-	bh=YUmDWz1wBXQI817i3iQnVe6r0SPThZopJaC3WTAs9z4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Q4eWQJDPT4nT7XM7LG+B9ljV/g9uhWlLStW6qPMqV2mb2mBMP/Pl9ghJSVOEhMrei
-	 EWykm7ssTKgzeAHImPsSxb8TfjTs4SZmKHFwevaND619TlgweNCgvwvd0Yd1mfkiBT
-	 735Sa6hz5gAw/oZ5vCGWWVweZR3pYL+Tj4JiNkEI=
+	by mail.kernel.org (Postfix) with ESMTP id CD61E20718
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:40:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H083x/sM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727553AbfLBOje (ORCPT
+        id S1727589AbfLBOkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 09:39:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37710 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727401AbfLBOjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 09:39:33 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD02D20833;
-        Mon,  2 Dec 2019 14:39:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575297573;
-        bh=YUmDWz1wBXQI817i3iQnVe6r0SPThZopJaC3WTAs9z4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SkhUjq4tOpzq+2gpqVrg2aFPo7eCcVDK3ibQLw7yjjTjU8JD6Jj8mPdd5sPt+u5I4
-         g5D4mljBas6FRJ+/SD2/21xB8ejtyth6Y99dxwnlR9c/HmgEp+aEj5pF45pRE3OPjH
-         1nZCPheuz6RgMhqU4PswpBR9x8c4fm+vdFhAHzVM=
-Date:   Mon, 2 Dec 2019 23:39:27 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, bristot@redhat.com,
-        jbaron@akamai.com, torvalds@linux-foundation.org,
-        tglx@linutronix.de, namit@vmware.com, hpa@zytor.com,
-        luto@kernel.org, ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
-        jeyu@kernel.org, alexei.starovoitov@gmail.com
-Subject: Re: [PATCH -tip 1/2] x86/alternative: Sync bp_patching update for
- avoiding NULL pointer exception
-Message-Id: <20191202233927.1f85f6967fc8d784be329fe4@kernel.org>
-In-Reply-To: <20191202134354.GF2827@hirez.programming.kicks-ass.net>
-References: <157483420094.25881.9190014521050510942.stgit@devnote2>
-        <157483421229.25881.15314414408559963162.stgit@devnote2>
-        <20191202091519.GA2827@hirez.programming.kicks-ass.net>
-        <20191202205012.8109bf98b649f38cdcd1e535@kernel.org>
-        <20191202134354.GF2827@hirez.programming.kicks-ass.net>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 2 Dec 2019 09:40:18 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:38677 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727406AbfLBOkS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 09:40:18 -0500
+Received: by mail-lf1-f67.google.com with SMTP id r14so11935153lfm.5;
+        Mon, 02 Dec 2019 06:40:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=MuKkyCaYPZK6q+vtj0Oj3LLvTH7hr0pT2uHjN7RG//Y=;
+        b=H083x/sMnck6FZU2DLKjYSIWNiVmUd1JQbRBPIWCRU+sSdQLK/cIScO2+lKTmtuxIa
+         GzNuLSQMNdmU2qqCzfsSTmEXeZRBOSjEhOFNOwqvcnRdIn1N5uwIW3AZRZKkhYPmIFro
+         0aLU/dv/s/Rc2ohcSTNiLTtAPwvbHymRdvYIbvLulpbKsXITq9/Gt9auYmB90im0hofs
+         0V00WPOYxEcD3sX8M9ywoW0WacDrDOtK3+qrtoN3cJ0TtnAUZgXkDcwfNoDowwfEt1TI
+         2hWX5kfbxiPdE6c6HbUYOMETpoa177F8uGgU2npYVF+/A2oruoXJs+mbo9Qi5rX6Pfkw
+         ankw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=MuKkyCaYPZK6q+vtj0Oj3LLvTH7hr0pT2uHjN7RG//Y=;
+        b=PcjZpaKFWru7/Ae3OSKNrFsmZLpNmRpQ78YMlREAZ1BnPYxQabSsk65b3mPSoWMQoJ
+         MAbdtHY1c2OQVb51gltLMqJnnQfml5+gO4l8ZDBWBQdi1lzJXs0JEu0/cxlE1EVD3dlx
+         TMAxdVxYxsOsC7dAyS1UrKrkEgQu1PXyks6xPh4T78A5NskbMMRSVgtU5+EPsOW885er
+         cTwBv62QwMNs1fmc3NaPyMhrgWp8DkZzUmKxDAIf5kAylhpgNSvuRz+7VDibCGDvJXYz
+         R/RKZOV2MAh0kqX5hyZ6FklZaaZL/hmhHJj8FK8/VBPsEa+OGLdZtKyGDELLuzv9fZX/
+         XbFA==
+X-Gm-Message-State: APjAAAUJt0J0/0DjIlRcigPOWYUlvwTBILtZeViJ7THZluuMzJymjv5F
+        7vWyKE24c/iG+/fgfDqFFcMCEXCevdmMHpJm0mbEKTC2
+X-Google-Smtp-Source: APXvYqyPFmLDrOIuV+Cs4RE1iW7MA9zfT7/FK8ojlRRNRjp4uDoxlwnO4ic/+mZIcN3tyacs9SFIZyPl298QIFKmvG8=
+X-Received: by 2002:ac2:428d:: with SMTP id m13mr37630848lfh.64.1575297616009;
+ Mon, 02 Dec 2019 06:40:16 -0800 (PST)
+MIME-Version: 1.0
+References: <20191127203114.766709977@linuxfoundation.org> <20191127203119.676489279@linuxfoundation.org>
+In-Reply-To: <20191127203119.676489279@linuxfoundation.org>
+From:   Jack Wang <jack.wang.usish@gmail.com>
+Date:   Mon, 2 Dec 2019 15:40:04 +0100
+Message-ID: <CA+res+QKCAn8PsSgbkqXNAF0Ov5pOkj=732=M5seWj+-JFQOwQ@mail.gmail.com>
+Subject: Re: [PATCH 4.19 067/306] KVM: nVMX: move check_vmentry_postreqs()
+ call to nested_vmx_enter_non_root_mode()
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Dec 2019 14:43:54 +0100
-Peter Zijlstra <peterz@infradead.org> wrote:
-
-> On Mon, Dec 02, 2019 at 08:50:12PM +0900, Masami Hiramatsu wrote:
-> > On Mon, 2 Dec 2019 10:15:19 +0100
-> > Peter Zijlstra <peterz@infradead.org> wrote:
-> > > On Wed, Nov 27, 2019 at 02:56:52PM +0900, Masami Hiramatsu wrote:
-> 
-> > > > --- a/arch/x86/kernel/alternative.c
-> > > > +++ b/arch/x86/kernel/alternative.c
-> > > > @@ -1134,8 +1134,14 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
-> > > >  	 * sync_core() implies an smp_mb() and orders this store against
-> > > >  	 * the writing of the new instruction.
-> > > >  	 */
-> > > > -	bp_patching.vec = NULL;
-> > > >  	bp_patching.nr_entries = 0;
-> > > > +	/*
-> > > > +	 * This sync_core () ensures that all int3 handlers in progress
-> > > > +	 * have finished. This allows poke_int3_handler () after this to
-> > > > +	 * avoid touching bp_paching.vec by checking nr_entries == 0.
-> > > > +	 */
-> > > > +	text_poke_sync();
-> > > > +	bp_patching.vec = NULL;
-> > > >  }
-> > > 
-> > > Hurm.. is there no way we can merge that with the 'last'
-> > > text_poke_sync() ? It seems a little daft to do 2 back-to-back IPI
-> > > things like that.
-> > 
-> > Maybe we can add a NULL check of bp_patchig.vec in poke_int3_handler()
-> > but it doesn't ensure the fundamental safeness, because the array
-> > pointed by bp_patching.vec itself can be released while
-> > poke_int3_handler() accesses it.
-> 
-> No, what I mean is something like:
-> 
-> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-> index 30e86730655c..347a234a7c52 100644
-> --- a/arch/x86/kernel/alternative.c
-> +++ b/arch/x86/kernel/alternative.c
-> @@ -1119,17 +1119,13 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
->  	 * Third step: replace the first byte (int3) by the first byte of
->  	 * replacing opcode.
->  	 */
-> -	for (do_sync = 0, i = 0; i < nr_entries; i++) {
-> +	for (i = 0; i < nr_entries; i++) {
->  		if (tp[i].text[0] == INT3_INSN_OPCODE)
->  			continue;
->  
->  		text_poke(text_poke_addr(&tp[i]), tp[i].text, INT3_INSN_SIZE);
-> -		do_sync++;
->  	}
->  
-> -	if (do_sync)
-> -		text_poke_sync();
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> =E4=BA=8E2019=E5=B9=B411=E6=
+=9C=8827=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8B=E5=8D=8810:30=E5=86=99=E9=81=
+=93=EF=BC=9A
+>
+> From: Sean Christopherson <sean.j.christopherson@intel.com>
+>
+> [ Upstream commit 7671ce21b13b9596163a29f4712cb2451a9b97dc ]
+>
+> In preparation of supporting checkpoint/restore for nested state,
+> commit ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vmx_run()"=
+)
+> modified check_vmentry_postreqs() to only perform the guest EFER
+> consistency checks when nested_run_pending is true.  But, in the
+> normal nested VMEntry flow, nested_run_pending is only set after
+> check_vmentry_postreqs(), i.e. the consistency check is being skipped.
+>
+> Alternatively, nested_run_pending could be set prior to calling
+> check_vmentry_postreqs() in nested_vmx_run(), but placing the
+> consistency checks in nested_vmx_enter_non_root_mode() allows us
+> to split prepare_vmcs02() and interleave the preparation with
+> the consistency checks without having to change the call sites
+> of nested_vmx_enter_non_root_mode().  In other words, the rest
+> of the consistency check code in nested_vmx_run() will be joining
+> the postreqs checks in future patches.
+>
+> Fixes: ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vmx_run()"=
+)
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Cc: Jim Mattson <jmattson@google.com>
+> Reviewed-by: Jim Mattson <jmattson@google.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  arch/x86/kvm/vmx.c | 10 +++-------
+>  1 file changed, 3 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+> index fe7fdd666f091..bdf019f322117 100644
+> --- a/arch/x86/kvm/vmx.c
+> +++ b/arch/x86/kvm/vmx.c
+> @@ -12694,6 +12694,9 @@ static int enter_vmx_non_root_mode(struct kvm_vcp=
+u *vcpu, u32 *exit_qual)
+>         if (likely(!evaluate_pending_interrupts) && kvm_vcpu_apicv_active=
+(vcpu))
+>                 evaluate_pending_interrupts |=3D vmx_has_apicv_interrupt(=
+vcpu);
+>
+> +       if (from_vmentry && check_vmentry_postreqs(vcpu, vmcs12, exit_qua=
+l))
+> +               return EXIT_REASON_INVALID_STATE;
+> +
+>         enter_guest_mode(vcpu);
+>
+>         if (!(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CONTROLS))
+> @@ -12836,13 +12839,6 @@ static int nested_vmx_run(struct kvm_vcpu *vcpu,=
+ bool launch)
+>          */
+>         skip_emulated_instruction(vcpu);
+>
+> -       ret =3D check_vmentry_postreqs(vcpu, vmcs12, &exit_qual);
+> -       if (ret) {
+> -               nested_vmx_entry_failure(vcpu, vmcs12,
+> -                                        EXIT_REASON_INVALID_STATE, exit_=
+qual);
+> -               return 1;
+> -       }
 > -
->  	/*
->  	 * sync_core() implies an smp_mb() and orders this store against
->  	 * the writing of the new instruction.
-> 
-> 
-> Or is that unsafe ?
+>         /*
+>          * We're finally done with prerequisite checking, and can start w=
+ith
+>          * the nested entry.
+> --
+> 2.20.1
+>
+>
+>
+Hi all,
 
-OK, let's check it. 
+This commit caused many kvm-unit-tests regression, cherry-pick
+following commits from 4.20 fix the regression:
+d63907dc7dd1 ("KVM: nVMX: rename enter_vmx_non_root_mode to
+nested_vmx_enter_non_root_mode")
+a633e41e7362 ("KVM: nVMX: assimilate nested_vmx_entry_failure() into
+nested_vmx_enter_non_root_mode()")
 
-text_poke_bp_batch() {
-  update vec
-  update nr_entries
-  smp_wmb()
-  write int3
-  text_poke_sync()
-  write rest_bytes
-  text_poke_sync() if rest_bytes
-  write first_byte
-  text_poke_sync() if first_byte ... (*)
-  update nr_entries
-  text_poke_sync() ... (**)
-  update vec
-}
-
-Before (*), the first byte can be new opcode or int3, thus
-poke_int3_handler() can be called. But anyway, at that point
-nr_entries != 0, thus poke_int3_handler() correctly emulate
-the new instruction.
-
-Before (**), all int3 should be removed, so nr_entries must
-not accessed, EXCEPT for writing int3 case.
-
-If we just remove the (*) as you say, the poke_int3_handler()
-can see nr_entries = 0 before (**). So it is still unsafe.
-
-I considered another way that skipping (**) if !first_byte,
-since (*) ensured the target address(text) doesn't hit int3
-anymore.
-However, this will be also unsafe because there can be another
-int3 (by kprobes) has been hit while updating nr_entries and vec.
-
-
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Regards,
+Jack Wang
+1 & 1 IONOS SE
