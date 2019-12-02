@@ -2,122 +2,175 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFAFC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD37C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 405D1206DC
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CFC9206DC
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:07:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575313643;
+	bh=q697X90CNyNPT1LUAD9A+0GksQiNeZhw/+TeL4j79h4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UR9dZW1O6YVhu5ueLV+tjmPW2BuXJJKYMMdKFBF2hjWQGpzjCwy9mQ9Cnjj1UQyUZ
+	 W7Ma0B9cW8jCPmVHtrkCAjOm3hWedrMm/Q4UD4Y7LfeoeV3wP50r+uaBZ4DzSer+XV
+	 RynoFE/5+EiVpYCRnwoJVhuyQhTM4FQfG8qR277I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728000AbfLBTGf (ORCPT
+        id S1728016AbfLBTHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 14:06:35 -0500
-Received: from mga03.intel.com ([134.134.136.65]:53014 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727580AbfLBTGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 14:06:35 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 11:06:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,270,1571727600"; 
-   d="scan'208";a="213149061"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga003.jf.intel.com with ESMTP; 02 Dec 2019 11:06:33 -0800
-Date:   Mon, 2 Dec 2019 11:06:33 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        Len Brown <lenb@kernel.org>, Shuah Khan <shuah@kernel.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, Borislav Petkov <bp@suse.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v4 01/19] x86/msr-index: Clean up bit defines for
- IA32_FEATURE_CONTROL MSR
-Message-ID: <20191202190633.GG4063@linux.intel.com>
-References: <20191128014016.4389-2-sean.j.christopherson@intel.com>
- <201912010347.7tMb4moN%lkp@intel.com>
+        Mon, 2 Dec 2019 14:07:22 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:39999 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727580AbfLBTHW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 14:07:22 -0500
+Received: by mail-qk1-f193.google.com with SMTP id a137so655570qkc.7;
+        Mon, 02 Dec 2019 11:07:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=N7ISo08j0woPGIeQrxmAiB+QIg6bs6djut0LfpSDf04=;
+        b=cKsMsIhQgKiiPEwxCObsVjWuQO/CF5L0v54SkJmNox7nauCBqgIqhiwYWoBj0zGh5D
+         mmQBm+I6TYJAzAULj+jeukFlPnaoFILP5plS7Z/akBZlLX8Ja5ZtWw9MlTf5XLlAaVrt
+         L8AWfcGtgFU1/1Q2G8lphU2IkJbL0+2LKePeUrvIlnVXQWLpDwGL/idOSO4ObMc39ijE
+         Ea81P9N6OcwsWi+L9hQVEdZjlLRrV3ObRanmRswBiId/ixIrNNjGMt9YZ7jyPB6KitmY
+         uWepid7isbXTWCVMuFUixktUaMBNjJsT36o6+C8Q0vrZ5Ra9Efb2RZDyvw3rNv9dIxpU
+         vSKQ==
+X-Gm-Message-State: APjAAAXjhkxhAm8QgRNDO9pELx2qdanyc8QCYcaXJ8Dkmyman21JjTDH
+        w6taKrih4eEDI9T0UNh4J2c=
+X-Google-Smtp-Source: APXvYqzoOtrVbRoTfSKHHVRxjDKIVWvY+rV01LuQk3IlHmigMqeKeJw1aBzCBZJcWaaAbb3eNrgC9w==
+X-Received: by 2002:a37:6c6:: with SMTP id 189mr367618qkg.179.1575313641203;
+        Mon, 02 Dec 2019 11:07:21 -0800 (PST)
+Received: from dennisz-mbp ([2620:10d:c091:500::3:2086])
+        by smtp.gmail.com with ESMTPSA id x68sm273045qkc.22.2019.12.02.11.07.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 11:07:20 -0800 (PST)
+Date:   Mon, 2 Dec 2019 14:07:18 -0500
+From:   Dennis Zhou <dennis@kernel.org>
+To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc:     Christopher Lameter <cl@linux.com>,
+        Dennis Zhou <dennis@kernel.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>, Nicholas Piggin <npiggin@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] fix __percpu annotation in asm-generic
+Message-ID: <20191202190718.GA18019@dennisz-mbp>
+References: <20191126200619.63348-1-luc.vanoostenryck@gmail.com>
+ <alpine.DEB.2.21.1911271553560.16980@www.lameter.com>
+ <20191127175350.GA52308@dennisz-mbp.dhcp.thefacebook.com>
+ <20191127225432.ttwxm3hxtg5utfaz@ltop.local>
+ <alpine.DEB.2.21.1911291808530.1365@www.lameter.com>
+ <20191130000037.zsendu5pk7p75xqf@ltop.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <201912010347.7tMb4moN%lkp@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191130000037.zsendu5pk7p75xqf@ltop.local>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 01, 2019 at 04:52:53AM +0800, kbuild test robot wrote:
-> Hi Sean,
+On Sat, Nov 30, 2019 at 01:00:37AM +0100, Luc Van Oostenryck wrote:
+> On Fri, Nov 29, 2019 at 06:11:59PM +0000, Christopher Lameter wrote:
+> > On Wed, 27 Nov 2019, Luc Van Oostenryck wrote:
+> > 
+> > > 1) it would strip any address space, not just __percpu, so:
+> > >    it would need to be combined with __verify_pcpu_ptr() or,
+> > >    * a better name should be used,
+> > 
+> > typeof_cast_kernel() to express the fact that it creates a kernel pointer
+> > and ignored the attributes??
 > 
-> I love your patch! Yet something to improve:
+> typeof_strip_address_space() would, I think, express this better. 
+> It's not obvious at all to me that 'kernel' in 'typeof_cast_kernel()'
+> relates to the (default) kernel address space.
+> Maybe it's just me. I don't know.
 > 
-> [auto build test ERROR on tip/auto-latest]
-> [also build test ERROR on next-20191129]
-> [cannot apply to tip/x86/core kvm/linux-next v5.4]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Sean-Christopherson/x86-cpu-Clean-up-handling-of-VMX-features/20191128-094556
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git e445033e58108a9891abfbc0dea90b066a75e4a9
-> config: x86_64-randconfig-s0-20191128 (attached as .config)
-> compiler: gcc-7 (Debian 7.4.0-14) 7.4.0
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=x86_64 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->    In file included from arch/x86/include/asm/processor.h:22:0,
->                     from arch/x86/include/asm/cpufeature.h:5,
->                     from arch/x86/include/asm/thread_info.h:53,
->                     from include/linux/thread_info.h:38,
->                     from arch/x86/include/asm/preempt.h:7,
->                     from include/linux/preempt.h:78,
->                     from include/linux/percpu.h:6,
->                     from include/linux/cpuidle.h:14,
->                     from drivers/idle/intel_idle.c:45:
->    drivers/idle/intel_idle.c: In function 'sklh_idle_state_table_update':
-> >> drivers/idle/intel_idle.c:1287:10: error: 'MSR_IA32_FEATURE_CONTROL' undeclared (first use in this function); did you mean 'MSR_MISC_FEATURE_CONTROL'?
->       rdmsrl(MSR_IA32_FEATURE_CONTROL, msr);
->              ^
 
-Argh, flat out missed this when doing search and replace.
+I think typeof_cast_kernel() or typeof_force_kernel() are reasonable
+names. I kind of like the idea of cast/force over strip because we're
+really still moving address spaces even if it is moving it back.
 
->    arch/x86/include/asm/msr.h:279:28: note: in definition of macro 'rdmsrl'
->      ((val) = native_read_msr((msr)))
->                                ^~~
->    drivers/idle/intel_idle.c:1287:10: note: each undeclared identifier is reported only once for each function it appears in
->       rdmsrl(MSR_IA32_FEATURE_CONTROL, msr);
->              ^
->    arch/x86/include/asm/msr.h:279:28: note: in definition of macro 'rdmsrl'
->      ((val) = native_read_msr((msr)))
->                                ^~~
+> > >    * it should be defined in a generic header, any idea where?
+> > 
+> > include/linux/compiler-types.h
 > 
-> vim +1287 drivers/idle/intel_idle.c
+> Yes, OK.
+> 
+> > > 2) while I find the current solution:
+> > > 	typeof(T) __kernel __force *ptr = ...;
+> > 
+> > It would be
+> > 
+> >    typeof_cast_kernel(&T) *xx = xxx
+> > 
+> > or so?
+> 
+> No, it would not. __percpu, and more generally, the address space
+> is a property of the object, not of its address.
+
+Maybe for other address spaces that's true, but for percpu, __percpu is
+a property of the address. An object can be referenced both from a
+percpu address (via accessors) and the kernel address which is the
+actual object.
+
+> For example, let's say T is a __percpu object:
+> 	int __percpu obj;
+
+This can't exist. __percpu denotes address space not object.
+
+> then '&T' is just a 'normal'/__kernel pointer to it:
+> 	int __percpu *;
+> There is nothing to strip (it would be if the __percpu
+> would be 'on the other side of the *': int * __percpu).
+> It's exactly the same as with 'const': a 'const char *'
+> is not const, only a pointer to const.
+> 
+> The situation with raw_cpu_generic_add_return() is:
+> - pcp is a lvalue of of a __percpu object of type T, so:
+> 	typeof(pcp)  := T __percpu
+> - pcp's address is given to raw_cpu_ptr(), so
+> 	typeof(&pcp) := T __percpu *
+> - raw_cpu_ptr() return the corresponding __kernel pointer
+>   (adjusted for the current percu offset), so:
+> 	typeof(raw_cpu_ptr(&pcp)) := T *
+> - so, the macro needs to declare a variable __p of type T*
+>   hence:
+> 	typeof(pcp) __kernel __force *__p;
+>   or, with this new macro:
+> 	typeof_cast_kernel(pcp) *__p;
+> 
+> Maybe a better solution would be to directly play at pointer
+> level and thus have something like this:
+> 	typeof_<some good name>(&pcp) __p = raw_cpu_ptr(&pcp);
+> or even:
+> 	__kernel_pointer(&pcp) __p = raw_cpu_ptr(&pcp);
+> I dunno.
+> 
+> Note: at implementation level, it complicates things slightly
+>       to want this 'strip_percpu' macro to behaves like typeof()
+>       because it means that it can take in argument either an
+>       expression or a type. And if it's a type, you can't do a
+>       simple cast on it, you need to declare an intermediate
+>       variable, hence the horrible:
+> 	  typeof(({ typeof(T) __kernel __force __fakename; __fakename; }))
+> 
+> Note: it would be much much nicer to do all these type generic
+>       macros with '__auto_type' (only supported in GCC 4.9 IIUC
+>       and supported in sparse but it shouldn't be very hard to do)..
+> 
+> 
+> -- Luc
+
+Thanks for debugging this. I'm still inclined to have a macro for either
+cast/force. I do agree it could be misused, but it's no different doing
+it in a macro than by just adding __force __kernel.
+
+Thanks,
+Dennis
