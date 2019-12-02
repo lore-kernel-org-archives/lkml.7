@@ -2,157 +2,150 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C871EC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2E9C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9996320715
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27D3420715
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:46:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbfLBGpL (ORCPT
+        id S1727413AbfLBGqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 01:45:11 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:39505 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfLBGpK (ORCPT
+        Mon, 2 Dec 2019 01:46:30 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42584 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725977AbfLBGqa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 01:45:10 -0500
-Received: by mail-il1-f197.google.com with SMTP id v11so1605394ilg.6
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Dec 2019 22:45:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=T6F075c2AlO7kBdIl91BZLO/CgKYWJ1O7qBf3Ha1UWA=;
-        b=k+1lbnT+IDa1x6fEZOViXqjRA6dDhtOR/j0IN4xlxA0q6e6RtFo4A4jbjNfKAX5sv0
-         4ROQYi+GqJaYNYKB1SpYctKZ/fxmUZnmiwH3YrdXbR9rx/nP/do91ZviPjXiMLmn3l6K
-         FAlBheJK1I0cFHuYVf3TxVUDQ1btl2XOQ+mAJukqgXpoDLJLv+c1Nabqa0UZRzJeJlVg
-         NONTnjf76c7fLclbyci/JbSKsxUA4QQlCUssPavg3tidxmD9vmELmmkjLhTNzh2H4/hr
-         8R1d2VQnJy8rqMlbxgxb7mlrgEcZDbXvK3hk5R22EISwVUXWTpH1Tg8vQz3D/MuOawcx
-         PC/g==
-X-Gm-Message-State: APjAAAWGuzH4XNAjFLn3yTejVW2QiKAKeR6VZIiKlXri30/1+xxePWRg
-        k77oNzFhZDzkvCdqHAktCJsolWm812/9Qvs44/tS1BwmRJBG
-X-Google-Smtp-Source: APXvYqw0QJ56YYxYAqgJf5iwMd/9ToZM16u0ZTFXZ72SR0m98bQ8IRzgsJlla2LIj04ktpigr9Mn+9MyxDA/gcZ97ZGXzXR48E9M
-MIME-Version: 1.0
-X-Received: by 2002:a92:79d2:: with SMTP id u201mr67821204ilc.103.1575269108688;
- Sun, 01 Dec 2019 22:45:08 -0800 (PST)
-Date:   Sun, 01 Dec 2019 22:45:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a6324b0598b2eb59@google.com>
-Subject: KASAN: slab-out-of-bounds Write in pipe_write
-From:   syzbot <syzbot+838eb0878ffd51f27c41@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Mon, 2 Dec 2019 01:46:30 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB26gFCF119413
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 01:46:29 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wm6uxpv7j-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 01:46:29 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
+        Mon, 2 Dec 2019 06:46:27 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 2 Dec 2019 06:46:22 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB26kLJ534799708
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 2 Dec 2019 06:46:21 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 86BF711C0A1;
+        Mon,  2 Dec 2019 06:46:21 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2CCED11C0BE;
+        Mon,  2 Dec 2019 06:46:08 +0000 (GMT)
+Received: from oc0525413822.ibm.com (unknown [9.80.214.136])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  2 Dec 2019 06:46:07 +0000 (GMT)
+From:   Ram Pai <linuxram@us.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au
+Cc:     benh@kernel.crashing.org, david@gibson.dropbear.id.au,
+        paulus@ozlabs.org, mdroth@linux.vnet.ibm.com, hch@lst.de,
+        linuxram@us.ibm.com, andmike@us.ibm.com,
+        sukadev@linux.vnet.ibm.com, mst@redhat.com, ram.n.pai@gmail.com,
+        aik@ozlabs.ru, cai@lca.pw, tglx@linutronix.de,
+        bauerman@linux.ibm.com, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 1/2] powerpc/pseries/iommu: Share the per-cpu TCE page with the hypervisor.
+Date:   Sun,  1 Dec 2019 22:45:23 -0800
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1575269124-17885-1-git-send-email-linuxram@us.ibm.com>
+References: <1575269124-17885-1-git-send-email-linuxram@us.ibm.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19120206-0016-0000-0000-000002CF7A2D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120206-0017-0000-0000-000033316BD7
+Message-Id: <1575269124-17885-2-git-send-email-linuxram@us.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-01_04:2019-11-29,2019-12-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ priorityscore=1501 impostorscore=0 adultscore=0 phishscore=0 bulkscore=0
+ suspectscore=2 lowpriorityscore=0 mlxlogscore=364 mlxscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1912020059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+H_PUT_TCE_INDIRECT hcall uses a page filled with TCE entries, as one of
+its parameters. One page is dedicated per cpu, for the lifetime of the
+kernel for this purpose. On secure VMs, contents of this page, when
+accessed by the hypervisor, retrieves encrypted TCE entries.  Hypervisor
+needs to know the unencrypted entries, to update the TCE table
+accordingly.  There is nothing secret or sensitive about these entries.
+Hence share the page with the hypervisor.
 
-syzbot found the following crash on:
-
-HEAD commit:    b94ae8ad Merge tag 'seccomp-v5.5-rc1' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=106a34a2e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ff560c3de405258c
-dashboard link: https://syzkaller.appspot.com/bug?extid=838eb0878ffd51f27c41
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=146a9f86e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1791d82ae00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+838eb0878ffd51f27c41@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: slab-out-of-bounds in pipe_write+0xe30/0x1000 fs/pipe.c:488
-Write of size 8 at addr ffff8880a8399228 by task syz-executor795/9550
-
-CPU: 1 PID: 9550 Comm: syz-executor795 Not tainted 5.4.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
-  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-  kasan_report+0x12/0x20 mm/kasan/common.c:634
-  __asan_report_store8_noabort+0x17/0x20 mm/kasan/generic_report.c:137
-  pipe_write+0xe30/0x1000 fs/pipe.c:488
-  call_write_iter include/linux/fs.h:1895 [inline]
-  new_sync_write+0x4d3/0x770 fs/read_write.c:483
-  __vfs_write+0xe1/0x110 fs/read_write.c:496
-  vfs_write+0x268/0x5d0 fs/read_write.c:558
-  ksys_write+0x220/0x290 fs/read_write.c:611
-  __do_sys_write fs/read_write.c:623 [inline]
-  __se_sys_write fs/read_write.c:620 [inline]
-  __x64_sys_write+0x73/0xb0 fs/read_write.c:620
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4466c9
-Code: e8 5c b3 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 0b 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fbd2a7abdb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00000000006dbc28 RCX: 00000000004466c9
-RDX: 00000000fffffef3 RSI: 00000000200001c0 RDI: 0000000000000004
-RBP: 00000000006dbc20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc2c
-R13: 00007ffc2fcd0f6f R14: 00007fbd2a7ac9c0 R15: 20c49ba5e353f7cf
-
-Allocated by task 9552:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:510 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
-  __do_kmalloc mm/slab.c:3655 [inline]
-  __kmalloc+0x163/0x770 mm/slab.c:3664
-  kmalloc_array include/linux/slab.h:618 [inline]
-  kcalloc include/linux/slab.h:629 [inline]
-  pipe_set_size fs/pipe.c:1143 [inline]
-  pipe_fcntl+0x3f7/0x8e0 fs/pipe.c:1209
-  do_fcntl+0x255/0x1030 fs/fcntl.c:417
-  __do_sys_fcntl fs/fcntl.c:463 [inline]
-  __se_sys_fcntl fs/fcntl.c:448 [inline]
-  __x64_sys_fcntl+0x16d/0x1e0 fs/fcntl.c:448
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 0:
-(stack is not available)
-
-The buggy address belongs to the object at ffff8880a8399200
-  which belongs to the cache kmalloc-64 of size 64
-The buggy address is located 40 bytes inside of
-  64-byte region [ffff8880a8399200, ffff8880a8399240)
-The buggy address belongs to the page:
-page:ffffea0002a0e640 refcount:1 mapcount:0 mapping:ffff8880aa400380  
-index:0x0
-raw: 00fffe0000000200 ffffea0002752548 ffffea00029d3648 ffff8880aa400380
-raw: 0000000000000000 ffff8880a8399000 0000000100000020 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8880a8399100: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff8880a8399180: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> ffff8880a8399200: 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc fc
-                                   ^
-  ffff8880a8399280: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-  ffff8880a8399300: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-==================================================================
-
-
+Signed-off-by: Ram Pai <linuxram@us.ibm.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ arch/powerpc/platforms/pseries/iommu.c | 23 ++++++++++++++++++++---
+ 1 file changed, 20 insertions(+), 3 deletions(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
+index 6ba081d..0720831 100644
+--- a/arch/powerpc/platforms/pseries/iommu.c
++++ b/arch/powerpc/platforms/pseries/iommu.c
+@@ -37,6 +37,7 @@
+ #include <asm/mmzone.h>
+ #include <asm/plpar_wrappers.h>
+ #include <asm/svm.h>
++#include <asm/ultravisor.h>
+ 
+ #include "pseries.h"
+ 
+@@ -179,6 +180,23 @@ static int tce_build_pSeriesLP(struct iommu_table *tbl, long tcenum,
+ 
+ static DEFINE_PER_CPU(__be64 *, tce_page);
+ 
++/*
++ * Allocate a tce page.  If secure VM, share the page with the hypervisor.
++ *
++ * NOTE: the TCE page is shared with the hypervisor explicitly and remains
++ * shared for the lifetime of the kernel. It is implicitly unshared at kernel
++ * shutdown through a UV_UNSHARE_ALL_PAGES ucall.
++ */
++static __be64 *alloc_tce_page(void)
++{
++	__be64 *tcep = (__be64 *)__get_free_page(GFP_ATOMIC);
++
++	if (tcep && is_secure_guest())
++		uv_share_page(PHYS_PFN(__pa(tcep)), 1);
++
++	return tcep;
++}
++
+ static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
+ 				     long npages, unsigned long uaddr,
+ 				     enum dma_data_direction direction,
+@@ -206,8 +224,7 @@ static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
+ 	 * from iommu_alloc{,_sg}()
+ 	 */
+ 	if (!tcep) {
+-		tcep = (__be64 *)__get_free_page(GFP_ATOMIC);
+-		/* If allocation fails, fall back to the loop implementation */
++		tcep = alloc_tce_page();
+ 		if (!tcep) {
+ 			local_irq_restore(flags);
+ 			return tce_build_pSeriesLP(tbl, tcenum, npages, uaddr,
+@@ -405,7 +422,7 @@ static int tce_setrange_multi_pSeriesLP(unsigned long start_pfn,
+ 	tcep = __this_cpu_read(tce_page);
+ 
+ 	if (!tcep) {
+-		tcep = (__be64 *)__get_free_page(GFP_ATOMIC);
++		tcep = alloc_tce_page();
+ 		if (!tcep) {
+ 			local_irq_enable();
+ 			return -ENOMEM;
+-- 
+1.8.3.1
+
