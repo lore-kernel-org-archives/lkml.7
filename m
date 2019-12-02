@@ -2,126 +2,157 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ADFAC43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA259C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC8252245C
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:44:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1CFE218AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:45:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbfLBGov (ORCPT
+        id S1727356AbfLBGpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 01:44:51 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40882 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725976AbfLBGou (ORCPT
+        Mon, 2 Dec 2019 01:45:09 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:51406 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbfLBGpJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 01:44:50 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB26gDgM072442;
-        Mon, 2 Dec 2019 01:44:40 -0500
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wm6g7xxfd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 02 Dec 2019 01:44:39 -0500
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xB26eOtN021563;
-        Mon, 2 Dec 2019 06:44:39 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma03wdc.us.ibm.com with ESMTP id 2wkg26882x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 02 Dec 2019 06:44:39 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB26iccR48366026
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Dec 2019 06:44:38 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 12BD478063;
-        Mon,  2 Dec 2019 06:44:38 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1F6F67805E;
-        Mon,  2 Dec 2019 06:44:36 +0000 (GMT)
-Received: from jarvis.ext.hansenpartnership.com (unknown [9.85.189.151])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon,  2 Dec 2019 06:44:35 +0000 (GMT)
-Message-ID: <1575269075.4080.31.camel@linux.ibm.com>
-Subject: Re: One question about trusted key of keyring in Linux kernel.
-From:   James Bottomley <jejb@linux.ibm.com>
-To:     "Zhao, Shirley" <shirley.zhao@intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
-        "Zhu, Bing" <bing.zhu@intel.com>,
-        "Chen, Luhai" <luhai.chen@intel.com>
-Date:   Sun, 01 Dec 2019 22:44:35 -0800
-In-Reply-To: <A888B25CD99C1141B7C254171A953E8E4909E381@shsmsx102.ccr.corp.intel.com>
-References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
-         <1573659978.17949.83.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
-         <1574877977.3551.5.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E49096521@shsmsx102.ccr.corp.intel.com>
-         <1575057916.6220.7.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909BA3B@shsmsx102.ccr.corp.intel.com>
-         <1575260220.4080.17.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909D360@shsmsx102.ccr.corp.intel.com>
-         <1575267453.4080.26.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909E381@shsmsx102.ccr.corp.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-01_04:2019-11-29,2019-12-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- lowpriorityscore=0 bulkscore=0 phishscore=0 priorityscore=1501
- impostorscore=0 suspectscore=0 spamscore=0 mlxscore=0 adultscore=0
- mlxlogscore=883 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912020059
+        Mon, 2 Dec 2019 01:45:09 -0500
+Received: by mail-il1-f199.google.com with SMTP id x2so30803652ilk.18
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Dec 2019 22:45:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=l0AnzQZ5Rm4/1GtZwjBpGVXk3mcbUlEcruCq1JhhvsA=;
+        b=hhHbOJN1G2RvJtSikvM4R4yUxKTxGMVuu2CxM1Gs/CoJk2JHFGIlUwyojaMH+uNpBd
+         LStYNTkeo9r9ltXywo3M1RebP+l3AqZdcdFdjVVxjzdPlsUYL09BUJLGHVG2rQ1o+i3Q
+         zdRD05iaoJqB0Q64ztBEgy1t71KeyX2Kor5UEhVCDugdZGHGesGpJJg4jdoT7WeHCqrR
+         GZlVT+ujWvgMk2bUeVPtIwnkV2Z0akiIIwWnRk6xoViY9Vn8WxO3Y0QPsgCW4ug0+uet
+         7OWSREMi2Q6FDbDzq+wZjJHGzSPdaVVODpxPAJrwYhV04nWTcoY6g80+t0b8XIvHalFl
+         UvzA==
+X-Gm-Message-State: APjAAAUB7J3UIISJkxSTBPUU35UfHKBCxXxNdfXEBer3BsLjMxhilWh+
+        vWcEDNch6BkilWul2cQsHfxq8LgjC7y57zh5OesyYqMXIiGU
+X-Google-Smtp-Source: APXvYqzgWJktcUTZbH6cKyWqv3rGaKB1JpQ4hsrh5P8wA7hj6vizCCqdktv+p9IPWRzvr17NCjAnrp/HCKHRLXvUn58jvn2BuUIZ
+MIME-Version: 1.0
+X-Received: by 2002:a6b:e90b:: with SMTP id u11mr12564454iof.14.1575269108510;
+ Sun, 01 Dec 2019 22:45:08 -0800 (PST)
+Date:   Sun, 01 Dec 2019 22:45:08 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a376820598b2eb97@google.com>
+Subject: kernel BUG at fs/pipe.c:LINE!
+From:   syzbot <syzbot+d37abaade33a934f16f2@syzkaller.appspotmail.com>
+To:     amit@kernel.org, arnd@arndb.de, dhowells@redhat.com,
+        gregkh@linuxfoundation.org, jannh@google.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        miklos@szeredi.hu, rostedt@goodmis.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        virtualization@lists.linux-foundation.org, willy@infradead.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-12-02 at 06:23 +0000, Zhao, Shirley wrote:
-> Hi, James, 
-> 
-> The PCR7 value and PCR7 policy is as below, please review, thanks. 
-> 
-> # tpm2_pcrlist -L sha256:7 -o pcr7_2.sha256
-> sha256:
->   7 :
-> 0x061AAD0705A62361AD18E58B65D3D7383F4D10F7F5A7E78924BE057AC6797408
-> 
-> # tpm2_createpolicy --policy-pcr --pcr-list sha256:7 --policy
-> pcr7_bin.policy > pcr7.policy
-> 321fbd28b60fcc23017d501b133bd5dbf2889814588e8a23510fe10105cb2cc9
-> 
-> # cat pcr7.policy
-> 321fbd28b60fcc23017d501b133bd5dbf2889814588e8a23510fe10105cb2cc9
+Hello,
 
-Well, the IBM TSS says that's the correct policy.  Your policy command
-is
+syzbot found the following crash on:
 
-jejb@jarvis:~> tsspolicymakerpcr -bm 000080 -if ~/pcr7.txt -pr | tee tmp.policy
-0000017f00000001000b038000009a47350fdbcc77ebeadcb4b4818d8e82a21717ea24434333c791c0cd0d1dc14e
+HEAD commit:    b94ae8ad Merge tag 'seccomp-v5.5-rc1' of git://git.kernel...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1387ab12e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ff560c3de405258c
+dashboard link: https://syzkaller.appspot.com/bug?extid=d37abaade33a934f16f2
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12945c41e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=161e202ee00000
 
-And that hashes to
-jejb@jarvis:~> tsspolicymaker -if ~/tmp.policy  -pr
- policy digest length 32
- 32 1f bd 28 b6 0f cc 23 01 7d 50 1b 13 3b d5 db 
- f2 88 98 14 58 8e 8a 23 51 0f e1 01 05 cb 2c c9 
+The bug was bisected to:
 
-So I don't understand why the userspace Intel TSS command is failing to
-do the unseal.
+commit 8cefc107ca54c8b06438b7dc9cc08bc0a11d5b98
+Author: David Howells <dhowells@redhat.com>
+Date:   Fri Nov 15 13:30:32 2019 +0000
 
-James
+     pipe: Use head and tail pointers for the ring, not cursor and length
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=118cce96e00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=138cce96e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=158cce96e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+d37abaade33a934f16f2@syzkaller.appspotmail.com
+Fixes: 8cefc107ca54 ("pipe: Use head and tail pointers for the ring, not  
+cursor and length")
+
+------------[ cut here ]------------
+kernel BUG at fs/pipe.c:582!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 9433 Comm: syz-executor802 Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:pipe_poll+0x37f/0x400 fs/pipe.c:582
+Code: ff 85 db 75 09 e8 b1 ee b5 ff 41 83 ce 08 e8 a8 ee b5 ff 44 89 f0 48  
+83 c4 10 5b 41 5c 41 5d 41 5e 41 5f 5d c3 e8 91 ee b5 ff <0f> 0b e8 ca 40  
+f3 ff e9 ed fc ff ff e8 c0 40 f3 ff e9 b3 fd ff ff
+RSP: 0018:ffff888093e3f698 EFLAGS: 00010293
+RAX: ffff8880a96083c0 RBX: ffff88809af6e800 RCX: ffffffff81beed8a
+RDX: 0000000000000000 RSI: ffffffff81beefaf RDI: 0000000000000004
+RBP: ffff888093e3f6d0 R08: ffff8880a96083c0 R09: ffff8880a9608c50
+R10: fffffbfff146e220 R11: ffffffff8a371107 R12: ffff88809c770d40
+R13: 00000000fffffffa R14: 0000000000000010 R15: 00000000000001f6
+FS:  00007fc5aa3cb700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020200000 CR3: 000000009b5a1000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  vfs_poll include/linux/poll.h:90 [inline]
+  do_select+0x922/0x16f0 fs/select.c:534
+  core_sys_select+0x53c/0x8c0 fs/select.c:677
+  do_pselect.constprop.0+0x199/0x1e0 fs/select.c:759
+  __do_sys_pselect6 fs/select.c:784 [inline]
+  __se_sys_pselect6 fs/select.c:769 [inline]
+  __x64_sys_pselect6+0x1fc/0x2e0 fs/select.c:769
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x44a629
+Code: e8 5c b3 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 2b cc fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fc5aa3cada8 EFLAGS: 00000246 ORIG_RAX: 000000000000010e
+RAX: ffffffffffffffda RBX: 00000000006dbc38 RCX: 000000000044a629
+RDX: 0000000000000000 RSI: 00000000200000c0 RDI: 0000000000000040
+RBP: 00000000006dbc30 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000020000140 R11: 0000000000000246 R12: 00000000006dbc3c
+R13: 00007fffcaf6d1bf R14: 00007fc5aa3cb9c0 R15: 20c49ba5e353f7cf
+Modules linked in:
+---[ end trace 1c441dd64ff48137 ]---
+RIP: 0010:pipe_poll+0x37f/0x400 fs/pipe.c:582
+Code: ff 85 db 75 09 e8 b1 ee b5 ff 41 83 ce 08 e8 a8 ee b5 ff 44 89 f0 48  
+83 c4 10 5b 41 5c 41 5d 41 5e 41 5f 5d c3 e8 91 ee b5 ff <0f> 0b e8 ca 40  
+f3 ff e9 ed fc ff ff e8 c0 40 f3 ff e9 b3 fd ff ff
+RSP: 0018:ffff888093e3f698 EFLAGS: 00010293
+RAX: ffff8880a96083c0 RBX: ffff88809af6e800 RCX: ffffffff81beed8a
+RDX: 0000000000000000 RSI: ffffffff81beefaf RDI: 0000000000000004
+RBP: ffff888093e3f6d0 R08: ffff8880a96083c0 R09: ffff8880a9608c50
+R10: fffffbfff146e220 R11: ffffffff8a371107 R12: ffff88809c770d40
+R13: 00000000fffffffa R14: 0000000000000010 R15: 00000000000001f6
+FS:  00007fc5aa3cb700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020200000 CR3: 000000009b5a1000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
