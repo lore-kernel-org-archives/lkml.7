@@ -2,88 +2,133 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 165C1C43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26EC8C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E031220717
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7FF2206E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:02:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UlyiU5dp"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="bs3Yn7m8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbfLBM5A (ORCPT
+        id S1727460AbfLBNCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 07:57:00 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42432 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727381AbfLBM5A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 07:57:00 -0500
-Received: by mail-lj1-f193.google.com with SMTP id e28so15804185ljo.9;
-        Mon, 02 Dec 2019 04:56:59 -0800 (PST)
+        Mon, 2 Dec 2019 08:02:35 -0500
+Received: from mail-eopbgr770071.outbound.protection.outlook.com ([40.107.77.71]:41102
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727391AbfLBNCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 08:02:33 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OxzDwtHlsuauTce4MSTn9mmR9clYDr5csPtfow2YCKxsl0oOWMKZmdSZcGroNh4AidIGOyY9PkaCps01DPhOTeFAQnsNVj5CdaQiuIt4O24XVPKNbDz81T7ZQSKENFurAZ6eUA9zeOxplaB7ZgEfJCEBQS2N4wP0RDoktnS9E8FSIqyFjIZOc/jgORVvP5qoDOpPoId4/2bn+X82ZuWKLorWUeuFuxHzI+DjIPhXVE/ThHCcJXmyOpaoT8b2wTesL05tNxuobB1hIFV/XnAh9l/IZ/05NAtt+YI9Wg3pQ3QPFgze4ahDnZiAEvU8JDQKMA+lH3bVKC59CG3lUMmAyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rTlAXqhI5gJcyj6P1xEX3iw2FbZ4NW07IIWRCbtE5/I=;
+ b=MMMPvpTg17oXEWf0CtZxyLT1XdiF/eyCHsr4TAHet1vLUHsSSPosN6ZuH7V5s7nnZCrB8Q4xsOLrTQfuuxl5JraVUsgkmCyrsr76/bJkA0dWNi30VSpu7L0z7uetJqmaynjVNXHfOXUFl6aDoe7muTCTtNA4msRpkl9FoGH7o3tPr0s+WNOmjbawonO4ROwtAcPxlzavWE61uENfLvFCuESg+A0J5dpf5zzg3EJLCMtVmPhAKBhip5tBTmuUqcJ+AHVrH9vsMONKGgeVM2S9qGhwoMUdwBulFJMXcF7U7FtuwlCSyRGLib0d7sClRqao2ScQg6dR0ldxmx6cs0ZUyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=grandegger.com smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Qlt+/dRlgH3WSZzFFBm5SD3CiWvxcdEsgMu4Ka1X8YE=;
-        b=UlyiU5dpvNruuaxcXO7dvcG62On/kdUK4obQpYfELq3M040cPWbk92RXty5c7XyxHQ
-         JlwoKbkid8aIAN5Tj/Q45F++QZmZ8BDp2fKC3o0KiEOLkPMVj/sP/GA1ijguRSSyroJY
-         j071GRkprPF86nKLRiFrKQr1QfIg+WOcCTwil4xkDqnRcrbJgBj574XnFo9nVQx06eqV
-         kcfwKnDmvmw0gf1VF5eHPJ4eSqHqCr0YzpPxG11lmnzUjX/43McgbFIBGFt2hl0/+GAb
-         ebjqRxaO1ouiLadvFFlXedasMYGwWmhPw3n5mRho5odgoUIv9cuc0UPXktHrNHYG+Tma
-         teyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Qlt+/dRlgH3WSZzFFBm5SD3CiWvxcdEsgMu4Ka1X8YE=;
-        b=t7NTKna6zMWUSxr1ze5Oe+GT5j3TyhA0q/XxXwiSe190O+uTDgxbEGR9rtzqQksJWF
-         QKG+xlcPd6wXQL1C5q2i3GsoZWUQSZVrYsqyaCBTkCSt2pJgTAeGmA+3JsA8LjMHc4rX
-         vx2jT2m7ZAnF2r/xN2PB4+LdYB0pwzEadNmuolgp0vM0tYWWK1DUQ2q8Hd2WD0Q998PH
-         ngYZdQmAF9PC9vSvKyV/om+SzI5GdtAhPipsqnI6qBI7SAS/BXap6Ci2XLaAl16I0k7m
-         RMQjQZPQjtfyGE6esEnP+dzQH+8cH+LQpDHgDtVlU3wrCiCfBIeHGVoTORcCm9i3f6z/
-         pTgQ==
-X-Gm-Message-State: APjAAAVziH83jLS/9RzGpKhMc/7EIwfFo9Ii7gH5sZEAH7g3lt7+mPhy
-        yEVgd6j5aqPn06YdSxAJJFliHQv/T5ykbIvtgiQ=
-X-Google-Smtp-Source: APXvYqxQdPHL3wwjh1XiiAR4BKUnI9ER2eZEatvhL25goi1fFQraJN0onktSvPLymKxIx9kQLcHq96wvcClwhZw058k=
-X-Received: by 2002:a2e:241a:: with SMTP id k26mr2647022ljk.26.1575291417981;
- Mon, 02 Dec 2019 04:56:57 -0800 (PST)
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rTlAXqhI5gJcyj6P1xEX3iw2FbZ4NW07IIWRCbtE5/I=;
+ b=bs3Yn7m8Ma+2NOVEzET5fAJGLWkyAnebe/u4UAESRPt28BAvMsHDnL17RPNBdksGdbwNG141HGyGe1nqM/ypadGwp0JR3t5/yKwRzNnd3ZeO9JltBLNbI2lNlukHQzPXabb0RiWJnCdusdNzhtBdHrBxePjV5Gs0er+f+Zt/xm0=
+Received: from SN4PR0201CA0051.namprd02.prod.outlook.com
+ (2603:10b6:803:20::13) by SN4PR0201MB3453.namprd02.prod.outlook.com
+ (2603:10b6:803:50::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.22; Mon, 2 Dec
+ 2019 13:02:30 +0000
+Received: from BL2NAM02FT026.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::201) by SN4PR0201CA0051.outlook.office365.com
+ (2603:10b6:803:20::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.18 via Frontend
+ Transport; Mon, 2 Dec 2019 13:02:30 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; grandegger.com; dkim=none (message not signed)
+ header.d=none;grandegger.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT026.mail.protection.outlook.com (10.152.77.156) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2474.17
+ via Frontend Transport; Mon, 2 Dec 2019 13:02:29 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1iblLR-00088M-3Z; Mon, 02 Dec 2019 05:02:29 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1iblLM-0007cC-02; Mon, 02 Dec 2019 05:02:24 -0800
+Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1iblLI-0007b6-5u; Mon, 02 Dec 2019 05:02:20 -0800
+From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
+To:     wg@grandegger.com, mkl@pengutronix.de, davem@davemloft.net,
+        michal.simek@xilinx.com, appanad@xilinx.com
+Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        git@xilinx.com, nagasure@xilinx.com,
+        Srinivas Neeli <srinivas.neeli@xilinx.com>
+Subject: [PATCH V2 0/2] can: xilinx_can: Bug fixes on can driver
+Date:   Mon,  2 Dec 2019 18:32:09 +0530
+Message-Id: <1575291731-11022-1-git-send-email-srinivas.neeli@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(39860400002)(396003)(376002)(199004)(189003)(36756003)(4326008)(51416003)(7696005)(2906002)(70586007)(70206006)(14444005)(316002)(9786002)(6666004)(16586007)(356004)(47776003)(2616005)(426003)(4744005)(305945005)(36386004)(336012)(81166006)(48376002)(81156014)(8936002)(50466002)(44832011)(50226002)(478600001)(5660300002)(186003)(26005)(107886003)(106002)(8676002)(6636002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN4PR0201MB3453;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
-References: <45ef9ee8c6265743a9c30d8e4d9dcbac1ee3aabe.1575286886.git.shengjiu.wang@nxp.com>
-In-Reply-To: <45ef9ee8c6265743a9c30d8e4d9dcbac1ee3aabe.1575286886.git.shengjiu.wang@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Mon, 2 Dec 2019 09:57:12 -0300
-Message-ID: <CAOMZO5AXnw7QDdfKkZ+FBwuWWvr+t0rRsHQ4muW-T00he2f73Q@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] ASoC: dt-bindings: fsl_asrc: add compatible string
- for imx8qm & imx8qxp
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7b4a01d3-8bbc-4791-3d3f-08d77727e362
+X-MS-TrafficTypeDiagnostic: SN4PR0201MB3453:
+X-Microsoft-Antispam-PRVS: <SN4PR0201MB3453701E78740CD143EF39A9AF430@SN4PR0201MB3453.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:3276;
+X-Forefront-PRVS: 0239D46DB6
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: l5iJD3MWXAUGQKPHvA13FK/QQqZi+VV4mSy0cLyANCiU+3T2OqoBUT3x2wDBRsbFXEcSyvtW0Tw2XHBc0ULpu/f72aGebVHGO3x0MWNBNeR0HrDP2Owe8Ps3YDoV8uqyu9B86QodPj88+yz4gBVigcGfAcsBwY65kbeCZMdIAL7eeZoKYqr2LCQsZi/pMmQXvI4ZD7xA6JzIklL+3IPe6A3DeABQuk2auMTNfv5JzKNjIilt+Cuudo6DDKAHYq5zMon1Je9aBiXuivCGr1+jnwSIlz9gWAfGFxCINuXhW+/beBXcOjjugJs9qe68n0m7aStNtba2aKBaILAQk/8jhByVv4FlLIWc7BuxjtVaDUR1gr/07FeWZy1E/b3uwWDKQrqC/4hu2uJ95T6H6BdH/Ou2Gxyh2xifx6m/l5eby1MNYXpZ1ygxJtzYVRTT3O07
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Dec 2019 13:02:29.6769
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b4a01d3-8bbc-4791-3d3f-08d77727e362
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0201MB3453
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 2, 2019 at 8:56 AM Shengjiu Wang <shengjiu.wang@nxp.com> wrote:
+This patch series does the following:
+-skip printing error message on deferred probe
+-Fix usage of skb memory
+---
+Changes in V2:
+-Called can_put_echo_skb call after usage of skb memory
+---
 
-> -  - compatible         : Contains "fsl,imx35-asrc" or "fsl,imx53-asrc".
-> +  - compatible         : Contains "fsl,imx35-asrc", "fsl,imx53-asrc",
-> +                         "fsl,imx8qm-asrc", "fsl,imx8qxp-asrc"
+Srinivas Neeli (1):
+  can: xilinx_can: Fix usage of skb memory
 
-You missed the word "or" as in the original binding.
+Venkatesh Yadav Abbarapu (1):
+  can: xilinx_can: skip error message on deferred probe
+
+ drivers/net/can/xilinx_can.c | 28 +++++++++++++++-------------
+ 1 file changed, 15 insertions(+), 13 deletions(-)
+
+-- 
+2.7.4
+
