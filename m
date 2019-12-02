@@ -2,140 +2,71 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDD3C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F47C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5206120865
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:28:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2STPfwq"
+	by mail.kernel.org (Postfix) with ESMTP id 1697920848
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:29:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726079AbfLBW2b (ORCPT
+        id S1726186AbfLBW3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 17:28:31 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38968 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbfLBW2b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 17:28:31 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y11so1244937wrt.6
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 14:28:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BMjiRy3QJEUM7qi9iVtt3EpRL4urnDNurtn48A3AP18=;
-        b=M2STPfwqrNHD9OcY0KGbYeWlNtCjqaz0glKPsVV2z8Rdh22fPf3UgtQSxE2Y4L97X/
-         LTGM6llw3dSR29MPdKwcygrfakK9W82mmZgd19q+dBV6Nkm/EPU4gXaILzTxPZvLPXyz
-         48OvcgS/LYVWFwdxM05VJfxISnJknSx79+rCgh+a4oCnCPm66DmltP3MYtHb6LPxdUVR
-         BN9kEXTtBUdTRN2MhjZ7FUsOqIibXcqzB/c4tqKBVch00IILr/pVeJyCwckMy2HN5fZX
-         FSNjAtsILVfEWtsZ6zeE7NhRVHvShnKrSuv7Q/bAmz2cA5lyPN13UFe3i737os8vHYFI
-         Vfeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BMjiRy3QJEUM7qi9iVtt3EpRL4urnDNurtn48A3AP18=;
-        b=KtDWH8rNglm/wGxlRlN/kDmtuAy6Yu9TojSsPsozJyKFp4QzIepdRcf4SZCvMFxNv4
-         AdWgSnNVH2S63KXSPiBP0r5YXjybiP3gH7WLiXAjNP+RajIQFWkn+WBXa6XkFnazAurx
-         832YDs7Jy+wrp1y4biDbEkh6n/oB2xVUJUq8G0QUsdR4j3kEnSSwXmlpauhN6IZjfCdc
-         YKO1mSH7i/l7tFdons/9SWA9LX3I+msCc1HdqPYI7+TqHMzGVhYFxMfH36F28dqv08yJ
-         QeIRtoOPCcAnpPrQSALy/rJ8dSQkqWam5sHfo+TLs+b2odiAeJLT1MVzecLqHcvu7Ija
-         Ynwg==
-X-Gm-Message-State: APjAAAVp7Lfj8w2j00zQu5xj8SXGA8DiM8icngFb8w4uQDsbcSXorQr4
-        e5Z6m3hEP5fEETdXBfCqaF4=
-X-Google-Smtp-Source: APXvYqxVufMWAPntjkOfUuktfrfgT33XpBapZ9/uwzUSD06bk8TCn9ojcnCzzSD5MJcghbNho4Ksbg==
-X-Received: by 2002:adf:8150:: with SMTP id 74mr1558824wrm.114.1575325709070;
-        Mon, 02 Dec 2019 14:28:29 -0800 (PST)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id o21sm835335wmc.17.2019.12.02.14.28.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Dec 2019 14:28:28 -0800 (PST)
-Date:   Mon, 2 Dec 2019 22:28:27 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        n-horiguchi@ah.jp.nec.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] mm/memory-failure.c: not necessary to recalculate
- hpage
-Message-ID: <20191202222827.isaelnqmuyn7zrns@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20191118082003.26240-1-richardw.yang@linux.intel.com>
- <20191118082003.26240-2-richardw.yang@linux.intel.com>
- <fdba31c8-d0c0-83a8-62d1-c04c1e894218@redhat.com>
+        Mon, 2 Dec 2019 17:29:22 -0500
+Received: from mga09.intel.com ([134.134.136.24]:41070 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725834AbfLBW3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 17:29:21 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 14:29:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,270,1571727600"; 
+   d="scan'208";a="218464248"
+Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
+  by fmsmga001.fm.intel.com with ESMTP; 02 Dec 2019 14:29:21 -0800
+Received: from orsmsx115.amr.corp.intel.com ([169.254.4.121]) by
+ ORSMSX102.amr.corp.intel.com ([169.254.3.246]) with mapi id 14.03.0439.000;
+ Mon, 2 Dec 2019 14:29:20 -0800
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>
+CC:     "Yu, Fenghua" <fenghua.yu@intel.com>
+Subject: RE: [PATCH] ia64: remove stale paravirt leftovers
+Thread-Topic: [PATCH] ia64: remove stale paravirt leftovers
+Thread-Index: AQHVh/bwVpusAEgcQUWj23hoyWR/g6ea4/AAgAzLYiA=
+Date:   Mon, 2 Dec 2019 22:29:20 +0000
+Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F4E7C10@ORSMSX115.amr.corp.intel.com>
+References: <20191021100415.7642-1-jgross@suse.com>
+ <5724dc57-2e1c-7ff4-c8df-758840aeae81@suse.com>
+In-Reply-To: <5724dc57-2e1c-7ff4-c8df-758840aeae81@suse.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiOGM5YmJiZTctNjZiOC00OWIxLTkwYzEtYjAyM2U1YTMyMjM3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiZ1o5RnlzVmtnbVBuU20zblhjUkFhdnNsSVRFeGZDQUFsZzB4M1dIdlNjeUxNWGROOFFPQ1h1MlFSODA1ODI5eiJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fdba31c8-d0c0-83a8-62d1-c04c1e894218@redhat.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 04:07:38PM +0100, David Hildenbrand wrote:
->On 18.11.19 09:20, Wei Yang wrote:
->> hpage is not changed.
->> 
->> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->> ---
->>   mm/memory-failure.c | 1 -
->>   1 file changed, 1 deletion(-)
->> 
->> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
->> index 392ac277b17d..9784f4339ae7 100644
->> --- a/mm/memory-failure.c
->> +++ b/mm/memory-failure.c
->> @@ -1319,7 +1319,6 @@ int memory_failure(unsigned long pfn, int flags)
->>   		}
->>   		unlock_page(p);
->>   		VM_BUG_ON_PAGE(!page_count(p), p);
->> -		hpage = compound_head(p);
->>   	}
->>   	/*
->> 
->
->I am *absolutely* no transparent huge page expert (sorry :) ), but won't the
->split_huge_page(p) eventually split the compound page, such that
->compound_head(p) will return something else after that call?
->
-
-Hi, David
-
-Took sometime to look into the code and re-think about it. Found maybe we can
-simplify this in another way.
-
-First, code touches here means split_huge_page() succeeds and "p" is now a PTE
-page. So compound_head(p) == p.
-
-Then let's look at who will use hpage in the following function. There are two
-uses in current upstream:
-
-    * page_flags calculation
-    * hwpoison_user_mappings()
-
-The first one would be removed in next patch since PageHuge is handled at the
-beginning.
-
-And in the second place, comment says if split succeeds, hpage points to page
-"p".
-
-After all, we don't need to re-calculate hpage after split, and just replace
-hpage in hwpoison_user_mappings() with p is enough.
-
->-- 
->
->Thanks,
->
->David / dhildenb
-
--- 
-Wei Yang
-Help you, Help me
+PiBQaW5nPw0KDQo+IE9uIDIxLjEwLjE5IDEyOjA0LCBKdWVyZ2VuIEdyb3NzIHdyb3RlOg0KPiA+
+IFJlbW92ZSB0aGUgbGFzdCBsZWZ0b3ZlcnMgZnJvbSBJQTY0IFhlbiBwdi1ndWVzdCBzdXBwb3J0
+Lg0KPiA+IA0KPiA+IFBBUkFWSVJUIGlzIGxvbmcgZ29uZSBmcm9tIElBNjQgS2NvbmZpZyBhbmQg
+WGVuIElBNjQgc3VwcG9ydCwgdG9vLg0KPiA+IA0KPiA+IER1ZSB0byBsYWNrIG9mIGluZnJhc3Ry
+dWN0dXJlIG5vIHRlc3RpbmcgZG9uZS4NCg0KU29ycnkuIEZvciB0aGUgZGVsYXkuICBJIHBpY2tl
+ZCB0aGlzIHVwIGFuZCBpdCBidWlsZHMgb24gYWxsIG15DQp0ZXN0IGNvbmZpZ3VyYXRpb25zLiAg
+Qm9vdHMgb24gbXkgdGVzdCBtYWNoaW5lIHRvby4NCg0KV2lsbCBwdXNoIHRvIExpbnVzIHNvb24u
+DQoNCi1Ub255DQo=
