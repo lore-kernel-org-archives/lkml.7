@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA1CC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A5EC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6820820848
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DF9D20848
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:54:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728189AbfLBTyL (ORCPT
+        id S1728209AbfLBTyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 14:54:11 -0500
+        Mon, 2 Dec 2019 14:54:18 -0500
 Received: from mga06.intel.com ([134.134.136.31]:62618 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728124AbfLBTxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 14:53:52 -0500
+        id S1727586AbfLBTxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 14:53:50 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 11:53:51 -0800
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 11:53:49 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,270,1571727600"; 
-   d="scan'208";a="218438166"
+   d="scan'208";a="218438145"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
-  by fmsmga001.fm.intel.com with ESMTP; 02 Dec 2019 11:53:51 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 02 Dec 2019 11:53:49 -0800
 From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
 To:     iommu@lists.linux-foundation.org,
         LKML <linux-kernel@vger.kernel.org>,
@@ -40,9 +40,9 @@ Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
         "Mehta, Sohil" <sohil.mehta@intel.com>,
         Joe Perches <joe@perches.com>,
         Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v5 8/8] iommu/vt-d: Misc macro clean up for SVM
-Date:   Mon,  2 Dec 2019 11:58:29 -0800
-Message-Id: <1575316709-54903-9-git-send-email-jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v5 2/8] iommu/vt-d: Match CPU and IOMMU paging mode
+Date:   Mon,  2 Dec 2019 11:58:23 -0800
+Message-Id: <1575316709-54903-3-git-send-email-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1575316709-54903-1-git-send-email-jacob.jun.pan@linux.intel.com>
 References: <1575316709-54903-1-git-send-email-jacob.jun.pan@linux.intel.com>
@@ -51,124 +51,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use combined macros for_each_svm_dev() to simplify SVM device iteration
-and error checking.
+When setting up first level page tables for sharing with CPU, we need
+to ensure IOMMU can support no less than the levels supported by the
+CPU.
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+It is not adequate, as in the current code, to set up 5-level paging
+in PASID entry First Level Paging Mode(FLPM) solely based on CPU.
+
+Currently, intel_pasid_setup_first_level() is only used by native SVM
+code which already checks paging mode matches. However, future use of
+this helper function may not be limited to native SVM.
+https://lkml.org/lkml/2019/11/18/1037
+
+Fixes: 437f35e1cd4c8 ("iommu/vt-d: Add first level page table
+interface")
 Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 Reviewed-by: Eric Auger <eric.auger@redhat.com>
 Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
 ---
- drivers/iommu/intel-svm.c | 79 +++++++++++++++++++++++------------------------
- 1 file changed, 39 insertions(+), 40 deletions(-)
+ drivers/iommu/intel-pasid.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-index 4ed7426473c1..0fcbe631cd5f 100644
---- a/drivers/iommu/intel-svm.c
-+++ b/drivers/iommu/intel-svm.c
-@@ -226,6 +226,10 @@ static const struct mmu_notifier_ops intel_mmuops = {
- static DEFINE_MUTEX(pasid_mutex);
- static LIST_HEAD(global_svm_list);
- 
-+#define for_each_svm_dev(sdev, svm, d)			\
-+	list_for_each_entry((sdev), &(svm)->devs, list)	\
-+		if ((d) != (sdev)->dev) {} else
-+
- int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_ops *ops)
- {
- 	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
-@@ -274,15 +278,14 @@ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_
- 				goto out;
- 			}
- 
--			list_for_each_entry(sdev, &svm->devs, list) {
--				if (dev == sdev->dev) {
--					if (sdev->ops != ops) {
--						ret = -EBUSY;
--						goto out;
--					}
--					sdev->users++;
--					goto success;
-+			/* Find the matching device in svm list */
-+			for_each_svm_dev(sdev, svm, dev) {
-+				if (sdev->ops != ops) {
-+					ret = -EBUSY;
-+					goto out;
- 				}
-+				sdev->users++;
-+				goto success;
- 			}
- 
- 			break;
-@@ -427,40 +430,36 @@ int intel_svm_unbind_mm(struct device *dev, int pasid)
- 		goto out;
+diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
+index 040a445be300..e7cb0b8a7332 100644
+--- a/drivers/iommu/intel-pasid.c
++++ b/drivers/iommu/intel-pasid.c
+@@ -499,8 +499,16 @@ int intel_pasid_setup_first_level(struct intel_iommu *iommu,
  	}
  
--	list_for_each_entry(sdev, &svm->devs, list) {
--		if (dev == sdev->dev) {
--			ret = 0;
--			sdev->users--;
--			if (!sdev->users) {
--				list_del_rcu(&sdev->list);
--				/* Flush the PASID cache and IOTLB for this device.
--				 * Note that we do depend on the hardware *not* using
--				 * the PASID any more. Just as we depend on other
--				 * devices never using PASIDs that they have no right
--				 * to use. We have a *shared* PASID table, because it's
--				 * large and has to be physically contiguous. So it's
--				 * hard to be as defensive as we might like. */
--				intel_pasid_tear_down_entry(iommu, dev, svm->pasid);
--				intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
--				kfree_rcu(sdev, rcu);
--
--				if (list_empty(&svm->devs)) {
--					ioasid_free(svm->pasid);
--					if (svm->mm)
--						mmu_notifier_unregister(&svm->notifier, svm->mm);
--
--					list_del(&svm->list);
--
--					/* We mandate that no page faults may be outstanding
--					 * for the PASID when intel_svm_unbind_mm() is called.
--					 * If that is not obeyed, subtle errors will happen.
--					 * Let's make them less subtle... */
--					memset(svm, 0x6b, sizeof(*svm));
--					kfree(svm);
--				}
-+	for_each_svm_dev(sdev, svm, dev) {
-+		ret = 0;
-+		sdev->users--;
-+		if (!sdev->users) {
-+			list_del_rcu(&sdev->list);
-+			/* Flush the PASID cache and IOTLB for this device.
-+			 * Note that we do depend on the hardware *not* using
-+			 * the PASID any more. Just as we depend on other
-+			 * devices never using PASIDs that they have no right
-+			 * to use. We have a *shared* PASID table, because it's
-+			 * large and has to be physically contiguous. So it's
-+			 * hard to be as defensive as we might like. */
-+			intel_pasid_tear_down_entry(iommu, dev, svm->pasid);
-+			intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
-+			kfree_rcu(sdev, rcu);
-+
-+			if (list_empty(&svm->devs)) {
-+				ioasid_free(svm->pasid);
-+				if (svm->mm)
-+					mmu_notifier_unregister(&svm->notifier, svm->mm);
-+				list_del(&svm->list);
-+				/* We mandate that no page faults may be outstanding
-+				 * for the PASID when intel_svm_unbind_mm() is called.
-+				 * If that is not obeyed, subtle errors will happen.
-+				 * Let's make them less subtle... */
-+				memset(svm, 0x6b, sizeof(*svm));
-+				kfree(svm);
- 			}
--			break;
- 		}
-+		break;
- 	}
-  out:
- 	mutex_unlock(&pasid_mutex);
+ #ifdef CONFIG_X86
+-	if (cpu_feature_enabled(X86_FEATURE_LA57))
+-		pasid_set_flpm(pte, 1);
++	/* Both CPU and IOMMU paging mode need to match */
++	if (cpu_feature_enabled(X86_FEATURE_LA57)) {
++		if (cap_5lp_support(iommu->cap)) {
++			pasid_set_flpm(pte, 1);
++		} else {
++			pr_err("VT-d has no 5-level paging support for CPU\n");
++			pasid_clear_entry(pte);
++			return -EINVAL;
++		}
++	}
+ #endif /* CONFIG_X86 */
+ 
+ 	pasid_set_domain_id(pte, did);
 -- 
 2.7.4
 
