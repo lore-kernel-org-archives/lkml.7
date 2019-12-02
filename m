@@ -2,160 +2,142 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5829FC432C0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5CBC432C3
 	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19FD92071E
+	by mail.kernel.org (Postfix) with ESMTP id 78E352071E
 	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:40:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Q/TFhfb1";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Q/TFhfb1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mn08Nirf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726066AbfLBWkk (ORCPT
+        id S1726139AbfLBWkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 17:40:40 -0500
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:49156 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725853AbfLBWkk (ORCPT
+        Mon, 2 Dec 2019 17:40:41 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:38382 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725853AbfLBWkl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 17:40:40 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 6FCBA8EE180;
-        Mon,  2 Dec 2019 14:40:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1575326439;
-        bh=w/oP+1BA9PA+20BsnpDXfjU/W0UeBcXPQE9EA4rXG7E=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Q/TFhfb106IByr2UHFDTsb5mKi9sCvOku2EZUYITsc1bD181AripSFV7XVrDcvMHw
-         ry0b18H8qc/HfPIROWBWvNQf9ou/Rm3IT0I78hArcBZ30hmdEdhgbawqno+xNVWxd7
-         LCm7UPVKKssPKqK52/5mrTiJbngcGlUwAcRsDpvg=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id tlDozYtRc6qk; Mon,  2 Dec 2019 14:40:39 -0800 (PST)
-Received: from jarvis.lan (unknown [50.35.76.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id BF5558EE11D;
-        Mon,  2 Dec 2019 14:40:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1575326439;
-        bh=w/oP+1BA9PA+20BsnpDXfjU/W0UeBcXPQE9EA4rXG7E=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Q/TFhfb106IByr2UHFDTsb5mKi9sCvOku2EZUYITsc1bD181AripSFV7XVrDcvMHw
-         ry0b18H8qc/HfPIROWBWvNQf9ou/Rm3IT0I78hArcBZ30hmdEdhgbawqno+xNVWxd7
-         LCm7UPVKKssPKqK52/5mrTiJbngcGlUwAcRsDpvg=
-Message-ID: <1575326437.24227.19.camel@HansenPartnership.com>
-Subject: Re: [GIT PULL] first round of SCSI updates for the 5.4+ merge window
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Mon, 02 Dec 2019 14:40:37 -0800
-In-Reply-To: <CAHk-=wjWNpPW91wyEj4FC4pOimWEUtLVb_RwQgB+9h2OO6ynyA@mail.gmail.com>
-References: <1575137443.5563.18.camel@HansenPartnership.com>
-         <CAHk-=wjWNpPW91wyEj4FC4pOimWEUtLVb_RwQgB+9h2OO6ynyA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 2 Dec 2019 17:40:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575326440;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hwCovQ1A2FIuM4qGkGFZtb5WeOCUje3jnQT4pB8ARrA=;
+        b=Mn08NirfqtBIoTt+22IJb0WDQpmiRj+Mk1Q/y/xpzwBpGXEmolK9NQnv/aCJPQev2yHbf5
+        lVa4b0V974cWnSzWvklZTiyyKNArre/cE8kzR3/VNxEqwpNBfa5BCNSvIXFPFXIm7+qVpx
+        c/pB9BgJ8JSbpjVXk3x17KlKA+d0Bc0=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-336-xLTYbVsjPT2jmUjaQ1GSiA-1; Mon, 02 Dec 2019 17:40:38 -0500
+Received: by mail-qv1-f72.google.com with SMTP id d38so849838qvc.5
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 14:40:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=A88TYrr+6QOTlvqShlweWdE3g666CkKb/QVajbFrpQI=;
+        b=nkPPCjoNK1w7g5kZLXRvVDwUCp3uwixIoUVFZP8yBVbRsr8Ipsugr2W/qFekcvb9UP
+         Rg8aXqbf7+YAIZUhMijcSTMO2jK5uZnXgXGRPKZ/RBN75mm79Vhi/Re7nJnFAnHF/Pk0
+         C0Gv5N8TLpRW8M2YGYY7xqbyWaehCmSKAqD+DAPW9IoaoXOby+OzBTwLJ2Mg1hmeYbZw
+         X2Ye2643xq2l6X3ciKk2zTpgrodDNV1iV9+8DT4zrXPDcqk3cGXKMEsUxgSBOyRFvrAW
+         Ew1WEhDaRiMJovzwMIDFzOakO4re/Ixe5LY2bPHdldqBMErppvKag51NVSwRytzYaL10
+         kyNQ==
+X-Gm-Message-State: APjAAAVmgWoi7zO6XAc5zj77EWer+QUAFz4vC+fLU9/YejEjoDDEhVCv
+        3XmsWjzdt/tksLlmT52HbxD93FYEgjWifqpgZCFdx+H3vwyoQO/O4fkf8Ocurr4PyIV5DW9BbAc
+        f+Amn2ks1Unt0GoXrhYGAcO/G
+X-Received: by 2002:ac8:2632:: with SMTP id u47mr2029168qtu.54.1575326437883;
+        Mon, 02 Dec 2019 14:40:37 -0800 (PST)
+X-Google-Smtp-Source: APXvYqw0JXhcvRX7e044tXudZta8UN6SWffpQCBnM5ZwWBduteqD4RVUl21bTGrSw2DHFn+vpV/4cA==
+X-Received: by 2002:ac8:2632:: with SMTP id u47mr2029148qtu.54.1575326437538;
+        Mon, 02 Dec 2019 14:40:37 -0800 (PST)
+Received: from xz-x1 ([2607:9880:19c0:3f::3])
+        by smtp.gmail.com with ESMTPSA id o10sm519593qtp.38.2019.12.02.14.40.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 14:40:36 -0800 (PST)
+Date:   Mon, 2 Dec 2019 17:40:34 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH RFC 03/15] KVM: Add build-time error check on kvm_run size
+Message-ID: <20191202224034.GH31681@xz-x1>
+References: <20191129213505.18472-1-peterx@redhat.com>
+ <20191129213505.18472-4-peterx@redhat.com>
+ <20191202193027.GH4063@linux.intel.com>
+ <20191202205315.GD31681@xz-x1>
+ <20191202221949.GD8120@linux.intel.com>
+MIME-Version: 1.0
+In-Reply-To: <20191202221949.GD8120@linux.intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-MC-Unique: xLTYbVsjPT2jmUjaQ1GSiA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-12-02 at 13:57 -0800, Linus Torvalds wrote:
-> On Sat, Nov 30, 2019 at 10:10 AM James Bottomley
-> <James.Bottomley@hansenpartnership.com> wrote:
-> > 
-> >    The two major core
-> > changes are Al Viro's reworking of sg's handling of copy to/from
-> > user, Ming Lei's removal of the host busy counter to avoid
-> > contention in the multiqueue case and Damien Le Moal's fixing of
-> > residual tracking across error handling.
-> 
-> Math is hard. You say "The two major core changes are.." and then you
-> list _three_ changes.
+On Mon, Dec 02, 2019 at 02:19:49PM -0800, Sean Christopherson wrote:
+> On Mon, Dec 02, 2019 at 03:53:15PM -0500, Peter Xu wrote:
+> > On Mon, Dec 02, 2019 at 11:30:27AM -0800, Sean Christopherson wrote:
+> > > On Fri, Nov 29, 2019 at 04:34:53PM -0500, Peter Xu wrote:
+> > > > It's already going to reach 2400 Bytes (which is over half of page
+> > > > size on 4K page archs), so maybe it's good to have this build-time
+> > > > check in case it overflows when adding new fields.
+> > >=20
+> > > Please explain why exceeding PAGE_SIZE is a bad thing.  I realize it'=
+s
+> > > almost absurdly obvious when looking at the code, but a) the patch it=
+self
+> > > does not provide that context and b) the changelog should hold up on =
+its
+> > > own,
+> >=20
+> > Right, I'll enhance the commit message.
+> >=20
+> > > e.g. in a mostly hypothetical case where the allocation of vcpu->run
+> > > were changed to something else.
+> >=20
+> > And that's why I added BUILD_BUG_ON right beneath that allocation. :)
+>=20
+> My point is that if the allocation were changed to no longer be a
+> straightforward alloc_page() then someone reading the combined code would
+> have no idea why the BUILD_BUG_ON() exists.  It's a bit ridiculous for
+> this case because the specific constraints of vcpu->run make it highly
+> unlikely to use anything else, but that's beside the point.
+>=20
+> > It's just a helper for developers when adding new kvm_run fields, not
+> > a risk for anyone who wants to start allocating more pages for it.
+>=20
+> But by adding a BUILD_BUG_ON without explaining *why*, you're placing an
+> extra burden on someone that wants to increase the size of kvm->run, e.g.
+> it's not at all obvious from the changelog whether this patch is adding
+> the BUILD_BUG_ON purely because the code allocates memory for vcpu->run
+> via alloc_page(), or if there is some fundamental aspect of vcpu->run tha=
+t
+> requires it to never span multiple pages.
 
-Oh ... I wasn't expecting the Spanish Inquisition.
+How about I add a comment above it?
 
-> Anyway, the sg copyin/out changes by Al conflicted fairly badly with
-> Arnd's compat_ioctl changes.
-> 
-> Al did
-> 
->   c35a5cfb4150 ("scsi: sg: sg_read(): simplify reading ->pack_id of
-> userland sg_io_hdr_t")
-> 
-> which avoided doing a whole allocation of an 'sg_io_hdr_t' to just
-> read the one field of it.
-> 
-> But Arnd did
-> 
->   98aaaec4a150 ("compat_ioctl: reimplement SG_IO handling")
-> 
-> which created a get_sg_io_hdr() helper that copied the 'sg_io_hdr_t'
-> from user space the right way for both compat and native, which
-> basically relied on the old approach.
-> 
-> So I effectively reverted Al's patch in order to take Arnd's patch in
-> the crazy sg legacy case that presumably nobody really cares about
-> anyway, since everybody should use SG_IO rather than the sg_read()
-> thing. But I know not everybody is.
-> 
-> I added a comment in that place:
-> 
->               /*
->                * This is stupid.
->                *
->                * We're copying the whole sg_io_hdr_t from user
->                * space just to get the 'pack_id' field. But the
->                * field is at different offsets for the compat
->                * case, so we'll use "get_sg_io_hdr()" to copy
->                * the whole thing and convert it.
->                *
->                * We could do something like just calculating the
->                * offset based of 'in_compat_syscall()', but the
->                * 'compat_sg_io_hdr' definition is in the wrong
->                * place for that.
->                */
-> 
-> since it turns out that the one 'pack_id' field we want does have the
-> same format in compat  mode as in native mode ("int" and
-> "compat_int_t" are the same), it's just at different offsets. But the
-> definition of 'compat_sg_io_hdr' isn't available in that place.
-> 
-> I'm leaving it to Al and Arnd to decide if they want to fix the
-> stupidity. I tried to make the minimally invasive merge resolution.
-> 
-> Al, Arnd? Comments?
-> 
-> It looks like linux-next punted on this entirely, and took Al's
-> simplified version that doesn't work with the compat case. Maybe I
-> should have done the same - if you use read() on the /dev/sg* device,
-> you deserve to get broken for the compat case. And it didn't
-> historically work anyway. But it was kind of sad to see how Arnd
-> fixed it, and then it got broken again.
+  /*
+   * Currently kvm_run only uses one physical page.  Warn the develper
+   * if kvm_run accidentaly grows more than that.
+   */
+  BUILD_BUG_ON(...);
 
-Sorry, I did do a test merge with the current state of your tree when I
-sent the pull request, but, obviously, that didn't include the Arnd
-changes and I've taken to rely on linux-next as the merge problem
-canary for trees you haven't yet pulled.
+Thanks,
 
-> I really really wish we could get rid of sg_read/sg_write() entirely,
-> and have SG_IO_SUBMIT and SG_IO_RECEIVE ioctl's that can handle the
-> queued cases that apparently some people need. Because the read/write
-> case really is disgusting.
-
-We're definitely not having a read/write case for the proposed v4
-protocol ... however we are a bit stuck with it for the existing v3
-case.
-
-James
+--=20
+Peter Xu
 
