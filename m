@@ -2,161 +2,127 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A30C43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0476C43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6092D2146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:06:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575302794;
-	bh=tLAqlApYip8hY+icp5gGvPR2GCxSCxU1nvhC+g4Pn6A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Phk360Xrn9qkUVWodguS8Gm6e1gBqr+XpRq+x53yYMgXQ/oXjsfcgyChPvFdWqmqw
-	 AjcMOFNCmlJZwJ8nm8QkIUfyhOEpHFPVZl0svUodpAH5O7OSgrq0mTVGe2RPRZnRxH
-	 KfKA6hhzyWsESEM2s5KHsdkHNFhH7FCytKkotRkY=
+	by mail.kernel.org (Postfix) with ESMTP id A6C9A20722
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:12:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ig1O7d6G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfLBQGd (ORCPT
+        id S1727562AbfLBQMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 11:06:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44330 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727418AbfLBQGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 11:06:33 -0500
-Received: from localhost (unknown [84.241.196.73])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6762A2084F;
-        Mon,  2 Dec 2019 16:06:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575302792;
-        bh=tLAqlApYip8hY+icp5gGvPR2GCxSCxU1nvhC+g4Pn6A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fxQCA2KFolO++XHLicfxkNv6yFzv1KuvwarF1oVcfmf9wmCuh83ar62YgPD7M9Uji
-         XCuEZ0OpBOQyHgiDjyvtkErc9N5WuW5tVNN1F3qNsqR5xYxQ4PGc79n5dIEsFmCMXr
-         Oyj+P7nAIhh4g249cr1LZN6pmu+r08SW/AFB5wwc=
-Date:   Mon, 2 Dec 2019 17:06:28 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Jack Wang <jack.wang.usish@gmail.com>,
-        linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 067/306] KVM: nVMX: move check_vmentry_postreqs()
- call to nested_vmx_enter_non_root_mode()
-Message-ID: <20191202160628.GB698577@kroah.com>
-References: <20191127203114.766709977@linuxfoundation.org>
- <20191127203119.676489279@linuxfoundation.org>
- <CA+res+QKCAn8PsSgbkqXNAF0Ov5pOkj=732=M5seWj+-JFQOwQ@mail.gmail.com>
- <20191202145105.GA571975@kroah.com>
- <bccbfccd-0e96-29c3-b2ba-2b1800364b08@redhat.com>
+        Mon, 2 Dec 2019 11:12:18 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37291 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727472AbfLBQMR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 11:12:17 -0500
+Received: by mail-wr1-f65.google.com with SMTP id w15so14059970wru.4
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 08:12:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7Xv8o+WsUdwWC7CiaXpsHd5QUxK044+HKFw9W9npptk=;
+        b=ig1O7d6GsDt4NBwP75X4Y5ujFXKgklak77SWNGcBuqnwXLGpk+P5XN90JKiEaf2DlT
+         WrVdXQtvxPygQzaAZx5Wyn09al6SJ3AefSjaSRjKH65+vqyjjGV3AAI7blYUMk6bxxNU
+         imZoAbvk8e7WIQaP2QJWb/dcdykPO0gubpktQ7rXHibDskvWbSc6e4RfKGeymd1SEHkQ
+         rN4NCNH9RCYgSR8vJIq6oJKWcWEeRYOub/IGzL0nHFyW8U+kqcHiSk1Jtzj7DgCmQ2b1
+         6mAr45FJYKlH47wLqjdCfiLeG38To+D9j+tZ1HBGdU1DBkzyDaikMHe5JMWjDCUZBREU
+         +AIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7Xv8o+WsUdwWC7CiaXpsHd5QUxK044+HKFw9W9npptk=;
+        b=TGRAxfiVnvu2lzYAILYwB1HL/2DefN0+HC/iQC+puqrAZXEoO4aOJ2O6U8rAtE2KUq
+         snr2jFExfYQhZl8VnZN7QvvfjosrZwb6cd4uWz4rkUbGEdYHIeHG4G6xW+ur4B1hiRHk
+         Z/j0utkB1TPIbUalBIZoJAl6Y33T4Xz6sCD1crkR18GoxRCsZHAtNWyIXQCUNW4Xhvfa
+         RuOM6DxhgpKjhjAuc1veCsCw7l2oJp4A15Gm0X/hkZqCTXGOq2afNfWSpdpHhafCj3S6
+         OuqGArhEfzOsNCPawwlP7NgyEPuJBvdXG9n0TA1XlnFGvoobIuqqIelHj7FabOvA276c
+         N/AA==
+X-Gm-Message-State: APjAAAX3Y7KqulSaL5tpn23bkMvQItFpgLA2U5aQmPwMRUp0MYHAcDGr
+        4oavE6DwA4zJ4un6IKa/0PzfyaKESyq6N01EPUDsHQ==
+X-Google-Smtp-Source: APXvYqxqte31rdFQPjtRI2d0z8l6rqekmUjNbkTYkhGQNfoYXbCoNDt/WGK3fQmslUDfdpQIN0cF13ot7mHRN/DXrE0=
+X-Received: by 2002:a5d:5345:: with SMTP id t5mr34600649wrv.0.1575303135165;
+ Mon, 02 Dec 2019 08:12:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bccbfccd-0e96-29c3-b2ba-2b1800364b08@redhat.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <1574864578-467-1-git-send-email-neal.liu@mediatek.com>
+ <1574864578-467-4-git-send-email-neal.liu@mediatek.com> <CADnJP=uhD=J2NrpSwiX8oCTd-u_q05=HhsAV-ErCsXNDwVS0rA@mail.gmail.com>
+ <1575027046.24848.4.camel@mtkswgap22>
+In-Reply-To: <1575027046.24848.4.camel@mtkswgap22>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Mon, 2 Dec 2019 16:12:09 +0000
+Message-ID: <CAKv+Gu_um7eRYXbieW7ogDX5mmZaxP7JQBJM9CajK+6CsO5RgQ@mail.gmail.com>
+Subject: Re: [PATCH v5 3/3] hwrng: add mtk-sec-rng driver
+To:     Neal Liu <neal.liu@mediatek.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>
+Cc:     Lars Persson <lists@bofh.nu>, Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?B?Q3J5c3RhbCBHdW8gKOmDreaZtik=?= <Crystal.Guo@mediatek.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Matt Mackall <mpm@selenic.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 04:09:33PM +0100, Paolo Bonzini wrote:
-> On 02/12/19 15:51, Greg Kroah-Hartman wrote:
-> > On Mon, Dec 02, 2019 at 03:40:04PM +0100, Jack Wang wrote:
-> >> Greg Kroah-Hartman <gregkh@linuxfoundation.org> 于2019年11月27日周三 下午10:30写道：
-> >>>
-> >>> From: Sean Christopherson <sean.j.christopherson@intel.com>
-> >>>
-> >>> [ Upstream commit 7671ce21b13b9596163a29f4712cb2451a9b97dc ]
-> >>>
-> >>> In preparation of supporting checkpoint/restore for nested state,
-> >>> commit ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vmx_run()")
-> >>> modified check_vmentry_postreqs() to only perform the guest EFER
-> >>> consistency checks when nested_run_pending is true.  But, in the
-> >>> normal nested VMEntry flow, nested_run_pending is only set after
-> >>> check_vmentry_postreqs(), i.e. the consistency check is being skipped.
-> >>>
-> >>> Alternatively, nested_run_pending could be set prior to calling
-> >>> check_vmentry_postreqs() in nested_vmx_run(), but placing the
-> >>> consistency checks in nested_vmx_enter_non_root_mode() allows us
-> >>> to split prepare_vmcs02() and interleave the preparation with
-> >>> the consistency checks without having to change the call sites
-> >>> of nested_vmx_enter_non_root_mode().  In other words, the rest
-> >>> of the consistency check code in nested_vmx_run() will be joining
-> >>> the postreqs checks in future patches.
-> >>>
-> >>> Fixes: ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vmx_run()")
-> >>> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> >>> Cc: Jim Mattson <jmattson@google.com>
-> >>> Reviewed-by: Jim Mattson <jmattson@google.com>
-> >>> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> >>> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> >>> ---
-> >>>  arch/x86/kvm/vmx.c | 10 +++-------
-> >>>  1 file changed, 3 insertions(+), 7 deletions(-)
-> >>>
-> >>> diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-> >>> index fe7fdd666f091..bdf019f322117 100644
-> >>> --- a/arch/x86/kvm/vmx.c
-> >>> +++ b/arch/x86/kvm/vmx.c
-> >>> @@ -12694,6 +12694,9 @@ static int enter_vmx_non_root_mode(struct kvm_vcpu *vcpu, u32 *exit_qual)
-> >>>         if (likely(!evaluate_pending_interrupts) && kvm_vcpu_apicv_active(vcpu))
-> >>>                 evaluate_pending_interrupts |= vmx_has_apicv_interrupt(vcpu);
-> >>>
-> >>> +       if (from_vmentry && check_vmentry_postreqs(vcpu, vmcs12, exit_qual))
-> >>> +               return EXIT_REASON_INVALID_STATE;
-> >>> +
-> >>>         enter_guest_mode(vcpu);
-> >>>
-> >>>         if (!(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CONTROLS))
-> >>> @@ -12836,13 +12839,6 @@ static int nested_vmx_run(struct kvm_vcpu *vcpu, bool launch)
-> >>>          */
-> >>>         skip_emulated_instruction(vcpu);
-> >>>
-> >>> -       ret = check_vmentry_postreqs(vcpu, vmcs12, &exit_qual);
-> >>> -       if (ret) {
-> >>> -               nested_vmx_entry_failure(vcpu, vmcs12,
-> >>> -                                        EXIT_REASON_INVALID_STATE, exit_qual);
-> >>> -               return 1;
-> >>> -       }
-> >>> -
-> >>>         /*
-> >>>          * We're finally done with prerequisite checking, and can start with
-> >>>          * the nested entry.
-> >>> --
-> >>> 2.20.1
-> >>>
-> >>>
-> >>>
-> >> Hi all,
-> >>
-> >> This commit caused many kvm-unit-tests regression, cherry-pick
-> >> following commits from 4.20 fix the regression:
-> >> d63907dc7dd1 ("KVM: nVMX: rename enter_vmx_non_root_mode to
-> >> nested_vmx_enter_non_root_mode")
-> >> a633e41e7362 ("KVM: nVMX: assimilate nested_vmx_entry_failure() into
-> >> nested_vmx_enter_non_root_mode()")
-> > 
-> > Now queued up, thanks!
-> > 
-> > greg k-h
-> > 
-> 
-> Why was it backported anyway?  Can everybody please just stop applying
-> KVM patches to stable kernels unless CCed to stable@vger.kernel.org?
-> 
-> I thought I had already asked Sasha to opt out of the autoselect
-> nonsense after catching another bug that would have been introduced.
+(adding some more arm64 folks)
 
-Sasha, can you add kvm code to the blacklist?  Odds are the fact that
-this is burried down in arch/x86/ it didn't get caught by the blacklist.
+On Fri, 29 Nov 2019 at 11:30, Neal Liu <neal.liu@mediatek.com> wrote:
+>
+> On Fri, 2019-11-29 at 18:02 +0800, Lars Persson wrote:
+> > Hi Neal,
+> >
+> > On Wed, Nov 27, 2019 at 3:23 PM Neal Liu <neal.liu@mediatek.com> wrote:
+> > >
+> > > For MediaTek SoCs on ARMv8 with TrustZone enabled, peripherals like
+> > > entropy sources is not accessible from normal world (linux) and
+> > > rather accessible from secure world (ATF/TEE) only. This driver aims
+> > > to provide a generic interface to ATF rng service.
+> > >
+> >
+> > I am working on several SoCs that also will need this kind of driver
+> > to get entropy from Arm trusted firmware.
+> > If you intend to make this a generic interface, please clean up the
+> > references to MediaTek and give it a more generic name. For example
+> > "Arm Trusted Firmware random number driver".
+> >
+> > It will also be helpful if the SMC call number is configurable.
+> >
+> > - Lars
+>
+> Yes, I'm trying to make this to a generic interface. I'll try to make
+> HW/platform related dependency to be configurable and let it more
+> generic.
+> Thanks for your suggestion.
+>
 
-thanks,
+I don't think it makes sense for each arm64 platform to expose an
+entropy source via SMC calls in a slightly different way, and model it
+as a h/w driver. Instead, we should try to standardize this, and
+perhaps expose it via the architectural helpers that already exist
+(get_random_seed_long() and friends), so they get plugged into the
+kernel random pool driver directly.
 
-greg k-h
+Note that in addition to drivers based on vendor SMC calls, we already
+have a RNG h/w driver based on OP-TEE as well, where the driver
+attaches to a standardized trusted OS interface identified by a UUID,
+and which also gets invoked via SMC calls into secure firmware.
