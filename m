@@ -6,110 +6,136 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46491C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D3DC43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 256132084F
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0FC3214AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:01:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727613AbfLBQAA (ORCPT
+        id S1727605AbfLBQBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 11:00:00 -0500
-Received: from mx2.suse.de ([195.135.220.15]:54652 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727418AbfLBP77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 10:59:59 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A3616B14A;
-        Mon,  2 Dec 2019 15:59:56 +0000 (UTC)
-Date:   Mon, 2 Dec 2019 16:59:55 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        kexec@lists.infradead.org
-Subject: Re: [RFC PATCH v5 1/3] printk-rb: new printk ringbuffer
- implementation (writer)
-Message-ID: <20191202155955.meawljmduiciw5t2@pathway.suse.cz>
-References: <20191128015235.12940-1-john.ogness@linutronix.de>
- <20191128015235.12940-2-john.ogness@linutronix.de>
- <20191202154841.qikvuvqt4btudxzg@pathway.suse.cz>
+        Mon, 2 Dec 2019 11:01:13 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56996 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727489AbfLBQBN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 11:01:13 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB2FuuA6081810
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 11:01:11 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2wm6c0j0xx-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 11:01:11 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Mon, 2 Dec 2019 16:01:09 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 2 Dec 2019 16:01:06 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB2G15UB51249366
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 2 Dec 2019 16:01:05 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 28F3D4203F;
+        Mon,  2 Dec 2019 16:01:05 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 868BF42041;
+        Mon,  2 Dec 2019 16:01:04 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.8.152])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon,  2 Dec 2019 16:01:04 +0000 (GMT)
+Date:   Mon, 2 Dec 2019 18:01:02 +0200
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Kars de Jong <karsdejong@home.nl>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: m68k Kconfig warning
+References: <021330b6-67a2-0b74-c129-5c725dd23810@infradead.org>
+ <CAMuHMdVLusDDB5G1R7=-53sK1bd2+3=s42hr9xkgPtWyjOrozg@mail.gmail.com>
+ <CACz-3rjOPg_rMt_FbJ5_nKLpjTK-Bv=amGsJpXwqbTBNX4YA7w@mail.gmail.com>
+ <CAMuHMdW1iqNkmCztAv93W4eLR5ooxh5m+vRLJHJmCfrjsOmc5g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191202154841.qikvuvqt4btudxzg@pathway.suse.cz>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <CAMuHMdW1iqNkmCztAv93W4eLR5ooxh5m+vRLJHJmCfrjsOmc5g@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19120216-0020-0000-0000-000003927D5A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120216-0021-0000-0000-000021E99982
+Message-Id: <20191202160101.GB17203@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-02_03:2019-11-29,2019-12-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ adultscore=0 priorityscore=1501 impostorscore=0 mlxscore=0 mlxlogscore=999
+ suspectscore=0 lowpriorityscore=0 spamscore=0 phishscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1912020141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2019-12-02 16:48:41, Petr Mladek wrote:
-> > +/* Reserve a new descriptor, invalidating the oldest if necessary. */
-> > +static bool desc_reserve(struct printk_ringbuffer *rb, u32 *id_out)
-> > +{
-> > +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
-> > +	struct prb_desc *desc;
-> > +	u32 id_prev_wrap;
-> > +	u32 head_id;
-> > +	u32 id;
-> > +
-> > +	head_id = atomic_read(&desc_ring->head_id);
-> > +
-> > +	do {
-> > +		desc = to_desc(desc_ring, head_id);
-> > +
-> > +		id = DESC_ID(head_id + 1);
-> > +		id_prev_wrap = DESC_ID_PREV_WRAP(desc_ring, id);
-> > +
-> > +		if (id_prev_wrap == atomic_read(&desc_ring->tail_id)) {
-> > +			if (!desc_push_tail(rb, id_prev_wrap))
-> > +				return false;
-> > +		}
-> > +	} while (!atomic_try_cmpxchg(&desc_ring->head_id, &head_id, id));
+On Mon, Dec 02, 2019 at 02:32:28PM +0100, Geert Uytterhoeven wrote:
+> Hi Kars,.
 > 
-> Hmm, in theory, ABA problem might cause that we successfully
-> move desc_ring->head_id when tail has not been pushed yet.
+> On Mon, Dec 2, 2019 at 12:42 PM Kars de Jong <karsdejong@home.nl> wrote:
+> > Op wo 27 nov. 2019 om 08:12 schreef Geert Uytterhoeven <geert@linux-m68k.org>:
+> > > On Wed, Nov 27, 2019 at 2:27 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+> > > > Just noticed this.  I don't know what the right fix is.
+> > > > Would you take care of it, please?
+> > > >
+> > > > on Linux 5.4, m68k allmodconfig:
+> > > >
+> > > > WARNING: unmet direct dependencies detected for NEED_MULTIPLE_NODES
+> > > >   Depends on [n]: DISCONTIGMEM [=n] || NUMA
+> > > >   Selected by [y]:
+> > > >   - SINGLE_MEMORY_CHUNK [=y] && MMU [=y]
+> > >
+> > > This has been basically there forever, but working.
+> >
+> > The reason for SINGLE_MEMORY_CHUNK depending on NEED_MULTIPLE_NODES is
+> > historic due to the way it is implemented.
+> > I played with it this weekend and I got a working version of FLATMEM,
+> > which can replace SINGLE_MEMORY_CHUNK.
 > 
-> As a result we would never call desc_push_tail() until
-> it overflows again.
+> Nice, thanks!
 > 
-> I am not sure if we need to take care of it. The code is called with
-> interrupts disabled. IMHO, only NMI could cause ABA problem
-> in reality. But the game (debugging) is lost anyway when NMI ovewrites
-> the buffer several times.
+> > step might be to replace DISCONTIGMEM with SPARSEMEM (since
+> > DISCONTIGMEM has been deprecated).
+> 
+> Mike Rapoport has patches for that:
+> "[PATCH v2 0/3] m68k/mm: switch from DISCONTIGMEM to SPARSEMEM"
+> 
+> Unfortunately they're not on lore, and there were some issues with them.
 
-BTW: If I am counting correctly. The ABA problem would happen when
-exactly 2^30 (1G) messages is written in the mean time.
+The patches are here:
+https://www.spinics.net/lists/linux-m68k/msg13588.html
 
-> Also it should not be a complete failure. We still could bail out when
-> the previous state was not reusable. We are on the safe side
-> when it was reusable.
-> 
-> Also we could probably detect when desc_ring->tail_id is not
-> updated any longer and do something about it.
-> 
-> > +
-> > +	desc = to_desc(desc_ring, id);
-> > +
-> > +	/* Set the descriptor's ID and also set its state to reserved. */
-> > +	atomic_set(&desc->state_var, id | 0);
-> 
-> We should check here that the original state id from the previous
-> wrap in reusable state (or 0 for bootstrap). On error, we know that
-> there was the ABA problem and would need to do something about it.
+Aside from some technicalities we had troubles deciding what should be the
+section size. With larger section size we might end up with wasted memory
+for memory maps and with smaller section size we'll have to limit the
+addressable physical memory...
 
-I believe that it should be enough to add this check and
-bail out in case of error.
 
-Best Regards,
-Petr
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+
+-- 
+Sincerely yours,
+Mike.
+
