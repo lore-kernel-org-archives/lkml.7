@@ -2,134 +2,91 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8E2C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7310DC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D45AD2071F
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4028B20718
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:27:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b6G8gNQP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbfLBSXO (ORCPT
+        id S1727870AbfLBS1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 13:23:14 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35906 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727858AbfLBSWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 13:22:15 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CC072AE53;
-        Mon,  2 Dec 2019 18:22:13 +0000 (UTC)
-From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-To:     linux-realtek-soc@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        James Tai <james.tai@realtek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH 01/14] ARM: dts: rtd1195: Introduce iso and misc syscon
-Date:   Mon,  2 Dec 2019 19:21:51 +0100
-Message-Id: <20191202182205.14629-2-afaerber@suse.de>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20191202182205.14629-1-afaerber@suse.de>
-References: <20191202182205.14629-1-afaerber@suse.de>
+        Mon, 2 Dec 2019 13:27:31 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:33412 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727671AbfLBS1b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 13:27:31 -0500
+Received: by mail-pj1-f65.google.com with SMTP id r67so101989pjb.0;
+        Mon, 02 Dec 2019 10:27:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kHId2K1mxfvE9DuGLR1TU18/e9Ev1X6mZeAaw2mVc2Y=;
+        b=b6G8gNQPSeawZGHOs8V0YQzs8YlHeA/RXizq1NQT5/x99h7TavgVA7Xj1xt4Rt533l
+         zgMrH9rc4tPWjH6ekO5UkNH01Afgc5t+TqwK1p75HjbzcdhAk/JYYbZsNWkWq4mmQxxL
+         MyYMN/qETHARQIjgSRt5bCz1XeycOHLk+K8IBPYdf2bEw7dJMqzrd8FvxuE+yn4rWylp
+         4hn1iGuwXAUVbU4fMcNyDCT5tKz6Pnc9fzW1rcxpv09llJ2gkq2oOnv22CgY/F5jsFcA
+         n16D4FLeAG+3ja4+bBStGnaEdOA9tHaMVxsgWYw1AOtg1YDN5kZR59VU121T9eb0AF/T
+         oDzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kHId2K1mxfvE9DuGLR1TU18/e9Ev1X6mZeAaw2mVc2Y=;
+        b=QvMaue07GjwZzX4xCvZb954wv3wVQRTcFaS8lmJiAkEQzCumBhW0Ovmku/0fDDCtlh
+         anjYCMMFQ0JeRJNb6uoEwb+R9Vrs8eQ030je8JwsaC6+8tTtnMis73sI2PPKW5OTgevP
+         9xPRaMZ8iPFP+rRKapNjy4iiDrKLxFAjmLuf1diViVMNGEfS1g/Ql7EpK6BNpFZD68Bu
+         3Peh2JQWAjilFc5vT4Nwa/upLEXfUH7JqQHtR3IIu71szA5t0RUydvnVZRPAMUQoyC6D
+         xQAHAMcZtsOVh/Pe419h+mJuXOd6TSRv8bmeYaRKps/V4NJLBSM3MwG+IfEt0KKxiN9q
+         TVJw==
+X-Gm-Message-State: APjAAAWkeylazf5nLM4M61nvfe7xKIjU44DcwRHCkBymMPfJmDM8o26i
+        nEcnLB30O1O1Jm1x3rvui5pAZDaT
+X-Google-Smtp-Source: APXvYqz0ZxG7eHgkaKqQ5ui+VUs6AKdnFWBt1wkZ5JNGRDYEHiB1cr5JEsPcZMOE/SIqe3ixY8x4Gw==
+X-Received: by 2002:a17:902:be10:: with SMTP id r16mr574623pls.169.1575311250097;
+        Mon, 02 Dec 2019 10:27:30 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id d69sm155038pfd.158.2019.12.02.10.27.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 10:27:28 -0800 (PST)
+Date:   Mon, 2 Dec 2019 10:27:26 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [PATCH] input: misc: Kconfig: use select instead of depends on
+ KEYBOARD_GPIO
+Message-ID: <20191202182726.GG50317@dtor-ws>
+References: <20191121132046.11977-1-info@metux.net>
+ <20191122195810.GD248138@dtor-ws>
+ <5600986e-239c-88a9-4f9c-ca261c33a156@metux.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5600986e-239c-88a9-4f9c-ca261c33a156@metux.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Group watchdog and UART0 into an Isolation syscon mfd node.
-Group UART1 into a Miscellaneous syscon mfd node.
+On Thu, Nov 28, 2019 at 02:03:40PM +0100, Enrico Weigelt, metux IT consult wrote:
+> On 22.11.19 20:58, Dmitry Torokhov wrote:
+> 
+> > KEYBOARD_GPIO depends on GPIOLIB and "select" does not propagate
+> > dependencies, so you may still end up with invalid configs...
+> 
+> Sure that they don't propagate ? In this case, I've got yet
+> another todo ... :o
 
-Cc: James Tai <james.tai@realtek.com>
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- arch/arm/boot/dts/rtd1195.dtsi | 58 +++++++++++++++++++++++++++++-------------
- 1 file changed, 40 insertions(+), 18 deletions(-)
+Yes, I am sure.
 
-diff --git a/arch/arm/boot/dts/rtd1195.dtsi b/arch/arm/boot/dts/rtd1195.dtsi
-index a8f7b9caacba..a74f530dc439 100644
---- a/arch/arm/boot/dts/rtd1195.dtsi
-+++ b/arch/arm/boot/dts/rtd1195.dtsi
-@@ -100,28 +100,22 @@
- 			#size-cells = <1>;
- 			ranges = <0x0 0x18000000 0x70000>;
- 
--			wdt: watchdog@7680 {
--				compatible = "realtek,rtd1295-watchdog";
--				reg = <0x7680 0x100>;
--				clocks = <&osc27M>;
--			};
--
--			uart0: serial@7800 {
--				compatible = "snps,dw-apb-uart";
--				reg = <0x7800 0x400>;
--				reg-shift = <2>;
-+			iso: syscon@7000 {
-+				compatible = "syscon", "simple-mfd";
-+				reg = <0x7000 0x1000>;
- 				reg-io-width = <4>;
--				clock-frequency = <27000000>;
--				status = "disabled";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0x0 0x7000 0x1000>;
- 			};
- 
--			uart1: serial@1b200 {
--				compatible = "snps,dw-apb-uart";
--				reg = <0x1b200 0x100>;
--				reg-shift = <2>;
-+			misc: syscon@1b000 {
-+				compatible = "syscon", "simple-mfd";
-+				reg = <0x1b000 0x1000>;
- 				reg-io-width = <4>;
--				clock-frequency = <27000000>;
--				status = "disabled";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0x0 0x1b000 0x1000>;
- 			};
- 		};
- 
-@@ -137,3 +131,31 @@
- 		};
- 	};
- };
-+
-+&iso {
-+	wdt: watchdog@680 {
-+		compatible = "realtek,rtd1295-watchdog";
-+		reg = <0x680 0x100>;
-+		clocks = <&osc27M>;
-+	};
-+
-+	uart0: serial@800 {
-+		compatible = "snps,dw-apb-uart";
-+		reg = <0x800 0x400>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+		clock-frequency = <27000000>;
-+		status = "disabled";
-+	};
-+};
-+
-+&misc {
-+	uart1: serial@200 {
-+		compatible = "snps,dw-apb-uart";
-+		reg = <0x200 0x100>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+		clock-frequency = <27000000>;
-+		status = "disabled";
-+	};
-+};
 -- 
-2.16.4
-
+Dmitry
