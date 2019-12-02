@@ -6,32 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C5EC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83581C43141
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAA4C2073C
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:22:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64F852084F
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:22:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbfLBSWv (ORCPT
+        id S1728057AbfLBSWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 13:22:51 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35998 "EHLO mx1.suse.de"
+        Mon, 2 Dec 2019 13:22:50 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35978 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727860AbfLBSWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 13:22:17 -0500
+        id S1727947AbfLBSWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 13:22:18 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B4321AEF5;
+        by mx1.suse.de (Postfix) with ESMTP id 18A91AE8D;
         Mon,  2 Dec 2019 18:22:16 +0000 (UTC)
 From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 To:     linux-realtek-soc@lists.infradead.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH 07/14] ARM: dts: rtd1195: Add reset nodes
-Date:   Mon,  2 Dec 2019 19:21:57 +0100
-Message-Id: <20191202182205.14629-8-afaerber@suse.de>
+Subject: [PATCH 06/14] dt-bindings: reset: Add Realtek RTD1195
+Date:   Mon,  2 Dec 2019 19:21:56 +0100
+Message-Id: <20191202182205.14629-7-afaerber@suse.de>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20191202182205.14629-1-afaerber@suse.de>
 References: <20191202182205.14629-1-afaerber@suse.de>
@@ -43,53 +44,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add reset controller nodes for Realtek RTD1195 SoC.
+Add a header with symbolic reset indices for Realtek RTD1195 SoC.
+Naming was derived from BSP register description headers.
 
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- v1: From RTD1195 v4 series (James wants to change the compatible string)
+ v1: From RTD1195 v4 series
  
- arch/arm/boot/dts/rtd1195.dtsi | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ include/dt-bindings/reset/realtek,rtd1195.h | 74 +++++++++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
+ create mode 100644 include/dt-bindings/reset/realtek,rtd1195.h
 
-diff --git a/arch/arm/boot/dts/rtd1195.dtsi b/arch/arm/boot/dts/rtd1195.dtsi
-index ac37366ff7c4..886845e52205 100644
---- a/arch/arm/boot/dts/rtd1195.dtsi
-+++ b/arch/arm/boot/dts/rtd1195.dtsi
-@@ -141,7 +141,33 @@
- 	};
- };
- 
-+&crt {
-+	reset1: reset-controller@0 {
-+		compatible = "snps,dw-low-reset";
-+		reg = <0x0 0x4>;
-+		#reset-cells = <1>;
-+	};
+diff --git a/include/dt-bindings/reset/realtek,rtd1195.h b/include/dt-bindings/reset/realtek,rtd1195.h
+new file mode 100644
+index 000000000000..27902abf935b
+--- /dev/null
++++ b/include/dt-bindings/reset/realtek,rtd1195.h
+@@ -0,0 +1,74 @@
++/* SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause) */
++/*
++ * Realtek RTD1195 reset controllers
++ *
++ * Copyright (c) 2017 Andreas Färber
++ */
++#ifndef DT_BINDINGS_RESET_RTD1195_H
++#define DT_BINDINGS_RESET_RTD1195_H
 +
-+	reset2: reset-controller@4 {
-+		compatible = "snps,dw-low-reset";
-+		reg = <0x4 0x4>;
-+		#reset-cells = <1>;
-+	};
++/* soft reset 1 */
++#define RTD1195_RSTN_MISC		0
++#define RTD1195_RSTN_RNG		1
++#define RTD1195_RSTN_USB3_POW		2
++#define RTD1195_RSTN_GSPI		3
++#define RTD1195_RSTN_USB3_P0_MDIO	4
++#define RTD1195_RSTN_VE_H265		5
++#define RTD1195_RSTN_USB		6
++#define RTD1195_RSTN_USB_PHY0		8
++#define RTD1195_RSTN_USB_PHY1		9
++#define RTD1195_RSTN_HDMIRX		11
++#define RTD1195_RSTN_HDMI		12
++#define RTD1195_RSTN_ETN		14
++#define RTD1195_RSTN_AIO		15
++#define RTD1195_RSTN_GPU		16
++#define RTD1195_RSTN_VE_H264		17
++#define RTD1195_RSTN_VE_JPEG		18
++#define RTD1195_RSTN_TVE		19
++#define RTD1195_RSTN_VO			20
++#define RTD1195_RSTN_LVDS		21
++#define RTD1195_RSTN_SE			22
++#define RTD1195_RSTN_DCU		23
++#define RTD1195_RSTN_DC_PHY		24
++#define RTD1195_RSTN_CP			25
++#define RTD1195_RSTN_MD			26
++#define RTD1195_RSTN_TP			27
++#define RTD1195_RSTN_AE			28
++#define RTD1195_RSTN_NF			29
++#define RTD1195_RSTN_MIPI		30
 +
-+	reset3: reset-controller@8 {
-+		compatible = "snps,dw-low-reset";
-+		reg = <0x8 0x4>;
-+		#reset-cells = <1>;
-+	};
-+};
++/* soft reset 2 */
++#define RTD1195_RSTN_ACPU		0
++#define RTD1195_RSTN_VCPU		1
++#define RTD1195_RSTN_PCR		9
++#define RTD1195_RSTN_CR			10
++#define RTD1195_RSTN_EMMC		11
++#define RTD1195_RSTN_SDIO		12
++#define RTD1195_RSTN_I2C_5		18
++#define RTD1195_RSTN_RTC		20
++#define RTD1195_RSTN_I2C_4		23
++#define RTD1195_RSTN_I2C_3		24
++#define RTD1195_RSTN_I2C_2		25
++#define RTD1195_RSTN_I2C_1		26
++#define RTD1195_RSTN_UR1		28
 +
- &iso {
-+	iso_reset: reset-controller@88 {
-+		compatible = "snps,dw-low-reset";
-+		reg = <0x88 0x4>;
-+		#reset-cells = <1>;
-+	};
++/* soft reset 3 */
++#define RTD1195_RSTN_SB2		0
 +
- 	wdt: watchdog@680 {
- 		compatible = "realtek,rtd1295-watchdog";
- 		reg = <0x680 0x100>;
++/* iso soft reset */
++#define RTD1195_ISO_RSTN_VFD		0
++#define RTD1195_ISO_RSTN_IR		1
++#define RTD1195_ISO_RSTN_CEC0		2
++#define RTD1195_ISO_RSTN_CEC1		3
++#define RTD1195_ISO_RSTN_DP		4
++#define RTD1195_ISO_RSTN_CBUSTX		5
++#define RTD1195_ISO_RSTN_CBUSRX		6
++#define RTD1195_ISO_RSTN_EFUSE		7
++#define RTD1195_ISO_RSTN_UR0		8
++#define RTD1195_ISO_RSTN_GMAC		9
++#define RTD1195_ISO_RSTN_GPHY		10
++#define RTD1195_ISO_RSTN_I2C_0		11
++#define RTD1195_ISO_RSTN_I2C_6		12
++#define RTD1195_ISO_RSTN_CBUS		13
++
++#endif
 -- 
 2.16.4
 
