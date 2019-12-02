@@ -2,81 +2,109 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDA2C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 935BEC43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55A6F20717
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 755C2215E5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:22:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbfLBSVF (ORCPT
+        id S1727936AbfLBSWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 13:21:05 -0500
-Received: from mga07.intel.com ([134.134.136.100]:58535 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727671AbfLBSVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 13:21:05 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 10:21:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,270,1571727600"; 
-   d="scan'208";a="410523120"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga005.fm.intel.com with ESMTP; 02 Dec 2019 10:21:02 -0800
-Date:   Mon, 2 Dec 2019 10:21:03 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Haitao Huang <haitao.huang@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        akpm@linux-foundation.org, dave.hansen@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com,
-        linux-security-module@vger.kernel.org,
-        Suresh Siddha <suresh.b.siddha@intel.com>
-Subject: Re: [PATCH v24 12/24] x86/sgx: Linux Enclave Driver
-Message-ID: <20191202182102.GF4063@linux.intel.com>
-References: <20191129231326.18076-1-jarkko.sakkinen@linux.intel.com>
- <20191129231326.18076-13-jarkko.sakkinen@linux.intel.com>
- <op.0b6gvhtiwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+        Mon, 2 Dec 2019 13:22:15 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35890 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727671AbfLBSWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 13:22:15 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 98844AD98;
+        Mon,  2 Dec 2019 18:22:13 +0000 (UTC)
+From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+To:     linux-realtek-soc@lists.infradead.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        James Tai <james.tai@realtek.com>
+Subject: [PATCH 00/14] ARM: dts: realtek: Introduce syscon
+Date:   Mon,  2 Dec 2019 19:21:50 +0100
+Message-Id: <20191202182205.14629-1-afaerber@suse.de>
+X-Mailer: git-send-email 2.16.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <op.0b6gvhtiwjvjmi@hhuan26-mobl.amr.corp.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 09:48:43AM -0600, Haitao Huang wrote:
-> On Fri, 29 Nov 2019 17:13:14 -0600, Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
-> 
-> 
-> >+
-> >+	for (c = 0 ; c < addp.length; c += PAGE_SIZE) {
-> >+		if (signal_pending(current)) {
-> >+			ret = -ERESTARTSYS;
-> >+			break;
-> >+		}
-> 
-> This IOC is not idempotent as pages EADDed at this point can not be
-> re-EADDed again. So we can't return ERESTARTSYS
+Hello,
 
-Ah, and now I remember why I opted for modifying the parameters directly
-instead of including a "number processed" field.  Andy pointed out the
-ERESTARTSYS thing in the original multi-page add RFC[*], so presumably
-updating the params and returning ERESTARTSYS is legal/acceptable.
+This patch series factors out system controller multi-function device nodes
+for CRT, Iso, Misc, SB2 and SCPU Wrapper IP blocks.
 
-[*] https://lkml.kernel.org/r/CALCETrUb4X9_L9RXKhmyNpfSCsbNodP=BfbfO8Fz_efq24jp8w@mail.gmail.com
+It was inspired by my SoC info RFC, as discussed in its cover letter [1].
+
+Goal of DT is to describe the hardware, and in previous patches we've already
+introduced Realtek's r-bus as node layer. The next step here is to model
+multi-function blocks as nodes. In order to cope with 80-character line limit,
+child nodes are added via reference rather than in-place.
+
+Also included is a patch adding a reset constant for the SB2 block added.
+We may need to follow up with bindings adding compatibles, clocks and resets.
+
+This series is based on my RTD1195 v4 [2] (except for reset, rebased here),
+my RTD1395 v2 [3] and James' modified RTD1619 v3 [4].
+
+The irq mux series v5 [5] has been rebased onto this series, v6 to be sent.
+The SoC info RFC series [1] is still being updated, v2 to be posted later.
+
+Latest experimental patches at:
+https://github.com/afaerber/linux/commits/rtd1295-next
+
+Have a lot of fun!
+
+Cheers,
+Andreas
+
+[1] https://patchwork.kernel.org/cover/11224261/
+[2] https://patchwork.kernel.org/cover/11258949/
+[3] https://patchwork.kernel.org/cover/11268955/
+[4] https://patchwork.kernel.org/patch/11239697/
+[5] https://patchwork.kernel.org/cover/11255291/
+
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: James Tai <james.tai@realtek.com>
+
+Andreas Färber (14):
+  ARM: dts: rtd1195: Introduce iso and misc syscon
+  arm64: dts: realtek: rtd129x: Introduce CRT, iso and misc syscon
+  arm64: dts: realtek: rtd139x: Introduce CRT, iso and misc syscon
+  arm64: dts: realtek: rtd16xx: Introduce iso and misc syscon
+  ARM: dts: rtd1195: Add CRT syscon node
+  dt-bindings: reset: Add Realtek RTD1195
+  ARM: dts: rtd1195: Add reset nodes
+  ARM: dts: rtd1195: Add UART resets
+  arm64: dts: realtek: rtd16xx: Add CRT syscon node
+  ARM: dts: rtd1195: Add SB2 and SCPU Wrapper syscon nodes
+  arm64: dts: realtek: rtd129x: Add SB2 and SCPU Wrapper syscon nodes
+  arm64: dts: realtek: rtd139x: Add SB2 and SCPU Wrapper syscon nodes
+  arm64: dts: realtek: rtd16xx: Add SB2 and SCPU Wrapper syscon nodes
+  dt-bindings: reset: rtd1295: Add SB2 reset
+
+ arch/arm/boot/dts/rtd1195.dtsi              | 110 ++++++++++++++++---
+ arch/arm64/boot/dts/realtek/rtd129x.dtsi    | 157 ++++++++++++++++++----------
+ arch/arm64/boot/dts/realtek/rtd139x.dtsi    | 157 ++++++++++++++++++----------
+ arch/arm64/boot/dts/realtek/rtd16xx.dtsi    |  91 ++++++++++++----
+ include/dt-bindings/reset/realtek,rtd1195.h |  74 +++++++++++++
+ include/dt-bindings/reset/realtek,rtd1295.h |   3 +
+ 6 files changed, 449 insertions(+), 143 deletions(-)
+ create mode 100644 include/dt-bindings/reset/realtek,rtd1195.h
+
+-- 
+2.16.4
+
