@@ -2,79 +2,75 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB7EC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F25C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30B3720848
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:09:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JGT1wvi7"
+	by mail.kernel.org (Postfix) with ESMTP id 678E520833
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:09:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575306595;
+	bh=GkbsSdmQ4eR/q4AClvX3n4KtKQbJWCPbVsm/uxNan0E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=COxUIvDpmJZwmI3TsUge8GOt1n69elY3NIeumUm7hGMuhStDlmN3FCDRPobKcaUkD
+	 CgFxoeuCQ8B4Vi38O12/N26OFS2Y6GqLpA4q4FsZn4O8btts+IDVEGozATpp05slud
+	 JBeDzLNZStR7N4hJPYfeqOmVargJjlQKuOwkaXTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbfLBRJt (ORCPT
+        id S1727854AbfLBRJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 12:09:49 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:39597 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727724AbfLBRJr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 12:09:47 -0500
-Received: by mail-qv1-f65.google.com with SMTP id y8so110641qvk.6;
-        Mon, 02 Dec 2019 09:09:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=fSLpCsC0gIfY0yNpzNg6ZYUHgfqDiFco3xCemoRy4iM=;
-        b=JGT1wvi7Mxpe5wO3iuZdiTBowwcSDL2PV10ehqW5a71+rQ8d6L/dY66/rzqHw0LHX/
-         c7m+7Pk7qw4vQMyyODN43cp4rn/eWqjSiRitTnp9UuhEV2AiWOxvSjc5fhm8RVH5N2Hy
-         omEoeo4cuGcHsrI8I5WCS0BaJI0NUx9tTmFfyCLj+P9BW+QpohFNsNyxNB24J8OPEg2H
-         W3QtFiQ5u5fixCsExbVo/A/D1FrCl8jd9HQVlCGvvneGeobDxcWpElppYnMMRTj/Ygkv
-         TZUeONnst/mdYNJNa5+95qZ+v8u6J0WK+efkGQd5dgIMli9HQtFFuJNwZB0st2e6ejEU
-         rLdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=fSLpCsC0gIfY0yNpzNg6ZYUHgfqDiFco3xCemoRy4iM=;
-        b=qX56gglAEv0ERKkxFSLlDNTbKUUbHkAisR8kvKT7n3J8iYCsompO0TOMR8706NRWS5
-         m3mSB10B4cOO/AAB2joKYe8APQqNVD/euAE96EUC8XZS4N5YfapFH2Lvt77LE/pKQ7UY
-         hUnI+TZX9lGCFiyvwKfzfqewFJw7eJ5HMdCZccwD7difyIpSOEB3LzknngyBl8dAZ3ch
-         uMiv7/Vato3Gk58K8ugQrS18HWBcAgZC1XdYX3URU5uMiCEx4OqeTpi4v9ViiRUqnHM0
-         In01SFHN3IrWhHazRUrOIhLu9ewgfoq3h00pmoBa12FYsrVYYIzrgYwI79cPUCcd64Kb
-         OPRQ==
-X-Gm-Message-State: APjAAAWCU8XqZdnh0neodgWx7xnBBNI9GKLaIqAr/UMZjwjPKOrCwwAm
-        G7uP9cKrdxa79V0yKEl2qB4UKrfwU0M5hTVvrs0=
-X-Google-Smtp-Source: APXvYqyKT6NO6KDsZ2ei5bKypY+iyosLPbJZy/xkL0hciZw1x+t08E3mYmWD+InttgZD7tNu/S5UBmrc2HpBRhRWSwc=
-X-Received: by 2002:a05:6214:38c:: with SMTP id l12mr1561456qvy.224.1575306584723;
- Mon, 02 Dec 2019 09:09:44 -0800 (PST)
+        Mon, 2 Dec 2019 12:09:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42278 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727724AbfLBRJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 12:09:53 -0500
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F135A20833;
+        Mon,  2 Dec 2019 17:09:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575306592;
+        bh=GkbsSdmQ4eR/q4AClvX3n4KtKQbJWCPbVsm/uxNan0E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=O9xXSKg8S6lM7Iks/wTYvZ1NUVYF6WWGXCJkhky2yE71DNlpRkTRLzZhxrC6aZxkN
+         ToP5TwKHAJgs+QW1VaDoiA6W3a5kpzPcupLLKeHa+wllldyjGFH0H0P7EPUsSLAalA
+         9xQ7l+0h5xI37uH0Tl7CPLR65PoHhN633F6cpQQw=
+Received: by mail-qt1-f179.google.com with SMTP id k11so464235qtm.3;
+        Mon, 02 Dec 2019 09:09:51 -0800 (PST)
+X-Gm-Message-State: APjAAAVBF1FojDo1bliIp6ou+5kBv6NJiRndW+Mx1HTygBlcZqXRG+Dj
+        PNyEFajNgada9iq+yxSE8zdhVNPYDKKEGX949A==
+X-Google-Smtp-Source: APXvYqx0eGKoau2S6a0rZyzd5VHUrfCL9liT+60FFeUQX4HBFesTQx2qmA3e+5um+KvbMtTh9mBqfuVW9OHHwdbtYdQ=
+X-Received: by 2002:ac8:5513:: with SMTP id j19mr310765qtq.143.1575306591095;
+ Mon, 02 Dec 2019 09:09:51 -0800 (PST)
 MIME-Version: 1.0
-References: <20191127094837.4045-1-jolsa@kernel.org>
-In-Reply-To: <20191127094837.4045-1-jolsa@kernel.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 2 Dec 2019 09:09:33 -0800
-Message-ID: <CAEf4BzbUK98tsYH1mSNoTjuVB4dstRsL5rpkA+9nRCcqrdn6-Q@mail.gmail.com>
-Subject: Re: [PATCH 0/3] perf/bpftool: Allow to link libbpf dynamically
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>
+References: <20191021124428.2541-1-brgl@bgdev.pl> <20191021124428.2541-6-brgl@bgdev.pl>
+ <20191111080837.GF18902@dell> <CAMRc=Me_b5c_e+qZ1s=TgTh7k_bQqrqthC8VTb7ak8+3AOEugg@mail.gmail.com>
+ <20191112105035.GR3218@dell>
+In-Reply-To: <20191112105035.GR3218@dell>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 2 Dec 2019 11:09:40 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+cpPppgVg_42m55DKOwA5uk7CLV_juDyCCECJMuuZYeg@mail.gmail.com>
+Message-ID: <CAL_Jsq+cpPppgVg_42m55DKOwA5uk7CLV_juDyCCECJMuuZYeg@mail.gmail.com>
+Subject: Re: [PATCH v4 5/6] dt-bindings: mfd: max77650: convert the binding
+ document to yaml
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,56 +78,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 1:49 AM Jiri Olsa <jolsa@kernel.org> wrote:
+On Tue, Nov 12, 2019 at 4:50 AM Lee Jones <lee.jones@linaro.org> wrote:
 >
-> hi,
-> adding support to link bpftool with libbpf dynamically,
-> and config change for perf.
+> On Mon, 11 Nov 2019, Bartosz Golaszewski wrote:
 >
-> It's now possible to use:
->   $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=3D1
+> > pon., 11 lis 2019 o 09:08 Lee Jones <lee.jones@linaro.org> napisa=C5=82=
+(a):
+> > >
+> > > On Mon, 21 Oct 2019, Bartosz Golaszewski wrote:
+> > >
+> > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > >
+> > > > Convert the binding document for MAX77650 core MFD module to YAML.
+> > > >
+> > > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > > ---
+> > > >  .../devicetree/bindings/mfd/max77650.txt      |  46 ------
+> > > >  .../devicetree/bindings/mfd/max77650.yaml     | 149 ++++++++++++++=
+++++
+> > > >  2 files changed, 149 insertions(+), 46 deletions(-)
+> > > >  delete mode 100644 Documentation/devicetree/bindings/mfd/max77650.=
+txt
+> > > >  create mode 100644 Documentation/devicetree/bindings/mfd/max77650.=
+yaml
+> > >
+> > > Applied, thanks.
+> > >
+> >
+> > Hi Lee,
+> >
+> > FYI this series is already in next through Rob's DT tree.
+>
+> Why don't I see an 'applied' email?
 
-I wonder what's the motivation behind these changes, though? Why is
-linking bpftool dynamically with libbpf is necessary and important?
-They are both developed tightly within kernel repo, so I fail to see
-what are the huge advantages one can get from linking them
-dynamically.
+There was discussion about it in the cover letter.
 
->
-> which will detect libbpf devel package with needed version,
-> and if found, link it with bpftool.
->
-> It's possible to use arbitrary installed libbpf:
->   $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=3D1 LIBBPF_DIR=3D/tmp/libbp=
-f/
->
-> I based this change on top of Arnaldo's perf/core, because
-> it contains libbpf feature detection code as dependency.
-> It's now also synced with latest bpf-next, so Toke's change
-> applies correctly.
->
-> Also available in:
->   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
->   libbpf/dyn
->
-> thanks,
-> jirka
->
->
-> ---
-> Jiri Olsa (2):
->       perf tools: Allow to specify libbpf install directory
->       bpftool: Allow to link libbpf dynamically
->
-> Toke H=C3=B8iland-J=C3=B8rgensen (1):
->       libbpf: Export netlink functions used by bpftool
->
->  tools/bpf/bpftool/Makefile        | 40 +++++++++++++++++++++++++++++++++=
-++++++-
->  tools/build/feature/test-libbpf.c |  9 +++++++++
->  tools/lib/bpf/libbpf.h            | 22 +++++++++++++---------
->  tools/lib/bpf/libbpf.map          |  7 +++++++
->  tools/lib/bpf/nlattr.h            | 15 ++++++++++-----
->  tools/perf/Makefile.config        | 27 ++++++++++++++++++++-------
->  6 files changed, 98 insertions(+), 22 deletions(-)
->
+With the schema for MFDs, we need to merge all the schema thru one
+tree because the main schema references the child node schemas.
+Otherwise, 'make dt_binding_check' will start failing (as Linus' tree
+is now). Perhaps we should encourage they be a single patche because
+1) child devices alone don't make sense and 2) it will be clear not to
+apply each separately.
+
+Rob
