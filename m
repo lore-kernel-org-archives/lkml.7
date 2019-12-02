@@ -2,116 +2,122 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A4EC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A87C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8802420684
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:39:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s7chfm3+"
+	by mail.kernel.org (Postfix) with ESMTP id 46FA82071E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:39:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726024AbfLBVjK (ORCPT
+        id S1726114AbfLBVje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 16:39:10 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35495 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfLBVjK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 16:39:10 -0500
-Received: by mail-wr1-f67.google.com with SMTP id g17so1151138wro.2;
-        Mon, 02 Dec 2019 13:39:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UY7Cgt/HHbMQf0k0lCTcwkYlvT/3f+PbQ7R+5FrroJk=;
-        b=s7chfm3+NiM53pTX/biaEdej5othUb91+knoYHrtDzVY329+Y3nrxfFjxX+3GOZVAZ
-         0EMZOmm0Ve/WdcrRS185uvrmSh3kM1+G2/gblrr9/jYCwAgq0HAOc92+fHPC4hjaPjFz
-         qtamQOzOUeazrRxUZ7sn2Xz/paAL28NH0tHbKyrNn6QDf2WArTa7HdslHaTb7HWlnVD9
-         ljUhJZx+A0dvNxO7tCZ0Yv0OZ+NEZg7eJRattmzXHIOueHA2Qq4hrcToMME1dBuxKlVS
-         qVgZXuX6Fp46I3jjCW/wTI+2wu1pz0g9p3D8b5wFwdb2nz8YkosfnP+whoSGGyvsOi7J
-         bo5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UY7Cgt/HHbMQf0k0lCTcwkYlvT/3f+PbQ7R+5FrroJk=;
-        b=SuOeVlvK0xSkqluT1O/Sn1z4EnZiUyfWd4puv2SzX5LxDAptjr+TuJbp/UpPlvHUFb
-         ktrbjT4SBQc+/2YKjqgD/cY2eBVFgihKOQ05khWnfBsn9/sgGtx7J+2tjqw9Ba/vWu/9
-         EzlPQpJjeY1lL2ZOqGi4Jvbblb5OegXJBTnAhgobHEtQwI77A9pc6MgBw2DiLOeZDPID
-         JWORD8DoQW+kynim80eo5049nYjrNTWvycJFvrS/4xwfyGZh2h7pHDTcpN7lsc/lNgem
-         kmY/QWjEZIRo2D4uumH1cnfVPMHjJEKkezY1wmGf3fBVioGqS+vy16Yh7i/VIfTGbmRJ
-         5RkQ==
-X-Gm-Message-State: APjAAAUaD3JznQ3jTDGdQSmd1Ler7CPkdAUkXwtCdxRHqRSo/eIfX7yx
-        2d/zLMSoiTa9SHsmiFpyupfm/dyAU/FhbMcxLqQ=
-X-Google-Smtp-Source: APXvYqyPXuAHZoIz3Nn0IQ/EHpeMnI4NckHiE/hs2YARA1G052OhgZkNuyP7oXg26gFkZU7g4h3eUDBXwumPOYpu3uk=
-X-Received: by 2002:a5d:46c7:: with SMTP id g7mr1239920wrs.11.1575322747719;
- Mon, 02 Dec 2019 13:39:07 -0800 (PST)
+        Mon, 2 Dec 2019 16:39:34 -0500
+Received: from muru.com ([72.249.23.125]:43968 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725775AbfLBVjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 16:39:33 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 3E5C880FC;
+        Mon,  2 Dec 2019 21:40:10 +0000 (UTC)
+Date:   Mon, 2 Dec 2019 13:39:29 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Adam Ford <aford173@gmail.com>,
+        =?utf-8?B?QW5kcsOp?= Roth <neolynx@gmail.com>,
+        Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [PATCH] ARM: OMAP2+: Fix warnings with broken
+ omap2_set_init_voltage()
+Message-ID: <20191202213929.GB35479@atomide.com>
+References: <20190924233222.52757-1-tony@atomide.com>
+ <8FFD44DB-73F8-4807-91E1-C97DA8F781BA@goldelico.com>
 MIME-Version: 1.0
-References: <20191202154738.56812-1-colin.king@canonical.com>
-In-Reply-To: <20191202154738.56812-1-colin.king@canonical.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Mon, 2 Dec 2019 16:38:56 -0500
-Message-ID: <CADnq5_Mtos36z7vp92ep4hQtW3KFeGb8EbWsGbhOGXJSebdVDA@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: remove redundant assignment to variable v_total
-To:     Colin King <colin.king@canonical.com>
-Cc:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8FFD44DB-73F8-4807-91E1-C97DA8F781BA@goldelico.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied.  thanks!
+Hi,
 
-Alex
+* H. Nikolaus Schaller <hns@goldelico.com> [191202 21:10]:
+> > Am 25.09.2019 um 01:32 schrieb Tony Lindgren <tony@atomide.com>:
+> > Guys, please check and ack if we can really do this to get rid of some
+> > pointless dmesg -l3 errors without affecting the ongoing cpufreq and
+> > voltage work.
+> 
+> unfortunately we did not yet test in combination with the 1GHz OPP
+> patches for omap3630 (queued for v5.5-rc1) and it appears that this
+> patch breaks the 1GHz OPP.
+> 
+> The symptom is that it works fine on a dm3730 with 800MHz rating
+> but results in spurious kernel panics, stack corruption, virtual memory
+> failures, OneNAND DMA timeouts etc. on a dm3730 with 1GHz speed grade.
 
-On Mon, Dec 2, 2019 at 10:47 AM Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> The variable v_total is being initialized with a value that is never
-> read and it is being updated later with a new value.  The initialization
-> is redundant and can be removed.
->
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/gpu/drm/amd/display/modules/freesync/freesync.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-> index 16e69bbc69aa..fa57885503d4 100644
-> --- a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-> +++ b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-> @@ -122,7 +122,7 @@ static unsigned int calc_v_total_from_refresh(
->                 const struct dc_stream_state *stream,
->                 unsigned int refresh_in_uhz)
->  {
-> -       unsigned int v_total = stream->timing.v_total;
-> +       unsigned int v_total;
->         unsigned int frame_duration_in_ns;
->
->         frame_duration_in_ns =
-> --
-> 2.24.0
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Hmm yeah OK, I was a bit worried about this breaking something.
+
+> We can also re-add the "turbo-mode" tags in the omap36xx.dtsi (or
+> remove the 1GHz OPP) and can then boot with 800MHz max. clock. But
+> enabling boost (echo 1 >/sys/devices/system/cpu/cpufreq/boost) makes
+> the problem and its symptoms appear almost immediately.
+> 
+> After some scratching our heads we found that v5.3.7 is still good and
+> v5.3.8 is bad. A bisect of our tree (which includes the 1GHz OPP) did
+> point to this patch whichwas apparently already backported to v5.3.8 and
+> v5.4.
+> 
+> So I assume that the code removed here enabled or initialized something
+> we need for safe 1GHz transitions. Maybe the ABB-LDO. Or it looks up the
+> vdd regulator and initializes it earlier than without this code. Maybe
+> it also (pre-)initializes some clk which could now be left uninitialized
+> too long?
+
+It was just doing voltdm_lookup() and clk_get_rate() and then failed
+dev_pm_opp_find_freq_ceil(), but I don't see what these might affect..
+
+> Note that seeing the log message indicates that voltdm_scale() and
+> dev_pm_opp_get_voltage() are not called, but all functions before could
+> be with side-effects.
+
+Yes that is strange. There's no clk_prepare() before we proceed to
+call clk_get_rate() either, not sure if that matter here though.
+
+> v5.5-rc1 will likely fail right from the beginning (only on 1GHz rated
+> omap36xx) because it makes the combination of this patch and 1GHz OPP
+> public (linux-next should already fail but it appears that nobody has
+> tested).
+
+OK
+
+> Any ideas how to fix? Before I try to do a revert and then add goto exit;
+> after each function call and see which ones are essential for 1GHz.
+
+If you have things reproducable, care to try to narrow the issue down
+a bit by trying see which parts of the old omap2_set_init_voltage()
+fix the issue?
+
+The issue should be there somewhere in the few lines of code before
+dev_pm_opp_find_freq_ceil(), right?
+
+It would be good to understand what's going on before reverting or
+fixing things condering that a revert would add back code that has
+it's own errors and fails to init :)
+
+Another thing to check is if the dev instance is actually the right
+one we had in omap2_set_init_voltage() vs the dts dev instance as
+we use that with dev_pm_opp_find_freq_ceil().
+
+Regards,
+
+Tony
