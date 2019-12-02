@@ -2,34 +2,34 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A29C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6933C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCD5020715
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B76C20833
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:06:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Kf1GY9e7"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="tW4PgOhK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbfLBOGh (ORCPT
+        id S1727613AbfLBOGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 09:06:37 -0500
-Received: from mail-eopbgr720081.outbound.protection.outlook.com ([40.107.72.81]:28832
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        Mon, 2 Dec 2019 09:06:40 -0500
+Received: from mail-eopbgr680055.outbound.protection.outlook.com ([40.107.68.55]:4837
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727164AbfLBOGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 09:06:36 -0500
+        id S1727362AbfLBOGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 09:06:38 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=At+K7BmAqBtqRyydZ5DqnNAdcjyYn+KjdO58q7uuIiIuHcLRGx/VwzOo1ukY3JN6dj9PnCJOIsYZj+m70bGdL7vktcPjjYNUEP1173QLuVyMC5I9SfW6OuKTaT+eW3GkKTi0BvTpvQa9LUt3Yz6hEIhdVdLUNrnYp+/wNSBpYTHuOI3yGvVsuRaPLM8/8h3eqyz/VdFFF0tua9Zd+YS9Mbbg/fAo6aNHY01PpfyySOK/KFqptUNw27kNIiexKwsnG9UYAogsKbEcJt0tpILZ+VIMOR8RmZphrYxiF0mOg/vYkxmFrfVqNo+yPBhAQZbkw3yczgKAVEJa9TBinfl4Kw==
+ b=BsbQK80sdUY5uaWamovn09nOBmF/nPs7FWq57JNMZTa9ynNwdt5NYnr5Gl71+UeMTRP8KsbEELieo9cEI1nl+vsP/jJm970jxT62HnSOr3sGNg+BXe80yp/0RhQTrpiZg3qPusiE3D73XsRoHcTaxwnZnJMASYX2UpwTS6EI4GfROFYZ5iaJGGm0K9QXy2W9+iNkyVWVKUrfKj615Vf8Jeh7Swl0slX14pijvC1P7ShttHFPqwEaVKzNyJGrUht/3VSDRAmDuo5zA3BQ2X60Rzgdv0Xx2VKFIHaba0qNiNZsAG96FifZ/jfpRWMQoME0TLrhbtwYXp1A7I7Fa8sJvg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kHtyt9MZvqldLJO2OBG9Yfg1Jmv8fU9HitUJQS5/qMs=;
- b=R9SAlyqihe3jVZsnUlUnR5EOo0iwTKbTOlpj2PhAeroz4Kkab3H8Rs4OLk+pkJhZb32T+FmU+5S+bvwnkSSHCGAnC99VeCjFQMM+ajlKmZptrhcaCwm46klUZUsfbWvjfDHp0Qr/Pm3A7f8aU9N3KavFx8LQYXdXq8PJU5q48lFYENcGF/vimRc04HkxYhpp1kjOZig6i85UgV3zCErNBwxqc+9wQX84X+xLk57u3QDJolK/pTrfQjl/naSxqP32Ldkcs0+rfBZFFudlRuS/mup931O2o8UkYveVYK/99WxRaO0Ukwa2ilANuvpfJFZxY9VM1nFnsyieC50/aR/qdQ==
+ bh=KBoP7J0kYcgWICurAXG7xkqYXjDwn7RVp5wemGyp/Vg=;
+ b=Z6KqwkNrnzKkcSfEnMlMh14Odj63bd5znRYMVx57bkaQzfYwOcrBR6HuYUmojSiCWaf3yMrwSS+e3PxLr68jDJ8ZewgQVCdl0QvovUPdD2JbcCFHwnhQiStXiOAHv+NAtwwdtOEITQVkPSzCpjt2fmn2LXgEckkUjAW7DVRkajstviXAYFVzYfxAlXudDYx3Tds+5DNIl61O5Bg8lhXn4DoH9YRZPTYYMAvWzUZ8i69PeGBkf5su26FIef7JCXONJNUgLTyHIzhfpNXI1YMFJz1jiSwVCo1/xj1ieNXbi+K+7aAKu+bx50J4mVI3uFggD5Lv1M1djkReudsu0gweEA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
  165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com;
  dmarc=permerror action=none header.from=amd.com; dkim=none (message not
@@ -37,34 +37,34 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kHtyt9MZvqldLJO2OBG9Yfg1Jmv8fU9HitUJQS5/qMs=;
- b=Kf1GY9e7AFnqkvpGC0aSNWrsWu1lk0VNRGio23tSXtDUjpJk2WuC6e7ARWzY9Ha9K0pkrzbVNbtmi57vO0JkZ6FGjdIop1yG4AYc4oB1BD16cdPz4w5CKmCfdoxlX49U6ZbRPgYfOtRwvR1Nom47D8iH1F6VycV7qKgxO4msVKo=
-Received: from MWHPR12CA0047.namprd12.prod.outlook.com (2603:10b6:301:2::33)
- by BY5PR12MB3874.namprd12.prod.outlook.com (2603:10b6:a03:1ad::15) with
+ bh=KBoP7J0kYcgWICurAXG7xkqYXjDwn7RVp5wemGyp/Vg=;
+ b=tW4PgOhKqF5jDJGCWbmfiKfKXf7ZBRPJVxXkddNdXjc9S5YacoYkcGSMgPamcFZCeL6mCbFRvgwBct+2XSdAERZkN8I4JrO79dIkXyjsjsDDSQDDrre/nGQil/ZkUUcn297DRD9NSQbB2Jn1TCckcsf1OBleeoTC+eYinINy7SI=
+Received: from SN1PR12CA0100.namprd12.prod.outlook.com (2603:10b6:802:21::35)
+ by MWHPR12MB1165.namprd12.prod.outlook.com (2603:10b6:300:d::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.18; Mon, 2 Dec
- 2019 14:06:33 +0000
-Received: from BN8NAM11FT021.eop-nam11.prod.protection.outlook.com
- (2a01:111:f400:7eae::208) by MWHPR12CA0047.outlook.office365.com
- (2603:10b6:301:2::33) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 14:06:34 +0000
+Received: from DM6NAM11FT039.eop-nam11.prod.protection.outlook.com
+ (2a01:111:f400:7eaa::207) by SN1PR12CA0100.outlook.office365.com
+ (2603:10b6:802:21::35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2495.18 via Frontend
- Transport; Mon, 2 Dec 2019 14:06:33 +0000
+ Transport; Mon, 2 Dec 2019 14:06:34 +0000
 Authentication-Results: spf=none (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; google.com; dkim=none (message not signed)
  header.d=none;google.com; dmarc=permerror action=none header.from=amd.com;
 Received-SPF: None (protection.outlook.com: amd.com does not designate
  permitted sender hosts)
-Received: from SATLEXMB02.amd.com (165.204.84.17) by
- BN8NAM11FT021.mail.protection.outlook.com (10.13.177.114) with Microsoft SMTP
+Received: from SATLEXMB01.amd.com (165.204.84.17) by
+ DM6NAM11FT039.mail.protection.outlook.com (10.13.172.83) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.20.2451.23 via Frontend Transport; Mon, 2 Dec 2019 14:06:32 +0000
-Received: from SATLEXMB01.amd.com (10.181.40.142) by SATLEXMB02.amd.com
- (10.181.40.143) with Microsoft SMTP Server (version=TLS1_2,
+ 15.20.2451.23 via Frontend Transport; Mon, 2 Dec 2019 14:06:34 +0000
+Received: from SATLEXMB01.amd.com (10.181.40.142) by SATLEXMB01.amd.com
+ (10.181.40.142) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 2 Dec 2019
- 08:06:09 -0600
+ 08:06:33 -0600
 Received: from vishnu-All-Series.amd.com (10.180.168.240) by
  SATLEXMB01.amd.com (10.181.40.142) with Microsoft SMTP Server id 15.1.1713.5
- via Frontend Transport; Mon, 2 Dec 2019 08:06:06 -0600
+ via Frontend Transport; Mon, 2 Dec 2019 08:06:30 -0600
 From:   Ravulapati Vishnu vardhan rao 
         <Vishnuvardhanrao.Ravulapati@amd.com>
 CC:     <Alexander.Deucher@amd.com>, <djkurtz@google.com>,
@@ -75,12 +75,15 @@ CC:     <Alexander.Deucher@amd.com>, <djkurtz@google.com>,
         Mark Brown <broonie@kernel.org>,
         Jaroslav Kysela <perex@perex.cz>,
         "Takashi Iwai" <tiwai@suse.com>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        "Kuninori Morimoto" <kuninori.morimoto.gx@renesas.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
         <alsa-devel@alsa-project.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH v13 1/7] ASoC: amd:Create multiple I2S platform device endpoint
-Date:   Mon, 2 Dec 2019 19:34:35 +0530
-Message-ID: <1575295481-9076-2-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+Subject: [PATCH v13 3/7] ASoC: amd: Enabling I2S instance in DMA and DAI
+Date:   Mon, 2 Dec 2019 19:34:37 +0530
+Message-ID: <1575295481-9076-4-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1575295481-9076-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
 References: <1575295481-9076-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
@@ -88,227 +91,690 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(396003)(136003)(376002)(428003)(189003)(199004)(47776003)(81156014)(76176011)(478600001)(305945005)(53416004)(86362001)(8936002)(1671002)(81166006)(48376002)(36756003)(50226002)(50466002)(5660300002)(16586007)(8676002)(54906003)(4326008)(7696005)(356004)(6666004)(51416003)(70586007)(70206006)(2616005)(11346002)(316002)(109986005)(186003)(26005)(336012)(446003)(426003)(2906002)(266003);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR12MB3874;H:SATLEXMB02.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;MX:1;A:1;
+X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(346002)(376002)(39860400002)(428003)(199004)(189003)(50226002)(8936002)(81156014)(50466002)(26005)(81166006)(47776003)(2906002)(478600001)(16586007)(186003)(36756003)(54906003)(316002)(70586007)(70206006)(7416002)(5660300002)(356004)(305945005)(19627235002)(14444005)(53416004)(11346002)(8676002)(446003)(48376002)(7696005)(4326008)(2616005)(76176011)(30864003)(51416003)(109986005)(1671002)(426003)(336012)(86362001)(266003)(473944003);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR12MB1165;H:SATLEXMB01.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;A:1;MX:1;
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b8c1c8c4-ab21-4534-0d76-08d77730d61a
-X-MS-TrafficTypeDiagnostic: BY5PR12MB3874:
-X-Microsoft-Antispam-PRVS: <BY5PR12MB38746B559FA47299EEEAF113E7430@BY5PR12MB3874.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:182;
+X-MS-Office365-Filtering-Correlation-Id: 7392c20f-ec81-466e-dd1a-08d77730d6da
+X-MS-TrafficTypeDiagnostic: MWHPR12MB1165:
+X-Microsoft-Antispam-PRVS: <MWHPR12MB1165268E1D2803E3CCDD1A22E7430@MWHPR12MB1165.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1443;
 X-Forefront-PRVS: 0239D46DB6
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1JSK2Fv+nUgu+DYTKTOmlV12CCsQxm0zopAXiFG4mJSU8MgjAKlrt0bziidj6hbU06KPxldFlG4IyxP1jMb/o6JAjIlVpY2dun3HVb18ZC0N9Hzry4R6fT7D3oOsAPHMUMRlShRLy1CcaT2i4Ll0zKgrI4pQuOLCHzjELZBhNHKgz3VIh/VcSpzAx+JFAeV+oAx1XB+pZgO8z93UXMR9+ZAFkCiGV3KCRFn5mVJapB2kwwIOuQ/1IAAcKgtvPDUzcBwM0i6uf7uUh6ZeA2eszsYoSexzeEueBknVaCyo3jqgnlTwFGNPJ6Ab48gQngz3WMzdxzOuufHlhTEpX296TzxVAFyaXTLn1TLaG3+W0qNpQLt3XkQ55FSER3CPdF/3uTM59hXkBZNMT7R2jUmTBDWn691GBzU+ppjpvZQ/AHJ1GRAcbSP9njyyjapeLnOK
+X-Microsoft-Antispam-Message-Info: iHM1UNmyMJrD6GV8mqgeQC0tblDao5MLx6yot/yIRUHg8ekFbSvP2rNTKzhJpMsy1vsdZb3lM7oRmXKQl6n4CUimoPpZLeUSbtnP+8a0rQJFiiJzz5e5tbcQ/Gow59R9+SdGFa38hPCCuhj76wBcEASXjpAIMABkA0Wg9s6HU/oGS9AZeIbPki9v2aCHW8my630Bpi/eZFe4TDE6pQruUOmqCsLsR6exX/S6Fd1/diRrgOOZi5z6xH1uRp40hV4+9fU6/jFqwNnJovjssh90IC+QjcUMy1Rh1z1mX7bFLONIM5gECDZhgjrYHz0tVtjnUQ+7qHQFPEPX8V1Ffbjbd/B8ALSQzPD0qGsPcuyv87jWzoomSwRtGDH/Ic/JGqw/an5Tc4AU6bGFwTzQ93oH4ndj6QAAf58eVII388+grKi5CCKeDaudRywsK4SL/xwU
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Dec 2019 14:06:32.9961
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Dec 2019 14:06:34.2168
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b8c1c8c4-ab21-4534-0d76-08d77730d61a
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7392c20f-ec81-466e-dd1a-08d77730d6da
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB02.amd.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB01.amd.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB3874
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1165
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Creates Platform Device endpoints for multiple
-I2S instances: SP and  BT endpoints device.
-Pass PCI resources like MMIO, irq to the platform devices.
+This patch adds I2S SP support in ACP PCM DMA and DAI.
+Added I2S support in DMA and DAI probe,its hw_params handling
+its open and close functionalities.
+This enables to open and close on the SP instance for
+playback and capture.
 
 Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
 ---
- sound/soc/amd/raven/acp3x.h     |  5 +++
- sound/soc/amd/raven/pci-acp3x.c | 95 +++++++++++++++++++++++++++--------------
- 2 files changed, 68 insertions(+), 32 deletions(-)
+ sound/soc/amd/raven/acp3x-i2s.c     | 123 ++++++++++++++++----
+ sound/soc/amd/raven/acp3x-pcm-dma.c | 217 +++++++++++++++++++++++++-----------
+ sound/soc/amd/raven/acp3x.h         |  77 ++++++++++---
+ 3 files changed, 312 insertions(+), 105 deletions(-)
 
+diff --git a/sound/soc/amd/raven/acp3x-i2s.c b/sound/soc/amd/raven/acp3x-i2s.c
+index cdc1c61..7f05782 100644
+--- a/sound/soc/amd/raven/acp3x-i2s.c
++++ b/sound/soc/amd/raven/acp3x-i2s.c
+@@ -28,10 +28,10 @@ static int acp3x_i2s_set_fmt(struct snd_soc_dai *cpu_dai,
+ 	mode = fmt & SND_SOC_DAIFMT_FORMAT_MASK;
+ 	switch (mode) {
+ 	case SND_SOC_DAIFMT_I2S:
+-		adata->tdm_mode = false;
++		adata->tdm_mode = TDM_DISABLE;
+ 		break;
+ 	case SND_SOC_DAIFMT_DSP_A:
+-		adata->tdm_mode = true;
++		adata->tdm_mode = TDM_ENABLE;
+ 		break;
+ 	default:
+ 		return -EINVAL;
+@@ -87,10 +87,22 @@ static int acp3x_i2s_hwparams(struct snd_pcm_substream *substream,
+ 	struct snd_pcm_hw_params *params, struct snd_soc_dai *dai)
+ {
+ 	struct i2s_stream_instance *rtd;
++	struct snd_soc_pcm_runtime *prtd;
++	struct snd_soc_card *card;
++	struct acp3x_platform_info *pinfo;
+ 	u32 val;
+ 	u32 reg_val;
+ 
++	prtd = substream->private_data;
+ 	rtd = substream->runtime->private_data;
++	card = prtd->card;
++	pinfo = snd_soc_card_get_drvdata(card);
++	if (pinfo) {
++		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
++			rtd->i2s_instance = pinfo->play_i2s_instance;
++		else
++			rtd->i2s_instance = pinfo->cap_i2s_instance;
++	}
+ 
+ 	/* These values are as per Hardware Spec */
+ 	switch (params_format(params)) {
+@@ -110,11 +122,25 @@ static int acp3x_i2s_hwparams(struct snd_pcm_substream *substream,
+ 	default:
+ 		return -EINVAL;
+ 	}
+-	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+-		reg_val = mmACP_BTTDM_ITER;
+-	else
+-		reg_val = mmACP_BTTDM_IRER;
+-
++	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
++		switch (rtd->i2s_instance) {
++		case I2S_BT_INSTANCE:
++			reg_val = mmACP_BTTDM_ITER;
++			break;
++		case I2S_SP_INSTANCE:
++		default:
++			reg_val = mmACP_I2STDM_ITER;
++		}
++	} else {
++		switch (rtd->i2s_instance) {
++		case I2S_BT_INSTANCE:
++			reg_val = mmACP_BTTDM_IRER;
++			break;
++		case I2S_SP_INSTANCE:
++		default:
++			reg_val = mmACP_I2STDM_IRER;
++		}
++	}
+ 	val = rv_readl(rtd->acp3x_base + reg_val);
+ 	val = val | (rtd->xfer_resolution  << 3);
+ 	rv_writel(val, rtd->acp3x_base + reg_val);
+@@ -125,10 +151,21 @@ static int acp3x_i2s_trigger(struct snd_pcm_substream *substream,
+ 				int cmd, struct snd_soc_dai *dai)
+ {
+ 	struct i2s_stream_instance *rtd;
+-	u32 val, period_bytes;
+-	int ret, reg_val;
++	struct snd_soc_pcm_runtime *prtd;
++	struct snd_soc_card *card;
++	struct acp3x_platform_info *pinfo;
++	u32 ret, val, period_bytes, reg_val, ier_val, water_val;
+ 
++	prtd = substream->private_data;
+ 	rtd = substream->runtime->private_data;
++	card = prtd->card;
++	pinfo = snd_soc_card_get_drvdata(card);
++	if (pinfo) {
++		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
++			rtd->i2s_instance = pinfo->play_i2s_instance;
++		else
++			rtd->i2s_instance = pinfo->cap_i2s_instance;
++	}
+ 	period_bytes = frames_to_bytes(substream->runtime,
+ 			substream->runtime->period_size);
+ 	switch (cmd) {
+@@ -138,31 +175,75 @@ static int acp3x_i2s_trigger(struct snd_pcm_substream *substream,
+ 		rtd->bytescount = acp_get_byte_count(rtd,
+ 						substream->stream);
+ 		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+-			reg_val = mmACP_BTTDM_ITER;
+-			rv_writel(period_bytes, rtd->acp3x_base +
+-					mmACP_BT_TX_INTR_WATERMARK_SIZE);
++			switch (rtd->i2s_instance) {
++			case I2S_BT_INSTANCE:
++				water_val =
++					mmACP_BT_TX_INTR_WATERMARK_SIZE;
++				reg_val = mmACP_BTTDM_ITER;
++				ier_val = mmACP_BTTDM_IER;
++				break;
++			case I2S_SP_INSTANCE:
++			default:
++				water_val =
++					mmACP_I2S_TX_INTR_WATERMARK_SIZE;
++				reg_val = mmACP_I2STDM_ITER;
++				ier_val = mmACP_I2STDM_IER;
++			}
+ 		} else {
+-			reg_val = mmACP_BTTDM_IRER;
+-			rv_writel(period_bytes, rtd->acp3x_base +
+-					mmACP_BT_RX_INTR_WATERMARK_SIZE);
++			switch (rtd->i2s_instance) {
++			case I2S_BT_INSTANCE:
++				water_val =
++					mmACP_BT_RX_INTR_WATERMARK_SIZE;
++				reg_val = mmACP_BTTDM_IRER;
++				ier_val = mmACP_BTTDM_IER;
++				break;
++			case I2S_SP_INSTANCE:
++			default:
++				water_val =
++					mmACP_I2S_RX_INTR_WATERMARK_SIZE;
++				reg_val = mmACP_I2STDM_IRER;
++				ier_val = mmACP_I2STDM_IER;
++			}
+ 		}
++		rv_writel(period_bytes, rtd->acp3x_base + water_val);
+ 		val = rv_readl(rtd->acp3x_base + reg_val);
+ 		val = val | BIT(0);
+ 		rv_writel(val, rtd->acp3x_base + reg_val);
+-		rv_writel(1, rtd->acp3x_base + mmACP_BTTDM_IER);
++		rv_writel(1, rtd->acp3x_base + ier_val);
++		ret = 0;
+ 		break;
+ 	case SNDRV_PCM_TRIGGER_STOP:
+ 	case SNDRV_PCM_TRIGGER_SUSPEND:
+ 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
+-		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+-			reg_val = mmACP_BTTDM_ITER;
+-		else
+-			reg_val = mmACP_BTTDM_IRER;
++		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
++			switch (rtd->i2s_instance) {
++			case I2S_BT_INSTANCE:
++				reg_val = mmACP_BTTDM_ITER;
++				ier_val = mmACP_BTTDM_IER;
++				break;
++			case I2S_SP_INSTANCE:
++			default:
++				reg_val = mmACP_I2STDM_ITER;
++				ier_val = mmACP_I2STDM_IER;
++			}
+ 
++		} else {
++			switch (rtd->i2s_instance) {
++			case I2S_BT_INSTANCE:
++				reg_val = mmACP_BTTDM_IRER;
++				ier_val = mmACP_BTTDM_IER;
++				break;
++			case I2S_SP_INSTANCE:
++			default:
++				reg_val = mmACP_I2STDM_IRER;
++				ier_val = mmACP_I2STDM_IER;
++			}
++		}
+ 		val = rv_readl(rtd->acp3x_base + reg_val);
+ 		val = val & ~BIT(0);
+ 		rv_writel(val, rtd->acp3x_base + reg_val);
+-		rv_writel(0, rtd->acp3x_base + mmACP_BTTDM_IER);
++		rv_writel(0, rtd->acp3x_base + ier_val);
++		ret = 0;
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
+index 3150516..14ef38e 100644
+--- a/sound/soc/amd/raven/acp3x-pcm-dma.c
++++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
+@@ -194,15 +194,31 @@ static irqreturn_t i2s_irq_handler(int irq, void *dev_id)
+ static void config_acp3x_dma(struct i2s_stream_instance *rtd, int direction)
+ {
+ 	u16 page_idx;
+-	u32 low, high, val, acp_fifo_addr;
+-	dma_addr_t addr = rtd->dma_addr;
++	u32 low, high, val, acp_fifo_addr, reg_fifo_addr;
++	u32 reg_ringbuf_size, reg_dma_size, reg_fifo_size;
++	dma_addr_t addr;
+ 
+-	/* 8 scratch registers used to map one 64 bit address */
+-	if (direction == SNDRV_PCM_STREAM_PLAYBACK)
+-		val = 0;
+-	else
+-		val = rtd->num_pages * 8;
++	addr = rtd->dma_addr;
+ 
++	if (direction == SNDRV_PCM_STREAM_PLAYBACK) {
++		switch (rtd->i2s_instance) {
++		case I2S_BT_INSTANCE:
++			val = ACP_SRAM_BT_PB_PTE_OFFSET;
++			break;
++		case I2S_SP_INSTANCE:
++		default:
++			val = ACP_SRAM_SP_PB_PTE_OFFSET;
++		}
++	} else {
++		switch (rtd->i2s_instance) {
++		case I2S_BT_INSTANCE:
++			val = ACP_SRAM_BT_CP_PTE_OFFSET;
++			break;
++		case I2S_SP_INSTANCE:
++		default:
++			val = ACP_SRAM_SP_CP_PTE_OFFSET;
++		}
++	}
+ 	/* Group Enable */
+ 	rv_writel(ACP_SRAM_PTE_OFFSET | BIT(31), rtd->acp3x_base +
+ 		  mmACPAXI2AXI_ATU_BASE_ADDR_GRP_1);
+@@ -224,38 +240,61 @@ static void config_acp3x_dma(struct i2s_stream_instance *rtd, int direction)
+ 	}
+ 
+ 	if (direction == SNDRV_PCM_STREAM_PLAYBACK) {
+-		/* Config ringbuffer */
+-		rv_writel(MEM_WINDOW_START, rtd->acp3x_base +
+-			  mmACP_BT_TX_RINGBUFADDR);
+-		rv_writel(MAX_BUFFER, rtd->acp3x_base +
+-			  mmACP_BT_TX_RINGBUFSIZE);
+-		rv_writel(DMA_SIZE, rtd->acp3x_base + mmACP_BT_TX_DMA_SIZE);
+-
+-		/* Config audio fifo */
+-		acp_fifo_addr = ACP_SRAM_PTE_OFFSET + (rtd->num_pages * 8)
+-				+ PLAYBACK_FIFO_ADDR_OFFSET;
+-		rv_writel(acp_fifo_addr, rtd->acp3x_base +
+-			  mmACP_BT_TX_FIFOADDR);
+-		rv_writel(FIFO_SIZE, rtd->acp3x_base + mmACP_BT_TX_FIFOSIZE);
++		switch (rtd->i2s_instance) {
++		case I2S_BT_INSTANCE:
++			reg_ringbuf_size = mmACP_BT_TX_RINGBUFSIZE;
++			reg_dma_size = mmACP_BT_TX_DMA_SIZE;
++			acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
++						BT_PB_FIFO_ADDR_OFFSET;
++			reg_fifo_addr = mmACP_BT_TX_FIFOADDR;
++			reg_fifo_size = mmACP_BT_TX_FIFOSIZE;
++			rv_writel(I2S_BT_TX_MEM_WINDOW_START,
++				rtd->acp3x_base + mmACP_BT_TX_RINGBUFADDR);
++			break;
++
++		case I2S_SP_INSTANCE:
++		default:
++			reg_ringbuf_size = mmACP_I2S_TX_RINGBUFSIZE;
++			reg_dma_size = mmACP_I2S_TX_DMA_SIZE;
++			acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
++						SP_PB_FIFO_ADDR_OFFSET;
++			reg_fifo_addr =	mmACP_I2S_TX_FIFOADDR;
++			reg_fifo_size = mmACP_I2S_TX_FIFOSIZE;
++			rv_writel(I2S_SP_TX_MEM_WINDOW_START,
++				rtd->acp3x_base + mmACP_I2S_TX_RINGBUFADDR);
++		}
+ 	} else {
+-		/* Config ringbuffer */
+-		rv_writel(MEM_WINDOW_START + MAX_BUFFER, rtd->acp3x_base +
+-			  mmACP_BT_RX_RINGBUFADDR);
+-		rv_writel(MAX_BUFFER, rtd->acp3x_base +
+-			  mmACP_BT_RX_RINGBUFSIZE);
+-		rv_writel(DMA_SIZE, rtd->acp3x_base + mmACP_BT_RX_DMA_SIZE);
+-
+-		/* Config audio fifo */
+-		acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
+-				(rtd->num_pages * 8) + CAPTURE_FIFO_ADDR_OFFSET;
+-		rv_writel(acp_fifo_addr, rtd->acp3x_base +
+-			  mmACP_BT_RX_FIFOADDR);
+-		rv_writel(FIFO_SIZE, rtd->acp3x_base + mmACP_BT_RX_FIFOSIZE);
+-	}
++		switch (rtd->i2s_instance) {
++		case I2S_BT_INSTANCE:
++			reg_ringbuf_size = mmACP_BT_RX_RINGBUFSIZE;
++			reg_dma_size = mmACP_BT_RX_DMA_SIZE;
++			acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
++						BT_CAPT_FIFO_ADDR_OFFSET;
++			reg_fifo_addr = mmACP_BT_RX_FIFOADDR;
++			reg_fifo_size = mmACP_BT_RX_FIFOSIZE;
++			rv_writel(I2S_BT_RX_MEM_WINDOW_START,
++				rtd->acp3x_base + mmACP_BT_RX_RINGBUFADDR);
++			break;
+ 
+-	/* Enable  watermark/period interrupt to host */
+-	rv_writel(BIT(BT_TX_THRESHOLD) | BIT(BT_RX_THRESHOLD),
+-		  rtd->acp3x_base + mmACP_EXTERNAL_INTR_CNTL);
++		case I2S_SP_INSTANCE:
++		default:
++			reg_ringbuf_size = mmACP_I2S_RX_RINGBUFSIZE;
++			reg_dma_size = mmACP_I2S_RX_DMA_SIZE;
++			acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
++						SP_CAPT_FIFO_ADDR_OFFSET;
++			reg_fifo_addr = mmACP_I2S_RX_FIFOADDR;
++			reg_fifo_size = mmACP_I2S_RX_FIFOSIZE;
++			rv_writel(I2S_SP_RX_MEM_WINDOW_START,
++				rtd->acp3x_base + mmACP_I2S_RX_RINGBUFADDR);
++		}
++	}
++	rv_writel(MAX_BUFFER, rtd->acp3x_base + reg_ringbuf_size);
++	rv_writel(DMA_SIZE, rtd->acp3x_base + reg_dma_size);
++	rv_writel(acp_fifo_addr, rtd->acp3x_base + reg_fifo_addr);
++	rv_writel(FIFO_SIZE, rtd->acp3x_base + reg_fifo_size);
++	rv_writel(BIT(I2S_RX_THRESHOLD) | BIT(BT_RX_THRESHOLD)
++		| BIT(I2S_TX_THRESHOLD) | BIT(BT_TX_THRESHOLD),
++		rtd->acp3x_base + mmACP_EXTERNAL_INTR_CNTL);
+ }
+ 
+ static int acp3x_dma_open(struct snd_soc_component *component,
+@@ -288,17 +327,21 @@ static int acp3x_dma_open(struct snd_soc_component *component,
+ 		return ret;
+ 	}
+ 
+-	if (!adata->play_stream && !adata->capture_stream)
++	if (!adata->play_stream && !adata->capture_stream &&
++		adata->i2ssp_play_stream && !adata->i2ssp_capture_stream)
+ 		rv_writel(1, adata->acp3x_base + mmACP_EXTERNAL_INTR_ENB);
+ 
+-	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
++	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+ 		adata->play_stream = substream;
+-	else
++		adata->i2ssp_play_stream = substream;
++	} else {
+ 		adata->capture_stream = substream;
++		adata->i2ssp_capture_stream = substream;
++	}
+ 
+ 	i2s_data->acp3x_base = adata->acp3x_base;
+ 	runtime->private_data = i2s_data;
+-	return 0;
++	return ret;
+ }
+ 
+ 
+@@ -306,16 +349,28 @@ static int acp3x_dma_hw_params(struct snd_soc_component *component,
+ 			       struct snd_pcm_substream *substream,
+ 			       struct snd_pcm_hw_params *params)
+ {
+-	struct snd_pcm_runtime *runtime;
+ 	struct i2s_stream_instance *rtd;
++	struct snd_soc_pcm_runtime *prtd;
++	struct snd_soc_card *card;
++	struct acp3x_platform_info *pinfo;
+ 	int status;
+ 	u64 size;
+ 
+-	runtime = substream->runtime;
+-	rtd = substream->private_data;
++	prtd = substream->private_data;
++	card = prtd->card;
++	pinfo = snd_soc_card_get_drvdata(card);
++	rtd = substream->runtime->private_data;
+ 	if (!rtd)
+ 		return -EINVAL;
+ 
++	if (pinfo)
++		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
++			rtd->i2s_instance = pinfo->play_i2s_instance;
++		else
++			rtd->i2s_instance = pinfo->cap_i2s_instance;
++	else
++		pr_err("pinfo failed\n");
++
+ 	size = params_buffer_bytes(params);
+ 	status = snd_pcm_lib_malloc_pages(substream, size);
+ 	if (status < 0)
+@@ -336,12 +391,25 @@ static int acp3x_dma_hw_params(struct snd_soc_component *component,
+ static snd_pcm_uframes_t acp3x_dma_pointer(struct snd_soc_component *component,
+ 					   struct snd_pcm_substream *substream)
+ {
++	struct snd_soc_pcm_runtime *prtd;
++	struct snd_soc_card *card;
++	struct acp3x_platform_info *pinfo;
+ 	struct i2s_stream_instance *rtd;
+ 	u32 pos;
+ 	u32 buffersize;
+ 	u64 bytescount;
+ 
++	prtd = substream->private_data;
++	card = prtd->card;
+ 	rtd = substream->runtime->private_data;
++	pinfo = snd_soc_card_get_drvdata(card);
++	if (pinfo) {
++		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
++			rtd->i2s_instance = pinfo->play_i2s_instance;
++		else
++			rtd->i2s_instance = pinfo->cap_i2s_instance;
++	}
++
+ 	buffersize = frames_to_bytes(substream->runtime,
+ 				     substream->runtime->buffer_size);
+ 	bytescount = acp_get_byte_count(rtd, substream->stream);
+@@ -386,15 +454,19 @@ static int acp3x_dma_close(struct snd_soc_component *component,
+ 	component = snd_soc_rtdcom_lookup(prtd, DRV_NAME);
+ 	adata = dev_get_drvdata(component->dev);
+ 
+-	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
++	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+ 		adata->play_stream = NULL;
+-	else
++		adata->i2ssp_play_stream = NULL;
++	} else {
+ 		adata->capture_stream = NULL;
++		adata->i2ssp_capture_stream = NULL;
++	}
+ 
+ 	/* Disable ACP irq, when the current stream is being closed and
+ 	 * another stream is also not active.
+ 	 */
+-	if (!adata->play_stream && !adata->capture_stream)
++	if (!adata->play_stream && !adata->capture_stream &&
++		!adata->i2ssp_play_stream && !adata->i2ssp_capture_stream)
+ 		rv_writel(0, adata->acp3x_base + mmACP_EXTERNAL_INTR_ENB);
+ 	return 0;
+ }
+@@ -503,8 +575,10 @@ static int acp3x_resume(struct device *dev)
+ {
+ 	struct i2s_dev_data *adata;
+ 	int status;
+-	u32 val;
++	u32 val, reg_val, frmt_val;
+ 
++	reg_val = 0;
++	frmt_val = 0;
+ 	adata = dev_get_drvdata(dev);
+ 	status = acp3x_init(adata->acp3x_base);
+ 	if (status)
+@@ -514,32 +588,39 @@ static int acp3x_resume(struct device *dev)
+ 		struct i2s_stream_instance *rtd =
+ 			adata->play_stream->runtime->private_data;
+ 		config_acp3x_dma(rtd, SNDRV_PCM_STREAM_PLAYBACK);
+-		rv_writel((rtd->xfer_resolution  << 3),
+-			  rtd->acp3x_base + mmACP_BTTDM_ITER);
+-		if (adata->tdm_mode == true) {
+-			rv_writel(adata->tdm_fmt, adata->acp3x_base +
+-				  mmACP_BTTDM_TXFRMT);
+-			val = rv_readl(adata->acp3x_base + mmACP_BTTDM_ITER);
+-			rv_writel((val | 0x2), adata->acp3x_base +
+-				  mmACP_BTTDM_ITER);
++		switch (rtd->i2s_instance) {
++		case I2S_BT_INSTANCE:
++			reg_val = mmACP_BTTDM_ITER;
++			frmt_val = mmACP_BTTDM_TXFRMT;
++			break;
++		case I2S_SP_INSTANCE:
++		default:
++			reg_val = mmACP_I2STDM_ITER;
++			frmt_val = mmACP_I2STDM_TXFRMT;
+ 		}
++	rv_writel((rtd->xfer_resolution  << 3), rtd->acp3x_base + reg_val);
+ 	}
+-
+ 	if (adata->capture_stream && adata->capture_stream->runtime) {
+ 		struct i2s_stream_instance *rtd =
+ 			adata->capture_stream->runtime->private_data;
+ 		config_acp3x_dma(rtd, SNDRV_PCM_STREAM_CAPTURE);
+-		rv_writel((rtd->xfer_resolution  << 3),
+-			  rtd->acp3x_base + mmACP_BTTDM_IRER);
+-		if (adata->tdm_mode == true) {
+-			rv_writel(adata->tdm_fmt, adata->acp3x_base +
+-				  mmACP_BTTDM_RXFRMT);
+-			val = rv_readl(adata->acp3x_base + mmACP_BTTDM_IRER);
+-			rv_writel((val | 0x2), adata->acp3x_base +
+-				  mmACP_BTTDM_IRER);
++		switch (rtd->i2s_instance) {
++		case I2S_BT_INSTANCE:
++			reg_val = mmACP_BTTDM_IRER;
++			frmt_val = mmACP_BTTDM_RXFRMT;
++			break;
++		case I2S_SP_INSTANCE:
++		default:
++			reg_val = mmACP_I2STDM_IRER;
++			frmt_val = mmACP_I2STDM_RXFRMT;
+ 		}
++	rv_writel((rtd->xfer_resolution  << 3), rtd->acp3x_base + reg_val);
++	}
++	if (adata->tdm_mode == TDM_ENABLE) {
++		rv_writel(adata->tdm_fmt, adata->acp3x_base + frmt_val);
++		val = rv_readl(adata->acp3x_base + reg_val);
++		rv_writel(val | 0x2, adata->acp3x_base + reg_val);
+ 	}
+-
+ 	rv_writel(1, adata->acp3x_base + mmACP_EXTERNAL_INTR_ENB);
+ 	return 0;
+ }
+@@ -549,8 +630,8 @@ static int acp3x_pcm_runtime_suspend(struct device *dev)
+ {
+ 	struct i2s_dev_data *adata;
+ 	int status;
+-	adata = dev_get_drvdata(dev);
+ 
++	adata = dev_get_drvdata(dev);
+ 	status = acp3x_deinit(adata->acp3x_base);
+ 	if (status)
+ 		dev_err(dev, "ACP de-init failed\n");
+@@ -566,8 +647,8 @@ static int acp3x_pcm_runtime_resume(struct device *dev)
+ {
+ 	struct i2s_dev_data *adata;
+ 	int status;
+-	adata = dev_get_drvdata(dev);
+ 
++	adata = dev_get_drvdata(dev);
+ 	status = acp3x_init(adata->acp3x_base);
+ 	if (status)
+ 		return -ENODEV;
 diff --git a/sound/soc/amd/raven/acp3x.h b/sound/soc/amd/raven/acp3x.h
-index 4f2cadd..2f15fe1 100644
+index a6c6d63..ed1acbc 100644
 --- a/sound/soc/amd/raven/acp3x.h
 +++ b/sound/soc/amd/raven/acp3x.h
-@@ -7,10 +7,15 @@
+@@ -7,6 +7,12 @@
  
  #include "chip_offset_byte.h"
  
-+#define ACP3x_DEVS		3
++#define I2S_SP_INSTANCE                 0x01
++#define I2S_BT_INSTANCE                 0x02
++
++#define TDM_ENABLE 1
++#define TDM_DISABLE 0
++
+ #define ACP3x_DEVS		3
  #define ACP3x_PHY_BASE_ADDRESS 0x1240000
  #define	ACP3x_I2S_MODE	0
- #define	ACP3x_REG_START	0x1240000
- #define	ACP3x_REG_END	0x1250200
-+#define ACP3x_I2STDM_REG_START	0x1242400
-+#define ACP3x_I2STDM_REG_END	0x1242410
-+#define ACP3x_BT_TDM_REG_START	0x1242800
-+#define ACP3x_BT_TDM_REG_END	0x1242810
+@@ -17,8 +23,11 @@
+ #define ACP3x_BT_TDM_REG_START	0x1242800
+ #define ACP3x_BT_TDM_REG_END	0x1242810
  #define I2S_MODE	0x04
++#define	I2S_RX_THRESHOLD	27
++#define	I2S_TX_THRESHOLD	28
  #define	BT_TX_THRESHOLD 26
  #define	BT_RX_THRESHOLD 25
-diff --git a/sound/soc/amd/raven/pci-acp3x.c b/sound/soc/amd/raven/pci-acp3x.c
-index facec24..94f5f21 100644
---- a/sound/soc/amd/raven/pci-acp3x.c
-+++ b/sound/soc/amd/raven/pci-acp3x.c
-@@ -16,17 +16,17 @@ struct acp3x_dev_data {
++#define ACP_ERR_INTR_MASK	29
+ #define ACP3x_POWER_ON 0x00
+ #define ACP3x_POWER_ON_IN_PROGRESS 0x01
+ #define ACP3x_POWER_OFF 0x02
+@@ -26,19 +35,28 @@
+ #define ACP3x_SOFT_RESET__SoftResetAudDone_MASK	0x00010001
+ 
+ #define ACP_SRAM_PTE_OFFSET	0x02050000
++#define ACP_SRAM_SP_PB_PTE_OFFSET	0x0
++#define ACP_SRAM_SP_CP_PTE_OFFSET	0x100
++#define ACP_SRAM_BT_PB_PTE_OFFSET	0x200
++#define ACP_SRAM_BT_CP_PTE_OFFSET	0x300
+ #define PAGE_SIZE_4K_ENABLE 0x2
+-#define MEM_WINDOW_START	0x4000000
+-#define PLAYBACK_FIFO_ADDR_OFFSET 0x400
+-#define CAPTURE_FIFO_ADDR_OFFSET  0x500
++#define I2S_SP_TX_MEM_WINDOW_START	0x4000000
++#define I2S_SP_RX_MEM_WINDOW_START	0x4020000
++#define I2S_BT_TX_MEM_WINDOW_START	0x4040000
++#define I2S_BT_RX_MEM_WINDOW_START	0x4060000
+ 
++#define SP_PB_FIFO_ADDR_OFFSET		0x500
++#define SP_CAPT_FIFO_ADDR_OFFSET	0x700
++#define BT_PB_FIFO_ADDR_OFFSET		0x900
++#define BT_CAPT_FIFO_ADDR_OFFSET	0xB00
+ #define PLAYBACK_MIN_NUM_PERIODS    2
+ #define PLAYBACK_MAX_NUM_PERIODS    8
+-#define PLAYBACK_MAX_PERIOD_SIZE    16384
+-#define PLAYBACK_MIN_PERIOD_SIZE    4096
++#define PLAYBACK_MAX_PERIOD_SIZE    8192
++#define PLAYBACK_MIN_PERIOD_SIZE    1024
+ #define CAPTURE_MIN_NUM_PERIODS     2
+ #define CAPTURE_MAX_NUM_PERIODS     8
+-#define CAPTURE_MAX_PERIOD_SIZE     16384
+-#define CAPTURE_MIN_PERIOD_SIZE     4096
++#define CAPTURE_MAX_PERIOD_SIZE     8192
++#define CAPTURE_MIN_PERIOD_SIZE     1024
+ 
+ #define MAX_BUFFER (PLAYBACK_MAX_PERIOD_SIZE * PLAYBACK_MAX_NUM_PERIODS)
+ #define MIN_BUFFER MAX_BUFFER
+@@ -65,14 +83,20 @@ struct i2s_dev_data {
  	void __iomem *acp3x_base;
- 	bool acp3x_audio_mode;
- 	struct resource *res;
--	struct platform_device *pdev;
-+	struct platform_device *pdev[ACP3x_DEVS];
+ 	struct snd_pcm_substream *play_stream;
+ 	struct snd_pcm_substream *capture_stream;
++	struct snd_pcm_substream *i2ssp_play_stream;
++	struct snd_pcm_substream *i2ssp_capture_stream;
  };
  
- static int snd_acp3x_probe(struct pci_dev *pci,
- 			   const struct pci_device_id *pci_id)
- {
--	int ret;
--	u32 addr, val;
- 	struct acp3x_dev_data *adata;
--	struct platform_device_info pdevinfo;
-+	struct platform_device_info pdevinfo[ACP3x_DEVS];
- 	unsigned int irqflags;
-+	int ret, i;
-+	u32 addr, val;
+ struct i2s_stream_instance {
+ 	u16 num_pages;
++	u16 i2s_instance;
++	u16 capture_channel;
++	u16 direction;
+ 	u16 channels;
+ 	u32 xfer_resolution;
+-	u64 bytescount;
++	u32 val;
+ 	dma_addr_t dma_addr;
++	u64 bytescount;
+ 	void __iomem *acp3x_base;
+ };
  
- 	if (pci_enable_device(pci)) {
- 		dev_err(&pci->dev, "pci_enable_device failed\n");
-@@ -56,10 +56,11 @@ static int snd_acp3x_probe(struct pci_dev *pci,
- 		irqflags = 0;
+@@ -92,15 +116,36 @@ static inline u64 acp_get_byte_count(struct i2s_stream_instance *rtd,
+ 	u64 byte_count;
  
- 	addr = pci_resource_start(pci, 0);
--	adata->acp3x_base = ioremap(addr, pci_resource_len(pci, 0));
-+	adata->acp3x_base = devm_ioremap(&pci->dev, addr,
-+					pci_resource_len(pci, 0));
- 	if (!adata->acp3x_base) {
- 		ret = -ENOMEM;
--		goto release_regions;
-+		goto disable_msi;
+ 	if (direction == SNDRV_PCM_STREAM_PLAYBACK) {
+-		byte_count = rv_readl(rtd->acp3x_base +
+-				mmACP_BT_TX_LINEARPOSITIONCNTR_HIGH);
+-		byte_count |= rv_readl(rtd->acp3x_base +
+-				mmACP_BT_TX_LINEARPOSITIONCNTR_LOW);
++		switch (rtd->i2s_instance) {
++		case I2S_BT_INSTANCE:
++			byte_count = rv_readl(rtd->acp3x_base +
++					mmACP_BT_TX_LINEARPOSITIONCNTR_HIGH);
++			byte_count |= rv_readl(rtd->acp3x_base +
++					mmACP_BT_TX_LINEARPOSITIONCNTR_LOW);
++			break;
++		case I2S_SP_INSTANCE:
++		default:
++			byte_count = rv_readl(rtd->acp3x_base +
++					mmACP_I2S_TX_LINEARPOSITIONCNTR_HIGH);
++			byte_count |= rv_readl(rtd->acp3x_base +
++					mmACP_I2S_TX_LINEARPOSITIONCNTR_LOW);
++		}
++
+ 	} else {
+-		byte_count = rv_readl(rtd->acp3x_base +
+-				mmACP_BT_RX_LINEARPOSITIONCNTR_HIGH);
+-		byte_count |= rv_readl(rtd->acp3x_base +
+-				mmACP_BT_RX_LINEARPOSITIONCNTR_LOW);
++		switch (rtd->i2s_instance) {
++		case I2S_BT_INSTANCE:
++			byte_count = rv_readl(rtd->acp3x_base +
++					mmACP_BT_RX_LINEARPOSITIONCNTR_HIGH);
++			byte_count |= rv_readl(rtd->acp3x_base +
++					mmACP_BT_RX_LINEARPOSITIONCNTR_LOW);
++			break;
++		case I2S_SP_INSTANCE:
++		default:
++			byte_count = rv_readl(rtd->acp3x_base +
++					mmACP_I2S_RX_LINEARPOSITIONCNTR_HIGH);
++			byte_count |= rv_readl(rtd->acp3x_base +
++					mmACP_I2S_RX_LINEARPOSITIONCNTR_LOW);
++		}
  	}
- 	pci_set_master(pci);
- 	pci_set_drvdata(pci, adata);
-@@ -68,11 +69,11 @@ static int snd_acp3x_probe(struct pci_dev *pci,
- 	switch (val) {
- 	case I2S_MODE:
- 		adata->res = devm_kzalloc(&pci->dev,
--					  sizeof(struct resource) * 2,
-+					  sizeof(struct resource) * 4,
- 					  GFP_KERNEL);
- 		if (!adata->res) {
- 			ret = -ENOMEM;
--			goto unmap_mmio;
-+			goto disable_msi;
- 		}
- 
- 		adata->res[0].name = "acp3x_i2s_iomem";
-@@ -80,40 +81,67 @@ static int snd_acp3x_probe(struct pci_dev *pci,
- 		adata->res[0].start = addr;
- 		adata->res[0].end = addr + (ACP3x_REG_END - ACP3x_REG_START);
- 
--		adata->res[1].name = "acp3x_i2s_irq";
--		adata->res[1].flags = IORESOURCE_IRQ;
--		adata->res[1].start = pci->irq;
--		adata->res[1].end = pci->irq;
-+		adata->res[1].name = "acp3x_i2s_sp";
-+		adata->res[1].flags = IORESOURCE_MEM;
-+		adata->res[1].start = addr + ACP3x_I2STDM_REG_START;
-+		adata->res[1].end = addr + ACP3x_I2STDM_REG_END;
-+
-+		adata->res[2].name = "acp3x_i2s_bt";
-+		adata->res[2].flags = IORESOURCE_MEM;
-+		adata->res[2].start = addr + ACP3x_BT_TDM_REG_START;
-+		adata->res[2].end = addr + ACP3x_BT_TDM_REG_END;
-+
-+		adata->res[3].name = "acp3x_i2s_irq";
-+		adata->res[3].flags = IORESOURCE_IRQ;
-+		adata->res[3].start = pci->irq;
-+		adata->res[3].end = adata->res[3].start;
- 
- 		adata->acp3x_audio_mode = ACP3x_I2S_MODE;
- 
- 		memset(&pdevinfo, 0, sizeof(pdevinfo));
--		pdevinfo.name = "acp3x_rv_i2s";
--		pdevinfo.id = 0;
--		pdevinfo.parent = &pci->dev;
--		pdevinfo.num_res = 2;
--		pdevinfo.res = adata->res;
--		pdevinfo.data = &irqflags;
--		pdevinfo.size_data = sizeof(irqflags);
--
--		adata->pdev = platform_device_register_full(&pdevinfo);
--		if (IS_ERR(adata->pdev)) {
--			dev_err(&pci->dev, "cannot register %s device\n",
--				pdevinfo.name);
--			ret = PTR_ERR(adata->pdev);
--			goto unmap_mmio;
-+		pdevinfo[0].name = "acp3x_rv_i2s_dma";
-+		pdevinfo[0].id = 0;
-+		pdevinfo[0].parent = &pci->dev;
-+		pdevinfo[0].num_res = 4;
-+		pdevinfo[0].res = &adata->res[0];
-+		pdevinfo[0].data = &irqflags;
-+		pdevinfo[0].size_data = sizeof(irqflags);
-+
-+		pdevinfo[1].name = "acp3x_i2s_playcap";
-+		pdevinfo[1].id = 0;
-+		pdevinfo[1].parent = &pci->dev;
-+		pdevinfo[1].num_res = 1;
-+		pdevinfo[1].res = &adata->res[1];
-+
-+		pdevinfo[2].name = "acp3x_i2s_playcap";
-+		pdevinfo[2].id = 1;
-+		pdevinfo[2].parent = &pci->dev;
-+		pdevinfo[2].num_res = 1;
-+		pdevinfo[2].res = &adata->res[2];
-+		for (i = 0; i < ACP3x_DEVS ; i++) {
-+			adata->pdev[i] =
-+				platform_device_register_full(&pdevinfo[i]);
-+			if (IS_ERR(adata->pdev[i])) {
-+				dev_err(&pci->dev, "cannot register %s device\n",
-+					pdevinfo[i].name);
-+				ret = PTR_ERR(adata->pdev[i]);
-+				goto unregister_devs;
-+			}
- 		}
- 		break;
- 	default:
- 		dev_err(&pci->dev, "Invalid ACP audio mode : %d\n", val);
- 		ret = -ENODEV;
--		goto unmap_mmio;
-+		goto disable_msi;
- 	}
- 	return 0;
- 
--unmap_mmio:
-+unregister_devs:
-+	if (val == I2S_MODE)
-+		for (i = 0 ; i < ACP3x_DEVS ; i++)
-+			platform_device_unregister(adata->pdev[i]);
-+disable_msi:
- 	pci_disable_msi(pci);
--	iounmap(adata->acp3x_base);
- release_regions:
- 	pci_release_regions(pci);
- disable_pci:
-@@ -125,10 +153,12 @@ static int snd_acp3x_probe(struct pci_dev *pci,
- static void snd_acp3x_remove(struct pci_dev *pci)
- {
- 	struct acp3x_dev_data *adata = pci_get_drvdata(pci);
-+	int i;
- 
--	platform_device_unregister(adata->pdev);
--	iounmap(adata->acp3x_base);
--
-+	if (adata->acp3x_audio_mode == ACP3x_I2S_MODE) {
-+		for (i = 0 ; i <  ACP3x_DEVS ; i++)
-+			platform_device_unregister(adata->pdev[i]);
-+	}
- 	pci_disable_msi(pci);
- 	pci_release_regions(pci);
- 	pci_disable_device(pci);
-@@ -151,6 +181,7 @@ static struct pci_driver acp3x_driver  = {
- 
- module_pci_driver(acp3x_driver);
- 
-+MODULE_AUTHOR("Vishnuvardhanrao.Ravulapati@amd.com");
- MODULE_AUTHOR("Maruthi.Bayyavarapu@amd.com");
- MODULE_DESCRIPTION("AMD ACP3x PCI driver");
- MODULE_LICENSE("GPL v2");
+ 	return byte_count;
+ }
 -- 
 2.7.4
 
