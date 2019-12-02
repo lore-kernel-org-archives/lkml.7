@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC0DC43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D68FC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDE0B2146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C33420833
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:14:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbfLBIO0 (ORCPT
+        id S1727431AbfLBIOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 03:14:26 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:44864 "EHLO huawei.com"
+        Mon, 2 Dec 2019 03:14:40 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:37316 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726486AbfLBIOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 03:14:25 -0500
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id AAB21B4B9543D1B553E4;
-        Mon,  2 Dec 2019 16:14:22 +0800 (CST)
+        id S1726214AbfLBIOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 03:14:24 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 96B92106611D16A3E7B5;
+        Mon,  2 Dec 2019 16:14:17 +0800 (CST)
 Received: from huawei.com (10.175.124.28) by DGGEMS405-HUB.china.huawei.com
  (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Mon, 2 Dec 2019
- 16:14:12 +0800
+ 16:14:09 +0800
 From:   "zhangyi (F)" <yi.zhang@huawei.com>
 To:     <gregkh@linuxfoundation.org>
 CC:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
@@ -33,9 +33,9 @@ CC:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
         <peterz@infradead.org>, <bigeasy@linutronix.de>, <mhocko@suse.com>,
         <john.ogness@linutronix.de>, <yi.zhang@huawei.com>,
         <nixiaoming@huawei.com>
-Subject: [PATCH 4.4 6/7] proc: fix coredump vs read /proc/*/stat race
-Date:   Mon, 2 Dec 2019 16:35:18 +0800
-Message-ID: <20191202083519.23138-7-yi.zhang@huawei.com>
+Subject: [PATCH 4.4 2/7] sched/core: Add try_get_task_stack() and put_task_stack()
+Date:   Mon, 2 Dec 2019 16:35:14 +0800
+Message-ID: <20191202083519.23138-3-yi.zhang@huawei.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20191202083519.23138-1-yi.zhang@huawei.com>
 References: <20191202083519.23138-1-yi.zhang@huawei.com>
@@ -48,106 +48,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Dobriyan <adobriyan@gmail.com>
+From: Andy Lutomirski <luto@kernel.org>
 
-commit 8bb2ee192e482c5d500df9f2b1b26a560bd3026f upstream.
+commit c6c314a613cd7d03fb97713e0d642b493de42e69 upstream.
 
-do_task_stat() accesses IP and SP of a task without bumping reference
-count of a stack (which became an entity with independent lifetime at
-some point).
+There are a few places in the kernel that access stack memory
+belonging to a different task.  Before we can start freeing task
+stacks before the task_struct is freed, we need a way for those code
+paths to pin the stack.
 
-Steps to reproduce:
-
-    #include <stdio.h>
-    #include <sys/types.h>
-    #include <sys/stat.h>
-    #include <fcntl.h>
-    #include <sys/time.h>
-    #include <sys/resource.h>
-    #include <unistd.h>
-    #include <sys/wait.h>
-
-    int main(void)
-    {
-    	setrlimit(RLIMIT_CORE, &(struct rlimit){});
-
-    	while (1) {
-    		char buf[64];
-    		char buf2[4096];
-    		pid_t pid;
-    		int fd;
-
-    		pid = fork();
-    		if (pid == 0) {
-    			*(volatile int *)0 = 0;
-    		}
-
-    		snprintf(buf, sizeof(buf), "/proc/%u/stat", pid);
-    		fd = open(buf, O_RDONLY);
-    		read(fd, buf2, sizeof(buf2));
-    		close(fd);
-
-    		waitpid(pid, NULL, 0);
-    	}
-    	return 0;
-    }
-
-    BUG: unable to handle kernel paging request at 0000000000003fd8
-    IP: do_task_stat+0x8b4/0xaf0
-    PGD 800000003d73e067 P4D 800000003d73e067 PUD 3d558067 PMD 0
-    Oops: 0000 [#1] PREEMPT SMP PTI
-    CPU: 0 PID: 1417 Comm: a.out Not tainted 4.15.0-rc8-dirty #2
-    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1.fc27 04/01/2014
-    RIP: 0010:do_task_stat+0x8b4/0xaf0
-    Call Trace:
-     proc_single_show+0x43/0x70
-     seq_read+0xe6/0x3b0
-     __vfs_read+0x1e/0x120
-     vfs_read+0x84/0x110
-     SyS_read+0x3d/0xa0
-     entry_SYSCALL_64_fastpath+0x13/0x6c
-    RIP: 0033:0x7f4d7928cba0
-    RSP: 002b:00007ffddb245158 EFLAGS: 00000246
-    Code: 03 b7 a0 01 00 00 4c 8b 4c 24 70 4c 8b 44 24 78 4c 89 74 24 18 e9 91 f9 ff ff f6 45 4d 02 0f 84 fd f7 ff ff 48 8b 45 40 48 89 ef <48> 8b 80 d8 3f 00 00 48 89 44 24 20 e8 9b 97 eb ff 48 89 44 24
-    RIP: do_task_stat+0x8b4/0xaf0 RSP: ffffc90000607cc8
-    CR2: 0000000000003fd8
-
-John Ogness said: for my tests I added an else case to verify that the
-race is hit and correctly mitigated.
-
-Link: http://lkml.kernel.org/r/20180116175054.GA11513@avx2
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
-Reported-by: "Kohli, Gaurav" <gkohli@codeaurora.org>
-Tested-by: John Ogness <john.ogness@linutronix.de>
-Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: Ingo Molnar <mingo@elte.hu>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Jann Horn <jann@thejh.net>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/17a434f50ad3d77000104f21666575e10a9c1fbd.1474003868.git.luto@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
 ---
- fs/proc/array.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ include/linux/sched.h | 16 ++++++++++++++++
+ init/Kconfig          |  3 +++
+ 2 files changed, 19 insertions(+)
 
-diff --git a/fs/proc/array.c b/fs/proc/array.c
-index c3e1732bcaa5..42e33ea50d1c 100644
---- a/fs/proc/array.c
-+++ b/fs/proc/array.c
-@@ -435,8 +435,11 @@ static int do_task_stat(struct seq_file *m, struct pid_namespace *ns,
- 		 * safe because the task has stopped executing permanently.
- 		 */
- 		if (permitted && (task->flags & PF_DUMPCORE)) {
--			eip = KSTK_EIP(task);
--			esp = KSTK_ESP(task);
-+			if (try_get_task_stack(task)) {
-+				eip = KSTK_EIP(task);
-+				esp = KSTK_ESP(task);
-+				put_task_stack(task);
-+			}
- 		}
- 	}
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index d6b2e77aad3f..761247c966a5 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -2858,11 +2858,19 @@ static inline struct thread_info *task_thread_info(struct task_struct *task)
+ {
+ 	return &task->thread_info;
+ }
++
++/*
++ * When accessing the stack of a non-current task that might exit, use
++ * try_get_task_stack() instead.  task_stack_page will return a pointer
++ * that could get freed out from under you.
++ */
+ static inline void *task_stack_page(const struct task_struct *task)
+ {
+ 	return task->stack;
+ }
++
+ #define setup_thread_stack(new,old)	do { } while(0)
++
+ static inline unsigned long *end_of_stack(const struct task_struct *task)
+ {
+ 	return task->stack;
+@@ -2898,6 +2906,14 @@ static inline unsigned long *end_of_stack(struct task_struct *p)
+ }
  
+ #endif
++
++static inline void *try_get_task_stack(struct task_struct *tsk)
++{
++	return task_stack_page(tsk);
++}
++
++static inline void put_task_stack(struct task_struct *tsk) {}
++
+ #define task_stack_end_corrupted(task) \
+ 		(*(end_of_stack(task)) != STACK_END_MAGIC)
+ 
+diff --git a/init/Kconfig b/init/Kconfig
+index 5dec7d424980..f9fb621c9562 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -33,6 +33,9 @@ config THREAD_INFO_IN_TASK
+ 	  make this work, an arch will need to remove all thread_info fields
+ 	  except flags and fix any runtime bugs.
+ 
++	  One subtle change that will be needed is to use try_get_task_stack()
++	  and put_task_stack() in save_thread_stack_tsk() and get_wchan().
++
+ menu "General setup"
+ 
+ config BROKEN
 -- 
 2.17.2
 
