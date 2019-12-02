@@ -2,112 +2,134 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9804FC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E17EC43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C73120848
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E0D020848
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:12:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575313923;
+	bh=qUgDcUIYZjpXimaWBcT9MWDmWH72y+pNWqertDenVdg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=d8NWKNBSjujYhtOceeOFRiwOdUZGRVW+nVsH+/OgSHEuIvaI62H5CAuyIPNLTn/EJ
+	 rp8RJL7hmSu0P7E5+/2Culufk4ZuI2oJS5YIzFmPrQqTpAjcX2vQprd+14W2OHMIpJ
+	 fwQaHd250sglBYbd96l6oT+a6gmbnYZu8/4rDjFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbfLBTLl (ORCPT
+        id S1728039AbfLBTMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 14:11:41 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22300 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727835AbfLBTLl (ORCPT
+        Mon, 2 Dec 2019 14:12:02 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:56958 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727977AbfLBTMC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 14:11:41 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB2J8e84162127
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 14:11:39 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wm6g8srnm-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 14:11:39 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 2 Dec 2019 19:11:37 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 2 Dec 2019 19:11:33 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB2JBWRW40567084
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Dec 2019 19:11:32 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C29B8A4053;
-        Mon,  2 Dec 2019 19:11:32 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A1A92A405D;
-        Mon,  2 Dec 2019 19:11:31 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.147.107])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  2 Dec 2019 19:11:31 +0000 (GMT)
-Subject: Re: [PATCH v0 1/2] IMA: Defined queue functions
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org, Janne Karhunen <janne.karhunen@gmail.com>
-Date:   Mon, 02 Dec 2019 14:11:31 -0500
-In-Reply-To: <6ec16f9d-b4f4-bb85-3496-be110fa68f6b@linux.microsoft.com>
-References: <20191127025212.3077-1-nramas@linux.microsoft.com>
-         <20191127025212.3077-2-nramas@linux.microsoft.com>
-         <1574887137.4793.346.camel@linux.ibm.com>
-         <ea2fafb8-a97f-5365-debd-d90143e549bf@linux.microsoft.com>
-         <1575309622.4793.413.camel@linux.ibm.com>
-         <6ec16f9d-b4f4-bb85-3496-be110fa68f6b@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19120219-0012-0000-0000-0000036FDE17
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120219-0013-0000-0000-000021AB9755
-Message-Id: <1575313891.4793.423.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-02_04:2019-11-29,2019-12-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
- suspectscore=0 clxscore=1015 mlxlogscore=999 impostorscore=0
- lowpriorityscore=0 adultscore=0 malwarescore=0 spamscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912020163
+        Mon, 2 Dec 2019 14:12:02 -0500
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1ibr6q-0006Qj-Gm; Mon, 02 Dec 2019 20:11:48 +0100
+Date:   Mon, 2 Dec 2019 19:11:46 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Neal Liu <neal.liu@mediatek.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Lars Persson <lists@bofh.nu>,
+        Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Crystal Guo (=?UTF-8?Q?=E9=83=AD=E6=99=B6?=)" 
+        <Crystal.Guo@mediatek.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Matt Mackall <mpm@selenic.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v5 3/3] hwrng: add mtk-sec-rng driver
+Message-ID: <20191202191146.79e6368c@why>
+In-Reply-To: <CAKv+Gu_um7eRYXbieW7ogDX5mmZaxP7JQBJM9CajK+6CsO5RgQ@mail.gmail.com>
+References: <1574864578-467-1-git-send-email-neal.liu@mediatek.com>
+        <1574864578-467-4-git-send-email-neal.liu@mediatek.com>
+        <CADnJP=uhD=J2NrpSwiX8oCTd-u_q05=HhsAV-ErCsXNDwVS0rA@mail.gmail.com>
+        <1575027046.24848.4.camel@mtkswgap22>
+        <CAKv+Gu_um7eRYXbieW7ogDX5mmZaxP7JQBJM9CajK+6CsO5RgQ@mail.gmail.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: ard.biesheuvel@linaro.org, neal.liu@mediatek.com, catalin.marinas@arm.com, will@kernel.org, lists@bofh.nu, mark.rutland@arm.com, devicetree@vger.kernel.org, herbert@gondor.apana.org.au, wsd_upstream@mediatek.com, sean.wang@kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Crystal.Guo@mediatek.com, linux-crypto@vger.kernel.org, mpm@selenic.com, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-12-02 at 10:39 -0800, Lakshmi Ramasubramanian wrote:
-> On 12/2/19 10:00 AM, Mimi Zohar wrote:
-> 
-> > 
-> > ima_update_policy() is called from multiple places.  Initially, it is
-> > called before a custom policy has been loaded.  The call to
-> > ima_process_queued_keys_for_measurement() needs to be moved to within
-> > the test, otherwise it runs the risk of dropping "key" measurements.
-> 
-> static const struct file_operations ima_measure_policy_ops = {
-> 	.release = ima_release_policy,
-> };
-> 
-> ima_update_policy() is called from ima_release_policy() function.
-> 
-> On my test machine I have the IMA policy in /etc/ima/ima-policy file. 
-> When IMA policy is setup from this file, I see ima_release_policy() 
-> called (which in turn calls ima_update_policy()).
-> 
-> How can I have ima_update_policy() called before a custom policy is loaded?
+On Mon, 2 Dec 2019 16:12:09 +0000
+Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
 
-Oops, you're right.  My concern was ima_init_policy(), but it calls
-ima_update_policy_flag() directly.
+> (adding some more arm64 folks)
+> 
+> On Fri, 29 Nov 2019 at 11:30, Neal Liu <neal.liu@mediatek.com> wrote:
+> >
+> > On Fri, 2019-11-29 at 18:02 +0800, Lars Persson wrote:  
+> > > Hi Neal,
+> > >
+> > > On Wed, Nov 27, 2019 at 3:23 PM Neal Liu <neal.liu@mediatek.com> wrote:  
+> > > >
+> > > > For MediaTek SoCs on ARMv8 with TrustZone enabled, peripherals like
+> > > > entropy sources is not accessible from normal world (linux) and
+> > > > rather accessible from secure world (ATF/TEE) only. This driver aims
+> > > > to provide a generic interface to ATF rng service.
+> > > >  
+> > >
+> > > I am working on several SoCs that also will need this kind of driver
+> > > to get entropy from Arm trusted firmware.
+> > > If you intend to make this a generic interface, please clean up the
+> > > references to MediaTek and give it a more generic name. For example
+> > > "Arm Trusted Firmware random number driver".
+> > >
+> > > It will also be helpful if the SMC call number is configurable.
+> > >
+> > > - Lars  
+> >
+> > Yes, I'm trying to make this to a generic interface. I'll try to make
+> > HW/platform related dependency to be configurable and let it more
+> > generic.
+> > Thanks for your suggestion.
+> >  
+> 
+> I don't think it makes sense for each arm64 platform to expose an
+> entropy source via SMC calls in a slightly different way, and model it
+> as a h/w driver. Instead, we should try to standardize this, and
+> perhaps expose it via the architectural helpers that already exist
+> (get_random_seed_long() and friends), so they get plugged into the
+> kernel random pool driver directly.
 
-Mimi
+Absolutely. I'd love to see a standard, ARM-specified, virtualizable
+RNG that is abstracted from the HW.
 
+> Note that in addition to drivers based on vendor SMC calls, we already
+> have a RNG h/w driver based on OP-TEE as well, where the driver
+> attaches to a standardized trusted OS interface identified by a UUID,
+> and which also gets invoked via SMC calls into secure firmware.
+
+... and probably an unhealthy number of hypervisor-specific hacks that
+do the same thing. The sooner we plug this, the better.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
