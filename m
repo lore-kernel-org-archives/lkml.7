@@ -2,70 +2,78 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EFF7C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 356ACC43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 521C02231B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02D522245C
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:02:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575277356;
+	bh=CafNsXgbcpGTq4EPfWUNnYuHlpgBrZvTanNi8nmiXC8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fHbSkumpojnwwgagt1CPpH1pMwMQGuDsg23sqLA82R6jR9Ke/GIdD/c/iEvljNCia
+	 CPtFj0xR/Fn0jBHO4vSbSTZiDO11btCcRI8hafZmDfIfUhjgNAlO6Vh1iCaftYmeZH
+	 GrA0EMVVkMFV234/i23bpr39EPIcOXON4/EWldyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727356AbfLBJCS (ORCPT
+        id S1727386AbfLBJCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 04:02:18 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:55251 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbfLBJCS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 04:02:18 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1ibhax-0006Io-Rg; Mon, 02 Dec 2019 09:02:15 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        linux-s390@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] s390/test_unwind: fix spelling mistake "reqister" -> "register"
-Date:   Mon,  2 Dec 2019 09:02:15 +0000
-Message-Id: <20191202090215.28766-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.24.0
+        Mon, 2 Dec 2019 04:02:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42612 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726087AbfLBJCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 04:02:34 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 159422231B;
+        Mon,  2 Dec 2019 09:02:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575277354;
+        bh=CafNsXgbcpGTq4EPfWUNnYuHlpgBrZvTanNi8nmiXC8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CFGvjSCkXurEfZmHReMjMFe86+fDzm30O6vRGMIXlYrwg1aPhwX6ZvkJNl3+2uImW
+         9W0D0jY3bpoRzDPiyfsb4jNQOJJ1z6pVe3XF1gDCcSexnIqyG42vbT4UmeGamvdSlT
+         KF9vhJ2sjQ8EAuH7Nl7UPcJVP8ngd868EnVxkDrY=
+Date:   Mon, 2 Dec 2019 17:02:18 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "sboyd@kernel.org" <sboyd@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [PATCH 2/2] clk: imx: clk-divider-gate: drop redundant
+ initialization
+Message-ID: <20191202090218.GH9767@dragon>
+References: <1572862200-29923-1-git-send-email-peng.fan@nxp.com>
+ <1572862200-29923-2-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1572862200-29923-2-git-send-email-peng.fan@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Mon, Nov 04, 2019 at 10:11:37AM +0000, Peng Fan wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> There is no need to initialize flags as 0.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-There is a spelling mistake in a pr_info message. Fix it.
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- arch/s390/lib/test_unwind.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/s390/lib/test_unwind.c b/arch/s390/lib/test_unwind.c
-index bda7ac0ddd29..32b7a30b2485 100644
---- a/arch/s390/lib/test_unwind.c
-+++ b/arch/s390/lib/test_unwind.c
-@@ -238,7 +238,7 @@ static int test_unwind_irq(struct unwindme *u)
- {
- 	preempt_disable();
- 	if (register_external_irq(EXT_IRQ_CLK_COMP, unwindme_irq_handler)) {
--		pr_info("Couldn't reqister external interrupt handler");
-+		pr_info("Couldn't register external interrupt handler");
- 		return -1;
- 	}
- 	u->task = current;
--- 
-2.24.0
-
+Applied, thanks.
