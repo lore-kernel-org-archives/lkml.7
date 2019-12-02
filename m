@@ -6,33 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF12C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C5EC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C99692073C
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:22:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAA4C2073C
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:22:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbfLBSWp (ORCPT
+        id S1728071AbfLBSWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 13:22:45 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35968 "EHLO mx1.suse.de"
+        Mon, 2 Dec 2019 13:22:51 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35998 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727963AbfLBSWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 13:22:19 -0500
+        id S1727860AbfLBSWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 13:22:17 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 28037AD98;
-        Mon,  2 Dec 2019 18:22:18 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id B4321AEF5;
+        Mon,  2 Dec 2019 18:22:16 +0000 (UTC)
 From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 To:     linux-realtek-soc@lists.infradead.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        James Tai <james.tai@realtek.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH 11/14] arm64: dts: realtek: rtd129x: Add SB2 and SCPU Wrapper syscon nodes
-Date:   Mon,  2 Dec 2019 19:22:01 +0100
-Message-Id: <20191202182205.14629-12-afaerber@suse.de>
+Subject: [PATCH 07/14] ARM: dts: rtd1195: Add reset nodes
+Date:   Mon,  2 Dec 2019 19:21:57 +0100
+Message-Id: <20191202182205.14629-8-afaerber@suse.de>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20191202182205.14629-1-afaerber@suse.de>
 References: <20191202182205.14629-1-afaerber@suse.de>
@@ -44,50 +43,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add syscon mfd nodes for SB2 and SCPU Wrapper to RTD129x DT.
+Add reset controller nodes for Realtek RTD1195 SoC.
 
-Cc: James Tai <james.tai@realtek.com>
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- arch/arm64/boot/dts/realtek/rtd129x.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ v1: From RTD1195 v4 series (James wants to change the compatible string)
+ 
+ arch/arm/boot/dts/rtd1195.dtsi | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/realtek/rtd129x.dtsi b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
-index 34dc09790d0b..39aefe66a794 100644
---- a/arch/arm64/boot/dts/realtek/rtd129x.dtsi
-+++ b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
-@@ -81,6 +81,15 @@
- 				ranges = <0x0 0x7000 0x1000>;
- 			};
+diff --git a/arch/arm/boot/dts/rtd1195.dtsi b/arch/arm/boot/dts/rtd1195.dtsi
+index ac37366ff7c4..886845e52205 100644
+--- a/arch/arm/boot/dts/rtd1195.dtsi
++++ b/arch/arm/boot/dts/rtd1195.dtsi
+@@ -141,7 +141,33 @@
+ 	};
+ };
  
-+			sb2: syscon@1a000 {
-+				compatible = "syscon", "simple-mfd";
-+				reg = <0x1a000 0x1000>;
-+				reg-io-width = <4>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0x0 0x1a000 0x1000>;
-+			};
++&crt {
++	reset1: reset-controller@0 {
++		compatible = "snps,dw-low-reset";
++		reg = <0x0 0x4>;
++		#reset-cells = <1>;
++	};
 +
- 			misc: syscon@1b000 {
- 				compatible = "syscon", "simple-mfd";
- 				reg = <0x1b000 0x1000>;
-@@ -89,6 +98,15 @@
- 				#size-cells = <1>;
- 				ranges = <0x0 0x1b000 0x1000>;
- 			};
++	reset2: reset-controller@4 {
++		compatible = "snps,dw-low-reset";
++		reg = <0x4 0x4>;
++		#reset-cells = <1>;
++	};
 +
-+			scpu_wrapper: syscon@1d000 {
-+				compatible = "syscon", "simple-mfd";
-+				reg = <0x1d000 0x2000>;
-+				reg-io-width = <4>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0x0 0x1d000 0x2000>;
-+			};
- 		};
- 
- 		gic: interrupt-controller@ff011000 {
++	reset3: reset-controller@8 {
++		compatible = "snps,dw-low-reset";
++		reg = <0x8 0x4>;
++		#reset-cells = <1>;
++	};
++};
++
+ &iso {
++	iso_reset: reset-controller@88 {
++		compatible = "snps,dw-low-reset";
++		reg = <0x88 0x4>;
++		#reset-cells = <1>;
++	};
++
+ 	wdt: watchdog@680 {
+ 		compatible = "realtek,rtd1295-watchdog";
+ 		reg = <0x680 0x100>;
 -- 
 2.16.4
 
