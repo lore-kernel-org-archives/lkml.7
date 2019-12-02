@@ -2,168 +2,120 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D68C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC492C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A27C520674
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:19:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575292772;
-	bh=ta352u00Y9Sh/vXn7+ZQhT6z5MmNgcaRNDiZYABzNgU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MFlwlDzfhfXs01QEWhgozdNmFkw6jR8W/yX7GTFMXDP6ZAP3klfqYh4cZ5SrIHmNw
-	 HWionLtlrlaJm27epU+Q7ElnWNab/Rz1lA5xRbj98bffeMG6IX570VCDBHB57XJ1Pb
-	 DxxWk6PHyLF6+x5CeMHabmPIGz24lmR0Cu5HWdtg=
+	by mail.kernel.org (Postfix) with ESMTP id B355A206E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:22:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nn8mWKLL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbfLBNTb convert rfc822-to-8bit (ORCPT
+        id S1727480AbfLBNWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 08:19:31 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25776 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727641AbfLBNT3 (ORCPT
+        Mon, 2 Dec 2019 08:22:32 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:44282 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727381AbfLBNWc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 08:19:29 -0500
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-77-Df7Z5Rv0PtOJKGMFN-1dpg-1; Mon, 02 Dec 2019 08:19:25 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E750E1005502;
-        Mon,  2 Dec 2019 13:19:22 +0000 (UTC)
-Received: from krava.redhat.com (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7B063600C8;
-        Mon,  2 Dec 2019 13:19:19 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>
-Subject: [PATCH 6/6] selftests, bpftool: Add build test for libbpf dynamic linking
-Date:   Mon,  2 Dec 2019 14:18:46 +0100
-Message-Id: <20191202131847.30837-7-jolsa@kernel.org>
-In-Reply-To: <20191202131847.30837-1-jolsa@kernel.org>
-References: <20191202131847.30837-1-jolsa@kernel.org>
+        Mon, 2 Dec 2019 08:22:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ByS6cD7gHgezj2QYsDI0rCaLPzSlfQQauHPBggjUu7I=; b=nn8mWKLLbMKOmA3ZsBMGrY8vJ
+        oKPxt6FMFyDq9qjHHN89s8Qf9NvSnVRlJIZLwNm/zjdd3Yn2J3ncJc1A83cWHYhIwZxb/UjQsNQIP
+        boUEmaup22i3FqmH/aj5nvcWVduxnEfY5bDgT8v8XGeNJPvxbYFnEFJcKBOjba+l+3xe/770v8F37
+        Tpj4tklgf5gIJ1BufrlZ+b5GaLncPAMDmskVvT849QuxtlcehhyLwfRrEc9J3v/7ump96LRkeqwoG
+        4wPi1BwRR4aW/NyhAsbQgo81MslJv3/em2HExZqqpMXxQGqxcStYgfUiHiUnwYmKTt+Wg89fZYLnm
+        wXoE5yy/Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ibleQ-0008FP-19; Mon, 02 Dec 2019 13:22:06 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 657E83006E3;
+        Mon,  2 Dec 2019 14:20:48 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1606E20236A4D; Mon,  2 Dec 2019 14:22:04 +0100 (CET)
+Date:   Mon, 2 Dec 2019 14:22:04 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     mingo@redhat.com, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/cfs: fix spurious active migration
+Message-ID: <20191202132204.GK2844@hirez.programming.kicks-ass.net>
+References: <1575036287-6052-1-git-send-email-vincent.guittot@linaro.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: Df7Z5Rv0PtOJKGMFN-1dpg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1575036287-6052-1-git-send-email-vincent.guittot@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding new test to test_bpftool_build.sh script to
-test the dynamic linkage of libbpf for bpftool:
+On Fri, Nov 29, 2019 at 03:04:47PM +0100, Vincent Guittot wrote:
+> The load balance can fail to find a suitable task during the periodic check
+> because  the imbalance is smaller than half of the load of the waiting
+> tasks. This results in the increase of the number of failed load balance,
+> which can end up to start an active migration. This active migration is
+> useless because the current running task is not a better choice than the
+> waiting ones. In fact, the current task was probably not running but
+> waiting for the CPU during one of the previous attempts and it had already
+> not been selected.
+> 
+> When load balance fails too many times to migrate a task, we should relax
+> the contraint on the maximum load of the tasks that can be migrated
+> similarly to what is done with cache hotness.
+> 
+> Before the rework, load balance used to set the imbalance to the average
+> load_per_task in order to mitigate such situation. This increased the
+> likelihood of migrating a task but also of selecting a larger task than
+> needed while more appropriate ones were in the list.
+> 
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> ---
+> 
+> I haven't seen any noticable performance changes on the benchmarks that I
+> usually run but the problem can be easily highlight with a simple test
+> with 9 always running tasks on 8 cores.
+> 
+>  kernel/sched/fair.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index e0d662a..d1b4fa7 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -7433,7 +7433,14 @@ static int detach_tasks(struct lb_env *env)
+>  			    load < 16 && !env->sd->nr_balance_failed)
+>  				goto next;
+>  
+> -			if (load/2 > env->imbalance)
+> +			/*
+> +			 * Make sure that we don't migrate too much load.
+> +			 * Nevertheless, let relax the constraint if
+> +			 * scheduler fails to find a good waiting task to
+> +			 * migrate.
+> +			 */
+> +			if (load/2 > env->imbalance &&
+> +			    env->sd->nr_balance_failed <= env->sd->cache_nice_tries)
+>  				goto next;
+>  
+>  			env->imbalance -= load;
 
-  $ ./test_bpftool_build.sh
-  [SNIP]
+The alternative is carrying a flag that inhibits incrementing
+nr_balance_failed.
 
-  ... with dynamic libbpf
-
-  $PWD:    /home/jolsa/kernel/linux-perf/tools/bpf/bpftool
-  command: make -s -C ../../build/feature clean >/dev/null
-  command: make -s -C ../../lib/bpf clean >/dev/null
-  command: make -s -C ../../lib/bpf prefix=/tmp/tmp.fG8O2Ps8ER install_lib install_headers >/dev/null
-  Parsed description of 117 helper function(s)
-  command: make -s clean >/dev/null
-  command: make -s LIBBPF_DYNAMIC=1 LIBBPF_DIR=/tmp/tmp.fG8O2Ps8ER >/dev/null
-  binary:  /home/jolsa/kernel/linux-perf/tools/bpf/bpftool/bpftool
-  binary:  linked with libbpf
-
-The test installs libbpf into temp directory
-and links bpftool dynamically with it.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- .../selftests/bpf/test_bpftool_build.sh       | 53 +++++++++++++++++++
- 1 file changed, 53 insertions(+)
-
-diff --git a/tools/testing/selftests/bpf/test_bpftool_build.sh b/tools/testing/selftests/bpf/test_bpftool_build.sh
-index ac349a5cea7e..e4a6a0520f8e 100755
---- a/tools/testing/selftests/bpf/test_bpftool_build.sh
-+++ b/tools/testing/selftests/bpf/test_bpftool_build.sh
-@@ -85,6 +85,55 @@ make_with_tmpdir() {
- 	echo
- }
- 
-+# Assumes current directory is tools/bpf/bpftool
-+make_with_dynamic_libbpf() {
-+	TMPDIR=$(mktemp -d)
-+	echo -e "\$PWD:    $PWD"
-+
-+	# It might be needed to clean build tree first because features
-+	# framework does not detect the change properly
-+	echo -e "command: make -s -C ../../build/feature clean >/dev/null"
-+	make $J -s -C ../../build/feature clean >/dev/null
-+	if [ $? -ne 0 ] ; then
-+		ERROR=1
-+	fi
-+	echo -e "command: make -s -C ../../lib/bpf clean >/dev/null"
-+	make $J -s -C ../../lib/bpf clean >/dev/null
-+	if [ $? -ne 0 ] ; then
-+		ERROR=1
-+	fi
-+
-+	# Now install libbpf into TMPDIR
-+	echo -e "command: make -s -C ../../lib/bpf prefix=$TMPDIR install_lib install_headers >/dev/null"
-+	make $J -s -C ../../lib/bpf prefix=$TMPDIR install_lib install_headers >/dev/null
-+	if [ $? -ne 0 ] ; then
-+		ERROR=1
-+	fi
-+
-+	# And final bpftool build (with clean first) with libbpf dynamic link
-+	echo -e "command: make -s clean >/dev/null"
-+	if [ $? -ne 0 ] ; then
-+		ERROR=1
-+	fi
-+	echo -e "command: make -s LIBBPF_DYNAMIC=1 LIBBPF_DIR=$TMPDIR >/dev/null"
-+	make $J -s LIBBPF_DYNAMIC=1 LIBBPF_DIR=$TMPDIR >/dev/null
-+	if [ $? -ne 0 ] ; then
-+		ERROR=1
-+	fi
-+
-+	check .
-+	ldd bpftool | grep -q libbpf.so
-+	if [ $? -ne 0 ] ; then
-+		printf "FAILURE: Did not find libbpf linked\n"
-+	else
-+		echo "binary:  linked with libbpf"
-+	fi
-+	make -s -C ../../lib/bpf clean
-+	make -s clean
-+	rm -rf -- $TMPDIR
-+	echo
-+}
-+
- echo "Trying to build bpftool"
- echo -e "... through kbuild\n"
- 
-@@ -145,3 +194,7 @@ make_and_clean
- make_with_tmpdir OUTPUT
- 
- make_with_tmpdir O
-+
-+echo -e "... with dynamic libbpf\n"
-+
-+make_with_dynamic_libbpf
--- 
-2.21.0
-
+Not migrating anything when doing so would make the imbalance worse is
+not a failure after all.
