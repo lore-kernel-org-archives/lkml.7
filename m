@@ -2,357 +2,169 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A23A0C43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F564C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F39F21823
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:14:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ej6UwQhC"
+	by mail.kernel.org (Postfix) with ESMTP id 71BF124653
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:14:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575281697;
+	bh=+yEowJLKOMjPDHTuH6PUsFeC4DPmKVnwMvOyi0ajpUM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kGBj5jugJc5mZvkefHrFV0U8bm11061ZKCSUwCnml+ZH82PqhuvqSlEYiUAHw029w
+	 eSqiKGvROpixNPYWDQN5tBIU4eIcR60XBKXC7gZ+nJ6ws9SIrudiiETp+r2YII439u
+	 0xx+JtJs9IEJE415yD0Lg9bsy58AqPAaO290eGXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbfLBKOt (ORCPT
+        id S1727612AbfLBKO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 05:14:49 -0500
-Received: from mail-eopbgr40079.outbound.protection.outlook.com ([40.107.4.79]:24223
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727574AbfLBKOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 05:14:47 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gjLX8V/UWVLcqf30e5EMEsVzPJPoynHqCpBoYVn1/eXy1JqTxvcnu5Swa4DS0ePWo9Cm03vx2BrGRwU/ZORDJhg1O5Zh49sCgVoW58anQHpSPdUp3Im2SVUdorrIXV9EwQZ529XNl41eCNlraNeWITL4I3ntE1xk87P82Yll6/DqVTxbDPag8Fgiv1otoh1gCVoVktRerRLQWdWhgw2AaaIK3Oc16xTp91bbrvpVYqOGbxIEVO4k4p4n9f8OFHHweTsydkB/tcyF7ZSsqGLqwjTD5ZaBWZjYGEW0Dj47+D2HbW/Es2zTlQRkb38HN0JqvJJmUeZNp4slqB9w8oIPcA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IxuFt7NVyrP5HI1lmV5oCK5xpAyuugMBRRcN4LkboXY=;
- b=M05YBhMpZQ1+ix2l011nfv0PBXa1NaWYE4V9QIFwrl3eR3KRsjGtuSVVsSDUy/UERjzHs7a8FGfj+NDzOH6MA11KPXpXT+1r+ssTpAW0WNOmxk8YhcXZSt3asy34PNDW/Qm/4I4TH4s2zfmOT9wlem2QbD5273q7edWEzBl55C8jvv8BNUFliUhGq4SSe9zp+JoNK0P1ZBQ0/Yd3+p++Co/TokJ1stnbvYm/yLRbWxi2tbtuXHdQAWNlJXrRJvUzL/0MAvTyizQGiS5mR7zIe/5rxj4QF81MDL1HnseUFfwdeMRP5F0Qn1UrWcgCDRIWrSQZ1Adlq4AZ/xum7dfoYA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IxuFt7NVyrP5HI1lmV5oCK5xpAyuugMBRRcN4LkboXY=;
- b=ej6UwQhCus7fnP1bbhqzjQqZJPse1Ns+hYtEh5ZMq2t9/+1zJc0RCvU2NMF5fobpjpH3pIkpmxSoUsF1mmrtAuaJGYM9KOSH/Xgh4MVdnM67iKylmGdkQ2lp9dxl0dSkta3xZDOGFyFLW65U/8kZ6M2O/ju1RnhE21aFXcSgQvQ=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB4545.eurprd04.prod.outlook.com (52.135.148.159) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.22; Mon, 2 Dec 2019 10:14:43 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::f16d:a26a:840:f97c]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::f16d:a26a:840:f97c%4]) with mapi id 15.20.2495.014; Mon, 2 Dec 2019
- 10:14:43 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        "andre.przywara@arm.com" <andre.przywara@arm.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH v11 2/2] mailbox: introduce ARM SMC based mailbox
-Thread-Topic: [PATCH v11 2/2] mailbox: introduce ARM SMC based mailbox
-Thread-Index: AQHVqPlQmY/2hS4Lz06JY3IQFRZRJA==
-Date:   Mon, 2 Dec 2019 10:14:43 +0000
-Message-ID: <1575281525-1549-3-git-send-email-peng.fan@nxp.com>
-References: <1575281525-1549-1-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1575281525-1549-1-git-send-email-peng.fan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK2PR04CA0060.apcprd04.prod.outlook.com
- (2603:1096:202:14::28) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 25d98f0d-8927-4e71-c790-08d777107336
-x-ms-traffictypediagnostic: AM0PR04MB4545:|AM0PR04MB4545:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB45453F6A2662E2CB6598E3FF88430@AM0PR04MB4545.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0239D46DB6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(366004)(346002)(39860400002)(396003)(199004)(189003)(3846002)(316002)(66476007)(66446008)(66946007)(64756008)(66556008)(52116002)(86362001)(305945005)(8676002)(81156014)(15650500001)(50226002)(2501003)(256004)(71190400001)(71200400001)(2201001)(66066001)(6116002)(7736002)(2906002)(5660300002)(14454004)(36756003)(81166006)(8936002)(76176011)(4326008)(6306002)(6436002)(6512007)(478600001)(11346002)(25786009)(446003)(44832011)(102836004)(186003)(2616005)(99286004)(110136005)(26005)(54906003)(6506007)(386003)(6486002)(966005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4545;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3pdhABGwge2Vm48nQ6iX/3M4SmRgaZ87Gz6z3NttCaGNyQGaMCz3IVU1L4cSDg7dwScgkpLa47TOrbUv3rLzDGSMXqcactTeQhU8+vYKU2BlpkPCKQLGphP/DVmywyrsOuEdk4ucDHv2uDI5OEuxqBQx5uVKgDRzhWU/26J4wK6eUcWWCLos/6Svdy+JS9z+eY00toCb7vJHyaWdVF9lixpm+yUBRILV+KJ3s8yVKCA0ZrTy5I7CuyuM+r7PEUfnCw51iVkk8OffUNkKnDEOsSlQkUgKh9oMmufC454lgAIWKN7zwggYDrV3JARccj32WSYDZTsbMOQBvsSRJgnGq0vZj8MDsRuGv15QcP2l+rQiPCVN3SSAfSCdlodXCBVAlnm6F9Let+xdGbcVv+61a//CHxAEKrrQsnLP4D0sv1EucdllAMgCoQS7mB3TTE4HQJ6AyWEvJFJ4/XXboG7BBkZTQnPllHCiIK3pNVvJ7ps=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 2 Dec 2019 05:14:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59740 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727494AbfLBKOy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 05:14:54 -0500
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D80321835;
+        Mon,  2 Dec 2019 10:14:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575281693;
+        bh=+yEowJLKOMjPDHTuH6PUsFeC4DPmKVnwMvOyi0ajpUM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JNQipn6AS5mrhjEskiiRKRXsIG9NqPoabSId7LAF4Ew0nm+N8Gw6J+2fmv17rR/a7
+         YE0QnmfYoLbFJzY+UtDP6W4t3iLOcbRW77SrJ8U47mKOvGwXPvlnomIH3TqzDM2eXW
+         CkxiCxbS8nVSP/6EbMCY2h5uu2KuO1YoJj8j/xg4=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v4 08/22] bootconfig: init: Allow admin to use bootconfig for init command line
+Date:   Mon,  2 Dec 2019 19:14:48 +0900
+Message-Id: <157528168803.22451.13616097455333249096.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <157528159833.22451.14878731055438721716.stgit@devnote2>
+References: <157528159833.22451.14878731055438721716.stgit@devnote2>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 25d98f0d-8927-4e71-c790-08d777107336
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Dec 2019 10:14:43.4845
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2SB3sjZhLErHVr9XAjE4zywVbGNUYge3bDm4ZEe1rQ0mVBv3RQOKDYVeBgTHc39RRkqdzAaL3jwkEIqzdhOkuQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4545
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+Since the current kernel command line is too short to describe
+long and many options for init (e.g. systemd command line options),
+this allows admin to use boot config for init command line.
 
-This mailbox driver implements a mailbox which signals transmitted data
-via an ARM smc (secure monitor call) instruction. The mailbox receiver
-is implemented in firmware and can synchronously return data when it
-returns execution to the non-secure world again.
-An asynchronous receive path is not implemented.
-This allows the usage of a mailbox to trigger firmware actions on SoCs
-which either don't have a separate management processor or on which such
-a core is not available. A user of this mailbox could be the SCP
-interface.
+All init command line under "init." keywords will be passed to
+init.
 
-Modified from Andre Przywara's v2 patch
-https://lore.kernel.org/patchwork/patch/812999/
+For example,
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
+init.systemd {
+	unified_cgroup_hierarchy = 1
+	debug_shell
+	default_timeout_start_sec = 60
+}
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- drivers/mailbox/Kconfig                |   7 ++
- drivers/mailbox/Makefile               |   2 +
- drivers/mailbox/arm-smc-mailbox.c      | 156 +++++++++++++++++++++++++++++=
-++++
- include/linux/mailbox/arm-smccc-mbox.h |  17 ++++
- 4 files changed, 182 insertions(+)
- create mode 100644 drivers/mailbox/arm-smc-mailbox.c
- create mode 100644 include/linux/mailbox/arm-smccc-mbox.h
+ init/main.c |   31 ++++++++++++++++++++++++++++---
+ 1 file changed, 28 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-index ab4eb750bbdd..7707ee26251a 100644
---- a/drivers/mailbox/Kconfig
-+++ b/drivers/mailbox/Kconfig
-@@ -16,6 +16,13 @@ config ARM_MHU
- 	  The controller has 3 mailbox channels, the last of which can be
- 	  used in Secure mode only.
-=20
-+config ARM_SMC_MBOX
-+	tristate "Generic ARM smc mailbox"
-+	depends on OF && HAVE_ARM_SMCCC
-+	help
-+	  Generic mailbox driver which uses ARM smc calls to call into
-+	  firmware for triggering mailboxes.
+diff --git a/init/main.c b/init/main.c
+index b2aac7ec2862..c138b2068602 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -139,6 +139,8 @@ char *saved_command_line;
+ static char *static_command_line;
+ /* Untouched extra command line */
+ static char *extra_command_line;
++/* Extra init arguments */
++static char *extra_init_args;
+ 
+ static char *execute_command;
+ static char *ramdisk_execute_command;
+@@ -372,6 +374,8 @@ static void __init setup_boot_config(void)
+ 		pr_info("Load boot config: %d bytes\n", size);
+ 		/* keys starting with "kernel." are passed via cmdline */
+ 		extra_command_line = xbc_make_cmdline("kernel");
++		/* Also, "init." keys are init arguments */
++		extra_init_args = xbc_make_cmdline("init");
+ 	}
+ }
+ #else
+@@ -507,16 +511,18 @@ static inline void smp_prepare_cpus(unsigned int maxcpus) { }
+  */
+ static void __init setup_command_line(char *command_line)
+ {
+-	size_t len, xlen = 0;
++	size_t len, xlen = 0, ilen = 0;
+ 
+ 	if (extra_command_line)
+ 		xlen = strlen(extra_command_line);
++	if (extra_init_args)
++		ilen = strlen(extra_init_args) + 4; /* for " -- " */
+ 
+ 	len = xlen + strlen(boot_command_line) + 1;
+ 
+-	saved_command_line = memblock_alloc(len, SMP_CACHE_BYTES);
++	saved_command_line = memblock_alloc(len + ilen, SMP_CACHE_BYTES);
+ 	if (!saved_command_line)
+-		panic("%s: Failed to allocate %zu bytes\n", __func__, len);
++		panic("%s: Failed to allocate %zu bytes\n", __func__, len + ilen);
+ 
+ 	static_command_line = memblock_alloc(len, SMP_CACHE_BYTES);
+ 	if (!static_command_line)
+@@ -533,6 +539,22 @@ static void __init setup_command_line(char *command_line)
+ 	}
+ 	strcpy(saved_command_line + xlen, boot_command_line);
+ 	strcpy(static_command_line + xlen, command_line);
 +
- config IMX_MBOX
- 	tristate "i.MX Mailbox"
- 	depends on ARCH_MXC || COMPILE_TEST
-diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-index c22fad6f696b..93918a84c91b 100644
---- a/drivers/mailbox/Makefile
-+++ b/drivers/mailbox/Makefile
-@@ -7,6 +7,8 @@ obj-$(CONFIG_MAILBOX_TEST)	+=3D mailbox-test.o
-=20
- obj-$(CONFIG_ARM_MHU)	+=3D arm_mhu.o
-=20
-+obj-$(CONFIG_ARM_SMC_MBOX)	+=3D arm-smc-mailbox.o
++	if (ilen) {
++		/*
++		 * Append supplemental init boot args to saved_command_line
++		 * so that user can check what command line options passed
++		 * to init.
++		 */
++		len = strlen(saved_command_line);
++		if (!strstr(boot_command_line, " -- ")) {
++			strcpy(saved_command_line + len, " -- ");
++			len += 4;
++		} else
++			saved_command_line[len++] = ' ';
 +
- obj-$(CONFIG_IMX_MBOX)	+=3D imx-mailbox.o
-=20
- obj-$(CONFIG_ARMADA_37XX_RWTM_MBOX)	+=3D armada-37xx-rwtm-mailbox.o
-diff --git a/drivers/mailbox/arm-smc-mailbox.c b/drivers/mailbox/arm-smc-ma=
-ilbox.c
-new file mode 100644
-index 000000000000..223d46fe6513
---- /dev/null
-+++ b/drivers/mailbox/arm-smc-mailbox.c
-@@ -0,0 +1,156 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2016,2017 ARM Ltd.
-+ * Copyright 2019 NXP
-+ */
-+
-+#include <linux/arm-smccc.h>
-+#include <linux/device.h>
-+#include <linux/kernel.h>
-+#include <linux/mailbox_controller.h>
-+#include <linux/mailbox/arm-smccc-mbox.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+typedef unsigned long (smc_mbox_fn)(unsigned int, unsigned long,
-+				    unsigned long, unsigned long,
-+				    unsigned long, unsigned long,
-+				    unsigned long);
-+
-+struct arm_smc_chan_data {
-+	unsigned int function_id;
-+	smc_mbox_fn *invoke_smc_mbox_fn;
-+};
-+
-+static int arm_smc_send_data(struct mbox_chan *link, void *data)
-+{
-+	struct arm_smc_chan_data *chan_data =3D link->con_priv;
-+	struct arm_smccc_mbox_cmd *cmd =3D data;
-+	unsigned long ret;
-+
-+	ret =3D chan_data->invoke_smc_mbox_fn(chan_data->function_id,
-+					    cmd->args_smccc[0],
-+					    cmd->args_smccc[1],
-+					    cmd->args_smccc[2],
-+					    cmd->args_smccc[3],
-+					    cmd->args_smccc[4],
-+					    cmd->args_smccc[5]);
-+
-+	mbox_chan_received_data(link, (void *)ret);
-+
-+	return 0;
-+}
-+
-+static unsigned long __invoke_fn_hvc(unsigned int function_id,
-+				     unsigned long arg0, unsigned long arg1,
-+				     unsigned long arg2, unsigned long arg3,
-+				     unsigned long arg4, unsigned long arg5)
-+{
-+	struct arm_smccc_res res;
-+
-+	arm_smccc_hvc(function_id, arg0, arg1, arg2, arg3, arg4,
-+		      arg5, 0, &res);
-+	return res.a0;
-+}
-+
-+static unsigned long __invoke_fn_smc(unsigned int function_id,
-+				     unsigned long arg0, unsigned long arg1,
-+				     unsigned long arg2, unsigned long arg3,
-+				     unsigned long arg4, unsigned long arg5)
-+{
-+	struct arm_smccc_res res;
-+
-+	arm_smccc_smc(function_id, arg0, arg1, arg2, arg3, arg4,
-+		      arg5, 0, &res);
-+	return res.a0;
-+}
-+
-+static const struct mbox_chan_ops arm_smc_mbox_chan_ops =3D {
-+	.send_data	=3D arm_smc_send_data,
-+};
-+
-+static struct mbox_chan *
-+arm_smc_mbox_of_xlate(struct mbox_controller *mbox,
-+		      const struct of_phandle_args *sp)
-+{
-+	return mbox->chans;
-+}
-+
-+static int arm_smc_mbox_probe(struct platform_device *pdev)
-+{
-+	struct device *dev =3D &pdev->dev;
-+	struct mbox_controller *mbox;
-+	struct arm_smc_chan_data *chan_data;
-+	int ret;
-+
-+	mbox =3D devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
-+	if (!mbox)
-+		return -ENOMEM;
-+
-+	mbox->of_xlate =3D arm_smc_mbox_of_xlate;
-+	mbox->num_chans =3D 1;
-+	mbox->chans =3D devm_kzalloc(dev, sizeof(*mbox->chans), GFP_KERNEL);
-+	if (!mbox->chans)
-+		return -ENOMEM;
-+
-+	chan_data =3D devm_kzalloc(dev, sizeof(*chan_data), GFP_KERNEL);
-+	if (!chan_data)
-+		return -ENOMEM;
-+
-+	ret =3D of_property_read_u32(dev->of_node, "arm,func-id",
-+				   &chan_data->function_id);
-+	if (ret)
-+		return ret;
-+
-+	if (of_device_is_compatible(dev->of_node, "arm,smc-mbox"))
-+		chan_data->invoke_smc_mbox_fn =3D __invoke_fn_smc;
-+	else
-+		chan_data->invoke_smc_mbox_fn =3D __invoke_fn_hvc;
-+
-+
-+	mbox->chans->con_priv =3D chan_data;
-+
-+	mbox->txdone_poll =3D false;
-+	mbox->txdone_irq =3D false;
-+	mbox->ops =3D &arm_smc_mbox_chan_ops;
-+	mbox->dev =3D dev;
-+
-+	platform_set_drvdata(pdev, mbox);
-+
-+	ret =3D devm_mbox_controller_register(dev, mbox);
-+	if (ret)
-+		return ret;
-+
-+	dev_info(dev, "ARM SMC mailbox enabled.\n");
-+
-+	return ret;
-+}
-+
-+static int arm_smc_mbox_remove(struct platform_device *pdev)
-+{
-+	struct mbox_controller *mbox =3D platform_get_drvdata(pdev);
-+
-+	mbox_controller_unregister(mbox);
-+	return 0;
-+}
-+
-+static const struct of_device_id arm_smc_mbox_of_match[] =3D {
-+	{ .compatible =3D "arm,smc-mbox", },
-+	{ .compatible =3D "arm,hvc-mbox", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, arm_smc_mbox_of_match);
-+
-+static struct platform_driver arm_smc_mbox_driver =3D {
-+	.driver =3D {
-+		.name =3D "arm-smc-mbox",
-+		.of_match_table =3D arm_smc_mbox_of_match,
-+	},
-+	.probe		=3D arm_smc_mbox_probe,
-+	.remove		=3D arm_smc_mbox_remove,
-+};
-+module_platform_driver(arm_smc_mbox_driver);
-+
-+MODULE_AUTHOR("Peng Fan <peng.fan@nxp.com>");
-+MODULE_DESCRIPTION("Generic ARM smc mailbox driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/mailbox/arm-smccc-mbox.h b/include/linux/mailbox=
-/arm-smccc-mbox.h
-new file mode 100644
-index 000000000000..244e09598c10
---- /dev/null
-+++ b/include/linux/mailbox/arm-smccc-mbox.h
-@@ -0,0 +1,17 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef _LINUX_ARM_SMCCC_MBOX_H_
-+#define _LINUX_ARM_SMCCC_MBOX_H_
-+
-+#include <linux/types.h>
-+
-+/**
-+ * struct arm_smccc_mbox_cmd - ARM SMCCC message structure
-+ * @args_smccc:	actual usage of registers is up to the protocol
-+ *		(within the SMCCC limits)
-+ */
-+struct arm_smccc_mbox_cmd {
-+	unsigned long args_smccc[6];
-+};
-+
-+#endif /* _LINUX_ARM_SMCCC_MBOX_H_ */
---=20
-2.16.4
++		strcpy(saved_command_line + len, extra_init_args);
++	}
+ }
+ 
+ /*
+@@ -759,6 +781,9 @@ asmlinkage __visible void __init start_kernel(void)
+ 	if (!IS_ERR_OR_NULL(after_dashes))
+ 		parse_args("Setting init args", after_dashes, NULL, 0, -1, -1,
+ 			   NULL, set_init_arg);
++	if (extra_init_args)
++		parse_args("Setting extra init args", extra_init_args,
++			   NULL, 0, -1, -1, NULL, set_init_arg);
+ 
+ 	/*
+ 	 * These use large bootmem allocations and must precede
 
