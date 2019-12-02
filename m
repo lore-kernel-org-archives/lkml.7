@@ -2,111 +2,164 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5C5C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 07:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83959C43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 07:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D129620715
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 07:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 508F220748
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 07:31:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IZJ5FJPz";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="T6F69I6q"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="BHEM/Co+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfLBH3f (ORCPT
+        id S1726327AbfLBHbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 02:29:35 -0500
-Received: from a27-18.smtp-out.us-west-2.amazonses.com ([54.240.27.18]:44324
-        "EHLO a27-18.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726010AbfLBH3f (ORCPT
+        Mon, 2 Dec 2019 02:31:44 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:5424 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726010AbfLBHbo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 02:29:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575271774;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=n1UHqyOwMirXt9ynuPF5AWJEn/klRohJE9Berk4y3+E=;
-        b=IZJ5FJPzg0BG3l7mnBT6N03zlx2u6el7V1zZtP3hOi66dd36BrYuifbMumGsbQ5L
-        ADkcHMiR8uDfY6PQNPTDtbdNT9COeedcc+DnbmchXUckbD5dtm0f8YeVCZ0z3wWITlN
-        TJ8/2n7jO/TsteWSvCQ/MK944wh/YoLYjVN1NLao=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575271774;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=n1UHqyOwMirXt9ynuPF5AWJEn/klRohJE9Berk4y3+E=;
-        b=T6F69I6qo5sSUKmipfp0NkQgBjG/g0bxUmpCugxtTVxn7OQK/of8Da8gGsLiACA5
-        qtf/kZm1hXVVcVzyt7RuXHE3fanRrgCFq18OWqa/vZn9zOED9f99CqWnU70/aSSRNPe
-        6BK5xMN2gcM2KFwjK5wYV8BALPPKiu5cLf+lexrI=
+        Mon, 2 Dec 2019 02:31:44 -0500
+X-UUID: 0e8070a5e7034993b709607a586265d9-20191202
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=a5jrEc352xLH4E1s0PphYrET7imYAjDTOReZgNhh1M0=;
+        b=BHEM/Co+6PheHQagy8mRbQT2akeB7ioyYKpu2Wd82Ln2VeTzlgpYVHijjMOPU4kL+pkfxJ8TJDOr2f0CEjgY/llroLb+0vyTDEKTKbiWuyw9NZQn7OoGfiER2qM9hqoQbkyV0StnCWjvPqPhxcGaTYxWGVoMLH434edoM7Jw17E=;
+X-UUID: 0e8070a5e7034993b709607a586265d9-20191202
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <yongqiang.niu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 485631828; Mon, 02 Dec 2019 15:31:38 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 2 Dec 2019 15:31:22 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 2 Dec 2019 15:31:20 +0800
+From:   <yongqiang.niu@mediatek.com>
+To:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Yongqiang Niu <yongqiang.niu@mediatek.com>
+Subject: [PATCH v1] drm/mediatek: add ctm property support
+Date:   Mon, 2 Dec 2019 15:31:32 +0800
+Message-ID: <1575271892-25117-1-git-send-email-yongqiang.niu@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 2 Dec 2019 07:29:34 +0000
-From:   cang@codeaurora.org
-To:     Avri Altman <Avri.Altman@wdc.com>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Evan Green <evgreen@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] scsi: ufs: Give an unique ID to each ufs-bsg
-In-Reply-To: <MN2PR04MB699154831CDD5847C4674632FC430@MN2PR04MB6991.namprd04.prod.outlook.com>
-References: <0101016ec4a25faa-77e03f78-006b-4b7c-bf8a-d56378f4b1be-000000@us-west-2.amazonses.com>
- <MN2PR04MB699154831CDD5847C4674632FC430@MN2PR04MB6991.namprd04.prod.outlook.com>
-Message-ID: <0101016ec583b87a-6f10681d-2567-4ae8-bf1b-d78404ad26fb-000000@us-west-2.amazonses.com>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2019.12.02-54.240.27.18
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-02 15:23, Avri Altman wrote:
-> Hi,
->> 
->> Considering there can be multiple UFS hosts in SoC, give each ufs-bsg 
->> an unique
->> ID by appending the scsi host number to its device name.
-> Can you refer me to such a design?
-> 
-> Thanks,
-> Avri
-> 
+RnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+DQoNCmFkZCBj
+dG0gcHJvcGVydHkgc3VwcG9ydA0KDQpTaWduZWQtb2ZmLWJ5OiBZb25ncWlhbmcgTml1IDx5b25n
+cWlhbmcubml1QG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
+dGtfZHJtX2NydGMuYyAgICAgfCAgNyArKystDQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
+a19kcm1fZGRwX2NvbXAuYyB8IDU5ICsrKysrKysrKysrKysrKysrKysrKysrKysrKystDQogZHJp
+dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaCB8ICA5ICsrKysrDQogMyBm
+aWxlcyBjaGFuZ2VkLCA3MiBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jIGIvZHJpdmVycy9n
+cHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQppbmRleCA0ZmIzNDZjLi5lN2UzYWE5IDEw
+MDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQorKysg
+Yi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMNCkBAIC02NjYsMTAgKzY2
+NiwxMyBAQCBzdGF0aWMgdm9pZCBtdGtfZHJtX2NydGNfYXRvbWljX2ZsdXNoKHN0cnVjdCBkcm1f
+Y3J0YyAqY3J0YywNCiAJaW50IGk7DQogDQogCWlmIChjcnRjLT5zdGF0ZS0+Y29sb3JfbWdtdF9j
+aGFuZ2VkKQ0KLQkJZm9yIChpID0gMDsgaSA8IG10a19jcnRjLT5kZHBfY29tcF9ucjsgaSsrKQ0K
+KwkJZm9yIChpID0gMDsgaSA8IG10a19jcnRjLT5kZHBfY29tcF9ucjsgaSsrKSB7DQogCQkJbXRr
+X2RkcF9nYW1tYV9zZXQobXRrX2NydGMtPmRkcF9jb21wW2ldLA0KIAkJCQkJICBjcnRjLT5zdGF0
+ZSwNCiAJCQkJCSAgbXRrX2NydGNfc3RhdGUtPmNtZHFfaGFuZGxlKTsNCisJCQltdGtfZGRwX2N0
+bV9zZXQobXRrX2NydGMtPmRkcF9jb21wW2ldLCBjcnRjLT5zdGF0ZSk7DQorCQl9DQorDQogI2lm
+ZGVmIENPTkZJR19NVEtfQ01EUQ0KIAlpZiAobXRrX2NydGMtPmNtZHFfY2xpZW50KSB7DQogCQlk
+cm1fYXRvbWljX3N0YXRlX2dldChvbGRfYXRvbWljX3N0YXRlKTsNCkBAIC04OTEsNyArODk0LDcg
+QEAgaW50IG10a19kcm1fY3J0Y19jcmVhdGUoc3RydWN0IGRybV9kZXZpY2UgKmRybV9kZXYsDQog
+CWlmIChyZXQgPCAwKQ0KIAkJcmV0dXJuIHJldDsNCiAJZHJtX21vZGVfY3J0Y19zZXRfZ2FtbWFf
+c2l6ZSgmbXRrX2NydGMtPmJhc2UsIE1US19MVVRfU0laRSk7DQotCWRybV9jcnRjX2VuYWJsZV9j
+b2xvcl9tZ210KCZtdGtfY3J0Yy0+YmFzZSwgMCwgZmFsc2UsIE1US19MVVRfU0laRSk7DQorCWRy
+bV9jcnRjX2VuYWJsZV9jb2xvcl9tZ210KCZtdGtfY3J0Yy0+YmFzZSwgMCwgdHJ1ZSwgTVRLX0xV
+VF9TSVpFKTsNCiAJcHJpdi0+bnVtX3BpcGVzKys7DQogI2lmZGVmIENPTkZJR19NVEtfQ01EUQ0K
+IAltdGtfY3J0Yy0+Y21kcV9jbGllbnQgPQ0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9t
+ZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
+X2RybV9kZHBfY29tcC5jDQppbmRleCA5Y2MxMmFmLi40YmJiYWM3IDEwMDY0NA0KLS0tIGEvZHJp
+dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYw0KKysrIGIvZHJpdmVycy9n
+cHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYw0KQEAgLTM4LDcgKzM4LDE1IEBADQog
+I2RlZmluZSBDQ09SUl9FTgkJCQlCSVQoMCkNCiAjZGVmaW5lIERJU1BfQ0NPUlJfQ0ZHCQkJCTB4
+MDAyMA0KICNkZWZpbmUgQ0NPUlJfUkVMQVlfTU9ERQkJCUJJVCgwKQ0KKyNkZWZpbmUgQ0NPUlJf
+RU5HSU5FX0VOCQkJCUJJVCgxKQ0KKyNkZWZpbmUgQ0NPUlJfR0FNTUFfT0ZGCQkJCUJJVCgyKQ0K
+KyNkZWZpbmUgQ0NPUlJfV0dBTVVUX1NSQ19DTElQCQkJQklUKDMpDQogI2RlZmluZSBESVNQX0ND
+T1JSX1NJWkUJCQkJMHgwMDMwDQorI2RlZmluZSBESVNQX0NDT1JSX0NPRUZfMAkJCTB4MDA4MA0K
+KyNkZWZpbmUgRElTUF9DQ09SUl9DT0VGXzEJCQkweDAwODQNCisjZGVmaW5lIERJU1BfQ0NPUlJf
+Q09FRl8yCQkJMHgwMDg4DQorI2RlZmluZSBESVNQX0NDT1JSX0NPRUZfMwkJCTB4MDA4Qw0KKyNk
+ZWZpbmUgRElTUF9DQ09SUl9DT0VGXzQJCQkweDAwOTANCiANCiAjZGVmaW5lIERJU1BfRElUSEVS
+X0VOCQkJCTB4MDAwMA0KICNkZWZpbmUgRElUSEVSX0VOCQkJCUJJVCgwKQ0KQEAgLTE4Nyw3ICsx
+OTUsNyBAQCBzdGF0aWMgdm9pZCBtdGtfY2NvcnJfY29uZmlnKHN0cnVjdCBtdGtfZGRwX2NvbXAg
+KmNvbXAsIHVuc2lnbmVkIGludCB3LA0KIAkJCSAgICAgdW5zaWduZWQgaW50IGJwYywgc3RydWN0
+IGNtZHFfcGt0ICpjbWRxX3BrdCkNCiB7DQogCW10a19kZHBfd3JpdGUoY21kcV9wa3QsIGggPDwg
+MTYgfCB3LCBjb21wLCBESVNQX0NDT1JSX1NJWkUpOw0KLQltdGtfZGRwX3dyaXRlKGNtZHFfcGt0
+LCBDQ09SUl9SRUxBWV9NT0RFLCBjb21wLCBESVNQX0NDT1JSX0NGRyk7DQorCW10a19kZHBfd3Jp
+dGUoY21kcV9wa3QsIENDT1JSX0VOR0lORV9FTiwgY29tcCwgRElTUF9DQ09SUl9DRkcpOw0KIH0N
+CiANCiBzdGF0aWMgdm9pZCBtdGtfY2NvcnJfc3RhcnQoc3RydWN0IG10a19kZHBfY29tcCAqY29t
+cCkNCkBAIC0yMDAsNiArMjA4LDU0IEBAIHN0YXRpYyB2b2lkIG10a19jY29ycl9zdG9wKHN0cnVj
+dCBtdGtfZGRwX2NvbXAgKmNvbXApDQogCXdyaXRlbF9yZWxheGVkKDB4MCwgY29tcC0+cmVncyAr
+IERJU1BfQ0NPUlJfRU4pOw0KIH0NCiANCisvKiBDb252ZXJ0cyBhIERSTSBTMzEuMzIgdmFsdWUg
+dG8gdGhlIEhXIFMwLjExIGZvcm1hdC4gKi8NCitzdGF0aWMgdTE2IG10a19jdG1fczMxXzMyX3Rv
+X3MwXzExKHU2NCBpbikNCit7DQorCXUxNiByOw0KKw0KKwkvKiBTaWduIGJpdC4gKi8NCisJciA9
+IGluICYgQklUX1VMTCg2MykgPyBCSVQoMTEpIDogMDsNCisNCisJaWYgKChpbiAmIEdFTk1BU0tf
+VUxMKDYyLCAzMykpID4gMCkgew0KKwkJLyogV2UgaGF2ZSB6ZXJvIGludGVnZXIgYml0cyBzbyB3
+ZSBjYW4gb25seSBzYXR1cmF0ZSBoZXJlLiAqLw0KKwkJciB8PSBHRU5NQVNLKDEwLCAwKTsNCisJ
+fSBlbHNlIHsNCisJCS8qIE90aGVyd2lzZSB0YWtlIHRoZSA5IG1vc3QgaW1wb3J0YW50IGZyYWN0
+aW9uYWwgYml0cy4gKi8NCisJCXIgfD0gKGluID4+IDIyKSAmIEdFTk1BU0soMTAsIDApOw0KKwl9
+DQorDQorCXJldHVybiByOw0KK30NCisNCitzdGF0aWMgdm9pZCBtdGtfY2NvcnJfY3RtX3NldChz
+dHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wLA0KKwkJCSAgICAgIHN0cnVjdCBkcm1fY3J0Y19zdGF0
+ZSAqc3RhdGUpDQorew0KKwlzdHJ1Y3QgZHJtX3Byb3BlcnR5X2Jsb2IgKmJsb2IgPSBzdGF0ZS0+
+Y3RtOw0KKwlzdHJ1Y3QgZHJtX2NvbG9yX2N0bSAqY3RtOw0KKwljb25zdCB1NjQgKmlucHV0Ow0K
+Kwl1aW50MTZfdCBjb2VmZnNbOV0gPSB7IDAgfTsNCisJaW50IGk7DQorDQorCWlmICghYmxvYikN
+CisJCXJldHVybjsNCisNCisJY3RtID0gKHN0cnVjdCBkcm1fY29sb3JfY3RtICopYmxvYi0+ZGF0
+YTsNCisJaW5wdXQgPSBjdG0tPm1hdHJpeDsNCisNCisJZm9yIChpID0gMDsgaSA8IEFSUkFZX1NJ
+WkUoY29lZmZzKTsgaSsrKQ0KKwkJY29lZmZzW2ldID0gbXRrX2N0bV9zMzFfMzJfdG9fczBfMTEo
+aW5wdXRbaV0pOw0KKw0KKwl3cml0ZWxfcmVsYXhlZChjb2VmZnNbMF0gPDwgMTYgfCBjb2VmZnNb
+MV0sDQorCQkgICAgICAgY29tcC0+cmVncyArIERJU1BfQ0NPUlJfQ09FRl8wKTsNCisJd3JpdGVs
+X3JlbGF4ZWQoY29lZmZzWzJdIDw8IDE2IHwgY29lZmZzWzNdLA0KKwkJICAgICAgIGNvbXAtPnJl
+Z3MgKyBESVNQX0NDT1JSX0NPRUZfMSk7DQorCXdyaXRlbF9yZWxheGVkKGNvZWZmc1s0XSA8PCAx
+NiB8IGNvZWZmc1s1XSwNCisJCSAgICAgICBjb21wLT5yZWdzICsgRElTUF9DQ09SUl9DT0VGXzIp
+Ow0KKwl3cml0ZWxfcmVsYXhlZChjb2VmZnNbNl0gPDwgMTYgfCBjb2VmZnNbN10sDQorCQkgICAg
+ICAgY29tcC0+cmVncyArIERJU1BfQ0NPUlJfQ09FRl8zKTsNCisJd3JpdGVsX3JlbGF4ZWQoY29l
+ZmZzWzhdIDw8IDE2LCBjb21wLT5yZWdzICsgRElTUF9DQ09SUl9DT0VGXzQpOw0KK30NCisNCiBz
+dGF0aWMgdm9pZCBtdGtfZGl0aGVyX2NvbmZpZyhzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wLCB1
+bnNpZ25lZCBpbnQgdywNCiAJCQkgICAgICB1bnNpZ25lZCBpbnQgaCwgdW5zaWduZWQgaW50IHZy
+ZWZyZXNoLA0KIAkJCSAgICAgIHVuc2lnbmVkIGludCBicGMsIHN0cnVjdCBjbWRxX3BrdCAqY21k
+cV9wa3QpDQpAQCAtMjY5LDYgKzMyNSw3IEBAIHN0YXRpYyB2b2lkIG10a19nYW1tYV9zZXQoc3Ry
+dWN0IG10a19kZHBfY29tcCAqY29tcCwNCiAJLmNvbmZpZyA9IG10a19jY29ycl9jb25maWcsDQog
+CS5zdGFydCA9IG10a19jY29ycl9zdGFydCwNCiAJLnN0b3AgPSBtdGtfY2NvcnJfc3RvcCwNCisJ
+LmN0bV9zZXQgPSBtdGtfY2NvcnJfY3RtX3NldCwNCiB9Ow0KIA0KIHN0YXRpYyBjb25zdCBzdHJ1
+Y3QgbXRrX2RkcF9jb21wX2Z1bmNzIGRkcF9kaXRoZXIgPSB7DQpkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaCBiL2RyaXZlcnMvZ3B1L2RybS9t
+ZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmgNCmluZGV4IDViMGEzZDQuLjUxMDBjM2QgMTAwNjQ0
+DQotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oDQorKysg
+Yi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oDQpAQCAtOTUsNiAr
+OTUsOCBAQCBzdHJ1Y3QgbXRrX2RkcF9jb21wX2Z1bmNzIHsNCiAJCQkgIHN0cnVjdCBjbWRxX3Br
+dCAqY21kcV9wa3QpOw0KIAl2b2lkICgqYmdjbHJfaW5fb24pKHN0cnVjdCBtdGtfZGRwX2NvbXAg
+KmNvbXApOw0KIAl2b2lkICgqYmdjbHJfaW5fb2ZmKShzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21w
+KTsNCisJdm9pZCAoKmN0bV9zZXQpKHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAsDQorCQkJc3Ry
+dWN0IGRybV9jcnRjX3N0YXRlICpzdGF0ZSk7DQogfTsNCiANCiBzdHJ1Y3QgbXRrX2RkcF9jb21w
+IHsNCkBAIC0yMTMsNiArMjE1LDEzIEBAIHN0YXRpYyBpbmxpbmUgdm9pZCBtdGtfZGRwX2NvbXBf
+YmdjbHJfaW5fb2ZmKHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXApDQogCQljb21wLT5mdW5jcy0+
+YmdjbHJfaW5fb2ZmKGNvbXApOw0KIH0NCiANCitzdGF0aWMgaW5saW5lIHZvaWQgbXRrX2RkcF9j
+dG1fc2V0KHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAsDQorCQkJCSAgIHN0cnVjdCBkcm1fY3J0
+Y19zdGF0ZSAqc3RhdGUpDQorew0KKwlpZiAoY29tcC0+ZnVuY3MgJiYgY29tcC0+ZnVuY3MtPmN0
+bV9zZXQpDQorCQljb21wLT5mdW5jcy0+Y3RtX3NldChjb21wLCBzdGF0ZSk7DQorfQ0KKw0KIGlu
+dCBtdGtfZGRwX2NvbXBfZ2V0X2lkKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSwNCiAJCQllbnVt
+IG10a19kZHBfY29tcF90eXBlIGNvbXBfdHlwZSk7DQogaW50IG10a19kZHBfY29tcF9pbml0KHN0
+cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZV9ub2RlICpjb21wX25vZGUsDQotLSANCjEu
+OC4xLjEuZGlydHkNCg==
 
-Consider a platform which has an embedded UFS device and supports a UFS 
-card meanwhile.
-This conbination is very popular nowadays. BTW, 845 started supporting 
-two UFS hosts 3 years ago.
-
-Thanks,
-
-Can Guo
-
->> 
->> Signed-off-by: Can Guo <cang@codeaurora.org>
->> 
->> diff --git a/drivers/scsi/ufs/ufs_bsg.c b/drivers/scsi/ufs/ufs_bsg.c 
->> index
->> dc2f6d2..3ef5b78 100644
->> --- a/drivers/scsi/ufs/ufs_bsg.c
->> +++ b/drivers/scsi/ufs/ufs_bsg.c
->> @@ -202,7 +202,7 @@ int ufs_bsg_probe(struct ufs_hba *hba)
->>         bsg_dev->parent = get_device(parent);
->>         bsg_dev->release = ufs_bsg_node_release;
->> 
->> -       dev_set_name(bsg_dev, "ufs-bsg");
->> +       dev_set_name(bsg_dev, "ufs-bsg%d", shost->host_no);
->> 
->>         ret = device_add(bsg_dev);
->>         if (ret)
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->> a Linux Foundation Collaborative Project
