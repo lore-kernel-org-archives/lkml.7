@@ -2,205 +2,164 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A21ADC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 05:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAAEC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 05:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D5A6206DC
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 05:43:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rQinLrZ4"
+	by mail.kernel.org (Postfix) with ESMTP id DA61C2070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 05:50:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575265857;
+	bh=ohXZGfk8CjVJs4OJSli9PTu51NLkasIiV8VRaopJkVM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=FodU07choT/GpbJHeDnX6IWQafjvj7ERMgWjmxDteH03vcdvTAv2MKke0jnegP8Za
+	 hIuzN/RIa98Z1UPsO2UkFA5GQqwhYCbXGJac01WtpKDe/yyXx3NrVv0xK0nvsvMCqM
+	 dxpnHhTsTq/TxNl/L08xE9xLbqeupfQKwKEre+6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726190AbfLBFn2 (ORCPT
+        id S1726139AbfLBFu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 00:43:28 -0500
-Received: from mail-eopbgr20062.outbound.protection.outlook.com ([40.107.2.62]:53134
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725807AbfLBFn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 00:43:28 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dcO9+ZGNEmSIcisQ5xSS3PhebMGsNw5Wbdtp7pUtpEDoEXYnbuf4b8a1GzVMJKr/bvQHgjmReoFRFUrMmAmEbpzGnR90pKvp0iZIma2hnjhIzt7f+i18t7BU5bOkTrr7Dilo4DdpfGSCeA75EkNGifEb8gHDvpe0ZX+n6/higM5E0VEJ1PDvTOEsA8u5KN27wHrtIqgu99GXb1SQ6FnnoP5sZsEM0jOFscF8qaapfrMaUKweGD7Iy/fr3FAnSGjccCQ271oU6WFFQBrn+Jb4Owq/kKctwfQaOg+G9Heil77TycL29edVGo26LiTXgasE0QMn4oVK6iOnnY4oggpStg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=s0mGa9R5++e7rDSKn6rr1bc75KdorayaimobJ7+6+Ug=;
- b=cgXEZmGP5l9xuKiwQPPAAHYxFNVR4HDxwEUixkDaaCH6sDhjSLCjRJZ3VrPamAoa/GMA460dDJJY2UW2PgmlwPxFI1t84YHbMpxONsHr8KnAW98rKZ5zA6ibHPCeDZS6ohETKOD8QR/k5GAWLb5iPvA96pmxe9BKGLqu9YB6VBiBHcACoK2ERjbCQgH/tJTyWcz60fNyEywqu68arRCqgZxhNzJCcZaAyiAO0JBIPOYkovZlvHb2sMR0Opfx74FVVKzBCzitH3eMK65h5jTHFbJU+IVGheRyUEY0OITaH4w4wfxDHNzE8kwu+M0U92SHfekd/SasxrA/VnmcqOVEag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=s0mGa9R5++e7rDSKn6rr1bc75KdorayaimobJ7+6+Ug=;
- b=rQinLrZ4doCMFz+52/rilIABPn6Lv7n3EfEU9BGRmnYM8kZCjuCI4QX3s9vXB579vhB9rfUepBg0glXWY1UBgTmVmh5BZZXEcfJ+DIT+ww99Vcq10PQGhZkv9KSfEa0CRfZHLVOV7YvdB3sqjEaruAY3WlX7/GFAXnu2vRK5RJk=
-Received: from AM0PR0402MB3556.eurprd04.prod.outlook.com (52.133.43.147) by
- AM0PR0402MB3569.eurprd04.prod.outlook.com (52.133.44.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.18; Mon, 2 Dec 2019 05:43:20 +0000
-Received: from AM0PR0402MB3556.eurprd04.prod.outlook.com
- ([fe80::e885:ac97:fca8:c4e]) by AM0PR0402MB3556.eurprd04.prod.outlook.com
- ([fe80::e885:ac97:fca8:c4e%3]) with mapi id 15.20.2495.014; Mon, 2 Dec 2019
- 05:43:20 +0000
-From:   Kuldeep Singh <kuldeep.singh@nxp.com>
-To:     Michael Walle <michael@walle.cc>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: RE: [EXT] [PATCH 3/4] arm64: dts: ls1028a: add FlexSPI node
-Thread-Topic: [EXT] [PATCH 3/4] arm64: dts: ls1028a: add FlexSPI node
-Thread-Index: AQHVojp/XO5z0jeXk0+aNgRvimpOIKedAjswgAA8FYCACSO5MA==
-Date:   Mon, 2 Dec 2019 05:43:20 +0000
-Message-ID: <AM0PR0402MB35568D79CBFDC28B32561085E0430@AM0PR0402MB3556.eurprd04.prod.outlook.com>
-References: <20191123201317.25861-1-michael@walle.cc>
- <20191123201317.25861-4-michael@walle.cc>
- <AM0PR0402MB3556804FB47D182173C6A7AAE0450@AM0PR0402MB3556.eurprd04.prod.outlook.com>
- <afde04b888418e9e4f4fdb946a579e70@walle.cc>
-In-Reply-To: <afde04b888418e9e4f4fdb946a579e70@walle.cc>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=kuldeep.singh@nxp.com; 
-x-originating-ip: [92.120.1.70]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7481655d-b4ca-4a14-3752-08d776ea89d2
-x-ms-traffictypediagnostic: AM0PR0402MB3569:|AM0PR0402MB3569:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR0402MB3569AB53833C5DAC733B3F98E0430@AM0PR0402MB3569.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2582;
-x-forefront-prvs: 0239D46DB6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(136003)(366004)(376002)(346002)(13464003)(199004)(189003)(5660300002)(966005)(54906003)(229853002)(4326008)(6436002)(66066001)(81166006)(8936002)(11346002)(52536014)(102836004)(186003)(26005)(6506007)(53546011)(76176011)(7696005)(14444005)(256004)(44832011)(71200400001)(71190400001)(76116006)(66946007)(66476007)(66556008)(64756008)(66446008)(14454004)(6246003)(55016002)(6116002)(3846002)(4001150100001)(446003)(86362001)(99286004)(316002)(7736002)(33656002)(6916009)(8676002)(81156014)(74316002)(305945005)(9686003)(6306002)(2906002)(25786009)(478600001)(45080400002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR0402MB3569;H:AM0PR0402MB3556.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: HgZdN5DE93MNvR3HO7CWqjsg1vxfhfplcYB/48z9mro+3EgBR531KekG+cSy+G/pLR0hBagZhJv5sn2Lkwb7Vj8KssPYXZSWL+zS59c3sO+vSBYM8WGCMsgn9deZZOlfcaS/1tvTztfaTQyVNkKwnfH0ZbswDyyBJQH64utckWNlbYstLjLA43DEHflod3iJieZVne/y79SNSArKgfhxsvQkvcS+7fzvTJ7H++HHBOp7uCtsoFZkqqe2hF2QseKHPyN1ft4Rtx2gRkT0/OJPXf0bhNB/iSitnSZivzaPeUgK9TEk7Otd0HVYA4AAzdcnttWFFq9RBv2UM68axdfemsKOnnop2FANfzigbeSm6Ae/KBCf70ofP2rgdiRQAXYb3kWe7j4q7JeYTFy2+tF2/T8GseGX3MmvzOkX9EeNRcDQuLQ5Zke1uSP0cdpZ2B6g
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 2 Dec 2019 00:50:56 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:46454 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbfLBFuz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 00:50:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=JxzbjAicqr2k4SAVBtPRNgbKswEiyX6uTFNgc/Dtp6k=; b=apK1WG3WMQC866rC6TIEGAe8J
+        RgKee35qVnLc0VPcoQ8ae9sLiEhbUArE9MNDF18YZo910y0a/X2Ra1I4WjtaGnJKGKL7Hy8YNvwN8
+        bAc+5ZmqYQZ9IvI+SJ7KWbH/SCevLyH9O3aos4UzUcfZWcF08ii1jmTEOp5Cvwp/2bw+7sd8k+ycY
+        3Pt+RVyAqnB2sQ8WnQCmN61MnF6raHaDcD/fvVFBdByIg4wiBuUsY3afsLeS5KesFn0b1A0YpqD/t
+        SiEaZHcjOFfgZU0Ihw4nsZWl+z2Rf219EJh8YfTstBt6/NQ+gdoA+9C5gCZS/AQDhTpgYXdPGbPFI
+        nshkGjLYg==;
+Received: from [80.156.29.194] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ibebi-0004Qx-To; Mon, 02 Dec 2019 05:50:51 +0000
+Date:   Mon, 2 Dec 2019 06:50:47 +0100
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+Cc:     gregkh@linuxfoundation.org, rfontana@redhat.com,
+        kstewart@linuxfoundation.org, tglx@linutronix.de,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: dvb_dummy_fe.c: add members to
+ dvb_dummy_fe_state
+Message-ID: <20191202065047.3cffda7a@kernel.org>
+In-Reply-To: <13629649-f363-4787-e88b-784f8309bfcd@gmail.com>
+References: <20191130045420.111288-1-dwlsalmeida@gmail.com>
+        <20191201090733.2bd8c2c4@kernel.org>
+        <13629649-f363-4787-e88b-784f8309bfcd@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7481655d-b4ca-4a14-3752-08d776ea89d2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Dec 2019 05:43:20.2215
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3ET/WXoyKIE3NktYwSfIxn3AG+RLmv8V8jE7Go88XrhzilqS7QYNxXGZyb5YEgQCVuPHk8Sn4ohPqVdccqc5rQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0402MB3569
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Em Mon, 2 Dec 2019 01:49:38 -0300
+"Daniel W. S. Almeida" <dwlsalmeida@gmail.com> escreveu:
 
-> -----Original Message-----
-> From: Michael Walle <michael@walle.cc>
-> Sent: Tuesday, November 26, 2019 3:38 PM
-> To: Kuldeep Singh <kuldeep.singh@nxp.com>
-> Cc: linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
-> linux-kernel@vger.kernel.org; Shawn Guo <shawnguo@kernel.org>; Leo Li
-> <leoyang.li@nxp.com>; Rob Herring <robh+dt@kernel.org>; Mark Rutland
-> <mark.rutland@arm.com>
-> Subject: Re: [EXT] [PATCH 3/4] arm64: dts: ls1028a: add FlexSPI node
->=20
-> Caution: EXT Email
->=20
-> Hi Kuldeep,
->=20
-> Am 2019-11-26 07:40, schrieb Kuldeep Singh:
-> > Hi Michael,
+> Hi Mauro, thanks for checking out my work!
+> 
+> > please don't add fields at the
+> > struct while they're not used, as this makes harder for reviewers to be
+> > sure that we're not adding bloatware at the code.  
+> 
+> OK.
+> 
+> > Please remember that
+> > we want one logical change per patch.
 > >
-> >> -----Original Message-----
-> >> From: devicetree-owner@vger.kernel.org
-> >> <devicetree-owner@vger.kernel.org>
-> >> On Behalf Of Michael Walle
-> >> Sent: Sunday, November 24, 2019 1:43 AM
-> >> To: linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
-> >> linux-
-> >> kernel@vger.kernel.org
-> >> Cc: Shawn Guo <shawnguo@kernel.org>; Leo Li <leoyang.li@nxp.com>;
-> Rob
-> >> Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
-> >> Michael Walle <michael@walle.cc>
-> >> Subject: [EXT] [PATCH 3/4] arm64: dts: ls1028a: add FlexSPI node
-> >
-> > There's already a patch[1] sent upstream and is under review.
-> > It includes dts(i) entries for LS1028. I will be sending the next
-> > version
->=20
-> I've seen that, but there wasn't any reply for almost two months now.
-> But
-> if you're sending your next version, this patch can be dropped from this
-> series.
+> > It means that, if you add a state->frontend_status at the driver, the
+> > patch should implement the entire logic for it.  
+> I will keep this in mind.
+> 
+> >   static int dvb_dummy_fe_sleep(struct dvb_frontend* fe)
+> >   {
+> > +
+> > +	struct dvb_dummy_fe_state *state = fe->demodulator_priv;
+> > +
+> > +	state->sleeping = true;
+> > +  
+> 
+> > Hmm...what's the sense of adding it? Where are you setting it to false?
+> > Where are you using the sleeping state?  
+> 
+> I noted some drivers seem to instruct the hardware into a low power state. Take helene, for instance:
+> 
+> static int helene_sleep(struct dvb_frontend *fe)
+> {
+> 	struct helene_priv *priv = fe->tuner_priv;
+> 
+> 	dev_dbg(&priv->i2c->dev, "%s()\n", __func__);
+> 	helene_enter_power_save(priv);
+> 	return 0;
+> }
+> 
+> static int helene_enter_power_save(struct helene_priv *priv)
+> {
+> 	dev_dbg(&priv->i2c->dev, "%s()\n", __func__);
+> 	if (priv->state == STATE_SLEEP)
+> 		return 0;
+> 
+> 	/* Standby setting for CPU */
+> 	helene_write_reg(priv, 0x88, 0x0);
+> 
+> 	/* Standby setting for internal logic block */
+> 	helene_write_reg(priv, 0x87, 0xC0);
+> 
+> 	priv->state = STATE_SLEEP;
+> 	return 0;
+> }
+> 
+> As we are emulating some piece of hardware I thought it would be enough to add a simple bool to indicate that the device was sleeping.
 
-Okay.
+Yeah, that could have some value. Yet, if you're doing that, I suggest
+to add a function to change the device power state, as this is what a
+real driver would do. Something similar to:
 
---Kuldeep
->=20
-> -michael
->=20
-> >
-> > [1]
-> >
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpatc
-> >
-> hwork.kernel.org%2Fpatch%2F11139365%2F&amp;data=3D02%7C01%7Ckuld
-> eep.sing
-> >
-> h%40nxp.com%7C327363e5ba97483c9add08d77258875d%7C686ea1d3bc2
-> b4c6fa92cd
-> >
-> 99c5c301635%7C0%7C0%7C637103596868168346&amp;sdata=3DyDJ1ggrIuR
-> v1%2Br%2F
-> > 9Ez1uvv0EpFB8Mns5%2Ffn%2F7zG5InA%3D&amp;reserved=3D0
-> >>
-> >> Caution: EXT Email
-> >>
-> >> Signed-off-by: Michael Walle <michael@walle.cc>
-> >> ---
-> >>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 13 +++++++++++++
-> >>  1 file changed, 13 insertions(+)
-> >>
-> >> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> >> b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> >> index 6730922c2d47..650b277ddd66 100644
-> >> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> >> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> >> @@ -260,6 +260,19 @@
-> >>                         status =3D "disabled";
-> >>                 };
-> >>
-> >> +               fspi: spi@20c0000 {
-> >> +                       compatible =3D "nxp,lx2160a-fspi";
-> >> +                       #address-cells =3D <1>;
-> >> +                       #size-cells =3D <0>;
-> >> +                       reg =3D <0x0 0x20c0000 0x0 0x10000>,
-> >> +                             <0x0 0x20000000 0x0 0x10000000>;
-> >> +                       reg-names =3D "fspi_base", "fspi_mmap";
-> >> +                       interrupts =3D <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH=
->;
-> >> +                       clocks =3D <&clockgen 4 3>, <&clockgen 4 3>;
-> >> +                       clock-names =3D "fspi_en", "fspi";
-> >> +                       status =3D "disabled";
-> >> +               };
-> >> +
-> >>                 esdhc: mmc@2140000 {
-> >>                         compatible =3D "fsl,ls1028a-esdhc", "fsl,esdhc=
-";
-> >>                         reg =3D <0x0 0x2140000 0x0 0x10000>;
-> >> --
-> >> 2.20.1
-> >
-> > Regards
-> > Kuldeep
+static inline void change_power_state(struct state *st, bool on) 
+{
+	/* A real driver would have commands here to wake/sleep the dev */
+
+	st->power = on;
+}
+
+In any case, a real device on sleeping mode will not be tuning any
+channels, so all stats will reflect that, e. g:
+
+	- frontend status will return 0;
+	- stats that depends on having a lock will be set with:
+		FE_SCALE_NOT_AVAILABLE
+	  tip: most stats are like that
+	- stats like signal strength should probably return 0.
+
+Not so sure what SNR will return, but probably it should return
+FE_SCALE_NOT_AVAILABLE too, as this is usually calculated indirectly
+once the device is locked.
+
+On other words, only signal strength and stats should return a value
+with would be 0 on both cases. All other stats should return
+FE_SCALE_NOT_AVAILABLE.
+
+Btw, as this depends on having the stats implemented, I would suggest you to
+first finish the tuning and stats part of the driver. Only after having those
+patches, apply the power mode patch.
+
+> 
+> This patch was a bit convoluted on my part. Let's iron out the issues you pointed out in v2.
+> 
+> - Daniel.
+
+Cheers,
+Mauro
