@@ -2,196 +2,128 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 439E1C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC45C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 116D72070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C29A20881
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:35:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbfLBGXe (ORCPT
+        id S1726327AbfLBGfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 01:23:34 -0500
-Received: from mga07.intel.com ([134.134.136.100]:12658 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725935AbfLBGXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 01:23:33 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Dec 2019 22:23:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,268,1571727600"; 
-   d="scan'208";a="212937004"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by orsmga003.jf.intel.com with ESMTP; 01 Dec 2019 22:23:30 -0800
-Received: from fmsmsx156.amr.corp.intel.com (10.18.116.74) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sun, 1 Dec 2019 22:23:29 -0800
-Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
- fmsmsx156.amr.corp.intel.com (10.18.116.74) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sun, 1 Dec 2019 22:23:29 -0800
-Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.109]) by
- SHSMSX151.ccr.corp.intel.com ([169.254.3.214]) with mapi id 14.03.0439.000;
- Mon, 2 Dec 2019 14:23:27 +0800
-From:   "Zhao, Shirley" <shirley.zhao@intel.com>
-To:     James Bottomley <jejb@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>
-CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
-        "Zhu, Bing" <bing.zhu@intel.com>,
-        "Chen, Luhai" <luhai.chen@intel.com>
-Subject: RE: One question about trusted key of keyring in Linux kernel.
-Thread-Topic: One question about trusted key of keyring in Linux kernel.
-Thread-Index: AdWZwFKzDBwFOydYTGGk+Aqs+6BIxAANhxEAAoxRZMAAOKaagABSSevwABZzFQAAgRP1kP//pW0A//9ftMCAAMH6gP//eLrA
-Date:   Mon, 2 Dec 2019 06:23:27 +0000
-Message-ID: <A888B25CD99C1141B7C254171A953E8E4909E381@shsmsx102.ccr.corp.intel.com>
-References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
-         <1573659978.17949.83.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
-         <1574877977.3551.5.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E49096521@shsmsx102.ccr.corp.intel.com>
-         <1575057916.6220.7.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909BA3B@shsmsx102.ccr.corp.intel.com>
-         <1575260220.4080.17.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909D360@shsmsx102.ccr.corp.intel.com>
- <1575267453.4080.26.camel@linux.ibm.com>
-In-Reply-To: <1575267453.4080.26.camel@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMzg0YmE3ODUtYmYzZC00YjU3LTgwNDktMTliMzViM2EyYTc5IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoidFRRZzFMWEF6Nm03Wlh4VjdZdmxNVWd1bmZRWk1kXC9EM3kwQUtQcjdXMVpVVnhDRjdtRXlBWDREeHhqWmNSR3gifQ==
-x-ctpclassification: CTP_NT
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 2 Dec 2019 01:35:09 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:38793 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbfLBGfI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 01:35:08 -0500
+Received: by mail-il1-f198.google.com with SMTP id o18so26650923ilb.5
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Dec 2019 22:35:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=8ReAb1Jx3MYvvwEcmPSKSznDWtDi/FnA+jmMVAEqRhg=;
+        b=ELlA6RsewAub6S+alXK9yepwiq3HcPZUjwXAllq7wspj+14p6jY/ZTbNvX+/2Xgt6C
+         /8ZLsnjyDh0ZHEr2hcZ7FAwlx/3BhtE+XdqOnTy87rveo+ogAqTIirok4Y2vSYeZOhdk
+         Wu30MJPmoqRyae1H8opq7IR71SYS8EroZhZ9gcQiLEnDpgoa6ydv8KvcdIsguHcOUfO/
+         YaDCga8iI6Gcid3z+V7gq1K4aJP3QlkhUr+Y7YaZsQtQhYDE2CADNg5RXnLhfpp/BaXw
+         WS+JBn98jflZQHp806lBwaznEVzqHc3UqeU5yuPxZG28UYS2utWUgydUCuZMQ9S5d6VW
+         1sfA==
+X-Gm-Message-State: APjAAAXt3nRyzwpz8+0dL9kGZA0dFpbuL9vZL4UoJAI7he4GJkP19qXu
+        5vxytrb+I/MrbpG1/NYvNVceB00AioHbp/UmCPjIRoRP+rG/
+X-Google-Smtp-Source: APXvYqx2LlddU0MrGHMtTu7I/2eykXIkLezxTM8GPVvLIohuzQHH5EFO7hwk+glvLrE+QX76wG02wBw/pEeeqViQXaX/JHf3xmLQ
 MIME-Version: 1.0
+X-Received: by 2002:a6b:5a02:: with SMTP id o2mr9770534iob.86.1575268508110;
+ Sun, 01 Dec 2019 22:35:08 -0800 (PST)
+Date:   Sun, 01 Dec 2019 22:35:08 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000da160a0598b2c704@google.com>
+Subject: general protection fault in override_creds
+From:   syzbot <syzbot+5320383e16029ba057ff@syzkaller.appspotmail.com>
+To:     Anna.Schumaker@Netapp.com, casey@schaufler-ca.com,
+        dhowells@redhat.com, jannh@google.com, keescook@chromium.org,
+        kstewart@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        neilb@suse.com, syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEphbWVzLCANCg0KVGhlIFBDUjcgdmFsdWUgYW5kIFBDUjcgcG9saWN5IGlzIGFzIGJlbG93
-LCBwbGVhc2UgcmV2aWV3LCB0aGFua3MuIA0KDQojIHRwbTJfcGNybGlzdCAtTCBzaGEyNTY6NyAt
-byBwY3I3XzIuc2hhMjU2DQpzaGEyNTY6DQogIDcgOiAweDA2MUFBRDA3MDVBNjIzNjFBRDE4RTU4
-QjY1RDNENzM4M0Y0RDEwRjdGNUE3RTc4OTI0QkUwNTdBQzY3OTc0MDgNCg0KIyB0cG0yX2NyZWF0
-ZXBvbGljeSAtLXBvbGljeS1wY3IgLS1wY3ItbGlzdCBzaGEyNTY6NyAtLXBvbGljeSBwY3I3X2Jp
-bi5wb2xpY3kgPiBwY3I3LnBvbGljeQ0KMzIxZmJkMjhiNjBmY2MyMzAxN2Q1MDFiMTMzYmQ1ZGJm
-Mjg4OTgxNDU4OGU4YTIzNTEwZmUxMDEwNWNiMmNjOQ0KDQojIGNhdCBwY3I3LnBvbGljeQ0KMzIx
-ZmJkMjhiNjBmY2MyMzAxN2Q1MDFiMTMzYmQ1ZGJmMjg4OTgxNDU4OGU4YTIzNTEwZmUxMDEwNWNi
-MmNjOQ0KDQotIFNoaXJsZXkgDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBK
-YW1lcyBCb3R0b21sZXkgPGplamJAbGludXguaWJtLmNvbT4gDQpTZW50OiBNb25kYXksIERlY2Vt
-YmVyIDIsIDIwMTkgMjoxOCBQTQ0KVG86IFpoYW8sIFNoaXJsZXkgPHNoaXJsZXkuemhhb0BpbnRl
-bC5jb20+OyBNaW1pIFpvaGFyIDx6b2hhckBsaW51eC5pYm0uY29tPjsgSmFya2tvIFNha2tpbmVu
-IDxqYXJra28uc2Fra2luZW5AbGludXguaW50ZWwuY29tPjsgSm9uYXRoYW4gQ29yYmV0IDxjb3Ji
-ZXRAbHduLm5ldD4NCkNjOiBsaW51eC1pbnRlZ3JpdHlAdmdlci5rZXJuZWwub3JnOyBrZXlyaW5n
-c0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWRvY0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5l
-bEB2Z2VyLmtlcm5lbC5vcmc7ICdNYXVybyBDYXJ2YWxobyBDaGVoYWInIDxtY2hlaGFiK3NhbXN1
-bmdAa2VybmVsLm9yZz47IFpodSwgQmluZyA8YmluZy56aHVAaW50ZWwuY29tPjsgQ2hlbiwgTHVo
-YWkgPGx1aGFpLmNoZW5AaW50ZWwuY29tPg0KU3ViamVjdDogUmU6IE9uZSBxdWVzdGlvbiBhYm91
-dCB0cnVzdGVkIGtleSBvZiBrZXlyaW5nIGluIExpbnV4IGtlcm5lbC4NCg0KT24gTW9uLCAyMDE5
-LTEyLTAyIGF0IDA1OjU1ICswMDAwLCBaaGFvLCBTaGlybGV5IHdyb3RlOg0KPiBUaGFua3MgZm9y
-IHlvdXIgZmVlZGJhY2ssIEphbWVzLg0KPiANCj4gVGhlIHBvbGljeSBpcyBnZW5lcmF0ZWQgYnkg
-VFBNIGNvbW1hbmQsIHRwbTJfY3JlYXRlcG9saWN5LCBpdCBqdXN0IHVzZSANCj4gdGhlIGFsZ29y
-aXRobSB5b3UgbWVudGlvbmVkLCB3aGljaCBpcyBkZWZpbmVkIGluIFRQTSBzcGVjLg0KPiBJIHJl
-LWF0dGFjaCBteSB0ZXN0IHN0ZXBzIGFzIGJlbG93LiANCj4gUGxlYXNlIGhlbHAgY2hlY2sgaXQs
-IGlzIHRoZXJlIGFueXRoaW5nIHdyb25nLCBlc3BlY2lhbGx5IHRoZSBmb3JtYXQgDQo+IG9mIGtl
-eWN0bCBjb21tYW5kLg0KPiANCj4gRmlyc3RseSwgdGhlIHBjciBwb2xpY3kgaXMgZ2VuZXJhdGVk
-IGFzIGJlbG93OiANCj4gJCB0cG0yX2NyZWF0ZXBvbGljeSAtLXBvbGljeS1wY3IgLS1wY3ItbGlz
-dCBzaGEyNTY6NyAtLXBvbGljeSANCj4gcGNyN19iaW4ucG9saWN5ID4gcGNyNy5wb2xpY3kNCg0K
-SSBkb24ndCB1c2UgdGhlIEludGVsIFRTUywgc28gSSBjYW4ndCBoZWxwIHlvdSB3aXRoIHRoaXMg
-Y29tbWFuZDogeW91IG5lZWQgdG8gYXNrIHNvbWVvbmUgd2hvIGRvZXMgdXNlIGl0IGl0LCBsaWtl
-IFBoaWwuDQoNCj4gUGNyNy5wb2xpY3kgaXMgdGhlIGFzY2lpIGhleCBvZiBwb2xpY3k6DQo+ICQg
-Y2F0IHBjcjcucG9saWN5DQo+IDMyMWZiZDI4YjYwZmNjMjMwMTdkNTAxYjEzM2JkNWRiZjI4ODk4
-MTQ1ODhlOGEyMzUxMGZlMTAxMDVjYjJjYzkNCg0KWW91IGhhdmVuJ3QgcHJvdmlkZWQgZW5vdWdo
-IGluZm9ybWF0aW9uLiAgSWYgeW91IHRlbGwgbWUgd2hhdCB0aGUgcGNyNyB2YWx1ZSB5b3UgdGll
-ZCB0aGUgcG9saWN5IHRvIGlzLCBJIGNhbiBydW4gaXQgdGhyb3VnaCB0aGUgSUJNIFRTUyBwb2xp
-Y3kgbWFrZXIgYW5kIHRlbGwgeW91IGlmIHRoaXMgaXMgdGhlIGNvcnJlY3QgaGFzaC4gIEJ1dCBv
-YnZpb3VzbHksIHNpbmNlIGl0J3MgYSBoYXNoLCBJIGNhbid0IHJldmVyc2UgaXQgdG8gdGVsbCB5
-b3Ugd2hhdCB0aGUgcG9saWN5IGl0IG1hbmRhdGVzIGlzLg0KDQpKYW1lcw0KDQo+IFRoZW4gZ2Vu
-ZXJhdGUgdGhlIHRydXN0ZWQga2V5IGFuZCBjb25maWd1cmUgcG9saWN5ZGlnZXN0IGFuZCBnZXQg
-dGhlIA0KPiBrZXkgSUQ6DQo+ICQga2V5Y3RsIGFkZCB0cnVzdGVkIGttayAibmV3IDMyIGtleWhh
-bmRsZT0weDgxMDAwMDAxIGhhc2g9c2hhMjU2IA0KPiBwb2xpY3lkaWdlc3Q9YGNhdCBwY3I3LnBv
-bGljeWAiIEB1DQo+IDg3NDExNzA0NQ0KPiANCj4gU2F2ZSB0aGUgdHJ1c3RlZCBrZXkuIA0KPiAk
-IGtleWN0bCBwaXBlIDg3NDExNzA0NSA+IGttay5ibG9iDQo+IA0KPiBSZWJvb3QgYW5kIGxvYWQg
-dGhlIGtleS4gDQo+IFN0YXJ0IGEgYXV0aCBzZXNzaW9uIHRvIGdlbmVyYXRlIHRoZSBwb2xpY3k6
-DQo+ICQgdHBtMl9zdGFydGF1dGhzZXNzaW9uIC1TIHNlc3Npb24uY3R4DQo+IHNlc3Npb24taGFu
-ZGxlOiAweDMwMDAwMDANCj4gJCB0cG0yX3Bjcmxpc3QgLUwgc2hhMjU2OjcgLW8gcGNyNy5zaGEy
-NTYgJCB0cG0yX3BvbGljeXBjciAtUyANCj4gc2Vzc2lvbi5jdHggLUwgc2hhMjU2OjcgLUYgcGNy
-Ny5zaGEyNTYgLWYgcGNyNy5wb2xpY3kNCj4gcG9saWN5LWRpZ2VzdDoNCj4gMHgzMjFGQkQyOEI2
-MEZDQzIzMDE3RDUwMUIxMzNCRDVEQkYyODg5ODE0NTg4RThBMjM1MTBGRTEwMTA1Q0IyQ0M5DQo+
-IA0KPiBJbnB1dCB0aGUgcG9saWN5IGhhbmRsZSB0byBsb2FkIHRydXN0ZWQga2V5Og0KPiAkIGtl
-eWN0bCBhZGQgdHJ1c3RlZCBrbWsgImxvYWQgYGNhdCBrbWsuYmxvYmAga2V5aGFuZGxlPTB4ODEw
-MDAwMDEgDQo+IHBvbGljeWhhbmRsZT0weDMwMDAwMDAiIEB1DQo+IGFkZF9rZXk6IE9wZXJhdGlv
-biBub3QgcGVybWl0dGVkDQo+IA0KPiBUaGUgZXJyb3Igc2hvdWxkIGJlIHBvbGljeSBjaGVjayBm
-YWlsZWQsIGJlY2F1c2UgSSB1c2UgVFBNIGNvbW1hbmQgdG8gDQo+IHVuc2VhbCBkaXJlY3RseSB3
-aXRoIGVycm9yIG9mIHBvbGljeSBjaGVjayBmYWlsZWQuDQo+ICQgdHBtMl91bnNlYWwgLWMgMHg4
-MTAwMDAwMSAtTCBzaGEyNTY6NyBFUlJPUiBvbiBsaW5lOiAiODEiIGluIGZpbGU6IA0KPiAiLi9s
-aWIvbG9nLmgiOiBUc3MyX1N5c19VbnNlYWwoMHg5OUQpIC0gdHBtOnNlc3Npb24oMSk6YSBwb2xp
-Y3kgY2hlY2sgDQo+IGZhaWxlZCBFUlJPUiBvbiBsaW5lOiAiMjEzIiBpbiBmaWxlOg0KPiAidG9v
-bHMvdHBtMl91bnNlYWwuYyI6IFVuc2VhbCBmYWlsZWQhDQo+IEVSUk9SIG9uIGxpbmU6ICIxNjYi
-IGluIGZpbGU6ICJ0b29scy90cG0yX3Rvb2wuYyI6IFVuYWJsZSB0byBydW4gDQo+IHRwbTJfdW5z
-ZWFsDQo+IA0KPiAtIFNoaXJsZXkNCj4gDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+
-IEZyb206IEphbWVzIEJvdHRvbWxleSA8amVqYkBsaW51eC5pYm0uY29tPg0KPiBTZW50OiBNb25k
-YXksIERlY2VtYmVyIDIsIDIwMTkgMTI6MTcgUE0NCj4gVG86IFpoYW8sIFNoaXJsZXkgPHNoaXJs
-ZXkuemhhb0BpbnRlbC5jb20+OyBNaW1pIFpvaGFyIDx6b2hhckBsaW51eC5pIA0KPiBibS5jb20+
-OyBKYXJra28gU2Fra2luZW4gPGphcmtrby5zYWtraW5lbkBsaW51eC5pbnRlbC5jb20+OyBKb25h
-dGhhbiANCj4gQ29yYmV0IDxjb3JiZXRAbHduLm5ldD4NCj4gQ2M6IGxpbnV4LWludGVncml0eUB2
-Z2VyLmtlcm5lbC5vcmc7IGtleXJpbmdzQHZnZXIua2VybmVsLm9yZzsgbGludXgtIA0KPiBkb2NA
-dmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyAnTWF1cm8gQ2Fy
-dmFsaG8gDQo+IENoZWhhYicgPG1jaGVoYWIrc2Ftc3VuZ0BrZXJuZWwub3JnPjsgWmh1LCBCaW5n
-IDxiaW5nLnpodUBpbnRlbC5jb20+OyANCj4gQ2hlbiwgTHVoYWkgPGx1aGFpLmNoZW5AaW50ZWwu
-Y29tPg0KPiBTdWJqZWN0OiBSZTogT25lIHF1ZXN0aW9uIGFib3V0IHRydXN0ZWQga2V5IG9mIGtl
-eXJpbmcgaW4gTGludXggDQo+IGtlcm5lbC4NCj4gDQo+IE9uIE1vbiwgMjAxOS0xMi0wMiBhdCAw
-MTo0NCArMDAwMCwgWmhhbywgU2hpcmxleSB3cm90ZToNCj4gPiBIaSwgSmFtZXMsDQo+ID4gDQo+
-ID4gVGhlIHZhbHVlIG9mIFBDUjcgaXMgbm90IGNoYW5nZWQuIEkgaGF2ZSBjaGVja2VkIGl0IHdp
-dGggVFBNIGNvbW1hbmQgDQo+ID4gdHBtX3Bjcmxpc3QuDQo+ID4gDQo+ID4gU28gSSB0aGluayB0
-aGUgcHJvYmxlbSBpcyBob3cgdG8gdXNlIHRoZSBvcHRpb24gcG9saWN5ZGlnZXN0IGFuZCANCj4g
-PiBwb2xpY3loYW5kbGU/IElzIHRoZXJlIGFueSBleGFtcGxlPw0KPiA+IE1heWJlIHRoZSBmb3Jt
-YXQgaW4gbXkgY29tbWFuZCBpcyBub3QgY29ycmVjdC4gDQo+IA0KPiBPSywgc28gcHJldmlvdXNs
-eSB5b3Ugc2FpZCB0aGF0IHVzaW5nIHRoZSBJbnRlbCBUU1MgdGhlIHBvbGljeSBhbHNvIA0KPiBm
-YWlsZWQgYWZ0ZXIgYSByZWJvb3Q6DQo+IA0KPiA+IFRoZSBlcnJvciBzaG91bGQgYmUgcG9saWN5
-IGNoZWNrIGZhaWxlZCwgYmVjYXVzZSBJIHVzZSBUUE0gY29tbWFuZCANCj4gPiB0byB1bnNlYWwg
-ZGlyZWN0bHkgd2l0aCBlcnJvciBvZiBwb2xpY3kgY2hlY2sgZmFpbGVkLg0KPiA+ICQgdHBtMl91
-bnNlYWwgLWMgMHg4MTAwMDAwMSAtTCBzaGEyNTY6NyBFUlJPUiBvbiBsaW5lOiAiODEiIGluDQo+
-ID4gZmlsZTogDQo+ID4gIi4vbGliL2xvZy5oIjogVHNzMl9TeXNfVW5zZWFsKDB4OTlEKSAtIHRw
-bTpzZXNzaW9uKDEpOmEgcG9saWN5IA0KPiA+IGNoZWNrIGZhaWxlZCBFUlJPUiBvbiBsaW5lOiAi
-MjEzIiBpbiBmaWxlOiAidG9vbHMvdHBtMl91bnNlYWwuYyI6IA0KPiA+IFVuc2VhbCBmYWlsZWQh
-DQo+ID4gRVJST1Igb24gbGluZTogIjE2NiIgaW4gZmlsZTogInRvb2xzL3RwbTJfdG9vbC5jIjog
-VW5hYmxlIHRvIHJ1biANCj4gPiB0cG0yX3Vuc2VhbA0KPiANCj4gU28gdGhpcyBtdXN0IG1lYW4g
-dGhlIGFjdHVhbCBwb2xpY3kgaGFzaCB5b3UgY29uc3RydWN0ZWQgd2FzIHdyb25nIGluIA0KPiBz
-b21lIHdheTogaXQgZGlkbid0IGNvcnJlc3BvbmQgc2ltcGx5IHRvIGEgdmFsdWUgb2YgcGNyNyAu
-Li4gd2VsbCANCj4gYXNzdW1pbmcgdGhlIC1MIHNoYTI1Njo3IG1lYW5zIGNvbnN0cnVjdCBhIHBv
-bGljeSBvZiB0aGUgc2hhMjU2IHZhbHVlIA0KPiBvZiBwY3I3IGFuZCB1c2UgaXQgaW4gdGhlIHVu
-c2VhbC4NCj4gDQo+IEkgY2FuIHRlbGwgeW91IGhvdyB0byBjb25zdHJ1Y3QgcG9saWNpZXMgdXNp
-bmcgVFBNMiBjb21tYW5kcywgYnV0IEkgDQo+IHRoaW5rIHlvdSB3YW50IHRvIGtub3cgaG93IHRv
-IGRvIGl0IHVzaW5nIHRoZSBJbnRlbCBUU1M/ICBJbiB3aGljaCANCj4gY2FzZSB5b3UgcmVhbGx5
-IG5lZWQgdG8gY29uc3VsdCB0aGUgZXhwZXJ0cyBpbiB0aGF0IFRTUywgbGlrZSBQaGlsIA0KPiBU
-cmljY2EuDQo+IA0KPiBGb3IgdGhlIHBsYWluIFRQTTIgY2FzZSwgdGhlIHBvbGljeSBsb29rcyBs
-aWtlDQo+IA0KPiBUUE1fQ0NfUG9saWN5UENSIHx8IHBjcnMgfHwgcGNyRGlnZXN0DQo+IA0KPiBX
-aGVyZSBUUE1fQ0NfUG9saWN5UENSID0gMDAwMDAxN2YgYW5kIGZvciBzZWxlY3RpbmcgcGNyNyBv
-bmx5LiAgcGNycyANCj4gaXMgYSBjb21wbGljYXRlZCBlbnRpdHk6IGl0J3MgYSBjb3VudGVkIGFy
-cmF5IG9mIHBjciBzZWxlY3Rpb25zLiAgRm9yIA0KPiB5b3VyIHBvbGljeSB5b3Ugb25seSBuZWVk
-IG9uZSBlbnRyeSwgc28gaXQgd291bGQgYmUgMDAwMDAwMDEgZm9sbG93ZWQgDQo+IGJ5IGEgc2lu
-Z2xlIHBjclNlbGVjdGlvbiBlbnRyeS4gIHBjclNlbGVjdGlvbiBpcyB0aGUgaGFzaCBhbGdvcml0
-aG0sIA0KPiB0aGUgc2l6ZSBvZiB0aGUgc2VsZWN0aW9uIGJpdG1hcCAoYWx3YXlzIDMgc2luY2Ug
-ZXZlcnkgY3VycmVudCBUUE0gDQo+IG9ubHkgaGFzDQo+IDI0IFBDUnMpIGFuZCBhIGJpdG1hcCBz
-ZWxlY3RpbmcgdGhlIFBDUnMgaW4gYmlnIGVuZGlhbiBmb3JtYXQsIHNvIGZvcg0KPiBQQ1I3IHVz
-aW5nIHNoYTI1NiAoYWxnb3JpdGhtIDAwMGIpLCBwY3JTZWxlY3Rpb24gPSAwMDBiIDAzIDgwIDAw
-IDAwLiANCj4gQW5kIHRoZW4geW91IGZvbGxvdyB0aGlzIGJ5IHRoZSBoYXNoIG9mIHRoZSBQQ1Ig
-dmFsdWUgeW91J3JlIGxvb2tpbmcgDQo+IGZvci4gIFRoZSBwb2xpY3loYXNoIGJlY29tZXMgdGhl
-IGluaXRpYWwgcG9saWN5IChhbGwgemVyb3MgZm9yIHRoZSANCj4gc3RhcnQgb2YgdGhlIHBvbGlj
-eSBjaGFpbikgaGFzaGVkIHdpdGggdGhpcy4NCj4gDQo+IFJlZ2FyZHMsDQo+IA0KPiBKYW1lcw0K
-PiANCg0K
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    b94ae8ad Merge tag 'seccomp-v5.5-rc1' of git://git.kernel...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10f9ffcee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ff560c3de405258c
+dashboard link: https://syzkaller.appspot.com/bug?extid=5320383e16029ba057ff
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12dd682ae00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16290abce00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+5320383e16029ba057ff@syzkaller.appspotmail.com
+
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 9217 Comm: io_uring-sq Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:creds_are_invalid kernel/cred.c:792 [inline]
+RIP: 0010:__validate_creds include/linux/cred.h:187 [inline]
+RIP: 0010:override_creds+0x9f/0x170 kernel/cred.c:550
+Code: ac 25 00 81 fb 64 65 73 43 0f 85 a3 37 00 00 e8 17 ab 25 00 49 8d 7c  
+24 10 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84  
+c0 74 08 3c 03 0f 8e 96 00 00 00 41 8b 5c 24 10 bf
+RSP: 0018:ffff88809c45fda0 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000043736564 RCX: ffffffff814f3318
+RDX: 0000000000000002 RSI: ffffffff814f3329 RDI: 0000000000000010
+RBP: ffff88809c45fdb8 R08: ffff8880a3aac240 R09: ffffed1014755849
+R10: ffffed1014755848 R11: ffff8880a3aac247 R12: 0000000000000000
+R13: ffff888098ab1600 R14: 0000000000000000 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffd51c40664 CR3: 0000000092641000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  io_sq_thread+0x1c7/0xa20 fs/io_uring.c:3274
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Modules linked in:
+---[ end trace f2e1a4307fbe2245 ]---
+RIP: 0010:creds_are_invalid kernel/cred.c:792 [inline]
+RIP: 0010:__validate_creds include/linux/cred.h:187 [inline]
+RIP: 0010:override_creds+0x9f/0x170 kernel/cred.c:550
+Code: ac 25 00 81 fb 64 65 73 43 0f 85 a3 37 00 00 e8 17 ab 25 00 49 8d 7c  
+24 10 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84  
+c0 74 08 3c 03 0f 8e 96 00 00 00 41 8b 5c 24 10 bf
+RSP: 0018:ffff88809c45fda0 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000043736564 RCX: ffffffff814f3318
+RDX: 0000000000000002 RSI: ffffffff814f3329 RDI: 0000000000000010
+RBP: ffff88809c45fdb8 R08: ffff8880a3aac240 R09: ffffed1014755849
+R10: ffffed1014755848 R11: ffff8880a3aac247 R12: 0000000000000000
+R13: ffff888098ab1600 R14: 0000000000000000 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffd51c40664 CR3: 0000000092641000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
