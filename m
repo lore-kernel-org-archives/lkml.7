@@ -2,112 +2,76 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9181CC43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 15:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6F1C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 15:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62F462084F
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 15:41:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ejdJmGX7"
+	by mail.kernel.org (Postfix) with ESMTP id 312362073C
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 15:47:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727644AbfLBPlx (ORCPT
+        id S1727472AbfLBPrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 10:41:53 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:40792 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727417AbfLBPlx (ORCPT
+        Mon, 2 Dec 2019 10:47:43 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:39206 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727417AbfLBPrn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 10:41:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1575301297; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fg/PlDK+PUoPua/OIog53C2OHM90AAbBw95IRxAF1p0=;
-        b=ejdJmGX7ldTLpDtqHVBHySbEnM4HxQxgk8hJzLqcusGuaibBluoBtzu9BT0Vu4bB7wl7nQ
-        MHp3AcDgEPql/L2soQ7BADjwLGQo8I85yC69JrZg/ugQ6Wer1M0mKi9Xhyfecrwscvu3/6
-        aTas+GoV1wzTRWIS5AqygrMqHPT1pV8=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     od@zcrc.me, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 3/3] drm/panel: simple: Add support for the Frida FRD350H54004 panel
-Date:   Mon,  2 Dec 2019 16:41:23 +0100
-Message-Id: <20191202154123.64139-3-paul@crapouillou.net>
-In-Reply-To: <20191202154123.64139-1-paul@crapouillou.net>
-References: <20191202154123.64139-1-paul@crapouillou.net>
+        Mon, 2 Dec 2019 10:47:43 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1ibnvG-00032m-IF; Mon, 02 Dec 2019 15:47:38 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/amd/display: remove redundant assignment to variable v_total
+Date:   Mon,  2 Dec 2019 15:47:38 +0000
+Message-Id: <20191202154738.56812-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The FRD350H54004 is a simple 3.5" 320x240 24-bit TFT panel, found for
-instance inside the Anbernic RG-350 handheld gaming console.
+From: Colin Ian King <colin.king@canonical.com>
 
-v2: Order alphabetically
+The variable v_total is being initialized with a value that is never
+read and it is being updated later with a new value.  The initialization
+is redundant and can be removed.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- drivers/gpu/drm/panel/panel-simple.c | 29 ++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ drivers/gpu/drm/amd/display/modules/freesync/freesync.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 28fa6ba7b767..0e5e33a57f0c 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1402,6 +1402,32 @@ static const struct panel_desc foxlink_fl500wvr00_a0t = {
- 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
- };
+diff --git a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
+index 16e69bbc69aa..fa57885503d4 100644
+--- a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
++++ b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
+@@ -122,7 +122,7 @@ static unsigned int calc_v_total_from_refresh(
+ 		const struct dc_stream_state *stream,
+ 		unsigned int refresh_in_uhz)
+ {
+-	unsigned int v_total = stream->timing.v_total;
++	unsigned int v_total;
+ 	unsigned int frame_duration_in_ns;
  
-+static const struct drm_display_mode frida_frd350h54004_mode = {
-+	.clock = 6777,
-+	.hdisplay = 320,
-+	.hsync_start = 320 + 70,
-+	.hsync_end = 320 + 70 + 50,
-+	.htotal = 320 + 70 + 50 + 10,
-+	.vdisplay = 240,
-+	.vsync_start = 240 + 5,
-+	.vsync_end = 240 + 5 + 1,
-+	.vtotal = 240 + 5 + 1 + 5,
-+	.vrefresh = 60,
-+	.flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
-+};
-+
-+static const struct panel_desc frida_frd350h54004 = {
-+	.modes = &frida_frd350h54004_mode,
-+	.num_modes = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 77,
-+		.height = 64,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-+	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDGE,
-+};
-+
- static const struct drm_display_mode friendlyarm_hd702e_mode = {
- 	.clock		= 67185,
- 	.hdisplay	= 800,
-@@ -3189,6 +3215,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "foxlink,fl500wvr00-a0t",
- 		.data = &foxlink_fl500wvr00_a0t,
-+	}, {
-+		.compatible = "frida,frd350h54004",
-+		.data = &frida_frd350h54004,
- 	}, {
- 		.compatible = "friendlyarm,hd702e",
- 		.data = &friendlyarm_hd702e,
+ 	frame_duration_in_ns =
 -- 
 2.24.0
 
