@@ -2,118 +2,122 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B00C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 917A9C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0968C20637
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54CC920717
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:39:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KSfk1Fo+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Td5CxMCo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbfLBSew (ORCPT
+        id S1727637AbfLBSjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 13:34:52 -0500
-Received: from mail-qt1-f177.google.com ([209.85.160.177]:40553 "EHLO
-        mail-qt1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727742AbfLBSev (ORCPT
+        Mon, 2 Dec 2019 13:39:18 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:35695 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727464AbfLBSjR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 13:34:51 -0500
-Received: by mail-qt1-f177.google.com with SMTP id z22so752127qto.7
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 10:34:51 -0800 (PST)
+        Mon, 2 Dec 2019 13:39:17 -0500
+Received: by mail-qk1-f196.google.com with SMTP id v23so581661qkg.2;
+        Mon, 02 Dec 2019 10:39:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=MqhHi4rCuh6TvqrsVK79PQTZcVaqrX9peBZXHH9YOKU=;
-        b=KSfk1Fo+iX32GznlIZ8cBnBv6JOoGV0L+WXcCCIJj7e75u0PHYW1KbKpWYbrYZrvPj
-         nl5JK4ScwOb5u+SsNL874pXW7e0dY1VyIW69UbshDULcXILLouBYOf7RrMOBDZMHAu6S
-         sUo7+ny3koz01hiouB3u3AJtoe2o7OoafbQ7ipU+akYi/ORB3bG/38/wHuZh6DYx1qNW
-         ZbJ9Hfn13YLlJuog/Dkn+EN8fHOyOA/wN4j0YAGDyBFPL3mCXiagipbVBvCMQaQRcFNJ
-         TDrJ3mQQ5OfLlHDehGxBynHICcb9EOtVFeBLrUqH4i7CXKkhZUc4UFEGmZ02hajQANZ+
-         3KjA==
+        bh=7AahTmyRrRRUN9KLoDWPPdZMRiFouQHG/IidjTUKsJw=;
+        b=Td5CxMCoPWDKuaDcEdMjcqTN0vf3CAF/Zjqj8fxFjZLzpY1VfH/+PukGoU53giP3Nu
+         Axn00akXjCoU+4PHFyaJNcocM2XKHkRogTkMArVSVGOjOCEkGNGQ0vK6vSd4cPD/iV97
+         bIm2uaxupDqAxFX1DfZafGOXYodXggYv3NwimWlgAlUi8pWJ7wEigTdS1nihZmk/lBE2
+         srrTy1AQvRMl5ht7rNzVI7aoWCn9KnTSZ0I2Kit/609gTCkq+ZX+53LgL3ntkFrn77o+
+         UxK6/bcf7vGEEwsbxqKRfZUU8mCWbAWb0Es7s0yTs5Ja9/z+c+BNrlqV0VlWddRwuJYu
+         ZaVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MqhHi4rCuh6TvqrsVK79PQTZcVaqrX9peBZXHH9YOKU=;
-        b=cNZn5gZ8CFyi8r13b1MMdD614BKmIFOmZPtO05OTiRpYvlwY5H85WOdsxeuQzYtCJ2
-         vtKofT0tub7+rBFEprGmfI7AAyxhejISZj9GJ92y0aDxiGITwzuy85/vnVxsV5CGfof6
-         Zf4THtUFl3kTYxRlZvAwnkkZNJdTE6YwYEtjUe+ztVL7vvKZzwkiHCmRzRHZ26jwUB9I
-         Fy9xHrhDPVPGlwYdw1PITB4QTpuSSlfEuPFLyLkoiL2D0wiOQpiIANsCkL2RGCRg7plc
-         CJnWUbjohegZN+/6AC5lNBRqwI3OfknutGXigLTrhiEuTpgRJnEH2a802gfuF56E5urf
-         dFsg==
-X-Gm-Message-State: APjAAAU8vPy+LFdaxHhdT56OkKT+d+lJ2z3ogWXvTlHZcI/7LL6h7i/v
-        92q7irQfyjGpMI6x2/VVQkg=
-X-Google-Smtp-Source: APXvYqzBuHCdkxgehb7X+eDXke0CbSH+9Y+e3slwvOpECAsa3UpJf2+6SC3H7hd6NxHsA6OGutNIKQ==
-X-Received: by 2002:ac8:614a:: with SMTP id d10mr754528qtm.373.1575311690621;
-        Mon, 02 Dec 2019 10:34:50 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([190.15.121.82])
-        by smtp.gmail.com with ESMTPSA id w128sm217601qkb.9.2019.12.02.10.34.49
+        bh=7AahTmyRrRRUN9KLoDWPPdZMRiFouQHG/IidjTUKsJw=;
+        b=m+GO8hUrrMUQ9UpWRo9ME0qjPmX5iEEY9YWULEUAQa5QFw9la5B2jn2KoHdCaDaUIv
+         K6fLVGGNJLnTiZzs1bmKq/JkMs48A2ozK3exIRnKkOeM721t26eQy05dxIg6GqSE/Ytz
+         Mlma181nOpIn3vCVQKBx72mZEbjkLgvwte4THPsXU7uKbZMp5HqDkAgASq9aqEu0u/Xb
+         vjbwIq4jkbITGbVVCeppFO93gkz7pv7Ec49/7urZiM5DGPHJrRehh1duYKwwFgDMVqQ8
+         8S6EKgkN5xO8qu0z8GCYsR66xbSZwpd814/2VHItqZ6mFQKS2SqgCujjyYNk3M/q03O3
+         FNZA==
+X-Gm-Message-State: APjAAAVRxX6mYRTb4K8g1rXS7sxqu51/Q0xyeuestyxbFmjq/pfzVwUX
+        XhPKfCrCYXv/CveyvmrkCnM=
+X-Google-Smtp-Source: APXvYqwMjunymDtO2f1xnW0eImKIiMUw5EZDJyLFOcySm5duaoG775SJvqdzcK/t1TJ/MGuAXydO/Q==
+X-Received: by 2002:a37:658f:: with SMTP id z137mr273840qkb.234.1575311956265;
+        Mon, 02 Dec 2019 10:39:16 -0800 (PST)
+Received: from localhost.localdomain ([168.181.48.195])
+        by smtp.gmail.com with ESMTPSA id b6sm194111qtp.5.2019.12.02.10.39.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 10:34:49 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 713C3405B6; Mon,  2 Dec 2019 15:20:32 -0300 (-03)
-Date:   Mon, 2 Dec 2019 15:20:32 -0300
-To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Song Liu <songliubraving@fb.com>, Leo Yan <leo.yan@linaro.org>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf jit: move test functionality in to a test
-Message-ID: <20191202182032.GF4063@kernel.org>
-References: <20191126235913.41855-1-irogers@google.com>
- <20191127152328.GI22719@kernel.org>
- <20191127160558.GM22719@kernel.org>
- <CAP-5=fVhXvMFtGU18-TMt29BsuZNySZ8sPvj_3r7GGsfZLPvuA@mail.gmail.com>
- <20191128131928.GD4063@kernel.org>
- <CAP-5=fWYUF7fnvVX1pDeTFg1u7Mfe9=1+E5zBiUX3QGTp2wDHw@mail.gmail.com>
+        Mon, 02 Dec 2019 10:39:15 -0800 (PST)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id C47FAC1B68; Mon,  2 Dec 2019 15:39:12 -0300 (-03)
+Date:   Mon, 2 Dec 2019 15:39:12 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzbot <syzbot+b2bf2652983d23734c5c@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        LKML <linux-kernel@vger.kernel.org>, linux-sctp@vger.kernel.org,
+        Xin Long <lucien.xin@gmail.com>, mvohra@vmware.com,
+        netdev <netdev@vger.kernel.org>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        William Tu <u9012063@gmail.com>,
+        Vladislav Yasevich <vyasevich@gmail.com>,
+        websitedesignservices4u@gmail.com,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Subject: Re: kernel BUG at net/core/skbuff.c:LINE! (3)
+Message-ID: <20191202183912.GC377783@localhost.localdomain>
+References: <001a114372a6074e6505642b7f72@google.com>
+ <000000000000039751059891760e@google.com>
+ <CACT4Y+Yrg8JxWABi4CJgBG7GpBSCmT0DHr_eZhQA-ikLH-X5Yw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fWYUF7fnvVX1pDeTFg1u7Mfe9=1+E5zBiUX3QGTp2wDHw@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <CACT4Y+Yrg8JxWABi4CJgBG7GpBSCmT0DHr_eZhQA-ikLH-X5Yw@mail.gmail.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Dec 02, 2019 at 09:30:19AM -0800, Ian Rogers escreveu:
-> On Thu, Nov 28, 2019 at 5:19 AM Arnaldo Carvalho de Melo
-> > But I'll defer this for later, not to hold what I have too much, after
-> > my next pull req I'll revisit this, if you haven't found a fix by then
-> > :-)
+On Sat, Nov 30, 2019 at 04:37:56PM +0100, Dmitry Vyukov wrote:
+> On Sat, Nov 30, 2019 at 3:50 PM syzbot
+> <syzbot+b2bf2652983d23734c5c@syzkaller.appspotmail.com> wrote:
+> >
+> > syzbot has bisected this bug to:
+> >
+> > commit 84e54fe0a5eaed696dee4019c396f8396f5a908b
+> > Author: William Tu <u9012063@gmail.com>
+> > Date:   Tue Aug 22 16:40:28 2017 +0000
+> >
+> >      gre: introduce native tunnel support for ERSPAN
+> >
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=158a2f86e00000
+> > start commit:   f9f1e414 Merge tag 'for-linus-4.16-rc1-tag' of git://git.k..
+> > git tree:       upstream
+> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=178a2f86e00000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=138a2f86e00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=34a80ee1ac29767b
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=b2bf2652983d23734c5c
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=147bfebd800000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13d8d543800000
+> >
+> > Reported-by: syzbot+b2bf2652983d23734c5c@syzkaller.appspotmail.com
+> > Fixes: 84e54fe0a5ea ("gre: introduce native tunnel support for ERSPAN")
+> >
+> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> 
+> Humm... the repro contains syz_emit_ethernet, wonder if it's
+> remote-triggerable...
 
-> > The current patch is below, with my fixes, and looking at it again it
-> > seems its just to replace that HAVE_LIBELF_SUPPORT with HAVE_JITDUMP,
-> > will confirm that later, after sending the pull req to Ingo.
- 
-> Your fix sounds correct, I should work on getting a build test setup.
-> It sounds like you have it covered but if you need me to do anything
-> let me know.
-
-Right, everything seems to be in good shape now and should go Ingo's way
-soon.
-
-- Arnaldo
+The call trace is still from the tx path. Packet never left the system
+in this case.
