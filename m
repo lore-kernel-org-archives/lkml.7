@@ -2,51 +2,48 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB72C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90070C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4510820848
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A24720848
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:33:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=freesources.org header.i=@freesources.org header.b="QZKWzaun"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=freesources.org header.i=@freesources.org header.b="WibdspO+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbfLBRdE (ORCPT
+        id S1727828AbfLBRdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 12:33:04 -0500
-Received: from mx3.freesources.org ([195.34.172.217]:36470 "EHLO
+        Mon, 2 Dec 2019 12:33:08 -0500
+Received: from mx3.freesources.org ([195.34.172.217]:36472 "EHLO
         mx3.freesources.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727671AbfLBRdE (ORCPT
+        with ESMTP id S1727671AbfLBRdF (ORCPT
         <rfc822;linux-kernel@vger.kernel.ORG>);
-        Mon, 2 Dec 2019 12:33:04 -0500
-X-Greylist: delayed 1649 seconds by postgrey-1.27 at vger.kernel.org; Mon, 02 Dec 2019 12:33:03 EST
+        Mon, 2 Dec 2019 12:33:05 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=freesources.org; s=20160526; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Mok72BsQvC2XKiuPcjQNyDCF0jvuS3WzAMUUARqPzeg=; b=QZKWzaunebVed98oxfFUNljvt0
-        JWxSL5HYQ4h2bpYYe/vpoUv64ExaUOw8YJIIMgeGEWr03YW/vd01+6dqw4BN44KM1MLTeW48Cjkb6
-        TGE8Cjjt1HAz85RLhFk0/ge13kpRCTA91uVD6aCg1KySTgpr/CCdkv4Y5g7Q7XEvB8Vo=;
+        MIME-Version:Date:Message-ID:Cc:To:Subject:From:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=imtAPl4o+FKPOJSi1wuV2NOHPm5W2xW9sOmyCAhb8kI=; b=WibdspO+TC0pJ+/I8+vhuegLVz
+        sX9zkeo3pLOeSWp6z2B46Iu5wU9ES0Xqr3FdPih6+OLgazi72l6f2o4nZtwPG9QwuWsSiYP+sfTa8
+        3wmrf6hL/9Un6pgd/U+gZlZo+liayQO9zMxV31uY1WhpKTggH5Z1qoTiUO9fmXPZtFNs=;
 Received: from anon-35-121.vpn.ipredator.se ([46.246.35.121])
         by mx3.freesources.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.89)
         (envelope-from <jonas@freesources.org>)
-        id 1ibpAo-0008F1-2Y; Mon, 02 Dec 2019 17:07:46 +0000
-Subject: [PATCH 2/2] PM: CONFIG_SUSPEND_SKIP_SYNC sets default for,
- '/sys/power/sync_on_suspend'
+        id 1ibp8c-0008Bx-17; Mon, 02 Dec 2019 17:05:30 +0000
 From:   Jonas Meurer <jonas@freesources.org>
+Subject: [PATCH 0/2] PM: Add a switch for disabling/enabling sync() before
+ suspend
 To:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
         Tim Dittler <tim.dittler@systemli.org>,
         Yannik Sembritzki <yannik@sembritzki.me>
-References: <1ee5b9ef-f30e-3fde-2325-ba516a96ced5@freesources.org>
 Autocrypt: addr=jonas@freesources.org; prefer-encrypt=mutual; keydata=
  mQINBEqFXAEBEAC+7gfLht8lDqGH1EPYoctDHvWQ4nk60UFDLfjqHmBGReL/9C7CyxYaqgY4
  V1/DXPCmsO5PvHMSi6VPn3B81alPKMT6syQhxDN6CXETh/mrxRbTPyQVSKYdD/BvA94vgwfy
@@ -131,12 +128,11 @@ Autocrypt: addr=jonas@freesources.org; prefer-encrypt=mutual; keydata=
  ucOyOCxbGK0rfZasgPXkzxTWohgQwhBvw+eZ+VXzjHiRyGQ4x1Jay9eYiw7QeOiLDQxQcxLI
  tAzfoD+TN75zyJrLjknLC+udmMVZMcserZHCUnb9WBW4qMNyy9PI53Ha6bvfZXbZCeS3PjTo
  2SCIHpzHfm/mpRL2
-Message-ID: <5c3996e1-eee7-1b8f-51bf-a6401d229bff@freesources.org>
-Date:   Mon, 2 Dec 2019 18:07:43 +0100
+Message-ID: <1ee5b9ef-f30e-3fde-2325-ba516a96ced5@freesources.org>
+Date:   Mon, 2 Dec 2019 18:05:27 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <1ee5b9ef-f30e-3fde-2325-ba516a96ced5@freesources.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -145,75 +141,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Slightly change the behaviour of build-time switch CONFIG_SUSPEND_SKIP_SYNC:
-Make it configure the default for '/sys/power/sync_on_suspend', now that we
-have a run-time switch for it.
+Hello,
 
-Signed-off-by: Jonas Meurer <jonas@freesources.org>
----
- Documentation/ABI/testing/sysfs-power | 7 ++++---
- kernel/power/Kconfig                  | 5 ++++-
- kernel/power/main.c                   | 2 +-
- kernel/power/suspend.c                | 2 +-
- 4 files changed, 10 insertions(+), 6 deletions(-)
+Introduce a new run-time sysfs switch to disable/enable sync() before
+system suspend. This is useful to avoid races and deadlocks if block
+devices have been suspended before, e.g. by 'cryptsetup luksSuspend'.
 
-diff --git a/Documentation/ABI/testing/sysfs-power b/Documentation/ABI/testing/sysfs-power
-index f164a364e89a..783b3ce8eb06 100644
---- a/Documentation/ABI/testing/sysfs-power
-+++ b/Documentation/ABI/testing/sysfs-power
-@@ -418,6 +418,7 @@ Description:
- 		aware that you have to take care of sync() yourself before
- 		suspending the system if you disable it here.
- 
--		Writing a "1" (default) to this file enables the sync() and
--		writing a "0" disables it. Reads from the file return the
--		current value.
-+		Writing a "1" to this file enables the sync() and writing a
-+		"0" disables it. Reads from the file return the current value.
-+		The default is "1" but can be configured with the build-time
-+		config flag "SUSPEND_SKIP_SYNC".
-diff --git a/kernel/power/Kconfig b/kernel/power/Kconfig
-index d3667b4075c1..7cbfbeacd68a 100644
---- a/kernel/power/Kconfig
-+++ b/kernel/power/Kconfig
-@@ -27,7 +27,10 @@ config SUSPEND_SKIP_SYNC
- 	  Skip the kernel sys_sync() before freezing user processes.
- 	  Some systems prefer not to pay this cost on every invocation
- 	  of suspend, or they are content with invoking sync() from
--	  user-space before invoking suspend.  Say Y if that's your case.
-+	  user-space before invoking suspend.  There's a run-time switch
-+	  at '/sys/power/sync_on_suspend' to configure this behaviour.
-+	  This setting changes the default for the run-tim switch. Say Y
-+	  to change the default to disable the kernel sys_sync().
- 
- config HIBERNATE_CALLBACKS
- 	bool
-diff --git a/kernel/power/main.c b/kernel/power/main.c
-index 7d9d579a8e6f..69b7a8aeca3b 100644
---- a/kernel/power/main.c
-+++ b/kernel/power/main.c
-@@ -197,7 +197,7 @@ power_attr(mem_sleep);
-  * show() returns whether ksys_sync_helper() is invoked before suspend.
-  * store() accepts 0 or 1.  0 disables ksys_sync_helper() and 1 enables it.
-  */
--bool sync_on_suspend_enabled = true;
-+bool sync_on_suspend_enabled = !IS_ENABLED(CONFIG_SUSPEND_SKIP_SYNC);
- 
- static ssize_t sync_on_suspend_show(struct kobject *kobj,
- 				   struct kobj_attribute *attr, char *buf)
-diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
-index 503d56419a69..2c47280fbfc7 100644
---- a/kernel/power/suspend.c
-+++ b/kernel/power/suspend.c
-@@ -564,7 +564,7 @@ static int enter_state(suspend_state_t state)
- 	if (state == PM_SUSPEND_TO_IDLE)
- 		s2idle_begin();
- 
--	if (!IS_ENABLED(CONFIG_SUSPEND_SKIP_SYNC) && sync_on_suspend_enabled) {
-+	if (sync_on_suspend_enabled) {
- 		trace_suspend_resume(TPS("sync_filesystems"), 0, true);
- 		ksys_sync_helper();
- 		trace_suspend_resume(TPS("sync_filesystems"), 0, false);
--- 
-2.20.1
+The second patch changes the behaviour of build-time switch
+'CONFIG_SUSPEND_SKIP_SYNC' accordingly, using the build-time switch value
+as default for our new run-time switch '/sys/power/sync_on_suspend'.
 
+Jonas Meurer (2):
+  PM: Add a switch for disabling/enabling sync() before suspend
+  PM: CONFIG_SUSPEND_SKIP_SYNC sets default for '/sys/power/sync_on_suspend'
+
+ Documentation/ABI/testing/sysfs-power | 15 +++++++++++++++
+ include/linux/suspend.h               |  2 ++
+ kernel/power/Kconfig                  |  5 ++++-
+ kernel/power/main.c                   | 33 +++++++++++++++++++++++++++++++++
+ kernel/power/suspend.c                |  2 +-
+ 5 files changed, 55 insertions(+), 2 deletions(-)
