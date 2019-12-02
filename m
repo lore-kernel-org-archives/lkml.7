@@ -2,97 +2,103 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD4BC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B45C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06723217F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93FFB20718
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:24:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="novKqp8H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727355AbfLBKXc (ORCPT
+        id S1727399AbfLBKYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 05:23:32 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2145 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726276AbfLBKXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 05:23:32 -0500
-Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 7AC43DCEC5967BE6F81D;
-        Mon,  2 Dec 2019 10:23:30 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML710-CAH.china.huawei.com (10.201.108.33) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 2 Dec 2019 10:23:30 +0000
-Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Mon, 2 Dec 2019
- 10:23:29 +0000
-Subject: Re: linuxnext-2019127 edac warns (was Re: edac KASAN warning in
- experimental arm64 allmodconfig boot)
-To:     Robert Richter <rrichter@marvell.com>
-CC:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        wanghuiqiang <wanghuiqiang@huawei.com>,
-        Xiaofei Tan <tanxiaofei@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        "Huangming (Mark)" <huangming23@huawei.com>
-References: <304df85b-8b56-b77e-1a11-aa23769f2e7c@huawei.com>
- <93bdc04e-9e8f-b766-6e97-9fd9e1460a8c@huawei.com>
- <20191121142302.rhvgkgqpiubidhtu@rric.localdomain>
- <4ff7631f-fbb7-e45f-87dd-9223beca4da7@huawei.com>
- <20191122112842.tmf4lkj52hpv6tqd@rric.localdomain>
- <4c1bd075-75ec-8445-9595-467b88a406b3@huawei.com>
- <957a809b-9efd-0979-df5d-a4f095da6147@huawei.com>
- <20191128211240.yuuhf4xkzhl2jvfw@rric.localdomain>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <49bb86d8-a7ad-e66d-9796-799ee0bdd605@huawei.com>
-Date:   Mon, 2 Dec 2019 10:23:29 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Mon, 2 Dec 2019 05:24:34 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36435 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbfLBKYe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 05:24:34 -0500
+Received: by mail-pg1-f194.google.com with SMTP id k13so18156711pgh.3;
+        Mon, 02 Dec 2019 02:24:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=m0LCE5hcVVGk8fjDfWm4sSuGTECQ8UothTBhXvlTHPM=;
+        b=novKqp8HWeDTOaxtSE7iRnp+oxbOVTDKu5VeT7nuojFFq4Bja0+QGnvmpv8mMxF0lp
+         CkdfBH7XWnDjZOgzL+Kpov4pkK53VNxDniXkeZEq6xTaau5HaS85SfIpSHxK/akRnYTN
+         fiDUP8MSCTDw+m2YQZQMgwKC8tyJOVySc9qjLx/whf5c+XhT7D3eAZt6gP1Yp03sfEla
+         h3n2g7lrWWlUZNBqq0HvK4tndbg+xuwLErgGNhniFb+l43lyACzQq/ktmkOOLpZgA5nn
+         NzyV90EIzfCCg8GuVGCB6z4//8YEUroJVB2mv9d9bKe+lSQdG6I+kkpe0hlBVVZ/e5/X
+         H07A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=m0LCE5hcVVGk8fjDfWm4sSuGTECQ8UothTBhXvlTHPM=;
+        b=DOq0g4jvRkzB6VLecY1tE5LEW8NYx+DAueBQiZo4EoDQZnqKb6QxzKska+Iy8aphf+
+         5VYoZgFHpeMzD9XD0WlXnKBL8OLfF0fIie5XT+a+l3h6PkTbY2KWU3ZbnD0Ji+O0fdf2
+         4jJgilP4HRzJ7P+F23pNzQEpbyHVwe4prr7V5MCAHnv41Bxv9TNOUFirJVUoSAZZwUPa
+         suafrPi+qGWmqyPbzTnz+hahaOpejAl6bvAyLqkOfJLo3tZSSJ9mfO8tOw0jCnI+KvUz
+         I381Tm7+Zrd9ll8Vom4cK4EGH1PnR4qpH8dIORecX4fgZFc/r0odV8tno6tj94P6l6/W
+         elXw==
+X-Gm-Message-State: APjAAAWd9Jv/TeX2IC/l2EPGjqg9HA713ZmAyVGjV8wG6JSnutLcTQ1J
+        ZdnFpENNJEvuTVayM5llvz8=
+X-Google-Smtp-Source: APXvYqy/U6PuDC1PIAsN3CGJuP0GcaVjxkgA4tu43H+VJNkGysMwN5CXvF8uLZW/+yW7IQV7JO2JhA==
+X-Received: by 2002:a63:cc05:: with SMTP id x5mr31319016pgf.141.1575282272237;
+        Mon, 02 Dec 2019 02:24:32 -0800 (PST)
+Received: from wangyang5-l1.corp.qihoo.net ([104.192.108.10])
+        by smtp.gmail.com with ESMTPSA id w2sm34639796pgm.18.2019.12.02.02.24.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 02:24:31 -0800 (PST)
+From:   kungf <wings.wyang@gmail.com>
+To:     colyli@suse.de
+Cc:     kent.overstreet@gmail.com, linux-bcache@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kungf <wings.wyang@gmail.com>
+Subject: [PATCH] bcache: add REQ_FUA to avoid data lost in writeback mode
+Date:   Mon,  2 Dec 2019 18:24:09 +0800
+Message-Id: <20191202102409.3980-1-wings.wyang@gmail.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20191128211240.yuuhf4xkzhl2jvfw@rric.localdomain>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.46]
-X-ClientProxiedBy: lhreml702-chm.china.huawei.com (10.201.108.51) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/11/2019 21:12, Robert Richter wrote:
-> On 27.11.19 17:07:33, John Garry wrote:
->> [   22.104498] BUG: KASAN: use-after-free in
->> edac_remove_sysfs_mci_device+0x148/0x180
-> 
-> It is triggered in edac_remove_sysfs_mci_device().
-> 
-> device_unregister(&dimm->dev) not only removes the sysfs entry, it
-> also frees the dimm struct in dimm_attr_release(). When incrementing
-> the loop in mci_for_each_dimm(), the dimm struct is accessed again
-> which causes the use-after-free. But, the dimm struct shouln'd be
-> released here already.
-> 
-> edac_remove_sysfs_mci_device() should not release the devices at this
-> point. We need clean release functions for mci and dimm_info and
-> refcounts to protect pdev/dev mappings. And mci_for_each_dimm() must
-> be checked how it handles device removals and if it is safe.
-> 
-> Let's see how this can be fixed.
-> 
-> Thanks for reporting the issue.
+data may lost when in the follow scene of writeback mode:
+1. client write data1 to bcache
+2. client fdatasync
+3. bcache flush cache set and backing device
+if now data1 was not writed back to backing, it was only guaranteed safe in cache.
+4.then cache writeback data1 to backing with only REQ_OP_WRITE
+So data1 was not guaranteed in non-volatile storage,  it may lost if  power interruption 
 
-Fine, and would any fix also deal with the v5.4 mem leak which I 
-mentioned also?
+Signed-off-by: kungf <wings.wyang@gmail.com>
+---
+ drivers/md/bcache/writeback.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Cheers,
-John
+diff --git a/drivers/md/bcache/writeback.c b/drivers/md/bcache/writeback.c
+index 4a40f9eadeaf..e5cecb60569e 100644
+--- a/drivers/md/bcache/writeback.c
++++ b/drivers/md/bcache/writeback.c
+@@ -357,7 +357,7 @@ static void write_dirty(struct closure *cl)
+ 	 */
+ 	if (KEY_DIRTY(&w->key)) {
+ 		dirty_init(w);
+-		bio_set_op_attrs(&io->bio, REQ_OP_WRITE, 0);
++		bio_set_op_attrs(&io->bio, REQ_OP_WRITE | REQ_FUA, 0);
+ 		io->bio.bi_iter.bi_sector = KEY_START(&w->key);
+ 		bio_set_dev(&io->bio, io->dc->bdev);
+ 		io->bio.bi_end_io	= dirty_endio;
+-- 
+2.17.1
+
