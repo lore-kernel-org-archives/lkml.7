@@ -2,144 +2,165 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A92C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB0AC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72DEF215E5
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:15:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E38FB215E5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:18:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tK3oKRyT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h01fvv2d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbfLBJPv (ORCPT
+        id S1726533AbfLBJSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 04:15:51 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:43092 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfLBJPv (ORCPT
+        Mon, 2 Dec 2019 04:18:07 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28254 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725977AbfLBJSG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 04:15:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=DGJK1cULYgkeySBQdMQkzTSj5AsEx9IiAHQO9LiAqjc=; b=tK3oKRyTaehYFS49DBNa+sxlQ
-        GXJVDXWUvseHTwD6hW6XM+dwqp8OEtE2zHd1KxSCHHNfcxPqNI4rI342xcNoWAFuGKqKrKmGw4Jv+
-        NjdxJK1XgQJbeNNkKtKj9UJAKVWsLJr+Uhrkg4J7Jnp6aXazVgnxKkdXVHZXSSQg9MsVbBVnUilSw
-        X7r9Nv36AvrbWTkr4BMTyjkLI88GcZFB0HADzgOOukycANlInfb2N7/8/Oiw2Ly4rm8+K4PQZ7Hsv
-        Xkt/05PCU6lTKpOyERk6hKVid4joKHbEP6+jtLn6hlHZ14LDeRcJmUl18wkdFzfPS8XG4KsjPszj5
-        EOzah+D5w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ibhnf-0005YM-4a; Mon, 02 Dec 2019 09:15:23 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B1E3930018B;
-        Mon,  2 Dec 2019 10:14:03 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 715EF20236A49; Mon,  2 Dec 2019 10:15:19 +0100 (CET)
-Date:   Mon, 2 Dec 2019 10:15:19 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, bristot@redhat.com,
-        jbaron@akamai.com, torvalds@linux-foundation.org,
-        tglx@linutronix.de, namit@vmware.com, hpa@zytor.com,
-        luto@kernel.org, ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
-        jeyu@kernel.org, alexei.starovoitov@gmail.com
-Subject: Re: [PATCH -tip 1/2] x86/alternative: Sync bp_patching update for
- avoiding NULL pointer exception
-Message-ID: <20191202091519.GA2827@hirez.programming.kicks-ass.net>
-References: <157483420094.25881.9190014521050510942.stgit@devnote2>
- <157483421229.25881.15314414408559963162.stgit@devnote2>
+        Mon, 2 Dec 2019 04:18:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575278286;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=npff6qkaiVVRvv7tuPNtj+wwmibAXzAwdtk2EuB02Og=;
+        b=h01fvv2duL2yeNWSzqFbqghjq9ceLcP03KIdQaxCJwX38dh0XZ/vmlxUscdDhoUBhy19bX
+        otGDPAac7Lg3PqoiWUb9EVZ+70mi31zdgIdx2jJ0G3mG+FFA8ZQv6tC7nY209MLdkHtQsG
+        zfAXk4BtnurO1/fI3u+/MlaZApDs94k=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-37-SXq89VQnOBGq3TC1VlgEjQ-1; Mon, 02 Dec 2019 04:18:04 -0500
+Received: by mail-wr1-f70.google.com with SMTP id b13so5995053wrx.22
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 01:18:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=R6aPR3UqicHf4GsiWrf0zN37cxh4xgoEfGHaIlgH6C0=;
+        b=jcXtDa0RcCMRptiYJPCPQIRywXewDCGc/XgW0LCM/pJnLFW4GIWjhFcQ1/lmNJt3Oi
+         EZzICLkoRGu4OZFrDdV0DrWNQoKLVDYA5lOzPClBvKSDX3ztar65uSFP7pVQgIa6iPAd
+         YAQuscjWG7lehRvRWEh4Ghc8uRKkJRmKOWhVeWxDuv7Mpns8MEcjHkWDFjA6ThbLWVP0
+         ymP4ZXTLN1KtNQrwMhd/wo2+P8dk5/gzYeb8drHvgsF1KV8k/yDVrdlgiGC+ePJQO8FX
+         1BQHSJd9shHv48t+0rVHoQcKhoLU0zu5Hk1aWCJZTUop+i3Jx811gPuETYrSDL6y6IjS
+         nwNg==
+X-Gm-Message-State: APjAAAXJhT68ivpK6i44rvSae/UaFM0Ac/L/4ICIdJZLAgkGseTjsBDk
+        atpsUNzNPCxeqobqKjzhjjHAgqvWANWUUzUYHnmjM83AFo0kEQzYRRRCMMbhsWrSgfodDPegBeq
+        O9gbUTgsiDoueqtmY/EtjiAGj
+X-Received: by 2002:a7b:cd82:: with SMTP id y2mr25285016wmj.58.1575278283803;
+        Mon, 02 Dec 2019 01:18:03 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx8JcZBBXm6dvSYhQNB14AMzV0OR34nUmyvp0qHHFqNiqcWeXkqzbmRcx4EvUNVoQ4Qfvpdbw==
+X-Received: by 2002:a7b:cd82:: with SMTP id y2mr25284991wmj.58.1575278283477;
+        Mon, 02 Dec 2019 01:18:03 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id t81sm23770468wmg.6.2019.12.02.01.18.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 01:18:02 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        peterx@redhat.com
+Subject: Re: [PATCH v2 3/3] KVM: X86: Fixup kvm_apic_match_dest() dest_mode parameter
+In-Reply-To: <20191129163234.18902-4-peterx@redhat.com>
+References: <20191129163234.18902-1-peterx@redhat.com> <20191129163234.18902-4-peterx@redhat.com>
+Date:   Mon, 02 Dec 2019 10:18:00 +0100
+Message-ID: <87mucbcchj.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <157483421229.25881.15314414408559963162.stgit@devnote2>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MC-Unique: SXq89VQnOBGq3TC1VlgEjQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 02:56:52PM +0900, Masami Hiramatsu wrote:
-> ftracetest multiple_kprobes.tc testcase hit a following NULL pointer
-> exception.
-> 
-> BUG: kernel NULL pointer dereference, address: 0000000000000000
-> #PF: supervisor read access in kernel mode
-> #PF: error_code(0x0000) - not-present page
-> PGD 800000007bf60067 P4D 800000007bf60067 PUD 7bf5f067 PMD 0
-> Oops: 0000 [#1] PREEMPT SMP PTI
-> CPU: 6 PID: 0 Comm: swapper/6 Not tainted 5.4.0-rc8+ #23
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
-> RIP: 0010:poke_int3_handler+0x39/0x100
-> Code: 5b 5d c3 f6 87 88 00 00 00 03 75 f2 48 8b 87 80 00 00 00 48 89 fb 48 8d 68 ff 48 8b 05 80 98 72 01 83 fa 01 0f 8f 93 00 00 00 <48> 63 10 48 81 c2 00 00 00 81 48 39 d5 75 c5 0f b6 50 08 8d 4a 34
-> RSP: 0018:ffffc900001a8eb8 EFLAGS: 00010046
-> RAX: 0000000000000000 RBX: ffffc900001a8ee8 RCX: ffffffff81a00b57
-> RDX: 0000000000000001 RSI: 0000000000000000 RDI: ffffc900001a8ee8
-> RBP: ffffffff81027635 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-> FS:  0000000000000000(0000) GS:ffff88807d980000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000000000000 CR3: 000000007a970000 CR4: 00000000000006a0
-> Call Trace:
->  <IRQ>
->  do_int3+0xd/0xf0
->  int3+0x42/0x50
-> RIP: 0010:sched_clock+0x6/0x10
-> 
-> eu-addr2line told that poke_int3_handler+0x39 was alternatives:958.
-> 
-> static inline void *text_poke_addr(struct text_poke_loc *tp)
-> {
->         return _stext + tp->rel_addr; <------ Here is line #958
-> }
-> 
-> This seems like caused by the tp (bp_patching.vec) was NULL but
-> bp_patching.nr_entries != 0. There is a small chance to do
-> this, because we have no sync after zeroing bp_patching.nr_entries
-> before clearing bp_patching.vec.
-> 
-> Steve suggested we could fix this by adding sync_core, because int3
-> is done with interrupts disabled, and the on_each_cpu() requires
-> all CPUs to have had their interrupts enabled.
-> 
-> Fixes: c0213b0ac03c ("x86/alternative: Batch of patch operations")
-> Suggested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> ---
->  arch/x86/kernel/alternative.c |    8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-> index 4552795a8df4..9505096e2cd1 100644
-> --- a/arch/x86/kernel/alternative.c
-> +++ b/arch/x86/kernel/alternative.c
-> @@ -1134,8 +1134,14 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
->  	 * sync_core() implies an smp_mb() and orders this store against
->  	 * the writing of the new instruction.
->  	 */
-> -	bp_patching.vec = NULL;
->  	bp_patching.nr_entries = 0;
-> +	/*
-> +	 * This sync_core () ensures that all int3 handlers in progress
-> +	 * have finished. This allows poke_int3_handler () after this to
-> +	 * avoid touching bp_paching.vec by checking nr_entries == 0.
-> +	 */
-> +	text_poke_sync();
-> +	bp_patching.vec = NULL;
->  }
+Peter Xu <peterx@redhat.com> writes:
 
-Hurm.. is there no way we can merge that with the 'last'
-text_poke_sync() ? It seems a little daft to do 2 back-to-back IPI
-things like that.
+> The problem is the same as the previous patch on that we've got too
+> many ways to define a dest_mode, but logically we should only pass in
+> APIC_DEST_* macros for this helper.
+
+Using 'the previous patch' in changelog is OK until it comes to
+backporting as the order can change. I'd suggest to spell out "KVM: X86:
+Use APIC_DEST_* macros properly" explicitly.
+
+>
+> To make it easier, simply define dest_mode of kvm_apic_match_dest() to
+> be a boolean to make it right while we can avoid to touch the callers.
+>
+> Signed-off-by: Peter Xu <peterx@redhat.com>
+> ---
+>  arch/x86/kvm/lapic.c | 5 +++--
+>  arch/x86/kvm/lapic.h | 2 +-
+>  2 files changed, 4 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index cf9177b4a07f..80732892c709 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -791,8 +791,9 @@ static u32 kvm_apic_mda(struct kvm_vcpu *vcpu, unsign=
+ed int dest_id,
+>  =09return dest_id;
+>  }
+> =20
+> +/* Set dest_mode to true for logical mode, false for physical mode */
+>  bool kvm_apic_match_dest(struct kvm_vcpu *vcpu, struct kvm_lapic *source=
+,
+> -=09=09=09   int short_hand, unsigned int dest, int dest_mode)
+> +=09=09=09   int short_hand, unsigned int dest, bool dest_mode)
+>  {
+>  =09struct kvm_lapic *target =3D vcpu->arch.apic;
+>  =09u32 mda =3D kvm_apic_mda(vcpu, dest, source, target);
+> @@ -800,7 +801,7 @@ bool kvm_apic_match_dest(struct kvm_vcpu *vcpu, struc=
+t kvm_lapic *source,
+>  =09ASSERT(target);
+>  =09switch (short_hand) {
+>  =09case APIC_DEST_NOSHORT:
+> -=09=09if (dest_mode =3D=3D APIC_DEST_PHYSICAL)
+> +=09=09if (dest_mode =3D=3D false)
+
+I must admit this seriously harm the readability of the code for
+me. Just look at the=20
+
+ if (dest_mode =3D=3D false)
+
+line without a context and try to say what's being checked. I can't.
+
+I see to solutions:
+1) Adhere to the APIC_DEST_PHYSICAL/APIC_DEST_LOGICAL (basically - just
+check against "dest_mode =3D=3D APIC_DEST_LOGICAL" in the else branch)
+2) Rename the dest_mode parameter to 'dest_mode_is_phys' or something
+like that.
+
+>  =09=09=09return kvm_apic_match_physical_addr(target, mda);
+>  =09=09else
+>  =09=09=09return kvm_apic_match_logical_addr(target, mda);
+> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+> index 19b36196e2ff..c0b472ed87ad 100644
+> --- a/arch/x86/kvm/lapic.h
+> +++ b/arch/x86/kvm/lapic.h
+> @@ -82,7 +82,7 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg=
+, u32 val);
+>  int kvm_lapic_reg_read(struct kvm_lapic *apic, u32 offset, int len,
+>  =09=09       void *data);
+>  bool kvm_apic_match_dest(struct kvm_vcpu *vcpu, struct kvm_lapic *source=
+,
+> -=09=09=09   int short_hand, unsigned int dest, int dest_mode);
+> +=09=09=09   int short_hand, unsigned int dest, bool dest_mode);
+>  int kvm_apic_compare_prio(struct kvm_vcpu *vcpu1, struct kvm_vcpu *vcpu2=
+);
+>  int kvm_irq_delivery_to_apic(struct kvm *kvm, struct kvm_lapic *src,
+>  =09=09=09     struct kvm_lapic_irq *irq,
+
+--=20
+Vitaly
+
