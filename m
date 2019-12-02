@@ -2,103 +2,153 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B45C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA78C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93FFB20718
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22D942070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:27:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="novKqp8H"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cxOXZi1T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbfLBKYe (ORCPT
+        id S1727388AbfLBK13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 05:24:34 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36435 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbfLBKYe (ORCPT
+        Mon, 2 Dec 2019 05:27:29 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31824 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726330AbfLBK12 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 05:24:34 -0500
-Received: by mail-pg1-f194.google.com with SMTP id k13so18156711pgh.3;
-        Mon, 02 Dec 2019 02:24:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=m0LCE5hcVVGk8fjDfWm4sSuGTECQ8UothTBhXvlTHPM=;
-        b=novKqp8HWeDTOaxtSE7iRnp+oxbOVTDKu5VeT7nuojFFq4Bja0+QGnvmpv8mMxF0lp
-         CkdfBH7XWnDjZOgzL+Kpov4pkK53VNxDniXkeZEq6xTaau5HaS85SfIpSHxK/akRnYTN
-         fiDUP8MSCTDw+m2YQZQMgwKC8tyJOVySc9qjLx/whf5c+XhT7D3eAZt6gP1Yp03sfEla
-         h3n2g7lrWWlUZNBqq0HvK4tndbg+xuwLErgGNhniFb+l43lyACzQq/ktmkOOLpZgA5nn
-         NzyV90EIzfCCg8GuVGCB6z4//8YEUroJVB2mv9d9bKe+lSQdG6I+kkpe0hlBVVZ/e5/X
-         H07A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=m0LCE5hcVVGk8fjDfWm4sSuGTECQ8UothTBhXvlTHPM=;
-        b=DOq0g4jvRkzB6VLecY1tE5LEW8NYx+DAueBQiZo4EoDQZnqKb6QxzKska+Iy8aphf+
-         5VYoZgFHpeMzD9XD0WlXnKBL8OLfF0fIie5XT+a+l3h6PkTbY2KWU3ZbnD0Ji+O0fdf2
-         4jJgilP4HRzJ7P+F23pNzQEpbyHVwe4prr7V5MCAHnv41Bxv9TNOUFirJVUoSAZZwUPa
-         suafrPi+qGWmqyPbzTnz+hahaOpejAl6bvAyLqkOfJLo3tZSSJ9mfO8tOw0jCnI+KvUz
-         I381Tm7+Zrd9ll8Vom4cK4EGH1PnR4qpH8dIORecX4fgZFc/r0odV8tno6tj94P6l6/W
-         elXw==
-X-Gm-Message-State: APjAAAWd9Jv/TeX2IC/l2EPGjqg9HA713ZmAyVGjV8wG6JSnutLcTQ1J
-        ZdnFpENNJEvuTVayM5llvz8=
-X-Google-Smtp-Source: APXvYqy/U6PuDC1PIAsN3CGJuP0GcaVjxkgA4tu43H+VJNkGysMwN5CXvF8uLZW/+yW7IQV7JO2JhA==
-X-Received: by 2002:a63:cc05:: with SMTP id x5mr31319016pgf.141.1575282272237;
-        Mon, 02 Dec 2019 02:24:32 -0800 (PST)
-Received: from wangyang5-l1.corp.qihoo.net ([104.192.108.10])
-        by smtp.gmail.com with ESMTPSA id w2sm34639796pgm.18.2019.12.02.02.24.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 02:24:31 -0800 (PST)
-From:   kungf <wings.wyang@gmail.com>
-To:     colyli@suse.de
-Cc:     kent.overstreet@gmail.com, linux-bcache@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kungf <wings.wyang@gmail.com>
-Subject: [PATCH] bcache: add REQ_FUA to avoid data lost in writeback mode
-Date:   Mon,  2 Dec 2019 18:24:09 +0800
-Message-Id: <20191202102409.3980-1-wings.wyang@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 2 Dec 2019 05:27:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575282446;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=2Z4KWZgUB8KxxSqEx5vJe/p+aKUMdsWbe4wLXhG+9Tw=;
+        b=cxOXZi1T3VtdbyY4OaIljAwMDA09wZ2kq9Z8Lu7ocG+p+IA664h1fLmB5SLcQo+XNezDhO
+        xx9qPGvd0fwsQK2ckhzyAI4/T1rY1zDQV7Hw0lvS0l0UDqAUsUZaXoH1HIhAVWHVqA3KuN
+        i0HASxSf9VVCssyyJ+Kqtjk8a3nunVc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-194-jWqb0AKlNciHMyxCuK7eIw-1; Mon, 02 Dec 2019 05:27:23 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 45DB09A4A4;
+        Mon,  2 Dec 2019 10:27:20 +0000 (UTC)
+Received: from [10.36.117.49] (ovpn-117-49.ams2.redhat.com [10.36.117.49])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D622B5D9E5;
+        Mon,  2 Dec 2019 10:27:14 +0000 (UTC)
+Subject: Re: [PATCH v2 0/2] mm: remove the memory isolate notifier
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Alexander Potapenko <glider@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Arun KS <arunks@codeaurora.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Wei Yang <richardw.yang@linux.intel.com>
+References: <20191114131911.11783-1-david@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <990e19a3-b758-aaca-0ea2-c04e191cb6dc@redhat.com>
+Date:   Mon, 2 Dec 2019 11:27:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191114131911.11783-1-david@redhat.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: jWqb0AKlNciHMyxCuK7eIw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-data may lost when in the follow scene of writeback mode:
-1. client write data1 to bcache
-2. client fdatasync
-3. bcache flush cache set and backing device
-if now data1 was not writed back to backing, it was only guaranteed safe in cache.
-4.then cache writeback data1 to backing with only REQ_OP_WRITE
-So data1 was not guaranteed in non-volatile storage,  it may lost if  power interruption 
+On 14.11.19 14:19, David Hildenbrand wrote:
+> This is the MM part of
+> 	https://lkml.org/lkml/2019/10/31/487
+> 
+> "We can get rid of the memory isolate notifier by switching to balloon
+> compaction in powerpc's CMM (Collaborative Memory Management). The memory
+> isolate notifier was only necessary to allow to offline memory blocks that
+> contain inflated/"loaned" pages - which also possible when the inflated
+> pages are movable (via balloon compaction). [...]"
+> 
+> Michael queued the POWERPC bits that remove the single user, but I am
+> missing ACKs for the MM bits. I think it makes sense to let these two
+> patches also go via Michael's tree, to avoid collissions. Thoughts?
 
-Signed-off-by: kungf <wings.wyang@gmail.com>
----
- drivers/md/bcache/writeback.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The prereqs (powerpc bits) are upstream - I assume Michael didn't want
+to mess with MM patches. @Andrew, please pick these up once you feel
+like time for them has come. :)
 
-diff --git a/drivers/md/bcache/writeback.c b/drivers/md/bcache/writeback.c
-index 4a40f9eadeaf..e5cecb60569e 100644
---- a/drivers/md/bcache/writeback.c
-+++ b/drivers/md/bcache/writeback.c
-@@ -357,7 +357,7 @@ static void write_dirty(struct closure *cl)
- 	 */
- 	if (KEY_DIRTY(&w->key)) {
- 		dirty_init(w);
--		bio_set_op_attrs(&io->bio, REQ_OP_WRITE, 0);
-+		bio_set_op_attrs(&io->bio, REQ_OP_WRITE | REQ_FUA, 0);
- 		io->bio.bi_iter.bi_sector = KEY_START(&w->key);
- 		bio_set_dev(&io->bio, io->dc->bdev);
- 		io->bio.bi_end_io	= dirty_endio;
+
 -- 
-2.17.1
+Thanks,
+
+David / dhildenb
 
