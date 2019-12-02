@@ -2,102 +2,109 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F789C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3B0C43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D330721835
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEBAC20865
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:31:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="giCE0LR4"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ibwwyX4C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727666AbfLBU2f (ORCPT
+        id S1727497AbfLBUbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 15:28:35 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38898 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727590AbfLBU22 (ORCPT
+        Mon, 2 Dec 2019 15:31:44 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:56508 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727417AbfLBUbn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 15:28:28 -0500
-Received: by mail-wr1-f67.google.com with SMTP id y17so869925wrh.5
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 12:28:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=1somXtkHoxvC/VbspBH5qSIskfATKri+DPQIL3Oev+8=;
-        b=giCE0LR4sDAsP3tAyxL+P7S3VCqgq4mJ5kRNNuKHc+i6sXaaPgntzv/F3DTBjX1TqX
-         2CYDqVXBCpMrIbiOjElu2WiB+UVgK0iYUDnDAAboH607ksuVqLuJKfYfiVFxBPO/qB+f
-         QYIz64fP3O3SJbB4F0r+QGj67bEwFB8H9a8iDt++UGDF8JvSsAzNKl86guiYx9xtxWhJ
-         RLbA8F98G6G7yUIC797GERJG0wNSbVEYCui6361m2p1XOxxnm+9Yboq/uDF1ZfRLIeWj
-         LRySFtB7c5iI2w7j+tM7d+URYkOhx9ROVsp8zT+FUtedNiEogHzy8WGEVw/n9RNagnvS
-         K4rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=1somXtkHoxvC/VbspBH5qSIskfATKri+DPQIL3Oev+8=;
-        b=MKeeLzE1Rgm4rtaFWUU1l9bRWmBm0vzzIfi1bUpbKDYBBkDenV1UmkMIIxoxRxUQTu
-         l0BZw8gGsQ3+uIbP+YppKk9ku/R83minjWLcbEXNvZIwiTJia9wA5pkE5XuXEhrQSclf
-         pQG1RsOKT1pYHKIaCTXw/V6Vmkc/lgLqI4MxZbcKZOAA9PyB3b/1kMpKVq3Avwm7F0c9
-         GtuhwHvR2uBSfASGkna4brusxRhWJJTh5aM9BUVoV7GJRM6Ocs+BQLRsNRvze36BHn5y
-         KyEoSBsU1kTUGxpaD6E8xQQdCRo/D/0M7GZFsT9CvqU8vB5N1cvYmT7kALZW4iFVpSpj
-         f6pw==
-X-Gm-Message-State: APjAAAUyiPKMJVczAL1pVBndR4iNvnG3m6qlw7ZbId8n6u+z+fNgZtIr
-        V85LFWnSBQNazRrkeFo9Ti5rF39CzCU=
-X-Google-Smtp-Source: APXvYqyRB4fpfJOy68WsHtJMDtjbja8mucHxwv8BK3z0oLKfXMWbg9waPUv+7avpWhWs9vzx/Q+XCw==
-X-Received: by 2002:adf:90e7:: with SMTP id i94mr900848wri.47.1575318506359;
-        Mon, 02 Dec 2019 12:28:26 -0800 (PST)
-Received: from localhost.localdomain ([2a01:e34:ed2f:f020:8196:cbcc:fb2c:4975])
-        by smtp.gmail.com with ESMTPSA id k20sm556456wmj.10.2019.12.02.12.28.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 12:28:25 -0800 (PST)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     viresh.kumar@linaro.org, rui.zhang@intel.com
-Cc:     rjw@rjwysocki.net, edubezval@gmail.com, linux-pm@vger.kernel.org,
-        amit.kucheria@linaro.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V2 4/4] thermal/drivers/cpu_cooling: Rename to cpufreq_cooling
-Date:   Mon,  2 Dec 2019 21:28:15 +0100
-Message-Id: <20191202202815.22731-4-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191202202815.22731-1-daniel.lezcano@linaro.org>
-References: <20191202202815.22731-1-daniel.lezcano@linaro.org>
+        Mon, 2 Dec 2019 15:31:43 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB2KVU2q064017;
+        Mon, 2 Dec 2019 14:31:30 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575318690;
+        bh=WJ7/iDoH+LgZm+FTh1H3GU4VY8iNBVP3eVx3nZf37Js=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=ibwwyX4C1bE891UNaonAVXRMx4ZwTY4Gfe3ExB59ZVRB+mLyo1AiwGq6KFphTiRhN
+         /3OjZmoSlmWh35JsB26bZKAmsWRt8+I2j25SZdzbPV3bGOMeTTpazJGhcIydY9WL42
+         45wOkoCc7Sg+If53ly5IkB5/r9mqlBKq7RX7ypKo=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB2KVU89001490
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 2 Dec 2019 14:31:30 -0600
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 2 Dec
+ 2019 14:31:30 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 2 Dec 2019 14:31:30 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB2KVOPm106889;
+        Mon, 2 Dec 2019 14:31:27 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <grygorii.strashko@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <vigneshr@ti.com>
+Subject: [PATCH 1/3] dmaengine: ti: k3-udma: Correct completed descriptor's residue value
+Date:   Mon, 2 Dec 2019 22:31:26 +0200
+Message-ID: <20191202203128.14348-2-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191202203128.14348-1-peter.ujfalusi@ti.com>
+References: <0191128105945.13071-1-peter.ujfalusi@ti.com>
+ <20191202203128.14348-1-peter.ujfalusi@ti.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As we introduced the idle injection cooling device called
-cpuidle_cooling, let's be consistent and rename the cpu_cooling to
-cpufreq_cooling as this one mitigates with OPPs changes.
+The residue should show the number of _not_ completed bytes, so it has to
+be 0 when the full transfer is completed.
 
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/thermal/Makefile                             | 2 +-
- drivers/thermal/{cpu_cooling.c => cpufreq_cooling.c} | 0
- 2 files changed, 1 insertion(+), 1 deletion(-)
- rename drivers/thermal/{cpu_cooling.c => cpufreq_cooling.c} (100%)
+ drivers/dma/ti/k3-udma.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index 9c8aa2d4bd28..5c98472ffd8b 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -19,7 +19,7 @@ thermal_sys-$(CONFIG_THERMAL_GOV_USER_SPACE)	+= user_space.o
- thermal_sys-$(CONFIG_THERMAL_GOV_POWER_ALLOCATOR)	+= power_allocator.o
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index c1450b0a8224..1b929f7a84d4 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -2784,13 +2784,14 @@ static void udma_desc_pre_callback(struct virt_dma_chan *vc,
  
- # cpufreq cooling
--thermal_sys-$(CONFIG_CPU_FREQ_THERMAL)	+= cpu_cooling.o
-+thermal_sys-$(CONFIG_CPU_FREQ_THERMAL)	+= cpufreq_cooling.o
- thermal_sys-$(CONFIG_CPU_IDLE_THERMAL)	+= cpuidle_cooling.o
- 
- # clock cooling
-diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpufreq_cooling.c
-similarity index 100%
-rename from drivers/thermal/cpu_cooling.c
-rename to drivers/thermal/cpufreq_cooling.c
+ 		if (cppi5_desc_get_type(desc_vaddr) ==
+ 		    CPPI5_INFO0_DESC_TYPE_VAL_HOST) {
+-			result->residue = cppi5_hdesc_get_pktlen(desc_vaddr);
+-			if (result->residue == d->residue)
+-				result->result = DMA_TRANS_NOERROR;
+-			else
++			result->residue = d->residue -
++					  cppi5_hdesc_get_pktlen(desc_vaddr);
++			if (result->residue)
+ 				result->result = DMA_TRANS_ABORTED;
++			else
++				result->result = DMA_TRANS_NOERROR;
+ 		} else {
+-			result->residue = d->residue;
++			result->residue = 0;
+ 			result->result = DMA_TRANS_NOERROR;
+ 		}
+ 	}
 -- 
-2.17.1
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
