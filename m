@@ -2,91 +2,110 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7310DC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F661C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4028B20718
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:27:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b6G8gNQP"
+	by mail.kernel.org (Postfix) with ESMTP id 6510920718
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:28:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbfLBS1b (ORCPT
+        id S1727908AbfLBS2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 13:27:31 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:33412 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727671AbfLBS1b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 13:27:31 -0500
-Received: by mail-pj1-f65.google.com with SMTP id r67so101989pjb.0;
-        Mon, 02 Dec 2019 10:27:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kHId2K1mxfvE9DuGLR1TU18/e9Ev1X6mZeAaw2mVc2Y=;
-        b=b6G8gNQPSeawZGHOs8V0YQzs8YlHeA/RXizq1NQT5/x99h7TavgVA7Xj1xt4Rt533l
-         zgMrH9rc4tPWjH6ekO5UkNH01Afgc5t+TqwK1p75HjbzcdhAk/JYYbZsNWkWq4mmQxxL
-         MyYMN/qETHARQIjgSRt5bCz1XeycOHLk+K8IBPYdf2bEw7dJMqzrd8FvxuE+yn4rWylp
-         4hn1iGuwXAUVbU4fMcNyDCT5tKz6Pnc9fzW1rcxpv09llJ2gkq2oOnv22CgY/F5jsFcA
-         n16D4FLeAG+3ja4+bBStGnaEdOA9tHaMVxsgWYw1AOtg1YDN5kZR59VU121T9eb0AF/T
-         oDzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kHId2K1mxfvE9DuGLR1TU18/e9Ev1X6mZeAaw2mVc2Y=;
-        b=QvMaue07GjwZzX4xCvZb954wv3wVQRTcFaS8lmJiAkEQzCumBhW0Ovmku/0fDDCtlh
-         anjYCMMFQ0JeRJNb6uoEwb+R9Vrs8eQ030je8JwsaC6+8tTtnMis73sI2PPKW5OTgevP
-         9xPRaMZ8iPFP+rRKapNjy4iiDrKLxFAjmLuf1diViVMNGEfS1g/Ql7EpK6BNpFZD68Bu
-         3Peh2JQWAjilFc5vT4Nwa/upLEXfUH7JqQHtR3IIu71szA5t0RUydvnVZRPAMUQoyC6D
-         xQAHAMcZtsOVh/Pe419h+mJuXOd6TSRv8bmeYaRKps/V4NJLBSM3MwG+IfEt0KKxiN9q
-         TVJw==
-X-Gm-Message-State: APjAAAWkeylazf5nLM4M61nvfe7xKIjU44DcwRHCkBymMPfJmDM8o26i
-        nEcnLB30O1O1Jm1x3rvui5pAZDaT
-X-Google-Smtp-Source: APXvYqz0ZxG7eHgkaKqQ5ui+VUs6AKdnFWBt1wkZ5JNGRDYEHiB1cr5JEsPcZMOE/SIqe3ixY8x4Gw==
-X-Received: by 2002:a17:902:be10:: with SMTP id r16mr574623pls.169.1575311250097;
-        Mon, 02 Dec 2019 10:27:30 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id d69sm155038pfd.158.2019.12.02.10.27.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 10:27:28 -0800 (PST)
-Date:   Mon, 2 Dec 2019 10:27:26 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: Re: [PATCH] input: misc: Kconfig: use select instead of depends on
- KEYBOARD_GPIO
-Message-ID: <20191202182726.GG50317@dtor-ws>
-References: <20191121132046.11977-1-info@metux.net>
- <20191122195810.GD248138@dtor-ws>
- <5600986e-239c-88a9-4f9c-ca261c33a156@metux.net>
+        Mon, 2 Dec 2019 13:28:52 -0500
+Received: from mga05.intel.com ([192.55.52.43]:22634 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727670AbfLBS2w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 13:28:52 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 10:28:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,270,1571727600"; 
+   d="scan'208";a="293505672"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by orsmga001.jf.intel.com with ESMTP; 02 Dec 2019 10:28:51 -0800
+Date:   Mon, 2 Dec 2019 10:28:51 -0800
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>
+Cc:     Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        David Laight <David.Laight@aculab.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v2 2/4] xen-pcifront: Align address of flags to size of
+ unsigned long
+Message-ID: <20191202182851.GB22528@agluck-desk2.amr.corp.intel.com>
+References: <1574710984-208305-1-git-send-email-fenghua.yu@intel.com>
+ <1574710984-208305-3-git-send-email-fenghua.yu@intel.com>
+ <e236e8fe-3a81-e17a-2286-228bfde9919a@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <5600986e-239c-88a9-4f9c-ca261c33a156@metux.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e236e8fe-3a81-e17a-2286-228bfde9919a@suse.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 02:03:40PM +0100, Enrico Weigelt, metux IT consult wrote:
-> On 22.11.19 20:58, Dmitry Torokhov wrote:
+On Tue, Nov 26, 2019 at 11:02:13AM +0100, Jürgen Groß wrote:
+> On 25.11.19 20:43, Fenghua Yu wrote:
+> > The address of "flags" is passed to atomic bitops which require the
+> > address is aligned to size of unsigned long.
+> > 
+> > Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> > ---
+> >   include/xen/interface/io/pciif.h | 7 +++++--
+> >   1 file changed, 5 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/include/xen/interface/io/pciif.h b/include/xen/interface/io/pciif.h
+> > index d9922ae36eb5..639d5fb484a3 100644
+> > --- a/include/xen/interface/io/pciif.h
+> > +++ b/include/xen/interface/io/pciif.h
+> > @@ -103,8 +103,11 @@ struct xen_pcie_aer_op {
+> >   	uint32_t devfn;
+> >   };
+> >   struct xen_pci_sharedinfo {
+> > -	/* flags - XEN_PCIF_* */
+> > -	uint32_t flags;
+> > +	/* flags - XEN_PCIF_*. Force alignment for atomic bit operations. */
+> > +	union {
+> > +		uint32_t	flags;
+> > +		unsigned long	flags_alignment;
+> > +	};
+> >   	struct xen_pci_op op;
+> >   	struct xen_pcie_aer_op aer_op;
+> >   };
+> > 
 > 
-> > KEYBOARD_GPIO depends on GPIOLIB and "select" does not propagate
-> > dependencies, so you may still end up with invalid configs...
+> NAK.
 > 
-> Sure that they don't propagate ? In this case, I've got yet
-> another todo ... :o
+> This is an interface definition for communication between Xen dom0 and
+> guests via shared memory. It can't be changed.
 
-Yes, I am sure.
+Bother. There doesn't seem to be anything else in the xen_pci_sharedinfo
+structure (or any of its sub-components) that would force the whole thing
+to be any more strictly aligned than uint32_t
 
--- 
-Dmitry
+Oh ... but it looks like this is the only allocation:
+
+
+        pdev->sh_info =
+            (struct xen_pci_sharedinfo *)__get_free_page(GFP_KERNEL);
+
+so "flags" is page aligned.
+
+Fenghua: drop this patch, it isn't needed.
+
+-Tony
