@@ -2,131 +2,198 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B32C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB97C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B157B20684
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:59:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ABF120678
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:59:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="an0kG+K7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IhX+gfX1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbfLBX7b (ORCPT
+        id S1726298AbfLBX7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 18:59:31 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:38698 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725899AbfLBX7b (ORCPT
+        Mon, 2 Dec 2019 18:59:47 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45692 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725899AbfLBX7r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 18:59:31 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB2NsNgT149510;
-        Mon, 2 Dec 2019 23:58:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=+ZmXwAnD2Aq57WrF0VXR5s5mei/X7zf/fv/3U7krmxY=;
- b=an0kG+K7UhIa6GsG2pz03eOO1JmV4CUTsRUcIfDRsdfpv3x6lRqVDXpHR0gP+1UW8arH
- 1Oiaw6z5x8Q1a4C6DJxjhxF+2nxQKb503IXyUBfYFoolZ9ixVJoR1pVpttNekdfyjBp/
- oRNEHC5dbwWJTsygXxlVdogulTCqu2INb5iUiUj8o0wZM0C81UCbaB3h9j5snlcJRsE0
- uYbP0EEu9ZAU9Kr929dIMHofg1MKhbRuxW0iig+amj5EJE8TPLu362olVZz8ocmR/Cyy
- hE36UBQMCy6mglvTakKXoIjkfYpq126UkADHMA3RWCN2Citupkg/qhWQ1acg9jSt6Kc4 XQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2wkh2r3g91-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 02 Dec 2019 23:58:59 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB2NwmOs013799;
-        Mon, 2 Dec 2019 23:58:58 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2wn8k1bf53-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 02 Dec 2019 23:58:58 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xB2NwMbH026350;
-        Mon, 2 Dec 2019 23:58:23 GMT
-Received: from localhost (/10.159.148.223)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 02 Dec 2019 15:58:22 -0800
-Date:   Mon, 2 Dec 2019 15:58:21 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [GIT PULL] xfs: new code for 5.5
-Message-ID: <20191202235821.GF7335@magnolia>
-References: <20191201184814.GA7335@magnolia>
- <CAHk-=wi+0suvJAw8hxLkKJHgYwRy-0vg4-dw9_Co6nQHK-XF9Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wi+0suvJAw8hxLkKJHgYwRy-0vg4-dw9_Co6nQHK-XF9Q@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9459 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912020206
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9459 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912020205
+        Mon, 2 Dec 2019 18:59:47 -0500
+Received: by mail-pg1-f196.google.com with SMTP id k1so613028pgg.12
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 15:59:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:subject:in-reply-to:cc:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YT4uEP8VQn4YJkJtyGgPiJyFzwEjXrAA5S6YuB+2oi8=;
+        b=IhX+gfX151SePSf80mnvPgfzBNoi7l160I1leUO8vw4z6sGDLcawYqngZmXTaYaA75
+         GJinrWzAwG2n5eF9F9+S6HuQdd7ZtVcd6T+4BeESFGHTPpYjlXj0pIDtaErhR4vmX+tZ
+         JvR7D8JR6oeDxcGX58aa31OkGssNtqY1w0yHn/sUhAbF5ID4rwBZFjzw5tXUwWmNwX0k
+         cIGxjhmmgZxRm4xWQCKHgneT9Mm//RPE9y1iQ1zdNGAIOZzXzmaIM52vl69TwHXOmaVF
+         GqBpXQq31FdJplaUh3xKALDCK5RxmVYE9HrniTz7crfD7HKthBIqbjB6xX9YiYlN/kHs
+         6gOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:in-reply-to:cc:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=YT4uEP8VQn4YJkJtyGgPiJyFzwEjXrAA5S6YuB+2oi8=;
+        b=ktXY4Al6PNGSd1kTmTWx6GrC7kyO9qwy1N85LxLcAeGpo5OWyIUaJ9Uy2Z+5IsNGi1
+         C4uNUTVWzFz1ho7SW8H2h4E4JSfLDxUxDwvQNvHs1mlbgJqwHbmeGwO/WbI1bP8fEecP
+         8Nt9258iBnndIrd0Y41UQLkDxUEgyMsaZEo0pozc355xQFWRMeyVRHFaGwhKmozxCZ0O
+         UdRXPiRmYc9BU+ZMxLyvNyy1sJ6agYLmCE5Zv8yjOAgVvEld6PWQMx7WV4iTlVoKl7fV
+         HnKWWvpBUGjTDpw84Gvnv7LBhaZaHFEhdrATqamFR9fyugFh5eYEvpzCGZICjsvCaEQh
+         rA+Q==
+X-Gm-Message-State: APjAAAVF7mfwnlsIyZfClPgyVYiyk5itiKtRRLDn+tiwqFTcUIaFHlyE
+        cUCGk+FqMNk1DqRs+7ZDsXDAkXClNVI=
+X-Google-Smtp-Source: APXvYqykaR/R8TB3hQac8uHJ7QdwdCLs0KiSo+C3wn7tXDCMm9hYQ7g5cySoXmTQM2Gjg5ylFx9ebw==
+X-Received: by 2002:a63:3404:: with SMTP id b4mr1966314pga.438.1575331185704;
+        Mon, 02 Dec 2019 15:59:45 -0800 (PST)
+Received: from localhost ([2620:15c:211:200:12cb:e51e:cbf0:6e3f])
+        by smtp.gmail.com with ESMTPSA id 203sm618912pfy.185.2019.12.02.15.59.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 15:59:45 -0800 (PST)
+Date:   Mon, 02 Dec 2019 15:59:45 -0800 (PST)
+X-Google-Original-Date: Mon, 02 Dec 2019 15:55:49 PST (-0800)
+From:   Palmer Dabbelt <palmerdabbelt@google.com>
+X-Google-Original-From: Palmer Dabbelt <palmer@dabbelt.com>
+Subject:     Re: [PATCH v5 1/4] RISC-V: Mark existing SBI as 0.1 SBI.
+In-Reply-To: <20191126190503.19303-2-atish.patra@wdc.com>
+CC:     linux-kernel@vger.kernel.org, Atish Patra <Atish.Patra@wdc.com>,
+        anup@brainfault.org, aou@eecs.berkeley.edu,
+        alexios.zavras@intel.com, linux-riscv@lists.infradead.org,
+        han_mao@c-sky.com, rppt@linux.ibm.com,
+        Paul Walmsley <paul.walmsley@sifive.com>, tglx@linutronix.de
+To:     Atish Patra <Atish.Patra@wdc.com>
+Message-ID: <mhng-18ffe96a-7a03-475f-ae9b-2d450fc3d29e@palmerdabbelt.mtv.corp.google.com>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 03:22:31PM -0800, Linus Torvalds wrote:
-> On Sun, Dec 1, 2019 at 10:48 AM Darrick J. Wong <djwong@kernel.org> wrote:
-> >
-> > FYI, Stephen Rothwell reported a merge conflict with the y2038 tree at
-> > the end of October[1].  His resolution looked pretty straightforward,
-> > though the current y2038 for-next branch no longer changes fs/ioctl.c
-> > (and the changes that were in it are not in upstream master), so that
-> > may not be necessary.
-> 
-> The changes and conflicts are definitely still there (now upstream),
-> I'm not sure what made you not see them.  But thanks for the note, I
-> compared my end result with linux-next to verify.
+On Tue, 26 Nov 2019 11:05:00 PST (-0800), Atish Patra wrote:
+> As per the new SBI specification, current SBI implementation version
+> is defined as 0.1 and will be removed/replaced in future. Each of the
+> function call in 0.1 is defined as a separate extension which makes
+> easier to replace them one at a time.
+>
+> Rename existing implementation to reflect that. This patch is just
+> a preparatory patch for SBI v0.2 and doesn't introduce any functional
+> changes.
+>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Reviewed-by: Anup Patel <anup@brainfault.org>
+> ---
+>  arch/riscv/include/asm/sbi.h | 43 +++++++++++++++++++-----------------
+>  1 file changed, 23 insertions(+), 20 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
+> index 2570c1e683d3..96aaee270ded 100644
+> --- a/arch/riscv/include/asm/sbi.h
+> +++ b/arch/riscv/include/asm/sbi.h
+> @@ -9,17 +9,17 @@
+>  #include <linux/types.h>
+>
+>  #ifdef CONFIG_RISCV_SBI
+> -#define SBI_SET_TIMER 0
+> -#define SBI_CONSOLE_PUTCHAR 1
+> -#define SBI_CONSOLE_GETCHAR 2
+> -#define SBI_CLEAR_IPI 3
+> -#define SBI_SEND_IPI 4
+> -#define SBI_REMOTE_FENCE_I 5
+> -#define SBI_REMOTE_SFENCE_VMA 6
+> -#define SBI_REMOTE_SFENCE_VMA_ASID 7
+> -#define SBI_SHUTDOWN 8
+> +#define SBI_EXT_0_1_SET_TIMER 0x0
+> +#define SBI_EXT_0_1_CONSOLE_PUTCHAR 0x1
+> +#define SBI_EXT_0_1_CONSOLE_GETCHAR 0x2
+> +#define SBI_EXT_0_1_CLEAR_IPI 0x3
+> +#define SBI_EXT_0_1_SEND_IPI 0x4
+> +#define SBI_EXT_0_1_REMOTE_FENCE_I 0x5
+> +#define SBI_EXT_0_1_REMOTE_SFENCE_VMA 0x6
+> +#define SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID 0x7
+> +#define SBI_EXT_0_1_SHUTDOWN 0x8
+>
+> -#define SBI_CALL(which, arg0, arg1, arg2, arg3) ({		\
+> +#define SBI_CALL(which, arg0, arg1, arg2, arg3) ({             \
+>  	register uintptr_t a0 asm ("a0") = (uintptr_t)(arg0);	\
+>  	register uintptr_t a1 asm ("a1") = (uintptr_t)(arg1);	\
+>  	register uintptr_t a2 asm ("a2") = (uintptr_t)(arg2);	\
+> @@ -43,48 +43,50 @@
+>
+>  static inline void sbi_console_putchar(int ch)
+>  {
+> -	SBI_CALL_1(SBI_CONSOLE_PUTCHAR, ch);
+> +	SBI_CALL_1(SBI_EXT_0_1_CONSOLE_PUTCHAR, ch);
+>  }
+>
+>  static inline int sbi_console_getchar(void)
+>  {
+> -	return SBI_CALL_0(SBI_CONSOLE_GETCHAR);
+> +	return SBI_CALL_0(SBI_EXT_0_1_CONSOLE_GETCHAR);
+>  }
+>
+>  static inline void sbi_set_timer(uint64_t stime_value)
+>  {
+>  #if __riscv_xlen == 32
+> -	SBI_CALL_2(SBI_SET_TIMER, stime_value, stime_value >> 32);
+> +	SBI_CALL_2(SBI_EXT_0_1_SET_TIMER, stime_value,
+> +			  stime_value >> 32);
+>  #else
+> -	SBI_CALL_1(SBI_SET_TIMER, stime_value);
+> +	SBI_CALL_1(SBI_EXT_0_1_SET_TIMER, stime_value);
+>  #endif
+>  }
+>
+>  static inline void sbi_shutdown(void)
+>  {
+> -	SBI_CALL_0(SBI_SHUTDOWN);
+> +	SBI_CALL_0(SBI_EXT_0_1_SHUTDOWN);
+>  }
+>
+>  static inline void sbi_clear_ipi(void)
+>  {
+> -	SBI_CALL_0(SBI_CLEAR_IPI);
+> +	SBI_CALL_0(SBI_EXT_0_1_CLEAR_IPI);
+>  }
+>
+>  static inline void sbi_send_ipi(const unsigned long *hart_mask)
+>  {
+> -	SBI_CALL_1(SBI_SEND_IPI, hart_mask);
+> +	SBI_CALL_1(SBI_EXT_0_1_SEND_IPI, hart_mask);
+>  }
+>
+>  static inline void sbi_remote_fence_i(const unsigned long *hart_mask)
+>  {
+> -	SBI_CALL_1(SBI_REMOTE_FENCE_I, hart_mask);
+> +	SBI_CALL_1(SBI_EXT_0_1_REMOTE_FENCE_I, hart_mask);
+>  }
+>
+>  static inline void sbi_remote_sfence_vma(const unsigned long *hart_mask,
+>  					 unsigned long start,
+>  					 unsigned long size)
+>  {
+> -	SBI_CALL_3(SBI_REMOTE_SFENCE_VMA, hart_mask, start, size);
+> +	SBI_CALL_3(SBI_EXT_0_1_REMOTE_SFENCE_VMA, hart_mask,
+> +			  start, size);
+>  }
+>
+>  static inline void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
+> @@ -92,7 +94,8 @@ static inline void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
+>  					      unsigned long size,
+>  					      unsigned long asid)
+>  {
+> -	SBI_CALL_4(SBI_REMOTE_SFENCE_VMA_ASID, hart_mask, start, size, asid);
+> +	SBI_CALL_4(SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID, hart_mask,
+> +			  start, size, asid);
+>  }
+>  #else /* CONFIG_RISCV_SBI */
+>  /* stubs for code that is only reachable under IS_ENABLED(CONFIG_RISCV_SBI): */
 
-Aha!  I pulled master yesterday morning, tried a test merge with xfs,
-saw the lack of merge conflicts, and sent you the xfs pull request.  A
-few hours later you pulled in the compat ioctl changes from Arnd's git
-tree, but the branch in his repo that feeds the -next tree doesn't
-contain the compat ioctl changes, so I assumed that meant he wasn't
-going to send them for 5.5... and then thought better of myself and
-attached an FYI anyway.
-
-> My resolution is different from Stephen's. All my non-x86-64 FS_IOC_*
-> cases just do "goto found_handler", because the compat case is
-> identical for the native case outside of the special x86-64 alignment
-> behavior, and I think that's what Arnd meant to happen.
-
-Yeah, that looks correct to me.  Stephen's solution backed out the
-changes that Arnd made for the !x86_64 compat ioctl case, so I or
-someone would have had to re-apply them.
-
-> There was some other minor difference too, but it's also possible I
-> could have messed up, so cc'ing Stephen and Arnd on this just in case
-> they have comments.
-
-<nod> Thanks for sorting this out.
-
---D
-
-> 
-> 
->                Linus
+Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
