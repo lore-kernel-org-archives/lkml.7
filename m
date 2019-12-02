@@ -2,116 +2,129 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 479B7C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 01:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8578FC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 01:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 194C020748
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 01:42:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VQcNvJfF"
+	by mail.kernel.org (Postfix) with ESMTP id 5BAC020748
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 01:44:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727332AbfLBBmm (ORCPT
+        id S1727370AbfLBBoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 20:42:42 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38835 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727279AbfLBBmm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 20:42:42 -0500
-Received: by mail-pg1-f195.google.com with SMTP id t3so17094625pgl.5;
-        Sun, 01 Dec 2019 17:42:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uhfo+Tsmbw3kX/yCMxwrxLrXfDbUCCVYUmIkTB7sVPY=;
-        b=VQcNvJfF7M39+QSaXYKr8Rgd1oArBi1F0NTI/m+Y9OkyarJzFqLfTjCQq6TX+FUyOR
-         wK9lkIbY+hVk7gVKH4ZWt2XtCKHW0VIo7KO/ekhnXmC8DpcHf7URaxZpQ1H4Cv50vI3S
-         YMuSwknEpN5LCkxEauwax+kk0DNJLyaP+Y2DuP3JuZK8UMq2kJiu4UiOgN3on6UwZiiY
-         oujDuPcNq67+eV/wm1lCcFHl7TN+TVpxx8zLBJddWekfBPPBFAMkKUtjfIOm2nMMtho2
-         YlN3A/JoPlC/u11MSPw87N4G4ORBwYsvJ8R3DY4ys3QpErLSQ9WsX80gllECMKKJibLF
-         cHVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uhfo+Tsmbw3kX/yCMxwrxLrXfDbUCCVYUmIkTB7sVPY=;
-        b=jTIOA9WqBx+SWCS0S60Ap9pD0HYg5zLXNFcTgQQ7d7YIbl5xI9v+w1IIwqsUkvuC9t
-         Oh+NBdAIL29ZgK5whu8/5cdhzL09QyxORkFdGJa4da0E5YgcClIjCPlIA0iQB85b2yCQ
-         DNgLAnv1lT+5Ohcsmvb2y94uhkIuz6KuPcrIWCOBwvhj3sLWiqvnTtacC8HUkR3Eax+d
-         nzWm3FN8pG5VmcvYrtjmUTZkM1qmPsnC8E6z1pws35pRU6ADB/DaySWds0mALbs7q6AW
-         V0x/aqnd2bi22q6v1WRLCRUDynP7ODoB/eVFiQJ+jaO61WtMBUlo/ImmVLoUXoxqEMOk
-         wpbg==
-X-Gm-Message-State: APjAAAVnVv6rjAeMCtE49r6cwz3K40QandPC4/vY6v0Wbv+Kj4Oj4GRU
-        E5x/4V2Khr/RXrD5A6hKToE=
-X-Google-Smtp-Source: APXvYqy3NxrHy9dDtOm4rbfhAZ5ovvcHxW7AxzSB9D2aLC4FbRyOoWq7jNqTfeCQ6zh8E7SCWi0Qfg==
-X-Received: by 2002:a63:105b:: with SMTP id 27mr17554482pgq.268.1575250961136;
-        Sun, 01 Dec 2019 17:42:41 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id m71sm13516731pje.0.2019.12.01.17.42.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Dec 2019 17:42:40 -0800 (PST)
-Date:   Sun, 1 Dec 2019 17:42:37 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v1] clk: Convert managed get functions to devm_add_action
- API
-Message-ID: <20191202014237.GR248138@dtor-ws>
-References: <3d8a58bf-0814-1ec1-038a-10a20b9646ad@free.fr>
- <20191128185630.GK82109@yoga>
+        Sun, 1 Dec 2019 20:44:04 -0500
+Received: from mga06.intel.com ([134.134.136.31]:60711 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727279AbfLBBoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Dec 2019 20:44:04 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Dec 2019 17:44:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,267,1571727600"; 
+   d="scan'208";a="200437555"
+Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
+  by orsmga007.jf.intel.com with ESMTP; 01 Dec 2019 17:44:02 -0800
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 1 Dec 2019 17:44:01 -0800
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sun, 1 Dec 2019 17:44:01 -0800
+Received: from shsmsx103.ccr.corp.intel.com (10.239.4.69) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Sun, 1 Dec 2019 17:44:01 -0800
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.109]) by
+ SHSMSX103.ccr.corp.intel.com ([169.254.4.29]) with mapi id 14.03.0439.000;
+ Mon, 2 Dec 2019 09:44:00 +0800
+From:   "Zhao, Shirley" <shirley.zhao@intel.com>
+To:     James Bottomley <jejb@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>
+CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
+        "Zhu, Bing" <bing.zhu@intel.com>,
+        "Chen, Luhai" <luhai.chen@intel.com>
+Subject: RE: One question about trusted key of keyring in Linux kernel.
+Thread-Topic: One question about trusted key of keyring in Linux kernel.
+Thread-Index: AdWZwFKzDBwFOydYTGGk+Aqs+6BIxAANhxEAAoxRZMAAOKaagABSSevwABZzFQAAgRP1kA==
+Date:   Mon, 2 Dec 2019 01:44:00 +0000
+Message-ID: <A888B25CD99C1141B7C254171A953E8E4909BA3B@shsmsx102.ccr.corp.intel.com>
+References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
+         <1573659978.17949.83.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
+         <1574877977.3551.5.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E49096521@shsmsx102.ccr.corp.intel.com>
+ <1575057916.6220.7.camel@linux.ibm.com>
+In-Reply-To: <1575057916.6220.7.camel@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZTYxYWJjZjgtYmU3NC00NTFkLWE0NzEtZTRlMzBlMzQyNTUzIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiZjQxZVhoaCt5bUxRMnN5cElyR2orNHVVclo4SzJZRDBMQmJKZmoyYVE0UUxhd1RJQzZxWFgwNjFYZXJPM2RjOSJ9
+x-ctpclassification: CTP_NT
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191128185630.GK82109@yoga>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 10:56:30AM -0800, Bjorn Andersson wrote:
-> On Tue 26 Nov 08:13 PST 2019, Marc Gonzalez wrote:
-> 
-> > Date: Tue, 26 Nov 2019 13:56:53 +0100
-> > 
-> > Using devm_add_action_or_reset() produces simpler code and smaller
-> > object size:
-> > 
-> > 1 file changed, 16 insertions(+), 46 deletions(-)
-> > 
-> >     text	   data	    bss	    dec	    hex	filename
-> > -   1797	     80	      0	   1877	    755	drivers/clk/clk-devres.o
-> > +   1499	     56	      0	   1555	    613	drivers/clk/clk-devres.o
-> > 
-> > Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> 
-> Looks neat
-> 
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-This however increases the runtime costs as each custom action cost us
-an extra pointer. Given that in a system we likely have many clocks
-managed by devres, I am not sure that this code savings is actually
-gives us overall win. It might still, I just want to understand how we
-are allocating/packing devres structures.
-
-Thanks.
-
--- 
-Dmitry
+SGksIEphbWVzLCANCg0KVGhlIHZhbHVlIG9mIFBDUjcgaXMgbm90IGNoYW5nZWQuIEkgaGF2ZSBj
+aGVja2VkIGl0IHdpdGggVFBNIGNvbW1hbmQgdHBtX3Bjcmxpc3QuIA0KDQpTbyBJIHRoaW5rIHRo
+ZSBwcm9ibGVtIGlzIGhvdyB0byB1c2UgdGhlIG9wdGlvbiBwb2xpY3lkaWdlc3QgYW5kIHBvbGlj
+eWhhbmRsZT8gSXMgdGhlcmUgYW55IGV4YW1wbGU/DQpNYXliZSB0aGUgZm9ybWF0IGluIG15IGNv
+bW1hbmQgaXMgbm90IGNvcnJlY3QuIA0KDQpUaGFua3MuIA0KDQotIFNoaXJsZXkgDQoNCi0tLS0t
+T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBKYW1lcyBCb3R0b21sZXkgPGplamJAbGludXgu
+aWJtLmNvbT4gDQpTZW50OiBTYXR1cmRheSwgTm92ZW1iZXIgMzAsIDIwMTkgNDowNSBBTQ0KVG86
+IFpoYW8sIFNoaXJsZXkgPHNoaXJsZXkuemhhb0BpbnRlbC5jb20+OyBNaW1pIFpvaGFyIDx6b2hh
+ckBsaW51eC5pYm0uY29tPjsgSmFya2tvIFNha2tpbmVuIDxqYXJra28uc2Fra2luZW5AbGludXgu
+aW50ZWwuY29tPjsgSm9uYXRoYW4gQ29yYmV0IDxjb3JiZXRAbHduLm5ldD4NCkNjOiBsaW51eC1p
+bnRlZ3JpdHlAdmdlci5rZXJuZWwub3JnOyBrZXlyaW5nc0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
+LWRvY0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7ICdNYXVy
+byBDYXJ2YWxobyBDaGVoYWInIDxtY2hlaGFiK3NhbXN1bmdAa2VybmVsLm9yZz47IFpodSwgQmlu
+ZyA8YmluZy56aHVAaW50ZWwuY29tPjsgQ2hlbiwgTHVoYWkgPGx1aGFpLmNoZW5AaW50ZWwuY29t
+Pg0KU3ViamVjdDogUmU6IE9uZSBxdWVzdGlvbiBhYm91dCB0cnVzdGVkIGtleSBvZiBrZXlyaW5n
+IGluIExpbnV4IGtlcm5lbC4NCg0KT24gRnJpLCAyMDE5LTExLTI5IGF0IDAxOjQwICswMDAwLCBa
+aGFvLCBTaGlybGV5IHdyb3RlOg0KPiBIaSwgSmFtZXMsDQo+IA0KPiBNYXliZSB0aGUgVFBNIGNv
+bW1hbmQgY29uZnVzZWQgeW91LiANCg0KV2VsbCB5b3UgZGlkIHNlZW0gdG8gYmUgc2F5aW5nIHdl
+IGhhZCBhIHByb2JsZW0gaW4gdGhlIFRQTSBzZWFsZWQga2V5IHN1YnN5c3RlbS4NCg0KPiBUaGUg
+cXVlc3Rpb24gaXMgSSB1c2Uga2V5Y3RsIGNvbW1hbmQgc2VhbGVkIGEgdHJ1c3RlZCBrZXkgd2l0
+aCBQQ1IgDQo+IHBvbGljeSwgYnV0IGxvYWQgaXQgZmFpbGVkIGFmdGVyIHJlYm9vdC4NCj4gSSBk
+b24ndCBrbm93IHdoeSBpdCB3YXMgbG9hZGVkIGZhaWxlZC4gSSB1c2UgVFBNIGNvbW1hbmQgdG8g
+aGVscCBmaW5kIA0KPiBpdCwgaXQgcmVwb3J0IHBvbGljeSBjaGVjayBmYWlsZWQuDQoNClJpZ2h0
+LCBzbyB5b3VyIHF1ZXN0aW9uIHNlZW1zIHRvIGJlIHdoeSBhZnRlciBhIHJlYm9vdCwgdGhlIFRQ
+TSBwb2xpY3kgbm8gbG9uZ2VyIHdvcmtzIHRvIGF1dGhvcml6ZSB0aGUga2V5IGV2ZW4gZnJvbSB1
+c2VyIHNwYWNlPyAgTXkgYmVzdCBndWVzcyB3b3VsZCBiZSB0aGUgUENSIHZhbHVlIHlvdSd2ZSBz
+ZWFsZWQgaXQgdG8gY2hhbmdlZCBvdmVyIHRoZSByZWJvb3QgZm9yIHNvbWUgcmVhc29uLg0KDQo+
+IFNvIG15IHF1ZXN0aW9uIGlzIGhvdyB0byBsb2FkIHRoZSBQQ1IgcG9saWN5IHNlYWxlZCB0cnVz
+dGVkIGtleSANCj4gY29ycmVjdGx5Pw0KDQpZb3UgaGF2ZSB0byBzZXQgdGhlIHNlYWxpbmcgcmVs
+ZWFzZSBwb2xpY3kgdG8gc29tZXRoaW5nIHlvdSBrbm93IHdpbGwgYmUgaW52YXJpYW50IGFjcm9z
+cyByZWJvb3RzIGZvciBhbiB1bnNlYWwgdG8gaGFwcGVuIHJlbGlhYmx5LiAgSG93ZXZlciwgdXN1
+YWxseSB5b3UgYWxzbyB3YW50IHRoZSB1bnNlYWwgdG8gZmFpbCBpZiBzb21ldGhpbmcgeW91IGRv
+bid0IGxpa2UgY2hhbmdlcywgc28geW91IHNldCB0aGUgcG9saWN5IHRvIGJlIHNvbWV0aGluZyB0
+aGF0J3MgaW52YXJpYW50IHVubGVzcyB0aGF0IGhhcHBlbnMuICBOb3QgcmVhbGx5IGtub3dpbmcg
+d2hhdCB5b3VyIGNvbmRpdGlvbnMgYXJlIHdlIGNhbid0IHJlYWxseSB0ZWxsIHlvdSB3aGF0IHlv
+dXIgcG9saWN5IHNob3VsZCBsb29rIGxpa2UuDQoNCj4gSG93IHRvIHVzZSBwb2xpY3lkaWdlc3Qg
+YW5kIHBvbGljeWhhbmRsZSBjb3JyZWN0bHkuIA0KDQpJJ3ZlIG5vIHJlYWwgaWRlYSBob3cgdGhl
+IHRwbTJfIGNvbW1hbmRzIHdvcmssIGJ1dCB0aGUgdHNzcG9saWN5IGNvbW1hbmRzIGFsbCBoYXZl
+IG1hbiBwYWdlcyB3aGljaCBkbyBhIHByZXR0eSBnb29kIGV4cGxhbmF0aW9uLiAgSWYgSSBpbmZl
+ciBob3cgeW91ciB0cG0yXyBjb21tYW5kcyBzZWVtIHRvIGJlIHdvcmtpbmcsIEkgdGhpbmsgeW91
+J3JlIHNlYWxpbmcgdG8gYSBwY3I3IGhhc2g/ICBwY3I3IGlzIHRoZSBvbmUgdGhhdCdzIHN1cHBv
+c2VkIHRvIG1lYXN1cmUgdGhlIHNlY3VyZSBib290IHBhdGggYW5kIHByb3BlcnRpZXMgYW5kIGFz
+IHN1Y2ggc2hvdWxkbid0IGNoYW5nZSBhY3Jvc3MgcmVib290cywgc28gSSB0aGluayB5b3VyIHBy
+b2JsZW0gYmVjb21lcyBmaW5kaW5nIG91dCB3aHkgaXQgY2hhbmdlZC4NCg0KSmFtZXMNCg0K
