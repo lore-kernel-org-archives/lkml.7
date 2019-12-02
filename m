@@ -2,202 +2,92 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6B6C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8973C43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 684A92053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:45:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="weHqKqK6"
+	by mail.kernel.org (Postfix) with ESMTP id BFFA82070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:48:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575294494;
+	bh=68gVpj7OMA9BcFgcDkkN8ZgFocPqY7k3fD758PWkQZ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q3M7DeBO74Cmvd10aTl4IN9jVa/eBfgSnXM63PQBGSyCZXtaevgjrSqySrY/1WISX
+	 MxrhlMRVtIy1B7gP9SrKEUd4JuaD16ID3I/N1kCaqVgBQd72nP4+kGT17w7mPIt2x5
+	 pN2QjBDX5WDystM6e1FYZOLSXz7uQJC0D2Oj5fgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbfLBNp5 (ORCPT
+        id S1727549AbfLBNsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 08:45:57 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:39600 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727487AbfLBNp5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 08:45:57 -0500
-Received: by mail-lj1-f195.google.com with SMTP id e10so31002375ljj.6
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 05:45:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=49jYbZVycOXFspdxl9CDUTh2W/4I3gjVIzO2kAHOhfU=;
-        b=weHqKqK6CpbCFt1jkDcyAM9l4ZlRl5wkEuDFLBbazMmIojfqabp5oSo6tLXuCIzaWu
-         MuYMSoa0ONVmpFuwjEWhox/dhcv86Z+wsg/9kFtV+cGU8yOL6I56QuWgtyseIhjPdthi
-         I4+IK8zSzhPx9UAPZQ1g80GtClIcJh08T7JdA38TQ8PMmNgRAMPhKG+oIUfRP8h/P0hE
-         Ax9lEnmLM6EUctVOZmfwlpRgge80/NhgGBajWxHstwa7SYJzz95fdPGiB0sr3VHSmSSy
-         AHtD+4qLHIo/GXk0NdOm9nCKaAktJHtGSveoJV3FECVT+9pI49wRBla4o7CRBlyZVmDK
-         dsBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=49jYbZVycOXFspdxl9CDUTh2W/4I3gjVIzO2kAHOhfU=;
-        b=snZYZjPt7r4W2c4EztzV8xTSDv+HqGvvR/M6749tzna9DiEGmMa8vIFfzVMJ2Meokm
-         se+IgaI/l3Y604eezzT22mpyxBrv/v+jQNlL5DGXWfcNqx4FTtEbVLJbcq039ue3FYuW
-         wWmfRl6VgSRONL71aVxyMH3IBn7qwH+PTJ6t6iByRxnQq0EoZO7fxb8J7J7Jnx6prCsH
-         pKz0GGnfa0YNWAsEPnHYAXEO+BN7c29aC2XldGMq+AFFdiNX2xzBkveYOjejAIUfjvWi
-         V8O+NcVJecS4LZ27nQJa8GT8lTo79je3CxZDK2/2dgK8qdiGaKcGH8w94Vg/F3T1ULAM
-         6ubQ==
-X-Gm-Message-State: APjAAAUOsEFx425yA23NFtqjTCJ1pHcCKmjbzirBrW+dcFtWJfEnK5K7
-        2/KHMBNuaByjWKXcq1hyQJeuOuogLQF4it2UM7of8w==
-X-Google-Smtp-Source: APXvYqxeByd/GwXPla7qySqPY0k0YYlASUzuqjZNj/U6zFcUOWxtXgVlcft9G28tw4AAwHLj66dc1hiGkBjfOJNyWxY=
-X-Received: by 2002:a2e:9a04:: with SMTP id o4mr14412076lji.214.1575294354710;
- Mon, 02 Dec 2019 05:45:54 -0800 (PST)
+        Mon, 2 Dec 2019 08:48:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51218 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727436AbfLBNsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 08:48:13 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A73332053B;
+        Mon,  2 Dec 2019 13:48:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575294493;
+        bh=68gVpj7OMA9BcFgcDkkN8ZgFocPqY7k3fD758PWkQZ8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TpzXSedQXEBTjAuBHm2WPPu+7DthlU4UXTfJNyoz8bG/sk0Di+Dl684WtoB9RsQ9o
+         w9M0Lv9xK4Cif9eBB3qP7GqLn6Mgo8tSrwOb194G8+w6QHwEJ63x0YYgwX8FLvW1NE
+         k5Zv8qqC8bsA6zQhMdkWxRGDf3U1L2DiLjt3QIYI=
+Date:   Mon, 2 Dec 2019 21:47:49 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH] ARM: dts: imx7ulp: Add cpu clock-frequency property
+Message-ID: <20191202134748.GB21897@dragon>
+References: <1572918578-13544-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-References: <20191114113153.GB4213@ming.t460p> <20191114235415.GL4614@dread.disaster.area>
- <20191115010824.GC4847@ming.t460p> <20191115045634.GN4614@dread.disaster.area>
- <20191115070843.GA24246@ming.t460p> <20191128094003.752-1-hdanton@sina.com>
- <CAKfTPtA23ErKGCEJVmg6vk-QoufkiUM3NbXd31mZmKnuwbTkFw@mail.gmail.com>
- <20191202024625.GD24512@ming.t460p> <20191202040256.GE2695@dread.disaster.area>
-In-Reply-To: <20191202040256.GE2695@dread.disaster.area>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Mon, 2 Dec 2019 14:45:42 +0100
-Message-ID: <CAKfTPtD8Q97qJ_+hdCXQRt=gy7k96XrhnFmGYP1G88YSFW0vNA@mail.gmail.com>
-Subject: Re: single aio thread is migrated crazily by scheduler
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Ming Lei <ming.lei@redhat.com>, Hillf Danton <hdanton@sina.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-fs <linux-fsdevel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rong Chen <rong.a.chen@intel.com>, Tejun Heo <tj@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1572918578-13544-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Dec 2019 at 05:02, Dave Chinner <david@fromorbit.com> wrote:
->
-> On Mon, Dec 02, 2019 at 10:46:25AM +0800, Ming Lei wrote:
-> > On Thu, Nov 28, 2019 at 10:53:33AM +0100, Vincent Guittot wrote:
-> > > On Thu, 28 Nov 2019 at 10:40, Hillf Danton <hdanton@sina.com> wrote:
-> > > > --- a/fs/iomap/direct-io.c
-> > > > +++ b/fs/iomap/direct-io.c
-> > > > @@ -157,10 +157,8 @@ static void iomap_dio_bio_end_io(struct
-> > > >                         WRITE_ONCE(dio->submit.waiter, NULL);
-> > > >                         blk_wake_io_task(waiter);
-> > > >                 } else if (dio->flags & IOMAP_DIO_WRITE) {
-> > > > -                       struct inode *inode = file_inode(dio->iocb->ki_filp);
-> > > > -
-> > > >                         INIT_WORK(&dio->aio.work, iomap_dio_complete_work);
-> > > > -                       queue_work(inode->i_sb->s_dio_done_wq, &dio->aio.work);
-> > > > +                       schedule_work(&dio->aio.work);
-> > >
-> > > I'm not sure that this will make a real difference because it ends up
-> > > to call queue_work(system_wq, ...) and system_wq is bounded as well so
-> > > the work will still be pinned to a CPU
-> > > Using system_unbound_wq should make a difference because it doesn't
-> > > pin the work on a CPU
-> > >  +                       queue_work(system_unbound_wq, &dio->aio.work);
-> >
-> > Indeed, just run a quick test on my KVM guest, looks the following patch
-> > makes a difference:
-> >
-> > diff --git a/fs/direct-io.c b/fs/direct-io.c
-> > index 9329ced91f1d..2f4488b0ecec 100644
-> > --- a/fs/direct-io.c
-> > +++ b/fs/direct-io.c
-> > @@ -613,7 +613,8 @@ int sb_init_dio_done_wq(struct super_block *sb)
-> >  {
-> >         struct workqueue_struct *old;
-> >         struct workqueue_struct *wq = alloc_workqueue("dio/%s",
-> > -                                                     WQ_MEM_RECLAIM, 0,
-> > +                                                     WQ_MEM_RECLAIM |
-> > +                                                     WQ_UNBOUND, 0,
-> >                                                       sb->s_id);
->
-> That's not an answer to the user task migration issue.
->
-> That is, all this patch does is trade user task migration when the
-> CPU is busy for migrating all the queued work off the CPU so the
-> user task does not get migrated. IOWs, this forces all the queued
-> work to be migrated rather than the user task. IOWs, it does not
-> address the issue we've exposed in the scheduler between tasks with
-> competing CPU affinity scheduling requirements - it just hides the
-> symptom.
->
-> Maintaining CPU affinity across dispatch and completion work has
-> been proven to be a significant performance win. Right throughout
-> the IO stack we try to keep this submitter/completion affinity,
-> and that's the whole point of using a bound wq in the first place:
-> efficient delayed batch processing of work on the local CPU.
+On Tue, Nov 05, 2019 at 09:49:38AM +0800, Anson Huang wrote:
+> Add "clock-frequency" property to avoid below warning on i.MX7ULP:
+> 
+> [    0.011762] /cpus/cpu@0 missing clock-frequency property
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  arch/arm/boot/dts/imx7ulp.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
+> index d37a192..87b2237 100644
+> --- a/arch/arm/boot/dts/imx7ulp.dtsi
+> +++ b/arch/arm/boot/dts/imx7ulp.dtsi
+> @@ -41,6 +41,7 @@
+>  			compatible = "arm,cortex-a7";
+>  			device_type = "cpu";
+>  			reg = <0>;
+> +			clock-frequency = <500210526>;
 
-Do you really want to target the same CPU ? looks like what you really
-want to target the same cache instead
+I cannot find the binding doc for this property.  What is the
+definition of it, the maximum frequency that the cpu could possibly run
+at?
 
->
-> Spewing deferred completion work across every idle CPU in the
-> machine because the local cpu is temporarily busy is a bad choice,
-> both from a performance perspective (dirty cacheline bouncing) and
-> from a power efficiency point of view as it causes CPUs to be taken
-> out of idle state much more frequently[*].
->
-> The fact that the scheduler migrates the user task we use workqueues
-> for deferred work as they were intended doesn't make this a
-> workqueue problem. If the answer to this problem is "make all IO
-> workqueues WQ_UNBOUND" then we are effectively saying "the scheduler
-> has unfixable problems when mixing bound and unbound work on the
-> same run queue".
->
-> And, besides, what happens when every other CPU is also completely
-> busy and can't run the work in a timely fashion? We've just moved
-> the work to some random CPU where we wait to be scheduled instead of
-> just sitting on the local CPU and waiting....
->
-> So, yes, we can work around the -symptoms- we see (frequent user
-> task migration) by changing the work queue configuration or
-> bypassing the workqueue for this specific workload. But these only
-> address the visible symptom and don't take into account the wider
-> goals of retaining CPU affinity in the IO stack, and they will have
-> variable scheduling latency and perofrmance and as the overall
-> system load changes.
->
-> So, we can fiddle with workqueues, but it doesn't address the
-> underlying issue that the scheduler appears to be migrating
-> non-bound tasks off a busy CPU too easily....
+Shawn
 
-The root cause of the problem is that the sched_wakeup_granularity_ns
-is in the same range or higher than load balance period. As Peter
-explained, This make the kworker waiting for the CPU for several load
-period and a transient unbalanced state becomes a stable one that the
-scheduler to fix. With default value, the scheduler doesn't try to
-migrate any task.
-
-Then, I agree that having an ack close to the request makes sense but
-forcing it on the exact same CPU is too restrictive IMO. Being able to
-use another CPU on the same core should not harm the performance and
-may even improve it. And that may still be the case while CPUs share
-their cache.
-
->
-> -Dave.
->
-> [*] Pay attention to the WQ_POWER_EFFICIENT definition for a work
-> queue: it's designed for interrupt routines that defer work via work
-> queues to avoid doing work on otherwise idle CPUs. It does this by
-> turning the per-cpu wq into an unbound wq so that work gets
-> scheduled on a non-idle CPUs in preference to the local idle CPU
-> which can then remain in low power states.
->
-> That's the exact opposite of what using WQ_UNBOUND ends up doing in
-> this IO completion context: it pushes the work out over idle CPUs
-> rather than keeping them confined on the already busy CPUs where CPU
-> affinity allows the work to be done quickly. So while WQ_UNBOUND
-> avoids the user task being migrated frequently, it results in the
-> work being spread around many more CPUs and we burn more power to do
-> the same work.
->
-> --
-> Dave Chinner
-> david@fromorbit.com
+>  		};
+>  	};
+>  
+> -- 
+> 2.7.4
+> 
