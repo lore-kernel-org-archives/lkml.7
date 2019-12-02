@@ -2,97 +2,112 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE415C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FBCC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A520C21835
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:13:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575314026;
-	bh=xPa0X6R5T4e6CEa2s0SLF/tQNyowSG/AuLe3v9UhiTU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ykhCmHID+Mb6eTMRLZTmK7aXqopGpPZo2WkLDJjtZIt5uVqcgVhAFguR9aUNM+kBr
-	 tbpKI26L5KgBEq6bC3fDroP8NccxvUc2F4qFANKXLW+TBxe+5OPkvn5h+PmXKOyCWc
-	 o8dGFUUhw17MMm7p9e12Aqeilmz3G3hKAc4ZUVHk=
+	by mail.kernel.org (Postfix) with ESMTP id E512320865
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:13:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UuElgHpi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbfLBTNp (ORCPT
+        id S1728094AbfLBTNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 14:13:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48798 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727580AbfLBTNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 14:13:45 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D9D420848;
-        Mon,  2 Dec 2019 19:13:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575314024;
-        bh=xPa0X6R5T4e6CEa2s0SLF/tQNyowSG/AuLe3v9UhiTU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OFfA4XXSIukBhUqFK/VHx0x3IEaSdakYD9V9S4aW89Q9zq5PeKYQWEONDx6t7Ze21
-         QBkk/jmZyCAKUK/lRxI6bex7+avShuMTRHoOJMBy4RO2DJIv//sUdG0ohk2zXOXLBG
-         Sm3vNETJvv8pNx6Ctq25FodpLb7DUWdyauDV8N2c=
-Date:   Mon, 2 Dec 2019 20:13:42 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Stefan Mavrodiev <stefan@olimex.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-sunxi@googlegroups.com, stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] arm64: dts: allwinner: a64: olinuxino: Fix eMMC
- supply regulator
-Message-ID: <20191202191342.7ttegde7jewn4xra@gilmour.lan>
-References: <20191129113941.20170-1-stefan@olimex.com>
- <20191129113941.20170-2-stefan@olimex.com>
+        Mon, 2 Dec 2019 14:13:48 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29916 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727835AbfLBTNq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 14:13:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575314024;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/Koo47jDt4Xn6t4/WFfWrAz0JUqLFx+2S884BamowWg=;
+        b=UuElgHpi/e/Cjc2VG0+ZZYxmBL/Hzd9BBzzyS02IlVRyhfSsy3FW3nZmbbYfDz9X7CzXWj
+        pLlraFV92IoAIacQMyJ/FgpRDouwWGnuhXfJUpaY7qMSwAu3u0TeGz1jTB1JFT+nd1ChGb
+        oF5UkWNXOj0CfeSVKyaB3B9CO8UZT9Y=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-38-uFl-RtndMaeU5H5ykOiJtw-1; Mon, 02 Dec 2019 14:13:43 -0500
+Received: by mail-qk1-f199.google.com with SMTP id r2so380274qkb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 11:13:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BioxUrJcAILXuwKr65jwIWwsCyr6BnKmW1bpxxUtOyM=;
+        b=B3AhOTz39z8L69crg4gq3tJS/z0yYQ8K0MsmgT72eGwVgktOaMKA90CTLGx1OqYQIp
+         hW8Wnm/WFg7hzQfapxoRewqQJEiOD3yYJq8m2N2MPDUFrCbKHHQwkHoc/+NMLSoRwrhY
+         5FilIpcJOe+8UuTl0AS+zPJZa7Lz9IDsChyHwiEsQqg5zWsOfL2X+qD/R1937hcZPvmQ
+         W4d9Hqk6HG8uWi+aoGYRX4l4QTcDapMChwOSx3YBqCcXOBgznz0suF7Hi2vEJi63xqQc
+         NLsXG9fL1jYa6+BomnQjavGmYb7gwp7EZWMvX73Mt+6sFVlC4+NEMsXKRVGHk/hTl/tg
+         7apQ==
+X-Gm-Message-State: APjAAAU5DFosGTaiB7B7twdAo9R3RJrNXrS+JuAfSojs5rYY7PKq1CtY
+        RJNf1pPnizHtznuV9txfm1xDWPLwNLo9uxaUFBDIrSrpmnfrQI/4iCqdFHquUG7lUFrv9ZrW35x
+        80buZvUDB/uuh33JPbk4FuQjf
+X-Received: by 2002:ac8:4712:: with SMTP id f18mr157194qtp.68.1575314023534;
+        Mon, 02 Dec 2019 11:13:43 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxnuJWazul2T04ohiAVs6sW/FPS0cM2fqg2o7jLwMh5Eg9j29fvLxb5xtdrZSNZquvLP8lCMA==
+X-Received: by 2002:ac8:4712:: with SMTP id f18mr157161qtp.68.1575314023236;
+        Mon, 02 Dec 2019 11:13:43 -0800 (PST)
+Received: from xz-x1 ([104.156.64.74])
+        by smtp.gmail.com with ESMTPSA id q73sm268156qka.56.2019.12.02.11.13.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 11:13:42 -0800 (PST)
+Date:   Mon, 2 Dec 2019 14:13:41 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH v2 1/3] KVM: X86: Some cleanups in ioapic.h/lapic.h
+Message-ID: <20191202191340.GC10882@xz-x1>
+References: <20191129163234.18902-1-peterx@redhat.com>
+ <20191129163234.18902-2-peterx@redhat.com>
+ <87k17fcc14.fsf@vitty.brq.redhat.com>
+ <20191202174741.GC4063@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="q764rlr5yjz4gv75"
+In-Reply-To: <20191202174741.GC4063@linux.intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-MC-Unique: uFl-RtndMaeU5H5ykOiJtw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191129113941.20170-2-stefan@olimex.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Dec 02, 2019 at 09:47:41AM -0800, Sean Christopherson wrote:
+> > kvm_apic_match_dest()'s implementation lives in lapic.c so moving the
+> > declaration to lapic.h makes perfect sense. kvm_irq_delivery_to_apic()'=
+s
+> > body is, however, in irq_comm.c and declarations for it are usually
+> > found in asm/kvm_host.h. I'm not sure but maybe it would make sense to
+> > move kvm_irq_delivery_to_apic()'s body to lapic.c too.
+>=20
+> asm/kvm_host.h is generally used only for exported functions, internal-on=
+ly
+> functions for irq_comm.c are declared in arch/x86/kvm/irq.h.
 
---q764rlr5yjz4gv75
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I think I'm fine with either lapic.h or irq.h.  Let me do with irq.h.
 
-On Fri, Nov 29, 2019 at 01:39:39PM +0200, Stefan Mavrodiev wrote:
-> A64-OLinuXino-eMMC uses 1.8V for eMMC supply. This is done via a triple
-> jumper, which sets VCC-PL to either 1.8V or 3.3V. This setting is different
-> for boards with and without eMMC.
->
-> This is not a big issue for DDR52 mode, however the eMMC will not work in
-> HS200/HS400, since these modes explicitly requires 1.8V.
->
-> Fixes: 94f68f3a4b2a ("arm64: dts: allwinner: a64: Add A64 OlinuXino board (with eMMC)")
-> Cc: stable@vger.kernel.org # v5.4
-> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+I'll try to avoid moving the body of kvm_irq_delivery_to_apic() if you
+don't disagree, I think it's ok to be in irq.c, while I'll normally
+avoid doing those churns because I wanted to keep the git history
+clean so it's easier to read the history per-line of that function. :)
 
-Applied, thanks!
-Maxime
+Thanks,
 
---q764rlr5yjz4gv75
-Content-Type: application/pgp-signature; name="signature.asc"
+--=20
+Peter Xu
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXeViZgAKCRDj7w1vZxhR
-xVnqAQCN+/fEAa8RYdLvkoYtRzpPTIeiTCvNTyfWakMZS9YKvQEAnFfgnu6qHLWp
-6DXcmrsNxdL1AzYEYmpIY1KhpG4BdgQ=
-=ZRr1
------END PGP SIGNATURE-----
-
---q764rlr5yjz4gv75--
