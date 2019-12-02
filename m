@@ -2,111 +2,198 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E18AFC43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDD9C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3F6C20848
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:04:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ODQMWZrx"
+	by mail.kernel.org (Postfix) with ESMTP id 9F21D20848
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:05:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbfLBRD7 (ORCPT
+        id S1727785AbfLBRFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 12:03:59 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:41746 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727601AbfLBRD7 (ORCPT
+        Mon, 2 Dec 2019 12:05:11 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:53105 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727644AbfLBRFL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 12:03:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=raL1+4V5E2+QW+HFVTt4GSePQ92W/jLVrBwyPI09wsc=; b=ODQMWZrxM3Ei91kafr/GGAwsm
-        Vaful+p5elqfnvM/sfwpwKe+crzQfQaye6TkkVGA5JgPugc7BaXzAbguFtZ+NwB1IvDOWEGnUSM5P
-        YiXwfDUsC+aHfe6gL86lsgHrBcIjiZBb0LAZnlHCLWXa2ehn9x38l1hcjs/wJPwXXCNV68SCA0WRu
-        9WhBoK77Mxc79Sp2vAATF0H+ZXHIIXb7cQRJ7BA9L5+wzu1qLAD96nekj6ivFZs1cH8TQXGuuTMFN
-        o+/jbkVAUVjjocir/PweEsTz9y0foZw1grxr76NcqC3ZyhjLc0uhtF2bYJlSzd8WpjRUo1lRebLOM
-        cAk26netg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ibp78-0001EG-SQ; Mon, 02 Dec 2019 17:03:58 +0000
-Date:   Mon, 2 Dec 2019 09:03:58 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     James Sewart <jamessewart@arista.com>
-Cc:     linux-pci@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <dima@arista.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v5 2/3] PCI: Add parameter nr_devfns to pci_add_dma_alias
-Message-ID: <20191202170358.GB4174@infradead.org>
-References: <6A902F0D-FE98-4760-ADBB-4D5987D866BE@arista.com>
- <20191126173833.GA16069@infradead.org>
- <547214A9-9FD0-4DD5-80E1-1F5A467A0913@arista.com>
- <9c54c5dd-702c-a19b-38ba-55ab73b24729@deltatee.com>
- <435064D4-00F0-47F5-94D2-2C354F6B1206@arista.com>
- <058383d9-69fe-65e3-e410-eebd99840261@deltatee.com>
- <F26CC19F-66C2-466B-AE30-D65E10BA3022@arista.com>
- <d811576e-0f89-2303-a554-2701af5c5647@deltatee.com>
- <9DD82D05-6B9E-4AF5-9A3C-D459B75C0089@arista.com>
- <07D724A1-308F-44C3-8937-EE0C21EF3170@arista.com>
+        Mon, 2 Dec 2019 12:05:11 -0500
+Received: by mail-il1-f199.google.com with SMTP id d28so199850ill.19
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 09:05:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=2f8HtfQq4IK9cIhIvyj5C1mmc9kchy4GexxX8Jm5qow=;
+        b=V//s6rUIDfZrYqXJkRq7siTXFzSg9UG7JxDxXW17cJZxPfPkNQbdNO4/AQaSfXsBin
+         guMEROTR1Oj9OxspX+0fSjbbxyAya0vp+8hgG5zLByZ8Vl+zERPKDAQsDGbrhvRKAsqX
+         B13/wa0WgptO2zH/6ggZX5TzZ2scWCLSj4dqrQJWc6EGzGjWLRWhp2EsWqyYcAq40Zzy
+         zAvtJ0WJ088lD2CS6VwHMOMogQc0VQE1xx/dI0L1gMPBgLUWVeM4ZWRW4/KRR8eIfBw8
+         NzeGcIbuzZEnxXq1PGobx7rMmaB6FeQGrI97bv6BWO6kQpBQtiILV8sdCkhpiqeWuNV1
+         Cc6A==
+X-Gm-Message-State: APjAAAV/313nueLC5tjXkjTSd+rHC8WBqxSO9OkiYdX4pbig4bbhZSUr
+        OsNwQMzsNxwIAic2MNZVzUSKP4HIslvsYD/VFALsewD32tf9
+X-Google-Smtp-Source: APXvYqwpG98Lsjm+MLH/KeR7s4+Wt1CjQooDZbumphbBU/JcL3Uj+ajYP3g92Tw5uzecd+/GVX82AqJUsyj9oQP5QACSA5YU+LgR
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <07D724A1-308F-44C3-8937-EE0C21EF3170@arista.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Received: by 2002:a6b:d912:: with SMTP id r18mr42792632ioc.306.1575306310599;
+ Mon, 02 Dec 2019 09:05:10 -0800 (PST)
+Date:   Mon, 02 Dec 2019 09:05:10 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000e4f720598bb95f8@google.com>
+Subject: KASAN: use-after-free Read in slcan_open
+From:   syzbot <syzbot+b5ec6fd05ab552a78532@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, linux-can@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mkl@pengutronix.de,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        wg@grandegger.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 05:56:55PM +0000, James Sewart wrote:
-> pci_add_dma_alias can now be used to create a dma alias for a range of
-> devfns.
-> 
-> Signed-off-by: James Sewart <jamessewart@arista.com>
-> ---
->  drivers/pci/pci.c    | 23 ++++++++++++++++++-----
->  drivers/pci/quirks.c | 14 +++++++-------
->  include/linux/pci.h  |  2 +-
->  3 files changed, 26 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 0a4449a30ace..f9800a610ca1 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5857,7 +5857,8 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
->  /**
->   * pci_add_dma_alias - Add a DMA devfn alias for a device
->   * @dev: the PCI device for which alias is added
-> - * @devfn: alias slot and function
-> + * @devfn_from: alias slot and function
-> + * @nr_devfns: Number of subsequent devfns to alias
->   *
->   * This helper encodes an 8-bit devfn as a bit number in dma_alias_mask
->   * which is used to program permissible bus-devfn source addresses for DMA
-> @@ -5873,8 +5874,14 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
->   * cannot be left as a userspace activity).  DMA aliases should therefore
->   * be configured via quirks, such as the PCI fixup header quirk.
->   */
-> -void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
-> +void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, unsigned nr_devfns)
->  {
-> +	int devfn_to;
-> +
-> +	if (nr_devfns > U8_MAX+1)
-> +		nr_devfns = U8_MAX+1;
+Hello,
 
-Missing whitespaces here as well.  Also this could use max() and I
-think you want a documented constants for MAX_NR_DEVFNS that documents
-this "not off by one".
+syzbot found the following crash on:
+
+HEAD commit:    32ef9553 Merge tag 'fsnotify_for_v5.5-rc1' of git://git.ke..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12a48e9ce00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ff560c3de405258c
+dashboard link: https://syzkaller.appspot.com/bug?extid=b5ec6fd05ab552a78532
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12943882e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10562f86e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+b5ec6fd05ab552a78532@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in slc_sync drivers/net/can/slcan.c:504 [inline]
+BUG: KASAN: use-after-free in slcan_open+0x8a1/0x9e0  
+drivers/net/can/slcan.c:579
+Read of size 8 at addr ffff88809a6e0b88 by task syz-executor961/9030
+
+CPU: 1 PID: 9030 Comm: syz-executor961 Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:634
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  slc_sync drivers/net/can/slcan.c:504 [inline]
+  slcan_open+0x8a1/0x9e0 drivers/net/can/slcan.c:579
+  tty_ldisc_open.isra.0+0xa3/0x110 drivers/tty/tty_ldisc.c:469
+  tty_set_ldisc+0x30e/0x6b0 drivers/tty/tty_ldisc.c:596
+  tiocsetd drivers/tty/tty_io.c:2334 [inline]
+  tty_ioctl+0xe8d/0x14f0 drivers/tty/tty_io.c:2594
+  vfs_ioctl fs/ioctl.c:46 [inline]
+  file_ioctl fs/ioctl.c:509 [inline]
+  do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:696
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4429e9
+Code: e8 dc 02 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 1b 0a fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffc7db87168 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004429e9
+RDX: 00000000200000c0 RSI: 0000000000005423 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 0000000000000002 R09: 0000000000003031
+R10: 0000000000000000 R11: 0000000000000246 R12: ffffffffffffffff
+R13: 0000000000000004 R14: 00007ffc7db871dc R15: 0000000000000000
+
+Allocated by task 9029:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:510 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
+  __do_kmalloc_node mm/slab.c:3615 [inline]
+  __kmalloc_node+0x4e/0x70 mm/slab.c:3622
+  kmalloc_node include/linux/slab.h:599 [inline]
+  kvmalloc_node+0xbd/0x100 mm/util.c:564
+  kvmalloc include/linux/mm.h:670 [inline]
+  kvzalloc include/linux/mm.h:678 [inline]
+  alloc_netdev_mqs+0x98/0xde0 net/core/dev.c:9730
+  slc_alloc drivers/net/can/slcan.c:533 [inline]
+  slcan_open+0x32d/0x9e0 drivers/net/can/slcan.c:590
+  tty_ldisc_open.isra.0+0xa3/0x110 drivers/tty/tty_ldisc.c:469
+  tty_set_ldisc+0x30e/0x6b0 drivers/tty/tty_ldisc.c:596
+  tiocsetd drivers/tty/tty_io.c:2334 [inline]
+  tty_ioctl+0xe8d/0x14f0 drivers/tty/tty_io.c:2594
+  vfs_ioctl fs/ioctl.c:46 [inline]
+  file_ioctl fs/ioctl.c:509 [inline]
+  do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:696
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 9029:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  kasan_set_free_info mm/kasan/common.c:332 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:471
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
+  __cache_free mm/slab.c:3425 [inline]
+  kfree+0x10a/0x2c0 mm/slab.c:3756
+  kvfree+0x61/0x70 mm/util.c:593
+  netdev_freemem net/core/dev.c:9684 [inline]
+  free_netdev+0x3c0/0x470 net/core/dev.c:9839
+  slcan_open+0x848/0x9e0 drivers/net/can/slcan.c:620
+  tty_ldisc_open.isra.0+0xa3/0x110 drivers/tty/tty_ldisc.c:469
+  tty_set_ldisc+0x30e/0x6b0 drivers/tty/tty_ldisc.c:596
+  tiocsetd drivers/tty/tty_io.c:2334 [inline]
+  tty_ioctl+0xe8d/0x14f0 drivers/tty/tty_io.c:2594
+  vfs_ioctl fs/ioctl.c:46 [inline]
+  file_ioctl fs/ioctl.c:509 [inline]
+  do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:696
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff88809a6e0000
+  which belongs to the cache kmalloc-32k of size 32768
+The buggy address is located 2952 bytes inside of
+  32768-byte region [ffff88809a6e0000, ffff88809a6e8000)
+The buggy address belongs to the page:
+page:ffffea000269b800 refcount:1 mapcount:0 mapping:ffff8880aa402540  
+index:0x0 compound_mapcount: 0
+raw: 00fffe0000010200 ffffea000244d008 ffff8880aa401d48 ffff8880aa402540
+raw: 0000000000000000 ffff88809a6e0000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff88809a6e0a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff88809a6e0b00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff88809a6e0b80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                       ^
+  ffff88809a6e0c00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff88809a6e0c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
