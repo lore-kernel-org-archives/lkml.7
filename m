@@ -2,98 +2,166 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA502C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E66A6C43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 920B32071E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B56A6217D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:28:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lqyHGeUt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727650AbfLBUZg (ORCPT
+        id S1727525AbfLBU2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 15:25:36 -0500
-Received: from mga17.intel.com ([192.55.52.151]:38875 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727420AbfLBUZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 15:25:36 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 12:25:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,270,1571727600"; 
-   d="scan'208";a="385024237"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by orsmga005.jf.intel.com with ESMTP; 02 Dec 2019 12:25:35 -0800
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 97D85300B57; Mon,  2 Dec 2019 12:25:35 -0800 (PST)
-Date:   Mon, 2 Dec 2019 12:25:35 -0800
-From:   Andi Kleen <ak@linux.intel.com>
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com,
-        acme@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        linux-kernel@vger.kernel.org, eranian@google.com,
-        alexey.budankov@linux.intel.com, vitaly.slobodskoy@intel.com
-Subject: Re: [RFC PATCH 3/8] perf: Init/fini PMU specific data
-Message-ID: <20191202202535.GO84886@tassilo.jf.intel.com>
-References: <1574954071-6321-1-git-send-email-kan.liang@linux.intel.com>
- <1574954071-6321-3-git-send-email-kan.liang@linux.intel.com>
- <20191202124055.GC2827@hirez.programming.kicks-ass.net>
- <20191202145957.GM84886@tassilo.jf.intel.com>
- <20191202162152.GG2827@hirez.programming.kicks-ass.net>
- <20191202191519.GN84886@tassilo.jf.intel.com>
- <8612523d-f035-b2aa-28f5-e4122ef59901@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8612523d-f035-b2aa-28f5-e4122ef59901@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Mon, 2 Dec 2019 15:28:24 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35048 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726673AbfLBU2Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 15:28:24 -0500
+Received: by mail-wm1-f65.google.com with SMTP id u8so1008852wmu.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 12:28:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=Ov3qfLDesJCRBNnguqXtY2vyu5jCndpMMvqcZHjaUgY=;
+        b=lqyHGeUtxxdEEaCZVDqaXCr/pN6fZMpBRfNUzEhXj+5xICpr9jadEu9V232RlhlB1e
+         UjFB0HMG9tr+1MdpnoJ2BcQB3+kImfPnZ8rLfsHhxH1PKRq1T5Tva0cYy5ec+3QerPKG
+         aTvXFiab7LC/ZZt8tGMIVmyAsp8t5FeA1hFTMTD71DjII7MZ3YXlIh7i7ZuU4Cq6xbaJ
+         IiByzw1YteII1wNhyYuzhorxJkoAW5/OxUXp6SB9xs8qxddQAmXLULhLBJNmutDdHk9v
+         t0Xh3RSe7r3T9bC4jTlfme2jsY3Vlm3Hdvi4ahj9n2pyGF7BFOlbSnIQ/wbiooCIbP9z
+         gZNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Ov3qfLDesJCRBNnguqXtY2vyu5jCndpMMvqcZHjaUgY=;
+        b=VAIuLfn4dM0ntW+OU1UwTeBe080f8TbF6PAjEaC2zOPBO7SbVMmu8l/gdjzvY13Pq2
+         fgf2AyKE52xJLcjDVZVoFp3BPR99NqHH3ZHr1x96Vc3U+XqiwdO+/AYLZ14baVKTskHp
+         NSwkekkXt7eNq+l9uytt3xQEH0wt03CtPhy+G42IxDHsgMVvLM/6XhA0Sd8WmBq5Cw7/
+         h+unuImyCRzo1HNzEQBH+Dxn5nUuPGOo1MvgAwQbqp7EPjDFu1Nvesb5+CahQ4T5Uq+1
+         LBZ+PO1A7gN9S1rTleC9mADeuKbgdv/sSS0vcgN+mKZUL6HDQTDxS9A2gHsncH1rkzn9
+         vrlg==
+X-Gm-Message-State: APjAAAWKcSceZLhsdTRQp3sympqX3BMJdDolI6NMSEvJXAY+T5/2M+LD
+        +kBYgw4zlG/Cyvwi2CIZ6IRjYg==
+X-Google-Smtp-Source: APXvYqwOs3WtzzgE1rYK2/VlJRQ9YJ+T4mXwoVhmT2WmZBx0iLEZp49UnPjOpRylLepNIWx3kecQag==
+X-Received: by 2002:a1c:4b03:: with SMTP id y3mr19930816wma.91.1575318501716;
+        Mon, 02 Dec 2019 12:28:21 -0800 (PST)
+Received: from localhost.localdomain ([2a01:e34:ed2f:f020:8196:cbcc:fb2c:4975])
+        by smtp.gmail.com with ESMTPSA id k20sm556456wmj.10.2019.12.02.12.28.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 12:28:21 -0800 (PST)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     viresh.kumar@linaro.org, rui.zhang@intel.com
+Cc:     rjw@rjwysocki.net, edubezval@gmail.com, linux-pm@vger.kernel.org,
+        amit.kucheria@linaro.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V2 1/4] thermal/drivers/Kconfig: Convert the CPU cooling device to a choice
+Date:   Mon,  2 Dec 2019 21:28:12 +0100
+Message-Id: <20191202202815.22731-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The next changes will add a new way to cool down a CPU by injecting
+idle cycles. With the current configuration, a CPU cooling device is
+the cpufreq cooling device. As we want to add a new CPU cooling
+device, let's convert the CPU cooling to a choice giving a list of CPU
+cooling devices. At this point, there is obviously only one CPU
+cooling device.
 
-Looks reasonable to me.
+There is no functional changes.
 
-> //get current number of threads
-> read_lock(&tasklist_lock);
-> for_each_process_thread(g, p)
-> 	num_thread++;
-> read_unlock(&tasklist_lock);
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+  V2:
+    - Default CPU_FREQ_COOLING when CPU_THERMAL is set (Viresh Kumar)
+---
+ drivers/thermal/Kconfig     | 14 ++++++++++++--
+ drivers/thermal/Makefile    |  2 +-
+ include/linux/cpu_cooling.h |  6 +++---
+ 3 files changed, 16 insertions(+), 6 deletions(-)
 
-I'm sure we have that count somewhere.
+diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+index 001a21abcc28..4e3ee036938b 100644
+--- a/drivers/thermal/Kconfig
++++ b/drivers/thermal/Kconfig
+@@ -150,8 +150,18 @@ config THERMAL_GOV_POWER_ALLOCATOR
+ 
+ config CPU_THERMAL
+ 	bool "Generic cpu cooling support"
+-	depends on CPU_FREQ
+ 	depends on THERMAL_OF
++	help
++	  Enable the CPU cooling features. If the system has no active
++	  cooling device available, this option allows to use the CPU
++	  as a cooling device.
++
++if CPU_THERMAL
++
++config CPU_FREQ_THERMAL
++	bool "CPU frequency cooling device"
++	depends on CPU_FREQ
++	default y
+ 	help
+ 	  This implements the generic cpu cooling mechanism through frequency
+ 	  reduction. An ACPI version of this already exists
+@@ -159,7 +169,7 @@ config CPU_THERMAL
+ 	  This will be useful for platforms using the generic thermal interface
+ 	  and not the ACPI interface.
+ 
+-	  If you want this support, you should say Y here.
++endif
+ 
+ config CLOCK_THERMAL
+ 	bool "Generic clock cooling support"
+diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+index 74a37c7f847a..d3b01cc96981 100644
+--- a/drivers/thermal/Makefile
++++ b/drivers/thermal/Makefile
+@@ -19,7 +19,7 @@ thermal_sys-$(CONFIG_THERMAL_GOV_USER_SPACE)	+= user_space.o
+ thermal_sys-$(CONFIG_THERMAL_GOV_POWER_ALLOCATOR)	+= power_allocator.o
+ 
+ # cpufreq cooling
+-thermal_sys-$(CONFIG_CPU_THERMAL)	+= cpu_cooling.o
++thermal_sys-$(CONFIG_CPU_FREQ_THERMAL)	+= cpu_cooling.o
+ 
+ # clock cooling
+ thermal_sys-$(CONFIG_CLOCK_THERMAL)	+= clock_cooling.o
+diff --git a/include/linux/cpu_cooling.h b/include/linux/cpu_cooling.h
+index b74732535e4b..3cdd85f987d7 100644
+--- a/include/linux/cpu_cooling.h
++++ b/include/linux/cpu_cooling.h
+@@ -19,7 +19,7 @@
+ 
+ struct cpufreq_policy;
+ 
+-#ifdef CONFIG_CPU_THERMAL
++#ifdef CONFIG_CPU_FREQ_THERMAL
+ /**
+  * cpufreq_cooling_register - function to create cpufreq cooling device.
+  * @policy: cpufreq policy.
+@@ -40,7 +40,7 @@ void cpufreq_cooling_unregister(struct thermal_cooling_device *cdev);
+ struct thermal_cooling_device *
+ of_cpufreq_cooling_register(struct cpufreq_policy *policy);
+ 
+-#else /* !CONFIG_CPU_THERMAL */
++#else /* !CONFIG_CPU_FREQ_THERMAL */
+ static inline struct thermal_cooling_device *
+ cpufreq_cooling_register(struct cpufreq_policy *policy)
+ {
+@@ -58,6 +58,6 @@ of_cpufreq_cooling_register(struct cpufreq_policy *policy)
+ {
+ 	return NULL;
+ }
+-#endif /* CONFIG_CPU_THERMAL */
++#endif /* CONFIG_CPU_FREQ_THERMAL */
+ 
+ #endif /* __CPU_COOLING_H__ */
+-- 
+2.17.1
 
-> 
-> //allocate the space for them
-> for (i = 0; i < num_thread; i++)
-> 	data[i] = kzalloc(ctx_size, flags);
-> i = 0;
-> 
-> /*
->  * Assign the space to tasks
->  * There may be some new threads created when we allocate space.
->  * new_task will track its number.
->  */
-> raw_spin_lock_irqsave(&task_data_events_lock, flags);
-> 
-> if (atomic_inc_return(&nr_task_data_events) > 1)
-> 	goto unlock;
-> 
-> for_each_process_thread(g, p) {
-> 	if (i < num_thread)
-> 		p->perf_ctx_data = data[i++];
-> 	else
-> 		new_task++;
-> }
-> raw_spin_unlock_irqrestore(&task_data_events_lock, flags);
-
-Is that lock taken in the context switch?
-
-If not could be a normal spinlock, thus be more RT friendly.
-
--Andi
