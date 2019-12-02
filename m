@@ -2,206 +2,130 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DCCC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A682BC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB3D62068E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7934A206E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:19:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="k5OBlfOU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbfLBVS7 (ORCPT
+        id S1726897AbfLBVTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 16:18:59 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:42304 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726474AbfLBVS4 (ORCPT
+        Mon, 2 Dec 2019 16:19:20 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44260 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfLBVTT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 16:18:56 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 9428B2901BF
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Collabora Kernel ML <kernel@collabora.com>, groeck@chromium.org,
-        bleung@chromium.org, dtor@chromium.org,
-        fabien.lahoudere@collabora.com, guillaume.tucker@collabora.com,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Alexey Brodkin <alexey.brodkin@synopsys.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 2/2] x86_64_defconfig: Enable support for Chromebooks devices
-Date:   Mon,  2 Dec 2019 22:18:44 +0100
-Message-Id: <20191202211844.19629-3-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191202211844.19629-1-enric.balletbo@collabora.com>
-References: <20191202211844.19629-1-enric.balletbo@collabora.com>
+        Mon, 2 Dec 2019 16:19:19 -0500
+Received: by mail-pf1-f196.google.com with SMTP id d199so369450pfd.11
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 13:19:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BDFi2KtUfHoxYhQyKwF8j1ECcKUBGo4/hE4QVcfZiuY=;
+        b=k5OBlfOUiouOhGL4KZyw41pLaH30PzkB5d3ZDqtGV/Ol3dKliwN57h0InITL0WL2vX
+         Ss72U23D08CWmhSmsy1She1V1pEOZy2IVux+qSo1YzkuqPk88MpxiAZbVyHawT8fqQWi
+         pcmXULt3qf+94Pauot0hTlG85A4cOlnm+Fscg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BDFi2KtUfHoxYhQyKwF8j1ECcKUBGo4/hE4QVcfZiuY=;
+        b=gFzI/F5mwtjhGsjmhCE1BTi46PsqqhIBtZHq5EUesrM8PRrk6SJeRS780njigoz0D6
+         fSwVtYMskV0aP3URNCj2BHEM9g8L3CStka8yV0KT5qiGkWRL2k2ovADd8dWMcKf8YifP
+         4nlMw1LU6RJvJr6V57a/BNE66hhiiEN0WBvcFqQ457+V1yUQEdD3dnrPMJkfKlgbQ6CF
+         Sv8IihvWKcwrXYS+WhcPdjydLxGox2FfxHGa0n6Lva+eYrsdULS+ntB9JAzAfBrwRNfR
+         xxbC4OaGDZZyi3ZPyDqZJmzkKbrfXwXs9TXQtZnrp6UdA1XSbyACTk/D24dPH0VUEUvw
+         epuA==
+X-Gm-Message-State: APjAAAWkuEovH2yKtPs2H4iLntDIcqsT/fOm8HAjppz7Q2hkfz53ZyQS
+        rwXiCXftbpNP3OoUqsglJKPjzA==
+X-Google-Smtp-Source: APXvYqxSoc2SCTWEE4t/98ajNaXkB89lCMxgkBxngI0eYX8ZLLrTxHxWP3ZysSCHCSy6mvVMxbj+MQ==
+X-Received: by 2002:a62:5807:: with SMTP id m7mr743978pfb.180.1575321558967;
+        Mon, 02 Dec 2019 13:19:18 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id a26sm398874pff.155.2019.12.02.13.19.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 13:19:16 -0800 (PST)
+Date:   Mon, 2 Dec 2019 16:19:15 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Amol Grover <frextrite@gmail.com>
+Cc:     Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>,
+        linux-audit@redhat.com, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>, paulmck@kernel.org,
+        rcu@vger.kernel.org, rostedt@kernel.org
+Subject: Re: [PATCH v3] kernel: audit.c: Add __rcu annotation to RCU pointer
+Message-ID: <20191202211915.GF17234@google.com>
+References: <20191201183347.18122-1-frextrite@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191201183347.18122-1-frextrite@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As part of KernelCI we plan to add different x86 based Chromebooks to do
-test boot and runtime testing. It will be useful have an upstream
-defconfig supporting this kind of devices like we have for ARM
-(multi_v7_defconfig) and ARM64 (defconfig). So add different options to
-enable different Chromebooks.
+Good idea to CC the following on RCU patches:
+Paul McKenney
+Steven Rostedt
+(Any others on the RCU maintainers list).
+And, the list: rcu@vger.kernel.org
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
+Could anyone Ack the patch? Looks safe and straight forward.
 
- arch/x86/configs/x86_64_defconfig | 68 +++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
-
-diff --git a/arch/x86/configs/x86_64_defconfig b/arch/x86/configs/x86_64_defconfig
-index a95291c89717..4ed7a5de1a5a 100644
---- a/arch/x86/configs/x86_64_defconfig
-+++ b/arch/x86/configs/x86_64_defconfig
-@@ -20,6 +20,7 @@ CONFIG_BLK_DEV_INITRD=y
- # CONFIG_COMPAT_BRK is not set
- CONFIG_PROFILING=y
- CONFIG_SMP=y
-+CONFIG_X86_INTEL_LPSS=y
- CONFIG_X86_REROUTE_FOR_BROKEN_BOOT_IRQS=y
- CONFIG_MICROCODE_AMD=y
- CONFIG_X86_MSR=y
-@@ -43,6 +44,12 @@ CONFIG_CPU_FREQ_GOV_PERFORMANCE=y
- CONFIG_CPU_FREQ_GOV_ONDEMAND=y
- CONFIG_X86_ACPI_CPUFREQ=y
- CONFIG_IA32_EMULATION=y
-+CONFIG_GOOGLE_FIRMWARE=y
-+CONFIG_GOOGLE_SMI=m
-+CONFIG_GOOGLE_COREBOOT_TABLE=m
-+CONFIG_GOOGLE_MEMCONSOLE_X86_LEGACY=m
-+CONFIG_GOOGLE_MEMCONSOLE_COREBOOT=m
-+CONFIG_GOOGLE_VPD=m
- CONFIG_EFI_VARS=y
- CONFIG_KPROBES=y
- CONFIG_JUMP_LABEL=y
-@@ -153,11 +160,15 @@ CONFIG_FORCEDETH=y
- CONFIG_8139TOO=y
- CONFIG_R8169=y
- CONFIG_FDDI=y
-+CONFIG_USB_RTL8152=m
-+CONFIG_USB_USBNET=m
- CONFIG_INPUT_POLLDEV=y
- CONFIG_INPUT_EVDEV=y
-+CONFIG_KEYBOARD_CROS_EC=m
- CONFIG_INPUT_JOYSTICK=y
- CONFIG_INPUT_TABLET=y
- CONFIG_INPUT_TOUCHSCREEN=y
-+CONFIG_TOUCHSCREEN_ATMEL_MXT=m
- CONFIG_INPUT_MISC=y
- # CONFIG_LEGACY_PTYS is not set
- CONFIG_SERIAL_NONSTANDARD=y
-@@ -176,7 +187,22 @@ CONFIG_NVRAM=y
- CONFIG_HPET=y
- # CONFIG_HPET_MMAP is not set
- CONFIG_I2C_I801=y
-+CONFIG_I2C_DESIGNWARE_PLATFORM=y
-+CONFIG_I2C_DESIGNWARE_PCI=y
-+CONFIG_I2C_DESIGNWARE_BAYTRAIL=y
-+CONFIG_I2C_CROS_EC_TUNNEL=m
-+CONFIG_SPI=y
-+CONFIG_PINCTRL_SX150X=y
-+CONFIG_PINCTRL_BAYTRAIL=y
-+CONFIG_CHARGER_CROS_USBPD=m
-+CONFIG_CHARGER_WILCO=m
- CONFIG_WATCHDOG=y
-+CONFIG_MFD_INTEL_LPSS_ACPI=m
-+CONFIG_MFD_INTEL_LPSS_PCI=m
-+CONFIG_MEDIA_SUPPORT=y
-+CONFIG_MEDIA_CAMERA_SUPPORT=y
-+CONFIG_MEDIA_USB_SUPPORT=y
-+CONFIG_USB_VIDEO_CLASS=m
- CONFIG_AGP=y
- CONFIG_AGP_AMD64=y
- CONFIG_AGP_INTEL=y
-@@ -191,11 +217,26 @@ CONFIG_LOGO=y
- # CONFIG_LOGO_LINUX_VGA16 is not set
- CONFIG_SOUND=y
- CONFIG_SND=y
-+CONFIG_SND_OSSEMUL=y
-+CONFIG_SND_MIXER_OSS=y
-+CONFIG_SND_PCM_OSS=y
- CONFIG_SND_HRTIMER=y
- CONFIG_SND_SEQUENCER=y
- CONFIG_SND_SEQ_DUMMY=y
-+CONFIG_SND_SEQUENCER_OSS=y
-+CONFIG_SND_DUMMY=m
- CONFIG_SND_HDA_INTEL=y
- CONFIG_SND_HDA_HWDEP=y
-+CONFIG_SND_HDA_CODEC_HDMI=m
-+CONFIG_SND_HDA_GENERIC=m
-+CONFIG_SND_SOC=m
-+CONFIG_SND_DESIGNWARE_I2S=m
-+CONFIG_SND_DESIGNWARE_PCM=y
-+CONFIG_SND_SOC_INTEL_HASWELL=m
-+CONFIG_SND_SOC_INTEL_HASWELL_MACH=m
-+CONFIG_SND_SOC_INTEL_BDW_RT5677_MACH=m
-+CONFIG_SND_SOC_CROS_EC_CODEC=m
-+CONFIG_SND_SIMPLE_CARD=m
- CONFIG_HIDRAW=y
- CONFIG_HID_GYRATION=y
- CONFIG_LOGITECH_FF=y
-@@ -209,6 +250,8 @@ CONFIG_HID_SUNPLUS=y
- CONFIG_HID_TOPSEED=y
- CONFIG_HID_PID=y
- CONFIG_USB_HIDDEV=y
-+CONFIG_I2C_HID=m
-+CONFIG_INTEL_ISH_HID=m
- CONFIG_USB=y
- CONFIG_USB_ANNOUNCE_NEW_DEVICES=y
- CONFIG_USB_MON=y
-@@ -218,14 +261,39 @@ CONFIG_USB_OHCI_HCD=y
- CONFIG_USB_UHCI_HCD=y
- CONFIG_USB_PRINTER=y
- CONFIG_USB_STORAGE=y
-+CONFIG_MMC=y
-+CONFIG_MMC_SDHCI=y
-+CONFIG_MMC_SDHCI_ACPI=y
- CONFIG_EDAC=y
- CONFIG_RTC_CLASS=y
- # CONFIG_RTC_HCTOSYS is not set
-+CONFIG_RTC_DRV_CROS_EC=m
- CONFIG_DMADEVICES=y
- CONFIG_EEEPC_LAPTOP=y
-+CONFIG_CHROME_PLATFORMS=y
-+CONFIG_CHROMEOS_LAPTOP=m
-+CONFIG_CHROMEOS_PSTORE=m
-+CONFIG_CHROMEOS_TBMC=m
-+CONFIG_CROS_EC=m
-+CONFIG_CROS_EC_I2C=m
-+CONFIG_CROS_EC_ISHTP=m
-+CONFIG_CROS_EC_SPI=m
-+CONFIG_CROS_EC_LPC=m
-+CONFIG_CROS_KBD_LED_BACKLIGHT=m
-+CONFIG_WILCO_EC=m
-+CONFIG_WILCO_EC_DEBUGFS=m
-+CONFIG_WILCO_EC_EVENTS=m
-+CONFIG_WILCO_EC_TELEMETRY=m
- CONFIG_AMD_IOMMU=y
- CONFIG_INTEL_IOMMU=y
- # CONFIG_INTEL_IOMMU_DEFAULT_ON is not set
-+CONFIG_IIO=m
-+CONFIG_IIO_CROS_EC_ACCEL_LEGACY=m
-+CONFIG_IIO_CROS_EC_SENSORS_CORE=m
-+CONFIG_IIO_CROS_EC_SENSORS=m
-+CONFIG_IIO_CROS_EC_SENSORS_LID_ANGLE=m
-+CONFIG_IIO_CROS_EC_LIGHT_PROX=m
-+CONFIG_IIO_CROS_EC_BARO=m
- CONFIG_EXT4_FS=y
- CONFIG_EXT4_FS_POSIX_ACL=y
- CONFIG_EXT4_FS_SECURITY=y
--- 
-2.20.1
-
+On Mon, Dec 02, 2019 at 12:03:48AM +0530, Amol Grover wrote:
+> Add __rcu annotation to RCU-protected global pointer auditd_conn.
+> 
+> auditd_conn is an RCU-protected global pointer,i.e., accessed
+> via RCU methods rcu_dereference() and rcu_assign_pointer(),
+> hence it must be annotated with __rcu for sparse to report
+> warnings/errors correctly.
+> 
+> Fix multiple instances of the sparse error:
+> error: incompatible types in comparison expression
+> (different address spaces)
+> 
+> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> Signed-off-by: Amol Grover <frextrite@gmail.com>
+> ---
+> v3:
+> - update changelog to be more descriptive
+> 
+> v2:
+> - fix erroneous RCU pointer initialization
+>  
+>  kernel/audit.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/audit.c b/kernel/audit.c
+> index da8dc0db5bd3..ff7cfc61f53d 100644
+> --- a/kernel/audit.c
+> +++ b/kernel/audit.c
+> @@ -102,12 +102,13 @@ struct audit_net {
+>   * This struct is RCU protected; you must either hold the RCU lock for reading
+>   * or the associated spinlock for writing.
+>   */
+> -static struct auditd_connection {
+> +struct auditd_connection {
+>  	struct pid *pid;
+>  	u32 portid;
+>  	struct net *net;
+>  	struct rcu_head rcu;
+> -} *auditd_conn = NULL;
+> +};
+> +static struct auditd_connection __rcu *auditd_conn;
+>  static DEFINE_SPINLOCK(auditd_conn_lock);
+>  
+>  /* If audit_rate_limit is non-zero, limit the rate of sending audit records
+> -- 
+> 2.24.0
+> 
