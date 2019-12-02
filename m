@@ -2,134 +2,261 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E17EC43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31787C43141
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E0D020848
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED085215E5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:12:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575313923;
-	bh=qUgDcUIYZjpXimaWBcT9MWDmWH72y+pNWqertDenVdg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=d8NWKNBSjujYhtOceeOFRiwOdUZGRVW+nVsH+/OgSHEuIvaI62H5CAuyIPNLTn/EJ
-	 rp8RJL7hmSu0P7E5+/2Culufk4ZuI2oJS5YIzFmPrQqTpAjcX2vQprd+14W2OHMIpJ
-	 fwQaHd250sglBYbd96l6oT+a6gmbnYZu8/4rDjFc=
+	s=default; t=1575313931;
+	bh=c0wU/ydN3X9chS8ohQeA9+Ps5De+Uh3+bA/Xz2NUefA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mFV13pvtEvLOvT3CWVjvJBHX44jblsIX5i2NlSHQorrpOzZ8HI+9Puewyq6xCrbiQ
+	 8qxt4vtdD+TIsMIbAouNhgsoEonddjNZdxWPPbnhK9EAapZ+8pY8a8ESzWVtjyOABH
+	 gspFLrptNEFf0VAy8/Tf+jjhsQN1eP7AI2htyJQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbfLBTMC (ORCPT
+        id S1728064AbfLBTMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 14:12:02 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:56958 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727977AbfLBTMC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 14:12:02 -0500
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1ibr6q-0006Qj-Gm; Mon, 02 Dec 2019 20:11:48 +0100
-Date:   Mon, 2 Dec 2019 19:11:46 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Neal Liu <neal.liu@mediatek.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Lars Persson <lists@bofh.nu>,
+        Mon, 2 Dec 2019 14:12:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47688 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727835AbfLBTMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 14:12:09 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AC4A20865;
+        Mon,  2 Dec 2019 19:12:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575313928;
+        bh=c0wU/ydN3X9chS8ohQeA9+Ps5De+Uh3+bA/Xz2NUefA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rtDi8zJvTPcyL3e/hsmgwlQ55KHTdew267Yef4LwQw4s8+vzWxPfAHmPbcjMBd/kR
+         OM28GSQxAWV8uOwrnxJat4lo3OJ9K7udADJWLDGhay+g3AiIOCBJCyY4JO3djA8QT0
+         o54LcLGQURJjZnuOfrxsPGWgDixTO63pDmHY2FZo=
+Date:   Mon, 2 Dec 2019 20:12:05 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Crystal Guo (=?UTF-8?Q?=E9=83=AD=E6=99=B6?=)" 
-        <Crystal.Guo@mediatek.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Matt Mackall <mpm@selenic.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v5 3/3] hwrng: add mtk-sec-rng driver
-Message-ID: <20191202191146.79e6368c@why>
-In-Reply-To: <CAKv+Gu_um7eRYXbieW7ogDX5mmZaxP7JQBJM9CajK+6CsO5RgQ@mail.gmail.com>
-References: <1574864578-467-1-git-send-email-neal.liu@mediatek.com>
-        <1574864578-467-4-git-send-email-neal.liu@mediatek.com>
-        <CADnJP=uhD=J2NrpSwiX8oCTd-u_q05=HhsAV-ErCsXNDwVS0rA@mail.gmail.com>
-        <1575027046.24848.4.camel@mtkswgap22>
-        <CAKv+Gu_um7eRYXbieW7ogDX5mmZaxP7JQBJM9CajK+6CsO5RgQ@mail.gmail.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: dts: allwinner: Convert to new-style SPDX license
+ identifiers
+Message-ID: <20191202191205.2izimptezz5rf5kp@gilmour.lan>
+References: <20191123132435.22093-1-peron.clem@gmail.com>
+ <20191128174204.tbr5ldilkadw42gc@gilmour.lan>
+ <CAJiuCccY7AFsd22bOxKZW=BAne5YEG0vmnVmUNFamU9cpW_vNA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: ard.biesheuvel@linaro.org, neal.liu@mediatek.com, catalin.marinas@arm.com, will@kernel.org, lists@bofh.nu, mark.rutland@arm.com, devicetree@vger.kernel.org, herbert@gondor.apana.org.au, wsd_upstream@mediatek.com, sean.wang@kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Crystal.Guo@mediatek.com, linux-crypto@vger.kernel.org, mpm@selenic.com, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hre6yxsla27gcger"
+Content-Disposition: inline
+In-Reply-To: <CAJiuCccY7AFsd22bOxKZW=BAne5YEG0vmnVmUNFamU9cpW_vNA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Dec 2019 16:12:09 +0000
-Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
 
-> (adding some more arm64 folks)
-> 
-> On Fri, 29 Nov 2019 at 11:30, Neal Liu <neal.liu@mediatek.com> wrote:
+--hre6yxsla27gcger
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Nov 28, 2019 at 07:12:16PM +0100, Cl=E9ment P=E9ron wrote:
+> On Thu, 28 Nov 2019 at 18:42, Maxime Ripard <mripard@kernel.org> wrote:
 > >
-> > On Fri, 2019-11-29 at 18:02 +0800, Lars Persson wrote:  
-> > > Hi Neal,
-> > >
-> > > On Wed, Nov 27, 2019 at 3:23 PM Neal Liu <neal.liu@mediatek.com> wrote:  
-> > > >
-> > > > For MediaTek SoCs on ARMv8 with TrustZone enabled, peripherals like
-> > > > entropy sources is not accessible from normal world (linux) and
-> > > > rather accessible from secure world (ATF/TEE) only. This driver aims
-> > > > to provide a generic interface to ATF rng service.
-> > > >  
-> > >
-> > > I am working on several SoCs that also will need this kind of driver
-> > > to get entropy from Arm trusted firmware.
-> > > If you intend to make this a generic interface, please clean up the
-> > > references to MediaTek and give it a more generic name. For example
-> > > "Arm Trusted Firmware random number driver".
-> > >
-> > > It will also be helpful if the SMC call number is configurable.
-> > >
-> > > - Lars  
+> > Hi Clement,
 > >
-> > Yes, I'm trying to make this to a generic interface. I'll try to make
-> > HW/platform related dependency to be configurable and let it more
-> > generic.
-> > Thanks for your suggestion.
-> >  
-> 
-> I don't think it makes sense for each arm64 platform to expose an
-> entropy source via SMC calls in a slightly different way, and model it
-> as a h/w driver. Instead, we should try to standardize this, and
-> perhaps expose it via the architectural helpers that already exist
-> (get_random_seed_long() and friends), so they get plugged into the
-> kernel random pool driver directly.
+> > Sorry for the pretty slow answer
+> >
+> > On Sat, Nov 23, 2019 at 02:24:35PM +0100, Cl=E9ment P=E9ron wrote:
+> > > Move the SPDX-License-Identifier lines to the top and drop the
+> > > license splat.
+> > >
+> > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> > > ---
+> > >
+> > > Hi,
+> > >
+> > > This the same logic that what has be done on Amlogic.
+> > >
+> > > Commit: ARM64: dts: amlogic: Convert to new-style SPDX license identi=
+fiers
+> > > https://lore.kernel.org/patchwork/patch/890455/
+> >
+> > So there's a bunch of different things that should be addressed in
+> > separate patches here I believe.
+> >
+> > >  arch/arm64/boot/dts/allwinner/axp803.dtsi     | 39 +----------------
+> > >  .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 39 +----------------
+> > >  .../dts/allwinner/sun50i-a64-nanopi-a64.dts   | 39 +----------------
+> > >  .../dts/allwinner/sun50i-a64-olinuxino.dts    | 39 +----------------
+> > >  .../dts/allwinner/sun50i-a64-orangepi-win.dts | 39 +----------------
+> > >  .../dts/allwinner/sun50i-a64-pine64-lts.dts   |  3 +-
+> > >  .../dts/allwinner/sun50i-a64-pine64-plus.dts  | 39 +----------------
+> > >  .../boot/dts/allwinner/sun50i-a64-pine64.dts  | 39 +----------------
+> > >  .../dts/allwinner/sun50i-a64-pinebook.dts     |  1 -
+> > >  .../allwinner/sun50i-a64-sopine-baseboard.dts | 42 +----------------=
+--
+> > >  .../boot/dts/allwinner/sun50i-a64-sopine.dtsi | 42 +----------------=
+--
+> > >  .../boot/dts/allwinner/sun50i-a64-teres-i.dts |  3 +-
+> > >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 39 +----------------
+> > >  .../sun50i-h5-bananapi-m2-plus-v1.2.dts       |  4 +-
+> > >  .../allwinner/sun50i-h5-bananapi-m2-plus.dts  |  4 +-
+> > >  .../allwinner/sun50i-h5-nanopi-neo-plus2.dts  | 39 +----------------
+> > >  .../dts/allwinner/sun50i-h5-nanopi-neo2.dts   | 39 +----------------
+> > >  .../dts/allwinner/sun50i-h5-orangepi-pc2.dts  | 39 +----------------
+> > >  .../allwinner/sun50i-h5-orangepi-prime.dts    | 42 +----------------=
+--
+> > >  .../sun50i-h5-orangepi-zero-plus.dts          |  3 +-
+> > >  .../sun50i-h5-orangepi-zero-plus2.dts         | 39 +----------------
+> > >  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  | 39 +----------------
+> > >  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  2 +-
+> > >  .../dts/allwinner/sun50i-h6-orangepi-3.dts    |  2 +-
+> > >  .../allwinner/sun50i-h6-orangepi-lite2.dts    |  2 +-
+> > >  .../allwinner/sun50i-h6-orangepi-one-plus.dts |  2 +-
+> > >  .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  2 +-
+> > >  .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  2 +-
+> > >  .../dts/allwinner/sun50i-h6-tanix-tx6.dts     |  2 +-
+> > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  2 +-
+> > >  30 files changed, 33 insertions(+), 634 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/allwinner/axp803.dtsi b/arch/arm64/b=
+oot/dts/allwinner/axp803.dtsi
+> > > index f0349ef4bfdd..f4f2c70fde5c 100644
+> > > --- a/arch/arm64/boot/dts/allwinner/axp803.dtsi
+> > > +++ b/arch/arm64/boot/dts/allwinner/axp803.dtsi
+> > > @@ -1,43 +1,6 @@
+> > > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > >  /*
+> > >   * Copyright 2017 Icenowy Zheng <icenowy@aosc.xyz>
+> > > - *
+> > > - * This file is dual-licensed: you can use it either under the terms
+> > > - * of the GPL or the X11 license, at your option. Note that this dual
+> > > - * licensing only applies to this file, and not this project as a
+> > > - * whole.
+> > > - *
+> > > - *  a) This file is free software; you can redistribute it and/or
+> > > - *     modify it under the terms of the GNU General Public License as
+> > > - *     published by the Free Software Foundation; either version 2 o=
+f the
+> > > - *     License, or (at your option) any later version.
+> > > - *
+> > > - *     This file is distributed in the hope that it will be useful,
+> > > - *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > > - *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > > - *     GNU General Public License for more details.
+> > > - *
+> > > - * Or, alternatively,
+> > > - *
+> > > - *  b) Permission is hereby granted, free of charge, to any person
+> > > - *     obtaining a copy of this software and associated documentation
+> > > - *     files (the "Software"), to deal in the Software without
+> > > - *     restriction, including without limitation the rights to use,
+> > > - *     copy, modify, merge, publish, distribute, sublicense, and/or
+> > > - *     sell copies of the Software, and to permit persons to whom the
+> > > - *     Software is furnished to do so, subject to the following
+> > > - *     conditions:
+> > > - *
+> > > - *     The above copyright notice and this permission notice shall be
+> > > - *     included in all copies or substantial portions of the Softwar=
+e.
+> > > - *
+> > > - *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIN=
+D,
+> > > - *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTI=
+ES
+> > > - *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> > > - *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> > > - *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> > > - *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> > > - *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> > > - *     OTHER DEALINGS IN THE SOFTWARE.
+> > >   */
+> >
+> > So this is the first, obvious, one that you talk about in your commit
+> > log. While the license says that it's X11, SPDX reports that it's now
+> > MIT, can you clarify this?
+>
+> As far as I know X11 and MIT are similar and MIT is preferred in Linux.
+> see: LICENSES/preferred.
+> So I have converted the X11 to MIT but it can be an explicit commit.
+> This is done implicitly in the Amlogic commit.
 
-Absolutely. I'd love to see a standard, ARM-specified, virtualizable
-RNG that is abstracted from the HW.
+It's not really my main concern, it's more that if it's a license
+change, then you need the agreement of all the authors, so basically
+anyone that touched all those DT.
 
-> Note that in addition to drivers based on vendor SMC calls, we already
-> have a RNG h/w driver based on OP-TEE as well, where the driver
-> attaches to a standardized trusted OS interface identified by a UUID,
-> and which also gets invoked via SMC calls into secure firmware.
+> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts =
+b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
+> > > index 72d6961dc312..2ca36580436c 100644
+> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
+> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
+> > > @@ -1,6 +1,5 @@
+> > > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > >  /*
+> > > - * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > > - *
+> > >   * Copyright (c) 2018 ARM Ltd.
+> > >   */
+> >
+> > This is another kind of changes though. The SPDX identifier is there,
+> > but under the wrong format and you're fixing it.
+> >
+> > That being said, I'm not a super fan of mixing the two comment styles
+> > for two lines.
+> >
+> > What about using only // style comments for the header?
+>
+> Most of the other dts use this style for the header so I would like to
+> keep this kind of style.
+> Except if DT maintainers want explicity to move to another style.
+> Having a coherency in all dts is better and we can move to another
+> style with a simple script.
 
-... and probably an unhealthy number of hypervisor-specific hacks that
-do the same thing. The sooner we plug this, the better.
+Some drivers already use the // comment for their copyright notice,
+the coding style allows it for single line comment and our DTs already
+use it, so it's the cleanest solution imho.
 
-Thanks,
+> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts =
+b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+> > > index f335f7482a73..84b7e9936300 100644
+> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+> > > @@ -1,4 +1,4 @@
+> > > -// SPDX-License-Identifier: (GPL-2.0+ or MIT)
+> > > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > >  /*
+> > >   * Copyright (C) 2019 Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> > >   */
+> >
+> > And I'm not sure what this one (and the next) is?
+>
+> The license expressions in dual licensed files is wrong here, "OR"
+> should be uppercase.
+> I can move it to a separate commit if you like.
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Ah, right, indeed, this should be in a separate patch.
+
+Thanks!
+Maxime
+
+--hre6yxsla27gcger
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXeViBQAKCRDj7w1vZxhR
+xT6AAQC35VJscNYYQjTRrHq7l91bwIQ1GxqYCZNUKpvRYALq2AEAhGVlONgaDx6+
+y1KC09Y3YVyygZJ9d705xzI+wYjh7gI=
+=wruZ
+-----END PGP SIGNATURE-----
+
+--hre6yxsla27gcger--
