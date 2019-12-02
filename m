@@ -2,138 +2,101 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 863F2C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E58AC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63A082070A
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10D9E206F0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:15:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575328548;
+	bh=Gg2JkBbcMNqXsfdOmDws3VGeZUd1RSfN9fss7sTSNL4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=y7pQP0Ie1MnMZTYdBNKldhcM+HLCm21PVkzN6OezMdeKy+sm2wc4WIOLj8evTRFSP
+	 6Qvi69nSqU84a2ewodflxdmUMybghmqy9GeMO+hSV9YtYQ4a+eu18QyUCCwBVtw66D
+	 LbR5doTBEe0I5Z8zyPd00IKxJy07U3pnpmaMlVwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726195AbfLBXPK (ORCPT
+        id S1726395AbfLBXPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 18:15:10 -0500
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:49495 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725834AbfLBXPK (ORCPT
+        Mon, 2 Dec 2019 18:15:47 -0500
+Received: from mail-oi1-f173.google.com ([209.85.167.173]:33826 "EHLO
+        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725834AbfLBXPr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 18:15:10 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R941e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TjlWD-8_1575328498;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TjlWD-8_1575328498)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 03 Dec 2019 07:15:06 +0800
-Subject: Re: [RFC PATCH] mm: shmem: allow split THP when truncating THP
- partially
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Hugh Dickins <hughd@google.com>
-Cc:     kirill.shutemov@linux.intel.com, aarcange@redhat.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1574471132-55639-1-git-send-email-yang.shi@linux.alibaba.com>
- <20191125093611.hlamtyo4hvefwibi@box>
- <3a35da3a-dff0-a8ca-8269-3018fff8f21b@linux.alibaba.com>
- <20191125183350.5gmcln6t3ofszbsy@box>
- <9a68b929-2f84-083d-0ac8-2ceb3eab8785@linux.alibaba.com>
- <14b7c24b-706e-79cf-6fbc-f3c042f30f06@linux.alibaba.com>
- <alpine.LSU.2.11.1911271718130.652@eggly.anvils>
- <20191128113456.5phjhd3ajgky3h3i@box>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <a3af0afd-6b45-495d-8e88-abdef5204329@linux.alibaba.com>
-Date:   Mon, 2 Dec 2019 15:14:50 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Mon, 2 Dec 2019 18:15:47 -0500
+Received: by mail-oi1-f173.google.com with SMTP id l136so1471739oig.1;
+        Mon, 02 Dec 2019 15:15:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=d1akBS2012TRx794NyTHGyEpjpY/8aUKIwYoBVW77Gw=;
+        b=QgjjqbSVpQXjVEdLlG3kazjvqyj6/Mz8QQHSA+9iBzXkFbmAL065Lr5OJCUtdpoWUG
+         P9NvLWvH/N74GSjoOQ3Z9963Q/Ta8ayVAERB05myxIcI5HBCDDnJ/zQCjHlue7/kSAp1
+         mSkIweRKQb5N/dvfG40dEyFrlJf/cqk68trXkquIBEga9R3QSRA0JRZE7dpBEgIpPMSl
+         6+YEiPtvG2JyVbQOncLx5lWU0kZFz+d/91xf8mQDKtjjH7yT/KYJk3RazOwTjR98UpHE
+         GnHTgXNEUJJymd/qAgknEj8RJq5h8qmOwkPykt/Ula2/+t3poR7OX+upJds3MYY7W5No
+         cBbw==
+X-Gm-Message-State: APjAAAUFH37F13akdGzMDpnNP2QgbURvhJJysdTIVijtKFCAVesdOo4Z
+        IODmcQf+5cLTnM3BTtferStyU14=
+X-Google-Smtp-Source: APXvYqy9lkloJ8bqAvWOLfqbxy0xxp431Ex2SwwSuUhb4/4rZv7QPbLgSbgRSy98uh1ksYCW+Tw1mw==
+X-Received: by 2002:aca:d988:: with SMTP id q130mr1243850oig.133.1575328545801;
+        Mon, 02 Dec 2019 15:15:45 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j43sm365334ota.59.2019.12.02.15.15.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 15:15:44 -0800 (PST)
+Date:   Mon, 2 Dec 2019 17:15:44 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Biwen Li <biwen.li@nxp.com>
+Cc:     peda@axentia.se, leoyang.li@nxp.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Biwen Li <biwen.li@nxp.com>
+Subject: Re: [v6,1/3] dt-bindings: i2c: support property idle-state
+Message-ID: <20191202231544.GA19159@bogus>
+References: <20191129092222.2706-1-biwen.li@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20191128113456.5phjhd3ajgky3h3i@box>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191129092222.2706-1-biwen.li@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 29 Nov 2019 17:22:20 +0800, Biwen Li wrote:
+> This supports property idle-state
+> 
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> ---
+> Change in v6:
+> 	- none
+> 
+> Change in v5:
+> 	- none
+> 
+> Change in v4:
+> 	- none
+> 
+> Change in v3:
+> 	- update subject and description
+> 	- add some information for property idle-state
+> 
+> Change in v2:
+> 	- update subject and description
+> 	- add property idle-state
+> 
+>  Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-On 11/28/19 3:34 AM, Kirill A. Shutemov wrote:
-> On Wed, Nov 27, 2019 at 07:06:01PM -0800, Hugh Dickins wrote:
->> On Tue, 26 Nov 2019, Yang Shi wrote:
->>> On 11/25/19 11:33 AM, Yang Shi wrote:
->>>> On 11/25/19 10:33 AM, Kirill A. Shutemov wrote:
->>>>> On Mon, Nov 25, 2019 at 10:24:38AM -0800, Yang Shi wrote:
->>>>>> On 11/25/19 1:36 AM, Kirill A. Shutemov wrote:
->>>>>>> On Sat, Nov 23, 2019 at 09:05:32AM +0800, Yang Shi wrote:
->>>>>>>> Currently when truncating shmem file, if the range is partial of
->>>>>>>> THP
->>>>>>>> (start or end is in the middle of THP), the pages actually will
->>>>>>>> just get
->>>>>>>> cleared rather than being freed unless the range cover the whole
->>>>>>>> THP.
->>>>>>>> Even though all the subpages are truncated (randomly or
->>>>>>>> sequentially),
->>>>>>>> the THP may still be kept in page cache.  This might be fine for
->>>>>>>> some
->>>>>>>> usecases which prefer preserving THP.
->>>>>>>>
->>>>>>>> But, when doing balloon inflation in QEMU, QEMU actually does hole
->>>>>>>> punch
->>>>>>>> or MADV_DONTNEED in base page size granulairty if hugetlbfs is not
->>>>>>>> used.
->>>>>>>> So, when using shmem THP as memory backend QEMU inflation actually
->>>>>>>> doesn't
->>>>>>>> work as expected since it doesn't free memory.  But, the inflation
->>>>>>>> usecase really needs get the memory freed.  Anonymous THP will not
->>>>>>>> get
->>>>>>>> freed right away too but it will be freed eventually when all
->>>>>>>> subpages are
->>>>>>>> unmapped, but shmem THP would still stay in page cache.
->>>>>>>>
->>>>>>>> To protect the usecases which may prefer preserving THP, introduce
->>>>>>>> a
->>>>>>>> new fallocate mode: FALLOC_FL_SPLIT_HPAGE, which means spltting THP
->>>>>>>> is
->>>>>>>> preferred behavior if truncating partial THP.  This mode just makes
->>>>>>>> sense to tmpfs for the time being.
->> Sorry, I haven't managed to set aside enough time for this until now.
->>
->> First off, let me say that I firmly believe this punch-split behavior
->> should be the standard behavior (like in my huge tmpfs implementation),
->> and we should not need a special FALLOC_FL_SPLIT_HPAGE to do it.
->> But I don't know if I'll be able to persuade Kirill of that.
->>
->> If the caller wants to write zeroes into the file, she can do so with the
->> write syscall: the caller has asked to punch a hole or truncate the file,
->> and in our case, like your QEMU case, hopes that memory and memcg charge
->> will be freed by doing so.  I'll be surprised if changing the behavior
->> to yours and mine turns out to introduce a regression, but if it does,
->> I guess we'll then have to put it behind a sysctl or whatever.
->>
->> IIUC the reason that it's currently implemented by clearing the hole
->> is because split_huge_page() (unlike in older refcounting days) cannot
->> be guaranteed to succeed.  Which is unfortunate, and none of us is very
->> keen to build a filesystem on unreliable behavior; but the failure cases
->> appear in practice to be rare enough, that it's on balance better to give
->> the punch-hole-truncate caller what she asked for whenever possible.
-> I don't have a firm position here. Maybe you are right and we should try
-> to split pages right away.
->
-> It might be useful to consider case wider than shmem.
->
-> On traditional filesystem with a backing storage semantics of the same
-> punch hole operation is somewhat different. It doesn't have explicit
-> implications on memory footprint. It's about managing persistent storage.
-> With shmem/tmpfs it is lumped together.
->
-> It might be nice to write down pages that can be discarded under memory
-> pressure and leave the huge page intact until then...
-
-Sounds like another deferred split queue. It could be an option, but our 
-usecase needs get memory freed right away since the memory might be 
-reused by others very soon.
-
->
-> [ I don't see a problem with your patch as long as we agree that it's
-> desired semantics for the interface. ]
->
-
+If a tag was not added on purpose, please state why and what changed.
