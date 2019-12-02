@@ -2,222 +2,97 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB46C43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8ADC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50C4820833
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AF7720881
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:20:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbfLBGRm (ORCPT
+        id S1726428AbfLBGU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 01:17:42 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3452 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725807AbfLBGRm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 01:17:42 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB26BbNa117263;
-        Mon, 2 Dec 2019 01:17:38 -0500
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wm6cwxmca-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 02 Dec 2019 01:17:38 -0500
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xB26FBh1026677;
-        Mon, 2 Dec 2019 06:17:37 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma03dal.us.ibm.com with ESMTP id 2wkg26c6xf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 02 Dec 2019 06:17:37 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB26HaFs52035850
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Dec 2019 06:17:36 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1718A7805C;
-        Mon,  2 Dec 2019 06:17:36 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1CFAB78060;
-        Mon,  2 Dec 2019 06:17:34 +0000 (GMT)
-Received: from jarvis.ext.hansenpartnership.com (unknown [9.85.189.151])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon,  2 Dec 2019 06:17:33 +0000 (GMT)
-Message-ID: <1575267453.4080.26.camel@linux.ibm.com>
-Subject: Re: One question about trusted key of keyring in Linux kernel.
-From:   James Bottomley <jejb@linux.ibm.com>
-To:     "Zhao, Shirley" <shirley.zhao@intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
-        "Zhu, Bing" <bing.zhu@intel.com>,
-        "Chen, Luhai" <luhai.chen@intel.com>
-Date:   Sun, 01 Dec 2019 22:17:33 -0800
-In-Reply-To: <A888B25CD99C1141B7C254171A953E8E4909D360@shsmsx102.ccr.corp.intel.com>
-References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
-         <1573659978.17949.83.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
-         <1574877977.3551.5.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E49096521@shsmsx102.ccr.corp.intel.com>
-         <1575057916.6220.7.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909BA3B@shsmsx102.ccr.corp.intel.com>
-         <1575260220.4080.17.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909D360@shsmsx102.ccr.corp.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-01_04:2019-11-29,2019-12-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 priorityscore=1501 suspectscore=0 bulkscore=0 phishscore=0
- mlxlogscore=999 adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912020055
+        Mon, 2 Dec 2019 01:20:26 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:52646 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725807AbfLBGU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 01:20:26 -0500
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1ibf4I-00033O-DD; Mon, 02 Dec 2019 14:20:22 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1ibf4D-0000d9-Q7; Mon, 02 Dec 2019 14:20:17 +0800
+Date:   Mon, 2 Dec 2019 14:20:17 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: [GIT PULL] Crypto Fixes for 5.5
+Message-ID: <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au>
+References: <20190916084901.GA20338@gondor.apana.org.au>
+ <20190923050515.GA6980@gondor.apana.org.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190923050515.GA6980@gondor.apana.org.au>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-12-02 at 05:55 +0000, Zhao, Shirley wrote:
-> Thanks for your feedback, James.
-> 
-> The policy is generated by TPM command, tpm2_createpolicy, it just
-> use the algorithm you mentioned, which is defined in TPM spec. 
-> I re-attach my test steps as below. 
-> Please help check it, is there anything wrong, especially the format
-> of keyctl command. 
-> 
-> Firstly, the pcr policy is generated as below: 
-> $ tpm2_createpolicy --policy-pcr --pcr-list sha256:7 --policy
-> pcr7_bin.policy > pcr7.policy
+Hi Linus:
 
-I don't use the Intel TSS, so I can't help you with this command: you
-need to ask someone who does use it it, like Phil.
+This push fixes the following issues:
 
-> Pcr7.policy is the ascii hex of policy:
-> $ cat pcr7.policy
-> 321fbd28b60fcc23017d501b133bd5dbf2889814588e8a23510fe10105cb2cc9
+- Fix build error in crypto lib code when crypto API is off.
+- Fix NULL/error check in hisilicon.
+- Fix Kconfig-related build error in talitos.
 
-You haven't provided enough information.  If you tell me what the pcr7
-value you tied the policy to is, I can run it through the IBM TSS
-policy maker and tell you if this is the correct hash.  But obviously,
-since it's a hash, I can't reverse it to tell you what the policy it
-mandates is.
+The following changes since commit 4ee812f6143d78d8ba1399671d78c8d78bf2817c:
 
-James
+  crypto: vmx - Avoid weird build failures (2019-11-22 18:48:39 +0800)
 
-> Then generate the trusted key and configure policydigest and get the
-> key ID: 
-> $ keyctl add trusted kmk "new 32 keyhandle=0x81000001 hash=sha256
-> policydigest=`cat pcr7.policy`" @u
-> 874117045
-> 
-> Save the trusted key. 
-> $ keyctl pipe 874117045 > kmk.blob
-> 
-> Reboot and load the key. 
-> Start a auth session to generate the policy:
-> $ tpm2_startauthsession -S session.ctx
-> session-handle: 0x3000000
-> $ tpm2_pcrlist -L sha256:7 -o pcr7.sha256 $ tpm2_policypcr -S
-> session.ctx -L sha256:7 -F pcr7.sha256 -f pcr7.policy
-> policy-digest:
-> 0x321FBD28B60FCC23017D501B133BD5DBF2889814588E8A23510FE10105CB2CC9
-> 
-> Input the policy handle to load trusted key:
-> $ keyctl add trusted kmk "load `cat kmk.blob` keyhandle=0x81000001
-> policyhandle=0x3000000" @u
-> add_key: Operation not permitted
-> 
-> The error should be policy check failed, because I use TPM command to
-> unseal directly with error of policy check failed. 
-> $ tpm2_unseal -c 0x81000001 -L sha256:7
-> ERROR on line: "81" in file: "./lib/log.h": Tss2_Sys_Unseal(0x99D) -
-> tpm:session(1):a policy check failed ERROR on line: "213" in file:
-> "tools/tpm2_unseal.c": Unseal failed!
-> ERROR on line: "166" in file: "tools/tpm2_tool.c": Unable to run
-> tpm2_unseal
-> 
-> - Shirley 
-> 
-> -----Original Message-----
-> From: James Bottomley <jejb@linux.ibm.com> 
-> Sent: Monday, December 2, 2019 12:17 PM
-> To: Zhao, Shirley <shirley.zhao@intel.com>; Mimi Zohar <zohar@linux.i
-> bm.com>; Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>; Jonathan
-> Corbet <corbet@lwn.net>
-> Cc: linux-integrity@vger.kernel.org; keyrings@vger.kernel.org; linux-
-> doc@vger.kernel.org; linux-kernel@vger.kernel.org; 'Mauro Carvalho
-> Chehab' <mchehab+samsung@kernel.org>; Zhu, Bing <bing.zhu@intel.com>;
-> Chen, Luhai <luhai.chen@intel.com>
-> Subject: Re: One question about trusted key of keyring in Linux
-> kernel.
-> 
-> On Mon, 2019-12-02 at 01:44 +0000, Zhao, Shirley wrote:
-> > Hi, James,
-> > 
-> > The value of PCR7 is not changed. I have checked it with TPM
-> > command 
-> > tpm_pcrlist.
-> > 
-> > So I think the problem is how to use the option policydigest and 
-> > policyhandle? Is there any example?
-> > Maybe the format in my command is not correct. 
-> 
-> OK, so previously you said that using the Intel TSS the policy also
-> failed after a reboot:
-> 
-> > The error should be policy check failed, because I use TPM command
-> > to 
-> > unseal directly with error of policy check failed.
-> > $ tpm2_unseal -c 0x81000001 -L sha256:7 ERROR on line: "81" in
-> > file: 
-> > "./lib/log.h": Tss2_Sys_Unseal(0x99D) - tpm:session(1):a policy
-> > check 
-> > failed ERROR on line: "213" in file: "tools/tpm2_unseal.c": Unseal 
-> > failed!
-> > ERROR on line: "166" in file: "tools/tpm2_tool.c": Unable to run 
-> > tpm2_unseal
-> 
-> So this must mean the actual policy hash you constructed was wrong in
-> some way: it didn't correspond simply to a value of pcr7 ... well
-> assuming the -L sha256:7 means construct a policy of the sha256 value
-> of pcr7 and use it in the unseal.
-> 
-> I can tell you how to construct policies using TPM2 commands, but I
-> think you want to know how to do it using the Intel TSS?  In which
-> case you really need to consult the experts in that TSS, like Phil
-> Tricca.
-> 
-> For the plain TPM2 case, the policy looks like
-> 
-> TPM_CC_PolicyPCR || pcrs || pcrDigest
-> 
-> Where TPM_CC_PolicyPCR = 0000017f and for selecting pcr7 only.  pcrs
-> is a complicated entity: it's a counted array of pcr selections.  For
-> your policy you only need one entry, so it would be 00000001 followed
-> by a single pcrSelection entry.  pcrSelection is the hash algorithm,
-> the size of the selection bitmap (always 3 since every current TPM
-> only has
-> 24 PCRs) and a bitmap selecting the PCRs in big endian format, so for
-> PCR7 using sha256 (algorithm 000b), pcrSelection = 000b 03 80 00 00. 
-> And then you follow this by the hash of the PCR value you're looking
-> for.  The policyhash becomes the initial policy (all zeros for the
-> start of the policy chain) hashed with this.
-> 
-> Regards,
-> 
-> James
-> 
+are available in the git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
+
+for you to fetch changes up to 8a6b8f4d7a891ac66db4f97900a86b55c84a5802:
+
+  crypto: hisilicon - fix a NULL vs IS_ERR() bug in sec_create_qp_ctx() (2019-11-27 13:08:50 +0800)
+
+----------------------------------------------------------------
+Dan Carpenter (1):
+      crypto: hisilicon - fix a NULL vs IS_ERR() bug in sec_create_qp_ctx()
+
+Herbert Xu (1):
+      crypto: talitos - Fix build error by selecting LIB_DES
+
+Jason A. Donenfeld (1):
+      crypto: arch - conditionalize crypto api in arch glue for lib code
+
+ arch/arm/crypto/chacha-glue.c              | 26 ++++++++++++++++----------
+ arch/arm/crypto/curve25519-glue.c          |  5 +++--
+ arch/arm/crypto/poly1305-glue.c            |  9 ++++++---
+ arch/arm64/crypto/chacha-neon-glue.c       |  5 +++--
+ arch/arm64/crypto/poly1305-glue.c          |  5 +++--
+ arch/mips/crypto/chacha-glue.c             |  6 ++++--
+ arch/mips/crypto/poly1305-glue.c           |  6 ++++--
+ arch/x86/crypto/blake2s-glue.c             |  6 ++++--
+ arch/x86/crypto/chacha_glue.c              |  5 +++--
+ arch/x86/crypto/curve25519-x86_64.c        |  7 ++++---
+ arch/x86/crypto/poly1305_glue.c            |  5 +++--
+ drivers/crypto/Kconfig                     |  1 +
+ drivers/crypto/hisilicon/sec2/sec_crypto.c |  4 ++--
+ 13 files changed, 56 insertions(+), 34 deletions(-)
+
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
