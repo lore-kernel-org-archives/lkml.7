@@ -2,156 +2,139 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD08EC43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 01:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7EFC43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 01:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 930FB214AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 01:17:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575249470;
-	bh=r++ufhdV5NVlSi05PmMJPmTLWPGMRkuNwvrCIPM7vWw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=o3VIEIyBqHg6KcUoBhPAz3++oH6eudwIubRtavsD+/tDO8FRVWXuebGTMz+0p4NXC
-	 gWXvMuD87zqWZ5cbiE/elb8b1cl70mhAfB6vnOY4p78wocYyLLNwQ8imf9ICx8Ye4M
-	 eBZ2hEKnuYyS4G/pXZg8gZ/Wh46OR7g9fPfJ8Ejk=
+	by mail.kernel.org (Postfix) with ESMTP id 93BED20881
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 01:23:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JbwPnDI8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727327AbfLBBRs (ORCPT
+        id S1727337AbfLBBXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 20:17:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43834 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727266AbfLBBRs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 20:17:48 -0500
-Received: from dragon (li2093-158.members.linode.com [172.105.159.158])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5F972146E;
-        Mon,  2 Dec 2019 01:17:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575249467;
-        bh=r++ufhdV5NVlSi05PmMJPmTLWPGMRkuNwvrCIPM7vWw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dBh24tZKD/7zjoNqX/NGFOhKLsn/+CaaH6xJ3LPngO06Ux87Flqd/FQZcn/gD86TC
-         PXD0O7Ra/Us4zbtu5wLWVxbed0ogucnybU2uYKmfnrm2+MhEXa2aLS8IBync2gsJdP
-         Jo+cRbi2jWVEXggGXxMViRUsGUUwX3ebLPAmux4k=
-Date:   Mon, 2 Dec 2019 09:17:24 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH 1/7] clk: imx: clk-pll14xx: Switch to clk_hw based API
-Message-ID: <20191202011721.GA17574@dragon>
-References: <1572356175-24950-1-git-send-email-peng.fan@nxp.com>
- <1572356175-24950-2-git-send-email-peng.fan@nxp.com>
+        Sun, 1 Dec 2019 20:23:11 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33913 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727266AbfLBBXL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Dec 2019 20:23:11 -0500
+Received: by mail-pg1-f193.google.com with SMTP id r11so528481pgf.1;
+        Sun, 01 Dec 2019 17:23:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=dMdDU7QPfqkfhU93NmKAKuY/iBXJ4ghiOz+NSAn8CiY=;
+        b=JbwPnDI8OxxpXKPY1ygxBWujZyN2RpsTQ4WphYMfy+RsO5+9/B5KEYI7tvMiPmvRoh
+         K8rM/5WWnjy0S9xHOyDt850wsZw4agJ1RSiKyK++A/Fe2X8dazhB32XSD2hZvZNPbsf7
+         tmQNwmYpr9cAECsTS0eYRa0I8edk9D8n9Jas3PVNV8OTGGzy25YtMfKcBrLFUyr5wy0X
+         5YcgUqAWgcXICJ8hfgDnj9FTYud0UYfbx5LGYAAXUfYbiFtE/CLOxlQgxmzVBDm52whl
+         x4auD4RoWMU3c6Bx8QinYLzkP94/kUPuqU7F5hQ23XTOYLPtgbrNSD5qJMXCNPt6es8z
+         AVQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=dMdDU7QPfqkfhU93NmKAKuY/iBXJ4ghiOz+NSAn8CiY=;
+        b=IMML6iTX5BmlS6NAbXrSV1QRu8GaviA1Jwo93zMxx3CT308wFz2E/sx640iSMI594s
+         HCLe1hJINYh78hSXzlRuEILrrODiQ2mFw9vm4hjXngaWAX7JkNPIOYgQC9fAmDH1tZU7
+         Rgb7rLKKLJxeonLH9OthzrQOH7jbWFbzpRIHqKBjeobunm47oSsJr9GNYoCXKzyXujf0
+         re8rEZSX/KAm7OkFdm+Rv/K5En2PnEg65vgiVdZ0PPvIc0303Twg+FuXUXcnLIiFH8I3
+         MuBvpzOr8y0EMX7XmJ6qenI+gi2rnpfQKsidFoMuscLHo/oe0Xge4wcyn2BO0Qr5rBpr
+         5VMA==
+X-Gm-Message-State: APjAAAXZUy6NV9OpX7BVPzr/MGSwaTpwWzM/ZJMiqaanlQbxP7iswwxd
+        ex0xUOAHWbqFSynBt1+LzMk=
+X-Google-Smtp-Source: APXvYqwxTVM2SJdf0fAcJ9eL46EQoaRI/xaWiLcdiJWwmOu/TEFvTCc4nbiWPVWt3IL/a9UwEwuJsQ==
+X-Received: by 2002:a63:1b1b:: with SMTP id b27mr26614665pgb.402.1575249788764;
+        Sun, 01 Dec 2019 17:23:08 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id y3sm10277577pfe.183.2019.12.01.17.23.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Dec 2019 17:23:08 -0800 (PST)
+Date:   Sun, 1 Dec 2019 17:23:05 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        linux-input@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Kirill Smelkov <kirr@nexedi.com>
+Subject: Re: [PATCH] Input: uinput - Add UI_SET_UNIQ ioctl handler
+Message-ID: <20191202012305.GQ248138@dtor-ws>
+References: <20191127185139.65048-1-abhishekpandit@chromium.org>
+ <20191201145357.ybq5gfty4ulnfasq@pali>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1572356175-24950-2-git-send-email-peng.fan@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191201145357.ybq5gfty4ulnfasq@pali>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 01:40:54PM +0000, Peng Fan wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> Switch the imx_clk_pll14xx function to clk_hw based API, rename
-> accordingly and add a macro for clk based legacy. This allows us to
-> move closer to a clear split between consumer and provider clk APIs.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/clk/imx/clk-pll14xx.c | 22 +++++++++++++---------
->  drivers/clk/imx/clk.h         |  8 ++++++--
->  2 files changed, 19 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/clk/imx/clk-pll14xx.c b/drivers/clk/imx/clk-pll14xx.c
-> index 5c458199060a..fa76e04251c4 100644
-> --- a/drivers/clk/imx/clk-pll14xx.c
-> +++ b/drivers/clk/imx/clk-pll14xx.c
-> @@ -369,13 +369,14 @@ static const struct clk_ops clk_pll1443x_ops = {
->  	.set_rate	= clk_pll1443x_set_rate,
->  };
->  
-> -struct clk *imx_clk_pll14xx(const char *name, const char *parent_name,
-> -			    void __iomem *base,
-> -			    const struct imx_pll14xx_clk *pll_clk)
-> +struct clk_hw *imx_clk_hw_pll14xx(const char *name, const char *parent_name,
-> +				  void __iomem *base,
-> +				  const struct imx_pll14xx_clk *pll_clk)
->  {
->  	struct clk_pll14xx *pll;
-> -	struct clk *clk;
-> +	struct clk_hw *hw;
->  	struct clk_init_data init;
-> +	int ret;
->  	u32 val;
->  
->  	pll = kzalloc(sizeof(*pll), GFP_KERNEL);
-> @@ -412,12 +413,15 @@ struct clk *imx_clk_pll14xx(const char *name, const char *parent_name,
->  	val &= ~BYPASS_MASK;
->  	writel_relaxed(val, pll->base + GNRL_CTL);
->  
-> -	clk = clk_register(NULL, &pll->hw);
-> -	if (IS_ERR(clk)) {
-> -		pr_err("%s: failed to register pll %s %lu\n",
-> -			__func__, name, PTR_ERR(clk));
-> +	hw = &pll->hw;
-> +
-> +	ret = clk_hw_register(NULL, hw);
-> +	if (ret) {
-> +		pr_err("%s: failed to register pll %s %d\n",
-> +			__func__, name, ret);
->  		kfree(pll);
-> +		return ERR_PTR(ret);
->  	}
->  
-> -	return clk;
-> +	return hw;
->  }
-> diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
-> index bc5bb6ac8636..5038622f1a72 100644
-> --- a/drivers/clk/imx/clk.h
-> +++ b/drivers/clk/imx/clk.h
-> @@ -97,8 +97,12 @@ extern struct imx_pll14xx_clk imx_1443x_pll;
->  #define imx_clk_mux(name, reg, shift, width, parents, num_parents) \
->  	imx_clk_hw_mux(name, reg, shift, width, parents, num_parents)->clk
->  
-> -struct clk *imx_clk_pll14xx(const char *name, const char *parent_name,
-> -		 void __iomem *base, const struct imx_pll14xx_clk *pll_clk);
-> +#define imx_clk_pll14xx(name, parent_name, base, pll_clk) \
-> +	imx_clk_hw_pll14xx(name, parent_name, base, pll_clk)->clk
-> +
+Hi Pali,
 
-I would suggest to use an inline function for this, which will be more
-readable and complying to kernel coding style.
-
-Shawn
-
-> +struct clk_hw *imx_clk_hw_pll14xx(const char *name, const char *parent_name,
-> +				  void __iomem *base,
-> +				  const struct imx_pll14xx_clk *pll_clk);
->  
->  struct clk *imx_clk_pllv1(enum imx_pllv1_type type, const char *name,
->  		const char *parent, void __iomem *base);
-> -- 
-> 2.16.4
+On Sun, Dec 01, 2019 at 03:53:57PM +0100, Pali Rohár wrote:
+> Hello!
 > 
+> On Wednesday 27 November 2019 10:51:39 Abhishek Pandit-Subedi wrote:
+> > Support setting the uniq attribute of the input device. The uniq
+> > attribute is used as a unique identifier for the connected device.
+> > 
+> > For example, uinput devices created by BlueZ will store the address of
+> > the connected device as the uniq property.
+> > 
+> > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> 
+> ...
+> 
+> > diff --git a/include/uapi/linux/uinput.h b/include/uapi/linux/uinput.h
+> > index c9e677e3af1d..d5b7767c1b02 100644
+> > --- a/include/uapi/linux/uinput.h
+> > +++ b/include/uapi/linux/uinput.h
+> > @@ -145,6 +145,7 @@ struct uinput_abs_setup {
+> >  #define UI_SET_PHYS		_IOW(UINPUT_IOCTL_BASE, 108, char*)
+> >  #define UI_SET_SWBIT		_IOW(UINPUT_IOCTL_BASE, 109, int)
+> >  #define UI_SET_PROPBIT		_IOW(UINPUT_IOCTL_BASE, 110, int)
+> > +#define UI_SET_UNIQ		_IOW(UINPUT_IOCTL_BASE, 111, char*)
+> 
+> I think that usage of char* as type in _IOW would cause compatibility
+> problems like it is for UI_SET_PHYS (there is UI_SET_PHYS_COMPAT). Size
+> of char* pointer depends on userspace (32 vs 64bit), so 32bit process on
+> 64bit kernel would not be able to call this new UI_SET_UNIQ ioctl.
+> 
+> I would suggest to define this ioctl as e.g.:
+> 
+>   #define UI_SET_UNIQ		_IOW(_IOC_WRITE, UINPUT_IOCTL_BASE, 111, 0)
+> 
+> And then in uinput.c code handle it as:
+> 
+>   case UI_SET_UNIQ & ~IOCSIZE_MASK:
+> 
+> as part of section /* Now check variable-length commands */
+
+If we did not have UI_SET_PHYS in its current form, I'd agree with you,
+but I think there is benefit in having UI_SET_UNIQ be similar to
+UI_SET_PHYS.
+
+But you are absolutely correct that in current form the patch is
+deficient on 64/32 systems, and the compat handling needs to be added
+before it can be accepted.
+
+Thanks.
+
+-- 
+Dmitry
