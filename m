@@ -2,164 +2,112 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAAEC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 05:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C3FC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 05:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA61C2070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 05:50:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575265857;
-	bh=ohXZGfk8CjVJs4OJSli9PTu51NLkasIiV8VRaopJkVM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=FodU07choT/GpbJHeDnX6IWQafjvj7ERMgWjmxDteH03vcdvTAv2MKke0jnegP8Za
-	 hIuzN/RIa98Z1UPsO2UkFA5GQqwhYCbXGJac01WtpKDe/yyXx3NrVv0xK0nvsvMCqM
-	 dxpnHhTsTq/TxNl/L08xE9xLbqeupfQKwKEre+6o=
+	by mail.kernel.org (Postfix) with ESMTP id 8AEBB20715
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 05:53:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="noH5xNFo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbfLBFu4 (ORCPT
+        id S1726399AbfLBFxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 00:50:56 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:46454 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbfLBFuz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 00:50:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=JxzbjAicqr2k4SAVBtPRNgbKswEiyX6uTFNgc/Dtp6k=; b=apK1WG3WMQC866rC6TIEGAe8J
-        RgKee35qVnLc0VPcoQ8ae9sLiEhbUArE9MNDF18YZo910y0a/X2Ra1I4WjtaGnJKGKL7Hy8YNvwN8
-        bAc+5ZmqYQZ9IvI+SJ7KWbH/SCevLyH9O3aos4UzUcfZWcF08ii1jmTEOp5Cvwp/2bw+7sd8k+ycY
-        3Pt+RVyAqnB2sQ8WnQCmN61MnF6raHaDcD/fvVFBdByIg4wiBuUsY3afsLeS5KesFn0b1A0YpqD/t
-        SiEaZHcjOFfgZU0Ihw4nsZWl+z2Rf219EJh8YfTstBt6/NQ+gdoA+9C5gCZS/AQDhTpgYXdPGbPFI
-        nshkGjLYg==;
-Received: from [80.156.29.194] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ibebi-0004Qx-To; Mon, 02 Dec 2019 05:50:51 +0000
-Date:   Mon, 2 Dec 2019 06:50:47 +0100
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-Cc:     gregkh@linuxfoundation.org, rfontana@redhat.com,
-        kstewart@linuxfoundation.org, tglx@linutronix.de,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: dvb_dummy_fe.c: add members to
- dvb_dummy_fe_state
-Message-ID: <20191202065047.3cffda7a@kernel.org>
-In-Reply-To: <13629649-f363-4787-e88b-784f8309bfcd@gmail.com>
-References: <20191130045420.111288-1-dwlsalmeida@gmail.com>
-        <20191201090733.2bd8c2c4@kernel.org>
-        <13629649-f363-4787-e88b-784f8309bfcd@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 2 Dec 2019 00:53:30 -0500
+Received: from ozlabs.org ([203.11.71.1]:56981 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725807AbfLBFxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 00:53:30 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47RDn32QZ8z9sPL;
+        Mon,  2 Dec 2019 16:53:26 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1575266008;
+        bh=EH+luGXjEilyQ8e+4eAH4LRNqk79yUFe6oQvFYlUr4k=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=noH5xNFoZXpnOmGLtGuWcghVmhFwCLZEThi4IM+78KPiDy/A0K25QrTucZRFgHP4w
+         p2UM2USUd7MJu6d/A3e/ccqQDysB0pqm//W3VLWOjSJkms+GcIcpkZBglp3shAkzHi
+         RZjxs5MUi7Nr6wZG0CZoxOL4RIqdc2dVDsEY/IGWMv0fCVY89W6dj1rFiZxl2I2Ypr
+         f1S3RlnKxSPmoNNdJ0AicXhAYf/uqa2zcQMFULONaZNMVJthAQMinzzwXbfXBu51PT
+         Dlux5u8JToEHyTEfhuOlQpqbXMouCkWZi+nWI+na3hSy6B9D1f6/pFDHTJb5DjlUoB
+         k0lXg7QDgxh0A==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Aurelien Jarno <aurelien@aurel32.net>, linux-kernel@vger.kernel.org
+Cc:     linuxppc-dev@lists.ozlabs.org, debian-kernel@lists.debian.org,
+        Aurelien Jarno <aurelien@aurel32.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "open list\:BPF \(Safe dynamic programs and tools\)" 
+        <netdev@vger.kernel.org>,
+        "open list\:BPF \(Safe dynamic programs and tools\)" 
+        <bpf@vger.kernel.org>
+Subject: Re: [PATCH] libbpf: fix readelf output parsing on powerpc with recent binutils
+In-Reply-To: <20191201195728.4161537-1-aurelien@aurel32.net>
+References: <20191201195728.4161537-1-aurelien@aurel32.net>
+Date:   Mon, 02 Dec 2019 16:53:26 +1100
+Message-ID: <87zhgbe0ix.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, 2 Dec 2019 01:49:38 -0300
-"Daniel W. S. Almeida" <dwlsalmeida@gmail.com> escreveu:
+Aurelien Jarno <aurelien@aurel32.net> writes:
+> On powerpc with recent versions of binutils, readelf outputs an extra
+> field when dumping the symbols of an object file. For example:
+>
+>     35: 0000000000000838    96 FUNC    LOCAL  DEFAULT [<localentry>: 8]     1 btf_is_struct
+>
+> The extra "[<localentry>: 8]" prevents the GLOBAL_SYM_COUNT variable to
+> be computed correctly and causes the checkabi target to fail.
+>
+> Fix that by looking for the symbol name in the last field instead of the
+> 8th one. This way it should also cope with future extra fields.
+>
+> Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
+> ---
+>  tools/lib/bpf/Makefile | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-> Hi Mauro, thanks for checking out my work!
-> 
-> > please don't add fields at the
-> > struct while they're not used, as this makes harder for reviewers to be
-> > sure that we're not adding bloatware at the code.  
-> 
-> OK.
-> 
-> > Please remember that
-> > we want one logical change per patch.
-> >
-> > It means that, if you add a state->frontend_status at the driver, the
-> > patch should implement the entire logic for it.  
-> I will keep this in mind.
-> 
-> >   static int dvb_dummy_fe_sleep(struct dvb_frontend* fe)
-> >   {
-> > +
-> > +	struct dvb_dummy_fe_state *state = fe->demodulator_priv;
-> > +
-> > +	state->sleeping = true;
-> > +  
-> 
-> > Hmm...what's the sense of adding it? Where are you setting it to false?
-> > Where are you using the sleeping state?  
-> 
-> I noted some drivers seem to instruct the hardware into a low power state. Take helene, for instance:
-> 
-> static int helene_sleep(struct dvb_frontend *fe)
-> {
-> 	struct helene_priv *priv = fe->tuner_priv;
-> 
-> 	dev_dbg(&priv->i2c->dev, "%s()\n", __func__);
-> 	helene_enter_power_save(priv);
-> 	return 0;
-> }
-> 
-> static int helene_enter_power_save(struct helene_priv *priv)
-> {
-> 	dev_dbg(&priv->i2c->dev, "%s()\n", __func__);
-> 	if (priv->state == STATE_SLEEP)
-> 		return 0;
-> 
-> 	/* Standby setting for CPU */
-> 	helene_write_reg(priv, 0x88, 0x0);
-> 
-> 	/* Standby setting for internal logic block */
-> 	helene_write_reg(priv, 0x87, 0xC0);
-> 
-> 	priv->state = STATE_SLEEP;
-> 	return 0;
-> }
-> 
-> As we are emulating some piece of hardware I thought it would be enough to add a simple bool to indicate that the device was sleeping.
+Thanks for fixing that, it's been on my very long list of test failures
+for a while.
 
-Yeah, that could have some value. Yet, if you're doing that, I suggest
-to add a function to change the device power state, as this is what a
-real driver would do. Something similar to:
+Tested-by: Michael Ellerman <mpe@ellerman.id.au>
 
-static inline void change_power_state(struct state *st, bool on) 
-{
-	/* A real driver would have commands here to wake/sleep the dev */
+cheers
 
-	st->power = on;
-}
-
-In any case, a real device on sleeping mode will not be tuning any
-channels, so all stats will reflect that, e. g:
-
-	- frontend status will return 0;
-	- stats that depends on having a lock will be set with:
-		FE_SCALE_NOT_AVAILABLE
-	  tip: most stats are like that
-	- stats like signal strength should probably return 0.
-
-Not so sure what SNR will return, but probably it should return
-FE_SCALE_NOT_AVAILABLE too, as this is usually calculated indirectly
-once the device is locked.
-
-On other words, only signal strength and stats should return a value
-with would be 0 on both cases. All other stats should return
-FE_SCALE_NOT_AVAILABLE.
-
-Btw, as this depends on having the stats implemented, I would suggest you to
-first finish the tuning and stats part of the driver. Only after having those
-patches, apply the power mode patch.
-
-> 
-> This patch was a bit convoluted on my part. Let's iron out the issues you pointed out in v2.
-> 
-> - Daniel.
-
-Cheers,
-Mauro
+> diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+> index 99425d0be6ff..333900cf3f4f 100644
+> --- a/tools/lib/bpf/Makefile
+> +++ b/tools/lib/bpf/Makefile
+> @@ -147,7 +147,7 @@ TAGS_PROG := $(if $(shell which etags 2>/dev/null),etags,ctags)
+>  
+>  GLOBAL_SYM_COUNT = $(shell readelf -s --wide $(BPF_IN_SHARED) | \
+>  			   cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | \
+> -			   awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$8}' | \
+> +			   awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$NF}' | \
+>  			   sort -u | wc -l)
+>  VERSIONED_SYM_COUNT = $(shell readelf -s --wide $(OUTPUT)libbpf.so | \
+>  			      grep -Eo '[^ ]+@LIBBPF_' | cut -d@ -f1 | sort -u | wc -l)
+> @@ -216,7 +216,7 @@ check_abi: $(OUTPUT)libbpf.so
+>  		     "versioned in $(VERSION_SCRIPT)." >&2;		 \
+>  		readelf -s --wide $(OUTPUT)libbpf-in.o |		 \
+>  		    cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' |	 \
+> -		    awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$8}'|   \
+> +		    awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$NF}'|  \
+>  		    sort -u > $(OUTPUT)libbpf_global_syms.tmp;		 \
+>  		readelf -s --wide $(OUTPUT)libbpf.so |			 \
+>  		    grep -Eo '[^ ]+@LIBBPF_' | cut -d@ -f1 |		 \
+> -- 
+> 2.24.0
