@@ -1,103 +1,155 @@
-Return-Path: <SRS0=SILN=ZX=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7024C43215
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 23:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D163DC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 00:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A59742072C
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Dec 2019 23:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A052E20881
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 00:05:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbfLAXyz (ORCPT
+        id S1727328AbfLBAFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 18:54:55 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:15056 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727266AbfLAXyz (ORCPT
+        Sun, 1 Dec 2019 19:05:21 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:59076 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727266AbfLBAFV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 18:54:55 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB1NqUqU104695;
-        Sun, 1 Dec 2019 18:54:53 -0500
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wm6sm59du-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 01 Dec 2019 18:54:53 -0500
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xB1No2sl023106;
-        Sun, 1 Dec 2019 23:54:52 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma04wdc.us.ibm.com with ESMTP id 2wkg265vsc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 01 Dec 2019 23:54:52 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB1Nspo047251850
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 1 Dec 2019 23:54:51 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 25DCC7805F;
-        Sun,  1 Dec 2019 23:54:51 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9A1217805C;
-        Sun,  1 Dec 2019 23:54:50 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Sun,  1 Dec 2019 23:54:50 +0000 (GMT)
-Subject: Re: [PATCH 0/2] Revert patches fixing probing of interrupts
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>
-Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, linux-security-module@vger.kernel.org
-References: <20191126131753.3424363-1-stefanb@linux.vnet.ibm.com>
- <20191129223418.GA15726@linux.intel.com>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-Message-ID: <6f6f60a2-3b55-e76d-c11a-4677fcb72c16@linux.ibm.com>
-Date:   Sun, 1 Dec 2019 18:54:45 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20191129223418.GA15726@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Sun, 1 Dec 2019 19:05:21 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id E27DD15008C80;
+        Sun,  1 Dec 2019 16:05:20 -0800 (PST)
+Date:   Sun, 01 Dec 2019 16:05:18 -0800 (PST)
+Message-Id: <20191201.160518.50010694947236666.davem@davemloft.net>
+To:     torvalds@linux-foundation.org
+CC:     akpm@linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT] Networking
+From:   David Miller <davem@davemloft.net>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-01_04:2019-11-29,2019-12-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- suspectscore=0 clxscore=1011 malwarescore=0 adultscore=0 impostorscore=0
- phishscore=0 mlxlogscore=845 spamscore=0 priorityscore=1501
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912010215
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 01 Dec 2019 16:05:21 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/29/19 5:37 PM, Jarkko Sakkinen wrote:
-> On Tue, Nov 26, 2019 at 08:17:51AM -0500, Stefan Berger wrote:
->> From: Stefan Berger <stefanb@linux.ibm.com>
->>
->> Revert the patches that were fixing the probing of interrupts due
->> to reports of interrupt stroms on some systems
-> Can you explain how reverting is going to fix the issue?
 
+1) Fix several scatter gather list issues in kTLS code, from Jakub
+   Kicinski.
 
-The reverts fix 'the interrupt storm issue' that they are causing on 
-some systems but don't fix the issue with the interrupt mode not being 
-used. I was hoping Jerry would get access to a system faster but this 
-didn't seem to be the case. So sending these patches seemed the better 
-solution than leaving 5.4.x with the problem but going back to when it 
-worked 'better.'
+2) macb driver device remove has to kill the hresp_err_tasklet.  From
+   Chuhong Yuan.
 
+3) Several memory leak and reference count bug fixes in tipc, from
+   Tung Nguyen.
 
->
-> This is wrong way to move forward. The root cause must be identified
-> first and then decide actions like always in any situation.
->
-> /Jarkko
+4) Fix mlx5 build error w/o ipv6, from Yue Haibing.
 
+5) Fix jumbo frame and other regressions in r8169, from Heiner
+   Kallweit.
 
+6) Undo some BUG_ON()'s and replace them with WARN_ON_ONCE and
+   proper error propagation/handling.  From Paolo Abeni.
+
+Please pull, thanks a lot!
+
+The following changes since commit 81b6b96475ac7a4ebfceae9f16fb3758327adbfe:
+
+  Merge branch 'master' of git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux; tag 'dma-mapping-5.5' of git://git.infradead.org/users/hch/dma-mapping (2019-11-28 11:16:43 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git 
+
+for you to fetch changes up to c5d728113532c695c894c2a88a10453ac83b0f3b:
+
+  Merge branch 'openvswitch-remove-a-couple-of-BUG_ON' (2019-12-01 13:21:24 -0800)
+
+----------------------------------------------------------------
+Chuhong Yuan (1):
+      net: macb: add missed tasklet_kill
+
+David S. Miller (3):
+      Merge branch 'net-tls-fix-scatter-gather-list-issues'
+      Merge branch 'tipc-Fix-some-bugs-at-socket-layer'
+      Merge branch 'openvswitch-remove-a-couple-of-BUG_ON'
+
+Dust Li (1):
+      net: sched: fix `tc -s class show` no bstats on class with nolock subqueues
+
+Grygorii Strashko (1):
+      net: ethernet: ti: ale: ensure vlan/mdb deleted when no members
+
+Heiner Kallweit (3):
+      r8169: fix jumbo configuration for RTL8168evl
+      r8169: fix resume on cable plug-in
+      net: phy: realtek: fix using paged operations with RTL8105e / RTL8208
+
+Jakub Kicinski (8):
+      net/tls: take into account that bpf_exec_tx_verdict() may free the record
+      net/tls: free the record on encryption error
+      net: skmsg: fix TLS 1.3 crash with full sk_msg
+      selftests/tls: add a test for fragmented messages
+      net/tls: remove the dead inplace_crypto code
+      net/tls: use sg_next() to walk sg entries
+      selftests: bpf: test_sockmap: handle file creation failures gracefully
+      selftests: bpf: correct perror strings
+
+Jiri Pirko (1):
+      selftests: forwarding: fix race between packet receive and tc check
+
+Paolo Abeni (2):
+      openvswitch: drop unneeded BUG_ON() in ovs_flow_cmd_build_info()
+      openvswitch: remove another BUG_ON()
+
+Randy Dunlap (1):
+      net: emulex: benet: indent a Kconfig depends continuation line
+
+Thadeu Lima de Souza Cascardo (1):
+      selftests: pmtu: use -oneline for ip route list cache
+
+Tung Nguyen (4):
+      tipc: fix potential memory leak in __tipc_sendmsg()
+      tipc: fix wrong socket reference counter after tipc_sk_timeout() returns
+      tipc: fix wrong timeout input for tipc_wait_for_cond()
+      tipc: fix duplicate SYN messages under link congestion
+
+YueHaibing (1):
+      net/mlx5e: Fix build error without IPV6
+
+ drivers/net/ethernet/cadence/macb_main.c            |  1 +
+ drivers/net/ethernet/emulex/benet/Kconfig           |  2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun.c | 74 ++++++++++++++++++++++++++++++++++++++------------------------------------
+ drivers/net/ethernet/realtek/r8169_main.c           |  3 ++-
+ drivers/net/ethernet/ti/cpsw_ale.c                  | 12 +++++++++---
+ drivers/net/phy/realtek.c                           |  9 +++++++++
+ include/linux/skmsg.h                               | 28 ++++++++++++++--------------
+ include/net/tls.h                                   |  3 +--
+ net/core/filter.c                                   |  8 ++++----
+ net/core/skmsg.c                                    |  2 +-
+ net/ipv4/tcp_bpf.c                                  |  2 +-
+ net/openvswitch/datapath.c                          | 11 +++++++++--
+ net/sched/sch_mq.c                                  |  3 ++-
+ net/sched/sch_mqprio.c                              |  4 ++--
+ net/sched/sch_multiq.c                              |  2 +-
+ net/sched/sch_prio.c                                |  2 +-
+ net/tipc/socket.c                                   | 24 +++++++++++++++---------
+ net/tls/tls_main.c                                  | 13 ++-----------
+ net/tls/tls_sw.c                                    | 32 +++++++++++++++++++-------------
+ tools/testing/selftests/bpf/test_sockmap.c          | 47 ++++++++++++++++++++++++++++-------------------
+ tools/testing/selftests/bpf/xdping.c                |  2 +-
+ tools/testing/selftests/net/forwarding/tc_common.sh | 39 +++++++++++++++++++++++++++++++--------
+ tools/testing/selftests/net/pmtu.sh                 |  5 ++---
+ tools/testing/selftests/net/tls.c                   | 60 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 24 files changed, 254 insertions(+), 134 deletions(-)
