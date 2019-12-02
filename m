@@ -2,217 +2,369 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B857C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D35C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 01:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68E3720656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:58:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="AVjZEAQC"
+	by mail.kernel.org (Postfix) with ESMTP id E82B620656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 01:01:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbfLCA61 (ORCPT
+        id S1726138AbfLCBBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 19:58:27 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:40918 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725853AbfLCA60 (ORCPT
+        Mon, 2 Dec 2019 20:01:32 -0500
+Received: from heinz.dinsnail.net ([81.169.187.250]:38168 "EHLO
+        heinz.dinsnail.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfLCBBb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 19:58:26 -0500
-Received: by mail-pj1-f66.google.com with SMTP id s35so687228pjb.7
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 16:58:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BR+jT8Y066t2mO55XxEry1eMb7cWO7vjJUPgcThgMBg=;
-        b=AVjZEAQCzvRfXUgaKTeSKFlJTK8mCfIX6AAUVXZh0JgRTfKBgG/qUeN8OZi2iHmyId
-         x3yCnRLW8flP2feuKGcB3CH4xBzIj3baZRg/K8vDt0ln0XUT/l7kYtcu7N4FoNXUFWVN
-         ciTZw+rEYALFENGndppPeFfIyPoMHQ+L/xz4UjzpletvE5X3pl+4m9/S+IB90Z40PRiO
-         f9l4azb8wpSYbfkoTa/eO1n6/kIGWSzlAqSPlSQP6qHsnbNVBuHgK8DLC3fSfCbmrhbu
-         Rd/udq7B22AynHwtU3UiJ8rnSCRHONwsNvAraGal7f70NbR2wf7ijcRFzjEZotVHntDa
-         Y76A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=BR+jT8Y066t2mO55XxEry1eMb7cWO7vjJUPgcThgMBg=;
-        b=FLjLrJ5Cxm4gd1fWDAZ6nsQC6IU/XAEmZ6S93JfMP5Cf+m+InSrNXKWDjQCbJ+eIcX
-         yuKDkP45zpWIXhtefNyCfK3t9QKiy9JlEluE3T8nd7ArXWoWwotzuHTMg8QGMt2kLVqW
-         27vidfNbRoD3o0JhqMSGJCyrRNeAbyo5324cS+HCmUO09ZysA+XK6N3oDs1AWRtkJLIj
-         rX/5/e/TYNnPVchDbkW+0Xgb2Rv2p2QPYiUhLP3CH0U1hZmiWqcswf0PI2xiGzq6Iw4O
-         3nI/waA08T7GtX578wMCqT/TgfD/z278U2Oj0oDzSFp5kJH2+wCBu4nQqllWXdNJ0idC
-         UPVg==
-X-Gm-Message-State: APjAAAWY0ujCZoO8mjHnFxth9x7xsweT9NiFjC4pWpNMxzyAA84z1KSy
-        wQN6EyUU4bIbtTy+Eht6+pxOmMobXLY=
-X-Google-Smtp-Source: APXvYqxqVG4LM07k2KaWc6qSYAFB1KEOYRqOrW6fVmMUKW/lYRGrWFfXlZBvfpwVQAxVjwYTifjw9w==
-X-Received: by 2002:a17:90a:8903:: with SMTP id u3mr2349558pjn.137.1575334705880;
-        Mon, 02 Dec 2019 16:58:25 -0800 (PST)
-Received: from [10.61.2.175] ([122.99.82.10])
-        by smtp.gmail.com with ESMTPSA id k88sm543846pjb.15.2019.12.02.16.58.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Dec 2019 16:58:24 -0800 (PST)
-Subject: Re: [PATCH v4 2/2] powerpc/pseries/iommu: Use dma_iommu_ops for
- Secure VMs aswell.
-To:     Ram Pai <linuxram@us.ibm.com>, linuxppc-dev@lists.ozlabs.org,
-        mpe@ellerman.id.au
-Cc:     benh@kernel.crashing.org, david@gibson.dropbear.id.au,
-        paulus@ozlabs.org, mdroth@linux.vnet.ibm.com, hch@lst.de,
-        andmike@us.ibm.com, sukadev@linux.vnet.ibm.com, mst@redhat.com,
-        ram.n.pai@gmail.com, cai@lca.pw, tglx@linutronix.de,
-        bauerman@linux.ibm.com, linux-kernel@vger.kernel.org
-References: <1575269124-17885-1-git-send-email-linuxram@us.ibm.com>
- <1575269124-17885-2-git-send-email-linuxram@us.ibm.com>
- <1575269124-17885-3-git-send-email-linuxram@us.ibm.com>
-From:   Alexey Kardashevskiy <aik@ozlabs.ru>
-Autocrypt: addr=aik@ozlabs.ru; keydata=
- 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
-Message-ID: <58b08d09-aaf8-5659-c4e8-c502c508f35c@ozlabs.ru>
-Date:   Tue, 3 Dec 2019 11:58:18 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 2 Dec 2019 20:01:31 -0500
+X-Greylist: delayed 3638 seconds by postgrey-1.27 at vger.kernel.org; Mon, 02 Dec 2019 20:01:31 EST
+Received: from heinz.dinsnail.net ([IPv6:0:0:0:0:0:0:0:1])
+        by heinz.dinsnail.net (8.15.2/8.15.2) with ESMTP id xB300C2Y016385;
+        Tue, 3 Dec 2019 01:00:12 +0100
+Received: from eldalonde.UUCP (uucp@localhost)
+        by heinz.dinsnail.net (8.15.2/8.15.2/Submit) with bsmtp id xB300BNi016384;
+        Tue, 3 Dec 2019 01:00:11 +0100
+Received: from eldalonde.weiser.dinsnail.net (localhost [IPv6:0:0:0:0:0:0:0:1])
+        by eldalonde.weiser.dinsnail.net (8.15.2/8.15.2) with ESMTP id xB2Njf9K028533;
+        Tue, 3 Dec 2019 00:45:41 +0100
+Received: (from michael@localhost)
+        by eldalonde.weiser.dinsnail.net (8.15.2/8.15.2/Submit) id xB2NjfYU028532;
+        Tue, 3 Dec 2019 00:45:41 +0100
+Date:   Tue, 3 Dec 2019 00:45:41 +0100
+From:   Michael Weiser <michael@weiser.dinsnail.net>
+To:     Dave Young <dyoung@redhat.com>
+Cc:     linux-efi@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>, x86@kernel.org,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: kexec_file overwrites reserved EFI ESRT memory
+Message-ID: <20191202234541.GA27567@weiser.dinsnail.net>
+References: <20191122180552.GA32104@weiser.dinsnail.net>
+ <87blt3y949.fsf@x220.int.ebiederm.org>
+ <20191122210702.GE32104@weiser.dinsnail.net>
+ <20191125055201.GA6569@dhcp-128-65.nay.redhat.com>
+ <20191129152700.GA8286@weiser.dinsnail.net>
+ <20191202085829.GA15808@dhcp-128-65.nay.redhat.com>
+ <20191202090520.GA15874@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1575269124-17885-3-git-send-email-linuxram@us.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191202090520.GA15874@dhcp-128-65.nay.redhat.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-dinsnail-net-MailScanner-Information: Please contact the ISP for more information
+X-dinsnail-net-MailScanner-ID: xB300C2Y016385
+X-dinsnail-net-MailScanner: Found to be clean
+X-dinsnail-net-MailScanner-From: michael@weiser.dinsnail.net
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Dave,
 
+On Mon, Dec 02, 2019 at 05:05:20PM +0800, Dave Young wrote:
 
-On 02/12/2019 17:45, Ram Pai wrote:
-> Commit edea902c1c1e ("powerpc/pseries/iommu: Don't use dma_iommu_ops on
-> 	       secure guests")
-> disabled dma_iommu_ops path, for secure VMs. The rationale for disabling
-> the dma_iommu_ops path, was to use the dma_direct path, since it had
-> inbuilt support for bounce-buffering through SWIOTLB.
-> 
-> However dma_iommu_ops is functionally much richer. Depending on the
-> capabilities of the platform, it can handle direct DMA; with or without
-> bounce buffering, and it can handle indirect DMA. Hence its better to
-> leverage the richer functionality supported by dma_iommu_ops.
+> > It seems a serious problem, the EFI modified memmap does not get an
+> > /proc/iomem resource update, but kexec_file relies on /proc/iomem in
+> > X86.
+> > 
+> > There is an question from Sai about why add_efi_memmap is not enabled by
+> > default:
+> > https://www.spinics.net/lists/linux-mm/msg185166.html
 
-What exactly do we leverage after applying this patch? afaict things are
-going to work in exact same old way with this applied, no? Thanks,
+Incidentally, a data point I did not think to mention: I do boot the
+kernel as EFI application directly from the firmware as a boot entry
+with compiled in initrd and command line:
 
+$ grep EFI nobak/kernel/linux/.config
+CONFIG_EFI=y
+CONFIG_EFI_STUB=y
+# CONFIG_EFI_MIXED is not set
+CONFIG_DMI_SCAN_MACHINE_NON_EFI_FALLBACK=y
+# EFI (Extensible Firmware Interface) Support
+CONFIG_EFI_VARS=m
+CONFIG_EFI_ESRT=y
+CONFIG_EFI_VARS_PSTORE=m
+# CONFIG_EFI_VARS_PSTORE_DEFAULT_DISABLE is not set
+CONFIG_EFI_RUNTIME_MAP=y
+# CONFIG_EFI_FAKE_MEMMAP is not set
+CONFIG_EFI_RUNTIME_WRAPPERS=y
+# CONFIG_EFI_BOOTLOADER_CONTROL is not set
+# CONFIG_EFI_CAPSULE_LOADER is not set
+# CONFIG_EFI_TEST is not set
+# CONFIG_EFI_RCI2_TABLE is not set
+# end of EFI (Extensible Firmware Interface) Support
+CONFIG_UEFI_CPER=y
+CONFIG_UEFI_CPER_X86=y
+CONFIG_EFI_EARLYCON=y
+CONFIG_EFI_PARTITION=y
+CONFIG_FB_EFI=y
+CONFIG_EFIVAR_FS=y
+# CONFIG_EFI_PGT_DUMP is not set
 
-> 
-> Renable dma_iommu_ops path for pseries Secure VMs.
-> 
-> Signed-off-by: Ram Pai <linuxram@us.ibm.com>
-> ---
->  arch/powerpc/platforms/pseries/iommu.c | 11 +----------
->  1 file changed, 1 insertion(+), 10 deletions(-)
-> 
-> diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
-> index 0720831..6adf4d3 100644
-> --- a/arch/powerpc/platforms/pseries/iommu.c
-> +++ b/arch/powerpc/platforms/pseries/iommu.c
-> @@ -36,7 +36,6 @@
->  #include <asm/udbg.h>
->  #include <asm/mmzone.h>
->  #include <asm/plpar_wrappers.h>
-> -#include <asm/svm.h>
->  #include <asm/ultravisor.h>
->  
->  #include "pseries.h"
-> @@ -1337,15 +1336,7 @@ void iommu_init_early_pSeries(void)
->  	of_reconfig_notifier_register(&iommu_reconfig_nb);
->  	register_memory_notifier(&iommu_mem_nb);
->  
-> -	/*
-> -	 * Secure guest memory is inacessible to devices so regular DMA isn't
-> -	 * possible.
-> -	 *
-> -	 * In that case keep devices' dma_map_ops as NULL so that the generic
-> -	 * DMA code path will use SWIOTLB to bounce buffers for DMA.
-> -	 */
-> -	if (!is_secure_guest())
-> -		set_pci_dma_ops(&dma_iommu_ops);
-> +	set_pci_dma_ops(&dma_iommu_ops);
->  }
->  
->  static int __init disable_multitce(char *str)
-> 
+$ grep CMDLINE nobak/kernel/linux/.config
+CONFIG_CMDLINE_BOOL=y
+CONFIG_CMDLINE="root=UUID=97[...]e4 rd.luks.uuid=8a[...]c3 rd.luks.allow-discards=8a[...]c3 mem_sleep_default=deep resume=UUID=97[...]e4 resume_offset=96256 efi=debug memblock=debug"
+CONFIG_CMDLINE_OVERRIDE=y
+# CONFIG_BLK_CMDLINE_PARSER is not set
+# CONFIG_CMDLINE_PARTITION is not set
+CONFIG_FB_CMDLINE=y
 
+$ efibootmgr -v
+BootCurrent: 000A
+Timeout: 2 seconds
+BootOrder: 000A,0009,0008,0005,0007,0006,0004,0002,0001,0000,0003
+[...]
+Boot0005* gentoo-5.4.0-next-20191127+-clear
+HD(1,GPT,e7[...]f2,0x800,0x64000)/File(\kernel-5.4.0-next-20191127+-clear)
+[...]
+Boot000A* gentoo-5.4.1-gentoo
+HD(1,GPT,e7[...]f2,0x800,0x64000)/File(\kernel-5.4.1-gentoo)
+
+So there's no boot loader that could construct an e820 table for the
+kernel to consume. I understand it's then up to the EFI stub to come up
+with a e820 table from the EFI memory map.
+
+> > Long time ago the add_efi_memmap is only enabled in case we explict
+> > enable it on cmdline, I'm not sure if we can do it by default, maybe we
+> > should.   Need opinion from X86 maintainers..
+> > Can you try below diff see if it works for you? (not tested, and need
+> > explicitly 'add_efi_memmap' in kernel cmdline param)
+
+Neither adding add_efi_memmap nor adding your patch and setting that option
+does make the ESRT memory region appear in /proc/iomem. kexec_file still
+loads the kernel across the ESRT region.
+
+What occurs to me is that nowhere does the ESRT memory region appear in
+any externally provided memory map. Neither e820 nor EFI seem to declare
+it. Is that expected or a bug of my particular system?
+
+For example, the e820 map (derived from the EFI map by the EFI stub?)
+has these regions:
+
+BIOS-provided physical RAM map:
+BIOS-e820: [mem 0x0000000000000000-0x000000000009efff] usable
+BIOS-e820: [mem 0x000000000009f000-0x00000000000fffff] reserved
+BIOS-e820: [mem 0x0000000000100000-0x00000000763f5fff] usable
+BIOS-e820: [mem 0x00000000763f6000-0x0000000079974fff] reserved
+BIOS-e820: [mem 0x0000000079975000-0x00000000799f1fff] ACPI data
+BIOS-e820: [mem 0x00000000799f2000-0x0000000079aa6fff] ACPI NVS
+BIOS-e820: [mem 0x0000000079aa7000-0x000000007a40dfff] reserved
+BIOS-e820: [mem 0x000000007a40e000-0x000000007a40efff] usable
+BIOS-e820: [mem 0x000000007a40f000-0x000000007fffffff] reserved
+BIOS-e820: [mem 0x00000000f0000000-0x00000000f7ffffff] reserved
+BIOS-e820: [mem 0x00000000fe000000-0x00000000fe010fff] reserved
+BIOS-e820: [mem 0x00000000fec00000-0x00000000fec00fff] reserved
+BIOS-e820: [mem 0x00000000fed00000-0x00000000fed03fff] reserved
+BIOS-e820: [mem 0x00000000fee00000-0x00000000fee00fff] reserved
+BIOS-e820: [mem 0x00000000ff000000-0x00000000ffffffff] reserved
+BIOS-e820: [mem 0x0000000100000000-0x000000047dffffff] usable
+
+The ESRT region sits smack in the middle of a large system RAM region:
+
+BIOS-e820: [mem 0x0000000000100000-0x00000000763f5fff] usable
+
+Consequently, the relevant part of /proc/iomem looks like this:
+
+00000000-00000fff : Reserved
+00001000-0009efff : System RAM
+0009f000-000fffff : Reserved
+  000a0000-000bffff : PCI Bus 0000:00
+  000e0000-000e3fff : PCI Bus 0000:00
+  000e4000-000e7fff : PCI Bus 0000:00
+  000e8000-000ebfff : PCI Bus 0000:00
+  000ec000-000effff : PCI Bus 0000:00
+  000f0000-000fffff : PCI Bus 0000:00
+    000f0000-000fffff : System ROM
+00100000-763f5fff : System RAM
+  65000000-6affffff : Crash kernel
+763f6000-79974fff : Reserved
+79975000-799f1fff : ACPI Tables
+799f2000-79aa6fff : ACPI Non-volatile Storage
+  79a17000-79a17fff : USBC000:00
+
+What it would need to look like for kexec to leave ESRT alone, I guess, is:
+
+00000000-00000fff : Reserved
+00001000-0009efff : System RAM
+0009f000-000fffff : Reserved
+  000a0000-000bffff : PCI Bus 0000:00
+  000e0000-000e3fff : PCI Bus 0000:00
+  000e4000-000e7fff : PCI Bus 0000:00
+  000e8000-000ebfff : PCI Bus 0000:00
+  000ec000-000effff : PCI Bus 0000:00
+  000f0000-000fffff : PCI Bus 0000:00
+    000f0000-000fffff : System ROM
+00100000-74dd1fff : System RAM         <---- split System RAM
+  65000000-6affffff : Crash kernel
+74dd2000-74dd2fff : Reserved           <---- ESRT
+74dd3000-763f5fff : System RAM         <---- split System RAM
+763f6000-79974fff : Reserved
+79975000-799f1fff : ACPI Tables
+799f2000-79aa6fff : ACPI Non-volatile Storage
+  79a17000-79a17fff : USBC000:00
+
+But since System RAM is set up from the e820 table very early on, the
+e820 table would need to be patched before that or the already present
+System RAM root resource split into three individual System
+RAM/Reserved/System RAM root resources later. Correct?
+
+I've played some more with the resource API and can now make /proc/iomem
+look like this, with "EFI runtime" marked reserved:
+
+00000000-00000fff : Reserved
+00001000-0009efff : System RAM
+0009f000-000fffff : Reserved
+  000a0000-000bffff : PCI Bus 0000:00
+  000e0000-000e3fff : PCI Bus 0000:00
+  000e4000-000e7fff : PCI Bus 0000:00
+  000e8000-000ebfff : PCI Bus 0000:00
+  000ec000-000effff : PCI Bus 0000:00
+  000f0000-000fffff : PCI Bus 0000:00
+    000f0000-000fffff : System ROM
+00100000-763f5fff : System RAM
+  65000000-6affffff : Crash kernel
+  74dd2000-74dd2fff : EFI runtime
+763f6000-79974fff : Reserved
+79975000-799f1fff : ACPI Tables
+799f2000-79aa6fff : ACPI Non-volatile Storage
+  79a17000-79a17fff : USBC000:00
+
+But kexec_file seems to only look at the 00100000-763f5fff System RAM
+root resource and still loads the kernel right across the ESRT region.
+Or should it walk down the hierarchy and exclude reserved child nodes?
+
+arm64 seems to have run into similar issues and solved them wholesale:
+https://lkml.org/lkml/2018/6/19/131
+https://elixir.bootlin.com/linux/v5.4.1/source/arch/arm64/kernel/setup.c#L249
+
+I tried to apply that to x86:
+
+diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+index 3b9fd679cea9..458731f49484 100644
+--- a/arch/x86/platform/efi/quirks.c
++++ b/arch/x86/platform/efi/quirks.c
+@@ -295,6 +295,48 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+ 	efi_memmap_install(new_phys, num_entries);
+ }
+ 
++static int __init efi_arch_mem_reserve_runtime(void)
++{
++	efi_memory_desc_t *md;
++	struct resource *res, *mem;
++	resource_size_t start, end;
++
++	for_each_efi_memory_desc(md) {
++		if (!(md->attribute & EFI_MEMORY_RUNTIME) &&
++		    (md->type == EFI_BOOT_SERVICES_CODE ||
++		     md->type == EFI_BOOT_SERVICES_DATA))
++			continue;
++
++		res = kzalloc(sizeof(*res), GFP_ATOMIC);
++		if (WARN_ON(!res))
++			return -ENOMEM;
++
++		start	= md->phys_addr;
++		end	= md->phys_addr + (md->num_pages << EFI_PAGE_SHIFT) - 1;
++		res->start	= start;
++		res->end	= end;
++		res->name	= "EFI runtime";
++		res->flags	= IORESOURCE_MEM;
++
++		mem = request_resource_conflict(&iomem_resource, res);
++		/* all is well if there's no conflict */
++		if (!mem) {
++			pr_debug("Reserved io resource for runtime region 0x%llx-0x%llx\n",
++					start, end);
++			continue;
++		}
++		kfree(res);
++
++		/* otherwise go on to split up the conflicting region */
++		pr_debug("Splitting 0x%llx-0x%llx to reserve 0x%llx-0x%llx\n",
++				mem->start, mem->end, start, end);
++		reserve_region_with_split(mem, start, end, "EFI Runtime");
++	}
++
++	return 0;
++}
++arch_initcall(efi_arch_mem_reserve_runtime);
++
+ /*
+  * Helper function for efi_reserve_boot_services() to figure out if we
+  * can free regions in efi_free_boot_services().
+
+That comes back with these in dmesg:
+
+[    0.190280] efi: Reserved io resource for runtime region 0xff000000-0xffffffff
+[    0.190280] efi: Reserved io resource for runtime region 0xfee00000-0xfee00fff
+[    0.190280] efi: Reserved io resource for runtime region 0xfed00000-0xfed03fff
+[    0.190280] efi: Reserved io resource for runtime region 0xfec00000-0xfec00fff
+[    0.190280] efi: Reserved io resource for runtime region 0xfe000000-0xfe010fff
+[    0.190280] efi: Reserved io resource for runtime region 0xf0000000-0xf7ffffff
+[    0.190280] efi: Reserved io resource for runtime region 0x7a317000-0x7a40dfff
+[    0.190280] efi: Reserved io resource for runtime region 0x79aa7000-0x7a316fff
+[    0.190280] efi: Splitting 0x100000-0x763f5fff to reserve 0x74dd2000-0x74dd2fff
+
+... but still only end up with new child resources and kexec_file
+still overwriting ESRT:
+
+00000000-00000fff : Reserved
+00001000-0009efff : System RAM
+0009f000-000fffff : Reserved
+  000a0000-000bffff : PCI Bus 0000:00
+  000e0000-000e3fff : PCI Bus 0000:00
+  000e4000-000e7fff : PCI Bus 0000:00
+  000e8000-000ebfff : PCI Bus 0000:00
+  000ec000-000effff : PCI Bus 0000:00
+  000f0000-000fffff : PCI Bus 0000:00
+    000f0000-000fffff : System ROM
+00100000-763f5fff : System RAM
+  65000000-6affffff : Crash kernel
+  74dd2000-74dd2fff : EFI Runtime
+763f6000-79974fff : Reserved
+79975000-799f1fff : ACPI Tables
+799f2000-79aa6fff : ACPI Non-volatile Storage
+  79a17000-79a17fff : USBC000:00
+79aa7000-7a40dfff : Reserved
+  79aa7000-7a316fff : EFI runtime
+  7a317000-7a40dfff : EFI runtime
+7a40e000-7a40efff : System RAM
+
+My kexec_file debugging currently looks like this:
+
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 79f252af7dee..3913129a6e22 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -542,6 +542,8 @@ static int locate_mem_hole_callback(struct resource *res, void *arg)
+        if (end < kbuf->buf_min || start > kbuf->buf_max)
+                return 0;
+ 
++       pr_debug("Considering 0x%llx-0x%llx\n", start, end);
++
+        /*
+         * Allocate memory top down with-in ram range. Otherwise bottom up
+         * allocation.
+
+... and outputs:
+
+[ 1103.941425] kexec-bzImage64: Loaded purgatory at 0x98000
+[ 1103.941428] kexec_file: Considering 0x1000-0x9efff
+[ 1103.941428] kexec-bzImage64: Loaded boot_param, command line and misc at 0x96000 bufsz=0x1240 memsz=0x1240
+[ 1103.941429] kexec_file: Considering 0x100000-0x763f5fff
+[ 1103.941430] kexec-bzImage64: Loaded 64bit kernel at 0x73000000 bufsz=0x1140888 memsz=0x24b7000
+[ 1103.941430] kexec-bzImage64: Final command line is: 
+[ 1104.017909] kexec_file: Loading segment 0: buf=0x00000000d7398bfe bufsz=0x5000 mem=0x98000 memsz=0x6000
+[ 1104.017936] kexec_file: Loading segment 1: buf=0x000000007238663b bufsz=0x1240 mem=0x96000 memsz=0x2000
+[ 1104.017938] kexec_file: Loading segment 2: buf=0x00000000bb108eb1 bufsz=0x1140888 mem=0x73000000 memsz=0x24b7000
 -- 
-Alexey
+Thank you for your patience,
+Michael
