@@ -2,143 +2,100 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83801C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 02:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FF9C43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 02:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A73220881
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 02:17:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="POn47bQ0"
+	by mail.kernel.org (Postfix) with ESMTP id B805E214AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 02:23:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727358AbfLBCR1 (ORCPT
+        id S1727337AbfLBCXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 21:17:27 -0500
-Received: from ozlabs.org ([203.11.71.1]:49411 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727298AbfLBCR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 21:17:27 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47R7zl3m4Dz9sNx;
-        Mon,  2 Dec 2019 13:17:23 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1575253043;
-        bh=qKvhvP+vkLsoAjR2coBKEozTrArZX0E+Nu2Btcv/YK4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=POn47bQ0alQ/NT3waoK8mqMclFewVI4/Pq94D6H6cJynlQFQcK0v8boT0fRsGE9Pn
-         HjjrhP42l58gUZTxLav3rOxSDt1krhnvkOe5CVNdKdX9TSZlU1T6+cJO/K6HJz88CK
-         tvwFeqLD1NTGryqg11g/iIiRU6lce6IEQ2mNdyocpEujh23CMmFWLxrPt+rXvGkZDT
-         /C581KB12+YV304BMloRxp4fMFGoVLgioioJCDhoWJvNivBMO7e2Hs+t48QrJiNsvd
-         ViBWVTqvGbU/43yr9jslemGzp0AOTNbGB3NHWMTuu48JJN06DwPMDlGSzIcJvveKyN
-         varTjiCQiVBgw==
-Date:   Mon, 2 Dec 2019 13:17:22 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Steven Price <steven.price@arm.com>
-Subject: linux-next: manual merge of the akpm tree with Linus' tree
-Message-ID: <20191202131722.111c5996@canb.auug.org.au>
+        Sun, 1 Dec 2019 21:23:13 -0500
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:50555 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727285AbfLBCXM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Dec 2019 21:23:12 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R871e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0TjbqBc0_1575253385;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TjbqBc0_1575253385)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 02 Dec 2019 10:23:06 +0800
+Subject: Re: [PATCH v2 2/3] sched/numa: expose per-task
+ pages-migration-failure
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
+ <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
+ <3931bf05-2939-0499-7660-8cc9a6f71c9a@linux.alibaba.com>
+Message-ID: <c63e9e2c-ea9e-3f61-734c-afa3b92cd5bb@linux.alibaba.com>
+Date:   Mon, 2 Dec 2019 10:22:15 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/bDsZE/DIrxhWBESXPmTgHfB";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <3931bf05-2939-0499-7660-8cc9a6f71c9a@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/bDsZE/DIrxhWBESXPmTgHfB
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi, Peter,
 
-Hi all,
+This has been acked by Mel Gorman, since it is not much related
+with the rest patches, would you like to pick this one now?
 
-Today's linux-next merge of the akpm tree got a conflict in:
+Regards,
+Michael Wang
 
-  include/linux/pagewalk.h
-
-between commit:
-
-  5b932abfc562 ("mm: pagewalk: add test_p?d callbacks")
-
-from Linus' tree and patch:
-
-  "mm: pagewalk: add test_p?d callbacks"
-
-from the akpm tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc include/linux/pagewalk.h
-index 2c9725bdcf1f,fe61448c5900..000000000000
---- a/include/linux/pagewalk.h
-+++ b/include/linux/pagewalk.h
-@@@ -24,9 -24,11 +24,14 @@@ struct mm_walk
-   *			"do page table walk over the current vma", returning
-   *			a negative value means "abort current page table walk
-   *			right now" and returning 1 means "skip the current vma"
-+  * @test_pmd:		similar to test_walk(), but called for every pmd.
-+  * @test_pud:		similar to test_walk(), but called for every pud.
-+  * @test_p4d:		similar to test_walk(), but called for every p4d.
-+  *			Returning 0 means walk this part of the page tables,
-+  *			returning 1 means to skip this range.
- + * @pre_vma:            if set, called before starting walk on a non-null=
- vma.
- + * @post_vma:           if set, called after a walk on a non-null vma, pr=
-ovided
- + *                      that @pre_vma and the vma walk succeeded.
-   *
-   * p?d_entry callbacks are called even if those levels are folded on a
-   * particular architecture/configuration.
-@@@ -49,9 -51,12 +54,15 @@@ struct mm_walk_ops=20
-  			     struct mm_walk *walk);
-  	int (*test_walk)(unsigned long addr, unsigned long next,
-  			struct mm_walk *walk);
-+ 	int (*test_pmd)(unsigned long addr, unsigned long next,
-+ 			pmd_t *pmd_start, struct mm_walk *walk);
-+ 	int (*test_pud)(unsigned long addr, unsigned long next,
-+ 			pud_t *pud_start, struct mm_walk *walk);
-+ 	int (*test_p4d)(unsigned long addr, unsigned long next,
-+ 			p4d_t *p4d_start, struct mm_walk *walk);
- +	int (*pre_vma)(unsigned long start, unsigned long end,
- +		       struct mm_walk *walk);
- +	void (*post_vma)(struct mm_walk *walk);
-  };
- =20
-  /**
-
---Sig_/bDsZE/DIrxhWBESXPmTgHfB
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3kdDIACgkQAVBC80lX
-0Gy2Gwf/ac8IMoB/PyIMZ7QnBpxwv6FwUnwdUpX37vVCN65ULvsuwgfpzk3KXC/e
-UGWGGINA8/D9pa1LSxM9J1YmsYk8sHvuRnDw4w7rwEJtYQWEFO6/VILoyP99pFzY
-VuLmpuF/KXkl+uC41VPIQp7uufbNX79hq8ZCjDggQT6WykManMyH6PPl7NmHGzCD
-jaHl6zggPwnvz71xLhp5AXGTY3mU5CiOY2OQuwgQjv4GnuEXbbsYD4TtzRnLtHRv
-KITn1iOagxgBt8bnoJYztkj0bK1IiQ8SY1ZnvkJ8omsAvhuxfHAk7Wed1wKPXUf2
-qkAOX1h5wKx9H7hJQ1HAvS7v5/8asg==
-=6eiX
------END PGP SIGNATURE-----
-
---Sig_/bDsZE/DIrxhWBESXPmTgHfB--
+On 2019/11/27 上午9:50, 王贇 wrote:
+> NUMA balancing will try to migrate pages between nodes, which
+> could caused by memory policy or numa group aggregation, while
+> the page migration could failed too for eg when the target node
+> run out of memory.
+> 
+> Since this is critical to the performance, admin should know
+> how serious the problem is, and take actions before it causing
+> too much performance damage, thus this patch expose the counter
+> as 'migfailed' in '/proc/PID/sched'.
+> 
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Michal Koutný <mkoutny@suse.com>
+> Suggested-by: Mel Gorman <mgorman@suse.de>
+> Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
+> ---
+>  kernel/sched/debug.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+> index f7e4579e746c..73c4809c8f37 100644
+> --- a/kernel/sched/debug.c
+> +++ b/kernel/sched/debug.c
+> @@ -848,6 +848,7 @@ static void sched_show_numa(struct task_struct *p, struct seq_file *m)
+>  	P(total_numa_faults);
+>  	SEQ_printf(m, "current_node=%d, numa_group_id=%d\n",
+>  			task_node(p), task_numa_group_id(p));
+> +	SEQ_printf(m, "migfailed=%lu\n", p->numa_faults_locality[2]);
+>  	show_numa_stats(p, m);
+>  	mpol_put(pol);
+>  #endif
+> 
