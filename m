@@ -2,48 +2,50 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90070C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33050C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A24720848
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:33:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4C2520848
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:33:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=freesources.org header.i=@freesources.org header.b="WibdspO+"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=freesources.org header.i=@freesources.org header.b="nxfLAId5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbfLBRdI (ORCPT
+        id S1727841AbfLBRdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 12:33:08 -0500
-Received: from mx3.freesources.org ([195.34.172.217]:36472 "EHLO
+        Mon, 2 Dec 2019 12:33:11 -0500
+Received: from mx3.freesources.org ([195.34.172.217]:36476 "EHLO
         mx3.freesources.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727671AbfLBRdF (ORCPT
+        with ESMTP id S1727815AbfLBRdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.ORG>);
-        Mon, 2 Dec 2019 12:33:05 -0500
+        Mon, 2 Dec 2019 12:33:09 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=freesources.org; s=20160526; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Cc:To:Subject:From:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=imtAPl4o+FKPOJSi1wuV2NOHPm5W2xW9sOmyCAhb8kI=; b=WibdspO+TC0pJ+/I8+vhuegLVz
-        sX9zkeo3pLOeSWp6z2B46Iu5wU9ES0Xqr3FdPih6+OLgazi72l6f2o4nZtwPG9QwuWsSiYP+sfTa8
-        3wmrf6hL/9Un6pgd/U+gZlZo+liayQO9zMxV31uY1WhpKTggH5Z1qoTiUO9fmXPZtFNs=;
+        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=9Bz7f1fHfXGjYvDKzYcPnR8z62wSSDRcp2hgIysBpVk=; b=nxfLAId5kcm1a7fRPsy7tN9HlG
+        4mvI+5KqzNs8q4YIRSqRQphmeHykOSjNXIALv3MbZcyJ2hQ7YrQaCkbjEFR6Zgsb9csA8IvXjR4r9
+        Rak9ijiTHDqo7tsP/E6Sj/XP0YG5LbCB8ubo1ZqMa6uxt4BYOJBF4MoiFvEeau4FNh7A=;
 Received: from anon-35-121.vpn.ipredator.se ([46.246.35.121])
         by mx3.freesources.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.89)
         (envelope-from <jonas@freesources.org>)
-        id 1ibp8c-0008Bx-17; Mon, 02 Dec 2019 17:05:30 +0000
-From:   Jonas Meurer <jonas@freesources.org>
-Subject: [PATCH 0/2] PM: Add a switch for disabling/enabling sync() before
+        id 1ibpAC-0008Ec-36; Mon, 02 Dec 2019 17:07:08 +0000
+Subject: [PATCH 1/2] PM: Add a switch for disabling/enabling sync() before,
  suspend
+From:   Jonas Meurer <jonas@freesources.org>
 To:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
         Tim Dittler <tim.dittler@systemli.org>,
         Yannik Sembritzki <yannik@sembritzki.me>
+References: <1ee5b9ef-f30e-3fde-2325-ba516a96ced5@freesources.org>
 Autocrypt: addr=jonas@freesources.org; prefer-encrypt=mutual; keydata=
  mQINBEqFXAEBEAC+7gfLht8lDqGH1EPYoctDHvWQ4nk60UFDLfjqHmBGReL/9C7CyxYaqgY4
  V1/DXPCmsO5PvHMSi6VPn3B81alPKMT6syQhxDN6CXETh/mrxRbTPyQVSKYdD/BvA94vgwfy
@@ -128,11 +130,12 @@ Autocrypt: addr=jonas@freesources.org; prefer-encrypt=mutual; keydata=
  ucOyOCxbGK0rfZasgPXkzxTWohgQwhBvw+eZ+VXzjHiRyGQ4x1Jay9eYiw7QeOiLDQxQcxLI
  tAzfoD+TN75zyJrLjknLC+udmMVZMcserZHCUnb9WBW4qMNyy9PI53Ha6bvfZXbZCeS3PjTo
  2SCIHpzHfm/mpRL2
-Message-ID: <1ee5b9ef-f30e-3fde-2325-ba516a96ced5@freesources.org>
-Date:   Mon, 2 Dec 2019 18:05:27 +0100
+Message-ID: <fceb198d-af5b-4d2e-ca55-8232295b202d@freesources.org>
+Date:   Mon, 2 Dec 2019 18:07:05 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <1ee5b9ef-f30e-3fde-2325-ba516a96ced5@freesources.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -141,23 +144,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+The switch allows to enable or disable the final sync() from the suspend.c
+Linux Kernel system suspend implementation. This is useful to avoid race
+conditions if block devices have been suspended before. Be aware that you
+have to take care of sync() yourself before suspending the system if you
+disable it here.
 
-Introduce a new run-time sysfs switch to disable/enable sync() before
-system suspend. This is useful to avoid races and deadlocks if block
-devices have been suspended before, e.g. by 'cryptsetup luksSuspend'.
-
-The second patch changes the behaviour of build-time switch
-'CONFIG_SUSPEND_SKIP_SYNC' accordingly, using the build-time switch value
-as default for our new run-time switch '/sys/power/sync_on_suspend'.
-
-Jonas Meurer (2):
-  PM: Add a switch for disabling/enabling sync() before suspend
-  PM: CONFIG_SUSPEND_SKIP_SYNC sets default for '/sys/power/sync_on_suspend'
-
- Documentation/ABI/testing/sysfs-power | 15 +++++++++++++++
+Signed-off-by: Jonas Meurer <jonas@freesources.org>
+---
+ Documentation/ABI/testing/sysfs-power | 14 ++++++++++++
  include/linux/suspend.h               |  2 ++
- kernel/power/Kconfig                  |  5 ++++-
- kernel/power/main.c                   | 33 +++++++++++++++++++++++++++++++++
+ kernel/power/main.c                   | 33 +++++++++++++++++++++++++++
  kernel/power/suspend.c                |  2 +-
- 5 files changed, 55 insertions(+), 2 deletions(-)
+ 4 files changed, 50 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-power b/Documentation/ABI/testing/sysfs-power
+index 6f87b9dd384b..f164a364e89a 100644
+--- a/Documentation/ABI/testing/sysfs-power
++++ b/Documentation/ABI/testing/sysfs-power
+@@ -407,3 +407,17 @@ Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
+ Description:
+ 		The /sys/power/suspend_stats/last_failed_step file contains
+ 		the last failed step in the suspend/resume path.
++
++What:		/sys/power/sync_on_suspend
++Date:		October 2019
++Contact:	Jonas Meurer <jonas@freesources.org>
++Description:
++		This file controls the switch to enable or disable the final
++		sync() before system suspend. This is useful to avoid race
++		conditions if block devices have been suspended before. Be
++		aware that you have to take care of sync() yourself before
++		suspending the system if you disable it here.
++
++		Writing a "1" (default) to this file enables the sync() and
++		writing a "0" disables it. Reads from the file return the
++		current value.
+diff --git a/include/linux/suspend.h b/include/linux/suspend.h
+index 6fc8843f1c9e..4a230c2f1c31 100644
+--- a/include/linux/suspend.h
++++ b/include/linux/suspend.h
+@@ -329,6 +329,7 @@ extern void arch_suspend_disable_irqs(void);
+ extern void arch_suspend_enable_irqs(void);
+ 
+ extern int pm_suspend(suspend_state_t state);
++extern bool sync_on_suspend_enabled;
+ #else /* !CONFIG_SUSPEND */
+ #define suspend_valid_only_mem	NULL
+ 
+@@ -342,6 +343,7 @@ static inline bool pm_suspend_default_s2idle(void) { return false; }
+ 
+ static inline void suspend_set_ops(const struct platform_suspend_ops *ops) {}
+ static inline int pm_suspend(suspend_state_t state) { return -ENOSYS; }
++static inline bool sync_on_suspend_enabled(void) { return true; }
+ static inline bool idle_should_enter_s2idle(void) { return false; }
+ static inline void __init pm_states_init(void) {}
+ static inline void s2idle_set_ops(const struct platform_s2idle_ops *ops) {}
+diff --git a/kernel/power/main.c b/kernel/power/main.c
+index e26de7af520b..7d9d579a8e6f 100644
+--- a/kernel/power/main.c
++++ b/kernel/power/main.c
+@@ -190,6 +190,38 @@ static ssize_t mem_sleep_store(struct kobject *kobj, struct kobj_attribute *attr
+ }
+ 
+ power_attr(mem_sleep);
++
++/*
++ * sync_on_suspend: invoke ksys_sync_helper() before suspend.
++ *
++ * show() returns whether ksys_sync_helper() is invoked before suspend.
++ * store() accepts 0 or 1.  0 disables ksys_sync_helper() and 1 enables it.
++ */
++bool sync_on_suspend_enabled = true;
++
++static ssize_t sync_on_suspend_show(struct kobject *kobj,
++				   struct kobj_attribute *attr, char *buf)
++{
++	return sprintf(buf, "%d\n", sync_on_suspend_enabled);
++}
++
++static ssize_t sync_on_suspend_store(struct kobject *kobj,
++				    struct kobj_attribute *attr,
++				    const char *buf, size_t n)
++{
++	unsigned long val;
++
++	if (kstrtoul(buf, 10, &val))
++		return -EINVAL;
++
++	if (val > 1)
++		return -EINVAL;
++
++	sync_on_suspend_enabled = !!val;
++	return n;
++}
++
++power_attr(sync_on_suspend);
+ #endif /* CONFIG_SUSPEND */
+ 
+ #ifdef CONFIG_PM_SLEEP_DEBUG
+@@ -855,6 +887,7 @@ static struct attribute * g[] = {
+ 	&wakeup_count_attr.attr,
+ #ifdef CONFIG_SUSPEND
+ 	&mem_sleep_attr.attr,
++	&sync_on_suspend_attr.attr,
+ #endif
+ #ifdef CONFIG_PM_AUTOSLEEP
+ 	&autosleep_attr.attr,
+diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
+index f3b7239f1892..503d56419a69 100644
+--- a/kernel/power/suspend.c
++++ b/kernel/power/suspend.c
+@@ -564,7 +564,7 @@ static int enter_state(suspend_state_t state)
+ 	if (state == PM_SUSPEND_TO_IDLE)
+ 		s2idle_begin();
+ 
+-	if (!IS_ENABLED(CONFIG_SUSPEND_SKIP_SYNC)) {
++	if (!IS_ENABLED(CONFIG_SUSPEND_SKIP_SYNC) && sync_on_suspend_enabled) {
+ 		trace_suspend_resume(TPS("sync_filesystems"), 0, true);
+ 		ksys_sync_helper();
+ 		trace_suspend_resume(TPS("sync_filesystems"), 0, false);
+-- 
+2.20.1
