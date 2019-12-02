@@ -2,103 +2,121 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED15C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1C4C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44FDC215E5
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 662F2215E5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:04:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=home.nl header.i=@home.nl header.b="Qeyz9euu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SUG7XFQx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbfLBMDD (ORCPT
+        id S1727446AbfLBME4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 07:03:03 -0500
-Received: from smtpq3.tb.mail.iss.as9143.net ([212.54.42.166]:45986 "EHLO
-        smtpq3.tb.mail.iss.as9143.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726149AbfLBMDD (ORCPT
+        Mon, 2 Dec 2019 07:04:56 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:47081 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727423AbfLBME4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 07:03:03 -0500
-X-Greylist: delayed 1242 seconds by postgrey-1.27 at vger.kernel.org; Mon, 02 Dec 2019 07:03:02 EST
-Received: from [212.54.42.137] (helo=smtp6.tb.mail.iss.as9143.net)
-        by smtpq3.tb.mail.iss.as9143.net with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <karsdejong@home.nl>)
-        id 1ibk5q-0004qu-SW
-        for linux-kernel@vger.kernel.org; Mon, 02 Dec 2019 12:42:18 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=home.nl;
-        s=201809corplgsmtpnl; h=To:Subject:Date:From;
-        bh=YLXC0XBbzlwCAGXJDXKrvYIocVCl4uJewEHmpw/A/Xg=; b=Qeyz9euu5PUo2yiYsI0e02mHAK
-        A/onbgBUpQpLbVD5NFfcAE2SulZ3YalcVU0bEz9bsnMTFTZMTgM/EfNjA+pFxOa1Wh/Y3+g5ZJ0N9
-        TUxWeLJmm0C/LK1jae3MzdeQaUzpk7/bewGPp4WSfMOPLQLlHo15EOUaRPdZQe1KxUGACU/bzO5eD
-        N5gPN/4CzYf1fpwQkilDU6VpFejJX7Wu73Fax26ASw0Iuu8zKofWNHRr7KINRp46Qzmm2as0xom2u
-        tndeoww+nFmqe7gj66l9xHoWNA2kfKeNl1VnJjJYkMoa793iSvz0QzVA+FwM2hnmpb2WsBkxzcXKb
-        d9MrWn5A==;
-Received: from mail-wr1-f41.google.com ([209.85.221.41])
-        by smtp6.tb.mail.iss.as9143.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <karsdejong@home.nl>)
-        id 1ibk5q-00029O-Np
-        for linux-kernel@vger.kernel.org; Mon, 02 Dec 2019 12:42:18 +0100
-Received: by mail-wr1-f41.google.com with SMTP id t2so43786963wrr.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 03:42:18 -0800 (PST)
-X-Gm-Message-State: APjAAAX7S7CcJrP7gxDU2FiW7wxDBN6/cRHJo9mdStyS32doshD9/AF8
-        Csb1d6zWxEAzpbUYfAKRy9MACyGEzHC0HPnR7CA=
-X-Google-Smtp-Source: APXvYqz7beAF7NVKzbZBeYsQhk6HkVllb6e0glkpL5bjyQ+026De230D24PuabZGNA1S9X13vvdS040AL9ds4Hlfc24=
-X-Received: by 2002:a5d:51c6:: with SMTP id n6mr21525943wrv.250.1575286938367;
- Mon, 02 Dec 2019 03:42:18 -0800 (PST)
+        Mon, 2 Dec 2019 07:04:56 -0500
+Received: by mail-wr1-f68.google.com with SMTP id z7so40449865wrl.13
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 04:04:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=soNW5fohseRrYu9CQUXRU3A2LW40lxkkIsWjpHtjy+4=;
+        b=SUG7XFQxmmslnG3yAcE+XfPV6jsM+pD0FOn/54XPlpukSkJwexaujXTj7VWCN9CS51
+         K1BGEZpvuVusIAPNwGWYifr6QBV3Ofv4pimEXUe+U5dyoDivC/moJFyo7GSqhy6FLBzE
+         WWeFROjbPyNLXD3Ms5kdMU3IRJEI7ZHRWvg6XrjX7ok5CeC3Ac+2cLeXhB6D9JI3Gqwy
+         27A+Hp/ugNpWU9QCKhl8xOP3Fq7lXOWOI4LlRYonFmGczAd9+0uJkz7DoDYWZddCb0O4
+         LP84Kbe0/+QVfD1OcPz8Aj/skgXs+GqAe4hzEhQR44AkCyfP06M0x65zCPiL2tsJnVzV
+         ilGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=soNW5fohseRrYu9CQUXRU3A2LW40lxkkIsWjpHtjy+4=;
+        b=Y4V9QjSxajLj/I6edfHKbT7LGSKajLnvPVj0hyiVk1NGpuQTaWLwCdzOLAh1DjTt/Y
+         UJz9H/2l+iIGO+VRXNOV+5ItNRlR13RfY9m3SDhgDATeO6ILv1XkOgZhwMyTRGOhR+Ks
+         WTc1zjtHeR/LcjckUUXr0RLF4WyGE0ytNHSNh8axcxCGbRpBRm0O89G7vD6eOAp9obOa
+         0hq2JtnIb+hjrEgIHj2/2t0FTkOJ3kOIwP73XdsZ1qcZXI++7DzZT48MdYo/cIu4Hysj
+         jMZ3S5kEYdf22SXH5OU3UKO2VAP4T8izZYYDe4Ce8r08AZt4oYpU1HEY8J0nvDhpEEiW
+         3kgQ==
+X-Gm-Message-State: APjAAAWZqYEAtdGi4xODOfQKmfnj2tTVOZ6LD4uXWg69Stco6UWpze+3
+        EISpGFm/G3sT71dr2XXcgTmX+g==
+X-Google-Smtp-Source: APXvYqwOBVgqYt1ED9Zw7laHel2W8Pvb3keFWerq1L9G4LSaenpLO4wmf6lPLnHFD28jBsEIYgohAA==
+X-Received: by 2002:adf:db86:: with SMTP id u6mr72454037wri.318.1575288293871;
+        Mon, 02 Dec 2019 04:04:53 -0800 (PST)
+Received: from dell ([2.27.35.155])
+        by smtp.gmail.com with ESMTPSA id 60sm40793963wrn.86.2019.12.02.04.04.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 04:04:53 -0800 (PST)
+Date:   Mon, 2 Dec 2019 12:04:42 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Marco Felsch <m.felsch@pengutronix.de>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Sascha Hauer <kernel@pengutronix.de>
+Subject: Re: [PATCH v3 0/6] DA9062 PMIC features
+Message-ID: <20191202120442.GC14416@dell>
+References: <20191129172537.31410-1-m.felsch@pengutronix.de>
+ <CACRpkdaSmwORgetv7aZjtgk+2OchcvQR4SBjdWQ4KsRMHuUvSg@mail.gmail.com>
 MIME-Version: 1.0
-References: <021330b6-67a2-0b74-c129-5c725dd23810@infradead.org> <CAMuHMdVLusDDB5G1R7=-53sK1bd2+3=s42hr9xkgPtWyjOrozg@mail.gmail.com>
-In-Reply-To: <CAMuHMdVLusDDB5G1R7=-53sK1bd2+3=s42hr9xkgPtWyjOrozg@mail.gmail.com>
-From:   Kars de Jong <karsdejong@home.nl>
-Date:   Mon, 2 Dec 2019 12:42:07 +0100
-X-Gmail-Original-Message-ID: <CACz-3rjOPg_rMt_FbJ5_nKLpjTK-Bv=amGsJpXwqbTBNX4YA7w@mail.gmail.com>
-Message-ID: <CACz-3rjOPg_rMt_FbJ5_nKLpjTK-Bv=amGsJpXwqbTBNX4YA7w@mail.gmail.com>
-Subject: Re: m68k Kconfig warning
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-SourceIP: 209.85.221.41
-X-Authenticated-Sender: karsdejong@home.nl (via SMTP)
-X-Ziggo-spambar: /
-X-Ziggo-spamscore: 0.0
-X-Ziggo-spamreport: CMAE Analysis: v=2.3 cv=ZLepZkzb c=1 sm=1 tr=0 a=9+rZDBEiDlHhcck0kWbJtElFXBc=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=IkcTkHD0fZMA:10 a=pxVhFHJ0LMsA:10 a=tBb2bbeoAAAA:8 a=JfrnYn6hAAAA:8 a=_nT3hX5ytRn4k0QMb7MA:9 a=QEXdDO2ut3YA:10 a=Oj-tNtZlA1e06AYgeCfH:22 a=1CNFftbPRP8L7MoqJWF3:22
-X-Ziggo-Spam-Status: No
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdaSmwORgetv7aZjtgk+2OchcvQR4SBjdWQ4KsRMHuUvSg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert & Randy,
+On Mon, 02 Dec 2019, Linus Walleij wrote:
 
-Op wo 27 nov. 2019 om 08:12 schreef Geert Uytterhoeven <geert@linux-m68k.org>:
-> On Wed, Nov 27, 2019 at 2:27 AM Randy Dunlap <rdunlap@infradead.org> wrote:
-> > Just noticed this.  I don't know what the right fix is.
-> > Would you take care of it, please?
-> >
-> > on Linux 5.4, m68k allmodconfig:
-> >
-> > WARNING: unmet direct dependencies detected for NEED_MULTIPLE_NODES
-> >   Depends on [n]: DISCONTIGMEM [=n] || NUMA
-> >   Selected by [y]:
-> >   - SINGLE_MEMORY_CHUNK [=y] && MMU [=y]
->
-> This has been basically there forever, but working.
+> On Fri, Nov 29, 2019 at 6:25 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
+> 
+> > this series address all comments made on [1]. Patch "gpio: add support
+> > to get local gpio number" is splitted into:
+> >  - "gpio: treewide rename gpio_chip_hwgpio to gpiod_to_offset"
+> >  - "gpio: make gpiod_to_offset() available for other users"
+> > Please check the discussion [1] for more information. You need to apply
+> > [2] to test the new features.
+> 
+> I am very happy with the shape of patches (1) and (2).
+> 
+> I can apply these on an immutable branch and merge into the
+> GPIO tree at v5.5-rc1 and offer to other subsystem maintainers
+> to pull in so they can merge the rest of the patch series on
+> top.
+> 
+> Alternatively I can merge all the patches into the GPIO tree.
+> 
+> I suppose this is not so much of a MFD business at this
+> point so whatever the regulator maintainer prefers I suppose?
 
-The reason for SINGLE_MEMORY_CHUNK depending on NEED_MULTIPLE_NODES is
-historic due to the way it is implemented.
-I played with it this weekend and I got a working version of FLATMEM,
-which can replace SINGLE_MEMORY_CHUNK.
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-I'll clean it up and send a patch later this week. A possible next
-step might be to replace DISCONTIGMEM with SPARSEMEM (since
-DISCONTIGMEM has been deprecated).
-
-Kind regards,
-
-Kars.
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
