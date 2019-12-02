@@ -6,63 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E397DC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 02:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60731C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 02:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAF6E2146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 02:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 341F3215F1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 02:05:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575252319;
-	bh=30ix3BPiH2zbGQ1mKoLQ+Ch4hXVi0LdKv9c7G/bbkKA=;
+	s=default; t=1575252322;
+	bh=shnHspuNEyB+HT9GYrZFmLBaqfcrlUpBGIORO0Z11EE=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=cbEfnncJgkPQylKld4DlIMjTlgvFDrmJ4HgxD7pnN8odvP73QKJXlCvdtYdSY4jvu
-	 y+2FezPAoCYXsa3QGxKbRKzNy2Sp0yuPA7g4+Kobz8UM44vlJo8Zcv1GfQGRGXbaPu
-	 CiPHBcakkF4dZ5dJZHDw7PgHyp1feAa8gYcBZ4QQ=
+	b=GhokaCh5ax/GoH/8JVYGvQfr/SyPiGGXYcj6F7kB0fuDRgBis1jt00wrDd9x99gl1
+	 ZX+l7vrNFC+fURhVNmLx5WZAslgd4wnnrCzf5tB5pFmdN/rtWpSIPykatoH7l9H9EZ
+	 KV/qstkY7Qoaeh1pbqZyK0Y06UcrXxnaqJc/yZmc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727719AbfLBCFS (ORCPT
+        id S1727734AbfLBCFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 21:05:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53864 "EHLO mail.kernel.org"
+        Sun, 1 Dec 2019 21:05:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727681AbfLBCFR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727699AbfLBCFR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 1 Dec 2019 21:05:17 -0500
-Subject: Re: [GIT PULL] Oneliner fix for the pinctrl pull request
+Subject: Re: [GIT PULL] LEDs changes for v5.5-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575252317;
-        bh=30ix3BPiH2zbGQ1mKoLQ+Ch4hXVi0LdKv9c7G/bbkKA=;
+        s=default; t=1575252316;
+        bh=shnHspuNEyB+HT9GYrZFmLBaqfcrlUpBGIORO0Z11EE=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=iiFzEa2Ul0LQvYaHQeZk29EAiVDpJSiRiOjg9PiCpLT9AQtKl6iKW2+m2j6c/vePX
-         NOMLN3SJ2AcAS0D/I8G0XDkeJHCC6esn2HrlNIsBVfKCRDEM+Xv6f8H3lHQ9JG0hNE
-         g+5FO6VQ9HoF4B17iNCniiZe0UAFt+S3eAt5xYwk=
+        b=e01TU8UMewpLntxhe0nM8vueieYDILPfT1OsaTrJPRUkcDeMSLrgg+5WGge7VomLb
+         ulWtWQXDRMfOc0q8gmoDm94XrekgO7QenDNpIGffvDCiWd2WifjNmqsYAPSuNZYM6d
+         mvHlbky480DaxcEIPTPItcLH4dsDLlMniDgFl2YY=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdb_5xjLBSPaGrDadHUj=4Npz13YELJw+Ov+JyigGPBZjg@mail.gmail.com>
-References: <CACRpkdb_5xjLBSPaGrDadHUj=4Npz13YELJw+Ov+JyigGPBZjg@mail.gmail.com>
+In-Reply-To: <20191127224614.GA24850@amd>
+References: <20191127224614.GA24850@amd>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdb_5xjLBSPaGrDadHUj=4Npz13YELJw+Ov+JyigGPBZjg@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
- tags/pinctrl-v5.5-2
-X-PR-Tracked-Commit-Id: 6d29032c2cef31633db5dfd946fbcf9190dddef0
+X-PR-Tracked-Message-Id: <20191127224614.GA24850@amd>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git/
+ tags/leds-5.5-rc1
+X-PR-Tracked-Commit-Id: 5f820ed52371b4f5d8c43c93f03408d0dbc01e5b
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8b233da0cc825166b5fa06c898517a7477b54388
-Message-Id: <157525231728.26823.4501025545170073476.pr-tracker-bot@kernel.org>
-Date:   Mon, 02 Dec 2019 02:05:17 +0000
-To:     Linus Walleij <linus.walleij@linaro.org>
+X-PR-Merge-Commit-Id: 304220b56e8c6a99b71832427802221be472247a
+Message-Id: <157525231674.26823.10880597113358141112.pr-tracker-bot@kernel.org>
+Date:   Mon, 02 Dec 2019 02:05:16 +0000
+To:     Pavel Machek <pavel@ucw.cz>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        kernel list <linux-kernel@vger.kernel.org>,
+        jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 28 Nov 2019 14:18:51 +0100:
+The pull request you sent on Wed, 27 Nov 2019 23:46:14 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.5-2
+> git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git/ tags/leds-5.5-rc1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8b233da0cc825166b5fa06c898517a7477b54388
+https://git.kernel.org/torvalds/c/304220b56e8c6a99b71832427802221be472247a
 
 Thank you!
 
