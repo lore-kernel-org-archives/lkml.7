@@ -2,97 +2,138 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 389BBC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F5EC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B16420674
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB4B420674
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:17:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ayWr/e+o"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oz6AzYkz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbfLBNNK (ORCPT
+        id S1727433AbfLBNRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 08:13:10 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35167 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727438AbfLBNNJ (ORCPT
+        Mon, 2 Dec 2019 08:17:03 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:44202 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727386AbfLBNRC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 08:13:09 -0500
-Received: by mail-ot1-f65.google.com with SMTP id o9so9955952ote.2;
-        Mon, 02 Dec 2019 05:13:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WpIVdJ8zzeydWnGV0Hm0bnq5TGbHkB7RgM4W8WL7sQM=;
-        b=ayWr/e+ojhqdyu94ajPFzL4M/3r8yrPBFpdu7nuiYbIwFygf5EZ9TGON0Us19wyU+g
-         V68zxsz72/NemBDm2k+BI3fe74hktkIKR7RGb8FhuVdIZtsUYAw7o9e2HbuMfE8yCxLP
-         88ucrHc5Me/bP5KjJwif2SovclkPZ5qqjqzxbAKDaCDcYj4vc/U/a0m9OR+cl8q3Fj56
-         D5Y2983Lbri5rCyCKWUukztlOgyQ6Wt0kUxIREWGMUD5hqaqiOJiaUzdbkyr9k2SzZN+
-         7Cud5lM13oPBVaDrrwFk6+S1C0Vv+gUzOBPptDT+WNZ7Qvzqf9Rl1ulx7/HUzxlCuB8s
-         K94w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WpIVdJ8zzeydWnGV0Hm0bnq5TGbHkB7RgM4W8WL7sQM=;
-        b=NbqHeU/K8tC8HmYZCYNnLengwlcYPENgkF6AJWa8CvQ9I3me1qbP5yuEvZXzUnPGeq
-         tQfTXZbu7/DN/DxqwbE7YcyifuixpRwz7eRLbJQyqZe+vQETzQ8Z7OrJkCaXxZlllPIk
-         UARhEo30qK29v01gYQffeSMKpbl+6G9GNjNI7Li1UlTTWOXsvGXezMFzVVwH4HTp0M/N
-         A6ayIwLs18NoevXW4HtoXvEtaPdVAS+wMmko0vI10585MPhADVn3ft5ORiP3ZaKJhsac
-         T2oVNnPgtmHbnj/gu9PBYjSAPSV1WSxGDJUy5xxGwl+cxLNsMK3WqXX3AVr7wA6zfstD
-         n5sQ==
-X-Gm-Message-State: APjAAAVUaI0FOMK2o9gIcnSwQTmXFPOiVD5XmLQ3pUHlp8dwgKfpIQ5j
-        Gvf4F0Uw0qrfqPe0oOHkvxQ=
-X-Google-Smtp-Source: APXvYqy4jx57qvDjpsvRN6iwGNeUOPmVPh3Uq+t3tmkFnPEJ9SiuOml5GNtzXGDCfgq9FhDaTZxeHg==
-X-Received: by 2002:a9d:18b:: with SMTP id e11mr19617070ote.305.1575292388688;
-        Mon, 02 Dec 2019 05:13:08 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id y16sm7700673otq.60.2019.12.02.05.13.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Dec 2019 05:13:07 -0800 (PST)
-Date:   Mon, 2 Dec 2019 05:13:06 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     y2038@lists.linaro.org, Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Christian Brauner <christian@brauner.io>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        linux-alpha@vger.kernel.org
-Subject: Re: [PATCH 19/23] y2038: use compat_{get,set}_itimer on alpha
-Message-ID: <20191202131306.GA6633@roeck-us.net>
-References: <20191108210236.1296047-1-arnd@arndb.de>
- <20191108211323.1806194-10-arnd@arndb.de>
+        Mon, 2 Dec 2019 08:17:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=cfCiwtxTe+vevwBzRpyd6UE5jtUfQLTraXDXuVr+qRs=; b=oz6AzYkz5r2qVrpoW55f7cxZF
+        bYrx7ddyJSjgxjKGmgL/qrow4MBusbBYzLMT9anlmqyIYM3Z/AalDWHpb86HJV4oY5+CxzEaDS1YX
+        EjO/VeiNi//RSFp+GKz6XsvM1ou2X5UqS/aDhAaxy33zp63wcDExllZb8JtFxjFa4CnH8xsSWYzrB
+        R6vpSDR+2VYagy0x9qLu7XMc9XdkQ0JiodG7pFcrN3gFdoLNBEdvzzFifOSj0/4Or8IfRigk3AOJi
+        bCA2mdhg1BNxI3TDfl9mLDybL5+xlyEBu3A9Vq1nRHaLRvGMP3jOVy2T0eBvBKWPR7GnB4uLh0MrT
+        LHeg28ijw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iblZJ-0008BE-AR; Mon, 02 Dec 2019 13:16:49 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 039463011DD;
+        Mon,  2 Dec 2019 14:15:31 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D8A8620236A49; Mon,  2 Dec 2019 14:16:46 +0100 (CET)
+Date:   Mon, 2 Dec 2019 14:16:46 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kan.liang@linux.intel.com
+Cc:     mingo@redhat.com, acme@kernel.org, tglx@linutronix.de,
+        bp@alien8.de, linux-kernel@vger.kernel.org, eranian@google.com,
+        alexey.budankov@linux.intel.com, vitaly.slobodskoy@intel.com,
+        ak@linux.intel.com
+Subject: Re: [RFC PATCH 2/8] perf: Helpers for alloc/init/fini PMU specific
+ data
+Message-ID: <20191202131646.GD2827@hirez.programming.kicks-ass.net>
+References: <1574954071-6321-1-git-send-email-kan.liang@linux.intel.com>
+ <1574954071-6321-2-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191108211323.1806194-10-arnd@arndb.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1574954071-6321-2-git-send-email-kan.liang@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 10:12:18PM +0100, Arnd Bergmann wrote:
-> The itimer handling for the old alpha osf_setitimer/osf_getitimer
-> system calls is identical to the compat version of getitimer/setitimer,
-> so just use those directly.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On Thu, Nov 28, 2019 at 07:14:25AM -0800, kan.liang@linux.intel.com wrote:
 
-alpha:allnoconfig, alpha:tinyconfig:
+> +static int
+> +__alloc_task_ctx_data_rcu(struct task_struct *task,
+> +			  size_t ctx_size, gfp_t flags)
+> +{
+> +	struct perf_ctx_data *ctx_data = task->perf_ctx_data;
+> +	int ret;
+> +
+> +	lockdep_assert_held_once(&task->perf_ctx_data_lock);
+> +
+> +	ret = alloc_perf_ctx_data(ctx_size, flags, &ctx_data);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ctx_data->refcount = 1;
+> +
+> +	rcu_assign_pointer(task->perf_ctx_data, ctx_data);
+> +
+> +	return 0;
+> +}
 
-alpha-linux-ld: arch/alpha/kernel/systbls.o: in function `sys_call_table':
-(.data+0x298): undefined reference to `compat_sys_setitimer'
-alpha-linux-ld: (.data+0x2b0): undefined reference to `compat_sys_getitimer'
+> +static int
+> +__init_task_ctx_data_rcu(struct task_struct *task, size_t ctx_size, gfp_t flags)
+> +{
+> +	struct perf_ctx_data *ctx_data = task->perf_ctx_data;
+> +
+> +	lockdep_assert_held_once(&task->perf_ctx_data_lock);
+> +
+> +	if (ctx_data) {
+> +		ctx_data->refcount++;
+> +		return 0;
+> +	}
+> +
+> +	return __alloc_task_ctx_data_rcu(task, ctx_size, flags);
+> +}
 
-Guenter
+> +/**
+> + * Free perf_ctx_data RCU pointer for a task
+> + * @task:        Target Task
+> + * @force:       Unconditionally free perf_ctx_data
+> + *
+> + * If force is set, free perf_ctx_data unconditionally.
+> + * Otherwise, free perf_ctx_data when there are no users.
+> + * Lock is required to sync the writers of perf_ctx_data RCU pointer
+> + * and refcount.
+> + */
+> +static void
+> +fini_task_ctx_data_rcu(struct task_struct *task, bool force)
+> +{
+> +	struct perf_ctx_data *ctx_data;
+> +	unsigned long flags;
+> +
+> +	raw_spin_lock_irqsave(&task->perf_ctx_data_lock, flags);
+> +
+> +	ctx_data = task->perf_ctx_data;
+> +	if (!ctx_data)
+> +		goto unlock;
+> +
+> +	if (!force && --ctx_data->refcount)
+> +		goto unlock;
+> +
+> +	RCU_INIT_POINTER(task->perf_ctx_data, NULL);
+> +	call_rcu(&ctx_data->rcu_head, free_perf_ctx_data);
+> +
+> +unlock:
+> +	raw_spin_unlock_irqrestore(&task->perf_ctx_data_lock, flags);
+> +}
+
+All this refcount under lock is an anti-pattern. Also the naming is
+insane.
