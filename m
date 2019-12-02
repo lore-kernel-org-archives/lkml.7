@@ -2,223 +2,241 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5714FC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57149C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19023214AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:03:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="odPCbBby"
+	by mail.kernel.org (Postfix) with ESMTP id 1EE28215E5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:03:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575317028;
+	bh=ObMQXij7UNQyPLmBCJawoB22jXPqknRYW9MQXk1d6Qc=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=W9OLbAiIFB92aWsqNlDsxHKbYIfJdSeek1NUPIuCZpPBQJISW979y5f21FmQp+rbw
+	 8Bp5rCKf3GjIYEDSrTSHj8ZH/RcV4D2kcKa/o6kAfkunjPXZYYEIzJgD46LdI8z455
+	 icXE7dafzSPFE9MyzJcoqVSQSp6pePHQw+piTEzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728141AbfLBUDJ (ORCPT
+        id S1728162AbfLBUDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 15:03:09 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:32976 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728001AbfLBUDI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 15:03:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=s39+6aj8P13+1hILCFwbf0pDx7vtLDZ1oXhIVJwKtm8=; b=odPCbBby0tzEgZlmvNJCtW9zV
-        WBcXa2z0LlIntP6dgh+SC9uNd27V9cNIvtih2LdaP8v6Z/tBJfR0Aprqe4BP9wBsN/PmTbjKj76RX
-        X9lob7oO73T/8NrBbZ/FQlWD34WQ6y7kDIDPBD6IeV0QORTQVHXBWo3Kbl/mcH6xrK72ZxKcjMHCq
-        yndqc4yDkGmIK8eAvlJj5TZm+EE23TD32RrDfZr3a4zoBFSmuRwQNJWRDZMqT5jo1J+coB7470rVV
-        9646YKwQeM8Wm8sMO7NxuxWrjF++JrkgSwlP+p51OWWFgFUobZabQ/6+paFrIlRR7mzNr/1XDez6s
-        Dd1Zj5L0g==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ibruQ-00043D-2s; Mon, 02 Dec 2019 20:03:02 +0000
-Date:   Mon, 2 Dec 2019 12:03:02 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs: introduce is_dot_dotdot helper for cleanup
-Message-ID: <20191202200302.GN20752@bombadil.infradead.org>
-References: <1575281413-6753-1-git-send-email-yangtiezhu@loongson.cn>
+        Mon, 2 Dec 2019 15:03:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40698 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728001AbfLBUDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 15:03:46 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54486214AF;
+        Mon,  2 Dec 2019 20:03:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575317025;
+        bh=ObMQXij7UNQyPLmBCJawoB22jXPqknRYW9MQXk1d6Qc=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=eeu9wllFSpwrVG7DeebZ5Kk2eE76wfP+aPTiq/70Oa3FBMABvq74LbN7CV6LzaErn
+         UrKFBnBIsMTtMy4c7VHElAOz0eGtl7AGFkxNlXF5LiHLuOTASkZkzs76jigYBW+5kM
+         XmUrwHFaRvJ5BwawvdGjQ7qFys7RX0qRI7/BSGzg=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 207AA3520649; Mon,  2 Dec 2019 12:03:45 -0800 (PST)
+Date:   Mon, 2 Dec 2019 12:03:45 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rcu@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 1/2] kernel: set taint flag 'L' at any kind of lockup
+Message-ID: <20191202200345.GV2889@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <157503370645.8187.6335564487789994134.stgit@buzz>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="u3/rZRmxL6MmkK24"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1575281413-6753-1-git-send-email-yangtiezhu@loongson.cn>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <157503370645.8187.6335564487789994134.stgit@buzz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Nov 29, 2019 at 04:21:46PM +0300, Konstantin Khlebnikov wrote:
+> Any lockup or stall notifies about unexpected lack of progress.
+> It's better to know about them for further problem investigations.
+> 
+> Right now only softlockup has own taint flag. Let's generalize it.
+> 
+> This patch renames TAINT_SOFTLOCKUP into TAINT_LOCKUP at sets it for:
+> - softlockup
+> - hardlockup
+> - RCU stalls
+> - stuck in workqueues
+> - detected task hung
+> 
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
---u3/rZRmxL6MmkK24
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+From an RCU perspective,
 
-On Mon, Dec 02, 2019 at 06:10:13PM +0800, Tiezhu Yang wrote:
-> There exists many similar and duplicate codes to check "." and "..",
-> so introduce is_dot_dotdot helper to make the code more clean.
+Acked-by: Paul E. McKenney <paulmck@kernel.org>
 
-The idea is good.  The implementation is, I'm afraid, badly chosen.
-Did you benchmark this change at all?  In general, you should prefer the
-core kernel implementation to that of some less-interesting filesystems.
-I measured the performance with the attached test program on my laptop
-(Core-i7 Kaby Lake):
-
-qstr . time_1 0.020531 time_2 0.005786
-qstr .. time_1 0.017892 time_2 0.008798
-qstr a time_1 0.017633 time_2 0.003634
-qstr matthew time_1 0.011820 time_2 0.003605
-qstr .a time_1 0.017909 time_2 0.008710
-qstr , time_1 0.017631 time_2 0.003619
-
-The results are quite stable:
-
-qstr . time_1 0.021137 time_2 0.005780
-qstr .. time_1 0.017964 time_2 0.008675
-qstr a time_1 0.017899 time_2 0.003654
-qstr matthew time_1 0.011821 time_2 0.003620
-qstr .a time_1 0.017889 time_2 0.008662
-qstr , time_1 0.017764 time_2 0.003613
-
-Feel free to suggest some different strings we could use for testing.
-These seemed like interesting strings to test with.  It's always possible
-I've messed up something with this benchmark that causes it to not
-accurately represent the performance of each algorithm, so please check
-that too.
-
-> +bool is_dot_dotdot(const struct qstr *str)
-> +{
-> +	if (str->len == 1 && str->name[0] == '.')
-> +		return true;
-> +
-> +	if (str->len == 2 && str->name[0] == '.' && str->name[1] == '.')
-> +		return true;
-> +
-> +	return false;
-> +}
-> +EXPORT_SYMBOL(is_dot_dotdot);
-> diff --git a/fs/namei.c b/fs/namei.c
-> index 2dda552..7730a3b 100644
-> --- a/fs/namei.c
-> +++ b/fs/namei.c
-> @@ -2458,10 +2458,8 @@ static int lookup_one_len_common(const char *name, struct dentry *base,
->  	if (!len)
->  		return -EACCES;
+> ---
+>  Documentation/admin-guide/sysctl/kernel.rst   |    2 +-
+>  Documentation/admin-guide/tainted-kernels.rst |    8 ++++++--
+>  include/linux/kernel.h                        |    2 +-
+>  kernel/hung_task.c                            |    2 ++
+>  kernel/panic.c                                |    2 +-
+>  kernel/rcu/tree_stall.h                       |    1 +
+>  kernel/watchdog.c                             |    2 +-
+>  kernel/watchdog_hld.c                         |    1 +
+>  kernel/workqueue.c                            |    1 +
+>  tools/debugging/kernel-chktaint               |    2 +-
+>  10 files changed, 16 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+> index 032c7cd3cede..60867ec525a4 100644
+> --- a/Documentation/admin-guide/sysctl/kernel.rst
+> +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> @@ -1082,7 +1082,7 @@ ORed together. The letters are seen in "Tainted" line of Oops reports.
+>    2048  `(I)`  workaround for bug in platform firmware applied
+>    4096  `(O)`  externally-built ("out-of-tree") module was loaded
+>    8192  `(E)`  unsigned module was loaded
+> - 16384  `(L)`  soft lockup occurred
+> + 16384  `(L)`  lockup occurred
+>   32768  `(K)`  kernel has been live patched
+>   65536  `(X)`  Auxiliary taint, defined and used by for distros
+>  131072  `(T)`  The kernel was built with the struct randomization plugin
+> diff --git a/Documentation/admin-guide/tainted-kernels.rst b/Documentation/admin-guide/tainted-kernels.rst
+> index 71e9184a9079..fc76d0aad9f5 100644
+> --- a/Documentation/admin-guide/tainted-kernels.rst
+> +++ b/Documentation/admin-guide/tainted-kernels.rst
+> @@ -96,7 +96,7 @@ Bit  Log  Number  Reason that got the kernel tainted
+>   11  _/I    2048  workaround for bug in platform firmware applied
+>   12  _/O    4096  externally-built ("out-of-tree") module was loaded
+>   13  _/E    8192  unsigned module was loaded
+> - 14  _/L   16384  soft lockup occurred
+> + 14  _/L   16384  lockup occurred
+>   15  _/K   32768  kernel has been live patched
+>   16  _/X   65536  auxiliary taint, defined for and used by distros
+>   17  _/T  131072  kernel was built with the struct randomization plugin
+> @@ -152,7 +152,11 @@ More detailed explanation for tainting
+>   13) ``E`` if an unsigned module has been loaded in a kernel supporting
+>       module signature.
 >  
-> -	if (unlikely(name[0] == '.')) {
-> -		if (len < 2 || (len == 2 && name[1] == '.'))
-> -			return -EACCES;
-> -	}
-> +	if (unlikely(is_dot_dotdot(this)))
-> +		return -EACCES;
+> - 14) ``L`` if a soft lockup has previously occurred on the system.
+> + 14) ``L`` if some kind of lockup has previously occurred on the system:
+> +     - soft/hardlockup, see Documentation/admin-guide/lockup-watchdogs.rst
+> +     - RCU stall, see Documentation/RCU/stallwarn.txt
+> +     - hung task detected, see CONFIG_DETECT_HUNG_TASK
+> +     - kernel workqueue lockup, see CONFIG_WQ_WATCHDOG
 >  
->  	while (len--) {
->  		unsigned int c = *(const unsigned char *)name++;
-
---u3/rZRmxL6MmkK24
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="dotdotdot.c"
-
-#include <stdio.h>
-#include <time.h>
-
-typedef _Bool bool;
-#define true 1
-#define false 0
-#define unlikely(x)	(x)
-typedef unsigned int u32;
-typedef unsigned long long u64;
-#define HASH_LEN_DECLARE u32 hash; u32 len
-
-struct qstr {
-        union {
-                struct {
-                        HASH_LEN_DECLARE;
-                };
-                u64 hash_len;
-        };
-        const char *name;
-};
-
-bool is_dot_dotdot_1(const struct qstr *str)
-{
-	if (str->len == 1 && str->name[0] == '.')
-		return true;
-	if (str->len == 2 && str->name[0] == '.' && str->name[1] == '.')
-		return true;
-	return false;
-}
-
-bool is_dot_dotdot_2(const struct qstr *str)
-{
-	if (unlikely(str->name[0] == '.')) {
-		if (str->len < 2 || (str->len == 2 && str->name[1] == '.'))
-			return false;
-	}
-
-	return true;
-}
-
-double time_sub(struct timespec *before, struct timespec *after)
-{
-	struct timespec diff = { .tv_sec  = after->tv_sec  - before->tv_sec,
-				 .tv_nsec = after->tv_nsec - before->tv_nsec };
-	if (diff.tv_nsec < 0) {
-		diff.tv_nsec += 1000 * 1000 * 1000;
-		diff.tv_sec -= 1;
-	}
-
-	return diff.tv_sec + diff.tv_nsec * 0.0000000001d;
-}
-
-bool res;
-
-void mytime(const struct qstr *qstr)
-{
-	unsigned int i;
-	struct timespec start, middle, end;
-
-	clock_gettime(CLOCK_THREAD_CPUTIME_ID, &start);
-	for (i = 0; i < 100000000; i++)
-		res = is_dot_dotdot_1(qstr);
-	clock_gettime(CLOCK_THREAD_CPUTIME_ID, &middle);
-	for (i = 0; i < 100000000; i++)
-		res = is_dot_dotdot_2(qstr);
-	clock_gettime(CLOCK_THREAD_CPUTIME_ID, &end);
-
-	printf("qstr %s time_1 %f time_2 %f\n", qstr->name,
-			time_sub(&start, &middle), time_sub(&middle, &end));
-}
-
-int main(int argc, char **argv)
-{
-	struct qstr dot = { .len = 1, .name = "." };
-	struct qstr dotdot = { .len = 2, .name = ".." };
-	struct qstr a = { .len = 1, .name = "a" };
-	struct qstr matthew = { .len = 7, .name = "matthew" };
-	struct qstr dota = { .len = 2, .name = ".a" };
-	struct qstr comma = { .len = 1, .name = "," };
-
-	mytime(&dot);
-	mytime(&dotdot);
-	mytime(&a);
-	mytime(&matthew);
-	mytime(&dota);
-	mytime(&comma);
-
-	return 0;
-}
-
---u3/rZRmxL6MmkK24--
+>   15) ``K`` if the kernel has been live patched.
+>  
+> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+> index d83d403dac2e..e8a6808e4f2f 100644
+> --- a/include/linux/kernel.h
+> +++ b/include/linux/kernel.h
+> @@ -591,7 +591,7 @@ extern enum system_states {
+>  #define TAINT_FIRMWARE_WORKAROUND	11
+>  #define TAINT_OOT_MODULE		12
+>  #define TAINT_UNSIGNED_MODULE		13
+> -#define TAINT_SOFTLOCKUP		14
+> +#define TAINT_LOCKUP			14
+>  #define TAINT_LIVEPATCH			15
+>  #define TAINT_AUX			16
+>  #define TAINT_RANDSTRUCT		17
+> diff --git a/kernel/hung_task.c b/kernel/hung_task.c
+> index 14a625c16cb3..521eb2fbf5fc 100644
+> --- a/kernel/hung_task.c
+> +++ b/kernel/hung_task.c
+> @@ -139,6 +139,8 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
+>  		hung_task_show_lock = true;
+>  	}
+>  
+> +	add_taint(TAINT_LOCKUP, LOCKDEP_STILL_OK);
+> +
+>  	touch_nmi_watchdog();
+>  }
+>  
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index f470a038b05b..d7750a45ca8d 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -372,7 +372,7 @@ const struct taint_flag taint_flags[TAINT_FLAGS_COUNT] = {
+>  	[ TAINT_FIRMWARE_WORKAROUND ]	= { 'I', ' ', false },
+>  	[ TAINT_OOT_MODULE ]		= { 'O', ' ', true },
+>  	[ TAINT_UNSIGNED_MODULE ]	= { 'E', ' ', true },
+> -	[ TAINT_SOFTLOCKUP ]		= { 'L', ' ', false },
+> +	[ TAINT_LOCKUP ]		= { 'L', ' ', false },
+>  	[ TAINT_LIVEPATCH ]		= { 'K', ' ', true },
+>  	[ TAINT_AUX ]			= { 'X', ' ', true },
+>  	[ TAINT_RANDSTRUCT ]		= { 'T', ' ', true },
+> diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
+> index c0b8c458d8a6..181495efff80 100644
+> --- a/kernel/rcu/tree_stall.h
+> +++ b/kernel/rcu/tree_stall.h
+> @@ -74,6 +74,7 @@ early_initcall(check_cpu_stall_init);
+>  /* If so specified via sysctl, panic, yielding cleaner stall-warning output. */
+>  static void panic_on_rcu_stall(void)
+>  {
+> +	add_taint(TAINT_LOCKUP, LOCKDEP_STILL_OK);
+>  	if (sysctl_panic_on_rcu_stall)
+>  		panic("RCU Stall\n");
+>  }
+> diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+> index f41334ef0971..d60b195708f7 100644
+> --- a/kernel/watchdog.c
+> +++ b/kernel/watchdog.c
+> @@ -466,7 +466,7 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
+>  			smp_mb__after_atomic();
+>  		}
+>  
+> -		add_taint(TAINT_SOFTLOCKUP, LOCKDEP_STILL_OK);
+> +		add_taint(TAINT_LOCKUP, LOCKDEP_STILL_OK);
+>  		if (softlockup_panic)
+>  			panic("softlockup: hung tasks");
+>  		__this_cpu_write(soft_watchdog_warn, true);
+> diff --git a/kernel/watchdog_hld.c b/kernel/watchdog_hld.c
+> index 247bf0b1582c..f77256f47422 100644
+> --- a/kernel/watchdog_hld.c
+> +++ b/kernel/watchdog_hld.c
+> @@ -152,6 +152,7 @@ static void watchdog_overflow_callback(struct perf_event *event,
+>  				!test_and_set_bit(0, &hardlockup_allcpu_dumped))
+>  			trigger_allbutself_cpu_backtrace();
+>  
+> +		add_taint(TAINT_LOCKUP, LOCKDEP_STILL_OK);
+>  		if (hardlockup_panic)
+>  			nmi_panic(regs, "Hard LOCKUP");
+>  
+> diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+> index bc2e09a8ea61..825a92893882 100644
+> --- a/kernel/workqueue.c
+> +++ b/kernel/workqueue.c
+> @@ -5741,6 +5741,7 @@ static void wq_watchdog_timer_fn(struct timer_list *unused)
+>  			pr_cont_pool_info(pool);
+>  			pr_cont(" stuck for %us!\n",
+>  				jiffies_to_msecs(jiffies - pool_ts) / 1000);
+> +			add_taint(TAINT_LOCKUP, LOCKDEP_STILL_OK);
+>  		}
+>  	}
+>  
+> diff --git a/tools/debugging/kernel-chktaint b/tools/debugging/kernel-chktaint
+> index 2240cb56e6e5..9f24719d8c80 100755
+> --- a/tools/debugging/kernel-chktaint
+> +++ b/tools/debugging/kernel-chktaint
+> @@ -168,7 +168,7 @@ if [ `expr $T % 2` -eq 0 ]; then
+>  	addout " "
+>  else
+>  	addout "L"
+> -	echo " * soft lockup occurred (#14)"
+> +	echo " * lockup occurred (#14)"
+>  fi
+>  
+>  T=`expr $T / 2`
+> 
