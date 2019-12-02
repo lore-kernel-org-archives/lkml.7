@@ -2,142 +2,144 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B03C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42777C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59D4C2073C
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:25:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OkT0pATS"
+	by mail.kernel.org (Postfix) with ESMTP id 213E62073C
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:27:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbfLBRZv (ORCPT
+        id S1727743AbfLBR1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 12:25:51 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43787 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727542AbfLBRZv (ORCPT
+        Mon, 2 Dec 2019 12:27:10 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:36886 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727493AbfLBR1K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 12:25:51 -0500
-Received: by mail-pf1-f196.google.com with SMTP id h14so8577224pfe.10
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 09:25:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QJkfeNUtZsUM1SriZ4NkOu1VRRZp6DXE5Ca/oup1eY0=;
-        b=OkT0pATSCD09KhjE0j2gmub4yYFjggeSCEDGGvJRy3S41QTVkCSh8xwimUhMdMZb9c
-         YujkvAxV8pa4f0EZH0s21gVwuSe6g/btLrsuyVX3i5JOTcGQSdNOAMcyRSDd3t5i404n
-         WpIK1uw847md8b8LtcOKJ8/u6Wyq9QJD+3DBsup2ZkoPnGM89ExC9cFaVHe3pohsGdlv
-         IctyftfHniR6t8oxq3n8RP++aJQhCUxr0uzN5fqRymt39FrYs3jIs3okKnTzay7FBi6g
-         tLhRuQOVVIM+TdDGHZsOTABM2SdXJqQAaPqY6dTjTN/zzrN/r7UheQRVQo73q30Dx5sZ
-         MDnQ==
+        Mon, 2 Dec 2019 12:27:10 -0500
+Received: by mail-io1-f72.google.com with SMTP id p2so113718iof.4
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 09:27:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QJkfeNUtZsUM1SriZ4NkOu1VRRZp6DXE5Ca/oup1eY0=;
-        b=sqsctXJmTmyDiQxvyFB2DAs7ypLYe5KupJ2ao5QRaplq4yVmZNkGR1JNF09ZYyN3A6
-         YDckSfkTsfjiGUSddLbeKZ3l1ZBlZkT74SbHxEq1Wiv4je10Kz7B4QAPyMM/vVCsPC7T
-         LQ4Bea1rsocL5O/cSNb4Y4C8FkzQj8F30n31BNbOUiodlSSsiIrYgYh+AuvZnEXsdZ5D
-         tzelOdY/T+vl/t3iHPg5mJjXYQ44WhEE7hI28erhu3ecE7tb4oo1c/cVs5ke6xM6T9FI
-         uRzj1OWLBJ4VjkaMKmIBNuIpWwFO3phEF+ecgEJKpDVUtuV2aZkYSK0F6tkadC+oLNkA
-         6C2w==
-X-Gm-Message-State: APjAAAVeRlCj44AxQhWFjpCSS51an+Seyt+yTT8WgTup7YXssIlPjeRL
-        v0WXY+6ge2/OlHf/30/qaBeC325gfYio+ehN8T7Pag==
-X-Google-Smtp-Source: APXvYqzRNnkhXeK9+TF40gPXRoir6QgRYhi5XcQ7EoDA4SgNek8Tj0V1GXGOZXZRvla3t8H8gAQqwdNuOUyfY1Tvp18=
-X-Received: by 2002:a62:7b46:: with SMTP id w67mr26208051pfc.113.1575307550038;
- Mon, 02 Dec 2019 09:25:50 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=TtI8iuODHAY3u2DEuOOaACvhCMI2l1BthLHP25nKwao=;
+        b=cmyy9aAoLcXfYUvzThAv1pLROXCyPwMwyc13n4Orm1CqrN3XDh1YPbwD+QO/EzSokR
+         QTxP38dQzfFw5fPRAL/OndmGfFK2gjDNq58MWtmiYsiWgpMJ0Vc1msieWDvLAbcWDCEE
+         czuyB0eC4/iMGYKQEMu+kv59Bjx+kngBRoxvw36zWB18ikgNsRfq/YcmBaovYmaSAwYE
+         GmkRBSrddehPbzD430vZQ+ah1PT6U7YewnrrEZ4NSTJz1N7F9BczrIWxU2ClvxAKeBnf
+         OI13yriQLjUVyNZVqY59Z11VuFSDVaC3jNkVTxXAT0duxJhqa5+Q/hhCWN+tBRRWhc3a
+         pNug==
+X-Gm-Message-State: APjAAAX9BMYIgd8fSxKN4aMRHW6222dWebcOgFNYoxqEj4NwGctpFioj
+        JxPy7/Dy0UWOw+1m4epOVTj+PGjaANMBSzaPVtCjD25eBf+y
+X-Google-Smtp-Source: APXvYqzUBK8l/nEEBz5DGClMhxGuP7KONlyXZ38j9ZDhKJcotxY5eRC7fYZQz1ryOHK1m0i9QwHV21qsGAKHHh0jtTCyTH+SHdUH
 MIME-Version: 1.0
-References: <1575242724-4937-1-git-send-email-sj38.park@gmail.com> <1575242724-4937-3-git-send-email-sj38.park@gmail.com>
-In-Reply-To: <1575242724-4937-3-git-send-email-sj38.park@gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 2 Dec 2019 09:25:41 -0800
-Message-ID: <CAFd5g47C6OShsYy5ngSGTmkL3fQoj-6jb09iQ+CD6FE0usggCA@mail.gmail.com>
-Subject: Re: [PATCH 2/6] docs/kunit/start: Skip wrapper run command
-To:     SeongJae Park <sj38.park@gmail.com>,
-        David Gow <davidgow@google.com>
-Cc:     shuah <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a5d:9f05:: with SMTP id q5mr6659087iot.295.1575307629224;
+ Mon, 02 Dec 2019 09:27:09 -0800 (PST)
+Date:   Mon, 02 Dec 2019 09:27:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a6f2030598bbe38c@google.com>
+Subject: WARNING in wp_page_copy
+From:   syzbot <syzbot+9301f2f33873407d5b33@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+David Gow - David has lots of good opinions on our documentation.
+Hello,
 
-On Sun, Dec 1, 2019 at 3:25 PM SeongJae Park <sj38.park@gmail.com> wrote:
->
-> From: SeongJae Park <sjpark@amazon.de>
->
-> The kunit 'Getting Started' document first shows the wrapper running
-> command.  However, a new user who simply following the command might
-> encounter a failure like below:
->
->     $ ./tools/testing/kunit/kunit.py run
->     Traceback (most recent call last):
->       File "./tools/testing/kunit/kunit.py", line 140, in <module>
->         main(sys.argv[1:])
->       File "./tools/testing/kunit/kunit.py", line 126, in main
->         linux = kunit_kernel.LinuxSourceTree()
->       File "/home/sjpark/linux/tools/testing/kunit/kunit_kernel.py", line 85, in __init__
->         self._kconfig.read_from_file(KUNITCONFIG_PATH)
->       File "/home/sjpark/linux/tools/testing/kunit/kunit_config.py", line 65, in read_from_file
->         with open(path, 'r') as f:
->     FileNotFoundError: [Errno 2] No such file or directory: 'kunitconfig'
->
-> Though the reason of the failure ('kunitconfig') is explained in its
-> next section, it would be better to reduce any failure that user might
-> encounter.  This commit removes the example command for the reason.
+syzbot found the following crash on:
 
-Seems reasonable.
+HEAD commit:    a6ed68d6 Merge tag 'drm-next-2019-11-27' of git://anongit...
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=1181e536e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6349516b24252b37
+dashboard link: https://syzkaller.appspot.com/bug?extid=9301f2f33873407d5b33
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-> Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> ---
->  Documentation/dev-tools/kunit/start.rst | 6 ------
->  1 file changed, 6 deletions(-)
->
-> diff --git a/Documentation/dev-tools/kunit/start.rst b/Documentation/dev-tools/kunit/start.rst
-> index 78a0aed..e25978d 100644
-> --- a/Documentation/dev-tools/kunit/start.rst
-> +++ b/Documentation/dev-tools/kunit/start.rst
-> @@ -15,12 +15,6 @@ Included with KUnit is a simple Python wrapper that helps format the output to
->  easily use and read KUnit output. It handles building and running the kernel, as
->  well as formatting the output.
->
-> -The wrapper can be run with:
-> -
-> -.. code-block:: bash
-> -
-> -   ./tools/testing/kunit/kunit.py run
-> -
->  Creating a kunitconfig
->  ======================
+Unfortunately, I don't have any reproducer for this crash yet.
 
-I think maybe we should demote this section so that this is a
-subsection under KUnit Wrapper. Might also want to add a tie-in
-explaining why we are talking about kunitconfig here? Right now this
-kind of reads as a non sequitur.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+9301f2f33873407d5b33@syzkaller.appspotmail.com
 
-Note: we have tried to address this potential issue for new users in
-this patch under review:
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 22897 at mm/memory.c:2223 cow_user_page  
+mm/memory.c:2223 [inline]
+WARNING: CPU: 0 PID: 22897 at mm/memory.c:2223 wp_page_copy+0x123c/0x1860  
+mm/memory.c:2393
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 22897 Comm: syz-executor.4 Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  panic+0x2e3/0x75c kernel/panic.c:221
+  __warn.cold+0x2f/0x3e kernel/panic.c:582
+  report_bug+0x289/0x300 lib/bug.c:195
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  fixup_bug arch/x86/kernel/traps.c:169 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:cow_user_page mm/memory.c:2223 [inline]
+RIP: 0010:wp_page_copy+0x123c/0x1860 mm/memory.c:2393
+Code: 4c 89 f7 ba 00 10 00 00 48 81 e6 00 f0 ff ff e8 7a 52 c0 05 31 ff 41  
+89 c7 89 c6 e8 be 9e d3 ff 45 85 ff 74 0f e8 34 9d d3 ff <0f> 0b 4c 89 f7  
+e8 aa 44 c0 05 e8 25 9d d3 ff 65 4c 8b 34 25 c0 1e
+RSP: 0018:ffff88806c99f8d0 EFLAGS: 00010202
+RAX: 0000000000040000 RBX: ffff88806c99fb78 RCX: ffffc9000ed9c000
+RDX: 0000000000000230 RSI: ffffffff81a0b77c RDI: 0000000000000005
+RBP: ffff88806c99fa18 R08: ffff888068576680 R09: 0000000000000000
+R10: ffffed100faee7ff R11: ffff88807d773fff R12: ffff88808a082420
+R13: ffffea0001f5dcc0 R14: ffff88807d773000 R15: 0000000000001000
+  do_wp_page+0x543/0x15c0 mm/memory.c:2702
+  handle_pte_fault mm/memory.c:3939 [inline]
+  __handle_mm_fault+0x23ec/0x4040 mm/memory.c:4047
+  handle_mm_fault+0x3b2/0xa50 mm/memory.c:4084
+  do_user_addr_fault arch/x86/mm/fault.c:1441 [inline]
+  __do_page_fault+0x536/0xd80 arch/x86/mm/fault.c:1506
+  do_page_fault+0x38/0x590 arch/x86/mm/fault.c:1530
+  page_fault+0x39/0x40 arch/x86/entry/entry_64.S:1203
+RIP: 0010:__put_user_4+0x1c/0x30 arch/x86/lib/putuser.S:70
+Code: 1f 00 c3 90 66 2e 0f 1f 84 00 00 00 00 00 65 48 8b 1c 25 c0 1e 02 00  
+48 8b 9b 90 14 00 00 48 83 eb 03 48 39 d9 73 4a 0f 1f 00 <89> 01 31 c0 0f  
+1f 00 c3 66 90 66 2e 0f 1f 84 00 00 00 00 00 65 48
+RSP: 0018:ffff88806c99fe18 EFLAGS: 00010297
+RAX: 0000000000000009 RBX: 00007fffffffeffd RCX: 0000000020003ac0
+RDX: 0000000000000058 RSI: ffffffff81a08021 RDI: 0000000000000286
+RBP: ffff88806c99fee0 R08: 0000000000000001 R09: ffff888068576f10
+R10: fffffbfff13cf9e8 R11: ffffffff89e7cf47 R12: 0000000000000006
+R13: 0000000000000009 R14: 000000000000000a R15: 0000000000000000
+  __do_sys_socketpair net/socket.c:1623 [inline]
+  __se_sys_socketpair net/socket.c:1620 [inline]
+  __x64_sys_socketpair+0x97/0xf0 net/socket.c:1620
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45a679
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f42bfff6c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000035
+RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 000000000045a679
+RDX: 00000000000000be RSI: 0000000000000006 RDI: 0000000000000006
+RBP: 000000000075c118 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000020003ac0 R11: 0000000000000246 R12: 00007f42bfff76d4
+R13: 00000000004c9e66 R14: 00000000004e2240 R15: 00000000ffffffff
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-https://patchwork.kernel.org/patch/11252953/
 
-I don't feel strongly whether we do it your way or my way. What do
-other people think?
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
->  The Python script is a thin wrapper around Kbuild as such, it needs to be
-> --
-> 2.7.4
->
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
