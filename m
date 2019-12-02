@@ -2,161 +2,103 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3F5C43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB30C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F25522231B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:59:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EQbHYK6R"
+	by mail.kernel.org (Postfix) with ESMTP id A356A22464
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:00:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575277259;
+	bh=tVYMJnp1OdZaMK26bl6SySF2HHbOorpSfPdGqQkO36s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GU39hWiqFm+xpvwtnNPZsAPe7l7sth1x9dNB3+NS+nJW1UZdpGKFKXYhOEm+RkgKg
+	 bCG88W4dm6TeHuWkPJuKwf8RU0631/QiP33NSRYkmfNEwBFkgPp8CR3afjTlZzV6T+
+	 JPptuHM4vTa7u9rlpW8SP9QRGr2HXI6SzQqXZiOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbfLBI7p (ORCPT
+        id S1726491AbfLBJA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 03:59:45 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55261 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726057AbfLBI7p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 03:59:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575277184;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rqUhLYNVakxLZv9wvfIxbDIemSFX/PcA3x0PAcyj2AI=;
-        b=EQbHYK6RUHsWN2+qhkCpfj3eAyT0+4VaMPuOX1CsmHVSWhoszv9IR94TZ3o2/B2RlbBfLr
-        IFLjYfaKCrHpvc5A/hNuAYWZFcarngMI23yBE4+AXzbSAZbc5TSEdF0fMfl+vRYzCIcUKn
-        yZ4FuY9iMvca7mWtQ6HUA2eHGe9YFhg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-399-lFiTp444MaORIzOiSLocmw-1; Mon, 02 Dec 2019 03:59:43 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 2 Dec 2019 04:00:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41904 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726087AbfLBJA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 04:00:57 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 72A42800D53;
-        Mon,  2 Dec 2019 08:59:40 +0000 (UTC)
-Received: from krava (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3C1885D6A0;
-        Mon,  2 Dec 2019 08:59:30 +0000 (UTC)
-Date:   Mon, 2 Dec 2019 09:59:30 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>, kubakici@wp.pl
-Subject: Re: [PATCH bpf v3] bpftool: Allow to link libbpf dynamically
-Message-ID: <20191202085930.GB5849@krava>
-References: <20191128160712.1048793-1-toke@redhat.com>
- <f6e8f6d2-6155-3b20-9975-81e29e460915@iogearbox.net>
- <87a78evl2v.fsf@toke.dk>
- <9853054b-dc1f-35ba-ba3c-4d0ab01c8f14@iogearbox.net>
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E2DE2231B;
+        Mon,  2 Dec 2019 09:00:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575277257;
+        bh=tVYMJnp1OdZaMK26bl6SySF2HHbOorpSfPdGqQkO36s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CdVEHvQArOPv081P1hWGHzhguheF0y/Yf2gsA8OdnQkCR7q/PG44qNY07q8GKdnSn
+         cGS8aZwyHV5y9HnnItM53YISMZF+tu+BQMvdSYk+nKblP6KrAfEI93bp6VChfuLrlS
+         x4r1Z4KPzDTzBkL6w6sRvLJLv53QDM+LvSUtA074=
+Date:   Mon, 2 Dec 2019 17:00:42 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "sboyd@kernel.org" <sboyd@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [PATCH 1/2] clk: imx: clk-divider-gate: typo fix
+Message-ID: <20191202090041.GG9767@dragon>
+References: <1572862200-29923-1-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <9853054b-dc1f-35ba-ba3c-4d0ab01c8f14@iogearbox.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: lFiTp444MaORIzOiSLocmw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <1572862200-29923-1-git-send-email-peng.fan@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 30, 2019 at 12:56:49AM +0100, Daniel Borkmann wrote:
-> On 11/29/19 3:00 PM, Toke H=F8iland-J=F8rgensen wrote:
-> > Daniel Borkmann <daniel@iogearbox.net> writes:
-> > > On 11/28/19 5:07 PM, Toke H=F8iland-J=F8rgensen wrote:
-> > > > From: Jiri Olsa <jolsa@kernel.org>
-> [...]
-> > > >    ifeq ($(srctree),)
-> > > >    srctree :=3D $(patsubst %/,%,$(dir $(CURDIR)))
-> > > > @@ -63,6 +72,19 @@ RM ?=3D rm -f
-> > > >    FEATURE_USER =3D .bpftool
-> > > >    FEATURE_TESTS =3D libbfd disassembler-four-args reallocarray zli=
-b
-> > > >    FEATURE_DISPLAY =3D libbfd disassembler-four-args zlib
-> > > > +ifdef LIBBPF_DYNAMIC
-> > > > +  FEATURE_TESTS   +=3D libbpf
-> > > > +  FEATURE_DISPLAY +=3D libbpf
-> > > > +
-> > > > +  # for linking with debug library run:
-> > > > +  # make LIBBPF_DYNAMIC=3D1 LIBBPF_DIR=3D/opt/libbpf
-> > >=20
-> > > The Makefile already has BPF_DIR which points right now to
-> > > '$(srctree)/tools/lib/bpf/' and LIBBPF_PATH for the final one and
-> > > where $(LIBBPF_PATH)libbpf.a is expected to reside. Can't we improve
-> > > the Makefile to reuse and work with these instead of adding yet
-> > > another LIBBPF_DIR var which makes future changes in this area more
-> > > confusing? The libbpf build spills out libbpf.{a,so*} by default
-> > > anyway.
-> >=20
-> > I see what you mean; however, LIBBPF_DIR is meant to be specifically an
-> > override for the dynamic library, not just the path to libbpf.
-> >=20
-> > Would it be less confusing to overload the LIBBPF_DYNAMIC variable
-> > instead? I.e.,
-> >=20
-> > make LIBBPF_DYNAMIC=3D1
-> >=20
-> > would dynamically link against the libbpf installed in the system, but
-> >=20
-> > make LIBBPF_DYNAMIC=3D/opt/libbpf
-> >=20
-> > would override that and link against whatever is in /opt/libbpf instead=
-?
-> > WDYT?
->=20
-> Hm, given perf tool has similar LIB*_DIR vars in place for its libs, it p=
-robably
-> makes sense to stick with this convention as well then. Perhaps better in=
- this
-> case to just rename s/BPF_DIR/BPF_SRC_DIR/, s/LIBBPF_OUTPUT/LIBBPF_BUILD_=
-OUTPUT/,
-> and s/LIBBPF_PATH/LIBBPF_BUILD_PATH/ to make their purpose more clear.
+On Mon, Nov 04, 2019 at 10:11:33AM +0000, Peng Fan wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> resue->reuse
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-ok, will have separate patch for this
+Applied it after updating the subject and commit log as below.
 
->=20
-> One thing that would be good to do as well for this patch is to:
->=20
->  i) Document both LIBBPF_DYNAMIC and LIBBPF_DIR in the Makefile comment y=
-ou
->     added at the top along with a simple usage example.
+    clk: imx: clk-divider-gate: fix a typo in comment
+    
+    Fix a typo in comment: resue -> reuse.
 
-ok
+Shawn
 
->=20
-> ii) Extend tools/testing/selftests/bpf/test_bpftool_build.sh with a dynam=
-ic
->     linking test case, e.g. building libbpf into a temp dir and pointing
->     LIBBPF_DIR to it for bpftool LIBBPF_DYNAMIC=3D1 build.
-
-ok, will send new version soon
-
-thanks,
-jirka
-
->=20
-> Thanks,
-> Daniel
->=20
-
+> ---
+>  drivers/clk/imx/clk-divider-gate.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/imx/clk-divider-gate.c b/drivers/clk/imx/clk-divider-gate.c
+> index 2a8352a316c7..214e18eb2b22 100644
+> --- a/drivers/clk/imx/clk-divider-gate.c
+> +++ b/drivers/clk/imx/clk-divider-gate.c
+> @@ -167,7 +167,7 @@ static const struct clk_ops clk_divider_gate_ops = {
+>  };
+>  
+>  /*
+> - * NOTE: In order to resue the most code from the common divider,
+> + * NOTE: In order to reuse the most code from the common divider,
+>   * we also design our divider following the way that provids an extra
+>   * clk_divider_flags, however it's fixed to CLK_DIVIDER_ONE_BASED by
+>   * default as our HW is. Besides that it supports only CLK_DIVIDER_READ_ONLY
+> -- 
+> 2.16.4
+> 
