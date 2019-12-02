@@ -2,162 +2,122 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6029C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFAFC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67704217F9
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:05:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CWvcWkOn"
+	by mail.kernel.org (Postfix) with ESMTP id 405D1206DC
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:06:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbfLBTFR (ORCPT
+        id S1728000AbfLBTGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 14:05:17 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:35999 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727580AbfLBTFR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 14:05:17 -0500
-Received: by mail-qv1-f65.google.com with SMTP id b18so317018qvy.3
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 11:05:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8CTZ5aUql8YCdrVBVzvU+J/sOnTSXZSchPxgBH+nZgs=;
-        b=CWvcWkOnAORpV+H1GetLi5DUi/zqcgn/H7FcmEuCQZYkKfq3KWXvJLzT5ljD/2Qjq6
-         BDmBABbaazS6hz3U3e7UmOf2jF3U4RqN694MIyiS+e8jBmYjsBslzdK8Q7sUbdE8/Znb
-         DHEWPdw/hF/FckRn5uGeYvzWmZST+SyCySi71epSLtEBpQMXuC+z2PtTB9kgUvHAuLlA
-         lM3tNxvj3SgD7rQlCvzzbkkkPVm4zpQchlYEPQgqkylGWHA2aquG+WYNBmg7Wikccwc5
-         kki4ypiC4I+7eWO2jX3x6zuPvZcidTroi1ivPmfxTKBeCzfaTHP65aNXGdlzHqQvZpb/
-         6xFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8CTZ5aUql8YCdrVBVzvU+J/sOnTSXZSchPxgBH+nZgs=;
-        b=iXwX4pMlSerlNq0h1+Pp0IkynQk6l8zZfihcE90XGZKaYDOemrY/NId4BWQqUBN6cn
-         DVBUopQJQBHn6U+Dn88XEDgbwlYlDR4e6nHt1SqZbKLawjMTD5907YAtvASIOY21TwIA
-         YmKXo97HNDg6/0reKj5cbGMgpZGji0a9hN2pNU5TVT1vvuQZhteNtOs1BhlHfWWJrDc8
-         VGUAfD6SI+qCkPRcQgxB6wji7FRsoJ5yTcBWBVCtvucA51MyGxzq1zFLWC60b/h5azFo
-         Yk8d3r74wWMQ2Y9gqLSWe/UQIVqxk+bywAs9ewCKcoj/FLnZykCDPNoKeepy/hUvAjNN
-         SJYg==
-X-Gm-Message-State: APjAAAXY05KnB50eTyQIrXdMaVaGp11tJnnRKBQQE7yCZ5qwr1jBZn1v
-        GoOyPVMIJhjVE2xzOuR59j1EE+iK/SY=
-X-Google-Smtp-Source: APXvYqxdCedcEkd13/IT2Wl/epQDjwayZiBySEnzcOI2CoC6ykiBIBLiDcVXDxDqxLxQWgjrj1f/VA==
-X-Received: by 2002:ad4:5525:: with SMTP id ba5mr568925qvb.117.1575313515725;
-        Mon, 02 Dec 2019 11:05:15 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([190.15.121.82])
-        by smtp.gmail.com with ESMTPSA id c80sm258945qkb.35.2019.12.02.11.05.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 11:05:15 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 733D0405B6; Mon,  2 Dec 2019 16:04:52 -0300 (-03)
-Date:   Mon, 2 Dec 2019 16:04:52 -0300
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Mon, 2 Dec 2019 14:06:35 -0500
+Received: from mga03.intel.com ([134.134.136.65]:53014 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727580AbfLBTGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 14:06:35 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 11:06:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,270,1571727600"; 
+   d="scan'208";a="213149061"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga003.jf.intel.com with ESMTP; 02 Dec 2019 11:06:33 -0800
+Date:   Mon, 2 Dec 2019 11:06:33 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: perf probe -d failing to delete probes
-Message-ID: <20191202190452.GI4063@kernel.org>
-References: <20191129151324.GA26963@kernel.org>
- <20191202185958.GH4063@kernel.org>
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        Len Brown <lenb@kernel.org>, Shuah Khan <shuah@kernel.org>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v4 01/19] x86/msr-index: Clean up bit defines for
+ IA32_FEATURE_CONTROL MSR
+Message-ID: <20191202190633.GG4063@linux.intel.com>
+References: <20191128014016.4389-2-sean.j.christopherson@intel.com>
+ <201912010347.7tMb4moN%lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191202185958.GH4063@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <201912010347.7tMb4moN%lkp@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Dec 02, 2019 at 03:59:58PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Fri, Nov 29, 2019 at 12:13:24PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > 
-> > Hi Masami,
-> > 
-> >    Can you please take a look at this?
-> > 
-> > [root@quaco perf]# perf probe -l
-> >   probe_perf:map__map_ip (on ui__warn_map_erange+222@perf/tools/perf/builtin-top.c in /home/acme/bin/perf)
-> >   probe_perf:map__map_ip (on ui__warn_map_erange+222@perf/tools/perf/builtin-top.c in /home/acme/bin/perf)
-> >   probe_perf:map__map_ip (on perf_evlist__set_paused+222@util/evlist.c in /home/acme/bin/perf)
-> >   probe_perf:map__map_ip (on perf_evlist__resume+222@util/evlist.c in /home/acme/bin/perf)
-> >   probe_perf:map__map_ip (on perf_evsel__group_desc+222@util/evsel.c in /home/acme/bin/perf)
-> >   probe_perf:map__map_ip (on svg_partial_wakeline+222@util/svghelper.c in /home/acme/bin/perf)
-> > [root@quaco perf]# perf probe -d probe_perf:map_*
-> > "probe_perf:map_*" does not hit any event.
-> >   Error: Failed to delete events.
-> > [root@quaco perf]# perf probe -d probe_perf:*
-> > "probe_perf:*" does not hit any event.
-> >   Error: Failed to delete events.
-> > [root@quaco perf]# perf probe -d probe*:*
-> > "probe*:*" does not hit any event.
-> >   Error: Failed to delete events.
-> > [root@quaco perf]# perf probe -d '*:*'
-> > "*:*" does not hit any event.
-> >   Error: Failed to delete events.
-> > [root@quaco perf]#
+On Sun, Dec 01, 2019 at 04:52:53AM +0800, kbuild test robot wrote:
+> Hi Sean,
 > 
-> [root@quaco ~]# perf probe -l
->   probe_perf:map__map_ip (on process_sample_event+6663@tools/perf/builtin-script.c in /home/acme/bin/perf)
->   probe_perf:map__map_ip (on process_sample_event+6739@tools/perf/builtin-script.c in /home/acme/bin/perf)
->   probe_perf:map__map_ip (on unwind_entry+436@util/machine.c in /home/acme/bin/perf)
->   probe_perf:map__map_ip (on machine__process_extra_kernel_map+31@util/machine.c in /home/acme/bin/perf)
->   probe_perf:map__map_ip (on __maps__insert+192@util/map.c in /home/acme/bin/perf)
->   probe_perf:map__map_ip (on dso__process_kernel_symbol+336@util/symbol-elf.c in /home/acme/bin/perf)
-> [root@quaco ~]# ls -la /sys/kernel/debug/tracing/events/probe_perf/
-> total 0
-> drwxr-xr-x.   3 root root 0 Nov 29 12:09 .
-> drwxr-xr-x. 113 root root 0 Dec  2 15:56 ..
-> -rw-r--r--.   1 root root 0 Nov 29 12:09 enable
-> -rw-r--r--.   1 root root 0 Nov 29 12:09 filter
-> drwxr-xr-x.   2 root root 0 Nov 29 12:09 map__map_ip
-> [root@quaco ~]#
+> I love your patch! Yet something to improve:
 > 
-> Trying to figure out how to remove it via debugfs/tracefs
+> [auto build test ERROR on tip/auto-latest]
+> [also build test ERROR on next-20191129]
+> [cannot apply to tip/x86/core kvm/linux-next v5.4]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Sean-Christopherson/x86-cpu-Clean-up-handling-of-VMX-features/20191128-094556
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git e445033e58108a9891abfbc0dea90b066a75e4a9
+> config: x86_64-randconfig-s0-20191128 (attached as .config)
+> compiler: gcc-7 (Debian 7.4.0-14) 7.4.0
+> reproduce:
+>         # save the attached .config to linux build tree
+>         make ARCH=x86_64 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    In file included from arch/x86/include/asm/processor.h:22:0,
+>                     from arch/x86/include/asm/cpufeature.h:5,
+>                     from arch/x86/include/asm/thread_info.h:53,
+>                     from include/linux/thread_info.h:38,
+>                     from arch/x86/include/asm/preempt.h:7,
+>                     from include/linux/preempt.h:78,
+>                     from include/linux/percpu.h:6,
+>                     from include/linux/cpuidle.h:14,
+>                     from drivers/idle/intel_idle.c:45:
+>    drivers/idle/intel_idle.c: In function 'sklh_idle_state_table_update':
+> >> drivers/idle/intel_idle.c:1287:10: error: 'MSR_IA32_FEATURE_CONTROL' undeclared (first use in this function); did you mean 'MSR_MISC_FEATURE_CONTROL'?
+>       rdmsrl(MSR_IA32_FEATURE_CONTROL, msr);
+>              ^
 
-[root@quaco ~]# cat /sys/kernel/debug/tracing/dynamic_events
-p:probe_perf/map__map_ip /home/acme/bin/perf:0x000000000005f257
-p:probe_perf/map__map_ip /home/acme/bin/perf:0x000000000005f2a3
-p:probe_perf/map__map_ip /home/acme/bin/perf:0x00000000000fda24
-p:probe_perf/map__map_ip /home/acme/bin/perf:0x00000000000fdacf
-p:probe_perf/map__map_ip /home/acme/bin/perf:0x00000000001028d0
-p:probe_perf/map__map_ip /home/acme/bin/perf:0x000000000016dd90
-[root@quaco ~]#
+Argh, flat out missed this when doing search and replace.
 
-[root@quaco ~]# cat /sys/kernel/debug/tracing/kprobe_events
-[root@quaco ~]#
-
-[root@quaco ~]# echo > /sys/kernel/debug/tracing/kprobe_events
-[root@quaco ~]# perf probe -l
-  probe_perf:map__map_ip (on process_sample_event+6663@tools/perf/builtin-script.c in /home/acme/bin/perf)
-  probe_perf:map__map_ip (on process_sample_event+6739@tools/perf/builtin-script.c in /home/acme/bin/perf)
-  probe_perf:map__map_ip (on unwind_entry+436@util/machine.c in /home/acme/bin/perf)
-  probe_perf:map__map_ip (on machine__process_extra_kernel_map+31@util/machine.c in /home/acme/bin/perf)
-  probe_perf:map__map_ip (on __maps__insert+192@util/map.c in /home/acme/bin/perf)
-  probe_perf:map__map_ip (on dso__process_kernel_symbol+336@util/symbol-elf.c in /home/acme/bin/perf)
-[root@quaco ~]#
-
-Finally it works:
-
-[root@quaco ~]# echo > /sys/kernel/debug/tracing/dynamic_events
-[root@quaco ~]# cat /sys/kernel/debug/tracing/dynamic_events
-[root@quaco ~]#
-[root@quaco ~]# perf probe -l
-[root@quaco ~]#
-
-A workaround, now to find out why 'perf probe -d '*:*' and the other
-reported variants are failing...
-
-- Arnaldo
+>    arch/x86/include/asm/msr.h:279:28: note: in definition of macro 'rdmsrl'
+>      ((val) = native_read_msr((msr)))
+>                                ^~~
+>    drivers/idle/intel_idle.c:1287:10: note: each undeclared identifier is reported only once for each function it appears in
+>       rdmsrl(MSR_IA32_FEATURE_CONTROL, msr);
+>              ^
+>    arch/x86/include/asm/msr.h:279:28: note: in definition of macro 'rdmsrl'
+>      ((val) = native_read_msr((msr)))
+>                                ^~~
+> 
+> vim +1287 drivers/idle/intel_idle.c
