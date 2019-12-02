@@ -2,79 +2,170 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC208C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DCAC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 782902073C
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:22:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DjHY3bPV"
+	by mail.kernel.org (Postfix) with ESMTP id 5D16520722
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:26:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575303986;
+	bh=yldwc/Z6MA1+VHq1mho9ORxlk97SJEe1yTyihqlVpb8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Ub91j+EsVeTnu2RQtOXDfFDlRErQVqM+T5h/KneTNTgOYbVBSQfV9lcLVOkSovHnE
+	 nb1MJNBVAUinFuh5L+/2OLFAu7gKSwCWoVaADIjMAJV/+R/mgvlvpQvnDgCXETsnyv
+	 SC6VFeISIKQnMn8BaS07VlWgG+tqDdaZ8ATNEHtI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbfLBQWC (ORCPT
+        id S1727608AbfLBQ0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 11:22:02 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:54354 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727555AbfLBQWC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 11:22:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KrIeoB6eXu5dDlRf2wZt+U1dAygcO/BvD5fSXChJq8E=; b=DjHY3bPVJwmIxla70oxFpA88U
-        WCVuYqWRGQ4t+VO9BfpjnUVA19Vt3nmVaCLOrQmRnLGAxicdwmaT/BGjsjvf76hQX1iXjn9CykVVR
-        J7Ive523K9vDAe5kp1n/zPWeheWFv2HY5wleFQQwTVUvu8c8R4T2XNV9Vk3r6fWCNanUfHZp2JviA
-        8SYg7c1aSy1z6J6es6jTux57HPRuYSVKgxvnRfCNS71Em267s2NMBxONRWyg0H/VTVHkkymk3N6Ix
-        SKG5VaIdgvE8msrJw9y7qQj9nhwIKMaRkcMTVSGByGc49F3KjcYd8V11O+aCICeAiUXMMtjca+2S4
-        3sLoDBV/Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iboSQ-0003YR-Ol; Mon, 02 Dec 2019 16:21:54 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 78A9B305E42;
-        Mon,  2 Dec 2019 17:20:36 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6D064201A401D; Mon,  2 Dec 2019 17:21:52 +0100 (CET)
-Date:   Mon, 2 Dec 2019 17:21:52 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     kan.liang@linux.intel.com, mingo@redhat.com, acme@kernel.org,
-        tglx@linutronix.de, bp@alien8.de, linux-kernel@vger.kernel.org,
-        eranian@google.com, alexey.budankov@linux.intel.com,
-        vitaly.slobodskoy@intel.com
-Subject: Re: [RFC PATCH 3/8] perf: Init/fini PMU specific data
-Message-ID: <20191202162152.GG2827@hirez.programming.kicks-ass.net>
-References: <1574954071-6321-1-git-send-email-kan.liang@linux.intel.com>
- <1574954071-6321-3-git-send-email-kan.liang@linux.intel.com>
- <20191202124055.GC2827@hirez.programming.kicks-ass.net>
- <20191202145957.GM84886@tassilo.jf.intel.com>
+        Mon, 2 Dec 2019 11:26:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727484AbfLBQ0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 11:26:25 -0500
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 144B12073C;
+        Mon,  2 Dec 2019 16:26:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575303984;
+        bh=yldwc/Z6MA1+VHq1mho9ORxlk97SJEe1yTyihqlVpb8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=fqJ+7zLWZAgiTKrSRyHUV5V0bNtcQm1gNjjnXYlpESE9V6ZrADlt0rtVaNv8PboHD
+         HVQyUIrqjDxNUMBeTYHrpWC1yR/Z7pxyQHN4y65J+DslZdEAaFekavSMYzuhwEs5Xk
+         1CIlE95uCfuP8sRzTtZ4TAjlXdMnDYvgXLGCDIbc=
+Received: by mail-qk1-f181.google.com with SMTP id q28so28530qkn.10;
+        Mon, 02 Dec 2019 08:26:24 -0800 (PST)
+X-Gm-Message-State: APjAAAUgU5k62SDtdi/6F9lwfBvB3xRID/TYk1iSTNmZQxeYVK9eehKA
+        Gp18WdaHP3BSLcV3g9ttSzVyalLzf6XpDkW+Cw==
+X-Google-Smtp-Source: APXvYqy+Ji9mce4aB8DbJH5nRjKgp1CutJ2doJc952RWmxbZU8ura3b3pvFQQuFPyXDQLffIiY0xb+L15fjEIsfZvxA=
+X-Received: by 2002:a37:81c6:: with SMTP id c189mr33951032qkd.223.1575303983133;
+ Mon, 02 Dec 2019 08:26:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191202145957.GM84886@tassilo.jf.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191113171505.26128-1-miquel.raynal@bootlin.com>
+ <20191113171505.26128-4-miquel.raynal@bootlin.com> <20191118221341.GA30937@bogus>
+ <20191125151523.0766b3b7@xps13>
+In-Reply-To: <20191125151523.0766b3b7@xps13>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 2 Dec 2019 10:26:11 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJR1OLexi9bArn0ZjNYB+d7eRTYpi4q0-eU93oVcz1AMA@mail.gmail.com>
+Message-ID: <CAL_JsqJR1OLexi9bArn0ZjNYB+d7eRTYpi4q0-eU93oVcz1AMA@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] dt-bindings: mtd: Describe mtd-concat devices
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Mark Brown <broonie@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Bernhard Frauendienst <kernel@nospam.obeliks.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 06:59:57AM -0800, Andi Kleen wrote:
-> > 
-> > This is atricous crap. Also it is completely broken for -RT.
-> 
-> Well can you please suggest how you would implement it instead?
+On Mon, Nov 25, 2019 at 8:15 AM Miquel Raynal <miquel.raynal@bootlin.com> w=
+rote:
+>
+> Hi Rob,
+>
+> Rob Herring <robh@kernel.org> wrote on Mon, 18 Nov 2019 16:13:41 -0600:
+>
+> > On Wed, Nov 13, 2019 at 06:15:04PM +0100, Miquel Raynal wrote:
+> > > From: Bernhard Frauendienst <kernel@nospam.obeliks.de>
+> > >
+> > > The main use case to concatenate MTD devices is probably SPI-NOR
+> > > flashes where the number of address bits is limited to 24, which can
+> > > access a range of 16MiB. Board manufacturers might want to double the
+> > > SPI storage size by adding a second flash asserted thanks to a second
+> > > chip selects which enhances the addressing capabilities to 25 bits,
+> > > 32MiB. Having two devices for twice the size is great but without mor=
+e
+> > > glue, we cannot define partition boundaries spread across the two
+> > > devices. This is the gap mtd-concat intends to address.
+> > >
+> > > There are two options to describe concatenated devices:
+> > > 1/ One flash chip is described in the DT with two CS;
+> > > 2/ Two flash chips are described in the DT with one CS each, a virtua=
+l
+> > > device is also created to describe the concatenation.
+> > >
+> > > Solution 1/ presents at least 3 issues:
+> > > * The hardware description is abused;
+> > > * The concatenation only works for SPI devices (while it could be
+> > >   helpful for any MTD);
+> > > * It would require a lot of rework in the SPI core as most of the
+> > >   logic assumes there is and there always will be only one CS per
+> > >   chip.
+> >
+> > This seems ok if all the devices are identical.
+>
+> This is not an option for Mark and I agree with him as we are faking
+> the reality: the two devices we want to virtually concatenate may be
+> two physically different devices. Binding them as one is lying.
+>
+> > > Solution 2/ also has caveats:
+> > > * The virtual device has no hardware reality;
+> > > * Possible optimizations at the hardware level will be hard to enable
+> > >   efficiently (ie. a common direct mapping abstracted by a SPI
+> > >   memories oriented controller).
+> >
+> > Something like this may be necessary if data is interleaved rather than
+> > concatinated.
+>
+> This is something that is gonna happen too, it is called "dual
+> parallel".
 
-I don't think that is on me; at best I get to explain why it is
-completely unacceptible to have O(nr_tasks) and allocations under a
-raw_spinlock_t, but I was thinking you'd already know that.
+Then it would be good to think about how that should look. Maybe
+there's overlap or maybe not.
 
+> > Solution 3
+> > Describe each device and partition separately and add link(s) from one
+> > partition to the next
+> >
+> > flash0 {
+> >   partitions {
+> >     compatible =3D "fixed-partitions";
+> >     concat-partition =3D <&flash1_partitions>;
+> >     ...
+> >   };
+> > };
+> >
+> > flash1 {
+> >   flash1_partition: partitions {
+> >     compatible =3D "fixed-partitions";
+> >     ...
+> >   };
+> > };
+>
+> I honestly don't see how this is different as solution 2/?
 
+It's a single new property rather than a whole binding for a virtual
+device. It's a minimal change to the DT. It would work with existing
+bootloaders (and other OSs and older kernels) without change except
+for the one concatenated partition.
+
+> In one case
+> we describe the partition concatenation in one subnode as a "link", in
+> the other we create a separate node to describe the link. Are you
+> strongly opposed as solution 2/?
+
+I'd prefer to not have virtual devices without good reason.
+
+> From a pure conceptual point of view,
+> is it really different than 3/?
+>
+>
+> Thanks,
+> Miqu=C3=A8l
