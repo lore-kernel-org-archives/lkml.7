@@ -2,120 +2,109 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E607C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BDFC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 487BF20722
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:15:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="hJ2jxg0G"
+	by mail.kernel.org (Postfix) with ESMTP id 4DED620718
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:17:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726066AbfLBWPb (ORCPT
+        id S1726186AbfLBWRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 17:15:31 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:51822 "EHLO mail.andi.de1.cc"
+        Mon, 2 Dec 2019 17:17:10 -0500
+Received: from mga11.intel.com ([192.55.52.93]:59081 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725825AbfLBWPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 17:15:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=87DJGgaOP4OR26er35jT2d/3xlEOtUkjxl/DEu2Hv4A=; b=hJ2jxg0GQjdVMV90G3GTon9LzP
-        71+pbAIhRDz3VxHs5UvWw2oSaW56+b3e9zgmTUTcandElA+kNrbzsnGSsp9BNhIcjj/b9y0gS2U5y
-        86W+CopAbhsHmyZresdzs0aZ4nRuxZyZc6L6WiVP30w3R1dqcc6NTv1USIjxt/xdoCN8=;
-Received: from p200300ccff066f001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff06:6f00:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1ibtyV-0008V1-Oz; Mon, 02 Dec 2019 23:15:24 +0100
-Date:   Mon, 2 Dec 2019 23:15:22 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Adam Ford <aford173@gmail.com>,
-        =?UTF-8?B?QW5kcsOp?= Roth <neolynx@gmail.com>,
-        Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Subject: Re: [PATCH] ARM: OMAP2+: Fix warnings with broken
- omap2_set_init_voltage()
-Message-ID: <20191202231522.5e7fe3f8@aktux>
-In-Reply-To: <8FFD44DB-73F8-4807-91E1-C97DA8F781BA@goldelico.com>
-References: <20190924233222.52757-1-tony@atomide.com>
-        <8FFD44DB-73F8-4807-91E1-C97DA8F781BA@goldelico.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725834AbfLBWRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 17:17:10 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 14:17:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,270,1571727600"; 
+   d="scan'208";a="410596616"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga005.fm.intel.com with ESMTP; 02 Dec 2019 14:17:07 -0800
+Date:   Mon, 2 Dec 2019 14:29:02 -0800
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v2 2/4] xen-pcifront: Align address of flags to size of
+ unsigned long
+Message-ID: <20191202222902.GB220960@romley-ivt3.sc.intel.com>
+References: <1574710984-208305-1-git-send-email-fenghua.yu@intel.com>
+ <1574710984-208305-3-git-send-email-fenghua.yu@intel.com>
+ <e236e8fe-3a81-e17a-2286-228bfde9919a@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e236e8fe-3a81-e17a-2286-228bfde9919a@suse.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Dec 2019 22:09:26 +0100
-"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+On Tue, Nov 26, 2019 at 11:02:13AM +0100, Jürgen Groß wrote:
+> On 25.11.19 20:43, Fenghua Yu wrote:
+> >The address of "flags" is passed to atomic bitops which require the 
+> >address is aligned to size of unsigned long.
+> >
+> >Signed-off-by: Fenghua Yu <fenghua.yu@intel.com> ---
+> >  include/xen/interface/io/pciif.h | 7 +++++-- 1 file changed, 5 
+> >  insertions(+), 2 deletions(-)
+> >
+> >diff --git a/include/xen/interface/io/pciif.h 
+> >b/include/xen/interface/io/pciif.h index d9922ae36eb5..639d5fb484a3 
+> >100644 --- a/include/xen/interface/io/pciif.h +++ 
+> >b/include/xen/interface/io/pciif.h @@ -103,8 +103,11 @@ struct 
+> >xen_pcie_aer_op {
+> >  	uint32_t devfn;
+> >  };
+> >  struct xen_pci_sharedinfo { - /* flags - XEN_PCIF_* */ - uint32_t 
+> >flags; + /* flags - XEN_PCIF_*. Force alignment for atomic bit 
+> >operations. */ + union { + uint32_t flags; + unsigned long 
+> >flags_alignment; + };
+> >  	struct xen_pci_op op; struct xen_pcie_aer_op aer_op;
+> >  };
+> >
+> 
+> NAK.
+> 
+> This is an interface definition for communication between Xen dom0 and 
+> guests via shared memory. It can't be changed.
+> 
+> BTW: you should Cc: the maintainers for the files you are modifying.
+> 
+> 
+> Juergen
 
-> Hi Tony,
->=20
-> > Am 25.09.2019 um 01:32 schrieb Tony Lindgren <tony@atomide.com>:
-> >=20
-> > This code is currently unable to find the dts opp tables as ti-cpufreq
-> > needs to set them up first based on speed binning.
-> >=20
-> > We stopped initializing the opp tables with platform code years ago for
-> > device tree based booting with commit 92d51856d740 ("ARM: OMAP3+: do not
-> > register non-dt OPP tables for device tree boot"), and all of mach-omap2
-> > is now booting using device tree.
-> >=20
-> > We currently get the following errors on init:
-> >=20
-> > omap2_set_init_voltage: unable to find boot up OPP for vdd_mpu
-> > omap2_set_init_voltage: unable to set vdd_mpu
-> > omap2_set_init_voltage: unable to find boot up OPP for vdd_core
-> > omap2_set_init_voltage: unable to set vdd_core
-> > omap2_set_init_voltage: unable to find boot up OPP for vdd_iva
-> > omap2_set_init_voltage: unable to set vdd_iva
-> >=20
-> > Let's just drop the unused code. Nowadays ti-cpufreq should be used to
-> > to initialize things properly.
-> >=20
-> > Cc: Adam Ford <aford173@gmail.com>
-> > Cc: Andr=C3=A9 Roth <neolynx@gmail.com>
-> > Cc: "H. Nikolaus Schaller" <hns@goldelico.com>
-> > Cc: Nishanth Menon <nm@ti.com>
-> > Cc: Tero Kristo <t-kristo@ti.com>
-> > Signed-off-by: Tony Lindgren <tony@atomide.com>
-> > ---
-> >=20
-> > Guys, please check and ack if we can really do this to get rid of some
-> > pointless dmesg -l3 errors without affecting the ongoing cpufreq and
-> > voltage work. =20
->=20
-> unfortunately we did not yet test in combination with the 1GHz OPP
-> patches for omap3630 (queued for v5.5-rc1) and it appears that this
-> patch breaks the 1GHz OPP.
->=20
-> The symptom is that it works fine on a dm3730 with 800MHz rating
-> but results in spurious kernel panics, stack corruption, virtual memory
-> failures, OneNAND DMA timeouts etc. on a dm3730 with 1GHz speed grade.
->=20
-I #if 0'ed the 1Ghz opp and found out that the OneNAND DMA timeouts
-are independant of 1Ghz. But the result is interesting:
-With this patch
-xxd /dev/mtd0 shows only ff
-without this patch gives content, it is slower.
-In both cases I see
-[  476.533477] omap2-onenand 4000000.onenand: timeout waiting for DMA
+After spending more time on the patch, actually I find this patch is not 
+needed because there is no split lock issue on the "flags" field:
 
-Regards,
-Andreas
+The bit offsets in all atomic bitops on the "flags" field are always 
+constant values. On x86, an atomic bitop is optimized to use a locked byte
+instruciton which only operates the byte containing the bit. So the
+byte won't across cache line boundaries and there won't be split lock
+issue in the atomic bitops
+
+I will remove this patch in the next version of the patch set.
+
+Thanks.
+
+-Fenghua
+
