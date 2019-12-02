@@ -2,163 +2,97 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B469C43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA48EC43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A1552084F
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8168B2084F
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:00:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575280814;
+	bh=0tDFuUSEsHsi2HDxMKGgmxIpdwpgGoFiRUoublzRD0Y=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=twH7YHWAF2ojzf3l+TjLSrg3lTx7JXGbz73dFVOJ8jp4w/YnlCOOA9Y7iXffG2qn/
+	 xNDYy3rp8TjKbt4v1xeBFkVsHRwXJmbodZiX8J2wQLSZUG9S2vrP4tElUQU6+YzHMO
+	 wSgsadVt4LbvR5viQ+UaDSUXbdNsIsamukD4yGjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727326AbfLBKAJ (ORCPT
+        id S1727378AbfLBKAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 05:00:09 -0500
-Received: from mx2.suse.de ([195.135.220.15]:60354 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726115AbfLBKAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 05:00:09 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D8DE5ADD9;
-        Mon,  2 Dec 2019 10:00:05 +0000 (UTC)
-Message-ID: <2820f3fb9abc69d54df0dee1b6233eaf3cb63834.camel@suse.de>
-Subject: Re: [PATCH v3 5/7] PCI: brcmstb: add MSI capability
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     maz@kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
-        mbrugger@suse.com, phil@raspberrypi.org, jeremy.linton@arm.com,
-        linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org
-Date:   Mon, 02 Dec 2019 10:59:36 +0100
-In-Reply-To: <20191129154629.GF43905@e119886-lin.cambridge.arm.com>
-References: <20191126091946.7970-1-nsaenzjulienne@suse.de>
-         <20191126091946.7970-6-nsaenzjulienne@suse.de>
-         <20191129154629.GF43905@e119886-lin.cambridge.arm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-K6gbtw6TubZyS8Q2Q2nd"
-User-Agent: Evolution 3.34.1 
+        Mon, 2 Dec 2019 05:00:13 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:56544 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726115AbfLBKAN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 05:00:13 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1ibiUy-0006FX-Mv; Mon, 02 Dec 2019 11:00:08 +0100
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Subject: Re: [PATCH] irqchip/gic-v3-its: Reference to  =?UTF-8?Q?its=5Finvall=5Fcmd=20descriptor=20when=20building=20INVALL?=
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 02 Dec 2019 10:00:08 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wanghaibin.wang@huawei.com>
+In-Reply-To: <20191202071021.1251-1-yuzenghui@huawei.com>
+References: <20191202071021.1251-1-yuzenghui@huawei.com>
+Message-ID: <f44b2fc14d26731333ee6ef1a50e63d6@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, tglx@linutronix.de, jason@lakedaemon.net, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, wanghaibin.wang@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Zenghui,
 
---=-K6gbtw6TubZyS8Q2Q2nd
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 2019-12-02 07:10, Zenghui Yu wrote:
+> It looks like an obvious mistake to use its_mapc_cmd descriptor when
+> building the INVALL command block. It so far worked by luck because
+> both its_mapc_cmd.col and its_invall_cmd.col sit at the same offset 
+> of
+> the ITS command descriptor, but we should not rely on it.
+>
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+> ---
+>  drivers/irqchip/irq-gic-v3-its.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c
+> b/drivers/irqchip/irq-gic-v3-its.c
+> index c52cc8d6d6b8..b3fec78b2226 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -598,7 +598,7 @@ static struct its_collection
+> *its_build_invall_cmd(struct its_node *its,
+>  						   struct its_cmd_desc *desc)
+>  {
+>  	its_encode_cmd(cmd, GITS_CMD_INVALL);
+> -	its_encode_collection(cmd, desc->its_mapc_cmd.col->col_id);
+> +	its_encode_collection(cmd, desc->its_invall_cmd.col->col_id);
+>
+>  	its_fixup_cmd(cmd);
 
-Hi Andrew,
+Yup, well spotted. Thankfully, there is no impact due to the two
+structures having similar layouts, but that definitely needs
+fixing.
 
-On Fri, 2019-11-29 at 15:46 +0000, Andrew Murray wrote:
-> On Tue, Nov 26, 2019 at 10:19:43AM +0100, Nicolas Saenz Julienne wrote:
-> > From: Jim Quinlan <james.quinlan@broadcom.com>
-> >=20
-> > This adds MSI support to the Broadcom STB PCIe host controller. The MSI
-> > controller is physically located within the PCIe block, however, there
-> > is no reason why the MSI controller could not be moved elsewhere in the
-> > future. MSIX is not supported by the HW.
-> >=20
-> > Since the internal Brcmstb MSI controller is intertwined with the PCIe
-> > controller, it is not its own platform device but rather part of the
-> > PCIe platform device.
-> >=20
-> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > Reviewed-by: Marc Zyngier <maz@kernel.org>
-> >=20
-> > ---
-> >=20
-> > Changes since v2 (kept Marc's Reviewed-by as changes didn't affect irq
-> > subsystem stuff or seem petty enough):
-> >   - Use standard APIs on register operations
-> >   - Get rid of revision code
->=20
-> Do any RPI4's have a HW revision of less than 33?
+I'll queue this for post -rc1.
 
-No, IIRC it's actually revision 34. I had left that bit of code in, followi=
-ng
-the same train of thought as with the of_data on the device-tree part of th=
-e
-driver: "It's harmless and should make accomodating other devices easier." =
-It
-turned out not to be such a great approach. Lesson's learned. So I decided =
-to
-remove it.
+Thanks,
 
-> >   - Update rules to msi_target_addr selection
-> >   - Remove unwarranted MSI_FLAG_PCI_MSIX
-> >   - Small cosmetic changes
-> >=20
-> > Changes since v1:cuando ten=C3=ADas tu vacaciones?
-> >   - Move revision code and some registers to this patch
-> >   - Use PCIE_MSI_IRQ_DOMAIN in Kconfig
-> >   - Remove redundant register read from ISR
-> >   - Fail probe on MSI init error
-> >   - Get rid of msi_internal
-> >   - Use bitmap family of functions
-> >   - Use edge triggered setup
-> >   - Add comment regarding MultiMSI
-> >   - Simplify compose_msi_msg to avoid reg read
-> >=20
-> > This is based on Jim's original submission[1] with some slight changes
-> > regarding how pcie->msi_target_addr is decided.
-> >=20
-> > [1] https://patchwork.kernel.org/patch/10605955/
-> >=20
-> >  drivers/pci/controller/Kconfig        |   1 +
-> >  drivers/pci/controller/pcie-brcmstb.c | 261 +++++++++++++++++++++++++-
-> >  2 files changed, 261 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kc=
-onfig
-> > index 27504f108ee5..918e283bbff1 100644
-> > +
-> > +static void brcm_msi_compose_msi_msg(struct irq_data *data, struct msi=
-_msg
-> > *msg)
-> > +{
-> > +	struct brcm_msi *msi =3D irq_data_get_irq_chip_data(data);
-> > +
-> > +	msg->address_lo =3D lower_32_bits(msi->target_addr);
-> > +	msg->address_hi =3D upper_32_bits(msi->target_addr);
-> > +	msg->data =3D 0x6540 | data->hwirq;
->=20
-> NIT: Perhaps this 0x6540 can be a define - just in the same way we have a
-> define
-> for PCIE_MISC_MSI_DATA_CONFIG_VAL.
-
-Noted
-
-Regards,
-Nicolas
-
-
---=-K6gbtw6TubZyS8Q2Q2nd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3k4IgACgkQlfZmHno8
-x/6oLAf/ZrjxvdunJzn4AYQQQ3YqnEVeLonAfG7NdyTmIPouYioWmuAJeWWycG9Z
-w9LJ5HQWtb34zAbKgJL9oznp+tlE/SKI+BoIxJt3HnNC44bQvYP9D2mVuC3khAMQ
-6wsSY7nKOQ84BC1wNhhsTxVOrR4TqAaCXG+Qh+rP5Vu/4tcH5CDJCg1+NpsTN1Lh
-/skKo6q+DbjQxyRUwXp0CpTm0VpSQpbhu9BDRAFUNT9VKY0zptPGFF1CiDaV+dsU
-WJENZ1GM/PaynUdZFbUE/y+uRf0JyvJeXyq6h7tsX0ORPvBHSR/mqSw70UregaH6
-c+jSMYmGSBOe+KRNM9w/TLdcRBa6Qw==
-=Z/P8
------END PGP SIGNATURE-----
-
---=-K6gbtw6TubZyS8Q2Q2nd--
-
+         M.
+-- 
+Jazz is not dead. It just smells funny...
