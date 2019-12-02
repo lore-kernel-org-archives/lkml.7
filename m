@@ -2,163 +2,99 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A6AC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A97B5C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7000020715
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:40:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 816FC214AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:43:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m91pVQxg"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="dVb1kjib"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbfLBGkp (ORCPT
+        id S1726533AbfLBGnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 01:40:45 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45478 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfLBGko (ORCPT
+        Mon, 2 Dec 2019 01:43:39 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:35831 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725976AbfLBGni (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 01:40:44 -0500
-Received: by mail-qt1-f194.google.com with SMTP id p5so9532099qtq.12
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Dec 2019 22:40:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=syKeBHWe4HxWIQ5X+mPdFfW/TrjICdwgcKSYdntZoAw=;
-        b=m91pVQxgzTI0E4n+uLlfZzxBobwKMj3ZjPelFZZYGrMIJA3ZOgEyVfWnhn9/Re94SD
-         idw2eTq/Q7tH674gGaoEtgjdDBVA8dXP/Q/AM+mCozV21XWDymyggGXwZGjBIEavNy16
-         /P21L19rESCvOY3jHZHYXp+/jHBl5ZTXbylJ5WWjnqvlQUe5phwwGOHBpRB4CxXRABc+
-         BB4JAkRa7fmiiw7U5UVqeIZf1x4xqdUQsbpRx/LlHyXibeN7WPqr+r4vgSqNA32jvdpk
-         Qg9OQi3PQSdAQKEEwkDG+B11X3eCrN/HrmO5szTELWzi4hTKOaA2y3OsAv+Gc9he35B6
-         xHvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=syKeBHWe4HxWIQ5X+mPdFfW/TrjICdwgcKSYdntZoAw=;
-        b=qwfu+wWQpnZg8DCK880rZeJ8WynL64zkopjccYVx8aBBKoRGF+WUsL42ppDCee6ZNG
-         H9CJ2Yry11FoINk6qT6Re3ilJghHBhOX+76dxmQ6OVm2agaQk/IaredFXUhNdO3qs9s+
-         7xuiDoQHSx6/AqRS3JRXryIW5vqRwooTYVuwdeOJ0OH0PYE58TWfMXwTOD1OUPgqbZ6B
-         wBdlCtFGU1NiJV7ghuChEZObpbYOqZ0wf1N8Oo5e7c+G9Zs5dV2wzjM+LhEAIm9WVntd
-         dvBRUlDVquJVEbszquOSCHqvnCCr1LEL2P0EBgArdgADaoaYa3V0CDKOFLsxHqiTO+wu
-         ZQCQ==
-X-Gm-Message-State: APjAAAUF9ilXTw1XqRv293F8s9Mw3cwctgU0pkfk5+smw1rW7/b2hBwU
-        LwpCSFObxSVhaCk32Kzi2u8wtJOVSTXjQwj1rAgTeA==
-X-Google-Smtp-Source: APXvYqzD+DzF6FrOkbh/p0y3ZBjxdkdQ0V+WSD9FdLXrt8p7t7t7KrEHOcJatfDllO4ozZeULlWK4QKNTpGI3WGzp3Y=
-X-Received: by 2002:ac8:ccf:: with SMTP id o15mr65616902qti.380.1575268843007;
- Sun, 01 Dec 2019 22:40:43 -0800 (PST)
-MIME-Version: 1.0
-References: <000000000000da160a0598b2c704@google.com>
-In-Reply-To: <000000000000da160a0598b2c704@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 2 Dec 2019 07:40:31 +0100
-Message-ID: <CACT4Y+ZGx16qc8qtekP0Bx=syVQest8K_RVtEN084jnszx4qhA@mail.gmail.com>
-Subject: Re: general protection fault in override_creds
-To:     syzbot <syzbot+5320383e16029ba057ff@syzkaller.appspotmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Al Viro <viro@zeniv.linux.org.uk>, io-uring@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Cc:     Anna.Schumaker@netapp.com,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        David Howells <dhowells@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, NeilBrown <neilb@suse.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>
+        Mon, 2 Dec 2019 01:43:38 -0500
+X-UUID: 7dc2100f29804568af4ecb81e747edfe-20191202
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=19s7GBXuY9yIpUgA9xWsAVPEjx09DZz7pwIlU0oD5U8=;
+        b=dVb1kjibhL4AnclmLKAjbPqNtPF8qBoEiAA51Rz+JTVgN94B0f3gKLMd6gNxqhwra1Oz04dtbn2+ZdbQlRhRjNi7Uy0AS1I+4wi5+vEUR0Xk9FMzh+se3MolD070LX7ngaswnJWas4sbuvq1Rgz8GgwbquXs5GKnOo5At76QjuI=;
+X-UUID: 7dc2100f29804568af4ecb81e747edfe-20191202
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1428788280; Mon, 02 Dec 2019 14:43:29 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 2 Dec 2019 14:43:13 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 2 Dec 2019 14:43:12 +0800
+Message-ID: <1575269008.3674.1.camel@mtksdaap41>
+Subject: Re: [PATCH v1 3/6] drm/mediatek: handle events when
+ enabling/disabling crtc
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+CC:     David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        YT Shen <yt.shen@mediatek.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        <linux-arm-kernel@lists.infradead.org>, <tfiga@chromium.org>,
+        <drinkcat@chromium.org>, <linux-kernel@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>
+Date:   Mon, 2 Dec 2019 14:43:28 +0800
+In-Reply-To: <20191128024238.9399-4-bibby.hsieh@mediatek.com>
+References: <20191128024238.9399-1-bibby.hsieh@mediatek.com>
+         <20191128024238.9399-4-bibby.hsieh@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 2, 2019 at 7:35 AM syzbot
-<syzbot+5320383e16029ba057ff@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    b94ae8ad Merge tag 'seccomp-v5.5-rc1' of git://git.kernel...
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10f9ffcee00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=ff560c3de405258c
-> dashboard link: https://syzkaller.appspot.com/bug?extid=5320383e16029ba057ff
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12dd682ae00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16290abce00000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+5320383e16029ba057ff@syzkaller.appspotmail.com
+SGksIEJpYmJ5Og0KDQpPbiBUaHUsIDIwMTktMTEtMjggYXQgMTA6NDIgKzA4MDAsIEJpYmJ5IEhz
+aWVoIHdyb3RlOg0KPiBUaGUgZHJpdmVyIGN1cnJlbnRseSBoYW5kbGVzIHZibGFuayBldmVudHMg
+b25seSB3aGVuIHVwZGF0aW5nIHBsYW5lcyBvbg0KPiBhbiBhbHJlYWR5IGVuYWJsZWQgQ1JUQy4g
+VGhlIGF0b21pYyB1cGRhdGUgQVBJIGhvd2V2ZXIgYWxsb3dzIHJlcXVlc3RpbmcNCj4gYW4gZXZl
+bnQgd2hlbiBlbmFibGluZyBvciBkaXNhYmxpbmcgYSBDUlRDLiBUaGlzIGN1cnJlbnRseSBsZWFk
+cyB0bw0KPiBldmVudCBvYmplY3RzIGJlaW5nIGxlYWtlZCBpbiB0aGUga2VybmVsIGFuZCB0byBl
+dmVudHMgbm90IGJlaW5nIHNlbnQNCj4gb3V0LiBGaXggaXQuDQoNClJldmlld2VkLWJ5OiBDSyBI
+dSA8Y2suaHVAbWVkaWF0ZWsuY29tPg0KDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBCaWJieSBIc2ll
+aCA8YmliYnkuaHNpZWhAbWVkaWF0ZWsuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvZ3B1L2RybS9t
+ZWRpYXRlay9tdGtfZHJtX2NydGMuYyB8IDggKysrKysrKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCA4
+IGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0
+ZWsvbXRrX2RybV9jcnRjLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRj
+LmMNCj4gaW5kZXggNzFmNDA4OWE4MTE3Li5jYjg3YTUzOGI4ZmYgMTAwNjQ0DQo+IC0tLSBhL2Ry
+aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYw0KPiArKysgYi9kcml2ZXJzL2dw
+dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMNCj4gQEAgLTMzNCw2ICszMzQsNyBAQCBzdGF0
+aWMgaW50IG10a19jcnRjX2RkcF9od19pbml0KHN0cnVjdCBtdGtfZHJtX2NydGMgKm10a19jcnRj
+KQ0KPiAgc3RhdGljIHZvaWQgbXRrX2NydGNfZGRwX2h3X2Zpbmkoc3RydWN0IG10a19kcm1fY3J0
+YyAqbXRrX2NydGMpDQo+ICB7DQo+ICAJc3RydWN0IGRybV9kZXZpY2UgKmRybSA9IG10a19jcnRj
+LT5iYXNlLmRldjsNCj4gKwlzdHJ1Y3QgZHJtX2NydGMgKmNydGMgPSAmbXRrX2NydGMtPmJhc2U7
+DQo+ICAJaW50IGk7DQo+ICANCj4gIAlEUk1fREVCVUdfRFJJVkVSKCIlc1xuIiwgX19mdW5jX18p
+Ow0KPiBAQCAtMzU3LDYgKzM1OCwxMyBAQCBzdGF0aWMgdm9pZCBtdGtfY3J0Y19kZHBfaHdfZmlu
+aShzdHJ1Y3QgbXRrX2RybV9jcnRjICptdGtfY3J0YykNCj4gIAltdGtfZGlzcF9tdXRleF91bnBy
+ZXBhcmUobXRrX2NydGMtPm11dGV4KTsNCj4gIA0KPiAgCXBtX3J1bnRpbWVfcHV0KGRybS0+ZGV2
+KTsNCj4gKw0KPiArCWlmIChjcnRjLT5zdGF0ZS0+ZXZlbnQgJiYgIWNydGMtPnN0YXRlLT5hY3Rp
+dmUpIHsNCj4gKwkJc3Bpbl9sb2NrX2lycSgmY3J0Yy0+ZGV2LT5ldmVudF9sb2NrKTsNCj4gKwkJ
+ZHJtX2NydGNfc2VuZF92YmxhbmtfZXZlbnQoY3J0YywgY3J0Yy0+c3RhdGUtPmV2ZW50KTsNCj4g
+KwkJY3J0Yy0+c3RhdGUtPmV2ZW50ID0gTlVMTDsNCj4gKwkJc3Bpbl91bmxvY2tfaXJxKCZjcnRj
+LT5kZXYtPmV2ZW50X2xvY2spOw0KPiArCX0NCj4gIH0NCj4gIA0KPiAgc3RhdGljIHZvaWQgbXRr
+X2NydGNfZGRwX2NvbmZpZyhzdHJ1Y3QgZHJtX2NydGMgKmNydGMpDQoNCg==
 
-I think this relates to fs/io_uring.c rather than kernel/cred.c.
-+io_uring maintainers
-
-> kasan: CONFIG_KASAN_INLINE enabled
-> kasan: GPF could be caused by NULL-ptr deref or user memory access
-> general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 0 PID: 9217 Comm: io_uring-sq Not tainted 5.4.0-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> RIP: 0010:creds_are_invalid kernel/cred.c:792 [inline]
-> RIP: 0010:__validate_creds include/linux/cred.h:187 [inline]
-> RIP: 0010:override_creds+0x9f/0x170 kernel/cred.c:550
-> Code: ac 25 00 81 fb 64 65 73 43 0f 85 a3 37 00 00 e8 17 ab 25 00 49 8d 7c
-> 24 10 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84
-> c0 74 08 3c 03 0f 8e 96 00 00 00 41 8b 5c 24 10 bf
-> RSP: 0018:ffff88809c45fda0 EFLAGS: 00010202
-> RAX: dffffc0000000000 RBX: 0000000043736564 RCX: ffffffff814f3318
-> RDX: 0000000000000002 RSI: ffffffff814f3329 RDI: 0000000000000010
-> RBP: ffff88809c45fdb8 R08: ffff8880a3aac240 R09: ffffed1014755849
-> R10: ffffed1014755848 R11: ffff8880a3aac247 R12: 0000000000000000
-> R13: ffff888098ab1600 R14: 0000000000000000 R15: 0000000000000000
-> FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007ffd51c40664 CR3: 0000000092641000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->   io_sq_thread+0x1c7/0xa20 fs/io_uring.c:3274
->   kthread+0x361/0x430 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> Modules linked in:
-> ---[ end trace f2e1a4307fbe2245 ]---
-> RIP: 0010:creds_are_invalid kernel/cred.c:792 [inline]
-> RIP: 0010:__validate_creds include/linux/cred.h:187 [inline]
-> RIP: 0010:override_creds+0x9f/0x170 kernel/cred.c:550
-> Code: ac 25 00 81 fb 64 65 73 43 0f 85 a3 37 00 00 e8 17 ab 25 00 49 8d 7c
-> 24 10 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84
-> c0 74 08 3c 03 0f 8e 96 00 00 00 41 8b 5c 24 10 bf
-> RSP: 0018:ffff88809c45fda0 EFLAGS: 00010202
-> RAX: dffffc0000000000 RBX: 0000000043736564 RCX: ffffffff814f3318
-> RDX: 0000000000000002 RSI: ffffffff814f3329 RDI: 0000000000000010
-> RBP: ffff88809c45fdb8 R08: ffff8880a3aac240 R09: ffffed1014755849
-> R10: ffffed1014755848 R11: ffff8880a3aac247 R12: 0000000000000000
-> R13: ffff888098ab1600 R14: 0000000000000000 R15: 0000000000000000
-> FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007ffd51c40664 CR3: 0000000092641000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000da160a0598b2c704%40google.com.
