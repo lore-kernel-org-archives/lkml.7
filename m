@@ -2,105 +2,174 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E47C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC43BC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12468214AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 865DE215E5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:02:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZR7294q/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NiZYzFLi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbfLBUBd (ORCPT
+        id S1728108AbfLBUC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 15:01:33 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:23645 "EHLO
+        Mon, 2 Dec 2019 15:02:56 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26035 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727586AbfLBUBc (ORCPT
+        by vger.kernel.org with ESMTP id S1727976AbfLBUC4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 15:01:32 -0500
+        Mon, 2 Dec 2019 15:02:56 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575316891;
+        s=mimecast20190719; t=1575316974;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=zacL8ZwUfm9ACoXwRxpaHO5nNuk5Pt/tAg3zBrg+MDU=;
-        b=ZR7294q/DRN0lSDPxYCkF7aLSVYZU0ZQ4PBiPpfUDYkU7ORjRJkZNQDbopgrNvYaJ8o550
-        THcHP8o+zIuztEwfo/bnoVYHRVoNDFWyCMcL3NVMPOP4y4kdy4hqt7ClgpMlTt43C48giW
-        twVqlj6Ebnms2UdSDsFRrRpmiUZizeE=
-Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
- [209.85.210.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-364-n2vhfZ9JNKS5MpSsA09Vbg-1; Mon, 02 Dec 2019 15:01:28 -0500
-Received: by mail-ot1-f71.google.com with SMTP id c9so249358otm.20
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 12:01:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ijUXKcWVOy6uyc+9TN1aIhkDvnkVi2DmgHGgcMYXyg8=;
-        b=jAgAyTHRans3w2ng2gdRTUAWxzoSuKJh3LRozAvWMCfJ47AGzC3otuWLR6GuFHDtQb
-         LIDq4fH8rKhlyIQwnF79r+OPZ5ej35o29wC50zFKbV1N2vJhyDOi++XSCdqBRwVooSXj
-         u9Wiq48aFtsxEC48fvqomlrcTrTZG8VOCMBq1uw1GmEDHKZukuJUtqmoDh4fRJ1DtuGQ
-         7DM4AA/5U3bQoJvrOspgmzHmmdEzfPwTf94HpTF9uppzmEqGFxpKRAQqswZ37eXAOjWg
-         c6Ga4mdqVbcn7KPwEaFadWdlsRy/Hhmv2eZWJBarCVycDzz5ohxvwv/vLqgDwACu1Spy
-         QpPQ==
-X-Gm-Message-State: APjAAAUKrSI/xwlHFY+fRsI/Xdfhkjh2jexiPRfbLTzw6CTvFoOrXDNA
-        JjmAxLpLlG58wxdWrogjuIzMI8hQFH535Nv1EOjlUx56FbxS4U/k0SVFyBBsY0X4OYKTbspv15Z
-        XiwfOSvLSY1LMhkzbPmeiVooUHMqJulJuamyrtSif
-X-Received: by 2002:a9d:6842:: with SMTP id c2mr587959oto.336.1575316887646;
-        Mon, 02 Dec 2019 12:01:27 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyMdBme1c9WpgSFSgNXAIaU6jfbxGCDDzMLm0j7YrB0Sco90y06wXmXOeN/FpJHGpZ/O6xcsvuz4LhYjQo9Iu8=
-X-Received: by 2002:a9d:6842:: with SMTP id c2mr587947oto.336.1575316887450;
- Mon, 02 Dec 2019 12:01:27 -0800 (PST)
+        bh=EahjHtPxa0IRKLg7rJztVt75g0Mh1O3hEHuZpwDPvYg=;
+        b=NiZYzFLiPqlnSu/NNoKVFW7jVAInZWxyKHGFD0/3kN8PiuF19A4xRbt8ATbkYfQrLPAjAM
+        vlA/DPflBfzIX8zlShRgi/oNTTbHc/snom4rN4/9SI5rYZmmKRjnrVqtvu9/UuyPAR6ww0
+        iV14fjIxdYucGmx+ukyoMxPICGIDuBo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-146-39vGrJ5NP5uyOA_Wex8FWg-1; Mon, 02 Dec 2019 15:02:53 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4E4FF800D41;
+        Mon,  2 Dec 2019 20:02:51 +0000 (UTC)
+Received: from krava (ovpn-204-100.brq.redhat.com [10.40.204.100])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A37FB5DA2C;
+        Mon,  2 Dec 2019 20:02:42 +0000 (UTC)
+Date:   Mon, 2 Dec 2019 21:02:41 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>
+Subject: Re: [PATCH 0/3] perf/bpftool: Allow to link libbpf dynamically
+Message-ID: <20191202200241.GB22100@krava>
+References: <20191127094837.4045-1-jolsa@kernel.org>
+ <CAEf4BzbUK98tsYH1mSNoTjuVB4dstRsL5rpkA+9nRCcqrdn6-Q@mail.gmail.com>
+ <87zhgappl7.fsf@toke.dk>
+ <CAEf4BzYoJUttk=o+p=NHK8K_aS3z2LdLiqzRni7PwyDaOxu68A@mail.gmail.com>
+ <20191202192122.GA22100@krava>
+ <CAEf4BzbqSKZyTyn5wTr3rt=-9W3bFZeupSiNr5YiTPp_Z8rOQw@mail.gmail.com>
 MIME-Version: 1.0
-References: <1574324085-4338-1-git-send-email-clabbe@baylibre.com> <20191202133254.GA21550@Red>
-In-Reply-To: <20191202133254.GA21550@Red>
-From:   David Airlie <airlied@redhat.com>
-Date:   Tue, 3 Dec 2019 06:01:15 +1000
-Message-ID: <CAMwc25obOebugXGSNVWd1bjPN+tR82wwFJ6PgqnvZXK4O6xAFw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] agp: minor fixes, does the maintainer still there ?
-To:     LABBE Corentin <clabbe@baylibre.com>
-Cc:     airlied <airlied@linux.ie>, arnd@arndb.de, fenghua.yu@intel.com,
-        "KH, Greg" <gregkh@linuxfoundation.org>,
-        "Luck, Tony" <tony.luck@intel.com>, linux-ia64@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-X-MC-Unique: n2vhfZ9JNKS5MpSsA09Vbg-1
+In-Reply-To: <CAEf4BzbqSKZyTyn5wTr3rt=-9W3bFZeupSiNr5YiTPp_Z8rOQw@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: 39vGrJ5NP5uyOA_Wex8FWg-1
 X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 2, 2019 at 11:33 PM LABBE Corentin <clabbe@baylibre.com> wrote:
->
-> On Thu, Nov 21, 2019 at 08:14:40AM +0000, Corentin Labbe wrote:
-> > Hello
+On Mon, Dec 02, 2019 at 11:54:27AM -0800, Andrii Nakryiko wrote:
+> On Mon, Dec 2, 2019 at 11:21 AM Jiri Olsa <jolsa@redhat.com> wrote:
 > >
-> > This patch serie fixes some minor problem found in the agp subsystem
-> > There are no change since v1 (posted two years ago)
-> > This is simply a repost for trying to get an answer (gentle ping 6 mont=
-h
-> > ago got no answer also).
+> > On Mon, Dec 02, 2019 at 10:42:53AM -0800, Andrii Nakryiko wrote:
+> > > On Mon, Dec 2, 2019 at 10:09 AM Toke H=F8iland-J=F8rgensen <toke@redh=
+at.com> wrote:
+> > > >
+> > > > Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
+> > > >
+> > > > > On Wed, Nov 27, 2019 at 1:49 AM Jiri Olsa <jolsa@kernel.org> wrot=
+e:
+> > > > >>
+> > > > >> hi,
+> > > > >> adding support to link bpftool with libbpf dynamically,
+> > > > >> and config change for perf.
+> > > > >>
+> > > > >> It's now possible to use:
+> > > > >>   $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=3D1
+> > > > >
+> > > > > I wonder what's the motivation behind these changes, though? Why =
+is
+> > > > > linking bpftool dynamically with libbpf is necessary and importan=
+t?
+> > > > > They are both developed tightly within kernel repo, so I fail to =
+see
+> > > > > what are the huge advantages one can get from linking them
+> > > > > dynamically.
+> > > >
+> > > > Well, all the regular reasons for using dynamic linking (memory usa=
+ge,
+> > > > binary size, etc).
+> > >
+> > > bpftool is 327KB with statically linked libbpf. Hardly a huge problem
+> > > for either binary size or memory usage. CPU instruction cache usage i=
+s
+> > > also hardly a concern for bpftool specifically.
+> > >
+> > > > But in particular, the ability to update the libbpf
+> > > > package if there's a serious bug, and have that be picked up by all
+> > > > utilities making use of it.
+> > >
+> > > I agree, and that works only for utilities linking with libbpf
+> > > dynamically. For tools that build statically, you'd have to update
+> > > tools anyways. And if you can update libbpf, you can as well update
+> > > bpftool at the same time, so I don't think linking bpftool statically
+> > > with libbpf causes any new problems.
 > >
-> > Regards
+> > it makes difference for us if we need to respin just one library
+> > instead of several applications (bpftool and perf at the moment),
+> > because of the bug in the library
 > >
->
-> Hello
->
-> Does the AGP maintainer still maintain it ?
+> > with the Toke's approach we compile some bits of libbpf statically into
+> > bpftool, but there's still the official API in the dynamic libbpf that
+> > we care about and that could carry on the fix without bpftool respin
+>=20
+> See my replies on v4 of your patchset. I have doubts this actually
+> works as we hope it works.
+>=20
+> I also don't see how that is going to work in general. Imagine
+> something like this:
+>=20
+> static int some_state =3D 123;
+>=20
+> LIBBPF_API void set_state(int x) { some_state =3D x; }
+>=20
+> int get_state() { return some_state; }
+>=20
+> If bpftool does:
+>=20
+> set_state(42);
+> printf("%d\n", get_state());
+>=20
+>=20
+> How is this supposed to work with set_state() coming from libbpf.so,
+> while get_state() being statically linked? Who "owns" memory of `int
+> some_state` -- bpftool or libbpf.so? Can they magically share it? Or
+> rather maybe some_state will be actually two different variables in
+> two different memory regions? And set_state() would be setting one of
+> them, while get_state() would be reading another one?
+>=20
+> It would be good to test this out. Do you mind checking?
 
-It's maintained but really loathe to touch it, I've no hw to validate
-any changes on so making any changes to it really has to get past my
-internal, I care enough about this change to risk applying anything to
-AGP.
+I think you're right.. sry, I should have checked on this more,
+there are no relocations for libbpf.so, so it's all statically
+linked and the libbpf is just in 'needed' libs record.. ugh :-\
 
-I'll try and look and apply those patches today.
-
-Dave.
+jirka
 
