@@ -2,181 +2,182 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDC9C43141
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A001BC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3524521774
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7345F20718
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:04:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727511AbfLBOC6 (ORCPT
+        id S1727533AbfLBOEP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 09:02:58 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:44494 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727362AbfLBOC5 (ORCPT
+        Mon, 2 Dec 2019 09:04:15 -0500
+Received: from mout.kundenserver.de ([212.227.126.187]:54379 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727164AbfLBOEO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 09:02:57 -0500
-X-AuditID: c0a8fbf4-199ff70000001fa6-35-5de5198e38f4
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 2A.6C.08102.E8915ED5; Mon,  2 Dec 2019 15:02:54 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0439.000; Mon, 2 Dec 2019 15:02:42 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "corbet@lwn.net" <corbet@lwn.net>, "pavel@ucw.cz" <pavel@ucw.cz>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "hofrat@osadl.org" <hofrat@osadl.org>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>
-Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
- regulator bindings
-Thread-Topic: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
- regulator bindings
-Thread-Index: AQHVndzxthsd4Y8wKkm7W/92Uslk+KeRDPcAgAAbkICAAZUNgIAACqYAgAAMmACADvFigIAASP2AgARwk4CAAFfQAIAADk+A
-Date:   Mon, 2 Dec 2019 14:02:41 +0000
-Message-ID: <72a1f4c5768b8c08c2669ea01e60d1b614095a43.camel@fi.rohmeurope.com>
-References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
-         <d29e0eb587b764f3ea77647392e45fac67bbd757.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
-         <20191118162502.GJ9761@sirena.org.uk>
-         <fd1e4e652840346bd990c769eabe2f966bda4ed6.camel@fi.rohmeurope.com>
-         <20191119181325.GD3634@sirena.org.uk>
-         <fa69d01504817e3260d2b023ae2637aa2f1b2862.camel@fi.rohmeurope.com>
-         <20191119193636.GH3634@sirena.org.uk>
-         <eb685cc78b936bc61ed9f7fbfa18c96398b00909.camel@fi.rohmeurope.com>
-         <20191129120925.GA5747@sirena.org.uk>
-         <297fa021fb243072dbbb7bca455e57c13e8c6843.camel@fi.rohmeurope.com>
-         <20191202131140.GD1998@sirena.org.uk>
-In-Reply-To: <20191202131140.GD1998@sirena.org.uk>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F85BB52ACDEEB44DB8C4B10B5AE452F7@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Mon, 2 Dec 2019 09:04:14 -0500
+Received: from mail-qt1-f171.google.com ([209.85.160.171]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MsrV2-1hnNVj2pjc-00tFFV for <linux-kernel@vger.kernel.org>; Mon, 02 Dec
+ 2019 15:04:11 +0100
+Received: by mail-qt1-f171.google.com with SMTP id p5so10705853qtq.12
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 06:04:11 -0800 (PST)
+X-Gm-Message-State: APjAAAWHaiNMmSX5Q7EuQlsvZ4sY5rYZtUDtOmpqQ8HEPPdvw00RSvNt
+        doUCqf/MZjx+JZFwiRKGtDKcRaPcRAIsW8CnglU=
+X-Google-Smtp-Source: APXvYqzY2KEySxcGaO1R0Ld5UfDskq+N3EoKgH5LDEY9SHFisuuB6M4zP0b90vsGoCLiwhc3LVgsBhBPXEnHoaHQQbs=
+X-Received: by 2002:ac8:27ab:: with SMTP id w40mr15859502qtw.18.1575295450496;
+ Mon, 02 Dec 2019 06:04:10 -0800 (PST)
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0wURxzHM7uzDx7XrifCcLZGL42N+KRp7ISgMZXGtcamhhitCcFFVo54
-        D7p3GCg1wVgehxYxxQcXOEXAmgPhemBVRIMHiJ4NlYh4jVBET+Kp8VAQX0h7y6rwz+xv5juf
-        +fz++C1Lqp2Mhk03WkTJKOi1dChsPfnGtXh/9P2kZY6vcXX3TQYXPDnB4NEKD8QHB3009rUW
-        AHy0vYvCe681Ufh44AiFrdZCCt8+7YT4SuMAwAPPOwAe6ykkcOn47wR+uu9fClfmV0PceHQc
-        4BvN5TQ+/bge4Mu1PTQ+1d7P4Jpb3QQur7kCceCZlcDdnm9wv6eDxnu6vSTOu9DO4InePyAu
-        7lqzag5fZ68DfMCbx/D2uhz+nK2f4ata/ATvclhpvq+3hearin+j+Af72iA/9tcByBc3OQA/
-        VNkA+U7vGYI/bH9F8CdrXzD8iGvO99yWsPgUwbIzMT3NuHTl1jBdl/82k1G/KGv88gkqF5Qv
-        LAIhLOK+RDcGWmERCGXV3E2Ang7vJ5VNJ0DnhkeoIsCyNBePiv5hZCCCW4wOvq6i5ZrkysKR
-        uy1MrmdyW1HTo3tQuSOgY2NvCKU2ooLykcn7kPsM5ToeALlWcd+h3X3XCcVVSKE7zl8n4RDu
-        C+StrZ+UAe5TZM19QiiyKOQaekEpXXOouuVvUqlnIf+9iXfnWnTh1SCUeya5BaiheamCrkKP
-        /U5Sqeeh0r2DjNLDDHS1zAdLQKRtmsE2Rdum0bZptG0afQxQDoAMQro+TbCIsUskMXOJZNIZ
-        gp9tJoMLKLM3ehb8517rBgQL3CCaJbSzVG9HfEnqj1JMqdk6waxLljL1otkNEEtqI1R/ovtJ
-        alWqkP2TKJneR7NZqI1SfT54IEnNya4dopghSu/TT1hWi1RWGZwhiWli1vZ0vWUqJtgQ+fFQ
-        TYRZNKaKkpBp0SXL85FsDg6IHIUHvfmTXnOGYAieKqgHxLIl/orjJNtYURNc2+VVDY0mo6iJ
-        Un0sA5wM6DKNH3QPQRQLtDNVDXIaHvwNP7z2MCgigqKvfrkriyzCVKTJBTt7shbpYzjT6u2d
-        vufz91w6NJS1qVQTFzk7seeHgg3eyiF0kS7Li/g2561m2y1D39zW5pi5DT+ejfHmxzWt8Cbf
-        KVvrvLvh/KOcWHXGmiMb+7KHL5o2pmxZ3jbxstezsmTX2PplMPFMICG84+q6hOs/L9/stgd8
-        lxiUmhB5aoE4YN+khWadEBtDSmbhf2abmHtDBAAA
+References: <20191108210236.1296047-1-arnd@arndb.de> <20191108210824.1534248-7-arnd@arndb.de>
+ <4faa78cd0a86cf5d0aea9bb16d03145c5745450b.camel@codethink.co.uk>
+ <CAK8P3a1nRq98ngfKnR2Du+7_vOxSRFD9AyjHyUCsAtk_gLR_Uw@mail.gmail.com>
+ <20191121172529.Horde.0uDMS4xQ-xexjp4a2mIoXQ5@messagerie.si.c-s.fr>
+ <CAK8P3a1UmAYTx=Vv06xP=O-oYD8_HzNqMG0-p7GPP2xgzs+75w@mail.gmail.com> <85ba697d-1a09-f1b0-b6b6-a511a2920f93@c-s.fr>
+In-Reply-To: <85ba697d-1a09-f1b0-b6b6-a511a2920f93@c-s.fr>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 2 Dec 2019 15:03:53 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a3-LCvF_V50k9Mwzc1coUjKc9kqVzYuD6bS6pg71hRJXQ@mail.gmail.com>
+Message-ID: <CAK8P3a3-LCvF_V50k9Mwzc1coUjKc9kqVzYuD6bS6pg71hRJXQ@mail.gmail.com>
+Subject: Re: [Y2038] [PATCH 07/23] y2038: vdso: powerpc: avoid timespec references
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Allison Randal <allison@lohutok.net>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:tlbt82ceCDDgY/Q8SkQlUuu3CXZtAY8sfxP/XKvCwdcqI2M+pPz
+ ae9qvjkzAXQKTWoAYFCKsozFjlV5YsXW0q+oH6NpDxaZG3M98eOGIHRdOuRdSABdq2AgIY2
+ il0476EKlGRNnBB6F9USY8F6KzND1rvbjnfveOs8iTn2F6g7p7TRRlPyo3+MEobRs67oOJ5
+ KAi58oN/YqVaxH18wqKIw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:mvgPR5nTy/Y=:ffm5WI0/r1toJUuiZNx8TD
+ h3cVTVeAhP94UqpNO857OTSWaXE5ehs1C9PQ6wdjgXZajBjUnI2sAFdzxlgLjlflgetU5FpaF
+ nhXYUAq+bBl1Us3S0C2rGQjt6wrK+uY1cZI2SwciJx2vy80nY5ioG27fwiqJj7xTyXYoEKic+
+ /YC2G8bbUcmPYwXpLB0vUazSztDR+v8YMAAumbENe28eSlLZZ1Df9BzX0QA8Fuc21v4iEQ7xZ
+ 6S6C+KqQ00bkEK0XyYBSr0ZDc/On90fpnzH67DHjIF0MdRtU8qBGFnsK5booo9IF5DWqN/GzO
+ sP3FNOFRrMyYymCEDoxhb/3Xfdxj6DRFL2VWXDQFYPRqWe0WyJ3syyGDWbzozDRkNGTsm6P0F
+ U2dN5eMPKBdhUybeRrCQiTDuFbPqrYGMpZ2IuIcZ0SKI76e2g6ahctjG8Ri6RGI3gY1FKAc2T
+ 8gw8fiIgfNI7G5JeWfGe4Cjotgp/N7yp0NJlGQ1rv4HzmN4Jva2kXApQPuCSQC5M7LOkhbLt9
+ hzUJWWR0+5yp75KYlD9n98l5uz4FazG+vpAhhG31tv3fzf1sN2Hd4fLyYgC1DplPpdYzlYLux
+ pWDLIICdTnBxj9nm7RSsCDiO9TMejepIGEOqv0+2ZH1GGqPsWLqJqIKP/4+g8hSbEpEf+BcT6
+ 8mIwtISlDGxKg9QaSevVVG06URz8ENutppGYmrMXLYBMIgS305n6Z29wA0gse3sTkUg38K0SC
+ o0EHtF+h4Agf4/gUS9qgFEmXjO5WIPYkoVrNL5COEQ4Tpntf1ITlSr6mQnuh8D277JwETWCwG
+ cqGK0cpf8w3T3CTB7X8G4ChpcDDNbNbqDXdGspDn596X1SH5cXje/5dnuAy0+/oJRJMzqF5LB
+ yQ7IQrnPRcv0BiXQJF8g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiBNb24sIDIwMTktMTItMDIgYXQgMTM6MTEgKzAwMDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+
-IE9uIE1vbiwgRGVjIDAyLCAyMDE5IGF0IDA3OjU3OjEzQU0gKzAwMDAsIFZhaXR0aW5lbiwgTWF0
-dGkgd3JvdGU6DQo+ID4gT24gRnJpLCAyMDE5LTExLTI5IGF0IDEyOjA5ICswMDAwLCBNYXJrIEJy
-b3duIHdyb3RlOg0KPiA+ID4gVGhlIHJlZ3VsYXRvciBkcml2ZXIgaGFzIGEgYnVuY2ggZm8gc2V0
-X3N1c3BlbmRfIG9wZXJhdGlvbnMuDQo+ID4gSG1tLiBJIHNhdyB0aGVzZS4gQnV0IHVubGVzcyBJ
-IGFtIG1pc3Rha2VuIGxpbnV4IG9ubHkga25vd3Mgb25lDQo+ID4gJ3N1c3BlbmQnIHN0YXRlIHdo
-ZXJlYXMgdGhlIFBNSUMgaGFzIGEgZmV3IHNlcGFyYXRlIHN0YXRlcyBJIGNhbg0KPiA+IHNlZSBh
-cw0KPiA+ICdzdXNwZW5kJyBzdGF0ZXMuIEFzIGZhciBhcyBJIHVuZGVyc3Rvb2QgdGhlIHNldF9z
-dXNwZW5kX3ZvbHRhZ2UNCj4gPiBkb2VzDQo+ID4gbm90IGFsbG93IHNldHRpbmcgc2VwYXJhdGUg
-c3VzcGVuZCB2b2x0YWdlcyBkZXBlbmRpbmcgb24gdGhlICJ0eXBlDQo+ID4gb2YNCj4gPiBzdXNw
-ZW5kIiAoYXMgdGhlcmUgaXMgb25seSBvbmUgJ3N1c3BlbmQnIHN0YXRlKS4NCj4gDQo+IE5vLCBs
-b29rIGF0IHRoZSBiaW5kaW5ncyAtIHdlIHN1cHBvcnQgYSBidW5jaCBvZiBkaWZmZXJlbnQNCj4g
-c3VzcGVuZCBzdGF0ZXMgbWF0Y2hpbmcgdGhlIGRpZmZlcmVudCBzdXNwZW5kIHN0YXRlcyB0aGF0
-IHRoZQ0KPiBrZXJuZWwgYXMgYSB3aG9sZSBzdXBwb3J0cy4gIFdlIGRvbid0IGFzc3VtZSB0aGF0
-IHRoZSBkZXZpY2Ugd2lsbA0KPiBrbm93IHRoaXMgYnV0IHlvdSBjYW4gYWx3YXlzIHVzZSB0aGUg
-Y3VycmVudCBzdXNwZW5kIHdlJ3JlIGdvaW5nDQo+IGZvciB0byBkZWNpZGUgd2hlcmUgdG8gdXBk
-YXRlLg0KDQpIbS4gU28gaWYgSSB1bmRlcnN0YW5kIHRoaXMgY29ycmVjdGx5LCB5b3UgbWVhbiB1
-c2VyIHNob3VsZCBzZXQgdGhlDQpzdXNwZW5kICd0YXJnZXQnIC0gYW5kIHRoZW4gY2FsbCB0aGUg
-c2V0X3N1c3BlbmRfdm9sdGFnZSBmb3IgdGhpcw0Kc3RhdGUuIFRvIHNldCB2b2x0YWdlcyBmb3Ig
-YWxsIHN0YXRlcyBvbmUgc2hvdWxkIGRvIGxvb3ANCg0KZ2V0X2N1cnJlbnRfbW9kZSgpDQoNCmZv
-cl9hbGxfbW9kZXMoKSB7DQoJc2V0X21vZGUoKQ0KCXNldF92b2x0YWdlKCkNCn0NCg0KcmVzdG9y
-ZV9vcmlnaW5hbF9tb2RlKCkNCg0KYW0gSSBvbiBhIHJpZ2h0IHRyYWNrPyBJJ2xsIHRyeSB0byBz
-ZWUgaWYgSSBjYW4gZmluZCBzb21lIGV4YW1wbGVzIG9mDQp0aGlzIC0gdGhhbmtzLg0KDQo+IA0K
-PiA+ID4gPiAoUlVOMCwgLi4uIFJVTjMpIGNvdWxkIGJlIG1hcHBlZCB0byByZWd1bGF0b3IgbW9k
-ZXMNCj4gPiA+ID4gUkVHVUxBVE9SX01PREVfRkFTVCwgUkVHVUxBVE9SX01PREVfTk9STUFMLCBS
-RUdVTEFUT1JfTU9ERV9JRExFDQo+ID4gPiA+IGFuZCANCj4gPiA+ID4gUkVHVUxBVE9SX01PREVf
-U1RBTkRCWS4gQnV0IHJlZ3VsYXRvcnMgd2hpY2ggYXJlIGNvbnRyb2xsZWQgYnkNCj4gPiA+ID4g
-dGhlc2UNCj4gPiA+IFRoYXQgZG9lc24ndCBtYWtlIHNlbnNlIGF0IGFsbCwgdGhlIG1vZGVzIGFm
-ZmVjdCB0aGUgcXVhbGl0eSBvZg0KPiA+ID4gcmVndWxhdGlvbiBub3QgdGhlIHZvbHRhZ2UgdGhh
-dCBpcyBzZXQuDQo+ID4gVGhhbmtzLiBJIG1pc3VuZGVyc3Rvb2QgdGhpcy4gSSB0aG91Z2h0IHRo
-ZXNlIHN0YXRlcyBjb3VsZCBiZSB1c2VkDQo+ID4gZm9yDQo+ID4gc29tZSBhZGFwdGl2ZSB2b2x0
-YWdlcy4gTXkgdW5kZXJzdGFuZGluZyBpcyB0aGF0IHRoZSBSVU4wLC4uLlJVTjMNCj4gPiBhcmUN
-Cj4gPiBkZXNpZ25lZCBmb3IgdGhhdCAtIGJ1dCBJIGRpZG4ndCBrbm93IGlmIHJlZ3VsYXRvciBm
-cmFtZXdvcmsgaXMNCj4gPiBkZXNpZ25lZCBmb3IgdGhpcy4NCj4gDQo+IFRoZSBmcmFtZXdvcmsg
-ZG9lc24ndCBjYXJlIGhvdyBhIGRldmljZSBpcyBjb250cm9sbGVkLCB0aGF0J3MgdXANCj4gdG8g
-dGhlIGRldmljZS4gIExpa2UgSSBzYWlkIEkgcmVjb21tZW5kIGZpZ3VyaW5nIG91dCB3aGF0DQo+
-IHZvbHRhZ2VzIGFyZSB1c2VmdWwgdG8gaGF2ZSBxdWljayBhY2Nlc3MgdG8gYXQgcnVudGltZSwg
-Zm9yDQo+IGV4YW1wbGUgaXQncyBsaWtlbHkgdGhhdCBpdCdzIGdvb2QgdG8gaGF2ZSBxdWljayBh
-Y2Nlc3MgdG8gdGhlDQo+IGhpZ2hlc3Qgdm9sdGFnZSB0aGF0J3MgYmVlbiBzZXQgKGFuZC9vciB0
-aGUgdG9wIG9mIHRoZQ0KPiBjb25zdHJhaW50cykuDQoNClByb2JsZW0gaXMgdGhhdCB0aGUgcnVu
-LWxldmVsIGNvbnRyb2xsZWQgcmVndWxhdG9yIGNhbid0IGJlDQppbmRpdmlkdWFsbHkgY29udHJv
-bGxlZCAodW5sZXNzIGl0IGlzIG9ubHkgcmVndWxhdG9yIGluIHRoZSBncm91cCkuIEkNCm1pc3Vu
-ZGVyc3Rvb2QgdGhlc2UgUkVHVUxBVE9SX01PREVfRkFTVCwgLi4uLFJFR1VMQVRPUl9NT0RFX1NU
-QU5EQlkgdG8NCmJlIGdsb2JhbCAnc3RhdGVzJyByYXRoZXIgdGhhbiBzdGF0ZXMgb2YgaW5kaXZp
-ZHVhbCByZWd1bGF0b3JzLiBBbmQgSQ0KdGhvdWdodCB0aGVzZSB3ZXJlIGFsc28gZGVzaWduZWQg
-Zm9yIHZvbHRhZ2Ugc2NhbGluZy4gQnV0IGFzIEkgc2FpZCwgSQ0KbWlzdW5kZXJzdG9vZCB0aGVt
-IC0gc28gdGhhbmtzIGZvciBjb3JyZWN0aW5nIG1lIG9uIHRoaXMuDQoNCj4gDQo+ID4gPiBUaGUg
-Y3B1ZnJlcSBjb2RlIGlzIGFsbCB0aGVyZSBpbiBrZXJuZWwgLSBkcml2ZXJzL2NwdWZyZXEuICBJ
-DQo+ID4gPiBjYW4ndA0KPiA+ID4gcmVtZW1iZXIgaWYgQW5kcm9pZCBzdGlsbCBoYXMgYSBjdXN0
-b20gZ292ZXJub3IgaW4gdGhlaXIgdHJlZXMNCj4gPiA+IGJ1dCBpdA0KPiA+ID4gZG9lc24ndCBy
-ZWFsbHkgbWFrZSBtdWNoIGRpZmZlcmVuY2UgaW4gdGVybXMgb2YgaG93IGl0IGludGVyYWN0cw0K
-PiA+ID4gd2l0aA0KPiA+ID4gdGhlIHJlZ3VsYXRvciBkcml2ZXJzLg0KPiA+IFJpZ2h0LiBJIGd1
-ZXNzIHlvdXIgYW5zd2VycyBtZWFuIHRoYXQgdGhlcmUgaXMgbm8gInJlZ3VsYXRvciBncm91cA0K
-PiA+IGNvbnRyb2wiIGZvciAiYWRhcHRpdmUgdm9sdGFnZSBjaGFuZ2VzIiBzdXBwb3J0ZWQgYnkg
-cmVndWxhdG9yDQo+IA0KPiBJIGNhbid0IHBhcnNlIHRoZSBhYm92ZSwgc29ycnkuICBXaGF0IGlz
-ICJyZWd1bGF0b3IgZ3JvdXANCj4gY29udHJvbCI/DQoNCkkgbWVhbiBidW5kbGluZyB0aGUgcmVn
-dWxhdG9ycyBpbiBhIGdyb3VwIC0gYW5kIGNoYW5naW5nIHN0YXRlIGZvciBhbGwNCm9mIHRoZSBi
-dW5kbGVkIHJlZ3VsYXRvcnMgaW4gb25lIGdvLiBUaGUgdGhpbmcgSSBtZW50aW9uZWQgZWFybGll
-ciAtDQphbmQgSSBndWVzcyB5b3UgZGlkIGFscmVhZHkgY29uZmlybSBpdCdzIG5vdCBkb2FibGUu
-IEkgdGhpbmsgeW91IHNhaWQNCnRoYXQgb25seSAnbWFzcyBvcGVyYXRpb24nIG9yICdncm91cCBv
-cGVyYXRpb24nIGlzIHRoZSBzdXNwZW5kLg0KDQpCdXQganVzdCB0byBjb25maXJtLCBJIG1lYW50
-IGZvciBleGFtcGxlIGFzc2lnbmluZyBidWNrcyAxLDIsNiBhbmQgNw0KaW50byBhIGdyb3VwIHdo
-aWNoICdzdGF0ZScgaXMgY2hhbmdlZCB2aWEgR1BJTyBsaW5lLiBTYXkgJ3N0YXRlcycgYXJlDQpS
-VU4wLCBSVU4xLiBGb3IgZWFjaCBvZiB0aGVzZSBidWNrcyB3ZSBjYW4gZGVmaW5lIGEgdm9sdGFn
-ZSBhbmQNCmVuYWJsZS9kaXNhYmxlIHN0YXR1cyB3aGljaCBpcyB0byBiZSB1c2VkIG9uIFJVTjAs
-IGFuZCBhbm90aGVyDQp2b2x0YWdlL3N0YXRlIHR1cGxlIGZvciBSVU4xLg0KDQpXaGVuIGNlcnRh
-aW4gJ3RyaWdnZXInIGlzIGRldGVjdGVkIChJIGFzc3VtZSBDUFUgbG9hZCBoZXJlIGFuZCBhZGFw
-dGl2ZQ0Kdm9sdGFnZSBzY2FsaW5nIC0gYnV0IHRoaXMgaXMganVzdCBteSBhc3N1bXB0aW9uIG9m
-IHRoZSB1c2UtY2FzZSBmb3INCm5vdykgdGhlIFBNSUMgc3RhdGUgY2FuIGJlIHF1aWNrbHkgY2hh
-bmdlZCB2aWEgdGhpcyBHUElPIHRvZ2dsZS4NCg0KSW4gcmVhbHR5LCB3ZSBoYXZlIHR3byBHUElP
-cyBhbmQgNCBzdGF0ZXMgLSBidXQgdGhhdCBkb2VzIG5vdCBjaGFuZ2UNCnRoZSBwcmluY2libGUu
-IEkgZG9uJ3QgdGhpbmsgdGhlcmUgaXMgYW55ICdkZS1mYWN0bycgbWVjaGFuaXNtIHRvDQpjb250
-cm9sIHN1Y2ggZ3JvdXBzLg0KDQoNCkJyLA0KCU1hdHRpIFZhaXR0aW5lbg0K
+On Mon, Dec 2, 2019 at 1:55 PM Christophe Leroy <christophe.leroy@c-s.fr> wrote:
+> Le 27/11/2019 à 12:03, Arnd Bergmann a écrit :
+> > On Thu, Nov 21, 2019 at 5:25 PM Christophe Leroy
+> > <christophe.leroy@c-s.fr> wrote:
+> >> Arnd Bergmann <arnd@arndb.de> a écrit :
+> >>> On Wed, Nov 20, 2019 at 11:43 PM Ben Hutchings
+> >>> <ben.hutchings@codethink.co.uk> wrote:
+> >>>>
+> >>>> On Fri, 2019-11-08 at 22:07 +0100, Arnd Bergmann wrote:
+> >>>>> @@ -192,7 +190,7 @@ V_FUNCTION_BEGIN(__kernel_time)
+> >>>>>        bl      __get_datapage@local
+> >>>>>        mr      r9, r3                  /* datapage ptr in r9 */
+> >>>>>
+> >>>>> -     lwz     r3,STAMP_XTIME+TSPEC_TV_SEC(r9)
+> >>>>> +     lwz     r3,STAMP_XTIME_SEC+LOWPART(r9)
+> >>>>
+> >>>> "LOWPART" should be "LOPART".
+> >>>>
+> >>>
+> >>> Thanks, fixed both instances in a patch on top now. I considered folding
+> >>> it into the original patch, but as it's close to the merge window I'd
+> >>> rather not rebase it, and this way I also give you credit for
+> >>> finding the bug.
+> >>
+> >> Take care, might conflict with
+> >> https://github.com/linuxppc/linux/commit/5e381d727fe8834ca5a126f510194a7a4ac6dd3a
+> >
+> > Sorry for my late reply. I see this commit and no other variant of it has
+> > made it into linux-next by now, so I assume this is not getting sent for v5.5
+> > and it's not stopping me from sending my own pull request.
+> >
+> > Please let me know if I missed something and this will cause problems.
+> >
+> > On a related note: are you still working on the generic lib/vdso support for
+> > powerpc? Without that, future libc implementations that use 64-bit time_t
+> > will have to use the slow clock_gettime64 syscall instead of the vdso,
+> > which has a significant performance impact.
+>
+> I have left this generic lib/vdso subject aside for the moment, because
+> performance is disappointing and its architecture doesn't real fit with
+> powerpc ABI.
+>
+>  From a performance point of view, it is manipulating 64 bits vars where
+> is could use 32 bits vars. Of course I understand that y2038 will anyway
+> force the use of 64 bits for seconds, but at the time being powerpc32
+> VDSO is using 32 bits vars for both secs and ns, it make the difference.
+
+Do you think we could optimize the common code? This sounds like
+it could improve things for other architectures as well.
+
+> Also, the generic VDSO is playing too much with data on stacks and
+> associated memory read/write/copies, which kills performance on RISC
+> processors like powerpc. Inlining do_hres() for instance significantly
+> improves that as it allow handling the 'struct __kernel_timespec ts' on
+> registers instead of using stack.
+
+That should be easy enough to change in the common code, as
+long as adding 'inline' does not cause harm on x86 and arm.
+
+> Regarding powerpc ABI, the issue is that errors shall be reported by
+> setting the SO bit in CR register, and this cannot be done in C.
+> This means:
+> - The VDSO entry point must be in ASM and the generic VDSO C function
+> must be called from there, it cannot be the VDSO entry point.
+> - The VDSO fallback (ie the system call) cannot be done from the generic
+> VDSO C function, it must be called from the ASM as well.
+
+As far as I can tell, both the VDSO entry point and the fallback are
+in architecture specific code on all architectures, so this does not
+seem to be a show-stopper.
+
+It also seems that they might be combined as long the current
+powerpc code could be changed to use the generic vdso_data
+structure definition: the existing code can keep being used for
+gettimeofday(), clock_gettime(CLOCK_MONOTONIC, ...) and
+clock_gettime(CLOCK_REALTIME), while the generic implementation
+can be called for clock_gettime64(), clock_getres() and clock_gettime()
+with other time clock IDs.
+
+> Last point/question, what's the point in using 64 bits for nanoseconds
+> on 32 bits arches ?
+
+The __kernel_timespec structure is defined with two 64-bit members so
+it has the same layout on both 32-bit and 64-bit architectures, which
+lets us share the implementation of the compat syscall handlers
+even on big-endian architectures, and it avoids accidentally leaking four
+bytes of stack data when copying a timespec from kernel to user
+space. The high 32 bits of the nanosecond are expected to always
+be zero when copying to user space, and to be ignored when copied
+into the kernel (see get_timespec64()).
+
+Note that C99 and POSIX require tv_nsec to be 'long', so 64-bit
+architectures have to make it 64-bit wide, and 32-bit architectures
+end up including padding for it.
+
+In the vdso_data, the "nsec" value is shifted, so it actually needs
+more bits. I don't know if this is a strict requirement, or if we could
+change it to be 32 bits non-shifted during the update at the cost
+of losing 1 nanosecond of accuracy.
+
+      Arnd
