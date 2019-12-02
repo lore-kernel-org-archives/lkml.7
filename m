@@ -2,160 +2,151 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 634AAC43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 07:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB90C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 07:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39A60215F1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 07:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAA26215E5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 07:42:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="NiMFtPxV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="BLSnN7Gp";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="yvPs3yY8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbfLBHkU (ORCPT
+        id S1726452AbfLBHm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 02:40:20 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41155 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbfLBHkU (ORCPT
+        Mon, 2 Dec 2019 02:42:29 -0500
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:56503 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbfLBHm3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 02:40:20 -0500
-Received: by mail-oi1-f193.google.com with SMTP id e9so31556088oif.8
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Dec 2019 23:40:19 -0800 (PST)
+        Mon, 2 Dec 2019 02:42:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1575272548; x=1606808548;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=TM7mKDa2Sc/9hBg7mKLakDMx/I/eZFhUKUg/BbqUEGs=;
+  b=BLSnN7Gpp+uSOnuwZ86SIxhz9wa5y+DTxtf0msfVCObu2D+vUtV0NWaw
+   z2TuyW5H6g8wauBn68Lp/c+HZH9yZLO0Lj2AiLKc3Itw4gwInoHkMf2H/
+   pjup+7d8T0pInAqfsPIkCFm4j+bNkcOOsoddU9mTbjtBgZHFNwZREr59e
+   zggTUhiXXFpM8udFXsZpepLQ3liMHkNNi1GVpscMYDMpqjatorca0Yxnz
+   C9RfdEfZSabpGmLeuApFZ4StTdvITEswh+tsLm5FbHwcl0rxJyWLj9cZM
+   za7rC+DrCfSMwyPDhA53PdV0w1gkgj3gd2Af2YuSXhHbp1eG8Kbx+EALX
+   Q==;
+IronPort-SDR: 2OOgFbU9t/RkbATxgeQsghe0OfBadKjqmP09GDrF0p/b9j1dQFnNCCBDY4T4TPc1T+cLQSqpzw
+ OCPQ30pE1Vki7KINqGnp+JLzGU7YSnzS0SpophJDzFm75i7yem0ZMjK+itdiHVnEP5h8az+qgR
+ lN2gR0KGGQRDA6RiYkkIGf5IJzMuhr/vQHKOX9f2hR0EkbEvW+8vHhP3bzNmKvJE9xxqfaJQm4
+ pu9sUXqG92mLr3nUcEyYYCMz5OOux/bF0GFgVl00TW5kOpAhW+qSBYgT9r1xi/lmqR+Ax93YN0
+ d7Y=
+X-IronPort-AV: E=Sophos;i="5.69,268,1571673600"; 
+   d="scan'208";a="231871101"
+Received: from mail-dm3nam05lp2050.outbound.protection.outlook.com (HELO NAM05-DM3-obe.outbound.protection.outlook.com) ([104.47.49.50])
+  by ob1.hgst.iphmx.com with ESMTP; 02 Dec 2019 15:42:01 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Bb4XW7JX5+CdWis2EBokLFUdUVZYKCS+tIBT5qUZBzHXBr3CHAzbYm/SFJtJ3B+t5GxLSRwjzF7V+x5PF94GAxmumnO3NwfayAhu0eDFU1M+yRQlgOlWd2hguHW7RZ5+16itOTey4oeDxhhqyRN3JisFfj8pCkBotRHGmwk5Hk4PzC2ckXfoOrvk41OyRq6Nl30hTGioyTkU0B0Oc9ffAumx0OFGyJK7PFcwNyxdu84G2AwscaqfXIDrFONuO/KOFvZREz9B7seJQXdhgBVv5phczn5E64ydd16kdvq8eMGMUR3UFS0ITNq2fX0w6eQo7TLsOGrumO1ApC6yMEwaXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TM7mKDa2Sc/9hBg7mKLakDMx/I/eZFhUKUg/BbqUEGs=;
+ b=ddeVe7cl8JGXqSUqhd3oJLR7Nx8rN2swih/tyogK5MD0xQG3VPCUfrqq7/hvSFbeYbLp8WJPCtzhImrsV+ZkwJ1imzyhvVAlTFYU6TSIo05ZB+CFtrghrLYkHXS8qj99O8pVJq2WPupL21u+KdWkqTMFG7KPFj673kavXAlYPWYAkDSJ4iDNwxjWv4lD2hyKtJNz9X9ilNL4f3hqngys7ehgTc8MS9680XPTOR+yrkD+3qu8MgHut5nhSBqgjCObCqrBbvkKGrLQeQeXe4c4KJJc6mpjo0Nqhbv/T6Ixh47399wwt1DxXmujX6qT7tvfWMxXwED6v7WI0JbSK/E6qg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=wAQOIWdO/+YrSmQ/0SbvKkchZaRVepDEGzH/WoVZ34o=;
-        b=NiMFtPxVoAMfub2BvU9FYk3U1q8NBuRHSoMScD94QybDfrwUv9UO6hNNWLwyQIpwAx
-         JSsuXxJf7TErTJf0CdS9eZRlxRtMxWKpBtDG+3CtsvVTr2g9sevWoW8IZMX8LwkXmBDM
-         oE0VzYURmJ1dhbW2PEauo+e6wtpjQ7I1Y6XMsGmaRjnxaEhjI/rFF5Yx3xk1p3OXlOMA
-         34Hlp10oFyH6mwidg4ssixKAeimfhsu4J2WcoPbEfxNpdO8u/9yG/CaVBq0ci6MmHS9O
-         +tDmI9YjmvjwOCrFucTHUNf8Am4S8qPo3Mm/3xan/NYIq5qIGVkuOkdnWo0BudVvM3hy
-         vTMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=wAQOIWdO/+YrSmQ/0SbvKkchZaRVepDEGzH/WoVZ34o=;
-        b=Ly65ocVKHeuqS18q7enFKOgDiCFVry5mMWGg8gLr7VJxTXXBDRCaMxTHhWg3YhWH/k
-         tNejly8IsqXo+dtE8bm3Lbin0Iimd3Sgm6GPLAPWL7xR9evePLg/0Wz4B0LW/gsRIQ4E
-         zTtfm0YriBmtlByid3SxQwOsBm66MN5F8E1IXFgaoNt8e0n3KxPBYMNhYi4zcLF9NoCL
-         /Cv/I7/chHAEgfOU9wQD/TeMH264BFsW4xu1wefzHIqZJuUeY9Z/3E3OSlgYZpSwUQ3Q
-         veE3htIRldhLgeHTdvclsYXtlTSN9YElDPATcUK4jeKKAFgF+PWWopD2D1F3FauiMQzm
-         qi5w==
-X-Gm-Message-State: APjAAAWLChxgv/6rpm+xxmr2qvfsQAXFlSLSb5IXvlSmZmALeoO3bWgL
-        8CgjOmI9LEUfu1idL4CBOfIoBdaqTsNs9OrG5+Syaw==
-X-Google-Smtp-Source: APXvYqz/BP3Gg+NKo3upJsW1kcj4YPHQVeb5HFVM1u4oXIkaTmISM2hIwhY4PpeNQsPIl9s+3BZvUufP/j+byB/241g=
-X-Received: by 2002:aca:d904:: with SMTP id q4mr23066147oig.21.1575272418472;
- Sun, 01 Dec 2019 23:40:18 -0800 (PST)
-MIME-Version: 1.0
-References: <20191003092913.10731-1-brgl@bgdev.pl> <20191003092912.G3pupKBmyct1r9ScP5Skuw9D-_ALcMVSnfMfHAlwe0Y@z>
- <20191202041440.GA1628@roeck-us.net>
-In-Reply-To: <20191202041440.GA1628@roeck-us.net>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 2 Dec 2019 08:40:07 +0100
-Message-ID: <CAMpxmJW3i4zmJJ14Xg65+T27kF3sgR1WG0K3FUT6+jeKtiHx=Q@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] drivers: move the early platform device support to arch/sh
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TM7mKDa2Sc/9hBg7mKLakDMx/I/eZFhUKUg/BbqUEGs=;
+ b=yvPs3yY8zkA7Mjw3/v1+dsv/TWtEsxWcKnJwg3z06ff6jdsscB2200l/Xp8Qh609XKYwTzQjyD0FbAPN6C80dh1jCxgCZwiXNRWaKeRfYcU459fZ9I/0CG8ifLgyIiw4FDoYKdViQkqkwpclpOkDhBb5Sz/r3nqkSgj+xYUz9qc=
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com (10.186.144.209) by
+ MN2PR04MB5744.namprd04.prod.outlook.com (20.179.20.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.20; Mon, 2 Dec 2019 07:42:01 +0000
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::9447:fa71:53df:f866]) by MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::9447:fa71:53df:f866%3]) with mapi id 15.20.2495.014; Mon, 2 Dec 2019
+ 07:42:01 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     "cang@codeaurora.org" <cang@codeaurora.org>
+CC:     "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
+        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "kernel-team@android.com" <kernel-team@android.com>,
+        "saravanak@google.com" <saravanak@google.com>,
+        "salyzyn@google.com" <salyzyn@google.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <Avri.Altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Slaby <jslaby@suse.com>, linux-sh@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Allison Randal <allison@lohutok.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v4 4/5] scsi: ufs: Do not clear the DL layer timers
+Thread-Topic: [PATCH v4 4/5] scsi: ufs: Do not clear the DL layer timers
+Thread-Index: AQHVqOJi9Uj0xO4g1EKSBfsTmVIai6emdJLA
+Date:   Mon, 2 Dec 2019 07:42:00 +0000
+Message-ID: <MN2PR04MB69916189C31D58EB6DCB71E9FC430@MN2PR04MB6991.namprd04.prod.outlook.com>
+References: <1573624824-671-1-git-send-email-cang@codeaurora.org>
+ <1573624824-671-5-git-send-email-cang@codeaurora.org>
+ <0101016ec584a776-2140a805-4b1d-4a3d-af0a-f073425be2d6-000000@us-west-2.amazonses.com>
+In-Reply-To: <0101016ec584a776-2140a805-4b1d-4a3d-af0a-f073425be2d6-000000@us-west-2.amazonses.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Avri.Altman@wdc.com; 
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 5a684202-ea10-49cd-07ef-08d776fb1e21
+x-ms-traffictypediagnostic: MN2PR04MB5744:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR04MB5744FB3411CD86BCF0F9007AFC430@MN2PR04MB5744.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0239D46DB6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(376002)(396003)(346002)(366004)(39860400002)(189003)(199004)(6916009)(186003)(86362001)(478600001)(229853002)(6246003)(14454004)(6436002)(33656002)(71190400001)(71200400001)(9686003)(7416002)(5660300002)(52536014)(55016002)(76176011)(7696005)(66946007)(4744005)(66476007)(66556008)(66446008)(64756008)(5640700003)(102836004)(76116006)(6506007)(25786009)(7736002)(74316002)(81156014)(305945005)(8936002)(2906002)(54906003)(1730700003)(81166006)(316002)(2501003)(4326008)(446003)(11346002)(256004)(3846002)(66066001)(8676002)(26005)(99286004)(2351001)(6116002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5744;H:MN2PR04MB6991.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: NjSTlZ9YqxBN/D7mxw7rcu9eAqPO6qkRMts2darDa9DBKjzbVdF0OOwD8UibMOnKWBoF/bO22GpkhWH6Hu0d/qnnozmJETgdvp4SBVp1O2SRdStkdct5Ld6cmcpGyrB0cOPAZ8r8Kc6Xxp3VDfU9qRBiRAsod2269nnEQg5DZfCpMTIcRsZ0gvOhJY3fPKD9n1fuoyvZcyUtQ9C1YSD7PIZJwI/SgYL5ku4ZzCDh11SXSpWuGD0rO3mknMiqtmn3a/8NefHMxLA91SBfsCAqg+Gqoq0nvGMtkJbjmCkHJSUAHFnFaOB/NZrTCZ+lGOkCup4kPmNJkLsv6rKkQfgFqeLxdcKAoDm2IE83Oomr53Qf2Scw8WaYu2BBBJBtnrwFq51By/5w4xY/XcMcWd7qzMANwD/NKPR2KMa68WNTIunbSUhlJarBIOIwoFZ3zUiN
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a684202-ea10-49cd-07ef-08d776fb1e21
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Dec 2019 07:42:00.8732
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xjDX6PoljUH3G0lmbNWDywsuhHnavCHCcaQqUcJgsfgbQQEQ8/BEl8DdhJH0tiat2rKf9vAW6XICeBsw5u5PsQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5744
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pon., 2 gru 2019 o 05:14 Guenter Roeck <linux@roeck-us.net> napisa=C5=82(a)=
-:
->
-> On Thu, Oct 03, 2019 at 11:29:12AM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > SuperH is the only user of the current implementation of early platform
-> > device support. We want to introduce a more robust approach to early
-> > probing. As the first step - move all the current early platform code
-> > to arch/sh.
-> >
-> > In order not to export internal drivers/base functions to arch code for
-> > this temporary solution - copy the two needed routines for driver
-> > matching from drivers/base/platform.c to arch/sh/drivers/platform_early=
-.c.
-> >
-> > Also: call early_platform_cleanup() from subsys_initcall() so that it's
-> > called after all early devices are probed.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Wondering ... has anyone tested this patch on affected hardware ?
-> All my qemu boot tests (both sh and sheb) fail because of it.
-> Bisect log below.
->
-> Guenter
->
-> ---
-> # bad: [72c0870e3a05d9cd5466d08c3d2a3069ed0a2f9f] Merge branch 'for-linus=
-' of git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input
-> # good: [89d57dddd7d319ded00415790a0bb3c954b7e386] Merge tag 'media/v5.5-=
-1' of git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media
-> git bisect start 'HEAD' '89d57dddd7d3'
-> # good: [0a6cad5df541108cfd3fbd79eef48eb824c89bdc] Merge branch 'vmwgfx-c=
-oherent' of git://people.freedesktop.org/~thomash/linux into drm-next
-> git bisect good 0a6cad5df541108cfd3fbd79eef48eb824c89bdc
-> # bad: [9a3d7fd275be4559277667228902824165153c80] Merge tag 'driver-core-=
-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-cor=
-e
-> git bisect bad 9a3d7fd275be4559277667228902824165153c80
-> # good: [59274c7164807d27b24e6c068dfe734f7bea4623] Merge tag 'usb-5.5-rc1=
-' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb
-> git bisect good 59274c7164807d27b24e6c068dfe734f7bea4623
-> # good: [e71903106721dc53923e90aa484d78bc86c039a9] staging: mt7621-dma: a=
-lign to match open parenthesis
-> git bisect good e71903106721dc53923e90aa484d78bc86c039a9
-> # good: [8f56e4ebe05c26c30e167519273843476e39e244] Merge tag 'char-misc-5=
-.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc
-> git bisect good 8f56e4ebe05c26c30e167519273843476e39e244
-> # good: [8bde9f3d2a217d1635a7c7bdf8ad4c25c9a34b50] Merge tag 'iio-for-5.5=
-c' of https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio into stagin=
-g-next
-> git bisect good 8bde9f3d2a217d1635a7c7bdf8ad4c25c9a34b50
-> # bad: [0628cda318df6baec439ca6e6e274007492f1ccd] mac80211: Use debugfs_c=
-reate_xul() helper
-> git bisect bad 0628cda318df6baec439ca6e6e274007492f1ccd
-> # bad: [03324507e66c7664c754b1ef92c5c3be24c78aa2] driver core: Allow fwno=
-de_operations.add_links to differentiate errors
-> git bisect bad 03324507e66c7664c754b1ef92c5c3be24c78aa2
-> # bad: [313f5dbba41d905d59c820bb2d91ee6c661aff99] debugfs: remove return =
-value of debugfs_create_u16()
-> git bisect bad 313f5dbba41d905d59c820bb2d91ee6c661aff99
-> # good: [d4387cd117414ba80230f27a514be5ca4a09cfcc] of: property: Create d=
-evice links for all child-supplier depencencies
-> git bisect good d4387cd117414ba80230f27a514be5ca4a09cfcc
-> # bad: [c31e73121f4c1ec45a3e523ac6ce3ce6dafdcec1] base: soc: Handle custo=
-m soc information sysfs entries
-> git bisect bad c31e73121f4c1ec45a3e523ac6ce3ce6dafdcec1
-> # bad: [201e91091b1d47047f55580b5474e1239f4d17aa] sh: add the sh_ prefix =
-to early platform symbols
-> git bisect bad 201e91091b1d47047f55580b5474e1239f4d17aa
-> # bad: [507fd01d5333338753a1cc26322dfc9f856c109f] drivers: move the early=
- platform device support to arch/sh
-> git bisect bad 507fd01d5333338753a1cc26322dfc9f856c109f
-> # first bad commit: [507fd01d5333338753a1cc26322dfc9f856c109f] drivers: m=
-ove the early platform device support to arch/sh
 
-Hi Guenter,
-
-can you post some bootlogs? Is it the same problem everywhere?
-
-Bart
+> During power mode change, PACP_PWR_Req frame sends
+> PAPowerModeUserData parameters (and they are considered valid by device i=
+f
+> Flags[4] - UserDataValid bit is set in the same frame).
+> Currently we don't set these PAPowerModeUserData parameters and hardware
+> always sets UserDataValid bit which would clear all the DL layer timeout =
+values
+> of the peer device after the power mode change.
+>=20
+> This change sets the PAPowerModeUserData[0..5] to UniPro specification
+> recommended default values, in addition we are also setting the relevant
+> DME_LOCAL_* timer attributes as required by UFS HCI specification.
+>=20
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
