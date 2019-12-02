@@ -2,164 +2,160 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83959C43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 07:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B629C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 07:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 508F220748
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 07:31:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="BHEM/Co+"
+	by mail.kernel.org (Postfix) with ESMTP id 6E05020748
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 07:32:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575271940;
+	bh=EbsJ58fc0CLqHX1FqIIjWjlir5y2EYZXHjHc/dKTbY4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=fHuTVqiPLn59XPKMLh3O6Gan/cmuzl183+/RNnLGEZ8N89FlCiMQ3j8sFLLup8rXn
+	 WmaK5nudjaAc2zUvc3PNVo+mYjteK24Yts1GR12HCiJciQTYKmlJ4TOicHa5LefaMa
+	 rxQmMwcolEcmNPEghxhea59gBte/7haVTkVSDe88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbfLBHbo (ORCPT
+        id S1726469AbfLBHcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 02:31:44 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:5424 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726010AbfLBHbo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 02:31:44 -0500
-X-UUID: 0e8070a5e7034993b709607a586265d9-20191202
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=a5jrEc352xLH4E1s0PphYrET7imYAjDTOReZgNhh1M0=;
-        b=BHEM/Co+6PheHQagy8mRbQT2akeB7ioyYKpu2Wd82Ln2VeTzlgpYVHijjMOPU4kL+pkfxJ8TJDOr2f0CEjgY/llroLb+0vyTDEKTKbiWuyw9NZQn7OoGfiER2qM9hqoQbkyV0StnCWjvPqPhxcGaTYxWGVoMLH434edoM7Jw17E=;
-X-UUID: 0e8070a5e7034993b709607a586265d9-20191202
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <yongqiang.niu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 485631828; Mon, 02 Dec 2019 15:31:38 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 2 Dec 2019 15:31:22 +0800
-Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 2 Dec 2019 15:31:20 +0800
-From:   <yongqiang.niu@mediatek.com>
-To:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Yongqiang Niu <yongqiang.niu@mediatek.com>
-Subject: [PATCH v1] drm/mediatek: add ctm property support
-Date:   Mon, 2 Dec 2019 15:31:32 +0800
-Message-ID: <1575271892-25117-1-git-send-email-yongqiang.niu@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
+        Mon, 2 Dec 2019 02:32:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50812 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726010AbfLBHcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 02:32:19 -0500
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D56220748;
+        Mon,  2 Dec 2019 07:32:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575271938;
+        bh=EbsJ58fc0CLqHX1FqIIjWjlir5y2EYZXHjHc/dKTbY4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Vu+xG8DK/+Atzk5cWWg1xrtmUrCShuFw20QsrJyHpIX6AcXkoYrsKV0eg7uw4Mk/U
+         ls6bAbnJAyiHur25EQSWRPzZYAocMYvO7BkZY/UgZqHd25jcNhmNcrZoVI8pjwpWc3
+         3TGulJToQVVz64dWFGfrsCy1G7DJrlJE5kywYoeA=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Anders Roxell <anders.roxell@linaro.org>, paulmck@kernel.org,
+        joel@joelfernandes.org,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        David Miller <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [PATCH -tip] kprobes: Lock rcu_read_lock() while searching kprobe
+Date:   Mon,  2 Dec 2019 16:32:13 +0900
+Message-Id: <157527193358.11113.14859628506665612104.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+DQoNCmFkZCBj
-dG0gcHJvcGVydHkgc3VwcG9ydA0KDQpTaWduZWQtb2ZmLWJ5OiBZb25ncWlhbmcgTml1IDx5b25n
-cWlhbmcubml1QG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
-dGtfZHJtX2NydGMuYyAgICAgfCAgNyArKystDQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
-a19kcm1fZGRwX2NvbXAuYyB8IDU5ICsrKysrKysrKysrKysrKysrKysrKysrKysrKystDQogZHJp
-dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaCB8ICA5ICsrKysrDQogMyBm
-aWxlcyBjaGFuZ2VkLCA3MiBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jIGIvZHJpdmVycy9n
-cHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQppbmRleCA0ZmIzNDZjLi5lN2UzYWE5IDEw
-MDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQorKysg
-Yi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMNCkBAIC02NjYsMTAgKzY2
-NiwxMyBAQCBzdGF0aWMgdm9pZCBtdGtfZHJtX2NydGNfYXRvbWljX2ZsdXNoKHN0cnVjdCBkcm1f
-Y3J0YyAqY3J0YywNCiAJaW50IGk7DQogDQogCWlmIChjcnRjLT5zdGF0ZS0+Y29sb3JfbWdtdF9j
-aGFuZ2VkKQ0KLQkJZm9yIChpID0gMDsgaSA8IG10a19jcnRjLT5kZHBfY29tcF9ucjsgaSsrKQ0K
-KwkJZm9yIChpID0gMDsgaSA8IG10a19jcnRjLT5kZHBfY29tcF9ucjsgaSsrKSB7DQogCQkJbXRr
-X2RkcF9nYW1tYV9zZXQobXRrX2NydGMtPmRkcF9jb21wW2ldLA0KIAkJCQkJICBjcnRjLT5zdGF0
-ZSwNCiAJCQkJCSAgbXRrX2NydGNfc3RhdGUtPmNtZHFfaGFuZGxlKTsNCisJCQltdGtfZGRwX2N0
-bV9zZXQobXRrX2NydGMtPmRkcF9jb21wW2ldLCBjcnRjLT5zdGF0ZSk7DQorCQl9DQorDQogI2lm
-ZGVmIENPTkZJR19NVEtfQ01EUQ0KIAlpZiAobXRrX2NydGMtPmNtZHFfY2xpZW50KSB7DQogCQlk
-cm1fYXRvbWljX3N0YXRlX2dldChvbGRfYXRvbWljX3N0YXRlKTsNCkBAIC04OTEsNyArODk0LDcg
-QEAgaW50IG10a19kcm1fY3J0Y19jcmVhdGUoc3RydWN0IGRybV9kZXZpY2UgKmRybV9kZXYsDQog
-CWlmIChyZXQgPCAwKQ0KIAkJcmV0dXJuIHJldDsNCiAJZHJtX21vZGVfY3J0Y19zZXRfZ2FtbWFf
-c2l6ZSgmbXRrX2NydGMtPmJhc2UsIE1US19MVVRfU0laRSk7DQotCWRybV9jcnRjX2VuYWJsZV9j
-b2xvcl9tZ210KCZtdGtfY3J0Yy0+YmFzZSwgMCwgZmFsc2UsIE1US19MVVRfU0laRSk7DQorCWRy
-bV9jcnRjX2VuYWJsZV9jb2xvcl9tZ210KCZtdGtfY3J0Yy0+YmFzZSwgMCwgdHJ1ZSwgTVRLX0xV
-VF9TSVpFKTsNCiAJcHJpdi0+bnVtX3BpcGVzKys7DQogI2lmZGVmIENPTkZJR19NVEtfQ01EUQ0K
-IAltdGtfY3J0Yy0+Y21kcV9jbGllbnQgPQ0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9t
-ZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
-X2RybV9kZHBfY29tcC5jDQppbmRleCA5Y2MxMmFmLi40YmJiYWM3IDEwMDY0NA0KLS0tIGEvZHJp
-dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYw0KKysrIGIvZHJpdmVycy9n
-cHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYw0KQEAgLTM4LDcgKzM4LDE1IEBADQog
-I2RlZmluZSBDQ09SUl9FTgkJCQlCSVQoMCkNCiAjZGVmaW5lIERJU1BfQ0NPUlJfQ0ZHCQkJCTB4
-MDAyMA0KICNkZWZpbmUgQ0NPUlJfUkVMQVlfTU9ERQkJCUJJVCgwKQ0KKyNkZWZpbmUgQ0NPUlJf
-RU5HSU5FX0VOCQkJCUJJVCgxKQ0KKyNkZWZpbmUgQ0NPUlJfR0FNTUFfT0ZGCQkJCUJJVCgyKQ0K
-KyNkZWZpbmUgQ0NPUlJfV0dBTVVUX1NSQ19DTElQCQkJQklUKDMpDQogI2RlZmluZSBESVNQX0ND
-T1JSX1NJWkUJCQkJMHgwMDMwDQorI2RlZmluZSBESVNQX0NDT1JSX0NPRUZfMAkJCTB4MDA4MA0K
-KyNkZWZpbmUgRElTUF9DQ09SUl9DT0VGXzEJCQkweDAwODQNCisjZGVmaW5lIERJU1BfQ0NPUlJf
-Q09FRl8yCQkJMHgwMDg4DQorI2RlZmluZSBESVNQX0NDT1JSX0NPRUZfMwkJCTB4MDA4Qw0KKyNk
-ZWZpbmUgRElTUF9DQ09SUl9DT0VGXzQJCQkweDAwOTANCiANCiAjZGVmaW5lIERJU1BfRElUSEVS
-X0VOCQkJCTB4MDAwMA0KICNkZWZpbmUgRElUSEVSX0VOCQkJCUJJVCgwKQ0KQEAgLTE4Nyw3ICsx
-OTUsNyBAQCBzdGF0aWMgdm9pZCBtdGtfY2NvcnJfY29uZmlnKHN0cnVjdCBtdGtfZGRwX2NvbXAg
-KmNvbXAsIHVuc2lnbmVkIGludCB3LA0KIAkJCSAgICAgdW5zaWduZWQgaW50IGJwYywgc3RydWN0
-IGNtZHFfcGt0ICpjbWRxX3BrdCkNCiB7DQogCW10a19kZHBfd3JpdGUoY21kcV9wa3QsIGggPDwg
-MTYgfCB3LCBjb21wLCBESVNQX0NDT1JSX1NJWkUpOw0KLQltdGtfZGRwX3dyaXRlKGNtZHFfcGt0
-LCBDQ09SUl9SRUxBWV9NT0RFLCBjb21wLCBESVNQX0NDT1JSX0NGRyk7DQorCW10a19kZHBfd3Jp
-dGUoY21kcV9wa3QsIENDT1JSX0VOR0lORV9FTiwgY29tcCwgRElTUF9DQ09SUl9DRkcpOw0KIH0N
-CiANCiBzdGF0aWMgdm9pZCBtdGtfY2NvcnJfc3RhcnQoc3RydWN0IG10a19kZHBfY29tcCAqY29t
-cCkNCkBAIC0yMDAsNiArMjA4LDU0IEBAIHN0YXRpYyB2b2lkIG10a19jY29ycl9zdG9wKHN0cnVj
-dCBtdGtfZGRwX2NvbXAgKmNvbXApDQogCXdyaXRlbF9yZWxheGVkKDB4MCwgY29tcC0+cmVncyAr
-IERJU1BfQ0NPUlJfRU4pOw0KIH0NCiANCisvKiBDb252ZXJ0cyBhIERSTSBTMzEuMzIgdmFsdWUg
-dG8gdGhlIEhXIFMwLjExIGZvcm1hdC4gKi8NCitzdGF0aWMgdTE2IG10a19jdG1fczMxXzMyX3Rv
-X3MwXzExKHU2NCBpbikNCit7DQorCXUxNiByOw0KKw0KKwkvKiBTaWduIGJpdC4gKi8NCisJciA9
-IGluICYgQklUX1VMTCg2MykgPyBCSVQoMTEpIDogMDsNCisNCisJaWYgKChpbiAmIEdFTk1BU0tf
-VUxMKDYyLCAzMykpID4gMCkgew0KKwkJLyogV2UgaGF2ZSB6ZXJvIGludGVnZXIgYml0cyBzbyB3
-ZSBjYW4gb25seSBzYXR1cmF0ZSBoZXJlLiAqLw0KKwkJciB8PSBHRU5NQVNLKDEwLCAwKTsNCisJ
-fSBlbHNlIHsNCisJCS8qIE90aGVyd2lzZSB0YWtlIHRoZSA5IG1vc3QgaW1wb3J0YW50IGZyYWN0
-aW9uYWwgYml0cy4gKi8NCisJCXIgfD0gKGluID4+IDIyKSAmIEdFTk1BU0soMTAsIDApOw0KKwl9
-DQorDQorCXJldHVybiByOw0KK30NCisNCitzdGF0aWMgdm9pZCBtdGtfY2NvcnJfY3RtX3NldChz
-dHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wLA0KKwkJCSAgICAgIHN0cnVjdCBkcm1fY3J0Y19zdGF0
-ZSAqc3RhdGUpDQorew0KKwlzdHJ1Y3QgZHJtX3Byb3BlcnR5X2Jsb2IgKmJsb2IgPSBzdGF0ZS0+
-Y3RtOw0KKwlzdHJ1Y3QgZHJtX2NvbG9yX2N0bSAqY3RtOw0KKwljb25zdCB1NjQgKmlucHV0Ow0K
-Kwl1aW50MTZfdCBjb2VmZnNbOV0gPSB7IDAgfTsNCisJaW50IGk7DQorDQorCWlmICghYmxvYikN
-CisJCXJldHVybjsNCisNCisJY3RtID0gKHN0cnVjdCBkcm1fY29sb3JfY3RtICopYmxvYi0+ZGF0
-YTsNCisJaW5wdXQgPSBjdG0tPm1hdHJpeDsNCisNCisJZm9yIChpID0gMDsgaSA8IEFSUkFZX1NJ
-WkUoY29lZmZzKTsgaSsrKQ0KKwkJY29lZmZzW2ldID0gbXRrX2N0bV9zMzFfMzJfdG9fczBfMTEo
-aW5wdXRbaV0pOw0KKw0KKwl3cml0ZWxfcmVsYXhlZChjb2VmZnNbMF0gPDwgMTYgfCBjb2VmZnNb
-MV0sDQorCQkgICAgICAgY29tcC0+cmVncyArIERJU1BfQ0NPUlJfQ09FRl8wKTsNCisJd3JpdGVs
-X3JlbGF4ZWQoY29lZmZzWzJdIDw8IDE2IHwgY29lZmZzWzNdLA0KKwkJICAgICAgIGNvbXAtPnJl
-Z3MgKyBESVNQX0NDT1JSX0NPRUZfMSk7DQorCXdyaXRlbF9yZWxheGVkKGNvZWZmc1s0XSA8PCAx
-NiB8IGNvZWZmc1s1XSwNCisJCSAgICAgICBjb21wLT5yZWdzICsgRElTUF9DQ09SUl9DT0VGXzIp
-Ow0KKwl3cml0ZWxfcmVsYXhlZChjb2VmZnNbNl0gPDwgMTYgfCBjb2VmZnNbN10sDQorCQkgICAg
-ICAgY29tcC0+cmVncyArIERJU1BfQ0NPUlJfQ09FRl8zKTsNCisJd3JpdGVsX3JlbGF4ZWQoY29l
-ZmZzWzhdIDw8IDE2LCBjb21wLT5yZWdzICsgRElTUF9DQ09SUl9DT0VGXzQpOw0KK30NCisNCiBz
-dGF0aWMgdm9pZCBtdGtfZGl0aGVyX2NvbmZpZyhzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wLCB1
-bnNpZ25lZCBpbnQgdywNCiAJCQkgICAgICB1bnNpZ25lZCBpbnQgaCwgdW5zaWduZWQgaW50IHZy
-ZWZyZXNoLA0KIAkJCSAgICAgIHVuc2lnbmVkIGludCBicGMsIHN0cnVjdCBjbWRxX3BrdCAqY21k
-cV9wa3QpDQpAQCAtMjY5LDYgKzMyNSw3IEBAIHN0YXRpYyB2b2lkIG10a19nYW1tYV9zZXQoc3Ry
-dWN0IG10a19kZHBfY29tcCAqY29tcCwNCiAJLmNvbmZpZyA9IG10a19jY29ycl9jb25maWcsDQog
-CS5zdGFydCA9IG10a19jY29ycl9zdGFydCwNCiAJLnN0b3AgPSBtdGtfY2NvcnJfc3RvcCwNCisJ
-LmN0bV9zZXQgPSBtdGtfY2NvcnJfY3RtX3NldCwNCiB9Ow0KIA0KIHN0YXRpYyBjb25zdCBzdHJ1
-Y3QgbXRrX2RkcF9jb21wX2Z1bmNzIGRkcF9kaXRoZXIgPSB7DQpkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaCBiL2RyaXZlcnMvZ3B1L2RybS9t
-ZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmgNCmluZGV4IDViMGEzZDQuLjUxMDBjM2QgMTAwNjQ0
-DQotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oDQorKysg
-Yi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oDQpAQCAtOTUsNiAr
-OTUsOCBAQCBzdHJ1Y3QgbXRrX2RkcF9jb21wX2Z1bmNzIHsNCiAJCQkgIHN0cnVjdCBjbWRxX3Br
-dCAqY21kcV9wa3QpOw0KIAl2b2lkICgqYmdjbHJfaW5fb24pKHN0cnVjdCBtdGtfZGRwX2NvbXAg
-KmNvbXApOw0KIAl2b2lkICgqYmdjbHJfaW5fb2ZmKShzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21w
-KTsNCisJdm9pZCAoKmN0bV9zZXQpKHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAsDQorCQkJc3Ry
-dWN0IGRybV9jcnRjX3N0YXRlICpzdGF0ZSk7DQogfTsNCiANCiBzdHJ1Y3QgbXRrX2RkcF9jb21w
-IHsNCkBAIC0yMTMsNiArMjE1LDEzIEBAIHN0YXRpYyBpbmxpbmUgdm9pZCBtdGtfZGRwX2NvbXBf
-YmdjbHJfaW5fb2ZmKHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXApDQogCQljb21wLT5mdW5jcy0+
-YmdjbHJfaW5fb2ZmKGNvbXApOw0KIH0NCiANCitzdGF0aWMgaW5saW5lIHZvaWQgbXRrX2RkcF9j
-dG1fc2V0KHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAsDQorCQkJCSAgIHN0cnVjdCBkcm1fY3J0
-Y19zdGF0ZSAqc3RhdGUpDQorew0KKwlpZiAoY29tcC0+ZnVuY3MgJiYgY29tcC0+ZnVuY3MtPmN0
-bV9zZXQpDQorCQljb21wLT5mdW5jcy0+Y3RtX3NldChjb21wLCBzdGF0ZSk7DQorfQ0KKw0KIGlu
-dCBtdGtfZGRwX2NvbXBfZ2V0X2lkKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSwNCiAJCQllbnVt
-IG10a19kZHBfY29tcF90eXBlIGNvbXBfdHlwZSk7DQogaW50IG10a19kZHBfY29tcF9pbml0KHN0
-cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZV9ub2RlICpjb21wX25vZGUsDQotLSANCjEu
-OC4xLjEuZGlydHkNCg==
+Anders reported that the lockdep warns that suspicious
+RCU list usage in register_kprobe() (detected by
+CONFIG_PROVE_RCU_LIST.) This is because get_kprobe()
+access kprobe_table[] by hlist_for_each_entry_rcu()
+without rcu_read_lock.
+
+If we call get_kprobe() from the breakpoint handler context,
+it is run with preempt disabled, so this is not a problem.
+But in other cases, instead of rcu_read_lock(), we locks
+kprobe_mutex so that the kprobe_table[] is not updated.
+So, current code is safe, but still not good from the view
+point of RCU.
+
+Let's lock the rcu_read_lock() around get_kprobe() and
+ensure kprobe_mutex is locked at those points.
+
+Note that we can safely unlock rcu_read_lock() soon after
+accessing the list, because we are sure the found kprobe has
+never gone before unlocking kprobe_mutex. Unless locking
+kprobe_mutex, caller must hold rcu_read_lock() until it
+finished operations on that kprobe.
+
+Reported-by: Anders Roxell <anders.roxell@linaro.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ kernel/kprobes.c |   18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 53534aa258a6..fd814ea7dbd8 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -319,6 +319,7 @@ static inline void reset_kprobe_instance(void)
+  * 	- under the kprobe_mutex - during kprobe_[un]register()
+  * 				OR
+  * 	- with preemption disabled - from arch/xxx/kernel/kprobes.c
++ * In both cases, caller must disable preempt (or acquire rcu_read_lock)
+  */
+ struct kprobe *get_kprobe(void *addr)
+ {
+@@ -435,6 +436,7 @@ static int kprobe_queued(struct kprobe *p)
+ /*
+  * Return an optimized kprobe whose optimizing code replaces
+  * instructions including addr (exclude breakpoint).
++ * This must be called with locking kprobe_mutex.
+  */
+ static struct kprobe *get_optimized_kprobe(unsigned long addr)
+ {
+@@ -442,9 +444,12 @@ static struct kprobe *get_optimized_kprobe(unsigned long addr)
+ 	struct kprobe *p = NULL;
+ 	struct optimized_kprobe *op;
+ 
++	lockdep_assert_held(&kprobe_mutex);
++	rcu_read_lock();
+ 	/* Don't check i == 0, since that is a breakpoint case. */
+ 	for (i = 1; !p && i < MAX_OPTIMIZED_LENGTH; i++)
+ 		p = get_kprobe((void *)(addr - i));
++	rcu_read_unlock();	/* We are safe because kprobe_mutex is held */
+ 
+ 	if (p && kprobe_optready(p)) {
+ 		op = container_of(p, struct optimized_kprobe, kp);
+@@ -1478,18 +1483,21 @@ static struct kprobe *__get_valid_kprobe(struct kprobe *p)
+ {
+ 	struct kprobe *ap, *list_p;
+ 
++	lockdep_assert_held(&kprobe_mutex);
++	rcu_read_lock();
+ 	ap = get_kprobe(p->addr);
+ 	if (unlikely(!ap))
+-		return NULL;
++		goto out;
+ 
+ 	if (p != ap) {
+ 		list_for_each_entry_rcu(list_p, &ap->list, list)
+ 			if (list_p == p)
+ 			/* kprobe p is a valid probe */
+-				goto valid;
+-		return NULL;
++				goto out;
++		ap = NULL;
+ 	}
+-valid:
++out:
++	rcu_read_unlock();	/* We are safe because kprobe_mutex is held */
+ 	return ap;
+ }
+ 
+@@ -1602,7 +1610,9 @@ int register_kprobe(struct kprobe *p)
+ 
+ 	mutex_lock(&kprobe_mutex);
+ 
++	rcu_read_lock();
+ 	old_p = get_kprobe(p->addr);
++	rcu_read_unlock();	/* We are safe because kprobe_mutex is held */
+ 	if (old_p) {
+ 		/* Since this may unoptimize old_p, locking text_mutex. */
+ 		ret = register_aggr_kprobe(old_p, p);
 
