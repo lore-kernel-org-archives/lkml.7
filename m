@@ -6,171 +6,119 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD37C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D970C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CFC9206DC
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5673820848
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575313643;
-	bh=q697X90CNyNPT1LUAD9A+0GksQiNeZhw/+TeL4j79h4=;
+	s=default; t=1575313866;
+	bh=+E0Qb8nIo8In81aZozyw4VnN3XxDrwjePWjsKwRQAC8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UR9dZW1O6YVhu5ueLV+tjmPW2BuXJJKYMMdKFBF2hjWQGpzjCwy9mQ9Cnjj1UQyUZ
-	 W7Ma0B9cW8jCPmVHtrkCAjOm3hWedrMm/Q4UD4Y7LfeoeV3wP50r+uaBZ4DzSer+XV
-	 RynoFE/5+EiVpYCRnwoJVhuyQhTM4FQfG8qR277I=
+	b=t8NQqO+KXirXiYkuIAvvYYTzvKnFqIX6RTixfwgBfFMWYd+W/nCo9BBikZxxL/ecQ
+	 TWoR74DS03sYJx8VFApvz+vITHNT8M/6MTigXU3VdA7oqLM9jPG65mBYCJVDG0204I
+	 XiG4YqhXcC7u/OBShK8VQ82TzsXf9NXmMWkh6NR0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbfLBTHW (ORCPT
+        id S1727976AbfLBTLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 14:07:22 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39999 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727580AbfLBTHW (ORCPT
+        Mon, 2 Dec 2019 14:11:05 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:42473 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727556AbfLBTLE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 14:07:22 -0500
-Received: by mail-qk1-f193.google.com with SMTP id a137so655570qkc.7;
-        Mon, 02 Dec 2019 11:07:21 -0800 (PST)
+        Mon, 2 Dec 2019 14:11:04 -0500
+Received: by mail-qt1-f195.google.com with SMTP id j5so865556qtq.9;
+        Mon, 02 Dec 2019 11:11:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Cwz6dYY9z4DxZQ5/f+vTSU4IwIt72HsTGUbyi+vmDkI=;
+        b=eHpXuxnoiIv7Vq2GQyfaaWZbunEntyK6amEKPxAgDXh2F7i6pgY5JOrOxmRYBWA/bK
+         SLP1DHchXwPfowdj5JvhSMqHWJ7QFOLj7S2hSIL6q74qGRvBlMbVhdd4v4Zy4ytfu78z
+         UeCcDaZGD86MzV5eApmB6/1ivXULShR+kN92UZjAxReIvbkora7ad9nnH48Ft6hy1IGB
+         olUfx22vze29Uq/6Ds41WgDpod/ax0ksHshy1zaH+DEUGhmxJeAa06AQaEhB2fDCukYe
+         htwTeqMbepZamefzWks0AUPXeBloI9/BFb2Y472dRAJOIRWU41rsOUmWavuiJf9QETF5
+         H6eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=N7ISo08j0woPGIeQrxmAiB+QIg6bs6djut0LfpSDf04=;
-        b=cKsMsIhQgKiiPEwxCObsVjWuQO/CF5L0v54SkJmNox7nauCBqgIqhiwYWoBj0zGh5D
-         mmQBm+I6TYJAzAULj+jeukFlPnaoFILP5plS7Z/akBZlLX8Ja5ZtWw9MlTf5XLlAaVrt
-         L8AWfcGtgFU1/1Q2G8lphU2IkJbL0+2LKePeUrvIlnVXQWLpDwGL/idOSO4ObMc39ijE
-         Ea81P9N6OcwsWi+L9hQVEdZjlLRrV3ObRanmRswBiId/ixIrNNjGMt9YZ7jyPB6KitmY
-         uWepid7isbXTWCVMuFUixktUaMBNjJsT36o6+C8Q0vrZ5Ra9Efb2RZDyvw3rNv9dIxpU
-         vSKQ==
-X-Gm-Message-State: APjAAAXjhkxhAm8QgRNDO9pELx2qdanyc8QCYcaXJ8Dkmyman21JjTDH
-        w6taKrih4eEDI9T0UNh4J2c=
-X-Google-Smtp-Source: APXvYqzoOtrVbRoTfSKHHVRxjDKIVWvY+rV01LuQk3IlHmigMqeKeJw1aBzCBZJcWaaAbb3eNrgC9w==
-X-Received: by 2002:a37:6c6:: with SMTP id 189mr367618qkg.179.1575313641203;
-        Mon, 02 Dec 2019 11:07:21 -0800 (PST)
-Received: from dennisz-mbp ([2620:10d:c091:500::3:2086])
-        by smtp.gmail.com with ESMTPSA id x68sm273045qkc.22.2019.12.02.11.07.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 11:07:20 -0800 (PST)
-Date:   Mon, 2 Dec 2019 14:07:18 -0500
-From:   Dennis Zhou <dennis@kernel.org>
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc:     Christopher Lameter <cl@linux.com>,
-        Dennis Zhou <dennis@kernel.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tejun Heo <tj@kernel.org>, Nicholas Piggin <npiggin@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] fix __percpu annotation in asm-generic
-Message-ID: <20191202190718.GA18019@dennisz-mbp>
-References: <20191126200619.63348-1-luc.vanoostenryck@gmail.com>
- <alpine.DEB.2.21.1911271553560.16980@www.lameter.com>
- <20191127175350.GA52308@dennisz-mbp.dhcp.thefacebook.com>
- <20191127225432.ttwxm3hxtg5utfaz@ltop.local>
- <alpine.DEB.2.21.1911291808530.1365@www.lameter.com>
- <20191130000037.zsendu5pk7p75xqf@ltop.local>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=Cwz6dYY9z4DxZQ5/f+vTSU4IwIt72HsTGUbyi+vmDkI=;
+        b=iNFpKIzq4nhD/jF6u8QGpkirLbcT23v+bRQjLgkSQlzrkQmUQ6rFrLFzaKmdJXUxcT
+         h30xXIwQ3UKoLgmcF3D0tXfCWM6Dz89cj/LdKo4oPEXPzqrePRsEnsldXm4ET0q4ovjW
+         4ipHMM1LCv4j8Tw8RTl/eaMZSYhVFv9m80DMc4/Jz4aeo98yS4/7+Wh5zJv1wXSYlNGc
+         S/MskOBQ5HyW6cFLyGOnVYO/X9ussVl4J+RUhsOt0npHo0MaDfZdBAnysY2rmiqkXbeb
+         fzJhHez7/O4WCtKuwKlZhrwSpQ/pssyvl7hEw/Czr0JbRnO7IEhxVwGEQHle3YXDen7A
+         U6sw==
+X-Gm-Message-State: APjAAAWvxfvzXg7KkiTxHRpT/BqiujHZMKYd/7s8ESAEXWZauLan4zBz
+        ejqXUU0pSz5aaAxxU+CWTxE=
+X-Google-Smtp-Source: APXvYqx8mht7nynmOddR27kQYNBnjL0lmPtURqUSmMWCZ7Pxu9OQ7QGVWDcztUiQd3M9LLP//0a/4w==
+X-Received: by 2002:ac8:745a:: with SMTP id h26mr992039qtr.192.1575313863412;
+        Mon, 02 Dec 2019 11:11:03 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::1:c909])
+        by smtp.gmail.com with ESMTPSA id s189sm269559qke.41.2019.12.02.11.11.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 02 Dec 2019 11:11:02 -0800 (PST)
+Date:   Mon, 2 Dec 2019 11:11:00 -0800
+From:   Tejun Heo <tj@kernel.org>
+To:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Cc:     cgroups@vger.kernel.org, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] cgroup/pids: Make pids.events notifications affine
+ to pids.max
+Message-ID: <20191202191100.GF16681@devbig004.ftw2.facebook.com>
+References: <20191128172612.10259-1-mkoutny@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191130000037.zsendu5pk7p75xqf@ltop.local>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191128172612.10259-1-mkoutny@suse.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 30, 2019 at 01:00:37AM +0100, Luc Van Oostenryck wrote:
-> On Fri, Nov 29, 2019 at 06:11:59PM +0000, Christopher Lameter wrote:
-> > On Wed, 27 Nov 2019, Luc Van Oostenryck wrote:
-> > 
-> > > 1) it would strip any address space, not just __percpu, so:
-> > >    it would need to be combined with __verify_pcpu_ptr() or,
-> > >    * a better name should be used,
-> > 
-> > typeof_cast_kernel() to express the fact that it creates a kernel pointer
-> > and ignored the attributes??
-> 
-> typeof_strip_address_space() would, I think, express this better. 
-> It's not obvious at all to me that 'kernel' in 'typeof_cast_kernel()'
-> relates to the (default) kernel address space.
-> Maybe it's just me. I don't know.
-> 
+Hello,
 
-I think typeof_cast_kernel() or typeof_force_kernel() are reasonable
-names. I kind of like the idea of cast/force over strip because we're
-really still moving address spaces even if it is moving it back.
+On Thu, Nov 28, 2019 at 06:26:12PM +0100, Michal Koutný wrote:
+> Currently, when pids.max limit is breached in the hierarchy, the event
+> is counted and reported in the cgroup where the forking task resides.
+> 
+> The proper hierarchical behavior is to count and report the event in the
+> cgroup whose limit is being exceeded. Apply this behavior in the default
+> hierarchy.
+> 
+> Reasons for RFC:
+> 
+> 1) If anyone has adjusted their readings to this behavior, this is a BC
+>    break.
+> 
+> 2) This solves no reported bug, just a spotted inconsistency.
+> 
+> 3) One step further would be to distinguish pids.events and
+>    pids.events.local for proper hierarchical counting. (The current
+>    behavior wouldn't match neither though.)
 
-> > >    * it should be defined in a generic header, any idea where?
-> > 
-> > include/linux/compiler-types.h
-> 
-> Yes, OK.
-> 
-> > > 2) while I find the current solution:
-> > > 	typeof(T) __kernel __force *ptr = ...;
-> > 
-> > It would be
-> > 
-> >    typeof_cast_kernel(&T) *xx = xxx
-> > 
-> > or so?
-> 
-> No, it would not. __percpu, and more generally, the address space
-> is a property of the object, not of its address.
+Yeah this is incosistent with memcg but there max / high events are
+essentially useless because that doesn't indicate actual limit breach.
+Both events are interesting - which cgroup's limit was reached and who
+suffered because of that.
 
-Maybe for other address spaces that's true, but for percpu, __percpu is
-a property of the address. An object can be referenced both from a
-percpu address (via accessors) and the kernel address which is the
-actual object.
+So, maybe sth like the following?
 
-> For example, let's say T is a __percpu object:
-> 	int __percpu obj;
+1. Make max event propagate hierarchically.  This is a behavior change
+   but also an obvious bug fix.  Given that internal cgroups don't
+   have processes in cgroup2, maybe it's safe enough?
 
-This can't exist. __percpu denotes address space not object.
+2. Add another (hierarchical, of course) event which counts the number
+   of fork rejects.  I can't think of a good name.  Any ideas?
 
-> then '&T' is just a 'normal'/__kernel pointer to it:
-> 	int __percpu *;
-> There is nothing to strip (it would be if the __percpu
-> would be 'on the other side of the *': int * __percpu).
-> It's exactly the same as with 'const': a 'const char *'
-> is not const, only a pointer to const.
-> 
-> The situation with raw_cpu_generic_add_return() is:
-> - pcp is a lvalue of of a __percpu object of type T, so:
-> 	typeof(pcp)  := T __percpu
-> - pcp's address is given to raw_cpu_ptr(), so
-> 	typeof(&pcp) := T __percpu *
-> - raw_cpu_ptr() return the corresponding __kernel pointer
->   (adjusted for the current percu offset), so:
-> 	typeof(raw_cpu_ptr(&pcp)) := T *
-> - so, the macro needs to declare a variable __p of type T*
->   hence:
-> 	typeof(pcp) __kernel __force *__p;
->   or, with this new macro:
-> 	typeof_cast_kernel(pcp) *__p;
-> 
-> Maybe a better solution would be to directly play at pointer
-> level and thus have something like this:
-> 	typeof_<some good name>(&pcp) __p = raw_cpu_ptr(&pcp);
-> or even:
-> 	__kernel_pointer(&pcp) __p = raw_cpu_ptr(&pcp);
-> I dunno.
-> 
-> Note: at implementation level, it complicates things slightly
->       to want this 'strip_percpu' macro to behaves like typeof()
->       because it means that it can take in argument either an
->       expression or a type. And if it's a type, you can't do a
->       simple cast on it, you need to declare an intermediate
->       variable, hence the horrible:
-> 	  typeof(({ typeof(T) __kernel __force __fakename; __fakename; }))
-> 
-> Note: it would be much much nicer to do all these type generic
->       macros with '__auto_type' (only supported in GCC 4.9 IIUC
->       and supported in sparse but it shouldn't be very hard to do)..
-> 
-> 
-> -- Luc
+Thanks.
 
-Thanks for debugging this. I'm still inclined to have a macro for either
-cast/force. I do agree it could be misused, but it's no different doing
-it in a macro than by just adding __force __kernel.
-
-Thanks,
-Dennis
+-- 
+tejun
