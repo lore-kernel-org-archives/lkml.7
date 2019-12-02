@@ -2,120 +2,101 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84780C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 11:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C30C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 11:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5477B215E5
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 11:53:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575287620;
-	bh=X7/G7ECl+47WffpLyzXfw7hwitgqh9/qBbZpzYgVjIU=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=uPyZJ2Y8UzMkT+0kiKYw8/68dMhRhRR8innzZWwVO19MOiHSz7vi1cFxH2by5ETvM
-	 kgsrcEyF7D7weIIIXmyxIC7Q+2scknm353bzacYVrwdo/q2rQeHnTVUhbgbO/CySMm
-	 7PRSoxLG8L1QqPpnIPUDcfuVAmcvcRz20z2LLcMw=
+	by mail.kernel.org (Postfix) with ESMTP id 8EAFB215E5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 11:55:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u7060+pH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727419AbfLBLxj (ORCPT
+        id S1727435AbfLBLzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 06:53:39 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:42324 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726149AbfLBLxj (ORCPT
+        Mon, 2 Dec 2019 06:55:13 -0500
+Received: from mail-pf1-f172.google.com ([209.85.210.172]:45645 "EHLO
+        mail-pf1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbfLBLzN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 06:53:39 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1ibkGm-00088T-Js; Mon, 02 Dec 2019 12:53:36 +0100
-To:     Guoheyi <guoheyi@huawei.com>
-Subject: Re: [PATCH] irq/gic-its: gicv4: set VPENDING table as inner-shareable
-X-PHP-Originating-Script: 0:main.inc
+        Mon, 2 Dec 2019 06:55:13 -0500
+Received: by mail-pf1-f172.google.com with SMTP id 2so183253pfg.12
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 03:55:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=+JlNxZ7OyFpjeQdtLba6JDOrrg1sd3sb+Hultp3gwqE=;
+        b=u7060+pHPw+GYyU5wpIFuxR6Hz0lW8bdJCJ6NHMS842+ljhabIBvIcqtux1ayXZ2eZ
+         soUSJdKzKXMZFBLfpAcEUzXL1E+drcl49ygA2p/kyqzqLmR/DmYb6lH9XF0JMt+ErTuK
+         Ev70V158Ku+LOkYWA8yBZ4rp0qQAL2+S0V4lDGhtJLjAg1M7vSW5wKx/E0lycWGeo9rA
+         yF4KU23SxMKn+lD0nRcAkSUC/fcMO0tKblb/6e4EjZkdIbDOEmi37WB3++Q04PLUl8dw
+         nNSzIC4SdPYnkHLpquO7L7NtdFCQHlwrxrx/hm5l1psMN2Wo72UvvAMJZWYQReBct90X
+         y6kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=+JlNxZ7OyFpjeQdtLba6JDOrrg1sd3sb+Hultp3gwqE=;
+        b=NBTGYRcNnE1Onr5qCjk15ebWgzHRLbXwNiccg4gIyFcj5ajkGb/21E10Bc0OdFjpRO
+         ug6QFs/88A73d7OWTdO5F+Kj9eNX0Pf5gDFu8Ot5/RMFfNp3GXwYyvm07KlNJTNF/5XY
+         BuzGaUyAyb4k2PaVOF6OY8brCdfR95C45ZFYDBnluoA1PcK330uu8h/BSC/T2zkEp+/B
+         yp8ElA4t/wgLHt0AVHDtcErjWKYk3brQtWyNhrLF4R0JkJlQrP4cNOR/T5v0qEaPJTCQ
+         0s0oM+NSHrUZdnDyYNEWrue76DEcyKEz/jAqsOox17xsMAvxq19JMhOOCjZZJvMqNGvL
+         OWjg==
+X-Gm-Message-State: APjAAAVKCz5GMRMlQPRzop2L8lo8kyrR5FFiw2IPpqe4FJJhsP/558zy
+        Z/doc7ycgDMhNbRiFQ5WEb9CmA8S
+X-Google-Smtp-Source: APXvYqzm8WdJ+jLiaMDKWtpCB/2lpXzkb0xWxhLf4IFgsv7uBj/rXnsKIgsj0RxIetWZTSOAvbMDAg==
+X-Received: by 2002:a63:5b59:: with SMTP id l25mr14997655pgm.382.1575287712549;
+        Mon, 02 Dec 2019 03:55:12 -0800 (PST)
+Received: from localhost (g143.222-224-150.ppp.wakwak.ne.jp. [222.224.150.143])
+        by smtp.gmail.com with ESMTPSA id w6sm33899107pge.92.2019.12.02.03.55.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 03:55:12 -0800 (PST)
+Date:   Mon, 2 Dec 2019 20:55:10 +0900
+From:   Stafford Horne <shorne@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] OpenRISC updates for v5.5
+Message-ID: <20191202115510.GO24874@lianli.shorne-pla.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Mon, 02 Dec 2019 11:53:35 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <linux-kernel@vger.kernel.org>, <wanghaibin.wang@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>
-In-Reply-To: <aaa0f679-9fde-f877-e125-7e609c555e38@huawei.com>
-References: <20191130073849.38378-1-guoheyi@huawei.com>
- <20191201180434.1dba3116@why>
- <aaa0f679-9fde-f877-e125-7e609c555e38@huawei.com>
-Message-ID: <31461466470212e05a279f9750a90463@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: guoheyi@huawei.com, linux-kernel@vger.kernel.org, wanghaibin.wang@huawei.com, tglx@linutronix.de, jason@lakedaemon.net
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-02 11:07, Guoheyi wrote:
-> 在 2019/12/2 2:04, Marc Zyngier 写道:
->> On Sat, 30 Nov 2019 15:38:49 +0800
->> Heyi Guo <guoheyi@huawei.com> wrote:
->>
->>> There is no special reason to set virtual LPI pending table as
->>> non-shareable. If we choose to hard code the shareability without
->>> probing, inner-shareable will be a better choice, for all the other
->>> ITS/GICR tables prefer to be inner-shareable.
->> One of the issues is that we have strictly no idea what the caches 
->> are
->> Inner Shareable with (I've been asking for such clarification for 
->> years
->> without getting anywhere). You can have as many disconnected inner
->> shareable domains as you want!
->
-> Hisilicon HIP07 and HIP08 are compliant with ARM SBSA and have only
-> one inner shareable domain in the whole system.
+Hi Linus,
 
-I'm glad these systems are well designed, but that's not what SBSA 
-mandates.
+Please consider for pulling.
 
-All it requires is that the all PEs are part of the same IS domain, and
-that PCIe is part of the same IS domain as the PEs. Nothing more, and
-certainly nothing about the GIC. Or anything else.
+The following changes since commit af42d3466bdc8f39806b26f593604fdc54140bcb:
 
-> What will happen if a system has multiple inner shareable domains?
-> Will Linux still work on such system? Can we declare that Linux only
-> supports one single inner shareable domain?
+  Linux 5.4-rc8 (2019-11-17 14:47:30 -0800)
 
-Linux works just fine as long as all the PEs are in the same IS domain.
-There is no architectural requirement for anything else to be in that
-domain.
+are available in the Git repository at:
 
->> I suspect that in the grand scheme of things, the redistributors
->> ought to be in the same inner shareable domain, and that with a bit 
->> of
->> luck, the CPUs are there as well. Still, that's a massive guess.
->>
->>> What's more, on Hisilicon hip08 it will trigger some kind of bus
->>> warning when mixing use of different shareabilities.
->> Do you have more information about what the bus is complaining 
->> about?
->> Is that because the CPUs have these pages mapped as inner shareable?
->
-> Actually HIP08 L3 Cache will complain on any non-shareable cache
-> entry, for the data coherence cannot be guarenteed for such
-> configuration. This also implies VPENDING table will be allocated and
-> snooped in L3 cache.
+  git://github.com/openrisc/linux.git tags/for-linus
 
-It really looks odd that L3 would even contain non-shareable entries.
+for you to fetch changes up to 0ecdcaa6d5e78649578ff32c37556a4140b64edf:
 
-Anyway, I don't think that's a biggy. Given that GICv4 is almost
-exclusively implemented on these two SoCs (unless someone revives
-QC system), I think we can take this change after some testing.
+  openrisc: Fix Kconfig indentation (2019-11-23 06:49:21 +0900)
 
-Thanks,
+----------------------------------------------------------------
+OpenRISC updates for 5.5
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+One thing for 5.5:
+ - White space fixups in Kconfig files from Krzysztof Kozlowski
+
+----------------------------------------------------------------
+Krzysztof Kozlowski (1):
+      openrisc: Fix Kconfig indentation
+
+ arch/openrisc/Kconfig | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
