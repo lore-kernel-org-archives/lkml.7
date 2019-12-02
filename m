@@ -2,87 +2,68 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E6DC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E37C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 610B720718
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:19:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0793720722
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:20:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575325218;
+	bh=PVAzibMEyic86B3ClR6DenJ+ORcVAz1URHvOrQ+co1w=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=oJZ5i41DEllY1Kp7+mdMYYKsG8Jgzlpt7zrqLu6sC0gt8ueOyWFCoY8U6FOewseLI
+	 s8BLZkgWdkj024JT2ANE07vt/lRL/UWgaSuQjwl/K8sq/N+vZ0LmThsmOFbmRglTwy
+	 N8/BeFcuMgnjQlTQPKCmVeaMNmAU4pw27nrEG9dk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbfLBWTv (ORCPT
+        id S1726386AbfLBWUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 17:19:51 -0500
-Received: from mga07.intel.com ([134.134.136.100]:9938 "EHLO mga07.intel.com"
+        Mon, 2 Dec 2019 17:20:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725834AbfLBWTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 17:19:51 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 14:19:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,270,1571727600"; 
-   d="scan'208";a="242131555"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga002.fm.intel.com with ESMTP; 02 Dec 2019 14:19:49 -0800
-Date:   Mon, 2 Dec 2019 14:19:49 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH RFC 03/15] KVM: Add build-time error check on kvm_run size
-Message-ID: <20191202221949.GD8120@linux.intel.com>
-References: <20191129213505.18472-1-peterx@redhat.com>
- <20191129213505.18472-4-peterx@redhat.com>
- <20191202193027.GH4063@linux.intel.com>
- <20191202205315.GD31681@xz-x1>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191202205315.GD31681@xz-x1>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        id S1725834AbfLBWUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 17:20:16 -0500
+Subject: Re: [git pull] FireWire (IEEE 1394) update post v5.4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575325216;
+        bh=PVAzibMEyic86B3ClR6DenJ+ORcVAz1URHvOrQ+co1w=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=taLtQqk1+9P5TzAc2vApd7tFg2h2+totYlWcC0TwKjLuScl1FvZ3+vfhL/hxchyRL
+         KVmKgW7O8iAeL164G4XUaJspsPnBnWtWY5b+AID7DJA0pzPJ8j3uqQdH79w3zRk5yu
+         GPmV6bzA3Rasb5LX37xFGtjIUka+dpHxDrCOqL9E=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20191201195308.363d0b83@kant>
+References: <20191201195308.363d0b83@kant>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191201195308.363d0b83@kant>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/ieee1394/linux1394.git
+ firewire-update
+X-PR-Tracked-Commit-Id: 7807759e4ad8d46347a5d52a0910269320b81e65
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 9b326948c23908692d7dfe56ed149840d3829eaa
+Message-Id: <157532521634.12303.9114949553263526469.pr-tracker-bot@kernel.org>
+Date:   Mon, 02 Dec 2019 22:20:16 +0000
+To:     Stefan Richter <stefanr@s5r6.in-berlin.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux1394-devel@lists.sourceforge.net
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 03:53:15PM -0500, Peter Xu wrote:
-> On Mon, Dec 02, 2019 at 11:30:27AM -0800, Sean Christopherson wrote:
-> > On Fri, Nov 29, 2019 at 04:34:53PM -0500, Peter Xu wrote:
-> > > It's already going to reach 2400 Bytes (which is over half of page
-> > > size on 4K page archs), so maybe it's good to have this build-time
-> > > check in case it overflows when adding new fields.
-> > 
-> > Please explain why exceeding PAGE_SIZE is a bad thing.  I realize it's
-> > almost absurdly obvious when looking at the code, but a) the patch itself
-> > does not provide that context and b) the changelog should hold up on its
-> > own,
-> 
-> Right, I'll enhance the commit message.
-> 
-> > e.g. in a mostly hypothetical case where the allocation of vcpu->run
-> > were changed to something else.
-> 
-> And that's why I added BUILD_BUG_ON right beneath that allocation. :)
+The pull request you sent on Sun, 1 Dec 2019 19:53:08 +0100:
 
-My point is that if the allocation were changed to no longer be a
-straightforward alloc_page() then someone reading the combined code would
-have no idea why the BUILD_BUG_ON() exists.  It's a bit ridiculous for
-this case because the specific constraints of vcpu->run make it highly
-unlikely to use anything else, but that's beside the point.
+> git://git.kernel.org/pub/scm/linux/kernel/git/ieee1394/linux1394.git firewire-update
 
-> It's just a helper for developers when adding new kvm_run fields, not
-> a risk for anyone who wants to start allocating more pages for it.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/9b326948c23908692d7dfe56ed149840d3829eaa
 
-But by adding a BUILD_BUG_ON without explaining *why*, you're placing an
-extra burden on someone that wants to increase the size of kvm->run, e.g.
-it's not at all obvious from the changelog whether this patch is adding
-the BUILD_BUG_ON purely because the code allocates memory for vcpu->run
-via alloc_page(), or if there is some fundamental aspect of vcpu->run that
-requires it to never span multiple pages.
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
