@@ -2,130 +2,153 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6010CC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B9DC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3469E2070A
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B2420748
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:29:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VndfOFFM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727454AbfLBMYO convert rfc822-to-8bit (ORCPT
+        id S1727423AbfLBM3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 07:24:14 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:36246 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727354AbfLBMYN (ORCPT
+        Mon, 2 Dec 2019 07:29:34 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37868 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727381AbfLBM3e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 07:24:13 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-209-ir8GbxBaO_GtMP1WeUlcjw-1; Mon, 02 Dec 2019 12:24:10 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 2 Dec 2019 12:24:09 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 2 Dec 2019 12:24:09 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Jakub Sitnicki' <jakub@cloudflare.com>
-CC:     Eric Dumazet <eric.dumazet@gmail.com>,
-        'Paolo Abeni' <pabeni@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        'Marek Majkowski' <marek@cloudflare.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "network dev" <netdev@vger.kernel.org>,
-        kernel-team <kernel-team@cloudflare.com>
-Subject: RE: epoll_wait() performance
-Thread-Topic: epoll_wait() performance
-Thread-Index: AdWgk3jgEIFNwcnRS6+4A+/jFPxTuQEdLCCAAAAn2qAADa2dEAAA53BgAAHhYYAAIluz0ABrirS6AFywc0A=
-Date:   Mon, 2 Dec 2019 12:24:09 +0000
-Message-ID: <40f7b16289274e10a30f5d8c6e2cdf08@AcuMS.aculab.com>
-References: <bc84e68c0980466096b0d2f6aec95747@AcuMS.aculab.com>
- <CAJPywTJYDxGQtDWLferh8ObjGp3JsvOn1om1dCiTOtY6S3qyVg@mail.gmail.com>
- <5f4028c48a1a4673bd3b38728e8ade07@AcuMS.aculab.com>
- <20191127164821.1c41deff@carbon>
- <0b8d7447e129539aec559fa797c07047f5a6a1b2.camel@redhat.com>
- <2f1635d9300a4bec8a0422e9e9518751@AcuMS.aculab.com>
- <313204cf-69fd-ec28-a22c-61526f1dea8b@gmail.com>
- <1265e30d04484d08b86ba2abef5f5822@AcuMS.aculab.com>
- <c46e43d1-ba7d-39d9-688f-0141931df1b0@gmail.com>
- <878snxo5kq.fsf@cloudflare.com>
-In-Reply-To: <878snxo5kq.fsf@cloudflare.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 2 Dec 2019 07:29:34 -0500
+Received: by mail-wr1-f67.google.com with SMTP id w15so13064249wru.4
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 04:29:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=m1gJFoxmvPjutyLqW6gwKw+LefgYzc+HHd4YVNJtFa4=;
+        b=VndfOFFMw1L/rmuAHJ6jsXalfXg2a3CmIxhSSc606nhVmBTPvovbR3NUrurVVdK3+W
+         E44+UttwXNH+0MxtQCXPLB8OiNanW+qSedpbrnWe9oQwqFucaNAQFIjpuaw89wOr9obQ
+         k0GCmcbMZk07b54nPsC/Wu55iei83BFsi1ci2YGe1U1KCx+WfIz8TaJQqQysqUH1/o1L
+         wtI5WOt0+zMNneclxZ7mMTgiFMk9GnqC44YtMjkUSoag6KZasDDHmvYom6ygNf2udlI2
+         BaJse3K4+wKFBwjw60hmQDUgvnai2FTppz18uwNeK7qTXNnqS/Ia6WWOY3aYW8mtXHrj
+         sYcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=m1gJFoxmvPjutyLqW6gwKw+LefgYzc+HHd4YVNJtFa4=;
+        b=DJ25rnzPVJTcP6QtjKrLfxYWH5zyRjPM2ydu0MK+1ZRW88Pjf3rqtn254VWvlt6M7l
+         vOWSc8rtEAUx5r61D8cR3IyBT98eMCsHNR86bkKnKIPX7hXhdRmIMGglrLppsGSoMRr9
+         4qVoTWtkXngLiMhAyjMMyXFWAVzN2YU35w2Hdgvw9SKDZHuvWgRj0PbvE+RwrFFqzWWW
+         8H4eU4WueL8dMRrsWLMmg9FQZTenYpoIAGAbYVoMIjGj2Ea4wwN6uz/1c0gEUjdRFkyW
+         z+jli2gHeSF/pYQRyFQ1R4OI5R00w7Gq/r3EAY58MyI/6n1pQOnUlIfCvuw4URISMmgo
+         rmPw==
+X-Gm-Message-State: APjAAAVnec30dfDorfbEtsS5eb8RIp64mQbgwBK33GmSyVW7D+dVDBEV
+        bpUsuuzPhAOawnxwsAcCMNPAhw==
+X-Google-Smtp-Source: APXvYqwd3UxC6c3DYGT/u/UuFJrPiuTjk+YcI3ZageRxW8ixm+PJ796D/NoYSrhFUN4lmKDGhjxM3w==
+X-Received: by 2002:adf:fe86:: with SMTP id l6mr4235243wrr.252.1575289772174;
+        Mon, 02 Dec 2019 04:29:32 -0800 (PST)
+Received: from bivouac.eciton.net (bivouac.eciton.net. [2a00:1098:0:86:1000:23:0:2])
+        by smtp.gmail.com with ESMTPSA id a14sm6471505wrx.81.2019.12.02.04.29.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 04:29:31 -0800 (PST)
+Date:   Mon, 2 Dec 2019 12:29:29 +0000
+From:   Leif Lindholm <leif.lindholm@linaro.org>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Rob Clark <robdclark@gmail.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kairui Song <kasong@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        "open list:EXTENSIBLE FIRMWARE INTERFACE (EFI)" 
+        <linux-efi@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] efi/fdt: install new fdt config table
+Message-ID: <20191202122929.GC7359@bivouac.eciton.net>
+References: <20191130195045.2005835-1-robdclark@gmail.com>
+ <CAKv+Gu_HXD=59q9zeK6-WoEEngHPrEJpPTyT8U4TZZ3AOs=TcA@mail.gmail.com>
 MIME-Version: 1.0
-X-MC-Unique: ir8GbxBaO_GtMP1WeUlcjw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu_HXD=59q9zeK6-WoEEngHPrEJpPTyT8U4TZZ3AOs=TcA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Sitnicki <jakub@cloudflare.com>
-> Sent: 30 November 2019 13:30
-> On Sat, Nov 30, 2019 at 02:07 AM CET, Eric Dumazet wrote:
-> > On 11/28/19 2:17 AM, David Laight wrote:
-...
-> >> How can you do that when all the UDP flows have different destination port numbers?
-> >> These are message flows not idempotent requests.
-> >> I don't really want to collect the packets before they've been processed by IP.
-> >>
-> >> I could write a driver that uses kernel udp sockets to generate a single message queue
-> >> than can be efficiently processed from userspace - but it is a faff compiling it for
-> >> the systems kernel version.
-> >
-> > Well if destinations ports are not under your control,
-> > you also could use AF_PACKET sockets, no need for 'UDP sockets' to receive UDP traffic,
-> > especially it the rate is small.
+On Mon, Dec 02, 2019 at 10:35:05 +0100, Ard Biesheuvel wrote:
+> On Sat, 30 Nov 2019 at 20:51, Rob Clark <robdclark@gmail.com> wrote:
+>
+> I understand what you are trying to do here, but this is not the right solution.
 > 
-> Alternatively, you could steer UDP flows coming to a certain port range
-> to one UDP socket using TPROXY [0, 1].
+> I have rejected patches in the past where config tables are used to
+> communicate information back to the firmware, as creating reverse
+> dependencies like this is a recipe for disaster.
 
-I don't think that can work, we don't really know the list of valid UDP port
-numbers ahead of time.
+This isn't *technically* communicating information back to the
+firmware, since the agent that ends up being invoked is a driver that
+has been explicitly installed in order to permit running Linux without
+hacking about with GRUB. (But it's certainly communicating it back to
+the firmware context.)
 
-> TPROXY has the same downside as AF_PACKET, meaning that it requires at
-> least CAP_NET_RAW to create/set up the socket.
-
-CAP_NET_RAW wouldn't be a problem - we already send from a 'raw' socket.
-(Which is a PITA for IPv4 because we have to determine the local IP address
-in order to calculate the UDP checksum - so we have to have a local copy
-of what (hopefully) matches the kernel routing tables.
-
-> OTOH, with TPROXY you can gracefully co-reside with other services,
-> filtering on just the destination addresses you want in iptables/nftables.
-
-Yes, the packets need to be extracted from normal processing - otherwise
-the UDP code would send ICMP port unreachable errors.
-
+> IIUC, the problem is that the DtbLoader attempts to be smart about
+> whether to install the DT config table, and to only do so if the OS is
+> going to boot in DT mode. This is based on the principle that we
+> should not expose both ACPI and DT tables, and make it the OS's
+> problem to reason about which one is the preferred description.
 > 
-> Fan-out / load-balancing with reuseport to have one socket per CPU is
-> not possible, though. You would need to do that with Netfilter.
+> I agree with that approach in general, but in this particular case, I
+> don't think it makes sense. Windows only cares about ACPI, and Linux
+> only cares about DT unless you instruct it specifically to prioritize
+> ACPI over DT.
 
-Or put different port ranges onto different sockets.
- 
-> [0] https://www.kernel.org/doc/Documentation/networking/tproxy.txt
-> [1] https://blog.cloudflare.com/how-we-built-spectrum/
+I guess it's worth pointing out here that this approach (DtbLoader)
+predates the finding out that these devices use PEP instead of ACPI
+for power management (which I guess makes it ACI) - so ACPI can never
+be usefully supported.
 
-The latter explains it a bit better than the former....
+> So the problem that this solves does not exist in
+> practice, and we're much better off just exposing the DT alongside the
+> ACPI tables, and let the OS use whichever one it wants.
 
-I think I'll try to understand the 'ftrace' documentation enough to add some
-extra trace points to those displayed by shedviz.
-So far I've only found some trivial example uses, not any actual docs.
-Hopefully there is a faster way than reading the kernel sources :-(
+Wo-hoo...
 
-	David
+> Also, the stub always reallocates the FDT, and so the CRC check is
+> only detecting whether the DT is being touched by GRUB or not.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+So does GRUB.
 
+DtbLoader looks up the DT through the system table again as part of
+the ExitBootservices hook. An address change *or* a CRC change
+triggers the ACPI deletion.
+
+This was the problem Rob was trying to address - ensuring the hook
+gets invoked even where the stub was the one that updated the DT.
+
+But given the situation we're in, I don't really disagree with you
+anyway.
+
+Let's just be clear that this isn't a free-for-all - this is because
+the abstraction of power management on this family of machines is
+broken by design.
+
+> So removing the ACPI tables like this is not something I think we
+> should be doing at all. As a compromise, you might add 'acpi=off' to
+> /chosen/cmdline so that GRUBless boot into Linux does not
+> inadvertently ends up booting in ACPI mode.
+
+If so, some form of (out-of-tree) sanity check would be needed on
+distros carrying out-of-tree patches that disable DT boot.
+
+It *is* possible to boot these machines using only ACPI. It's just not
+a very great user experience with all cores running at minimum
+frequency.
+
+/
+    Leif
