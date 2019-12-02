@@ -2,140 +2,161 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D3DC43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A30C43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0FC3214AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6092D2146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:06:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575302794;
+	bh=tLAqlApYip8hY+icp5gGvPR2GCxSCxU1nvhC+g4Pn6A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Phk360Xrn9qkUVWodguS8Gm6e1gBqr+XpRq+x53yYMgXQ/oXjsfcgyChPvFdWqmqw
+	 AjcMOFNCmlJZwJ8nm8QkIUfyhOEpHFPVZl0svUodpAH5O7OSgrq0mTVGe2RPRZnRxH
+	 KfKA6hhzyWsESEM2s5KHsdkHNFhH7FCytKkotRkY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbfLBQBN (ORCPT
+        id S1727555AbfLBQGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 11:01:13 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56996 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727489AbfLBQBN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 11:01:13 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB2FuuA6081810
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 11:01:11 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wm6c0j0xx-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 11:01:11 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Mon, 2 Dec 2019 16:01:09 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 2 Dec 2019 16:01:06 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB2G15UB51249366
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Dec 2019 16:01:05 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 28F3D4203F;
-        Mon,  2 Dec 2019 16:01:05 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 868BF42041;
-        Mon,  2 Dec 2019 16:01:04 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.8.152])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon,  2 Dec 2019 16:01:04 +0000 (GMT)
-Date:   Mon, 2 Dec 2019 18:01:02 +0200
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Kars de Jong <karsdejong@home.nl>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: m68k Kconfig warning
-References: <021330b6-67a2-0b74-c129-5c725dd23810@infradead.org>
- <CAMuHMdVLusDDB5G1R7=-53sK1bd2+3=s42hr9xkgPtWyjOrozg@mail.gmail.com>
- <CACz-3rjOPg_rMt_FbJ5_nKLpjTK-Bv=amGsJpXwqbTBNX4YA7w@mail.gmail.com>
- <CAMuHMdW1iqNkmCztAv93W4eLR5ooxh5m+vRLJHJmCfrjsOmc5g@mail.gmail.com>
+        Mon, 2 Dec 2019 11:06:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44330 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727418AbfLBQGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 11:06:33 -0500
+Received: from localhost (unknown [84.241.196.73])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6762A2084F;
+        Mon,  2 Dec 2019 16:06:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575302792;
+        bh=tLAqlApYip8hY+icp5gGvPR2GCxSCxU1nvhC+g4Pn6A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fxQCA2KFolO++XHLicfxkNv6yFzv1KuvwarF1oVcfmf9wmCuh83ar62YgPD7M9Uji
+         XCuEZ0OpBOQyHgiDjyvtkErc9N5WuW5tVNN1F3qNsqR5xYxQ4PGc79n5dIEsFmCMXr
+         Oyj+P7nAIhh4g249cr1LZN6pmu+r08SW/AFB5wwc=
+Date:   Mon, 2 Dec 2019 17:06:28 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Jack Wang <jack.wang.usish@gmail.com>,
+        linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 067/306] KVM: nVMX: move check_vmentry_postreqs()
+ call to nested_vmx_enter_non_root_mode()
+Message-ID: <20191202160628.GB698577@kroah.com>
+References: <20191127203114.766709977@linuxfoundation.org>
+ <20191127203119.676489279@linuxfoundation.org>
+ <CA+res+QKCAn8PsSgbkqXNAF0Ov5pOkj=732=M5seWj+-JFQOwQ@mail.gmail.com>
+ <20191202145105.GA571975@kroah.com>
+ <bccbfccd-0e96-29c3-b2ba-2b1800364b08@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdW1iqNkmCztAv93W4eLR5ooxh5m+vRLJHJmCfrjsOmc5g@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19120216-0020-0000-0000-000003927D5A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120216-0021-0000-0000-000021E99982
-Message-Id: <20191202160101.GB17203@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-02_03:2019-11-29,2019-12-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- adultscore=0 priorityscore=1501 impostorscore=0 mlxscore=0 mlxlogscore=999
- suspectscore=0 lowpriorityscore=0 spamscore=0 phishscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-1912020141
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bccbfccd-0e96-29c3-b2ba-2b1800364b08@redhat.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 02:32:28PM +0100, Geert Uytterhoeven wrote:
-> Hi Kars,.
+On Mon, Dec 02, 2019 at 04:09:33PM +0100, Paolo Bonzini wrote:
+> On 02/12/19 15:51, Greg Kroah-Hartman wrote:
+> > On Mon, Dec 02, 2019 at 03:40:04PM +0100, Jack Wang wrote:
+> >> Greg Kroah-Hartman <gregkh@linuxfoundation.org> 于2019年11月27日周三 下午10:30写道：
+> >>>
+> >>> From: Sean Christopherson <sean.j.christopherson@intel.com>
+> >>>
+> >>> [ Upstream commit 7671ce21b13b9596163a29f4712cb2451a9b97dc ]
+> >>>
+> >>> In preparation of supporting checkpoint/restore for nested state,
+> >>> commit ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vmx_run()")
+> >>> modified check_vmentry_postreqs() to only perform the guest EFER
+> >>> consistency checks when nested_run_pending is true.  But, in the
+> >>> normal nested VMEntry flow, nested_run_pending is only set after
+> >>> check_vmentry_postreqs(), i.e. the consistency check is being skipped.
+> >>>
+> >>> Alternatively, nested_run_pending could be set prior to calling
+> >>> check_vmentry_postreqs() in nested_vmx_run(), but placing the
+> >>> consistency checks in nested_vmx_enter_non_root_mode() allows us
+> >>> to split prepare_vmcs02() and interleave the preparation with
+> >>> the consistency checks without having to change the call sites
+> >>> of nested_vmx_enter_non_root_mode().  In other words, the rest
+> >>> of the consistency check code in nested_vmx_run() will be joining
+> >>> the postreqs checks in future patches.
+> >>>
+> >>> Fixes: ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vmx_run()")
+> >>> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> >>> Cc: Jim Mattson <jmattson@google.com>
+> >>> Reviewed-by: Jim Mattson <jmattson@google.com>
+> >>> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> >>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> >>> ---
+> >>>  arch/x86/kvm/vmx.c | 10 +++-------
+> >>>  1 file changed, 3 insertions(+), 7 deletions(-)
+> >>>
+> >>> diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+> >>> index fe7fdd666f091..bdf019f322117 100644
+> >>> --- a/arch/x86/kvm/vmx.c
+> >>> +++ b/arch/x86/kvm/vmx.c
+> >>> @@ -12694,6 +12694,9 @@ static int enter_vmx_non_root_mode(struct kvm_vcpu *vcpu, u32 *exit_qual)
+> >>>         if (likely(!evaluate_pending_interrupts) && kvm_vcpu_apicv_active(vcpu))
+> >>>                 evaluate_pending_interrupts |= vmx_has_apicv_interrupt(vcpu);
+> >>>
+> >>> +       if (from_vmentry && check_vmentry_postreqs(vcpu, vmcs12, exit_qual))
+> >>> +               return EXIT_REASON_INVALID_STATE;
+> >>> +
+> >>>         enter_guest_mode(vcpu);
+> >>>
+> >>>         if (!(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CONTROLS))
+> >>> @@ -12836,13 +12839,6 @@ static int nested_vmx_run(struct kvm_vcpu *vcpu, bool launch)
+> >>>          */
+> >>>         skip_emulated_instruction(vcpu);
+> >>>
+> >>> -       ret = check_vmentry_postreqs(vcpu, vmcs12, &exit_qual);
+> >>> -       if (ret) {
+> >>> -               nested_vmx_entry_failure(vcpu, vmcs12,
+> >>> -                                        EXIT_REASON_INVALID_STATE, exit_qual);
+> >>> -               return 1;
+> >>> -       }
+> >>> -
+> >>>         /*
+> >>>          * We're finally done with prerequisite checking, and can start with
+> >>>          * the nested entry.
+> >>> --
+> >>> 2.20.1
+> >>>
+> >>>
+> >>>
+> >> Hi all,
+> >>
+> >> This commit caused many kvm-unit-tests regression, cherry-pick
+> >> following commits from 4.20 fix the regression:
+> >> d63907dc7dd1 ("KVM: nVMX: rename enter_vmx_non_root_mode to
+> >> nested_vmx_enter_non_root_mode")
+> >> a633e41e7362 ("KVM: nVMX: assimilate nested_vmx_entry_failure() into
+> >> nested_vmx_enter_non_root_mode()")
+> > 
+> > Now queued up, thanks!
+> > 
+> > greg k-h
+> > 
 > 
-> On Mon, Dec 2, 2019 at 12:42 PM Kars de Jong <karsdejong@home.nl> wrote:
-> > Op wo 27 nov. 2019 om 08:12 schreef Geert Uytterhoeven <geert@linux-m68k.org>:
-> > > On Wed, Nov 27, 2019 at 2:27 AM Randy Dunlap <rdunlap@infradead.org> wrote:
-> > > > Just noticed this.  I don't know what the right fix is.
-> > > > Would you take care of it, please?
-> > > >
-> > > > on Linux 5.4, m68k allmodconfig:
-> > > >
-> > > > WARNING: unmet direct dependencies detected for NEED_MULTIPLE_NODES
-> > > >   Depends on [n]: DISCONTIGMEM [=n] || NUMA
-> > > >   Selected by [y]:
-> > > >   - SINGLE_MEMORY_CHUNK [=y] && MMU [=y]
-> > >
-> > > This has been basically there forever, but working.
-> >
-> > The reason for SINGLE_MEMORY_CHUNK depending on NEED_MULTIPLE_NODES is
-> > historic due to the way it is implemented.
-> > I played with it this weekend and I got a working version of FLATMEM,
-> > which can replace SINGLE_MEMORY_CHUNK.
+> Why was it backported anyway?  Can everybody please just stop applying
+> KVM patches to stable kernels unless CCed to stable@vger.kernel.org?
 > 
-> Nice, thanks!
-> 
-> > step might be to replace DISCONTIGMEM with SPARSEMEM (since
-> > DISCONTIGMEM has been deprecated).
-> 
-> Mike Rapoport has patches for that:
-> "[PATCH v2 0/3] m68k/mm: switch from DISCONTIGMEM to SPARSEMEM"
-> 
-> Unfortunately they're not on lore, and there were some issues with them.
+> I thought I had already asked Sasha to opt out of the autoselect
+> nonsense after catching another bug that would have been introduced.
 
-The patches are here:
-https://www.spinics.net/lists/linux-m68k/msg13588.html
+Sasha, can you add kvm code to the blacklist?  Odds are the fact that
+this is burried down in arch/x86/ it didn't get caught by the blacklist.
 
-Aside from some technicalities we had troubles deciding what should be the
-section size. With larger section size we might end up with wasted memory
-for memory maps and with smaller section size we'll have to limit the
-addressable physical memory...
+thanks,
 
-
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-
--- 
-Sincerely yours,
-Mike.
-
+greg k-h
