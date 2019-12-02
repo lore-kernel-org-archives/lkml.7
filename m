@@ -2,71 +2,93 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F47C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA43C43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1697920848
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF0E72070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:32:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FR/srBNr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726186AbfLBW3W (ORCPT
+        id S1726057AbfLBWcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 17:29:22 -0500
-Received: from mga09.intel.com ([134.134.136.24]:41070 "EHLO mga09.intel.com"
+        Mon, 2 Dec 2019 17:32:14 -0500
+Received: from ozlabs.org ([203.11.71.1]:55343 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725834AbfLBW3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 17:29:21 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 14:29:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,270,1571727600"; 
-   d="scan'208";a="218464248"
-Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
-  by fmsmga001.fm.intel.com with ESMTP; 02 Dec 2019 14:29:21 -0800
-Received: from orsmsx115.amr.corp.intel.com ([169.254.4.121]) by
- ORSMSX102.amr.corp.intel.com ([169.254.3.246]) with mapi id 14.03.0439.000;
- Mon, 2 Dec 2019 14:29:20 -0800
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>
-CC:     "Yu, Fenghua" <fenghua.yu@intel.com>
-Subject: RE: [PATCH] ia64: remove stale paravirt leftovers
-Thread-Topic: [PATCH] ia64: remove stale paravirt leftovers
-Thread-Index: AQHVh/bwVpusAEgcQUWj23hoyWR/g6ea4/AAgAzLYiA=
-Date:   Mon, 2 Dec 2019 22:29:20 +0000
-Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F4E7C10@ORSMSX115.amr.corp.intel.com>
-References: <20191021100415.7642-1-jgross@suse.com>
- <5724dc57-2e1c-7ff4-c8df-758840aeae81@suse.com>
-In-Reply-To: <5724dc57-2e1c-7ff4-c8df-758840aeae81@suse.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiOGM5YmJiZTctNjZiOC00OWIxLTkwYzEtYjAyM2U1YTMyMjM3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiZ1o5RnlzVmtnbVBuU20zblhjUkFhdnNsSVRFeGZDQUFsZzB4M1dIdlNjeUxNWGROOFFPQ1h1MlFSODA1ODI5eiJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.139]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1725834AbfLBWcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 17:32:13 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47RfxR0q8zz9sNx;
+        Tue,  3 Dec 2019 09:32:10 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1575325931;
+        bh=PS8ZCxyebpHnwpzLlSXRTCBEi86nooa6CSQgCnfd3EU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=FR/srBNrQp8WZX/ZEFOpGegVjriH1GEw7pWagqXi+SOn1ioRhdlTdqAtAT+4XlQF9
+         rmn24lj3EAAa7Ea1jiJ6RDQQNlu73xIOKPL8vjjyBZY8NDVPQx7FZ+A2SgbwheciEf
+         rgmr0x5+BbclAX+ET/3ncSnkcDEMwxqYSfZTm/bDFLCRW23MMZsOPgNr4HCqmmI+6v
+         slW76G6ha47Byv7EPhEznJcF/rLyHKc9rmSfzpF53R85HkxgHtmPVXnmvvtZOoo/VW
+         Hepqt1+ldIM6KLIuvO/k+BhsOd9YZGF8i1pTqrO4EIJns3E6xk4jfIgwrC73S4o6VO
+         WxH976mp7rlBA==
+Date:   Tue, 3 Dec 2019 09:32:03 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Al Viro <viro@ZenIV.linux.org.uk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build warning after merge of the vfs-fixes tree
+Message-ID: <20191203093203.2f88400d@canb.auug.org.au>
 MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/XWyp_XTB+vJcGnZp0c6A90F";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBQaW5nPw0KDQo+IE9uIDIxLjEwLjE5IDEyOjA0LCBKdWVyZ2VuIEdyb3NzIHdyb3RlOg0KPiA+
-IFJlbW92ZSB0aGUgbGFzdCBsZWZ0b3ZlcnMgZnJvbSBJQTY0IFhlbiBwdi1ndWVzdCBzdXBwb3J0
-Lg0KPiA+IA0KPiA+IFBBUkFWSVJUIGlzIGxvbmcgZ29uZSBmcm9tIElBNjQgS2NvbmZpZyBhbmQg
-WGVuIElBNjQgc3VwcG9ydCwgdG9vLg0KPiA+IA0KPiA+IER1ZSB0byBsYWNrIG9mIGluZnJhc3Ry
-dWN0dXJlIG5vIHRlc3RpbmcgZG9uZS4NCg0KU29ycnkuIEZvciB0aGUgZGVsYXkuICBJIHBpY2tl
-ZCB0aGlzIHVwIGFuZCBpdCBidWlsZHMgb24gYWxsIG15DQp0ZXN0IGNvbmZpZ3VyYXRpb25zLiAg
-Qm9vdHMgb24gbXkgdGVzdCBtYWNoaW5lIHRvby4NCg0KV2lsbCBwdXNoIHRvIExpbnVzIHNvb24u
-DQoNCi1Ub255DQo=
+--Sig_/XWyp_XTB+vJcGnZp0c6A90F
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+After merging the vfs-fixes tree, today's linux-next build (x86_64
+allmodconfig) produced this warning:
+
+fs/quota/dquot.c: In function 'dquot_quota_on_mount':
+fs/quota/dquot.c:2499:1: warning: label 'out' defined but not used [-Wunuse=
+d-label]
+ 2499 | out:
+      | ^~~
+
+Introduced by commit
+
+  6c2d4798a8d1 ("new helper: lookup_positive_unlocked()")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/XWyp_XTB+vJcGnZp0c6A90F
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3lkOMACgkQAVBC80lX
+0GwsYQf+OeS06MzOhqa+GF9AgCmaUx3TaPXVWAqgWwE6aVI/mg6Qni8KSncB8wKr
+Da7jHmKzRoYb0whthvGKhQ8j4kxv7Jmt6MM0gMfLSzylckXwO60N75nOiV6/aZ6z
+dQt1m9FKdw1Q1lzkNuXzcsh90rhWWVn6wxqalOxIbrHGtc52DsEwljearMslJxw5
+j21VeH4sBraoA2IeUnLdd+4APkhgpvtET083oTArnG4VqJdnb9/QwCVFkcxkjJSr
+Gtjx68Itkck+iQKPGQnIkF7PtVvfykyP5GLNDA6oWAdZ11gNNB8xXoi7kvOCO7sA
+pxq7rhVO7YVe0/hrIxUbjFyF5qgMvw==
+=UTKA
+-----END PGP SIGNATURE-----
+
+--Sig_/XWyp_XTB+vJcGnZp0c6A90F--
