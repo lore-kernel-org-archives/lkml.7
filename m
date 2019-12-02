@@ -7,149 +7,94 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C417C43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 11:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72EA5C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 11:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CE7C2146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 11:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F8622084F
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 11:42:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="CQcTSaZD"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="t9/wIgv5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727472AbfLBLlz (ORCPT
+        id S1727483AbfLBLmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 06:41:55 -0500
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:3526 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727399AbfLBLly (ORCPT
+        Mon, 2 Dec 2019 06:42:54 -0500
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:41294 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727354AbfLBLmy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 06:41:54 -0500
+        Mon, 2 Dec 2019 06:42:54 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1575286914; x=1606822914;
+  t=1575286974; x=1606822974;
   h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=s8XvxZ0fNsu10HOeFwxMLW9YLhKZXhrIK9PCbhCy7tY=;
-  b=CQcTSaZDEdK2ucoIpNV8mjPj/MkGuMvFTRbENZhUkk1fDhw9LQbtmOMR
-   hrVdbQ4M/VyilIsbIxBYWpTfxAM9W1Tujg15PHxwB3baG/Ti1ugsPbdHo
-   sZUkf6DClKUaIV8rrgfS/D/OgtLbxR5vG9opHHpo/8yvp1j92Axnw2xxt
-   w=;
-IronPort-SDR: h8rgTEIu4Hn1eGWLtLSNN3T19Ltbix9FJSB1ccXh7x8ZIZv4dovNIfCqkAO08bnxFRgfN1p+zi
- dyCgPP7V05Eg==
+   references:mime-version;
+  bh=YbPUPuzF4OcGCGbbvQM8HIlqgtczstxhV1wKbI3uy50=;
+  b=t9/wIgv5ixkIQ1Uc1TFXTDkEC2kRE2748Xqv5YBbtN80EetpZmCTxJjQ
+   Qmcr6icoUoIDxuUNaTXzS8XlIu7Y+UhnWCGu2Jmfu+eWINhBvtm3dGfKo
+   m0XOskMYBuLFss7WygkyDoaedioLxZwRDSTw4vh4KisbA+hxF/rDK7kV9
+   o=;
+IronPort-SDR: AA0fXIKQ/10bIqFM5QBP620q61GOx0tbBX6qQmN17T9tElCs2czzrZ/UWkA+OQ5o8eeX53JJIB
+ Mu/c4wnp0Drw==
 X-IronPort-AV: E=Sophos;i="5.69,268,1571702400"; 
-   d="scan'208";a="2606754"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-168cbb73.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 02 Dec 2019 11:41:42 +0000
+   d="scan'208";a="12391585"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-119b4f96.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 02 Dec 2019 11:42:47 +0000
 Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-168cbb73.us-west-2.amazon.com (Postfix) with ESMTPS id CE644A0603;
-        Mon,  2 Dec 2019 11:41:40 +0000 (UTC)
-Received: from EX13D32EUB002.ant.amazon.com (10.43.166.114) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 2 Dec 2019 11:41:40 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
- EX13D32EUB002.ant.amazon.com (10.43.166.114) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 2 Dec 2019 11:41:39 +0000
-Received: from u2f063a87eabd5f.cbg10.amazon.com (10.125.106.135) by
- mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Mon, 2 Dec 2019 11:41:36 +0000
-From:   Paul Durrant <pdurrant@amazon.com>
-To:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <xen-devel@lists.xenproject.org>
-CC:     Paul Durrant <pdurrant@amazon.com>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Juergen Gross <jgross@suse.com>,
-        "Konrad Rzeszutek Wilk" <konrad.wilk@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH v3 2/2] xen-blkback: allow module to be cleanly unloaded
-Date:   Mon, 2 Dec 2019 11:41:17 +0000
-Message-ID: <20191202114117.1264-3-pdurrant@amazon.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191202114117.1264-1-pdurrant@amazon.com>
-References: <20191202114117.1264-1-pdurrant@amazon.com>
+        by email-inbound-relay-2a-119b4f96.us-west-2.amazon.com (Postfix) with ESMTPS id 090021A122F;
+        Mon,  2 Dec 2019 11:42:45 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 2 Dec 2019 11:42:45 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.217) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 2 Dec 2019 11:42:41 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <shuah@kernel.org>, <keescook@chromium.org>
+CC:     <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sj38.park@gmail.com>, SeongJae Park <sjpark@amazon.de>
+Subject: [PATCH 2/2] kselftest: Support old perl versions
+Date:   Mon, 2 Dec 2019 12:42:21 +0100
+Message-ID: <20191202114221.827-2-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191202114221.827-1-sjpark@amazon.com>
+References: <20191202114221.827-1-sjpark@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.217]
+X-ClientProxiedBy: EX13D16UWC003.ant.amazon.com (10.43.162.15) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a module_exit() to perform the necessary clean-up.
+From: SeongJae Park <sjpark@amazon.de>
 
-Signed-off-by: Paul Durrant <pdurrant@amazon.com>
-Reviewed-by: "Roger Pau Monné" <roger.pau@citrix.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
+On an old perl such as v5.10.1, `kselftest/prefix.pl` gives below error
+message:
+
+    Can't locate object method "autoflush" via package "IO::Handle" at kselftest/prefix.pl line 10.
+
+This commit fixes the error by explicitly specifying the use of the
+`IO::Handle` package.
+
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
 ---
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: Jens Axboe <axboe@kernel.dk>
+ tools/testing/selftests/kselftest/prefix.pl | 1 +
+ 1 file changed, 1 insertion(+)
 
-Signed-off-by: Paul Durrant <pdurrant@amazon.com>
----
- drivers/block/xen-blkback/blkback.c |  8 ++++++++
- drivers/block/xen-blkback/common.h  |  3 +++
- drivers/block/xen-blkback/xenbus.c  | 11 +++++++++++
- 3 files changed, 22 insertions(+)
-
-diff --git a/drivers/block/xen-blkback/blkback.c b/drivers/block/xen-blkback/blkback.c
-index fd1e19f1a49f..e562a7e20c3c 100644
---- a/drivers/block/xen-blkback/blkback.c
-+++ b/drivers/block/xen-blkback/blkback.c
-@@ -1504,5 +1504,13 @@ static int __init xen_blkif_init(void)
+diff --git a/tools/testing/selftests/kselftest/prefix.pl b/tools/testing/selftests/kselftest/prefix.pl
+index ec7e48118183..31f7c2a0a8bd 100755
+--- a/tools/testing/selftests/kselftest/prefix.pl
++++ b/tools/testing/selftests/kselftest/prefix.pl
+@@ -3,6 +3,7 @@
+ # Prefix all lines with "# ", unbuffered. Command being piped in may need
+ # to have unbuffering forced with "stdbuf -i0 -o0 -e0 $cmd".
+ use strict;
++use IO::Handle;
  
- module_init(xen_blkif_init);
- 
-+static void __exit xen_blkif_fini(void)
-+{
-+	xen_blkif_xenbus_fini();
-+	xen_blkif_interface_fini();
-+}
-+
-+module_exit(xen_blkif_fini);
-+
- MODULE_LICENSE("Dual BSD/GPL");
- MODULE_ALIAS("xen-backend:vbd");
-diff --git a/drivers/block/xen-blkback/common.h b/drivers/block/xen-blkback/common.h
-index 1d3002d773f7..49132b0adbbe 100644
---- a/drivers/block/xen-blkback/common.h
-+++ b/drivers/block/xen-blkback/common.h
-@@ -375,9 +375,12 @@ struct phys_req {
- 	struct block_device	*bdev;
- 	blkif_sector_t		sector_number;
- };
-+
- int xen_blkif_interface_init(void);
-+void xen_blkif_interface_fini(void);
- 
- int xen_blkif_xenbus_init(void);
-+void xen_blkif_xenbus_fini(void);
- 
- irqreturn_t xen_blkif_be_int(int irq, void *dev_id);
- int xen_blkif_schedule(void *arg);
-diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
-index b90dbcd99c03..e8c5c54e1d26 100644
---- a/drivers/block/xen-blkback/xenbus.c
-+++ b/drivers/block/xen-blkback/xenbus.c
-@@ -333,6 +333,12 @@ int __init xen_blkif_interface_init(void)
- 	return 0;
- }
- 
-+void xen_blkif_interface_fini(void)
-+{
-+	kmem_cache_destroy(xen_blkif_cachep);
-+	xen_blkif_cachep = NULL;
-+}
-+
- /*
-  *  sysfs interface for VBD I/O requests
-  */
-@@ -1122,3 +1128,8 @@ int xen_blkif_xenbus_init(void)
- {
- 	return xenbus_register_backend(&xen_blkbk_driver);
- }
-+
-+void xen_blkif_xenbus_fini(void)
-+{
-+	xenbus_unregister_driver(&xen_blkbk_driver);
-+}
+ binmode STDIN;
+ binmode STDOUT;
 -- 
-2.20.1
+2.17.1
 
