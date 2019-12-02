@@ -2,104 +2,160 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F82CC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5829FC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 404B8206F0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:35:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575326100;
-	bh=037N1n95HaeHA9qb/NcymMRdiDlQXJFA6+wjFRryMyU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=zqv4N+ewy0wF2rb8dx5mL8n9OLXst/cR/Up9t0df2SX5ZrCnKDUKwBqwDx1L7BVtb
-	 EwOuc6VGEi7IHgGd38j9oCdsWpH62YbYi5/VPJutwAspTyS9fJPhIUtlZT8VM3Zi5Z
-	 pMpjGWNjfCUUyTKmY6v2LyXetrmum8e0bv/I2xjY=
+	by mail.kernel.org (Postfix) with ESMTP id 19FD92071E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:40:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Q/TFhfb1";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Q/TFhfb1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726066AbfLBWe7 (ORCPT
+        id S1726066AbfLBWkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 17:34:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52026 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725835AbfLBWe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 17:34:59 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        Mon, 2 Dec 2019 17:40:40 -0500
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:49156 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725853AbfLBWkk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 17:40:40 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 6FCBA8EE180;
+        Mon,  2 Dec 2019 14:40:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1575326439;
+        bh=w/oP+1BA9PA+20BsnpDXfjU/W0UeBcXPQE9EA4rXG7E=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Q/TFhfb106IByr2UHFDTsb5mKi9sCvOku2EZUYITsc1bD181AripSFV7XVrDcvMHw
+         ry0b18H8qc/HfPIROWBWvNQf9ou/Rm3IT0I78hArcBZ30hmdEdhgbawqno+xNVWxd7
+         LCm7UPVKKssPKqK52/5mrTiJbngcGlUwAcRsDpvg=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id tlDozYtRc6qk; Mon,  2 Dec 2019 14:40:39 -0800 (PST)
+Received: from jarvis.lan (unknown [50.35.76.230])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5A69206F0;
-        Mon,  2 Dec 2019 22:34:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575326098;
-        bh=037N1n95HaeHA9qb/NcymMRdiDlQXJFA6+wjFRryMyU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hkEpkGihe2wrEItuO8f9YJbOJJ2pLUXESmFJNyn1lSmZL2+qDcmAe0r5vkxObLXzp
-         9SLKZSIMUf+bfWdQb3tRJdWSj/UBP/At26m3VuEpN+mov0+M3fJvkGJijUavqaO95r
-         56cg65RGdCL1Yc6wcsc1UKpqMFODwpObJeSPGJ5o=
-Date:   Tue, 3 Dec 2019 07:34:53 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>, paulmck@kernel.org,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        David Miller <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -tip] kprobes: Lock rcu_read_lock() while searching
- kprobe
-Message-Id: <20191203073453.057c1bed6931457b011dd8cc@kernel.org>
-In-Reply-To: <20191202210854.GD17234@google.com>
-References: <157527193358.11113.14859628506665612104.stgit@devnote2>
-        <20191202210854.GD17234@google.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id BF5558EE11D;
+        Mon,  2 Dec 2019 14:40:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1575326439;
+        bh=w/oP+1BA9PA+20BsnpDXfjU/W0UeBcXPQE9EA4rXG7E=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Q/TFhfb106IByr2UHFDTsb5mKi9sCvOku2EZUYITsc1bD181AripSFV7XVrDcvMHw
+         ry0b18H8qc/HfPIROWBWvNQf9ou/Rm3IT0I78hArcBZ30hmdEdhgbawqno+xNVWxd7
+         LCm7UPVKKssPKqK52/5mrTiJbngcGlUwAcRsDpvg=
+Message-ID: <1575326437.24227.19.camel@HansenPartnership.com>
+Subject: Re: [GIT PULL] first round of SCSI updates for the 5.4+ merge window
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Mon, 02 Dec 2019 14:40:37 -0800
+In-Reply-To: <CAHk-=wjWNpPW91wyEj4FC4pOimWEUtLVb_RwQgB+9h2OO6ynyA@mail.gmail.com>
+References: <1575137443.5563.18.camel@HansenPartnership.com>
+         <CAHk-=wjWNpPW91wyEj4FC4pOimWEUtLVb_RwQgB+9h2OO6ynyA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joel,
-
-On Mon, 2 Dec 2019 16:08:54 -0500
-Joel Fernandes <joel@joelfernandes.org> wrote:
-
-> On Mon, Dec 02, 2019 at 04:32:13PM +0900, Masami Hiramatsu wrote:
-> > Anders reported that the lockdep warns that suspicious
-> > RCU list usage in register_kprobe() (detected by
-> > CONFIG_PROVE_RCU_LIST.) This is because get_kprobe()
-> > access kprobe_table[] by hlist_for_each_entry_rcu()
-> > without rcu_read_lock.
+On Mon, 2019-12-02 at 13:57 -0800, Linus Torvalds wrote:
+> On Sat, Nov 30, 2019 at 10:10 AM James Bottomley
+> <James.Bottomley@hansenpartnership.com> wrote:
 > > 
-> > If we call get_kprobe() from the breakpoint handler context,
-> > it is run with preempt disabled, so this is not a problem.
-> > But in other cases, instead of rcu_read_lock(), we locks
-> > kprobe_mutex so that the kprobe_table[] is not updated.
-> > So, current code is safe, but still not good from the view
-> > point of RCU.
-> > 
-> > Let's lock the rcu_read_lock() around get_kprobe() and
-> > ensure kprobe_mutex is locked at those points.
-> > 
-> > Note that we can safely unlock rcu_read_lock() soon after
-> > accessing the list, because we are sure the found kprobe has
-> > never gone before unlocking kprobe_mutex. Unless locking
-> > kprobe_mutex, caller must hold rcu_read_lock() until it
-> > finished operations on that kprobe.
-> > 
-> > Reported-by: Anders Roxell <anders.roxell@linaro.org>
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> >    The two major core
+> > changes are Al Viro's reworking of sg's handling of copy to/from
+> > user, Ming Lei's removal of the host busy counter to avoid
+> > contention in the multiqueue case and Damien Le Moal's fixing of
+> > residual tracking across error handling.
 > 
-> Instead of this, can you not just pass the lockdep_is_held() expression as
-> the last argument to list_for_each_entry_rcu() to silence the warning? Then
-> it will be a simpler patch.
+> Math is hard. You say "The two major core changes are.." and then you
+> list _three_ changes.
 
-Ah, I see. That is more natural to silence the warning.
+Oh ... I wasn't expecting the Spanish Inquisition.
 
-Thank you!
+> Anyway, the sg copyin/out changes by Al conflicted fairly badly with
+> Arnd's compat_ioctl changes.
+> 
+> Al did
+> 
+>   c35a5cfb4150 ("scsi: sg: sg_read(): simplify reading ->pack_id of
+> userland sg_io_hdr_t")
+> 
+> which avoided doing a whole allocation of an 'sg_io_hdr_t' to just
+> read the one field of it.
+> 
+> But Arnd did
+> 
+>   98aaaec4a150 ("compat_ioctl: reimplement SG_IO handling")
+> 
+> which created a get_sg_io_hdr() helper that copied the 'sg_io_hdr_t'
+> from user space the right way for both compat and native, which
+> basically relied on the old approach.
+> 
+> So I effectively reverted Al's patch in order to take Arnd's patch in
+> the crazy sg legacy case that presumably nobody really cares about
+> anyway, since everybody should use SG_IO rather than the sg_read()
+> thing. But I know not everybody is.
+> 
+> I added a comment in that place:
+> 
+>               /*
+>                * This is stupid.
+>                *
+>                * We're copying the whole sg_io_hdr_t from user
+>                * space just to get the 'pack_id' field. But the
+>                * field is at different offsets for the compat
+>                * case, so we'll use "get_sg_io_hdr()" to copy
+>                * the whole thing and convert it.
+>                *
+>                * We could do something like just calculating the
+>                * offset based of 'in_compat_syscall()', but the
+>                * 'compat_sg_io_hdr' definition is in the wrong
+>                * place for that.
+>                */
+> 
+> since it turns out that the one 'pack_id' field we want does have the
+> same format in compat  mode as in native mode ("int" and
+> "compat_int_t" are the same), it's just at different offsets. But the
+> definition of 'compat_sg_io_hdr' isn't available in that place.
+> 
+> I'm leaving it to Al and Arnd to decide if they want to fix the
+> stupidity. I tried to make the minimally invasive merge resolution.
+> 
+> Al, Arnd? Comments?
+> 
+> It looks like linux-next punted on this entirely, and took Al's
+> simplified version that doesn't work with the compat case. Maybe I
+> should have done the same - if you use read() on the /dev/sg* device,
+> you deserve to get broken for the compat case. And it didn't
+> historically work anyway. But it was kind of sad to see how Arnd
+> fixed it, and then it got broken again.
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Sorry, I did do a test merge with the current state of your tree when I
+sent the pull request, but, obviously, that didn't include the Arnd
+changes and I've taken to rely on linux-next as the merge problem
+canary for trees you haven't yet pulled.
+
+> I really really wish we could get rid of sg_read/sg_write() entirely,
+> and have SG_IO_SUBMIT and SG_IO_RECEIVE ioctl's that can handle the
+> queued cases that apparently some people need. Because the read/write
+> case really is disgusting.
+
+We're definitely not having a read/write case for the proposed v4
+protocol ... however we are a bit stuck with it for the existing v3
+case.
+
+James
+
