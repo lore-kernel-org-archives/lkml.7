@@ -2,113 +2,81 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4399C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 327ACC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A31AA20717
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:39:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sdKmUrTf"
+	by mail.kernel.org (Postfix) with ESMTP id ECCE820717
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:41:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbfLBSj1 (ORCPT
+        id S1727565AbfLBSln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 13:39:27 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:51038 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727464AbfLBSj1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 13:39:27 -0500
-Received: from [10.137.112.108] (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 09B1D20B7185;
-        Mon,  2 Dec 2019 10:39:26 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 09B1D20B7185
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1575311966;
-        bh=wg913gH9ZJLPwcHiC0YhT9cCRRz7LfaWFv/LBba+5cY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=sdKmUrTf4ECy39T2kUyLJATwkpHu2Ozq5rgsJul1R1hrnx7vb1qdrPep41kqc6wHD
-         xPpOCnRpm9hmQJtwQoccDZ60XREF7nUYx7Eb4fgeZwnAFOUugqJTWILFaalrDN9Yb6
-         MVIOyvZCzhwd8KYYbr9KDS/z7uckQyfy0Tpe6BGg=
-Subject: Re: [PATCH v0 1/2] IMA: Defined queue functions
-To:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org, Janne Karhunen <janne.karhunen@gmail.com>
-References: <20191127025212.3077-1-nramas@linux.microsoft.com>
- <20191127025212.3077-2-nramas@linux.microsoft.com>
- <1574887137.4793.346.camel@linux.ibm.com>
- <ea2fafb8-a97f-5365-debd-d90143e549bf@linux.microsoft.com>
- <1575309622.4793.413.camel@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <6ec16f9d-b4f4-bb85-3496-be110fa68f6b@linux.microsoft.com>
-Date:   Mon, 2 Dec 2019 10:39:25 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 2 Dec 2019 13:41:43 -0500
+Received: from mga11.intel.com ([192.55.52.93]:43443 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727418AbfLBSlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 13:41:42 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 10:41:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,270,1571727600"; 
+   d="scan'208";a="384989972"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga005.jf.intel.com with ESMTP; 02 Dec 2019 10:41:41 -0800
+Date:   Mon, 2 Dec 2019 10:53:35 -0800
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Babu Moger <babu.moger@amd.com>,
+        Andre Przywara <Andre.Przywara@arm.com>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v8 01/13] selftests/resctrl: Add README for resctrl tests
+Message-ID: <20191202185334.GA220960@romley-ivt3.sc.intel.com>
+References: <1574901584-212957-1-git-send-email-fenghua.yu@intel.com>
+ <1574901584-212957-2-git-send-email-fenghua.yu@intel.com>
+ <20191128072338.GA17745@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <1575309622.4793.413.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191128072338.GA17745@zn.tnic>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/2/19 10:00 AM, Mimi Zohar wrote:
-
+On Thu, Nov 28, 2019 at 08:23:38AM +0100, Borislav Petkov wrote:
+> On Wed, Nov 27, 2019 at 04:39:32PM -0800, Fenghua Yu wrote:
+> > resctrl tests will be implemented. README is added for the tool first.
+> > 
+> > Signed-off-by: Babu Moger <babu.moger@amd.com>
+> > Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 > 
-> ima_update_policy() is called from multiple places.  Initially, it is
-> called before a custom policy has been loaded.  The call to
-> ima_process_queued_keys_for_measurement() needs to be moved to within
-> the test, otherwise it runs the risk of dropping "key" measurements.
-
-static const struct file_operations ima_measure_policy_ops = {
-	.release = ima_release_policy,
-};
-
-ima_update_policy() is called from ima_release_policy() function.
-
-On my test machine I have the IMA policy in /etc/ima/ima-policy file. 
-When IMA policy is setup from this file, I see ima_release_policy() 
-called (which in turn calls ima_update_policy()).
-
-How can I have ima_update_policy() called before a custom policy is loaded?
-
-If CONFIG_IMA_WRITE_POLICY is enabled, IMA policy can be updated at 
-runtime - which would invoke ima_update_policy().
-
-Is there any other way ima_update_policy() can get called?
-
-> All the queued keys need to be processed at the same time.  Afterwards
-> the queue should be deleted.  Unfortunately, the current queue locking
-> assumes ima_process_queued_keys_for_measurement() is called multiple
-> times.
-
-When ima_process_queued_keys_for_measurement() is called the first time, 
-the flag ima_process_keys_for_measurement is set to true and all queued 
-keys are processed at that time.
-
-The queue is not used after this point - In the IMA hook the key is 
-processed immediately when ima_process_keys_for_measurement is set to true.
-
-ima_process_queued_keys_for_measurement() can be called multiple times, 
-but on 2nd and subsequent calls it will be a NOP.
-
+> What does this SOB chain mean?
 > 
-> Perhaps using the RCU method of walking lists would help.  I need to
-> think about it some more.
+> Same question for patches 2,3,4,5,6,7,8,9,13.
 > 
-> Mimi
+> So it seems you wanna say that Babu has contributed somehow but it is
+> not clear what/how.
 
-Please let me know how using RCU method would help.
+Babu's major contributions are in v5 where he virtually touched every
+patch. He sent out v5 and put Signed-off-by: Babu Moger in each patch:
+https://lore.kernel.org/patchwork/cover/1033532/
 
-thanks,
-  -lakshmi
+That's why I keep his SOB in v6-v8 in each patch.
 
+Thanks.
+
+-Fenghua
 
