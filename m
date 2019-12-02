@@ -2,178 +2,127 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FBFC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FA8C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10B2420661
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2088E20661
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:50:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XBO2mq/Y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WLqwgQHE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727326AbfLBJqI (ORCPT
+        id S1727312AbfLBJup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 04:46:08 -0500
-Received: from mail-eopbgr40047.outbound.protection.outlook.com ([40.107.4.47]:48854
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726087AbfLBJqI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 04:46:08 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IJLDTQMACobf7e8u1MsoZNm1aD6yX2Y+Nq5pRnpssF2wyJqVU8wf000ApJbVwgCyOFDBoW1bbQTa4StOl0kThhVOhZeQmWE9RLMERB1lzR+OXww88BA/m8NQwabZyqXFAEPynlTya1EfDEO3+EId/SKrmTRD1INtfdS3dIcYE5xXiMkDker2294bLhMpZ4SKmUU41Y8gK08hcBvoHKukWhVlzgwDwchHR/HhPAr1cpAuQKr/UfixczUtLBqsQv1uA+UOkMS0XYdzDBli1kyJgd/cE7tkEpWk1oaNbiCtTT+9lVgvKHDeek93RxVzUfr0aXWIfJfInsNptJ/QI9aMnw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iHKD30VXFMShPA1Yq6qDTuokNKWFsacsp5qNK3o/p64=;
- b=I1voTlVJXQB+JfmzA9dEULelTVvbX0j6wzdtCZsbZiXKjbirU6UTPD7l7zp9l5k27nuowjfQzVr82IbuWNmRKWM1m1E3J0sL62RUu46N7NLWabdN7qO5d0BDOpji6nKHWqcWI9OG2epFdTvee+FFzqw5c6OEDUMZkKhFoqs7jrBYUc6WPU0wwqup3v6mItoL37v9KDCH6huDzmQItCzygffuXbl/G3CoFZGiUXGkTIqHNqaqhdCWYx8q9bDbebmGj2e8bGV2zV3Zn8utsiLj1xd2gi/i3x5fMQANWIAT832W1/rXlKkDCyBEIgYM3NIGxVWdvIgmSiC40oUnE3bTKQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iHKD30VXFMShPA1Yq6qDTuokNKWFsacsp5qNK3o/p64=;
- b=XBO2mq/YZiFY6rBDHHqB5Ytki70GiKKT/jmTJI/zYWggmLcVCJvHW7cporhosGQh/6dqTumKt5fCPfbXovRQOsefVICaVNraPZek9pjnBD4H5U07jYMz3lQtDrA2EbzJciJbtya+1AvCBfiee8nAhEN12xuUf/+qGAdE9x5nImw=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB4706.eurprd04.prod.outlook.com (20.177.40.78) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.22; Mon, 2 Dec 2019 09:45:25 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::f16d:a26a:840:f97c]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::f16d:a26a:840:f97c%4]) with mapi id 15.20.2495.014; Mon, 2 Dec 2019
- 09:45:25 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     "axboe@kernel.dk" <axboe@kernel.dk>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "tj@kernel.org" <tj@kernel.org>
-CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Richard Zhu <hongxing.zhu@nxp.com>
-Subject: RE: [PATCH] ahci: imx: i.MX8QM: fix error handling
-Thread-Topic: [PATCH] ahci: imx: i.MX8QM: fix error handling
-Thread-Index: AQHVmRhVtJOcbRZcDU+JyEEqGXtClKemuBgg
-Date:   Mon, 2 Dec 2019 09:45:24 +0000
-Message-ID: <AM0PR04MB448164AD76243D955BC025E588430@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1573535674-25364-1-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1573535674-25364-1-git-send-email-peng.fan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [114.220.170.63]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 43451e89-36f8-425a-190a-08d7770c5b51
-x-ms-traffictypediagnostic: AM0PR04MB4706:|AM0PR04MB4706:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB4706391460B390501E44673D88430@AM0PR04MB4706.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 0239D46DB6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(376002)(39860400002)(366004)(346002)(199004)(189003)(51234002)(2906002)(229853002)(9686003)(6246003)(102836004)(14454004)(478600001)(110136005)(66476007)(7736002)(86362001)(66556008)(64756008)(26005)(256004)(76176011)(14444005)(4326008)(5024004)(66446008)(6506007)(7696005)(7416002)(25786009)(74316002)(71190400001)(71200400001)(186003)(52536014)(6436002)(55016002)(54906003)(6116002)(3846002)(305945005)(8936002)(11346002)(2201001)(446003)(76116006)(5660300002)(2501003)(81156014)(8676002)(81166006)(33656002)(99286004)(44832011)(316002)(66946007)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4706;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: R5xLjIX6aMgomFluNY6YbB5tHZ8IQwdpGFRAsLzlJods3zXp8Q5KxrrkEJlarI61tJETQfzO8UdGNRRmjMm24NLeibbckBaOmlfRBL2cgyHHT9Pe0GvdaxQ/NkUNeWTZ+WlWXEzjQTBDLxgh9mI+0JK68E6gH5xmAe1PvhaO0XVCEGirXsQRgiE5J2h2bsxm8Tnl9MsGxY8ZGMc4Y3QhTAkn/PEgOaaJKEcsYNxuhvnJj0BhdeDZMRTWYCPTvmvZg9seItgnlZgzZBlbipTZufVBnlFsIz6uceyKzPQHE0RKjSw8b2dsdVeT9zNY9WEiYi7H+t0qYciZEVeBl8mu0l/Js5T6dLVobP+DaXwf/sXOzYqg9zw6HuYMgVR4S0aEXxCIWDGCpmp9fVcHiePHNmqi0Nud7swN+x+9oSGxpGQXCmxZ6FcNI8ICBuElw+9xmUYYXllmkBIxWeRynD7hZA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 2 Dec 2019 04:50:45 -0500
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:38709 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbfLBJuo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 04:50:44 -0500
+Received: by mail-vs1-f68.google.com with SMTP id y195so10050426vsy.5;
+        Mon, 02 Dec 2019 01:50:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ipg1WLEffdYnfTvQd1IRhgK8FSlTc8OcoNS/WRcxcW0=;
+        b=WLqwgQHEsnBfqsvS0rIxr5QM7OYHkYfM8LrhsB/tsD15MrIlhFGlC20BtP6VXNRCg2
+         +xDFCxzkcTzb765X57bQyZi9ZnDRYTXvpfo0Bcz9bOnwq0NLo9RYRW179t9GP4bxrjLz
+         hMxOJkA9Vj2y9ofEct4i+lW4GyT3Hlgm7pUKeiqmud4cHY7sOLc41bBUPisZ1IaP8JyC
+         8Aqvqg4kfjok17Ov7r3V+cLZsKIjpWFRKtPFQ/lNJ7o2NDg+hhbFr4WcLwFZUF7GVYfs
+         QPZOigvEaqvwRoF4jMZKZouMnW/+DzWK6kdMml8cMovOy1fxJ4hEsXtRabToVBlA2Rbq
+         u+6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ipg1WLEffdYnfTvQd1IRhgK8FSlTc8OcoNS/WRcxcW0=;
+        b=sJiG5Grih9fv+PaKT2zEqaZRw/TEl2tA98sfDGXJsEpb6eNrVfS63O4R5JpnpiIvf9
+         4e+dsQN3ifOhXJ6kaUU4n3peAiiZuHyLJa3UNVwD1XFjMTYPdf2wL+7z6iJ7pNdsM8MP
+         6tMVkjx44GaZLJlyMhFrCfE7uqC8dseuEVGZB4nqr8LRrSgXQVCmLaZsJRVcmhvXT0td
+         hfR1qJ6BrDlJAcI+TUgdxhziDBSpdoVaOri0KAIQPbcdaqrFg/XE6bMBXWxqLS3J5kfk
+         MNFxJTK0eWwwzSWFCfqvBWVeuXLr20jhoWkvLqdqSajTfebSWvr500QMC/urhd1pMxGy
+         Ggmg==
+X-Gm-Message-State: APjAAAXoJXiQ5Om85v0vFcfMsYYzVEcHR2Oe1gj1joe1LNvJSjKA/Lds
+        CEqpt0FkTrmDqRlZ6ST5ddR57Yfm7GrNId+gFwA=
+X-Google-Smtp-Source: APXvYqyiVZmMk0LsdmPaDP3UNQX15ikmg1n2j98bbuACw1hpO77IA0X0pLqtYDaZTw+dWTqrH32pe3kfaJ495a89q7I=
+X-Received: by 2002:a05:6102:5c7:: with SMTP id v7mr37986140vsf.85.1575280243731;
+ Mon, 02 Dec 2019 01:50:43 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 43451e89-36f8-425a-190a-08d7770c5b51
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Dec 2019 09:45:24.9110
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /PK47h6uymx3cvgoeIkORYdEQFpU9tU4SBVCzQ6HbzLHpysw1sn1Eh5raqbsuVys5USDmo4q296VLIV6e2P09w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4706
+References: <20191130180301.5c39d8a4@lwn.net> <CAHk-=wj8tNhu76yxShwOfwVKk=qWznSFkAKyQfu6adcV8JzJkQ@mail.gmail.com>
+ <20191130184512.23c6faaa@lwn.net> <xmqqblss1rjp.fsf@gitster-ct.c.googlers.com>
+ <CAHk-=wj9P8ukXOuTUnpkPNwc8B683Z0Za=-WxpLygMbjEtNxgA@mail.gmail.com> <xmqq7e3g12xo.fsf@gitster-ct.c.googlers.com>
+In-Reply-To: <xmqq7e3g12xo.fsf@gitster-ct.c.googlers.com>
+From:   Amit Choudhary <amitchoudhary2305@gmail.com>
+Date:   Mon, 2 Dec 2019 15:20:08 +0530
+Message-ID: <CAFzckaEQo6CQM9LukikgbtUKZX=eajG+OFNhnDJ_EY7M1V4XKA@mail.gmail.com>
+Subject: Re: [PATCH] Documentation: networking: device drivers: Remove stray asterisks
+To:     Junio C Hamano <gitster@pobox.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Git List Mailing <git@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: [PATCH] ahci: imx: i.MX8QM: fix error handling
+Is it possible that git complains about everything that has ^M in it
+and rejects it (that is without trying to fix it, etc.)
 
-Ping..
+Regards,
+Amit
 
-Thanks,
-Peng.
-
->=20
-> From: Peng Fan <peng.fan@nxp.com>
->=20
-> When imx8_sata_enable failed, need to jump to path disable_clk.
-> Otherwise there will be kernel dump as following.
->     Workqueue: events deferred_probe_work_func
->     pstate: 60000005 (nZCv daif -PAN -UAO)
->     pc : _regulator_put.part.27+0x34/0x158
->     lr : _regulator_put.part.27+0x2c/0x158
->     sp : ffff80001286bb00
->     x29: ffff80001286bb00 x28: 0000000000000000
->     x27: 0000000000000000 x26: ffff8000100fddf0
->     x25: 0000000000000000 x24: 000000000000001b
->     x23: ffff80001286bbd8 x22: ffff0008ea007600
->     x21: ffff0008ea0104f0 x20: ffff0008ea007e00
->     x19: ffff8000120753e8 x18: 0000000000000010
->     x17: 00000000eefd8a54 x16: 00000000deadbeef
->     x15: ffffffffffffffff x14: ffff800011f198c8
->     x13: 0000000000000000 x12: 0000000000000001
->     x11: 0000000000000000 x10: 0000000000000990
->     x9 : ffff80001286b870 x8 : ffff0008eb99c0f0
->     x7 : ffff0008eb99b880 x6 : ffff0008eb99b7c0
->     x5 : 00000000000001df x4 : 0000000000001adb
->     x3 : ffff8008de089000 x2 : a4c383a3cc862400
->     x1 : 0000000000000000 x0 : 0000000000000001
->     Call trace:
->      _regulator_put.part.27+0x34/0x158
->      regulator_put+0x34/0x48
->      ahci_platform_put_resources+0x64/0xd0
->      release_nodes+0x1b0/0x220
->      devres_release_all+0x34/0x50
->      really_probe+0x1b8/0x308
->      driver_probe_device+0x54/0xe8
->      __device_attach_driver+0x80/0xb8
->      bus_for_each_drv+0x78/0xc8
->      __device_attach+0xd4/0x130
->      device_initial_probe+0x10/0x18
->      bus_probe_device+0x90/0x98
->      deferred_probe_work_func+0x64/0x98
->      process_one_work+0x1e0/0x358
->      worker_thread+0x208/0x488
->      kthread+0x118/0x120
->      ret_from_fork+0x10/0x18
->=20
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/ata/ahci_imx.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/drivers/ata/ahci_imx.c b/drivers/ata/ahci_imx.c index
-> bfc617cc8ac5..1d6a5ef78259 100644
-> --- a/drivers/ata/ahci_imx.c
-> +++ b/drivers/ata/ahci_imx.c
-> @@ -692,6 +692,8 @@ static int imx_sata_enable(struct ahci_host_priv
-> *hpriv)
->  		}
->  	} else if (imxpriv->type =3D=3D AHCI_IMX8QM) {
->  		ret =3D imx8_sata_enable(hpriv);
-> +		if (ret)
-> +			goto disable_clk;
->  	}
->=20
->  	usleep_range(1000, 2000);
-> --
-> 2.16.4
-
+On Sun, Dec 1, 2019 at 8:58 PM Junio C Hamano <gitster@pobox.com> wrote:
+>
+> Linus Torvalds <torvalds@linux-foundation.org> writes:
+>
+> > On Sat, Nov 30, 2019 at 10:35 PM Junio C Hamano <gitster@pobox.com> wrote:
+> >>
+> >> OK, so it appears that the tool is working as documented.
+> >
+> > Well, yes and no.
+> >
+> > I think it's a mistake that --no-keep-cr (which is the default) only
+> > acts on the outer envelope.
+> >
+> > Now, *originally* the outer envelope was all that existed so it makes
+> > sense in a historical context of "CR removal happens when splitting
+> > emails in an mbox". And that's the behavior we have.
+>
+> Hmph, first of all, the one I was referring to as "documented" was
+> about --ignore-whitespace, and not --no-keep-cr.
+>
+> And I am not as sure as you seem to be about "--no-keep-cr" either.
+>
+> What was the reason why "--no-keep-cr" was invented and made
+> default?  Wasn't it because RFC says that each line of plaintext
+> transfer of an e-mail is terminated with CRLF?  It would mean that,
+> whether the payload originally had CRLF terminated or LF terminated,
+> we would not be able to tell---the CR may have been there from the
+> beginning, or it could have been added in transit.  And because we
+> (the projects Git was originally designed to serve well) wanted our
+> patches with LF terminated lines most of the time, it made sense to
+> strip CR from CRLF (i.e. assuming that it would be rare that the
+> sender wants to transmit CRLF terminated lines).
+>
+> If the contents were base64 protected from getting munged during
+> transit, we _know_ CRLF in the payload after we decode MIME is what
+> the sender _meant_ to give us, no?  Which leads me to say ...
+>
+> >
+> > But then git learnt to do MIME decoding and extracting things from
+> > base64 etc, and the CR removal wasn't updated to that change.
+>
+> ... I do not think it was a wrong decision (well, I do not think we
+> made the conscious decision to do so, though) not to do that update.
+>
+> I dunno.
+>
