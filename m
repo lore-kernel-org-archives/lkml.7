@@ -2,273 +2,186 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB33CC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B5AC43141
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EDF920866
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B9F82070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:32:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SoKFJhgX"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="EBVy3LiY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726190AbfLBVbQ (ORCPT
+        id S1726195AbfLBVcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 16:31:16 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:34980 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbfLBVbQ (ORCPT
+        Mon, 2 Dec 2019 16:32:20 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:53293 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbfLBVcU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 16:31:16 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB2LV6E6080747;
-        Mon, 2 Dec 2019 15:31:06 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575322266;
-        bh=YOU/tE/GgwM2e8lr07xh4JwbNuzF8RidPoRRVOBtWg8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=SoKFJhgXql7/7rMTEHqrsYjnBzabgQAKK/ppNfWhXfC7td1dzd3GI8W7xPAZxMbal
-         bGI6rMEKGf2CBS2YA+MJss7jIw2oXRIwVBx0gzHDTs2CXkM3trJp38jr/OJVoqqT4E
-         d4Jiv7oqEw298hh9jTa9eS0g6nqJH2KT5ocF5PD4=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB2LV5DD099915;
-        Mon, 2 Dec 2019 15:31:05 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 2 Dec
- 2019 15:31:03 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 2 Dec 2019 15:31:03 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB2LV1NM065806;
-        Mon, 2 Dec 2019 15:31:01 -0600
-Subject: Re: [RFC 1/2] dt-bindings: gpio: Document shared GPIO line usage
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <20191120133409.9217-1-peter.ujfalusi@ti.com>
- <20191120133409.9217-2-peter.ujfalusi@ti.com>
- <CACRpkdbXX3=1EGpGRf6NgwUfY2Q0AKbGM8gJvVpY+BRAo5MQvQ@mail.gmail.com>
- <d423bc53-31df-b1b4-37da-932b7208a29e@ti.com>
- <CACRpkdafEdsN6i16SA175wE4J_4+EhS5Uw4Qsg=cZ=EuDYHmgg@mail.gmail.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <89afb07f-fb70-3f44-2396-df350ca15690@ti.com>
-Date:   Mon, 2 Dec 2019 23:31:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 2 Dec 2019 16:32:20 -0500
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 258E122FFC;
+        Mon,  2 Dec 2019 22:32:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1575322336;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cmBUIDjXbaH6gYvi3PQRfhA7L3Y7n+FXkoteSMH40vQ=;
+        b=EBVy3LiYphh91ps24yCY7oA7J20YqXWU1rBnQus3fRDfSSmaeK7OW4zS88+hyFZAfc4ZfE
+        0CGGhSCAfRddkevBMTrCvFngCXnRiq9O+xL0cdACFCdG4yoJzSfSIUhJJcPMoiy9Su5VVY
+        mDCvcUENN41MKIQTvJ53Fg4n87BWHAE=
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdafEdsN6i16SA175wE4J_4+EhS5Uw4Qsg=cZ=EuDYHmgg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 02 Dec 2019 22:32:16 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Wen He <wen.he_1@nxp.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Li Yang <leoyang.li@nxp.com>, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [v10 1/2] dt/bindings: clk: Add YAML schemas for LS1028A Display
+ Clock bindings
+In-Reply-To: <20191202184758.GA8408@bogus>
+References: <20191127101525.44516-1-wen.he_1@nxp.com>
+ <20191202184758.GA8408@bogus>
+Message-ID: <e876f247860d728498df37705e7dfba2@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.8
+X-Spamd-Bar: /
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 258E122FFC
+X-Spamd-Result: default: False [-0.10 / 15.00];
+         ARC_NA(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[9];
+         NEURAL_HAM(-0.00)[-0.619];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         MID_RHS_MATCH_FROM(0.00)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 28/11/2019 12.06, Linus Walleij wrote:
-> On Fri, Nov 22, 2019 at 2:36 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->> On 22/11/2019 14.10, Linus Walleij wrote:
->>> On Wed, Nov 20, 2019 at 2:34 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->>>
->>>> Boards might use the same GPIO line to control several external devices.
->>>> Add section to document on how a shared GPIO pin can be described.
->>>>
->>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->>>
->>> As I've stated earlier I think this information is surplus.
->>> If two devices have a phandle to the same GPIO line
->>> then it is by definition shared.
->>
->> Well, phandle + line number to be precise.
+Am 2019-12-02 19:47, schrieb Rob Herring:
+> On Wed, Nov 27, 2019 at 06:15:24PM +0800, Wen He wrote:
+>> LS1028A has a clock domain PXLCLK0 used for provide pixel clocks to 
+>> Display
+>> output interface. Add a YAML schema for this.
+>> 
+>> Signed-off-by: Wen He <wen.he_1@nxp.com>
+>> Signed-off-by: Michael Walle <michael@walle.cc>
+>> ---
+>> change in v10:
+>>         - Add optional feild 'vco-frequency'.
+>> 
+>>  .../devicetree/bindings/clock/fsl,plldig.yaml | 54 
+>> +++++++++++++++++++
+>>  1 file changed, 54 insertions(+)
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/clock/fsl,plldig.yaml
+>> 
+>> diff --git a/Documentation/devicetree/bindings/clock/fsl,plldig.yaml 
+>> b/Documentation/devicetree/bindings/clock/fsl,plldig.yaml
+>> new file mode 100644
+>> index 000000000000..ee5b5c61a471
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/fsl,plldig.yaml
+>> @@ -0,0 +1,54 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/bindings/clock/fsl,plldig.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: NXP QorIQ Layerscape LS1028A Display PIXEL Clock Binding
+>> +
+>> +maintainers:
+>> +  - Wen He <wen.he_1@nxp.com>
+>> +
+>> +description: |
+>> +  NXP LS1028A has a clock domain PXLCLK0 used for the Display output
+>> +  interface in the display core, as implemented in TSMC CLN28HPM PLL.
+>> +  which generate and offers pixel clocks to Display.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: fsl,ls1028a-plldig
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  '#clock-cells':
+>> +    const: 0
+>> +
+>> +  vco-frequency:
 > 
-> This is what I mean when I say "phandle to the same GPIO line".
-> Like this:
+> Needs vendor prefix and unit suffix:
 > 
-> foo-gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
+> fsl,vco-hz
 > 
-> If the phandle <&gpio0 5 *>; appear in some other
-> (non-disabled) node it has > 1 users.
+> Or you could perhaps just use 'clock-frequency'.
 
-I thought so.
-Not sure how to look up (and how expensive it is) to find the nodes
-which contain any gpio(lib) binding pointing to the given line.
+Ok, fsl,vco-hz sounds good. clock-frequency sounds like it is the 
+output.
 
+-michael
+
+>> +     $ref: '/schemas/types.yaml#/definitions/uint32'
+>> +     description: Optional for VCO frequency of the PLL in Hertz.
+>> +        The VCO frequency of this PLL cannot be changed during 
+>> runtime
+>> +        only at startup. Therefore, the output frequencies are very
+>> +        limited and might not even closely match the requested 
+>> frequency.
+>> +        To work around this restriction the user may specify its own
+>> +        desired VCO frequency for the PLL. The frequency has to be in 
+>> the
+>> +        range of 650000000 to 1300000000.
+>> +        If not set, the default frequency is 1188000000.
 > 
->>>> +               line_a {
->>>> +                       gpio-shared;
->>>
->>> So this is unnecessary: if the same line is referenced
->>> by phandle from two places it is shared, simple as that.
->>
->> phandle is pointing to the gpio controller, not to the line.
+> A bunch of constraints you've listed here that should be schema rather
+> than freeform text:
 > 
-> Cleared up above.
+> minimum: 650000000
+> maximum: 1300000000
+> default: 1188000000
 > 
->>>> +                       gpios = <5 0>;
->>>> +                       output-low;
->>>
->>> This is overlapping with the use case to define initial
->>> state values for GPIOs, something that has been
->>> brought up repeatedly and I've collected links for
->>> previous discussions several times.
->>
->> I don't mind this to go away and the first set would configure the level.
->> Kept it here so I can reuse the gpio-hog code from gpiolib-of ;)
-> 
-> People have tried to reuse the hog code to set up
-> initial line levels as well, it failed because they could
-> not get the DT bindings through the door.
-
-But we are happily using the gpio-hog to control board level muxes to
-select functionality...
-
-Initial level is a tricky one, for outputs there is a valid use case for
-them for sure. If the GPIO is used to control LCD backlight for example.
-You want the backlight to not flicker due to gpio state changes.
-
-It depends on how it is configured when the kernel boots, do we have
-users of the given GPIO.
-
-Again, different issue.
-
->>> I guess if need be I have to look them up again.
->>>
->>> The DT maintainers don't like the hog syntax so
->>> something else is desired for this.
->>
->> I see, so the gpio-hog might change?
-> 
-> They will not change since they are ABI, but their
-> use case will not be extended AFAICT.
-> Not my pick, I liked the hog syntax but we need
-> consensus.
-
-OK.
-
->>> (snip)
->>>> +The shared GPIO line management strategy can be selected with either of the
->>>> +following properties:
->>>> +- refcounted-low: The line must be kept low as long as there is at least one
->>>> +               request asking it to be low.
->>>> +- refcounted-high: The line must be kept high as long as there is at least one
->>>> +               request asking it to be high.
->>>
->>> Is this really needed? Isn't it more appropriate to just define the
->>> semantics such that as soon as some consumer requests the line
->>> high it will be refcounted high, and as soon as it is requested
->>> low by any consumer it will be refcounted low.
->>
->> Well. How do we decide which level is the one that should be preserved?
-> 
-> First come first serve.
-> 
-> If there is any conflict amongst the consumers we are
-> screwed anyway so why try to establish where they should
-> agree if they don't agree?
-
-They must agree on the (precious, must be preserved) level _on_ the GPIO
-chip side.
-It is another matter if one driver will power down it's device at probe,
-the other would enable it.
-This must not matter, both of them needs the same level to be enabled
-and it might not be the level they will request first.
-
->> How would the core decide what to in a simplest case:
->> two device, they are the same part.
->> ENABLE pin which needs to be high to enable the device.
->> When the driver probes it asks for initial deasserted GPIO as the device
->> is not in active use.
-> 
-> This makes me think it should be a unique driver
-> with a unique compatible string, as it embodies
-> use cases.
-
-Like the gpio-shared from the previous RFC ;)
-
-> It is too broad to just define
-> refcounted-high or refcounted-low, that is hiding the
-> real use case, so I would go for something like a
-> resource in the device tree that all other devices that
-> need it can take.
-> 
-> Like a reset controller, precisely:
-> 
-> reset: reset-controller {
->     compatible = "reset-gpio";
->     gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
->     #reset-cells = <0>;
-> };
-> 
-> dev0 {
->     resets = <&reset>;
-> };
-> 
-> dev1 {
->     resets = <&reset>;
-> };
-> 
-> The ambition to use refcounted GPIOs to solve this
-> usecase is probably wrong, I would say try to go for a
-> GPIO-based reset controller instead.
-
-I did that. A bit more lines of code than the gpio-shared.
-Only works if all clients are converted to reset controller, all must
-use reset_control_get_shared()
-
-But my biggest issue was that how would you put a resets/reset-names to
-DT for a device where the gpio is used for enabling an output/input pin
-and not to place the device or part of the device to reset.
-
-Sure, one can say that something is in 'reset' when it is not enabled,
-but do you put the LCD backlight to 'reset' when you turn it off?
-
-Is your DC motor in 'reset' when it is not working?
-
-GPIO stands for General Purpose Input/Output, one of the purpose is to
-enable/disable things, reset things, turn on/off things or anything one
-could use 3.3V (or more/less).
-
-> The fact that some Linux drivers are already using explicit
-> GPIO's for their reset handling is maybe unfortunate,
-> they will simply have to grow code to deal with a reset
-> alternatively to GPIO, like first try to grab a reset
-> handle and if that doesn't fall back to use a GPIO.
-
-Sure, it can be done, but when we hit a case when the reset framework is
-not fitting for some devices use of the shared GPIO, then what we will do?
-
-> I would say don't try to shoehorn this use case into the
-> gpio library but instead try to create a reset controller that
-> takes care of arbitrating the use of a single GPIO line.
-
-It would certainly cover the use case I have.
-
-How would it satisfy the regulator use case? We put the regulators to
-'reset' when they are turned off / disabled?
-
-> 
-> Yours,
-> Linus Walleij
-> 
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +  - '#clock-cells'
+>> +
+>> +examples:
+>> +  # Display PIXEL Clock node:
+>> +  - |
+>> +    dpclk: clock-display@f1f0000 {
+>> +        compatible = "fsl,ls1028a-plldig";
+>> +        reg = <0x0 0xf1f0000 0x0 0xffff>;
+>> +        #clock-cells = <0>;
+>> +        clocks = <&osc_27m>;
+>> +    };
+>> +
+>> +...
+>> --
+>> 2.17.1
+>> 
