@@ -2,606 +2,157 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB55C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BCBC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20D6C20833
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6511F20705
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:41:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KldH7d9n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727364AbfLBJjk (ORCPT
+        id S1727308AbfLBJle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 04:39:40 -0500
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:43003 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbfLBJjj (ORCPT
+        Mon, 2 Dec 2019 04:41:34 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38285 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbfLBJle (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 04:39:39 -0500
-X-Originating-IP: 90.65.102.129
-Received: from localhost (lfbn-1-1480-129.w90-65.abo.wanadoo.fr [90.65.102.129])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 9D30820012;
-        Mon,  2 Dec 2019 09:39:35 +0000 (UTC)
-Date:   Mon, 2 Dec 2019 10:39:35 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        a.zummo@towertech.it, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
-        stefan@agner.ch, b.galvani@gmail.com, phh@phh.me,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH v3 6/6] rtc: rtc-rc5t619: add ricoh rc5t619 RTC driver
-Message-ID: <20191202093935.GA909634@piout.net>
-References: <20191129212045.18325-1-andreas@kemnade.info>
- <20191129212045.18325-7-andreas@kemnade.info>
+        Mon, 2 Dec 2019 04:41:34 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p17so9516488wmi.3
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 01:41:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qNXsoGRkeV+9oPq3u6Qc5ytFYrW1pi4ZmdbejetvXlc=;
+        b=KldH7d9nsW22vsf6pHjOvoHIz09katpCBpZuRU2xrO2hVsZrdu53lA8hje0CTOz2cy
+         kq2FQ3FZHjp+0KT+sznWHON7mCmQJBHrE2T00Lwl/4u2MI9U86rcZUF1SeMITQdHhMfL
+         K53I3axzBZ7M4sYdaulTKw8OGIN3tp5YfY62e0OFLi2+drvjBvd8/FcarQAGE6AOePeA
+         CFcj1Amw13mFMYG9kEklzFUBXLnkDnHnkYzRTABT65e556RdovKSRIUc9A1nVgF6KF/j
+         wGDVyG2I/ADjpkDlwW9Ycw78Yth2vhQRRgZFp6gOcLkeRhxmcqva3YyVUvChVq50Wmn6
+         LzdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qNXsoGRkeV+9oPq3u6Qc5ytFYrW1pi4ZmdbejetvXlc=;
+        b=SwobKrbGVEukcYuKI5r8CB3jFOWG+K6R/YPrv9icfzEdfJNZ1hHoUTHJCCOzljoJAu
+         JCD5Ief3x+VEHxCLAO56bfVILH8LJeaN1ZNzfStiJYlmMm2l6aJOKQTEPvQgOaegi2sY
+         lTDzvYOw13RcNT2lH7x/vJZoutDLnzAcGGfLX2zV0L4IkEEiUB47gMnVVU1778UsN59w
+         GzZZo9+BZpT1dYmvEI+4qwilo7Z5mtHFpVcbs9HUcyOIu12XHzZeYD+IpwDgemAfQve8
+         JRydIPZMQANRBI8bPNgaT4YK053NiIs1rE+eJ8f6X3+Of+n2Ye3Vf9Hbh67RhdDrVd4g
+         kMKA==
+X-Gm-Message-State: APjAAAVB/XNu5kPx9ml6/scBnY/+5h2UG/do4mh3U4GspR6l9MRo+JE9
+        gb7DOi/h3y7v/EJ7w5V1erD8GlO1z3nBKWe8NfXiag==
+X-Google-Smtp-Source: APXvYqxnet7ppU/SHR2rHYN537piB6hE4+i9EBQeeW6bxLGuGO1hD0GgI+4TYSTlsods2DS+0CeQ2jeD7Odi5iB8m7U=
+X-Received: by 2002:a1c:49c3:: with SMTP id w186mr27302288wma.53.1575279691198;
+ Mon, 02 Dec 2019 01:41:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191129212045.18325-7-andreas@kemnade.info>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191201155238.GR18573@shao2-debian>
+In-Reply-To: <20191201155238.GR18573@shao2-debian>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Mon, 2 Dec 2019 10:41:23 +0100
+Message-ID: <CAKv+Gu8MO_85Fa0y7YZ0iEgxrXbfR5-1e37FbiByzP8LrohcYA@mail.gmail.com>
+Subject: Re: [efi] 1c5fecb612: WARNING:at_kernel/iomem.c:#memremap
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     Narendra K <Narendra.K@dell.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        lkp@lists.01.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/11/2019 22:20:45+0100, Andreas Kemnade wrote:
-> Add an RTC driver for the RTC device on Ricoh MFD rc5t619,
-> which is implemented as a variant of rn5t618.
-> 
-> rtc-range output:
-> Testing 2000-02-28 23:59:59.
-> OK
-> 
-> Testing 2038-01-19 03:14:07.
-> OK
-> 
-> Testing 2069-12-31 23:59:59.
-> OK
-> 
-> Testing 2099-12-31 23:59:59.
-> KO RTC_RD_TIME returned 22 (line 138)
-> 
-> Testing 2100-02-28 23:59:59.
-> KO RTC_SET_TIME returned 34 (line 122)
-> 
-> Testing 2106-02-07 06:28:15.
-> KO RTC_SET_TIME returned 34 (line 122)
-> 
-> Testing 2262-04-11 23:47:16.
-> KO RTC_SET_TIME returned 34 (line 122)
-> 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+On Sun, 1 Dec 2019 at 16:53, kernel test robot <rong.a.chen@intel.com> wrote:
+>
+> FYI, we noticed the following commit (built with gcc-7):
+>
+> commit: 1c5fecb61255aa12a16c4c06335ab68979865914 ("efi: Export Runtime Configuration Interface table to sysfs")
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+>
+> in testcase: rcutorture
+> with following parameters:
+>
+>         runtime: 300s
+>         test: default
+>         torture_type: tasks
+>
+> test-description: rcutorture is rcutorture kernel module load/unload test.
+> test-url: https://www.kernel.org/doc/Documentation/RCU/torture.txt
+>
+>
+> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
+>
+> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+>
+>
+> +------------------------------------------------+------------+------------+
+> |                                                | 5828efb95b | 1c5fecb612 |
+> +------------------------------------------------+------------+------------+
+> | boot_successes                                 | 0          | 0          |
+> | boot_failures                                  | 4          | 4          |
+> | Kernel_panic-not_syncing:No_working_init_found | 4          | 4          |
+> | WARNING:at_kernel/iomem.c:#memremap            | 0          | 4          |
+> | EIP:memremap                                   | 0          | 4          |
+> +------------------------------------------------+------------+------------+
+>
 
-> ---
-> - further output cleanup
-> - remove useless toggling of alarm flag in rtc probe
-> - alignment cleanup
-> 
-> Changes in v2:
-> - correct subject line
-> - reset pon flag not at probe but later
-> - initialize things only on pon
-> - 12h handling
-> - ranges
-> - style cleanup
-> - less magic values
-> 
->  drivers/rtc/Kconfig       |  10 +
->  drivers/rtc/Makefile      |   1 +
->  drivers/rtc/rtc-rc5t619.c | 462 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 473 insertions(+)
->  create mode 100644 drivers/rtc/rtc-rc5t619.c
-> 
-> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> index 1adf9f815652..b8e5bfa8efc6 100644
-> --- a/drivers/rtc/Kconfig
-> +++ b/drivers/rtc/Kconfig
-> @@ -600,6 +600,16 @@ config RTC_DRV_RC5T583
->  	  This driver can also be built as a module. If so, the module
->  	  will be called rtc-rc5t583.
->  
-> +config RTC_DRV_RC5T619
-> +	tristate "RICOH RC5T619 RTC driver"
-> +	depends on MFD_RN5T618
-> +	help
-> +	  If you say yes here you get support for the RTC on the
-> +	  RICOH RC5T619 chips.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called rtc-rc5t619.
-> +
->  config RTC_DRV_S35390A
->  	tristate "Seiko Instruments S-35390A"
->  	select BITREVERSE
-> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-> index 4ac8f19fb631..7612912cdf00 100644
-> --- a/drivers/rtc/Makefile
-> +++ b/drivers/rtc/Makefile
-> @@ -137,6 +137,7 @@ obj-$(CONFIG_RTC_DRV_PXA)	+= rtc-pxa.o
->  obj-$(CONFIG_RTC_DRV_R7301)	+= rtc-r7301.o
->  obj-$(CONFIG_RTC_DRV_R9701)	+= rtc-r9701.o
->  obj-$(CONFIG_RTC_DRV_RC5T583)	+= rtc-rc5t583.o
-> +obj-$(CONFIG_RTC_DRV_RC5T619)	+= rtc-rc5t619.o
->  obj-$(CONFIG_RTC_DRV_RK808)	+= rtc-rk808.o
->  obj-$(CONFIG_RTC_DRV_RP5C01)	+= rtc-rp5c01.o
->  obj-$(CONFIG_RTC_DRV_RS5C313)	+= rtc-rs5c313.o
-> diff --git a/drivers/rtc/rtc-rc5t619.c b/drivers/rtc/rtc-rc5t619.c
-> new file mode 100644
-> index 000000000000..1860f3e7f6e7
-> --- /dev/null
-> +++ b/drivers/rtc/rtc-rc5t619.c
-> @@ -0,0 +1,462 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * drivers/rtc/rtc-rc5t619.c
-> + *
-> + * Real time clock driver for RICOH RC5T619 power management chip.
-> + *
-> + * Copyright (C) 2019 Andreas Kemnade
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/device.h>
-> +#include <linux/errno.h>
-> +#include <linux/init.h>
-> +#include <linux/module.h>
-> +#include <linux/mfd/rn5t618.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/bcd.h>
-> +#include <linux/rtc.h>
-> +#include <linux/slab.h>
-> +#include <linux/irqdomain.h>
-> +
-> +struct rc5t619_rtc {
-> +	int			irq;
-> +	struct rtc_device	*rtc;
-> +	struct rn5t618 *rn5t618;
-> +};
-> +
-> +#define CTRL1_ALARM_ENABLED 0x40
-> +#define CTRL1_24HR 0x20
-> +#define CTRL1_PERIODIC_MASK 0xf
-> +
-> +#define CTRL2_PON 0x10
-> +#define CTRL2_ALARM_STATUS 0x80
-> +#define CTRL2_CTFG 0x4
-> +#define CTRL2_CTC 0x1
-> +
-> +#define MONTH_CENTFLAG 0x80
-> +#define HOUR_PMFLAG 0x20
-> +#define MDAY_DAL_EXT 0x80
-> +
-> +static uint8_t rtc5t619_12hour_bcd2bin(uint8_t hour)
-> +{
-> +	if (hour & HOUR_PMFLAG) {
-> +		hour = bcd2bin(hour & ~HOUR_PMFLAG);
-> +		return hour == 12 ? 12 : 12 + hour;
-> +	}
-> +
-> +	hour = bcd2bin(hour);
-> +	return hour == 12 ? 0 : hour;
-> +}
-> +
-> +static uint8_t rtc5t619_12hour_bin2bcd(uint8_t hour)
-> +{
-> +	if (!hour)
-> +		return 0x12;
-> +
-> +	if (hour < 12)
-> +		return bin2bcd(hour);
-> +
-> +	if (hour == 12)
-> +		return 0x12 | HOUR_PMFLAG;
-> +
-> +	return bin2bcd(hour - 12) | HOUR_PMFLAG;
-> +}
-> +
-> +static int rc5t619_rtc_periodic_disable(struct device *dev)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +	int err;
-> +
-> +	/* disable function */
-> +	err = regmap_update_bits(rtc->rn5t618->regmap,
-> +				 RN5T618_RTC_CTRL1, CTRL1_PERIODIC_MASK, 0);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	/* clear alarm flag and CTFG */
-> +	err = regmap_update_bits(rtc->rn5t618->regmap, RN5T618_RTC_CTRL2,
-> +				 CTRL2_ALARM_STATUS | CTRL2_CTFG | CTRL2_CTC,
-> +				 0);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	return 0;
-> +}
-> +
-> +/* things to be done once after power on */
-> +static int rc5t619_rtc_pon_setup(struct device *dev)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +	int err;
-> +	unsigned int reg_data;
-> +
-> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL2, &reg_data);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	/* clear VDET PON */
-> +	reg_data &= ~(CTRL2_PON | CTRL2_CTC | 0x4a);	/* 0101-1011 */
-> +	reg_data |= 0x20;	/* 0010-0000 */
-> +	err = regmap_write(rtc->rn5t618->regmap, RN5T618_RTC_CTRL2, reg_data);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	/* clearing RTC Adjust register */
-> +	err = regmap_write(rtc->rn5t618->regmap, RN5T618_RTC_ADJUST, 0);
-> +	if (err)
-> +		return err;
-> +
-> +	return regmap_update_bits(rtc->rn5t618->regmap,
-> +					RN5T618_RTC_CTRL1,
-> +					CTRL1_24HR, CTRL1_24HR);
-> +}
-> +
-> +static int rc5t619_rtc_read_time(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +	u8 buff[7];
-> +	int err;
-> +	int cent_flag;
-> +	unsigned int ctrl1;
-> +	unsigned int ctrl2;
-> +
-> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL2, &ctrl2);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	if (ctrl2 & CTRL2_PON)
-> +		return -EINVAL;
-> +
-> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL1, &ctrl1);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	err = regmap_bulk_read(rtc->rn5t618->regmap, RN5T618_RTC_SECONDS,
-> +			       buff, sizeof(buff));
-> +	if (err < 0)
-> +		return err;
-> +
-> +	if (buff[5] & MONTH_CENTFLAG)
-> +		cent_flag = 1;
-> +	else
-> +		cent_flag = 0;
-> +
-> +	tm->tm_sec  = bcd2bin(buff[0]);
-> +	tm->tm_min  = bcd2bin(buff[1]);
-> +
-> +	if (ctrl1 & CTRL1_24HR)
-> +		tm->tm_hour = bcd2bin(buff[2]);
-> +	else
-> +		tm->tm_hour = rtc5t619_12hour_bcd2bin(buff[2]);
-> +
-> +	tm->tm_wday = bcd2bin(buff[3]);
-> +	tm->tm_mday = bcd2bin(buff[4]);
-> +	tm->tm_mon  = bcd2bin(buff[5] & 0x1f) - 1; /* back to system 0-11 */
-> +	tm->tm_year = bcd2bin(buff[6]) + 100 * cent_flag;
-> +
-> +	return 0;
-> +}
-> +
-> +static int rc5t619_rtc_set_time(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +	u8 buff[7];
-> +	int err;
-> +	int cent_flag;
-> +	unsigned int ctrl1;
-> +	unsigned int ctrl2;
-> +
-> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL2, &ctrl2);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	if (ctrl2 & CTRL2_PON)
-> +		rc5t619_rtc_pon_setup(dev);
-> +
-> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL1, &ctrl1);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	if (tm->tm_year >= 100)
-> +		cent_flag = 1;
-> +	else
-> +		cent_flag = 0;
-> +
-> +	buff[0] = bin2bcd(tm->tm_sec);
-> +	buff[1] = bin2bcd(tm->tm_min);
-> +
-> +	if (ctrl1 & CTRL1_24HR)
-> +		buff[2] = bin2bcd(tm->tm_hour);
-> +	else
-> +		buff[2] = rtc5t619_12hour_bin2bcd(tm->tm_hour);
-> +
-> +	buff[3] = bin2bcd(tm->tm_wday);
-> +	buff[4] = bin2bcd(tm->tm_mday);
-> +	buff[5] = bin2bcd(tm->tm_mon + 1);	/* system set 0-11 */
-> +	buff[6] = bin2bcd(tm->tm_year - cent_flag * 100);
-> +
-> +	if (cent_flag)
-> +		buff[5] |= MONTH_CENTFLAG;
-> +
-> +	err = regmap_bulk_write(rtc->rn5t618->regmap, RN5T618_RTC_SECONDS,
-> +				buff, sizeof(buff));
-> +	if (err < 0) {
-> +		dev_err(dev, "failed to program new time: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int rc5t619_rtc_alarm_is_enabled(struct device *dev,  uint8_t *enabled)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +	int err;
-> +	unsigned int reg_data;
-> +
-> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL1, &reg_data);
-> +	if (err)
-> +		return err;
-> +
-> +	if (reg_data & CTRL1_ALARM_ENABLED)
-> +		*enabled = 1;
-> +	else
-> +		*enabled = 0;
-> +
-> +	return err;
-> +}
-> +
-> +/* 0-disable, 1-enable */
-> +static int rc5t619_rtc_alarm_enable(struct device *dev, unsigned int enabled)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +
-> +	return regmap_update_bits(rtc->rn5t618->regmap,
-> +			RN5T618_RTC_CTRL1,
-> +			CTRL1_ALARM_ENABLED,
-> +			enabled ? CTRL1_ALARM_ENABLED : 0);
-> +}
-> +
-> +static int rc5t619_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +	u8 buff[6];
-> +	unsigned int buff_cent;
-> +	int err;
-> +	int cent_flag;
-> +	unsigned int ctrl1;
-> +
-> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL1, &ctrl1);
-> +	if (err)
-> +		return err;
-> +
-> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_MONTH, &buff_cent);
-> +	if (err < 0) {
-> +		dev_err(dev, "failed to read time: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	if (buff_cent & MONTH_CENTFLAG)
-> +		cent_flag = 1;
-> +	else
-> +		cent_flag = 0;
-> +
-> +	err = regmap_bulk_read(rtc->rn5t618->regmap, RN5T618_RTC_ALARM_Y_SEC,
-> +			       buff, sizeof(buff));
-> +	if (err)
-> +		return err;
-> +
-> +	buff[3] = buff[3] & 0x3f;
-> +
-> +	alrm->time.tm_sec  = bcd2bin(buff[0]);
-> +	alrm->time.tm_min  = bcd2bin(buff[1]);
-> +
-> +	if (ctrl1 & CTRL1_24HR)
-> +		alrm->time.tm_hour = bcd2bin(buff[2]);
-> +	else
-> +		alrm->time.tm_hour = rtc5t619_12hour_bcd2bin(buff[2]);
-> +
-> +	alrm->time.tm_mday = bcd2bin(buff[3]);
-> +	alrm->time.tm_mon  = bcd2bin(buff[4]) - 1;
-> +	alrm->time.tm_year = bcd2bin(buff[5]) + 100 * cent_flag;
-> +	alrm->enabled = !!(ctrl1 & CTRL1_ALARM_ENABLED);
-> +	dev_dbg(dev, "read alarm: %ptR\n", &alrm->time);
-> +
-> +	return 0;
-> +}
-> +
-> +static int rc5t619_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +	u8 buff[6];
-> +	int err;
-> +	int cent_flag;
-> +	unsigned int ctrl1;
-> +
-> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL1, &ctrl1);
-> +	if (err)
-> +		return err;
-> +
-> +	err = rc5t619_rtc_alarm_enable(dev, 0);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	if (rtc->irq == -1)
-> +		return -EINVAL;
-> +
-> +	if (alrm->enabled == 0)
-> +		return 0;
-> +
-> +	if (alrm->time.tm_year >= 100)
-> +		cent_flag = 1;
-> +	else
-> +		cent_flag = 0;
-> +
-> +	alrm->time.tm_mon += 1;
-> +	buff[0] = bin2bcd(alrm->time.tm_sec);
-> +	buff[1] = bin2bcd(alrm->time.tm_min);
-> +
-> +	if (ctrl1 & CTRL1_24HR)
-> +		buff[2] = bin2bcd(alrm->time.tm_hour);
-> +	else
-> +		buff[2] = rtc5t619_12hour_bin2bcd(alrm->time.tm_hour);
-> +
-> +	buff[3] = bin2bcd(alrm->time.tm_mday);
-> +	buff[4] = bin2bcd(alrm->time.tm_mon);
-> +	buff[5] = bin2bcd(alrm->time.tm_year - 100 * cent_flag);
-> +	buff[3] |= MDAY_DAL_EXT;
-> +
-> +	err = regmap_bulk_write(rtc->rn5t618->regmap, RN5T618_RTC_ALARM_Y_SEC,
-> +				buff, sizeof(buff));
-> +	if (err < 0)
-> +		return err;
-> +
-> +	return rc5t619_rtc_alarm_enable(dev, alrm->enabled);
-> +}
-> +
-> +static const struct rtc_class_ops rc5t619_rtc_ops = {
-> +	.read_time	= rc5t619_rtc_read_time,
-> +	.set_time	= rc5t619_rtc_set_time,
-> +	.set_alarm	= rc5t619_rtc_set_alarm,
-> +	.read_alarm	= rc5t619_rtc_read_alarm,
-> +	.alarm_irq_enable = rc5t619_rtc_alarm_enable,
-> +};
-> +
-> +static int rc5t619_rtc_alarm_flag_clr(struct device *dev)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +
-> +	/* clear alarm-D status bits.*/
-> +	return regmap_update_bits(rtc->rn5t618->regmap,
-> +				RN5T618_RTC_CTRL2,
-> +				CTRL2_ALARM_STATUS | CTRL2_CTC, 0);
-> +}
-> +
-> +static irqreturn_t rc5t619_rtc_irq(int irq, void *data)
-> +{
-> +	struct device *dev = data;
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +
-> +	rc5t619_rtc_alarm_flag_clr(dev);
-> +
-> +	rtc_update_irq(rtc->rtc, 1, RTC_IRQF | RTC_AF);
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int rc5t619_rtc_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct rn5t618 *rn5t618 = dev_get_drvdata(pdev->dev.parent);
-> +	struct rc5t619_rtc *rtc;
-> +	unsigned int ctrl2;
-> +	int err;
-> +
-> +	rtc = devm_kzalloc(dev, sizeof(*rtc), GFP_KERNEL);
-> +	if (IS_ERR(rtc)) {
-> +		err = PTR_ERR(rtc);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	rtc->rn5t618 = rn5t618;
-> +
-> +	dev_set_drvdata(dev, rtc);
-> +	rtc->irq = -1;
-> +
-> +	if (rn5t618->irq_data)
-> +		rtc->irq = regmap_irq_get_virq(rn5t618->irq_data,
-> +					       RN5T618_IRQ_RTC);
-> +
-> +	if (rtc->irq  < 0)
-> +		rtc->irq = -1;
-> +
-> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL2, &ctrl2);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	/* disable rtc periodic function */
-> +	err = rc5t619_rtc_periodic_disable(&pdev->dev);
-> +	if (err)
-> +		return err;
-> +
-> +	if (ctrl2 & CTRL2_PON) {
-> +		err = rc5t619_rtc_alarm_flag_clr(&pdev->dev);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	rtc->rtc = devm_rtc_allocate_device(&pdev->dev);
-> +	if (IS_ERR(rtc->rtc)) {
-> +		err = PTR_ERR(rtc->rtc);
-> +		dev_err(dev, "RTC device register: err %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	rtc->rtc->ops = &rc5t619_rtc_ops;
-> +	rtc->rtc->range_min = RTC_TIMESTAMP_BEGIN_1900;
-> +	rtc->rtc->range_max = RTC_TIMESTAMP_END_2099;
-> +
-> +	/* set interrupt and enable it */
-> +	if (rtc->irq != -1) {
-> +		err = devm_request_threaded_irq(&pdev->dev, rtc->irq, NULL,
-> +						rc5t619_rtc_irq,
-> +						IRQF_ONESHOT,
-> +						"rtc-rc5t619",
-> +						&pdev->dev);
-> +		if (err < 0) {
-> +			dev_err(&pdev->dev, "request IRQ:%d fail\n", rtc->irq);
-> +			rtc->irq = -1;
-> +
-> +			err = rc5t619_rtc_alarm_enable(&pdev->dev, 0);
-> +			if (err)
-> +				return err;
-> +
-> +		} else {
-> +			/* enable wake */
-> +			device_init_wakeup(&pdev->dev, 1);
-> +			enable_irq_wake(rtc->irq);
-> +		}
-> +	} else {
-> +		/* system don't want to using alarm interrupt, so close it */
-> +		err = rc5t619_rtc_alarm_enable(&pdev->dev, 0);
-> +		if (err)
-> +			return err;
-> +
-> +		dev_warn(&pdev->dev, "rc5t619 interrupt is disabled\n");
-> +	}
-> +
-> +	return rtc_register_device(rtc->rtc);
-> +}
-> +
-> +static struct platform_driver rc5t619_rtc_driver = {
-> +	.driver	= {
-> +		.name	= "rc5t619-rtc",
-> +	},
-> +	.probe	= rc5t619_rtc_probe,
-> +};
-> +
-> +module_platform_driver(rc5t619_rtc_driver);
-> +MODULE_ALIAS("platform:rc5t619-rtc");
-> +MODULE_DESCRIPTION("RICOH RC5T619 RTC driver");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.20.1
-> 
+I don't understand this result. Doesn't it say the number of failures
+is the same, but it just fails in a different place? Is there a
+working config that breaks due to that commit?
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+
+>
+> If you fix the issue, kindly add following tag
+> Reported-by: kernel test robot <rong.a.chen@intel.com>
+>
+>
+> [   27.829857] WARNING: CPU: 0 PID: 1 at kernel/iomem.c:82 memremap+0x62/0x148
+> [   27.832571] Modules linked in:
+> [   27.833528] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G                T 5.3.0-rc1-00004-g1c5fecb61255a #2
+> [   27.836364] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+> [   27.838876] EIP: memremap+0x62/0x148
+> [   27.840028] Code: 89 c7 83 f8 02 75 2a 80 3d bb 47 c8 c1 00 0f 85 bd 00 00 00 c6 05 bb 47 c8 c1 01 53 8d 45 ec 50 68 78 3c a5 c1 e8 f2 ff f1 ff <0f> 0b e9 9d 00 00 00 31 c0 f7 c6 01 00 00 00 74 65 85 ff 74 0f 89
+> [   27.845798] EAX: 0000003f EBX: 0000001e ECX: 00000000 EDX: 30706000
+> [   27.847665] ESI: 00000001 EDI: 00000002 EBP: e9e03f0c ESP: e9e03ee4
+> [   27.849523] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010282
+> [   27.851616] CR0: 80050033 CR2: 08056130 CR3: 01db5000 CR4: 000406b0
+> [   27.853465] Call Trace:
+> [   27.853896]  ? kobject_add+0x5b/0x66
+> [   27.854502]  ? map_properties+0x425/0x425
+> [   27.855171]  efi_rci2_sysfs_init+0x1f/0x1e2
+> [   27.855873]  ? map_properties+0x425/0x425
+> [   27.856545]  do_one_initcall+0xa0/0x1cb
+> [   27.857187]  ? parse_args+0xa3/0x28b
+> [   27.857823]  ? trace_initcall_level+0x53/0x6e
+> [   27.858548]  kernel_init_freeable+0x102/0x190
+> [   27.859300]  ? rest_init+0xee/0xee
+> [   27.859887]  kernel_init+0xd/0xdf
+> [   27.860443]  ret_from_fork+0x1e/0x28
+> [   27.861144] ---[ end trace c5c6f0b028e1905c ]---
+>
+>
+> To reproduce:
+>
+>         # build kernel
+>         cd linux
+>         cp config-5.3.0-rc1-00004-g1c5fecb61255a .config
+>         make HOSTCC=gcc-7 CC=gcc-7 ARCH=i386 olddefconfig prepare modules_prepare bzImage
+>
+>         git clone https://github.com/intel/lkp-tests.git
+>         cd lkp-tests
+>         bin/lkp qemu -k <bzImage> job-script # job-script is attached in this email
+>
+>
+>
+> Thanks,
+> Rong Chen
+>
