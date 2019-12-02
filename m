@@ -2,284 +2,253 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F20C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CBCC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9FDD20863
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DBC920848
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:10:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="SA7Z6kQY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pwu4o8nZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbfLBVJ5 (ORCPT
+        id S1726678AbfLBVKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 16:09:57 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:35738 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbfLBVJ5 (ORCPT
+        Mon, 2 Dec 2019 16:10:19 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42579 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725834AbfLBVKT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 16:09:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1575320991;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=FrGufs8yOusYQL5oaAaiiF5A9W8IpjOBuIOCcxFy/38=;
-        b=SA7Z6kQYADs7C6nXYWjDpMgZczSe4dtxT411+oBq5PLvIdCDqg3tLu6gQfuuT3hGCZ
-        Jvw9aSpGLYDeOqy2fxjUhIbyYQPXe23lilrXaDLbsxz+qyh0vXJwm7FjHxuH7Esue8wZ
-        qsVNokDRCiCqKauUbaL+5crVE38PO5ejjYZQhso6/4AP+s8tokYrXdW/azSD02+MB6IW
-        ej74Rne67KV6gWQcvSVXoLSX7stbIlaj0GUwMbfYVklIcj5g8UOvbkl7F75AkEL+EGLR
-        YApkGnaEcHCx+vRiDLaw44DyPQtLE9ONB+g28HuIhM6xnUUe0VRnvHMyNAPXotHZuBqA
-        JbTQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlaVXA4EIw=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.0.2 DYNA|AUTH)
-        with ESMTPSA id 6067eavB2L9Q1cK
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Mon, 2 Dec 2019 22:09:26 +0100 (CET)
-Content-Type: text/plain; charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH] ARM: OMAP2+: Fix warnings with broken omap2_set_init_voltage()
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20190924233222.52757-1-tony@atomide.com>
-Date:   Mon, 2 Dec 2019 22:09:26 +0100
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Adam Ford <aford173@gmail.com>,
-        =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
-        Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Mon, 2 Dec 2019 16:10:19 -0500
+Received: by mail-lj1-f196.google.com with SMTP id e28so1123606ljo.9;
+        Mon, 02 Dec 2019 13:10:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bI0vrIcnx4OyiLwsy+iUg8MBW9que6as4Vgej46HfQE=;
+        b=Pwu4o8nZY8nAcf27eWcYyvVgM7fHYu7v1RJJh+M6sl0RXXqubD4tPL0g2jEL8Zze8X
+         rbryxAGu1R2fuQC4EgocyoSpuNQRCN4rI3XMOj4FBWpafOlbRjIZ9BG+VoKZOFgsZrbD
+         L1dckW2Is1XYBluqMpZ3FPFJdCNHH0hy3QWAo1nlt4k6hPIQnfenYO6JbLA6IET7Yh3B
+         doELxvTNHLAqLx+MiZVO8c8XTTRNaN106vAaI2iiISq84b83LMRhCCQougdGqsuuWPZD
+         cT/eIkXw2e8MCHUSEJfQBLmzF29prSnvnQ3v2TqOM6ZGSJ/Qmf0z6GD9CEhsj3+NkyAQ
+         bv3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bI0vrIcnx4OyiLwsy+iUg8MBW9que6as4Vgej46HfQE=;
+        b=hGZ8SBZo8rgUXlkoGQVkqZQ4f2imuosAHiYcSymynrmsCDQzOalnMI2veZjDO2LpBC
+         rA766St+8Mc7N0RUVoHr3snFj+SHsWnnrALuHro1Ucua989QFwa4M8LNDKPeP+K30WKF
+         4rcPwyrU3KlD2B9bRSGwnYVeZt35Aa1s8YSBgRYBOVvl3QiglAu8Hu2yYRFpFsin0Ove
+         /udzhsymBZ/7w2Th3xA9xGBzZz24dIjQEoTpFV8fRypf855VJFml8315pxaoFgb6qxvk
+         Kzp+gqDThlk72bMjitoooo8QVi7rZKoEMQKZowCOMxSD2s0VllI4n3XujyznMKNgZFiK
+         Q8zg==
+X-Gm-Message-State: APjAAAUSy+7NuS8PaTBfebKlKStKKEfC8puuZoET438Jn9HAKZiBtFl9
+        UHbssPSR3TP4XfvYFEZwUZYErOeZ/qJJoCBdNxI=
+X-Google-Smtp-Source: APXvYqzuMeAo6CLh8G4KVix8Vb7c5xmu/o1UZpX1Y8VMOBlfI9bXc9O8atB+enauwtCcjG+rK+xRSNJPzPFP22O9nWw=
+X-Received: by 2002:a2e:7816:: with SMTP id t22mr468856ljc.161.1575321015559;
+ Mon, 02 Dec 2019 13:10:15 -0800 (PST)
+MIME-Version: 1.0
+References: <1575242724-4937-1-git-send-email-sj38.park@gmail.com>
+ <1575242724-4937-3-git-send-email-sj38.park@gmail.com> <CAFd5g47C6OShsYy5ngSGTmkL3fQoj-6jb09iQ+CD6FE0usggCA@mail.gmail.com>
+ <CABVgOS=xYiqVNND3JxgRLPv--0ZNC+h=FB0oZc2sKmVk4HJ95A@mail.gmail.com>
+In-Reply-To: <CABVgOS=xYiqVNND3JxgRLPv--0ZNC+h=FB0oZc2sKmVk4HJ95A@mail.gmail.com>
+From:   SeongJae Park <sj38.park@gmail.com>
+Date:   Mon, 2 Dec 2019 22:09:49 +0100
+Message-ID: <CAEjAshqVQNwQo+yiAYhKXC0k=ZHx2MKZAB90hO2PLw9STMZ8=w@mail.gmail.com>
+Subject: Re: [PATCH 2/6] docs/kunit/start: Skip wrapper run command
+To:     David Gow <davidgow@google.com>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        shuah <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Andreas Kemnade <andreas@kemnade.info>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <8FFD44DB-73F8-4807-91E1-C97DA8F781BA@goldelico.com>
-References: <20190924233222.52757-1-tony@atomide.com>
-To:     Tony Lindgren <tony@atomide.com>
-X-Mailer: Apple Mail (2.3124)
+        SeongJae Park <sjpark@amazon.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tony,
+On Mon, Dec 2, 2019 at 10:03 PM David Gow <davidgow@google.com> wrote:
+>
+> On Mon, Dec 2, 2019 at 9:25 AM Brendan Higgins
+> <brendanhiggins@google.com> wrote:
+> >
+> > +David Gow - David has lots of good opinions on our documentation.
+> >
+> > On Sun, Dec 1, 2019 at 3:25 PM SeongJae Park <sj38.park@gmail.com> wrote:
+> > >
+> > > From: SeongJae Park <sjpark@amazon.de>
+> > >
+> > > The kunit 'Getting Started' document first shows the wrapper running
+> > > command.  However, a new user who simply following the command might
+> > > encounter a failure like below:
+> > >
+> > >     $ ./tools/testing/kunit/kunit.py run
+> > >     Traceback (most recent call last):
+> > >       File "./tools/testing/kunit/kunit.py", line 140, in <module>
+> > >         main(sys.argv[1:])
+> > >       File "./tools/testing/kunit/kunit.py", line 126, in main
+> > >         linux = kunit_kernel.LinuxSourceTree()
+> > >       File "/home/sjpark/linux/tools/testing/kunit/kunit_kernel.py", line 85, in __init__
+> > >         self._kconfig.read_from_file(KUNITCONFIG_PATH)
+> > >       File "/home/sjpark/linux/tools/testing/kunit/kunit_config.py", line 65, in read_from_file
+> > >         with open(path, 'r') as f:
+> > >     FileNotFoundError: [Errno 2] No such file or directory: 'kunitconfig'
+> > >
+> > > Though the reason of the failure ('kunitconfig') is explained in its
+> > > next section, it would be better to reduce any failure that user might
+> > > encounter.  This commit removes the example command for the reason.
+> >
+> > Seems reasonable.
+> >
+> I definitely agree that having a non-working command here is doing
+> more harm than good. Whether we just get rid of it, or change it to
+> use the --defconfig option is a matter of taste. (Personally, I think
+> there's some value in having a one-line "run the tests" command at the
+> top of the Getting Started page, but it definitely needs to be one
+> that works.)
+>
+> So, overall, I think this is definitely an improvement, but that we do
+> need to choose whether to take this approach (deleting this command)
+> or the --defconfig approach as in:
+> https://lore.kernel.org/linux-kselftest/20191119003120.154041-1-brendanhiggins@google.com/
+>
+> > > Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> > > ---
+> > >  Documentation/dev-tools/kunit/start.rst | 6 ------
+> > >  1 file changed, 6 deletions(-)
+> > >
+> > > diff --git a/Documentation/dev-tools/kunit/start.rst b/Documentation/dev-tools/kunit/start.rst
+> > > index 78a0aed..e25978d 100644
+> > > --- a/Documentation/dev-tools/kunit/start.rst
+> > > +++ b/Documentation/dev-tools/kunit/start.rst
+> > > @@ -15,12 +15,6 @@ Included with KUnit is a simple Python wrapper that helps format the output to
+> > >  easily use and read KUnit output. It handles building and running the kernel, as
+> > >  well as formatting the output.
+> > >
+> > > -The wrapper can be run with:
+> > > -
+> > > -.. code-block:: bash
+> > > -
+> > > -   ./tools/testing/kunit/kunit.py run
+> > > -
+> > >  Creating a kunitconfig
+> > >  ======================
+> >
+> > I think maybe we should demote this section so that this is a
+> > subsection under KUnit Wrapper. Might also want to add a tie-in
+> > explaining why we are talking about kunitconfig here? Right now this
+> > kind of reads as a non sequitur.
+> I generally think we want to keep the "Getting Started" guide focused
+> on the goal (running/writing tests), rather than too much detail on
+> the implementation (the wrapper itself).
+> How about renaming what's currently the "KUnit Wrapper" section to
+> "Running tests" or similar, and moving the kunitconfig part under
+> that?
+>
+> The "Creating a kunitconfig" part could equally be "configuring which
+> tests to run" or something, which may speak more to motivating
+>
+> As for some sort of tie-in, perhaps rewording the opening sentence to
+> say "The easiest way to run tests is to use the kunit_tool script",
+> and link to the page kunit_tool page in the patch below?
+> >
+> > Note: we have tried to address this potential issue for new users in
+> > this patch under review:
+> >
+> > https://patchwork.kernel.org/patch/11252953/
+> >
+> > I don't feel strongly whether we do it your way or my way. What do
+> > other people think?
+>
+> As above, my slight preference is for adding the --defconfig option
+> over removing the section entirely.
 
-> Am 25.09.2019 um 01:32 schrieb Tony Lindgren <tony@atomide.com>:
->=20
-> This code is currently unable to find the dts opp tables as ti-cpufreq
-> needs to set them up first based on speed binning.
->=20
-> We stopped initializing the opp tables with platform code years ago =
-for
-> device tree based booting with commit 92d51856d740 ("ARM: OMAP3+: do =
-not
-> register non-dt OPP tables for device tree boot"), and all of =
-mach-omap2
-> is now booting using device tree.
->=20
-> We currently get the following errors on init:
->=20
-> omap2_set_init_voltage: unable to find boot up OPP for vdd_mpu
-> omap2_set_init_voltage: unable to set vdd_mpu
-> omap2_set_init_voltage: unable to find boot up OPP for vdd_core
-> omap2_set_init_voltage: unable to set vdd_core
-> omap2_set_init_voltage: unable to find boot up OPP for vdd_iva
-> omap2_set_init_voltage: unable to set vdd_iva
->=20
-> Let's just drop the unused code. Nowadays ti-cpufreq should be used to
-> to initialize things properly.
->=20
-> Cc: Adam Ford <aford173@gmail.com>
-> Cc: Andr=C3=A9 Roth <neolynx@gmail.com>
-> Cc: "H. Nikolaus Schaller" <hns@goldelico.com>
-> Cc: Nishanth Menon <nm@ti.com>
-> Cc: Tero Kristo <t-kristo@ti.com>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
->=20
-> Guys, please check and ack if we can really do this to get rid of some
-> pointless dmesg -l3 errors without affecting the ongoing cpufreq and
-> voltage work.
+Agree, I would also prefer to do explain about '--defconfig' option.
 
-unfortunately we did not yet test in combination with the 1GHz OPP
-patches for omap3630 (queued for v5.5-rc1) and it appears that this
-patch breaks the 1GHz OPP.
+Thanks,
+SeongJae Park
 
-The symptom is that it works fine on a dm3730 with 800MHz rating
-but results in spurious kernel panics, stack corruption, virtual memory
-failures, OneNAND DMA timeouts etc. on a dm3730 with 1GHz speed grade.
-
-We can also re-add the "turbo-mode" tags in the omap36xx.dtsi (or
-remove the 1GHz OPP) and can then boot with 800MHz max. clock. But
-enabling boost (echo 1 >/sys/devices/system/cpu/cpufreq/boost) makes
-the problem and its symptoms appear almost immediately.
-
-After some scratching our heads we found that v5.3.7 is still good and
-v5.3.8 is bad. A bisect of our tree (which includes the 1GHz OPP) did
-point to this patch whichwas apparently already backported to v5.3.8 and
-v5.4.
-
-So I assume that the code removed here enabled or initialized something
-we need for safe 1GHz transitions. Maybe the ABB-LDO. Or it looks up the
-vdd regulator and initializes it earlier than without this code. Maybe
-it also (pre-)initializes some clk which could now be left uninitialized
-too long?
-
-Note that seeing the log message indicates that voltdm_scale() and
-dev_pm_opp_get_voltage() are not called, but all functions before could
-be with side-effects.
-
-v5.5-rc1 will likely fail right from the beginning (only on 1GHz rated
-omap36xx) because it makes the combination of this patch and 1GHz OPP
-public (linux-next should already fail but it appears that nobody has
-tested).
-
-Any ideas how to fix? Before I try to do a revert and then add goto =
-exit;
-after each function call and see which ones are essential for 1GHz.
-
-BR,
-Nikolaus
-
-
->=20
-> ---
-> arch/arm/mach-omap2/pm.c | 100 ---------------------------------------
-> 1 file changed, 100 deletions(-)
->=20
-> diff --git a/arch/arm/mach-omap2/pm.c b/arch/arm/mach-omap2/pm.c
-> --- a/arch/arm/mach-omap2/pm.c
-> +++ b/arch/arm/mach-omap2/pm.c
-> @@ -74,83 +74,6 @@ int omap_pm_clkdms_setup(struct clockdomain *clkdm, =
-void *unused)
-> 	return 0;
-> }
->=20
-> -/*
-> - * This API is to be called during init to set the various voltage
-> - * domains to the voltage as per the opp table. Typically we boot up
-> - * at the nominal voltage. So this function finds out the rate of
-> - * the clock associated with the voltage domain, finds out the =
-correct
-> - * opp entry and sets the voltage domain to the voltage specified
-> - * in the opp entry
-> - */
-> -static int __init omap2_set_init_voltage(char *vdd_name, char =
-*clk_name,
-> -					 const char *oh_name)
-> -{
-> -	struct voltagedomain *voltdm;
-> -	struct clk *clk;
-> -	struct dev_pm_opp *opp;
-> -	unsigned long freq, bootup_volt;
-> -	struct device *dev;
-> -
-> -	if (!vdd_name || !clk_name || !oh_name) {
-> -		pr_err("%s: invalid parameters\n", __func__);
-> -		goto exit;
-> -	}
-> -
-> -	if (!strncmp(oh_name, "mpu", 3))
-> -		/*=20
-> -		 * All current OMAPs share voltage rail and clock
-> -		 * source, so CPU0 is used to represent the MPU-SS.
-> -		 */
-> -		dev =3D get_cpu_device(0);
-> -	else
-> -		dev =3D omap_device_get_by_hwmod_name(oh_name);
-> -
-> -	if (IS_ERR(dev)) {
-> -		pr_err("%s: Unable to get dev pointer for hwmod %s\n",
-> -			__func__, oh_name);
-> -		goto exit;
-> -	}
-> -
-> -	voltdm =3D voltdm_lookup(vdd_name);
-> -	if (!voltdm) {
-> -		pr_err("%s: unable to get vdd pointer for vdd_%s\n",
-> -			__func__, vdd_name);
-> -		goto exit;
-> -	}
-> -
-> -	clk =3D  clk_get(NULL, clk_name);
-> -	if (IS_ERR(clk)) {
-> -		pr_err("%s: unable to get clk %s\n", __func__, =
-clk_name);
-> -		goto exit;
-> -	}
-> -
-> -	freq =3D clk_get_rate(clk);
-> -	clk_put(clk);
-> -
-> -	opp =3D dev_pm_opp_find_freq_ceil(dev, &freq);
-> -	if (IS_ERR(opp)) {
-> -		pr_err("%s: unable to find boot up OPP for vdd_%s\n",
-> -			__func__, vdd_name);
-> -		goto exit;
-> -	}
-> -
-> -	bootup_volt =3D dev_pm_opp_get_voltage(opp);
-> -	dev_pm_opp_put(opp);
-> -
-> -	if (!bootup_volt) {
-> -		pr_err("%s: unable to find voltage corresponding to the =
-bootup OPP for vdd_%s\n",
-> -		       __func__, vdd_name);
-> -		goto exit;
-> -	}
-> -
-> -	voltdm_scale(voltdm, bootup_volt);
-> -	return 0;
-> -
-> -exit:
-> -	pr_err("%s: unable to set vdd_%s\n", __func__, vdd_name);
-> -	return -EINVAL;
-> -}
-> -
-> #ifdef CONFIG_SUSPEND
-> static int omap_pm_enter(suspend_state_t suspend_state)
-> {
-> @@ -208,25 +131,6 @@ void omap_common_suspend_init(void *pm_suspend)
-> }
-> #endif /* CONFIG_SUSPEND */
->=20
-> -static void __init omap3_init_voltages(void)
-> -{
-> -	if (!soc_is_omap34xx())
-> -		return;
-> -
-> -	omap2_set_init_voltage("mpu_iva", "dpll1_ck", "mpu");
-> -	omap2_set_init_voltage("core", "l3_ick", "l3_main");
-> -}
-> -
-> -static void __init omap4_init_voltages(void)
-> -{
-> -	if (!soc_is_omap44xx())
-> -		return;
-> -
-> -	omap2_set_init_voltage("mpu", "dpll_mpu_ck", "mpu");
-> -	omap2_set_init_voltage("core", "l3_div_ck", "l3_main_1");
-> -	omap2_set_init_voltage("iva", "dpll_iva_m5x2_ck", "iva");
-> -}
-> -
-> int __maybe_unused omap_pm_nop_init(void)
-> {
-> 	return 0;
-> @@ -246,10 +150,6 @@ int __init omap2_common_pm_late_init(void)
-> 	omap4_twl_init();
-> 	omap_voltage_late_init();
->=20
-> -	/* Initialize the voltages */
-> -	omap3_init_voltages();
-> -	omap4_init_voltages();
-> -
-> 	/* Smartreflex device init */
-> 	omap_devinit_smartreflex();
->=20
-> --=20
-> 2.23.0
-
+>
+> > >  The Python script is a thin wrapper around Kbuild as such, it needs to be
+> > > --
+> > > 2.7.4
+> > >
+> On Mon, Dec 2, 2019 at 9:25 AM Brendan Higgins
+> <brendanhiggins@google.com> wrote:
+> >
+> > +David Gow - David has lots of good opinions on our documentation.
+> >
+> > On Sun, Dec 1, 2019 at 3:25 PM SeongJae Park <sj38.park@gmail.com> wrote:
+> > >
+> > > From: SeongJae Park <sjpark@amazon.de>
+> > >
+> > > The kunit 'Getting Started' document first shows the wrapper running
+> > > command.  However, a new user who simply following the command might
+> > > encounter a failure like below:
+> > >
+> > >     $ ./tools/testing/kunit/kunit.py run
+> > >     Traceback (most recent call last):
+> > >       File "./tools/testing/kunit/kunit.py", line 140, in <module>
+> > >         main(sys.argv[1:])
+> > >       File "./tools/testing/kunit/kunit.py", line 126, in main
+> > >         linux = kunit_kernel.LinuxSourceTree()
+> > >       File "/home/sjpark/linux/tools/testing/kunit/kunit_kernel.py", line 85, in __init__
+> > >         self._kconfig.read_from_file(KUNITCONFIG_PATH)
+> > >       File "/home/sjpark/linux/tools/testing/kunit/kunit_config.py", line 65, in read_from_file
+> > >         with open(path, 'r') as f:
+> > >     FileNotFoundError: [Errno 2] No such file or directory: 'kunitconfig'
+> > >
+> > > Though the reason of the failure ('kunitconfig') is explained in its
+> > > next section, it would be better to reduce any failure that user might
+> > > encounter.  This commit removes the example command for the reason.
+> >
+> > Seems reasonable.
+> >
+> > > Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> > > ---
+> > >  Documentation/dev-tools/kunit/start.rst | 6 ------
+> > >  1 file changed, 6 deletions(-)
+> > >
+> > > diff --git a/Documentation/dev-tools/kunit/start.rst b/Documentation/dev-tools/kunit/start.rst
+> > > index 78a0aed..e25978d 100644
+> > > --- a/Documentation/dev-tools/kunit/start.rst
+> > > +++ b/Documentation/dev-tools/kunit/start.rst
+> > > @@ -15,12 +15,6 @@ Included with KUnit is a simple Python wrapper that helps format the output to
+> > >  easily use and read KUnit output. It handles building and running the kernel, as
+> > >  well as formatting the output.
+> > >
+> > > -The wrapper can be run with:
+> > > -
+> > > -.. code-block:: bash
+> > > -
+> > > -   ./tools/testing/kunit/kunit.py run
+> > > -
+> > >  Creating a kunitconfig
+> > >  ======================
+> >
+> > I think maybe we should demote this section so that this is a
+> > subsection under KUnit Wrapper. Might also want to add a tie-in
+> > explaining why we are talking about kunitconfig here? Right now this
+> > kind of reads as a non sequitur.
+> >
+> > Note: we have tried to address this potential issue for new users in
+> > this patch under review:
+> >
+> > https://patchwork.kernel.org/patch/11252953/
+> >
+> > I don't feel strongly whether we do it your way or my way. What do
+> > other people think?
+> >
+> > >  The Python script is a thin wrapper around Kbuild as such, it needs to be
+> > > --
+> > > 2.7.4
+> > >
