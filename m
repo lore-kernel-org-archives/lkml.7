@@ -2,75 +2,155 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F553C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5EFC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF4FA20672
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1088120684
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:53:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726066AbfLBXwW (ORCPT
+        id S1726251AbfLBXx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 18:52:22 -0500
-Received: from mga14.intel.com ([192.55.52.115]:7499 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfLBXwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 18:52:22 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 15:52:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,270,1571727600"; 
-   d="scan'208";a="360992449"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga004.jf.intel.com with ESMTP; 02 Dec 2019 15:52:21 -0800
-Date:   Mon, 2 Dec 2019 16:04:14 -0800
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Babu Moger <babu.moger@amd.com>,
-        Andre Przywara <Andre.Przywara@arm.com>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH v8 01/13] selftests/resctrl: Add README for resctrl tests
-Message-ID: <20191203000413.GD220960@romley-ivt3.sc.intel.com>
-References: <1574901584-212957-1-git-send-email-fenghua.yu@intel.com>
- <1574901584-212957-2-git-send-email-fenghua.yu@intel.com>
- <20191128072338.GA17745@zn.tnic>
- <20191202185334.GA220960@romley-ivt3.sc.intel.com>
- <20191202230642.GD32696@zn.tnic>
- <20191202234244.GC220960@romley-ivt3.sc.intel.com>
- <20191202234927.GE32696@zn.tnic>
+        Mon, 2 Dec 2019 18:53:28 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:41335 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725775AbfLBXx1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 18:53:27 -0500
+Received: from dread.disaster.area (pa49-179-150-192.pa.nsw.optusnet.com.au [49.179.150.192])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 60BD27E9A0F;
+        Tue,  3 Dec 2019 10:53:23 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1ibvVJ-0006vv-Nh; Tue, 03 Dec 2019 10:53:21 +1100
+Date:   Tue, 3 Dec 2019 10:53:21 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ming Lei <ming.lei@redhat.com>, Hillf Danton <hdanton@sina.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-fs <linux-fsdevel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rong Chen <rong.a.chen@intel.com>, Tejun Heo <tj@kernel.org>
+Subject: Re: single aio thread is migrated crazily by scheduler
+Message-ID: <20191202235321.GJ2695@dread.disaster.area>
+References: <20191114113153.GB4213@ming.t460p>
+ <20191114235415.GL4614@dread.disaster.area>
+ <20191115010824.GC4847@ming.t460p>
+ <20191115045634.GN4614@dread.disaster.area>
+ <20191115070843.GA24246@ming.t460p>
+ <20191128094003.752-1-hdanton@sina.com>
+ <CAKfTPtA23ErKGCEJVmg6vk-QoufkiUM3NbXd31mZmKnuwbTkFw@mail.gmail.com>
+ <20191202024625.GD24512@ming.t460p>
+ <20191202040256.GE2695@dread.disaster.area>
+ <CAKfTPtD8Q97qJ_+hdCXQRt=gy7k96XrhnFmGYP1G88YSFW0vNA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191202234927.GE32696@zn.tnic>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <CAKfTPtD8Q97qJ_+hdCXQRt=gy7k96XrhnFmGYP1G88YSFW0vNA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=ZXpxJgW8/q3NVgupyyvOCQ==:117 a=ZXpxJgW8/q3NVgupyyvOCQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pxVhFHJ0LMsA:10
+        a=7-415B0cAAAA:8 a=QY18SFpNAAAA:8 a=0-rSKxhP8GJoaAKyaOwA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22 a=LYL6_n6_bXSRrjLcjcND:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 12:49:27AM +0100, Borislav Petkov wrote:
-> On Mon, Dec 02, 2019 at 03:42:44PM -0800, Fenghua Yu wrote:
-> > Should I send v9 patch set with only the Co-developed-by changes?
+On Mon, Dec 02, 2019 at 02:45:42PM +0100, Vincent Guittot wrote:
+> On Mon, 2 Dec 2019 at 05:02, Dave Chinner <david@fromorbit.com> wrote:
+> >
+> > On Mon, Dec 02, 2019 at 10:46:25AM +0800, Ming Lei wrote:
+> > > On Thu, Nov 28, 2019 at 10:53:33AM +0100, Vincent Guittot wrote:
+> > > > On Thu, 28 Nov 2019 at 10:40, Hillf Danton <hdanton@sina.com> wrote:
+> > > > > --- a/fs/iomap/direct-io.c
+> > > > > +++ b/fs/iomap/direct-io.c
+> > > > > @@ -157,10 +157,8 @@ static void iomap_dio_bio_end_io(struct
+> > > > >                         WRITE_ONCE(dio->submit.waiter, NULL);
+> > > > >                         blk_wake_io_task(waiter);
+> > > > >                 } else if (dio->flags & IOMAP_DIO_WRITE) {
+> > > > > -                       struct inode *inode = file_inode(dio->iocb->ki_filp);
+> > > > > -
+> > > > >                         INIT_WORK(&dio->aio.work, iomap_dio_complete_work);
+> > > > > -                       queue_work(inode->i_sb->s_dio_done_wq, &dio->aio.work);
+> > > > > +                       schedule_work(&dio->aio.work);
+> > > >
+> > > > I'm not sure that this will make a real difference because it ends up
+> > > > to call queue_work(system_wq, ...) and system_wq is bounded as well so
+> > > > the work will still be pinned to a CPU
+> > > > Using system_unbound_wq should make a difference because it doesn't
+> > > > pin the work on a CPU
+> > > >  +                       queue_work(system_unbound_wq, &dio->aio.work);
+> > >
+> > > Indeed, just run a quick test on my KVM guest, looks the following patch
+> > > makes a difference:
+> > >
+> > > diff --git a/fs/direct-io.c b/fs/direct-io.c
+> > > index 9329ced91f1d..2f4488b0ecec 100644
+> > > --- a/fs/direct-io.c
+> > > +++ b/fs/direct-io.c
+> > > @@ -613,7 +613,8 @@ int sb_init_dio_done_wq(struct super_block *sb)
+> > >  {
+> > >         struct workqueue_struct *old;
+> > >         struct workqueue_struct *wq = alloc_workqueue("dio/%s",
+> > > -                                                     WQ_MEM_RECLAIM, 0,
+> > > +                                                     WQ_MEM_RECLAIM |
+> > > +                                                     WQ_UNBOUND, 0,
+> > >                                                       sb->s_id);
+> >
+> > That's not an answer to the user task migration issue.
+> >
+> > That is, all this patch does is trade user task migration when the
+> > CPU is busy for migrating all the queued work off the CPU so the
+> > user task does not get migrated. IOWs, this forces all the queued
+> > work to be migrated rather than the user task. IOWs, it does not
+> > address the issue we've exposed in the scheduler between tasks with
+> > competing CPU affinity scheduling requirements - it just hides the
+> > symptom.
+> >
+> > Maintaining CPU affinity across dispatch and completion work has
+> > been proven to be a significant performance win. Right throughout
+> > the IO stack we try to keep this submitter/completion affinity,
+> > and that's the whole point of using a bound wq in the first place:
+> > efficient delayed batch processing of work on the local CPU.
 > 
-> You can wait for other people's review first. And since you sent them
-> during the merge window, you probably should wait longer, since people
-> are busy with fixing fallout from the current stuff going upstream and
-> not reviewing anything new.
+> Do you really want to target the same CPU ? looks like what you really
+> want to target the same cache instead
 
-Ok.
+Well, yes, ideally we want to target the same cache, but we can't do
+that with workqueues.
 
-Thanks.
+However, the block layer already does that same-cache steering for
+it's directed completions (see __blk_mq_complete_request()), so we
+are *already running in a "hot cache" CPU context* when we queue
+work. When we queue to the same CPU, we are simply maintaining the
+"cache-hot" context that we are already running in.
 
--Fenghua
+Besides, selecting a specific "hot cache" CPU and bind the work to
+that CPU (via queue_work_on()) doesn't fix the scheduler problem -
+it just moves it to another CPU. If the destination CPU is loaded
+like the local CPU, then it's jsut going to cause migrations on the
+destination CPU instead of the local CPU.
+
+IOWs, this is -not a fix- for the scheduler making an incorrect
+migration decisions when we are mixing bound and unbound tasks on
+the local run queue. Yes, it will hide the problem from this
+specific workload instance but it doesn't fix it. We'll just hit it
+under heavier load, such as when production workloads start running
+AIO submission from tens of CPUs at a time while burning near 100%
+CPU in userspace.......
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
