@@ -2,229 +2,206 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F37AC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0A6C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED8C22073C
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAC97215E5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:59:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Wz/HrpXp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fxjO1/IF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727988AbfLBS7b (ORCPT
+        id S1727935AbfLBS7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 13:59:31 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46473 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727730AbfLBS7a (ORCPT
+        Mon, 2 Dec 2019 13:59:44 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:27346 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727960AbfLBS7n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 13:59:30 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z7so424579wrl.13
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 10:59:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=unQTULTp6sAiG48yHS2yhT/Mb1KShE6yCF9NxnRbumc=;
-        b=Wz/HrpXpI9EidUbftYCVFgDYmqn47264Tr7ylFDuLsrDIpJf0hjv3lRQOwtjP3Yww8
-         Z48ehC2r8dousMCklB+fs6PWssXD4/5k/f0aNSwcqnMZuuAwar68mwFVtGg09Bu6287E
-         7m3b3kDb3hFcziNommbxQcoJM2bBxBCQgiVPtPkBGRQi7Lcq8MXtkZsshKu0m2au1iN4
-         RnwzxyNoGetxVUzxEpc89778wB7lvisgV1vfKWOEBP3tD7w0K9SZg3IM2MDm19qPOKn+
-         o5602GFlgDoV8PCOIjm1vUSqGLrJ+fAnPykRZkLc2LQvFtUpEnr2Zl6+xqWGn/X9PqeS
-         AKUA==
+        Mon, 2 Dec 2019 13:59:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575313181;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xHVdnribHROCprX42oK+sO39UEOdlO/Er0CYVvgYuxY=;
+        b=fxjO1/IFoP4NTioNeEA/5rbeG6unsF33EgcTPlFIwyMg12X000EQ5PWPyup76ZT6WJj0zS
+        l3UVLeI/eaoaiGIlyFLxFiDqD60iFbeXUMuL4ZXV47KV3PYJMzLGWBj62am8W4NTkXpfZ2
+        B4J0/lzzKdwBY5EpvHqllJKi6ZyJsMY=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-314-_0q64_u0M1evrVaJsWGp3g-1; Mon, 02 Dec 2019 13:59:38 -0500
+Received: by mail-qv1-f72.google.com with SMTP id w13so391013qvb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 10:59:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=unQTULTp6sAiG48yHS2yhT/Mb1KShE6yCF9NxnRbumc=;
-        b=o6S/JMos+GrAv1wl+2wr7kYedS8ANFhE6QK4/bPtwPh4Vkbn1blSJHY0YKw4SrJB6T
-         Lu8T5zNCqbpwrCXXeGUGDOftlVGzgspeOLGKe7unIN5rRzAFYqonXg9JBwIy/4Ay/FW2
-         EppUvHeiarVRGqo+HNP6rOZnM3JUldl+l8irdRiWqi02HPjgNKh5Pjnrb7pjjfi+oVOc
-         gHUie7hw8zhb71z0gDKXreSLsQgWPaCdu28ZSoQ9IbFLlutlHIkowhJZXsCSDuD/R+bC
-         Y2nYqtsTWvAXlAdwQ6lGOkvwqp9pu/4aaRYAZ+Pr+BLKvuSMiik2f9UxhsbK+vsbDIkd
-         On2A==
-X-Gm-Message-State: APjAAAWD0xqHoQmdOARMl/MzJ0JyPVYGsQaFBkPhmz10OuZotjBSBEQ7
-        GXo/P+5yZldux/LAjZaq/HqQ7w==
-X-Google-Smtp-Source: APXvYqwF3V6A6/ZmoJopXwSQgsb+/y5UMG/e7168Qb4THtCwU66DB7QwmneInenq2eC7frlHkGWP2g==
-X-Received: by 2002:adf:de86:: with SMTP id w6mr480167wrl.115.1575313166088;
-        Mon, 02 Dec 2019 10:59:26 -0800 (PST)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id w22sm347094wmk.34.2019.12.02.10.59.24
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Y0FYmPwzu9gexxX3miu/BQ5UsoJK0QS2CjNZdYYEyUw=;
+        b=ngNA/y1xFFwAiRbm6OVDYanL4yuFwMzCF+1XzTphq9M3eNzzJ3Bvqfv5uM6wzgXu57
+         GE3EKQUq3DwoNqA72hYK1NYWTLgTo01SBciM7KW7E/fdqELgzPG+RMOXZMciBlLOzLIB
+         2PUXQq4ALxsJAWOJ+lfCwl4qNXnPqSOzkWKOxKG5oad7Lwd5JoHB/OBNDi52v1RA7txW
+         Xdh2HpXuSXwwSl8tS/QkeEzzNUpux2xYU1frIuxN0Vz8S3ySXdTRG293skbviY9+szd/
+         6Rs9ihBYzozSy4tn/6ACOwY4DNgsIhLjF3/C9nlslfHsL1fb/2Tw8ZLyatctLG5PRVOq
+         MNYw==
+X-Gm-Message-State: APjAAAUi9fNzv/BgX++VoGQB+bU1VjUfVDLJsB0qigKEkCzSo4NnWudw
+        r/rX3k4pRf9r8OSFnlgsavSD4R1ocMiwZDrVegbJ0ArByn4xEoeII1oNixn9CFxHwqlw+HArwtR
+        jtzZ4osyk5+qQVdshOIVY9MZL
+X-Received: by 2002:aed:204d:: with SMTP id 71mr969421qta.116.1575313177975;
+        Mon, 02 Dec 2019 10:59:37 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyl7pBr23YluBRFDZ4/fKPJnD9cok9J0wZ1rQBLGCQW7UnnKuNfyyZ6uiORP4ugO5LfhiICFw==
+X-Received: by 2002:aed:204d:: with SMTP id 71mr969400qta.116.1575313177628;
+        Mon, 02 Dec 2019 10:59:37 -0800 (PST)
+Received: from xz-x1 ([104.156.64.74])
+        by smtp.gmail.com with ESMTPSA id o2sm248207qkf.68.2019.12.02.10.59.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 10:59:25 -0800 (PST)
-References: <20191129161658.344517-1-jbrunet@baylibre.com> <20191202181923.4D26D20717@mail.kernel.org>
-User-agent: mu4e 1.3.3; emacs 26.2
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH] clk: walk orphan list on clock provider registration
-In-reply-to: <20191202181923.4D26D20717@mail.kernel.org>
-Date:   Mon, 02 Dec 2019 19:59:22 +0100
-Message-ID: <1j7e3eft9x.fsf@starbuckisacylon.baylibre.com>
+        Mon, 02 Dec 2019 10:59:36 -0800 (PST)
+Date:   Mon, 2 Dec 2019 13:59:35 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH v2 3/3] KVM: X86: Fixup kvm_apic_match_dest() dest_mode
+ parameter
+Message-ID: <20191202185935.GB10882@xz-x1>
+References: <20191129163234.18902-1-peterx@redhat.com>
+ <20191129163234.18902-4-peterx@redhat.com>
+ <87mucbcchj.fsf@vitty.brq.redhat.com>
+ <20191202173152.GB4063@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20191202173152.GB4063@linux.intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-MC-Unique: _0q64_u0M1evrVaJsWGp3g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Dec 02, 2019 at 09:31:52AM -0800, Sean Christopherson wrote:
+> On Mon, Dec 02, 2019 at 10:18:00AM +0100, Vitaly Kuznetsov wrote:
+> > Peter Xu <peterx@redhat.com> writes:
+> >=20
+> > > The problem is the same as the previous patch on that we've got too
+> > > many ways to define a dest_mode, but logically we should only pass in
+> > > APIC_DEST_* macros for this helper.
+> >=20
+> > Using 'the previous patch' in changelog is OK until it comes to
+> > backporting as the order can change. I'd suggest to spell out "KVM: X86=
+:
+> > Use APIC_DEST_* macros properly" explicitly.
+>=20
+> Even that is bad practice IMO.  Unless there is an explicit dependency on
+> a previous patch, which does not seem to be the case here, the changelog
+> should fully describe and justify the patch without referencing a previou=
+s
+> patch/commit.
+>=20
+> Case in point, I haven't looked at the previous patch yet and have no ide=
+a
+> why *this* patch is needed or what it's trying to accomplish.
 
-On Mon 02 Dec 2019 at 19:19, Stephen Boyd <sboyd@kernel.org> wrote:
+I'll improve both commit messages.
 
-> Quoting Jerome Brunet (2019-11-29 08:16:58)
->> So far, we walked the orphan list every time a new clock was registered
->> in CCF. This was fine since the clocks were only referenced by name.
->> 
->> Now that the clock can be referenced through DT, it is not enough:
->> * Controller A register first a reference clocks from controller B
->>   through DT.
->> * Controller B register all its clocks then register the provider.
->> 
->> Each time controller B registers a new clock, the orphan list is walked
->> but it can't match since the provider is registered yet. When the
->> provider is finally registered, the orphan list is not walked unless
->> another clock is registered afterward.
->> 
->> This can lead to situation where some clocks remain orphaned even if
->> the parent is available.
->> 
->> Walking the orphan list on provider registration solves the problem.
->> 
->> Fixes: fc0c209c147f ("clk: Allow parents to be specified without string names")
->> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
->> ---
->
-> Sounds right. Thanks for making the fix!
->
-> I suspect there should be a reported-by tag though?
+>=20
+> > >
+> > > To make it easier, simply define dest_mode of kvm_apic_match_dest() t=
+o
+> > > be a boolean to make it right while we can avoid to touch the callers=
+.
+> > >
+> > > Signed-off-by: Peter Xu <peterx@redhat.com>
+> > > ---
+> > >  arch/x86/kvm/lapic.c | 5 +++--
+> > >  arch/x86/kvm/lapic.h | 2 +-
+> > >  2 files changed, 4 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> > > index cf9177b4a07f..80732892c709 100644
+> > > --- a/arch/x86/kvm/lapic.c
+> > > +++ b/arch/x86/kvm/lapic.c
+> > > @@ -791,8 +791,9 @@ static u32 kvm_apic_mda(struct kvm_vcpu *vcpu, un=
+signed int dest_id,
+> > >  =09return dest_id;
+> > >  }
+> > > =20
+> > > +/* Set dest_mode to true for logical mode, false for physical mode *=
+/
+> > >  bool kvm_apic_match_dest(struct kvm_vcpu *vcpu, struct kvm_lapic *so=
+urce,
+> > > -=09=09=09   int short_hand, unsigned int dest, int dest_mode)
+> > > +=09=09=09   int short_hand, unsigned int dest, bool dest_mode)
+> > >  {
+> > >  =09struct kvm_lapic *target =3D vcpu->arch.apic;
+> > >  =09u32 mda =3D kvm_apic_mda(vcpu, dest, source, target);
+> > > @@ -800,7 +801,7 @@ bool kvm_apic_match_dest(struct kvm_vcpu *vcpu, s=
+truct kvm_lapic *source,
+> > >  =09ASSERT(target);
+> > >  =09switch (short_hand) {
+> > >  =09case APIC_DEST_NOSHORT:
+> > > -=09=09if (dest_mode =3D=3D APIC_DEST_PHYSICAL)
+> > > +=09=09if (dest_mode =3D=3D false)
+> >=20
+> > I must admit this seriously harm the readability of the code for
+> > me. Just look at the=20
+> >=20
+> >  if (dest_mode =3D=3D false)
+> >=20
+> > line without a context and try to say what's being checked. I can't.
+> >=20
+> > I see to solutions:
+> > 1) Adhere to the APIC_DEST_PHYSICAL/APIC_DEST_LOGICAL (basically - just
+> > check against "dest_mode =3D=3D APIC_DEST_LOGICAL" in the else branch)
+> > 2) Rename the dest_mode parameter to 'dest_mode_is_phys' or something
+> > like that.
+>=20
+> For #2, it should be "logical" instead of "phys" as APIC_DEST_PHYSICAL is
+> the zero value.
+>=20
+> There's also a third option:
+>=20
+>   3) Add a WARN_ON_ONCE and fix the IO APIC callers, e.g.:
+>=20
+> =09WARN_ON_ONCE(dest_mode !=3D APIC_DEST_PHYSICAL ||
+> =09=09     dest_mode !=3D APIC_DEST_LOGICAL);
+>=20
+> =09if (dest_mode =3D=3D APIC_DEST_PHYSICAL)
+> =09=09return kvm_apic_match_physical_addr(target, mda);
+> =09else
+> =09=09return kvm_apic_match_logical_addr(target, mda);
+>=20
+> Part of me likes the simplicity of #2, but on the other hand I don't like
+> the inconsistency with respect to @short_hand and @dest, which take in
+> "full" values.  E.g. @short_hand would also be problematic for a caller
+> that uses a bitfield.
 
-laboriously, yes
+IMHO the best way is that we should always use a boolean for dest mode
+internally because it's always a true or false flag, and we only
+convert it to other forms when needed (e.g. when applying that bit to
+an IOAPIC entry).  But here I think I'll go with the 3rd option to
+avoid code churns (I think it's also what Vitaly suggested as the 1st
+option).
 
->
->>  drivers/clk/clk.c | 59 +++++++++++++++++++++++++++++------------------
->>  1 file changed, 37 insertions(+), 22 deletions(-)
->> 
->> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
->> index ef4416721777..917ba37c3b9d 100644
->> --- a/drivers/clk/clk.c
->> +++ b/drivers/clk/clk.c
->> @@ -3249,6 +3249,34 @@ static inline void clk_debug_unregister(struct clk_core *core)
->>  }
->>  #endif
->>  
->> +static void __clk_core_reparent_orphan(void)
->
-> Maybe drop the double underscore. clk_core prefix already means "private
-> to this file".
+>=20
+> Side topic, the I/O APIC callers should explicitly pass APIC_DEST_NOSHORT
+> instead of 0.
 
-I've done it this way just to keep coherent with __clk_core_init(),
-which the code was extracted from
+I'll fix that too.
 
-In the end, I don't mind so I'll drop it in the v2
+(I also missed suggested-by/reported-by for Vitaly)
 
->
->> +{
->> +       struct clk_core *orphan;
->> +       struct hlist_node *tmp2;
->> +
->> +       /*
->> +        * walk the list of orphan clocks and reparent any that newly finds a
->> +        * parent.
->> +        */
->> +       hlist_for_each_entry_safe(orphan, tmp2, &clk_orphan_list, child_node) {
->> +               struct clk_core *parent = __clk_init_parent(orphan);
->> +
->> +               /*
->> +                * We need to use __clk_set_parent_before() and _after() to
->> +                * to properly migrate any prepare/enable count of the orphan
->> +                * clock. This is important for CLK_IS_CRITICAL clocks, which
->> +                * are enabled during init but might not have a parent yet.
->> +                */
->> +               if (parent) {
->> +                       /* update the clk tree topology */
->> +                       __clk_set_parent_before(orphan, parent);
->> +                       __clk_set_parent_after(orphan, parent, NULL);
->> +                       __clk_recalc_accuracies(orphan);
->> +                       __clk_recalc_rates(orphan, 0);
->> +               }
->> +       }
->> +}
->> +
->>  /**
->>   * __clk_core_init - initialize the data structures in a struct clk_core
->>   * @core:      clk_core being initialized
->> @@ -3259,8 +3287,6 @@ static inline void clk_debug_unregister(struct clk_core *core)
->>  static int __clk_core_init(struct clk_core *core)
->>  {
->>         int ret;
->> -       struct clk_core *orphan;
->> -       struct hlist_node *tmp2;
->>         unsigned long rate;
->>  
->>         if (!core)
->> @@ -3416,27 +3442,8 @@ static int __clk_core_init(struct clk_core *core)
->>                 clk_enable_unlock(flags);
->>         }
->>  
->> -       /*
->> -        * walk the list of orphan clocks and reparent any that newly finds a
->> -        * parent.
->> -        */
->> -       hlist_for_each_entry_safe(orphan, tmp2, &clk_orphan_list, child_node) {
->> -               struct clk_core *parent = __clk_init_parent(orphan);
->> +       __clk_core_reparent_orphan();
->>  
->> -               /*
->> -                * We need to use __clk_set_parent_before() and _after() to
->> -                * to properly migrate any prepare/enable count of the orphan
->> -                * clock. This is important for CLK_IS_CRITICAL clocks, which
->> -                * are enabled during init but might not have a parent yet.
->> -                */
->> -               if (parent) {
->> -                       /* update the clk tree topology */
->> -                       __clk_set_parent_before(orphan, parent);
->> -                       __clk_set_parent_after(orphan, parent, NULL);
->> -                       __clk_recalc_accuracies(orphan);
->> -                       __clk_recalc_rates(orphan, 0);
->> -               }
->> -       }
->>  
->>         kref_init(&core->ref);
->>  out:
->> @@ -4288,6 +4295,10 @@ int of_clk_add_provider(struct device_node *np,
->>         mutex_unlock(&of_clk_mutex);
->>         pr_debug("Added clock from %pOF\n", np);
->>  
->> +       clk_prepare_lock();
->> +       __clk_core_reparent_orphan();
->> +       clk_prepare_unlock();
->> +
->
-> Maybe make a locked version of this function and an unlocked version?
->
->>         ret = of_clk_set_defaults(np, true);
->>         if (ret < 0)
->>                 of_clk_del_provider(np);
->> @@ -4323,6 +4334,10 @@ int of_clk_add_hw_provider(struct device_node *np,
->>         mutex_unlock(&of_clk_mutex);
->>         pr_debug("Added clk_hw provider from %pOF\n", np);
->>  
->> +       clk_prepare_lock();
->> +       __clk_core_reparent_orphan();
->> +       clk_prepare_unlock();
->> +
->
-> So we don't duplicate this twice.
->
+Thank you both for your reviews,
 
-Sure.
-
->>         ret = of_clk_set_defaults(np, true);
->>         if (ret < 0)
+--=20
+Peter Xu
 
