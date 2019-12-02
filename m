@@ -2,119 +2,74 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF56C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8AE3C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 551BC2068E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9771720675
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:18:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfLBVRu (ORCPT
+        id S1726473AbfLBVSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 16:17:50 -0500
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:39332 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbfLBVRt (ORCPT
+        Mon, 2 Dec 2019 16:18:53 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42260 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbfLBVSx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 16:17:49 -0500
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id EA9133C0579;
-        Mon,  2 Dec 2019 22:17:46 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 0ASiIrofYquI; Mon,  2 Dec 2019 22:17:40 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 540063C003B;
-        Mon,  2 Dec 2019 22:17:40 +0100 (CET)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Mon, 2 Dec 2019
- 22:17:39 +0100
-Date:   Mon, 2 Dec 2019 22:17:37 +0100
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        <linux-gpio@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <qemu-devel@nongnu.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH v3 1/7] gpiolib: Add GPIOCHIP_NAME definition
-Message-ID: <20191202211737.GA27915@vmlxhi-102.adit-jv.com>
-References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20191127084253.16356-2-geert+renesas@glider.be>
+        Mon, 2 Dec 2019 16:18:53 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 80F3028F568
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Collabora Kernel ML <kernel@collabora.com>, groeck@chromium.org,
+        bleung@chromium.org, dtor@chromium.org,
+        fabien.lahoudere@collabora.com, guillaume.tucker@collabora.com,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Alexey Brodkin <alexey.brodkin@synopsys.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH 0/2] Standard x86_64 defconfig for KernelCI or Chromebooks
+Date:   Mon,  2 Dec 2019 22:18:42 +0100
+Message-Id: <20191202211844.19629-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191127084253.16356-2-geert+renesas@glider.be>
-User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
-X-Originating-IP: [10.72.93.184]
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+Hi x86 maintainers,
 
-On Wed, Nov 27, 2019 at 09:42:47AM +0100, Geert Uytterhoeven wrote:
-> The string literal "gpiochip" is used in several places.
-> Add a definition for it, and use it everywhere, to make sure everything
-> stays in sync.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v3:
->   - New.
-> ---
->  drivers/gpio/gpiolib-sysfs.c | 7 +++----
->  drivers/gpio/gpiolib.c       | 4 ++--
->  drivers/gpio/gpiolib.h       | 2 ++
->  3 files changed, 7 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-> index ca9bc1e4803c2979..a4a759920faa48ab 100644
-> --- a/drivers/gpio/gpiolib.h
-> +++ b/drivers/gpio/gpiolib.h
-> @@ -16,6 +16,8 @@
->  #include <linux/module.h>
->  #include <linux/cdev.h>
->  
-> +#define GPIOCHIP_NAME	"gpiochip"
+For testing purposes it'd be useful have a standard/mainline config that
+supports the devices that we're testing in KernelCI. For Chromebooks we
+try to take care of have multi_v7_defconfig and arm64 defconfig up to
+date supporting different devices, that way, we don't need to deal with
+out-of-tree kernel configs or fragments. We'd like to do the same for
+x86 architecture, hence this patch series.
 
-[.02$/nit] I wonder if GPIOCHIP_NAME is actually an essential
-part of kernel-user contract [1-2], in which case it could
-probably be moved to include/uapi/linux/gpio.h ?
+I am unsure if the x86_64_defconfig is the right place to do it, if not,
+maybe we can add a chromebooks.config (like xen.config) or even better,
+a kernelci.config, so take this as a RFC if that's the case.
 
-Regardless:
-Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Thanks,
 
-[1] linux (v5.4) git grep '"gpiochip' -- tools/
-tools/gpio/lsgpio.c:                    if (check_prefix(ent->d_name, "gpiochip")) {
-tools/testing/selftests/gpio/gpio-mockup-chardev.c:             if (check_prefix(ent->d_name, "gpiochip")) {
+Enric Balletbo i Serra (2):
+  x86_64_defconfig: Normalize x86_64 defconfig
+  x86_64_defconfig: Enable support for Chromebooks devices
 
-[2] libgpiod (v1.4-76-g00418dfdfc8b) git grep '"gpiochip'
-lib/iter.c:	return !strncmp(dir->d_name, "gpiochip", 8);
-tests/mockup/gpio-mockup.c:	rv = sscanf(sysname, "gpiochip%u", &chip->num);
-tools/gpioget.c:		die("gpiochip must be specified");
-tools/gpiomon.c:		die("gpiochip must be specified");
-tools/gpioset.c:		die("gpiochip must be specified");
+ arch/x86/configs/x86_64_defconfig | 156 +++++++++++++++++++-----------
+ 1 file changed, 97 insertions(+), 59 deletions(-)
 
 -- 
-Best Regards,
-Eugeniu
+2.20.1
+
