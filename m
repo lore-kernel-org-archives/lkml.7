@@ -2,72 +2,116 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3957FC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2854C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 158D52073C
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B907B2071F
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:39:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575304771;
+	bh=BOYd7FIUwuN3tAA+k+QFiEnMWMetmq+s99CxPTiHIaU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=yWrSeeJ4ZpZTcc0NSywKg7uay9f2N8x4BeaO8/lhfR1zSa3DaITgwxjDVe3WhnRLR
+	 +Qeu/+uY3/XOwUDQ+tH8dNuwXSK5GNMTGYgz0u660gpGqRYmXkWzsVuKdM5XsH+4EK
+	 6ysNSMdA4CNAuQxkiwV/knm5mCTQLakGMWfa9bO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727699AbfLBQiE (ORCPT
+        id S1727702AbfLBQja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 11:38:04 -0500
-Received: from mga04.intel.com ([192.55.52.120]:39001 "EHLO mga04.intel.com"
+        Mon, 2 Dec 2019 11:39:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727418AbfLBQiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 11:38:04 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 08:38:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,268,1571727600"; 
-   d="scan'208";a="410487760"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 02 Dec 2019 08:38:03 -0800
-Received: from [10.125.253.1] (abudanko-mobl.ccr.corp.intel.com [10.125.253.1])
-        by linux.intel.com (Postfix) with ESMTP id 551175800FF;
-        Mon,  2 Dec 2019 08:38:01 -0800 (PST)
-Subject: Re: [RFC PATCH 3/8] perf: Init/fini PMU specific data
-To:     Andi Kleen <ak@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     kan.liang@linux.intel.com, mingo@redhat.com, acme@kernel.org,
-        tglx@linutronix.de, bp@alien8.de, linux-kernel@vger.kernel.org,
-        eranian@google.com, vitaly.slobodskoy@intel.com
-References: <1574954071-6321-1-git-send-email-kan.liang@linux.intel.com>
- <1574954071-6321-3-git-send-email-kan.liang@linux.intel.com>
- <20191202124055.GC2827@hirez.programming.kicks-ass.net>
- <20191202145957.GM84886@tassilo.jf.intel.com>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <79138ea7-2249-b7e0-3541-8569e593c6e8@linux.intel.com>
-Date:   Mon, 2 Dec 2019 19:38:00 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        id S1727418AbfLBQja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 11:39:30 -0500
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3D0C20748;
+        Mon,  2 Dec 2019 16:39:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575304770;
+        bh=BOYd7FIUwuN3tAA+k+QFiEnMWMetmq+s99CxPTiHIaU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=zm2zuNr9W2dNwDK5mUKR3imz9kS2EL/vujtjBzVLAd9K9LlJiT7e2rpwNtCW+qQkh
+         7trKeuBmMtlBlO4PiFNIxyT6iZMy7KaV77aqzH6YF/ucVdUQSngDxem1qQ4AHkO50P
+         bp/hQfTMYHp4DFxIQyhe45ziL3hs+7hpOOif3jmE=
+Received: by mail-qt1-f177.google.com with SMTP id n4so356189qte.2;
+        Mon, 02 Dec 2019 08:39:29 -0800 (PST)
+X-Gm-Message-State: APjAAAWeTF1XUN15ZRJNnK24As7gg2g7wcx/cEiEzyhl6Y+onK6vU223
+        Zeq7hSD0QRchqgLzEC2qsyiEaSMN48w3abiQ0A==
+X-Google-Smtp-Source: APXvYqwEfzQjYccT2wMEqMX5wDQatL2N4tHp4A7ns8FSpZxZv0Ca+4EE0DOAgrU16BLEIRXVuEDqcV+whmWoa1VfvRI=
+X-Received: by 2002:ac8:341d:: with SMTP id u29mr179567qtb.300.1575304769066;
+ Mon, 02 Dec 2019 08:39:29 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191202145957.GM84886@tassilo.jf.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191126091946.7970-1-nsaenzjulienne@suse.de> <20191126091946.7970-3-nsaenzjulienne@suse.de>
+In-Reply-To: <20191126091946.7970-3-nsaenzjulienne@suse.de>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 2 Dec 2019 10:39:18 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ=xXWVmnEJc7=Hg_NXhbHnCgkCOUMKRfmq7CKiGzg3Hg@mail.gmail.com>
+Message-ID: <CAL_JsqJ=xXWVmnEJc7=Hg_NXhbHnCgkCOUMKRfmq7CKiGzg3Hg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/7] dt-bindings: PCI: Add bindings for brcmstb's PCIe device
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Andrew Murray <andrew.murray@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        james.quinlan@broadcom.com, Matthias Brugger <mbrugger@suse.com>,
+        Phil Elwell <phil@raspberrypi.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Nov 26, 2019 at 3:20 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> From: Jim Quinlan <james.quinlan@broadcom.com>
+>
+> The DT bindings description of the brcmstb PCIe device is described.
+> This node can only be used for now on the Raspberry Pi 4.
+>
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>
+> ---
+>
+> Changes since v2:
+>   - Add pci reference schema
+>   - Drop all default properties
+>   - Assume msi-controller and msi-parent are properly defined
+>   - Add num entries on multiple properties
+>   - use unevaluatedProperties
+>   - Update required properties
+>   - Fix license
+>
+> Changes since v1:
+>   - Fix commit Subject
+>   - Remove linux,pci-domain
+>
+> This was based on Jim's original submission[1], converted to yaml and
+> adapted to the RPi4 case.
+>
+> [1] https://patchwork.kernel.org/patch/10605937/
+>
+>  .../bindings/pci/brcm,stb-pcie.yaml           | 97 +++++++++++++++++++
+>  1 file changed, 97 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
 
-On 02.12.2019 17:59, Andi Kleen wrote:
->>
->> This is atricous crap. Also it is completely broken for -RT.
-> 
-> Well can you please suggest how you would implement it instead?
-
-FWIW,
-An alternative could probably be to make task_ctx_data allocations
-on the nearest context switch in, and obvious drawback is slowdown on
-this critical path, but it could be amortized by static branches.
-
-Thanks,
-Alexey
+Reviewed-by: Rob Herring <robh@kernel.org>
