@@ -2,123 +2,211 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70282C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 384C3C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4051A20833
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04F7A20833
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:09:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zK9GMzrq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HzWZaaFi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbfLBRGk (ORCPT
+        id S1727750AbfLBRJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 12:06:40 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:45866 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727513AbfLBRGk (ORCPT
+        Mon, 2 Dec 2019 12:09:41 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:38341 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727460AbfLBRJj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 12:06:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=12vfepLsf3YjzqkbhBhkyf8yhAtAkfl23HqEvJbIYys=; b=zK9GMzrqmWlBy2n7w8dQ32Vqf
-        bv8aGZN49p6N2cxJl8zVgmFND6A2TJ6qR2c+N17WmR7c5M+PhTby3xuCZmjxs8D1e5BFfTTehCC3P
-        fpC8GqCLcf714iQFA+30cAgS2AaxfXmMyMyVEXAQuZQeK97qAGOWN8nJ44do0XzJmylqa6JQjNfOG
-        6MITRiyMF3gFeuz2hM/dahKKuDKCf69x2sLnGWAcQ4ZYmTBsPg9edkoooNdcXI+aGLzZea3WejnXj
-        Td34e9V1X+aEoOdriw5fZaAKVTP7AjKTTHGbceS3WAIVLrTodn4iH3j8tzAJrzDua9grQJsPDwmWK
-        fMmWlKCZg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ibp9e-00020p-OC; Mon, 02 Dec 2019 17:06:34 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 363CD301A6C;
-        Mon,  2 Dec 2019 18:05:17 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1D51120D96EC4; Mon,  2 Dec 2019 18:06:33 +0100 (CET)
-Date:   Mon, 2 Dec 2019 18:06:33 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Meelis Roos <mroos@linux.ee>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: UBSAN: Undefined behaviour in arch/x86/events/intel/p6.c:116:29
-Message-ID: <20191202170633.GN2844@hirez.programming.kicks-ass.net>
-References: <02f44ed5-13ac-f9c6-1f35-129c41006900@linux.ee>
+        Mon, 2 Dec 2019 12:09:39 -0500
+Received: by mail-lf1-f67.google.com with SMTP id r14so392884lfm.5;
+        Mon, 02 Dec 2019 09:09:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=U5owG/LNQp37887crEqy2krNGviKjIAZqknpx9+eSTE=;
+        b=HzWZaaFiHaLISnrJN/Y+/337Ql3ejH2WzCCCwQWAsrAIgg3afcXYHoOtaPYFfZiWea
+         QpU8AIRud/pXDQv3bepLYTQDtkWhZm7E80EC59aqsFq75V85mU9nbd5b+LyNSHiKV62q
+         KhN+P4qwMkLgFcIwQaANVebUG+8VCJVoT4dQDqwAC4V6rs0svyFJN+UBzY5VnzAmMhef
+         +Yb5kNGJnvChEVMtWtlFsGVbhPBYfzUuAWIlxd5BXqmr+AgohMVJAt50P6K5L8a0pJJJ
+         PcWl49gu0g9dhioTBEfK8dUOPG+nGothSIGj6QXb8JUUvf0//d7dyuYP0ocab8nNfCvO
+         SNHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=U5owG/LNQp37887crEqy2krNGviKjIAZqknpx9+eSTE=;
+        b=cUETWvteoKA0d5+j8pEcTnqw0NiodH33JG0tYb+fnhGEQMFuewh/Gpnw0eW9wkiH7q
+         UmKtKt18sZrWCI8yF6+tPquwFAxCesBNz56q6McCCM5wqiGhDEpXL0ZGakCCAbSdrEh+
+         g0MEs3Q0UW3QQHPC+vC3y0bvo/ggaOx6A2quDGDn+7u1odNYn039jN8bThQciI0VViXq
+         LbYdCfYOyjJ9GrI7nb0s/5nLSKJENwU1L6sJGe2YJNUif0FPidy/1rPa3Bx8r6/l1Dv0
+         aPkRHrSk+E9HQ5PX/aH/hRIzKXvYCWRM1/Yt1TlhHmQTN1amYcHy4pVUw0C8ZqhrZjDb
+         8yxg==
+X-Gm-Message-State: APjAAAXqWeGrZYXECF7YKt5zRrOQgZ/1+jw33CB16eiKlPIWvlFCf9p2
+        aq6DhBn3uj1Ub5ousrufdzfChtNJ
+X-Google-Smtp-Source: APXvYqw3axLT041EynLDZcJsLKTYSgzFQPe1KnDFN5BsWUUf9K93lqIpG871TPn6wAsbpz4yiXZORg==
+X-Received: by 2002:ac2:5626:: with SMTP id b6mr71481lff.74.1575306576148;
+        Mon, 02 Dec 2019 09:09:36 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id k22sm14777562lfm.48.2019.12.02.09.09.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Dec 2019 09:09:35 -0800 (PST)
+Subject: Re: [PATCH v2 00/11] Move PMC clocks into Tegra PMC driver
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        mperttunen@nvidia.com, sboyd@kernel.org
+Cc:     gregkh@linuxfoundation.org, tglx@linutronix.de, robh+dt@kernel.org,
+        mark.rutland@arm.com, allison@lohutok.net, pdeschrijver@nvidia.com,
+        pgaikwad@nvidia.com, mturquette@baylibre.com,
+        horms+renesas@verge.net.au, Jisheng.Zhang@synaptics.com,
+        krzk@kernel.org, arnd@arndb.de, spujar@nvidia.com,
+        josephl@nvidia.com, vidyas@nvidia.com, daniel.lezcano@linaro.org,
+        mmaddireddy@nvidia.com, markz@nvidia.com,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1574830773-14892-1-git-send-email-skomatineni@nvidia.com>
+ <79e7bd6a-f138-1e7d-6e0b-435adde3b3e5@gmail.com>
+ <04b093fe-5eff-1ad2-9a8a-7674dcb2318a@nvidia.com>
+ <ebcce0df-bb7a-2f24-cfbc-daaf3ac6bb4f@nvidia.com>
+ <45058e6b-244e-8926-584d-297452873612@gmail.com>
+Message-ID: <ccb7b50e-1a71-9803-4dba-b0e743a085df@gmail.com>
+Date:   Mon, 2 Dec 2019 20:09:33 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <02f44ed5-13ac-f9c6-1f35-129c41006900@linux.ee>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <45058e6b-244e-8926-584d-297452873612@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 07:55:08PM +0200, Meelis Roos wrote:
-> While testing 5.4 on a Dell D600 (32-bit), I noticed the old UBSAN warnings from p6 perf events.
-> I remember having seen these warnings on other p6 era computers too.
+28.11.2019 16:06, Dmitry Osipenko пишет:
+> 28.11.2019 00:38, Sowjanya Komatineni пишет:
+>>
+>> On 11/27/19 9:02 AM, Sowjanya Komatineni wrote:
+>>>
+>>> On 11/27/19 6:31 AM, Dmitry Osipenko wrote:
+>>>> 27.11.2019 07:59, Sowjanya Komatineni пишет:
+>>>>> Tegra PMC has clk_out_1, clk_out_2, clk_out_3 and blink controls which
+>>>>> are currently registered by Tegra clock driver using clk_regiser_mux
+>>>>> and
+>>>>> clk_register_gate which performs direct Tegra PMC register access.
+>>>>>
+>>>>> When Tegra PMC is in secure mode, any access from non-secure world will
+>>>>> not go through.
+>>>>>
+>>>>> This patch series adds these Tegra PMC clocks and blink controls to
+>>>>> Tegra
+>>>>> PMC driver with PMC as clock provider and removed them from Tegra clock
+>>>>> driver. This also adds PMC specific clock id's to use in device tree
+>>>>> and
+>>>>> removed clock ids of PMC clock from Tegra clock driver.
+>>>>>
+>>>>> This series also includes patch to update clock provider from tegra_car
+>>>>> to pmc in the device tree tegra210-smaug.dts that uses clk_out_2
+>>>>> from PMC.
+>>>>>
+>>>>> [v2]:    Changes between v1 and v2 are
+>>>>>     - v2 includes patches for adding clk_out_1, clk_out_2, clk_out_3,
+>>>>>       blink controls to Tegra PMC driver and removing clk-tegra-pmc.
+>>>>>     - feedback related to pmc clocks in Tegra PMC driver from v1
+>>>>>     - Removed patches for WB0 PLLM overrides and PLLE IDDQ PMC
+>>>>> programming
+>>>>>       by the clock driver using helper functions from Tegra PMC.
+>>>>>
+>>>>>         Note:
+>>>>>       To use helper functions from PMC driver, PMC early init need to
+>>>>>       happen prior to using helper functions and these helper
+>>>>> functions are
+>>>>>       for PLLM Override and PLLE IDDQ programming in PMC during
+>>>>> PLLM/PLLE
+>>>>>       clock registration which happen in clock_init prior to Tegra PMC
+>>>>>       probe.
+>>>>>       Moving PLLM/PLLE clocks registration to happen after Tegra PMC
+>>>>>       impacts other clocks EMC, MC and corresponding tegra_emc_init and
+>>>>>       tegra_mc_init.
+>>>>>       This implementation of configuring PMC registers thru helper
+>>>>>       functions in clock driver needs proper changes across PMC, Clock,
+>>>>>       EMC and MC inits to have it work across all Tegra platforms.
+>>>>>
+>>>>>       Currently PLLM Override is not enabled in the bootloader so
+>>>>> proper
+>>>>>       patches for this fix will be taken care separately.
+>>>> Hello Sowjanya,
+>>>>
+>>>> Could you please clarify what do you mean by "PLLM Override not enabled
+>>>> in bootloader"?
+>>>>
+>>>> There is T124 Nyan Big Chromebook which is supported in upstream kernel,
+>>>> it has PLLM Override set by bootloader. I also have T30 Nexus 7 tablet
+>>>> which has the PLLM Override set by bootloader as well. It's not clear to
+>>>> me whether this patch series is supposed to break these devices. If the
+>>>> breakage is the case here, then I'm afraid you can't postpone supporting
+>>>> the PLLM Override and a full-featured implementation is needed.
+>>>
+>>> Hi Dmitry,
+>>>
+>>> Secure boot currently is enabled only on Tegra210 and Tegra210
+>>> bootloader doesn't enable PLLM override.
+>>>
+>>> So PLLM override/PLLE IDDQ being in clock driver currently will not
+>>> break on any of existing Tegra platforms.
+>>>
+>>>>
+>>>> I briefly tried to test this series on T30 and this time it doesn't hang
+>>>> on boot, but somehow WiFi MMC card detection is broken. AFAIK, the WiFi
+>>>> chip uses the Blink clock source and the clock should be enabled by the
+>>>> MMC core because this is how DT part looks like:
+>>>>
+>>>> brcm_wifi_pwrseq: wifi-pwrseq {
+>>>>     compatible = "mmc-pwrseq-simple";
+>>>>     clocks = <&pmc TEGRA_PMC_CLK_BLINK>;
+>>>>     clock-names = "ext_clock";
+>>>>     reset-gpios =  <&gpio TEGRA_GPIO(D, 3) GPIO_ACTIVE_LOW>;
+>>>>     post-power-on-delay-ms = <300>;
+>>>>     power-off-delay-us = <300>;
+>>>> };
+>>>>
+>>>> BTW, I  tried this series on a T20 device which also uses the Blink
+>>>> clock for WiFi card and it works. So looks like this patchset has some
+>>>> problem in regards to the T30 PMC clocks implementation.
+>>>>
+>>>> [snip]
+>>>
+>>> Blink init state is set to true for both Tegra20 and Tegra30 and all
+>>> go through the same blink programming sequence.
+>>>
+>>> Will try to add more debug messages to dump registers and will test
+>>> blink through device tree on T30 and will get back...
+>>>
+>>>
+>> define value for BLINK uses BIT macro instead of just position. Will fix
+>> this in v3.
 > 
-> [    2.795167] ================================================================================
-> [    2.795206] UBSAN: Undefined behaviour in arch/x86/events/intel/p6.c:116:29
-> [    2.795235] index 8 is out of range for type 'u64 [8]'
-> [    2.795265] CPU: 0 PID: 1 Comm: swapper Not tainted 5.4.0-03419-g386403a115f9-dirty #18
-> [    2.795266] Hardware name: Dell Computer Corporation Latitude D600                   /0X2034, BIOS A16 06/29/2005
-> [    2.795268] Call Trace:
-> [    2.795283]  dump_stack+0x16/0x19
-> [    2.795290]  ubsan_epilogue+0xb/0x29
-> [    2.795293]  __ubsan_handle_out_of_bounds.cold+0x43/0x48
-> [    2.795299]  ? sysfs_add_file_mode_ns+0xad/0x180
-> [    2.795304]  p6_pmu_event_map+0x3b/0x50
-> [    2.795306]  is_visible+0x25/0x30
-> [    2.795308]  ? collect_events+0x150/0x150
-> [    2.795310]  internal_create_group+0xd8/0x3e0
-> [    2.795312]  ? collect_events+0x150/0x150
-> [    2.795314]  internal_create_groups.part.0+0x34/0x80
-> [    2.795317]  sysfs_create_groups+0x10/0x20
-> [    2.795321]  device_add+0x536/0x5a0
-> [    2.795326]  ? kvasprintf_const+0x59/0x90
-> [    2.795331]  ? kfree_const+0xf/0x30
-> [    2.795334]  ? kobject_set_name_vargs+0x6a/0xa0
-> [    2.795338]  pmu_dev_alloc+0x8e/0xe0
-> [    2.795344]  perf_event_sysfs_init+0x40/0x78
-> [    2.795346]  ? stack_map_init+0x17/0x17
-> [    2.795347]  do_one_initcall+0x7a/0x1b3
-> [    2.795351]  ? do_early_param+0x75/0x75
-> [    2.795354]  kernel_init_freeable+0x1ae/0x230
-> [    2.795357]  ? rest_init+0x6d/0x6d
-> [    2.795359]  kernel_init+0x9/0xf3
-> [    2.795361]  ? rest_init+0x6d/0x6d
-> [    2.795363]  ret_from_fork+0x2e/0x38
-> [    2.795364] ================================================================================
+> Thanks, will try v3 once it will be ready.
+> 
+> I took a look through the T20 board's schematics and seems it doesn't
+> use the Blink clock for the WiFi, instead it uses 32k source directly
+> from PMU. While T30 board schematics tells that  32k comes out from the
+> Tegra chip.
 
-Does something like so fix it?
+That was wrong, both T20 and T30 are identical in regards to the clk32k
+wiring. I'm not sure what's difference between T20 and T30 that made
+WiFi card not to work without the blink clock on T30, maybe it's a WiFi
+chip difference.
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 9a89d98c55bd..f0ab61cd2f68 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1642,9 +1642,12 @@ static struct attribute_group x86_pmu_format_group __ro_after_init = {
- 
- ssize_t events_sysfs_show(struct device *dev, struct device_attribute *attr, char *page)
- {
--	struct perf_pmu_events_attr *pmu_attr = \
-+	struct perf_pmu_events_attr *pmu_attr =
- 		container_of(attr, struct perf_pmu_events_attr, attr);
--	u64 config = x86_pmu.event_map(pmu_attr->id);
-+	u64 config = 0;
-+
-+	if (pmu_attr->id < x86_pmu.max_events)
-+		config = x86_pmu.event_map(pmu_attr->id);
- 
- 	/* string trumps id */
- 	if (pmu_attr->event_str)
+> BTW, I'm curious what's the reason for having Blink clock always-ON on
+> T20/30, any insights? Looks like it's just some relic from old clk
+> driver and it should be safe to drop the always-ON.
+> 
+
