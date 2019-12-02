@@ -2,163 +2,213 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83821C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 900BFC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FABF20717
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:18:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6789F20718
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:19:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575310765;
+	bh=Mxs13Bq2Hc395fEDycCp4i58HTi6qNbE8hBTBrlz/Vk=;
+	h=In-Reply-To:References:Subject:To:From:Cc:Date:List-ID:From;
+	b=n6C2vWoUGyhTGOWX7sSk9r+j5wi1HALC2flkRr4haBVv8lR9g4k8AjOAF4zaECGQB
+	 vOzkBiAeeVSOy428aGizyzLG1ygIqRkdFUXc+SsDUKT+6nZFmvsnZEPGwgTwwz89sr
+	 m5IBXz5A2NHWQYBxxAg7fTx0sujlA3yHKQOhwEwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbfLBSSr (ORCPT
+        id S1727897AbfLBSTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 13:18:47 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36858 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727721AbfLBSSr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 13:18:47 -0500
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB2II2fP131580
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 13:18:45 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wkm46v2wt-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 13:18:45 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 2 Dec 2019 18:18:41 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 2 Dec 2019 18:18:37 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB2IIaDa52363282
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Dec 2019 18:18:36 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 444FB42041;
-        Mon,  2 Dec 2019 18:18:36 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2E96C4203F;
-        Mon,  2 Dec 2019 18:18:35 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.147.107])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  2 Dec 2019 18:18:35 +0000 (GMT)
-Subject: Re: [PATCH v9 5/6] IMA: Add support to limit measuring keys
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org
-Date:   Mon, 02 Dec 2019 13:18:34 -0500
-In-Reply-To: <18b30666-7c44-f81e-8515-189052007e47@linux.microsoft.com>
-References: <20191127015654.3744-1-nramas@linux.microsoft.com>
-         <20191127015654.3744-6-nramas@linux.microsoft.com>
-         <1574880741.4793.292.camel@linux.ibm.com>
-         <18b30666-7c44-f81e-8515-189052007e47@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19120218-0028-0000-0000-000003C39241
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120218-0029-0000-0000-00002486A8F0
-Message-Id: <1575310714.4793.420.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-02_04:2019-11-29,2019-12-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- spamscore=0 priorityscore=1501 lowpriorityscore=0 clxscore=1015
- impostorscore=0 adultscore=0 suspectscore=2 mlxlogscore=999 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912020155
+        Mon, 2 Dec 2019 13:19:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57050 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727670AbfLBSTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 13:19:24 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D26D20717;
+        Mon,  2 Dec 2019 18:19:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575310763;
+        bh=Mxs13Bq2Hc395fEDycCp4i58HTi6qNbE8hBTBrlz/Vk=;
+        h=In-Reply-To:References:Subject:To:From:Cc:Date:From;
+        b=Q/YlT+Dq1E8auTOdqK2zgTCyqjrXkH7Qs4t9Afs/PDOP5MK95Qw2QeP4iaEiz7TT2
+         uOh0Re1R14g1AD1HhkohYGrDRbu/TSxt81UpEtNxodTU+7p2KO2nmJxIT4rxDvpI7S
+         EhLgJm10101qxvcLruG3RmRCZJOrAa/MyBBXtUjM=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191129161658.344517-1-jbrunet@baylibre.com>
+References: <20191129161658.344517-1-jbrunet@baylibre.com>
+Subject: Re: [PATCH] clk: walk orphan list on clock provider registration
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Michael Turquette <mturquette@baylibre.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org
+User-Agent: alot/0.8.1
+Date:   Mon, 02 Dec 2019 10:19:22 -0800
+Message-Id: <20191202181923.4D26D20717@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-11-27 at 16:44 -0800, Lakshmi Ramasubramanian wrote:
-> On 11/27/19 10:52 AM, Mimi Zohar wrote:
-> 
-> Hi Mimi,
-> 
-> >> +static bool ima_match_keyring(struct ima_rule_entry *rule,
-> >> +			      const char *keyring)
-> >> +{
-> >> +	/*
-> >> +	 * "keyrings=" is specified in the policy in the format below:
-> >> +	 *   keyrings=.builtin_trusted_keys|.ima|.evm
-> >> +	 *
-> >> +	 * Each keyring name in the option is separated by a '|' and
-> >> +	 * the last keyring name is null terminated.
-> >> +	 *
-> >> +	 * The given keyring is considered matched only if
-> >> +	 * the whole keyring name matched a keyring name specified
-> >> +	 * in the "keyrings=" option.
-> >> +	 */
-> >> +	p = strstr(rule->keyrings, keyring);
-> >> +	if (p) {
-> >> +		/*
-> >> +		 * Found a substring match. Check if the character
-> >> +		 * at the end of the keyring name is | (keyring name
-> >> +		 * separator) or is the terminating null character.
-> >> +		 * If yes, we have a whole string match.
-> >> +		 */
-> >> +		p += strlen(keyring);
-> >> +		if (*p == '|' || *p == '\0')
-> >> +			return true;
+Quoting Jerome Brunet (2019-11-29 08:16:58)
+> So far, we walked the orphan list every time a new clock was registered
+> in CCF. This was fine since the clocks were only referenced by name.
+>=20
+> Now that the clock can be referenced through DT, it is not enough:
+> * Controller A register first a reference clocks from controller B
+>   through DT.
+> * Controller B register all its clocks then register the provider.
+>=20
+> Each time controller B registers a new clock, the orphan list is walked
+> but it can't match since the provider is registered yet. When the
+> provider is finally registered, the orphan list is not walked unless
+> another clock is registered afterward.
+>=20
+> This can lead to situation where some clocks remain orphaned even if
+> the parent is available.
+>=20
+> Walking the orphan list on provider registration solves the problem.
+>=20
+> Fixes: fc0c209c147f ("clk: Allow parents to be specified without string n=
+ames")
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
 
-This code checks that the keyring name isn't suffixed, but not
-prefixed.
+Sounds right. Thanks for making the fix!
 
-> >> +	}
-> >> +
-> > 
-> > Using "while strsep()" would simplify this code, removing the need for
-> > such a long comment.
-> > 
-> > Mimi
-> 
-> strsep() modifies the source string (replaces the delimiter with '\0' 
-> and also updates the source string pointer). I am not sure it can be 
-> used for our scenario. Please correct me if I am wrong.
-> 
-> Initial IMA policy:
-> -------------------
-> measure func=KEY_CHECK 
-> keyrings=.ima|.evm|.builtin_trusted_keys|.blacklist template=ima-buf
-> 
-> Policy after adding a key to .ima keyring:
-> ------------------------------------------
-> measure func=KEY_CHECK keyrings=.evm|.builtin_trusted_keys|.blacklist 
-> template=ima-buf
-> 
-> Policy after adding a key to a keyring that is not listed in the policy:
-> ------------------------------------------------------------------------
-> measure func=KEY_CHECK keyrings= template=ima-buf
-> 
-> ********************************************************************************
-> 
-> Please see the description from the man page for strsep():
-> 
-> http://man7.org/linux/man-pages/man3/strsep.3.html
-> 
-> char *strsep(char **stringp, const char *delim);
-> 
-> This function finds the first token in the string *stringp, that is 
-> delimited by one of the bytes in the string delim.  This token is 
-> terminated by overwriting the delimiter with a null byte ('\0'), and 
-> *stringp is updated to point past the token.
+I suspect there should be a reported-by tag though?
 
-Yes, you would have to make a copy of the string before using
-strsep().  You could always use kstrdup(), remembering to free it, or
-allocate the memory just once, and then just use memcpy.
+>  drivers/clk/clk.c | 59 +++++++++++++++++++++++++++++------------------
+>  1 file changed, 37 insertions(+), 22 deletions(-)
+>=20
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index ef4416721777..917ba37c3b9d 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -3249,6 +3249,34 @@ static inline void clk_debug_unregister(struct clk=
+_core *core)
+>  }
+>  #endif
+> =20
+> +static void __clk_core_reparent_orphan(void)
 
-Mimi
+Maybe drop the double underscore. clk_core prefix already means "private
+to this file".
 
+> +{
+> +       struct clk_core *orphan;
+> +       struct hlist_node *tmp2;
+> +
+> +       /*
+> +        * walk the list of orphan clocks and reparent any that newly fin=
+ds a
+> +        * parent.
+> +        */
+> +       hlist_for_each_entry_safe(orphan, tmp2, &clk_orphan_list, child_n=
+ode) {
+> +               struct clk_core *parent =3D __clk_init_parent(orphan);
+> +
+> +               /*
+> +                * We need to use __clk_set_parent_before() and _after() =
+to
+> +                * to properly migrate any prepare/enable count of the or=
+phan
+> +                * clock. This is important for CLK_IS_CRITICAL clocks, w=
+hich
+> +                * are enabled during init but might not have a parent ye=
+t.
+> +                */
+> +               if (parent) {
+> +                       /* update the clk tree topology */
+> +                       __clk_set_parent_before(orphan, parent);
+> +                       __clk_set_parent_after(orphan, parent, NULL);
+> +                       __clk_recalc_accuracies(orphan);
+> +                       __clk_recalc_rates(orphan, 0);
+> +               }
+> +       }
+> +}
+> +
+>  /**
+>   * __clk_core_init - initialize the data structures in a struct clk_core
+>   * @core:      clk_core being initialized
+> @@ -3259,8 +3287,6 @@ static inline void clk_debug_unregister(struct clk_=
+core *core)
+>  static int __clk_core_init(struct clk_core *core)
+>  {
+>         int ret;
+> -       struct clk_core *orphan;
+> -       struct hlist_node *tmp2;
+>         unsigned long rate;
+> =20
+>         if (!core)
+> @@ -3416,27 +3442,8 @@ static int __clk_core_init(struct clk_core *core)
+>                 clk_enable_unlock(flags);
+>         }
+> =20
+> -       /*
+> -        * walk the list of orphan clocks and reparent any that newly fin=
+ds a
+> -        * parent.
+> -        */
+> -       hlist_for_each_entry_safe(orphan, tmp2, &clk_orphan_list, child_n=
+ode) {
+> -               struct clk_core *parent =3D __clk_init_parent(orphan);
+> +       __clk_core_reparent_orphan();
+> =20
+> -               /*
+> -                * We need to use __clk_set_parent_before() and _after() =
+to
+> -                * to properly migrate any prepare/enable count of the or=
+phan
+> -                * clock. This is important for CLK_IS_CRITICAL clocks, w=
+hich
+> -                * are enabled during init but might not have a parent ye=
+t.
+> -                */
+> -               if (parent) {
+> -                       /* update the clk tree topology */
+> -                       __clk_set_parent_before(orphan, parent);
+> -                       __clk_set_parent_after(orphan, parent, NULL);
+> -                       __clk_recalc_accuracies(orphan);
+> -                       __clk_recalc_rates(orphan, 0);
+> -               }
+> -       }
+> =20
+>         kref_init(&core->ref);
+>  out:
+> @@ -4288,6 +4295,10 @@ int of_clk_add_provider(struct device_node *np,
+>         mutex_unlock(&of_clk_mutex);
+>         pr_debug("Added clock from %pOF\n", np);
+> =20
+> +       clk_prepare_lock();
+> +       __clk_core_reparent_orphan();
+> +       clk_prepare_unlock();
+> +
+
+Maybe make a locked version of this function and an unlocked version?
+
+>         ret =3D of_clk_set_defaults(np, true);
+>         if (ret < 0)
+>                 of_clk_del_provider(np);
+> @@ -4323,6 +4334,10 @@ int of_clk_add_hw_provider(struct device_node *np,
+>         mutex_unlock(&of_clk_mutex);
+>         pr_debug("Added clk_hw provider from %pOF\n", np);
+> =20
+> +       clk_prepare_lock();
+> +       __clk_core_reparent_orphan();
+> +       clk_prepare_unlock();
+> +
+
+So we don't duplicate this twice.
+
+>         ret =3D of_clk_set_defaults(np, true);
+>         if (ret < 0)
