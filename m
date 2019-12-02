@@ -2,76 +2,175 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECE4C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF06DC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 529F620684
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:53:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D28C20684
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:54:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ftn3CX6v"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XfAUie+A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbfLBRxn (ORCPT
+        id S1727841AbfLBRyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 12:53:43 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:59924 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727420AbfLBRxn (ORCPT
+        Mon, 2 Dec 2019 12:54:45 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37562 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726673AbfLBRyp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 12:53:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=M7fv7jcOHqgohkKt6f3sn6tPoUKwQcA0o8iBf5ScMR0=; b=Ftn3CX6v4yGsyPyCd7AAhMAhq
-        I1vzf9YcNLjMrtrHPnqfxpK/QaVDWE2JBG3KrM+sLCo/J4E3friVmXTXfOGtZmI6HZ8becZ87M4Pv
-        g6D4jmcjz30PIB288ApHnafM8k434QwrcjYLOvFwAmlxUAgak0ZDOqORuiGRC1PhCbcRrUlBXuE1T
-        1l22YEvFDxqeSIVr63exXLm4cHJXWTmuSBCrOJDmUgWunFeFYVJ+Rsu2MVYxnDdVDZTJsf2WlMiRI
-        2tBLpLubYolQHogMga4ed/rdcncw76uYQs9xx8+x44Y140TO5qN5TrJjHXE9+2qJ8bK9WEtRzypx0
-        wRSsIt9Xw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ibptF-00033n-Kt; Mon, 02 Dec 2019 17:53:41 +0000
-Date:   Mon, 2 Dec 2019 09:53:41 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Can Guo <cang@codeaurora.org>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Evan Green <evgreen@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] scsi: ufs: Give an unique ID to each ufs-bsg
-Message-ID: <20191202175341.GA11646@infradead.org>
-References: <0101016ec4a25ed1-faa62196-1f0c-48a8-9cba-a433245d0ed0-000000@us-west-2.amazonses.com>
+        Mon, 2 Dec 2019 12:54:45 -0500
+Received: by mail-pf1-f195.google.com with SMTP id s18so21381pfm.4;
+        Mon, 02 Dec 2019 09:54:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=qiujuAi1riVo8klnEP4qdEE/TOBe0O4bFb1tD08EBXY=;
+        b=XfAUie+ABFBr1n4Fr9d871P83rSuILi6F6dhe0peXxcSI74PdIRM1cha4BQjnMJ3cr
+         4SRHPHbdHI1gpXeEAdrhd0u4e6z3HLcoBZqS8jFaklkzfe8Lz9STfOL9WOgQ2TkzyD0v
+         7ePPlxyZMuhSUKYkCgD5/RjIP7dJG1EQozc73l9MNuvEezyMeMnHhD4GFYlGvTQBJJfW
+         bzPmPT8HHMUm4XbG/GCTKqj5noNt/iRkZ0vErSPIy1iwwUaUYIffddKcd0S3fFSYOF3P
+         Vc7x15dnEUv2yuaNmcqTmtIrX9YyjDSk7BPxruWNbKhADxuvTUUWCnRbcG5CZ7XBOQqz
+         t4gA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=qiujuAi1riVo8klnEP4qdEE/TOBe0O4bFb1tD08EBXY=;
+        b=UocJCndIIZ9aL8z2OlQD2PqMDRGWNV9Dz31IidzKp4MQRJHmlEu15EibyhNi05kteC
+         4M9wslNAULyrf/0Jbbm8i8Jxww5o0pyZWWVl2SLByBPBS1WRrL4teH6Lm+yun9Burrqk
+         InVn2zWOH5OOk0tBd8U+Dj2u+YCO2/1XGbdqcg+UGtNjFp4c9fzYKo/SgoRsh7kl2tgF
+         T7nvYVJVrdRWr3IkCegbG/hioqYZRZCsoDub0oRQtMaODBsCotPY+P943Pc+y1bJfd7W
+         8LHZZKoBQ4tONiW8K3fbw/P3jpijNy3eSzW/R5apj8LVBQXZoHUNmqllbcbisK1VzA5Y
+         SKhA==
+X-Gm-Message-State: APjAAAWwzlA6oJeWR9xdcjTTlOYPc4LfUgpfWVhlebn4UxqI/uwZLQ1R
+        dRrpgRSLYRo9m4INITuI4O0=
+X-Google-Smtp-Source: APXvYqw+gLzaW8HjWseoNCUamJPIy95r6IqJIJaDoP4ERqtPvzN8dBJNAumdCnwFHx3n1LnW+J3vRw==
+X-Received: by 2002:a63:f355:: with SMTP id t21mr197357pgj.443.1575309283918;
+        Mon, 02 Dec 2019 09:54:43 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id q4sm195991pgv.83.2019.12.02.09.54.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 09:54:42 -0800 (PST)
+Date:   Mon, 2 Dec 2019 09:54:40 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        linux-input@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Kirill Smelkov <kirr@nexedi.com>
+Subject: Re: [PATCH] Input: uinput - Add UI_SET_UNIQ ioctl handler
+Message-ID: <20191202175440.GA50317@dtor-ws>
+References: <20191127185139.65048-1-abhishekpandit@chromium.org>
+ <20191201145357.ybq5gfty4ulnfasq@pali>
+ <20191202012305.GQ248138@dtor-ws>
+ <20191202084750.k7lafzzrf3yq2tqs@pali>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <0101016ec4a25ed1-faa62196-1f0c-48a8-9cba-a433245d0ed0-000000@us-west-2.amazonses.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191202084750.k7lafzzrf3yq2tqs@pali>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 03:23:25AM +0000, Can Guo wrote:
-> Considering there can be multiple UFS hosts in SoC, give each ufs-bsg an
-> unique ID by appending the scsi host number to its device name.
+On Mon, Dec 02, 2019 at 09:47:50AM +0100, Pali Rohár wrote:
+> On Sunday 01 December 2019 17:23:05 Dmitry Torokhov wrote:
+> > Hi Pali,
+> > 
+> > On Sun, Dec 01, 2019 at 03:53:57PM +0100, Pali Rohár wrote:
+> > > Hello!
+> > > 
+> > > On Wednesday 27 November 2019 10:51:39 Abhishek Pandit-Subedi wrote:
+> > > > Support setting the uniq attribute of the input device. The uniq
+> > > > attribute is used as a unique identifier for the connected device.
+> > > > 
+> > > > For example, uinput devices created by BlueZ will store the address of
+> > > > the connected device as the uniq property.
+> > > > 
+> > > > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> > > 
+> > > ...
+> > > 
+> > > > diff --git a/include/uapi/linux/uinput.h b/include/uapi/linux/uinput.h
+> > > > index c9e677e3af1d..d5b7767c1b02 100644
+> > > > --- a/include/uapi/linux/uinput.h
+> > > > +++ b/include/uapi/linux/uinput.h
+> > > > @@ -145,6 +145,7 @@ struct uinput_abs_setup {
+> > > >  #define UI_SET_PHYS		_IOW(UINPUT_IOCTL_BASE, 108, char*)
+> > > >  #define UI_SET_SWBIT		_IOW(UINPUT_IOCTL_BASE, 109, int)
+> > > >  #define UI_SET_PROPBIT		_IOW(UINPUT_IOCTL_BASE, 110, int)
+> > > > +#define UI_SET_UNIQ		_IOW(UINPUT_IOCTL_BASE, 111, char*)
+> > > 
+> > > I think that usage of char* as type in _IOW would cause compatibility
+> > > problems like it is for UI_SET_PHYS (there is UI_SET_PHYS_COMPAT). Size
+> > > of char* pointer depends on userspace (32 vs 64bit), so 32bit process on
+> > > 64bit kernel would not be able to call this new UI_SET_UNIQ ioctl.
+> > > 
+> > > I would suggest to define this ioctl as e.g.:
+> > > 
+> > >   #define UI_SET_UNIQ		_IOW(_IOC_WRITE, UINPUT_IOCTL_BASE, 111, 0)
+> > > 
+> > > And then in uinput.c code handle it as:
+> > > 
+> > >   case UI_SET_UNIQ & ~IOCSIZE_MASK:
+> > > 
+> > > as part of section /* Now check variable-length commands */
+> > 
+> > If we did not have UI_SET_PHYS in its current form, I'd agree with you,
+> > but I think there is benefit in having UI_SET_UNIQ be similar to
+> > UI_SET_PHYS.
 > 
-> Signed-off-by: Can Guo <cang@codeaurora.org>
+> I thought that ioctl is just number, so we can define it as we want. And
+> because uinput.c has already switch for variable-length commands it
+> would be easy to use it. Final handling can be in separate function like
+> for UI_SET_PHYS which can look like same.
 
-Looks good,
+Yes, we can define ioctl number as whatever we want. What I was trying
+to say, right now users do this:
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+	rc = ioctl(fd, UI_SET_PHYS, "whatever");
+	...
 
-This should also get a Fixes: tag so that it gets backported.
+and with UI_SET_UNIQ they expect the following to work:
+
+	rc = ioctl(fd, UI_SET_UNIQ, "whatever");
+	...
+
+They would not expect a variable length IOCTL here, or expect a
+fixed-size string, nor do they expect to cast pointer to u64. So keeping
+the spirit of UI_SET_PHYS, even if it is not great from 64/32 bit point
+of view is beneficial here.
+
+> 
+> > But you are absolutely correct that in current form the patch is
+> > deficient on 64/32 systems, and the compat handling needs to be added
+> > before it can be accepted.
+> 
+> Is not better to avoid usage of compat ioctl? Or it is OK to use compat
+> ioctl also for new features? I do not know if there are some kernel
+> rules for it or not... But for me it sounds like "compatibility layer
+> for older code".
+
+Yes, if uinput driver did not have any compat code in it, we would not
+want to add it. But alas! we already need to handle compat cases for
+expsting API, so consistency is more important than purity (in my
+opinion) here.
+
+Thanks.
+
+-- 
+Dmitry
