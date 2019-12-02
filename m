@@ -2,97 +2,116 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E81C43141
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84560C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6790024653
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:17:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575314233;
-	bh=Tbap/Zmbh8gZMiHJcbLH34iqHD0SlfP5bSkdQHyv2Pw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ckd+sRc67Q37kJshhnTTfP1KBL8mZZjvY79KK3noxtNZa6X2uHyRidwAYiZtGv56t
-	 muxWrsaBCjOYqaLj40cCsytxRTffpPjfb9WNQosbHJEV5GsbEoM9bgvge8Flz1jaSx
-	 l7Xgi7WwXjD5edVeqmQIEcce3sH5A6LkU+q+9AJs=
+	by mail.kernel.org (Postfix) with ESMTP id 4E9A8214AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:18:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ofPd/sJG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728106AbfLBTRM (ORCPT
+        id S1728047AbfLBTSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 14:17:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49856 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727586AbfLBTRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 14:17:12 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50C7A214AF;
-        Mon,  2 Dec 2019 19:17:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575314231;
-        bh=Tbap/Zmbh8gZMiHJcbLH34iqHD0SlfP5bSkdQHyv2Pw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Dkufy4cS1HaipR+LhHipcKBL4Xu12NzG+/yYNkCVI8gfr2V1PjPUmGCblvOaQChp3
-         NGrtXRe7y9k2FEFMan3af92qn2MJT+HhhtXbHNOwPFyH+qYrAXJdXDgQBw4M7zNt1d
-         cpllNddpVE7MoUoKopBcs0zLjKjMqw+iRkfQ22aA=
-Date:   Mon, 2 Dec 2019 20:17:09 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Stefan Mavrodiev <stefan@olimex.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-sunxi@googlegroups.com, stable@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] arm64: dts: allwinner: a64: olinuxino: Fix SDIO
- supply regulator
-Message-ID: <20191202191709.nqbushoi65dhiqgj@gilmour.lan>
-References: <20191129113941.20170-1-stefan@olimex.com>
- <20191129113941.20170-4-stefan@olimex.com>
+        Mon, 2 Dec 2019 14:18:34 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37997 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727556AbfLBTSd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 14:18:33 -0500
+Received: by mail-pf1-f196.google.com with SMTP id x185so146807pfc.5
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 11:18:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AG/LZstzo//ptLVf07PatyOsdS+AHHPAwpIXLlE6z3Q=;
+        b=ofPd/sJG1S0B0dPuZvEuwVEnta6pLrb2ze2cDFyASH+9cicpvVoSXin1a28KC1uw+8
+         A1zEeq6ZSTIb+mv4SqffAInNcaih6mMYQdKn3P1tWDJYo81FPRS1fLZrzho/xgiDm8SC
+         YOhQaxeWaQnX+pq28UmTQjVjcOGSrcQztu3QcM0dLbmS4HkmH+6+uaSnhPZ6QyM+Kpuf
+         O25gQvWrczJ6AQNj+mOf5ExZdJtaFVULHquVeMHHBeZDHdeLWb9dMIctEZvYFV8oR3cs
+         kRT1gazLrRcIoDGasBeKRreFz2tyPPID3Ya/K80xcDHhS1E1QjS4D+HGae5pA+TeVSCn
+         E3cA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AG/LZstzo//ptLVf07PatyOsdS+AHHPAwpIXLlE6z3Q=;
+        b=ksxcrKOuludJHGOxAT5BbrWL33IW3h+Dm+vBPzlpfVas53Gvgsatc0A4To1P0k6vrl
+         VGSpW9cLJUCgb2yNbcIib6awK8KTr+JKoqvwrprc1zbB3FzMa0XBRLxgIgL85hWCkhPV
+         rm8ucl+foPhar3YNpo5wRg/kk79FI2ASyVGjlVFDn1LfZVkw70f7EnLs+ZnIl9d+qgED
+         6jtO3eVqkPgh1ttFQfizZ+U5Z7aYQB/MUQzi2OLZZFMYvtLe0Uqqg1VZx21gC5p4bout
+         LyF0ZWg6pa7lVhVgCFv2OmIu+9zx7/iAnbw6RtXeZsk2y8+Ffnk7x4IFRQP2H/SwMWva
+         +vvQ==
+X-Gm-Message-State: APjAAAUYp3x61j8zd15gu0Oj7o9kkaydpdXW352TxfDXRhoYK9e7xklG
+        ux24+inedzog8WNWd1w5+FWFN9qzAtVx34tYgT/Smw==
+X-Google-Smtp-Source: APXvYqx4981BLNDeOn62kzvLoj/j1kEDcJo+0UePcbQi+8VI03sKun8IkhkPLZsWMAv1Pcyofy6UuuetlJSBs1CKAcU=
+X-Received: by 2002:a65:64c1:: with SMTP id t1mr677588pgv.263.1575314311159;
+ Mon, 02 Dec 2019 11:18:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="l3uncgqa5xbn4vfx"
-Content-Disposition: inline
-In-Reply-To: <20191129113941.20170-4-stefan@olimex.com>
+References: <20191123195321.41305-1-natechancellor@gmail.com> <157453950786.2524.16955749910067219709@skylake-alporthouse-com>
+In-Reply-To: <157453950786.2524.16955749910067219709@skylake-alporthouse-com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 2 Dec 2019 11:18:20 -0800
+Message-ID: <CAKwvOdniXqn3xt3-W0Pqi-X1nWjJ2vUVofjCm1O-UPXZ7_4rXw@mail.gmail.com>
+Subject: Re: [PATCH] drm/i915: Remove tautological compare in eb_relocate_vma
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        intel-gfx@lists.freedesktop.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---l3uncgqa5xbn4vfx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Nov 29, 2019 at 01:39:41PM +0200, Stefan Mavrodiev wrote:
-> A64-OLinuXino uses DCDC1 (VCC-IO) for MMC1 supply. In commit 916b68cfe4b5
-> ("arm64: dts: a64-olinuxino: Enable RTL8723BS WiFi") ALDO2 is set, which is
-> VCC-PL. Since DCDC1 is always present, the boards are working without a
-> problem.
+On Sat, Nov 23, 2019 at 12:05 PM Chris Wilson <chris@chris-wilson.co.uk> wrote:
 >
-> This patch sets the correct regulator.
+> Quoting Nathan Chancellor (2019-11-23 19:53:22)
+> > -Wtautological-compare was recently added to -Wall in LLVM, which
+> > exposed an if statement in i915 that is always false:
+> >
+> > ../drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c:1485:22: warning:
+> > result of comparison of constant 576460752303423487 with expression of
+> > type 'unsigned int' is always false
+> > [-Wtautological-constant-out-of-range-compare]
+> >         if (unlikely(remain > N_RELOC(ULONG_MAX)))
+> >             ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+> >
+> > Since remain is an unsigned int, it can never be larger than UINT_MAX,
+> > which is less than ULONG_MAX / sizeof(struct drm_i915_gem_relocation_entry).
+> > Remove this statement to fix the warning.
 >
-> Fixes: 916b68cfe4b5 ("arm64: dts: a64-olinuxino: Enable RTL8723BS WiFi")
-> Cc: stable@vger.kernel.org # v4.16+
-> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+> The check should remain as we do want to document the overflow
+> calculation, and it should represent the types used -- it's much easier
 
-Applied, thanks!
-Maxime
+What do you mean "represent the types used?"  Are you concerned that
+the type of drm_i915_gem_exec_object2->relocation_count might change
+in the future?
 
---l3uncgqa5xbn4vfx
-Content-Type: application/pgp-signature; name="signature.asc"
+> to review a stub than trying to find a missing overflow check. If the
+> overflow cannot happen as the types are wide enough, no problem, the
+> compiler can remove the known false branch.
 
------BEGIN PGP SIGNATURE-----
+What overflow are you trying to protect against here?
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXeVjNQAKCRDj7w1vZxhR
-xYI5AQDZZQGUNxHfiwStWrEfc2VJtj2zpYy6AQcUhgg5psTkzQEAr0lcg82RRRqt
-AQVFVWi1+hH35NAMNs6z1e4eIPP5ggU=
-=yaJQ
------END PGP SIGNATURE-----
+>
+> Tautology here has a purpose for conveying information to the reader.
 
---l3uncgqa5xbn4vfx--
+Well leaving a warning unaddressed is also not a solution.  Either
+replace it with a comment or turn off the warning for your subdir.
+
+The warning here looks valid to me; you have a guard for something
+that's impossible.
+-- 
+Thanks,
+~Nick Desaulniers
