@@ -6,34 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB9DC43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BA2C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED7E32070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:29:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B99AC2070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:29:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbfLBK31 (ORCPT
+        id S1727486AbfLBK30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 05:29:27 -0500
-Received: from mx2.suse.de ([195.135.220.15]:57536 "EHLO mx1.suse.de"
+        Mon, 2 Dec 2019 05:29:26 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57564 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726330AbfLBK3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727430AbfLBK3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Dec 2019 05:29:23 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E3A61B29F;
-        Mon,  2 Dec 2019 10:29:20 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 6E18EB2B3;
+        Mon,  2 Dec 2019 10:29:21 +0000 (UTC)
 From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 To:     linux-realtek-soc@lists.infradead.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
         James Tai <james.tai@realtek.com>,
-        Rob Herring <robh@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org
-Subject: [PATCH v2 4/9] arm64: dts: realtek: rtd129x: Carve out boot ROM from memory
-Date:   Mon,  2 Dec 2019 11:29:05 +0100
-Message-Id: <20191202102910.26916-5-afaerber@suse.de>
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: [PATCH v2 5/9] arm64: dts: realtek: rtd16xx: Carve out boot ROM from memory
+Date:   Mon,  2 Dec 2019 11:29:06 +0100
+Message-Id: <20191202102910.26916-6-afaerber@suse.de>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20191202102910.26916-1-afaerber@suse.de>
 References: <20191202102910.26916-1-afaerber@suse.de>
@@ -45,155 +44,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update DS418j, MeLE V9, PROBOX2 AVA, Zidoo X9S and DS418 /memory nodes
-to exclude 0..0x1efff from reg entry and update unit address to match.
-Add this region to /soc ranges and for now just update the /memreserve/s.
+Update Mjolnir /memory node to exclude 0..0x2dfff from reg entry.
+Add this region to /soc ranges instead.
 
 Suggested-by: Rob Herring <robh@kernel.org>
-Fixes: 72a7786c0a0d ("ARM64: dts: Add Realtek RTD1295 and Zidoo X9S")
-Fixes: d938a964a966 ("arm64: dts: realtek: Add ProBox2 Ava")
-Fixes: a9ce6f854581 ("arm64: dts: realtek: Add MeLE V9")
-Fixes: cf976f660ee8 ("arm64: dts: realtek: Add RTD1293 and Synology DS418j")
-Fixes: 5133636e41a2 ("arm64: dts: realtek: Add RTD1296 and Synology DS418")
 Cc: James Tai <james.tai@realtek.com>
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
+ TODO: Add Fixes header once RTD1619 has a stable -rc1 based commit hash.
+
+ To be followed up by patch unshadowing more RAM from /soc 0x98000000..0xffffffff,
+ once we know the higher RAM windows.
+ 
  v2: New
  
- arch/arm64/boot/dts/realtek/rtd1293-ds418j.dts      | 6 +++---
- arch/arm64/boot/dts/realtek/rtd1295-mele-v9.dts     | 6 +++---
- arch/arm64/boot/dts/realtek/rtd1295-probox2-ava.dts | 6 +++---
- arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts   | 4 ++--
- arch/arm64/boot/dts/realtek/rtd1296-ds418.dts       | 4 ++--
- arch/arm64/boot/dts/realtek/rtd129x.dtsi            | 9 +++++----
- 6 files changed, 18 insertions(+), 17 deletions(-)
+ arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts | 5 +++--
+ arch/arm64/boot/dts/realtek/rtd16xx.dtsi        | 4 +++-
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/realtek/rtd1293-ds418j.dts b/arch/arm64/boot/dts/realtek/rtd1293-ds418j.dts
-index b2dd583146b4..b2e44c6c2d22 100644
---- a/arch/arm64/boot/dts/realtek/rtd1293-ds418j.dts
-+++ b/arch/arm64/boot/dts/realtek/rtd1293-ds418j.dts
-@@ -1,6 +1,6 @@
+diff --git a/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts b/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
+index 44dd67e04335..90ed6681468f 100644
+--- a/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
++++ b/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
+@@ -1,6 +1,7 @@
  // SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
  /*
-- * Copyright (c) 2017 Andreas Färber
-+ * Copyright (c) 2017-2019 Andreas Färber
+  * Copyright (c) 2019 Realtek Semiconductor Corp.
++ * Copyright (c) 2019 Andreas Färber
   */
  
  /dts-v1/;
-@@ -11,9 +11,9 @@
- 	compatible = "synology,ds418j", "realtek,rtd1293";
- 	model = "Synology DiskStation DS418j";
+@@ -11,9 +12,9 @@
+ 	compatible = "realtek,mjolnir", "realtek,rtd1619";
+ 	model = "Realtek Mjolnir EVB";
  
 -	memory@0 {
-+	memory@1f000 {
++	memory@2e000 {
  		device_type = "memory";
--		reg = <0x0 0x40000000>;
-+		reg = <0x1f000 0x3ffe1000>; /* boot ROM to 1 GiB */
+-		reg = <0x0 0x80000000>;
++		reg = <0x2e000 0x7ffd2000>; /* boot ROM to 2 GiB */
  	};
  
- 	aliases {
-diff --git a/arch/arm64/boot/dts/realtek/rtd1295-mele-v9.dts b/arch/arm64/boot/dts/realtek/rtd1295-mele-v9.dts
-index bd584e99fff9..cf4a57c012a8 100644
---- a/arch/arm64/boot/dts/realtek/rtd1295-mele-v9.dts
-+++ b/arch/arm64/boot/dts/realtek/rtd1295-mele-v9.dts
-@@ -1,5 +1,5 @@
- /*
-- * Copyright (c) 2017 Andreas Färber
-+ * Copyright (c) 2017-2019 Andreas Färber
+ 	chosen {
+diff --git a/arch/arm64/boot/dts/realtek/rtd16xx.dtsi b/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
+index c7bbf2c7bb7c..69cc0d941c8d 100644
+--- a/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
++++ b/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
+@@ -3,6 +3,7 @@
+  * Realtek RTD16xx SoC family
   *
-  * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+  * Copyright (c) 2019 Realtek Semiconductor Corp.
++ * Copyright (c) 2019 Andreas Färber
   */
-@@ -12,9 +12,9 @@
- 	compatible = "mele,v9", "realtek,rtd1295";
- 	model = "MeLE V9";
- 
--	memory@0 {
-+	memory@1f000 {
- 		device_type = "memory";
--		reg = <0x0 0x80000000>;
-+		reg = <0x1f000 0x7ffe1000>; /* boot ROM to 2 GiB */
- 	};
- 
- 	aliases {
-diff --git a/arch/arm64/boot/dts/realtek/rtd1295-probox2-ava.dts b/arch/arm64/boot/dts/realtek/rtd1295-probox2-ava.dts
-index 8e2b0e75298a..14161c3f304d 100644
---- a/arch/arm64/boot/dts/realtek/rtd1295-probox2-ava.dts
-+++ b/arch/arm64/boot/dts/realtek/rtd1295-probox2-ava.dts
-@@ -1,5 +1,5 @@
- /*
-- * Copyright (c) 2017 Andreas Färber
-+ * Copyright (c) 2017-2019 Andreas Färber
-  *
-  * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-  */
-@@ -12,9 +12,9 @@
- 	compatible = "probox2,ava", "realtek,rtd1295";
- 	model = "PROBOX2 AVA";
- 
--	memory@0 {
-+	memory@1f000 {
- 		device_type = "memory";
--		reg = <0x0 0x80000000>;
-+		reg = <0x1f000 0x7ffe1000>; /* boot ROM to 2 GiB */
- 	};
- 
- 	aliases {
-diff --git a/arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts b/arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts
-index e98e508b9514..4beb37bb9522 100644
---- a/arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts
-+++ b/arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts
-@@ -11,9 +11,9 @@
- 	compatible = "zidoo,x9s", "realtek,rtd1295";
- 	model = "Zidoo X9S";
- 
--	memory@0 {
-+	memory@1f000 {
- 		device_type = "memory";
--		reg = <0x0 0x80000000>;
-+		reg = <0x1f000 0x7ffe1000>; /* boot ROM to 2 GiB */
- 	};
- 
- 	aliases {
-diff --git a/arch/arm64/boot/dts/realtek/rtd1296-ds418.dts b/arch/arm64/boot/dts/realtek/rtd1296-ds418.dts
-index 5a051a52bf88..cc706d13da8b 100644
---- a/arch/arm64/boot/dts/realtek/rtd1296-ds418.dts
-+++ b/arch/arm64/boot/dts/realtek/rtd1296-ds418.dts
-@@ -11,9 +11,9 @@
- 	compatible = "synology,ds418", "realtek,rtd1296";
- 	model = "Synology DiskStation DS418";
- 
--	memory@0 {
-+	memory@1f000 {
- 		device_type = "memory";
--		reg = <0x0 0x80000000>;
-+		reg = <0x1f000 0x7ffe1000>; /* boot ROM to 2 GiB */
- 	};
- 
- 	aliases {
-diff --git a/arch/arm64/boot/dts/realtek/rtd129x.dtsi b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
-index 5e755dda7abb..0de9e675be16 100644
---- a/arch/arm64/boot/dts/realtek/rtd129x.dtsi
-+++ b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
-@@ -5,8 +5,8 @@
-  * Copyright (c) 2016-2019 Andreas Färber
-  */
- 
--/memreserve/	0x0000000000000000 0x0000000000030000;
--/memreserve/	0x0000000000030000 0x00000000000d0000;
-+/memreserve/	0x0000000000000000 0x000000000001f000;
-+/memreserve/	0x000000000001f000 0x00000000000e1000;
- /memreserve/	0x0000000001b00000 0x00000000004be000;
  
  #include <dt-bindings/interrupt-controller/arm-gic.h>
-@@ -52,8 +52,9 @@
+@@ -107,7 +108,8 @@
  		compatible = "simple-bus";
  		#address-cells = <1>;
  		#size-cells = <1>;
--		/* Exclude up to 2 GiB of RAM */
--		ranges = <0x80000000 0x80000000 0x80000000>;
-+		ranges = <0x00000000 0x00000000 0x0001f000>, /* boot ROM */
-+			 /* Exclude up to 2 GiB of RAM */
-+			 <0x80000000 0x80000000 0x80000000>;
+-		ranges = <0x98000000 0x98000000 0x68000000>;
++		ranges = <0x00000000 0x00000000 0x0002e000>, /* boot ROM */
++			 <0x98000000 0x98000000 0x68000000>;
  
  		rbus: bus@98000000 {
  			compatible = "simple-bus";
