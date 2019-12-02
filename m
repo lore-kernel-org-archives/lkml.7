@@ -2,138 +2,215 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5A1C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 04:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B633C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 04:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C466D2146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 04:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 683CE206DC
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 04:22:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IGcGivQ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbfLBERJ (ORCPT
+        id S1727386AbfLBEW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 23:17:09 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25658 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727298AbfLBERJ (ORCPT
+        Sun, 1 Dec 2019 23:22:28 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49017 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727312AbfLBEW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 23:17:09 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB24CJTm050963;
-        Sun, 1 Dec 2019 23:17:04 -0500
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wm6smb4wm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 01 Dec 2019 23:17:04 -0500
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xB24DS4M026084;
-        Mon, 2 Dec 2019 04:17:08 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma01wdc.us.ibm.com with ESMTP id 2wkg25qed9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 02 Dec 2019 04:17:08 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB24H2S944302720
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Dec 2019 04:17:02 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BF1FE28060;
-        Mon,  2 Dec 2019 04:17:02 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7A01228058;
-        Mon,  2 Dec 2019 04:17:01 +0000 (GMT)
-Received: from jarvis.ext.hansenpartnership.com (unknown [9.85.189.151])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  2 Dec 2019 04:17:01 +0000 (GMT)
-Message-ID: <1575260220.4080.17.camel@linux.ibm.com>
-Subject: Re: One question about trusted key of keyring in Linux kernel.
-From:   James Bottomley <jejb@linux.ibm.com>
-To:     "Zhao, Shirley" <shirley.zhao@intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
-        "Zhu, Bing" <bing.zhu@intel.com>,
-        "Chen, Luhai" <luhai.chen@intel.com>
-Date:   Sun, 01 Dec 2019 20:17:00 -0800
-In-Reply-To: <A888B25CD99C1141B7C254171A953E8E4909BA3B@shsmsx102.ccr.corp.intel.com>
-References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
-         <1573659978.17949.83.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
-         <1574877977.3551.5.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E49096521@shsmsx102.ccr.corp.intel.com>
-         <1575057916.6220.7.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909BA3B@shsmsx102.ccr.corp.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-01_04:2019-11-29,2019-12-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- suspectscore=0 clxscore=1015 malwarescore=0 adultscore=0 impostorscore=0
- phishscore=0 mlxlogscore=961 spamscore=0 priorityscore=1501
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912020035
+        Sun, 1 Dec 2019 23:22:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575260546;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8RAQwdSGI/J5XsC44f2BDL68Ox237P+Fd4spno9x/dA=;
+        b=IGcGivQ5PHAFifZBrUixNAgqB5AJVhu6+I8BjjpnWYYcgXmX3Il52hqn1ASVKYsvnhLyf7
+        RDbZ/sXOlDjERF393QqtCD/SpOZmlx4DnVnoW5uAgg7rQWRskpKrDp3sZaUwdLVaf0WC34
+        3orrfcE3kknavdvI4eNeBpbcPnJp/48=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-190-Bc8xasMOOESXR_rNx_9-3w-1; Sun, 01 Dec 2019 23:22:23 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 683FA1852E20;
+        Mon,  2 Dec 2019 04:22:21 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-21.pek2.redhat.com [10.72.8.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7F24067E52;
+        Mon,  2 Dec 2019 04:22:13 +0000 (UTC)
+Date:   Mon, 2 Dec 2019 12:22:08 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Hillf Danton <hdanton@sina.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-fs <linux-fsdevel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rong Chen <rong.a.chen@intel.com>, Tejun Heo <tj@kernel.org>
+Subject: Re: single aio thread is migrated crazily by scheduler
+Message-ID: <20191202042208.GE24512@ming.t460p>
+References: <20191114113153.GB4213@ming.t460p>
+ <20191114235415.GL4614@dread.disaster.area>
+ <20191115010824.GC4847@ming.t460p>
+ <20191115045634.GN4614@dread.disaster.area>
+ <20191115070843.GA24246@ming.t460p>
+ <20191128094003.752-1-hdanton@sina.com>
+ <CAKfTPtA23ErKGCEJVmg6vk-QoufkiUM3NbXd31mZmKnuwbTkFw@mail.gmail.com>
+ <20191202024625.GD24512@ming.t460p>
+ <20191202040256.GE2695@dread.disaster.area>
+MIME-Version: 1.0
+In-Reply-To: <20191202040256.GE2695@dread.disaster.area>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: Bc8xasMOOESXR_rNx_9-3w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-12-02 at 01:44 +0000, Zhao, Shirley wrote:
-> Hi, James, 
-> 
-> The value of PCR7 is not changed. I have checked it with TPM command
-> tpm_pcrlist. 
-> 
-> So I think the problem is how to use the option policydigest and
-> policyhandle? Is there any example?
-> Maybe the format in my command is not correct. 
+On Mon, Dec 02, 2019 at 03:02:56PM +1100, Dave Chinner wrote:
+> On Mon, Dec 02, 2019 at 10:46:25AM +0800, Ming Lei wrote:
+> > On Thu, Nov 28, 2019 at 10:53:33AM +0100, Vincent Guittot wrote:
+> > > On Thu, 28 Nov 2019 at 10:40, Hillf Danton <hdanton@sina.com> wrote:
+> > > > --- a/fs/iomap/direct-io.c
+> > > > +++ b/fs/iomap/direct-io.c
+> > > > @@ -157,10 +157,8 @@ static void iomap_dio_bio_end_io(struct
+> > > >                         WRITE_ONCE(dio->submit.waiter, NULL);
+> > > >                         blk_wake_io_task(waiter);
+> > > >                 } else if (dio->flags & IOMAP_DIO_WRITE) {
+> > > > -                       struct inode *inode =3D file_inode(dio->ioc=
+b->ki_filp);
+> > > > -
+> > > >                         INIT_WORK(&dio->aio.work, iomap_dio_complet=
+e_work);
+> > > > -                       queue_work(inode->i_sb->s_dio_done_wq, &dio=
+->aio.work);
+> > > > +                       schedule_work(&dio->aio.work);
+> > >=20
+> > > I'm not sure that this will make a real difference because it ends up
+> > > to call queue_work(system_wq, ...) and system_wq is bounded as well s=
+o
+> > > the work will still be pinned to a CPU
+> > > Using system_unbound_wq should make a difference because it doesn't
+> > > pin the work on a CPU
+> > >  +                       queue_work(system_unbound_wq, &dio->aio.work=
+);
+> >=20
+> > Indeed, just run a quick test on my KVM guest, looks the following patc=
+h
+> > makes a difference:
+> >=20
+> > diff --git a/fs/direct-io.c b/fs/direct-io.c
+> > index 9329ced91f1d..2f4488b0ecec 100644
+> > --- a/fs/direct-io.c
+> > +++ b/fs/direct-io.c
+> > @@ -613,7 +613,8 @@ int sb_init_dio_done_wq(struct super_block *sb)
+> >  {
+> >         struct workqueue_struct *old;
+> >         struct workqueue_struct *wq =3D alloc_workqueue("dio/%s",
+> > -                                                     WQ_MEM_RECLAIM, 0=
+,
+> > +                                                     WQ_MEM_RECLAIM |
+> > +                                                     WQ_UNBOUND, 0,
+> >                                                       sb->s_id);
+>=20
+> That's not an answer to the user task migration issue.
+>=20
+> That is, all this patch does is trade user task migration when the
+> CPU is busy for migrating all the queued work off the CPU so the
+> user task does not get migrated. IOWs, this forces all the queued
+> work to be migrated rather than the user task. IOWs, it does not
+> address the issue we've exposed in the scheduler between tasks with
+> competing CPU affinity scheduling requirements - it just hides the
+> symptom.
 
-OK, so previously you said that using the Intel TSS the policy also
-failed after a reboot:
+Yeah, I believe we all reach the agreement that this is one issue in
+scheduler's load balance.
 
-> The error should be policy check failed, because I use TPM command to
-> unseal directly with error of policy check failed. 
-> $ tpm2_unseal -c 0x81000001 -L sha256:7
-> ERROR on line: "81" in file: "./lib/log.h": Tss2_Sys_Unseal(0x99D) -
-> tpm:session(1):a policy check failed
-> ERROR on line: "213" in file: "tools/tpm2_unseal.c": Unseal failed!
-> ERROR on line: "166" in file: "tools/tpm2_tool.c": Unable to run
-> tpm2_unseal
+>=20
+> Maintaining CPU affinity across dispatch and completion work has
+> been proven to be a significant performance win. Right throughout
+> the IO stack we try to keep this submitter/completion affinity,
+> and that's the whole point of using a bound wq in the first place:
+> efficient delayed batch processing of work on the local CPU.
+>=20
+> Spewing deferred completion work across every idle CPU in the
+> machine because the local cpu is temporarily busy is a bad choice,
+> both from a performance perspective (dirty cacheline bouncing) and
+> from a power efficiency point of view as it causes CPUs to be taken
+> out of idle state much more frequently[*].
+>=20
+> The fact that the scheduler migrates the user task we use workqueues
+> for deferred work as they were intended doesn't make this a
+> workqueue problem. If the answer to this problem is "make all IO
+> workqueues WQ_UNBOUND" then we are effectively saying "the scheduler
+> has unfixable problems when mixing bound and unbound work on the
+> same run queue".
+>=20
+> And, besides, what happens when every other CPU is also completely
+> busy and can't run the work in a timely fashion? We've just moved
+> the work to some random CPU where we wait to be scheduled instead of
+> just sitting on the local CPU and waiting....
+>=20
+> So, yes, we can work around the -symptoms- we see (frequent user
+> task migration) by changing the work queue configuration or
+> bypassing the workqueue for this specific workload. But these only
+> address the visible symptom and don't take into account the wider
+> goals of retaining CPU affinity in the IO stack, and they will have
+> variable scheduling latency and perofrmance and as the overall
+> system load changes.
 
-So this must mean the actual policy hash you constructed was wrong in
-some way: it didn't correspond simply to a value of pcr7 ... well
-assuming the -L sha256:7 means construct a policy of the sha256 value
-of pcr7 and use it in the unseal.
+So far, not see any progress in fixing the load balance issue,
+I'd suggest to workaround the issue via the patch if no one objects.
+We can comment it explicitly that it is just for workround scheduler's
+problem.
 
-I can tell you how to construct policies using TPM2 commands, but I
-think you want to know how to do it using the Intel TSS?  In which case
-you really need to consult the experts in that TSS, like Phil Tricca.
+BTW, there is lots of WQ_UNBOUND uses in kernel:
 
-For the plain TPM2 case, the policy looks like
+[linux]$ git grep -n -w WQ_UNBOUND ./ | grep -v "kernel\/workqueue" | wc
+     86     524    7356
 
-TPM_CC_PolicyPCR || pcrs || pcrDigest
+Some of them are used in fast IO path too.
 
-Where TPM_CC_PolicyPCR = 0000017f and for selecting pcr7 only.  pcrs is
-a complicated entity: it's a counted array of pcr selections.  For your
-policy you only need one entry, so it would be 00000001 followed by a
-single pcrSelection entry.  pcrSelection is the hash algorithm, the
-size of the selection bitmap (always 3 since every current TPM only has
-24 PCRs) and a bitmap selecting the PCRs in big endian format, so for
-PCR7 using sha256 (algorithm 000b), pcrSelection = 000b 03 80 00 00. 
-And then you follow this by the hash of the PCR value you're looking
-for.  The policyhash becomes the initial policy (all zeros for the
-start of the policy chain) hashed with this.
+>=20
+> So, we can fiddle with workqueues, but it doesn't address the
+> underlying issue that the scheduler appears to be migrating
+> non-bound tasks off a busy CPU too easily....
+>=20
+> -Dave.
+>=20
+> [*] Pay attention to the WQ_POWER_EFFICIENT definition for a work
+> queue: it's designed for interrupt routines that defer work via work
+> queues to avoid doing work on otherwise idle CPUs. It does this by
+> turning the per-cpu wq into an unbound wq so that work gets
+> scheduled on a non-idle CPUs in preference to the local idle CPU
+> which can then remain in low power states.
+>=20
+> That's the exact opposite of what using WQ_UNBOUND ends up doing in
+> this IO completion context: it pushes the work out over idle CPUs
+> rather than keeping them confined on the already busy CPUs where CPU
+> affinity allows the work to be done quickly. So while WQ_UNBOUND
+> avoids the user task being migrated frequently, it results in the
+> work being spread around many more CPUs and we burn more power to do
+> the same work.
 
-Regards,
+That can't be worse than this crazy migration, which schedules the
+IO thread on other IDLE CPUs too.
 
-James
+
+Thanks,
+Ming
 
