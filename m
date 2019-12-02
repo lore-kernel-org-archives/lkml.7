@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2E8C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA547C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 204932071F
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FA6B20637
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:22:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbfLBSWR (ORCPT
+        id S1727992AbfLBSWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 13:22:17 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35922 "EHLO mx1.suse.de"
+        Mon, 2 Dec 2019 13:22:23 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36032 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727860AbfLBSWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 13:22:15 -0500
+        id S1727962AbfLBSWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 13:22:19 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 31659AD75;
-        Mon,  2 Dec 2019 18:22:14 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id B5EFCAE53;
+        Mon,  2 Dec 2019 18:22:17 +0000 (UTC)
 From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 To:     linux-realtek-soc@lists.infradead.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
@@ -30,9 +30,9 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         James Tai <james.tai@realtek.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH 02/14] arm64: dts: realtek: rtd129x: Introduce CRT, iso and misc syscon
-Date:   Mon,  2 Dec 2019 19:21:52 +0100
-Message-Id: <20191202182205.14629-3-afaerber@suse.de>
+Subject: [PATCH 10/14] ARM: dts: rtd1195: Add SB2 and SCPU Wrapper syscon nodes
+Date:   Mon,  2 Dec 2019 19:22:00 +0100
+Message-Id: <20191202182205.14629-11-afaerber@suse.de>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20191202182205.14629-1-afaerber@suse.de>
 References: <20191202182205.14629-1-afaerber@suse.de>
@@ -44,185 +44,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Group the non-iso reset controller nodes in a CRT syscon mfd node.
-Group reset controller, watchdog and UART0 in an Isolation syscon mfd node.
-Group UART1 and UART2 into a Miscellaneous syscon mfd node.
+Add syscon mfd nodes for SB2 and SCPU Wrapper to RTD1195 DT.
 
 Cc: James Tai <james.tai@realtek.com>
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- arch/arm64/boot/dts/realtek/rtd129x.dtsi | 147 +++++++++++++++++++------------
- 1 file changed, 90 insertions(+), 57 deletions(-)
+ arch/arm/boot/dts/rtd1195.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/realtek/rtd129x.dtsi b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
-index 0de9e675be16..34dc09790d0b 100644
---- a/arch/arm64/boot/dts/realtek/rtd129x.dtsi
-+++ b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
-@@ -63,70 +63,31 @@
- 			#size-cells = <1>;
- 			ranges = <0x0 0x98000000 0x200000>;
- 
--			reset1: reset-controller@0 {
--				compatible = "snps,dw-low-reset";
--				reg = <0x0 0x4>;
--				#reset-cells = <1>;
--			};
--
--			reset2: reset-controller@4 {
--				compatible = "snps,dw-low-reset";
--				reg = <0x4 0x4>;
--				#reset-cells = <1>;
--			};
--
--			reset3: reset-controller@8 {
--				compatible = "snps,dw-low-reset";
--				reg = <0x8 0x4>;
--				#reset-cells = <1>;
--			};
--
--			reset4: reset-controller@50 {
--				compatible = "snps,dw-low-reset";
--				reg = <0x50 0x4>;
--				#reset-cells = <1>;
--			};
--
--			iso_reset: reset-controller@7088 {
--				compatible = "snps,dw-low-reset";
--				reg = <0x7088 0x4>;
--				#reset-cells = <1>;
--			};
--
--			wdt: watchdog@7680 {
--				compatible = "realtek,rtd1295-watchdog";
--				reg = <0x7680 0x100>;
--				clocks = <&osc27M>;
--			};
--
--			uart0: serial@7800 {
--				compatible = "snps,dw-apb-uart";
--				reg = <0x7800 0x400>;
--				reg-shift = <2>;
-+			crt: syscon@0 {
-+				compatible = "syscon", "simple-mfd";
-+				reg = <0x0 0x1800>;
- 				reg-io-width = <4>;
--				clock-frequency = <27000000>;
--				resets = <&iso_reset RTD1295_ISO_RSTN_UR0>;
--				status = "disabled";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0x0 0x0 0x1800>;
+diff --git a/arch/arm/boot/dts/rtd1195.dtsi b/arch/arm/boot/dts/rtd1195.dtsi
+index 09acb99083c1..21897210d9d0 100644
+--- a/arch/arm/boot/dts/rtd1195.dtsi
++++ b/arch/arm/boot/dts/rtd1195.dtsi
+@@ -119,6 +119,15 @@
+ 				ranges = <0x0 0x7000 0x1000>;
  			};
  
--			uart1: serial@1b200 {
--				compatible = "snps,dw-apb-uart";
--				reg = <0x1b200 0x100>;
--				reg-shift = <2>;
-+			iso: syscon@7000 {
++			sb2: syscon@1a000 {
 +				compatible = "syscon", "simple-mfd";
-+				reg = <0x7000 0x1000>;
- 				reg-io-width = <4>;
--				clock-frequency = <432000000>;
--				resets = <&reset2 RTD1295_RSTN_UR1>;
--				status = "disabled";
++				reg = <0x1a000 0x1000>;
++				reg-io-width = <4>;
 +				#address-cells = <1>;
 +				#size-cells = <1>;
-+				ranges = <0x0 0x7000 0x1000>;
++				ranges = <0x0 0x1a000 0x1000>;
++			};
++
+ 			misc: syscon@1b000 {
+ 				compatible = "syscon", "simple-mfd";
+ 				reg = <0x1b000 0x1000>;
+@@ -127,6 +136,15 @@
+ 				#size-cells = <1>;
+ 				ranges = <0x0 0x1b000 0x1000>;
  			};
- 
--			uart2: serial@1b400 {
--				compatible = "snps,dw-apb-uart";
--				reg = <0x1b400 0x100>;
--				reg-shift = <2>;
-+			misc: syscon@1b000 {
++
++			scpu_wrapper: syscon@1d000 {
 +				compatible = "syscon", "simple-mfd";
-+				reg = <0x1b000 0x1000>;
- 				reg-io-width = <4>;
--				clock-frequency = <432000000>;
--				resets = <&reset2 RTD1295_RSTN_UR2>;
--				status = "disabled";
++				reg = <0x1d000 0x1000>;
++				reg-io-width = <4>;
 +				#address-cells = <1>;
 +				#size-cells = <1>;
-+				ranges = <0x0 0x1b000 0x1000>;
- 			};
++				ranges = <0x0 0x1d000 0x1000>;
++			};
  		};
  
-@@ -142,3 +103,75 @@
- 		};
- 	};
- };
-+
-+&crt {
-+	reset1: reset-controller@0 {
-+		compatible = "snps,dw-low-reset";
-+		reg = <0x0 0x4>;
-+		#reset-cells = <1>;
-+	};
-+
-+	reset2: reset-controller@4 {
-+		compatible = "snps,dw-low-reset";
-+		reg = <0x4 0x4>;
-+		#reset-cells = <1>;
-+	};
-+
-+	reset3: reset-controller@8 {
-+		compatible = "snps,dw-low-reset";
-+		reg = <0x8 0x4>;
-+		#reset-cells = <1>;
-+	};
-+
-+	reset4: reset-controller@50 {
-+		compatible = "snps,dw-low-reset";
-+		reg = <0x50 0x4>;
-+		#reset-cells = <1>;
-+	};
-+};
-+
-+&iso {
-+	iso_reset: reset-controller@88 {
-+		compatible = "snps,dw-low-reset";
-+		reg = <0x88 0x4>;
-+		#reset-cells = <1>;
-+	};
-+
-+	wdt: watchdog@680 {
-+		compatible = "realtek,rtd1295-watchdog";
-+		reg = <0x680 0x100>;
-+		clocks = <&osc27M>;
-+	};
-+
-+	uart0: serial@800 {
-+		compatible = "snps,dw-apb-uart";
-+		reg = <0x800 0x400>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+		clock-frequency = <27000000>;
-+		resets = <&iso_reset RTD1295_ISO_RSTN_UR0>;
-+		status = "disabled";
-+	};
-+};
-+
-+&misc {
-+	uart1: serial@200 {
-+		compatible = "snps,dw-apb-uart";
-+		reg = <0x200 0x100>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+		clock-frequency = <432000000>;
-+		resets = <&reset2 RTD1295_RSTN_UR1>;
-+		status = "disabled";
-+	};
-+
-+	uart2: serial@400 {
-+		compatible = "snps,dw-apb-uart";
-+		reg = <0x400 0x100>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+		clock-frequency = <432000000>;
-+		resets = <&reset2 RTD1295_RSTN_UR2>;
-+		status = "disabled";
-+	};
-+};
+ 		gic: interrupt-controller@ff011000 {
 -- 
 2.16.4
 
