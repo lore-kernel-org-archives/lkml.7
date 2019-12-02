@@ -2,141 +2,126 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 040F8C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E5CC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD2E820718
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8BAE20717
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:43:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C/H55AzQ"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="XrAoYtFk";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gPhBsGiC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbfLBSnG (ORCPT
+        id S1727907AbfLBSny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 13:43:06 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41755 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727418AbfLBSnG (ORCPT
+        Mon, 2 Dec 2019 13:43:54 -0500
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:49879 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727783AbfLBSny (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 13:43:06 -0500
-Received: by mail-qt1-f193.google.com with SMTP id v2so774357qtv.8;
-        Mon, 02 Dec 2019 10:43:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=AnWD7sTCrH/sWowo7WOFM1CDDX20u+B+tWaH0Jnqtwk=;
-        b=C/H55AzQsVIXNNR37eV61Ui6BsPj6qxnpiS4smZk4LFHMtNhrnyr4UBxDT8noF/KRi
-         4FWHgATpEt1TvCf+lA8lvfY7OZm7F93zKsCIcy5uKJ6L4wMs6QEDoDJMzV0a7hfMLmsG
-         uMbfEvCj/Ftyb4upOkqE/8UU7cXyEfRYhb6UOHa4lMXuwaKMUW7ChhwTK2x/DdX4MKN0
-         UDvxtFJHv/Wdy9XNDXAwafvbvag8Az7r1dcwvItwXpCf/aSM22J85zLdlkaIt9QZL9oV
-         JnCyScixf2nZbms22YbVdS3xs+24xjJcdlqaPaPbXzMXN4Qr0r7TcYeg/8jRUb0+bRzL
-         JNqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=AnWD7sTCrH/sWowo7WOFM1CDDX20u+B+tWaH0Jnqtwk=;
-        b=n0VUocufSNV0ecBx/O8vqrAiUfXWBy5e1pho+Jm2FsXWT4HNwWonQYpys83jhzZ6Pm
-         ehQyNIn4z5/jjLFfVP16bq/MMpIeu6K0rnkvkUFeOukKWqE/b91LeILlXZPLiY2r+Nd0
-         bXIJzrdc61gj3/COPhGAQpIrNzcGld0JfNtSihPBlCg1oiYU8uFyuYI/E5EwaeBBcmyV
-         U2TGMt1vSnbiuDvvoCUybkQzjlFmsEutzVZ84xHUDrw54H7I0SxGdVbemreLha/uPJJm
-         omaaI1LAAMU/IDNy5xWMwiFnSolpjEdLj1wrWKaWebNTQmmKYkD7NGnysVZZINh8e1k2
-         vzcg==
-X-Gm-Message-State: APjAAAUfu2pIYTfsIdwVKstNRMvv1DK+2ae1OQF8gdkXrtwV7AjjqGuj
-        EfRr77fEm8Fwa7iDNxXITbE6ZHl0iTwotlzIvBA=
-X-Google-Smtp-Source: APXvYqwIgwsCAJeW/GmVHa9v0gX68uVrUsI9VUspc7LOGfwihg3b/Uvp8JTHV9/ke+jwXgb2EQ+fGHCGnVhYxRtGJLo=
-X-Received: by 2002:ac8:1385:: with SMTP id h5mr835578qtj.59.1575312184786;
- Mon, 02 Dec 2019 10:43:04 -0800 (PST)
+        Mon, 2 Dec 2019 13:43:54 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id C9E4722331;
+        Mon,  2 Dec 2019 13:43:52 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Mon, 02 Dec 2019 13:43:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=KF+LOK7Oz3IVzefSc8lu98RYXJR
+        KzI5ErcAOrK2J5A0=; b=XrAoYtFk4dG1UaDZH5jbx+GA56OEGL2NHVPSlRXZgnD
+        HId39wMAic68P1ivRJjuHAOOey8v/L4jWlfj9I6Ers/8O7AwkqtbrCC5Q6p2Ouq3
+        S+5oT8HNtJBVT6RkuJgz1lQZ26Gl55D4TEflCFDPjjW0eAL6+q4nLpXVubHZjSwe
+        zZw5Q6v3ZSJnW0hyB391D6Gk52F7bbm93xu+/Yukvlgdx/4ybqqwWQ5PSHF19L/x
+        KAwtoT7KBv74E/PZOeEyIkNIPwix08JdijA9097ejO0WwpJquMk/rnWmiLaJmFrG
+        PFi+/Y14aUtkmYSu/myyRHMFpQSHjOzs+pKqa20r+1Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=KF+LOK
+        7Oz3IVzefSc8lu98RYXJRKzI5ErcAOrK2J5A0=; b=gPhBsGiCQuJIGYHEqB348u
+        ClkZMj4FFUhFB7Zz+fA3ZgUL5hi8x01D02A9fIyYQwOpGDH6JUK9USpiDXiq7/+k
+        8qK31k9cc7SqKM8tAQaLYYJjso5MdkvDpXAGkPDEEdlFeIA8XfT3i9WAXgVdi2kE
+        5GoJ40Kb1+9GejtvA5EIP4SO5uvNz1ajvRhCbesz+6YeftW6IFAdfr0mFZ7mpLGa
+        QlK3/JNuBfdRbYdcxfXmjh/ID6IMkNJkY5LmVIQmYsVV/MmaQuy5cR05A8seB+c0
+        opoBxSoXM84m28HEzf536umzhywY+xb8D/qBpAK1kvJKXWJdYlzjHXm633WoTXCQ
+        ==
+X-ME-Sender: <xms:aFvlXelWZxd61iy3KT_1RkcceG7Yl9QLHtsVr5bcwpyoHNy4eQmYdA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudejhedguddukecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgv
+    ghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrd
+    dutdejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhen
+    ucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:aFvlXWp7_e7d_6iPiMoCOcJGmMdNjbhX8q3onbgoGwA0OKfunxVL4w>
+    <xmx:aFvlXbMIz9aDQurGmZGRZPqKv3OYOcPwiOimqbINK8vZwJ9sCVmyPg>
+    <xmx:aFvlXYayhCh3RGmiI7LI_jZkDywtnzqfy1VDHOM-3AegPkCA67ee-A>
+    <xmx:aFvlXQyflayerK7ZZ62SchT0sltSq8ObvTINqsgCSAgROLrnvX4RtA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5B60730600BD;
+        Mon,  2 Dec 2019 13:43:52 -0500 (EST)
+Date:   Mon, 2 Dec 2019 19:43:49 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 4.4 v1] power: supply: ltc2941-battery-gauge: fix
+ use-after-free
+Message-ID: <20191202184349.GC734264@kroah.com>
+References: <20190919151137.9960-1-TheSven73@gmail.com>
+ <20190919190208.13648-1-TheSven73@gmail.com>
 MIME-Version: 1.0
-References: <20191127094837.4045-1-jolsa@kernel.org> <CAEf4BzbUK98tsYH1mSNoTjuVB4dstRsL5rpkA+9nRCcqrdn6-Q@mail.gmail.com>
- <87zhgappl7.fsf@toke.dk>
-In-Reply-To: <87zhgappl7.fsf@toke.dk>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 2 Dec 2019 10:42:53 -0800
-Message-ID: <CAEf4BzYoJUttk=o+p=NHK8K_aS3z2LdLiqzRni7PwyDaOxu68A@mail.gmail.com>
-Subject: Re: [PATCH 0/3] perf/bpftool: Allow to link libbpf dynamically
-To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190919190208.13648-1-TheSven73@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 2, 2019 at 10:09 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redh=
-at.com> wrote:
->
-> Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
->
-> > On Wed, Nov 27, 2019 at 1:49 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> >>
-> >> hi,
-> >> adding support to link bpftool with libbpf dynamically,
-> >> and config change for perf.
-> >>
-> >> It's now possible to use:
-> >>   $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=3D1
-> >
-> > I wonder what's the motivation behind these changes, though? Why is
-> > linking bpftool dynamically with libbpf is necessary and important?
-> > They are both developed tightly within kernel repo, so I fail to see
-> > what are the huge advantages one can get from linking them
-> > dynamically.
->
-> Well, all the regular reasons for using dynamic linking (memory usage,
-> binary size, etc).
+On Thu, Sep 19, 2019 at 03:02:08PM -0400, Sven Van Asbroeck wrote:
+> This driver's remove path calls cancel_delayed_work().
+> However, that function does not wait until the work function
+> finishes. This could mean that the work function is still
+> running after the driver's remove function has finished,
+> which would result in a use-after-free.
+> 
+> Fix by calling cancel_delayed_work_sync(), which ensures that
+> that the work is properly cancelled, no longer running, and
+> unable to re-schedule itself.
+> 
+> This issue was detected with the help of Coccinelle.
+> 
+> Cc: stable <stable@vger.kernel.org>
+> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+> ---
+>  drivers/power/ltc2941-battery-gauge.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/power/ltc2941-battery-gauge.c b/drivers/power/ltc2941-battery-gauge.c
+> index da49436176cd..30a9014b2f95 100644
+> --- a/drivers/power/ltc2941-battery-gauge.c
+> +++ b/drivers/power/ltc2941-battery-gauge.c
+> @@ -449,7 +449,7 @@ static int ltc294x_i2c_remove(struct i2c_client *client)
+>  {
+>  	struct ltc294x_info *info = i2c_get_clientdata(client);
+>  
+> -	cancel_delayed_work(&info->work);
+> +	cancel_delayed_work_sync(&info->work);
+>  	power_supply_unregister(info->supply);
+>  	return 0;
+>  }
+> -- 
+> 2.17.1
+> 
 
-bpftool is 327KB with statically linked libbpf. Hardly a huge problem
-for either binary size or memory usage. CPU instruction cache usage is
-also hardly a concern for bpftool specifically.
+What is the git commit id of this patch in Linus's tree?
 
-> But in particular, the ability to update the libbpf
-> package if there's a serious bug, and have that be picked up by all
-> utilities making use of it.
+thanks,
 
-I agree, and that works only for utilities linking with libbpf
-dynamically. For tools that build statically, you'd have to update
-tools anyways. And if you can update libbpf, you can as well update
-bpftool at the same time, so I don't think linking bpftool statically
-with libbpf causes any new problems.
-
-> No reason why bpftool should be special in that respect.
-
-But I think bpftool is special and we actually want it to be special
-and tightly coupled to libbpf with sometimes very intimate knowledge
-of libbpf and access to "hidden" APIs. That allows us to experiment
-with new stuff that requires use of bpftool (e.g., code generation for
-BPF programs), without having to expose and seal public APIs. And I
-don't think it's a problem from the point of code maintenance, because
-both live in the same repository and are updated "atomically" when new
-features are added or changed.
-
-Beyond superficial binary size worries, I don't see any good reason
-why we should add more complexity and variables to libbpf and bpftool
-build processes just to have a "nice to have" option of linking
-bpftool dynamically with libbpf.
-
-
->
-> -Toke
->
+greg k-h
