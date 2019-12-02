@@ -2,297 +2,97 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BC9C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD4BC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90400217F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:17:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575281853;
-	bh=CQwLaPfjyq5qvrJ95mM35q4XZZrZIKEuQkYcOzmmww4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S42naLzFKDoeqRxtuJlQW2Sv57rRqnGAy3e4IC8K2+eLjdptDGy6S25VSWSKJ7W2G
-	 5RkB2KUSlkVE1jeLu2AJEA9EZtyVxeYw777c5SBjmbxNs/mEoxQD1VYctan1ApOtEJ
-	 V+nSyeDDpy/ZqTrxwTX2wTImoijiHTkGGr8eu5xY=
+	by mail.kernel.org (Postfix) with ESMTP id 06723217F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:23:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727525AbfLBKRc (ORCPT
+        id S1727355AbfLBKXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 05:17:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33678 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727364AbfLBKRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 05:17:32 -0500
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B12F217D9;
-        Mon,  2 Dec 2019 10:17:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575281850;
-        bh=CQwLaPfjyq5qvrJ95mM35q4XZZrZIKEuQkYcOzmmww4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ofKz3D+UYOSrcblzVDZ44gBbY0L3/A79zqd3D02vsq1wQHg4F91Mv2avrpk2hbH1s
-         ocfS8pfqx2g6I359u4PcAzv0breZDSdn0WfYTJe8FY3X6Rsw7wIt6ZlZx0FPgU0eKX
-         zByI/xtCEyIsfeahVWhemL8DuCvA12MlXW0/HH0Y=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v4 22/22] Documentation: tracing: Add boot-time tracing document
-Date:   Mon,  2 Dec 2019 19:17:25 +0900
-Message-Id: <157528184501.22451.12534762470752205454.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <157528159833.22451.14878731055438721716.stgit@devnote2>
-References: <157528159833.22451.14878731055438721716.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
+        Mon, 2 Dec 2019 05:23:32 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2145 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726276AbfLBKXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 05:23:32 -0500
+Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 7AC43DCEC5967BE6F81D;
+        Mon,  2 Dec 2019 10:23:30 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ LHREML710-CAH.china.huawei.com (10.201.108.33) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 2 Dec 2019 10:23:30 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Mon, 2 Dec 2019
+ 10:23:29 +0000
+Subject: Re: linuxnext-2019127 edac warns (was Re: edac KASAN warning in
+ experimental arm64 allmodconfig boot)
+To:     Robert Richter <rrichter@marvell.com>
+CC:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        wanghuiqiang <wanghuiqiang@huawei.com>,
+        Xiaofei Tan <tanxiaofei@huawei.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        "Huangming (Mark)" <huangming23@huawei.com>
+References: <304df85b-8b56-b77e-1a11-aa23769f2e7c@huawei.com>
+ <93bdc04e-9e8f-b766-6e97-9fd9e1460a8c@huawei.com>
+ <20191121142302.rhvgkgqpiubidhtu@rric.localdomain>
+ <4ff7631f-fbb7-e45f-87dd-9223beca4da7@huawei.com>
+ <20191122112842.tmf4lkj52hpv6tqd@rric.localdomain>
+ <4c1bd075-75ec-8445-9595-467b88a406b3@huawei.com>
+ <957a809b-9efd-0979-df5d-a4f095da6147@huawei.com>
+ <20191128211240.yuuhf4xkzhl2jvfw@rric.localdomain>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <49bb86d8-a7ad-e66d-9796-799ee0bdd605@huawei.com>
+Date:   Mon, 2 Dec 2019 10:23:29 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191128211240.yuuhf4xkzhl2jvfw@rric.localdomain>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml702-chm.china.huawei.com (10.201.108.51) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a documentation about boot-time tracing options in
-boot config.
+On 28/11/2019 21:12, Robert Richter wrote:
+> On 27.11.19 17:07:33, John Garry wrote:
+>> [   22.104498] BUG: KASAN: use-after-free in
+>> edac_remove_sysfs_mci_device+0x148/0x180
+> 
+> It is triggered in edac_remove_sysfs_mci_device().
+> 
+> device_unregister(&dimm->dev) not only removes the sysfs entry, it
+> also frees the dimm struct in dimm_attr_release(). When incrementing
+> the loop in mci_for_each_dimm(), the dimm struct is accessed again
+> which causes the use-after-free. But, the dimm struct shouln'd be
+> released here already.
+> 
+> edac_remove_sysfs_mci_device() should not release the devices at this
+> point. We need clean release functions for mci and dimm_info and
+> refcounts to protect pdev/dev mappings. And mci_for_each_dimm() must
+> be checked how it handles device removals and if it is safe.
+> 
+> Let's see how this can be fixed.
+> 
+> Thanks for reporting the issue.
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- Documentation/admin-guide/bootconfig.rst |    2 
- Documentation/trace/boottime-trace.rst   |  184 ++++++++++++++++++++++++++++++
- Documentation/trace/index.rst            |    1 
- 3 files changed, 187 insertions(+)
- create mode 100644 Documentation/trace/boottime-trace.rst
+Fine, and would any fix also deal with the v5.4 mem leak which I 
+mentioned also?
 
-diff --git a/Documentation/admin-guide/bootconfig.rst b/Documentation/admin-guide/bootconfig.rst
-index db35cee8a00a..ab015e512614 100644
---- a/Documentation/admin-guide/bootconfig.rst
-+++ b/Documentation/admin-guide/bootconfig.rst
-@@ -1,5 +1,7 @@
- .. SPDX-License-Identifier: GPL-2.0
- 
-+.. _bootconfig:
-+
- ==================
- Boot Configuration
- ==================
-diff --git a/Documentation/trace/boottime-trace.rst b/Documentation/trace/boottime-trace.rst
-new file mode 100644
-index 000000000000..1d10fdebf1b2
---- /dev/null
-+++ b/Documentation/trace/boottime-trace.rst
-@@ -0,0 +1,184 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=================
-+Boot-time tracing
-+=================
-+
-+:Author: Masami Hiramatsu <mhiramat@kernel.org>
-+
-+Overview
-+========
-+
-+Boot-time tracing allows users to trace boot-time process including
-+device initialization with full features of ftrace including per-event
-+filter and actions, histograms, kprobe-events and synthetic-events,
-+and trace instances.
-+Since kernel cmdline is not enough to control these complex features,
-+this uses bootconfig file to describe tracing feature programming.
-+
-+Options in the Boot Config
-+==========================
-+
-+Here is the list of available options list for boot time tracing in
-+boot config file [1]_. All options are under "ftrace." or "kernel."
-+refix. See kernel parameters for the options which starts
-+with "kernel." prefix [2]_.
-+
-+.. [1] See :ref:`Documentation/admin-guide/bootconfig.rst <bootconfig>`
-+.. [2] See :ref:`Documentation/admin-guide/kernel-parameters.rst <kernelparameters>`
-+
-+Ftrace Global Options
-+---------------------
-+
-+Ftrace global options have "kernel." prefix in boot config, which means
-+these options are passed as a part of kernel legacy command line.
-+
-+kernel.tp_printk
-+   Output trace-event data on printk buffer too.
-+
-+kernel.dump_on_oops [= MODE]
-+   Dump ftrace on Oops. If MODE = 1 or omitted, dump trace buffer
-+   on all CPUs. If MODE = 2, dump a buffer on a CPU which kicks Oops.
-+
-+kernel.traceoff_on_warning
-+   Stop tracing if WARN_ON() occurs.
-+
-+kernel.fgraph_max_depth = MAX_DEPTH
-+   Set MAX_DEPTH to maximum depth of fgraph tracer.
-+
-+kernel.fgraph_filters = FILTER[, FILTER2...]
-+   Add fgraph tracing function filters.
-+
-+kernel.fgraph_notraces = FILTER[, FILTER2...]
-+   Add fgraph non tracing function filters.
-+
-+
-+Ftrace Per-instance Options
-+---------------------------
-+
-+These options can be used for each instance including global ftrace node.
-+
-+ftrace.[instance.INSTANCE.]options = OPT1[, OPT2[...]]
-+   Enable given ftrace options.
-+
-+ftrace.[instance.INSTANCE.]trace_clock = CLOCK
-+   Set given CLOCK to ftrace's trace_clock.
-+
-+ftrace.[instance.INSTANCE.]buffer_size = SIZE
-+   Configure ftrace buffer size to SIZE. You can use "KB" or "MB"
-+   for that SIZE.
-+
-+ftrace.[instance.INSTANCE.]alloc_snapshot
-+   Allocate snapshot buffer.
-+
-+ftrace.[instance.INSTANCE.]cpumask = CPUMASK
-+   Set CPUMASK as trace cpu-mask.
-+
-+ftrace.[instance.INSTANCE.]events = EVENT[, EVENT2[...]]
-+   Enable given events on boot. You can use a wild card in EVENT.
-+
-+ftrace.[instance.INSTANCE.]tracer = TRACER
-+   Set TRACER to current tracer on boot. (e.g. function)
-+
-+ftrace.[instance.INSTANCE.]ftrace.filters
-+   This will take an array of tracing function filter rules
-+
-+ftrace.[instance.INSTANCE.]ftrace.notraces
-+   This will take an array of NON-tracing function filter rules
-+
-+
-+Ftrace Per-Event Options
-+------------------------
-+
-+These options are setting per-event options.
-+
-+ftrace.[instance.INSTANCE.]event.GROUP.EVENT.enable
-+   Enables GROUP:EVENT tracing.
-+
-+ftrace.[instance.INSTANCE.]event.GROUP.EVENT.filter = FILTER
-+   Set FILTER rule to the GROUP:EVENT.
-+
-+ftrace.[instance.INSTANCE.]event.GROUP.EVENT.actions = ACTION[, ACTION2[...]]
-+   Set ACTIONs to the GROUP:EVENT.
-+
-+ftrace.[instance.INSTANCE.]event.kprobes.EVENT.probes = PROBE[, PROBE2[...]]
-+   Defines new kprobe event based on PROBEs. It is able to define
-+   multiple probes on one event, but those must have same type of
-+   arguments. This option is available only for the event which
-+   group name is "kprobes".
-+
-+ftrace.[instance.INSTANCE.]event.synthetic.EVENT.fields = FIELD[, FIELD2[...]]
-+   Defines new synthetic event with FIELDs. Each field should be
-+   "type varname".
-+
-+Note that kprobe and synthetic event definitions can be written under
-+instance node, but those are also visible from other instances. So please
-+take care for event name conflict.
-+
-+
-+Examples
-+========
-+
-+For example, to add filter and actions for each event, define kprobe
-+events, and synthetic events with histogram, write a boot config like
-+below::
-+
-+  ftrace.event {
-+        task.task_newtask {
-+                filter = "pid < 128"
-+                enable
-+        }
-+        kprobes.vfs_read {
-+                probes = "vfs_read $arg1 $arg2"
-+                filter = "common_pid < 200"
-+                enable
-+        }
-+        synthetic.initcall_latency {
-+                fields = "unsigned long func", "u64 lat"
-+                actions = "hist:keys=func.sym,lat:vals=lat:sort=lat"
-+        }
-+        initcall.initcall_start {
-+                actions = "hist:keys=func:ts0=common_timestamp.usecs"
-+        }
-+        initcall.initcall_finish {
-+                actions = "hist:keys=func:lat=common_timestamp.usecs-$ts0:onmatch(initcall.initcall_start).initcall_latency(func,$lat)"
-+        }
-+  }
-+
-+Also, boottime tracing supports "instance" node, which allows us to run
-+several tracers for different purpose at once. For example, one tracer
-+is for tracing functions start with "user\_", and others tracing "kernel\_"
-+functions, you can write boot config as below::
-+
-+  ftrace.instance {
-+        foo {
-+                tracer = "function"
-+                ftrace.filters = "user_*"
-+        }
-+        bar {
-+                tracer = "function"
-+                ftrace.filters = "kernel_*"
-+        }
-+  }
-+
-+The instance node also accepts event nodes so that each instance
-+can customize its event tracing.
-+
-+This boot-time tracing also supports ftrace kernel parameters via boot
-+config.
-+For example, following kernel parameters::
-+
-+ trace_options=sym-addr trace_event=initcall:* tp_printk trace_buf_size=1M ftrace=function ftrace_filter="vfs*"
-+
-+This can be written in boot config like below::
-+
-+  kernel {
-+        trace_options = sym-addr
-+        trace_event = "initcall:*"
-+        tp_printk
-+        trace_buf_size = 1M
-+        ftrace = function
-+        ftrace_filter = "vfs*"
-+  }
-+
-+Note that parameters start with "kernel" prefix instead of "ftrace".
-diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
-index b7891cb1ab4d..47d6b466e308 100644
---- a/Documentation/trace/index.rst
-+++ b/Documentation/trace/index.rst
-@@ -19,6 +19,7 @@ Linux Tracing Technologies
-    events-msr
-    mmiotrace
-    histogram
-+   boottime-trace
-    hwlat_detector
-    intel_th
-    stm
-
+Cheers,
+John
