@@ -2,91 +2,340 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 564B6C43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C708FC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 361132073C
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 901EC2146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:55:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbfLBJym (ORCPT
+        id S1727386AbfLBJzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 04:54:42 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:47164 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbfLBJym (ORCPT
+        Mon, 2 Dec 2019 04:55:12 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46565 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbfLBJzM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 04:54:42 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xB29oALQ029104, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com ([172.21.6.12])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xB29oALQ029104
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 2 Dec 2019 17:50:10 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTITCAS11.realtek.com.tw (172.21.6.12) with Microsoft SMTP Server (TLS) id
- 14.3.468.0; Mon, 2 Dec 2019 17:49:57 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTEXMB03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 2 Dec 2019 17:49:57 +0800
-Received: from RTEXMB03.realtek.com.tw ([fe80::35ac:d9d0:1393:a902]) by
- RTEXMB03.realtek.com.tw ([fe80::35ac:d9d0:1393:a902%8]) with mapi id
- 15.01.1779.005; Mon, 2 Dec 2019 17:49:57 +0800
-From:   James Tai <james.tai@realtek.com>
-To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
-        "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH 2/7] arm64: dts: realtek: rtd129x: Use reserved-memory for RPC regions
-Thread-Topic: [PATCH 2/7] arm64: dts: realtek: rtd129x: Use reserved-memory
- for RPC regions
-Thread-Index: AQHVmDzfamWec3ddWkiVVX1ELT676KemGsuAgACXBLA=
-Date:   Mon, 2 Dec 2019 09:49:56 +0000
-Message-ID: <a511b94a991946a1b3f26dcdc485d4fa@realtek.com>
-References: <20191111030434.29977-1-afaerber@suse.de>
- <20191111030434.29977-3-afaerber@suse.de>
- <1f25f2fc-5d31-1d74-b730-78ad7861ffce@suse.de>
-In-Reply-To: <1f25f2fc-5d31-1d74-b730-78ad7861ffce@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.190.187]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 2 Dec 2019 04:55:12 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1ibiQ9-00037w-Qs; Mon, 02 Dec 2019 10:55:09 +0100
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <sha@pengutronix.de>)
+        id 1ibiQ9-0002FL-5L; Mon, 02 Dec 2019 10:55:09 +0100
+Date:   Mon, 2 Dec 2019 10:55:09 +0100
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Biwen Li <biwen.li@nxp.com>
+Cc:     shawnguo@kernel.org, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, wsa@the-dreams.de, leoyang.li@nxp.com,
+        aisheng.dong@nxp.com, xiaoning.wang@nxp.com,
+        o.rempel@pengutronix.de, xiaobo.xie@nxp.com,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        jiafei.pan@nxp.com, linux-arm-kernel@lists.infradead.org,
+        laurentiu.tudor@nxp.com
+Subject: Re: [v5] i2c: imx: support slave mode for imx I2C driver
+Message-ID: <20191202095509.ynxq2dyri36i2fwk@pengutronix.de>
+References: <20191129090513.2150-1-biwen.li@nxp.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191129090513.2150-1-biwen.li@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 10:17:41 up 147 days, 15:27, 130 users,  load average: 0.08, 0.17,
+ 0.24
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQW5kcmVhcywNCg0KPiA+ICAvbWVtcmVzZXJ2ZS8JMHgwMDAwMDAwMDAwMDAwMDAwIDB4MDAw
-MDAwMDAwMDAzMDAwMDsNCj4gPiAtL21lbXJlc2VydmUvCTB4MDAwMDAwMDAwMDAxZjAwMCAweDAw
-MDAwMDAwMDAwMDEwMDA7DQo+ID4gIC9tZW1yZXNlcnZlLwkweDAwMDAwMDAwMDAwMzAwMDAgMHgw
-MDAwMDAwMDAwMGQwMDAwOw0KPiA+ICAvbWVtcmVzZXJ2ZS8JMHgwMDAwMDAwMDAxYjAwMDAwIDB4
-MDAwMDAwMDAwMDRiZTAwMDsNCj4gPiAtL21lbXJlc2VydmUvCTB4MDAwMDAwMDAwMWZmZTAwMCAw
-eDAwMDAwMDAwMDAwMDQwMDA7DQo+ID4NCg0KPiA+ICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvaW50
-ZXJydXB0LWNvbnRyb2xsZXIvYXJtLWdpYy5oPg0KPiA+ICAjaW5jbHVkZSA8ZHQtYmluZGluZ3Mv
-cmVzZXQvcmVhbHRlayxydGQxMjk1Lmg+DQo+ID4gQEAgLTE5LDYgKzE3LDI1IEBADQo+ID4gIAkj
-YWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPiAgCSNzaXplLWNlbGxzID0gPDE+Ow0KPiA+DQo+ID4g
-KwlyZXNlcnZlZC1tZW1vcnkgew0KPiA+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICsJ
-CSNzaXplLWNlbGxzID0gPDE+Ow0KPiA+ICsJCXJhbmdlczsNCj4gPiArDQo+ID4gKwkJcnBjX2Nv
-bW06IHJwY0AxZjAwMCB7DQo+ID4gKwkJCXJlZyA9IDwweDFmMDAwIDB4MTAwMD47DQo+ID4gKwkJ
-fTsNCj4gPiArDQo+ID4gKwkJcnBjX3JpbmdidWY6IHJwY0AxZmZlMDAwIHsNCj4gPiArCQkJcmVn
-ID0gPDB4MWZmZTAwMCAweDQwMDA+Ow0KPiA+ICsJCX07DQo+IA0KPiBIYXZlIHlvdSByZXZpZXdl
-ZCB0aGlzIHBhdGNoIHRvIGJlIGNvcnJlY3Q/IEkuZS4sIGFyZSB0aGUgYWJvdmUgdHdvIHJlZ2lv
-bnMNCj4gcmVzZXJ2ZWQgUkFNIChhc3N1bXB0aW9uIGFib3ZlKSwgb3IgaXMgdGhpcyByYXRoZXIg
-TU1JTyBzaGFkb3dpbmcgUkFNPw0KPiAodGhlbiB3ZSB3b3VsZCBuZWVkIHRvIHVwZGF0ZSB0aGUg
-L21lbW9yeSByZWcgYW5kIC9zb2MgcmFuZ2VzIHByb3BlcnRpZXMpDQo+IA0KPiBUaGF0IGFsc28g
-YWZmZWN0cyBSVEQxNjE5LCB3aGljaCBjdXJyZW50bHkgaGFzIG5laXRoZXIuDQo+IA0KVGhlIFJQ
-QyBjb21tb24gYnVmZmVyIGFuZCBSUEMgcmluZyBidWZmZXIgYWRkcmVzcyBpcyBjb3JyZWN0Lg0K
-DQoNClJlZ2FyZHMsDQpKYW1lcw0KDQoNCg==
+Hi,
+
+Some more comments inline.
+
+On Fri, Nov 29, 2019 at 05:05:13PM +0800, Biwen Li wrote:
+> The patch supports slave mode for imx I2C driver
+> 
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> ---
+> Change in v5:
+> 	- fix a bug that cannot determine in what mode(master mode or
+> 	  slave mode)
+> 
+> Change in v4:
+> 	- add MACRO CONFIG_I2C_SLAVE to fix compilation issue
+> 
+> Change in v3:
+> 	- support layerscape and i.mx platform
+> 
+> Change in v2:
+> 	- remove MACRO CONFIG_I2C_SLAVE
+> 
+> 
+>  drivers/i2c/busses/i2c-imx.c | 216 ++++++++++++++++++++++++++++++++---
+>  1 file changed, 198 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+> index a3b61336fe55..52f70de16900 100644
+> --- a/drivers/i2c/busses/i2c-imx.c
+> +++ b/drivers/i2c/busses/i2c-imx.c
+> @@ -203,6 +203,9 @@ struct imx_i2c_struct {
+>  	struct pinctrl_state *pinctrl_pins_gpio;
+>  
+>  	struct imx_i2c_dma	*dma;
+> +#if IS_ENABLED(CONFIG_I2C_SLAVE)
+> +	struct i2c_client	*slave;
+> +#endif
+>  };
+>  
+>  static const struct imx_i2c_hwdata imx1_i2c_hwdata = {
+> @@ -279,6 +282,14 @@ static inline unsigned char imx_i2c_read_reg(struct imx_i2c_struct *i2c_imx,
+>  	return readb(i2c_imx->base + (reg << i2c_imx->hwdata->regshift));
+>  }
+>  
+> +/* Set up i2c controller register and i2c status register to default value. */
+> +static void i2c_imx_reset_regs(struct imx_i2c_struct *i2c_imx)
+> +{
+> +	imx_i2c_write_reg(i2c_imx->hwdata->i2cr_ien_opcode ^ I2CR_IEN,
+> +			i2c_imx, IMX_I2C_I2CR);
+> +	imx_i2c_write_reg(i2c_imx->hwdata->i2sr_clr_opcode, i2c_imx, IMX_I2C_I2SR);
+> +}
+> +
+>  /* Functions for DMA support */
+>  static void i2c_imx_dma_request(struct imx_i2c_struct *i2c_imx,
+>  						dma_addr_t phy_addr)
+> @@ -588,23 +599,33 @@ static void i2c_imx_stop(struct imx_i2c_struct *i2c_imx)
+>  	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
+>  }
+>  
+> -static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
+> +/* Clear interrupt flag bit */
+> +static void i2c_imx_clr_if_bit(unsigned int status, struct imx_i2c_struct *i2c_imx)
+>  {
+> -	struct imx_i2c_struct *i2c_imx = dev_id;
+> -	unsigned int temp;
+> +	status &= ~I2SR_IIF;
+> +	status |= (i2c_imx->hwdata->i2sr_clr_opcode & I2SR_IIF);
+> +	imx_i2c_write_reg(status, i2c_imx, IMX_I2C_I2SR);
+> +}
+>  
+> -	temp = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
+> -	if (temp & I2SR_IIF) {
+> -		/* save status register */
+> -		i2c_imx->i2csr = temp;
+> -		temp &= ~I2SR_IIF;
+> -		temp |= (i2c_imx->hwdata->i2sr_clr_opcode & I2SR_IIF);
+> -		imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2SR);
+> -		wake_up(&i2c_imx->queue);
+> -		return IRQ_HANDLED;
+> -	}
+> +/* Clear arbitration lost bit */
+> +static void i2c_imx_clr_al_bit(unsigned int status, struct imx_i2c_struct *i2c_imx)
+> +{
+
+Can you please remove some of the really obvious comments? When a
+function is named clr_al_bit, then it doesn't need a comment which says
+that this function really does this. There are more comments like this
+in the patch.
+
+> +	status &= ~I2SR_IAL;
+> +	status |= (i2c_imx->hwdata->i2sr_clr_opcode & I2SR_IAL);
+> +	imx_i2c_write_reg(status, i2c_imx, IMX_I2C_I2SR);
+> +}
+>  
+> -	return IRQ_NONE;
+> +static irqreturn_t i2c_imx_master_isr(struct imx_i2c_struct *i2c_imx)
+> +{
+> +	unsigned int status;
+> +
+> +	/* Save status register */
+> +	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
+> +	i2c_imx->i2csr = status | I2SR_IIF;
+
+Instead of reading the status register again you could set
+i2c_imx->i2csr in the caller.
+
+> +
+> +	wake_up(&i2c_imx->queue);
+> +
+> +	return IRQ_HANDLED;
+>  }
+>  
+>  static int i2c_imx_dma_write(struct imx_i2c_struct *i2c_imx,
+> @@ -900,6 +921,13 @@ static int i2c_imx_xfer(struct i2c_adapter *adapter,
+>  
+>  	dev_dbg(&i2c_imx->adapter.dev, "<%s>\n", __func__);
+>  
+> +#if IS_ENABLED(CONFIG_I2C_SLAVE)
+> +	if (i2c_imx->slave) {
+> +		dev_err(&i2c_imx->adapter.dev, "Please not do operations of master mode in slave mode");
+> +		return -EBUSY;
+> +	}
+> +#endif
+> +
+>  	result = pm_runtime_get_sync(i2c_imx->adapter.dev.parent);
+>  	if (result < 0)
+>  		goto out;
+> @@ -1048,11 +1076,166 @@ static u32 i2c_imx_func(struct i2c_adapter *adapter)
+>  		| I2C_FUNC_SMBUS_READ_BLOCK_DATA;
+>  }
+>  
+> +#if IS_ENABLED(CONFIG_I2C_SLAVE)
+> +static int i2c_imx_slave_init(struct imx_i2c_struct *i2c_imx)
+> +{
+> +	int temp;
+> +
+> +	/* Resume */
+> +	temp = pm_runtime_get_sync(i2c_imx->adapter.dev.parent);
+> +	if (temp < 0) {
+> +		dev_err(&i2c_imx->adapter.dev, "failed to resume i2c controller");
+> +		return temp;
+> +	}
+> +
+> +	/* Set slave addr. */
+> +	imx_i2c_write_reg((i2c_imx->slave->addr << 1), i2c_imx, IMX_I2C_IADR);
+> +
+> +	i2c_imx_reset_regs(i2c_imx);
+> +
+> +	/* Enable module */
+> +	temp = i2c_imx->hwdata->i2cr_ien_opcode;
+> +	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
+> +
+> +	/* Enable interrupt from i2c module */
+> +	temp |= I2CR_IIEN;
+> +	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
+
+Do these have to be two register accesses?
+
+> +
+> +	/* Wait controller to be stable */
+> +	usleep_range(50, 150);
+> +	return 0;
+> +}
+> +
+> +static irqreturn_t i2c_imx_slave_isr(struct imx_i2c_struct *i2c_imx)
+> +{
+> +	unsigned int status, ctl;
+> +	u8 value;
+> +
+> +	if (!i2c_imx->slave) {
+> +		dev_err(&i2c_imx->adapter.dev, "cannot deal with slave irq,i2c_imx->slave is null");
+> +		return IRQ_NONE;
+> +	}
+
+This function is never called with !i2c_imx->slave.
+
+> +
+> +	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
+> +	ctl = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2CR);
+> +	if (status & I2SR_IAL) { /* Arbitration lost */
+> +		i2c_imx_clr_al_bit(status, i2c_imx);
+> +	} else if (status & I2SR_IAAS) { /* Addressed as a slave */
+> +		if (status & I2SR_SRW) { /* Master wants to read from us*/
+> +			dev_dbg(&i2c_imx->adapter.dev, "read requested");
+> +			i2c_slave_event(i2c_imx->slave, I2C_SLAVE_READ_REQUESTED, &value);
+> +
+> +			/* Slave transmit */
+> +			ctl |= I2CR_MTX;
+> +			imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
+> +
+> +			/* Send data */
+> +			imx_i2c_write_reg(value, i2c_imx, IMX_I2C_I2DR);
+> +		} else { /* Master wants to write to us */
+> +			dev_dbg(&i2c_imx->adapter.dev, "write requested");
+> +			i2c_slave_event(i2c_imx->slave,	I2C_SLAVE_WRITE_REQUESTED, &value);
+> +
+> +			/* Slave receive */
+> +			ctl &= ~I2CR_MTX;
+> +			imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
+> +			/* Dummy read */
+> +			imx_i2c_read_reg(i2c_imx, IMX_I2C_I2DR);
+> +		}
+> +	} else if (!(ctl & I2CR_MTX)) { /* Receive mode */
+> +			if (status & I2SR_IBB) { /* No STOP signal detected */
+> +				ctl &= ~I2CR_MTX;
+> +				imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
+> +
+> +				value = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2DR);
+> +				i2c_slave_event(i2c_imx->slave,	I2C_SLAVE_WRITE_RECEIVED, &value);
+> +			} else { /* STOP signal is detected */
+> +				dev_dbg(&i2c_imx->adapter.dev,
+> +					"STOP signal detected");
+> +				i2c_slave_event(i2c_imx->slave, I2C_SLAVE_STOP, &value);
+> +			}
+> +	} else if (!(status & I2SR_RXAK)) {	/* Transmit mode received ACK */
+> +		ctl |= I2CR_MTX;
+> +		imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
+> +
+> +		i2c_slave_event(i2c_imx->slave,	I2C_SLAVE_READ_PROCESSED, &value);
+> +
+> +		imx_i2c_write_reg(value, i2c_imx, IMX_I2C_I2DR);
+> +	} else { /* Transmit mode received NAK */
+> +		ctl &= ~I2CR_MTX;
+> +		imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
+> +		imx_i2c_read_reg(i2c_imx, IMX_I2C_I2DR);
+> +	}
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int i2c_imx_reg_slave(struct i2c_client *client)
+> +{
+> +	struct imx_i2c_struct *i2c_imx = i2c_get_adapdata(client->adapter);
+> +	int ret;
+> +	if (i2c_imx->slave)
+> +		return -EBUSY;
+> +
+> +	i2c_imx->slave = client;
+> +
+> +	ret = i2c_imx_slave_init(i2c_imx);
+> +	if (ret < 0)
+> +		dev_err(&i2c_imx->adapter.dev, "failed to switch to slave mode");
+
+The caller already reports an error. No need to do it here again.
+
+> +
+> +	return ret;
+> +}
+> +
+> +static int i2c_imx_unreg_slave(struct i2c_client *client)
+> +{
+> +	struct imx_i2c_struct *i2c_imx = i2c_get_adapdata(client->adapter);
+> +	int ret;
+> +
+> +	if (!i2c_imx->slave)
+> +		return -EINVAL;
+> +
+> +	/* Reset slave address. */
+> +	imx_i2c_write_reg(0, i2c_imx, IMX_I2C_IADR);
+> +
+> +	i2c_imx_reset_regs(i2c_imx);
+> +
+> +	i2c_imx->slave = NULL;
+> +
+> +	/* Suspend */
+> +	ret = pm_runtime_put_sync(i2c_imx->adapter.dev.parent);
+> +	if (ret < 0)
+> +		dev_err(&i2c_imx->adapter.dev, "failed to suspend i2c controller");
+
+I doubt this message is useful.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
