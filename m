@@ -2,214 +2,81 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 448FCC43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CA2C43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 114B92070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:35:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PJ4fMewu"
+	by mail.kernel.org (Postfix) with ESMTP id C8E1220748
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:37:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfLBJfQ (ORCPT
+        id S1726707AbfLBJh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 04:35:16 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43466 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbfLBJfP (ORCPT
+        Mon, 2 Dec 2019 04:37:56 -0500
+Received: from www62.your-server.de ([213.133.104.62]:33064 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbfLBJh4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 04:35:15 -0500
-Received: by mail-wr1-f68.google.com with SMTP id n1so43307175wra.10
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 01:35:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DsomJDEnPS1SeuqmJo1Um2y9Uve/ujNAly1vGnk2Wnw=;
-        b=PJ4fMewuOtG8ott73XB4wcNp/ELlbBp8phss1wfiPvivwfGxnWW855kS4lrm4jxN5e
-         odOP4guLhWbyqMqKIxBr504trIh1bR4wpK+G4mVEI41N1zTWtZso3L3iqzG70jo9qk67
-         XzS14gmuZK54bkj+bkprbmjgr+qWo8HAszuI8hw/1qKkYzzdzIX0wH47sSLXyU5piI6O
-         eEGCOXj0k+1zkSN7eWe/HCv6riTYSbiN8U4JImU4KcxsWGQnDhr3M42Lp3GrWp6eJSVw
-         n6Cnh8BY7Di1yZQOtsyKagscZZRVXzMzWLKqYSF9RTtKj/miu53kJZ489bHwCpzMNE+C
-         i+ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DsomJDEnPS1SeuqmJo1Um2y9Uve/ujNAly1vGnk2Wnw=;
-        b=mUov53qH6SXHdJoy9P4B/DSxLr24CMIl+xpIZscIozTZcKfs4I78JEb5wEAkWMB10z
-         4oSzRDT5EuMSTSTMnp9Nb9xB4GTWFiotpE3fOeyItb8r5cSCrdWR0nsaKSmbAzNOuPDS
-         lHKqp+OnV/kdVRe99aT1AG1S+0xxxtgp97yrV4L8LkEgkbFDKMtGXxOKR3O87VhT2TcK
-         26oCUQocj5Bfyr039cT24rXwPjNbO2ZuTQZjDgPNrug9hEUkXXrqdo66R+MIf+M0G+G5
-         q0cgKRvdSpYtVHDW9OMy9YDnyJaKCuf9kyA6QRK5/sXnuzdOvsmMx9TH/nuRjIlx8/F8
-         5MDA==
-X-Gm-Message-State: APjAAAVy8dFfXC8ISKEhou49SWf1KC8yNO5XKnOnGIo5Y1FSBZ4xbeyE
-        Yno1ZfVBDaoH3Wx/xRVvB6/TkIoM43mvEqvV6pkbxQ==
-X-Google-Smtp-Source: APXvYqzB1kelzlTBEO6JhwtzoB6hvrB8nJisEMcHG1OTRpfRgKSL0aRStSFTwmv3nM9gluzSuO82HynhYXOJl+BOrH0=
-X-Received: by 2002:a5d:46c1:: with SMTP id g1mr46786997wrs.200.1575279312562;
- Mon, 02 Dec 2019 01:35:12 -0800 (PST)
+        Mon, 2 Dec 2019 04:37:56 -0500
+Received: from [194.230.159.159] (helo=localhost)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1ibi9Q-0004d3-Nt; Mon, 02 Dec 2019 10:37:52 +0100
+Date:   Mon, 2 Dec 2019 10:37:52 +0100
+From:   Daniel Borkmann <daniel@iogearbox.net>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Aurelien Jarno <aurelien@aurel32.net>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        debian-kernel@lists.debian.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <netdev@vger.kernel.org>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <bpf@vger.kernel.org>
+Subject: Re: [PATCH] libbpf: fix readelf output parsing on powerpc with
+ recent binutils
+Message-ID: <20191202093752.GA1535@localhost.localdomain>
+References: <20191201195728.4161537-1-aurelien@aurel32.net>
+ <87zhgbe0ix.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <20191130195045.2005835-1-robdclark@gmail.com>
-In-Reply-To: <20191130195045.2005835-1-robdclark@gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Mon, 2 Dec 2019 10:35:05 +0100
-Message-ID: <CAKv+Gu_HXD=59q9zeK6-WoEEngHPrEJpPTyT8U4TZZ3AOs=TcA@mail.gmail.com>
-Subject: Re: [PATCH] efi/fdt: install new fdt config table
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Leif Lindholm <leif.lindholm@linaro.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kairui Song <kasong@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        "open list:EXTENSIBLE FIRMWARE INTERFACE (EFI)" 
-        <linux-efi@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87zhgbe0ix.fsf@mpe.ellerman.id.au>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25650/Sun Dec  1 11:04:04 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 30 Nov 2019 at 20:51, Rob Clark <robdclark@gmail.com> wrote:
->
-> From: Rob Clark <robdclark@chromium.org>
->
-> If there is an fdt config table, replace it with the newly allocated one
-> before calling ExitBootServices().
->
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
-> The DtbLoader.efi[1] driver, which Leif created for EBBR boot on the
-> "windows" aarch64 laptops, tries to detect in an EBS hook, whether the
-> HLOS is using DT.  It does this by realizing that the kernel cmdline is
-> patched in to the fdt, and comparing the CRC.  If the CRC has changed,
-> that means the HLOS is using DT boot, so it removes the ACPI config
-> tables, so that the HLOS does not see two conflicting sets of config
-> tables.
->
-> However, I realized this mechanism does not work when directly loading
-> the linux kernel as an efi executable (ie. without an intermediary like
-> grub doing it's own DT modifications), because efi/libstub is modifying
-> a copy of the DT config table.
->
-> If we update the config table with the new DT, then it will realize
-> properly that the HLOS is using DT.
->
+On Mon, Dec 02, 2019 at 04:53:26PM +1100, Michael Ellerman wrote:
+> Aurelien Jarno <aurelien@aurel32.net> writes:
+> > On powerpc with recent versions of binutils, readelf outputs an extra
+> > field when dumping the symbols of an object file. For example:
+> >
+> >     35: 0000000000000838    96 FUNC    LOCAL  DEFAULT [<localentry>: 8]     1 btf_is_struct
+> >
+> > The extra "[<localentry>: 8]" prevents the GLOBAL_SYM_COUNT variable to
+> > be computed correctly and causes the checkabi target to fail.
+> >
+> > Fix that by looking for the symbol name in the last field instead of the
+> > 8th one. This way it should also cope with future extra fields.
+> >
+> > Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
+> > ---
+> >  tools/lib/bpf/Makefile | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> Thanks for fixing that, it's been on my very long list of test failures
+> for a while.
+> 
+> Tested-by: Michael Ellerman <mpe@ellerman.id.au>
 
-Hey Rob,
-
-I understand what you are trying to do here, but this is not the right solution.
-
-I have rejected patches in the past where config tables are used to
-communicate information back to the firmware, as creating reverse
-dependencies like this is a recipe for disaster.
-
-IIUC, the problem is that the DtbLoader attempts to be smart about
-whether to install the DT config table, and to only do so if the OS is
-going to boot in DT mode. This is based on the principle that we
-should not expose both ACPI and DT tables, and make it the OS's
-problem to reason about which one is the preferred description.
-
-I agree with that approach in general, but in this particular case, I
-don't think it makes sense. Windows only cares about ACPI, and Linux
-only cares about DT unless you instruct it specifically to prioritize
-ACPI over DT. So the problem that this solves does not exist in
-practice, and we're much better off just exposing the DT alongside the
-ACPI tables, and let the OS use whichever one it wants.
-
-Also, the stub always reallocates the FDT, and so the CRC check is
-only detecting whether the DT is being touched by GRUB or not.
-
-So removing the ACPI tables like this is not something I think we
-should be doing at all. As a compromise, you might add 'acpi=off' to
-/chosen/cmdline so that GRUBless boot into Linux does not
-inadvertently ends up booting in ACPI mode.
-
-Thanks,
-Ard.
-
-
-
-
-> [1] https://git.linaro.org/people/leif.lindholm/edk2.git/log/?h=dtbloader
->
->  .../firmware/efi/libstub/efi-stub-helper.c    | 32 +++++++++++++++++++
->  drivers/firmware/efi/libstub/efistub.h        |  2 ++
->  drivers/firmware/efi/libstub/fdt.c            |  2 ++
->  3 files changed, 36 insertions(+)
->
-> diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
-> index 35dbc2791c97..210070f3b231 100644
-> --- a/drivers/firmware/efi/libstub/efi-stub-helper.c
-> +++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-> @@ -953,3 +953,35 @@ void *get_efi_config_table(efi_system_table_t *sys_table, efi_guid_t guid)
->         else
->                 return get_efi_config_table32(sys_table, guid);
->  }
-> +
-> +#define REPLACE_EFI_CONFIG_TABLE(bits)                                 \
-> +static void *replace_efi_config_table##bits(efi_system_table_t *_sys_table, \
-> +                                       efi_guid_t guid, void *table)   \
-> +{                                                                      \
-> +       efi_system_table_##bits##_t *sys_table;                         \
-> +       efi_config_table_##bits##_t *tables;                            \
-> +       int i;                                                          \
-> +                                                                       \
-> +       sys_table = (typeof(sys_table))_sys_table;                      \
-> +       tables = (typeof(tables))(unsigned long)sys_table->tables;      \
-> +                                                                       \
-> +       for (i = 0; i < sys_table->nr_tables; i++) {                    \
-> +               if (efi_guidcmp(tables[i].guid, guid) != 0)             \
-> +                       continue;                                       \
-> +                                                                       \
-> +               tables[i].table = (uintptr_t)table;                     \
-> +               return;                                                 \
-> +       }                                                               \
-> +}
-> +REPLACE_EFI_CONFIG_TABLE(32)
-> +REPLACE_EFI_CONFIG_TABLE(64)
-> +
-> +/* replaces an existing config table: */
-> +void replace_efi_config_table(efi_system_table_t *sys_table, efi_guid_t guid,
-> +                         void *table)
-> +{
-> +       if (efi_is_64bit())
-> +               replace_efi_config_table64(sys_table, guid, table);
-> +       else
-> +               replace_efi_config_table32(sys_table, guid, table);
-> +}
-> diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-> index 7f1556fd867d..66f2927ce26f 100644
-> --- a/drivers/firmware/efi/libstub/efistub.h
-> +++ b/drivers/firmware/efi/libstub/efistub.h
-> @@ -66,6 +66,8 @@ efi_status_t check_platform_features(efi_system_table_t *sys_table_arg);
->  efi_status_t efi_random_get_seed(efi_system_table_t *sys_table_arg);
->
->  void *get_efi_config_table(efi_system_table_t *sys_table, efi_guid_t guid);
-> +void replace_efi_config_table(efi_system_table_t *sys_table, efi_guid_t guid,
-> +                         void *table);
->
->  /* Helper macros for the usual case of using simple C variables: */
->  #ifndef fdt_setprop_inplace_var
-> diff --git a/drivers/firmware/efi/libstub/fdt.c b/drivers/firmware/efi/libstub/fdt.c
-> index 0bf0190917e0..15887ec2dc3b 100644
-> --- a/drivers/firmware/efi/libstub/fdt.c
-> +++ b/drivers/firmware/efi/libstub/fdt.c
-> @@ -313,6 +313,8 @@ efi_status_t allocate_new_fdt_and_exit_boot(efi_system_table_t *sys_table,
->         priv.runtime_entry_count        = &runtime_entry_count;
->         priv.new_fdt_addr               = (void *)*new_fdt_addr;
->
-> +       replace_efi_config_table(sys_table, DEVICE_TREE_GUID, priv.new_fdt_addr);
-> +
->         status = efi_exit_boot_services(sys_table, handle, &map, &priv, exit_boot_func);
->
->         if (status == EFI_SUCCESS) {
-> --
-> 2.23.0
->
+Looks good & also continues to work on x86. Applied, thanks!
