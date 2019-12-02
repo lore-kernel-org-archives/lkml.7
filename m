@@ -2,101 +2,118 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2E0C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1A2C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F276420833
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:12:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="LDvW5+gU"
+	by mail.kernel.org (Postfix) with ESMTP id EF8A720833
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:14:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbfLBIMr (ORCPT
+        id S1726516AbfLBIOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 03:12:47 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42412 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfLBIMr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 03:12:47 -0500
-Received: by mail-lf1-f68.google.com with SMTP id y19so27151535lfl.9
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 00:12:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RXvQHsZsmW6pXP8cWlKu2oB3ye6J64yetODPCUShQls=;
-        b=LDvW5+gU93ELdFLgK+qT5nVScnz7JgrgQhRNku/wapYS8SJVJ0DJqOui367w/7mQxq
-         Au7P5C7DLMSuDtkf/MWrkqjx3ggt2cjLRCY1veJ07zT9Q1Eu1LPn5x1JVqaSg1XnhMZM
-         3wHW/8HPkLuPc9XfhNEKM5So4ssvUYGcLRkL8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RXvQHsZsmW6pXP8cWlKu2oB3ye6J64yetODPCUShQls=;
-        b=WVU+i9k2wNg21NWn2sf1pMlRnh7zfyII4pU+swOpjR6hlVcYaLa64y4shcQi+g+ewM
-         /mxXCUXucntWIxDEPiVxxUZ7kBbMbLz28+sT8/EX4C/YfbuRpmWvhNyKmKYmYExLupZw
-         XqLyI7JYdSTgZPhDaJb3HCcEDms9KSYF5F0WCG9K7maw0VqgqYqvIJ7sNtJrVxzwTJpX
-         4/diRCsDRUxQVwpfoS9Wqgj3/IgFX21SpMf7lnEXhSMKx02f9kdDEac+x8rjGLcskWz8
-         152rYbvD5EV6weEKU8e/lf0msmhETVvsTGbf1qCjXAlme1LvLjEQ/Lu2WI7eLm4F3Vme
-         vnrw==
-X-Gm-Message-State: APjAAAXAHaO6X2upL4qeYPu8exvbNLYZnP+dqqYm1txNr/PgjwHjrep8
-        yALGYO2WiQEU5iYDtoe84N4mdg==
-X-Google-Smtp-Source: APXvYqwlkkFrnJatLGMhg+Y85fDnQNQBGUSaNwCgj8pT5xNS23TPmswcOte86uiWZSUfoOuJ8nIa5g==
-X-Received: by 2002:ac2:4c82:: with SMTP id d2mr29043163lfl.62.1575274363744;
-        Mon, 02 Dec 2019 00:12:43 -0800 (PST)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id t6sm5445106lji.17.2019.12.02.00.12.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Dec 2019 00:12:42 -0800 (PST)
-Subject: Re: [PATCH v6 00/49] QUICC Engine support on ARM, ARM64, PPC64
-To:     Timur Tabi <timur@kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Scott Wood <oss@buserror.net>
-References: <20191128145554.1297-1-linux@rasmusvillemoes.dk>
- <7beef282-1dd8-7c7a-4f6d-d0605d11eab5@kernel.org>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <fb810251-f444-bd5d-54e3-774d2e1ccdb9@rasmusvillemoes.dk>
-Date:   Mon, 2 Dec 2019 09:12:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 2 Dec 2019 03:14:23 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:37318 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726057AbfLBIOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 03:14:23 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9CEB786D8616E3D309D1;
+        Mon,  2 Dec 2019 16:14:17 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Mon, 2 Dec 2019
+ 16:14:11 +0800
+From:   "zhangyi (F)" <yi.zhang@huawei.com>
+To:     <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <luto@kernel.org>, <adobriyan@gmail.com>,
+        <akpm@linux-foundation.org>, <vbabka@suse.cz>,
+        <peterz@infradead.org>, <bigeasy@linutronix.de>, <mhocko@suse.com>,
+        <john.ogness@linutronix.de>, <yi.zhang@huawei.com>,
+        <nixiaoming@huawei.com>
+Subject: [PATCH 4.4 5/7] fs/proc: Report eip/esp in /prod/PID/stat for coredumping
+Date:   Mon, 2 Dec 2019 16:35:17 +0800
+Message-ID: <20191202083519.23138-6-yi.zhang@huawei.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20191202083519.23138-1-yi.zhang@huawei.com>
+References: <20191202083519.23138-1-yi.zhang@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <7beef282-1dd8-7c7a-4f6d-d0605d11eab5@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/12/2019 17.10, Timur Tabi wrote:
-> On 11/28/19 8:55 AM, Rasmus Villemoes wrote:
->> There have been several attempts in the past few years to allow
->> building the QUICC engine drivers for platforms other than PPC32. This
->> is yet another attempt.
->>
->> v5 can be found
->> here:https://lore.kernel.org/lkml/20191118112324.22725-1-linux@rasmusvillemoes.dk/
->>
-> 
-> If it helps:
-> 
-> Entire series:
-> Acked-by: Timur Tabi <timur@kernel.org>
+From: John Ogness <john.ogness@linutronix.de>
 
-Thanks. I'll leave it to Li Yang whether to apply that - they already
-all (except for the last-minute build fix) have your R-b.
+commit fd7d56270b526ca3ed0c224362e3c64a0f86687a upstream.
 
-Li Yang, any chance you could pick up these patches so they have plenty
-of time in -next until 5.6?
+Commit 0a1eb2d474ed ("fs/proc: Stop reporting eip and esp in
+/proc/PID/stat") stopped reporting eip/esp because it is
+racy and dangerous for executing tasks. The comment adds:
 
-Thanks,
-Rasmus
+    As far as I know, there are no use programs that make any
+    material use of these fields, so just get rid of them.
+
+However, existing userspace core-dump-handler applications (for
+example, minicoredumper) are using these fields since they
+provide an excellent cross-platform interface to these valuable
+pointers. So that commit introduced a user space visible
+regression.
+
+Partially revert the change and make the readout possible for
+tasks with the proper permissions and only if the target task
+has the PF_DUMPCORE flag set.
+
+Fixes: 0a1eb2d474ed ("fs/proc: Stop reporting eip and esp in> /proc/PID/stat")
+Reported-by: Marco Felsch <marco.felsch@preh.de>
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Reviewed-by: Andy Lutomirski <luto@kernel.org>
+Cc: Tycho Andersen <tycho.andersen@canonical.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: stable@vger.kernel.org
+Cc: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Linux API <linux-api@vger.kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: http://lkml.kernel.org/r/87poatfwg6.fsf@linutronix.de
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+
+[ zhangyi: 68db0cf10678 does not merged, skip the task_stack.h for 4.4]
+
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+---
+ fs/proc/array.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/fs/proc/array.c b/fs/proc/array.c
+index 618c83f1866d..c3e1732bcaa5 100644
+--- a/fs/proc/array.c
++++ b/fs/proc/array.c
+@@ -429,7 +429,15 @@ static int do_task_stat(struct seq_file *m, struct pid_namespace *ns,
+ 		 * esp and eip are intentionally zeroed out.  There is no
+ 		 * non-racy way to read them without freezing the task.
+ 		 * Programs that need reliable values can use ptrace(2).
++		 *
++		 * The only exception is if the task is core dumping because
++		 * a program is not able to use ptrace(2) in that case. It is
++		 * safe because the task has stopped executing permanently.
+ 		 */
++		if (permitted && (task->flags & PF_DUMPCORE)) {
++			eip = KSTK_EIP(task);
++			esp = KSTK_ESP(task);
++		}
+ 	}
+ 
+ 	get_task_comm(tcomm, task);
+-- 
+2.17.2
+
