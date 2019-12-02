@@ -2,75 +2,94 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E05F5C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83500C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDBC920705
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5547920722
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:58:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="XWw2EpfR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726224AbfLBV5o (ORCPT
+        id S1726418AbfLBV6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 16:57:44 -0500
-Received: from hera.iit.uni-miskolc.hu ([193.6.5.4]:46596 "EHLO
-        hera.iit.uni-miskolc.hu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbfLBV5n (ORCPT
+        Mon, 2 Dec 2019 16:58:13 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:33214 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbfLBV6N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 16:57:43 -0500
-X-Greylist: delayed 315 seconds by postgrey-1.27 at vger.kernel.org; Mon, 02 Dec 2019 16:57:42 EST
-Received: from localhost (localhost [127.0.0.1])
-        by hera.iit.uni-miskolc.hu (Postfix) with ESMTP id 084AD1B3D;
-        Mon,  2 Dec 2019 22:52:22 +0100 (CET)
-X-Virus-Scanned: Kamavis at iit.uni-miskolc.hu
-Received: from hera.iit.uni-miskolc.hu ([127.0.0.1])
-        by localhost (hera.iit.uni-miskolc.hu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id YMw1GiuZXysi; Mon,  2 Dec 2019 22:52:13 +0100 (CET)
-Received: from titan.hitronhub.home (unknown [IPv6:2a02:8109:a180:2298:f5f6:6861:31b7:8595])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: szucst@iit.uni-miskolc.hu)
-        by hera.iit.uni-miskolc.hu (Postfix) with ESMTPSA id C589D1B36;
-        Mon,  2 Dec 2019 22:52:12 +0100 (CET)
-From:   =?UTF-8?q?Tam=C3=A1s=20Sz=C5=B1cs?= <tszucs@protonmail.ch>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Tam=C3=A1s=20Sz=C5=B1cs?= <tszucs@protonmail.ch>
-Subject: [PATCH v2 0/1] arm64: tegra: enable SDIO on Jetson Nano M.2 Key E
-Date:   Mon,  2 Dec 2019 22:51:59 +0100
-Message-Id: <20191202215200.9656-1-tszucs@protonmail.ch>
-X-Mailer: git-send-email 2.20.1
+        Mon, 2 Dec 2019 16:58:13 -0500
+Received: by mail-qt1-f193.google.com with SMTP id d5so1504200qto.0;
+        Mon, 02 Dec 2019 13:58:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VVaXi6VJTkbrgkla/zwTZyQ8K5/Xxz313P0oOuR5JLg=;
+        b=XWw2EpfR9RQ5mqYx+5gAbzvTMmVCWjIReY5TUkcIZu0YmHa4ZB0fXyRpQt2prd/Jt9
+         zB2H7XHyKxEelGbm1Zqadp6pIw230RhAiwSmkhq9kTLZZ1T1oTCTXScsMfTiO9GzVYgi
+         Yhq8U0O6rEwP0mAEFu8/zQqPp/Jyi3YRBrHvQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VVaXi6VJTkbrgkla/zwTZyQ8K5/Xxz313P0oOuR5JLg=;
+        b=BkCdUSXTvPBxh2mZRqvvICHe5pgF4+h8jlCPwAPAaeev9MNmxG0E7FWaQ3ebzcjlxu
+         M26i5MM9hKHQD7RSufkv/JAYbMXwV/BIB3dGaagaQn3dCfl26ePjYqsIxWBBvRx49QK0
+         8ysTPFF5onKq5Dv5HH/T3/f9rWgsVmG9kmv+cxAn0pBrOVeu1yfYuNTCrQ8oFkKrEXz6
+         TK3IB3WxqRkmcwMldX6IUmqKBXbJ2xc89gpgY9nlI3o2fpc5hqxWdiqCWBfbmwlWpRyP
+         VktyB2D077I+DpOkvHd+f+yLR5mD5AUl++pwnSZbJeXRB+SqVzlwUxlCQalG5jnjjtv+
+         NPNw==
+X-Gm-Message-State: APjAAAW65AGxvTUaz3AoyHPQtMn/dF/oMpCIoqWIp7n6VtgcKcSdr6Dr
+        2iIdVnGUMwI+r+TYwTkpp7olo3wqsm7X+nOXcX+Vopx9
+X-Google-Smtp-Source: APXvYqwn8km6OVIYCMYJKryuP0QuX/13ylrQEYjCB7m9ABt4yTHTTD4AFAZOfzcAiG0hyJq8vCjs4fCaeUqpwTnDWRE=
+X-Received: by 2002:ac8:4244:: with SMTP id r4mr1769497qtm.169.1575323891858;
+ Mon, 02 Dec 2019 13:58:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20191118104646.3838-1-i.mikhaylov@yadro.com> <20191118104646.3838-4-i.mikhaylov@yadro.com>
+ <CAPDyKFrshWd1P9dZGTSuU=5P0L6LSPz=v2nn+0SWi3ZZazKrRw@mail.gmail.com>
+In-Reply-To: <CAPDyKFrshWd1P9dZGTSuU=5P0L6LSPz=v2nn+0SWi3ZZazKrRw@mail.gmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Mon, 2 Dec 2019 21:57:59 +0000
+Message-ID: <CACPK8XeOgNviNY6gBw74Kvmf=a6d8t4PRbZk1YevxUG035QxUQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] mmc: sdhci-of-aspeed: add inversion signal presence
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It turns out SDMMC3 on the Jetson Nano module is wired to respective pins of
-the carrier's M.2 Key E socket. However, it is not enabled. I see no reason
-why. This block is functional and has a fixed 1.8 V I/O supply. Perfect for
-SDIO cards nowdays. I think it would make sense to enable this feature. PCIe
-could be used for something else.
+On Wed, 20 Nov 2019 at 12:59, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Mon, 18 Nov 2019 at 11:47, Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+> >
+> > Add read_l callback in sdhci_ops with flipping of SDHCI_CARD_PRESENT
+> > bit in case of inverted card detection signal.
+> >
+> > Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+>
+> Applied for next, thanks!
+>
+> For clarity, I am leaving patch 1 for arm-soc.
 
-Kind regards,
-Tamas
+Thanks. I'd already sent the aspeed pull request for 5.5, so I'll send
+the device tree patch next merge window.
 
+Cheers,
 
-Tamás Szűcs (1):
-  arm64: tegra: Enable SDIO on Jetson Nano M.2 Key E
-
- arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
--- 
-2.20.1
-
+Joel
