@@ -2,158 +2,152 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF829C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1D1C43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE02921774
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:13:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575317624;
-	bh=MXoENw3cYJ6J7KpnVVbH5KT0PBuJDBdvZjwKlnHQKOs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CDsl+o/6qHftSdZh1EdrtGlZqcbnAckt6TaZDGYJn3s6C+DGnDccMS1+IGh+hRLln
-	 YJTiIREPFJlp2E1ZvYwxoceJrxXNMm1XKoLVCJYuw3h7aDvxmukjHNA9oovqDb0I79
-	 PNTaYla6YlTZg2mfS9ylazHpyaD354IbAFdos1xI=
+	by mail.kernel.org (Postfix) with ESMTP id 35D3D21774
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:13:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aO+chg+i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbfLBUNn (ORCPT
+        id S1728238AbfLBUNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 15:13:43 -0500
-Received: from mail-qk1-f172.google.com ([209.85.222.172]:45950 "EHLO
-        mail-qk1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728065AbfLBUNl (ORCPT
+        Mon, 2 Dec 2019 15:13:44 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:26069 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728150AbfLBUN3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 15:13:41 -0500
-Received: by mail-qk1-f172.google.com with SMTP id x1so869215qkl.12
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 12:13:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sBnzwv1UojXwcxoE01fHXt46ZRgERe+2cEMc8lTvX3E=;
-        b=DreL1zkTtshzjI6V8vid1mjQeP7Xu5Jhh4ucMAJDI/aufGo89p2/2FjWEuriutdG/6
-         A6J4ubhi5yiggUNWynoR6LH4+WP/qJXRSWiD1/klNtlKQkRDib8nvBe907UnPdA5vXT/
-         SAWV1S9UfscHSRPXMPugVgxQDX50BoyGuoE2uujTqS9ZX3/vFomSjyPJuptQwAUHt1/D
-         chYqWMnWEkbMTFl5xOVEAhyXnC29sYI8iltxCnZDDgrD4Uv8JtdYghGRGkj0y4+YBP0u
-         LQc8bg0E1RB4toTajCpiaMo241Cvl6uLCLvTkndyjrFqKhGAiK8d5CRwRuvNjD5C/ijy
-         MiJA==
+        Mon, 2 Dec 2019 15:13:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575317609;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hGyv0HcV61jwW8d05G9E2IdyBpBV7NLYzlcgkoWtE1A=;
+        b=aO+chg+ijsWPtKjp7zVXqrI2PKwa5lqc/bOWKgQBrXbq7v1z2/QIVWK1J9rjYe0NPneNyf
+        R4OjAgIOI8qf22DTqplK3yfSHVK+KyhGvCYcus5gVMqQnAnAegtdsuSH1YzaQwO4tNOBEV
+        GBuHBJAUu7CAxABFaRZEkmRdkmAG308=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-257-frWkKpoUM6efzHCu7mA3XA-1; Mon, 02 Dec 2019 15:13:28 -0500
+Received: by mail-qv1-f71.google.com with SMTP id g6so554998qvp.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 12:13:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sBnzwv1UojXwcxoE01fHXt46ZRgERe+2cEMc8lTvX3E=;
-        b=Tnuy7mzdDyLeWsooYhbv77P+hFptmHjH8LvGwbtdWHpm+zXaZtpLiaaYVXwf1b/T2O
-         DdEzcdq+r3mNAZBwbTg2dm3Y+C6plFpHRVoSJxkrPwzeFqBPjLg60TxW9LY6UKe0KZYs
-         YVZo52EzafuwfUmyA3xpk69E2FDvXIBdfoW0ODDzvERDXXqSr1uFxEQSEAm/XNdiHItE
-         LSa6dkD9tPrF2w6CzEVuq6/FewkiZhG4hB36bBELmETlQuUu7amLg1NPpQTQxM2t7TzL
-         HahZwAgkw5BdXQTgY4vKNZijSi9X3xWww68K4DIU1ev4Tjd5N0dWTEKRtkDyYnweO7el
-         H31w==
-X-Gm-Message-State: APjAAAVCrUL6WOdWCeRgXmr88VUT+Z5uWP45qe36400XJemwOlygzhYA
-        KcG6C8Cz13VGHvfiCIU5cZE=
-X-Google-Smtp-Source: APXvYqyNNKabKnJy9SL+NWsZ7LyYz0TW4CMLLMVJiO8Rdt1NNMt7sN2QiHqv19Ep9cYz0AaCQwJ8sQ==
-X-Received: by 2002:a05:620a:1363:: with SMTP id d3mr713037qkl.263.1575317620556;
-        Mon, 02 Dec 2019 12:13:40 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::1:c909])
-        by smtp.gmail.com with ESMTPSA id 13sm350850qke.85.2019.12.02.12.13.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Dec 2019 12:13:39 -0800 (PST)
-Date:   Mon, 2 Dec 2019 12:13:38 -0800
-From:   Tejun Heo <tj@kernel.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     jiangshanlai@gmail.com, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: Workqueues splat due to ending up on wrong CPU
-Message-ID: <20191202201338.GH16681@devbig004.ftw2.facebook.com>
-References: <20191125230312.GP2889@paulmck-ThinkPad-P72>
- <20191126183334.GE2867037@devbig004.ftw2.facebook.com>
- <20191126220533.GU2889@paulmck-ThinkPad-P72>
- <20191127155027.GA15170@paulmck-ThinkPad-P72>
- <20191128161823.GA24667@paulmck-ThinkPad-P72>
- <20191129155850.GA17002@paulmck-ThinkPad-P72>
- <20191202015548.GA13391@paulmck-ThinkPad-P72>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=D/FzhMnEoda/8HIh8/dn3z8Z/X2H7yZOxK6TY6H8n7g=;
+        b=CPO7rsvRGo3M1i/8zP++e2ePKBPXkMjMh/GFNsFbn+FxgIhDydc6H52RZYFyAy9cej
+         FpTbOIDv7BlxIIqfwIgXClyH2TsMk1yQzhRcBhvhF0fMYIrJCe75+lko/PI6RA0+Wupu
+         2UutV2ngutSvii1HA8rZ+K7uJjpKgDYzuf7VmDmrweBv0VmdBkVkvBKsUWaJ9cnjpN0+
+         FzNnnoZEvSjEamEd50wzHj8oOiCkfUdWEDCr/KfnLDlmDKO1r6QaaPIYj61ywLPQt9Jk
+         5jp9sn7+EUiFO5Yzzz5xAUDfQW6qM6Dvk9TgdvOlnRElfr3ydM/mayizX97QCLg8acyh
+         pvHg==
+X-Gm-Message-State: APjAAAVD9Ww6Rns60vV1izWKSGR3aA8N7OF3xVaHU+/UaRzh7ue736An
+        Wnrgem+/svBPTaAi1UXnEiy6amCLcJFb2pmRCUrubvyZgXjSLtrpJWL7zTGY5UXZkfTnyDoayu0
+        xnOWAMUR8f5/C+sicddc0LvSH
+X-Received: by 2002:ac8:4a8a:: with SMTP id l10mr1303332qtq.198.1575317607420;
+        Mon, 02 Dec 2019 12:13:27 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyJIT5O2PIq2hBfIXIZv6d47L3iz/6K6nfkU3HOvroWZken45053jQWJDbUYGB3TtnE632I4A==
+X-Received: by 2002:ac8:4a8a:: with SMTP id l10mr1303310qtq.198.1575317607172;
+        Mon, 02 Dec 2019 12:13:27 -0800 (PST)
+Received: from xz-x1.yyz.redhat.com ([104.156.64.74])
+        by smtp.gmail.com with ESMTPSA id b6sm342410qtp.5.2019.12.02.12.13.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 12:13:26 -0800 (PST)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        peterx@redhat.com, Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: [PATCH v3 5/5] KVM: X86: Fix callers of kvm_apic_match_dest() to use correct macros
+Date:   Mon,  2 Dec 2019 15:13:14 -0500
+Message-Id: <20191202201314.543-6-peterx@redhat.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191202201314.543-1-peterx@redhat.com>
+References: <20191202201314.543-1-peterx@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191202015548.GA13391@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-MC-Unique: frWkKpoUM6efzHCu7mA3XA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Paul.
+Callers of kvm_apic_match_dest() should always pass in APIC_DEST_*
+macros for either dest_mode and short_hand parameters.  Fix up all the
+callers of kvm_apic_match_dest() that are not following the rule.
 
-(cc'ing scheduler folks - workqueue rescuer is very occassionally
-triggering a warning which says that it isn't on the cpu it should be
-on under rcu cpu hotplug torture test.  It's checking smp_processor_id
-is the expected one after a successful set_cpus_allowed_ptr() call.)
+Reported-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reported-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ arch/x86/kvm/ioapic.c   | 11 +++++++----
+ arch/x86/kvm/irq_comm.c |  3 ++-
+ 2 files changed, 9 insertions(+), 5 deletions(-)
 
-On Sun, Dec 01, 2019 at 05:55:48PM -0800, Paul E. McKenney wrote:
-> > And hyperthreading seems to have done the trick!  One splat thus far,
-> > shown below.  The run should complete this evening, Pacific Time.
-> 
-> That was the only one for that run, but another 24*56-hour run got three
-> more.  All of them expected to be on CPU 0 (which never goes offline, so
-> why?) and the "XXX" diagnostic never did print.
+diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
+index 901d85237d1c..1082ca8d11e5 100644
+--- a/arch/x86/kvm/ioapic.c
++++ b/arch/x86/kvm/ioapic.c
+@@ -108,8 +108,9 @@ static void __rtc_irq_eoi_tracking_restore_one(struct k=
+vm_vcpu *vcpu)
+ =09union kvm_ioapic_redirect_entry *e;
+=20
+ =09e =3D &ioapic->redirtbl[RTC_GSI];
+-=09if (!kvm_apic_match_dest(vcpu, NULL, 0,=09e->fields.dest_id,
+-=09=09=09=09e->fields.dest_mode))
++=09if (!kvm_apic_match_dest(vcpu, NULL, APIC_DEST_NOSHORT,
++=09=09=09=09 e->fields.dest_id,
++=09=09=09=09 kvm_lapic_irq_dest_mode(e->fields.dest_mode)))
+ =09=09return;
+=20
+ =09new_val =3D kvm_apic_pending_eoi(vcpu, e->fields.vector);
+@@ -237,6 +238,7 @@ void kvm_ioapic_scan_entry(struct kvm_vcpu *vcpu, ulong=
+ *ioapic_handled_vectors)
+ =09struct dest_map *dest_map =3D &ioapic->rtc_status.dest_map;
+ =09union kvm_ioapic_redirect_entry *e;
+ =09int index;
++=09u16 dm;
+=20
+ =09spin_lock(&ioapic->lock);
+=20
+@@ -250,8 +252,9 @@ void kvm_ioapic_scan_entry(struct kvm_vcpu *vcpu, ulong=
+ *ioapic_handled_vectors)
+ =09=09if (e->fields.trig_mode =3D=3D IOAPIC_LEVEL_TRIG ||
+ =09=09    kvm_irq_has_notifier(ioapic->kvm, KVM_IRQCHIP_IOAPIC, index) ||
+ =09=09    index =3D=3D RTC_GSI) {
+-=09=09=09if (kvm_apic_match_dest(vcpu, NULL, 0,
+-=09=09=09             e->fields.dest_id, e->fields.dest_mode) ||
++=09=09=09dm =3D kvm_lapic_irq_dest_mode(e->fields.dest_mode);
++=09=09=09if (kvm_apic_match_dest(vcpu, NULL, APIC_DEST_NOSHORT,
++=09=09=09=09=09=09e->fields.dest_id, dm) ||
+ =09=09=09    kvm_apic_pending_eoi(vcpu, e->fields.vector))
+ =09=09=09=09__set_bit(e->fields.vector,
+ =09=09=09=09=09  ioapic_handled_vectors);
+diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
+index 5f59e5ebdbed..e89c2160b39f 100644
+--- a/arch/x86/kvm/irq_comm.c
++++ b/arch/x86/kvm/irq_comm.c
+@@ -417,7 +417,8 @@ void kvm_scan_ioapic_routes(struct kvm_vcpu *vcpu,
+=20
+ =09=09=09kvm_set_msi_irq(vcpu->kvm, entry, &irq);
+=20
+-=09=09=09if (irq.level && kvm_apic_match_dest(vcpu, NULL, 0,
++=09=09=09if (irq.level &&
++=09=09=09    kvm_apic_match_dest(vcpu, NULL, APIC_DEST_NOSHORT,
+ =09=09=09=09=09=09irq.dest_id, irq.dest_mode))
+ =09=09=09=09__set_bit(irq.vector, ioapic_handled_vectors);
+ =09=09}
+--=20
+2.21.0
 
-Heh, I didn't expect that, so maybe set_cpus_allowed_ptr() is
-returning 0 while not migrating the rescuer task to the target cpu for
-some reason?
-
-The rescuer is always calling to migrate itself, so it must always be
-running.  set_cpus_allowed_ptr() migrates live ones by calling
-stop_one_cpu() which schedules a migration function which runs from a
-highpri task on the target cpu.  Please take a look at the following.
-
-  static bool cpu_stop_queue_work(unsigned int cpu, struct cpu_stop_work *work)
-  {
-          ...
-	  enabled = stopper->enabled;
-	  if (enabled)
-		  __cpu_stop_queue_work(stopper, work, &wakeq);
-	  else if (work->done)
-		  cpu_stop_signal_done(work->done);
-          ...
-  }
-
-So, if stopper->enabled is clear, it'll signal completion without
-running the work.  stopper->enabled is cleared during cpu hotunplug
-and restored from bringup_cpu() while cpu is being brought back up.
-
-  static int bringup_wait_for_ap(unsigned int cpu)
-  {
-          ...
-	  stop_machine_unpark(cpu);
-          ....
-  }
-
-  static int bringup_cpu(unsigned int cpu)
-  {
-	  ...
-	  ret = __cpu_up(cpu, idle);
-          ...
-	  return bringup_wait_for_ap(cpu);
-  }
-
-__cpu_up() is what marks the cpu online and once the cpu is online,
-kthreads are free to migrate into the cpu, so it looks like there's a
-brief window where a cpu is marked online but the stopper thread is
-still disabled meaning that a kthread may schedule into the cpu but
-not out of it, which would explain the symptom that you were seeing.
-
-This makes the cpumask and the cpu the task is actually on disagree
-and retries would become noops.  I can work around it by excluding
-rescuer attachments against hotplugs but this looks like a genuine cpu
-hotplug bug.
-
-It could be that I'm misreading the code.  What do you guys think?
-
-Thanks.
-
--- 
-tejun
