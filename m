@@ -2,173 +2,178 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 914E1C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 01:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EFEC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 01:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67F7020748
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 01:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B56732146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 01:56:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575251764;
+	bh=kh/UNCAnqZyjo+76mnWesFmYTkQ1qMNTcBTJSiYYJnA=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=vPWlmIjye27gk/qVFTWpWn67ATnNNQ2BkdS5DMce6UIBmXL4jdLi/URowzy+1nG0K
+	 y7VzTcEHk7bGGrooHAuL9Tcx8pLxUjxuOFZpbav7wwXAONcVeGQbphYqgvQd3uGxzk
+	 fYjWSfvoJK8tiikjDGTR5TeGAdSnsb7y6oLxp3io=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbfLBBph convert rfc822-to-8bit (ORCPT
+        id S1727327AbfLBBzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 20:45:37 -0500
-Received: from mga12.intel.com ([192.55.52.136]:45963 "EHLO mga12.intel.com"
+        Sun, 1 Dec 2019 20:55:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727394AbfLBBph (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 20:45:37 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Dec 2019 17:45:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,267,1571727600"; 
-   d="scan'208";a="212870090"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by orsmga006.jf.intel.com with ESMTP; 01 Dec 2019 17:45:35 -0800
-Received: from fmsmsx605.amr.corp.intel.com (10.18.126.85) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sun, 1 Dec 2019 17:45:34 -0800
-Received: from fmsmsx605.amr.corp.intel.com (10.18.126.85) by
- fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sun, 1 Dec 2019 17:45:34 -0800
-Received: from shsmsx104.ccr.corp.intel.com (10.239.4.70) by
- fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Sun, 1 Dec 2019 17:45:34 -0800
-Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.109]) by
- SHSMSX104.ccr.corp.intel.com ([169.254.5.90]) with mapi id 14.03.0439.000;
- Mon, 2 Dec 2019 09:45:31 +0800
-From:   "Zhao, Shirley" <shirley.zhao@intel.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>
-CC:     James Bottomley <jejb@linux.ibm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
-        "Zhu, Bing" <bing.zhu@intel.com>,
-        "Chen, Luhai" <luhai.chen@intel.com>
-Subject: RE: One question about trusted key of keyring in Linux kernel.
-Thread-Topic: One question about trusted key of keyring in Linux kernel.
-Thread-Index: AdWZwFKzDBwFOydYTGGk+Aqs+6BIxAANhxEAAoxRZMAACTMHAACeWpwAAHsDLGA=
-Date:   Mon, 2 Dec 2019 01:45:30 +0000
-Message-ID: <A888B25CD99C1141B7C254171A953E8E4909CA4B@shsmsx102.ccr.corp.intel.com>
-References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
- <1573659978.17949.83.camel@linux.ibm.com>
- <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
- <1574796456.4793.248.camel@linux.ibm.com>
- <20191129230146.GB15726@linux.intel.com>
-In-Reply-To: <20191129230146.GB15726@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZGJjNWFmN2MtZWU2Ny00MGNmLTk2N2UtZWZiMTU0Mjk3OTNiIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoidG1Nck1haHRoaDNJaEhmRlFFXC8zYVo4VHNHS1o2NmhKdU42UlBNdXBoM1o0Y2FrR1d5ck1VbDNOYTZaYU9WYVEifQ==
-x-ctpclassification: CTP_NT
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        id S1727279AbfLBBzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Dec 2019 20:55:50 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34AD42146E;
+        Mon,  2 Dec 2019 01:55:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575251749;
+        bh=kh/UNCAnqZyjo+76mnWesFmYTkQ1qMNTcBTJSiYYJnA=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=uqfy8dv240PcCOMhZ3muvYXvRhAjDN6Jdk5z9HuZcVY1WZGfrqT+UTbU3lJm5+5NH
+         h8c2bhWoK25WFKdx8bSF7GTlPld3VJz2gnhE2jGICR3kELBdAxTfsl9rflsdTBP+cd
+         IuhPfGFdwesrkaerfbfrox1dOw/Vlc7rL62EJ1zA=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 042A7352278B; Sun,  1 Dec 2019 17:55:49 -0800 (PST)
+Date:   Sun, 1 Dec 2019 17:55:48 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     jiangshanlai@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: Workqueues splat due to ending up on wrong CPU
+Message-ID: <20191202015548.GA13391@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191125230312.GP2889@paulmck-ThinkPad-P72>
+ <20191126183334.GE2867037@devbig004.ftw2.facebook.com>
+ <20191126220533.GU2889@paulmck-ThinkPad-P72>
+ <20191127155027.GA15170@paulmck-ThinkPad-P72>
+ <20191128161823.GA24667@paulmck-ThinkPad-P72>
+ <20191129155850.GA17002@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191129155850.GA17002@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Jarkko, 
-
-The rc1 you mentioned is the version for what? 
-How to download it and update it? 
-
-Thanks. 
-
-- Shirley 
-
------Original Message-----
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> 
-Sent: Saturday, November 30, 2019 7:02 AM
-To: Mimi Zohar <zohar@linux.ibm.com>
-Cc: Zhao, Shirley <shirley.zhao@intel.com>; James Bottomley <jejb@linux.ibm.com>; Jonathan Corbet <corbet@lwn.net>; linux-integrity@vger.kernel.org; keyrings@vger.kernel.org; linux-doc@vger.kernel.org; linux-kernel@vger.kernel.org; 'Mauro Carvalho Chehab' <mchehab+samsung@kernel.org>; Zhu, Bing <bing.zhu@intel.com>; Chen, Luhai <luhai.chen@intel.com>
-Subject: Re: One question about trusted key of keyring in Linux kernel.
-
-On Tue, Nov 26, 2019 at 02:27:36PM -0500, Mimi Zohar wrote:
-> On Tue, 2019-11-26 at 07:32 +0000, Zhao, Shirley wrote:
-> > Thanks for your feedback, Mimi. 
-> > But the document of dracut can't solve my problem. 
-> > 
-> > I did more test these days and try to descript my question in more detail. 
-> > 
-> > In my scenario, the trusted key will be sealed into TPM with PCR policy. 
-> > And there are some related options in manual like 
-> >        hash=         hash algorithm name as a string. For TPM 1.x the only
-> >                      allowed value is sha1. For TPM 2.x the allowed values
-> >                      are sha1, sha256, sha384, sha512 and sm3-256.
-> >        policydigest= digest for the authorization policy. must be calculated
-> >                      with the same hash algorithm as specified by the 'hash='
-> >                      option.
-> >        policyhandle= handle to an authorization policy session that defines the
-> >                      same policy and with the same hash algorithm as was used to
-> >                      seal the key. 
-> > 
-> > Here is my test step. 
-> > Firstly, the pcr policy is generated as below: 
-> > $ tpm2_createpolicy --policy-pcr --pcr-list sha256:7 --policy 
-> > pcr7_bin.policy > pcr7.policy
-> > 
-> > Pcr7.policy is the ascii hex of policy:
-> > $ cat pcr7.policy
-> > 321fbd28b60fcc23017d501b133bd5dbf2889814588e8a23510fe10105cb2cc9
-> > 
-> > Then generate the trusted key and configure policydigest and get the key ID: 
-> > $ keyctl add trusted kmk "new 32 keyhandle=0x81000001 hash=sha256 
-> > policydigest=`cat pcr7.policy`" @u
-> > 874117045
-> > 
-> > Save the trusted key. 
-> > $ keyctl pipe 874117045 > kmk.blob
-> > 
-> > Reboot and load the key. 
-> > Start a auth session to generate the policy:
-> > $ tpm2_startauthsession -S session.ctx
-> > session-handle: 0x3000000
-> > $ tpm2_pcrlist -L sha256:7 -o pcr7.sha256 $ tpm2_policypcr -S 
-> > session.ctx -L sha256:7 -F pcr7.sha256 -f pcr7.policy
-> > policy-digest: 
-> > 0x321FBD28B60FCC23017D501B133BD5DBF2889814588E8A23510FE10105CB2CC9
-> > 
-> > Input the policy handle to load trusted key:
-> > $ keyctl add trusted kmk "load `cat kmk.blob` keyhandle=0x81000001 
-> > policyhandle=0x3000000" @u
-> > add_key: Operation not permitted
-> > 
-> > The error should be policy check failed, because I use TPM command to unseal directly with error of policy check failed. 
-> > $ tpm2_unseal -c 0x81000001 -L sha256:7 ERROR on line: "81" in file: 
-> > "./lib/log.h": Tss2_Sys_Unseal(0x99D) - tpm:session(1):a policy 
-> > check failed ERROR on line: "213" in file: "tools/tpm2_unseal.c": Unseal failed!
-> > ERROR on line: "166" in file: "tools/tpm2_tool.c": Unable to run 
-> > tpm2_unseal
-> > 
-> > So my question is:
-> > 1. How to use the option, policydigest, policyhandle?? Is there any example? 
-> > 2. What's wrong with my test step? 
+On Fri, Nov 29, 2019 at 07:58:50AM -0800, Paul E. McKenney wrote:
+> On Thu, Nov 28, 2019 at 08:18:23AM -0800, Paul E. McKenney wrote:
+> > On Wed, Nov 27, 2019 at 07:50:27AM -0800, Paul E. McKenney wrote:
 > 
-> When reporting a problem please state which kernel is experiencing 
-> this problem.  Recently there was a trusted key regression.  Refer to 
-> commit e13cd21ffd50 "tpm: Wrap the buffer from the caller to tpm_buf 
-> in tpm_send()" for the details.
+> [ . . . ]
 > 
-> Before delving into this particular problem, first please make sure 
-> you are able to create, save, remove, and then reload a trusted key 
-> not sealed to a PCR.
+> > And still -ENOREPRODUCE.  It did happen on this system with
+> > hyperthreading, so the next step is to make rcutorture better tolerate
+> > very large hyperthreaded systems and try again.
+> 
+> [ . . . ]
+> 
+> And hyperthreading seems to have done the trick!  One splat thus far,
+> shown below.  The run should complete this evening, Pacific Time.
 
-Please re-test with rc1 when available.
+That was the only one for that run, but another 24*56-hour run got three
+more.  All of them expected to be on CPU 0 (which never goes offline, so
+why?) and the "XXX" diagnostic never did print.
 
-/Jarkko
+							Thanx, Paul
+
+------------------------------------------------------------------------
+2019.11.29-20:46:36/TREE02.14/console.log
+------------------------------------------------------------------------
+[ 3570.209627] ------------[ cut here ]------------
+[ 3570.211476] expected on cpu 0 but on cpu 1, pool 0, workfn=sync_rcu_exp_select_node_cpus
+[ 3570.212721] WARNING: CPU: 1 PID: 4 at kernel/workqueue.c:2186 process_one_work+0x53b/0x550
+[ 3570.213971] Modules linked in:
+[ 3570.214471] CPU: 1 PID: 4 Comm: rcu_par_gp Not tainted 5.4.0-rc1+ #36
+[ 3570.215469] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.11.0-2.el7 04/01/2014
+[ 3570.216760] Workqueue:  0x0 (rcu_par_gp)
+[ 3570.217385] RIP: 0010:process_one_work+0x53b/0x550
+[ 3570.218096] Code: 99 0f 0b eb d2 c6 05 3c dd 6d 01 01 65 8b 15 64 78 78 47 41 8b 4c 24 40 4c 8b 43 18 48 c7 c7 08 72 ac b9 31 c0 e8 55 08 fe ff <0f> 0b e9 53 fb ff ff 0f 1f 40 00 66 2e 0f 1f 84 00 00 00 00 00 41
+[ 3570.220936] RSP: 0000:ffffb73c0002fe30 EFLAGS: 00010086
+[ 3570.221740] RAX: 0000000000000000 RBX: ffffffffb9e65f68 RCX: ffffb73c0002fcdc
+[ 3570.222880] RDX: 0000000000000002 RSI: ffffffffb9e627d8 RDI: 00000000ffffffff
+[ 3570.224332] RBP: ffff98871ec95600 R08: 0000000000000001 R09: 0000000000000000
+[ 3570.225418] R10: 5f7563725f636e79 R11: 656c65735f707865 R12: ffff98871f228a80
+[ 3570.226507] R13: ffff98871f22d400 R14: 0000000000000000 R15: ffff98871ec95600
+[ 3570.227595] FS:  0000000000000000(0000) GS:ffff98871f240000(0000) knlGS:0000000000000000
+[ 3570.228827] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 3570.229716] CR2: 0000000000000148 CR3: 000000000521e000 CR4: 00000000000006e0
+[ 3570.231199] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 3570.233546] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 3570.235793] Call Trace:
+[ 3570.236223]  rescuer_thread+0x1b5/0x2e0
+[ 3570.236807]  kthread+0xf3/0x130
+[ 3570.237311]  ? worker_thread+0x3c0/0x3c0
+[ 3570.237893]  ? kthread_cancel_delayed_work_sync+0x10/0x10
+[ 3570.238731]  ret_from_fork+0x35/0x40
+[ 3570.239436] ---[ end trace 10a567590f676f64 ]---
+
+------------------------------------------------------------------------
+2019.11.29-20:46:36/TREE02.14/console.log
+------------------------------------------------------------------------
+[ 7611.377493] ------------[ cut here ]------------
+[ 7611.379592] expected on cpu 0 but on cpu 5, pool 0, workfn=sync_rcu_exp_select_node_cpus
+[ 7611.381178] WARNING: CPU: 5 PID: 4 at kernel/workqueue.c:2186 process_one_work+0x53b/0x550
+[ 7611.382782] Modules linked in:
+[ 7611.383423] CPU: 5 PID: 4 Comm: rcu_par_gp Not tainted 5.4.0-rc1+ #36
+[ 7611.384851] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.11.0-2.el7 04/01/2014
+[ 7611.386482] Workqueue:  0x0 (rcu_par_gp)
+[ 7611.387256] RIP: 0010:process_one_work+0x53b/0x550
+[ 7611.388357] Code: 99 0f 0b eb d2 c6 05 3c dd 6d 01 01 65 8b 15 64 78 b8 55 41 8b 4c 24 40 4c 8b 43 18 48 c7 c7 08 72 6c ab 31 c0 e8 55 08 fe ff <0f> 0b e9 53 fb ff ff 0f 1f 40 00 66 2e 0f 1f 84 00 00 00 00 00 41
+[ 7611.392663] RSP: 0000:ffffb4f54002fe30 EFLAGS: 00010086
+[ 7611.393675] RAX: 0000000000000000 RBX: ffffffffaba65ba8 RCX: ffffb4f54002fcdc
+[ 7611.395058] RDX: 0000000000000002 RSI: ffffffffaba627d8 RDI: 00000000ffffffff
+[ 7611.396454] RBP: ffffa1941ec95600 R08: 0000000000000001 R09: 0000000000000000
+[ 7611.397845] R10: 757063206e6f2074 R11: 7562203020757063 R12: ffffa1941f228a80
+[ 7611.399209] R13: ffffa1941f22d400 R14: 0000000000000000 R15: ffffa1941ec95600
+[ 7611.400584] FS:  0000000000000000(0000) GS:ffffa1941f340000(0000) knlGS:0000000000000000
+[ 7611.402121] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 7611.403222] CR2: 0000000000000148 CR3: 000000001b61e000 CR4: 00000000000006e0
+[ 7611.404844] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 7611.406958] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 7611.408854] Call Trace:
+[ 7611.409372]  rescuer_thread+0x1b5/0x2e0
+[ 7611.410108]  kthread+0xf3/0x130
+[ 7611.410720]  ? worker_thread+0x3c0/0x3c0
+[ 7611.411482]  ? kthread_cancel_delayed_work_sync+0x10/0x10
+[ 7611.412525]  ret_from_fork+0x35/0x40
+[ 7611.413234] ---[ end trace 63b5961f08d2230c ]---
+
+------------------------------------------------------------------------
+2019.11.29-20:46:36/TREE02.6/console.log
+------------------------------------------------------------------------
+[ 8656.713321] ------------[ cut here ]------------
+[ 8656.717080] expected on cpu 0 but on cpu 1, pool 0, workfn=sync_rcu_exp_select_node_cpus
+[ 8656.719854] WARNING: CPU: 1 PID: 4 at kernel/workqueue.c:2186 process_one_work+0x53b/0x550
+[ 8656.722821] Modules linked in:
+[ 8656.724024] CPU: 1 PID: 4 Comm: rcu_par_gp Not tainted 5.4.0-rc1+ #36
+[ 8656.726108] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.11.0-2.el7 04/01/2014
+[ 8656.727973] Workqueue:  0x0 (rcu_par_gp)
+[ 8656.728842] RIP: 0010:process_one_work+0x53b/0x550
+[ 8656.729886] Code: 99 0f 0b eb d2 c6 05 3c dd 6d 01 01 65 8b 15 64 78 18 6b 41 8b 4c 24 40 4c 8b 43 18 48 c7 c7 08 72 0c 96 31 c0 e8 55 08 fe ff <0f> 0b e9 53 fb ff ff 0f 1f 40 00 66 2e 0f 1f 84 00 00 00 00 00 41
+[ 8656.734413] RSP: 0000:ffffadf10002fe30 EFLAGS: 00010086
+[ 8656.735467] RAX: 0000000000000000 RBX: ffffffff96465f68 RCX: ffffadf10002fcdc
+[ 8656.737094] RDX: 0000000000000002 RSI: ffffffff964627d8 RDI: 00000000ffffffff
+[ 8656.738657] RBP: ffff9bd09ec95600 R08: 0000000000000001 R09: 0000000000000000
+[ 8656.740224] R10: 757063206e6f2074 R11: 7562203020757063 R12: ffff9bd09f228a80
+[ 8656.741476] R13: ffff9bd09f22d400 R14: 0000000000000000 R15: ffff9bd09ec95600
+[ 8656.742751] FS:  0000000000000000(0000) GS:ffff9bd09f240000(0000) knlGS:0000000000000000
+[ 8656.745267] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 8656.747560] CR2: 0000000000000148 CR3: 0000000019e1e000 CR4: 00000000000006e0
+[ 8656.750223] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 8656.751797] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 8656.753406] Call Trace:
+[ 8656.753850]  rescuer_thread+0x1b5/0x2e0
+[ 8656.754693]  kthread+0xf3/0x130
+[ 8656.755270]  ? worker_thread+0x3c0/0x3c0
+[ 8656.756119]  ? kthread_cancel_delayed_work_sync+0x10/0x10
+[ 8656.757273]  ret_from_fork+0x35/0x40
+[ 8656.758086] ---[ end trace 2d4f67335fea1163 ]---
