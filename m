@@ -2,170 +2,94 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E516EC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 04:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A938C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 04:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB5232146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 04:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEF4E20705
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 04:07:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbfLBEDB (ORCPT
+        id S1727409AbfLBEHC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 23:03:01 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:47388 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727285AbfLBEDB (ORCPT
+        Sun, 1 Dec 2019 23:07:02 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:45190 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727382AbfLBEHC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 23:03:01 -0500
-Received: from dread.disaster.area (pa49-179-150-192.pa.nsw.optusnet.com.au [49.179.150.192])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id C290243FB53;
-        Mon,  2 Dec 2019 15:02:56 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1ibcvI-0008VF-8f; Mon, 02 Dec 2019 15:02:56 +1100
-Date:   Mon, 2 Dec 2019 15:02:56 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Hillf Danton <hdanton@sina.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-fs <linux-fsdevel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rong Chen <rong.a.chen@intel.com>, Tejun Heo <tj@kernel.org>
-Subject: Re: single aio thread is migrated crazily by scheduler
-Message-ID: <20191202040256.GE2695@dread.disaster.area>
-References: <20191114113153.GB4213@ming.t460p>
- <20191114235415.GL4614@dread.disaster.area>
- <20191115010824.GC4847@ming.t460p>
- <20191115045634.GN4614@dread.disaster.area>
- <20191115070843.GA24246@ming.t460p>
- <20191128094003.752-1-hdanton@sina.com>
- <CAKfTPtA23ErKGCEJVmg6vk-QoufkiUM3NbXd31mZmKnuwbTkFw@mail.gmail.com>
- <20191202024625.GD24512@ming.t460p>
+        Sun, 1 Dec 2019 23:07:02 -0500
+Received: by mail-il1-f199.google.com with SMTP id w6so9671061ill.12
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Dec 2019 20:07:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=oWsENjm7d/+QABjuPHBYSJPPMCuN6XI9dZYPsoGDEJo=;
+        b=IHJqZ0vQsEziv69gY8S8AUUBueU87SGln1PBr5kRuBNXrBEYW0FI6Shpikb9OONss4
+         u2AC2wrElIXSU9LgKnLbuSRwCzCGvQS70tMxtWBggOKC+jqxQdvo1WDWNphpWL0g8SRS
+         S/6Bzf4hcEC7Np1758zZWOTiHmbOAhLseDd55OLPoycZlmwu/GO3CTJEGG2cHkpLOKnu
+         Mkm7rwxc2a7oHUMb2DzVoaxRBcdvR6KhTT0z4OblQ0x0th2gLzSAffkXNJ15fjxrei+5
+         fHAauLDOqdvsUHxaFe0BmrFl+M0hGdUn5cW34V6bz4ts3KV/oZfbDZh4g+sEWITRrmra
+         1xDA==
+X-Gm-Message-State: APjAAAWaI7Io4VLA5HuYf/P0Xbu8BdiTbF8eCTIcBJxiHtuCfuaCt7ej
+        BgSlN19NX0oYMuQfqDm42tMBnE9g3jimP6whc0n17Y17tY+v
+X-Google-Smtp-Source: APXvYqwbNau2iLq/cBIAuQInsyrPMPEuwnt2BDzeyB8yqBtnk0ZK4FLDDa7c3GeQTvUxRw7rZ0iE6vluQVplMVvE3Si4+oaVnUb7
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191202024625.GD24512@ming.t460p>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=ZXpxJgW8/q3NVgupyyvOCQ==:117 a=ZXpxJgW8/q3NVgupyyvOCQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pxVhFHJ0LMsA:10
-        a=QY18SFpNAAAA:8 a=7-415B0cAAAA:8 a=O3AchcIIkV7hgp5uPPkA:9
-        a=VhM0DojlG1CNIegh:21 a=LWgaBQf-yoKGiJ_h:21 a=CjuIK1q_8ugA:10
-        a=LYL6_n6_bXSRrjLcjcND:22 a=biEYGPWJfzWAr4FL6Ov7:22
+X-Received: by 2002:a5d:8184:: with SMTP id u4mr50614802ion.155.1575259621372;
+ Sun, 01 Dec 2019 20:07:01 -0800 (PST)
+Date:   Sun, 01 Dec 2019 20:07:01 -0800
+In-Reply-To: <000000000000c280ba05988b6242@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000293e9f0598b0b69d@google.com>
+Subject: Re: BUG: sleeping function called from invalid context in __alloc_pages_nodemask
+From:   syzbot <syzbot+4925d60532bf4c399608@syzkaller.appspotmail.com>
+To:     a@unstable.cc, akpm@linux-foundation.org, alex.aring@gmail.com,
+        allison@lohutok.net, andrew@lunn.ch, andy@greyhouse.net,
+        ap420073@gmail.com, aryabinin@virtuozzo.com, ast@domdv.de,
+        b.a.t.m.a.n@lists.open-mesh.org, bridge@lists.linux-foundation.org,
+        christophe.leroy@c-s.fr, cleech@redhat.com, daniel@iogearbox.net,
+        davem@davemloft.net, dja@axtens.net, dsa@cumulusnetworks.com,
+        dvyukov@google.com, edumazet@google.com, f.fainelli@gmail.com,
+        fw@strlen.de, glider@google.com, gor@linux.ibm.com,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        gvaradar@cisco.com, haiyangz@microsoft.com, hdanton@sina.com,
+        idosch@mellanox.com, info@metux.net, j.vosburgh@gmail.com, j@w1.fi,
+        jakub.kicinski@netronome.com, jhs@mojatatu.com, jiri@resnulli.us,
+        johan.hedberg@gmail.com, johannes.berg@intel.com,
+        jwi@linux.ibm.com, kasan-dev@googlegroups.com,
+        kstewart@linuxfoundation.org, kvalo@codeaurora.org,
+        kys@microsoft.com, lariel@mellanox.com, linmiaohe@huawei.com,
+        linux-bluetooth@vger.kernel.org, linux-hams@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-ppp@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 10:46:25AM +0800, Ming Lei wrote:
-> On Thu, Nov 28, 2019 at 10:53:33AM +0100, Vincent Guittot wrote:
-> > On Thu, 28 Nov 2019 at 10:40, Hillf Danton <hdanton@sina.com> wrote:
-> > > --- a/fs/iomap/direct-io.c
-> > > +++ b/fs/iomap/direct-io.c
-> > > @@ -157,10 +157,8 @@ static void iomap_dio_bio_end_io(struct
-> > >                         WRITE_ONCE(dio->submit.waiter, NULL);
-> > >                         blk_wake_io_task(waiter);
-> > >                 } else if (dio->flags & IOMAP_DIO_WRITE) {
-> > > -                       struct inode *inode = file_inode(dio->iocb->ki_filp);
-> > > -
-> > >                         INIT_WORK(&dio->aio.work, iomap_dio_complete_work);
-> > > -                       queue_work(inode->i_sb->s_dio_done_wq, &dio->aio.work);
-> > > +                       schedule_work(&dio->aio.work);
-> > 
-> > I'm not sure that this will make a real difference because it ends up
-> > to call queue_work(system_wq, ...) and system_wq is bounded as well so
-> > the work will still be pinned to a CPU
-> > Using system_unbound_wq should make a difference because it doesn't
-> > pin the work on a CPU
-> >  +                       queue_work(system_unbound_wq, &dio->aio.work);
-> 
-> Indeed, just run a quick test on my KVM guest, looks the following patch
-> makes a difference:
-> 
-> diff --git a/fs/direct-io.c b/fs/direct-io.c
-> index 9329ced91f1d..2f4488b0ecec 100644
-> --- a/fs/direct-io.c
-> +++ b/fs/direct-io.c
-> @@ -613,7 +613,8 @@ int sb_init_dio_done_wq(struct super_block *sb)
->  {
->         struct workqueue_struct *old;
->         struct workqueue_struct *wq = alloc_workqueue("dio/%s",
-> -                                                     WQ_MEM_RECLAIM, 0,
-> +                                                     WQ_MEM_RECLAIM |
-> +                                                     WQ_UNBOUND, 0,
->                                                       sb->s_id);
+syzbot has bisected this bug to:
 
-That's not an answer to the user task migration issue.
+commit ab92d68fc22f9afab480153bd82a20f6e2533769
+Author: Taehee Yoo <ap420073@gmail.com>
+Date:   Mon Oct 21 18:47:51 2019 +0000
 
-That is, all this patch does is trade user task migration when the
-CPU is busy for migrating all the queued work off the CPU so the
-user task does not get migrated. IOWs, this forces all the queued
-work to be migrated rather than the user task. IOWs, it does not
-address the issue we've exposed in the scheduler between tasks with
-competing CPU affinity scheduling requirements - it just hides the
-symptom.
+     net: core: add generic lockdep keys
 
-Maintaining CPU affinity across dispatch and completion work has
-been proven to be a significant performance win. Right throughout
-the IO stack we try to keep this submitter/completion affinity,
-and that's the whole point of using a bound wq in the first place:
-efficient delayed batch processing of work on the local CPU.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15769712e00000
+start commit:   419593da Add linux-next specific files for 20191129
+git tree:       linux-next
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=17769712e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=13769712e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7c04b0959e75c206
+dashboard link: https://syzkaller.appspot.com/bug?extid=4925d60532bf4c399608
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16148e9ce00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12a1f786e00000
 
-Spewing deferred completion work across every idle CPU in the
-machine because the local cpu is temporarily busy is a bad choice,
-both from a performance perspective (dirty cacheline bouncing) and
-from a power efficiency point of view as it causes CPUs to be taken
-out of idle state much more frequently[*].
+Reported-by: syzbot+4925d60532bf4c399608@syzkaller.appspotmail.com
+Fixes: ab92d68fc22f ("net: core: add generic lockdep keys")
 
-The fact that the scheduler migrates the user task we use workqueues
-for deferred work as they were intended doesn't make this a
-workqueue problem. If the answer to this problem is "make all IO
-workqueues WQ_UNBOUND" then we are effectively saying "the scheduler
-has unfixable problems when mixing bound and unbound work on the
-same run queue".
-
-And, besides, what happens when every other CPU is also completely
-busy and can't run the work in a timely fashion? We've just moved
-the work to some random CPU where we wait to be scheduled instead of
-just sitting on the local CPU and waiting....
-
-So, yes, we can work around the -symptoms- we see (frequent user
-task migration) by changing the work queue configuration or
-bypassing the workqueue for this specific workload. But these only
-address the visible symptom and don't take into account the wider
-goals of retaining CPU affinity in the IO stack, and they will have
-variable scheduling latency and perofrmance and as the overall
-system load changes.
-
-So, we can fiddle with workqueues, but it doesn't address the
-underlying issue that the scheduler appears to be migrating
-non-bound tasks off a busy CPU too easily....
-
--Dave.
-
-[*] Pay attention to the WQ_POWER_EFFICIENT definition for a work
-queue: it's designed for interrupt routines that defer work via work
-queues to avoid doing work on otherwise idle CPUs. It does this by
-turning the per-cpu wq into an unbound wq so that work gets
-scheduled on a non-idle CPUs in preference to the local idle CPU
-which can then remain in low power states.
-
-That's the exact opposite of what using WQ_UNBOUND ends up doing in
-this IO completion context: it pushes the work out over idle CPUs
-rather than keeping them confined on the already busy CPUs where CPU
-affinity allows the work to be done quickly. So while WQ_UNBOUND
-avoids the user task being migrated frequently, it results in the
-work being spread around many more CPUs and we burn more power to do
-the same work.
-
--- 
-Dave Chinner
-david@fromorbit.com
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
