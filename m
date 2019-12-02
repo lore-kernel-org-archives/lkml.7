@@ -2,163 +2,214 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC13C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 448FCC43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4BF220833
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 114B92070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:35:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PJ4fMewu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfLBJcP (ORCPT
+        id S1726653AbfLBJfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 04:32:15 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:49079 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726330AbfLBJcP (ORCPT
+        Mon, 2 Dec 2019 04:35:16 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43466 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbfLBJfP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 04:32:15 -0500
-Received: from dimstar.local.net (n122-110-44-45.sun2.vic.optusnet.com.au [122.110.44.45])
-        by mail104.syd.optusnet.com.au (Postfix) with SMTP id 1E3F57EB47C
-        for <linux-kernel@vger.kernel.org>; Mon,  2 Dec 2019 20:32:02 +1100 (AEDT)
-Received: (qmail 27087 invoked by uid 501); 2 Dec 2019 09:31:59 -0000
-Date:   Mon, 2 Dec 2019 20:31:59 +1100
-From:   Duncan Roe <duncan_roe@optusnet.com.au>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Chris Metcalf <cmetcalf@ezchip.com>, coreteam@netfilter.org,
-        David Miller <davem@davemloft.net>,
-        Chen Gang <gang.chen.5i5j@gmail.com>,
-        Patrick McHardy <kaber@trash.net>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        NetFilter <netfilter-devel@vger.kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: KASAN: use-after-free Read in blkdev_get
-Message-ID: <20191202093159.GA3185@dimstar.local.net>
-Mail-Followup-To: Dmitry Vyukov <dvyukov@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Chris Metcalf <cmetcalf@ezchip.com>, coreteam@netfilter.org,
-        David Miller <davem@davemloft.net>,
-        Chen Gang <gang.chen.5i5j@gmail.com>,
-        Patrick McHardy <kaber@trash.net>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        NetFilter <netfilter-devel@vger.kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-References: <000000000000e59aab056e8873ae@google.com>
- <0000000000000beff305981c5ac6@google.com>
- <20191124193035.GA4203@ZenIV.linux.org.uk>
- <20191130110645.GA4405@dimstar.local.net>
- <CACT4Y+bg7bZOSg0P9VXq8yG2odAJMg6b6N2fXxbamOmKiz3ohw@mail.gmail.com>
- <20191201000439.GA15496@dimstar.local.net>
- <CACT4Y+YhYaEC2of_6bZ6aZxX_kc3+4Li=MZU-MB1RcNr6Z7iww@mail.gmail.com>
+        Mon, 2 Dec 2019 04:35:15 -0500
+Received: by mail-wr1-f68.google.com with SMTP id n1so43307175wra.10
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 01:35:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DsomJDEnPS1SeuqmJo1Um2y9Uve/ujNAly1vGnk2Wnw=;
+        b=PJ4fMewuOtG8ott73XB4wcNp/ELlbBp8phss1wfiPvivwfGxnWW855kS4lrm4jxN5e
+         odOP4guLhWbyqMqKIxBr504trIh1bR4wpK+G4mVEI41N1zTWtZso3L3iqzG70jo9qk67
+         XzS14gmuZK54bkj+bkprbmjgr+qWo8HAszuI8hw/1qKkYzzdzIX0wH47sSLXyU5piI6O
+         eEGCOXj0k+1zkSN7eWe/HCv6riTYSbiN8U4JImU4KcxsWGQnDhr3M42Lp3GrWp6eJSVw
+         n6Cnh8BY7Di1yZQOtsyKagscZZRVXzMzWLKqYSF9RTtKj/miu53kJZ489bHwCpzMNE+C
+         i+ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DsomJDEnPS1SeuqmJo1Um2y9Uve/ujNAly1vGnk2Wnw=;
+        b=mUov53qH6SXHdJoy9P4B/DSxLr24CMIl+xpIZscIozTZcKfs4I78JEb5wEAkWMB10z
+         4oSzRDT5EuMSTSTMnp9Nb9xB4GTWFiotpE3fOeyItb8r5cSCrdWR0nsaKSmbAzNOuPDS
+         lHKqp+OnV/kdVRe99aT1AG1S+0xxxtgp97yrV4L8LkEgkbFDKMtGXxOKR3O87VhT2TcK
+         26oCUQocj5Bfyr039cT24rXwPjNbO2ZuTQZjDgPNrug9hEUkXXrqdo66R+MIf+M0G+G5
+         q0cgKRvdSpYtVHDW9OMy9YDnyJaKCuf9kyA6QRK5/sXnuzdOvsmMx9TH/nuRjIlx8/F8
+         5MDA==
+X-Gm-Message-State: APjAAAVy8dFfXC8ISKEhou49SWf1KC8yNO5XKnOnGIo5Y1FSBZ4xbeyE
+        Yno1ZfVBDaoH3Wx/xRVvB6/TkIoM43mvEqvV6pkbxQ==
+X-Google-Smtp-Source: APXvYqzB1kelzlTBEO6JhwtzoB6hvrB8nJisEMcHG1OTRpfRgKSL0aRStSFTwmv3nM9gluzSuO82HynhYXOJl+BOrH0=
+X-Received: by 2002:a5d:46c1:: with SMTP id g1mr46786997wrs.200.1575279312562;
+ Mon, 02 Dec 2019 01:35:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+YhYaEC2of_6bZ6aZxX_kc3+4Li=MZU-MB1RcNr6Z7iww@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=4DzML1vCOQ6Odsy8BUtSXQ==:117 a=4DzML1vCOQ6Odsy8BUtSXQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pxVhFHJ0LMsA:10
-        a=RSmzAf-M6YYA:10 a=PO7r1zJSAAAA:8 a=7QvuB2UPAAAA:8 a=edf1wS77AAAA:8
-        a=hSkVLCK3AAAA:8 a=mzoz-TVAAAAA:20 a=VwQbUJbxAAAA:8 a=kGbAZRCgAAAA:20
-        a=RZrVL_RPe_AL--TquSQA:9 a=CjuIK1q_8ugA:10 a=vVHabExCe68A:10
-        a=PyAPxfarwdVEPLbpdMBu:22 a=DcSpbTIhAlouE1Uv7lRv:22
-        a=cQPPKAXgyycSBL8etih5:22 a=AjGcO6oz07-iQ99wixmX:22
-        a=pHzHmUro8NiASowvMSCR:22 a=Ew2E2A-JSTLzCXPT_086:22
+References: <20191130195045.2005835-1-robdclark@gmail.com>
+In-Reply-To: <20191130195045.2005835-1-robdclark@gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Mon, 2 Dec 2019 10:35:05 +0100
+Message-ID: <CAKv+Gu_HXD=59q9zeK6-WoEEngHPrEJpPTyT8U4TZZ3AOs=TcA@mail.gmail.com>
+Subject: Re: [PATCH] efi/fdt: install new fdt config table
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Leif Lindholm <leif.lindholm@linaro.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kairui Song <kasong@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        "open list:EXTENSIBLE FIRMWARE INTERFACE (EFI)" 
+        <linux-efi@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 07:47:11AM +0100, Dmitry Vyukov wrote:
-> On Sun, Dec 1, 2019 at 1:04 AM Duncan Roe <duncan_roe@optusnet.com.au> wrote:
-> >
-> > On Sat, Nov 30, 2019 at 04:53:12PM +0100, Dmitry Vyukov wrote:
-> > > On Sat, Nov 30, 2019 at 12:06 PM Duncan Roe <duncan_roe@optusnet.com.au> wrote:
-> > > > > > syzbot has bisected this bug to:
-> > > > > >
-> > > > > > commit 77ef8f5177599efd0cedeb52c1950c1bd73fa5e3
-> > > > > > Author: Chris Metcalf <cmetcalf@ezchip.com>
-> > > > > > Date:   Mon Jan 25 20:05:34 2016 +0000
-> > > > > >
-> > > > > >     tile kgdb: fix bug in copy to gdb regs, and optimize memset
-> > > > > >
-> > > > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1131bc0ee00000
-> > > > > > start commit:   f5b7769e Revert "debugfs: inode: debugfs_create_dir uses m..
-> > > > > > git tree:       upstream
-> > > > > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=1331bc0ee00000
-> > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=1531bc0ee00000
-> > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=709f8187af941e84
-> > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=eaeb616d85c9a0afec7d
-> > > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=177f898f800000
-> > > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=147eb85f800000
-> > > > > >
-> > > > > > Reported-by: syzbot+eaeb616d85c9a0afec7d@syzkaller.appspotmail.com
-> > > > > > Fixes: 77ef8f517759 ("tile kgdb: fix bug in copy to gdb regs, and optimize
-> > > > > > memset")
-> > > > > >
-> > > > > > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> > > > >
-> > > > > Seriously?  How can the commit in question (limited to arch/tile/kernel/kgdb.c)
-> > > > > possibly affect a bug that manages to produce a crash report with
-> > > > > RSP: 0018:ffffffff82e03eb8  EFLAGS: 00000282
-> > > > > RAX: 0000000000000000 RBX: ffffffff82e00000 RCX: 0000000000000000
-> > > > > RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff81088779
-> > > > > RBP: ffffffff82e03eb8 R08: 0000000000000000 R09: 0000000000000001
-> > > > > R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-> > > > > R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff82e00000
-> > > > > FS:  0000000000000000(0000) GS:ffff88021fc00000(0000) knlGS:0000000000000000
-> > > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > > > CR2: 000000c420447ff8 CR3: 0000000213184000 CR4: 00000000001406f0
-> > > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > > > in it?  Unless something very odd has happened to tile, this crash has
-> > > > > been observed on 64bit x86; the names of registers alone are enough
-> > > > > to be certain of that.
-> > > > >
-> > > > > And the binaries produced by an x86 build should not be affected by any
-> > > > > changes in arch/tile; not unless something is very wrong with the build
-> > > > > system.  It's not even that this commit has fixed an earlier bug that
-> > > > > used to mask the one manifested here - it really should have had zero
-> > > > > impact on x86 builds, period.
-> > > > >
-> > > > > So I'm sorry, but I'm calling bullshit.  Something's quite wrong with
-> > > > > the bot - either its build system or the bisection process.
-> > > >
-> > > > The acid test would be: does reverting that commit make the problem go away?
-> > > >
-> > > > See, for example, https://bugzilla.kernel.org/show_bug.cgi?id=203935
-> > > >
-> > > > Cheers ... Duncan.
-> > >
-> > > This is done as part of any bisection by definition, right? The test
-> > > was done on the previous commit (effectively this one reverted) and no
-> > > crash was observed. Otherwise bisection would have been pointed to a
-> > > different commit.
-> > >
-> > Agree that's what bisecting does. What I had in mind was to make a patch to
-> > remove the identified commit, and apply that to the most recent revision
-> > possible. Then see if that makes the problem go away.
+On Sat, 30 Nov 2019 at 20:51, Rob Clark <robdclark@gmail.com> wrote:
 >
-> I wonder in what percent of cases:
-> 1. It gives signal different from reverting the commit in place.
-> 2. The revert can be cleanly applied to head.
-> 3. The revert does not introduce other bugs.
+> From: Rob Clark <robdclark@chromium.org>
 >
-> For this to be worth doing, all these 3 should be reasonably high. I
-> can imagine 3 may be high (?), but I am not sure about 1 and 2.
+> If there is an fdt config table, replace it with the newly allocated one
+> before calling ExitBootServices().
+>
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+> The DtbLoader.efi[1] driver, which Leif created for EBBR boot on the
+> "windows" aarch64 laptops, tries to detect in an EBS hook, whether the
+> HLOS is using DT.  It does this by realizing that the kernel cmdline is
+> patched in to the fdt, and comparing the CRC.  If the CRC has changed,
+> that means the HLOS is using DT boot, so it removes the ACPI config
+> tables, so that the HLOS does not see two conflicting sets of config
+> tables.
+>
+> However, I realized this mechanism does not work when directly loading
+> the linux kernel as an efi executable (ie. without an intermediary like
+> grub doing it's own DT modifications), because efi/libstub is modifying
+> a copy of the DT config table.
+>
+> If we update the config table with the new DT, then it will realize
+> properly that the HLOS is using DT.
+>
 
-The whole arch/tile directory no longer exists, so the patch cannot be applied.
-If I had realised that earlier, I would not have posted at all.
-Sorry for the noise.
+Hey Rob,
+
+I understand what you are trying to do here, but this is not the right solution.
+
+I have rejected patches in the past where config tables are used to
+communicate information back to the firmware, as creating reverse
+dependencies like this is a recipe for disaster.
+
+IIUC, the problem is that the DtbLoader attempts to be smart about
+whether to install the DT config table, and to only do so if the OS is
+going to boot in DT mode. This is based on the principle that we
+should not expose both ACPI and DT tables, and make it the OS's
+problem to reason about which one is the preferred description.
+
+I agree with that approach in general, but in this particular case, I
+don't think it makes sense. Windows only cares about ACPI, and Linux
+only cares about DT unless you instruct it specifically to prioritize
+ACPI over DT. So the problem that this solves does not exist in
+practice, and we're much better off just exposing the DT alongside the
+ACPI tables, and let the OS use whichever one it wants.
+
+Also, the stub always reallocates the FDT, and so the CRC check is
+only detecting whether the DT is being touched by GRUB or not.
+
+So removing the ACPI tables like this is not something I think we
+should be doing at all. As a compromise, you might add 'acpi=off' to
+/chosen/cmdline so that GRUBless boot into Linux does not
+inadvertently ends up booting in ACPI mode.
+
+Thanks,
+Ard.
+
+
+
+
+> [1] https://git.linaro.org/people/leif.lindholm/edk2.git/log/?h=dtbloader
+>
+>  .../firmware/efi/libstub/efi-stub-helper.c    | 32 +++++++++++++++++++
+>  drivers/firmware/efi/libstub/efistub.h        |  2 ++
+>  drivers/firmware/efi/libstub/fdt.c            |  2 ++
+>  3 files changed, 36 insertions(+)
+>
+> diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
+> index 35dbc2791c97..210070f3b231 100644
+> --- a/drivers/firmware/efi/libstub/efi-stub-helper.c
+> +++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
+> @@ -953,3 +953,35 @@ void *get_efi_config_table(efi_system_table_t *sys_table, efi_guid_t guid)
+>         else
+>                 return get_efi_config_table32(sys_table, guid);
+>  }
+> +
+> +#define REPLACE_EFI_CONFIG_TABLE(bits)                                 \
+> +static void *replace_efi_config_table##bits(efi_system_table_t *_sys_table, \
+> +                                       efi_guid_t guid, void *table)   \
+> +{                                                                      \
+> +       efi_system_table_##bits##_t *sys_table;                         \
+> +       efi_config_table_##bits##_t *tables;                            \
+> +       int i;                                                          \
+> +                                                                       \
+> +       sys_table = (typeof(sys_table))_sys_table;                      \
+> +       tables = (typeof(tables))(unsigned long)sys_table->tables;      \
+> +                                                                       \
+> +       for (i = 0; i < sys_table->nr_tables; i++) {                    \
+> +               if (efi_guidcmp(tables[i].guid, guid) != 0)             \
+> +                       continue;                                       \
+> +                                                                       \
+> +               tables[i].table = (uintptr_t)table;                     \
+> +               return;                                                 \
+> +       }                                                               \
+> +}
+> +REPLACE_EFI_CONFIG_TABLE(32)
+> +REPLACE_EFI_CONFIG_TABLE(64)
+> +
+> +/* replaces an existing config table: */
+> +void replace_efi_config_table(efi_system_table_t *sys_table, efi_guid_t guid,
+> +                         void *table)
+> +{
+> +       if (efi_is_64bit())
+> +               replace_efi_config_table64(sys_table, guid, table);
+> +       else
+> +               replace_efi_config_table32(sys_table, guid, table);
+> +}
+> diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
+> index 7f1556fd867d..66f2927ce26f 100644
+> --- a/drivers/firmware/efi/libstub/efistub.h
+> +++ b/drivers/firmware/efi/libstub/efistub.h
+> @@ -66,6 +66,8 @@ efi_status_t check_platform_features(efi_system_table_t *sys_table_arg);
+>  efi_status_t efi_random_get_seed(efi_system_table_t *sys_table_arg);
+>
+>  void *get_efi_config_table(efi_system_table_t *sys_table, efi_guid_t guid);
+> +void replace_efi_config_table(efi_system_table_t *sys_table, efi_guid_t guid,
+> +                         void *table);
+>
+>  /* Helper macros for the usual case of using simple C variables: */
+>  #ifndef fdt_setprop_inplace_var
+> diff --git a/drivers/firmware/efi/libstub/fdt.c b/drivers/firmware/efi/libstub/fdt.c
+> index 0bf0190917e0..15887ec2dc3b 100644
+> --- a/drivers/firmware/efi/libstub/fdt.c
+> +++ b/drivers/firmware/efi/libstub/fdt.c
+> @@ -313,6 +313,8 @@ efi_status_t allocate_new_fdt_and_exit_boot(efi_system_table_t *sys_table,
+>         priv.runtime_entry_count        = &runtime_entry_count;
+>         priv.new_fdt_addr               = (void *)*new_fdt_addr;
+>
+> +       replace_efi_config_table(sys_table, DEVICE_TREE_GUID, priv.new_fdt_addr);
+> +
+>         status = efi_exit_boot_services(sys_table, handle, &map, &priv, exit_boot_func);
+>
+>         if (status == EFI_SUCCESS) {
+> --
+> 2.23.0
+>
