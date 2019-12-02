@@ -2,155 +2,122 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE03C43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B056C43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DC3820833
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 479DB214AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:20:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575274804;
+	bh=ugPnad4csUtS5gu9gvNWiYsom6nlpl/ToMIjVCWJbZo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=G9R2z0dSqAxV04twTp8ipSnhAVk5zmXkrcgxfnUywCiBXRl9PC3dLQVRtYm5WbRKB
+	 oGRTzIPCah0yFCKV//VovdwdtGy+DxcyO5Xru5rK4M+uZrusAC2u6Exaqw0sNcVXc3
+	 hpeFP4oRri4k9EgZ+KwXdiDk6veBwD+MFVPek56g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727472AbfLBIPq (ORCPT
+        id S1726276AbfLBIUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 03:15:46 -0500
-Received: from mx2.suse.de ([195.135.220.15]:53812 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726106AbfLBIPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 03:15:46 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id F3D59AE3C;
-        Mon,  2 Dec 2019 08:15:43 +0000 (UTC)
-Subject: Re: [PATCH 2/7] arm64: dts: realtek: rtd129x: Use reserved-memory for
- RPC regions
-To:     linux-realtek-soc@lists.infradead.org,
-        James Tai <james.tai@realtek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20191111030434.29977-1-afaerber@suse.de>
- <20191111030434.29977-3-afaerber@suse.de>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <1f25f2fc-5d31-1d74-b730-78ad7861ffce@suse.de>
-Date:   Mon, 2 Dec 2019 09:15:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 2 Dec 2019 03:20:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725977AbfLBIUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 03:20:03 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6D7F20833;
+        Mon,  2 Dec 2019 08:19:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575274802;
+        bh=ugPnad4csUtS5gu9gvNWiYsom6nlpl/ToMIjVCWJbZo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=t4VYe/+Oc3UZ1KYFtA1wTahHsh8T/DkBKOAjLV3QmxJ9AQZJD9FuVuoz0zBVP5cJd
+         6WDmgdCr0jLI3LnyltUWtEHaHuXSyO4G91iqUGfsOATVp3kxz/wVXVVS13AVMy9U59
+         VhUdzsyRQVt1jlLwjP9WO0TNt/hw0WpXKTJtvAd0=
+Date:   Mon, 2 Dec 2019 16:19:49 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "sboyd@kernel.org" <sboyd@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [PATCH] clk: imx: clk-composite-8m: add lock to gate/mux
+Message-ID: <20191202081948.GD9767@dragon>
+References: <1572603166-24594-1-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20191111030434.29977-3-afaerber@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1572603166-24594-1-git-send-email-peng.fan@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James and Realtek colleagues,
-
-Am 11.11.19 um 04:04 schrieb Andreas Färber:
-> Move /reserved-memory node from RTD1295 to RTD129x DT.
-> Convert RPC /memreserve/s into /reserved-memory nodes.
+On Fri, Nov 01, 2019 at 10:16:19AM +0000, Peng Fan wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
+> There is a lock to diviver in the composite driver, but that's not
+
+s/diviver/divider
+
+> enought. lock to gate/mux are also needed to provide exclusive access
+
+s/enought/enough
+
+> to the register.
+> 
+> Fixes: d3ff9728134e ("clk: imx: Add imx composite clock")
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+
+Other than above typos,
+
+Acked-by: Shawn Guo <shawnguo@kernel.org>
+
+Stephen,
+
+I assume you will take it a fix.  Otherwise, please let me know.
+
+Shawn
+
 > ---
->  arch/arm64/boot/dts/realtek/rtd1295.dtsi | 13 +------------
->  arch/arm64/boot/dts/realtek/rtd129x.dtsi | 23 ++++++++++++++++++++---
->  2 files changed, 21 insertions(+), 15 deletions(-)
+>  drivers/clk/imx/clk-composite-8m.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/realtek/rtd1295.dtsi b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-> index 34f6cc6f16fe..1402abe80ea1 100644
-> --- a/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-> +++ b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-> @@ -2,7 +2,7 @@
->  /*
->   * Realtek RTD1295 SoC
->   *
-> - * Copyright (c) 2016-2017 Andreas Färber
-> + * Copyright (c) 2016-2019 Andreas Färber
->   */
+> diff --git a/drivers/clk/imx/clk-composite-8m.c b/drivers/clk/imx/clk-composite-8m.c
+> index e0f25983e80f..20f7c91c03d2 100644
+> --- a/drivers/clk/imx/clk-composite-8m.c
+> +++ b/drivers/clk/imx/clk-composite-8m.c
+> @@ -142,6 +142,7 @@ struct clk_hw *imx8m_clk_hw_composite_flags(const char *name,
+>  	mux->reg = reg;
+>  	mux->shift = PCG_PCS_SHIFT;
+>  	mux->mask = PCG_PCS_MASK;
+> +	mux->lock = &imx_ccm_lock;
 >  
->  #include "rtd129x.dtsi"
-> @@ -47,17 +47,6 @@
->  		};
->  	};
+>  	div = kzalloc(sizeof(*div), GFP_KERNEL);
+>  	if (!div)
+> @@ -161,6 +162,7 @@ struct clk_hw *imx8m_clk_hw_composite_flags(const char *name,
+>  	gate_hw = &gate->hw;
+>  	gate->reg = reg;
+>  	gate->bit_idx = PCG_CGC_SHIFT;
+> +	gate->lock = &imx_ccm_lock;
 >  
-> -	reserved-memory {
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
-> -		ranges;
-> -
-> -		tee@10100000 {
-> -			reg = <0x10100000 0xf00000>;
-> -			no-map;
-> -		};
-> -	};
-> -
->  	timer {
->  		compatible = "arm,armv8-timer";
->  		interrupts = <GIC_PPI 13
-> diff --git a/arch/arm64/boot/dts/realtek/rtd129x.dtsi b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
-> index 4433114476f5..8d80cca945bc 100644
-> --- a/arch/arm64/boot/dts/realtek/rtd129x.dtsi
-> +++ b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
-> @@ -2,14 +2,12 @@
->  /*
->   * Realtek RTD1293/RTD1295/RTD1296 SoC
->   *
-> - * Copyright (c) 2016-2017 Andreas Färber
-> + * Copyright (c) 2016-2019 Andreas Färber
->   */
->  
->  /memreserve/	0x0000000000000000 0x0000000000030000;
-> -/memreserve/	0x000000000001f000 0x0000000000001000;
->  /memreserve/	0x0000000000030000 0x00000000000d0000;
->  /memreserve/	0x0000000001b00000 0x00000000004be000;
-> -/memreserve/	0x0000000001ffe000 0x0000000000004000;
->  
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/reset/realtek,rtd1295.h>
-> @@ -19,6 +17,25 @@
->  	#address-cells = <1>;
->  	#size-cells = <1>;
->  
-> +	reserved-memory {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		rpc_comm: rpc@1f000 {
-> +			reg = <0x1f000 0x1000>;
-> +		};
-> +
-> +		rpc_ringbuf: rpc@1ffe000 {
-> +			reg = <0x1ffe000 0x4000>;
-> +		};
-
-Have you reviewed this patch to be correct? I.e., are the above two
-regions reserved RAM (assumption above), or is this rather MMIO
-shadowing RAM? (then we would need to update the /memory reg and /soc
-ranges properties)
-
-That also affects RTD1619, which currently has neither.
-
-Thanks,
-Andreas
-
-> +
-> +		tee: tee@10100000 {
-> +			reg = <0x10100000 0xf00000>;
-> +			no-map;
-> +		};
-> +	};
-> +
->  	arm_pmu: arm-pmu {
->  		compatible = "arm,cortex-a53-pmu";
->  		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+>  	hw = clk_hw_register_composite(NULL, name, parent_names, num_parents,
+>  			mux_hw, &clk_mux_ops, div_hw,
+> -- 
+> 2.16.4
+> 
