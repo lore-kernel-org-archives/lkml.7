@@ -2,87 +2,136 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54810C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB7EC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2644A20833
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30B3720848
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:09:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qy1XX0NQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JGT1wvi7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbfLBRJn (ORCPT
+        id S1727838AbfLBRJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 12:09:43 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:39106 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727726AbfLBRJk (ORCPT
+        Mon, 2 Dec 2019 12:09:49 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:39597 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727724AbfLBRJr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 12:09:40 -0500
-Received: by mail-pj1-f68.google.com with SMTP id v93so13909371pjb.6
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 09:09:39 -0800 (PST)
+        Mon, 2 Dec 2019 12:09:47 -0500
+Received: by mail-qv1-f65.google.com with SMTP id y8so110641qvk.6;
+        Mon, 02 Dec 2019 09:09:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RDGGQHWpdkZIj81hxXdfawczIBgk86TVXpxZEqNBkKw=;
-        b=qy1XX0NQtaJmJIk1WSswX5pJZErX2pRnSRnoUqnlqrxvfEfIdPE2rOIZfXv4W1NZX4
-         rGki7kDJGQgC9QNz5h/BMIDI8PcBEHBAET/FtufdP8qVa+7E0j1+0gueUKOZvey7xV40
-         ipOq2+hRM8AUag4zbb8uui/TQI7YALdkbuBkUeU2jw0/LwEC5TJd2lIYmAZsEWM6h4Kz
-         ULeuV/etAnPSASnzO8ReR0Ve6D0Slh2WeHYBc634bc1ZtUxqWo9SnOYUzl/Dg+LIpiOb
-         siGdXVqIA1rMRUNUnhlfzuAqV3jyDSRhDCDSLfFBAfTM+f2wK5f7F3+WE59nxKFLE2nW
-         buHw==
+         :cc:content-transfer-encoding;
+        bh=fSLpCsC0gIfY0yNpzNg6ZYUHgfqDiFco3xCemoRy4iM=;
+        b=JGT1wvi7Mxpe5wO3iuZdiTBowwcSDL2PV10ehqW5a71+rQ8d6L/dY66/rzqHw0LHX/
+         c7m+7Pk7qw4vQMyyODN43cp4rn/eWqjSiRitTnp9UuhEV2AiWOxvSjc5fhm8RVH5N2Hy
+         omEoeo4cuGcHsrI8I5WCS0BaJI0NUx9tTmFfyCLj+P9BW+QpohFNsNyxNB24J8OPEg2H
+         W3QtFiQ5u5fixCsExbVo/A/D1FrCl8jd9HQVlCGvvneGeobDxcWpElppYnMMRTj/Ygkv
+         TZUeONnst/mdYNJNa5+95qZ+v8u6J0WK+efkGQd5dgIMli9HQtFFuJNwZB0st2e6ejEU
+         rLdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RDGGQHWpdkZIj81hxXdfawczIBgk86TVXpxZEqNBkKw=;
-        b=Rpm7Gao9u+bgP6By51UKvdDrbp/N+JqXr8VxaNR8ZzqHTAwtuG8QO6eKm0ZvWVAXX9
-         ZfvpKu5y4c8hEZgrqJQsGRn5YCSItNpmifyiRNxBxtAUHGOJra4DoRdkZgRzf2xLKwMt
-         khNutM5NFUmElHXOAUk3GQ2Lv1HU3lrcQ9XmOyBQ+GeNkOcCPDUjGIIdgnzsM9oIqOW8
-         7Uvg2z+cCgZb4oBh1JwDsrjc7whj8kus4nbKLoPi11vt+Z3FyTxezfVEaZaJBz+Ykim6
-         e3rrE4/no+9elHFkoczD5p4JXZeNFglBDETgl32v/8unMPcTwaxWVd7EfXSkFnlV2Nzm
-         gpog==
-X-Gm-Message-State: APjAAAWOMk2/xvXBe+iQUc6HNTgFLLLRH9gpPMQ08SUfynKyVpw/KEFs
-        CB/RbgJfMTQLu4fDd3b1+KjmE6ENyxXo9EUT+95x1w==
-X-Google-Smtp-Source: APXvYqzqsLYh95mI5pQBPTRCrUh++E3DAxgln/usIn0Xc7WWl8bqC9mEjf/KwCQBB6K3knP54p0s/dChqA2Dqaj6CAI=
-X-Received: by 2002:a17:90a:ff02:: with SMTP id ce2mr264576pjb.117.1575306578192;
- Mon, 02 Dec 2019 09:09:38 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=fSLpCsC0gIfY0yNpzNg6ZYUHgfqDiFco3xCemoRy4iM=;
+        b=qX56gglAEv0ERKkxFSLlDNTbKUUbHkAisR8kvKT7n3J8iYCsompO0TOMR8706NRWS5
+         m3mSB10B4cOO/AAB2joKYe8APQqNVD/euAE96EUC8XZS4N5YfapFH2Lvt77LE/pKQ7UY
+         hUnI+TZX9lGCFiyvwKfzfqewFJw7eJ5HMdCZccwD7difyIpSOEB3LzknngyBl8dAZ3ch
+         uMiv7/Vato3Gk58K8ugQrS18HWBcAgZC1XdYX3URU5uMiCEx4OqeTpi4v9ViiRUqnHM0
+         In01SFHN3IrWhHazRUrOIhLu9ewgfoq3h00pmoBa12FYsrVYYIzrgYwI79cPUCcd64Kb
+         OPRQ==
+X-Gm-Message-State: APjAAAWCU8XqZdnh0neodgWx7xnBBNI9GKLaIqAr/UMZjwjPKOrCwwAm
+        G7uP9cKrdxa79V0yKEl2qB4UKrfwU0M5hTVvrs0=
+X-Google-Smtp-Source: APXvYqyKT6NO6KDsZ2ei5bKypY+iyosLPbJZy/xkL0hciZw1x+t08E3mYmWD+InttgZD7tNu/S5UBmrc2HpBRhRWSwc=
+X-Received: by 2002:a05:6214:38c:: with SMTP id l12mr1561456qvy.224.1575306584723;
+ Mon, 02 Dec 2019 09:09:44 -0800 (PST)
 MIME-Version: 1.0
-References: <20191127231926.162437-1-heidifahim@google.com>
-In-Reply-To: <20191127231926.162437-1-heidifahim@google.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 2 Dec 2019 09:09:29 -0800
-Message-ID: <CAFd5g46TG-+baJE29dR8iUdBdWViO_BygKbwUQ5fHv8X3Jkpfw@mail.gmail.com>
-Subject: Re: [PATCH] kunit: testing kunit: Bug fix in test_run_timeout function
-To:     Heidi Fahim <heidifahim@google.com>
-Cc:     David Gow <davidgow@google.com>, shuah <shuah@kernel.org>,
-        SeongJae Park <sj38.park@gmail.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191127094837.4045-1-jolsa@kernel.org>
+In-Reply-To: <20191127094837.4045-1-jolsa@kernel.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 2 Dec 2019 09:09:33 -0800
+Message-ID: <CAEf4BzbUK98tsYH1mSNoTjuVB4dstRsL5rpkA+9nRCcqrdn6-Q@mail.gmail.com>
+Subject: Re: [PATCH 0/3] perf/bpftool: Allow to link libbpf dynamically
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 3:19 PM Heidi Fahim <heidifahim@google.com> wrote:
+On Wed, Nov 27, 2019 at 1:49 AM Jiri Olsa <jolsa@kernel.org> wrote:
 >
-> Assert in test_run_timeout was not updated with the build_dir argument
-> and caused the following error:
-> AssertionError: Expected call: run_kernel(timeout=3453)
-> Actual call: run_kernel(build_dir=None, timeout=3453)
+> hi,
+> adding support to link bpftool with libbpf dynamically,
+> and config change for perf.
 >
-> Needed to update kunit_tool_test to reflect this fix
-> https://lkml.org/lkml/2019/9/6/3
->
-> Signed-off-by: Heidi Fahim <heidifahim@google.com>
-> Change-Id: I6f161c72c6a5f071a4dc31582ba08b91974502ce
+> It's now possible to use:
+>   $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=3D1
 
-Change-Id should not be used on LKML patches. Did you run checkpatch?
+I wonder what's the motivation behind these changes, though? Why is
+linking bpftool dynamically with libbpf is necessary and important?
+They are both developed tightly within kernel repo, so I fail to see
+what are the huge advantages one can get from linking them
+dynamically.
+
+>
+> which will detect libbpf devel package with needed version,
+> and if found, link it with bpftool.
+>
+> It's possible to use arbitrary installed libbpf:
+>   $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=3D1 LIBBPF_DIR=3D/tmp/libbp=
+f/
+>
+> I based this change on top of Arnaldo's perf/core, because
+> it contains libbpf feature detection code as dependency.
+> It's now also synced with latest bpf-next, so Toke's change
+> applies correctly.
+>
+> Also available in:
+>   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+>   libbpf/dyn
+>
+> thanks,
+> jirka
+>
+>
+> ---
+> Jiri Olsa (2):
+>       perf tools: Allow to specify libbpf install directory
+>       bpftool: Allow to link libbpf dynamically
+>
+> Toke H=C3=B8iland-J=C3=B8rgensen (1):
+>       libbpf: Export netlink functions used by bpftool
+>
+>  tools/bpf/bpftool/Makefile        | 40 +++++++++++++++++++++++++++++++++=
+++++++-
+>  tools/build/feature/test-libbpf.c |  9 +++++++++
+>  tools/lib/bpf/libbpf.h            | 22 +++++++++++++---------
+>  tools/lib/bpf/libbpf.map          |  7 +++++++
+>  tools/lib/bpf/nlattr.h            | 15 ++++++++++-----
+>  tools/perf/Makefile.config        | 27 ++++++++++++++++++++-------
+>  6 files changed, 98 insertions(+), 22 deletions(-)
+>
