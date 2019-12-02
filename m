@@ -2,81 +2,141 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 327ACC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 040F8C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECCE820717
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD2E820718
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:43:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C/H55AzQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbfLBSln (ORCPT
+        id S1727730AbfLBSnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 13:41:43 -0500
-Received: from mga11.intel.com ([192.55.52.93]:43443 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727418AbfLBSlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 13:41:42 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 10:41:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,270,1571727600"; 
-   d="scan'208";a="384989972"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga005.jf.intel.com with ESMTP; 02 Dec 2019 10:41:41 -0800
-Date:   Mon, 2 Dec 2019 10:53:35 -0800
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Babu Moger <babu.moger@amd.com>,
-        Andre Przywara <Andre.Przywara@arm.com>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH v8 01/13] selftests/resctrl: Add README for resctrl tests
-Message-ID: <20191202185334.GA220960@romley-ivt3.sc.intel.com>
-References: <1574901584-212957-1-git-send-email-fenghua.yu@intel.com>
- <1574901584-212957-2-git-send-email-fenghua.yu@intel.com>
- <20191128072338.GA17745@zn.tnic>
+        Mon, 2 Dec 2019 13:43:06 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:41755 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727418AbfLBSnG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 13:43:06 -0500
+Received: by mail-qt1-f193.google.com with SMTP id v2so774357qtv.8;
+        Mon, 02 Dec 2019 10:43:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=AnWD7sTCrH/sWowo7WOFM1CDDX20u+B+tWaH0Jnqtwk=;
+        b=C/H55AzQsVIXNNR37eV61Ui6BsPj6qxnpiS4smZk4LFHMtNhrnyr4UBxDT8noF/KRi
+         4FWHgATpEt1TvCf+lA8lvfY7OZm7F93zKsCIcy5uKJ6L4wMs6QEDoDJMzV0a7hfMLmsG
+         uMbfEvCj/Ftyb4upOkqE/8UU7cXyEfRYhb6UOHa4lMXuwaKMUW7ChhwTK2x/DdX4MKN0
+         UDvxtFJHv/Wdy9XNDXAwafvbvag8Az7r1dcwvItwXpCf/aSM22J85zLdlkaIt9QZL9oV
+         JnCyScixf2nZbms22YbVdS3xs+24xjJcdlqaPaPbXzMXN4Qr0r7TcYeg/8jRUb0+bRzL
+         JNqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=AnWD7sTCrH/sWowo7WOFM1CDDX20u+B+tWaH0Jnqtwk=;
+        b=n0VUocufSNV0ecBx/O8vqrAiUfXWBy5e1pho+Jm2FsXWT4HNwWonQYpys83jhzZ6Pm
+         ehQyNIn4z5/jjLFfVP16bq/MMpIeu6K0rnkvkUFeOukKWqE/b91LeILlXZPLiY2r+Nd0
+         bXIJzrdc61gj3/COPhGAQpIrNzcGld0JfNtSihPBlCg1oiYU8uFyuYI/E5EwaeBBcmyV
+         U2TGMt1vSnbiuDvvoCUybkQzjlFmsEutzVZ84xHUDrw54H7I0SxGdVbemreLha/uPJJm
+         omaaI1LAAMU/IDNy5xWMwiFnSolpjEdLj1wrWKaWebNTQmmKYkD7NGnysVZZINh8e1k2
+         vzcg==
+X-Gm-Message-State: APjAAAUfu2pIYTfsIdwVKstNRMvv1DK+2ae1OQF8gdkXrtwV7AjjqGuj
+        EfRr77fEm8Fwa7iDNxXITbE6ZHl0iTwotlzIvBA=
+X-Google-Smtp-Source: APXvYqwIgwsCAJeW/GmVHa9v0gX68uVrUsI9VUspc7LOGfwihg3b/Uvp8JTHV9/ke+jwXgb2EQ+fGHCGnVhYxRtGJLo=
+X-Received: by 2002:ac8:1385:: with SMTP id h5mr835578qtj.59.1575312184786;
+ Mon, 02 Dec 2019 10:43:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191128072338.GA17745@zn.tnic>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20191127094837.4045-1-jolsa@kernel.org> <CAEf4BzbUK98tsYH1mSNoTjuVB4dstRsL5rpkA+9nRCcqrdn6-Q@mail.gmail.com>
+ <87zhgappl7.fsf@toke.dk>
+In-Reply-To: <87zhgappl7.fsf@toke.dk>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 2 Dec 2019 10:42:53 -0800
+Message-ID: <CAEf4BzYoJUttk=o+p=NHK8K_aS3z2LdLiqzRni7PwyDaOxu68A@mail.gmail.com>
+Subject: Re: [PATCH 0/3] perf/bpftool: Allow to link libbpf dynamically
+To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 08:23:38AM +0100, Borislav Petkov wrote:
-> On Wed, Nov 27, 2019 at 04:39:32PM -0800, Fenghua Yu wrote:
-> > resctrl tests will be implemented. README is added for the tool first.
-> > 
-> > Signed-off-by: Babu Moger <babu.moger@amd.com>
-> > Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> 
-> What does this SOB chain mean?
-> 
-> Same question for patches 2,3,4,5,6,7,8,9,13.
-> 
-> So it seems you wanna say that Babu has contributed somehow but it is
-> not clear what/how.
+On Mon, Dec 2, 2019 at 10:09 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redh=
+at.com> wrote:
+>
+> Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
+>
+> > On Wed, Nov 27, 2019 at 1:49 AM Jiri Olsa <jolsa@kernel.org> wrote:
+> >>
+> >> hi,
+> >> adding support to link bpftool with libbpf dynamically,
+> >> and config change for perf.
+> >>
+> >> It's now possible to use:
+> >>   $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=3D1
+> >
+> > I wonder what's the motivation behind these changes, though? Why is
+> > linking bpftool dynamically with libbpf is necessary and important?
+> > They are both developed tightly within kernel repo, so I fail to see
+> > what are the huge advantages one can get from linking them
+> > dynamically.
+>
+> Well, all the regular reasons for using dynamic linking (memory usage,
+> binary size, etc).
 
-Babu's major contributions are in v5 where he virtually touched every
-patch. He sent out v5 and put Signed-off-by: Babu Moger in each patch:
-https://lore.kernel.org/patchwork/cover/1033532/
+bpftool is 327KB with statically linked libbpf. Hardly a huge problem
+for either binary size or memory usage. CPU instruction cache usage is
+also hardly a concern for bpftool specifically.
 
-That's why I keep his SOB in v6-v8 in each patch.
+> But in particular, the ability to update the libbpf
+> package if there's a serious bug, and have that be picked up by all
+> utilities making use of it.
 
-Thanks.
+I agree, and that works only for utilities linking with libbpf
+dynamically. For tools that build statically, you'd have to update
+tools anyways. And if you can update libbpf, you can as well update
+bpftool at the same time, so I don't think linking bpftool statically
+with libbpf causes any new problems.
 
--Fenghua
+> No reason why bpftool should be special in that respect.
 
+But I think bpftool is special and we actually want it to be special
+and tightly coupled to libbpf with sometimes very intimate knowledge
+of libbpf and access to "hidden" APIs. That allows us to experiment
+with new stuff that requires use of bpftool (e.g., code generation for
+BPF programs), without having to expose and seal public APIs. And I
+don't think it's a problem from the point of code maintenance, because
+both live in the same repository and are updated "atomically" when new
+features are added or changed.
+
+Beyond superficial binary size worries, I don't see any good reason
+why we should add more complexity and variables to libbpf and bpftool
+build processes just to have a "nice to have" option of linking
+bpftool dynamically with libbpf.
+
+
+>
+> -Toke
+>
