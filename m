@@ -2,127 +2,163 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0476C43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA9C5C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6C9A20722
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:12:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ig1O7d6G"
+	by mail.kernel.org (Postfix) with ESMTP id 8F1002053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:12:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575303172;
+	bh=cwvqO0EbVQvPbYXLS9rbygkQby1a9fW2IFadER46POY=;
+	h=To:Cc:From:Subject:Date:List-ID:From;
+	b=iNuTXLHzRScTGFRarltzAot0KgASUTHbv/8QMzB8ZoKDRcOU6y3nnxDuSXM6qhEWa
+	 +RkP9spwqkTgkzDnTpmdxRWTEOAsHbYvcDoDRE7t8hxfiiRZKKBM/3Gv/CjAs4BJiW
+	 h7dMBzMobScJKf82XDa+hck94Yct7+DIC+nTjHQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727562AbfLBQMS (ORCPT
+        id S1727614AbfLBQMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 11:12:18 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37291 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727472AbfLBQMR (ORCPT
+        Mon, 2 Dec 2019 11:12:51 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36379 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727580AbfLBQMv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 11:12:17 -0500
-Received: by mail-wr1-f65.google.com with SMTP id w15so14059970wru.4
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 08:12:15 -0800 (PST)
+        Mon, 2 Dec 2019 11:12:51 -0500
+Received: by mail-io1-f65.google.com with SMTP id l17so14947488ioj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 08:12:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7Xv8o+WsUdwWC7CiaXpsHd5QUxK044+HKFw9W9npptk=;
-        b=ig1O7d6GsDt4NBwP75X4Y5ujFXKgklak77SWNGcBuqnwXLGpk+P5XN90JKiEaf2DlT
-         WrVdXQtvxPygQzaAZx5Wyn09al6SJ3AefSjaSRjKH65+vqyjjGV3AAI7blYUMk6bxxNU
-         imZoAbvk8e7WIQaP2QJWb/dcdykPO0gubpktQ7rXHibDskvWbSc6e4RfKGeymd1SEHkQ
-         rN4NCNH9RCYgSR8vJIq6oJKWcWEeRYOub/IGzL0nHFyW8U+kqcHiSk1Jtzj7DgCmQ2b1
-         6mAr45FJYKlH47wLqjdCfiLeG38To+D9j+tZ1HBGdU1DBkzyDaikMHe5JMWjDCUZBREU
-         +AIw==
+        d=linuxfoundation.org; s=google;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language;
+        bh=R5zJ8In6LlJQbPpTqvTFgEgHr4r6MhNv3YRn/orOSDU=;
+        b=P0HIc1/Dq5h4/jQB2TXzHRf3K6gk27bx6R5uWk/CR00EOzYwppxWoL/1BsZzDgWs5e
+         EyMQSTG8AYaInxacsWOIZHE6Wywt9PIihQ8lFtL6OKbLNnm6h4RC35OiD1O/oz0Odt/T
+         LifAG1XjlNA/L5q+h0QjqbZrZW2TQNJYGpXsA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7Xv8o+WsUdwWC7CiaXpsHd5QUxK044+HKFw9W9npptk=;
-        b=TGRAxfiVnvu2lzYAILYwB1HL/2DefN0+HC/iQC+puqrAZXEoO4aOJ2O6U8rAtE2KUq
-         snr2jFExfYQhZl8VnZN7QvvfjosrZwb6cd4uWz4rkUbGEdYHIeHG4G6xW+ur4B1hiRHk
-         Z/j0utkB1TPIbUalBIZoJAl6Y33T4Xz6sCD1crkR18GoxRCsZHAtNWyIXQCUNW4Xhvfa
-         RuOM6DxhgpKjhjAuc1veCsCw7l2oJp4A15Gm0X/hkZqCTXGOq2afNfWSpdpHhafCj3S6
-         OuqGArhEfzOsNCPawwlP7NgyEPuJBvdXG9n0TA1XlnFGvoobIuqqIelHj7FabOvA276c
-         N/AA==
-X-Gm-Message-State: APjAAAX3Y7KqulSaL5tpn23bkMvQItFpgLA2U5aQmPwMRUp0MYHAcDGr
-        4oavE6DwA4zJ4un6IKa/0PzfyaKESyq6N01EPUDsHQ==
-X-Google-Smtp-Source: APXvYqxqte31rdFQPjtRI2d0z8l6rqekmUjNbkTYkhGQNfoYXbCoNDt/WGK3fQmslUDfdpQIN0cF13ot7mHRN/DXrE0=
-X-Received: by 2002:a5d:5345:: with SMTP id t5mr34600649wrv.0.1575303135165;
- Mon, 02 Dec 2019 08:12:15 -0800 (PST)
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language;
+        bh=R5zJ8In6LlJQbPpTqvTFgEgHr4r6MhNv3YRn/orOSDU=;
+        b=j3WKP05AETGT+iyspJKPjHf4jO7akS/gOmXmh+q/S8CmPckC4Tsk0lbP9Tn64F59H2
+         QXGeJvKEcfKJ4Vm0edKIx/CRSb9UstUCnzT7b3CXmqiZ1xRuZiVu2gmMkhYdfzb9JQbG
+         IUpYACNQUdzjGZY0VJ4qq93tZSNDEmezrc53lYzUIqh0QVCeYlvBsfdPpcbg5jjiv9Ei
+         63NSSW0u+bvY/k1jubq6nWTSQ9M8jK3nhaufwjWQq01RLGpNViZpDoF0axKTy+vTKm2U
+         T2dh6Xc2V5K+3cbtu2MljvMKX9f7CuE1CCgUpI4IcmdrdgPdDi2fUxSE5nOZ/xOlGGkl
+         XDiA==
+X-Gm-Message-State: APjAAAVR/JrYVj4+q0tPebE+8liwNwGumpxXzl8PZ20d5/L5tZQVvOZ4
+        sznC0KtFIej4VteZjdoBVvg/TL0hxYc=
+X-Google-Smtp-Source: APXvYqxRlhfblsNYn/5FSfPcwDEC+6JBjaNlTfqo/tQG7X1ZiydMZgmPU8uW7Saec8hQmqMdd+vmRw==
+X-Received: by 2002:a6b:5914:: with SMTP id n20mr39940124iob.42.1575303170409;
+        Mon, 02 Dec 2019 08:12:50 -0800 (PST)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id c4sm1001193iln.24.2019.12.02.08.12.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Dec 2019 08:12:49 -0800 (PST)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        linux-kselftest@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Subject: [GIT PULL] Kselftest fixes2 update for Linux 5.5.rc1
+Message-ID: <2b0d6a6e-d135-f5dd-f8e9-74b3130d5e9e@linuxfoundation.org>
+Date:   Mon, 2 Dec 2019 09:12:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <1574864578-467-1-git-send-email-neal.liu@mediatek.com>
- <1574864578-467-4-git-send-email-neal.liu@mediatek.com> <CADnJP=uhD=J2NrpSwiX8oCTd-u_q05=HhsAV-ErCsXNDwVS0rA@mail.gmail.com>
- <1575027046.24848.4.camel@mtkswgap22>
-In-Reply-To: <1575027046.24848.4.camel@mtkswgap22>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Mon, 2 Dec 2019 16:12:09 +0000
-Message-ID: <CAKv+Gu_um7eRYXbieW7ogDX5mmZaxP7JQBJM9CajK+6CsO5RgQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] hwrng: add mtk-sec-rng driver
-To:     Neal Liu <neal.liu@mediatek.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>
-Cc:     Lars Persson <lists@bofh.nu>, Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?B?Q3J5c3RhbCBHdW8gKOmDreaZtik=?= <Crystal.Guo@mediatek.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Matt Mackall <mpm@selenic.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed;
+ boundary="------------67779F6A768A6C04B0623C06"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(adding some more arm64 folks)
+This is a multi-part message in MIME format.
+--------------67779F6A768A6C04B0623C06
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, 29 Nov 2019 at 11:30, Neal Liu <neal.liu@mediatek.com> wrote:
->
-> On Fri, 2019-11-29 at 18:02 +0800, Lars Persson wrote:
-> > Hi Neal,
-> >
-> > On Wed, Nov 27, 2019 at 3:23 PM Neal Liu <neal.liu@mediatek.com> wrote:
-> > >
-> > > For MediaTek SoCs on ARMv8 with TrustZone enabled, peripherals like
-> > > entropy sources is not accessible from normal world (linux) and
-> > > rather accessible from secure world (ATF/TEE) only. This driver aims
-> > > to provide a generic interface to ATF rng service.
-> > >
-> >
-> > I am working on several SoCs that also will need this kind of driver
-> > to get entropy from Arm trusted firmware.
-> > If you intend to make this a generic interface, please clean up the
-> > references to MediaTek and give it a more generic name. For example
-> > "Arm Trusted Firmware random number driver".
-> >
-> > It will also be helpful if the SMC call number is configurable.
-> >
-> > - Lars
->
-> Yes, I'm trying to make this to a generic interface. I'll try to make
-> HW/platform related dependency to be configurable and let it more
-> generic.
-> Thanks for your suggestion.
->
+Hi Linus,
 
-I don't think it makes sense for each arm64 platform to expose an
-entropy source via SMC calls in a slightly different way, and model it
-as a h/w driver. Instead, we should try to standardize this, and
-perhaps expose it via the architectural helpers that already exist
-(get_random_seed_long() and friends), so they get plugged into the
-kernel random pool driver directly.
+Please pull this second Kselftest fixes update for Linux 5.5-rc1.
 
-Note that in addition to drivers based on vendor SMC calls, we already
-have a RNG h/w driver based on OP-TEE as well, where the driver
-attaches to a standardized trusted OS interface identified by a UUID,
-and which also gets invoked via SMC calls into secure firmware.
+This second Kselftest fixes update for Linux 5.5-rc1 consists of
+an urgent revert to fix regression in CI coverage.
+
+diff is attached.
+
+thanks,
+-- Shuah
+
+----------------------------------------------------------------
+
+The following changes since commit ed2d8fa734e7759ac3788a19f308d3243d0eb164:
+
+   selftests: sync: Fix cast warnings on arm (2019-11-07 14:54:37 -0700)
+
+are available in the Git repository at:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest 
+tags/linux-kselftest-5.5-rc1-fixes2
+
+for you to fetch changes up to f60b85e83659b5fbd3eb2c8f68d33ef4e35ebb2c:
+
+   Revert "selftests: Fix O= and KBUILD_OUTPUT handling for relative 
+paths" (2019-11-28 16:27:44 -0700)
+
+----------------------------------------------------------------
+linux-kselftest-5.5-rc1-fixes2
+
+This second Kselftest fixes update for Linux 5.5-rc1 consists of
+an urgent revert to fix regression in CI coverage.
+
+----------------------------------------------------------------
+Shuah Khan (1):
+       Revert "selftests: Fix O= and KBUILD_OUTPUT handling for relative 
+paths"
+
+  tools/testing/selftests/Makefile | 5 ++---
+  1 file changed, 2 insertions(+), 3 deletions(-)
+
+----------------------------------------------------------------
+
+--------------67779F6A768A6C04B0623C06
+Content-Type: text/x-patch; charset=UTF-8;
+ name="linux-kselftest-5.5-rc1-fixes2.diff"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="linux-kselftest-5.5-rc1-fixes2.diff"
+
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+index 6e762c42d758..503a93afd452 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -86,10 +86,10 @@ override LDFLAGS =
+ endif
+ 
+ ifneq ($(O),)
+-	BUILD := $(abs_objtree)
++	BUILD := $(O)
+ else
+ 	ifneq ($(KBUILD_OUTPUT),)
+-		BUILD := $(abs_objtree)/kselftest
++		BUILD := $(KBUILD_OUTPUT)/kselftest
+ 	else
+ 		BUILD := $(shell pwd)
+ 		DEFAULT_INSTALL_HDR_PATH := 1
+@@ -102,7 +102,6 @@ include $(top_srcdir)/scripts/subarch.include
+ ARCH           ?= $(SUBARCH)
+ export KSFT_KHDR_INSTALL_DONE := 1
+ export BUILD
+-#$(info abd_objtree = $(abs_objtree) BUILD = $(BUILD))
+ 
+ # build and run gpio when output directory is the src dir.
+ # gpio has dependency on tools/gpio and builds tools/gpio
+
+--------------67779F6A768A6C04B0623C06--
