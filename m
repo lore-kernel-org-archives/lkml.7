@@ -2,134 +2,82 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D477C43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA8BC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1439B218AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:07:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575277624;
-	bh=4FwCVeTFST03BvCT/H0DDIcWMagOt/dsTOUkJbFiFQ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YpZW4LqVUK4D5DDKxT3JJa7wavd1RIM0EoMk6HLOmW2U+9mP8QtOyd7YLEPtK2MxX
-	 STGarKGwvWUzsBjFervZEGZ4NPddajiiT7flDDciEdV2aC6JH/zUBuv3f5ZOU+nuub
-	 2J/G2yU6IhVOZ9KO5ceyuofAloxFvHcslFT49gMk=
+	by mail.kernel.org (Postfix) with ESMTP id 7F322215E5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:10:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbfLBJHD (ORCPT
+        id S1726339AbfLBJKv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 04:07:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45066 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726106AbfLBJHC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 04:07:02 -0500
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD3BB215E5;
-        Mon,  2 Dec 2019 09:06:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575277622;
-        bh=4FwCVeTFST03BvCT/H0DDIcWMagOt/dsTOUkJbFiFQ4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=a3niqJ6LgVjMjZJgBXuJuJvs4aU8Yf+rWtnMVpeB0LCnzL3bhq7E3yaEaS2R4o3Z1
-         c60QB3Bk0k8Di1ubbriqyxwgEDRu5Z82QZzCqRZAonWEQr3fFfaC35qygcBCvOT5l+
-         hJVpQcl+j7QiLOglT5l+fuORciTH99zV7DKNApbU=
-Date:   Mon, 2 Dec 2019 17:06:45 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Subject: Re: [PATCH v17 10/19] ARM: dts: imx6dl-yapp4: Add reg property to
- the lp5562 channel node
-Message-ID: <20191202090645.GI9767@dragon>
-References: <20191114133023.32185-1-dmurphy@ti.com>
- <20191114133023.32185-11-dmurphy@ti.com>
+        Mon, 2 Dec 2019 04:10:51 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:52140 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725977AbfLBJKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 04:10:51 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 89C9D3186B0E22340C12;
+        Mon,  2 Dec 2019 17:10:49 +0800 (CST)
+Received: from [127.0.0.1] (10.177.246.209) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Mon, 2 Dec 2019
+ 17:10:40 +0800
+From:   "Longpeng (Mike)" <longpeng2@huawei.com>
+Subject: vfio_pin_map_dma cause synchronize_sched wait too long
+To:     Alex Williamson <alex.williamson@redhat.com>, <pbonzini@redhat.com>
+CC:     <qemu-devel@nongnu.org>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Longpeng(Mike)" <longpeng.mike@gmail.com>,
+        Gonglei <arei.gonglei@huawei.com>,
+        Huangzhichao <huangzhichao@huawei.com>
+Message-ID: <2e53a9f0-3225-d416-98ff-55bd337330bc@huawei.com>
+Date:   Mon, 2 Dec 2019 17:10:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191114133023.32185-11-dmurphy@ti.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.246.209]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 07:30:14AM -0600, Dan Murphy wrote:
-> Add the reg property to each channel node.  This update is
-> to accomodate the multicolor framework.  In addition to the
-> accomodation this allows the LEDs to be placed on any channel
-> and allow designs to skip channels as opposed to requiring
-> sequential order.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> CC: Shawn Guo <shawnguo@kernel.org>
-> CC: Sascha Hauer <s.hauer@pengutronix.de>
-> CC: Pengutronix Kernel Team <kernel@pengutronix.de>
-> CC: Fabio Estevam <festevam@gmail.com>
-> CC: NXP Linux Team <linux-imx@nxp.com>
-> ---
->  arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-> index e8d800fec637..efc466ed1fea 100644
-> --- a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-> +++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-> @@ -257,29 +257,35 @@
->  		reg = <0x30>;
->  		clock-mode = /bits/ 8 <1>;
->  		status = "disabled";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
->  
-> -		chan0 {
-> +		chan@0 {
+Hi guys,
 
-Again, why do not we rename it to led@0 as you update the bindings in
-the last patch in the series?
+Suppose there're two VMs: VM1 is bind to node-0 and calling vfio_pin_map_dma(),
+VM2 is a migrate incoming VM which bind to node-1. We found the vm_start( QEMU
+function) of VM2 will take too long occasionally, the reason is as follow.
 
-Shawn
+- VM2 -
+qemu: vm_start
+        vm_start_notify
+          virtio_vmstate_change
+            virtio_pci_vmstate_change
+              virtio_pci_start_ioeventfd
+                virtio_device_start_ioeventfd_impl
+                  event_notifier_init
+                    eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC) <-- too long
+kern: sys_eventfd2
+        get_unused_fd_flags
+          __alloc_fd
+            expand_files
+              expand_fdtable
+                synchronize_sched <-- too long
 
->  			chan-name = "R";
->  			led-cur = /bits/ 8 <0x20>;
->  			max-cur = /bits/ 8 <0x60>;
-> +			reg = <0>;
->  		};
->  
-> -		chan1 {
-> +		chan@1 {
->  			chan-name = "G";
->  			led-cur = /bits/ 8 <0x20>;
->  			max-cur = /bits/ 8 <0x60>;
-> +			reg = <1>;
->  		};
->  
-> -		chan2 {
-> +		chan@2 {
->  			chan-name = "B";
->  			led-cur = /bits/ 8 <0x20>;
->  			max-cur = /bits/ 8 <0x60>;
-> +			reg = <2>;
->  		};
->  
-> -		chan3 {
-> +		chan@3 {
->  			chan-name = "W";
->  			led-cur = /bits/ 8 <0x0>;
->  			max-cur = /bits/ 8 <0x0>;
-> +			reg = <3>;
->  		};
->  	};
->  
-> -- 
-> 2.22.0.214.g8dca754b1e
-> 
+- VM1 -
+The VM1 is doing vfio_pin_map_dma at the same time.
+
+The CPU must finish vfio_pin_map_dma and then rcu-sched grace period can be
+elapsed, so synchronize_sched would wait for a long time.
+
+Is there any solution to this ? Any suggestion would be greatly appreciated, thanks!
+
+-- 
+Regards,
+Longpeng(Mike)
+
