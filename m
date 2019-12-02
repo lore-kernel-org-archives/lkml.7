@@ -2,194 +2,143 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F86EC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D32C5C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25B1720672
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A3E120833
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:19:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="GuLOx2Zp"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="rnSYxE9b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727738AbfLBRSg (ORCPT
+        id S1727779AbfLBRTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 12:18:36 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40761 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727695AbfLBRSf (ORCPT
+        Mon, 2 Dec 2019 12:19:17 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:58764 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727628AbfLBRTR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 12:18:35 -0500
-Received: by mail-ot1-f68.google.com with SMTP id i15so138662oto.7
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 09:18:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=6m5GyYZgGjlReYT0UlQJpt9O1RSpFkhX7hTS5Y3rL8A=;
-        b=GuLOx2Zp3ZZ90Tm4v6pIsuMUqW5EKKBOtz2OFCipBoqw0100kj7xtHtEdX64q6lWAW
-         pD1itDn0zL2PH8BDTkq/ZohZNfnj1PJGqh8zFGjN6LrykJ2h4LZgAmf8MZ1t5+TODv/v
-         nFdRCYmdVHIe5MH+6D0JBBnuR/6ran/ta4wvvVj1qbn/vnpBfMCYB9N4HPu9CKJ0EgLc
-         A4cNfwiaZXvyHsmEp4cWUz/fOhPRLwI9IyHFzC5RqEH13/bDz709PU7fOxDW1c3cmkL8
-         ECKs2OH7phaSwsIdhN9kdCWDl7v5tH/tmmlMf7eO/tLnobqg2mlQHqIIIJo2Bv/bIMPY
-         MVrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=6m5GyYZgGjlReYT0UlQJpt9O1RSpFkhX7hTS5Y3rL8A=;
-        b=uV7ub364vEc+gZnJAeVJYvPeal+l7fxiafLh3otNb9GUuQXebINzlk9lfmBCdatSHH
-         6iyw1eDX+3KXsnHL0y3gADDXxK2NESnGydHuNYaIGFJfah3/LGsjFx2suuypprTa+ACz
-         bTg/ford77vCJ1lTNo1CSQUFhtIjI1DSaP/XmgfuCLDCeWXrd6cPB6u6c3BK25A4o4Sm
-         0jODjYSNCe5jqxA9hjToGl21tU1Ud3qKqMxgnp1H7WXB2trP0c8L0R10V045ApBJDrrG
-         mwaTLpvTnzsiAc0no6adtpd+UqylQGjTtTOKXt2etWhC6fNLyoeqHDXubcG5ov0WzXnq
-         JOqQ==
-X-Gm-Message-State: APjAAAULAsSf9ilUk6kMRZ+/KPt2TG0vRg2U4gWaUgZSA1ClRLVoSLLc
-        tAkgBWrBMlUDwHyfqFY6hwStXBuKoeEaGgAlhD2fiw==
-X-Google-Smtp-Source: APXvYqyYLXF9eAgv7IfmBg18I6YR52lazrz4VDRUHWzFpa7cmv7OeAl8w9FBa0bv0eN4jxBqQrkuqs5Bnn/pF8jwkaw=
-X-Received: by 2002:a9d:5d10:: with SMTP id b16mr95092oti.250.1575307113737;
- Mon, 02 Dec 2019 09:18:33 -0800 (PST)
+        Mon, 2 Dec 2019 12:19:17 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB2HCrok015839;
+        Mon, 2 Dec 2019 18:18:56 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : references : in-reply-to : content-type : content-id :
+ content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=ajIX9WQCsBYLKyNEdOZyKdS4oEk7N1oMheg1Z9YD/LU=;
+ b=rnSYxE9be3BTdERhx7CdwME9chL5wHCPU6DHd5Ak/qF2JFkVV67kr4JAZPuKzA3A2YDU
+ XgX3G5euB1YxPfnYctv9/ncDz2j47mvc7S0GpU+XAXdwedDyXsA2+mR2ouN425qVNaZO
+ M168QwGgtmU6JpT01uzOkaroifTZ1obJindrjHEEhONhCXizWgx/8Ym1nTDGDkAg6TIi
+ ibxA2z/LAPNKWX2FIAF+FgL+m2RlD/TpvJpEh9dFDmejP+goVuuIa6Y7jhzUHoDYkzce
+ HKfG7PdFnv8UJ30/Ii29shdf9NvRdUiO19k4qDq6ZFG5DeNeV5d331bzTZftf/WpwcGn ng== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2wkes2k09n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 Dec 2019 18:18:48 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7CED010002A;
+        Mon,  2 Dec 2019 18:18:46 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 40B162AF6B8;
+        Mon,  2 Dec 2019 18:18:46 +0100 (CET)
+Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG6NODE1.st.com
+ (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 2 Dec
+ 2019 18:18:45 +0100
+Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
+ SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
+ 15.00.1473.003; Mon, 2 Dec 2019 18:18:45 +0100
+From:   Philippe CORNU <philippe.cornu@st.com>
+To:     Yannick FERTRE <yannick.fertre@st.com>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "Alexandre TORGUE" <alexandre.torgue@st.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/stm: ltdc: move pinctrl to encoder mode set
+Thread-Topic: [PATCH] drm/stm: ltdc: move pinctrl to encoder mode set
+Thread-Index: AQHVpQy83g+L3HcPpECGo0y4vMZ4rqenDjcA
+Date:   Mon, 2 Dec 2019 17:18:45 +0000
+Message-ID: <90e15f5b-0b65-1de7-229d-c8e0470071b5@st.com>
+References: <1574850218-13257-1-git-send-email-yannick.fertre@st.com>
+In-Reply-To: <1574850218-13257-1-git-send-email-yannick.fertre@st.com>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.44]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CD1DE62153C9A94B962ABF94CB242BED@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191003092913.10731-1-brgl@bgdev.pl> <20191003092912.G3pupKBmyct1r9ScP5Skuw9D-_ALcMVSnfMfHAlwe0Y@z>
- <20191202041440.GA1628@roeck-us.net> <CAMpxmJW3i4zmJJ14Xg65+T27kF3sgR1WG0K3FUT6+jeKtiHx=Q@mail.gmail.com>
- <3f8ffe03-98b8-423a-7cba-53961a5600cb@roeck-us.net>
-In-Reply-To: <3f8ffe03-98b8-423a-7cba-53961a5600cb@roeck-us.net>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 2 Dec 2019 18:18:22 +0100
-Message-ID: <CAMpxmJUmTF3FwacjvTrC+Vvzm8MscS9E=ZyWLbJV87LkQhqVow@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] drivers: move the early platform device support to arch/sh
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Slaby <jslaby@suse.com>, linux-sh@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-02_03:2019-11-29,2019-12-02 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pon., 2 gru 2019 o 14:03 Guenter Roeck <linux@roeck-us.net> napisa=C5=82(a)=
-:
->
-> On 12/1/19 11:40 PM, Bartosz Golaszewski wrote:
-> > pon., 2 gru 2019 o 05:14 Guenter Roeck <linux@roeck-us.net> napisa=C5=
-=82(a):
-> >>
-> >> On Thu, Oct 03, 2019 at 11:29:12AM +0200, Bartosz Golaszewski wrote:
-> >>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >>>
-> >>> SuperH is the only user of the current implementation of early platfo=
-rm
-> >>> device support. We want to introduce a more robust approach to early
-> >>> probing. As the first step - move all the current early platform code
-> >>> to arch/sh.
-> >>>
-> >>> In order not to export internal drivers/base functions to arch code f=
-or
-> >>> this temporary solution - copy the two needed routines for driver
-> >>> matching from drivers/base/platform.c to arch/sh/drivers/platform_ear=
-ly.c.
-> >>>
-> >>> Also: call early_platform_cleanup() from subsys_initcall() so that it=
-'s
-> >>> called after all early devices are probed.
-> >>>
-> >>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >>
-> >> Wondering ... has anyone tested this patch on affected hardware ?
-> >> All my qemu boot tests (both sh and sheb) fail because of it.
-> >> Bisect log below.
-> >>
-> >> Guenter
-> >>
-> >> ---
-> >> # bad: [72c0870e3a05d9cd5466d08c3d2a3069ed0a2f9f] Merge branch 'for-li=
-nus' of git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input
-> >> # good: [89d57dddd7d319ded00415790a0bb3c954b7e386] Merge tag 'media/v5=
-.5-1' of git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media
-> >> git bisect start 'HEAD' '89d57dddd7d3'
-> >> # good: [0a6cad5df541108cfd3fbd79eef48eb824c89bdc] Merge branch 'vmwgf=
-x-coherent' of git://people.freedesktop.org/~thomash/linux into drm-next
-> >> git bisect good 0a6cad5df541108cfd3fbd79eef48eb824c89bdc
-> >> # bad: [9a3d7fd275be4559277667228902824165153c80] Merge tag 'driver-co=
-re-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-=
-core
-> >> git bisect bad 9a3d7fd275be4559277667228902824165153c80
-> >> # good: [59274c7164807d27b24e6c068dfe734f7bea4623] Merge tag 'usb-5.5-=
-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb
-> >> git bisect good 59274c7164807d27b24e6c068dfe734f7bea4623
-> >> # good: [e71903106721dc53923e90aa484d78bc86c039a9] staging: mt7621-dma=
-: align to match open parenthesis
-> >> git bisect good e71903106721dc53923e90aa484d78bc86c039a9
-> >> # good: [8f56e4ebe05c26c30e167519273843476e39e244] Merge tag 'char-mis=
-c-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-mis=
-c
-> >> git bisect good 8f56e4ebe05c26c30e167519273843476e39e244
-> >> # good: [8bde9f3d2a217d1635a7c7bdf8ad4c25c9a34b50] Merge tag 'iio-for-=
-5.5c' of https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio into sta=
-ging-next
-> >> git bisect good 8bde9f3d2a217d1635a7c7bdf8ad4c25c9a34b50
-> >> # bad: [0628cda318df6baec439ca6e6e274007492f1ccd] mac80211: Use debugf=
-s_create_xul() helper
-> >> git bisect bad 0628cda318df6baec439ca6e6e274007492f1ccd
-> >> # bad: [03324507e66c7664c754b1ef92c5c3be24c78aa2] driver core: Allow f=
-wnode_operations.add_links to differentiate errors
-> >> git bisect bad 03324507e66c7664c754b1ef92c5c3be24c78aa2
-> >> # bad: [313f5dbba41d905d59c820bb2d91ee6c661aff99] debugfs: remove retu=
-rn value of debugfs_create_u16()
-> >> git bisect bad 313f5dbba41d905d59c820bb2d91ee6c661aff99
-> >> # good: [d4387cd117414ba80230f27a514be5ca4a09cfcc] of: property: Creat=
-e device links for all child-supplier depencencies
-> >> git bisect good d4387cd117414ba80230f27a514be5ca4a09cfcc
-> >> # bad: [c31e73121f4c1ec45a3e523ac6ce3ce6dafdcec1] base: soc: Handle cu=
-stom soc information sysfs entries
-> >> git bisect bad c31e73121f4c1ec45a3e523ac6ce3ce6dafdcec1
-> >> # bad: [201e91091b1d47047f55580b5474e1239f4d17aa] sh: add the sh_ pref=
-ix to early platform symbols
-> >> git bisect bad 201e91091b1d47047f55580b5474e1239f4d17aa
-> >> # bad: [507fd01d5333338753a1cc26322dfc9f856c109f] drivers: move the ea=
-rly platform device support to arch/sh
-> >> git bisect bad 507fd01d5333338753a1cc26322dfc9f856c109f
-> >> # first bad commit: [507fd01d5333338753a1cc26322dfc9f856c109f] drivers=
-: move the early platform device support to arch/sh
-> >
-> > Hi Guenter,
-> >
-> > can you post some bootlogs? Is it the same problem everywhere?
-> >
->
-> I don't have any useful logs. The boot fails too early for that.
->
-
-Yeah, it touched "early" devices after all...
-
-> Sorry, I don't understand "everywhere". It fails in mainline and -next, i=
-f that is what you mean.
-
-I referred to "All my qemu boot tests" when saying everywhere.
-
-I don't have any relevant HW - the idea for this patch is to stop
-compiling for everyone a bunch of code that's only used by one largely
-irrelevant architecture and free the namespace for a generic early
-platform drivers implementation.
-
-How are you creating your SH qemu images? I'm seeing there's something
-in buildroot for superh - maybe I'll be able to build something
-useful.
-
-Bartosz
-
-> And, yes, it has failed in -next for a while, looking back at the log his=
-tory.
->
-> Guenter
+RGVhciBZYW5uaWNrLA0KVGhhbmsgeW91IGZvciB5b3VyIHBhdGNoLA0KDQpBY2tlZC1ieTogUGhp
+bGlwcGUgQ29ybnUgPHBoaWxpcHBlLmNvcm51QHN0LmNvbT4NCg0KUGhpbGlwcGUgOi0pDQoNCk9u
+IDExLzI3LzE5IDExOjIzIEFNLCBZYW5uaWNrIEZlcnRyZSB3cm90ZToNCj4gRnJvbTogWWFubmlj
+ayBGZXJ0csOpIDx5YW5uaWNrLmZlcnRyZUBzdC5jb20+DQo+IA0KPiBUaGUgcGluIGNvbnRyb2wg
+bXVzdCBiZSBzZXQgdG8gZGVmYXVsdCBhcyBzb29uIGFzIHBvc3NpYmxlIHRvDQo+IGVzdGFibGlz
+aCBhIGdvb2QgdmlkZW8gbGluayBiZXR3ZWVuIHR2ICYgYnJpZGdlIGhkbWkNCj4gKGVuY29kZXIg
+bW9kZSBzZXQgaXMgY2FsbCBiZWZvcmUgZW5jb2RlciBlbmFibGUpLg0KPiANCj4gU2lnbmVkLW9m
+Zi1ieTogWWFubmljayBGZXJ0cmUgPHlhbm5pY2suZmVydHJlQHN0LmNvbT4NCj4gLS0tDQo+ICAg
+ZHJpdmVycy9ncHUvZHJtL3N0bS9sdGRjLmMgfCAyNCArKysrKysrKysrKysrKysrKystLS0tLS0N
+Cj4gICAxIGZpbGUgY2hhbmdlZCwgMTggaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkNCj4g
+DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc3RtL2x0ZGMuYyBiL2RyaXZlcnMvZ3B1
+L2RybS9zdG0vbHRkYy5jDQo+IGluZGV4IDQ5ZWY0MDYuLmRiYThlN2YgMTAwNjQ0DQo+IC0tLSBh
+L2RyaXZlcnMvZ3B1L2RybS9zdG0vbHRkYy5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9zdG0v
+bHRkYy5jDQo+IEBAIC00MzUsOSArNDM1LDYgQEAgc3RhdGljIHZvaWQgbHRkY19jcnRjX2F0b21p
+Y19lbmFibGUoc3RydWN0IGRybV9jcnRjICpjcnRjLA0KPiAgIAkvKiBDb21taXQgc2hhZG93IHJl
+Z2lzdGVycyA9IHVwZGF0ZSBwbGFuZXMgYXQgbmV4dCB2YmxhbmsgKi8NCj4gICAJcmVnX3NldChs
+ZGV2LT5yZWdzLCBMVERDX1NSQ1IsIFNSQ1JfVkJSKTsNCj4gICANCj4gLQkvKiBFbmFibGUgTFRE
+QyAqLw0KPiAtCXJlZ19zZXQobGRldi0+cmVncywgTFREQ19HQ1IsIEdDUl9MVERDRU4pOw0KPiAt
+DQo+ICAgCWRybV9jcnRjX3ZibGFua19vbihjcnRjKTsNCj4gICB9DQo+ICAgDQo+IEBAIC00NTEs
+OSArNDQ4LDYgQEAgc3RhdGljIHZvaWQgbHRkY19jcnRjX2F0b21pY19kaXNhYmxlKHN0cnVjdCBk
+cm1fY3J0YyAqY3J0YywNCj4gICANCj4gICAJZHJtX2NydGNfdmJsYW5rX29mZihjcnRjKTsNCj4g
+ICANCj4gLQkvKiBkaXNhYmxlIExUREMgKi8NCj4gLQlyZWdfY2xlYXIobGRldi0+cmVncywgTFRE
+Q19HQ1IsIEdDUl9MVERDRU4pOw0KPiAtDQo+ICAgCS8qIGRpc2FibGUgSVJRICovDQo+ICAgCXJl
+Z19jbGVhcihsZGV2LT5yZWdzLCBMVERDX0lFUiwgSUVSX1JSSUUgfCBJRVJfRlVJRSB8IElFUl9U
+RVJSSUUpOw0KPiAgIA0KPiBAQCAtMTA0Miw5ICsxMDM2LDEzIEBAIHN0YXRpYyBjb25zdCBzdHJ1
+Y3QgZHJtX2VuY29kZXJfZnVuY3MgbHRkY19lbmNvZGVyX2Z1bmNzID0gew0KPiAgIHN0YXRpYyB2
+b2lkIGx0ZGNfZW5jb2Rlcl9kaXNhYmxlKHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcikNCj4g
+ICB7DQo+ICAgCXN0cnVjdCBkcm1fZGV2aWNlICpkZGV2ID0gZW5jb2Rlci0+ZGV2Ow0KPiArCXN0
+cnVjdCBsdGRjX2RldmljZSAqbGRldiA9IGRkZXYtPmRldl9wcml2YXRlOw0KPiAgIA0KPiAgIAlE
+Uk1fREVCVUdfRFJJVkVSKCJcbiIpOw0KPiAgIA0KPiArCS8qIERpc2FibGUgTFREQyAqLw0KPiAr
+CXJlZ19jbGVhcihsZGV2LT5yZWdzLCBMVERDX0dDUiwgR0NSX0xURENFTik7DQo+ICsNCj4gICAJ
+LyogU2V0IHRvIHNsZWVwIHN0YXRlIHRoZSBwaW5jdHJsIHdoYXRldmVyIHR5cGUgb2YgZW5jb2Rl
+ciAqLw0KPiAgIAlwaW5jdHJsX3BtX3NlbGVjdF9zbGVlcF9zdGF0ZShkZGV2LT5kZXYpOw0KPiAg
+IH0NCj4gQEAgLTEwNTIsNiArMTA1MCwxOSBAQCBzdGF0aWMgdm9pZCBsdGRjX2VuY29kZXJfZGlz
+YWJsZShzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpDQo+ICAgc3RhdGljIHZvaWQgbHRkY19l
+bmNvZGVyX2VuYWJsZShzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpDQo+ICAgew0KPiAgIAlz
+dHJ1Y3QgZHJtX2RldmljZSAqZGRldiA9IGVuY29kZXItPmRldjsNCj4gKwlzdHJ1Y3QgbHRkY19k
+ZXZpY2UgKmxkZXYgPSBkZGV2LT5kZXZfcHJpdmF0ZTsNCj4gKw0KPiArCURSTV9ERUJVR19EUklW
+RVIoIlxuIik7DQo+ICsNCj4gKwkvKiBFbmFibGUgTFREQyAqLw0KPiArCXJlZ19zZXQobGRldi0+
+cmVncywgTFREQ19HQ1IsIEdDUl9MVERDRU4pOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMgdm9pZCBs
+dGRjX2VuY29kZXJfbW9kZV9zZXQoc3RydWN0IGRybV9lbmNvZGVyICplbmNvZGVyLA0KPiArCQkJ
+CSAgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGUsDQo+ICsJCQkJICBzdHJ1Y3QgZHJtX2Rp
+c3BsYXlfbW9kZSAqYWRqdXN0ZWRfbW9kZSkNCj4gK3sNCj4gKwlzdHJ1Y3QgZHJtX2RldmljZSAq
+ZGRldiA9IGVuY29kZXItPmRldjsNCj4gICANCj4gICAJRFJNX0RFQlVHX0RSSVZFUigiXG4iKTsN
+Cj4gICANCj4gQEAgLTEwNjcsNiArMTA3OCw3IEBAIHN0YXRpYyB2b2lkIGx0ZGNfZW5jb2Rlcl9l
+bmFibGUoc3RydWN0IGRybV9lbmNvZGVyICplbmNvZGVyKQ0KPiAgIHN0YXRpYyBjb25zdCBzdHJ1
+Y3QgZHJtX2VuY29kZXJfaGVscGVyX2Z1bmNzIGx0ZGNfZW5jb2Rlcl9oZWxwZXJfZnVuY3MgPSB7
+DQo+ICAgCS5kaXNhYmxlID0gbHRkY19lbmNvZGVyX2Rpc2FibGUsDQo+ICAgCS5lbmFibGUgPSBs
+dGRjX2VuY29kZXJfZW5hYmxlLA0KPiArCS5tb2RlX3NldCA9IGx0ZGNfZW5jb2Rlcl9tb2RlX3Nl
+dCwNCj4gICB9Ow0KPiAgIA0KPiAgIHN0YXRpYyBpbnQgbHRkY19lbmNvZGVyX2luaXQoc3RydWN0
+IGRybV9kZXZpY2UgKmRkZXYsIHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UpDQo+IA==
