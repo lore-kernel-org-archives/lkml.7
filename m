@@ -2,158 +2,384 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 696D0C43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09751C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3435E2146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:03:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cgUQvJ2h"
+	by mail.kernel.org (Postfix) with ESMTP id C999D2084F
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:03:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727640AbfLBNDR (ORCPT
+        id S1727652AbfLBNDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 08:03:17 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:36874 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727401AbfLBNDP (ORCPT
+        Mon, 2 Dec 2019 08:03:19 -0500
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:45818 "EHLO
+        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727493AbfLBNDQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 08:03:15 -0500
-Received: by mail-oi1-f193.google.com with SMTP id x195so3132942oix.4;
-        Mon, 02 Dec 2019 05:03:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bX52blO5Z/VfsD74ynSwB9VNncYy9CIY2khqE8Zel0g=;
-        b=cgUQvJ2haeoS1q2G8itmIG4cIR5Aan1bCkEEC4kBO2GOGHFvT7K02UIt9/KPZMXjNH
-         SiEoEhIIb3Y5P/qh0b2Z6JI3an3bmtGr4xpdt35WqX8qEKgOF1XIZKwuTcijtPc62Mrt
-         LDdKVhpc1flSpXGhHAQfHLh73Z9LYck49kxUpnHU9iuvOdK/zpSgF1Hv4F4QJgpjwVEb
-         h+I/mQYRvncoyyKBUOJQsoAxGBLWua2x/fF+yKZbFKP6tthYU/zlF7sNPwgWWghbAc7d
-         23TjFd0rF4IT3W3GwXW+gYwtwlEGyiv1FDwSPIAHz5IPeUcddvX6vkV95oj85r1RYT7B
-         cRZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bX52blO5Z/VfsD74ynSwB9VNncYy9CIY2khqE8Zel0g=;
-        b=uLMLRp/oNI2LVbrgvmn66GRJRzwe68RJPWGoOrgAoeKqO2bckkoBkubMoOd3Ds+e0b
-         aUTadeQDe3oPtDDG1SyvIbNQyRH4mXDfbIgl1hDEi+J5Bn9kKaHyoSmbZ53WBcm+BCpu
-         /6JHLF2AhY4+4TFrIoRmI+wKjgTWKIUCQtqjipiFI6E30BGkmUY9AzjuX+fUSpUwQlM6
-         jh3vfsQUiFjocLC1rAcDDd149fgtaOxy800hfVpyXBLTpFxguEIUOMAejpqCDvXT5PpP
-         941xncxrY78C2EIpSKb13gAbBLO60NiSEj3u9Psmi/27q1iVI8RQauxGN48V0qDdb9Od
-         8lsQ==
-X-Gm-Message-State: APjAAAWaK6uJVj3BDcDSfBWvZuJ+5RLg+FTakp/dszlpqNygV1b29Wk9
-        d7ciE4CUqmJ6+mh7xm2LcTdPVdNP
-X-Google-Smtp-Source: APXvYqyVJ0/NLBpbcrIvPb2DGj+WK2ZRiJdvf2mYCU99DqsYlBcC0xncybV9ColrRMjd1SFx0qvvwg==
-X-Received: by 2002:aca:1a0a:: with SMTP id a10mr20621387oia.146.1575291793674;
-        Mon, 02 Dec 2019 05:03:13 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g25sm2499051otr.8.2019.12.02.05.03.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Dec 2019 05:03:12 -0800 (PST)
-Subject: Re: [PATCH v4 1/2] drivers: move the early platform device support to
- arch/sh
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Slaby <jslaby@suse.com>, linux-sh@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org
-References: <20191003092913.10731-1-brgl@bgdev.pl>
- <20191003092912.G3pupKBmyct1r9ScP5Skuw9D-_ALcMVSnfMfHAlwe0Y@z>
- <20191202041440.GA1628@roeck-us.net>
- <CAMpxmJW3i4zmJJ14Xg65+T27kF3sgR1WG0K3FUT6+jeKtiHx=Q@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <3f8ffe03-98b8-423a-7cba-53961a5600cb@roeck-us.net>
-Date:   Mon, 2 Dec 2019 05:03:09 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 2 Dec 2019 08:03:16 -0500
+Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id xB2D1tjF015206;
+        Mon, 2 Dec 2019 15:01:55 +0200
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
+        id 715CA60275; Mon,  2 Dec 2019 15:01:55 +0200 (IST)
+From:   amirmizi6@gmail.com
+To:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
+        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de,
+        jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        ayna@linux.vnet.ibm.com, Dan.Morav@nuvoton.com,
+        oren.tanami@nuvoton.com, shmulik.hager@nuvoton.com,
+        amir.mizinski@nuvoton.com, Amir Mizinski <amirmizi6@gmail.com>
+Subject: [PATCH v1 5/5] char: tpm: add tpm_tis_i2c driver
+Date:   Mon,  2 Dec 2019 15:01:32 +0200
+Message-Id: <20191202130132.175382-6-amirmizi6@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20191202130132.175382-1-amirmizi6@gmail.com>
+References: <20191202130132.175382-1-amirmizi6@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAMpxmJW3i4zmJJ14Xg65+T27kF3sgR1WG0K3FUT6+jeKtiHx=Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/1/19 11:40 PM, Bartosz Golaszewski wrote:
-> pon., 2 gru 2019 o 05:14 Guenter Roeck <linux@roeck-us.net> napisał(a):
->>
->> On Thu, Oct 03, 2019 at 11:29:12AM +0200, Bartosz Golaszewski wrote:
->>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>>
->>> SuperH is the only user of the current implementation of early platform
->>> device support. We want to introduce a more robust approach to early
->>> probing. As the first step - move all the current early platform code
->>> to arch/sh.
->>>
->>> In order not to export internal drivers/base functions to arch code for
->>> this temporary solution - copy the two needed routines for driver
->>> matching from drivers/base/platform.c to arch/sh/drivers/platform_early.c.
->>>
->>> Also: call early_platform_cleanup() from subsys_initcall() so that it's
->>> called after all early devices are probed.
->>>
->>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>
->> Wondering ... has anyone tested this patch on affected hardware ?
->> All my qemu boot tests (both sh and sheb) fail because of it.
->> Bisect log below.
->>
->> Guenter
->>
->> ---
->> # bad: [72c0870e3a05d9cd5466d08c3d2a3069ed0a2f9f] Merge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input
->> # good: [89d57dddd7d319ded00415790a0bb3c954b7e386] Merge tag 'media/v5.5-1' of git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media
->> git bisect start 'HEAD' '89d57dddd7d3'
->> # good: [0a6cad5df541108cfd3fbd79eef48eb824c89bdc] Merge branch 'vmwgfx-coherent' of git://people.freedesktop.org/~thomash/linux into drm-next
->> git bisect good 0a6cad5df541108cfd3fbd79eef48eb824c89bdc
->> # bad: [9a3d7fd275be4559277667228902824165153c80] Merge tag 'driver-core-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core
->> git bisect bad 9a3d7fd275be4559277667228902824165153c80
->> # good: [59274c7164807d27b24e6c068dfe734f7bea4623] Merge tag 'usb-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb
->> git bisect good 59274c7164807d27b24e6c068dfe734f7bea4623
->> # good: [e71903106721dc53923e90aa484d78bc86c039a9] staging: mt7621-dma: align to match open parenthesis
->> git bisect good e71903106721dc53923e90aa484d78bc86c039a9
->> # good: [8f56e4ebe05c26c30e167519273843476e39e244] Merge tag 'char-misc-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc
->> git bisect good 8f56e4ebe05c26c30e167519273843476e39e244
->> # good: [8bde9f3d2a217d1635a7c7bdf8ad4c25c9a34b50] Merge tag 'iio-for-5.5c' of https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio into staging-next
->> git bisect good 8bde9f3d2a217d1635a7c7bdf8ad4c25c9a34b50
->> # bad: [0628cda318df6baec439ca6e6e274007492f1ccd] mac80211: Use debugfs_create_xul() helper
->> git bisect bad 0628cda318df6baec439ca6e6e274007492f1ccd
->> # bad: [03324507e66c7664c754b1ef92c5c3be24c78aa2] driver core: Allow fwnode_operations.add_links to differentiate errors
->> git bisect bad 03324507e66c7664c754b1ef92c5c3be24c78aa2
->> # bad: [313f5dbba41d905d59c820bb2d91ee6c661aff99] debugfs: remove return value of debugfs_create_u16()
->> git bisect bad 313f5dbba41d905d59c820bb2d91ee6c661aff99
->> # good: [d4387cd117414ba80230f27a514be5ca4a09cfcc] of: property: Create device links for all child-supplier depencencies
->> git bisect good d4387cd117414ba80230f27a514be5ca4a09cfcc
->> # bad: [c31e73121f4c1ec45a3e523ac6ce3ce6dafdcec1] base: soc: Handle custom soc information sysfs entries
->> git bisect bad c31e73121f4c1ec45a3e523ac6ce3ce6dafdcec1
->> # bad: [201e91091b1d47047f55580b5474e1239f4d17aa] sh: add the sh_ prefix to early platform symbols
->> git bisect bad 201e91091b1d47047f55580b5474e1239f4d17aa
->> # bad: [507fd01d5333338753a1cc26322dfc9f856c109f] drivers: move the early platform device support to arch/sh
->> git bisect bad 507fd01d5333338753a1cc26322dfc9f856c109f
->> # first bad commit: [507fd01d5333338753a1cc26322dfc9f856c109f] drivers: move the early platform device support to arch/sh
-> 
-> Hi Guenter,
-> 
-> can you post some bootlogs? Is it the same problem everywhere?
-> 
+From: Amir Mizinski <amirmizi6@gmail.com>
 
-I don't have any useful logs. The boot fails too early for that.
+Implements the functionality needed to communicate with an I2C TPM
+according to the TCG TPM I2C Interface Specification.
 
-Sorry, I don't understand "everywhere". It fails in mainline and -next, if that is what you mean.
-And, yes, it has failed in -next for a while, looking back at the log history.
+Limitations:
+* No IRQ support
+* No support for updating GUARD_TIME 
+Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+---
+ drivers/char/tpm/Kconfig       |  12 ++
+ drivers/char/tpm/Makefile      |   1 +
+ drivers/char/tpm/tpm_tis_i2c.c | 272 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 285 insertions(+)
+ create mode 100644 drivers/char/tpm/tpm_tis_i2c.c
 
-Guenter
+diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+index 88a3c06..b731a80 100644
+--- a/drivers/char/tpm/Kconfig
++++ b/drivers/char/tpm/Kconfig
+@@ -67,6 +67,18 @@ config TCG_TIS_SPI
+ 	  within Linux. To compile this driver as a module, choose  M here;
+ 	  the module will be called tpm_tis_spi.
+ 
++config TCG_TIS_I2C
++	tristate "TPM I2C Interface Specification"
++	depends on I2C
++        depends on CRC_CCITT
++	select TCG_TIS_CORE
++	---help---
++	  If you have a TPM security chip which is connected to a regular
++	  I2C master (i.e. most embedded platforms) that is compliant with the
++	  TCG TPM I2C Interface Specification say Yes and it will be accessible from
++	  within Linux. To compile this driver as a module, choose  M here;
++	  the module will be called tpm_tis_i2c.
++
+ config TCG_TIS_I2C_ATMEL
+ 	tristate "TPM Interface Specification 1.2 Interface (I2C - Atmel)"
+ 	depends on I2C
+diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+index a01c4ca..15a0010 100644
+--- a/drivers/char/tpm/Makefile
++++ b/drivers/char/tpm/Makefile
+@@ -22,6 +22,7 @@ tpm-$(CONFIG_OF) += eventlog/of.o
+ obj-$(CONFIG_TCG_TIS_CORE) += tpm_tis_core.o
+ obj-$(CONFIG_TCG_TIS) += tpm_tis.o
+ obj-$(CONFIG_TCG_TIS_SPI) += tpm_tis_spi.o
++obj-$(CONFIG_TCG_TIS_I2C) += tpm_tis_i2c.o
+ obj-$(CONFIG_TCG_TIS_I2C_ATMEL) += tpm_i2c_atmel.o
+ obj-$(CONFIG_TCG_TIS_I2C_INFINEON) += tpm_i2c_infineon.o
+ obj-$(CONFIG_TCG_TIS_I2C_NUVOTON) += tpm_i2c_nuvoton.o
+diff --git a/drivers/char/tpm/tpm_tis_i2c.c b/drivers/char/tpm/tpm_tis_i2c.c
+new file mode 100644
+index 0000000..080e82e
+--- /dev/null
++++ b/drivers/char/tpm/tpm_tis_i2c.c
+@@ -0,0 +1,272 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2014-2019 Nuvoton Technology corporation
++ *
++ * TPM TIS I2C
++ *
++ * TPM TIS I2C Device Driver Interface for devices that implement the TPM I2C
++ * Interface defined by TCG PC Client Platform TPM Profile (PTP) Specification
++ * Revision 01.03 v22 at www.trustedcomputinggroup.org
++ */
++
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/moduleparam.h>
++#include <linux/slab.h>
++#include <linux/interrupt.h>
++#include <linux/wait.h>
++#include <linux/acpi.h>
++#include <linux/freezer.h>
++#include <linux/crc-ccitt.h>
++
++#include <linux/module.h>
++#include <linux/i2c.h>
++#include <linux/gpio.h>
++#include <linux/of_irq.h>
++#include <linux/of_gpio.h>
++#include <linux/tpm.h>
++#include "tpm.h"
++#include "tpm_tis_core.h"
++
++#define TPM_LOC_SEL                    0x04
++#define TPM_I2C_INTERFACE_CAPABILITY   0x30
++#define TPM_I2C_DEVICE_ADDRESS         0x38
++#define TPM_DATA_CSUM_ENABLE           0x40
++#define TPM_DATA_CSUM                  0x44
++#define TPM_I2C_DID_VID                        0x48
++#define TPM_I2C_RID                    0x4C
++
++struct tpm_tis_i2c_phy {
++	struct tpm_tis_data priv;
++	struct i2c_client *i2c_client;
++	bool data_csum;
++	u8 *iobuf;
++};
++
++static inline struct tpm_tis_i2c_phy *to_tpm_tis_i2c_phy(struct tpm_tis_data *data)
++{
++	return container_of(data, struct tpm_tis_i2c_phy, priv);
++}
++
++static u8 address_to_register(u32 addr)
++{
++	addr &= 0xFFF;
++
++	switch (addr) {
++		// adapt register addresses that have changed compared to
++		// older TIS versions
++	case TPM_ACCESS(0):
++		return 0x04;
++	case TPM_LOC_SEL:
++		return 0x00;
++	case TPM_DID_VID(0):
++		return 0x48;
++	case TPM_RID(0):
++		return 0x4C;
++	default:
++		return addr;
++	}
++}
++
++static int tpm_tis_i2c_read_bytes(struct tpm_tis_data *data, u32 addr,
++				  u16 len, u8 *result)
++{
++	struct tpm_tis_i2c_phy *phy = to_tpm_tis_i2c_phy(data);
++	int ret;
++	u8 reg = address_to_register(addr);
++	struct i2c_msg msgs[] = {
++		{
++			.addr = phy->i2c_client->addr,
++			.len = sizeof(reg),
++			.buf = &reg,
++		},
++		{
++			.addr = phy->i2c_client->addr,
++			.len = len,
++			.buf = result,
++			.flags = I2C_M_RD,
++		},
++	};
++
++	ret = i2c_transfer(phy->i2c_client->adapter, msgs, ARRAY_SIZE(msgs));
++
++	if (ret < 0)
++		return ret;
++
++	usleep_range(250, 300); // wait default GUARD_TIME of 250µs
++
++	return 0;
++}
++
++static int tpm_tis_i2c_write_bytes(struct tpm_tis_data *data, u32 addr,
++				   u16 len, const u8 *value)
++{
++	struct tpm_tis_i2c_phy *phy = to_tpm_tis_i2c_phy(data);
++	int ret;
++
++	if (phy->iobuf) {
++		if (len > TPM_BUFSIZE - 1)
++			return -EIO;
++
++		phy->iobuf[0] = address_to_register(addr);
++		memcpy(phy->iobuf + 1, value, len);
++
++		{
++			struct i2c_msg msgs[] = {
++				{
++					.addr = phy->i2c_client->addr,
++					.len = len + 1,
++					.buf = phy->iobuf,
++				},
++			};
++
++			ret = i2c_transfer(phy->i2c_client->adapter, msgs,
++					   ARRAY_SIZE(msgs));
++		}
++	} else {
++		u8 reg = address_to_register(addr);
++
++		struct i2c_msg msgs[] = {
++			{
++				.addr = phy->i2c_client->addr,
++				.len = sizeof(reg),
++				.buf = &reg,
++			},
++			{
++				.addr = phy->i2c_client->addr,
++				.len = len,
++				.buf = (u8 *)value,
++				.flags = I2C_M_NOSTART,
++			},
++		};
++
++		ret = i2c_transfer(phy->i2c_client->adapter, msgs,
++				   ARRAY_SIZE(msgs));
++	}
++
++	if (ret < 0)
++		return ret;
++
++	usleep_range(250, 300); // wait default GUARD_TIME of 250µs
++
++	return 0;
++}
++
++static bool tpm_tis_i2c_check_data(struct tpm_tis_data *data,
++				   const u8 *buf, size_t len)
++{
++	struct tpm_tis_i2c_phy *phy = to_tpm_tis_i2c_phy(data);
++	u16 crc, crc_tpm;
++	int rc;
++
++	if (phy->data_csum) {
++		crc = crc_ccitt(0x0000, buf, len);
++		rc = tpm_tis_read16(data, TPM_DATA_CSUM, &crc_tpm);
++		if (rc < 0)
++			return false;
++
++		crc_tpm = be16_to_cpu(crc_tpm);
++		return crc == crc_tpm;
++	}
++
++	return true;
++}
++
++static SIMPLE_DEV_PM_OPS(tpm_tis_pm, tpm_pm_suspend, tpm_tis_resume);
++
++static int csum_state_store(struct tpm_tis_data *data, u8 new_state)
++{
++	struct tpm_tis_i2c_phy *phy = to_tpm_tis_i2c_phy(data);
++	u8 cur_state;
++	int rc;
++
++	rc = tpm_tis_i2c_write_bytes(&phy->priv, TPM_DATA_CSUM_ENABLE,
++				     1, &new_state);
++	if (rc < 0)
++		return rc;
++
++	rc = tpm_tis_i2c_read_bytes(&phy->priv, TPM_DATA_CSUM_ENABLE,
++				    1, &cur_state);
++	if (rc < 0)
++		return rc;
++
++	if (new_state == cur_state)
++		phy->data_csum = (bool)new_state;
++
++	return rc;
++}
++
++static const struct tpm_tis_phy_ops tpm_i2c_phy_ops = {
++	.read_bytes = tpm_tis_i2c_read_bytes,
++	.write_bytes = tpm_tis_i2c_write_bytes,
++	.check_data = tpm_tis_i2c_check_data,
++};
++
++static int tpm_tis_i2c_probe(struct i2c_client *dev,
++			     const struct i2c_device_id *id)
++{
++	struct tpm_tis_i2c_phy *phy;
++	int rc;
++	const u8 loc_init = 0;
++
++	phy = devm_kzalloc(&dev->dev, sizeof(struct tpm_tis_i2c_phy),
++			   GFP_KERNEL);
++	if (!phy)
++		return -ENOMEM;
++
++	phy->i2c_client = dev;
++
++	if (!i2c_check_functionality(dev->adapter, I2C_FUNC_NOSTART)) {
++		phy->iobuf = devm_kmalloc(&dev->dev, TPM_BUFSIZE, GFP_KERNEL);
++		if (!phy->iobuf)
++			return -ENOMEM;
++	}
++
++	// select locality 0 (the driver will access only via locality 0)
++	rc = tpm_tis_i2c_write_bytes(&phy->priv, TPM_LOC_SEL, 1, &loc_init);
++	if (rc < 0)
++		return rc;
++
++	// enables the data checksum calculation
++	rc = csum_state_store(&phy->priv, 0x01);
++	if (rc < 0)
++		return rc;
++
++	return tpm_tis_core_init(&dev->dev, &phy->priv, -1, &tpm_i2c_phy_ops,
++					NULL);
++}
++
++static const struct i2c_device_id tpm_tis_i2c_id[] = {
++	{"tpm_tis_i2c", 0},
++	{}
++};
++MODULE_DEVICE_TABLE(i2c, tpm_tis_i2c_id);
++
++static const struct of_device_id of_tis_i2c_match[] = {
++	{ .compatible = "tcg,tpm_tis-i2c", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, of_tis_i2c_match);
++
++static const struct acpi_device_id acpi_tis_i2c_match[] = {
++	{"SMO0768", 0},
++	{}
++};
++MODULE_DEVICE_TABLE(acpi, acpi_tis_i2c_match);
++
++static struct i2c_driver tpm_tis_i2c_driver = {
++	.driver = {
++		.owner = THIS_MODULE,
++		.name = "tpm_tis_i2c",
++		.pm = &tpm_tis_pm,
++		.of_match_table = of_match_ptr(of_tis_i2c_match),
++		.acpi_match_table = ACPI_PTR(acpi_tis_i2c_match),
++	},
++	.probe = tpm_tis_i2c_probe,
++	.id_table = tpm_tis_i2c_id,
++};
++
++module_i2c_driver(tpm_tis_i2c_driver);
++
++MODULE_DESCRIPTION("TPM Driver for native I2C access");
++MODULE_LICENSE("GPL");
+-- 
+2.7.4
+
