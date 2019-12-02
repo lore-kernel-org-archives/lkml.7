@@ -2,76 +2,96 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F4BC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B081FC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4430214AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 873EB215E5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:16:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575314194;
+	bh=a6t1Y8SGT7pSf3rULBWUhEZkTYHWD3R+C5WYp9Mtkqw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XEhGUoVQaBrWB7QDlisvfnwQfjs0Gk9KrXzln9wN2K1t2XT+gaXm2PKFYOWjfjE7L
+	 F8miZUdlU4Ap55vM7V6c9AmVLLbd91rUiIiF7Xy9YJo5chB34M3NeQgNT/dOkmdRZv
+	 BQQjqC0hUF8cM+SjPDac5bvrmZk9QCCer3olU/k4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbfLBTPV (ORCPT
+        id S1728080AbfLBTQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 14:15:21 -0500
-Received: from mga02.intel.com ([134.134.136.20]:37189 "EHLO mga02.intel.com"
+        Mon, 2 Dec 2019 14:16:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727730AbfLBTPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 14:15:21 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 11:15:19 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,270,1571727600"; 
-   d="scan'208";a="218430125"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by fmsmga001.fm.intel.com with ESMTP; 02 Dec 2019 11:15:19 -0800
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id BF957300B57; Mon,  2 Dec 2019 11:15:19 -0800 (PST)
-Date:   Mon, 2 Dec 2019 11:15:19 -0800
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     kan.liang@linux.intel.com, mingo@redhat.com, acme@kernel.org,
-        tglx@linutronix.de, bp@alien8.de, linux-kernel@vger.kernel.org,
-        eranian@google.com, alexey.budankov@linux.intel.com,
-        vitaly.slobodskoy@intel.com
-Subject: Re: [RFC PATCH 3/8] perf: Init/fini PMU specific data
-Message-ID: <20191202191519.GN84886@tassilo.jf.intel.com>
-References: <1574954071-6321-1-git-send-email-kan.liang@linux.intel.com>
- <1574954071-6321-3-git-send-email-kan.liang@linux.intel.com>
- <20191202124055.GC2827@hirez.programming.kicks-ass.net>
- <20191202145957.GM84886@tassilo.jf.intel.com>
- <20191202162152.GG2827@hirez.programming.kicks-ass.net>
+        id S1727686AbfLBTQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 14:16:33 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 493AF214AF;
+        Mon,  2 Dec 2019 19:16:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575314192;
+        bh=a6t1Y8SGT7pSf3rULBWUhEZkTYHWD3R+C5WYp9Mtkqw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=B2Qw9kdE+gwwP5bF0EJCih5sClV0MRDEfGH2vmu0pZD+l+jrBimZsJuztk5/991Ly
+         O251kVtz1NxT0EIr05Rf7TdQP5wwUdFeh5vB9/ZrhbT5HMZVijUUorG7SIdjYGMxnS
+         rQZ1PdHUKNI9lPCYhEjoGJ8ApOJ87xvVy1RrJ8pU=
+Date:   Mon, 2 Dec 2019 20:16:30 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Stefan Mavrodiev <stefan@olimex.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2 2/3] arm64: dts: allwinner: a64: olinuxino: Add bank
+ supply regulators
+Message-ID: <20191202191630.55itysenwpxdrhfj@gilmour.lan>
+References: <20191129113941.20170-1-stefan@olimex.com>
+ <20191129113941.20170-3-stefan@olimex.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="e67e634t6wlkd7vk"
 Content-Disposition: inline
-In-Reply-To: <20191202162152.GG2827@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191129113941.20170-3-stefan@olimex.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 05:21:52PM +0100, Peter Zijlstra wrote:
-> On Mon, Dec 02, 2019 at 06:59:57AM -0800, Andi Kleen wrote:
-> > > 
-> > > This is atricous crap. Also it is completely broken for -RT.
-> > 
-> > Well can you please suggest how you would implement it instead?
-> 
-> I don't think that is on me; at best I get to explain why it is
 
-Normally code review is expected to be constructive.
+--e67e634t6wlkd7vk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> completely unacceptible to have O(nr_tasks) and allocations under a
-> raw_spinlock_t, but I was thinking you'd already know that.
+On Fri, Nov 29, 2019 at 01:39:40PM +0200, Stefan Mavrodiev wrote:
+> Allwinner A64 SoC has separate supplies for PC, PD, PE, PG and PL. This
+> patch adds regulators for them to the pinctrl node.
+>
+> Exception is PL which is used by the RSB bus. To avoid circular
+> dependencies, VCC-PL is omitted.
+>
+> On boards with eMMC, VCC-PC is supplied by ELDO1, instead of DCDC1.
+>
+> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
 
-Ok if that's the only problem then a lock breaker + retry 
-if rescheduling is needed + some limit against live lock 
-should be sufficient.
+Queued for 5.6, thanks!
+Maxime
 
--Andi
+--e67e634t6wlkd7vk
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXeVjDgAKCRDj7w1vZxhR
+xS4NAQDZhesDivpERrXEzobJO+Q/JbNqNrZlcfOynVfPsfUvkAEAiDtcDNlVg4f3
+Bw029YZyhs6d/m38NqQXo2VJx6QRDwg=
+=6lca
+-----END PGP SIGNATURE-----
+
+--e67e634t6wlkd7vk--
