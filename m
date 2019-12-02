@@ -2,112 +2,147 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CEBC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 15:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF899C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 15:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 668F420881
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 15:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9068D2084F
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 15:40:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="X39EcDwt"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ZuACP+D8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbfLBPjH (ORCPT
+        id S1727533AbfLBPkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 10:39:07 -0500
-Received: from smtpbgbr2.qq.com ([54.207.22.56]:33802 "EHLO smtpbgbr2.qq.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727431AbfLBPjH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 10:39:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-        s=s201512; t=1575301134;
-        bh=qxhDF0663v1hbvbZByeK69uarzcMA+FhFaj7j+FZi1M=;
-        h=From:To:Subject:Date:Message-Id:MIME-Version;
-        b=X39EcDwtdvb1mbB0zPxP+C+ZyfwzT/uPbezVmrJk+6gY0Kwl838ZmbHNS4eyzBtLH
-         5Xbrg8xKbJ90MCH86H1eVvfaUEnVR3T0v6+LnT9gOiIb9nGyIP+6xno87v4mox4u18
-         kQnUEh/ft4hqmfes/UHOgK0+glCe5yHOwQGOnUHk=
-X-QQ-mid: esmtp4t1575301131t81f1i73m
-Received: from Home-PC.lan (unknown [39.180.30.185])
-        by esmtp4.qq.com (ESMTP) with 
-        id ; Mon, 02 Dec 2019 23:38:49 +0800 (CST)
-X-QQ-SSF: 0100000000000040C7101F00000000O
-X-QQ-FEAT: EUGmOqWjSYKrlczS1C5GpZ8p2d1quYLjG/gMMWe9CgTsVmZYPXb7FBtwYAbDH
-        B0wgDV/bUXf1oOmaOAuDJS347kNatFUsZjkHcMQIp92g7q/WDdD/7eAmRsWVK4TYJx5Dfrv
-        hDs60f4EYOEM9jI+mjaKtjTgD1be5qn+jau4+ZaF1q6Lf6uycP5d04KSzv2WVdzb/EudUb/
-        75M9jx2HUWY6bGlBdZrMGAMpv/j8F0g7/oeSF59eWuN5aoDiP6/7v1uwRL7pLcsnzOTt+7+
-        mbtaO2RkIfF4w4kJmbHS8StZOk7irllV8QsA==
-X-QQ-GoodBg: 0
-From:   Jack Chen <redchenjs@foxmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jack Chen <redchenjs@live.com>
-Subject: [PATCH] ARM: dts: rockchip: Add missing cpu operating points for rk3288-tinker
-Date:   Mon,  2 Dec 2019 23:35:40 +0800
-Message-Id: <20191202153540.26143-1-redchenjs@foxmail.com>
-X-Mailer: git-send-email 2.24.0
+        Mon, 2 Dec 2019 10:40:49 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:42553 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727436AbfLBPkt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 10:40:49 -0500
+Received: by mail-il1-f196.google.com with SMTP id f6so22846ilh.9
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 07:40:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Qo0WCLG/RhcpIAjfVeitSqiWKm1KS1IacYIGFKaHtek=;
+        b=ZuACP+D8ju5cgg0LyHFliG0Q8/9feKVCNcdWd0oXkCcuaedkespPghKpv9mfFyxZRS
+         ZXsnO+3bNzcMA8yRzWG0/lHtJrvvccRtdL5yifvMFNxe27/5jSB6OB5d25YHAAVMey42
+         wOuwr96LroiltNAZ8mRDNJhho6c3wsufng70hEbeufxMAaZaTa6syagxaGf6gLmg5Nwg
+         /1bLlnOBuSZNkxT5ABR7YDP5ZWq6Ks9KhzQxLz9OL1Xt73Nf3crm0nLNLSmlopYVT38b
+         DV+0YisNvyX9bF9qtS6kmeNq27bByKWy9N6mhMtKsoe0KqlyAVIiZB8FhsYnuL/RU8Y2
+         ohVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Qo0WCLG/RhcpIAjfVeitSqiWKm1KS1IacYIGFKaHtek=;
+        b=BWNzkWqnmY9QI2eg1g0QxbvgpPEhzXBfrXgraFopKPIkHsZayom68lOgYzPYCfNT14
+         9KMbDR7BEeGW/Ueq4mpGtQca4SYjAfif5oQPM5o6daDgNMhf0xHEN9rmeG/Ga7v2fLUc
+         APk8JNti0KXhvIlksGXp0YSPL791AVRc5SI9ujJFSZCg43ruAjC5/vD4nskQMaImWk1C
+         OV+urXxIi6Xh5eujb2nLkDJx3w1BwG2hi8Q+/n+kM4uvXVfa0G3JTkU64oE/DZjCo9SI
+         B70OFqeUJU75Jm5kNZ6/oImRuyHfZCU3FZG+XUn8AZslsXxkL2/p6W1JLFKIB78LHM0Y
+         0xaw==
+X-Gm-Message-State: APjAAAX/3Wz36gquyo1GxnDw3vLKssAAQg1CG/sm/pnsy4j70Q1ObORA
+        zgroB036ekVLuGn8kkoYYAnt+g==
+X-Google-Smtp-Source: APXvYqxj7s9YyvQDe8VJRKErNoRUHFcUmxx9XB+GBE+Mucwdhyd2TBhUUwbPpwBrXHhH/gErwV8ZIA==
+X-Received: by 2002:a92:3dd0:: with SMTP id k77mr20312842ilf.3.1575301248415;
+        Mon, 02 Dec 2019 07:40:48 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id s2sm8128247ioe.64.2019.12.02.07.40.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Dec 2019 07:40:47 -0800 (PST)
+Subject: Re: general protection fault in override_creds
+To:     Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+5320383e16029ba057ff@syzkaller.appspotmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, io-uring@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Cc:     Anna.Schumaker@netapp.com,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        David Howells <dhowells@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, NeilBrown <neilb@suse.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <000000000000da160a0598b2c704@google.com>
+ <CACT4Y+ZGx16qc8qtekP0Bx=syVQest8K_RVtEN084jnszx4qhA@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <39ea5e00-3278-a84f-25ae-c7a93a4b8ab5@kernel.dk>
+Date:   Mon, 2 Dec 2019 08:40:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtp:foxmail.com:bgforeign:bgforeign11
-X-QQ-Bgrelay: 1
+In-Reply-To: <CACT4Y+ZGx16qc8qtekP0Bx=syVQest8K_RVtEN084jnszx4qhA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Chen <redchenjs@live.com>
+On 12/1/19 10:40 PM, Dmitry Vyukov wrote:
+> On Mon, Dec 2, 2019 at 7:35 AM syzbot
+> <syzbot+5320383e16029ba057ff@syzkaller.appspotmail.com> wrote:
+>>
+>> Hello,
+>>
+>> syzbot found the following crash on:
+>>
+>> HEAD commit:    b94ae8ad Merge tag 'seccomp-v5.5-rc1' of git://git.kernel...
+>> git tree:       upstream
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=10f9ffcee00000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=ff560c3de405258c
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=5320383e16029ba057ff
+>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12dd682ae00000
+>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16290abce00000
+>>
+>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>> Reported-by: syzbot+5320383e16029ba057ff@syzkaller.appspotmail.com
+> 
+> I think this relates to fs/io_uring.c rather than kernel/cred.c.
+> +io_uring maintainers
 
-The Tinker Board / S devices use a special chip variant called rk3288-c
-and use different operating points with a higher max frequency.
+Yeah that's my fault, guessing the below will fix it. I'll test and
+queue it up.
 
-So add the missing operating points for Tinker Board / S devices, also
-increase the vdd_cpu regulator-max-microvolt to 1400000 uV so that the
-cpu can operate at 1.8 GHz.
 
-Signed-off-by: Jack Chen <redchenjs@live.com>
----
- arch/arm/boot/dts/rk3288-tinker.dtsi | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
-index 81e4e953d4a4..09e83b3d5e7d 100644
---- a/arch/arm/boot/dts/rk3288-tinker.dtsi
-+++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
-@@ -113,6 +113,17 @@
- 	cpu0-supply = <&vdd_cpu>;
- };
- 
-+&cpu_opp_table {
-+	opp-1704000000 {
-+		opp-hz = /bits/ 64 <1704000000>;
-+		opp-microvolt = <1350000>;
-+	};
-+	opp-1800000000 {
-+		opp-hz = /bits/ 64 <1800000000>;
-+		opp-microvolt = <1400000>;
-+	};
-+};
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index ec53aa7cdc94..afafe0463d2d 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -4361,7 +4361,8 @@ static void io_ring_ctx_free(struct io_ring_ctx *ctx)
+  		io_unaccount_mem(ctx->user,
+  				ring_pages(ctx->sq_entries, ctx->cq_entries));
+  	free_uid(ctx->user);
+-	put_cred(ctx->creds);
++	if (ctx->creds)
++		put_cred(ctx->creds);
+  	kfree(ctx->completions);
+  	kmem_cache_free(req_cachep, ctx->fallback_req);
+  	kfree(ctx);
+@@ -4759,7 +4760,12 @@ static int io_uring_create(unsigned entries, struct io_uring_params *p)
+  	ctx->compat = in_compat_syscall();
+  	ctx->account_mem = account_mem;
+  	ctx->user = user;
 +
- &gmac {
- 	assigned-clocks = <&cru SCLK_MAC>;
- 	assigned-clock-parents = <&ext_gmac>;
-@@ -175,7 +186,7 @@
- 				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-min-microvolt = <750000>;
--				regulator-max-microvolt = <1350000>;
-+				regulator-max-microvolt = <1400000>;
- 				regulator-name = "vdd_arm";
- 				regulator-ramp-delay = <6000>;
- 				regulator-state-mem {
+  	ctx->creds = prepare_creds();
++	if (!ctx->creds) {
++		ret = -ENOMEM;
++		goto err;
++	}
+  
+  	ret = io_allocate_scq_urings(ctx, p);
+  	if (ret)
+
 -- 
-2.24.0
-
-
+Jens Axboe
 
