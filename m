@@ -2,104 +2,110 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBA1C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 07:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1255C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 07:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 932B3214AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 07:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D0722146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 07:07:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbfLBHDy (ORCPT
+        id S1726179AbfLBHHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 02:03:54 -0500
-Received: from mga03.intel.com ([134.134.136.65]:4373 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725965AbfLBHDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 02:03:54 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Dec 2019 23:03:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,268,1571727600"; 
-   d="scan'208";a="207980148"
-Received: from tao-optiplex-7060.sh.intel.com ([10.239.159.36])
-  by fmsmga008.fm.intel.com with ESMTP; 01 Dec 2019 23:03:51 -0800
-From:   Tao Xu <tao3.xu@intel.com>
-To:     rafael.j.wysocki@intel.com, lenb@kernel.org, keith.busch@intel.com,
-        gregkh@linuxfoundation.org, dan.j.williams@intel.com,
-        dave.hansen@linux.intel.com
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tao Xu <tao3.xu@intel.com>
-Subject: [PATCH] ACPI/HMAT: Fix the parsing of Cache Associativity and Write Policy
-Date:   Mon,  2 Dec 2019 15:03:48 +0800
-Message-Id: <20191202070348.32148-1-tao3.xu@intel.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 2 Dec 2019 02:07:55 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:50058 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725914AbfLBHHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 02:07:55 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 675DD3D046B9D697FAD3;
+        Mon,  2 Dec 2019 15:07:49 +0800 (CST)
+Received: from [127.0.0.1] (10.65.95.32) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Mon, 2 Dec 2019
+ 15:07:41 +0800
+Subject: Re: [RFC v3 0/5] perf tools: Add support for some spe events and
+ precise ip
+To:     Tan Xiaojun <tanxiaojun@huawei.com>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
+        <namhyung@kernel.org>, <ak@linux.intel.com>,
+        <adrian.hunter@intel.com>, <yao.jin@linux.intel.com>,
+        <tmricht@linux.ibm.com>, <brueckner@linux.ibm.com>,
+        <songliubraving@fb.com>, <gregkh@linuxfoundation.org>,
+        <kim.phillips@arm.com>, <James.Clark@arm.com>,
+        <jeremy.linton@arm.com>
+References: <20191123101118.12635-1-tanxiaojun@huawei.com>
+CC:     <gengdongjiu@huawei.com>, <wxf.wang@hisilicon.com>,
+        <liwei391@huawei.com>, <huawei.libin@huawei.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+From:   Qi Liu <liuqi115@hisilicon.com>
+Message-ID: <07717318-ddab-e57d-e356-52dff683ac76@hisilicon.com>
+Date:   Mon, 2 Dec 2019 15:07:40 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191123101118.12635-1-tanxiaojun@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.95.32]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In chapter 5.2.27.5, Table 5-147: Field "Cache Attributes" of
-ACPI 6.3 spec: 0 is "None", 1 is "Direct Mapped", 2 is "Complex Cache
-Indexing" for Cache Associativity; 0 is "None", 1 is "Write Back",
-2 is "Write Through" for Write Policy.
 
-Signed-off-by: Tao Xu <tao3.xu@intel.com>
----
- drivers/acpi/numa/hmat.c | 4 ++--
- include/linux/node.h     | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+Tested-by: Qi Liu <liuqi115@hisilicon.com>
 
-diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-index 2c32cfb72370..719d0279563d 100644
---- a/drivers/acpi/numa/hmat.c
-+++ b/drivers/acpi/numa/hmat.c
-@@ -383,7 +383,7 @@ static __init int hmat_parse_cache(union acpi_subtable_headers *header,
- 		break;
- 	case ACPI_HMAT_CA_NONE:
- 	default:
--		tcache->cache_attrs.indexing = NODE_CACHE_OTHER;
-+		tcache->cache_attrs.indexing = NODE_CACHE_NONE;
- 		break;
- 	}
- 
-@@ -396,7 +396,7 @@ static __init int hmat_parse_cache(union acpi_subtable_headers *header,
- 		break;
- 	case ACPI_HMAT_CP_NONE:
- 	default:
--		tcache->cache_attrs.write_policy = NODE_CACHE_WRITE_OTHER;
-+		tcache->cache_attrs.write_policy = NODE_CACHE_WRITE_NONE;
- 		break;
- 	}
- 	list_add_tail(&tcache->node, &target->caches);
-diff --git a/include/linux/node.h b/include/linux/node.h
-index 4866f32a02d8..6dbd764d09ce 100644
---- a/include/linux/node.h
-+++ b/include/linux/node.h
-@@ -36,15 +36,15 @@ struct node_hmem_attrs {
- };
- 
- enum cache_indexing {
-+	NODE_CACHE_NONE,
- 	NODE_CACHE_DIRECT_MAP,
- 	NODE_CACHE_INDEXED,
--	NODE_CACHE_OTHER,
- };
- 
- enum cache_write_policy {
-+	NODE_CACHE_WRITE_NONE,
- 	NODE_CACHE_WRITE_BACK,
- 	NODE_CACHE_WRITE_THROUGH,
--	NODE_CACHE_WRITE_OTHER,
- };
- 
- /**
--- 
-2.20.1
+
+On 2019/11/23 18:11, Tan Xiaojun wrote:
+> After the commit ffd3d18c20b8 ("perf tools: Add ARM Statistical
+> Profiling Extensions (SPE) support") is merged, "perf record" and
+> "perf report --dump-raw-trace" have been supported. However, the
+> raw data that is dumped cannot be used without parsing.
+> 
+> This patchset is to improve the "perf report" support for spe, and
+> further process the data. Currently, support for the three events
+> of llc-miss, tlb-miss, branch-miss and remote-access is added.
+> 
+> v1->v2:
+> Some cleanup and bugfix fixes were made, and support for the precise
+> ip of branch-misses was added. Thanks for the suggestions of Jeremy
+> and James.
+> 
+> v2->v3:
+> Mainly add four spe precise ip events, you can see through perf list.
+> More details in [5/5].
+> 
+> Tan Xiaojun (5):
+>   perf tools: Move arm-spe-pkt-decoder.h/c to the new dir
+>   perf tools: Add support for "report" for some spe events
+>   perf report: Add --spe options for arm-spe
+>   drivers: perf: add some arm spe events
+>   perf tools: Add support to process multi spe events
+> 
+>  drivers/perf/arm_spe_pmu.c                    |  44 +
+>  tools/perf/Documentation/perf-report.txt      |  10 +
+>  tools/perf/arch/arm64/util/arm-spe.c          |  47 +-
+>  tools/perf/builtin-report.c                   |   5 +
+>  tools/perf/util/Build                         |   2 +-
+>  tools/perf/util/arm-spe-decoder/Build         |   1 +
+>  .../util/arm-spe-decoder/arm-spe-decoder.c    | 225 +++++
+>  .../util/arm-spe-decoder/arm-spe-decoder.h    |  66 ++
+>  .../arm-spe-pkt-decoder.c                     |   0
+>  .../arm-spe-pkt-decoder.h                     |   2 +
+>  tools/perf/util/arm-spe.c                     | 771 +++++++++++++++++-
+>  tools/perf/util/arm-spe.h                     |  20 +
+>  tools/perf/util/auxtrace.c                    |  49 ++
+>  tools/perf/util/auxtrace.h                    |  29 +
+>  tools/perf/util/session.h                     |   2 +
+>  15 files changed, 1231 insertions(+), 42 deletions(-)
+>  create mode 100644 tools/perf/util/arm-spe-decoder/Build
+>  create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+>  create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+>  rename tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.c (100%)
+>  rename tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.h (96%)
+> 
 
