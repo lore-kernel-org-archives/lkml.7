@@ -2,117 +2,220 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5DCC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF24BC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FAED206F0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A274720715
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:02:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=osandov-com.20150623.gappssmtp.com header.i=@osandov-com.20150623.gappssmtp.com header.b="wbLoAhpI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbfLBSAg (ORCPT
+        id S1727869AbfLBSCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 13:00:36 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25652 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727778AbfLBSAf (ORCPT
+        Mon, 2 Dec 2019 13:02:41 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:38064 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727670AbfLBSCl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 13:00:35 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB2HvrvO070194
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 13:00:34 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wm6g8rqvu-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 13:00:33 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 2 Dec 2019 18:00:31 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 2 Dec 2019 18:00:26 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB2I0Pv657737372
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Dec 2019 18:00:25 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9CFC1A4055;
-        Mon,  2 Dec 2019 18:00:24 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 69042A4051;
-        Mon,  2 Dec 2019 18:00:23 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.147.107])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  2 Dec 2019 18:00:23 +0000 (GMT)
-Subject: Re: [PATCH v0 1/2] IMA: Defined queue functions
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org, Janne Karhunen <janne.karhunen@gmail.com>
-Date:   Mon, 02 Dec 2019 13:00:22 -0500
-In-Reply-To: <ea2fafb8-a97f-5365-debd-d90143e549bf@linux.microsoft.com>
-References: <20191127025212.3077-1-nramas@linux.microsoft.com>
-         <20191127025212.3077-2-nramas@linux.microsoft.com>
-         <1574887137.4793.346.camel@linux.ibm.com>
-         <ea2fafb8-a97f-5365-debd-d90143e549bf@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Mon, 2 Dec 2019 13:02:41 -0500
+Received: by mail-pj1-f65.google.com with SMTP id l4so54159pjt.5
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 10:02:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=osandov-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ax7AJFFSOuj9/KpKJurbPo//Js3m9VypMUOlCMjR8xE=;
+        b=wbLoAhpI3zpBjumoLAzDXqBKlWvYOrMKC+8KTct/2ORkshG4rYi/a7x0z9skQ+UF+i
+         pFG4vX6HeqoW5shQ3FiUohzpdRU54TytrpO3JqKdf2AzV4CO2ZKFhOXi4N0pdPDzVa3b
+         EK7+VjR8fII3C+LF2LTpyUG7oBhNIoyUqYMjlsYyBIBmsTEjISbd55+eN+XOv3LPbdgb
+         ZdHldWIhYaOGA27oa3KJENfT300RwkByoHZvHrrq4zlMhaC6lHKHUb/w6rscWDMkJRjl
+         MhB/LESi9BWJS3kp/qKn4Sa57vOP49mRCFKpCSkvEzJsaydTg30Gl2vIDLvQ5e8zlQ3Z
+         hLKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ax7AJFFSOuj9/KpKJurbPo//Js3m9VypMUOlCMjR8xE=;
+        b=ElnbKVBKrz9zPbgv66tb8cinhacRmtmyWvUa7hOtlHFOKDOzgfl0U6EjVegDciFe10
+         ZCrKquGDiUf0pWup2klma9HNtiAXFRYpKrZvPjnMXabq/uy35nVVQH3sO/aY+8Yxl8DS
+         oXGrvfRPNkAg5UMHmnoJqPJhEgugMTgUnKsHZBbcyGf+wy1Xdmb2dEeeaMTp81juquC6
+         YBkoY6rye1sS5a9m84/sbIFS5NxhW7juj9WV0KowzhBstoaPQ+ql7FnXAOHNZCC15xLS
+         BFcEtc05RCB/yvgZ81FieYtmqh0tsvnFVfUgycFT7zzl3Ow1y/jnI1NjbyGPcc9jjamd
+         tRlg==
+X-Gm-Message-State: APjAAAX/f7Rxxi5a2mjjqWESzvmf7KyIVhtyjd6hlDJUIEliw7gereB+
+        iLK3v6Wq0ZXx6cFR4KuuGxjJHA==
+X-Google-Smtp-Source: APXvYqxzUG4s6dG8gjJ4GL72W2YEuag/dwxvNlJ9amBgYfwIEuVydQEN4ez+apZH69m6dQEaX5APNg==
+X-Received: by 2002:a17:90a:aa96:: with SMTP id l22mr341827pjq.112.1575309760080;
+        Mon, 02 Dec 2019 10:02:40 -0800 (PST)
+Received: from vader.thefacebook.com ([2620:10d:c090:200::3:4fcf])
+        by smtp.gmail.com with ESMTPSA id x2sm238373pgc.67.2019.12.02.10.02.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 10:02:39 -0800 (PST)
+From:   Omar Sandoval <osandov@osandov.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] x86: define arch_crash_save_vmcoreinfo() if CONFIG_CRASH_CORE=y
+Date:   Mon,  2 Dec 2019 10:02:29 -0800
+Message-Id: <9e9eb78c157d26d80f8781f8ce0e088fd12120b4.1575309711.git.osandov@fb.com>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19120218-0008-0000-0000-0000033BD2C2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120218-0009-0000-0000-00004A5AEA58
-Message-Id: <1575309622.4793.413.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-02_04:2019-11-29,2019-12-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- lowpriorityscore=0 bulkscore=0 phishscore=0 priorityscore=1501
- impostorscore=0 suspectscore=0 spamscore=0 mlxscore=0 adultscore=0
- mlxlogscore=922 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912020152
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-11-27 at 13:11 -0800, Lakshmi Ramasubramanian wrote:
-> On 11/27/19 12:38 PM, Mimi Zohar wrote:
+From: Omar Sandoval <osandov@fb.com>
 
-> > I'm not sure why you want to differentiate between IMA being
-> > initialized vs. an empty policy.  I would think you would want to know
-> > when a custom policy has been loaded.
-> 
-> You are right - When custom ima policy rules are loaded (in 
-> ima_update_policy() function), ima_process_queued_keys_for_measurement() 
-> function is called to process queued keys.
-> 
-> The flag ima_process_keys_for_measurement is set to true in 
-> ima_process_queued_keys_for_measurement(). And, subsequent keys are 
-> processed immediately.
-> 
-> Please take a look at ima_process_queued_keys_for_measurement() in this 
-> patch (v0 1/2) and the ima_update_policy() change in "PATCH v0 2/2".
+kernel/crash_core.c calls arch_crash_save_vmcoreinfo() to get
+arch-specific bits for vmcoreinfo. If it is not defined, then it has a
+no-op fallback. kernel/crash_core.c is gated behind CONFIG_CRASH_CORE.
+However, x86 defines arch_crash_save_vmcoreinfo() in
+arch/x86/kernel/machine_kexec_*.c, which is gated behind
+CONFIG_KEXEC_CORE. So, a kernel with CONFIG_CRASH_CORE=y and
+CONFIG_KEXEC_CORE=n uses the fallback and gets incomplete vmcoreinfo
+data, which can confuse applications reading vmcoreinfo from
+/proc/kcore.
 
-ima_update_policy() is called from multiple places.  Initially, it is
-called before a custom policy has been loaded.  The call to
-ima_process_queued_keys_for_measurement() needs to be moved to within 
-the test, otherwise it runs the risk of dropping "key" measurements.
+Fix it by moving arch_crash_save_vmcoreinfo() into two new
+arch/x86/kernel/crash_core_*.c files, which are gated behind
+CONFIG_CRASH_CORE.
 
-All the queued keys need to be processed at the same time.  Afterwards
-the queue should be deleted.  Unfortunately, the current queue locking
-assumes ima_process_queued_keys_for_measurement() is called multiple
-times.
+Signed-off-by: Omar Sandoval <osandov@fb.com>
+---
+Based on Linus's tree.
 
-Perhaps using the RCU method of walking lists would help.  I need to
-think about it some more.
+ arch/x86/kernel/Makefile           |  1 +
+ arch/x86/kernel/crash_core_32.c    | 17 +++++++++++++++++
+ arch/x86/kernel/crash_core_64.c    | 24 ++++++++++++++++++++++++
+ arch/x86/kernel/machine_kexec_32.c | 12 ------------
+ arch/x86/kernel/machine_kexec_64.c | 19 -------------------
+ 5 files changed, 42 insertions(+), 31 deletions(-)
+ create mode 100644 arch/x86/kernel/crash_core_32.c
+ create mode 100644 arch/x86/kernel/crash_core_64.c
 
-Mimi
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index 6175e370ee4a..9b294c13809a 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -94,6 +94,7 @@ obj-$(CONFIG_FUNCTION_TRACER)	+= ftrace_$(BITS).o
+ obj-$(CONFIG_FUNCTION_GRAPH_TRACER) += ftrace.o
+ obj-$(CONFIG_FTRACE_SYSCALLS)	+= ftrace.o
+ obj-$(CONFIG_X86_TSC)		+= trace_clock.o
++obj-$(CONFIG_CRASH_CORE)	+= crash_core_$(BITS).o
+ obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec_$(BITS).o
+ obj-$(CONFIG_KEXEC_CORE)	+= relocate_kernel_$(BITS).o crash.o
+ obj-$(CONFIG_KEXEC_FILE)	+= kexec-bzimage64.o
+diff --git a/arch/x86/kernel/crash_core_32.c b/arch/x86/kernel/crash_core_32.c
+new file mode 100644
+index 000000000000..c0159a7bca6d
+--- /dev/null
++++ b/arch/x86/kernel/crash_core_32.c
+@@ -0,0 +1,17 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++#include <linux/crash_core.h>
++
++#include <asm/pgtable.h>
++#include <asm/setup.h>
++
++void arch_crash_save_vmcoreinfo(void)
++{
++#ifdef CONFIG_NUMA
++	VMCOREINFO_SYMBOL(node_data);
++	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
++#endif
++#ifdef CONFIG_X86_PAE
++	VMCOREINFO_CONFIG(X86_PAE);
++#endif
++}
+diff --git a/arch/x86/kernel/crash_core_64.c b/arch/x86/kernel/crash_core_64.c
+new file mode 100644
+index 000000000000..845a57eb4eb7
+--- /dev/null
++++ b/arch/x86/kernel/crash_core_64.c
+@@ -0,0 +1,24 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++#include <linux/crash_core.h>
++
++#include <asm/pgtable.h>
++#include <asm/setup.h>
++
++void arch_crash_save_vmcoreinfo(void)
++{
++	u64 sme_mask = sme_me_mask;
++
++	VMCOREINFO_NUMBER(phys_base);
++	VMCOREINFO_SYMBOL(init_top_pgt);
++	vmcoreinfo_append_str("NUMBER(pgtable_l5_enabled)=%d\n",
++			      pgtable_l5_enabled());
++
++#ifdef CONFIG_NUMA
++	VMCOREINFO_SYMBOL(node_data);
++	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
++#endif
++	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
++	VMCOREINFO_NUMBER(KERNEL_IMAGE_SIZE);
++	VMCOREINFO_NUMBER(sme_mask);
++}
+diff --git a/arch/x86/kernel/machine_kexec_32.c b/arch/x86/kernel/machine_kexec_32.c
+index 7b45e8daad22..02bddfc122a4 100644
+--- a/arch/x86/kernel/machine_kexec_32.c
++++ b/arch/x86/kernel/machine_kexec_32.c
+@@ -250,15 +250,3 @@ void machine_kexec(struct kimage *image)
+ 
+ 	__ftrace_enabled_restore(save_ftrace_enabled);
+ }
+-
+-void arch_crash_save_vmcoreinfo(void)
+-{
+-#ifdef CONFIG_NUMA
+-	VMCOREINFO_SYMBOL(node_data);
+-	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
+-#endif
+-#ifdef CONFIG_X86_PAE
+-	VMCOREINFO_CONFIG(X86_PAE);
+-#endif
+-}
+-
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 16e125a50b33..ad5cdd6a5f23 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -398,25 +398,6 @@ void machine_kexec(struct kimage *image)
+ 	__ftrace_enabled_restore(save_ftrace_enabled);
+ }
+ 
+-void arch_crash_save_vmcoreinfo(void)
+-{
+-	u64 sme_mask = sme_me_mask;
+-
+-	VMCOREINFO_NUMBER(phys_base);
+-	VMCOREINFO_SYMBOL(init_top_pgt);
+-	vmcoreinfo_append_str("NUMBER(pgtable_l5_enabled)=%d\n",
+-			pgtable_l5_enabled());
+-
+-#ifdef CONFIG_NUMA
+-	VMCOREINFO_SYMBOL(node_data);
+-	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
+-#endif
+-	vmcoreinfo_append_str("KERNELOFFSET=%lx\n",
+-			      kaslr_offset());
+-	VMCOREINFO_NUMBER(KERNEL_IMAGE_SIZE);
+-	VMCOREINFO_NUMBER(sme_mask);
+-}
+-
+ /* arch-dependent functionality related to kexec file-based syscall */
+ 
+ #ifdef CONFIG_KEXEC_FILE
+-- 
+2.24.0
 
