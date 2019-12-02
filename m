@@ -2,160 +2,115 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F097C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5350BC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53D9B20705
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 275FE20881
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:12:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ooyr+wvN"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="ic8mng/k";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UFQ+ITXG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726079AbfLBGH0 (ORCPT
+        id S1726263AbfLBGMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 01:07:26 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:45366 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725852AbfLBGH0 (ORCPT
+        Mon, 2 Dec 2019 01:12:52 -0500
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:41067 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725807AbfLBGMw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 01:07:26 -0500
-X-UUID: ad48ffc2b44a4ade856538f4f7f5309c-20191202
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=1hVDXQnEXhl488d24pN92x7M9sMocqCpXtujHufwujQ=;
-        b=ooyr+wvN/CzaisrsNJylXVzjAIEBxbERIjGlZFXs3PQSGD6omi/ffFnUUpG5neWtC+6adlVo584rAScqbQPgjzXshoUDXIDiYJ0OJDDSwiScpJfiZnFr6IASIO6eV6E5pRw01Lh32bWmSkvM/lDgEuBy6h4XDlQwvGP/8b1u+/I=;
-X-UUID: ad48ffc2b44a4ade856538f4f7f5309c-20191202
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1110865870; Mon, 02 Dec 2019 14:07:19 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 2 Dec 2019 14:07:07 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 2 Dec 2019 14:07:03 +0800
-Message-ID: <1575266838.26513.0.camel@mtksdaap41>
-Subject: Re: [PATCH v1 2/6] drm/mediatek: use DRM core's atomic commit helper
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-CC:     David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        YT Shen <yt.shen@mediatek.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>, <tfiga@chromium.org>,
-        <drinkcat@chromium.org>, <linux-kernel@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>
-Date:   Mon, 2 Dec 2019 14:07:18 +0800
-In-Reply-To: <20191128024238.9399-3-bibby.hsieh@mediatek.com>
-References: <20191128024238.9399-1-bibby.hsieh@mediatek.com>
-         <20191128024238.9399-3-bibby.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 2 Dec 2019 01:12:52 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 85EBE22639;
+        Mon,  2 Dec 2019 01:12:50 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 02 Dec 2019 01:12:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm1; bh=0RjErlsd2BgGPzWKY9035wj5+w
+        1sayMAH/KmpcDz7N0=; b=ic8mng/k1DqnwT6Gl3dHcq25QjL4puHw+CyRFrcjRO
+        SSY7IGpT8mmRmFsxz2qYv3Xc3b9vlyT4Xkfm99QJimK0YafQ+8HOHtAuZoqbNeCZ
+        G6u6uerhmJlfdm5cXkRHA+gZ3LjfIn0nzwUQW4PIRiFBXHXBFjuCm2+f/msR5ObV
+        /dod50vtchx47qZAvTxev57NgvkjflpWcE4NLA8KCW0Rd1iHWnFNCHBtRY/Rbpz8
+        s079MHvJo8fOtdV9CIzjlqTFeLxiwExMHhNBKnPMew7u9Na6/nb5L9FPqc4gOmFZ
+        laozeS1WEdrbw+/gAibQSjN2I1nvgcvhouLFBF/WjkjQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=0RjErlsd2BgGPzWKY
+        9035wj5+w1sayMAH/KmpcDz7N0=; b=UFQ+ITXGYvmYQjvyDNA2IYiO7w2MnBI1K
+        7x9B6Q0St7fwbUcJ4jsJuBKjdZxohm5U+ghYDuMkVWYnFyXPOFKINrbCKBZon5qP
+        RYkWFcK8cgT17qA+S3Ind7WAKDZ9Gpo6M6A4xHtTvlF/Czsugw8ZDXrxMYDf746t
+        1YXSc53OO7ZiM8d1VxLR7CJx5m7ztoNs2CTvVXc8NC6AciC/7A5qznHxBJIB6/Tv
+        1kllmuxdxY08QpsYdwPRM8gOIVaRp1WxYh+HFbpxXebk3L+oLRtLAXwSrrVTDXwH
+        xSVnOW8yl8mg+kAPJt63ldKiMlnKvk0eT+aZnfcdFGbUCUBcOGy1w==
+X-ME-Sender: <xms:YKvkXTtUo9MuWIb4KRGwNzRSB6KEmk60U2YiyaFwcq6-DNMnor8gww>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudejgedgleegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
+    dttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegrjhdr
+    ihgurdgruheqnecukfhppeduudekrddvuddurdelvddrudefnecurfgrrhgrmhepmhgrih
+    hlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgvrhfuihiivgep
+    td
+X-ME-Proxy: <xmx:YKvkXQ1ffOumc3312OXu_BO_dhduMphO8uo0uIZE0SeR5zU9UVX1xQ>
+    <xmx:YKvkXbO3ESr9sYNGBCOALc6hnrwD1rbGdkvonL0h7minx4vzuGinNQ>
+    <xmx:YKvkXQUez-46vBL-lcju1Yhmy76kz6jjcdnItmBN6EiH85gXdEvmJA>
+    <xmx:YqvkXdbwbi_GhewCX739IsuQ7ztsMluU8SB46CIkruCFZDo5Y3r35w>
+Received: from mistburn.lan (unknown [118.211.92.13])
+        by mail.messagingengine.com (Postfix) with ESMTPA id AE8D080062;
+        Mon,  2 Dec 2019 01:12:45 -0500 (EST)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     linux-gpio@vger.kernel.org
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        joel@jms.id.au, linux-aspeed@lists.ozlabs.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/7] pinctrl: aspeed-g6: USB and pinconf support
+Date:   Mon,  2 Dec 2019 16:44:25 +1030
+Message-Id: <20191202061432.3996-1-andrew@aj.id.au>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEJpYmJ5Og0KDQpPbiBUaHUsIDIwMTktMTEtMjggYXQgMTA6NDIgKzA4MDAsIEJpYmJ5IEhz
-aWVoIHdyb3RlOg0KPiBUaGUgRFJNIGNvcmUgYXRvbWljIGhlbHBlciBub3cgc3VwcG9ydHMgYXN5
-bmNocm9ub3VzIGNvbW1pdHMgbmF0aXZlbHkuDQo+IFRoZSBjdXN0b20gZHJtIGltcGxlbWVudGF0
-aW9uIGlzbid0IG5lZWRlZCBhbnltb3JlLCByZW1vdmUgaXQuDQoNClJldmlld2VkLWJ5OiBDSyBI
-dSA8Y2suaHVAbWVkaWF0ZWsuY29tPg0KDQpSZWdhcmRzLA0KQ0sNCg0KPiANCj4gU2lnbmVkLW9m
-Zi1ieTogQmliYnkgSHNpZWggPGJpYmJ5LmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gLS0tDQo+ICBk
-cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYyB8IDg2ICsrLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuaCB8
-ICA3IC0tLQ0KPiAgMiBmaWxlcyBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDg4IGRlbGV0aW9u
-cygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
-X2Rydi5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmMNCj4gaW5kZXgg
-NjU4OGRjNmRkNWUzLi4xNmU1NzcxZDE4MmUgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2Ry
-bS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
-ay9tdGtfZHJtX2Rydi5jDQo+IEBAIC0zNiw4OSArMzYsMTQgQEANCj4gICNkZWZpbmUgRFJJVkVS
-X01BSk9SIDENCj4gICNkZWZpbmUgRFJJVkVSX01JTk9SIDANCj4gIA0KPiAtc3RhdGljIHZvaWQg
-bXRrX2F0b21pY19zY2hlZHVsZShzdHJ1Y3QgbXRrX2RybV9wcml2YXRlICpwcml2YXRlLA0KPiAt
-CQkJCXN0cnVjdCBkcm1fYXRvbWljX3N0YXRlICpzdGF0ZSkNCj4gLXsNCj4gLQlwcml2YXRlLT5j
-b21taXQuc3RhdGUgPSBzdGF0ZTsNCj4gLQlzY2hlZHVsZV93b3JrKCZwcml2YXRlLT5jb21taXQu
-d29yayk7DQo+IC19DQo+IC0NCj4gLXN0YXRpYyB2b2lkIG10a19hdG9taWNfY29tcGxldGUoc3Ry
-dWN0IG10a19kcm1fcHJpdmF0ZSAqcHJpdmF0ZSwNCj4gLQkJCQlzdHJ1Y3QgZHJtX2F0b21pY19z
-dGF0ZSAqc3RhdGUpDQo+IC17DQo+IC0Jc3RydWN0IGRybV9kZXZpY2UgKmRybSA9IHByaXZhdGUt
-PmRybTsNCj4gLQ0KPiAtCWRybV9hdG9taWNfaGVscGVyX3dhaXRfZm9yX2ZlbmNlcyhkcm0sIHN0
-YXRlLCBmYWxzZSk7DQo+IC0NCj4gLQkvKg0KPiAtCSAqIE1lZGlhdGVrIGRybSBzdXBwb3J0cyBy
-dW50aW1lIFBNLCBzbyBwbGFuZSByZWdpc3RlcnMgY2Fubm90IGJlDQo+IC0JICogd3JpdHRlbiB3
-aGVuIHRoZWlyIGNydGMgaXMgZGlzYWJsZWQuDQo+IC0JICoNCj4gLQkgKiBUaGUgY29tbWVudCBm
-b3IgZHJtX2F0b21pY19oZWxwZXJfY29tbWl0IHN0YXRlczoNCj4gLQkgKiAgICAgRm9yIGRyaXZl
-cnMgc3VwcG9ydGluZyBydW50aW1lIFBNIHRoZSByZWNvbW1lbmRlZCBzZXF1ZW5jZSBpcw0KPiAt
-CSAqDQo+IC0JICogICAgIGRybV9hdG9taWNfaGVscGVyX2NvbW1pdF9tb2Rlc2V0X2Rpc2FibGVz
-KGRldiwgc3RhdGUpOw0KPiAtCSAqICAgICBkcm1fYXRvbWljX2hlbHBlcl9jb21taXRfbW9kZXNl
-dF9lbmFibGVzKGRldiwgc3RhdGUpOw0KPiAtCSAqICAgICBkcm1fYXRvbWljX2hlbHBlcl9jb21t
-aXRfcGxhbmVzKGRldiwgc3RhdGUsDQo+IC0JICogICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgRFJNX1BMQU5FX0NPTU1JVF9BQ1RJVkVfT05MWSk7DQo+IC0JICoNCj4gLQkgKiBT
-ZWUgdGhlIGtlcm5lbGRvYyBlbnRyaWVzIGZvciB0aGVzZSB0aHJlZSBmdW5jdGlvbnMgZm9yIG1v
-cmUgZGV0YWlscy4NCj4gLQkgKi8NCj4gLQlkcm1fYXRvbWljX2hlbHBlcl9jb21taXRfbW9kZXNl
-dF9kaXNhYmxlcyhkcm0sIHN0YXRlKTsNCj4gLQlkcm1fYXRvbWljX2hlbHBlcl9jb21taXRfbW9k
-ZXNldF9lbmFibGVzKGRybSwgc3RhdGUpOw0KPiAtCWRybV9hdG9taWNfaGVscGVyX2NvbW1pdF9w
-bGFuZXMoZHJtLCBzdGF0ZSwNCj4gLQkJCQkJRFJNX1BMQU5FX0NPTU1JVF9BQ1RJVkVfT05MWSk7
-DQo+IC0NCj4gLQlkcm1fYXRvbWljX2hlbHBlcl93YWl0X2Zvcl92YmxhbmtzKGRybSwgc3RhdGUp
-Ow0KPiAtDQo+IC0JZHJtX2F0b21pY19oZWxwZXJfY2xlYW51cF9wbGFuZXMoZHJtLCBzdGF0ZSk7
-DQo+IC0JZHJtX2F0b21pY19zdGF0ZV9wdXQoc3RhdGUpOw0KPiAtfQ0KPiAtDQo+IC1zdGF0aWMg
-dm9pZCBtdGtfYXRvbWljX3dvcmsoc3RydWN0IHdvcmtfc3RydWN0ICp3b3JrKQ0KPiAtew0KPiAt
-CXN0cnVjdCBtdGtfZHJtX3ByaXZhdGUgKnByaXZhdGUgPSBjb250YWluZXJfb2Yod29yaywNCj4g
-LQkJCXN0cnVjdCBtdGtfZHJtX3ByaXZhdGUsIGNvbW1pdC53b3JrKTsNCj4gLQ0KPiAtCW10a19h
-dG9taWNfY29tcGxldGUocHJpdmF0ZSwgcHJpdmF0ZS0+Y29tbWl0LnN0YXRlKTsNCj4gLX0NCj4g
-LQ0KPiAtc3RhdGljIGludCBtdGtfYXRvbWljX2NvbW1pdChzdHJ1Y3QgZHJtX2RldmljZSAqZHJt
-LA0KPiAtCQkJICAgICBzdHJ1Y3QgZHJtX2F0b21pY19zdGF0ZSAqc3RhdGUsDQo+IC0JCQkgICAg
-IGJvb2wgYXN5bmMpDQo+IC17DQo+IC0Jc3RydWN0IG10a19kcm1fcHJpdmF0ZSAqcHJpdmF0ZSA9
-IGRybS0+ZGV2X3ByaXZhdGU7DQo+IC0JaW50IHJldDsNCj4gLQ0KPiAtCXJldCA9IGRybV9hdG9t
-aWNfaGVscGVyX3ByZXBhcmVfcGxhbmVzKGRybSwgc3RhdGUpOw0KPiAtCWlmIChyZXQpDQo+IC0J
-CXJldHVybiByZXQ7DQo+IC0NCj4gLQltdXRleF9sb2NrKCZwcml2YXRlLT5jb21taXQubG9jayk7
-DQo+IC0JZmx1c2hfd29yaygmcHJpdmF0ZS0+Y29tbWl0LndvcmspOw0KPiAtDQo+IC0JcmV0ID0g
-ZHJtX2F0b21pY19oZWxwZXJfc3dhcF9zdGF0ZShzdGF0ZSwgdHJ1ZSk7DQo+IC0JaWYgKHJldCkg
-ew0KPiAtCQltdXRleF91bmxvY2soJnByaXZhdGUtPmNvbW1pdC5sb2NrKTsNCj4gLQkJZHJtX2F0
-b21pY19oZWxwZXJfY2xlYW51cF9wbGFuZXMoZHJtLCBzdGF0ZSk7DQo+IC0JCXJldHVybiByZXQ7
-DQo+IC0JfQ0KPiAtDQo+IC0JZHJtX2F0b21pY19zdGF0ZV9nZXQoc3RhdGUpOw0KPiAtCWlmIChh
-c3luYykNCj4gLQkJbXRrX2F0b21pY19zY2hlZHVsZShwcml2YXRlLCBzdGF0ZSk7DQo+IC0JZWxz
-ZQ0KPiAtCQltdGtfYXRvbWljX2NvbXBsZXRlKHByaXZhdGUsIHN0YXRlKTsNCj4gLQ0KPiAtCW11
-dGV4X3VubG9jaygmcHJpdmF0ZS0+Y29tbWl0LmxvY2spOw0KPiAtDQo+IC0JcmV0dXJuIDA7DQo+
-IC19DQo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9tb2RlX2NvbmZpZ19oZWxwZXJfZnVuY3Mg
-bXRrX2RybV9tb2RlX2NvbmZpZ19oZWxwZXJzID0gew0KPiArCS5hdG9taWNfY29tbWl0X3RhaWwg
-PSBkcm1fYXRvbWljX2hlbHBlcl9jb21taXRfdGFpbF9ycG0sDQo+ICt9Ow0KPiAgDQo+ICBzdGF0
-aWMgY29uc3Qgc3RydWN0IGRybV9tb2RlX2NvbmZpZ19mdW5jcyBtdGtfZHJtX21vZGVfY29uZmln
-X2Z1bmNzID0gew0KPiAgCS5mYl9jcmVhdGUgPSBtdGtfZHJtX21vZGVfZmJfY3JlYXRlLA0KPiAg
-CS5hdG9taWNfY2hlY2sgPSBkcm1fYXRvbWljX2hlbHBlcl9jaGVjaywNCj4gLQkuYXRvbWljX2Nv
-bW1pdCA9IG10a19hdG9taWNfY29tbWl0LA0KPiArCS5hdG9taWNfY29tbWl0ID0gZHJtX2F0b21p
-Y19oZWxwZXJfY29tbWl0LA0KPiAgfTsNCj4gIA0KPiAgc3RhdGljIGNvbnN0IGVudW0gbXRrX2Rk
-cF9jb21wX2lkIG10MjcwMV9tdGtfZGRwX21haW5bXSA9IHsNCj4gQEAgLTI2NSw2ICsxOTAsNyBA
-QCBzdGF0aWMgaW50IG10a19kcm1fa21zX2luaXQoc3RydWN0IGRybV9kZXZpY2UgKmRybSkNCj4g
-IAlkcm0tPm1vZGVfY29uZmlnLm1heF93aWR0aCA9IDQwOTY7DQo+ICAJZHJtLT5tb2RlX2NvbmZp
-Zy5tYXhfaGVpZ2h0ID0gNDA5NjsNCj4gIAlkcm0tPm1vZGVfY29uZmlnLmZ1bmNzID0gJm10a19k
-cm1fbW9kZV9jb25maWdfZnVuY3M7DQo+ICsJZHJtLT5tb2RlX2NvbmZpZy5oZWxwZXJfcHJpdmF0
-ZSA9ICZtdGtfZHJtX21vZGVfY29uZmlnX2hlbHBlcnM7DQo+ICANCj4gIAlyZXQgPSBjb21wb25l
-bnRfYmluZF9hbGwoZHJtLT5kZXYsIGRybSk7DQo+ICAJaWYgKHJldCkNCj4gQEAgLTU0MCw4ICs0
-NjYsNiBAQCBzdGF0aWMgaW50IG10a19kcm1fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAq
-cGRldikNCj4gIAlpZiAoIXByaXZhdGUpDQo+ICAJCXJldHVybiAtRU5PTUVNOw0KPiAgDQo+IC0J
-bXV0ZXhfaW5pdCgmcHJpdmF0ZS0+Y29tbWl0LmxvY2spOw0KPiAtCUlOSVRfV09SSygmcHJpdmF0
-ZS0+Y29tbWl0LndvcmssIG10a19hdG9taWNfd29yayk7DQo+ICAJcHJpdmF0ZS0+ZGF0YSA9IG9m
-X2RldmljZV9nZXRfbWF0Y2hfZGF0YShkZXYpOw0KPiAgDQo+ICAJbWVtID0gcGxhdGZvcm1fZ2V0
-X3Jlc291cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAwKTsNCj4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5oIGIvZHJpdmVycy9ncHUvZHJtL21lZGlh
-dGVrL210a19kcm1fZHJ2LmgNCj4gaW5kZXggYjZhODI3MjhkNTYzLi45ZjRjZTYwMTc0ZjYgMTAw
-NjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5oDQo+ICsr
-KyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5oDQo+IEBAIC00NiwxMyAr
-NDYsNiBAQCBzdHJ1Y3QgbXRrX2RybV9wcml2YXRlIHsNCj4gIAlzdHJ1Y3QgZGV2aWNlX25vZGUg
-KmNvbXBfbm9kZVtERFBfQ09NUE9ORU5UX0lEX01BWF07DQo+ICAJc3RydWN0IG10a19kZHBfY29t
-cCAqZGRwX2NvbXBbRERQX0NPTVBPTkVOVF9JRF9NQVhdOw0KPiAgCWNvbnN0IHN0cnVjdCBtdGtf
-bW1zeXNfZHJpdmVyX2RhdGEgKmRhdGE7DQo+IC0NCj4gLQlzdHJ1Y3Qgew0KPiAtCQlzdHJ1Y3Qg
-ZHJtX2F0b21pY19zdGF0ZSAqc3RhdGU7DQo+IC0JCXN0cnVjdCB3b3JrX3N0cnVjdCB3b3JrOw0K
-PiAtCQlzdHJ1Y3QgbXV0ZXggbG9jazsNCj4gLQl9IGNvbW1pdDsNCj4gLQ0KPiAgCXN0cnVjdCBk
-cm1fYXRvbWljX3N0YXRlICpzdXNwZW5kX3N0YXRlOw0KPiAgDQo+ICAJYm9vbCBkbWFfcGFybXNf
-YWxsb2NhdGVkOw0KDQo=
+Hello,
+
+This series adds USB and pinconf support to the AST2600 pincontrol driver. The
+patches have largely been developed by Johnny Huang from ASPEED and have been
+used for bringup and verification of the chip. The were developed around the
+time of the 5.4 merge window but I got distracted for a while and haven't had
+an opportunity to send them until now. They've had a run in the OpenBMC kernel
+tree and so shouldn't cause any issues, but given where we are for 5.5 I'm just
+getting them in early for 5.6 so we don't miss another release.
+
+Please review!
+
+Andrew Jeffery (1):
+  dt-bindings: pinctrl: aspeed-g6: Add USB functions and groups
+
+Johnny Huang (6):
+  pinctrl: aspeed-g6: Add AST2600 I3C1 and I3C2 pinmux config
+  pinctrl: aspeed-g6: Add support for the AST2600 USB pinmux
+  pinctrl: aspeed: Add ASPEED_SB_PINCONF() helper
+  pinctrl: aspeed: Move aspeed_pin_config_map to separate source file
+  pinctrl: aspeed: Use masks to describe pinconf bitfields
+  pinctrl: aspeed-g6: Add AST2600 pinconf support
+
+ .../pinctrl/aspeed,ast2600-pinctrl.yaml       |   9 +-
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c    | 170 ++++----
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c    | 212 +++++-----
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c    | 387 +++++++++++++++++-
+ drivers/pinctrl/aspeed/pinctrl-aspeed.c       |  50 +--
+ drivers/pinctrl/aspeed/pinctrl-aspeed.h       |  38 +-
+ drivers/pinctrl/aspeed/pinmux-aspeed.h        |   1 +
+ 7 files changed, 640 insertions(+), 227 deletions(-)
+
+-- 
+2.20.1
 
