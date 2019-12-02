@@ -2,133 +2,186 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26EC8C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2C0C43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7FF2206E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:02:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="bs3Yn7m8"
+	by mail.kernel.org (Postfix) with ESMTP id 3B0C3206E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:02:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbfLBNCf (ORCPT
+        id S1727501AbfLBNCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 08:02:35 -0500
-Received: from mail-eopbgr770071.outbound.protection.outlook.com ([40.107.77.71]:41102
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727391AbfLBNCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 08:02:33 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OxzDwtHlsuauTce4MSTn9mmR9clYDr5csPtfow2YCKxsl0oOWMKZmdSZcGroNh4AidIGOyY9PkaCps01DPhOTeFAQnsNVj5CdaQiuIt4O24XVPKNbDz81T7ZQSKENFurAZ6eUA9zeOxplaB7ZgEfJCEBQS2N4wP0RDoktnS9E8FSIqyFjIZOc/jgORVvP5qoDOpPoId4/2bn+X82ZuWKLorWUeuFuxHzI+DjIPhXVE/ThHCcJXmyOpaoT8b2wTesL05tNxuobB1hIFV/XnAh9l/IZ/05NAtt+YI9Wg3pQ3QPFgze4ahDnZiAEvU8JDQKMA+lH3bVKC59CG3lUMmAyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rTlAXqhI5gJcyj6P1xEX3iw2FbZ4NW07IIWRCbtE5/I=;
- b=MMMPvpTg17oXEWf0CtZxyLT1XdiF/eyCHsr4TAHet1vLUHsSSPosN6ZuH7V5s7nnZCrB8Q4xsOLrTQfuuxl5JraVUsgkmCyrsr76/bJkA0dWNi30VSpu7L0z7uetJqmaynjVNXHfOXUFl6aDoe7muTCTtNA4msRpkl9FoGH7o3tPr0s+WNOmjbawonO4ROwtAcPxlzavWE61uENfLvFCuESg+A0J5dpf5zzg3EJLCMtVmPhAKBhip5tBTmuUqcJ+AHVrH9vsMONKGgeVM2S9qGhwoMUdwBulFJMXcF7U7FtuwlCSyRGLib0d7sClRqao2ScQg6dR0ldxmx6cs0ZUyw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=grandegger.com smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rTlAXqhI5gJcyj6P1xEX3iw2FbZ4NW07IIWRCbtE5/I=;
- b=bs3Yn7m8Ma+2NOVEzET5fAJGLWkyAnebe/u4UAESRPt28BAvMsHDnL17RPNBdksGdbwNG141HGyGe1nqM/ypadGwp0JR3t5/yKwRzNnd3ZeO9JltBLNbI2lNlukHQzPXabb0RiWJnCdusdNzhtBdHrBxePjV5Gs0er+f+Zt/xm0=
-Received: from SN4PR0201CA0051.namprd02.prod.outlook.com
- (2603:10b6:803:20::13) by SN4PR0201MB3453.namprd02.prod.outlook.com
- (2603:10b6:803:50::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.22; Mon, 2 Dec
- 2019 13:02:30 +0000
-Received: from BL2NAM02FT026.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::201) by SN4PR0201CA0051.outlook.office365.com
- (2603:10b6:803:20::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.18 via Frontend
- Transport; Mon, 2 Dec 2019 13:02:30 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; grandegger.com; dkim=none (message not signed)
- header.d=none;grandegger.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT026.mail.protection.outlook.com (10.152.77.156) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2474.17
- via Frontend Transport; Mon, 2 Dec 2019 13:02:29 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1iblLR-00088M-3Z; Mon, 02 Dec 2019 05:02:29 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1iblLM-0007cC-02; Mon, 02 Dec 2019 05:02:24 -0800
-Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1iblLI-0007b6-5u; Mon, 02 Dec 2019 05:02:20 -0800
-From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
-To:     wg@grandegger.com, mkl@pengutronix.de, davem@davemloft.net,
-        michal.simek@xilinx.com, appanad@xilinx.com
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        git@xilinx.com, nagasure@xilinx.com,
-        Srinivas Neeli <srinivas.neeli@xilinx.com>
-Subject: [PATCH V2 0/2] can: xilinx_can: Bug fixes on can driver
-Date:   Mon,  2 Dec 2019 18:32:09 +0530
-Message-Id: <1575291731-11022-1-git-send-email-srinivas.neeli@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(39860400002)(396003)(376002)(199004)(189003)(36756003)(4326008)(51416003)(7696005)(2906002)(70586007)(70206006)(14444005)(316002)(9786002)(6666004)(16586007)(356004)(47776003)(2616005)(426003)(4744005)(305945005)(36386004)(336012)(81166006)(48376002)(81156014)(8936002)(50466002)(44832011)(50226002)(478600001)(5660300002)(186003)(26005)(107886003)(106002)(8676002)(6636002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN4PR0201MB3453;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+        Mon, 2 Dec 2019 08:02:43 -0500
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:45792 "EHLO
+        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727391AbfLBNCk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 08:02:40 -0500
+Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id xB2D1nmk015194;
+        Mon, 2 Dec 2019 15:01:49 +0200
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
+        id 839D960275; Mon,  2 Dec 2019 15:01:49 +0200 (IST)
+From:   amirmizi6@gmail.com
+To:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
+        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de,
+        jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        ayna@linux.vnet.ibm.com, Dan.Morav@nuvoton.com,
+        oren.tanami@nuvoton.com, shmulik.hager@nuvoton.com,
+        amir.mizinski@nuvoton.com, Amir Mizinski <amirmizi6@gmail.com>
+Subject: [PATCH v1 1/5] char: tpm: Make implementation of read16 read32 write32 optional
+Date:   Mon,  2 Dec 2019 15:01:28 +0200
+Message-Id: <20191202130132.175382-2-amirmizi6@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20191202130132.175382-1-amirmizi6@gmail.com>
+References: <20191202130132.175382-1-amirmizi6@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7b4a01d3-8bbc-4791-3d3f-08d77727e362
-X-MS-TrafficTypeDiagnostic: SN4PR0201MB3453:
-X-Microsoft-Antispam-PRVS: <SN4PR0201MB3453701E78740CD143EF39A9AF430@SN4PR0201MB3453.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:3276;
-X-Forefront-PRVS: 0239D46DB6
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: l5iJD3MWXAUGQKPHvA13FK/QQqZi+VV4mSy0cLyANCiU+3T2OqoBUT3x2wDBRsbFXEcSyvtW0Tw2XHBc0ULpu/f72aGebVHGO3x0MWNBNeR0HrDP2Owe8Ps3YDoV8uqyu9B86QodPj88+yz4gBVigcGfAcsBwY65kbeCZMdIAL7eeZoKYqr2LCQsZi/pMmQXvI4ZD7xA6JzIklL+3IPe6A3DeABQuk2auMTNfv5JzKNjIilt+Cuudo6DDKAHYq5zMon1Je9aBiXuivCGr1+jnwSIlz9gWAfGFxCINuXhW+/beBXcOjjugJs9qe68n0m7aStNtba2aKBaILAQk/8jhByVv4FlLIWc7BuxjtVaDUR1gr/07FeWZy1E/b3uwWDKQrqC/4hu2uJ95T6H6BdH/Ou2Gxyh2xifx6m/l5eby1MNYXpZ1ygxJtzYVRTT3O07
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Dec 2019 13:02:29.6769
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7b4a01d3-8bbc-4791-3d3f-08d77727e362
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0201MB3453
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series does the following:
--skip printing error message on deferred probe
--Fix usage of skb memory
+From: Amir Mizinski <amirmizi6@gmail.com>
+
+Only tpm_tis has a faster way to access multiple bytes at once, every other
+driver will just fall back to read_bytes/write_bytes. Therefore, move this
+common code out of tpm_tis_spi into tpm_tis_core, so that it is
+automatically used when low-level drivers do not implement the specialized
+methods.
+this commit is based on previous work by Alexander Steffen
+
+Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
 ---
-Changes in V2:
--Called can_put_echo_skb call after usage of skb memory
----
+ drivers/char/tpm/tpm_tis_core.h | 38 +++++++++++++++++++++++++++++++++++---
+ drivers/char/tpm/tpm_tis_spi.c  | 41 -----------------------------------------
+ 2 files changed, 35 insertions(+), 44 deletions(-)
 
-Srinivas Neeli (1):
-  can: xilinx_can: Fix usage of skb memory
-
-Venkatesh Yadav Abbarapu (1):
-  can: xilinx_can: skip error message on deferred probe
-
- drivers/net/can/xilinx_can.c | 28 +++++++++++++++-------------
- 1 file changed, 15 insertions(+), 13 deletions(-)
-
+diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
+index 7337819..d06c65b 100644
+--- a/drivers/char/tpm/tpm_tis_core.h
++++ b/drivers/char/tpm/tpm_tis_core.h
+@@ -122,13 +122,35 @@ static inline int tpm_tis_read8(struct tpm_tis_data *data, u32 addr, u8 *result)
+ static inline int tpm_tis_read16(struct tpm_tis_data *data, u32 addr,
+ 				 u16 *result)
+ {
+-	return data->phy_ops->read16(data, addr, result);
++	__le16 result_le;
++	int rc;
++
++	if (data->phy_ops->read16)
++		return data->phy_ops->read16(data, addr, result);
++
++	rc = data->phy_ops->read_bytes(data, addr, sizeof(u16),
++				       (u8 *)&result_le);
++	if (!rc)
++		*result = le16_to_cpu(result_le);
++
++	return rc;
+ }
+ 
+ static inline int tpm_tis_read32(struct tpm_tis_data *data, u32 addr,
+ 				 u32 *result)
+ {
+-	return data->phy_ops->read32(data, addr, result);
++	__le32 result_le;
++	int rc;
++
++	if (data->phy_ops->read32)
++		return data->phy_ops->read32(data, addr, result);
++
++	rc = data->phy_ops->read_bytes(data, addr, sizeof(u32),
++				       (u8 *)&result_le);
++	if (!rc)
++		*result = le32_to_cpu(result_le);
++
++	return rc;
+ }
+ 
+ static inline int tpm_tis_write_bytes(struct tpm_tis_data *data, u32 addr,
+@@ -145,7 +167,17 @@ static inline int tpm_tis_write8(struct tpm_tis_data *data, u32 addr, u8 value)
+ static inline int tpm_tis_write32(struct tpm_tis_data *data, u32 addr,
+ 				  u32 value)
+ {
+-	return data->phy_ops->write32(data, addr, value);
++	__le32 value_le;
++	int rc;
++
++	if (data->phy_ops->write32)
++		return data->phy_ops->write32(data, addr, value);
++
++	value_le = cpu_to_le32(value);
++	rc = data->phy_ops->write_bytes(data, addr, sizeof(u32),
++					(u8 *)&value_le);
++
++	return rc;
+ }
+ 
+ static inline bool is_bsw(void)
+diff --git a/drivers/char/tpm/tpm_tis_spi.c b/drivers/char/tpm/tpm_tis_spi.c
+index 19513e6..da82924 100644
+--- a/drivers/char/tpm/tpm_tis_spi.c
++++ b/drivers/char/tpm/tpm_tis_spi.c
+@@ -146,50 +146,9 @@ static int tpm_tis_spi_write_bytes(struct tpm_tis_data *data, u32 addr,
+ 	return tpm_tis_spi_transfer(data, addr, len, NULL, value);
+ }
+ 
+-static int tpm_tis_spi_read16(struct tpm_tis_data *data, u32 addr, u16 *result)
+-{
+-	__le16 result_le;
+-	int rc;
+-
+-	rc = data->phy_ops->read_bytes(data, addr, sizeof(u16),
+-				       (u8 *)&result_le);
+-	if (!rc)
+-		*result = le16_to_cpu(result_le);
+-
+-	return rc;
+-}
+-
+-static int tpm_tis_spi_read32(struct tpm_tis_data *data, u32 addr, u32 *result)
+-{
+-	__le32 result_le;
+-	int rc;
+-
+-	rc = data->phy_ops->read_bytes(data, addr, sizeof(u32),
+-				       (u8 *)&result_le);
+-	if (!rc)
+-		*result = le32_to_cpu(result_le);
+-
+-	return rc;
+-}
+-
+-static int tpm_tis_spi_write32(struct tpm_tis_data *data, u32 addr, u32 value)
+-{
+-	__le32 value_le;
+-	int rc;
+-
+-	value_le = cpu_to_le32(value);
+-	rc = data->phy_ops->write_bytes(data, addr, sizeof(u32),
+-					(u8 *)&value_le);
+-
+-	return rc;
+-}
+-
+ static const struct tpm_tis_phy_ops tpm_spi_phy_ops = {
+ 	.read_bytes = tpm_tis_spi_read_bytes,
+ 	.write_bytes = tpm_tis_spi_write_bytes,
+-	.read16 = tpm_tis_spi_read16,
+-	.read32 = tpm_tis_spi_read32,
+-	.write32 = tpm_tis_spi_write32,
+ };
+ 
+ static int tpm_tis_spi_probe(struct spi_device *dev)
 -- 
 2.7.4
 
