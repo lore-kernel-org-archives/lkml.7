@@ -2,213 +2,96 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 900BFC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46805C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6789F20718
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:19:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575310765;
-	bh=Mxs13Bq2Hc395fEDycCp4i58HTi6qNbE8hBTBrlz/Vk=;
-	h=In-Reply-To:References:Subject:To:From:Cc:Date:List-ID:From;
-	b=n6C2vWoUGyhTGOWX7sSk9r+j5wi1HALC2flkRr4haBVv8lR9g4k8AjOAF4zaECGQB
-	 vOzkBiAeeVSOy428aGizyzLG1ygIqRkdFUXc+SsDUKT+6nZFmvsnZEPGwgTwwz89sr
-	 m5IBXz5A2NHWQYBxxAg7fTx0sujlA3yHKQOhwEwU=
+	by mail.kernel.org (Postfix) with ESMTP id 2376C20717
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:20:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbfLBSTY (ORCPT
+        id S1727917AbfLBSUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 13:19:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57050 "EHLO mail.kernel.org"
+        Mon, 2 Dec 2019 13:20:34 -0500
+Received: from mga03.intel.com ([134.134.136.65]:49673 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727670AbfLBSTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 13:19:24 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D26D20717;
-        Mon,  2 Dec 2019 18:19:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575310763;
-        bh=Mxs13Bq2Hc395fEDycCp4i58HTi6qNbE8hBTBrlz/Vk=;
-        h=In-Reply-To:References:Subject:To:From:Cc:Date:From;
-        b=Q/YlT+Dq1E8auTOdqK2zgTCyqjrXkH7Qs4t9Afs/PDOP5MK95Qw2QeP4iaEiz7TT2
-         uOh0Re1R14g1AD1HhkohYGrDRbu/TSxt81UpEtNxodTU+7p2KO2nmJxIT4rxDvpI7S
-         EhLgJm10101qxvcLruG3RmRCZJOrAa/MyBBXtUjM=
-Content-Type: text/plain; charset="utf-8"
+        id S1727671AbfLBSUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 13:20:33 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 10:20:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,270,1571727600"; 
+   d="scan'208";a="208178708"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by fmsmga008.fm.intel.com with ESMTP; 02 Dec 2019 10:20:32 -0800
+Date:   Mon, 2 Dec 2019 10:20:32 -0800
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
+ kernel parameter
+Message-ID: <20191202182032.GA22528@agluck-desk2.amr.corp.intel.com>
+References: <1574297603-198156-1-git-send-email-fenghua.yu@intel.com>
+ <1574297603-198156-7-git-send-email-fenghua.yu@intel.com>
+ <20191121060444.GA55272@gmail.com>
+ <20191121130153.GS4097@hirez.programming.kicks-ass.net>
+ <20191121171214.GD12042@gmail.com>
+ <20191121173444.GA5581@agluck-desk2.amr.corp.intel.com>
+ <20191122105141.GY4114@hirez.programming.kicks-ass.net>
+ <20191122152715.GA1909@hirez.programming.kicks-ass.net>
+ <20191123003056.GA28761@agluck-desk2.amr.corp.intel.com>
+ <20191125161348.GA12178@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191129161658.344517-1-jbrunet@baylibre.com>
-References: <20191129161658.344517-1-jbrunet@baylibre.com>
-Subject: Re: [PATCH] clk: walk orphan list on clock provider registration
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Michael Turquette <mturquette@baylibre.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org
-User-Agent: alot/0.8.1
-Date:   Mon, 02 Dec 2019 10:19:22 -0800
-Message-Id: <20191202181923.4D26D20717@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191125161348.GA12178@linux.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jerome Brunet (2019-11-29 08:16:58)
-> So far, we walked the orphan list every time a new clock was registered
-> in CCF. This was fine since the clocks were only referenced by name.
->=20
-> Now that the clock can be referenced through DT, it is not enough:
-> * Controller A register first a reference clocks from controller B
->   through DT.
-> * Controller B register all its clocks then register the provider.
->=20
-> Each time controller B registers a new clock, the orphan list is walked
-> but it can't match since the provider is registered yet. When the
-> provider is finally registered, the orphan list is not walked unless
-> another clock is registered afterward.
->=20
-> This can lead to situation where some clocks remain orphaned even if
-> the parent is available.
->=20
-> Walking the orphan list on provider registration solves the problem.
->=20
-> Fixes: fc0c209c147f ("clk: Allow parents to be specified without string n=
-ames")
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
+On Mon, Nov 25, 2019 at 08:13:48AM -0800, Sean Christopherson wrote:
+> On Fri, Nov 22, 2019 at 04:30:56PM -0800, Luck, Tony wrote:
+> > Don't you have some horrible races between the two logical
+> > processors on the same core as they both try to set/clear the
+> > MSR that is shared at the core level?
+> 
+> Yes and no.  Yes, there will be races, but they won't be fatal in any way.
+> 
+>   - Only the split-lock bit is supported by the kernel, so there isn't a
+>     risk of corrupting other bits as both threads will rewrite the current
+>     hardware value.
+> 
+>   - Toggling of split-lock is only done in "warn" mode.  Worst case
+>     scenario of a race is that a misbehaving task will generate multiple
+>     #AC exceptions on the same instruction.  And this race will only occur
+>     if both siblings are running tasks that generate split-lock #ACs, e.g.
+>     a race where sibling threads are writing different values will only
+>     occur if CPUx is disabling split-lock after an #AC and CPUy is
+>     re-enabling split-lock after *its* previous task generated an #AC.
+> 
+>   - Transitioning between modes at runtime isn't supported and disabling
+>     is tracked per task, so hardware will always reach a steady state that
+>     matches the configured mode.  I.e. split-lock is guaranteed to be
+>     enabled in hardware once all _TIF_SLD threads have been scheduled out.
 
-Sounds right. Thanks for making the fix!
+We should probably include this analysis in the commit
+comment. Maybe a comment or two in the code too to note
+that the races are mostly harmless and guaranteed to end
+quickly.
 
-I suspect there should be a reported-by tag though?
-
->  drivers/clk/clk.c | 59 +++++++++++++++++++++++++++++------------------
->  1 file changed, 37 insertions(+), 22 deletions(-)
->=20
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index ef4416721777..917ba37c3b9d 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -3249,6 +3249,34 @@ static inline void clk_debug_unregister(struct clk=
-_core *core)
->  }
->  #endif
-> =20
-> +static void __clk_core_reparent_orphan(void)
-
-Maybe drop the double underscore. clk_core prefix already means "private
-to this file".
-
-> +{
-> +       struct clk_core *orphan;
-> +       struct hlist_node *tmp2;
-> +
-> +       /*
-> +        * walk the list of orphan clocks and reparent any that newly fin=
-ds a
-> +        * parent.
-> +        */
-> +       hlist_for_each_entry_safe(orphan, tmp2, &clk_orphan_list, child_n=
-ode) {
-> +               struct clk_core *parent =3D __clk_init_parent(orphan);
-> +
-> +               /*
-> +                * We need to use __clk_set_parent_before() and _after() =
-to
-> +                * to properly migrate any prepare/enable count of the or=
-phan
-> +                * clock. This is important for CLK_IS_CRITICAL clocks, w=
-hich
-> +                * are enabled during init but might not have a parent ye=
-t.
-> +                */
-> +               if (parent) {
-> +                       /* update the clk tree topology */
-> +                       __clk_set_parent_before(orphan, parent);
-> +                       __clk_set_parent_after(orphan, parent, NULL);
-> +                       __clk_recalc_accuracies(orphan);
-> +                       __clk_recalc_rates(orphan, 0);
-> +               }
-> +       }
-> +}
-> +
->  /**
->   * __clk_core_init - initialize the data structures in a struct clk_core
->   * @core:      clk_core being initialized
-> @@ -3259,8 +3287,6 @@ static inline void clk_debug_unregister(struct clk_=
-core *core)
->  static int __clk_core_init(struct clk_core *core)
->  {
->         int ret;
-> -       struct clk_core *orphan;
-> -       struct hlist_node *tmp2;
->         unsigned long rate;
-> =20
->         if (!core)
-> @@ -3416,27 +3442,8 @@ static int __clk_core_init(struct clk_core *core)
->                 clk_enable_unlock(flags);
->         }
-> =20
-> -       /*
-> -        * walk the list of orphan clocks and reparent any that newly fin=
-ds a
-> -        * parent.
-> -        */
-> -       hlist_for_each_entry_safe(orphan, tmp2, &clk_orphan_list, child_n=
-ode) {
-> -               struct clk_core *parent =3D __clk_init_parent(orphan);
-> +       __clk_core_reparent_orphan();
-> =20
-> -               /*
-> -                * We need to use __clk_set_parent_before() and _after() =
-to
-> -                * to properly migrate any prepare/enable count of the or=
-phan
-> -                * clock. This is important for CLK_IS_CRITICAL clocks, w=
-hich
-> -                * are enabled during init but might not have a parent ye=
-t.
-> -                */
-> -               if (parent) {
-> -                       /* update the clk tree topology */
-> -                       __clk_set_parent_before(orphan, parent);
-> -                       __clk_set_parent_after(orphan, parent, NULL);
-> -                       __clk_recalc_accuracies(orphan);
-> -                       __clk_recalc_rates(orphan, 0);
-> -               }
-> -       }
-> =20
->         kref_init(&core->ref);
->  out:
-> @@ -4288,6 +4295,10 @@ int of_clk_add_provider(struct device_node *np,
->         mutex_unlock(&of_clk_mutex);
->         pr_debug("Added clock from %pOF\n", np);
-> =20
-> +       clk_prepare_lock();
-> +       __clk_core_reparent_orphan();
-> +       clk_prepare_unlock();
-> +
-
-Maybe make a locked version of this function and an unlocked version?
-
->         ret =3D of_clk_set_defaults(np, true);
->         if (ret < 0)
->                 of_clk_del_provider(np);
-> @@ -4323,6 +4334,10 @@ int of_clk_add_hw_provider(struct device_node *np,
->         mutex_unlock(&of_clk_mutex);
->         pr_debug("Added clk_hw provider from %pOF\n", np);
-> =20
-> +       clk_prepare_lock();
-> +       __clk_core_reparent_orphan();
-> +       clk_prepare_unlock();
-> +
-
-So we don't duplicate this twice.
-
->         ret =3D of_clk_set_defaults(np, true);
->         if (ret < 0)
+-Tony
