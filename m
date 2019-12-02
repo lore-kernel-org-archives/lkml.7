@@ -2,135 +2,100 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B920CC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F734C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4782073C
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:23:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575292983;
-	bh=9lWm2bLIopqnqtd07k3yweTcVDNggaVbyjuZO0inaxA=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=R7Pn0nAfS62Ux62/OEwB3q8PYSbjUY4O+je3EqrRENp29iX+TpH1rlML5pv91rYrU
-	 vXn+0OhjcdWxnyv1uzFpWsk7E8zKYiTsfSmSBfGx/jxjd+0bw0t4uRs53r5KrIhaN8
-	 3HY0rMFV8C7uoRyBa7EmAcmfEAsA+V//EXhsu9pg=
+	by mail.kernel.org (Postfix) with ESMTP id 3B8F320833
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:32:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbfLBNXC (ORCPT
+        id S1727446AbfLBNcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 08:23:02 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:42112 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727381AbfLBNXC (ORCPT
+        Mon, 2 Dec 2019 08:32:41 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39021 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727401AbfLBNck (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 08:23:02 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iblfI-0001C6-C7; Mon, 02 Dec 2019 14:23:00 +0100
-To:     yaohongbo <yaohongbo@huawei.com>
-Subject: Re: ITS restore/save state when HCC =?UTF-8?Q?=3D=3D=20=30?=
-X-PHP-Originating-Script: 0:main.inc
+        Mon, 2 Dec 2019 08:32:40 -0500
+Received: by mail-oi1-f196.google.com with SMTP id a67so13630655oib.6
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 05:32:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FUb7Rc+GIP9MKLEXkxhbaxhusHdmEduUo1Z+J1qlGCo=;
+        b=QCngT7ECbbOr7x84sAPDWXTS38Wclwm4YzpxHuZ3YqUF8NQrKDuiZK2wBgQ5qh6wOO
+         lSKeYbrz5r8jDLDsvoTAn8F10AGeKFYO9haKt9l2vyg94FlguoL/W7YnPsedKZ+saEw3
+         A0LEFy6uxoTXLaihXyOvJbQnruGT5+4mDCom5qLANG5OKyoifeubBPJtb3fHrkEqucnb
+         XmxNrXhiwQxOAgJ7ldXWTVr1L35dqyss7Ugm6qfx0M9uFUVqCE4rawGPc3fNMEsyw0kc
+         iGGVWZDet6/J/l2i/3w2roFDgFhWK2fT+Ij2Cwo+6qR3UFgwjUvkfJ2lDL19Zdxr387O
+         nMMw==
+X-Gm-Message-State: APjAAAWv7c1m1g6E8pJYhhNJwSx3/X71knz0xooFYTiKMwNvVX6i64S+
+        zdCCPw7TqPR5kADP+3ZtRAqNhDB/A3ZQtL3+6mM=
+X-Google-Smtp-Source: APXvYqyCMxXLzeZ3RnbW9zza35sEQ4DWlDlwDArm/Dx7HkjU3qwX5haNiFPRwXfVX2mL+pSh+XgrY1BY0k87X19WS1c=
+X-Received: by 2002:aca:fdd0:: with SMTP id b199mr11619204oii.153.1575293559910;
+ Mon, 02 Dec 2019 05:32:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 02 Dec 2019 13:22:59 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>,
-        Yangyingliang <yangyingliang@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>
-In-Reply-To: <fd89d78030914d19939a1fc1c6eb5048@huawei.com>
-References: <fd89d78030914d19939a1fc1c6eb5048@huawei.com>
-Message-ID: <e04e35e0a14f1507ac4a3d56899adcae@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: yaohongbo@huawei.com, guohanjun@huawei.com, yangyingliang@huawei.com, linuxarm@huawei.com, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+References: <021330b6-67a2-0b74-c129-5c725dd23810@infradead.org>
+ <CAMuHMdVLusDDB5G1R7=-53sK1bd2+3=s42hr9xkgPtWyjOrozg@mail.gmail.com> <CACz-3rjOPg_rMt_FbJ5_nKLpjTK-Bv=amGsJpXwqbTBNX4YA7w@mail.gmail.com>
+In-Reply-To: <CACz-3rjOPg_rMt_FbJ5_nKLpjTK-Bv=amGsJpXwqbTBNX4YA7w@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 2 Dec 2019 14:32:28 +0100
+Message-ID: <CAMuHMdW1iqNkmCztAv93W4eLR5ooxh5m+vRLJHJmCfrjsOmc5g@mail.gmail.com>
+Subject: Re: m68k Kconfig warning
+To:     Kars de Jong <karsdejong@home.nl>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yaohongbo,
+Hi Kars,.
 
-In the future, please refrain from sending HTML emails, they
-don't render very well and force me to reformat your email
-by hand.
+On Mon, Dec 2, 2019 at 12:42 PM Kars de Jong <karsdejong@home.nl> wrote:
+> Op wo 27 nov. 2019 om 08:12 schreef Geert Uytterhoeven <geert@linux-m68k.org>:
+> > On Wed, Nov 27, 2019 at 2:27 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+> > > Just noticed this.  I don't know what the right fix is.
+> > > Would you take care of it, please?
+> > >
+> > > on Linux 5.4, m68k allmodconfig:
+> > >
+> > > WARNING: unmet direct dependencies detected for NEED_MULTIPLE_NODES
+> > >   Depends on [n]: DISCONTIGMEM [=n] || NUMA
+> > >   Selected by [y]:
+> > >   - SINGLE_MEMORY_CHUNK [=y] && MMU [=y]
+> >
+> > This has been basically there forever, but working.
+>
+> The reason for SINGLE_MEMORY_CHUNK depending on NEED_MULTIPLE_NODES is
+> historic due to the way it is implemented.
+> I played with it this weekend and I got a working version of FLATMEM,
+> which can replace SINGLE_MEMORY_CHUNK.
 
-On 2019-12-02 12:52, yaohongbo wrote:
-> Hi, marc.
->
-> I met a problem with GIC ITS when I try to power off gic logic in
-> suspend.
->
-> In hisilicon hip08, the value of GIC_TYPER.HCC is zero, so that
-> ITS_FLAGS_SAVE_SUSPEND_STATE will have no chance to be set to 1.
+Nice, thanks!
 
-And that's a good thing. HCC indicates that you have collections that
-are backed by registers, and not memory. Which means that once the GIC
-is powered off, the state is lost.
+> step might be to replace DISCONTIGMEM with SPARSEMEM (since
+> DISCONTIGMEM has been deprecated).
 
-> It goes well for s4, when I simply remove the condition judgement in
-> the code.
+Mike Rapoport has patches for that:
+"[PATCH v2 0/3] m68k/mm: switch from DISCONTIGMEM to SPARSEMEM"
 
-What is "s4"? Doing so means you are reprogramming the ITS with 
-mappings
-that already exist in the tables, and that is UNPRED territory.
+Unfortunately they're not on lore, and there were some issues with them.
 
-<quote>
-Behavior is unpredictable if there are interrupts that are mapped to 
-the
-specified collection and the collection is currently mapped to a 
-Redistributor
-[...]
-</quote>
+Gr{oetje,eeting}s,
 
-> --- a/drivers/irqchip/irq-gic-v3-its.c
->
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
->
-> @@ -3670,8 +3670,8 @@ static int __init its_probe_one(struct resource
-> *res,
->
->  ctlr |= GITS_CTLR_ImDe;
->
->  writel_relaxed(ctlr, its->base + GITS_CTLR);
->
-> - if (GITS_TYPER_HCC(typer))
->
-> - its->flags |= ITS_FLAGS_SAVE_SUSPEND_STATE;
->
-> + its->flags |= ITS_FLAGS_SAVE_SUSPEND_STATE;
->
->  err = its_init_domain(handle, its);
->
->  if (err)
->
-> @@ -4005,3 +4005,17 @@ int __init its_init(struct fwnode_handle
-> *handle, struct rdists *rdists,
->
->  return 0;
->
-> }
->
-> Do you have any suggestion for this case?
+                        Geert
 
-The expectations are that across a GIC power-off, the firmware
-will restore the state of the GIC (recondiguring the various
-memory tables), and that this is enough for the ITS to be
-functional again, having reloaded its state from memory.
-
-Does firmware perform this on your machine? Or are there
-implementation-specific issues that require the ITS to be
-reprogrammed?
-
-Thanks,
-
-         M.
 -- 
-Jazz is not dead. It just smells funny...
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
