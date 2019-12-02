@@ -2,67 +2,132 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07735C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 02:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD04C43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 02:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFB59218AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 02:05:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575252331;
-	bh=PnzmZ1l6elwD1S8GUuhop+PktoKslOXlwGUay8hIf6M=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=yQoC1FoXNl84w/fxhcA5Ax5yuR1CIcKD3SwoJX6CiKCAAhQxkuPY8Z+ba+HQU9IbE
-	 xMRQlpWaLxq62HCz0pGGvp1VUlBeasCt7sEYfcw9UkNG7SdwamCt4UoSJTzJfN7iTj
-	 DmFiCFQfu4fCia5x5FIkd366hhpPc7/YzhTbWkqY=
+	by mail.kernel.org (Postfix) with ESMTP id A0DDF20881
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 02:08:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dS6n34Iy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbfLBCFb (ORCPT
+        id S1727462AbfLBCIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 21:05:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53918 "EHLO mail.kernel.org"
+        Sun, 1 Dec 2019 21:08:40 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:41283 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727720AbfLBCFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 21:05:19 -0500
-Subject: Re: [GIT PULL] Backlight for v5.5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575252318;
-        bh=PnzmZ1l6elwD1S8GUuhop+PktoKslOXlwGUay8hIf6M=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=y3GLb9cvD44aoKS95CyR8ACBL6Cv8LXica2FpLxAQ1zuhKosj3UqROW1utAz7G/Hx
-         DMVdo+TelAt5wsrkQ3TG0CG/xKp5joO6HvpbwVHIvWWAlH9MiiRxqFPa0qtFevJsnk
-         kdoyClWu/yVul5PfjL6RSbzQ8nAbimyY5sAYDfMk=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191128144511.GA14416@dell>
-References: <20191128144511.GA14416@dell>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191128144511.GA14416@dell>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/lee/backlight.git
- tags/backlight-next-5.5
-X-PR-Tracked-Commit-Id: 102a1b382177d89f75bc49b931c329a317cf531f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 38edc3dff9d2805c48e0a171667e7ca820336ab7
-Message-Id: <157525231871.26823.2841519412473226517.pr-tracker-bot@kernel.org>
-Date:   Mon, 02 Dec 2019 02:05:18 +0000
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
+        id S1727279AbfLBCIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Dec 2019 21:08:40 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47R7nc2rnWz9sPJ;
+        Mon,  2 Dec 2019 13:08:36 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1575252517;
+        bh=74O/u3J2V7AMDE3ZLBLLp180U2jAMy1E0q89TgGY+xI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=dS6n34Iy6c0ZYmOpgoNNY9Wv3AfVrhcEfF4o2JlL1wAlq0Qnot0Q/q0SjG3BPreFD
+         VHuqU2wli+YTf93azD7e9MFuzXK/SGxCmO1kUpgsQmlXq5hc4cZBAlxo5jByW/8f3w
+         jw0+VwuLtOvdAp3bbyi9s/+rydyAs4tHb9HLBZ6Ap7buE1EYhxzih2x1PYbDlvjhtv
+         Ue6MoDTNg6lwjFtcmy2rWKKudwHwV21Reorm4j4gW2YqTwN8OsdFq7qrHCPin+3Fl9
+         e8RGRyya0DSndibwU0ZwRxRw/fHkMUHo4PfUnqw83hvx7A8dxuOsMd3vpSe2zG4iFX
+         +FJZCB2u5ZivA==
+Date:   Mon, 2 Dec 2019 13:08:30 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Steven Price <steven.price@arm.com>
+Subject: linux-next: manual merge of the akpm tree with Linus' tree
+Message-ID: <20191202130830.765312fb@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/EExt0WUvigW5bgLs1jWU/uR";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 28 Nov 2019 14:45:44 +0000:
+--Sig_/EExt0WUvigW5bgLs1jWU/uR
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/lee/backlight.git tags/backlight-next-5.5
+Hi all,
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/38edc3dff9d2805c48e0a171667e7ca820336ab7
+Today's linux-next merge of the akpm tree got a conflict in:
 
-Thank you!
+  include/linux/pagewalk.h
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+between commit:
+
+  ecaad8aca204 ("mm: Add a walk_page_mapping() function to the pagewalk cod=
+e")
+
+from Linus' tree and patch:
+
+  "mm: pagewalk: add p4d_entry() and pgd_entry()"
+
+from the akpm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc include/linux/pagewalk.h
+index 6ec82e92c87f,12004b097eae..000000000000
+--- a/include/linux/pagewalk.h
++++ b/include/linux/pagewalk.h
+@@@ -24,11 -24,15 +24,18 @@@ struct mm_walk
+   *			"do page table walk over the current vma", returning
+   *			a negative value means "abort current page table walk
+   *			right now" and returning 1 means "skip the current vma"
+ + * @pre_vma:            if set, called before starting walk on a non-null=
+ vma.
+ + * @post_vma:           if set, called after a walk on a non-null vma, pr=
+ovided
+ + *                      that @pre_vma and the vma walk succeeded.
++  *
++  * p?d_entry callbacks are called even if those levels are folded on a
++  * particular architecture/configuration.
+   */
+  struct mm_walk_ops {
++ 	int (*pgd_entry)(pgd_t *pgd, unsigned long addr,
++ 			 unsigned long next, struct mm_walk *walk);
++ 	int (*p4d_entry)(p4d_t *p4d, unsigned long addr,
++ 			 unsigned long next, struct mm_walk *walk);
+  	int (*pud_entry)(pud_t *pud, unsigned long addr,
+  			 unsigned long next, struct mm_walk *walk);
+  	int (*pmd_entry)(pmd_t *pmd, unsigned long addr,
+
+--Sig_/EExt0WUvigW5bgLs1jWU/uR
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3kch4ACgkQAVBC80lX
+0GxJ3Af/dRvPi+FXDlK8RZGp0458zI9C2fvfop46idyyyOQqTkN5ghqTBKA1Vjo0
+7nYSfNWkVsH7vxLnZsou30iS3e7ZMoW0Dj+/bTuds0VREAWtDUYiH5XfZWashOlT
+qZRxyyB4Cw9mLAaZa/Qk8csGfCfi55M1lBVuppoJfL73vRhyPnHCEvGwWKaJN0ze
+JDW/pgWJSWPn2cqVbzIzET+KmPk9u0ZSYk0xxM+t6ubh6J628I0EilVvwVvrh1Mv
+nFxlQJlIlKMpEC30DHoPo1A4W7wXdkcy4fxebAGrwlMASHzRelDUfnm98WNFZQ4h
+YF8BH2Vsvg8T8wXyATw68IswrcWrAA==
+=+YbL
+-----END PGP SIGNATURE-----
+
+--Sig_/EExt0WUvigW5bgLs1jWU/uR--
