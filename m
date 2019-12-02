@@ -2,123 +2,112 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D970C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9804FC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5673820848
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:11:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575313866;
-	bh=+E0Qb8nIo8In81aZozyw4VnN3XxDrwjePWjsKwRQAC8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=t8NQqO+KXirXiYkuIAvvYYTzvKnFqIX6RTixfwgBfFMWYd+W/nCo9BBikZxxL/ecQ
-	 TWoR74DS03sYJx8VFApvz+vITHNT8M/6MTigXU3VdA7oqLM9jPG65mBYCJVDG0204I
-	 XiG4YqhXcC7u/OBShK8VQ82TzsXf9NXmMWkh6NR0=
+	by mail.kernel.org (Postfix) with ESMTP id 6C73120848
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:11:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbfLBTLF (ORCPT
+        id S1728002AbfLBTLl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 14:11:05 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:42473 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727556AbfLBTLE (ORCPT
+        Mon, 2 Dec 2019 14:11:41 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22300 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727835AbfLBTLl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 14:11:04 -0500
-Received: by mail-qt1-f195.google.com with SMTP id j5so865556qtq.9;
-        Mon, 02 Dec 2019 11:11:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Cwz6dYY9z4DxZQ5/f+vTSU4IwIt72HsTGUbyi+vmDkI=;
-        b=eHpXuxnoiIv7Vq2GQyfaaWZbunEntyK6amEKPxAgDXh2F7i6pgY5JOrOxmRYBWA/bK
-         SLP1DHchXwPfowdj5JvhSMqHWJ7QFOLj7S2hSIL6q74qGRvBlMbVhdd4v4Zy4ytfu78z
-         UeCcDaZGD86MzV5eApmB6/1ivXULShR+kN92UZjAxReIvbkora7ad9nnH48Ft6hy1IGB
-         olUfx22vze29Uq/6Ds41WgDpod/ax0ksHshy1zaH+DEUGhmxJeAa06AQaEhB2fDCukYe
-         htwTeqMbepZamefzWks0AUPXeBloI9/BFb2Y472dRAJOIRWU41rsOUmWavuiJf9QETF5
-         H6eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=Cwz6dYY9z4DxZQ5/f+vTSU4IwIt72HsTGUbyi+vmDkI=;
-        b=iNFpKIzq4nhD/jF6u8QGpkirLbcT23v+bRQjLgkSQlzrkQmUQ6rFrLFzaKmdJXUxcT
-         h30xXIwQ3UKoLgmcF3D0tXfCWM6Dz89cj/LdKo4oPEXPzqrePRsEnsldXm4ET0q4ovjW
-         4ipHMM1LCv4j8Tw8RTl/eaMZSYhVFv9m80DMc4/Jz4aeo98yS4/7+Wh5zJv1wXSYlNGc
-         S/MskOBQ5HyW6cFLyGOnVYO/X9ussVl4J+RUhsOt0npHo0MaDfZdBAnysY2rmiqkXbeb
-         fzJhHez7/O4WCtKuwKlZhrwSpQ/pssyvl7hEw/Czr0JbRnO7IEhxVwGEQHle3YXDen7A
-         U6sw==
-X-Gm-Message-State: APjAAAWvxfvzXg7KkiTxHRpT/BqiujHZMKYd/7s8ESAEXWZauLan4zBz
-        ejqXUU0pSz5aaAxxU+CWTxE=
-X-Google-Smtp-Source: APXvYqx8mht7nynmOddR27kQYNBnjL0lmPtURqUSmMWCZ7Pxu9OQ7QGVWDcztUiQd3M9LLP//0a/4w==
-X-Received: by 2002:ac8:745a:: with SMTP id h26mr992039qtr.192.1575313863412;
-        Mon, 02 Dec 2019 11:11:03 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::1:c909])
-        by smtp.gmail.com with ESMTPSA id s189sm269559qke.41.2019.12.02.11.11.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Dec 2019 11:11:02 -0800 (PST)
-Date:   Mon, 2 Dec 2019 11:11:00 -0800
-From:   Tejun Heo <tj@kernel.org>
-To:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc:     cgroups@vger.kernel.org, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] cgroup/pids: Make pids.events notifications affine
- to pids.max
-Message-ID: <20191202191100.GF16681@devbig004.ftw2.facebook.com>
-References: <20191128172612.10259-1-mkoutny@suse.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+        Mon, 2 Dec 2019 14:11:41 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB2J8e84162127
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 14:11:39 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2wm6g8srnm-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 14:11:39 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 2 Dec 2019 19:11:37 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 2 Dec 2019 19:11:33 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB2JBWRW40567084
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 2 Dec 2019 19:11:32 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C29B8A4053;
+        Mon,  2 Dec 2019 19:11:32 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A1A92A405D;
+        Mon,  2 Dec 2019 19:11:31 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.147.107])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  2 Dec 2019 19:11:31 +0000 (GMT)
+Subject: Re: [PATCH v0 1/2] IMA: Defined queue functions
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org, Janne Karhunen <janne.karhunen@gmail.com>
+Date:   Mon, 02 Dec 2019 14:11:31 -0500
+In-Reply-To: <6ec16f9d-b4f4-bb85-3496-be110fa68f6b@linux.microsoft.com>
+References: <20191127025212.3077-1-nramas@linux.microsoft.com>
+         <20191127025212.3077-2-nramas@linux.microsoft.com>
+         <1574887137.4793.346.camel@linux.ibm.com>
+         <ea2fafb8-a97f-5365-debd-d90143e549bf@linux.microsoft.com>
+         <1575309622.4793.413.camel@linux.ibm.com>
+         <6ec16f9d-b4f4-bb85-3496-be110fa68f6b@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191128172612.10259-1-mkoutny@suse.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19120219-0012-0000-0000-0000036FDE17
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120219-0013-0000-0000-000021AB9755
+Message-Id: <1575313891.4793.423.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-02_04:2019-11-29,2019-12-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ suspectscore=0 clxscore=1015 mlxlogscore=999 impostorscore=0
+ lowpriorityscore=0 adultscore=0 malwarescore=0 spamscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912020163
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Thu, Nov 28, 2019 at 06:26:12PM +0100, Michal Koutn� wrote:
-> Currently, when pids.max limit is breached in the hierarchy, the event
-> is counted and reported in the cgroup where the forking task resides.
+On Mon, 2019-12-02 at 10:39 -0800, Lakshmi Ramasubramanian wrote:
+> On 12/2/19 10:00 AM, Mimi Zohar wrote:
 > 
-> The proper hierarchical behavior is to count and report the event in the
-> cgroup whose limit is being exceeded. Apply this behavior in the default
-> hierarchy.
+> > 
+> > ima_update_policy() is called from multiple places.  Initially, it is
+> > called before a custom policy has been loaded.  The call to
+> > ima_process_queued_keys_for_measurement() needs to be moved to within
+> > the test, otherwise it runs the risk of dropping "key" measurements.
 > 
-> Reasons for RFC:
+> static const struct file_operations ima_measure_policy_ops = {
+> 	.release = ima_release_policy,
+> };
 > 
-> 1) If anyone has adjusted their readings to this behavior, this is a BC
->    break.
+> ima_update_policy() is called from ima_release_policy() function.
 > 
-> 2) This solves no reported bug, just a spotted inconsistency.
+> On my test machine I have the IMA policy in /etc/ima/ima-policy file. 
+> When IMA policy is setup from this file, I see ima_release_policy() 
+> called (which in turn calls ima_update_policy()).
 > 
-> 3) One step further would be to distinguish pids.events and
->    pids.events.local for proper hierarchical counting. (The current
->    behavior wouldn't match neither though.)
+> How can I have ima_update_policy() called before a custom policy is loaded?
 
-Yeah this is incosistent with memcg but there max / high events are
-essentially useless because that doesn't indicate actual limit breach.
-Both events are interesting - which cgroup's limit was reached and who
-suffered because of that.
+Oops, you're right.  My concern was ima_init_policy(), but it calls
+ima_update_policy_flag() directly.
 
-So, maybe sth like the following?
+Mimi
 
-1. Make max event propagate hierarchically.  This is a behavior change
-   but also an obvious bug fix.  Given that internal cgroups don't
-   have processes in cgroup2, maybe it's safe enough?
-
-2. Add another (hierarchical, of course) event which counts the number
-   of fork rejects.  I can't think of a good name.  Any ideas?
-
-Thanks.
-
--- 
-tejun
