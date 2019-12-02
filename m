@@ -2,261 +2,97 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31787C43141
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE415C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED085215E5
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A520C21835
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:13:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575313931;
-	bh=c0wU/ydN3X9chS8ohQeA9+Ps5De+Uh3+bA/Xz2NUefA=;
+	s=default; t=1575314026;
+	bh=xPa0X6R5T4e6CEa2s0SLF/tQNyowSG/AuLe3v9UhiTU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mFV13pvtEvLOvT3CWVjvJBHX44jblsIX5i2NlSHQorrpOzZ8HI+9Puewyq6xCrbiQ
-	 8qxt4vtdD+TIsMIbAouNhgsoEonddjNZdxWPPbnhK9EAapZ+8pY8a8ESzWVtjyOABH
-	 gspFLrptNEFf0VAy8/Tf+jjhsQN1eP7AI2htyJQM=
+	b=ykhCmHID+Mb6eTMRLZTmK7aXqopGpPZo2WkLDJjtZIt5uVqcgVhAFguR9aUNM+kBr
+	 tbpKI26L5KgBEq6bC3fDroP8NccxvUc2F4qFANKXLW+TBxe+5OPkvn5h+PmXKOyCWc
+	 o8dGFUUhw17MMm7p9e12Aqeilmz3G3hKAc4ZUVHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728064AbfLBTMK (ORCPT
+        id S1728078AbfLBTNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 14:12:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47688 "EHLO mail.kernel.org"
+        Mon, 2 Dec 2019 14:13:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727835AbfLBTMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 14:12:09 -0500
+        id S1727580AbfLBTNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 14:13:45 -0500
 Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AC4A20865;
-        Mon,  2 Dec 2019 19:12:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D9D420848;
+        Mon,  2 Dec 2019 19:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575313928;
-        bh=c0wU/ydN3X9chS8ohQeA9+Ps5De+Uh3+bA/Xz2NUefA=;
+        s=default; t=1575314024;
+        bh=xPa0X6R5T4e6CEa2s0SLF/tQNyowSG/AuLe3v9UhiTU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rtDi8zJvTPcyL3e/hsmgwlQ55KHTdew267Yef4LwQw4s8+vzWxPfAHmPbcjMBd/kR
-         OM28GSQxAWV8uOwrnxJat4lo3OJ9K7udADJWLDGhay+g3AiIOCBJCyY4JO3djA8QT0
-         o54LcLGQURJjZnuOfrxsPGWgDixTO63pDmHY2FZo=
-Date:   Mon, 2 Dec 2019 20:12:05 +0100
+        b=OFfA4XXSIukBhUqFK/VHx0x3IEaSdakYD9V9S4aW89Q9zq5PeKYQWEONDx6t7Ze21
+         QBkk/jmZyCAKUK/lRxI6bex7+avShuMTRHoOJMBy4RO2DJIv//sUdG0ohk2zXOXLBG
+         Sm3vNETJvv8pNx6Ctq25FodpLb7DUWdyauDV8N2c=
+Date:   Mon, 2 Dec 2019 20:13:42 +0100
 From:   Maxime Ripard <mripard@kernel.org>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+To:     Stefan Mavrodiev <stefan@olimex.com>
 Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: allwinner: Convert to new-style SPDX license
- identifiers
-Message-ID: <20191202191205.2izimptezz5rf5kp@gilmour.lan>
-References: <20191123132435.22093-1-peron.clem@gmail.com>
- <20191128174204.tbr5ldilkadw42gc@gilmour.lan>
- <CAJiuCccY7AFsd22bOxKZW=BAne5YEG0vmnVmUNFamU9cpW_vNA@mail.gmail.com>
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-sunxi@googlegroups.com, stable@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] arm64: dts: allwinner: a64: olinuxino: Fix eMMC
+ supply regulator
+Message-ID: <20191202191342.7ttegde7jewn4xra@gilmour.lan>
+References: <20191129113941.20170-1-stefan@olimex.com>
+ <20191129113941.20170-2-stefan@olimex.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hre6yxsla27gcger"
+        protocol="application/pgp-signature"; boundary="q764rlr5yjz4gv75"
 Content-Disposition: inline
-In-Reply-To: <CAJiuCccY7AFsd22bOxKZW=BAne5YEG0vmnVmUNFamU9cpW_vNA@mail.gmail.com>
+In-Reply-To: <20191129113941.20170-2-stefan@olimex.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---hre6yxsla27gcger
-Content-Type: text/plain; charset=iso-8859-1
+--q764rlr5yjz4gv75
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 28, 2019 at 07:12:16PM +0100, Cl=E9ment P=E9ron wrote:
-> On Thu, 28 Nov 2019 at 18:42, Maxime Ripard <mripard@kernel.org> wrote:
-> >
-> > Hi Clement,
-> >
-> > Sorry for the pretty slow answer
-> >
-> > On Sat, Nov 23, 2019 at 02:24:35PM +0100, Cl=E9ment P=E9ron wrote:
-> > > Move the SPDX-License-Identifier lines to the top and drop the
-> > > license splat.
-> > >
-> > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> > > ---
-> > >
-> > > Hi,
-> > >
-> > > This the same logic that what has be done on Amlogic.
-> > >
-> > > Commit: ARM64: dts: amlogic: Convert to new-style SPDX license identi=
-fiers
-> > > https://lore.kernel.org/patchwork/patch/890455/
-> >
-> > So there's a bunch of different things that should be addressed in
-> > separate patches here I believe.
-> >
-> > >  arch/arm64/boot/dts/allwinner/axp803.dtsi     | 39 +----------------
-> > >  .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 39 +----------------
-> > >  .../dts/allwinner/sun50i-a64-nanopi-a64.dts   | 39 +----------------
-> > >  .../dts/allwinner/sun50i-a64-olinuxino.dts    | 39 +----------------
-> > >  .../dts/allwinner/sun50i-a64-orangepi-win.dts | 39 +----------------
-> > >  .../dts/allwinner/sun50i-a64-pine64-lts.dts   |  3 +-
-> > >  .../dts/allwinner/sun50i-a64-pine64-plus.dts  | 39 +----------------
-> > >  .../boot/dts/allwinner/sun50i-a64-pine64.dts  | 39 +----------------
-> > >  .../dts/allwinner/sun50i-a64-pinebook.dts     |  1 -
-> > >  .../allwinner/sun50i-a64-sopine-baseboard.dts | 42 +----------------=
---
-> > >  .../boot/dts/allwinner/sun50i-a64-sopine.dtsi | 42 +----------------=
---
-> > >  .../boot/dts/allwinner/sun50i-a64-teres-i.dts |  3 +-
-> > >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 39 +----------------
-> > >  .../sun50i-h5-bananapi-m2-plus-v1.2.dts       |  4 +-
-> > >  .../allwinner/sun50i-h5-bananapi-m2-plus.dts  |  4 +-
-> > >  .../allwinner/sun50i-h5-nanopi-neo-plus2.dts  | 39 +----------------
-> > >  .../dts/allwinner/sun50i-h5-nanopi-neo2.dts   | 39 +----------------
-> > >  .../dts/allwinner/sun50i-h5-orangepi-pc2.dts  | 39 +----------------
-> > >  .../allwinner/sun50i-h5-orangepi-prime.dts    | 42 +----------------=
---
-> > >  .../sun50i-h5-orangepi-zero-plus.dts          |  3 +-
-> > >  .../sun50i-h5-orangepi-zero-plus2.dts         | 39 +----------------
-> > >  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  | 39 +----------------
-> > >  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  2 +-
-> > >  .../dts/allwinner/sun50i-h6-orangepi-3.dts    |  2 +-
-> > >  .../allwinner/sun50i-h6-orangepi-lite2.dts    |  2 +-
-> > >  .../allwinner/sun50i-h6-orangepi-one-plus.dts |  2 +-
-> > >  .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  2 +-
-> > >  .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  2 +-
-> > >  .../dts/allwinner/sun50i-h6-tanix-tx6.dts     |  2 +-
-> > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  2 +-
-> > >  30 files changed, 33 insertions(+), 634 deletions(-)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/allwinner/axp803.dtsi b/arch/arm64/b=
-oot/dts/allwinner/axp803.dtsi
-> > > index f0349ef4bfdd..f4f2c70fde5c 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/axp803.dtsi
-> > > +++ b/arch/arm64/boot/dts/allwinner/axp803.dtsi
-> > > @@ -1,43 +1,6 @@
-> > > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > >  /*
-> > >   * Copyright 2017 Icenowy Zheng <icenowy@aosc.xyz>
-> > > - *
-> > > - * This file is dual-licensed: you can use it either under the terms
-> > > - * of the GPL or the X11 license, at your option. Note that this dual
-> > > - * licensing only applies to this file, and not this project as a
-> > > - * whole.
-> > > - *
-> > > - *  a) This file is free software; you can redistribute it and/or
-> > > - *     modify it under the terms of the GNU General Public License as
-> > > - *     published by the Free Software Foundation; either version 2 o=
-f the
-> > > - *     License, or (at your option) any later version.
-> > > - *
-> > > - *     This file is distributed in the hope that it will be useful,
-> > > - *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > > - *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > > - *     GNU General Public License for more details.
-> > > - *
-> > > - * Or, alternatively,
-> > > - *
-> > > - *  b) Permission is hereby granted, free of charge, to any person
-> > > - *     obtaining a copy of this software and associated documentation
-> > > - *     files (the "Software"), to deal in the Software without
-> > > - *     restriction, including without limitation the rights to use,
-> > > - *     copy, modify, merge, publish, distribute, sublicense, and/or
-> > > - *     sell copies of the Software, and to permit persons to whom the
-> > > - *     Software is furnished to do so, subject to the following
-> > > - *     conditions:
-> > > - *
-> > > - *     The above copyright notice and this permission notice shall be
-> > > - *     included in all copies or substantial portions of the Softwar=
-e.
-> > > - *
-> > > - *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIN=
-D,
-> > > - *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTI=
-ES
-> > > - *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> > > - *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> > > - *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> > > - *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> > > - *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> > > - *     OTHER DEALINGS IN THE SOFTWARE.
-> > >   */
-> >
-> > So this is the first, obvious, one that you talk about in your commit
-> > log. While the license says that it's X11, SPDX reports that it's now
-> > MIT, can you clarify this?
+On Fri, Nov 29, 2019 at 01:39:39PM +0200, Stefan Mavrodiev wrote:
+> A64-OLinuXino-eMMC uses 1.8V for eMMC supply. This is done via a triple
+> jumper, which sets VCC-PL to either 1.8V or 3.3V. This setting is different
+> for boards with and without eMMC.
 >
-> As far as I know X11 and MIT are similar and MIT is preferred in Linux.
-> see: LICENSES/preferred.
-> So I have converted the X11 to MIT but it can be an explicit commit.
-> This is done implicitly in the Amlogic commit.
-
-It's not really my main concern, it's more that if it's a license
-change, then you need the agreement of all the authors, so basically
-anyone that touched all those DT.
-
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts =
-b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
-> > > index 72d6961dc312..2ca36580436c 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
-> > > @@ -1,6 +1,5 @@
-> > > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > >  /*
-> > > - * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > > - *
-> > >   * Copyright (c) 2018 ARM Ltd.
-> > >   */
-> >
-> > This is another kind of changes though. The SPDX identifier is there,
-> > but under the wrong format and you're fixing it.
-> >
-> > That being said, I'm not a super fan of mixing the two comment styles
-> > for two lines.
-> >
-> > What about using only // style comments for the header?
+> This is not a big issue for DDR52 mode, however the eMMC will not work in
+> HS200/HS400, since these modes explicitly requires 1.8V.
 >
-> Most of the other dts use this style for the header so I would like to
-> keep this kind of style.
-> Except if DT maintainers want explicity to move to another style.
-> Having a coherency in all dts is better and we can move to another
-> style with a simple script.
+> Fixes: 94f68f3a4b2a ("arm64: dts: allwinner: a64: Add A64 OlinuXino board (with eMMC)")
+> Cc: stable@vger.kernel.org # v5.4
+> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
 
-Some drivers already use the // comment for their copyright notice,
-the coding style allows it for single line comment and our DTs already
-use it, so it's the cleanest solution imho.
-
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts =
-b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> > > index f335f7482a73..84b7e9936300 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> > > @@ -1,4 +1,4 @@
-> > > -// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-> > > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > >  /*
-> > >   * Copyright (C) 2019 Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> > >   */
-> >
-> > And I'm not sure what this one (and the next) is?
->
-> The license expressions in dual licensed files is wrong here, "OR"
-> should be uppercase.
-> I can move it to a separate commit if you like.
-
-Ah, right, indeed, this should be in a separate patch.
-
-Thanks!
+Applied, thanks!
 Maxime
 
---hre6yxsla27gcger
+--q764rlr5yjz4gv75
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXeViBQAKCRDj7w1vZxhR
-xT6AAQC35VJscNYYQjTRrHq7l91bwIQ1GxqYCZNUKpvRYALq2AEAhGVlONgaDx6+
-y1KC09Y3YVyygZJ9d705xzI+wYjh7gI=
-=wruZ
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXeViZgAKCRDj7w1vZxhR
+xVnqAQCN+/fEAa8RYdLvkoYtRzpPTIeiTCvNTyfWakMZS9YKvQEAnFfgnu6qHLWp
+6DXcmrsNxdL1AzYEYmpIY1KhpG4BdgQ=
+=ZRr1
 -----END PGP SIGNATURE-----
 
---hre6yxsla27gcger--
+--q764rlr5yjz4gv75--
