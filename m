@@ -2,212 +2,153 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD49BC43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27350C43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9908F20881
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E14C320881
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:54:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XGwV1mIt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dDtBW9Xl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbfLBSxp (ORCPT
+        id S1728001AbfLBSym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 13:53:45 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46764 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727464AbfLBSxp (ORCPT
+        Mon, 2 Dec 2019 13:54:42 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:32952 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727464AbfLBSym (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 13:53:45 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z7so401243wrl.13;
-        Mon, 02 Dec 2019 10:53:42 -0800 (PST)
+        Mon, 2 Dec 2019 13:54:42 -0500
+Received: by mail-qt1-f193.google.com with SMTP id d5so874550qto.0;
+        Mon, 02 Dec 2019 10:54:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=f1v7Nshk6iUxJP3MddmPzidScvIGdRe5OmcnUCAkON0=;
-        b=XGwV1mItkhgTdZwwbVNEACxRbTs8LSWOx0Y0LkkF9qPUpy5oOusnG5/w5NOdo68xNV
-         NDS2veH+u1ZQ8lFpH05EO2y5DpZs95zH8MSVwAASHh2oNa2wVSSFn8uDfxDlZKYIyHtj
-         jALjaRp6xwWehXwwIS9R9YlvNuMsni7V5mWrfqZkLY3KDXmv7st3sbPjq3MDSdFda+7P
-         SnLWDZ1CGXFyGtNXsql1T5MWBFsQj1788+EM8fB4RViStvE4nB4LHkiDiJVmSW8/HBfZ
-         FbB/WTX/+jyCBXE9KzJKSKiqkyfHszQw29gNiZfzYiw6BLE4KpVN0QWOGW8OHkFqoCv9
-         L4aQ==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Q+km/f32wNPmuJKYXN+UMoF0b6NSliqWpDUpI204bWk=;
+        b=dDtBW9Xl19goZYg0ymdeTAVghXD5B/NSctJHlHqhEEWZv0XvMmaz0pGWljjJZZXjNO
+         Dx/LfknM/v7/T9aF5QAYcaUOpCVUef5KWXbDcRANpAJDopJ7ULrO+L0MBoFotGn/TSdg
+         fXu2ViYbWOtT3WibenKpyOIsAH7kHlMhMG055/xQLxViH/PiXnpn5LSItT1vUnEXFH01
+         /aaisaVDXvp0mbdH2eYlY2lw4blLfSqs5YXimQ0MOr4LyDOecJ4Bdqxv8i/v9eyQQ71y
+         zSamElZjTBTQAE77E4KVpPQTMY3+JxSACODQTItvXF7rELNAmERVa9tYAXdmqF/NDuir
+         CshQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=f1v7Nshk6iUxJP3MddmPzidScvIGdRe5OmcnUCAkON0=;
-        b=Fm7+UoCf7RGCYj6W/efhXZZwJXjdshvtTN8F/lgLedyzRpE32BwKKrFAwcrgdzobK8
-         sQ3ceXd40f5pcSgNVBJOihT+rIDEhjNv+/YncwZV9E3T7nOXmxtOaLS3RIM1crRfSyvA
-         gtod7to4wgFDwIzmTL94vziP816qxFTqGQEIHcRQpninpHAONodfpBw8OzXjJKYnq17e
-         2OPV/DXg/hKw0wSGJGeCmaWox6iPjb+XoqUkBnEBfpFbHqnsd2hbqmC1eP3b8xPymzps
-         Zwq14/0/KlfZd7Cxv5IF2yAc/j+woKbabjD+k5CsnIl/EqMzSTVXTDlSfgclHARTYYfK
-         rXMQ==
-X-Gm-Message-State: APjAAAWKbC/eh7bsD9Ka/AZ5shDryLqwm9aYgP1LEkiQlvcPVWQNLKT0
-        tu+cGUiXPleWOKuxMuv8Jz0=
-X-Google-Smtp-Source: APXvYqyT5qIZqkrFXiSHABrKE+fUSySESMth558JCSTXqpdokQG8FYcOIPXEvGBDJOqe6aBeIfztcA==
-X-Received: by 2002:a5d:50d2:: with SMTP id f18mr467853wrt.366.1575312822127;
-        Mon, 02 Dec 2019 10:53:42 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id p5sm309610wrt.79.2019.12.02.10.53.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Dec 2019 10:53:41 -0800 (PST)
-Date:   Mon, 2 Dec 2019 19:53:40 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        linux-input@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Kirill Smelkov <kirr@nexedi.com>
-Subject: Re: [PATCH] Input: uinput - Add UI_SET_UNIQ ioctl handler
-Message-ID: <20191202185340.nae4lljten5jqp3y@pali>
-References: <20191127185139.65048-1-abhishekpandit@chromium.org>
- <20191201145357.ybq5gfty4ulnfasq@pali>
- <20191202012305.GQ248138@dtor-ws>
- <20191202084750.k7lafzzrf3yq2tqs@pali>
- <20191202175440.GA50317@dtor-ws>
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Q+km/f32wNPmuJKYXN+UMoF0b6NSliqWpDUpI204bWk=;
+        b=Fkv8ICJLmkOYoJrNvK7FqVfCgsayrpGSTpI2PV0Z8ENIUI3Of95As1DR8Qy0obB7bQ
+         J4CcxPt2paP9KvCoyvWTz8WI+c078/jBG+EoNY4SMvXvBKBpJlVnHH7zRJycXjR+R2oc
+         YoWpJ+j98FN4KbGo7cf5aCJxGUYr9deGGzDKZyL3+B2fxI2NgrdqJBEXN3FMoxt0TU5R
+         CCaAIXowtFwg0qAwW0IU0gYsZE67u9v8p1A0+mCZOIlpKcxP0/zF+3f+oSTeH7A5ZGvN
+         OP90xnMcI3D2o2WpOtR5VL8v79I+/vpHJ9byR1fryZka4a5uARdpFCJdpn0I71IocmU/
+         C2vw==
+X-Gm-Message-State: APjAAAXA4Rnqb2QUIR4vxk3CfRInpM/SuuosvNPTvwwDQeWnMQDEkjxx
+        m569KqDaS4BheEC7nMfOXrU=
+X-Google-Smtp-Source: APXvYqzHdM3/QSgrJ44KrRmrxwpAka45CYVys9Ev++GURc/Uutt3BdxZdTk/YFZdcc3u0BjBAp/suQ==
+X-Received: by 2002:ac8:3a27:: with SMTP id w36mr907843qte.204.1575312880987;
+        Mon, 02 Dec 2019 10:54:40 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([190.15.121.82])
+        by smtp.gmail.com with ESMTPSA id q130sm219864qka.114.2019.12.02.10.54.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 10:54:40 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 079D8405B6; Mon,  2 Dec 2019 15:54:35 -0300 (-03)
+Date:   Mon, 2 Dec 2019 15:54:34 -0300
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>
+Subject: Re: [PATCH 0/3] perf/bpftool: Allow to link libbpf dynamically
+Message-ID: <20191202185434.GG4063@kernel.org>
+References: <20191127094837.4045-1-jolsa@kernel.org>
+ <CAEf4BzbUK98tsYH1mSNoTjuVB4dstRsL5rpkA+9nRCcqrdn6-Q@mail.gmail.com>
+ <87zhgappl7.fsf@toke.dk>
+ <CAEf4BzYoJUttk=o+p=NHK8K_aS3z2LdLiqzRni7PwyDaOxu68A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="2etcyssq2xsldc6g"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191202175440.GA50317@dtor-ws>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzYoJUttk=o+p=NHK8K_aS3z2LdLiqzRni7PwyDaOxu68A@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Mon, Dec 02, 2019 at 10:42:53AM -0800, Andrii Nakryiko escreveu:
+> On Mon, Dec 2, 2019 at 10:09 AM Toke Høiland-Jørgensen <toke@redhat.com> wrote:
+> > Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
+> > > On Wed, Nov 27, 2019 at 1:49 AM Jiri Olsa <jolsa@kernel.org> wrote:
+> > >> adding support to link bpftool with libbpf dynamically,
+> > >> and config change for perf.
 
---2etcyssq2xsldc6g
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > >> It's now possible to use:
+> > >>   $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=1
 
-On Monday 02 December 2019 09:54:40 Dmitry Torokhov wrote:
-> On Mon, Dec 02, 2019 at 09:47:50AM +0100, Pali Roh=C3=A1r wrote:
-> > On Sunday 01 December 2019 17:23:05 Dmitry Torokhov wrote:
-> > > Hi Pali,
-> > >=20
-> > > On Sun, Dec 01, 2019 at 03:53:57PM +0100, Pali Roh=C3=A1r wrote:
-> > > > Hello!
-> > > >=20
-> > > > On Wednesday 27 November 2019 10:51:39 Abhishek Pandit-Subedi wrote:
-> > > > > Support setting the uniq attribute of the input device. The uniq
-> > > > > attribute is used as a unique identifier for the connected device.
-> > > > >=20
-> > > > > For example, uinput devices created by BlueZ will store the addre=
-ss of
-> > > > > the connected device as the uniq property.
-> > > > >=20
-> > > > > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.or=
-g>
-> > > >=20
-> > > > ...
-> > > >=20
-> > > > > diff --git a/include/uapi/linux/uinput.h b/include/uapi/linux/uin=
-put.h
-> > > > > index c9e677e3af1d..d5b7767c1b02 100644
-> > > > > --- a/include/uapi/linux/uinput.h
-> > > > > +++ b/include/uapi/linux/uinput.h
-> > > > > @@ -145,6 +145,7 @@ struct uinput_abs_setup {
-> > > > >  #define UI_SET_PHYS		_IOW(UINPUT_IOCTL_BASE, 108, char*)
-> > > > >  #define UI_SET_SWBIT		_IOW(UINPUT_IOCTL_BASE, 109, int)
-> > > > >  #define UI_SET_PROPBIT		_IOW(UINPUT_IOCTL_BASE, 110, int)
-> > > > > +#define UI_SET_UNIQ		_IOW(UINPUT_IOCTL_BASE, 111, char*)
-> > > >=20
-> > > > I think that usage of char* as type in _IOW would cause compatibili=
-ty
-> > > > problems like it is for UI_SET_PHYS (there is UI_SET_PHYS_COMPAT). =
-Size
-> > > > of char* pointer depends on userspace (32 vs 64bit), so 32bit proce=
-ss on
-> > > > 64bit kernel would not be able to call this new UI_SET_UNIQ ioctl.
-> > > >=20
-> > > > I would suggest to define this ioctl as e.g.:
-> > > >=20
-> > > >   #define UI_SET_UNIQ		_IOW(_IOC_WRITE, UINPUT_IOCTL_BASE, 111, 0)
-> > > >=20
-> > > > And then in uinput.c code handle it as:
-> > > >=20
-> > > >   case UI_SET_UNIQ & ~IOCSIZE_MASK:
-> > > >=20
-> > > > as part of section /* Now check variable-length commands */
-> > >=20
-> > > If we did not have UI_SET_PHYS in its current form, I'd agree with yo=
-u,
-> > > but I think there is benefit in having UI_SET_UNIQ be similar to
-> > > UI_SET_PHYS.
-> >=20
-> > I thought that ioctl is just number, so we can define it as we want. And
-> > because uinput.c has already switch for variable-length commands it
-> > would be easy to use it. Final handling can be in separate function like
-> > for UI_SET_PHYS which can look like same.
->=20
-> Yes, we can define ioctl number as whatever we want. What I was trying
-> to say, right now users do this:
->=20
-> 	rc =3D ioctl(fd, UI_SET_PHYS, "whatever");
-> 	...
->=20
-> and with UI_SET_UNIQ they expect the following to work:
->=20
-> 	rc =3D ioctl(fd, UI_SET_UNIQ, "whatever");
-> 	...
+> > > I wonder what's the motivation behind these changes, though? Why is
+> > > linking bpftool dynamically with libbpf is necessary and important?
+> > > They are both developed tightly within kernel repo, so I fail to see
+> > > what are the huge advantages one can get from linking them
+> > > dynamically.
 
-And would not following definition
+> > Well, all the regular reasons for using dynamic linking (memory usage,
+> > binary size, etc).
 
-  #define UI_SET_UNIQ _IOW(_IOC_WRITE, UINPUT_IOCTL_BASE, 111, 0)
+> bpftool is 327KB with statically linked libbpf. Hardly a huge problem
+> for either binary size or memory usage. CPU instruction cache usage is
+> also hardly a concern for bpftool specifically.
 
-allow userspace to call
+> > But in particular, the ability to update the libbpf
+> > package if there's a serious bug, and have that be picked up by all
+> > utilities making use of it.
 
-  rc =3D ioctl(fd, UI_SET_UNIQ, "whatever");
+> I agree, and that works only for utilities linking with libbpf
+> dynamically. For tools that build statically, you'd have to update
+> tools anyways. And if you can update libbpf, you can as well update
+> bpftool at the same time, so I don't think linking bpftool statically
+> with libbpf causes any new problems.
 
-as you want?
+> > No reason why bpftool should be special in that respect.
 
-> They would not expect a variable length IOCTL here, or expect a
-> fixed-size string, nor do they expect to cast pointer to u64. So keeping
-> the spirit of UI_SET_PHYS, even if it is not great from 64/32 bit point
-> of view is beneficial here.
->=20
-> >=20
-> > > But you are absolutely correct that in current form the patch is
-> > > deficient on 64/32 systems, and the compat handling needs to be added
-> > > before it can be accepted.
-> >=20
-> > Is not better to avoid usage of compat ioctl? Or it is OK to use compat
-> > ioctl also for new features? I do not know if there are some kernel
-> > rules for it or not... But for me it sounds like "compatibility layer
-> > for older code".
->=20
-> Yes, if uinput driver did not have any compat code in it, we would not
-> want to add it. But alas! we already need to handle compat cases for
-> expsting API, so consistency is more important than purity (in my
-> opinion) here.
->=20
-> Thanks.
->=20
+> But I think bpftool is special and we actually want it to be special
+> and tightly coupled to libbpf with sometimes very intimate knowledge
+> of libbpf and access to "hidden" APIs. That allows us to experiment
+> with new stuff that requires use of bpftool (e.g., code generation for
+> BPF programs), without having to expose and seal public APIs. And I
+> don't think it's a problem from the point of code maintenance, because
+> both live in the same repository and are updated "atomically" when new
+> features are added or changed.
 
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+> Beyond superficial binary size worries, I don't see any good reason
+> why we should add more complexity and variables to libbpf and bpftool
+> build processes just to have a "nice to have" option of linking
+> bpftool dynamically with libbpf.
 
---2etcyssq2xsldc6g
-Content-Type: application/pgp-signature; name="signature.asc"
+s/bpftool/perf/g
+s/libbpf/libperf/g
 
------BEGIN PGP SIGNATURE-----
+And I would also agree 8-)
 
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXeVdsgAKCRCL8Mk9A+RD
-UizOAJ9Q3KfvZg+KBeneTeD4TNT4oX4cRQCgxcA8gx8TdeB2oOo7XPVxPq/88XQ=
-=s/uf
------END PGP SIGNATURE-----
-
---2etcyssq2xsldc6g--
+- Arnaldo
