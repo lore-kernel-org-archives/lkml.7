@@ -2,132 +2,123 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 829FCC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70282C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DAE320640
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4051A20833
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:06:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CeUIdf7z"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zK9GMzrq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbfLBRGL (ORCPT
+        id S1727743AbfLBRGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 12:06:11 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44293 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727601AbfLBRGL (ORCPT
+        Mon, 2 Dec 2019 12:06:40 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:45866 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727513AbfLBRGk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 12:06:11 -0500
-Received: by mail-io1-f68.google.com with SMTP id z23so39282iog.11
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 09:06:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BcglRaGep1GKTanrUcF7KHchUGiMPbVv1u4sFWn/C04=;
-        b=CeUIdf7zfJkvsqlV1h8nSKP+ClCgoWj5xy62q0+PEiDKFA2Z++Rp/4hquyCRzLmqz+
-         /w3EEp7905sgnqlRvpttWRk6M2B8VtT0i50nh+QyiW9q7DeIwC9YYlCTN/GBZB+ku2LE
-         Ur7QJZlAGnpNlkaXw8RI71YbNDNw+g5qNyDAo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BcglRaGep1GKTanrUcF7KHchUGiMPbVv1u4sFWn/C04=;
-        b=llckw1OxeFwcGsftZJGcCM43nU8o1m5W89yp5vQyw+SnJ63jc3kBnQ1d4gvC9oHZZ6
-         QTHp9eyyLNNa/H3tcCS1LVwaW6uudOZO4vD/YTOfWdKHAxbvR/IZhM3zOXI9KYGgBefg
-         efPux6aEmfODxnkn/mx/mTH+0M1Gm76/TDMFlc3cUrmLIwvJu7LwdQFyVA4NUbm6gI0p
-         +fxYvwvdfpXJ7X00s3tgAojvV+WHw8836k60k317CeEd88bs1JUa+qbAcA0R3JcngNtl
-         KqbEtlGK3FbAj/RcLg94E6dzBB2JGaMDP3SDbSqWYLqRbAnupOn7/xHtz87CgOWDYQK6
-         hOsQ==
-X-Gm-Message-State: APjAAAX+tmjIB5eRhqqyiNH0ojR9Z48yyfVxbclpp6+IpZa4KCGp8qzs
-        rA/OzkubAMhBgn4nsJNCSt51wtUtlq1Hk+bQzbTpjA==
-X-Google-Smtp-Source: APXvYqxA8DLcRZblCZY7UyL1SA9gkefXuH49Fgg09Zfae13kxAmKaY7QDwjfrFl7LLEFEHeZBjNaScoCNLcsigxnDTc=
-X-Received: by 2002:a6b:ec0f:: with SMTP id c15mr6648604ioh.149.1575306370163;
- Mon, 02 Dec 2019 09:06:10 -0800 (PST)
+        Mon, 2 Dec 2019 12:06:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=12vfepLsf3YjzqkbhBhkyf8yhAtAkfl23HqEvJbIYys=; b=zK9GMzrqmWlBy2n7w8dQ32Vqf
+        bv8aGZN49p6N2cxJl8zVgmFND6A2TJ6qR2c+N17WmR7c5M+PhTby3xuCZmjxs8D1e5BFfTTehCC3P
+        fpC8GqCLcf714iQFA+30cAgS2AaxfXmMyMyVEXAQuZQeK97qAGOWN8nJ44do0XzJmylqa6JQjNfOG
+        6MITRiyMF3gFeuz2hM/dahKKuDKCf69x2sLnGWAcQ4ZYmTBsPg9edkoooNdcXI+aGLzZea3WejnXj
+        Td34e9V1X+aEoOdriw5fZaAKVTP7AjKTTHGbceS3WAIVLrTodn4iH3j8tzAJrzDua9grQJsPDwmWK
+        fMmWlKCZg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ibp9e-00020p-OC; Mon, 02 Dec 2019 17:06:34 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 363CD301A6C;
+        Mon,  2 Dec 2019 18:05:17 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1D51120D96EC4; Mon,  2 Dec 2019 18:06:33 +0100 (CET)
+Date:   Mon, 2 Dec 2019 18:06:33 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Meelis Roos <mroos@linux.ee>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: UBSAN: Undefined behaviour in arch/x86/events/intel/p6.c:116:29
+Message-ID: <20191202170633.GN2844@hirez.programming.kicks-ass.net>
+References: <02f44ed5-13ac-f9c6-1f35-129c41006900@linux.ee>
 MIME-Version: 1.0
-References: <20191114235008.185111-1-evgreen@chromium.org> <20191114154903.v7.1.I0b2734bafaa1bd6831dec49cdb4730d04be60fc8@changeid>
-In-Reply-To: <20191114154903.v7.1.I0b2734bafaa1bd6831dec49cdb4730d04be60fc8@changeid>
-From:   Gwendal Grignou <gwendal@chromium.org>
-Date:   Mon, 2 Dec 2019 09:05:59 -0800
-Message-ID: <CAPUE2utX4LC8k7o9_Dr8ZOOiMr3sVdNFH81S2fP_8+meBACLdA@mail.gmail.com>
-Subject: Re: [PATCH v7 1/2] loop: Report EOPNOTSUPP properly
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Martin K Petersen <martin.petersen@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Alexis Savery <asavery@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-block@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <02f44ed5-13ac-f9c6-1f35-129c41006900@linux.ee>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+On Tue, Nov 26, 2019 at 07:55:08PM +0200, Meelis Roos wrote:
+> While testing 5.4 on a Dell D600 (32-bit), I noticed the old UBSAN warnings from p6 perf events.
+> I remember having seen these warnings on other p6 era computers too.
+> 
+> [    2.795167] ================================================================================
+> [    2.795206] UBSAN: Undefined behaviour in arch/x86/events/intel/p6.c:116:29
+> [    2.795235] index 8 is out of range for type 'u64 [8]'
+> [    2.795265] CPU: 0 PID: 1 Comm: swapper Not tainted 5.4.0-03419-g386403a115f9-dirty #18
+> [    2.795266] Hardware name: Dell Computer Corporation Latitude D600                   /0X2034, BIOS A16 06/29/2005
+> [    2.795268] Call Trace:
+> [    2.795283]  dump_stack+0x16/0x19
+> [    2.795290]  ubsan_epilogue+0xb/0x29
+> [    2.795293]  __ubsan_handle_out_of_bounds.cold+0x43/0x48
+> [    2.795299]  ? sysfs_add_file_mode_ns+0xad/0x180
+> [    2.795304]  p6_pmu_event_map+0x3b/0x50
+> [    2.795306]  is_visible+0x25/0x30
+> [    2.795308]  ? collect_events+0x150/0x150
+> [    2.795310]  internal_create_group+0xd8/0x3e0
+> [    2.795312]  ? collect_events+0x150/0x150
+> [    2.795314]  internal_create_groups.part.0+0x34/0x80
+> [    2.795317]  sysfs_create_groups+0x10/0x20
+> [    2.795321]  device_add+0x536/0x5a0
+> [    2.795326]  ? kvasprintf_const+0x59/0x90
+> [    2.795331]  ? kfree_const+0xf/0x30
+> [    2.795334]  ? kobject_set_name_vargs+0x6a/0xa0
+> [    2.795338]  pmu_dev_alloc+0x8e/0xe0
+> [    2.795344]  perf_event_sysfs_init+0x40/0x78
+> [    2.795346]  ? stack_map_init+0x17/0x17
+> [    2.795347]  do_one_initcall+0x7a/0x1b3
+> [    2.795351]  ? do_early_param+0x75/0x75
+> [    2.795354]  kernel_init_freeable+0x1ae/0x230
+> [    2.795357]  ? rest_init+0x6d/0x6d
+> [    2.795359]  kernel_init+0x9/0xf3
+> [    2.795361]  ? rest_init+0x6d/0x6d
+> [    2.795363]  ret_from_fork+0x2e/0x38
+> [    2.795364] ================================================================================
 
-On Thu, Nov 14, 2019 at 3:50 PM Evan Green <evgreen@chromium.org> wrote:
->
-> Properly plumb out EOPNOTSUPP from loop driver operations, which may
-> get returned when for instance a discard operation is attempted but not
-> supported by the underlying block device. Before this change, everything
-> was reported in the log as an I/O error, which is scary and not
-> helpful in debugging.
->
-> Signed-off-by: Evan Green <evgreen@chromium.org>
-> ---
->
-> Changes in v7:
-> - Use errno_to_blk_status() (Christoph)
->
-> Changes in v6:
-> - Updated tags
->
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3:
-> - Updated tags
->
-> Changes in v2:
-> - Unnested error if statement (Bart)
->
->  drivers/block/loop.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> index ef6e251857c8..6a9fe1f9fe84 100644
-> --- a/drivers/block/loop.c
-> +++ b/drivers/block/loop.c
-> @@ -461,7 +461,7 @@ static void lo_complete_rq(struct request *rq)
->         if (!cmd->use_aio || cmd->ret < 0 || cmd->ret == blk_rq_bytes(rq) ||
->             req_op(rq) != REQ_OP_READ) {
->                 if (cmd->ret < 0)
-> -                       ret = BLK_STS_IOERR;
-> +                       ret = errno_to_blk_status(cmd->ret);
->                 goto end_io;
->         }
->
-> @@ -1950,7 +1950,10 @@ static void loop_handle_cmd(struct loop_cmd *cmd)
->   failed:
->         /* complete non-aio request */
->         if (!cmd->use_aio || ret) {
-> -               cmd->ret = ret ? -EIO : 0;
-> +               if (ret == -EOPNOTSUPP)
-> +                       cmd->ret = ret;
-> +               else
-> +                       cmd->ret = ret ? -EIO : 0;
->                 blk_mq_complete_request(rq);
->         }
->  }
-> --
-> 2.21.0
->
+Does something like so fix it?
+
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 9a89d98c55bd..f0ab61cd2f68 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1642,9 +1642,12 @@ static struct attribute_group x86_pmu_format_group __ro_after_init = {
+ 
+ ssize_t events_sysfs_show(struct device *dev, struct device_attribute *attr, char *page)
+ {
+-	struct perf_pmu_events_attr *pmu_attr = \
++	struct perf_pmu_events_attr *pmu_attr =
+ 		container_of(attr, struct perf_pmu_events_attr, attr);
+-	u64 config = x86_pmu.event_map(pmu_attr->id);
++	u64 config = 0;
++
++	if (pmu_attr->id < x86_pmu.max_events)
++		config = x86_pmu.event_map(pmu_attr->id);
+ 
+ 	/* string trumps id */
+ 	if (pmu_attr->event_str)
