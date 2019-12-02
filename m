@@ -2,176 +2,306 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E69C43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64891C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CAA222464
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 269F72231B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:05:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GGV3kQDC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EEOtEcxb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfLBJEC (ORCPT
+        id S1726678AbfLBJFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 04:04:02 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:31231 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725977AbfLBJEC (ORCPT
+        Mon, 2 Dec 2019 04:05:35 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36083 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725977AbfLBJFe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 04:04:02 -0500
-X-UUID: c63f6da9ca17430e88cffc858eaf4327-20191202
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=77BHlXRq8SWcz9OZW4vRLcX/STRmZd2DJc8sv5irofo=;
-        b=GGV3kQDCulJBamveyTpo9shAObW0ycaCFw6qvys3g7qWlyUBtIsiHzxezbr+xHuVPkt1Hv/fZ9+rmkwih8CLJcSQqPFiM77hN2kr0a4J/7D/7K6AU6Mq3yvGMKHejtdAH4nesVC67RIQeVpazVewLLsvhe5dadz/ndAcM7gsZ5I=;
-X-UUID: c63f6da9ca17430e88cffc858eaf4327-20191202
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
-        (envelope-from <yongqiang.niu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1023811263; Mon, 02 Dec 2019 17:03:52 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 2 Dec 2019 17:03:36 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 2 Dec 2019 17:03:34 +0800
-From:   <yongqiang.niu@mediatek.com>
-To:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Yongqiang Niu <yongqiang.niu@mediatek.com>
-Subject: [PATCH v2] drm/mediatek: add ctm property support
-Date:   Mon, 2 Dec 2019 17:03:43 +0800
-Message-ID: <1575277423-31182-1-git-send-email-yongqiang.niu@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
+        Mon, 2 Dec 2019 04:05:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575277532;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qAoDcpZsTZBeGAgb4FDu6Iu8xRQd3BKioUUXksqixrQ=;
+        b=EEOtEcxbPL+aEFU2u4/EJX7OSNvEcjSzpxtLaujSRzGYp13+fIsLvZyuvsJW4K1suqOpOd
+        AoLZAc92ZBB9tn6LaRI1BWg1atvc6h1BKuTxa5Zav/L6yWr41a6gxJg45dpxOJyqpkIeGK
+        YP+hmw14pJ6mShbqT0t7ikP+nGxv3Ws=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-311-twPDTInbNQyZkEM9W9Tjqw-1; Mon, 02 Dec 2019 04:05:31 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 357BB8017DF;
+        Mon,  2 Dec 2019 09:05:29 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-203.pek2.redhat.com [10.72.12.203])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2443D5C21A;
+        Mon,  2 Dec 2019 09:05:23 +0000 (UTC)
+Date:   Mon, 2 Dec 2019 17:05:20 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Michael Weiser <michael@weiser.dinsnail.net>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-efi@vger.kernel.org, kexec@lists.infradead.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: kexec_file overwrites reserved EFI ESRT memory
+Message-ID: <20191202090520.GA15874@dhcp-128-65.nay.redhat.com>
+References: <20191122180552.GA32104@weiser.dinsnail.net>
+ <87blt3y949.fsf@x220.int.ebiederm.org>
+ <20191122210702.GE32104@weiser.dinsnail.net>
+ <20191125055201.GA6569@dhcp-128-65.nay.redhat.com>
+ <20191129152700.GA8286@weiser.dinsnail.net>
+ <20191202085829.GA15808@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20191202085829.GA15808@dhcp-128-65.nay.redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: twPDTInbNQyZkEM9W9Tjqw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+DQoNCmFkZCBj
-dG0gcHJvcGVydHkgc3VwcG9ydA0KDQpDaGFuZ2UtSWQ6IEk4MTExZGE3YjMwOWIxODA5YzYzMDJl
-Nzc0OGRkOWZkMDZkYzk3YmRlDQpTaWduZWQtb2ZmLWJ5OiBZb25ncWlhbmcgTml1IDx5b25ncWlh
-bmcubml1QG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
-ZHJtX2NydGMuYyAgICAgfCAxNSArKysrKystDQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
-a19kcm1fZGRwX2NvbXAuYyB8IDYxICsrKysrKysrKysrKysrKysrKysrKysrKysrKystDQogZHJp
-dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaCB8IDExICsrKysrKw0KIDMg
-ZmlsZXMgY2hhbmdlZCwgODQgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCg0KZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYyBiL2RyaXZlcnMv
-Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYw0KaW5kZXggNGZiMzQ2Yy4uMTJkYzY4NCAx
-MDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYw0KKysr
-IGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQpAQCAtNjY2LDEwICs2
-NjYsMTMgQEAgc3RhdGljIHZvaWQgbXRrX2RybV9jcnRjX2F0b21pY19mbHVzaChzdHJ1Y3QgZHJt
-X2NydGMgKmNydGMsDQogCWludCBpOw0KIA0KIAlpZiAoY3J0Yy0+c3RhdGUtPmNvbG9yX21nbXRf
-Y2hhbmdlZCkNCi0JCWZvciAoaSA9IDA7IGkgPCBtdGtfY3J0Yy0+ZGRwX2NvbXBfbnI7IGkrKykN
-CisJCWZvciAoaSA9IDA7IGkgPCBtdGtfY3J0Yy0+ZGRwX2NvbXBfbnI7IGkrKykgew0KIAkJCW10
-a19kZHBfZ2FtbWFfc2V0KG10a19jcnRjLT5kZHBfY29tcFtpXSwNCiAJCQkJCSAgY3J0Yy0+c3Rh
-dGUsDQogCQkJCQkgIG10a19jcnRjX3N0YXRlLT5jbWRxX2hhbmRsZSk7DQorCQkJbXRrX2RkcF9j
-dG1fc2V0KG10a19jcnRjLT5kZHBfY29tcFtpXSwgY3J0Yy0+c3RhdGUpOw0KKwkJfQ0KKw0KICNp
-ZmRlZiBDT05GSUdfTVRLX0NNRFENCiAJaWYgKG10a19jcnRjLT5jbWRxX2NsaWVudCkgew0KIAkJ
-ZHJtX2F0b21pY19zdGF0ZV9nZXQob2xkX2F0b21pY19zdGF0ZSk7DQpAQCAtODE5LDYgKzgyMiw4
-IEBAIGludCBtdGtfZHJtX2NydGNfY3JlYXRlKHN0cnVjdCBkcm1fZGV2aWNlICpkcm1fZGV2LA0K
-IAlpbnQgcGlwZSA9IHByaXYtPm51bV9waXBlczsNCiAJaW50IHJldDsNCiAJaW50IGk7DQorCWJv
-b2wgaGFzX2N0bSA9IGZhbHNlOw0KKwl1aW50IGdhbW1hX2x1dF9zaXplID0gMDsNCiANCiAJaWYg
-KCFwYXRoKQ0KIAkJcmV0dXJuIDA7DQpAQCAtODcwLDYgKzg3NSwxMiBAQCBpbnQgbXRrX2RybV9j
-cnRjX2NyZWF0ZShzdHJ1Y3QgZHJtX2RldmljZSAqZHJtX2RldiwNCiAJCX0NCiANCiAJCW10a19j
-cnRjLT5kZHBfY29tcFtpXSA9IGNvbXA7DQorDQorCQlpZiAoY29tcF9pZCA9PSBERFBfQ09NUE9O
-RU5UX0NDT1JSKQ0KKwkJCWhhc19jdG0gPSB0cnVlOw0KKw0KKwkJaWYgKGNvbXBfaWQgPT0gRERQ
-X0NPTVBPTkVOVF9HQU1NQSkNCisJCQlnYW1tYV9sdXRfc2l6ZSA9IE1US19MVVRfU0laRTsNCiAJ
-fQ0KIA0KIAlmb3IgKGkgPSAwOyBpIDwgbXRrX2NydGMtPmRkcF9jb21wX25yOyBpKyspDQpAQCAt
-ODkxLDcgKzkwMiw3IEBAIGludCBtdGtfZHJtX2NydGNfY3JlYXRlKHN0cnVjdCBkcm1fZGV2aWNl
-ICpkcm1fZGV2LA0KIAlpZiAocmV0IDwgMCkNCiAJCXJldHVybiByZXQ7DQogCWRybV9tb2RlX2Ny
-dGNfc2V0X2dhbW1hX3NpemUoJm10a19jcnRjLT5iYXNlLCBNVEtfTFVUX1NJWkUpOw0KLQlkcm1f
-Y3J0Y19lbmFibGVfY29sb3JfbWdtdCgmbXRrX2NydGMtPmJhc2UsIDAsIGZhbHNlLCBNVEtfTFVU
-X1NJWkUpOw0KKwlkcm1fY3J0Y19lbmFibGVfY29sb3JfbWdtdCgmbXRrX2NydGMtPmJhc2UsIDAs
-IGhhc19jdG0sIGdhbW1hX2x1dF9zaXplKTsNCiAJcHJpdi0+bnVtX3BpcGVzKys7DQogI2lmZGVm
-IENPTkZJR19NVEtfQ01EUQ0KIAltdGtfY3J0Yy0+Y21kcV9jbGllbnQgPQ0KZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMgYi9kcml2ZXJzL2dw
-dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jDQppbmRleCA5Y2MxMmFmLi4yZmQ1MmJh
-IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAu
-Yw0KKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYw0KQEAg
-LTM4LDcgKzM4LDE1IEBADQogI2RlZmluZSBDQ09SUl9FTgkJCQlCSVQoMCkNCiAjZGVmaW5lIERJ
-U1BfQ0NPUlJfQ0ZHCQkJCTB4MDAyMA0KICNkZWZpbmUgQ0NPUlJfUkVMQVlfTU9ERQkJCUJJVCgw
-KQ0KKyNkZWZpbmUgQ0NPUlJfRU5HSU5FX0VOCQkJCUJJVCgxKQ0KKyNkZWZpbmUgQ0NPUlJfR0FN
-TUFfT0ZGCQkJCUJJVCgyKQ0KKyNkZWZpbmUgQ0NPUlJfV0dBTVVUX1NSQ19DTElQCQkJQklUKDMp
-DQogI2RlZmluZSBESVNQX0NDT1JSX1NJWkUJCQkJMHgwMDMwDQorI2RlZmluZSBESVNQX0NDT1JS
-X0NPRUZfMAkJCTB4MDA4MA0KKyNkZWZpbmUgRElTUF9DQ09SUl9DT0VGXzEJCQkweDAwODQNCisj
-ZGVmaW5lIERJU1BfQ0NPUlJfQ09FRl8yCQkJMHgwMDg4DQorI2RlZmluZSBESVNQX0NDT1JSX0NP
-RUZfMwkJCTB4MDA4Qw0KKyNkZWZpbmUgRElTUF9DQ09SUl9DT0VGXzQJCQkweDAwOTANCiANCiAj
-ZGVmaW5lIERJU1BfRElUSEVSX0VOCQkJCTB4MDAwMA0KICNkZWZpbmUgRElUSEVSX0VOCQkJCUJJ
-VCgwKQ0KQEAgLTE4Nyw3ICsxOTUsNyBAQCBzdGF0aWMgdm9pZCBtdGtfY2NvcnJfY29uZmlnKHN0
-cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAsIHVuc2lnbmVkIGludCB3LA0KIAkJCSAgICAgdW5zaWdu
-ZWQgaW50IGJwYywgc3RydWN0IGNtZHFfcGt0ICpjbWRxX3BrdCkNCiB7DQogCW10a19kZHBfd3Jp
-dGUoY21kcV9wa3QsIGggPDwgMTYgfCB3LCBjb21wLCBESVNQX0NDT1JSX1NJWkUpOw0KLQltdGtf
-ZGRwX3dyaXRlKGNtZHFfcGt0LCBDQ09SUl9SRUxBWV9NT0RFLCBjb21wLCBESVNQX0NDT1JSX0NG
-Ryk7DQorCW10a19kZHBfd3JpdGUoY21kcV9wa3QsIENDT1JSX0VOR0lORV9FTiwgY29tcCwgRElT
-UF9DQ09SUl9DRkcpOw0KIH0NCiANCiBzdGF0aWMgdm9pZCBtdGtfY2NvcnJfc3RhcnQoc3RydWN0
-IG10a19kZHBfY29tcCAqY29tcCkNCkBAIC0yMDAsNiArMjA4LDU2IEBAIHN0YXRpYyB2b2lkIG10
-a19jY29ycl9zdG9wKHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXApDQogCXdyaXRlbF9yZWxheGVk
-KDB4MCwgY29tcC0+cmVncyArIERJU1BfQ0NPUlJfRU4pOw0KIH0NCiANCisvKiBDb252ZXJ0cyBh
-IERSTSBTMzEuMzIgdmFsdWUgdG8gdGhlIEhXIFMwLjExIGZvcm1hdC4gKi8NCitzdGF0aWMgdTE2
-IG10a19jdG1fczMxXzMyX3RvX3MwXzExKHU2NCBpbikNCit7DQorCXUxNiByOw0KKw0KKwkvKiBT
-aWduIGJpdC4gKi8NCisJciA9IGluICYgQklUX1VMTCg2MykgPyBCSVQoMTEpIDogMDsNCisNCisJ
-aWYgKChpbiAmIEdFTk1BU0tfVUxMKDYyLCAzMykpID4gMCkgew0KKwkJLyogV2UgaGF2ZSB6ZXJv
-IGludGVnZXIgYml0cyBzbyB3ZSBjYW4gb25seSBzYXR1cmF0ZSBoZXJlLiAqLw0KKwkJciB8PSBH
-RU5NQVNLKDEwLCAwKTsNCisJfSBlbHNlIHsNCisJCS8qIE90aGVyd2lzZSB0YWtlIHRoZSA5IG1v
-c3QgaW1wb3J0YW50IGZyYWN0aW9uYWwgYml0cy4gKi8NCisJCXIgfD0gKGluID4+IDIyKSAmIEdF
-Tk1BU0soMTAsIDApOw0KKwl9DQorDQorCXJldHVybiByOw0KK30NCisNCitzdGF0aWMgdm9pZCBt
-dGtfY2NvcnJfY3RtX3NldChzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wLA0KKwkJCSAgICAgIHN0
-cnVjdCBkcm1fY3J0Y19zdGF0ZSAqc3RhdGUNCisJCQkgICAgICBzdHJ1Y3QgY21kcV9wa3QgKmNt
-ZHFfcGt0KQ0KK3sNCisJc3RydWN0IGRybV9wcm9wZXJ0eV9ibG9iICpibG9iID0gc3RhdGUtPmN0
-bTsNCisJc3RydWN0IGRybV9jb2xvcl9jdG0gKmN0bTsNCisJY29uc3QgdTY0ICppbnB1dDsNCisJ
-dWludDE2X3QgY29lZmZzWzldID0geyAwIH07DQorCWludCBpOw0KKw0KKwlpZiAoIWJsb2IpDQor
-CQlyZXR1cm47DQorDQorCWN0bSA9IChzdHJ1Y3QgZHJtX2NvbG9yX2N0bSAqKWJsb2ItPmRhdGE7
-DQorCWlucHV0ID0gY3RtLT5tYXRyaXg7DQorDQorCWZvciAoaSA9IDA7IGkgPCBBUlJBWV9TSVpF
-KGNvZWZmcyk7IGkrKykNCisJCWNvZWZmc1tpXSA9IG10a19jdG1fczMxXzMyX3RvX3MwXzExKGlu
-cHV0W2ldKTsNCisNCisJbXRrX2RkcF93cml0ZShjbWRxX3BrdCwgY29lZmZzWzBdIDw8IDE2IHwg
-Y29lZmZzWzFdLA0KKwkJICAgICAgY29tcCwgRElTUF9DQ09SUl9DT0VGXzApOw0KKwltdGtfZGRw
-X3dyaXRlKGNtZHFfcGt0LCBjb2VmZnNbMl0gPDwgMTYgfCBjb2VmZnNbM10sDQorCQkgICAgICBj
-b21wLCBESVNQX0NDT1JSX0NPRUZfMSk7DQorCW10a19kZHBfd3JpdGUoY21kcV9wa3QsIGNvZWZm
-c1s0XSA8PCAxNiB8IGNvZWZmc1s1XSwNCisJCSAgICAgIGNvbXAsIERJU1BfQ0NPUlJfQ09FRl8y
-KTsNCisJbXRrX2RkcF93cml0ZShjbWRxX3BrdCwgY29lZmZzWzZdIDw8IDE2IHwgY29lZmZzWzdd
-LA0KKwkJICAgICAgY29tcCwgRElTUF9DQ09SUl9DT0VGXzMpOw0KKwltdGtfZGRwX3dyaXRlKGNt
-ZHFfcGt0LCBjb2VmZnNbOF0gPDwgMTYsDQorCQkgICAgICBjb21wLCBESVNQX0NDT1JSX0NPRUZf
-NCk7DQorfQ0KKw0KIHN0YXRpYyB2b2lkIG10a19kaXRoZXJfY29uZmlnKHN0cnVjdCBtdGtfZGRw
-X2NvbXAgKmNvbXAsIHVuc2lnbmVkIGludCB3LA0KIAkJCSAgICAgIHVuc2lnbmVkIGludCBoLCB1
-bnNpZ25lZCBpbnQgdnJlZnJlc2gsDQogCQkJICAgICAgdW5zaWduZWQgaW50IGJwYywgc3RydWN0
-IGNtZHFfcGt0ICpjbWRxX3BrdCkNCkBAIC0yNjksNiArMzI3LDcgQEAgc3RhdGljIHZvaWQgbXRr
-X2dhbW1hX3NldChzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wLA0KIAkuY29uZmlnID0gbXRrX2Nj
-b3JyX2NvbmZpZywNCiAJLnN0YXJ0ID0gbXRrX2Njb3JyX3N0YXJ0LA0KIAkuc3RvcCA9IG10a19j
-Y29ycl9zdG9wLA0KKwkuY3RtX3NldCA9IG10a19jY29ycl9jdG1fc2V0LA0KIH07DQogDQogc3Rh
-dGljIGNvbnN0IHN0cnVjdCBtdGtfZGRwX2NvbXBfZnVuY3MgZGRwX2RpdGhlciA9IHsNCmRpZmYg
-LS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oIGIvZHJp
-dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaA0KaW5kZXggNWIwYTNkNC4u
-NGUzZTVhYSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rk
-cF9jb21wLmgNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21w
-LmgNCkBAIC05NSw2ICs5NSw5IEBAIHN0cnVjdCBtdGtfZGRwX2NvbXBfZnVuY3Mgew0KIAkJCSAg
-c3RydWN0IGNtZHFfcGt0ICpjbWRxX3BrdCk7DQogCXZvaWQgKCpiZ2Nscl9pbl9vbikoc3RydWN0
-IG10a19kZHBfY29tcCAqY29tcCk7DQogCXZvaWQgKCpiZ2Nscl9pbl9vZmYpKHN0cnVjdCBtdGtf
-ZGRwX2NvbXAgKmNvbXApOw0KKwl2b2lkICgqY3RtX3NldCkoc3RydWN0IG10a19kZHBfY29tcCAq
-Y29tcCwNCisJCQlzdHJ1Y3QgZHJtX2NydGNfc3RhdGUgKnN0YXRlDQorCQkJc3RydWN0IGNtZHFf
-cGt0ICpjbWRxX3BrdCk7DQogfTsNCiANCiBzdHJ1Y3QgbXRrX2RkcF9jb21wIHsNCkBAIC0yMTMs
-NiArMjE2LDE0IEBAIHN0YXRpYyBpbmxpbmUgdm9pZCBtdGtfZGRwX2NvbXBfYmdjbHJfaW5fb2Zm
-KHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXApDQogCQljb21wLT5mdW5jcy0+YmdjbHJfaW5fb2Zm
-KGNvbXApOw0KIH0NCiANCitzdGF0aWMgaW5saW5lIHZvaWQgbXRrX2RkcF9jdG1fc2V0KHN0cnVj
-dCBtdGtfZGRwX2NvbXAgKmNvbXAsDQorCQkJCSAgIHN0cnVjdCBkcm1fY3J0Y19zdGF0ZSAqc3Rh
-dGUNCisJCQkJICAgc3RydWN0IGNtZHFfcGt0ICpjbWRxX3BrdCkNCit7DQorCWlmIChjb21wLT5m
-dW5jcyAmJiBjb21wLT5mdW5jcy0+Y3RtX3NldCkNCisJCWNvbXAtPmZ1bmNzLT5jdG1fc2V0KGNv
-bXAsIHN0YXRlKTsNCit9DQorDQogaW50IG10a19kZHBfY29tcF9nZXRfaWQoc3RydWN0IGRldmlj
-ZV9ub2RlICpub2RlLA0KIAkJCWVudW0gbXRrX2RkcF9jb21wX3R5cGUgY29tcF90eXBlKTsNCiBp
-bnQgbXRrX2RkcF9jb21wX2luaXQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlX25v
-ZGUgKmNvbXBfbm9kZSwNCi0tIA0KMS44LjEuMS5kaXJ0eQ0K
+Add more cc
+On 12/02/19 at 04:58pm, Dave Young wrote:
+> On 11/29/19 at 04:27pm, Michael Weiser wrote:
+> > Hello Dave,
+> >=20
+> > On Mon, Nov 25, 2019 at 01:52:01PM +0800, Dave Young wrote:
+> >=20
+> > > > > Fundamentally when deciding where to place a new kernel kexec (ei=
+ther
+> > > > > user space or the in kernel kexec_file implementation) needs to b=
+e able
+> > > > > to ask the question which memory ares are reserved.
+> > [...]
+> > > > > So my question is why doesn't the ESRT reservation wind up in
+> > > > > /proc/iomem?
+> > > >=20
+> > > > My guess is that the focus was that some EFI structures need to be =
+kept
+> > > > around accross the life cycle of *one* running kernel and
+> > > > memblock_reserve() was enough for that. Marking them so they surviv=
+e
+> > > > kexecing another kernel might just never have cropped up thus far. =
+Ard
+> > > > or Matt would know.
+> > > Can you check your un-reserved memory, if your memory falls into EFI
+> > > BOOT* then in X86 you can use something like below if it is not cover=
+ed:
+> >=20
+> > > void __init efi_esrt_init(void)
+> > > {
+> > > ...
+> > > =09pr_info("Reserving ESRT space from %pa to %pa.\n", &esrt_data, &en=
+d);
+> > > =09if (md.type =3D=3D EFI_BOOT_SERVICES_DATA)
+> > > =09=09efi_mem_reserve(esrt_data, esrt_data_size);
+> > > ...
+> > > }
+> >=20
+> > Please bear with me if I'm a bit slow on the uptake here: On my machine=
+,
+> > the esrt module reports at boot:
+> >=20
+> > [    0.001244] esrt: Reserving ESRT space from 0x0000000074dd2f98 to 0x=
+0000000074dd2fd0.
+> >=20
+> > This area is of type "Boot Data" (=3D=3D BOOT_SERVICES_DATA) which make=
+s the
+> > code you quote reserve it using memblock_reserve() shown by
+> > memblock=3Ddebug:
+> >=20
+> > [    0.001246] memblock_reserve: [0x0000000074dd2f98-0x0000000074dd2fcf=
+] efi_mem_reserve+0x1d/0x2b
+> >=20
+> > It also calls into arch/x86/platform/efi/quirks.c:efi_arch_mem_reserve(=
+)
+> > which tags it as EFI_MEMORY_RUNTIME while the surrounding ones aren't
+> > as shown by efi=3Ddebug:
+> >=20
+> > [    0.178111] efi: mem10: [Boot Data          |   |  |  |  |  |  |  | =
+ |   |WB|WT|WC|UC] range=3D[0x0000000074dd3000-0x0000000075becfff] (14MB)
+> > [    0.178113] efi: mem11: [Boot Data          |RUN|  |  |  |  |  |  | =
+ |   |WB|WT|WC|UC] range=3D[0x0000000074dd2000-0x0000000074dd2fff] (0MB)
+> > [    0.178114] efi: mem12: [Boot Data          |   |  |  |  |  |  |  | =
+ |   |WB|WT|WC|UC] range=3D[0x000000006d635000-0x0000000074dd1fff] (119MB)
+> >=20
+> > This prevents arch/x86/platform/efi/quirks.c:efi_free_boot_services()
+> > from calling __memblock_free_late() on it. And indeed, memblock=3Ddebug=
+ does
+> > not report this area as being free'd while the surrounding ones are:
+> >=20
+> > [    0.178369] __memblock_free_late: [0x0000000074dd3000-0x0000000075be=
+cfff] efi_free_boot_services+0x126/0x1f8
+> > [    0.178658] __memblock_free_late: [0x000000006d635000-0x0000000074dd=
+1fff] efi_free_boot_services+0x126/0x1f8
+> >=20
+> > The esrt area does not show up in /proc/iomem though:
+> >=20
+> > 00100000-763f5fff : System RAM
+> >   62000000-62a00d80 : Kernel code
+> >   62c00000-62f15fff : Kernel rodata
+> >   63000000-630ea8bf : Kernel data
+> >   63fed000-641fffff : Kernel bss
+> >   65000000-6affffff : Crash kernel
+> >=20
+> > And thus kexec loads the new kernel right over that area as shown when
+> > enabling -DDEBUG on kexec_file.c (0x74dd3000 being inbetween 0x73000000
+> > and 0x73000000+0x24be000 =3D 0x754be000):
+> >=20
+> > [  650.007695] kexec_file: Loading segment 0: buf=3D0x000000003a9c84d6 =
+bufsz=3D0x5000 mem=3D0x98000 memsz=3D0x6000
+> > [  650.007699] kexec_file: Loading segment 1: buf=3D0x0000000017b2b9e6 =
+bufsz=3D0x1240 mem=3D0x96000 memsz=3D0x2000
+> > [  650.007703] kexec_file: Loading segment 2: buf=3D0x00000000fdf72ba2 =
+bufsz=3D0x1150888 mem=3D0x73000000 memsz=3D0x24be000
+> >=20
+> > ... because it looks for any memory hole large enough in iomem resource=
+s
+> > tagged as System RAM, which 0x74dd2000-0x74dd2fff would then need to be
+> > excluded from on my system.
+> >=20
+> > Looking some more at efi_arch_mem_reserve() I see that it also register=
+s
+> > the area with efi.memmap and installs it using efi_memmap_install().
+> > which seems to call memremap(MEMREMAP_WB) on it. From my understanding
+> > of the comments in the source of memremap(), MEMREMAP_WB does specifica=
+lly
+> > *not* reserve that memory in any way.
+> >=20
+> > > Unfortunately I noticed there are different requirements/ways for
+> > > different types of "reserved" memory.  But that is another topic..
+> >=20
+> > I tried to reserve the area with something like this:
+> >=20
+> > t a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+> > index 4de244683a7e..b86a5df027a2 100644
+> > --- a/arch/x86/platform/efi/quirks.c
+> > +++ b/arch/x86/platform/efi/quirks.c
+> > @@ -249,6 +249,7 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, =
+u64 size)
+> >         efi_memory_desc_t md;
+> >         int num_entries;
+> >         void *new;
+> > +       struct resource *res;
+> > =20
+> >         if (efi_mem_desc_lookup(addr, &md) ||
+> >             md.type !=3D EFI_BOOT_SERVICES_DATA) {
+> > @@ -294,6 +295,21 @@ void __init efi_arch_mem_reserve(phys_addr_t addr,=
+ u64 size)
+> >         early_memunmap(new, new_size);
+> > =20
+> >         efi_memmap_install(new_phys, num_entries);
+> > +
+> > +       res =3D memblock_alloc(sizeof(*res), SMP_CACHE_BYTES);
+> > +       if (!res) {
+> > +               pr_err("Failed to allocate EFI io resource allocator fo=
+r "
+> > +                               "0x%llx:0x%llx", mr.range.start, mr.ran=
+ge.end);
+> > +               return;
+> > +       }
+> > +
+> > +       res->start      =3D mr.range.start;
+> > +       res->end        =3D mr.range.end;
+> > +       res->name       =3D "EFI runtime";
+> > +       res->flags      =3D IORESOURCE_MEM | IORESOURCE_BUSY;
+> > +       res->desc       =3D IORES_DESC_NONE;
+> > +
+> > +       insert_resource(&iomem_resource, res);
+> >  }
+> > =20
+> >  /*
+> >=20
+> > ... but failed miserably in terms of the kernel not booting because I
+> > have no experience whatsoever in programming and debugging early kernel
+> > init. But I am somewhat keen to ride the learning curve here. :)
+> >=20
+> > Am I on the right track or were you a couple of leaps ahead of me
+> > already and I just didn't get the question?
+>=20
+> It seems a serious problem, the EFI modified memmap does not get an
+> /proc/iomem resource update, but kexec_file relies on /proc/iomem in
+> X86.
+>=20
+> Can you try below diff see if it works for you? (not tested, and need
+> explicitly 'add_efi_memmap' in kernel cmdline param)
+>=20
+> There is an question from Sai about why add_efi_memmap is not enabled by
+> default:
+> https://www.spinics.net/lists/linux-mm/msg185166.html
+>=20
+> Long time ago the add_efi_memmap is only enabled in case we explict
+> enable it on cmdline, I'm not sure if we can do it by default, maybe we
+> should.   Need opinion from X86 maintainers..
+>=20
+> diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
+> index 43a82e59c59d..eddaac6131cf 100644
+> --- a/arch/x86/include/asm/efi.h
+> +++ b/arch/x86/include/asm/efi.h
+> @@ -243,6 +243,7 @@ static inline bool efi_is_64bit(void)
+> =20
+>  extern bool efi_reboot_required(void);
+>  extern bool efi_is_table_address(unsigned long phys_addr);
+> +extern void do_add_efi_memmap(void);
+> =20
+>  #else
+>  static inline void parse_efi_setup(u64 phys_addr, u32 data_len) {}
+> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+> index 425e025341db..39e28ec76522 100644
+> --- a/arch/x86/platform/efi/efi.c
+> +++ b/arch/x86/platform/efi/efi.c
+> @@ -149,10 +149,12 @@ void __init efi_find_mirror(void)
+>   * (zeropage) memory map.
+>   */
+> =20
+> -static void __init do_add_efi_memmap(void)
+> +void __init do_add_efi_memmap(void)
+>  {
+>  =09efi_memory_desc_t *md;
+> =20
+> +=09if (!add_efi_memmap)
+> +=09=09return;
+>  =09for_each_efi_memory_desc(md) {
+>  =09=09unsigned long long start =3D md->phys_addr;
+>  =09=09unsigned long long size =3D md->num_pages << EFI_PAGE_SHIFT;
+> @@ -224,8 +226,7 @@ int __init efi_memblock_x86_reserve_range(void)
+>  =09if (rv)
+>  =09=09return rv;
+> =20
+> -=09if (add_efi_memmap)
+> -=09=09do_add_efi_memmap();
+> +=09do_add_efi_memmap();
+> =20
+>  =09WARN(efi.memmap.desc_version !=3D 1,
+>  =09     "Unexpected EFI_MEMORY_DESCRIPTOR version %ld",
+> diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirk=
+s.c
+> index 3b9fd679cea9..cfda591e51e3 100644
+> --- a/arch/x86/platform/efi/quirks.c
+> +++ b/arch/x86/platform/efi/quirks.c
+> @@ -496,6 +496,7 @@ void __init efi_free_boot_services(void)
+>  =09=09pr_err("Could not install new EFI memmap\n");
+>  =09=09return;
+>  =09}
+> +=09do_add_efi_memmap();
+>  }
+> =20
+>  /*
 
