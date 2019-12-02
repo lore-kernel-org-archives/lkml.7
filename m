@@ -6,68 +6,60 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8503AC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 02:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88229C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 02:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58DE6218AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 02:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DA0B215F1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 02:50:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575255029;
-	bh=1NEFka9hmnXxHttmZxWYuxv559QWcB3UM6F2sez2fkA=;
+	s=default; t=1575255032;
+	bh=9l4dHkIeah5VsErCWWecA2EyD/7pIboC4NjCJw6Q7OY=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=05a5LvyGApLLU1A97QPiMKPMYivpArt68I6rUvk8GG94+hDQnjl4vxS4jNPxwPE7D
-	 fH+97dJbkF62OkbHmICdZ3q1biIb4sk2r9RnY2e8kUBIs8A/1AyN/5ghXWYIXXuIGc
-	 jPO2IoG77KQZDj5PPbwY2AwVnYtnD7mxQaZVlm3w=
+	b=ZQWtXupllU3o7mYmeTe3QyIJgIs2KrQfEGf9dd+HL1Utk7PAE82cJu7wmc93mWIIm
+	 gepkLzuQ0hx1ZoA58PHKWYH9JMXsWzo6zRWS1MvGZa1JmcfUBHVh7d9blXjXRulGgR
+	 1yaDu8ccXMjM1ybT4x/muZ9/9QGdpF2+j7oIihGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbfLBCu2 (ORCPT
+        id S1727610AbfLBCub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 21:50:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34216 "EHLO mail.kernel.org"
+        Sun, 1 Dec 2019 21:50:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727561AbfLBCuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 21:50:24 -0500
-Subject: Re: [GIT PULL] rpmsg updates for v5.5
+        id S1727553AbfLBCu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Dec 2019 21:50:27 -0500
+Subject: Re: [git pull] Input updates for v5.5-rc0
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575255024;
-        bh=1NEFka9hmnXxHttmZxWYuxv559QWcB3UM6F2sez2fkA=;
+        s=default; t=1575255026;
+        bh=9l4dHkIeah5VsErCWWecA2EyD/7pIboC4NjCJw6Q7OY=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=F50MBVm790SUKMW/xI0r0nlWwtX9PXbdm7ulvKXviLUpkCjaKpcQ/zkwhmsAmCDIG
-         KY/18f9jRBUk9F36E4RV2gbkNDqOLo7oRD17sZ2VE00Eyh3aQgKqpF9CGFgyaWQgt2
-         qDioLM7YB1uud5vF2WhxwCfSAIMDz7O0CyjWcLmQ=
+        b=QkMquyH4e87WA4q0/qGJvAPdrg8qbI/av84522vIvO9AKPCKYsi9r1yiAXVZfo+pP
+         xcE1Pv34Z0VpueI7lb4bNX4O/TvYp1YK5g6oEXrg35jRqY8cNFqVQ7+RpXcjMkAua5
+         pntU6D/iyJau02UI678YTmVzDhoYY9eAq0PyLj/E=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191130191423.GB151303@yoga>
-References: <20191130191423.GB151303@yoga>
+In-Reply-To: <20191201020020.GA225595@dtor-ws>
+References: <20191201020020.GA225595@dtor-ws>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191130191423.GB151303@yoga>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc.git
- tags/rpmsg-v5.5
-X-PR-Tracked-Commit-Id: 8cf9b615653e40debdcf3b6f1d69e6b580d71173
+X-PR-Tracked-Message-Id: <20191201020020.GA225595@dtor-ws>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
+X-PR-Tracked-Commit-Id: 976e3645923bdd2fe7893aae33fd7a21098bfb28
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 687fcad8a3ab95f228e62a58b03eb10af67146f4
-Message-Id: <157525502401.1709.6584412870186406628.pr-tracker-bot@kernel.org>
-Date:   Mon, 02 Dec 2019 02:50:24 +0000
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+X-PR-Merge-Commit-Id: 72c0870e3a05d9cd5466d08c3d2a3069ed0a2f9f
+Message-Id: <157525502686.1709.8788003897011032901.pr-tracker-bot@kernel.org>
+Date:   Mon, 02 Dec 2019 02:50:26 +0000
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Lew <clew@codeaurora.org>,
-        Arun Kumar Neelakantam <aneela@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Navid Emamdoost <navid.emamdoost@gmail.com>
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 30 Nov 2019 11:14:23 -0800:
+The pull request you sent on Sat, 30 Nov 2019 18:00:20 -0800:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc.git tags/rpmsg-v5.5
+> git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/687fcad8a3ab95f228e62a58b03eb10af67146f4
+https://git.kernel.org/torvalds/c/72c0870e3a05d9cd5466d08c3d2a3069ed0a2f9f
 
 Thank you!
 
