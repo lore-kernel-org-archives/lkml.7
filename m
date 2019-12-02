@@ -2,153 +2,124 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27350C43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C145FC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E14C320881
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A6F2070A
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:55:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dDtBW9Xl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CX6pJYGw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbfLBSym (ORCPT
+        id S1727969AbfLBSz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 13:54:42 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:32952 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727464AbfLBSym (ORCPT
+        Mon, 2 Dec 2019 13:55:27 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20396 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727936AbfLBSz1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 13:54:42 -0500
-Received: by mail-qt1-f193.google.com with SMTP id d5so874550qto.0;
-        Mon, 02 Dec 2019 10:54:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Q+km/f32wNPmuJKYXN+UMoF0b6NSliqWpDUpI204bWk=;
-        b=dDtBW9Xl19goZYg0ymdeTAVghXD5B/NSctJHlHqhEEWZv0XvMmaz0pGWljjJZZXjNO
-         Dx/LfknM/v7/T9aF5QAYcaUOpCVUef5KWXbDcRANpAJDopJ7ULrO+L0MBoFotGn/TSdg
-         fXu2ViYbWOtT3WibenKpyOIsAH7kHlMhMG055/xQLxViH/PiXnpn5LSItT1vUnEXFH01
-         /aaisaVDXvp0mbdH2eYlY2lw4blLfSqs5YXimQ0MOr4LyDOecJ4Bdqxv8i/v9eyQQ71y
-         zSamElZjTBTQAE77E4KVpPQTMY3+JxSACODQTItvXF7rELNAmERVa9tYAXdmqF/NDuir
-         CshQ==
+        Mon, 2 Dec 2019 13:55:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575312926;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BasR9fJysMtCMWPHS/Ez/vs7HdvrZKVU0mKfLNeG6GU=;
+        b=CX6pJYGwyd5KyH05UMR5BeHCATfsxaUsOgP9iL4y5d22BpNdb4VyZn0e5z+Sn5BI5l1Sh5
+        TwGpFOtOTzluivNc+zpDuOCxtTGVlKGNpEqVH7t/yYEOd2kr8ojjaV0koNnyl7z3JrGuam
+        Py6GRuUnaBzc9P8tX1ZoosyWlwYk94c=
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
+ [209.85.215.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-219-4BC4DyDxOzKonpawJrh0aA-1; Mon, 02 Dec 2019 13:55:23 -0500
+Received: by mail-pg1-f197.google.com with SMTP id a4so207197pgq.23
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 10:55:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Q+km/f32wNPmuJKYXN+UMoF0b6NSliqWpDUpI204bWk=;
-        b=Fkv8ICJLmkOYoJrNvK7FqVfCgsayrpGSTpI2PV0Z8ENIUI3Of95As1DR8Qy0obB7bQ
-         J4CcxPt2paP9KvCoyvWTz8WI+c078/jBG+EoNY4SMvXvBKBpJlVnHH7zRJycXjR+R2oc
-         YoWpJ+j98FN4KbGo7cf5aCJxGUYr9deGGzDKZyL3+B2fxI2NgrdqJBEXN3FMoxt0TU5R
-         CCaAIXowtFwg0qAwW0IU0gYsZE67u9v8p1A0+mCZOIlpKcxP0/zF+3f+oSTeH7A5ZGvN
-         OP90xnMcI3D2o2WpOtR5VL8v79I+/vpHJ9byR1fryZka4a5uARdpFCJdpn0I71IocmU/
-         C2vw==
-X-Gm-Message-State: APjAAAXA4Rnqb2QUIR4vxk3CfRInpM/SuuosvNPTvwwDQeWnMQDEkjxx
-        m569KqDaS4BheEC7nMfOXrU=
-X-Google-Smtp-Source: APXvYqzHdM3/QSgrJ44KrRmrxwpAka45CYVys9Ev++GURc/Uutt3BdxZdTk/YFZdcc3u0BjBAp/suQ==
-X-Received: by 2002:ac8:3a27:: with SMTP id w36mr907843qte.204.1575312880987;
-        Mon, 02 Dec 2019 10:54:40 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([190.15.121.82])
-        by smtp.gmail.com with ESMTPSA id q130sm219864qka.114.2019.12.02.10.54.39
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=3tYGvKckyNK6guzJmLUsGmhSZAtdLju3TCYhP65wmYk=;
+        b=VxfMQM5uNf1Ao9xIptJ/O9oiDT/UItU+UPB8vO2JnLW7EK5TVlvC9Fh6Qonk3xSyZS
+         9nZMe+DUKnD2KpCK9yFbkDDZWqDL6ytWHcRqc1C4AtV9PxjC8PBXIWNk/tfS3RDokaGw
+         UYHbnEgQwzRrhO+xESE87DvigWYodYfGj2pHkRSyI+3srppHbyc5xSmCYj4WdcrBQorm
+         OA0Scjd/T1Jlqq/zgukZHeoG0rng2Tigr19NaMmXCU6Q9+4S7kGXtbB9G7oFqdshq3PS
+         4MlLSTYtdzahItKSe2D2zhZn/Fvil4+nqbEwgtufBBTEiIcGNKBYw1YvEC40HZ5K9bsb
+         5XwQ==
+X-Gm-Message-State: APjAAAXiW+T6nOMYXKXEBCaYIqIANmUIwpGc3sXCAOvhcQ6k/Aj3fEeK
+        cjw11L9p0kb2EQ6+r1UEJLiZCcsMUSyezFbYuW53Ycn1qBjIuxmYP1y63NIs7HX3y2y14jU1ilI
+        gSTuAR44Hy94+MJ9CLq45w5hj
+X-Received: by 2002:a17:902:9a49:: with SMTP id x9mr631793plv.331.1575312922277;
+        Mon, 02 Dec 2019 10:55:22 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx10URV1PHP5Yt2PPgF5JNaFQDDTv65xxiVu8l3E0jlcc9g5YQ3pGK9NLzlsY1cV2dHkq7eDg==
+X-Received: by 2002:a17:902:9a49:: with SMTP id x9mr631768plv.331.1575312921957;
+        Mon, 02 Dec 2019 10:55:21 -0800 (PST)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id d85sm203111pfd.146.2019.12.02.10.55.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 10:54:40 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 079D8405B6; Mon,  2 Dec 2019 15:54:35 -0300 (-03)
-Date:   Mon, 2 Dec 2019 15:54:34 -0300
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>
-Subject: Re: [PATCH 0/3] perf/bpftool: Allow to link libbpf dynamically
-Message-ID: <20191202185434.GG4063@kernel.org>
-References: <20191127094837.4045-1-jolsa@kernel.org>
- <CAEf4BzbUK98tsYH1mSNoTjuVB4dstRsL5rpkA+9nRCcqrdn6-Q@mail.gmail.com>
- <87zhgappl7.fsf@toke.dk>
- <CAEf4BzYoJUttk=o+p=NHK8K_aS3z2LdLiqzRni7PwyDaOxu68A@mail.gmail.com>
+        Mon, 02 Dec 2019 10:55:21 -0800 (PST)
+Date:   Mon, 2 Dec 2019 11:55:20 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Stefan Berger <stefanb@linux.ibm.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, linux-security-module@vger.kernel.org
+Subject: Re: [PATCH 0/2] Revert patches fixing probing of interrupts
+Message-ID: <20191202185520.57w2h3dgs5q7lhob@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Stefan Berger <stefanb@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, linux-security-module@vger.kernel.org
+References: <20191126131753.3424363-1-stefanb@linux.vnet.ibm.com>
+ <20191129223418.GA15726@linux.intel.com>
+ <6f6f60a2-3b55-e76d-c11a-4677fcb72c16@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+In-Reply-To: <6f6f60a2-3b55-e76d-c11a-4677fcb72c16@linux.ibm.com>
+X-MC-Unique: 4BC4DyDxOzKonpawJrh0aA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzYoJUttk=o+p=NHK8K_aS3z2LdLiqzRni7PwyDaOxu68A@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Dec 02, 2019 at 10:42:53AM -0800, Andrii Nakryiko escreveu:
-> On Mon, Dec 2, 2019 at 10:09 AM Toke Høiland-Jørgensen <toke@redhat.com> wrote:
-> > Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
-> > > On Wed, Nov 27, 2019 at 1:49 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> > >> adding support to link bpftool with libbpf dynamically,
-> > >> and config change for perf.
+On Sun Dec 01 19, Stefan Berger wrote:
+>On 11/29/19 5:37 PM, Jarkko Sakkinen wrote:
+>>On Tue, Nov 26, 2019 at 08:17:51AM -0500, Stefan Berger wrote:
+>>>From: Stefan Berger <stefanb@linux.ibm.com>
+>>>
+>>>Revert the patches that were fixing the probing of interrupts due
+>>>to reports of interrupt stroms on some systems
+>>Can you explain how reverting is going to fix the issue?
+>
+>
+>The reverts fix 'the interrupt storm issue' that they are causing on=20
+>some systems but don't fix the issue with the interrupt mode not being=20
+>used. I was hoping Jerry would get access to a system faster but this=20
+>didn't seem to be the case. So sending these patches seemed the better=20
+>solution than leaving 5.4.x with the problem but going back to when it=20
+>worked 'better.'
+>
 
-> > >> It's now possible to use:
-> > >>   $ make -C tools/bpf/bpftool/ LIBBPF_DYNAMIC=1
+I finally heard back from IT support, and unfortunately they don't
+have any T490s systems to give out on temp loan. So I can only send
+patched kernels to the end user that had the problem.
 
-> > > I wonder what's the motivation behind these changes, though? Why is
-> > > linking bpftool dynamically with libbpf is necessary and important?
-> > > They are both developed tightly within kernel repo, so I fail to see
-> > > what are the huge advantages one can get from linking them
-> > > dynamically.
+>
+>>
+>>This is wrong way to move forward. The root cause must be identified
+>>first and then decide actions like always in any situation.
+>>
+>>/Jarkko
+>
+>
 
-> > Well, all the regular reasons for using dynamic linking (memory usage,
-> > binary size, etc).
-
-> bpftool is 327KB with statically linked libbpf. Hardly a huge problem
-> for either binary size or memory usage. CPU instruction cache usage is
-> also hardly a concern for bpftool specifically.
-
-> > But in particular, the ability to update the libbpf
-> > package if there's a serious bug, and have that be picked up by all
-> > utilities making use of it.
-
-> I agree, and that works only for utilities linking with libbpf
-> dynamically. For tools that build statically, you'd have to update
-> tools anyways. And if you can update libbpf, you can as well update
-> bpftool at the same time, so I don't think linking bpftool statically
-> with libbpf causes any new problems.
-
-> > No reason why bpftool should be special in that respect.
-
-> But I think bpftool is special and we actually want it to be special
-> and tightly coupled to libbpf with sometimes very intimate knowledge
-> of libbpf and access to "hidden" APIs. That allows us to experiment
-> with new stuff that requires use of bpftool (e.g., code generation for
-> BPF programs), without having to expose and seal public APIs. And I
-> don't think it's a problem from the point of code maintenance, because
-> both live in the same repository and are updated "atomically" when new
-> features are added or changed.
-
-> Beyond superficial binary size worries, I don't see any good reason
-> why we should add more complexity and variables to libbpf and bpftool
-> build processes just to have a "nice to have" option of linking
-> bpftool dynamically with libbpf.
-
-s/bpftool/perf/g
-s/libbpf/libperf/g
-
-And I would also agree 8-)
-
-- Arnaldo
