@@ -2,89 +2,197 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC78BC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0F3C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3A8A2071E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 373D62071E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:55:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DBjGmh5p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbfLBWxK (ORCPT
+        id S1726318AbfLBWzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 17:53:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57236 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725835AbfLBWxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 17:53:09 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DFC52070A;
-        Mon,  2 Dec 2019 22:53:08 +0000 (UTC)
-Date:   Mon, 2 Dec 2019 17:53:07 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
-        arnaldo.melo@gmail.com, Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH 1/2] libtraceevent: fix lib installation
-Message-ID: <20191202175307.40d5a3df@gandalf.local.home>
-In-Reply-To: <CADVatmMVcDDys62U31D4zOo4pZ58-YP6O25hAZxNObTTEPpfSg@mail.gmail.com>
-References: <20191115113610.21493-1-sudipm.mukherjee@gmail.com>
-        <CADVatmMVcDDys62U31D4zOo4pZ58-YP6O25hAZxNObTTEPpfSg@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 2 Dec 2019 17:55:09 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:33128 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbfLBWzJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 17:55:09 -0500
+Received: by mail-qt1-f195.google.com with SMTP id d5so1667585qto.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 14:55:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=p04VAJalNVcM1wKI1wNyT7o1NcBjHgxv0Xx73wtI7Uw=;
+        b=DBjGmh5pKmn+iK8CQgTpxCXLqyiQJG9uyAwY9nd08tUBTD7EdZNQdCkUROtRV0IszW
+         Ik9DYNnewG76/TeC83sHVxHYQwrMx3nuthATSCVyb9jMw4daw9ZMFKSqB7oxEtzWTp/0
+         lreu79OC1dYu/O4Np+dsp0oz9IXG8f7xH1uoo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=p04VAJalNVcM1wKI1wNyT7o1NcBjHgxv0Xx73wtI7Uw=;
+        b=m9+jCC110raesVxzrYmHMOabkdhlFHSTQCVKMvLIGcyNk258wTqWDG5x+vFOAqZ/qD
+         FCHFFMeCDGFaTfQld6cgejHjYmokIkYpklw51Dko+P78GaORIUVkV3saPhHwZT39z9CP
+         kfOc+p1l2foY88KdiGnFnO4Saq5MdoIMtC/XLQF6itJfKPULgQYAxMXxG0YkLR9z0yQY
+         bhzWYbnHi3NQH5Du3RGlqBMyowYQHLE/qOrjykoKuJNA4Ri3+c2U/FjnJNgzyTrpZoKO
+         610e6l5t0M7tNzxh+/NR83Qc3VulroepWseelnPT3nb/asTufsG1kc82o80YHkO33vCY
+         G9vg==
+X-Gm-Message-State: APjAAAVFwnYXJwknyGC8fKBguctwsF+f5hAH0jaiuhdGq1/9LkMxmap4
+        yRJhekK9AeGGZnNpHw33ivobyXXgCZHQE0ZpHMTXZg==
+X-Google-Smtp-Source: APXvYqx+knpHqLNbP/4kmVwRIQS9IqbMUxOuMcqsz6hyYcabkc8gLoz79VWWwIZmM8CQiV86Xtj8ei8hj4e8cKYZl30=
+X-Received: by 2002:ac8:750b:: with SMTP id u11mr2133080qtq.170.1575327307548;
+ Mon, 02 Dec 2019 14:55:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20191127185139.65048-1-abhishekpandit@chromium.org>
+ <20191201145357.ybq5gfty4ulnfasq@pali> <20191202012305.GQ248138@dtor-ws>
+ <20191202084750.k7lafzzrf3yq2tqs@pali> <20191202175440.GA50317@dtor-ws>
+ <20191202185340.nae4lljten5jqp3y@pali> <20191202193628.GI50317@dtor-ws>
+In-Reply-To: <20191202193628.GI50317@dtor-ws>
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Date:   Mon, 2 Dec 2019 14:54:56 -0800
+Message-ID: <CANFp7mVr_cb89BH0ApuPWV2wgmBq7MVqeNUWC=OBjO9KTj=qnw@mail.gmail.com>
+Subject: Re: [PATCH] Input: uinput - Add UI_SET_UNIQ ioctl handler
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        linux-input@vger.kernel.org,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Kirill Smelkov <kirr@nexedi.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Dec 2019 12:40:49 +0000
-Sudip Mukherjee <sudipm.mukherjee@gmail.com> wrote:
-
-> Hi Steve,
-> 
-> On Fri, Nov 15, 2019 at 11:36 AM Sudip Mukherjee
-> <sudipm.mukherjee@gmail.com> wrote:
+On Mon, Dec 2, 2019 at 11:36 AM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+>
+> On Mon, Dec 02, 2019 at 07:53:40PM +0100, Pali Roh=C3=A1r wrote:
+> > On Monday 02 December 2019 09:54:40 Dmitry Torokhov wrote:
+> > > On Mon, Dec 02, 2019 at 09:47:50AM +0100, Pali Roh=C3=A1r wrote:
+> > > > On Sunday 01 December 2019 17:23:05 Dmitry Torokhov wrote:
+> > > > > Hi Pali,
+> > > > >
+> > > > > On Sun, Dec 01, 2019 at 03:53:57PM +0100, Pali Roh=C3=A1r wrote:
+> > > > > > Hello!
+> > > > > >
+> > > > > > On Wednesday 27 November 2019 10:51:39 Abhishek Pandit-Subedi w=
+rote:
+> > > > > > > Support setting the uniq attribute of the input device. The u=
+niq
+> > > > > > > attribute is used as a unique identifier for the connected de=
+vice.
+> > > > > > >
+> > > > > > > For example, uinput devices created by BlueZ will store the a=
+ddress of
+> > > > > > > the connected device as the uniq property.
+> > > > > > >
+> > > > > > > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromiu=
+m.org>
+> > > > > >
+> > > > > > ...
+> > > > > >
+> > > > > > > diff --git a/include/uapi/linux/uinput.h b/include/uapi/linux=
+/uinput.h
+> > > > > > > index c9e677e3af1d..d5b7767c1b02 100644
+> > > > > > > --- a/include/uapi/linux/uinput.h
+> > > > > > > +++ b/include/uapi/linux/uinput.h
+> > > > > > > @@ -145,6 +145,7 @@ struct uinput_abs_setup {
+> > > > > > >  #define UI_SET_PHYS                _IOW(UINPUT_IOCTL_BASE, 1=
+08, char*)
+> > > > > > >  #define UI_SET_SWBIT               _IOW(UINPUT_IOCTL_BASE, 1=
+09, int)
+> > > > > > >  #define UI_SET_PROPBIT             _IOW(UINPUT_IOCTL_BASE, 1=
+10, int)
+> > > > > > > +#define UI_SET_UNIQ                _IOW(UINPUT_IOCTL_BASE, 1=
+11, char*)
+> > > > > >
+> > > > > > I think that usage of char* as type in _IOW would cause compati=
+bility
+> > > > > > problems like it is for UI_SET_PHYS (there is UI_SET_PHYS_COMPA=
+T). Size
+> > > > > > of char* pointer depends on userspace (32 vs 64bit), so 32bit p=
+rocess on
+> > > > > > 64bit kernel would not be able to call this new UI_SET_UNIQ ioc=
+tl.
+> > > > > >
+> > > > > > I would suggest to define this ioctl as e.g.:
+> > > > > >
+> > > > > >   #define UI_SET_UNIQ         _IOW(_IOC_WRITE, UINPUT_IOCTL_BAS=
+E, 111, 0)
+> > > > > >
+> > > > > > And then in uinput.c code handle it as:
+> > > > > >
+> > > > > >   case UI_SET_UNIQ & ~IOCSIZE_MASK:
+> > > > > >
+> > > > > > as part of section /* Now check variable-length commands */
+> > > > >
+> > > > > If we did not have UI_SET_PHYS in its current form, I'd agree wit=
+h you,
+> > > > > but I think there is benefit in having UI_SET_UNIQ be similar to
+> > > > > UI_SET_PHYS.
+> > > >
+> > > > I thought that ioctl is just number, so we can define it as we want=
+. And
+> > > > because uinput.c has already switch for variable-length commands it
+> > > > would be easy to use it. Final handling can be in separate function=
+ like
+> > > > for UI_SET_PHYS which can look like same.
+> > >
+> > > Yes, we can define ioctl number as whatever we want. What I was tryin=
+g
+> > > to say, right now users do this:
+> > >
+> > >     rc =3D ioctl(fd, UI_SET_PHYS, "whatever");
+> > >     ...
+> > >
+> > > and with UI_SET_UNIQ they expect the following to work:
+> > >
+> > >     rc =3D ioctl(fd, UI_SET_UNIQ, "whatever");
+> > >     ...
 > >
-> > When we use 'O=' with make to build libtraceevent in a separate folder
-> > it fails to install libtraceevent.a and libtraceevent.so.1.1.0 with the
-> > error:
-> >   INSTALL  /home/sudip/linux/obj-trace/libtraceevent.a
-> >   INSTALL  /home/sudip/linux/obj-trace/libtraceevent.so.1.1.0
-> > cp: cannot stat 'libtraceevent.a': No such file or directory
-> > Makefile:225: recipe for target 'install_lib' failed
-> > make: *** [install_lib] Error 1
+> > And would not following definition
 > >
-> > I used the command:
-> > make O=../../../obj-trace DESTDIR=~/test prefix==/usr  install
+> >   #define UI_SET_UNIQ _IOW(_IOC_WRITE, UINPUT_IOCTL_BASE, 111, 0)
 > >
-> > It turns out libtraceevent Makefile, even though it builds in a separate
-> > folder, searches for libtraceevent.a and libtraceevent.so.1.1.0 in its
-> > source folder.
-> > So, add the 'OUTPUT' prefix to the source path so that 'make' looks for
-> > the files in the correct place.
+> > allow userspace to call
 > >
-> > Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-> > ---
-> >  tools/lib/traceevent/Makefile | 1 +  
-> 
-> A gentle ping.
-> I know its the merge window now. But your ack for these two patches will allow
-> me to start with the debian workflow.
-> 
+> >   rc =3D ioctl(fd, UI_SET_UNIQ, "whatever");
+> >
+> > as you want?
+>
+> OK, so what you are saying is that we can have whatever in the size
+> portion of ioctl number and simply ignore it in the driver (and I do not
+> think we need to do any of "UI_SET_UNIQ & ~IOCSIZE_MASK" really).
+> While this would work, I am not sure it is the best option as I think
+> we'd have to comment extensively why we have arbitrary number in place
+> of the size.
+>
+> And we still do not really save anything, as we still have to go through
+> compat ioctl handler (since we have it already) and it is very simple to
+> add a case for UI_SET_UNIQ there...
+>
+> Thanks.
+>
+> --
+> Dmitry
 
-Thanks for the reminder. Yeah, these look fine, and I just tested them
-out.
+Since the compat handling already exists for UI_SET_PHYS, I think I
+would prefer to go with the simpler solution of just duplicating that
+for UI_SET_UNIQ. Next patch is coming with that change.
 
-Arnaldo, can you take these in, and possibly get them into this merge
-window?
-
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
--- Steve
+Thanks
+Abhishek
