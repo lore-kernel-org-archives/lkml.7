@@ -2,150 +2,123 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB63BC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F01C6C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B223A2146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F2221774
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:03:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="dz3vZEta"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="p3WWMLeE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbfLBICQ (ORCPT
+        id S1726410AbfLBIDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 03:02:16 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:36113 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725977AbfLBICP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 03:02:15 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47RHdX1YxWz9txsq;
-        Mon,  2 Dec 2019 09:02:08 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=dz3vZEta; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id Nugd4Uyqk_4B; Mon,  2 Dec 2019 09:02:08 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47RHdX0WK3z9txsn;
-        Mon,  2 Dec 2019 09:02:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1575273728; bh=R0DzOApn8sfF6b/fIqfYO/uTeigqDJ/6K0S4/0UVFJk=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=dz3vZEtadKms4NZFO1roHSBY77uzZ4IfNjpoaJ37R8kS7ULKFb7jlQ8u9G4hLdEvn
-         nRQ/4smn+bRRPHn2mXT6WrHGYhdvlRAANdOw5gh0HPPOvewfgcAHAWRABgChxxXmAp
-         e8xvSG7vOaqC5RZ2eqPwjrm9Sf+iGEL/CMn5LhCg=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A9F248B79B;
-        Mon,  2 Dec 2019 09:02:12 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id kizfJgE835l1; Mon,  2 Dec 2019 09:02:12 +0100 (CET)
-Received: from po16098vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.103])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5ED478B770;
-        Mon,  2 Dec 2019 09:02:12 +0100 (CET)
-Subject: Re: [PATCH v3 4/8] powerpc/vdso32: inline __get_datapage()
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Arnd Bergmann <arnd@arndb.de>
-References: <cover.1572342582.git.christophe.leroy@c-s.fr>
- <9c9fe32df8633e6ba8e670274dc3eef82a1b5a65.1572342582.git.christophe.leroy@c-s.fr>
- <874kywbrjv.fsf@mpe.ellerman.id.au> <871ru0beke.fsf@mpe.ellerman.id.au>
- <dd5e359b-5864-f8e3-876a-ec606b51eb65@c-s.fr>
- <87sgm8zhw0.fsf@mpe.ellerman.id.au>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <688fe6fa-5bca-4fa6-dda3-603e515be60d@c-s.fr>
-Date:   Mon, 2 Dec 2019 08:02:11 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Mon, 2 Dec 2019 03:03:18 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43744 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbfLBIDS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 03:03:18 -0500
+Received: by mail-lj1-f193.google.com with SMTP id a13so15724131ljm.10
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 00:03:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pZzAMwk10JqTjDXwgTJurkovZOHqxsdyWD2t9EmKVOQ=;
+        b=p3WWMLeEJ/fPe3vlpWukc3E52B41OYT04vWL+sVy/5hBJUFLKkTJvLTDGlIbGL6iIn
+         fw00EwBteZvV5N4AB+pHHH2/5HnqeBFUA1yKNWSisRIJxD3K3R2FLaV59i0E0D3MIpK7
+         RHDqcqOGLQAlbuTSIs6njIEiw2lNtmg+kUVj0Poexk+sQgQudXhN1FolwrZ9VYzpl+1a
+         cB0C6EJa+VI6wmCi8ZsXd/jN79cO7nHqw3Gev+O0Nco3V7QWR3V6TrPd1ciJIxloMrH5
+         8tzldXn/qE02e1lopdnIDGwpTKQeGUYAollVWB8MkmDgadtNiBkKFLc9m2cqnAEIryYv
+         tJBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pZzAMwk10JqTjDXwgTJurkovZOHqxsdyWD2t9EmKVOQ=;
+        b=oO3YgsY+DNhalA44v0SjyRunBnbICW5iQNB7aAvEVpMOjJFLyaWGRzNalDLlrtafAr
+         XdLfHh0NmKDIhd7EiqM6LfyLNj602LZpkH2aKFzuhi6cf0d8n36xsf8ekZNIR/qk/8Nh
+         2z0/sDcdPAMrVCWdf79pWfR9RV/U3Knr+d24q7E37ov/x3ReugBzpdxXs67mc0XIg5gH
+         4OmP8n/KIi0n+fL0iePE8aAOQGc41WoTbv8FujiWmwyjVW0TnTFo+5dITdhE9CxFikua
+         CL32ob/h9kiwfSS7ykMLDLThQABEyQg4MX95B6oLLEPpsZqFbR1cL1GGiYbf0hO7iHWw
+         Mu1A==
+X-Gm-Message-State: APjAAAX40XqeneWrYZse8RzhXrdL6O9QtHnVYPl/Nfkde8JSr7qZwCZy
+        bGbEEdPHpRJdU8Uu3OJApdB3hOePBCA=
+X-Google-Smtp-Source: APXvYqw2xS4YykGPdeRcFE4NZLnndPBghVdFAcfy3CqcTLlc0mTqj0TGZ4HMlNzmb41uz0qVkwLKnw==
+X-Received: by 2002:a2e:2283:: with SMTP id i125mr30215378lji.244.1575273795843;
+        Mon, 02 Dec 2019 00:03:15 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id m9sm5099306lfj.57.2019.12.02.00.03.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 00:03:14 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 1B9B6100F4E; Mon,  2 Dec 2019 11:03:15 +0300 (+03)
+Date:   Mon, 2 Dec 2019 11:03:15 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Wei Yang <richard.weiyang@gmail.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] mm/page_vma_mapped: use PMD_SIZE instead of
+ calculating it
+Message-ID: <20191202080315.oqtm3q7cyfkl5rma@box.shutemov.name>
+References: <20191128010321.21730-1-richardw.yang@linux.intel.com>
+ <20191128083255.ab5rwj7gvktwunik@box.shutemov.name>
+ <20191128212226.sfrhfs5m3q7m6tly@master>
 MIME-Version: 1.0
-In-Reply-To: <87sgm8zhw0.fsf@mpe.ellerman.id.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191128212226.sfrhfs5m3q7m6tly@master>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 11/28/2019 05:31 AM, Michael Ellerman wrote:
-> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->> Le 22/11/2019 à 07:38, Michael Ellerman a écrit :
->>> Michael Ellerman <mpe@ellerman.id.au> writes:
->>>> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->>>>> __get_datapage() is only a few instructions to retrieve the
->>>>> address of the page where the kernel stores data to the VDSO.
->>>>>
->>>>> By inlining this function into its users, a bl/blr pair and
->>>>> a mflr/mtlr pair is avoided, plus a few reg moves.
->>>>>
->>>>> The improvement is noticeable (about 55 nsec/call on an 8xx)
->>>>>
->>>>> vdsotest before the patch:
->>>>> gettimeofday:    vdso: 731 nsec/call
->>>>> clock-gettime-realtime-coarse:    vdso: 668 nsec/call
->>>>> clock-gettime-monotonic-coarse:    vdso: 745 nsec/call
->>>>>
->>>>> vdsotest after the patch:
->>>>> gettimeofday:    vdso: 677 nsec/call
->>>>> clock-gettime-realtime-coarse:    vdso: 613 nsec/call
->>>>> clock-gettime-monotonic-coarse:    vdso: 690 nsec/call
->>>>>
->>>>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->>>>
->>>> This doesn't build with gcc 4.6.3:
->>>>
->>>>     /linux/arch/powerpc/kernel/vdso32/gettimeofday.S: Assembler messages:
->>>>     /linux/arch/powerpc/kernel/vdso32/gettimeofday.S:41: Error: unsupported relocation against __kernel_datapage_offset
->>>>     /linux/arch/powerpc/kernel/vdso32/gettimeofday.S:86: Error: unsupported relocation against __kernel_datapage_offset
->>>>     /linux/arch/powerpc/kernel/vdso32/gettimeofday.S:213: Error: unsupported relocation against __kernel_datapage_offset
->>>>     /linux/arch/powerpc/kernel/vdso32/gettimeofday.S:247: Error: unsupported relocation against __kernel_datapage_offset
->>>>     make[4]: *** [arch/powerpc/kernel/vdso32/gettimeofday.o] Error 1
->>>
->>> Actually I guess it's binutils, which is v2.22 in this case.
->>>
->>> Needed this:
->>>
->>> diff --git a/arch/powerpc/include/asm/vdso_datapage.h b/arch/powerpc/include/asm/vdso_datapage.h
->>> index 12785f72f17d..0048db347ddf 100644
->>> --- a/arch/powerpc/include/asm/vdso_datapage.h
->>> +++ b/arch/powerpc/include/asm/vdso_datapage.h
->>> @@ -117,7 +117,7 @@ extern struct vdso_data *vdso_data;
->>>    .macro get_datapage ptr, tmp
->>>    	bcl	20, 31, .+4
->>>    	mflr	\ptr
->>> -	addi	\ptr, \ptr, __kernel_datapage_offset - (.-4)
->>> +	addi	\ptr, \ptr, (__kernel_datapage_offset - (.-4))@l
->>>    	lwz	\tmp, 0(\ptr)
->>>    	add	\ptr, \tmp, \ptr
->>>    .endm
->>>
->>
->> Are you still planning to getting this series merged ? Do you need any
->> help / rebase / re-spin ?
+On Thu, Nov 28, 2019 at 09:22:26PM +0000, Wei Yang wrote:
+> On Thu, Nov 28, 2019 at 11:32:55AM +0300, Kirill A. Shutemov wrote:
+> >On Thu, Nov 28, 2019 at 09:03:20AM +0800, Wei Yang wrote:
+> >> At this point, we are sure page is PageTransHuge, which means
+> >> hpage_nr_pages is HPAGE_PMD_NR.
+> >> 
+> >> This is safe to use PMD_SIZE instead of calculating it.
+> >> 
+> >> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+> >> ---
+> >>  mm/page_vma_mapped.c | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >> 
+> >> diff --git a/mm/page_vma_mapped.c b/mm/page_vma_mapped.c
+> >> index eff4b4520c8d..76e03650a3ab 100644
+> >> --- a/mm/page_vma_mapped.c
+> >> +++ b/mm/page_vma_mapped.c
+> >> @@ -223,7 +223,7 @@ bool page_vma_mapped_walk(struct page_vma_mapped_walk *pvmw)
+> >>  			if (pvmw->address >= pvmw->vma->vm_end ||
+> >>  			    pvmw->address >=
+> >>  					__vma_address(pvmw->page, pvmw->vma) +
+> >> -					hpage_nr_pages(pvmw->page) * PAGE_SIZE)
+> >> +					PMD_SIZE)
+> >>  				return not_found(pvmw);
+> >>  			/* Did we cross page table boundary? */
+> >>  			if (pvmw->address % PMD_SIZE == 0) {
+> >
+> >It is dubious cleanup. Maybe page_size(pvmw->page) instead? It will not
+> >break if we ever get PUD THP pages.
+> >
 > 
-> Not sure. I'll possibly send a 2nd pull request next week with it
-> included.
+> Thanks for your comment.
 > 
+> I took a look into the code again and found I may miss something.
+> 
+> I found we support PUD THP pages, whilc hpage_nr_pages() just return
+> HPAGE_PMD_NR on PageTransHuge. Why this is not possible to return PUD number?
 
-v3 conflicts with 2038 cleanup series from Arnd merged yesterday by 
-Linus (ceb307474506 ("Merge tag 'y2038-cleanups-5.5' of 
-git://git.kernel.org:/pub/scm/linux/kernel/git/arnd/playground"))
+We only support PUD THP for DAX. Means, we don't have struct page for it.
 
-Not seen your Ack in that series.
-
-I sent out v4 of my series, rebased on top of 2038 cleanup series.
-
-Christophe
+-- 
+ Kirill A. Shutemov
