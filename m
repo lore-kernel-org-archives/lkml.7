@@ -2,162 +2,143 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B03C43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C280C43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD61E20718
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:40:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H083x/sM"
+	by mail.kernel.org (Postfix) with ESMTP id 1C81820833
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:51:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575298271;
+	bh=nltjLLYixOrKRPkRTFLX6Xk/JRIw/DjlSVOlwBIbnHA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Kq4jScRbuLxHViGlRRd/0+lAc7GiPX5264bp1bGR78Ila5uQr3c/f/JlKZyYDJhl1
+	 SzJ+/an/Dl89zzOjTc2Pcigj4z5RmRA8aHDXunMd1xWPqOArmJMyt7WcDgxBleaIka
+	 3zj0ReURcki73b0naxykss9VnCUDkVCukXNolHwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727589AbfLBOkS (ORCPT
+        id S1727451AbfLBOvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 09:40:18 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:38677 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727406AbfLBOkS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 09:40:18 -0500
-Received: by mail-lf1-f67.google.com with SMTP id r14so11935153lfm.5;
-        Mon, 02 Dec 2019 06:40:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MuKkyCaYPZK6q+vtj0Oj3LLvTH7hr0pT2uHjN7RG//Y=;
-        b=H083x/sMnck6FZU2DLKjYSIWNiVmUd1JQbRBPIWCRU+sSdQLK/cIScO2+lKTmtuxIa
-         GzNuLSQMNdmU2qqCzfsSTmEXeZRBOSjEhOFNOwqvcnRdIn1N5uwIW3AZRZKkhYPmIFro
-         0aLU/dv/s/Rc2ohcSTNiLTtAPwvbHymRdvYIbvLulpbKsXITq9/Gt9auYmB90im0hofs
-         0V00WPOYxEcD3sX8M9ywoW0WacDrDOtK3+qrtoN3cJ0TtnAUZgXkDcwfNoDowwfEt1TI
-         2hWX5kfbxiPdE6c6HbUYOMETpoa177F8uGgU2npYVF+/A2oruoXJs+mbo9Qi5rX6Pfkw
-         ankw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MuKkyCaYPZK6q+vtj0Oj3LLvTH7hr0pT2uHjN7RG//Y=;
-        b=PcjZpaKFWru7/Ae3OSKNrFsmZLpNmRpQ78YMlREAZ1BnPYxQabSsk65b3mPSoWMQoJ
-         MAbdtHY1c2OQVb51gltLMqJnnQfml5+gO4l8ZDBWBQdi1lzJXs0JEu0/cxlE1EVD3dlx
-         TMAxdVxYxsOsC7dAyS1UrKrkEgQu1PXyks6xPh4T78A5NskbMMRSVgtU5+EPsOW885er
-         cTwBv62QwMNs1fmc3NaPyMhrgWp8DkZzUmKxDAIf5kAylhpgNSvuRz+7VDibCGDvJXYz
-         R/RKZOV2MAh0kqX5hyZ6FklZaaZL/hmhHJj8FK8/VBPsEa+OGLdZtKyGDELLuzv9fZX/
-         XbFA==
-X-Gm-Message-State: APjAAAUJt0J0/0DjIlRcigPOWYUlvwTBILtZeViJ7THZluuMzJymjv5F
-        7vWyKE24c/iG+/fgfDqFFcMCEXCevdmMHpJm0mbEKTC2
-X-Google-Smtp-Source: APXvYqyPFmLDrOIuV+Cs4RE1iW7MA9zfT7/FK8ojlRRNRjp4uDoxlwnO4ic/+mZIcN3tyacs9SFIZyPl298QIFKmvG8=
-X-Received: by 2002:ac2:428d:: with SMTP id m13mr37630848lfh.64.1575297616009;
- Mon, 02 Dec 2019 06:40:16 -0800 (PST)
-MIME-Version: 1.0
-References: <20191127203114.766709977@linuxfoundation.org> <20191127203119.676489279@linuxfoundation.org>
-In-Reply-To: <20191127203119.676489279@linuxfoundation.org>
-From:   Jack Wang <jack.wang.usish@gmail.com>
-Date:   Mon, 2 Dec 2019 15:40:04 +0100
-Message-ID: <CA+res+QKCAn8PsSgbkqXNAF0Ov5pOkj=732=M5seWj+-JFQOwQ@mail.gmail.com>
-Subject: Re: [PATCH 4.19 067/306] KVM: nVMX: move check_vmentry_postreqs()
- call to nested_vmx_enter_non_root_mode()
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        Mon, 2 Dec 2019 09:51:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727420AbfLBOvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 09:51:09 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6EAB2073C;
+        Mon,  2 Dec 2019 14:51:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575298268;
+        bh=nltjLLYixOrKRPkRTFLX6Xk/JRIw/DjlSVOlwBIbnHA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=H5l/+NezE+LKWA0Y/Id4jNPzQT1d/LSLfUcx0AvcLAP7Rzw+78JrzgDO3CxdcCn51
+         nDt6HcGgFsRWxogXS8CQd3/MfzfMBsX2+V9CgITPfHTCXcqZHWQ21bK7NrekeLU9Ax
+         PJ1lcLxhiou5OaHvpU4wB2kGhP4MCT3mcsx9MR9A=
+Date:   Mon, 2 Dec 2019 15:51:05 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jack Wang <jack.wang.usish@gmail.com>
 Cc:     linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 4.19 067/306] KVM: nVMX: move check_vmentry_postreqs()
+ call to nested_vmx_enter_non_root_mode()
+Message-ID: <20191202145105.GA571975@kroah.com>
+References: <20191127203114.766709977@linuxfoundation.org>
+ <20191127203119.676489279@linuxfoundation.org>
+ <CA+res+QKCAn8PsSgbkqXNAF0Ov5pOkj=732=M5seWj+-JFQOwQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+res+QKCAn8PsSgbkqXNAF0Ov5pOkj=732=M5seWj+-JFQOwQ@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> =E4=BA=8E2019=E5=B9=B411=E6=
-=9C=8827=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8B=E5=8D=8810:30=E5=86=99=E9=81=
-=93=EF=BC=9A
->
-> From: Sean Christopherson <sean.j.christopherson@intel.com>
->
-> [ Upstream commit 7671ce21b13b9596163a29f4712cb2451a9b97dc ]
->
-> In preparation of supporting checkpoint/restore for nested state,
-> commit ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vmx_run()"=
-)
-> modified check_vmentry_postreqs() to only perform the guest EFER
-> consistency checks when nested_run_pending is true.  But, in the
-> normal nested VMEntry flow, nested_run_pending is only set after
-> check_vmentry_postreqs(), i.e. the consistency check is being skipped.
->
-> Alternatively, nested_run_pending could be set prior to calling
-> check_vmentry_postreqs() in nested_vmx_run(), but placing the
-> consistency checks in nested_vmx_enter_non_root_mode() allows us
-> to split prepare_vmcs02() and interleave the preparation with
-> the consistency checks without having to change the call sites
-> of nested_vmx_enter_non_root_mode().  In other words, the rest
-> of the consistency check code in nested_vmx_run() will be joining
-> the postreqs checks in future patches.
->
-> Fixes: ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vmx_run()"=
-)
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Cc: Jim Mattson <jmattson@google.com>
-> Reviewed-by: Jim Mattson <jmattson@google.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  arch/x86/kvm/vmx.c | 10 +++-------
->  1 file changed, 3 insertions(+), 7 deletions(-)
->
-> diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-> index fe7fdd666f091..bdf019f322117 100644
-> --- a/arch/x86/kvm/vmx.c
-> +++ b/arch/x86/kvm/vmx.c
-> @@ -12694,6 +12694,9 @@ static int enter_vmx_non_root_mode(struct kvm_vcp=
-u *vcpu, u32 *exit_qual)
->         if (likely(!evaluate_pending_interrupts) && kvm_vcpu_apicv_active=
-(vcpu))
->                 evaluate_pending_interrupts |=3D vmx_has_apicv_interrupt(=
-vcpu);
->
-> +       if (from_vmentry && check_vmentry_postreqs(vcpu, vmcs12, exit_qua=
-l))
-> +               return EXIT_REASON_INVALID_STATE;
-> +
->         enter_guest_mode(vcpu);
->
->         if (!(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CONTROLS))
-> @@ -12836,13 +12839,6 @@ static int nested_vmx_run(struct kvm_vcpu *vcpu,=
- bool launch)
->          */
->         skip_emulated_instruction(vcpu);
->
-> -       ret =3D check_vmentry_postreqs(vcpu, vmcs12, &exit_qual);
-> -       if (ret) {
-> -               nested_vmx_entry_failure(vcpu, vmcs12,
-> -                                        EXIT_REASON_INVALID_STATE, exit_=
-qual);
-> -               return 1;
-> -       }
-> -
->         /*
->          * We're finally done with prerequisite checking, and can start w=
-ith
->          * the nested entry.
-> --
-> 2.20.1
->
->
->
-Hi all,
+On Mon, Dec 02, 2019 at 03:40:04PM +0100, Jack Wang wrote:
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> 于2019年11月27日周三 下午10:30写道：
+> >
+> > From: Sean Christopherson <sean.j.christopherson@intel.com>
+> >
+> > [ Upstream commit 7671ce21b13b9596163a29f4712cb2451a9b97dc ]
+> >
+> > In preparation of supporting checkpoint/restore for nested state,
+> > commit ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vmx_run()")
+> > modified check_vmentry_postreqs() to only perform the guest EFER
+> > consistency checks when nested_run_pending is true.  But, in the
+> > normal nested VMEntry flow, nested_run_pending is only set after
+> > check_vmentry_postreqs(), i.e. the consistency check is being skipped.
+> >
+> > Alternatively, nested_run_pending could be set prior to calling
+> > check_vmentry_postreqs() in nested_vmx_run(), but placing the
+> > consistency checks in nested_vmx_enter_non_root_mode() allows us
+> > to split prepare_vmcs02() and interleave the preparation with
+> > the consistency checks without having to change the call sites
+> > of nested_vmx_enter_non_root_mode().  In other words, the rest
+> > of the consistency check code in nested_vmx_run() will be joining
+> > the postreqs checks in future patches.
+> >
+> > Fixes: ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vmx_run()")
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > Cc: Jim Mattson <jmattson@google.com>
+> > Reviewed-by: Jim Mattson <jmattson@google.com>
+> > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > ---
+> >  arch/x86/kvm/vmx.c | 10 +++-------
+> >  1 file changed, 3 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+> > index fe7fdd666f091..bdf019f322117 100644
+> > --- a/arch/x86/kvm/vmx.c
+> > +++ b/arch/x86/kvm/vmx.c
+> > @@ -12694,6 +12694,9 @@ static int enter_vmx_non_root_mode(struct kvm_vcpu *vcpu, u32 *exit_qual)
+> >         if (likely(!evaluate_pending_interrupts) && kvm_vcpu_apicv_active(vcpu))
+> >                 evaluate_pending_interrupts |= vmx_has_apicv_interrupt(vcpu);
+> >
+> > +       if (from_vmentry && check_vmentry_postreqs(vcpu, vmcs12, exit_qual))
+> > +               return EXIT_REASON_INVALID_STATE;
+> > +
+> >         enter_guest_mode(vcpu);
+> >
+> >         if (!(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CONTROLS))
+> > @@ -12836,13 +12839,6 @@ static int nested_vmx_run(struct kvm_vcpu *vcpu, bool launch)
+> >          */
+> >         skip_emulated_instruction(vcpu);
+> >
+> > -       ret = check_vmentry_postreqs(vcpu, vmcs12, &exit_qual);
+> > -       if (ret) {
+> > -               nested_vmx_entry_failure(vcpu, vmcs12,
+> > -                                        EXIT_REASON_INVALID_STATE, exit_qual);
+> > -               return 1;
+> > -       }
+> > -
+> >         /*
+> >          * We're finally done with prerequisite checking, and can start with
+> >          * the nested entry.
+> > --
+> > 2.20.1
+> >
+> >
+> >
+> Hi all,
+> 
+> This commit caused many kvm-unit-tests regression, cherry-pick
+> following commits from 4.20 fix the regression:
+> d63907dc7dd1 ("KVM: nVMX: rename enter_vmx_non_root_mode to
+> nested_vmx_enter_non_root_mode")
+> a633e41e7362 ("KVM: nVMX: assimilate nested_vmx_entry_failure() into
+> nested_vmx_enter_non_root_mode()")
 
-This commit caused many kvm-unit-tests regression, cherry-pick
-following commits from 4.20 fix the regression:
-d63907dc7dd1 ("KVM: nVMX: rename enter_vmx_non_root_mode to
-nested_vmx_enter_non_root_mode")
-a633e41e7362 ("KVM: nVMX: assimilate nested_vmx_entry_failure() into
-nested_vmx_enter_non_root_mode()")
+Now queued up, thanks!
 
-Regards,
-Jack Wang
-1 & 1 IONOS SE
+greg k-h
