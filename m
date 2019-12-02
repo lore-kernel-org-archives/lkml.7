@@ -2,91 +2,188 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E06F6C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF0BC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A921A20833
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:13:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vk1wssvB"
+	by mail.kernel.org (Postfix) with ESMTP id EA65920833
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:15:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727758AbfLBRNr (ORCPT
+        id S1727778AbfLBRPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 12:13:47 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43800 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727529AbfLBRNr (ORCPT
+        Mon, 2 Dec 2019 12:15:11 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:40208 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727646AbfLBRPK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 12:13:47 -0500
-Received: by mail-pl1-f193.google.com with SMTP id q16so183194plr.10
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 09:13:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=64Rtkbp5lv2QBUlTxW71SlutJl/znQZhVAhGmRkDa5A=;
-        b=Vk1wssvB/zZH8eG99umAlefNG1L3qcWJrGhvntSWhcfpVqIgNAxOidQi1rwq4EQIXn
-         bN4vLm7U3VKPpBs9sda/OGs+oyh9PNagdmFLvXdLj/BS47NPntYenQZ5La3ndeMMvSdE
-         skeX0zFDPEe2oYhEETSdTU90kbb3+PL8p4zstc5e0YlF0cKXQ92MxFz36GyVOGZ0X7/M
-         K3MrdpOuSClJ+EaJxL7s+dztJNSPhojECu28cIb0F2l3WqnCnMDfk4C/Hj49DL952BEY
-         BxZqmEm7yS/3E/w9YNyvwuwajKd5JfcTzCs/nbSRB1EuYZe1m8RWrwueCb+hlp03EFEM
-         7wcg==
+        Mon, 2 Dec 2019 12:15:10 -0500
+Received: by mail-il1-f198.google.com with SMTP id s10so251065ilh.7
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 09:15:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=64Rtkbp5lv2QBUlTxW71SlutJl/znQZhVAhGmRkDa5A=;
-        b=NHOFSGDPVkNQ3ww+2Cz5fhsbsGjt7EjhU8hx57e2cn4tpZaUgGgdDe7HxEtfmea5tp
-         +KYQfIj3rFm/XMRujrGMCEqFeZv7q8vtiKVfP1zVSB0YUhAFlEk6W2WgLQGUa7N2uI+t
-         5SqDYo+8038uqTc1Ub4bAfx2gK4NNTCgAHOkjBf3uslUl7fdAFCHZizkqRsqGE1PJeXp
-         96XL6ekXnCr1rDJBfwY2gXIZW58Aa0i3T1qRzCyG6qtkycIQw5+nVGNdb8bENLU6pEf6
-         B+Cb+aKyZ9+S4jjAcPOUHbm4hdmeRnj4HcGIotndF5KbOO+qnKEnA6WNG7ipJdMxw9Tm
-         VZTw==
-X-Gm-Message-State: APjAAAUbwA5ZibSOGScOn/LMfrXA2sehg26Aay9DLs5BHDxQH9lVKVnl
-        ucSf0OlqlZ8HmGfuu8yRNSz9P5ZSQL73+5W0pw6WEQ==
-X-Google-Smtp-Source: APXvYqw2U7Pcn6yuncEv+9Hnh2ggnupoJ+IowA3xrDVuGtbGVVpYPNpOewznFvm7KtezB3JzP8UOxrp7rkAIVpmh7PQ=
-X-Received: by 2002:a17:90a:ff02:: with SMTP id ce2mr16466pjb.117.1575306825934;
- Mon, 02 Dec 2019 09:13:45 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=jJwI23GQ7UoBdhmtwPeNfel6AzBv3Y3n6KsCAm4HCIY=;
+        b=RX5+hBiAoPeNWS0zZOVkF6KIa9DTDjE1ZINYrdf/5tLoEiqVs4TnVMtptLbRNImQYW
+         rpJmP3RKwMpRT84I87eIo4b7ovLqP0Fiu6x0KAqcGiq0a1t1e2blwQkggQYzZ4KNYMDN
+         Uoy/McN2dV/dQXdnKZEUbdiyfGudVMjGIkLRHeGr1T9RdCHvUZOHHrg3/OUTkcyI3UWk
+         5yso2EwGwOULoOBN4raww8Vzm6zfKvvaCA7mlECqOTn9Kt3gYnSMvIiCtXTdeSF7mw5L
+         +sSZEf4iYY/NgvN3Fbz4wTWlihuMA/cpRtMxnFi9+F6elBldEAMZZJnm2tUGMxqZHFLL
+         LL9w==
+X-Gm-Message-State: APjAAAXFAeQ8LpWtBFNngwBbw+M77Ifdu/BfiJ1BehsJFeF02A2dSFkc
+        C8nSbylrO2rK020woklQzG4HDAnXaVXqblZwwNMYo92QGKmT
+X-Google-Smtp-Source: APXvYqyQZcrh/4cqBQ8PN1IbFlHFVgnMEdv1ZKtKoSFgOSoIO+GSqFC25S9kw9MSwcwWAFvXwWUvjtq98HAtxauk9/2c6OJS2NXw
 MIME-Version: 1.0
-References: <1575242724-4937-1-git-send-email-sj38.park@gmail.com> <1575242724-4937-2-git-send-email-sj38.park@gmail.com>
-In-Reply-To: <1575242724-4937-2-git-send-email-sj38.park@gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 2 Dec 2019 09:13:37 -0800
-Message-ID: <CAFd5g468=suYdH9No7f1qkr-oAvOFS3q4O1iW3ABs57fzsntdw@mail.gmail.com>
-Subject: Re: [PATCH 1/6] docs/kunit/start: Use in-tree 'kunit_defconfig'
-To:     SeongJae Park <sj38.park@gmail.com>
-Cc:     shuah <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>,
-        David Gow <davidgow@google.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a5d:874b:: with SMTP id k11mr50084251iol.222.1575306908241;
+ Mon, 02 Dec 2019 09:15:08 -0800 (PST)
+Date:   Mon, 02 Dec 2019 09:15:08 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ad9f910598bbb867@google.com>
+Subject: KASAN: use-after-free Read in iov_iter_alignment
+From:   syzbot <syzbot+bea68382bae9490e7dd6@syzkaller.appspotmail.com>
+To:     darrick.wong@oracle.com, hch@infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 1, 2019 at 3:25 PM SeongJae Park <sj38.park@gmail.com> wrote:
->
-> From: SeongJae Park <sjpark@amazon.de>
->
-> The kunit doc suggests users to get the default `kunitconfig` from an
-> external git tree.  However, the file is already located under the
-> `arch/um/configs/` of the kernel tree.  Because the local file is easier
-> to access and maintain, this commit updates the doc to use it.
+Hello,
 
-I agree; this probably makes more sense.
+syzbot found the following crash on:
 
-> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+HEAD commit:    b94ae8ad Merge tag 'seccomp-v5.5-rc1' of git://git.kernel...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=135a8d7ae00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c2e464ae414aee8c
+dashboard link: https://syzkaller.appspot.com/bug?extid=bea68382bae9490e7dd6
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1135cb36e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14e90abce00000
 
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+bea68382bae9490e7dd6@syzkaller.appspotmail.com
 
-Thanks!
+==================================================================
+BUG: KASAN: use-after-free in iov_iter_alignment+0x6a1/0x7b0  
+lib/iov_iter.c:1225
+Read of size 4 at addr ffff888098d40f54 by task loop0/8203
+
+CPU: 0 PID: 8203 Comm: loop0 Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+  print_address_description+0x75/0x5c0 mm/kasan/report.c:374
+  __kasan_report+0x14b/0x1c0 mm/kasan/report.c:506
+  kasan_report+0x26/0x50 mm/kasan/common.c:634
+  __asan_report_load4_noabort+0x14/0x20 mm/kasan/generic_report.c:131
+  iov_iter_alignment+0x6a1/0x7b0 lib/iov_iter.c:1225
+  iomap_dio_bio_actor+0x1a7/0x11e0 fs/iomap/direct-io.c:203
+  iomap_dio_actor+0x2b4/0x4a0 fs/iomap/direct-io.c:375
+  iomap_apply+0x370/0x490 fs/iomap/apply.c:80
+  iomap_dio_rw+0x8ad/0x1010 fs/iomap/direct-io.c:493
+  ext4_dio_read_iter fs/ext4/file.c:77 [inline]
+  ext4_file_read_iter+0x834/0xc20 fs/ext4/file.c:128
+  lo_rw_aio+0xcbb/0xea0 include/linux/fs.h:1889
+  do_req_filebacked drivers/block/loop.c:616 [inline]
+  loop_handle_cmd drivers/block/loop.c:1952 [inline]
+  loop_queue_work+0x13ab/0x2590 drivers/block/loop.c:1966
+  kthread_worker_fn+0x449/0x700 kernel/kthread.c:671
+  loop_kthread_worker_fn+0x40/0x60 drivers/block/loop.c:901
+  kthread+0x332/0x350 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Allocated by task 4198:
+  save_stack mm/kasan/common.c:69 [inline]
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc+0x11c/0x1b0 mm/kasan/common.c:510
+  kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:518
+  slab_post_alloc_hook mm/slab.h:584 [inline]
+  slab_alloc mm/slab.c:3319 [inline]
+  kmem_cache_alloc+0x1f5/0x2e0 mm/slab.c:3483
+  mempool_alloc_slab+0x4d/0x70 mm/mempool.c:513
+  mempool_alloc+0x104/0x5e0 mm/mempool.c:393
+  bio_alloc_bioset+0x1b0/0x5f0 block/bio.c:477
+  bio_alloc include/linux/bio.h:400 [inline]
+  mpage_alloc fs/mpage.c:79 [inline]
+  do_mpage_readpage+0x1685/0x1d10 fs/mpage.c:306
+  mpage_readpages+0x2a9/0x440 fs/mpage.c:404
+  blkdev_readpages+0x2c/0x40 fs/block_dev.c:620
+  read_pages+0xad/0x4d0 mm/readahead.c:126
+  __do_page_cache_readahead+0x480/0x530 mm/readahead.c:212
+  force_page_cache_readahead mm/readahead.c:243 [inline]
+  page_cache_sync_readahead+0x329/0x3b0 mm/readahead.c:522
+  generic_file_buffered_read+0x41d/0x2570 mm/filemap.c:2051
+  generic_file_read_iter+0xa9/0x450 mm/filemap.c:2324
+  blkdev_read_iter+0x12e/0x140 fs/block_dev.c:2039
+  call_read_iter include/linux/fs.h:1889 [inline]
+  new_sync_read fs/read_write.c:414 [inline]
+  __vfs_read+0x59e/0x730 fs/read_write.c:427
+  vfs_read+0x1dd/0x420 fs/read_write.c:461
+  ksys_read+0x117/0x220 fs/read_write.c:587
+  __do_sys_read fs/read_write.c:597 [inline]
+  __se_sys_read fs/read_write.c:595 [inline]
+  __x64_sys_read+0x7b/0x90 fs/read_write.c:595
+  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 4205:
+  save_stack mm/kasan/common.c:69 [inline]
+  set_track mm/kasan/common.c:77 [inline]
+  kasan_set_free_info mm/kasan/common.c:332 [inline]
+  __kasan_slab_free+0x12a/0x1e0 mm/kasan/common.c:471
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
+  __cache_free mm/slab.c:3425 [inline]
+  kmem_cache_free+0x81/0xf0 mm/slab.c:3693
+  mempool_free_slab+0x1d/0x30 mm/mempool.c:520
+  mempool_free+0xd5/0x350 mm/mempool.c:502
+  bio_put+0x38b/0x460 block/bio.c:255
+  mpage_end_io+0x2f5/0x330 fs/mpage.c:58
+  bio_endio+0x4ff/0x570 block/bio.c:1818
+  req_bio_endio block/blk-core.c:245 [inline]
+  blk_update_request+0x438/0x10d0 block/blk-core.c:1464
+  scsi_end_request+0x8c/0xa20 drivers/scsi/scsi_lib.c:579
+  scsi_io_completion+0x17c/0x1b80 drivers/scsi/scsi_lib.c:963
+  scsi_finish_command+0x3b3/0x560 drivers/scsi/scsi.c:228
+  scsi_softirq_done+0x289/0x310 drivers/scsi/scsi_lib.c:1477
+  blk_done_softirq+0x312/0x370 block/blk-softirq.c:37
+  __do_softirq+0x333/0x7c4 arch/x86/include/asm/paravirt.h:762
+
+The buggy address belongs to the object at ffff888098d40f00
+  which belongs to the cache bio-0 of size 192
+The buggy address is located 84 bytes inside of
+  192-byte region [ffff888098d40f00, ffff888098d40fc0)
+The buggy address belongs to the page:
+page:ffffea0002635000 refcount:1 mapcount:0 mapping:ffff88821acf5700  
+index:0xffff888098d40c00
+raw: 00fffe0000000200 ffffea0002805188 ffff8880a7b42738 ffff88821acf5700
+raw: ffff888098d40c00 ffff888098d40000 000000010000000e 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff888098d40e00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  ffff888098d40e80: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+> ffff888098d40f00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                  ^
+  ffff888098d40f80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+  ffff888098d41000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
