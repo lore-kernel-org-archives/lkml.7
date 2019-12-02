@@ -2,153 +2,90 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B9DC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C90B6C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83B2420748
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:29:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VndfOFFM"
+	by mail.kernel.org (Postfix) with ESMTP id 9601420748
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:30:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575289807;
+	bh=kCVVE4B4Q5W9eZUpPWjvkeVEthalrdkMKgvf7MTv00M=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=R6i4rEHKmUWoqXqAqqArReoS9EDoHD6uZIv2fosTItLvXI9aHgvYufAZ6FbzLw7MD
+	 Dn+2QAk3YH+XujgC7wcq5T0Z0gV0mLccy+mjNcbJp7FCb9fRno0ubvXXZNnrnfSe06
+	 0tkJlEob3HuIeJ42aEfzS7B/2MUn4RvygeqA6Nuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727423AbfLBM3e (ORCPT
+        id S1727451AbfLBMaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 07:29:34 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37868 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727381AbfLBM3e (ORCPT
+        Mon, 2 Dec 2019 07:30:06 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:37382 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727362AbfLBMaG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 07:29:34 -0500
-Received: by mail-wr1-f67.google.com with SMTP id w15so13064249wru.4
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 04:29:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=m1gJFoxmvPjutyLqW6gwKw+LefgYzc+HHd4YVNJtFa4=;
-        b=VndfOFFMw1L/rmuAHJ6jsXalfXg2a3CmIxhSSc606nhVmBTPvovbR3NUrurVVdK3+W
-         E44+UttwXNH+0MxtQCXPLB8OiNanW+qSedpbrnWe9oQwqFucaNAQFIjpuaw89wOr9obQ
-         k0GCmcbMZk07b54nPsC/Wu55iei83BFsi1ci2YGe1U1KCx+WfIz8TaJQqQysqUH1/o1L
-         wtI5WOt0+zMNneclxZ7mMTgiFMk9GnqC44YtMjkUSoag6KZasDDHmvYom6ygNf2udlI2
-         BaJse3K4+wKFBwjw60hmQDUgvnai2FTppz18uwNeK7qTXNnqS/Ia6WWOY3aYW8mtXHrj
-         sYcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=m1gJFoxmvPjutyLqW6gwKw+LefgYzc+HHd4YVNJtFa4=;
-        b=DJ25rnzPVJTcP6QtjKrLfxYWH5zyRjPM2ydu0MK+1ZRW88Pjf3rqtn254VWvlt6M7l
-         vOWSc8rtEAUx5r61D8cR3IyBT98eMCsHNR86bkKnKIPX7hXhdRmIMGglrLppsGSoMRr9
-         4qVoTWtkXngLiMhAyjMMyXFWAVzN2YU35w2Hdgvw9SKDZHuvWgRj0PbvE+RwrFFqzWWW
-         8H4eU4WueL8dMRrsWLMmg9FQZTenYpoIAGAbYVoMIjGj2Ea4wwN6uz/1c0gEUjdRFkyW
-         z+jli2gHeSF/pYQRyFQ1R4OI5R00w7Gq/r3EAY58MyI/6n1pQOnUlIfCvuw4URISMmgo
-         rmPw==
-X-Gm-Message-State: APjAAAVnec30dfDorfbEtsS5eb8RIp64mQbgwBK33GmSyVW7D+dVDBEV
-        bpUsuuzPhAOawnxwsAcCMNPAhw==
-X-Google-Smtp-Source: APXvYqwd3UxC6c3DYGT/u/UuFJrPiuTjk+YcI3ZageRxW8ixm+PJ796D/NoYSrhFUN4lmKDGhjxM3w==
-X-Received: by 2002:adf:fe86:: with SMTP id l6mr4235243wrr.252.1575289772174;
-        Mon, 02 Dec 2019 04:29:32 -0800 (PST)
-Received: from bivouac.eciton.net (bivouac.eciton.net. [2a00:1098:0:86:1000:23:0:2])
-        by smtp.gmail.com with ESMTPSA id a14sm6471505wrx.81.2019.12.02.04.29.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 04:29:31 -0800 (PST)
-Date:   Mon, 2 Dec 2019 12:29:29 +0000
-From:   Leif Lindholm <leif.lindholm@linaro.org>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Rob Clark <robdclark@gmail.com>,
-        Rob Clark <robdclark@chromium.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kairui Song <kasong@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        "open list:EXTENSIBLE FIRMWARE INTERFACE (EFI)" 
-        <linux-efi@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] efi/fdt: install new fdt config table
-Message-ID: <20191202122929.GC7359@bivouac.eciton.net>
-References: <20191130195045.2005835-1-robdclark@gmail.com>
- <CAKv+Gu_HXD=59q9zeK6-WoEEngHPrEJpPTyT8U4TZZ3AOs=TcA@mail.gmail.com>
+        Mon, 2 Dec 2019 07:30:06 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1ibkpz-0000HJ-ES; Mon, 02 Dec 2019 13:29:59 +0100
+To:     Daode Huang <huangdaode@hisilicon.com>
+Subject: Re: [PATCH] irqchip/stm32: Fix "WARNING: invalid free of  =?UTF-8?Q?devm=5F=20allocated?=
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKv+Gu_HXD=59q9zeK6-WoEEngHPrEJpPTyT8U4TZZ3AOs=TcA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 02 Dec 2019 12:29:59 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <fabien.dessenne@st.com>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1574931880-168682-1-git-send-email-huangdaode@hisilicon.com>
+References: <1574931880-168682-1-git-send-email-huangdaode@hisilicon.com>
+Message-ID: <8acaa494701c91b8a8acd60a2390d810@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: huangdaode@hisilicon.com, tglx@linutronix.de, jason@lakedaemon.net, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, fabien.dessenne@st.com, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 10:35:05 +0100, Ard Biesheuvel wrote:
-> On Sat, 30 Nov 2019 at 20:51, Rob Clark <robdclark@gmail.com> wrote:
+On 2019-11-28 09:04, Daode Huang wrote:
+> Since devm_ allocated data can be automaitcally released, it's no
+> need to free it apparently, just remove it.
 >
-> I understand what you are trying to do here, but this is not the right solution.
-> 
-> I have rejected patches in the past where config tables are used to
-> communicate information back to the firmware, as creating reverse
-> dependencies like this is a recipe for disaster.
+> Fixes: cfbf9e497094 ("irqchip/stm32: Use a platform driver for
+> stm32mp1-exti device")
+> Signed-off-by: Daode Huang <huangdaode@hisilicon.com>
+> ---
+>  drivers/irqchip/irq-stm32-exti.c | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/drivers/irqchip/irq-stm32-exti.c
+> b/drivers/irqchip/irq-stm32-exti.c
+> index e00f2fa..46ec0af 100644
+> --- a/drivers/irqchip/irq-stm32-exti.c
+> +++ b/drivers/irqchip/irq-stm32-exti.c
+> @@ -779,8 +779,6 @@ static int __init stm32_exti_init(const struct
+> stm32_exti_drv_data *drv_data,
+>  	irq_domain_remove(domain);
+>  out_unmap:
+>  	iounmap(host_data->base);
+> -	kfree(host_data->chips_data);
+> -	kfree(host_data);
+>  	return ret;
+>  }
 
-This isn't *technically* communicating information back to the
-firmware, since the agent that ends up being invoked is a driver that
-has been explicitly installed in order to permit running Linux without
-hacking about with GRUB. (But it's certainly communicating it back to
-the firmware context.)
+Applied, thanks.
 
-> IIUC, the problem is that the DtbLoader attempts to be smart about
-> whether to install the DT config table, and to only do so if the OS is
-> going to boot in DT mode. This is based on the principle that we
-> should not expose both ACPI and DT tables, and make it the OS's
-> problem to reason about which one is the preferred description.
-> 
-> I agree with that approach in general, but in this particular case, I
-> don't think it makes sense. Windows only cares about ACPI, and Linux
-> only cares about DT unless you instruct it specifically to prioritize
-> ACPI over DT.
-
-I guess it's worth pointing out here that this approach (DtbLoader)
-predates the finding out that these devices use PEP instead of ACPI
-for power management (which I guess makes it ACI) - so ACPI can never
-be usefully supported.
-
-> So the problem that this solves does not exist in
-> practice, and we're much better off just exposing the DT alongside the
-> ACPI tables, and let the OS use whichever one it wants.
-
-Wo-hoo...
-
-> Also, the stub always reallocates the FDT, and so the CRC check is
-> only detecting whether the DT is being touched by GRUB or not.
-
-So does GRUB.
-
-DtbLoader looks up the DT through the system table again as part of
-the ExitBootservices hook. An address change *or* a CRC change
-triggers the ACPI deletion.
-
-This was the problem Rob was trying to address - ensuring the hook
-gets invoked even where the stub was the one that updated the DT.
-
-But given the situation we're in, I don't really disagree with you
-anyway.
-
-Let's just be clear that this isn't a free-for-all - this is because
-the abstraction of power management on this family of machines is
-broken by design.
-
-> So removing the ACPI tables like this is not something I think we
-> should be doing at all. As a compromise, you might add 'acpi=off' to
-> /chosen/cmdline so that GRUBless boot into Linux does not
-> inadvertently ends up booting in ACPI mode.
-
-If so, some form of (out-of-tree) sanity check would be needed on
-distros carrying out-of-tree patches that disable DT boot.
-
-It *is* possible to boot these machines using only ACPI. It's just not
-a very great user experience with all cores running at minimum
-frequency.
-
-/
-    Leif
+         M.
+-- 
+Jazz is not dead. It just smells funny...
