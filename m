@@ -2,153 +2,88 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CD8C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 165C1C43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3577E20705
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:55:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E031220717
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:57:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="uYyRYGLk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UlyiU5dp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727442AbfLBMz6 (ORCPT
+        id S1727466AbfLBM5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 07:55:58 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:58015 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727381AbfLBMz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 07:55:57 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47RQ8Q6LnNz9v1HJ;
-        Mon,  2 Dec 2019 13:55:50 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=uYyRYGLk; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id j1lbP863FWaw; Mon,  2 Dec 2019 13:55:50 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47RQ8Q5G9vz9v1H7;
-        Mon,  2 Dec 2019 13:55:50 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1575291350; bh=0PiER+iG4dOV5r1TXBRVB852IzwzoLmssACM3pBfACM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=uYyRYGLkiczFw0RaGmyLshMwx1P7HPT7g3g4PqeF6S+EIO1OaJE+o8E2Q6jN4wNVa
-         CHdz6+PF/KjYn3b3vJ7pa2Qq/m2YeblD/s4NFB1NgKnDT5TEG4EMyQFXzkx3EMdBr0
-         0cpnzsGPuGKjxO7gRQyzBPmDsyhw/18S0VYW2Gvw=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B2D278B7AD;
-        Mon,  2 Dec 2019 13:55:55 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id JCEDdLM1Ls41; Mon,  2 Dec 2019 13:55:55 +0100 (CET)
-Received: from [172.25.230.103] (po15451.idsi0.si.c-s.fr [172.25.230.103])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5B0358B770;
-        Mon,  2 Dec 2019 13:55:55 +0100 (CET)
-Subject: Re: [Y2038] [PATCH 07/23] y2038: vdso: powerpc: avoid timespec
- references
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Allison Randal <allison@lohutok.net>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-References: <20191108210236.1296047-1-arnd@arndb.de>
- <20191108210824.1534248-7-arnd@arndb.de>
- <4faa78cd0a86cf5d0aea9bb16d03145c5745450b.camel@codethink.co.uk>
- <CAK8P3a1nRq98ngfKnR2Du+7_vOxSRFD9AyjHyUCsAtk_gLR_Uw@mail.gmail.com>
- <20191121172529.Horde.0uDMS4xQ-xexjp4a2mIoXQ5@messagerie.si.c-s.fr>
- <CAK8P3a1UmAYTx=Vv06xP=O-oYD8_HzNqMG0-p7GPP2xgzs+75w@mail.gmail.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <85ba697d-1a09-f1b0-b6b6-a511a2920f93@c-s.fr>
-Date:   Mon, 2 Dec 2019 13:55:55 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Mon, 2 Dec 2019 07:57:00 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42432 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727381AbfLBM5A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 07:57:00 -0500
+Received: by mail-lj1-f193.google.com with SMTP id e28so15804185ljo.9;
+        Mon, 02 Dec 2019 04:56:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Qlt+/dRlgH3WSZzFFBm5SD3CiWvxcdEsgMu4Ka1X8YE=;
+        b=UlyiU5dpvNruuaxcXO7dvcG62On/kdUK4obQpYfELq3M040cPWbk92RXty5c7XyxHQ
+         JlwoKbkid8aIAN5Tj/Q45F++QZmZ8BDp2fKC3o0KiEOLkPMVj/sP/GA1ijguRSSyroJY
+         j071GRkprPF86nKLRiFrKQr1QfIg+WOcCTwil4xkDqnRcrbJgBj574XnFo9nVQx06eqV
+         kcfwKnDmvmw0gf1VF5eHPJ4eSqHqCr0YzpPxG11lmnzUjX/43McgbFIBGFt2hl0/+GAb
+         ebjqRxaO1ouiLadvFFlXedasMYGwWmhPw3n5mRho5odgoUIv9cuc0UPXktHrNHYG+Tma
+         teyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Qlt+/dRlgH3WSZzFFBm5SD3CiWvxcdEsgMu4Ka1X8YE=;
+        b=t7NTKna6zMWUSxr1ze5Oe+GT5j3TyhA0q/XxXwiSe190O+uTDgxbEGR9rtzqQksJWF
+         QKG+xlcPd6wXQL1C5q2i3GsoZWUQSZVrYsqyaCBTkCSt2pJgTAeGmA+3JsA8LjMHc4rX
+         vx2jT2m7ZAnF2r/xN2PB4+LdYB0pwzEadNmuolgp0vM0tYWWK1DUQ2q8Hd2WD0Q998PH
+         ngYZdQmAF9PC9vSvKyV/om+SzI5GdtAhPipsqnI6qBI7SAS/BXap6Ci2XLaAl16I0k7m
+         RMQjQZPQjtfyGE6esEnP+dzQH+8cH+LQpDHgDtVlU3wrCiCfBIeHGVoTORcCm9i3f6z/
+         pTgQ==
+X-Gm-Message-State: APjAAAVziH83jLS/9RzGpKhMc/7EIwfFo9Ii7gH5sZEAH7g3lt7+mPhy
+        yEVgd6j5aqPn06YdSxAJJFliHQv/T5ykbIvtgiQ=
+X-Google-Smtp-Source: APXvYqxQdPHL3wwjh1XiiAR4BKUnI9ER2eZEatvhL25goi1fFQraJN0onktSvPLymKxIx9kQLcHq96wvcClwhZw058k=
+X-Received: by 2002:a2e:241a:: with SMTP id k26mr2647022ljk.26.1575291417981;
+ Mon, 02 Dec 2019 04:56:57 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a1UmAYTx=Vv06xP=O-oYD8_HzNqMG0-p7GPP2xgzs+75w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <45ef9ee8c6265743a9c30d8e4d9dcbac1ee3aabe.1575286886.git.shengjiu.wang@nxp.com>
+In-Reply-To: <45ef9ee8c6265743a9c30d8e4d9dcbac1ee3aabe.1575286886.git.shengjiu.wang@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Mon, 2 Dec 2019 09:57:12 -0300
+Message-ID: <CAOMZO5AXnw7QDdfKkZ+FBwuWWvr+t0rRsHQ4muW-T00he2f73Q@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] ASoC: dt-bindings: fsl_asrc: add compatible string
+ for imx8qm & imx8qxp
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Dec 2, 2019 at 8:56 AM Shengjiu Wang <shengjiu.wang@nxp.com> wrote:
 
+> -  - compatible         : Contains "fsl,imx35-asrc" or "fsl,imx53-asrc".
+> +  - compatible         : Contains "fsl,imx35-asrc", "fsl,imx53-asrc",
+> +                         "fsl,imx8qm-asrc", "fsl,imx8qxp-asrc"
 
-Le 27/11/2019 à 12:03, Arnd Bergmann a écrit :
-> On Thu, Nov 21, 2019 at 5:25 PM Christophe Leroy
-> <christophe.leroy@c-s.fr> wrote:
->> Arnd Bergmann <arnd@arndb.de> a écrit :
->>> On Wed, Nov 20, 2019 at 11:43 PM Ben Hutchings
->>> <ben.hutchings@codethink.co.uk> wrote:
->>>>
->>>> On Fri, 2019-11-08 at 22:07 +0100, Arnd Bergmann wrote:
->>>>> @@ -192,7 +190,7 @@ V_FUNCTION_BEGIN(__kernel_time)
->>>>>        bl      __get_datapage@local
->>>>>        mr      r9, r3                  /* datapage ptr in r9 */
->>>>>
->>>>> -     lwz     r3,STAMP_XTIME+TSPEC_TV_SEC(r9)
->>>>> +     lwz     r3,STAMP_XTIME_SEC+LOWPART(r9)
->>>>
->>>> "LOWPART" should be "LOPART".
->>>>
->>>
->>> Thanks, fixed both instances in a patch on top now. I considered folding
->>> it into the original patch, but as it's close to the merge window I'd
->>> rather not rebase it, and this way I also give you credit for
->>> finding the bug.
->>
->> Take care, might conflict with
->> https://github.com/linuxppc/linux/commit/5e381d727fe8834ca5a126f510194a7a4ac6dd3a
-> 
-> Sorry for my late reply. I see this commit and no other variant of it has
-> made it into linux-next by now, so I assume this is not getting sent for v5.5
-> and it's not stopping me from sending my own pull request.
-> 
-> Please let me know if I missed something and this will cause problems.
-> 
-> On a related note: are you still working on the generic lib/vdso support for
-> powerpc? Without that, future libc implementations that use 64-bit time_t
-> will have to use the slow clock_gettime64 syscall instead of the vdso,
-> which has a significant performance impact.
-
-I have left this generic lib/vdso subject aside for the moment, because 
-performance is disappointing and its architecture doesn't real fit with 
-powerpc ABI.
-
- From a performance point of view, it is manipulating 64 bits vars where 
-is could use 32 bits vars. Of course I understand that y2038 will anyway 
-force the use of 64 bits for seconds, but at the time being powerpc32 
-VDSO is using 32 bits vars for both secs and ns, it make the difference. 
-Also, the generic VDSO is playing too much with data on stacks and 
-associated memory read/write/copies, which kills performance on RISC 
-processors like powerpc. Inlining do_hres() for instance significantly 
-improves that as it allow handling the 'struct __kernel_timespec ts' on 
-registers instead of using stack.
-
-Regarding powerpc ABI, the issue is that errors shall be reported by 
-setting the SO bit in CR register, and this cannot be done in C.
-This means:
-- The VDSO entry point must be in ASM and the generic VDSO C function 
-must be called from there, it cannot be the VDSO entry point.
-- The VDSO fallback (ie the system call) cannot be done from the generic 
-VDSO C function, it must be called from the ASM as well.
-
-Last point/question, what's the point in using 64 bits for nanoseconds 
-on 32 bits arches ?
-
-Christophe
+You missed the word "or" as in the original binding.
