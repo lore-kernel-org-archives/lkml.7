@@ -2,150 +2,176 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D36A1C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A13C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A647821774
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:47:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6981821774
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:49:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pGVkQKfZ"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="lpXqgi6R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfLBIrz (ORCPT
+        id S1726486AbfLBItl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 03:47:55 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51657 "EHLO
+        Mon, 2 Dec 2019 03:49:41 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55878 "EHLO
         mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfLBIrz (ORCPT
+        with ESMTP id S1726106AbfLBItl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 03:47:55 -0500
-Received: by mail-wm1-f68.google.com with SMTP id g206so20807562wme.1;
-        Mon, 02 Dec 2019 00:47:53 -0800 (PST)
+        Mon, 2 Dec 2019 03:49:41 -0500
+Received: by mail-wm1-f68.google.com with SMTP id a131so16460259wme.5
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 00:49:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=zyOKweXKHOPtqk+48O/QHHMQCCOb/ibIpSzxHuzne4E=;
-        b=pGVkQKfZstToZiwqGP39z4Wy9KIhn5MnEXy6JSxCglui3LGSJZ/unwHs3izmEj0w9u
-         LHVsZCJH9ZQ+CIsdzkZ1m38wwkYKx560rta1CAzquV/qW7IdGvyLG6W9jEABLuF+zpqy
-         3eQ6+hbSW0uLQVb351xC6/IiXlFMFOQW8sMpToM1i7JiN8wpTxabXrr/cFgtQxjjUaz4
-         P0ijV+6XFt3Vy5QFrrXPXLNhO//G1kYDPEP8czX4NmVCBPi61hBeSBQIctjM2TS15fCP
-         k3VPMklRw6PnpedXaiNk/WDHFfG8sWzf3BCdE+M3MIEYlcfVPQATaP0yT31WWwDQVdFz
-         O6Bg==
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OTj1RBCZb2YMCeCoS+sNA0hsSD1PCx/KWXCN5P/k7WI=;
+        b=lpXqgi6RxG7r8QtKa9tbrp1YCJngkhiNJXJ0eZoRoKbbZGYJNMc2FmmkfOnrrr+aIS
+         K1uhIrJieHIHhZBmIuypHu8pQnp34Mat7kQLu7jS8EH2TNQt0FpWNQ7d4/1QPg8FQecZ
+         n0Jj0Bz2KoQ0dcXy3jkwRHHXpzCWTivuBmcYs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
          :in-reply-to:user-agent;
-        bh=zyOKweXKHOPtqk+48O/QHHMQCCOb/ibIpSzxHuzne4E=;
-        b=kW9dHI+gty4Znzz/HcgYS14ejbStwPal+S8MFbD7NdWB5YzsGYMVCRDzQQGTZMgUks
-         5EhaTPXrDbSuCqCcJdbNz/BkjUFi8GLEusVr+z4lMDuXrNljI7jLei3ACY2NAPd3wrjd
-         yyBFtPIf56GhDC9eoccC3IrSVPbXgT3a97jFoMSut4dGm62W7yA86227ZD/0a+VforQz
-         ZED3JJLyk5faW3yW0j9pBlR/J5kMLKLTgELJHkHarh14aacWdEORXnoxnIVhVn5UGoTD
-         /G4hq+6H3gzRKuukzgjbFXY2LDu3lDfJTKS3afqOBS7WZm9xycX+EgFqg6DivN0kTsN6
-         U+Og==
-X-Gm-Message-State: APjAAAWjB3wISBYomwT+rJfyZsvRrfIRKUgalvF8CpgjgvRFcRkXxpR6
-        GjykQzDeLwE2mDVpaYgPC/o=
-X-Google-Smtp-Source: APXvYqz5uCyAD5CSXVQpElDuIk/VKSs+/hEVEVHXQgAf1sWm3bXsklsVGYc8ngStuhcDka3q39loqQ==
-X-Received: by 2002:a1c:6707:: with SMTP id b7mr23290086wmc.54.1575276473006;
-        Mon, 02 Dec 2019 00:47:53 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id h124sm23837188wme.30.2019.12.02.00.47.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Dec 2019 00:47:52 -0800 (PST)
-Date:   Mon, 2 Dec 2019 09:47:50 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        linux-input@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Kirill Smelkov <kirr@nexedi.com>
-Subject: Re: [PATCH] Input: uinput - Add UI_SET_UNIQ ioctl handler
-Message-ID: <20191202084750.k7lafzzrf3yq2tqs@pali>
-References: <20191127185139.65048-1-abhishekpandit@chromium.org>
- <20191201145357.ybq5gfty4ulnfasq@pali>
- <20191202012305.GQ248138@dtor-ws>
+        bh=OTj1RBCZb2YMCeCoS+sNA0hsSD1PCx/KWXCN5P/k7WI=;
+        b=oBQfFdooWIA9J/FkbmN98gI749yfOhlV/30VgxtA+NYe6emB03NumGo9GQHYCTxpm0
+         YnznIvpQ1u4vV7V7QevnaD56bATdrBmHxJjLKjz0tI1LxGdHOyxglMOP/aT0X1x3ZJlP
+         4Krhoze+LwfE4tdlgfQLoVX/vEgMJRruYu1s7TyVYeXSLil9wo6UPMa9X3fkCniPMFPE
+         tY7B5iJGHZ2HNliM0XQPaIn5Ozqz8f3AMEe4hOQMPAKs+ZViud5nGKPqoa8czgPlotJS
+         2x00VT99cF10xcU1DziVPZUSpiuzG/Wc3RqO7bpRvF6cnGwE/fDsaq4oSKppUE2AP36W
+         yhJg==
+X-Gm-Message-State: APjAAAUj8jC/e0hiIarC1LhvJMF3VpQT3bRw+z83DhO570UWrfnjCrB2
+        n8zBvUpmXxH+ZPaHD9Is53VW6w==
+X-Google-Smtp-Source: APXvYqynfMmdc+cNc63cE3ghvW6E0uyOdcT96eJ8oRbrseMVckK734QiBG7ddSOHI9zfdzlNiX+ppA==
+X-Received: by 2002:a1c:4e03:: with SMTP id g3mr12747171wmh.22.1575276578020;
+        Mon, 02 Dec 2019 00:49:38 -0800 (PST)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id a64sm25598619wmc.18.2019.12.02.00.49.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 00:49:37 -0800 (PST)
+Date:   Mon, 2 Dec 2019 09:49:35 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+Cc:     Mihail Atanassov <Mihail.Atanassov@arm.com>,
+        David Airlie <airlied@linux.ie>, nd <nd@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Subject: Re: [01/30] drm: Introduce drm_bridge_init()
+Message-ID: <20191202084935.GW624164@phenom.ffwll.local>
+Mail-Followup-To: "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        Mihail Atanassov <Mihail.Atanassov@arm.com>,
+        David Airlie <airlied@linux.ie>, nd <nd@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+References: <20191126131541.47393-2-mihail.atanassov@arm.com>
+ <20191202055459.GA25729@jamwan02-TSP300>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191202012305.GQ248138@dtor-ws>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191202055459.GA25729@jamwan02-TSP300>
+X-Operating-System: Linux phenom 5.3.0-2-amd64 
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sunday 01 December 2019 17:23:05 Dmitry Torokhov wrote:
-> Hi Pali,
+On Mon, Dec 02, 2019 at 05:55:06AM +0000, james qian wang (Arm Technology China) wrote:
+> On Tue, Nov 26, 2019 at 01:15:59PM +0000, Mihail Atanassov wrote:
+> > A simple convenience function to initialize the struct drm_bridge.
+> > 
+> > Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
+> > ---
+> >  drivers/gpu/drm/drm_bridge.c | 29 +++++++++++++++++++++++++++++
+> >  include/drm/drm_bridge.h     |  4 ++++
+> >  2 files changed, 33 insertions(+)
+> > 
+> > diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
+> > index cba537c99e43..cbe680aa6eac 100644
+> > --- a/drivers/gpu/drm/drm_bridge.c
+> > +++ b/drivers/gpu/drm/drm_bridge.c
+> > @@ -89,6 +89,35 @@ void drm_bridge_remove(struct drm_bridge *bridge)
+> >  }
+> >  EXPORT_SYMBOL(drm_bridge_remove);
+> >  
+> > +/**
+> > + * drm_bridge_init - initialise a drm_bridge structure
+> > + *
+> > + * @bridge: bridge control structure
+> > + * @funcs: control functions
+> > + * @dev: device
+> > + * @timings: timing specification for the bridge; optional (may be NULL)
+> > + * @driver_private: pointer to the bridge driver internal context (may be NULL)
+> > + */
+> > +void drm_bridge_init(struct drm_bridge *bridge, struct device *dev,
+> > +		     const struct drm_bridge_funcs *funcs,
+> > +		     const struct drm_bridge_timings *timings,
+> > +		     void *driver_private)
+> > +{
+> > +	WARN_ON(!funcs);
+> > +
+> > +	bridge->dev = NULL;
+> > +	bridge->encoder = NULL;
+> > +	bridge->next = NULL;
+> > +
+> > +#ifdef CONFIG_OF
+> > +	bridge->of_node = dev->of_node;
+> > +#endif
+> > +	bridge->timings = timings;
+> > +	bridge->funcs = funcs;
+> > +	bridge->driver_private = driver_private;
 > 
-> On Sun, Dec 01, 2019 at 03:53:57PM +0100, Pali Rohár wrote:
-> > Hello!
-> > 
-> > On Wednesday 27 November 2019 10:51:39 Abhishek Pandit-Subedi wrote:
-> > > Support setting the uniq attribute of the input device. The uniq
-> > > attribute is used as a unique identifier for the connected device.
-> > > 
-> > > For example, uinput devices created by BlueZ will store the address of
-> > > the connected device as the uniq property.
-> > > 
-> > > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> > 
-> > ...
-> > 
-> > > diff --git a/include/uapi/linux/uinput.h b/include/uapi/linux/uinput.h
-> > > index c9e677e3af1d..d5b7767c1b02 100644
-> > > --- a/include/uapi/linux/uinput.h
-> > > +++ b/include/uapi/linux/uinput.h
-> > > @@ -145,6 +145,7 @@ struct uinput_abs_setup {
-> > >  #define UI_SET_PHYS		_IOW(UINPUT_IOCTL_BASE, 108, char*)
-> > >  #define UI_SET_SWBIT		_IOW(UINPUT_IOCTL_BASE, 109, int)
-> > >  #define UI_SET_PROPBIT		_IOW(UINPUT_IOCTL_BASE, 110, int)
-> > > +#define UI_SET_UNIQ		_IOW(UINPUT_IOCTL_BASE, 111, char*)
-> > 
-> > I think that usage of char* as type in _IOW would cause compatibility
-> > problems like it is for UI_SET_PHYS (there is UI_SET_PHYS_COMPAT). Size
-> > of char* pointer depends on userspace (32 vs 64bit), so 32bit process on
-> > 64bit kernel would not be able to call this new UI_SET_UNIQ ioctl.
-> > 
-> > I would suggest to define this ioctl as e.g.:
-> > 
-> >   #define UI_SET_UNIQ		_IOW(_IOC_WRITE, UINPUT_IOCTL_BASE, 111, 0)
-> > 
-> > And then in uinput.c code handle it as:
-> > 
-> >   case UI_SET_UNIQ & ~IOCSIZE_MASK:
-> > 
-> > as part of section /* Now check variable-length commands */
+> Can we directly put drm_bridge_add() here. then
+> - User always need to call bridge_init and add together.
+> - Consistent with others like drm_plane/crtc_init which directly has
+>   drm_mode_object_add() in it.
+
+Uh no, the trouble here is that drm_bridge_add should actually be called
+_register, because it publishes the bridge to the world. I think we even
+have a todo item to rename _add to _register ... Once that's done the
+bridge can't be changed anymore, all init code must have completed. So
+often you need a bit of code between _init() and _register().
+
+drm_mode_object_add is different since for mode objects it doesn't publish
+it to the world, that's done with drm_dev_register and
+drm_connector_register. drm_mode_object_add just does a bit of internal
+house keeping.
+-Daniel
+
 > 
-> If we did not have UI_SET_PHYS in its current form, I'd agree with you,
-> but I think there is benefit in having UI_SET_UNIQ be similar to
-> UI_SET_PHYS.
-
-I thought that ioctl is just number, so we can define it as we want. And
-because uinput.c has already switch for variable-length commands it
-would be easy to use it. Final handling can be in separate function like
-for UI_SET_PHYS which can look like same.
-
-> But you are absolutely correct that in current form the patch is
-> deficient on 64/32 systems, and the compat handling needs to be added
-> before it can be accepted.
-
-Is not better to avoid usage of compat ioctl? Or it is OK to use compat
-ioctl also for new features? I do not know if there are some kernel
-rules for it or not... But for me it sounds like "compatibility layer
-for older code".
+> James.
+> > +}
+> > +EXPORT_SYMBOL(drm_bridge_init);
+> > +
+> >  /**
+> >   * drm_bridge_attach - attach the bridge to an encoder's chain
+> >   *
+> > diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+> > index c0a2286a81e9..d6d9d5301551 100644
+> > --- a/include/drm/drm_bridge.h
+> > +++ b/include/drm/drm_bridge.h
+> > @@ -402,6 +402,10 @@ struct drm_bridge {
+> >  
+> >  void drm_bridge_add(struct drm_bridge *bridge);
+> >  void drm_bridge_remove(struct drm_bridge *bridge);
+> > +void drm_bridge_init(struct drm_bridge *bridge, struct device *dev,
+> > +		     const struct drm_bridge_funcs *funcs,
+> > +		     const struct drm_bridge_timings *timings,
+> > +		     void *driver_private);
+> >  struct drm_bridge *of_drm_find_bridge(struct device_node *np);
+> >  int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
+> >  		      struct drm_bridge *previous);
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
