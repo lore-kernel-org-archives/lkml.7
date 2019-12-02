@@ -2,97 +2,196 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8ADC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 439E1C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AF7720881
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 116D72070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:23:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbfLBGU0 (ORCPT
+        id S1726443AbfLBGXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 01:20:26 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:52646 "EHLO deadmen.hmeau.com"
+        Mon, 2 Dec 2019 01:23:34 -0500
+Received: from mga07.intel.com ([134.134.136.100]:12658 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725807AbfLBGU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 01:20:26 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1ibf4I-00033O-DD; Mon, 02 Dec 2019 14:20:22 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1ibf4D-0000d9-Q7; Mon, 02 Dec 2019 14:20:17 +0800
-Date:   Mon, 2 Dec 2019 14:20:17 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: [GIT PULL] Crypto Fixes for 5.5
-Message-ID: <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au>
-References: <20190916084901.GA20338@gondor.apana.org.au>
- <20190923050515.GA6980@gondor.apana.org.au>
+        id S1725935AbfLBGXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 01:23:33 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Dec 2019 22:23:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,268,1571727600"; 
+   d="scan'208";a="212937004"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by orsmga003.jf.intel.com with ESMTP; 01 Dec 2019 22:23:30 -0800
+Received: from fmsmsx156.amr.corp.intel.com (10.18.116.74) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 1 Dec 2019 22:23:29 -0800
+Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
+ fmsmsx156.amr.corp.intel.com (10.18.116.74) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 1 Dec 2019 22:23:29 -0800
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.109]) by
+ SHSMSX151.ccr.corp.intel.com ([169.254.3.214]) with mapi id 14.03.0439.000;
+ Mon, 2 Dec 2019 14:23:27 +0800
+From:   "Zhao, Shirley" <shirley.zhao@intel.com>
+To:     James Bottomley <jejb@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>
+CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
+        "Zhu, Bing" <bing.zhu@intel.com>,
+        "Chen, Luhai" <luhai.chen@intel.com>
+Subject: RE: One question about trusted key of keyring in Linux kernel.
+Thread-Topic: One question about trusted key of keyring in Linux kernel.
+Thread-Index: AdWZwFKzDBwFOydYTGGk+Aqs+6BIxAANhxEAAoxRZMAAOKaagABSSevwABZzFQAAgRP1kP//pW0A//9ftMCAAMH6gP//eLrA
+Date:   Mon, 2 Dec 2019 06:23:27 +0000
+Message-ID: <A888B25CD99C1141B7C254171A953E8E4909E381@shsmsx102.ccr.corp.intel.com>
+References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
+         <1573659978.17949.83.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
+         <1574877977.3551.5.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E49096521@shsmsx102.ccr.corp.intel.com>
+         <1575057916.6220.7.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909BA3B@shsmsx102.ccr.corp.intel.com>
+         <1575260220.4080.17.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909D360@shsmsx102.ccr.corp.intel.com>
+ <1575267453.4080.26.camel@linux.ibm.com>
+In-Reply-To: <1575267453.4080.26.camel@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMzg0YmE3ODUtYmYzZC00YjU3LTgwNDktMTliMzViM2EyYTc5IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoidFRRZzFMWEF6Nm03Wlh4VjdZdmxNVWd1bmZRWk1kXC9EM3kwQUtQcjdXMVpVVnhDRjdtRXlBWDREeHhqWmNSR3gifQ==
+x-ctpclassification: CTP_NT
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190923050515.GA6980@gondor.apana.org.au>
-User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus:
-
-This push fixes the following issues:
-
-- Fix build error in crypto lib code when crypto API is off.
-- Fix NULL/error check in hisilicon.
-- Fix Kconfig-related build error in talitos.
-
-The following changes since commit 4ee812f6143d78d8ba1399671d78c8d78bf2817c:
-
-  crypto: vmx - Avoid weird build failures (2019-11-22 18:48:39 +0800)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
-
-for you to fetch changes up to 8a6b8f4d7a891ac66db4f97900a86b55c84a5802:
-
-  crypto: hisilicon - fix a NULL vs IS_ERR() bug in sec_create_qp_ctx() (2019-11-27 13:08:50 +0800)
-
-----------------------------------------------------------------
-Dan Carpenter (1):
-      crypto: hisilicon - fix a NULL vs IS_ERR() bug in sec_create_qp_ctx()
-
-Herbert Xu (1):
-      crypto: talitos - Fix build error by selecting LIB_DES
-
-Jason A. Donenfeld (1):
-      crypto: arch - conditionalize crypto api in arch glue for lib code
-
- arch/arm/crypto/chacha-glue.c              | 26 ++++++++++++++++----------
- arch/arm/crypto/curve25519-glue.c          |  5 +++--
- arch/arm/crypto/poly1305-glue.c            |  9 ++++++---
- arch/arm64/crypto/chacha-neon-glue.c       |  5 +++--
- arch/arm64/crypto/poly1305-glue.c          |  5 +++--
- arch/mips/crypto/chacha-glue.c             |  6 ++++--
- arch/mips/crypto/poly1305-glue.c           |  6 ++++--
- arch/x86/crypto/blake2s-glue.c             |  6 ++++--
- arch/x86/crypto/chacha_glue.c              |  5 +++--
- arch/x86/crypto/curve25519-x86_64.c        |  7 ++++---
- arch/x86/crypto/poly1305_glue.c            |  5 +++--
- drivers/crypto/Kconfig                     |  1 +
- drivers/crypto/hisilicon/sec2/sec_crypto.c |  4 ++--
- 13 files changed, 56 insertions(+), 34 deletions(-)
-
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+SGksIEphbWVzLCANCg0KVGhlIFBDUjcgdmFsdWUgYW5kIFBDUjcgcG9saWN5IGlzIGFzIGJlbG93
+LCBwbGVhc2UgcmV2aWV3LCB0aGFua3MuIA0KDQojIHRwbTJfcGNybGlzdCAtTCBzaGEyNTY6NyAt
+byBwY3I3XzIuc2hhMjU2DQpzaGEyNTY6DQogIDcgOiAweDA2MUFBRDA3MDVBNjIzNjFBRDE4RTU4
+QjY1RDNENzM4M0Y0RDEwRjdGNUE3RTc4OTI0QkUwNTdBQzY3OTc0MDgNCg0KIyB0cG0yX2NyZWF0
+ZXBvbGljeSAtLXBvbGljeS1wY3IgLS1wY3ItbGlzdCBzaGEyNTY6NyAtLXBvbGljeSBwY3I3X2Jp
+bi5wb2xpY3kgPiBwY3I3LnBvbGljeQ0KMzIxZmJkMjhiNjBmY2MyMzAxN2Q1MDFiMTMzYmQ1ZGJm
+Mjg4OTgxNDU4OGU4YTIzNTEwZmUxMDEwNWNiMmNjOQ0KDQojIGNhdCBwY3I3LnBvbGljeQ0KMzIx
+ZmJkMjhiNjBmY2MyMzAxN2Q1MDFiMTMzYmQ1ZGJmMjg4OTgxNDU4OGU4YTIzNTEwZmUxMDEwNWNi
+MmNjOQ0KDQotIFNoaXJsZXkgDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBK
+YW1lcyBCb3R0b21sZXkgPGplamJAbGludXguaWJtLmNvbT4gDQpTZW50OiBNb25kYXksIERlY2Vt
+YmVyIDIsIDIwMTkgMjoxOCBQTQ0KVG86IFpoYW8sIFNoaXJsZXkgPHNoaXJsZXkuemhhb0BpbnRl
+bC5jb20+OyBNaW1pIFpvaGFyIDx6b2hhckBsaW51eC5pYm0uY29tPjsgSmFya2tvIFNha2tpbmVu
+IDxqYXJra28uc2Fra2luZW5AbGludXguaW50ZWwuY29tPjsgSm9uYXRoYW4gQ29yYmV0IDxjb3Ji
+ZXRAbHduLm5ldD4NCkNjOiBsaW51eC1pbnRlZ3JpdHlAdmdlci5rZXJuZWwub3JnOyBrZXlyaW5n
+c0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWRvY0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5l
+bEB2Z2VyLmtlcm5lbC5vcmc7ICdNYXVybyBDYXJ2YWxobyBDaGVoYWInIDxtY2hlaGFiK3NhbXN1
+bmdAa2VybmVsLm9yZz47IFpodSwgQmluZyA8YmluZy56aHVAaW50ZWwuY29tPjsgQ2hlbiwgTHVo
+YWkgPGx1aGFpLmNoZW5AaW50ZWwuY29tPg0KU3ViamVjdDogUmU6IE9uZSBxdWVzdGlvbiBhYm91
+dCB0cnVzdGVkIGtleSBvZiBrZXlyaW5nIGluIExpbnV4IGtlcm5lbC4NCg0KT24gTW9uLCAyMDE5
+LTEyLTAyIGF0IDA1OjU1ICswMDAwLCBaaGFvLCBTaGlybGV5IHdyb3RlOg0KPiBUaGFua3MgZm9y
+IHlvdXIgZmVlZGJhY2ssIEphbWVzLg0KPiANCj4gVGhlIHBvbGljeSBpcyBnZW5lcmF0ZWQgYnkg
+VFBNIGNvbW1hbmQsIHRwbTJfY3JlYXRlcG9saWN5LCBpdCBqdXN0IHVzZSANCj4gdGhlIGFsZ29y
+aXRobSB5b3UgbWVudGlvbmVkLCB3aGljaCBpcyBkZWZpbmVkIGluIFRQTSBzcGVjLg0KPiBJIHJl
+LWF0dGFjaCBteSB0ZXN0IHN0ZXBzIGFzIGJlbG93LiANCj4gUGxlYXNlIGhlbHAgY2hlY2sgaXQs
+IGlzIHRoZXJlIGFueXRoaW5nIHdyb25nLCBlc3BlY2lhbGx5IHRoZSBmb3JtYXQgDQo+IG9mIGtl
+eWN0bCBjb21tYW5kLg0KPiANCj4gRmlyc3RseSwgdGhlIHBjciBwb2xpY3kgaXMgZ2VuZXJhdGVk
+IGFzIGJlbG93OiANCj4gJCB0cG0yX2NyZWF0ZXBvbGljeSAtLXBvbGljeS1wY3IgLS1wY3ItbGlz
+dCBzaGEyNTY6NyAtLXBvbGljeSANCj4gcGNyN19iaW4ucG9saWN5ID4gcGNyNy5wb2xpY3kNCg0K
+SSBkb24ndCB1c2UgdGhlIEludGVsIFRTUywgc28gSSBjYW4ndCBoZWxwIHlvdSB3aXRoIHRoaXMg
+Y29tbWFuZDogeW91IG5lZWQgdG8gYXNrIHNvbWVvbmUgd2hvIGRvZXMgdXNlIGl0IGl0LCBsaWtl
+IFBoaWwuDQoNCj4gUGNyNy5wb2xpY3kgaXMgdGhlIGFzY2lpIGhleCBvZiBwb2xpY3k6DQo+ICQg
+Y2F0IHBjcjcucG9saWN5DQo+IDMyMWZiZDI4YjYwZmNjMjMwMTdkNTAxYjEzM2JkNWRiZjI4ODk4
+MTQ1ODhlOGEyMzUxMGZlMTAxMDVjYjJjYzkNCg0KWW91IGhhdmVuJ3QgcHJvdmlkZWQgZW5vdWdo
+IGluZm9ybWF0aW9uLiAgSWYgeW91IHRlbGwgbWUgd2hhdCB0aGUgcGNyNyB2YWx1ZSB5b3UgdGll
+ZCB0aGUgcG9saWN5IHRvIGlzLCBJIGNhbiBydW4gaXQgdGhyb3VnaCB0aGUgSUJNIFRTUyBwb2xp
+Y3kgbWFrZXIgYW5kIHRlbGwgeW91IGlmIHRoaXMgaXMgdGhlIGNvcnJlY3QgaGFzaC4gIEJ1dCBv
+YnZpb3VzbHksIHNpbmNlIGl0J3MgYSBoYXNoLCBJIGNhbid0IHJldmVyc2UgaXQgdG8gdGVsbCB5
+b3Ugd2hhdCB0aGUgcG9saWN5IGl0IG1hbmRhdGVzIGlzLg0KDQpKYW1lcw0KDQo+IFRoZW4gZ2Vu
+ZXJhdGUgdGhlIHRydXN0ZWQga2V5IGFuZCBjb25maWd1cmUgcG9saWN5ZGlnZXN0IGFuZCBnZXQg
+dGhlIA0KPiBrZXkgSUQ6DQo+ICQga2V5Y3RsIGFkZCB0cnVzdGVkIGttayAibmV3IDMyIGtleWhh
+bmRsZT0weDgxMDAwMDAxIGhhc2g9c2hhMjU2IA0KPiBwb2xpY3lkaWdlc3Q9YGNhdCBwY3I3LnBv
+bGljeWAiIEB1DQo+IDg3NDExNzA0NQ0KPiANCj4gU2F2ZSB0aGUgdHJ1c3RlZCBrZXkuIA0KPiAk
+IGtleWN0bCBwaXBlIDg3NDExNzA0NSA+IGttay5ibG9iDQo+IA0KPiBSZWJvb3QgYW5kIGxvYWQg
+dGhlIGtleS4gDQo+IFN0YXJ0IGEgYXV0aCBzZXNzaW9uIHRvIGdlbmVyYXRlIHRoZSBwb2xpY3k6
+DQo+ICQgdHBtMl9zdGFydGF1dGhzZXNzaW9uIC1TIHNlc3Npb24uY3R4DQo+IHNlc3Npb24taGFu
+ZGxlOiAweDMwMDAwMDANCj4gJCB0cG0yX3Bjcmxpc3QgLUwgc2hhMjU2OjcgLW8gcGNyNy5zaGEy
+NTYgJCB0cG0yX3BvbGljeXBjciAtUyANCj4gc2Vzc2lvbi5jdHggLUwgc2hhMjU2OjcgLUYgcGNy
+Ny5zaGEyNTYgLWYgcGNyNy5wb2xpY3kNCj4gcG9saWN5LWRpZ2VzdDoNCj4gMHgzMjFGQkQyOEI2
+MEZDQzIzMDE3RDUwMUIxMzNCRDVEQkYyODg5ODE0NTg4RThBMjM1MTBGRTEwMTA1Q0IyQ0M5DQo+
+IA0KPiBJbnB1dCB0aGUgcG9saWN5IGhhbmRsZSB0byBsb2FkIHRydXN0ZWQga2V5Og0KPiAkIGtl
+eWN0bCBhZGQgdHJ1c3RlZCBrbWsgImxvYWQgYGNhdCBrbWsuYmxvYmAga2V5aGFuZGxlPTB4ODEw
+MDAwMDEgDQo+IHBvbGljeWhhbmRsZT0weDMwMDAwMDAiIEB1DQo+IGFkZF9rZXk6IE9wZXJhdGlv
+biBub3QgcGVybWl0dGVkDQo+IA0KPiBUaGUgZXJyb3Igc2hvdWxkIGJlIHBvbGljeSBjaGVjayBm
+YWlsZWQsIGJlY2F1c2UgSSB1c2UgVFBNIGNvbW1hbmQgdG8gDQo+IHVuc2VhbCBkaXJlY3RseSB3
+aXRoIGVycm9yIG9mIHBvbGljeSBjaGVjayBmYWlsZWQuDQo+ICQgdHBtMl91bnNlYWwgLWMgMHg4
+MTAwMDAwMSAtTCBzaGEyNTY6NyBFUlJPUiBvbiBsaW5lOiAiODEiIGluIGZpbGU6IA0KPiAiLi9s
+aWIvbG9nLmgiOiBUc3MyX1N5c19VbnNlYWwoMHg5OUQpIC0gdHBtOnNlc3Npb24oMSk6YSBwb2xp
+Y3kgY2hlY2sgDQo+IGZhaWxlZCBFUlJPUiBvbiBsaW5lOiAiMjEzIiBpbiBmaWxlOg0KPiAidG9v
+bHMvdHBtMl91bnNlYWwuYyI6IFVuc2VhbCBmYWlsZWQhDQo+IEVSUk9SIG9uIGxpbmU6ICIxNjYi
+IGluIGZpbGU6ICJ0b29scy90cG0yX3Rvb2wuYyI6IFVuYWJsZSB0byBydW4gDQo+IHRwbTJfdW5z
+ZWFsDQo+IA0KPiAtIFNoaXJsZXkNCj4gDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+
+IEZyb206IEphbWVzIEJvdHRvbWxleSA8amVqYkBsaW51eC5pYm0uY29tPg0KPiBTZW50OiBNb25k
+YXksIERlY2VtYmVyIDIsIDIwMTkgMTI6MTcgUE0NCj4gVG86IFpoYW8sIFNoaXJsZXkgPHNoaXJs
+ZXkuemhhb0BpbnRlbC5jb20+OyBNaW1pIFpvaGFyIDx6b2hhckBsaW51eC5pIA0KPiBibS5jb20+
+OyBKYXJra28gU2Fra2luZW4gPGphcmtrby5zYWtraW5lbkBsaW51eC5pbnRlbC5jb20+OyBKb25h
+dGhhbiANCj4gQ29yYmV0IDxjb3JiZXRAbHduLm5ldD4NCj4gQ2M6IGxpbnV4LWludGVncml0eUB2
+Z2VyLmtlcm5lbC5vcmc7IGtleXJpbmdzQHZnZXIua2VybmVsLm9yZzsgbGludXgtIA0KPiBkb2NA
+dmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyAnTWF1cm8gQ2Fy
+dmFsaG8gDQo+IENoZWhhYicgPG1jaGVoYWIrc2Ftc3VuZ0BrZXJuZWwub3JnPjsgWmh1LCBCaW5n
+IDxiaW5nLnpodUBpbnRlbC5jb20+OyANCj4gQ2hlbiwgTHVoYWkgPGx1aGFpLmNoZW5AaW50ZWwu
+Y29tPg0KPiBTdWJqZWN0OiBSZTogT25lIHF1ZXN0aW9uIGFib3V0IHRydXN0ZWQga2V5IG9mIGtl
+eXJpbmcgaW4gTGludXggDQo+IGtlcm5lbC4NCj4gDQo+IE9uIE1vbiwgMjAxOS0xMi0wMiBhdCAw
+MTo0NCArMDAwMCwgWmhhbywgU2hpcmxleSB3cm90ZToNCj4gPiBIaSwgSmFtZXMsDQo+ID4gDQo+
+ID4gVGhlIHZhbHVlIG9mIFBDUjcgaXMgbm90IGNoYW5nZWQuIEkgaGF2ZSBjaGVja2VkIGl0IHdp
+dGggVFBNIGNvbW1hbmQgDQo+ID4gdHBtX3Bjcmxpc3QuDQo+ID4gDQo+ID4gU28gSSB0aGluayB0
+aGUgcHJvYmxlbSBpcyBob3cgdG8gdXNlIHRoZSBvcHRpb24gcG9saWN5ZGlnZXN0IGFuZCANCj4g
+PiBwb2xpY3loYW5kbGU/IElzIHRoZXJlIGFueSBleGFtcGxlPw0KPiA+IE1heWJlIHRoZSBmb3Jt
+YXQgaW4gbXkgY29tbWFuZCBpcyBub3QgY29ycmVjdC4gDQo+IA0KPiBPSywgc28gcHJldmlvdXNs
+eSB5b3Ugc2FpZCB0aGF0IHVzaW5nIHRoZSBJbnRlbCBUU1MgdGhlIHBvbGljeSBhbHNvIA0KPiBm
+YWlsZWQgYWZ0ZXIgYSByZWJvb3Q6DQo+IA0KPiA+IFRoZSBlcnJvciBzaG91bGQgYmUgcG9saWN5
+IGNoZWNrIGZhaWxlZCwgYmVjYXVzZSBJIHVzZSBUUE0gY29tbWFuZCANCj4gPiB0byB1bnNlYWwg
+ZGlyZWN0bHkgd2l0aCBlcnJvciBvZiBwb2xpY3kgY2hlY2sgZmFpbGVkLg0KPiA+ICQgdHBtMl91
+bnNlYWwgLWMgMHg4MTAwMDAwMSAtTCBzaGEyNTY6NyBFUlJPUiBvbiBsaW5lOiAiODEiIGluDQo+
+ID4gZmlsZTogDQo+ID4gIi4vbGliL2xvZy5oIjogVHNzMl9TeXNfVW5zZWFsKDB4OTlEKSAtIHRw
+bTpzZXNzaW9uKDEpOmEgcG9saWN5IA0KPiA+IGNoZWNrIGZhaWxlZCBFUlJPUiBvbiBsaW5lOiAi
+MjEzIiBpbiBmaWxlOiAidG9vbHMvdHBtMl91bnNlYWwuYyI6IA0KPiA+IFVuc2VhbCBmYWlsZWQh
+DQo+ID4gRVJST1Igb24gbGluZTogIjE2NiIgaW4gZmlsZTogInRvb2xzL3RwbTJfdG9vbC5jIjog
+VW5hYmxlIHRvIHJ1biANCj4gPiB0cG0yX3Vuc2VhbA0KPiANCj4gU28gdGhpcyBtdXN0IG1lYW4g
+dGhlIGFjdHVhbCBwb2xpY3kgaGFzaCB5b3UgY29uc3RydWN0ZWQgd2FzIHdyb25nIGluIA0KPiBz
+b21lIHdheTogaXQgZGlkbid0IGNvcnJlc3BvbmQgc2ltcGx5IHRvIGEgdmFsdWUgb2YgcGNyNyAu
+Li4gd2VsbCANCj4gYXNzdW1pbmcgdGhlIC1MIHNoYTI1Njo3IG1lYW5zIGNvbnN0cnVjdCBhIHBv
+bGljeSBvZiB0aGUgc2hhMjU2IHZhbHVlIA0KPiBvZiBwY3I3IGFuZCB1c2UgaXQgaW4gdGhlIHVu
+c2VhbC4NCj4gDQo+IEkgY2FuIHRlbGwgeW91IGhvdyB0byBjb25zdHJ1Y3QgcG9saWNpZXMgdXNp
+bmcgVFBNMiBjb21tYW5kcywgYnV0IEkgDQo+IHRoaW5rIHlvdSB3YW50IHRvIGtub3cgaG93IHRv
+IGRvIGl0IHVzaW5nIHRoZSBJbnRlbCBUU1M/ICBJbiB3aGljaCANCj4gY2FzZSB5b3UgcmVhbGx5
+IG5lZWQgdG8gY29uc3VsdCB0aGUgZXhwZXJ0cyBpbiB0aGF0IFRTUywgbGlrZSBQaGlsIA0KPiBU
+cmljY2EuDQo+IA0KPiBGb3IgdGhlIHBsYWluIFRQTTIgY2FzZSwgdGhlIHBvbGljeSBsb29rcyBs
+aWtlDQo+IA0KPiBUUE1fQ0NfUG9saWN5UENSIHx8IHBjcnMgfHwgcGNyRGlnZXN0DQo+IA0KPiBX
+aGVyZSBUUE1fQ0NfUG9saWN5UENSID0gMDAwMDAxN2YgYW5kIGZvciBzZWxlY3RpbmcgcGNyNyBv
+bmx5LiAgcGNycyANCj4gaXMgYSBjb21wbGljYXRlZCBlbnRpdHk6IGl0J3MgYSBjb3VudGVkIGFy
+cmF5IG9mIHBjciBzZWxlY3Rpb25zLiAgRm9yIA0KPiB5b3VyIHBvbGljeSB5b3Ugb25seSBuZWVk
+IG9uZSBlbnRyeSwgc28gaXQgd291bGQgYmUgMDAwMDAwMDEgZm9sbG93ZWQgDQo+IGJ5IGEgc2lu
+Z2xlIHBjclNlbGVjdGlvbiBlbnRyeS4gIHBjclNlbGVjdGlvbiBpcyB0aGUgaGFzaCBhbGdvcml0
+aG0sIA0KPiB0aGUgc2l6ZSBvZiB0aGUgc2VsZWN0aW9uIGJpdG1hcCAoYWx3YXlzIDMgc2luY2Ug
+ZXZlcnkgY3VycmVudCBUUE0gDQo+IG9ubHkgaGFzDQo+IDI0IFBDUnMpIGFuZCBhIGJpdG1hcCBz
+ZWxlY3RpbmcgdGhlIFBDUnMgaW4gYmlnIGVuZGlhbiBmb3JtYXQsIHNvIGZvcg0KPiBQQ1I3IHVz
+aW5nIHNoYTI1NiAoYWxnb3JpdGhtIDAwMGIpLCBwY3JTZWxlY3Rpb24gPSAwMDBiIDAzIDgwIDAw
+IDAwLiANCj4gQW5kIHRoZW4geW91IGZvbGxvdyB0aGlzIGJ5IHRoZSBoYXNoIG9mIHRoZSBQQ1Ig
+dmFsdWUgeW91J3JlIGxvb2tpbmcgDQo+IGZvci4gIFRoZSBwb2xpY3loYXNoIGJlY29tZXMgdGhl
+IGluaXRpYWwgcG9saWN5IChhbGwgemVyb3MgZm9yIHRoZSANCj4gc3RhcnQgb2YgdGhlIHBvbGlj
+eSBjaGFpbikgaGFzaGVkIHdpdGggdGhpcy4NCj4gDQo+IFJlZ2FyZHMsDQo+IA0KPiBKYW1lcw0K
+PiANCg0K
