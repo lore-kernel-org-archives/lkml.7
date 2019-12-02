@@ -2,135 +2,92 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CC7C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 15:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E19C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 15:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32A872073C
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 15:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D613A20881
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 15:34:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="OfaJYQTl";
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="OfaJYQTl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbfLBPZv (ORCPT
+        id S1727502AbfLBPel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 10:25:51 -0500
-Received: from mga14.intel.com ([192.55.52.115]:31689 "EHLO mga14.intel.com"
+        Mon, 2 Dec 2019 10:34:41 -0500
+Received: from node.akkea.ca ([192.155.83.177]:57856 "EHLO node.akkea.ca"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727413AbfLBPZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 10:25:51 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 07:25:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,268,1571727600"; 
-   d="scan'208";a="384921871"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 02 Dec 2019 07:25:50 -0800
-Received: from [10.125.253.1] (abudanko-mobl.ccr.corp.intel.com [10.125.253.1])
-        by linux.intel.com (Postfix) with ESMTP id 93D9458048A;
-        Mon,  2 Dec 2019 07:25:47 -0800 (PST)
-Subject: Re: [RFC PATCH 2/8] perf: Helpers for alloc/init/fini PMU specific
- data
-To:     Peter Zijlstra <peterz@infradead.org>, kan.liang@linux.intel.com
-Cc:     mingo@redhat.com, acme@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, linux-kernel@vger.kernel.org, eranian@google.com,
-        vitaly.slobodskoy@intel.com, ak@linux.intel.com
-References: <1574954071-6321-1-git-send-email-kan.liang@linux.intel.com>
- <1574954071-6321-2-git-send-email-kan.liang@linux.intel.com>
- <20191202131646.GD2827@hirez.programming.kicks-ass.net>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <7a119a02-adb8-dc18-2d74-c71903e84afe@linux.intel.com>
-Date:   Mon, 2 Dec 2019 18:25:46 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-MIME-Version: 1.0
-In-Reply-To: <20191202131646.GD2827@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1727445AbfLBPel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 10:34:41 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by node.akkea.ca (Postfix) with ESMTP id A4CEB4E201D;
+        Mon,  2 Dec 2019 15:25:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1575300330; bh=iHgUsViNgJaJu51knhIGUnBoTr/el9Xe/qUZYMfe4Kw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=OfaJYQTlZ+DVHsr6F2rntHFbnPkuUhcEIY4rZlHbBKirHYBTXK0byFY8PIjxEu0/X
+         E/YbbAzQa2L1ixW0NBsn/5JGdYx+OX3XQ5lIi3ROpXKw+4FeJsp9Kl795g/1R+r0ij
+         GSm9EOBPSRkbMzrwkTwEmsCNgeN5+euUNlPjlINU=
+X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
+Received: from node.akkea.ca ([127.0.0.1])
+        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id XEeBMcwq-AS1; Mon,  2 Dec 2019 15:25:30 +0000 (UTC)
+Received: from thinkpad-tablet.cg.shawcable.net (S0106905851b613e9.cg.shawcable.net [70.77.244.40])
+        by node.akkea.ca (Postfix) with ESMTPSA id C05364E2003;
+        Mon,  2 Dec 2019 15:25:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1575300330; bh=iHgUsViNgJaJu51knhIGUnBoTr/el9Xe/qUZYMfe4Kw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=OfaJYQTlZ+DVHsr6F2rntHFbnPkuUhcEIY4rZlHbBKirHYBTXK0byFY8PIjxEu0/X
+         E/YbbAzQa2L1ixW0NBsn/5JGdYx+OX3XQ5lIi3ROpXKw+4FeJsp9Kl795g/1R+r0ij
+         GSm9EOBPSRkbMzrwkTwEmsCNgeN5+euUNlPjlINU=
+From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
+To:     linux-pm@vger.kernel.org
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@puri.sm, "Angus Ainslie (Purism)" <angus@akkea.ca>
+Subject: [PATCH 2/2] dts: bindings: max17042_battery: add all of the compatible strings
+Date:   Mon,  2 Dec 2019 08:25:20 -0700
+Message-Id: <20191202152520.27558-3-angus@akkea.ca>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191202152520.27558-1-angus@akkea.ca>
+References: <20191202152520.27558-1-angus@akkea.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The bindings are missing documentation for some of the compatible
+strings.
 
-On 02.12.2019 16:16, Peter Zijlstra wrote:
-> On Thu, Nov 28, 2019 at 07:14:25AM -0800, kan.liang@linux.intel.com wrote:
-> 
->> +static int
->> +__alloc_task_ctx_data_rcu(struct task_struct *task,
->> +			  size_t ctx_size, gfp_t flags)
->> +{
->> +	struct perf_ctx_data *ctx_data = task->perf_ctx_data;
->> +	int ret;
->> +
->> +	lockdep_assert_held_once(&task->perf_ctx_data_lock);
->> +
->> +	ret = alloc_perf_ctx_data(ctx_size, flags, &ctx_data);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ctx_data->refcount = 1;
->> +
->> +	rcu_assign_pointer(task->perf_ctx_data, ctx_data);
->> +
->> +	return 0;
->> +}
-> 
->> +static int
->> +__init_task_ctx_data_rcu(struct task_struct *task, size_t ctx_size, gfp_t flags)
->> +{
->> +	struct perf_ctx_data *ctx_data = task->perf_ctx_data;
->> +
->> +	lockdep_assert_held_once(&task->perf_ctx_data_lock);
->> +
->> +	if (ctx_data) {
->> +		ctx_data->refcount++;
->> +		return 0;
->> +	}
->> +
->> +	return __alloc_task_ctx_data_rcu(task, ctx_size, flags);
->> +}
-> 
->> +/**
->> + * Free perf_ctx_data RCU pointer for a task
->> + * @task:        Target Task
->> + * @force:       Unconditionally free perf_ctx_data
->> + *
->> + * If force is set, free perf_ctx_data unconditionally.
->> + * Otherwise, free perf_ctx_data when there are no users.
->> + * Lock is required to sync the writers of perf_ctx_data RCU pointer
->> + * and refcount.
->> + */
->> +static void
->> +fini_task_ctx_data_rcu(struct task_struct *task, bool force)
->> +{
->> +	struct perf_ctx_data *ctx_data;
->> +	unsigned long flags;
->> +
->> +	raw_spin_lock_irqsave(&task->perf_ctx_data_lock, flags);
->> +
->> +	ctx_data = task->perf_ctx_data;
->> +	if (!ctx_data)
->> +		goto unlock;
->> +
->> +	if (!force && --ctx_data->refcount)
->> +		goto unlock;
->> +
->> +	RCU_INIT_POINTER(task->perf_ctx_data, NULL);
->> +	call_rcu(&ctx_data->rcu_head, free_perf_ctx_data);
->> +
->> +unlock:
->> +	raw_spin_unlock_irqrestore(&task->perf_ctx_data_lock, flags);
->> +}
-> 
-> All this refcount under lock is an anti-pattern. Also the naming is
-> insane.
+Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+---
+ .../devicetree/bindings/power/supply/max17042_battery.txt   | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Could you please provide proper patterning examples for such or similar cases?
+diff --git a/Documentation/devicetree/bindings/power/supply/max17042_battery.txt b/Documentation/devicetree/bindings/power/supply/max17042_battery.txt
+index 3f3894aaeebc..f34c5daae9af 100644
+--- a/Documentation/devicetree/bindings/power/supply/max17042_battery.txt
++++ b/Documentation/devicetree/bindings/power/supply/max17042_battery.txt
+@@ -2,7 +2,11 @@ max17042_battery
+ ~~~~~~~~~~~~~~~~
+ 
+ Required properties :
+- - compatible : "maxim,max17042"
++ - compatible : one of the following
++ * "maxim,max17042"
++ * "maxim,max17047"
++ * "maxim,max17050"
++ * "maxim,max17055"
+ 
+ Optional properties :
+  - maxim,rsns-microohm : Resistance of rsns resistor in micro Ohms
+-- 
+2.17.1
 
-Thanks,
-Alexey
