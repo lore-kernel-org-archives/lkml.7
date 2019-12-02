@@ -2,155 +2,98 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5EFC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF70C43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1088120684
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C14972054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:53:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RGDpjo9g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbfLBXx2 (ORCPT
+        id S1726350AbfLBXxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 18:53:28 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:41335 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725775AbfLBXx1 (ORCPT
+        Mon, 2 Dec 2019 18:53:35 -0500
+Received: from mail-yw1-f74.google.com ([209.85.161.74]:36564 "EHLO
+        mail-yw1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbfLBXxf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 18:53:27 -0500
-Received: from dread.disaster.area (pa49-179-150-192.pa.nsw.optusnet.com.au [49.179.150.192])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 60BD27E9A0F;
-        Tue,  3 Dec 2019 10:53:23 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1ibvVJ-0006vv-Nh; Tue, 03 Dec 2019 10:53:21 +1100
-Date:   Tue, 3 Dec 2019 10:53:21 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Ming Lei <ming.lei@redhat.com>, Hillf Danton <hdanton@sina.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-fs <linux-fsdevel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rong Chen <rong.a.chen@intel.com>, Tejun Heo <tj@kernel.org>
-Subject: Re: single aio thread is migrated crazily by scheduler
-Message-ID: <20191202235321.GJ2695@dread.disaster.area>
-References: <20191114113153.GB4213@ming.t460p>
- <20191114235415.GL4614@dread.disaster.area>
- <20191115010824.GC4847@ming.t460p>
- <20191115045634.GN4614@dread.disaster.area>
- <20191115070843.GA24246@ming.t460p>
- <20191128094003.752-1-hdanton@sina.com>
- <CAKfTPtA23ErKGCEJVmg6vk-QoufkiUM3NbXd31mZmKnuwbTkFw@mail.gmail.com>
- <20191202024625.GD24512@ming.t460p>
- <20191202040256.GE2695@dread.disaster.area>
- <CAKfTPtD8Q97qJ_+hdCXQRt=gy7k96XrhnFmGYP1G88YSFW0vNA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtD8Q97qJ_+hdCXQRt=gy7k96XrhnFmGYP1G88YSFW0vNA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
-        a=ZXpxJgW8/q3NVgupyyvOCQ==:117 a=ZXpxJgW8/q3NVgupyyvOCQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pxVhFHJ0LMsA:10
-        a=7-415B0cAAAA:8 a=QY18SFpNAAAA:8 a=0-rSKxhP8GJoaAKyaOwA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22 a=LYL6_n6_bXSRrjLcjcND:22
+        Mon, 2 Dec 2019 18:53:35 -0500
+Received: by mail-yw1-f74.google.com with SMTP id n34so1076455ywh.3
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 15:53:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=UeRKrWFVc6wY9N41muBnONFCKBYX0ait5S3vLExo2C8=;
+        b=RGDpjo9g2s0+05+TUY8HpRUB7+2PduVCQSOy60Qh1+iVPxkuooklhCwku+SiEnKI0L
+         b5qB9mxFIOsHKNxJOx4a/UVd1ppbUhUPNKBrtdNOauCww107oIAuy2mTUbwR1SEJLTjq
+         aRNyNcsn7aDtjYCcDJCqYlixRa7haLhQ8rvQ74PWZX4IcHjxovu/0RFFOJPuhh3taJpc
+         crzz00vYIuuWE1oIEEOe9Jh2XfLXyt3Gx9wQ+npPR0quW/KBG+1VC6/+mitVnOCuIFl2
+         Qf7eRhMMEk/ieWyLrXscyQz21cegxwafthWAWNmQo7SvZHgIleptKl6I/gj/+IGW3Vrs
+         sRCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=UeRKrWFVc6wY9N41muBnONFCKBYX0ait5S3vLExo2C8=;
+        b=BaepJis97c00Yy9ZYgfdvrbaZeGVfiiI/PNw19RK6ojh1k5XDwQnRH2KWijdGdYxk9
+         Npyu4GbOX7sFCQwCH5/nthscMOc9Umh6QUQxhJjTmBkwoJknqSG18pbMxCoHJmbBMy3Y
+         3FDFdLmeNS9F6SAXuaJftIhaRtjrfExUsHlyxfFXG0szziJIjdzt2FSTD/ICr/12E61i
+         99Ot4L2tfSbe9aFJfPL6T+dr6rmm76WCSnfb3lDv4gp/WW86knczwvXWdetRgrL9UB/6
+         A2YmHO8LudeEAb0KehfkZsu2EduX1aGsCjPqdd19HAAtqEwv6WO5PBvIgR5SCCiixpCX
+         K4QA==
+X-Gm-Message-State: APjAAAVTm10uGJuBlOBoipJYLP2sqlPhjcbo4vZPjDM2xY+RuN8vqjMz
+        7PSmHV6bpZnZagkrvWZWrIbGcw3QENc4K5wz
+X-Google-Smtp-Source: APXvYqzmaUROhknPs3h84wqPTsgnp/3k+KDptOqKEFmduxF1uHlGv1cWBX/AyR/Vw9ASXdFPSaggJabpNdUQnDb0
+X-Received: by 2002:a0d:c205:: with SMTP id e5mr1182728ywd.165.1575330813948;
+ Mon, 02 Dec 2019 15:53:33 -0800 (PST)
+Date:   Mon,  2 Dec 2019 15:53:29 -0800
+Message-Id: <20191202235329.241986-1-heidifahim@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
+Subject: [PATCH v2] kunit: testing kunit: Bug fix in test_run_timeout function
+From:   Heidi Fahim <heidifahim@google.com>
+To:     brendanhiggins@google.com, davidgow@google.com, shuah@kernel.org
+Cc:     sj38.park@gmail.com, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        Heidi Fahim <heidifahim@google.com>,
+        SeongJae Park <sjpark@amazon.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 02:45:42PM +0100, Vincent Guittot wrote:
-> On Mon, 2 Dec 2019 at 05:02, Dave Chinner <david@fromorbit.com> wrote:
-> >
-> > On Mon, Dec 02, 2019 at 10:46:25AM +0800, Ming Lei wrote:
-> > > On Thu, Nov 28, 2019 at 10:53:33AM +0100, Vincent Guittot wrote:
-> > > > On Thu, 28 Nov 2019 at 10:40, Hillf Danton <hdanton@sina.com> wrote:
-> > > > > --- a/fs/iomap/direct-io.c
-> > > > > +++ b/fs/iomap/direct-io.c
-> > > > > @@ -157,10 +157,8 @@ static void iomap_dio_bio_end_io(struct
-> > > > >                         WRITE_ONCE(dio->submit.waiter, NULL);
-> > > > >                         blk_wake_io_task(waiter);
-> > > > >                 } else if (dio->flags & IOMAP_DIO_WRITE) {
-> > > > > -                       struct inode *inode = file_inode(dio->iocb->ki_filp);
-> > > > > -
-> > > > >                         INIT_WORK(&dio->aio.work, iomap_dio_complete_work);
-> > > > > -                       queue_work(inode->i_sb->s_dio_done_wq, &dio->aio.work);
-> > > > > +                       schedule_work(&dio->aio.work);
-> > > >
-> > > > I'm not sure that this will make a real difference because it ends up
-> > > > to call queue_work(system_wq, ...) and system_wq is bounded as well so
-> > > > the work will still be pinned to a CPU
-> > > > Using system_unbound_wq should make a difference because it doesn't
-> > > > pin the work on a CPU
-> > > >  +                       queue_work(system_unbound_wq, &dio->aio.work);
-> > >
-> > > Indeed, just run a quick test on my KVM guest, looks the following patch
-> > > makes a difference:
-> > >
-> > > diff --git a/fs/direct-io.c b/fs/direct-io.c
-> > > index 9329ced91f1d..2f4488b0ecec 100644
-> > > --- a/fs/direct-io.c
-> > > +++ b/fs/direct-io.c
-> > > @@ -613,7 +613,8 @@ int sb_init_dio_done_wq(struct super_block *sb)
-> > >  {
-> > >         struct workqueue_struct *old;
-> > >         struct workqueue_struct *wq = alloc_workqueue("dio/%s",
-> > > -                                                     WQ_MEM_RECLAIM, 0,
-> > > +                                                     WQ_MEM_RECLAIM |
-> > > +                                                     WQ_UNBOUND, 0,
-> > >                                                       sb->s_id);
-> >
-> > That's not an answer to the user task migration issue.
-> >
-> > That is, all this patch does is trade user task migration when the
-> > CPU is busy for migrating all the queued work off the CPU so the
-> > user task does not get migrated. IOWs, this forces all the queued
-> > work to be migrated rather than the user task. IOWs, it does not
-> > address the issue we've exposed in the scheduler between tasks with
-> > competing CPU affinity scheduling requirements - it just hides the
-> > symptom.
-> >
-> > Maintaining CPU affinity across dispatch and completion work has
-> > been proven to be a significant performance win. Right throughout
-> > the IO stack we try to keep this submitter/completion affinity,
-> > and that's the whole point of using a bound wq in the first place:
-> > efficient delayed batch processing of work on the local CPU.
-> 
-> Do you really want to target the same CPU ? looks like what you really
-> want to target the same cache instead
+Assert in test_run_timeout was not updated with the build_dir argument
+and caused the following error:
+AssertionError: Expected call: run_kernel(timeout=3453)
+Actual call: run_kernel(build_dir=None, timeout=3453)
 
-Well, yes, ideally we want to target the same cache, but we can't do
-that with workqueues.
+Needed to update kunit_tool_test to reflect this fix
+https://lkml.org/lkml/2019/9/6/351
 
-However, the block layer already does that same-cache steering for
-it's directed completions (see __blk_mq_complete_request()), so we
-are *already running in a "hot cache" CPU context* when we queue
-work. When we queue to the same CPU, we are simply maintaining the
-"cache-hot" context that we are already running in.
+Signed-off-by: Heidi Fahim <heidifahim@google.com>
+Reviewed-by: SeongJae Park <sjpark@amazon.de>
+---
+ tools/testing/kunit/kunit_tool_test.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Besides, selecting a specific "hot cache" CPU and bind the work to
-that CPU (via queue_work_on()) doesn't fix the scheduler problem -
-it just moves it to another CPU. If the destination CPU is loaded
-like the local CPU, then it's jsut going to cause migrations on the
-destination CPU instead of the local CPU.
-
-IOWs, this is -not a fix- for the scheduler making an incorrect
-migration decisions when we are mixing bound and unbound tasks on
-the local run queue. Yes, it will hide the problem from this
-specific workload instance but it doesn't fix it. We'll just hit it
-under heavier load, such as when production workloads start running
-AIO submission from tens of CPUs at a time while burning near 100%
-CPU in userspace.......
-
-Cheers,
-
-Dave.
+diff --git a/tools/testing/kunit/kunit_tool_test.py b/tools/testing/kunit/kunit_tool_test.py
+index 4a12baa0cd4e..a2a8ea6beae3 100755
+--- a/tools/testing/kunit/kunit_tool_test.py
++++ b/tools/testing/kunit/kunit_tool_test.py
+@@ -199,7 +199,7 @@ class KUnitMainTest(unittest.TestCase):
+ 		timeout = 3453
+ 		kunit.main(['run', '--timeout', str(timeout)], self.linux_source_mock)
+ 		assert self.linux_source_mock.build_reconfig.call_count == 1
+-		self.linux_source_mock.run_kernel.assert_called_once_with(timeout=timeout)
++		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir=None, timeout=timeout)
+ 		self.print_mock.assert_any_call(StrContains('Testing complete.'))
+ 
+ if __name__ == '__main__':
 -- 
-Dave Chinner
-david@fromorbit.com
+2.24.0.393.g34dc348eaf-goog
+
