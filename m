@@ -2,109 +2,113 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC11C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9162C43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45B6020848
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86E7D20848
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 20:13:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a8Q1U7LR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbfLBULW (ORCPT
+        id S1728094AbfLBUNU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 15:11:22 -0500
-Received: from smtprelay0014.hostedemail.com ([216.40.44.14]:60319 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727586AbfLBULW (ORCPT
+        Mon, 2 Dec 2019 15:13:20 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50255 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727586AbfLBUNU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 15:11:22 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id D8FE5181D341E;
-        Mon,  2 Dec 2019 20:11:20 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: whip27_45b83b744b756
-X-Filterd-Recvd-Size: 2912
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf19.hostedemail.com (Postfix) with ESMTPA;
-        Mon,  2 Dec 2019 20:11:18 +0000 (UTC)
-Message-ID: <d3dd39dabf20814174c11f60dc22c2401490e4ca.camel@perches.com>
-Subject: Re: [PATCH v5 8/8] iommu/vt-d: Misc macro clean up for SVM
-From:   Joe Perches <joe@perches.com>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        "Mehta, Sohil" <sohil.mehta@intel.com>
-Date:   Mon, 02 Dec 2019 12:10:45 -0800
-In-Reply-To: <1575316709-54903-9-git-send-email-jacob.jun.pan@linux.intel.com>
-References: <1575316709-54903-1-git-send-email-jacob.jun.pan@linux.intel.com>
-         <1575316709-54903-9-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Mon, 2 Dec 2019 15:13:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575317599;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=AAoHzUyrY/MGtK6MVYph2Nv7coxAjaKdNzJNELfvGio=;
+        b=a8Q1U7LRpENNlb+aihmSrlojSMhX09IVYal4tzqBr/RNiQZW0xJIcahMsM+Ac4WKaIlEOG
+        NEDnf4ZhzVQr6ySy9gOV3yM9w6aDLVmgJIlGCsTpvzho2WGWLp1pLVFM3MfDeotnyWTsqI
+        0/JNZnBRrKMEZHqPM91Q/JdSenl96zI=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-264-wvZf-B1xOLS-L0ZZOtYqPQ-1; Mon, 02 Dec 2019 15:13:17 -0500
+Received: by mail-qk1-f197.google.com with SMTP id a6so498215qkl.7
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 12:13:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MeEk0ij29n0kTPi4OJez+UYNwIiLUI6R5zpd+TNY67M=;
+        b=YQHfahz0E9KvJ8t/JbuC8ghmyKnqo8Oj159GQTfU+4PjzHQXsCH0JWJxsloxiFd9A1
+         WtjnzYhN0MCkaszak7U/3fyLX3EM1G1hJW8+DMrBMeui7tG90ro9NE90zC/uKRrl67RE
+         0dfLoHO2JW+RfrAimceLDQflFXdGCjeLyeXtfU5BCc8H/DuSq8DMpeVKW0gSxvsNXfb/
+         C8t0BOi5IMKsA3vfgKxlhhtuQkkNnpFBDbtpAp02hVwjazpViriG/P5jCsf84+XjP8dz
+         nt6ceY9cvvjH5CLJvaw8TtRGCzo2lsdA/6JRxI4OIEwH8azBOOM9cp2lV3aHMXzleg0o
+         Ju5A==
+X-Gm-Message-State: APjAAAX8CHs87VawSksi869sFMhK1Lx8myMnOWfPmIAFxd3rB2IBIFpI
+        yr/FXQnZZPbswN2AuOOkgl4YrTm93pIVBR6LvIrCOuWI3h84ghCpN8tYQ7N4dbOAmTLZuKsFM+U
+        2TlIHL0++YbU/cnjP2DyIngm+
+X-Received: by 2002:ac8:607:: with SMTP id d7mr1330144qth.186.1575317596607;
+        Mon, 02 Dec 2019 12:13:16 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxEDymFkNuWxzKe4cUT0lCYk0JjSaaXOL4ga2ZDAhsswgDBqGmNFtJsj4EG2GiyhikKxlMgHA==
+X-Received: by 2002:ac8:607:: with SMTP id d7mr1330123qth.186.1575317596342;
+        Mon, 02 Dec 2019 12:13:16 -0800 (PST)
+Received: from xz-x1.yyz.redhat.com ([104.156.64.74])
+        by smtp.gmail.com with ESMTPSA id b6sm342410qtp.5.2019.12.02.12.13.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 12:13:15 -0800 (PST)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        peterx@redhat.com, Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: [PATCH v3 0/5] KVM: X86: Cleanups on dest_mode and headers
+Date:   Mon,  2 Dec 2019 15:13:09 -0500
+Message-Id: <20191202201314.543-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-MC-Unique: wvZf-B1xOLS-L0ZZOtYqPQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-12-02 at 11:58 -0800, Jacob Pan wrote:
-> Use combined macros for_each_svm_dev() to simplify SVM device iteration
-> and error checking.
-[]
-> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-[]
-> @@ -427,40 +430,36 @@ int intel_svm_unbind_mm(struct device *dev, int pasid)
-[]
-> +	for_each_svm_dev(sdev, svm, dev) {
-> +		ret = 0;
-> +		sdev->users--;
-> +		if (!sdev->users) {
+v3:
+- address all the comments from both Vitaly and Sean
+- since at it, added patches:
+  "KVM: X86: Fix kvm_bitmap_or_dest_vcpus() to use irq shorthand"
+  "KVM: X86: Drop KVM_APIC_SHORT_MASK and KVM_APIC_DEST_MASK"
 
-This might be better by reducing indentation here too
+Each patch explains itself.
 
-		if (sdev->users)
-			break;
+Please have a look, thanks.
 
-> +			list_del_rcu(&sdev->list);
+Peter Xu (5):
+  KVM: X86: Fix kvm_bitmap_or_dest_vcpus() to use irq shorthand
+  KVM: X86: Move irrelevant declarations out of ioapic.h
+  KVM: X86: Use APIC_DEST_* macros properly in kvm_lapic_irq.dest_mode
+  KVM: X86: Drop KVM_APIC_SHORT_MASK and KVM_APIC_DEST_MASK
+  KVM: X86: Fix callers of kvm_apic_match_dest() to use correct macros
 
-to reduce indentation 1 level below this
+ arch/x86/include/asm/kvm_host.h |  5 +++++
+ arch/x86/kvm/hyperv.c           |  1 +
+ arch/x86/kvm/ioapic.c           | 19 ++++++++++++-------
+ arch/x86/kvm/ioapic.h           |  6 ------
+ arch/x86/kvm/irq.h              |  3 +++
+ arch/x86/kvm/irq_comm.c         | 10 ++++++----
+ arch/x86/kvm/lapic.c            |  5 +----
+ arch/x86/kvm/lapic.h            |  7 ++++---
+ arch/x86/kvm/svm.c              |  4 ++--
+ arch/x86/kvm/x86.c              |  2 +-
+ 10 files changed, 35 insertions(+), 27 deletions(-)
 
-> +			/* Flush the PASID cache and IOTLB for this device.
-> +			 * Note that we do depend on the hardware *not* using
-> +			 * the PASID any more. Just as we depend on other
-> +			 * devices never using PASIDs that they have no right
-> +			 * to use. We have a *shared* PASID table, because it's
-> +			 * large and has to be physically contiguous. So it's
-> +			 * hard to be as defensive as we might like. */
-> +			intel_pasid_tear_down_entry(iommu, dev, svm->pasid);
-> +			intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
-> +			kfree_rcu(sdev, rcu);
-> +
-> +			if (list_empty(&svm->devs)) {
-> +				ioasid_free(svm->pasid);
-> +				if (svm->mm)
-> +					mmu_notifier_unregister(&svm->notifier, svm->mm);
-> +				list_del(&svm->list);
-> +				/* We mandate that no page faults may be outstanding
-> +				 * for the PASID when intel_svm_unbind_mm() is called.
-> +				 * If that is not obeyed, subtle errors will happen.
-> +				 * Let's make them less subtle... */
-> +				memset(svm, 0x6b, sizeof(*svm));
-> +				kfree(svm);
->  			}
-> -			break;
->  		}
-> +		break;
->  	}
->   out:
->  	mutex_unlock(&pasid_mutex);
+--=20
+2.21.0
 
