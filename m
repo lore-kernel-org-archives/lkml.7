@@ -2,138 +2,138 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE63C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 04:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5A1C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 04:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0EDA20725
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 04:14:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PyPB0suN"
+	by mail.kernel.org (Postfix) with ESMTP id C466D2146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 04:17:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbfLBEOq (ORCPT
+        id S1727413AbfLBERJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 23:14:46 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41943 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727298AbfLBEOq (ORCPT
+        Sun, 1 Dec 2019 23:17:09 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25658 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727298AbfLBERJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 23:14:46 -0500
-Received: by mail-oi1-f193.google.com with SMTP id e9so31203747oif.8;
-        Sun, 01 Dec 2019 20:14:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=f/5KDWwc/xKNxHsiDOtb26jMc/teIu2y72BKQlD6HUw=;
-        b=PyPB0suN3Ac/0YBN/GdG8mMtlpX+Q2k15I84EAq6fyg6P3jVxHJ+pL9vSwl/+B+8q4
-         PWU3EUC+3u7/7UkoBdF9NI8morrmDlADs397ZTs6x/CLy3KRHnBCSu7jf0NpWKJWbtK0
-         OS9SNvWEjeRkbN5l/YTF7NK1uWGN7UXFD0tmWlOH505dDMXvfWWIRgLCgbLFhkoFHcho
-         tRbUvog+kYJmqI9IQlg6//ZjWVpwEAUy674rkBNd4ySL5ywzMlA1ncNQk3XpJw/BIibJ
-         VVn1hTFhHjahdJyg/TDKWziZHhJvo6NBn2Nist5N+J2skFel2VqMuSZZ0jvw/GzuCTzZ
-         zmaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=f/5KDWwc/xKNxHsiDOtb26jMc/teIu2y72BKQlD6HUw=;
-        b=hVuPOt9diZ1HC6AjblSd9TeXYCdW7doIUYBduUhgRF4op3maFHU7EgAoa1vKPn2H1a
-         WNdLn9DzGbWFl1vleWiJn/FvmZ+pVcRShKLDIrmAHeW/dZ5Fp4DjzR3rrjmkZNreh3Qd
-         qL4roykSAmdIm3NzrmNxEXQAVDwmg1CTxaUc7CfmlPcQV1pozPIU7fJ9wtru3e0qMxbS
-         JW3M40up882bs+gkEy+/yP0+FEqGvZImp9fWdGRzqwFpqXMcBd5XwS/h9iidKS1G/FB5
-         +eX3vAKd+HTemF252PXFDpv9lwFRagyEwS7WR1x51FSZvVae2MVKOuBNQVqnWh/xF+Yo
-         9FeQ==
-X-Gm-Message-State: APjAAAX48oVcz1Xq6/iMFDl23WExDJuFuiHI7cnvKvZyFOQBp5KSq0/j
-        G9Y44OQ+o4RrWrSycwcL+yfpnOoT
-X-Google-Smtp-Source: APXvYqzsOVbpb/beefEZE/OzfdaH+fj4ZJmh7Tyh+FkhBzgVvyUJ1tZU7N7psT2RXkxa29/o1rZ46Q==
-X-Received: by 2002:aca:d4c1:: with SMTP id l184mr22524637oig.172.1575260083692;
-        Sun, 01 Dec 2019 20:14:43 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id y23sm10176414oih.17.2019.12.01.20.14.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 01 Dec 2019 20:14:42 -0800 (PST)
-Date:   Sun, 1 Dec 2019 20:14:40 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Slaby <jslaby@suse.com>, linux-sh@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v4 1/2] drivers: move the early platform device support
- to arch/sh
-Message-ID: <20191202041440.GA1628@roeck-us.net>
-References: <20191003092913.10731-1-brgl@bgdev.pl>
- <20191003092912.G3pupKBmyct1r9ScP5Skuw9D-_ALcMVSnfMfHAlwe0Y@z>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003092912.G3pupKBmyct1r9ScP5Skuw9D-_ALcMVSnfMfHAlwe0Y@z>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Sun, 1 Dec 2019 23:17:09 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB24CJTm050963;
+        Sun, 1 Dec 2019 23:17:04 -0500
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wm6smb4wm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 01 Dec 2019 23:17:04 -0500
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xB24DS4M026084;
+        Mon, 2 Dec 2019 04:17:08 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma01wdc.us.ibm.com with ESMTP id 2wkg25qed9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 Dec 2019 04:17:08 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB24H2S944302720
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 2 Dec 2019 04:17:02 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BF1FE28060;
+        Mon,  2 Dec 2019 04:17:02 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7A01228058;
+        Mon,  2 Dec 2019 04:17:01 +0000 (GMT)
+Received: from jarvis.ext.hansenpartnership.com (unknown [9.85.189.151])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon,  2 Dec 2019 04:17:01 +0000 (GMT)
+Message-ID: <1575260220.4080.17.camel@linux.ibm.com>
+Subject: Re: One question about trusted key of keyring in Linux kernel.
+From:   James Bottomley <jejb@linux.ibm.com>
+To:     "Zhao, Shirley" <shirley.zhao@intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
+        "Zhu, Bing" <bing.zhu@intel.com>,
+        "Chen, Luhai" <luhai.chen@intel.com>
+Date:   Sun, 01 Dec 2019 20:17:00 -0800
+In-Reply-To: <A888B25CD99C1141B7C254171A953E8E4909BA3B@shsmsx102.ccr.corp.intel.com>
+References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
+         <1573659978.17949.83.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
+         <1574877977.3551.5.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E49096521@shsmsx102.ccr.corp.intel.com>
+         <1575057916.6220.7.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909BA3B@shsmsx102.ccr.corp.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-01_04:2019-11-29,2019-12-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ suspectscore=0 clxscore=1015 malwarescore=0 adultscore=0 impostorscore=0
+ phishscore=0 mlxlogscore=961 spamscore=0 priorityscore=1501
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912020035
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 11:29:12AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Mon, 2019-12-02 at 01:44 +0000, Zhao, Shirley wrote:
+> Hi, James, 
 > 
-> SuperH is the only user of the current implementation of early platform
-> device support. We want to introduce a more robust approach to early
-> probing. As the first step - move all the current early platform code
-> to arch/sh.
+> The value of PCR7 is not changed. I have checked it with TPM command
+> tpm_pcrlist. 
 > 
-> In order not to export internal drivers/base functions to arch code for
-> this temporary solution - copy the two needed routines for driver
-> matching from drivers/base/platform.c to arch/sh/drivers/platform_early.c.
-> 
-> Also: call early_platform_cleanup() from subsys_initcall() so that it's
-> called after all early devices are probed.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> So I think the problem is how to use the option policydigest and
+> policyhandle? Is there any example?
+> Maybe the format in my command is not correct. 
 
-Wondering ... has anyone tested this patch on affected hardware ?
-All my qemu boot tests (both sh and sheb) fail because of it.
-Bisect log below.
+OK, so previously you said that using the Intel TSS the policy also
+failed after a reboot:
 
-Guenter
+> The error should be policy check failed, because I use TPM command to
+> unseal directly with error of policy check failed. 
+> $ tpm2_unseal -c 0x81000001 -L sha256:7
+> ERROR on line: "81" in file: "./lib/log.h": Tss2_Sys_Unseal(0x99D) -
+> tpm:session(1):a policy check failed
+> ERROR on line: "213" in file: "tools/tpm2_unseal.c": Unseal failed!
+> ERROR on line: "166" in file: "tools/tpm2_tool.c": Unable to run
+> tpm2_unseal
 
----
-# bad: [72c0870e3a05d9cd5466d08c3d2a3069ed0a2f9f] Merge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input
-# good: [89d57dddd7d319ded00415790a0bb3c954b7e386] Merge tag 'media/v5.5-1' of git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media
-git bisect start 'HEAD' '89d57dddd7d3'
-# good: [0a6cad5df541108cfd3fbd79eef48eb824c89bdc] Merge branch 'vmwgfx-coherent' of git://people.freedesktop.org/~thomash/linux into drm-next
-git bisect good 0a6cad5df541108cfd3fbd79eef48eb824c89bdc
-# bad: [9a3d7fd275be4559277667228902824165153c80] Merge tag 'driver-core-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core
-git bisect bad 9a3d7fd275be4559277667228902824165153c80
-# good: [59274c7164807d27b24e6c068dfe734f7bea4623] Merge tag 'usb-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb
-git bisect good 59274c7164807d27b24e6c068dfe734f7bea4623
-# good: [e71903106721dc53923e90aa484d78bc86c039a9] staging: mt7621-dma: align to match open parenthesis
-git bisect good e71903106721dc53923e90aa484d78bc86c039a9
-# good: [8f56e4ebe05c26c30e167519273843476e39e244] Merge tag 'char-misc-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc
-git bisect good 8f56e4ebe05c26c30e167519273843476e39e244
-# good: [8bde9f3d2a217d1635a7c7bdf8ad4c25c9a34b50] Merge tag 'iio-for-5.5c' of https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio into staging-next
-git bisect good 8bde9f3d2a217d1635a7c7bdf8ad4c25c9a34b50
-# bad: [0628cda318df6baec439ca6e6e274007492f1ccd] mac80211: Use debugfs_create_xul() helper
-git bisect bad 0628cda318df6baec439ca6e6e274007492f1ccd
-# bad: [03324507e66c7664c754b1ef92c5c3be24c78aa2] driver core: Allow fwnode_operations.add_links to differentiate errors
-git bisect bad 03324507e66c7664c754b1ef92c5c3be24c78aa2
-# bad: [313f5dbba41d905d59c820bb2d91ee6c661aff99] debugfs: remove return value of debugfs_create_u16()
-git bisect bad 313f5dbba41d905d59c820bb2d91ee6c661aff99
-# good: [d4387cd117414ba80230f27a514be5ca4a09cfcc] of: property: Create device links for all child-supplier depencencies
-git bisect good d4387cd117414ba80230f27a514be5ca4a09cfcc
-# bad: [c31e73121f4c1ec45a3e523ac6ce3ce6dafdcec1] base: soc: Handle custom soc information sysfs entries
-git bisect bad c31e73121f4c1ec45a3e523ac6ce3ce6dafdcec1
-# bad: [201e91091b1d47047f55580b5474e1239f4d17aa] sh: add the sh_ prefix to early platform symbols
-git bisect bad 201e91091b1d47047f55580b5474e1239f4d17aa
-# bad: [507fd01d5333338753a1cc26322dfc9f856c109f] drivers: move the early platform device support to arch/sh
-git bisect bad 507fd01d5333338753a1cc26322dfc9f856c109f
-# first bad commit: [507fd01d5333338753a1cc26322dfc9f856c109f] drivers: move the early platform device support to arch/sh
+So this must mean the actual policy hash you constructed was wrong in
+some way: it didn't correspond simply to a value of pcr7 ... well
+assuming the -L sha256:7 means construct a policy of the sha256 value
+of pcr7 and use it in the unseal.
+
+I can tell you how to construct policies using TPM2 commands, but I
+think you want to know how to do it using the Intel TSS?  In which case
+you really need to consult the experts in that TSS, like Phil Tricca.
+
+For the plain TPM2 case, the policy looks like
+
+TPM_CC_PolicyPCR || pcrs || pcrDigest
+
+Where TPM_CC_PolicyPCR = 0000017f and for selecting pcr7 only.  pcrs is
+a complicated entity: it's a counted array of pcr selections.  For your
+policy you only need one entry, so it would be 00000001 followed by a
+single pcrSelection entry.  pcrSelection is the hash algorithm, the
+size of the selection bitmap (always 3 since every current TPM only has
+24 PCRs) and a bitmap selecting the PCRs in big endian format, so for
+PCR7 using sha256 (algorithm 000b), pcrSelection = 000b 03 80 00 00. 
+And then you follow this by the hash of the PCR value you're looking
+for.  The policyhash becomes the initial policy (all zeros for the
+start of the policy chain) hashed with this.
+
+Regards,
+
+James
+
