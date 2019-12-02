@@ -2,140 +2,224 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61322C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FCDC43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 330402070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:06:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hQdP+6LY"
+	by mail.kernel.org (Postfix) with ESMTP id 637E2217F9
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 10:10:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbfLBKGz (ORCPT
+        id S1727391AbfLBKKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 05:06:55 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34915 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726557AbfLBKGy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 05:06:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575281213;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LWf99ClocJTrdl7yyjr79cgOtm906wplocGScS3IZvg=;
-        b=hQdP+6LYLS6C0QH6q/JACMpCKo65hFnN6FxdN1EvcORDTAI+poZJPKLJjrfmZWf4yWweXY
-        nTa0qYFC4KsP4uyK4/96FJPhzD6LWeSSO3Se76tze0E8YDGDoEFzil8rvAuXFtF3YvKZDA
-        5Yot9NYuHlexbU+NuWyxeLqjsRvntWM=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-184-DbAEa8CuOPCqily9HSKZzQ-1; Mon, 02 Dec 2019 05:06:51 -0500
-Received: by mail-wm1-f71.google.com with SMTP id z2so1099627wmf.5
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 02:06:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LWf99ClocJTrdl7yyjr79cgOtm906wplocGScS3IZvg=;
-        b=GasaneW+EwUOWJDzzOtCjOlxE8ypgEssvPHeBtUA1BTHloA8nm2YHTf1U100V3o4il
-         xQ45uUdhROZR8QqnqrsGUp2KQlFxw0uMXfX1Z7lixInCNIAHN1HkNSo+7embx8yqEh7c
-         CYMDzgSc5BGQbGoBEghjOtXAC19FZaeiG3W6ad4b1gmv9CC7hOizxtwr21iMoPeC8DzL
-         wnKb/FiioZTZhQmt+or44DZ5w6KsmJIH1sfLcuvltAaKyPvOPo1/uOaqSSaRpi6hKtBu
-         /pvvjtqt7jXd+6XAhKzTjj08a2zZem0trSp7BPCAU56x2uHI4xk6BdFvEHpfRbKA8PVo
-         2LzQ==
-X-Gm-Message-State: APjAAAUZbOYTF/7TNYn6rLmtuIFUZ2htNNQbO0hpqF//HrigW2/nDXhS
-        imqFGH5QHE5IJaOMhIZyf+2jBD4d/HsijgDCTL2mFbXrug0toDixm0yNtcUZ4bNt0QXb1XPnKwM
-        bNDBYn6DM4u7QQhNKi8PVrXxP
-X-Received: by 2002:a05:6000:160d:: with SMTP id u13mr12421024wrb.22.1575281210539;
-        Mon, 02 Dec 2019 02:06:50 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzhhcWugDGw+DX0hPY8W0LFXNpfNFg/3a/6ZsSrTvg2/gVh4gPEEBjHkxYw0bKDu8FVVN2YaA==
-X-Received: by 2002:a05:6000:160d:: with SMTP id u13mr12420998wrb.22.1575281210224;
-        Mon, 02 Dec 2019 02:06:50 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:8dc6:5dd5:2c0a:6a9a? ([2001:b07:6468:f312:8dc6:5dd5:2c0a:6a9a])
-        by smtp.gmail.com with ESMTPSA id n14sm11013440wmi.26.2019.12.02.02.06.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Dec 2019 02:06:49 -0800 (PST)
-Subject: Re: vfio_pin_map_dma cause synchronize_sched wait too long
-To:     "Longpeng (Mike)" <longpeng2@huawei.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-Cc:     qemu-devel@nongnu.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Longpeng(Mike)" <longpeng.mike@gmail.com>,
-        Gonglei <arei.gonglei@huawei.com>,
-        Huangzhichao <huangzhichao@huawei.com>
-References: <2e53a9f0-3225-d416-98ff-55bd337330bc@huawei.com>
- <34c53520-4144-fe71-528a-8df53e7f4dd1@redhat.com>
- <561fb205-16be-ae87-9cfe-61e6a3b04dc5@huawei.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <42c907fd-6c09-fbb6-d166-60e6827edff5@redhat.com>
-Date:   Mon, 2 Dec 2019 11:06:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <561fb205-16be-ae87-9cfe-61e6a3b04dc5@huawei.com>
-Content-Language: en-US
-X-MC-Unique: DbAEa8CuOPCqily9HSKZzQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 7bit
+        Mon, 2 Dec 2019 05:10:40 -0500
+Received: from mail.loongson.cn ([114.242.206.163]:58674 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726276AbfLBKKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 05:10:40 -0500
+Received: from linux.localdomain (unknown [123.138.236.242])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxbxUP4+RdcvAFAA--.28S2;
+        Mon, 02 Dec 2019 18:10:25 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Tyler Hicks <tyhicks@canonical.com>
+Cc:     linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] fs: introduce is_dot_dotdot helper for cleanup
+Date:   Mon,  2 Dec 2019 18:10:13 +0800
+Message-Id: <1575281413-6753-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9DxbxUP4+RdcvAFAA--.28S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3GF1xZFWrCrykGryfWFyUJrb_yoW7GFWDpF
+        43JF97Jrn7JFyY9rn5tF1rZ34av34xGr17GrZ7Ga4Iyr12qr1Fqr4IyFy093Z3JFZ8Wan0
+        gFs5G34rCa43taDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkKb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY
+        04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
+        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+        W8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_
+        Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU56c_D
+        UUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/12/19 10:42, Longpeng (Mike) wrote:
->> cond_resched in vfio_iommu_map.  Perhaps you could add one to 
->> vfio_pin_pages_remote and/or use vfio_pgsize_bitmap to cap the
->> number of pages that it returns.
-> Um ... There's only one running task (qemu-kvm of the VM1) on that
-> CPU, so maybe the cond_resched() is ineffective ?
+There exists many similar and duplicate codes to check "." and "..",
+so introduce is_dot_dotdot helper to make the code more clean.
 
-Note that synchronize_sched() these days is just a synonym of
-synchronize_rcu, so this makes me wonder if you're running on an older
-kernel and whether you are missing this commit:
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ fs/crypto/fname.c    | 15 ++-------------
+ fs/ecryptfs/crypto.c | 13 ++-----------
+ fs/f2fs/f2fs.h       | 11 -----------
+ fs/libfs.c           | 12 ++++++++++++
+ fs/namei.c           |  6 ++----
+ include/linux/fs.h   |  2 ++
+ 6 files changed, 20 insertions(+), 39 deletions(-)
 
-
-commit 92aa39e9dc77481b90cbef25e547d66cab901496
-Author: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Date:   Mon Jul 9 13:47:30 2018 -0700
-
-    rcu: Make need_resched() respond to urgent RCU-QS needs
-
-    The per-CPU rcu_dynticks.rcu_urgent_qs variable communicates an urgent
-    need for an RCU quiescent state from the force-quiescent-state
-processing
-    within the grace-period kthread to context switches and to
-cond_resched().
-    Unfortunately, such urgent needs are not communicated to need_resched(),
-    which is sometimes used to decide when to invoke cond_resched(), for
-    but one example, within the KVM vcpu_run() function.  As of v4.15, this
-    can result in synchronize_sched() being delayed by up to ten seconds,
-    which can be problematic, to say nothing of annoying.
-
-    This commit therefore checks rcu_dynticks.rcu_urgent_qs from within
-    rcu_check_callbacks(), which is invoked from the scheduling-clock
-    interrupt handler.  If the current task is not an idle task and is
-    not executing in usermode, a context switch is forced, and either way,
-    the rcu_dynticks.rcu_urgent_qs variable is set to false.  If the current
-    task is an idle task, then RCU's dyntick-idle code will detect the
-    quiescent state, so no further action is required.  Similarly, if the
-    task is executing in usermode, other code in rcu_check_callbacks() and
-    its called functions will report the corresponding quiescent state.
-
-    Reported-by: Marius Hillenbrand <mhillenb@amazon.de>
-    Reported-by: David Woodhouse <dwmw2@infradead.org>
-    Suggested-by: Peter Zijlstra <peterz@infradead.org>
-    Signed-off-by: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-
-
-Thanks,
-
-Paolo
+diff --git a/fs/crypto/fname.c b/fs/crypto/fname.c
+index 3da3707..36be864 100644
+--- a/fs/crypto/fname.c
++++ b/fs/crypto/fname.c
+@@ -15,17 +15,6 @@
+ #include <crypto/skcipher.h>
+ #include "fscrypt_private.h"
+ 
+-static inline bool fscrypt_is_dot_dotdot(const struct qstr *str)
+-{
+-	if (str->len == 1 && str->name[0] == '.')
+-		return true;
+-
+-	if (str->len == 2 && str->name[0] == '.' && str->name[1] == '.')
+-		return true;
+-
+-	return false;
+-}
+-
+ /**
+  * fname_encrypt() - encrypt a filename
+  *
+@@ -255,7 +244,7 @@ int fscrypt_fname_disk_to_usr(struct inode *inode,
+ 	const struct qstr qname = FSTR_TO_QSTR(iname);
+ 	struct fscrypt_digested_name digested_name;
+ 
+-	if (fscrypt_is_dot_dotdot(&qname)) {
++	if (is_dot_dotdot(&qname)) {
+ 		oname->name[0] = '.';
+ 		oname->name[iname->len - 1] = '.';
+ 		oname->len = iname->len;
+@@ -323,7 +312,7 @@ int fscrypt_setup_filename(struct inode *dir, const struct qstr *iname,
+ 	memset(fname, 0, sizeof(struct fscrypt_name));
+ 	fname->usr_fname = iname;
+ 
+-	if (!IS_ENCRYPTED(dir) || fscrypt_is_dot_dotdot(iname)) {
++	if (!IS_ENCRYPTED(dir) || is_dot_dotdot(iname)) {
+ 		fname->disk_name.name = (unsigned char *)iname->name;
+ 		fname->disk_name.len = iname->len;
+ 		return 0;
+diff --git a/fs/ecryptfs/crypto.c b/fs/ecryptfs/crypto.c
+index f91db24..6f4db74 100644
+--- a/fs/ecryptfs/crypto.c
++++ b/fs/ecryptfs/crypto.c
+@@ -1991,16 +1991,6 @@ int ecryptfs_encrypt_and_encode_filename(
+ 	return rc;
+ }
+ 
+-static bool is_dot_dotdot(const char *name, size_t name_size)
+-{
+-	if (name_size == 1 && name[0] == '.')
+-		return true;
+-	else if (name_size == 2 && name[0] == '.' && name[1] == '.')
+-		return true;
+-
+-	return false;
+-}
+-
+ /**
+  * ecryptfs_decode_and_decrypt_filename - converts the encoded cipher text name to decoded plaintext
+  * @plaintext_name: The plaintext name
+@@ -2020,6 +2010,7 @@ int ecryptfs_decode_and_decrypt_filename(char **plaintext_name,
+ {
+ 	struct ecryptfs_mount_crypt_stat *mount_crypt_stat =
+ 		&ecryptfs_superblock_to_private(sb)->mount_crypt_stat;
++	const struct qstr file_name = {.name = name, .len = name_size};
+ 	char *decoded_name;
+ 	size_t decoded_name_size;
+ 	size_t packet_size;
+@@ -2027,7 +2018,7 @@ int ecryptfs_decode_and_decrypt_filename(char **plaintext_name,
+ 
+ 	if ((mount_crypt_stat->flags & ECRYPTFS_GLOBAL_ENCRYPT_FILENAMES) &&
+ 	    !(mount_crypt_stat->flags & ECRYPTFS_ENCRYPTED_VIEW_ENABLED)) {
+-		if (is_dot_dotdot(name, name_size)) {
++		if (is_dot_dotdot(&file_name)) {
+ 			rc = ecryptfs_copy_filename(plaintext_name,
+ 						    plaintext_name_size,
+ 						    name, name_size);
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 5a888a0..3d5e684 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -2767,17 +2767,6 @@ static inline bool f2fs_cp_error(struct f2fs_sb_info *sbi)
+ 	return is_set_ckpt_flags(sbi, CP_ERROR_FLAG);
+ }
+ 
+-static inline bool is_dot_dotdot(const struct qstr *str)
+-{
+-	if (str->len == 1 && str->name[0] == '.')
+-		return true;
+-
+-	if (str->len == 2 && str->name[0] == '.' && str->name[1] == '.')
+-		return true;
+-
+-	return false;
+-}
+-
+ static inline bool f2fs_may_extent_tree(struct inode *inode)
+ {
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+diff --git a/fs/libfs.c b/fs/libfs.c
+index 1463b03..876b1b6 100644
+--- a/fs/libfs.c
++++ b/fs/libfs.c
+@@ -1291,3 +1291,15 @@ bool is_empty_dir_inode(struct inode *inode)
+ 	return (inode->i_fop == &empty_dir_operations) &&
+ 		(inode->i_op == &empty_dir_inode_operations);
+ }
++
++bool is_dot_dotdot(const struct qstr *str)
++{
++	if (str->len == 1 && str->name[0] == '.')
++		return true;
++
++	if (str->len == 2 && str->name[0] == '.' && str->name[1] == '.')
++		return true;
++
++	return false;
++}
++EXPORT_SYMBOL(is_dot_dotdot);
+diff --git a/fs/namei.c b/fs/namei.c
+index 2dda552..7730a3b 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -2458,10 +2458,8 @@ static int lookup_one_len_common(const char *name, struct dentry *base,
+ 	if (!len)
+ 		return -EACCES;
+ 
+-	if (unlikely(name[0] == '.')) {
+-		if (len < 2 || (len == 2 && name[1] == '.'))
+-			return -EACCES;
+-	}
++	if (unlikely(is_dot_dotdot(this)))
++		return -EACCES;
+ 
+ 	while (len--) {
+ 		unsigned int c = *(const unsigned char *)name++;
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index c159a8b..e999826 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3627,4 +3627,6 @@ static inline int inode_drain_writes(struct inode *inode)
+ 	return filemap_write_and_wait(inode->i_mapping);
+ }
+ 
++extern bool is_dot_dotdot(const struct qstr *str);
++
+ #endif /* _LINUX_FS_H */
+-- 
+2.1.0
 
