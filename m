@@ -2,198 +2,176 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB97C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA36C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ABF120678
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BFDA20678
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:59:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IhX+gfX1"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="U9wEliua"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbfLBX7r (ORCPT
+        id S1726418AbfLBX75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 18:59:47 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45692 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725899AbfLBX7r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 18:59:47 -0500
-Received: by mail-pg1-f196.google.com with SMTP id k1so613028pgg.12
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 15:59:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:subject:in-reply-to:cc:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YT4uEP8VQn4YJkJtyGgPiJyFzwEjXrAA5S6YuB+2oi8=;
-        b=IhX+gfX151SePSf80mnvPgfzBNoi7l160I1leUO8vw4z6sGDLcawYqngZmXTaYaA75
-         GJinrWzAwG2n5eF9F9+S6HuQdd7ZtVcd6T+4BeESFGHTPpYjlXj0pIDtaErhR4vmX+tZ
-         JvR7D8JR6oeDxcGX58aa31OkGssNtqY1w0yHn/sUhAbF5ID4rwBZFjzw5tXUwWmNwX0k
-         cIGxjhmmgZxRm4xWQCKHgneT9Mm//RPE9y1iQ1zdNGAIOZzXzmaIM52vl69TwHXOmaVF
-         GqBpXQq31FdJplaUh3xKALDCK5RxmVYE9HrniTz7crfD7HKthBIqbjB6xX9YiYlN/kHs
-         6gOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:in-reply-to:cc:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=YT4uEP8VQn4YJkJtyGgPiJyFzwEjXrAA5S6YuB+2oi8=;
-        b=ktXY4Al6PNGSd1kTmTWx6GrC7kyO9qwy1N85LxLcAeGpo5OWyIUaJ9Uy2Z+5IsNGi1
-         C4uNUTVWzFz1ho7SW8H2h4E4JSfLDxUxDwvQNvHs1mlbgJqwHbmeGwO/WbI1bP8fEecP
-         8Nt9258iBnndIrd0Y41UQLkDxUEgyMsaZEo0pozc355xQFWRMeyVRHFaGwhKmozxCZ0O
-         UdRXPiRmYc9BU+ZMxLyvNyy1sJ6agYLmCE5Zv8yjOAgVvEld6PWQMx7WV4iTlVoKl7fV
-         HnKWWvpBUGjTDpw84Gvnv7LBhaZaHFEhdrATqamFR9fyugFh5eYEvpzCGZICjsvCaEQh
-         rA+Q==
-X-Gm-Message-State: APjAAAVF7mfwnlsIyZfClPgyVYiyk5itiKtRRLDn+tiwqFTcUIaFHlyE
-        cUCGk+FqMNk1DqRs+7ZDsXDAkXClNVI=
-X-Google-Smtp-Source: APXvYqykaR/R8TB3hQac8uHJ7QdwdCLs0KiSo+C3wn7tXDCMm9hYQ7g5cySoXmTQM2Gjg5ylFx9ebw==
-X-Received: by 2002:a63:3404:: with SMTP id b4mr1966314pga.438.1575331185704;
-        Mon, 02 Dec 2019 15:59:45 -0800 (PST)
-Received: from localhost ([2620:15c:211:200:12cb:e51e:cbf0:6e3f])
-        by smtp.gmail.com with ESMTPSA id 203sm618912pfy.185.2019.12.02.15.59.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 15:59:45 -0800 (PST)
-Date:   Mon, 02 Dec 2019 15:59:45 -0800 (PST)
-X-Google-Original-Date: Mon, 02 Dec 2019 15:55:49 PST (-0800)
-From:   Palmer Dabbelt <palmerdabbelt@google.com>
-X-Google-Original-From: Palmer Dabbelt <palmer@dabbelt.com>
-Subject:     Re: [PATCH v5 1/4] RISC-V: Mark existing SBI as 0.1 SBI.
-In-Reply-To: <20191126190503.19303-2-atish.patra@wdc.com>
-CC:     linux-kernel@vger.kernel.org, Atish Patra <Atish.Patra@wdc.com>,
-        anup@brainfault.org, aou@eecs.berkeley.edu,
-        alexios.zavras@intel.com, linux-riscv@lists.infradead.org,
-        han_mao@c-sky.com, rppt@linux.ibm.com,
-        Paul Walmsley <paul.walmsley@sifive.com>, tglx@linutronix.de
-To:     Atish Patra <Atish.Patra@wdc.com>
-Message-ID: <mhng-18ffe96a-7a03-475f-ae9b-2d450fc3d29e@palmerdabbelt.mtv.corp.google.com>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Mon, 2 Dec 2019 18:59:57 -0500
+Received: from mail-eopbgr1320110.outbound.protection.outlook.com ([40.107.132.110]:30791
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725775AbfLBX75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 18:59:57 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Al1pN+r0zLUWuutcljsXM1hTEevN/xC4d0KDN2EwWHn26/5pWmO8zDVuANIkbVm2RRYqo5zYMLqEdIm3xXhgJmnoisQFbWfKmPiuO9qio7TITboFpOG9ttD4tJV9mTnl65VW7C/RjjDSVEyZRPL35qqW8+cCsrfFBIEc8/v5gba/l7ZrEHSQ/p6jmWb32tlnGMVG9/Jplxg/msOcusd0RvY1ZYvfhWNRFRjl0Sl0sXksDpIVtTIfLMVVYF5T2nNe5A5d3bLrv0/fbqRXUExU3TF7FhFI3iBJith0+q7zEKxn6lH+VmnIBrHNRbaJFGbU4LUcnHj6LF5Owuk6zAa2Og==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oe2L8bzEnwGmX3GLscAK1iL+8v4xS+dj4heGcxrolHU=;
+ b=C0kNYsnGkTHIZiaSjSDEHOHH+1nm2w3IlHaC3782VeVEJAYidAm95nFNu4koFp+msu/nBhpPmsHYZgabaVYUs5+VjvzA13/eMzTelf/KOzF7JCfWovCPWF+gHM1xjF7KAGa4dNBTMF+pL2GVd/POS3qdhbHpjuoTL4odrFptemfXZ/7pZ5p5X14AzxPv9dlceXR3DSD8fMeD5Y/WHFVMj1hVykWRtFvszu/JOHED7mwSe+KJ+nE1K275W2QtxGfU0P2NFkWzVXsrwxmcrDR2lxbC/VXy3dtoLr9JeDk0UJztFgn/q2ibRdJHsdPXdxbGX0uNskj5N/L0ssRE+ecuQg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oe2L8bzEnwGmX3GLscAK1iL+8v4xS+dj4heGcxrolHU=;
+ b=U9wEliuaUqPlZPue0rYinMeWfEiPE60Ql2JjYmHGnpOi2j/+ddHPA5NThpiRsT8capJRTuo7ek9lgxbUyzVjiI3jZZSmAf00cEvK79w7mBvJxkhfOm0l254Qr1/2bAdLyxtRl50tuItvm/o+GH5oM+B5bhVyv9Ni/cud3LuXVCo=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0106.APCP153.PROD.OUTLOOK.COM (10.170.188.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.0; Mon, 2 Dec 2019 23:59:09 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::704b:f2b6:33d:557a]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::704b:f2b6:33d:557a%9]) with mapi id 15.20.2538.000; Mon, 2 Dec 2019
+ 23:59:09 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Long Li <longli@microsoft.com>
+Subject: RE: [EXTERNAL] [PATCH 2/2] PCI: hv: Add support for protocol 1.3 and
+ support PCI_BUS_RELATIONS2
+Thread-Topic: [EXTERNAL] [PATCH 2/2] PCI: hv: Add support for protocol 1.3 and
+ support PCI_BUS_RELATIONS2
+Thread-Index: AQHVoaFkXIxw3tqrZk6POfn/+X8rjaenViVA
+Date:   Mon, 2 Dec 2019 23:59:09 +0000
+Message-ID: <PU1P153MB0169CFE46920BAEEE11CA9B7BF430@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1574474229-44840-1-git-send-email-longli@linuxonhyperv.com>
+ <1574474229-44840-2-git-send-email-longli@linuxonhyperv.com>
+In-Reply-To: <1574474229-44840-2-git-send-email-longli@linuxonhyperv.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-12-02T23:59:07.6209316Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f258566e-1d09-4e97-950d-9e44dee110b0;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:3:8f1:d9c8:629b:7ac]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d469e003-f1c3-4799-5da5-08d777839f83
+x-ms-traffictypediagnostic: PU1P153MB0106:|PU1P153MB0106:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <PU1P153MB0106191546EC58344414616ABF430@PU1P153MB0106.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0239D46DB6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(376002)(39860400002)(366004)(346002)(189003)(199004)(33656002)(478600001)(10290500003)(2906002)(4326008)(107886003)(66446008)(64756008)(46003)(66476007)(2201001)(9686003)(55016002)(5660300002)(1511001)(22452003)(316002)(7736002)(305945005)(74316002)(256004)(6436002)(10090500001)(110136005)(52536014)(229853002)(2501003)(99286004)(86362001)(102836004)(186003)(8990500004)(6506007)(71190400001)(71200400001)(81156014)(7696005)(25786009)(76176011)(8936002)(11346002)(446003)(81166006)(8676002)(6116002)(76116006)(66556008)(66946007)(6246003)(14454004)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0106;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: dXPe3l5ZheOj+jAcRZ9iBtT+ZqpEirKRYI+woxcpqgnBTEellY69RvSPSrGjlJuJCQSv1u041ncnir83zeBhvzhVLlGUzo2tbcQ54Lfb7+mhCFVnrjNP4gNxy02q66RY2x39ffNfRLTE0C4yUOEO9aHu25Uplis/REFAXXRjCNdLJfCPxAfnrJcTzz7U0C7LhppOGJEcsfsxp0nhnBQ5ZPvZ5AHlYD5sZd8mVERikccteNSz3a6sHBp/3FyyHgzbMTcOl6MR1QbIwsLRFDFqgo9RYFhkpvkBcXrfp2fNlurlaReL/a5HgR7yFfjj+PCE5CR8jRAhjRWyTgdYjSuTbo4rPIxZfL4pnckjkxZs3vTQXNT2TJXUpoSFNl9Xwd3UJ5tT2XIofcAMHQf29nJLmXoM1mARnUagS8m4dcPMcYl9hbZ87NvnY9tAk1X/fK6r
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d469e003-f1c3-4799-5da5-08d777839f83
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Dec 2019 23:59:09.2674
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZPAiaL7+Ulvk6KRnZIMdxDsQXs8lBKY2VwFBileeHujXAc7acF7XB6D6J/LSNaPovtpVTbCxM/s8LTKHfC8UOw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Nov 2019 11:05:00 PST (-0800), Atish Patra wrote:
-> As per the new SBI specification, current SBI implementation version
-> is defined as 0.1 and will be removed/replaced in future. Each of the
-> function call in 0.1 is defined as a separate extension which makes
-> easier to replace them one at a time.
->
-> Rename existing implementation to reflect that. This patch is just
-> a preparatory patch for SBI v0.2 and doesn't introduce any functional
-> changes.
->
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> Reviewed-by: Anup Patel <anup@brainfault.org>
-> ---
->  arch/riscv/include/asm/sbi.h | 43 +++++++++++++++++++-----------------
->  1 file changed, 23 insertions(+), 20 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-> index 2570c1e683d3..96aaee270ded 100644
-> --- a/arch/riscv/include/asm/sbi.h
-> +++ b/arch/riscv/include/asm/sbi.h
-> @@ -9,17 +9,17 @@
->  #include <linux/types.h>
->
->  #ifdef CONFIG_RISCV_SBI
-> -#define SBI_SET_TIMER 0
-> -#define SBI_CONSOLE_PUTCHAR 1
-> -#define SBI_CONSOLE_GETCHAR 2
-> -#define SBI_CLEAR_IPI 3
-> -#define SBI_SEND_IPI 4
-> -#define SBI_REMOTE_FENCE_I 5
-> -#define SBI_REMOTE_SFENCE_VMA 6
-> -#define SBI_REMOTE_SFENCE_VMA_ASID 7
-> -#define SBI_SHUTDOWN 8
-> +#define SBI_EXT_0_1_SET_TIMER 0x0
-> +#define SBI_EXT_0_1_CONSOLE_PUTCHAR 0x1
-> +#define SBI_EXT_0_1_CONSOLE_GETCHAR 0x2
-> +#define SBI_EXT_0_1_CLEAR_IPI 0x3
-> +#define SBI_EXT_0_1_SEND_IPI 0x4
-> +#define SBI_EXT_0_1_REMOTE_FENCE_I 0x5
-> +#define SBI_EXT_0_1_REMOTE_SFENCE_VMA 0x6
-> +#define SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID 0x7
-> +#define SBI_EXT_0_1_SHUTDOWN 0x8
->
-> -#define SBI_CALL(which, arg0, arg1, arg2, arg3) ({		\
-> +#define SBI_CALL(which, arg0, arg1, arg2, arg3) ({             \
->  	register uintptr_t a0 asm ("a0") = (uintptr_t)(arg0);	\
->  	register uintptr_t a1 asm ("a1") = (uintptr_t)(arg1);	\
->  	register uintptr_t a2 asm ("a2") = (uintptr_t)(arg2);	\
-> @@ -43,48 +43,50 @@
->
->  static inline void sbi_console_putchar(int ch)
->  {
-> -	SBI_CALL_1(SBI_CONSOLE_PUTCHAR, ch);
-> +	SBI_CALL_1(SBI_EXT_0_1_CONSOLE_PUTCHAR, ch);
->  }
->
->  static inline int sbi_console_getchar(void)
->  {
-> -	return SBI_CALL_0(SBI_CONSOLE_GETCHAR);
-> +	return SBI_CALL_0(SBI_EXT_0_1_CONSOLE_GETCHAR);
->  }
->
->  static inline void sbi_set_timer(uint64_t stime_value)
->  {
->  #if __riscv_xlen == 32
-> -	SBI_CALL_2(SBI_SET_TIMER, stime_value, stime_value >> 32);
-> +	SBI_CALL_2(SBI_EXT_0_1_SET_TIMER, stime_value,
-> +			  stime_value >> 32);
->  #else
-> -	SBI_CALL_1(SBI_SET_TIMER, stime_value);
-> +	SBI_CALL_1(SBI_EXT_0_1_SET_TIMER, stime_value);
->  #endif
->  }
->
->  static inline void sbi_shutdown(void)
->  {
-> -	SBI_CALL_0(SBI_SHUTDOWN);
-> +	SBI_CALL_0(SBI_EXT_0_1_SHUTDOWN);
->  }
->
->  static inline void sbi_clear_ipi(void)
->  {
-> -	SBI_CALL_0(SBI_CLEAR_IPI);
-> +	SBI_CALL_0(SBI_EXT_0_1_CLEAR_IPI);
->  }
->
->  static inline void sbi_send_ipi(const unsigned long *hart_mask)
->  {
-> -	SBI_CALL_1(SBI_SEND_IPI, hart_mask);
-> +	SBI_CALL_1(SBI_EXT_0_1_SEND_IPI, hart_mask);
->  }
->
->  static inline void sbi_remote_fence_i(const unsigned long *hart_mask)
->  {
-> -	SBI_CALL_1(SBI_REMOTE_FENCE_I, hart_mask);
-> +	SBI_CALL_1(SBI_EXT_0_1_REMOTE_FENCE_I, hart_mask);
->  }
->
->  static inline void sbi_remote_sfence_vma(const unsigned long *hart_mask,
->  					 unsigned long start,
->  					 unsigned long size)
->  {
-> -	SBI_CALL_3(SBI_REMOTE_SFENCE_VMA, hart_mask, start, size);
-> +	SBI_CALL_3(SBI_EXT_0_1_REMOTE_SFENCE_VMA, hart_mask,
-> +			  start, size);
->  }
->
->  static inline void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
-> @@ -92,7 +94,8 @@ static inline void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
->  					      unsigned long size,
->  					      unsigned long asid)
->  {
-> -	SBI_CALL_4(SBI_REMOTE_SFENCE_VMA_ASID, hart_mask, start, size, asid);
-> +	SBI_CALL_4(SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID, hart_mask,
-> +			  start, size, asid);
->  }
->  #else /* CONFIG_RISCV_SBI */
->  /* stubs for code that is only reachable under IS_ENABLED(CONFIG_RISCV_SBI): */
+> From: linux-hyperv-owner@vger.kernel.org
+> Sent: Friday, November 22, 2019 5:57 PM
+>  ...
+> @@ -63,6 +63,7 @@
+>  enum pci_protocol_version_t {
+>  	PCI_PROTOCOL_VERSION_1_1 =3D PCI_MAKE_VERSION(1, 1),	/* Win10
+> */
+>  	PCI_PROTOCOL_VERSION_1_2 =3D PCI_MAKE_VERSION(1, 2),	/* RS1 */
+> +	PCI_PROTOCOL_VERSION_1_3 =3D PCI_MAKE_VERSION(1, 3),	/* VB */
+>  };
 
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+What is "VB" ? Can we use a more meaningful name here? :-)
+
+> +struct pci_function_description2 {
+> +	u16	v_id;	/* vendor ID */
+> +	u16	d_id;	/* device ID */
+> +	u8	rev;
+> +	u8	prog_intf;
+> +	u8	subclass;
+> +	u8	base_class;
+> +	u32	subsystem_id;
+> +	union win_slot_encoding win_slot;
+
+space -> TAB?
+
+> +/*
+> + * Set NUMA node for the devices on the bus
+> + */
+> +static void pci_assign_numa_node(struct hv_pcibus_device *hbus)
+
+IMO we'd better add a "hv_" prefix to this function's name, otherwise it lo=
+oks
+more like a generic PCI subsystem API.
+
+> +{
+> +	struct pci_dev *dev;
+> +	struct pci_bus *bus =3D hbus->pci_bus;
+> +	struct hv_pci_dev *hv_dev;
+> +
+> +	list_for_each_entry(dev, &bus->devices, bus_list) {
+> +		hv_dev =3D get_pcichild_wslot(hbus, devfn_to_wslot(dev->devfn));
+> +		if (!hv_dev)
+> +			continue;
+> +
+> +		if (hv_dev->desc.flags & HV_PCI_DEVICE_FLAG_NUMA_AFFINITY)
+> +			set_dev_node(&dev->dev, hv_dev->desc.virtual_numa_node);
+> +	}
+> +}
+
+Can you please give a brief background introduction to dev->numa_node,
+e.g. how is it used here? -- is it used when a PCI device driver (e.g. the =
+mlx
+driver) asks the kernel to allocate memory for DMA, or allocate MSI interru=
+pts?
+How big is the performance gain in the tests? I'm curious as it looks uncle=
+ar
+to me how dev->numa_node is used by the PCI subsystem.
+
+Thanks,
+-- Dexuan
