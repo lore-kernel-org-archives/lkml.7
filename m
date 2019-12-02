@@ -2,272 +2,137 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F41C33CA0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 199A5C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7495620833
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:55:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="COnBxzIO"
+	by mail.kernel.org (Postfix) with ESMTP id EE20120833
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:55:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfLBIzn (ORCPT
+        id S1727312AbfLBIz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 03:55:43 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:38603 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726350AbfLBIzm (ORCPT
+        Mon, 2 Dec 2019 03:55:58 -0500
+Received: from baptiste.telenet-ops.be ([195.130.132.51]:39280 "EHLO
+        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726350AbfLBIz5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 03:55:42 -0500
-X-UUID: e7b80bc0875d4652be082aece5b2176b-20191202
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=uXxPm6Kc6afNppHkjKnTzIzbererUFZh8m/i5JmT/xM=;
-        b=COnBxzIOi4mcndQRlWWKzCDzXQ7rp99wozxSGJv3pu9r0Iby9CqbySqY68+SvXRTpKTFyuwabCYHmCkzlg1sA5/fmYkK2cEucDEQZ7ghwzobavTvzWFBzxhoqL+LzGjwWLNTKQCgTTegOt6v4VFn2b46L35VYH1A3853lbQXUAk=;
-X-UUID: e7b80bc0875d4652be082aece5b2176b-20191202
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <owen.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1631121494; Mon, 02 Dec 2019 16:55:32 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 2 Dec 2019 16:55:26 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 2 Dec 2019 16:54:45 +0800
-Message-ID: <1575276931.3435.2.camel@mtkswgap22>
-Subject: Re: [PATCH v6 5/8] clk: mediatek: Add MT6765 clock support
-From:   Owen Chen <owen.chen@mediatek.com>
-To:     Stephen Boyd <sboyd@kernel.org>
-CC:     Macpaul Lin =?UTF-8?Q?=28=E6=9E=97=E6=99=BA=E6=96=8C=29?= 
-        <Macpaul.Lin@mediatek.com>, Marc Zyngier <marc.zyngier@arm.com>,
-        Mars Cheng =?UTF-8?Q?=28=E9=84=AD=E6=A3=AE=E5=8F=8B=29?= 
-        <Mars.Cheng@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ryder Lee =?UTF-8?Q?=28=E6=9D=8E=E5=BA=9A=E8=AB=BA=29?= 
-        <Ryder.Lee@mediatek.com>, Sean Wang <Sean.Wang@mediatek.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        CC Hwang =?UTF-8?Q?=28=E9=BB=83=E8=87=B4=E9=8A=93=29?= 
-        <cc.hwang@mediatek.com>,
-        "Loda Chou =?UTF-8?Q?=28=E5=91=A8=E5=AE=8F=E9=9C=96=29?=" 
-        <Loda.Chou@mediatek.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Date:   Mon, 2 Dec 2019 16:55:31 +0800
-In-Reply-To: <20190815002721.A71C72083B@mail.kernel.org>
-References: <1562924653-10056-1-git-send-email-macpaul.lin@mediatek.com>
-         <1562924653-10056-6-git-send-email-macpaul.lin@mediatek.com>
-         <20190815002721.A71C72083B@mail.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Mon, 2 Dec 2019 03:55:57 -0500
+Received: from ramsan ([84.195.182.253])
+        by baptiste.telenet-ops.be with bizsmtp
+        id Ywvn2100Q5USYZQ01wvopW; Mon, 02 Dec 2019 09:55:54 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1ibhUh-0002ZA-RE; Mon, 02 Dec 2019 09:55:47 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1ibhUh-0005lK-Oo; Mon, 02 Dec 2019 09:55:47 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2] iio: adc: max9611: Fix too short conversion time delay
+Date:   Mon,  2 Dec 2019 09:55:46 +0100
+Message-Id: <20191202085546.21655-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTA4LTE1IGF0IDA4OjI3ICswODAwLCBTdGVwaGVuIEJveWQgd3JvdGU6DQo+
-IFF1b3RpbmcgTWFjcGF1bCBMaW4gKDIwMTktMDctMTIgMDI6NDM6NDEpDQo+ID4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDY3NjUtYXVkaW8uYyBiL2RyaXZlcnMvY2xr
-L21lZGlhdGVrL2Nsay1tdDY3NjUtYXVkaW8uYw0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+
-ID4gaW5kZXggMDAwMDAwMDAwMDAwLi40MWYxOTM0M2RmYjkNCj4gPiAtLS0gL2Rldi9udWxsDQo+
-ID4gKysrIGIvZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10Njc2NS1hdWRpby5jDQo+ID4gQEAg
-LTAsMCArMSwxMDkgQEANCj4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAN
-Cj4gPiArLyoNCj4gPiArICogQ29weXJpZ2h0IChjKSAyMDE4IE1lZGlhVGVrIEluYy4NCj4gPiAr
-ICogQXV0aG9yOiBPd2VuIENoZW4gPG93ZW4uY2hlbkBtZWRpYXRlay5jb20+DQo+ID4gKyAqDQo+
-ID4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0
-ZSBpdCBhbmQvb3IgbW9kaWZ5DQo+ID4gKyAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05V
-IEdlbmVyYWwgUHVibGljIExpY2Vuc2UgdmVyc2lvbiAyIGFzDQo+ID4gKyAqIHB1Ymxpc2hlZCBi
-eSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLg0KPiA+ICsgKg0KPiA+ICsgKiBUaGlzIHBy
-b2dyYW0gaXMgZGlzdHJpYnV0ZWQgaW4gdGhlIGhvcGUgdGhhdCBpdCB3aWxsIGJlIHVzZWZ1bCwN
-Cj4gPiArICogYnV0IFdJVEhPVVQgQU5ZIFdBUlJBTlRZOyB3aXRob3V0IGV2ZW4gdGhlIGltcGxp
-ZWQgd2FycmFudHkgb2YNCj4gPiArICogTUVSQ0hBTlRBQklMSVRZIG9yIEZJVE5FU1MgRk9SIEEg
-UEFSVElDVUxBUiBQVVJQT1NFLiAgU2VlIHRoZQ0KPiA+ICsgKiBHTlUgR2VuZXJhbCBQdWJsaWMg
-TGljZW5zZSBmb3IgbW9yZSBkZXRhaWxzLg0KPiANCj4gUGxlYXNlIHVzZSBTUERYIHRhZ3MuDQo+
-IA0KPiA+ICsgKi8NCj4gPiArDQo+ID4gKyNpbmNsdWRlIDxsaW51eC9jbGstcHJvdmlkZXIuaD4N
-Cj4gPiArI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KPiA+ICsNCj4gPiArI2lu
-Y2x1ZGUgImNsay1tdGsuaCINCj4gPiArI2luY2x1ZGUgImNsay1nYXRlLmgiDQo+ID4gKw0KPiA+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ2NzY1LXZjb2RlYy5jIGIv
-ZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10Njc2NS12Y29kZWMuYw0KPiA+IG5ldyBmaWxlIG1v
-ZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi5lYjlhZTFjMmM5OWMNCj4gPiAtLS0g
-L2Rldi9udWxsDQo+ID4gKysrIGIvZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10Njc2NS12Y29k
-ZWMuYw0KPiA+IEBAIC0wLDAgKzEsNzkgQEANCj4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZp
-ZXI6IEdQTC0yLjANCj4gPiArLyoNCj4gPiArICogQ29weXJpZ2h0IChjKSAyMDE4IE1lZGlhVGVr
-IEluYy4NCj4gPiArICogQXV0aG9yOiBPd2VuIENoZW4gPG93ZW4uY2hlbkBtZWRpYXRlay5jb20+
-DQo+ID4gKyAqDQo+ID4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2Fu
-IHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3IgbW9kaWZ5DQo+ID4gKyAqIGl0IHVuZGVyIHRoZSB0ZXJt
-cyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgdmVyc2lvbiAyIGFzDQo+ID4gKyAq
-IHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLg0KPiA+ICsgKg0KPiA+
-ICsgKiBUaGlzIHByb2dyYW0gaXMgZGlzdHJpYnV0ZWQgaW4gdGhlIGhvcGUgdGhhdCBpdCB3aWxs
-IGJlIHVzZWZ1bCwNCj4gPiArICogYnV0IFdJVEhPVVQgQU5ZIFdBUlJBTlRZOyB3aXRob3V0IGV2
-ZW4gdGhlIGltcGxpZWQgd2FycmFudHkgb2YNCj4gPiArICogTUVSQ0hBTlRBQklMSVRZIG9yIEZJ
-VE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFLiAgU2VlIHRoZQ0KPiA+ICsgKiBHTlUgR2Vu
-ZXJhbCBQdWJsaWMgTGljZW5zZSBmb3IgbW9yZSBkZXRhaWxzLg0KPiA+ICsgKi8NCj4gDQo+IFNQ
-RFggdGFncy4NCj4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1t
-dDY3NjUuYyBiL2RyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDY3NjUuYw0KPiA+IG5ldyBmaWxl
-IG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi5mNzE2YTQ4YTkyNmQNCj4gPiAt
-LS0gL2Rldi9udWxsDQo+ID4gKysrIGIvZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10Njc2NS5j
-DQo+ID4gQEAgLTAsMCArMSw5NjEgQEANCj4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6
-IEdQTC0yLjANCj4gPiArLyoNCj4gPiArICogQ29weXJpZ2h0IChjKSAyMDE4IE1lZGlhVGVrIElu
-Yy4NCj4gPiArICogQXV0aG9yOiBPd2VuIENoZW4gPG93ZW4uY2hlbkBtZWRpYXRlay5jb20+DQo+
-ID4gKyAqDQo+ID4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJl
-ZGlzdHJpYnV0ZSBpdCBhbmQvb3IgbW9kaWZ5DQo+ID4gKyAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBv
-ZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgdmVyc2lvbiAyIGFzDQo+ID4gKyAqIHB1
-Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLg0KPiA+ICsgKg0KPiA+ICsg
-KiBUaGlzIHByb2dyYW0gaXMgZGlzdHJpYnV0ZWQgaW4gdGhlIGhvcGUgdGhhdCBpdCB3aWxsIGJl
-IHVzZWZ1bCwNCj4gPiArICogYnV0IFdJVEhPVVQgQU5ZIFdBUlJBTlRZOyB3aXRob3V0IGV2ZW4g
-dGhlIGltcGxpZWQgd2FycmFudHkgb2YNCj4gPiArICogTUVSQ0hBTlRBQklMSVRZIG9yIEZJVE5F
-U1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFLiAgU2VlIHRoZQ0KPiA+ICsgKiBHTlUgR2VuZXJh
-bCBQdWJsaWMgTGljZW5zZSBmb3IgbW9yZSBkZXRhaWxzLg0KPiANCj4gU1BEWCB0YWdzLg0KPiAN
-Cj4gPiArICovDQo+ID4gKw0KPiA+ICsjaW5jbHVkZSA8bGludXgvY2xrLXByb3ZpZGVyLmg+DQo+
-ID4gKyNpbmNsdWRlIDxsaW51eC9vZi5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvb2ZfYWRkcmVz
-cy5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvc2xhYi5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgv
-bWZkL3N5c2Nvbi5oPg0KPiANCj4gSXMgdGhpcyB1c2VkPyBNYXliZSBJIGRlbGV0ZWQgaXQuDQo+
-IA0KPiA+ICsjaW5jbHVkZSA8bGludXgvb2ZfZGV2aWNlLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51
-eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCj4gWy4uLl0NCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBj
-aGFyICogY29uc3QgYXhpX3BhcmVudHNbXSA9IHsNCj4gPiArICAgICAgICJjbGsyNm0iLA0KPiA+
-ICsgICAgICAgInN5c3BsbF9kNyIsDQo+ID4gKyAgICAgICAic3lzcGxsMV9kNCIsDQo+ID4gKyAg
-ICAgICAic3lzcGxsM19kMiINCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBjaGFy
-ICogY29uc3QgbWVtX3BhcmVudHNbXSA9IHsNCj4gPiArICAgICAgICJjbGsyNm0iLA0KPiA+ICsg
-ICAgICAgImRtcGxsX2NrIiwNCj4gPiArICAgICAgICJhcGxsMV9jayINCj4gPiArfTsNCj4gPiAr
-DQo+ID4gK3N0YXRpYyBjb25zdCBjaGFyICogY29uc3QgbW1fcGFyZW50c1tdID0gew0KPiA+ICsg
-ICAgICAgImNsazI2bSIsDQo+ID4gKyAgICAgICAibW1wbGxfY2siLA0KPiA+ICsgICAgICAgInN5
-c3BsbDFfZDIiLA0KPiA+ICsgICAgICAgInN5c3BsbF9kNSIsDQo+ID4gKyAgICAgICAic3lzcGxs
-MV9kNCIsDQo+ID4gKyAgICAgICAidW5pdnBsbF9kNSIsDQo+ID4gKyAgICAgICAidW5pdnBsbDFf
-ZDIiLA0KPiA+ICsgICAgICAgIm1tcGxsX2QyIg0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RhdGlj
-IGNvbnN0IGNoYXIgKiBjb25zdCBzY3BfcGFyZW50c1tdID0gew0KPiA+ICsgICAgICAgImNsazI2
-bSIsDQo+ID4gKyAgICAgICAic3lzcGxsNF9kMiIsDQo+ID4gKyAgICAgICAidW5pdnBsbDJfZDIi
-LA0KPiA+ICsgICAgICAgInN5c3BsbDFfZDIiLA0KPiA+ICsgICAgICAgInVuaXZwbGwxX2QyIiwN
-Cj4gPiArICAgICAgICJzeXNwbGxfZDMiLA0KPiA+ICsgICAgICAgInVuaXZwbGxfZDMiDQo+ID4g
-K307DQo+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IG1mZ19wYXJlbnRzW10g
-PSB7DQo+ID4gKyAgICAgICAiY2xrMjZtIiwNCj4gPiArICAgICAgICJtZmdwbGxfY2siLA0KPiA+
-ICsgICAgICAgInN5c3BsbF9kMyIsDQo+ID4gKyAgICAgICAidW5pdnBsbF9kMyINCj4gPiArfTsN
-Cj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBjaGFyICogY29uc3QgYXRiX3BhcmVudHNbXSA9IHsN
-Cj4gPiArICAgICAgICJjbGsyNm0iLA0KPiA+ICsgICAgICAgInN5c3BsbDFfZDQiLA0KPiA+ICsg
-ICAgICAgInN5c3BsbDFfZDIiDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3QgY2hh
-ciAqIGNvbnN0IGNhbXRnX3BhcmVudHNbXSA9IHsNCj4gPiArICAgICAgICJjbGsyNm0iLA0KPiA+
-ICsgICAgICAgInVzYjIwXzE5Mm1fZDgiLA0KPiA+ICsgICAgICAgInVuaXZwbGwyX2Q4IiwNCj4g
-PiArICAgICAgICJ1c2IyMF8xOTJtX2Q0IiwNCj4gPiArICAgICAgICJ1bml2cGxsMl9kMzIiLA0K
-PiA+ICsgICAgICAgInVzYjIwXzE5Mm1fZDE2IiwNCj4gPiArICAgICAgICJ1c2IyMF8xOTJtX2Qz
-MiINCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBjaGFyICogY29uc3QgdWFydF9w
-YXJlbnRzW10gPSB7DQo+ID4gKyAgICAgICAiY2xrMjZtIiwNCj4gPiArICAgICAgICJ1bml2cGxs
-Ml9kOCINCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBjaGFyICogY29uc3Qgc3Bp
-X3BhcmVudHNbXSA9IHsNCj4gPiArICAgICAgICJjbGsyNm0iLA0KPiA+ICsgICAgICAgInN5c3Bs
-bDNfZDIiLA0KPiA+ICsgICAgICAgInN5c3BsbDRfZDIiLA0KPiA+ICsgICAgICAgInN5c3BsbDJf
-ZDQiDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IG1zZGM1
-aGNsa19wYXJlbnRzW10gPSB7DQo+ID4gKyAgICAgICAiY2xrMjZtIiwNCj4gPiArICAgICAgICJz
-eXNwbGwxX2QyIiwNCj4gPiArICAgICAgICJ1bml2cGxsMV9kNCIsDQo+ID4gKyAgICAgICAic3lz
-cGxsMl9kMiINCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBjaGFyICogY29uc3Qg
-bXNkYzUwXzBfcGFyZW50c1tdID0gew0KPiA+ICsgICAgICAgImNsazI2bSIsDQo+ID4gKyAgICAg
-ICAibXNkY3BsbF9jayIsDQo+ID4gKyAgICAgICAic3lzcGxsMl9kMiIsDQo+ID4gKyAgICAgICAi
-c3lzcGxsNF9kMiIsDQo+ID4gKyAgICAgICAidW5pdnBsbDFfZDIiLA0KPiA+ICsgICAgICAgInN5
-c3BsbDFfZDIiLA0KPiA+ICsgICAgICAgInVuaXZwbGxfZDUiLA0KPiA+ICsgICAgICAgInVuaXZw
-bGwxX2Q0Ig0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RhdGljIGNvbnN0IGNoYXIgKiBjb25zdCBt
-c2RjMzBfMV9wYXJlbnRzW10gPSB7DQo+ID4gKyAgICAgICAiY2xrMjZtIiwNCj4gPiArICAgICAg
-ICJtc2RjcGxsX2QyIiwNCj4gPiArICAgICAgICJ1bml2cGxsMl9kMiIsDQo+ID4gKyAgICAgICAi
-c3lzcGxsMl9kMiIsDQo+ID4gKyAgICAgICAic3lzcGxsMV9kNCIsDQo+ID4gKyAgICAgICAidW5p
-dnBsbDFfZDQiLA0KPiA+ICsgICAgICAgInVzYjIwXzE5Mm1fZDQiLA0KPiA+ICsgICAgICAgInN5
-c3BsbDJfZDQiDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0
-IGF1ZGlvX3BhcmVudHNbXSA9IHsNCj4gPiArICAgICAgICJjbGsyNm0iLA0KPiA+ICsgICAgICAg
-InN5c3BsbDNfZDQiLA0KPiA+ICsgICAgICAgInN5c3BsbDRfZDQiLA0KPiA+ICsgICAgICAgInN5
-c3BsbDFfZDE2Ig0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RhdGljIGNvbnN0IGNoYXIgKiBjb25z
-dCBhdWRfaW50YnVzX3BhcmVudHNbXSA9IHsNCj4gPiArICAgICAgICJjbGsyNm0iLA0KPiA+ICsg
-ICAgICAgInN5c3BsbDFfZDQiLA0KPiA+ICsgICAgICAgInN5c3BsbDRfZDIiDQo+ID4gK307DQo+
-ID4gKw0KPiA+ICtzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IGF1ZF8xX3BhcmVudHNbXSA9IHsN
-Cj4gPiArICAgICAgICJjbGsyNm0iLA0KPiA+ICsgICAgICAgImFwbGwxX2NrIg0KPiA+ICt9Ow0K
-PiA+ICsNCj4gPiArc3RhdGljIGNvbnN0IGNoYXIgKiBjb25zdCBhdWRfZW5nZW4xX3BhcmVudHNb
-XSA9IHsNCj4gPiArICAgICAgICJjbGsyNm0iLA0KPiA+ICsgICAgICAgImFwbGwxX2QyIiwNCj4g
-PiArICAgICAgICJhcGxsMV9kNCIsDQo+ID4gKyAgICAgICAiYXBsbDFfZDgiDQo+ID4gK307DQo+
-ID4gKw0KPiA+ICtzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IGRpc3BfcHdtX3BhcmVudHNbXSA9
-IHsNCj4gPiArICAgICAgICJjbGsyNm0iLA0KPiA+ICsgICAgICAgInVuaXZwbGwyX2Q0IiwNCj4g
-PiArICAgICAgICJ1bHBvc2MxX2QyIiwNCj4gPiArICAgICAgICJ1bHBvc2MxX2Q4Ig0KPiA+ICt9
-Ow0KPiA+ICsNCj4gPiArc3RhdGljIGNvbnN0IGNoYXIgKiBjb25zdCBzc3BtX3BhcmVudHNbXSA9
-IHsNCj4gPiArICAgICAgICJjbGsyNm0iLA0KPiA+ICsgICAgICAgInN5c3BsbDFfZDIiLA0KPiA+
-ICsgICAgICAgInN5c3BsbF9kMyINCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBj
-aGFyICogY29uc3QgZHhjY19wYXJlbnRzW10gPSB7DQo+ID4gKyAgICAgICAiY2xrMjZtIiwNCj4g
-PiArICAgICAgICJzeXNwbGwxX2QyIiwNCj4gPiArICAgICAgICJzeXNwbGwxX2Q0IiwNCj4gPiAr
-ICAgICAgICJzeXNwbGwxX2Q4Ig0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RhdGljIGNvbnN0IGNo
-YXIgKiBjb25zdCB1c2JfdG9wX3BhcmVudHNbXSA9IHsNCj4gPiArICAgICAgICJjbGsyNm0iLA0K
-PiA+ICsgICAgICAgInVuaXZwbGwzX2Q0Ig0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RhdGljIGNv
-bnN0IGNoYXIgKiBjb25zdCBzcG1fcGFyZW50c1tdID0gew0KPiA+ICsgICAgICAgImNsazI2bSIs
-DQo+ID4gKyAgICAgICAic3lzcGxsMV9kOCINCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBj
-b25zdCBjaGFyICogY29uc3QgaTJjX3BhcmVudHNbXSA9IHsNCj4gPiArICAgICAgICJjbGsyNm0i
-LA0KPiA+ICsgICAgICAgInVuaXZwbGwzX2Q0IiwNCj4gPiArICAgICAgICJ1bml2cGxsM19kMiIs
-DQo+ID4gKyAgICAgICAic3lzcGxsMV9kOCIsDQo+ID4gKyAgICAgICAic3lzcGxsMl9kOCINCj4g
-PiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBjaGFyICogY29uc3QgcHdtX3BhcmVudHNb
-XSA9IHsNCj4gPiArICAgICAgICJjbGsyNm0iLA0KPiA+ICsgICAgICAgInVuaXZwbGwzX2Q0IiwN
-Cj4gPiArICAgICAgICJzeXNwbGwxX2Q4Ig0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RhdGljIGNv
-bnN0IGNoYXIgKiBjb25zdCBzZW5pbmZfcGFyZW50c1tdID0gew0KPiA+ICsgICAgICAgImNsazI2
-bSIsDQo+ID4gKyAgICAgICAidW5pdnBsbDFfZDQiLA0KPiA+ICsgICAgICAgInVuaXZwbGwxX2Qy
-IiwNCj4gPiArICAgICAgICJ1bml2cGxsMl9kMiINCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRp
-YyBjb25zdCBjaGFyICogY29uc3QgYWVzX2ZkZV9wYXJlbnRzW10gPSB7DQo+ID4gKyAgICAgICAi
-Y2xrMjZtIiwNCj4gPiArICAgICAgICJtc2RjcGxsX2NrIiwNCj4gPiArICAgICAgICJ1bml2cGxs
-X2QzIiwNCj4gPiArICAgICAgICJ1bml2cGxsMl9kMiIsDQo+ID4gKyAgICAgICAidW5pdnBsbDFf
-ZDIiLA0KPiA+ICsgICAgICAgInN5c3BsbDFfZDIiDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0
-aWMgY29uc3QgY2hhciAqIGNvbnN0IHVscG9zY19wYXJlbnRzW10gPSB7DQo+ID4gKyAgICAgICAi
-Y2xrMjZtIiwNCj4gPiArICAgICAgICJ1bHBvc2MxX2Q0IiwNCj4gPiArICAgICAgICJ1bHBvc2Mx
-X2Q4IiwNCj4gPiArICAgICAgICJ1bHBvc2MxX2QxNiIsDQo+ID4gKyAgICAgICAidWxwb3NjMV9k
-MzIiDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IGNhbXRt
-X3BhcmVudHNbXSA9IHsNCj4gPiArICAgICAgICJjbGsyNm0iLA0KPiA+ICsgICAgICAgInVuaXZw
-bGwxX2Q0IiwNCj4gPiArICAgICAgICJ1bml2cGxsMV9kMiIsDQo+ID4gKyAgICAgICAidW5pdnBs
-bDJfZDIiDQo+ID4gK307DQo+ID4gKw0KPiANCj4gQ2FuIHlvdSBtaWdyYXRlIHRoaXMgZHJpdmVy
-IHRvIHRoZSBuZXcgd2F5IG9mIHNwZWNpZnlpbmcgY2xrIHBhcmVudHM/DQo+IFRoYXQgd2F5IHdl
-IGRvbid0IGp1c3QgaGF2ZSBsaXN0cyBvZiBzdHJpbmdzLg0KPiANCg0KRG8geW91IG1lYW4gaGlk
-ZSB0aGUgc3RyaW5nIGxpc3QgaW5mb3JtYXRpb24gaW5zaWRlIERUUyBmaWxlIG9yIGNsaw0KaGVh
-ZGVyIGZpbGU/DQoNCj4gPiArI2RlZmluZSBJTlZBTElEX1VQREFURV9SRUcgMHhGRkZGRkZGRg0K
-PiA+ICsjZGVmaW5lIElOVkFMSURfVVBEQVRFX1NISUZUIC0xDQo+ID4gKyNkZWZpbmUgSU5WQUxJ
-RF9NVVhfR0FURSAtMQ0KPiA+ICsNCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfbXV4IHRv
-cF9tdXhlc1tdID0gew0KPiA+ICsgICAgICAgLyogQ0xLX0NGR18wICovDQo+ID4gKyAgICAgICBN
-VVhfR0FURV9DTFJfU0VUX1VQRF9GTEFHUyhDTEtfVE9QX0FYSV9TRUwsICJheGlfc2VsIiwgYXhp
-X3BhcmVudHMsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQ0xLX0NGR18wLCBD
-TEtfQ0ZHXzBfU0VULCBDTEtfQ0ZHXzBfQ0xSLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIDAsIDIsIDcsIENMS19DRkdfVVBEQVRFLCAwLCBDTEtfSVNfQ1JJVElDQUwpLA0KPiAN
-Cj4gUGxlYXNlIGFkZCBhIGNvbW1lbnQgd2h5IENMS19JU19DUklUSUNBTCBmbGFnIGlzIHVzZWQg
-aW4gZWFjaCBwbGFjZS4NCj4gDQo+ID4gKyAgICAgICBNVVhfR0FURV9DTFJfU0VUX1VQRF9GTEFH
-UyhDTEtfVE9QX01FTV9TRUwsICJtZW1fc2VsIiwgbWVtX3BhcmVudHMsDQo+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgQ0xLX0NGR18wLCBDTEtfQ0ZHXzBfU0VULCBDTEtfQ0ZHXzBf
-Q0xSLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDgsIDIsIDE1LCBDTEtfQ0ZH
-X1VQREFURSwgMSwgQ0xLX0lTX0NSSVRJQ0FMKSwNCj4gPiArICAgICAgIE1VWF9HQVRFX0NMUl9T
-RVRfVVBEKENMS19UT1BfTU1fU0VMLCAibW1fc2VsIiwgbW1fcGFyZW50cywgQ0xLX0NGR18wLA0K
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgIENMS19DRkdfMF9TRVQsIENMS19DRkdfMF9DTFIs
-IDE2LCAzLCAyMywNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBDTEtfQ0ZHX1VQREFURSwg
-MiksDQo+ID4gKyAgICAgICBNVVhfR0FURV9DTFJfU0VUX1VQRChDTEtfVE9QX1NDUF9TRUwsICJz
-Y3Bfc2VsIiwgc2NwX3BhcmVudHMsIENMS19DRkdfMCwNCj4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICBDTEtfQ0ZHXzBfU0VULCBDTEtfQ0ZHXzBfQ0xSLCAyNCwgMywgMzEsDQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgQ0xLX0NGR19VUERBVEUsIDMpLA0KPiBbLi4uXQ0KPiA+ICsgICAg
-ICAgfSwgew0KPiA+ICsgICAgICAgICAgICAgICAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3
-NjUtdG9wY2tnZW4iLA0KPiA+ICsgICAgICAgICAgICAgICAuZGF0YSA9IGNsa19tdDY3NjVfdG9w
-X3Byb2JlLA0KPiA+ICsgICAgICAgfSwgew0KPiA+ICsgICAgICAgICAgICAgICAuY29tcGF0aWJs
-ZSA9ICJtZWRpYXRlayxtdDY3NjUtaW5mcmFjZmciLA0KPiA+ICsgICAgICAgICAgICAgICAuZGF0
-YSA9IGNsa19tdDY3NjVfaWZyX3Byb2JlLA0KPiA+ICsgICAgICAgfSwgew0KPiA+ICsgICAgICAg
-ICAgICAgICAvKiBzZW50aW5lbCAqLw0KPiA+ICsgICAgICAgfQ0KPiA+ICt9Ow0KPiA+ICsNCj4g
-PiArc3RhdGljIGludCBjbGtfbXQ2NzY1X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBk
-ZXYpDQo+ID4gK3sNCj4gPiArICAgICAgIGludCAoKmNsa19wcm9iZSkoc3RydWN0IHBsYXRmb3Jt
-X2RldmljZSAqZCk7DQo+ID4gKyAgICAgICBpbnQgcjsNCj4gPiArDQo+ID4gKyAgICAgICBjbGtf
-cHJvYmUgPSBvZl9kZXZpY2VfZ2V0X21hdGNoX2RhdGEoJnBkZXYtPmRldik7DQo+ID4gKyAgICAg
-ICBpZiAoIWNsa19wcm9iZSkNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7DQo+
-ID4gKw0KPiA+ICsgICAgICAgciA9IGNsa19wcm9iZShwZGV2KTsNCj4gPiArICAgICAgIGlmIChy
-KQ0KPiA+ICsgICAgICAgICAgICAgICBkZXZfZXJyKCZwZGV2LT5kZXYsDQo+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgImNvdWxkIG5vdCByZWdpc3RlciBjbG9jayBwcm92aWRlcjogJXM6ICVk
-XG4iLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHBkZXYtPm5hbWUsIHIpOw0KPiA+ICsN
-Cj4gPiArICAgICAgIHJldHVybiByOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgc3RydWN0
-IHBsYXRmb3JtX2RyaXZlciBjbGtfbXQ2NzY1X2RydiA9IHsNCj4gPiArICAgICAgIC5wcm9iZSA9
-IGNsa19tdDY3NjVfcHJvYmUsDQo+ID4gKyAgICAgICAuZHJpdmVyID0gew0KPiA+ICsgICAgICAg
-ICAgICAgICAubmFtZSA9ICJjbGstbXQ2NzY1IiwNCj4gPiArICAgICAgICAgICAgICAgLm93bmVy
-ID0gVEhJU19NT0RVTEUsDQo+IA0KPiBSZW1vdmUgdGhpcyBsaW5lLCBwbGF0Zm9ybV9kcml2ZXJf
-cmVnaXN0ZXIoKSBzaG91bGQgdGFrZSBjYXJlIG9mIGl0Lg0KPiANCj4gPiArICAgICAgICAgICAg
-ICAgLm9mX21hdGNoX3RhYmxlID0gb2ZfbWF0Y2hfY2xrX210Njc2NSwNCj4gPiArICAgICAgIH0s
-DQo+ID4gK307DQo+ID4gKw0KDQo=
+As of commit b9ddd5091160793e ("iio: adc: max9611: Fix temperature
+reading in probe"), max9611 initialization sometimes fails on the
+Salvator-X(S) development board with:
+
+    max9611 4-007f: Invalid value received from ADC 0x8000: aborting
+    max9611: probe of 4-007f failed with error -5
+
+The max9611 driver tests communications with the chip by reading the die
+temperature during the probe function, which returns an invalid value.
+
+According to the datasheet, the typical ADC conversion time is 2 ms, but
+no minimum or maximum values are provided.  Maxim Technical Support
+confirmed this was tested with temperature Ta=25 degreeC, and promised
+to inform me if a maximum/minimum value is available (they didn't get
+back to me, so I assume it is not).
+
+However, the driver assumes a 1 ms conversion time.  Usually the
+usleep_range() call returns after more than 1.8 ms, hence it succeeds.
+When it returns earlier, the data register may be read too early, and
+the previous measurement value will be returned.  After boot, this is
+the temperature POR (power-on reset) value, causing the failure above.
+
+Fix this by increasing the delay from 1000-2000 µs to 3000-3300 µs.
+
+Note that this issue has always been present, but it was exposed by the
+aformentioned commit.
+
+Fixes: 69780a3bbc0b1e7e ("iio: adc: Add Maxim max9611 ADC driver")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+---
+After this patch, probing of the two max9611 sensors succeeded during
+ca. 3000 boot cycles on Salvator-X(S) boards, equipped with various
+R-Car H3/M3-W/M3-N SoCs.
+
+v2:
+  - Add Reviewed-by,
+  - Add feedback from Maxim Technical Support,
+  - Increase delay from 2000-2200 µs to 3000-3300 µs to play safe.
+---
+ drivers/iio/adc/max9611.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
+index da073d72f649f829..135793db4fad6b2c 100644
+--- a/drivers/iio/adc/max9611.c
++++ b/drivers/iio/adc/max9611.c
+@@ -89,6 +89,12 @@
+ #define MAX9611_TEMP_SCALE_NUM		1000000
+ #define MAX9611_TEMP_SCALE_DIV		2083
+ 
++/*
++ * Conversion time is 2 ms (typically) at Ta=25 degreeC
++ * No maximum value is known, so play it safe.
++ */
++#define MAX9611_CONV_TIME_US_RANGE	3000, 3300
++
+ struct max9611_dev {
+ 	struct device *dev;
+ 	struct i2c_client *i2c_client;
+@@ -238,9 +244,9 @@ static int max9611_read_single(struct max9611_dev *max9611,
+ 
+ 	/*
+ 	 * need a delay here to make register configuration
+-	 * stabilize. 1 msec at least, from empirical testing.
++	 * stabilize.
+ 	 */
+-	usleep_range(1000, 2000);
++	usleep_range(MAX9611_CONV_TIME_US_RANGE);
+ 
+ 	ret = i2c_smbus_read_word_swapped(max9611->i2c_client, reg_addr);
+ 	if (ret < 0) {
+@@ -507,7 +513,7 @@ static int max9611_init(struct max9611_dev *max9611)
+ 			MAX9611_REG_CTRL2, 0);
+ 		return ret;
+ 	}
+-	usleep_range(1000, 2000);
++	usleep_range(MAX9611_CONV_TIME_US_RANGE);
+ 
+ 	return 0;
+ }
+-- 
+2.17.1
 
