@@ -2,103 +2,173 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4354C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 01:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 914E1C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 01:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC39120748
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 01:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67F7020748
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 01:45:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbfLBBpH (ORCPT
+        id S1727417AbfLBBph convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 20:45:07 -0500
-Received: from mail.phunq.net ([66.183.183.73]:38782 "EHLO phunq.net"
+        Sun, 1 Dec 2019 20:45:37 -0500
+Received: from mga12.intel.com ([192.55.52.136]:45963 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727279AbfLBBpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 20:45:07 -0500
-Received: from [172.16.1.14]
-        by phunq.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-        (Exim 4.92.3)
-        (envelope-from <daniel@phunq.net>)
-        id 1ibalt-00027V-Dm; Sun, 01 Dec 2019 17:45:05 -0800
-Subject: Re: [RFC] Thing 1: Shardmap fox Ext4
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-References: <176a1773-f5ea-e686-ec7b-5f0a46c6f731@phunq.net>
- <20191127142508.GB5143@mit.edu>
-From:   Daniel Phillips <daniel@phunq.net>
-Message-ID: <6b6242d9-f88b-824d-afe9-d42382a93b34@phunq.net>
-Date:   Sun, 1 Dec 2019 17:45:05 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191127142508.GB5143@mit.edu>
-Content-Type: text/plain; charset=utf-8
+        id S1727394AbfLBBph (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Dec 2019 20:45:37 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Dec 2019 17:45:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,267,1571727600"; 
+   d="scan'208";a="212870090"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by orsmga006.jf.intel.com with ESMTP; 01 Dec 2019 17:45:35 -0800
+Received: from fmsmsx605.amr.corp.intel.com (10.18.126.85) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 1 Dec 2019 17:45:34 -0800
+Received: from fmsmsx605.amr.corp.intel.com (10.18.126.85) by
+ fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sun, 1 Dec 2019 17:45:34 -0800
+Received: from shsmsx104.ccr.corp.intel.com (10.239.4.70) by
+ fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Sun, 1 Dec 2019 17:45:34 -0800
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.109]) by
+ SHSMSX104.ccr.corp.intel.com ([169.254.5.90]) with mapi id 14.03.0439.000;
+ Mon, 2 Dec 2019 09:45:31 +0800
+From:   "Zhao, Shirley" <shirley.zhao@intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+CC:     James Bottomley <jejb@linux.ibm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
+        "Zhu, Bing" <bing.zhu@intel.com>,
+        "Chen, Luhai" <luhai.chen@intel.com>
+Subject: RE: One question about trusted key of keyring in Linux kernel.
+Thread-Topic: One question about trusted key of keyring in Linux kernel.
+Thread-Index: AdWZwFKzDBwFOydYTGGk+Aqs+6BIxAANhxEAAoxRZMAACTMHAACeWpwAAHsDLGA=
+Date:   Mon, 2 Dec 2019 01:45:30 +0000
+Message-ID: <A888B25CD99C1141B7C254171A953E8E4909CA4B@shsmsx102.ccr.corp.intel.com>
+References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
+ <1573659978.17949.83.camel@linux.ibm.com>
+ <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
+ <1574796456.4793.248.camel@linux.ibm.com>
+ <20191129230146.GB15726@linux.intel.com>
+In-Reply-To: <20191129230146.GB15726@linux.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZGJjNWFmN2MtZWU2Ny00MGNmLTk2N2UtZWZiMTU0Mjk3OTNiIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoidG1Nck1haHRoaDNJaEhmRlFFXC8zYVo4VHNHS1o2NmhKdU42UlBNdXBoM1o0Y2FrR1d5ck1VbDNOYTZaYU9WYVEifQ==
+x-ctpclassification: CTP_NT
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-27 6:25 a.m., Theodore Y. Ts'o wrote:
-> (3) It's not particularly well documented...
+Hi, Jarkko, 
 
-We regard that as an issue needing attention. Here is a pretty picture
-to get started:
+The rc1 you mentioned is the version for what? 
+How to download it and update it? 
 
-   https://github.com/danielbot/Shardmap/wiki/Shardmap-media-format
+Thanks. 
 
-This needs some explaining. The bottom part of the directory file is
-a simple linear range of directory blocks, with a freespace map block
-appearing once every 4K blocks or so. This freespace mapping needs a
-post of its own, it is somewhat subtle. This will be a couple of posts
-in the future.
+- Shirley 
 
-The Shardmap index appears at a higher logical address, sufficiently
-far above the directory base to accommodate a reasonable number of
-record entry blocks below it. We try not to place the index at so high
-an address that the radix tree gets extra levels, slowing everything
-down.
+-----Original Message-----
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> 
+Sent: Saturday, November 30, 2019 7:02 AM
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Zhao, Shirley <shirley.zhao@intel.com>; James Bottomley <jejb@linux.ibm.com>; Jonathan Corbet <corbet@lwn.net>; linux-integrity@vger.kernel.org; keyrings@vger.kernel.org; linux-doc@vger.kernel.org; linux-kernel@vger.kernel.org; 'Mauro Carvalho Chehab' <mchehab+samsung@kernel.org>; Zhu, Bing <bing.zhu@intel.com>; Chen, Luhai <luhai.chen@intel.com>
+Subject: Re: One question about trusted key of keyring in Linux kernel.
 
-When the index needs to be expanded, either because some shard exceeded
-a threshold number of entries, or the record entry blocks ran into the
-the bottom of the index, then a new index tier with more shards is
-created at a higher logical address. The lower index tier is not copied
-immediately to the upper tier, but rather, each shard is incrementally
-split when it hits the threshold because of an insert. This bounds the
-latency of any given insert to the time needed to split one shard, which
-we target nominally at less than one millisecond. Thus, Shardmap takes a
-modest step in the direction of real time response.
+On Tue, Nov 26, 2019 at 02:27:36PM -0500, Mimi Zohar wrote:
+> On Tue, 2019-11-26 at 07:32 +0000, Zhao, Shirley wrote:
+> > Thanks for your feedback, Mimi. 
+> > But the document of dracut can't solve my problem. 
+> > 
+> > I did more test these days and try to descript my question in more detail. 
+> > 
+> > In my scenario, the trusted key will be sealed into TPM with PCR policy. 
+> > And there are some related options in manual like 
+> >        hash=         hash algorithm name as a string. For TPM 1.x the only
+> >                      allowed value is sha1. For TPM 2.x the allowed values
+> >                      are sha1, sha256, sha384, sha512 and sm3-256.
+> >        policydigest= digest for the authorization policy. must be calculated
+> >                      with the same hash algorithm as specified by the 'hash='
+> >                      option.
+> >        policyhandle= handle to an authorization policy session that defines the
+> >                      same policy and with the same hash algorithm as was used to
+> >                      seal the key. 
+> > 
+> > Here is my test step. 
+> > Firstly, the pcr policy is generated as below: 
+> > $ tpm2_createpolicy --policy-pcr --pcr-list sha256:7 --policy 
+> > pcr7_bin.policy > pcr7.policy
+> > 
+> > Pcr7.policy is the ascii hex of policy:
+> > $ cat pcr7.policy
+> > 321fbd28b60fcc23017d501b133bd5dbf2889814588e8a23510fe10105cb2cc9
+> > 
+> > Then generate the trusted key and configure policydigest and get the key ID: 
+> > $ keyctl add trusted kmk "new 32 keyhandle=0x81000001 hash=sha256 
+> > policydigest=`cat pcr7.policy`" @u
+> > 874117045
+> > 
+> > Save the trusted key. 
+> > $ keyctl pipe 874117045 > kmk.blob
+> > 
+> > Reboot and load the key. 
+> > Start a auth session to generate the policy:
+> > $ tpm2_startauthsession -S session.ctx
+> > session-handle: 0x3000000
+> > $ tpm2_pcrlist -L sha256:7 -o pcr7.sha256 $ tpm2_policypcr -S 
+> > session.ctx -L sha256:7 -F pcr7.sha256 -f pcr7.policy
+> > policy-digest: 
+> > 0x321FBD28B60FCC23017D501B133BD5DBF2889814588E8A23510FE10105CB2CC9
+> > 
+> > Input the policy handle to load trusted key:
+> > $ keyctl add trusted kmk "load `cat kmk.blob` keyhandle=0x81000001 
+> > policyhandle=0x3000000" @u
+> > add_key: Operation not permitted
+> > 
+> > The error should be policy check failed, because I use TPM command to unseal directly with error of policy check failed. 
+> > $ tpm2_unseal -c 0x81000001 -L sha256:7 ERROR on line: "81" in file: 
+> > "./lib/log.h": Tss2_Sys_Unseal(0x99D) - tpm:session(1):a policy 
+> > check failed ERROR on line: "213" in file: "tools/tpm2_unseal.c": Unseal failed!
+> > ERROR on line: "166" in file: "tools/tpm2_tool.c": Unable to run 
+> > tpm2_unseal
+> > 
+> > So my question is:
+> > 1. How to use the option, policydigest, policyhandle?? Is there any example? 
+> > 2. What's wrong with my test step? 
+> 
+> When reporting a problem please state which kernel is experiencing 
+> this problem.  Recently there was a trusted key regression.  Refer to 
+> commit e13cd21ffd50 "tpm: Wrap the buffer from the caller to tpm_buf 
+> in tpm_send()" for the details.
+> 
+> Before delving into this particular problem, first please make sure 
+> you are able to create, save, remove, and then reload a trusted key 
+> not sealed to a PCR.
 
-Each index tier is just a simple array of shards, each of which fills
-up with 8 byte entries from bottom to top. The count of entries in each
-shard is stored separately in a table just below the shard array. So at
-shard load time, we can determine rapidly from the count table which
-tier a given shard belongs to. There are other advantages to breaking
-the shard counts out separately having to do with the persistent memory
-version of Shardmap, interesting details that I will leave for later.
+Please re-test with rc1 when available.
 
-When all lower tier shards have been deleted, the lower tier may be
-overwritten by the expanding record entry block region. In practice,
-a Shardmap file normally has just one tier most of the time, the other
-tier existing only long enough to complete the incremental expansion
-of the shard table, insert by insert.
-
-There is a small header in the lowest record entry block, giving the
-positions of the one or two index tiers, count of entry blocks, and
-various tuning parameters such as maximum shard size and average depth
-of cache hash collision lists.
-
-That is it for media format. Very simple, is it not? My next post
-will explain the Shardmap directory block format, with a focus on
-deficiencies of the traditional Ext2 format that were addressed.
-
-Regards,
-
-Daniel
+/Jarkko
