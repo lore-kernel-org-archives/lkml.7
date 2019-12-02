@@ -2,140 +2,72 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8D6C43141
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3957FC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 879F220748
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:37:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TXlfLkNQ"
+	by mail.kernel.org (Postfix) with ESMTP id 158D52073C
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:38:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbfLBQhx (ORCPT
+        id S1727699AbfLBQiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 11:37:53 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:46246 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727418AbfLBQhx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 11:37:53 -0500
-Received: by mail-il1-f193.google.com with SMTP id t17so186307ilm.13;
-        Mon, 02 Dec 2019 08:37:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2h8wdrXvnncmWCF77v8dSWf6+7HM1jrsdePjMP6K/Bo=;
-        b=TXlfLkNQjoEHdXaQVklK3Uw+gGemK6Mwc1vT8jIQsfyYpzHmNyYPA69GnOfcwaTlSF
-         /OD/sgq4o+c/VtZwFAfZCpFSPkG46jbjpuAz8NHVfUvVCN3TS+NihpI0H9AwAyk5/Ag4
-         sHWcRXNc1WB6HIU3ZrGKfzgcWrEdXauhRg5a46qqDicILaqGpbFk+3I3NfEYjq9XUH0/
-         CZl2b6d04Bde4lILMwDLrhIAOIpB6edUvXTuv+ABmaoXv1MAAcnLZtDgjxA/fDdMp0SN
-         ufwP7Yq4x8lpCflJYiBzDJ37vpRKfFzJeM66N0/l6IKyodBrFMx++srRheGKhfV14O39
-         9O3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2h8wdrXvnncmWCF77v8dSWf6+7HM1jrsdePjMP6K/Bo=;
-        b=FXj4rLRde5ftZzofdF8sFngzkXdZsrBLbNoTt+U9S/c/+D5oAXyzNiR1OxMn8sOfS+
-         vzNoyFglpmjZmzseR8py5vH9vzuqnK2jKWhLlseucRuoTPbkWkx6f4rpopbHyQ0UB7VM
-         9wJZjY1QfWQBfXN3XjFm1cHrBKdC779tNnf88sjNeA3GSb+r6JJbhqYHuefJFdJG8MIu
-         wkoYCA5aZBv2TnUlxHtcrgl3xU3rMTt9LOUn9MEae1Yqi+diW1uM7Yx2F0iMeXDfMh41
-         ltEbVgkEkFl7mFKfp1Rei0av1k3e6Q6JApAi5ajG99OcQxsltmRoUWnfc02n4iy6p38n
-         /KTQ==
-X-Gm-Message-State: APjAAAX/oSpwsY4DTx8orOnAwRX8GRweo0OLS3gB7kMeMdxOtAJR6EhA
-        HiuVxdof5LebJg0nqXegIcSh47lok9bcBQe8uwI=
-X-Google-Smtp-Source: APXvYqzp1Xd703HeRlD50En4AyiDZ1bxrwk+Gf7H2uCn/NWWWtxiWGhbFN7PzEyUWULIA67Tyq2FAV0tgpPc0osRBJ4=
-X-Received: by 2002:a92:b60e:: with SMTP id s14mr68353788ili.178.1575304672579;
- Mon, 02 Dec 2019 08:37:52 -0800 (PST)
+        Mon, 2 Dec 2019 11:38:04 -0500
+Received: from mga04.intel.com ([192.55.52.120]:39001 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727418AbfLBQiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 11:38:04 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 08:38:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,268,1571727600"; 
+   d="scan'208";a="410487760"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 02 Dec 2019 08:38:03 -0800
+Received: from [10.125.253.1] (abudanko-mobl.ccr.corp.intel.com [10.125.253.1])
+        by linux.intel.com (Postfix) with ESMTP id 551175800FF;
+        Mon,  2 Dec 2019 08:38:01 -0800 (PST)
+Subject: Re: [RFC PATCH 3/8] perf: Init/fini PMU specific data
+To:     Andi Kleen <ak@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     kan.liang@linux.intel.com, mingo@redhat.com, acme@kernel.org,
+        tglx@linutronix.de, bp@alien8.de, linux-kernel@vger.kernel.org,
+        eranian@google.com, vitaly.slobodskoy@intel.com
+References: <1574954071-6321-1-git-send-email-kan.liang@linux.intel.com>
+ <1574954071-6321-3-git-send-email-kan.liang@linux.intel.com>
+ <20191202124055.GC2827@hirez.programming.kicks-ass.net>
+ <20191202145957.GM84886@tassilo.jf.intel.com>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <79138ea7-2249-b7e0-3541-8569e593c6e8@linux.intel.com>
+Date:   Mon, 2 Dec 2019 19:38:00 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-References: <20191127141544.4277-1-leo.yan@linaro.org> <20191127141544.4277-2-leo.yan@linaro.org>
-In-Reply-To: <20191127141544.4277-2-leo.yan@linaro.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Mon, 2 Dec 2019 09:37:41 -0700
-Message-ID: <CAOCk7NryqvGjkWYKcHp+bNxqfG7AWsN5tvhx71ZWObvssXV3mA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] tty: serial: msm_serial: Fix lockup for sysrq and oops
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Nicolas Dechesne <nicolas.dechesne@linaro.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        linux-serial@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191202145957.GM84886@tassilo.jf.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 7:16 AM Leo Yan <leo.yan@linaro.org> wrote:
->
-> As the commit 677fe555cbfb ("serial: imx: Fix recursive locking bug")
-> has mentioned the uart driver might cause recursive locking between
-> normal printing and the kernel debugging facilities (e.g. sysrq and
-> oops).  In the commit it gave out suggestion for fixing recursive
-> locking issue: "The solution is to avoid locking in the sysrq case
-> and trylock in the oops_in_progress case."
->
-> This patch follows the suggestion (also used the exactly same code with
-> other serial drivers, e.g. amba-pl011.c) to fix the recursive locking
-> issue, this can avoid stuck caused by deadlock and print out log for
-> sysrq and oops.
->
-> Fixes: 04896a77a97b ("msm_serial: serial driver for MSM7K onboard serial peripheral.")
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 
-Looks sane to me
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+On 02.12.2019 17:59, Andi Kleen wrote:
+>>
+>> This is atricous crap. Also it is completely broken for -RT.
+> 
+> Well can you please suggest how you would implement it instead?
 
-> ---
->  drivers/tty/serial/msm_serial.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
-> index 3657a24913fc..889538182e83 100644
-> --- a/drivers/tty/serial/msm_serial.c
-> +++ b/drivers/tty/serial/msm_serial.c
-> @@ -1576,6 +1576,7 @@ static void __msm_console_write(struct uart_port *port, const char *s,
->         int num_newlines = 0;
->         bool replaced = false;
->         void __iomem *tf;
-> +       int locked = 1;
->
->         if (is_uartdm)
->                 tf = port->membase + UARTDM_TF;
-> @@ -1588,7 +1589,13 @@ static void __msm_console_write(struct uart_port *port, const char *s,
->                         num_newlines++;
->         count += num_newlines;
->
-> -       spin_lock(&port->lock);
-> +       if (port->sysrq)
-> +               locked = 0;
-> +       else if (oops_in_progress)
-> +               locked = spin_trylock(&port->lock);
-> +       else
-> +               spin_lock(&port->lock);
-> +
->         if (is_uartdm)
->                 msm_reset_dm_count(port, count);
->
-> @@ -1624,7 +1631,9 @@ static void __msm_console_write(struct uart_port *port, const char *s,
->                 iowrite32_rep(tf, buf, 1);
->                 i += num_chars;
->         }
-> -       spin_unlock(&port->lock);
-> +
-> +       if (locked)
-> +               spin_unlock(&port->lock);
->  }
->
->  static void msm_console_write(struct console *co, const char *s,
-> --
-> 2.17.1
->
+FWIW,
+An alternative could probably be to make task_ctx_data allocations
+on the nearest context switch in, and obvious drawback is slowdown on
+this critical path, but it could be amortized by static branches.
+
+Thanks,
+Alexey
