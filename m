@@ -2,123 +2,63 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33187C43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C7B2C43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0417D2146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:28:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C7C22146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:29:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727511AbfLBO2o (ORCPT
+        id S1727549AbfLBO34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 09:28:44 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:57231 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727386AbfLBO2n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 09:28:43 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1ibmgp-0007e7-2S; Mon, 02 Dec 2019 15:28:39 +0100
-Message-ID: <3dff516c16dbb8c654293e16c49b4c59d29fd707.camel@pengutronix.de>
-Subject: Re: [PATCH 1/2] soc: imx: gpcv2: Add support for imx8mm
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Adam Ford <aford173@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Date:   Mon, 02 Dec 2019 15:28:38 +0100
-In-Reply-To: <20191129234108.12732-1-aford173@gmail.com>
-References: <20191129234108.12732-1-aford173@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Mon, 2 Dec 2019 09:29:56 -0500
+Received: from ms.lwn.net ([45.79.88.28]:45410 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727435AbfLBO34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 09:29:56 -0500
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 741964FA;
+        Mon,  2 Dec 2019 14:29:55 +0000 (UTC)
+Date:   Mon, 2 Dec 2019 07:29:54 -0700
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Subject: Re: [PULL] Documentation for 5.5
+Message-ID: <20191202072954.0e00ac92@lwn.net>
+In-Reply-To: <20191202001928.GA4146@latitude>
+References: <20191126093002.06ece6dd@lwn.net>
+        <CAHk-=whH-wrF7dx_+NgpYi8pK0vovE2mEFE3sgEYXAQZcPwBjA@mail.gmail.com>
+        <20191130171428.6c09f892@lwn.net>
+        <20191202001928.GA4146@latitude>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-11-29 at 17:41 -0600, Adam Ford wrote:
-> The technical reference manual for both the i.MX8MQ and i.MX8M Mini
-> appear to show the same register definitions and locations for the
-> General Power Controller (GPC).
-> 
-> This patch expands the table of compatible SoC's to include
-> the i.MX8m Mini
-> 
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-> 
-> diff --git a/drivers/soc/imx/gpcv2.c b/drivers/soc/imx/gpcv2.c
-> index b0dffb06c05d..67c54cbb6c81 100644
-> --- a/drivers/soc/imx/gpcv2.c
-> +++ b/drivers/soc/imx/gpcv2.c
-> @@ -641,6 +641,7 @@ static int imx_gpcv2_probe(struct platform_device *pdev)
->  static const struct of_device_id imx_gpcv2_dt_ids[] = {
->  	{ .compatible = "fsl,imx7d-gpc", .data = &imx7_pgc_domain_data, },
->  	{ .compatible = "fsl,imx8mq-gpc", .data = &imx8m_pgc_domain_data, },
-> +	{ .compatible = "fsl,imx8mm-gpc", .data = &imx8m_pgc_domain_data, },
+On Mon, 2 Dec 2019 01:19:28 +0100
+Jonathan Neuschäfer <j.neuschaefer@gmx.net> wrote:
 
-According to the 5.2.5.1 "PGC power domains" chapters in both the i.MX
-8M Dual/8M QuadLite/8M Quad and i.MX 8M Mini Applications Processor
-Reference Manuals (Rev.1), the two SoCs have a different list of power
-domains:
+> On a somewhat related note: "Documentation: networking: device drivers:
+> Remove stray asterisks" was also picked up via the networking tree.
+> Perhaps I should have mentioned that when I became aware(?)
 
-i.MX8MQ:
-	PGC_C0
-	PGC_C1
-	PGC_C2
-	PGC_C3
-	PGC_SCU
-	PGC_MF
-	PGC_OTG1
-	PGC_OTG2
-	PGC_PCIE
-	PGC_MIPI
-	PGC_DDR1
-	PGC_DDR2
-	PGC_VPU
-	PGC_GPU
-	PGC_HDMI
-	PGC_DISP
-	PGC_MIPI_CSI1
-	PGC_MIPI_CSI2
-	PGC_PCIE2
+Yeah, I'm not quite sure why that happened.  Dave M. suggested I take it
+and sent an ack, then it looks like Jeff Kirsher grabbed it as well
+anyway for some reason...?  Oh well, the resulting conflict brought the
+problem to light, at least :)
 
-i.MX8MM:
-	PGC_C0
-	PGC_C1
-	PGC_C2
-	PGC_C3
-	PGC_SCU
-	PGC_NOC
-	PGC_PCIE
-	PGC_OTG1
-	PGC_OTG2
-	PGC_DDR1
-	PGC_DISPMIX
-	GPC_MIPI
-	PGC_GPUMIX
-	PGC_GPU_3D
-	PGC_GPU_2D
-	PGC_VPUMIX
-	PGC_VPU_G1
-	PGC_VPU_G2
-	PGC_VPU_H1
+Thanks,
 
-regards
-Philipp
-
+jon
