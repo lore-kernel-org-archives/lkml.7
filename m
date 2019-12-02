@@ -2,100 +2,105 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FF9C43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 02:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F195C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 02:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B805E214AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 02:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E9DC2146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 02:24:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575253483;
+	bh=bCX0zLHnRAYKwu7QjN9Wg2R3BkNbHuG8UU52n0LnOyY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=LSAczFDgNDZeWXYOLXizkvCi+EXFo/GX6s1YbxRSK30yCIBk6mSC9tdQIuWB/XgY1
+	 giiq534TrKNbd3WzF0bWXp3s7NdZdz3Yvlw1/P2ZN080Am1/1DTqxFZfNXqwy0vXao
+	 GGwFbmbYlsmYKxXTc0Ld4bng9KbmbP4sueazZYGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbfLBCXN (ORCPT
+        id S1727378AbfLBCYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Dec 2019 21:23:13 -0500
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:50555 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727285AbfLBCXM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Dec 2019 21:23:12 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R871e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0TjbqBc0_1575253385;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TjbqBc0_1575253385)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 02 Dec 2019 10:23:06 +0800
-Subject: Re: [PATCH v2 2/3] sched/numa: expose per-task
- pages-migration-failure
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
- <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
- <3931bf05-2939-0499-7660-8cc9a6f71c9a@linux.alibaba.com>
-Message-ID: <c63e9e2c-ea9e-3f61-734c-afa3b92cd5bb@linux.alibaba.com>
-Date:   Mon, 2 Dec 2019 10:22:15 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <3931bf05-2939-0499-7660-8cc9a6f71c9a@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Sun, 1 Dec 2019 21:24:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58228 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727285AbfLBCYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Dec 2019 21:24:42 -0500
+Received: from devnote (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 366E720833;
+        Mon,  2 Dec 2019 02:24:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575253481;
+        bh=bCX0zLHnRAYKwu7QjN9Wg2R3BkNbHuG8UU52n0LnOyY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=wY1eP/G6XCEBWo2esoz0bpaBpVcbJ7JNs6DjR5T1KSAMXzhPEDD/j7ZDlm2tL1rxk
+         ay8nBxsUKj+DKIuVOEryFmfxeAM+5y9P5XOJEcTG8xjqpcwa9cFHxwgKXSzgGYhGiJ
+         EHhcg33opZ1+HsljQX96NlD+1kcnE3UBYVwEPxO0=
+Date:   Mon, 2 Dec 2019 11:24:37 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Anders Roxell <anders.roxell@linaro.org>
+Cc:     paulmck@kernel.org, joel@joelfernandes.org,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        David Miller <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: next-20191122: qemu arm64: WARNING: suspicious RCU usage
+Message-Id: <20191202112437.b7dc520eeea0690623263ad5@kernel.org>
+In-Reply-To: <CADYN=9LGeAzBtgZOwA4ro+KnXp=1J1i7h3Sne6BqHvaf4Z6byA@mail.gmail.com>
+References: <CADYN=9LGeAzBtgZOwA4ro+KnXp=1J1i7h3Sne6BqHvaf4Z6byA@mail.gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Peter,
+Hello,
 
-This has been acked by Mel Gorman, since it is not much related
-with the rest patches, would you like to pick this one now?
+Sorry for replying so late.
 
-Regards,
-Michael Wang
+On Fri, 22 Nov 2019 22:43:56 +0100
+Anders Roxell <anders.roxell@linaro.org> wrote:
 
-On 2019/11/27 上午9:50, 王贇 wrote:
-> NUMA balancing will try to migrate pages between nodes, which
-> could caused by memory policy or numa group aggregation, while
-> the page migration could failed too for eg when the target node
-> run out of memory.
+> Hi,
 > 
-> Since this is critical to the performance, admin should know
-> how serious the problem is, and take actions before it causing
-> too much performance damage, thus this patch expose the counter
-> as 'migfailed' in '/proc/PID/sched'.
+> I'm seeing the following warning when I'm booting an arm64 allmodconfig
+> kernel [1] on linux-next; tag next-20191122, is this anything you've seen
+> before ?
 > 
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Michal Koutný <mkoutny@suse.com>
-> Suggested-by: Mel Gorman <mgorman@suse.de>
-> Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
-> ---
->  kernel/sched/debug.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-> index f7e4579e746c..73c4809c8f37 100644
-> --- a/kernel/sched/debug.c
-> +++ b/kernel/sched/debug.c
-> @@ -848,6 +848,7 @@ static void sched_show_numa(struct task_struct *p, struct seq_file *m)
->  	P(total_numa_faults);
->  	SEQ_printf(m, "current_node=%d, numa_group_id=%d\n",
->  			task_node(p), task_numa_group_id(p));
-> +	SEQ_printf(m, "migfailed=%lu\n", p->numa_faults_locality[2]);
->  	show_numa_stats(p, m);
->  	mpol_put(pol);
->  #endif
-> 
+> The code seems to have introduced a long time ago and the warning was
+> added recently 28875945ba98 ("rcu: Add support for consolidated-RCU
+> reader checking").
+
+I've never seen this but the warning itself is justified.
+
+struct kprobe *get_kprobe(void *addr)
+{
+        struct hlist_head *head;
+        struct kprobe *p;
+
+        head = &kprobe_table[hash_ptr(addr, KPROBE_HASH_BITS)];
+        hlist_for_each_entry_rcu(p, head, hlist) {  <---- this cause the warning
+                if (p->addr == addr)
+                        return p;
+        }
+
+        return NULL;
+}
+
+The kprobe_table itself is protected by kprobe_mutex OR rcu.
+If the caller locks the kprobe_mutex, we can safely access the hash
+table, this is what the register_kprobe does. If not, the caller must
+disable preemption, this happens when a kprobe (breakpoint) is hit.
+
+Thus, the kernel itself is safe, but it should be fixed.
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
