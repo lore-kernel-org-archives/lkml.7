@@ -2,84 +2,97 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A25FC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 11:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19274C43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 11:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08BD620748
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 11:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1F1C2071F
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 11:11:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727478AbfLBLJN (ORCPT
+        id S1727498AbfLBLLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 06:09:13 -0500
-Received: from mx2.suse.de ([195.135.220.15]:54660 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726330AbfLBLJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 06:09:12 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 22851B2F8;
-        Mon,  2 Dec 2019 11:09:11 +0000 (UTC)
-Subject: Re: [PATCH] bcache: add REQ_FUA to avoid data lost in writeback mode
-To:     kungf <wings.wyang@gmail.com>
-Cc:     kent.overstreet@gmail.com, linux-bcache@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191202102409.3980-1-wings.wyang@gmail.com>
-From:   Coly Li <colyli@suse.de>
-Organization: SUSE Labs
-Message-ID: <785fe04f-f841-3083-66db-53fab7bc0577@suse.de>
-Date:   Mon, 2 Dec 2019 19:08:59 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.2.2
+        Mon, 2 Dec 2019 06:11:22 -0500
+Received: from foss.arm.com ([217.140.110.172]:52988 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726330AbfLBLLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 06:11:21 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9783A328;
+        Mon,  2 Dec 2019 03:11:20 -0800 (PST)
+Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A53E3F68E;
+        Mon,  2 Dec 2019 03:11:19 -0800 (PST)
+Date:   Mon, 2 Dec 2019 11:11:14 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 2/2] cpufreq: vexpress-spc: Switch cpumask from topology
+ core to OPP sharing
+Message-ID: <20191202111055.GA16058@bogus>
+References: <20191128101547.519-1-sudeep.holla@arm.com>
+ <20191128101547.519-2-sudeep.holla@arm.com>
+ <20191129114926.GA24793@bogus>
+ <20191202020146.pzjq2gtgo7rzzorx@vireshk-i7>
 MIME-Version: 1.0
-In-Reply-To: <20191202102409.3980-1-wings.wyang@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191202020146.pzjq2gtgo7rzzorx@vireshk-i7>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/12/2 6:24 下午, kungf wrote:
-> data may lost when in the follow scene of writeback mode:
-> 1. client write data1 to bcache
-> 2. client fdatasync
-> 3. bcache flush cache set and backing device
-> if now data1 was not writed back to backing, it was only guaranteed safe in cache.
-> 4.then cache writeback data1 to backing with only REQ_OP_WRITE
-> So data1 was not guaranteed in non-volatile storage,  it may lost if  power interruption 
-> 
+On Mon, Dec 02, 2019 at 07:31:46AM +0530, Viresh Kumar wrote:
+> On 29-11-19, 11:49, Sudeep Holla wrote:
+> > Hi Viresh, Rafael,
+> >
+> > On Thu, Nov 28, 2019 at 10:15:47AM +0000, Sudeep Holla wrote:
+> > > Since commit ca74b316df96 ("arm: Use common cpu_topology structure and
+> > > functions.") the core cpumask has to be modified during cpu hotplug
+> > > operations. So using them to set up cpufreq policy cpumask may be
+> > > incorrect as it may contain only cpus that are online at that instance.
+> > >
+> > > Instead, we can use the cpumask setup by OPP library that contains all
+> > > the cpus sharing OPP table using dev_pm_opp_get_sharing_cpus.
+> > >
+> > > Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> >
+> > This can go independently via PM tree and I can take 1/2 via SoC tree
+> > (as the file is being moved). The problem will be fixed only after both
+> > lands, but this alone won't break the build.
+>
+> Yes, but it will break cpufreq for sure as shared-cpus won't be set by anyone.
+>
 
-Hi,
+It's already broke on hotplug :) but yes works on boot at-least.
 
-Do you encounter such problem in real work load ? With bcache journal, I
-don't see the possibility of data lost with your description.
+> > Or if you guys provide
+> > Ack, I can take both together via ARM SoC team. Let me know.
+>
+> I was planning to take them through cpufreq tree, but that fine if you can do
+> that.
+>
 
-Correct me if I am wrong.
+Arnd moved and compressed few folders in arch/arm/mach-*, and vexpress
+was merged into versatile. Not sure if it's planned for v5.5, so to be
+cautious, I preferred to take it via ARM SoC.
 
-Coly Li
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-> Signed-off-by: kungf <wings.wyang@gmail.com>
-> ---
->  drivers/md/bcache/writeback.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/md/bcache/writeback.c b/drivers/md/bcache/writeback.c
-> index 4a40f9eadeaf..e5cecb60569e 100644
-> --- a/drivers/md/bcache/writeback.c
-> +++ b/drivers/md/bcache/writeback.c
-> @@ -357,7 +357,7 @@ static void write_dirty(struct closure *cl)
->  	 */
->  	if (KEY_DIRTY(&w->key)) {
->  		dirty_init(w);
-> -		bio_set_op_attrs(&io->bio, REQ_OP_WRITE, 0);
-> +		bio_set_op_attrs(&io->bio, REQ_OP_WRITE | REQ_FUA, 0);
->  		io->bio.bi_iter.bi_sector = KEY_START(&w->key);
->  		bio_set_dev(&io->bio, io->dc->bdev);
->  		io->bio.bi_end_io	= dirty_endio;
-> 
+Thanks, I will take them together via ARM SoC
 
+--
+Regards,
+Sudeep
