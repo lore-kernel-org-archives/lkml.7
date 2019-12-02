@@ -2,189 +2,295 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B21FEC43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7E0C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75B6B215E5
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:32:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="iVktsuXg"
+	by mail.kernel.org (Postfix) with ESMTP id 670D5215E5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:32:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbfLBIcF (ORCPT
+        id S1726469AbfLBIcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 03:32:05 -0500
-Received: from mailgw02.mediatek.com ([1.203.163.81]:15694 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726057AbfLBIcF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 03:32:05 -0500
-X-UUID: e22cc0b94bd7479db0bead6734df2fde-20191202
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=GCYL1fCFWq1iA/iY4T+CWQDOn1fK9FOmhCNpgaK8pow=;
-        b=iVktsuXg6evyoWtZ7KNFjn2vjgNq34KyCuvCTVlq68Bj7haY8WAWOFOrpv2zulx/6cjgsohs1BH971DbjfI2yTzPYzMe7lj4zVeLu1BQQH1fM1HgzuO2AkFhT2JHsBGakGcVBiyaQdu1Ebdh2CoV+jVB4SdIrMQzgSRhQ08aPnk=;
-X-UUID: e22cc0b94bd7479db0bead6734df2fde-20191202
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 672596413; Mon, 02 Dec 2019 16:31:46 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 2 Dec 2019 16:31:27 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 2 Dec 2019 16:31:28 +0800
-Message-ID: <1575275504.31913.3.camel@mtksdaap41>
-Subject: Re: [PATCH v1] drm/mediatek: add ctm property support
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Mon, 2 Dec 2019 16:31:44 +0800
-In-Reply-To: <1575275040.31913.1.camel@mtksdaap41>
-References: <1575271892-25117-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1575275040.31913.1.camel@mtksdaap41>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 2 Dec 2019 03:32:21 -0500
+Received: from mga11.intel.com ([192.55.52.93]:63093 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726057AbfLBIcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 03:32:21 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 00:32:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,268,1571727600"; 
+   d="scan'208";a="222345773"
+Received: from shao2-debian.sh.intel.com (HELO [10.239.13.6]) ([10.239.13.6])
+  by orsmga002.jf.intel.com with ESMTP; 02 Dec 2019 00:32:18 -0800
+Subject: Re: [PATCH] x86/pat: Fix off-by-one bugs in interval tree search
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>, mceier@gmail.com,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Davidlohr Bueso <dbueso@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        "Kenneth R. Crudup" <kenny@panix.com>
+References: <20191127005312.GD20422@shao2-debian>
+ <CAJTyqKPstH9PYk1nMuRJWnXUPTf9wAkphPFi9Yfz6PApLVVE0Q@mail.gmail.com>
+ <20191130212729.ykxstm5kj2p5ir6q@linux-p48b>
+ <CAJTyqKOp+mV1CfpasschSDO4vEDbshE4GPCB6+aX4rJOYSF=7A@mail.gmail.com>
+ <CAHk-=wh--xwpatv_Rcp3WtCPQtg-RVoXYQj8O+1TSw8os7Jtvw@mail.gmail.com>
+ <20191201104624.GA51279@gmail.com> <20191201144947.GA4167@gmail.com>
+From:   Rong Chen <rong.a.chen@intel.com>
+Message-ID: <45ca8086-b7ce-1561-c7d1-3580872d2ba8@intel.com>
+Date:   Mon, 2 Dec 2019 16:31:52 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: EC37C633580B1C78F6E94A205743CD10F5331807D1C261A3CCCA324DBA6BEE902000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20191201144947.GA4167@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFlvbmdxaWFuZzoNCg0KT24gTW9uLCAyMDE5LTEyLTAyIGF0IDE2OjI0ICswODAwLCBDSyBI
-dSB3cm90ZToNCj4gSGksIFlvbmdxaWFuZzoNCj4gDQo+IE9uIE1vbiwgMjAxOS0xMi0wMiBhdCAx
-NTozMSArMDgwMCwgeW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6DQo+ID4gRnJvbTog
-WW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+DQo+ID4gDQo+ID4gYWRk
-IGN0bSBwcm9wZXJ0eSBzdXBwb3J0DQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogWW9uZ3FpYW5n
-IE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMv
-Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYyAgICAgfCAgNyArKystDQo+ID4gIGRyaXZl
-cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMgfCA1OSArKysrKysrKysrKysr
-KysrKysrKysrKysrKysrLQ0KPiA+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9k
-ZHBfY29tcC5oIHwgIDkgKysrKysNCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCA3MiBpbnNlcnRpb25z
-KCspLCAzIGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
-X2RybV9jcnRjLmMNCj4gPiBpbmRleCA0ZmIzNDZjLi5lN2UzYWE5IDEwMDY0NA0KPiA+IC0tLSBh
-L2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYw0KPiA+ICsrKyBiL2RyaXZl
-cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYw0KPiA+IEBAIC02NjYsMTAgKzY2Niwx
-MyBAQCBzdGF0aWMgdm9pZCBtdGtfZHJtX2NydGNfYXRvbWljX2ZsdXNoKHN0cnVjdCBkcm1fY3J0
-YyAqY3J0YywNCj4gPiAgCWludCBpOw0KPiA+ICANCj4gPiAgCWlmIChjcnRjLT5zdGF0ZS0+Y29s
-b3JfbWdtdF9jaGFuZ2VkKQ0KPiA+IC0JCWZvciAoaSA9IDA7IGkgPCBtdGtfY3J0Yy0+ZGRwX2Nv
-bXBfbnI7IGkrKykNCj4gPiArCQlmb3IgKGkgPSAwOyBpIDwgbXRrX2NydGMtPmRkcF9jb21wX25y
-OyBpKyspIHsNCj4gPiAgCQkJbXRrX2RkcF9nYW1tYV9zZXQobXRrX2NydGMtPmRkcF9jb21wW2ld
-LA0KPiA+ICAJCQkJCSAgY3J0Yy0+c3RhdGUsDQo+ID4gIAkJCQkJICBtdGtfY3J0Y19zdGF0ZS0+
-Y21kcV9oYW5kbGUpOw0KPiA+ICsJCQltdGtfZGRwX2N0bV9zZXQobXRrX2NydGMtPmRkcF9jb21w
-W2ldLCBjcnRjLT5zdGF0ZSk7DQo+IA0KPiBUaGlzIHBhdGNoIGlzIGJhc2VkIG9uIGFub3RoZXIg
-cGF0Y2ggd2hpY2ggc3VwcG9ydCBjbWRxLiBTbyBJIHRoaW5rIHRoaXMNCj4gcGF0Y2ggd291bGQg
-YWxzbyBzdXBwb3J0IGNtZHEuDQo+IA0KPiA+ICsJCX0NCj4gPiArDQo+ID4gICNpZmRlZiBDT05G
-SUdfTVRLX0NNRFENCj4gPiAgCWlmIChtdGtfY3J0Yy0+Y21kcV9jbGllbnQpIHsNCj4gPiAgCQlk
-cm1fYXRvbWljX3N0YXRlX2dldChvbGRfYXRvbWljX3N0YXRlKTsNCj4gPiBAQCAtODkxLDcgKzg5
-NCw3IEBAIGludCBtdGtfZHJtX2NydGNfY3JlYXRlKHN0cnVjdCBkcm1fZGV2aWNlICpkcm1fZGV2
-LA0KPiA+ICAJaWYgKHJldCA8IDApDQo+ID4gIAkJcmV0dXJuIHJldDsNCj4gPiAgCWRybV9tb2Rl
-X2NydGNfc2V0X2dhbW1hX3NpemUoJm10a19jcnRjLT5iYXNlLCBNVEtfTFVUX1NJWkUpOw0KPiA+
-IC0JZHJtX2NydGNfZW5hYmxlX2NvbG9yX21nbXQoJm10a19jcnRjLT5iYXNlLCAwLCBmYWxzZSwg
-TVRLX0xVVF9TSVpFKTsNCj4gPiArCWRybV9jcnRjX2VuYWJsZV9jb2xvcl9tZ210KCZtdGtfY3J0
-Yy0+YmFzZSwgMCwgdHJ1ZSwgTVRLX0xVVF9TSVpFKTsNCj4gDQo+IE9ubHkgTVQ4MTgzIGhhcyBD
-Q09SUiwgSSB0aGluayB5b3Ugc2hvdWxkIGVuYWJsZSBjdG0gYnkgU29DLiAoZ2FtbWEgaGFzDQo+
-IHRoZSBzYW1lIHByb2JsZW0pDQoNCkFtZW5kOiBlbmFibGUgY3RtIGFjY29yZGluZyB0byB0aGUg
-Y3J0YyB3aGljaCBhcyBjdG0gZnVuY3Rpb24uDQoNClJlZ2FyZHMsDQpDSw0KDQo+IA0KPiA+ICAJ
-cHJpdi0+bnVtX3BpcGVzKys7DQo+ID4gICNpZmRlZiBDT05GSUdfTVRLX0NNRFENCj4gPiAgCW10
-a19jcnRjLT5jbWRxX2NsaWVudCA9DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9t
-ZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
-X2RybV9kZHBfY29tcC5jDQo+ID4gaW5kZXggOWNjMTJhZi4uNGJiYmFjNyAxMDA2NDQNCj4gPiAt
-LS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jDQo+ID4gKysr
-IGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYw0KPiA+IEBAIC0z
-OCw3ICszOCwxNSBAQA0KPiA+ICAjZGVmaW5lIENDT1JSX0VOCQkJCUJJVCgwKQ0KPiA+ICAjZGVm
-aW5lIERJU1BfQ0NPUlJfQ0ZHCQkJCTB4MDAyMA0KPiA+ICAjZGVmaW5lIENDT1JSX1JFTEFZX01P
-REUJCQlCSVQoMCkNCj4gPiArI2RlZmluZSBDQ09SUl9FTkdJTkVfRU4JCQkJQklUKDEpDQo+ID4g
-KyNkZWZpbmUgQ0NPUlJfR0FNTUFfT0ZGCQkJCUJJVCgyKQ0KPiA+ICsjZGVmaW5lIENDT1JSX1dH
-QU1VVF9TUkNfQ0xJUAkJCUJJVCgzKQ0KPiA+ICAjZGVmaW5lIERJU1BfQ0NPUlJfU0laRQkJCQkw
-eDAwMzANCj4gPiArI2RlZmluZSBESVNQX0NDT1JSX0NPRUZfMAkJCTB4MDA4MA0KPiA+ICsjZGVm
-aW5lIERJU1BfQ0NPUlJfQ09FRl8xCQkJMHgwMDg0DQo+ID4gKyNkZWZpbmUgRElTUF9DQ09SUl9D
-T0VGXzIJCQkweDAwODgNCj4gPiArI2RlZmluZSBESVNQX0NDT1JSX0NPRUZfMwkJCTB4MDA4Qw0K
-PiA+ICsjZGVmaW5lIERJU1BfQ0NPUlJfQ09FRl80CQkJMHgwMDkwDQo+ID4gIA0KPiA+ICAjZGVm
-aW5lIERJU1BfRElUSEVSX0VOCQkJCTB4MDAwMA0KPiA+ICAjZGVmaW5lIERJVEhFUl9FTgkJCQlC
-SVQoMCkNCj4gPiBAQCAtMTg3LDcgKzE5NSw3IEBAIHN0YXRpYyB2b2lkIG10a19jY29ycl9jb25m
-aWcoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCwgdW5zaWduZWQgaW50IHcsDQo+ID4gIAkJCSAg
-ICAgdW5zaWduZWQgaW50IGJwYywgc3RydWN0IGNtZHFfcGt0ICpjbWRxX3BrdCkNCj4gPiAgew0K
-PiA+ICAJbXRrX2RkcF93cml0ZShjbWRxX3BrdCwgaCA8PCAxNiB8IHcsIGNvbXAsIERJU1BfQ0NP
-UlJfU0laRSk7DQo+ID4gLQltdGtfZGRwX3dyaXRlKGNtZHFfcGt0LCBDQ09SUl9SRUxBWV9NT0RF
-LCBjb21wLCBESVNQX0NDT1JSX0NGRyk7DQo+ID4gKwltdGtfZGRwX3dyaXRlKGNtZHFfcGt0LCBD
-Q09SUl9FTkdJTkVfRU4sIGNvbXAsIERJU1BfQ0NPUlJfQ0ZHKTsNCj4gPiAgfQ0KPiA+ICANCj4g
-PiAgc3RhdGljIHZvaWQgbXRrX2Njb3JyX3N0YXJ0KHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAp
-DQo+ID4gQEAgLTIwMCw2ICsyMDgsNTQgQEAgc3RhdGljIHZvaWQgbXRrX2Njb3JyX3N0b3Aoc3Ry
-dWN0IG10a19kZHBfY29tcCAqY29tcCkNCj4gPiAgCXdyaXRlbF9yZWxheGVkKDB4MCwgY29tcC0+
-cmVncyArIERJU1BfQ0NPUlJfRU4pOw0KPiA+ICB9DQo+ID4gIA0KPiA+ICsvKiBDb252ZXJ0cyBh
-IERSTSBTMzEuMzIgdmFsdWUgdG8gdGhlIEhXIFMwLjExIGZvcm1hdC4gKi8NCj4gPiArc3RhdGlj
-IHUxNiBtdGtfY3RtX3MzMV8zMl90b19zMF8xMSh1NjQgaW4pDQo+ID4gK3sNCj4gPiArCXUxNiBy
-Ow0KPiA+ICsNCj4gPiArCS8qIFNpZ24gYml0LiAqLw0KPiA+ICsJciA9IGluICYgQklUX1VMTCg2
-MykgPyBCSVQoMTEpIDogMDsNCj4gPiArDQo+ID4gKwlpZiAoKGluICYgR0VOTUFTS19VTEwoNjIs
-IDMzKSkgPiAwKSB7DQo+IA0KPiBpZiAoKGluICYgR0VOTUFTS19VTEwoNjIsIDMyKSkgPiAwKSB7
-DQo+IA0KPiA+ICsJCS8qIFdlIGhhdmUgemVybyBpbnRlZ2VyIGJpdHMgc28gd2UgY2FuIG9ubHkg
-c2F0dXJhdGUgaGVyZS4gKi8NCj4gPiArCQlyIHw9IEdFTk1BU0soMTAsIDApOw0KPiA+ICsJfSBl
-bHNlIHsNCj4gPiArCQkvKiBPdGhlcndpc2UgdGFrZSB0aGUgOSBtb3N0IGltcG9ydGFudCBmcmFj
-dGlvbmFsIGJpdHMuICovDQo+ID4gKwkJciB8PSAoaW4gPj4gMjIpICYgR0VOTUFTSygxMCwgMCk7
-DQo+IA0KPiByIHw9IChpbiA+PiAyMSkgJiBHRU5NQVNLKDEwLCAwKTsNCj4gDQo+IFJlZ2FyZHMs
-DQo+IENLDQo+IA0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCXJldHVybiByOw0KPiA+ICt9DQo+ID4g
-Kw0KPiA+ICtzdGF0aWMgdm9pZCBtdGtfY2NvcnJfY3RtX3NldChzdHJ1Y3QgbXRrX2RkcF9jb21w
-ICpjb21wLA0KPiA+ICsJCQkgICAgICBzdHJ1Y3QgZHJtX2NydGNfc3RhdGUgKnN0YXRlKQ0KPiA+
-ICt7DQo+ID4gKwlzdHJ1Y3QgZHJtX3Byb3BlcnR5X2Jsb2IgKmJsb2IgPSBzdGF0ZS0+Y3RtOw0K
-PiA+ICsJc3RydWN0IGRybV9jb2xvcl9jdG0gKmN0bTsNCj4gPiArCWNvbnN0IHU2NCAqaW5wdXQ7
-DQo+ID4gKwl1aW50MTZfdCBjb2VmZnNbOV0gPSB7IDAgfTsNCj4gPiArCWludCBpOw0KPiA+ICsN
-Cj4gPiArCWlmICghYmxvYikNCj4gPiArCQlyZXR1cm47DQo+ID4gKw0KPiA+ICsJY3RtID0gKHN0
-cnVjdCBkcm1fY29sb3JfY3RtICopYmxvYi0+ZGF0YTsNCj4gPiArCWlucHV0ID0gY3RtLT5tYXRy
-aXg7DQo+ID4gKw0KPiA+ICsJZm9yIChpID0gMDsgaSA8IEFSUkFZX1NJWkUoY29lZmZzKTsgaSsr
-KQ0KPiA+ICsJCWNvZWZmc1tpXSA9IG10a19jdG1fczMxXzMyX3RvX3MwXzExKGlucHV0W2ldKTsN
-Cj4gPiArDQo+ID4gKwl3cml0ZWxfcmVsYXhlZChjb2VmZnNbMF0gPDwgMTYgfCBjb2VmZnNbMV0s
-DQo+ID4gKwkJICAgICAgIGNvbXAtPnJlZ3MgKyBESVNQX0NDT1JSX0NPRUZfMCk7DQo+ID4gKwl3
-cml0ZWxfcmVsYXhlZChjb2VmZnNbMl0gPDwgMTYgfCBjb2VmZnNbM10sDQo+ID4gKwkJICAgICAg
-IGNvbXAtPnJlZ3MgKyBESVNQX0NDT1JSX0NPRUZfMSk7DQo+ID4gKwl3cml0ZWxfcmVsYXhlZChj
-b2VmZnNbNF0gPDwgMTYgfCBjb2VmZnNbNV0sDQo+ID4gKwkJICAgICAgIGNvbXAtPnJlZ3MgKyBE
-SVNQX0NDT1JSX0NPRUZfMik7DQo+ID4gKwl3cml0ZWxfcmVsYXhlZChjb2VmZnNbNl0gPDwgMTYg
-fCBjb2VmZnNbN10sDQo+ID4gKwkJICAgICAgIGNvbXAtPnJlZ3MgKyBESVNQX0NDT1JSX0NPRUZf
-Myk7DQo+ID4gKwl3cml0ZWxfcmVsYXhlZChjb2VmZnNbOF0gPDwgMTYsIGNvbXAtPnJlZ3MgKyBE
-SVNQX0NDT1JSX0NPRUZfNCk7DQo+ID4gK30NCj4gPiArDQo+ID4gIHN0YXRpYyB2b2lkIG10a19k
-aXRoZXJfY29uZmlnKHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAsIHVuc2lnbmVkIGludCB3LA0K
-PiA+ICAJCQkgICAgICB1bnNpZ25lZCBpbnQgaCwgdW5zaWduZWQgaW50IHZyZWZyZXNoLA0KPiA+
-ICAJCQkgICAgICB1bnNpZ25lZCBpbnQgYnBjLCBzdHJ1Y3QgY21kcV9wa3QgKmNtZHFfcGt0KQ0K
-PiA+IEBAIC0yNjksNiArMzI1LDcgQEAgc3RhdGljIHZvaWQgbXRrX2dhbW1hX3NldChzdHJ1Y3Qg
-bXRrX2RkcF9jb21wICpjb21wLA0KPiA+ICAJLmNvbmZpZyA9IG10a19jY29ycl9jb25maWcsDQo+
-ID4gIAkuc3RhcnQgPSBtdGtfY2NvcnJfc3RhcnQsDQo+ID4gIAkuc3RvcCA9IG10a19jY29ycl9z
-dG9wLA0KPiA+ICsJLmN0bV9zZXQgPSBtdGtfY2NvcnJfY3RtX3NldCwNCj4gPiAgfTsNCj4gPiAg
-DQo+ID4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2RkcF9jb21wX2Z1bmNzIGRkcF9kaXRoZXIg
-PSB7DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rk
-cF9jb21wLmggYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oDQo+
-ID4gaW5kZXggNWIwYTNkNC4uNTEwMGMzZCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oDQo+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJt
-L21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaA0KPiA+IEBAIC05NSw2ICs5NSw4IEBAIHN0cnVj
-dCBtdGtfZGRwX2NvbXBfZnVuY3Mgew0KPiA+ICAJCQkgIHN0cnVjdCBjbWRxX3BrdCAqY21kcV9w
-a3QpOw0KPiA+ICAJdm9pZCAoKmJnY2xyX2luX29uKShzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21w
-KTsNCj4gPiAgCXZvaWQgKCpiZ2Nscl9pbl9vZmYpKHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAp
-Ow0KPiA+ICsJdm9pZCAoKmN0bV9zZXQpKHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAsDQo+ID4g
-KwkJCXN0cnVjdCBkcm1fY3J0Y19zdGF0ZSAqc3RhdGUpOw0KPiA+ICB9Ow0KPiA+ICANCj4gPiAg
-c3RydWN0IG10a19kZHBfY29tcCB7DQo+ID4gQEAgLTIxMyw2ICsyMTUsMTMgQEAgc3RhdGljIGlu
-bGluZSB2b2lkIG10a19kZHBfY29tcF9iZ2Nscl9pbl9vZmYoc3RydWN0IG10a19kZHBfY29tcCAq
-Y29tcCkNCj4gPiAgCQljb21wLT5mdW5jcy0+YmdjbHJfaW5fb2ZmKGNvbXApOw0KPiA+ICB9DQo+
-ID4gIA0KPiA+ICtzdGF0aWMgaW5saW5lIHZvaWQgbXRrX2RkcF9jdG1fc2V0KHN0cnVjdCBtdGtf
-ZGRwX2NvbXAgKmNvbXAsDQo+ID4gKwkJCQkgICBzdHJ1Y3QgZHJtX2NydGNfc3RhdGUgKnN0YXRl
-KQ0KPiA+ICt7DQo+ID4gKwlpZiAoY29tcC0+ZnVuY3MgJiYgY29tcC0+ZnVuY3MtPmN0bV9zZXQp
-DQo+ID4gKwkJY29tcC0+ZnVuY3MtPmN0bV9zZXQoY29tcCwgc3RhdGUpOw0KPiA+ICt9DQo+ID4g
-Kw0KPiA+ICBpbnQgbXRrX2RkcF9jb21wX2dldF9pZChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUs
-DQo+ID4gIAkJCWVudW0gbXRrX2RkcF9jb21wX3R5cGUgY29tcF90eXBlKTsNCj4gPiAgaW50IG10
-a19kZHBfY29tcF9pbml0KHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZV9ub2RlICpj
-b21wX25vZGUsDQo+IA0KPiANCg0K
+Hi Ingo,
+
+The patch fixes the regression reported by 0day-CI.
+
+    "[LKP] [x86/mm/pat] 8d04a5f97a: phoronix-test-suite.glmark2.0.score 
+-23.7% regression": 
+https://lkml.kernel.org/r/20191127005312.GD20422@shao2-debian
+
+Best Regards,
+Rong Chen
+
+On 12/1/19 10:49 PM, Ingo Molnar wrote:
+> * Ingo Molnar <mingo@kernel.org> wrote:
+>
+>> * Linus Torvalds <torvalds@linux-foundation.org> wrote:
+>>> But the final difference is a real difference where it used to be WC,
+>>> and is now UC-:
+>>>
+>>>      -write-combining @ 0x2000000000-0x2100000000
+>>>      -write-combining @ 0x2000000000-0x2100000000
+>>>      +uncached-minus @ 0x2000000000-0x2100000000
+>>>      +uncached-minus @ 0x2000000000-0x2100000000
+>>>
+>>> which certainly could easily explain the huge performance degradation.
+>> It's not an unconditional regression, as both Boris and me tried to
+>> reproduce it on different systems that do ioremap_wc() as well and didn't
+>> measure a slowdown, but something about the memory layout probably
+>> triggers the tree management bug.
+> Ok, I think I found at least one bug in the new PAT code, the conversion
+> of memtype_check_conflict() is buggy I think:
+>
+>     8d04a5f97a5f: ("x86/mm/pat: Convert the PAT tree to a generic interval tree")
+>
+>          dprintk("Overlap at 0x%Lx-0x%Lx\n", match->start, match->end);
+>          found_type = match->type;
+>   
+> -       node = rb_next(&match->rb);
+> -       while (node) {
+> -               match = rb_entry(node, struct memtype, rb);
+> -
+> -               if (match->start >= end) /* Checked all possible matches */
+> -                       goto success;
+> -
+> -               if (is_node_overlap(match, start, end) &&
+> -                   match->type != found_type) {
+> +       match = memtype_interval_iter_next(match, start, end);
+> +       while (match) {
+> +               if (match->type != found_type)
+>                          goto failure;
+> -               }
+>   
+> -               node = rb_next(&match->rb);
+> +               match = memtype_interval_iter_next(match, start, end);
+>          }
+>
+>
+> Note how the '>= end' condition to end the interval check, got converted
+> into:
+>
+> +       match = memtype_interval_iter_next(match, start, end);
+>
+> This is subtly off by one, because the interval trees interfaces require
+> closed interval parameters:
+>
+>    include/linux/interval_tree_generic.h
+>
+>   /*                                                                            \
+>    * Iterate over intervals intersecting [start;last]                           \
+>    *                                                                            \
+>    * Note that a node's interval intersects [start;last] iff:                   \
+>    *   Cond1: ITSTART(node) <= last                                             \
+>    * and                                                                        \
+>    *   Cond2: start <= ITLAST(node)                                             \
+>    */                                                                           \
+>
+>    ...
+>
+>                  if (ITSTART(node) <= last) {            /* Cond1 */           \
+>                          if (start <= ITLAST(node))      /* Cond2 */           \
+>                                  return node;    /* node is leftmost match */  \
+>
+> [start;last] is a closed interval (note that '<= last' check) - while the
+> PAT 'end' parameter is 1 byte beyond the end of the range, because
+> ioremap() and the other mapping APIs usually use the [start,end)
+> half-open interval, derived from 'size'.
+>
+> This is what ioremap() does for example:
+>
+>          /*
+>           * Mappings have to be page-aligned
+>           */
+>          offset = phys_addr & ~PAGE_MASK;
+>          phys_addr &= PHYSICAL_PAGE_MASK;
+>          size = PAGE_ALIGN(last_addr+1) - phys_addr;
+>
+>          retval = reserve_memtype(phys_addr, (u64)phys_addr + size,
+>                                                  pcm, &new_pcm);
+>
+>
+> phys_addr+size will be on a page boundary, after the last byte of the
+> mapped interval.
+>
+> So the correct parameter to use in the interval tree searches is not
+> 'end' but 'end-1'.
+>
+> This could have relevance if conflicting PAT ranges are exactly adjacent,
+> for example a future WC region is followed immediately by an already
+> mapped UC- region - in this case memtype_check_conflict() would
+> incorrectly deny the WC memtype region and downgrade the memtype to UC-.
+>
+> BTW., rather annoyingly this downgrading is done silently in
+> memtype_check_insert():
+>
+> int memtype_check_insert(struct memtype *new,
+>                           enum page_cache_mode *ret_type)
+> {
+>          int err = 0;
+>
+>          err = memtype_check_conflict(new->start, new->end, new->type, ret_type);
+>          if (err)
+>                  return err;
+>
+>          if (ret_type)
+>                  new->type = *ret_type;
+>
+>          memtype_interval_insert(new, &memtype_rbroot);
+>          return 0;
+> }
+>
+>
+> So on such a conflict we'd just silently get UC- in *ret_type, and write
+> it into the new region, never the wiser ...
+>
+> So assuming that the patch below fixes the primary bug the diagnostics
+> side of ioremap() cache attribute downgrades would be another thing to
+> fix.
+>
+> Anyway, I checked all the interval-tree iterations, and most of them are
+> off by one - but I think the one related to memtype_check_conflict() is
+> the one causing this particular performance regression.
+>
+> The only correct interval-tree searches were these two:
+>
+> arch/x86/mm/pat_interval.c:     match = memtype_interval_iter_first(&memtype_rbroot, 0, ULONG_MAX);
+> arch/x86/mm/pat_interval.c:             match = memtype_interval_iter_next(match, 0, ULONG_MAX);
+>
+> The ULONG_MAX was hiding the off-by-one in plain sight. :-)
+>
+> So it would be nice if everyone who is seeing this bug could test the
+> patch below against Linus's latest tree - does it fix the regression?
+>
+> If not then please send the before/after dump of
+> /sys/kernel/debug/x86/pat_memtype_list - and even if it works please send
+> the dumps so we can double check it all.
+>
+> Note that the bug was benign in the sense of implementing a too strict
+> cache attribute conflict policy and downgrading cache attributes - so
+> AFAICS the worst outcome of this bug would be a performance regression.
+>
+> Patch is only lightly tested, so take care. (Patch is emphatically not
+> signed off yet, because I spent most of the day on this and I don't yet
+> trust my fix - all of the affected sites need to be reviewed more
+> carefully.)
+>
+> Thanks,
+>
+> 	Ingo
+>
+>
+> ====================>
+> From: Ingo Molnar <mingo@kernel.org>
+> Date: Sun, 1 Dec 2019 15:25:50 +0100
+> Subject: [PATCH] x86/pat: Fix off-by-one bugs in interval tree search
+>
+> NOT-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> ---
+>   arch/x86/mm/pat_interval.c | 12 ++++++------
+>   1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/x86/mm/pat_interval.c b/arch/x86/mm/pat_interval.c
+> index 47a1bf30748f..6855362eaf21 100644
+> --- a/arch/x86/mm/pat_interval.c
+> +++ b/arch/x86/mm/pat_interval.c
+> @@ -56,7 +56,7 @@ static struct memtype *memtype_match(u64 start, u64 end, int match_type)
+>   {
+>   	struct memtype *match;
+>   
+> -	match = memtype_interval_iter_first(&memtype_rbroot, start, end);
+> +	match = memtype_interval_iter_first(&memtype_rbroot, start, end-1);
+>   	while (match != NULL && match->start < end) {
+>   		if ((match_type == MEMTYPE_EXACT_MATCH) &&
+>   		    (match->start == start) && (match->end == end))
+> @@ -66,7 +66,7 @@ static struct memtype *memtype_match(u64 start, u64 end, int match_type)
+>   		    (match->start < start) && (match->end == end))
+>   			return match;
+>   
+> -		match = memtype_interval_iter_next(match, start, end);
+> +		match = memtype_interval_iter_next(match, start, end-1);
+>   	}
+>   
+>   	return NULL; /* Returns NULL if there is no match */
+> @@ -79,7 +79,7 @@ static int memtype_check_conflict(u64 start, u64 end,
+>   	struct memtype *match;
+>   	enum page_cache_mode found_type = reqtype;
+>   
+> -	match = memtype_interval_iter_first(&memtype_rbroot, start, end);
+> +	match = memtype_interval_iter_first(&memtype_rbroot, start, end-1);
+>   	if (match == NULL)
+>   		goto success;
+>   
+> @@ -89,12 +89,12 @@ static int memtype_check_conflict(u64 start, u64 end,
+>   	dprintk("Overlap at 0x%Lx-0x%Lx\n", match->start, match->end);
+>   	found_type = match->type;
+>   
+> -	match = memtype_interval_iter_next(match, start, end);
+> +	match = memtype_interval_iter_next(match, start, end-1);
+>   	while (match) {
+>   		if (match->type != found_type)
+>   			goto failure;
+>   
+> -		match = memtype_interval_iter_next(match, start, end);
+> +		match = memtype_interval_iter_next(match, start, end-1);
+>   	}
+>   success:
+>   	if (newtype)
+> @@ -160,7 +160,7 @@ struct memtype *memtype_erase(u64 start, u64 end)
+>   struct memtype *memtype_lookup(u64 addr)
+>   {
+>   	return memtype_interval_iter_first(&memtype_rbroot, addr,
+> -					   addr + PAGE_SIZE);
+> +					   addr + PAGE_SIZE-1);
+>   }
+>   
+>   #if defined(CONFIG_DEBUG_FS)
 
