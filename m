@@ -2,130 +2,156 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C40AC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D85B4C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56E0E20715
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C16820715
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:47:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WoudGpAX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbfLBGqf (ORCPT
+        id S1727454AbfLBGrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 01:46:35 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56616 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727416AbfLBGqc (ORCPT
+        Mon, 2 Dec 2019 01:47:25 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46616 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbfLBGrZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 01:46:32 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB26ga40134774
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 01:46:32 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wm6smf2yx-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 01:46:31 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
-        Mon, 2 Dec 2019 06:46:29 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 2 Dec 2019 06:46:26 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB26kP6b43122710
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Dec 2019 06:46:25 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CA0F211C07A;
-        Mon,  2 Dec 2019 06:46:21 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A783311C0E1;
-        Mon,  2 Dec 2019 06:46:12 +0000 (GMT)
-Received: from oc0525413822.ibm.com (unknown [9.80.214.136])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  2 Dec 2019 06:46:12 +0000 (GMT)
-From:   Ram Pai <linuxram@us.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au
-Cc:     benh@kernel.crashing.org, david@gibson.dropbear.id.au,
-        paulus@ozlabs.org, mdroth@linux.vnet.ibm.com, hch@lst.de,
-        linuxram@us.ibm.com, andmike@us.ibm.com,
-        sukadev@linux.vnet.ibm.com, mst@redhat.com, ram.n.pai@gmail.com,
-        aik@ozlabs.ru, cai@lca.pw, tglx@linutronix.de,
-        bauerman@linux.ibm.com, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/2] powerpc/pseries/iommu: Use dma_iommu_ops for Secure VMs aswell.
-Date:   Sun,  1 Dec 2019 22:45:24 -0800
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1575269124-17885-2-git-send-email-linuxram@us.ibm.com>
-References: <1575269124-17885-1-git-send-email-linuxram@us.ibm.com>
- <1575269124-17885-2-git-send-email-linuxram@us.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19120206-0012-0000-0000-0000036F7831
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120206-0013-0000-0000-000021AB2E5F
-Message-Id: <1575269124-17885-3-git-send-email-linuxram@us.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-01_04:2019-11-29,2019-12-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- suspectscore=0 clxscore=1015 malwarescore=0 adultscore=0 impostorscore=0
- phishscore=0 mlxlogscore=956 spamscore=0 priorityscore=1501
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912020059
+        Mon, 2 Dec 2019 01:47:25 -0500
+Received: by mail-qt1-f195.google.com with SMTP id 38so4345915qtb.13
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Dec 2019 22:47:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=w5F3Y8zqEkCwkUMXUn9FFeKvhwvA4xUSSc7Xy06U26E=;
+        b=WoudGpAXy+WLLgqCY/1HXkL7kxkpmMmaAywYNCPy+DV5kFlauvDt+MVGIj3voqs8EB
+         a4dMaDFhyaHUPnV2HnAODhoa4UJ4Hdpg9plGJqhykWqQX2UZb5wL6ktmuwP2PnILoY/V
+         t4IcagIqscxpDzHd6Ornm0PNMMibtXhiwkbSmQ+uvsXI2QS12RqDEiWpzThWlZcZvgqc
+         ajMSS3bm7BLDbzEAAYh/GMjIL+m6EjZC1VQqHEBHs0lRsKNwebEnA5yF00moDshiqY1v
+         V2+wqSLocate/712Js6yG63IJS0XSPZ2VPeptYYCyzhhFrV6eXdBTGoc5CFKJKHt8yt3
+         2ACQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=w5F3Y8zqEkCwkUMXUn9FFeKvhwvA4xUSSc7Xy06U26E=;
+        b=kA1JAFHPgfALu1XStPB1GEunvYBW9DAWKEAaXGrKRDVkr3+OFv8O2rqJEeZ/2VAvkC
+         1PKONAGPMRXkM9XW04j64qWi5uDr5DALIzkUD7NeMVpvQaFOPzCiXTZOf79bJ2H53IpJ
+         rHSK3e1qJcfqlFbKg4CLb2r6HRp4ercWjTFID50etf12jUs3i2EmFdqfbTj5A8hsnDnM
+         IccqnyKkKiEkD+qv6emfF25bAev0ahL0zMWvFohKZcTJZWlJZErq0120JxyA/4RSn81I
+         59LZi8noz5F+lmL6jhN/x/d6SNudjHbUCGJ71nvmKSyiexSDy18AOduF4mvDcA0UccHW
+         vakQ==
+X-Gm-Message-State: APjAAAXePHdbHt6WIIJtmC3FiS+acfEVkscR/1paLxLgaFHxVUCKFggs
+        4ui5YDpo3xYyS26BcmilONrsy9BdRyrSFHwkIp+5cg==
+X-Google-Smtp-Source: APXvYqyKDu9/tqAvMtHO6VvbWtZqcaxmYBnv+++IWHqBoEDkHy5Y/Zgs72zDEMHhogHxbnZKh2USvOUFIKpcipPq2AA=
+X-Received: by 2002:ac8:ccf:: with SMTP id o15mr65633251qti.380.1575269243204;
+ Sun, 01 Dec 2019 22:47:23 -0800 (PST)
+MIME-Version: 1.0
+References: <000000000000e59aab056e8873ae@google.com> <0000000000000beff305981c5ac6@google.com>
+ <20191124193035.GA4203@ZenIV.linux.org.uk> <20191130110645.GA4405@dimstar.local.net>
+ <CACT4Y+bg7bZOSg0P9VXq8yG2odAJMg6b6N2fXxbamOmKiz3ohw@mail.gmail.com> <20191201000439.GA15496@dimstar.local.net>
+In-Reply-To: <20191201000439.GA15496@dimstar.local.net>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 2 Dec 2019 07:47:11 +0100
+Message-ID: <CACT4Y+YhYaEC2of_6bZ6aZxX_kc3+4Li=MZU-MB1RcNr6Z7iww@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in blkdev_get
+To:     Dmitry Vyukov <dvyukov@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Chris Metcalf <cmetcalf@ezchip.com>, coreteam@netfilter.org,
+        David Miller <davem@davemloft.net>,
+        Chen Gang <gang.chen.5i5j@gmail.com>,
+        Patrick McHardy <kaber@trash.net>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        NetFilter <netfilter-devel@vger.kernel.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit edea902c1c1e ("powerpc/pseries/iommu: Don't use dma_iommu_ops on
-	       secure guests")
-disabled dma_iommu_ops path, for secure VMs. The rationale for disabling
-the dma_iommu_ops path, was to use the dma_direct path, since it had
-inbuilt support for bounce-buffering through SWIOTLB.
+On Sun, Dec 1, 2019 at 1:04 AM Duncan Roe <duncan_roe@optusnet.com.au> wrote:
+>
+> On Sat, Nov 30, 2019 at 04:53:12PM +0100, Dmitry Vyukov wrote:
+> > On Sat, Nov 30, 2019 at 12:06 PM Duncan Roe <duncan_roe@optusnet.com.au> wrote:
+> > > > > syzbot has bisected this bug to:
+> > > > >
+> > > > > commit 77ef8f5177599efd0cedeb52c1950c1bd73fa5e3
+> > > > > Author: Chris Metcalf <cmetcalf@ezchip.com>
+> > > > > Date:   Mon Jan 25 20:05:34 2016 +0000
+> > > > >
+> > > > >     tile kgdb: fix bug in copy to gdb regs, and optimize memset
+> > > > >
+> > > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1131bc0ee00000
+> > > > > start commit:   f5b7769e Revert "debugfs: inode: debugfs_create_dir uses m..
+> > > > > git tree:       upstream
+> > > > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=1331bc0ee00000
+> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=1531bc0ee00000
+> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=709f8187af941e84
+> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=eaeb616d85c9a0afec7d
+> > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=177f898f800000
+> > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=147eb85f800000
+> > > > >
+> > > > > Reported-by: syzbot+eaeb616d85c9a0afec7d@syzkaller.appspotmail.com
+> > > > > Fixes: 77ef8f517759 ("tile kgdb: fix bug in copy to gdb regs, and optimize
+> > > > > memset")
+> > > > >
+> > > > > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> > > >
+> > > > Seriously?  How can the commit in question (limited to arch/tile/kernel/kgdb.c)
+> > > > possibly affect a bug that manages to produce a crash report with
+> > > > RSP: 0018:ffffffff82e03eb8  EFLAGS: 00000282
+> > > > RAX: 0000000000000000 RBX: ffffffff82e00000 RCX: 0000000000000000
+> > > > RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff81088779
+> > > > RBP: ffffffff82e03eb8 R08: 0000000000000000 R09: 0000000000000001
+> > > > R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+> > > > R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff82e00000
+> > > > FS:  0000000000000000(0000) GS:ffff88021fc00000(0000) knlGS:0000000000000000
+> > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > > CR2: 000000c420447ff8 CR3: 0000000213184000 CR4: 00000000001406f0
+> > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > > in it?  Unless something very odd has happened to tile, this crash has
+> > > > been observed on 64bit x86; the names of registers alone are enough
+> > > > to be certain of that.
+> > > >
+> > > > And the binaries produced by an x86 build should not be affected by any
+> > > > changes in arch/tile; not unless something is very wrong with the build
+> > > > system.  It's not even that this commit has fixed an earlier bug that
+> > > > used to mask the one manifested here - it really should have had zero
+> > > > impact on x86 builds, period.
+> > > >
+> > > > So I'm sorry, but I'm calling bullshit.  Something's quite wrong with
+> > > > the bot - either its build system or the bisection process.
+> > >
+> > > The acid test would be: does reverting that commit make the problem go away?
+> > >
+> > > See, for example, https://bugzilla.kernel.org/show_bug.cgi?id=203935
+> > >
+> > > Cheers ... Duncan.
+> >
+> > This is done as part of any bisection by definition, right? The test
+> > was done on the previous commit (effectively this one reverted) and no
+> > crash was observed. Otherwise bisection would have been pointed to a
+> > different commit.
+> >
+> Agree that's what bisecting does. What I had in mind was to make a patch to
+> remove the identified commit, and apply that to the most recent revision
+> possible. Then see if that makes the problem go away.
 
-However dma_iommu_ops is functionally much richer. Depending on the
-capabilities of the platform, it can handle direct DMA; with or without
-bounce buffering, and it can handle indirect DMA. Hence its better to
-leverage the richer functionality supported by dma_iommu_ops.
+I wonder in what percent of cases:
+1. It gives signal different from reverting the commit in place.
+2. The revert can be cleanly applied to head.
+3. The revert does not introduce other bugs.
 
-Renable dma_iommu_ops path for pseries Secure VMs.
-
-Signed-off-by: Ram Pai <linuxram@us.ibm.com>
----
- arch/powerpc/platforms/pseries/iommu.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
-
-diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
-index 0720831..6adf4d3 100644
---- a/arch/powerpc/platforms/pseries/iommu.c
-+++ b/arch/powerpc/platforms/pseries/iommu.c
-@@ -36,7 +36,6 @@
- #include <asm/udbg.h>
- #include <asm/mmzone.h>
- #include <asm/plpar_wrappers.h>
--#include <asm/svm.h>
- #include <asm/ultravisor.h>
- 
- #include "pseries.h"
-@@ -1337,15 +1336,7 @@ void iommu_init_early_pSeries(void)
- 	of_reconfig_notifier_register(&iommu_reconfig_nb);
- 	register_memory_notifier(&iommu_mem_nb);
- 
--	/*
--	 * Secure guest memory is inacessible to devices so regular DMA isn't
--	 * possible.
--	 *
--	 * In that case keep devices' dma_map_ops as NULL so that the generic
--	 * DMA code path will use SWIOTLB to bounce buffers for DMA.
--	 */
--	if (!is_secure_guest())
--		set_pci_dma_ops(&dma_iommu_ops);
-+	set_pci_dma_ops(&dma_iommu_ops);
- }
- 
- static int __init disable_multitce(char *str)
--- 
-1.8.3.1
-
+For this to be worth doing, all these 3 should be reasonably high. I
+can imagine 3 may be high (?), but I am not sure about 1 and 2.
