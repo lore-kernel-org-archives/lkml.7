@@ -2,102 +2,163 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1342C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83821C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 954F52071E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:15:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575310509;
-	bh=jPiVcuaAidjifO58kG4+hCHpnuzdzZqrqEC+SolpAOU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WfG9CHQMwnn0W1vA4vbW1KqdO2Gc0cC01hNxHHAEkdHkd2rKtVgDP6sOx+wQSI2Pg
-	 YBIyzrrN+5Z7HkR08ZrBuBJng2kYOO2VE+mEqpX8sBVZvopqcuH+3COwBHfJT4gi53
-	 jkXDd0BUeAyOgrsYRqaVyAM3GppDRRwO86UK2LCc=
+	by mail.kernel.org (Postfix) with ESMTP id 5FABF20717
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:18:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbfLBSPI (ORCPT
+        id S1727882AbfLBSSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 13:15:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56074 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727670AbfLBSPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 13:15:08 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 074A420718;
-        Mon,  2 Dec 2019 18:15:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575310507;
-        bh=jPiVcuaAidjifO58kG4+hCHpnuzdzZqrqEC+SolpAOU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=P6bhaZwzCNYqu2wRmSwVWP1lQj0PvgQZV5Kj5fZcXqVbd+NH3/s4kDXSgJK/FgUHi
-         2Q61RLf0BQrpim/TpxKnTJUuz3Y80S4xiDyJ5+mYNPHw3LKysj92FXM7TI2d/NdTwS
-         eKuSaewyR5BgM1svvcAdcYqzBeYkaIKP26jHMjHk=
-Date:   Mon, 2 Dec 2019 19:15:05 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     devel@driverdev.osuosl.org, Julia Lawall <julia.lawall@lip6.fr>,
-        linux-kernel@vger.kernel.org,
-        Wambui Karuga <wambui.karugax@gmail.com>
-Subject: Re: [PATCH] staging/octeon: Mark Ethernet driver as BROKEN
-Message-ID: <20191202181505.GA732872@kroah.com>
-References: <20191202141836.9363-1-linux@roeck-us.net>
- <20191202165231.GA728202@kroah.com>
- <20191202173620.GA29323@roeck-us.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191202173620.GA29323@roeck-us.net>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Mon, 2 Dec 2019 13:18:47 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36858 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727721AbfLBSSr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 13:18:47 -0500
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB2II2fP131580
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 13:18:45 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wkm46v2wt-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 13:18:45 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 2 Dec 2019 18:18:41 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 2 Dec 2019 18:18:37 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB2IIaDa52363282
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 2 Dec 2019 18:18:36 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 444FB42041;
+        Mon,  2 Dec 2019 18:18:36 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2E96C4203F;
+        Mon,  2 Dec 2019 18:18:35 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.147.107])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  2 Dec 2019 18:18:35 +0000 (GMT)
+Subject: Re: [PATCH v9 5/6] IMA: Add support to limit measuring keys
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org
+Date:   Mon, 02 Dec 2019 13:18:34 -0500
+In-Reply-To: <18b30666-7c44-f81e-8515-189052007e47@linux.microsoft.com>
+References: <20191127015654.3744-1-nramas@linux.microsoft.com>
+         <20191127015654.3744-6-nramas@linux.microsoft.com>
+         <1574880741.4793.292.camel@linux.ibm.com>
+         <18b30666-7c44-f81e-8515-189052007e47@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19120218-0028-0000-0000-000003C39241
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120218-0029-0000-0000-00002486A8F0
+Message-Id: <1575310714.4793.420.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-02_04:2019-11-29,2019-12-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ spamscore=0 priorityscore=1501 lowpriorityscore=0 clxscore=1015
+ impostorscore=0 adultscore=0 suspectscore=2 mlxlogscore=999 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912020155
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 09:36:20AM -0800, Guenter Roeck wrote:
-> On Mon, Dec 02, 2019 at 05:52:31PM +0100, Greg Kroah-Hartman wrote:
-> > On Mon, Dec 02, 2019 at 06:18:36AM -0800, Guenter Roeck wrote:
-> > > The code doesn't compile due to incompatible pointer errors such as
-> > > 
-> > > drivers/staging/octeon/ethernet-tx.c:649:50: error:
-> > > 	passing argument 1 of 'cvmx_wqe_get_grp' from incompatible pointer type
-> > > 
-> > > This is due to mixing, for example, cvmx_wqe_t with 'struct cvmx_wqe'.
-> > > 
-> > > Unfortunately, one can not just revert the primary offending commit, as doing so
-> > > results in secondary errors. This is made worse by the fact that the "removed"
-> > > typedefs still exist and are used widely outside the staging directory,
-> > > making the entire set of "remove typedef" changes pointless and wrong.
-> > 
-> > Ugh, sorry about that.
-> > 
-> > > Reflect reality and mark the driver as BROKEN.
-> > 
-> > Should I just delete this thing?  No one seems to be using it and there
-> > is no move to get it out of staging at all.
-> > 
-> > Will anyone actually miss it?  It can always come back of someone
-> > does...
-> > 
+On Wed, 2019-11-27 at 16:44 -0800, Lakshmi Ramasubramanian wrote:
+> On 11/27/19 10:52 AM, Mimi Zohar wrote:
 > 
-> All it does is causing trouble and misguided attempts to clean it up.
-> If anything, the whole thing goes into the wrong direction (declare a
-> complete set of dummy functions just to be able to build the driver
-> with COMPILE_TEST ? Seriously ?).
+> Hi Mimi,
 > 
-> I second the motion to drop it. This has been in staging for 10 years.
-> Don't we have some kind of time limit for code in staging ? If not,
-> should we ? If anyone really needs it, that person or group should
-> really invest the time to get it out of staging for good.
+> >> +static bool ima_match_keyring(struct ima_rule_entry *rule,
+> >> +			      const char *keyring)
+> >> +{
+> >> +	/*
+> >> +	 * "keyrings=" is specified in the policy in the format below:
+> >> +	 *   keyrings=.builtin_trusted_keys|.ima|.evm
+> >> +	 *
+> >> +	 * Each keyring name in the option is separated by a '|' and
+> >> +	 * the last keyring name is null terminated.
+> >> +	 *
+> >> +	 * The given keyring is considered matched only if
+> >> +	 * the whole keyring name matched a keyring name specified
+> >> +	 * in the "keyrings=" option.
+> >> +	 */
+> >> +	p = strstr(rule->keyrings, keyring);
+> >> +	if (p) {
+> >> +		/*
+> >> +		 * Found a substring match. Check if the character
+> >> +		 * at the end of the keyring name is | (keyring name
+> >> +		 * separator) or is the terminating null character.
+> >> +		 * If yes, we have a whole string match.
+> >> +		 */
+> >> +		p += strlen(keyring);
+> >> +		if (*p == '|' || *p == '\0')
+> >> +			return true;
 
-10 years?  Ugh, yes, it's time to drop the thing, I'll do so after -rc1
-is out.
+This code checks that the keyring name isn't suffixed, but not
+prefixed.
 
-thanks,
+> >> +	}
+> >> +
+> > 
+> > Using "while strsep()" would simplify this code, removing the need for
+> > such a long comment.
+> > 
+> > Mimi
+> 
+> strsep() modifies the source string (replaces the delimiter with '\0' 
+> and also updates the source string pointer). I am not sure it can be 
+> used for our scenario. Please correct me if I am wrong.
+> 
+> Initial IMA policy:
+> -------------------
+> measure func=KEY_CHECK 
+> keyrings=.ima|.evm|.builtin_trusted_keys|.blacklist template=ima-buf
+> 
+> Policy after adding a key to .ima keyring:
+> ------------------------------------------
+> measure func=KEY_CHECK keyrings=.evm|.builtin_trusted_keys|.blacklist 
+> template=ima-buf
+> 
+> Policy after adding a key to a keyring that is not listed in the policy:
+> ------------------------------------------------------------------------
+> measure func=KEY_CHECK keyrings= template=ima-buf
+> 
+> ********************************************************************************
+> 
+> Please see the description from the man page for strsep():
+> 
+> http://man7.org/linux/man-pages/man3/strsep.3.html
+> 
+> char *strsep(char **stringp, const char *delim);
+> 
+> This function finds the first token in the string *stringp, that is 
+> delimited by one of the bytes in the string delim.  This token is 
+> terminated by overwriting the delimiter with a null byte ('\0'), and 
+> *stringp is updated to point past the token.
 
-greg k-h
+Yes, you would have to make a copy of the string before using
+strsep().  You could always use kstrdup(), remembering to free it, or
+allocate the memory just once, and then just use memcpy.
+
+Mimi
+
