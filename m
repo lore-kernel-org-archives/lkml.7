@@ -2,106 +2,224 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D089C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 788A0C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F01220833
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:25:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="T2szKvc/";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="bBsIqyQt"
+	by mail.kernel.org (Postfix) with ESMTP id 4289C20833
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:25:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727355AbfLBJZH (ORCPT
+        id S1727414AbfLBJZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 04:25:07 -0500
-Received: from a27-21.smtp-out.us-west-2.amazonses.com ([54.240.27.21]:42634
-        "EHLO a27-21.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726087AbfLBJZG (ORCPT
+        Mon, 2 Dec 2019 04:25:11 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:39980 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727356AbfLBJZJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 04:25:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575278705;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type;
-        bh=PsbuLqg3PnKHZC8fFLVJ8BSKlIh+aXX3eRcWBfbOHQk=;
-        b=T2szKvc/XxMT/ZvGa0HxlsftgkKoplO4jc3Ije5Bt9DUIFfHYlwZz9/c83wKnCEa
-        jCicj+RykvK2G+2ZpUW99QF2bzArEe6fgvqdm0MB/pxwn1a9nEIttxWbNf/egYysv+v
-        +FygTZ96NhRjG4VJuzv6s36voeJ6nnOv7ZRCvuXk=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575278705;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type:Feedback-ID;
-        bh=PsbuLqg3PnKHZC8fFLVJ8BSKlIh+aXX3eRcWBfbOHQk=;
-        b=bBsIqyQtxqaJOzQfgUnPNfVvRfUjTSpzldVz+tYN13bdKRO1GMSEkCdv8X8ZN7Bc
-        xUK8KyWiIE0BS/ZUEmH6e3Oxnd2Vv7+2dkVNdoHAWwKCVqy7vbghoZ7ID2a1biurDIZ
-        1O3AujZnUI1FLvkmDcZ+9+7G7ud7aNrn5w6rP60E=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7F829C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Pablo Greco <pgreco@centosproject.org>
-Cc:     Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Roy Luo <royluo@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] mt76: mt7615: Fix build with older compilers
-References: <20191201181716.61892-1-pgreco@centosproject.org>
-Date:   Mon, 2 Dec 2019 09:25:05 +0000
-In-Reply-To: <20191201181716.61892-1-pgreco@centosproject.org> (Pablo Greco's
-        message of "Sun, 1 Dec 2019 15:17:10 -0300")
-Message-ID: <0101016ec5ed7c43-209a11a1-70b1-4151-bf9c-a2c5ce9f5348-000000@us-west-2.amazonses.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Mon, 2 Dec 2019 04:25:09 -0500
+Received: by mail-io1-f72.google.com with SMTP id d1so10132253ioe.7
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 01:25:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=s/fzY9n/Wc759s+X5jwa5PXhW5V1f6rxMUh+sQv+EIU=;
+        b=jGb7CxSHE6maelW3/R9M91+jT/RIp050W52QTnmIMph7ArSSueBEDWOAtmsFOaHA0s
+         vwPgZ0GO/l1D2OT00ZA4kY7QraPhYHHyYIRWpgEA//gkt4Tt3lR3AcXrLqkFkpDc5gts
+         ErKv9EdPNB/vKIvrD2etFVbYYQYrg7+Yi00iljMSUK23fBRmm9tDlz4Fqmqz7vTdJKBr
+         5qOfl7Iu9UYjV4QpjGnRW1hd40jRkz+svdnlOsovXYl7eslZevOhp7EZNnj///mBqO/m
+         ZygkgCjNJsI/CqD1VdqUDOLpRI1PK1CassQXNhhWyeGREAwBn0I4nrsEsgqWfNGah/w9
+         0krQ==
+X-Gm-Message-State: APjAAAVtOyLwqAz3cOwMHlGFrS780C4SemHLB1+APPVtpfgs1aPTsAU1
+        QsZCt8oWK3CCyRylFxx1LpijsKDnDQvSvmP/XvQOWN4wGUVv
+X-Google-Smtp-Source: APXvYqxUgkfSuyTzo7urgNwiNWOccCUAD3r/7Xc6+I7tBgXjkAdKtW2Xb8ndo2wJJNzCx0qC3O1QWtMZvde93oeGiTGB9b+IeVx2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-SES-Outgoing: 2019.12.02-54.240.27.21
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+X-Received: by 2002:a92:8995:: with SMTP id w21mr6775582ilk.231.1575278706708;
+ Mon, 02 Dec 2019 01:25:06 -0800 (PST)
+Date:   Mon, 02 Dec 2019 01:25:06 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000bc5c0e0598b52778@google.com>
+Subject: KASAN: use-after-free Write in as102_release
+From:   syzbot <syzbot+edff65c4ade21b5db190@syzkaller.appspotmail.com>
+To:     allison@lohutok.net, andreyknvl@google.com,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
+        mchehab@kernel.org, rfontana@redhat.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pablo Greco <pgreco@centosproject.org> writes:
+Hello,
 
-> Some compilers (tested with 4.8.5 from CentOS 7) fail properly process
-> FIELD_GET inside an inline function, which ends up in a BUILD_BUG_ON.
-> Convert inline function to a macro.
->
-> Fixes commit bf92e7685100 ("mt76: mt7615: add support for per-chain
-> signal strength reporting")
-> Reported in https://lkml.org/lkml/2019/9/21/146
->
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Pablo Greco <pgreco@centosproject.org>
-> ---
->  drivers/net/wireless/mediatek/mt76/mt7615/mac.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
->
-> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-> index c77adc5d2552..77e395ca2c6a 100644
-> --- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-> @@ -13,10 +13,7 @@
->  #include "../dma.h"
->  #include "mac.h"
->  
-> -static inline s8 to_rssi(u32 field, u32 rxv)
-> -{
-> -	return (FIELD_GET(field, rxv) - 220) / 2;
-> -}
-> +#define to_rssi(field, rxv)		((FIELD_GET(field, rxv) - 220) / 2)
+syzbot found the following crash on:
 
-What about u32_get_bits() instead of FIELD_GET(), would that work? I
-guess chances for that is slim, but it's always a shame to convert a
-function to a macro so we should try other methods first.
+HEAD commit:    32b5e2b2 usb: gadget: add raw-gadget interface
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=1255457ae00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d88612251f7691bd
+dashboard link: https://syzkaller.appspot.com/bug?extid=edff65c4ade21b5db190
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-Or even better if we could fix FIELD_GET() to work with older compilers.
+Unfortunately, I don't have any reproducer for this crash yet.
 
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+edff65c4ade21b5db190@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in atomic_fetch_sub  
+include/asm-generic/atomic-instrumented.h:199 [inline]
+BUG: KASAN: use-after-free in refcount_sub_and_test  
+include/linux/refcount.h:253 [inline]
+BUG: KASAN: use-after-free in refcount_dec_and_test  
+include/linux/refcount.h:281 [inline]
+BUG: KASAN: use-after-free in kref_put include/linux/kref.h:64 [inline]
+BUG: KASAN: use-after-free in as102_release+0x58/0xd8  
+drivers/media/usb/as102/as102_usb_drv.c:458
+Write of size 4 at addr ffff8881adb84140 by task syz-executor.5/16315
+
+CPU: 1 PID: 16315 Comm: syz-executor.5 Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xef/0x16e lib/dump_stack.c:118
+  print_address_description.constprop.0+0x36/0x50 mm/kasan/report.c:374
+  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:506
+  kasan_report+0xe/0x20 mm/kasan/common.c:634
+  check_memory_region_inline mm/kasan/generic.c:185 [inline]
+  check_memory_region+0x128/0x190 mm/kasan/generic.c:192
+  atomic_fetch_sub include/asm-generic/atomic-instrumented.h:199 [inline]
+  refcount_sub_and_test include/linux/refcount.h:253 [inline]
+  refcount_dec_and_test include/linux/refcount.h:281 [inline]
+  kref_put include/linux/kref.h:64 [inline]
+  as102_release+0x58/0xd8 drivers/media/usb/as102/as102_usb_drv.c:458
+  __fput+0x2d7/0x840 fs/file_table.c:280
+  task_work_run+0x13f/0x1c0 kernel/task_work.c:113
+  exit_task_work include/linux/task_work.h:22 [inline]
+  do_exit+0x8ab/0x2bc0 kernel/exit.c:797
+  do_group_exit+0x125/0x340 kernel/exit.c:895
+  get_signal+0x466/0x23c0 kernel/signal.c:2734
+  do_signal+0x88/0x1490 arch/x86/kernel/signal.c:815
+  exit_to_usermode_loop+0x1a2/0x200 arch/x86/entry/common.c:160
+  prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+  do_syscall_64+0x4d1/0x5b0 arch/x86/entry/common.c:304
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45a4e7
+Code: Bad RIP value.
+RSP: 002b:00007f8274f103c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: fffffffffffffffc RBX: 0000000000000000 RCX: 000000000045a4e7
+RDX: 00007f8274f10810 RSI: 0000000080085502 RDI: 0000000000000003
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000003
+R13: 00000000004ca701 R14: 00000000004e2e78 R15: 00000000ffffffff
+
+Allocated by task 17:
+  save_stack+0x1b/0x80 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:510 [inline]
+  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:483
+  kmalloc include/linux/slab.h:556 [inline]
+  kzalloc include/linux/slab.h:690 [inline]
+  as102_usb_probe+0x4e/0x3d0 drivers/media/usb/as102/as102_usb_drv.c:350
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+  device_add+0x1480/0x1c20 drivers/base/core.c:2487
+  usb_set_configuration+0xe67/0x1740 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+  device_add+0x1480/0x1c20 drivers/base/core.c:2487
+  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2537
+  hub_port_connect drivers/usb/core/hub.c:5184 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
+  port_event drivers/usb/core/hub.c:5470 [inline]
+  hub_event+0x1e59/0x3860 drivers/usb/core/hub.c:5552
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2264
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2410
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Freed by task 17:
+  save_stack+0x1b/0x80 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  kasan_set_free_info mm/kasan/common.c:332 [inline]
+  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:471
+  slab_free_hook mm/slub.c:1424 [inline]
+  slab_free_freelist_hook mm/slub.c:1457 [inline]
+  slab_free mm/slub.c:3004 [inline]
+  kfree+0xdc/0x310 mm/slub.c:3956
+  as102_usb_probe.cold+0x133/0x366  
+drivers/media/usb/as102/as102_usb_drv.c:412
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+  device_add+0x1480/0x1c20 drivers/base/core.c:2487
+  usb_set_configuration+0xe67/0x1740 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+  device_add+0x1480/0x1c20 drivers/base/core.c:2487
+  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2537
+  hub_port_connect drivers/usb/core/hub.c:5184 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
+  port_event drivers/usb/core/hub.c:5470 [inline]
+  hub_event+0x1e59/0x3860 drivers/usb/core/hub.c:5552
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2264
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2410
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the object at ffff8881adb84000
+  which belongs to the cache kmalloc-4k of size 4096
+The buggy address is located 320 bytes inside of
+  4096-byte region [ffff8881adb84000, ffff8881adb85000)
+The buggy address belongs to the page:
+page:ffffea0006b6e000 refcount:1 mapcount:0 mapping:ffff8881da00c280  
+index:0x0 compound_mapcount: 0
+raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da00c280
+raw: 0000000000000000 0000000000040004 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8881adb84000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8881adb84080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff8881adb84100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                            ^
+  ffff8881adb84180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8881adb84200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
