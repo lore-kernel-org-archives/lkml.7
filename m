@@ -2,114 +2,148 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32888C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 746F1C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F41072084F
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:10:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575288643;
-	bh=cphmgeAsDWjq+15o1pHung2WwOwRbEiFtNXHzm2Pn+s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DA3/e9/ZerClg4htTJ5GNUJPIVDdAxTtiBzxcaxUF+DwAnCdChqPX6TWMiEQ/oHwI
-	 P1BH5wZexrdEXGR+PpwJH4ZZqo3xsERB5mAe2d0Hn4CDathyTQHgPFeYpXZkDpZVAO
-	 d1uo5KeXlnW5FBjtVC4vPDfuU3S4dwPfs9Dw/IHM=
+	by mail.kernel.org (Postfix) with ESMTP id 557F82071F
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:20:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbfLBMKl (ORCPT
+        id S1727418AbfLBMUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 07:10:41 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36642 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727354AbfLBMKk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 07:10:40 -0500
-Received: by mail-wm1-f66.google.com with SMTP id p17so17106486wma.1;
-        Mon, 02 Dec 2019 04:10:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=H+WNR4Gv7wXCDUGA34sGUVp4d2Py5Z7w/w17ZTUcwFQ=;
-        b=FkGIefBnFAIn4YWM26tn/56KJ0fIicD/2Ti5PnCpw9mEAzAVnUWYB8HZFkVMthf7mO
-         OxV3Y04xyfYZevpNzkPxzQuRgB+OcdxqQ6LJx8bU6WOaK4xLNEdRMjukZOzGHqcz2F3K
-         F+a0xOpSaGQdw9pirQaqXjQUt1S3kaqyoA90mCW8usmPTHD/IVparOHnXHSZ5pxYamLN
-         g7rw4t3WAqM+Z9g3IopZJx0N2W+DVbC8awTc4iPOhDKGNab/JLhsqZkoH0OTqELYj/ER
-         lwIPcu6/NDHVNvWlsryxK3AN91z81hRkzFU+9Tixa4o6+XFs27Pb/c8wgPa2iZXpB9Pz
-         AEkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=H+WNR4Gv7wXCDUGA34sGUVp4d2Py5Z7w/w17ZTUcwFQ=;
-        b=VOCeVrI3XNRUF51KbqmMfsYdJB8CU2hACWrby1GHBJSABUnXbQnNG9DkrAVTURF2Vl
-         zyx9bWwmqJg0rtzQ+sf34e1q0vy6OBKiGvU4tAA37IKOcojo1LbAQJHpuVROnoFEhB/d
-         7nb8mAzDs8e5yZHsV/Str3rPe+caZyDxfAnsI/X3+5UgeyUjyVKx3/GlHJSDEiWtJmki
-         Mcmvvb2b1baTqeax8oPgYd05Mj76XXjGU/xxwRlKXNH5lJFoSnQABnpXJHlwgKM+uOkE
-         1hlKy2jkCfQos+jAxyPZS2r2g5ba4XCdnIPhdd7z5Wqke6mcJIeWkbsNHBAaMkvJuKhn
-         YWZQ==
-X-Gm-Message-State: APjAAAUkJVceStNJh/aGaXEQNuHFSsV3Yp+5zAax6kwBWcaRPsGogMi6
-        hU1v+q5fnWJExV9iXQb/FEI=
-X-Google-Smtp-Source: APXvYqwby5asr6kpFgXMYVtMnSO7hotnx0yL3RNXUDyflSFrfvIdfzVWXMcjF161nYpjsEW//WTcUw==
-X-Received: by 2002:a05:600c:54c:: with SMTP id k12mr27760496wmc.124.1575288636871;
-        Mon, 02 Dec 2019 04:10:36 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id e16sm23522479wme.35.2019.12.02.04.10.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 04:10:31 -0800 (PST)
-Date:   Mon, 2 Dec 2019 13:10:29 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org
-Subject: Re: [RFC PATCH v5 0/7] Speed booting by sorting ORC unwind tables at
- build time
-Message-ID: <20191202121029.GA37334@gmail.com>
-References: <20191128110206.2107-1-shile.zhang@linux.alibaba.com>
- <20191202103248.GB2827@hirez.programming.kicks-ass.net>
+        Mon, 2 Dec 2019 07:20:54 -0500
+Received: from foss.arm.com ([217.140.110.172]:53728 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727354AbfLBMUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 07:20:54 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF3FF30E;
+        Mon,  2 Dec 2019 04:20:52 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 68CBB3F68E;
+        Mon,  2 Dec 2019 04:20:52 -0800 (PST)
+Date:   Mon, 2 Dec 2019 12:20:50 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     maz@kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
+        mbrugger@suse.com, phil@raspberrypi.org, jeremy.linton@arm.com,
+        linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 5/7] PCI: brcmstb: add MSI capability
+Message-ID: <20191202122050.GA18399@e119886-lin.cambridge.arm.com>
+References: <20191126091946.7970-1-nsaenzjulienne@suse.de>
+ <20191126091946.7970-6-nsaenzjulienne@suse.de>
+ <20191129154629.GF43905@e119886-lin.cambridge.arm.com>
+ <2820f3fb9abc69d54df0dee1b6233eaf3cb63834.camel@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191202103248.GB2827@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2820f3fb9abc69d54df0dee1b6233eaf3cb63834.camel@suse.de>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Peter Zijlstra <peterz@infradead.org> wrote:
-
-> On Thu, Nov 28, 2019 at 07:01:59PM +0800, Shile Zhang wrote:
-> > This series refactored the original sortextable tools, add ORC unwind
-> > tables sort at build time.
+On Mon, Dec 02, 2019 at 10:59:36AM +0100, Nicolas Saenz Julienne wrote:
+> Hi Andrew,
+> 
+> On Fri, 2019-11-29 at 15:46 +0000, Andrew Murray wrote:
+> > On Tue, Nov 26, 2019 at 10:19:43AM +0100, Nicolas Saenz Julienne wrote:
+> > > From: Jim Quinlan <james.quinlan@broadcom.com>
+> > > 
+> > > This adds MSI support to the Broadcom STB PCIe host controller. The MSI
+> > > controller is physically located within the PCIe block, however, there
+> > > is no reason why the MSI controller could not be moved elsewhere in the
+> > > future. MSIX is not supported by the HW.
+> > > 
+> > > Since the internal Brcmstb MSI controller is intertwined with the PCIe
+> > > controller, it is not its own platform device but rather part of the
+> > > PCIe platform device.
+> > > 
+> > > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > > Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > > Reviewed-by: Marc Zyngier <maz@kernel.org>
+> > > 
+> > > ---
+> > > 
+> > > Changes since v2 (kept Marc's Reviewed-by as changes didn't affect irq
+> > > subsystem stuff or seem petty enough):
+> > >   - Use standard APIs on register operations
+> > >   - Get rid of revision code
 > > 
-> > To sort the ORC unwind tables(.orc_unwind & .orc_unwind_ip) can save
-> > about 100ms in my test ENV (2C4G VM w/ Xeon 2.5GHz CPU).
-> > It costs about 30ms sort by new sorttable tool.
+> > Do any RPI4's have a HW revision of less than 33?
 > 
-> IIRC from your previous emails the new build-time sort is actually
-> shorter than that, so even for single build+run scenarios we win.
-> 
-> The code looks good to me, so:
-> 
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> 
-> Who it going to apply this? I suppose we could take it through -tip,
-> like we do with all x86 and objtool related bits.
+> No, IIRC it's actually revision 34. I had left that bit of code in, following
+> the same train of thought as with the of_data on the device-tree part of the
+> driver: "It's harmless and should make accomodating other devices easier." It
+> turned out not to be such a great approach. Lesson's learned. So I decided to
+> remove it.
 
-Yeah, will apply it once the merge window slows down a bit.
+OK you can add my:
+
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
 Thanks,
 
-	Ingo
+Andrew Murray
+
+> 
+> > >   - Update rules to msi_target_addr selection
+> > >   - Remove unwarranted MSI_FLAG_PCI_MSIX
+> > >   - Small cosmetic changes
+> > > 
+> > > Changes since v1:cuando tenías tu vacaciones?
+> > >   - Move revision code and some registers to this patch
+> > >   - Use PCIE_MSI_IRQ_DOMAIN in Kconfig
+> > >   - Remove redundant register read from ISR
+> > >   - Fail probe on MSI init error
+> > >   - Get rid of msi_internal
+> > >   - Use bitmap family of functions
+> > >   - Use edge triggered setup
+> > >   - Add comment regarding MultiMSI
+> > >   - Simplify compose_msi_msg to avoid reg read
+> > > 
+> > > This is based on Jim's original submission[1] with some slight changes
+> > > regarding how pcie->msi_target_addr is decided.
+> > > 
+> > > [1] https://patchwork.kernel.org/patch/10605955/
+> > > 
+> > >  drivers/pci/controller/Kconfig        |   1 +
+> > >  drivers/pci/controller/pcie-brcmstb.c | 261 +++++++++++++++++++++++++-
+> > >  2 files changed, 261 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> > > index 27504f108ee5..918e283bbff1 100644
+> > > +
+> > > +static void brcm_msi_compose_msi_msg(struct irq_data *data, struct msi_msg
+> > > *msg)
+> > > +{
+> > > +	struct brcm_msi *msi = irq_data_get_irq_chip_data(data);
+> > > +
+> > > +	msg->address_lo = lower_32_bits(msi->target_addr);
+> > > +	msg->address_hi = upper_32_bits(msi->target_addr);
+> > > +	msg->data = 0x6540 | data->hwirq;
+> > 
+> > NIT: Perhaps this 0x6540 can be a define - just in the same way we have a
+> > define
+> > for PCIE_MISC_MSI_DATA_CONFIG_VAL.
+> 
+> Noted
+> 
+> Regards,
+> Nicolas
+> 
+
+
