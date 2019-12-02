@@ -2,29 +2,29 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1A2C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2606DC43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF8A720833
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0815620833
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 08:14:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbfLBIOX (ORCPT
+        id S1726949AbfLBIOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 03:14:23 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:37318 "EHLO huawei.com"
+        Mon, 2 Dec 2019 03:14:24 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:37314 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726057AbfLBIOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 03:14:23 -0500
+        id S1726251AbfLBIOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 03:14:24 -0500
 Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 9CEB786D8616E3D309D1;
+        by Forcepoint Email with ESMTP id 8AA411A6202CFEA882E6;
         Mon,  2 Dec 2019 16:14:17 +0800 (CST)
 Received: from huawei.com (10.175.124.28) by DGGEMS405-HUB.china.huawei.com
  (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Mon, 2 Dec 2019
- 16:14:11 +0800
+ 16:14:07 +0800
 From:   "zhangyi (F)" <yi.zhang@huawei.com>
 To:     <gregkh@linuxfoundation.org>
 CC:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
@@ -33,12 +33,10 @@ CC:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
         <peterz@infradead.org>, <bigeasy@linutronix.de>, <mhocko@suse.com>,
         <john.ogness@linutronix.de>, <yi.zhang@huawei.com>,
         <nixiaoming@huawei.com>
-Subject: [PATCH 4.4 5/7] fs/proc: Report eip/esp in /prod/PID/stat for coredumping
-Date:   Mon, 2 Dec 2019 16:35:17 +0800
-Message-ID: <20191202083519.23138-6-yi.zhang@huawei.com>
+Subject: [PATCH 4.4 0/7] fs/proc: Stop reporting eip and esp in
+Date:   Mon, 2 Dec 2019 16:35:12 +0800
+Message-ID: <20191202083519.23138-1-yi.zhang@huawei.com>
 X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20191202083519.23138-1-yi.zhang@huawei.com>
-References: <20191202083519.23138-1-yi.zhang@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.175.124.28]
@@ -48,72 +46,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Ogness <john.ogness@linutronix.de>
+Reporting eip and esp fields on a non-current task is dangerous,
+so backport this series for 4.4 to fix protential oops and info leak
+problems. The first 3 patch are depended on the 6/7 patch.
 
-commit fd7d56270b526ca3ed0c224362e3c64a0f86687a upstream.
+Alexey Dobriyan (1):
+  proc: fix coredump vs read /proc/*/stat race
 
-Commit 0a1eb2d474ed ("fs/proc: Stop reporting eip and esp in
-/proc/PID/stat") stopped reporting eip/esp because it is
-racy and dangerous for executing tasks. The comment adds:
+Andy Lutomirski (3):
+  sched/core: Allow putting thread_info into task_struct
+  sched/core: Add try_get_task_stack() and put_task_stack()
+  fs/proc: Stop reporting eip and esp in /proc/PID/stat
 
-    As far as I know, there are no use programs that make any
-    material use of these fields, so just get rid of them.
+Heiko Carstens (1):
+  sched/core, x86: Make struct thread_info arch specific again
 
-However, existing userspace core-dump-handler applications (for
-example, minicoredumper) are using these fields since they
-provide an excellent cross-platform interface to these valuable
-pointers. So that commit introduced a user space visible
-regression.
+John Ogness (2):
+  fs/proc: Report eip/esp in /prod/PID/stat for coredumping
+  fs/proc/array.c: allow reporting eip/esp for all coredumping threads
 
-Partially revert the change and make the readout possible for
-tasks with the proper permissions and only if the target task
-has the PF_DUMPCORE flag set.
+ fs/proc/array.c             | 18 ++++++++++---
+ include/linux/init_task.h   |  9 +++++++
+ include/linux/sched.h       | 52 +++++++++++++++++++++++++++++++++++--
+ include/linux/thread_info.h |  4 +++
+ init/Kconfig                | 10 +++++++
+ init/init_task.c            |  7 +++--
+ kernel/sched/sched.h        |  4 +++
+ 7 files changed, 97 insertions(+), 7 deletions(-)
 
-Fixes: 0a1eb2d474ed ("fs/proc: Stop reporting eip and esp in> /proc/PID/stat")
-Reported-by: Marco Felsch <marco.felsch@preh.de>
-Signed-off-by: John Ogness <john.ogness@linutronix.de>
-Reviewed-by: Andy Lutomirski <luto@kernel.org>
-Cc: Tycho Andersen <tycho.andersen@canonical.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: stable@vger.kernel.org
-Cc: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Linux API <linux-api@vger.kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: http://lkml.kernel.org/r/87poatfwg6.fsf@linutronix.de
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-
-[ zhangyi: 68db0cf10678 does not merged, skip the task_stack.h for 4.4]
-
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
----
- fs/proc/array.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/fs/proc/array.c b/fs/proc/array.c
-index 618c83f1866d..c3e1732bcaa5 100644
---- a/fs/proc/array.c
-+++ b/fs/proc/array.c
-@@ -429,7 +429,15 @@ static int do_task_stat(struct seq_file *m, struct pid_namespace *ns,
- 		 * esp and eip are intentionally zeroed out.  There is no
- 		 * non-racy way to read them without freezing the task.
- 		 * Programs that need reliable values can use ptrace(2).
-+		 *
-+		 * The only exception is if the task is core dumping because
-+		 * a program is not able to use ptrace(2) in that case. It is
-+		 * safe because the task has stopped executing permanently.
- 		 */
-+		if (permitted && (task->flags & PF_DUMPCORE)) {
-+			eip = KSTK_EIP(task);
-+			esp = KSTK_ESP(task);
-+		}
- 	}
- 
- 	get_task_comm(tcomm, task);
 -- 
 2.17.2
 
