@@ -2,27 +2,28 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,UPPERCASE_75_100,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8AE3C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDC4C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9771720675
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A44782068E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 21:18:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfLBVSx (ORCPT
+        id S1726785AbfLBVS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 16:18:53 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:42260 "EHLO
+        Mon, 2 Dec 2019 16:18:56 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42284 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbfLBVSx (ORCPT
+        with ESMTP id S1725874AbfLBVSz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 16:18:53 -0500
+        Mon, 2 Dec 2019 16:18:55 -0500
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id 80F3028F568
+        with ESMTPSA id 1E94E2901AE
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Collabora Kernel ML <kernel@collabora.com>, groeck@chromium.org,
@@ -37,10 +38,12 @@ Cc:     Collabora Kernel ML <kernel@collabora.com>, groeck@chromium.org,
         Alexey Brodkin <alexey.brodkin@synopsys.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 0/2] Standard x86_64 defconfig for KernelCI or Chromebooks
-Date:   Mon,  2 Dec 2019 22:18:42 +0100
-Message-Id: <20191202211844.19629-1-enric.balletbo@collabora.com>
+Subject: [PATCH 1/2] x86_64_defconfig: Normalize x86_64 defconfig
+Date:   Mon,  2 Dec 2019 22:18:43 +0100
+Message-Id: <20191202211844.19629-2-enric.balletbo@collabora.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191202211844.19629-1-enric.balletbo@collabora.com>
+References: <20191202211844.19629-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,28 +51,242 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi x86 maintainers,
+make savedefconfig result in some difference, lets normalize the
+defconfig
 
-For testing purposes it'd be useful have a standard/mainline config that
-supports the devices that we're testing in KernelCI. For Chromebooks we
-try to take care of have multi_v7_defconfig and arm64 defconfig up to
-date supporting different devices, that way, we don't need to deal with
-out-of-tree kernel configs or fragments. We'd like to do the same for
-x86 architecture, hence this patch series.
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
 
-I am unsure if the x86_64_defconfig is the right place to do it, if not,
-maybe we can add a chromebooks.config (like xen.config) or even better,
-a kernelci.config, so take this as a RFC if that's the case.
+ arch/x86/configs/x86_64_defconfig | 90 +++++++++++--------------------
+ 1 file changed, 30 insertions(+), 60 deletions(-)
 
-Thanks,
-
-Enric Balletbo i Serra (2):
-  x86_64_defconfig: Normalize x86_64 defconfig
-  x86_64_defconfig: Enable support for Chromebooks devices
-
- arch/x86/configs/x86_64_defconfig | 156 +++++++++++++++++++-----------
- 1 file changed, 97 insertions(+), 59 deletions(-)
-
+diff --git a/arch/x86/configs/x86_64_defconfig b/arch/x86/configs/x86_64_defconfig
+index 0b9654c7a05c..a95291c89717 100644
+--- a/arch/x86/configs/x86_64_defconfig
++++ b/arch/x86/configs/x86_64_defconfig
+@@ -1,36 +1,26 @@
+ # CONFIG_LOCALVERSION_AUTO is not set
+ CONFIG_SYSVIPC=y
+ CONFIG_POSIX_MQUEUE=y
++CONFIG_AUDIT=y
++CONFIG_NO_HZ=y
++CONFIG_HIGH_RES_TIMERS=y
++CONFIG_PREEMPT_VOLUNTARY=y
+ CONFIG_BSD_PROCESS_ACCT=y
+ CONFIG_TASKSTATS=y
+ CONFIG_TASK_DELAY_ACCT=y
+ CONFIG_TASK_XACCT=y
+ CONFIG_TASK_IO_ACCOUNTING=y
+-CONFIG_FHANDLE=y
+-CONFIG_AUDIT=y
+-CONFIG_NO_HZ=y
+-CONFIG_HIGH_RES_TIMERS=y
+ CONFIG_LOG_BUF_SHIFT=18
+ CONFIG_CGROUPS=y
++CONFIG_CGROUP_SCHED=y
+ CONFIG_CGROUP_FREEZER=y
+ CONFIG_CPUSETS=y
+ CONFIG_CGROUP_CPUACCT=y
+-CONFIG_CGROUP_SCHED=y
+ CONFIG_BLK_DEV_INITRD=y
+ # CONFIG_COMPAT_BRK is not set
+ CONFIG_PROFILING=y
+-CONFIG_KPROBES=y
+-CONFIG_JUMP_LABEL=y
+-CONFIG_MODULES=y
+-CONFIG_MODULE_UNLOAD=y
+-CONFIG_MODULE_FORCE_UNLOAD=y
+ CONFIG_SMP=y
+-CONFIG_NR_CPUS=64
+-CONFIG_SCHED_SMT=y
+-CONFIG_PREEMPT_VOLUNTARY=y
+ CONFIG_X86_REROUTE_FOR_BROKEN_BOOT_IRQS=y
+-CONFIG_X86_MCE=y
+-CONFIG_MICROCODE=y
+ CONFIG_MICROCODE_AMD=y
+ CONFIG_X86_MSR=y
+ CONFIG_X86_CPUID=y
+@@ -38,30 +28,29 @@ CONFIG_NUMA=y
+ CONFIG_X86_CHECK_BIOS_CORRUPTION=y
+ # CONFIG_MTRR_SANITIZER is not set
+ CONFIG_EFI=y
++CONFIG_EFI_STUB=y
++CONFIG_EFI_MIXED=y
+ CONFIG_HZ_1000=y
+ CONFIG_KEXEC=y
+ CONFIG_CRASH_DUMP=y
+-CONFIG_RANDOMIZE_BASE=y
+-CONFIG_RANDOMIZE_MEMORY=y
+-# CONFIG_COMPAT_VDSO is not set
+ CONFIG_HIBERNATION=y
+ CONFIG_PM_DEBUG=y
+ CONFIG_PM_TRACE_RTC=y
+ CONFIG_ACPI_DOCK=y
+-CONFIG_CPU_FREQ=y
+-# CONFIG_CPU_FREQ_STAT is not set
++CONFIG_ACPI_BGRT=y
+ CONFIG_CPU_FREQ_DEFAULT_GOV_USERSPACE=y
+ CONFIG_CPU_FREQ_GOV_PERFORMANCE=y
+ CONFIG_CPU_FREQ_GOV_ONDEMAND=y
+ CONFIG_X86_ACPI_CPUFREQ=y
+-CONFIG_PCI=y
+-CONFIG_PCI_MMCONFIG=y
+-CONFIG_PCIEPORTBUS=y
+-CONFIG_PCCARD=y
+-CONFIG_YENTA=y
+-CONFIG_HOTPLUG_PCI=y
+-CONFIG_BINFMT_MISC=y
+ CONFIG_IA32_EMULATION=y
++CONFIG_EFI_VARS=y
++CONFIG_KPROBES=y
++CONFIG_JUMP_LABEL=y
++CONFIG_MODULES=y
++CONFIG_MODULE_UNLOAD=y
++CONFIG_MODULE_FORCE_UNLOAD=y
++# CONFIG_UNUSED_SYMBOLS is not set
++CONFIG_BINFMT_MISC=y
+ CONFIG_NET=y
+ CONFIG_PACKET=y
+ CONFIG_UNIX=y
+@@ -80,16 +69,12 @@ CONFIG_IP_MROUTE=y
+ CONFIG_IP_PIMSM_V1=y
+ CONFIG_IP_PIMSM_V2=y
+ CONFIG_SYN_COOKIES=y
+-# CONFIG_INET_XFRM_MODE_TRANSPORT is not set
+-# CONFIG_INET_XFRM_MODE_TUNNEL is not set
+-# CONFIG_INET_XFRM_MODE_BEET is not set
+ # CONFIG_INET_DIAG is not set
+ CONFIG_TCP_CONG_ADVANCED=y
+ # CONFIG_TCP_CONG_BIC is not set
+ # CONFIG_TCP_CONG_WESTWOOD is not set
+ # CONFIG_TCP_CONG_HTCP is not set
+ CONFIG_TCP_MD5SIG=y
+-CONFIG_IPV6=y
+ CONFIG_INET6_AH=y
+ CONFIG_INET6_ESP=y
+ CONFIG_NETLABEL=y
+@@ -100,6 +85,7 @@ CONFIG_NF_CONNTRACK_FTP=y
+ CONFIG_NF_CONNTRACK_IRC=y
+ CONFIG_NF_CONNTRACK_SIP=y
+ CONFIG_NF_CT_NETLINK=y
++CONFIG_NF_NAT=y
+ CONFIG_NETFILTER_XT_TARGET_CONNSECMARK=y
+ CONFIG_NETFILTER_XT_TARGET_NFLOG=y
+ CONFIG_NETFILTER_XT_TARGET_SECMARK=y
+@@ -107,14 +93,11 @@ CONFIG_NETFILTER_XT_TARGET_TCPMSS=y
+ CONFIG_NETFILTER_XT_MATCH_CONNTRACK=y
+ CONFIG_NETFILTER_XT_MATCH_POLICY=y
+ CONFIG_NETFILTER_XT_MATCH_STATE=y
+-CONFIG_NF_CONNTRACK_IPV4=y
+ CONFIG_IP_NF_IPTABLES=y
+ CONFIG_IP_NF_FILTER=y
+ CONFIG_IP_NF_TARGET_REJECT=y
+-CONFIG_NF_NAT=y
+-CONFIG_IP_NF_TARGET_MASQUERADE=y
++CONFIG_IP_NF_TARGET_MASQUERADE=m
+ CONFIG_IP_NF_MANGLE=y
+-CONFIG_NF_CONNTRACK_IPV6=y
+ CONFIG_IP6_NF_IPTABLES=y
+ CONFIG_IP6_NF_MATCH_IPV6HEADER=y
+ CONFIG_IP6_NF_FILTER=y
+@@ -128,6 +111,11 @@ CONFIG_CFG80211=y
+ CONFIG_MAC80211=y
+ CONFIG_MAC80211_LEDS=y
+ CONFIG_RFKILL=y
++CONFIG_PCI=y
++CONFIG_PCIEPORTBUS=y
++CONFIG_HOTPLUG_PCI=y
++CONFIG_PCCARD=y
++CONFIG_YENTA=y
+ CONFIG_DEVTMPFS=y
+ CONFIG_DEVTMPFS_MOUNT=y
+ CONFIG_DEBUG_DEVRES=y
+@@ -166,13 +154,11 @@ CONFIG_8139TOO=y
+ CONFIG_R8169=y
+ CONFIG_FDDI=y
+ CONFIG_INPUT_POLLDEV=y
+-# CONFIG_INPUT_MOUSEDEV_PSAUX is not set
+ CONFIG_INPUT_EVDEV=y
+ CONFIG_INPUT_JOYSTICK=y
+ CONFIG_INPUT_TABLET=y
+ CONFIG_INPUT_TOUCHSCREEN=y
+ CONFIG_INPUT_MISC=y
+-CONFIG_VT_HW_CONSOLE_BINDING=y
+ # CONFIG_LEGACY_PTYS is not set
+ CONFIG_SERIAL_NONSTANDARD=y
+ CONFIG_SERIAL_8250=y
+@@ -199,19 +185,15 @@ CONFIG_DRM_I915=y
+ CONFIG_FB_MODE_HELPERS=y
+ CONFIG_FB_TILEBLITTING=y
+ CONFIG_FB_EFI=y
+-# CONFIG_LCD_CLASS_DEVICE is not set
+ CONFIG_VGACON_SOFT_SCROLLBACK=y
+ CONFIG_LOGO=y
+ # CONFIG_LOGO_LINUX_MONO is not set
+ # CONFIG_LOGO_LINUX_VGA16 is not set
+ CONFIG_SOUND=y
+ CONFIG_SND=y
++CONFIG_SND_HRTIMER=y
+ CONFIG_SND_SEQUENCER=y
+ CONFIG_SND_SEQ_DUMMY=y
+-CONFIG_SND_MIXER_OSS=y
+-CONFIG_SND_PCM_OSS=y
+-CONFIG_SND_SEQUENCER_OSS=y
+-CONFIG_SND_HRTIMER=y
+ CONFIG_SND_HDA_INTEL=y
+ CONFIG_SND_HDA_HWDEP=y
+ CONFIG_HIDRAW=y
+@@ -232,7 +214,6 @@ CONFIG_USB_ANNOUNCE_NEW_DEVICES=y
+ CONFIG_USB_MON=y
+ CONFIG_USB_XHCI_HCD=y
+ CONFIG_USB_EHCI_HCD=y
+-CONFIG_USB_EHCI_TT_NEWSCHED=y
+ CONFIG_USB_OHCI_HCD=y
+ CONFIG_USB_UHCI_HCD=y
+ CONFIG_USB_PRINTER=y
+@@ -245,7 +226,6 @@ CONFIG_EEEPC_LAPTOP=y
+ CONFIG_AMD_IOMMU=y
+ CONFIG_INTEL_IOMMU=y
+ # CONFIG_INTEL_IOMMU_DEFAULT_ON is not set
+-CONFIG_EFI_VARS=y
+ CONFIG_EXT4_FS=y
+ CONFIG_EXT4_FS_POSIX_ACL=y
+ CONFIG_EXT4_FS_SECURITY=y
+@@ -271,28 +251,18 @@ CONFIG_NLS_CODEPAGE_437=y
+ CONFIG_NLS_ASCII=y
+ CONFIG_NLS_ISO8859_1=y
+ CONFIG_NLS_UTF8=y
++CONFIG_SECURITY=y
++CONFIG_SECURITY_NETWORK=y
++CONFIG_SECURITY_SELINUX=y
++CONFIG_SECURITY_SELINUX_BOOTPARAM=y
++CONFIG_SECURITY_SELINUX_DISABLE=y
+ CONFIG_PRINTK_TIME=y
+ CONFIG_MAGIC_SYSRQ=y
+-# CONFIG_UNUSED_SYMBOLS is not set
+ CONFIG_DEBUG_KERNEL=y
++CONFIG_DEBUG_STACK_USAGE=y
+ # CONFIG_SCHED_DEBUG is not set
+ CONFIG_SCHEDSTATS=y
+-CONFIG_TIMER_STATS=y
+-CONFIG_DEBUG_STACK_USAGE=y
+ CONFIG_BLK_DEV_IO_TRACE=y
+ CONFIG_PROVIDE_OHCI1394_DMA_INIT=y
+ CONFIG_EARLY_PRINTK_DBGP=y
+-CONFIG_DEBUG_STACKOVERFLOW=y
+-# CONFIG_DEBUG_RODATA_TEST is not set
+ CONFIG_DEBUG_BOOT_PARAMS=y
+-CONFIG_OPTIMIZE_INLINING=y
+-CONFIG_UNWINDER_ORC=y
+-CONFIG_SECURITY=y
+-CONFIG_SECURITY_NETWORK=y
+-CONFIG_SECURITY_SELINUX=y
+-CONFIG_SECURITY_SELINUX_BOOTPARAM=y
+-CONFIG_SECURITY_SELINUX_DISABLE=y
+-# CONFIG_CRYPTO_ANSI_CPRNG is not set
+-CONFIG_EFI_STUB=y
+-CONFIG_EFI_MIXED=y
+-CONFIG_ACPI_BGRT=y
 -- 
 2.20.1
 
