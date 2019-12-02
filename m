@@ -2,197 +2,100 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0F3C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7185DC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 373D62071E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:55:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DBjGmh5p"
+	by mail.kernel.org (Postfix) with ESMTP id 4A49D2071E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:56:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbfLBWzJ (ORCPT
+        id S1726319AbfLBW4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 17:55:09 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:33128 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbfLBWzJ (ORCPT
+        Mon, 2 Dec 2019 17:56:53 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45648 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbfLBW4x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 17:55:09 -0500
-Received: by mail-qt1-f195.google.com with SMTP id d5so1667585qto.0
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 14:55:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=p04VAJalNVcM1wKI1wNyT7o1NcBjHgxv0Xx73wtI7Uw=;
-        b=DBjGmh5pKmn+iK8CQgTpxCXLqyiQJG9uyAwY9nd08tUBTD7EdZNQdCkUROtRV0IszW
-         Ik9DYNnewG76/TeC83sHVxHYQwrMx3nuthATSCVyb9jMw4daw9ZMFKSqB7oxEtzWTp/0
-         lreu79OC1dYu/O4Np+dsp0oz9IXG8f7xH1uoo=
+        Mon, 2 Dec 2019 17:56:53 -0500
+Received: by mail-oi1-f195.google.com with SMTP id 14so1344176oir.12
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 14:56:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=p04VAJalNVcM1wKI1wNyT7o1NcBjHgxv0Xx73wtI7Uw=;
-        b=m9+jCC110raesVxzrYmHMOabkdhlFHSTQCVKMvLIGcyNk258wTqWDG5x+vFOAqZ/qD
-         FCHFFMeCDGFaTfQld6cgejHjYmokIkYpklw51Dko+P78GaORIUVkV3saPhHwZT39z9CP
-         kfOc+p1l2foY88KdiGnFnO4Saq5MdoIMtC/XLQF6itJfKPULgQYAxMXxG0YkLR9z0yQY
-         bhzWYbnHi3NQH5Du3RGlqBMyowYQHLE/qOrjykoKuJNA4Ri3+c2U/FjnJNgzyTrpZoKO
-         610e6l5t0M7tNzxh+/NR83Qc3VulroepWseelnPT3nb/asTufsG1kc82o80YHkO33vCY
-         G9vg==
-X-Gm-Message-State: APjAAAVFwnYXJwknyGC8fKBguctwsF+f5hAH0jaiuhdGq1/9LkMxmap4
-        yRJhekK9AeGGZnNpHw33ivobyXXgCZHQE0ZpHMTXZg==
-X-Google-Smtp-Source: APXvYqx+knpHqLNbP/4kmVwRIQS9IqbMUxOuMcqsz6hyYcabkc8gLoz79VWWwIZmM8CQiV86Xtj8ei8hj4e8cKYZl30=
-X-Received: by 2002:ac8:750b:: with SMTP id u11mr2133080qtq.170.1575327307548;
- Mon, 02 Dec 2019 14:55:07 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=5dllmzilFshZS41Rqd+tPknCh99mINDcFfUz5Z0ooFc=;
+        b=mDRKvsmfPtWZXf0ssUDOU5+X/yRvXnZg5oQjqrQqhUPVaJWMA22dyibjHBWAk8uCdQ
+         PacQvZjk6yqjTEZWLDtnPtePZk3A4ROR2RRnP11Ny9SwnVhxzUOcvx517gdhBdT41paI
+         wWRe1s8gAoYU2/9sDiZP2mJG+2ZElqM/nU7ooJ6QDD/5/nkl2G0K1+o8st8Z7uATOGDj
+         LZ6wM6dV5KdRLIe+g+dbQWvPoEUm3B6M+tYrUCWnJFZpyS5goJqizEmtxJ2XD+UZYGtu
+         DjOGYGWxaOxXa6xA8y0gWe55M136Pg0df6sot4TzSyVltkSj2rD2IX2LNB4pCQmZvPwT
+         dCCw==
+X-Gm-Message-State: APjAAAX6H+9tBwk8YGtv3KNA/ubc5TKZpzKaQ8pmTB6kTau+JGBYWYQ9
+        PyFFOuLpkrDsfhk12xSSW5kMkiWA
+X-Google-Smtp-Source: APXvYqwsskmgauv+Q0vPsOYaT6yTGHkhNSIYNd+V0rcxltvmMQfK/ztEu+Pax/fFbvyJe2KfI6Pfyg==
+X-Received: by 2002:a05:6808:499:: with SMTP id z25mr1294697oid.62.1575327411717;
+        Mon, 02 Dec 2019 14:56:51 -0800 (PST)
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com. [209.85.210.50])
+        by smtp.gmail.com with ESMTPSA id o4sm353929ota.57.2019.12.02.14.56.50
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Dec 2019 14:56:51 -0800 (PST)
+Received: by mail-ot1-f50.google.com with SMTP id p8so1100404oth.10
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 14:56:50 -0800 (PST)
+X-Received: by 2002:a9d:6745:: with SMTP id w5mr1041681otm.221.1575327410613;
+ Mon, 02 Dec 2019 14:56:50 -0800 (PST)
 MIME-Version: 1.0
-References: <20191127185139.65048-1-abhishekpandit@chromium.org>
- <20191201145357.ybq5gfty4ulnfasq@pali> <20191202012305.GQ248138@dtor-ws>
- <20191202084750.k7lafzzrf3yq2tqs@pali> <20191202175440.GA50317@dtor-ws>
- <20191202185340.nae4lljten5jqp3y@pali> <20191202193628.GI50317@dtor-ws>
-In-Reply-To: <20191202193628.GI50317@dtor-ws>
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Date:   Mon, 2 Dec 2019 14:54:56 -0800
-Message-ID: <CANFp7mVr_cb89BH0ApuPWV2wgmBq7MVqeNUWC=OBjO9KTj=qnw@mail.gmail.com>
-Subject: Re: [PATCH] Input: uinput - Add UI_SET_UNIQ ioctl handler
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        linux-input@vger.kernel.org,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Kirill Smelkov <kirr@nexedi.com>
+References: <20191128145554.1297-1-linux@rasmusvillemoes.dk>
+ <7beef282-1dd8-7c7a-4f6d-d0605d11eab5@kernel.org> <fb810251-f444-bd5d-54e3-774d2e1ccdb9@rasmusvillemoes.dk>
+In-Reply-To: <fb810251-f444-bd5d-54e3-774d2e1ccdb9@rasmusvillemoes.dk>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Mon, 2 Dec 2019 16:56:39 -0600
+X-Gmail-Original-Message-ID: <CADRPPNSXS95DCpbnEG14tN7H4uxo7kFb8-azMU+MfPStyRcdpQ@mail.gmail.com>
+Message-ID: <CADRPPNSXS95DCpbnEG14tN7H4uxo7kFb8-azMU+MfPStyRcdpQ@mail.gmail.com>
+Subject: Re: [PATCH v6 00/49] QUICC Engine support on ARM, ARM64, PPC64
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        David Miller <davem@davemloft.net>
+Cc:     Timur Tabi <timur@kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Scott Wood <oss@buserror.net>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 2, 2019 at 11:36 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
+On Mon, Dec 2, 2019 at 2:14 AM Rasmus Villemoes
+<linux@rasmusvillemoes.dk> wrote:
 >
-> On Mon, Dec 02, 2019 at 07:53:40PM +0100, Pali Roh=C3=A1r wrote:
-> > On Monday 02 December 2019 09:54:40 Dmitry Torokhov wrote:
-> > > On Mon, Dec 02, 2019 at 09:47:50AM +0100, Pali Roh=C3=A1r wrote:
-> > > > On Sunday 01 December 2019 17:23:05 Dmitry Torokhov wrote:
-> > > > > Hi Pali,
-> > > > >
-> > > > > On Sun, Dec 01, 2019 at 03:53:57PM +0100, Pali Roh=C3=A1r wrote:
-> > > > > > Hello!
-> > > > > >
-> > > > > > On Wednesday 27 November 2019 10:51:39 Abhishek Pandit-Subedi w=
-rote:
-> > > > > > > Support setting the uniq attribute of the input device. The u=
-niq
-> > > > > > > attribute is used as a unique identifier for the connected de=
-vice.
-> > > > > > >
-> > > > > > > For example, uinput devices created by BlueZ will store the a=
-ddress of
-> > > > > > > the connected device as the uniq property.
-> > > > > > >
-> > > > > > > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromiu=
-m.org>
-> > > > > >
-> > > > > > ...
-> > > > > >
-> > > > > > > diff --git a/include/uapi/linux/uinput.h b/include/uapi/linux=
-/uinput.h
-> > > > > > > index c9e677e3af1d..d5b7767c1b02 100644
-> > > > > > > --- a/include/uapi/linux/uinput.h
-> > > > > > > +++ b/include/uapi/linux/uinput.h
-> > > > > > > @@ -145,6 +145,7 @@ struct uinput_abs_setup {
-> > > > > > >  #define UI_SET_PHYS                _IOW(UINPUT_IOCTL_BASE, 1=
-08, char*)
-> > > > > > >  #define UI_SET_SWBIT               _IOW(UINPUT_IOCTL_BASE, 1=
-09, int)
-> > > > > > >  #define UI_SET_PROPBIT             _IOW(UINPUT_IOCTL_BASE, 1=
-10, int)
-> > > > > > > +#define UI_SET_UNIQ                _IOW(UINPUT_IOCTL_BASE, 1=
-11, char*)
-> > > > > >
-> > > > > > I think that usage of char* as type in _IOW would cause compati=
-bility
-> > > > > > problems like it is for UI_SET_PHYS (there is UI_SET_PHYS_COMPA=
-T). Size
-> > > > > > of char* pointer depends on userspace (32 vs 64bit), so 32bit p=
-rocess on
-> > > > > > 64bit kernel would not be able to call this new UI_SET_UNIQ ioc=
-tl.
-> > > > > >
-> > > > > > I would suggest to define this ioctl as e.g.:
-> > > > > >
-> > > > > >   #define UI_SET_UNIQ         _IOW(_IOC_WRITE, UINPUT_IOCTL_BAS=
-E, 111, 0)
-> > > > > >
-> > > > > > And then in uinput.c code handle it as:
-> > > > > >
-> > > > > >   case UI_SET_UNIQ & ~IOCSIZE_MASK:
-> > > > > >
-> > > > > > as part of section /* Now check variable-length commands */
-> > > > >
-> > > > > If we did not have UI_SET_PHYS in its current form, I'd agree wit=
-h you,
-> > > > > but I think there is benefit in having UI_SET_UNIQ be similar to
-> > > > > UI_SET_PHYS.
-> > > >
-> > > > I thought that ioctl is just number, so we can define it as we want=
-. And
-> > > > because uinput.c has already switch for variable-length commands it
-> > > > would be easy to use it. Final handling can be in separate function=
- like
-> > > > for UI_SET_PHYS which can look like same.
-> > >
-> > > Yes, we can define ioctl number as whatever we want. What I was tryin=
-g
-> > > to say, right now users do this:
-> > >
-> > >     rc =3D ioctl(fd, UI_SET_PHYS, "whatever");
-> > >     ...
-> > >
-> > > and with UI_SET_UNIQ they expect the following to work:
-> > >
-> > >     rc =3D ioctl(fd, UI_SET_UNIQ, "whatever");
-> > >     ...
+> On 01/12/2019 17.10, Timur Tabi wrote:
+> > On 11/28/19 8:55 AM, Rasmus Villemoes wrote:
+> >> There have been several attempts in the past few years to allow
+> >> building the QUICC engine drivers for platforms other than PPC32. This
+> >> is yet another attempt.
+> >>
+> >> v5 can be found
+> >> here:https://lore.kernel.org/lkml/20191118112324.22725-1-linux@rasmusvillemoes.dk/
+> >>
 > >
-> > And would not following definition
+> > If it helps:
 > >
-> >   #define UI_SET_UNIQ _IOW(_IOC_WRITE, UINPUT_IOCTL_BASE, 111, 0)
-> >
-> > allow userspace to call
-> >
-> >   rc =3D ioctl(fd, UI_SET_UNIQ, "whatever");
-> >
-> > as you want?
+> > Entire series:
+> > Acked-by: Timur Tabi <timur@kernel.org>
 >
-> OK, so what you are saying is that we can have whatever in the size
-> portion of ioctl number and simply ignore it in the driver (and I do not
-> think we need to do any of "UI_SET_UNIQ & ~IOCSIZE_MASK" really).
-> While this would work, I am not sure it is the best option as I think
-> we'd have to comment extensively why we have arbitrary number in place
-> of the size.
+> Thanks. I'll leave it to Li Yang whether to apply that - they already
+> all (except for the last-minute build fix) have your R-b.
 >
-> And we still do not really save anything, as we still have to go through
-> compat ioctl handler (since we have it already) and it is very simple to
-> add a case for UI_SET_UNIQ there...
->
-> Thanks.
->
-> --
-> Dmitry
+> Li Yang, any chance you could pick up these patches so they have plenty
+> of time in -next until 5.6?
 
-Since the compat handling already exists for UI_SET_PHYS, I think I
-would prefer to go with the simpler solution of just duplicating that
-for UI_SET_UNIQ. Next patch is coming with that change.
+Sure.  I will.  I'm waiting for the Ack from David on the networking side.
 
-Thanks
-Abhishek
+Regards,
+Leo
