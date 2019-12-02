@@ -6,49 +6,48 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 788A0C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED77C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4289C20833
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B66E0215E5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 09:25:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbfLBJZL (ORCPT
+        id S1727391AbfLBJZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 04:25:11 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:39980 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727356AbfLBJZJ (ORCPT
+        Mon, 2 Dec 2019 04:25:10 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:50099 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726190AbfLBJZH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 04:25:09 -0500
-Received: by mail-io1-f72.google.com with SMTP id d1so10132253ioe.7
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 01:25:07 -0800 (PST)
+        Mon, 2 Dec 2019 04:25:07 -0500
+Received: by mail-il1-f198.google.com with SMTP id t13so1332797ilk.16
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 01:25:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=s/fzY9n/Wc759s+X5jwa5PXhW5V1f6rxMUh+sQv+EIU=;
-        b=jGb7CxSHE6maelW3/R9M91+jT/RIp050W52QTnmIMph7ArSSueBEDWOAtmsFOaHA0s
-         vwPgZ0GO/l1D2OT00ZA4kY7QraPhYHHyYIRWpgEA//gkt4Tt3lR3AcXrLqkFkpDc5gts
-         ErKv9EdPNB/vKIvrD2etFVbYYQYrg7+Yi00iljMSUK23fBRmm9tDlz4Fqmqz7vTdJKBr
-         5qOfl7Iu9UYjV4QpjGnRW1hd40jRkz+svdnlOsovXYl7eslZevOhp7EZNnj///mBqO/m
-         ZygkgCjNJsI/CqD1VdqUDOLpRI1PK1CassQXNhhWyeGREAwBn0I4nrsEsgqWfNGah/w9
-         0krQ==
-X-Gm-Message-State: APjAAAVtOyLwqAz3cOwMHlGFrS780C4SemHLB1+APPVtpfgs1aPTsAU1
-        QsZCt8oWK3CCyRylFxx1LpijsKDnDQvSvmP/XvQOWN4wGUVv
-X-Google-Smtp-Source: APXvYqxUgkfSuyTzo7urgNwiNWOccCUAD3r/7Xc6+I7tBgXjkAdKtW2Xb8ndo2wJJNzCx0qC3O1QWtMZvde93oeGiTGB9b+IeVx2
+        bh=vlZSW3HLefI9bXNH/+u9926W8YYXQ2/ihlTh151hCYg=;
+        b=ga9+IlkjbxpXyO5MF0OmhdCWZdiE1FmTiJSugb+XHToPo9TzU7goe8pWPZedQoxHuh
+         EMA0n/cqWW+//JvXU32T09z2adap5IgbYmp7V+cYmfdvcauOg4NtXvCwXyfNR2MYCPOe
+         KqKQnrBd31VLp+vXn6PheicQqnr1x+LBCM8VlTQnEba9XDLQw1jFPDzNEpsvW2y357z5
+         OH0ojQOrKX6A813SMiRcF5jrUubfmyX4Mmjy32/xBVGFBnNJDJqwjw0aYCKgJoMRvnua
+         iwo0x+XpAcZb5ltASn9yz2u8ND1xi09jUFO9nrym2Efr3ykxTXnhfd81dkpZjO3Zw8um
+         YA6A==
+X-Gm-Message-State: APjAAAVY9NUzKxLKVTBkPRj9pHCEqvmG3F0QIybbTl4J4ulafq3+8jjt
+        UUzSejpEZViZ99JwyZVpBbRFY6m1AJTVcKUO8s9gQjdnd3fX
+X-Google-Smtp-Source: APXvYqzm/EPogmg2s8v0c6GN1ZO5ECxnO9ocPG0KALjtJTs4yHOrz2J8CuM+PYywU6eWy16bEFKiVcJiY4ZMK/AVSXLQES9Ibi0Z
 MIME-Version: 1.0
-X-Received: by 2002:a92:8995:: with SMTP id w21mr6775582ilk.231.1575278706708;
+X-Received: by 2002:a92:47c9:: with SMTP id e70mr4543272ilk.144.1575278706468;
  Mon, 02 Dec 2019 01:25:06 -0800 (PST)
 Date:   Mon, 02 Dec 2019 01:25:06 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000bc5c0e0598b52778@google.com>
-Subject: KASAN: use-after-free Write in as102_release
-From:   syzbot <syzbot+edff65c4ade21b5db190@syzkaller.appspotmail.com>
-To:     allison@lohutok.net, andreyknvl@google.com,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
-        mchehab@kernel.org, rfontana@redhat.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Message-ID: <000000000000b8b3c10598b5274a@google.com>
+Subject: kernel BUG at drivers/media/mc/mc-entity.c:LINE!
+From:   syzbot <syzbot+8eb28ed1d916cc03eef6@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, laurent.pinchart@ideasonboard.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-usb@vger.kernel.org, mchehab@kernel.org,
+        sakari.ailus@linux.intel.com, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -61,73 +60,50 @@ syzbot found the following crash on:
 
 HEAD commit:    32b5e2b2 usb: gadget: add raw-gadget interface
 git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=1255457ae00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=101d682ae00000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=d88612251f7691bd
-dashboard link: https://syzkaller.appspot.com/bug?extid=edff65c4ade21b5db190
+dashboard link: https://syzkaller.appspot.com/bug?extid=8eb28ed1d916cc03eef6
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15b9ffcee00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16859696e00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+edff65c4ade21b5db190@syzkaller.appspotmail.com
+Reported-by: syzbot+8eb28ed1d916cc03eef6@syzkaller.appspotmail.com
 
-==================================================================
-BUG: KASAN: use-after-free in atomic_fetch_sub  
-include/asm-generic/atomic-instrumented.h:199 [inline]
-BUG: KASAN: use-after-free in refcount_sub_and_test  
-include/linux/refcount.h:253 [inline]
-BUG: KASAN: use-after-free in refcount_dec_and_test  
-include/linux/refcount.h:281 [inline]
-BUG: KASAN: use-after-free in kref_put include/linux/kref.h:64 [inline]
-BUG: KASAN: use-after-free in as102_release+0x58/0xd8  
-drivers/media/usb/as102/as102_usb_drv.c:458
-Write of size 4 at addr ffff8881adb84140 by task syz-executor.5/16315
-
-CPU: 1 PID: 16315 Comm: syz-executor.5 Not tainted 5.4.0-syzkaller #0
+usb 1-1: New USB device found, idVendor=18cd, idProduct=cafe, bcdDevice=  
+3.bb
+usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=16
+usb 1-1: SerialNumber: syz
+usb 1-1: config 0 descriptor??
+uvcvideo: Found UVC 0.00 device <unnamed> (18cd:cafe)
+uvcvideo 1-1:0.0: Entity type for entity Output 0 was not initialized!
+------------[ cut here ]------------
+kernel BUG at drivers/media/mc/mc-entity.c:666!
+invalid opcode: 0000 [#1] SMP KASAN
+CPU: 1 PID: 22 Comm: kworker/1:1 Not tainted 5.4.0-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:media_create_pad_link+0x40f/0x530 drivers/media/mc/mc-entity.c:666
+Code: 83 45 3a 01 45 31 e4 e8 9f 93 59 fd 44 89 e0 48 83 c4 18 5b 5d 41 5c  
+41 5d 41 5e 41 5f c3 e8 88 93 59 fd 0f 0b e8 81 93 59 fd <0f> 0b e8 7a 93  
+59 fd 0f 0b e8 53 23 81 fd e9 91 fc ff ff e8 49 23
+RSP: 0018:ffff8881d8c2f058 EFLAGS: 00010293
+RAX: ffff8881da24e200 RBX: ffff8881cf8dc070 RCX: ffffffff83e4dd4b
+RDX: 0000000000000000 RSI: ffffffff83e4e0df RDI: 0000000000000000
+RBP: ffff8881cf8da070 R08: ffff8881da24e200 R09: ffffed1039ff2a91
+R10: ffffed1039ff2a90 R11: ffff8881cff95483 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000003 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f7061237000 CR3: 00000001d148c000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xef/0x16e lib/dump_stack.c:118
-  print_address_description.constprop.0+0x36/0x50 mm/kasan/report.c:374
-  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:506
-  kasan_report+0xe/0x20 mm/kasan/common.c:634
-  check_memory_region_inline mm/kasan/generic.c:185 [inline]
-  check_memory_region+0x128/0x190 mm/kasan/generic.c:192
-  atomic_fetch_sub include/asm-generic/atomic-instrumented.h:199 [inline]
-  refcount_sub_and_test include/linux/refcount.h:253 [inline]
-  refcount_dec_and_test include/linux/refcount.h:281 [inline]
-  kref_put include/linux/kref.h:64 [inline]
-  as102_release+0x58/0xd8 drivers/media/usb/as102/as102_usb_drv.c:458
-  __fput+0x2d7/0x840 fs/file_table.c:280
-  task_work_run+0x13f/0x1c0 kernel/task_work.c:113
-  exit_task_work include/linux/task_work.h:22 [inline]
-  do_exit+0x8ab/0x2bc0 kernel/exit.c:797
-  do_group_exit+0x125/0x340 kernel/exit.c:895
-  get_signal+0x466/0x23c0 kernel/signal.c:2734
-  do_signal+0x88/0x1490 arch/x86/kernel/signal.c:815
-  exit_to_usermode_loop+0x1a2/0x200 arch/x86/entry/common.c:160
-  prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
-  do_syscall_64+0x4d1/0x5b0 arch/x86/entry/common.c:304
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45a4e7
-Code: Bad RIP value.
-RSP: 002b:00007f8274f103c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: fffffffffffffffc RBX: 0000000000000000 RCX: 000000000045a4e7
-RDX: 00007f8274f10810 RSI: 0000000080085502 RDI: 0000000000000003
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000003
-R13: 00000000004ca701 R14: 00000000004e2e78 R15: 00000000ffffffff
-
-Allocated by task 17:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:510 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:483
-  kmalloc include/linux/slab.h:556 [inline]
-  kzalloc include/linux/slab.h:690 [inline]
-  as102_usb_probe+0x4e/0x3d0 drivers/media/usb/as102/as102_usb_drv.c:350
+  uvc_mc_create_links drivers/media/usb/uvc/uvc_entity.c:50 [inline]
+  uvc_mc_register_entities+0x468/0x77a drivers/media/usb/uvc/uvc_entity.c:114
+  uvc_register_chains drivers/media/usb/uvc/uvc_driver.c:2075 [inline]
+  uvc_probe.cold+0x2137/0x29de drivers/media/usb/uvc/uvc_driver.c:2201
   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
   really_probe+0x281/0x6d0 drivers/base/dd.c:548
   driver_probe_device+0x104/0x210 drivers/base/dd.c:721
@@ -155,65 +131,23 @@ Allocated by task 17:
   worker_thread+0x96/0xe20 kernel/workqueue.c:2410
   kthread+0x318/0x420 kernel/kthread.c:255
   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Freed by task 17:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  kasan_set_free_info mm/kasan/common.c:332 [inline]
-  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:471
-  slab_free_hook mm/slub.c:1424 [inline]
-  slab_free_freelist_hook mm/slub.c:1457 [inline]
-  slab_free mm/slub.c:3004 [inline]
-  kfree+0xdc/0x310 mm/slub.c:3956
-  as102_usb_probe.cold+0x133/0x366  
-drivers/media/usb/as102/as102_usb_drv.c:412
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
-  device_add+0x1480/0x1c20 drivers/base/core.c:2487
-  usb_set_configuration+0xe67/0x1740 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
-  device_add+0x1480/0x1c20 drivers/base/core.c:2487
-  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2537
-  hub_port_connect drivers/usb/core/hub.c:5184 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
-  port_event drivers/usb/core/hub.c:5470 [inline]
-  hub_event+0x1e59/0x3860 drivers/usb/core/hub.c:5552
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2264
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2410
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the object at ffff8881adb84000
-  which belongs to the cache kmalloc-4k of size 4096
-The buggy address is located 320 bytes inside of
-  4096-byte region [ffff8881adb84000, ffff8881adb85000)
-The buggy address belongs to the page:
-page:ffffea0006b6e000 refcount:1 mapcount:0 mapping:ffff8881da00c280  
-index:0x0 compound_mapcount: 0
-raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da00c280
-raw: 0000000000000000 0000000000040004 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8881adb84000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881adb84080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff8881adb84100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                            ^
-  ffff8881adb84180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881adb84200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+Modules linked in:
+---[ end trace 4651c1a0587de7fd ]---
+RIP: 0010:media_create_pad_link+0x40f/0x530 drivers/media/mc/mc-entity.c:666
+Code: 83 45 3a 01 45 31 e4 e8 9f 93 59 fd 44 89 e0 48 83 c4 18 5b 5d 41 5c  
+41 5d 41 5e 41 5f c3 e8 88 93 59 fd 0f 0b e8 81 93 59 fd <0f> 0b e8 7a 93  
+59 fd 0f 0b e8 53 23 81 fd e9 91 fc ff ff e8 49 23
+RSP: 0018:ffff8881d8c2f058 EFLAGS: 00010293
+RAX: ffff8881da24e200 RBX: ffff8881cf8dc070 RCX: ffffffff83e4dd4b
+RDX: 0000000000000000 RSI: ffffffff83e4e0df RDI: 0000000000000000
+RBP: ffff8881cf8da070 R08: ffff8881da24e200 R09: ffffed1039ff2a91
+R10: ffffed1039ff2a90 R11: ffff8881cff95483 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000003 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f7061237000 CR3: 00000001d148c000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
 ---
@@ -223,3 +157,5 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this bug report. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
