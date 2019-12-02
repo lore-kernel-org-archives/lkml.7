@@ -2,104 +2,108 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C02A4C43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B118CC43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9698620705
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:41:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e/VXVsr9"
+	by mail.kernel.org (Postfix) with ESMTP id 9209E20705
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 12:47:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbfLBMl2 (ORCPT
+        id S1727414AbfLBMrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 07:41:28 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39560 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727354AbfLBMl2 (ORCPT
+        Mon, 2 Dec 2019 07:47:47 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:50451 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727354AbfLBMrr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 07:41:28 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 77so9724040oty.6;
-        Mon, 02 Dec 2019 04:41:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v4jccqE55GWOauKr9QrlxYG6hq9cbi6xQqZ+qrqIQtU=;
-        b=e/VXVsr9R04p7rr2L8KyP22bNyu1F6kLzFl+N967X4X0EUhKeNAuQOI4d/9URUs7yq
-         vQuJW1nmUjm2aqNs440Oyd9DEiTIA711sJ6T2e9PL7fIQmnsxpMYPfHNh6VgW+K8/d+V
-         tNIgJuABB/Awxdq5MUGiUqWHnudEcjTBXawdbkGhsNyqLNMiWuG5iqLh5pKSkg+m3ev9
-         v6uGUIm1ffsavPKXYR0sN2TlhP4meAwCCnPqibjxybVe2piF1T0gFRDl7s8lGAtfK6RK
-         1vULmE13peVsFlFW0Sv4TJMx5fdwHf36/Ldx2KmlgpTo7FLrcftTcpXPZgY864nTbs4M
-         dIYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v4jccqE55GWOauKr9QrlxYG6hq9cbi6xQqZ+qrqIQtU=;
-        b=pKnAV58376C1Z0M0aquE4y6rK2SZMxd32x0qRvuh3feRrYVulpVdKn08mDJKQbrjf2
-         QsO4pkHIaw8sUQRrwtaVpi2SJyYz+iq99Yx/sv6SI6XdPKfXJc+Rh5htz6/fOJcn/+1r
-         9ppxkgVhqYL+R2mumip4/Cqt9MRRZ06QaRR/tsAyV2m/O91Z9SOSUy0a7Y+QV6q0bT6f
-         XZMsmSLEShsAvBHuuzE+dBLsOVn1WCxBWIc0s3RoA53JkbiQGcGyelEy25Ym7tq0ZGpd
-         s/QznPFVqR3FJVT8obBbJNFK46LN8dkab1LDYDItVVfLWrYnab35L2D33KPR6ekWTeSV
-         C8nQ==
-X-Gm-Message-State: APjAAAWX64I0SnInRDZUhmSrzLBSx5bdHWRAODSIHvUrQpYxcTfLvK6T
-        dmfQg/BS7KlrSSxpvyHKWN5j3OD60v7YVlJypkA=
-X-Google-Smtp-Source: APXvYqx/XM1fQDIxfkHKS+KMfb9rRjJmqVh0BNi2GgrRwqAT69ugp8xH+QePfbWm5VS96dIm7/TEW5Vpfll/SUilniA=
-X-Received: by 2002:a05:6830:1db3:: with SMTP id z19mr22245770oti.152.1575290486057;
- Mon, 02 Dec 2019 04:41:26 -0800 (PST)
+        Mon, 2 Dec 2019 07:47:47 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@misterjones.org>)
+        id 1ibl76-0000Yo-Ut; Mon, 02 Dec 2019 13:47:40 +0100
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: Re: [PATCH] PCI: layerscape: Add the SRIOV support in host side
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-References: <20191115113610.21493-1-sudipm.mukherjee@gmail.com>
-In-Reply-To: <20191115113610.21493-1-sudipm.mukherjee@gmail.com>
-From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Date:   Mon, 2 Dec 2019 12:40:49 +0000
-Message-ID: <CADVatmMVcDDys62U31D4zOo4pZ58-YP6O25hAZxNObTTEPpfSg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] libtraceevent: fix lib installation
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
-        arnaldo.melo@gmail.com, Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 02 Dec 2019 12:47:40 +0000
+From:   Marc Zyngier <maz@misterjones.org>
+Cc:     <robh+dt@kernel.org>, <frowand.list@gmail.com>,
+        <minghuan.lian@nxp.com>, <mingkai.hu@nxp.com>, <roy.zang@nxp.com>,
+        <lorenzo.pieralisi@arm.com>, <andrew.murray@arm.com>,
+        <bhelgaas@google.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <zhiqiang.hou@nxp.com>
+Organization: Metropolis
+In-Reply-To: <20191202104506.27916-1-xiaowei.bao@nxp.com>
+References: <20191202104506.27916-1-xiaowei.bao@nxp.com>
+Message-ID: <606a00a2edcf077aa868319e0daa4dbc@www.loen.fr>
+X-Sender: maz@misterjones.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: xiaowei.bao@nxp.com, robh+dt@kernel.org, frowand.list@gmail.com, minghuan.lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, lorenzo.pieralisi@arm.com, andrew.murray@arm.com, bhelgaas@google.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhiqiang.hou@nxp.com
+X-SA-Exim-Mail-From: maz@misterjones.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
-
-On Fri, Nov 15, 2019 at 11:36 AM Sudip Mukherjee
-<sudipm.mukherjee@gmail.com> wrote:
+On 2019-12-02 10:45, Xiaowei Bao wrote:
+> GIC get the map relations of devid and stream id from the msi-map
+> property of DTS, our platform add this property in u-boot base on
+> the PCIe device in the bus, but if enable the vf device in kernel,
+> the vf device msi-map will not set, so the vf device can't work,
+> this patch purpose is that manage the stream id and device id map
+> relations dynamically in kernel, and make the new PCIe device work
+> in kernel.
 >
-> When we use 'O=' with make to build libtraceevent in a separate folder
-> it fails to install libtraceevent.a and libtraceevent.so.1.1.0 with the
-> error:
->   INSTALL  /home/sudip/linux/obj-trace/libtraceevent.a
->   INSTALL  /home/sudip/linux/obj-trace/libtraceevent.so.1.1.0
-> cp: cannot stat 'libtraceevent.a': No such file or directory
-> Makefile:225: recipe for target 'install_lib' failed
-> make: *** [install_lib] Error 1
->
-> I used the command:
-> make O=../../../obj-trace DESTDIR=~/test prefix==/usr  install
->
-> It turns out libtraceevent Makefile, even though it builds in a separate
-> folder, searches for libtraceevent.a and libtraceevent.so.1.1.0 in its
-> source folder.
-> So, add the 'OUTPUT' prefix to the source path so that 'make' looks for
-> the files in the correct place.
->
-> Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 > ---
->  tools/lib/traceevent/Makefile | 1 +
+>  drivers/of/irq.c                            |  9 +++
+>  drivers/pci/controller/dwc/pci-layerscape.c | 94
+> +++++++++++++++++++++++++++++
+>  drivers/pci/probe.c                         |  6 ++
+>  drivers/pci/remove.c                        |  6 ++
+>  4 files changed, 115 insertions(+)
+>
+> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> index a296eaf..791e609 100644
+> --- a/drivers/of/irq.c
+> +++ b/drivers/of/irq.c
+> @@ -576,6 +576,11 @@ void __init of_irq_init(const struct
+> of_device_id *matches)
+>  	}
+>  }
+>
+> +u32 __weak ls_pcie_streamid_fix(struct device *dev, u32 rid)
+> +{
+> +	return rid;
+> +}
+> +
+>  static u32 __of_msi_map_rid(struct device *dev, struct device_node 
+> **np,
+>  			    u32 rid_in)
+>  {
+> @@ -590,6 +595,10 @@ static u32 __of_msi_map_rid(struct device *dev,
+> struct device_node **np,
+>  		if (!of_map_rid(parent_dev->of_node, rid_in, "msi-map",
+>  				"msi-map-mask", np, &rid_out))
+>  			break;
+> +
+> +	if (rid_out == rid_in)
+> +		rid_out = ls_pcie_streamid_fix(parent_dev, rid_in);
 
-A gentle ping.
-I know its the merge window now. But your ack for these two patches will allow
-me to start with the debian workflow.
+Over my dead body. Get your firmware to properly program the LUT
+so that it presents the ITS with a reasonable topology. There is
+absolutely no way this kind of change makes it into the kernel.
 
---
-Regards
-Sudip
+Thanks,
+
+         M.
+-- 
+Who you jivin' with that Cosmik Debris?
