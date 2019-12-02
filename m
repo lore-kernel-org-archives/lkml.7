@@ -2,250 +2,83 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6D4C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA17C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36F6C20722
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:42:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575304932;
-	bh=kKC0g0K61O3ypb3302wwDQnQOQCQsAveLqbvialnyWU=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=SkQ7QmHNsOeREC8yjxzGvm0Qzok+QMKvhLbz2XXjJzQqOYTIPFqpaoZHjNZV/NKS4
-	 o9NdOX/k7Gn8v+epth3TF6geEp73iZzDtyJwBLVgQpMAIkbfawGEcEZZiJitY+Bfau
-	 gmm/2wThXvlAs7HJVFEf9mol585MeIAI50dn7920=
+	by mail.kernel.org (Postfix) with ESMTP id EA7ED2071F
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:43:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OED4IyTy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727658AbfLBQmL (ORCPT
+        id S1727695AbfLBQnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 11:42:11 -0500
-Received: from condef-02.nifty.com ([202.248.20.67]:56029 "EHLO
-        condef-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727455AbfLBQmK (ORCPT
+        Mon, 2 Dec 2019 11:43:32 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:45768 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727459AbfLBQnb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 11:42:10 -0500
-X-Greylist: delayed 722 seconds by postgrey-1.27 at vger.kernel.org; Mon, 02 Dec 2019 11:42:08 EST
-Received: from conssluserg-01.nifty.com ([10.126.8.80])by condef-02.nifty.com with ESMTP id xB2GOgMN031239;
-        Tue, 3 Dec 2019 01:24:42 +0900
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id xB2GOduR012428;
-        Tue, 3 Dec 2019 01:24:39 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com xB2GOduR012428
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1575303880;
-        bh=rm3ZK7yhiq4FZDdHluzZykagSvCfF8C1lx7K2GP6vG0=;
-        h=From:Date:Subject:To:Cc:From;
-        b=ptGFI9grRK6usirFR6+BSc5OGy5NquniEtLGC0KJ8vQ2RYUZOk4HbZKonUfppA027
-         1St7hynnD2atkF9TcI+7SwuBzPbxF/cXnMlY2naaepaYDrteanPwEmH7mPiKo1POHS
-         53vMx+VbTc+riT4l36nA+lj2AKT2xQxT4mygCnvpduUqSNaoYr6PTIxf5vin4vgWST
-         i6uGv9Kp+VU3lR35DKUVRtbUHhN0LUWfJbSrIRPz+yWVhyEj24eeifv/PjwD/TRuZH
-         i8cW7mJZVhR8lYaalRRhcvBWuSqhDJAIXrifmnOjIuskxoQraGFvnNP+QP1Cy6PqR/
-         5xAb8myFPPhaA==
-X-Nifty-SrcIP: [209.85.217.42]
-Received: by mail-vs1-f42.google.com with SMTP id g23so212655vsr.7;
-        Mon, 02 Dec 2019 08:24:39 -0800 (PST)
-X-Gm-Message-State: APjAAAUBTV3sSRsHZx0mEzw9JVubzGz0De+BbOjW+naI3Dhr/zJhT9rt
-        iKVK62tSXvVkyNolXecd2yiVj5M3tpujhTfElys=
-X-Google-Smtp-Source: APXvYqy5QEmkCbvFQme0P5Qi7i5tG5bxFowJIv7zFdC13WbWqqPF9gUA8pn8MMzQqHMLL7YaZ8VoDMznaxjROPH9WuA=
-X-Received: by 2002:a67:30c3:: with SMTP id w186mr1355880vsw.179.1575303878334;
- Mon, 02 Dec 2019 08:24:38 -0800 (PST)
+        Mon, 2 Dec 2019 11:43:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=o7z4AAJInIfL4gKaAcpTvAYmbfUd91xXg4CQ5NXh6Hg=; b=OED4IyTy85CwKHHNf0I7M/htk
+        ZcAmjZQ2PN8ctAtF5U3bxprBSyCP1/Ws5Sd8k0RBVgnjH8CNJ+tJfCw1qL7Q2lLwumHxG7znkiJS0
+        jrz40dFgvwUhsxDK2lfVpE7NtFFAetEy7i4mO4jc0VwvvhXBFnmnFYsHzqA/FEB6LB0i7VNAn8y/V
+        0ibtIKPh3Kz+SUCQhEt/bm7GBLKj3uj5/9D7JkaRk6xvPEwvZNG52wA2H/uCfyraGrlch3xNJg9tM
+        izxfVqqAuBibVLb6OtrUf0hDjACxt/sBvLp3hltyVxoaKAvMbuR7/rX//nWENHnpApRa/6rJ0X3n8
+        akQQTqmcA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ibon7-0001jT-B7; Mon, 02 Dec 2019 16:43:17 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0A9F83011DD;
+        Mon,  2 Dec 2019 17:41:58 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EC849201DD686; Mon,  2 Dec 2019 17:43:13 +0100 (CET)
+Date:   Mon, 2 Dec 2019 17:43:13 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Andi Kleen <ak@linux.intel.com>, kan.liang@linux.intel.com,
+        mingo@redhat.com, acme@kernel.org, tglx@linutronix.de,
+        bp@alien8.de, linux-kernel@vger.kernel.org, eranian@google.com,
+        vitaly.slobodskoy@intel.com
+Subject: Re: [RFC PATCH 3/8] perf: Init/fini PMU specific data
+Message-ID: <20191202164313.GM2844@hirez.programming.kicks-ass.net>
+References: <1574954071-6321-1-git-send-email-kan.liang@linux.intel.com>
+ <1574954071-6321-3-git-send-email-kan.liang@linux.intel.com>
+ <20191202124055.GC2827@hirez.programming.kicks-ass.net>
+ <20191202145957.GM84886@tassilo.jf.intel.com>
+ <79138ea7-2249-b7e0-3541-8569e593c6e8@linux.intel.com>
 MIME-Version: 1.0
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 3 Dec 2019 01:24:02 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATG5bPOn5qD8=NAJP8LwicV0hO4W8WBE8LFgOczEePBKg@mail.gmail.com>
-Message-ID: <CAK7LNATG5bPOn5qD8=NAJP8LwicV0hO4W8WBE8LFgOczEePBKg@mail.gmail.com>
-Subject: [GIT PULL] Kbuild updates for v5.5-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <79138ea7-2249-b7e0-3541-8569e593c6e8@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Mon, Dec 02, 2019 at 07:38:00PM +0300, Alexey Budankov wrote:
+> 
+> On 02.12.2019 17:59, Andi Kleen wrote:
+> >>
+> >> This is atricous crap. Also it is completely broken for -RT.
+> > 
+> > Well can you please suggest how you would implement it instead?
+> 
+> FWIW,
+> An alternative could probably be to make task_ctx_data allocations
+> on the nearest context switch in, and obvious drawback is slowdown on
+> this critical path, but it could be amortized by static branches.
 
-Please pull Kbuild updates for v5.5-rc1.
-
-You will see merge conflicts in two files
-when pulling it.
-
-
-[1] Just delete include/Kbuild, please.
-[2] The fix-up for drivers/gpu/drm/i915/Kconfig.debug
-    is available in linux-next.
-
-Thanks.
-
-
-
-The following changes since commit 31f4f5b495a62c9a8b15b1c3581acd5efeb9af8c:
-
-  Linux 5.4-rc7 (2019-11-10 16:17:15 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
-tags/kbuild-v5.5
-
-for you to fetch changes up to d21b7e6b985c15ff75e8668b0282ec5104391901:
-
-  MAINTAINERS: update Kbuild/Kconfig maintainer's email address
-(2019-12-01 16:13:01 +0900)
-
-----------------------------------------------------------------
-Kbuild updates for v5.5
-
- - remove unneeded asm headers from hexagon, ia64
-
- - add 'dir-pkg' target, which works like 'tar-pkg' but skips archiving
-
- - add 'helpnewconfig' target, which shows help for new CONFIG options
-
- - support 'make nsdeps' for external modules
-
- - make rebuilds faster by deleting $(wildcard $^) checks
-
- - remove compile tests for kernel-space headers
-
- - refactor modpost to simplify modversion handling
-
- - make single target builds faster
-
- - optimize and clean up scripts/kallsyms.c
-
- - refactor various Makefiles and scripts
-
-----------------------------------------------------------------
-Alyssa Ross (1):
-      kconfig: be more helpful if pkg-config is missing
-
-Bhaskar Chowdhury (2):
-      scripts: setlocalversion: replace backquote to dollar parenthesis
-      scripts/ver_linux: add Bison and Flex to the checklist
-
-Geert Uytterhoeven (2):
-      kbuild: Wrap long "make help" text lines
-      kbuild: Extend defconfig field size from 24 to 27
-
-Laura Abbott (1):
-      kconfig: Add option to get the full help text with listnewconfig
-
-Masahiro Yamada (52):
-      hexagon: remove asm/bitsperlong.h
-      ia64: remove unneeded uapi asm-generic wrappers
-      video/logo: simplify cmd_logo
-      video/logo: move pnmtologo tool to drivers/video/logo/ from scripts/
-      kconfig: split util.c out of parser.y
-      kbuild: update comments in scripts/Makefile.modpost
-      modpost: do not parse vmlinux for external module builds
-      kbuild: do not read $(KBUILD_EXTMOD)/Module.symvers
-      kheaders: remove unneeded 'cat' command piped to 'head' / 'tail'
-      kheaders: optimize md5sum calculation for in-tree builds
-      kheaders: optimize header copy for in-tree builds
-      kheaders: remove the last bashism to allow sh to run it
-      kheaders: explain why include/config/autoconf.h is excluded from md5sum
-      kbuild: remove unneeded variable, single-all
-      kbuild: reduce KBUILD_SINGLE_TARGETS as descending into subdirectories
-      kbuild: make single target builds much faster
-      asm-generic/export.h: make __ksymtab_* local symbols
-      asm-generic/export.h: remove unneeded __kcrctab_* symbols
-      modpost: do not invoke extra modpost for nsdeps
-      modpost: free ns_deps_buf.p after writing ns_deps files
-      modpost: dump missing namespaces into a single modules.nsdeps file
-      scripts/nsdeps: support nsdeps for external module builds
-      modpost: remove unneeded local variable in contains_namespace()
-      kbuild: update compile-test header list for v5.5-rc1
-      kbuild: drop $(wildcard $^) check in if_changed* for faster rebuild
-      kbuild: rename any-prereq to newer-prereqs
-      kbuild: remove header compile test
-      kbuild: move headers_check rule to usr/include/Makefile
-      modpost: add a helper to get data pointed by a symbol
-      modpost: refactor namespace_from_kstrtabns() to not hard-code section name
-      modpost: rename handle_modversions() to handle_symbol()
-      modpost: stop symbol preloading for modversion CRC
-      modpost: do not set ->preloaded for symbols from Module.symvers
-      modpost: respect the previous export when 'exported twice' is warned
-      kbuild: make single target builds even faster
-      scripts/kallsyms: remove unneeded #ifndef ARRAY_SIZE
-      scripts/kallsyms: fix definitely-lost memory leak
-      scripts/kallsyms: shrink table before sorting it
-      scripts/kallsyms: set relative_base more effectively
-      scripts/kallsyms: remove redundant is_arm_mapping_symbol()
-      scripts/kallsyms: remove unneeded length check for prefix matching
-      scripts/kallsyms: add sym_name() to mitigate cast ugliness
-      scripts/kallsyms: replace prefix_underscores_count() with strspn()
-      scripts/kallsyms: make find_token() return (unsigned char *)
-      scripts/kallsyms: add const qualifiers where possible
-      scripts/kallsyms: skip ignored symbols very early
-      scripts/kallsyms: move more patterns to the ignored_prefixes array
-      scripts/kallsyms: move ignored symbol types to is_ignored_symbol()
-      scripts/kallsyms: make check_symbol_range() void function
-      scripts/kallsyms: put check_symbol_range() calls close together
-      scripts/kallsyms: remove redundant initializers
-      MAINTAINERS: update Kbuild/Kconfig maintainer's email address
-
-Matteo Croce (1):
-      kbuild: Add make dir-pkg build option
-
- .gitignore                                   |    2 +-
- Documentation/Makefile                       |    6 +-
- Documentation/core-api/symbol-namespaces.rst |    3 +
- Documentation/dontdiff                       |    1 +
- Documentation/kbuild/makefiles.rst           |   17 -
- Documentation/kbuild/modules.rst             |   13 +-
- MAINTAINERS                                  |    4 +-
- Makefile                                     |  121 ++-
- arch/hexagon/include/uapi/asm/bitsperlong.h  |   27 -
- arch/ia64/include/uapi/asm/errno.h           |    2 -
- arch/ia64/include/uapi/asm/ioctl.h           |    2 -
- arch/ia64/include/uapi/asm/ioctls.h          |    7 -
- drivers/gpu/drm/i915/Kconfig.debug           |    1 -
- drivers/video/logo/.gitignore                |    1 +
- drivers/video/logo/Makefile                  |   15 +-
- {scripts => drivers/video/logo}/pnmtologo.c  |    0
- include/Kbuild                               | 1185
------------------------------
- include/asm-generic/export.h                 |    2 -
- init/Kconfig                                 |   22 +-
- kernel/Makefile                              |    2 +-
- kernel/gen_kheaders.sh                       |   64 +-
- lib/Kconfig.debug                            |   11 -
- scripts/.gitignore                           |    1 -
- scripts/Kbuild.include                       |   15 +-
- scripts/Makefile                             |    2 -
- scripts/Makefile.build                       |   20 +-
- scripts/Makefile.headersinst                 |   18 -
- scripts/Makefile.lib                         |   14 -
- scripts/Makefile.modpost                     |   18 +-
- scripts/Makefile.package                     |    6 +-
- scripts/kallsyms.c                           |  287 ++++---
- scripts/kconfig/Makefile                     |   10 +-
- scripts/kconfig/conf.c                       |   13 +-
- scripts/kconfig/mconf-cfg.sh                 |    3 +
- scripts/kconfig/nconf-cfg.sh                 |    3 +
- scripts/kconfig/parser.y                     |    1 -
- scripts/mod/modpost.c                        |  188 +++--
- scripts/mod/modpost.h                        |    5 +-
- scripts/nsdeps                               |   29 +-
- scripts/package/buildtar                     |    8 +-
- scripts/setlocalversion                      |   22 +-
- scripts/ver_linux                            |    2 +
- usr/include/Makefile                         |   19 +-
- 43 files changed, 452 insertions(+), 1740 deletions(-)
- delete mode 100644 arch/hexagon/include/uapi/asm/bitsperlong.h
- delete mode 100644 arch/ia64/include/uapi/asm/errno.h
- delete mode 100644 arch/ia64/include/uapi/asm/ioctl.h
- delete mode 100644 arch/ia64/include/uapi/asm/ioctls.h
- rename {scripts => drivers/video/logo}/pnmtologo.c (100%)
- delete mode 100644 include/Kbuild
-
-
--- 
-Best Regards
-Masahiro Yamada
+Context switch is under a raw_spinlock_t too.
