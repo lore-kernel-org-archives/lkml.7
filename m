@@ -2,99 +2,71 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7FDC43141
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B42E8C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 250DC2071F
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:48:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575305295;
-	bh=YC1D92Q2/C1s5BHdiFIxUIytMAKtToyeLtGa1l/noTo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NN5RlOsbySvpdewVteuHmmR19tFcmsGoadqHfegZ0A9D2GCW0SqMkgTp9NIyL678W
-	 zgtqtsmf2YntOOiOJtY4eHYCz/QHTa8aCSIfHRBZ3d8gfRlLG0i+Xlgth3ZIi01BsT
-	 PFiaL338Dcj+AHuVs8ei2+UX2UGiKb15x+8ntPOw=
+	by mail.kernel.org (Postfix) with ESMTP id 909BE20848
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:48:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbfLBQsO (ORCPT
+        id S1727707AbfLBQsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 11:48:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36446 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727438AbfLBQsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 11:48:14 -0500
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49C4F2084F;
-        Mon,  2 Dec 2019 16:48:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575305293;
-        bh=YC1D92Q2/C1s5BHdiFIxUIytMAKtToyeLtGa1l/noTo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bykY119De2Dhrk6aOlyWBaRhw24DgNOII7pSeQbvYq6wu3HB8bZucLCeyDiyMphHb
-         waaA0naFVT+GSbvm42jVpSwMwWClCWu9aVLJjhdONOMfBEtPbh8DDN4Gg0dgfCKWQz
-         9uRWPv0Sk1cVyfOOCZjMHG+h5prDjgvLgkc+MIT4=
-Received: by mail-qk1-f170.google.com with SMTP id d124so145995qke.6;
-        Mon, 02 Dec 2019 08:48:13 -0800 (PST)
-X-Gm-Message-State: APjAAAXshZvn9lPzSco0kryhudLWxr0rR+BUs6OjoIhpbwX6inNy5B4G
-        5N7B8sWrTFzEx9bHsMb9VrieYsIDXGgQ/oRemg==
-X-Google-Smtp-Source: APXvYqzEf6nK0R9FJCeFAuVHbm+2+Z+yErAyrcxTHZY90AVZEGsjtOmw8+JlCpW8cD4sggibZAOibC9Zpx1Hu5OeO3U=
-X-Received: by 2002:a37:81c6:: with SMTP id c189mr34076068qkd.223.1575305292430;
- Mon, 02 Dec 2019 08:48:12 -0800 (PST)
+        Mon, 2 Dec 2019 11:48:42 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:43500 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727435AbfLBQsm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 11:48:42 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1ibosD-0007nR-Pr; Mon, 02 Dec 2019 16:48:33 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        ocfs2-devel@oss.oracle.com
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ocfs2/dlm: remove redundant assignment to ret
+Date:   Mon,  2 Dec 2019 16:48:33 +0000
+Message-Id: <20191202164833.62865-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20191116205026.dvlevawj5obq7weh@smtp.gmail.com>
- <CAL_JsqJzi_0eYj=rMxwQe+OTh_m3ngocOvcPZd-tykAwAJAw6g@mail.gmail.com> <20191123122548.54f0f529@archlinux>
-In-Reply-To: <20191123122548.54f0f529@archlinux>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 2 Dec 2019 10:48:01 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKOdmCn2cxGcjioUibXc=_2cTWtZb81nEx08CMv2fo6Pw@mail.gmail.com>
-Message-ID: <CAL_JsqKOdmCn2cxGcjioUibXc=_2cTWtZb81nEx08CMv2fo6Pw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: iio: adc: ad7292: Update SPDX identifier
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>,
-        Dragos Bogdan <dragos.bogdan@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 23, 2019 at 6:25 AM Jonathan Cameron <jic23@kernel.org> wrote:
->
-> On Fri, 22 Nov 2019 10:05:52 -0600
-> Rob Herring <robh@kernel.org> wrote:
->
-> > On Sat, Nov 16, 2019 at 2:50 PM Marcelo Schmitt
-> > <marcelo.schmitt1@gmail.com> wrote:
-> > >
-> > > Update SPDX identifier to the preferred dual GPL-2.0 OR BSD-2-Clause
-> > > licensing.
-> > >
-> > > Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> > > ---
-> > > I split the changes into 2 different patches since they are about
-> > > different issues.
-> > >
-> > >  Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> I've applied this to the fixes-togreg branch so it'll go in during
-> the early RCs.  Nice not to have a release with a different
-> license, particularly as this was me running too fast at taking
-> patches.
+From: Colin Ian King <colin.king@canonical.com>
 
-Please send patch 2 sooner rather than later. I would like 'make
-dt_binding_check' to pass in rc1 (or rc2 at the latest) rather than
-rc5/6 as happened in 5.4 cycle. It's hard to complain that patches
-fail it when mainline is already broken.
+The variable ret is being initialized with a value that is never
+read and it is being updated later with a new value.  The initialization
+is redundant and can be removed.
 
-Rob
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ fs/ocfs2/dlm/dlmrecovery.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/ocfs2/dlm/dlmrecovery.c b/fs/ocfs2/dlm/dlmrecovery.c
+index 064ce5bbc3f6..2734867473a6 100644
+--- a/fs/ocfs2/dlm/dlmrecovery.c
++++ b/fs/ocfs2/dlm/dlmrecovery.c
+@@ -1668,7 +1668,7 @@ static int dlm_lockres_master_requery(struct dlm_ctxt *dlm,
+ int dlm_do_master_requery(struct dlm_ctxt *dlm, struct dlm_lock_resource *res,
+ 			  u8 nodenum, u8 *real_master)
+ {
+-	int ret = -EINVAL;
++	int ret;
+ 	struct dlm_master_requery req;
+ 	int status = DLM_LOCK_RES_OWNER_UNKNOWN;
+ 
+-- 
+2.24.0
+
