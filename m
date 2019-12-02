@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E75F7C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF12C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9DC52073F
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C99692073C
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:22:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbfLBSWm (ORCPT
+        id S1728047AbfLBSWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 13:22:42 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36014 "EHLO mx1.suse.de"
+        Mon, 2 Dec 2019 13:22:45 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35968 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727959AbfLBSWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727963AbfLBSWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Dec 2019 13:22:19 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5163FAEF3;
-        Mon,  2 Dec 2019 18:22:17 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 28037AD98;
+        Mon,  2 Dec 2019 18:22:18 +0000 (UTC)
 From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 To:     linux-realtek-soc@lists.infradead.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
@@ -30,9 +30,9 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         James Tai <james.tai@realtek.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH 09/14] arm64: dts: realtek: rtd16xx: Add CRT syscon node
-Date:   Mon,  2 Dec 2019 19:21:59 +0100
-Message-Id: <20191202182205.14629-10-afaerber@suse.de>
+Subject: [PATCH 11/14] arm64: dts: realtek: rtd129x: Add SB2 and SCPU Wrapper syscon nodes
+Date:   Mon,  2 Dec 2019 19:22:01 +0100
+Message-Id: <20191202182205.14629-12-afaerber@suse.de>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20191202182205.14629-1-afaerber@suse.de>
 References: <20191202182205.14629-1-afaerber@suse.de>
@@ -44,34 +44,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prepare a CRT syscon mfd node.
+Add syscon mfd nodes for SB2 and SCPU Wrapper to RTD129x DT.
 
 Cc: James Tai <james.tai@realtek.com>
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- arch/arm64/boot/dts/realtek/rtd16xx.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm64/boot/dts/realtek/rtd129x.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/realtek/rtd16xx.dtsi b/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
-index 8f8f2b328cd1..776efc10bab2 100644
---- a/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
-+++ b/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
-@@ -118,6 +118,15 @@
- 			#size-cells = <1>;
- 			ranges = <0x0 0x98000000 0x200000>;
+diff --git a/arch/arm64/boot/dts/realtek/rtd129x.dtsi b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
+index 34dc09790d0b..39aefe66a794 100644
+--- a/arch/arm64/boot/dts/realtek/rtd129x.dtsi
++++ b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
+@@ -81,6 +81,15 @@
+ 				ranges = <0x0 0x7000 0x1000>;
+ 			};
  
-+			crt: syscon@0 {
++			sb2: syscon@1a000 {
 +				compatible = "syscon", "simple-mfd";
-+				reg = <0x0 0x1000>;
++				reg = <0x1a000 0x1000>;
 +				reg-io-width = <4>;
 +				#address-cells = <1>;
 +				#size-cells = <1>;
-+				ranges = <0x0 0x0 0x1000>;
++				ranges = <0x0 0x1a000 0x1000>;
 +			};
 +
- 			iso: syscon@7000 {
+ 			misc: syscon@1b000 {
  				compatible = "syscon", "simple-mfd";
- 				reg = <0x7000 0x1000>;
+ 				reg = <0x1b000 0x1000>;
+@@ -89,6 +98,15 @@
+ 				#size-cells = <1>;
+ 				ranges = <0x0 0x1b000 0x1000>;
+ 			};
++
++			scpu_wrapper: syscon@1d000 {
++				compatible = "syscon", "simple-mfd";
++				reg = <0x1d000 0x2000>;
++				reg-io-width = <4>;
++				#address-cells = <1>;
++				#size-cells = <1>;
++				ranges = <0x0 0x1d000 0x2000>;
++			};
+ 		};
+ 
+ 		gic: interrupt-controller@ff011000 {
 -- 
 2.16.4
 
