@@ -2,132 +2,140 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9403AC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8D6C43141
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 714E32071F
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 879F220748
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 16:37:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TXlfLkNQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbfLBQho (ORCPT
+        id S1727683AbfLBQhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 11:37:44 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:52856 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727418AbfLBQho (ORCPT
+        Mon, 2 Dec 2019 11:37:53 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:46246 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727418AbfLBQhx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 11:37:44 -0500
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1ibohU-00030f-Dp; Mon, 02 Dec 2019 17:37:28 +0100
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        kexec@lists.infradead.org
-Subject: Re: [RFC PATCH v5 1/3] printk-rb: new printk ringbuffer implementation (writer)
-References: <20191128015235.12940-1-john.ogness@linutronix.de>
-        <20191128015235.12940-2-john.ogness@linutronix.de>
-        <20191202154841.qikvuvqt4btudxzg@pathway.suse.cz>
-        <20191202155955.meawljmduiciw5t2@pathway.suse.cz>
-Date:   Mon, 02 Dec 2019 17:37:26 +0100
-In-Reply-To: <20191202155955.meawljmduiciw5t2@pathway.suse.cz> (Petr Mladek's
-        message of "Mon, 2 Dec 2019 16:59:55 +0100")
-Message-ID: <87sgm2fzuh.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Mon, 2 Dec 2019 11:37:53 -0500
+Received: by mail-il1-f193.google.com with SMTP id t17so186307ilm.13;
+        Mon, 02 Dec 2019 08:37:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2h8wdrXvnncmWCF77v8dSWf6+7HM1jrsdePjMP6K/Bo=;
+        b=TXlfLkNQjoEHdXaQVklK3Uw+gGemK6Mwc1vT8jIQsfyYpzHmNyYPA69GnOfcwaTlSF
+         /OD/sgq4o+c/VtZwFAfZCpFSPkG46jbjpuAz8NHVfUvVCN3TS+NihpI0H9AwAyk5/Ag4
+         sHWcRXNc1WB6HIU3ZrGKfzgcWrEdXauhRg5a46qqDicILaqGpbFk+3I3NfEYjq9XUH0/
+         CZl2b6d04Bde4lILMwDLrhIAOIpB6edUvXTuv+ABmaoXv1MAAcnLZtDgjxA/fDdMp0SN
+         ufwP7Yq4x8lpCflJYiBzDJ37vpRKfFzJeM66N0/l6IKyodBrFMx++srRheGKhfV14O39
+         9O3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2h8wdrXvnncmWCF77v8dSWf6+7HM1jrsdePjMP6K/Bo=;
+        b=FXj4rLRde5ftZzofdF8sFngzkXdZsrBLbNoTt+U9S/c/+D5oAXyzNiR1OxMn8sOfS+
+         vzNoyFglpmjZmzseR8py5vH9vzuqnK2jKWhLlseucRuoTPbkWkx6f4rpopbHyQ0UB7VM
+         9wJZjY1QfWQBfXN3XjFm1cHrBKdC779tNnf88sjNeA3GSb+r6JJbhqYHuefJFdJG8MIu
+         wkoYCA5aZBv2TnUlxHtcrgl3xU3rMTt9LOUn9MEae1Yqi+diW1uM7Yx2F0iMeXDfMh41
+         ltEbVgkEkFl7mFKfp1Rei0av1k3e6Q6JApAi5ajG99OcQxsltmRoUWnfc02n4iy6p38n
+         /KTQ==
+X-Gm-Message-State: APjAAAX/oSpwsY4DTx8orOnAwRX8GRweo0OLS3gB7kMeMdxOtAJR6EhA
+        HiuVxdof5LebJg0nqXegIcSh47lok9bcBQe8uwI=
+X-Google-Smtp-Source: APXvYqzp1Xd703HeRlD50En4AyiDZ1bxrwk+Gf7H2uCn/NWWWtxiWGhbFN7PzEyUWULIA67Tyq2FAV0tgpPc0osRBJ4=
+X-Received: by 2002:a92:b60e:: with SMTP id s14mr68353788ili.178.1575304672579;
+ Mon, 02 Dec 2019 08:37:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+References: <20191127141544.4277-1-leo.yan@linaro.org> <20191127141544.4277-2-leo.yan@linaro.org>
+In-Reply-To: <20191127141544.4277-2-leo.yan@linaro.org>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Mon, 2 Dec 2019 09:37:41 -0700
+Message-ID: <CAOCk7NryqvGjkWYKcHp+bNxqfG7AWsN5tvhx71ZWObvssXV3mA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] tty: serial: msm_serial: Fix lockup for sysrq and oops
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Nicolas Dechesne <nicolas.dechesne@linaro.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        linux-serial@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-02, Petr Mladek <pmladek@suse.com> wrote:
->> > +/* Reserve a new descriptor, invalidating the oldest if necessary. */
->> > +static bool desc_reserve(struct printk_ringbuffer *rb, u32 *id_out)
->> > +{
->> > +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
->> > +	struct prb_desc *desc;
->> > +	u32 id_prev_wrap;
->> > +	u32 head_id;
->> > +	u32 id;
->> > +
->> > +	head_id = atomic_read(&desc_ring->head_id);
->> > +
->> > +	do {
->> > +		desc = to_desc(desc_ring, head_id);
->> > +
->> > +		id = DESC_ID(head_id + 1);
->> > +		id_prev_wrap = DESC_ID_PREV_WRAP(desc_ring, id);
->> > +
->> > +		if (id_prev_wrap == atomic_read(&desc_ring->tail_id)) {
->> > +			if (!desc_push_tail(rb, id_prev_wrap))
->> > +				return false;
->> > +		}
->> > +	} while (!atomic_try_cmpxchg(&desc_ring->head_id, &head_id, id));
->> 
->> Hmm, in theory, ABA problem might cause that we successfully
->> move desc_ring->head_id when tail has not been pushed yet.
->> 
->> As a result we would never call desc_push_tail() until
->> it overflows again.
->> 
->> I am not sure if we need to take care of it. The code is called with
->> interrupts disabled. IMHO, only NMI could cause ABA problem
->> in reality. But the game (debugging) is lost anyway when NMI ovewrites
->> the buffer several times.
+On Wed, Nov 27, 2019 at 7:16 AM Leo Yan <leo.yan@linaro.org> wrote:
 >
-> BTW: If I am counting correctly. The ABA problem would happen when
-> exactly 2^30 (1G) messages is written in the mean time.
-
-All the ringbuffer code assumes that the use of index numbers handles
-the ABA problem (i.e. there must not be 1 billion printk's within an
-NMI). If we want to support 1 billion+ printk's within an NMI, then
-perhaps the index number should be increased. For 64-bit systems it
-would be no problem to go to 62 bits. For 32-bit systems, I don't know
-how well the 64-bit atomic operations are supported.
-
->> Also it should not be a complete failure. We still could bail out when
->> the previous state was not reusable. We are on the safe side
->> when it was reusable.
->> 
->> Also we could probably detect when desc_ring->tail_id is not
->> updated any longer and do something about it.
->> 
->> > +
->> > +	desc = to_desc(desc_ring, id);
->> > +
->> > +	/* Set the descriptor's ID and also set its state to reserved. */
->> > +	atomic_set(&desc->state_var, id | 0);
->> 
->> We should check here that the original state id from the previous
->> wrap in reusable state (or 0 for bootstrap). On error, we know that
->> there was the ABA problem and would need to do something about it.
+> As the commit 677fe555cbfb ("serial: imx: Fix recursive locking bug")
+> has mentioned the uart driver might cause recursive locking between
+> normal printing and the kernel debugging facilities (e.g. sysrq and
+> oops).  In the commit it gave out suggestion for fixing recursive
+> locking issue: "The solution is to avoid locking in the sysrq case
+> and trylock in the oops_in_progress case."
 >
-> I believe that it should be enough to add this check and
-> bail out in case of error.
+> This patch follows the suggestion (also used the exactly same code with
+> other serial drivers, e.g. amba-pl011.c) to fix the recursive locking
+> issue, this can avoid stuck caused by deadlock and print out log for
+> sysrq and oops.
+>
+> Fixes: 04896a77a97b ("msm_serial: serial driver for MSM7K onboard serial peripheral.")
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 
-I need to go through the code again in detail and see how many locations
-are affected by ABA. All the code was written with the assumption that
-this type of ABA will not happen.
+Looks sane to me
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-As you've stated, we could add minimal handling so that the ringbuffer
-at least does not break or get stuck.
-
-BTW: The same assumption is made for logical positions. There are 4
-times as many of these (on 32-bit systems) but logical positions advance
-much faster. I will review these as well.
-
-John Ogness
+> ---
+>  drivers/tty/serial/msm_serial.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
+> index 3657a24913fc..889538182e83 100644
+> --- a/drivers/tty/serial/msm_serial.c
+> +++ b/drivers/tty/serial/msm_serial.c
+> @@ -1576,6 +1576,7 @@ static void __msm_console_write(struct uart_port *port, const char *s,
+>         int num_newlines = 0;
+>         bool replaced = false;
+>         void __iomem *tf;
+> +       int locked = 1;
+>
+>         if (is_uartdm)
+>                 tf = port->membase + UARTDM_TF;
+> @@ -1588,7 +1589,13 @@ static void __msm_console_write(struct uart_port *port, const char *s,
+>                         num_newlines++;
+>         count += num_newlines;
+>
+> -       spin_lock(&port->lock);
+> +       if (port->sysrq)
+> +               locked = 0;
+> +       else if (oops_in_progress)
+> +               locked = spin_trylock(&port->lock);
+> +       else
+> +               spin_lock(&port->lock);
+> +
+>         if (is_uartdm)
+>                 msm_reset_dm_count(port, count);
+>
+> @@ -1624,7 +1631,9 @@ static void __msm_console_write(struct uart_port *port, const char *s,
+>                 iowrite32_rep(tf, buf, 1);
+>                 i += num_chars;
+>         }
+> -       spin_unlock(&port->lock);
+> +
+> +       if (locked)
+> +               spin_unlock(&port->lock);
+>  }
+>
+>  static void msm_console_write(struct console *co, const char *s,
+> --
+> 2.17.1
+>
