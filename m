@@ -2,92 +2,125 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93775C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D09FC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63FAE2084F
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:11:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uP8y/Lzi"
+	by mail.kernel.org (Postfix) with ESMTP id 29C8720718
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 18:11:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbfLBSK7 (ORCPT
+        id S1727905AbfLBSLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 13:10:59 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:35668 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727670AbfLBSK7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 13:10:59 -0500
-Received: by mail-pj1-f66.google.com with SMTP id s8so74287pji.2;
-        Mon, 02 Dec 2019 10:10:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OWl5LMlyWthCEsecxcscMjlc8//jLun1U4+HNkZP2EQ=;
-        b=uP8y/LziWCPvQnk7isxZu1yhkNU4fMAOvEeJBpxzG1hUwojItHcdqelLFdCjb+vXJl
-         VdYqUYnEuTe7F/sZ0mW45o+WXnEyj0KFG2EttqOFSnTGHFscKDpd/zWdDyLDVq753J1A
-         Wtp1poTat69yQymDjAaChATPzk6U8M1t7KVGxOJhBTNo26W1p4eocxQ0kTXHRXjQrrOj
-         gi7KUg8UD6eO2zu4BYA2GCtiOzONY2qMV0d1qjhzvNvdmrQWGrA2SVoM6vuQuStLfTts
-         H34wikchwvobC63jBu9jJjtnmLhWgBTmS34tnc+ncdGAdP+Se0sHHhVBNZdB4TxZJl9T
-         ao+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OWl5LMlyWthCEsecxcscMjlc8//jLun1U4+HNkZP2EQ=;
-        b=aYDqIRXz4rXiY9nR01d0mUoVXHHtrOoRhxXkfPOeorwUU6znUpou2dVElpP9jJQsoV
-         9JcjSphYajU9Je7S9vJ+N30Uq5+JNRIiJtMakK2evGpQ/DN8/9E3SoZAaDNbwSvBeYkX
-         wX8hvolAySMdDJ+3F+hEZy3+Df/xFEQlUSr6fldIzeg9NhBRU1nPfdOQT4DkSXfifZEM
-         R9Kg7qpKZ3+IRkPDXGL7ZwExKiS75Oift6pi87NWNlvnk6EXJ8y8YWf0Rqiw2YeN4vi+
-         LM5GuBfMDDKrU9dXFMVmC8pN/g889KVjPthXsr2SRPR+vbvsj98ew1aTmH/ry40NAZRi
-         ELmA==
-X-Gm-Message-State: APjAAAWi9B5EtwzO2iVjZhnjjbie9Gf4E62fzyiW661UidIuc7cnoQaq
-        dUTK2s3e4oezWfQb9Zpos5s=
-X-Google-Smtp-Source: APXvYqwb+PHDoFPOZYqIaZPMZD2O8EccPICF7fxGPPwMqJjvCNUXFL4eFf6NfxpqCyuQOKO87y/vjg==
-X-Received: by 2002:a17:90a:b304:: with SMTP id d4mr409661pjr.142.1575310258156;
-        Mon, 02 Dec 2019 10:10:58 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id h185sm236616pgc.87.2019.12.02.10.10.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 10:10:57 -0800 (PST)
-Date:   Mon, 2 Dec 2019 10:10:54 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Luca Weiss <luca@z3ntu.xyz>
-Cc:     linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marek Vasut <marex@denx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: ili210x - add ili2120 support
-Message-ID: <20191202181054.GF50317@dtor-ws>
-References: <20191119180543.120362-1-luca@z3ntu.xyz>
+        Mon, 2 Dec 2019 13:11:12 -0500
+Received: from mga12.intel.com ([192.55.52.136]:48020 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727893AbfLBSLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 13:11:11 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 10:11:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,270,1571727600"; 
+   d="scan'208";a="213113529"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga006.jf.intel.com with ESMTP; 02 Dec 2019 10:11:10 -0800
+Date:   Mon, 2 Dec 2019 10:15:53 -0800
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        "Mehta, Sohil" <sohil.mehta@intel.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v4 8/8] iommu/vt-d: Misc macro clean up for SVM
+Message-ID: <20191202101553.079898a3@jacob-builder>
+In-Reply-To: <38d4586f3aeb21bb08028525db89868acb34e9fd.camel@perches.com>
+References: <1574371588-65634-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1574371588-65634-9-git-send-email-jacob.jun.pan@linux.intel.com>
+        <38d4586f3aeb21bb08028525db89868acb34e9fd.camel@perches.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191119180543.120362-1-luca@z3ntu.xyz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luca,
+On Thu, 21 Nov 2019 13:37:10 -0800
+Joe Perches <joe@perches.com> wrote:
 
-On Tue, Nov 19, 2019 at 07:05:43PM +0100, Luca Weiss wrote:
-> This adds support for the Ilitek ili2120 touchscreen found in the
-> Fairphone 2 smartphone.
+> On Thu, 2019-11-21 at 13:26 -0800, Jacob Pan wrote:
+> > Use combined macros for_each_svm_dev() to simplify SVM device
+> > iteration and error checking.  
+> []
+> > diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c  
+> []
+> > +#define for_each_svm_dev(sdev, svm, d)			\
+> > +	list_for_each_entry((sdev), &(svm)->devs, list)	\
+> > +		if ((d) != (sdev)->dev) {} else
+> > +
+> >  int intel_svm_bind_mm(struct device *dev, int *pasid, int flags,
+> > struct svm_dev_ops *ops) {
+> >  	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
+> > @@ -274,15 +278,13 @@ int intel_svm_bind_mm(struct device *dev, int
+> > *pasid, int flags, struct svm_dev_ goto out;
+> >  			}
+> >  
+> > -			list_for_each_entry(sdev, &svm->devs,
+> > list) {
+> > -				if (dev == sdev->dev) {
+> > -					if (sdev->ops != ops) {
+> > -						ret = -EBUSY;
+> > -						goto out;
+> > -					}
+> > -					sdev->users++;
+> > -					goto success;
+> > +			for_each_svm_dev(sdev, svm, dev) {
+> > +				if (sdev->ops != ops) {
+> > +					ret = -EBUSY;
+> > +					goto out;
+> >  				}
+> > +				sdev->users++;
+> > +				goto success;
+> >  			}  
+> 
+> I think this does not read better as this is now a
+> for_each loop that exits the loop on the first match.
+> 
+I think one of the benefits is reduced indentation. What do you
+recommend?
 
-The driver has been reworked recently, please update on top of the
-latest version.
+> >  
+> >  			break;
+> > @@ -427,43 +429,36 @@ int intel_svm_unbind_mm(struct device *dev,
+> > int pasid) goto out;
+> >  	}
+> >  
+> > -	if (!svm)
+> > -		goto out;
+> > -
+> > -	list_for_each_entry(sdev, &svm->devs, list) {  
+> []
+> > +	for_each_svm_dev(sdev, svm, dev) {  
+> 
+> I think this should not remove the !svm test above.
+> 
+Yeah, !svm test should have been part of 6/8. I will fix that.
 
-Thanks.
+Thanks,
 
--- 
-Dmitry
+Jacob 
+> 
+
+[Jacob Pan]
