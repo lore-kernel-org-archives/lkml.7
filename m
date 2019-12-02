@@ -2,79 +2,147 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F55C43141
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C0AC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A87DF217D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 731E520848
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 19:54:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728181AbfLBTyD (ORCPT
+        id S1728138AbfLBTxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 14:54:03 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:53918 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728080AbfLBTyB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 14:54:01 -0500
-Received: by mail-il1-f198.google.com with SMTP id d3so634131ilg.20
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 11:54:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=sYedtpyaMKG5whWJkf6dyBRhk3jwnlp5j6dMs2CqDFU=;
-        b=smTZ1gUqa4DIogj1fcAdL9sdXQ/v4JPt7EP1Dmunj3wYgQZDbqWYqijK6sgIDqZw1p
-         9caG/QoAM8sjJ8rILQWq8vhhDKyqrZDj+OE46uu8wffpxzPNMaoNl6ajI4ImY4f8Budf
-         lm6sRoRaymTh3CfIVR+B3dVq57w+xMmosMFN0UqYfOGOv2pxdfec/MrUShs738bJoMOE
-         2qWNy+99/6d9MU316mTUXr7NAQDDx+H8NhGf8ruulc2zFsZNi8C09nAWDLcwA2HMIGue
-         U3xhygZc66TI5nDvBepFhVY4GEGOZDd0OjzqN8nlqaaBtwDedG6miHqNX0aEGcjwUQLX
-         S1Nw==
-X-Gm-Message-State: APjAAAV9I/2bqG3z+tcRGyW5Qq3zJYsYLGEphbIbFURU45cqXH/CHC1x
-        V3qf4mO82qhAhehLJNsXWmeRlwN7/TLVcED1qEFTXUBzKj5f
-X-Google-Smtp-Source: APXvYqwCsGxdE1Q39uMe3w+N7P34H3tGUIGjHKavf2twfv9j9z6nDvvs/vMFI7BQnMa0/lyn5/xB48hDQosPeU+CdJaN0K7ha/dE
-MIME-Version: 1.0
-X-Received: by 2002:a02:b47:: with SMTP id 68mr1505294jad.49.1575316440400;
- Mon, 02 Dec 2019 11:54:00 -0800 (PST)
-Date:   Mon, 02 Dec 2019 11:54:00 -0800
-In-Reply-To: <000000000000a6324b0598b2eb59@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d6c9870598bdf090@google.com>
-Subject: Re: KASAN: slab-out-of-bounds Write in pipe_write
-From:   syzbot <syzbot+838eb0878ffd51f27c41@syzkaller.appspotmail.com>
-To:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Mon, 2 Dec 2019 14:53:52 -0500
+Received: from mga06.intel.com ([134.134.136.31]:62618 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727935AbfLBTxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 14:53:50 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 11:53:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,270,1571727600"; 
+   d="scan'208";a="218438153"
+Received: from jacob-builder.jf.intel.com ([10.7.199.155])
+  by fmsmga001.fm.intel.com with ESMTP; 02 Dec 2019 11:53:49 -0800
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>, "Yi Liu" <yi.l.liu@intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        "Mehta, Sohil" <sohil.mehta@intel.com>,
+        Joe Perches <joe@perches.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v5 4/8] iommu/vt-d: Avoid duplicated code for PASID setup
+Date:   Mon,  2 Dec 2019 11:58:25 -0800
+Message-Id: <1575316709-54903-5-git-send-email-jacob.jun.pan@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1575316709-54903-1-git-send-email-jacob.jun.pan@linux.intel.com>
+References: <1575316709-54903-1-git-send-email-jacob.jun.pan@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+After each setup for PASID entry, related translation caches must be
+flushed. We can combine duplicated code into one function which is less
+error prone.
 
-commit a194dfe6e6f6f7205eea850a420f2bc6a1541209
-Author: David Howells <dhowells@redhat.com>
-Date:   Fri Sep 20 15:32:19 2019 +0000
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+---
+ drivers/iommu/intel-pasid.c | 48 +++++++++++++++++----------------------------
+ 1 file changed, 18 insertions(+), 30 deletions(-)
 
-     pipe: Rearrange sequence in pipe_write() to preallocate slot
+diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
+index e7cb0b8a7332..732bfee228df 100644
+--- a/drivers/iommu/intel-pasid.c
++++ b/drivers/iommu/intel-pasid.c
+@@ -465,6 +465,21 @@ void intel_pasid_tear_down_entry(struct intel_iommu *iommu,
+ 		devtlb_invalidation_with_pasid(iommu, dev, pasid);
+ }
+ 
++static void pasid_flush_caches(struct intel_iommu *iommu,
++				struct pasid_entry *pte,
++				int pasid, u16 did)
++{
++	if (!ecap_coherent(iommu->ecap))
++		clflush_cache_range(pte, sizeof(*pte));
++
++	if (cap_caching_mode(iommu->cap)) {
++		pasid_cache_invalidation_with_pasid(iommu, did, pasid);
++		iotlb_invalidation_with_pasid(iommu, did, pasid);
++	} else {
++		iommu_flush_write_buffer(iommu);
++	}
++}
++
+ /*
+  * Set up the scalable mode pasid table entry for first only
+  * translation type.
+@@ -518,16 +533,7 @@ int intel_pasid_setup_first_level(struct intel_iommu *iommu,
+ 	/* Setup Present and PASID Granular Transfer Type: */
+ 	pasid_set_translation_type(pte, 1);
+ 	pasid_set_present(pte);
+-
+-	if (!ecap_coherent(iommu->ecap))
+-		clflush_cache_range(pte, sizeof(*pte));
+-
+-	if (cap_caching_mode(iommu->cap)) {
+-		pasid_cache_invalidation_with_pasid(iommu, did, pasid);
+-		iotlb_invalidation_with_pasid(iommu, did, pasid);
+-	} else {
+-		iommu_flush_write_buffer(iommu);
+-	}
++	pasid_flush_caches(iommu, pte, pasid, did);
+ 
+ 	return 0;
+ }
+@@ -591,16 +597,7 @@ int intel_pasid_setup_second_level(struct intel_iommu *iommu,
+ 	 */
+ 	pasid_set_sre(pte);
+ 	pasid_set_present(pte);
+-
+-	if (!ecap_coherent(iommu->ecap))
+-		clflush_cache_range(pte, sizeof(*pte));
+-
+-	if (cap_caching_mode(iommu->cap)) {
+-		pasid_cache_invalidation_with_pasid(iommu, did, pasid);
+-		iotlb_invalidation_with_pasid(iommu, did, pasid);
+-	} else {
+-		iommu_flush_write_buffer(iommu);
+-	}
++	pasid_flush_caches(iommu, pte, pasid, did);
+ 
+ 	return 0;
+ }
+@@ -634,16 +631,7 @@ int intel_pasid_setup_pass_through(struct intel_iommu *iommu,
+ 	 */
+ 	pasid_set_sre(pte);
+ 	pasid_set_present(pte);
+-
+-	if (!ecap_coherent(iommu->ecap))
+-		clflush_cache_range(pte, sizeof(*pte));
+-
+-	if (cap_caching_mode(iommu->cap)) {
+-		pasid_cache_invalidation_with_pasid(iommu, did, pasid);
+-		iotlb_invalidation_with_pasid(iommu, did, pasid);
+-	} else {
+-		iommu_flush_write_buffer(iommu);
+-	}
++	pasid_flush_caches(iommu, pte, pasid, did);
+ 
+ 	return 0;
+ }
+-- 
+2.7.4
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16085abce00000
-start commit:   b94ae8ad Merge tag 'seccomp-v5.5-rc1' of git://git.kernel...
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=15085abce00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=11085abce00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ff560c3de405258c
-dashboard link: https://syzkaller.appspot.com/bug?extid=838eb0878ffd51f27c41
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=146a9f86e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1791d82ae00000
-
-Reported-by: syzbot+838eb0878ffd51f27c41@syzkaller.appspotmail.com
-Fixes: a194dfe6e6f6 ("pipe: Rearrange sequence in pipe_write() to  
-preallocate slot")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
