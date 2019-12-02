@@ -2,142 +2,137 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5CBC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF381C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78E352071E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8592D2070A
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 22:52:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mn08Nirf"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ImnkRo0m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbfLBWkl (ORCPT
+        id S1726079AbfLBWwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 17:40:41 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:38382 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725853AbfLBWkl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 17:40:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575326440;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hwCovQ1A2FIuM4qGkGFZtb5WeOCUje3jnQT4pB8ARrA=;
-        b=Mn08NirfqtBIoTt+22IJb0WDQpmiRj+Mk1Q/y/xpzwBpGXEmolK9NQnv/aCJPQev2yHbf5
-        lVa4b0V974cWnSzWvklZTiyyKNArre/cE8kzR3/VNxEqwpNBfa5BCNSvIXFPFXIm7+qVpx
-        c/pB9BgJ8JSbpjVXk3x17KlKA+d0Bc0=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-336-xLTYbVsjPT2jmUjaQ1GSiA-1; Mon, 02 Dec 2019 17:40:38 -0500
-Received: by mail-qv1-f72.google.com with SMTP id d38so849838qvc.5
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 14:40:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=A88TYrr+6QOTlvqShlweWdE3g666CkKb/QVajbFrpQI=;
-        b=nkPPCjoNK1w7g5kZLXRvVDwUCp3uwixIoUVFZP8yBVbRsr8Ipsugr2W/qFekcvb9UP
-         Rg8aXqbf7+YAIZUhMijcSTMO2jK5uZnXgXGRPKZ/RBN75mm79Vhi/Re7nJnFAnHF/Pk0
-         C0Gv5N8TLpRW8M2YGYY7xqbyWaehCmSKAqD+DAPW9IoaoXOby+OzBTwLJ2Mg1hmeYbZw
-         X2Ye2643xq2l6X3ciKk2zTpgrodDNV1iV9+8DT4zrXPDcqk3cGXKMEsUxgSBOyRFvrAW
-         Ew1WEhDaRiMJovzwMIDFzOakO4re/Ixe5LY2bPHdldqBMErppvKag51NVSwRytzYaL10
-         kyNQ==
-X-Gm-Message-State: APjAAAVmgWoi7zO6XAc5zj77EWer+QUAFz4vC+fLU9/YejEjoDDEhVCv
-        3XmsWjzdt/tksLlmT52HbxD93FYEgjWifqpgZCFdx+H3vwyoQO/O4fkf8Ocurr4PyIV5DW9BbAc
-        f+Amn2ks1Unt0GoXrhYGAcO/G
-X-Received: by 2002:ac8:2632:: with SMTP id u47mr2029168qtu.54.1575326437883;
-        Mon, 02 Dec 2019 14:40:37 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw0JXhcvRX7e044tXudZta8UN6SWffpQCBnM5ZwWBduteqD4RVUl21bTGrSw2DHFn+vpV/4cA==
-X-Received: by 2002:ac8:2632:: with SMTP id u47mr2029148qtu.54.1575326437538;
-        Mon, 02 Dec 2019 14:40:37 -0800 (PST)
-Received: from xz-x1 ([2607:9880:19c0:3f::3])
-        by smtp.gmail.com with ESMTPSA id o10sm519593qtp.38.2019.12.02.14.40.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 14:40:36 -0800 (PST)
-Date:   Mon, 2 Dec 2019 17:40:34 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH RFC 03/15] KVM: Add build-time error check on kvm_run size
-Message-ID: <20191202224034.GH31681@xz-x1>
-References: <20191129213505.18472-1-peterx@redhat.com>
- <20191129213505.18472-4-peterx@redhat.com>
- <20191202193027.GH4063@linux.intel.com>
- <20191202205315.GD31681@xz-x1>
- <20191202221949.GD8120@linux.intel.com>
-MIME-Version: 1.0
-In-Reply-To: <20191202221949.GD8120@linux.intel.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-MC-Unique: xLTYbVsjPT2jmUjaQ1GSiA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
+        Mon, 2 Dec 2019 17:52:02 -0500
+Received: from mail-eopbgr130057.outbound.protection.outlook.com ([40.107.13.57]:17293
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725835AbfLBWwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 17:52:01 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=j+L6IKyFsPNxONHE8p32DtpovjvFP+0kx3L6s7LJ1s+3yRVAyGcloIE92RKyQ+rEJfnELTb8juTIgeHa0A+NALKzoR/0uXviYZ0fg77VPsWSPQJSeqzB8d8nqf1054O50gFNTmfi97XryzU0/VN+5Y4VjUt4ZLoT5L1n8nFBpGDoJ2bktqAIpr4Hv8GGatueo7qMZ1n+aWweCmkvJfWx2/w0Dfx2wEzXaoHJw1qkToO/7MzeeNnuzEET7udzhvknrz/31fjoe+NZWNLS6zoyUO9PpQC1zCxD1RPC34+e1o/mDF4SsbCGVaSvha8bwwyNOee4iic19KONefK/dvVQAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Z8FyuXm79w//A8asyiSVH3/UepC+XF9SGERVHtcW1+M=;
+ b=SuHlgac0rtibdh4w5zlA7vIFhDUrxUTBpt2UeCp5vH3t2DxyF4Vvn2hkmXt/4mZz8w6xon4/qUChN/8+wSlkwNuNgNyxYcQVeXVKpKlFhJl/e4lkYk3J11PIBguDcGmlMP9Tb4F1Voloaepucu+ED+ts6Zmzo6VV8CKp56fcrz1pPQ2z0Siz84m6Qu3LBFOyrYXsI0GkyHjR24POoZibHGTgOMWbYzvA5UqUhoOtWDokaBk6VGkvJs4WjdKZ3O2yC1lagvOrz+Oq8XN1bL1CQoXGRdeMTJY81uj4TBjNEdMlPIv8kj8WoZQEGz0pSvymw9Ytnl/nAacu55gBovkkVw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Z8FyuXm79w//A8asyiSVH3/UepC+XF9SGERVHtcW1+M=;
+ b=ImnkRo0m+54eJ7tv6jesz+T8D2BzdKsVkjbHT2kcVdiKR3s0PahkfVUAx7NFp6DqetPb6j/WWqtre/KrPTjFKscd/fUFD7LbyiX/LiwkERoRNqSfKo4w64qvDZKQAn0gbXqOd4Vnqy/WfDXVO/I9VowiKPrgrNggGfTr+E0Th+Q=
+Received: from VE1PR04MB6687.eurprd04.prod.outlook.com (20.179.234.30) by
+ VE1PR04MB6639.eurprd04.prod.outlook.com (10.255.118.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.20; Mon, 2 Dec 2019 22:51:58 +0000
+Received: from VE1PR04MB6687.eurprd04.prod.outlook.com
+ ([fe80::e948:7a32:ae88:906d]) by VE1PR04MB6687.eurprd04.prod.outlook.com
+ ([fe80::e948:7a32:ae88:906d%4]) with mapi id 15.20.2495.014; Mon, 2 Dec 2019
+ 22:51:57 +0000
+From:   Leo Li <leoyang.li@nxp.com>
+To:     David Miller <davem@davemloft.net>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Scott Wood <oss@buserror.net>, Timur Tabi <timur@kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Qiang Zhao <qiang.zhao@nxp.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: RE: [PATCH v6 44/49] net/wan/fsl_ucc_hdlc: avoid use of
+ IS_ERR_VALUE()
+Thread-Topic: [PATCH v6 44/49] net/wan/fsl_ucc_hdlc: avoid use of
+ IS_ERR_VALUE()
+Thread-Index: AQHVpfw8xYSflyw9IkOdsMxlnEQBn6enLxpw
+Date:   Mon, 2 Dec 2019 22:51:57 +0000
+Message-ID: <VE1PR04MB6687B5428E3E4FA0F8F77DF08F430@VE1PR04MB6687.eurprd04.prod.outlook.com>
+References: <20191128145554.1297-1-linux@rasmusvillemoes.dk>
+ <20191128145554.1297-45-linux@rasmusvillemoes.dk>
+In-Reply-To: <20191128145554.1297-45-linux@rasmusvillemoes.dk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leoyang.li@nxp.com; 
+x-originating-ip: [64.157.242.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f8e19fe5-4c13-4dc1-c242-08d7777a3c6a
+x-ms-traffictypediagnostic: VE1PR04MB6639:|VE1PR04MB6639:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB66394E3D2D3794331BAA4C378F430@VE1PR04MB6639.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0239D46DB6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(136003)(346002)(366004)(39860400002)(13464003)(189003)(199004)(71190400001)(54906003)(305945005)(7696005)(6436002)(55016002)(478600001)(66556008)(9686003)(6116002)(66476007)(3846002)(33656002)(81166006)(6506007)(53546011)(102836004)(229853002)(316002)(26005)(52536014)(81156014)(8676002)(186003)(5660300002)(76176011)(446003)(8936002)(64756008)(66946007)(74316002)(256004)(76116006)(11346002)(2906002)(66066001)(99286004)(6246003)(25786009)(86362001)(14454004)(6916009)(71200400001)(66446008)(7736002)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6639;H:VE1PR04MB6687.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: oHI+Ro1l1oUKotJ9dFwGUR+h9jhDj4qj0OJdjxd8pXEJUo0HpRfigtCooYWyPQfW3GPxUZPCykti0e545kdIT94ePVd5XGWj/FNPFCDpaBYRtD3Q/nmrFKtCn6bV/PJlG9qWesacx4regJGyHnok8vtkptn7Ktt1OCpHC5844G4Mxz0ZDfqZGiOj/dZ8gPVO14talZsntRqOIyQWDAyyZnS7InFxQM5vPjDM6rGXh36yBdx29NQV5QXUQzW0L86toxKPeT2HG2tdiNnxu6bMAUg4UdUJ4DP9qwERov4ky2l+mTQjRyLFEbZx+1e3/pPav/5kuQS/hLzD6kHVUReKAyN+eJ1LayTZyTzqnUa/h3ti8mFtqrzEQDuCARuMAYiTe1FBI9B3i4IavS86M96BjeVfcYFzH0hv/gz5EhDlfLH4wnkjQHnTDycWo+NcFpqV
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f8e19fe5-4c13-4dc1-c242-08d7777a3c6a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Dec 2019 22:51:57.8420
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4Cmoq7GJ25Rua++mGquLIq17ARcLHN5IKcLl5Fy30JWq85NVWNdYgiCKuMpoDkPteTmltYYeK4m4dPjOifD+EA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6639
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 02:19:49PM -0800, Sean Christopherson wrote:
-> On Mon, Dec 02, 2019 at 03:53:15PM -0500, Peter Xu wrote:
-> > On Mon, Dec 02, 2019 at 11:30:27AM -0800, Sean Christopherson wrote:
-> > > On Fri, Nov 29, 2019 at 04:34:53PM -0500, Peter Xu wrote:
-> > > > It's already going to reach 2400 Bytes (which is over half of page
-> > > > size on 4K page archs), so maybe it's good to have this build-time
-> > > > check in case it overflows when adding new fields.
-> > >=20
-> > > Please explain why exceeding PAGE_SIZE is a bad thing.  I realize it'=
-s
-> > > almost absurdly obvious when looking at the code, but a) the patch it=
-self
-> > > does not provide that context and b) the changelog should hold up on =
-its
-> > > own,
-> >=20
-> > Right, I'll enhance the commit message.
-> >=20
-> > > e.g. in a mostly hypothetical case where the allocation of vcpu->run
-> > > were changed to something else.
-> >=20
-> > And that's why I added BUILD_BUG_ON right beneath that allocation. :)
->=20
-> My point is that if the allocation were changed to no longer be a
-> straightforward alloc_page() then someone reading the combined code would
-> have no idea why the BUILD_BUG_ON() exists.  It's a bit ridiculous for
-> this case because the specific constraints of vcpu->run make it highly
-> unlikely to use anything else, but that's beside the point.
->=20
-> > It's just a helper for developers when adding new kvm_run fields, not
-> > a risk for anyone who wants to start allocating more pages for it.
->=20
-> But by adding a BUILD_BUG_ON without explaining *why*, you're placing an
-> extra burden on someone that wants to increase the size of kvm->run, e.g.
-> it's not at all obvious from the changelog whether this patch is adding
-> the BUILD_BUG_ON purely because the code allocates memory for vcpu->run
-> via alloc_page(), or if there is some fundamental aspect of vcpu->run tha=
-t
-> requires it to never span multiple pages.
 
-How about I add a comment above it?
 
-  /*
-   * Currently kvm_run only uses one physical page.  Warn the develper
-   * if kvm_run accidentaly grows more than that.
-   */
-  BUILD_BUG_ON(...);
+> -----Original Message-----
+> From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Sent: Thursday, November 28, 2019 8:56 AM
+> To: Qiang Zhao <qiang.zhao@nxp.com>; Leo Li <leoyang.li@nxp.com>;
+> Christophe Leroy <christophe.leroy@c-s.fr>
+> Cc: linuxppc-dev@lists.ozlabs.org; linux-arm-kernel@lists.infradead.org;
+> linux-kernel@vger.kernel.org; Scott Wood <oss@buserror.net>; Timur Tabi
+> <timur@kernel.org>; Rasmus Villemoes <linux@rasmusvillemoes.dk>;
+> netdev@vger.kernel.org
+> Subject: [PATCH v6 44/49] net/wan/fsl_ucc_hdlc: avoid use of
+> IS_ERR_VALUE()
+
+Hi David,
+
+Would you help to review patch 44-47 in the series?  If it is fine with you=
+, I can take these 4 patches with the whole series though soc tree to enabl=
+e the QE drivers on ARM and PPC64 with your ACK.
 
 Thanks,
+Leo
 
---=20
-Peter Xu
+>=20
+> When building this on a 64-bit platform gcc rightly warns that the error
+> checking is broken (-ENOMEM stored in an u32 does not compare greater
+> than (unsigned long)-MAX_ERRNO). Instead, now that
+> qe_muram_alloc() returns s32, use that type to store the return value and
+> use standard kernel style "ret < 0".
+>=20
+> Reviewed-by: Timur Tabi <timur@kernel.org>
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
