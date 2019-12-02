@@ -2,120 +2,129 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC492C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B29CC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B355A206E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:22:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE293206E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:22:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nn8mWKLL"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="xjiDFUmN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfLBNWc (ORCPT
+        id S1727511AbfLBNWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 08:22:32 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:44282 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727381AbfLBNWc (ORCPT
+        Mon, 2 Dec 2019 08:22:41 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:58134 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727381AbfLBNWl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 08:22:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ByS6cD7gHgezj2QYsDI0rCaLPzSlfQQauHPBggjUu7I=; b=nn8mWKLLbMKOmA3ZsBMGrY8vJ
-        oKPxt6FMFyDq9qjHHN89s8Qf9NvSnVRlJIZLwNm/zjdd3Yn2J3ncJc1A83cWHYhIwZxb/UjQsNQIP
-        boUEmaup22i3FqmH/aj5nvcWVduxnEfY5bDgT8v8XGeNJPvxbYFnEFJcKBOjba+l+3xe/770v8F37
-        Tpj4tklgf5gIJ1BufrlZ+b5GaLncPAMDmskVvT849QuxtlcehhyLwfRrEc9J3v/7ump96LRkeqwoG
-        4wPi1BwRR4aW/NyhAsbQgo81MslJv3/em2HExZqqpMXxQGqxcStYgfUiHiUnwYmKTt+Wg89fZYLnm
-        wXoE5yy/Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ibleQ-0008FP-19; Mon, 02 Dec 2019 13:22:06 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 657E83006E3;
-        Mon,  2 Dec 2019 14:20:48 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1606E20236A4D; Mon,  2 Dec 2019 14:22:04 +0100 (CET)
-Date:   Mon, 2 Dec 2019 14:22:04 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     mingo@redhat.com, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched/cfs: fix spurious active migration
-Message-ID: <20191202132204.GK2844@hirez.programming.kicks-ass.net>
-References: <1575036287-6052-1-git-send-email-vincent.guittot@linaro.org>
+        Mon, 2 Dec 2019 08:22:41 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB2DCk8P026461;
+        Mon, 2 Dec 2019 14:22:15 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=e/Togba5U9ys+8oqJTXGaZUdpDWn0rAPQUQJmgN0SO0=;
+ b=xjiDFUmNL8x0aNlPPh4I+U6OGwFIwBLTXy6g0AQPbagKm2qGswk+2ggHTZ2a8UsUtb2X
+ nAwm5FaCrwh03iIfMRdTlMS+fKf56ZAGPa8pmTSlv7f0P5Ky74GRGah5on0gmZ6vkJaG
+ YNzx7Pu0ZPcI5XBoyZIfU6vFtAMwT2du5F9PP6n2K6wBNjYrYLhruXTtK29hn1eRnYlI
+ OOHhzEoCQQyzQF96dDgN8NZhdt4kb4PqggrM+TmjmefeL1rhydNdHGZHnsyx24umUg3y
+ iacc5eHs9dIUDtYBNshxOjf6Gx9b3o+1ADV1BOgFYlzdK/fHZ3oqLNFsT83KvgjOLISk fg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2wkg6k9qtd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 Dec 2019 14:22:15 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1F43A100039;
+        Mon,  2 Dec 2019 14:22:15 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0BEF42C9D9B;
+        Mon,  2 Dec 2019 14:22:15 +0100 (CET)
+Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 2 Dec
+ 2019 14:22:14 +0100
+Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
+ SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
+ 15.00.1473.003; Mon, 2 Dec 2019 14:22:14 +0100
+From:   Fabien DESSENNE <fabien.dessenne@st.com>
+To:     Marc Zyngier <maz@kernel.org>,
+        Daode Huang <huangdaode@hisilicon.com>
+CC:     "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Alexandre TORGUE <alexandre.torgue@st.com>
+Subject: Re: [PATCH] irqchip/stm32: Fix "WARNING: invalid free of devm_
+ allocated
+Thread-Topic: [PATCH] irqchip/stm32: Fix "WARNING: invalid free of devm_
+ allocated
+Thread-Index: AQHVqRODxV7lpFAqyU+rnFWM+DebYg==
+Date:   Mon, 2 Dec 2019 13:22:14 +0000
+Message-ID: <d7a90e49-b847-7fad-d11c-5969050e8d12@st.com>
+References: <1574931880-168682-1-git-send-email-huangdaode@hisilicon.com>
+ <8acaa494701c91b8a8acd60a2390d810@www.loen.fr>
+ <028744c349410eb1f74b7e2b18590c75@www.loen.fr>
+In-Reply-To: <028744c349410eb1f74b7e2b18590c75@www.loen.fr>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.45]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D0A2F87ABFC4674D83462422A4D8618F@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1575036287-6052-1-git-send-email-vincent.guittot@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-02_02:2019-11-29,2019-12-02 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 03:04:47PM +0100, Vincent Guittot wrote:
-> The load balance can fail to find a suitable task during the periodic check
-> because  the imbalance is smaller than half of the load of the waiting
-> tasks. This results in the increase of the number of failed load balance,
-> which can end up to start an active migration. This active migration is
-> useless because the current running task is not a better choice than the
-> waiting ones. In fact, the current task was probably not running but
-> waiting for the CPU during one of the previous attempts and it had already
-> not been selected.
-> 
-> When load balance fails too many times to migrate a task, we should relax
-> the contraint on the maximum load of the tasks that can be migrated
-> similarly to what is done with cache hotness.
-> 
-> Before the rework, load balance used to set the imbalance to the average
-> load_per_task in order to mitigate such situation. This increased the
-> likelihood of migrating a task but also of selecting a larger task than
-> needed while more appropriate ones were in the list.
-> 
-> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> ---
-> 
-> I haven't seen any noticable performance changes on the benchmarks that I
-> usually run but the problem can be easily highlight with a simple test
-> with 9 always running tasks on 8 cores.
-> 
->  kernel/sched/fair.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index e0d662a..d1b4fa7 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -7433,7 +7433,14 @@ static int detach_tasks(struct lb_env *env)
->  			    load < 16 && !env->sd->nr_balance_failed)
->  				goto next;
->  
-> -			if (load/2 > env->imbalance)
-> +			/*
-> +			 * Make sure that we don't migrate too much load.
-> +			 * Nevertheless, let relax the constraint if
-> +			 * scheduler fails to find a good waiting task to
-> +			 * migrate.
-> +			 */
-> +			if (load/2 > env->imbalance &&
-> +			    env->sd->nr_balance_failed <= env->sd->cache_nice_tries)
->  				goto next;
->  
->  			env->imbalance -= load;
-
-The alternative is carrying a flag that inhibits incrementing
-nr_balance_failed.
-
-Not migrating anything when doing so would make the imbalance worse is
-not a failure after all.
+SGkgRGFvZGUsDQoNCg0KSSBjb25maXJtIHRoYXQgdGhpcyBwYXRjaCBpcyBub3QgYSBnb29kIGlk
+ZWEsIGhlcmUgYXJlIHNvbWUgZXhwbGFuYXRpb25zLg0KDQppcnEtc3RtMzItZXh0aS5jIGRlYWxz
+IHdpdGggdHdvIGRpZmZlcmVudCBwdXJwb3NlczoNCg0KLSBlaXRoZXIgaXQgaXMgdXNlZCB0byBw
+cm9iZSB0aGUgInN0LHN0bTMybXAxLWV4dGkiIGNvbXBhdGlibGUgZGV2aWNlLiANCkluIHRoYXQg
+Y2FzZSAucHJvYmUoKSBpcyBpbnZva2VkIGFuZCB1c2VzIGRldm1fa3phbGxvYygpIHRvIGdldCBt
+ZW1vcnkuIA0KTm8gbmVlZCB0byBmcmVlIG1lbW9yeS4NCg0KLWVpdGhlciBpcyBpdCB1c2VkIGZv
+ciBvdGhlciBzdG0zMiBkZXZpY2VzLiBJbiB0aGF0IGNhc2UsIHRoZXJlIGlzIG5vIA0KcHJvYmUg
+ZnVuY3Rpb24sIHRoZSBkcml2ZXIgaXMgJ2p1c3QnIGluaXQnZWQuIEluIHRoYXQgY2FzZSwgDQpk
+ZXZtX2t6YWxsb2MoKSBpcyBub3QgdXNlZCBhbmQgZXhwbGljaXQgZnJlZSBtZW1vcnkgaXMgcmVx
+dWlyZWQuDQoNCkFzIHNhaWQgYnkgTWFyaywgeW91IGhhdmUganVzdCBtaXhlZCB0aGUgdHdvIHBh
+dGhzLg0KDQpGYWJpZW4NCg0KDQoNCk9uIDAyLzEyLzIwMTkgMTo0MCBQTSwgTWFyYyBaeW5naWVy
+IHdyb3RlOg0KPiBPbiAyMDE5LTEyLTAyIDEyOjI5LCBNYXJjIFp5bmdpZXIgd3JvdGU6DQo+PiBP
+biAyMDE5LTExLTI4IDA5OjA0LCBEYW9kZSBIdWFuZyB3cm90ZToNCj4+PiBTaW5jZSBkZXZtXyBh
+bGxvY2F0ZWQgZGF0YSBjYW4gYmUgYXV0b21haXRjYWxseSByZWxlYXNlZCwgaXQncyBubw0KPj4+
+IG5lZWQgdG8gZnJlZSBpdCBhcHBhcmVudGx5LCBqdXN0IHJlbW92ZSBpdC4NCj4+Pg0KPj4+IEZp
+eGVzOiBjZmJmOWU0OTcwOTQgKCJpcnFjaGlwL3N0bTMyOiBVc2UgYSBwbGF0Zm9ybSBkcml2ZXIg
+Zm9yDQo+Pj4gc3RtMzJtcDEtZXh0aSBkZXZpY2UiKQ0KPj4+IFNpZ25lZC1vZmYtYnk6IERhb2Rl
+IEh1YW5nIDxodWFuZ2Rhb2RlQGhpc2lsaWNvbi5jb20+DQo+Pj4gLS0tDQo+Pj4gwqBkcml2ZXJz
+L2lycWNoaXAvaXJxLXN0bTMyLWV4dGkuYyB8IDIgLS0NCj4+PiDCoDEgZmlsZSBjaGFuZ2VkLCAy
+IGRlbGV0aW9ucygtKQ0KPj4+DQo+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaXJxY2hpcC9pcnEt
+c3RtMzItZXh0aS5jDQo+Pj4gYi9kcml2ZXJzL2lycWNoaXAvaXJxLXN0bTMyLWV4dGkuYw0KPj4+
+IGluZGV4IGUwMGYyZmEuLjQ2ZWMwYWYgMTAwNjQ0DQo+Pj4gLS0tIGEvZHJpdmVycy9pcnFjaGlw
+L2lycS1zdG0zMi1leHRpLmMNCj4+PiArKysgYi9kcml2ZXJzL2lycWNoaXAvaXJxLXN0bTMyLWV4
+dGkuYw0KPj4+IEBAIC03NzksOCArNzc5LDYgQEAgc3RhdGljIGludCBfX2luaXQgc3RtMzJfZXh0
+aV9pbml0KGNvbnN0IHN0cnVjdA0KPj4+IHN0bTMyX2V4dGlfZHJ2X2RhdGEgKmRydl9kYXRhLA0K
+Pj4+IMKgwqDCoMKgIGlycV9kb21haW5fcmVtb3ZlKGRvbWFpbik7DQo+Pj4gwqBvdXRfdW5tYXA6
+DQo+Pj4gwqDCoMKgwqAgaW91bm1hcChob3N0X2RhdGEtPmJhc2UpOw0KPj4+IC3CoMKgwqAga2Zy
+ZWUoaG9zdF9kYXRhLT5jaGlwc19kYXRhKTsNCj4+PiAtwqDCoMKgIGtmcmVlKGhvc3RfZGF0YSk7
+DQo+Pj4gwqDCoMKgwqAgcmV0dXJuIHJldDsNCj4+PiDCoH0NCj4+DQo+PiBBcHBsaWVkLCB0aGFu
+a3MuDQo+DQo+IFNjcmF0Y2ggdGhhdC4gVGhpcyBwYXRjaCBpcyBqdXN0IHdyb25nLCBhbmQganVz
+dCByZWFkaW5nIHRoZSBjb2RlDQo+IG1ha2VzIGl0IG9idmlvdXMuIHN0bTMyX2V4dGlfaW5pdCgp
+IGlzIG9ubHkgY2FsbGVkIG9uIHBhdGhzDQo+IHRoYXQgYWxsb2NhdGUgdGhlIG1lbW9yeSB3aXRo
+IGttYWxsb2MuDQo+DQo+IENsZWFybHkgeW91IGhhdmVuJ3QgdHJpZWQgdG8gdW5kZXJzdGFuZCB3
+aGF0IGlzIGdvaW5nIG9uLg0KPg0KPiDCoMKgwqDCoMKgwqDCoCBNLg==
