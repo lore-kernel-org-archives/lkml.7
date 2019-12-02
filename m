@@ -2,135 +2,138 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 035CDC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA5BC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C09B1206E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 13:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C5312070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 14:01:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I7qqQUgI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qaYV4IDk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfLBNv5 (ORCPT
+        id S1727451AbfLBOBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 08:51:57 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:32837 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727391AbfLBNv4 (ORCPT
+        Mon, 2 Dec 2019 09:01:16 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:36776 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727362AbfLBOBP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 08:51:56 -0500
-Received: by mail-lf1-f68.google.com with SMTP id n25so2997565lfl.0
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 05:51:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XtfrhDtdzCxL3Xb03lgcl6ONk0p14oDVPbfrCoLCTMU=;
-        b=I7qqQUgIRQI7EvMDT1n9KA9WL1pREVLQG4Gy1MMgNgkHkI6mI8NkY8tAcgJEyeN1EI
-         Tvq5XCwrx+YayBLix/B7JoMLMfsQRB6/o6h/nLbRqfAJHwo+l8pvb3nPInFItyzQahw0
-         yli8WLpCd1GTRxgD53W2iUjZMqHKZe7ZQ+czZDzMucz54z3ffRnxYB0nZ7sbpRHJ+N/b
-         kWXGgf7/+fkOY3JhmJSJ+XgnfO9HHj7XbJtv9udwWBff2Vg6vM34UY1VkZtFhG5T10lY
-         tJ0GZhsoTnhPdki/eZ7IhFt81RWn/95wb+MnTVxdjgWQ2Qwb6GAfhEwPFkzQWb4S6MLR
-         laLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XtfrhDtdzCxL3Xb03lgcl6ONk0p14oDVPbfrCoLCTMU=;
-        b=FXGXPg10ciG8S2l4tPUDQE8/b6x9FhB+GQJrhav1HQD4ujXS0YPQCPdTxeOPYU8/rR
-         7I0CScRUiKXVWTql8hEmfapJ8O5sfEbMqjeoB95Vi+LB1/uqWbVk9DCnAEhJ1PpIpEGZ
-         rbpwtBLIuju9Xl1RLWhkgfwwiSOQJw5Y8ZBfXO3rjbvxqy+H7MNawognq1L2TdMm566w
-         KhrvckhWuTZYn5tt32NrNcUQClhV9QqOIcRn5i0KREEbKFDNBXI7+ec7lzN0KHzxLit3
-         /ktv/jgQUfOHDGF3LDyinSDVWxyNs9CiC2hIToZ/zrOlM4d0mvhP3sL/ieEhcX+iFCJk
-         5bKA==
-X-Gm-Message-State: APjAAAVQtdR32OIGMj630LzalHTTesy3+qXowlsBdyNWfJ940J8nDr/B
-        oJ2qmBrw18uZg0C+YJ4ky5zc8g08Ng3D+AbahBd5lg==
-X-Google-Smtp-Source: APXvYqxv39zeUzBPjDccuBFGveDJk4YfxKmPUP3c+dQ3y0cUEEzwQitLsma2s/6tRgHQzP+bFJA9NMzIsOR96I5mLoc=
-X-Received: by 2002:ac2:4c8e:: with SMTP id d14mr37142463lfl.32.1575294714613;
- Mon, 02 Dec 2019 05:51:54 -0800 (PST)
+        Mon, 2 Dec 2019 09:01:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=93Mq4hGdwdZNtTVNb7h07FqV5Mx6ZBkun/PInhPUvK4=; b=qaYV4IDkSUmBBTbEa4wLLu5/Fo
+        OJsXD57aGELBrcxhoAXSne5BvxwEZatEnO6wELplNpLRJceBEgXrLqUdwk33crjIoaauEv3QndcDz
+        IiLZvn+IMAmSMiNQEB/Pvzbt6UQygwx5m6k+v4PCIPxVeM3D66dPRd1MmuyKPmgzxwi5Sc7YcUy4l
+        RWAHelsytXAs80uW6C0sq+myEhjnnJTXouudhPqqsoHqC0WwtQEdDTpW9j3T+PjZ7BB1lKQ0CA5BB
+        aDZ9f3f3y031J4P8+4vhRPXrCbyTHcK6nteiWTdgux+BeR+38yFSWIJKz1JmYY4ESAYI8EYk8kYsn
+        ovEbaKIA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ibmG7-0005BI-Go; Mon, 02 Dec 2019 14:01:03 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4D04C3006E3;
+        Mon,  2 Dec 2019 14:59:44 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0CC89201A401D; Mon,  2 Dec 2019 15:01:00 +0100 (CET)
+Date:   Mon, 2 Dec 2019 15:00:59 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     roman.sudarikov@linux.intel.com
+Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        eranian@google.com, bgregg@netflix.com, ak@linux.intel.com,
+        kan.liang@linux.intel.com, alexander.antonov@intel.com
+Subject: Re: [PATCH 1/6] perf x86: Infrastructure for exposing an Uncore unit
+ to PMON mapping
+Message-ID: <20191202140059.GL2844@hirez.programming.kicks-ass.net>
+References: <20191126163630.17300-1-roman.sudarikov@linux.intel.com>
+ <20191126163630.17300-2-roman.sudarikov@linux.intel.com>
 MIME-Version: 1.0
-References: <1575036287-6052-1-git-send-email-vincent.guittot@linaro.org> <20191202132204.GK2844@hirez.programming.kicks-ass.net>
-In-Reply-To: <20191202132204.GK2844@hirez.programming.kicks-ass.net>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Mon, 2 Dec 2019 14:51:43 +0100
-Message-ID: <CAKfTPtBgZZWUonqdkOMJCyJSxSkGtbiWji=bR4LaZZJ=mVW-zQ@mail.gmail.com>
-Subject: Re: [PATCH] sched/cfs: fix spurious active migration
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191126163630.17300-2-roman.sudarikov@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Dec 2019 at 14:22, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Fri, Nov 29, 2019 at 03:04:47PM +0100, Vincent Guittot wrote:
-> > The load balance can fail to find a suitable task during the periodic check
-> > because  the imbalance is smaller than half of the load of the waiting
-> > tasks. This results in the increase of the number of failed load balance,
-> > which can end up to start an active migration. This active migration is
-> > useless because the current running task is not a better choice than the
-> > waiting ones. In fact, the current task was probably not running but
-> > waiting for the CPU during one of the previous attempts and it had already
-> > not been selected.
-> >
-> > When load balance fails too many times to migrate a task, we should relax
-> > the contraint on the maximum load of the tasks that can be migrated
-> > similarly to what is done with cache hotness.
-> >
-> > Before the rework, load balance used to set the imbalance to the average
-> > load_per_task in order to mitigate such situation. This increased the
-> > likelihood of migrating a task but also of selecting a larger task than
-> > needed while more appropriate ones were in the list.
-> >
-> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> > ---
-> >
-> > I haven't seen any noticable performance changes on the benchmarks that I
-> > usually run but the problem can be easily highlight with a simple test
-> > with 9 always running tasks on 8 cores.
-> >
-> >  kernel/sched/fair.c | 9 ++++++++-
-> >  1 file changed, 8 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index e0d662a..d1b4fa7 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -7433,7 +7433,14 @@ static int detach_tasks(struct lb_env *env)
-> >                           load < 16 && !env->sd->nr_balance_failed)
-> >                               goto next;
-> >
-> > -                     if (load/2 > env->imbalance)
-> > +                     /*
-> > +                      * Make sure that we don't migrate too much load.
-> > +                      * Nevertheless, let relax the constraint if
-> > +                      * scheduler fails to find a good waiting task to
-> > +                      * migrate.
-> > +                      */
-> > +                     if (load/2 > env->imbalance &&
-> > +                         env->sd->nr_balance_failed <= env->sd->cache_nice_tries)
-> >                               goto next;
-> >
-> >                       env->imbalance -= load;
->
-> The alternative is carrying a flag that inhibits incrementing
-> nr_balance_failed.
->
-> Not migrating anything when doing so would make the imbalance worse is
-> not a failure after all.
+On Tue, Nov 26, 2019 at 07:36:25PM +0300, roman.sudarikov@linux.intel.com wrote:
+> From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
+> 
+> Intel® Xeon® Scalable processor family (code name Skylake-SP) makes significant
+> changes in the integrated I/O (IIO) architecture. The new solution introduces
+> IIO stacks which are responsible for managing traffic between the PCIe domain
+> and the Mesh domain. Each IIO stack has its own PMON block and can handle either
+> DMI port, x16 PCIe root port, MCP-Link or various built-in accelerators.
+> IIO PMON blocks allow concurrent monitoring of I/O flows up to 4 x4 bifurcation
+> within each IIO stack.
+> 
+> Software is supposed to program required perf counters within each IIO stack
+> and gather performance data. The tricky thing here is that IIO PMON reports data
+> per IIO stack but users have no idea what IIO stacks are - they only know devices
+> which are connected to the platform.
+> 
+> Understanding IIO stack concept to find which IIO stack that particular IO device
+> is connected to, or to identify an IIO PMON block to program for monitoring
+> specific IIO stack assumes a lot of implicit knowledge about given Intel server
+> platform architecture.
+> 
+> This patch set introduces:
+>     An infrastructure for exposing an Uncore unit to Uncore PMON mapping through sysfs-backend
+>     A new --iiostat mode in perf stat to provide I/O performance metrics per I/O device
+> 
+> Current version supports a server line starting Intel® Xeon® Processor Scalable
+> Family and introduces mapping for IIO Uncore units only.
+> Other units can be added on demand.
+> 
+> Usage example:
+>     /sys/devices/uncore_<type>_<pmu_idx>/platform_mapping
+> 
+> Each Uncore unit type, by its nature, can be mapped to its own context, for example:
+>     CHA - each uncore_cha_<pmu_idx> is assigned to manage a distinct slice of LLC capacity
+>     UPI - each uncore_upi_<pmu_idx> is assigned to manage one link of Intel UPI Subsystem
+>     IIO - each uncore_iio_<pmu_idx> is assigned to manage one stack of the IIO module
+>     IMC - each uncore_imc_<pmu_idx> is assigned to manage one channel of Memory Controller
+> 
+> Implementation details:
+>     Two callbacks added to struct intel_uncore_type to discover and map Uncore units to PMONs:
+>         int (*get_topology)(struct intel_uncore_type *type)
+>         int (*set_mapping)(struct intel_uncore_type *type)
+> 
+>     IIO stack to PMON mapping is exposed through
+>         /sys/devices/uncore_iio_<pmu_idx>/platform_mapping
+>         in the following format: domain:bus
+> 
+> Details of IIO Uncore unit mapping to IIO PMON:
+> Each IIO stack is either a DMI port, x16 PCIe root port, MCP-Link or various
+> built-in accelerators. For Uncore IIO Unit type, the platform_mapping file
+> holds bus numbers of devices, which can be monitored by that IIO PMON block
+> on each die.
+> 
+> For example, on a 4-die Intel Xeon® server platform:
+>     $ cat /sys/devices/uncore_iio_0/platform_mapping
+>     0000:00,0000:40,0000:80,0000:c0
+> 
+> Which means:
+> IIO PMON block 0 on die 0 belongs to IIO stack located on bus 0x00, domain 0x0000
+> IIO PMON block 0 on die 1 belongs to IIO stack located on bus 0x40, domain 0x0000
+> IIO PMON block 0 on die 2 belongs to IIO stack located on bus 0x80, domain 0x0000
+> IIO PMON block 0 on die 3 belongs to IIO stack located on bus 0xc0, domain 0x0000
+> 
+> Signed-off-by: Roman Sudarikov <roman.sudarikov@linux.intel.com>
+> Co-developed-by: Alexander Antonov <alexander.antonov@intel.com>
+> Signed-off-by: Alexander Antonov <alexander.antonov@intel.com>
 
-Yeah I thought about this possibility but this behavior will make a
-big difference compared to legacy load balance and i'm not sure about
-the impact on performance because we can generate significant
-unfairness with 2 tasks sharing a CPU while others have a full CPU in
-the example that I mentioned above.
+Kan, can you help these people? There's a ton of process fail with this
+submission. From SoB chain to CodingStyle to git-sendmail threading.
