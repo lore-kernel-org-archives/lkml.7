@@ -2,233 +2,85 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5D2C43215
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 11:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E932C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 11:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE05C217F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 11:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EA4B2084F
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 11:16:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727454AbfLBLNC (ORCPT
+        id S1727433AbfLBLQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 06:13:02 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:34073 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbfLBLNB (ORCPT
+        Mon, 2 Dec 2019 06:16:26 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60946 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbfLBLQ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 06:13:01 -0500
-Received: from droid15-sz.amlogic.com (10.28.8.25) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Mon, 2 Dec 2019
- 19:13:26 +0800
-From:   Jian Hu <jian.hu@amlogic.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Jian Hu <jian.hu@amlogic.com>, Kevin Hilman <khilman@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        <linux-amlogic@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH] arm64: dts: meson-a1: add I2C nodes
-Date:   Mon, 2 Dec 2019 19:12:52 +0800
-Message-ID: <20191202111253.94872-1-jian.hu@amlogic.com>
-X-Mailer: git-send-email 2.24.0
+        Mon, 2 Dec 2019 06:16:26 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 6522E28DB10
+Subject: Re: [PATCH] platform/chrome: wilco_ec: fix use after free issue
+To:     Wen Yang <wenyang@linux.alibaba.com>,
+        Benson Leung <bleung@chromium.org>
+Cc:     xlpang@linux.alibaba.com, Nick Crews <ncrews@chromium.org>,
+        linux-kernel@vger.kernel.org
+References: <20191130130842.33763-1-wenyang@linux.alibaba.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <5d19df91-ac9a-05a5-3636-c5f1594138a3@collabora.com>
+Date:   Mon, 2 Dec 2019 12:16:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.28.8.25]
+In-Reply-To: <20191130130842.33763-1-wenyang@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are four I2C controllers in A1 series,
-Share the same comptible with AXG.The I2C nodes
-depend on pinmux and clock controller.
+Hi Wen,
 
-Signed-off-by: Jian Hu <jian.hu@amlogic.com>
----
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 149 ++++++++++++++++++++++
- 1 file changed, 149 insertions(+)
+On 30/11/19 14:08, Wen Yang wrote:
+> This is caused by dereferencing 'dev_data' after put_device() in
+> the telem_device_remove() function.
+> This patch just moves the put_device() down a bit to avoid this
+> issue.
+> 
+> Fixes: 1210d1e6bad1 ("platform/chrome: wilco_ec: Add telemetry char device interface")
+> Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+> Cc: Benson Leung <bleung@chromium.org>
+> Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Cc: Nick Crews <ncrews@chromium.org>
+> Cc: linux-kernel@vger.kernel.org
+> ---
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-index eab2ecd36aa8..d0a73d953f5e 100644
---- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-@@ -16,6 +16,13 @@
- 	#address-cells = <2>;
- 	#size-cells = <2>;
- 
-+	aliases {
-+		i2c0 = &i2c0;
-+		i2c1 = &i2c1;
-+		i2c2 = &i2c2;
-+		i2c3 = &i2c3;
-+	};
-+
- 	cpus {
- 		#address-cells = <2>;
- 		#size-cells = <0>;
-@@ -117,6 +124,46 @@
- 				};
- 			};
- 
-+			i2c0: i2c@1400 {
-+				compatible = "amlogic,meson-axg-i2c";
-+				reg = <0x0 0x1400 0x0 0x24>;
-+				interrupts = <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				clocks = <&clkc_periphs CLKID_I2C_M_A>;
-+				status = "disabled";
-+			};
-+
-+			i2c1: i2c@5c00 {
-+				compatible = "amlogic,meson-axg-i2c";
-+				reg = <0x0 0x5c00 0x0 0x24>;
-+				interrupts = <GIC_SPI 68 IRQ_TYPE_EDGE_RISING>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				clocks = <&clkc_periphs CLKID_I2C_M_B>;
-+				status = "disabled";
-+			};
-+
-+			i2c2: i2c@6800 {
-+				compatible = "amlogic,meson-axg-i2c";
-+				reg = <0x0 0x6800 0x0 0x24>;
-+				interrupts = <GIC_SPI 76 IRQ_TYPE_EDGE_RISING>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				clocks = <&clkc_periphs CLKID_I2C_M_C>;
-+				status = "disabled";
-+			};
-+
-+			i2c3: i2c@6c00 {
-+				compatible = "amlogic,meson-axg-i2c";
-+				reg = <0x0 0x6c00 0x0 0x24>;
-+				interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				clocks = <&clkc_periphs CLKID_I2C_M_D>;
-+				status = "disabled";
-+			};
-+
- 			uart_AO: serial@1c00 {
- 				compatible = "amlogic,meson-gx-uart",
- 					     "amlogic,meson-ao-uart";
-@@ -171,3 +218,105 @@
- 		#clock-cells = <0>;
- 	};
- };
-+
-+&periphs_pinctrl {
-+	i2c0_f11_pins:i2c0-f11 {
-+		mux {
-+			groups = "i2c0_sck_f11",
-+				"i2c0_sda_f12";
-+			function = "i2c0";
-+			bias-pull-up;
-+			drive-strength-microamp = <3000>;
-+		};
-+	};
-+
-+	i2c0_f9_pins:i2c0-f9 {
-+		mux {
-+			groups = "i2c0_sck_f9",
-+				"i2c0_sda_f10";
-+			function = "i2c0";
-+			bias-pull-up;
-+			drive-strength-microamp = <3000>;
-+		};
-+	};
-+
-+	i2c1_x_pins:i2c1-x {
-+		mux {
-+			groups = "i2c1_sck_x",
-+				"i2c1_sda_x";
-+			function = "i2c1";
-+			bias-pull-up;
-+			drive-strength-microamp = <3000>;
-+		};
-+	};
-+
-+	i2c1_a_pins:i2c1-a {
-+		mux {
-+			groups = "i2c1_sck_a",
-+				"i2c1_sda_a";
-+			function = "i2c1";
-+			bias-pull-up;
-+			drive-strength-microamp = <3000>;
-+		};
-+	};
-+
-+	i2c2_x0_pins:i2c2-x0 {
-+		mux {
-+			groups = "i2c2_sck_x0",
-+				"i2c2_sda_x1";
-+			function = "i2c2";
-+			bias-pull-up;
-+			drive-strength-microamp = <3000>;
-+		};
-+	};
-+
-+	i2c2_x15_pins:i2c2-x15 {
-+		mux {
-+			groups = "i2c2_sck_x15",
-+				"i2c2_sda_x16";
-+			function = "i2c2";
-+			bias-pull-up;
-+			drive-strength-microamp = <3000>;
-+		};
-+	};
-+
-+	i2c2_a4_pins:i2c2-a4 {
-+		mux {
-+			groups = "i2c2_sck_a4",
-+				"i2c2_sda_a5";
-+			function = "i2c2";
-+			bias-pull-up;
-+			drive-strength-microamp = <3000>;
-+		};
-+	};
-+
-+	i2c2_a8_pins:i2c2-a8 {
-+		mux {
-+			groups = "i2c2_sck_a8",
-+				"i2c2_sda_a9";
-+			function = "i2c2";
-+			bias-pull-up;
-+			drive-strength-microamp = <3000>;
-+		};
-+	};
-+
-+	i2c3_x_pins:i2c3-x {
-+		mux {
-+			groups = "i2c3_sck_x",
-+				"i2c3_sda_x";
-+			function = "i2c3";
-+			bias-pull-up;
-+			drive-strength-microamp = <3000>;
-+		};
-+	};
-+
-+	i2c3_f_pins:i2c3-f {
-+		mux {
-+			groups = "i2c3_sck_f",
-+				"i2c3_sda_f";
-+			function = "i2c3";
-+			bias-pull-up;
-+			drive-strength-microamp = <3000>;
-+		};
-+	};
-+};
--- 
-2.24.0
+Queued for 5.5 as is a fix.
 
+Thanks.
+ Enric
+
+>  drivers/platform/chrome/wilco_ec/telemetry.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/chrome/wilco_ec/telemetry.c b/drivers/platform/chrome/wilco_ec/telemetry.c
+> index b9d03c3..1176d54 100644
+> --- a/drivers/platform/chrome/wilco_ec/telemetry.c
+> +++ b/drivers/platform/chrome/wilco_ec/telemetry.c
+> @@ -406,8 +406,8 @@ static int telem_device_remove(struct platform_device *pdev)
+>  	struct telem_device_data *dev_data = platform_get_drvdata(pdev);
+>  
+>  	cdev_device_del(&dev_data->cdev, &dev_data->dev);
+> -	put_device(&dev_data->dev);
+>  	ida_simple_remove(&telem_ida, MINOR(dev_data->dev.devt));
+> +	put_device(&dev_data->dev);
+>  
+>  	return 0;
+>  }
+> 
