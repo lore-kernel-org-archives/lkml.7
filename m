@@ -2,156 +2,137 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D85B4C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAC9C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C16820715
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:47:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WoudGpAX"
+	by mail.kernel.org (Postfix) with ESMTP id 31666215E5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 06:50:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727454AbfLBGrZ (ORCPT
+        id S1726533AbfLBGuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 01:47:25 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46616 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbfLBGrZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 01:47:25 -0500
-Received: by mail-qt1-f195.google.com with SMTP id 38so4345915qtb.13
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Dec 2019 22:47:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=w5F3Y8zqEkCwkUMXUn9FFeKvhwvA4xUSSc7Xy06U26E=;
-        b=WoudGpAXy+WLLgqCY/1HXkL7kxkpmMmaAywYNCPy+DV5kFlauvDt+MVGIj3voqs8EB
-         a4dMaDFhyaHUPnV2HnAODhoa4UJ4Hdpg9plGJqhykWqQX2UZb5wL6ktmuwP2PnILoY/V
-         t4IcagIqscxpDzHd6Ornm0PNMMibtXhiwkbSmQ+uvsXI2QS12RqDEiWpzThWlZcZvgqc
-         ajMSS3bm7BLDbzEAAYh/GMjIL+m6EjZC1VQqHEBHs0lRsKNwebEnA5yF00moDshiqY1v
-         V2+wqSLocate/712Js6yG63IJS0XSPZ2VPeptYYCyzhhFrV6eXdBTGoc5CFKJKHt8yt3
-         2ACQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=w5F3Y8zqEkCwkUMXUn9FFeKvhwvA4xUSSc7Xy06U26E=;
-        b=kA1JAFHPgfALu1XStPB1GEunvYBW9DAWKEAaXGrKRDVkr3+OFv8O2rqJEeZ/2VAvkC
-         1PKONAGPMRXkM9XW04j64qWi5uDr5DALIzkUD7NeMVpvQaFOPzCiXTZOf79bJ2H53IpJ
-         rHSK3e1qJcfqlFbKg4CLb2r6HRp4ercWjTFID50etf12jUs3i2EmFdqfbTj5A8hsnDnM
-         IccqnyKkKiEkD+qv6emfF25bAev0ahL0zMWvFohKZcTJZWlJZErq0120JxyA/4RSn81I
-         59LZi8noz5F+lmL6jhN/x/d6SNudjHbUCGJ71nvmKSyiexSDy18AOduF4mvDcA0UccHW
-         vakQ==
-X-Gm-Message-State: APjAAAXePHdbHt6WIIJtmC3FiS+acfEVkscR/1paLxLgaFHxVUCKFggs
-        4ui5YDpo3xYyS26BcmilONrsy9BdRyrSFHwkIp+5cg==
-X-Google-Smtp-Source: APXvYqyKDu9/tqAvMtHO6VvbWtZqcaxmYBnv+++IWHqBoEDkHy5Y/Zgs72zDEMHhogHxbnZKh2USvOUFIKpcipPq2AA=
-X-Received: by 2002:ac8:ccf:: with SMTP id o15mr65633251qti.380.1575269243204;
- Sun, 01 Dec 2019 22:47:23 -0800 (PST)
+        Mon, 2 Dec 2019 01:50:22 -0500
+Received: from mga06.intel.com ([134.134.136.31]:47608 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725977AbfLBGuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 01:50:21 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Dec 2019 22:50:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,268,1571727600"; 
+   d="scan'208";a="241823695"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by fmsmga002.fm.intel.com with ESMTP; 01 Dec 2019 22:50:20 -0800
+Received: from fmsmsx606.amr.corp.intel.com (10.18.126.86) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 1 Dec 2019 22:50:20 -0800
+Received: from fmsmsx606.amr.corp.intel.com (10.18.126.86) by
+ fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sun, 1 Dec 2019 22:50:19 -0800
+Received: from shsmsx152.ccr.corp.intel.com (10.239.6.52) by
+ fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Sun, 1 Dec 2019 22:50:19 -0800
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.109]) by
+ SHSMSX152.ccr.corp.intel.com ([169.254.6.222]) with mapi id 14.03.0439.000;
+ Mon, 2 Dec 2019 14:50:18 +0800
+From:   "Zhao, Shirley" <shirley.zhao@intel.com>
+To:     James Bottomley <jejb@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>
+CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
+        "Zhu, Bing" <bing.zhu@intel.com>,
+        "Chen, Luhai" <luhai.chen@intel.com>
+Subject: RE: One question about trusted key of keyring in Linux kernel.
+Thread-Topic: One question about trusted key of keyring in Linux kernel.
+Thread-Index: AdWZwFKzDBwFOydYTGGk+Aqs+6BIxAANhxEAAoxRZMAAOKaagABSSevwABZzFQAAgRP1kP//pW0A//9ftMCAAMH6gP//eLrAgACO1ID//3k2UA==
+Date:   Mon, 2 Dec 2019 06:50:17 +0000
+Message-ID: <A888B25CD99C1141B7C254171A953E8E4909E399@shsmsx102.ccr.corp.intel.com>
+References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
+         <1573659978.17949.83.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
+         <1574877977.3551.5.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E49096521@shsmsx102.ccr.corp.intel.com>
+         <1575057916.6220.7.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909BA3B@shsmsx102.ccr.corp.intel.com>
+         <1575260220.4080.17.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909D360@shsmsx102.ccr.corp.intel.com>
+         <1575267453.4080.26.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909E381@shsmsx102.ccr.corp.intel.com>
+ <1575269075.4080.31.camel@linux.ibm.com>
+In-Reply-To: <1575269075.4080.31.camel@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMjg5OTM2NjItYjQ4My00MmU0LTkzNDctYWJhNTJjZWZhNjUyIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiVjRqSThcL3RhbTg1bnVcL3FxY3NZWkZDczV4SEc4VHhMbThBREZlbjc2VzZaWTRLY0tCMkpHWmhoWFJFVmVpdnpTIn0=
+x-ctpclassification: CTP_NT
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <000000000000e59aab056e8873ae@google.com> <0000000000000beff305981c5ac6@google.com>
- <20191124193035.GA4203@ZenIV.linux.org.uk> <20191130110645.GA4405@dimstar.local.net>
- <CACT4Y+bg7bZOSg0P9VXq8yG2odAJMg6b6N2fXxbamOmKiz3ohw@mail.gmail.com> <20191201000439.GA15496@dimstar.local.net>
-In-Reply-To: <20191201000439.GA15496@dimstar.local.net>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 2 Dec 2019 07:47:11 +0100
-Message-ID: <CACT4Y+YhYaEC2of_6bZ6aZxX_kc3+4Li=MZU-MB1RcNr6Z7iww@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in blkdev_get
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Chris Metcalf <cmetcalf@ezchip.com>, coreteam@netfilter.org,
-        David Miller <davem@davemloft.net>,
-        Chen Gang <gang.chen.5i5j@gmail.com>,
-        Patrick McHardy <kaber@trash.net>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        NetFilter <netfilter-devel@vger.kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 1, 2019 at 1:04 AM Duncan Roe <duncan_roe@optusnet.com.au> wrote:
->
-> On Sat, Nov 30, 2019 at 04:53:12PM +0100, Dmitry Vyukov wrote:
-> > On Sat, Nov 30, 2019 at 12:06 PM Duncan Roe <duncan_roe@optusnet.com.au> wrote:
-> > > > > syzbot has bisected this bug to:
-> > > > >
-> > > > > commit 77ef8f5177599efd0cedeb52c1950c1bd73fa5e3
-> > > > > Author: Chris Metcalf <cmetcalf@ezchip.com>
-> > > > > Date:   Mon Jan 25 20:05:34 2016 +0000
-> > > > >
-> > > > >     tile kgdb: fix bug in copy to gdb regs, and optimize memset
-> > > > >
-> > > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1131bc0ee00000
-> > > > > start commit:   f5b7769e Revert "debugfs: inode: debugfs_create_dir uses m..
-> > > > > git tree:       upstream
-> > > > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=1331bc0ee00000
-> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=1531bc0ee00000
-> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=709f8187af941e84
-> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=eaeb616d85c9a0afec7d
-> > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=177f898f800000
-> > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=147eb85f800000
-> > > > >
-> > > > > Reported-by: syzbot+eaeb616d85c9a0afec7d@syzkaller.appspotmail.com
-> > > > > Fixes: 77ef8f517759 ("tile kgdb: fix bug in copy to gdb regs, and optimize
-> > > > > memset")
-> > > > >
-> > > > > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> > > >
-> > > > Seriously?  How can the commit in question (limited to arch/tile/kernel/kgdb.c)
-> > > > possibly affect a bug that manages to produce a crash report with
-> > > > RSP: 0018:ffffffff82e03eb8  EFLAGS: 00000282
-> > > > RAX: 0000000000000000 RBX: ffffffff82e00000 RCX: 0000000000000000
-> > > > RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff81088779
-> > > > RBP: ffffffff82e03eb8 R08: 0000000000000000 R09: 0000000000000001
-> > > > R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-> > > > R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff82e00000
-> > > > FS:  0000000000000000(0000) GS:ffff88021fc00000(0000) knlGS:0000000000000000
-> > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > > CR2: 000000c420447ff8 CR3: 0000000213184000 CR4: 00000000001406f0
-> > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > > in it?  Unless something very odd has happened to tile, this crash has
-> > > > been observed on 64bit x86; the names of registers alone are enough
-> > > > to be certain of that.
-> > > >
-> > > > And the binaries produced by an x86 build should not be affected by any
-> > > > changes in arch/tile; not unless something is very wrong with the build
-> > > > system.  It's not even that this commit has fixed an earlier bug that
-> > > > used to mask the one manifested here - it really should have had zero
-> > > > impact on x86 builds, period.
-> > > >
-> > > > So I'm sorry, but I'm calling bullshit.  Something's quite wrong with
-> > > > the bot - either its build system or the bisection process.
-> > >
-> > > The acid test would be: does reverting that commit make the problem go away?
-> > >
-> > > See, for example, https://bugzilla.kernel.org/show_bug.cgi?id=203935
-> > >
-> > > Cheers ... Duncan.
-> >
-> > This is done as part of any bisection by definition, right? The test
-> > was done on the previous commit (effectively this one reverted) and no
-> > crash was observed. Otherwise bisection would have been pointed to a
-> > different commit.
-> >
-> Agree that's what bisecting does. What I had in mind was to make a patch to
-> remove the identified commit, and apply that to the most recent revision
-> possible. Then see if that makes the problem go away.
-
-I wonder in what percent of cases:
-1. It gives signal different from reverting the commit in place.
-2. The revert can be cleanly applied to head.
-3. The revert does not introduce other bugs.
-
-For this to be worth doing, all these 3 should be reasonably high. I
-can imagine 3 may be high (?), but I am not sure about 1 and 2.
+U28gSSBndWVzcyBtb3N0bHkgbGlrZSwgaXQgaXMgdGhlIGZvcm1hdCBvZiBwb2xpY3lkaWdlc3Qs
+IHBvbGljeWhhbmRsZSBpcyBub3QgY29ycmVjdGx5IGluIG15IGtleWN0bCBjb21tYW5kLiANCkJ1
+dCB3aGF0IGlzIHRoZSBjb3JyZWN0IHVzaW5nPw0KDQpNeSBrZXljdGwgY29tbWFuZHMgYXJlIGF0
+dGFjaGVkIGFzIGJlbG93OiANCiQga2V5Y3RsIGFkZCB0cnVzdGVkIGttayAibmV3IDMyIGtleWhh
+bmRsZT0weDgxMDAwMDAxIGhhc2g9c2hhMjU2IHBvbGljeWRpZ2VzdD1gY2F0IHBjcjcucG9saWN5
+YCIgQHUNCjg3NDExNzA0NQ0KDQpTYXZlIHRoZSB0cnVzdGVkIGtleS4gDQokIGtleWN0bCBwaXBl
+IDg3NDExNzA0NSA+IGttay5ibG9iDQoNClJlYm9vdCBhbmQgbG9hZCB0aGUga2V5LiANClN0YXJ0
+IGEgYXV0aCBzZXNzaW9uIHRvIGdlbmVyYXRlIHRoZSBwb2xpY3k6DQokIHRwbTJfc3RhcnRhdXRo
+c2Vzc2lvbiAtUyBzZXNzaW9uLmN0eA0Kc2Vzc2lvbi1oYW5kbGU6IDB4MzAwMDAwMA0KJCB0cG0y
+X3Bjcmxpc3QgLUwgc2hhMjU2OjcgLW8gcGNyNy5zaGEyNTYgJCB0cG0yX3BvbGljeXBjciAtUyBz
+ZXNzaW9uLmN0eCAtTCBzaGEyNTY6NyAtRiBwY3I3LnNoYTI1NiAtZiBwY3I3LnBvbGljeQ0KcG9s
+aWN5LWRpZ2VzdDogMHgzMjFGQkQyOEI2MEZDQzIzMDE3RDUwMUIxMzNCRDVEQkYyODg5ODE0NTg4
+RThBMjM1MTBGRTEwMTA1Q0IyQ0M5DQoNCklucHV0IHRoZSBwb2xpY3kgaGFuZGxlIHRvIGxvYWQg
+dHJ1c3RlZCBrZXk6DQokIGtleWN0bCBhZGQgdHJ1c3RlZCBrbWsgImxvYWQgYGNhdCBrbWsuYmxv
+YmAga2V5aGFuZGxlPTB4ODEwMDAwMDEgcG9saWN5aGFuZGxlPTB4MzAwMDAwMCIgQHUNCmFkZF9r
+ZXk6IE9wZXJhdGlvbiBub3QgcGVybWl0dGVkDQoNCg0KVGhhbmtzLiANCg0KLSBTaGlybGV5IA0K
+DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBKYW1lcyBCb3R0b21sZXkgPGpl
+amJAbGludXguaWJtLmNvbT4gDQpTZW50OiBNb25kYXksIERlY2VtYmVyIDIsIDIwMTkgMjo0NSBQ
+TQ0KVG86IFpoYW8sIFNoaXJsZXkgPHNoaXJsZXkuemhhb0BpbnRlbC5jb20+OyBNaW1pIFpvaGFy
+IDx6b2hhckBsaW51eC5pYm0uY29tPjsgSmFya2tvIFNha2tpbmVuIDxqYXJra28uc2Fra2luZW5A
+bGludXguaW50ZWwuY29tPjsgSm9uYXRoYW4gQ29yYmV0IDxjb3JiZXRAbHduLm5ldD4NCkNjOiBs
+aW51eC1pbnRlZ3JpdHlAdmdlci5rZXJuZWwub3JnOyBrZXlyaW5nc0B2Z2VyLmtlcm5lbC5vcmc7
+IGxpbnV4LWRvY0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7
+ICdNYXVybyBDYXJ2YWxobyBDaGVoYWInIDxtY2hlaGFiK3NhbXN1bmdAa2VybmVsLm9yZz47IFpo
+dSwgQmluZyA8YmluZy56aHVAaW50ZWwuY29tPjsgQ2hlbiwgTHVoYWkgPGx1aGFpLmNoZW5AaW50
+ZWwuY29tPg0KU3ViamVjdDogUmU6IE9uZSBxdWVzdGlvbiBhYm91dCB0cnVzdGVkIGtleSBvZiBr
+ZXlyaW5nIGluIExpbnV4IGtlcm5lbC4NCg0KT24gTW9uLCAyMDE5LTEyLTAyIGF0IDA2OjIzICsw
+MDAwLCBaaGFvLCBTaGlybGV5IHdyb3RlOg0KPiBIaSwgSmFtZXMsDQo+IA0KPiBUaGUgUENSNyB2
+YWx1ZSBhbmQgUENSNyBwb2xpY3kgaXMgYXMgYmVsb3csIHBsZWFzZSByZXZpZXcsIHRoYW5rcy4g
+DQo+IA0KPiAjIHRwbTJfcGNybGlzdCAtTCBzaGEyNTY6NyAtbyBwY3I3XzIuc2hhMjU2DQo+IHNo
+YTI1NjoNCj4gICA3IDoNCj4gMHgwNjFBQUQwNzA1QTYyMzYxQUQxOEU1OEI2NUQzRDczODNGNEQx
+MEY3RjVBN0U3ODkyNEJFMDU3QUM2Nzk3NDA4DQo+IA0KPiAjIHRwbTJfY3JlYXRlcG9saWN5IC0t
+cG9saWN5LXBjciAtLXBjci1saXN0IHNoYTI1Njo3IC0tcG9saWN5IA0KPiBwY3I3X2Jpbi5wb2xp
+Y3kgPiBwY3I3LnBvbGljeQ0KPiAzMjFmYmQyOGI2MGZjYzIzMDE3ZDUwMWIxMzNiZDVkYmYyODg5
+ODE0NTg4ZThhMjM1MTBmZTEwMTA1Y2IyY2M5DQo+IA0KPiAjIGNhdCBwY3I3LnBvbGljeQ0KPiAz
+MjFmYmQyOGI2MGZjYzIzMDE3ZDUwMWIxMzNiZDVkYmYyODg5ODE0NTg4ZThhMjM1MTBmZTEwMTA1
+Y2IyY2M5DQoNCldlbGwsIHRoZSBJQk0gVFNTIHNheXMgdGhhdCdzIHRoZSBjb3JyZWN0IHBvbGlj
+eS4gIFlvdXIgcG9saWN5IGNvbW1hbmQgaXMNCg0KamVqYkBqYXJ2aXM6fj4gdHNzcG9saWN5bWFr
+ZXJwY3IgLWJtIDAwMDA4MCAtaWYgfi9wY3I3LnR4dCAtcHIgfCB0ZWUgdG1wLnBvbGljeSAwMDAw
+MDE3ZjAwMDAwMDAxMDAwYjAzODAwMDAwOWE0NzM1MGZkYmNjNzdlYmVhZGNiNGI0ODE4ZDhlODJh
+MjE3MTdlYTI0NDM0MzMzYzc5MWMwY2QwZDFkYzE0ZQ0KDQpBbmQgdGhhdCBoYXNoZXMgdG8NCmpl
+amJAamFydmlzOn4+IHRzc3BvbGljeW1ha2VyIC1pZiB+L3RtcC5wb2xpY3kgIC1wciAgcG9saWN5
+IGRpZ2VzdCBsZW5ndGggMzINCiAzMiAxZiBiZCAyOCBiNiAwZiBjYyAyMyAwMSA3ZCA1MCAxYiAx
+MyAzYiBkNSBkYg0KIGYyIDg4IDk4IDE0IDU4IDhlIDhhIDIzIDUxIDBmIGUxIDAxIDA1IGNiIDJj
+IGM5IA0KDQpTbyBJIGRvbid0IHVuZGVyc3RhbmQgd2h5IHRoZSB1c2Vyc3BhY2UgSW50ZWwgVFNT
+IGNvbW1hbmQgaXMgZmFpbGluZyB0byBkbyB0aGUgdW5zZWFsLg0KDQpKYW1lcw0KDQo=
