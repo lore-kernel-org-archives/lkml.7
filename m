@@ -2,64 +2,67 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71579C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E18AFC43215
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ED4120848
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3F6C20848
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:04:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SbCAbqhl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ODQMWZrx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727767AbfLBRDh (ORCPT
+        id S1727777AbfLBRD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 12:03:37 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:41710 "EHLO
+        Mon, 2 Dec 2019 12:03:59 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:41746 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727493AbfLBRDg (ORCPT
+        with ESMTP id S1727601AbfLBRD7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 12:03:36 -0500
+        Mon, 2 Dec 2019 12:03:59 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4Bog2FcHzbVHTGABIFboxW3D8q+dKfFuUFtGCAvbJN8=; b=SbCAbqhl8BRByWXfNxrs1pif9
-        h1kuXOWtY5KlKFGagbhiuSkdoQ8JTC3tVkOtyn7IDbslxfoLacwaCo9JhBbnclgHD6EiMIarWctt4
-        BmfhVDD8DdqCJwKvltRp77ZzUz2+t7BrAuuxTADLlgCvFrdC/Sw6UFGWmY9MucMUflWd6YH2SCb49
-        AxZksLP9TKMgCA7M/p3ge6FA0nY77A+fBYDdZGQY/B1xIiUwbDL9leZ9CoKm16Tz2b47hwQQuu16T
-        sjQENJmZI8qWH53Ebo13NhIo60AsJeRUiBsd0r2yUYqFXTj3rTafZNTQvNrBDM/sFqG0ix3JICDw2
-        Ya7gGk/lw==;
+         bh=raL1+4V5E2+QW+HFVTt4GSePQ92W/jLVrBwyPI09wsc=; b=ODQMWZrxM3Ei91kafr/GGAwsm
+        Vaful+p5elqfnvM/sfwpwKe+crzQfQaye6TkkVGA5JgPugc7BaXzAbguFtZ+NwB1IvDOWEGnUSM5P
+        YiXwfDUsC+aHfe6gL86lsgHrBcIjiZBb0LAZnlHCLWXa2ehn9x38l1hcjs/wJPwXXCNV68SCA0WRu
+        9WhBoK77Mxc79Sp2vAATF0H+ZXHIIXb7cQRJ7BA9L5+wzu1qLAD96nekj6ivFZs1cH8TQXGuuTMFN
+        o+/jbkVAUVjjocir/PweEsTz9y0foZw1grxr76NcqC3ZyhjLc0uhtF2bYJlSzd8WpjRUo1lRebLOM
+        cAk26netg==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ibp57-000150-Vc; Mon, 02 Dec 2019 17:01:53 +0000
-Date:   Mon, 2 Dec 2019 09:01:53 -0800
+        id 1ibp78-0001EG-SQ; Mon, 02 Dec 2019 17:03:58 +0000
+Date:   Mon, 2 Dec 2019 09:03:58 -0800
 From:   Christoph Hellwig <hch@infradead.org>
-To:     ira.weiny@intel.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, Dave Chinner <david@fromorbit.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH V3 2/3] fs: Move swap_[de]activate to file_operations
-Message-ID: <20191202170153.GA2870@infradead.org>
-References: <20191129163300.14749-1-ira.weiny@intel.com>
- <20191129163300.14749-3-ira.weiny@intel.com>
+To:     James Sewart <jamessewart@arista.com>
+Cc:     linux-pci@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <dima@arista.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v5 2/3] PCI: Add parameter nr_devfns to pci_add_dma_alias
+Message-ID: <20191202170358.GB4174@infradead.org>
+References: <6A902F0D-FE98-4760-ADBB-4D5987D866BE@arista.com>
+ <20191126173833.GA16069@infradead.org>
+ <547214A9-9FD0-4DD5-80E1-1F5A467A0913@arista.com>
+ <9c54c5dd-702c-a19b-38ba-55ab73b24729@deltatee.com>
+ <435064D4-00F0-47F5-94D2-2C354F6B1206@arista.com>
+ <058383d9-69fe-65e3-e410-eebd99840261@deltatee.com>
+ <F26CC19F-66C2-466B-AE30-D65E10BA3022@arista.com>
+ <d811576e-0f89-2303-a554-2701af5c5647@deltatee.com>
+ <9DD82D05-6B9E-4AF5-9A3C-D459B75C0089@arista.com>
+ <07D724A1-308F-44C3-8937-EE0C21EF3170@arista.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191129163300.14749-3-ira.weiny@intel.com>
+In-Reply-To: <07D724A1-308F-44C3-8937-EE0C21EF3170@arista.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,11 +70,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While the patch itself looks fine, I kinda disagree with the rationale.
-If we want different ops for DAX that applies to file operations just
-as much as to the address space operations.
+On Fri, Nov 29, 2019 at 05:56:55PM +0000, James Sewart wrote:
+> pci_add_dma_alias can now be used to create a dma alias for a range of
+> devfns.
+> 
+> Signed-off-by: James Sewart <jamessewart@arista.com>
+> ---
+>  drivers/pci/pci.c    | 23 ++++++++++++++++++-----
+>  drivers/pci/quirks.c | 14 +++++++-------
+>  include/linux/pci.h  |  2 +-
+>  3 files changed, 26 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 0a4449a30ace..f9800a610ca1 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5857,7 +5857,8 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
+>  /**
+>   * pci_add_dma_alias - Add a DMA devfn alias for a device
+>   * @dev: the PCI device for which alias is added
+> - * @devfn: alias slot and function
+> + * @devfn_from: alias slot and function
+> + * @nr_devfns: Number of subsequent devfns to alias
+>   *
+>   * This helper encodes an 8-bit devfn as a bit number in dma_alias_mask
+>   * which is used to program permissible bus-devfn source addresses for DMA
+> @@ -5873,8 +5874,14 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
+>   * cannot be left as a userspace activity).  DMA aliases should therefore
+>   * be configured via quirks, such as the PCI fixup header quirk.
+>   */
+> -void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
+> +void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, unsigned nr_devfns)
+>  {
+> +	int devfn_to;
+> +
+> +	if (nr_devfns > U8_MAX+1)
+> +		nr_devfns = U8_MAX+1;
 
-However I agree that the ops are logically a better fit for the file
-operations, so:
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Missing whitespaces here as well.  Also this could use max() and I
+think you want a documented constants for MAX_NR_DEVFNS that documents
+this "not off by one".
