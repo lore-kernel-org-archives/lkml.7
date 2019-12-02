@@ -2,188 +2,194 @@ Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF0BC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F86EC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA65920833
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25B1720672
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 17:18:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="GuLOx2Zp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbfLBRPL (ORCPT
+        id S1727738AbfLBRSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 12:15:11 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:40208 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727646AbfLBRPK (ORCPT
+        Mon, 2 Dec 2019 12:18:36 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40761 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727695AbfLBRSf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 12:15:10 -0500
-Received: by mail-il1-f198.google.com with SMTP id s10so251065ilh.7
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 09:15:08 -0800 (PST)
+        Mon, 2 Dec 2019 12:18:35 -0500
+Received: by mail-ot1-f68.google.com with SMTP id i15so138662oto.7
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 09:18:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=6m5GyYZgGjlReYT0UlQJpt9O1RSpFkhX7hTS5Y3rL8A=;
+        b=GuLOx2Zp3ZZ90Tm4v6pIsuMUqW5EKKBOtz2OFCipBoqw0100kj7xtHtEdX64q6lWAW
+         pD1itDn0zL2PH8BDTkq/ZohZNfnj1PJGqh8zFGjN6LrykJ2h4LZgAmf8MZ1t5+TODv/v
+         nFdRCYmdVHIe5MH+6D0JBBnuR/6ran/ta4wvvVj1qbn/vnpBfMCYB9N4HPu9CKJ0EgLc
+         A4cNfwiaZXvyHsmEp4cWUz/fOhPRLwI9IyHFzC5RqEH13/bDz709PU7fOxDW1c3cmkL8
+         ECKs2OH7phaSwsIdhN9kdCWDl7v5tH/tmmlMf7eO/tLnobqg2mlQHqIIIJo2Bv/bIMPY
+         MVrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=jJwI23GQ7UoBdhmtwPeNfel6AzBv3Y3n6KsCAm4HCIY=;
-        b=RX5+hBiAoPeNWS0zZOVkF6KIa9DTDjE1ZINYrdf/5tLoEiqVs4TnVMtptLbRNImQYW
-         rpJmP3RKwMpRT84I87eIo4b7ovLqP0Fiu6x0KAqcGiq0a1t1e2blwQkggQYzZ4KNYMDN
-         Uoy/McN2dV/dQXdnKZEUbdiyfGudVMjGIkLRHeGr1T9RdCHvUZOHHrg3/OUTkcyI3UWk
-         5yso2EwGwOULoOBN4raww8Vzm6zfKvvaCA7mlECqOTn9Kt3gYnSMvIiCtXTdeSF7mw5L
-         +sSZEf4iYY/NgvN3Fbz4wTWlihuMA/cpRtMxnFi9+F6elBldEAMZZJnm2tUGMxqZHFLL
-         LL9w==
-X-Gm-Message-State: APjAAAXFAeQ8LpWtBFNngwBbw+M77Ifdu/BfiJ1BehsJFeF02A2dSFkc
-        C8nSbylrO2rK020woklQzG4HDAnXaVXqblZwwNMYo92QGKmT
-X-Google-Smtp-Source: APXvYqyQZcrh/4cqBQ8PN1IbFlHFVgnMEdv1ZKtKoSFgOSoIO+GSqFC25S9kw9MSwcwWAFvXwWUvjtq98HAtxauk9/2c6OJS2NXw
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=6m5GyYZgGjlReYT0UlQJpt9O1RSpFkhX7hTS5Y3rL8A=;
+        b=uV7ub364vEc+gZnJAeVJYvPeal+l7fxiafLh3otNb9GUuQXebINzlk9lfmBCdatSHH
+         6iyw1eDX+3KXsnHL0y3gADDXxK2NESnGydHuNYaIGFJfah3/LGsjFx2suuypprTa+ACz
+         bTg/ford77vCJ1lTNo1CSQUFhtIjI1DSaP/XmgfuCLDCeWXrd6cPB6u6c3BK25A4o4Sm
+         0jODjYSNCe5jqxA9hjToGl21tU1Ud3qKqMxgnp1H7WXB2trP0c8L0R10V045ApBJDrrG
+         mwaTLpvTnzsiAc0no6adtpd+UqylQGjTtTOKXt2etWhC6fNLyoeqHDXubcG5ov0WzXnq
+         JOqQ==
+X-Gm-Message-State: APjAAAULAsSf9ilUk6kMRZ+/KPt2TG0vRg2U4gWaUgZSA1ClRLVoSLLc
+        tAkgBWrBMlUDwHyfqFY6hwStXBuKoeEaGgAlhD2fiw==
+X-Google-Smtp-Source: APXvYqyYLXF9eAgv7IfmBg18I6YR52lazrz4VDRUHWzFpa7cmv7OeAl8w9FBa0bv0eN4jxBqQrkuqs5Bnn/pF8jwkaw=
+X-Received: by 2002:a9d:5d10:: with SMTP id b16mr95092oti.250.1575307113737;
+ Mon, 02 Dec 2019 09:18:33 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a5d:874b:: with SMTP id k11mr50084251iol.222.1575306908241;
- Mon, 02 Dec 2019 09:15:08 -0800 (PST)
-Date:   Mon, 02 Dec 2019 09:15:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ad9f910598bbb867@google.com>
-Subject: KASAN: use-after-free Read in iov_iter_alignment
-From:   syzbot <syzbot+bea68382bae9490e7dd6@syzkaller.appspotmail.com>
-To:     darrick.wong@oracle.com, hch@infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20191003092913.10731-1-brgl@bgdev.pl> <20191003092912.G3pupKBmyct1r9ScP5Skuw9D-_ALcMVSnfMfHAlwe0Y@z>
+ <20191202041440.GA1628@roeck-us.net> <CAMpxmJW3i4zmJJ14Xg65+T27kF3sgR1WG0K3FUT6+jeKtiHx=Q@mail.gmail.com>
+ <3f8ffe03-98b8-423a-7cba-53961a5600cb@roeck-us.net>
+In-Reply-To: <3f8ffe03-98b8-423a-7cba-53961a5600cb@roeck-us.net>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 2 Dec 2019 18:18:22 +0100
+Message-ID: <CAMpxmJUmTF3FwacjvTrC+Vvzm8MscS9E=ZyWLbJV87LkQhqVow@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] drivers: move the early platform device support to arch/sh
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Slaby <jslaby@suse.com>, linux-sh@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+pon., 2 gru 2019 o 14:03 Guenter Roeck <linux@roeck-us.net> napisa=C5=82(a)=
+:
+>
+> On 12/1/19 11:40 PM, Bartosz Golaszewski wrote:
+> > pon., 2 gru 2019 o 05:14 Guenter Roeck <linux@roeck-us.net> napisa=C5=
+=82(a):
+> >>
+> >> On Thu, Oct 03, 2019 at 11:29:12AM +0200, Bartosz Golaszewski wrote:
+> >>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >>>
+> >>> SuperH is the only user of the current implementation of early platfo=
+rm
+> >>> device support. We want to introduce a more robust approach to early
+> >>> probing. As the first step - move all the current early platform code
+> >>> to arch/sh.
+> >>>
+> >>> In order not to export internal drivers/base functions to arch code f=
+or
+> >>> this temporary solution - copy the two needed routines for driver
+> >>> matching from drivers/base/platform.c to arch/sh/drivers/platform_ear=
+ly.c.
+> >>>
+> >>> Also: call early_platform_cleanup() from subsys_initcall() so that it=
+'s
+> >>> called after all early devices are probed.
+> >>>
+> >>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >>
+> >> Wondering ... has anyone tested this patch on affected hardware ?
+> >> All my qemu boot tests (both sh and sheb) fail because of it.
+> >> Bisect log below.
+> >>
+> >> Guenter
+> >>
+> >> ---
+> >> # bad: [72c0870e3a05d9cd5466d08c3d2a3069ed0a2f9f] Merge branch 'for-li=
+nus' of git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input
+> >> # good: [89d57dddd7d319ded00415790a0bb3c954b7e386] Merge tag 'media/v5=
+.5-1' of git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media
+> >> git bisect start 'HEAD' '89d57dddd7d3'
+> >> # good: [0a6cad5df541108cfd3fbd79eef48eb824c89bdc] Merge branch 'vmwgf=
+x-coherent' of git://people.freedesktop.org/~thomash/linux into drm-next
+> >> git bisect good 0a6cad5df541108cfd3fbd79eef48eb824c89bdc
+> >> # bad: [9a3d7fd275be4559277667228902824165153c80] Merge tag 'driver-co=
+re-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-=
+core
+> >> git bisect bad 9a3d7fd275be4559277667228902824165153c80
+> >> # good: [59274c7164807d27b24e6c068dfe734f7bea4623] Merge tag 'usb-5.5-=
+rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb
+> >> git bisect good 59274c7164807d27b24e6c068dfe734f7bea4623
+> >> # good: [e71903106721dc53923e90aa484d78bc86c039a9] staging: mt7621-dma=
+: align to match open parenthesis
+> >> git bisect good e71903106721dc53923e90aa484d78bc86c039a9
+> >> # good: [8f56e4ebe05c26c30e167519273843476e39e244] Merge tag 'char-mis=
+c-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-mis=
+c
+> >> git bisect good 8f56e4ebe05c26c30e167519273843476e39e244
+> >> # good: [8bde9f3d2a217d1635a7c7bdf8ad4c25c9a34b50] Merge tag 'iio-for-=
+5.5c' of https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio into sta=
+ging-next
+> >> git bisect good 8bde9f3d2a217d1635a7c7bdf8ad4c25c9a34b50
+> >> # bad: [0628cda318df6baec439ca6e6e274007492f1ccd] mac80211: Use debugf=
+s_create_xul() helper
+> >> git bisect bad 0628cda318df6baec439ca6e6e274007492f1ccd
+> >> # bad: [03324507e66c7664c754b1ef92c5c3be24c78aa2] driver core: Allow f=
+wnode_operations.add_links to differentiate errors
+> >> git bisect bad 03324507e66c7664c754b1ef92c5c3be24c78aa2
+> >> # bad: [313f5dbba41d905d59c820bb2d91ee6c661aff99] debugfs: remove retu=
+rn value of debugfs_create_u16()
+> >> git bisect bad 313f5dbba41d905d59c820bb2d91ee6c661aff99
+> >> # good: [d4387cd117414ba80230f27a514be5ca4a09cfcc] of: property: Creat=
+e device links for all child-supplier depencencies
+> >> git bisect good d4387cd117414ba80230f27a514be5ca4a09cfcc
+> >> # bad: [c31e73121f4c1ec45a3e523ac6ce3ce6dafdcec1] base: soc: Handle cu=
+stom soc information sysfs entries
+> >> git bisect bad c31e73121f4c1ec45a3e523ac6ce3ce6dafdcec1
+> >> # bad: [201e91091b1d47047f55580b5474e1239f4d17aa] sh: add the sh_ pref=
+ix to early platform symbols
+> >> git bisect bad 201e91091b1d47047f55580b5474e1239f4d17aa
+> >> # bad: [507fd01d5333338753a1cc26322dfc9f856c109f] drivers: move the ea=
+rly platform device support to arch/sh
+> >> git bisect bad 507fd01d5333338753a1cc26322dfc9f856c109f
+> >> # first bad commit: [507fd01d5333338753a1cc26322dfc9f856c109f] drivers=
+: move the early platform device support to arch/sh
+> >
+> > Hi Guenter,
+> >
+> > can you post some bootlogs? Is it the same problem everywhere?
+> >
+>
+> I don't have any useful logs. The boot fails too early for that.
+>
 
-syzbot found the following crash on:
+Yeah, it touched "early" devices after all...
 
-HEAD commit:    b94ae8ad Merge tag 'seccomp-v5.5-rc1' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=135a8d7ae00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c2e464ae414aee8c
-dashboard link: https://syzkaller.appspot.com/bug?extid=bea68382bae9490e7dd6
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1135cb36e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14e90abce00000
+> Sorry, I don't understand "everywhere". It fails in mainline and -next, i=
+f that is what you mean.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+bea68382bae9490e7dd6@syzkaller.appspotmail.com
+I referred to "All my qemu boot tests" when saying everywhere.
 
-==================================================================
-BUG: KASAN: use-after-free in iov_iter_alignment+0x6a1/0x7b0  
-lib/iov_iter.c:1225
-Read of size 4 at addr ffff888098d40f54 by task loop0/8203
+I don't have any relevant HW - the idea for this patch is to stop
+compiling for everyone a bunch of code that's only used by one largely
+irrelevant architecture and free the namespace for a generic early
+platform drivers implementation.
 
-CPU: 0 PID: 8203 Comm: loop0 Not tainted 5.4.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x1fb/0x318 lib/dump_stack.c:118
-  print_address_description+0x75/0x5c0 mm/kasan/report.c:374
-  __kasan_report+0x14b/0x1c0 mm/kasan/report.c:506
-  kasan_report+0x26/0x50 mm/kasan/common.c:634
-  __asan_report_load4_noabort+0x14/0x20 mm/kasan/generic_report.c:131
-  iov_iter_alignment+0x6a1/0x7b0 lib/iov_iter.c:1225
-  iomap_dio_bio_actor+0x1a7/0x11e0 fs/iomap/direct-io.c:203
-  iomap_dio_actor+0x2b4/0x4a0 fs/iomap/direct-io.c:375
-  iomap_apply+0x370/0x490 fs/iomap/apply.c:80
-  iomap_dio_rw+0x8ad/0x1010 fs/iomap/direct-io.c:493
-  ext4_dio_read_iter fs/ext4/file.c:77 [inline]
-  ext4_file_read_iter+0x834/0xc20 fs/ext4/file.c:128
-  lo_rw_aio+0xcbb/0xea0 include/linux/fs.h:1889
-  do_req_filebacked drivers/block/loop.c:616 [inline]
-  loop_handle_cmd drivers/block/loop.c:1952 [inline]
-  loop_queue_work+0x13ab/0x2590 drivers/block/loop.c:1966
-  kthread_worker_fn+0x449/0x700 kernel/kthread.c:671
-  loop_kthread_worker_fn+0x40/0x60 drivers/block/loop.c:901
-  kthread+0x332/0x350 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+How are you creating your SH qemu images? I'm seeing there's something
+in buildroot for superh - maybe I'll be able to build something
+useful.
 
-Allocated by task 4198:
-  save_stack mm/kasan/common.c:69 [inline]
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc+0x11c/0x1b0 mm/kasan/common.c:510
-  kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:518
-  slab_post_alloc_hook mm/slab.h:584 [inline]
-  slab_alloc mm/slab.c:3319 [inline]
-  kmem_cache_alloc+0x1f5/0x2e0 mm/slab.c:3483
-  mempool_alloc_slab+0x4d/0x70 mm/mempool.c:513
-  mempool_alloc+0x104/0x5e0 mm/mempool.c:393
-  bio_alloc_bioset+0x1b0/0x5f0 block/bio.c:477
-  bio_alloc include/linux/bio.h:400 [inline]
-  mpage_alloc fs/mpage.c:79 [inline]
-  do_mpage_readpage+0x1685/0x1d10 fs/mpage.c:306
-  mpage_readpages+0x2a9/0x440 fs/mpage.c:404
-  blkdev_readpages+0x2c/0x40 fs/block_dev.c:620
-  read_pages+0xad/0x4d0 mm/readahead.c:126
-  __do_page_cache_readahead+0x480/0x530 mm/readahead.c:212
-  force_page_cache_readahead mm/readahead.c:243 [inline]
-  page_cache_sync_readahead+0x329/0x3b0 mm/readahead.c:522
-  generic_file_buffered_read+0x41d/0x2570 mm/filemap.c:2051
-  generic_file_read_iter+0xa9/0x450 mm/filemap.c:2324
-  blkdev_read_iter+0x12e/0x140 fs/block_dev.c:2039
-  call_read_iter include/linux/fs.h:1889 [inline]
-  new_sync_read fs/read_write.c:414 [inline]
-  __vfs_read+0x59e/0x730 fs/read_write.c:427
-  vfs_read+0x1dd/0x420 fs/read_write.c:461
-  ksys_read+0x117/0x220 fs/read_write.c:587
-  __do_sys_read fs/read_write.c:597 [inline]
-  __se_sys_read fs/read_write.c:595 [inline]
-  __x64_sys_read+0x7b/0x90 fs/read_write.c:595
-  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Bartosz
 
-Freed by task 4205:
-  save_stack mm/kasan/common.c:69 [inline]
-  set_track mm/kasan/common.c:77 [inline]
-  kasan_set_free_info mm/kasan/common.c:332 [inline]
-  __kasan_slab_free+0x12a/0x1e0 mm/kasan/common.c:471
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
-  __cache_free mm/slab.c:3425 [inline]
-  kmem_cache_free+0x81/0xf0 mm/slab.c:3693
-  mempool_free_slab+0x1d/0x30 mm/mempool.c:520
-  mempool_free+0xd5/0x350 mm/mempool.c:502
-  bio_put+0x38b/0x460 block/bio.c:255
-  mpage_end_io+0x2f5/0x330 fs/mpage.c:58
-  bio_endio+0x4ff/0x570 block/bio.c:1818
-  req_bio_endio block/blk-core.c:245 [inline]
-  blk_update_request+0x438/0x10d0 block/blk-core.c:1464
-  scsi_end_request+0x8c/0xa20 drivers/scsi/scsi_lib.c:579
-  scsi_io_completion+0x17c/0x1b80 drivers/scsi/scsi_lib.c:963
-  scsi_finish_command+0x3b3/0x560 drivers/scsi/scsi.c:228
-  scsi_softirq_done+0x289/0x310 drivers/scsi/scsi_lib.c:1477
-  blk_done_softirq+0x312/0x370 block/blk-softirq.c:37
-  __do_softirq+0x333/0x7c4 arch/x86/include/asm/paravirt.h:762
-
-The buggy address belongs to the object at ffff888098d40f00
-  which belongs to the cache bio-0 of size 192
-The buggy address is located 84 bytes inside of
-  192-byte region [ffff888098d40f00, ffff888098d40fc0)
-The buggy address belongs to the page:
-page:ffffea0002635000 refcount:1 mapcount:0 mapping:ffff88821acf5700  
-index:0xffff888098d40c00
-raw: 00fffe0000000200 ffffea0002805188 ffff8880a7b42738 ffff88821acf5700
-raw: ffff888098d40c00 ffff888098d40000 000000010000000e 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff888098d40e00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  ffff888098d40e80: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
-> ffff888098d40f00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                  ^
-  ffff888098d40f80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-  ffff888098d41000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+> And, yes, it has failed in -next for a while, looking back at the log his=
+tory.
+>
+> Guenter
