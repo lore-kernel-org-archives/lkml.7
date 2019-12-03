@@ -2,163 +2,105 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF44C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEEAC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7C562068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D49CE2068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:14:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="C2ifl54y";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="C2ifl54y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbfLCDMP (ORCPT
+        id S1726516AbfLCDO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 22:12:15 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:8620 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726186AbfLCDMO (ORCPT
+        Mon, 2 Dec 2019 22:14:27 -0500
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:53094 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726186AbfLCDO1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 22:12:14 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB338fJu039177;
-        Mon, 2 Dec 2019 22:12:10 -0500
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wm6snqf1y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 02 Dec 2019 22:12:10 -0500
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xB33BRZO029645;
-        Tue, 3 Dec 2019 03:12:09 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma04dal.us.ibm.com with ESMTP id 2wkg26pg31-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 03 Dec 2019 03:12:09 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB33C7AZ32964986
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Dec 2019 03:12:07 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A4D54136055;
-        Tue,  3 Dec 2019 03:12:07 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 67F9B136051;
-        Tue,  3 Dec 2019 03:12:05 +0000 (GMT)
-Received: from jarvis.ext.hansenpartnership.com (unknown [9.80.221.34])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue,  3 Dec 2019 03:12:05 +0000 (GMT)
-Message-ID: <1575342724.24227.41.camel@linux.ibm.com>
-Subject: Re: One question about trusted key of keyring in Linux kernel.
-From:   James Bottomley <jejb@linux.ibm.com>
-To:     "Zhao, Shirley" <shirley.zhao@intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
-        "Zhu, Bing" <bing.zhu@intel.com>,
-        "Chen, Luhai" <luhai.chen@intel.com>
-Date:   Mon, 02 Dec 2019 19:12:04 -0800
-In-Reply-To: <A888B25CD99C1141B7C254171A953E8E4909E62E@shsmsx102.ccr.corp.intel.com>
-References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
-         <1573659978.17949.83.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
-         <1574877977.3551.5.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E49096521@shsmsx102.ccr.corp.intel.com>
-         <1575057916.6220.7.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909BA3B@shsmsx102.ccr.corp.intel.com>
-         <1575260220.4080.17.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909D360@shsmsx102.ccr.corp.intel.com>
-         <1575267453.4080.26.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909E381@shsmsx102.ccr.corp.intel.com>
-         <1575269075.4080.31.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909E399@shsmsx102.ccr.corp.intel.com>
-         <1575312932.24227.13.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909E62E@shsmsx102.ccr.corp.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 2 Dec 2019 22:14:27 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id E068A8EE180;
+        Mon,  2 Dec 2019 19:14:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1575342866;
+        bh=9nKoSLwdyLlq7gWbSICoavwX/Fu9M/NrMTHHzhLxwHY=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=C2ifl54y6xLB0IQqQwCGSGb/va411huHcpyi/FMEouLfnwKaI8cBCjVJLg84tn8cj
+         WXx+lUoPcj+qbNVPejsmj4ENAL+r9/zKUjl3izxVL6qTtaDapDMu7nV57W5JVhlAKd
+         JpglLViauBhaSYwaiDB8Gzq3SAvCH7tvP/DuC3iQ=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id t3iaSOjBkjd8; Mon,  2 Dec 2019 19:14:26 -0800 (PST)
+Received: from jarvis.lan (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 402908EE11D;
+        Mon,  2 Dec 2019 19:14:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1575342866;
+        bh=9nKoSLwdyLlq7gWbSICoavwX/Fu9M/NrMTHHzhLxwHY=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=C2ifl54y6xLB0IQqQwCGSGb/va411huHcpyi/FMEouLfnwKaI8cBCjVJLg84tn8cj
+         WXx+lUoPcj+qbNVPejsmj4ENAL+r9/zKUjl3izxVL6qTtaDapDMu7nV57W5JVhlAKd
+         JpglLViauBhaSYwaiDB8Gzq3SAvCH7tvP/DuC3iQ=
+Message-ID: <1575342854.24227.43.camel@HansenPartnership.com>
+Subject: Re: linux-next: manual merge of the y2038 tree with the scsi tree
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Date:   Mon, 02 Dec 2019 19:14:14 -0800
+In-Reply-To: <20191203140052.0ed8810d@canb.auug.org.au>
+References: <20191107153757.4999749b@canb.auug.org.au>
+         <20191203140052.0ed8810d@canb.auug.org.au>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-zKgM0jTI4stvZ0vZ3F0Y"
 X-Mailer: Evolution 3.26.6 
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-02_06:2019-11-29,2019-12-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- suspectscore=0 clxscore=1015 malwarescore=0 adultscore=0 impostorscore=0
- phishscore=0 mlxlogscore=999 spamscore=0 priorityscore=1501
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912030028
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-12-03 at 02:11 +0000, Zhao, Shirley wrote:
-> Thanks so much for you feedback, James. 
-> And glad to hear that the API will be made more friendly. 
-> 
-> But I have a little confused about the call stack. 
-> From the document, https://github.com/torvalds/linux/blob/master/Docu
-> mentation/security/keys/trusted-encrypted.rst and 
-> https://github.com/zfsonlinux/dracut/tree/master/modules.d/97masterke
-> y, the trusted key is a random number and generated by TPM2.0 and
-> sealed with TPM2.0 2048 RSA key. 
 
-Well, um, that document seems to be based on TPM 1.2 ... a lot of what
-it says isn't quite true for TPM 2.0.  For instance all TPM 2.0 primary
-keys come with a symmetric component, so the sealed data in TPM 2.0 is
-actually symmetrically encrypted to a primary key.
+--=-zKgM0jTI4stvZ0vZ3F0Y
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> The 2048 RSA key is generated by tpm2_createprimary, and it can be
-> got by the TPM2.0 handle, just the "keyhandle" used in the following
-> keyctl command. 
-> $ keyctl add trusted kmk "new 32 keyhandle=0x81000001 hash=sha256
-> policydigest=`cat pcr7.policy`" @u
+On Tue, 2019-12-03 at 14:00 +1100, Stephen Rothwell wrote:
+> Hi all,
+>=20
+> This is now a conflict between the scsi tree and Linus' tree.
 
-The problem TPM 2.0 has is that most of them can't generate prime
-numbers very fast, so even through the kernel could generate the RSA
-primary, it would usually take far too long, so if you want to use a
-RSA primary you have to pre-generate one and place it in NV storage;
-the TCG recommends doing this at handle 81000001, which is what you
-have above.  However, the more modern way is to derive an elliptic
-curve key primary key every time ... EC keys can be generated by most
-TPMs in 10s of milliseconds, so the primary doesn't need to be present
-in NVRAM.
+Actually Linus resolved it:
 
-THe kernel should be using the EC primary method for the parent.  The
-only exception is when the key has an intermediate parent, and then it
-can be simply loaded from a file.
+https://lore.kernel.org/linux-scsi/CAHk-=3DwjWNpPW91wyEj4FC4pOimWEUtLVb_RwQ=
+gB+9h2OO6ynyA@mail.gmail.com/
 
-> If reboot, to re-load the trusted key back to keyring, just call
-> tpm2_unseal is enough, don't need to call tpm2_load to load the
-> TPM2.0 2048 RSA key.
-> If the trusted key is also protected by policy, then the policy will
-> be checked during tpm2_unseal. 
-> 
-> After check the source code, the call stack is mostly like: 
-> SYSCALL_DEFINE5(add_key,...) --> key_create_or_update() -->
-> __key_instantiate_and_link() -->  trusted_instantiate() -->
-> tpm2_unseal_trusted() --> tpm2_unseal_cmd().
-
-Well, the API is confusing, but the code seems to imply the parent
-should be present somehow.  A key in NVRAM, like 81000001 is always
-present so it doesn't need to be loaded it can just be used as is.
-
-> Another problem here is, to build the policy to unseal the key, it
-> need to start an policy session, and transfer the session handle to
-> TPM2.0 unseal command. 
-> In my keyctl command, I use tpm2.0 command to start the session and
-> get the handle, put it into the keyctl command like:
-> keyctl add trusted kmk "load `cat kmk.blob` keyhandle=0x81000001
-> policyhandle=0x3000000" @u
-
-As I said, using policy handles simply won't scale, so we need to use
-the actual policy instead ... thus the policy should be passed into the
-kernel  as part of the trusted key and the kernel itself would generate
-a policy session from the policy statements ... this approach is aready
-proven to be useful and functional in the tpm2 openssl engine code.
+So been there, done that and even got to crack a monty python joke.
 
 James
+
+--=-zKgM0jTI4stvZ0vZ3F0Y
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABMIAB0WIQTnYEDbdso9F2cI+arnQslM7pishQUCXeXTBgAKCRDnQslM7pis
+hYiLAQCBGecZjCZpcDpcdHnKN3GaTRePLNAX+7meQjbrfHb8vAEAigVFa+KsijTg
+KswlqXR8HFav0AzdEP0zAcYfIqDAYkM=
+=Db50
+-----END PGP SIGNATURE-----
+
+--=-zKgM0jTI4stvZ0vZ3F0Y--
 
