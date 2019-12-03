@@ -2,195 +2,137 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0ACC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3DFC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A1BA206DC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:34:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="i5z0BJM5"
+	by mail.kernel.org (Postfix) with ESMTP id 0B8B5206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:46:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbfLCDeh (ORCPT
+        id S1726653AbfLCDn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 22:34:37 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:23863 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726319AbfLCDeg (ORCPT
+        Mon, 2 Dec 2019 22:43:26 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14394 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726319AbfLCDn0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 22:34:36 -0500
-X-UUID: 8e3c37583a844ab9ae9af2b48028fd98-20191203
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=YYdvdLxaz+GrtaamZIqTRrwxovn6ou6aNFueL+5BIUI=;
-        b=i5z0BJM5zG4zTt49S9eba3RZRo3J16IO1cT51iOotJ7V7VOk4r9TcmgBrG2k0Ox1LfKEh12NscTYLiSd2o4guGqTVRysbIUsZS0A8Bn6eSvX6qFAs/WJwT7g5NPiWmcdZj2YKzcMcJgVTVCuaS+iKmCWl1ZAWYmKag+1C/NeLW0=;
-X-UUID: 8e3c37583a844ab9ae9af2b48028fd98-20191203
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1694831396; Tue, 03 Dec 2019 11:34:30 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 3 Dec 2019 11:34:13 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 3 Dec 2019 11:34:08 +0800
-Message-ID: <1575344068.627.2.camel@mtksdaap41>
-Subject: Re: [PATCH v1 5/6] drm/mediatek: support CMDQ interface in ddp
- component
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-CC:     David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        YT Shen <yt.shen@mediatek.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>, <tfiga@chromium.org>,
-        <drinkcat@chromium.org>, <linux-kernel@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>,
-        Yongqiang Niu <yongqiang.niu@mediatek.com>
-Date:   Tue, 3 Dec 2019 11:34:28 +0800
-In-Reply-To: <1575341763.19788.3.camel@mtksdaap41>
-References: <20191128024238.9399-1-bibby.hsieh@mediatek.com>
-         <20191128024238.9399-6-bibby.hsieh@mediatek.com>
-         <1575341763.19788.3.camel@mtksdaap41>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 2 Dec 2019 22:43:26 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB33g9pU071154
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 22:43:25 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wm6xb0j07-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 22:43:24 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
+        Tue, 3 Dec 2019 03:43:23 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 3 Dec 2019 03:43:20 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB33hJx144564502
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-kernel@vger.kernel.org>; Tue, 3 Dec 2019 03:43:19 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8BD3E5204E
+        for <linux-kernel@vger.kernel.org>; Tue,  3 Dec 2019 03:43:19 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 3CC2D5204F
+        for <linux-kernel@vger.kernel.org>; Tue,  3 Dec 2019 03:43:19 +0000 (GMT)
+Received: from [9.81.204.28] (unknown [9.81.204.28])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 83AC5A01B6
+        for <linux-kernel@vger.kernel.org>; Tue,  3 Dec 2019 14:43:15 +1100 (AEDT)
+Subject: Re: [ANNOUNCE] Call for Sessions - linux.conf.au 2020 Kernel Miniconf
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+References: <b15cd04a-b7d0-f14c-38e4-6204858425db@linux.ibm.com>
+Date:   Tue, 3 Dec 2019 14:43:16 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <b15cd04a-b7d0-f14c-38e4-6204858425db@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19120303-0020-0000-0000-00000392CBB0
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120303-0021-0000-0000-000021E9E9FF
+Message-Id: <1ac8d366-dce1-a69a-6865-88e9e3b59e01@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-02_06:2019-11-29,2019-12-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
+ suspectscore=0 lowpriorityscore=0 phishscore=0 priorityscore=1501
+ impostorscore=0 clxscore=1015 adultscore=0 mlxlogscore=802 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912030031
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEJpYmJ5Og0KDQpPbiBUdWUsIDIwMTktMTItMDMgYXQgMTA6NTYgKzA4MDAsIENLIEh1IHdy
-b3RlOg0KPiBIaSwgQmliYnk6DQo+IA0KPiBPbiBUaHUsIDIwMTktMTEtMjggYXQgMTA6NDIgKzA4
-MDAsIEJpYmJ5IEhzaWVoIHdyb3RlOg0KPiA+IFRoZSBDTURRIChDb21tYW5kIFF1ZXVlKSBpbiBN
-VDgxODMgaXMgdXNlZCB0byBoZWxwDQo+ID4gdXBkYXRlIGFsbCByZWxldmFudCBkaXNwbGF5IGNv
-bnRyb2xsZXIgcmVnaXN0ZXJzDQo+ID4gd2l0aCBjcml0aWNhbCB0aW1lIGxpbWF0aW9uLg0KPiA+
-IFRoaXMgcGF0Y2ggYWRkIGNtZHEgaW50ZXJmYWNlIGluIGRkcF9jb21wIGludGVyZmFjZSwNCj4g
-PiBsZXQgYWxsIGRkcF9jb21wIGludGVyZmFjZSBjYW4gc3VwcG9ydCBjcHUvY21kcSBmdW5jdGlv
-bg0KPiA+IGF0IHRoZSBzYW1lIHRpbWUuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogWVQgU2hl
-biA8eXQuc2hlbkBtZWRpYXRlay5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogQ0sgSHUgPGNrLmh1
-QG1lZGlhdGVrLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwIFphYmVsIDxwLnphYmVs
-QHBlbmd1dHJvbml4LmRlPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEJpYmJ5IEhzaWVoIDxiaWJieS5o
-c2llaEBtZWRpYXRlay5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogWW9uZ3FpYW5nIE5pdSA8eW9u
-Z3FpYW5nLm5pdUBtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvZ3B1L2RybS9t
-ZWRpYXRlay9tdGtfZGlzcF9jb2xvci5jICAgfCAgIDcgKy0NCj4gPiAgZHJpdmVycy9ncHUvZHJt
-L21lZGlhdGVrL210a19kaXNwX292bC5jICAgICB8ICA2NSArKysrKystLS0tLQ0KPiA+ICBkcml2
-ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfcmRtYS5jICAgIHwgIDQzICsrKystLS0NCj4g
-PiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jICAgICB8ICAxMSArLQ0K
-PiA+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jIHwgMTIwICsr
-KysrKysrKysrKysrLS0tLS0tDQo+ID4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
-X2RkcF9jb21wLmggfCAgNTUgKysrKysrLS0tDQo+ID4gIDYgZmlsZXMgY2hhbmdlZCwgMTkwIGlu
-c2VydGlvbnMoKyksIDExMSBkZWxldGlvbnMoLSkNCj4gPiANCj4gDQoNCltzbmlwXQ0KDQo+ID4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmgg
-Yi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oDQo+ID4gaW5kZXgg
-ZWM1NWM3NDg4Y2MzLi41YjBhM2Q0OGRmYTYgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9ncHUv
-ZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaA0KPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmgNCj4gPiBAQCAtNjksMjUgKzY5LDMwIEBAIGVu
-dW0gbXRrX2RkcF9jb21wX2lkIHsNCj4gPiAgfTsNCj4gPiAgDQo+ID4gIHN0cnVjdCBtdGtfZGRw
-X2NvbXA7DQo+ID4gLQ0KPiA+ICtzdHJ1Y3QgY21kcV9wa3Q7DQo+ID4gIHN0cnVjdCBtdGtfZGRw
-X2NvbXBfZnVuY3Mgew0KPiA+ICAJdm9pZCAoKmNvbmZpZykoc3RydWN0IG10a19kZHBfY29tcCAq
-Y29tcCwgdW5zaWduZWQgaW50IHcsDQo+ID4gLQkJICAgICAgIHVuc2lnbmVkIGludCBoLCB1bnNp
-Z25lZCBpbnQgdnJlZnJlc2gsIHVuc2lnbmVkIGludCBicGMpOw0KPiA+ICsJCSAgICAgICB1bnNp
-Z25lZCBpbnQgaCwgdW5zaWduZWQgaW50IHZyZWZyZXNoLA0KPiA+ICsJCSAgICAgICB1bnNpZ25l
-ZCBpbnQgYnBjLCBzdHJ1Y3QgY21kcV9wa3QgKmNtZHFfcGt0KTsNCj4gPiAgCXZvaWQgKCpzdGFy
-dCkoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCk7DQo+ID4gIAl2b2lkICgqc3RvcCkoc3RydWN0
-IG10a19kZHBfY29tcCAqY29tcCk7DQo+ID4gIAl2b2lkICgqZW5hYmxlX3ZibGFuaykoc3RydWN0
-IG10a19kZHBfY29tcCAqY29tcCwgc3RydWN0IGRybV9jcnRjICpjcnRjKTsNCj4gPiAgCXZvaWQg
-KCpkaXNhYmxlX3ZibGFuaykoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCk7DQo+ID4gIAl1bnNp
-Z25lZCBpbnQgKCpzdXBwb3J0ZWRfcm90YXRpb25zKShzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21w
-KTsNCj4gPiAgCXVuc2lnbmVkIGludCAoKmxheWVyX25yKShzdHJ1Y3QgbXRrX2RkcF9jb21wICpj
-b21wKTsNCj4gPiAtCXZvaWQgKCpsYXllcl9vbikoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCwg
-dW5zaWduZWQgaW50IGlkeCk7DQo+ID4gLQl2b2lkICgqbGF5ZXJfb2ZmKShzdHJ1Y3QgbXRrX2Rk
-cF9jb21wICpjb21wLCB1bnNpZ25lZCBpbnQgaWR4KTsNCj4gPiArCXZvaWQgKCpsYXllcl9vbiko
-c3RydWN0IG10a19kZHBfY29tcCAqY29tcCwgdW5zaWduZWQgaW50IGlkeCwNCj4gPiArCQkJIHN0
-cnVjdCBjbWRxX3BrdCAqY21kcV9wa3QpOw0KPiA+ICsJdm9pZCAoKmxheWVyX29mZikoc3RydWN0
-IG10a19kZHBfY29tcCAqY29tcCwgdW5zaWduZWQgaW50IGlkeCwNCj4gPiArCQkJICBzdHJ1Y3Qg
-Y21kcV9wa3QgKmNtZHFfcGt0KTsNCg0KbGF5ZXJfb24oKSBhbmQgbGF5ZXJfb2ZmKCkgbG9va3Mg
-dXNlbGVzcywgc28gSSB3b3VsZCBsaWtlIHlvdSBqdXN0DQpyZW1vdmUgdGhpcyBpbnRlcmZhY2Ug
-aW4gYW5vdGhlciBwYXRjaC4NCg0KUmVnYXJkcywNCkNLDQoNCj4gPiAgCWludCAoKmxheWVyX2No
-ZWNrKShzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wLA0KPiA+ICAJCQkgICB1bnNpZ25lZCBpbnQg
-aWR4LA0KPiA+ICAJCQkgICBzdHJ1Y3QgbXRrX3BsYW5lX3N0YXRlICpzdGF0ZSk7DQo+ID4gIAl2
-b2lkICgqbGF5ZXJfY29uZmlnKShzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wLCB1bnNpZ25lZCBp
-bnQgaWR4LA0KPiA+IC0JCQkgICAgIHN0cnVjdCBtdGtfcGxhbmVfc3RhdGUgKnN0YXRlKTsNCj4g
-PiArCQkJICAgICBzdHJ1Y3QgbXRrX3BsYW5lX3N0YXRlICpzdGF0ZSwNCj4gPiArCQkJICAgICBz
-dHJ1Y3QgY21kcV9wa3QgKmNtZHFfcGt0KTsNCj4gPiAgCXZvaWQgKCpnYW1tYV9zZXQpKHN0cnVj
-dCBtdGtfZGRwX2NvbXAgKmNvbXAsDQo+ID4gLQkJCSAgc3RydWN0IGRybV9jcnRjX3N0YXRlICpz
-dGF0ZSk7DQo+ID4gKwkJCSAgc3RydWN0IGRybV9jcnRjX3N0YXRlICpzdGF0ZSwNCj4gPiArCQkJ
-ICBzdHJ1Y3QgY21kcV9wa3QgKmNtZHFfcGt0KTsNCj4gPiAgCXZvaWQgKCpiZ2Nscl9pbl9vbiko
-c3RydWN0IG10a19kZHBfY29tcCAqY29tcCk7DQo+ID4gIAl2b2lkICgqYmdjbHJfaW5fb2ZmKShz
-dHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wKTsNCj4gPiAgfTsNCj4gPiBAQCAtOTksMTQgKzEwNCwx
-NyBAQCBzdHJ1Y3QgbXRrX2RkcF9jb21wIHsNCj4gPiAgCXN0cnVjdCBkZXZpY2UgKmRldjsNCj4g
-PiAgCWVudW0gbXRrX2RkcF9jb21wX2lkIGlkOw0KPiA+ICAJY29uc3Qgc3RydWN0IG10a19kZHBf
-Y29tcF9mdW5jcyAqZnVuY3M7DQo+ID4gKwlyZXNvdXJjZV9zaXplX3QgcmVnc19wYTsNCj4gPiAr
-CXU4IHN1YnN5czsNCj4gPiAgfTsNCj4gPiAgDQo+ID4gIHN0YXRpYyBpbmxpbmUgdm9pZCBtdGtf
-ZGRwX2NvbXBfY29uZmlnKHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAsDQo+ID4gIAkJCQkgICAg
-ICAgdW5zaWduZWQgaW50IHcsIHVuc2lnbmVkIGludCBoLA0KPiA+IC0JCQkJICAgICAgIHVuc2ln
-bmVkIGludCB2cmVmcmVzaCwgdW5zaWduZWQgaW50IGJwYykNCj4gPiArCQkJCSAgICAgICB1bnNp
-Z25lZCBpbnQgdnJlZnJlc2gsIHVuc2lnbmVkIGludCBicGMsDQo+ID4gKwkJCQkgICAgICAgc3Ry
-dWN0IGNtZHFfcGt0ICpjbWRxX3BrdCkNCj4gPiAgew0KPiA+ICAJaWYgKGNvbXAtPmZ1bmNzICYm
-IGNvbXAtPmZ1bmNzLT5jb25maWcpDQo+ID4gLQkJY29tcC0+ZnVuY3MtPmNvbmZpZyhjb21wLCB3
-LCBoLCB2cmVmcmVzaCwgYnBjKTsNCj4gPiArCQljb21wLT5mdW5jcy0+Y29uZmlnKGNvbXAsIHcs
-IGgsIHZyZWZyZXNoLCBicGMsIGNtZHFfcGt0KTsNCj4gPiAgfQ0KPiA+ICANCj4gPiAgc3RhdGlj
-IGlubGluZSB2b2lkIG10a19kZHBfY29tcF9zdGFydChzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21w
-KQ0KPiA+IEBAIC0xNTIsMTcgKzE2MCwxOSBAQCBzdGF0aWMgaW5saW5lIHVuc2lnbmVkIGludCBt
-dGtfZGRwX2NvbXBfbGF5ZXJfbnIoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCkNCj4gPiAgfQ0K
-PiA+ICANCj4gPiAgc3RhdGljIGlubGluZSB2b2lkIG10a19kZHBfY29tcF9sYXllcl9vbihzdHJ1
-Y3QgbXRrX2RkcF9jb21wICpjb21wLA0KPiA+IC0JCQkJCSB1bnNpZ25lZCBpbnQgaWR4KQ0KPiA+
-ICsJCQkJCSB1bnNpZ25lZCBpbnQgaWR4LA0KPiA+ICsJCQkJCSBzdHJ1Y3QgY21kcV9wa3QgKmNt
-ZHFfcGt0KQ0KPiA+ICB7DQo+ID4gIAlpZiAoY29tcC0+ZnVuY3MgJiYgY29tcC0+ZnVuY3MtPmxh
-eWVyX29uKQ0KPiA+IC0JCWNvbXAtPmZ1bmNzLT5sYXllcl9vbihjb21wLCBpZHgpOw0KPiA+ICsJ
-CWNvbXAtPmZ1bmNzLT5sYXllcl9vbihjb21wLCBpZHgsIGNtZHFfcGt0KTsNCj4gPiAgfQ0KPiA+
-ICANCj4gPiAgc3RhdGljIGlubGluZSB2b2lkIG10a19kZHBfY29tcF9sYXllcl9vZmYoc3RydWN0
-IG10a19kZHBfY29tcCAqY29tcCwNCj4gPiAtCQkJCQkgIHVuc2lnbmVkIGludCBpZHgpDQo+ID4g
-KwkJCQkJICB1bnNpZ25lZCBpbnQgaWR4LA0KPiA+ICsJCQkJCSAgc3RydWN0IGNtZHFfcGt0ICpj
-bWRxX3BrdCkNCj4gPiAgew0KPiA+ICAJaWYgKGNvbXAtPmZ1bmNzICYmIGNvbXAtPmZ1bmNzLT5s
-YXllcl9vZmYpDQo+ID4gLQkJY29tcC0+ZnVuY3MtPmxheWVyX29mZihjb21wLCBpZHgpOw0KPiA+
-ICsJCWNvbXAtPmZ1bmNzLT5sYXllcl9vZmYoY29tcCwgaWR4LCBjbWRxX3BrdCk7DQo+ID4gIH0N
-Cj4gPiAgDQo+ID4gIHN0YXRpYyBpbmxpbmUgaW50IG10a19kZHBfY29tcF9sYXllcl9jaGVjayhz
-dHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wLA0KPiA+IEBAIC0xNzYsMTcgKzE4NiwxOSBAQCBzdGF0
-aWMgaW5saW5lIGludCBtdGtfZGRwX2NvbXBfbGF5ZXJfY2hlY2soc3RydWN0IG10a19kZHBfY29t
-cCAqY29tcCwNCj4gPiAgDQo+ID4gIHN0YXRpYyBpbmxpbmUgdm9pZCBtdGtfZGRwX2NvbXBfbGF5
-ZXJfY29uZmlnKHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAsDQo+ID4gIAkJCQkJICAgICB1bnNp
-Z25lZCBpbnQgaWR4LA0KPiA+IC0JCQkJCSAgICAgc3RydWN0IG10a19wbGFuZV9zdGF0ZSAqc3Rh
-dGUpDQo+ID4gKwkJCQkJICAgICBzdHJ1Y3QgbXRrX3BsYW5lX3N0YXRlICpzdGF0ZSwNCj4gPiAr
-CQkJCQkgICAgIHN0cnVjdCBjbWRxX3BrdCAqY21kcV9wa3QpDQo+ID4gIHsNCj4gPiAgCWlmIChj
-b21wLT5mdW5jcyAmJiBjb21wLT5mdW5jcy0+bGF5ZXJfY29uZmlnKQ0KPiA+IC0JCWNvbXAtPmZ1
-bmNzLT5sYXllcl9jb25maWcoY29tcCwgaWR4LCBzdGF0ZSk7DQo+ID4gKwkJY29tcC0+ZnVuY3Mt
-PmxheWVyX2NvbmZpZyhjb21wLCBpZHgsIHN0YXRlLCBjbWRxX3BrdCk7DQo+ID4gIH0NCj4gPiAg
-DQo+ID4gIHN0YXRpYyBpbmxpbmUgdm9pZCBtdGtfZGRwX2dhbW1hX3NldChzdHJ1Y3QgbXRrX2Rk
-cF9jb21wICpjb21wLA0KPiA+IC0JCQkJICAgICBzdHJ1Y3QgZHJtX2NydGNfc3RhdGUgKnN0YXRl
-KQ0KPiA+ICsJCQkJICAgICBzdHJ1Y3QgZHJtX2NydGNfc3RhdGUgKnN0YXRlLA0KPiA+ICsJCQkJ
-ICAgICBzdHJ1Y3QgY21kcV9wa3QgKmNtZHFfcGt0KQ0KPiA+ICB7DQo+ID4gIAlpZiAoY29tcC0+
-ZnVuY3MgJiYgY29tcC0+ZnVuY3MtPmdhbW1hX3NldCkNCj4gPiAtCQljb21wLT5mdW5jcy0+Z2Ft
-bWFfc2V0KGNvbXAsIHN0YXRlKTsNCj4gPiArCQljb21wLT5mdW5jcy0+Z2FtbWFfc2V0KGNvbXAs
-IHN0YXRlLCBjbWRxX3BrdCk7DQo+ID4gIH0NCj4gPiAgDQo+ID4gIHN0YXRpYyBpbmxpbmUgdm9p
-ZCBtdGtfZGRwX2NvbXBfYmdjbHJfaW5fb24oc3RydWN0IG10a19kZHBfY29tcCAqY29tcCkNCj4g
-PiBAQCAtMjA5LDYgKzIyMSwxMyBAQCBpbnQgbXRrX2RkcF9jb21wX2luaXQoc3RydWN0IGRldmlj
-ZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlX25vZGUgKmNvbXBfbm9kZSwNCj4gPiAgaW50IG10a19kZHBf
-Y29tcF9yZWdpc3RlcihzdHJ1Y3QgZHJtX2RldmljZSAqZHJtLCBzdHJ1Y3QgbXRrX2RkcF9jb21w
-ICpjb21wKTsNCj4gPiAgdm9pZCBtdGtfZGRwX2NvbXBfdW5yZWdpc3RlcihzdHJ1Y3QgZHJtX2Rl
-dmljZSAqZHJtLCBzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wKTsNCj4gPiAgdm9pZCBtdGtfZGl0
-aGVyX3NldChzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wLCB1bnNpZ25lZCBpbnQgYnBjLA0KPiA+
-IC0JCSAgICB1bnNpZ25lZCBpbnQgQ0ZHKTsNCj4gPiAtDQo+ID4gKwkJICAgIHVuc2lnbmVkIGlu
-dCBDRkcsIHN0cnVjdCBjbWRxX3BrdCAqY21kcV9wa3QpOw0KPiA+ICtlbnVtIG10a19kZHBfY29t
-cF90eXBlIG10a19kZHBfY29tcF9nZXRfdHlwZShlbnVtIG10a19kZHBfY29tcF9pZCBjb21wX2lk
-KTsNCj4gPiArdm9pZCBtdGtfZGRwX3dyaXRlKHN0cnVjdCBjbWRxX3BrdCAqY21kcV9wa3QsIHVu
-c2lnbmVkIGludCB2YWx1ZSwNCj4gPiArCQkgICBzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wLCB1
-bnNpZ25lZCBpbnQgb2Zmc2V0KTsNCj4gPiArdm9pZCBtdGtfZGRwX3dyaXRlX3JlbGF4ZWQoc3Ry
-dWN0IGNtZHFfcGt0ICpjbWRxX3BrdCwgdW5zaWduZWQgaW50IHZhbHVlLA0KPiA+ICsJCQkgICBz
-dHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wLCB1bnNpZ25lZCBpbnQgb2Zmc2V0KTsNCj4gPiArdm9p
-ZCBtdGtfZGRwX3dyaXRlX21hc2soc3RydWN0IGNtZHFfcGt0ICpjbWRxX3BrdCwgdW5zaWduZWQg
-aW50IHZhbHVlLA0KPiA+ICsJCQlzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wLCB1bnNpZ25lZCBp
-bnQgb2Zmc2V0LA0KPiA+ICsJCQl1bnNpZ25lZCBpbnQgbWFzayk7DQo+ID4gICNlbmRpZiAvKiBN
-VEtfRFJNX0REUF9DT01QX0ggKi8NCj4gDQoNCg==
+On 16/10/19 6:52 pm, Andrew Donnellan wrote:
+> LCA2020 Kernel Miniconf - Gold Coast, Queensland, Australia - 2020-01-14
+> ------------------------------------------------------------------------
+> 
+> ******
+> 
+> LCA Kernel Miniconf submissions open!
+> 
+> Submissions close: 2019-12-08 (early submissions until 2019-11-17)
+
+This date is coming up soon - if you've been thinking of submitting a 
+talk, get on to it! :)
+
+
+Andrew
+
+
+> 
+> Submissions: https://linux.conf.au/proposals/submit/kernel-miniconf/
+> 
+> More info: https://lca-kernel.ozlabs.org/2020-cfs.html
+> 
+> ******
+> 
+> linux.conf.au 2020 will be held at the Gold Coast Convention and 
+> Exhibition Centre, from 13-17 January 2020. The Kernel Miniconf is 
+> returning once again to discuss all things kernel.
+> 
+> The Kernel Miniconf is a single-day miniconf track about everything 
+> related to the kernel and low-level systems programming.
+> 
+> The Kernel Miniconf will focus on a variety of kernel-related topics - 
+> technical presentations on up-and-coming kernel developments, the future 
+> direction of the kernel, and kernel development community and process 
+> matters. Past Kernel Miniconfs have included technical talks on topics 
+> such as memory management, RCU, scheduling and filesystems, as well as 
+> talks on Linux kernel community topics such as licensing and Linux 
+> kernel development process.
+> 
+> We invite submissions on anything related to kernel and low-level 
+> systems programming. We welcome submissions from developers of all 
+> levels of experience in the kernel community, covering a broad range of 
+> topics. The focus of the miniconf will primarily be on Linux, however 
+> non-Linux talks of sufficient interest to a primarily Linux audience 
+> will be considered.
+> 
+> Early Close Date: 2019-11-17, midnight Anywhere on Earth (UTC-12)
+> Final Close Date: 2019-12-08, midnight Anywhere on Earth (UTC-12)
+> Submissions: https://linux.conf.au/proposals/submit/kernel-miniconf/
+> 
+> ** For more information: http://lca-kernel.ozlabs.org/2020-cfs.html **
+> 
+
+-- 
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
 
