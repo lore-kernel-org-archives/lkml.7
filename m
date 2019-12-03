@@ -2,125 +2,112 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0882C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8AE0C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6BD92053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:28:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eo4Qh7jO"
+	by mail.kernel.org (Postfix) with ESMTP id 9B8B92053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:33:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbfLCI2s (ORCPT
+        id S1726098AbfLCIdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 03:28:48 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46747 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfLCI2s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 03:28:48 -0500
-Received: by mail-lj1-f194.google.com with SMTP id z17so2699402ljk.13;
-        Tue, 03 Dec 2019 00:28:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5oEhfQgkh6INLdW6wa3eTLG84bgQm9Za6O9S9+YUffs=;
-        b=eo4Qh7jOOCXXbAe+shu+HJP+6ZdE/VA9D/IsBwKFcv+fhqNIO7FOyZNkFaVKwu6StO
-         0DH0mmLewmbyeC0ksEOSnbxYHzgSRnRufiFLfTFCtmKEjdCpbtkjx28riaNCVZJX1vZI
-         VEO5SJlDCmnJT2beepGFrsPOIqbT0PBStejXAsPyEabo7Gdr/VprKbn3oEoii933kwLM
-         2dhOtpEGzFRXZPfscPZsDJEflvtTbFZarCnv9wRR1wNeD3uztiti3F8jnQbRih3iLtHy
-         Gs+iqOjUjs8wStUyXjCfbUUD3ITkByz07DYtrcxuokXphxK7g3P4TX9mHxtOW2jz91pq
-         Zo3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5oEhfQgkh6INLdW6wa3eTLG84bgQm9Za6O9S9+YUffs=;
-        b=nvZ115vnsOEzRRu0x8KNOj+kL6YjFN4csqXB5IwUJXsa1UtGoSLpBthKVSiiAmkvy8
-         ZpU+T1HDKee+Q6ThZACbf0gLaN1D0aXa8mplzF8ulHOHZEb9k4N3eX2uAw3c9ehXiOug
-         Bq17aGZyLqEPjyvcklHG6ne2tg/clEuqohi2sOKdWwknYEQxR5JDm6788IhOgegAa/Wm
-         bPdR59bFOuBCmnsPKoVIvnEPyjGFQWdp2r7ibvw6erEDdm2nxdgkRe8FHRFdU9k1xhrU
-         U9keNYLFvdCoLIqBZ2WnRJJXB4dO6a1ChHydu8Q/NJAGKo0OPok0Fjaj53HE2K26N+Yc
-         6lIg==
-X-Gm-Message-State: APjAAAX1jpURzISzXyPai5hrMoA+9NT+LZmrGorlikjgtKEi01AYfEaJ
-        g6t61zYw/06bTHXAJTvDYxclz21I9XreJq2x0u8=
-X-Google-Smtp-Source: APXvYqzhtvKxcXPGfDdCxcuKRkf8LkhSldJOtH5NLq+r+zzSSaMNlgbnh7gWBL41PnYneHPYICwutFkXYnU0spkYHds=
-X-Received: by 2002:a2e:580c:: with SMTP id m12mr1789990ljb.150.1575361726008;
- Tue, 03 Dec 2019 00:28:46 -0800 (PST)
+        Tue, 3 Dec 2019 03:33:53 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6740 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725773AbfLCIdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 03:33:53 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id B2160C238957AF1B488A;
+        Tue,  3 Dec 2019 16:33:51 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 3 Dec 2019
+ 16:33:44 +0800
+Subject: Re: [PATCH] btrfs: remove unused condition check in
+ btrfs_page_mkwrite()
+To:     Omar Sandoval <osandov@osandov.com>
+CC:     <clm@fb.com>, <josef@toxicpanda.com>, <dsterba@suse.com>,
+        <linux-btrfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
+        "linfeilong@huawei.com" <linfeilong@huawei.com>
+References: <a84442bc-304b-2514-272e-ea89aae4b992@huawei.com>
+ <20191203082426.GC829117@vader>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Message-ID: <4796f90f-ca5d-7b7c-5645-034af21d7c8b@huawei.com>
+Date:   Tue, 3 Dec 2019 16:33:33 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1575242724-4937-1-git-send-email-sj38.park@gmail.com>
- <1575242724-4937-5-git-send-email-sj38.park@gmail.com> <CAFd5g46bb_46dCpu3t=qT0FMqifS8wodnhjWC7jfpkuhT1ngAQ@mail.gmail.com>
-In-Reply-To: <CAFd5g46bb_46dCpu3t=qT0FMqifS8wodnhjWC7jfpkuhT1ngAQ@mail.gmail.com>
-From:   SeongJae Park <sj38.park@gmail.com>
-Date:   Tue, 3 Dec 2019 09:28:19 +0100
-Message-ID: <CAEjAshpyBfo8Pv1jzQfTz2tza5Pr8mLgpWtR_Yt2pp4CkMfmDA@mail.gmail.com>
-Subject: Re: [PATCH 4/6] kunit: Create default config in 'build_dir'
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     shuah <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191203082426.GC829117@vader>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 7:41 AM Brendan Higgins
-<brendanhiggins@google.com> wrote:
->
-> On Sun, Dec 1, 2019 at 3:25 PM SeongJae Park <sj38.park@gmail.com> wrote:
-> >
-> > From: SeongJae Park <sjpark@amazon.de>
-> >
-> > If both '--build_dir' and '--defconfig' are given, the handling of
-> > '--defconfig' ignores '--build_dir' option.  This commit modifies the
-> > behavior to respect '--build_dir' option.
-> >
-> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> > ---
-> >  tools/testing/kunit/kunit.py | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
-> > index f8f2695..1746330 100755
-> > --- a/tools/testing/kunit/kunit.py
-> > +++ b/tools/testing/kunit/kunit.py
-> > @@ -114,6 +114,11 @@ def main(argv, linux=None):
-> >         cli_args = parser.parse_args(argv)
-> >
-> >         if cli_args.subcommand == 'run':
-> > +               if cli_args.build_dir:
-> > +                       kunit_kernel.KUNITCONFIG_PATH = os.path.join(
->
-> If you are going to modify the value of KUNITCONFIG_PATH can you
-> rename the variable to make it lower_snake_case? UPPER_SNAKE_CASE in
-> Python is usually (at least in this directory) used to indicate the
-> variable is a constant.
-
-Changed as you suggested in the second version patchset[1].
-
-[1] https://lore.kernel.org/linux-doc/1575361141-6806-1-git-send-email-sj38.park@gmail.com/
 
 
-Thanks,
-SeongJae Park
+On 2019/12/3 16:24, Omar Sandoval wrote:
+> On Tue, Dec 03, 2019 at 04:16:43PM +0800, Yunfeng Ye wrote:
+>> The condition '!ret2' is always true. so remove the unused condition
+>> check.
+>>
+>> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+> 
+> For this sort of change, one should mention how the code got in this
+> state. In this case, commit 717beb96d969 ("Btrfs: fix regression in
+> btrfs_page_mkwrite() from vm_fault_t conversion") left behind the check
+> after moving this code out of the goto.
+> 
+ok, I will update the comment, thanks.
 
->
-> > +                               cli_args.build_dir,
-> > +                               kunit_kernel.KUNITCONFIG_PATH)
-> > +
-> >                 if cli_args.defconfig:
-> >                         create_default_kunitconfig()
-> >
-> > --
-> > 2.7.4
-> >
+> Ohter than that,
+> 
+> Reviewed-by: Omar Sandoval <osandov@fb.com>
+> 
+>> ---
+>>  fs/btrfs/inode.c | 11 ++++-------
+>>  1 file changed, 4 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+>> index 56032c518b26..eef2432597e2 100644
+>> --- a/fs/btrfs/inode.c
+>> +++ b/fs/btrfs/inode.c
+>> @@ -9073,7 +9073,6 @@ vm_fault_t btrfs_page_mkwrite(struct vm_fault *vmf)
+>>  		ret = VM_FAULT_SIGBUS;
+>>  		goto out_unlock;
+>>  	}
+>> -	ret2 = 0;
+>>
+>>  	/* page is wholly or partially inside EOF */
+>>  	if (page_start + PAGE_SIZE > size)
+>> @@ -9097,12 +9096,10 @@ vm_fault_t btrfs_page_mkwrite(struct vm_fault *vmf)
+>>
+>>  	unlock_extent_cached(io_tree, page_start, page_end, &cached_state);
+>>
+>> -	if (!ret2) {
+>> -		btrfs_delalloc_release_extents(BTRFS_I(inode), PAGE_SIZE);
+>> -		sb_end_pagefault(inode->i_sb);
+>> -		extent_changeset_free(data_reserved);
+>> -		return VM_FAULT_LOCKED;
+>> -	}
+>> +	btrfs_delalloc_release_extents(BTRFS_I(inode), PAGE_SIZE);
+>> +	sb_end_pagefault(inode->i_sb);
+>> +	extent_changeset_free(data_reserved);
+>> +	return VM_FAULT_LOCKED;
+>>
+>>  out_unlock:
+>>  	unlock_page(page);
+>> -- 
+>> 2.7.4
+>>
+> 
+> .
+> 
+
