@@ -2,111 +2,118 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF20C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0363C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C28962054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF8672054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:30:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pjJDdnHT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726075AbfLCKap (ORCPT
+        id S1726319AbfLCKaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 05:30:45 -0500
-Received: from foss.arm.com ([217.140.110.172]:40176 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbfLCKap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 05:30:45 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE3C930E;
-        Tue,  3 Dec 2019 02:30:44 -0800 (PST)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 31B9F3F68E;
-        Tue,  3 Dec 2019 02:30:44 -0800 (PST)
-Subject: Re: Crash in fair scheduler
-To:     "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
+        Tue, 3 Dec 2019 05:30:52 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:50526 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfLCKaw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 05:30:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Rna2JaW2M6WY+wWsRwUd4SfBNEf14oDaBk5RQKMA9hg=; b=pjJDdnHT+AUhQe+9+Mdn8NFb0
+        vOqy8/jX7I+kbZrJPaPBfN8LcK3afWqNHTnEUwy2JTe9agZ8sz80sPhtcpW/3DVijarJUtpp/SYBE
+        fAawQaC/dPFVGExiRkIMSpLX7T+b88IC9ufnNPjrS6Awg7t54s0ti0Odtv/VcmIBp/1miFqmh7OBD
+        VTh1WnSIAbdaCVAOPiytgFL8wKSboB/EInhh2f4GzvsP632cDSTDw11glWvR9ob3lg9IY16ZzEJHe
+        lwwdvimjxPLjPeQ1FnkS1v2FH0w7EfDqTzPrw/vqFrHMBZfH449nH3opiyW9ZxAg+QuWfAQ8263n6
+        gzyvSuMVQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ic5SC-0006Kd-HL; Tue, 03 Dec 2019 10:30:48 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id ABB3B303144;
+        Tue,  3 Dec 2019 11:29:30 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E53BC2061BAF9; Tue,  3 Dec 2019 11:30:46 +0100 (CET)
+Date:   Tue, 3 Dec 2019 11:30:46 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Schmid, Carsten" <Carsten_Schmid@mentor.com>
+Cc:     "mingo@redhat.com" <mingo@redhat.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: Crash in fair scheduler
+Message-ID: <20191203103046.GJ2827@hirez.programming.kicks-ass.net>
 References: <1575364273836.74450@mentor.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <564e45cb-8230-9c3d-24a8-b58e6e88349f@arm.com>
-Date:   Tue, 3 Dec 2019 10:30:26 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <1575364273836.74450@mentor.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/12/2019 09:11, Schmid, Carsten wrote:
-[...]
+On Tue, Dec 03, 2019 at 09:11:14AM +0000, Schmid, Carsten wrote:
+> Hi maintainers of the fair scheduler,
+> 
+> we had a crash in the fair scheduler and analysis shows that this could happen again.
+> Happened on 4.14.86 (LTS series) but failing code path still exists in 5.4-rc2 (and 4.14.147 too).
 
-> set_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *se)
+Please, do try if you can reproduce with Linus' latest git. I've no idea
+what is, or is not, in those stable trees.
+
+> crash> * cfs_rq ffff99a96dda9800
+> struct cfs_rq {
+>   load = {  weight = 1048576,  inv_weight = 0  }, 
+>   nr_running = 1, 
+>   h_nr_running = 1, 
+>   exec_clock = 0, 
+>   min_vruntime = 190894920101, 
+>   tasks_timeline = {  rb_root = {    rb_node = 0xffff99a9502e0d10  },   rb_leftmost = 0x0  }, 
+>   curr = 0x0, 
+>   next = 0x0, 
+>   last = 0x0, 
+>   skip = 0x0, 
+
+
+> &cfs_rq->tasks_timeline->rb_leftmost
+>   tasks_timeline = {
+>     rb_root = {
+>       rb_node = 0xffff99a9502e0d10
+>     }, 
+>     rb_leftmost = 0x0
+>   }, 
+
+> include/linux/rbtree.h:91:#define rb_first_cached(root) (root)->rb_leftmost
+
+> struct sched_entity *__pick_first_entity(struct cfs_rq *cfs_rq)
 > {
-> 	/* 'current' is not kept within the tree. */
-> 	if (se->on_rq) { <<<<<<< crash here
+> 	struct rb_node *left = rb_first_cached(&cfs_rq->tasks_timeline);
 > 
-> set_next_entity is called from within pick_next_task_fair, from the following piece of code:
-> static struct task_struct *
-> pick_next_task_fair(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
-> {
-> 	struct cfs_rq *cfs_rq = &rq->cfs;
-> 	struct sched_entity *se;
-> 	struct task_struct *p;
-> 	int new_tasks;
+> 	if (!left)
+> 		return NULL; <<<<<<<<<< the case
 > 
-> again:
-> 	if (!cfs_rq->nr_running) // this is 1, so we are not going to idle
-> 		goto idle;
-> 
-> #ifdef CONFIG_FAIR_GROUP_SCHED
-> 	if (prev->sched_class != &fair_sched_class) <<<<< this is true:
-> 							crash> p &fair_sched_class
-> 							$1 = (const struct sched_class *) 0xffffffffaaa10cc0 <<<<
-> 							crash> $prev=ffff99a97895a580
-> 							crash> gdb set $prev=(struct task_struct *)0xffff99a97895a580
-> 							crash> p $prev->sched_class
-> 							$2 = (const struct sched_class *) 0xffffffffaaa10b40 <<<<
-> 		goto simple; <<<< so we go to simple
-> ....
-> (Line 6360, Kernel 4.14.86; Line 6820 Kernel v5.4-rc2)
-> simple:
-> #endif
-> 
-> 	put_prev_task(rq, prev);
-> 
-> 	do {
-> 		se = pick_next_entity(cfs_rq, NULL); <<<< this returns se=NULL
-> 		set_next_entity(cfs_rq, se); <<<<<<<< here we crash
-> 		cfs_rq = group_cfs_rq(se);
-> 	} while (cfs_rq);
-> 
-> So why is se = NULL returned?
+> 	return rb_entry(left, struct sched_entity, run_node);
+> }
 
+This the problem, for some reason the rbtree code got that rb_leftmost
+thing wrecked.
 
-That looks a lot like a recent issue we've had, see
+> Is this a corner case nobody thought of or do we have cfs_rq data that is unexpected in it's content?
 
-  https://lore.kernel.org/lkml/20191108131909.428842459@infradead.org/
+No, the rbtree is corrupt. Your tree has a single node (which matches
+with nr_running), but for some reason it thinks rb_leftmost is NULL.
+This is wrong, if the tree is non-empty, it must have a leftmost
+element.
 
-The issue is caused by
-  
-  67692435c411 ("sched: Rework pick_next_task() slow-path")
-
-which 5.4-rc2 has (without the fix which landed in -rc7) but 4.14 really
-shouldn't, unless the kernel you're using has had core scheduling somehow
-backported to it?
-
-I've only scraped the surface but I'd like to first ask: can you reproduce
-the issue on v5.4 final ?
-
-> Best regards
-> Carsten
-> 
+Can you reproduce at will? If so, can you please try the latest kernel,
+and or share the reproducer?
