@@ -8,68 +8,69 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E83F4C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3312CC43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C02B4206E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 047E2206E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:42:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qtA92IPc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sUKJcS63"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbfLCAlu (ORCPT
+        id S1726443AbfLCAmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 19:41:50 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36552 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbfLCAlt (ORCPT
+        Mon, 2 Dec 2019 19:42:03 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44266 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbfLCAmD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 19:41:49 -0500
-Received: by mail-pl1-f193.google.com with SMTP id k20so854130pls.3;
-        Mon, 02 Dec 2019 16:41:49 -0800 (PST)
+        Mon, 2 Dec 2019 19:42:03 -0500
+Received: by mail-lj1-f195.google.com with SMTP id c19so1630060lji.11;
+        Mon, 02 Dec 2019 16:42:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5F3LmlLJ3DLUlNEK9V6ggwNn0/WBf54z3A3fMxHOMC0=;
-        b=qtA92IPcnLG8L/fIoNQ7renoQI235C29BpF+GTBOhKseLGiUYRw7Y8Jb9SvIJklV/c
-         BI/ishToIJ/57CniabwqzeLc32C0/Anc7yWa85UGB+sybPbEp0eul2XJxG4axDzice+U
-         BYJBA34aiDqHU6FTXNM03itIr5CCaW2BHMzpNuw0mpOz3utGO9el+KKP/BXZZMyD/W52
-         TyHRDJ+grfB1aaIVFHSZIjvoho2JBlEQubRthLR7c4MvTP3LdLIgGq3EZZB/jka2pO/3
-         KLDNj60VOR+SZkeb8wKLS/wGNF6WoLfleh7MQMN8iK2ths7wB5yFa17MFYEDqLH1tYIb
-         eKrw==
+        bh=RXuTZNw4YluF0xsaWYam3YpLe0yLbc8vBZ1dGFmmgz4=;
+        b=sUKJcS63tb1/bE2B19Z+utIpq8bnEg+Gv14tzsoDn0iZxdIwWa84H1iUfSvXrk1jAx
+         DDab6Omdsv2fQedGajfAymBRLGm8jzauyBWbVtGai9BUe4Eiad9zjHwG5LIjxo9ChRFF
+         OG7XH6y0Ha8Cfv2JfoitJNIJ6z7AKTzVKoyonLulHbAE+kbU2THnBEWFg6+8bX0qpNQA
+         yy513flUCYmupIqgpsA/oZEe1rkonzPcdO/ipU1aPZ8DLQYigOhqcCI9wsWI+yhXXwG8
+         nCmbKPfs7dW1RryL58rQWF6JSNjWchFOnnMYHrqUVqT5/LUnajPwaqidI4ejjfbV3uIh
+         VXHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5F3LmlLJ3DLUlNEK9V6ggwNn0/WBf54z3A3fMxHOMC0=;
-        b=Rv9RFHJCV53gYC7O7Ucwe8jF2ZRcgVtrQhWvqpyc3EX81Ldf8f+uflAaeyMC8Hde6b
-         YB6vGoWMmO7VqMDjWCQ44BBQU5BAFmeME+v+29LTnS1N096kcVJnCjUtQsrEzSuWvh+C
-         hC2Z7+3MKBfJc7WQwdmk6vhEoECWFq2VG50L9QhghlwGBOJcfFIhGcPqy9rV+hZIbjzn
-         w1vPB4j9s4KbAQIp6NdJGmqmjxIvLIPvhiiBGOtAECWC3YPMN8LRmV/2UUTpKPql2OWt
-         WQb2c7K1vb8QspBeNt9HSXCTSC/9QMwp18YEmE6S9C/Hd8YG71UsZGWecHefOQWLKqRO
-         kG3Q==
-X-Gm-Message-State: APjAAAUxKkGRngJq5VKzNUKZs5gK359N4wxp0QNF8NjHM8O4X/P3taSH
-        8wbAKvSX+qXGmyEN3Xd0sAM=
-X-Google-Smtp-Source: APXvYqyLRZcpTsfPKjdg4qt6LU+Ifi6fGkc9DXr47Aaci1PiH2RfLpmCvEa3U2aM3JKz+3kKz/jYqA==
-X-Received: by 2002:a17:90a:1aa3:: with SMTP id p32mr2418600pjp.8.1575333709070;
-        Mon, 02 Dec 2019 16:41:49 -0800 (PST)
-Received: from debian.net.fpt ([2405:4800:58f7:32f8:99ed:5ecf:a28d:555e])
-        by smtp.gmail.com with ESMTPSA id x4sm688788pff.143.2019.12.02.16.41.46
+        bh=RXuTZNw4YluF0xsaWYam3YpLe0yLbc8vBZ1dGFmmgz4=;
+        b=SC329KVMU252SLiJJebkvoAeRq66qJGLX8a3AYNDTFQ4CBktK2stXRs9RkiF1Kdafs
+         WxthUm96hrkk6J2BlvBl1FQszGdNknVsqjvPDH3EPjuWBW2By1NKgF4MbY3rk0664PZp
+         Iq0+XqhJvqwbeL0gyHcgtll2RKVTzk/uFnz8lTY2UfqXW7OL7QPyn4iu1aob9sysdzZ1
+         5qT7xcb1AtpNulsPypyx3TktVyvPOSYxZdGmTGk6wqYMhSqzhPRNUeqCuG7MhJfms2Te
+         VaLXTZjupcgBvAWXtbLdL7m973wG1p1Zdl6oMICFNVUqvNBi7Wvmuiraxa2ikS1DoDwd
+         8D0A==
+X-Gm-Message-State: APjAAAWwxGbY7hNowCf4XUC/T/z0rg9UTrqITm+6ffP0AFR6hnnqEcYe
+        EokAsOaanrXuLQBugY2WmSE=
+X-Google-Smtp-Source: APXvYqyDdCe4cvfThpvsaPkZ+owpBUCZfAhEmQKBt9kVsfCXwF8+pPhTggQwhNStfNVqxDE5Hip0vg==
+X-Received: by 2002:a2e:95c4:: with SMTP id y4mr908302ljh.38.1575333720872;
+        Mon, 02 Dec 2019 16:42:00 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id y21sm456384ljm.25.2019.12.02.16.41.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 16:41:48 -0800 (PST)
-From:   Phong Tran <tranmanphong@gmail.com>
-To:     mchehab@kernel.org, gregkh@linuxfoundation.org,
-        allison@lohutok.net, tglx@linutronix.de,
-        syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        glider@google.com, syzkaller-bugs@googlegroups.com,
-        Phong Tran <tranmanphong@gmail.com>
-Subject: [PATCH] media: dvb: check return value digitv_ctrl_msg
-Date:   Tue,  3 Dec 2019 07:41:38 +0700
-Message-Id: <20191203004138.21223-1-tranmanphong@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <0000000000004f3d820596d8c51c@google.com>
-References: <0000000000004f3d820596d8c51c@google.com>
+        Mon, 02 Dec 2019 16:42:00 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v8 01/19] ARM: tegra: Compile sleep-tegra20/30.S unconditionally
+Date:   Tue,  3 Dec 2019 03:40:58 +0300
+Message-Id: <20191203004116.11771-2-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191203004116.11771-1-digetx@gmail.com>
+References: <20191203004116.11771-1-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,57 +78,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For fixing syzbot "KMSAN: uninit-value in digitv_rc_query"
+The sleep-tegra*.S provides functionality required for suspend/resume
+and CPU hotplugging. The new unified CPUIDLE driver will support multiple
+hardware generations starting from Terga20 and ending with Tegra124, the
+driver will utilize functions that are provided by the assembly and thus
+it is cleaner to compile that code without any build-dependencies in order
+to avoid churning with #ifdef's.
 
-In scenario testing for syzbot, failure reading from
-digitv_ctrl_msg() [1].
-
-Eg:
-[   91.846657][ T3844] dvb-usb: bulk message failed: -22 (7/0)
-
-digitv_rc_query() always return 0. But in this case a wrong thing happens.
-
-Reported-by: syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com
-Tested-by: syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com
-
-[1]: https://syzkaller.appspot.com/text?tag=CrashLog&x=16860a63600000
-[2]: https://groups.google.com/d/msg/syzkaller-bugs/-TXIJAZ0J9Q/T4PEUQoeAQAJ
-
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/media/usb/dvb-usb/digitv.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ arch/arm/mach-tegra/Makefile | 6 ++----
+ arch/arm/mach-tegra/sleep.h  | 2 --
+ 2 files changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/media/usb/dvb-usb/digitv.c b/drivers/media/usb/dvb-usb/digitv.c
-index dd5bb230cec1..61bc8945e6b9 100644
---- a/drivers/media/usb/dvb-usb/digitv.c
-+++ b/drivers/media/usb/dvb-usb/digitv.c
-@@ -231,17 +231,21 @@ static struct rc_map_table rc_map_digitv_table[] = {
- static int digitv_rc_query(struct dvb_usb_device *d, u32 *event, int *state)
- {
- 	int i;
--	u8 key[5];
-+	u8 key[5] = { 0 };
- 	u8 b[4] = { 0 };
-+	int ret;
+diff --git a/arch/arm/mach-tegra/Makefile b/arch/arm/mach-tegra/Makefile
+index 6c1dff2eccc2..965862608ff6 100644
+--- a/arch/arm/mach-tegra/Makefile
++++ b/arch/arm/mach-tegra/Makefile
+@@ -8,13 +8,13 @@ obj-y					+= reset.o
+ obj-y					+= reset-handler.o
+ obj-y					+= sleep.o
+ obj-y					+= tegra.o
++obj-y					+= sleep-tegra20.o
++obj-y					+= sleep-tegra30.o
+ obj-$(CONFIG_CPU_IDLE)			+= cpuidle.o
+-obj-$(CONFIG_ARCH_TEGRA_2x_SOC)		+= sleep-tegra20.o
+ obj-$(CONFIG_ARCH_TEGRA_2x_SOC)		+= pm-tegra20.o
+ ifeq ($(CONFIG_CPU_IDLE),y)
+ obj-$(CONFIG_ARCH_TEGRA_2x_SOC)		+= cpuidle-tegra20.o
+ endif
+-obj-$(CONFIG_ARCH_TEGRA_3x_SOC)		+= sleep-tegra30.o
+ obj-$(CONFIG_ARCH_TEGRA_3x_SOC)		+= pm-tegra30.o
+ ifeq ($(CONFIG_CPU_IDLE),y)
+ obj-$(CONFIG_ARCH_TEGRA_3x_SOC)		+= cpuidle-tegra30.o
+@@ -22,12 +22,10 @@ endif
+ obj-$(CONFIG_SMP)			+= platsmp.o
+ obj-$(CONFIG_HOTPLUG_CPU)               += hotplug.o
  
- 	*event = 0;
- 	*state = REMOTE_NO_KEY_PRESSED;
+-obj-$(CONFIG_ARCH_TEGRA_114_SOC)	+= sleep-tegra30.o
+ obj-$(CONFIG_ARCH_TEGRA_114_SOC)	+= pm-tegra30.o
+ ifeq ($(CONFIG_CPU_IDLE),y)
+ obj-$(CONFIG_ARCH_TEGRA_114_SOC)	+= cpuidle-tegra114.o
+ endif
+-obj-$(CONFIG_ARCH_TEGRA_124_SOC)	+= sleep-tegra30.o
+ obj-$(CONFIG_ARCH_TEGRA_124_SOC)	+= pm-tegra30.o
+ ifeq ($(CONFIG_CPU_IDLE),y)
+ obj-$(CONFIG_ARCH_TEGRA_124_SOC)	+= cpuidle-tegra114.o
+diff --git a/arch/arm/mach-tegra/sleep.h b/arch/arm/mach-tegra/sleep.h
+index 78ef32a907c8..63e2205cbc82 100644
+--- a/arch/arm/mach-tegra/sleep.h
++++ b/arch/arm/mach-tegra/sleep.h
+@@ -120,10 +120,8 @@ void tegra_resume(void);
+ int tegra_sleep_cpu_finish(unsigned long);
+ void tegra_disable_clean_inv_dcache(u32 flag);
  
--	digitv_ctrl_msg(d,USB_READ_REMOTE,0,NULL,0,&key[1],4);
--
-+	ret = digitv_ctrl_msg(d, USB_READ_REMOTE, 0, NULL, 0, &key[1], 4);
-+	if (ret < 0)
-+		return ret;
- 	/* Tell the device we've read the remote. Not sure how necessary
- 	   this is, but the Nebula SDK does it. */
--	digitv_ctrl_msg(d,USB_WRITE_REMOTE,0,b,4,NULL,0);
-+	ret = digitv_ctrl_msg(d, USB_WRITE_REMOTE, 0, b, 4, NULL, 0);
-+	if (ret < 0)
-+		return ret;
+-#ifdef CONFIG_HOTPLUG_CPU
+ void tegra20_hotplug_shutdown(void);
+ void tegra30_hotplug_shutdown(void);
+-#endif
  
- 	/* if something is inside the buffer, simulate key press */
- 	if (key[1] != 0)
+ void tegra20_cpu_shutdown(int cpu);
+ int tegra20_cpu_is_resettable_soon(void);
 -- 
-2.20.1
+2.24.0
 
