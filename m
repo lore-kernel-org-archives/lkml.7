@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C96FC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 312D4C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 108A120674
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0100920674
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:54:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413658;
-	bh=/lcAWHBkLChrSM0oXx4xjHts2xF9XpAEnOD+MzhiIF4=;
+	s=default; t=1575413663;
+	bh=8YvM9+J34BD6t+/ML1qLi5wu14hLYMK6CX1h3JsZ7+s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SZZ7Z56oj3tP6wewcQuSevYw3Hfldrv9Rs6FQztxWN2HAE9JIqhaLd5e00nrX5g5R
-	 /8K86xNGuMDFN+OTe6twWmQtmOB6mYQzVMi40u4ZsV8EOUrA4883qAQn+10YHpmlK3
-	 GgAaDNvR9gOBFSodJGB40C15uIavggH5/32JCOvc=
+	b=0fLNdxGkX527t0iJynnAk99L17d0/Dz8rn24vXcJfenlJYERFFgzma5rlKu/vvBN/
+	 bikJMSJOq7+u0EtrU5J0X6tZXRhsG5DzyMLME2j8uqh5+JAWV02XgCzPeRIR2Ifgiq
+	 IrS35IUIbp4sF/qZeYOXdkl8/Ce2xRY5yg01RHUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730268AbfLCWyR (ORCPT
+        id S1730284AbfLCWyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:54:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47962 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:54:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730123AbfLCWyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:54:13 -0500
+        id S1730270AbfLCWyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:54:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C36A2053B;
-        Tue,  3 Dec 2019 22:54:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 022C5215B2;
+        Tue,  3 Dec 2019 22:54:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413652;
-        bh=/lcAWHBkLChrSM0oXx4xjHts2xF9XpAEnOD+MzhiIF4=;
+        s=default; t=1575413657;
+        bh=8YvM9+J34BD6t+/ML1qLi5wu14hLYMK6CX1h3JsZ7+s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xJag3yh/+trA9CIpIVHZeCkn49fM5L2lJZA+pt67LSRbE8BSZuBLiJ3VIhAkEsPkC
-         aakD3Z8qgkx51iPnxfwRU5voXI1XwB+QGrC+bXK+rzAuPdPDcxYrkof6ZSlp+X8Kp/
-         Aqw5My66KLWSOflpmKJqXTIQMl28ngyyDJD4erR0=
+        b=lH2MXDCc3QH/W/PkbfLh8UqZ9UUGUsPRgW0yZtJCIsZss8vKvZk2hnXpIxUhF9MbO
+         k0lPIIi7AbcaoAGH+uYi9pZoYAiWAieQP1t7RoDrNjwz0Mc4Q/PSne4Ah2fyWaONav
+         /B7PYMQCnFQm2m8IGRvY6VSgEYJmkIQ5rz/2ctCc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 173/321] drbd: do not block when adjusting "disk-options" while IO is frozen
-Date:   Tue,  3 Dec 2019 23:33:59 +0100
-Message-Id: <20191203223436.131865177@linuxfoundation.org>
+        stable@vger.kernel.org, Yi Wang <wang.yi59@zte.com.cn>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 210/321] fork: fix some -Wmissing-prototypes warnings
+Date:   Tue,  3 Dec 2019 23:34:36 +0100
+Message-Id: <20191203223438.046689783@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -59,89 +63,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars Ellenberg <lars.ellenberg@linbit.com>
+From: Yi Wang <wang.yi59@zte.com.cn>
 
-[ Upstream commit f708bd08ecbdc23d03aaedf5b3311ebe44cfdb50 ]
+[ Upstream commit fb5bf31722d0805a3f394f7d59f2e8cd07acccb7 ]
 
-"suspending" IO is overloaded.
-It can mean "do not allow new requests" (obviously),
-but it also may mean "must not complete pending IO",
-for example while the fencing handlers do their arbitration.
+We get a warning when building kernel with W=1:
 
-When adjusting disk options, we suspend io (disallow new requests), then
-wait for the activity-log to become unused (drain all IO completions),
-and possibly replace it with a new activity log of different size.
+  kernel/fork.c:167:13: warning: no previous prototype for `arch_release_thread_stack' [-Wmissing-prototypes]
+  kernel/fork.c:779:13: warning: no previous prototype for `fork_init' [-Wmissing-prototypes]
 
-If the other "suspend IO" aspect is active, pending IO completions won't
-happen, and we would block forever (unkillable drbdsetup process).
+Add the missing declaration in head file to fix this.
 
-Fix this by skipping the activity log adjustment if the "al-extents"
-setting did not change. Also, in case it did change, fail early without
-blocking if it looks like we would block forever.
+Also, remove arch_release_thread_stack() completely because no arch
+seems to implement it since bb9d81264 (arch: remove tile port).
 
-Signed-off-by: Lars Ellenberg <lars.ellenberg@linbit.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Link: http://lkml.kernel.org/r/1542170087-23645-1-git-send-email-wang.yi59@zte.com.cn
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/drbd/drbd_nl.c | 37 ++++++++++++++++++++++++++++--------
- 1 file changed, 29 insertions(+), 8 deletions(-)
+ include/linux/sched/task.h | 2 ++
+ init/main.c                | 1 -
+ kernel/fork.c              | 5 -----
+ 3 files changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/block/drbd/drbd_nl.c b/drivers/block/drbd/drbd_nl.c
-index 3366c1a91ee00..5b15ffd0c7f57 100644
---- a/drivers/block/drbd/drbd_nl.c
-+++ b/drivers/block/drbd/drbd_nl.c
-@@ -1515,6 +1515,30 @@ static void sanitize_disk_conf(struct drbd_device *device, struct disk_conf *dis
- 	}
+diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+index 108ede99e5335..44c6f15800ff5 100644
+--- a/include/linux/sched/task.h
++++ b/include/linux/sched/task.h
+@@ -39,6 +39,8 @@ void __noreturn do_task_dead(void);
+ 
+ extern void proc_caches_init(void);
+ 
++extern void fork_init(void);
++
+ extern void release_task(struct task_struct * p);
+ 
+ #ifdef CONFIG_HAVE_COPY_THREAD_TLS
+diff --git a/init/main.c b/init/main.c
+index 020972fed1171..38a603f62b7bb 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -105,7 +105,6 @@
+ static int kernel_init(void *);
+ 
+ extern void init_IRQ(void);
+-extern void fork_init(void);
+ extern void radix_tree_init(void);
+ 
+ /*
+diff --git a/kernel/fork.c b/kernel/fork.c
+index aef1430bdce0b..8cb5cd7c97e19 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -163,10 +163,6 @@ static inline void free_task_struct(struct task_struct *tsk)
  }
+ #endif
  
-+static int disk_opts_check_al_size(struct drbd_device *device, struct disk_conf *dc)
-+{
-+	int err = -EBUSY;
-+
-+	if (device->act_log &&
-+	    device->act_log->nr_elements == dc->al_extents)
-+		return 0;
-+
-+	drbd_suspend_io(device);
-+	/* If IO completion is currently blocked, we would likely wait
-+	 * "forever" for the activity log to become unused. So we don't. */
-+	if (atomic_read(&device->ap_bio_cnt))
-+		goto out;
-+
-+	wait_event(device->al_wait, lc_try_lock(device->act_log));
-+	drbd_al_shrink(device);
-+	err = drbd_check_al_size(device, dc);
-+	lc_unlock(device->act_log);
-+	wake_up(&device->al_wait);
-+out:
-+	drbd_resume_io(device);
-+	return err;
-+}
-+
- int drbd_adm_disk_opts(struct sk_buff *skb, struct genl_info *info)
- {
- 	struct drbd_config_context adm_ctx;
-@@ -1577,15 +1601,12 @@ int drbd_adm_disk_opts(struct sk_buff *skb, struct genl_info *info)
- 		}
- 	}
- 
--	drbd_suspend_io(device);
--	wait_event(device->al_wait, lc_try_lock(device->act_log));
--	drbd_al_shrink(device);
--	err = drbd_check_al_size(device, new_disk_conf);
--	lc_unlock(device->act_log);
--	wake_up(&device->al_wait);
--	drbd_resume_io(device);
+-void __weak arch_release_thread_stack(unsigned long *stack)
+-{
+-}
 -
-+	err = disk_opts_check_al_size(device, new_disk_conf);
- 	if (err) {
-+		/* Could be just "busy". Ignore?
-+		 * Introduce dedicated error code? */
-+		drbd_msg_put_info(adm_ctx.reply_skb,
-+			"Try again without changing current al-extents setting");
- 		retcode = ERR_NOMEM;
- 		goto fail_unlock;
- 	}
+ #ifndef CONFIG_ARCH_THREAD_STACK_ALLOCATOR
+ 
+ /*
+@@ -376,7 +372,6 @@ static void release_task_stack(struct task_struct *tsk)
+ 		return;  /* Better to leak the stack than to free prematurely */
+ 
+ 	account_kernel_stack(tsk, -1);
+-	arch_release_thread_stack(tsk->stack);
+ 	free_thread_stack(tsk);
+ 	tsk->stack = NULL;
+ #ifdef CONFIG_VMAP_STACK
 -- 
 2.20.1
 
