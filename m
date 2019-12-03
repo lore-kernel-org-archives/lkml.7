@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7604C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF448C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA67F207DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B8FD207DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414536;
-	bh=c6CoG+ElvzE2nJ6/nYqSH5WvSz4hUr4TXIojSkX6nYY=;
+	s=default; t=1575414539;
+	bh=sceLJGCo77DPR9JBaWfFyeAjcJUerBMlT9tLv1Mf0SQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cN6aywQb0PznyWdWrmtpxEHf67Gz1rBwpgesT45moDVtON6vKKJoIO5iAqKYSIe8n
-	 TFNwYdFhT+L+tHjFpOBP9HqfwCgpxg+8KM8ZMyixa3jjjxI45YK5hkn9+hqyTlDLQc
-	 G+rfwsRiD2ojY7qUvUQbN21ITGL6lLC1ImvvLJh4=
+	b=SNVb7ei8tVlTZ182xflIR7oB92xp9QQ+1nQAd0cubUvrWXznsAWsFonvr99ao2MuP
+	 75fM+Lry5ikMoh42A1TUBr+p9gWKOTgo3LpOYK7nSFFdx6ijkIobvtfp3fGp0F1ziV
+	 gfuWuokJv29lEzEs1TnX/o7VPZg0fErA93dVmgI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728806AbfLCWpJ (ORCPT
+        id S1728733AbfLCWpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:45:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33350 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:45:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728739AbfLCWpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:45:02 -0500
+        id S1728871AbfLCWo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:44:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B826207DD;
-        Tue,  3 Dec 2019 22:45:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56A7F2073C;
+        Tue,  3 Dec 2019 22:44:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413102;
-        bh=c6CoG+ElvzE2nJ6/nYqSH5WvSz4hUr4TXIojSkX6nYY=;
+        s=default; t=1575413096;
+        bh=sceLJGCo77DPR9JBaWfFyeAjcJUerBMlT9tLv1Mf0SQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WzBFtC8VIbdP4pKXUMVYUqBkrtwrubvoBQBXFSEiNTxd9LIR4u396dFr0xll7Y+ce
-         8UFmp4+fn7buo0kov4ytXW5Nh9Yci6pskyAxNq9XNt06yiXE/Os0PA8uPpyQq3TIRS
-         FFW3cxm4XqSsl4/LCt1Ics9wrM0nwOcxT1M+BoF4=
+        b=DMx4GQMSM/wc6DW4g63NVXPqaqcepG+tRz09dopoLTQ2up7zZa0SpOexz7pNbMSmK
+         NRlp7IlFvTjMVXxtD5Qob7qpvilf4GtOC24R60+URi+1zMpA2oRN729/LwPwfGVKX8
+         Qo0ZEcliwyPAwxV/erfLGpJRewn6lwo3AQBVZW7o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 126/135] net/tls: remove the dead inplace_crypto code
-Date:   Tue,  3 Dec 2019 23:36:06 +0100
-Message-Id: <20191203213045.019713052@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 5.3 134/135] platform/x86: hp-wmi: Fix ACPI errors caused by too small buffer
+Date:   Tue,  3 Dec 2019 23:36:14 +0100
+Message-Id: <20191203213046.260872434@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -61,74 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 9e5ffed37df68d0ccfb2fdc528609e23a1e70ebe ]
+commit 16245db1489cd9aa579506f64afeeeb13d825a93 upstream.
 
-Looks like when BPF support was added by commit d3b18ad31f93
-("tls: add bpf support to sk_msg handling") and
-commit d829e9c4112b ("tls: convert to generic sk_msg interface")
-it broke/removed the support for in-place crypto as added by
-commit 4e6d47206c32 ("tls: Add support for inplace records
-encryption").
+The HP WMI calls may take up to 128 bytes of data as input, and
+the AML methods implementing the WMI calls, declare a couple of fields for
+accessing input in different sizes, specifycally the HWMC method contains:
 
-The inplace_crypto member of struct tls_rec is dead, inited
-to zero, and sometimes set to zero again. It used to be
-set to 1 when record was allocated, but the skmsg code doesn't
-seem to have been written with the idea of in-place crypto
-in mind.
+        CreateField (Arg1, 0x80, 0x0400, D128)
 
-Since non trivial effort is required to bring the feature back
-and we don't really have the HW to measure the benefit just
-remove the left over support for now to avoid confusing readers.
+Even though we do not use any of the WMI command-types which need a buffer
+of this size, the APCI interpreter still tries to create it as it is
+declared in generoc code at the top of the HWMC method which runs before
+the code looks at which command-type is requested.
 
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This results in many of these errors on many different HP laptop models:
+
+[   14.459261] ACPI Error: Field [D128] at 1152 exceeds Buffer [NULL] size 160 (bits) (20170303/dsopcode-236)
+[   14.459268] ACPI Error: Method parse/execution failed [\HWMC] (Node ffff8edcc61507f8), AE_AML_BUFFER_LIMIT (20170303/psparse-543)
+[   14.459279] ACPI Error: Method parse/execution failed [\_SB.WMID.WMAA] (Node ffff8edcc61523c0), AE_AML_BUFFER_LIMIT (20170303/psparse-543)
+
+This commit increases the size of the data element of the bios_args struct
+to 128 bytes fixing these errors.
+
+Cc: stable@vger.kernel.org
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=197007
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=201981
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1520703
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/net/tls.h |    1 -
- net/tls/tls_sw.c  |    6 +-----
- 2 files changed, 1 insertion(+), 6 deletions(-)
 
---- a/include/net/tls.h
-+++ b/include/net/tls.h
-@@ -121,7 +121,6 @@ struct tls_rec {
- 	struct list_head list;
- 	int tx_ready;
- 	int tx_flags;
--	int inplace_crypto;
+---
+ drivers/platform/x86/hp-wmi.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -65,7 +65,7 @@ struct bios_args {
+ 	u32 command;
+ 	u32 commandtype;
+ 	u32 datasize;
+-	u32 data;
++	u8 data[128];
+ };
  
- 	struct sk_msg msg_plaintext;
- 	struct sk_msg msg_encrypted;
---- a/net/tls/tls_sw.c
-+++ b/net/tls/tls_sw.c
-@@ -705,8 +705,7 @@ static int tls_push_record(struct sock *
- 	}
+ enum hp_wmi_commandtype {
+@@ -216,7 +216,7 @@ static int hp_wmi_perform_query(int quer
+ 		.command = command,
+ 		.commandtype = query,
+ 		.datasize = insize,
+-		.data = 0,
++		.data = { 0 },
+ 	};
+ 	struct acpi_buffer input = { sizeof(struct bios_args), &args };
+ 	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+@@ -228,7 +228,7 @@ static int hp_wmi_perform_query(int quer
  
- 	i = msg_pl->sg.start;
--	sg_chain(rec->sg_aead_in, 2, rec->inplace_crypto ?
--		 &msg_en->sg.data[i] : &msg_pl->sg.data[i]);
-+	sg_chain(rec->sg_aead_in, 2, &msg_pl->sg.data[i]);
+ 	if (WARN_ON(insize > sizeof(args.data)))
+ 		return -EINVAL;
+-	memcpy(&args.data, buffer, insize);
++	memcpy(&args.data[0], buffer, insize);
  
- 	i = msg_en->sg.end;
- 	sk_msg_iter_var_prev(i);
-@@ -971,8 +970,6 @@ alloc_encrypted:
- 			if (ret)
- 				goto fallback_to_reg_send;
+ 	wmi_evaluate_method(HPWMI_BIOS_GUID, 0, mid, &input, &output);
  
--			rec->inplace_crypto = 0;
--
- 			num_zc++;
- 			copied += try_to_copy;
- 
-@@ -1171,7 +1168,6 @@ alloc_payload:
- 
- 		tls_ctx->pending_open_record_frags = true;
- 		if (full_record || eor || sk_msg_full(msg_pl)) {
--			rec->inplace_crypto = 0;
- 			ret = bpf_exec_tx_verdict(msg_pl, sk, full_record,
- 						  record_type, &copied, flags);
- 			if (ret) {
 
 
