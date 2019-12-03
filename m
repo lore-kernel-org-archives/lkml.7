@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E851C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D07A6C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D98F20803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A329D2080F
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:45:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413133;
-	bh=ylCLNd3oLbwGgmHrWPImfAN2JXqR+4fZHS8bj2jnUAM=;
+	s=default; t=1575413137;
+	bh=CFbyICVMg0BGL5eCOv0DJz8yDGSEwWUHhTT7v4gPrhY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zCu7sL7fXEjrStDQwXCqUkdmXQwCjGeX7gkkKZ4prH8hDlowEU50ZtZj2WYYtEDAG
-	 7c4ynijKUEYg4AIjvYzQsdH6/E5z94ietGQQHfvjcsUhizrsvo8HVniwSxf1dYJkim
-	 prbl3rG6vR9L2Ir/06CaGOTe8zHBX3BBry++vRnw=
+	b=12EoBSqJ69pnRFn7lHV1VAT8DU6auijNiruQ42/IZ2sks/ELyPMq3wa76ktxXsfe1
+	 z0QfQbOuZiJSEryc+4QG7jrB5qSkij3rQT2Gp9hsWMGOJ8C7O+Vu9H6lijIYY0/zNk
+	 UdIBLRCmqAHqf1wz5XD29MtSS9BAV4tqyHtdsAz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729069AbfLCWpc (ORCPT
+        id S1729057AbfLCWpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:45:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34076 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:45:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729057AbfLCWp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:45:29 -0500
+        id S1727901AbfLCWpe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:45:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 108F020803;
-        Tue,  3 Dec 2019 22:45:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 060CF2073C;
+        Tue,  3 Dec 2019 22:45:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413128;
-        bh=ylCLNd3oLbwGgmHrWPImfAN2JXqR+4fZHS8bj2jnUAM=;
+        s=default; t=1575413133;
+        bh=CFbyICVMg0BGL5eCOv0DJz8yDGSEwWUHhTT7v4gPrhY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wqwZD6rE0vQM6H5Dt+Vy/2kWZ6ziCQziPHocsFycbp+TuZJWTAekTgdby0mBcrTXd
-         HfNfyentc1Zq0rt9eGiwhx2bIXCDes4G4nHPHCR0mjuShwMF5GKirYgpbwrVP3gSlo
-         75Qvsq7yTp0/Tnz4YlEZ7abkxZUu2G3sl+yLMB7k=
+        b=B+5pc2nSFr7HYmQWPa7SDK8wU87nDfhdHHHUs0thBlWUkBpa30C+87rQkMkoHjkGH
+         VJmY6dQ2qpWOGE5foSbQIGpVQwHP34p/h7eQC4ysRkgMNhUvAwlxW/bThbr/Iz5r70
+         CkvOmruZQsEEWl6hLN+oa4aR9fE6k9m2Kr2MPKi8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 010/321] pinctrl: cherryview: Allocate IRQ chip dynamic
-Date:   Tue,  3 Dec 2019 23:31:16 +0100
-Message-Id: <20191203223427.656336310@linuxfoundation.org>
+Subject: [PATCH 4.19 012/321] reset: fix reset_control_ops kerneldoc comment
+Date:   Tue,  3 Dec 2019 23:31:18 +0100
+Message-Id: <20191203223427.758333833@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,94 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit 67d33aecd030226f0a577eb683aaa6853ecf8f91 ]
+[ Upstream commit f430c7ed8bc22992ed528b518da465b060b9223f ]
 
-Keeping the IRQ chip definition static shares it with multiple instances
-of the GPIO chip in the system. This is bad and now we get this warning
-from GPIO library:
+Add a missing short description to the reset_control_ops documentation.
 
-"detected irqchip that is shared with multiple gpiochips: please fix the driver."
-
-Hence, move the IRQ chip definition from being driver static into the struct
-intel_pinctrl. So a unique IRQ chip is used for each GPIO chip instance.
-
-This patch is heavily based on the attachment to the bug by Christoph Marz.
-
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=202543
-Fixes: 6e08d6bbebeb ("pinctrl: Add Intel Cherryview/Braswell pin controller support")
-Depends-on: 83b9dc11312f ("pinctrl: cherryview: Associate IRQ descriptors to irqdomain")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+[p.zabel@pengutronix.de: rebased and updated commit message]
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/intel/pinctrl-cherryview.c | 24 +++++++++++-----------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ include/linux/reset-controller.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
-index 9eab508395814..f16baf9b86962 100644
---- a/drivers/pinctrl/intel/pinctrl-cherryview.c
-+++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
-@@ -157,6 +157,7 @@ struct chv_pin_context {
-  * @pctldesc: Pin controller description
-  * @pctldev: Pointer to the pin controller device
-  * @chip: GPIO chip in this pin controller
-+ * @irqchip: IRQ chip in this pin controller
-  * @regs: MMIO registers
-  * @intr_lines: Stores mapping between 16 HW interrupt wires and GPIO
-  *		offset (in GPIO number space)
-@@ -170,6 +171,7 @@ struct chv_pinctrl {
- 	struct pinctrl_desc pctldesc;
- 	struct pinctrl_dev *pctldev;
- 	struct gpio_chip chip;
-+	struct irq_chip irqchip;
- 	void __iomem *regs;
- 	unsigned intr_lines[16];
- 	const struct chv_community *community;
-@@ -1477,16 +1479,6 @@ static int chv_gpio_irq_type(struct irq_data *d, unsigned type)
- 	return 0;
- }
+diff --git a/include/linux/reset-controller.h b/include/linux/reset-controller.h
+index 9326d671b6e6c..8675ec64987bb 100644
+--- a/include/linux/reset-controller.h
++++ b/include/linux/reset-controller.h
+@@ -7,7 +7,7 @@
+ struct reset_controller_dev;
  
--static struct irq_chip chv_gpio_irqchip = {
--	.name = "chv-gpio",
--	.irq_startup = chv_gpio_irq_startup,
--	.irq_ack = chv_gpio_irq_ack,
--	.irq_mask = chv_gpio_irq_mask,
--	.irq_unmask = chv_gpio_irq_unmask,
--	.irq_set_type = chv_gpio_irq_type,
--	.flags = IRQCHIP_SKIP_SET_WAKE,
--};
--
- static void chv_gpio_irq_handler(struct irq_desc *desc)
- {
- 	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
-@@ -1626,7 +1618,15 @@ static int chv_gpio_probe(struct chv_pinctrl *pctrl, int irq)
- 		}
- 	}
- 
--	ret = gpiochip_irqchip_add(chip, &chv_gpio_irqchip, 0,
-+	pctrl->irqchip.name = "chv-gpio";
-+	pctrl->irqchip.irq_startup = chv_gpio_irq_startup;
-+	pctrl->irqchip.irq_ack = chv_gpio_irq_ack;
-+	pctrl->irqchip.irq_mask = chv_gpio_irq_mask;
-+	pctrl->irqchip.irq_unmask = chv_gpio_irq_unmask;
-+	pctrl->irqchip.irq_set_type = chv_gpio_irq_type;
-+	pctrl->irqchip.flags = IRQCHIP_SKIP_SET_WAKE;
-+
-+	ret = gpiochip_irqchip_add(chip, &pctrl->irqchip, 0,
- 				   handle_bad_irq, IRQ_TYPE_NONE);
- 	if (ret) {
- 		dev_err(pctrl->dev, "failed to add IRQ chip\n");
-@@ -1643,7 +1643,7 @@ static int chv_gpio_probe(struct chv_pinctrl *pctrl, int irq)
- 		}
- 	}
- 
--	gpiochip_set_chained_irqchip(chip, &chv_gpio_irqchip, irq,
-+	gpiochip_set_chained_irqchip(chip, &pctrl->irqchip, irq,
- 				     chv_gpio_irq_handler);
- 	return 0;
- }
+ /**
+- * struct reset_control_ops
++ * struct reset_control_ops - reset controller driver callbacks
+  *
+  * @reset: for self-deasserting resets, does all necessary
+  *         things to reset the device
 -- 
 2.20.1
 
