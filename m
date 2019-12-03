@@ -7,76 +7,101 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E353C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A10C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2576F20803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:26:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7638620803
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:27:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SsrIQQ4t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DWtDNKTC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727416AbfLCT01 (ORCPT
+        id S1727417AbfLCT1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 14:26:27 -0500
-Received: from mail-pf1-f174.google.com ([209.85.210.174]:45767 "EHLO
-        mail-pf1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726932AbfLCT00 (ORCPT
+        Tue, 3 Dec 2019 14:27:41 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:40969 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbfLCT1l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 14:26:26 -0500
-Received: by mail-pf1-f174.google.com with SMTP id 2so2311565pfg.12
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 11:26:26 -0800 (PST)
+        Tue, 3 Dec 2019 14:27:41 -0500
+Received: by mail-pj1-f66.google.com with SMTP id ca19so1901482pjb.8;
+        Tue, 03 Dec 2019 11:27:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=sqtioymHBr0uuCq5mwVAHI29Uwj8my7Exon8dNBMKKs=;
-        b=SsrIQQ4tDtJEG1eE6i6xdWD0thA30XH+Iwb/cUfSpfMWvtserG/Z8P1Tu2BSn1L+vD
-         47Ri1mKfNphnsCdlxFzcxgtcuc55HOMXnr4BCgCq4LZXPuGHdbA3lqtVcCQEGFWqeHvi
-         95aeGnDhy6lv6qycnhK6woh9OfgoJcRpZTVF9wAByEiZc4Gq9YHkLEGWtzw+ebumyjPe
-         CJyP8wo8JxCp0hncgXVY9JAZwWLDGgHlC0BuJvf3iQmLLLDT3mxzvm/fLLIjsDJvUeOV
-         rrbId5rvL1Ls+4C1y40bEpk2rmGF3ISIHyxZLe+hBdEauBsyyXUDKbiZmTGtv+9sR4QB
-         bBlA==
+        bh=0PgT9Sm6MTMXuNLnykZQsd6rodt9b9uQNxM2B4NE8NA=;
+        b=DWtDNKTCoDd8AVCIaKWfQfjF6A4gU6y0pXYZm1LWLNrAeN5pJ9Y396tGvuAKw2+hjS
+         9I0LbSyqQ7l9MmBlbcleBIcWLxNqWH2bsVLpQ+ej/42KKf0q3gq/rnkxuw6tkqD5Iju4
+         MAlpnzmxV8tZ8LLrVN/c+JoRc0dk9pz8WRgp/Y+xcIAGODoylB4pay2xzNuzBhRz2VsS
+         95AyBS/cKU80PT2U9kwEHMkM1ATpRNwkmL30hBQckrBKSZq3//5quE+bwi0lOB6eXZMt
+         2akPUnbWrXS8XxcfKD5SXmiaP6FvnzlR+5jSGWF7M3GKsCanmAcbZgk34LXmIxqC9Lpv
+         2IyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=sqtioymHBr0uuCq5mwVAHI29Uwj8my7Exon8dNBMKKs=;
-        b=D35tWGtVuqGCQ39mFQmbbY1LnBkRau19hhp/dgZ9DqVVZ/6CZGF2dCpfTjojTvyMJa
-         DVnTkUNCkeJewvFVNRpRoAdkJCW2cYEgs9SqxWgXvBCpUYOLnIvO06h0IvIO3UadrKOZ
-         mReVrwMcuuArOtr7MfZd3AsWMBr9DdnOJ83k/82aFGQ9isIU5kvRsL4ugkF+NSCB9Q8F
-         A7wp0fBcV+UnodfIRdYHeje8Z5255Td52nVxRdxjo02j3GCUePOW2fZ79eZ+F418/v9G
-         ecNcaPyuv8lPjYW63XcjYGB5QEz2k3bKXa/0HiJNph7efdSg9g0p7+iUevDVW9pecs6v
-         4brQ==
-X-Gm-Message-State: APjAAAVllOVdy6/VhpKETYOb0cAXeGMfV3OfSuCoS7nLlUTToCQ3K8eA
-        6FbtkMn+d9yw4iEcVoT3k6to14OwTfTVpRlVWDooTBmM
-X-Google-Smtp-Source: APXvYqys3iet5YGW1UKJyuKaxQYtYMh5kqZuPWHHzRf2oS9FTmDwnVsLMfAS5j5iGOhcUKZDs899N5Tqi5hgxGU355A=
-X-Received: by 2002:a63:1953:: with SMTP id 19mr6938676pgz.157.1575401185710;
- Tue, 03 Dec 2019 11:26:25 -0800 (PST)
+        bh=0PgT9Sm6MTMXuNLnykZQsd6rodt9b9uQNxM2B4NE8NA=;
+        b=lVPPJLKx2uAkeBeV9JvW/RIcaWuIkjlVZnGf5yI6zvI9jjCzvLBCLDCEcPB71D3Kpy
+         nByuIoC23mdxSldcTjIeXeap/7F9g9whCJf78haWWtlHO6ImALCo/0aTpMMLXLPwcNSo
+         WkqjCVy6yR1m2wItoy43SzdfqmkL1m7erob4epyJwlmkSEgA2t3ofu3LLSKVLBGaIhxy
+         DVWCfOOEVsaf7CYdXatnpDb+0wUnZvzpQYLIGhMFAmomrzbtYQigG3TMyVZPBmjYT+BX
+         xdsYtn/RdVerN2PfU9HPPszGSPc9fuiUiiHwznmZ+YaLDWrd1MMdrK/9mcCn/+vdaWZC
+         kF6w==
+X-Gm-Message-State: APjAAAXmp/QKxDq6vRQj+gMWkYcEL9sXP5tC6LNOIwU0fYL095bUbzsF
+        CWfE2rDXuppe3er9n6SciygcPp8UCjktsf42w0c=
+X-Google-Smtp-Source: APXvYqwc1SheFyTjSmLHWhBW+YXY6ussA8W4aKKbrfYIk26KUHYQylX/y9/Hfdg+UU5PNMTEH5UyuW8U8XCJn2rOjDc=
+X-Received: by 2002:a17:90b:3109:: with SMTP id gc9mr7346216pjb.30.1575401260458;
+ Tue, 03 Dec 2019 11:27:40 -0800 (PST)
 MIME-Version: 1.0
-References: <20191129004855.18506-1-xiyou.wangcong@gmail.com>
- <20191129004855.18506-2-xiyou.wangcong@gmail.com> <d0f58734-0c1e-af9d-3437-31cf6c8a86f9@huawei.com>
- <CAM_iQpXAf8obF1-CRCGc3Fb_YmNBozcyoKQC5yuP6r9Akg6HBg@mail.gmail.com> <b27d0ba1-4f30-3e25-6898-26305a3d42db@huawei.com>
-In-Reply-To: <b27d0ba1-4f30-3e25-6898-26305a3d42db@huawei.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Tue, 3 Dec 2019 11:26:13 -0800
-Message-ID: <CAM_iQpWj2bW+WS37UabhejWwQw7GCYEsCw1hP6eRcuOTCBHiAw@mail.gmail.com>
-Subject: Re: [Patch v2 1/3] iommu: match the original algorithm
-To:     John Garry <john.garry@huawei.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>
+References: <1575349026-8743-1-git-send-email-srinath.mannam@broadcom.com>
+ <1575349026-8743-3-git-send-email-srinath.mannam@broadcom.com> <20191203155514.GE18399@e119886-lin.cambridge.arm.com>
+In-Reply-To: <20191203155514.GE18399@e119886-lin.cambridge.arm.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 3 Dec 2019 21:27:30 +0200
+Message-ID: <CAHp75Vf7d=Gw24MTq2q3BKspkLEDDM24GVK4Zh_4zfZEzVuZjw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/6] PCI: iproc: Add INTx support with better modeling
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Srinath Mannam <srinath.mannam@broadcom.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pci@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ray Jui <ray.jui@broadcom.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 2, 2019 at 2:55 AM John Garry <john.garry@huawei.com> wrote:
-> Apart from this change, did anyone ever consider kmem cache for the
-> magazines?
+On Tue, Dec 3, 2019 at 5:55 PM Andrew Murray <andrew.murray@arm.com> wrote:
+> On Tue, Dec 03, 2019 at 10:27:02AM +0530, Srinath Mannam wrote:
 
-You can always make any changes you want after this patch,
-I can't do all optimizations in one single patch. :)
+> > +     /* go through INTx A, B, C, D until all interrupts are handled */
+> > +     do {
+> > +             status = iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_CSR);
+>
+> By performing this read once and outside of the do/while loop you may improve
+> performance. I wonder how probable it is to get another INTx whilst handling
+> one?
 
-So, I will leave this to you.
+May I ask how it can be improved?
+One read will be needed any way, and so does this code.
 
-Thanks.
+> > +             for_each_set_bit(bit, &status, PCI_NUM_INTX) {
+> > +                     virq = irq_find_mapping(pcie->irq_domain, bit);
+> > +                     if (virq)
+> > +                             generic_handle_irq(virq);
+> > +                     else
+> > +                             dev_err(dev, "unexpected INTx%u\n", bit);
+> > +             }
+> > +     } while ((status & SYS_RC_INTX_MASK) != 0);
+
+-- 
+With Best Regards,
+Andy Shevchenko
