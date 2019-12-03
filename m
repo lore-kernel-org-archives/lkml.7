@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05722C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA4BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA36D20684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E24DE2064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:10:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414634;
-	bh=qm5/sHBfu8SWriiyMEBV4y7WHmX7oPbse1mtJOkC930=;
+	s=default; t=1575414638;
+	bh=DGfUc6OPcdg+selrsf0vCRMAyp9NIYMTOzMVaFuB3xs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EF7tRWjU/1ZZlwJpkgv4A09NWafBUb3N3H1/oMO6RbNnKY3DGhJOa0Ac15LCPPVly
-	 Rjl38rWtdaDxlgahK61XP/AbIN472wTLzw8CqQoev4xenudVNIPuEb3nSzQhcUKg1a
-	 voyHHDthJ4oTGtSJ4rrdDX8mBHfTZi/0rF9WTxf8=
+	b=in0J/PgmpWmSWQtpbmsnuGK4ph6vtMExrTW2ncK4qthsb49YdsFU6bvOzoauDmUlF
+	 Q9k6jKVktNeOsjm2tNnQJAJ0UBEMhN56d18DHBWQCLmpUtMIbL0M8SU06GpDZNyejt
+	 LDxNXGmHUsXStYrleX/6bZSLyVGQQDA6Kogezc0U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728836AbfLCXKe (ORCPT
+        id S1728647AbfLCWmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:10:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57540 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:42:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728327AbfLCWmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:42:33 -0500
+        id S1728626AbfLCWmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:42:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C291206EC;
-        Tue,  3 Dec 2019 22:42:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE17E2073C;
+        Tue,  3 Dec 2019 22:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412952;
-        bh=qm5/sHBfu8SWriiyMEBV4y7WHmX7oPbse1mtJOkC930=;
+        s=default; t=1575412936;
+        bh=DGfUc6OPcdg+selrsf0vCRMAyp9NIYMTOzMVaFuB3xs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dj9YFIUnh/5fCIkTyerhuB4+GEsHI+Vd+FyWEuHl7Tdo4pK2E8J2jT389YKr86KEL
-         8BX16zaLE9M7Gu/gqZ3QBuqAaXguZ2/BRlSkRs/7wQRcr8FTF6MOF7rJLOtByulbiP
-         N0Q9RkKklsrvfqt1xq8SbdpXz+MvwpIVU/90Xqw4=
+        b=pG07fZ7XRAjsg+o6P/4Ae7J0hjEPm2KmLUkTQ2a9dBWOgiUusck31L/TlTsl6BTqC
+         w+f6ahzBA0N0O7a7HA2muSZJlfM3pZnAkAig7OA98fAi7GL34udtlrl+DYS9YfA80w
+         MdSXO4bx2+hEHduwFQU9Y+7PmxLYCxe6mo95YAmc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roi Dayan <roid@mellanox.com>,
-        Eli Britstein <elibr@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+        stable@vger.kernel.org, Jaska Uimonen <jaska.uimonen@intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Dragos Tarcatu <dragos_tarcatu@mentor.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 078/135] net/mlx5e: Fix eswitch debug print of max fdb flow
-Date:   Tue,  3 Dec 2019 23:35:18 +0100
-Message-Id: <20191203213029.374329807@linuxfoundation.org>
+Subject: [PATCH 5.3 072/135] ASoC: SOF: topology: Fix bytes control size checks
+Date:   Tue,  3 Dec 2019 23:35:12 +0100
+Message-Id: <20191203213026.735283478@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -61,34 +63,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roi Dayan <roid@mellanox.com>
+From: Dragos Tarcatu <dragos_tarcatu@mentor.com>
 
-[ Upstream commit f382b0df6946d48fae80a2201ccff43b41382099 ]
+[ Upstream commit 9508ef5a980f5d847cad9b932b6ada8f2a3466c1 ]
 
-The value is already the calculation so remove the log prefix.
+When using the example SOF amp widget topology, KASAN dumps this
+when the AMP bytes kcontrol gets loaded:
 
-Fixes: e52c28024008 ("net/mlx5: E-Switch, Add chains and priorities")
-Signed-off-by: Roi Dayan <roid@mellanox.com>
-Reviewed-by: Eli Britstein <elibr@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+[ 9.579548] BUG: KASAN: slab-out-of-bounds in
+sof_control_load+0x8cc/0xac0 [snd_sof]
+[ 9.588194] Write of size 40 at addr ffff8882314559dc by task
+systemd-udevd/2411
+
+Fix that by rejecting the topology if the bytes data size > max_size
+
+Fixes: 311ce4fe7637d ("ASoC: SOF: Add support for loading topologies")
+Reviewed-by: Jaska Uimonen <jaska.uimonen@intel.com>
+Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Signed-off-by: Dragos Tarcatu <dragos_tarcatu@mentor.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20191106145816.9367-1-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/sof/topology.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-index 35945cdd0a618..3ac6104e9924c 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-@@ -1085,7 +1085,7 @@ static int esw_create_offloads_fdb_tables(struct mlx5_eswitch *esw, int nvports)
- 			    MLX5_CAP_GEN(dev, max_flow_counter_15_0);
- 	fdb_max = 1 << MLX5_CAP_ESW_FLOWTABLE_FDB(dev, log_max_ft_size);
+diff --git a/sound/soc/sof/topology.c b/sound/soc/sof/topology.c
+index 96230329e678f..355f04663f576 100644
+--- a/sound/soc/sof/topology.c
++++ b/sound/soc/sof/topology.c
+@@ -533,15 +533,16 @@ static int sof_control_load_bytes(struct snd_soc_component *scomp,
+ 	struct soc_bytes_ext *sbe = (struct soc_bytes_ext *)kc->private_value;
+ 	int max_size = sbe->max;
  
--	esw_debug(dev, "Create offloads FDB table, min (max esw size(2^%d), max counters(%d), groups(%d), max flow table size(2^%d))\n",
-+	esw_debug(dev, "Create offloads FDB table, min (max esw size(2^%d), max counters(%d), groups(%d), max flow table size(%d))\n",
- 		  MLX5_CAP_ESW_FLOWTABLE_FDB(dev, log_max_ft_size),
- 		  max_flow_counter, ESW_OFFLOADS_NUM_GROUPS,
- 		  fdb_max);
+-	if (le32_to_cpu(control->priv.size) > max_size) {
++	/* init the get/put bytes data */
++	scontrol->size = sizeof(struct sof_ipc_ctrl_data) +
++		le32_to_cpu(control->priv.size);
++
++	if (scontrol->size > max_size) {
+ 		dev_err(sdev->dev, "err: bytes data size %d exceeds max %d.\n",
+-			control->priv.size, max_size);
++			scontrol->size, max_size);
+ 		return -EINVAL;
+ 	}
+ 
+-	/* init the get/put bytes data */
+-	scontrol->size = sizeof(struct sof_ipc_ctrl_data) +
+-		le32_to_cpu(control->priv.size);
+ 	scontrol->control_data = kzalloc(max_size, GFP_KERNEL);
+ 	cdata = scontrol->control_data;
+ 	if (!scontrol->control_data)
 -- 
 2.20.1
 
