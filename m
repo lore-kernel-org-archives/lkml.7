@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2447C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1211AC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1C3520863
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7D242158C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413584;
-	bh=L7kOZ2DuuxrBOah1HpwY0bLme+c1Dzk3lN0xbxhInE8=;
+	s=default; t=1575413585;
+	bh=su1n9rIFco9QybKw4v3E7bYzZ5i2FUYnqUp43IBNZ6w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QN9bQCoptAKvP6PAMiTt/C7DFnVSgswUAe7u1rcMDB3Xw5ldKtB5OvchsYxe/XLG6
-	 ImcOoZbkyLfJ+cvBnaqsK0MVDgWpeQDQJjm7vfiv14VtS5snSwsXa3LhYeZf4lyZT4
-	 k3eXFStGMnUAlGyrcZCVRWO25/6onIPueM0k0c5c=
+	b=uT4h+5beWTVu9Dh6rf4nBkLA2utFoivTUCzjfdPeyDgjKWspeS6ALX0WLngpahsIV
+	 HCOdOVgFY9tOUalIHGIG62/7eY+f6p3ha7DYhbA/IrfneixkPp50zCWKOmPLZC0X9w
+	 T5w+K/R4IGUERpgyCgMBoAd5M9jPDUC8hV9NL81k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbfLCWxD (ORCPT
+        id S1730107AbfLCWxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:53:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46034 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:53:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730078AbfLCWxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:53:00 -0500
+        id S1730093AbfLCWxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:53:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE81920862;
-        Tue,  3 Dec 2019 22:52:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E42D207DD;
+        Tue,  3 Dec 2019 22:53:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413580;
-        bh=L7kOZ2DuuxrBOah1HpwY0bLme+c1Dzk3lN0xbxhInE8=;
+        s=default; t=1575413582;
+        bh=su1n9rIFco9QybKw4v3E7bYzZ5i2FUYnqUp43IBNZ6w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XhKanbveyr+ASEY3/PvjS6mYhnMI4aMpvZAKBwbr0fr98Ppb8NyDkV3Qt2yYSuuEu
-         9oQNNKg28Vyx7a2qM1h4KsobVSDHTAuP6Z9kTbtUed8E5vT8oZKqGx+OKOeRJ/fkIK
-         2GUJFoLeacUkCwxD1mCAJ4MvpEq0UAgik4chMJPw=
+        b=x96LpU1Gf9xJn3IP+ZnEVAPaxXan4Yj20Anq3P0N4SGOs+b3JUBBpVJuLRXNqMltG
+         V1Y8MGu+xEOQsgnalSx15632dKshe9eyEYaTfe8N7odSzVyf+psKXl09arFbeXn7QY
+         V1FbDm7OlgFVSYqvXmDOMwt/1W/PB+fwMUNnjZz0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 183/321] net/netlink_compat: Fix a missing check of nla_parse_nested
-Date:   Tue,  3 Dec 2019 23:34:09 +0100
-Message-Id: <20191203223436.645103976@linuxfoundation.org>
+Subject: [PATCH 4.19 184/321] net/net_namespace: Check the return value of register_pernet_subsys()
+Date:   Tue,  3 Dec 2019 23:34:10 +0100
+Message-Id: <20191203223436.695979889@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -62,37 +63,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit 89dfd0083751d00d5d7ead36f6d8b045bf89c5e1 ]
+[ Upstream commit 0eb987c874dc93f9c9d85a6465dbde20fdd3884c ]
 
-In tipc_nl_compat_sk_dump(), if nla_parse_nested() fails, it could return
-an error. To be consistent with other invocations of the function call,
-on error, the fix passes the return value upstream.
+In net_ns_init(), register_pernet_subsys() could fail while registering
+network namespace subsystems. The fix checks the return value and
+sends a panic() on failure.
 
 Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tipc/netlink_compat.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ net/core/net_namespace.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/tipc/netlink_compat.c b/net/tipc/netlink_compat.c
-index 318c541970ecd..6494d6b5e1b24 100644
---- a/net/tipc/netlink_compat.c
-+++ b/net/tipc/netlink_compat.c
-@@ -1030,8 +1030,11 @@ static int tipc_nl_compat_sk_dump(struct tipc_nl_compat_msg *msg,
- 		u32 node;
- 		struct nlattr *con[TIPC_NLA_CON_MAX + 1];
+diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
+index 6dab186d4b8f6..c60123dff8039 100644
+--- a/net/core/net_namespace.c
++++ b/net/core/net_namespace.c
+@@ -913,7 +913,8 @@ static int __init net_ns_init(void)
+ 	init_net_initialized = true;
+ 	up_write(&pernet_ops_rwsem);
  
--		nla_parse_nested(con, TIPC_NLA_CON_MAX,
--				 sock[TIPC_NLA_SOCK_CON], NULL, NULL);
-+		err = nla_parse_nested(con, TIPC_NLA_CON_MAX,
-+				       sock[TIPC_NLA_SOCK_CON], NULL, NULL);
-+
-+		if (err)
-+			return err;
+-	register_pernet_subsys(&net_ns_ops);
++	if (register_pernet_subsys(&net_ns_ops))
++		panic("Could not register network namespace subsystems");
  
- 		node = nla_get_u32(con[TIPC_NLA_CON_NODE]);
- 		tipc_tlv_sprintf(msg->rep, "  connected to <%u.%u.%u:%u>",
+ 	rtnl_register(PF_UNSPEC, RTM_NEWNSID, rtnl_net_newid, NULL,
+ 		      RTNL_FLAG_DOIT_UNLOCKED);
 -- 
 2.20.1
 
