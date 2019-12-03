@@ -2,178 +2,812 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0DAC43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98055C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A22C206E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:02:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="POxFZTmn"
+	by mail.kernel.org (Postfix) with ESMTP id 5B55A206E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:06:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbfLCFC5 (ORCPT
+        id S1726444AbfLCFGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 00:02:57 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:34813 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfLCFC4 (ORCPT
+        Tue, 3 Dec 2019 00:06:02 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33486 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725773AbfLCFGC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 00:02:56 -0500
-Received: by mail-ua1-f67.google.com with SMTP id w20so871681uap.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 21:02:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7ERmn5rq1lNnKn/P5AfwLSlBRWPm9K3lY7uKonmiuBQ=;
-        b=POxFZTmnXWUJj/QSh7bNjrQKeTsKp9x3JT1UUj5Ox6CqdlasjfT0Sd+kJ3yIifanpH
-         HW2KVRp/PAkRCh2/C7bnkMFPgn4E1kk6Bzfl6NKEJgMromg15+AgJGXTCKsn4fDbGhNN
-         OSh5T7Lb8Ux1Hea4sE7xKWAMtj2ar9CYDt0pFzeBeufb8xWPARB2lBCWO9vTD8ITG15l
-         6tte8NbCCmSfn4qKmeTnC0WLC2yg8+vRWEd31YGTDiCbzpmVDG7f7SM2yJwQz9r5509K
-         uLrb+EceyEOJqhtbWNSDxAD+Ll3BJHT3t2BjpEjLLZYAgHbkeB1sHX4dS8mduopLI8uj
-         7NWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7ERmn5rq1lNnKn/P5AfwLSlBRWPm9K3lY7uKonmiuBQ=;
-        b=UiQAao3ZHMWbbIEV9TsTuOlfabKL5Wi+AnFaxi79zXBI4yz1yBcDYEOjp7zFuBe8FB
-         U7DniThgRq8kAzkQ4hex1bDs+ZjfugicJOrHEkP47MZgtO7fokDIjjlUbF+9qMDtOdN/
-         vnVoxaRGxvYfu/qinLC33NGGn3R9/k5eAeiwTItfCmoc0v0td113KBnVPacNVqQ7nnAN
-         /CfCTZ7+92YlHenqTYjAnKomIDtTyukYcMRDnPunFZDm31sKxwJ7OQacB5kIgbOTFnYl
-         UbhOxNIDhmd4vjX/n7+bsNbuexSGFBm4luP0rVYrqfrr5PyjSFDrdYtKlB1Nz1ejzwOw
-         k7ew==
-X-Gm-Message-State: APjAAAV/cOwNSmLzZYTCP868Wbvz9F6ZGPY48FI0FDXGT2xVkkeLrEdz
-        8Ts/zP0VWeDcMKeKD4Ds0lJGX3QGCFU+1WWe8FFY3g==
-X-Google-Smtp-Source: APXvYqyk8mjX0oY3ryDpuMEExI9RS0dYRl+SayJdvhnyj2hjEpQI3jjLtCw/e3hNiCcN7gK3acNuNVLsVTiJEV5H3RE=
-X-Received: by 2002:ab0:7027:: with SMTP id u7mr2136566ual.94.1575349375038;
- Mon, 02 Dec 2019 21:02:55 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1573499020.git.amit.kucheria@linaro.org>
- <4b949a4f401a7f9d403ed0f0c16c7feb083f3524.1573499020.git.amit.kucheria@linaro.org>
- <20191112193852.GC3140946@builder> <CAHLCerN1VXhU0VQWN15PB2R16mkCV0i6Mn3+LW=xXtB5_7Z6JQ@mail.gmail.com>
- <20191128214339.GL82109@yoga>
-In-Reply-To: <20191128214339.GL82109@yoga>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Tue, 3 Dec 2019 10:32:43 +0530
-Message-ID: <CAHLCerPmdTTfANng2uNnTRs0-Sz+jtstOD9N0MbLEvV3DYDUFw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] drivers: thermal: tsens: Add critical interrupt support
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Stephen Boyd <swboyd@chromium.org>, sivaa@codeaurora.org,
-        Andy Gross <agross@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
+        Tue, 3 Dec 2019 00:06:02 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB352mxk106006
+        for <linux-kernel@vger.kernel.org>; Tue, 3 Dec 2019 00:06:00 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wknuaru8r-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 00:06:00 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Tue, 3 Dec 2019 05:05:57 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 3 Dec 2019 05:05:50 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB355nVV46203188
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 3 Dec 2019 05:05:49 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7B27D52057;
+        Tue,  3 Dec 2019 05:05:49 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 9677552067;
+        Tue,  3 Dec 2019 05:05:48 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 2468CA01B6;
+        Tue,  3 Dec 2019 16:05:46 +1100 (AEDT)
+Subject: Re: [PATCH v2 10/27] nvdimm: Add driver for OpenCAPI Storage Class
+ Memory
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Date:   Tue, 03 Dec 2019 16:05:47 +1100
+In-Reply-To: <20191203034655.51561-11-alastair@au1.ibm.com>
+References: <20191203034655.51561-1-alastair@au1.ibm.com>
+         <20191203034655.51561-11-alastair@au1.ibm.com>
+Organization: IBM Australia
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19120305-0016-0000-0000-000002D01F88
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120305-0017-0000-0000-0000333216B8
+Message-Id: <cf906859919b0918a8c72102691d5da0e0f32f3c.camel@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-02_06:2019-11-29,2019-12-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ bulkscore=0 adultscore=0 mlxlogscore=999 phishscore=0 spamscore=0
+ lowpriorityscore=0 impostorscore=0 suspectscore=0 malwarescore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912030044
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 3:13 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Thu 28 Nov 10:46 PST 2019, Amit Kucheria wrote:
->
-> > On Wed, Nov 13, 2019 at 1:08 AM Bjorn Andersson
-> > <bjorn.andersson@linaro.org> wrote:
-> > >
-> > > On Mon 11 Nov 11:21 PST 2019, Amit Kucheria wrote:
-> > >
-> > > > TSENS IP v2.x adds critical threshold interrupt support for each sensor
-> > > > in addition to the upper/lower threshold interrupt. Add support in the
-> > > > driver.
-> > > >
-> > > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > > > ---
-> > > >  drivers/thermal/qcom/tsens-common.c | 129 ++++++++++++++++++++++++++--
-> > > >  drivers/thermal/qcom/tsens-v2.c     |   8 +-
-> > > >  drivers/thermal/qcom/tsens.c        |  21 +++++
-> > > >  drivers/thermal/qcom/tsens.h        |  73 ++++++++++++++++
-> > > >  4 files changed, 220 insertions(+), 11 deletions(-)
-> > > >
-> > > > diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
-> > > > index 4359a4247ac3..2989cb952cdb 100644
-> > > > --- a/drivers/thermal/qcom/tsens-common.c
-> > > > +++ b/drivers/thermal/qcom/tsens-common.c
-> > > > @@ -23,6 +23,10 @@
-> > > >   * @low_thresh:     lower threshold temperature value
-> > > >   * @low_irq_mask:   mask register for lower threshold irqs
-> > > >   * @low_irq_clear:  clear register for lower threshold irqs
-> > > > + * @crit_viol:      critical threshold violated
-> > >
-> > > "violated" as in "temperature is above crit_thresh"?
-> >
-> > Yes.
-> >
-> > >
-> > > > + * @crit_thresh:    critical threshold temperature value
-> > > > + * @crit_irq_mask:  mask register for critical threshold irqs
-> > > > + * @crit_irq_clear: clear register for critical threshold irqs
-> > > >   *
-> > > [..]
-> > > > diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
-> > > > index 7d317660211e..784c4976c4f9 100644
-> > > > --- a/drivers/thermal/qcom/tsens.c
-> > > > +++ b/drivers/thermal/qcom/tsens.c
-> > > > @@ -121,6 +121,27 @@ static int tsens_register(struct tsens_priv *priv)
-> > > >
-> > > >       enable_irq_wake(irq);
-> > > >
-> > > > +     if (tsens_version(priv) > VER_1_X) {
-> > > > +             irq = platform_get_irq_byname(pdev, "critical");
-> > > > +             if (irq < 0) {
-> > >
-> > > Treating this as a fatal error breaks backwards compatibility with
-> > > current devicetree; and even within your patch series, tsens should fail
-> > > to probe between this patch and the application of patch 3.
-> >
-> > Good catch.
-> >
-> > > Please flip this around and do:
-> > >
-> > > irq = platform_get_irq_byname(pdev, "critical");
-> > > if (irq >= 0 && tsens_version(priv) > VER_1_X) {
-> > >         request_irq()...
-> > > }
-> >
-> > Won't this still break with current devicetree since irq < 0 until
-> > patch 3? Or are you saying we shouldn't check for
-> > platform_get_irq_byname() failure?
-> >
->
-> I'm trying to say that dtsi without "critical" defined should cause the
-> driver to simply skip this segment, not fail to initialize.
->
-> > I can see two ways out:
-> > 1. We patch the dtsi before the code change.
->
-> You're expected to maintain backwards compatibility with existing dtb
-> files out there. The support for critical interrupt is an additional
-> feature, so you should be able to do this by detecting if "critical" is
-> defined (e.g. by checking the return value of
-> platform_get_irq_byname()).
->
-> > 2. We make critical interrupt failure non-fatal by just printing some
-> > messages and still returning success.
-> >
->
-> Try to make it as specific as possible (without adding a bunch of code)
-> and throw in a dev_info() if no "critical" is found.
+On Tue, 2019-12-03 at 14:46 +1100, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> This driver exposes LPC memory on OpenCAPI SCM cards
+> as an NVDIMM, allowing the existing nvram infrastructure
+> to be used.
+> 
+> Namespace metadata is stored on the media itself, so
+> scm_reserve_metadata() maps 1 section's worth of PMEM storage
+> at the start to hold this. The rest of the PMEM range is registered
+> with libnvdimm as an nvdimm. scm_ndctl_config_read/write/size()
+> provide
+> callbacks to libnvdimm to access the metadata.
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> ---
+>  drivers/nvdimm/Kconfig             |   2 +
+>  drivers/nvdimm/Makefile            |   2 +-
+>  drivers/nvdimm/ocxl/Kconfig        |  15 +
+>  drivers/nvdimm/ocxl/Makefile       |   7 +
+>  drivers/nvdimm/ocxl/scm.c          | 519
+> +++++++++++++++++++++++++++++
+>  drivers/nvdimm/ocxl/scm_internal.h |  28 ++
+>  6 files changed, 572 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/nvdimm/ocxl/Kconfig
+>  create mode 100644 drivers/nvdimm/ocxl/Makefile
+>  create mode 100644 drivers/nvdimm/ocxl/scm.c
+>  create mode 100644 drivers/nvdimm/ocxl/scm_internal.h
+> 
+> diff --git a/drivers/nvdimm/Kconfig b/drivers/nvdimm/Kconfig
+> index 36af7af6b7cf..d1bab36da61c 100644
+> --- a/drivers/nvdimm/Kconfig
+> +++ b/drivers/nvdimm/Kconfig
+> @@ -130,4 +130,6 @@ config NVDIMM_TEST_BUILD
+>  	  core devm_memremap_pages() implementation and other
+>  	  infrastructure.
+>  
+> +source "drivers/nvdimm/ocxl/Kconfig"
+> +
+>  endif
+> diff --git a/drivers/nvdimm/Makefile b/drivers/nvdimm/Makefile
+> index 29203f3d3069..e33492128042 100644
+> --- a/drivers/nvdimm/Makefile
+> +++ b/drivers/nvdimm/Makefile
+> @@ -1,5 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -obj-$(CONFIG_LIBNVDIMM) += libnvdimm.o
+> +obj-$(CONFIG_LIBNVDIMM) += libnvdimm.o ocxl/
+>  obj-$(CONFIG_BLK_DEV_PMEM) += nd_pmem.o
+>  obj-$(CONFIG_ND_BTT) += nd_btt.o
+>  obj-$(CONFIG_ND_BLK) += nd_blk.o
+> diff --git a/drivers/nvdimm/ocxl/Kconfig
+> b/drivers/nvdimm/ocxl/Kconfig
+> new file mode 100644
+> index 000000000000..24099b300f5e
+> --- /dev/null
+> +++ b/drivers/nvdimm/ocxl/Kconfig
+> @@ -0,0 +1,15 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +if LIBNVDIMM
+> +
+> +config OCXL_SCM
+> +	tristate "OpenCAPI Storage Class Memory"
+> +	depends on LIBNVDIMM && PPC_POWERNV && PCI && EEH
+> +	select ZONE_DEVICE
+> +	select OCXL
+> +	help
+> +	  Exposes devices that implement the OpenCAPI Storage Class
+> Memory
+> +	  specification as persistent memory regions.
+> +
+> +	  Select N if unsure.
+> +
+> +endif
+> diff --git a/drivers/nvdimm/ocxl/Makefile
+> b/drivers/nvdimm/ocxl/Makefile
+> new file mode 100644
+> index 000000000000..74a1bd98848e
+> --- /dev/null
+> +++ b/drivers/nvdimm/ocxl/Makefile
+> @@ -0,0 +1,7 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +ccflags-$(CONFIG_PPC_WERROR)	+= -Werror
+> +
+> +obj-$(CONFIG_OCXL_SCM) += ocxlscm.o
+> +
+> +ocxlscm-y := scm.o
+> diff --git a/drivers/nvdimm/ocxl/scm.c b/drivers/nvdimm/ocxl/scm.c
+> new file mode 100644
+> index 000000000000..571058a9e7b8
+> --- /dev/null
+> +++ b/drivers/nvdimm/ocxl/scm.c
+> @@ -0,0 +1,519 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +// Copyright 2019 IBM Corp.
+> +
+> +/*
+> + * A driver for Storage Class Memory, connected via OpenCAPI
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <misc/ocxl.h>
+> +#include <linux/ndctl.h>
+> +#include <linux/mm_types.h>
+> +#include <linux/memory_hotplug.h>
+> +#include "scm_internal.h"
+> +
+> +
+> +static const struct pci_device_id scm_pci_tbl[] = {
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_IBM, 0x0625), },
+> +	{ }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(pci, scm_pci_tbl);
+> +
+> +#define SCM_NUM_MINORS 256 // Total to reserve
+> +
+> +static dev_t scm_dev;
+> +static struct class *scm_class;
+> +static struct mutex minors_idr_lock;
+> +static struct idr minors_idr;
+> +
+> +static const struct attribute_group *scm_pmem_attribute_groups[] = {
+> +	&nvdimm_bus_attribute_group,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group
+> *scm_pmem_region_attribute_groups[] = {
+> +	&nd_region_attribute_group,
+> +	&nd_device_attribute_group,
+> +	&nd_mapping_attribute_group,
+> +	&nd_numa_attribute_group,
+> +	NULL,
+> +};
+> +
+> +/**
+> + * scm_ndctl_config_write() - Handle a ND_CMD_SET_CONFIG_DATA
+> command from ndctl
+> + * @scm_data: the SCM metadata
+> + * @command: the incoming data to write
+> + * Return: 0 on success, negative on failure
+> + */
+> +static int scm_ndctl_config_write(struct scm_data *scm_data,
+> +				  struct nd_cmd_set_config_hdr
+> *command)
+> +{
+> +	if (command->in_offset + command->in_length >
+> SCM_LABEL_AREA_SIZE)
+> +		return -EINVAL;
+> +
+> +	memcpy_flushcache(scm_data->metadata_addr + command->in_offset, 
+> command->in_buf,
+> +			  command->in_length);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * scm_ndctl_config_read() - Handle a ND_CMD_GET_CONFIG_DATA command
+> from ndctl
+> + * @scm_data: the SCM metadata
+> + * @command: the read request
+> + * Return: 0 on success, negative on failure
+> + */
+> +static int scm_ndctl_config_read(struct scm_data *scm_data,
+> +				 struct nd_cmd_get_config_data_hdr
+> *command)
+> +{
+> +	if (command->in_offset + command->in_length >
+> SCM_LABEL_AREA_SIZE)
+> +		return -EINVAL;
+> +
+> +	memcpy_mcsafe(command->out_buf, scm_data->metadata_addr +
+> command->in_offset,
+> +		      command->in_length);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * scm_ndctl_config_size() - Handle a ND_CMD_GET_CONFIG_SIZE command
+> from ndctl
+> + * @scm_data: the SCM metadata
+> + * @command: the read request
+> + * Return: 0 on success, negative on failure
+> + */
+> +static int scm_ndctl_config_size(struct nd_cmd_get_config_size
+> *command)
+> +{
+> +	command->status = 0;
+> +	command->config_size = SCM_LABEL_AREA_SIZE;
+> +	command->max_xfer = PAGE_SIZE;
+> +
+> +	return 0;
+> +}
+> +
+> +static int scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
+> +		     struct nvdimm *nvdimm,
+> +		     unsigned int cmd, void *buf, unsigned int buf_len,
+> int *cmd_rc)
+> +{
+> +	struct scm_data *scm_data = container_of(nd_desc, struct
+> scm_data, bus_desc);
+> +
+> +	switch (cmd) {
+> +	case ND_CMD_GET_CONFIG_SIZE:
+> +		*cmd_rc = scm_ndctl_config_size(buf);
+> +		return 0;
+> +
+> +	case ND_CMD_GET_CONFIG_DATA:
+> +		*cmd_rc = scm_ndctl_config_read(scm_data, buf);
+> +		return 0;
+> +
+> +	case ND_CMD_SET_CONFIG_DATA:
+> +		*cmd_rc = scm_ndctl_config_write(scm_data, buf);
+> +		return 0;
+> +
+> +	default:
+> +		return -ENOTTY;
+> +	}
+> +}
+> +
+> +static ssize_t serial_show(struct device *dev,
+> +			   struct device_attribute *attr, char *buf)
+> +{
+> +	struct nvdimm *nvdimm = to_nvdimm(dev);
+> +	struct scm_data *scm_data = nvdimm_provider_data(nvdimm);
+> +	const struct ocxl_fn_config *config =
+> ocxl_function_config(scm_data->ocxl_fn);
+> +
+> +	return sprintf(buf, "0x%llx\n", config->serial);
+> +}
+> +static DEVICE_ATTR_RO(serial);
+> +
+> +static struct attribute *scm_dimm_attributes[] = {
+> +	&dev_attr_serial.attr,
+> +	NULL,
+> +};
+> +
+> +static umode_t scm_dimm_attr_visible(struct kobject *kobj,
+> +				     struct attribute *a, int n)
+> +{
+> +	return a->mode;
+> +}
+> +
+> +static const struct attribute_group scm_dimm_attribute_group = {
+> +	.name = "ocxl",
+> +	.attrs = scm_dimm_attributes,
+> +	.is_visible = scm_dimm_attr_visible,
+> +};
+> +
+> +static const struct attribute_group *scm_dimm_attribute_groups[] = {
+> +	&nvdimm_attribute_group,
+> +	&nd_device_attribute_group,
+> +	&scm_dimm_attribute_group,
+> +	NULL,
+> +};
 
-I believe I have now addressed the problem in v2 explicitly overriding
-the return value in case of failure in the critical interrupt irq
-setup path and simply printing a warning.
+As Aneesh Kumar has pointed out, these attribute groups should be
+dropped when the following patch is accepted:
+https://patchwork.kernel.org/patch/11248491/
 
-In hindsight, critical interrupt support should've been added in the
-same series as uplow interrupt support so avoid having to support
-"intermediate" DTS file state for one kernel version.
+> +
+> +/**
+> + * scm_reserve_metadata() - Reserve space for nvdimm metadata
+> + * @scm_data: The SCM device data
+> + * @lpc_mem: The resource representing the LPC memory of the SCM
+> device
+> + */
+> +static int scm_reserve_metadata(struct scm_data *scm_data,
+> +				struct resource *lpc_mem)
+> +{
+> +	scm_data->metadata_addr = devm_memremap(&scm_data->dev,
+> lpc_mem->start,
+> +						SCM_LABEL_AREA_SIZE,
+> MEMREMAP_WB);
+> +	if (IS_ERR(scm_data->metadata_addr))
+> +		return PTR_ERR(scm_data->metadata_addr);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * scm_register_lpc_mem() - Discover persistent memory on a device
+> and register it with the NVDIMM subsystem
+> + * @scm_data: The SCM device data
+> + * Return: 0 on success
+> + */
+> +static int scm_register_lpc_mem(struct scm_data *scm_data)
+> +{
+> +	struct nd_region_desc region_desc;
+> +	struct nd_mapping_desc nd_mapping_desc;
+> +	struct resource *lpc_mem;
+> +	const struct ocxl_afu_config *config;
+> +	const struct ocxl_fn_config *fn_config;
+> +	int rc;
+> +	unsigned long nvdimm_cmd_mask = 0;
+> +	unsigned long nvdimm_flags = 0;
+> +	int target_node;
+> +	char serial[16+1];
+> +
+> +	// Set up the reserved metadata area
+> +	rc = ocxl_afu_map_lpc_mem(scm_data->ocxl_afu);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	lpc_mem = ocxl_afu_lpc_mem(scm_data->ocxl_afu);
+> +	if (lpc_mem == NULL || lpc_mem->start == 0)
+> +		return -EINVAL;
+> +
+> +	config = ocxl_afu_config(scm_data->ocxl_afu);
+> +	fn_config = ocxl_function_config(scm_data->ocxl_fn);
+> +
+> +	rc = scm_reserve_metadata(scm_data, lpc_mem);
+> +	if (rc)
+> +		return rc;
+> +
+> +	scm_data->bus_desc.attr_groups = scm_pmem_attribute_groups;
+> +	scm_data->bus_desc.provider_name = "ocxl-scm";
+> +	scm_data->bus_desc.ndctl = scm_ndctl;
+> +	scm_data->bus_desc.module = THIS_MODULE;
+> +
+> +	scm_data->nvdimm_bus = nvdimm_bus_register(&scm_data->dev,
+> +			       &scm_data->bus_desc);
+> +	if (!scm_data->nvdimm_bus)
+> +		return -EINVAL;
+> +
+> +	scm_data->scm_res.start = (u64)lpc_mem->start +
+> SCM_LABEL_AREA_SIZE;
+> +	scm_data->scm_res.end = (u64)lpc_mem->start + config-
+> >lpc_mem_size - 1;
+> +	scm_data->scm_res.name = "SCM persistent memory";
+> +
+> +	set_bit(ND_CMD_GET_CONFIG_SIZE, &nvdimm_cmd_mask);
+> +	set_bit(ND_CMD_GET_CONFIG_DATA, &nvdimm_cmd_mask);
+> +	set_bit(ND_CMD_SET_CONFIG_DATA, &nvdimm_cmd_mask);
+> +
+> +	set_bit(NDD_ALIASING, &nvdimm_flags);
+> +
+> +	snprintf(serial, sizeof(serial), "%llx", fn_config->serial);
+> +	nd_mapping_desc.nvdimm = nvdimm_create(scm_data->nvdimm_bus,
+> scm_data,
+> +				 scm_dimm_attribute_groups,
+> +				 nvdimm_flags, nvdimm_cmd_mask,
+> +				 0, NULL);
+> +	if (!nd_mapping_desc.nvdimm)
+> +		return -ENOMEM;
+> +
+> +	if (nvdimm_bus_check_dimm_count(scm_data->nvdimm_bus, 1))
+> +		return -EINVAL;
+> +
+> +	nd_mapping_desc.start = scm_data->scm_res.start;
+> +	nd_mapping_desc.size = resource_size(&scm_data->scm_res);
+> +	nd_mapping_desc.position = 0;
+> +
+> +	scm_data->nd_set.cookie1 = fn_config->serial + 1; // allow for
+> empty serial
+> +	scm_data->nd_set.cookie2 = fn_config->serial + 1;
+> +
+> +	target_node = of_node_to_nid(scm_data->pdev->dev.of_node);
+> +
+> +	memset(&region_desc, 0, sizeof(region_desc));
+> +	region_desc.res = &scm_data->scm_res;
+> +	region_desc.attr_groups = scm_pmem_region_attribute_groups;
+> +	region_desc.numa_node = NUMA_NO_NODE;
+> +	region_desc.target_node = target_node;
+> +	region_desc.num_mappings = 1;
+> +	region_desc.mapping = &nd_mapping_desc;
+> +	region_desc.nd_set = &scm_data->nd_set;
+> +
+> +	set_bit(ND_REGION_PAGEMAP, &region_desc.flags);
+> +	/*
+> +	 * NB: libnvdimm copies the data from ndr_desc into it's own
+> +	 * structures so passing a stack pointer is fine.
+> +	 */
+> +	scm_data->nd_region = nvdimm_pmem_region_create(scm_data-
+> >nvdimm_bus,
+> +			      &region_desc);
+> +	if (!scm_data->nd_region)
+> +		return -EINVAL;
+> +
+> +	dev_info(&scm_data->dev,
+> +		 "Onlining %lluMB of persistent memory\n",
+> +		 nd_mapping_desc.size / SZ_1M);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * allocate_scm_minor() - Allocate a minor number to use for an SCM
+> device
+> + * @scm_data: The SCM device to associate the minor with
+> + * Return: the allocated minor number
+> + */
+> +static int allocate_scm_minor(struct scm_data *scm_data)
+> +{
+> +	int minor;
+> +
+> +	mutex_lock(&minors_idr_lock);
+> +	minor = idr_alloc(&minors_idr, scm_data, 0, SCM_NUM_MINORS,
+> GFP_KERNEL);
+> +	mutex_unlock(&minors_idr_lock);
+> +	return minor;
+> +}
+> +
+> +static void free_scm_minor(struct scm_data *scm_data)
+> +{
+> +	mutex_lock(&minors_idr_lock);
+> +	idr_remove(&minors_idr, MINOR(scm_data->dev.devt));
+> +	mutex_unlock(&minors_idr_lock);
+> +}
+> +
+> +/**
+> + * free_scm() - Free all members of an SCM struct
+> + * @scm_data: the SCM metadata to clear
+> + */
+> +static void free_scm(struct scm_data *scm_data)
+> +{
+> +	int rc;
+> +
+> +	if (scm_data->nvdimm_bus)
+> +		nvdimm_bus_unregister(scm_data->nvdimm_bus);
+> +
+> +	free_scm_minor(scm_data);
+> +
+> +	if (scm_data->metadata_addr)
+> +		devm_memunmap(&scm_data->dev, scm_data->metadata_addr);
+> +
+> +	if (scm_data->ocxl_context) {
+> +		rc = ocxl_context_detach(scm_data->ocxl_context);
+> +		if (rc == -EBUSY)
+> +			dev_warn(&scm_data->dev, "Timeout detaching
+> ocxl context\n");
+> +		else
+> +			ocxl_context_free(scm_data->ocxl_context);
+> +
+> +	}
+> +
+> +	if (scm_data->ocxl_afu)
+> +		ocxl_afu_put(scm_data->ocxl_afu);
+> +
+> +	if (scm_data->ocxl_fn)
+> +		ocxl_function_close(scm_data->ocxl_fn);
+> +
+> +	kfree(scm_data);
+> +}
+> +
+> +/**
+> + * free_scm_dev - Free an SCM device
+> + * @dev: The device struct
+> + */
+> +static void free_scm_dev(struct device *dev)
+> +{
+> +	struct scm_data *scm_data = container_of(dev, struct scm_data,
+> dev);
+> +
+> +	free_scm(scm_data);
+> +}
+> +
+> +/**
+> + * scm_register - Register an SCM device with the kernel
+> + * @scm_data: the SCM metadata
+> + * Return: 0 on success, negative on failure
+> + */
+> +static int scm_register(struct scm_data *scm_data)
+> +{
+> +	int rc;
+> +	int minor = allocate_scm_minor(scm_data);
+> +
+> +	if (minor < 0)
+> +		return minor;
+> +
+> +	scm_data->dev.release = free_scm_dev;
+> +	rc = dev_set_name(&scm_data->dev, "ocxl-scm%d", minor);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	scm_data->dev.devt = MKDEV(MAJOR(scm_dev), minor);
+> +	scm_data->dev.class = scm_class;
+> +	scm_data->dev.parent = &scm_data->pdev->dev;
+> +
+> +	rc = device_register(&scm_data->dev);
+> +	return rc;
+> +}
+> +
+> +/**
+> + * scm_remove() - Free an OpenCAPI Storage Class Memory device
+> + * @pdev: the PCI device information struct
+> + */
+> +static void scm_remove(struct pci_dev *pdev)
+> +{
+> +	if (PCI_FUNC(pdev->devfn) == 0) {
+> +		struct scm_function_0 *scm_func_0 =
+> pci_get_drvdata(pdev);
+> +
+> +		if (scm_func_0) {
+> +			ocxl_function_close(scm_func_0->ocxl_fn);
+> +			scm_func_0->ocxl_fn = NULL;
+> +		}
+> +	} else {
+> +		struct scm_data *scm_data = pci_get_drvdata(pdev);
+> +
+> +		if (scm_data)
+> +			device_unregister(&scm_data->dev);
+> +	}
+> +}
+> +
+> +/**
+> + * scm_probe_function_0 - Set up function 0 for an OpenCAPI Storage
+> Class Memory device
+> + * This is important as it enables templates higher than 0 across
+> all other functions,
+> + * which in turn enables higher bandwidth accesses
+> + * which in turn enables higher bandwidth accesses
+> + * @pdev: the PCI device information struct
+> + * Return: 0 on success, negative on failure
+> + */
+> +static int scm_probe_function_0(struct pci_dev *pdev)
+> +{
+> +	struct scm_function_0 *scm_func_0 = NULL;
+> +	struct ocxl_fn *fn;
+> +
+> +	scm_func_0 = kzalloc(sizeof(*scm_func_0), GFP_KERNEL);
+> +	if (!scm_func_0)
+> +		return -ENOMEM;
+> +
+> +	scm_func_0->pdev = pdev;
+> +	fn = ocxl_function_open(pdev);
+> +	if (IS_ERR(fn)) {
+> +		kfree(scm_func_0);
+> +		dev_err(&pdev->dev, "failed to open OCXL function\n");
+> +		return PTR_ERR(fn);
+> +	}
+> +	scm_func_0->ocxl_fn = fn;
+> +
+> +	pci_set_drvdata(pdev, scm_func_0);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * scm_probe - Init an OpenCAPI Storage Class Memory device
+> + * @pdev: the PCI device information struct
+> + * @ent: The entry from scm_pci_tbl
+> + * Return: 0 on success, negative on failure
+> + */
+> +static int scm_probe(struct pci_dev *pdev, const struct
+> pci_device_id *ent)
+> +{
+> +	struct scm_data *scm_data = NULL;
+> +
+> +	if (PCI_FUNC(pdev->devfn) == 0)
+> +		return scm_probe_function_0(pdev);
+> +	else if (PCI_FUNC(pdev->devfn) != 1)
+> +		return 0;
+> +
+> +	scm_data = kzalloc(sizeof(*scm_data), GFP_KERNEL);
+> +	if (!scm_data) {
+> +		dev_err(&pdev->dev, "Could not allocate SCM
+> metadata\n");
+> +		goto err;
+> +	}
+> +	scm_data->pdev = pdev;
+> +
+> +	pci_set_drvdata(pdev, scm_data);
+> +
+> +	scm_data->ocxl_fn = ocxl_function_open(pdev);
+> +	if (IS_ERR(scm_data->ocxl_fn)) {
+> +		kfree(scm_data);
+> +		scm_data = NULL;
+> +		pci_set_drvdata(pdev, NULL);
+> +		dev_err(&pdev->dev, "failed to open OCXL function\n");
+> +		goto err;
+> +	}
+> +
+> +	scm_data->ocxl_afu = ocxl_function_fetch_afu(scm_data->ocxl_fn, 
+> 0);
+> +	if (scm_data->ocxl_afu == NULL) {
+> +		dev_err(&pdev->dev, "Could not get OCXL AFU from
+> function\n");
+> +		goto err;
+> +	}
+> +
+> +	ocxl_afu_get(scm_data->ocxl_afu);
+> +
+> +	if (scm_register(scm_data) < 0) {
+> +		dev_err(&pdev->dev, "Could not register SCM device with
+> the kernel\n");
+> +		goto err;
+> +	}
+> +
+> +	// Resources allocated below here are cleaned up in the release
+> handler
+> +
+> +	if (ocxl_context_alloc(&scm_data->ocxl_context, scm_data-
+> >ocxl_afu, NULL)) {
+> +		dev_err(&pdev->dev, "Could not allocate OCXL
+> context\n");
+> +		goto err;
+> +	}
+> +
+> +	if (ocxl_context_attach(scm_data->ocxl_context, 0, NULL)) {
+> +		dev_err(&pdev->dev, "Could not attach ocxl context\n");
+> +		goto err;
+> +	}
+> +
+> +	if (scm_register_lpc_mem(scm_data)) {
+> +		dev_err(&pdev->dev, "Could not register OCXL SCM memory
+> with libnvdimm\n");
+> +		goto err;
+> +	}
+> +
+> +	return 0;
+> +
+> +err:
+> +	/*
+> +	 * Further cleanup is done in the release handler via
+> free_scm()
+> +	 * This allows us to keep the character device live to handle
+> IOCTLs to
+> +	 * investigate issues if the card has an error
+> +	 */
+> +
+> +	dev_err(&pdev->dev,
+> +		"Error detected, will not register storage class
+> memory\n");
+> +	return -ENXIO;
+> +}
+> +
+> +static struct pci_driver scm_pci_driver = {
+> +	.name = "ocxl-scm",
+> +	.id_table = scm_pci_tbl,
+> +	.probe = scm_probe,
+> +	.remove = scm_remove,
+> +	.shutdown = scm_remove,
+> +};
+> +
+> +static int __init scm_init(void)
+> +{
+> +	int rc = 0;
+> +
+> +	rc = pci_register_driver(&scm_pci_driver);
+> +	if (rc)
+> +		return rc;
+> +
+> +	return 0;
+> +}
+> +
+> +static void scm_exit(void)
+> +{
+> +	pci_unregister_driver(&scm_pci_driver);
+> +}
+> +
+> +module_init(scm_init);
+> +module_exit(scm_exit);
+> +
+> +MODULE_DESCRIPTION("Storage Class Memory");
+> +MODULE_LICENSE("GPL");
+> diff --git a/drivers/nvdimm/ocxl/scm_internal.h
+> b/drivers/nvdimm/ocxl/scm_internal.h
+> new file mode 100644
+> index 000000000000..6340012e0f8a
+> --- /dev/null
+> +++ b/drivers/nvdimm/ocxl/scm_internal.h
+> @@ -0,0 +1,28 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +// Copyright 2019 IBM Corp.
+> +
+> +#include <linux/pci.h>
+> +#include <misc/ocxl.h>
+> +#include <linux/libnvdimm.h>
+> +#include <linux/mm.h>
+> +
+> +#define SCM_LABEL_AREA_SIZE	(1UL << PA_SECTION_SHIFT)
+> +
+> +struct scm_function_0 {
+> +	struct pci_dev *pdev;
+> +	struct ocxl_fn *ocxl_fn;
+> +};
+> +
+> +struct scm_data {
+> +	struct device dev;
+> +	struct pci_dev *pdev;
+> +	struct ocxl_fn *ocxl_fn;
+> +	struct nd_interleave_set nd_set;
+> +	struct nvdimm_bus_descriptor bus_desc;
+> +	struct nvdimm_bus *nvdimm_bus;
+> +	struct ocxl_afu *ocxl_afu;
+> +	struct ocxl_context *ocxl_context;
+> +	void *metadata_addr;
+> +	struct resource scm_res;
+> +	struct nd_region *nd_region;
+> +};
+-- 
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
 
-Regards,
-Amit
