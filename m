@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4ECC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76994C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F1CD20865
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 496F520865
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412923;
-	bh=Cob9II1USz9OZYAyMh+qKhCiH3vFEAJWdyas8rtimoE=;
+	s=default; t=1575412925;
+	bh=WjHu08LmqT2OPELbjZFEqCtn8ZeJPW9t8uOuPbCMxrI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t4S1WSvU7JyOQuGDdXSpxuhkZA6TWXM6hqzhNMqODHROAIyfiPoNbCisub0H92NPi
-	 zFX/XOwSuV+o9FR1wRAlwzzqYC+a1nRIpD5eRPvqy3joAgJTmbF7UQikew053uMURc
-	 EFakaOwij5QxFvgdVRW5V4nxX8PxMqJfplHIjT9U=
+	b=mUcYvpTV1k6VQZhU2lA7IO8bhHjR60OwTq5knFR5fDimvTwcIV2f4V1n5QPgt8Mth
+	 vbwGgtOc/wqTVUuuYJioOKM+XOeNu4o7THmowNn5GQR53L+KnAYrdHKcH6idIqUHMo
+	 jUnKDT/idREbaTR7nBaFx287heI93Nsw4CGHeKkg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbfLCWmC (ORCPT
+        id S1728628AbfLCWmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:42:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56660 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:42:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728613AbfLCWl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:41:57 -0500
+        id S1728183AbfLCWmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:42:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0708320862;
-        Tue,  3 Dec 2019 22:41:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87518206EC;
+        Tue,  3 Dec 2019 22:41:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412917;
-        bh=Cob9II1USz9OZYAyMh+qKhCiH3vFEAJWdyas8rtimoE=;
+        s=default; t=1575412920;
+        bh=WjHu08LmqT2OPELbjZFEqCtn8ZeJPW9t8uOuPbCMxrI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JaPixY+tSnPWY2O5MWBYz3AFaIyH07TK240diQS6zUsoMo1iCHrO7oGrKJlLmvv3n
-         GmFcT9zOr3KE4I04ueSpN36evM42YVr8rqf5gEGvgBmseoBQyGpq1gt54Uk1tLDN8E
-         f1z+eFdh9F19RNpjXWy6Shg8K5GHhHmou1zgX5Pc=
+        b=oGUmr7vpoonoKvShqVUIc2FzXHOAsEYNyBIDZbm+ApnZQciBcSyr0nEAXn1f3sy4C
+         pZ7SF+M1ACA2fQjAZ+kBpMpJoUIV8hV6ttPjm5uzpU3Mydh8Rk3BuN/clnFgYsiqZC
+         Wb2SuQvyVAgOYJdy+21A3gjsgivBpGbyv/V0LPgs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xingyu Chen <xingyu.chen@amlogic.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
+        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
         Guenter Roeck <linux@roeck-us.net>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 066/135] watchdog: meson: Fix the wrong value of left time
-Date:   Tue,  3 Dec 2019 23:35:06 +0100
-Message-Id: <20191203213025.240489620@linuxfoundation.org>
+Subject: [PATCH 5.3 067/135] watchdog: imx_sc_wdt: Pretimeout should follow SCU firmware format
+Date:   Tue,  3 Dec 2019 23:35:07 +0100
+Message-Id: <20191203213025.741546037@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -63,45 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xingyu Chen <xingyu.chen@amlogic.com>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-[ Upstream commit 2c77734642d52448aca673e889b39f981110828b ]
+[ Upstream commit 2c50a6b825b3463a7600d6e6acadba73211c3d2c ]
 
-The left time value is wrong when we get it by sysfs. The left time value
-should be equal to preset timeout value minus elapsed time value. According
-to the Meson-GXB/GXL datasheets which can be found at [0], the timeout value
-is saved to BIT[0-15] of the WATCHDOG_TCNT, and elapsed time value is saved
-to BIT[16-31] of the WATCHDOG_TCNT.
+SCU firmware calculates pretimeout based on current time stamp
+instead of watchdog timeout stamp, need to convert the pretimeout
+to SCU firmware's timeout value.
 
-[0]: http://linux-meson.com
-
-Fixes: 683fa50f0e18 ("watchdog: Add Meson GXBB Watchdog Driver")
-Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+Fixes: 15f7d7fc5542 ("watchdog: imx_sc: Add pretimeout support")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/meson_gxbb_wdt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/watchdog/imx_sc_wdt.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/watchdog/meson_gxbb_wdt.c b/drivers/watchdog/meson_gxbb_wdt.c
-index d17c1a6ed7234..5a9ca10fbcfa0 100644
---- a/drivers/watchdog/meson_gxbb_wdt.c
-+++ b/drivers/watchdog/meson_gxbb_wdt.c
-@@ -89,8 +89,8 @@ static unsigned int meson_gxbb_wdt_get_timeleft(struct watchdog_device *wdt_dev)
+diff --git a/drivers/watchdog/imx_sc_wdt.c b/drivers/watchdog/imx_sc_wdt.c
+index 78eaaf75a263f..9545d1e07421a 100644
+--- a/drivers/watchdog/imx_sc_wdt.c
++++ b/drivers/watchdog/imx_sc_wdt.c
+@@ -99,8 +99,14 @@ static int imx_sc_wdt_set_pretimeout(struct watchdog_device *wdog,
+ {
+ 	struct arm_smccc_res res;
  
- 	reg = readl(data->reg_base + GXBB_WDT_TCNT_REG);
++	/*
++	 * SCU firmware calculates pretimeout based on current time
++	 * stamp instead of watchdog timeout stamp, need to convert
++	 * the pretimeout to SCU firmware's timeout value.
++	 */
+ 	arm_smccc_smc(IMX_SIP_TIMER, IMX_SIP_TIMER_SET_PRETIME_WDOG,
+-		      pretimeout * 1000, 0, 0, 0, 0, 0, &res);
++		      (wdog->timeout - pretimeout) * 1000, 0, 0, 0,
++		      0, 0, &res);
+ 	if (res.a0)
+ 		return -EACCES;
  
--	return ((reg >> GXBB_WDT_TCNT_CNT_SHIFT) -
--		(reg & GXBB_WDT_TCNT_SETUP_MASK)) / 1000;
-+	return ((reg & GXBB_WDT_TCNT_SETUP_MASK) -
-+		(reg >> GXBB_WDT_TCNT_CNT_SHIFT)) / 1000;
- }
- 
- static const struct watchdog_ops meson_gxbb_wdt_ops = {
 -- 
 2.20.1
 
