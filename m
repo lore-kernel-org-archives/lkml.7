@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54269C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9199EC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA3F206F0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66ACF2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:42:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J2lygnRY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="emlsPJmR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbfLCAm0 (ORCPT
+        id S1726950AbfLCAmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 19:42:26 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:46866 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbfLCAmQ (ORCPT
+        Mon, 2 Dec 2019 19:42:21 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44278 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726741AbfLCAmO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 19:42:16 -0500
-Received: by mail-lf1-f67.google.com with SMTP id a17so1357495lfi.13;
-        Mon, 02 Dec 2019 16:42:14 -0800 (PST)
+        Mon, 2 Dec 2019 19:42:14 -0500
+Received: by mail-lj1-f195.google.com with SMTP id c19so1630377lji.11;
+        Mon, 02 Dec 2019 16:42:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=7Er4Vc+z2ksR0zUUT5Njd+rmUl7+6DjOG6u4eDEnuSc=;
-        b=J2lygnRYWnx4vzwi7HKXIyWtwvTVa7tK3dNI4j4nA95IjTgMVi4JQDgC171S1roy7z
-         EQgJ/44YN9JumlaBJhIJYcpy7/YPktUH8i4CsIDC72ETHaQKX3XEC4Wm6YaSbhFT8Jpv
-         TC8tM0wbxCrZ+4BsdNrNcZr8eiNOkejli/lJV9rMxTOtCQ+PwNx7YxXEL67RemehOzeT
-         /4LT2QF2KrNTuovlKGaoZ7G+MEaT6m2husWmouNoJFFZjZlWWiuMXMeKy8DAc/gfX3r8
-         r4OUEe1P8jDFxw5EUamNPuadg4ybTggOvdfd90k3E8UlndMFkYY4RJwfrn4SQ7RqnJgK
-         R1lA==
+        bh=YS3LdxKq5b+UqxDE8Gb+7FH4eIFw8irwS8Dbd5Tpsrs=;
+        b=emlsPJmRNGBdEP0DCWBUFtAq+/fSqOcidcQY5LOBKTpTine1WweRJKkNhZ7JLXNwcW
+         aATS6UgvXwl2a7QD8OAPMJFFvZbksjOtPzVZfA9RSPsEKOx2OU9g05eTjC00gGIQJGhG
+         VCYXkVwaB41Y58vYYp5mNLz67XQCvCge0EhbcYGLD5FjylEMqIzw+ZQ/FvhhWymVT/wh
+         U/rr1xKlgi2BAHQ2Nhxx2ovrGSpy2l///42f2z9RY0L0Zz5DDsjer31krm3U3xQXUpIy
+         lsyuZml2QdaEHpRhPzFlgy8gd/rBD+UuplsrkB4lg2+M+BJHH/ipTzwLSymSUynPUf4e
+         X+fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=7Er4Vc+z2ksR0zUUT5Njd+rmUl7+6DjOG6u4eDEnuSc=;
-        b=ZJvslJO7PeNuoc5S7f+814jE3ag8QFp6hgFb5L9H9Zga911kDXgFyoSGP33FKEGG8s
-         jGDoXuV8WJdsfPJWpEVfYs6xj5fawSb4QyyhyOGBJF7UgSlZ44pjOJEHWzIAGNh6JXib
-         0e93Ljb2EPkcHKfoyjvgLPMKKuzrqhgWuWEqyaAHiLJ2RZK+fiAOEHsm+7RHZkx4/N19
-         sAXgV4xQsJKgn2SkLv1MRckd9mBlkK/YJTT94cCQBL7QWVKitfjURfH8e2yKlBkGtxwX
-         ZYLhXuMVwAbzHtD725KtRaQfTmxj/zDKyjeG61CwqOZGuG1R9bDNmN37dqqIfXDb25AQ
-         KRcw==
-X-Gm-Message-State: APjAAAVfVzrCMitX2CTADTrW4aqXgRuMjVs1rT6DXAt8XgynOBwOkh/I
-        oUmqE/MFKW82nFoA+/b1+gmmjmOV
-X-Google-Smtp-Source: APXvYqyYdC1ZeK54TKY4uYq4h3iOkIzqyAkex3VOXAi8DuXLsCh/MVu/UxqF/KaUTz75e40PMLK5Sw==
-X-Received: by 2002:ac2:508f:: with SMTP id f15mr992482lfm.146.1575333733523;
-        Mon, 02 Dec 2019 16:42:13 -0800 (PST)
+        bh=YS3LdxKq5b+UqxDE8Gb+7FH4eIFw8irwS8Dbd5Tpsrs=;
+        b=DtwJ3QRzxk4yZ7exeIKzowXAfpmnncFqheAaVe3XMiZNfjb2a+EI36vtOjtaupKUtJ
+         3PDbvpv4ySgpXtQgFkGk/bHpkCFTvAcQoaZX4DiuBhULtPY/21tF6TAKN4CaswzcL5eb
+         0d1IT6GHpLzIXDXpdBHa1NtgOGjRlO1bnUxs3CEc+CjeX6N0RyOowdfIyfAsDxUBSDU6
+         cIok6bpmavcQt50Qp2uH2WYF8lbxx+W6UUMzyf+kWf4xHYeD8m6wuY6I5GMJ2MMBoxt4
+         j11256DRIokSrI9/fimRfQXApps0nUuvx9eQR865a405EM+RUeviVxF6aqmJJCofgyPT
+         qhVw==
+X-Gm-Message-State: APjAAAUvLBywoPSLgVAQCA/qD0kvKIeGL2LCOP2ZYkaWtGON9K5THY1F
+        pecTH00OAemZijUXq9MP1UFf7eHb
+X-Google-Smtp-Source: APXvYqyQBFgbeWgxsgFsudpDoLp6B5xeUCyg5Ux6CKxPw4eh2/mETwgXCa8JT67u+dnewwAbofeSqw==
+X-Received: by 2002:a2e:8eda:: with SMTP id e26mr826153ljl.65.1575333731754;
+        Mon, 02 Dec 2019 16:42:11 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id y21sm456384ljm.25.2019.12.02.16.42.12
+        by smtp.gmail.com with ESMTPSA id y21sm456384ljm.25.2019.12.02.16.42.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 16:42:13 -0800 (PST)
+        Mon, 02 Dec 2019 16:42:11 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -65,9 +65,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v8 12/19] cpuidle: Avoid NULL dereference in cpuidle_driver_state_disabled()
-Date:   Tue,  3 Dec 2019 03:41:09 +0300
-Message-Id: <20191203004116.11771-13-digetx@gmail.com>
+Subject: [PATCH v8 10/19] arm: tegra20: cpuidle: Make abort_flag atomic
+Date:   Tue,  3 Dec 2019 03:41:07 +0300
+Message-Id: <20191203004116.11771-11-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203004116.11771-1-digetx@gmail.com>
 References: <20191203004116.11771-1-digetx@gmail.com>
@@ -78,38 +78,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cpumask is NULL if cpuidle_driver_state_disabled() is called before
-cpuidle driver is initialized. This shouldn't be a problem for now because
-cpuidle drivers are registered quite early. The NVIDIA Tegra cpuidle
-driver is going to be moved to a later init stage and thus it could become
-a problem if PCIE driver is probed earlier than cpuidle.
+Replace memory accessors with atomic API just to make code consistent
+with the abort_barrier. The new variant may be even more correct now since
+atomic_read() will prevent compiler from generating wrong things like
+carrying abort_flag value in a register instead of re-fetching it from
+memory.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/cpuidle/driver.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/mach-tegra/cpuidle-tegra20.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/cpuidle/driver.c b/drivers/cpuidle/driver.c
-index c76423aaef4d..f8164f56c420 100644
---- a/drivers/cpuidle/driver.c
-+++ b/drivers/cpuidle/driver.c
-@@ -403,6 +403,9 @@ void cpuidle_driver_state_disabled(struct cpuidle_driver *drv, int idx,
+diff --git a/arch/arm/mach-tegra/cpuidle-tegra20.c b/arch/arm/mach-tegra/cpuidle-tegra20.c
+index f3a898f69a1d..3f4c75dbb4aa 100644
+--- a/arch/arm/mach-tegra/cpuidle-tegra20.c
++++ b/arch/arm/mach-tegra/cpuidle-tegra20.c
+@@ -32,7 +32,7 @@
+ #include "sleep.h"
  
- 	mutex_lock(&cpuidle_lock);
+ #ifdef CONFIG_PM_SLEEP
+-static bool abort_flag;
++static atomic_t abort_flag;
+ static atomic_t abort_barrier;
+ static int tegra20_idle_lp2_coupled(struct cpuidle_device *dev,
+ 				    struct cpuidle_driver *drv,
+@@ -167,13 +167,14 @@ static int tegra20_idle_lp2_coupled(struct cpuidle_device *dev,
+ 	bool entered_lp2 = false;
  
-+	if (!drv->cpumask)
-+		goto unlock;
-+
- 	for_each_cpu(cpu, drv->cpumask) {
- 		struct cpuidle_device *dev = per_cpu(cpuidle_devices, cpu);
+ 	if (tegra_pending_sgi())
+-		WRITE_ONCE(abort_flag, true);
++		atomic_set(&abort_flag, 1);
  
-@@ -415,5 +418,6 @@ void cpuidle_driver_state_disabled(struct cpuidle_driver *drv, int idx,
- 			dev->states_usage[idx].disable &= ~CPUIDLE_STATE_DISABLED_BY_DRIVER;
+ 	cpuidle_coupled_parallel_barrier(dev, &abort_barrier);
+ 
+-	if (abort_flag) {
++	if (atomic_read(&abort_flag)) {
+ 		cpuidle_coupled_parallel_barrier(dev, &abort_barrier);
+-		abort_flag = false;	/* clean flag for next coming */
++		/* clean flag for next coming */
++		atomic_set(&abort_flag, 0);
+ 		return -EINTR;
  	}
  
-+unlock:
- 	mutex_unlock(&cpuidle_lock);
- }
 -- 
 2.24.0
 
