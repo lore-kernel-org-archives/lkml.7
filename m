@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E2BC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D182FC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4198920803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A20F92073C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412714;
-	bh=9dFJH4pPKlk5GhffhpQUM7dSEIwNSARrX0h+XxeiS18=;
+	s=default; t=1575412716;
+	bh=L1VuuR2aHnGuXPFOaUKF5kxM3+Aapq+94Dmtx7408LA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XSWD5QDK3TTe0aApVng7D904dp5FqO6yGtKv0TYYA4mldlwbDMWhbgkghlK/mKvh+
-	 m2IKcZKoJ825mB+X/FN3j7YKcr9iOz7VOa8dka+8Px9tFDl6qjCj6yVYQ5qkFFvsPc
-	 yF9R480FF30g32kl+FZ6owmHOoXYY6WXJ0bhcqP0=
+	b=RAYJuiitFZeAtJFav0V1X2UNdzT1xy5lJ8/EoWb/bRApnjJro4Xnx/gH1XHGBVe/X
+	 +TK7/1hq/w5MNJgmn30lRYOEdUTZkJaQYPg7QXe4vWAWwPeTlGcApfC20ceTHp2uBm
+	 Ewwvdm0NH8JgCo42TXQp2xoZ4G+uoDMpHhNOE870=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbfLCWid (ORCPT
+        id S1728028AbfLCWif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:38:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47608 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:38:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728005AbfLCWi3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:38:29 -0500
+        id S1728017AbfLCWic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:38:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA27120684;
-        Tue,  3 Dec 2019 22:38:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FB5820684;
+        Tue,  3 Dec 2019 22:38:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412709;
-        bh=9dFJH4pPKlk5GhffhpQUM7dSEIwNSARrX0h+XxeiS18=;
+        s=default; t=1575412711;
+        bh=L1VuuR2aHnGuXPFOaUKF5kxM3+Aapq+94Dmtx7408LA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NrsBZ35hv2/L+9+GwdaL/ONME8t97sunjN1Io1vLw8Muz5MOtEOJ28Df3b1vdi00P
-         LwFDS1uCwdw5VWBlyYGdF0+E6e+7OUFgq8m4BahkVFV9PSya7VQo2IZPBAfCQHqmt5
-         j4rC3lTVza4BN/9j8zH2j7yVhZM8RXb2FS4OBJMU=
+        b=hadJVSH5fjb94Hecd9eiBXrfbndaEkHDSVCyzwYYPQyV2tjxfZN04AN0dvYvQazOo
+         5FUvNBoyDp8N1k3tfS18bVBV5Yfat8idNPE0jyLkb5Kz0N9/YKSPrFFiMDlf9Hua1E
+         955GRSox5UjicRFFIl9WVbyTvQzj+B65m20YunHQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Simon Horman <simon.horman@netronome.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 33/46] net/tls: remove the dead inplace_crypto code
-Date:   Tue,  3 Dec 2019 23:35:53 +0100
-Message-Id: <20191203212753.658284453@linuxfoundation.org>
+Subject: [PATCH 5.4 34/46] net/tls: use sg_next() to walk sg entries
+Date:   Tue,  3 Dec 2019 23:35:54 +0100
+Message-Id: <20191203212754.733031040@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203212705.175425505@linuxfoundation.org>
 References: <20191203212705.175425505@linuxfoundation.org>
@@ -63,72 +63,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit 9e5ffed37df68d0ccfb2fdc528609e23a1e70ebe ]
+[ Upstream commit c5daa6cccdc2f94aca2c9b3fa5f94e4469997293 ]
 
-Looks like when BPF support was added by commit d3b18ad31f93
-("tls: add bpf support to sk_msg handling") and
-commit d829e9c4112b ("tls: convert to generic sk_msg interface")
-it broke/removed the support for in-place crypto as added by
-commit 4e6d47206c32 ("tls: Add support for inplace records
-encryption").
-
-The inplace_crypto member of struct tls_rec is dead, inited
-to zero, and sometimes set to zero again. It used to be
-set to 1 when record was allocated, but the skmsg code doesn't
-seem to have been written with the idea of in-place crypto
-in mind.
-
-Since non trivial effort is required to bring the feature back
-and we don't really have the HW to measure the benefit just
-remove the left over support for now to avoid confusing readers.
+Partially sent record cleanup path increments an SG entry
+directly instead of using sg_next(). This should not be a
+problem today, as encrypted messages should be always
+allocated as arrays. But given this is a cleanup path it's
+easy to miss was this ever to change. Use sg_next(), and
+simplify the code.
 
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Reviewed-by: Simon Horman <simon.horman@netronome.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/tls.h |    1 -
- net/tls/tls_sw.c  |    6 +-----
- 2 files changed, 1 insertion(+), 6 deletions(-)
+ include/net/tls.h  |    2 +-
+ net/tls/tls_main.c |   13 ++-----------
+ net/tls/tls_sw.c   |    3 ++-
+ 3 files changed, 5 insertions(+), 13 deletions(-)
 
 --- a/include/net/tls.h
 +++ b/include/net/tls.h
-@@ -122,7 +122,6 @@ struct tls_rec {
- 	struct list_head list;
- 	int tx_ready;
- 	int tx_flags;
--	int inplace_crypto;
+@@ -395,7 +395,7 @@ int tls_push_sg(struct sock *sk, struct
+ 		int flags);
+ int tls_push_partial_record(struct sock *sk, struct tls_context *ctx,
+ 			    int flags);
+-bool tls_free_partial_record(struct sock *sk, struct tls_context *ctx);
++void tls_free_partial_record(struct sock *sk, struct tls_context *ctx);
  
- 	struct sk_msg msg_plaintext;
- 	struct sk_msg msg_encrypted;
+ static inline struct tls_msg *tls_msg(struct sk_buff *skb)
+ {
+--- a/net/tls/tls_main.c
++++ b/net/tls/tls_main.c
+@@ -209,24 +209,15 @@ int tls_push_partial_record(struct sock
+ 	return tls_push_sg(sk, ctx, sg, offset, flags);
+ }
+ 
+-bool tls_free_partial_record(struct sock *sk, struct tls_context *ctx)
++void tls_free_partial_record(struct sock *sk, struct tls_context *ctx)
+ {
+ 	struct scatterlist *sg;
+ 
+-	sg = ctx->partially_sent_record;
+-	if (!sg)
+-		return false;
+-
+-	while (1) {
++	for (sg = ctx->partially_sent_record; sg; sg = sg_next(sg)) {
+ 		put_page(sg_page(sg));
+ 		sk_mem_uncharge(sk, sg->length);
+-
+-		if (sg_is_last(sg))
+-			break;
+-		sg++;
+ 	}
+ 	ctx->partially_sent_record = NULL;
+-	return true;
+ }
+ 
+ static void tls_write_space(struct sock *sk)
 --- a/net/tls/tls_sw.c
 +++ b/net/tls/tls_sw.c
-@@ -705,8 +705,7 @@ static int tls_push_record(struct sock *
- 	}
- 
- 	i = msg_pl->sg.start;
--	sg_chain(rec->sg_aead_in, 2, rec->inplace_crypto ?
--		 &msg_en->sg.data[i] : &msg_pl->sg.data[i]);
-+	sg_chain(rec->sg_aead_in, 2, &msg_pl->sg.data[i]);
- 
- 	i = msg_en->sg.end;
- 	sk_msg_iter_var_prev(i);
-@@ -971,8 +970,6 @@ alloc_encrypted:
- 			if (ret)
- 				goto fallback_to_reg_send;
- 
--			rec->inplace_crypto = 0;
--
- 			num_zc++;
- 			copied += try_to_copy;
- 
-@@ -1171,7 +1168,6 @@ alloc_payload:
- 
- 		tls_ctx->pending_open_record_frags = true;
- 		if (full_record || eor || sk_msg_full(msg_pl)) {
--			rec->inplace_crypto = 0;
- 			ret = bpf_exec_tx_verdict(msg_pl, sk, full_record,
- 						  record_type, &copied, flags);
- 			if (ret) {
+@@ -2084,7 +2084,8 @@ void tls_sw_release_resources_tx(struct
+ 	/* Free up un-sent records in tx_list. First, free
+ 	 * the partially sent record if any at head of tx_list.
+ 	 */
+-	if (tls_free_partial_record(sk, tls_ctx)) {
++	if (tls_ctx->partially_sent_record) {
++		tls_free_partial_record(sk, tls_ctx);
+ 		rec = list_first_entry(&ctx->tx_list,
+ 				       struct tls_rec, list);
+ 		list_del(&rec->list);
 
 
