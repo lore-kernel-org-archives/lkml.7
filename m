@@ -2,51 +2,53 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF448C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CFAC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B8FD207DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20FA4215E5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414539;
-	bh=sceLJGCo77DPR9JBaWfFyeAjcJUerBMlT9tLv1Mf0SQ=;
+	s=default; t=1575414544;
+	bh=8ToaJQ695p2SfwWZ5E3MFRCG42I9Nm3w5fQf1fuY/+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SNVb7ei8tVlTZ182xflIR7oB92xp9QQ+1nQAd0cubUvrWXznsAWsFonvr99ao2MuP
-	 75fM+Lry5ikMoh42A1TUBr+p9gWKOTgo3LpOYK7nSFFdx6ijkIobvtfp3fGp0F1ziV
-	 gfuWuokJv29lEzEs1TnX/o7VPZg0fErA93dVmgI8=
+	b=C52iWg6KQFxDY5yTVWF+lPU35zHFpaxoY3y17ljrqLdvFp380C+ckSiDzidq94vRh
+	 mLPcoF8L2oZN7OD2JisqJpLl6I/aYoX6PsndkyBKkQf6OZDIVHcrgxETu1iKecOhiw
+	 BZWpDnHcGn1rqraIDh2sGo9dveYIvGCGzF8OSd0U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbfLCWpD (ORCPT
+        id S1728871AbfLCXJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:45:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33112 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 18:09:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728871AbfLCWo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:44:57 -0500
+        id S1727798AbfLCWow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:44:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56A7F2073C;
-        Tue,  3 Dec 2019 22:44:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 644882080F;
+        Tue,  3 Dec 2019 22:44:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413096;
-        bh=sceLJGCo77DPR9JBaWfFyeAjcJUerBMlT9tLv1Mf0SQ=;
+        s=default; t=1575413091;
+        bh=8ToaJQ695p2SfwWZ5E3MFRCG42I9Nm3w5fQf1fuY/+M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DMx4GQMSM/wc6DW4g63NVXPqaqcepG+tRz09dopoLTQ2up7zZa0SpOexz7pNbMSmK
-         NRlp7IlFvTjMVXxtD5Qob7qpvilf4GtOC24R60+URi+1zMpA2oRN729/LwPwfGVKX8
-         Qo0ZEcliwyPAwxV/erfLGpJRewn6lwo3AQBVZW7o=
+        b=JCgnMg1D6o7nFoceNzqIJBGEQijX2DBzPlRHE3X+b+hCez2gUfpbQ3d/+9XwWGqDv
+         6rCg6RTUbeElqeCRHhtHd9Ksuj3T2LLmmmkzcbP8sgRQIGt89TQs81xZ90SMXYwqtz
+         FJ5CFuO96xMyRMvTrVZ+tRHxHX82mVJvyy7ZLY+I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.3 134/135] platform/x86: hp-wmi: Fix ACPI errors caused by too small buffer
-Date:   Tue,  3 Dec 2019 23:36:14 +0100
-Message-Id: <20191203213046.260872434@linuxfoundation.org>
+        stable@vger.kernel.org, Kevin Wang <kevin1.wang@amd.com>,
+        Kenneth Feng <kenneth.feng@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 081/135] drm/amd/swSMU: fix smu workload bit map error
+Date:   Tue,  3 Dec 2019 23:35:21 +0100
+Message-Id: <20191203213031.319188482@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -59,70 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Kevin Wang <kevin1.wang@amd.com>
 
-commit 16245db1489cd9aa579506f64afeeeb13d825a93 upstream.
+[ Upstream commit 38264de0dce80d223f358ce47512378fae0de586 ]
 
-The HP WMI calls may take up to 128 bytes of data as input, and
-the AML methods implementing the WMI calls, declare a couple of fields for
-accessing input in different sizes, specifycally the HWMC method contains:
+fix workload bit (WORKLOAD_PPLIB_COMPUTE_BIT) map error
+on vega20 and navi asic.
 
-        CreateField (Arg1, 0x80, 0x0400, D128)
+fix commit:
+drm/amd/powerplay: add function get_workload_type_map for swsmu
 
-Even though we do not use any of the WMI command-types which need a buffer
-of this size, the APCI interpreter still tries to create it as it is
-declared in generoc code at the top of the HWMC method which runs before
-the code looks at which command-type is requested.
-
-This results in many of these errors on many different HP laptop models:
-
-[   14.459261] ACPI Error: Field [D128] at 1152 exceeds Buffer [NULL] size 160 (bits) (20170303/dsopcode-236)
-[   14.459268] ACPI Error: Method parse/execution failed [\HWMC] (Node ffff8edcc61507f8), AE_AML_BUFFER_LIMIT (20170303/psparse-543)
-[   14.459279] ACPI Error: Method parse/execution failed [\_SB.WMID.WMAA] (Node ffff8edcc61523c0), AE_AML_BUFFER_LIMIT (20170303/psparse-543)
-
-This commit increases the size of the data element of the bios_args struct
-to 128 bytes fixing these errors.
-
-Cc: stable@vger.kernel.org
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=197007
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=201981
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1520703
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Kevin Wang <kevin1.wang@amd.com>
+Reviewed-by: Kenneth Feng <kenneth.feng@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/hp-wmi.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/powerplay/navi10_ppt.c | 2 +-
+ drivers/gpu/drm/amd/powerplay/vega20_ppt.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -65,7 +65,7 @@ struct bios_args {
- 	u32 command;
- 	u32 commandtype;
- 	u32 datasize;
--	u32 data;
-+	u8 data[128];
+diff --git a/drivers/gpu/drm/amd/powerplay/navi10_ppt.c b/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
+index 8bf9f541e7fe7..a0ef44d025d61 100644
+--- a/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
++++ b/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
+@@ -205,7 +205,7 @@ static int navi10_workload_map[] = {
+ 	WORKLOAD_MAP(PP_SMC_POWER_PROFILE_POWERSAVING,		WORKLOAD_PPLIB_POWER_SAVING_BIT),
+ 	WORKLOAD_MAP(PP_SMC_POWER_PROFILE_VIDEO,		WORKLOAD_PPLIB_VIDEO_BIT),
+ 	WORKLOAD_MAP(PP_SMC_POWER_PROFILE_VR,			WORKLOAD_PPLIB_VR_BIT),
+-	WORKLOAD_MAP(PP_SMC_POWER_PROFILE_COMPUTE,		WORKLOAD_PPLIB_CUSTOM_BIT),
++	WORKLOAD_MAP(PP_SMC_POWER_PROFILE_COMPUTE,		WORKLOAD_PPLIB_COMPUTE_BIT),
+ 	WORKLOAD_MAP(PP_SMC_POWER_PROFILE_CUSTOM,		WORKLOAD_PPLIB_CUSTOM_BIT),
  };
  
- enum hp_wmi_commandtype {
-@@ -216,7 +216,7 @@ static int hp_wmi_perform_query(int quer
- 		.command = command,
- 		.commandtype = query,
- 		.datasize = insize,
--		.data = 0,
-+		.data = { 0 },
- 	};
- 	struct acpi_buffer input = { sizeof(struct bios_args), &args };
- 	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-@@ -228,7 +228,7 @@ static int hp_wmi_perform_query(int quer
+diff --git a/drivers/gpu/drm/amd/powerplay/vega20_ppt.c b/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
+index 6a14497257e43..33ca6c581f219 100644
+--- a/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
++++ b/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
+@@ -219,7 +219,7 @@ static int vega20_workload_map[] = {
+ 	WORKLOAD_MAP(PP_SMC_POWER_PROFILE_POWERSAVING,		WORKLOAD_PPLIB_POWER_SAVING_BIT),
+ 	WORKLOAD_MAP(PP_SMC_POWER_PROFILE_VIDEO,		WORKLOAD_PPLIB_VIDEO_BIT),
+ 	WORKLOAD_MAP(PP_SMC_POWER_PROFILE_VR,			WORKLOAD_PPLIB_VR_BIT),
+-	WORKLOAD_MAP(PP_SMC_POWER_PROFILE_COMPUTE,		WORKLOAD_PPLIB_CUSTOM_BIT),
++	WORKLOAD_MAP(PP_SMC_POWER_PROFILE_COMPUTE,		WORKLOAD_PPLIB_COMPUTE_BIT),
+ 	WORKLOAD_MAP(PP_SMC_POWER_PROFILE_CUSTOM,		WORKLOAD_PPLIB_CUSTOM_BIT),
+ };
  
- 	if (WARN_ON(insize > sizeof(args.data)))
- 		return -EINVAL;
--	memcpy(&args.data, buffer, insize);
-+	memcpy(&args.data[0], buffer, insize);
- 
- 	wmi_evaluate_method(HPWMI_BIOS_GUID, 0, mid, &input, &output);
- 
+-- 
+2.20.1
+
 
 
