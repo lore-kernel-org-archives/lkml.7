@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC229C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3586FC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9D912053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F35E220656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414078;
-	bh=B86OaxNtTQFhZOlp+ie1sa1q2newj9M5PkzFAV6EL4A=;
+	s=default; t=1575414092;
+	bh=DqeW1U78vlTUIlsSZ6UY5jGKiwesidoeQuHKuMlvuJg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HJMGBvngfDmCviy3naHCAQCf1rYFm2eFewGTrdEv7yKt6AkrjMtO2e9+Yfpy20t/3
-	 /hV/XcvQ/v1n13MwJ/YwSvE+0Znpk0W6Ia7n1hMP6GGPKRxuAlGGVskvwvSv3+LesA
-	 wAk7HPGYHQJL+4bVxjr6I4zo/6RmpZ4zN1Me7lI8=
+	b=a12xxliSF0jLVSlA7dYvOj74FZmD8oyyNIddUP8RTXFv3IMX9TlJSN87X2bhmnOqL
+	 ArhKuFMjQkPWzb8LkgPm5IQSYrHtVpYy7jg4Ztn/AewKdF+ei4ramLGAgMiLAaD3Gw
+	 6HY+CSdyclq47LL/6QRwd/hMtBRCrvqzAk3dtAbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730623AbfLCXBR (ORCPT
+        id S1730488AbfLCXBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:01:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51380 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 18:01:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729169AbfLCW4Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:56:24 -0500
+        id S1728357AbfLCW4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:56:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A06F920865;
-        Tue,  3 Dec 2019 22:56:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 624122053B;
+        Tue,  3 Dec 2019 22:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413783;
-        bh=B86OaxNtTQFhZOlp+ie1sa1q2newj9M5PkzFAV6EL4A=;
+        s=default; t=1575413764;
+        bh=DqeW1U78vlTUIlsSZ6UY5jGKiwesidoeQuHKuMlvuJg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=acyhnVNYjNIdvcFWT9S9ZDKuqRsxUNZ0dNPXdCCfnsBXg8BEgvSwzrWNuWcsy/hT5
-         sfhSkZmL1aEHYQ8lZPFu4tlzVIxj5O9fVHAMtQgCEEVmEyZxmjdWvlXC+sttlA0GPN
-         4g5KtD3UQDMgctp9niJFYbnDjquSt+S8Hf6IYey0=
+        b=qYDfR28zXSNrblCIrr8eQXm7hf68b9pWZ5DCEbugWpd++J7mM6ME1OffW/s0OhxU7
+         ItGvmrxWUXsGMxPpefF++o1jgo1mcC08eZ/r+iARK/Dho3x7Mtd4/vLUAZhI0fVPDa
+         q8VvbjU7U/P4nl3clTDTc4CpREPWfa/Or0GJgRWA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@gmx.us>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+        James Morse <james.morse@arm.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 211/321] drivers/base/platform.c: kmemleak ignore a known leak
-Date:   Tue,  3 Dec 2019 23:34:37 +0100
-Message-Id: <20191203223438.098119676@linuxfoundation.org>
+Subject: [PATCH 4.19 251/321] ACPI / APEI: Dont wait to serialise with oops messages when panic()ing
+Date:   Tue,  3 Dec 2019 23:35:17 +0100
+Message-Id: <20191203223440.195603776@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -63,81 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@gmx.us>
+From: James Morse <james.morse@arm.com>
 
-[ Upstream commit 967d3010df8b6f6f9aa95c198edc5fe3646ebf36 ]
+[ Upstream commit 78b0b690f6558ed788dccafa45965325dd11ba89 ]
 
-unreferenced object 0xffff808ec6dc5a80 (size 128):
-  comm "swapper/0", pid 1, jiffies 4294938063 (age 2560.530s)
-  hex dump (first 32 bytes):
-    ff ff ff ff 00 00 00 00 6b 6b 6b 6b 6b 6b 6b 6b  ........kkkkkkkk
-    6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
-  backtrace:
-    [<00000000476dcf8c>] kmem_cache_alloc_trace+0x430/0x500
-    [<000000004f708d37>] platform_device_register_full+0xbc/0x1e8
-    [<000000006c2a7ec7>] acpi_create_platform_device+0x370/0x450
-    [<00000000ef135642>] acpi_default_enumeration+0x34/0x78
-    [<000000003bd9a052>] acpi_bus_attach+0x2dc/0x3e0
-    [<000000003cf4f7f2>] acpi_bus_attach+0x108/0x3e0
-    [<000000003cf4f7f2>] acpi_bus_attach+0x108/0x3e0
-    [<000000002968643e>] acpi_bus_scan+0xb0/0x110
-    [<0000000010dd0bd7>] acpi_scan_init+0x1a8/0x410
-    [<00000000965b3c5a>] acpi_init+0x408/0x49c
-    [<00000000ed4b9fe2>] do_one_initcall+0x178/0x7f4
-    [<00000000a5ac5a74>] kernel_init_freeable+0x9d4/0xa9c
-    [<0000000070ea6c15>] kernel_init+0x18/0x138
-    [<00000000fb8fff06>] ret_from_fork+0x10/0x1c
-    [<0000000041273a0d>] 0xffffffffffffffff
+oops_begin() exists to group printk() messages with the oops message
+printed by die(). To reach this caller we know that platform firmware
+took this error first, then notified the OS via NMI with a 'panic'
+severity.
 
-Then, faddr2line pointed out this line,
+Don't wait for another CPU to release the die-lock before panic()ing,
+our only goal is to print this fatal error and panic().
 
-/*
- * This memory isn't freed when the device is put,
- * I don't have a nice idea for that though.  Conceptually
- * dma_mask in struct device should not be a pointer.
- * See http://thread.gmane.org/gmane.linux.kernel.pci/9081
- */
-pdev->dev.dma_mask =
-	kmalloc(sizeof(*pdev->dev.dma_mask), GFP_KERNEL);
+This code is always called in_nmi(), and since commit 42a0bb3f7138
+("printk/nmi: generic solution for safe printk in NMI"), it has been
+safe to call printk() from this context. Messages are batched in a
+per-cpu buffer and printed via irq-work, or a call back from panic().
 
-Since this leak has existed for more than 8 years and it does not
-reference other parts of the memory, let kmemleak ignore it, so users
-don't need to waste time reporting this in the future.
-
-Link: http://lkml.kernel.org/r/20181206160751.36211-1-cai@gmx.us
-Signed-off-by: Qian Cai <cai@gmx.us>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://patchwork.kernel.org/patch/10313555/
+Acked-by: Borislav Petkov <bp@suse.de>
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/platform.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/acpi/apei/ghes.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index dff82a3c2caa9..e9be1f56929af 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -26,6 +26,7 @@
- #include <linux/clk/clk-conf.h>
- #include <linux/limits.h>
- #include <linux/property.h>
-+#include <linux/kmemleak.h>
+diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+index f008ba7c9cedc..0c46b79e31b1e 100644
+--- a/drivers/acpi/apei/ghes.c
++++ b/drivers/acpi/apei/ghes.c
+@@ -33,7 +33,6 @@
+ #include <linux/interrupt.h>
+ #include <linux/timer.h>
+ #include <linux/cper.h>
+-#include <linux/kdebug.h>
+ #include <linux/platform_device.h>
+ #include <linux/mutex.h>
+ #include <linux/ratelimit.h>
+@@ -949,7 +948,6 @@ static int ghes_notify_nmi(unsigned int cmd, struct pt_regs *regs)
  
- #include "base.h"
- #include "power/power.h"
-@@ -525,6 +526,8 @@ struct platform_device *platform_device_register_full(
- 		if (!pdev->dev.dma_mask)
- 			goto err;
- 
-+		kmemleak_ignore(pdev->dev.dma_mask);
-+
- 		*pdev->dev.dma_mask = pdevinfo->dma_mask;
- 		pdev->dev.coherent_dma_mask = pdevinfo->dma_mask;
- 	}
+ 		sev = ghes_severity(ghes->estatus->error_severity);
+ 		if (sev >= GHES_SEV_PANIC) {
+-			oops_begin();
+ 			ghes_print_queued_estatus();
+ 			__ghes_panic(ghes);
+ 		}
 -- 
 2.20.1
 
