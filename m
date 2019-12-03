@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E780C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A232C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D6CE20684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E9F720684
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414780;
-	bh=MP99nh/TM0pE6NtJsYqybo9a6kDwZHzSSkrdsojSgnY=;
+	s=default; t=1575414793;
+	bh=LSTdpTaR8hFMPic0CKoXaJCg2EX49Lkv4RNvwW08Kyw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pniGFuW1zZhCCr4Bwnkr6/InPgTtrwdOH3AYbw32SyA0AiP6cUq80zuuIoVWbN7f8
-	 N0G3ZmY+KLBG357saDZZuq33L8AJKC2BvfZmJhhNPNtjqKjIe2V4ZOrhAO9v8+q7ry
-	 S1EcmDxNWLraJp6QPhSH0JEb2KILea/k0iHji5w4=
+	b=Mu2oFidszLnPQchFSdVbDm9bkn4NVruHGZVDS7TCWJqIxJdufDen33AF9phH2yTsM
+	 boI5b/AVWqqi+6TrzVXZI0XW8pbezxFONoTQAbvFyxvx8L1EYGjnE4v0uVIF3m8DfX
+	 YCm2754n3nTBaXejbRHcIb+UJ4fIjKFQLAFQJedo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbfLCWjF (ORCPT
+        id S1728252AbfLCXNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:39:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48752 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 18:13:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728117AbfLCWjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:39:01 -0500
+        id S1727721AbfLCWin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:38:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19EDD20684;
-        Tue,  3 Dec 2019 22:38:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C7E420803;
+        Tue,  3 Dec 2019 22:38:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412740;
-        bh=MP99nh/TM0pE6NtJsYqybo9a6kDwZHzSSkrdsojSgnY=;
+        s=default; t=1575412722;
+        bh=LSTdpTaR8hFMPic0CKoXaJCg2EX49Lkv4RNvwW08Kyw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0u0p0iLLjAf5EWRIiyeG1XlzoqYLInBmVNRFQ65BO3Lmg8wH2osjAbTxmzIjBMnzE
-         RZNIjG/UrOnIkMHuE0ClCzzEF0n0obzCBZe6EcJpalAKLZbroc46nuEEmH6HzK5g+B
-         EekK0lQB2MCytw5L4tu1tgyZcK6yoyK4gxJ18D/Y=
+        b=mgysItCqGVB/eqdU3+hI/KBK14Vy8BQk1IFuSnbIYW4yCRpRnScQYxNwzZsoD3DOo
+         eJ8qB1DYnaYe11rOcX7Nx13Y3xX3JuFqqyYTc7Ba00gRJxJ3ltibEusT6IC7ldxD/I
+         6OclnwoR6ajfhGWSZcPON5e7SQ3nhpMYbuxNmSq8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Candle Sun <candle.sun@unisoc.com>,
-        Nianfu Bai <nianfu.bai@unisoc.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Siarhei Vishniakou <svv@google.com>
-Subject: [PATCH 5.4 44/46] HID: core: check whether Usage Page item is after Usage ID items
-Date:   Tue,  3 Dec 2019 23:36:04 +0100
-Message-Id: <20191203212806.707201166@linuxfoundation.org>
+        stable@vger.kernel.org, Fabio DUrso <fabiodurso@hotmail.it>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.4 11/46] USB: serial: ftdi_sio: add device IDs for U-Blox C099-F9P
+Date:   Tue,  3 Dec 2019 23:35:31 +0100
+Message-Id: <20191203212725.867552506@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203212705.175425505@linuxfoundation.org>
 References: <20191203212705.175425505@linuxfoundation.org>
@@ -62,173 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Candle Sun <candle.sun@unisoc.com>
+From: Fabio D'Urso <fabiodurso@hotmail.it>
 
-commit 1cb0d2aee26335d0bccf29100c7bed00ebece851 upstream.
+commit c1a1f273d0825774c80896b8deb1c9ea1d0b91e3 upstream.
 
-Upstream commit 58e75155009c ("HID: core: move Usage Page concatenation
-to Main item") adds support for Usage Page item after Usage ID items
-(such as keyboards manufactured by Primax).
+This device presents itself as a USB hub with three attached devices:
+ - An ACM serial port connected to the GPS module (not affected by this
+   commit)
+ - An FTDI serial port connected to the GPS module (1546:0502)
+ - Another FTDI serial port connected to the ODIN-W2 radio module
+   (1546:0503)
 
-Usage Page concatenation in Main item works well for following report
-descriptor patterns:
+This commit registers U-Blox's VID and the PIDs of the second and third
+devices.
 
-    USAGE_PAGE (Keyboard)                   05 07
-    USAGE_MINIMUM (Keyboard LeftControl)    19 E0
-    USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
-    LOGICAL_MINIMUM (0)                     15 00
-    LOGICAL_MAXIMUM (1)                     25 01
-    REPORT_SIZE (1)                         75 01
-    REPORT_COUNT (8)                        95 08
-    INPUT (Data,Var,Abs)                    81 02
+Datasheet: https://www.u-blox.com/sites/default/files/C099-F9P-AppBoard-Mbed-OS3-FW_UserGuide_%28UBX-18063024%29.pdf
 
--------------
-
-    USAGE_MINIMUM (Keyboard LeftControl)    19 E0
-    USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
-    LOGICAL_MINIMUM (0)                     15 00
-    LOGICAL_MAXIMUM (1)                     25 01
-    REPORT_SIZE (1)                         75 01
-    REPORT_COUNT (8)                        95 08
-    USAGE_PAGE (Keyboard)                   05 07
-    INPUT (Data,Var,Abs)                    81 02
-
-But it makes the parser act wrong for the following report
-descriptor pattern(such as some Gamepads):
-
-    USAGE_PAGE (Button)                     05 09
-    USAGE (Button 1)                        09 01
-    USAGE (Button 2)                        09 02
-    USAGE (Button 4)                        09 04
-    USAGE (Button 5)                        09 05
-    USAGE (Button 7)                        09 07
-    USAGE (Button 8)                        09 08
-    USAGE (Button 14)                       09 0E
-    USAGE (Button 15)                       09 0F
-    USAGE (Button 13)                       09 0D
-    USAGE_PAGE (Consumer Devices)           05 0C
-    USAGE (Back)                            0a 24 02
-    USAGE (HomePage)                        0a 23 02
-    LOGICAL_MINIMUM (0)                     15 00
-    LOGICAL_MAXIMUM (1)                     25 01
-    REPORT_SIZE (1)                         75 01
-    REPORT_COUNT (11)                       95 0B
-    INPUT (Data,Var,Abs)                    81 02
-
-With Usage Page concatenation in Main item, parser recognizes all the
-11 Usages as consumer keys, it is not the HID device's real intention.
-
-This patch checks whether Usage Page is really defined after Usage ID
-items by comparing usage page using status.
-
-Usage Page concatenation on currently defined Usage Page will always
-do in local parsing when Usage ID items encountered.
-
-When Main item is parsing, concatenation will do again with last
-defined Usage Page if this page has not been used in the previous
-usages concatenation.
-
-Signed-off-by: Candle Sun <candle.sun@unisoc.com>
-Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
-Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Cc: Siarhei Vishniakou <svv@google.com>
+Signed-off-by: Fabio D'Urso <fabiodurso@hotmail.it>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/hid-core.c |   51 +++++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 45 insertions(+), 6 deletions(-)
+ drivers/usb/serial/ftdi_sio.c     |    3 +++
+ drivers/usb/serial/ftdi_sio_ids.h |    7 +++++++
+ 2 files changed, 10 insertions(+)
 
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -212,6 +212,18 @@ static unsigned hid_lookup_collection(st
- }
+--- a/drivers/usb/serial/ftdi_sio.c
++++ b/drivers/usb/serial/ftdi_sio.c
+@@ -1033,6 +1033,9 @@ static const struct usb_device_id id_tab
+ 	/* Sienna devices */
+ 	{ USB_DEVICE(FTDI_VID, FTDI_SIENNA_PID) },
+ 	{ USB_DEVICE(ECHELON_VID, ECHELON_U20_PID) },
++	/* U-Blox devices */
++	{ USB_DEVICE(UBLOX_VID, UBLOX_C099F9P_ZED_PID) },
++	{ USB_DEVICE(UBLOX_VID, UBLOX_C099F9P_ODIN_PID) },
+ 	{ }					/* Terminating entry */
+ };
  
- /*
-+ * Concatenate usage which defines 16 bits or less with the
-+ * currently defined usage page to form a 32 bit usage
-+ */
-+
-+static void complete_usage(struct hid_parser *parser, unsigned int index)
-+{
-+	parser->local.usage[index] &= 0xFFFF;
-+	parser->local.usage[index] |=
-+		(parser->global.usage_page & 0xFFFF) << 16;
-+}
+--- a/drivers/usb/serial/ftdi_sio_ids.h
++++ b/drivers/usb/serial/ftdi_sio_ids.h
+@@ -1558,3 +1558,10 @@
+  */
+ #define UNJO_VID			0x22B7
+ #define UNJO_ISODEBUG_V1_PID		0x150D
 +
 +/*
-  * Add a usage to the temporary parser table.
-  */
- 
-@@ -222,6 +234,14 @@ static int hid_add_usage(struct hid_pars
- 		return -1;
- 	}
- 	parser->local.usage[parser->local.usage_index] = usage;
-+
-+	/*
-+	 * If Usage item only includes usage id, concatenate it with
-+	 * currently defined usage page
-+	 */
-+	if (size <= 2)
-+		complete_usage(parser, parser->local.usage_index);
-+
- 	parser->local.usage_size[parser->local.usage_index] = size;
- 	parser->local.collection_index[parser->local.usage_index] =
- 		parser->collection_stack_ptr ?
-@@ -543,13 +563,32 @@ static int hid_parser_local(struct hid_p
-  * usage value."
-  */
- 
--static void hid_concatenate_usage_page(struct hid_parser *parser)
-+static void hid_concatenate_last_usage_page(struct hid_parser *parser)
- {
- 	int i;
-+	unsigned int usage_page;
-+	unsigned int current_page;
-+
-+	if (!parser->local.usage_index)
-+		return;
- 
--	for (i = 0; i < parser->local.usage_index; i++)
--		if (parser->local.usage_size[i] <= 2)
--			parser->local.usage[i] += parser->global.usage_page << 16;
-+	usage_page = parser->global.usage_page;
-+
-+	/*
-+	 * Concatenate usage page again only if last declared Usage Page
-+	 * has not been already used in previous usages concatenation
-+	 */
-+	for (i = parser->local.usage_index - 1; i >= 0; i--) {
-+		if (parser->local.usage_size[i] > 2)
-+			/* Ignore extended usages */
-+			continue;
-+
-+		current_page = parser->local.usage[i] >> 16;
-+		if (current_page == usage_page)
-+			break;
-+
-+		complete_usage(parser, i);
-+	}
- }
- 
- /*
-@@ -561,7 +600,7 @@ static int hid_parser_main(struct hid_pa
- 	__u32 data;
- 	int ret;
- 
--	hid_concatenate_usage_page(parser);
-+	hid_concatenate_last_usage_page(parser);
- 
- 	data = item_udata(item);
- 
-@@ -772,7 +811,7 @@ static int hid_scan_main(struct hid_pars
- 	__u32 data;
- 	int i;
- 
--	hid_concatenate_usage_page(parser);
-+	hid_concatenate_last_usage_page(parser);
- 
- 	data = item_udata(item);
- 
++ * U-Blox products (http://www.u-blox.com).
++ */
++#define UBLOX_VID			0x1546
++#define UBLOX_C099F9P_ZED_PID		0x0502
++#define UBLOX_C099F9P_ODIN_PID		0x0503
 
 
