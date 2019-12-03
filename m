@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EC7C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF0DC43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1476420863
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D96020863
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413737;
-	bh=aEig3xLJ0ayeEDQUT+Zv0DbOuIHBjOVxj1yI+WpZ7DI=;
+	s=default; t=1575413738;
+	bh=aBGta1FQVU8aqNnb8OLhtCuBnkmaBwv/fVv+4IHTpmw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nSQoP7dyT9umJKkAdtN+haYEH9Aab8l20gu0V9gL6yZJ308q/rf9uqco0j9E9En/P
-	 vUCjon7C+laoZ6kA7OskiEzC6mp29DuxPNoRUxHZES3PxVkHlRRsJnLOy6GvnppZ3u
-	 MZbwFsNa9HmGAQigXUM05ovAPRvKo/2Rpiof08Co=
+	b=nTP5Ub5Ssj0ZeXM+ijHGFVZsFuzWuSJc0DWS4KicHh8XJNRiIRfRkc2WULS9P+T2b
+	 HeZ+gvwStwZm+O/56ZfhcIoz4IBa5kPaKO4UDzCAwG2+cfOY1whgbyXPSOOerN/gzq
+	 eAoeZm7CZ3Q0LJvwn+KLeeV/3L/v4iFYAQ5i1biE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730354AbfLCWzf (ORCPT
+        id S1730365AbfLCWzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:55:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49882 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:55:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728988AbfLCWz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:55:29 -0500
+        id S1730348AbfLCWze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:55:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F72C217D9;
-        Tue,  3 Dec 2019 22:55:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 328F320674;
+        Tue,  3 Dec 2019 22:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413728;
-        bh=aEig3xLJ0ayeEDQUT+Zv0DbOuIHBjOVxj1yI+WpZ7DI=;
+        s=default; t=1575413733;
+        bh=aBGta1FQVU8aqNnb8OLhtCuBnkmaBwv/fVv+4IHTpmw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=to8Rl+XOr0izzPN9LUbGwKFx8DtTg1fZ8jPQH3IB0/bFlsKYtW477sX5JcX1+Crwc
-         TNPXn9HCuquhAnIkgCetxAYvdyP5JpPJV8oA4dbu4sEsdDCheIvLCb1t43wiP9iigJ
-         IQQUM9k4ISDlK5iWyswQaFC23nDtCDcJ+EZH/BK4=
+        b=Sid4ZfhpcjjXdrXVr+G64ZnaOvJc/ltCjJmOJzZK/gVnVwiQBNYZKvLAOzV79e7EP
+         mF9M6FjNpCqOwPuENDdoIF4AMkRcRIXQIiCdrPJHtbL6Vam/EbFCwIrzZhblBnxbQ8
+         Z4xavBT3gtLMXHrhc+RyxGXZhrikezW05NDWRHio=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peng Sun <sironhide0null@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Ying Xue <ying.xue@windriver.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 239/321] bpf: decrease usercnt if bpf_map_new_fd() fails in bpf_map_get_fd_by_id()
-Date:   Tue,  3 Dec 2019 23:35:05 +0100
-Message-Id: <20191203223439.576369519@linuxfoundation.org>
+Subject: [PATCH 4.19 214/321] tipc: fix memory leak in tipc_nl_compat_publ_dump
+Date:   Tue,  3 Dec 2019 23:34:40 +0100
+Message-Id: <20191203223438.253860395@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,36 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Sun <sironhide0null@gmail.com>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-[ Upstream commit 781e62823cb81b972dc8652c1827205cda2ac9ac ]
+[ Upstream commit f87d8ad9233f115db92c6c087d58403b0009ed36 ]
 
-In bpf/syscall.c, bpf_map_get_fd_by_id() use bpf_map_inc_not_zero()
-to increase the refcount, both map->refcnt and map->usercnt. Then, if
-bpf_map_new_fd() fails, should handle map->usercnt too.
+There is a memory leak in case genlmsg_put fails.
 
-Fixes: bd5f5f4ecb78 ("bpf: Add BPF_MAP_GET_FD_BY_ID")
-Signed-off-by: Peng Sun <sironhide0null@gmail.com>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Fix this by freeing *args* before return.
+
+Addresses-Coverity-ID: 1476406 ("Resource leak")
+Fixes: 46273cf7e009 ("tipc: fix a missing check of genlmsg_put")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Acked-by: Ying Xue <ying.xue@windriver.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/syscall.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/tipc/netlink_compat.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 6e544e364821e..90bb0c05c10e9 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -1887,7 +1887,7 @@ static int bpf_map_get_fd_by_id(const union bpf_attr *attr)
+diff --git a/net/tipc/netlink_compat.c b/net/tipc/netlink_compat.c
+index fab0384d2b4b3..b4860084a8f56 100644
+--- a/net/tipc/netlink_compat.c
++++ b/net/tipc/netlink_compat.c
+@@ -983,8 +983,10 @@ static int tipc_nl_compat_publ_dump(struct tipc_nl_compat_msg *msg, u32 sock)
  
- 	fd = bpf_map_new_fd(map, f_flags);
- 	if (fd < 0)
--		bpf_map_put(map);
-+		bpf_map_put_with_uref(map);
+ 	hdr = genlmsg_put(args, 0, 0, &tipc_genl_family, NLM_F_MULTI,
+ 			  TIPC_NL_PUBL_GET);
+-	if (!hdr)
++	if (!hdr) {
++		kfree_skb(args);
+ 		return -EMSGSIZE;
++	}
  
- 	return fd;
- }
+ 	nest = nla_nest_start(args, TIPC_NLA_SOCK);
+ 	if (!nest) {
 -- 
 2.20.1
 
