@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3604EC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 872FAC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEEF620803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55326206EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:42:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412965;
-	bh=NqpJgS/zcGankvvKn6DxWuKh1tqx5rUAmShdIQvPmpI=;
+	s=default; t=1575412969;
+	bh=t0sLogmBCCcptSxQbwL7O2wFcSPZZcIJVbZOHokkq8Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JRXfMBX1KzPa3U5PqYXZNyUqJz99uvDCyD1C2NFUyYbb8ATqxY/KK/r/tb1/wCXVV
-	 8MC1/bEv2aWJHr0G4nitCn7CXm/xPbhIQDentB9rwGCkLebwhcRVI3yFHffsKZFONe
-	 qw1Tqxx6hZ7sAhfl3nrPAbbjrJSiOvjGoC3lBtLQ=
+	b=rw/0Q1g8oWvuH6oYOnkw4Ul4NPUrph37iBFGlGOwxZX4DroO0KmL7ITjVUrDcyfz6
+	 VMyknhX42xRPjLoKuTrJtT/y1LIHPVJgjSVLIqpGxHrk07wr0ftrAUK06SBM71eqQs
+	 FQ9GzPSe2hqYKIQK88MiVKTT7TQy6GE7XWg9ufAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728693AbfLCWmn (ORCPT
+        id S1728702AbfLCWms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:42:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57694 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:42:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728343AbfLCWmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:42:40 -0500
+        id S1728686AbfLCWmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:42:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7640B20803;
-        Tue,  3 Dec 2019 22:42:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0402220684;
+        Tue,  3 Dec 2019 22:42:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412959;
-        bh=NqpJgS/zcGankvvKn6DxWuKh1tqx5rUAmShdIQvPmpI=;
+        s=default; t=1575412962;
+        bh=t0sLogmBCCcptSxQbwL7O2wFcSPZZcIJVbZOHokkq8Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1CUpkkXBb3uwJxEPfuzJBheWx9yMcERz4vVeKx9nGTMWo+50Hg1f+KSBRDkkyJs2X
-         FlJ5cjoBoQjix+kLmSTL0nYuAeN+wm2s4rRlJ5eoE1csZrneF6JgulzBMfOiSO1tus
-         9c6sUFc0fl18jzlEEE/O927mMCufTrIziPiArpOI=
+        b=CtCk79TNxx0Z5pne34mrVE1Wn4uJEPJl3msoiSyASvdf82sFMhtt0WXRSIO3gWPiS
+         JgpWKKuuRTE41DOB3wUVerHZiBwGDTg9Dx46fhyIpn3VqmY6ctucFr0vALLM5B1BvO
+         KTcTXhQs6RtmZQmJgpXt7yWooxfcOhVHn4O6EqWU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 080/135] net: mscc: ocelot: fix __ocelot_rmw_ix prototype
-Date:   Tue,  3 Dec 2019 23:35:20 +0100
-Message-Id: <20191203213030.489718361@linuxfoundation.org>
+Subject: [PATCH 5.3 044/135] clk: ti: clkctrl: Fix failed to enable error with double udelay timeout
+Date:   Tue,  3 Dec 2019 23:34:44 +0100
+Message-Id: <20191203213017.974005977@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -60,37 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 17fdd7638cb687cd7f15a48545f25d738f0101e0 ]
+[ Upstream commit 81a41901ffd46bac6df4c95b8290ac259e0feda8 ]
 
-The "read-modify-write register index" function is declared with a
-confusing prototype: the "mask" and "reg" arguments are swapped.
+Commit 3d8598fb9c5a ("clk: ti: clkctrl: use fallback udelay approach if
+timekeeping is suspended") added handling for cases when timekeeping is
+suspended. But looks like we can still get occasional "failed to enable"
+errors on the PM runtime resume path with udelay() returning faster than
+expected.
 
-Fortunately, this does not affect callers so far. Both arguments are
-u32, and the wrapper macros (ocelot_rmw_ix etc) have the arguments in
-the correct order (the one from ocelot_io.c).
+With ti-sysc interconnect target module driver this leads into device
+failure with PM runtime failing with "failed to enable" clkctrl error.
 
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Let's fix the issue with a delay of two times the desired delay as in
+often done for udelay() to account for the inaccuracy.
+
+Fixes: 3d8598fb9c5a ("clk: ti: clkctrl: use fallback udelay approach if timekeeping is suspended")
+Cc: Keerthy <j-keerthy@ti.com>
+Cc: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Link: https://lkml.kernel.org/r/20190930154001.46581-1-tony@atomide.com
+Tested-by: Keerthy <j-keerthy@ti.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mscc/ocelot.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/ti/clkctrl.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/mscc/ocelot.h b/drivers/net/ethernet/mscc/ocelot.h
-index f7eeb4806897d..aa372aba66c8c 100644
---- a/drivers/net/ethernet/mscc/ocelot.h
-+++ b/drivers/net/ethernet/mscc/ocelot.h
-@@ -479,7 +479,7 @@ void __ocelot_write_ix(struct ocelot *ocelot, u32 val, u32 reg, u32 offset);
- #define ocelot_write_rix(ocelot, val, reg, ri) __ocelot_write_ix(ocelot, val, reg, reg##_RSZ * (ri))
- #define ocelot_write(ocelot, val, reg) __ocelot_write_ix(ocelot, val, reg, 0)
- 
--void __ocelot_rmw_ix(struct ocelot *ocelot, u32 val, u32 reg, u32 mask,
-+void __ocelot_rmw_ix(struct ocelot *ocelot, u32 val, u32 mask, u32 reg,
- 		     u32 offset);
- #define ocelot_rmw_ix(ocelot, val, m, reg, gi, ri) __ocelot_rmw_ix(ocelot, val, m, reg, reg##_GSZ * (gi) + reg##_RSZ * (ri))
- #define ocelot_rmw_gix(ocelot, val, m, reg, gi) __ocelot_rmw_ix(ocelot, val, m, reg, reg##_GSZ * (gi))
+diff --git a/drivers/clk/ti/clkctrl.c b/drivers/clk/ti/clkctrl.c
+index 975995eea15cb..b0c0690a5a121 100644
+--- a/drivers/clk/ti/clkctrl.c
++++ b/drivers/clk/ti/clkctrl.c
+@@ -100,11 +100,12 @@ static bool _omap4_is_timeout(union omap4_timeout *time, u32 timeout)
+ 	 * can be from a timer that requires pm_runtime access, which
+ 	 * will eventually bring us here with timekeeping_suspended,
+ 	 * during both suspend entry and resume paths. This happens
+-	 * at least on am43xx platform.
++	 * at least on am43xx platform. Account for flakeyness
++	 * with udelay() by multiplying the timeout value by 2.
+ 	 */
+ 	if (unlikely(_early_timeout || timekeeping_suspended)) {
+ 		if (time->cycles++ < timeout) {
+-			udelay(1);
++			udelay(1 * 2);
+ 			return false;
+ 		}
+ 	} else {
 -- 
 2.20.1
 
