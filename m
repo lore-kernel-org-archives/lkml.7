@@ -2,229 +2,124 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 520B5C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 12:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF76BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 178AE2073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 12:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54AA8206EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:05:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="i1ns4ghb"
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="GZ1ph2Ws"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfLCM61 (ORCPT
+        id S1726298AbfLCNFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 07:58:27 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:10734 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbfLCM60 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 07:58:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1575377902;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=87WHGRshVeBhlmae2Rpoqq+PFlF4eGL+Y6NwEivh8Io=;
-        b=i1ns4ghbrigQMzH56o6BTsb74tBr26SK/sAlAHWafWAt2qhvBn6HRSLGNNVUUcZYlY
-        Ftmk/VONUPIi4OMkvrxnfHdP8yxloWh8heVlViwm0VZJ2hIkjO+kewizZ104oRPxX0YP
-        YcuhY+LDCgd9eJrgKSeckDEYXhMFhyyPVj3XjGxgOzVyGBD9E5oDNgZo1dZMvwSGkQp+
-        W2XvJULa91w5zMwxmNYRGk8Tb0Ov3tgjnEd7yaoWONeM9B6K4nu2Yoj+BZBEYAjA96MD
-        mXZjcw6X1A4XwSBDNhtjZMQoQx6R3ku8DCpaGr0syxQE9/cgxJzH6zyjA2CFmlP3RedO
-        NGzQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlacXAYPiQ=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.0.2 DYNA|AUTH)
-        with ESMTPSA id 6067eavB3Cw958a
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Tue, 3 Dec 2019 13:58:09 +0100 (CET)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH] ARM: OMAP2+: Fix warnings with broken omap2_set_init_voltage()
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <BAF5B057-1017-4174-8C3F-4B49B31E2E0D@goldelico.com>
-Date:   Tue, 3 Dec 2019 13:58:09 +0100
-Cc:     Nishanth Menon <nm@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <33A772D8-5A90-4FB0-A5A2-CAE0AB33E518@goldelico.com>
-References: <20190924233222.52757-1-tony@atomide.com> <8FFD44DB-73F8-4807-91E1-C97DA8F781BA@goldelico.com> <20191202213929.GB35479@atomide.com> <EE749881-C3DB-4BBE-85FE-E5AF3D34884F@goldelico.com> <BAF5B057-1017-4174-8C3F-4B49B31E2E0D@goldelico.com>
-To:     Tony Lindgren <tony@atomide.com>
-X-Mailer: Apple Mail (2.3124)
+        Tue, 3 Dec 2019 08:05:02 -0500
+Received: from mail-eopbgr140132.outbound.protection.outlook.com ([40.107.14.132]:5774
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725954AbfLCNFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 08:05:02 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=itiSklXH9YMNpPXmSVS+jPtpU1jIFWuvWyYurdVlGO6lWxrUG9+Sm1LNCyp58uOaMcKf1AE0fBzej1o8Y2+W1P/hO9FZVwVML0resZiwvrAN1JTlyjUZ5WVfhnSFNGRu8qC/IMPQ+zWroImQsxAzSPhIhdfVfAKGJNh8h6Y2c/BI1HEa9kifs1bTMb13yB6k07Ikai93pgd6jQysOXNJuI4RnScuy1V+2jRFfTDH158272FWhy0Os7/LLYejAHClaQeEjcTogjrPPDlHQBIyzOv53F2kiWVYlGV1m681fCgwG2oOBLNnhluRgCZRGCGliZ5SMK/LpkL3R01k/+a7VQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y6H4RF7fl5CSFX/0j+TWyz1D3w/8Bk8M64RsIspG79Y=;
+ b=PH4+LDDtYMAg7ZnPzOsI30yUXioCSkqSloAjub8Yyy00tbnGrAhEiSP5TN062QKsjG7dZVMpjFUyV7R4WPhX2CZQbLslN4FkET60z2oXSwaVn5ITC0lA8GTjYiVxBlpsisa5uSPDhJCy+ypL2yntltyOog7szG3eR4bfbIdb69lD7eilOzeOQvhlM60FKjPWtbQJktttKhGqOvVrgUK1otDfR5FpqkpwuvUtOZlsSjaBWtaDlI7eq7mVUzVs0lNasaJgHkPX20viGWD5jYrhnNvGEKUd3exH+DyAqknQjeAGdbTRxPj9/t03EqDy4cVTOu2gkfzBx5IxXNUPC3cf1g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y6H4RF7fl5CSFX/0j+TWyz1D3w/8Bk8M64RsIspG79Y=;
+ b=GZ1ph2Ws0sGreY8b6udkcp3pAaMdfQ0ebEuy7XlkuaqDuPKrotMNkdDjHY62mBRHESOQOHfeJV31wCL8tkmakUcvXxeawtBPNhivhvptLYyqFPez+cJQImVHWOd8W7jyrVOakmxgJWu/GNCk7Atxa2XsWPJgoc9KjNP9Gpa+aRs=
+Received: from AM6PR0202MB3432.eurprd02.prod.outlook.com (52.133.11.29) by
+ AM6PR0202MB3432.eurprd02.prod.outlook.com (52.133.11.29) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.20; Tue, 3 Dec 2019 13:04:57 +0000
+Received: from AM6PR0202MB3432.eurprd02.prod.outlook.com
+ ([fe80::dc43:ed2c:945a:cd5]) by AM6PR0202MB3432.eurprd02.prod.outlook.com
+ ([fe80::dc43:ed2c:945a:cd5%6]) with mapi id 15.20.2495.014; Tue, 3 Dec 2019
+ 13:04:56 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     Ingo van Lil <inguin@gmx.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: Re: [PATCH] ARM: dts: at91: Reenable UART TX pull-ups
+Thread-Topic: [PATCH] ARM: dts: at91: Reenable UART TX pull-ups
+Thread-Index: AQHVpdOvdUWDNvrpeU+UsNRoQGwGi6eoaNgA
+Date:   Tue, 3 Dec 2019 13:04:56 +0000
+Message-ID: <8e8dfc02-bdab-d6f1-f6e9-e1dba7e38bfd@axentia.se>
+References: <20191128100629.10247-1-inguin@gmx.de>
+In-Reply-To: <20191128100629.10247-1-inguin@gmx.de>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+x-originating-ip: [213.112.138.100]
+x-clientproxiedby: HE1PR0501CA0018.eurprd05.prod.outlook.com
+ (2603:10a6:3:1a::28) To AM6PR0202MB3432.eurprd02.prod.outlook.com
+ (2603:10a6:209:26::29)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7947a15e-1176-4e68-4c89-08d777f16542
+x-ms-traffictypediagnostic: AM6PR0202MB3432:
+x-microsoft-antispam-prvs: <AM6PR0202MB3432543D7F9A72DC1E7F2763BC420@AM6PR0202MB3432.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2512;
+x-forefront-prvs: 02408926C4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39830400003)(376002)(136003)(366004)(346002)(396003)(189003)(199004)(229853002)(5660300002)(7736002)(305945005)(71190400001)(4326008)(110136005)(71200400001)(6436002)(508600001)(31696002)(25786009)(2201001)(8936002)(14444005)(186003)(316002)(99286004)(6486002)(4001150100001)(54906003)(6246003)(256004)(6512007)(2616005)(81166006)(2501003)(66946007)(66556008)(64756008)(58126008)(11346002)(66446008)(6506007)(446003)(81156014)(36756003)(65956001)(66476007)(3846002)(53546011)(2906002)(102836004)(6116002)(386003)(14454004)(4744005)(31686004)(8676002)(26005)(76176011)(86362001)(52116002);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR0202MB3432;H:AM6PR0202MB3432.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: OW7JiUo2rj5SorxM8jmVHQ0LkOFQg5sbAHBz7EkHkjMJZxsWZhjtfZLxiuq99dLtuAU0XEn2KS7Sw4Fez8/RQZ1NkCQVwRF/a+IfQizPTDp6j43e/HI4Ck/n2UZgktdbV2xOhAL9GhdvTrFDjij8A1JgfyhDc+bNvtcySbXYbS04dYcVOkae3kN6d1lzKIQyGxbrBkz/EYXfgIfuhdeJLPLD7dQs9XRpbSuVEZE0rDCRaICXm7skuHENTXtRy2QLtwh4KKzQcal11HWwA0YiY0lS04trp+b1IP9gGqqIJONuuraOKKdavHDp4PEUrZ5VQh6G1lgVePvKUamhj4btyJ/PquTuofIjrDlO/qJXZAVHJ86fh4PSWSgbxpgT/9wt2Ue16Gv/s7qOzdWzBaytSL26sipzqU501N+/i1wGLGoJ3oF8DwpAqee1gScXOzZM
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <67E14BFC18AD7247B2E9B05C77247FF9@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7947a15e-1176-4e68-4c89-08d777f16542
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Dec 2019 13:04:56.8200
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BX7/dn1le8ArtHpHh8NeM4BRgis99HE5mKiuzWMmpPjk/OPpxiSBlesPU2CTn7+u
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0202MB3432
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-> Am 03.12.2019 um 13:30 schrieb H. Nikolaus Schaller =
-<hns@goldelico.com>:
->=20
->>=20
->> Am 03.12.2019 um 10:53 schrieb H. Nikolaus Schaller =
-<hns@goldelico.com>:
->>=20
->> HiTony,
->>=20
->>> Am 02.12.2019 um 22:39 schrieb Tony Lindgren <tony@atomide.com>:
->>>=20
->>> Hi,
->>>=20
->>> * H. Nikolaus Schaller <hns@goldelico.com> [191202 21:10]:
->>>>> Am 25.09.2019 um 01:32 schrieb Tony Lindgren <tony@atomide.com>:
->>>>> Guys, please check and ack if we can really do this to get rid of =
-some
->>>>> pointless dmesg -l3 errors without affecting the ongoing cpufreq =
-and
->>>>> voltage work.
->>>>=20
->>>> unfortunately we did not yet test in combination with the 1GHz OPP
->>>> patches for omap3630 (queued for v5.5-rc1) and it appears that this
->>>> patch breaks the 1GHz OPP.
->>>>=20
->>>> The symptom is that it works fine on a dm3730 with 800MHz rating
->>>> but results in spurious kernel panics, stack corruption, virtual =
-memory
->>>> failures, OneNAND DMA timeouts etc. on a dm3730 with 1GHz speed =
-grade.
->>>=20
->>> Hmm yeah OK, I was a bit worried about this breaking something.
->>>=20
->>>> We can also re-add the "turbo-mode" tags in the omap36xx.dtsi (or
->>>> remove the 1GHz OPP) and can then boot with 800MHz max. clock. But
->>>> enabling boost (echo 1 >/sys/devices/system/cpu/cpufreq/boost) =
-makes
->>>> the problem and its symptoms appear almost immediately.
->>>>=20
->>>> After some scratching our heads we found that v5.3.7 is still good =
-and
->>>> v5.3.8 is bad. A bisect of our tree (which includes the 1GHz OPP) =
-did
->>>> point to this patch whichwas apparently already backported to =
-v5.3.8 and
->>>> v5.4.
->>>>=20
->>>> So I assume that the code removed here enabled or initialized =
-something
->>>> we need for safe 1GHz transitions. Maybe the ABB-LDO. Or it looks =
-up the
->>>> vdd regulator and initializes it earlier than without this code. =
-Maybe
->>>> it also (pre-)initializes some clk which could now be left =
-uninitialized
->>>> too long?
->>>=20
->>> It was just doing voltdm_lookup() and clk_get_rate() and then failed
->>> dev_pm_opp_find_freq_ceil(), but I don't see what these might =
-affect..
->>>=20
->>>> Note that seeing the log message indicates that voltdm_scale() and
->>>> dev_pm_opp_get_voltage() are not called, but all functions before =
-could
->>>> be with side-effects.
->>>=20
->>> Yes that is strange. There's no clk_prepare() before we proceed to
->>> call clk_get_rate() either, not sure if that matter here though.
->>>=20
->>>> v5.5-rc1 will likely fail right from the beginning (only on 1GHz =
-rated
->>>> omap36xx) because it makes the combination of this patch and 1GHz =
-OPP
->>>> public (linux-next should already fail but it appears that nobody =
-has
->>>> tested).
->>>=20
->>> OK
->>=20
->> Well, it is not that urgent as I thought since I have not yet =
-submitted
->> my patch to remove the turbo-mode tags for 1GHz OPP. Therefore even =
-if this
->> code is deployed, no dm3730 will try to boot or run at 1GHz unless
->> manually enabled by echo 1 >/sys/devices/system/cpu/cpufreq/boost.
->>=20
->>>=20
->>>> Any ideas how to fix? Before I try to do a revert and then add goto =
-exit;
->>>> after each function call and see which ones are essential for 1GHz.
->>>=20
->>> If you have things reproducable, care to try to narrow the issue =
-down
->>> a bit by trying see which parts of the old omap2_set_init_voltage()
->>> fix the issue?
->>>=20
->>> The issue should be there somewhere in the few lines of code before
->>> dev_pm_opp_find_freq_ceil(), right?
->>>=20
->>> It would be good to understand what's going on before reverting or
->>> fixing things condering that a revert would add back code that has
->>> it's own errors and fails to init :)
->>=20
->> Indeed!
->>=20
->>>=20
->>> Another thing to check is if the dev instance is actually the right
->>> one we had in omap2_set_init_voltage() vs the dts dev instance as
->>> we use that with dev_pm_opp_find_freq_ceil().
->>=20
->> As a first step I tried to comment out some steps but immediately
->> got failures.
->>=20
->> What I then noticed is that there is only a message for
->>=20
->> [    2.508392] omap2_set_init_voltage: unable to find boot up OPP for =
-vdd_core
->> [    2.517639] omap2_set_init_voltage: unable to set vdd_core
->>=20
->> There is none for vdd_mpu_iva. This OPP initialization is successful
->> and does call voltdm_scale() once.
->>=20
->> So it appears as if omap3_init_voltages() is not a complete no-op.
->>=20
->> IMHO the reason for the message is that u-boot defines a frequency
->> and voltage that can not be found in the OPP table at all.
->>=20
->> Maybe a better solution to get rid of the message would be to modify=20=
-
->> dev_pm_opp_find_freq_ceil() to interpolate between OPPs?
->>=20
->> Hm. After looking into the code I start to wonder why it fails at
->> all. _find_freq_ceil() should return the highest available frequency
->> above the one passed in and u-boot should not pass more than 800 =
-MHz...
->>=20
->> That is IMHO a good next step to go into details.
->=20
-> Ok, dev_pm_opp_find_freq_ceil() is doing what it should do and it
-> returns the first OPP higher or equal than the frequency passed in.
->=20
-> The real reason for the warning is that the same OPP table is used
-> for vdd_mpu_iva and vdd_core and it appears as if "core" (l3_ick)
-> runs at 200 MHz which does not correspond to a valid OPP.
->=20
-> So to silcence the warning it suffices to remove
->=20
-> 	omap2_set_init_voltage("core", "l3_ick", "l3_main");
->=20
-> The question is now what l3_ick has to do with the OPPs at all
-> and how it should interwork with OPPs and cpufreq.
->=20
-> Or does all this mean we may need a second OPP fable for vdd_core
-> and 200 MHz? But what would it be good for? I have not seen any
-> reference for "core-OPPs" in the TRM.
-
-One more, maybe important, finding:
-
-cpufreq_init() is called ca. 0.4 seconds before omap2_set_init_voltage()
-and dpll1_ck may already be 1 GHz at that point.
-
+T24gMjAxOS0xMS0yOCAxMTowNiwgSW5nbyB2YW4gTGlsIHdyb3RlOg0KPiBQdWxsLXVwcyBmb3Ig
+U0FNOSBVQVJUL1VTQVJUIFRYIGxpbmVzIHdlcmUgZGlzYWJsZWQgaW4gNWUwNDgyMmYuDQo+IEhv
+d2V2ZXIsIHNldmVyYWwgY2hpcHMgaW4gdGhlIFNBTTkgZmFtaWx5IHJlcXVpcmUgcHVsbC11cHMg
+dG8gcHJldmVudA0KPiB0aGUgVFggbGluZXMgZnJvbSBmYWxsaW5nIChhbmQgY2F1c2luZyBhbiBl
+bmRsZXNzIGJyZWFrIGNvbmRpdGlvbikgd2hlbg0KPiB0aGUgdHJhbnNjZWl2ZXIgaXMgZGlzYWJs
+ZWQuDQo+IA0KPiBGcm9tIHRoZSBTQU05RzIwIGRhdGFzaGVldCwgMzIuNS4xOiAiVG8gcHJldmVu
+dCB0aGUgVFhEIGxpbmUgZnJvbQ0KPiBmYWxsaW5nIHdoZW4gdGhlIFVTQVJUIGlzIGRpc2FibGVk
+LCB0aGUgdXNlIG9mIGFuIGludGVybmFsIHB1bGwgdXANCj4gaXMgbWFuZGF0b3J5LiIuIFRoaXMg
+Y29tbWl0IHJlZW5hYmxlcyB0aGUgcHVsbC11cHMgZm9yIGFsbCBjaGlwcyBoYXZpbmcNCj4gdGhh
+dCBzZW50ZW5jZSBpbiB0aGVpciBkYXRhc2hlZXRzLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogSW5n
+byB2YW4gTGlsIDxpbmd1aW5AZ214LmRlPg0KDQpTb3VuZHMgcmVhc29uYWJsZSwgYW5kIHNvcnJ5
+IGZvciB0aGUgYnJlYWthZ2UuIEhvd2V2ZXIsIHBlcmhhcHMgYSBwcm9wZXINCmZpeGVzIHRhZyAo
+d2l0aCB0aGUgcHJlc2NyaWJlZCBsZW5ndGggb2YgdGhlIGNvbW1pdCBoYXNoKSBzaG91bGQgYmUg
+aW4NCnRoZXJlIHNvbWV3aGVyZT8NCg0KRml4ZXM6IDVlMDQ4MjJmN2RiNSAoIkFSTTogZHRzOiBh
+dDkxOiBmaXhlcyB1YXJ0IHBpbmN0cmwsIHNldCBwdWxsdXAgb24gcngsIGNsZWFyIHB1bGx1cCBv
+biB0eCIpDQoNCkFsc28sIEkgdGhpbmsgdGhlIHNhbWUga2luZCBvZiBjaGFuZ2Ugd2FzIG1hZGUg
+dG8gdGhlIGJhcmVib3ggYm9vdGxvYWRlcg0KYXQgYWJvdXQgdGhlIHNhbWUgdGltZS4gSXMgdGhl
+cmUgYSBmaXggZm9yIHRoYXQgcXVldWVkIHVwIGFzIHdlbGw/DQoNCkNoZWVycywNClBldGVyDQo=
