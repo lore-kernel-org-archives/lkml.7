@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF5CC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5D9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10B4320803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D6A92073C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:45:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413140;
-	bh=jwGr+hYXP5pi265n5106NIYld71gD4gKrLSgbzLrLUg=;
+	s=default; t=1575413143;
+	bh=cUBxm5bpX3BNZcvYOv8A70HiYFqDP/A/TSE0hj9URx0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eOW4UGXZft65xdPduRdxNG+yxVFQ4PFCROdZnxt8W5+TAtOzMUUpy6VPevrEnhECU
-	 aWbcqPgbnl/0uUt+Iy3F19x90nfMCDR+8ixeTyJ7H6w2uGQc2mBwk/cX0p2GvmpGxn
-	 fAqGZHuIXGkIELcNcIbsm2XGxCXwIe8vny7YXg4o=
+	b=iRYWMCDA0AkPwuiTU1QDm7zAlwSwY79AyRdZ8XRpaNKYM3l7Nf2V4gCm/z4xHEG3h
+	 cSdxFljKUR349UUNvPFkQ1HOEzRrSckWNf27NTS2w4Ez6tXksSQVVJlbcklqMJ75Vy
+	 r73b8LGGcnvb6AGchtyE8yn13F/UAQhmcxfvEaHg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729079AbfLCWpi (ORCPT
+        id S1728822AbfLCWpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:45:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34124 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:45:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729064AbfLCWpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:45:31 -0500
+        id S1729075AbfLCWpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:45:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8519A20803;
-        Tue,  3 Dec 2019 22:45:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7434720803;
+        Tue,  3 Dec 2019 22:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413131;
-        bh=jwGr+hYXP5pi265n5106NIYld71gD4gKrLSgbzLrLUg=;
+        s=default; t=1575413135;
+        bh=cUBxm5bpX3BNZcvYOv8A70HiYFqDP/A/TSE0hj9URx0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sm7QSE+BWWw8tNLse2orvE5PTtGeA3lHe7zb9auHS4gzR0W1lJbkAlh6VRX9z00iM
-         MbCld3URPg6JFngWbG+R3O11lIEHxFsl1At5zyDD8ZMh0ytgX7MdYM7Ro5Z+op5+h/
-         YPT0c9wiJ2MP2SUVCx7fq4Ii3H9yaaPhJoH2tMhk=
+        b=nyxwLgA4x6EXFweshLoXkl5WwJbVI7sdNUxg/Cl4YaZtRhb8kkEhRnlBI1dTHCEIo
+         NOWpyrIW7Lwtxe5NKIYrq8U1APkBrlnAXWOjgbRc1nHa3S+VEdOhyU6g4lVkabDhja
+         cstrrUBF1mZnXfsGBA5ScFzrze6IrRYiJp5T0Qa8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 011/321] ARM: dts: imx6qdl-sabreauto: Fix storm of accelerometer interrupts
-Date:   Tue,  3 Dec 2019 23:31:17 +0100
-Message-Id: <20191203223427.707369014@linuxfoundation.org>
+Subject: [PATCH 4.19 013/321] clk: at91: avoid sleeping early
+Date:   Tue,  3 Dec 2019 23:31:19 +0100
+Message-Id: <20191203223427.809547362@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,97 +63,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[ Upstream commit 7e5d0bf6afcc7bd72f78e7f33570e2e0945624f0 ]
+[ Upstream commit 658fd65cf0b0d511de1718e48d9a28844c385ae0 ]
 
-Since commit a211b8c55f3c ("ARM: dts: imx6qdl-sabreauto: Add sensors")
-a storm of accelerometer interrupts is seen:
+It is not allowed to sleep to early in the boot process and this may lead
+to kernel issues if the bootloader didn't prepare the slow clock and main
+clock.
 
-[  114.211283] irq 260: nobody cared (try booting with the "irqpoll" option)
-[  114.218108] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.3.4 #1
-[  114.223960] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-[  114.230531] [<c0112858>] (unwind_backtrace) from [<c010cdc8>] (show_stack+0x10/0x14)
-[  114.238301] [<c010cdc8>] (show_stack) from [<c0c1aa1c>] (dump_stack+0xd8/0x110)
-[  114.245644] [<c0c1aa1c>] (dump_stack) from [<c0193594>] (__report_bad_irq+0x30/0xc0)
-[  114.253417] [<c0193594>] (__report_bad_irq) from [<c01933ac>] (note_interrupt+0x108/0x298)
-[  114.261707] [<c01933ac>] (note_interrupt) from [<c018ffe4>] (handle_irq_event_percpu+0x70/0x80)
-[  114.270433] [<c018ffe4>] (handle_irq_event_percpu) from [<c019002c>] (handle_irq_event+0x38/0x5c)
-[  114.279326] [<c019002c>] (handle_irq_event) from [<c019438c>] (handle_level_irq+0xc8/0x154)
-[  114.287701] [<c019438c>] (handle_level_irq) from [<c018eda0>] (generic_handle_irq+0x20/0x34)
-[  114.296166] [<c018eda0>] (generic_handle_irq) from [<c0534214>] (mxc_gpio_irq_handler+0x30/0xf0)
-[  114.304975] [<c0534214>] (mxc_gpio_irq_handler) from [<c0534334>] (mx3_gpio_irq_handler+0x60/0xb0)
-[  114.313955] [<c0534334>] (mx3_gpio_irq_handler) from [<c018eda0>] (generic_handle_irq+0x20/0x34)
-[  114.322762] [<c018eda0>] (generic_handle_irq) from [<c018f3ac>] (__handle_domain_irq+0x64/0xe0)
-[  114.331485] [<c018f3ac>] (__handle_domain_irq) from [<c05215a8>] (gic_handle_irq+0x4c/0xa8)
-[  114.339862] [<c05215a8>] (gic_handle_irq) from [<c0101a70>] (__irq_svc+0x70/0x98)
-[  114.347361] Exception stack(0xc1301ec0 to 0xc1301f08)
-[  114.352435] 1ec0: 00000001 00000006 00000000 c130c340 00000001 c130f688 9785636d c13ea2e8
-[  114.360635] 1ee0: 9784907d 0000001a eaf99d78 0000001a 00000000 c1301f10 c0182b00 c0878de4
-[  114.368830] 1f00: 20000013 ffffffff
-[  114.372349] [<c0101a70>] (__irq_svc) from [<c0878de4>] (cpuidle_enter_state+0x168/0x5f4)
-[  114.380464] [<c0878de4>] (cpuidle_enter_state) from [<c08792ac>] (cpuidle_enter+0x28/0x38)
-[  114.388751] [<c08792ac>] (cpuidle_enter) from [<c015ef9c>] (do_idle+0x224/0x2a8)
-[  114.396168] [<c015ef9c>] (do_idle) from [<c015f3b8>] (cpu_startup_entry+0x18/0x20)
-[  114.403765] [<c015f3b8>] (cpu_startup_entry) from [<c1200e54>] (start_kernel+0x43c/0x500)
-[  114.411958] handlers:
-[  114.414302] [<a01028b8>] irq_default_primary_handler threaded [<fd7a3b08>] mma8452_interrupt
-[  114.422974] Disabling IRQ #260
+This results in the following error and dump stack on the AriettaG25:
+   bad: scheduling from the idle thread!
 
-           CPU0       CPU1
-....
-260:     100001          0  gpio-mxc  31 Level     mma8451
+Ensure it is possible to sleep, else simply have a delay.
 
-The MMA8451 interrupt triggers as low level, so the GPIO6_IO31 pin
-needs to activate its pull up, otherwise it will stay always at low level
-generating multiple interrupts.
-
-The current device tree does not configure the IOMUX for this pin, so
-it uses whathever comes configured from the bootloader.
-
-The IOMUXC_SW_PAD_CTL_PAD_EIM_BCLK register value comes as 0x8000 from
-the bootloader, which has PKE bit cleared, hence disabling the
-pull-up.
-
-Instead of relying on a previous configuration from the bootloader,
-configure the GPIO6_IO31 pin with pull-up enabled in order to fix
-this problem.
-
-Fixes: a211b8c55f3c ("ARM: dts: imx6qdl-sabreauto: Add sensors")
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Reviewed-By: Leonard Crestez <leonard.crestez@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Reported-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Link: https://lkml.kernel.org/r/20190920153906.20887-1-alexandre.belloni@bootlin.com
+Fixes: 80eded6ce8bb ("clk: at91: add slow clks driver")
+Tested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6qdl-sabreauto.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/clk/at91/clk-main.c |  5 ++++-
+ drivers/clk/at91/sckc.c     | 20 ++++++++++++++++----
+ 2 files changed, 20 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-index 9f11f1fcc3e6c..9d086a3b5ffc0 100644
---- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-@@ -177,6 +177,8 @@
- 			accelerometer@1c {
- 				compatible = "fsl,mma8451";
- 				reg = <0x1c>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&pinctrl_mma8451_int>;
- 				interrupt-parent = <&gpio6>;
- 				interrupts = <31 IRQ_TYPE_LEVEL_LOW>;
- 			};
-@@ -522,6 +524,12 @@
- 			>;
- 		};
+diff --git a/drivers/clk/at91/clk-main.c b/drivers/clk/at91/clk-main.c
+index 2f97a843d6d6b..fb5c14af8cc8d 100644
+--- a/drivers/clk/at91/clk-main.c
++++ b/drivers/clk/at91/clk-main.c
+@@ -354,7 +354,10 @@ static int clk_main_probe_frequency(struct regmap *regmap)
+ 		regmap_read(regmap, AT91_CKGR_MCFR, &mcfr);
+ 		if (mcfr & AT91_PMC_MAINRDY)
+ 			return 0;
+-		usleep_range(MAINF_LOOP_MIN_WAIT, MAINF_LOOP_MAX_WAIT);
++		if (system_state < SYSTEM_RUNNING)
++			udelay(MAINF_LOOP_MIN_WAIT);
++		else
++			usleep_range(MAINF_LOOP_MIN_WAIT, MAINF_LOOP_MAX_WAIT);
+ 	} while (time_before(prep_time, timeout));
  
-+		pinctrl_mma8451_int: mma8451intgrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_EIM_BCLK__GPIO6_IO31		0xb0b1
-+			>;
-+		};
-+
- 		pinctrl_pwm3: pwm1grp {
- 			fsl,pins = <
- 				MX6QDL_PAD_SD4_DAT1__PWM3_OUT		0x1b0b1
+ 	return -ETIMEDOUT;
+diff --git a/drivers/clk/at91/sckc.c b/drivers/clk/at91/sckc.c
+index ab6ecefc49ad8..43ba2a8b03faf 100644
+--- a/drivers/clk/at91/sckc.c
++++ b/drivers/clk/at91/sckc.c
+@@ -74,7 +74,10 @@ static int clk_slow_osc_prepare(struct clk_hw *hw)
+ 
+ 	writel(tmp | AT91_SCKC_OSC32EN, sckcr);
+ 
+-	usleep_range(osc->startup_usec, osc->startup_usec + 1);
++	if (system_state < SYSTEM_RUNNING)
++		udelay(osc->startup_usec);
++	else
++		usleep_range(osc->startup_usec, osc->startup_usec + 1);
+ 
+ 	return 0;
+ }
+@@ -197,7 +200,10 @@ static int clk_slow_rc_osc_prepare(struct clk_hw *hw)
+ 
+ 	writel(readl(sckcr) | AT91_SCKC_RCEN, sckcr);
+ 
+-	usleep_range(osc->startup_usec, osc->startup_usec + 1);
++	if (system_state < SYSTEM_RUNNING)
++		udelay(osc->startup_usec);
++	else
++		usleep_range(osc->startup_usec, osc->startup_usec + 1);
+ 
+ 	return 0;
+ }
+@@ -310,7 +316,10 @@ static int clk_sam9x5_slow_set_parent(struct clk_hw *hw, u8 index)
+ 
+ 	writel(tmp, sckcr);
+ 
+-	usleep_range(SLOWCK_SW_TIME_USEC, SLOWCK_SW_TIME_USEC + 1);
++	if (system_state < SYSTEM_RUNNING)
++		udelay(SLOWCK_SW_TIME_USEC);
++	else
++		usleep_range(SLOWCK_SW_TIME_USEC, SLOWCK_SW_TIME_USEC + 1);
+ 
+ 	return 0;
+ }
+@@ -443,7 +452,10 @@ static int clk_sama5d4_slow_osc_prepare(struct clk_hw *hw)
+ 		return 0;
+ 	}
+ 
+-	usleep_range(osc->startup_usec, osc->startup_usec + 1);
++	if (system_state < SYSTEM_RUNNING)
++		udelay(osc->startup_usec);
++	else
++		usleep_range(osc->startup_usec, osc->startup_usec + 1);
+ 	osc->prepared = true;
+ 
+ 	return 0;
 -- 
 2.20.1
 
