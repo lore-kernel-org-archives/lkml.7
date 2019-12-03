@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A60CEC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6022C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6774A20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A5A920803
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413799;
-	bh=Nf0DVFVuptbAyQMUFY7AZ2jp/QtCcsFowue809GM62E=;
+	s=default; t=1575413803;
+	bh=iWz+xQsYxy64C4DLxGQ1cBWmn/n02k3AjJMBZLWgd68=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R3Yje6j3Q74Ab2Xwyiwyeyk5Sfu1asEX6RDNwYTKYKq9bPs3FSir1rKsX/tqbjCcQ
-	 dXZpjUzQU+7Wl0UiQJrCuS2ewrX/3NgWGMFS8d3knYI8HOIf7huN4DAwvUhSOkvXh2
-	 BW3N2N/ikDv0DGkR6Re+d1hA8s6KvwS3yAGyTaL4=
+	b=dVQFpjo568/qRDk1NRMQLh8c/ZOqHGJGYqlvU+4ZTCpC9MMmjwZxh/fcNcwBr5Nhj
+	 zJfYJLpzkJH5ux4Z1sagtm21hxb0ouBskIOhYwIW6WHf3oyBVZUp5TyPAbQsb2NtUQ
+	 TKd+y70Mof8ClJIedT63yeqc8Hj/OkL7yCC+fB60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730459AbfLCW4i (ORCPT
+        id S1730467AbfLCW4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:56:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51752 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:56:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729231AbfLCW4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:56:36 -0500
+        id S1730154AbfLCW4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:56:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42F0C20803;
-        Tue,  3 Dec 2019 22:56:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABA8C2053B;
+        Tue,  3 Dec 2019 22:56:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413795;
-        bh=Nf0DVFVuptbAyQMUFY7AZ2jp/QtCcsFowue809GM62E=;
+        s=default; t=1575413798;
+        bh=iWz+xQsYxy64C4DLxGQ1cBWmn/n02k3AjJMBZLWgd68=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w37agp0Mv2KRWweaQoYHNNF8HgfnAWbDru6RBPyBk+qrUSPYqcdsu8vHAevLugZYg
-         o75x/nijfyYWCO5w+/XNp4PjBO/rnc3TWobiyf34BCExd9QADcb/yZtxi+ESr8z5TY
-         6A9v801YMCBdlYxHmeS1saBjpqQZKzdErPreav0w=
+        b=eUjiaV25zopfMcz0oXvpuGjyHWaFhBDCtltkyMNlqe5OA905AKijuaYPtnEBI4Hws
+         Pj99aiZ35QZEA4EnwahaTxzs3nKVZAJ1EIRR+/1bp5sH2byzDSIKn2Ode8gqJxob5Y
+         K8gzJ9ddC82FamSaq2A0QSSGyZnejPxIvOvK5ePg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Eugen Hristev <eugen.hristev@microchip.com>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
         Stephen Boyd <sboyd@kernel.org>,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.19 266/321] clk: at91: fix update bit maps on CFG_MOR write
-Date:   Tue,  3 Dec 2019 23:35:32 +0100
-Message-Id: <20191203223440.964911742@linuxfoundation.org>
+Subject: [PATCH 4.19 267/321] clk: at91: generated: set audio_pll_allowed in at91_clk_register_generated()
+Date:   Tue,  3 Dec 2019 23:35:33 +0100
+Message-Id: <20191203223441.016118835@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -63,38 +61,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-commit 263eaf8f172d9f44e15d6aca85fe40ec18d2c477 upstream.
+commit c1e4580a1d0ff510d56268c1fc7fcfeec366fe70 upstream.
 
-The regmap update bits call was not selecting the proper mask, considering
-the bits which was updating.
-Update the mask from call to also include OSCBYPASS.
-Removed MOSCEN which was not updated.
+Set gck->audio_pll_allowed in at91_clk_register_generated. This makes it
+easier to do it from code that is not parsing device tree.
 
-Fixes: 1bdf02326b71 ("clk: at91: make use of syscon/regmap internally")
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Link: https://lkml.kernel.org/r/1568042692-11784-1-git-send-email-eugen.hristev@microchip.com
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Reviewed-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Also, this fixes an issue where the resulting clk_hw can be dereferenced
+before being tested for error.
+
+Fixes: 1a1a36d72e3d ("clk: at91: clk-generated: make gclk determine audio_pll rate")
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/clk/at91/clk-main.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/at91/clk-generated.c |   28 ++++++++++------------------
+ 1 file changed, 10 insertions(+), 18 deletions(-)
 
---- a/drivers/clk/at91/clk-main.c
-+++ b/drivers/clk/at91/clk-main.c
-@@ -162,7 +162,7 @@ at91_clk_register_main_osc(struct regmap
- 	if (bypass)
- 		regmap_update_bits(regmap,
- 				   AT91_CKGR_MOR, MOR_KEY_MASK |
--				   AT91_PMC_MOSCEN,
-+				   AT91_PMC_OSCBYPASS,
- 				   AT91_PMC_OSCBYPASS | AT91_PMC_KEY);
+--- a/drivers/clk/at91/clk-generated.c
++++ b/drivers/clk/at91/clk-generated.c
+@@ -284,7 +284,7 @@ static void clk_generated_startup(struct
+ static struct clk_hw * __init
+ at91_clk_register_generated(struct regmap *regmap, spinlock_t *lock,
+ 			    const char *name, const char **parent_names,
+-			    u8 num_parents, u8 id,
++			    u8 num_parents, u8 id, bool pll_audio,
+ 			    const struct clk_range *range)
+ {
+ 	struct clk_generated *gck;
+@@ -308,6 +308,7 @@ at91_clk_register_generated(struct regma
+ 	gck->regmap = regmap;
+ 	gck->lock = lock;
+ 	gck->range = *range;
++	gck->audio_pll_allowed = pll_audio;
  
- 	hw = &osc->hw;
+ 	clk_generated_startup(gck);
+ 	hw = &gck->hw;
+@@ -333,7 +334,6 @@ static void __init of_sama5d2_clk_genera
+ 	struct device_node *gcknp;
+ 	struct clk_range range = CLK_RANGE(0, 0);
+ 	struct regmap *regmap;
+-	struct clk_generated *gck;
+ 
+ 	num_parents = of_clk_get_parent_count(np);
+ 	if (num_parents == 0 || num_parents > GENERATED_SOURCE_MAX)
+@@ -350,6 +350,8 @@ static void __init of_sama5d2_clk_genera
+ 		return;
+ 
+ 	for_each_child_of_node(np, gcknp) {
++		bool pll_audio = false;
++
+ 		if (of_property_read_u32(gcknp, "reg", &id))
+ 			continue;
+ 
+@@ -362,24 +364,14 @@ static void __init of_sama5d2_clk_genera
+ 		of_at91_get_clk_range(gcknp, "atmel,clk-output-range",
+ 				      &range);
+ 
++		if (of_device_is_compatible(np, "atmel,sama5d2-clk-generated") &&
++		    (id == GCK_ID_I2S0 || id == GCK_ID_I2S1 ||
++		     id == GCK_ID_CLASSD))
++			pll_audio = true;
++
+ 		hw = at91_clk_register_generated(regmap, &pmc_pcr_lock, name,
+ 						  parent_names, num_parents,
+-						  id, &range);
+-
+-		gck = to_clk_generated(hw);
+-
+-		if (of_device_is_compatible(np,
+-					    "atmel,sama5d2-clk-generated")) {
+-			if (gck->id == GCK_ID_SSC0 || gck->id == GCK_ID_SSC1 ||
+-			    gck->id == GCK_ID_I2S0 || gck->id == GCK_ID_I2S1 ||
+-			    gck->id == GCK_ID_CLASSD)
+-				gck->audio_pll_allowed = true;
+-			else
+-				gck->audio_pll_allowed = false;
+-		} else {
+-			gck->audio_pll_allowed = false;
+-		}
+-
++						  id, pll_audio, &range);
+ 		if (IS_ERR(hw))
+ 			continue;
+ 
 
 
