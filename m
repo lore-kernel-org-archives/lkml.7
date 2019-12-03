@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75535C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05655C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41C73206EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C967C2073C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:42:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412949;
-	bh=cet8sYWhO/iD+8etpg2NUEaddX7y3venOG+F3NFCEH4=;
+	s=default; t=1575412952;
+	bh=4bvOv7Tb1buqjjqNw0qh1xq/Odft7h5t7H8iWeQ4www=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V+toceh3JRNQ9Yo1+2KYhR1j7bseM6IyF8EbRbCxM1MRuwUi+p3NmAGdvqHo0u1Ah
-	 BiUQktAyFpFaLmSP49Qcvg52EIy450/VmeXdPIPL5qsYrxYSv5DEIRZNl7IPriy4gO
-	 FXMf5tjvDjRb8xdFtwcv/AxZdlycOldXjPsQM9rQ=
+	b=fVzra0F5ZdCFzQw4cd252ksPIqAJcU9e/OMjJJAjDAPRjjumB4m59/hmFyM07r41l
+	 eRoV05h1uNXKrUrMuJ9/kwptkBWcPA6Ku/pxvKn2DP9t8/tP36OdVxu60j++IiTKYD
+	 uD2h0/TSabhbIopwb+7Ms/T2Ia0EY9Imhq5mlrqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728657AbfLCWm2 (ORCPT
+        id S1728335AbfLCWmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:42:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57326 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:42:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727887AbfLCWmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:42:24 -0500
+        id S1728327AbfLCWm1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:42:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 745CE206EC;
-        Tue,  3 Dec 2019 22:42:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C13E3206EC;
+        Tue,  3 Dec 2019 22:42:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412943;
-        bh=cet8sYWhO/iD+8etpg2NUEaddX7y3venOG+F3NFCEH4=;
+        s=default; t=1575412947;
+        bh=4bvOv7Tb1buqjjqNw0qh1xq/Odft7h5t7H8iWeQ4www=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qLuW73lE4+9cvV5GRDhlZDGE3+h9xs+UOfr+9nIwGY7D4KqhxKcS1HVZY3JXmvA73
-         7gvuFVRdpHwhsaZL23+W8tWhbo1/DNEefad0BL3VWGvr+CxKHBw3nlE0/B6ip498PZ
-         bk8SK3sUTXXtkf2if3cr2vf7ppcYBHJGOc2zb4xc=
+        b=sl5MMrnfEf550PT3zl4vjqBqSxbPDQtkRj2yEf5ujZHojr3rxFT/UFSt3Hx5sRt/H
+         IQj6q6loEC5ZpSeiOsjtpVAw4SjzMK1UMn+/xF+GtJIMP2HNDnAghdRrY2s0irUiiy
+         YVeOoPQ7eJMlBxPJp5X3r7UM3KJuThgCBngwRWbc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 075/135] net: bcmgenet: use RGMII loopback for MAC reset
-Date:   Tue,  3 Dec 2019 23:35:15 +0100
-Message-Id: <20191203213027.860936034@linuxfoundation.org>
+Subject: [PATCH 5.3 076/135] net: bcmgenet: reapply manual settings to the PHY
+Date:   Tue,  3 Dec 2019 23:35:16 +0100
+Message-Id: <20191203213028.337631387@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -63,49 +63,20 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit 3a55402c93877d291b0a612d25edb03d1b4b93ac ]
+[ Upstream commit 0686bd9d5e6863f60e4bb1e78e6fe7bb217a0890 ]
 
-As noted in commit 28c2d1a7a0bf ("net: bcmgenet: enable loopback
-during UniMAC sw_reset") the UniMAC must be clocked while sw_reset
-is asserted for its state machines to reset cleanly.
+The phy_init_hw() function may reset the PHY to a configuration
+that does not match manual network settings stored in the phydev
+structure. If the phy state machine is polled rather than event
+driven this can create a timing hazard where the phy state machine
+might alter the settings stored in the phydev structure from the
+value read from the BMCR.
 
-The transmit and receive clocks used by the UniMAC are derived from
-the signals used on its PHY interface. The bcmgenet MAC can be
-configured to work with different PHY interfaces including MII,
-GMII, RGMII, and Reverse MII on internal and external interfaces.
-Unfortunately for the UniMAC, when configured for MII the Tx clock
-is always driven from the PHY which places it outside of the direct
-control of the MAC.
-
-The earlier commit enabled a local loopback mode within the UniMAC
-so that the receive clock would be derived from the transmit clock
-which addressed the observed issue with an external GPHY disabling
-it's Rx clock. However, when a Tx clock is not available this
-loopback is insufficient.
-
-This commit implements a workaround that leverages the fact that
-the MAC can reliably generate all of its necessary clocking by
-enterring the external GPHY RGMII interface mode with the UniMAC in
-local loopback during the sw_reset interval. Unfortunately, this
-has the undesirable side efect of the RGMII GTXCLK signal being
-driven during the same window.
-
-In most configurations this is a benign side effect as the signal
-is either not routed to a pin or is already expected to drive the
-pin. The one exception is when an external MII PHY is expected to
-drive the same pin with its TX_CLK output creating output driver
-contention.
-
-This commit exploits the IEEE 802.3 clause 22 standard defined
-isolate mode to force an external MII PHY to present a high
-impedance on its TX_CLK output during the window to prevent any
-contention at the pin.
-
-The MII interface is used internally with the 40nm internal EPHY
-which agressively disables its clocks for power savings leading to
-incomplete resets of the UniMAC and many instabilities observed
-over the years. The workaround of this commit is expected to put
-an end to those problems.
+This commit follows invocations of phy_init_hw() by the bcmgenet
+driver with invocations of the genphy_config_aneg() function to
+ensure that the BMCR is written to match the settings held in the
+phydev structure. This prevents the risk of manual settings being
+accidentally altered.
 
 Fixes: 1c1008c793fa ("net: bcmgenet: add main driver file")
 Signed-off-by: Doug Berger <opendmb@gmail.com>
@@ -113,76 +84,33 @@ Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/broadcom/genet/bcmgenet.c    |  2 --
- drivers/net/ethernet/broadcom/genet/bcmmii.c  | 33 +++++++++++++++++++
- 2 files changed, 33 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index 06e2581b28eaf..4c90923d7a1c8 100644
+index 4c90923d7a1c8..2f0011465af0c 100644
 --- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
 +++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -1996,8 +1996,6 @@ static void reset_umac(struct bcmgenet_priv *priv)
+@@ -2617,8 +2617,10 @@ static void bcmgenet_irq_task(struct work_struct *work)
+ 	spin_unlock_irq(&priv->lock);
  
- 	/* issue soft reset with (rg)mii loopback to ensure a stable rxclk */
- 	bcmgenet_umac_writel(priv, CMD_SW_RESET | CMD_LCL_LOOP_EN, UMAC_CMD);
--	udelay(2);
--	bcmgenet_umac_writel(priv, 0, UMAC_CMD);
- }
- 
- static void bcmgenet_intr_disable(struct bcmgenet_priv *priv)
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-index e7c291bf4ed17..dbe18cdf6c1b8 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-@@ -181,8 +181,38 @@ int bcmgenet_mii_config(struct net_device *dev, bool init)
- 	const char *phy_name = NULL;
- 	u32 id_mode_dis = 0;
- 	u32 port_ctrl;
-+	int bmcr = -1;
-+	int ret;
- 	u32 reg;
- 
-+	/* MAC clocking workaround during reset of umac state machines */
-+	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
-+	if (reg & CMD_SW_RESET) {
-+		/* An MII PHY must be isolated to prevent TXC contention */
-+		if (priv->phy_interface == PHY_INTERFACE_MODE_MII) {
-+			ret = phy_read(phydev, MII_BMCR);
-+			if (ret >= 0) {
-+				bmcr = ret;
-+				ret = phy_write(phydev, MII_BMCR,
-+						bmcr | BMCR_ISOLATE);
-+			}
-+			if (ret) {
-+				netdev_err(dev, "failed to isolate PHY\n");
-+				return ret;
-+			}
-+		}
-+		/* Switch MAC clocking to RGMII generated clock */
-+		bcmgenet_sys_writel(priv, PORT_MODE_EXT_GPHY, SYS_PORT_CTRL);
-+		/* Ensure 5 clks with Rx disabled
-+		 * followed by 5 clks with Reset asserted
-+		 */
-+		udelay(4);
-+		reg &= ~(CMD_SW_RESET | CMD_LCL_LOOP_EN);
-+		bcmgenet_umac_writel(priv, reg, UMAC_CMD);
-+		/* Ensure 5 more clocks before Rx is enabled */
-+		udelay(2);
+ 	if (status & UMAC_IRQ_PHY_DET_R &&
+-	    priv->dev->phydev->autoneg != AUTONEG_ENABLE)
++	    priv->dev->phydev->autoneg != AUTONEG_ENABLE) {
+ 		phy_init_hw(priv->dev->phydev);
++		genphy_config_aneg(priv->dev->phydev);
 +	}
-+
- 	priv->ext_phy = !priv->internal_phy &&
- 			(priv->phy_interface != PHY_INTERFACE_MODE_MOCA);
  
-@@ -214,6 +244,9 @@ int bcmgenet_mii_config(struct net_device *dev, bool init)
- 		phy_set_max_speed(phydev, SPEED_100);
- 		bcmgenet_sys_writel(priv,
- 				    PORT_MODE_EXT_EPHY, SYS_PORT_CTRL);
-+		/* Restore the MII PHY after isolation */
-+		if (bmcr >= 0)
-+			phy_write(phydev, MII_BMCR, bmcr);
- 		break;
+ 	/* Link UP/DOWN event */
+ 	if (status & UMAC_IRQ_LINK_EVENT)
+@@ -3641,6 +3643,7 @@ static int bcmgenet_resume(struct device *d)
+ 	phy_init_hw(dev->phydev);
  
- 	case PHY_INTERFACE_MODE_REVMII:
+ 	/* Speed settings must be restored */
++	genphy_config_aneg(dev->phydev);
+ 	bcmgenet_mii_config(priv->dev, false);
+ 
+ 	bcmgenet_set_hw_addr(priv, dev->dev_addr);
 -- 
 2.20.1
 
