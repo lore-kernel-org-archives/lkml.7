@@ -2,178 +2,84 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 586D4C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C51C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 259A4206E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:43:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FE6E20705
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:43:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n3LLOHE1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T00bsc0A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbfLCAnL (ORCPT
+        id S1727320AbfLCAnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 19:43:11 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41444 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbfLCAmJ (ORCPT
+        Mon, 2 Dec 2019 19:43:13 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39668 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727269AbfLCAnK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 19:42:09 -0500
-Received: by mail-lj1-f194.google.com with SMTP id h23so1651442ljc.8;
-        Mon, 02 Dec 2019 16:42:07 -0800 (PST)
+        Mon, 2 Dec 2019 19:43:10 -0500
+Received: by mail-io1-f65.google.com with SMTP id c16so1654009ioh.6
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 16:43:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9DMFC/TKshEjchnH9K9TM7efWfj5kMXwrSGDV4MlU4Y=;
-        b=n3LLOHE1XGTBJhAl+hnm2O7bkvpmae1oWJspfu5Fp8zbjDkiD/Lvj/ktCgscgnvy5l
-         1t6Y7SNESeIr0I9ugKqc5R4WrTx+M3JBWyHGvrLnWZLI5A3/WtuEO29Mxjgc5btLre+D
-         nCv8GzH4uPKm1EFooV8B9NVpwnIDpCqoqikX6TW+KimrVNe1mtsaIxI0MKB681sglers
-         agdtjpFI5nAUPgggoRpwEyjBePSqFquVpJhKGdkf/9e7SeGNgLTXRFhHm+zG8NTusAT7
-         OtEc16z8naQzT5MJwyzS+GmNumjtgx7x9qlS0qs6XsCNuqAOIsAQTq1ZpunocYDuwL3l
-         ispg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4jnL6iDubLY8gL5JP3QSc0ju+BQUG+h8VIAOn+X5oWQ=;
+        b=T00bsc0APIQpp0kFPoFsLBa72cSKQI8/kvf/jrmlw4YTXIkoV3Uo9vYbKOVb/uvmMa
+         Fx0TgLfE1CVyHBCn7J7nM976Z7PON3M3w+uSZtQ2kTxe+7DNpYO1vky1kHc7MGIzcifk
+         Rsgk4WafvGso2zBq8zzPlQSTSk797b7OEJlbteHeDpdZ+gwvXPs5Nniz0vbM33QLo++f
+         5WJ3xnuNz/Crxcb8d8IUNaOA8+ssCGZqzJbMWlPmvRzBWmuRrGqBI8UecAbi+m6cUljH
+         FvUNkjv38k90sNUFreVKS1i8TAkgxv4pKR1dCeBNykyTp5S+fR9yd6wQ6dhzRH2CzVjC
+         hetg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9DMFC/TKshEjchnH9K9TM7efWfj5kMXwrSGDV4MlU4Y=;
-        b=ce4T7KtKU9oqIPs9o5WGqSXcGSa0V0IHeMKpvsMqAwWeL+y6UcfZoZrxB+Da/Nkt3M
-         v7R+IFOYjTZWfkBZ861+VGz3dSZbN9oECJueQKMROH5Gya1P4sa8BIw+oo2CViiuV8ws
-         i4UyeR4i/VE50VtQEenKSN2uCMvuGfSNa7kD9Hfl6YTBgAQEyWEI4DqrOe5uIBGXLccn
-         wCMZFf+qdlSY40a5Dt9O45Mh28zfEXYTto4akZjgrFQ53kJgrAYyyZY4etAlbVcqyl5D
-         JY1VSHpHmwLTZkggI0hjrG7pKeg/66/wmLs0H5nQD8n3Sxw2nrDIxeE3YF3XzrizSH/U
-         xr/A==
-X-Gm-Message-State: APjAAAXgh9BCBoXrHWIDRqrYECG7fzymJfVXN2dZt/if6pO2f2epzkpZ
-        Rro3rKMYBpIKYWC/GY8fOUk=
-X-Google-Smtp-Source: APXvYqwbneEmhey2S1vYkJZiB4v6pwV3qlHLdmY9aMKVT714fNtql+ZsCiHWnmHuN/eYc41IqKmH6A==
-X-Received: by 2002:a05:651c:112c:: with SMTP id e12mr880196ljo.169.1575333726868;
-        Mon, 02 Dec 2019 16:42:06 -0800 (PST)
-Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id y21sm456384ljm.25.2019.12.02.16.42.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 16:42:06 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v8 05/19] ARM: tegra: Propagate error from tegra_idle_lp2_last()
-Date:   Tue,  3 Dec 2019 03:41:02 +0300
-Message-Id: <20191203004116.11771-6-digetx@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191203004116.11771-1-digetx@gmail.com>
-References: <20191203004116.11771-1-digetx@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4jnL6iDubLY8gL5JP3QSc0ju+BQUG+h8VIAOn+X5oWQ=;
+        b=DhF6ynmi9mAssKJKmN5Kx1oC0TyAYlbXUalbAkIHRMPz2j6ZdDweK7/24Ky86tiAuG
+         xFUGx98h6xfS2KCyboMYtzI517Yc1WjRAg0Njnbd6+HAyu2L164FHg9DX8BJaTPsGF/l
+         eeIlNorT6sn7FqjfWPW+Y41uM4+K2BeeidR0/deuidqn7/a8GvqKVCPlt5HpFf0nFbog
+         nRfG0gT1xn/Xg70kOBg/H7hYfgFq9I3HdX4w4MURpINod7mrTONTVgkCl0mWSVPZ0Pkt
+         4bYaA7Bg4fd7dGFmQQHxKQ8G83NGzEMe7kutIC5VSWDtVwPx+W+nh3ky6qWKlovobZl9
+         MqnA==
+X-Gm-Message-State: APjAAAX8EacICCHMhPRo2zyUCkznCPMl2/PwBxeR4M8ZP9OvYDDiF/2N
+        zAMCiVMadLpCXf0bsnjoUlzwrYL73z2UAqTANMU0nQ==
+X-Google-Smtp-Source: APXvYqxJrkK1ZdE65kA4EuWOJ5vb0zsDMEQ4ZrjeW7uzvZYJCxvo09UHOuHs6AjLENBNZOWUxi9WR6+6dwVQ5+rKKQ4=
+X-Received: by 2002:a5e:df06:: with SMTP id f6mr235848ioq.84.1575333788813;
+ Mon, 02 Dec 2019 16:43:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191203004043.174977-1-matthewgarrett@google.com>
+In-Reply-To: <20191203004043.174977-1-matthewgarrett@google.com>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Mon, 2 Dec 2019 16:42:57 -0800
+Message-ID: <CACdnJus7nHdr4p4H1j5as9eB=FG-uX+wy_tjvTQ5ObErDJHdow@mail.gmail.com>
+Subject: Re: [PATCH] [EFI,PCI] Allow disabling PCI busmastering on bridges
+ during boot
+To:     linux-efi <linux-efi@vger.kernel.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>, x86@kernel.org,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Technically cpu_suspend() may fail and it's never good to lose information
-about failure. For example things like cpuidle core could correctly sample
-idling time in the case of failure.
+On Mon, Dec 2, 2019 at 4:40 PM Matthew Garrett
+<matthewgarrett@google.com> wrote:
+>
+> Add an option to disable the busmaster bit in the control register on
+> all PCI bridges before calling ExitBootServices() and passing control to
+> the runtime kernel. System firmware may configure the IOMMU to prevent
+> malicious PCI devices from being able to attack the OS via DMA. However,
+> since firmware can't guarantee that the OS is IOMMU-aware, it will tear
+> down IOMMU configuration when ExitBootServices() is called. This leaves
+> a window between where a hostile device could still cause damage before
+> Linux configures the IOMMU again.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- arch/arm/mach-tegra/cpuidle-tegra20.c | 6 ++++--
- arch/arm/mach-tegra/cpuidle-tegra30.c | 4 +---
- arch/arm/mach-tegra/pm.c              | 8 ++++++--
- arch/arm/mach-tegra/pm.h              | 2 +-
- 4 files changed, 12 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arm/mach-tegra/cpuidle-tegra20.c b/arch/arm/mach-tegra/cpuidle-tegra20.c
-index f7d5041e73cc..9789541adb7d 100644
---- a/arch/arm/mach-tegra/cpuidle-tegra20.c
-+++ b/arch/arm/mach-tegra/cpuidle-tegra20.c
-@@ -87,15 +87,17 @@ static bool tegra20_cpu_cluster_power_down(struct cpuidle_device *dev,
- 					   struct cpuidle_driver *drv,
- 					   int index)
- {
-+	bool ret;
-+
- 	while (!tegra_cpu_rail_off_ready())
- 		cpu_relax();
- 
--	tegra_idle_lp2_last();
-+	ret = !tegra_idle_lp2_last();
- 
- 	if (cpu_online(1))
- 		tegra20_wake_cpu1_from_reset();
- 
--	return true;
-+	return ret;
- }
- 
- #ifdef CONFIG_SMP
-diff --git a/arch/arm/mach-tegra/cpuidle-tegra30.c b/arch/arm/mach-tegra/cpuidle-tegra30.c
-index a3ce8dabfe18..17cbd118abee 100644
---- a/arch/arm/mach-tegra/cpuidle-tegra30.c
-+++ b/arch/arm/mach-tegra/cpuidle-tegra30.c
-@@ -68,9 +68,7 @@ static bool tegra30_cpu_cluster_power_down(struct cpuidle_device *dev,
- 		return false;
- 	}
- 
--	tegra_idle_lp2_last();
--
--	return true;
-+	return !tegra_idle_lp2_last();
- }
- 
- #ifdef CONFIG_SMP
-diff --git a/arch/arm/mach-tegra/pm.c b/arch/arm/mach-tegra/pm.c
-index a72f9a2d3cb7..a094acaca307 100644
---- a/arch/arm/mach-tegra/pm.c
-+++ b/arch/arm/mach-tegra/pm.c
-@@ -189,14 +189,16 @@ static void tegra_pm_set(enum tegra_suspend_mode mode)
- 	tegra_pmc_enter_suspend_mode(mode);
- }
- 
--void tegra_idle_lp2_last(void)
-+int tegra_idle_lp2_last(void)
- {
-+	int err;
-+
- 	tegra_pm_set(TEGRA_SUSPEND_LP2);
- 
- 	cpu_cluster_pm_enter();
- 	suspend_cpu_complex();
- 
--	cpu_suspend(PHYS_OFFSET - PAGE_OFFSET, &tegra_sleep_cpu);
-+	err = cpu_suspend(PHYS_OFFSET - PAGE_OFFSET, &tegra_sleep_cpu);
- 
- 	/*
- 	 * Resume L2 cache if it wasn't re-enabled early during resume,
-@@ -208,6 +210,8 @@ void tegra_idle_lp2_last(void)
- 
- 	restore_cpu_complex();
- 	cpu_cluster_pm_exit();
-+
-+	return err;
- }
- 
- enum tegra_suspend_mode tegra_pm_validate_suspend_mode(
-diff --git a/arch/arm/mach-tegra/pm.h b/arch/arm/mach-tegra/pm.h
-index 2c294f6365c0..7d72f31dee77 100644
---- a/arch/arm/mach-tegra/pm.h
-+++ b/arch/arm/mach-tegra/pm.h
-@@ -25,7 +25,7 @@ void tegra30_sleep_core_init(void);
- 
- void tegra_clear_cpu_in_lp2(void);
- void tegra_set_cpu_in_lp2(void);
--void tegra_idle_lp2_last(void);
-+int tegra_idle_lp2_last(void);
- extern void (*tegra_tear_down_cpu)(void);
- 
- #ifdef CONFIG_PM_SLEEP
--- 
-2.24.0
-
+I don't know enough about ARM to know if this makes sense there as well. Anyone?
