@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4CDC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B99C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 152F520674
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6C472158C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:57:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413835;
-	bh=Kbrdk6gUhA9oPjNwOJm4QFALTESiSeqyghcvP1iJWYg=;
+	s=default; t=1575413838;
+	bh=hg3O3/S4lttXG+2JlF6GAvLeIN89WGF2hMXQbXeBU/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lMiKhFIJYaOATCp3LsEqVflLr/qc9YNExLFaOPBG6boAxYV3HqBSW6SFtQLDN7XyU
-	 m4Th+ItcVnmoldR3LgdVyTY9vT81gZcOMorrDs3aiTao+gOWqPYZ+MLDSzNHGkRass
-	 T0pxcDdpTD1LayPf2kHyGVVjYbX49I1gjmYJBIVo=
+	b=SNUpZH/8SQ5oqRYKNLTf3WcxFmafXNh74ob9LW3I1bZZIsraOYrFAlN4ttMUuvHT6
+	 SBVmqJemHQqLO8lqKrS1wI4jjJWvRy71gAc6ko/TPidsvnRJz/HG3Rt929jDwxJrHG
+	 q2Jz2Y9H57K+FG31XDT7ngn4owSwqhzom1/SL/6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728920AbfLCW5N (ORCPT
+        id S1730339AbfLCW5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:57:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52554 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:57:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730520AbfLCW5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:57:07 -0500
+        id S1730526AbfLCW5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:57:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C4412053B;
-        Tue,  3 Dec 2019 22:57:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CC9020865;
+        Tue,  3 Dec 2019 22:57:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413827;
-        bh=Kbrdk6gUhA9oPjNwOJm4QFALTESiSeqyghcvP1iJWYg=;
+        s=default; t=1575413829;
+        bh=hg3O3/S4lttXG+2JlF6GAvLeIN89WGF2hMXQbXeBU/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MfEOpiUnvjPkc0X41rcSUk+glWw7+n6QeFr+ARoEY95PEhBC1wnONPO7geHt9mIc1
-         PHsC6UKLj+7LoQ7fElgVwtDluphs2NhshNzToC2TMR9UHpoWqo1IXt8zfspxW1PSot
-         FQlkgzzcS8f3sBhC2BEey0AzrmK1Q9c7KN9sjjJU=
+        b=mHb+o8CKyjzmtw7zmVVRYExBjRn2+20MLBqLqHlWBknL0MQIME4v8uqN4Agb6rltC
+         04ZF0tG63FXDXjg2WCL9VfOyCXpQQJH9dwmoY7RKZAiFQBfo/yWu67S1z8bIgY37Yk
+         aLprnI5CORgwkgsmoYUQQnzVKXeCSnYDNmphiViU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Luca Ceresoli <luca@lucaceresoli.net>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.19 277/321] media: v4l2-ctrl: fix flags for DO_WHITE_BALANCE
-Date:   Tue,  3 Dec 2019 23:35:43 +0100
-Message-Id: <20191203223441.537425529@linuxfoundation.org>
+Subject: [PATCH 4.19 278/321] net: macb: fix error format in dev_err()
+Date:   Tue,  3 Dec 2019 23:35:44 +0100
+Message-Id: <20191203223441.589593297@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -62,35 +62,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+From: Luca Ceresoli <luca@lucaceresoli.net>
 
-commit a0816e5088baab82aa738d61a55513114a673c8e upstream.
+commit f413cbb332a0b5251a790f396d0eb4ebcade5dec upstream.
 
-Control DO_WHITE_BALANCE is a button, with read only and execute-on-write flags.
-Adding this control in the proper list in the fill function.
+Errors are negative numbers. Using %u shows them as very large positive
+numbers such as 4294967277 that don't make sense. Use the %d format
+instead, and get a much nicer -19.
 
-After adding it here, we can see output of v4l2-ctl -L
-do_white_balance 0x0098090d (button) : flags=write-only, execute-on-write
-
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+Fixes: b48e0bab142f ("net: macb: Migrate to devm clock interface")
+Fixes: 93b31f48b3ba ("net/macb: unify clock management")
+Fixes: 421d9df0628b ("net/macb: merge at91_ether driver into macb driver")
+Fixes: aead88bd0e99 ("net: ethernet: macb: Add support for rx_clk")
+Fixes: f5473d1d44e4 ("net: macb: Support clock management for tsu_clk")
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/v4l2-core/v4l2-ctrls.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/cadence/macb_main.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -1145,6 +1145,7 @@ void v4l2_ctrl_fill(u32 id, const char *
- 	case V4L2_CID_FLASH_STROBE_STOP:
- 	case V4L2_CID_AUTO_FOCUS_START:
- 	case V4L2_CID_AUTO_FOCUS_STOP:
-+	case V4L2_CID_DO_WHITE_BALANCE:
- 		*type = V4L2_CTRL_TYPE_BUTTON;
- 		*flags |= V4L2_CTRL_FLAG_WRITE_ONLY |
- 			  V4L2_CTRL_FLAG_EXECUTE_ON_WRITE;
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -3328,7 +3328,7 @@ static int macb_clk_init(struct platform
+ 		if (!err)
+ 			err = -ENODEV;
+ 
+-		dev_err(&pdev->dev, "failed to get macb_clk (%u)\n", err);
++		dev_err(&pdev->dev, "failed to get macb_clk (%d)\n", err);
+ 		return err;
+ 	}
+ 
+@@ -3337,7 +3337,7 @@ static int macb_clk_init(struct platform
+ 		if (!err)
+ 			err = -ENODEV;
+ 
+-		dev_err(&pdev->dev, "failed to get hclk (%u)\n", err);
++		dev_err(&pdev->dev, "failed to get hclk (%d)\n", err);
+ 		return err;
+ 	}
+ 
+@@ -3351,25 +3351,25 @@ static int macb_clk_init(struct platform
+ 
+ 	err = clk_prepare_enable(*pclk);
+ 	if (err) {
+-		dev_err(&pdev->dev, "failed to enable pclk (%u)\n", err);
++		dev_err(&pdev->dev, "failed to enable pclk (%d)\n", err);
+ 		return err;
+ 	}
+ 
+ 	err = clk_prepare_enable(*hclk);
+ 	if (err) {
+-		dev_err(&pdev->dev, "failed to enable hclk (%u)\n", err);
++		dev_err(&pdev->dev, "failed to enable hclk (%d)\n", err);
+ 		goto err_disable_pclk;
+ 	}
+ 
+ 	err = clk_prepare_enable(*tx_clk);
+ 	if (err) {
+-		dev_err(&pdev->dev, "failed to enable tx_clk (%u)\n", err);
++		dev_err(&pdev->dev, "failed to enable tx_clk (%d)\n", err);
+ 		goto err_disable_hclk;
+ 	}
+ 
+ 	err = clk_prepare_enable(*rx_clk);
+ 	if (err) {
+-		dev_err(&pdev->dev, "failed to enable rx_clk (%u)\n", err);
++		dev_err(&pdev->dev, "failed to enable rx_clk (%d)\n", err);
+ 		goto err_disable_txclk;
+ 	}
+ 
+@@ -3839,7 +3839,7 @@ static int at91ether_clk_init(struct pla
+ 
+ 	err = clk_prepare_enable(*pclk);
+ 	if (err) {
+-		dev_err(&pdev->dev, "failed to enable pclk (%u)\n", err);
++		dev_err(&pdev->dev, "failed to enable pclk (%d)\n", err);
+ 		return err;
+ 	}
+ 
 
 
