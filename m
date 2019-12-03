@@ -7,77 +7,77 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A79C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C47DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6545D2073F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5213C206EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:21:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fLjS3fJE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MF6eDGvB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbfLCQQy (ORCPT
+        id S1726689AbfLCQV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 11:16:54 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51482 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725848AbfLCQQy (ORCPT
+        Tue, 3 Dec 2019 11:21:58 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41442 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726330AbfLCQV5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 11:16:54 -0500
+        Tue, 3 Dec 2019 11:21:57 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575389812;
+        s=mimecast20190719; t=1575390116;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=l5DRPz75FYfbi6k56DuDWzncPOz5zbOpOMHv3gX9mR0=;
-        b=fLjS3fJEwFeoRRC6Xxkiiw6gUYV6gY116biCWxuAH2fCt3ic6T1Lz1lFlUYRmrB4rkqcvq
-        E4cjjros13hEs62DxeUTWaZ5fCk4h26gq4DzT1Coebw612xQEQoZAJGaNVOojM7IMcuM8+
-        YjlYSwXS53g4ndsgW3ZXRBWgGmFFyaA=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-182-ZN7pHPpCOlSFurLJB_1bwg-1; Tue, 03 Dec 2019 11:16:47 -0500
-Received: by mail-qk1-f198.google.com with SMTP id j192so2543868qke.3
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 08:16:47 -0800 (PST)
+        bh=Krr7ZwxuAitCp24WVDOUedZ/Q7sKuIWyB1AA5BQo0EE=;
+        b=MF6eDGvB00E3ILHQgVrxZsx7PlKMgM65N9uglVegZcJUo47HDztjNxWTqDqEo1M+c2g6Sp
+        cxUQAZfqb2DKS9Uwc2XQon8VBcTi7OXuZy11uozyk3GHTmR58rg/D6S9M3Uk3lwOzSWWhJ
+        J5fifXNv7MHXc946rJfotfbYssYf2M4=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-330-l4XJTMoMOEi2dnXyjt8vZQ-1; Tue, 03 Dec 2019 11:21:53 -0500
+Received: by mail-qt1-f197.google.com with SMTP id h14so1114553qtq.11
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 08:21:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OAvig8M7YhwpuhEupgjTLkU7y0yDFNJcrooMFpTalaM=;
-        b=b2xVyrqszRPLTb+ljmya0FiLbK9bU3xGz4Kn2G7Ja5sSk4Q1lOg47D79lDRrIbwH4s
-         r4dSeR21RaRdI5/12sDDAMj+2BOIaCHKbg/dqReY+c6n7VDFSvhs3vl7tjI3wx9DfGz7
-         1oQDaOAzsWirwiVIY814ZMLIChZWb3QZBHKVjGyXxyZ/YUnMfvwfXbdTP5wbfrgs5UK6
-         Fv4VbGeF23aGvmN1k0K7tmt6thkOR3hlVj1ZOmWfqH1A7CvumL1duvq6M8Ud3rwa0mKN
-         3zz9Fd8bgpqRF1B5OmhTHlIAbEDXVzFLiCQ/lzRN69ss8pi0KbJHi7wx0K+Cq280DIX5
-         lesg==
-X-Gm-Message-State: APjAAAVDDL9r+yfLA59v0r3stMlYFJTF2TLiH3uPcJdqVN1CE2QAsgoo
-        tTkhLqqNjTScCz05zp3gdVCEjT8DklXjlRIf9xnE3zrFGkxidJVVt1bV80Y++6m2FNgyWT5BNLF
-        R4wyPHpS+D2GhTbP4r5+UB5pU
-X-Received: by 2002:a37:5c02:: with SMTP id q2mr5848883qkb.72.1575389806788;
-        Tue, 03 Dec 2019 08:16:46 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzADuhWD+oXo0EFAH6UvLZQnyzJStpL8OpOHP4ltkZ4Yg/RluWK8PFf/WihKlf1cIBL/pBGtw==
-X-Received: by 2002:a37:5c02:: with SMTP id q2mr5848850qkb.72.1575389806486;
-        Tue, 03 Dec 2019 08:16:46 -0800 (PST)
+        bh=QBbNGfvUlTYS0yIz8xLqE+mI2O2biBkly1Uwosv+Za8=;
+        b=f8kJrd4CNhip4tQ75Kg58eApKJl9tevm5ZQC4TSirUYw99Y41ptow/ql033HVJEZZw
+         LDsdGszf905JrL5gk3VLxycPkLu7wc1gd9UkrhJn53L8J6JatQvlIcaJQ1hLKMW4la9/
+         1Txq4kQN0/agyRtKG+SwfqOmvt1SSi2f6paROVzN05HXCnhlQDSgpPcw2siyT3ocBSWF
+         b9oMp3shxtkq9t6ynKE6VQjZXoFhGuBFILhy3B6wjMjdMCcwZXOSJd/mQjvvyf3YJ+OV
+         EMO5kb6NGmCGjl+hyduAvxPuZCNU5oKRWmWCMrN0kw5SJu9RrpAKzr76GrBl7IK4Ognh
+         Ijpw==
+X-Gm-Message-State: APjAAAV6QOcVcG6lt3p+KmW8Y5gydNeIVCr5mIop1uXpsgRemXciXhGw
+        JgXGlDYvcsp6vWRIYHrBu6Wer84aErOE3B9A7mq3ygC9zKVqpuLeQgisGNfrjPiQIyodOnmmGF7
+        AAeCc3xxHx73ZgKHYJdka+wF1
+X-Received: by 2002:a05:620a:113a:: with SMTP id p26mr5917403qkk.491.1575390112972;
+        Tue, 03 Dec 2019 08:21:52 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx+ctfQIoW78w8OdbCo+kvI8ncqL4KHBecGiT6GAly/K7HMAi0YO7NohD2Vyk8qsxsJQy1OLQ==
+X-Received: by 2002:a05:620a:113a:: with SMTP id p26mr5917372qkk.491.1575390112700;
+        Tue, 03 Dec 2019 08:21:52 -0800 (PST)
 Received: from xz-x1 ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id s20sm1938085qkj.100.2019.12.03.08.16.45
+        by smtp.gmail.com with ESMTPSA id h203sm2024678qke.90.2019.12.03.08.21.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 08:16:45 -0800 (PST)
-Date:   Tue, 3 Dec 2019 11:16:44 -0500
+        Tue, 03 Dec 2019 08:21:52 -0800 (PST)
+Date:   Tue, 3 Dec 2019 11:21:50 -0500
 From:   Peter Xu <peterx@redhat.com>
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
+Cc:     kvm@vger.kernel.org, Nitesh Narayan Lal <nitesh@redhat.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH v3 3/5] KVM: X86: Use APIC_DEST_* macros properly in
- kvm_lapic_irq.dest_mode
-Message-ID: <20191203161644.GB17275@xz-x1>
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/5] KVM: X86: Drop KVM_APIC_SHORT_MASK and
+ KVM_APIC_DEST_MASK
+Message-ID: <20191203162150.GC17275@xz-x1>
 References: <20191202201314.543-1-peterx@redhat.com>
- <20191202201314.543-4-peterx@redhat.com>
- <87wobdblda.fsf@vitty.brq.redhat.com>
+ <20191202201314.543-5-peterx@redhat.com>
+ <87tv6hbl7v.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <87wobdblda.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87tv6hbl7v.fsf@vitty.brq.redhat.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
-X-MC-Unique: ZN7pHPpCOlSFurLJB_1bwg-1
+X-MC-Unique: l4XJTMoMOEi2dnXyjt8vZQ-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
@@ -87,40 +87,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 02:16:01PM +0100, Vitaly Kuznetsov wrote:
-> Peter Xu <peterx@redhat.com> writes:
+On Tue, Dec 03, 2019 at 02:19:16PM +0100, Vitaly Kuznetsov wrote:
+> > @@ -4519,9 +4519,9 @@ static int avic_incomplete_ipi_interception(struc=
+t vcpu_svm *svm)
+> >  =09=09 */
+> >  =09=09kvm_for_each_vcpu(i, vcpu, kvm) {
+> >  =09=09=09bool m =3D kvm_apic_match_dest(vcpu, apic,
+> > -=09=09=09=09=09=09     icrl & KVM_APIC_SHORT_MASK,
+> > +=09=09=09=09=09=09     icrl & APIC_SHORT_MASK,
+> >  =09=09=09=09=09=09     GET_APIC_DEST_FIELD(icrh),
+> > -=09=09=09=09=09=09     icrl & KVM_APIC_DEST_MASK);
+> > +=09=09=09=09=09=09     icrl & APIC_DEST_MASK);
+> > =20
+> >  =09=09=09if (m && !avic_vcpu_is_running(vcpu))
+> >  =09=09=09=09kvm_vcpu_wake_up(vcpu);
 >=20
-> > We were using either APIC_DEST_PHYSICAL|APIC_DEST_LOGICAL or 0|1 to
-> > fill in kvm_lapic_irq.dest_mode.  It's fine only because in most cases
-> > when we check against dest_mode it's against APIC_DEST_PHYSICAL (which
-> > equals to 0).  However, that's not consistent.  We'll have problem
-> > when we want to start checking against APIC_DEST_PHYSICAL
->=20
-> APIC_DEST_LOGICAL
+> Personal taste but I would've preserved KVM_ prefix. The patch itself
+> looks correct, so
 
-Fixed.
+KVM apic uses apicdefs.h a lot, so I was trying to match them (APIC_*)
+with it.
 
-> > +=09irq->dest_mode =3D kvm_lapic_irq_dest_mode(
-> > +=09    (1 << MSI_ADDR_DEST_MODE_SHIFT) & e->msi.address_lo);
 >=20
-> This usage is a bit fishy (I understand that it works, but),
-> kvm_lapic_irq_dest_mode()'s input is bool (0/1) but here we're passing
-> something different.
->=20
-> I'm not sure kvm_lapic_irq_dest_mode() is even needed here, but in case
-> it is I'd suggest to add '!!':
->=20
->  kvm_lapic_irq_dest_mode(!!((1 << MSI_ADDR_DEST_MODE_SHIFT) & e->msi.addr=
-ess_lo))
->=20
-> to make things explicit. I don't like how it looks though.
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-IMHO it's the same (converting uint to _Bool will be the same as "!!",
-also A ? B : C will be another, so we probably wrote this three times,
-each of them will translate to a similar pattern of "cmpl + setne" asm
-code).  But sure I can add them if you prefer.
-
-Thanks,
+Thanks for the reviews,
 
 --=20
 Peter Xu
