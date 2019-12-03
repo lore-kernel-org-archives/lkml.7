@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C83C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E12C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 394C020684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE10320803
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:48:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413279;
-	bh=QMfJafxbKV6VqZ8NBZCoKoHf49qSMqnZYPlVj1ehGus=;
+	s=default; t=1575413287;
+	bh=zfH7E1dQ0QMkwOWmVhltnebB7TPcOcSQTtCRkRBoYr0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OHwflXr1AvhHF5mAGmnQQ72J8kUMjAvhIF6l/BuolFeacFOqjPWJUbkB1MyX4uYII
-	 fu4JDW5i+F9As3434tnKvMGTvPh/L6ciS+wSK7FaJAjNTvhmW6EZ+AVIZYuDYoX1Rg
-	 mHkyyVLKTL7imUL292gc3wdCBz9TbSEy01XcDzq8=
+	b=yY8kwkZ0ZV10ZgLoI2JPR1V0miXeB6d8S5M2Ib9QO3rsbHXOoTFz8xP0mNSAS7RAu
+	 ecHtRzQsk+ksiIiCDOS/wDBnrq7dUZiuK5LSnjFYYT5T3fjPHzcdoZ7Yr+3bb0w8Zi
+	 V6RFZ5UER0NCrWYWxf5YXERcsr2FLO27Hnuz60Z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729366AbfLCWr6 (ORCPT
+        id S1729035AbfLCWsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:47:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38184 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:48:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729348AbfLCWrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:47:51 -0500
+        id S1729136AbfLCWr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:47:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A19C20656;
-        Tue,  3 Dec 2019 22:47:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CB7F20656;
+        Tue,  3 Dec 2019 22:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413270;
-        bh=QMfJafxbKV6VqZ8NBZCoKoHf49qSMqnZYPlVj1ehGus=;
+        s=default; t=1575413278;
+        bh=zfH7E1dQ0QMkwOWmVhltnebB7TPcOcSQTtCRkRBoYr0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aKW7OAfLJ6xD53rI9+/cyRKmg+aM1223V+m2FBRfF3ho+IL4TaKaycbBWC1MUMSTN
-         BfRoube2nR1tT0dICRGG9slH+nMAZudSF3wdyDuVz+VR2INH3/iHETpQNIK5zE22pp
-         6Y1DLJT57d71pn+rbFQ7djdVNJ9ght/JF2keOVWc=
+        b=MLNwZebowHCJpmZAw4Cnyaq4SO4EnNm09tyrgvibodlJXTILrH+MDnfbYY/yT6zhr
+         CQjqAMvbhk0m5QHefaNRqnJGmR1C5t7OZ+7Q6s3qZ2j19hlkPgFJbXVix9jM/odcO8
+         aJaBzhtc639Txg+9AnmSeWF+RN1BxHYtNjLrgcbg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        stable@vger.kernel.org, Marco Franchi <marco.franchi@nxp.com>,
         Fabio Estevam <festevam@gmail.com>,
         Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 064/321] ARM: dts: imx1: Fix memory node duplication
-Date:   Tue,  3 Dec 2019 23:32:10 +0100
-Message-Id: <20191203223430.500063536@linuxfoundation.org>
+Subject: [PATCH 4.19 067/321] ARM: dts: imx53-voipac-dmm-668: Fix memory node duplication
+Date:   Tue,  3 Dec 2019 23:32:13 +0100
+Message-Id: <20191203223430.654153564@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -63,66 +63,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Fabio Estevam <festevam@gmail.com>
 
-[ Upstream commit 62864d5665c4fc636d3021f829b3ac00fa058e30 ]
+[ Upstream commit 998a84c27a7f3f9133d32af64e19c05cec161a1a ]
 
-Boards based on imx1 have duplicate memory nodes:
+imx53-voipac-dmm-668 has two memory nodes, but the correct representation
+would be to use a single one with two reg entries - one for each RAM chip
+select, so fix it accordingly.
 
-- One coming from the board dts file: memory@
-
-- One coming from the imx1.dtsi file.
-
-Fix the duplication by removing the memory node from the dtsi file
-and by adding 'device_type = "memory";' in the board dts.
-
-Reported-by: Rob Herring <robh@kernel.org>
+Reported-by: Marco Franchi <marco.franchi@nxp.com>
 Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Marco Franchi <marco.franchi@nxp.com>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx1-ads.dts     | 1 +
- arch/arm/boot/dts/imx1-apf9328.dts | 1 +
- arch/arm/boot/dts/imx1.dtsi        | 2 --
- 3 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx1-ads.dts b/arch/arm/boot/dts/imx1-ads.dts
-index a1d81badb5c8a..119b19ba53b6d 100644
---- a/arch/arm/boot/dts/imx1-ads.dts
-+++ b/arch/arm/boot/dts/imx1-ads.dts
-@@ -21,6 +21,7 @@
+diff --git a/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi b/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
+index f83a8c62ea531..d595034f3f1bf 100644
+--- a/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
++++ b/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
+@@ -17,12 +17,8 @@
+ 
+ 	memory@70000000 {
+ 		device_type = "memory";
+-		reg = <0x70000000 0x20000000>;
+-	};
+-
+-	memory@b0000000 {
+-		device_type = "memory";
+-		reg = <0xb0000000 0x20000000>;
++		reg = <0x70000000 0x20000000>,
++		      <0xb0000000 0x20000000>;
  	};
  
- 	memory@8000000 {
-+		device_type = "memory";
- 		reg = <0x08000000 0x04000000>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx1-apf9328.dts b/arch/arm/boot/dts/imx1-apf9328.dts
-index 11515c0cb195c..ee4b1b106b1ae 100644
---- a/arch/arm/boot/dts/imx1-apf9328.dts
-+++ b/arch/arm/boot/dts/imx1-apf9328.dts
-@@ -21,6 +21,7 @@
- 	};
- 
- 	memory@8000000 {
-+		device_type = "memory";
- 		reg = <0x08000000 0x00800000>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx1.dtsi b/arch/arm/boot/dts/imx1.dtsi
-index 3edc7b5550d88..2b6e77029de4d 100644
---- a/arch/arm/boot/dts/imx1.dtsi
-+++ b/arch/arm/boot/dts/imx1.dtsi
-@@ -15,10 +15,8 @@
- 	 * The decompressor and also some bootloaders rely on a
- 	 * pre-existing /chosen node to be available to insert the
- 	 * command line and merge other ATAGS info.
--	 * Also for U-Boot there must be a pre-existing /memory node.
- 	 */
- 	chosen {};
--	memory { device_type = "memory"; };
- 
- 	aliases {
- 		gpio0 = &gpio1;
+ 	regulators {
 -- 
 2.20.1
 
