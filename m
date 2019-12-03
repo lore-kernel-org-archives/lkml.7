@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F90C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8D6C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B5ED20848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA63D2054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413467;
-	bh=CNp5Bv0TclL9MKLcrB14tMvBBV+oreR/zTbo2XPb6NA=;
+	s=default; t=1575413469;
+	bh=jbC6ZhBxthZDxgG7DkeDeiHxtbSvJq26q5IiyQFNSwA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zzMOmiuy30QTyp0CrzjInVyRScHKD2Qa7HF1qNnbj9KVE1pXkZKnqe/MYTyuL8FW9
-	 /0u9avTJjDWf2Hy6a+kRn+PJWV/E0+LDqe+DXFw1RN3YlXJn0VgQeufXONbCnR9zYb
-	 j8+m25wEix5d0W7gokhkkYUvP+OvZ3yfJiCQ9tNc=
+	b=bHwC7emlqtfx4wi0C4EafoEnBzFgPDxLk0IHFHtShAGy33tJqO4I4odwgEgwxC6AQ
+	 hysrFtRRMhAbPZp2zv9m5rlufXXXNUinWfNCjGz8xd/083hQzEM3laGvzE8dokiTMo
+	 f+r1q5LD0zwjISafwtnqiq72ERQBwfjhTj7GJ+IQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729702AbfLCWvG (ORCPT
+        id S1729842AbfLCWvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:51:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42964 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:51:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729823AbfLCWvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:51:03 -0500
+        id S1729829AbfLCWvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:51:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B2B32054F;
-        Tue,  3 Dec 2019 22:51:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05ABF2054F;
+        Tue,  3 Dec 2019 22:51:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413462;
-        bh=CNp5Bv0TclL9MKLcrB14tMvBBV+oreR/zTbo2XPb6NA=;
+        s=default; t=1575413465;
+        bh=jbC6ZhBxthZDxgG7DkeDeiHxtbSvJq26q5IiyQFNSwA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MHDexBGrpGCUY1JsnYgow4+Dwlqf9y1q0zFHCmb76YabyzcCDj6SFjCsDXgMRA3dh
-         Tc86LwdCz7/nX9TfVsiMP2c/mocBWE8Y4ZmZ+Bgk9ZVBuw9QKetWIp2AiUUGpEozYH
-         icoLh41ySsRwk7S797bAWyJ/uyNiv0eCUzz0Ol7E=
+        b=lus3WQy6Pfrr+DL/VwSxegBxAwgevSkjB6tKiFgGwJBj0dd6ZUodW5xOUd2gentiz
+         LhAKeIwZmtlEQcfDs8EdjxxI+FR2dDHOBMSq0elyq9As46X04mUNdd+LJViLvz8w7h
+         gNtjQK5m3av33xNQB6GR7AqAYNrALjx4ahXwKGYA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Michael Mueller <mimu@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 138/321] bnxt_en: query force speeds before disabling autoneg mode.
-Date:   Tue,  3 Dec 2019 23:33:24 +0100
-Message-Id: <20191203223434.340912492@linuxfoundation.org>
+Subject: [PATCH 4.19 139/321] KVM: s390: unregister debug feature on failing arch init
+Date:   Tue,  3 Dec 2019 23:33:25 +0100
+Message-Id: <20191203223434.392479435@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -62,66 +63,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Michael Mueller <mimu@linux.ibm.com>
 
-[ Upstream commit 56d374624778652d2a999e18c87a25338b127b41 ]
+[ Upstream commit 308c3e6673b012beecb96ef04cc65f4a0e7cdd99 ]
 
-With autoneg enabled, PHY loopback test fails. To disable autoneg,
-driver needs to send a valid forced speed to FW. FW is not sending
-async event for invalid speeds. To fix this, query forced speeds
-and send the correct speed when disabling autoneg mode.
+Make sure the debug feature and its allocated resources get
+released upon unsuccessful architecture initialization.
 
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+A related indication of the issue will be reported as kernel
+message.
+
+Signed-off-by: Michael Mueller <mimu@linux.ibm.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Message-Id: <20181130143215.69496-2-mimu@linux.ibm.com>
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 22 ++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ arch/s390/kvm/kvm-s390.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-index eaa285bf908b9..2240c23b0a4c9 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-@@ -2390,17 +2390,37 @@ static int bnxt_hwrm_mac_loopback(struct bnxt *bp, bool enable)
- 	return hwrm_send_message(bp, &req, sizeof(req), HWRM_CMD_TIMEOUT);
- }
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index 3c317bc6b7997..db3196aebaa1c 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -416,19 +416,30 @@ static void kvm_s390_cpu_feat_init(void)
  
-+static int bnxt_query_force_speeds(struct bnxt *bp, u16 *force_speeds)
-+{
-+	struct hwrm_port_phy_qcaps_output *resp = bp->hwrm_cmd_resp_addr;
-+	struct hwrm_port_phy_qcaps_input req = {0};
+ int kvm_arch_init(void *opaque)
+ {
 +	int rc;
 +
-+	bnxt_hwrm_cmd_hdr_init(bp, &req, HWRM_PORT_PHY_QCAPS, -1, -1);
-+	mutex_lock(&bp->hwrm_cmd_lock);
-+	rc = _hwrm_send_message(bp, &req, sizeof(req), HWRM_CMD_TIMEOUT);
-+	if (!rc)
-+		*force_speeds = le16_to_cpu(resp->supported_speeds_force_mode);
+ 	kvm_s390_dbf = debug_register("kvm-trace", 32, 1, 7 * sizeof(long));
+ 	if (!kvm_s390_dbf)
+ 		return -ENOMEM;
+ 
+ 	if (debug_register_view(kvm_s390_dbf, &debug_sprintf_view)) {
+-		debug_unregister(kvm_s390_dbf);
+-		return -ENOMEM;
++		rc = -ENOMEM;
++		goto out_debug_unreg;
+ 	}
+ 
+ 	kvm_s390_cpu_feat_init();
+ 
+ 	/* Register floating interrupt controller interface. */
+-	return kvm_register_device_ops(&kvm_flic_ops, KVM_DEV_TYPE_FLIC);
++	rc = kvm_register_device_ops(&kvm_flic_ops, KVM_DEV_TYPE_FLIC);
++	if (rc) {
++		pr_err("Failed to register FLIC rc=%d\n", rc);
++		goto out_debug_unreg;
++	}
++	return 0;
 +
-+	mutex_unlock(&bp->hwrm_cmd_lock);
++out_debug_unreg:
++	debug_unregister(kvm_s390_dbf);
 +	return rc;
-+}
-+
- static int bnxt_disable_an_for_lpbk(struct bnxt *bp,
- 				    struct hwrm_port_phy_cfg_input *req)
- {
- 	struct bnxt_link_info *link_info = &bp->link_info;
--	u16 fw_advertising = link_info->advertising;
-+	u16 fw_advertising;
- 	u16 fw_speed;
- 	int rc;
+ }
  
- 	if (!link_info->autoneg)
- 		return 0;
- 
-+	rc = bnxt_query_force_speeds(bp, &fw_advertising);
-+	if (rc)
-+		return rc;
-+
- 	fw_speed = PORT_PHY_CFG_REQ_FORCE_LINK_SPEED_1GB;
- 	if (netif_carrier_ok(bp->dev))
- 		fw_speed = bp->link_info.link_speed;
+ void kvm_arch_exit(void)
 -- 
 2.20.1
 
