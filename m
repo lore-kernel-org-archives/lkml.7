@@ -5,65 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37195C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14830C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 057E92073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E05612073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:13:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B3F8X5qt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rIgBPB5E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfLCLNf (ORCPT
+        id S1726533AbfLCLNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 06:13:35 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:32979 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbfLCLNf (ORCPT
+        Tue, 3 Dec 2019 06:13:49 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35953 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbfLCLNs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 06:13:35 -0500
-Received: by mail-pl1-f193.google.com with SMTP id ay6so1584319plb.0;
-        Tue, 03 Dec 2019 03:13:35 -0800 (PST)
+        Tue, 3 Dec 2019 06:13:48 -0500
+Received: by mail-pl1-f195.google.com with SMTP id k20so1580923pls.3;
+        Tue, 03 Dec 2019 03:13:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=h6woE9Nax3taBQLO1Xq0hMJ7t3v77ZgaLEpNXtLBqYw=;
-        b=B3F8X5qtRbbpuiEJ5KoZjjMjpajVpJYhZXGs2tcTzF9PN88S6vz6kn4TquY5aSP8rA
-         /6KxjT3WzYkCvJXprpHjYKKCP6jG91EGzkiGrJ3s3iLFhQgQTZluQ2WJkudMe2R0cmVr
-         MijfHi/y5EV7mSWKWIw+lGwG2zDe8k6z9R7GspuI3g70azFphBbzzuMS+p8qkKCF5Fjf
-         5T1eyihX4vFjN37HQd9dnOYsMcyFjEb13iZzohoDDiDR8bCm32FhFE7+HIlLw9C7JtUy
-         apuOz8jd/31QyACZk7qSSRLQMKPNHJMlya73SYZIRfwiMp2eL/udLNi5NjV9w5CinxQp
-         FURw==
+        bh=3OQmcTBUAZ2iXSh3JXM+wJ67H7N0YZcDSFL8pDk9sd4=;
+        b=rIgBPB5E+yWkRwsoh+YtACXKnkcsu7iUF1xeunZZFUmes5SEdpGcBEZXP3mHl0Pvfg
+         7SjYKW9VDHOXTA6u2BMNfOvbugLa8m6qnY/lUnwDhA+nys0DKbb8riaL+7/NLRvRaDBc
+         whkjfAUXXlV+r+lKG10D5SsJ+H1D+t50nmm6wIIvx3EIJjzfi016qOrmSjjhnobK2/x2
+         IpPKJgVbyzhGWP40aD8E29+jbM37nxAp7Bn4BUQs/2d7KM6Jkdq3ZvU0/7KEWsv5t+df
+         f59UTRRbgQ3OSUuptCc1cVqbzyjE1fP3cETy2K8ubuu+izZHudybWaHuv+HLvpf46W3Z
+         o5vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=h6woE9Nax3taBQLO1Xq0hMJ7t3v77ZgaLEpNXtLBqYw=;
-        b=r+Q1B0y43HtYCfpUNnNtOEosVCdSLP6tsVHCy/K3cJSlqMWhKVKlYQ9UV141rctlbO
-         B+HZ0sL3b0P09zskXOxjjgT30LsIh6pYYy29WxcrrYeqA0jAS1XxyILp7nXFxAF9rmm9
-         nh8Zk1BeeS8LMycNE5meNtF7fRzDTHpVAbvdCYv6GMZxRG6xwU/yow9c6yUjQNHrtxxF
-         yW8y7LLpenBqpPulwBugbTqWPofDfquj55QABpYkTvNhRBzBuiHc4N8tFPK6HYqfIc1d
-         3IXe8kJD7MEa6+swNu58wkrmNoy2SZa38ItnUmQtSsAFGI6WZu4/Q0taOWc/ILzgOZ/i
-         UKug==
-X-Gm-Message-State: APjAAAWhSMEMG2EmQvot0WiWcC1Ewd6skmBkgxS6GuvJK/qAEozfi8ik
-        8T53AjQFa0p62GoDKUYEUBs=
-X-Google-Smtp-Source: APXvYqxNr9bNu8ebjYlsuMvI4SKrQ+tzjKzSNR/YRzDXk3TZ2NUeM4oXUS0bEyVLWOb25rN6JfJs7w==
-X-Received: by 2002:a17:90a:2808:: with SMTP id e8mr4834004pjd.63.1575371615026;
-        Tue, 03 Dec 2019 03:13:35 -0800 (PST)
+        bh=3OQmcTBUAZ2iXSh3JXM+wJ67H7N0YZcDSFL8pDk9sd4=;
+        b=V3LtvfTOQWD20+e8h6laCPh/89z5RtIRJPQtPwvqpQU6ycGXvZo5HiSvM9PrENRdVY
+         5CW7n5PsX5J8QXkAI7D4knwgJlHcEMU1zKZYwRADSxLjDou1mSg7Zihw9+CzgxU80Wqt
+         VvRSBWaVFHDXMWtxEdGURemXnMAkyTwtDGyf12iAczLg+/Sr91iko/S8FSA8enwKfV0p
+         5sWrb9ZDOpD1/ZgnjDEpS3+Ny8hKx7lLSX0MX6q3JrGlc4kSQRze8/8MImUyCyLBxkgD
+         gwqXxcFKAaUHFvrDXWVNjC75+RKE7yxepkQAWSamfcCQ19Il1J4VETeVmw6yGfEqLzmu
+         7AbQ==
+X-Gm-Message-State: APjAAAXwT3MO21PS1ngdrAsHKkS9RJmPlKChFNwqAwXdqyu4AjDYptlW
+        cvozgwELQUzZHUyXDoiJ5Z/tLuTY1WA=
+X-Google-Smtp-Source: APXvYqxCdytRvhloaoKigv0Gde6ma+4f3G42KTSjsjlSTKXDMZbt6w2BlEBLUog/7u88FW2IekSaow==
+X-Received: by 2002:a17:902:9a8b:: with SMTP id w11mr4426590plp.9.1575371628072;
+        Tue, 03 Dec 2019 03:13:48 -0800 (PST)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id j4sm2614901pjf.25.2019.12.03.03.13.30
+        by smtp.gmail.com with ESMTPSA id g192sm3124849pgc.3.2019.12.03.03.13.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 03:13:34 -0800 (PST)
+        Tue, 03 Dec 2019 03:13:47 -0800 (PST)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH resend] media: pxa_camera: add missed tasklet_kill
-Date:   Tue,  3 Dec 2019 19:13:24 +0800
-Message-Id: <20191203111324.12997-1-hslester96@gmail.com>
+Cc:     Don Brace <don.brace@microsemi.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        esc.storagedev@microsemi.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH resend] scsi: smartpqi: add missed free_irq in suspend
+Date:   Tue,  3 Dec 2019 19:13:37 +0800
+Message-Id: <20191203111337.13054-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -73,34 +75,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver forgets to kill tasklet when probe fails and remove.
-Add the calls to fix it.
+The driver calls request_irq in resume but does not call free_irq in
+suspend.
+Add the missed call to fix it.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/media/platform/pxa_camera.c | 2 ++
+ drivers/scsi/smartpqi/smartpqi_init.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/platform/pxa_camera.c b/drivers/media/platform/pxa_camera.c
-index 8d47ea0c33f8..43ae645d866b 100644
---- a/drivers/media/platform/pxa_camera.c
-+++ b/drivers/media/platform/pxa_camera.c
-@@ -2530,6 +2530,7 @@ static int pxa_camera_probe(struct platform_device *pdev)
- 	v4l2_device_unregister(&pcdev->v4l2_dev);
- exit_deactivate:
- 	pxa_camera_deactivate(pcdev);
-+	tasklet_kill(&pcdev->task_eof);
- exit_free_dma:
- 	dma_release_channel(pcdev->dma_chans[2]);
- exit_free_dma_u:
-@@ -2544,6 +2545,7 @@ static int pxa_camera_remove(struct platform_device *pdev)
- 	struct pxa_camera_dev *pcdev = dev_get_drvdata(&pdev->dev);
+diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
+index 7b7ef3acb504..2251c39afb1b 100644
+--- a/drivers/scsi/smartpqi/smartpqi_init.c
++++ b/drivers/scsi/smartpqi/smartpqi_init.c
+@@ -8078,6 +8078,8 @@ static __maybe_unused int pqi_suspend(struct pci_dev *pci_dev, pm_message_t stat
+ 	pqi_ctrl_wait_for_pending_io(ctrl_info, NO_TIMEOUT);
+ 	pqi_stop_heartbeat_timer(ctrl_info);
  
- 	pxa_camera_deactivate(pcdev);
-+	tasklet_kill(&pcdev->task_eof);
- 	dma_release_channel(pcdev->dma_chans[0]);
- 	dma_release_channel(pcdev->dma_chans[1]);
- 	dma_release_channel(pcdev->dma_chans[2]);
++	free_irq(pci_irq_vector(pci_dev, 0), &ctrl_info->queue_groups[0]);
++
+ 	if (state.event == PM_EVENT_FREEZE)
+ 		return 0;
+ 
 -- 
 2.24.0
 
