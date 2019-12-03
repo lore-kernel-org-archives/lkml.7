@@ -2,54 +2,57 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 171C9C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D23C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC70D2073C
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 164EE20803
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412768;
-	bh=yPoiiB8nW+V4aZlHFa+hH08rvxh+w9pWkK2I9swro+E=;
+	s=default; t=1575412771;
+	bh=L8aTFcBkYlwSH4hb0/HZBFxZiMJsBbKPtEM+pulKXFU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yObPdbx7LKp6IXlmNWov+28sumKIszWE6qwuY7V6tI7dch7Nmj6LL3RO/05aRnDap
-	 nlv1X5UJXyOjdv9j2R4muf1fSKlJTU+IAMJvpsZZ2B7f4W2ebJqOn3EgyJ+mLaO/gq
-	 oUkXjU3Sm7ou7u6VbEgpZysvqmwryflROR37+o5k=
+	b=wGd6IKcaPjceP6mle7MMCLNz3uGWyf/sPlt0rG502kppuanBnmjapTAcPQwcBTWzc
+	 YwKm+VQi20rH0lruiOVjwfBaKkbGs7HP/ENkf1cJpG2ya69N4H969sBY1cH8in4reS
+	 iJqWahlfldTNJyEzj3jC/4d2XqOhG1omYnPjAzoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728218AbfLCWj1 (ORCPT
+        id S1727913AbfLCWja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:39:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49492 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:39:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727872AbfLCWjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:39:23 -0500
+        id S1727872AbfLCWj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:39:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF16F207DD;
-        Tue,  3 Dec 2019 22:39:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF960207DD;
+        Tue,  3 Dec 2019 22:39:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412763;
-        bh=yPoiiB8nW+V4aZlHFa+hH08rvxh+w9pWkK2I9swro+E=;
+        s=default; t=1575412768;
+        bh=L8aTFcBkYlwSH4hb0/HZBFxZiMJsBbKPtEM+pulKXFU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SFVV8yKizovC3i7sK/1WRWcvD0izFZ4m8q6gGb2Ogg8Nnf1HFKftcBf5z5+ZjEW2I
-         Uh9Au1BasDDY7yXmqpaW+XdJsAIYM+wRY5HkiD3bXr4aVplaySXeGXluYm+HsrS1JB
-         E1XYPX9/4e1uXBUfWjlWySvW6oPZq6yRlbUUs4+0=
+        b=IfJR9JHSXM4BwDgKjuCAT19m9w5uS9qjVVHtQSWbYZoG8mOnUQuCtuw6oJyQFS5JN
+         fZK1eG99na4FYVIXYpsOGcVAG+jSZgQNQpKvC5ndn9ksgc7bi11bB06RciL8zGxUIP
+         /3I3ntE7yccvqKPV475h+gc0pMiTryFrIpqDDvdk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH 5.4 08/46] staging: rtl8192e: fix potential use after free
-Date:   Tue,  3 Dec 2019 23:35:28 +0100
-Message-Id: <20191203212722.065206368@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 010/135] soundwire: intel: fix intel_register_dai PDI offsets and numbers
+Date:   Tue,  3 Dec 2019 23:34:10 +0100
+Message-Id: <20191203213007.585191169@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191203212705.175425505@linuxfoundation.org>
-References: <20191203212705.175425505@linuxfoundation.org>
+In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
+References: <20191203213005.828543156@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,45 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Bard Liao <yung-chuan.liao@linux.intel.com>
 
-commit b7aa39a2ed0112d07fc277ebd24a08a7b2368ab9 upstream.
+[ Upstream commit cf9249626f72878b6d205a4965093cba5cce98df ]
 
-The variable skb is released via kfree_skb() when the return value of
-_rtl92e_tx is not zero. However, after that, skb is accessed again to
-read its length, which may result in a use after free bug. This patch
-fixes the bug by moving the release operation to where skb is never
-used later.
+There are two issues, likely copy/paste:
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1572965351-6745-1-git-send-email-bianpan2016@163.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+1. Use cdns->pcm.num_in instead of stream_num_in for consistency with
+the rest of the code. This was not detected earlier since platforms did
+not have input-only PDIs.
 
+2. use the correct offset for bi-dir PDM, based on IN and OUT
+PDIs. Again this was not detected since PDM was not supported earlier.
+
+Reported-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20190916192348.467-2-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/rtl8192e/rtl8192e/rtl_core.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/soundwire/intel.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
-@@ -1616,14 +1616,15 @@ static void _rtl92e_hard_data_xmit(struc
- 	memcpy((unsigned char *)(skb->cb), &dev, sizeof(dev));
- 	skb_push(skb, priv->rtllib->tx_headroom);
- 	ret = _rtl92e_tx(dev, skb);
--	if (ret != 0)
--		kfree_skb(skb);
+diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+index ec25a71d08873..db9c138adb1ff 100644
+--- a/drivers/soundwire/intel.c
++++ b/drivers/soundwire/intel.c
+@@ -765,7 +765,7 @@ static int intel_register_dai(struct sdw_intel *sdw)
+ 	/* Create PCM DAIs */
+ 	stream = &cdns->pcm;
  
- 	if (queue_index != MGNT_QUEUE) {
- 		priv->rtllib->stats.tx_bytes += (skb->len -
- 						 priv->rtllib->tx_headroom);
- 		priv->rtllib->stats.tx_packets++;
- 	}
-+
-+	if (ret != 0)
-+		kfree_skb(skb);
- }
+-	ret = intel_create_dai(cdns, dais, INTEL_PDI_IN, stream->num_in,
++	ret = intel_create_dai(cdns, dais, INTEL_PDI_IN, cdns->pcm.num_in,
+ 			       off, stream->num_ch_in, true);
+ 	if (ret)
+ 		return ret;
+@@ -796,7 +796,7 @@ static int intel_register_dai(struct sdw_intel *sdw)
+ 	if (ret)
+ 		return ret;
  
- static int _rtl92e_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
+-	off += cdns->pdm.num_bd;
++	off += cdns->pdm.num_out;
+ 	ret = intel_create_dai(cdns, dais, INTEL_PDI_BD, cdns->pdm.num_bd,
+ 			       off, stream->num_ch_bd, false);
+ 	if (ret)
+-- 
+2.20.1
+
 
 
