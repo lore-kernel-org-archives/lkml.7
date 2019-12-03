@@ -2,201 +2,117 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B042C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 375A3C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B6C520675
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A2EC2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:06:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbfLCPDQ (ORCPT
+        id S1726674AbfLCPGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 10:03:16 -0500
-Received: from foss.arm.com ([217.140.110.172]:43988 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726057AbfLCPDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 10:03:16 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E78F531B;
-        Tue,  3 Dec 2019 07:03:14 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3888E3F52E;
-        Tue,  3 Dec 2019 07:03:14 -0800 (PST)
-Date:   Tue, 3 Dec 2019 15:03:12 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     maz@kernel.org, linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        james.quinlan@broadcom.com, mbrugger@suse.com,
-        phil@raspberrypi.org, jeremy.linton@arm.com,
-        linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        Rob Herring <robh@kernel.org>,
+        Tue, 3 Dec 2019 10:06:13 -0500
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:52505 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfLCPGM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 10:06:12 -0500
+X-Originating-IP: 90.76.211.102
+Received: from localhost.localdomain (lfbn-1-2154-102.w90-76.abo.wanadoo.fr [90.76.211.102])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 6C3EF1BF203;
+        Tue,  3 Dec 2019 15:06:08 +0000 (UTC)
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 1/8] dt-bindings: PCI: Add bindings for brcmstb's PCIe
- device
-Message-ID: <20191203150312.GD18399@e119886-lin.cambridge.arm.com>
-References: <20191203114743.1294-1-nsaenzjulienne@suse.de>
- <20191203114743.1294-2-nsaenzjulienne@suse.de>
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: [PATCH v4 0/3] drm: LogiCVC display controller support
+Date:   Tue,  3 Dec 2019 16:06:03 +0100
+Message-Id: <20191203150606.317062-1-paul.kocialkowski@bootlin.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191203114743.1294-2-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 12:47:34PM +0100, Nicolas Saenz Julienne wrote:
-> From: Jim Quinlan <james.quinlan@broadcom.com>
-> 
-> The DT bindings description of the brcmstb PCIe device is described.
-> This node can only be used for now on the Raspberry Pi 4.
-> 
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> ---
+This series introduces support for the LogiCVC display controller.
+The controller is a bit unusual since it is usually loaded as
+programmable logic on Xilinx FPGAs or Zynq-7000 SoCs.
+More details are presented on the main commit for the driver.
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+More information about the controller is available on the dedicated
+web page: https://www.logicbricks.com/Products/logiCVC-ML.aspx
 
-> 
-> Changes since v2:
->   - Add pci reference schema
->   - Drop all default properties
->   - Assume msi-controller and msi-parent are properly defined
->   - Add num entries on multiple properties
->   - use unevaluatedProperties
->   - Update required properties
->   - Fix license
-> 
-> Changes since v1:
->   - Fix commit Subject
->   - Remove linux,pci-domain
-> 
-> This was based on Jim's original submission[1], converted to yaml and
-> adapted to the RPi4 case.
-> 
-> [1] https://patchwork.kernel.org/patch/10605937/
-> 
->  .../bindings/pci/brcm,stb-pcie.yaml           | 97 +++++++++++++++++++
->  1 file changed, 97 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> new file mode 100644
-> index 000000000000..77d3e81a437b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> @@ -0,0 +1,97 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Brcmstb PCIe Host Controller Device Tree Bindings
-> +
-> +maintainers:
-> +  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/pci-bus.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: brcm,bcm2711-pcie # The Raspberry Pi 4
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - description: PCIe host controller
-> +      - description: builtin MSI controller
-> +
-> +  interrupt-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - const: pcie
-> +      - const: msi
-> +
-> +  ranges:
-> +    maxItems: 1
-> +
-> +  dma-ranges:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: sw_pcie
-> +
-> +  msi-controller:
-> +    description: Identifies the node as an MSI controller.
-> +
-> +  msi-parent:
-> +    description: MSI controller the device is capable of using.
-> +
-> +  brcm,enable-ssc:
-> +    description: Indicates usage of spread-spectrum clocking.
-> +    type: boolean
-> +
-> +required:
-> +  - reg
-> +  - dma-ranges
-> +  - "#interrupt-cells"
-> +  - interrupts
-> +  - interrupt-names
-> +  - interrupt-map-mask
-> +  - interrupt-map
-> +  - msi-controller
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    scb {
-> +            #address-cells = <2>;
-> +            #size-cells = <1>;
-> +            pcie0: pcie@7d500000 {
-> +                    compatible = "brcm,bcm2711-pcie";
-> +                    reg = <0x0 0x7d500000 0x9310>;
-> +                    device_type = "pci";
-> +                    #address-cells = <3>;
-> +                    #size-cells = <2>;
-> +                    #interrupt-cells = <1>;
-> +                    interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-> +                                 <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-> +                    interrupt-names = "pcie", "msi";
-> +                    interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-> +                    interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
-> +                    msi-parent = <&pcie0>;
-> +                    msi-controller;
-> +                    ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
-> +                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
-> +                    brcm,enable-ssc;
-> +            };
-> +    };
-> -- 
-> 2.24.0
-> 
+Changes since v3:
+- Rebased on latest drm-misc;
+- Improved event lock wrapping;
+- Added collect tag;
+- Added color-key support patch (not for merge, for reference only).
+
+Changes since v2:
+- Fixed and slightly improved dt schema.
+
+Changes since v1:
+- Switched dt bindings documentation to dt schema;
+- Described more possible dt parameters;
+- Added support for the lvds-3bit interface;
+- Added support for grabbing syscon regmap from parent node;
+- Removed layers count property and count layers child nodes instead.
+
+Cheers!
+
+Paul Kocialkowski (3):
+  dt-bindings: display: Document the Xylon LogiCVC display controller
+  drm: Add support for the LogiCVC display controller
+  WIP: drm/logicvc: Add plane colorkey support
+
+ .../display/xylon,logicvc-display.yaml        | 313 ++++++++
+ drivers/gpu/drm/Kconfig                       |   2 +
+ drivers/gpu/drm/Makefile                      |   1 +
+ drivers/gpu/drm/logicvc/Kconfig               |   8 +
+ drivers/gpu/drm/logicvc/Makefile              |   4 +
+ drivers/gpu/drm/logicvc/logicvc_crtc.c        | 271 +++++++
+ drivers/gpu/drm/logicvc/logicvc_crtc.h        |  25 +
+ drivers/gpu/drm/logicvc/logicvc_drm.c         | 467 +++++++++++
+ drivers/gpu/drm/logicvc/logicvc_drm.h         |  63 ++
+ drivers/gpu/drm/logicvc/logicvc_interface.c   | 235 ++++++
+ drivers/gpu/drm/logicvc/logicvc_interface.h   |  32 +
+ drivers/gpu/drm/logicvc/logicvc_layer.c       | 733 ++++++++++++++++++
+ drivers/gpu/drm/logicvc/logicvc_layer.h       |  72 ++
+ drivers/gpu/drm/logicvc/logicvc_mode.c        | 103 +++
+ drivers/gpu/drm/logicvc/logicvc_mode.h        |  15 +
+ drivers/gpu/drm/logicvc/logicvc_of.c          | 205 +++++
+ drivers/gpu/drm/logicvc/logicvc_of.h          |  28 +
+ drivers/gpu/drm/logicvc/logicvc_regs.h        |  88 +++
+ 18 files changed, 2665 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/xylon,logicvc-display.yaml
+ create mode 100644 drivers/gpu/drm/logicvc/Kconfig
+ create mode 100644 drivers/gpu/drm/logicvc/Makefile
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_crtc.c
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_crtc.h
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_drm.c
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_drm.h
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_interface.c
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_interface.h
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_layer.c
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_layer.h
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_mode.c
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_mode.h
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_of.c
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_of.h
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_regs.h
+
+-- 
+2.24.0
+
