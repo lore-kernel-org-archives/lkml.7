@@ -2,122 +2,203 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93242C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59BBEC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AAE02068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2442B2068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:30:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eeKGjnxM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Eo2Tw1qp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbfLCFZ6 (ORCPT
+        id S1726958AbfLCFa1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 00:25:58 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37217 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbfLCFZ5 (ORCPT
+        Tue, 3 Dec 2019 00:30:27 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:53112 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbfLCFa0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 00:25:57 -0500
-Received: by mail-pf1-f195.google.com with SMTP id s18so1250460pfm.4;
-        Mon, 02 Dec 2019 21:25:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=M+Srzhos+DQbPdSyVlOGh0ahebrnO+JHC74IMgDA9Bg=;
-        b=eeKGjnxM0XbZKXZOPzIRMe8+dxlQhanLYSuWF9PAKWyivLmsJgQpCJnyComD2mfVwb
-         SBH8A+xfUhFhdp6Tc4hCQQvlTET/BFBN4a2cRki+E4TLh0wEdVFfHiwM9tRHDSzX8XXS
-         jpACCFmiGNed3ljP2KsWf6MRZ4Xllx4dqx4IVK8J+aCCvGoIiwXp+vTOpe4+e6Jwt4TC
-         cD9t5uPXgF+5sNjAoLFNyiY/bAmtBEtS4ku9WLQPU6DL0NYthrOOJkYMTCJgDSoc25Vp
-         6lB2NRAX51XHCoH/DWG5mcoGVy1G+nXEP83lV1bCIaJWVru6OCbNDRc1AgQOcJUXBM+X
-         +uOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=M+Srzhos+DQbPdSyVlOGh0ahebrnO+JHC74IMgDA9Bg=;
-        b=rKXxfLM9Yl8If1j1SlBb/lXGL9QF4XIe5CA8M8wS557W63I+nV6X1IEgShdV7/QWWA
-         iE9lQnDbnbZ2ifXMpm5ZDMiw7NAFU5xeCtjsUuhpceQPArf7m7l2lBk+hxkKg61TyRMB
-         TxhnXP7whC+Xq7mvCDj16ArxT0A2g19oYSqRB/ewxbMfJ7ICHcK8nLgfG3sRux+uCFpe
-         TeGdTE93Sr/ZwHeUbRyEV7ufRgDRwJGQo6L66Ys2gzo4O9ehmjazY4sIgtwfNZ9RpGco
-         fDilUOK/g5eMDVJEKi1ebHZSXTiyU8JTiKyJ/Ym46ByodEVftdfipYVuL897J/rlbo1f
-         zZyA==
-X-Gm-Message-State: APjAAAU589XQYWSfwpglFX5qg44+Ua8FIntRPJ4tmazMxXOe3lTLodm4
-        cVQu1TrVFcwrnmohPSIlikvwh4zO
-X-Google-Smtp-Source: APXvYqxQfQdsIkgF7VkUdEOXCBieiD/yZesNsTlRPdQtfxS+Cny46WRXpQ+K97lot9VjQz+YLq+mMA==
-X-Received: by 2002:a63:cb50:: with SMTP id m16mr3448077pgi.425.1575350756962;
-        Mon, 02 Dec 2019 21:25:56 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q22sm1448697pfg.170.2019.12.02.21.25.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Dec 2019 21:25:56 -0800 (PST)
-Subject: Re: [PATCH 4.4 000/132] 4.4.204-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-References: <20191127202857.270233486@linuxfoundation.org>
- <CA+G9fYs-ugvOrYBZbmieSK1rQrcRh6R9cL3Vz8xK59sB3aAqyg@mail.gmail.com>
- <20191129085350.GE3584430@kroah.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <4808b398-aa8f-01a9-3783-a07344944944@roeck-us.net>
-Date:   Mon, 2 Dec 2019 21:25:55 -0800
+        Tue, 3 Dec 2019 00:30:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=fasHx2KRVQANkAag/rtzNmdYDi10qgh4xlJuuHfsM7I=; b=Eo2Tw1qpTglRUBzzKh4KHekHS
+        MG9I0TAHFIY17B2RpTzLKPVWZ+X/jaHOGUDa/fVa+4pZWAKehkeqd+uAhmdrUBZw2tS9W8B4+6SUv
+        02RYQRnO+xCCCRh5IKgL1pHFiwxUL4oIDt8noq9UyQDLvP6O/qk+aX5y3C6VqWdB+XxUb6BN+XtdV
+        RNZLAHC5Wc+HIFCV5oAsJcyWdij865PYUk8WAPtIEJIDOrMCYQnt/ZIbUlx4aY9KVo5BWP97n95gw
+        wileGc5m4doam4/bw72H3DJOqddWzASrdMpJ60C5d2fH6IFtD3/5PPQthd/TkMOsmhRyW67sZwBX/
+        uF3q3pCCg==;
+Received: from [2601:1c0:6280:3f0::5a22]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ic0lU-0007lO-O8; Tue, 03 Dec 2019 05:30:24 +0000
+Subject: Re: [PATCH v3 3/3] kcsan: Prefer __always_inline for fast-path
+To:     Marco Elver <elver@google.com>
+Cc:     mark.rutland@arm.com, paulmck@kernel.org,
+        linux-kernel@vger.kernel.org, will@kernel.org,
+        peterz@infradead.org, boqun.feng@gmail.com, arnd@arndb.de,
+        dvyukov@google.com, linux-arch@vger.kernel.org,
+        kasan-dev@googlegroups.com
+References: <20191126140406.164870-1-elver@google.com>
+ <20191126140406.164870-3-elver@google.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <00ee3b40-0e37-c9ac-3209-d07b233a0c1d@infradead.org>
+Date:   Mon, 2 Dec 2019 21:30:22 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <20191129085350.GE3584430@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191126140406.164870-3-elver@google.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/29/19 12:53 AM, Greg Kroah-Hartman wrote:
-> On Thu, Nov 28, 2019 at 06:59:17PM +0530, Naresh Kamboju wrote:
->> On Thu, 28 Nov 2019 at 02:04, Greg Kroah-Hartman
->> <gregkh@linuxfoundation.org> wrote:
->>>
->>> This is the start of the stable review cycle for the 4.4.204 release.
->>> There are 132 patches in this series, all will be posted as a response
->>> to this one.  If anyone has any issues with these being applied, please
->>> let me know.
->>>
->>> Responses should be made by Fri, 29 Nov 2019 20:18:09 +0000.
->>> Anything received after that time might be too late.
->>>
->>> The whole patch series can be found in one patch at:
->>>          https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.204-rc1.gz
->>> or in the git tree and branch at:
->>>          git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
->>> and the diffstat can be found below.
->>>
->>> thanks,
->>>
->>> greg k-h
->>>
->>
->> Results from Linaro’s test farm.
->> No regressions on arm64, arm, x86_64, and i386.
+On 11/26/19 6:04 AM, Marco Elver wrote:
+> Prefer __always_inline for fast-path functions that are called outside
+> of user_access_save, to avoid generating UACCESS warnings when
+> optimizing for size (CC_OPTIMIZE_FOR_SIZE). It will also avoid future
+> surprises with compiler versions that change the inlining heuristic even
+> when optimizing for performance.
 > 
-> As you all are doing run-time tests, it would be interesting to see why
-> I saw failures in the Android networking tests with this and the 4.9
-> queue, but they did not show up in your testing :(
+> Report: http://lkml.kernel.org/r/58708908-84a0-0a81-a836-ad97e33dbb62@infradead.org
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Marco Elver <elver@google.com>
+
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+
+Thanks.
+
+> ---
+> Rebased on: locking/kcsan branch of tip tree.
+> ---
+>  kernel/kcsan/atomic.h   |  2 +-
+>  kernel/kcsan/core.c     | 16 +++++++---------
+>  kernel/kcsan/encoding.h | 14 +++++++-------
+>  3 files changed, 15 insertions(+), 17 deletions(-)
+> 
+> diff --git a/kernel/kcsan/atomic.h b/kernel/kcsan/atomic.h
+> index 576e03ddd6a3..a9c193053491 100644
+> --- a/kernel/kcsan/atomic.h
+> +++ b/kernel/kcsan/atomic.h
+> @@ -18,7 +18,7 @@
+>   * than cast to volatile. Eventually, we hope to be able to remove this
+>   * function.
+>   */
+> -static inline bool kcsan_is_atomic(const volatile void *ptr)
+> +static __always_inline bool kcsan_is_atomic(const volatile void *ptr)
+>  {
+>  	/* only jiffies for now */
+>  	return ptr == &jiffies;
+> diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
+> index 3314fc29e236..c616fec639cd 100644
+> --- a/kernel/kcsan/core.c
+> +++ b/kernel/kcsan/core.c
+> @@ -78,10 +78,8 @@ static atomic_long_t watchpoints[CONFIG_KCSAN_NUM_WATCHPOINTS + NUM_SLOTS-1];
+>   */
+>  static DEFINE_PER_CPU(long, kcsan_skip);
+>  
+> -static inline atomic_long_t *find_watchpoint(unsigned long addr,
+> -					     size_t size,
+> -					     bool expect_write,
+> -					     long *encoded_watchpoint)
+> +static __always_inline atomic_long_t *
+> +find_watchpoint(unsigned long addr, size_t size, bool expect_write, long *encoded_watchpoint)
+>  {
+>  	const int slot = watchpoint_slot(addr);
+>  	const unsigned long addr_masked = addr & WATCHPOINT_ADDR_MASK;
+> @@ -146,7 +144,7 @@ insert_watchpoint(unsigned long addr, size_t size, bool is_write)
+>   *	2. the thread that set up the watchpoint already removed it;
+>   *	3. the watchpoint was removed and then re-used.
+>   */
+> -static inline bool
+> +static __always_inline bool
+>  try_consume_watchpoint(atomic_long_t *watchpoint, long encoded_watchpoint)
+>  {
+>  	return atomic_long_try_cmpxchg_relaxed(watchpoint, &encoded_watchpoint, CONSUMED_WATCHPOINT);
+> @@ -160,7 +158,7 @@ static inline bool remove_watchpoint(atomic_long_t *watchpoint)
+>  	return atomic_long_xchg_relaxed(watchpoint, INVALID_WATCHPOINT) != CONSUMED_WATCHPOINT;
+>  }
+>  
+> -static inline struct kcsan_ctx *get_ctx(void)
+> +static __always_inline struct kcsan_ctx *get_ctx(void)
+>  {
+>  	/*
+>  	 * In interrupts, use raw_cpu_ptr to avoid unnecessary checks, that would
+> @@ -169,7 +167,7 @@ static inline struct kcsan_ctx *get_ctx(void)
+>  	return in_task() ? &current->kcsan_ctx : raw_cpu_ptr(&kcsan_cpu_ctx);
+>  }
+>  
+> -static inline bool is_atomic(const volatile void *ptr)
+> +static __always_inline bool is_atomic(const volatile void *ptr)
+>  {
+>  	struct kcsan_ctx *ctx = get_ctx();
+>  
+> @@ -193,7 +191,7 @@ static inline bool is_atomic(const volatile void *ptr)
+>  	return kcsan_is_atomic(ptr);
+>  }
+>  
+> -static inline bool should_watch(const volatile void *ptr, int type)
+> +static __always_inline bool should_watch(const volatile void *ptr, int type)
+>  {
+>  	/*
+>  	 * Never set up watchpoints when memory operations are atomic.
+> @@ -226,7 +224,7 @@ static inline void reset_kcsan_skip(void)
+>  	this_cpu_write(kcsan_skip, skip_count);
+>  }
+>  
+> -static inline bool kcsan_is_enabled(void)
+> +static __always_inline bool kcsan_is_enabled(void)
+>  {
+>  	return READ_ONCE(kcsan_enabled) && get_ctx()->disable_count == 0;
+>  }
+> diff --git a/kernel/kcsan/encoding.h b/kernel/kcsan/encoding.h
+> index b63890e86449..f03562aaf2eb 100644
+> --- a/kernel/kcsan/encoding.h
+> +++ b/kernel/kcsan/encoding.h
+> @@ -59,10 +59,10 @@ encode_watchpoint(unsigned long addr, size_t size, bool is_write)
+>  		      (addr & WATCHPOINT_ADDR_MASK));
+>  }
+>  
+> -static inline bool decode_watchpoint(long watchpoint,
+> -				     unsigned long *addr_masked,
+> -				     size_t *size,
+> -				     bool *is_write)
+> +static __always_inline bool decode_watchpoint(long watchpoint,
+> +					      unsigned long *addr_masked,
+> +					      size_t *size,
+> +					      bool *is_write)
+>  {
+>  	if (watchpoint == INVALID_WATCHPOINT ||
+>  	    watchpoint == CONSUMED_WATCHPOINT)
+> @@ -78,13 +78,13 @@ static inline bool decode_watchpoint(long watchpoint,
+>  /*
+>   * Return watchpoint slot for an address.
+>   */
+> -static inline int watchpoint_slot(unsigned long addr)
+> +static __always_inline int watchpoint_slot(unsigned long addr)
+>  {
+>  	return (addr / PAGE_SIZE) % CONFIG_KCSAN_NUM_WATCHPOINTS;
+>  }
+>  
+> -static inline bool matching_access(unsigned long addr1, size_t size1,
+> -				   unsigned long addr2, size_t size2)
+> +static __always_inline bool matching_access(unsigned long addr1, size_t size1,
+> +					    unsigned long addr2, size_t size2)
+>  {
+>  	unsigned long end_range1 = addr1 + size1 - 1;
+>  	unsigned long end_range2 = addr2 + size2 - 1;
 > 
 
-Did you solve this problem, or am I going to get into trouble when I merge this
-release ?
 
-Guenter
+-- 
+~Randy
+
