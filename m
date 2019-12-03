@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 800F0C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0340C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5205D20656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8900020656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:59:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413988;
-	bh=fn5ihxksOkvHYhFfgCE8xyhI+MbV1Hr1ZAb+Xisteog=;
+	s=default; t=1575413993;
+	bh=wPSD5GVuIeOKSj3ezSPdIhvdyMAG0R9gBfHweupUel8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZO55FyAhCrMLSnIQxphHWuZirS5DIYMykVW9xP4o4TJWf/vk43q79h4bI22ThgpoN
-	 yjDO7Y/j560ueJf3a40laC7HVfqUrOSKnfJ6Q28qhOq6WX0iMClzWmqJUz8zlTuDKR
-	 GXnrV2IsGZEyFGWMG7kldpvtMkn5Y41fRimOjg4g=
+	b=l0eBnAw5MytoVkB7z2lBUe8ZGBNVNLYudVmWjX58HMOVrH2Jhpr+CjiZE6fSsVGMf
+	 9uDqhb2DilNcx4i5raTYaZpFNV+9NkcBW+vs2pbSwc9PWmP5noBXiHu0ZgSpjMwvPh
+	 Q1BJrPpPHzpVPJI9D7EteIzWT2ySogWKtVkEr/hw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730727AbfLCW7C (ORCPT
+        id S1730694AbfLCW6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:59:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55506 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:58:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730486AbfLCW66 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:58:58 -0500
+        id S1730564AbfLCW6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:58:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F30A820803;
-        Tue,  3 Dec 2019 22:58:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7ACF020863;
+        Tue,  3 Dec 2019 22:58:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413938;
-        bh=fn5ihxksOkvHYhFfgCE8xyhI+MbV1Hr1ZAb+Xisteog=;
+        s=default; t=1575413922;
+        bh=wPSD5GVuIeOKSj3ezSPdIhvdyMAG0R9gBfHweupUel8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sdzZTV6ltYgz0zeUvWZSX3gxrEC/H/rW2epR1NgCt0KOz5tRoaTAPmLA2iCaiYSf3
-         JsjT5RaEO53Mp2mmbBhSEK3voOyK8f6dkKbmpKbulnpjNoeLW26lP19KL/ii9EVaPi
-         KBNXBDpZKhKImLeRufXt6A+pp7ZNB98Sqs52D3yw=
+        b=1YkwkPbO/qPs8gOCxoYoSlzudKFZBdHt4ohWUzC3d46CIT8O6rwTBABSMTl/0/xlB
+         RW0HfAXUYj5uVe3VuSvkp5qfDgAcdd4Z3Xkl+iNx2WeeoXg1VYmmdRyJK+tKStbWXX
+         9HezpoOIFRPvfDzXpt6I5+I6GgKsXclGIOrbxTkY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 4.19 320/321] platform/x86: hp-wmi: Fix ACPI errors caused by too small buffer
-Date:   Tue,  3 Dec 2019 23:36:26 +0100
-Message-Id: <20191203223443.789772361@linuxfoundation.org>
+        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: [PATCH 4.19 315/321] ASoC: stm32: i2s: fix dma configuration
+Date:   Tue,  3 Dec 2019 23:36:21 +0100
+Message-Id: <20191203223443.532777109@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -59,70 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Olivier Moysan <olivier.moysan@st.com>
 
-commit 16245db1489cd9aa579506f64afeeeb13d825a93 upstream.
+commit 1ac2bd16448997d9ec01922423486e1e85535eda upstream.
 
-The HP WMI calls may take up to 128 bytes of data as input, and
-the AML methods implementing the WMI calls, declare a couple of fields for
-accessing input in different sizes, specifycally the HWMC method contains:
+DMA configuration is not balanced on start/stop.
+Move DMA configuration to trigger callback.
 
-        CreateField (Arg1, 0x80, 0x0400, D128)
-
-Even though we do not use any of the WMI command-types which need a buffer
-of this size, the APCI interpreter still tries to create it as it is
-declared in generoc code at the top of the HWMC method which runs before
-the code looks at which command-type is requested.
-
-This results in many of these errors on many different HP laptop models:
-
-[   14.459261] ACPI Error: Field [D128] at 1152 exceeds Buffer [NULL] size 160 (bits) (20170303/dsopcode-236)
-[   14.459268] ACPI Error: Method parse/execution failed [\HWMC] (Node ffff8edcc61507f8), AE_AML_BUFFER_LIMIT (20170303/psparse-543)
-[   14.459279] ACPI Error: Method parse/execution failed [\_SB.WMID.WMAA] (Node ffff8edcc61523c0), AE_AML_BUFFER_LIMIT (20170303/psparse-543)
-
-This commit increases the size of the data element of the bios_args struct
-to 128 bytes fixing these errors.
-
-Cc: stable@vger.kernel.org
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=197007
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=201981
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1520703
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/platform/x86/hp-wmi.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ sound/soc/stm/stm32_i2s.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -78,7 +78,7 @@ struct bios_args {
- 	u32 command;
- 	u32 commandtype;
- 	u32 datasize;
--	u32 data;
-+	u8 data[128];
- };
+--- a/sound/soc/stm/stm32_i2s.c
++++ b/sound/soc/stm/stm32_i2s.c
+@@ -488,7 +488,7 @@ static int stm32_i2s_configure(struct sn
+ {
+ 	struct stm32_i2s_data *i2s = snd_soc_dai_get_drvdata(cpu_dai);
+ 	int format = params_width(params);
+-	u32 cfgr, cfgr_mask, cfg1, cfg1_mask;
++	u32 cfgr, cfgr_mask, cfg1;
+ 	unsigned int fthlv;
+ 	int ret;
  
- enum hp_wmi_commandtype {
-@@ -229,7 +229,7 @@ static int hp_wmi_perform_query(int quer
- 		.command = command,
- 		.commandtype = query,
- 		.datasize = insize,
--		.data = 0,
-+		.data = { 0 },
- 	};
- 	struct acpi_buffer input = { sizeof(struct bios_args), &args };
- 	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-@@ -241,7 +241,7 @@ static int hp_wmi_perform_query(int quer
+@@ -529,15 +529,11 @@ static int stm32_i2s_configure(struct sn
+ 	if (ret < 0)
+ 		return ret;
  
- 	if (WARN_ON(insize > sizeof(args.data)))
- 		return -EINVAL;
--	memcpy(&args.data, buffer, insize);
-+	memcpy(&args.data[0], buffer, insize);
+-	cfg1 = I2S_CFG1_RXDMAEN | I2S_CFG1_TXDMAEN;
+-	cfg1_mask = cfg1;
+-
+ 	fthlv = STM32_I2S_FIFO_SIZE * I2S_FIFO_TH_ONE_QUARTER / 4;
+-	cfg1 |= I2S_CFG1_FTHVL_SET(fthlv - 1);
+-	cfg1_mask |= I2S_CFG1_FTHVL_MASK;
++	cfg1 = I2S_CFG1_FTHVL_SET(fthlv - 1);
  
- 	wmi_evaluate_method(HPWMI_BIOS_GUID, 0, mid, &input, &output);
+ 	return regmap_update_bits(i2s->regmap, STM32_I2S_CFG1_REG,
+-				  cfg1_mask, cfg1);
++				  I2S_CFG1_FTHVL_MASK, cfg1);
+ }
  
+ static int stm32_i2s_startup(struct snd_pcm_substream *substream,
+@@ -589,6 +585,10 @@ static int stm32_i2s_trigger(struct snd_
+ 		/* Enable i2s */
+ 		dev_dbg(cpu_dai->dev, "start I2S\n");
+ 
++		cfg1_mask = I2S_CFG1_RXDMAEN | I2S_CFG1_TXDMAEN;
++		regmap_update_bits(i2s->regmap, STM32_I2S_CFG1_REG,
++				   cfg1_mask, cfg1_mask);
++
+ 		ret = regmap_update_bits(i2s->regmap, STM32_I2S_CR1_REG,
+ 					 I2S_CR1_SPE, I2S_CR1_SPE);
+ 		if (ret < 0) {
 
 
