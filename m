@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43EB0C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C72C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 077A52064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:02:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A3C220674
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414168;
-	bh=AK+0iL2K88+4zjkWg6cRz/Q8lxIKszoqmc5G3IFXL+c=;
+	s=default; t=1575414176;
+	bh=ZJ8gpXQBhU0zBIqGfk5Yz47S/EoXgQRH3InZOl3iSCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XugrA95HfPe4oM+Wy0svOxpgD6yr9id0BvhaDBD7jwfQK1SfHfqznLV33ZjR3dWqs
-	 gbqo0Uqo9KG5HUjV0RQ0RtwBJbU/07ZU6qK2foCV2slLkO0etZJnLMn3M1eZ2p+fxF
-	 MWmw7yA3mwuHcaQ28Lq7bFH2gju63zvEBHMCZ0TY=
+	b=I/wZiKajMECik0ALEcdJW2wqc/6nc+uIKjJ/ca2A1Utu2bANBlyE/kR44XLmhzJla
+	 BYsb4ZMM37RqfQwxdgBqGrqaCUbXfgHYI1CopE2aSXobk5+Bi6NTa/Q10LygqsFClw
+	 iapz2W7UGVWpOg2d150jF03l+pTdTdAh2y5ELALI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730114AbfLCWyJ (ORCPT
+        id S1730210AbfLCXCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:54:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47764 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 18:02:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728742AbfLCWyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:54:05 -0500
+        id S1728720AbfLCWx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:53:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1AA720674;
-        Tue,  3 Dec 2019 22:54:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EE2A20865;
+        Tue,  3 Dec 2019 22:53:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413645;
-        bh=AK+0iL2K88+4zjkWg6cRz/Q8lxIKszoqmc5G3IFXL+c=;
+        s=default; t=1575413637;
+        bh=ZJ8gpXQBhU0zBIqGfk5Yz47S/EoXgQRH3InZOl3iSCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a8oQiIuKMuTIIUOJEXpJQp9nVrXkc2OpeVg1Q9Q2ozzyKPT8qgrdBIfpn3n+fopk1
-         34KTMIhVErLzdt1siSMOjVeNMgc4x/V50ZEfXYbxx2avCdPE3CzMj5/UGJjGZXtyVs
-         23XbTqnC3r3nSIJtex/GxNEisWbEAw4K1cGhV9nk=
+        b=mKsxlspFcicI+edsttfkauZmJzeYqoPXVP40LHdSuM3bGZBa9bluSxmhiD3pNBkRm
+         9nYKcDvd++jUVHeblcMWD/dt+8kfbesUpjVOJz3Z4SKt+wb4l2ElFRcKaP9GcpdceU
+         9hCbvPeT2WpwtivH6wfYmExKUfgoGc0naS4e70SE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        James Morse <james.morse@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
+        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 206/321] firmware: arm_sdei: fix wrong of_node_put() in init function
-Date:   Tue,  3 Dec 2019 23:34:32 +0100
-Message-Id: <20191203223437.838369982@linuxfoundation.org>
+Subject: [PATCH 4.19 203/321] xprtrdma: Prevent leak of rpcrdma_rep objects
+Date:   Tue,  3 Dec 2019 23:34:29 +0100
+Message-Id: <20191203223437.682769675@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -62,38 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit c3790b3799f8d75d93d26f6fd7bb569fc8c8b0cb ]
+[ Upstream commit 07e10308ee5da8e6132e0b737ece1c99dd651fb6 ]
 
-After finding a "firmware" dt node arm_sdei tries to match it's
-compatible string with it. To do so it's calling of_find_matching_node()
-which already takes care of decreasing the refcount on the "firmware"
-node. We are then incorrectly decreasing the refcount on that node
-again.
+If a reply has been processed but the RPC is later retransmitted
+anyway, the req->rl_reply field still contains the only pointer to
+the old rpcrdma rep. When the next reply comes in, the reply handler
+will stomp on the rl_reply field, leaking the old rep.
 
-This patch removes the unwarranted call to of_node_put().
+A trace event is added to capture such leaks.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+This problem seems to be worsened by the restructuring of the RPC
+Call path in v4.20. Fully addressing this issue will require at
+least a re-architecture of the disconnect logic, which is not
+appropriate during -rc.
+
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/arm_sdei.c | 1 -
- 1 file changed, 1 deletion(-)
+ include/trace/events/rpcrdma.h | 28 ++++++++++++++++++++++++++++
+ net/sunrpc/xprtrdma/rpc_rdma.c |  4 ++++
+ 2 files changed, 32 insertions(+)
 
-diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
-index 1ea71640fdc21..dffb47c6b4801 100644
---- a/drivers/firmware/arm_sdei.c
-+++ b/drivers/firmware/arm_sdei.c
-@@ -1017,7 +1017,6 @@ static bool __init sdei_present_dt(void)
- 		return false;
+diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
+index 53df203b8057a..4c91cadd1871d 100644
+--- a/include/trace/events/rpcrdma.h
++++ b/include/trace/events/rpcrdma.h
+@@ -917,6 +917,34 @@ TRACE_EVENT(xprtrdma_cb_setup,
+ DEFINE_CB_EVENT(xprtrdma_cb_call);
+ DEFINE_CB_EVENT(xprtrdma_cb_reply);
  
- 	np = of_find_matching_node(fw_np, sdei_of_match);
--	of_node_put(fw_np);
- 	if (!np)
- 		return false;
++TRACE_EVENT(xprtrdma_leaked_rep,
++	TP_PROTO(
++		const struct rpc_rqst *rqst,
++		const struct rpcrdma_rep *rep
++	),
++
++	TP_ARGS(rqst, rep),
++
++	TP_STRUCT__entry(
++		__field(unsigned int, task_id)
++		__field(unsigned int, client_id)
++		__field(u32, xid)
++		__field(const void *, rep)
++	),
++
++	TP_fast_assign(
++		__entry->task_id = rqst->rq_task->tk_pid;
++		__entry->client_id = rqst->rq_task->tk_client->cl_clid;
++		__entry->xid = be32_to_cpu(rqst->rq_xid);
++		__entry->rep = rep;
++	),
++
++	TP_printk("task:%u@%u xid=0x%08x rep=%p",
++		__entry->task_id, __entry->client_id, __entry->xid,
++		__entry->rep
++	)
++);
++
+ /**
+  ** Server-side RPC/RDMA events
+  **/
+diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
+index c8ae983c6cc01..f2eaf264726be 100644
+--- a/net/sunrpc/xprtrdma/rpc_rdma.c
++++ b/net/sunrpc/xprtrdma/rpc_rdma.c
+@@ -1360,6 +1360,10 @@ void rpcrdma_reply_handler(struct rpcrdma_rep *rep)
+ 	spin_unlock(&xprt->recv_lock);
  
+ 	req = rpcr_to_rdmar(rqst);
++	if (req->rl_reply) {
++		trace_xprtrdma_leaked_rep(rqst, req->rl_reply);
++		rpcrdma_recv_buffer_put(req->rl_reply);
++	}
+ 	req->rl_reply = rep;
+ 	rep->rr_rqst = rqst;
+ 	clear_bit(RPCRDMA_REQ_F_PENDING, &req->rl_flags);
 -- 
 2.20.1
 
