@@ -2,176 +2,104 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E903C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F61C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F15F20640
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BDA020640
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:41:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575362464;
+	bh=xNXnJQMqxsoMv7LLaUi0i2Vx2d7CHjbfF+XyAr5UNpk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rhhEJtjnafEZWWmx82e83f8ECL9MKnU1z1gWXtgYR5ZfQFOTqeDmwHfBMrTMTVrUW
+	 6kMltzReN8WCm0OEvub24FYUBkqFkKEcOnTca6HOP0swdvHf1WJehU8TDY+RKvfyz1
+	 XV6cpn0AkHBMCWl7dQ8MX20h+IqWfAaG0gEi5AgA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbfLCIjV (ORCPT
+        id S1726074AbfLCIlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 03:39:21 -0500
-Received: from foss.arm.com ([217.140.110.172]:39002 "EHLO foss.arm.com"
+        Tue, 3 Dec 2019 03:41:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbfLCIjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 03:39:21 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A954C30E;
-        Tue,  3 Dec 2019 00:39:20 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4EFAD3F68E;
-        Tue,  3 Dec 2019 00:42:27 -0800 (PST)
-Date:   Tue, 3 Dec 2019 08:39:16 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Parth Shah <parth@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, vincent.guittot@linaro.org,
-        patrick.bellasi@matbug.net, valentin.schneider@arm.com,
-        pavel@ucw.cz, dhaval.giani@oracle.com, qperret@qperret.net,
-        David.Laight@ACULAB.COM, morten.rasmussen@arm.com, pjt@google.com,
-        tj@kernel.org, dietmar.eggemann@arm.com, viresh.kumar@linaro.org,
-        rafael.j.wysocki@intel.com, daniel.lezcano@linaro.org
-Subject: Re: [RFC 3/3] Allow sched_{get,set}attr to change latency_tolerance
- of the task
-Message-ID: <20191203083915.yahl2qd3wnnkqxxs@e107158-lin.cambridge.arm.com>
-References: <20191125094618.30298-1-parth@linux.ibm.com>
- <20191125094618.30298-4-parth@linux.ibm.com>
+        id S1725829AbfLCIlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 03:41:03 -0500
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F316F206DF
+        for <linux-kernel@vger.kernel.org>; Tue,  3 Dec 2019 08:41:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575362462;
+        bh=xNXnJQMqxsoMv7LLaUi0i2Vx2d7CHjbfF+XyAr5UNpk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nsKyqEW1GpkfYJMMDx/Ca9z+dwFg0Oef8NTJGyCHGlF5uZGoZ51gQPswVkQ9cg7ma
+         6V/Rl+lRsqWk5gQH8lqNfA62jKFMdG8N/ysX6ojc2XihD4w8DRylicaKLdh0JhI9wK
+         5C8ta1GFhhbmI9+6qGmYCkxfT3X9lepTwF3q2Ts0=
+Received: by mail-lj1-f176.google.com with SMTP id j6so2822591lja.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 00:41:01 -0800 (PST)
+X-Gm-Message-State: APjAAAV9NMW6HbzRglz5bBZ0EbfxcUGArdI8VmMbHCCiuE5gLJQlP+AD
+        OSjVfT/H0/tSm1XjxWpuCK2CFUkVpzSARd7nhmA=
+X-Google-Smtp-Source: APXvYqzBXp6dwlc5mHUlmWK4YfCHWiu1mg0M2AAq7fhngtn6OVEIiUUGc/raSEzmPaHAzMTOKyQjyLzDf69bpqvh6hQ=
+X-Received: by 2002:a2e:9d9a:: with SMTP id c26mr1828903ljj.225.1575362460172;
+ Tue, 03 Dec 2019 00:41:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191125094618.30298-4-parth@linux.ibm.com>
-User-Agent: NeoMutt/20171215
+References: <1574906800-19901-1-git-send-email-krzk@kernel.org>
+ <87a78gnyaz.fsf@intel.com> <ab3309596fac1c5a0cb4e0abed0cf1ee7ac13a3d.camel@perches.com>
+In-Reply-To: <ab3309596fac1c5a0cb4e0abed0cf1ee7ac13a3d.camel@perches.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Tue, 3 Dec 2019 16:40:48 +0800
+X-Gmail-Original-Message-ID: <CAJKOXPdqn7+ucwqu2vJFL9ggCerpBz1qN6BSJvcsi4BQ3DU6fg@mail.gmail.com>
+Message-ID: <CAJKOXPdqn7+ucwqu2vJFL9ggCerpBz1qN6BSJvcsi4BQ3DU6fg@mail.gmail.com>
+Subject: Re: [PATCH] checkpatch: Look for Kconfig indentation errors
+To:     Joe Perches <joe@perches.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/25/19 15:16, Parth Shah wrote:
-> Introduce the latency_tolerance attribute to sched_attr and provide a
-> mechanism to change the value with the use of sched_setattr/sched_getattr
-> syscall.
-> 
-> Also add new flag "SCHED_FLAG_LATENCY_TOLERANCE" to hint the change in
-> latency_tolerance of the task on every sched_setattr syscall.
-> 
-> Signed-off-by: Parth Shah <parth@linux.ibm.com>
-> ---
->  include/uapi/linux/sched.h       |  4 +++-
->  include/uapi/linux/sched/types.h |  2 ++
->  kernel/sched/core.c              | 15 +++++++++++++++
->  kernel/sched/sched.h             |  1 +
->  4 files changed, 21 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
-> index b3105ac1381a..73db430d11b6 100644
-> --- a/include/uapi/linux/sched.h
-> +++ b/include/uapi/linux/sched.h
-> @@ -71,6 +71,7 @@ struct clone_args {
->  #define SCHED_FLAG_KEEP_PARAMS		0x10
->  #define SCHED_FLAG_UTIL_CLAMP_MIN	0x20
->  #define SCHED_FLAG_UTIL_CLAMP_MAX	0x40
-> +#define SCHED_FLAG_LATENCY_TOLERANCE	0x80
->  
->  #define SCHED_FLAG_KEEP_ALL	(SCHED_FLAG_KEEP_POLICY | \
->  				 SCHED_FLAG_KEEP_PARAMS)
-> @@ -82,6 +83,7 @@ struct clone_args {
->  			 SCHED_FLAG_RECLAIM		| \
->  			 SCHED_FLAG_DL_OVERRUN		| \
->  			 SCHED_FLAG_KEEP_ALL		| \
-> -			 SCHED_FLAG_UTIL_CLAMP)
-> +			 SCHED_FLAG_UTIL_CLAMP		| \
-> +			 SCHED_FLAG_LATENCY_TOLERANCE)
->  
->  #endif /* _UAPI_LINUX_SCHED_H */
-> diff --git a/include/uapi/linux/sched/types.h b/include/uapi/linux/sched/types.h
-> index c852153ddb0d..960774ac0c70 100644
-> --- a/include/uapi/linux/sched/types.h
-> +++ b/include/uapi/linux/sched/types.h
-> @@ -118,6 +118,8 @@ struct sched_attr {
->  	__u32 sched_util_min;
->  	__u32 sched_util_max;
->  
-> +	/* latency requirement hints */
-> +	__s32 sched_latency_tolerance;
->  };
->  
->  #endif /* _UAPI_LINUX_SCHED_TYPES_H */
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index ea7abbf5c1bb..dfd36ec14404 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -4695,6 +4695,9 @@ static void __setscheduler_params(struct task_struct *p,
->  	p->rt_priority = attr->sched_priority;
->  	p->normal_prio = normal_prio(p);
->  	set_load_weight(p, true);
-> +
-> +	/* Change latency tolerance of the task if !SCHED_FLAG_KEEP_PARAMS */
-> +	p->latency_tolerance = attr->sched_latency_tolerance;
->  }
->  
->  /* Actually do priority change: must hold pi & rq lock. */
-> @@ -4852,6 +4855,13 @@ static int __sched_setscheduler(struct task_struct *p,
->  			return retval;
->  	}
->  
-> +	if (attr->sched_flags & SCHED_FLAG_LATENCY_TOLERANCE) {
-> +		if (attr->sched_latency_tolerance > MAX_LATENCY_TOLERANCE)
-> +			return -EINVAL;
-> +		if (attr->sched_latency_tolerance < MIN_LATENCY_TOLERANCE)
-> +			return -EINVAL;
-> +	}
-> +
->  	if (pi)
->  		cpuset_read_lock();
->  
-> @@ -4886,6 +4896,9 @@ static int __sched_setscheduler(struct task_struct *p,
->  			goto change;
->  		if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP)
->  			goto change;
-> +		if (attr->sched_flags & SCHED_FLAG_LATENCY_TOLERANCE &&
-> +		    attr->sched_latency_tolerance != p->latency_tolerance)
-> +			goto change;
->  
->  		p->sched_reset_on_fork = reset_on_fork;
->  		retval = 0;
-> @@ -5392,6 +5405,8 @@ SYSCALL_DEFINE4(sched_getattr, pid_t, pid, struct sched_attr __user *, uattr,
->  	else
->  		kattr.sched_nice = task_nice(p);
->  
-> +	kattr.sched_latency_tolerance = p->latency_tolerance;
-> +
->  #ifdef CONFIG_UCLAMP_TASK
->  	kattr.sched_util_min = p->uclamp_req[UCLAMP_MIN].value;
->  	kattr.sched_util_max = p->uclamp_req[UCLAMP_MAX].value;
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 0db2c1b3361e..bb181175954b 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -21,6 +21,7 @@
->  #include <linux/sched/nohz.h>
->  #include <linux/sched/numa_balancing.h>
->  #include <linux/sched/prio.h>
-> +#include <linux/sched/latency_tolerance.h>
+On Thu, 28 Nov 2019 at 17:35, Joe Perches <joe@perches.com> wrote:
+>
+> On Thu, 2019-11-28 at 11:29 +0200, Jani Nikula wrote:
+> > On Thu, 28 Nov 2019, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > > Kconfig should be indented with one tab for first level and tab+2 spaces
+> > > for second level.  There are many mixups of this so add a checkpatch
+> > > rule.
+> > >
+> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >
+> > I agree unifying the indentation is nice, and without something like
+> > this it'll start bitrotting before Krzysztof's done fixing them all... I
+> > think there's been quite a few fixes merged lately.
+> >
+> > I approve of the idea, but I'm clueless about the implementation.
+>
+> I think that a grammar, or a least an array of words
+> that are supposed to start on a tab should be used here.
 
-nit: keep in alphabatical order.
+This won't work for wrong indentation of help text. This is quite
+popular Kconfig indentation violation so worth checking. I can then
+check for:
+1. any white-space violations before array of Kconfig words - that
+2. spaces mixed with tab before any text,
+3. just spaces before any text,
+4. tab + wrong number of spaces before any text.
 
-The series looks good to me except for the 2 minor nits. Thanks for taking care
-of this!
+It would look like:
++               if ($realfile =~ /Kconfig/ &&
++                   (($rawline =~
+/^\+\s+(?:config|menuconfig|choice|endchoice|if|endif|menu|endmenu|source|bool|tristate|prompt|help|---help---|depends|select)\b/
+&&
++                     $rawline !~ /^\+\t[a-z-]/) ||
++                    $rawline =~ /^\+\t* +\t+ *[a-zA-Z0-9-]/ ||
++                    $rawline =~ /^\+\t( |   )[a-zA-Z0-9-]/)) {
 
-Reviewed-by: Qais Yousef <qais.yousef@arm.com>
-
-Cheers
-
---
-Qais Yousef
-
->  #include <linux/sched/rt.h>
->  #include <linux/sched/signal.h>
->  #include <linux/sched/smt.h>
-> -- 
-> 2.17.2
-> 
+Best regards,
+Krzysztof
