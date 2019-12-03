@@ -2,116 +2,267 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A37C9C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD8AC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76ABF20661
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:31:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="jUDRzMDs"
+	by mail.kernel.org (Postfix) with ESMTP id 9E5512154A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:31:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbfLCTbO (ORCPT
+        id S1727472AbfLCTbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 14:31:14 -0500
-Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:39358 "EHLO
-        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727385AbfLCTbN (ORCPT
+        Tue, 3 Dec 2019 14:31:22 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35922 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727385AbfLCTbW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 14:31:13 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 538823F79C;
-        Tue,  3 Dec 2019 20:31:10 +0100 (CET)
-Authentication-Results: pio-pvt-msa2.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=jUDRzMDs;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id hehyB8a_Sx59; Tue,  3 Dec 2019 20:31:09 +0100 (CET)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id A66153F4CF;
-        Tue,  3 Dec 2019 20:31:08 +0100 (CET)
-Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 2375B362501;
-        Tue,  3 Dec 2019 20:31:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1575401468; bh=GgpXsnJVZPKyPe+h+0gIt+VQkmGTuW5nmRdMrtnMCT8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jUDRzMDsGPJvk0017GCqWL8w/RwWA/9L3q2eiH3OKffW6LTeyvYqK2UFvt561ftiN
-         wasrY82tz2l++RDhSJKGJbIhKugSzN9YtRvhKCaaVEFsvvagkkJ+o/SZEyF3ve9iUe
-         edTj+I5iYtmQCNd02pOlVcQTXfeGs3fZE13W2wOQ=
-From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
-        <thomas_os@shipmail.org>
-To:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pv-drivers@vmware.com
-Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Jim Gill <jgill@vmware.com>
-Subject: [PATCH RESEND 2/2] scsi: vmw_pvscsi: Silence dma mapping errors
-Date:   Tue,  3 Dec 2019 20:30:52 +0100
-Message-Id: <20191203193052.7583-2-thomas_os@shipmail.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191203193052.7583-1-thomas_os@shipmail.org>
-References: <20191203193052.7583-1-thomas_os@shipmail.org>
+        Tue, 3 Dec 2019 14:31:22 -0500
+Received: from localhost (unknown [IPv6:2610:98:8005::647])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: krisman)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id BAB152904A2;
+        Tue,  3 Dec 2019 19:31:19 +0000 (GMT)
+From:   Gabriel Krisman Bertazi <krisman@collabora.com>
+To:     Daniel Rosenberg <drosen@google.com>
+Cc:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Eric Biggers <ebiggers@kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [PATCH 4/8] vfs: Fold casefolding into vfs
+Organization: Collabora
+References: <20191203051049.44573-1-drosen@google.com>
+        <20191203051049.44573-5-drosen@google.com>
+Date:   Tue, 03 Dec 2019 14:31:16 -0500
+In-Reply-To: <20191203051049.44573-5-drosen@google.com> (Daniel Rosenberg's
+        message of "Mon, 2 Dec 2019 21:10:45 -0800")
+Message-ID: <851rtlcikb.fsf@collabora.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hellstrom <thellstrom@vmware.com>
+Daniel Rosenberg <drosen@google.com> writes:
 
-These errors typically occur with swiotlb when the swiotlb buffer is full.
-But they are transient and would typically unnecessarily worry a user.
-Instead of errors, print debug messages.
+> Ext4 and F2fs are both using casefolding, and they, along with any other
+> filesystem that adds the feature, will be using identical dentry_ops.
+> Additionally, those dentry ops interfere with the dentry_ops required
+> for fscrypt once we add support for casefolding and encryption.
+> Moving this into the vfs removes code duplication as well as the
+> complication with encryption.
+>
+> Currently this is pretty close to just moving the existing f2fs/ext4
+> code up a level into the vfs, although there is a lot of room for
+> improvement now.
+>
+> Signed-off-by: Daniel Rosenberg <drosen@google.com>
+> ---
+>  fs/dcache.c        | 35 +++++++++++++++++++++++++++++++++++
+>  fs/namei.c         | 43 ++++++++++++++++++++++++++++++++++++++++---
+>  include/linux/fs.h | 12 ++++++++++++
+>  3 files changed, 87 insertions(+), 3 deletions(-)
+>
+> diff --git a/fs/dcache.c b/fs/dcache.c
+> index f7931b682a0d..575f3c2c3f77 100644
+> --- a/fs/dcache.c
+> +++ b/fs/dcache.c
+> @@ -32,6 +32,7 @@
+>  #include <linux/bit_spinlock.h>
+>  #include <linux/rculist_bl.h>
+>  #include <linux/list_lru.h>
+> +#include <linux/unicode.h>
+>  #include "internal.h"
+>  #include "mount.h"
+>  
+> @@ -228,6 +229,13 @@ static inline int dentry_string_cmp(const unsigned char *cs, const unsigned char
+>  
+>  #endif
+>  
+> +bool needs_casefold(const struct inode *dir)
+> +{
+> +	return IS_CASEFOLDED(dir) &&
+> +			(!IS_ENCRYPTED(dir) || fscrypt_has_encryption_key(dir));
+> +}
+> +EXPORT_SYMBOL(needs_casefold);
+> +
+>  static inline int dentry_cmp(const struct dentry *dentry, const unsigned char *ct, unsigned tcount)
+>  {
+>  	/*
+> @@ -247,7 +255,19 @@ static inline int dentry_cmp(const struct dentry *dentry, const unsigned char *c
+>  	 * be no NUL in the ct/tcount data)
+>  	 */
+>  	const unsigned char *cs = READ_ONCE(dentry->d_name.name);
+> +#ifdef CONFIG_UNICODE
+> +	struct inode *parent = dentry->d_parent->d_inode;
+>  
+> +	if (unlikely(needs_casefold(parent))) {
+> +		const struct qstr n1 = QSTR_INIT(cs, tcount);
+> +		const struct qstr n2 = QSTR_INIT(ct, tcount);
+> +		int result = utf8_strncasecmp(dentry->d_sb->s_encoding,
+> +						&n1, &n2);
+> +
+> +		if (result >= 0 || sb_has_enc_strict_mode(dentry->d_sb))
+> +			return result;
+> +	}
+> +#endif
+>  	return dentry_string_cmp(cs, ct, tcount);
+>  }
+>  
+> @@ -2404,7 +2424,22 @@ struct dentry *d_hash_and_lookup(struct dentry *dir, struct qstr *name)
+>  	 * calculate the standard hash first, as the d_op->d_hash()
+>  	 * routine may choose to leave the hash value unchanged.
+>  	 */
+> +#ifdef CONFIG_UNICODE
+> +	unsigned char *hname = NULL;
+> +	int hlen = name->len;
+> +
+> +	if (IS_CASEFOLDED(dir->d_inode)) {
+> +		hname = kmalloc(PATH_MAX, GFP_ATOMIC);
+> +		if (!hname)
+> +			return ERR_PTR(-ENOMEM);
+> +		hlen = utf8_casefold(dir->d_sb->s_encoding,
+> +					name, hname, PATH_MAX);
+> +	}
+> +	name->hash = full_name_hash(dir, hname ?: name->name, hlen);
+> +	kfree(hname);
+> +#else
+>  	name->hash = full_name_hash(dir, name->name, name->len);
+> +#endif
+>  	if (dir->d_flags & DCACHE_OP_HASH) {
+>  		int err = dir->d_op->d_hash(dir, name);
+>  		if (unlikely(err < 0))
+> diff --git a/fs/namei.c b/fs/namei.c
+> index 2dda552bcf7a..b8d5cb0994ec 100644
+> --- a/fs/namei.c
+> +++ b/fs/namei.c
+> @@ -39,6 +39,7 @@
+>  #include <linux/bitops.h>
+>  #include <linux/init_task.h>
+>  #include <linux/uaccess.h>
+> +#include <linux/unicode.h>
+>  
+>  #include "internal.h"
+>  #include "mount.h"
+> @@ -2062,6 +2063,10 @@ static inline u64 hash_name(const void *salt, const char *name)
+>  static int link_path_walk(const char *name, struct nameidata *nd)
+>  {
+>  	int err;
+> +#ifdef CONFIG_UNICODE
+> +	char *hname = NULL;
+> +	int hlen = 0;
+> +#endif
+>  
+>  	if (IS_ERR(name))
+>  		return PTR_ERR(name);
+> @@ -2078,9 +2083,21 @@ static int link_path_walk(const char *name, struct nameidata *nd)
+>  		err = may_lookup(nd);
+>  		if (err)
+>  			return err;
+> -
+> +#ifdef CONFIG_UNICODE
+> +		if (needs_casefold(nd->path.dentry->d_inode)) {
+> +			struct qstr str = QSTR_INIT(name, PATH_MAX);
+> +
+> +			hname = kmalloc(PATH_MAX, GFP_ATOMIC);
+> +			if (!hname)
+> +				return -ENOMEM;
+> +			hlen = utf8_casefold(nd->path.dentry->d_sb->s_encoding,
+> +						&str, hname, PATH_MAX);
+> +		}
+> +		hash_len = hash_name(nd->path.dentry, hname ?: name);
+> +		kfree(hname);
 
-Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-Acked-by: Jim Gill <jgill@vmware.com>
----
- drivers/scsi/vmw_pvscsi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+It would be nice to reuse the memory allocation for the entire path walk
+instead of allocating and freeing several times in a row.  Still not
+ideal, but I don't see how we could not have at least one allocation here.
 
-diff --git a/drivers/scsi/vmw_pvscsi.c b/drivers/scsi/vmw_pvscsi.c
-index 8a09d184a320..c3f010df641e 100644
---- a/drivers/scsi/vmw_pvscsi.c
-+++ b/drivers/scsi/vmw_pvscsi.c
-@@ -365,7 +365,7 @@ static int pvscsi_map_buffers(struct pvscsi_adapter *adapter,
- 		int segs = scsi_dma_map(cmd);
- 
- 		if (segs == -ENOMEM) {
--			scmd_printk(KERN_ERR, cmd,
-+			scmd_printk(KERN_DEBUG, cmd,
- 				    "vmw_pvscsi: Failed to map cmd sglist for DMA.\n");
- 			return -ENOMEM;
- 		} else if (segs > 1) {
-@@ -392,7 +392,7 @@ static int pvscsi_map_buffers(struct pvscsi_adapter *adapter,
- 		ctx->dataPA = dma_map_single(&adapter->dev->dev, sg, bufflen,
- 					     cmd->sc_data_direction);
- 		if (dma_mapping_error(&adapter->dev->dev, ctx->dataPA)) {
--			scmd_printk(KERN_ERR, cmd,
-+			scmd_printk(KERN_DEBUG, cmd,
- 				    "vmw_pvscsi: Failed to map direct data buffer for DMA.\n");
- 			return -ENOMEM;
- 		}
-@@ -725,7 +725,7 @@ static int pvscsi_queue_ring(struct pvscsi_adapter *adapter,
- 				cmd->sense_buffer, SCSI_SENSE_BUFFERSIZE,
- 				DMA_FROM_DEVICE);
- 		if (dma_mapping_error(&adapter->dev->dev, ctx->sensePA)) {
--			scmd_printk(KERN_ERR, cmd,
-+			scmd_printk(KERN_DEBUG, cmd,
- 				    "vmw_pvscsi: Failed to map sense buffer for DMA.\n");
- 			ctx->sensePA = 0;
- 			return -ENOMEM;
+> +#else
+>  		hash_len = hash_name(nd->path.dentry, name);
+> -
+> +#endif
+>  		type = LAST_NORM;
+>  		if (name[0] == '.') switch (hashlen_len(hash_len)) {
+>  			case 2:
+> @@ -2452,9 +2469,29 @@ EXPORT_SYMBOL(vfs_path_lookup);
+>  static int lookup_one_len_common(const char *name, struct dentry *base,
+>  				 int len, struct qstr *this)
+>  {
+> +#ifdef CONFIG_UNICODE
+> +	char *hname = NULL;
+> +	int hlen = len;
+> +
+> +	if (needs_casefold(base->d_inode)) {
+> +		struct qstr str = QSTR_INIT(name, len);
+> +
+> +		hname = kmalloc(PATH_MAX, GFP_ATOMIC);
+> +		if (!hname)
+> +			return -ENOMEM;
+> +		hlen = utf8_casefold(base->d_sb->s_encoding,
+> +					&str, hname, PATH_MAX);
+> +	}
+> +	this->hash = full_name_hash(base, hname ?: name, hlen);
+> +	kvfree(hname);
+> +#else
+> +	this->hash = full_name_hash(base, name, len);
+> +#endif
+>  	this->name = name;
+>  	this->len = len;
+> -	this->hash = full_name_hash(base, name, len);
+> +#ifdef CONFIG_UNICODE
+> +	kfree(hname);
+> +#endif
+>  	if (!len)
+>  		return -EACCES;
+>  
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index c159a8bdee8b..38d1c20f3e6f 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -1382,6 +1382,12 @@ extern int send_sigurg(struct fown_struct *fown);
+>  #define SB_ACTIVE	(1<<30)
+>  #define SB_NOUSER	(1<<31)
+>  
+> +/* These flags relate to encoding and casefolding */
+> +#define SB_ENC_STRICT_MODE_FL	(1 << 0)
+> +
+> +#define sb_has_enc_strict_mode(sb) \
+> +	(sb->s_encoding_flags & SB_ENC_STRICT_MODE_FL)
+> +
+>  /*
+>   *	Umount options
+>   */
+> @@ -1449,6 +1455,10 @@ struct super_block {
+>  #endif
+>  #ifdef CONFIG_FS_VERITY
+>  	const struct fsverity_operations *s_vop;
+> +#endif
+> +#ifdef CONFIG_UNICODE
+> +	struct unicode_map *s_encoding;
+> +	__u16 s_encoding_flags;
+>  #endif
+>  	struct hlist_bl_head	s_roots;	/* alternate root dentries for NFS */
+>  	struct list_head	s_mounts;	/* list of mounts; _not_ for fs use */
+> @@ -2044,6 +2054,8 @@ static inline bool sb_rdonly(const struct super_block *sb) { return sb->s_flags
+>  #define IS_WHITEOUT(inode)	(S_ISCHR(inode->i_mode) && \
+>  				 (inode)->i_rdev == WHITEOUT_DEV)
+>  
+> +extern bool needs_casefold(const struct inode *dir);
+> +
+>  static inline bool HAS_UNMAPPED_ID(struct inode *inode)
+>  {
+>  	return !uid_valid(inode->i_uid) || !gid_valid(inode->i_gid);
+
 -- 
-2.21.0
-
+Gabriel Krisman Bertazi
