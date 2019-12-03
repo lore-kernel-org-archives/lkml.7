@@ -2,86 +2,107 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BD3C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA7EC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50C9F207DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:57:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K+oWswS7"
+	by mail.kernel.org (Postfix) with ESMTP id 85BE5207DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:57:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575381470;
+	bh=tWcjEHHLpVhKLX1B5i7zG6hngQtT0ckeiqNvl9ldcOk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mqiX8WNnhM5j736jXogSWyheIMhFh/c2pfbpAv4FyWPEiCjwkUbh2FKq1Xr2eM+TJ
+	 9pAv8YcPlbZ7AFoaO+KVrCGPk2YDJAbxQAghVR+lVD0ugTRoJyR5WGR0uuRAdM5CnK
+	 ldAoQyEdkAvS0bORKewKx1nwfALYrKSRiARF8n4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbfLCN5l (ORCPT
+        id S1727322AbfLCN5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 08:57:41 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:58434 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727180AbfLCN5J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 08:57:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=pGZjUh8ellhVGI9ssg4DQAJRtWM/oSsrAhWz58uDLYE=; b=K+oWswS7BbZQhmXrTzt62YVxf
-        mKNwgluw/QFfsuhI2q2SwT2RGIfB+UDz+XkbodHVayXzf4yZ7U49NGvpJETvrCpbzXtFKKe0ncN5F
-        z6psPTwUdiyKtaWK2e1noIWYD+8MPgF0q5TJg5ftlWJ0jKgOyoxoykYbaP8J2zz7psj19Eh4snUbU
-        hfs/OXm9cR1EtryubmeT6YOH4/24FbG8gPGIVAQnIfvxnFFjfFQFRCnUIHBOMbBk35mty6yv3ZH+w
-        p1QwiAlusOVQVbSUVFmbnmZjsqCs/12YIeIKqZgxSOg3M5PdmftpMCXuZBdzfMwupQO1aGNv04Zcz
-        c0SdgoDgw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ic8fb-0005Ec-5g; Tue, 03 Dec 2019 13:56:51 +0000
-Date:   Tue, 3 Dec 2019 05:56:51 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] fs: introduce is_dot_dotdot helper for cleanup
-Message-ID: <20191203135651.GU20752@bombadil.infradead.org>
-References: <1575377810-3574-1-git-send-email-yangtiezhu@loongson.cn>
+        Tue, 3 Dec 2019 08:57:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35110 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726659AbfLCN5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 08:57:03 -0500
+Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FD47206DF;
+        Tue,  3 Dec 2019 13:57:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575381423;
+        bh=tWcjEHHLpVhKLX1B5i7zG6hngQtT0ckeiqNvl9ldcOk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oCkmWrMy4q89f33BGKb7EL/5VYpvsiGS+5pB7zS0kLn/Z8hfxZ55YC0UZ4nVF3eL8
+         GqszEYqBSxzmSUtSo0hUQpw4E267M+WdjG8Pta4PqLVD1tV5A1mcLCc878X/N3dSBC
+         ETyh7ubN2wtmkh+LCOGvzaI9uubMOfy0Tpb6iEug=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Eric Biggers <ebiggers@google.com>
+Subject: [PATCH 16/23] tools headers uapi: Sync linux/stat.h with the kernel sources
+Date:   Tue,  3 Dec 2019 10:55:59 -0300
+Message-Id: <20191203135606.24902-17-acme@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191203135606.24902-1-acme@kernel.org>
+References: <20191203135606.24902-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1575377810-3574-1-git-send-email-yangtiezhu@loongson.cn>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 08:56:50PM +0800, Tiezhu Yang wrote:
-> There exists many similar and duplicate codes to check "." and "..",
-> so introduce is_dot_dotdot helper to make the code more clean.
-> 
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
-> 
-> v2:
->   - use the better performance implementation of is_dot_dotdot
->   - make it static inline and move it to include/linux/fs.h
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Ugh, not more crap in fs.h.
+To pick the changes from:
 
-$ ls -l --sort=size include/linux |head
--rw-r--r--  1 willy willy 154148 Nov 29 22:35 netdevice.h
--rw-r--r--  1 willy willy 130488 Nov 29 22:35 skbuff.h
--rw-r--r--  1 willy willy 123540 Nov 29 22:35 pci_ids.h
--rw-r--r--  1 willy willy 118991 Nov 29 22:35 fs.h
+  3ad2522c64cf ("statx: define STATX_ATTR_VERITY")
 
-I think this probably fits well in namei.h.  And I think it works
-better with bare 'name' and 'len' arguments, rather than taking a qstr.
+That don't trigger any changes in tooling.
 
-And, as I asked twice in the last round of review, did you benchmark
-this change?
+This silences this perf build warning:
+
+  Warning: Kernel ABI header at 'tools/include/uapi/linux/stat.h' differs from latest version at 'include/uapi/linux/stat.h'
+  diff -u tools/include/uapi/linux/stat.h include/uapi/linux/stat.h
+
+At some point we wi'll beautify structs passed in pointers to syscalls
+and then we'll need to have tables for these defines, for now update the
+file to silence the warning as this file is used for doing this type of
+number -> string translations for other defines found in these file.
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Eric Biggers <ebiggers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-thcy60dpry5qrpn7nmc58bwg@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/include/uapi/linux/stat.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/include/uapi/linux/stat.h b/tools/include/uapi/linux/stat.h
+index 7b35e98d3c58..ad80a5c885d5 100644
+--- a/tools/include/uapi/linux/stat.h
++++ b/tools/include/uapi/linux/stat.h
+@@ -167,8 +167,8 @@ struct statx {
+ #define STATX_ATTR_APPEND		0x00000020 /* [I] File is append-only */
+ #define STATX_ATTR_NODUMP		0x00000040 /* [I] File is not to be dumped */
+ #define STATX_ATTR_ENCRYPTED		0x00000800 /* [I] File requires key to decrypt in fs */
+-
+ #define STATX_ATTR_AUTOMOUNT		0x00001000 /* Dir: Automount trigger */
++#define STATX_ATTR_VERITY		0x00100000 /* [I] Verity protected file */
+ 
+ 
+ #endif /* _UAPI_LINUX_STAT_H */
+-- 
+2.21.0
+
