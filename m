@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 293F5C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE525C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E49172053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B76420866
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413811;
-	bh=Cxr1IVn+aLITQktIXXM8xcaAwdsk5806Gmw3pUO//Ng=;
+	s=default; t=1575413814;
+	bh=ojpl4hfOmmoT+ZFUjS1qM2CWa0mAd8MLm4DDMJlldYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vFTICSZ1oKLTpBT9R7+5ETmbwfJHho61dKOKChaUpaYgCIacLNUfO5iCloznG60n+
-	 sJLEZKuq9mi4XHrMm+9+RS6vZTpvwHGa9fJMNFbhNVefugq4UZBd2Uw5nnOpf7qunl
-	 oC6QueGApUnwZdPZNNePeK0cpzQs93xDQajdo+HQ=
+	b=v2Jrh7Dsn8wzfgGaeJYtELvGdTSO4YNhrw6TwUhej0Nxp1uW0H5/ga4sNHZjRa0tZ
+	 xH2cicg3vQXbmpwrmie3+gs2fvfDAxddbIpNPoHNuASLbzTvZv/OeY9dxUYW8YKEY1
+	 aPsHg/n5y1rxxgUaSbCy/4NOy6McoCGCrCIK/jIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730307AbfLCW4t (ORCPT
+        id S1730484AbfLCW4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:56:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51976 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:56:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730378AbfLCW4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:56:46 -0500
+        id S1730331AbfLCW4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:56:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0A1820803;
-        Tue,  3 Dec 2019 22:56:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A49EE20803;
+        Tue,  3 Dec 2019 22:56:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413806;
-        bh=Cxr1IVn+aLITQktIXXM8xcaAwdsk5806Gmw3pUO//Ng=;
+        s=default; t=1575413811;
+        bh=ojpl4hfOmmoT+ZFUjS1qM2CWa0mAd8MLm4DDMJlldYI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PxpuK2YpAeZx5+2UYUbzviL/Y9FaQwYgfxpHvyNf9krU2Tgkx3KwhNJLLAnk5r4zM
-         uLhbBOqED9tecFmXUYZhWONH+f/0h6W8h37w4s6yJoef28MwxSz+Fo8Q26pJqgzRKM
-         pZzG+q3agav8hxSk+8hkBCYPPaAeBI4sjsvkv+B8=
+        b=TlhNu1u5OX0k3r4EBNJXIa/vMavES4cmltPbuBg4Xuy1x2oVi8N+YCt6Ln1dOeuaZ
+         0e2axBHG89lhA7mZoyHa6KSlxGRqpkCF4x49B5JK0Wt8n9GGDM2iFdJHFyS4EaODuU
+         4+h1QALEwJXVveyzrIV1mq7keuT0u1E+GqwIDu2k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 4.19 270/321] staging: rtl8723bs: Drop ACPI device ids
-Date:   Tue,  3 Dec 2019 23:35:36 +0100
-Message-Id: <20191203223441.174230938@linuxfoundation.org>
+        stable@vger.kernel.org, Fabio DUrso <fabiodurso@hotmail.it>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.19 272/321] USB: serial: ftdi_sio: add device IDs for U-Blox C099-F9P
+Date:   Tue,  3 Dec 2019 23:35:38 +0100
+Message-Id: <20191203223441.278511776@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -58,38 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Fabio D'Urso <fabiodurso@hotmail.it>
 
-commit 2d9d2491530a156b9a5614adf9dc79285e35d55e upstream.
+commit c1a1f273d0825774c80896b8deb1c9ea1d0b91e3 upstream.
 
-The driver only binds by SDIO device-ids, all the ACPI device-id does
-is causing the driver to load unnecessarily on devices where the DSDT
-contains a bogus OBDA8723 device.
+This device presents itself as a USB hub with three attached devices:
+ - An ACM serial port connected to the GPS module (not affected by this
+   commit)
+ - An FTDI serial port connected to the GPS module (1546:0502)
+ - Another FTDI serial port connected to the ODIN-W2 radio module
+   (1546:0503)
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+This commit registers U-Blox's VID and the PIDs of the second and third
+devices.
+
+Datasheet: https://www.u-blox.com/sites/default/files/C099-F9P-AppBoard-Mbed-OS3-FW_UserGuide_%28UBX-18063024%29.pdf
+
+Signed-off-by: Fabio D'Urso <fabiodurso@hotmail.it>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191111113846.24940-2-hdegoede@redhat.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8723bs/os_dep/sdio_intf.c |    6 ------
- 1 file changed, 6 deletions(-)
+ drivers/usb/serial/ftdi_sio.c     |    3 +++
+ drivers/usb/serial/ftdi_sio_ids.h |    7 +++++++
+ 2 files changed, 10 insertions(+)
 
---- a/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-+++ b/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-@@ -22,13 +22,7 @@ static const struct sdio_device_id sdio_
- 	{ SDIO_DEVICE(0x024c, 0xb723), },
- 	{ /* end: all zeroes */				},
+--- a/drivers/usb/serial/ftdi_sio.c
++++ b/drivers/usb/serial/ftdi_sio.c
+@@ -1023,6 +1023,9 @@ static const struct usb_device_id id_tab
+ 	/* Sienna devices */
+ 	{ USB_DEVICE(FTDI_VID, FTDI_SIENNA_PID) },
+ 	{ USB_DEVICE(ECHELON_VID, ECHELON_U20_PID) },
++	/* U-Blox devices */
++	{ USB_DEVICE(UBLOX_VID, UBLOX_C099F9P_ZED_PID) },
++	{ USB_DEVICE(UBLOX_VID, UBLOX_C099F9P_ODIN_PID) },
+ 	{ }					/* Terminating entry */
  };
--static const struct acpi_device_id acpi_ids[] = {
--	{"OBDA8723", 0x0000},
--	{}
--};
--
- MODULE_DEVICE_TABLE(sdio, sdio_ids);
--MODULE_DEVICE_TABLE(acpi, acpi_ids);
  
- static int rtw_drv_init(struct sdio_func *func, const struct sdio_device_id *id);
- static void rtw_dev_remove(struct sdio_func *func);
+--- a/drivers/usb/serial/ftdi_sio_ids.h
++++ b/drivers/usb/serial/ftdi_sio_ids.h
+@@ -1558,3 +1558,10 @@
+  */
+ #define UNJO_VID			0x22B7
+ #define UNJO_ISODEBUG_V1_PID		0x150D
++
++/*
++ * U-Blox products (http://www.u-blox.com).
++ */
++#define UBLOX_VID			0x1546
++#define UBLOX_C099F9P_ZED_PID		0x0502
++#define UBLOX_C099F9P_ODIN_PID		0x0503
 
 
