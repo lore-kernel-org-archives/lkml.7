@@ -2,117 +2,120 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B47FC43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C67C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD93D206ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED72D206E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:01:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cCer6lW0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QOLrjCYa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbfLCDAz (ORCPT
+        id S1726645AbfLCDBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 22:00:55 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37479 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725941AbfLCDAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 22:00:55 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47RmvS4RY0z9sNx;
-        Tue,  3 Dec 2019 14:00:52 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1575342053;
-        bh=X3dwqvlcWqJxqxmFoyi4SdNifU4XJBFxpZs22IwDcz4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=cCer6lW01K4UANdIZz08cJa38nTb1SdrRualII/5mf+PZzgYLe1/dfus+kw5bujla
-         1MA7T856WcMlGMkGhPtwK6miViKJXbIBViuXdgsoSfC4s6KUKhDN9otVRetWYlQJQY
-         3+8trHgPVUCr7YMdkVWRtIshFSJQC/BX0hpMeO5Pu/oaeC6FEFydAhfyUcxzZqpgxi
-         8CUVw+nEZ1lAhOIByucrMZQkOa83rSJ8OvXTv4LKmCVS5M+f4HRb3zfUXfaAkGyw8h
-         9x3EOGWxBnwwa8XmKbGCftpE+fR3gKf1ww+Uh3INyfD8lZWnHRTjs0K9bWzDfy+QJE
-         Mayp+rDlCD+Yw==
-Date:   Tue, 3 Dec 2019 14:00:52 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: Re: linux-next: manual merge of the y2038 tree with the scsi tree
-Message-ID: <20191203140052.0ed8810d@canb.auug.org.au>
-In-Reply-To: <20191107153757.4999749b@canb.auug.org.au>
-References: <20191107153757.4999749b@canb.auug.org.au>
+        Mon, 2 Dec 2019 22:01:13 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34442 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbfLCDBM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 22:01:12 -0500
+Received: by mail-wr1-f66.google.com with SMTP id t2so1835009wrr.1;
+        Mon, 02 Dec 2019 19:01:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=HZYl9ujPBCb4Q8KhFCqYu50tnO5uzcIOpRaURtSjLV4=;
+        b=QOLrjCYaBxKjhhZsd6wWwsrpY0JN76eUSuBQRYbPxwRC271sdqVzpNeIRMG8KbovZI
+         kYy83hLhtwapkakeoCeqF2btcYS+n3P0LE3pFT1zwDckWZbCZmTtkQYcc/vA29LlLwa7
+         DtaKdYUU8+2do7kmE5+ThSCaaWuKIm5ZMQdryvSAUaNfZotK8prpkX/+W3Cn+Z1rIUPI
+         slbvt1XKOmiwrm719n75mTorHpGprHHcM0aOFu14gs2Hx//U1ZHc+QfZB8gxchISGUjj
+         vg6mFh6b8vvxbRI8mpYeMVxnmt0Pd8uady9sdg+sAUvw23t1wbR8B6zpomolXoq3k+4p
+         DQqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=HZYl9ujPBCb4Q8KhFCqYu50tnO5uzcIOpRaURtSjLV4=;
+        b=qjUqjHdtUQi4/pod0gYAlYLjfth3m7nvOxumK6sNrUpR0LkJGvTUyBJfRsXQtYYrqq
+         9evmF0m37EkkxDPmo2jCj/3EV6jWJt1Kad3P7y4TgNpdhahDgnQpruHWss1h5t8wUZmk
+         YvpS2GR4pRxat2JvsanDLL75t/DzpnzdSsyiXxUBltSKUZfFaVtBgK9qqkRvaCoJHfLa
+         AzjdPZujWO5TGUswv5FvQi8zvM7OJ+yhHH0WsRnX+JlaSqkAYgw0ku/FBL8f8PiFA1eW
+         UQPpsXE6fX1t2HazTvPnKGD3eWsTZeT9gyKo/kUmqtmp14RZofFt6MsXrphjZkmsJQRR
+         KHJw==
+X-Gm-Message-State: APjAAAUodWAzwQQW561Lgj0KdtEtQdSlxDz06FmXhG9Q1DydsRdK56CQ
+        fYFpE+O/43/sodHKaq0GN1c=
+X-Google-Smtp-Source: APXvYqzqkvJ/pKTddWLInxGiinfuFWqn/n+KDdBZ3N6M8mubyY+OUclZB8PYjUK5E0uf3vDQfx7cuw==
+X-Received: by 2002:a5d:50cf:: with SMTP id f15mr2364769wrt.381.1575342070498;
+        Mon, 02 Dec 2019 19:01:10 -0800 (PST)
+Received: from ltop.local ([2a02:a03f:404e:f500:442d:b656:b1a0:d761])
+        by smtp.gmail.com with ESMTPSA id f2sm1269093wmh.46.2019.12.02.19.01.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 19:01:09 -0800 (PST)
+Date:   Tue, 3 Dec 2019 04:01:08 +0100
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Dennis Zhou <dennis@kernel.org>
+Cc:     Christopher Lameter <cl@linux.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>, Nicholas Piggin <npiggin@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] fix __percpu annotation in asm-generic
+Message-ID: <20191203030108.ch7n6yoqgsco2alj@ltop.local>
+References: <20191126200619.63348-1-luc.vanoostenryck@gmail.com>
+ <alpine.DEB.2.21.1911271553560.16980@www.lameter.com>
+ <20191127175350.GA52308@dennisz-mbp.dhcp.thefacebook.com>
+ <20191127225432.ttwxm3hxtg5utfaz@ltop.local>
+ <alpine.DEB.2.21.1911291808530.1365@www.lameter.com>
+ <20191130000037.zsendu5pk7p75xqf@ltop.local>
+ <20191202190718.GA18019@dennisz-mbp>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/zf.0TYPUMqU1Q2r/BsYjzzg";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191202190718.GA18019@dennisz-mbp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/zf.0TYPUMqU1Q2r/BsYjzzg
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Dec 02, 2019 at 02:07:18PM -0500, Dennis Zhou wrote:
+> On Sat, Nov 30, 2019 at 01:00:37AM +0100, Luc Van Oostenryck wrote:
+> > On Fri, Nov 29, 2019 at 06:11:59PM +0000, Christopher Lameter wrote:
+> > > On Wed, 27 Nov 2019, Luc Van Oostenryck wrote:
+> > > 
+> > > > 1) it would strip any address space, not just __percpu, so:
+> > > >    it would need to be combined with __verify_pcpu_ptr() or,
+> > > >    * a better name should be used,
+> > > 
+> > > typeof_cast_kernel() to express the fact that it creates a kernel pointer
+> > > and ignored the attributes??
+> > 
+> > typeof_strip_address_space() would, I think, express this better. 
+> > It's not obvious at all to me that 'kernel' in 'typeof_cast_kernel()'
+> > relates to the (default) kernel address space.
+> > Maybe it's just me. I don't know.
+> > 
+> 
+> I think typeof_cast_kernel() or typeof_force_kernel() are reasonable
+> names. I kind of like the idea of cast/force over strip because we're
+> really still moving address spaces even if it is moving it back.
 
-Hi all,
+Well, 'typeof_cast_kernel()' somehow conveys the idea but sounds
+a bit weird as the macro doesn't contain a cast (expression).
 
-This is now a conflict between the scsi tree and Linus' tree.
+> Thanks for debugging this. I'm still inclined to have a macro for either
+> cast/force. I do agree it could be misused, but it's no different doing
+> it in a macro than by just adding __force __kernel.
 
-On Thu, 7 Nov 2019 15:37:57 +1100 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> Today's linux-next merge of the y2038 tree got a conflict in:
->=20
->   drivers/scsi/sg.c
->=20
-> between commits:
->=20
->   a16a47416d3f ("scsi: sg: sg_ioctl(): fix copyout handling")
->   c35a5cfb4150 ("scsi: sg: sg_read(): simplify reading ->pack_id of userl=
-and sg_io_hdr_t")
->   d9fc5617bcb6 ("scsi: sg: sg_new_write(): don't bother with access_ok")
->=20
-> from the scsi tree and commits:
->=20
->   98aaaec4a150 ("compat_ioctl: reimplement SG_IO handling")
->   fd6c3d5accea ("compat_ioctl: move SG_GET_REQUEST_TABLE handling")
->=20
-> from the y2038 tree.
->=20
-> I fixed it up (I used one side for some conflicts and the other for
-> others - see the final file attached) and can carry the fix as
-> necessary. This is now fixed as far as linux-next is concerned, but any
-> non trivial conflicts should be mentioned to your upstream maintainer
-> when your tree is submitted for merging.  You may also want to consider
-> cooperating with the maintainer of the conflicting tree to minimise any
-> particularly complex conflicts.
+I'm glad to help making the kernel type-clean (with the goal of
+catching more bugs earlier) but I admit that I absolutely detest
+these layers of ugly macros. 
 
+I'm working on a nicer implementation but it's not yet ready.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/zf.0TYPUMqU1Q2r/BsYjzzg
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3lz+QACgkQAVBC80lX
-0GwwxAgAjkH42IYT8Vpt8nayPxMus1Jlfrix0wImLz925lT29M8C7So+Q3rOH4L9
-i92JjPOwo5joG2yzAhKjUrqFK1ra/9N3ruQdBhptFRumk8grHPlZlOIojuynZC8i
-LtbYT03Eg1mfy7G4q96zC1RSkp8NtaPkT5WvzpFznxngFtVzOqnn24Z+P6bwJ9Xq
-59GXOogE+a4QAQHQ3ZQSW0RJKdkBZqaufN0LOU1kHiWT1zPDTfduwFfeB7T0MLyT
-BahRJIx+b/cEZuJYYmeCzeErpu3qU6+smfuttxfcgMITT15W+srauK/TLrRMhpcE
-6EvQv7z3hdnXxkx6FtQtlAS9Z438yA==
-=6HGd
------END PGP SIGNATURE-----
-
---Sig_/zf.0TYPUMqU1Q2r/BsYjzzg--
+Best regards,
+-- Luc
