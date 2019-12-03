@@ -2,95 +2,82 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBB5C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06AE0C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E08F20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:32:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCF3F206E4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:33:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oRdLWz80"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbfLCQc4 (ORCPT
+        id S1726847AbfLCQdo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 11:32:56 -0500
-Received: from mga05.intel.com ([192.55.52.43]:6600 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726186AbfLCQc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 11:32:56 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Dec 2019 08:32:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,273,1571727600"; 
-   d="scan'208";a="201056444"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga007.jf.intel.com with ESMTP; 03 Dec 2019 08:32:55 -0800
-Date:   Tue, 3 Dec 2019 08:32:55 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 5/5] KVM: X86: Fix callers of kvm_apic_match_dest() to
- use correct macros
-Message-ID: <20191203163255.GA19877@linux.intel.com>
-References: <20191202201314.543-1-peterx@redhat.com>
- <20191202201314.543-6-peterx@redhat.com>
- <87r21lbl0c.fsf@vitty.brq.redhat.com>
- <20191203162747.GD17275@xz-x1>
+        Tue, 3 Dec 2019 11:33:44 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:51290 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbfLCQdo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 11:33:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=bmHoVTlf0pCpIQSoAotql3m5fbx6C4BbcKfSAm0A92U=; b=oRdLWz80LB9JS+CxEFpCP+w0q
+        jwYiGS1ZNRht3ecXNBDcRRpHZAKkGmtOZWAj+s7RytRgR2akpqHJkZ2hQ4Eeyb9OBquqvmVzVPdlL
+        a1Nk5J18bjum26pM9/XAdPGM2USIDIBIoeBz6g5v1W+2TaCyHGJqrKw4T4HWDQWgssUfe6TlhmQfP
+        sKZSsmL2VTn/7w93PaVNCpFyF5s7ZbqpxyULBE7mIes4a4anGd/XjpOdoz/uYniiDn83Q+saBx9rJ
+        lSAQEIW5X74UbbEdRNlQlM4izZVUIzmmDBnMIv01IxRWii8dOrpWwodwZ19miSPsHfm4TrZW7tSxN
+        pu5fnxCZQ==;
+Received: from [2601:1c0:6280:3f0::5a22]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1icB7O-0002Hq-HS; Tue, 03 Dec 2019 16:33:42 +0000
+Subject: Re: linux-next: Tree for Dec 3 (pinctrl-equilibrium)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+References: <20191203155405.31404722@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <1a78124d-bef9-46da-aef4-60f85fddfceb@infradead.org>
+Date:   Tue, 3 Dec 2019 08:33:41 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191203162747.GD17275@xz-x1>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191203155405.31404722@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 11:27:47AM -0500, Peter Xu wrote:
-> On Tue, Dec 03, 2019 at 02:23:47PM +0100, Vitaly Kuznetsov wrote:
-> > > @@ -250,8 +252,9 @@ void kvm_ioapic_scan_entry(struct kvm_vcpu *vcpu, ulong *ioapic_handled_vectors)
-> > >  		if (e->fields.trig_mode == IOAPIC_LEVEL_TRIG ||
-> > >  		    kvm_irq_has_notifier(ioapic->kvm, KVM_IRQCHIP_IOAPIC, index) ||
-> > >  		    index == RTC_GSI) {
-> > > -			if (kvm_apic_match_dest(vcpu, NULL, 0,
-> > > -			             e->fields.dest_id, e->fields.dest_mode) ||
-> > > +			dm = kvm_lapic_irq_dest_mode(e->fields.dest_mode);
-> > 
-> > Nit: you could've defined 'dm' right here in the block (after '{') but
-> > in any case I'd suggest to stick to 'dest_mode' and not shorten it to
-> > 'dm' for consistency.
-> > 
-> > > +			if (kvm_apic_match_dest(vcpu, NULL, APIC_DEST_NOSHORT,
-> > > +						e->fields.dest_id, dm) ||
-> > >  			    kvm_apic_pending_eoi(vcpu, e->fields.vector))
-> > >  				__set_bit(e->fields.vector,
-> > >  					  ioapic_handled_vectors);
-> > > diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
-> > > index 5f59e5ebdbed..e89c2160b39f 100644
-> > > --- a/arch/x86/kvm/irq_comm.c
-> > > +++ b/arch/x86/kvm/irq_comm.c
-> > > @@ -417,7 +417,8 @@ void kvm_scan_ioapic_routes(struct kvm_vcpu *vcpu,
-> > >  
-> > >  			kvm_set_msi_irq(vcpu->kvm, entry, &irq);
-> > >  
-> > > -			if (irq.level && kvm_apic_match_dest(vcpu, NULL, 0,
-> > > +			if (irq.level &&
-> > > +			    kvm_apic_match_dest(vcpu, NULL, APIC_DEST_NOSHORT,
-> > >  						irq.dest_id, irq.dest_mode))
-> > >  				__set_bit(irq.vector, ioapic_handled_vectors);
-> > >  		}
-> > 
-> > Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+On 12/2/19 8:54 PM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> I'll move the declaration in with your r-b.  'dm' is a silly trick of
-> mine to avoid the 80-char line limit.  Thanks,
+> Please do not add any material for v5.6 to your linux-next included
+> trees until after v5.5-rc1 has been released.
+> 
+> Changes since 20191202:
+> 
 
-The 80-char limit isn't an unbreakable rule, it's ok for a line to run a
-few chars over when there is no better alternative.
+on x86_64:
+# CONFIG_OF is not set
+
+
+ld: drivers/pinctrl/pinctrl-equilibrium.o: in function `pinconf_generic_dt_node_to_map_all':
+pinctrl-equilibrium.c:(.text+0xb): undefined reference to `pinconf_generic_dt_node_to_map'
+
+Probably depends on OF.
+
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
