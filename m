@@ -6,109 +6,66 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F7FC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A37E4C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 063912068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 743042073C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:10:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726079AbfLCJGu convert rfc822-to-8bit (ORCPT
+        id S1726087AbfLCJK0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 04:06:50 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36875 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfLCJGu (ORCPT
+        Tue, 3 Dec 2019 04:10:26 -0500
+Received: from lithops.sigma-star.at ([195.201.40.130]:49176 "EHLO
+        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbfLCJK0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 04:06:50 -0500
-Received: by mail-oi1-f195.google.com with SMTP id x195so2600013oix.4;
-        Tue, 03 Dec 2019 01:06:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=99SpjBDj/3zwk9C1FEoFJcHmxVqPzeCRBXa6juwGTEo=;
-        b=TEUHwVtDBshfdDUNHM8pS8IOzahJbWBFwHrmrzXCITlpR5oXGkztp1u2jY26UCg7hk
-         koHU4dlOKtPjEPZVx9JUQNWrkx5VN2SXI/fZbG2gcJhoXSQZzz9WTJyEFfE93X9aWM0b
-         IBfvF2/gtJh/eCKWOevR/Us2m1Yj8RBOMA+GiVvn+1ZW5DhQazWaeqC3EHUFHtofUo6r
-         e0obTx+QUqHk3KqAzPxN4gLFzekg4nCx+Bxw5JepMs46BwMcr1KA9RX/V7gy9bATGApy
-         kxqWF7v35WyFC2mHI7AtbkqScfHPeGN54jL9xYk2r2GG0kmcqsJVkQ+le8nEcrSphfe5
-         6adg==
-X-Gm-Message-State: APjAAAXlnNEnVgUyyjscpwg5fc6iKxoh/wdLydNnpCzaiEUgnCPeXAS6
-        zoPPqgWXT4DfnzbyteHqLbyl7ftO4Nnc+KtMARo=
-X-Google-Smtp-Source: APXvYqwjoAhTRQ0xt52tIil49EnXS94YzS6iwjxlAYBuKV4vu5fc6aAklzn5FAd1MfYR6UoPe+55WjaSd8AcyJHVit0=
-X-Received: by 2002:aca:4e87:: with SMTP id c129mr511543oib.153.1575364009649;
- Tue, 03 Dec 2019 01:06:49 -0800 (PST)
+        Tue, 3 Dec 2019 04:10:26 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id E9DB9605A912;
+        Tue,  3 Dec 2019 10:10:23 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 0EnEESTuRsEP; Tue,  3 Dec 2019 10:10:23 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 8DB626094C4B;
+        Tue,  3 Dec 2019 10:10:23 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id td6hCF_Ij_Kf; Tue,  3 Dec 2019 10:10:23 +0100 (CET)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 6AD28605A912;
+        Tue,  3 Dec 2019 10:10:23 +0100 (CET)
+Date:   Tue, 3 Dec 2019 10:10:23 +0100 (CET)
+From:   Richard Weinberger <richard@nod.at>
+To:     Naga Sureshkumar Relli <nagasure@xilinx.com>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Michal Simek <michals@xilinx.com>,
+        siva durga paladugu <siva.durga.paladugu@xililnx.com>
+Message-ID: <614898763.105471.1575364223372.JavaMail.zimbra@nod.at>
+In-Reply-To: <MN2PR02MB57272E3343CA62ADBA0F97E5AF420@MN2PR02MB5727.namprd02.prod.outlook.com>
+References: <MN2PR02MB5727000CBE70BAF31F60FEE4AF420@MN2PR02MB5727.namprd02.prod.outlook.com> <20191203084134.tgzir4mtekpm5xbs@pengutronix.de> <MN2PR02MB57272E3343CA62ADBA0F97E5AF420@MN2PR02MB5727.namprd02.prod.outlook.com>
+Subject: Re: ubifs mount failure
 MIME-Version: 1.0
-References: <71cf82d5-5986-43b7-cf1c-acba429a89d6@c-s.fr> <3a95d445-1f5c-7750-f0de-ddc427800b3b@kernel.dk>
-In-Reply-To: <3a95d445-1f5c-7750-f0de-ddc427800b3b@kernel.dk>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 3 Dec 2019 10:06:37 +0100
-Message-ID: <CAMuHMdUzqnPpbSXB1JaY-+BbAvKno3akSYi6c8ZLQfLuOCC7rg@mail.gmail.com>
-Subject: Re: Build failure on latest powerpc/merge (311ae9e159d8 io_uring: fix
- dead-hung for non-iter fixed rw)
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [195.201.40.130]
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF68 (Linux)/8.8.12_GA_3809)
+Thread-Topic: ubifs mount failure
+Thread-Index: AdWpk0w1vXoILfyXR5WMh1O5WbDMxgAIiuAAAABceaAxSwJwoQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jens,
+----- Ursprüngliche Mail -----
+> Von: "Naga Sureshkumar Relli" <nagasure@xilinx.com>
+> https://elixir.bootlin.com/linux/v5.4/source/fs/ubifs/sb.c#L164
+> we are trying to allocate 4325376 (~4MB)
 
-On Fri, Nov 29, 2019 at 5:06 PM Jens Axboe <axboe@kernel.dk> wrote:
-> On 11/29/19 6:53 AM, Christophe Leroy wrote:
-> >     CC      fs/io_uring.o
-> > fs/io_uring.c: In function ‘loop_rw_iter’:
-> > fs/io_uring.c:1628:21: error: implicit declaration of function ‘kmap’
-> > [-Werror=implicit-function-declaration]
-> >       iovec.iov_base = kmap(iter->bvec->bv_page)
-> >                        ^
-> > fs/io_uring.c:1628:19: warning: assignment makes pointer from integer
-> > without a cast [-Wint-conversion]
-> >       iovec.iov_base = kmap(iter->bvec->bv_page)
-> >                      ^
-> > fs/io_uring.c:1643:4: error: implicit declaration of function ‘kunmap’
-> > [-Werror=implicit-function-declaration]
-> >       kunmap(iter->bvec->bv_page);
-> >       ^
-> >
-> >
-> > Reverting commit 311ae9e159d8 ("io_uring: fix dead-hung for non-iter
-> > fixed rw") clears the failure.
-> >
-> > Most likely an #include is missing.
->
-> Huh weird how the build bots didn't catch that. Does the below work?
+4MiB? Is ->min_io_size that large?
 
-Thanks, this fixes the same issue on SuperH:
-
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -69,6 +69,7 @@
->   #include <linux/nospec.h>
->   #include <linux/sizes.h>
->   #include <linux/hugetlb.h>
-> +#include <linux/highmem.h>
->
->   #define CREATE_TRACE_POINTS
->   #include <trace/events/io_uring.h>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks,
+//richard
