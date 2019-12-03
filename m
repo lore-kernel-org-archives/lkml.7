@@ -2,142 +2,88 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64173C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD28FC43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E39420661
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A44F20661
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:05:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575363917;
+	bh=kH7M6raCYcwzp14cZpiS1nz6oSFsgOSES0lH2kUYIbc=;
+	h=In-Reply-To:References:Subject:To:From:Cc:Date:List-ID:From;
+	b=xRkOKaxfjZDIk2EcuE/ROcVZZddtRQlJX4kn0FrZaxL7gCQQ949hgItK9PI0knqof
+	 y9i1WiRGw1W23QCfIsz3UG2lOU8YnrNHaQ4mRU45DtIW4O0Cykd9v5iw/kphhFbCKL
+	 ygWHS2EvXaxhuH5cSMcdIL837ZwZds4+Qlm6saz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726060AbfLCJDW (ORCPT
+        id S1726098AbfLCJFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 04:03:22 -0500
-Received: from mga12.intel.com ([192.55.52.136]:46668 "EHLO mga12.intel.com"
+        Tue, 3 Dec 2019 04:05:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbfLCJDV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 04:03:21 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Dec 2019 01:03:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,272,1571727600"; 
-   d="scan'208";a="412112040"
-Received: from shao2-debian.sh.intel.com (HELO [10.239.13.6]) ([10.239.13.6])
-  by fmsmga006.fm.intel.com with ESMTP; 03 Dec 2019 01:03:20 -0800
-Subject: Re: [kbuild-all] Re: [PATCH next 2/3] debugfs: introduce
- debugfs_create_single[,_data]
-To:     Dan Carpenter <dan.carpenter@oracle.com>, kbuild@lists.01.org,
-        Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc:     kbuild-all@lists.01.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-References: <20191203083847.GC1787@kadam>
-From:   Rong Chen <rong.a.chen@intel.com>
-Message-ID: <06d63c3c-bab5-c19e-a51d-ac7c1ed0a80c@intel.com>
-Date:   Tue, 3 Dec 2019 17:02:54 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1725773AbfLCJFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 04:05:16 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A03B20661;
+        Tue,  3 Dec 2019 09:05:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575363916;
+        bh=kH7M6raCYcwzp14cZpiS1nz6oSFsgOSES0lH2kUYIbc=;
+        h=In-Reply-To:References:Subject:To:From:Cc:Date:From;
+        b=yLaYHkcUYhTB5dMIAfawF2MIKjgR0iQV5k/t02Uqmww2lc3bYrZ8x9inAWCS1P992
+         WdKqbojHyVHi4XPlP2AW8T/2cn3wL6HH8O6DHJoT+lFo4a2PfPRs9iPUU3+QKHW+yW
+         iG9RTsU9ljzDwfGw1299K8sp4Z4X6W5QK08FK+bM=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20191203083847.GC1787@kadam>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1jv9r27kzn.fsf@starbuckisacylon.baylibre.com>
+References: <20190924123954.31561-1-jbrunet@baylibre.com> <1jv9r27kzn.fsf@starbuckisacylon.baylibre.com>
+Subject: Re: [PATCH 0/3] clk: let clock perform allocation in init
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Michael Turquette <mturquette@baylibre.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+User-Agent: alot/0.8.1
+Date:   Tue, 03 Dec 2019 01:05:15 -0800
+Message-Id: <20191203090516.1A03B20661@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Jerome Brunet (2019-11-29 07:36:28)
+>=20
+> On Tue 24 Sep 2019 at 14:39, Jerome Brunet <jbrunet@baylibre.com> wrote:
+>=20
+> > This patchset is a follow up on this pinky swear [0].
+> > Its purpose is:
+> >  * Clarify the acceptable use of clk_ops init() callback
+> >  * Let the init() callback return an error code in case anything
+> >    fail.
+> >  * Add the terminate() counter part of of init() to release the
+> >    resources which may have been claimed in init()
+> >
+> > After discussing with Stephen at LPC, I decided to drop the 2 last patc=
+hes
+> > of the RFC [1]. I can live without it for now and nobody expressed a
+> > critical need to get the proposed placeholder.
+> >
+> > [0]: https://lkml.kernel.org/r/CAEG3pNB-143Pr_xCTPj=3DtURhpiTiJqi61xfDG=
+DVdU7zG5H-2tA@mail.gmail.com
+> > [1]: https://lkml.kernel.org/r/20190828102012.4493-1-jbrunet@baylibre.c=
+om
+> >
+>=20
+> Hi Stephen,
+>=20
+> Do you think we can fit this into the incoming cycle ?
+>=20
 
-
-On 12/3/19 4:38 PM, Dan Carpenter wrote:
-> [ How do I fetch 0day git branchs?
->    git fetch https://github.com/0day-ci/linux/commits/Kefeng-Wang/debugfs-introduce-debugfs_create_single-seq-_data/20191129-173440
->    doesn't work. - dan ]
-
-Hi Dan,
-
-I can fetch it by the following steps:
-
-nfs@shao2-debian:~/linux$ git remote add 0day-linux-review 
-https://github.com/0day-ci/linux.git
-nfs@shao2-debian:~/linux$ git fetch --no-tags 0day-linux-review 
-Kefeng-Wang/debugfs-introduce-debugfs_create_single-seq-_data/20191129-173440 
-
-remote: Enumerating objects: 25261, done.
-remote: Counting objects: 100% (25261/25261), done.
-remote: Total 33246 (delta 25260), reused 25260 (delta 25260), 
-pack-reused 7985
-Receiving objects: 100% (33246/33246), 12.03 MiB | 1.05 MiB/s, done.
-Resolving deltas: 100% (28148/28148), completed with 6149 local objects.
- From https://github.com/0day-ci/linux
-  * branch 
-Kefeng-Wang/debugfs-introduce-debugfs_create_single-seq-_data/20191129-173440 
--> FETCH_HEAD
-  * [new branch] 
-Kefeng-Wang/debugfs-introduce-debugfs_create_single-seq-_data/20191129-173440 
--> 
-0day-linux-review/Kefeng-Wang/debugfs-introduce-debugfs_create_single-seq-_data/20191129-173440
-
-Best Regards,
-Rong Chen
-
->
-> Hi Kefeng,
->
-> Thank you for the patch! Perhaps something to improve:
->
-> [auto build test WARNING on next-20191128]
-> [cannot apply to v5.4]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
->
-> url:    https://github.com/0day-ci/linux/commits/Kefeng-Wang/debugfs-introduce-debugfs_create_single-seq-_data/20191129-173440
-> base:    d26b0e226f222c22c3b7e9d16e5b886e7c51057a
->
->
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
->
-> New smatch warnings:
-> fs/debugfs/file.c:1193 debugfs_create_single_data() warn: overwrite may leak 'entry'
->
-> Old smatch warnings:
-> include/linux/compiler.h:247 __write_once_size() warn: potential memory corrupting cast 8 vs 4 bytes
->
-> # https://github.com/0day-ci/linux/commit/198a4ea9768d6790a169e8b802e702c208aafbd1
-> git remote add linux-review https://github.com/0day-ci/linux
-> git remote update linux-review
-> git checkout 198a4ea9768d6790a169e8b802e702c208aafbd1
-> vim +/entry +1193 fs/debugfs/file.c
->
-> 198a4ea9768d67 Kefeng Wang      2019-11-29  1179  struct dentry *debugfs_create_single_data(const char *name, umode_t mode,
-> 198a4ea9768d67 Kefeng Wang      2019-11-29  1180  					  struct dentry *parent, void *data,
-> 198a4ea9768d67 Kefeng Wang      2019-11-29  1181  					  int (*read_fn)(struct seq_file *s,
-> 198a4ea9768d67 Kefeng Wang      2019-11-29  1182  							 void *data))
-> 198a4ea9768d67 Kefeng Wang      2019-11-29  1183  {
-> 198a4ea9768d67 Kefeng Wang      2019-11-29  1184  	struct debugfs_entry *entry;
-> 198a4ea9768d67 Kefeng Wang      2019-11-29  1185
-> 198a4ea9768d67 Kefeng Wang      2019-11-29  1186  	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
-> 198a4ea9768d67 Kefeng Wang      2019-11-29  1187  	if (!entry)
-> 198a4ea9768d67 Kefeng Wang      2019-11-29  1188  		return ERR_PTR(-ENOMEM);
-> 198a4ea9768d67 Kefeng Wang      2019-11-29  1189
-> 198a4ea9768d67 Kefeng Wang      2019-11-29  1190  	entry->read = read_fn;
-> 198a4ea9768d67 Kefeng Wang      2019-11-29  1191  	entry->data = data;
-> 198a4ea9768d67 Kefeng Wang      2019-11-29  1192
-> 198a4ea9768d67 Kefeng Wang      2019-11-29 @1193  	entry = debugfs_set_lowest_bit(entry);
->                                                          ^^^^^^^^
-> I haven't looked at the surrounding code but how would we free "entry"
-> when we write over it here?
->
-> ---
-> 0-DAY kernel test infrastructure                 Open Source Technology Center
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
-> _______________________________________________
-> kbuild-all mailing list -- kbuild-all@lists.01.org
-> To unsubscribe send an email to kbuild-all-leave@lists.01.org
+Sorry I missed this one. I'll apply it soon but won't be for this merge
+window.
 
