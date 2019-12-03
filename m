@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C98C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F641C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0455A2080F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F271220862
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412869;
-	bh=7h6ndB6QypJdFtbDKJjriaCER95owTAXaqIlv2NDRvc=;
+	s=default; t=1575412872;
+	bh=u954+shcCEclub6HtP+djStlkAjtG58zV2PjPgjj44c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tO/bGMmQjFwSpRZgoYbmdH/fwOV1wPvyWlvvLeAdd5GNr5I7r4cSQxnCBHDT0sriF
-	 0A0OI6glrLZvadvUmBOnVd3dllimLcTg3Uhm5dC677O7+mai5pqULDnWrRWrNuHmhO
-	 7yeDwG7RrqPrhb5eEkxFa4v17UVAGqXO8IF/PNog=
+	b=uRpIb4meNuZT5lUE97lH+ssWBdiqLqOPPLe31fYl+jxH00HgH9NmPT/+G2MGggOP2
+	 /GI7uchIIk771Wz02yG/xZnkoLEAEjsGVjPVuRgi3gOzU1/HyS/kZ2VtyzwqasdYBD
+	 oHvcgjtVXQxRiQCgWnohGtqlVg5AMvARLAGj0ziY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727194AbfLCWlI (ORCPT
+        id S1727841AbfLCWlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:41:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55144 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:41:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727539AbfLCWlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:41:01 -0500
+        id S1727731AbfLCWlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:41:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 756D52073C;
-        Tue,  3 Dec 2019 22:40:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDDFE2080F;
+        Tue,  3 Dec 2019 22:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412859;
-        bh=7h6ndB6QypJdFtbDKJjriaCER95owTAXaqIlv2NDRvc=;
+        s=default; t=1575412862;
+        bh=u954+shcCEclub6HtP+djStlkAjtG58zV2PjPgjj44c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0U5HFKhF1AWmNVoo7dvG1z/kU8353wTWze8WwOUvTavy7wyZ8knfPCNJrRNm5/fWx
-         TPtQIuFWPCSHdu4FtpBFitdmz93vBDbZ+6476UJa4IxDmy/4mamciaAec46QVwYfGf
-         DzT8GbpzzhzklbWh9OQI6MnX070jcKWyrh+H739A=
+        b=WAoYtdtVeEdOIUcw8sKwN15l0BKqWthGNMwFoN3lpRejDkfvzMIOOatDdMUl4WH9e
+         zmEAkUPFwkdRsV4TdJhV7IJD5d0veF6LlhNYUmJeJK8Je8dBerm3H4Xi+0nUwnWicq
+         D1by2O4aEQs4DJeVtq0hevdXsh2ZpK+QtQ86x/GI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        stable@vger.kernel.org, Fabien Parent <fparent@baylibre.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 008/135] thunderbolt: Fix lockdep circular locking depedency warning
-Date:   Tue,  3 Dec 2019 23:34:08 +0100
-Message-Id: <20191203213007.242619036@linuxfoundation.org>
+Subject: [PATCH 5.3 009/135] clocksource/drivers/mediatek: Fix error handling
+Date:   Tue,  3 Dec 2019 23:34:09 +0100
+Message-Id: <20191203213007.434895455@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -61,131 +60,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Fabien Parent <fparent@baylibre.com>
 
-[ Upstream commit 6f6709734274aef75058356e029d5e8f86d0d53b ]
+[ Upstream commit 41d49e7939de5ec532d86494185b2ca2e99c848a ]
 
-When lockdep is enabled, plugging Thunderbolt dock on Dominik's laptop
-triggers following splat:
+When timer_of_init fails, it cleans up after itself by undoing
+everything it did during the initialization function.
 
-  ======================================================
-  WARNING: possible circular locking dependency detected
-  5.3.0-rc6+ #1 Tainted: G                T
-  ------------------------------------------------------
-  pool-/usr/lib/b/1258 is trying to acquire lock:
-  000000005ab0ad43 (pci_rescan_remove_lock){+.+.}, at: authorized_store+0xe8/0x210
+mtk_syst_init and mtk_gpt_init both call timer_of_cleanup if
+timer_of_init fails. timer_of_cleanup try to release the resource
+taken.  Since these resources have already been cleaned up by
+timer_of_init, we end up getting a few warnings printed:
 
-  but task is already holding lock:
-  00000000bfb796b5 (&tb->lock){+.+.}, at: authorized_store+0x7c/0x210
+[    0.001935] WARNING: CPU: 0 PID: 0 at __clk_put+0xe8/0x128
+[    0.002650] Modules linked in:
+[    0.003058] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.19.67+ #1
+[    0.003852] Hardware name: MediaTek MT8183 (DT)
+[    0.004446] pstate: 20400085 (nzCv daIf +PAN -UAO)
+[    0.005073] pc : __clk_put+0xe8/0x128
+[    0.005555] lr : clk_put+0xc/0x14
+[    0.005988] sp : ffffff80090b3ea0
+[    0.006422] x29: ffffff80090b3ea0 x28: 0000000040e20018
+[    0.007121] x27: ffffffc07bfff780 x26: 0000000000000001
+[    0.007819] x25: ffffff80090bda80 x24: ffffff8008ec5828
+[    0.008517] x23: ffffff80090bd000 x22: ffffff8008d8b2e8
+[    0.009216] x21: 0000000000000001 x20: fffffffffffffdfb
+[    0.009914] x19: ffffff8009166180 x18: 00000000002bffa8
+[    0.010612] x17: ffffffc012996980 x16: 0000000000000000
+[    0.011311] x15: ffffffbf004a6800 x14: 3536343038393334
+[    0.012009] x13: 2079726576652073 x12: 7eb9c62c5c38f100
+[    0.012707] x11: ffffff80090b3ba0 x10: ffffff80090b3ba0
+[    0.013405] x9 : 0000000000000004 x8 : 0000000000000040
+[    0.014103] x7 : ffffffc079400270 x6 : 0000000000000000
+[    0.014801] x5 : ffffffc079400248 x4 : 0000000000000000
+[    0.015499] x3 : 0000000000000000 x2 : 0000000000000000
+[    0.016197] x1 : ffffff80091661c0 x0 : fffffffffffffdfb
+[    0.016896] Call trace:
+[    0.017218]  __clk_put+0xe8/0x128
+[    0.017654]  clk_put+0xc/0x14
+[    0.018048]  timer_of_cleanup+0x60/0x7c
+[    0.018551]  mtk_syst_init+0x8c/0x9c
+[    0.019020]  timer_probe+0x6c/0xe0
+[    0.019469]  time_init+0x14/0x44
+[    0.019893]  start_kernel+0x2d0/0x46c
+[    0.020378] ---[ end trace 8c1efabea1267649 ]---
+[    0.020982] ------------[ cut here ]------------
+[    0.021586] Trying to vfree() nonexistent vm area ((____ptrval____))
+[    0.022427] WARNING: CPU: 0 PID: 0 at __vunmap+0xd0/0xd8
+[    0.023119] Modules linked in:
+[    0.023524] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W         4.19.67+ #1
+[    0.024498] Hardware name: MediaTek MT8183 (DT)
+[    0.025091] pstate: 60400085 (nZCv daIf +PAN -UAO)
+[    0.025718] pc : __vunmap+0xd0/0xd8
+[    0.026176] lr : __vunmap+0xd0/0xd8
+[    0.026632] sp : ffffff80090b3e90
+[    0.027066] x29: ffffff80090b3e90 x28: 0000000040e20018
+[    0.027764] x27: ffffffc07bfff780 x26: 0000000000000001
+[    0.028462] x25: ffffff80090bda80 x24: ffffff8008ec5828
+[    0.029160] x23: ffffff80090bd000 x22: ffffff8008d8b2e8
+[    0.029858] x21: 0000000000000000 x20: 0000000000000000
+[    0.030556] x19: ffffff800800d000 x18: 00000000002bffa8
+[    0.031254] x17: 0000000000000000 x16: 0000000000000000
+[    0.031952] x15: ffffffbf004a6800 x14: 3536343038393334
+[    0.032651] x13: 2079726576652073 x12: 7eb9c62c5c38f100
+[    0.033349] x11: ffffff80090b3b40 x10: ffffff80090b3b40
+[    0.034047] x9 : 0000000000000005 x8 : 5f5f6c6176727470
+[    0.034745] x7 : 5f5f5f5f28282061 x6 : ffffff80091c86ef
+[    0.035443] x5 : ffffff800852b690 x4 : 0000000000000000
+[    0.036141] x3 : 0000000000000002 x2 : 0000000000000002
+[    0.036839] x1 : 7eb9c62c5c38f100 x0 : 7eb9c62c5c38f100
+[    0.037536] Call trace:
+[    0.037859]  __vunmap+0xd0/0xd8
+[    0.038271]  vunmap+0x24/0x30
+[    0.038664]  __iounmap+0x2c/0x34
+[    0.039088]  timer_of_cleanup+0x70/0x7c
+[    0.039591]  mtk_syst_init+0x8c/0x9c
+[    0.040060]  timer_probe+0x6c/0xe0
+[    0.040507]  time_init+0x14/0x44
+[    0.040932]  start_kernel+0x2d0/0x46c
 
-  which lock already depends on the new lock.
+This commit remove the calls to timer_of_cleanup when timer_of_init
+fails since it is unnecessary and actually cause warnings to be printed.
 
-  the existing dependency chain (in reverse order) is:
-
-  -> #1 (&tb->lock){+.+.}:
-         __mutex_lock+0xac/0x9a0
-         tb_domain_add+0x2d/0x130
-         nhi_probe+0x1dd/0x330
-         pci_device_probe+0xd2/0x150
-         really_probe+0xee/0x280
-         driver_probe_device+0x50/0xc0
-         bus_for_each_drv+0x84/0xd0
-         __device_attach+0xe4/0x150
-         pci_bus_add_device+0x4e/0x70
-         pci_bus_add_devices+0x2e/0x66
-         pci_bus_add_devices+0x59/0x66
-         pci_bus_add_devices+0x59/0x66
-         enable_slot+0x344/0x450
-         acpiphp_check_bridge.part.0+0x119/0x150
-         acpiphp_hotplug_notify+0xaa/0x140
-         acpi_device_hotplug+0xa2/0x3f0
-         acpi_hotplug_work_fn+0x1a/0x30
-         process_one_work+0x234/0x580
-         worker_thread+0x50/0x3b0
-         kthread+0x10a/0x140
-         ret_from_fork+0x3a/0x50
-
-  -> #0 (pci_rescan_remove_lock){+.+.}:
-         __lock_acquire+0xe54/0x1ac0
-         lock_acquire+0xb8/0x1b0
-         __mutex_lock+0xac/0x9a0
-         authorized_store+0xe8/0x210
-         kernfs_fop_write+0x125/0x1b0
-         vfs_write+0xc2/0x1d0
-         ksys_write+0x6c/0xf0
-         do_syscall_64+0x50/0x180
-         entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-  other info that might help us debug this:
-   Possible unsafe locking scenario:
-         CPU0                    CPU1
-         ----                    ----
-    lock(&tb->lock);
-                                 lock(pci_rescan_remove_lock);
-                                 lock(&tb->lock);
-    lock(pci_rescan_remove_lock);
-
-   *** DEADLOCK ***
-  5 locks held by pool-/usr/lib/b/1258:
-   #0: 000000003df1a1ad (&f->f_pos_lock){+.+.}, at: __fdget_pos+0x4d/0x60
-   #1: 0000000095a40b02 (sb_writers#6){.+.+}, at: vfs_write+0x185/0x1d0
-   #2: 0000000017a7d714 (&of->mutex){+.+.}, at: kernfs_fop_write+0xf2/0x1b0
-   #3: 000000004f262981 (kn->count#208){.+.+}, at: kernfs_fop_write+0xfa/0x1b0
-   #4: 00000000bfb796b5 (&tb->lock){+.+.}, at: authorized_store+0x7c/0x210
-
-  stack backtrace:
-  CPU: 0 PID: 1258 Comm: pool-/usr/lib/b Tainted: G                T 5.3.0-rc6+ #1
-
-On an system using ACPI hotplug the host router gets hotplugged first and then
-the firmware starts sending notifications about connected devices so the above
-scenario should not happen in reality. However, after taking a second
-look at commit a03e828915c0 ("thunderbolt: Serialize PCIe tunnel
-creation with PCI rescan") that introduced the locking, I don't think it
-is actually correct. It may have cured the symptom but probably the real
-root cause was somewhere closer to PCI stack and possibly is already
-fixed with recent kernels. I also tried to reproduce the original issue
-with the commit reverted but could not.
-
-So to keep lockdep happy and the code bit less complex drop calls to
-pci_lock_rescan_remove()/pci_unlock_rescan_remove() in
-tb_switch_set_authorized() effectively reverting a03e828915c0.
-
-Link: https://lkml.org/lkml/2019/8/30/513
-Fixes: a03e828915c0 ("thunderbolt: Serialize PCIe tunnel creation with PCI rescan")
-Reported-by: Dominik Brodowski <linux@dominikbrodowski.net>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Fixes: a0858f937960 ("mediatek: Convert the driver to timer-of")
+Signed-off-by: Fabien Parent <fparent@baylibre.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/linux-arm-kernel/20190919191315.25190-1-fparent@baylibre.com/
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thunderbolt/switch.c | 9 ---------
- 1 file changed, 9 deletions(-)
+ drivers/clocksource/timer-mediatek.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-index 00daf5a7f46a5..28395c3dcfed5 100644
---- a/drivers/thunderbolt/switch.c
-+++ b/drivers/thunderbolt/switch.c
-@@ -1025,13 +1025,6 @@ static int tb_switch_set_authorized(struct tb_switch *sw, unsigned int val)
- 	if (sw->authorized)
- 		goto unlock;
+diff --git a/drivers/clocksource/timer-mediatek.c b/drivers/clocksource/timer-mediatek.c
+index a562f491b0f8d..9318edcd89635 100644
+--- a/drivers/clocksource/timer-mediatek.c
++++ b/drivers/clocksource/timer-mediatek.c
+@@ -268,15 +268,12 @@ static int __init mtk_syst_init(struct device_node *node)
  
--	/*
--	 * Make sure there is no PCIe rescan ongoing when a new PCIe
--	 * tunnel is created. Otherwise the PCIe rescan code might find
--	 * the new tunnel too early.
--	 */
--	pci_lock_rescan_remove();
--
- 	switch (val) {
- 	/* Approve switch */
- 	case 1:
-@@ -1051,8 +1044,6 @@ static int tb_switch_set_authorized(struct tb_switch *sw, unsigned int val)
- 		break;
- 	}
+ 	ret = timer_of_init(node, &to);
+ 	if (ret)
+-		goto err;
++		return ret;
  
--	pci_unlock_rescan_remove();
--
- 	if (!ret) {
- 		sw->authorized = val;
- 		/* Notify status change to the userspace */
+ 	clockevents_config_and_register(&to.clkevt, timer_of_rate(&to),
+ 					TIMER_SYNC_TICKS, 0xffffffff);
+ 
+ 	return 0;
+-err:
+-	timer_of_cleanup(&to);
+-	return ret;
+ }
+ 
+ static int __init mtk_gpt_init(struct device_node *node)
+@@ -293,7 +290,7 @@ static int __init mtk_gpt_init(struct device_node *node)
+ 
+ 	ret = timer_of_init(node, &to);
+ 	if (ret)
+-		goto err;
++		return ret;
+ 
+ 	/* Configure clock source */
+ 	mtk_gpt_setup(&to, TIMER_CLK_SRC, GPT_CTRL_OP_FREERUN);
+@@ -311,9 +308,6 @@ static int __init mtk_gpt_init(struct device_node *node)
+ 	mtk_gpt_enable_irq(&to, TIMER_CLK_EVT);
+ 
+ 	return 0;
+-err:
+-	timer_of_cleanup(&to);
+-	return ret;
+ }
+ TIMER_OF_DECLARE(mtk_mt6577, "mediatek,mt6577-timer", mtk_gpt_init);
+ TIMER_OF_DECLARE(mtk_mt6765, "mediatek,mt6765-timer", mtk_syst_init);
 -- 
 2.20.1
 
