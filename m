@@ -2,80 +2,104 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E583C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 02:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6211EC43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 02:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F35920674
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 02:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3292020661
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 02:23:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="q9D3yRsJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbfLCCT7 (ORCPT
+        id S1726179AbfLCCXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 21:19:59 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:60625 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726189AbfLCCT7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 21:19:59 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TjlrUB7_1575339596;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TjlrUB7_1575339596)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 03 Dec 2019 10:19:56 +0800
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Subject: [PATCH RESEND] sched/numa: expose per-task pages-migration-failure
-Message-ID: <7038afda-dd08-f01f-5da0-afadf76f5533@linux.alibaba.com>
-Date:   Tue, 3 Dec 2019 10:18:17 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Mon, 2 Dec 2019 21:23:06 -0500
+Received: from ozlabs.org ([203.11.71.1]:54115 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725954AbfLCCXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 21:23:06 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Rm3n2LsCz9sNx;
+        Tue,  3 Dec 2019 13:23:01 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1575339783;
+        bh=EL9ZyahnDGpSzzlhJ1wKUfVIQDAdvKJz012rP4TCPs0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=q9D3yRsJL7riVhL8NHHJa2KtQWnAkF95p5pT6aNGmzgrs90EOg7VyCDP0Bu23v0/g
+         a/6gqy4VuNywJQ5sUPdmFRUDqVoormLWZoNSZE+esXLj7CsS/bEJB16HICU0m/zX+/
+         KpVi0pthEWNiTWwIE4xjwkX9nnkSeIHBdiCOLLJjuYovXN0KTkQapSMIoETSRtVdtI
+         zphvoNlcS5khjPSNDE1wVFdogx7Eb1R2nlQvTV/qdyRUfFhp53yggf0w6lG5QwvIdp
+         KvCRVQ1ok+PMtwiCMs/jOAL+C5APXlm2B3+1UJO28Bl6JpRTL44VEG5T032WqcM6ys
+         Rwb5s4vlWauGQ==
+Date:   Tue, 3 Dec 2019 13:23:00 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus <torvalds@linux-foundation.org>
+Subject: Re: linux-next: manual merge of the y2038 tree with the xfs tree
+Message-ID: <20191203132300.3186125c@canb.auug.org.au>
+In-Reply-To: <20191203002258.GE7339@magnolia>
+References: <20191030153046.01efae4a@canb.auug.org.au>
+        <20191203110039.2ec22a17@canb.auug.org.au>
+        <20191203002258.GE7339@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/G5fteeX4WpkVraxOJWz9wJm";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-NUMA balancing will try to migrate pages between nodes, which
-could caused by memory policy or numa group aggregation, while
-the page migration could failed too for eg when the target node
-run out of memory.
+--Sig_/G5fteeX4WpkVraxOJWz9wJm
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Since this is critical to the performance, admin should know
-how serious the problem is, and take actions before it causing
-too much performance damage, thus this patch expose the counter
-as 'migfailed' in '/proc/PID/sched'.
+Hi Darrick,
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Michal Koutný <mkoutny@suse.com>
-Acked-by: Mel Gorman <mgorman@suse.de>
-Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
----
- kernel/sched/debug.c | 1 +
- 1 file changed, 1 insertion(+)
+On Mon, 2 Dec 2019 16:22:58 -0800 "Darrick J. Wong" <darrick.wong@oracle.co=
+m> wrote:
+>
+> On Tue, Dec 03, 2019 at 11:00:39AM +1100, Stephen Rothwell wrote:
+> > Hi all,
+> >=20
+> > This conflict is now between the xfs tree and Linus' tree (and the
+> > merge fix up patch below needs applying to that merge. =20
+>=20
+> There shouldn't be a conflict any more, since Linus just pulled the xfs
+> tree into master and resolved the conflict in the merge commit.
+> (Right?  Or am I missing something here post-turkeyweekend? 8))
 
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index f7e4579e746c..73c4809c8f37 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -848,6 +848,7 @@ static void sched_show_numa(struct task_struct *p, struct seq_file *m)
- 	P(total_numa_faults);
- 	SEQ_printf(m, "current_node=%d, numa_group_id=%d\n",
- 			task_node(p), task_numa_group_id(p));
-+	SEQ_printf(m, "migfailed=%lu\n", p->numa_faults_locality[2]);
- 	show_numa_stats(p, m);
- 	mpol_put(pol);
- #endif
--- 
-2.14.4.44.g2045bb6
+Yeah, it should all be gone in tomorrow's linux-next.
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/G5fteeX4WpkVraxOJWz9wJm
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3lxwQACgkQAVBC80lX
+0Gz2Pgf/W+qtlGWltx8FwrLej5hHElz+9Qsxf9biRtTbhblZybgbQ4mICamyW0DR
+dhCUsa2GYCVwAZ/m+eMyFjvpu+Z86PA5sqNWY97ZV7hF9pnWYoxDRb4q/lJyXGLv
+z9QffiYs/l9J7CJNoT/KcCJvcLLz/DU79LB/nUQv4TK4+UOFpYKx+Deq8xK2G5WX
+w5romAXa2JCbGFfXy5Cysr2v2Tqpc4/9IbJ/qC83H2ZA2NK6ajG5pryydXBoTco2
+16rGnqQISq/+VZ8wr1G5OMxM8kueXJx9N566+OX4RqoEuIdsqa71pd7udRO1u78r
+j4VZj8d4hpWSwwJBLeQDh2pMC/5aAg==
+=074M
+-----END PGP SIGNATURE-----
+
+--Sig_/G5fteeX4WpkVraxOJWz9wJm--
