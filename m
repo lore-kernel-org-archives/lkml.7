@@ -2,94 +2,102 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D52C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4556C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54DFF2064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:19:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A549820659
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:19:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YngqJA4U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XWJCfFkr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfLCITQ (ORCPT
+        id S1726808AbfLCITV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 03:19:16 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43370 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbfLCITQ (ORCPT
+        Tue, 3 Dec 2019 03:19:21 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37032 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbfLCITS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 03:19:16 -0500
-Received: by mail-wr1-f66.google.com with SMTP id n1so2424937wra.10;
-        Tue, 03 Dec 2019 00:19:14 -0800 (PST)
+        Tue, 3 Dec 2019 03:19:18 -0500
+Received: by mail-wm1-f66.google.com with SMTP id f129so2385431wmf.2;
+        Tue, 03 Dec 2019 00:19:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=kzB1OOAN73r9jazBgk7VDDlYJoM5akmDKyZXmPa1LfM=;
-        b=YngqJA4Ur8bjbh7ZkWIr9jCDnTAGV8cpxVF4V4TQRh0dVtapSSpf6AfvRyptWgQyG/
-         45lgDkgV+8IV63hmTIV9pUKDlFD4A/1GoKdLYzfxDO8VMn4xrZrrSSNVGX/9ROpt2vQX
-         6GZMiZ2QzspWxCeymonkeVdahwTiEHmQZlAv7yhQ/D+BucS9vHgNQJDOJ/P37KXvksif
-         39OV8Y+rnKVrTjQJry4mQOTCFQ1ZlNfWxljbghRb1SM7pxWtYsgZN7r8IGqp3hITwDSU
-         OU3pxVE1F6lrT3P68dQ21weoftKzj8Ke1/My/d7qn2SrItsWv8qcyHneI9B/nKjaYcS2
-         fPDg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Fspx7bIXXs0k8mMRF6gpjQkO0Aw1T/BQQAXOr83Gdx0=;
+        b=XWJCfFkrPHe1Ba4cyqiTHzY629AzEtC9/bijTztY+Chrta5eejzLI9UnDAqC8O3LeW
+         ung4QmEBfsb6D9D14RKydctfEOmEsHEtcuoY99+RUJS33soqYy9JTIxLchAunK8kkpgO
+         opaLm2qYdHDUnxrF1v3C2dXBum3OiapGU/EAAlAThDMAHf1iz0j1Y/OcDvKIbN3O9UYp
+         XwggjFQpIGqSLcvu/AcpPggCAIBfgJ9uEUoNPRI7l5Oh6l0nzyY0/8hDiKF+56Gc+IBo
+         UO1Ig4s030zMF5/PXqqHRmYhOk55Dad/YLhjU2XQ7NRjEFCOaXzYN0JrkUBsaKDPNPBQ
+         rLFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=kzB1OOAN73r9jazBgk7VDDlYJoM5akmDKyZXmPa1LfM=;
-        b=kAOz79v8E5pAfeAqZ4xZ/FT0lCdICR/VBpG40dW/RsZjErNOFbm1KKWV+adpaf5Qo5
-         8tmYwK3x94WaO9oJs74CQtpXrPwbDXOnayfog2xYfm3DYmQ1jssKCJBxh3ip5QumQg54
-         wTWKfcxkBPHS3eMTYoiEHEHm/Q4qFeDaZUcMdGE7evBqEzisXgnvJFjM1j1ZLGI0/tTk
-         xIpg9jy/9lyaOuwAOhzymoXUPiXS+cAP+ZrScKbfxls+4nGmLsY+0CVXH7G8N71ZG5Jw
-         vf/5Lb7nyIsz7z3IwzsNnCSxMmF/ofdhBYitbXIu006AZjVgSOfHlcnxay58mWLEigGl
-         COpA==
-X-Gm-Message-State: APjAAAVxitTXbV417DX4xn3zwo90To0sOJMxqwbRrOMYAryaOxVz9fb0
-        QW0QTMoCkYWP+xlidk0LbhQ=
-X-Google-Smtp-Source: APXvYqwWwavbbzKQunBTS00pOLVHCqVc4H9imfuH+KhO+/E4PnM3Qckm4eqMD1yNEQOgF3vgTLrVpw==
-X-Received: by 2002:adf:e70d:: with SMTP id c13mr3722980wrm.248.1575361153533;
-        Tue, 03 Dec 2019 00:19:13 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Fspx7bIXXs0k8mMRF6gpjQkO0Aw1T/BQQAXOr83Gdx0=;
+        b=BI9EQAUXzajZhsgba7oGrRhFWm6UXaBWD8sn03rAnOWndJdxolzKDvyLr6O9DkLEAw
+         DqztR13tnaywHh8WwE+N9MpcMtpwui9gJsiVV55VVjzlyJd3F9AaANwlo1JrDKocVhw+
+         N0ory1GUmqIBrf1BRLg0PX6qDrY0WUj0CjXd4AXUmTGpGxh1K7vpiNqciIVxJOwkhpM4
+         io9FBtvDlB2P2nFLAxdGj4011Q6pHNSz1oaEYFlUJSchq2g2e/6Es40dL7W5VJcKxW4G
+         EBdvss1euilqU7c7OHzQhRJOGkBstOCqR1VFBCpLvI4hMT1u9ivnpKC1HwErTrW6tQbx
+         Fyuw==
+X-Gm-Message-State: APjAAAUBZLnQvFt0MEY2VEi0XD18FuedU5WilvX32mQfTfMSl2brAGS8
+        iiToK+ZC/uR2NlxHjOCoe2g=
+X-Google-Smtp-Source: APXvYqwtzqgb604MYHUY923Uhk6K2ccj3q0xJ14ecw55x0JbrMqhaFx9/7cnGm/XmCXNugQzRxFnAg==
+X-Received: by 2002:a1c:9e58:: with SMTP id h85mr34239551wme.77.1575361156150;
+        Tue, 03 Dec 2019 00:19:16 -0800 (PST)
 Received: from localhost.localdomain (p50991abe.dip0.t-ipconnect.de. [80.153.26.190])
-        by smtp.gmail.com with ESMTPSA id 188sm2048197wmz.13.2019.12.03.00.19.12
+        by smtp.gmail.com with ESMTPSA id 188sm2048197wmz.13.2019.12.03.00.19.14
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 03 Dec 2019 00:19:12 -0800 (PST)
+        Tue, 03 Dec 2019 00:19:15 -0800 (PST)
 From:   SeongJae Park <sj38.park@gmail.com>
 To:     brendanhiggins@google.com, shuah@kernel.org
 Cc:     corbet@lwn.net, linux-kselftest@vger.kernel.org,
         kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sjpark@amazon.de,
-        SeongJae Park <sj38.park@gmail.com>
-Subject: [PATCH v2 0/5] Fix nits in the kunit
-Date:   Tue,  3 Dec 2019 17:18:56 +0900
-Message-Id: <1575361141-6806-1-git-send-email-sj38.park@gmail.com>
+        linux-kernel@vger.kernel.org, sjpark@amazon.de
+Subject: [PATCH v2 2/5] kunit: Remove duplicated defconfig creation
+Date:   Tue,  3 Dec 2019 17:18:58 +0900
+Message-Id: <1575361141-6806-3-git-send-email-sj38.park@gmail.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1575361141-6806-1-git-send-email-sj38.park@gmail.com>
+References: <1575361141-6806-1-git-send-email-sj38.park@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset contains trivial fixes for the kunit documentations and the
-wrapper python scripts.
+From: SeongJae Park <sjpark@amazon.de>
 
+'--defconfig' option is handled by the 'main() of the 'kunit.py' but
+again handled in following 'run_tests()'.  This commit removes this
+duplicated handling of the option in the 'run_tests()'.
 
-Changes from v1 (https://lore.kernel.org/linux-doc/1575242724-4937-1-git-send-email-sj38.park@gmail.com/):
- - Remove "docs/kunit/start: Skip wrapper run command" (A similar approach is
-   ongoing)
- - Make 'build_dir' if not exists
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+---
+ tools/testing/kunit/kunit.py | 3 ---
+ 1 file changed, 3 deletions(-)
 
-SeongJae Park (5):
-  docs/kunit/start: Use in-tree 'kunit_defconfig'
-  kunit: Remove duplicated defconfig creation
-  kunit: Create default config in '--build_dir'
-  kunit: Place 'test.log' under the 'build_dir'
-  kunit: Rename 'kunitconfig' to '.kunitconfig'
-
- Documentation/dev-tools/kunit/start.rst | 13 +++++--------
- tools/testing/kunit/kunit.py            | 14 ++++++++------
- tools/testing/kunit/kunit_kernel.py     |  8 ++++----
- 3 files changed, 17 insertions(+), 18 deletions(-)
-
+diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
+index efe06d6..f8f2695 100755
+--- a/tools/testing/kunit/kunit.py
++++ b/tools/testing/kunit/kunit.py
+@@ -37,9 +37,6 @@ def create_default_kunitconfig():
+ 
+ def run_tests(linux: kunit_kernel.LinuxSourceTree,
+ 	      request: KunitRequest) -> KunitResult:
+-	if request.defconfig:
+-		create_default_kunitconfig()
+-
+ 	config_start = time.time()
+ 	success = linux.build_reconfig(request.build_dir)
+ 	config_end = time.time()
 -- 
 2.7.4
 
