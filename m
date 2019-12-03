@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D35C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C357C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03E882080F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EE0D2080F
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413346;
-	bh=eyU1uN6m4e8tsqe9BadBCFEWGiABRBv7Mkj8eycyImE=;
+	s=default; t=1575413347;
+	bh=i2TUQ1gesl9JwdNVYVse27uEquLrDG/YSkiLYku2988=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hwxvjsv4aS+PGIxfp/nHituwsfwGgGwcdkCGb8XV8SxQnfJREMqZDMAqQhUZqQJia
-	 CWQwa1rfGP4S8JxXOaxZRoiSYPamduZlwMSvsL5m+pYYsgl3ZAhmN6XkZVCGav6yYw
-	 MENlLKqWQwxYRGwB52xgM7mH/ic3umAxTt/5UgUc=
+	b=KMNT8aj1UuJ+VTnSq0v3+GDIYQTREWyveVSxb/PgsCUYFb/gyZrSncsQrHtnXdeDW
+	 vTeJlyiYn3jEPvW4Oq4xp9DAiS1RRLe1WB/qbsHoFJ6SiGZOTte3Mzs0k2tXf+4Tv9
+	 C14NEMvXH9abNhrz7n96f9ZLxZgfUzrNoC/m6fGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729536AbfLCWtE (ORCPT
+        id S1729546AbfLCWtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:49:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39902 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:49:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729510AbfLCWtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:49:02 -0500
+        id S1729532AbfLCWtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:49:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B47B20684;
-        Tue,  3 Dec 2019 22:49:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0B3E20803;
+        Tue,  3 Dec 2019 22:49:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413341;
-        bh=eyU1uN6m4e8tsqe9BadBCFEWGiABRBv7Mkj8eycyImE=;
+        s=default; t=1575413344;
+        bh=i2TUQ1gesl9JwdNVYVse27uEquLrDG/YSkiLYku2988=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1TAYLwY89V48WHWk4TgVP3mcVNTBnY+IfWnWEaM65sj8kY+N1p7UMbV4bRbIg99cK
-         spjrkoWVcINHtwXAFIavGWlJ6nT6ztN6MkbGmcLU4E9JYIeVafqy7UhP59gMK7xVIP
-         gKA7pmpRaz1fbHWpctyAh4zbiQv4iAqBi5wK6FQ8=
+        b=Ush9cVmEfxP1XCCwaDM9HNHlcfmtToVNlTd/HucvtHrSxubc57Q1sst7r1etV3nXi
+         mCPBd34hjXGWkIs2R+24rckunwiIeUI3r+rBRExp/dp+bKM7RI4Dc1jJnSZ2F+EpyV
+         LALZMTHhdPWBpQCJzD2sN8rXbeejcbamM/GiMr2s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Madhan Mohan R <madhanmohan.r@cypress.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 084/321] scsi: qla2xxx: Fix NPIV handling for FC-NVMe
-Date:   Tue,  3 Dec 2019 23:32:30 +0100
-Message-Id: <20191203223431.527072152@linuxfoundation.org>
+Subject: [PATCH 4.19 093/321] brcmfmac: set SDIO F1 MesBusyCtrl for CYW4373
+Date:   Tue,  3 Dec 2019 23:32:39 +0100
+Message-Id: <20191203223431.987493166@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,78 +63,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Himanshu Madhani <hmadhani@marvell.com>
+From: Madhan Mohan R <MadhanMohan.R@cypress.com>
 
-[ Upstream commit 5e6803b409ba3c18434de6693062d98a470bcb1e ]
+[ Upstream commit 58e4bbea0c1d9b5ace11df968c5dc096ce052a73 ]
 
-This patch fixes issues with NPIV port with FC-NVMe. Clean up code for
-remoteport delete and also call nvme_delete when deleting VPs.
+Along with F2 watermark (existing) configuration, F1 MesBusyCtrl
+should be enabled & sdio device RX FIFO watermark should be
+configured to avoid overflow errors.
 
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reviewed-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+Signed-off-by: Madhan Mohan R <madhanmohan.r@cypress.com>
+Signed-off-by: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_nvme.c | 16 +++-------------
- drivers/scsi/qla2xxx/qla_os.c   |  2 ++
- 2 files changed, 5 insertions(+), 13 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 3 +++
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.h | 9 ++++++++-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_nvme.c b/drivers/scsi/qla2xxx/qla_nvme.c
-index e6545cb9a2c19..5590d6e8b5762 100644
---- a/drivers/scsi/qla2xxx/qla_nvme.c
-+++ b/drivers/scsi/qla2xxx/qla_nvme.c
-@@ -474,21 +474,10 @@ static int qla_nvme_post_cmd(struct nvme_fc_local_port *lport,
- 	int rval = -ENODEV;
- 	srb_t *sp;
- 	struct qla_qpair *qpair = hw_queue_handle;
--	struct nvme_private *priv;
-+	struct nvme_private *priv = fd->private;
- 	struct qla_nvme_rport *qla_rport = rport->private;
- 
--	if (!fd || !qpair) {
--		ql_log(ql_log_warn, NULL, 0x2134,
--		    "NO NVMe request or Queue Handle\n");
--		return rval;
--	}
--
--	priv = fd->private;
- 	fcport = qla_rport->fcport;
--	if (!fcport) {
--		ql_log(ql_log_warn, NULL, 0x210e, "No fcport ptr\n");
--		return rval;
--	}
- 
- 	vha = fcport->vha;
- 
-@@ -517,6 +506,7 @@ static int qla_nvme_post_cmd(struct nvme_fc_local_port *lport,
- 	sp->name = "nvme_cmd";
- 	sp->done = qla_nvme_sp_done;
- 	sp->qpair = qpair;
-+	sp->vha = vha;
- 	nvme = &sp->u.iocb_cmd;
- 	nvme->u.nvme.desc = fd;
- 
-@@ -564,7 +554,7 @@ static void qla_nvme_remoteport_delete(struct nvme_fc_remote_port *rport)
- 		schedule_work(&fcport->free_work);
- 	}
- 
--	fcport->nvme_flag &= ~(NVME_FLAG_REGISTERED | NVME_FLAG_DELETING);
-+	fcport->nvme_flag &= ~NVME_FLAG_DELETING;
- 	ql_log(ql_log_info, fcport->vha, 0x2110,
- 	    "remoteport_delete of %p completed.\n", fcport);
- }
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 3e892e013658d..183bfda8f5d11 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -3538,6 +3538,8 @@ qla2x00_delete_all_vps(struct qla_hw_data *ha, scsi_qla_host_t *base_vha)
- 		spin_unlock_irqrestore(&ha->vport_slock, flags);
- 		mutex_unlock(&ha->vport_lock);
- 
-+		qla_nvme_delete(vha);
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+index e487dd78cc024..abaed2fa2defd 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+@@ -4133,6 +4133,9 @@ static void brcmf_sdio_firmware_callback(struct device *dev, int err,
+ 			devctl |= SBSDIO_DEVCTL_F2WM_ENAB;
+ 			brcmf_sdiod_writeb(sdiod, SBSDIO_DEVICE_CTL, devctl,
+ 					   &err);
++			brcmf_sdiod_writeb(sdiod, SBSDIO_FUNC1_MESBUSYCTRL,
++					   CY_4373_F2_WATERMARK |
++					   SBSDIO_MESBUSYCTRL_ENAB, &err);
+ 			break;
+ 		default:
+ 			brcmf_sdiod_writeb(sdiod, SBSDIO_WATERMARK,
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.h
+index 7faed831f07d5..34b031154da93 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.h
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.h
+@@ -77,7 +77,7 @@
+ #define SBSDIO_GPIO_OUT			0x10006
+ /* gpio enable */
+ #define SBSDIO_GPIO_EN			0x10007
+-/* rev < 7, watermark for sdio device */
++/* rev < 7, watermark for sdio device TX path */
+ #define SBSDIO_WATERMARK		0x10008
+ /* control busy signal generation */
+ #define SBSDIO_DEVICE_CTL		0x10009
+@@ -104,6 +104,13 @@
+ #define SBSDIO_FUNC1_RFRAMEBCHI		0x1001C
+ /* MesBusyCtl (rev 11) */
+ #define SBSDIO_FUNC1_MESBUSYCTRL	0x1001D
++/* Watermark for sdio device RX path */
++#define SBSDIO_MESBUSY_RXFIFO_WM_MASK	0x7F
++#define SBSDIO_MESBUSY_RXFIFO_WM_SHIFT	0
++/* Enable busy capability for MES access */
++#define SBSDIO_MESBUSYCTRL_ENAB		0x80
++#define SBSDIO_MESBUSYCTRL_ENAB_SHIFT	7
 +
- 		fc_vport_terminate(vha->fc_vport);
- 		scsi_host_put(vha->host);
- 
+ /* Sdio Core Rev 12 */
+ #define SBSDIO_FUNC1_WAKEUPCTRL		0x1001E
+ #define SBSDIO_FUNC1_WCTRL_ALPWAIT_MASK		0x1
 -- 
 2.20.1
 
