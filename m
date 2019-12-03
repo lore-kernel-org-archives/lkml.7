@@ -2,85 +2,174 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F75C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9C9C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FD8F2073F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:02:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575410549;
-	bh=keVXt5Dqnkw78Vt0cAvfU2626c0DWW2+SjWv/uBoC7w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eQAyddAAvxggvnDnaCSH+TIk/gJNQMmwqoV5KhSrrUjVSRsLVysuu+gSTnArit4iC
-	 d3vkp2vsoP8FVC4BAfP0jIti2DNOCfmZvlXullvlqKfszYxE5GTvtRS9DRRdktXQXX
-	 8nw9UNvenm2aU/mbxOZyOCH8Bv+JUsT/+U6rzfyM=
+	by mail.kernel.org (Postfix) with ESMTP id D29222080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:04:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g/vCifTP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbfLCWC2 (ORCPT
+        id S1727566AbfLCWEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:02:28 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:37283 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727416AbfLCWC1 (ORCPT
+        Tue, 3 Dec 2019 17:04:55 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39523 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727416AbfLCWEz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:02:27 -0500
-Received: by mail-oi1-f195.google.com with SMTP id x195so4887737oix.4;
-        Tue, 03 Dec 2019 14:02:27 -0800 (PST)
+        Tue, 3 Dec 2019 17:04:55 -0500
+Received: by mail-pl1-f193.google.com with SMTP id o9so2234623plk.6;
+        Tue, 03 Dec 2019 14:04:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=U0Zdh1W8YT0/olhw1BoU9rQF6IK87SH/WsTNkT7lsS0=;
+        b=g/vCifTPoAWVc8oyZoGmNOfDZRRaIHZEevlL0fkqsv6VtvBAbJGLmdmjrOsB+qDtoP
+         5IIjaNVPnNUavp8IrO5OzPBXz7oD8qkQ3Vz6rhXbVKNT2GHcFziIAAn0Q0ncuHJoV00o
+         4LN4IQgja2CntGjXgvKAr5LwQYiF46cmugwBMqCYg3FsdJOqOxlODuFnDkatgSwuiUbd
+         E1Bv3zHyot6Pwgjo5/4gKhueiVc57ttnXApgQvWo0W7x5EO64ifeBpNwfrp9q/8VR1KF
+         4vEHiC4Ctc5c5v1jdoZWCuCeguU4oJgxBv8OfsYv2LAKiCIjNFNsDwDfjnP7LQF4yISC
+         gcQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=90kwbqDcp7UEOW069UgJZG7CeERSPfvM2e/4IVBQtmg=;
-        b=QYOlkSWRkkDvZ9P/VRtt/JhR9JZtVOp/Oy9BNK8f+3oG+/VvoqjVS1cFH4J56czoBw
-         se1VTkJ1ckCYzEF8FXXCb8WNC1NfOI3TTV4uAq4tF79jCdNaSVIIWbVXYIwH3EL6EIl7
-         Tfrxq2Ga4PJQxiQGCtgx0CQ4ODep6FutOqtwZVg3X35lZKN+7giRxkEzaECN8cjhWxJF
-         W4/Rbk0j0eoFi949WQ3lj7uixPCpC9w0BS6nbCbozQG7uHpFTG0thD44Xu2M2KzCPFib
-         Dp0LEC46i1jPaWXG6br5O6gInL5hsosOes/xyw00rCcDV8D/NOrQAfxxGzlwFe2cpgDq
-         mE8Q==
-X-Gm-Message-State: APjAAAUOcWkRkaV95NrGg6Isr+1Jx4SCbl8ZS0xlNbYLqbazlFCsXszi
-        MmNKx+M/cNfXKieV1d5T4g==
-X-Google-Smtp-Source: APXvYqxrRfI0UN95eqjO4C8gSA0I9sLWnVvsUts8X9Qr0NL09XMOoPTbWgGcEBLbzFgRiTnhvrIi8w==
-X-Received: by 2002:aca:5cc4:: with SMTP id q187mr155936oib.45.1575410546786;
-        Tue, 03 Dec 2019 14:02:26 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n15sm1488396otr.67.2019.12.03.14.02.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 14:02:26 -0800 (PST)
-Date:   Tue, 3 Dec 2019 16:02:25 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, jhugo@codeaurora.org,
-        robh+dt@kernel.org, jonathan@marek.ca, ohad@wizery.com,
-        mark.rutland@arm.com, p.zabel@pengutronix.de,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=U0Zdh1W8YT0/olhw1BoU9rQF6IK87SH/WsTNkT7lsS0=;
+        b=PjWn9uyAQkwR/i7Ba4OBDbzdXa74zVAr2L7b/04lP0IKyGmTPrQ+gWfZS+ONfJAk9D
+         9FJKYtO/RavMil26tdXVmy37eJEhHGLZBnvZqj0bBzCFr5Rg1uz1I2DziRaPFb1s3gnK
+         To9UHUOtXQkhzEb4PIMBvRxteC+ybTrZEkDhvWeMe+79NNezlICzYHeAXFHtsimapZGn
+         L+ogi3lZHscFzwUQB0ZIG9QOPsJ3o39n9XWGaWx0oJGz6dS71mUP/Nc82IZWR9uqWHoC
+         +ao5tP2MC0qC8m+4Lypx23hxWOjML0Ogt15+gBS9w/bd1mDBp0Fo0edKQTo/3TvomQnz
+         q0nQ==
+X-Gm-Message-State: APjAAAV9N1UfCg0VWzSciYKqW2kKnbc3zuirKbuFEn6VIOoj4xJ+eLO2
+        Adqx7Avjd5bG2/ScAMxc+Qw=
+X-Google-Smtp-Source: APXvYqwH5p1pdvT3ai1jo+LMmmdPT7SPC5sK4b5ZBOokc1cDiEtQrVREoJtQYrcsD0p0AQ4Rb+uUEg==
+X-Received: by 2002:a17:902:59c9:: with SMTP id d9mr180612plj.184.1575410694389;
+        Tue, 03 Dec 2019 14:04:54 -0800 (PST)
+Received: from ?IPv6:2001:4898:d8:1009:24f7:1d2:3fb0:320e? ([2001:4898:80e8:1:b4ee:1d2:3fb0:320e])
+        by smtp.gmail.com with ESMTPSA id i5sm721512pgj.58.2019.12.03.14.04.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Dec 2019 14:04:53 -0800 (PST)
+From:   Shiping Ji <shiping.linux@gmail.com>
+Subject: Re: [PATCH v7 1/2] dt-bindings: edac: arm-dmc520.txt
+To:     Rob Herring <robh@kernel.org>
+Cc:     bp@alien8.de, james.morse@arm.com, mark.rutland@arm.com,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        agross@kernel.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH 10/16] dt-bindings: remoteproc: qcom: SM8150 Add ADSP,
- CDSP, MPSS and SLPI support
-Message-ID: <20191203220225.GA22560@bogus>
-References: <20191118214250.14002-1-sibis@codeaurora.org>
- <0101016e8078dad4-458c8501-93fd-4daa-8938-d01027f248cb-000000@us-west-2.amazonses.com>
+        mchehab@kernel.org, linux-edac@vger.kernel.org, sashal@kernel.org,
+        hangl@microsoft.com, lewan@microsoft.com, ruizhao@microsoft.com,
+        scott.branden@broadcom.com, yuqing.shen@broadcom.com,
+        ray.jui@broadcom.com, shji@microsoft.com, wangglei@gmail.com
+References: <f947d821-8e67-dcc7-d753-5b04d099792d@gmail.com>
+ <20191121204350.GA26174@bogus>
+Message-ID: <87af6922-41d6-c017-b31b-75eaa2c5551b@gmail.com>
+Date:   Tue, 3 Dec 2019 14:04:53 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0101016e8078dad4-458c8501-93fd-4daa-8938-d01027f248cb-000000@us-west-2.amazonses.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191121204350.GA26174@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 Nov 2019 21:43:54 +0000, Sibi Sankar wrote:
-> Add ADSP, CDSP, MPSS and SLPI compatibles for SM8150 SoC.
+On 11/21/2019 12:43 PM, Rob Herring wrote:
+> On Sun, Nov 17, 2019 at 06:10:43PM -0800, Shiping Ji wrote:
+>> This is the device tree bindings for new EDAC driver dmc520_edac.c.
+>>
+>> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+>> Reviewed-by: James Morse <james.morse@arm.com>
+>>
+>> ---
+>>      Changes in v7:
+>>          - Added arm prefix to the interrupt-config property
+>>
+>> ---
+>>  .../devicetree/bindings/edac/arm-dmc520.txt   | 26 +++++++++++++++++++
+>>  1 file changed, 26 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/edac/arm-dmc520.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/edac/arm-dmc520.txt b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+>> new file mode 100644
+>> index 000000000000..476cf8b76f2a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+>> @@ -0,0 +1,26 @@
+>> +* ARM DMC-520 EDAC node
+>> +
+>> +Required properties:
+>> +- compatible  : "brcm,dmc-520", "arm,dmc-520".
+>> +- reg   : Address range of the DMC-520 registers.
+>> +- interrupts  : DMC-520 interrupt numbers. The example below specifies
+>> +     two interrupt lines for dram_ecc_errc_int and
+>> +     dram_ecc_errd_int.
+>> +- arm,interrupt-config : This is an array of interrupt masks. For each of the
+>> +     above interrupt line, add one interrupt mask element to
+>> +     it. That is, there is a 1:1 mapping from each interrupt
+>> +     line to an interrupt mask. An interrupt mask can represent
+>> +     multiple interrupts being enabled. Refer to interrupt_control
+>> +     register in DMC-520 TRM for interrupt mapping. In the example
+>> +     below, the interrupt configuration enables dram_ecc_errc_int
+>> +     and dram_ecc_errd_int. And each interrupt is connected to
+>> +     a separate interrupt line.
 > 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  .../devicetree/bindings/remoteproc/qcom,adsp.txt   | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+> Looking at this again, I think I now understand what you are trying to 
+> do. Your mask is just what interrupt line each one is. We have a 
+> standard way of doing this either by using indices of 'interrupts' or 
+> with interrupt-names. The latter probably works best in this case.
+> 
+> You need to define *all* the interrupt-names:
+> combined
+> ram_ecc_errc
+> ram_ecc_errd
+> dram_ecc_errc
+> dram_ecc_errd
+> failed_access
+> failed_prog
+> link_err
+> temperature_event
+> arch_fsm
+> phy_request
+
+Thanks for interrupt-names suggestion!
+
+We did experiments and it looks cleaner now. In the device tree we define only the interrupts and interrupt-names that are of interest:
+
+dmc0: dmc@200000 {
+ compatible = "brcm,dmc-520", "arm,dmc-520";
+ reg = <0x200000 0x80000>;
+ interrupts = <0x0 0x349 0x4>, <0x0 0x34B 0x4>;
+ interrupt-names = "dram_ecc_errc", "dram_ecc_errd";
+};
+
+In the driver code, we maintain an interrupt table with all known interrupts (name, irq, mask, etc.) Upon probing, we go through every known interrupt name and call platform_get_irq_byname(). If any interrupt has been defined then we update the interrupt number in the table.
+
+In isr function we lookup the mask and perform specific logic.
+ 
+> I'm not sure if all the '*_oflow' interrupts should be listed too. It 
+> doesn't seem all that useful to get a 2nd interrupt.
+
+No, we do not list them.
+
+> Your node should list all that are hooked up in the h/w, not just the > ones you need for EDAC.
+
+Do you suggest to list all of them in the device tree node? Currently we list only the enabled ones and update the mask accordingly.
+
+Please let us know whether our approach makes sense, we will submit new patch after your confirmation.
+ 
+> Rob
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+-- 
+Best regards,
+Shiping Ji
