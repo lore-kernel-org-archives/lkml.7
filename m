@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1EBC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F4BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CC67207DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB85D207DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414530;
-	bh=1jaVvqrRRcxk8G/3Hlu0ZZYVZUHHzUghRnsT1CY3Qr8=;
+	s=default; t=1575414534;
+	bh=stNeFF6eYSL12Hwp4UCDFutVjOAtlzu0FO++CF2jli0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nhkP5n9zImnqpa1aIfAVjE/OvcjNeenAtbgtn2YPPW+AZPQy9QCYDo5/4CThb6PCp
-	 Nue864NBvSF0mc7e7Bi9nrGCh5zsLIragJo59HLgnyBOfnhhtAklMrKqTT6ygDufLV
-	 H2FhhsjQdTEGFeSYNTLpLJCBNSOyKmPVFxjYyAFw=
+	b=sCoIEnGQ9BgIfeXEDnWnpbyaLanWtQlpkyOyLlzPc0R6eKYpP6nsIeX9PDgE6EeLF
+	 6SPMcPR6aySW3uIO1e0dokjg9xz9KEz6PhSZyKlqN+KaC9e2aNoms09uDVgeVLhPCU
+	 d0YGIdB/iqqM9goFlBk013M6tM2GKG6NkGJNeQlY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbfLCXIt (ORCPT
+        id S1729009AbfLCWpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:08:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33734 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:45:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728776AbfLCWpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:45:15 -0500
+        id S1728715AbfLCWpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:45:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAFD220848;
-        Tue,  3 Dec 2019 22:45:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87C62207DD;
+        Tue,  3 Dec 2019 22:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413115;
-        bh=1jaVvqrRRcxk8G/3Hlu0ZZYVZUHHzUghRnsT1CY3Qr8=;
+        s=default; t=1575413105;
+        bh=stNeFF6eYSL12Hwp4UCDFutVjOAtlzu0FO++CF2jli0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IBQbtPKHVAsxXq46WRg+J1v5gBKCuf4ASU8gvfj5r+1n17gTViFdXcHH6bImsXEPj
-         agQLo2MKkVxYJgYjNY7Gy84qaL2OEiuLl1h41NmYYuCkFgmpkrZZPbFmJY0soOqLyZ
-         /78dVLwzwt4sC83guVu8ZhiFAsNlzNurFOpAHmjY=
+        b=nplOTDetVVa5wDcdGz+23nGUWeDjgUNU9GAKnyOiXrxPCePiCVrrLWEuC34bW1KlN
+         jpuDc5o+SdDDzLBEaV4Ye5rORLN1n9j46LKAXnSCaygp9cGOeOdeZYkH0k0bHvKPq+
+         66LlYn17a6bNZ5jSuk2dRLgEvvOWREf6zmd93a6Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
-        Stefano Brivio <sbrivio@redhat.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Simon Horman <simon.horman@netronome.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 131/135] selftests: pmtu: use -oneline for ip route list cache
-Date:   Tue,  3 Dec 2019 23:36:11 +0100
-Message-Id: <20191203213045.675600377@linuxfoundation.org>
+Subject: [PATCH 5.3 127/135] net/tls: use sg_next() to walk sg entries
+Date:   Tue,  3 Dec 2019 23:36:07 +0100
+Message-Id: <20191203213045.174759174@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -61,57 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit 2745aea6750ff0d2c48285d25bdb00e5b636ec8b ]
+[ Upstream commit c5daa6cccdc2f94aca2c9b3fa5f94e4469997293 ]
 
-Some versions of iproute2 will output more than one line per entry, which
-will cause the test to fail, like:
+Partially sent record cleanup path increments an SG entry
+directly instead of using sg_next(). This should not be a
+problem today, as encrypted messages should be always
+allocated as arrays. But given this is a cleanup path it's
+easy to miss was this ever to change. Use sg_next(), and
+simplify the code.
 
-TEST: ipv6: list and flush cached exceptions                        [FAIL]
-  can't list cached exceptions
-
-That happens, for example, with iproute2 4.15.0. When using the -oneline
-option, this will work just fine:
-
-TEST: ipv6: list and flush cached exceptions                        [ OK ]
-
-This also works just fine with a more recent version of iproute2, like
-5.4.0.
-
-For some reason, two lines are printed for the IPv4 test no matter what
-version of iproute2 is used. Use the same -oneline parameter there instead
-of counting the lines twice.
-
-Fixes: b964641e9925 ("selftests: pmtu: Make list_flush_ipv6_exception test more demanding")
-Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-Acked-by: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/net/pmtu.sh |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ include/net/tls.h  |    2 +-
+ net/tls/tls_main.c |   13 ++-----------
+ net/tls/tls_sw.c   |    3 ++-
+ 3 files changed, 5 insertions(+), 13 deletions(-)
 
---- a/tools/testing/selftests/net/pmtu.sh
-+++ b/tools/testing/selftests/net/pmtu.sh
-@@ -1249,8 +1249,7 @@ test_list_flush_ipv4_exception() {
- 	done
- 	run_cmd ${ns_a} ping -q -M want -i 0.1 -c 2 -s 1800 "${dst2}"
+--- a/include/net/tls.h
++++ b/include/net/tls.h
+@@ -407,7 +407,7 @@ int tls_push_sg(struct sock *sk, struct
+ 		int flags);
+ int tls_push_partial_record(struct sock *sk, struct tls_context *ctx,
+ 			    int flags);
+-bool tls_free_partial_record(struct sock *sk, struct tls_context *ctx);
++void tls_free_partial_record(struct sock *sk, struct tls_context *ctx);
  
--	# Each exception is printed as two lines
--	if [ "$(${ns_a} ip route list cache | wc -l)" -ne 202 ]; then
-+	if [ "$(${ns_a} ip -oneline route list cache | wc -l)" -ne 101 ]; then
- 		err "  can't list cached exceptions"
- 		fail=1
- 	fi
-@@ -1300,7 +1299,7 @@ test_list_flush_ipv6_exception() {
- 		run_cmd ${ns_a} ping -q -M want -i 0.1 -w 1 -s 1800 "${dst_prefix1}${i}"
- 	done
- 	run_cmd ${ns_a} ping -q -M want -i 0.1 -w 1 -s 1800 "${dst2}"
--	if [ "$(${ns_a} ip -6 route list cache | wc -l)" -ne 101 ]; then
-+	if [ "$(${ns_a} ip -oneline -6 route list cache | wc -l)" -ne 101 ]; then
- 		err "  can't list cached exceptions"
- 		fail=1
- 	fi
+ static inline struct tls_msg *tls_msg(struct sk_buff *skb)
+ {
+--- a/net/tls/tls_main.c
++++ b/net/tls/tls_main.c
+@@ -208,24 +208,15 @@ int tls_push_partial_record(struct sock
+ 	return tls_push_sg(sk, ctx, sg, offset, flags);
+ }
+ 
+-bool tls_free_partial_record(struct sock *sk, struct tls_context *ctx)
++void tls_free_partial_record(struct sock *sk, struct tls_context *ctx)
+ {
+ 	struct scatterlist *sg;
+ 
+-	sg = ctx->partially_sent_record;
+-	if (!sg)
+-		return false;
+-
+-	while (1) {
++	for (sg = ctx->partially_sent_record; sg; sg = sg_next(sg)) {
+ 		put_page(sg_page(sg));
+ 		sk_mem_uncharge(sk, sg->length);
+-
+-		if (sg_is_last(sg))
+-			break;
+-		sg++;
+ 	}
+ 	ctx->partially_sent_record = NULL;
+-	return true;
+ }
+ 
+ static void tls_write_space(struct sock *sk)
+--- a/net/tls/tls_sw.c
++++ b/net/tls/tls_sw.c
+@@ -2086,7 +2086,8 @@ void tls_sw_release_resources_tx(struct
+ 	/* Free up un-sent records in tx_list. First, free
+ 	 * the partially sent record if any at head of tx_list.
+ 	 */
+-	if (tls_free_partial_record(sk, tls_ctx)) {
++	if (tls_ctx->partially_sent_record) {
++		tls_free_partial_record(sk, tls_ctx);
+ 		rec = list_first_entry(&ctx->tx_list,
+ 				       struct tls_rec, list);
+ 		list_del(&rec->list);
 
 
