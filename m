@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A36C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D54C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74CF82080F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A06CD2073C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412983;
-	bh=d8tFwmVImrszxwQTnGKG3yU2XKNhYmDIDK7xuuLW7LY=;
+	s=default; t=1575412985;
+	bh=b/K4573lT1m1rjcTQI/G5X4LvK07LO0gE+dvSXDdXEY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ASQGugDmjaAt1B+O/ZsuOHSznC3XvGqsvUHzOHz5iCtRaorh9nY/dw2pdghdx+znB
-	 eU99EJ4KnIRocqIpefywr6V55megHIUidXyoHFhZ3EUPCsWL3dEUkKMIdDIPQZi9Xe
-	 SpxS03d9OSkxgz1OZyUfXTlnsg1qlcQEV6kaL7rM=
+	b=JA8wkQHYRdqNB4cekR+QrKxadY+aQvjOp83lgFbcvWj773Y54f7pt3mgkv37v2bvP
+	 nYz89BM0aUp4lsuj/gusBU9ymb7dlbQ4v6U6zxqOPnzNZ+ets+bzlFVedEEW/ss9Kg
+	 XsiCTUvZoCTzmqwyZJncrCDjQVhfgldY5ogFfUsE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbfLCWnC (ORCPT
+        id S1727689AbfLCWnE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:43:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58122 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:43:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728727AbfLCWm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:42:56 -0500
+        id S1728738AbfLCWm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:42:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E01E206EC;
-        Tue,  3 Dec 2019 22:42:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAAD320803;
+        Tue,  3 Dec 2019 22:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412975;
-        bh=d8tFwmVImrszxwQTnGKG3yU2XKNhYmDIDK7xuuLW7LY=;
+        s=default; t=1575412978;
+        bh=b/K4573lT1m1rjcTQI/G5X4LvK07LO0gE+dvSXDdXEY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pDTHz9zMfNWB5Y24aFVc/Hgs4a56aS0TZ2cLeO8qqQo9prev26qlHbJ2VdAJKiQwQ
-         Sf3j6kXKK0IlKT7hArmKnWbJBM4UZbDAVtH6/TJ021I1ZFMkFkAFmTsfLIdl9h4e/y
-         ju+hfCB0982bEjpnz7YEIUJNUlCakU/9xi6cF9YA=
+        b=n6xNcl3T160D2BNZfqPGpVPadswKThqmFa6VRUZC6ddpliaEj5+0JE/rfMSzfFS3O
+         i9BXRIKGE65qOW7+afTYFnST0MVbiFVlV+Y3rr80cVk/4cODxXeYfzTMajQHAMfCoD
+         Hm2I64J7nmo0/I5zPAEBkuu/plg7H4HZl7a17SVs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiaochen Shen <xiaochen.shen@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        pei.p.jia@intel.com, Reinette Chatre <reinette.chatre@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 039/135] x86/resctrl: Prevent NULL pointer dereference when reading mondata
-Date:   Tue,  3 Dec 2019 23:34:39 +0100
-Message-Id: <20191203213014.048963542@linuxfoundation.org>
+Subject: [PATCH 5.3 082/135] drm/amdgpu: register gpu instance before fan boost feature enablment
+Date:   Tue,  3 Dec 2019 23:35:22 +0100
+Message-Id: <20191203213031.952845802@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -65,57 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaochen Shen <xiaochen.shen@intel.com>
+From: Evan Quan <evan.quan@amd.com>
 
-[ Upstream commit 26467b0f8407cbd628fa5b7bcfd156e772004155 ]
+[ Upstream commit 6a299d7aaa97dfde5988d8f9e2fa2c046b5793ff ]
 
-When a mon group is being deleted, rdtgrp->flags is set to RDT_DELETED
-in rdtgroup_rmdir_mon() firstly. The structure of rdtgrp will be freed
-until rdtgrp->waitcount is dropped to 0 in rdtgroup_kn_unlock() later.
+Otherwise, the feature enablement will be skipped due to wrong count.
 
-During the window of deleting a mon group, if an application calls
-rdtgroup_mondata_show() to read mondata under this mon group,
-'rdtgrp' returned from rdtgroup_kn_lock_live() is a NULL pointer when
-rdtgrp->flags is RDT_DELETED. And then 'rdtgrp' is passed in this path:
-rdtgroup_mondata_show() --> mon_event_read() --> mon_event_count().
-Thus it results in NULL pointer dereference in mon_event_count().
-
-Check 'rdtgrp' in rdtgroup_mondata_show(), and return -ENOENT
-immediately when reading mondata during the window of deleting a mon
-group.
-
-Fixes: d89b7379015f ("x86/intel_rdt/cqm: Add mon_data")
-Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: pei.p.jia@intel.com
-Cc: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/1572326702-27577-1-git-send-email-xiaochen.shen@intel.com
+Fixes: beff74bc6e0fa91 ("drm/amdgpu: fix a race in GPU reset with IB test (v2)")
+Signed-off-by: Evan Quan <evan.quan@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/resctrl/ctrlmondata.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 7 +++++++
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c    | 1 -
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-index efbd54cc4e696..055c8613b5317 100644
---- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-+++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-@@ -522,6 +522,10 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
- 	int ret = 0;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+index 5a7f893cf7244..2877ce84aef2b 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -2788,6 +2788,13 @@ fence_driver_init:
+ 			DRM_INFO("amdgpu: acceleration disabled, skipping benchmarks\n");
+ 	}
  
- 	rdtgrp = rdtgroup_kn_lock_live(of->kn);
-+	if (!rdtgrp) {
-+		ret = -ENOENT;
-+		goto out;
-+	}
++	/*
++	 * Register gpu instance before amdgpu_device_enable_mgpu_fan_boost.
++	 * Otherwise the mgpu fan boost feature will be skipped due to the
++	 * gpu instance is counted less.
++	 */
++	amdgpu_register_gpu_instance(adev);
++
+ 	/* enable clockgating, etc. after ib tests, etc. since some blocks require
+ 	 * explicit gating rather than handling it automatically.
+ 	 */
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+index 65f6619f0c0c4..e531ba9195a0f 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+@@ -190,7 +190,6 @@ int amdgpu_driver_load_kms(struct drm_device *dev, unsigned long flags)
+ 		pm_runtime_put_autosuspend(dev->dev);
+ 	}
  
- 	md.priv = of->kn->priv;
- 	resid = md.u.rid;
+-	amdgpu_register_gpu_instance(adev);
+ out:
+ 	if (r) {
+ 		/* balance pm_runtime_get_sync in amdgpu_driver_unload_kms */
 -- 
 2.20.1
 
