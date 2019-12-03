@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DF3C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E400C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70F5420656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68AAB20656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:58:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413888;
-	bh=BBuT6WcOlJ5I5KToApIymCv4XRE2claoTNM1LLNUSx8=;
+	s=default; t=1575413891;
+	bh=pz78iwdXUENbZcbYUMALJIFQGQOKoTGxA9AdC7L3WZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G84ssGqnstIs7JldHLNs2CRqugi9g0rYNAmz3hvFKnGeLSGhvYBiLaj+DEXlbcA3R
-	 KUG+aO/FJ5xva4tU7BbK1bzrVPXgrulq30pjXlgN/AAlI/rpkIQp645EM2oqsy2z6y
-	 TbYI13dDV4W/E4YYRj9gzCM+QiDA5kpo02MvxZXc=
+	b=b/9ogh5xwRisD2/04PVm857BatD4jba2aFC/M+ZGJ2jcSwxuiX6nVLLoABk406/gv
+	 8DtqRJzzxfkYBp1ILTibDFwKKxpBad2S+qB9GX8w4lUBsKui7O1g+fRjqXVG6xcyoO
+	 /lC78Po1xXZxcUFbBGVCQsjB0Z8bs4EtdaZa2l18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730317AbfLCW6H (ORCPT
+        id S1730621AbfLCW6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:58:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54138 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:58:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729656AbfLCW6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:58:01 -0500
+        id S1730236AbfLCW6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:58:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCC3420656;
-        Tue,  3 Dec 2019 22:58:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0298420674;
+        Tue,  3 Dec 2019 22:58:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413881;
-        bh=BBuT6WcOlJ5I5KToApIymCv4XRE2claoTNM1LLNUSx8=;
+        s=default; t=1575413884;
+        bh=pz78iwdXUENbZcbYUMALJIFQGQOKoTGxA9AdC7L3WZw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HbeDX6tGz1Gz50j9NWG97zSkySFeW/x9fUbrFB8sk4+nFYTLijpqLLXNYcFvFIRy6
-         shE/38o0xS3OpPBxrxerJMntaGLbGI0HIlwwXz4RK2rBkajQAMW5DtPApi84fCG7Bs
-         MPVeYXmHVwVQpUQFWe+oOc9tpnqsVb2pGRjgbuTc=
+        b=D5YgEhrs2Kpz8NO52MNXovF+B7aiHGjNAew6fV3mDeJ2AtspGk5urCiZZz8kaXJCy
+         tCNoXS09Qmjz16aXS6bGYeN12WTk1+OHOa8HgxR/6tgRv10Ye/mzY2S6VXC1sfm8Pt
+         OSPxrADFoBARV7Mae8FPt7FGxv4GKM4gr6N4Gn2s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 258/321] RDMA/hns: Use GFP_ATOMIC in hns_roce_v2_modify_qp
-Date:   Tue,  3 Dec 2019 23:35:24 +0100
-Message-Id: <20191203223440.555593418@linuxfoundation.org>
+Subject: [PATCH 4.19 259/321] ASoC: rt5645: Headphone Jack sense inverts on the LattePanda board
+Date:   Tue,  3 Dec 2019 23:35:25 +0100
+Message-Id: <20191203223440.607002578@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,33 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Hui Wang <hui.wang@canonical.com>
 
-[ Upstream commit 4e69cf1fe2c52d189acdd06c1fd99cc258aba61f ]
+[ Upstream commit 406dcbc55a0a20fd155be889a4a0c4b812f7c18e ]
 
-The the below commit, hns_roce_v2_modify_qp is called inside spinlock
-while using GFP_KERNEL. Change it to GFP_ATOMIC.
+The LattePanda board has a sound card chtrt5645, when there is nothing
+plugged in the headphone jack, the system thinks the headphone is
+plugged in, while we plug a headphone in the jack, the system thinks
+the headphone is unplugged.
 
-Fixes: 0425e3e6e0c7 ("RDMA/hns: Support flush cqe for hip08 in kernel space")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+If adding quirk=0x21 in the module parameter, the headphone jack can
+work well. So let us fix it via platform_data.
+
+https://bugs.launchpad.net/bugs/182459
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/codecs/rt5645.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-index a5ec900a14ae9..7021444f18b46 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-@@ -3446,7 +3446,7 @@ static int hns_roce_v2_modify_qp(struct ib_qp *ibqp,
- 	struct device *dev = hr_dev->dev;
- 	int ret = -EINVAL;
+diff --git a/sound/soc/codecs/rt5645.c b/sound/soc/codecs/rt5645.c
+index 1dc70f452c1b9..f842db498c741 100644
+--- a/sound/soc/codecs/rt5645.c
++++ b/sound/soc/codecs/rt5645.c
+@@ -3662,6 +3662,11 @@ static const struct rt5645_platform_data jd_mode3_platform_data = {
+ 	.jd_mode = 3,
+ };
  
--	context = kcalloc(2, sizeof(*context), GFP_KERNEL);
-+	context = kcalloc(2, sizeof(*context), GFP_ATOMIC);
- 	if (!context)
- 		return -ENOMEM;
++static const struct rt5645_platform_data lattepanda_board_platform_data = {
++	.jd_mode = 2,
++	.inv_jd1_1 = true
++};
++
+ static const struct dmi_system_id dmi_platform_data[] = {
+ 	{
+ 		.ident = "Chrome Buddy",
+@@ -3759,6 +3764,15 @@ static const struct dmi_system_id dmi_platform_data[] = {
+ 		},
+ 		.driver_data = (void *)&intel_braswell_platform_data,
+ 	},
++	{
++		.ident = "LattePanda board",
++		.matches = {
++		  DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
++		  DMI_EXACT_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
++		  DMI_EXACT_MATCH(DMI_BOARD_VERSION, "Default string"),
++		},
++		.driver_data = (void *)&lattepanda_board_platform_data,
++	},
+ 	{ }
+ };
  
 -- 
 2.20.1
