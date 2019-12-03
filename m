@@ -2,296 +2,85 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B75C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B480C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F2FE20803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1495220803
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:42:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="me/gELWw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CA8U+ILS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbfLCRi3 (ORCPT
+        id S1726741AbfLCRmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 12:38:29 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54366 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbfLCRi1 (ORCPT
+        Tue, 3 Dec 2019 12:42:00 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34619 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726182AbfLCRl7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 12:38:27 -0500
-Received: by mail-wm1-f68.google.com with SMTP id b11so3831124wmj.4;
-        Tue, 03 Dec 2019 09:38:25 -0800 (PST)
+        Tue, 3 Dec 2019 12:41:59 -0500
+Received: by mail-pf1-f195.google.com with SMTP id n13so2212795pff.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 09:41:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hf1GEOTtUT5DFT9gZa5Emai2aUMzMaSb3KfXYC7NTBw=;
-        b=me/gELWwhGoTijaU04Rgwe9CJuiDhi3Ce6csKDhzn+z0JagSCiKzp4EdQrfOzVchHv
-         bLexUDAOkBQPlWjf3fP0B8Oy1rZk4oOeiSeVUXIUU0jW109DIvQWLm3IfgqUZDz7hHhw
-         LQ+5XwzGQZnLS/1FwPbKUjF0OcuprIzCbeUm+JeGHl8Qs1ZPbpa9Nr76dO5JfCwSYQpl
-         looVoXvDgzReK9iuFrtfFmVbben93dgBa+94dJtS2oYP6eMsg65QPaOd0/W5HQKRmsAj
-         bKfvD53jgTzhH3HPr6uHuPLBHWAtchIfwkxMUwpqtIBSe+N+5cagmkIeJD6Bo6Dj09R9
-         6MKQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aPNclA55GeMuTPy00O4xA3XNidBB0rleD9eOny3IQXU=;
+        b=CA8U+ILSVCqpsw6oVcTIiykcDXOPtAQZ3dRCBFCZF1Nnq9ZRybkNiuadJE3k6L38nk
+         1nM6dfAtI1nmuq17a2w3pQeYTJcbN+0E7hZQXNu1BmYtv22ZIo+H6t8xILsvT5l3PK3F
+         jKAh96PdF5kuA3LEMjN+Mi1PK/05bdRSWUicAd9PMzhTT1G7ELE6IpqgsinlpfSopyS/
+         lODY3D32qAbzArZ+QI45bVCSRWDjJAaFswGXvQ/spe0FY5bCVUlTftGsJzDCsvmGUaqy
+         wBCVGR89Awy9K5FZunIUztSkOLIa0VchzzRL68mjE+rANibb5Yi+gTiKo9Ce0FEKX68U
+         pmBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hf1GEOTtUT5DFT9gZa5Emai2aUMzMaSb3KfXYC7NTBw=;
-        b=Hs0DD7qaE42NFYFdFzMeIR8DXvIkb5TlWKsEuC3kNGTrxCp2wpmD17AgTbJ0eRaqE/
-         w/FDxzDGTPWYY8kklKAuzKAmSOh5pZvdD9bwTS2t/JkAJckItTnQ1h00fGTb187QbHZ1
-         cMYTrdFHrytkdVI7tT0aLzUR2nwamEQgrB0/wn2wntmZD/osCz2OVD7TWvjRMY7/VP8s
-         VL1nz7fdFRHfp3H/bA61OO1YJYtmhvY63+WG1BI0NX3DcpFU0VrkXwDDA2ipEWrivpbZ
-         uuEKBvTJ4EobK1o2rgih6TidFPeU/srH+lL0HQAV28qOKpWo4yOB93zXwJbu50Pg9gfb
-         zrNQ==
-X-Gm-Message-State: APjAAAXucK0r1Ayz6cH64jYMgt8ps7Lpha+Hgtix0WWWIx1HQPtZP4as
-        wAgs9Lr8wx1Ve+PtxqwECZU=
-X-Google-Smtp-Source: APXvYqyR8hLxgwCadstEPcB1ak4FGNcU8m8HZd0HQOX+9GD3bZWwWvwS4oprJKZPTRJpWd8UKzosiw==
-X-Received: by 2002:a05:600c:224d:: with SMTP id a13mr14779400wmm.70.1575394704767;
-        Tue, 03 Dec 2019 09:38:24 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id p10sm3536516wmi.15.2019.12.03.09.38.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 03 Dec 2019 09:38:22 -0800 (PST)
-Date:   Tue, 3 Dec 2019 18:38:21 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        linux-input@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Kirill Smelkov <kirr@nexedi.com>
-Subject: Re: [PATCH] Input: uinput - Add UI_SET_UNIQ ioctl handler
-Message-ID: <20191203173821.4u6uzxeaqnt3gyz3@pali>
-References: <20191127185139.65048-1-abhishekpandit@chromium.org>
- <20191201145357.ybq5gfty4ulnfasq@pali>
- <20191202012305.GQ248138@dtor-ws>
- <20191202084750.k7lafzzrf3yq2tqs@pali>
- <20191202175440.GA50317@dtor-ws>
- <20191202185340.nae4lljten5jqp3y@pali>
- <20191202193628.GI50317@dtor-ws>
- <20191202230947.ld5ibnczdpkekfcm@pali>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aPNclA55GeMuTPy00O4xA3XNidBB0rleD9eOny3IQXU=;
+        b=XihI17mQd96BxWwB7x7X/19FihAg8ZDz+7YMZ34A0QQyTx0mjoibEaG2P+leZ5pwb5
+         TTPfIn961Qfr8zhTm1aGJsds565r5xiLxujgQoVRUOno7Z7g5/k/w/6ert0Osklajk2f
+         7KHP7CJ/zeidPhqP90SYDqkixA9rq0yTpOcXQAmcoujR1c+3Xg98xRuM4RsTYYPGPr7E
+         mFZy8zNAhW2gV3oeZbCLdjjUSMrdQIth7EbvdBRdbzrnCg//Jp8oNfNG5LMKtYft1Vk9
+         9/+b6AIYG9MZw+nU9PuRYv2Okx8zz40TAOc3pPsrQHqf7chujapKuKVC/W8f+SbPx26e
+         zxzg==
+X-Gm-Message-State: APjAAAWFy2L+NFMDg84TEj6zBxl40KKXg1u5KvYxEOP1DnPAFMWl+G83
+        /6Vy1mP5rNoHnPEmm3K+kU+PvU1d6l6dJS8xCrvdcA==
+X-Google-Smtp-Source: APXvYqyLfrzqw76FsSf7xNdSx42vZjlHk3EqzEY2B6hdnMDa1YuE2bPl3G/so4GSGjfHNmL5z7UDa/RdVqlVulsRkzU=
+X-Received: by 2002:a62:174b:: with SMTP id 72mr6112264pfx.185.1575394918652;
+ Tue, 03 Dec 2019 09:41:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="xlvpbxqyrlflyepa"
-Content-Disposition: inline
-In-Reply-To: <20191202230947.ld5ibnczdpkekfcm@pali>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <1575361141-6806-1-git-send-email-sj38.park@gmail.com> <1575361141-6806-6-git-send-email-sj38.park@gmail.com>
+In-Reply-To: <1575361141-6806-6-git-send-email-sj38.park@gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 3 Dec 2019 09:41:47 -0800
+Message-ID: <CAFd5g456ZK-zZw_E2O1MOC2-vjwQ8Rpm=tuNMscks_mcOsdwxQ@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] kunit: Rename 'kunitconfig' to '.kunitconfig'
+To:     SeongJae Park <sj38.park@gmail.com>
+Cc:     shuah <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        SeongJae Park <sjpark@amazon.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Dec 3, 2019 at 12:19 AM SeongJae Park <sj38.park@gmail.com> wrote:
+>
+> From: SeongJae Park <sjpark@amazon.de>
+>
+> This commit renames 'kunitconfig' to '.kunitconfig' so that it can be
+> automatically ignored by git and do not disturb people who want to type
+> 'kernel/' by pressing only the 'k' and then 'tab' key.
+>
+> Signed-off-by: SeongJae Park <sjpark@amazon.de>
 
---xlvpbxqyrlflyepa
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tuesday 03 December 2019 00:09:47 Pali Roh=C3=A1r wrote:
-> On Monday 02 December 2019 11:36:28 Dmitry Torokhov wrote:
-> > On Mon, Dec 02, 2019 at 07:53:40PM +0100, Pali Roh=C3=A1r wrote:
-> > > On Monday 02 December 2019 09:54:40 Dmitry Torokhov wrote:
-> > > > On Mon, Dec 02, 2019 at 09:47:50AM +0100, Pali Roh=C3=A1r wrote:
-> > > > > On Sunday 01 December 2019 17:23:05 Dmitry Torokhov wrote:
-> > > > > > Hi Pali,
-> > > > > >=20
-> > > > > > On Sun, Dec 01, 2019 at 03:53:57PM +0100, Pali Roh=C3=A1r wrote:
-> > > > > > > Hello!
-> > > > > > >=20
-> > > > > > > On Wednesday 27 November 2019 10:51:39 Abhishek Pandit-Subedi=
- wrote:
-> > > > > > > > Support setting the uniq attribute of the input device. The=
- uniq
-> > > > > > > > attribute is used as a unique identifier for the connected =
-device.
-> > > > > > > >=20
-> > > > > > > > For example, uinput devices created by BlueZ will store the=
- address of
-> > > > > > > > the connected device as the uniq property.
-> > > > > > > >=20
-> > > > > > > > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chrom=
-ium.org>
-> > > > > > >=20
-> > > > > > > ...
-> > > > > > >=20
-> > > > > > > > diff --git a/include/uapi/linux/uinput.h b/include/uapi/lin=
-ux/uinput.h
-> > > > > > > > index c9e677e3af1d..d5b7767c1b02 100644
-> > > > > > > > --- a/include/uapi/linux/uinput.h
-> > > > > > > > +++ b/include/uapi/linux/uinput.h
-> > > > > > > > @@ -145,6 +145,7 @@ struct uinput_abs_setup {
-> > > > > > > >  #define UI_SET_PHYS		_IOW(UINPUT_IOCTL_BASE, 108, char*)
-> > > > > > > >  #define UI_SET_SWBIT		_IOW(UINPUT_IOCTL_BASE, 109, int)
-> > > > > > > >  #define UI_SET_PROPBIT		_IOW(UINPUT_IOCTL_BASE, 110, int)
-> > > > > > > > +#define UI_SET_UNIQ		_IOW(UINPUT_IOCTL_BASE, 111, char*)
-> > > > > > >=20
-> > > > > > > I think that usage of char* as type in _IOW would cause compa=
-tibility
-> > > > > > > problems like it is for UI_SET_PHYS (there is UI_SET_PHYS_COM=
-PAT). Size
-> > > > > > > of char* pointer depends on userspace (32 vs 64bit), so 32bit=
- process on
-> > > > > > > 64bit kernel would not be able to call this new UI_SET_UNIQ i=
-octl.
-> > > > > > >=20
-> > > > > > > I would suggest to define this ioctl as e.g.:
-> > > > > > >=20
-> > > > > > >   #define UI_SET_UNIQ		_IOW(_IOC_WRITE, UINPUT_IOCTL_BASE, 11=
-1, 0)
-> > > > > > >=20
-> > > > > > > And then in uinput.c code handle it as:
-> > > > > > >=20
-> > > > > > >   case UI_SET_UNIQ & ~IOCSIZE_MASK:
-> > > > > > >=20
-> > > > > > > as part of section /* Now check variable-length commands */
-> > > > > >=20
-> > > > > > If we did not have UI_SET_PHYS in its current form, I'd agree w=
-ith you,
-> > > > > > but I think there is benefit in having UI_SET_UNIQ be similar to
-> > > > > > UI_SET_PHYS.
-> > > > >=20
-> > > > > I thought that ioctl is just number, so we can define it as we wa=
-nt. And
-> > > > > because uinput.c has already switch for variable-length commands =
-it
-> > > > > would be easy to use it. Final handling can be in separate functi=
-on like
-> > > > > for UI_SET_PHYS which can look like same.
-> > > >=20
-> > > > Yes, we can define ioctl number as whatever we want. What I was try=
-ing
-> > > > to say, right now users do this:
-> > > >=20
-> > > > 	rc =3D ioctl(fd, UI_SET_PHYS, "whatever");
-> > > > 	...
-> > > >=20
-> > > > and with UI_SET_UNIQ they expect the following to work:
-> > > >=20
-> > > > 	rc =3D ioctl(fd, UI_SET_UNIQ, "whatever");
-> > > > 	...
-> > >=20
-> > > And would not following definition
-> > >=20
-> > >   #define UI_SET_UNIQ _IOW(_IOC_WRITE, UINPUT_IOCTL_BASE, 111, 0)
-> > >=20
-> > > allow userspace to call
-> > >=20
-> > >   rc =3D ioctl(fd, UI_SET_UNIQ, "whatever");
-> > >=20
-> > > as you want?
-> >=20
-> > OK, so what you are saying is that we can have whatever in the size
-> > portion of ioctl number and simply ignore it in the driver
->=20
-> Yes.
->=20
-> > (and I do not
-> > think we need to do any of "UI_SET_UNIQ & ~IOCSIZE_MASK" really).
->=20
-> You are right, we do not need to clear any IOCSIZE_MASK. As ioctl number
-> would be always sam constant number. So it would be really simple. So
-> original patch would work if UI_SET_UNIQ define would be changed to
-> above with _IOW() macro.
->=20
-> > While this would work, I am not sure it is the best option as I think
-> > we'd have to comment extensively why we have arbitrary number in place
-> > of the size.
->=20
-> Comment can be added. But this is as ioctl is going to accept variable
-> length array (not fixed array), zero value make sense for me (zero as we
-> do not know exact size).
->=20
-> > And we still do not really save anything, as we still have to go through
-> > compat ioctl handler (since we have it already) and it is very simple to
-> > add a case for UI_SET_UNIQ there...
->=20
-> Yes, compat ioctl is still used. But my proposed solution does not
-> involve to define a new compact ioctl number just for sizeof(char *).
->=20
-> I'm looking at this particular problem from side, that there is no
-> reason to define two new ioctl numbers for UI_SET_UNIQ (one normal
-> number and one compat number), when one number is enough. It is one new
-> ioctl call, so one ioctl number should be enough.
->=20
-> And also with my proposed solution with ioctl size=3D0 it simplify
-> implementation of UI_SET_UNIQ as it is not needed to implement also
-> UI_SET_UNIQ_COMPAT ioctl nor touch compat ioct code path. Basically
-> original patch (with changed UI_SET_UNIQ macro) is enough.
->=20
-> But of of course, this is my view of this problem and I would not be
-> against your decision from maintainer position. Both solutions would
-> work correctly and bring same behavior for userspace applications.
-
-
-Hi Dmitry!
-
-I was looking again at those _IOW defines for ioctl calls and I have
-another argument why not specify 'char *' in _IOW:
-
-All ioctls in _IOW() specify as a third macro argument type which is
-passed as pointer to the third argument for ioctl() syscall.
-
-So e.g.:
-
-  #define EVIOCSCLOCKID _IOW('E', 0xa0, int)
-
-is called from userspace as:
-
-  int val;
-  ioctl(fd, EVIOCSCLOCKID, &val);
-
-Or
-
-  #define EVIOCSMASK _IOW('E', 0x93, struct input_mask)
-
-is called as:
-
-  struct input_mask val;
-  ioctl(fd, EVIOCSMASK, &val);
-
-So basically third argument for _IOW specify size of byte buffer passed
-as third argument for ioctl(). In _IOW is not specified pointer to
-struct input_mask, but struct input_mask itself.
-
-And in case you define
-
-  #define MY_NEW_IOCTL _IOW(UINPUT_IOCTL_BASE, 200, char*)
-
-then you by above usage you should pass data as:
-
-  char *val =3D "DATA";
-  ioctl(fd, MY_NEW_IOCTL, &val);
-
-Which is not same as just:
-
-  ioctl(fd, MY_NEW_IOCTL, "DATA");
-
-As in former case you passed pointer to pointer to data and in later
-case you passed only pointer to data.
-
-It just mean that UI_SET_PHYS is already defined inconsistently which is
-also reason why compat ioctl for it was introduced.
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---xlvpbxqyrlflyepa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXeadigAKCRCL8Mk9A+RD
-UkWEAJ0adxjwIUFAhWq0sGgUKdFfXEXbZACgw7jPQCtZtVTFvbHVZ73GkK8cJcc=
-=4NDj
------END PGP SIGNATURE-----
-
---xlvpbxqyrlflyepa--
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
