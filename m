@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E882FC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC02C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B16AD207DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E5892080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412671;
-	bh=Ye4jR+CkRjrPNFX6t5EZnz+G8uSEfUhD99Mv+tsNazs=;
+	s=default; t=1575412674;
+	bh=7A3hz86hho8zPVVfeppDdzaz96Fco5arCwp2AtimF0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YFNcEgGSENMIQNO/DQNSxhR8WuQN7XWET388f/SImoaOx57n6FWIkSLHAACp9zzPh
-	 2qbnDwXkEiwoj+i7V4f2o3PJv4wbp9cvmY/Qz7WFNhwFwUN9lKJHhakN4MT/vVfkKU
-	 Q58LYeRL4GbMlHGGPvuB3uctoGzeA8Xd0miZa2AM=
+	b=tOt9r3dHi7bibkjRXwubhTT1A2ba9cHAGvFvV/qJbrThVbuIQF27pqTtMQ6n7KcH5
+	 FBv9QebTdIdj4EDIMqoBu8Ph/+WYONJRsmmjMYOdYdamvnp1iLKPggRZgNbOt8AXIX
+	 swbFrsNae10SwWbfYr8EkKa+ZxZBZLKT5wI9tNOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbfLCWhu (ORCPT
+        id S1727830AbfLCWhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:37:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46240 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:37:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727792AbfLCWhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:37:47 -0500
+        id S1727812AbfLCWhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:37:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6BED207DD;
-        Tue,  3 Dec 2019 22:37:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 667B42080A;
+        Tue,  3 Dec 2019 22:37:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412667;
-        bh=Ye4jR+CkRjrPNFX6t5EZnz+G8uSEfUhD99Mv+tsNazs=;
+        s=default; t=1575412669;
+        bh=7A3hz86hho8zPVVfeppDdzaz96Fco5arCwp2AtimF0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KkvvJz4zOka0I9AcLZwERWAqaDSX0nx+vg0CnVsY+oZXH9K3Xw2WH9G2yBX8KZ9nk
-         vf5mxWZKrLRHoVuc2tag5ddZjyAwAmXyROxGqHuKYTGL3gVEK+MQOB5LTTJp789861
-         PCXpsg3sGtQVCyFCqNgfx/zoAQrzPnOaFLqvCUIQ=
+        b=lBdsSBhW7k5lgkUbWSx5hnSmW7dtBzhItAT9AL7GFpFsEtaF8nsMmlOBqeoiTy1yP
+         xMEABvjwHX2/DvsmaW3Ys1v+UqRu6TsIZU8OnMItRKSVqbjNnaF1FUy/Kqw8+ByEBY
+         +Dx7F9xX8h3Om2hx8lUdt7ck4MKh5ePr1eRS08no=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        David Bauer <mail@david-bauer.net>,
+        stable@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>,
+        Vladimir Oltean <olteanv@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 18/46] mdio_bus: dont use managed reset-controller
-Date:   Tue,  3 Dec 2019 23:35:38 +0100
-Message-Id: <20191203212734.825000265@linuxfoundation.org>
+Subject: [PATCH 5.4 19/46] net: dsa: sja1105: fix sja1105_parse_rgmii_delays()
+Date:   Tue,  3 Dec 2019 23:35:39 +0100
+Message-Id: <20191203212735.282097523@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203212705.175425505@linuxfoundation.org>
 References: <20191203212705.175425505@linuxfoundation.org>
@@ -61,49 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Bauer <mail@david-bauer.net>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
 
-[ Upstream commit 32085f25d7b68404055f3525c780142fc72e543f ]
+[ Upstream commit 9bca3a0a923fc3f0fb9e41391be1d0f291e86858 ]
 
-Geert Uytterhoeven reported that using devm_reset_controller_get leads
-to a WARNING when probing a reset-controlled PHY. This is because the
-device devm_reset_controller_get gets supplied is not actually the
-one being probed.
+This function was using configuration of port 0 in devicetree for all ports.
+In case CPU port was not 0, the delay settings was ignored. This resulted not
+working communication between CPU and the switch.
 
-Acquire an unmanaged reset-control as well as free the reset_control on
-unregister to fix this.
-
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-CC: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David Bauer <mail@david-bauer.net>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Fixes: f5b8631c293b ("net: dsa: sja1105: Error out if RGMII delays are requested in DT")
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/phy/mdio_bus.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/dsa/sja1105/sja1105_main.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/drivers/net/phy/mdio_bus.c
-+++ b/drivers/net/phy/mdio_bus.c
-@@ -62,8 +62,8 @@ static int mdiobus_register_reset(struct
- 	struct reset_control *reset = NULL;
+--- a/drivers/net/dsa/sja1105/sja1105_main.c
++++ b/drivers/net/dsa/sja1105/sja1105_main.c
+@@ -594,15 +594,15 @@ static int sja1105_parse_rgmii_delays(st
+ 	int i;
  
- 	if (mdiodev->dev.of_node)
--		reset = devm_reset_control_get_exclusive(&mdiodev->dev,
--							 "phy");
-+		reset = of_reset_control_get_exclusive(mdiodev->dev.of_node,
-+						       "phy");
- 	if (IS_ERR(reset)) {
- 		if (PTR_ERR(reset) == -ENOENT || PTR_ERR(reset) == -ENOTSUPP)
- 			reset = NULL;
-@@ -107,6 +107,8 @@ int mdiobus_unregister_device(struct mdi
- 	if (mdiodev->bus->mdio_map[mdiodev->addr] != mdiodev)
- 		return -EINVAL;
+ 	for (i = 0; i < SJA1105_NUM_PORTS; i++) {
+-		if (ports->role == XMII_MAC)
++		if (ports[i].role == XMII_MAC)
+ 			continue;
  
-+	reset_control_put(mdiodev->reset_ctrl);
-+
- 	mdiodev->bus->mdio_map[mdiodev->addr] = NULL;
+-		if (ports->phy_mode == PHY_INTERFACE_MODE_RGMII_RXID ||
+-		    ports->phy_mode == PHY_INTERFACE_MODE_RGMII_ID)
++		if (ports[i].phy_mode == PHY_INTERFACE_MODE_RGMII_RXID ||
++		    ports[i].phy_mode == PHY_INTERFACE_MODE_RGMII_ID)
+ 			priv->rgmii_rx_delay[i] = true;
  
- 	return 0;
+-		if (ports->phy_mode == PHY_INTERFACE_MODE_RGMII_TXID ||
+-		    ports->phy_mode == PHY_INTERFACE_MODE_RGMII_ID)
++		if (ports[i].phy_mode == PHY_INTERFACE_MODE_RGMII_TXID ||
++		    ports[i].phy_mode == PHY_INTERFACE_MODE_RGMII_ID)
+ 			priv->rgmii_tx_delay[i] = true;
+ 
+ 		if ((priv->rgmii_rx_delay[i] || priv->rgmii_tx_delay[i]) &&
 
 
