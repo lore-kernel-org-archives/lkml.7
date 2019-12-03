@@ -2,206 +2,142 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA3FC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B2CC43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E6832080F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A00C2080F
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:45:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a40wQB7M"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QpxjuqLN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbfLCRmf (ORCPT
+        id S1726763AbfLCRpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 12:42:35 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33157 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbfLCRmf (ORCPT
+        Tue, 3 Dec 2019 12:45:44 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:43484 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726486AbfLCRpo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 12:42:35 -0500
-Received: by mail-wr1-f67.google.com with SMTP id b6so4853890wrq.0;
-        Tue, 03 Dec 2019 09:42:32 -0800 (PST)
+        Tue, 3 Dec 2019 12:45:44 -0500
+Received: by mail-pj1-f67.google.com with SMTP id g4so1789347pjs.10
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 09:45:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qE5r3nti027mzy0pKgrnKXkE1RSc8kUqTOaORXIdEtE=;
-        b=a40wQB7Mk7pBuIEzPBChXZl1yBZvbIVXlaeGoAaiJcl8DZczFfOnjnbH4qGRZ0lPoT
-         sRb08dAvwJLNEP5eDKxT0YBpPq2HtoE0w0BQ5jV2bXhdv76SufUrjfF1rhgxyZLThrsp
-         S9blKgXZiiYIkiuBLkMhYny1XboAMLEmBjUeD8rHJy+FiM+s8XPJ0IopkA6ylmfT1Szl
-         nwXDM1qbCCzKRRN1vUDI9Ac8ntundjbrtPnLX/IosvRrhRvDfkqzMorv7i/w36fh/01e
-         CeBmgwklnmeK9BfhSLVbKd+L0W/hQdVrkFJUhf0AWeQCw5G5psDNjeZ/3d/P7bsqKm4N
-         6Ogg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z7N6iQZ6w+KnK1x580YAK+IgWlbj+L7z26/RNYAhP3E=;
+        b=QpxjuqLNn8DPHEmW8Mne7bHFbkHFrWcadhd3+9wt8gWJJIslzBTmim1TD5pOW0dvaA
+         bC76EQ7govwprkNb75aGyD6KHY8ymXR5N5w6Caa7L8wSLQ8o6YSIh5c8qGyJKwLNR5rV
+         6tCVzWrx/V9AD8Wf/hpe4/4M2sZYDEa5fP87n24haNU0l1cBwtmastId7QhfBbfz8tpB
+         nWWGDUBjCE44/t64p3fJ3FPUQNbKUKjxqw+zdrcFFOL8bd+Lh7WxRAF0+EazzRUNLgF8
+         4eSmnS+upC3AWrGrfZYAOw40jtAJYKZ0evSwDw4C01BQqyVmi2IWQBkkHsc/FPsTTzL+
+         PB5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qE5r3nti027mzy0pKgrnKXkE1RSc8kUqTOaORXIdEtE=;
-        b=d3SppsbxuINEqJKZoW2zbGSKdkicLcv/C58vSdD7lHbfIzPOFq2I2GaQ8MMpasU9JM
-         0/8iKf1q9TTrBQmneSVI6Lsf3opUwbp9AY/fP6nX+bELhIW8YPJC3fLzUKzoQE+SZjYD
-         y4ABX2KUgiEwXd+24GLpKubBitPIvSfDlMaoi2XN8mxmZFbmRJ7CsSoBIMm+mEs8wpWb
-         YJGofW2qj0dYGX7ZFa8UJbOXnBsXuUj06Tg/udIUeQVENNo+pE8oA/PUupTwtrfdXY4U
-         fUJ4TwMh3lZ6tIWw52eP/Gcac3QN7pIwMg+hA5sdI2B1VM+T2JyICX5Pk5VCC61uMTW8
-         2/ag==
-X-Gm-Message-State: APjAAAU8oyk/ZqkwTmVRTWTvaTwt9fonJHV7Ai781SLje1YYnRZOg3H0
-        IaAFPgO1vPWgrvTHTaF8OLg=
-X-Google-Smtp-Source: APXvYqyirRyu04jqDg3x30rmhKDhkCSn+pJlYnYt6qaMKeOuedWuhIFZA6+FPRXQ60evaeNBBoHQdg==
-X-Received: by 2002:adf:d4ca:: with SMTP id w10mr6193149wrk.53.1575394951675;
-        Tue, 03 Dec 2019 09:42:31 -0800 (PST)
-Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
-        by smtp.gmail.com with ESMTPSA id x7sm4411960wrq.41.2019.12.03.09.42.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 09:42:30 -0800 (PST)
-Date:   Tue, 3 Dec 2019 18:42:29 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sumit Gupta <sumitg@nvidia.com>
-Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        catalin.marinas@arm.com, will@kernel.org, jonathanh@nvidia.com,
-        talho@nvidia.com, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, bbasu@nvidia.com,
-        mperttunen@nvidia.com
-Subject: Re: [TEGRA194_CPUFREQ Patch 1/3] firmware: tegra: adding function to
- get BPMP data
-Message-ID: <20191203174229.GA1721849@ulmo>
-References: <1575394348-17649-1-git-send-email-sumitg@nvidia.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z7N6iQZ6w+KnK1x580YAK+IgWlbj+L7z26/RNYAhP3E=;
+        b=HvNHhqAqoVoGtrW74W0Q3otMTsErgPLxzfFbrwuSBHaPzetv4/pY6uk3OSvUnnxfvA
+         8xVRCDisvD6FaeovLELYhvdjcYc2CmW8XqD5H1q39M+0vOJVVNKzHgE7LUBtS/qBsxep
+         3oi5s5wfjnVpqI4x7KYS5SyJ8yvBF4nrfAL5k7rHGfPIgGztJhW04N0y5YO5pOv/H7AT
+         GAp5YUW+y8l7dwcUKm470uOOucbSqeCBN1DT5ZvraoEvGFGk1Ac6+CE1Zb/HA8jVnwNi
+         PElvtYyHB5haerQoUMGPgPxxpyxSSEeDy++668ACoIT0IODOK+lzoMX+JxLye8wq7Sxy
+         Iy1w==
+X-Gm-Message-State: APjAAAWitpI/zGTC3yXDWRAWREoG+B/+FKse7AdzinX/E6mHIpqcfdfn
+        qEY0/LF0c3bdGhLerstya3cKEjGrtfsHOL9QdDVOvA==
+X-Google-Smtp-Source: APXvYqykkKXbum3SSjV3LDPg92I2gZuwgqFvaKWHVvCaYAZ8GyCh+gaXA/1WQQhyvLYBi43QZL+p4VYGPLTqotMNZac=
+X-Received: by 2002:a17:90a:ff12:: with SMTP id ce18mr4019224pjb.117.1575395143149;
+ Tue, 03 Dec 2019 09:45:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jRHKVT23PllUwdXP"
-Content-Disposition: inline
-In-Reply-To: <1575394348-17649-1-git-send-email-sumitg@nvidia.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <1575242724-4937-1-git-send-email-sj38.park@gmail.com>
+ <20191203070025.GA4206@google.com> <CAEjAshraUy20gEEaff69=b11DhB7zbz8WHT=6wOuw6C2FyJwYA@mail.gmail.com>
+ <CAEjAsho98ER1RQ6=++ECmoCJxw2mMrGqV4jAgW5wgfb8eEM9eQ@mail.gmail.com>
+In-Reply-To: <CAEjAsho98ER1RQ6=++ECmoCJxw2mMrGqV4jAgW5wgfb8eEM9eQ@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 3 Dec 2019 09:45:31 -0800
+Message-ID: <CAFd5g46qPPsKJFqs07Eiea0Nim=YDWbOUndJu=JbW--VcTb-ww@mail.gmail.com>
+Subject: Re: [PATCH 0/6] Fix nits in the kunit
+To:     SeongJae Park <sj38.park@gmail.com>
+Cc:     Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        SeongJae Park <sjpark@amazon.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Dec 3, 2019 at 12:26 AM SeongJae Park <sj38.park@gmail.com> wrote:
+>
+> You're right, the error was due to the assumption of the existence of the
+> build_dir.  The "kunit: Create default config in '--build_dir'" patch made the
+> bug.  I fixed it in the second version patchset[1].
+>
+> [1] https://lore.kernel.org/linux-doc/1575361141-6806-1-git-send-email-sj38.park@gmail.com/
 
---jRHKVT23PllUwdXP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+After trying your new patches, I am still getting the
+"FileNotFoundError" when the given build_dir has not been created.
 
-On Tue, Dec 03, 2019 at 11:02:26PM +0530, Sumit Gupta wrote:
-> Adding new function of_tegra_bpmp_get() to get BPMP data.
-> This function can be used by other drivers like cpufreq to
-> get BPMP data without adding any property in respective
-> drivers DT node.
-
-What's wrong with adding the property in the DT node? We already do that
-for Tegra186's CPU frequency driver, so it makes sense to continue that
-for Tegra194.
-
-Thierry
-
-> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
-> ---
->  drivers/firmware/tegra/bpmp.c | 38 ++++++++++++++++++++++++++++++++++++++
->  include/soc/tegra/bpmp.h      |  5 +++++
->  2 files changed, 43 insertions(+)
->=20
-> diff --git a/drivers/firmware/tegra/bpmp.c b/drivers/firmware/tegra/bpmp.c
-> index 6741fcd..9c3d7f1 100644
-> --- a/drivers/firmware/tegra/bpmp.c
-> +++ b/drivers/firmware/tegra/bpmp.c
-> @@ -38,6 +38,44 @@ channel_to_ops(struct tegra_bpmp_channel *channel)
->  	return bpmp->soc->ops;
->  }
-> =20
-> +struct tegra_bpmp *of_tegra_bpmp_get(void)
-> +{
-> +	struct platform_device *pdev;
-> +	struct device_node *bpmp_dev;
-> +	struct tegra_bpmp *bpmp;
-> +
-> +	/* Check for bpmp device status in DT */
-> +	bpmp_dev =3D of_find_compatible_node(NULL, NULL, "nvidia,tegra186-bpmp"=
-);
-> +	if (!bpmp_dev) {
-> +		bpmp =3D ERR_PTR(-ENODEV);
-> +		goto err_out;
-> +	}
-> +	if (!of_device_is_available(bpmp_dev)) {
-> +		bpmp =3D ERR_PTR(-ENODEV);
-> +		goto err_put;
-> +	}
-> +
-> +	pdev =3D of_find_device_by_node(bpmp_dev);
-> +	if (!pdev) {
-> +		bpmp =3D ERR_PTR(-ENODEV);
-> +		goto err_put;
-> +	}
-> +
-> +	bpmp =3D platform_get_drvdata(pdev);
-> +	if (!bpmp) {
-> +		bpmp =3D ERR_PTR(-EPROBE_DEFER);
-> +		put_device(&pdev->dev);
-> +		goto err_put;
-> +	}
-> +
-> +	return bpmp;
-> +err_put:
-> +	of_node_put(bpmp_dev);
-> +err_out:
-> +	return bpmp;
-> +}
-> +EXPORT_SYMBOL_GPL(of_tegra_bpmp_get);
-> +
->  struct tegra_bpmp *tegra_bpmp_get(struct device *dev)
->  {
->  	struct platform_device *pdev;
-> diff --git a/include/soc/tegra/bpmp.h b/include/soc/tegra/bpmp.h
-> index f2604e9..21402d9 100644
-> --- a/include/soc/tegra/bpmp.h
-> +++ b/include/soc/tegra/bpmp.h
-> @@ -107,6 +107,7 @@ struct tegra_bpmp_message {
->  };
-> =20
->  #if IS_ENABLED(CONFIG_TEGRA_BPMP)
-> +struct tegra_bpmp *of_tegra_bpmp_get(void);
->  struct tegra_bpmp *tegra_bpmp_get(struct device *dev);
->  void tegra_bpmp_put(struct tegra_bpmp *bpmp);
->  int tegra_bpmp_transfer_atomic(struct tegra_bpmp *bpmp,
-> @@ -122,6 +123,10 @@ void tegra_bpmp_free_mrq(struct tegra_bpmp *bpmp, un=
-signed int mrq,
->  			 void *data);
->  bool tegra_bpmp_mrq_is_supported(struct tegra_bpmp *bpmp, unsigned int m=
-rq);
->  #else
-> +static inline struct tegra_bpmp *of_tegra_bpmp_get(void)
-> +{
-> +	return ERR_PTR(-ENOTSUPP);
-> +}
->  static inline struct tegra_bpmp *tegra_bpmp_get(struct device *dev)
->  {
->  	return ERR_PTR(-ENOTSUPP);
-> --=20
-> 2.7.4
->=20
-
---jRHKVT23PllUwdXP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3mnoEACgkQ3SOs138+
-s6GpwBAAvaZJp87NoF1TROjbDypFZ2E7Oov0yzlV1zJak8mF3KIV0tKaCHoXheWI
-rcQZm8VFfh/Gqxw63Yk1Gn9nA1KJoqaIUY1On3cMHvY2wtVF7Wh/tFI+5JNXsCIi
-H9et1e5q/J9LaFHxcdNsEeYaocswM31Zy+rNIhT1bpLzvTZObIzbQp5v5eao8U6i
-VUdAUsr5XSj0vcN51HVz6CHFMpQsocQV1AsACAMUny+ajHL/FTmJYa5jvXvhqgpX
-yH593XBFitXrqAhWj3kR6okHC2U9UAd2S9ZXsu15xawQNymTi2mdqnaoeohRajFj
-z9GF5CxNbNCNOBMxvzAkF08s8dQCA/vsSkxQ518Z3BK+dPxu7Leho9yVeNs9muy/
-7fOU5sc+gIBuBB0V/fwP2xiPbvoe/wozI2LtbmDa6akd5rwxYLi3ogJOKtS1QRhN
-JHaTZ08hjuRiL64s8EAfz1VsQYF0MwkfomCfXKMoTCu+8mVXkcMuZcaotXul/Mck
-LMYlsKbCwgLpM4NrNW++q1nTewTXmQpzrLN762Ae23ud7ARns1mwaaGa6UvfxIhE
-cxZVU66dHXKEIdGsA6uSByRKUS8/1le4Iy6zRAu7O88XAbxSydYOm45/ovZTEzAz
-jAymOGgaP0NBMXICJoBLt3/Z0WwBmSAZ/Vir1cbs2jsup+XvzaE=
-=c7iN
------END PGP SIGNATURE-----
-
---jRHKVT23PllUwdXP--
+> Thanks,
+> SeongJae Park
+>
+> On Tue, Dec 3, 2019 at 8:10 AM SeongJae Park <sj38.park@gmail.com> wrote:
+> >
+> > On Tue, Dec 3, 2019 at 8:00 AM Brendan Higgins
+> > <brendanhiggins@google.com> wrote:
+> > >
+> > > On Mon, Dec 02, 2019 at 08:25:18AM +0900, SeongJae Park wrote:
+> > > > From: SeongJae Park <sjpark@amazon.de>
+> > > >
+> > > > This patchset contains trivial fixes for the kunit documentations and the
+> > > > wrapper python scripts.
+> > > >
+> > > > SeongJae Park (6):
+> > > >   docs/kunit/start: Use in-tree 'kunit_defconfig'
+> > > >   docs/kunit/start: Skip wrapper run command
+> > > >   kunit: Remove duplicated defconfig creation
+> > > >   kunit: Create default config in 'build_dir'
+> > > >   kunit: Place 'test.log' under the 'build_dir'
+> > > >   kunit: Rename 'kunitconfig' to '.kunitconfig'
+> > > >
+> > > >  Documentation/dev-tools/kunit/start.rst | 19 +++++--------------
+> > > >  tools/testing/kunit/kunit.py            | 10 ++++++----
+> > > >  tools/testing/kunit/kunit_kernel.py     |  6 +++---
+> > > >  3 files changed, 14 insertions(+), 21 deletions(-)
+> > >
+> > > I applied your patchset to torvalds/master, ran the command:
+> > >
+> > > tools/testing/kunit/kunit.py run --timeout=60 --jobs=8 --defconfig --build_dir=.kunit
+> > >
+> > > and got the error:
+> > >
+> > > Traceback (most recent call last):
+> > >   File "tools/testing/kunit/kunit.py", line 140, in <module>
+> > >     main(sys.argv[1:])
+> > >   File "tools/testing/kunit/kunit.py", line 123, in main
+> > >     create_default_kunitconfig()
+> > >   File "tools/testing/kunit/kunit.py", line 36, in create_default_kunitconfig
+> > >     kunit_kernel.KUNITCONFIG_PATH)
+> > >   File "/usr/lib/python3.7/shutil.py", line 121, in copyfile
+> > >     with open(dst, 'wb') as fdst:
+> > > FileNotFoundError: [Errno 2] No such file or directory: '.kunit/.kunitconfig'
+> > >
+> > > It seems that it expects the build_dir to already exist; however, I
+> > > don't think this is clear from the error message. Would you mind
+> > > addressing that here?
+> >
+> > Thank you for sharing this.  I will take a look!
+> >
+> >
+> > Thanks,
+> > SeongJae Park
+> > >
+> > > Cheers!
