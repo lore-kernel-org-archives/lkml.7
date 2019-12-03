@@ -2,113 +2,234 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F037C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9AD5C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15F8D2068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B48CD2068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:24:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kfohgtuo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lx+7hcMo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727310AbfLCFYO (ORCPT
+        id S1727022AbfLCFYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 00:24:14 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38821 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727268AbfLCFYM (ORCPT
+        Tue, 3 Dec 2019 00:24:53 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:45833 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbfLCFYx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 00:24:12 -0500
-Received: by mail-pl1-f195.google.com with SMTP id o8so1214187pls.5
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 21:24:11 -0800 (PST)
+        Tue, 3 Dec 2019 00:24:53 -0500
+Received: by mail-pj1-f66.google.com with SMTP id r11so1014064pjp.12;
+        Mon, 02 Dec 2019 21:24:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=XTs9jOzk9TL0hbRB6PjchZQOiZjWYWm9M+GqSi78t2E=;
-        b=Kfohgtuot4VMjzMiYs1RTN4CFr9Jv/O7n0D/sGYRNzskj2k00jCBksRHVQfvnqUxAA
-         2IbaRwkzM9ZN4Ci0TmKQ5Q2rUPnUKyEP8UtqkpfbOdifaxkbf92SIpyTA6bGOPeCHzku
-         g5zteQaD96IhVul8m2Qn2/GwP1eh8em5lJ6jLEQzFmP6bc7XWnohjp2YYIyeZbkbE3MI
-         ZnE3VIXaj3BwDiLB7VM60MzzpHGCZ0qMfHYlziNEzGnNBj15NuHbf035kLSiPA80k74E
-         pWvKpE4Ql/uLYJ3e4ggEFrEVbGcTigkR+E8s/rYckZ+ZT++oeDFcO/pG/zALFSPy+oAL
-         t0MQ==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LqMgpd5NfJZCD8fR3+lPbefg0WuLAcbEmN/6cSyenN4=;
+        b=lx+7hcMokNK2Y/O8i8XOJljZh5EMOWNaHgFz4/MehepfB8s7TNyVc/aioVGyys6KUs
+         OGo2MKTgySVOiAVlYLtCpX1b3h+M3oQgumDhOhieTDdkIDL9PNZbfbxvfmVVSu/c/a6Y
+         sQyOzDhTF/Ie8JtChcSwqcz58L6Tpw3iysigSihT5y2d7lVzlfrsmqr1x8d7yOheUKJe
+         dY7N8eQvi1hIy8q9Q4OYeQVctHruS1Hjcbfph8+c5sD7pJv5KgGNOzpSBotrM72sCZ2u
+         gNh4PEP6qVRu27XqVHtYMtjCg/NJl++FWzf709eeeiVeOKhHa9waMayoCJtjsRGUaYxn
+         N7+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=XTs9jOzk9TL0hbRB6PjchZQOiZjWYWm9M+GqSi78t2E=;
-        b=n+3EnyrwaL5M0qcucW8mYD6/gc3vRj/CX6abXxhWaej4BekA5cHKugBL/gUq5KBZK/
-         Be/G5Ci1IACmhXKQyRtcVQZ94Qr6yEYe2DBPZJNUQyIJ2SIrZKAtJqTSjlHAzxLa1e4j
-         g4JOCvL+azP3Z9zHAf5BpDSS0gNWAPkGZ1qRLc3SJB5Qvb1iOh4TL22pBqujo5cL2ZR7
-         9kPb6qOc73cRGZBAv/NA0zUhNdNd4vvPsqrNSq/9Tc/1Z7+isDCQTlAWx/Eg3aQplbBy
-         z2TUku/ETW38WQCXAGkO/rLdqFKtGgOkkZKWjurVr4rVQHdAnmzXblW/OhRUAMSk4QAi
-         r9VA==
-X-Gm-Message-State: APjAAAUK4xO6sC4MUVRhy/egx2wxhd5OXVGgIw2l2PIQaY6xC1LUlZL7
-        +4hxplVEiyI/dK/4CRxru0fcs06FtyesHQ==
-X-Google-Smtp-Source: APXvYqy8GFCzB0hsgDh30sxoG3uiLFI3/zW3FYzh5VBo//Uenr05GQzjstP9U+bCmlG9zacc6MVthg==
-X-Received: by 2002:a17:902:bd97:: with SMTP id q23mr3255257pls.310.1575350650547;
-        Mon, 02 Dec 2019 21:24:10 -0800 (PST)
-Received: from localhost ([14.96.109.134])
-        by smtp.gmail.com with ESMTPSA id j17sm1449689pfr.2.2019.12.02.21.24.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Dec 2019 21:24:10 -0800 (PST)
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, swboyd@chromium.org,
-        sivaa@codeaurora.org, Andy Gross <agross@kernel.org>
-Cc:     devicetree@vger.kernel.org
-Subject: [PATCH v2 9/9] arm64: dts: msm8998: thermal: Add critical interrupt support
-Date:   Tue,  3 Dec 2019 10:53:30 +0530
-Message-Id: <3ef309a98ca6445c1982ec3ff1a70db39b18f415.1575349416.git.amit.kucheria@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1575349416.git.amit.kucheria@linaro.org>
-References: <cover.1575349416.git.amit.kucheria@linaro.org>
-In-Reply-To: <cover.1575349416.git.amit.kucheria@linaro.org>
-References: <cover.1575349416.git.amit.kucheria@linaro.org>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LqMgpd5NfJZCD8fR3+lPbefg0WuLAcbEmN/6cSyenN4=;
+        b=FJMsYimT/nkC4lc/ijVFc7rAQR/o6mwO2HFx/szKSiGqWshq1Ybv4bHJ/a2Ck2Qmzt
+         9PQXJh08+jSK0FU8VBl4wpWhMPCO4UdFW08oUoldV9+/lQ4Nmc+MrWIeEHBs+dd38rTN
+         7rrLonfzGSRmgVhlZlG+2b33Hfovb9rdRGN14SPbOzMwS176vNUzOxsaNB/b3SA3RTdg
+         vpgj+dPuHEY6AIBW47Jt5j9KuaXKBzcvbro/F+ipQDxnov0CckvZ9luLtjyJSY2ptCNW
+         P9ovsxWe7yLlMaX7hgGf/B8a6nMn8uB3ImlVoPA8I+jy3vvmvfv/9ps4f5P04RBfsxPT
+         6PQA==
+X-Gm-Message-State: APjAAAWVVLU1GwOyxHII4iwEOxPcNMrLg9tByXXVZ4oyRC7tPHjYNy15
+        zR+wXUrFYDmrEN1T0OEAzpF/V/9d
+X-Google-Smtp-Source: APXvYqww43bhq3gaITH9dOAPDzb5gj9wB9hB0DcrelqJBD8r137tcxz9aFx8v+yoLzcV21zThRopfA==
+X-Received: by 2002:a17:902:fe03:: with SMTP id g3mr3287678plj.1.1575350692123;
+        Mon, 02 Dec 2019 21:24:52 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id f132sm1430282pgc.50.2019.12.02.21.24.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Dec 2019 21:24:51 -0800 (PST)
+Subject: Re: [PATCH v4 1/2] drivers: move the early platform device support to
+ arch/sh
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Slaby <jslaby@suse.com>, linux-sh@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org
+References: <20191003092913.10731-1-brgl@bgdev.pl>
+ <20191003092912.G3pupKBmyct1r9ScP5Skuw9D-_ALcMVSnfMfHAlwe0Y@z>
+ <20191202041440.GA1628@roeck-us.net>
+ <CAMpxmJW3i4zmJJ14Xg65+T27kF3sgR1WG0K3FUT6+jeKtiHx=Q@mail.gmail.com>
+ <3f8ffe03-98b8-423a-7cba-53961a5600cb@roeck-us.net>
+ <CAMpxmJUmTF3FwacjvTrC+Vvzm8MscS9E=ZyWLbJV87LkQhqVow@mail.gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <5e7aafc9-deb9-9305-afea-2c86e310683f@roeck-us.net>
+Date:   Mon, 2 Dec 2019 21:24:49 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+In-Reply-To: <CAMpxmJUmTF3FwacjvTrC+Vvzm8MscS9E=ZyWLbJV87LkQhqVow@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Register critical interrupts for each of the two tsens controllers
+On 12/2/19 9:18 AM, Bartosz Golaszewski wrote:
+> pon., 2 gru 2019 o 14:03 Guenter Roeck <linux@roeck-us.net> napisał(a):
+>>
+>> On 12/1/19 11:40 PM, Bartosz Golaszewski wrote:
+>>> pon., 2 gru 2019 o 05:14 Guenter Roeck <linux@roeck-us.net> napisał(a):
+>>>>
+>>>> On Thu, Oct 03, 2019 at 11:29:12AM +0200, Bartosz Golaszewski wrote:
+>>>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>>>>
+>>>>> SuperH is the only user of the current implementation of early platform
+>>>>> device support. We want to introduce a more robust approach to early
+>>>>> probing. As the first step - move all the current early platform code
+>>>>> to arch/sh.
+>>>>>
+>>>>> In order not to export internal drivers/base functions to arch code for
+>>>>> this temporary solution - copy the two needed routines for driver
+>>>>> matching from drivers/base/platform.c to arch/sh/drivers/platform_early.c.
+>>>>>
+>>>>> Also: call early_platform_cleanup() from subsys_initcall() so that it's
+>>>>> called after all early devices are probed.
+>>>>>
+>>>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>>>
+>>>> Wondering ... has anyone tested this patch on affected hardware ?
+>>>> All my qemu boot tests (both sh and sheb) fail because of it.
+>>>> Bisect log below.
+>>>>
+>>>> Guenter
+>>>>
+>>>> ---
+>>>> # bad: [72c0870e3a05d9cd5466d08c3d2a3069ed0a2f9f] Merge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input
+>>>> # good: [89d57dddd7d319ded00415790a0bb3c954b7e386] Merge tag 'media/v5.5-1' of git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media
+>>>> git bisect start 'HEAD' '89d57dddd7d3'
+>>>> # good: [0a6cad5df541108cfd3fbd79eef48eb824c89bdc] Merge branch 'vmwgfx-coherent' of git://people.freedesktop.org/~thomash/linux into drm-next
+>>>> git bisect good 0a6cad5df541108cfd3fbd79eef48eb824c89bdc
+>>>> # bad: [9a3d7fd275be4559277667228902824165153c80] Merge tag 'driver-core-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core
+>>>> git bisect bad 9a3d7fd275be4559277667228902824165153c80
+>>>> # good: [59274c7164807d27b24e6c068dfe734f7bea4623] Merge tag 'usb-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb
+>>>> git bisect good 59274c7164807d27b24e6c068dfe734f7bea4623
+>>>> # good: [e71903106721dc53923e90aa484d78bc86c039a9] staging: mt7621-dma: align to match open parenthesis
+>>>> git bisect good e71903106721dc53923e90aa484d78bc86c039a9
+>>>> # good: [8f56e4ebe05c26c30e167519273843476e39e244] Merge tag 'char-misc-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc
+>>>> git bisect good 8f56e4ebe05c26c30e167519273843476e39e244
+>>>> # good: [8bde9f3d2a217d1635a7c7bdf8ad4c25c9a34b50] Merge tag 'iio-for-5.5c' of https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio into staging-next
+>>>> git bisect good 8bde9f3d2a217d1635a7c7bdf8ad4c25c9a34b50
+>>>> # bad: [0628cda318df6baec439ca6e6e274007492f1ccd] mac80211: Use debugfs_create_xul() helper
+>>>> git bisect bad 0628cda318df6baec439ca6e6e274007492f1ccd
+>>>> # bad: [03324507e66c7664c754b1ef92c5c3be24c78aa2] driver core: Allow fwnode_operations.add_links to differentiate errors
+>>>> git bisect bad 03324507e66c7664c754b1ef92c5c3be24c78aa2
+>>>> # bad: [313f5dbba41d905d59c820bb2d91ee6c661aff99] debugfs: remove return value of debugfs_create_u16()
+>>>> git bisect bad 313f5dbba41d905d59c820bb2d91ee6c661aff99
+>>>> # good: [d4387cd117414ba80230f27a514be5ca4a09cfcc] of: property: Create device links for all child-supplier depencencies
+>>>> git bisect good d4387cd117414ba80230f27a514be5ca4a09cfcc
+>>>> # bad: [c31e73121f4c1ec45a3e523ac6ce3ce6dafdcec1] base: soc: Handle custom soc information sysfs entries
+>>>> git bisect bad c31e73121f4c1ec45a3e523ac6ce3ce6dafdcec1
+>>>> # bad: [201e91091b1d47047f55580b5474e1239f4d17aa] sh: add the sh_ prefix to early platform symbols
+>>>> git bisect bad 201e91091b1d47047f55580b5474e1239f4d17aa
+>>>> # bad: [507fd01d5333338753a1cc26322dfc9f856c109f] drivers: move the early platform device support to arch/sh
+>>>> git bisect bad 507fd01d5333338753a1cc26322dfc9f856c109f
+>>>> # first bad commit: [507fd01d5333338753a1cc26322dfc9f856c109f] drivers: move the early platform device support to arch/sh
+>>>
+>>> Hi Guenter,
+>>>
+>>> can you post some bootlogs? Is it the same problem everywhere?
+>>>
+>>
+>> I don't have any useful logs. The boot fails too early for that.
+>>
+> 
+> Yeah, it touched "early" devices after all...
+> 
+>> Sorry, I don't understand "everywhere". It fails in mainline and -next, if that is what you mean.
+> 
+> I referred to "All my qemu boot tests" when saying everywhere.
+> 
+> I don't have any relevant HW - the idea for this patch is to stop
+> compiling for everyone a bunch of code that's only used by one largely
+> irrelevant architecture and free the namespace for a generic early
+> platform drivers implementation.
+> 
+> How are you creating your SH qemu images? I'm seeing there's something
+> in buildroot for superh - maybe I'll be able to bearly_platform_cleanupuild something
+> useful.
+> 
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+Below is a possible fix. As I had suspected, the call to early_platform_cleanup()
+is in the wrong place.
+
+Guenter
+
 ---
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+  arch/sh/drivers/platform_early.c | 11 ++---------
+  drivers/base/platform.c          |  4 ++++
+  2 files changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index fc7838ea9a010..4b786b8651a90 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -817,8 +817,9 @@
- 			reg = <0x010ab000 0x1000>, /* TM */
- 			      <0x010aa000 0x1000>; /* SROT */
- 			#qcom,sensors = <14>;
--			interrupts = <GIC_SPI 458 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-names = "uplow";
-+			interrupts = <GIC_SPI 458 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 445 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "uplow", "critical";
- 			#thermal-sensor-cells = <1>;
- 		};
- 
-@@ -827,8 +828,9 @@
- 			reg = <0x010ae000 0x1000>, /* TM */
- 			      <0x010ad000 0x1000>; /* SROT */
- 			#qcom,sensors = <8>;
--			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-names = "uplow";
-+			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 430 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "uplow", "critical";
- 			#thermal-sensor-cells = <1>;
- 		};
- 
--- 
-2.17.1
+diff --git a/arch/sh/drivers/platform_early.c b/arch/sh/drivers/platform_early.c
+index f6d148451dfc..16f33bffd8fc 100644
+--- a/arch/sh/drivers/platform_early.c
++++ b/arch/sh/drivers/platform_early.c
+@@ -325,9 +325,9 @@ int __init sh_early_platform_driver_probe(char *class_str,
+  }
+
+  /**
+- * sh_early_platform_cleanup - clean up early platform code
++ * early_platform_cleanup - clean up early platform code
+   */
+-static int __init sh_early_platform_cleanup(void)
++void early_platform_cleanup(void)
+  {
+  	struct platform_device *pd, *pd2;
+
+@@ -337,11 +337,4 @@ static int __init sh_early_platform_cleanup(void)
+  		list_del(&pd->dev.devres_head);
+  		memset(&pd->dev.devres_head, 0, sizeof(pd->dev.devres_head));
+  	}
+-
+-	return 0;
+  }
+-/*
+- * This must happen once after all early devices are probed but before probing
+- * real platform devices.
+- */
+-subsys_initcall(sh_early_platform_cleanup);
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 7c532548b0a6..3ba153e356ee 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -1325,10 +1325,14 @@ struct device *platform_find_device_by_driver(struct device *start,
+  }
+  EXPORT_SYMBOL_GPL(platform_find_device_by_driver);
+
++void __weak early_platform_cleanup(void) { }
++
+  int __init platform_bus_init(void)
+  {
+  	int error;
+
++	early_platform_cleanup();
++
+  	error = device_register(&platform_bus);
+  	if (error) {
+  		put_device(&platform_bus);
 
