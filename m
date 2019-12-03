@@ -2,102 +2,218 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 410C8C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 202A0C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F132206E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE0112068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:03:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VpXrUP7t";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="H1uFvqZc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbfLCQCY (ORCPT
+        id S1726659AbfLCQDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 11:02:24 -0500
-Received: from foss.arm.com ([217.140.110.172]:44840 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727109AbfLCQCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 11:02:15 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4B5E31B;
-        Tue,  3 Dec 2019 08:02:14 -0800 (PST)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 95AFB3F52E;
-        Tue,  3 Dec 2019 08:02:13 -0800 (PST)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@kernel.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, patrick.bellasi@matbug.net,
-        qperret@google.com, qais.yousef@arm.com, morten.rasmussen@arm.com
-Subject: [PATCH v2 3/4] sched/fair: Make task_fits_capacity() consider uclamp restrictions
-Date:   Tue,  3 Dec 2019 15:59:06 +0000
-Message-Id: <20191203155907.2086-4-valentin.schneider@arm.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191203155907.2086-1-valentin.schneider@arm.com>
-References: <20191203155907.2086-1-valentin.schneider@arm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 3 Dec 2019 11:03:32 -0500
+Received: from a27-18.smtp-out.us-west-2.amazonses.com ([54.240.27.18]:59440
+        "EHLO a27-18.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726131AbfLCQDc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 11:03:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575389011;
+        h=From:To:Cc:Subject:Date:Message-Id;
+        bh=/Oji1XfOeHWM5w73YnSdVFFyOQQ7sN1E/xUaeAITslU=;
+        b=VpXrUP7tJNyLCkCrp92zQCKJhf/3BCBC2roXBepJH5apzw9a77/wztWh64HcpXUf
+        YeUVhU/ftcD7kZDAoC6x2fxj7Xdo60gnOf9j1TomnBIkSvhPRFhjrWcULts/eYJDrYD
+        IvdpEyg/5jxptUYf2SIh8NrP0NOcfDyjAakQNqrE=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575389011;
+        h=From:To:Cc:Subject:Date:Message-Id:Feedback-ID;
+        bh=/Oji1XfOeHWM5w73YnSdVFFyOQQ7sN1E/xUaeAITslU=;
+        b=H1uFvqZcSlniwO1p0jGtVu6RM+VzMkjk8JBBArbznm7varLckUWbKk929K6Cbw9+
+        MRMSy7qep17XSDn40S8zdESnWQjTNGMuECUNY8B5BPnbHxs4gPqFd0wdBL0f1kqSFST
+        R9b6Nmk9D3VuK1TmATtvbi0bHu3T9ew2sELpiglg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 99A38C447A0
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=prsood@codeaurora.org
+From:   Prateek Sood <prsood@codeaurora.org>
+To:     rostedt@goodmis.org, mingo@redhat.com
+Cc:     linux-kernel@vger.kernel.org, kaushalk@codeaurora.org,
+        Prateek Sood <prsood@codeaurora.org>
+Subject: [PATCH] trace: circular dependency for trace_types_lock and event_mutex
+Date:   Tue, 3 Dec 2019 16:03:31 +0000
+Message-ID: <0101016ecc809d86-ef995a42-fbd1-437d-917e-bd05fe7732c6-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 1.9.1
+X-SES-Outgoing: 2019.12.03-54.240.27.18
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-task_fits_capacity() drives CPU selection at wakeup time, and is also used
-to detect misfit tasks. Right now it does so by comparing task_util_est()
-with a CPU's capacity, but doesn't take into account uclamp restrictions.
+       Task T2                             Task T3
+trace_options_core_write()            subsystem_open()
 
-There's a few interesting uses that can come out of doing this. For
-instance, a low uclamp.max value could prevent certain tasks from being
-flagged as misfit tasks, so they could merrily remain on low-capacity CPUs.
-Similarly, a high uclamp.min value would steer tasks towards high capacity
-CPU at wakeup (and, should that fail, later steered via misfit balancing),
-so such "boosted" tasks would favor CPUs of higher capacity.
+ mutex_lock(trace_types_lock)           mutex_lock(event_mutex)
 
-Introduce uclamp_task_util() and make task_fits_capacity() use it.
+ set_tracer_flag()
 
-Reviewed-by: Quentin Perret <qperret@google.com>
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+   trace_event_enable_tgid_record()       mutex_lock(trace_types_lock)
+
+    mutex_lock(event_mutex)
+
+This gives a circular dependency deadlock between trace_types_lock and
+event_mutex. To fix this invert the usage of trace_types_lock and event_mutex
+in trace_options_core_write(). This keeps the sequence of lock usage consistent.
+
+Change-Id: I3752a77c59555852c2241f7775ec4a1960c15c15
+Signed-off-by: Prateek Sood <prsood@codeaurora.org>
 ---
- kernel/sched/fair.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ kernel/trace/trace.c              | 6 ++++++
+ kernel/trace/trace_events.c       | 8 ++++----
+ kernel/trace/trace_irqsoff.c      | 4 ++++
+ kernel/trace/trace_sched_wakeup.c | 4 ++++
+ 4 files changed, 18 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 08a233e97a01..dc3e86cb2b2e 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3711,6 +3711,22 @@ static inline unsigned long task_util_est(struct task_struct *p)
- 	return max(task_util(p), _task_util_est(p));
- }
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 6a0ee91..2c09aa1 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4590,6 +4590,8 @@ int trace_keep_overwrite(struct tracer *tracer, u32 mask, int set)
  
-+#ifdef CONFIG_UCLAMP_TASK
-+static inline
-+unsigned long uclamp_task_util(struct task_struct *p)
-+{
-+	return clamp(task_util_est(p),
-+		     (unsigned long)uclamp_eff_value(p, UCLAMP_MIN),
-+		     (unsigned long)uclamp_eff_value(p, UCLAMP_MAX));
-+}
-+#else
-+static inline
-+unsigned long uclamp_task_util(struct task_struct *p)
-+{
-+	return task_util_est(p);
-+}
-+#endif
+ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
+ {
++	lockdep_assert_held(&event_mutex);
 +
- static inline void util_est_enqueue(struct cfs_rq *cfs_rq,
- 				    struct task_struct *p)
- {
-@@ -3822,7 +3838,7 @@ util_est_dequeue(struct cfs_rq *cfs_rq, struct task_struct *p, bool task_sleep)
+ 	/* do nothing if flag is already set */
+ 	if (!!(tr->trace_flags & mask) == !!enabled)
+ 		return 0;
+@@ -4657,6 +4659,7 @@ static int trace_set_options(struct trace_array *tr, char *option)
  
- static inline int task_fits_capacity(struct task_struct *p, long capacity)
- {
--	return fits_capacity(task_util_est(p), capacity);
-+	return fits_capacity(uclamp_task_util(p), capacity);
+ 	cmp += len;
+ 
++	mutex_lock(&event_mutex);
+ 	mutex_lock(&trace_types_lock);
+ 
+ 	ret = match_string(trace_options, -1, cmp);
+@@ -4667,6 +4670,7 @@ static int trace_set_options(struct trace_array *tr, char *option)
+ 		ret = set_tracer_flag(tr, 1 << ret, !neg);
+ 
+ 	mutex_unlock(&trace_types_lock);
++	mutex_unlock(&event_mutex);
+ 
+ 	/*
+ 	 * If the first trailing whitespace is replaced with '\0' by strstrip,
+@@ -7972,9 +7976,11 @@ static void get_tr_index(void *data, struct trace_array **ptr,
+ 	if (val != 0 && val != 1)
+ 		return -EINVAL;
+ 
++	mutex_lock(&event_mutex);
+ 	mutex_lock(&trace_types_lock);
+ 	ret = set_tracer_flag(tr, 1 << index, val);
+ 	mutex_unlock(&trace_types_lock);
++	mutex_unlock(&event_mutex);
+ 
+ 	if (ret < 0)
+ 		return ret;
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index fba87d1..995061b 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -320,7 +320,8 @@ void trace_event_enable_cmd_record(bool enable)
+ 	struct trace_event_file *file;
+ 	struct trace_array *tr;
+ 
+-	mutex_lock(&event_mutex);
++	lockdep_assert_held(&event_mutex);
++
+ 	do_for_each_event_file(tr, file) {
+ 
+ 		if (!(file->flags & EVENT_FILE_FL_ENABLED))
+@@ -334,7 +335,6 @@ void trace_event_enable_cmd_record(bool enable)
+ 			clear_bit(EVENT_FILE_FL_RECORDED_CMD_BIT, &file->flags);
+ 		}
+ 	} while_for_each_event_file();
+-	mutex_unlock(&event_mutex);
  }
  
- static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
+ void trace_event_enable_tgid_record(bool enable)
+@@ -342,7 +342,8 @@ void trace_event_enable_tgid_record(bool enable)
+ 	struct trace_event_file *file;
+ 	struct trace_array *tr;
+ 
+-	mutex_lock(&event_mutex);
++	lockdep_assert_held(&event_mutex);
++
+ 	do_for_each_event_file(tr, file) {
+ 		if (!(file->flags & EVENT_FILE_FL_ENABLED))
+ 			continue;
+@@ -356,7 +357,6 @@ void trace_event_enable_tgid_record(bool enable)
+ 				  &file->flags);
+ 		}
+ 	} while_for_each_event_file();
+-	mutex_unlock(&event_mutex);
+ }
+ 
+ static int __ftrace_event_enable_disable(struct trace_event_file *file,
+diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
+index a745b0c..887cdb5 100644
+--- a/kernel/trace/trace_irqsoff.c
++++ b/kernel/trace/trace_irqsoff.c
+@@ -560,8 +560,10 @@ static int __irqsoff_tracer_init(struct trace_array *tr)
+ 	save_flags = tr->trace_flags;
+ 
+ 	/* non overwrite screws up the latency tracers */
++	mutex_lock(&event_mutex);
+ 	set_tracer_flag(tr, TRACE_ITER_OVERWRITE, 1);
+ 	set_tracer_flag(tr, TRACE_ITER_LATENCY_FMT, 1);
++	mutex_unlock(&event_mutex);
+ 
+ 	tr->max_latency = 0;
+ 	irqsoff_trace = tr;
+@@ -586,8 +588,10 @@ static void __irqsoff_tracer_reset(struct trace_array *tr)
+ 
+ 	stop_irqsoff_tracer(tr, is_graph(tr));
+ 
++	mutex_lock(&event_mutex);
+ 	set_tracer_flag(tr, TRACE_ITER_LATENCY_FMT, lat_flag);
+ 	set_tracer_flag(tr, TRACE_ITER_OVERWRITE, overwrite_flag);
++	mutex_unlock(&event_mutex);
+ 	ftrace_reset_array_ops(tr);
+ 
+ 	irqsoff_busy = false;
+diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
+index 5e43b96..0bc67d1 100644
+--- a/kernel/trace/trace_sched_wakeup.c
++++ b/kernel/trace/trace_sched_wakeup.c
+@@ -671,8 +671,10 @@ static int __wakeup_tracer_init(struct trace_array *tr)
+ 	save_flags = tr->trace_flags;
+ 
+ 	/* non overwrite screws up the latency tracers */
++	mutex_lock(&event_mutex);
+ 	set_tracer_flag(tr, TRACE_ITER_OVERWRITE, 1);
+ 	set_tracer_flag(tr, TRACE_ITER_LATENCY_FMT, 1);
++	mutex_unlock(&event_mutex);
+ 
+ 	tr->max_latency = 0;
+ 	wakeup_trace = tr;
+@@ -722,8 +724,10 @@ static void wakeup_tracer_reset(struct trace_array *tr)
+ 	/* make sure we put back any tasks we are tracing */
+ 	wakeup_reset(tr);
+ 
++	mutex_lock(&event_mutex);
+ 	set_tracer_flag(tr, TRACE_ITER_LATENCY_FMT, lat_flag);
+ 	set_tracer_flag(tr, TRACE_ITER_OVERWRITE, overwrite_flag);
++	mutex_unlock(&event_mutex);
+ 	ftrace_reset_array_ops(tr);
+ 	wakeup_busy = false;
+ }
 -- 
-2.24.0
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., 
+is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
