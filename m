@@ -2,421 +2,149 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9884DC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC58C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 542A520862
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:57:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575381423;
-	bh=yGD2Tpv8iJsB4nustdK3rvZpMb0g2lBoRl5gKQBqJsc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dv7CagfUTQjlVnp1gM4ul0MY7AuTsC4ypmF9RzyYxFEhwqehS3ZZ/xHvVT0i9ljGJ
-	 h9LPFvuudgyj87Cvh3WnAg+FEyftTWfH8Rj4NqmzOWkYeQNZTXt8efvPFzyrsyFxii
-	 FD/gpNuPkjEvP9FqTir2vW4IGUsGsYaOl9AtnDyQ=
+	by mail.kernel.org (Postfix) with ESMTP id 6126B20409
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:57:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="FSwMrlCz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbfLCN46 (ORCPT
+        id S1726505AbfLCN5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 08:56:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34952 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726986AbfLCN4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 08:56:54 -0500
-Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FA9820803;
-        Tue,  3 Dec 2019 13:56:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575381413;
-        bh=yGD2Tpv8iJsB4nustdK3rvZpMb0g2lBoRl5gKQBqJsc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yLG9ldi9EAMFvNY6iiqdKpoQN2bZ/PJeSRjSNymCIZtNu/ymQnWhCHuvuzrdvZdKx
-         ZbXV8l5vHe/VVOzvLwkGMRn70y0m5MUanpfwtWa5r436SMLWBtShkmKg4n8qwoij2J
-         9k0EmhyztuGK4BvznsJenbGqngObk2PPLxsIbqsw=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Borislav Petkov <bp@suse.de>, Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 13/23] perf bench: Update the copies of x86's mem{cpy,set}_64.S
-Date:   Tue,  3 Dec 2019 10:55:56 -0300
-Message-Id: <20191203135606.24902-14-acme@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191203135606.24902-1-acme@kernel.org>
-References: <20191203135606.24902-1-acme@kernel.org>
+        Tue, 3 Dec 2019 08:57:04 -0500
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:37406 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726195AbfLCN5C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 08:57:02 -0500
+Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB3DhKuB026549;
+        Tue, 3 Dec 2019 08:56:33 -0500
+Received: from nam02-cy1-obe.outbound.protection.outlook.com (mail-cys01nam02lp2050.outbound.protection.outlook.com [104.47.37.50])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2wknx8rg30-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 03 Dec 2019 08:56:33 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LCKlFFfvJBHTzFalMb5m8+BxGNCEJ7IeLgEyPcEjlxF+kcso42t93H04dQqOcyZp0tQQ0dvck8RAfZBwryjb0xgUNX+enBMlwdJ3Mib3dXiOMN7CooEF3No/bQkECjeZkzhscOqAayUJldd/cU+e6nRMr6dNIB2DMeaSItAKzufB2sOO+A3/rSTgxwNuDrCWSh1/IwtxMmWEkHrG9PflkeSwNW4LxgfjJw75187ECEzF22QTh9TNP010JeGP0I4G/vgWqouSRVP01fmEdMdleYQ/Y9LzwGgSMC0Xz78EK4B282yPvJ1eEVLIb2u/DNCA/ESE3+CawtW4sgf2pLMmug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ni+sBV613/ZlkuzoAipntnzGl48V3R+j++o2aqo2MqU=;
+ b=Yf6OjL/t60NJiSmVG94bQqmmrYoQYSQCleHRPSMnLyTh4mj1nEeXlaw/sXD+mGwhU9xYFS2U+M/LKtDToqjlr1yXg7RREvqU+Tdl3BHx/ElwUWvZUfWUuoObzYiSu9ZWDmvNfDFthFEWONTnNFWU3kgo1ReytkgpC4RF3lihcB3/W9L3Mgoc3AZJ6d68ZosjzQI9zOadGKuFqjTN0ytKbTRgVI7oS6Z98wY0DEzeTXjktgXfF4IIaYFY4uCve6du3Nft2QlICepLQQQBxSG2SXe6iu2L1mqc7gGZ6TJblWv/WDmdOWwoCcDdDSJeTa89aNsMyUyCUxSSiV92+YYinA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.55) smtp.rcpttodomain=suse.com smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ni+sBV613/ZlkuzoAipntnzGl48V3R+j++o2aqo2MqU=;
+ b=FSwMrlCzLAKimYEq0XgknjBQNJVyNjKzqFbCaiohbUgRbAF7AQpDtH5jfxl9mgZzWcWzyeY1dWSlQCTgLWEpT2KUX8q8cmW77VrcVIF7hU5WcuzNylfIsVNh4rymibACmwZFfLrZUzlIRwN//l3PEOinHd79fyjpIjxjuxwpUiM=
+Received: from BN6PR03CA0103.namprd03.prod.outlook.com (2603:10b6:404:10::17)
+ by CY1PR03MB2395.namprd03.prod.outlook.com (2a01:111:e400:c612::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.22; Tue, 3 Dec
+ 2019 13:56:31 +0000
+Received: from BL2NAM02FT035.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::207) by BN6PR03CA0103.outlook.office365.com
+ (2603:10b6:404:10::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.18 via Frontend
+ Transport; Tue, 3 Dec 2019 13:56:31 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ BL2NAM02FT035.mail.protection.outlook.com (10.152.77.157) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2474.17
+ via Frontend Transport; Tue, 3 Dec 2019 13:56:31 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id xB3DuVur007919
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Tue, 3 Dec 2019 05:56:31 -0800
+Received: from ben-Latitude-E6540.ad.analog.com (10.48.65.231) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Tue, 3 Dec 2019 08:56:30 -0500
+From:   Beniamin Bia <beniamin.bia@analog.com>
+To:     <linux-hwmon@vger.kernel.org>
+CC:     <Michael.Hennerich@analog.com>, <linux-kernel@vger.kernel.org>,
+        <jdelvare@suse.com>, <linux@roeck-us.net>, <mark.rutland@arm.com>,
+        <lgirdwood@gmail.com>, <broonie@kernel.org>,
+        <devicetree@vger.kernel.org>, <biabeniamin@outlook.com>,
+        Beniamin Bia <beniamin.bia@analog.com>
+Subject: [PATCH 3/3] MAINTAINERS: add entry for ADM1177 driver
+Date:   Tue, 3 Dec 2019 15:57:11 +0200
+Message-ID: <20191203135711.13972-3-beniamin.bia@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191203135711.13972-1-beniamin.bia@analog.com>
+References: <20191203135711.13972-1-beniamin.bia@analog.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(396003)(136003)(346002)(39860400002)(189003)(199004)(16586007)(186003)(26005)(6306002)(86362001)(50226002)(446003)(426003)(305945005)(50466002)(4326008)(70586007)(246002)(478600001)(6916009)(8936002)(36756003)(4744005)(966005)(2351001)(1076003)(2616005)(336012)(11346002)(316002)(8676002)(70206006)(5660300002)(7636002)(44832011)(54906003)(7696005)(48376002)(51416003)(2906002)(76176011)(6666004)(356004)(106002)(107886003);DIR:OUT;SFP:1101;SCL:1;SRVR:CY1PR03MB2395;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1bd7b1b3-ae14-4b53-42a6-08d777f89a0d
+X-MS-TrafficTypeDiagnostic: CY1PR03MB2395:
+X-Microsoft-Antispam-PRVS: <CY1PR03MB2395F2CA4854083ED1BAA003F0420@CY1PR03MB2395.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1303;
+X-Forefront-PRVS: 02408926C4
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: MhuMspzlIO3YAEd0ibBOYen1GSMEOp91IupRvZNHq7UvMzdGr/x7usn4z0ZwQvbGSR+FY96AiaU2MTCV6C/oEWQRTa4qDVx2q7CD7hW0LiYNcXI5sXwgOAhkPOuLBOVIPc751k/HEOKJVTICEuboyXe5d4zKQ6JGsMcSK2IUMNUTHMXFCQP7os4iPQ9uRUVIbzQLkEZidOpra3HKqp/jFgZht0DADslqp3QYMYaDF6ULQvJhkCGsemPlpsYkNeZfhmojQxOveeWShn/dpbSIP1Vqzmw1HqnVaqVbrFB/vkSbcnmHh/wuffv+R9fNXweEgt6ZEsRMK5MlCPHAqFch189sOFI+jUpeC9pqhxoZgvZf/cGBMrvkjSO11M9UJrLGuB/7uJPKnYr2XmQHiG3BKgNatentcbSlHYylsirNqNkpRKiVA3dw/G9wD30E+SKfJCKQjolLtBJi/wOLAc9/5ZxiXouc5xePHhXnKmJdJvM=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Dec 2019 13:56:31.5829
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1bd7b1b3-ae14-4b53-42a6-08d777f89a0d
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR03MB2395
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-03_03:2019-12-02,2019-12-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 priorityscore=1501 mlxlogscore=999 adultscore=0 spamscore=0
+ impostorscore=0 suspectscore=1 phishscore=0 mlxscore=0 clxscore=1015
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912030108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Add Beniamin Bia and Michael Hennerich as a maintainer for ADM1177 ADC.
 
-And update linux/linkage.h, which requires in turn that we make these
-files switch from ENTRY()/ENDPROC() to SYM_FUNC_START()/SYM_FUNC_END():
-
-  tools/perf/arch/arm64/tests/regs_load.S
-  tools/perf/arch/arm/tests/regs_load.S
-  tools/perf/arch/powerpc/tests/regs_load.S
-  tools/perf/arch/x86/tests/regs_load.S
-
-We also need to switch SYM_FUNC_START_LOCAL() to SYM_FUNC_START() for
-the functions used directly by 'perf bench', and update
-tools/perf/check_headers.sh to ignore those changes when checking if the
-kernel original files drifted from the copies we carry.
-
-This is to get the changes from:
-
-  6dcc5627f6ae ("x86/asm: Change all ENTRY+ENDPROC to SYM_FUNC_*")
-  ef1e03152cb0 ("x86/asm: Make some functions local")
-  e9b9d020c487 ("x86/asm: Annotate aliases")
-
-And address these tools/perf build warnings:
-
-  Warning: Kernel ABI header at 'tools/arch/x86/lib/memcpy_64.S' differs from latest version at 'arch/x86/lib/memcpy_64.S'
-  diff -u tools/arch/x86/lib/memcpy_64.S arch/x86/lib/memcpy_64.S
-  Warning: Kernel ABI header at 'tools/arch/x86/lib/memset_64.S' differs from latest version at 'arch/x86/lib/memset_64.S'
-  diff -u tools/arch/x86/lib/memset_64.S arch/x86/lib/memset_64.S
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Jiri Slaby <jslaby@suse.cz>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-tay3l8x8k11p7y3qcpqh9qh5@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
 ---
- tools/arch/x86/lib/memcpy_64.S          | 20 +++---
- tools/arch/x86/lib/memset_64.S          | 16 ++---
- tools/perf/arch/arm/tests/regs_load.S   |  4 +-
- tools/perf/arch/arm64/tests/regs_load.S |  4 +-
- tools/perf/arch/x86/tests/regs_load.S   |  8 +--
- tools/perf/check-headers.sh             |  4 +-
- tools/perf/util/include/linux/linkage.h | 89 ++++++++++++++++++++++++-
- 7 files changed, 114 insertions(+), 31 deletions(-)
+ MAINTAINERS | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/tools/arch/x86/lib/memcpy_64.S b/tools/arch/x86/lib/memcpy_64.S
-index 92748660ba51..df767afc690f 100644
---- a/tools/arch/x86/lib/memcpy_64.S
-+++ b/tools/arch/x86/lib/memcpy_64.S
-@@ -28,8 +28,8 @@
-  * Output:
-  * rax original destination
-  */
--ENTRY(__memcpy)
--ENTRY(memcpy)
-+SYM_FUNC_START_ALIAS(__memcpy)
-+SYM_FUNC_START_LOCAL(memcpy)
- 	ALTERNATIVE_2 "jmp memcpy_orig", "", X86_FEATURE_REP_GOOD, \
- 		      "jmp memcpy_erms", X86_FEATURE_ERMS
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3ef731fc753b..bc19b624fcd5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -978,6 +978,15 @@ W:	http://ez.analog.com/community/linux-device-drivers
+ F:	drivers/iio/imu/adis16460.c
+ F:	Documentation/devicetree/bindings/iio/imu/adi,adis16460.yaml
  
-@@ -41,8 +41,8 @@ ENTRY(memcpy)
- 	movl %edx, %ecx
- 	rep movsb
- 	ret
--ENDPROC(memcpy)
--ENDPROC(__memcpy)
-+SYM_FUNC_END(memcpy)
-+SYM_FUNC_END_ALIAS(__memcpy)
- EXPORT_SYMBOL(memcpy)
- EXPORT_SYMBOL(__memcpy)
- 
-@@ -50,14 +50,14 @@ EXPORT_SYMBOL(__memcpy)
-  * memcpy_erms() - enhanced fast string memcpy. This is faster and
-  * simpler than memcpy. Use memcpy_erms when possible.
-  */
--ENTRY(memcpy_erms)
-+SYM_FUNC_START(memcpy_erms)
- 	movq %rdi, %rax
- 	movq %rdx, %rcx
- 	rep movsb
- 	ret
--ENDPROC(memcpy_erms)
-+SYM_FUNC_END(memcpy_erms)
- 
--ENTRY(memcpy_orig)
-+SYM_FUNC_START(memcpy_orig)
- 	movq %rdi, %rax
- 
- 	cmpq $0x20, %rdx
-@@ -182,7 +182,7 @@ ENTRY(memcpy_orig)
- 
- .Lend:
- 	retq
--ENDPROC(memcpy_orig)
-+SYM_FUNC_END(memcpy_orig)
- 
- #ifndef CONFIG_UML
- 
-@@ -193,7 +193,7 @@ MCSAFE_TEST_CTL
-  * Note that we only catch machine checks when reading the source addresses.
-  * Writes to target are posted and don't generate machine checks.
-  */
--ENTRY(__memcpy_mcsafe)
-+SYM_FUNC_START(__memcpy_mcsafe)
- 	cmpl $8, %edx
- 	/* Less than 8 bytes? Go to byte copy loop */
- 	jb .L_no_whole_words
-@@ -260,7 +260,7 @@ ENTRY(__memcpy_mcsafe)
- 	xorl %eax, %eax
- .L_done:
- 	ret
--ENDPROC(__memcpy_mcsafe)
-+SYM_FUNC_END(__memcpy_mcsafe)
- EXPORT_SYMBOL_GPL(__memcpy_mcsafe)
- 
- 	.section .fixup, "ax"
-diff --git a/tools/arch/x86/lib/memset_64.S b/tools/arch/x86/lib/memset_64.S
-index f8f3dc0a6690..fd5d25a474b7 100644
---- a/tools/arch/x86/lib/memset_64.S
-+++ b/tools/arch/x86/lib/memset_64.S
-@@ -18,8 +18,8 @@
-  *
-  * rax   original destination
-  */
--ENTRY(memset)
--ENTRY(__memset)
-+SYM_FUNC_START_ALIAS(memset)
-+SYM_FUNC_START(__memset)
- 	/*
- 	 * Some CPUs support enhanced REP MOVSB/STOSB feature. It is recommended
- 	 * to use it when possible. If not available, use fast string instructions.
-@@ -42,8 +42,8 @@ ENTRY(__memset)
- 	rep stosb
- 	movq %r9,%rax
- 	ret
--ENDPROC(memset)
--ENDPROC(__memset)
-+SYM_FUNC_END(__memset)
-+SYM_FUNC_END_ALIAS(memset)
- 
- /*
-  * ISO C memset - set a memory block to a byte value. This function uses
-@@ -56,16 +56,16 @@ ENDPROC(__memset)
-  *
-  * rax   original destination
-  */
--ENTRY(memset_erms)
-+SYM_FUNC_START(memset_erms)
- 	movq %rdi,%r9
- 	movb %sil,%al
- 	movq %rdx,%rcx
- 	rep stosb
- 	movq %r9,%rax
- 	ret
--ENDPROC(memset_erms)
-+SYM_FUNC_END(memset_erms)
- 
--ENTRY(memset_orig)
-+SYM_FUNC_START(memset_orig)
- 	movq %rdi,%r10
- 
- 	/* expand byte value  */
-@@ -136,4 +136,4 @@ ENTRY(memset_orig)
- 	subq %r8,%rdx
- 	jmp .Lafter_bad_alignment
- .Lfinal:
--ENDPROC(memset_orig)
-+SYM_FUNC_END(memset_orig)
-diff --git a/tools/perf/arch/arm/tests/regs_load.S b/tools/perf/arch/arm/tests/regs_load.S
-index 6e2495cc4517..4284307d7822 100644
---- a/tools/perf/arch/arm/tests/regs_load.S
-+++ b/tools/perf/arch/arm/tests/regs_load.S
-@@ -37,7 +37,7 @@
- 
- .text
- .type perf_regs_load,%function
--ENTRY(perf_regs_load)
-+SYM_FUNC_START(perf_regs_load)
- 	str r0, [r0, #R0]
- 	str r1, [r0, #R1]
- 	str r2, [r0, #R2]
-@@ -56,4 +56,4 @@ ENTRY(perf_regs_load)
- 	str lr, [r0, #PC]	// store pc as lr in order to skip the call
- 	                        //  to this function
- 	mov pc, lr
--ENDPROC(perf_regs_load)
-+SYM_FUNC_END(perf_regs_load)
-diff --git a/tools/perf/arch/arm64/tests/regs_load.S b/tools/perf/arch/arm64/tests/regs_load.S
-index 07042511dca9..d49de40b6818 100644
---- a/tools/perf/arch/arm64/tests/regs_load.S
-+++ b/tools/perf/arch/arm64/tests/regs_load.S
-@@ -7,7 +7,7 @@
- #define LDR_REG(r)	ldr x##r, [x0, 8 * r]
- #define SP	(8 * 31)
- #define PC	(8 * 32)
--ENTRY(perf_regs_load)
-+SYM_FUNC_START(perf_regs_load)
- 	STR_REG(0)
- 	STR_REG(1)
- 	STR_REG(2)
-@@ -44,4 +44,4 @@ ENTRY(perf_regs_load)
- 	str x30, [x0, #PC]
- 	LDR_REG(1)
- 	ret
--ENDPROC(perf_regs_load)
-+SYM_FUNC_END(perf_regs_load)
-diff --git a/tools/perf/arch/x86/tests/regs_load.S b/tools/perf/arch/x86/tests/regs_load.S
-index bbe5a0d16e51..80f14f52e3f6 100644
---- a/tools/perf/arch/x86/tests/regs_load.S
-+++ b/tools/perf/arch/x86/tests/regs_load.S
-@@ -28,7 +28,7 @@
- 
- .text
- #ifdef HAVE_ARCH_X86_64_SUPPORT
--ENTRY(perf_regs_load)
-+SYM_FUNC_START(perf_regs_load)
- 	movq %rax, AX(%rdi)
- 	movq %rbx, BX(%rdi)
- 	movq %rcx, CX(%rdi)
-@@ -60,9 +60,9 @@ ENTRY(perf_regs_load)
- 	movq %r14, R14(%rdi)
- 	movq %r15, R15(%rdi)
- 	ret
--ENDPROC(perf_regs_load)
-+SYM_FUNC_END(perf_regs_load)
- #else
--ENTRY(perf_regs_load)
-+SYM_FUNC_START(perf_regs_load)
- 	push %edi
- 	movl 8(%esp), %edi
- 	movl %eax, AX(%edi)
-@@ -88,7 +88,7 @@ ENTRY(perf_regs_load)
- 	movl $0, FS(%edi)
- 	movl $0, GS(%edi)
- 	ret
--ENDPROC(perf_regs_load)
-+SYM_FUNC_END(perf_regs_load)
- #endif
- 
- /*
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index a1dc16724352..68039a96c1dc 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -110,8 +110,8 @@ for i in $FILES; do
- done
- 
- # diff with extra ignore lines
--check arch/x86/lib/memcpy_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/export.h>"'
--check arch/x86/lib/memset_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/export.h>"'
-+check arch/x86/lib/memcpy_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/export.h>" -I"^SYM_FUNC_START\(_LOCAL\)*(memcpy_\(erms\|orig\))"'
-+check arch/x86/lib/memset_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/export.h>" -I"^SYM_FUNC_START\(_LOCAL\)*(memset_\(erms\|orig\))"'
- check include/uapi/asm-generic/mman.h '-I "^#include <\(uapi/\)*asm-generic/mman-common\(-tools\)*.h>"'
- check include/uapi/linux/mman.h       '-I "^#include <\(uapi/\)*asm/mman.h>"'
- check include/linux/ctype.h	      '-I "isdigit("'
-diff --git a/tools/perf/util/include/linux/linkage.h b/tools/perf/util/include/linux/linkage.h
-index f01d48a8d707..b8a5159361b4 100644
---- a/tools/perf/util/include/linux/linkage.h
-+++ b/tools/perf/util/include/linux/linkage.h
-@@ -5,10 +5,93 @@
- 
- /* linkage.h ... for including arch/x86/lib/memcpy_64.S */
- 
--#define ENTRY(name)				\
--	.globl name;				\
-+/* Some toolchains use other characters (e.g. '`') to mark new line in macro */
-+#ifndef ASM_NL
-+#define ASM_NL		 ;
-+#endif
++ANALOG DEVICES INC ADM1177 DRIVER
++M:	Beniamin Bia <beniamin.bia@analog.com>
++M:	Michael Hennerich <Michael.Hennerich@analog.com>
++L:	linux-hwmon@vger.kernel.org
++W:	http://ez.analog.com/community/linux-device-drivers
++S:	Supported
++F:	drivers/hwmon/adm1177.c
++F:	Documentation/devicetree/bindings/hwmon/adi,adm1177.yaml
 +
-+#ifndef __ALIGN
-+#define __ALIGN		.align 4,0x90
-+#define __ALIGN_STR	".align 4,0x90"
-+#endif
-+
-+/* SYM_T_FUNC -- type used by assembler to mark functions */
-+#ifndef SYM_T_FUNC
-+#define SYM_T_FUNC				STT_FUNC
-+#endif
-+
-+/* SYM_A_* -- align the symbol? */
-+#define SYM_A_ALIGN				ALIGN
-+
-+/* SYM_L_* -- linkage of symbols */
-+#define SYM_L_GLOBAL(name)			.globl name
-+#define SYM_L_LOCAL(name)			/* nothing */
-+
-+#define ALIGN __ALIGN
-+
-+/* === generic annotations === */
-+
-+/* SYM_ENTRY -- use only if you have to for non-paired symbols */
-+#ifndef SYM_ENTRY
-+#define SYM_ENTRY(name, linkage, align...)		\
-+	linkage(name) ASM_NL				\
-+	align ASM_NL					\
- 	name:
-+#endif
-+
-+/* SYM_START -- use only if you have to */
-+#ifndef SYM_START
-+#define SYM_START(name, linkage, align...)		\
-+	SYM_ENTRY(name, linkage, align)
-+#endif
-+
-+/* SYM_END -- use only if you have to */
-+#ifndef SYM_END
-+#define SYM_END(name, sym_type)				\
-+	.type name sym_type ASM_NL			\
-+	.size name, .-name
-+#endif
-+
-+/*
-+ * SYM_FUNC_START_ALIAS -- use where there are two global names for one
-+ * function
-+ */
-+#ifndef SYM_FUNC_START_ALIAS
-+#define SYM_FUNC_START_ALIAS(name)			\
-+	SYM_START(name, SYM_L_GLOBAL, SYM_A_ALIGN)
-+#endif
-+
-+/* SYM_FUNC_START -- use for global functions */
-+#ifndef SYM_FUNC_START
-+/*
-+ * The same as SYM_FUNC_START_ALIAS, but we will need to distinguish these two
-+ * later.
-+ */
-+#define SYM_FUNC_START(name)				\
-+	SYM_START(name, SYM_L_GLOBAL, SYM_A_ALIGN)
-+#endif
-+
-+/* SYM_FUNC_START_LOCAL -- use for local functions */
-+#ifndef SYM_FUNC_START_LOCAL
-+/* the same as SYM_FUNC_START_LOCAL_ALIAS, see comment near SYM_FUNC_START */
-+#define SYM_FUNC_START_LOCAL(name)			\
-+	SYM_START(name, SYM_L_LOCAL, SYM_A_ALIGN)
-+#endif
-+
-+/* SYM_FUNC_END_ALIAS -- the end of LOCAL_ALIASed or ALIASed function */
-+#ifndef SYM_FUNC_END_ALIAS
-+#define SYM_FUNC_END_ALIAS(name)			\
-+	SYM_END(name, SYM_T_FUNC)
-+#endif
- 
--#define ENDPROC(name)
-+/*
-+ * SYM_FUNC_END -- the end of SYM_FUNC_START_LOCAL, SYM_FUNC_START,
-+ * SYM_FUNC_START_WEAK, ...
-+ */
-+#ifndef SYM_FUNC_END
-+/* the same as SYM_FUNC_END_ALIAS, see comment near SYM_FUNC_START */
-+#define SYM_FUNC_END(name)				\
-+	SYM_END(name, SYM_T_FUNC)
-+#endif
- 
- #endif	/* PERF_LINUX_LINKAGE_H_ */
+ ANALOG DEVICES INC ADP5061 DRIVER
+ M:	Stefan Popa <stefan.popa@analog.com>
+ L:	linux-pm@vger.kernel.org
 -- 
-2.21.0
+2.17.1
 
