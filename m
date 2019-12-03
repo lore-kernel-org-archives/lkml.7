@@ -2,84 +2,172 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C51C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C2AC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE6E20705
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FE7B206F0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:43:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T00bsc0A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aTO2dQSx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727320AbfLCAnN (ORCPT
+        id S1727329AbfLCAnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 19:43:13 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39668 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727269AbfLCAnK (ORCPT
+        Mon, 2 Dec 2019 19:43:19 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34928 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726484AbfLCAmI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 19:43:10 -0500
-Received: by mail-io1-f65.google.com with SMTP id c16so1654009ioh.6
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 16:43:09 -0800 (PST)
+        Mon, 2 Dec 2019 19:42:08 -0500
+Received: by mail-lj1-f194.google.com with SMTP id j6so1710108lja.2;
+        Mon, 02 Dec 2019 16:42:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4jnL6iDubLY8gL5JP3QSc0ju+BQUG+h8VIAOn+X5oWQ=;
-        b=T00bsc0APIQpp0kFPoFsLBa72cSKQI8/kvf/jrmlw4YTXIkoV3Uo9vYbKOVb/uvmMa
-         Fx0TgLfE1CVyHBCn7J7nM976Z7PON3M3w+uSZtQ2kTxe+7DNpYO1vky1kHc7MGIzcifk
-         Rsgk4WafvGso2zBq8zzPlQSTSk797b7OEJlbteHeDpdZ+gwvXPs5Nniz0vbM33QLo++f
-         5WJ3xnuNz/Crxcb8d8IUNaOA8+ssCGZqzJbMWlPmvRzBWmuRrGqBI8UecAbi+m6cUljH
-         FvUNkjv38k90sNUFreVKS1i8TAkgxv4pKR1dCeBNykyTp5S+fR9yd6wQ6dhzRH2CzVjC
-         hetg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=lggSWbCZNX4XnKftuaR7fJMavXczez7/+ave15WB09g=;
+        b=aTO2dQSxtLsNpKvjGhKfHA+Dho91ikfU8iK1uYu3rGNE2aNovu7uxkfuQ/kwT7Mjgd
+         3yR11LoWQUL9+fplIPmQa7Wxr+TtrD2nmmIPFC+B+QSYvc1QtTNAWDH0ZNM9A8sKH0kA
+         FPbKItZbr1LfXl0BaKHsFQz1IdRKprpiOJnVpLjb4qXaDFP16T3JBROWQR+cJ7JES5Kb
+         bQV6W4MKcatkvB5N5s9js2GkiDCafVKxRqu1pYUuJj1vEqcJvn+JAcIn6g0nxtOb+/Xa
+         aLGr4hJlSc1HPcdKPvWXo9hToCdmpv7sHN1ozja6oIsBFEjnHswMWSbuL6uavXjeHSWD
+         Vahw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4jnL6iDubLY8gL5JP3QSc0ju+BQUG+h8VIAOn+X5oWQ=;
-        b=DhF6ynmi9mAssKJKmN5Kx1oC0TyAYlbXUalbAkIHRMPz2j6ZdDweK7/24Ky86tiAuG
-         xFUGx98h6xfS2KCyboMYtzI517Yc1WjRAg0Njnbd6+HAyu2L164FHg9DX8BJaTPsGF/l
-         eeIlNorT6sn7FqjfWPW+Y41uM4+K2BeeidR0/deuidqn7/a8GvqKVCPlt5HpFf0nFbog
-         nRfG0gT1xn/Xg70kOBg/H7hYfgFq9I3HdX4w4MURpINod7mrTONTVgkCl0mWSVPZ0Pkt
-         4bYaA7Bg4fd7dGFmQQHxKQ8G83NGzEMe7kutIC5VSWDtVwPx+W+nh3ky6qWKlovobZl9
-         MqnA==
-X-Gm-Message-State: APjAAAX8EacICCHMhPRo2zyUCkznCPMl2/PwBxeR4M8ZP9OvYDDiF/2N
-        zAMCiVMadLpCXf0bsnjoUlzwrYL73z2UAqTANMU0nQ==
-X-Google-Smtp-Source: APXvYqxJrkK1ZdE65kA4EuWOJ5vb0zsDMEQ4ZrjeW7uzvZYJCxvo09UHOuHs6AjLENBNZOWUxi9WR6+6dwVQ5+rKKQ4=
-X-Received: by 2002:a5e:df06:: with SMTP id f6mr235848ioq.84.1575333788813;
- Mon, 02 Dec 2019 16:43:08 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=lggSWbCZNX4XnKftuaR7fJMavXczez7/+ave15WB09g=;
+        b=h0iFwQFqEvDYUtaRRs1n28hNhylSvOcML/taJfunUkC2yXtojTP9jIfbiWk8liDmm/
+         5KnrvUZXt7PPvhHkM00MWQ/XasA6TegQV8DMuIsrqhc43WKzRhJOPI6jcHtNiMi56UQ7
+         mC/bPe6zj2ELFvDBhOFhWgP28HlgUKwAeVvLMz1KSByWOjbWA86wFYZeTjAIySddIIxO
+         vXLJ/nnCSdmpwrat+sTfPjqGliEH4NR0dUw3G2DT9KoL9J3cYEmpo8Nvtn1xrlfV85Y7
+         ihaEVngGdSRWkjCFDMXceCBc7V8au3bJYRcwuJcvdNEPz4GFCu6jWmxW03yYDxvXRFwO
+         N9Hw==
+X-Gm-Message-State: APjAAAWg6YI0aAYbBhbAHe/SWXjzQqT52d6scRBJJInyRKKNPwGZOxPt
+        Ael+Zx/n6HvBfG9dxaMAHprBYfok
+X-Google-Smtp-Source: APXvYqxyFBmKkomgX9ONthvnDaB7i4Ua9A46iWU2dN3NEFThRceWwppnAHq/XfJY6OEZKPJNaj+f+w==
+X-Received: by 2002:a2e:8e69:: with SMTP id t9mr851837ljk.91.1575333725701;
+        Mon, 02 Dec 2019 16:42:05 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id y21sm456384ljm.25.2019.12.02.16.42.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 16:42:05 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v8 04/19] ARM: tegra: Change tegra_set_cpu_in_lp2() type to void
+Date:   Tue,  3 Dec 2019 03:41:01 +0300
+Message-Id: <20191203004116.11771-5-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191203004116.11771-1-digetx@gmail.com>
+References: <20191203004116.11771-1-digetx@gmail.com>
 MIME-Version: 1.0
-References: <20191203004043.174977-1-matthewgarrett@google.com>
-In-Reply-To: <20191203004043.174977-1-matthewgarrett@google.com>
-From:   Matthew Garrett <mjg59@google.com>
-Date:   Mon, 2 Dec 2019 16:42:57 -0800
-Message-ID: <CACdnJus7nHdr4p4H1j5as9eB=FG-uX+wy_tjvTQ5ObErDJHdow@mail.gmail.com>
-Subject: Re: [PATCH] [EFI,PCI] Allow disabling PCI busmastering on bridges
- during boot
-To:     linux-efi <linux-efi@vger.kernel.org>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>, x86@kernel.org,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 2, 2019 at 4:40 PM Matthew Garrett
-<matthewgarrett@google.com> wrote:
->
-> Add an option to disable the busmaster bit in the control register on
-> all PCI bridges before calling ExitBootServices() and passing control to
-> the runtime kernel. System firmware may configure the IOMMU to prevent
-> malicious PCI devices from being able to attack the OS via DMA. However,
-> since firmware can't guarantee that the OS is IOMMU-aware, it will tear
-> down IOMMU configuration when ExitBootServices() is called. This leaves
-> a window between where a hostile device could still cause damage before
-> Linux configures the IOMMU again.
+The Tegra30 CPUIDLE driver has intention to check whether primary CPU was
+the last CPU that entered LP2 (CC6) idle-state, but that functionality
+never got utilized because driver never supported the CC6 state for the
+case where any secondary CPU is online. The new cpuidle driver will
+properly support CC6 on Tegra30, including the case where secondary CPUs
+are online, and that knowledge about what CPUs entered into CC6 won't be
+needed at all because new driver will use different approach by making use
+of the coupled idle-state and explicitly parking secondary CPUs before
+entering into CC6. Thus this patch is just a minor cleanup change.
 
-I don't know enough about ARM to know if this makes sense there as well. Anyone?
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ arch/arm/mach-tegra/cpuidle-tegra30.c | 14 ++++----------
+ arch/arm/mach-tegra/pm.c              |  8 +-------
+ arch/arm/mach-tegra/pm.h              |  2 +-
+ 3 files changed, 6 insertions(+), 18 deletions(-)
+
+diff --git a/arch/arm/mach-tegra/cpuidle-tegra30.c b/arch/arm/mach-tegra/cpuidle-tegra30.c
+index c6128526877d..a3ce8dabfe18 100644
+--- a/arch/arm/mach-tegra/cpuidle-tegra30.c
++++ b/arch/arm/mach-tegra/cpuidle-tegra30.c
+@@ -98,22 +98,16 @@ static int tegra30_idle_lp2(struct cpuidle_device *dev,
+ 			    int index)
+ {
+ 	bool entered_lp2 = false;
+-	bool last_cpu;
+ 
+ 	local_fiq_disable();
+ 
+-	last_cpu = tegra_set_cpu_in_lp2();
++	tegra_set_cpu_in_lp2();
+ 	cpu_pm_enter();
+ 
+-	if (dev->cpu == 0) {
+-		if (last_cpu)
+-			entered_lp2 = tegra30_cpu_cluster_power_down(dev, drv,
+-								     index);
+-		else
+-			cpu_do_idle();
+-	} else {
++	if (dev->cpu == 0)
++		entered_lp2 = tegra30_cpu_cluster_power_down(dev, drv, index);
++	else
+ 		entered_lp2 = tegra30_cpu_core_power_down(dev, drv, index);
+-	}
+ 
+ 	cpu_pm_exit();
+ 	tegra_clear_cpu_in_lp2();
+diff --git a/arch/arm/mach-tegra/pm.c b/arch/arm/mach-tegra/pm.c
+index 1ff499068bb1..a72f9a2d3cb7 100644
+--- a/arch/arm/mach-tegra/pm.c
++++ b/arch/arm/mach-tegra/pm.c
+@@ -123,11 +123,9 @@ void tegra_clear_cpu_in_lp2(void)
+ 	spin_unlock(&tegra_lp2_lock);
+ }
+ 
+-bool tegra_set_cpu_in_lp2(void)
++void tegra_set_cpu_in_lp2(void)
+ {
+ 	int phy_cpu_id = cpu_logical_map(smp_processor_id());
+-	bool last_cpu = false;
+-	cpumask_t *cpu_lp2_mask = tegra_cpu_lp2_mask;
+ 	u32 *cpu_in_lp2 = tegra_cpu_lp2_mask;
+ 
+ 	spin_lock(&tegra_lp2_lock);
+@@ -135,11 +133,7 @@ bool tegra_set_cpu_in_lp2(void)
+ 	BUG_ON((*cpu_in_lp2 & BIT(phy_cpu_id)));
+ 	*cpu_in_lp2 |= BIT(phy_cpu_id);
+ 
+-	if ((phy_cpu_id == 0) && cpumask_equal(cpu_lp2_mask, cpu_online_mask))
+-		last_cpu = true;
+-
+ 	spin_unlock(&tegra_lp2_lock);
+-	return last_cpu;
+ }
+ 
+ static int tegra_sleep_cpu(unsigned long v2p)
+diff --git a/arch/arm/mach-tegra/pm.h b/arch/arm/mach-tegra/pm.h
+index b9cc12222bb1..2c294f6365c0 100644
+--- a/arch/arm/mach-tegra/pm.h
++++ b/arch/arm/mach-tegra/pm.h
+@@ -24,7 +24,7 @@ void tegra30_lp1_iram_hook(void);
+ void tegra30_sleep_core_init(void);
+ 
+ void tegra_clear_cpu_in_lp2(void);
+-bool tegra_set_cpu_in_lp2(void);
++void tegra_set_cpu_in_lp2(void);
+ void tegra_idle_lp2_last(void);
+ extern void (*tegra_tear_down_cpu)(void);
+ 
+-- 
+2.24.0
+
