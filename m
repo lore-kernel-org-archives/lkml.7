@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE67C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 12:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC51C43141
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 12:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8388206EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 12:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4234206EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 12:09:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XshhpMXm"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JjaDrhiv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfLCMJM (ORCPT
+        id S1726673AbfLCMJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 07:09:12 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:46302 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbfLCMJL (ORCPT
+        Tue, 3 Dec 2019 07:09:48 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:49150 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbfLCMJs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 07:09:11 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB3Bs2uf147819;
-        Tue, 3 Dec 2019 12:08:52 GMT
+        Tue, 3 Dec 2019 07:09:48 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB3Brvei135359;
+        Tue, 3 Dec 2019 12:08:23 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=CNr0y+ZoPApz+Tp45+kJAccK/U23wlJ3cxKmAvkb2ZI=;
- b=XshhpMXm4z9mCI2Ceys9JEAiTAY87sFJ/a8ze8ca63aECp348cHrJAt1IzPUtrXqCRpA
- hHhtmT5dZIHCgfKK/u2LAcBJP6xtXHyp3PmonrbUqrZY1r2y9oE04oYYew6u46P5+GA4
- kLy1K/PxYhGxAXl01KOQh887yCsumleADosj1T2VAKowVJfIwi8XYw1Lqi3BW+l4NLWK
- ckGBhygeLdEb9zsWrsvXDYEmNHqU47/UBhG5UsotU0rE8XKoV3UVYSOqJXWs6AfPWrUd
- yyuD6C84X1cLsane1EUP4eu9oWLoz7z4hR9E7mt7GgtXAWNo4yB3Qw6O7GzSyp7VutfF 1w== 
+ bh=AN47JONeK8oCX+YPtCKA7vbhhvfwmEGZgeS7UlEbne0=;
+ b=JjaDrhiv+rRmYqW+kIbCiQNtcgi0IUPDTSgrQjgnVz7F8IgCd7CFKWoZNnBc5MX5vXyT
+ /f2nJkYPhiCLsmAglLQqFWZtE4jLBH3fsGf0thEBn754mY2AxT0QJWSnkcKInaeXu2Sp
+ A9yaMuWgi11Vhzcd7+uSQE6EdwO3Q/Jjkm1xytp1fmzHjecwbxC6Nf/5Ui7i9aIfMNMa
+ 6A8mRgLnmDeblM/rUlJ7ZbOltMKT7DoTkbuxGca0+aQnes4iETmTINgyao0Tw9Fsl0uF
+ y2Id2m6suf+prtFY2+S6y2bx5Hqv5f3LeqQeHFNQROjrUfRDlZ6+Cls2iz7zj3alxXMP Dw== 
 Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2wkgcq75ws-1
+        by userp2120.oracle.com with ESMTP id 2wkh2r70y1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Dec 2019 12:08:52 +0000
+        Tue, 03 Dec 2019 12:08:23 +0000
 Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB3BsX9a161922;
-        Tue, 3 Dec 2019 12:08:52 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2wn4qpupdp-1
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB3BsXJ8161861;
+        Tue, 3 Dec 2019 12:08:23 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2wn4qpunwg-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Dec 2019 12:08:51 +0000
+        Tue, 03 Dec 2019 12:08:23 +0000
 Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xB3C8oM6027265;
-        Tue, 3 Dec 2019 12:08:50 GMT
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xB3C8KT2024568;
+        Tue, 3 Dec 2019 12:08:20 GMT
 Received: from dhcp-10-175-211-120.vpn.oracle.com (/10.175.211.120)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 03 Dec 2019 04:08:49 -0800
+        with ESMTP ; Tue, 03 Dec 2019 04:08:19 -0800
 From:   Alan Maguire <alan.maguire@oracle.com>
 To:     brendanhiggins@google.com, linux-kselftest@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
@@ -63,20 +63,20 @@ Cc:     linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
         mcgrof@kernel.org, linux-doc@vger.kernel.org,
         Alan Maguire <alan.maguire@oracle.com>,
         Knut Omang <knut.omang@oracle.com>
-Subject: [PATCH v5 linux-kselftest-test 6/6] kunit: update documentation to describe module-based build
-Date:   Tue,  3 Dec 2019 12:07:48 +0000
-Message-Id: <1575374868-32601-7-git-send-email-alan.maguire@oracle.com>
+Subject: [PATCH v5 linux-kselftest-test 1/6] kunit: move string-stream.h to lib/kunit
+Date:   Tue,  3 Dec 2019 12:07:43 +0000
+Message-Id: <1575374868-32601-2-git-send-email-alan.maguire@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1575374868-32601-1-git-send-email-alan.maguire@oracle.com>
 References: <1575374868-32601-1-git-send-email-alan.maguire@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9459 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=4 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-1912030096
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9459 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=4 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
  definitions=main-1912030096
@@ -85,74 +85,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Documentation should describe how to build kunit and tests as
-modules.
+string-stream interfaces are not intended for external use;
+move them from include/kunit to lib/kunit accordingly.
 
 Co-developed-by: Knut Omang <knut.omang@oracle.com>
 Signed-off-by: Knut Omang <knut.omang@oracle.com>
 Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Tested-by: Brendan Higgins <brendanhiggins@google.com>
 ---
- Documentation/dev-tools/kunit/faq.rst   |  3 ++-
- Documentation/dev-tools/kunit/index.rst |  3 +++
- Documentation/dev-tools/kunit/usage.rst | 16 ++++++++++++++++
- 3 files changed, 21 insertions(+), 1 deletion(-)
+ include/kunit/assert.h                 | 3 ++-
+ lib/kunit/assert.c                     | 2 ++
+ lib/kunit/string-stream-test.c         | 3 ++-
+ lib/kunit/string-stream.c              | 3 ++-
+ {include => lib}/kunit/string-stream.h | 0
+ lib/kunit/test.c                       | 2 ++
+ 6 files changed, 10 insertions(+), 3 deletions(-)
+ rename {include => lib}/kunit/string-stream.h (100%)
 
-diff --git a/Documentation/dev-tools/kunit/faq.rst b/Documentation/dev-tools/kunit/faq.rst
-index bf20951..ea55b24 100644
---- a/Documentation/dev-tools/kunit/faq.rst
-+++ b/Documentation/dev-tools/kunit/faq.rst
-@@ -29,7 +29,8 @@ Yes, well, mostly.
+diff --git a/include/kunit/assert.h b/include/kunit/assert.h
+index db6a0fc..ad889b5 100644
+--- a/include/kunit/assert.h
++++ b/include/kunit/assert.h
+@@ -9,10 +9,11 @@
+ #ifndef _KUNIT_ASSERT_H
+ #define _KUNIT_ASSERT_H
  
- For the most part, the KUnit core framework (what you use to write the tests)
- can compile to any architecture; it compiles like just another part of the
--kernel and runs when the kernel boots. However, there is some infrastructure,
-+kernel and runs when the kernel boots, or when built as a module, when the
-+module is loaded.  However, there is some infrastructure,
- like the KUnit Wrapper (``tools/testing/kunit/kunit.py``) that does not support
- other architectures.
+-#include <kunit/string-stream.h>
+ #include <linux/err.h>
++#include <linux/kernel.h>
  
-diff --git a/Documentation/dev-tools/kunit/index.rst b/Documentation/dev-tools/kunit/index.rst
-index 26ffb46..7ddc385 100644
---- a/Documentation/dev-tools/kunit/index.rst
-+++ b/Documentation/dev-tools/kunit/index.rst
-@@ -48,6 +48,9 @@ to a standalone program that can be run like any other program directly inside
- of a host operating system; to be clear, it does not require any virtualization
- support; it is just a regular program.
+ struct kunit;
++struct string_stream;
  
-+Alternatively, kunit and kunit tests can be built as modules and tests will
-+run when the test module is loaded.
-+
- KUnit is fast. Excluding build time, from invocation to completion KUnit can run
- several dozen tests in only 10 to 20 seconds; this might not sound like a big
- deal to some people, but having such fast and easy to run tests fundamentally
-diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
-index c6e6963..82f9213 100644
---- a/Documentation/dev-tools/kunit/usage.rst
-+++ b/Documentation/dev-tools/kunit/usage.rst
-@@ -539,6 +539,22 @@ Interspersed in the kernel logs you might see the following:
+ /**
+  * enum kunit_assert_type - Type of expectation/assertion.
+diff --git a/lib/kunit/assert.c b/lib/kunit/assert.c
+index 86013d4..9aca71c 100644
+--- a/lib/kunit/assert.c
++++ b/lib/kunit/assert.c
+@@ -7,6 +7,8 @@
+  */
+ #include <kunit/assert.h>
  
- Congratulations, you just ran a KUnit test on the x86 architecture!
++#include "string-stream.h"
++
+ void kunit_base_assert_format(const struct kunit_assert *assert,
+ 			      struct string_stream *stream)
+ {
+diff --git a/lib/kunit/string-stream-test.c b/lib/kunit/string-stream-test.c
+index 76cc05e..6c70dc8 100644
+--- a/lib/kunit/string-stream-test.c
++++ b/lib/kunit/string-stream-test.c
+@@ -6,10 +6,11 @@
+  * Author: Brendan Higgins <brendanhiggins@google.com>
+  */
  
-+In a similar manner, kunit and kunit tests can also be built as modules,
-+so if you wanted to run tests in this way you might add the following config
-+options to your ``.config``:
-+
-+.. code-block:: none
-+
-+	CONFIG_KUNIT=m
-+	CONFIG_KUNIT_EXAMPLE_TEST=m
-+
-+Once the kernel is built and installed, a simple
-+
-+.. code-block:: bash
-+	modprobe example-test
-+
-+...will run the tests.
-+
- Writing new tests for other architectures
- -----------------------------------------
+-#include <kunit/string-stream.h>
+ #include <kunit/test.h>
+ #include <linux/slab.h>
  
++#include "string-stream.h"
++
+ static void string_stream_test_empty_on_creation(struct kunit *test)
+ {
+ 	struct string_stream *stream = alloc_string_stream(test, GFP_KERNEL);
+diff --git a/lib/kunit/string-stream.c b/lib/kunit/string-stream.c
+index e6d17aa..3503920 100644
+--- a/lib/kunit/string-stream.c
++++ b/lib/kunit/string-stream.c
+@@ -6,11 +6,12 @@
+  * Author: Brendan Higgins <brendanhiggins@google.com>
+  */
+ 
+-#include <kunit/string-stream.h>
+ #include <kunit/test.h>
+ #include <linux/list.h>
+ #include <linux/slab.h>
+ 
++#include "string-stream.h"
++
+ struct string_stream_fragment_alloc_context {
+ 	struct kunit *test;
+ 	int len;
+diff --git a/include/kunit/string-stream.h b/lib/kunit/string-stream.h
+similarity index 100%
+rename from include/kunit/string-stream.h
+rename to lib/kunit/string-stream.h
+diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+index c83c0fa..36ebf47 100644
+--- a/lib/kunit/test.c
++++ b/lib/kunit/test.c
+@@ -11,6 +11,8 @@
+ #include <linux/kernel.h>
+ #include <linux/sched/debug.h>
+ 
++#include "string-stream.h"
++
+ static void kunit_set_failure(struct kunit *test)
+ {
+ 	WRITE_ONCE(test->success, false);
 -- 
 1.8.3.1
 
