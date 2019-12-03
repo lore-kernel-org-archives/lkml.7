@@ -2,101 +2,100 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0DEC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F7FC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D550205F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:36:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12EBF20659
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:38:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pr0qDdPn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="UaoPpRXQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbfLCKg0 (ORCPT
+        id S1726131AbfLCKiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 05:36:26 -0500
-Received: from mail-ot1-f47.google.com ([209.85.210.47]:46673 "EHLO
-        mail-ot1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfLCKgZ (ORCPT
+        Tue, 3 Dec 2019 05:38:15 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:36543 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbfLCKiO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 05:36:25 -0500
-Received: by mail-ot1-f47.google.com with SMTP id g18so2410058otj.13
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 02:36:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Q+735gGCXevswzwfpCOFjVKAkug8qCPXCSRULo1Os3Q=;
-        b=Pr0qDdPnz4S4yfoq52AnT57mX+qS0QeZyWD2gxwjt7NrHFoBtQzS2CI2ll8Kl0yO9s
-         SF30Qb5YdOFOlD229QYAJ87qrdDRb3RSTIdjEFYQpJB6T/KEyFvI9RMiY8/Fdnqiqtya
-         4JiA80hxlwCQbWTuyOxf4jvXlx55ODRZXhuJF6oYaDn28MwOPZtOjvNZcV4+D6COhWcO
-         LZ8Nj6b9Ob7AUXaq66EbIoEQKv1CSmJEdampHp1TwoRbHi90SgrIomgxjMb5gexZNOBk
-         Wj9EPWyCYnpMSYvg0XgzJsIhW1l0EpV16hZFWZb3grsZlPiuKPG5Mudp0dUexkT7v9yV
-         edlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Q+735gGCXevswzwfpCOFjVKAkug8qCPXCSRULo1Os3Q=;
-        b=iVPZGdZmEl1oStJq1iCg6+DamflnVWpxN4FxuPirUUgvvfEagIE5f3yjBHggOsHrLU
-         4tLQj3KPCeyam6ro14whdcJjaGENX7WWhxdyeFv9SkiJmaHlP9y2cvWAnYLwPhTz0F3n
-         PoshKLSzUCTRtvO9x1tCh2Q/IF3JJIbJPw1781O3dKOuf87Y6tbAOUUijt3UFT1oGqdP
-         uvvf2JYiQAoNfII2CHMtsWgh8EXgEkA9HD5Ui9QhPzulJvq0o/jDdO2N+qi/Gy3lb1Uk
-         2EzL61AecVUWz207pChHXk2E0YT0aA8+GBHc3atkGEDfD0/Y1Q992MLekQVu/4FSmdGx
-         qIOQ==
-X-Gm-Message-State: APjAAAWOPJcQpt4mAIYse8+cZlzigAqT4rg+jOeZLi1itkIXDgNjsESQ
-        Q4womxCeMWEZhDI7YX8gIFfYpVZCVH7LeUwu10Gt/YT4yeQ=
-X-Google-Smtp-Source: APXvYqzfijOqRMtegdoAhWDeSV5H4prhPRTaSzKjuBLhYFIUydZxoXIrqGaHEoIA9kXwVT0n195Hm981fL0uV1x4dGA=
-X-Received: by 2002:a9d:192f:: with SMTP id j47mr2765461ota.230.1575369384620;
- Tue, 03 Dec 2019 02:36:24 -0800 (PST)
+        Tue, 3 Dec 2019 05:38:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1575369492;
+        s=strato-dkim-0002; d=hartkopp.net;
+        h=In-Reply-To:Date:Message-ID:From:References:To:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=o9i3/yanwDyaN0+23FOIDMIC4RdoI5wBh4FGxZDhL/A=;
+        b=UaoPpRXQMqj4GhUq/jJ+ahNInZkU0YYIm4NpH0YyOJ1C+3NVwTgYEa1tOeoCy60y6c
+        Vi5+Ep2lcnGUPJyIL7tUiVS5Mo8yE1amZxc88KvMjW5Olr8uD9X5g5dLRhLZQyGaKasI
+        frKvAPNS3gsX7ZhcodNSFGN2wyBVT9cIvV36pWKefJ/IkNo+i+4CFjQyZvLGjwoIUTzO
+        iccQXRu8tJNnLhpXjJx0g3rcxvpCREpANHajUJ643beXdyr/TzQrawyz0gfVEW+YnKke
+        RV9MmGwILPDsL+RgE9D0LqDbfLmC1B7r4cvxdE7/sirK8F0npUrD480/TFpYLUd8NmbN
+        nQJQ==
+X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1q3jXdVqE32oRVrGn+26OxA=="
+X-RZG-CLASS-ID: mo00
+Received: from [10.180.55.161]
+        by smtp.strato.de (RZmta 46.0.2 SBL|AUTH)
+        with ESMTPSA id 90101evB3Ac33Ap
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Tue, 3 Dec 2019 11:38:03 +0100 (CET)
+Subject: Re: KMSAN: uninit-value in can_receive
+To:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        syzbot <syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com>,
+        davem@davemloft.net, glider@google.com, linux-can@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+References: <0000000000005c08d10597a3a05d@google.com>
+ <a5f73d92-fdf2-2590-c863-39a181dca8e1@hartkopp.net>
+ <deedd609-6f3b-8035-47e1-252ab221faa1@pengutronix.de>
+ <7934bc2b-597f-0bb3-be2d-32f3b07b4de9@hartkopp.net>
+ <7f5c4546-0c1a-86ae-581e-0203b5fca446@pengutronix.de>
+ <1f7d6ea7-152e-ff18-549c-b196d8b5e3a7@hartkopp.net>
+ <9e06266a-67f3-7352-7b87-2b9144c7c9a9@gmail.com>
+ <3142c032-e46a-531c-d1b8-d532e5b403a6@hartkopp.net>
+ <92c04159-b83a-3e33-91da-25a727a692d0@gmail.com>
+ <c1f80bac-bb75-e671-ba32-05cfae86569c@hartkopp.net>
+ <0f395f1e-b7d4-6254-2a0c-54029b4dc38f@pengutronix.de>
+From:   Oliver Hartkopp <socketcan@hartkopp.net>
+Message-ID: <82b02a62-51ff-4568-c33d-90223a2aed86@hartkopp.net>
+Date:   Tue, 3 Dec 2019 11:37:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <MN2PR02MB5727000CBE70BAF31F60FEE4AF420@MN2PR02MB5727.namprd02.prod.outlook.com>
- <20191203084134.tgzir4mtekpm5xbs@pengutronix.de> <MN2PR02MB57272E3343CA62ADBA0F97E5AF420@MN2PR02MB5727.namprd02.prod.outlook.com>
- <614898763.105471.1575364223372.JavaMail.zimbra@nod.at>
-In-Reply-To: <614898763.105471.1575364223372.JavaMail.zimbra@nod.at>
-From:   naga suresh kumar <nagasureshkumarrelli@gmail.com>
-Date:   Tue, 3 Dec 2019 16:06:12 +0530
-Message-ID: <CALgLF9KPAk_AsecnTMmbdF5qbgqXe7HNOrNariNVbhSr6FVN2g@mail.gmail.com>
-Subject: Re: ubifs mount failure
-To:     Richard Weinberger <richard@nod.at>
-Cc:     Naga Sureshkumar Relli <nagasure@xilinx.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Michal Simek <michals@xilinx.com>,
-        siva durga paladugu <siva.durga.paladugu@xililnx.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <0f395f1e-b7d4-6254-2a0c-54029b4dc38f@pengutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Richard,
+No. I have analyzed several solutions which turn out to be either unsafe 
+in processing or need some changes in af_packet :-(
 
-On Tue, Dec 3, 2019 at 2:40 PM Richard Weinberger <richard@nod.at> wrote:
->
-> ----- Urspr=C3=BCngliche Mail -----
-> > Von: "Naga Sureshkumar Relli" <nagasure@xilinx.com>
-> > https://elixir.bootlin.com/linux/v5.4/source/fs/ubifs/sb.c#L164
-> > we are trying to allocate 4325376 (~4MB)
->
-> 4MiB? Is ->min_io_size that large?
-if you see https://elixir.bootlin.com/linux/latest/source/fs/ubifs/sb.c#L16=
-4
-The size is actually ALIGN(tmp, c->min_io_size).
-Here tmp is of 4325376 Bytes and min_io_size is 16384 Bytes
+I'm currently very busy @work but will come up with a discussion until 
+end of this week.
 
-Thanks,
-Naga Sureshkumar Relli
->
-> Thanks,
-> //richard
->
-> ______________________________________________________
-> Linux MTD discussion mailing list
-> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+There is no big pressure as the problem is more unpleasant than causing 
+a real problem right now.
+
+Best regards,
+Oliver
+
+On 03/12/2019 11.09, Marc Kleine-Budde wrote:
+> On 11/20/19 9:10 PM, Oliver Hartkopp wrote:
+> [...]
+>> So the KMSAN detection was right at the end :-(
+>>
+>> I'll take a closer look to enable PF_PACKET to send CAN frames again
+>> which will fix up the entire  problem.
+> 
+> I'm going to send a pull request today. Do you already have a fix for this?
+> 
+> regards,
+> Marc
+> 
