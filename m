@@ -2,232 +2,226 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31473C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AE1C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1B3E2073F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:48:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6370720803
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:48:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VsFJBHH0"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="bzQVtQsv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfLCNsp (ORCPT
+        id S1726763AbfLCNss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 08:48:45 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20326 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726330AbfLCNsn (ORCPT
+        Tue, 3 Dec 2019 08:48:48 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40535 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726684AbfLCNsq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 08:48:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575380921;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2426TUXH46Dvbw7yzD1hSMTjB99OXECttwgkoFd/DRo=;
-        b=VsFJBHH0VVa/qyNMUtytPY/+epTaxLEVw5/wspYCVVau1GJrGZzTWFJcIaeYWlnht5BVAi
-        ZfESldp1BCcyMDaskzDw/ag3oksqrR1ttVmF7v5SIiEXsO2WZKj279mxF6o0fxXAmSOS/D
-        N/6rOPDJF/st0OP+ATNeaDn8xhOuOJw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-176-dR6Bu5Q8O12bf7__N6_-gQ-1; Tue, 03 Dec 2019 08:48:38 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 55C6E800D41;
-        Tue,  3 Dec 2019 13:48:37 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A51715C28F;
-        Tue,  3 Dec 2019 13:48:36 +0000 (UTC)
-Date:   Tue, 3 Dec 2019 08:48:36 -0500
-From:   Brian Foster <bfoster@redhat.com>
-To:     syzbot <syzbot+c732f8644185de340492@syzkaller.appspotmail.com>
-Cc:     darrick.wong@oracle.com, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: KASAN: use-after-free Read in xlog_alloc_log (2)
-Message-ID: <20191203134836.GC18418@bfoster>
-References: <00000000000087c51905988b297b@google.com>
+        Tue, 3 Dec 2019 08:48:46 -0500
+Received: by mail-pg1-f194.google.com with SMTP id k25so1705754pgt.7
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 05:48:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=cZ4/teiuFdafb5RuME47dUY85SO685foNncJ+cZhSOo=;
+        b=bzQVtQsvU9O8dXv0M3xGbCqaL/q9CJlsqOgF/n0/hHdtOVxO72jDaIEkuyUHzEV57O
+         qM3Bj9ZKAxHvUv3WI2J6Y5gAxkCp6TuLc2HzernLE1JTTaenMGcBkRIwMB42wg6gjvqY
+         Utw7kPxSbcEWTXM9ZCgJpIMtVH6IzQLCePT74=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=cZ4/teiuFdafb5RuME47dUY85SO685foNncJ+cZhSOo=;
+        b=rUbM9LcoeOsY4LuHXrnF6JbDflhzi/oWfVip8josivWDBX3lcvli+ei0n0y7LDgIAb
+         k5kTKRbIzmC7ZYLu2WdhxuUVocBHXFtRj3i++/XQ490+VFrkNbn8rlKAn86Cgl8xS4BJ
+         AsDZb1hNYPFV+lztVirqcEH+u0MnMi6zMNK655eRXkD9Ooaio3h+RW4aML/vSASTk1Pg
+         YYzzWTGyzjURbnfdkXJesl3BUFE0JTp/HNauoZ2jjB8A1xfAzrQcsh9GQKdoqgSwzrM0
+         0pcFP0B5P4Za5xgGHfx2E6qXC62OHRz785dEud0gFTi2QYfC6yLucnFsrbTe+CXNb5ph
+         Dn9w==
+X-Gm-Message-State: APjAAAW73YNNwO8e6FdglxcWxvY5uU1cvSRitwruszSDR7HexUiir04f
+        aSZ03p2ktL2YdgLHWtTGl63XGA==
+X-Google-Smtp-Source: APXvYqzOhrp2vBfBWLr6WtTENMHpXtD/Gx6XDn+ryyG4N1W0Xbbc1zWvgIC4t9s/eR2eo7kqDboxPw==
+X-Received: by 2002:a63:c652:: with SMTP id x18mr5478439pgg.211.1575380925537;
+        Tue, 03 Dec 2019 05:48:45 -0800 (PST)
+Received: from localhost.localdomain ([115.97.190.29])
+        by smtp.gmail.com with ESMTPSA id y144sm4397892pfb.188.2019.12.03.05.48.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2019 05:48:45 -0800 (PST)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     michael@amarulasolutions.com, Icenowy Zheng <icenowy@aosc.io>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v12 3/7] drm/sun4i: dsi: Add has_mod_clk quirk
+Date:   Tue,  3 Dec 2019 19:18:12 +0530
+Message-Id: <20191203134816.5319-4-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
+In-Reply-To: <20191203134816.5319-1-jagan@amarulasolutions.com>
+References: <20191203134816.5319-1-jagan@amarulasolutions.com>
 MIME-Version: 1.0
-In-Reply-To: <00000000000087c51905988b297b@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: dR6Bu5Q8O12bf7__N6_-gQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 11:19:08PM -0800, syzbot wrote:
-> Hello,
->=20
-> syzbot found the following crash on:
->=20
-> HEAD commit:    81b6b964 Merge branch 'master' of git://git.kernel.org/pu=
-b..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D13b27696e0000=
-0
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D773597fe8d7cb=
-41a
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3Dc732f8644185de3=
-40492
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->=20
-> Unfortunately, I don't have any reproducer for this crash yet.
->=20
+As per the user manual, look like mod clock is not mandatory
+for all Allwinner MIPI DSI controllers, it is connected to
+CLK_DSI_SCLK for A31 and not available in A64.
 
-It looks like the out_free_iclog: error path in xlog_alloc_log() doesn't
-handle the case of a fully initialized iclog list. It uses an iclog !=3D
-NULL check to terminate the freeing loop, and that might never occur if
-we failed after the linked list was set up. I've confirmed with a simple
-error injection test and will send a patch..
+So add has_mod_clk quirk and process the mod clk accordingly.
 
-Brian
+Tested-by: Merlijn Wajer <merlijn@wizzup.org>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+Changes for v12:
+- none
 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit=
-:
-> Reported-by: syzbot+c732f8644185de340492@syzkaller.appspotmail.com
->=20
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> BUG: KASAN: use-after-free in xlog_alloc_log+0x1398/0x14b0
-> fs/xfs/xfs_log.c:1495
-> Read of size 8 at addr ffff888068139890 by task syz-executor.3/32544
->=20
-> CPU: 0 PID: 32544 Comm: syz-executor.3 Not tainted 5.4.0-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x197/0x210 lib/dump_stack.c:118
->  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:=
-374
->  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
->  kasan_report+0x12/0x20 mm/kasan/common.c:634
->  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
->  xlog_alloc_log+0x1398/0x14b0 fs/xfs/xfs_log.c:1495
->  xfs_log_mount+0xdc/0x780 fs/xfs/xfs_log.c:599
->  xfs_mountfs+0xdb9/0x1be0 fs/xfs/xfs_mount.c:811
->  xfs_fs_fill_super+0xd24/0x1750 fs/xfs/xfs_super.c:1732
->  mount_bdev+0x304/0x3c0 fs/super.c:1415
->  xfs_fs_mount+0x35/0x40 fs/xfs/xfs_super.c:1806
->  legacy_get_tree+0x108/0x220 fs/fs_context.c:647
->  vfs_get_tree+0x8e/0x300 fs/super.c:1545
->  do_new_mount fs/namespace.c:2822 [inline]
->  do_mount+0x135a/0x1b50 fs/namespace.c:3142
->  ksys_mount+0xdb/0x150 fs/namespace.c:3351
->  __do_sys_mount fs/namespace.c:3365 [inline]
->  __se_sys_mount fs/namespace.c:3362 [inline]
->  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3362
->  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x45d0ca
-> Code: b8 a6 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 4d 8c fb ff c3 66 2e 0=
-f
-> 1f 84 00 00 00 00 00 66 90 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff=
- ff
-> 0f 83 2a 8c fb ff c3 66 0f 1f 84 00 00 00 00 00
-> RSP: 002b:00007f525b430a88 EFLAGS: 00000206 ORIG_RAX: 00000000000000a5
-> RAX: ffffffffffffffda RBX: 00007f525b430b40 RCX: 000000000045d0ca
-> RDX: 00007f525b430ae0 RSI: 0000000020000100 RDI: 00007f525b430b00
-> RBP: 0000000000000001 R08: 00007f525b430b40 R09: 00007f525b430ae0
-> R10: 0000000000000000 R11: 0000000000000206 R12: 0000000000000004
-> R13: 00000000004ca258 R14: 00000000004e2870 R15: 00000000ffffffff
->=20
-> Allocated by task 32544:
->  save_stack+0x23/0x90 mm/kasan/common.c:69
->  set_track mm/kasan/common.c:77 [inline]
->  __kasan_kmalloc mm/kasan/common.c:510 [inline]
->  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
->  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
->  __do_kmalloc mm/slab.c:3655 [inline]
->  __kmalloc+0x163/0x770 mm/slab.c:3664
->  kmalloc include/linux/slab.h:561 [inline]
->  kmem_alloc+0x15b/0x4d0 fs/xfs/kmem.c:21
->  kmem_zalloc fs/xfs/kmem.h:68 [inline]
->  xlog_alloc_log+0xcce/0x14b0 fs/xfs/xfs_log.c:1437
->  xfs_log_mount+0xdc/0x780 fs/xfs/xfs_log.c:599
->  xfs_mountfs+0xdb9/0x1be0 fs/xfs/xfs_mount.c:811
->  xfs_fs_fill_super+0xd24/0x1750 fs/xfs/xfs_super.c:1732
->  mount_bdev+0x304/0x3c0 fs/super.c:1415
->  xfs_fs_mount+0x35/0x40 fs/xfs/xfs_super.c:1806
->  legacy_get_tree+0x108/0x220 fs/fs_context.c:647
->  vfs_get_tree+0x8e/0x300 fs/super.c:1545
->  do_new_mount fs/namespace.c:2822 [inline]
->  do_mount+0x135a/0x1b50 fs/namespace.c:3142
->  ksys_mount+0xdb/0x150 fs/namespace.c:3351
->  __do_sys_mount fs/namespace.c:3365 [inline]
->  __se_sys_mount fs/namespace.c:3362 [inline]
->  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3362
->  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
->=20
-> Freed by task 32544:
->  save_stack+0x23/0x90 mm/kasan/common.c:69
->  set_track mm/kasan/common.c:77 [inline]
->  kasan_set_free_info mm/kasan/common.c:332 [inline]
->  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:471
->  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
->  __cache_free mm/slab.c:3425 [inline]
->  kfree+0x10a/0x2c0 mm/slab.c:3756
->  kvfree+0x61/0x70 mm/util.c:593
->  kmem_free fs/xfs/kmem.h:61 [inline]
->  xlog_alloc_log+0xeb5/0x14b0 fs/xfs/xfs_log.c:1497
->  xfs_log_mount+0xdc/0x780 fs/xfs/xfs_log.c:599
->  xfs_mountfs+0xdb9/0x1be0 fs/xfs/xfs_mount.c:811
->  xfs_fs_fill_super+0xd24/0x1750 fs/xfs/xfs_super.c:1732
->  mount_bdev+0x304/0x3c0 fs/super.c:1415
->  xfs_fs_mount+0x35/0x40 fs/xfs/xfs_super.c:1806
->  legacy_get_tree+0x108/0x220 fs/fs_context.c:647
->  vfs_get_tree+0x8e/0x300 fs/super.c:1545
->  do_new_mount fs/namespace.c:2822 [inline]
->  do_mount+0x135a/0x1b50 fs/namespace.c:3142
->  ksys_mount+0xdb/0x150 fs/namespace.c:3351
->  __do_sys_mount fs/namespace.c:3365 [inline]
->  __se_sys_mount fs/namespace.c:3362 [inline]
->  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3362
->  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
->=20
-> The buggy address belongs to the object at ffff888068139800
->  which belongs to the cache kmalloc-1k of size 1024
-> The buggy address is located 144 bytes inside of
->  1024-byte region [ffff888068139800, ffff888068139c00)
-> The buggy address belongs to the page:
-> page:ffffea0001a04e40 refcount:1 mapcount:0 mapping:ffff8880aa400c40
-> index:0x0
-> raw: 00fffe0000000200 ffffea0002728148 ffffea00015604c8 ffff8880aa400c40
-> raw: 0000000000000000 ffff888068139000 0000000100000002 0000000000000000
-> page dumped because: kasan: bad access detected
->=20
-> Memory state around the buggy address:
->  ffff888068139780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->  ffff888068139800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> > ffff888068139880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->                          ^
->  ffff888068139900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->  ffff888068139980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
->=20
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->=20
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->=20
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 38 ++++++++++++++++++--------
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h |  5 ++++
+ 2 files changed, 32 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+index c958ca9bae63..8c4c541224dd 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
++++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+@@ -11,6 +11,7 @@
+ #include <linux/crc-ccitt.h>
+ #include <linux/module.h>
+ #include <linux/of_address.h>
++#include <linux/of_device.h>
+ #include <linux/phy/phy-mipi-dphy.h>
+ #include <linux/phy/phy.h>
+ #include <linux/platform_device.h>
+@@ -1093,6 +1094,7 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+ 	dsi->dev = dev;
+ 	dsi->host.ops = &sun6i_dsi_host_ops;
+ 	dsi->host.dev = dev;
++	dsi->variant = of_device_get_match_data(dev);
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	base = devm_ioremap_resource(dev, res);
+@@ -1120,17 +1122,20 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+ 		return PTR_ERR(dsi->reset);
+ 	}
+ 
+-	dsi->mod_clk = devm_clk_get(dev, "mod");
+-	if (IS_ERR(dsi->mod_clk)) {
+-		dev_err(dev, "Couldn't get the DSI mod clock\n");
+-		return PTR_ERR(dsi->mod_clk);
++	if (dsi->variant->has_mod_clk) {
++		dsi->mod_clk = devm_clk_get(dev, "mod");
++		if (IS_ERR(dsi->mod_clk)) {
++			dev_err(dev, "Couldn't get the DSI mod clock\n");
++			return PTR_ERR(dsi->mod_clk);
++		}
+ 	}
+ 
+ 	/*
+ 	 * In order to operate properly, that clock seems to be always
+ 	 * set to 297MHz.
+ 	 */
+-	clk_set_rate_exclusive(dsi->mod_clk, 297000000);
++	if (dsi->variant->has_mod_clk)
++		clk_set_rate_exclusive(dsi->mod_clk, 297000000);
+ 
+ 	dsi->dphy = devm_phy_get(dev, "dphy");
+ 	if (IS_ERR(dsi->dphy)) {
+@@ -1160,7 +1165,8 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+ err_pm_disable:
+ 	pm_runtime_disable(dev);
+ err_unprotect_clk:
+-	clk_rate_exclusive_put(dsi->mod_clk);
++	if (dsi->variant->has_mod_clk)
++		clk_rate_exclusive_put(dsi->mod_clk);
+ 	return ret;
+ }
+ 
+@@ -1172,7 +1178,8 @@ static int sun6i_dsi_remove(struct platform_device *pdev)
+ 	component_del(&pdev->dev, &sun6i_dsi_ops);
+ 	mipi_dsi_host_unregister(&dsi->host);
+ 	pm_runtime_disable(dev);
+-	clk_rate_exclusive_put(dsi->mod_clk);
++	if (dsi->variant->has_mod_clk)
++		clk_rate_exclusive_put(dsi->mod_clk);
+ 
+ 	return 0;
+ }
+@@ -1189,7 +1196,8 @@ static int __maybe_unused sun6i_dsi_runtime_resume(struct device *dev)
+ 	}
+ 
+ 	reset_control_deassert(dsi->reset);
+-	clk_prepare_enable(dsi->mod_clk);
++	if (dsi->variant->has_mod_clk)
++		clk_prepare_enable(dsi->mod_clk);
+ 
+ 	/*
+ 	 * Enable the DSI block.
+@@ -1217,7 +1225,8 @@ static int __maybe_unused sun6i_dsi_runtime_suspend(struct device *dev)
+ {
+ 	struct sun6i_dsi *dsi = dev_get_drvdata(dev);
+ 
+-	clk_disable_unprepare(dsi->mod_clk);
++	if (dsi->variant->has_mod_clk)
++		clk_disable_unprepare(dsi->mod_clk);
+ 	reset_control_assert(dsi->reset);
+ 	regulator_disable(dsi->regulator);
+ 
+@@ -1230,9 +1239,16 @@ static const struct dev_pm_ops sun6i_dsi_pm_ops = {
+ 			   NULL)
+ };
+ 
++static const struct sun6i_dsi_variant sun6i_a31_mipi_dsi = {
++	.has_mod_clk = true,
++};
++
+ static const struct of_device_id sun6i_dsi_of_table[] = {
+-	{ .compatible = "allwinner,sun6i-a31-mipi-dsi" },
+-	{ }
++	{
++		.compatible = "allwinner,sun6i-a31-mipi-dsi",
++		.data = &sun6i_a31_mipi_dsi,
++	},
++	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, sun6i_dsi_of_table);
+ 
+diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+index 3f4846f581ef..d791c9f6fccf 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
++++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+@@ -15,6 +15,10 @@
+ 
+ #define SUN6I_DSI_TCON_DIV	4
+ 
++struct sun6i_dsi_variant {
++	bool			has_mod_clk;
++};
++
+ struct sun6i_dsi {
+ 	struct drm_connector	connector;
+ 	struct drm_encoder	encoder;
+@@ -31,6 +35,7 @@ struct sun6i_dsi {
+ 	struct sun4i_drv	*drv;
+ 	struct mipi_dsi_device	*device;
+ 	struct drm_panel	*panel;
++	const struct sun6i_dsi_variant	*variant;
+ };
+ 
+ static inline struct sun6i_dsi *host_to_sun6i_dsi(struct mipi_dsi_host *host)
+-- 
+2.18.0.321.gffc6fa0e3
 
