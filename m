@@ -7,239 +7,127 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE87C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D4DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA97D2154A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF8742073C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:43:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JqOTal9D"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="icMa4rx1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfLCPnD (ORCPT
+        id S1726888AbfLCPn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 10:43:03 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55432 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726105AbfLCPnC (ORCPT
+        Tue, 3 Dec 2019 10:43:27 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34934 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfLCPn1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 10:43:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575387780;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mwIie4f/cRbrQG5a7iYXir2IBzgVvgbaZEb5jJx1d6Y=;
-        b=JqOTal9DhtpzeP94VdzmsNLDCrgshRt22fcIPgF4s/QERcp7a8oXwAmlPCy1vLEwkqu3OV
-        WaIT/lqQYY7+UoA46iECD+9AI5qxLJWdWq1Yr1SQwZOUcag9IRLCqPoMNIWEWCbjzvHAed
-        Nx1jxy3ZUX1zzHQKAYUohsHN1LdeQzY=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-298-WUSmC93JOA-wVEQRL5aGvA-1; Tue, 03 Dec 2019 10:43:00 -0500
-Received: by mail-qk1-f200.google.com with SMTP id d26so2459573qkk.8
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 07:42:59 -0800 (PST)
+        Tue, 3 Dec 2019 10:43:27 -0500
+Received: by mail-pg1-f195.google.com with SMTP id l24so1850058pgk.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 07:43:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=from:content-transfer-encoding:mime-version:subject:message-id:date
+         :cc:to;
+        bh=b4QI//StRs4CfOqNK9eqzKkxRA2qL4/GWMuaqRRnuEU=;
+        b=icMa4rx1ZMtE5mnOvVjmI5EmCAMki8keD1M3g2P0oLuo3vA1I4BJW9vCZHa3KzebQg
+         gX8+tYGFryfM9B+JfdjFEuj/FnbP8ZaCdaIDSiP3gkT1m0rpfhYO5EtPm7NjSH7S92Q7
+         Ckqx4GyGRmfWn/wQqCRffS+ElnSoMBGBGth1jD5cGB+NLc6HwogzaEQ5JaZaQ+09fyJ5
+         APB4eEpHr2arpYyM55WyB3NqajX3n1/4dS3wDV6IYKjWg0IFVruXrBB9sudTsjGZzqPC
+         sKm0dZxtL526oFKECCvin+Dw51/efc/ZJh7TmRSFhL7ClWy/kOzTqCN7bOU+hrHOP387
+         9vpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=U0dQFMzS2rXCEeOJP1XOszx/oJ4UEFVvA3Pxp6Rvtd0=;
-        b=Ag5yokrstWDCf7q3SjghfvnHuELdtfdB6OyTcH1F+EsqJWNgjvz42QxsICmI3a6O2D
-         xIUsQdwe3a7oc2zM+S/TF5/Oa3jyJ/eXCIgN243DBeaEbl3gDzOyAu+im/eaAPYvTIsV
-         arj6Ms94CFxu3VHjCo34TKgd2DIxnQarEERy9874sM7ctwMwSDAj57y0nZq2p69p1DOI
-         fTHpKf4X82bbz+1P0W0hXc7TrpxM+Pp1CPjlFMWfXnW2MMWQNu+wXRWvDIuYKn7ZrQBF
-         EpbKgRRbAobnT/XXKphs1s7f1UKMmpG0FfLrpn383CPl5DljBjtg6/h8UJw1GrEbVqXv
-         AEeg==
-X-Gm-Message-State: APjAAAX3F7M8cYKIHGIZFDfl+OgOesaqigzv4G64nMBDI7vKdSqxJzrp
-        JlF8qbickNzk3LoPLN0ZuaM9AQOl6B0sbNq0lo1cAGigsFmHlBjtFaKXD4Lnvsm9RkFwgV54xbs
-        DqPOIUFnxkV6THxpbxzzhM0Hd
-X-Received: by 2002:ac8:4645:: with SMTP id f5mr5640953qto.38.1575387779010;
-        Tue, 03 Dec 2019 07:42:59 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxp9lC/Jp/2dE/7mPrFm8Zdh/X3yaI1ji1wcvv4uxOgmr6DGkywI8tk4Ps6zBeos0vlMFEIrQ==
-X-Received: by 2002:ac8:4645:: with SMTP id f5mr5640925qto.38.1575387778733;
-        Tue, 03 Dec 2019 07:42:58 -0800 (PST)
-Received: from redhat.com (bzq-79-181-48-215.red.bezeqint.net. [79.181.48.215])
-        by smtp.gmail.com with ESMTPSA id m29sm2013564qtf.1.2019.12.03.07.42.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 07:42:57 -0800 (PST)
-Date:   Tue, 3 Dec 2019 10:42:52 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Amit Shah <amit@infradead.org>
-Cc:     Laurent Vivier <lvivier@redhat.com>, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org,
-        Amit Shah <amit@kernel.org>
-Subject: Re: [PATCH v3] virtio_console: allocate inbufs in add_port() only if
- it is needed
-Message-ID: <20191203103840-mutt-send-email-mst@kernel.org>
-References: <20191114122548.24364-1-lvivier@redhat.com>
- <ae3451423c18f2e408245d745d1f28e311a2845c.camel@infradead.org>
-MIME-Version: 1.0
-In-Reply-To: <ae3451423c18f2e408245d745d1f28e311a2845c.camel@infradead.org>
-X-MC-Unique: WUSmC93JOA-wVEQRL5aGvA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:message-id:date:cc:to;
+        bh=b4QI//StRs4CfOqNK9eqzKkxRA2qL4/GWMuaqRRnuEU=;
+        b=aneqSfT9/ZZ5F4hajF9hBkci0EgEXxfQ73mzH7+PvulwBQormeiizj+KeKnfnsAgjm
+         V6Dw0L/t5lQHC2L7zf6jNKHnAgIOLA081fy1k8xp6dZnUdTzjfNl6WxqiieRmiZzEUt+
+         SW7iU1y7EpHkKLd6Jo1CsNxPjcgFfljn8Y7AZ9wjMvl5EYinAT3eOp0/GhuXdVrK6Ejf
+         9SkRqTVWpsidf/Iyg+b190mBiOBGC5jUOftb/ZjXUlfurHitZfg0a4+KjdvvwAUhAFjl
+         JSSDxlDams7eYPiol/SREdbEYxx+c/zd3qagXuyu6WP7lwzmMageA+geH3rs/pmGt4Ww
+         gwng==
+X-Gm-Message-State: APjAAAVaxGmKzF9Vs6q2BxoCvOJV2SoRoXERUXPj3fE4NAATgDjIaxEM
+        cglPtVgMXdSCRKA5LLWiRd7UbQ==
+X-Google-Smtp-Source: APXvYqy5sg3uYP2PMY30/llWMY51RYB4brhQFWOKQRquMLOrHznUnkMZQ43OVqK+IyKd3Jqdc+RmFw==
+X-Received: by 2002:a63:1624:: with SMTP id w36mr5602893pgl.404.1575387806408;
+        Tue, 03 Dec 2019 07:43:26 -0800 (PST)
+Received: from [10.83.42.232] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id e11sm3953969pgh.54.2019.12.03.07.43.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Dec 2019 07:43:25 -0800 (PST)
+From:   James Sewart <jamessewart@arista.com>
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: [PATCH v6 1/3] PCI: Fix off by one in dma_alias_mask allocation size
+Message-Id: <910070E3-7964-4549-B77F-EC7FC6144503@arista.com>
+Date:   Tue, 3 Dec 2019 15:43:22 +0000
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <dima@arista.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+To:     linux-pci@vger.kernel.org
+X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 03:46:50PM +0100, Amit Shah wrote:
-> On Thu, 2019-11-14 at 13:25 +0100, Laurent Vivier wrote:
-> > When we hot unplug a virtserialport and then try to hot plug again,
-> > it fails:
-> >=20
-> > (qemu) chardev-add socket,id=3Dserial0,path=3D/tmp/serial0,server,nowai=
-t
-> > (qemu) device_add virtserialport,bus=3Dvirtio-serial0.0,nr=3D2,\
-> >                   chardev=3Dserial0,id=3Dserial0,name=3Dserial0
-> > (qemu) device_del serial0
-> > (qemu) device_add virtserialport,bus=3Dvirtio-serial0.0,nr=3D2,\
-> >                   chardev=3Dserial0,id=3Dserial0,name=3Dserial0
-> > kernel error:
-> >   virtio-ports vport2p2: Error allocating inbufs
-> > qemu error:
-> >   virtio-serial-bus: Guest failure in adding port 2 for device \
-> >                      virtio-serial0.0
-> >=20
-> > This happens because buffers for the in_vq are allocated when the
-> > port is
-> > added but are not released when the port is unplugged.
-> >=20
-> > They are only released when virtconsole is removed (see a7a69ec0d8e4)
-> >=20
-> > To avoid the problem and to be symmetric, we could allocate all the
-> > buffers
-> > in init_vqs() as they are released in remove_vqs(), but it sounds
-> > like
-> > a waste of memory.
-> >=20
-> > Rather than that, this patch changes add_port() logic to ignore
-> > ENOSPC
-> > error in fill_queue(), which means queue has already been filled.
-> >=20
-> > Fixes: a7a69ec0d8e4 ("virtio_console: free buffers after reset")
-> > Cc: mst@redhat.com
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Laurent Vivier <lvivier@redhat.com>
->=20
-> Reviewed-by: Amit Shah <amit@kernel.org>
->=20
-> Thanks!
+The number of possible devfns is 256, add def and correct uses.
 
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: James Sewart <jamessewart@arista.com>
+---
+ drivers/pci/pci.c    | 2 +-
+ drivers/pci/search.c | 2 +-
+ include/linux/pci.h  | 2 ++
+ 3 files changed, 4 insertions(+), 2 deletions(-)
 
-Thanks, however this has already been merged by Linus.
-I can't add the tag retroactively, sorry about that.
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index a97e2571a527..d3c83248f3ce 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5876,7 +5876,7 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
+ void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
+ {
+ 	if (!dev->dma_alias_mask)
+-		dev->dma_alias_mask = bitmap_zalloc(U8_MAX, GFP_KERNEL);
++		dev->dma_alias_mask = bitmap_zalloc(MAX_NR_DEVFNS, GFP_KERNEL);
+ 	if (!dev->dma_alias_mask) {
+ 		pci_warn(dev, "Unable to allocate DMA alias mask\n");
+ 		return;
+diff --git a/drivers/pci/search.c b/drivers/pci/search.c
+index bade14002fd8..9e4dfae47252 100644
+--- a/drivers/pci/search.c
++++ b/drivers/pci/search.c
+@@ -43,7 +43,7 @@ int pci_for_each_dma_alias(struct pci_dev *pdev,
+ 	if (unlikely(pdev->dma_alias_mask)) {
+ 		u8 devfn;
+ 
+-		for_each_set_bit(devfn, pdev->dma_alias_mask, U8_MAX) {
++		for_each_set_bit(devfn, pdev->dma_alias_mask, MAX_NR_DEVFNS) {
+ 			ret = fn(pdev, PCI_DEVID(pdev->bus->number, devfn),
+ 				 data);
+ 			if (ret)
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 1a6cf19eac2d..6481da29d667 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -57,6 +57,8 @@
+ #define PCI_DEVID(bus, devfn)	((((u16)(bus)) << 8) | (devfn))
+ /* return bus from PCI devid = ((u16)bus_number) << 8) | devfn */
+ #define PCI_BUS_NUM(x) (((x) >> 8) & 0xff)
++/* Number of possible devfns. devfns can be from 0.0 to 1f.7 inclusive */
++#define MAX_NR_DEVFNS 256
+ 
+ /* pci_slot represents a physical slot */
+ struct pci_slot {
+-- 
+2.24.0
 
-For bugfix patches like that, I think we can reasonably
-target a turn around of a couple of days, these
-shouldn't really need to wait weeks for review.
-
-> > ---
-> >=20
-> > Notes:
-> >     v3: add a comment about ENOSPC error
-> >     v2: making fill_queue return int and testing return code for
-> > -ENOSPC
-> >=20
-> >  drivers/char/virtio_console.c | 28 +++++++++++++---------------
-> >  1 file changed, 13 insertions(+), 15 deletions(-)
-> >=20
-> > diff --git a/drivers/char/virtio_console.c
-> > b/drivers/char/virtio_console.c
-> > index 7270e7b69262..3259426f01dc 100644
-> > --- a/drivers/char/virtio_console.c
-> > +++ b/drivers/char/virtio_console.c
-> > @@ -1325,24 +1325,24 @@ static void set_console_size(struct port
-> > *port, u16 rows, u16 cols)
-> >  =09port->cons.ws.ws_col =3D cols;
-> >  }
-> > =20
-> > -static unsigned int fill_queue(struct virtqueue *vq, spinlock_t
-> > *lock)
-> > +static int fill_queue(struct virtqueue *vq, spinlock_t *lock)
-> >  {
-> >  =09struct port_buffer *buf;
-> > -=09unsigned int nr_added_bufs;
-> > +=09int nr_added_bufs;
-> >  =09int ret;
-> > =20
-> >  =09nr_added_bufs =3D 0;
-> >  =09do {
-> >  =09=09buf =3D alloc_buf(vq->vdev, PAGE_SIZE, 0);
-> >  =09=09if (!buf)
-> > -=09=09=09break;
-> > +=09=09=09return -ENOMEM;
-> > =20
-> >  =09=09spin_lock_irq(lock);
-> >  =09=09ret =3D add_inbuf(vq, buf);
-> >  =09=09if (ret < 0) {
-> >  =09=09=09spin_unlock_irq(lock);
-> >  =09=09=09free_buf(buf, true);
-> > -=09=09=09break;
-> > +=09=09=09return ret;
-> >  =09=09}
-> >  =09=09nr_added_bufs++;
-> >  =09=09spin_unlock_irq(lock);
-> > @@ -1362,7 +1362,6 @@ static int add_port(struct ports_device
-> > *portdev, u32 id)
-> >  =09char debugfs_name[16];
-> >  =09struct port *port;
-> >  =09dev_t devt;
-> > -=09unsigned int nr_added_bufs;
-> >  =09int err;
-> > =20
-> >  =09port =3D kmalloc(sizeof(*port), GFP_KERNEL);
-> > @@ -1421,11 +1420,13 @@ static int add_port(struct ports_device
-> > *portdev, u32 id)
-> >  =09spin_lock_init(&port->outvq_lock);
-> >  =09init_waitqueue_head(&port->waitqueue);
-> > =20
-> > -=09/* Fill the in_vq with buffers so the host can send us data. */
-> > -=09nr_added_bufs =3D fill_queue(port->in_vq, &port->inbuf_lock);
-> > -=09if (!nr_added_bufs) {
-> > +=09/* We can safely ignore ENOSPC because it means
-> > +=09 * the queue already has buffers. Buffers are removed
-> > +=09 * only by virtcons_remove(), not by unplug_port()
-> > +=09 */
-> > +=09err =3D fill_queue(port->in_vq, &port->inbuf_lock);
-> > +=09if (err < 0 && err !=3D -ENOSPC) {
-> >  =09=09dev_err(port->dev, "Error allocating inbufs\n");
-> > -=09=09err =3D -ENOMEM;
-> >  =09=09goto free_device;
-> >  =09}
-> > =20
-> > @@ -2059,14 +2060,11 @@ static int virtcons_probe(struct
-> > virtio_device *vdev)
-> >  =09INIT_WORK(&portdev->control_work, &control_work_handler);
-> > =20
-> >  =09if (multiport) {
-> > -=09=09unsigned int nr_added_bufs;
-> > -
-> >  =09=09spin_lock_init(&portdev->c_ivq_lock);
-> >  =09=09spin_lock_init(&portdev->c_ovq_lock);
-> > =20
-> > -=09=09nr_added_bufs =3D fill_queue(portdev->c_ivq,
-> > -=09=09=09=09=09   &portdev->c_ivq_lock);
-> > -=09=09if (!nr_added_bufs) {
-> > +=09=09err =3D fill_queue(portdev->c_ivq, &portdev->c_ivq_lock);
-> > +=09=09if (err < 0) {
-> >  =09=09=09dev_err(&vdev->dev,
-> >  =09=09=09=09"Error allocating buffers for control
-> > queue\n");
-> >  =09=09=09/*
-> > @@ -2077,7 +2075,7 @@ static int virtcons_probe(struct virtio_device
-> > *vdev)
-> >  =09=09=09=09=09   VIRTIO_CONSOLE_DEVICE_READY,
-> > 0);
-> >  =09=09=09/* Device was functional: we need full cleanup.
-> > */
-> >  =09=09=09virtcons_remove(vdev);
-> > -=09=09=09return -ENOMEM;
-> > +=09=09=09return err;
-> >  =09=09}
-> >  =09} else {
-> >  =09=09/*
 
