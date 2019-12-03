@@ -2,199 +2,166 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F42AC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5C2C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F03A12054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:29:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4AB320684
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:29:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EMOJSUz9"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="G1OOjciX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726098AbfLCK3B (ORCPT
+        id S1726182AbfLCK33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 05:29:01 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:56908 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfLCK26 (ORCPT
+        Tue, 3 Dec 2019 05:29:29 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:32582 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725848AbfLCK32 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 05:28:58 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB3ASdQU125781;
-        Tue, 3 Dec 2019 04:28:39 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575368919;
-        bh=jo8iHnrEm+gjBKUyjYXLNWcDF2FN0eHXQrGt/UkiHa4=;
-        h=To:From:Subject:Date;
-        b=EMOJSUz93bWqRHEL3lGPAA3VzTzTaTXmpsJ4Tf69gv1p0286b7O/CdEguK0J/nFCi
-         ahMIH0SNmhVU49e5WAShIW9r6e/xuaRoGf4T6rxqz/NxJW/fVMasF630ki4Zrf+XF0
-         piNEBS2YQ3F859uVwSFdGul6bD7ZL45VUJTQFYEs=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB3ASdDX033407
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 3 Dec 2019 04:28:39 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 3 Dec
- 2019 04:28:39 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 3 Dec 2019 04:28:39 -0600
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB3ASZsP092888;
-        Tue, 3 Dec 2019 04:28:36 -0600
-To:     netdev <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: linux-master: WARNING: suspicious RCU usage in
- mem_allocator_disconnect
-Message-ID: <09e42c75-228a-f390-abd5-43e8f6ae70f2@ti.com>
-Date:   Tue, 3 Dec 2019 12:28:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        Tue, 3 Dec 2019 05:29:28 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB3ARHDg017607;
+        Tue, 3 Dec 2019 11:29:15 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : references : in-reply-to : content-type : content-id :
+ content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=bM3pWSeqkB5UkxAbD3228fZVFkK6OfNc9gF3Gi65CVw=;
+ b=G1OOjciXP9KiviJUFCAZxsXwXh36wmMOGLYwq4FXtqGmaQ9svtqwZr0sUXX33xn450wF
+ DOjeC9fxgDochVQXjOuHpGv7vzzbVKZ97/mAkGlaJUfJmflbfz0JzKs2p8kyAuwLbIks
+ VlFr/wZyaGX4BQqlS7EKC1GQwJGPN7iE6ROBoCD4jiMYSEDJL1xnD4kvg1TXkJ4Yegrd
+ xv0dXTS3S1F6XqAw736j/NNtiaKN6agD7HAdjHxM8GlX/FtKWqq93MGooh+XSG5NkQW4
+ lMhyu/EXL5LgBSng1HbUUp1kav23948sMj6bL4+IX/jZCURNsAugkOSDA3ZIHR+yKIHV FQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2wkee9xybr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 03 Dec 2019 11:29:15 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E559510003A;
+        Tue,  3 Dec 2019 11:29:14 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B24E02AFD24;
+        Tue,  3 Dec 2019 11:29:14 +0100 (CET)
+Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 3 Dec
+ 2019 11:29:14 +0100
+Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
+ SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
+ 15.00.1473.003; Tue, 3 Dec 2019 11:29:14 +0100
+From:   Fabien DESSENNE <fabien.dessenne@st.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] irqchip/stm32-exti: Use the
+ hwspin_lock_timeout_in_atomic() API
+Thread-Topic: [PATCH] irqchip/stm32-exti: Use the
+ hwspin_lock_timeout_in_atomic() API
+Thread-Index: AQHVb8Qw0weioX7Mt0ih3xTUpVlZr6eomLeA
+Date:   Tue, 3 Dec 2019 10:29:14 +0000
+Message-ID: <c279603f-7ba6-6e47-5f1f-43e95a0b2fea@st.com>
+References: <1568991643-7549-1-git-send-email-fabien.dessenne@st.com>
+In-Reply-To: <1568991643-7549-1-git-send-email-fabien.dessenne@st.com>
+Accept-Language: fr-FR, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.49]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DB6069AC1532F74CBDB0DBE0646F9FA7@st.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-03_02:2019-11-29,2019-12-03 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
-
-While placing intf down I'm getting below splat with debug options enabled.
-Not sure how to fix it, so will be appreciated for any help.
-
-
-
-=========================================================
-[  333.933896]
-[  333.935511] =============================
-[  333.939552] WARNING: suspicious RCU usage
-[  333.943724] 5.4.0-08849-ga6eb3c7b339b-dirty #40 Not tainted
-[  333.949335] -----------------------------
-[  333.953445] ./include/linux/rcupdate.h:273 Illegal context switch in RCU read-side critical section!
-[  333.962698]
-[  333.962698] other info that might help us debug this:
-[  333.962698]
-[  333.970752]
-[  333.970752] rcu_scheduler_active = 2, debug_locks = 1
-[  333.977391] 2 locks held by ifconfig/1007:
-[  333.981520]  #0: c10b18ec (rtnl_mutex){+.+.}, at: devinet_ioctl+0xc4/0x850
-[  333.988534]  #1: c103e838 (rcu_read_lock){....}, at: rhashtable_walk_start_check+0x0/0x3dc
-[  333.996939]
-[  333.996939] stack backtrace:
-[  334.001334] CPU: 0 PID: 1007 Comm: ifconfig Not tainted 5.4.0-08849-ga6eb3c7b339b-dirty #40
-[  334.009733] Hardware name: Generic DRA72X (Flattened Device Tree)
-[  334.015878] [<c0113330>] (unwind_backtrace) from [<c010d23c>] (show_stack+0x10/0x14)
-[  334.023675] [<c010d23c>] (show_stack) from [<c09f9e08>] (dump_stack+0xe4/0x11c)
-[  334.031038] [<c09f9e08>] (dump_stack) from [<c016e4a4>] (___might_sleep+0x1e8/0x2bc)
-[  334.038834] [<c016e4a4>] (___might_sleep) from [<c0a17bd0>] (__mutex_lock+0x38/0xa18)
-[  334.046716] [<c0a17bd0>] (__mutex_lock) from [<c0a185cc>] (mutex_lock_nested+0x1c/0x24)
-[  334.054774] [<c0a185cc>] (mutex_lock_nested) from [<c0858208>] (mem_allocator_disconnect+0xf8/0x288)
-[  334.063966] [<c0858208>] (mem_allocator_disconnect) from [<c085df50>] (page_pool_release+0x230/0x3b4)
-[  334.073242] [<c085df50>] (page_pool_release) from [<c085e12c>] (page_pool_destroy+0x58/0x11c)
-[  334.081822] [<c085e12c>] (page_pool_destroy) from [<c0771554>] (cpsw_destroy_xdp_rxqs+0x88/0xa0)
-[  334.090663] [<c0771554>] (cpsw_destroy_xdp_rxqs) from [<c0774638>] (cpsw_ndo_stop+0x100/0x10c)
-[  334.099331] [<c0774638>] (cpsw_ndo_stop) from [<c0814fdc>] (__dev_close_many+0xac/0x130)
-[  334.107475] [<c0814fdc>] (__dev_close_many) from [<c0824068>] (__dev_change_flags+0xc8/0x1f0)
-[  334.116053] [<c0824068>] (__dev_change_flags) from [<c08241a8>] (dev_change_flags+0x18/0x48)
-[  334.124545] [<c08241a8>] (dev_change_flags) from [<c08efc3c>] (devinet_ioctl+0x6c0/0x850)
-[  334.132775] [<c08efc3c>] (devinet_ioctl) from [<c08f2d98>] (inet_ioctl+0x1f8/0x3b4)
-[  334.140483] [<c08f2d98>] (inet_ioctl) from [<c07f4594>] (sock_ioctl+0x398/0x5f4)
-[  334.147929] [<c07f4594>] (sock_ioctl) from [<c03279b4>] (do_vfs_ioctl+0x9c/0xa08)
-[  334.155461] [<c03279b4>] (do_vfs_ioctl) from [<c0328384>] (ksys_ioctl+0x64/0x74)
-[  334.162905] [<c0328384>] (ksys_ioctl) from [<c01011ac>] (__sys_trace_return+0x0/0x14)
-[  334.170781] Exception stack(0xed517fa8 to 0xed517ff0)
-[  334.175870] 7fa0:                   0007b4ec bee79d84 00000003 00008914 bee79a80 0007b4ec
-[  334.184099] 7fc0: 0007b4ec bee79d84 bee79d84 00000036 bee79c4c bee79c4c bee79a80 00000003
-[  334.192325] 7fe0: 0009d1ec bee79a14 0003214b b6e94f7c
-[  334.197604] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:938
-[  334.206157] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 1007, name: ifconfig
-[  334.214274] 2 locks held by ifconfig/1007:
-[  334.218401]  #0: c10b18ec (rtnl_mutex){+.+.}, at: devinet_ioctl+0xc4/0x850
-[  334.225407]  #1: c103e838 (rcu_read_lock){....}, at: rhashtable_walk_start_check+0x0/0x3dc
-[  334.233813] CPU: 0 PID: 1007 Comm: ifconfig Not tainted 5.4.0-08849-ga6eb3c7b339b-dirty #40
-[  334.242212] Hardware name: Generic DRA72X (Flattened Device Tree)
-[  334.248351] [<c0113330>] (unwind_backtrace) from [<c010d23c>] (show_stack+0x10/0x14)
-[  334.256147] [<c010d23c>] (show_stack) from [<c09f9e08>] (dump_stack+0xe4/0x11c)
-[  334.263506] [<c09f9e08>] (dump_stack) from [<c016e464>] (___might_sleep+0x1a8/0x2bc)
-[  334.271300] [<c016e464>] (___might_sleep) from [<c0a17bd0>] (__mutex_lock+0x38/0xa18)
-[  334.279181] [<c0a17bd0>] (__mutex_lock) from [<c0a185cc>] (mutex_lock_nested+0x1c/0x24)
-[  334.287238] [<c0a185cc>] (mutex_lock_nested) from [<c0858208>] (mem_allocator_disconnect+0xf8/0x288)
-[  334.296427] [<c0858208>] (mem_allocator_disconnect) from [<c085df50>] (page_pool_release+0x230/0x3b4)
-[  334.305703] [<c085df50>] (page_pool_release) from [<c085e12c>] (page_pool_destroy+0x58/0x11c)
-[  334.314281] [<c085e12c>] (page_pool_destroy) from [<c0771554>] (cpsw_destroy_xdp_rxqs+0x88/0xa0)
-[  334.323122] [<c0771554>] (cpsw_destroy_xdp_rxqs) from [<c0774638>] (cpsw_ndo_stop+0x100/0x10c)
-[  334.331788] [<c0774638>] (cpsw_ndo_stop) from [<c0814fdc>] (__dev_close_many+0xac/0x130)
-[  334.339931] [<c0814fdc>] (__dev_close_many) from [<c0824068>] (__dev_change_flags+0xc8/0x1f0)
-[  334.348510] [<c0824068>] (__dev_change_flags) from [<c08241a8>] (dev_change_flags+0x18/0x48)
-[  334.357000] [<c08241a8>] (dev_change_flags) from [<c08efc3c>] (devinet_ioctl+0x6c0/0x850)
-[  334.365228] [<c08efc3c>] (devinet_ioctl) from [<c08f2d98>] (inet_ioctl+0x1f8/0x3b4)
-[  334.372935] [<c08f2d98>] (inet_ioctl) from [<c07f4594>] (sock_ioctl+0x398/0x5f4)
-[  334.380380] [<c07f4594>] (sock_ioctl) from [<c03279b4>] (do_vfs_ioctl+0x9c/0xa08)
-[  334.387911] [<c03279b4>] (do_vfs_ioctl) from [<c0328384>] (ksys_ioctl+0x64/0x74)
-[  334.395355] [<c0328384>] (ksys_ioctl) from [<c01011ac>] (__sys_trace_return+0x0/0x14)
-[  334.403231] Exception stack(0xed517fa8 to 0xed517ff0)
-[  334.408319] 7fa0:                   0007b4ec bee79d84 00000003 00008914 bee79a80 0007b4ec
-[  334.416548] 7fc0: 0007b4ec bee79d84 bee79d84 00000036 bee79c4c bee79c4c bee79a80 00000003
-[  334.424774] 7fe0: 0009d1ec bee79a14 0003214b b6e94f7c
-
-
-Enabled debug options:
-=================================================
-+CONFIG_LOCKUP_DETECTOR=y
-+CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC=y
-+CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC_VALUE=1
-+CONFIG_DETECT_HUNG_TASK=y
-+CONFIG_DEFAULT_HUNG_TASK_TIMEOUT=300
-+CONFIG_BOOTPARAM_HUNG_TASK_PANIC=y
-+CONFIG_BOOTPARAM_HUNG_TASK_PANIC_VALUE=1
-+CONFIG_PANIC_ON_OOPS=y
-+CONFIG_PANIC_ON_OOPS_VALUE=1
-+
-+CONFIG_DEBUG_RT_MUTEXES=y
-+CONFIG_DEBUG_PI_LIST=y
-+CONFIG_DEBUG_SPINLOCK=y
-+CONFIG_DEBUG_MUTEXES=y
-+CONFIG_DEBUG_WW_MUTEX_SLOWPATH=y
-+CONFIG_DEBUG_LOCK_ALLOC=y
-+CONFIG_PROVE_LOCKING=y
-+CONFIG_LOCKDEP=y
-+CONFIG_DEBUG_LOCKDEP=y
-+CONFIG_DEBUG_ATOMIC_SLEEP=y
-+CONFIG_DEBUG_LOCKING_API_SELFTESTS=n
-+CONFIG_STACKTRACE=y
-+CONFIG_DEBUG_BUGVERBOSE=y
-+CONFIG_DEBUG_LIST=y
-+CONFIG_DEBUG_SG=y
-+CONFIG_DEBUG_NOTIFIERS=y
-+
-+CONFIG_SPARSE_RCU_POINTER=y
-+CONFIG_RCU_CPU_STALL_TIMEOUT=60
-+CONFIG_RCU_CPU_STALL_INFO=y
-+CONFIG_RCU_TRACE=y
-+CONFIG_PROVE_RCU=y
-+CONFIG_PROVE_RCU_REPEATEDLY=y
-+
-+CONFIG_DMA_API_DEBUG=y
-
-
--- 
-Best regards,
-grygorii
+SGkNCg0KDQpJdCBsb29rcyBsaWtlIHRoaXMgcGF0Y2ggZ290IGxvc3QuIENhbiBhbnlvbmUgaGF2
+ZSBhIGxvb2sgYXQgaXQ/DQoNCkJSDQoNCkZhYmllbg0KDQoNCk9uIDIwLzA5LzIwMTkgNTowMCBQ
+TSwgRmFiaWVuIERlc3Nlbm5lIHdyb3RlOg0KPiBOb3cgdGhhdCB0aGUgaHdzcGluX2xvY2tfdGlt
+ZW91dF9pbl9hdG9taWMoKSBBUEkgaXMgYXZhaWxhYmxlIHVzZSBpdC4NCj4NCj4gU2lnbmVkLW9m
+Zi1ieTogRmFiaWVuIERlc3Nlbm5lIDxmYWJpZW4uZGVzc2VubmVAc3QuY29tPg0KPiAtLS0NCj4g
+ICBkcml2ZXJzL2lycWNoaXAvaXJxLXN0bTMyLWV4dGkuYyB8IDY1ICsrKysrKysrKysrKystLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gICAxIGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0aW9u
+cygrKSwgNDUgZGVsZXRpb25zKC0pDQo+DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lycWNoaXAv
+aXJxLXN0bTMyLWV4dGkuYyBiL2RyaXZlcnMvaXJxY2hpcC9pcnEtc3RtMzItZXh0aS5jDQo+IGlu
+ZGV4IGUwMGYyZmEuLjdmYzBkMWYgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvaXJxY2hpcC9pcnEt
+c3RtMzItZXh0aS5jDQo+ICsrKyBiL2RyaXZlcnMvaXJxY2hpcC9pcnEtc3RtMzItZXh0aS5jDQo+
+IEBAIC0yNSw3ICsyNSw2IEBADQo+ICAgI2RlZmluZSBJUlFTX1BFUl9CQU5LIDMyDQo+ICAgDQo+
+ICAgI2RlZmluZSBIV1NQTkxDS19USU1FT1VUCTEwMDAgLyogdXNlYyAqLw0KPiAtI2RlZmluZSBI
+V1NQTkxDS19SRVRSWV9ERUxBWQkxMDAgIC8qIHVzZWMgKi8NCj4gICANCj4gICBzdHJ1Y3Qgc3Rt
+MzJfZXh0aV9iYW5rIHsNCj4gICAJdTMyIGltcl9vZnN0Ow0KPiBAQCAtMjc3LDU1ICsyNzYsMjQg
+QEAgc3RhdGljIGludCBzdG0zMl9leHRpX3NldF90eXBlKHN0cnVjdCBpcnFfZGF0YSAqZCwNCj4g
+ICAJcmV0dXJuIDA7DQo+ICAgfQ0KPiAgIA0KPiAtc3RhdGljIGludCBzdG0zMl9leHRpX2h3c3Bp
+bl9sb2NrKHN0cnVjdCBzdG0zMl9leHRpX2NoaXBfZGF0YSAqY2hpcF9kYXRhKQ0KPiAtew0KPiAt
+CWludCByZXQsIHRpbWVvdXQgPSAwOw0KPiAtDQo+IC0JaWYgKCFjaGlwX2RhdGEtPmhvc3RfZGF0
+YS0+aHdsb2NrKQ0KPiAtCQlyZXR1cm4gMDsNCj4gLQ0KPiAtCS8qDQo+IC0JICogVXNlIHRoZSB4
+X3JhdyBBUEkgc2luY2Ugd2UgYXJlIHVuZGVyIHNwaW5fbG9jayBwcm90ZWN0aW9uLg0KPiAtCSAq
+IERvIG5vdCB1c2UgdGhlIHhfdGltZW91dCBBUEkgYmVjYXVzZSB3ZSBhcmUgdW5kZXIgaXJxX2Rp
+c2FibGUNCj4gLQkgKiBtb2RlIChzZWUgX19zZXR1cF9pcnEoKSkNCj4gLQkgKi8NCj4gLQlkbyB7
+DQo+IC0JCXJldCA9IGh3c3Bpbl90cnlsb2NrX3JhdyhjaGlwX2RhdGEtPmhvc3RfZGF0YS0+aHds
+b2NrKTsNCj4gLQkJaWYgKCFyZXQpDQo+IC0JCQlyZXR1cm4gMDsNCj4gLQ0KPiAtCQl1ZGVsYXko
+SFdTUE5MQ0tfUkVUUllfREVMQVkpOw0KPiAtCQl0aW1lb3V0ICs9IEhXU1BOTENLX1JFVFJZX0RF
+TEFZOw0KPiAtCX0gd2hpbGUgKHRpbWVvdXQgPCBIV1NQTkxDS19USU1FT1VUKTsNCj4gLQ0KPiAt
+CWlmIChyZXQgPT0gLUVCVVNZKQ0KPiAtCQlyZXQgPSAtRVRJTUVET1VUOw0KPiAtDQo+IC0JaWYg
+KHJldCkNCj4gLQkJcHJfZXJyKCIlcyBjYW4ndCBnZXQgaHdzcGlubG9jayAoJWQpXG4iLCBfX2Z1
+bmNfXywgcmV0KTsNCj4gLQ0KPiAtCXJldHVybiByZXQ7DQo+IC19DQo+IC0NCj4gLXN0YXRpYyB2
+b2lkIHN0bTMyX2V4dGlfaHdzcGluX3VubG9jayhzdHJ1Y3Qgc3RtMzJfZXh0aV9jaGlwX2RhdGEg
+KmNoaXBfZGF0YSkNCj4gLXsNCj4gLQlpZiAoY2hpcF9kYXRhLT5ob3N0X2RhdGEtPmh3bG9jaykN
+Cj4gLQkJaHdzcGluX3VubG9ja19yYXcoY2hpcF9kYXRhLT5ob3N0X2RhdGEtPmh3bG9jayk7DQo+
+IC19DQo+IC0NCj4gICBzdGF0aWMgaW50IHN0bTMyX2lycV9zZXRfdHlwZShzdHJ1Y3QgaXJxX2Rh
+dGEgKmQsIHVuc2lnbmVkIGludCB0eXBlKQ0KPiAgIHsNCj4gICAJc3RydWN0IGlycV9jaGlwX2dl
+bmVyaWMgKmdjID0gaXJxX2RhdGFfZ2V0X2lycV9jaGlwX2RhdGEoZCk7DQo+ICAgCXN0cnVjdCBz
+dG0zMl9leHRpX2NoaXBfZGF0YSAqY2hpcF9kYXRhID0gZ2MtPnByaXZhdGU7DQo+ICAgCWNvbnN0
+IHN0cnVjdCBzdG0zMl9leHRpX2JhbmsgKnN0bTMyX2JhbmsgPSBjaGlwX2RhdGEtPnJlZ19iYW5r
+Ow0KPiArCXN0cnVjdCBod3NwaW5sb2NrICpod2xvY2sgPSBjaGlwX2RhdGEtPmhvc3RfZGF0YS0+
+aHdsb2NrOw0KPiAgIAl1MzIgcnRzciwgZnRzcjsNCj4gICAJaW50IGVycjsNCj4gICANCj4gICAJ
+aXJxX2djX2xvY2soZ2MpOw0KPiAgIA0KPiAtCWVyciA9IHN0bTMyX2V4dGlfaHdzcGluX2xvY2so
+Y2hpcF9kYXRhKTsNCj4gLQlpZiAoZXJyKQ0KPiAtCQlnb3RvIHVubG9jazsNCj4gKwlpZiAoaHds
+b2NrKSB7DQo+ICsJCWVyciA9IGh3c3Bpbl9sb2NrX3RpbWVvdXRfaW5fYXRvbWljKGh3bG9jaywg
+SFdTUE5MQ0tfVElNRU9VVCk7DQo+ICsJCWlmIChlcnIpIHsNCj4gKwkJCXByX2VycigiJXMgY2Fu
+J3QgZ2V0IGh3c3BpbmxvY2sgKCVkKVxuIiwgX19mdW5jX18sIGVycik7DQo+ICsJCQlnb3RvIHVu
+bG9jazsNCj4gKwkJfQ0KPiArCX0NCj4gICANCj4gICAJcnRzciA9IGlycV9yZWdfcmVhZGwoZ2Ms
+IHN0bTMyX2JhbmstPnJ0c3Jfb2ZzdCk7DQo+ICAgCWZ0c3IgPSBpcnFfcmVnX3JlYWRsKGdjLCBz
+dG0zMl9iYW5rLT5mdHNyX29mc3QpOw0KPiBAQCAtMzM4LDcgKzMwNiw4IEBAIHN0YXRpYyBpbnQg
+c3RtMzJfaXJxX3NldF90eXBlKHN0cnVjdCBpcnFfZGF0YSAqZCwgdW5zaWduZWQgaW50IHR5cGUp
+DQo+ICAgCWlycV9yZWdfd3JpdGVsKGdjLCBmdHNyLCBzdG0zMl9iYW5rLT5mdHNyX29mc3QpOw0K
+PiAgIA0KPiAgIHVuc3BpbmxvY2s6DQo+IC0Jc3RtMzJfZXh0aV9od3NwaW5fdW5sb2NrKGNoaXBf
+ZGF0YSk7DQo+ICsJaWYgKGh3bG9jaykNCj4gKwkJaHdzcGluX3VubG9ja19pbl9hdG9taWMoaHds
+b2NrKTsNCj4gICB1bmxvY2s6DQo+ICAgCWlycV9nY191bmxvY2soZ2MpOw0KPiAgIA0KPiBAQCAt
+NTA0LDE1ICs0NzMsMjAgQEAgc3RhdGljIGludCBzdG0zMl9leHRpX2hfc2V0X3R5cGUoc3RydWN0
+IGlycV9kYXRhICpkLCB1bnNpZ25lZCBpbnQgdHlwZSkNCj4gICB7DQo+ICAgCXN0cnVjdCBzdG0z
+Ml9leHRpX2NoaXBfZGF0YSAqY2hpcF9kYXRhID0gaXJxX2RhdGFfZ2V0X2lycV9jaGlwX2RhdGEo
+ZCk7DQo+ICAgCWNvbnN0IHN0cnVjdCBzdG0zMl9leHRpX2JhbmsgKnN0bTMyX2JhbmsgPSBjaGlw
+X2RhdGEtPnJlZ19iYW5rOw0KPiArCXN0cnVjdCBod3NwaW5sb2NrICpod2xvY2sgPSBjaGlwX2Rh
+dGEtPmhvc3RfZGF0YS0+aHdsb2NrOw0KPiAgIAl2b2lkIF9faW9tZW0gKmJhc2UgPSBjaGlwX2Rh
+dGEtPmhvc3RfZGF0YS0+YmFzZTsNCj4gICAJdTMyIHJ0c3IsIGZ0c3I7DQo+ICAgCWludCBlcnI7
+DQo+ICAgDQo+ICAgCXJhd19zcGluX2xvY2soJmNoaXBfZGF0YS0+cmxvY2spOw0KPiAgIA0KPiAt
+CWVyciA9IHN0bTMyX2V4dGlfaHdzcGluX2xvY2soY2hpcF9kYXRhKTsNCj4gLQlpZiAoZXJyKQ0K
+PiAtCQlnb3RvIHVubG9jazsNCj4gKwlpZiAoaHdsb2NrKSB7DQo+ICsJCWVyciA9IGh3c3Bpbl9s
+b2NrX3RpbWVvdXRfaW5fYXRvbWljKGh3bG9jaywgSFdTUE5MQ0tfVElNRU9VVCk7DQo+ICsJCWlm
+IChlcnIpIHsNCj4gKwkJCXByX2VycigiJXMgY2FuJ3QgZ2V0IGh3c3BpbmxvY2sgKCVkKVxuIiwg
+X19mdW5jX18sIGVycik7DQo+ICsJCQlnb3RvIHVubG9jazsNCj4gKwkJfQ0KPiArCX0NCj4gICAN
+Cj4gICAJcnRzciA9IHJlYWRsX3JlbGF4ZWQoYmFzZSArIHN0bTMyX2JhbmstPnJ0c3Jfb2ZzdCk7
+DQo+ICAgCWZ0c3IgPSByZWFkbF9yZWxheGVkKGJhc2UgKyBzdG0zMl9iYW5rLT5mdHNyX29mc3Qp
+Ow0KPiBAQCAtNTI1LDcgKzQ5OSw4IEBAIHN0YXRpYyBpbnQgc3RtMzJfZXh0aV9oX3NldF90eXBl
+KHN0cnVjdCBpcnFfZGF0YSAqZCwgdW5zaWduZWQgaW50IHR5cGUpDQo+ICAgCXdyaXRlbF9yZWxh
+eGVkKGZ0c3IsIGJhc2UgKyBzdG0zMl9iYW5rLT5mdHNyX29mc3QpOw0KPiAgIA0KPiAgIHVuc3Bp
+bmxvY2s6DQo+IC0Jc3RtMzJfZXh0aV9od3NwaW5fdW5sb2NrKGNoaXBfZGF0YSk7DQo+ICsJaWYg
+KGh3bG9jaykNCj4gKwkJaHdzcGluX3VubG9ja19pbl9hdG9taWMoaHdsb2NrKTsNCj4gICB1bmxv
+Y2s6DQo+ICAgCXJhd19zcGluX3VubG9jaygmY2hpcF9kYXRhLT5ybG9jayk7DQo+ICAg
