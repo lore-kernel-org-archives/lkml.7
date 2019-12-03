@@ -2,122 +2,302 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D6BC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCE7C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11F2620659
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D33920848
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:34:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575405259;
+	bh=Ft3VbSW+4sEMMJImW+Kc+Vs4E3V3SZr3aSQqLUs7N2c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BIIeAswJcZSdTsH6KIIK58A0UrmvKkd6BkW6QTaeVXS1CKRiL8E4XGlGrOWgG18kr
+	 5L2QM68hPXIDFZ+XHkgIcPNz3w6Ho8/NMdMRPtpCyE833vdpUlWoVDiL6K2Z4xfZtT
+	 E93VEVwG79J7HxiKaB/TN9qjO2xdhfeG99U0n7Xk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbfLCUdu (ORCPT
+        id S1727490AbfLCUeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 15:33:50 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:58106 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727249AbfLCUdt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 15:33:49 -0500
-Received: from static-50-53-33-191.bvtn.or.frontiernet.net ([50.53.33.191] helo=[192.168.192.153])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <john.johansen@canonical.com>)
-        id 1icErh-0001Y7-RR; Tue, 03 Dec 2019 20:33:46 +0000
-From:   John Johansen <john.johansen@canonical.com>
-Subject: [GIT PULL] apparmor updates for 5.5
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKLM <linux-kernel@vger.kernel.org>,
-        "open list:SECURITY SUBSYSTEM" 
-        <linux-security-module@vger.kernel.org>
-Organization: Canonical
-Message-ID: <ab8e6cbb-c46d-41bd-0a0d-43530ee37386@canonical.com>
-Date:   Tue, 3 Dec 2019 12:33:43 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 3 Dec 2019 15:34:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57194 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726567AbfLCUeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 15:34:17 -0500
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C061720659;
+        Tue,  3 Dec 2019 20:34:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575405256;
+        bh=Ft3VbSW+4sEMMJImW+Kc+Vs4E3V3SZr3aSQqLUs7N2c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=e4SLDj5czbRQZvg8YSy6NR+w175+YAzq7nzRa5w83voGHH9+iODY/RUFF0TEmd6ff
+         JbU8QMFsWZHhwAKwqaU9iGALoO3pEI4wu+/hj2XaOYkAFNXlED+z/PwzKBeN6HaSZK
+         VvbGYPARk0mwxvPYlcXkeaJvxerOePsKzNn0GIjI=
+Date:   Tue, 3 Dec 2019 12:34:14 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Gabriel Krisman Bertazi <krisman@collabora.com>
+Cc:     Gao Xiang <gaoxiang25@huawei.com>,
+        Daniel Rosenberg <drosen@google.com>,
+        Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [PATCH 4/8] vfs: Fold casefolding into vfs
+Message-ID: <20191203203414.GA727@sol.localdomain>
+References: <20191203051049.44573-1-drosen@google.com>
+ <20191203051049.44573-5-drosen@google.com>
+ <20191203074154.GA216261@architecture4>
+ <85wobdb3hp.fsf@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <85wobdb3hp.fsf@collabora.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Tue, Dec 03, 2019 at 02:42:10PM -0500, Gabriel Krisman Bertazi wrote:
+> Gao Xiang <gaoxiang25@huawei.com> writes:
+> 
+> > On Mon, Dec 02, 2019 at 09:10:45PM -0800, Daniel Rosenberg wrote:
+> >> Ext4 and F2fs are both using casefolding, and they, along with any other
+> >> filesystem that adds the feature, will be using identical dentry_ops.
+> >> Additionally, those dentry ops interfere with the dentry_ops required
+> >> for fscrypt once we add support for casefolding and encryption.
+> >> Moving this into the vfs removes code duplication as well as the
+> >> complication with encryption.
+> >> 
+> >> Currently this is pretty close to just moving the existing f2fs/ext4
+> >> code up a level into the vfs, although there is a lot of room for
+> >> improvement now.
+> >> 
+> >> Signed-off-by: Daniel Rosenberg <drosen@google.com>
+> >
+> > I'm afraid that such vfs modification is unneeded.
+> >
+> > Just a quick glance it seems just can be replaced by introducing some
+> > .d_cmp, .d_hash helpers (or with little modification) and most non-Android
+> > emulated storage files are not casefolded (even in Android).
+> >
+> > "those dentry ops interfere with the dentry_ops required for fscrypt",
+> > I don't think it's a real diffculty and it could be done with some
+> > better approach instead.
+> 
+> It would be good to avoid dentry_ops in general for these cases.  It
+> doesn't just interfere with fscrypt, but also overlayfs and others.
+> 
+> The difficulty is that it is not trivial to change dentry_ops after
+> dentries are already installed in the dcache.  Which means that it is
+> hard to use different dentry_ops for different parts of the filesystem,
+> for instance when converting a directory to case-insensitive or back
+> to case-sensitive.
+> 
+> In fact, currently and for case-insensitive at least, we install generic
+> hooks for the entire case-insensitive filesystem and use it even for
+> !IS_CASEFOLDED() directories. This breaks overlayfs even if we don't
+> have a single IS_CASEFOLDED() directory at all, just by having the
+> superblock flag, we *must* set the dentry_ops, which already breaks
+> overlayfs.
+> 
+> I think Daniel's approach of moving this into VFS is the simplest way to
+> actually solve the issue, instead of extending and duplicating a lot of
+> functionality into filesystem hooks to support the possible mixes of
+> case-insensitive, overlayfs and fscrypt.
+> 
 
-Sorry I didn't manage to get these out before last weeks vacation.
+I think we can actually get everything we want using dentry_operations only,
+since the filesystem can set ->d_op during ->lookup() (like what is done for
+encrypted filenames now) rather than at dentry allocation time.  And fs/crypto/
+can export fscrypt_d_revalidate() rather than setting ->d_op itself.
 
-Can you please pull the following changes for apparmor
+See the untested patch below.
 
-Thanks!
+It's definitely ugly to have to handle the 3 cases of encrypt, casefold, and
+encrypt+casefold separately -- and this will need to be duplicated for each
+filesystem.  But we do have to weigh that against adding additional complexity
+and overhead to the VFS for everyone.  If we do go with the VFS changes, please
+try to make them as simple and unobtrusive as possible.
 
-- John
+diff --git a/fs/crypto/crypto.c b/fs/crypto/crypto.c
+index 3719efa546c6..cfa44adff2b3 100644
+--- a/fs/crypto/crypto.c
++++ b/fs/crypto/crypto.c
+@@ -290,7 +290,7 @@ EXPORT_SYMBOL(fscrypt_decrypt_block_inplace);
+  * Validate dentries in encrypted directories to make sure we aren't potentially
+  * caching stale dentries after a key has been added.
+  */
+-static int fscrypt_d_revalidate(struct dentry *dentry, unsigned int flags)
++int fscrypt_d_revalidate(struct dentry *dentry, unsigned int flags)
+ {
+ 	struct dentry *dir;
+ 	int err;
+@@ -329,10 +329,7 @@ static int fscrypt_d_revalidate(struct dentry *dentry, unsigned int flags)
+ 
+ 	return valid;
+ }
+-
+-const struct dentry_operations fscrypt_d_ops = {
+-	.d_revalidate = fscrypt_d_revalidate,
+-};
++EXPORT_SYMBOL_GPL(fscrypt_d_revalidate);
+ 
+ /**
+  * fscrypt_initialize() - allocate major buffers for fs encryption.
+diff --git a/fs/crypto/fscrypt_private.h b/fs/crypto/fscrypt_private.h
+index 130b50e5a011..4420670ac40a 100644
+--- a/fs/crypto/fscrypt_private.h
++++ b/fs/crypto/fscrypt_private.h
+@@ -233,7 +233,6 @@ extern int fscrypt_crypt_block(const struct inode *inode,
+ 			       unsigned int len, unsigned int offs,
+ 			       gfp_t gfp_flags);
+ extern struct page *fscrypt_alloc_bounce_page(gfp_t gfp_flags);
+-extern const struct dentry_operations fscrypt_d_ops;
+ 
+ extern void __printf(3, 4) __cold
+ fscrypt_msg(const struct inode *inode, const char *level, const char *fmt, ...);
+diff --git a/fs/crypto/hooks.c b/fs/crypto/hooks.c
+index bb3b7fcfdd48..ec81b6a597aa 100644
+--- a/fs/crypto/hooks.c
++++ b/fs/crypto/hooks.c
+@@ -116,7 +116,6 @@ int __fscrypt_prepare_lookup(struct inode *dir, struct dentry *dentry,
+ 		spin_lock(&dentry->d_lock);
+ 		dentry->d_flags |= DCACHE_ENCRYPTED_NAME;
+ 		spin_unlock(&dentry->d_lock);
+-		d_set_d_op(dentry, &fscrypt_d_ops);
+ 	}
+ 	return err;
+ }
+diff --git a/fs/ext4/dir.c b/fs/ext4/dir.c
+index 9fdd2b269d61..bd3c14e6b24a 100644
+--- a/fs/ext4/dir.c
++++ b/fs/ext4/dir.c
+@@ -704,9 +704,47 @@ static int ext4_d_hash(const struct dentry *dentry, struct qstr *str)
+ 	kfree(norm);
+ 	return ret;
+ }
++#endif /* !CONFIG_UNICODE */
+ 
+-const struct dentry_operations ext4_dentry_ops = {
++#ifdef CONFIG_UNICODE
++static const struct dentry_operations ext4_ci_dentry_ops = {
++	.d_hash = ext4_d_hash,
++	.d_compare = ext4_d_compare,
++};
++#endif
++
++#ifdef CONFIG_FS_ENCRYPTION
++static const struct dentry_operations ext4_encrypted_dentry_ops = {
++	.d_revalidate = fscrypt_d_revalidate,
++};
++#endif
++
++#if IS_ENABLED(CONFIG_UNICODE) && IS_ENABLED(CONFIG_FS_ENCRYPTION)
++static const struct dentry_operations ext4_encrypted_ci_dentry_ops = {
+ 	.d_hash = ext4_d_hash,
+ 	.d_compare = ext4_d_compare,
++	.d_revalidate = fscrypt_d_revalidate,
+ };
+ #endif
++
++void ext4_set_d_ops(struct inode *dir, struct dentry *dentry)
++{
++#ifdef CONFIG_FS_ENCRYPTION
++	if (dentry->d_flags & DCACHE_ENCRYPTED_NAME) {
++#ifdef CONFIG_UNICODE
++		if (IS_CASEFOLDED(dir)) {
++			d_set_d_op(dentry, &ext4_encrypted_ci_dentry_ops);
++			return;
++		}
++#endif
++		d_set_d_op(dentry, &ext4_encrypted_dentry_ops);
++		return;
++	}
++#endif
++#ifdef CONFIG_UNICODE
++	if (IS_CASEFOLDED(dir)) {
++		d_set_d_op(dentry, &ext4_ci_dentry_ops);
++		return;
++	}
++#endif
++}
+diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+index f8578caba40d..00a10015a53c 100644
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -2499,6 +2499,8 @@ static inline  unsigned char get_dtype(struct super_block *sb, int filetype)
+ extern int ext4_check_all_de(struct inode *dir, struct buffer_head *bh,
+ 			     void *buf, int buf_size);
+ 
++void ext4_set_d_ops(struct inode *dir, struct dentry *dentry);
++
+ /* fsync.c */
+ extern int ext4_sync_file(struct file *, loff_t, loff_t, int);
+ 
+@@ -3097,10 +3099,6 @@ static inline void ext4_unlock_group(struct super_block *sb,
+ /* dir.c */
+ extern const struct file_operations ext4_dir_operations;
+ 
+-#ifdef CONFIG_UNICODE
+-extern const struct dentry_operations ext4_dentry_ops;
+-#endif
+-
+ /* file.c */
+ extern const struct inode_operations ext4_file_inode_operations;
+ extern const struct file_operations ext4_file_operations;
+diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
+index a856997d87b5..4df1d074b393 100644
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -1608,6 +1608,7 @@ static struct buffer_head *ext4_lookup_entry(struct inode *dir,
+ 	struct buffer_head *bh;
+ 
+ 	err = ext4_fname_prepare_lookup(dir, dentry, &fname);
++	ext4_set_d_ops(dir, dentry);
+ 	if (err == -ENOENT)
+ 		return NULL;
+ 	if (err)
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 1d82b56d9b11..ac593e9af270 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -4498,11 +4498,6 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 		goto failed_mount4;
+ 	}
+ 
+-#ifdef CONFIG_UNICODE
+-	if (sbi->s_encoding)
+-		sb->s_d_op = &ext4_dentry_ops;
+-#endif
+-
+ 	sb->s_root = d_make_root(root);
+ 	if (!sb->s_root) {
+ 		ext4_msg(sb, KERN_ERR, "get root dentry failed");
+diff --git a/include/linux/fscrypt.h b/include/linux/fscrypt.h
+index 1a7bffe78ed5..0de461f2225a 100644
+--- a/include/linux/fscrypt.h
++++ b/include/linux/fscrypt.h
+@@ -120,6 +120,8 @@ static inline struct page *fscrypt_pagecache_page(struct page *bounce_page)
+ 
+ extern void fscrypt_free_bounce_page(struct page *bounce_page);
+ 
++extern int fscrypt_d_revalidate(struct dentry *dentry, unsigned int flags);
++
+ /* policy.c */
+ extern int fscrypt_ioctl_set_policy(struct file *, const void __user *);
+ extern int fscrypt_ioctl_get_policy(struct file *, void __user *);
+-- 
+2.24.0
 
-The following changes since commit 582549e3fbe137eb6ce9be591aca25c2222a36b4:
-
-   Merge tag 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma (2019-04-10 09:39:04 -1000)
-
-are available in the Git repository at:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/jj/linux-apparmor tags/apparmor-pr-2019-12-03
-
-for you to fetch changes up to 341c1fda5e17156619fb71acfc7082b2669b4b72:
-
-   apparmor: make it so work buffers can be allocated from atomic context (2019-11-22 16:41:08 -0800)
-
-----------------------------------------------------------------
-+ Features
-   - increase left match history buffer size to provide inproved conflict
-     resolution in overlapping execution rules.
-   - switch buffer allocation to use a memory pool and GFP_KERNEL
-     where possible.
-   - add compression of policy blobs to reduce memory usage.
-+ Cleanups
-   - fix spelling mistake "immutible" -> "immutable"
-+ Bug fixes
-   - fix unsigned len comparison in update_for_len macro
-   - fix sparse warning for type-casting of current->real_cred
-
-----------------------------------------------------------------
-Bharath Vedartham (1):
-       apparmor: Force type-casting of current->real_cred
-
-Chris Coulson (1):
-       apparmor: Initial implementation of raw policy blob compression
-
-Colin Ian King (2):
-       apparmor: fix spelling mistake "immutible" -> "immutable"
-       apparmor: fix unsigned len comparison with less than zero
-
-John Johansen (7):
-       apparmor: fix blob compression build failure on ppc
-       apparmor: fix missing ZLIB defines
-       apparmor: fix blob compression when ns is forced on a policy load
-       apparmor: increase left match history buffer size
-       apparmor: fix wrong buffer allocation in aa_new_mount
-       apparmor: reduce rcu_read_lock scope for aa_file_perm mediation
-       apparmor: make it so work buffers can be allocated from atomic context
-
-Sebastian Andrzej Siewior (2):
-       apparmor: Use a memory pool instead per-CPU caches
-       apparmor: Switch to GFP_KERNEL where possible
-
-  security/apparmor/Kconfig                 |   2 +
-  security/apparmor/apparmorfs.c            | 130 +++++++++++++++++++-
-  security/apparmor/domain.c                |  46 +++----
-  security/apparmor/file.c                  |  45 ++++---
-  security/apparmor/include/apparmor.h      |   1 +
-  security/apparmor/include/file.h          |   2 +-
-  security/apparmor/include/match.h         |   3 +-
-  security/apparmor/include/path.h          |  50 +-------
-  security/apparmor/include/policy_unpack.h |   8 +-
-  security/apparmor/label.c                 |  12 +-
-  security/apparmor/lsm.c                   | 198 ++++++++++++++++++++++++------
-  security/apparmor/match.c                 |   6 +-
-  security/apparmor/mount.c                 |  67 +++++++---
-  security/apparmor/policy.c                |   5 +-
-  security/apparmor/policy_unpack.c         | 116 ++++++++++++++++-
-  15 files changed, 526 insertions(+), 165 deletions(-)
