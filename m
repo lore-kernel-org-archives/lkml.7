@@ -2,169 +2,209 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,PDS_BTC_ID,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AC6C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2749C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E2D120684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0581206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:18:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="rhxqOBTq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NqNyCNRX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfLCOQn (ORCPT
+        id S1726182AbfLCOSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 09:16:43 -0500
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:30791 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbfLCOQm (ORCPT
+        Tue, 3 Dec 2019 09:18:44 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:46312 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbfLCOSo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 09:16:42 -0500
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="Tudor.Ambarus@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: T37hLq4OlG2kYfV+QLSKWFVQ5io2qefw1QaJDPzZvGnBY4Y95hFWSz+1Wy1ugXXsydSMxWy4Zc
- u7dS6OpbBE/555Hi4TWc+HmdEo49M8h30PGIAm77tZm6Y43C0J7mbW0K3y2fE3pZH48y279l2f
- bXZ6ZnuKrAbHJhaIbqjmSbmpR5NWHLnqFr/PU2C736IGUs0vg2Px4gYAq/HEOIRDa43Cy42+JT
- DdlwN+vChqtYENI9J81WnkSJlNQSeT7i64369WCbOv2OXwr0mjhD4GHbb+UYleJ+ydOJK6asmG
- /Oc=
-X-IronPort-AV: E=Sophos;i="5.69,273,1571727600"; 
-   d="scan'208";a="56431760"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Dec 2019 07:16:42 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 3 Dec 2019 07:16:42 -0700
-Received: from NAM03-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 3 Dec 2019 07:16:41 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GXEFw6t8JjAtvYK/sXNoQLvCnmTvhAXzqWYBVpKuCIpaxHcDWfO7U6BO5Qdmnq1RSO28MjxHVourGJuSQGuou0I+MeNLjPODR6nBUQw0sWXOcFjUiJTdqDV7CKz+8qsYjD55UzppFyDVkF3BYbO5+m2SbVGUfUQeJGe09JqxdLJqEPX+iDYGRwEyowcP7S4usMRzX/rFIPOHeZ3CyScOLrns0ARlBWtOqu7BOOmQb6+BIi3lxOGFpxMMDHszKdk+EGGwOCSNFFwVbjzra+0DOtP8pnaB4K/OFqanFhWn6zzI4XhoFhGv8zNG9niMIJech95WkBlNj6kKFMY1ZHqxpA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AXvqrrrzo545XPvFeITzoLQ0XLf0We0PbZImX7ir5PY=;
- b=VpdMxwrEOim+7qUhzDSdw8qmYmjwTcSShH0cRfe3XJm5Yv+7bI81GdwoADRhGRFWmas6jthrNO2j9OzIZvsfBFD1R3S1TpOCjUc8X4bShDfOcFVzcBMCFlHcyct2WhJFW65qlLlscGjCj3kOrQljtstelRnXJsV8V6Fsu9Ek4J5GG4rc5SZrQ8kXa/s2bytX54BV3hbmEvnDv7ZF1pb44i2JEokb+qBfbf8OmRt6/+pjHb/XQVztgDhubYLY5qy6AoPz09T9nq/qohQthsJZJD0WcQXEeNiyiG4aOBu2XjIH2grUQ9JJ0usU9tgQJu2IozrFzAC/9Ank3AnpeZzsjw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        Tue, 3 Dec 2019 09:18:44 -0500
+Received: by mail-il1-f195.google.com with SMTP id t17so3255503ilm.13;
+        Tue, 03 Dec 2019 06:18:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AXvqrrrzo545XPvFeITzoLQ0XLf0We0PbZImX7ir5PY=;
- b=rhxqOBTqeuiq3WR5QyMcbMyWgDW913kgC5hUvQrHVf+klECSbO5cV5ElPjpTTqxxwQwnQfePZAsu3QqqcRdK4YcDMSJcnbMRGHGU34KmCt+KekfpRQsg3GhtqnxxBwR7M07K4odOZZjw79eWO4xHumnC/sl7clwWqj9PpctqaPo=
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
- MN2PR11MB3662.namprd11.prod.outlook.com (20.178.251.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.22; Tue, 3 Dec 2019 14:16:40 +0000
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::84c:6e75:22df:cbc9]) by MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::84c:6e75:22df:cbc9%5]) with mapi id 15.20.2495.014; Tue, 3 Dec 2019
- 14:16:40 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <john.garry@huawei.com>, <vigneshr@ti.com>, <richard@nod.at>,
-        <miquel.raynal@bootlin.com>
-CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <Tudor.Ambarus@microchip.com>
-Subject: [PATCH] mtd: spi-nor: Fix the write Status Register on micron flashes
-Thread-Topic: [PATCH] mtd: spi-nor: Fix the write Status Register on micron
- flashes
-Thread-Index: AQHVqeRHcKWKCTf45E2yWEPJkz+EwA==
-Date:   Tue, 3 Dec 2019 14:16:40 +0000
-Message-ID: <20191203141625.13839-1-tudor.ambarus@microchip.com>
-References: <00cf6eab-9798-b0e9-e4a2-5b2f8374b698@huawei.com>
-In-Reply-To: <00cf6eab-9798-b0e9-e4a2-5b2f8374b698@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM0PR04CA0003.eurprd04.prod.outlook.com
- (2603:10a6:208:122::16) To MN2PR11MB4448.namprd11.prod.outlook.com
- (2603:10b6:208:193::29)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.14.5
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b6a9d472-8528-4cc0-a3f6-08d777fb6a3a
-x-ms-traffictypediagnostic: MN2PR11MB3662:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR11MB36628A62613923316D9AA63CF0420@MN2PR11MB3662.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 02408926C4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(366004)(39860400002)(396003)(346002)(189003)(199004)(71200400001)(6512007)(76176011)(64756008)(52116002)(66476007)(66446008)(316002)(81166006)(386003)(2616005)(102836004)(26005)(1076003)(8936002)(99286004)(11346002)(305945005)(186003)(446003)(8676002)(81156014)(6436002)(107886003)(4326008)(6506007)(6486002)(5660300002)(66946007)(110136005)(7736002)(66556008)(54906003)(2201001)(50226002)(71190400001)(14444005)(25786009)(36756003)(2501003)(86362001)(3846002)(2906002)(6116002)(478600001)(14454004)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3662;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: NRWRT7FHpVVGUaxNSaQImU2CFdFuLFkpY1U+q5r+VpPtXhU+/EOnx4UNNDbmQGxem8YdBvG0EjpaK/dbZKAVISCLhYFX6Gm357v9PkSxuaHFPrynkB+/RP0qGqAJzh2B18TeBy6czk6/wlgZQa25RSKKxQJedzr1euQ83ChP6f9MZNRf596NlEyJ3y0RLVSc+fbnFsC2eO79Jc8TZwe84gjFWfUg+I8kp7CKE0vNXRg/HI/hOFr2eNBKaJQgDJZ3tHWW5Gb2qxcsZX15D0boJoqEacCEf98cwzo/ml7eyRYdijsjKAhxz2bUhdCn9NZjAe7oJlFyIRWO/G8+uZT7eAwkF+dK1A9MLDLMCO+uoKITzwcDJvWKJDrhgj606xsESJgIaJMEWQ+U0Uvqr2/JFmX9AjTkwKGIQEICvBzVt1Tov6axQ9BLkLcInora6VCV
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XN+XRtcOHa0jorvMJvWtS/vVXdDZhBa/Ghza1vzaZdo=;
+        b=NqNyCNRXymGDyuCXHcsD+tVnihrhxEaHPUnfiLassfKRzV3b51ExPc5dYPPr54iZlo
+         OcvukUd9PB8OHHXv9g66G+tarKutYvfTDdej21zW4zEXWdLvPHkZEHSnY4VTg0v91vYl
+         oTpKWI1PMnOMRbHKgQkUJ364gn1h1RoLuNNkpvTAFqTExXai5i4JPHL1VdO4zCpKMb5I
+         zYdJbwfF5XsNLEoQjsEKEeMEn4mgYTmLk3blvdLTw4kLO5iFjzQCcULk1tw7Kh0ucbbm
+         lQ74crkyrOjTdfXswn7g1+pfzxf2JRNf3DH3IN72mhhOV+KEKNx0WU9m4ZEvtp+gmN3Z
+         E96A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XN+XRtcOHa0jorvMJvWtS/vVXdDZhBa/Ghza1vzaZdo=;
+        b=UZk8ZFu6v515XBCjhoL+rr4tOp/d8RoKcLozXA3k/AnMqIfGlJ1P7irLLamd9VtYXh
+         /qtsAybBmo0XlCx3BR2rT5mRDkCLaK05eEGOs3BPBwAXSDvzjwr2lkEVZdYOVCWrWUOq
+         1Pk+HExoxup57CjMyNVRWnnOAmWlE/B7pZjlud5F7qY6go6C3OpeB4uqSRd/HXU7xuTX
+         XWCRE1zmwDHStrsXKllOH6bjjsQzemK1CawQgCunClY/VHPybCRPR0EHWdtCZI7z5MIu
+         yJ0KRNFQOJnDZAKpJKF1xid6OwpBQt8mKg3lVG15j6Lag6ZxvZ5S/wb29GYd2D6AYPQV
+         Qdjw==
+X-Gm-Message-State: APjAAAUJLiaWJFwjJzKTcdx9jOoCpSktbp5SZ0MfmO0YXyT1p19zv/GD
+        GfUU4vB//usTJ2guifX1g9ovtuYbnNwDIrcX+g0=
+X-Google-Smtp-Source: APXvYqw8NxWNBMAQg+prj1Z6J3tAFZbuAh+ImBksrtUjlqlkkC8tJBBcqFJ7aCPLjzythQNt+TXpAs42ySY6N3wNVXM=
+X-Received: by 2002:a92:b60e:: with SMTP id s14mr4891623ili.178.1575382722774;
+ Tue, 03 Dec 2019 06:18:42 -0800 (PST)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: b6a9d472-8528-4cc0-a3f6-08d777fb6a3a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Dec 2019 14:16:40.2816
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aOkOofjeG3z84rdfMbrvp8F3Mi2S8Vqw3bIqLJp6YeY3mYY2qfPwLLgiknnTD6TGPX0NHBWcAGcLwcCAux3NvBpdFx2vxGdC5Tq8hfrlXeA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3662
+References: <20191112104854.20850-1-masneyb@onstation.org> <CAOCk7NosRhRp3vZxg2Nx8106PQ0ryo5b68cUv605XUzCm6gYPA@mail.gmail.com>
+ <20191113112334.GA18702@onstation.org> <20191203014006.GA7756@onstation.org>
+In-Reply-To: <20191203014006.GA7756@onstation.org>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Tue, 3 Dec 2019 07:18:31 -0700
+Message-ID: <CAOCk7NpHE7kPX5tc=qUJo9qM-7Qzg2E+zmmmhBdnnVwJ+i5XLg@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm/mdp5: enable autocommit
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        MSM <linux-arm-msm@vger.kernel.org>, Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tudor Ambarus <tudor.ambarus@microchip.com>
+On Mon, Dec 2, 2019 at 6:40 PM Brian Masney <masneyb@onstation.org> wrote:
+>
+> Hi Jeffrey,
+>
+> On Wed, Nov 13, 2019 at 06:23:34AM -0500, Brian Masney wrote:
+> > On Tue, Nov 12, 2019 at 08:38:27AM -0700, Jeffrey Hugo wrote:
+> > > On Tue, Nov 12, 2019 at 3:49 AM Brian Masney <masneyb@onstation.org> wrote:
+> > > >
+> > > > Since the introduction of commit 2d99ced787e3 ("drm/msm: async commit
+> > > > support"), command-mode panels began throwing the following errors:
+> > > >
+> > > >     msm fd900000.mdss: pp done time out, lm=0
+> > > >
+> > > > Let's fix this by enabling the autorefresh feature that's available in
+> > > > the MDP starting at version 1.0. This will cause the MDP to
+> > > > automatically send a frame to the panel every time the panel invokes
+> > > > the TE signal, which will trigger the PP_DONE IRQ. This requires not
+> > > > sending a START signal for command-mode panels.
+> > > >
+> > > > This fixes the error and gives us a counter for command-mode panels that
+> > > > we can use to implement async commit support for the MDP5 in a follow up
+> > > > patch.
+> > > >
+> > > > Signed-off-by: Brian Masney <masneyb@onstation.org>
+> > > > Suggested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > > > ---
+> > > >  drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c | 15 ++++++++++++++-
+> > > >  drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c  |  9 +--------
+> > > >  2 files changed, 15 insertions(+), 9 deletions(-)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+> > > > index 05cc04f729d6..539348cb6331 100644
+> > > > --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+> > > > +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+> > > > @@ -456,6 +456,7 @@ static void mdp5_crtc_atomic_enable(struct drm_crtc *crtc,
+> > > >  {
+> > > >         struct mdp5_crtc *mdp5_crtc = to_mdp5_crtc(crtc);
+> > > >         struct mdp5_crtc_state *mdp5_cstate = to_mdp5_crtc_state(crtc->state);
+> > > > +       struct mdp5_pipeline *pipeline = &mdp5_cstate->pipeline;
+> > > >         struct mdp5_kms *mdp5_kms = get_kms(crtc);
+> > > >         struct device *dev = &mdp5_kms->pdev->dev;
+> > > >
+> > > > @@ -493,9 +494,21 @@ static void mdp5_crtc_atomic_enable(struct drm_crtc *crtc,
+> > > >
+> > > >         mdp_irq_register(&mdp5_kms->base, &mdp5_crtc->err);
+> > > >
+> > > > -       if (mdp5_cstate->cmd_mode)
+> > > > +       if (mdp5_cstate->cmd_mode) {
+> > > >                 mdp_irq_register(&mdp5_kms->base, &mdp5_crtc->pp_done);
+> > > >
+> > > > +               /*
+> > > > +                * Enable autorefresh so we get regular ping/pong IRQs.
+> > > > +                * - Bit 31 is the enable bit
+> > > > +                * - Bits 0-15 represent the frame count, specifically how many
+> > > > +                *   TE events before the MDP sends a frame.
+> > > > +                */
+> > > > +               mdp5_write(mdp5_kms,
+> > > > +                          REG_MDP5_PP_AUTOREFRESH_CONFIG(pipeline->mixer->pp),
+> > > > +                          BIT(31) | BIT(0));
+> > > > +               crtc_flush_all(crtc);
+> > > > +       }
+> > > > +
+> > > >         mdp5_crtc->enabled = true;
+> > > >  }
+> > > >
+> > > > diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c
+> > > > index 030279d7b64b..aee295abada3 100644
+> > > > --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c
+> > > > +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c
+> > > > @@ -187,14 +187,7 @@ static bool start_signal_needed(struct mdp5_ctl *ctl,
+> > > >         if (!ctl->encoder_enabled)
+> > > >                 return false;
+> > > >
+> > > > -       switch (intf->type) {
+> > > > -       case INTF_WB:
+> > > > -               return true;
+> > > > -       case INTF_DSI:
+> > > > -               return intf->mode == MDP5_INTF_DSI_MODE_COMMAND;
+> > > > -       default:
+> > > > -               return false;
+> > > > -       }
+> > > > +       return intf->type == INTF_WB;
+> > > >  }
+> > >
+> > > I don't think this fully works.
+> > >
+> > > The whole "flush" thing exists because the configuration is double
+> > > buffered.  You write to the flush register to tell the hardware to
+> > > pickup the new configuration, but it doesn't do that automatically.
+> > > It only picks up the new config on the next "vsync".  When you have a
+> > > video mode panel, you have the timing engine running, which drives
+> > > that.  With a command mode panel, you have either the start signal, or
+> > > the auto refresh to do the same, but you have a bit of a chicken and
+> > > egg situation where if you are programming the hardware from scratch,
+> > > autorefresh isn't already enabled to then pickup the config to enable
+> > > autorefresh. In this case, you'll need a single start to kick
+> > > everything off.  However, if say the bootloader already configured
+> > > things and has autorefresh running, then you need to not do that start
+> > > because you'll overload the DSI like you saw.
+> >
+> > As part of my testing for this work, I added a log statement to
+> > mdp5_crtc_pp_done_irq() and it shows that a PP_IRQ comes in consistently
+> > every ~0.0166 seconds, which is about 60 HZ. Without this change, plus
+> > the 3 commits I mentioned in an earlier email related to the async
+> > commit support, the PP IRQs come in at a variety of times: between every
+> > ~0.0140 and ~0.2224 seconds. That's why I assumed that this was working.
+> >
+> > If I call send_start_signal() inside mdp5_crtc_atomic_enable(), then the
+> > display does not work properly.
+>
+> I'd like to get the 'pp done time out' errors that are now occurring
+> upstream for command-mode panels fixed. As I mentioned above, this patch
+> fixes the problem on the Nexus 5 and the pp done interrupts are
+> delivered at approximately 60 HZ. I don't have any other command-mode
+> panels to test.
+>
+> I'm not sure how to proceed here since sending the start command breaks
+> the display. I'm likely putting that command in the wrong spot.
 
-Micron flashes do not support 16 bit writes on the Status Register.
-According to micron datasheets, when using the Write Status Register
-(01h) command, the chip select should be driven LOW and held LOW until
-the eighth bit of the last data byte has been latched in, after which
-it must be driven HIGH. If CS is not driven HIGH, the command is not
-executed, flag status register error bits are not set, and the write enable
-latch remains set to 1. This fixes the lock operations on micron flashes.
+Sorry, I didn't realize you were waiting on me,
 
-Reported-by: John Garry <john.garry@huawei.com>
-Fixes: 39d1e3340c73 ("mtd: spi-nor: Fix clearing of QE bit on lock()/unlock=
-()")
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
----
- drivers/mtd/spi-nor/spi-nor.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index f1490c7b5cb9..7e41493f69d8 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -4607,6 +4607,7 @@ static void sst_set_default_init(struct spi_nor *nor)
- static void st_micron_set_default_init(struct spi_nor *nor)
- {
- 	nor->flags |=3D SNOR_F_HAS_LOCK;
-+	nor->flags &=3D ~SNOR_F_HAS_16BIT_SR;
- 	nor->params.quad_enable =3D NULL;
- 	nor->params.set_4byte =3D st_micron_set_4byte;
- }
---=20
-2.14.5
-
+I'm traveling currently, so this is more off the top of my head than
+looking at the code/docs.  What I'm thinking is that we want to get
+autorefresh enabled, which would be simple except that the bootloader
+may have already enabled it for us.  Perhaps we have a state flag that
+indicates if autorefresh is enabled, and if so, it skips the start
+command (where the start command is normally in the code).  When we
+boot up, we check the hardware and set the flag if its already enabled
+(note I just realized the flag is per ping pong, so we need multiple
+flags I guess).  If the flag is not enabled when we go to use the
+start command, we issue the start, then set the flag.  The only catch
+is I don't know recall the exact sequence of when we configure the
+ping pong in the entire initialization sequence.  We may configure a
+bunch of stuff, but not the ping pong, flush the config (which issues
+a start) and then get stuck because we didn't set the autorefresh.
