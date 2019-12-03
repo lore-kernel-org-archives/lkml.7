@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97105C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11379C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 649D720803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D514E207DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:07:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414421;
-	bh=lYgW7XNs/bbUDwrVycp3txPbcFxD4o6rSDmCKbDXXEo=;
+	s=default; t=1575414426;
+	bh=HwrdliP4e2KnHoiiMFsQZ6eO7u3d7tT5XWKqlt9m2F4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ymdvsy1tDi3z/w+NeNHaSyLlO68I9cnJlvQl5g8j27Gj3aoYAI1z5y2mvqVyn9c2k
-	 0zjaf/QHzGWu7RagUu5jNXTpZ2mxALrUaEhNZPACD55QpqDAHL3frRojr3KAE6uKuk
-	 8fkpkhjVH6nUY5EivrS6xXCTgR5JFA/JkpWTB3Jk=
+	b=itxwDpcXmPasiAtnLH2A/Ji2yYAiHvtIePYioRX54JY1rNtxyaRmudLR57Igt7ZMi
+	 WV1bXE22qHeNuZhptQC+HpPqHO6olLW68geJYU9rcWyjczCcUdNBdsEKITGtVQjjzY
+	 o8FAZvQ2EXUprGWLitggE37ZnhkjyQOBTsemRgts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbfLCXHA (ORCPT
+        id S1729355AbfLCWr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:07:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38510 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:47:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729370AbfLCWsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:48:01 -0500
+        id S1728343AbfLCWrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:47:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C980B2080F;
-        Tue,  3 Dec 2019 22:48:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9F8320684;
+        Tue,  3 Dec 2019 22:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413281;
-        bh=lYgW7XNs/bbUDwrVycp3txPbcFxD4o6rSDmCKbDXXEo=;
+        s=default; t=1575413268;
+        bh=HwrdliP4e2KnHoiiMFsQZ6eO7u3d7tT5XWKqlt9m2F4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GX7wnydSescw7/TpObXTl1NKZ/CM9bfi90g5TFCzHZnchpSe29f8uXyTIsX7dY7YS
-         mWH51NIU/1Qf24auVZmpT9xtA2Gg4TCNaktc3mCEWeAIzf2Vfmd4raJ7pOsVJzJEqM
-         wXXTEB15btdPpyN8JVEZ0HJGgvLHwYLY7+ZIvSDc=
+        b=uta/fiN69toY/rLb5rQbDpzA1cPVL6i+Cn+PWF5vBxqcygy7ZnYzDI7icWfSErKWN
+         NsVx7V0yGKA4r7Yt5QBKFrxgXIsbKvN8+r4iacCjx+XhJII7OkrUMPAgqcsXkjEX6w
+         2PrJSsV+3m5n3yuAQq5EBpo+GAZzww6x2zcxtfo0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helge Deller <deller@gmx.de>,
+        stable@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 068/321] parisc: Fix serio address output
-Date:   Tue,  3 Dec 2019 23:32:14 +0100
-Message-Id: <20191203223430.705548896@linuxfoundation.org>
+Subject: [PATCH 4.19 063/321] ARM: dts: imx23: Fix memory node duplication
+Date:   Tue,  3 Dec 2019 23:32:09 +0100
+Message-Id: <20191203223430.448598495@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -59,38 +61,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Fabio Estevam <festevam@gmail.com>
 
-[ Upstream commit 785145171d17af2554128becd6a7c8f89e101141 ]
+[ Upstream commit b629e83520fafe6f4c2f3e8c88c78a496fc4987c ]
 
-We want the hpa addresses printed in the serio modules, not some
-virtual ioremap()ed address, e.g.:
+Boards based on imx23 have duplicate memory nodes:
 
- serio: gsc-ps2-keyboard port at 0xf0108000 irq 22 @ 2:0:11
- serio: gsc-ps2-mouse port at 0xf0108100 irq 22 @ 2:0:12
+- One coming from the board dts file: memory@
 
-Signed-off-by: Helge Deller <deller@gmx.de>
+- One coming from the imx23.dtsi file.
+
+Fix the duplication by removing the memory node from the dtsi file
+and by adding 'device_type = "memory";' in the board dts.
+
+Reported-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/serio/gscps2.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx23-evk.dts           | 1 +
+ arch/arm/boot/dts/imx23-olinuxino.dts     | 1 +
+ arch/arm/boot/dts/imx23-sansa.dts         | 1 +
+ arch/arm/boot/dts/imx23-stmp378x_devb.dts | 1 +
+ arch/arm/boot/dts/imx23-xfi3.dts          | 1 +
+ arch/arm/boot/dts/imx23.dtsi              | 2 --
+ 6 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/input/serio/gscps2.c b/drivers/input/serio/gscps2.c
-index 49d8d53e50b7b..96f9b5397367f 100644
---- a/drivers/input/serio/gscps2.c
-+++ b/drivers/input/serio/gscps2.c
-@@ -381,9 +381,9 @@ static int __init gscps2_probe(struct parisc_device *dev)
- 		goto fail;
- #endif
+diff --git a/arch/arm/boot/dts/imx23-evk.dts b/arch/arm/boot/dts/imx23-evk.dts
+index ad2ae25b7b4db..aca27aa2d44bd 100644
+--- a/arch/arm/boot/dts/imx23-evk.dts
++++ b/arch/arm/boot/dts/imx23-evk.dts
+@@ -10,6 +10,7 @@
+ 	compatible = "fsl,imx23-evk", "fsl,imx23";
  
--	printk(KERN_INFO "serio: %s port at 0x%p irq %d @ %s\n",
-+	pr_info("serio: %s port at 0x%08lx irq %d @ %s\n",
- 		ps2port->port->name,
--		ps2port->addr,
-+		hpa,
- 		ps2port->padev->irq,
- 		ps2port->port->phys);
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0x08000000>;
+ 	};
  
+diff --git a/arch/arm/boot/dts/imx23-olinuxino.dts b/arch/arm/boot/dts/imx23-olinuxino.dts
+index e9351774c6199..109f51603d45e 100644
+--- a/arch/arm/boot/dts/imx23-olinuxino.dts
++++ b/arch/arm/boot/dts/imx23-olinuxino.dts
+@@ -20,6 +20,7 @@
+ 	compatible = "olimex,imx23-olinuxino", "fsl,imx23";
+ 
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0x04000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx23-sansa.dts b/arch/arm/boot/dts/imx23-sansa.dts
+index 67de7863ad795..fa22fd9b24129 100644
+--- a/arch/arm/boot/dts/imx23-sansa.dts
++++ b/arch/arm/boot/dts/imx23-sansa.dts
+@@ -50,6 +50,7 @@
+ 	compatible = "sandisk,sansa_fuze_plus", "fsl,imx23";
+ 
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0x04000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx23-stmp378x_devb.dts b/arch/arm/boot/dts/imx23-stmp378x_devb.dts
+index 95c7b918f6d60..aab029349420d 100644
+--- a/arch/arm/boot/dts/imx23-stmp378x_devb.dts
++++ b/arch/arm/boot/dts/imx23-stmp378x_devb.dts
+@@ -17,6 +17,7 @@
+ 	compatible = "fsl,stmp378x-devb", "fsl,imx23";
+ 
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0x04000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx23-xfi3.dts b/arch/arm/boot/dts/imx23-xfi3.dts
+index 9616e500b9961..2b5df8dfd3ff3 100644
+--- a/arch/arm/boot/dts/imx23-xfi3.dts
++++ b/arch/arm/boot/dts/imx23-xfi3.dts
+@@ -49,6 +49,7 @@
+ 	compatible = "creative,x-fi3", "fsl,imx23";
+ 
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0x04000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx23.dtsi b/arch/arm/boot/dts/imx23.dtsi
+index 71bfd2b15609a..aaaa987d8eff9 100644
+--- a/arch/arm/boot/dts/imx23.dtsi
++++ b/arch/arm/boot/dts/imx23.dtsi
+@@ -13,10 +13,8 @@
+ 	 * The decompressor and also some bootloaders rely on a
+ 	 * pre-existing /chosen node to be available to insert the
+ 	 * command line and merge other ATAGS info.
+-	 * Also for U-Boot there must be a pre-existing /memory node.
+ 	 */
+ 	chosen {};
+-	memory { device_type = "memory"; };
+ 
+ 	aliases {
+ 		gpio0 = &gpio0;
 -- 
 2.20.1
 
