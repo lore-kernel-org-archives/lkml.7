@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A71C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9D7C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 038BD20862
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2A3120862
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412877;
-	bh=EaplAfuheF1sBF4x0lD26ZSodyHdeqvGBmEQkvmT834=;
+	s=default; t=1575412880;
+	bh=OkQcdxTstU1Pzv002g0q7wkNAXVtWVcDMkq6fJScZ2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GDHSZjYBBgT3C4q+yKlOyGRpxcRW6IWdv3MEbq9uXKBNGMYaqHWpkjlCrBoxYi9Em
-	 zS+PF6M2P+5TxRRLSbvFBCAYbyC8dJJ+oElil7Ai5phNYcLNub7dMPO3uV9LVfMG7L
-	 PbF9+0dd4BBinrQHGvwaTOdwun0Heizy6jKm982E=
+	b=rdAWoJyMbPknmhZX+Dn4s6LMqHHUdAwsdoIEKsNwbTRtDCGCGAvPI1+zoKH1mPMn+
+	 4CU8TdSn21eTQ5u2Xllvy8sjLwxwjUsE5hxjnXCVbBM54f0IIbOHZFXRSUOfj/Qvsd
+	 pYuzGrBxuArQi1j+DjTZRuAlQWO6qrPGms2stT3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbfLCWlQ (ORCPT
+        id S1728534AbfLCWlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:41:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55544 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:41:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727731AbfLCWlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:41:13 -0500
+        id S1728520AbfLCWlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:41:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DC212080A;
-        Tue,  3 Dec 2019 22:41:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7078F20684;
+        Tue,  3 Dec 2019 22:41:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412872;
-        bh=EaplAfuheF1sBF4x0lD26ZSodyHdeqvGBmEQkvmT834=;
+        s=default; t=1575412877;
+        bh=OkQcdxTstU1Pzv002g0q7wkNAXVtWVcDMkq6fJScZ2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gSmvNfosgqxixKjFTIsIglyJTlBDnVM6oXOLblal5oM/N1IgbqupWtjdTLky1Wumh
-         T9t07g8SDyGFBtPCDNF9YIhkaYUBBBTtchoiBvWNzZqmOLsqqnGvy8NK4e/2D87U2n
-         nwi6QCQf9VksbzCSdk0yJtMKAHi6d4di3Y3PS8e0=
+        b=a7yIEBJoVo5a9w2v6nT1LCLCSyUzNxhhpnWKKlNSX9NwZr/UUhocMB9vdnqzP8E4y
+         fNs8uEwbnwZwIRCMii6Chs2MlKAS+vvToi8JJagvN7gd7h59eR/OgFw3SRE3SLXgyX
+         hKBMEKDUzfHPMR+vOd1ItqduR0TMNVukfvZPDZE8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michal Suchanek <msuchanek@suse.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
+        stable@vger.kernel.org,
+        Jeroen Hofstee <jhofstee@victronenergy.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 050/135] stacktrace: Dont skip first entry on noncurrent tasks
-Date:   Tue,  3 Dec 2019 23:34:50 +0100
-Message-Id: <20191203213019.500970064@linuxfoundation.org>
+Subject: [PATCH 5.3 052/135] can: c_can: D_CAN: c_can_chip_config(): perform a sofware reset on open
+Date:   Tue,  3 Dec 2019 23:34:52 +0100
+Message-Id: <20191203213019.882647560@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -62,55 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Jeroen Hofstee <jhofstee@victronenergy.com>
 
-[ Upstream commit b0c51f158455e31d5024100cf3580fcd88214b0e ]
+[ Upstream commit 23c5a9488f076bab336177cd1d1a366bd8ddf087 ]
 
-When doing cat /proc/<PID>/stack, the output is missing the first entry.
-When the current code walks the stack starting in stack_trace_save_tsk,
-it skips all scheduler functions (that's OK) plus one more function. But
-this one function should be skipped only for the 'current' task as it is
-stack_trace_save_tsk proper.
+When the CAN interface is closed it the hardwre is put in power down
+mode, but does not reset the error counters / state. Reset the D_CAN on
+open, so the reported state and the actual state match.
 
-The original code (before the common infrastructure) skipped one
-function only for the 'current' task -- see save_stack_trace_tsk before
-3599fe12a125. So do so also in the new infrastructure now.
+According to [1], the C_CAN module doesn't have the software reset.
 
-Fixes: 214d8ca6ee85 ("stacktrace: Provide common infrastructure")
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Michal Suchanek <msuchanek@suse.de>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Link: https://lkml.kernel.org/r/20191030072545.19462-1-jslaby@suse.cz
+[1] http://www.bosch-semiconductors.com/media/ip_modules/pdf_2/c_can_fd8/users_manual_c_can_fd8_r210_1.pdf
+
+Signed-off-by: Jeroen Hofstee <jhofstee@victronenergy.com>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/stacktrace.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/can/c_can/c_can.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
-index f5440abb75329..9bbfbdb96ae51 100644
---- a/kernel/stacktrace.c
-+++ b/kernel/stacktrace.c
-@@ -141,7 +141,8 @@ unsigned int stack_trace_save_tsk(struct task_struct *tsk, unsigned long *store,
- 	struct stacktrace_cookie c = {
- 		.store	= store,
- 		.size	= size,
--		.skip	= skipnr + 1,
-+		/* skip this function if they are tracing us */
-+		.skip	= skipnr + !!(current == tsk),
- 	};
+diff --git a/drivers/net/can/c_can/c_can.c b/drivers/net/can/c_can/c_can.c
+index 9b61bfbea6cd1..24c6015f6c92b 100644
+--- a/drivers/net/can/c_can/c_can.c
++++ b/drivers/net/can/c_can/c_can.c
+@@ -52,6 +52,7 @@
+ #define CONTROL_EX_PDR		BIT(8)
  
- 	if (!try_get_task_stack(tsk))
-@@ -298,7 +299,8 @@ unsigned int stack_trace_save_tsk(struct task_struct *task,
- 	struct stack_trace trace = {
- 		.entries	= store,
- 		.max_entries	= size,
--		.skip		= skipnr + 1,
-+		/* skip this function if they are tracing us */
-+		.skip	= skipnr + !!(current == task),
- 	};
+ /* control register */
++#define CONTROL_SWR		BIT(15)
+ #define CONTROL_TEST		BIT(7)
+ #define CONTROL_CCE		BIT(6)
+ #define CONTROL_DISABLE_AR	BIT(5)
+@@ -572,6 +573,26 @@ static void c_can_configure_msg_objects(struct net_device *dev)
+ 				   IF_MCONT_RCV_EOB);
+ }
  
- 	save_stack_trace_tsk(task, &trace);
++static int c_can_software_reset(struct net_device *dev)
++{
++	struct c_can_priv *priv = netdev_priv(dev);
++	int retry = 0;
++
++	if (priv->type != BOSCH_D_CAN)
++		return 0;
++
++	priv->write_reg(priv, C_CAN_CTRL_REG, CONTROL_SWR | CONTROL_INIT);
++	while (priv->read_reg(priv, C_CAN_CTRL_REG) & CONTROL_SWR) {
++		msleep(20);
++		if (retry++ > 100) {
++			netdev_err(dev, "CCTRL: software reset failed\n");
++			return -EIO;
++		}
++	}
++
++	return 0;
++}
++
+ /*
+  * Configure C_CAN chip:
+  * - enable/disable auto-retransmission
+@@ -581,6 +602,11 @@ static void c_can_configure_msg_objects(struct net_device *dev)
+ static int c_can_chip_config(struct net_device *dev)
+ {
+ 	struct c_can_priv *priv = netdev_priv(dev);
++	int err;
++
++	err = c_can_software_reset(dev);
++	if (err)
++		return err;
+ 
+ 	/* enable automatic retransmission */
+ 	priv->write_reg(priv, C_CAN_CTRL_REG, CONTROL_ENABLE_AR);
 -- 
 2.20.1
 
