@@ -2,64 +2,60 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF530C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 675B9C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93C4D2073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:41:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575355276;
-	bh=+7fslhszV7K2Omo1jDYceinaZZe39tXZaFis9U579jA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xexgnUPoAM/d447Tzy8iX+r1ZUvDITFyIQu/ANRoL2hTuJ7HBHD0FIyB/8xrszvoI
-	 HcKzTUretyASrdX4EG53PZ+IDob2CzDCpMgXSTgYeP9IHfIoTHnuJoLqi0lpu5PPqi
-	 TrX7yQzj8vMZZn9n6FQWtK36G02b23bnZEkgjlfQ=
+	by mail.kernel.org (Postfix) with ESMTP id 3EC3920684
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:42:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="SwoYHX5o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfLCGlP (ORCPT
+        id S1727319AbfLCGmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 01:41:15 -0500
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:34232 "EHLO
+        Tue, 3 Dec 2019 01:42:16 -0500
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:35687 "EHLO
         conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727213AbfLCGlO (ORCPT
+        with ESMTP id S1726521AbfLCGmP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 01:41:14 -0500
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id xB36emIw001528
-        for <linux-kernel@vger.kernel.org>; Tue, 3 Dec 2019 15:40:49 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com xB36emIw001528
+        Tue, 3 Dec 2019 01:42:15 -0500
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id xB36fxQx002046;
+        Tue, 3 Dec 2019 15:41:59 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com xB36fxQx002046
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1575355249;
-        bh=GmXrWvhOttxlHCjX9wBisNRIMAo1vtJVcSCFg0ZfW/E=;
+        s=dec2015msa; t=1575355319;
+        bh=d1TaPWKkweQ1rY/9jQKGxR8RbctwUl4ZdBH262gE6Ek=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=eQfEAHxN/nyufxxHjUgeAqfUWRF9N56N6laRBYIa9ZUPDx+oXOlkXeU7KxqPwuQzo
-         pSrn1TZMHRowWTRqGBXYN2AANUfHl5vYyyXnnkfQLRj/UxYbQwcUe06/pcP9/5pI/v
-         jCYcFWZHB5NA8Jj9QXLSGDVJNjzwRalDB/SROx4QLfA7fv7qX7qGIEkO6305O9AtVz
-         86nMvnH5KzB0HRgM40Dp+axd9d+ayIRZ2zLK0fjXKD2wK0L+uwCgFIJwUtLd8RxoEu
-         t9I8bNCFI0J635yawOfhmbAUpYhg+5dsS7/vMhZkkznnSQHOftcRL7E3CtYtHdccrf
-         mR12BCMLCqmMg==
-X-Nifty-SrcIP: [209.85.222.43]
-Received: by mail-ua1-f43.google.com with SMTP id d6so908180uam.11
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 22:40:48 -0800 (PST)
-X-Gm-Message-State: APjAAAWvtsV5lUEfWhOz+gfXXsgg7XzwcXp/CDgoxwItCfqSml1lvxir
-        Vto1yWeXTsDR4ea4jFgoqciB0tsaqAU5HUXCx94=
-X-Google-Smtp-Source: APXvYqwRi6dH3+fcClvqz37Ap3nH0SRDXHHJ5azuwG10OEJ40DOOd6/KUMOAaiwkuJFBpVyZafygaqHFxR9pXXHM82Y=
-X-Received: by 2002:ab0:6418:: with SMTP id x24mr2561736uao.40.1575355247780;
- Mon, 02 Dec 2019 22:40:47 -0800 (PST)
+        b=SwoYHX5ogHo9RL8Nc+N0vXtoMdM8NTbmdzHaNGMQ8mkQAHOL/krz6QWLr4Vn72MfY
+         OSPm4OaSQgfPeghIdjSFPVKurVV4Xy94Oj7MQBwgH6ptJ3vMjxhRLLFZXS4PWfmiUA
+         H+3M1wPKDdPRfYCJbv7nrR6FEeXsW80r09rOsxFGVYzix4//vA5PBuTlv4w82VJSwZ
+         M5twJrrM7vL8yd/iXmHzDlkHiEL/XxvPOAOlfcQLae//PzwCdFxrjI3Ydqbt6OlzOj
+         iOEKDYVL4rR3wZYDxQ1Q7KHFhcrD7JIXTDhePJ04lvB2YzzFcbU8l0X3mVkYKj0Htg
+         ARgPMppx73Zbg==
+X-Nifty-SrcIP: [209.85.217.48]
+Received: by mail-vs1-f48.google.com with SMTP id n27so1685569vsa.0;
+        Mon, 02 Dec 2019 22:41:59 -0800 (PST)
+X-Gm-Message-State: APjAAAVWGdEYYebf8uWhcG94343K8IDlsICABzwOHU0u7SyVDdGc97NC
+        kfP/TqR3ynAKgV8wsW4MRT+DhUI/2SfjNU0ou8g=
+X-Google-Smtp-Source: APXvYqzLsiH4HRQY9QqmGR/SA97yO7NrrmjdmBWFjksc9y+rkTjK3+4kSlw3fdNk79ycV87KfqHrKT+gli71BIb+qN8=
+X-Received: by 2002:a67:f6c2:: with SMTP id v2mr1763077vso.54.1575355318341;
+ Mon, 02 Dec 2019 22:41:58 -0800 (PST)
 MIME-Version: 1.0
-References: <1575001159-19648-1-git-send-email-hayashi.kunihiko@socionext.com>
- <12f11e521a41d9f1e0e916fcbe413f6d0390bb3c.camel@pengutronix.de> <20191203151149.52A8.4A936039@socionext.com>
-In-Reply-To: <20191203151149.52A8.4A936039@socionext.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 3 Dec 2019 15:40:11 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQvsw-bgXm5u-z0gtSZ078RvPFU10yqyhBRi2Oaq4bqdA@mail.gmail.com>
-Message-ID: <CAK7LNAQvsw-bgXm5u-z0gtSZ078RvPFU10yqyhBRi2Oaq4bqdA@mail.gmail.com>
-Subject: Re: [PATCH] reset: uniphier: Add SCSSI reset control for each channel
+References: <1575000968-19434-1-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <1575000968-19434-1-git-send-email-hayashi.kunihiko@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 3 Dec 2019 15:41:22 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARjGtt-Ee_seet=nB7K0AVA8x4Q+bFRm=1A_aLn7Qancg@mail.gmail.com>
+Message-ID: <CAK7LNARjGtt-Ee_seet=nB7K0AVA8x4Q+bFRm=1A_aLn7Qancg@mail.gmail.com>
+Subject: Re: [PATCH] clk: uniphier: Add SCSSI clock gate for each channel
 To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Masami Hiramatsu <masami.hiramatsu@linaro.org>,
@@ -70,39 +66,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 3:14 PM Kunihiko Hayashi
+On Fri, Nov 29, 2019 at 1:16 PM Kunihiko Hayashi
 <hayashi.kunihiko@socionext.com> wrote:
 >
-> Hi Philipp,
+> SCSSI has clock gates for each channel in the SoCs newer than Pro4,
+> so this adds missing clock gates for channel 1, 2 and 3. And more, this
+> moves MCSSI clock ID after SCSSI.
 >
-> On Mon, 2 Dec 2019 14:06:20 +0100 <p.zabel@pengutronix.de> wrote:
->
-> > On Fri, 2019-11-29 at 13:19 +0900, Kunihiko Hayashi wrote:
-> > > SCSSI has reset controls for each channel in the SoCs newer than Pro4,
-> > > so this adds missing reset controls for channel 1, 2 and 3. And more, this
-> > > moves MCSSI reset ID after SCSSI.
-> >
-> > Just to be sure, there are no device trees in circulation that already
-> > use the MCSSI reset?
->
-> Yes, currently no device trees refer to MCSSI reset,
-> so I think MCSSI reset ID can be moved.
->
-> Thank you,
->
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 > ---
-> Best Regards,
-> Kunihiko Hayashi
->
 
 
-Fixes: 6b39fd590aeb ("reset: uniphier: add reset control support for SPI")
+Fixes: ff388ee36516 ("clk: uniphier: add clock frequency support for SPI")
 
-Assuming you tested it this time,
 Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
 
 
+
+>  drivers/clk/uniphier/clk-uniphier-peri.c | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/clk/uniphier/clk-uniphier-peri.c b/drivers/clk/uniphier/clk-uniphier-peri.c
+> index 9caa529..3e32db9 100644
+> --- a/drivers/clk/uniphier/clk-uniphier-peri.c
+> +++ b/drivers/clk/uniphier/clk-uniphier-peri.c
+> @@ -18,8 +18,8 @@
+>  #define UNIPHIER_PERI_CLK_FI2C(idx, ch)                                        \
+>         UNIPHIER_CLK_GATE("i2c" #ch, (idx), "i2c", 0x24, 24 + (ch))
+>
+> -#define UNIPHIER_PERI_CLK_SCSSI(idx)                                   \
+> -       UNIPHIER_CLK_GATE("scssi", (idx), "spi", 0x20, 17)
+> +#define UNIPHIER_PERI_CLK_SCSSI(idx, ch)                               \
+> +       UNIPHIER_CLK_GATE("scssi" #ch, (idx), "spi", 0x20, 17 + (ch))
+>
+>  #define UNIPHIER_PERI_CLK_MCSSI(idx)                                   \
+>         UNIPHIER_CLK_GATE("mcssi", (idx), "spi", 0x24, 14)
+> @@ -35,7 +35,7 @@ const struct uniphier_clk_data uniphier_ld4_peri_clk_data[] = {
+>         UNIPHIER_PERI_CLK_I2C(6, 2),
+>         UNIPHIER_PERI_CLK_I2C(7, 3),
+>         UNIPHIER_PERI_CLK_I2C(8, 4),
+> -       UNIPHIER_PERI_CLK_SCSSI(11),
+> +       UNIPHIER_PERI_CLK_SCSSI(11, 0),
+>         { /* sentinel */ }
+>  };
+>
+> @@ -51,7 +51,10 @@ const struct uniphier_clk_data uniphier_pro4_peri_clk_data[] = {
+>         UNIPHIER_PERI_CLK_FI2C(8, 4),
+>         UNIPHIER_PERI_CLK_FI2C(9, 5),
+>         UNIPHIER_PERI_CLK_FI2C(10, 6),
+> -       UNIPHIER_PERI_CLK_SCSSI(11),
+> -       UNIPHIER_PERI_CLK_MCSSI(12),
+> +       UNIPHIER_PERI_CLK_SCSSI(11, 0),
+> +       UNIPHIER_PERI_CLK_SCSSI(12, 1),
+> +       UNIPHIER_PERI_CLK_SCSSI(13, 2),
+> +       UNIPHIER_PERI_CLK_SCSSI(14, 3),
+> +       UNIPHIER_PERI_CLK_MCSSI(15),
+>         { /* sentinel */ }
+>  };
+> --
+> 2.7.4
+>
 
 -- 
 Best Regards
