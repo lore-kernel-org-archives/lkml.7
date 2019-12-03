@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42092C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54193C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14E1520803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24E3320803
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412726;
-	bh=+2CN5l6mJ8eMxZslm+VysI6hfxmKHCqxHd9jh/oSp9Q=;
+	s=default; t=1575412729;
+	bh=1jaVvqrRRcxk8G/3Hlu0ZZYVZUHHzUghRnsT1CY3Qr8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YjpmlfUdQTBUHsiKGPbQb9ml3dqtvVFUiHzhOPKfE4rbxaw9d8s7Ywqq/BS7AXGuO
-	 68UYZ4neCwZ9GYmNRiaWRTcnFtqn8+fGj9EyTtj6lJXUR9n75J0K64tfdTDhZ3kX5U
-	 vvaHIr22sdD6AvUl4kMmP4+gFlZxiISRLoWO857o=
+	b=Pu0Cl9kZiJ7E1sNxTIQ9Xzd0QpZUvg/ItAzeqIPwx9m2aohQFkLDww3zzUQ3jYgIk
+	 AK2Tfzpvq5wcGUSb6Eo319GfaemRV3Q0iO1cnLTFXx3L8j+JDtsbgbuqcUppoWVV+c
+	 H54gGSUI4zFmVV2E43p3DT0ZGRxzyYrpOHsONmbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbfLCWip (ORCPT
+        id S1728074AbfLCWis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:38:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48044 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:38:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728036AbfLCWik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:38:40 -0500
+        id S1728064AbfLCWip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:38:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 898D420684;
-        Tue,  3 Dec 2019 22:38:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 798C120684;
+        Tue,  3 Dec 2019 22:38:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412720;
-        bh=+2CN5l6mJ8eMxZslm+VysI6hfxmKHCqxHd9jh/oSp9Q=;
+        s=default; t=1575412724;
+        bh=1jaVvqrRRcxk8G/3Hlu0ZZYVZUHHzUghRnsT1CY3Qr8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fDzP1sU4X67u/Mj3nKpwXQm1WCsbS1a51Ka1l6vOBrzBQT2F9P6UnenaaU4hAOHy0
-         idogk3SPIWUK7UIcRWbCXpus1qS7o+BfRLKUshe+Zqe1tVJymzHF3O81BzJC+ZdtaA
-         3OYRCLtCK5ao2vS5Qhg4q7cvA92AVxDxvMepzw8E=
+        b=eo/6VkApQM3W+32KTtxQv+btDmo9RPDJXGG19iFlHsltuGZunqapgCIxsVATN852Y
+         UDP/bRg/heI0WUQY1TVGed0cg3WRYwclKEWTl/uXyJvEoAr9PXCAgvxrVlSx9Sd5V/
+         maavT0PZuvU8VJS5dlhuERyXUtobbTqFMHHHjFUE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        John Rutherford <john.rutherford@dektech.com.au>,
-        Jon Maloy <jon.maloy@ericsson.com>,
+        Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
+        Stefano Brivio <sbrivio@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 37/46] tipc: fix link name length check
-Date:   Tue,  3 Dec 2019 23:35:57 +0100
-Message-Id: <20191203212758.728217209@linuxfoundation.org>
+Subject: [PATCH 5.4 38/46] selftests: pmtu: use -oneline for ip route list cache
+Date:   Tue,  3 Dec 2019 23:35:58 +0100
+Message-Id: <20191203212801.005375736@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203212705.175425505@linuxfoundation.org>
 References: <20191203212705.175425505@linuxfoundation.org>
@@ -61,45 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Rutherford <john.rutherford@dektech.com.au>
+From: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
 
-[ Upstream commit fd567ac20cb0377ff466d3337e6e9ac5d0cb15e4 ]
+[ Upstream commit 2745aea6750ff0d2c48285d25bdb00e5b636ec8b ]
 
-In commit 4f07b80c9733 ("tipc: check msg->req data len in
-tipc_nl_compat_bearer_disable") the same patch code was copied into
-routines: tipc_nl_compat_bearer_disable(),
-tipc_nl_compat_link_stat_dump() and tipc_nl_compat_link_reset_stats().
-The two link routine occurrences should have been modified to check
-the maximum link name length and not bearer name length.
+Some versions of iproute2 will output more than one line per entry, which
+will cause the test to fail, like:
 
-Fixes: 4f07b80c9733 ("tipc: check msg->reg data len in tipc_nl_compat_bearer_disable")
-Signed-off-by: John Rutherford <john.rutherford@dektech.com.au>
-Acked-by: Jon Maloy <jon.maloy@ericsson.com>
+TEST: ipv6: list and flush cached exceptions                        [FAIL]
+  can't list cached exceptions
+
+That happens, for example, with iproute2 4.15.0. When using the -oneline
+option, this will work just fine:
+
+TEST: ipv6: list and flush cached exceptions                        [ OK ]
+
+This also works just fine with a more recent version of iproute2, like
+5.4.0.
+
+For some reason, two lines are printed for the IPv4 test no matter what
+version of iproute2 is used. Use the same -oneline parameter there instead
+of counting the lines twice.
+
+Fixes: b964641e9925 ("selftests: pmtu: Make list_flush_ipv6_exception test more demanding")
+Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+Acked-by: Stefano Brivio <sbrivio@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tipc/netlink_compat.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/pmtu.sh |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/net/tipc/netlink_compat.c
-+++ b/net/tipc/netlink_compat.c
-@@ -550,7 +550,7 @@ static int tipc_nl_compat_link_stat_dump
- 	if (len <= 0)
- 		return -EINVAL;
+--- a/tools/testing/selftests/net/pmtu.sh
++++ b/tools/testing/selftests/net/pmtu.sh
+@@ -1249,8 +1249,7 @@ test_list_flush_ipv4_exception() {
+ 	done
+ 	run_cmd ${ns_a} ping -q -M want -i 0.1 -c 2 -s 1800 "${dst2}"
  
--	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
-+	len = min_t(int, len, TIPC_MAX_LINK_NAME);
- 	if (!string_is_valid(name, len))
- 		return -EINVAL;
- 
-@@ -822,7 +822,7 @@ static int tipc_nl_compat_link_reset_sta
- 	if (len <= 0)
- 		return -EINVAL;
- 
--	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
-+	len = min_t(int, len, TIPC_MAX_LINK_NAME);
- 	if (!string_is_valid(name, len))
- 		return -EINVAL;
- 
+-	# Each exception is printed as two lines
+-	if [ "$(${ns_a} ip route list cache | wc -l)" -ne 202 ]; then
++	if [ "$(${ns_a} ip -oneline route list cache | wc -l)" -ne 101 ]; then
+ 		err "  can't list cached exceptions"
+ 		fail=1
+ 	fi
+@@ -1300,7 +1299,7 @@ test_list_flush_ipv6_exception() {
+ 		run_cmd ${ns_a} ping -q -M want -i 0.1 -w 1 -s 1800 "${dst_prefix1}${i}"
+ 	done
+ 	run_cmd ${ns_a} ping -q -M want -i 0.1 -w 1 -s 1800 "${dst2}"
+-	if [ "$(${ns_a} ip -6 route list cache | wc -l)" -ne 101 ]; then
++	if [ "$(${ns_a} ip -oneline -6 route list cache | wc -l)" -ne 101 ]; then
+ 		err "  can't list cached exceptions"
+ 		fail=1
+ 	fi
 
 
