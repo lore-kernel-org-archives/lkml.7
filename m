@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A44C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F4DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33EA020656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:01:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3435E2084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:01:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414066;
-	bh=pPZsBLyPBI1BaG0vlYUUYhpQW3wrjUUIPFUaphUi7xU=;
+	s=default; t=1575414069;
+	bh=klQsIEaLdkvQn9mXHsL/19l5ID92BD8wx7KpDUk+fkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DFjReq64g5zQReFPFeYQnINujUTE6R6yEzoHCuPU8xvoLquZF183v9aQA34DrTfYR
-	 moidzq2Vpq6ZDsXcddLbE8PQgTZn81M3gkgThzVtttoPeLs7Z8pEMv4QQ6AEBb/EqC
-	 CY2Vjy75QBKQYfsof5XNItVnbXE2fuD3KWDJp4o0=
+	b=PgakzDU+c0BOLNa7l9SPA7dL+pMDVIOWawqgF47QfOzSpXl+LMw2Ub3iwAnTJlS+H
+	 kQMhf+esL7fq/4g+ODIORt/2x8kHQGGDTq7QxU+4jnRi1Wj9ErQfOshsMwT/uOd7dU
+	 s/R7swh7ksoTQEYnBq+blCnpFpBzL6H16hCiwFVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730290AbfLCW4h (ORCPT
+        id S1730605AbfLCXBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:56:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51626 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 18:01:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729898AbfLCW4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:56:31 -0500
+        id S1729231AbfLCW4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:56:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3352320865;
-        Tue,  3 Dec 2019 22:56:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F82320803;
+        Tue,  3 Dec 2019 22:56:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413790;
-        bh=pPZsBLyPBI1BaG0vlYUUYhpQW3wrjUUIPFUaphUi7xU=;
+        s=default; t=1575413801;
+        bh=klQsIEaLdkvQn9mXHsL/19l5ID92BD8wx7KpDUk+fkw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jCPBDKH9lbm14j8Kq4BYQe8ib2Jm1ujlFq/jfgp6sx97FIEHVl7ogIJoDZPu7GVLA
-         pEC5GXaOh2ILgXHL+nfTd2jFGlrKnquCPNL3nXFOCqmuQ31isLSTEGD7Xa+81k4u0P
-         U81TWKJcfvPTT26FQYV/NxO2DYFAwmuVyfGWCek8=
+        b=b84PSBlyXmiVIikg0oGPW1gteEYDvWzMwx2HVEin+7pYHSda0OmwcZhZZZ782clG0
+         WI6DFpTybzFju9HaiNWf/R32LfzpY7tNDNaawvRi+DyzWIZ2CnVUIA9M2ZpID1xfjx
+         oIi0PUSaqXgxdrEbI/nHPtMNcZ+qMwaxFl/dLMik=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jack Wang <jack.wang.usish@gmail.com>
-Subject: [PATCH 4.19 264/321] KVM: nVMX: rename enter_vmx_non_root_mode to nested_vmx_enter_non_root_mode
-Date:   Tue,  3 Dec 2019 23:35:30 +0100
-Message-Id: <20191203223440.862014163@linuxfoundation.org>
+        stable@vger.kernel.org, Mathias Kresin <dev@kresin.me>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: [PATCH 4.19 268/321] usb: dwc2: use a longer core rest timeout in dwc2_core_reset()
+Date:   Tue,  3 Dec 2019 23:35:34 +0100
+Message-Id: <20191203223441.067373492@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -62,68 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Mathias Kresin <dev@kresin.me>
 
-commit d63907dc7dd11d98c8ffbdaf8311987e5a508744 upstream.
+commit 6689f0f4bb14e50917ba42eb9b41c25e0184970c upstream.
 
-...to be more consistent with the nested VMX nomenclature.
+Testing on different generations of Lantiq MIPS SoC based boards, showed
+that it takes up to 1500 us until the core reset bit is cleared.
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Jack Wang <jack.wang.usish@gmail.com>
+The driver from the vendor SDK (ifxhcd) uses a 1 second timeout. Use the
+same timeout to fix wrong hang detections and make the driver work for
+Lantiq MIPS SoCs.
+
+At least till kernel 4.14 the hanging reset only caused a warning but
+the driver was probed successful. With kernel 4.19 errors out with
+EBUSY.
+
+Cc: linux-stable <stable@vger.kernel.org> # 4.19+
+Signed-off-by: Mathias Kresin <dev@kresin.me>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/usb/dwc2/core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -12680,7 +12680,7 @@ static int check_vmentry_postreqs(struct
-  * If exit_qual is NULL, this is being called from state restore (either RSM
-  * or KVM_SET_NESTED_STATE).  Otherwise it's called from vmlaunch/vmresume.
-  */
--static int enter_vmx_non_root_mode(struct kvm_vcpu *vcpu, u32 *exit_qual)
-+static int nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu, u32 *exit_qual)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
-@@ -12845,7 +12845,7 @@ static int nested_vmx_run(struct kvm_vcp
- 	 */
+--- a/drivers/usb/dwc2/core.c
++++ b/drivers/usb/dwc2/core.c
+@@ -524,7 +524,7 @@ int dwc2_core_reset(struct dwc2_hsotg *h
+ 	greset |= GRSTCTL_CSFTRST;
+ 	dwc2_writel(hsotg, greset, GRSTCTL);
  
- 	vmx->nested.nested_run_pending = 1;
--	ret = enter_vmx_non_root_mode(vcpu, &exit_qual);
-+	ret = nested_vmx_enter_non_root_mode(vcpu, &exit_qual);
- 	if (ret) {
- 		nested_vmx_entry_failure(vcpu, vmcs12, ret, exit_qual);
- 		vmx->nested.nested_run_pending = 0;
-@@ -12856,7 +12856,7 @@ static int nested_vmx_run(struct kvm_vcp
- 	vmx->vcpu.arch.l1tf_flush_l1d = true;
- 
- 	/*
--	 * Must happen outside of enter_vmx_non_root_mode() as it will
-+	 * Must happen outside of nested_vmx_enter_non_root_mode() as it will
- 	 * also be used as part of restoring nVMX state for
- 	 * snapshot restore (migration).
- 	 *
-@@ -14089,7 +14089,7 @@ static int vmx_pre_leave_smm(struct kvm_
- 
- 	if (vmx->nested.smm.guest_mode) {
- 		vcpu->arch.hflags &= ~HF_SMM_MASK;
--		ret = enter_vmx_non_root_mode(vcpu, NULL);
-+		ret = nested_vmx_enter_non_root_mode(vcpu, NULL);
- 		vcpu->arch.hflags |= HF_SMM_MASK;
- 		if (ret)
- 			return ret;
-@@ -14300,7 +14300,7 @@ static int vmx_set_nested_state(struct k
- 		return -EINVAL;
- 
- 	vmx->nested.dirty_vmcs12 = true;
--	ret = enter_vmx_non_root_mode(vcpu, NULL);
-+	ret = nested_vmx_enter_non_root_mode(vcpu, NULL);
- 	if (ret)
- 		return -EINVAL;
- 
+-	if (dwc2_hsotg_wait_bit_clear(hsotg, GRSTCTL, GRSTCTL_CSFTRST, 50)) {
++	if (dwc2_hsotg_wait_bit_clear(hsotg, GRSTCTL, GRSTCTL_CSFTRST, 10000)) {
+ 		dev_warn(hsotg->dev, "%s: HANG! Soft Reset timeout GRSTCTL GRSTCTL_CSFTRST\n",
+ 			 __func__);
+ 		return -EBUSY;
 
 
