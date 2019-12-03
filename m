@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D712C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A44C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23B132064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:01:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33EA020656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:01:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414061;
-	bh=lkpQiYQzwqaVxM9jUXRZJtLSNKEgRmR/SaQeIQHpOCA=;
+	s=default; t=1575414066;
+	bh=pPZsBLyPBI1BaG0vlYUUYhpQW3wrjUUIPFUaphUi7xU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c5sWxP7/LMnQhLQa82Eib3XecFy0PRaGA7ubs8mi9178RJ8vKCTxY4POh2uiSOKbX
-	 YKBdX6UacxyTIsApefK4RpcJu97S44ak9QPe2686FsBZfldaTkL+rfq8dG4bzoXQBP
-	 8C0DdTXwCAXly1PAw7tmqqiJycz7jZdpgccjcEc0=
+	b=DFjReq64g5zQReFPFeYQnINujUTE6R6yEzoHCuPU8xvoLquZF183v9aQA34DrTfYR
+	 moidzq2Vpq6ZDsXcddLbE8PQgTZn81M3gkgThzVtttoPeLs7Z8pEMv4QQ6AEBb/EqC
+	 CY2Vjy75QBKQYfsof5XNItVnbXE2fuD3KWDJp4o0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730469AbfLCW4w (ORCPT
+        id S1730290AbfLCW4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:56:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52054 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:56:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729945AbfLCW4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:56:49 -0500
+        id S1729898AbfLCW4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:56:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 330F62053B;
-        Tue,  3 Dec 2019 22:56:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3352320865;
+        Tue,  3 Dec 2019 22:56:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413808;
-        bh=lkpQiYQzwqaVxM9jUXRZJtLSNKEgRmR/SaQeIQHpOCA=;
+        s=default; t=1575413790;
+        bh=pPZsBLyPBI1BaG0vlYUUYhpQW3wrjUUIPFUaphUi7xU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D9oBKwsKfdQLxmkN0/9Kl+RYMKVrcDjptLVK/uxHcEC6PnFwygZfr7U7CWGt48acP
-         ZhjQvXY6CNNx32s7LYAhULcq6tZwIGbZxwoePbWlMmfFWitUwPwXQUdT1ijw8PLF8O
-         I5gBD3emZIdtxfrzqoehCJmsd/CTaIk0d1M1zdi8=
+        b=jCPBDKH9lbm14j8Kq4BYQe8ib2Jm1ujlFq/jfgp6sx97FIEHVl7ogIJoDZPu7GVLA
+         pEC5GXaOh2ILgXHL+nfTd2jFGlrKnquCPNL3nXFOCqmuQ31isLSTEGD7Xa+81k4u0P
+         U81TWKJcfvPTT26FQYV/NxO2DYFAwmuVyfGWCek8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        youling257 <youling257@gmail.com>
-Subject: [PATCH 4.19 271/321] staging: rtl8723bs: Add 024c:0525 to the list of SDIO device-ids
-Date:   Tue,  3 Dec 2019 23:35:37 +0100
-Message-Id: <20191203223441.227317169@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jack Wang <jack.wang.usish@gmail.com>
+Subject: [PATCH 4.19 264/321] KVM: nVMX: rename enter_vmx_non_root_mode to nested_vmx_enter_non_root_mode
+Date:   Tue,  3 Dec 2019 23:35:30 +0100
+Message-Id: <20191203223440.862014163@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -59,33 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 3d5f1eedbfd22ceea94b39989d6021b1958181f4 upstream.
+commit d63907dc7dd11d98c8ffbdaf8311987e5a508744 upstream.
 
-Add 024c:0525 to the list of SDIO device-ids, based on a patch found
-in the Android X86 kernels. According to that patch this device id is
-used on the Alcatel Plus 10 device.
+...to be more consistent with the nested VMX nomenclature.
 
-Reported-and-tested-by: youling257 <youling257@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191111113846.24940-1-hdegoede@redhat.com
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Jack Wang <jack.wang.usish@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8723bs/os_dep/sdio_intf.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kvm/vmx.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-+++ b/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-@@ -17,6 +17,7 @@
- static const struct sdio_device_id sdio_ids[] =
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -12680,7 +12680,7 @@ static int check_vmentry_postreqs(struct
+  * If exit_qual is NULL, this is being called from state restore (either RSM
+  * or KVM_SET_NESTED_STATE).  Otherwise it's called from vmlaunch/vmresume.
+  */
+-static int enter_vmx_non_root_mode(struct kvm_vcpu *vcpu, u32 *exit_qual)
++static int nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu, u32 *exit_qual)
  {
- 	{ SDIO_DEVICE(0x024c, 0x0523), },
-+	{ SDIO_DEVICE(0x024c, 0x0525), },
- 	{ SDIO_DEVICE(0x024c, 0x0623), },
- 	{ SDIO_DEVICE(0x024c, 0x0626), },
- 	{ SDIO_DEVICE(0x024c, 0xb723), },
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
+@@ -12845,7 +12845,7 @@ static int nested_vmx_run(struct kvm_vcp
+ 	 */
+ 
+ 	vmx->nested.nested_run_pending = 1;
+-	ret = enter_vmx_non_root_mode(vcpu, &exit_qual);
++	ret = nested_vmx_enter_non_root_mode(vcpu, &exit_qual);
+ 	if (ret) {
+ 		nested_vmx_entry_failure(vcpu, vmcs12, ret, exit_qual);
+ 		vmx->nested.nested_run_pending = 0;
+@@ -12856,7 +12856,7 @@ static int nested_vmx_run(struct kvm_vcp
+ 	vmx->vcpu.arch.l1tf_flush_l1d = true;
+ 
+ 	/*
+-	 * Must happen outside of enter_vmx_non_root_mode() as it will
++	 * Must happen outside of nested_vmx_enter_non_root_mode() as it will
+ 	 * also be used as part of restoring nVMX state for
+ 	 * snapshot restore (migration).
+ 	 *
+@@ -14089,7 +14089,7 @@ static int vmx_pre_leave_smm(struct kvm_
+ 
+ 	if (vmx->nested.smm.guest_mode) {
+ 		vcpu->arch.hflags &= ~HF_SMM_MASK;
+-		ret = enter_vmx_non_root_mode(vcpu, NULL);
++		ret = nested_vmx_enter_non_root_mode(vcpu, NULL);
+ 		vcpu->arch.hflags |= HF_SMM_MASK;
+ 		if (ret)
+ 			return ret;
+@@ -14300,7 +14300,7 @@ static int vmx_set_nested_state(struct k
+ 		return -EINVAL;
+ 
+ 	vmx->nested.dirty_vmcs12 = true;
+-	ret = enter_vmx_non_root_mode(vcpu, NULL);
++	ret = nested_vmx_enter_non_root_mode(vcpu, NULL);
+ 	if (ret)
+ 		return -EINVAL;
+ 
 
 
