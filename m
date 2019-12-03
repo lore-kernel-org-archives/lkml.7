@@ -2,145 +2,178 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C78B8C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B2EC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A595A206E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46EE32073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:26:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kccTZ+9U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbfLCRXI (ORCPT
+        id S1727111AbfLCR0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 12:23:08 -0500
-Received: from mx2.suse.de ([195.135.220.15]:51018 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726422AbfLCRXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 12:23:08 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 83641B2074;
-        Tue,  3 Dec 2019 17:23:05 +0000 (UTC)
-Message-ID: <dd0d91b74853d1afa9bcb8a56a3ddbfa744ae116.camel@suse.de>
-Subject: Re: [PATCH v3 4/7] PCI: brcmstb: add Broadcom STB PCIe host
- controller driver
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Jeremy Linton <jeremy.linton@arm.com>, andrew.murray@arm.com,
-        maz@kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     james.quinlan@broadcom.com, mbrugger@suse.com,
-        phil@raspberrypi.org, linux-pci@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org
-Date:   Tue, 03 Dec 2019 18:23:03 +0100
-In-Reply-To: <ddab6abd-68fb-543d-bb8e-057d92ac15ed@arm.com>
-References: <20191126091946.7970-1-nsaenzjulienne@suse.de>
-         <20191126091946.7970-5-nsaenzjulienne@suse.de>
-         <ddab6abd-68fb-543d-bb8e-057d92ac15ed@arm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-tiQfYVDELUAGwVd1u8VU"
-User-Agent: Evolution 3.34.1 
-MIME-Version: 1.0
+        Tue, 3 Dec 2019 12:26:46 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35351 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfLCR0q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 12:26:46 -0500
+Received: by mail-pl1-f193.google.com with SMTP id s10so1962597plp.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 09:26:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=ocQPUWmBDA1ShS30D9CjTE8lnIkFhXXMmEypYP4B6rw=;
+        b=kccTZ+9Uc4KNGSKUxGhO+iaAN6wsFLsJrzJpvClvxh6T1hom4ViXkofIEeffvYb0eY
+         3uweP6vw8BTxO6bKV2yhHNeWLZbE719Lki0BZaKRvzrwJKyQQSpHMKplJSvnp4Heqalr
+         +pP8ghsniOFqwIPO1ft4c7khgElThpULVOkZkMHmexB8xYCso+U7/nMSt6BlWtrW+5Qf
+         kSVaSOFB8fj+PEsYKVXc4ihEDtpMMGtih6gDjH5TLA/Wtv618d5dw9Qky98TLt6IBdgY
+         d2bLK3UJ4ka6Z3Wep2oSiro1LqsruRGcqMEE9DOsrSAJg8bhsNSN39wub3g3I+ohFuAH
+         XZrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ocQPUWmBDA1ShS30D9CjTE8lnIkFhXXMmEypYP4B6rw=;
+        b=FN6dXZZ9UD5hp+tfTCjAB2zhI3yyNtjRQgyEJNErP809WcxloA1VpK9bECoys8GEhX
+         NmB5V1lEeNSLHX9D3V2ZQh02KZ6+SoqxeJ/uMDjsu1QkX+NmoFS3/nCM/iO281greNb6
+         TN2FkneGUMR4Jaeff+FuCYNvzyd+ityHE5YLpVsowYZ3pTdOJOVCQ2JJLHvpypgNmDhe
+         5lZ/Pk+7lwTVgJ79zNj3kX0xdfheZF7Ne/WisUoJgbwRI1cerelN8QpkWINC7ohs65Ob
+         GmjqQsgS0IyRBJ/VSwB2EcgRR2w4AqZ3Lorl188Xhxcxxmm6Oz0UfEW7Rc0sOZ7uIwHo
+         OAww==
+X-Gm-Message-State: APjAAAUXFhBbFnjp7i6Uoat+bsFngO23Y2QCQkVi5/Tz6LYIofGNbZj0
+        aUeQACuMxlWA7RbVXsTLfr+geatZuNk=
+X-Google-Smtp-Source: APXvYqwy55wKG7PVnuQtP6CuY6wXN1tqggyfL0l53RKgpOyBd7xYIc/NDwo+Im4OU+AAfTYlCvPpuA==
+X-Received: by 2002:a17:902:59d8:: with SMTP id d24mr5711015plj.318.1575394004633;
+        Tue, 03 Dec 2019 09:26:44 -0800 (PST)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id l9sm4066177pgh.34.2019.12.03.09.26.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2019 09:26:43 -0800 (PST)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Dave Airlie <airlied@gmail.com>,
+        dri-devel@lists.freedesktop.org
+Subject: [RESEND][PATCH v16 0/5] DMA-BUF Heaps (destaging ION)
+Date:   Tue,  3 Dec 2019 17:26:36 +0000
+Message-Id: <20191203172641.66642-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Just wanted to resend v16.
 
---=-tiQfYVDELUAGwVd1u8VU
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+This patchset implements per-heap devices which can be opened
+directly and then an ioctl is used to allocate a dmabuf from the
+heap.
 
-On Tue, 2019-12-03 at 10:31 -0600, Jeremy Linton wrote:
-> Hi,
->=20
-> On 11/26/19 3:19 AM, Nicolas Saenz Julienne wrote:
-> > From: Jim Quinlan <james.quinlan@broadcom.com>
-> >=20
-> > This adds a basic driver for Broadcom's STB PCIe controller, for now
-> > aimed at Raspberry Pi 4's SoC, bcm2711.
-> >=20
-> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> >=20
-> > ---
-> >=20
-> > Changes since v2:
-> >    - Correct rc_bar2_offset sign
-> >    - Invert IRQ clear and masking in setup code
-> >    - Use bitfield.h, redo all register ops while keeping the register
-> >      names intact
-> >    - Remove all SHIFT register definitions
-> >    - Get rid of all _RB writes
-> >    - Get rid of of_data
-> >    - Don't iterate over inexisting dma-ranges
-> >    - Add comment regarding dma-ranges validation
-> >    - Small cosmetic cleanups
-> >    - Fix license mismatch
-> >    - Set driver Kconfig tristate
-> >    - Didn't add any comment about the controller not being I/O coherent
-> >      for now as I wait for Jeremy's reply
->=20
-> I guess its fine.. In answer to the original query. It seems that this=
-=20
-> PCIe bridge requires explicit cache operations for DMA from PCIe=20
-> endpoints. This wasn't obvious to me at first reading because I was=20
-> assuming the custom DMA ops were strictly to deal with the stated DMA=20
-> limits.
+The interface is similar, but much simpler then IONs, only
+providing an ALLOC ioctl.
 
-Thanks, I now see what you meant.
+Also, I've provided relatively simple system and cma heaps.
 
-> So if you end up respinning, it still might be worthy mentioning=20
-> somewhere that this is a non-coherent PCIe implementation. I still hold=
-=20
-> much of my original reservations about pieces of this driver.=20
-> Particularly, how it might look if someone wanted to boot the RPi using=
-=20
-> ACPI on linux. But, I was shown a clever bit of AML recently, which=20
-> solves those problems for the RPi and the attached XHCI.
+I've booted and tested these patches with AOSP on the HiKey960
+using the kernel tree here:
+  https://git.linaro.org/people/john.stultz/android-dev.git/log/?h=dev/dma-buf-heap
 
-I don't know much about ACPI, but ultimately if you're booting trough ACPI,
-you're unlikely to use device-tree at all, right? And if you where and this
-driver clashed with your ACPI implementation you'd simply have to disable i=
-t on
-the device-tree.
+And the reviewed (+2'ed) userspace changes here:
+  https://android-review.googlesource.com/c/device/linaro/hikey/+/909436
 
-> So, given how much time I've looked at the root port configuration/etc=
-=20
-> sections of this driver and I've not found a serious bug:
->=20
-> Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
+Compared to ION, this patchset is missing the system-contig,
+carveout and chunk heaps, as I don't have a device that uses
+those, so I'm unable to do much useful validation there.
+Additionally we have no upstream users of chunk or carveout,
+and the system-contig has been deprecated in the common/andoid-*
+kernels, so this should be ok.
 
-Thanks!
+I've also removed the stats accounting, since any such
+accounting should be implemented by dma-buf core or the heaps
+themselves.
 
-Regards,
-Nicolas
+New in v16:
+* Typo fix suggested by Hridya Valsaraju <hridya@google.com>
+* Add extra error and ioctl compatibility testing suggested by
+  Daniel Vetter to the kselftest test
 
+Thanks again for all the reviews and feedback!
+-john
 
---=-tiQfYVDELUAGwVd1u8VU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Cc: Laura Abbott <labbott@redhat.com>
+Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: Liam Mark <lmark@codeaurora.org>
+Cc: Pratik Patel <pratikp@codeaurora.org>
+Cc: Brian Starkey <Brian.Starkey@arm.com>
+Cc: Vincent Donnefort <Vincent.Donnefort@arm.com>
+Cc: Sudipto Paul <Sudipto.Paul@arm.com>
+Cc: Andrew F. Davis <afd@ti.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Chenbo Feng <fengc@google.com>
+Cc: Alistair Strachan <astrachan@google.com>
+Cc: Hridya Valsaraju <hridya@google.com>
+Cc: Sandeep Patil <sspatil@google.com>
+Cc: Hillf Danton <hdanton@sina.com>
+Cc: Dave Airlie <airlied@gmail.com>
+Cc: dri-devel@lists.freedesktop.org
 
------BEGIN PGP SIGNATURE-----
+Andrew F. Davis (1):
+  dma-buf: Add dma-buf heaps framework
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3mmfcACgkQlfZmHno8
-x/526wf/dHShet63is8+wboQUSa9Ik3p1r5FrbuSercRQWbob00Roa1615tbyVSg
-vJvel1G4DtTT/bDzL7xsp4eixx0NeInNcuJvv9bBveOzD5U1TAFdlHu4o2wVtFVF
-oqQevC+iJoMb4NX9qECr8NHoRgyBaw9fakVjgMRZ/xhqHQ1edsqJVjHcUHBVv6D8
-w4r5CbB3AYmidDDOCx62CO6xKq+zHWg6yAVbDbCnisIc/zWA/F+Lq7U0ukqEP1aF
-vthC/OvlaQXB7c9ui7cXtklRXL00yGBgpShG5TOQrNP1WInlUG5IkheQm3kdKYob
-4k2yRLGOlwt8fOiPz3s2RCWt6NtXRg==
-=ByNX
------END PGP SIGNATURE-----
+John Stultz (4):
+  dma-buf: heaps: Add heap helpers
+  dma-buf: heaps: Add system heap to dmabuf heaps
+  dma-buf: heaps: Add CMA heap to dmabuf heaps
+  kselftests: Add dma-heap test
 
---=-tiQfYVDELUAGwVd1u8VU--
+ MAINTAINERS                                   |  18 +
+ drivers/dma-buf/Kconfig                       |  11 +
+ drivers/dma-buf/Makefile                      |   2 +
+ drivers/dma-buf/dma-heap.c                    | 297 +++++++++++++
+ drivers/dma-buf/heaps/Kconfig                 |  14 +
+ drivers/dma-buf/heaps/Makefile                |   4 +
+ drivers/dma-buf/heaps/cma_heap.c              | 177 ++++++++
+ drivers/dma-buf/heaps/heap-helpers.c          | 271 ++++++++++++
+ drivers/dma-buf/heaps/heap-helpers.h          |  53 +++
+ drivers/dma-buf/heaps/system_heap.c           | 123 ++++++
+ include/linux/dma-heap.h                      |  59 +++
+ include/uapi/linux/dma-heap.h                 |  53 +++
+ tools/testing/selftests/dmabuf-heaps/Makefile |   6 +
+ .../selftests/dmabuf-heaps/dmabuf-heap.c      | 396 ++++++++++++++++++
+ 14 files changed, 1484 insertions(+)
+ create mode 100644 drivers/dma-buf/dma-heap.c
+ create mode 100644 drivers/dma-buf/heaps/Kconfig
+ create mode 100644 drivers/dma-buf/heaps/Makefile
+ create mode 100644 drivers/dma-buf/heaps/cma_heap.c
+ create mode 100644 drivers/dma-buf/heaps/heap-helpers.c
+ create mode 100644 drivers/dma-buf/heaps/heap-helpers.h
+ create mode 100644 drivers/dma-buf/heaps/system_heap.c
+ create mode 100644 include/linux/dma-heap.h
+ create mode 100644 include/uapi/linux/dma-heap.h
+ create mode 100644 tools/testing/selftests/dmabuf-heaps/Makefile
+ create mode 100644 tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
+
+-- 
+2.17.1
 
