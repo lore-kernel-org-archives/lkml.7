@@ -2,149 +2,107 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18646C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF19C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEB622068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51DD22068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:04:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bY77NiQk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zwge6x1C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfLCRBU (ORCPT
+        id S1727016AbfLCREk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 12:01:20 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:42363 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbfLCRBT (ORCPT
+        Tue, 3 Dec 2019 12:04:40 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54349 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726074AbfLCREj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 12:01:19 -0500
-Received: by mail-qv1-f68.google.com with SMTP id q19so1808058qvy.9;
-        Tue, 03 Dec 2019 09:01:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=10sAMBZMUjFRsxR8aABeO1fVDktZCwcXIz8Qs0BHrSI=;
-        b=bY77NiQkC69ov7j7OMLKkUXv6HhSowFkfYiDrdT5MFbfThUXtqBo0fzqZq+McugIVR
-         Q2QfuUadPMWiGjz4Vdu+S8qoCsTOkSExFSHJD7xV3SM/IjGKWQV+9ckB97Ev33USoYkM
-         TzkTtdEZWGzt/TbReefLvdSPrMonuXVK5cYQgJHIZCA+LuEoBJo2iQM2Z4b24hYZSvgb
-         7ByROBx5EPuzD3EhiuwVqB3DMS5MB5E0a09Sv8ImxbvrKW6W68Cvr8By+qApje890sKN
-         8RBrvnIkZNH3iY+i4bocTfPL4JdCR6qQJX6DJSHNmAOpm3OhVjdhVTkXonnaLRnFnRO0
-         AFjQ==
+        Tue, 3 Dec 2019 12:04:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575392679;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=t8DvubUvc77D7QCd7w64sRjJyRVQE6dAmn4FvsDL5hw=;
+        b=Zwge6x1Cpd4kSfnN+vFCPy8cyr1lqsJ02b2KIJkVLr84j1ZgLOyOnibGSJJMrRxC890dYU
+        z2OimvDujGGZTLHRTnkYhzihaCZHeCbNl+zsBMg7whHWU07Vr17IskH+afRj6iUFTU0YVP
+        sobin6L0Okzt8P5fJlsGM+fRahtOrN4=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-147-V9iWGWMKP_S6dOO2XsuMWg-1; Tue, 03 Dec 2019 12:04:35 -0500
+Received: by mail-qv1-f72.google.com with SMTP id d12so2584978qvj.16
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 09:04:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=10sAMBZMUjFRsxR8aABeO1fVDktZCwcXIz8Qs0BHrSI=;
-        b=UG4xotlAx0b0MmIEXJZx/4RlpGzzw5lOeGnMJWrBcMVMZXLLg6JQDXt/cTGvt3lEKE
-         m+UwuAYiEUcGsyOyGd33yTFIQvanKpf3+3I9QuUCsczehqFyP4IRkY8WAyvTFX41cPl5
-         vtbBy5TDWbK4n+IbF5xWV1RRzUprltSUJeZoq7Y3tayHMcDi8ZZh5n3zgV9IaT0rvZMI
-         vyWW7yiae/tH0jvg/ZchGT5R6efGKgqAhwOuPYaNuPEp8bPXGv97UacsY08p8r3HkmK0
-         E5EFyACdDeTp3SJ8wGaskIaRqSrbQvWAlQLgGyPHyWgVxj8kA3qHW5TXHaCSmqt24d6S
-         /5Ag==
-X-Gm-Message-State: APjAAAXmMitp/LwpOJ4+a9buUWmO2tn/i1i3lNcpCtpV8q+mAcUeOrKL
-        Y0UK6yJ/juAohls29GcKcvE+jXPvOk3B7w==
-X-Google-Smtp-Source: APXvYqzU6RtFIOwEITHm1Sqpx6zVqf5CvLcV04Vc9oAuR1Wi3o/5oFzruFpcsdbB9tUU46vP3NflIA==
-X-Received: by 2002:a05:6214:429:: with SMTP id a9mr6176316qvy.200.1575392478385;
-        Tue, 03 Dec 2019 09:01:18 -0800 (PST)
-Received: from localhost.localdomain ([177.220.176.179])
-        by smtp.gmail.com with ESMTPSA id c184sm2066760qke.118.2019.12.03.09.01.17
+        bh=GwSc2v/NazflzpFrOlkNA8IEQZUbi7+GF+4oI30XE/w=;
+        b=QMNASyYYycuU5HMCamWz2UHN312otsRY+VBTgl2r2SPz5mq68jyisecVJcHIMilRt5
+         WaPYsxl7KLgriJoLLWKLciQgo96jI3D2dkAN10epZtCfym1gjwQMuSEw36GRW4iVtp3v
+         czexs+RiJPDoco5LXu47Twvt719295vKehMnlawLcOho4HcbSlTGuxnCMiwgvP2LPeMN
+         dlTHaVWu55VInIxkRVaZPwbv6EGvuitzC6/RXsXku94cdgcKRX2n80L8TGLV6abD4AY+
+         dMPoQnpCUMpnOlKEP6R3/mSW/bXonDuZGXHCBEFkYM4z5Mzj+j4kfXU1Pmnd/TPOOx5O
+         r11A==
+X-Gm-Message-State: APjAAAXcCrfy6qsd5j1+HCAQD8V0exofS2yCEDkdjxTfEYFYpgBcNd3E
+        ghOmMHur40pJYwmPTeWsHhS3lJb9lFfigWA6cQ+KB9flRiSESGggdy/IAELLTca8Z6+ZCQAQGT7
+        7kvYqYiGtDJo9mM1noOsXY6A7
+X-Received: by 2002:ae9:ed43:: with SMTP id c64mr5709437qkg.78.1575392675442;
+        Tue, 03 Dec 2019 09:04:35 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxETwyoGLSM2JBWDT+YiR0hnGqeVSXHwTu0/n3KH8ZbAv41W1TPnYnRnlWUEQgCwYJO0Iavvw==
+X-Received: by 2002:ae9:ed43:: with SMTP id c64mr5709327qkg.78.1575392674409;
+        Tue, 03 Dec 2019 09:04:34 -0800 (PST)
+Received: from xz-x1 ([104.156.64.74])
+        by smtp.gmail.com with ESMTPSA id l130sm2062530qke.33.2019.12.03.09.04.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 09:01:17 -0800 (PST)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id 6038EC3B9B; Tue,  3 Dec 2019 14:01:14 -0300 (-03)
-Date:   Tue, 3 Dec 2019 14:01:14 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Laura Abbott <labbott@redhat.com>
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] netfilter: nf_flow_table_offload: Correct memcpy size
- for flow_overload_mangle
-Message-ID: <20191203170114.GB377782@localhost.localdomain>
-References: <20191203160345.24743-1-labbott@redhat.com>
+        Tue, 03 Dec 2019 09:04:33 -0800 (PST)
+Date:   Tue, 3 Dec 2019 12:04:32 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH RFC 03/15] KVM: Add build-time error check on kvm_run size
+Message-ID: <20191203170432.GF17275@xz-x1>
+References: <20191129213505.18472-1-peterx@redhat.com>
+ <20191129213505.18472-4-peterx@redhat.com>
+ <20191202193027.GH4063@linux.intel.com>
+ <20191202205315.GD31681@xz-x1>
+ <20191202221949.GD8120@linux.intel.com>
+ <ee107756-12d2-2de0-bb05-a23616346b6d@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <ee107756-12d2-2de0-bb05-a23616346b6d@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-MC-Unique: V9iWGWMKP_S6dOO2XsuMWg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191203160345.24743-1-labbott@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 11:03:45AM -0500, Laura Abbott wrote:
-> The sizes for memcpy in flow_offload_mangle don't match
-> the source variables, leading to overflow errors on some
-> build configurations:
-> 
-> In function 'memcpy',
->     inlined from 'flow_offload_mangle' at net/netfilter/nf_flow_table_offload.c:112:2,
->     inlined from 'flow_offload_port_dnat' at net/netfilter/nf_flow_table_offload.c:373:2,
->     inlined from 'nf_flow_rule_route_ipv4' at net/netfilter/nf_flow_table_offload.c:424:3:
-> ./include/linux/string.h:376:4: error: call to '__read_overflow2' declared with attribute error: detected read beyond size of object passed as 2nd parameter
->   376 |    __read_overflow2();
->       |    ^~~~~~~~~~~~~~~~~~
-> make[2]: *** [scripts/Makefile.build:266: net/netfilter/nf_flow_table_offload.o] Error 1
-> 
-> Fix this by using the corresponding type.
-> 
-> Fixes: c29f74e0df7a ("netfilter: nf_flow_table: hardware offload support")
-> Signed-off-by: Laura Abbott <labbott@redhat.com>
-> ---
-> Seen on a Fedora powerpc little endian build with -O3 but it looks like
-> it is correctly catching an error with doing a memcpy outside the source
-> variable.
+On Tue, Dec 03, 2019 at 02:41:58PM +0100, Paolo Bonzini wrote:
+> On 02/12/19 23:19, Sean Christopherson wrote:
+> >>> e.g. in a mostly hypothetical case where the allocation of vcpu->run
+> >>> were changed to something else.
+> >> And that's why I added BUILD_BUG_ON right beneath that allocation. :)
+>=20
+> It's not exactly beneath it (it's out of the patch context at least).  I
+> think a comment is not strictly necessary, but a better commit message
+> is and, since you are at it, I would put the BUILD_BUG_ON *before* the
+> allocation.  That makes it more obvious that you are checking the
+> invariant before allocating.
 
-Hi,
+Makes sense, will do.  Thanks for both of your reviews.
 
-It is right but the fix is not. In that call trace:
+--=20
+Peter Xu
 
-flow_offload_port_dnat() {
-...
-        u32 mask = ~htonl(0xffff);
-        __be16 port;
-...
-        flow_offload_mangle(entry, flow_offload_l4proto(flow), offset,
-	                            (u8 *)&port, (u8 *)&mask);
-}
-
-port should have a 32b storage as well, and aligned with the mask.
-
-> ---
->  net/netfilter/nf_flow_table_offload.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/net/netfilter/nf_flow_table_offload.c b/net/netfilter/nf_flow_table_offload.c
-> index c54c9a6cc981..526f894d0bdb 100644
-> --- a/net/netfilter/nf_flow_table_offload.c
-> +++ b/net/netfilter/nf_flow_table_offload.c
-> @@ -108,8 +108,8 @@ static void flow_offload_mangle(struct flow_action_entry *entry,
->  	entry->id = FLOW_ACTION_MANGLE;
->  	entry->mangle.htype = htype;
->  	entry->mangle.offset = offset;
-> -	memcpy(&entry->mangle.mask, mask, sizeof(u32));
-> -	memcpy(&entry->mangle.val, value, sizeof(u32));
-                                   ^^^^^         ^^^ which is &port in the call above
-> +	memcpy(&entry->mangle.mask, mask, sizeof(u8));
-> +	memcpy(&entry->mangle.val, value, sizeof(u8));
-
-This fix would cause it to copy only the first byte, which is not the
-intention.
-
->  }
->  
->  static inline struct flow_action_entry *
-> -- 
-> 2.21.0
-> 
