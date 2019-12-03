@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD87C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44912C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEF4820863
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 131EF20863
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413471;
-	bh=7DS8nQvITiDoPvFXUkkqn4Bs2erk92HkQ7idQB7DNKM=;
+	s=default; t=1575413475;
+	bh=2ruCfQM2uGTJfrjE1Ri3MmU/nY3aN8p9UYu2mdRhDEo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lJng4gbCluvHJ8xh+jskxT9wSmqZaBcFrbqsInHdgVGKqgdNXkKH7UzmrLgs+9puY
-	 Y1l0crv25svskBE12AF3ONihp1riOe2oRQzMPW3VSFwSvydGqboEkzT5tbQeSx/UT5
-	 p5edHj4wHDZujinApTtHx5mh+1sOx2tdvdYBb4jc=
+	b=Tt0kS/8c5wUxXK3FesnF7TMq73zp73JJOraG9xHkcCAHIj9iDDJTXsCVQ8nLPdk6K
+	 eCEKJQQ3isOBBQ14jg23bwBawNW4i3K283Mc2NXi0Wi2WdbWNK98r2jUFUq6D7Vjoy
+	 qIVi0fPNhXmGocFngZ0uMe/yQlJaH8gkNCEVyTAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729849AbfLCWvK (ORCPT
+        id S1729857AbfLCWvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:51:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43144 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:51:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729698AbfLCWvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:51:08 -0500
+        id S1729850AbfLCWvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:51:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8417620865;
-        Tue,  3 Dec 2019 22:51:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A43A21772;
+        Tue,  3 Dec 2019 22:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413468;
-        bh=7DS8nQvITiDoPvFXUkkqn4Bs2erk92HkQ7idQB7DNKM=;
+        s=default; t=1575413470;
+        bh=2ruCfQM2uGTJfrjE1Ri3MmU/nY3aN8p9UYu2mdRhDEo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0rGL9JOGVVJV9tsItFodBL+gPLxjXzWJI8RHk9csgIsUDEKtPYlP7KGhLbMbdbz8p
-         qBESdhw5fPEcYQDP/yfYCaYavWA1K0pqEOKhOtz/fqDYX1AJLdI2gC5JfliHhI2kw0
-         R4NI0+BVsckDBYX3SxP74R0MeqTkDe5KDaT3D03A=
+        b=2Xwy9jKtPQjTwFzsUTvuRhJ5dzCgswdFM8sIq2M9FdC7V5pqB6nbYN5Rn7fIX3l1M
+         cpjWJYgXAj6ItBcV/tc/VEE/YCUd6mYeHk3idOIO4CczHMhPg6oNpgbRHJTTmdw65X
+         wDeNMQfubBmQvAyCFnioX4L7CA4Zto0qHPPE+zrk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 140/321] pinctrl: sh-pfc: r8a77990: Fix MOD_SEL0 SEL_I2C1 field width
-Date:   Tue,  3 Dec 2019 23:33:26 +0100
-Message-Id: <20191203223434.445747703@linuxfoundation.org>
+Subject: [PATCH 4.19 141/321] pinctrl: sh-pfc: sh7264: Fix PFCR3 and PFCR0 register configuration
+Date:   Tue,  3 Dec 2019 23:33:27 +0100
+Message-Id: <20191203223434.495466225@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -63,39 +63,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 755a5b805fa7ff22e2934d67501efd92109f41ea ]
+[ Upstream commit 1b99d0c80bbe1810572c2cb77b90f67886adfa8d ]
 
-The SEL_I2C1 (MOD_SEL0[21:20]) field in Module Select Register 0 has a
-width of 2 bits, i.e. it allows programming one out of 4 different
-configurations.
-However, the MOD_SEL0_21_20 macro contains 8 values instead of 4,
-overflowing into the subsequent fields in the register, and thus breaking
-the configuration of the latter.
+The Port F Control Register 3 (PFCR3) contains only a single field.
+However, counting from left to right, it is the fourth field, not the
+first field.
+Insert the missing dummy configuration values (3 fields of 16 values) to
+fix this.
 
-Fix this by dropping the bogus last 4 values, including the non-existent
-SEL_I2C1_4 configuration.
+The descriptor for the Port F Control Register 0 (PFCR0) lacks the
+description for the 4th field (PF0 Mode, PF0MD[2:0]).
+Add the missing configuration values to fix this.
 
-Fixes: 6d4036a1e3b3ac0f ("pinctrl: sh-pfc: Initial R8A77990 PFC support")
+Fixes: a8d42fc4217b1ea1 ("sh-pfc: Add sh7264 pinmux support")
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a77990.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/sh-pfc/pfc-sh7264.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77990.c b/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
-index b81c807ac54d5..d2fcf7f7b9668 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
-@@ -395,7 +395,7 @@ FM(IP12_31_28)	IP12_31_28	FM(IP13_31_28)	IP13_31_28	FM(IP14_31_28)	IP14_31_28	FM
- #define MOD_SEL0_24		FM(SEL_HSCIF0_0)		FM(SEL_HSCIF0_1)
- #define MOD_SEL0_23		FM(SEL_HSCIF1_0)		FM(SEL_HSCIF1_1)
- #define MOD_SEL0_22		FM(SEL_HSCIF2_0)		FM(SEL_HSCIF2_1)
--#define MOD_SEL0_21_20		FM(SEL_I2C1_0)			FM(SEL_I2C1_1)			FM(SEL_I2C1_2)			FM(SEL_I2C1_3)		FM(SEL_I2C1_4)		F_(0, 0)	F_(0, 0)	F_(0, 0)
-+#define MOD_SEL0_21_20		FM(SEL_I2C1_0)			FM(SEL_I2C1_1)			FM(SEL_I2C1_2)			FM(SEL_I2C1_3)
- #define MOD_SEL0_19_18_17	FM(SEL_I2C2_0)			FM(SEL_I2C2_1)			FM(SEL_I2C2_2)			FM(SEL_I2C2_3)		FM(SEL_I2C2_4)		F_(0, 0)	F_(0, 0)	F_(0, 0)
- #define MOD_SEL0_16		FM(SEL_NDFC_0)			FM(SEL_NDFC_1)
- #define MOD_SEL0_15		FM(SEL_PWM0_0)			FM(SEL_PWM0_1)
+diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7264.c b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
+index 8070765311dbf..e1c34e19222ee 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-sh7264.c
++++ b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
+@@ -1716,6 +1716,9 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 	},
+ 
+ 	{ PINMUX_CFG_REG("PFCR3", 0xfffe38a8, 16, 4) {
++		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
++		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
++		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 		PF12MD_000, PF12MD_001, 0, PF12MD_011,
+ 		PF12MD_100, PF12MD_101, 0, 0,
+ 		0, 0, 0, 0, 0, 0, 0, 0 }
+@@ -1759,8 +1762,10 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		0, 0, 0, 0, 0, 0, 0, 0,
+ 		PF1MD_000, PF1MD_001, PF1MD_010, PF1MD_011,
+ 		PF1MD_100, PF1MD_101, 0, 0,
+-		0, 0, 0, 0, 0, 0, 0, 0
+-	 }
++		0, 0, 0, 0, 0, 0, 0, 0,
++		PF0MD_000, PF0MD_001, PF0MD_010, PF0MD_011,
++		PF0MD_100, PF0MD_101, 0, 0,
++		0, 0, 0, 0, 0, 0, 0, 0 }
+ 	},
+ 
+ 	{ PINMUX_CFG_REG("PFIOR0", 0xfffe38b2, 16, 1) {
 -- 
 2.20.1
 
