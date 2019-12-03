@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 708F5C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FB1C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B86020803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAC7320684
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412656;
-	bh=bbv4kIv0JEg2XdqcHA1mlb5X4tvo2jsrDB0t8sD3azE=;
+	s=default; t=1575412660;
+	bh=klQsIEaLdkvQn9mXHsL/19l5ID92BD8wx7KpDUk+fkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V3Ah4x+D2OfppjhSyiqgzXCeoPPdYkM97OE4lItF8q+zGQUmwXWdp25FdmJMyTrPA
-	 A3X1GBo9aMUTTgAJ+21p92ZHgI4Ec4rRU/f6prMn7FVQHv3qpLR/CR92/r2C3NZIJV
-	 VkiOEHdCSscw0/HqYK4I7fMP8LqURhqXtDkwXpNM=
+	b=KLsgAh++gmRkcD4RAYVRyxQkFzqll6xifqYkzg7Vbj3477BQ7y+gXBlwXAC2caWHd
+	 k3eb+D33Trm4Mx3hbuhsU2EzDeALdywuEcdrNSs8hU5ZTDxnf8QueZSdOMHJeshFni
+	 fXLPoAIAUanucvp0nf5TNVKa3Kiqh5GA0DhsAjZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727738AbfLCWhf (ORCPT
+        id S1727762AbfLCWhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:37:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45832 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:37:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727722AbfLCWhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:37:31 -0500
+        id S1727722AbfLCWhh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:37:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AC162073C;
-        Tue,  3 Dec 2019 22:37:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0C0B2073C;
+        Tue,  3 Dec 2019 22:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412650;
-        bh=bbv4kIv0JEg2XdqcHA1mlb5X4tvo2jsrDB0t8sD3azE=;
+        s=default; t=1575412656;
+        bh=klQsIEaLdkvQn9mXHsL/19l5ID92BD8wx7KpDUk+fkw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mqrwwWzuyV3i/miRhjReZh5tdtyehjQWD75dBZEp+m7XV9i0siJPuP1fawYzXZMaD
-         yy0kq9bJ6Egp+Ie64odMfacN4XUbkyppkz4JrZB/VkF759r4Xqdt7p3DvAr3hLUN3R
-         Z6M1Yd/xtjulcGrKjbhsUyN2LfDRLFkM/6n1u86k=
+        b=KWVMQ9fbZ2HoZvK4+WzTM2G+XC2R/H8QZrPFENjvQc8/TiZUsSROeGwY4o3k5eNPj
+         NCKAdaQ973ig1MNV5vuEs20IeDUA7vGmgQJplTz6rLhpTfw7sN2C0FNfMmtC4dwNeP
+         ac+phyoTcESEhgMgPdk0ImyTjg7iulTiUXWDuIWc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pascal van Leeuwen <pvanleeuwen@verimatrix.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.4 04/46] crypto: inside-secure - Fix stability issue with Macchiatobin
-Date:   Tue,  3 Dec 2019 23:35:24 +0100
-Message-Id: <20191203212714.413552019@linuxfoundation.org>
+        stable@vger.kernel.org, Mathias Kresin <dev@kresin.me>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: [PATCH 5.4 06/46] usb: dwc2: use a longer core rest timeout in dwc2_core_reset()
+Date:   Tue,  3 Dec 2019 23:35:26 +0100
+Message-Id: <20191203212716.752250752@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203212705.175425505@linuxfoundation.org>
 References: <20191203212705.175425505@linuxfoundation.org>
@@ -60,41 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pascal van Leeuwen <pascalvanl@gmail.com>
+From: Mathias Kresin <dev@kresin.me>
 
-commit b8c5d882c8334d05754b69dcdf1cfd6bc48a9e12 upstream.
+commit 6689f0f4bb14e50917ba42eb9b41c25e0184970c upstream.
 
-This patch corrects an error in the Transform Record Cache initialization
-code that was causing intermittent stability problems on the Macchiatobin
-board.
+Testing on different generations of Lantiq MIPS SoC based boards, showed
+that it takes up to 1500 us until the core reset bit is cleared.
 
-Unfortunately, due to HW platform specifics, the problem could not happen
-on the main development platform, being the VCU118 Xilinx development
-board. And since it was a problem with hash table access, it was very
-dependent on the actual physical context record DMA buffers being used,
-i.e. with some (bad) luck it could seemingly work quit stable for a while.
+The driver from the vendor SDK (ifxhcd) uses a 1 second timeout. Use the
+same timeout to fix wrong hang detections and make the driver work for
+Lantiq MIPS SoCs.
 
-Signed-off-by: Pascal van Leeuwen <pvanleeuwen@verimatrix.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+At least till kernel 4.14 the hanging reset only caused a warning but
+the driver was probed successful. With kernel 4.19 errors out with
+EBUSY.
+
+Cc: linux-stable <stable@vger.kernel.org> # 4.19+
+Signed-off-by: Mathias Kresin <dev@kresin.me>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/inside-secure/safexcel.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/dwc2/core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/crypto/inside-secure/safexcel.c
-+++ b/drivers/crypto/inside-secure/safexcel.c
-@@ -221,9 +221,9 @@ static void eip197_trc_cache_init(struct
- 	/* Step #3: Determine log2 of hash table size */
- 	cs_ht_sz = __fls(asize - cs_rc_max) - 2;
- 	/* Step #4: determine current size of hash table in dwords */
--	cs_ht_wc = 16<<cs_ht_sz; /* dwords, not admin words */
-+	cs_ht_wc = 16 << cs_ht_sz; /* dwords, not admin words */
- 	/* Step #5: add back excess words and see if we can fit more records */
--	cs_rc_max = min_t(uint, cs_rc_abs_max, asize - (cs_ht_wc >> 4));
-+	cs_rc_max = min_t(uint, cs_rc_abs_max, asize - (cs_ht_wc >> 2));
+--- a/drivers/usb/dwc2/core.c
++++ b/drivers/usb/dwc2/core.c
+@@ -524,7 +524,7 @@ int dwc2_core_reset(struct dwc2_hsotg *h
+ 	greset |= GRSTCTL_CSFTRST;
+ 	dwc2_writel(hsotg, greset, GRSTCTL);
  
- 	/* Clear the cache RAMs */
- 	eip197_trc_cache_clear(priv, cs_rc_max, cs_ht_wc);
+-	if (dwc2_hsotg_wait_bit_clear(hsotg, GRSTCTL, GRSTCTL_CSFTRST, 50)) {
++	if (dwc2_hsotg_wait_bit_clear(hsotg, GRSTCTL, GRSTCTL_CSFTRST, 10000)) {
+ 		dev_warn(hsotg->dev, "%s: HANG! Soft Reset timeout GRSTCTL GRSTCTL_CSFTRST\n",
+ 			 __func__);
+ 		return -EBUSY;
 
 
