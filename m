@@ -2,138 +2,68 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F65C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA0BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A13BD20637
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:43:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XHbmMynD"
+	by mail.kernel.org (Postfix) with ESMTP id 1833020637
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:44:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfLCHnz (ORCPT
+        id S1727544AbfLCHo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 02:43:55 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:26550 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727376AbfLCHnz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 02:43:55 -0500
-X-UUID: 0b0fa2acfe384dbb9bc9e2e9d6308f2a-20191203
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:Reply-To:From:Subject:Message-ID; bh=BVAs28Vtt9E82BQJB0GFe4lxbgi2+ruTeT4/bQX4A4I=;
-        b=XHbmMynDvrHjPl/c8iUX+/TuxhLI20Bichhqnr589Geoydmgzk7xI3dejC0HQl2/HepO1dCD9lqDXY3CUMduZb82VYMRsS+3lD4IoJR6JOzRQLKRQ6evVHhpZpfIwyGSHmWwlaXlfRjY2r+xG4qNafMblAikeJuBQj/Pr5sHooc=;
-X-UUID: 0b0fa2acfe384dbb9bc9e2e9d6308f2a-20191203
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <yongqiang.niu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1088377323; Tue, 03 Dec 2019 15:43:50 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs05n2.mediatek.inc
- (172.21.101.140) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 3 Dec
- 2019 15:43:33 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 3 Dec 2019 15:43:37 +0800
-Message-ID: <1575359027.10160.2.camel@mhfsdcap03>
-Subject: Re: [PATCH v1, 1/2] drm/mediatek: Fixup external display black
- screen issue
-From:   Yongqiang Niu <yongqiang.niu@mediatek.com>
-Reply-To: <yongqiang.niu@mediatek.com>
-To:     CK Hu <ck.hu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Tue, 3 Dec 2019 15:43:47 +0800
-In-Reply-To: <1575352101.2457.8.camel@mtksdaap41>
-References: <1574817475-22378-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1574817475-22378-2-git-send-email-yongqiang.niu@mediatek.com>
-         <1575352101.2457.8.camel@mtksdaap41>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 3 Dec 2019 02:44:56 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7192 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727459AbfLCHoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 02:44:55 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 2F25094BB710449FBC82;
+        Tue,  3 Dec 2019 15:44:53 +0800 (CST)
+Received: from DESKTOP-8RFUVS3.china.huawei.com (10.173.222.27) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 3 Dec 2019 15:44:46 +0800
+From:   Zenghui Yu <yuzenghui@huawei.com>
+To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>
+CC:     <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <wanghaibin.wang@huawei.com>, Zenghui Yu <yuzenghui@huawei.com>
+Subject: [PATCH] KVM: Remove duplicated declaration of kvm_vcpu_kick
+Date:   Tue, 3 Dec 2019 15:44:08 +0800
+Message-ID: <20191203074408.1758-1-yuzenghui@huawei.com>
+X-Mailer: git-send-email 2.23.0.windows.1
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTEyLTAzIGF0IDEzOjQ4ICswODAwLCBDSyBIdSB3cm90ZToNCj4gSGksIFlv
-bmdxaWFuZzoNCj4gDQo+IE9uIFdlZCwgMjAxOS0xMS0yNyBhdCAwOToxNyArMDgwMCwgeW9uZ3Fp
-YW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6DQo+ID4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9u
-Z3FpYW5nLm5pdUBtZWRpYXRlay5jb20+DQo+ID4gDQo+ID4gUHJvYmxlbToNCj4gPiBvdmVybGF5
-IGhhbmd1cCB3aGVuIGV4dGVybmFsIGRpc3BsYXkgaG90cGx1dCB0ZXN0DQo+ID4gDQo+ID4gRml4
-Og0KPiA+IGRpc2FibGUgb3ZlcmxheSB3aGVuIGNydGMgZGlzYWJsZQ0KPiANCj4gSSB0aGluayB5
-b3UgZG8gdHdvIHRoaW5ncyBpbiB0aGlzIHBhdGNoLiBUaGUgZmlyc3QgaXMgdG8gY29uZmlnIGxh
-eWVyDQo+IGJlZm9yZSBjb21wb25lbnQgc3RhcnQsIGFuZCB0aGUgc2Vjb25kIGlzIGRpc2FibGUg
-bGF5ZXIgd2hlbiBjcnRjDQo+IGRpc2FibGUuIFNvIHNlcGFyYXRlIHRvIHR3byBwYXRjaGVzLg0K
-PiANCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBZb25ncWlhbmcgTml1IDx5b25ncWlhbmcubml1
-QG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
-a19kcm1fY3J0Yy5jIHwgMzkgKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tDQo+ID4g
-IDEgZmlsZSBjaGFuZ2VkLCAyNSBpbnNlcnRpb25zKCspLCAxNCBkZWxldGlvbnMoLSkNCj4gPiAN
-Cj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5j
-IGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQo+ID4gaW5kZXggNGZi
-MzQ2Yy4uN2VjYTAyZiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
-bXRrX2RybV9jcnRjLmMNCj4gPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
-bV9jcnRjLmMNCj4gPiBAQCAtMzY5LDYgKzM2OSwyMCBAQCBzdGF0aWMgaW50IG10a19jcnRjX2Rk
-cF9od19pbml0KHN0cnVjdCBtdGtfZHJtX2NydGMgKm10a19jcnRjKQ0KPiA+ICAJbXRrX2Rpc3Bf
-bXV0ZXhfYWRkX2NvbXAobXRrX2NydGMtPm11dGV4LCBtdGtfY3J0Yy0+ZGRwX2NvbXBbaV0tPmlk
-KTsNCj4gPiAgCW10a19kaXNwX211dGV4X2VuYWJsZShtdGtfY3J0Yy0+bXV0ZXgpOw0KPiA+ICAN
-Cj4gPiArCS8qIEluaXRpYWxseSBjb25maWd1cmUgYWxsIHBsYW5lcyAqLw0KPiA+ICsJZm9yIChp
-ID0gMDsgaSA8IG10a19jcnRjLT5sYXllcl9ucjsgaSsrKSB7DQo+ID4gKwkJc3RydWN0IGRybV9w
-bGFuZSAqcGxhbmUgPSAmbXRrX2NydGMtPnBsYW5lc1tpXTsNCj4gPiArCQlzdHJ1Y3QgbXRrX3Bs
-YW5lX3N0YXRlICpwbGFuZV9zdGF0ZTsNCj4gPiArCQlzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21w
-Ow0KPiA+ICsJCXVuc2lnbmVkIGludCBsb2NhbF9sYXllcjsNCj4gPiArDQo+ID4gKwkJcGxhbmVf
-c3RhdGUgPSB0b19tdGtfcGxhbmVfc3RhdGUocGxhbmUtPnN0YXRlKTsNCj4gPiArCQljb21wID0g
-bXRrX2RybV9kZHBfY29tcF9mb3JfcGxhbmUoY3J0YywgcGxhbmUsICZsb2NhbF9sYXllcik7DQo+
-ID4gKwkJaWYgKGNvbXApDQo+ID4gKwkJCW10a19kZHBfY29tcF9sYXllcl9jb25maWcoY29tcCwg
-bG9jYWxfbGF5ZXIsDQo+ID4gKwkJCQkJCSAgcGxhbmVfc3RhdGUsIE5VTEwpOw0KPiA+ICsJfQ0K
-PiA+ICsNCj4gPiAgCWZvciAoaSA9IDA7IGkgPCBtdGtfY3J0Yy0+ZGRwX2NvbXBfbnI7IGkrKykg
-ew0KPiA+ICAJCXN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAgPSBtdGtfY3J0Yy0+ZGRwX2NvbXBb
-aV07DQo+ID4gIAkJZW51bSBtdGtfZGRwX2NvbXBfaWQgcHJldjsNCj4gPiBAQCAtMzg1LDIwICsz
-OTksNiBAQCBzdGF0aWMgaW50IG10a19jcnRjX2RkcF9od19pbml0KHN0cnVjdCBtdGtfZHJtX2Ny
-dGMgKm10a19jcnRjKQ0KPiA+ICAJCW10a19kZHBfY29tcF9zdGFydChjb21wKTsNCj4gPiAgCX0N
-Cj4gPiAgDQo+ID4gLQkvKiBJbml0aWFsbHkgY29uZmlndXJlIGFsbCBwbGFuZXMgKi8NCj4gPiAt
-CWZvciAoaSA9IDA7IGkgPCBtdGtfY3J0Yy0+bGF5ZXJfbnI7IGkrKykgew0KPiA+IC0JCXN0cnVj
-dCBkcm1fcGxhbmUgKnBsYW5lID0gJm10a19jcnRjLT5wbGFuZXNbaV07DQo+ID4gLQkJc3RydWN0
-IG10a19wbGFuZV9zdGF0ZSAqcGxhbmVfc3RhdGU7DQo+ID4gLQkJc3RydWN0IG10a19kZHBfY29t
-cCAqY29tcDsNCj4gPiAtCQl1bnNpZ25lZCBpbnQgbG9jYWxfbGF5ZXI7DQo+ID4gLQ0KPiA+IC0J
-CXBsYW5lX3N0YXRlID0gdG9fbXRrX3BsYW5lX3N0YXRlKHBsYW5lLT5zdGF0ZSk7DQo+ID4gLQkJ
-Y29tcCA9IG10a19kcm1fZGRwX2NvbXBfZm9yX3BsYW5lKGNydGMsIHBsYW5lLCAmbG9jYWxfbGF5
-ZXIpOw0KPiA+IC0JCWlmIChjb21wKQ0KPiA+IC0JCQltdGtfZGRwX2NvbXBfbGF5ZXJfY29uZmln
-KGNvbXAsIGxvY2FsX2xheWVyLA0KPiA+IC0JCQkJCQkgIHBsYW5lX3N0YXRlLCBOVUxMKTsNCj4g
-PiAtCX0NCj4gPiAtDQo+ID4gIAlyZXR1cm4gMDsNCj4gPiAgDQo+ID4gIGVycl9tdXRleF91bnBy
-ZXBhcmU6DQo+ID4gQEAgLTYwNywxMCArNjA3LDIxIEBAIHN0YXRpYyB2b2lkIG10a19kcm1fY3J0
-Y19hdG9taWNfZGlzYWJsZShzdHJ1Y3QgZHJtX2NydGMgKmNydGMsDQo+ID4gIAlmb3IgKGkgPSAw
-OyBpIDwgbXRrX2NydGMtPmxheWVyX25yOyBpKyspIHsNCj4gPiAgCQlzdHJ1Y3QgZHJtX3BsYW5l
-ICpwbGFuZSA9ICZtdGtfY3J0Yy0+cGxhbmVzW2ldOw0KPiA+ICAJCXN0cnVjdCBtdGtfcGxhbmVf
-c3RhdGUgKnBsYW5lX3N0YXRlOw0KPiA+ICsJCXN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAgPSBt
-dGtfY3J0Yy0+ZGRwX2NvbXBbMF07DQo+ID4gKwkJdW5zaWduZWQgaW50IGNvbXBfbGF5ZXJfbnIg
-PSBtdGtfZGRwX2NvbXBfbGF5ZXJfbnIoY29tcCk7DQo+ID4gKwkJdW5zaWduZWQgaW50IGxvY2Fs
-X2xheWVyOw0KPiA+ICANCj4gPiAgCQlwbGFuZV9zdGF0ZSA9IHRvX210a19wbGFuZV9zdGF0ZShw
-bGFuZS0+c3RhdGUpOw0KPiA+ICAJCXBsYW5lX3N0YXRlLT5wZW5kaW5nLmVuYWJsZSA9IGZhbHNl
-Ow0KPiA+ICAJCXBsYW5lX3N0YXRlLT5wZW5kaW5nLmNvbmZpZyA9IHRydWU7DQo+ID4gKw0KPiA+
-ICsJCWlmIChpID49IGNvbXBfbGF5ZXJfbnIpIHsNCj4gPiArCQkJY29tcCA9IG10a19jcnRjLT5k
-ZHBfY29tcFsxXTsNCj4gPiArCQkJbG9jYWxfbGF5ZXIgPSBpIC0gY29tcF9sYXllcl9ucjsNCj4g
-PiArCQl9IGVsc2UNCj4gPiArCQkJbG9jYWxfbGF5ZXIgPSBpOw0KPiA+ICsJCW10a19kZHBfY29t
-cF9sYXllcl9jb25maWcoY29tcCwgbG9jYWxfbGF5ZXIsDQo+ID4gKwkJCQkJICBwbGFuZV9zdGF0
-ZSwgTlVMTCk7DQo+IA0KPiBJJ20gY29uZnVzZWQgd2l0aCB0aGlzIHBhcnQuIFRoZSBkZXNpZ24g
-b2YgdGhpcyBsb29wIGlzIHRvIHNldA0KPiBwbGFuZV9zdGF0ZS0+cGVuZGluZy5lbmFibGUgPSBm
-YWxzZSBhbmQgd2FpdCBmb3IgaXJxIGhhbmRsZXIgdG8gd3JpdGUNCj4gcmVnaXN0ZXIuIFdoeSBk
-byB5b3UgZGlyZWN0bHkgd3JpdGUgcmVnaXN0ZXI/DQo+IA0KPiBSZWdhcmRzLA0KPiBDSw0KDQp3
-aGVuIGNtZHEgZW5hYmxlLCBtdGtfY3J0Yy0+Y21kcV9jbGllbnQgd2lsbCBiZSBhbHdheXMgdHJ1
-ZSB3aGVuIGNydGMNCmNyZWF0ZSwgdGhlcmUgaXMgbm8gY2hhbmNlIGZvciBtdGtfY3J0Y19kZHBf
-Y29uZmlnIHByb2Nlc3MgaW4gZGRwIGlycSANCmNhbGxiYWNrIGZ1bmN0aW9uDQo+IA0KPiA+ICAJ
-fQ0KPiA+ICAJbXRrX2NydGMtPnBlbmRpbmdfcGxhbmVzID0gdHJ1ZTsNCj4gPiAgDQo+IA0KPiAN
-Cg0K
+There are two declarations of kvm_vcpu_kick() in kvm_host.h where
+one of them is redundant. Remove to keep the git grep a bit cleaner.
+
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+---
+ include/linux/kvm_host.h | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 7ed1e2f8641e..92ce5e205622 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -982,7 +982,6 @@ void kvm_arch_destroy_vm(struct kvm *kvm);
+ void kvm_arch_sync_events(struct kvm *kvm);
+ 
+ int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu);
+-void kvm_vcpu_kick(struct kvm_vcpu *vcpu);
+ 
+ bool kvm_is_reserved_pfn(kvm_pfn_t pfn);
+ bool kvm_is_zone_device_pfn(kvm_pfn_t pfn);
+-- 
+2.19.1
+
 
