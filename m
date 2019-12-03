@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D64C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF29AC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6707E20848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 858A420848
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:46:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413187;
-	bh=3MPmXrUepXMgUnsZ9X97eB/Uc79sY9PVqfT/RaSuPHE=;
+	s=default; t=1575413189;
+	bh=niyvFOtyYxs5l4rCU3bfoX+734yFXqmXUw/xZMlHfcA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VKTS9gU6Qvotibq40ZvEqeGnji1/iS4vmIoS0+IGDdf/5wqJFvunhni9+og7Zmis/
-	 aEcjOmf0TTeeXhuTIe8eclu/ltzaC+8EKuZx9Sy7c9TZJDg6k9UK50D98xhNlvxvIP
-	 LD5/Y8bnQ4A12YN/70AcEUESGYsIACYM1WU31Zac=
+	b=1U8yd7GZvp1s/mkNSRclwhtVBK32Ruf6Np5A9xyUR7q+4MfiX2r5KbEDjy6suNbG6
+	 2yL2eJXNU+jAdwuXZr2nAapRrZtQr0H3guRrK2zvO5xSJFvt5uzs58+8nbAGCin4SL
+	 9J1BtVCdaYxoNisPonmE6kC7FTSr8hbQSJIN0O+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729189AbfLCWqZ (ORCPT
+        id S1729201AbfLCWq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:46:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35904 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:46:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728015AbfLCWqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:46:23 -0500
+        id S1729190AbfLCWq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:46:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 210C52084B;
-        Tue,  3 Dec 2019 22:46:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BC03215B2;
+        Tue,  3 Dec 2019 22:46:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413182;
-        bh=3MPmXrUepXMgUnsZ9X97eB/Uc79sY9PVqfT/RaSuPHE=;
+        s=default; t=1575413185;
+        bh=niyvFOtyYxs5l4rCU3bfoX+734yFXqmXUw/xZMlHfcA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Na2R5+CbQRoiutVWgNGSpjVp0m0RlZ5Czqz11CCJW8l2sSTRGGlN5EOFeXoh/WRM5
-         v4zXzJJAEQFExMECrsdWYYN+u158nt+ApbDKHskQPWv5NQsZ21ZUFsJLmwrXx6NlFP
-         bn0Whu616EZnhL8I1+W2dB47U7R7XvFV6Xe7mfHM=
+        b=Upb3bauYKDI+PlPacnW1xND9AsHAP3QiDG/JR20RQiatC7oQnxCH6dal1XPb8NTT3
+         gnKvBZwHNYU7CO4wyqNvxRZcnKTVesRXYh33sAgUppxKy7ru7/ukcufgS2BzEva/DJ
+         tSfpk35GqOAnbioLlNDxgFPlBnJaJg+Kar4U5CI0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 003/321] ASoC: msm8916-wcd-analog: Fix RX1 selection in RDAC2 MUX
-Date:   Tue,  3 Dec 2019 23:31:09 +0100
-Message-Id: <20191203223427.298941996@linuxfoundation.org>
+Subject: [PATCH 4.19 030/321] can: rx-offload: can_rx_offload_offload_one(): increment rx_fifo_errors on queue overflow or OOM
+Date:   Tue,  3 Dec 2019 23:31:36 +0100
+Message-Id: <20191203223428.683914108@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,54 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
 
-[ Upstream commit 9110d1b0e229cebb1ffce0c04db2b22beffd513d ]
+[ Upstream commit 4e9016bee3bf0c24963097edace034ff205b565c ]
 
-According to the PM8916 Hardware Register Description,
-CDC_D_CDC_CONN_HPHR_DAC_CTL has only a single bit (RX_SEL)
-to switch between RX1 (0) and RX2 (1). It is not possible to
-disable it entirely to achieve the "ZERO" state.
+If the rx-offload skb_queue is full or the skb allocation fails (due to OOM),
+the mailbox contents is discarded.
 
-However, at the moment the "RDAC2 MUX" mixer defines three possible
-values ("ZERO", "RX2" and "RX1"). Setting the mixer to "ZERO"
-actually configures it to RX1. Setting the mixer to "RX1" has
-(seemingly) no effect.
+This patch adds the incrementing of the rx_fifo_errors statistics counter.
 
-Remove "ZERO" and replace it with "RX1" to fix this.
-
-Fixes: 585e881e5b9e ("ASoC: codecs: Add msm8916-wcd analog codec")
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Link: https://lore.kernel.org/r/20191020153007.206070-1-stephan@gerhold.net
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/msm8916-wcd-analog.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/can/rx-offload.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/msm8916-wcd-analog.c b/sound/soc/codecs/msm8916-wcd-analog.c
-index b7cf7cce95fec..4f0497ab1aa80 100644
---- a/sound/soc/codecs/msm8916-wcd-analog.c
-+++ b/sound/soc/codecs/msm8916-wcd-analog.c
-@@ -303,7 +303,7 @@ struct pm8916_wcd_analog_priv {
- };
+diff --git a/drivers/net/can/rx-offload.c b/drivers/net/can/rx-offload.c
+index e32b65599a5f2..16af09c71cfed 100644
+--- a/drivers/net/can/rx-offload.c
++++ b/drivers/net/can/rx-offload.c
+@@ -134,8 +134,10 @@ static struct sk_buff *can_rx_offload_offload_one(struct can_rx_offload *offload
  
- static const char *const adc2_mux_text[] = { "ZERO", "INP2", "INP3" };
--static const char *const rdac2_mux_text[] = { "ZERO", "RX2", "RX1" };
-+static const char *const rdac2_mux_text[] = { "RX1", "RX2" };
- static const char *const hph_text[] = { "ZERO", "Switch", };
+ 		ret = offload->mailbox_read(offload, &cf_overflow,
+ 					    &timestamp, n);
+-		if (ret)
++		if (ret) {
+ 			offload->dev->stats.rx_dropped++;
++			offload->dev->stats.rx_fifo_errors++;
++		}
  
- static const struct soc_enum hph_enum = SOC_ENUM_SINGLE_VIRT(
-@@ -318,7 +318,7 @@ static const struct soc_enum adc2_enum = SOC_ENUM_SINGLE_VIRT(
- 
- /* RDAC2 MUX */
- static const struct soc_enum rdac2_mux_enum = SOC_ENUM_SINGLE(
--			CDC_D_CDC_CONN_HPHR_DAC_CTL, 0, 3, rdac2_mux_text);
-+			CDC_D_CDC_CONN_HPHR_DAC_CTL, 0, 2, rdac2_mux_text);
- 
- static const struct snd_kcontrol_new spkr_switch[] = {
- 	SOC_DAPM_SINGLE("Switch", CDC_A_SPKR_DAC_CTL, 7, 1, 0)
+ 		return NULL;
+ 	}
 -- 
 2.20.1
 
