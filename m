@@ -2,108 +2,134 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B4DC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 671B1C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB25A206EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:30:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OKCh36lZ"
+	by mail.kernel.org (Postfix) with ESMTP id 2DC782070A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:31:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575383490;
+	bh=paDjy7hZsmQkcUp7jKSH70ftPLffSgdTsEFpUetgz24=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LmHpNAuTjpUEwU76UYt5+wFJlrlB0Nd7Co1c4QQhSfVbCg1z8ebysfKzc4mdkE3Xf
+	 g1j4apbH75mgob2Fkr024uUPH0PM3vJi+WYL83JqgmlhF9AXbh/JBhCaWI/jKdcCGs
+	 BiIp2le4mHFJ0HGbXsv5f1UznAfRb8XC5ipR/5fc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbfLCOaj (ORCPT
+        id S1726443AbfLCOb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 09:30:39 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41656 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfLCOai (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 09:30:38 -0500
-Received: by mail-pf1-f194.google.com with SMTP id s18so1937809pfd.8;
-        Tue, 03 Dec 2019 06:30:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=J2Bki53qX313b1AARXHLy2ucszmnsdlQKT35x42nCu8=;
-        b=OKCh36lZ9pDx0Y8bc0qMl7g8YiKhOooNxDwawYU4yO7Dq7rTfzWx9N8HEHwFNhc5xS
-         kTPmwwfJFv6q3zqRx6wJyoiGlRRuOFDasaCW45wzungTG/Z6ASkTzKO02JOMGEC14Lqx
-         8vbjT7THR5CWyoeSy7ZcjBMQgA9Dk9GsLU3wCm58lcK7iYIyyeB/qQfotew+ztsiVO1m
-         vBKsh1+FoSFggHoEIRSZtREx/ICfREIqhbLqIyT18zZTVy6ed1YZKrSAf8xsBzLnVAzc
-         aUJ0B35mKG5i6A+eTPcK32med0uhmvSTN7NYfC/pH2v50jtJri9OOaYoUwQEipv/UjjD
-         U8PA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references;
-        bh=J2Bki53qX313b1AARXHLy2ucszmnsdlQKT35x42nCu8=;
-        b=cDjomdguZEnm1wQhAM3LWA1aINvHyp7JqFvNKFotqiwfGTid/ojUdjHxCh6VMtta9Q
-         mQ5AiX37Ws173+hRnbcxwmO02u+t8Vcw2hHSJgfGkPveyRzG2HSqxeOdZ+CWaVoKDx1P
-         YrkxfW0CXOMx7ohufv5h225s6VjG5dB9LT+7sbQNeIoLgO095s372L33jZPyzfc5rYS8
-         eUNKcMrdhzj4VjH79wnDwzFndRemnzpCSxj18MMH1PZRsZi9fHp84PySFR9n8hRG9pZW
-         L2QTyojhhPrWZTyAi6ZEl1DQ1y1ihQRhgdFAQPsPI+qCi0LyAl4pLvSKlKtsw+2uDdqj
-         y5mQ==
-X-Gm-Message-State: APjAAAVS7N9W7FWHppYhZzJTCRRIZFxe2+gNdrc3RyCtQs65HCmOogCe
-        jltI/GgZBdD0GyxoMzZHAWk=
-X-Google-Smtp-Source: APXvYqxd9orlFfynhShIrO9O1xR/zQV3ibpOIf2jcASyL8fEZuhTT6fLlphL85Wkw/2sKrMEmZkXCw==
-X-Received: by 2002:a62:2cd7:: with SMTP id s206mr5081621pfs.106.1575383437811;
-        Tue, 03 Dec 2019 06:30:37 -0800 (PST)
-Received: from localhost.localdomain ([2406:b400:a2:3691:8da9:a1b8:23c9:e525])
-        by smtp.gmail.com with ESMTPSA id z10sm3756468pgg.39.2019.12.03.06.30.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 06:30:36 -0800 (PST)
-From:   Susarla Nikhilesh <nikhilesh1294@gmail.com>
-To:     valdis.kletnieks@vt.edu, gregkh@linuxfoundation.org,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: exfat: fix spelling mistake
-Date:   Tue,  3 Dec 2019 20:00:23 +0530
-Message-Id: <20191203143023.2786-1-nikhilesh1294@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <43e42d774081d2edeaf826845915348209152756>
-References: <43e42d774081d2edeaf826845915348209152756>
+        Tue, 3 Dec 2019 09:31:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50604 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbfLCOb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 09:31:28 -0500
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 488E220659;
+        Tue,  3 Dec 2019 14:31:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575383487;
+        bh=paDjy7hZsmQkcUp7jKSH70ftPLffSgdTsEFpUetgz24=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=KZ3PkNnslqc7BEkuj8s892JHiyp111mpjo13oyKF2LEIsAAcH/hc5JifebD94uck3
+         nvVaUSye1Jaz8ajRoUANeZarO5PaXCebynHCFsWg9UsJyvHq5vbTBbBh+fkKJlWy4n
+         ygD9D5lhomlPo1jbX8Cgfpm0LyJHYR996Q4klzU0=
+Received: by mail-qv1-f44.google.com with SMTP id o18so1579749qvf.1;
+        Tue, 03 Dec 2019 06:31:27 -0800 (PST)
+X-Gm-Message-State: APjAAAX6siZ28IpYyeoB3c/o2qRLnuo9Wg30ZnPj1yXqUYOrwEaagzCE
+        U9MCCDpKb2WB+zZn94r4sH/h7CZZ61hN5lHs1A==
+X-Google-Smtp-Source: APXvYqxDBnGQNKjTk3qSKKiOvMvxPKQPV7m6ur08FqhiSl9j9w8DAHBF3481M9puWdGG8hXS2X7yJKuiKlMAjUfp4E0=
+X-Received: by 2002:a05:6214:11ac:: with SMTP id u12mr5420247qvv.85.1575383483847;
+ Tue, 03 Dec 2019 06:31:23 -0800 (PST)
+MIME-Version: 1.0
+References: <cover.5630f63168ad5cddf02e9796106f8e086c196907.1575376664.git-series.andrew@aj.id.au>
+ <3da2492c244962c27b21aad87bfa6bf74f568f1d.1575376664.git-series.andrew@aj.id.au>
+In-Reply-To: <3da2492c244962c27b21aad87bfa6bf74f568f1d.1575376664.git-series.andrew@aj.id.au>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 3 Dec 2019 08:31:10 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+3qXJbTu9G42g11PLJH-A0XeSQmJKj0obO32QFna3dEA@mail.gmail.com>
+Message-ID: <CAL_Jsq+3qXJbTu9G42g11PLJH-A0XeSQmJKj0obO32QFna3dEA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: ipmi: aspeed: Introduce a v2 binding for KCS
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     openipmi-developer@lists.sourceforge.net,
+        Corey Minyard <minyard@acm.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CHECK: 'propogate' may be misspelled - perhaps 'propagate'?
-FILE: drivers/staging/exfat/exfat_super.c:1484
+On Tue, Dec 3, 2019 at 6:36 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> The v2 binding utilises reg and renames some of the v1 properties.
+>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+>  Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt | 20 +++++---
+>  1 file changed, 14 insertions(+), 6 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt b/Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt
+> index d98a9bf45d6c..76b180ebbde4 100644
+> --- a/Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt
+> +++ b/Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt
+> @@ -1,9 +1,10 @@
+> -* Aspeed KCS (Keyboard Controller Style) IPMI interface
+> +# Aspeed KCS (Keyboard Controller Style) IPMI interface
+>
+>  The Aspeed SOCs (AST2400 and AST2500) are commonly used as BMCs
+>  (Baseboard Management Controllers) and the KCS interface can be
+>  used to perform in-band IPMI communication with their host.
+>
+> +## v1
+>  Required properties:
+>  - compatible : should be one of
+>      "aspeed,ast2400-kcs-bmc"
+> @@ -12,14 +13,21 @@ Required properties:
+>  - kcs_chan : The LPC channel number in the controller
+>  - kcs_addr : The host CPU IO map address
+>
+> +## v2
+> +Required properties:
+> +- compatible : should be one of
+> +    "aspeed,ast2400-kcs-bmc-v2"
+> +    "aspeed,ast2500-kcs-bmc-v2"
+> +- reg : The address and size of the IDR, ODR and STR registers
+> +- interrupts : interrupt generated by the controller
+> +- slave-reg : The host CPU IO map address
 
-CHECK: 'propogate' may be misspelled - perhaps 'propagate'?
-FILE: drivers/staging/exfat/exfat_super.c:1551
+aspeed,slave-reg
 
-Signed-off-by: Susarla Nikhilesh <nikhilesh1294@gmail.com>
----
- drivers/staging/exfat/exfat_super.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+>
+>  Example:
+>
+> -    kcs3: kcs3@0 {
+> -        compatible = "aspeed,ast2500-kcs-bmc";
+> -        reg = <0x0 0x80>;
+> +    kcs3: kcs@24 {
+> +        compatible = "aspeed,ast2500-kcs-bmc-v2";
+> +        reg = <0x24 0x1>, <0x30 0x1>, <0x3c 0x1>;
 
-diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
-index 6e481908c59f..d1c1e50fb492 100644
---- a/drivers/staging/exfat/exfat_super.c
-+++ b/drivers/staging/exfat/exfat_super.c
-@@ -1481,7 +1481,7 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
- 
- 			count = count_dos_name_entries(sb, &dir, TYPE_DIR);
- 			if (count < 0) {
--				ret = count; /* propogate error upward */
-+				ret = count; /* propagate error upward */
- 				goto out;
- 			}
- 			info->NumSubdirs = count;
-@@ -1548,7 +1548,7 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
- 
- 		count = count_dos_name_entries(sb, &dir, TYPE_DIR);
- 		if (count < 0) {
--			ret = count; /* propogate error upward */
-+			ret = count; /* propagate error upward */
- 			goto out;
- 		}
- 		info->NumSubdirs += count;
--- 
-2.17.1
+What are the other registers in this address space? I'm not so sure
+this is an improvement if you end up with a bunch of nodes with single
+registers.
 
+>          interrupts = <8>;
+> -        kcs_chan = <3>;
+> -        kcs_addr = <0xCA2>;
+> +        slave-reg = <0xca2>;
+>          status = "okay";
+>      };
+> --
+> git-series 0.9.1
