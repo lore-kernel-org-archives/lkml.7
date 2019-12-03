@@ -2,209 +2,99 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9201C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94228C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A343C2070A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65A112070A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:42:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575387779;
+	bh=HCKyqnJ8KndkesApi5P/dMyTOyK6e1sFgOC12OV+AJs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WXUNKEtFg+Bz4WrGoTGGToMZpItP+el2PRGYGaXujvEdrg3VJpkILfno5KHDiPE+L
+	 Xx0tb7dN2n3loEtnvZLVFGji700NRQgJtBS+OX913s32qqzmLDUxsFvllp/bqaLlCm
+	 9nhTFuloW7qdwroXmJxkPW+2ioIDC/tf+BFZ6PJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfLCPmf (ORCPT
+        id S1726995AbfLCPm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 10:42:35 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:50160 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfLCPmf (ORCPT
+        Tue, 3 Dec 2019 10:42:58 -0500
+Received: from mail-qk1-f179.google.com ([209.85.222.179]:43831 "EHLO
+        mail-qk1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbfLCPm6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 10:42:35 -0500
-Received: from [81.92.17.147] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1icAHg-0004aI-Cd; Tue, 03 Dec 2019 15:40:16 +0000
-Date:   Tue, 3 Dec 2019 16:40:13 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Laurent Vivier <laurent@vivier.eu>
-Cc:     linux-kernel@vger.kernel.org,
-        Henning Schild <henning.schild@siemens.com>,
-        Dmitry Safonov <dima@arista.com>, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        Jann Horn <jannh@google.com>, Greg Kurz <groug@kaod.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        linux-fsdevel@vger.kernel.org,
-        =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>,
-        dhowells@redhat.com
-Subject: Re: [PATCH v7 1/1] ns: add binfmt_misc to the user namespace
-Message-ID: <20191203154012.opirpicsuc6ou3cx@wittgenstein>
-References: <20191107140304.8426-1-laurent@vivier.eu>
- <20191107140304.8426-2-laurent@vivier.eu>
+        Tue, 3 Dec 2019 10:42:58 -0500
+Received: by mail-qk1-f179.google.com with SMTP id q28so3817652qkn.10
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 07:42:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GZ5+yklq7H8c4cLmSOwBTw3oeLZQUR/opCiWbrMVFHw=;
+        b=LvI71To1VF/q1yq1S8AWadCBry6iIUKT0fW/YgdRM/ooPpIOdYifucaLUxQNDvQG7F
+         6WzTXRJqm5WyTkJJC880WNiTSi0j3sBIJ+h9j/aQXV1hv3/d3ZIDdIDu3r7taktYQYte
+         TBCa7Ej0WoDB6fdPMoEIuENBrL10zXSDUS/fzwei8eaF+RN3hq+WRJ623KS0Ldb1y6IU
+         polQJbQ/r7z/0SKAkRYhzSf+HrZVGaSLYkLQzynpBo7aBxz+Thn1embz07roqjmHaylY
+         wWLZHC16k5Fer1spanc1u/h+IYQmD+R5CwSKwrRgztKuMOVeRwdRwMU/mRfQrJKcNdNQ
+         M2Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GZ5+yklq7H8c4cLmSOwBTw3oeLZQUR/opCiWbrMVFHw=;
+        b=C1q5vlcZxs8lNRKh9IwYu7ZvtnA4Vl/ixwCxyKOjmSM6homT7yoRpAr2wKKZwbxJ66
+         5+SBK7Y+BWdPe5jyzznRFOldigMKW36EY4eckDE8aS3Ljm7ZhfwzSndheD8ZAxNw2ZiT
+         /JpEp+HbcdhcyXNdDOlh+LMr5NkAbHIQ217sV6qgA8vJskP7EopYO3zZbIN3czzfPkd5
+         ziTe4e9qxy4ly7x2N0BGx0kP/1bZ490l69bpqyyVys/iPjtz0fo8SvRzS9xcsuY0FmWD
+         MxO2B+lKzKvCnQhGu/AyjeFW75TJyqDU8n4lX30vRNJ5U6MXK7pIUsHHY/1u57OyHTr/
+         L5tw==
+X-Gm-Message-State: APjAAAXCXs3MvS6G7EpH72tC7NRNJbEN+jKfwyYoxbBr3SfCD0ZajKgb
+        jPpT6vOGrJwjwiPoAC3ZiIg=
+X-Google-Smtp-Source: APXvYqz7zbichx9Xsf2WHw7Kn9aQgenAuKj3xnpaGD6uXIpcLyjtKIc7+jfvjey9Dv0KreS8xpQVTw==
+X-Received: by 2002:ae9:de44:: with SMTP id s65mr5769090qkf.203.1575387777043;
+        Tue, 03 Dec 2019 07:42:57 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::3:6ede])
+        by smtp.gmail.com with ESMTPSA id f26sm1956315qtv.77.2019.12.03.07.42.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Dec 2019 07:42:54 -0800 (PST)
+Date:   Tue, 3 Dec 2019 07:42:51 -0800
+From:   Tejun Heo <tj@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>, jiangshanlai@gmail.com,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: Workqueues splat due to ending up on wrong CPU
+Message-ID: <20191203154251.GC2196666@devbig004.ftw2.facebook.com>
+References: <20191125230312.GP2889@paulmck-ThinkPad-P72>
+ <20191126183334.GE2867037@devbig004.ftw2.facebook.com>
+ <20191126220533.GU2889@paulmck-ThinkPad-P72>
+ <20191127155027.GA15170@paulmck-ThinkPad-P72>
+ <20191128161823.GA24667@paulmck-ThinkPad-P72>
+ <20191129155850.GA17002@paulmck-ThinkPad-P72>
+ <20191202015548.GA13391@paulmck-ThinkPad-P72>
+ <20191202201338.GH16681@devbig004.ftw2.facebook.com>
+ <20191203095521.GH2827@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191107140304.8426-2-laurent@vivier.eu>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191203095521.GH2827@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 03:03:04PM +0100, Laurent Vivier wrote:
-> This patch allows to have a different binfmt_misc configuration
-> for each new user namespace. By default, the binfmt_misc configuration
-> is the one of the previous level, but if the binfmt_misc filesystem is
-> mounted in the new namespace a new empty binfmt instance is created and
-> used in this namespace.
-> 
-> For instance, using "unshare" we can start a chroot of another
-> architecture and configure the binfmt_misc interpreter without being root
-> to run the binaries in this chroot.
-> 
-> Signed-off-by: Laurent Vivier <laurent@vivier.eu>
-> Acked-by: Andrei Vagin <avagin@gmail.com>
-> ---
->  fs/binfmt_misc.c               | 115 +++++++++++++++++++++++++--------
->  include/linux/user_namespace.h |  15 +++++
->  kernel/user.c                  |  14 ++++
->  kernel/user_namespace.c        |   3 +
->  4 files changed, 119 insertions(+), 28 deletions(-)
-> 
-> diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
-> index cdb45829354d..ba5f0d2ade96 100644
-> --- a/fs/binfmt_misc.c
-> +++ b/fs/binfmt_misc.c
-> @@ -40,9 +40,6 @@ enum {
->  	VERBOSE_STATUS = 1 /* make it zero to save 400 bytes kernel memory */
->  };
->  
-> -static LIST_HEAD(entries);
-> -static int enabled = 1;
-> -
->  enum {Enabled, Magic};
->  #define MISC_FMT_PRESERVE_ARGV0 (1 << 31)
->  #define MISC_FMT_OPEN_BINARY (1 << 30)
-> @@ -62,10 +59,7 @@ typedef struct {
->  	struct file *interp_file;
->  } Node;
->  
-> -static DEFINE_RWLOCK(entries_lock);
->  static struct file_system_type bm_fs_type;
-> -static struct vfsmount *bm_mnt;
-> -static int entry_count;
->  
->  /*
->   * Max length of the register string.  Determined by:
-> @@ -82,18 +76,37 @@ static int entry_count;
->   */
->  #define MAX_REGISTER_LENGTH 1920
->  
-> +static struct binfmt_namespace *binfmt_ns(struct user_namespace *ns)
-> +{
-> +	struct binfmt_namespace *b_ns;
-> +
-> +	while (ns) {
-> +		b_ns = READ_ONCE(ns->binfmt_ns);
-> +		if (b_ns)
-> +			return b_ns;
-> +		ns = ns->parent;
-> +	}
-> +	/* as the first user namespace is initialized with
-> +	 * &init_binfmt_ns we should never come here
-> +	 * but we try to stay safe by logging a warning
-> +	 * and returning a sane value
-> +	 */
-> +	WARN_ON_ONCE(1);
-> +	return &init_binfmt_ns;
-> +}
-> +
->  /*
->   * Check if we support the binfmt
->   * if we do, return the node, else NULL
->   * locking is done in load_misc_binary
->   */
-> -static Node *check_file(struct linux_binprm *bprm)
-> +static Node *check_file(struct binfmt_namespace *ns, struct linux_binprm *bprm)
->  {
->  	char *p = strrchr(bprm->interp, '.');
->  	struct list_head *l;
->  
->  	/* Walk all the registered handlers. */
-> -	list_for_each(l, &entries) {
-> +	list_for_each(l, &ns->entries) {
->  		Node *e = list_entry(l, Node, list);
->  		char *s;
->  		int j;
-> @@ -135,17 +148,18 @@ static int load_misc_binary(struct linux_binprm *bprm)
->  	struct file *interp_file = NULL;
->  	int retval;
->  	int fd_binary = -1;
-> +	struct binfmt_namespace *ns = binfmt_ns(current_user_ns());
->  
->  	retval = -ENOEXEC;
-> -	if (!enabled)
-> +	if (!ns->enabled)
->  		return retval;
->  
->  	/* to keep locking time low, we copy the interpreter string */
-> -	read_lock(&entries_lock);
-> -	fmt = check_file(bprm);
-> +	read_lock(&ns->entries_lock);
-> +	fmt = check_file(ns, bprm);
->  	if (fmt)
->  		dget(fmt->dentry);
-> -	read_unlock(&entries_lock);
-> +	read_unlock(&ns->entries_lock);
->  	if (!fmt)
->  		return retval;
->  
-> @@ -611,19 +625,19 @@ static void bm_evict_inode(struct inode *inode)
->  	kfree(e);
->  }
->  
-> -static void kill_node(Node *e)
-> +static void kill_node(struct binfmt_namespace *ns, Node *e)
->  {
->  	struct dentry *dentry;
->  
-> -	write_lock(&entries_lock);
-> +	write_lock(&ns->entries_lock);
->  	list_del_init(&e->list);
-> -	write_unlock(&entries_lock);
-> +	write_unlock(&ns->entries_lock);
->  
->  	dentry = e->dentry;
->  	drop_nlink(d_inode(dentry));
->  	d_drop(dentry);
->  	dput(dentry);
-> -	simple_release_fs(&bm_mnt, &entry_count);
-> +	simple_release_fs(&ns->bm_mnt, &ns->entry_count);
->  }
->  
->  /* /<entry> */
-> @@ -653,6 +667,9 @@ static ssize_t bm_entry_write(struct file *file, const char __user *buffer,
->  	struct dentry *root;
->  	Node *e = file_inode(file)->i_private;
->  	int res = parse_command(buffer, count);
-> +	struct binfmt_namespace *ns;
-> +
-> +	ns = binfmt_ns(file->f_path.dentry->d_sb->s_user_ns);
+Hello,
 
-Sorry for being so late to the party.
+On Tue, Dec 03, 2019 at 10:55:21AM +0100, Peter Zijlstra wrote:
+> The below seems to not insta explode...
 
-The naked dereferences here are not very pretty and also likely mean you
-access the wrong dentry when you do (weird but possible) things like:
+Paul, any chance you can run Peter's patch through your test?
 
-mount -t overlay overlay -o lowerdir=/proc/sys/fs/binfmt_misc,workdir=/work,upperdir=/upper /merged
+Thanks.
 
-(which might already cause trouble in other parts of this code)
-
-so I think it's better if you replace 
-file->f_path.dentry->d_sb->s_user_ns
-with
-file_dentry(file)->d_sb->s_user_ns
-in places where you do naked dereferences now.
+-- 
+tejun
