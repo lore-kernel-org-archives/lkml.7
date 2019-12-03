@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD26C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2EFC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5886D20684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFA2C2064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414672;
-	bh=VbReP7Qkbf3t3xJNhOIE20IUIgjrJJkVWaMD9BCNTDs=;
+	s=default; t=1575414676;
+	bh=vJgGt+XVMnYKZoAG5h05kAuYMAWp/uN3IP2/FWjb6iE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UVLJTTZltJaRU27IljMLlhhAQNY87UdgsxJvk2KgsOrQguo+JzGKUyYYpJLqAILhc
-	 /NYBeWOE4M8FH73p3lEp+ED6JSrttBj9zRZ5TNc4IK7i+yHR9iM/JFh/J5ylTTqiUq
-	 zM5h9dc1cc5KS2yjdf5PnGNynmLeloAKmmxe1xLg=
+	b=0uw8RIEONZ+t7ovyTt/qpDXkFwcpwPKCT9GIdPL3hd5kzVUjgssFMZt576w2DoUMp
+	 PSLWnixzoaJ8nIEJ1PL+ymX+T5qtGkp9jT8ZINZ9PjJHQ6VUOuG1w2WGo0lhKCH7Vq
+	 EzSV0Mo75tR1FPFXuhkl/lQQKSuvA6ycUxn10naU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728106AbfLCWl3 (ORCPT
+        id S1728527AbfLCWlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:41:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55884 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:41:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728550AbfLCWlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:41:25 -0500
+        id S1728504AbfLCWlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:41:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D68B82084B;
-        Tue,  3 Dec 2019 22:41:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 001932080F;
+        Tue,  3 Dec 2019 22:41:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412885;
-        bh=VbReP7Qkbf3t3xJNhOIE20IUIgjrJJkVWaMD9BCNTDs=;
+        s=default; t=1575412875;
+        bh=vJgGt+XVMnYKZoAG5h05kAuYMAWp/uN3IP2/FWjb6iE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MQDNCXplqanrNyczn6msiZuQdwNfI2L57OyRPSpAVD7ZJ2lDVXmmVYynf2R4Qm/Sd
-         0uOwTsS+HE3nT/c6vRzfP70wPEJjEONE7d1b8sMP7dIt9V4h6xcXotw0894WTWOelX
-         LMNBeqsJVOi7gH4zO40B4SHpgnxVT9tWw998MXrY=
+        b=2P+itleDkb84vxJrA1s/Lz4e35yVEk10icMmFjNftSQLsZVTrgfBeA8G5gah+R5TX
+         YXFDrn1aSi1xQxCpu0X4sm1r1P2dzPW3IvVHYWoM7dWCJi2waIGoUxAxXiggsvomlQ
+         zhSfMQJj0Crwm8f7efG6hyMW4QX/H8PB4r73S4tU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>,
+        stable@vger.kernel.org,
+        Jeroen Hofstee <jhofstee@victronenergy.com>,
+        Stephane Grosjean <s.grosjean@peak-system.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 055/135] can: rx-offload: can_rx_offload_offload_one(): increment rx_fifo_errors on queue overflow or OOM
-Date:   Tue,  3 Dec 2019 23:34:55 +0100
-Message-Id: <20191203213020.458989998@linuxfoundation.org>
+Subject: [PATCH 5.3 051/135] can: peak_usb: report bus recovery as well
+Date:   Tue,  3 Dec 2019 23:34:51 +0100
+Message-Id: <20191203213019.620878955@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -59,37 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Kleine-Budde <mkl@pengutronix.de>
+From: Jeroen Hofstee <jhofstee@victronenergy.com>
 
-[ Upstream commit 4e9016bee3bf0c24963097edace034ff205b565c ]
+[ Upstream commit 128a1b87d3ceb2ba449d5aadb222fe22395adeb0 ]
 
-If the rx-offload skb_queue is full or the skb allocation fails (due to OOM),
-the mailbox contents is discarded.
+While the state changes are reported when the error counters increase
+and decrease, there is no event when the bus recovers and the error
+counters decrease again. So add those as well.
 
-This patch adds the incrementing of the rx_fifo_errors statistics counter.
+Change the state going downward to be ERROR_PASSIVE -> ERROR_WARNING ->
+ERROR_ACTIVE instead of directly to ERROR_ACTIVE again.
 
+Signed-off-by: Jeroen Hofstee <jhofstee@victronenergy.com>
+Cc: Stephane Grosjean <s.grosjean@peak-system.com>
 Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/rx-offload.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/can/usb/peak_usb/pcan_usb.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/can/rx-offload.c b/drivers/net/can/rx-offload.c
-index bdc27481b57f9..e224530a06300 100644
---- a/drivers/net/can/rx-offload.c
-+++ b/drivers/net/can/rx-offload.c
-@@ -125,8 +125,10 @@ static struct sk_buff *can_rx_offload_offload_one(struct can_rx_offload *offload
+diff --git a/drivers/net/can/usb/peak_usb/pcan_usb.c b/drivers/net/can/usb/peak_usb/pcan_usb.c
+index 5a66c9f53aae6..d2539c95adb65 100644
+--- a/drivers/net/can/usb/peak_usb/pcan_usb.c
++++ b/drivers/net/can/usb/peak_usb/pcan_usb.c
+@@ -436,8 +436,8 @@ static int pcan_usb_decode_error(struct pcan_usb_msg_context *mc, u8 n,
+ 		}
+ 		if ((n & PCAN_USB_ERROR_BUS_LIGHT) == 0) {
+ 			/* no error (back to active state) */
+-			mc->pdev->dev.can.state = CAN_STATE_ERROR_ACTIVE;
+-			return 0;
++			new_state = CAN_STATE_ERROR_ACTIVE;
++			break;
+ 		}
+ 		break;
  
- 		ret = offload->mailbox_read(offload, &cf_overflow,
- 					    &timestamp, n);
--		if (ret)
-+		if (ret) {
- 			offload->dev->stats.rx_dropped++;
-+			offload->dev->stats.rx_fifo_errors++;
-+		}
+@@ -460,9 +460,9 @@ static int pcan_usb_decode_error(struct pcan_usb_msg_context *mc, u8 n,
+ 		}
  
- 		return NULL;
- 	}
+ 		if ((n & PCAN_USB_ERROR_BUS_HEAVY) == 0) {
+-			/* no error (back to active state) */
+-			mc->pdev->dev.can.state = CAN_STATE_ERROR_ACTIVE;
+-			return 0;
++			/* no error (back to warning state) */
++			new_state = CAN_STATE_ERROR_WARNING;
++			break;
+ 		}
+ 		break;
+ 
+@@ -501,6 +501,11 @@ static int pcan_usb_decode_error(struct pcan_usb_msg_context *mc, u8 n,
+ 		mc->pdev->dev.can.can_stats.error_warning++;
+ 		break;
+ 
++	case CAN_STATE_ERROR_ACTIVE:
++		cf->can_id |= CAN_ERR_CRTL;
++		cf->data[1] = CAN_ERR_CRTL_ACTIVE;
++		break;
++
+ 	default:
+ 		/* CAN_STATE_MAX (trick to handle other errors) */
+ 		cf->can_id |= CAN_ERR_CRTL;
 -- 
 2.20.1
 
