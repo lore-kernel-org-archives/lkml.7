@@ -2,52 +2,51 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	PDS_BTC_ID,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29263C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E90C7C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3B892053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9C5B215F2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413706;
-	bh=zYB41gfG09mqdRPWxWlUgH4vOV0svqU0ru6XZw2f+fE=;
+	s=default; t=1575413709;
+	bh=UbjP11MIT97gaXxas0EP18cGt2Ib3JuutiwvMza+Zog=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OR9/v59uH9AxZy3UAzhabsqDRPuoA55FdJxp7G/GJQ8WXq9lrLoIA4Pq4GbZvbUUk
-	 d60+AyxJQxLuXcb8wEncpuCpZycuC8L09bK6Q1zaZSlctjzwWZRX3pzakueZ6VApnX
-	 vSnvEA5GXE+/1K4a3f42FqCMrvZnJbRBGxlK6lMM=
+	b=fFykMLHpj36duxHZ/24qcTbOkWt+vGP4sr3v6ZytMFt6MUjmhQe6L1VYxn+WvWvhl
+	 44B1pPX81O6GkYdR0Gja1Gq+ZmG3dPMsmBBVsw8Ob9SaoWSI+uG/ZUdOPc2b3k3Lco
+	 A0KUYBaublrv3iMHmxYUtPfPSxFTrWWOusrzqhCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730324AbfLCWzE (ORCPT
+        id S1728277AbfLCWzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:55:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49144 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:55:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730321AbfLCWy7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:54:59 -0500
+        id S1730323AbfLCWzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:55:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7693214AF;
-        Tue,  3 Dec 2019 22:54:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4C9120863;
+        Tue,  3 Dec 2019 22:55:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413699;
-        bh=zYB41gfG09mqdRPWxWlUgH4vOV0svqU0ru6XZw2f+fE=;
+        s=default; t=1575413704;
+        bh=UbjP11MIT97gaXxas0EP18cGt2Ib3JuutiwvMza+Zog=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nfOQ6YKmwFX1jXj3bUBCiHsUUwldpfFHtuoU0IWPdqdI3h2fX56mKU7Qo4hY2tzoX
-         PPwNg1qPNQu3J1ZdhETk66fJmJG1PcMlitpjsN8ZaxPY8FItC5BMaDRLeV+vV8KhzE
-         Al2HA0x32hN4fTNZsPXnr1sXAHZ3OPcnRrsm9lOs=
+        b=VIXJ/pZld5X+nYZeDfzUohMYIaKBQFw+Wqxfj5CCmVjIY1+OrPAy2mHtp58yDvJN1
+         M0djZhBXuG7wZ5OBqTatea7GimIwamTf/sG98DPBmYN3Wd9Ai9SPjrotjqfzHEfui4
+         4iAU207pPMN7T35SjTcYJ3uUk5pCTDRaxG3UxFbc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
-        Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Boris Brezillon <bbrezillon@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 229/321] blktrace: Show requests without sector
-Date:   Tue,  3 Dec 2019 23:34:55 +0100
-Message-Id: <20191203223439.028520755@linuxfoundation.org>
+Subject: [PATCH 4.19 213/321] mtd: Check add_mtd_device() ret code
+Date:   Tue,  3 Dec 2019 23:34:39 +0100
+Message-Id: <20191203223438.201348495@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,43 +59,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Boris Brezillon <bbrezillon@kernel.org>
 
-[ Upstream commit 0803de78049fe1b0baf44bcddc727b036fb9139b ]
+[ Upstream commit 2b6f0090a3335b7bdd03ca520c35591159463041 ]
 
-Currently, blktrace will not show requests that don't have any data as
-rq->__sector is initialized to -1 which is out of device range and thus
-discarded by act_log_check(). This is most notably the case for cache
-flush requests sent to the device. Fix the problem by making
-blk_rq_trace_sector() return 0 for requests without initialized sector.
+add_mtd_device() can fail. We should always check its return value
+and gracefully handle the failure case. Fix the call sites where this
+not done (in mtdpart.c) and add a __must_check attribute to the
+prototype to avoid this kind of mistakes.
 
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Boris Brezillon <bbrezillon@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/blktrace_api.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/mtd/mtdcore.h |  2 +-
+ drivers/mtd/mtdpart.c | 36 +++++++++++++++++++++++++++++++-----
+ 2 files changed, 32 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/blktrace_api.h b/include/linux/blktrace_api.h
-index 8804753805ac5..7bb2d8de9f308 100644
---- a/include/linux/blktrace_api.h
-+++ b/include/linux/blktrace_api.h
-@@ -116,7 +116,13 @@ extern void blk_fill_rwbs(char *rwbs, unsigned int op, int bytes);
+diff --git a/drivers/mtd/mtdcore.h b/drivers/mtd/mtdcore.h
+index 9887bda317cd9..b31c868019ada 100644
+--- a/drivers/mtd/mtdcore.h
++++ b/drivers/mtd/mtdcore.h
+@@ -7,7 +7,7 @@
+ extern struct mutex mtd_table_mutex;
  
- static inline sector_t blk_rq_trace_sector(struct request *rq)
+ struct mtd_info *__mtd_next_device(int i);
+-int add_mtd_device(struct mtd_info *mtd);
++int __must_check add_mtd_device(struct mtd_info *mtd);
+ int del_mtd_device(struct mtd_info *mtd);
+ int add_mtd_partitions(struct mtd_info *, const struct mtd_partition *, int);
+ int del_mtd_partitions(struct mtd_info *);
+diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
+index 0bbb23b014f1b..b9b308cde0a5d 100644
+--- a/drivers/mtd/mtdpart.c
++++ b/drivers/mtd/mtdpart.c
+@@ -612,10 +612,22 @@ int mtd_add_partition(struct mtd_info *parent, const char *name,
+ 	list_add(&new->list, &mtd_partitions);
+ 	mutex_unlock(&mtd_partitions_mutex);
+ 
+-	add_mtd_device(&new->mtd);
++	ret = add_mtd_device(&new->mtd);
++	if (ret)
++		goto err_remove_part;
+ 
+ 	mtd_add_partition_attrs(new);
+ 
++	return 0;
++
++err_remove_part:
++	mutex_lock(&mtd_partitions_mutex);
++	list_del(&new->list);
++	mutex_unlock(&mtd_partitions_mutex);
++
++	free_partition(new);
++	pr_info("%s:%i\n", __func__, __LINE__);
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(mtd_add_partition);
+@@ -706,22 +718,31 @@ int add_mtd_partitions(struct mtd_info *master,
  {
--	return blk_rq_is_passthrough(rq) ? 0 : blk_rq_pos(rq);
-+	/*
-+	 * Tracing should ignore starting sector for passthrough requests and
-+	 * requests where starting sector didn't get set.
-+	 */
-+	if (blk_rq_is_passthrough(rq) || blk_rq_pos(rq) == (sector_t)-1)
-+		return 0;
-+	return blk_rq_pos(rq);
+ 	struct mtd_part *slave;
+ 	uint64_t cur_offset = 0;
+-	int i;
++	int i, ret;
+ 
+ 	printk(KERN_NOTICE "Creating %d MTD partitions on \"%s\":\n", nbparts, master->name);
+ 
+ 	for (i = 0; i < nbparts; i++) {
+ 		slave = allocate_partition(master, parts + i, i, cur_offset);
+ 		if (IS_ERR(slave)) {
+-			del_mtd_partitions(master);
+-			return PTR_ERR(slave);
++			ret = PTR_ERR(slave);
++			goto err_del_partitions;
+ 		}
+ 
+ 		mutex_lock(&mtd_partitions_mutex);
+ 		list_add(&slave->list, &mtd_partitions);
+ 		mutex_unlock(&mtd_partitions_mutex);
+ 
+-		add_mtd_device(&slave->mtd);
++		ret = add_mtd_device(&slave->mtd);
++		if (ret) {
++			mutex_lock(&mtd_partitions_mutex);
++			list_del(&slave->list);
++			mutex_unlock(&mtd_partitions_mutex);
++
++			free_partition(slave);
++			goto err_del_partitions;
++		}
++
+ 		mtd_add_partition_attrs(slave);
+ 		/* Look for subpartitions */
+ 		parse_mtd_partitions(&slave->mtd, parts[i].types, NULL);
+@@ -730,6 +751,11 @@ int add_mtd_partitions(struct mtd_info *master,
+ 	}
+ 
+ 	return 0;
++
++err_del_partitions:
++	del_mtd_partitions(master);
++
++	return ret;
  }
  
- static inline unsigned int blk_rq_trace_nr_sectors(struct request *rq)
+ static DEFINE_SPINLOCK(part_parser_lock);
 -- 
 2.20.1
 
