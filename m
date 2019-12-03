@@ -2,146 +2,193 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9318C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0877C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C505207DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62B4220637
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:15:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="bKdTNc7W"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="obXrp93+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfLCRLh (ORCPT
+        id S1726819AbfLCRPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 12:11:37 -0500
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:40875 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbfLCRLh (ORCPT
+        Tue, 3 Dec 2019 12:15:33 -0500
+Received: from mail1.bemta25.messagelabs.com ([195.245.230.5]:41194 "EHLO
+        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726074AbfLCRPd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 12:11:37 -0500
-Received: by mail-ua1-f68.google.com with SMTP id p18so1637529uar.7
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 09:11:37 -0800 (PST)
+        Tue, 3 Dec 2019 12:15:33 -0500
+Received: from [46.226.52.104] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-5.bemta.az-a.eu-west-1.aws.symcld.net id E0/79-19910-F2896ED5; Tue, 03 Dec 2019 17:15:27 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPJsWRWlGSWpSXmKPExsWSoc9roqs/41m
+  swakLPBZXLh5isljT3MFkMfXhEzaLb1eArMu75rBZdO7qZ7XY8H0towO7x4bPTWweO2fdZfdY
+  vOclk8emVZ1sHvveLmPzWL/lKovH501yAexRrJl5SfkVCawZDze3shec566YMfcdWwPjBs4uR
+  i4ORoGlzBK3Ptxn7mLkBHKOsUicuaEDkdjMKPG79ycbiMMicIJZ4u2kVcwgjpDAVCaJtl+v2S
+  CcB4wS9z7vZQPpZxOwkJh84gFYQkRgOqPE08lv2UEcZoEGJolVK04wgVQJC9hJfHjyGGyjiIC
+  9xLLGb0BFHEB2tMSJdywgYRYBFYnGSZfYQWxegUSJm433mCC2zWeROPbzElgvp0CoxIY3Oxgh
+  LpeV+NK4GizOLCAucevJfLBdEgICEkv2nGeGsEUlXj7+xwpRnypxsukGI0RcR+Ls9SdQtpLEv
+  LlHoGxZiUvzu6FsX4kfhy6ww9Sf2viXBcK2kFjS3coCcr8E0NH/DlVChAskbp4/CdWqJnHjTQ
+  fUCTISBy+tYAX5RULgJqvEs4fdzBMY9WchORvC1pFYsPsTG4StLbFs4WvmWeCwEJQ4OfMJywJ
+  GllWM5klFmekZJbmJmTm6hgYGuoaGRrqGlqa6ZmZ6iVW6iXqppbrlqcUluoZ6ieXFesWVuck5
+  KXp5qSWbGIFpLaXgsNMOxrdf3+odYpTkYFIS5f37+UmsEF9SfkplRmJxRnxRaU5q8SFGGQ4OJ
+  QnemdOexQoJFqWmp1akZeYAUyxMWoKDR0mElx8kzVtckJhbnJkOkTrFqMsx4eXcRcxCLHn5ea
+  lS4rxNIEUCIEUZpXlwI2Dp/hKjrJQwLyMDA4MQT0FqUW5mCar8K0ZxDkYlYd5QkCk8mXklcJt
+  eAR3BBHTEgUqwI0oSEVJSDUz9LNv+73j5MrQ7deV21Z8t0eq3L+9+XWr8ScR9u0NqusvXK+9l
+  z50I1wyK7gxcnfArmtlgHUdu3hy+UM2nnS+f3InsYFi2hyVx/2yXGQ2Or+Snlk2QU78aMu+w9
+  cI7n07a6Uf9nXdOe1Np1FKmJ8eTlS5I8TlvfdC0v2J+6anFVzu2iVZGvo63dHP6q5y7YL5P8e
+  tljgyf2aeyeYvn/etK4d4gYPU1KearwrvWuLN/X0bpKXKqiiWdnr5h+TNHAaOLh3Z2dDU6Xnl
+  mrR6cIdqTnNlyxf4ec5J58RZtdSFzzyNpto1LNeYeLvTZveJojsHS319S/gbPW5/Z4lvNsXj9
+  zEIfRabIO0ymRxhVzyuxFGckGmoxFxUnAgAslOk1cgQAAA==
+X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
+X-Msg-Ref: server-12.tower-268.messagelabs.com!1575393326!977682!1
+X-Originating-IP: [104.47.13.52]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.44.22; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 13739 invoked from network); 3 Dec 2019 17:15:27 -0000
+Received: from mail-he1eur04lp2052.outbound.protection.outlook.com (HELO EUR04-HE1-obe.outbound.protection.outlook.com) (104.47.13.52)
+  by server-12.tower-268.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 3 Dec 2019 17:15:27 -0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Qahw/2uzhrfeFXfWtnmbTraXpJ39EGyCfS0hogjnuTKsKkuYOaVBXWHj4WvOvGlvL/BvNWrkUVujlTRWmN0uYnNfOj571YM9Pg8TOSGUjThG9fZjdfbtBW4zY3lpdTZf0jzsWMmaVYFNQdxR/JPq0a2drbtmig7HtN3yZ+/YeEWRRVZk/NsqBaRt2FX6L3JXXo2ydoKStF8AExvXLL+XqqfNCU9A76fYfgSanfyW0MuGdWpnn5EA3slEbs7pTzcZpKWCRnqU+V6TVZF7PBzCMdLQHHn81gkuVvrSsRVwKdJvvEZe4+fKMw0p0isnavTkxrn/Spoyos2XUjAQJSOjKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M8tGdc/rXFvrxLFzpS7YjDcYuFmK8gSgEb/I5fCha6I=;
+ b=YfAS0Np8r3KOje5LUT56+l2oVzXbExWm7lJFngS6/aiPXoYUuWsmmBeR1BWNO2uDipxRV6oXt5xJj9oTTWCIMPWstnBUjjwIHtJaF6T4Y5dsBzohQalFn0FElDLj9H+PcqZEQb780Edwt6hSQQ2NxJnda2VHkjpvvIHysxYKj+mOnAfxPOoNzSsEiaXd1bo5AyYclxbB2/NlxITxPdPGgCewBQMqICr2uPkLPNyfTWi398daLfD37EPl7KTc64Mt+MWKHZoCR95rLk4S2b8ev9JUgTLzxavOZAZNjvCITzcbtMyzCbrixGEizG4vScMOBKk29EfS+7dVeOq2A6qwUg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RYPCalvxomeQV1CkDjlQpVsPcmQcNpZDg8Vkr5RNt0c=;
-        b=bKdTNc7Wqr668+yrFz8j1YGhU16Y4rqLkEgT0+/N9W5hwVVczyND1CDzIb/zEmN4or
-         2bHP9QhjOYz6WfvJ+Uq2fWdbM7ZtOHw2di6BzZe4Hd7noLUUTwrNS9n5N4BWuadig+8l
-         8IQydC1LrLzd5Z2rsMXECRfDDPB0D6vVOUfgIHEk0wcVfqDTFM7plsDknpyigh+8gDEy
-         mHsP9jSD2KGAjqoYOfz60YmYF1OfW3bOVYXq5maVMfSuI9HbTdjrpz58U+pL2m1Ny327
-         X189Fy9UqvQ4FfmsqPlqxJ9CR0a5L5cjOOiPOXObew+1plAdkEtsf9/4MLWcy9vXQvXh
-         kX0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RYPCalvxomeQV1CkDjlQpVsPcmQcNpZDg8Vkr5RNt0c=;
-        b=jiZ/xW4XJxb5n0XZ0uC4oEOlJxCgztqT3IPEcIdGqrNPs6mJbZ8tj3fD8o0PuV9z/T
-         N0q1yJu+gWqk/E9awsZtFJZ3f8vdZ7z62TmB6Igvvxeobk07xun1BQ5brXgwI87nTFyV
-         HIjiMQZbY0sTHIqUPnnn0ZGpXAfEQ8f+uZ6/fpIc6MEZJgVmumTLytlXkPCZL5yuUzQR
-         daAa8yN5aqrCfiftXU1CgXoT5gbEfQ+k6UKnJBqapwpMiwi/aSOfSuqPSP87yf/tQXGJ
-         M9Zt4RmWicXDVCz6La7v2Znpfn2AB+IqU9anzrf8YEhJZfiWZSIcw0hjf4ASjToJ3n2M
-         qUDQ==
-X-Gm-Message-State: APjAAAWDZ6PqtmW9bdnK59yblMJbDnJf/KWpim4iiIzhuMgQwcVyx9j1
-        8SpCaL7vsL5qmWSq9ajcUNTlYWMiNQYJ5mtTiCKB5g==
-X-Google-Smtp-Source: APXvYqyrsPU83KSAbx46fxu4fPfOtzF6WCy9KBLD8pLeQB+6NEVYfCLKfKR/4scTI3JPZVvBxWqUo13V18lIgWoem78=
-X-Received: by 2002:a9f:3f46:: with SMTP id i6mr3994929uaj.60.1575393096169;
- Tue, 03 Dec 2019 09:11:36 -0800 (PST)
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M8tGdc/rXFvrxLFzpS7YjDcYuFmK8gSgEb/I5fCha6I=;
+ b=obXrp93+fM1LYxeubRgC566fuZwObpCHD3QKOYyY0WKjP/jiljdce4WyKAtHoa/y6Wpd20sbEjLuYcrfePNScvPHMabcVYAgTUHZjqVuma6zcaWFrNHzc/vM0gA62IB1OXg0c04YzZ9xeit6ley/+E31bbiB3fxdcLTOUHxZEFE=
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM (10.169.154.136) by
+ AM5PR1001MB1203.EURPRD10.PROD.OUTLOOK.COM (10.169.154.149) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.20; Tue, 3 Dec 2019 17:15:25 +0000
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::5525:87da:ca4:e8df]) by AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::5525:87da:ca4:e8df%7]) with mapi id 15.20.2495.014; Tue, 3 Dec 2019
+ 17:15:25 +0000
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+To:     "Lu, Brent" <brent.lu@intel.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+CC:     Support Opensource <Support.Opensource@diasemi.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] ASoC: da7219: remove SRM lock check retry
+Thread-Topic: [PATCH] ASoC: da7219: remove SRM lock check retry
+Thread-Index: AQHVqaxDP6cBrmECm0aX2T25rtDQx6eoJvjggAAPtwCAAAQYEIAAP/KAgAAFyUCAAAdBgIAAHw+Q
+Date:   Tue, 3 Dec 2019 17:15:25 +0000
+Message-ID: <AM5PR1001MB09946850D64829B34BDA89EB80420@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+References: <1575358265-17905-1-git-send-email-brent.lu@intel.com>
+ <AM5PR1001MB0994EB497D3BC7D0F4C6FD9080420@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <CF33C36214C39B4496568E5578BE70C7403CA7B2@PGSMSX108.gar.corp.intel.com>
+ <AM5PR1001MB09946C295B8DAD5F9C8D191080420@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <CF33C36214C39B4496568E5578BE70C7403CACC7@PGSMSX108.gar.corp.intel.com>
+ <AM5PR1001MB0994921AE80726BAC59C552B80420@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <CF33C36214C39B4496568E5578BE70C7403CAFAE@PGSMSX108.gar.corp.intel.com>
+In-Reply-To: <CF33C36214C39B4496568E5578BE70C7403CAFAE@PGSMSX108.gar.corp.intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.225.80.228]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f0e68229-42ca-499e-6993-08d778146329
+x-ms-traffictypediagnostic: AM5PR1001MB1203:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM5PR1001MB12035FDF116B8A7B52988B16A7420@AM5PR1001MB1203.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02408926C4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(136003)(366004)(39860400002)(199004)(189003)(7696005)(52536014)(76176011)(2501003)(11346002)(55016002)(229853002)(7736002)(66446008)(86362001)(305945005)(74316002)(2906002)(66946007)(5660300002)(6436002)(9686003)(64756008)(3846002)(66556008)(66476007)(6116002)(76116006)(25786009)(4326008)(6246003)(110136005)(33656002)(81166006)(8676002)(81156014)(186003)(478600001)(55236004)(71200400001)(446003)(8936002)(71190400001)(6506007)(53546011)(102836004)(99286004)(14444005)(256004)(26005)(316002)(14454004)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB1203;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: MyCQiEW0nYPtH4VKwKDqIXBUhAqZy8rRzisK4aWjcyC3+9MOCFF0ih2U0VpY173cjcfNST0+B/MoaVSH/VdVCCM2+Az4S3p7WpL6uPvA8iG0uI/7VNCqpnqKvj+W766keLNgW3V1EH/vtzPqbS/99/VDvZAVUDMvVGECyFvy0YjYGM7pSVtVjadaUZbrcv3hngJAwKbzzNrZJvnWgEzmlGff7BvPzngH9ELm1BS3ejp+B4Qhbasy8ZqU0KBM2bVqRq69C5qGnz75FAemMUKi7y5TFRwwjCbYejrSEPjv65oZF8TlGa97hTdmagZOxf6JBYLyletkrDeY6K5OpWVY6+tYPSnk16xP63bSKZ84h/88kl6utYfSPhVm5acVScHzFmYfb7nIAc+U4FhaUy2ffvpXuOkcMYR8auZr98WMQP979igGlbDnAX13U0R+Vwn6
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <1571254641-13626-1-git-send-email-thara.gopinath@linaro.org>
- <1571254641-13626-4-git-send-email-thara.gopinath@linaro.org> <CAHLCerOCt9VBizAHu+y+CmzFmz-ktqCJgcB_NeC3WC4W9YBvAQ@mail.gmail.com>
-In-Reply-To: <CAHLCerOCt9VBizAHu+y+CmzFmz-ktqCJgcB_NeC3WC4W9YBvAQ@mail.gmail.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Tue, 3 Dec 2019 22:41:24 +0530
-Message-ID: <CAHLCerMq=jGmpvw9XCfkj8z=m+5--E8Ku4-GxYAcDbSm9-ZoTQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/7] thermal: core: Add late init hook to cooling
- device ops
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     Eduardo Valentin <edubezval@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0e68229-42ca-499e-6993-08d778146329
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Dec 2019 17:15:25.3332
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: IcpNPWgLX2IleRVSUAmIYSLh1OGBekVdfX11MYS0fpL0p7lyDVbXXh7ZEp3KKjvfz6ySXfndWH5mSgweLo1BmsY1VW0/6ebVC/Syxsfs1bA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB1203
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 10:34 PM Amit Kucheria
-<amit.kucheria@verdurent.com> wrote:
->
-> On Thu, Oct 17, 2019 at 1:07 AM Thara Gopinath
-> <thara.gopinath@linaro.org> wrote:
-> >
-> > Add a hook in thermal_cooling_device_ops to be called after
-> > the cooling device has been initialized and registered
-> > but before binding it to a thermal zone.
-> >
-> > In this patch series it is used to hook up a power domain
-> > to the device pointer of cooling device.
-> >
-> > It can be used for any other relevant late initializations
-> > of a cooling device as well.
->
-> Please describe WHY this hook is needed.
+On 03 December 2019 15:23, Brent Lu wrote:
 
-Just noticed you dropped this for v4. Nevermind.
+> > Yes, that's right. I have put in a request with our HW team to again cl=
+arify
+> > timings, but still awaiting feedback.
+> >
+> > The driver already warns via the kernel logs when SRM lock fails as fol=
+lows:
+> >
+> > 	dev_warn(component->dev, "SRM failed to lock\n");
+> >
+> > What else do you think is needed?
+> >
+>=20
+> Hi Adam,
+>=20
+> Let's say that the SRM locks in the second loop. The 50ms delay was appli=
+ed
+> but there is no kernel log message about it because the value of srm_lock=
+ is
+> already true when exiting the loop. If we can print every SRM lock fail b=
+efore
+> msleep() call, it would be a helpful for people resolving timing issues l=
+ike Cold
+> latency.
+>=20
+> do {
+> 	pll_status =3D snd_soc_component_read32(component,
+> DA7219_PLL_SRM_STS);
+> 	if (pll_status & DA7219_PLL_SRM_STS_SRM_LOCK) {
+> 		break;
+> 	} else {
+> 		++i;
+> 		dev_warn(component->dev, "SRM failed to lock, retry in
+> 50ms\n");
+> 		msleep(50);
+> 	}
+> } while (i < DA7219_SRM_CHECK_RETRIES);
 
-> > Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> > ---
-> >  drivers/thermal/thermal_core.c | 13 +++++++++++++
-> >  include/linux/thermal.h        |  1 +
-> >  2 files changed, 14 insertions(+)
-> >
-> > diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-> > index 886e8fa..c2ecb73 100644
-> > --- a/drivers/thermal/thermal_core.c
-> > +++ b/drivers/thermal/thermal_core.c
-> > @@ -994,6 +994,19 @@ __thermal_cooling_device_register(struct device_node *np,
-> >         list_add(&cdev->node, &thermal_cdev_list);
-> >         mutex_unlock(&thermal_list_lock);
-> >
-> > +       /* Call into cdev late initialization if defined */
-> > +       if (cdev->ops->late_init) {
-> > +               result = cdev->ops->late_init(cdev);
-> > +               if (result) {
-> > +                       ida_simple_remove(&thermal_cdev_ida, cdev->id);
-> > +                       put_device(&cdev->device);
-> > +                       mutex_lock(&thermal_list_lock);
-> > +                       list_del(&cdev->node);
-> > +                       mutex_unlock(&thermal_list_lock);
-> > +                       return ERR_PTR(result);
-> > +               }
-> > +       }
-> > +
-> >         /* Update binding information for 'this' new cdev */
-> >         bind_cdev(cdev);
-> >
-> > diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-> > index e45659c..e94b3de 100644
-> > --- a/include/linux/thermal.h
-> > +++ b/include/linux/thermal.h
-> > @@ -125,6 +125,7 @@ struct thermal_cooling_device_ops {
-> >                            struct thermal_zone_device *, unsigned long, u32 *);
-> >         int (*power2state)(struct thermal_cooling_device *,
-> >                            struct thermal_zone_device *, u32, unsigned long *);
-> > +       int (*late_init)(struct thermal_cooling_device *);
-> >  };
-> >
-> >  struct thermal_cooling_device {
-> > --
-> > 2.1.4
-> >
+I have no real problem in providing debug like this, although this is proba=
+bly
+dev_info() rather than dev_warn(). Also I'd suggest the debug message shoul=
+d be
+something like the following if we were to add anything here:
+
+	dev_info(component->dev, "Waiting for SRM lock\n");
+
+Timings can be ascertained from the kernel log (assuming timestamping is on=
+) so
+I don't think we need to explicitly state the delay information.
+
+>=20
+>=20
+> Regards,
+> Brent
