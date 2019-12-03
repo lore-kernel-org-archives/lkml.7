@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C26C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF53C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B78972084F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C06F20863
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413379;
-	bh=IJ+0jeSZb9ortcdzj9j4dxSaRyrGAGfxWZNhRfCNZIs=;
+	s=default; t=1575413386;
+	bh=RuXCy8MiSHwkFqpJv3UmmnKuGufeTgueNF/f4E5Vf+I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vNwQhzLlmxjAzyjYPIn3OOpNz3XNO0f54MhI2DpGojB32KJ+BXN6yRuL1XOlheGLP
-	 9PV8VgLgFOKr8dgGMfYH+tkJAgjId7d8jIM8mj2ZpL4XiV7CUZPOXWwx/wduTZmW9m
-	 8W+hQd2Z3ECJHM4P/3n7jJ2rdZTtQLYeeGmiKOuE=
+	b=lxSQSJjSJBybASLLG+0J1nNqV3sClcHigA69syQFklVm5Qn2yq2rr6zFKufUde4y8
+	 cbg9wh8G/5T/0b0EsZZImvq427Wp8AZmbfnPXL4y/M+FdK6NDTxbZu6pkZMIq1uxUo
+	 1gNBpXc1akGwrkCpBTPxFXSTFQ9bEotofwWNoHnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729638AbfLCWti (ORCPT
+        id S1729657AbfLCWto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:49:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40754 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:49:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729392AbfLCWth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:49:37 -0500
+        id S1728950AbfLCWtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:49:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F5EC20803;
-        Tue,  3 Dec 2019 22:49:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0016320863;
+        Tue,  3 Dec 2019 22:49:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413376;
-        bh=IJ+0jeSZb9ortcdzj9j4dxSaRyrGAGfxWZNhRfCNZIs=;
+        s=default; t=1575413381;
+        bh=RuXCy8MiSHwkFqpJv3UmmnKuGufeTgueNF/f4E5Vf+I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dh2nCtq3NxkcF2T+P8bBJ3pskQphlxfTiHfPSa2H06pvBIUjw0Fb3da2Bpadzcd4g
-         rtQhDfqGIuHFrJsKYT1xFRWEbdPqt1XAsFhz5b2MX/VrYYgKdVtu1aBPxQFtkCndyS
-         b6iPwwvInXhrKpSKIob8ZyiU8bU+SEeUp1Iz4Xww=
+        b=tHbjCVSv0PhmiUshCxLUyLE2wbFzkjT9wkLGlTGTJgViuTu9QT32Sl0lJ/tznvr+D
+         vAZ/HWPYO9JIzRNQHoMVS3Rn5VPFxwRjcLZCsAiWmuO6RkfxcsRF1uMU4XU9UQ0cgN
+         mOn8dV19pNyyJF3h7Ac1CkKTd3aI//IPZVAp3aRM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Simek <michal.simek@xilinx.com>,
+        stable@vger.kernel.org, Avraham Stern <avraham.stern@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 104/321] microblaze: fix multiple bugs in arch/microblaze/boot/Makefile
-Date:   Tue,  3 Dec 2019 23:32:50 +0100
-Message-Id: <20191203223432.564066598@linuxfoundation.org>
+Subject: [PATCH 4.19 106/321] iwlwifi: mvm: force TCM re-evaluation on TCM resume
+Date:   Tue,  3 Dec 2019 23:32:52 +0100
+Message-Id: <20191203223432.666549212@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,109 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Avraham Stern <avraham.stern@intel.com>
 
-[ Upstream commit 4722a3e6b716d9d4594c3cf3856b03bbd24a59a8 ]
+[ Upstream commit 7bc2468277033e05401d5f8fd48a772f407338c2 ]
 
-This commit fixes some build issues.
+When traffic load is not low or low latency is active, TCM schedules
+re-evaluation work so in case traffic stops TCM will detect that
+traffic load has become low or that low latency is no longer active.
+However, if TCM is paused when the re-evaluation work runs, it does
+not re-evaluate and the re-evaluation work is no longer scheduled.
+As a result, TCM will not indicate that low latency is no longer
+active or that traffic load is low when traffic stops.
 
-The first issue is the breakage of linux.bin.ub target since commit
-ece97f3a5fb5 ("microblaze: Fix simpleImage format generation")
-because the addition of UIMAGE_{IN,OUT} affected it.
+Fix this by forcing TCM re-evaluation when TCM is resumed in case
+low latency is active or traffic load is not low.
 
-make ARCH=microblaze CROSS_COMPILE=microblaze-linux- linux.bin.ub
-  [ snip ]
-  OBJCOPY arch/microblaze/boot/linux.bin
-  UIMAGE  arch/microblaze/boot/linux.bin.ub.ub
-/usr/bin/mkimage: Can't open arch/microblaze/boot/linux.bin.ub: No such file or directory
-make[1]: *** [arch/microblaze/boot/Makefile;14: arch/microblaze/boot/linux.bin.ub] Error 1
-make: *** [arch/microblaze/Makefile;83: linux.bin.ub] Error 2
-
-The second issue is the use of the "if_changed" multiple times for
-the same target.
-
-As commit 92a4728608a8 ("x86/boot: Fix if_changed build flip/flop bug")
-pointed out, this never works properly. Moreover, generating multiple
-images as a side-effect is confusing.
-
-Let's split the build recipe for each image.
-
-simpleImage.<dt>*.unstrip is just a copy of vmlinux.
-
-simpleImage.<dt> and simpleImage.<dt>.ub are created in the same way
-as linux.bin and linux.bin.ub, respectively.
-
-I kept simpleImage.* recipes independent of linux.bin.* ones to not
-change the behavior.
-
-Lastly, this commit fixes "make ARCH=microblaze clean". Previously,
-it only cleaned up the unstrip image. Now, all the simpleImage files
-are cleaned.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Avraham Stern <avraham.stern@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/microblaze/Makefile      |  2 +-
- arch/microblaze/boot/Makefile | 19 +++++++++----------
- 2 files changed, 10 insertions(+), 11 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/utils.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/microblaze/Makefile b/arch/microblaze/Makefile
-index b9808ddaf985f..548bac6c60f8c 100644
---- a/arch/microblaze/Makefile
-+++ b/arch/microblaze/Makefile
-@@ -86,7 +86,7 @@ linux.bin linux.bin.gz linux.bin.ub: vmlinux
- 	@echo 'Kernel: $(boot)/$@ is ready' ' (#'`cat .version`')'
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/utils.c b/drivers/net/wireless/intel/iwlwifi/mvm/utils.c
+index 6a5349401aa99..00712205c05f2 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/utils.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/utils.c
+@@ -1804,6 +1804,7 @@ void iwl_mvm_pause_tcm(struct iwl_mvm *mvm, bool with_cancel)
+ void iwl_mvm_resume_tcm(struct iwl_mvm *mvm)
+ {
+ 	int mac;
++	bool low_latency = false;
  
- simpleImage.%: vmlinux
--	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
-+	$(Q)$(MAKE) $(build)=$(boot) $(addprefix $(boot)/$@., ub unstrip strip)
- 	@echo 'Kernel: $(boot)/$@ is ready' ' (#'`cat .version`')'
- 
- define archhelp
-diff --git a/arch/microblaze/boot/Makefile b/arch/microblaze/boot/Makefile
-index 96eefdca0d9b3..cff570a719461 100644
---- a/arch/microblaze/boot/Makefile
-+++ b/arch/microblaze/boot/Makefile
-@@ -3,7 +3,7 @@
- # arch/microblaze/boot/Makefile
- #
- 
--targets := linux.bin linux.bin.gz linux.bin.ub simpleImage.%
-+targets := linux.bin linux.bin.gz linux.bin.ub simpleImage.*
- 
- OBJCOPYFLAGS := -R .note -R .comment -R .note.gnu.build-id -O binary
- 
-@@ -16,21 +16,20 @@ $(obj)/linux.bin.ub: $(obj)/linux.bin FORCE
- $(obj)/linux.bin.gz: $(obj)/linux.bin FORCE
- 	$(call if_changed,gzip)
- 
--quiet_cmd_cp = CP      $< $@$2
--	cmd_cp = cat $< >$@$2 || (rm -f $@ && echo false)
--
- quiet_cmd_strip = STRIP   $< $@$2
- 	cmd_strip = $(STRIP) -K microblaze_start -K _end -K __log_buf \
- 				-K _fdt_start $< -o $@$2
- 
- UIMAGE_LOADADDR = $(CONFIG_KERNEL_BASE_ADDR)
--UIMAGE_IN = $@
--UIMAGE_OUT = $@.ub
- 
--$(obj)/simpleImage.%: vmlinux FORCE
--	$(call if_changed,cp,.unstrip)
-+$(obj)/simpleImage.$(DTB): vmlinux FORCE
- 	$(call if_changed,objcopy)
+ 	spin_lock_bh(&mvm->tcm.lock);
+ 	mvm->tcm.ts = jiffies;
+@@ -1815,10 +1816,23 @@ void iwl_mvm_resume_tcm(struct iwl_mvm *mvm)
+ 		memset(&mdata->tx.pkts, 0, sizeof(mdata->tx.pkts));
+ 		memset(&mdata->rx.airtime, 0, sizeof(mdata->rx.airtime));
+ 		memset(&mdata->tx.airtime, 0, sizeof(mdata->tx.airtime));
 +
-+$(obj)/simpleImage.$(DTB).ub: $(obj)/simpleImage.$(DTB) FORCE
- 	$(call if_changed,uimage)
--	$(call if_changed,strip,.strip)
- 
--clean-files += simpleImage.*.unstrip linux.bin.ub
-+$(obj)/simpleImage.$(DTB).unstrip: vmlinux FORCE
-+	$(call if_changed,shipped)
++		if (mvm->tcm.result.low_latency[mac])
++			low_latency = true;
+ 	}
+ 	/* The TCM data needs to be reset before "paused" flag changes */
+ 	smp_mb();
+ 	mvm->tcm.paused = false;
 +
-+$(obj)/simpleImage.$(DTB).strip: vmlinux FORCE
-+	$(call if_changed,strip)
++	/*
++	 * if the current load is not low or low latency is active, force
++	 * re-evaluation to cover the case of no traffic.
++	 */
++	if (mvm->tcm.result.global_load > IWL_MVM_TRAFFIC_LOW)
++		schedule_delayed_work(&mvm->tcm.work, MVM_TCM_PERIOD);
++	else if (low_latency)
++		schedule_delayed_work(&mvm->tcm.work, MVM_LL_PERIOD);
++
+ 	spin_unlock_bh(&mvm->tcm.lock);
+ }
+ 
 -- 
 2.20.1
 
