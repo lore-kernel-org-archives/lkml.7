@@ -2,189 +2,184 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3003C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD663C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0666206E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:13:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575367985;
-	bh=wI49/3MX3A5K4KXoKvz8MjUjQ7lmXO+cIlGX8yR3wXs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AG0zbvX7WE4IBwrtsmeuid+mExjy0Mk8HJvc7m1+c17wfSbqVUO4cVMsgATflz2uQ
-	 DG5sxp/DTyCwCNKI2eRmaPcFQfe5F0pXReU3lESjWbC/0CS3p9Zv6A80fB6NFCCxD7
-	 juLGBF1vA6TsirrXxGHM76/YXrtyb5wGrGHZpvBc=
+	by mail.kernel.org (Postfix) with ESMTP id A4A54206E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:15:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726319AbfLCKNE (ORCPT
+        id S1726115AbfLCKPH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 05:13:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59464 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbfLCKNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 05:13:02 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22E5C206DF;
-        Tue,  3 Dec 2019 10:12:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575367981;
-        bh=wI49/3MX3A5K4KXoKvz8MjUjQ7lmXO+cIlGX8yR3wXs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Sc86W9/tccQOqQmYT3saFdznHpCbiKhhZ0lfmhYEUbg7DqCajtQ8cwkT4HGMqsFQg
-         bWcuPJo8EhusJxRV2NfJEIpb5L7QcVt2PMZ3cow5j4BzFTQNSoTVMCEM7NkLJ/834F
-         JUbhMmgAFoB883XHKUkBCUhzsbpQZstw1bHbNfuM=
-Date:   Tue, 3 Dec 2019 10:12:50 +0000
-From:   Will Deacon <will@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>, wahrenst@gmx.net,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, mbrugger@suse.com,
-        linux-rpi-kernel@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Nicolas Dechense <nicolas.dechesne@linaro.org>
-Subject: Re: [PATCH v6 3/4] arm64: use both ZONE_DMA and ZONE_DMA32
-Message-ID: <20191203101249.GC6815@willie-the-truck>
-References: <20190911182546.17094-1-nsaenzjulienne@suse.de>
- <20190911182546.17094-4-nsaenzjulienne@suse.de>
- <CALAqxLVVcsmFrDKLRGRq7GewcW405yTOxG=KR3csVzQ6bXutkA@mail.gmail.com>
- <CALAqxLUkPNf9JYyt+_VOrxq=Zq03veb1y-7aDx+_Vw+fF9i82A@mail.gmail.com>
- <CALAqxLW7RTif_NPxFXnxfTm2_ST+6aNmE6X=3v4XsuojKH2mtg@mail.gmail.com>
+        Tue, 3 Dec 2019 05:15:07 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41948 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfLCKPH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 05:15:07 -0500
+Received: by mail-oi1-f194.google.com with SMTP id e9so2749064oif.8;
+        Tue, 03 Dec 2019 02:15:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=K//UtWMNAk6TcfdrCIFGgkw50sxyYpid+eTdEpciHyg=;
+        b=r0HDdljeejDAAFsZ69mMZ7oh3QwQ/IYmDW4AfIh9gqb4F+pDeph+cWphV1Z3a0Csaa
+         ogFl1y47D77/HkCNgsnS+e1P7Uoa1oByn+4qbM6wI/obe75ILyVcmWktBdnlz3MwZB+k
+         MspBcbpB+FhIHjbsJRxansqNJZds/v19eOQr4hPLL0l/oDD6jdpZHmDyXUiigBJc9rrC
+         9Xpr5WAZNpfYgFmSefUJj0SREIvmH9bFu//lyQzupaYZ6yTTikw/EOwdNvPnOll93xUF
+         uo/a4Ehf5LE5a9YjpEHCE/hLvPHWDjl6ocXFeWZms3hYECUZL3Lxwpp5A/l98imLrQHV
+         OYjA==
+X-Gm-Message-State: APjAAAWcczUDORdKIoo0/RwMGypTlGgYySgdfcc+SEJA/4wTElmWLxe1
+        q3hOqOwWqd7uj0LhPuMik0Gr48UAA9isQXDDXFI=
+X-Google-Smtp-Source: APXvYqwPikpQ7lOwDxfiOvQqyCVq3XI61fAbw0o1QpvVQxo4zDuULPLWJwoE1XPR3TT98NHhmDh1Kx99gshZ8mPj75A=
+X-Received: by 2002:aca:36c5:: with SMTP id d188mr3075823oia.54.1575368106196;
+ Tue, 03 Dec 2019 02:15:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALAqxLW7RTif_NPxFXnxfTm2_ST+6aNmE6X=3v4XsuojKH2mtg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191003092913.10731-1-brgl@bgdev.pl> <20191003092912.G3pupKBmyct1r9ScP5Skuw9D-_ALcMVSnfMfHAlwe0Y@z>
+ <20191202041440.GA1628@roeck-us.net> <CAMpxmJW3i4zmJJ14Xg65+T27kF3sgR1WG0K3FUT6+jeKtiHx=Q@mail.gmail.com>
+ <3f8ffe03-98b8-423a-7cba-53961a5600cb@roeck-us.net> <CAMpxmJUmTF3FwacjvTrC+Vvzm8MscS9E=ZyWLbJV87LkQhqVow@mail.gmail.com>
+ <5e7aafc9-deb9-9305-afea-2c86e310683f@roeck-us.net> <CAMRc=MebSL+WA-nHFkaUd0rHTmwLkv2e16D9oO1=PY8-sPnzzQ@mail.gmail.com>
+In-Reply-To: <CAMRc=MebSL+WA-nHFkaUd0rHTmwLkv2e16D9oO1=PY8-sPnzzQ@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 3 Dec 2019 11:14:54 +0100
+Message-ID: <CAMuHMdXDLfCUnNevNqGXUrtwa11yvyBn0Semq6EOPuJKtnwgLg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] drivers: move the early platform device support to arch/sh
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Slaby <jslaby@suse.com>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+Hi Bartosz, Günter,
 
-On Mon, Dec 02, 2019 at 10:03:17PM -0800, John Stultz wrote:
-> Ok, narrowing it down further, it seems its the following bit from the
-> patch:
-> 
-> > @@ -201,13 +212,18 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
-> >         struct memblock_region *reg;
-> >         unsigned long zone_size[MAX_NR_ZONES], zhole_size[MAX_NR_ZONES];
-> >         unsigned long max_dma32 = min;
-> > +       unsigned long max_dma = min;
+On Tue, Dec 3, 2019 at 10:50 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> wt., 3 gru 2019 o 06:24 Guenter Roeck <linux@roeck-us.net> napisał(a):
+> > On 12/2/19 9:18 AM, Bartosz Golaszewski wrote:
+> > > pon., 2 gru 2019 o 14:03 Guenter Roeck <linux@roeck-us.net> napisał(a):
+> > >>
+> > >> On 12/1/19 11:40 PM, Bartosz Golaszewski wrote:
+> > >>> pon., 2 gru 2019 o 05:14 Guenter Roeck <linux@roeck-us.net> napisał(a):
+> > >>>>
+> > >>>> On Thu, Oct 03, 2019 at 11:29:12AM +0200, Bartosz Golaszewski wrote:
+> > >>>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > >>>>>
+> > >>>>> SuperH is the only user of the current implementation of early platform
+> > >>>>> device support. We want to introduce a more robust approach to early
+> > >>>>> probing. As the first step - move all the current early platform code
+> > >>>>> to arch/sh.
+> > >>>>>
+> > >>>>> In order not to export internal drivers/base functions to arch code for
+> > >>>>> this temporary solution - copy the two needed routines for driver
+> > >>>>> matching from drivers/base/platform.c to arch/sh/drivers/platform_early.c.
+> > >>>>>
+> > >>>>> Also: call early_platform_cleanup() from subsys_initcall() so that it's
+> > >>>>> called after all early devices are probed.
+> > >>>>>
+> > >>>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > >>>>
+> > >>>> Wondering ... has anyone tested this patch on affected hardware ?
+> > >>>> All my qemu boot tests (both sh and sheb) fail because of it.
+> > >>>> Bisect log below.
+> > >>>>
+> > >>>> Guenter
+> > >>>>
+> > >>>> ---
+> > >>>> # bad: [72c0870e3a05d9cd5466d08c3d2a3069ed0a2f9f] Merge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input
+> > >>>> # good: [89d57dddd7d319ded00415790a0bb3c954b7e386] Merge tag 'media/v5.5-1' of git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media
+> > >>>> git bisect start 'HEAD' '89d57dddd7d3'
+> > >>>> # good: [0a6cad5df541108cfd3fbd79eef48eb824c89bdc] Merge branch 'vmwgfx-coherent' of git://people.freedesktop.org/~thomash/linux into drm-next
+> > >>>> git bisect good 0a6cad5df541108cfd3fbd79eef48eb824c89bdc
+> > >>>> # bad: [9a3d7fd275be4559277667228902824165153c80] Merge tag 'driver-core-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core
+> > >>>> git bisect bad 9a3d7fd275be4559277667228902824165153c80
+> > >>>> # good: [59274c7164807d27b24e6c068dfe734f7bea4623] Merge tag 'usb-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb
+> > >>>> git bisect good 59274c7164807d27b24e6c068dfe734f7bea4623
+> > >>>> # good: [e71903106721dc53923e90aa484d78bc86c039a9] staging: mt7621-dma: align to match open parenthesis
+> > >>>> git bisect good e71903106721dc53923e90aa484d78bc86c039a9
+> > >>>> # good: [8f56e4ebe05c26c30e167519273843476e39e244] Merge tag 'char-misc-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc
+> > >>>> git bisect good 8f56e4ebe05c26c30e167519273843476e39e244
+> > >>>> # good: [8bde9f3d2a217d1635a7c7bdf8ad4c25c9a34b50] Merge tag 'iio-for-5.5c' of https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio into staging-next
+> > >>>> git bisect good 8bde9f3d2a217d1635a7c7bdf8ad4c25c9a34b50
+> > >>>> # bad: [0628cda318df6baec439ca6e6e274007492f1ccd] mac80211: Use debugfs_create_xul() helper
+> > >>>> git bisect bad 0628cda318df6baec439ca6e6e274007492f1ccd
+> > >>>> # bad: [03324507e66c7664c754b1ef92c5c3be24c78aa2] driver core: Allow fwnode_operations.add_links to differentiate errors
+> > >>>> git bisect bad 03324507e66c7664c754b1ef92c5c3be24c78aa2
+> > >>>> # bad: [313f5dbba41d905d59c820bb2d91ee6c661aff99] debugfs: remove return value of debugfs_create_u16()
+> > >>>> git bisect bad 313f5dbba41d905d59c820bb2d91ee6c661aff99
+> > >>>> # good: [d4387cd117414ba80230f27a514be5ca4a09cfcc] of: property: Create device links for all child-supplier depencencies
+> > >>>> git bisect good d4387cd117414ba80230f27a514be5ca4a09cfcc
+> > >>>> # bad: [c31e73121f4c1ec45a3e523ac6ce3ce6dafdcec1] base: soc: Handle custom soc information sysfs entries
+> > >>>> git bisect bad c31e73121f4c1ec45a3e523ac6ce3ce6dafdcec1
+> > >>>> # bad: [201e91091b1d47047f55580b5474e1239f4d17aa] sh: add the sh_ prefix to early platform symbols
+> > >>>> git bisect bad 201e91091b1d47047f55580b5474e1239f4d17aa
+> > >>>> # bad: [507fd01d5333338753a1cc26322dfc9f856c109f] drivers: move the early platform device support to arch/sh
+> > >>>> git bisect bad 507fd01d5333338753a1cc26322dfc9f856c109f
+> > >>>> # first bad commit: [507fd01d5333338753a1cc26322dfc9f856c109f] drivers: move the early platform device support to arch/sh
+> > >>>
+> > >>> Hi Guenter,
+> > >>>
+> > >>> can you post some bootlogs? Is it the same problem everywhere?
+> > >>>
+> > >>
+> > >> I don't have any useful logs. The boot fails too early for that.
+> > >>
+> > >
+> > > Yeah, it touched "early" devices after all...
+> > >
+> > >> Sorry, I don't understand "everywhere". It fails in mainline and -next, if that is what you mean.
+> > >
+> > > I referred to "All my qemu boot tests" when saying everywhere.
+> > >
+> > > I don't have any relevant HW - the idea for this patch is to stop
+> > > compiling for everyone a bunch of code that's only used by one largely
+> > > irrelevant architecture and free the namespace for a generic early
+> > > platform drivers implementation.
+> > >
+> > > How are you creating your SH qemu images? I'm seeing there's something
+> > > in buildroot for superh - maybe I'll be able to bearly_platform_cleanupuild something
+> > > useful.
+> > >
 > >
-> >         memset(zone_size, 0, sizeof(zone_size));
+> > Below is a possible fix. As I had suspected, the call to early_platform_cleanup()
+> > is in the wrong place.
 > >
-> > -       /* 4GB maximum for 32-bit only capable devices */
-> > +#ifdef CONFIG_ZONE_DMA
-> > +       max_dma = PFN_DOWN(arm64_dma_phys_limit);
-> > +       zone_size[ZONE_DMA] = max_dma - min;
-> > +       max_dma32 = max_dma;
-> > +#endif
-> >  #ifdef CONFIG_ZONE_DMA32
-> >         max_dma32 = PFN_DOWN(arm64_dma32_phys_limit);
-> > -       zone_size[ZONE_DMA32] = max_dma32 - min;
-> > +       zone_size[ZONE_DMA32] = max_dma32 - max_dma;
-> >  #endif
-> >         zone_size[ZONE_NORMAL] = max - max_dma32;
-> >
-> > @@ -219,11 +235,17 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
-> >
-> >                 if (start >= max)
-> >                         continue;
-> > -
-> > +#ifdef CONFIG_ZONE_DMA
-> > +               if (start < max_dma) {
-> > +                       unsigned long dma_end = min_not_zero(end, max_dma);
-> > +                       zhole_size[ZONE_DMA] -= dma_end - start;
-> > +               }
-> > +#endif
-> >  #ifdef CONFIG_ZONE_DMA32
-> >                 if (start < max_dma32) {
-> > -                       unsigned long dma_end = min(end, max_dma32);
-> > -                       zhole_size[ZONE_DMA32] -= dma_end - start;
-> > +                       unsigned long dma32_end = min(end, max_dma32);
-> > +                       unsigned long dma32_start = max(start, max_dma);
-> > +                       zhole_size[ZONE_DMA32] -= dma32_end - dma32_start;
-> >                 }
-> >  #endif
-> >                 if (end > max_dma32) {
-> 
-> The zhole_sizes end up being:
-> zhole_size: DMA: 67671, DMA32: 1145664 NORMAL: 0
-> 
-> This seems to be due to dma32_start being calculated as 786432 each
-> time - I'm guessing that's the max_dma value.
-> Where dma32_end is around 548800, but changes each iteration (so we
-> end up subtracting a negative value each pass, growing the size).
+>
+> This makes sense. If it fixes the issue - do you want to send it to Greg?
 
-Yeah, this logic looks utterly buggered to me so I'm surprised that nobody
-else has seen the problem. In particlar, kernelci is reporting success
-on the same SoC :/
+Which tree does this patch apply to?
+Oh, it's whitespace-damaged.
 
-https://kernelci.org/boot/sdm845-db845c/
+After applying it manually on top of current Linus' tree, (remote)
+SH7722-based Migo-R boots again, so
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-The logs also don't seem to match up with the trees either. For example,
-looking at the boot logs for:
+There's still an issue with crashing userspace, but that happens on v5.4
+too. Bisecting...
 
-https://kernelci.org/boot/id/5de5fc60b1ed6e2d46960f08/
+Gr{oetje,eeting}s,
 
-It claims that the kernel is "next-2019-12-30" but the dmesg says:
+                        Geert
 
-[    0.000000] Linux version 5.4.0 (KernelCI@b19b74fe311d) (gcc version
-8.3.0 (Debian 8.3.0-2)) #1 SMP PREEMPT Tue Dec 3 03:14:07 UTC 2019
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Which isn't great.
-
-Anyway, I've had a go at fixing it below but it's 100% untested. I think
-the issue is that your SoC has memblocks contained entirely within the
-ZONE_DMA region and we don't cater for that at all when processing the
-ZONE_DMA32 region.
-
-Will
-
---->8
-
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index be9481cdf3b9..af365ce59ed6 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -242,19 +242,19 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
- 		if (start < max_dma) {
- 			unsigned long dma_end = min_not_zero(end, max_dma);
- 			zhole_size[ZONE_DMA] -= dma_end - start;
-+			start = dma_end;
- 		}
- #endif
- #ifdef CONFIG_ZONE_DMA32
--		if (start < max_dma32) {
-+		if (start >= max_dma && start < max_dma32) {
- 			unsigned long dma32_end = min(end, max_dma32);
--			unsigned long dma32_start = max(start, max_dma);
--			zhole_size[ZONE_DMA32] -= dma32_end - dma32_start;
-+			zhole_size[ZONE_DMA32] -= dma32_end - start;
-+			start = dma32_end;
- 		}
- #endif
--		if (end > max_dma32) {
-+		if (start >= max_dma32) {
- 			unsigned long normal_end = min(end, max);
--			unsigned long normal_start = max(start, max_dma32);
--			zhole_size[ZONE_NORMAL] -= normal_end - normal_start;
-+			zhole_size[ZONE_NORMAL] -= normal_end - start;
- 		}
- 	}
- 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
