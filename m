@@ -2,112 +2,108 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E39F9C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF530C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9BD020684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:41:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mQgWYUsa"
+	by mail.kernel.org (Postfix) with ESMTP id 93C4D2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:41:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575355276;
+	bh=+7fslhszV7K2Omo1jDYceinaZZe39tXZaFis9U579jA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xexgnUPoAM/d447Tzy8iX+r1ZUvDITFyIQu/ANRoL2hTuJ7HBHD0FIyB/8xrszvoI
+	 HcKzTUretyASrdX4EG53PZ+IDob2CzDCpMgXSTgYeP9IHfIoTHnuJoLqi0lpu5PPqi
+	 TrX7yQzj8vMZZn9n6FQWtK36G02b23bnZEkgjlfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbfLCGlC (ORCPT
+        id S1727295AbfLCGlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 01:41:02 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:36214 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727227AbfLCGlC (ORCPT
+        Tue, 3 Dec 2019 01:41:15 -0500
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:34232 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727213AbfLCGlO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 01:41:02 -0500
-Received: by mail-pj1-f68.google.com with SMTP id n96so1114356pjc.3
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 22:41:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=txqB93EC07vnRxRZaCApt0VS2Bxm0RCf+BrdUWlZ5n8=;
-        b=mQgWYUsazi3iLKeYXps0csdlVmrHlYsQ8PPJW+N+TvkqBxRZLF3r9hThklk0JAeT/E
-         95g4K9LXGYqaiyl3PMjAA8hEHNCwh0BHK3lCTFehF1JZCKBWQHbkK6vJgg494kuCoDG0
-         llgHa+eD0gQ3/JVO/nYpmFM2RtR0AE9/LCgiwjx4ateE5sRsltCWYyijqdVXbwi+HRes
-         vAHJESd5WrwgpkCCzoDg870kMIk27sNmUhT66e6ZAP2rm/l3UZyLLgaVD9YwyJnpCc/5
-         27YtK8VqP5y5D1N+TabQGA+Y7kir+ClhGf7zWb5Uesoh0JkPs0xH/jNkTmocqNFHv3Oy
-         ZduA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=txqB93EC07vnRxRZaCApt0VS2Bxm0RCf+BrdUWlZ5n8=;
-        b=hfrLNEJI/AK8e3cfuuDGwVLP2c/EU9ogDWB+wUtKk+wvINHvaQVdXem1Ffzc+peeq9
-         ukhG93vjLjbKT+ZIVIXDtWcYulqFMRM6qcQE9mIQcM2l7hSXp3AjK9weLECP/ibVqi/Y
-         pTAn7fflnEJLpiTzQQviS0ek6n4mFRqDcztztqUA6x67wqBIA5yZ9+zoUmu5O3mA0alY
-         scXpeBO4fuIwwSVC51Rjo0lTpxwKQ2/HNWEwlr5cB08WC/ndOZa39GKrlzhocUtO6yCM
-         tR8SQju+x9bYfIFoyCdcP/4fkMJufwNn6CFsse55c1+sK9Fwgz1eeGH8w67tPJSoHz3s
-         1gmA==
-X-Gm-Message-State: APjAAAWy2Uq/RFrZtqIClabB08DJOehUGg9s6gD9S+E9itOhoWH+MPXl
-        ZBnYMaMPWEzyNofg3aZt7Q4Zr5YPjLfrsMYjSf7uaA==
-X-Google-Smtp-Source: APXvYqxFV1COUKvWUrh7FKcPNPvAl5pzHEfFxQVmduhIljm7Zx5aez1Zqxp7kxFQPcnSN/a6hmWpDnEap+IdDr9XjLE=
-X-Received: by 2002:a17:902:9f98:: with SMTP id g24mr3446029plq.325.1575355260934;
- Mon, 02 Dec 2019 22:41:00 -0800 (PST)
+        Tue, 3 Dec 2019 01:41:14 -0500
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id xB36emIw001528
+        for <linux-kernel@vger.kernel.org>; Tue, 3 Dec 2019 15:40:49 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com xB36emIw001528
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1575355249;
+        bh=GmXrWvhOttxlHCjX9wBisNRIMAo1vtJVcSCFg0ZfW/E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=eQfEAHxN/nyufxxHjUgeAqfUWRF9N56N6laRBYIa9ZUPDx+oXOlkXeU7KxqPwuQzo
+         pSrn1TZMHRowWTRqGBXYN2AANUfHl5vYyyXnnkfQLRj/UxYbQwcUe06/pcP9/5pI/v
+         jCYcFWZHB5NA8Jj9QXLSGDVJNjzwRalDB/SROx4QLfA7fv7qX7qGIEkO6305O9AtVz
+         86nMvnH5KzB0HRgM40Dp+axd9d+ayIRZ2zLK0fjXKD2wK0L+uwCgFIJwUtLd8RxoEu
+         t9I8bNCFI0J635yawOfhmbAUpYhg+5dsS7/vMhZkkznnSQHOftcRL7E3CtYtHdccrf
+         mR12BCMLCqmMg==
+X-Nifty-SrcIP: [209.85.222.43]
+Received: by mail-ua1-f43.google.com with SMTP id d6so908180uam.11
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 22:40:48 -0800 (PST)
+X-Gm-Message-State: APjAAAWvtsV5lUEfWhOz+gfXXsgg7XzwcXp/CDgoxwItCfqSml1lvxir
+        Vto1yWeXTsDR4ea4jFgoqciB0tsaqAU5HUXCx94=
+X-Google-Smtp-Source: APXvYqwRi6dH3+fcClvqz37Ap3nH0SRDXHHJ5azuwG10OEJ40DOOd6/KUMOAaiwkuJFBpVyZafygaqHFxR9pXXHM82Y=
+X-Received: by 2002:ab0:6418:: with SMTP id x24mr2561736uao.40.1575355247780;
+ Mon, 02 Dec 2019 22:40:47 -0800 (PST)
 MIME-Version: 1.0
-References: <1575242724-4937-1-git-send-email-sj38.park@gmail.com> <1575242724-4937-5-git-send-email-sj38.park@gmail.com>
-In-Reply-To: <1575242724-4937-5-git-send-email-sj38.park@gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 2 Dec 2019 22:40:49 -0800
-Message-ID: <CAFd5g46bb_46dCpu3t=qT0FMqifS8wodnhjWC7jfpkuhT1ngAQ@mail.gmail.com>
-Subject: Re: [PATCH 4/6] kunit: Create default config in 'build_dir'
-To:     SeongJae Park <sj38.park@gmail.com>
-Cc:     shuah <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+References: <1575001159-19648-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <12f11e521a41d9f1e0e916fcbe413f6d0390bb3c.camel@pengutronix.de> <20191203151149.52A8.4A936039@socionext.com>
+In-Reply-To: <20191203151149.52A8.4A936039@socionext.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 3 Dec 2019 15:40:11 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQvsw-bgXm5u-z0gtSZ078RvPFU10yqyhBRi2Oaq4bqdA@mail.gmail.com>
+Message-ID: <CAK7LNAQvsw-bgXm5u-z0gtSZ078RvPFU10yqyhBRi2Oaq4bqdA@mail.gmail.com>
+Subject: Re: [PATCH] reset: uniphier: Add SCSSI reset control for each channel
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 1, 2019 at 3:25 PM SeongJae Park <sj38.park@gmail.com> wrote:
+On Tue, Dec 3, 2019 at 3:14 PM Kunihiko Hayashi
+<hayashi.kunihiko@socionext.com> wrote:
 >
-> From: SeongJae Park <sjpark@amazon.de>
+> Hi Philipp,
 >
-> If both '--build_dir' and '--defconfig' are given, the handling of
-> '--defconfig' ignores '--build_dir' option.  This commit modifies the
-> behavior to respect '--build_dir' option.
+> On Mon, 2 Dec 2019 14:06:20 +0100 <p.zabel@pengutronix.de> wrote:
 >
-> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> > On Fri, 2019-11-29 at 13:19 +0900, Kunihiko Hayashi wrote:
+> > > SCSSI has reset controls for each channel in the SoCs newer than Pro4,
+> > > so this adds missing reset controls for channel 1, 2 and 3. And more, this
+> > > moves MCSSI reset ID after SCSSI.
+> >
+> > Just to be sure, there are no device trees in circulation that already
+> > use the MCSSI reset?
+>
+> Yes, currently no device trees refer to MCSSI reset,
+> so I think MCSSI reset ID can be moved.
+>
+> Thank you,
+>
 > ---
->  tools/testing/kunit/kunit.py | 5 +++++
->  1 file changed, 5 insertions(+)
+> Best Regards,
+> Kunihiko Hayashi
 >
-> diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
-> index f8f2695..1746330 100755
-> --- a/tools/testing/kunit/kunit.py
-> +++ b/tools/testing/kunit/kunit.py
-> @@ -114,6 +114,11 @@ def main(argv, linux=None):
->         cli_args = parser.parse_args(argv)
->
->         if cli_args.subcommand == 'run':
-> +               if cli_args.build_dir:
-> +                       kunit_kernel.KUNITCONFIG_PATH = os.path.join(
 
-If you are going to modify the value of KUNITCONFIG_PATH can you
-rename the variable to make it lower_snake_case? UPPER_SNAKE_CASE in
-Python is usually (at least in this directory) used to indicate the
-variable is a constant.
 
-> +                               cli_args.build_dir,
-> +                               kunit_kernel.KUNITCONFIG_PATH)
-> +
->                 if cli_args.defconfig:
->                         create_default_kunitconfig()
->
-> --
-> 2.7.4
->
+Fixes: 6b39fd590aeb ("reset: uniphier: add reset control support for SPI")
+
+Assuming you tested it this time,
+Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
