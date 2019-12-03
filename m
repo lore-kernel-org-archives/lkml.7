@@ -2,125 +2,218 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6519C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE234C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A596E2073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD55420684
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:09:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414555;
-	bh=X0xSGi6xT4B5606Mrh/tfrSpMoE/QoK7hRlEwjUTq+s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oE8ljFhfNFKeeTH2UJuL+c+BXtSSQoqD2NXIuq1e6YhmqwRUNUMKjtYeeSOPXMa+X
-	 QKVJpwOzeCxf1q6GdOkxWnYzlu9nLpLjfkD/OQ09TX62D6gJDq3MbGUb0qns5F8zjp
-	 gkAX18xPUaiMZ5czbughwHIBaGkzuHz+lNpH/PJU=
+	s=default; t=1575414565;
+	bh=K6IMMvz7VrhBT/r4elDKy+T8OufjAAZQT6Bk0nA+v8I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Iw2RNapEDT3kcGExystIdlsAIekoFmYfLpX6KQhEAms7EannRXMm0MOvQMGVOXDPD
+	 wyQUq+M3OG4jDnnZAzLyTBaLqGvGt85sSOAjOhqVdkUAiVZ3s6HUunKX2FbHJ0KMiU
+	 omRP/+jny4NYGybOnIZ9j1WA2bXtSH+axPhWfmZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729110AbfLCXJO (ORCPT
+        id S1729148AbfLCXJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:09:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60668 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 18:09:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728652AbfLCWof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:44:35 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728530AbfLCXJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 18:09:22 -0500
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8255E207DD;
-        Tue,  3 Dec 2019 22:44:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA0E520866;
+        Tue,  3 Dec 2019 23:09:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413074;
-        bh=X0xSGi6xT4B5606Mrh/tfrSpMoE/QoK7hRlEwjUTq+s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dBDh2HfMjFxqwPksL14wQMyh5Iw9Gn2fevVdabjz/gGh4dmXc+3h+QgOzd/nwA9fZ
-         jQgfe2EHT07DZUYA6B3hJZIoOjYm43x+cX7/CFhvPqQQ7i+6kxE3rlak93hgQFGAm8
-         4diP0eyz0qxFR6MFOYkjryKwRQuXzXEkgv1Dm7ic=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 122/135] net/tls: take into account that bpf_exec_tx_verdict() may free the record
-Date:   Tue,  3 Dec 2019 23:36:02 +0100
-Message-Id: <20191203213044.443548621@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
-References: <20191203213005.828543156@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1575414560;
+        bh=K6IMMvz7VrhBT/r4elDKy+T8OufjAAZQT6Bk0nA+v8I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nXbO+PKWt82VvDfa008aPfRPCljM7YrhQqDUK+tbjsJ8YOMRJOaiZNLw2wHoDr7rG
+         p17jQRp/hnlEheJZZFeuvn9Fwzggq9tiUsZahKgCfJHAMjPQAXCmAlZQOsG7fBmTZP
+         Kvs+fZaygNwtEdjM1kmXmtDdkg+7WWnbFtCPL7xA=
+Received: by mail-qv1-f52.google.com with SMTP id q19so2309962qvy.9;
+        Tue, 03 Dec 2019 15:09:20 -0800 (PST)
+X-Gm-Message-State: APjAAAVe4/Feirmj8jUyJT9OuN32MAUdrnS9SSt4iStSA/fL8J/iwn6E
+        3Vx+UHA06N6MEanaEqqLL4r4U9Lkx5ialwCaoA==
+X-Google-Smtp-Source: APXvYqxWbn3HAd6F5z+7jJVFqPmGA3wry5wZeoXSEFBoX0HCQMPI5HWXhzetnpmuOaPsqKjXxoFDMW5qwot8ObEg0+w=
+X-Received: by 2002:a0c:f6cd:: with SMTP id d13mr144958qvo.20.1575414559852;
+ Tue, 03 Dec 2019 15:09:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20191203134910.26470-1-p.paillet@st.com>
+In-Reply-To: <20191203134910.26470-1-p.paillet@st.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 3 Dec 2019 17:09:07 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJOWgB1mC3TwkpzfsAViB2tF9At1z1rtFQZqWEEJ5VnPQ@mail.gmail.com>
+Message-ID: <CAL_JsqJOWgB1mC3TwkpzfsAViB2tF9At1z1rtFQZqWEEJ5VnPQ@mail.gmail.com>
+Subject: Re: [PATCH] regulator: Convert stm32-pwr regulator to json-schema
+To:     Pascal Paillet <p.paillet@st.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
+On Tue, Dec 3, 2019 at 7:49 AM Pascal Paillet <p.paillet@st.com> wrote:
+>
+> Convert the stm32-pwr regulator binding to DT schema format using
+> json-schema.
+>
+> Signed-off-by: Pascal Paillet <p.paillet@st.com>
+> ---
+>  .../regulator/st,stm32mp1-pwr-reg.txt         | 43 ------------
+>  .../regulator/st,stm32mp1-pwr-reg.yaml        | 67 +++++++++++++++++++
+>  2 files changed, 67 insertions(+), 43 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
+>  create mode 100644 Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
+> deleted file mode 100644
+> index e372dd3f0c8a..000000000000
+> --- a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
+> +++ /dev/null
+> @@ -1,43 +0,0 @@
+> -STM32MP1 PWR Regulators
+> ------------------------
+> -
+> -Available Regulators in STM32MP1 PWR block are:
+> -  - reg11 for regulator 1V1
+> -  - reg18 for regulator 1V8
+> -  - usb33 for the swtich USB3V3
+> -
+> -Required properties:
+> -- compatible: Must be "st,stm32mp1,pwr-reg"
+> -- list of child nodes that specify the regulator reg11, reg18 or usb33
+> -  initialization data for defined regulators. The definition for each of
+> -  these nodes is defined using the standard binding for regulators found at
+> -  Documentation/devicetree/bindings/regulator/regulator.txt.
+> -- vdd-supply: phandle to the parent supply/regulator node for vdd input
+> -- vdd_3v3_usbfs-supply: phandle to the parent supply/regulator node for usb33
+> -
+> -Example:
+> -
+> -pwr_regulators: pwr@50001000 {
+> -       compatible = "st,stm32mp1,pwr-reg";
+> -       reg = <0x50001000 0x10>;
+> -       vdd-supply = <&vdd>;
+> -       vdd_3v3_usbfs-supply = <&vdd_usb>;
+> -
+> -       reg11: reg11 {
+> -               regulator-name = "reg11";
+> -               regulator-min-microvolt = <1100000>;
+> -               regulator-max-microvolt = <1100000>;
+> -       };
+> -
+> -       reg18: reg18 {
+> -               regulator-name = "reg18";
+> -               regulator-min-microvolt = <1800000>;
+> -               regulator-max-microvolt = <1800000>;
+> -       };
+> -
+> -       usb33: usb33 {
+> -               regulator-name = "usb33";
+> -               regulator-min-microvolt = <3300000>;
+> -               regulator-max-microvolt = <3300000>;
+> -       };
+> -};
+> diff --git a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml
+> new file mode 100644
+> index 000000000000..f661728ebdeb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml
+> @@ -0,0 +1,67 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/regulator/st,stm32mp1-pwr-reg.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: STM32MP1 PWR voltage regulators
+> +
+> +maintainers:
+> +  - Pascal Paillet <p.paillet@st.com>
+> +
+> +allOf:
+> +  - $ref: "regulator.yaml#"
 
-[ Upstream commit c329ef9684de9517d82af5b4758c9e1b64a8a11a ]
+This doesn't belong here as it applied to regulator nodes like you have below.
 
-bpf_exec_tx_verdict() may free the record if tls_push_record()
-fails, or if the entire record got consumed by BPF. Re-check
-ctx->open_rec before touching the data.
+> +
+> +properties:
+> +  compatible:
+> +    const: st,stm32mp1,pwr-reg
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  vdd-supply:
+> +    description: Input supply phandle(s) for vdd input
+> +
+> +  vdd_3v3_usbfs-supply:
+> +    description: Input supply phandle(s) for vdd_3v3_usbfs input
+> +
+> +patternProperties:
+> +  "^(reg11|reg18|usb33)":
 
-Fixes: d3b18ad31f93 ("tls: add bpf support to sk_msg handling")
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/tls/tls_sw.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+Needs a '$' on the end.
 
---- a/net/tls/tls_sw.c
-+++ b/net/tls/tls_sw.c
-@@ -979,7 +979,7 @@ alloc_encrypted:
- 					num_async++;
- 				else if (ret == -ENOMEM)
- 					goto wait_for_memory;
--				else if (ret == -ENOSPC)
-+				else if (ctx->open_rec && ret == -ENOSPC)
- 					goto rollback_iter;
- 				else if (ret != -EAGAIN)
- 					goto send_end;
-@@ -1048,11 +1048,12 @@ wait_for_memory:
- 		ret = sk_stream_wait_memory(sk, &timeo);
- 		if (ret) {
- trim_sgl:
--			tls_trim_both_msgs(sk, orig_size);
-+			if (ctx->open_rec)
-+				tls_trim_both_msgs(sk, orig_size);
- 			goto send_end;
- 		}
- 
--		if (msg_en->sg.size < required_size)
-+		if (ctx->open_rec && msg_en->sg.size < required_size)
- 			goto alloc_encrypted;
- 	}
- 
-@@ -1185,11 +1186,13 @@ wait_for_sndbuf:
- wait_for_memory:
- 		ret = sk_stream_wait_memory(sk, &timeo);
- 		if (ret) {
--			tls_trim_both_msgs(sk, msg_pl->sg.size);
-+			if (ctx->open_rec)
-+				tls_trim_both_msgs(sk, msg_pl->sg.size);
- 			goto sendpage_end;
- 		}
- 
--		goto alloc_payload;
-+		if (ctx->open_rec)
-+			goto alloc_payload;
- 	}
- 
- 	if (num_async) {
+> +    type: object
+> +
+> +    allOf:
+> +      - $ref: "regulator.yaml#"
+> +
+> +required:
+> +   - compatible
+> +   - reg
 
+Should be 2 not 3 space indent.
 
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    pwr@50001000 {
+> +      compatible = "st,stm32mp1,pwr-reg";
+> +      reg = <0x50001000 0x10>;
+> +      vdd-supply = <&vdd>;
+> +      vdd_3v3_usbfs-supply = <&vdd_usb>;
+> +
+> +      reg11 {
+> +        regulator-name = "reg11";
+> +        regulator-min-microvolt = <1100000>;
+> +        regulator-max-microvolt = <1100000>;
+> +      };
+> +
+> +      reg18 {
+> +        regulator-name = "reg18";
+> +        regulator-min-microvolt = <1800000>;
+> +        regulator-max-microvolt = <1800000>;
+> +      };
+> +
+> +      usb33 {
+> +        regulator-name = "usb33";
+> +        regulator-min-microvolt = <3300000>;
+> +        regulator-max-microvolt = <3300000>;
+> +      };
+> +    };
+> +...
+> --
+> 2.17.1
+>
