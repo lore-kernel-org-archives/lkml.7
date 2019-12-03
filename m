@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 553C2C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48401C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EDDD20863
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1848520863
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413699;
-	bh=UXrKNNPHHCXadJX4lrOLkoDwl7hPsSWGkSDvnZUS1dI=;
+	s=default; t=1575413702;
+	bh=/Y/AFb/HLWd/GJdXfqnLvWAYyyhntv+qURI/r1g4Xjc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KI/dpGODR88+JSqPvTF6hnHX732NpWcPqbIfJb54DHH8yicKsG22BYMtfJo+NqcwD
-	 yC0Aof2xAIIRgEP3cvqbfNacWnNOHe6af84IesXwrU1GAQyUily9XutRxRk+bGOvq7
-	 +yKnmzoK2K9YOPVy3Cv1RCiSTYBp+tVrfez5Jwg8=
+	b=uKvoVPqQyaRVtjvGegrY/87CuqVQWBJutFyASPH7ydmOYUNjKoM9aK287O2Wnw0eK
+	 btvb9ZdsYw4szIzvsxPITtFGmyGoOkeggc3Xq5hVOUvMx3cHV5vsEYMxAnkhMBevCb
+	 Y07tF56ROLOwiu5glPWW5YiqA5MzDhK1jw+iPMcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730320AbfLCWy5 (ORCPT
+        id S1728247AbfLCWzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:54:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49008 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:55:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730317AbfLCWyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:54:54 -0500
+        id S1730211AbfLCWy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:54:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2908320803;
-        Tue,  3 Dec 2019 22:54:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9713220863;
+        Tue,  3 Dec 2019 22:54:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413693;
-        bh=UXrKNNPHHCXadJX4lrOLkoDwl7hPsSWGkSDvnZUS1dI=;
+        s=default; t=1575413696;
+        bh=/Y/AFb/HLWd/GJdXfqnLvWAYyyhntv+qURI/r1g4Xjc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2KyfOvS65pMmKKmY165GS37il9CtZJLFamUI9b0X/GlkdvgbOYhuGR7CnkXMGX+RR
-         mMBitbPLzqwaVxrCyCCOhLVfdvndbrcINdurb2rDq5swVS15mt8F3sxRh7ltM5Ijmw
-         6LYp7XlrOvLY0ILkUB5fQLEfBIp6fkuFVqpR+DgA=
+        b=amUI+Gj3P2TbGV4lT3wqjNOfAdmkHqCy5wvd8cEofleYGhWJBak3b7gBgWf4hZTeM
+         1AOJaorPZJq1jelAOnVb3zHBMoqDgsvHe+wIw9cBowan2+R0FcKYYqFa8PbKnIg7y/
+         NG3r2jVc8rMpJVnj1cc7qr3sL7Dsk944F7iHyR80=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Foster <bfoster@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        stable@vger.kernel.org, Ursula Braun <ubraun@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 227/321] xfs: end sync buffer I/O properly on shutdown error
-Date:   Tue,  3 Dec 2019 23:34:53 +0100
-Message-Id: <20191203223438.926046943@linuxfoundation.org>
+Subject: [PATCH 4.19 228/321] net/smc: fix sender_free computation
+Date:   Tue,  3 Dec 2019 23:34:54 +0100
+Message-Id: <20191203223438.977526894@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,48 +60,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Foster <bfoster@redhat.com>
+From: Ursula Braun <ubraun@linux.ibm.com>
 
-[ Upstream commit 465fa17f4a303d9fdff9eac4d45f91ece92e96ca ]
+[ Upstream commit b8649efad879c69c7ab1f19ce8814fcabef1f72b ]
 
-As of commit e339dd8d8b ("xfs: use sync buffer I/O for sync delwri
-queue submission"), the delwri submission code uses sync buffer I/O
-for sync delwri I/O. Instead of waiting on async I/O to unlock the
-buffer, it uses the underlying sync I/O completion mechanism.
+In some scenarios a separate consumer cursor update is necessary.
+The decision is made in smc_tx_consumer_cursor_update(). The
+sender_free computation could be wrong:
 
-If delwri buffer submission fails due to a shutdown scenario, an
-error is set on the buffer and buffer completion never occurs. This
-can cause xfs_buf_delwri_submit() to deadlock waiting on a
-completion event.
+The rx confirmed cursor is always smaller than or equal to the
+rx producer cursor. The parameters in the smc_curs_diff() call
+have to be exchanged, otherwise sender_free might even be negative.
 
-We could check the error state before waiting on such buffers, but
-that doesn't serialize against the case of an error set via a racing
-I/O completion. Instead, invoke I/O completion in the shutdown case
-regardless of buffer I/O type.
+And if more data arrives local_rx_ctrl.prod might be updated, enabling
+a cursor difference between local_rx_ctrl.prod and rx confirmed cursor
+larger than the RMB size. This case is not covered by smc_curs_diff().
+Thus function smc_curs_diff_large() is introduced here.
 
-Signed-off-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+If a recvmsg() is processed in parallel, local_tx_ctrl.cons might
+change during smc_cdc_msg_send. Make sure rx_curs_confirmed is updated
+with the actually sent local_tx_ctrl.cons value.
+
+Fixes: e82f2e31f559 ("net/smc: optimize consumer cursor updates")
+Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_buf.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ net/smc/smc_cdc.c |  5 +++--
+ net/smc/smc_cdc.h | 26 +++++++++++++++++++++++++-
+ net/smc/smc_tx.c  |  3 ++-
+ 3 files changed, 30 insertions(+), 4 deletions(-)
 
-diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index e36124546d0db..c1f7c0d5d608a 100644
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -1506,8 +1506,7 @@ __xfs_buf_submit(
- 		xfs_buf_ioerror(bp, -EIO);
- 		bp->b_flags &= ~XBF_DONE;
- 		xfs_buf_stale(bp);
--		if (bp->b_flags & XBF_ASYNC)
--			xfs_buf_ioend(bp);
-+		xfs_buf_ioend(bp);
- 		return -EIO;
+diff --git a/net/smc/smc_cdc.c b/net/smc/smc_cdc.c
+index ed5dcf03fe0b6..8f691b5a44ddf 100644
+--- a/net/smc/smc_cdc.c
++++ b/net/smc/smc_cdc.c
+@@ -96,6 +96,7 @@ int smc_cdc_msg_send(struct smc_connection *conn,
+ 		     struct smc_wr_buf *wr_buf,
+ 		     struct smc_cdc_tx_pend *pend)
+ {
++	union smc_host_cursor cfed;
+ 	struct smc_link *link;
+ 	int rc;
+ 
+@@ -107,10 +108,10 @@ int smc_cdc_msg_send(struct smc_connection *conn,
+ 	conn->local_tx_ctrl.seqno = conn->tx_cdc_seq;
+ 	smc_host_msg_to_cdc((struct smc_cdc_msg *)wr_buf,
+ 			    &conn->local_tx_ctrl, conn);
++	smc_curs_copy(&cfed, &((struct smc_host_cdc_msg *)wr_buf)->cons, conn);
+ 	rc = smc_wr_tx_send(link, (struct smc_wr_tx_pend_priv *)pend);
+ 	if (!rc)
+-		smc_curs_copy(&conn->rx_curs_confirmed,
+-			      &conn->local_tx_ctrl.cons, conn);
++		smc_curs_copy(&conn->rx_curs_confirmed, &cfed, conn);
+ 
+ 	return rc;
+ }
+diff --git a/net/smc/smc_cdc.h b/net/smc/smc_cdc.h
+index 934df4473a7ce..2377a51772d51 100644
+--- a/net/smc/smc_cdc.h
++++ b/net/smc/smc_cdc.h
+@@ -135,7 +135,9 @@ static inline void smc_curs_copy_net(union smc_cdc_cursor *tgt,
+ #endif
+ }
+ 
+-/* calculate cursor difference between old and new, where old <= new */
++/* calculate cursor difference between old and new, where old <= new and
++ * difference cannot exceed size
++ */
+ static inline int smc_curs_diff(unsigned int size,
+ 				union smc_host_cursor *old,
+ 				union smc_host_cursor *new)
+@@ -160,6 +162,28 @@ static inline int smc_curs_comp(unsigned int size,
+ 	return smc_curs_diff(size, old, new);
+ }
+ 
++/* calculate cursor difference between old and new, where old <= new and
++ * difference may exceed size
++ */
++static inline int smc_curs_diff_large(unsigned int size,
++				      union smc_host_cursor *old,
++				      union smc_host_cursor *new)
++{
++	if (old->wrap < new->wrap)
++		return min_t(int,
++			     (size - old->count) + new->count +
++			     (new->wrap - old->wrap - 1) * size,
++			     size);
++
++	if (old->wrap > new->wrap) /* wrap has switched from 0xffff to 0x0000 */
++		return min_t(int,
++			     (size - old->count) + new->count +
++			     (new->wrap + 0xffff - old->wrap) * size,
++			     size);
++
++	return max_t(int, 0, (new->count - old->count));
++}
++
+ static inline void smc_host_cursor_to_cdc(union smc_cdc_cursor *peer,
+ 					  union smc_host_cursor *local,
+ 					  struct smc_connection *conn)
+diff --git a/net/smc/smc_tx.c b/net/smc/smc_tx.c
+index f1f621675db01..0ecbbdc337b82 100644
+--- a/net/smc/smc_tx.c
++++ b/net/smc/smc_tx.c
+@@ -595,7 +595,8 @@ void smc_tx_consumer_update(struct smc_connection *conn, bool force)
+ 	if (to_confirm > conn->rmbe_update_limit) {
+ 		smc_curs_copy(&prod, &conn->local_rx_ctrl.prod, conn);
+ 		sender_free = conn->rmb_desc->len -
+-			      smc_curs_diff(conn->rmb_desc->len, &prod, &cfed);
++			      smc_curs_diff_large(conn->rmb_desc->len,
++						  &cfed, &prod);
  	}
  
+ 	if (conn->local_rx_ctrl.prod_flags.cons_curs_upd_req ||
 -- 
 2.20.1
 
