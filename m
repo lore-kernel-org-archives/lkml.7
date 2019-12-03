@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C9EC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A04C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7C4C206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11435206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:50:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbfLCDuI (ORCPT
+        id S1727508AbfLCDuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 22:50:08 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38718 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726823AbfLCDsa (ORCPT
+        Mon, 2 Dec 2019 22:50:17 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25406 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726684AbfLCDs2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 22:48:30 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB33kmqM093370
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 22:48:29 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wm6g99bpg-1
+        Mon, 2 Dec 2019 22:48:28 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB33kk9G032809
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 22:48:27 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wm6snr93u-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 22:48:29 -0500
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 22:48:27 -0500
 Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Tue, 3 Dec 2019 03:48:25 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Tue, 3 Dec 2019 03:48:24 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 3 Dec 2019 03:48:18 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB33mHb553739674
+        Tue, 3 Dec 2019 03:48:16 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB33lZVF46661902
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Dec 2019 03:48:17 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 671DBA4055;
-        Tue,  3 Dec 2019 03:48:17 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C590CA4040;
-        Tue,  3 Dec 2019 03:48:16 +0000 (GMT)
+        Tue, 3 Dec 2019 03:47:35 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9AD545204F;
+        Tue,  3 Dec 2019 03:48:15 +0000 (GMT)
 Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  3 Dec 2019 03:48:16 +0000 (GMT)
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4911652059;
+        Tue,  3 Dec 2019 03:48:15 +0000 (GMT)
 Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
         (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 9DE35A03CF;
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 60092A03CC;
         Tue,  3 Dec 2019 14:48:12 +1100 (AEDT)
 From:   "Alastair D'Silva" <alastair@au1.ibm.com>
 To:     alastair@d-silva.org
@@ -85,24 +82,24 @@ Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Alexey Kardashevskiy <aik@ozlabs.ru>,
         linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Subject: [PATCH v2 07/27] ocxl: Add functions to map/unmap LPC memory
-Date:   Tue,  3 Dec 2019 14:46:35 +1100
+Subject: [PATCH v2 04/27] mm/memory_hotplug: Allow check_hotplug_memory_addressable to be called from drivers
+Date:   Tue,  3 Dec 2019 14:46:32 +1100
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191203034655.51561-1-alastair@au1.ibm.com>
 References: <20191203034655.51561-1-alastair@au1.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19120303-0012-0000-0000-000003701287
+x-cbid: 19120303-0016-0000-0000-000002D0158B
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120303-0013-0000-0000-000021ABCCBC
-Message-Id: <20191203034655.51561-8-alastair@au1.ibm.com>
+x-cbparentid: 19120303-0017-0000-0000-000033320CA4
+Message-Id: <20191203034655.51561-5-alastair@au1.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
  definitions=2019-12-02_06:2019-11-29,2019-12-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- lowpriorityscore=0 bulkscore=0 phishscore=0 priorityscore=1501
- impostorscore=0 suspectscore=1 spamscore=0 mlxscore=0 adultscore=0
- mlxlogscore=833 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ suspectscore=3 clxscore=1015 malwarescore=0 adultscore=0 impostorscore=0
+ phishscore=0 mlxlogscore=883 spamscore=0 priorityscore=1501
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-1910280000 definitions=main-1912030032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -111,142 +108,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alastair D'Silva <alastair@d-silva.org>
 
-Add functions to map/unmap LPC memory
+When setting up OpenCAPI connected persistent memory, the range check may
+not be performed until quite late (or perhaps not at all, if the user does
+not establish a DAX device).
+
+This patch makes the range check callable so we can perform the check while
+probing the OpenCAPI SCM device.
 
 Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 ---
- drivers/misc/ocxl/config.c        |  4 +++
- drivers/misc/ocxl/core.c          | 50 +++++++++++++++++++++++++++++++
- drivers/misc/ocxl/ocxl_internal.h |  3 ++
- include/misc/ocxl.h               | 18 +++++++++++
- 4 files changed, 75 insertions(+)
+ include/linux/memory_hotplug.h | 5 +++++
+ mm/memory_hotplug.c            | 4 ++--
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
-index c8e19bfb5ef9..fb0c3b6f8312 100644
---- a/drivers/misc/ocxl/config.c
-+++ b/drivers/misc/ocxl/config.c
-@@ -568,6 +568,10 @@ static int read_afu_lpc_memory_info(struct pci_dev *dev,
- 		afu->special_purpose_mem_size =
- 			total_mem_size - lpc_mem_size;
- 	}
+diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+index f46ea71b4ffd..3f3a010b60d2 100644
+--- a/include/linux/memory_hotplug.h
++++ b/include/linux/memory_hotplug.h
+@@ -339,6 +339,11 @@ static inline int remove_memory(int nid, u64 start, u64 size)
+ static inline void __remove_memory(int nid, u64 start, u64 size) {}
+ #endif /* CONFIG_MEMORY_HOTREMOVE */
+ 
++#ifdef CONFIG_MEMORY_HOTPLUG_SPARSE
++int check_hotplug_memory_addressable(unsigned long pfn,
++		unsigned long nr_pages);
++#endif /* CONFIG_MEMORY_HOTPLUG_SPARSE */
 +
-+	dev_info(&dev->dev, "Probed LPC memory of %#llx bytes and special purpose memory of %#llx bytes\n",
-+		afu->lpc_mem_size, afu->special_purpose_mem_size);
-+
+ extern void __ref free_area_init_core_hotplug(int nid);
+ extern int __add_memory(int nid, u64 start, u64 size);
+ extern int add_memory(int nid, u64 start, u64 size);
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index b5be827ecda5..abd9624bd0c1 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -278,8 +278,8 @@ static int check_pfn_span(unsigned long pfn, unsigned long nr_pages,
  	return 0;
  }
  
-diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
-index 2531c6cf19a0..98611faea219 100644
---- a/drivers/misc/ocxl/core.c
-+++ b/drivers/misc/ocxl/core.c
-@@ -210,6 +210,55 @@ static void unmap_mmio_areas(struct ocxl_afu *afu)
- 	release_fn_bar(afu->fn, afu->config.global_mmio_bar);
- }
- 
-+int ocxl_afu_map_lpc_mem(struct ocxl_afu *afu)
-+{
-+	struct pci_dev *dev = to_pci_dev(afu->fn->dev.parent);
-+
-+	if ((afu->config.lpc_mem_size + afu->config.special_purpose_mem_size) == 0)
-+		return 0;
-+
-+	afu->lpc_base_addr = ocxl_link_lpc_map(afu->fn->link, dev);
-+	if (afu->lpc_base_addr == 0)
-+		return -EINVAL;
-+
-+	if (afu->config.lpc_mem_size) {
-+		afu->lpc_res.start = afu->lpc_base_addr + afu->config.lpc_mem_offset;
-+		afu->lpc_res.end = afu->lpc_res.start + afu->config.lpc_mem_size - 1;
-+	}
-+
-+	if (afu->config.special_purpose_mem_size) {
-+		afu->special_purpose_res.start = afu->lpc_base_addr +
-+						 afu->config.special_purpose_mem_offset;
-+		afu->special_purpose_res.end = afu->special_purpose_res.start +
-+					       afu->config.special_purpose_mem_size - 1;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(ocxl_afu_map_lpc_mem);
-+
-+struct resource *ocxl_afu_lpc_mem(struct ocxl_afu *afu)
-+{
-+	return &afu->lpc_res;
-+}
-+EXPORT_SYMBOL_GPL(ocxl_afu_lpc_mem);
-+
-+static void unmap_lpc_mem(struct ocxl_afu *afu)
-+{
-+	struct pci_dev *dev = to_pci_dev(afu->fn->dev.parent);
-+
-+	if (afu->lpc_res.start || afu->special_purpose_res.start) {
-+		void *link = afu->fn->link;
-+
-+		ocxl_link_lpc_release(link, dev);
-+
-+		afu->lpc_res.start = 0;
-+		afu->lpc_res.end = 0;
-+		afu->special_purpose_res.start = 0;
-+		afu->special_purpose_res.end = 0;
-+	}
-+}
-+
- static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
+-static int check_hotplug_memory_addressable(unsigned long pfn,
+-					    unsigned long nr_pages)
++int check_hotplug_memory_addressable(unsigned long pfn,
++				     unsigned long nr_pages)
  {
- 	int rc;
-@@ -251,6 +300,7 @@ static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
+ 	const u64 max_addr = PFN_PHYS(pfn + nr_pages) - 1;
  
- static void deconfigure_afu(struct ocxl_afu *afu)
- {
-+	unmap_lpc_mem(afu);
- 	unmap_mmio_areas(afu);
- 	reclaim_afu_pasid(afu);
- 	reclaim_afu_actag(afu);
-diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
-index 20b417e00949..9f4b47900e62 100644
---- a/drivers/misc/ocxl/ocxl_internal.h
-+++ b/drivers/misc/ocxl/ocxl_internal.h
-@@ -52,6 +52,9 @@ struct ocxl_afu {
- 	void __iomem *global_mmio_ptr;
- 	u64 pp_mmio_start;
- 	void *private;
-+	u64 lpc_base_addr; /* Covers both LPC & special purpose memory */
-+	struct resource lpc_res;
-+	struct resource special_purpose_res;
- };
- 
- enum ocxl_context_status {
-diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
-index 06dd5839e438..6f7c02f0d5e3 100644
---- a/include/misc/ocxl.h
-+++ b/include/misc/ocxl.h
-@@ -212,6 +212,24 @@ int ocxl_irq_set_handler(struct ocxl_context *ctx, int irq_id,
- 
- // AFU Metadata
- 
-+/**
-+ * Map the LPC system & special purpose memory for an AFU
-+ *
-+ * Do not call this during device discovery, as there may me multiple
-+ * devices on a link, and the memory is mapped for the whole link, not
-+ * just one device. It should only be called after all devices have
-+ * registered their memory on the link.
-+ *
-+ * afu: The AFU that has the LPC memory to map
-+ */
-+extern int ocxl_afu_map_lpc_mem(struct ocxl_afu *afu);
-+
-+/**
-+ * Get the physical address range of LPC memory for an AFU
-+ * afu: The AFU associated with the LPC memory
-+ */
-+extern struct resource *ocxl_afu_lpc_mem(struct ocxl_afu *afu);
-+
- /**
-  * Get a pointer to the config for an AFU
-  *
 -- 
 2.23.0
 
