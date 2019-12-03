@@ -2,114 +2,113 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB0AC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05756C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70F4020409
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:12:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Oyk10zwb"
+	by mail.kernel.org (Postfix) with ESMTP id D5B6520409
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:15:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbfLCJMe (ORCPT
+        id S1726060AbfLCJPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 04:12:34 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:34613 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbfLCJMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 04:12:34 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47Rx8J0kcjz9vBK7;
-        Tue,  3 Dec 2019 10:12:32 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Oyk10zwb; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id tQkAB2K9bzU1; Tue,  3 Dec 2019 10:12:32 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47Rx8H6djZz9vBK2;
-        Tue,  3 Dec 2019 10:12:31 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1575364351; bh=Tfzyfftdxt7nNkAel0mvTxcsHw6cENeeVt1BDJa4Wwk=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=Oyk10zwbEQZj+hz/ApbAX7bZU2VISoBlDzphx0qgX4vuGI5JovpO7+XhDvgSS4Ht7
-         8HTSc9mACgVCHkmuTGygTYKD88Z8cVYQajNaAgNEy52275tEGgvrZkFa67Z5XWulIZ
-         cL/BkLM5Crlkacm12sfXyMktVPVbHlCut51DSplo=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 000188B7D7;
-        Tue,  3 Dec 2019 10:12:32 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Ni-i5GC6tlVU; Tue,  3 Dec 2019 10:12:32 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 79DBB8B787;
-        Tue,  3 Dec 2019 10:12:32 +0100 (CET)
-Subject: Re: [PATCH 0/9] Improve boot command line handling
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, danielwa@cisco.com
-Cc:     linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1554195798.git.christophe.leroy@c-s.fr>
-Message-ID: <8eb90163-0e6b-c5ee-179a-c20773d54e58@c-s.fr>
-Date:   Tue, 3 Dec 2019 10:12:32 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 3 Dec 2019 04:15:41 -0500
+Received: from mx2.suse.de ([195.135.220.15]:37984 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725773AbfLCJPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 04:15:41 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6A984B023;
+        Tue,  3 Dec 2019 09:15:39 +0000 (UTC)
+Date:   Tue, 3 Dec 2019 10:15:36 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Philip Li <philip.li@intel.com>
+Cc:     kbuild test robot <lkp@intel.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        kbuild-all@lists.01.org, joe@perches.com,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        tj@kernel.org, arnd@arndb.de, sergey.senozhatsky@gmail.com,
+        rostedt@goodmis.org
+Subject: Re: [kbuild-all] Re: [PATCH 3/4] printk: Drop pr_warning definition
+Message-ID: <20191203091536.k6jvrwpo3qjukamd@pathway.suse.cz>
+References: <20191128004752.35268-4-wangkefeng.wang@huawei.com>
+ <201911281545.4mGpcG7D%lkp@intel.com>
+ <20191129115347.ltzif5jstfxh3h3t@pathway.suse.cz>
+ <20191130090316.GA5419@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <cover.1554195798.git.christophe.leroy@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191130090316.GA5419@intel.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 02/04/2019 à 11:08, Christophe Leroy a écrit :
-> The purpose of this series is to improve and enhance the
-> handling of kernel boot arguments.
+On Sat 2019-11-30 17:03:16, Philip Li wrote:
+> On Fri, Nov 29, 2019 at 12:53:47PM +0100, Petr Mladek wrote:
+> > On Thu 2019-11-28 15:14:36, kbuild test robot wrote:
+> > > Hi Kefeng,
+> > > 
+> > > Thank you for the patch! Yet something to improve:
+> > > 
+> > > [auto build test ERROR on wq/for-next]
+> > > [cannot apply to pmladek/for-next v5.4 next-20191127]
+> > > [if your patch is applied to the wrong git tree, please drop us a note to help
+> > > improve the system. BTW, we also suggest to use '--base' option to specify the
+> > > base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> > > 
+> > > url:    https://github.com/0day-ci/linux/commits/Kefeng-Wang/part2-kill-pr_warning-from-kernel/20191128-085343
+> > > base:   https://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git for-next
+> > > config: i386-defconfig (attached as .config)
+> > > compiler: gcc-7 (Debian 7.4.0-14) 7.4.0
+> > > reproduce:
+> > >         # save the attached .config to linux build tree
+> > >         make ARCH=i386 
+> > > 
+> > > If you fix the issue, kindly add following tag
+> > > Reported-by: kbuild test robot <lkp@intel.com>
+> > > 
+> > > All errors (new ones prefixed by >>):
+> > > 
+> > >    drivers/platform/x86/eeepc-laptop.c: In function 'eeepc_rfkill_hotplug':
+> > > >> drivers/platform/x86/eeepc-laptop.c:581:3: error: implicit declaration of function 'pr_warning'; did you mean 'acpi_warning'? [-Werror=implicit-function-declaration]
+> > >       pr_warning("Unable to find port\n");
+> > >       ^~~~~~~~~~
+> > >       acpi_warning
+> > >    cc1: some warnings being treated as errors
+> > 
+> > [...]
+> > 
+> > These are false positives. These pr_warning() calls have already been
+> > removed in mainline via a pull request from printk.git.
+> thanks, we will check this to improve.
 > 
-> It is first focussed on powerpc but also extends the capability
-> for other arches.
-> 
-> This is based on suggestion from Daniel Walker <danielwa@cisco.com>
+> > 
+> > Best Regards.
+> > Petr
+> > 
+> > 
+> > tj/wq.git for-next branch is outdated.
+> > This branch is outdated. The 
+> Thanks for the info Petr, we will look into this to resolve the out of
+> dated base. In this case, do you have any recommended base to use?
 
-Looks like nobody has been interested in that series.
+Good question. These kind of problems should be solved in linux-next
+git tree.
 
-It doesn't apply anymore and I don't plan to rebase it, I'll retire it.
+Well, I am not sure how often you see these false positives. I think
+that they happen only where there is some global change that affects
+many subsystems and is done in more stages.
 
-Christophe
+In this case, we removed most pr_warning() users in one patchset. Then
+we removed the remaining (new) users and the function definition
+in another patchset. It might be a corner case that does not need
+any changes on your side.
 
-
-> 
-> Christophe Leroy (9):
->    powerpc: enable appending of CONFIG_CMDLINE to bootloader's cmdline.
->    Add generic function to build command line.
->    drivers: of: use cmdline building function
->    powerpc/prom_init: get rid of PROM_SCRATCH_SIZE
->    powerpc: convert to generic builtin command line
->    Add capability to prepend the command line
->    powerpc: add capability to prepend default command line
->    Gives arches opportunity to use generically defined boot cmdline
->      manipulation
->    powerpc: use generic CMDLINE manipulations
-> 
->   arch/powerpc/Kconfig                   | 23 ++------------
->   arch/powerpc/kernel/prom_init.c        | 38 ++++++++++-------------
->   arch/powerpc/kernel/prom_init_check.sh |  2 +-
->   drivers/of/fdt.c                       | 23 +++-----------
->   include/linux/cmdline.h                | 37 ++++++++++++++++++++++
->   init/Kconfig                           | 56 ++++++++++++++++++++++++++++++++++
->   6 files changed, 117 insertions(+), 62 deletions(-)
->   create mode 100644 include/linux/cmdline.h
-> 
+Best Regards,
+Petr
+most 
