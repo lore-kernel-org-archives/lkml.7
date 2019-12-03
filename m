@@ -2,261 +2,290 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB7DC43141
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4ABEC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1A3920722
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:00:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="a+4vUUM7"
+	by mail.kernel.org (Postfix) with ESMTP id 7BD0C2068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:02:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbfLCAAp (ORCPT
+        id S1726114AbfLCACR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 19:00:45 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:51065 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfLCAAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 19:00:45 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47RhvX1h2lz9sP3;
-        Tue,  3 Dec 2019 11:00:39 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1575331241;
-        bh=ehUuKtq21c7JP3KxhQWOn6j7URCI+Jki4iw3Ti1zz6c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=a+4vUUM7/0EjzX+2stCMoiovqMuVaN0/Pjbl7HBD8Rl+Lsw4Jz5qrj8/fuGSmzVuw
-         51i5Iv1y81jAXig8h+Ii7mZBFzmFijQmO+jdyHW6Tjf7h/QJjoU1+kzsHY1DgoSJk2
-         sCxwgIwxRHAXYhrg2twqVMIWvA7mDK/mzE5C24JnUp6l5bFhJBNHw8YE7Kexz/ZTC8
-         7drAN0FequacPH8xhiNfPWZgQY0gfQG43aOtpea1WrUhr498grCDTLVgjeoFVpEKNL
-         xi18fUs5qv1Vm2aNe5++GEp9XV13UjyBupKfjQgBT4n2PA7QZUUt9/AEpMKv5DofbZ
-         wK2PtkRyU7EgQ==
-Date:   Tue, 3 Dec 2019 11:00:39 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus <torvalds@linux-foundation.org>
-Subject: Re: linux-next: manual merge of the y2038 tree with the xfs tree
-Message-ID: <20191203110039.2ec22a17@canb.auug.org.au>
-In-Reply-To: <20191030153046.01efae4a@canb.auug.org.au>
-References: <20191030153046.01efae4a@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/5_edYof0YP+3JTXH5TkWab8";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Mon, 2 Dec 2019 19:02:17 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30314 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725834AbfLCACQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 19:02:16 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB302CHD102081
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 19:02:15 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2wm6g93rpw-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 19:02:14 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 3 Dec 2019 00:02:13 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 3 Dec 2019 00:02:09 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB3029CR47775858
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 3 Dec 2019 00:02:09 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0616CA4054;
+        Tue,  3 Dec 2019 00:02:09 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E5792A405B;
+        Tue,  3 Dec 2019 00:02:07 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.147.107])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  3 Dec 2019 00:02:07 +0000 (GMT)
+Subject: Re: [PATCH v0 1/2] IMA: Defined queue functions
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org
+Date:   Mon, 02 Dec 2019 19:02:07 -0500
+In-Reply-To: <20191127025212.3077-2-nramas@linux.microsoft.com>
+References: <20191127025212.3077-1-nramas@linux.microsoft.com>
+         <20191127025212.3077-2-nramas@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19120300-0016-0000-0000-000002CFFE06
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120300-0017-0000-0000-00003331F4C5
+Message-Id: <1575331327.4793.469.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-02_06:2019-11-29,2019-12-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ lowpriorityscore=0 bulkscore=0 phishscore=0 priorityscore=1501
+ impostorscore=0 suspectscore=2 spamscore=0 mlxscore=0 adultscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912020206
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/5_edYof0YP+3JTXH5TkWab8
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Lakshmi,
 
-Hi all,
+On Tue, 2019-11-26 at 18:52 -0800, Lakshmi Ramasubramanian wrote:
+> Keys created or updated in the system before IMA is initialized
+> should be queued up. And, keys (including any queued ones)
+> should be processed when IMA initialization is completed.
+> 
+> This patch defines functions to queue and dequeue keys for
+> measurement. A flag namely ima_process_keys_for_measurement
+> is used to check if the key should be queued or should be
+> processed immediately.
+> 
+> ima_policy_flag cannot be relied upon to make queuing decision
+> because ima_policy_flag will be set to 0 when either IMA is
+> not initialized or when the IMA policy itself is empty.
 
-This conflict is now between the xfs tree and Linus' tree (and the
-merge fix up patch below needs applying to that merge.
+Already commented on the patch description.  Some additional minor
+comments below.
 
-On Wed, 30 Oct 2019 15:31:10 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Today's linux-next merge of the y2038 tree got a conflict in:
->=20
->   fs/compat_ioctl.c
->=20
-> between commit:
->=20
->   837a6e7f5cdb ("fs: add generic UNRESVSP and ZERO_RANGE ioctl handlers")
->=20
-> from the xfs tree and commits:
->   011da44bc5b6 ("compat: move FS_IOC_RESVSP_32 handling to fs/ioctl.c")
->   37ecf8b20abd ("compat_sys_ioctl(): make parallel to do_vfs_ioctl()")
->=20
-> from the y2038 tree.
->=20
-> I fixed it up (see below and the added patch) and can carry the fix as
-> necessary. This is now fixed as far as linux-next is concerned, but any
-> non trivial conflicts should be mentioned to your upstream maintainer
-> when your tree is submitted for merging.  You may also want to consider
-> cooperating with the maintainer of the conflicting tree to minimise any
-> particularly complex conflicts.
->=20
-> From af387ea192196ffd141234e7e45bcfbc2be1a4fc Mon Sep 17 00:00:00 2001
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Wed, 30 Oct 2019 15:05:29 +1100
-> Subject: [PATCH] fix up for "compat: move FS_IOC_RESVSP_32 handling to
->  fs/ioctl.c"
->=20
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> 
+> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 > ---
->  fs/ioctl.c             | 4 ++--
->  include/linux/falloc.h | 7 +++++--
->  2 files changed, 7 insertions(+), 4 deletions(-)
->=20
-> diff --git a/fs/ioctl.c b/fs/ioctl.c
-> index 455ad38c8610..2f5e4e5b97e1 100644
-> --- a/fs/ioctl.c
-> +++ b/fs/ioctl.c
-> @@ -495,7 +495,7 @@ int ioctl_preallocate(struct file *filp, int mode, vo=
-id __user *argp)
->  /* on ia32 l_start is on a 32-bit boundary */
->  #if defined CONFIG_COMPAT && defined(CONFIG_X86_64)
->  /* just account for different alignment */
-> -int compat_ioctl_preallocate(struct file *file,
-> +int compat_ioctl_preallocate(struct file *file, int mode,
->  				struct space_resv_32 __user *argp)
->  {
->  	struct inode *inode =3D file_inode(file);
-> @@ -517,7 +517,7 @@ int compat_ioctl_preallocate(struct file *file,
->  		return -EINVAL;
->  	}
-> =20
-> -	return vfs_fallocate(file, FALLOC_FL_KEEP_SIZE, sr.l_start, sr.l_len);
-> +	return vfs_fallocate(file, mode | FALLOC_FL_KEEP_SIZE, sr.l_start, sr.l=
-_len);
->  }
->  #endif
-> =20
-> diff --git a/include/linux/falloc.h b/include/linux/falloc.h
-> index 63c4f0d615bc..ab42b72424f0 100644
-> --- a/include/linux/falloc.h
-> +++ b/include/linux/falloc.h
-> @@ -45,10 +45,13 @@ struct space_resv_32 {
->  	__s32		l_pad[4];	/* reserve area */
->  };
-> =20
-> -#define FS_IOC_RESVSP_32		_IOW ('X', 40, struct space_resv_32)
-> +#define FS_IOC_RESVSP_32	_IOW ('X', 40, struct space_resv_32)
-> +#define FS_IOC_UNRESVSP_32	_IOW ('X', 41, struct space_resv_32)
->  #define FS_IOC_RESVSP64_32	_IOW ('X', 42, struct space_resv_32)
-> +#define FS_IOC_UNRESVSP64_32	_IOW ('X', 43, struct space_resv_32)
-> +#define FS_IOC_ZERO_RANGE_32	_IOW ('X', 57, struct space_resv_32)
-> =20
-> -int compat_ioctl_preallocate(struct file *, struct space_resv_32 __user =
-*);
-> +int compat_ioctl_preallocate(struct file *, int mode, struct space_resv_=
-32 __user *);
-> =20
->  #endif
-> =20
-> --=20
-> 2.23.0
->=20
-> --=20
-> Cheers,
-> Stephen Rothwell
->=20
-> diff --cc fs/compat_ioctl.c
-> index 62e530814cef,9ae90d728c0f..000000000000
-> --- a/fs/compat_ioctl.c
-> +++ b/fs/compat_ioctl.c
-> @@@ -1020,51 -165,38 +165,57 @@@ COMPAT_SYSCALL_DEFINE3(ioctl, unsigned=20
->   	case FIONBIO:
->   	case FIOASYNC:
->   	case FIOQSIZE:
-> - 		break;
-> -=20
-> - #if defined(CONFIG_IA64) || defined(CONFIG_X86_64)
-> + 	case FS_IOC_FIEMAP:
-> + 	case FIGETBSZ:
-> + 	case FICLONERANGE:
-> + 	case FIDEDUPERANGE:
-> + 		goto found_handler;
-> + 	/*
-> + 	 * The next group is the stuff handled inside file_ioctl().
-> + 	 * For regular files these never reach ->ioctl(); for
-> + 	 * devices, sockets, etc. they do and one (FIONREAD) is
-> + 	 * even accepted in some cases.  In all those cases
-> + 	 * argument has the same type, so we can handle these
-> + 	 * here, shunting them towards do_vfs_ioctl().
-> + 	 * ->compat_ioctl() will never see any of those.
-> + 	 */
-> + 	/* pointer argument, never actually handled by ->ioctl() */
-> + 	case FIBMAP:
-> + 		goto found_handler;
-> + 	/* handled by some ->ioctl(); always a pointer to int */
-> + 	case FIONREAD:
-> + 		goto found_handler;
-> + 	/* these two get messy on amd64 due to alignment differences */
-> + #if defined(CONFIG_X86_64)
->   	case FS_IOC_RESVSP_32:
->   	case FS_IOC_RESVSP64_32:
->  -		error =3D compat_ioctl_preallocate(f.file, compat_ptr(arg));
->  +		error =3D compat_ioctl_preallocate(f.file, 0, compat_ptr(arg));
->  +		goto out_fput;
->  +	case FS_IOC_UNRESVSP_32:
->  +	case FS_IOC_UNRESVSP64_32:
->  +		error =3D compat_ioctl_preallocate(f.file, FALLOC_FL_PUNCH_HOLE,
->  +				compat_ptr(arg));
->  +		goto out_fput;
->  +	case FS_IOC_ZERO_RANGE_32:
->  +		error =3D compat_ioctl_preallocate(f.file, FALLOC_FL_ZERO_RANGE,
->  +				compat_ptr(arg));
->   		goto out_fput;
->   #else
->   	case FS_IOC_RESVSP:
->   	case FS_IOC_RESVSP64:
->  -		goto found_handler;
->  +		error =3D ioctl_preallocate(f.file, 0, compat_ptr(arg));
->  +		goto out_fput;
->  +	case FS_IOC_UNRESVSP:
->  +	case FS_IOC_UNRESVSP64:
->  +		error =3D ioctl_preallocate(f.file, FALLOC_FL_PUNCH_HOLE,
->  +				compat_ptr(arg));
->  +		goto out_fput;
->  +	case FS_IOC_ZERO_RANGE:
->  +		error =3D ioctl_preallocate(f.file, FALLOC_FL_ZERO_RANGE,
->  +				compat_ptr(arg));
->  +		goto out_fput;
->   #endif
->  =20
-> - 	case FICLONE:
-> - 	case FICLONERANGE:
-> - 	case FIDEDUPERANGE:
-> - 	case FS_IOC_FIEMAP:
-> - 		goto do_ioctl;
-> -=20
-> - 	case FIBMAP:
-> - 	case FIGETBSZ:
-> - 	case FIONREAD:
-> - 		if (S_ISREG(file_inode(f.file)->i_mode))
-> - 			break;
-> - 		/*FALL THROUGH*/
-> -=20
->   	default:
->   		if (f.file->f_op->compat_ioctl) {
->   			error =3D f.file->f_op->compat_ioctl(f.file, cmd, arg);
+>  security/integrity/ima/ima.h                 |  15 +++
+>  security/integrity/ima/ima_asymmetric_keys.c | 135 ++++++++++++++++++-
+>  2 files changed, 146 insertions(+), 4 deletions(-)
+> 
+> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+> index f06238e41a7c..f86371647707 100644
+> --- a/security/integrity/ima/ima.h
+> +++ b/security/integrity/ima/ima.h
+> @@ -205,6 +205,21 @@ extern const char *const func_tokens[];
+>  
+>  struct modsig;
+>  
+> +#ifdef CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE
+> +/*
+> + * To track keys that need to be measured.
+> + */
+> +struct ima_measure_key_entry {
+> +	struct list_head list;
+> +	void *payload;
+> +	size_t payload_len;
+> +	char *keyring_name;
+> +};
+> +void ima_process_queued_keys_for_measurement(void);
+> +#else
+> +static inline void ima_process_queued_keys_for_measurement(void) {}
+> +#endif /* CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE */
+> +
+>  /* LIM API function definitions */
+>  int ima_get_action(struct inode *inode, const struct cred *cred, u32 secid,
+>  		   int mask, enum ima_hooks func, int *pcr,
+> diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
+> index ca895f9a6504..10deb77b22a0 100644
+> --- a/security/integrity/ima/ima_asymmetric_keys.c
+> +++ b/security/integrity/ima/ima_asymmetric_keys.c
+> @@ -14,12 +14,139 @@
+>  #include <keys/asymmetric-type.h>
+>  #include "ima.h"
+>  
+> +/*
+> + * Flag to indicate whether a key can be processed
+> + * right away or should be queued for processing later.
+> + */
+> +bool ima_process_keys_for_measurement;
+> +
+> +/*
+> + * To synchronize access to the list of keys that need to be measured
+> + */
+> +static DEFINE_MUTEX(ima_measure_keys_mutex);
+> +static LIST_HEAD(ima_measure_keys);
+> +
+> +static void ima_free_measure_key_entry(struct ima_measure_key_entry *entry)
+> +{
+> +	if (entry) {
+> +		kfree(entry->payload);
+> +		kfree(entry->keyring_name);
+> +		kfree(entry);
+> +	}
+> +}
+> +
+> +static struct ima_measure_key_entry *ima_alloc_measure_key_entry(
+> +	struct key *keyring,
+> +	const void *payload, size_t payload_len)
+> +{
+> +	int rc = 0;
+> +	struct ima_measure_key_entry *entry = NULL;
+> +
+> +	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
+> +	if (entry) {
+> +		entry->payload =
+> +			kmemdup(payload, payload_len, GFP_KERNEL);
+> +		entry->keyring_name =
+> +			kstrdup(keyring->description, GFP_KERNEL);
 
---=20
-Cheers,
-Stephen Rothwell
+No need to break up the assignments like this.  Neither line when
+joined is greater than 80 bytes.
 
---Sig_/5_edYof0YP+3JTXH5TkWab8
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> +		entry->payload_len = payload_len;
+> +	}
+> +
+> +	if ((entry == NULL) || (entry->payload == NULL) ||
+> +	    (entry->keyring_name == NULL)) {
+> +		rc = -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	INIT_LIST_HEAD(&entry->list);
+> +	rc = 0;
 
------BEGIN PGP SIGNATURE-----
+"rc" was initialized in the declaration.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3lpacACgkQAVBC80lX
-0Gxefgf/eFC5Ja1WCb8ObxkHw12SrZfMlHLZ3b/7qM0WvkkgUXa4VD6Dxyg5bbzY
-/h2Qpm7WT2lcmEoKn3zujfXc4DHEJlkewLk2MZA4PS522C0mHaTG7joC5OUnNocr
-luluGD/DHU4H96lkrMg5r+q5JYbs6upiuVcFP+1sOA9xgeuqmcx7/IytlDTuBRCK
-dJZj1sm2BnBjZbml/9kdnCXxoD/ZAnX4+rFK4L9rMDPlkXOee+jn+o6xPuz5sl5/
-hY2t/oZ08f8bKnguN471ChdE8YwAiWHN/6oDUBO/6qusdFwZreJfId0H3dhZ8CUG
-Omg3ObpWTZXRZuz0eWieTWN+VA3M6w==
-=bZuD
------END PGP SIGNATURE-----
+> +
+> +out:
+> +	if (rc) {
+> +		ima_free_measure_key_entry(entry);
+> +		entry = NULL;
+> +	}
+> +
+> +	return entry;
+> +}
+> +
+> +bool ima_queue_key_for_measurement(struct key *keyring,
+> +				   const void *payload, size_t payload_len)
+> +{
+> +	bool queued = false;
+> +	struct ima_measure_key_entry *entry = NULL;
 
---Sig_/5_edYof0YP+3JTXH5TkWab8--
+No need to initialize ima_measure_key_entry here, as the first
+statement sets it.
+> +
+> +	entry = ima_alloc_measure_key_entry(keyring, payload, payload_len);
+> +	if (entry) {
+
+If we're ignoring failure to allocate memory, why not just return?
+
+> +		/*
+> +		 * ima_measure_keys_mutex should be taken before checking
+> +		 * ima_process_keys_for_measurement flag to avoid the race
+> +		 * condition between the IMA hook checking this flag and
+> +		 * calling ima_queue_key_for_measurement() to queue
+> +		 * the key and ima_process_queued_keys_for_measurement()
+> +		 * setting this flag.
+> +		 */
+> +		mutex_lock(&ima_measure_keys_mutex);
+> +		if (!ima_process_keys_for_measurement) {
+> +			list_add_tail(&entry->list, &ima_measure_keys);
+> +			queued = true;
+> +		}
+> +		mutex_unlock(&ima_measure_keys_mutex);
+> +
+> +		if (!queued)
+> +			ima_free_measure_key_entry(entry);
+> +	}
+> +
+> +	return queued;
+> +}
+> +
+> +void ima_process_queued_keys_for_measurement(void)
+> +{
+> +	struct ima_measure_key_entry *entry, *tmp;
+> +	LIST_HEAD(temp_ima_measure_keys);
+> +
+> +	if (ima_process_keys_for_measurement)
+> +		return;
+> +
+> +	/*
+> +	 * Any queued keys will be processed now. From here on
+> +	 * keys should be processed right away.
+> +	 */
+> +	ima_process_keys_for_measurement = true;
+> +
+> +	/*
+> +	 * To avoid holding the mutex when processing queued keys,
+> +	 * transfer the queued keys with the mutex held to a temp list,
+> +	 * release the mutex, and then process the queued keys from
+> +	 * the temp list.
+> +	 *
+> +	 * Since ima_process_keys_for_measurement is set to true above,
+> +	 * any new key will be processed immediately and not be queued.
+> +	 */
+> +	INIT_LIST_HEAD(&temp_ima_measure_keys);
+> +	mutex_lock(&ima_measure_keys_mutex);
+> +	list_for_each_entry_safe(entry, tmp, &ima_measure_keys, list) {
+> +		list_move_tail(&entry->list, &temp_ima_measure_keys);
+> +	}
+
+Parenthesis not needed.
+
+> +	mutex_unlock(&ima_measure_keys_mutex);
+> +
+> +	list_for_each_entry_safe(entry, tmp,
+> +				 &temp_ima_measure_keys, list) {
+
+No need to break up this line either.  The joined line is not greater
+than 80 bytes.
+
+> +		process_buffer_measurement(entry->payload,
+> +					   entry->payload_len,
+> +					   entry->keyring_name,
+> +					   KEY_CHECK, 0,
+> +					   entry->keyring_name);
+> +		list_del(&entry->list);
+> +		ima_free_measure_key_entry(entry);
+> +	}
+> +}
+> +
+
