@@ -2,174 +2,193 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9C9C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F6AC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D29222080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 573A92073F
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:05:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g/vCifTP"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="IlLHgJUt";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Z+ZFCbM/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbfLCWEz (ORCPT
+        id S1727588AbfLCWFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:04:55 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39523 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727416AbfLCWEz (ORCPT
+        Tue, 3 Dec 2019 17:05:55 -0500
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:37823 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727416AbfLCWFy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:04:55 -0500
-Received: by mail-pl1-f193.google.com with SMTP id o9so2234623plk.6;
-        Tue, 03 Dec 2019 14:04:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=U0Zdh1W8YT0/olhw1BoU9rQF6IK87SH/WsTNkT7lsS0=;
-        b=g/vCifTPoAWVc8oyZoGmNOfDZRRaIHZEevlL0fkqsv6VtvBAbJGLmdmjrOsB+qDtoP
-         5IIjaNVPnNUavp8IrO5OzPBXz7oD8qkQ3Vz6rhXbVKNT2GHcFziIAAn0Q0ncuHJoV00o
-         4LN4IQgja2CntGjXgvKAr5LwQYiF46cmugwBMqCYg3FsdJOqOxlODuFnDkatgSwuiUbd
-         E1Bv3zHyot6Pwgjo5/4gKhueiVc57ttnXApgQvWo0W7x5EO64ifeBpNwfrp9q/8VR1KF
-         4vEHiC4Ctc5c5v1jdoZWCuCeguU4oJgxBv8OfsYv2LAKiCIjNFNsDwDfjnP7LQF4yISC
-         gcQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=U0Zdh1W8YT0/olhw1BoU9rQF6IK87SH/WsTNkT7lsS0=;
-        b=PjWn9uyAQkwR/i7Ba4OBDbzdXa74zVAr2L7b/04lP0IKyGmTPrQ+gWfZS+ONfJAk9D
-         9FJKYtO/RavMil26tdXVmy37eJEhHGLZBnvZqj0bBzCFr5Rg1uz1I2DziRaPFb1s3gnK
-         To9UHUOtXQkhzEb4PIMBvRxteC+ybTrZEkDhvWeMe+79NNezlICzYHeAXFHtsimapZGn
-         L+ogi3lZHscFzwUQB0ZIG9QOPsJ3o39n9XWGaWx0oJGz6dS71mUP/Nc82IZWR9uqWHoC
-         +ao5tP2MC0qC8m+4Lypx23hxWOjML0Ogt15+gBS9w/bd1mDBp0Fo0edKQTo/3TvomQnz
-         q0nQ==
-X-Gm-Message-State: APjAAAV9N1UfCg0VWzSciYKqW2kKnbc3zuirKbuFEn6VIOoj4xJ+eLO2
-        Adqx7Avjd5bG2/ScAMxc+Qw=
-X-Google-Smtp-Source: APXvYqwH5p1pdvT3ai1jo+LMmmdPT7SPC5sK4b5ZBOokc1cDiEtQrVREoJtQYrcsD0p0AQ4Rb+uUEg==
-X-Received: by 2002:a17:902:59c9:: with SMTP id d9mr180612plj.184.1575410694389;
-        Tue, 03 Dec 2019 14:04:54 -0800 (PST)
-Received: from ?IPv6:2001:4898:d8:1009:24f7:1d2:3fb0:320e? ([2001:4898:80e8:1:b4ee:1d2:3fb0:320e])
-        by smtp.gmail.com with ESMTPSA id i5sm721512pgj.58.2019.12.03.14.04.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Dec 2019 14:04:53 -0800 (PST)
-From:   Shiping Ji <shiping.linux@gmail.com>
-Subject: Re: [PATCH v7 1/2] dt-bindings: edac: arm-dmc520.txt
-To:     Rob Herring <robh@kernel.org>
-Cc:     bp@alien8.de, james.morse@arm.com, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mchehab@kernel.org, linux-edac@vger.kernel.org, sashal@kernel.org,
-        hangl@microsoft.com, lewan@microsoft.com, ruizhao@microsoft.com,
-        scott.branden@broadcom.com, yuqing.shen@broadcom.com,
-        ray.jui@broadcom.com, shji@microsoft.com, wangglei@gmail.com
-References: <f947d821-8e67-dcc7-d753-5b04d099792d@gmail.com>
- <20191121204350.GA26174@bogus>
-Message-ID: <87af6922-41d6-c017-b31b-75eaa2c5551b@gmail.com>
-Date:   Tue, 3 Dec 2019 14:04:53 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 3 Dec 2019 17:05:54 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 67D758BE;
+        Tue,  3 Dec 2019 17:05:53 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Tue, 03 Dec 2019 17:05:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm2; bh=r
+        SaF4yFU03eE8gAMdYbBxKkkiTKHBEsZ6xKHZ1B43B4=; b=IlLHgJUtS+R+dU+Zu
+        6g5WIl/+R+Kj0QqzLmoM+x+1CkPHN21yMaN+wzLM9ldRG7bW+6O50toyJUQGw15M
+        IfL7t73wqB02Lmnuz12lkiC/bMb2BrtsZeo9E+sEmq3Lx5oU2MuZrRXnEffOW7cL
+        moAcvNQx1IYUYs+L87FDVn4BIc8UHqdr4ukREQ4HrwaD7y3QrY4xJGKM2VX8+S3h
+        Eg1QeXHCnf1LxXdHEojmbbYGoZrQMOzL+hbpAxzMrgSoKNJHnTrdsys7IUCSfMnr
+        vTueoEV23mqztCTS5f8DN6/vLuruSDVF24BYcVgPSIPve+uhxOhmNOATf1mIoBgB
+        LYSpQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; bh=rSaF4yFU03eE8gAMdYbBxKkkiTKHBEsZ6xKHZ1B43
+        B4=; b=Z+ZFCbM/KeYc6EEN96Uq50167+wEZnDfdCnM5LgOzOIbRVHnA+Rx5uVzO
+        qoDwlNm/ub8koSJnBzM7eyVb71+MIwItXX3fNjAJRAwuQYXdeKZZ1LPKHn3f3KMN
+        5H8kA+EDoa+a6vB4vp5bCcr5BvN5PXvlA/7Nc0eqWVeoiwm6WMozfoMG/Ith5/fg
+        qzePspewjsH0CnPw+L/pl5Txv0xIq1zgx+1pnPGInnNmFIezY/KVVESyRjOyZ42x
+        l4ygHZUh2gGhiyMclkCIb3NB9qDntq11lZmODoiYFKW7FtpwZWM6oHFPjKN41P1D
+        GI53hKGFg00EunRRjWcn6vdrC6kLg==
+X-ME-Sender: <xms:QNzmXTO44SbmiWxtmmnWtgV-4OQ7XCT-E9BNgiRYAN6Ejzl0Wie-TQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudejjedgudehiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtugfgjgesth
+    ekredttddtjeenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtgho
+    mheqnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepkeefrdekiedrkeelrd
+    dutdejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhen
+    ucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:QNzmXccqAiw6b7_sf7EgX_7L5m1-BRK4Le9mLvyfPREmphvpxlnrDA>
+    <xmx:QNzmXYmFRaUlw0scfLl6t64Ky5Bgn5e1efsqEI_33LngOVhClpCqDQ>
+    <xmx:QNzmXeQsYAIG0k8ak5S6zglBn48Wih0nOuS_JPNHi84v4ixonXwUwA>
+    <xmx:QdzmXVoJDUP2rpXrkj8tVcpJ_0WI108ltahrbUP5Gkcl-_5jaw_jkQ>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D17CB30600BD;
+        Tue,  3 Dec 2019 17:05:51 -0500 (EST)
+Date:   Tue, 3 Dec 2019 23:05:48 +0100
+From:   Greg KH <greg@kroah.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     zhengliang6@huawei.com, stable-commits@vger.kernel.org
+Subject: Re: Patch "f2fs: fix to data block override node segment by mistake"
+ has been added to the 4.19-stable tree
+Message-ID: <20191203220548.GA3430290@kroah.com>
+References: <20191201151520.98C652231B@mail.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20191121204350.GA26174@bogus>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191201151520.98C652231B@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/21/2019 12:43 PM, Rob Herring wrote:
-> On Sun, Nov 17, 2019 at 06:10:43PM -0800, Shiping Ji wrote:
->> This is the device tree bindings for new EDAC driver dmc520_edac.c.
->>
->> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
->> Reviewed-by: James Morse <james.morse@arm.com>
->>
->> ---
->>      Changes in v7:
->>          - Added arm prefix to the interrupt-config property
->>
->> ---
->>  .../devicetree/bindings/edac/arm-dmc520.txt   | 26 +++++++++++++++++++
->>  1 file changed, 26 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/edac/arm-dmc520.txt
->>
->> diff --git a/Documentation/devicetree/bindings/edac/arm-dmc520.txt b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
->> new file mode 100644
->> index 000000000000..476cf8b76f2a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
->> @@ -0,0 +1,26 @@
->> +* ARM DMC-520 EDAC node
->> +
->> +Required properties:
->> +- compatible  : "brcm,dmc-520", "arm,dmc-520".
->> +- reg   : Address range of the DMC-520 registers.
->> +- interrupts  : DMC-520 interrupt numbers. The example below specifies
->> +     two interrupt lines for dram_ecc_errc_int and
->> +     dram_ecc_errd_int.
->> +- arm,interrupt-config : This is an array of interrupt masks. For each of the
->> +     above interrupt line, add one interrupt mask element to
->> +     it. That is, there is a 1:1 mapping from each interrupt
->> +     line to an interrupt mask. An interrupt mask can represent
->> +     multiple interrupts being enabled. Refer to interrupt_control
->> +     register in DMC-520 TRM for interrupt mapping. In the example
->> +     below, the interrupt configuration enables dram_ecc_errc_int
->> +     and dram_ecc_errd_int. And each interrupt is connected to
->> +     a separate interrupt line.
+On Sun, Dec 01, 2019 at 10:15:19AM -0500, Sasha Levin wrote:
+> This is a note to let you know that I've just added the patch titled
 > 
-> Looking at this again, I think I now understand what you are trying to 
-> do. Your mask is just what interrupt line each one is. We have a 
-> standard way of doing this either by using indices of 'interrupts' or 
-> with interrupt-names. The latter probably works best in this case.
+>     f2fs: fix to data block override node segment by mistake
 > 
-> You need to define *all* the interrupt-names:
-> combined
-> ram_ecc_errc
-> ram_ecc_errd
-> dram_ecc_errc
-> dram_ecc_errd
-> failed_access
-> failed_prog
-> link_err
-> temperature_event
-> arch_fsm
-> phy_request
-
-Thanks for interrupt-names suggestion!
-
-We did experiments and it looks cleaner now. In the device tree we define only the interrupts and interrupt-names that are of interest:
-
-dmc0: dmc@200000 {
- compatible = "brcm,dmc-520", "arm,dmc-520";
- reg = <0x200000 0x80000>;
- interrupts = <0x0 0x349 0x4>, <0x0 0x34B 0x4>;
- interrupt-names = "dram_ecc_errc", "dram_ecc_errd";
-};
-
-In the driver code, we maintain an interrupt table with all known interrupts (name, irq, mask, etc.) Upon probing, we go through every known interrupt name and call platform_get_irq_byname(). If any interrupt has been defined then we update the interrupt number in the table.
-
-In isr function we lookup the mask and perform specific logic.
- 
-> I'm not sure if all the '*_oflow' interrupts should be listed too. It 
-> doesn't seem all that useful to get a 2nd interrupt.
-
-No, we do not list them.
-
-> Your node should list all that are hooked up in the h/w, not just the > ones you need for EDAC.
-
-Do you suggest to list all of them in the device tree node? Currently we list only the enabled ones and update the mask accordingly.
-
-Please let us know whether our approach makes sense, we will submit new patch after your confirmation.
- 
-> Rob
+> to the 4.19-stable tree which can be found at:
+>     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 > 
+> The filename of the patch is:
+>      f2fs-fix-to-data-block-override-node-segment-by-mist.patch
+> and it can be found in the queue-4.19 subdirectory.
+> 
+> If you, or anyone else, feels it should not be added to the stable tree,
+> please let <stable@vger.kernel.org> know about it.
+> 
+> 
+> 
+> commit 9db064cac1f087e2f67fcd2b60b33a8047fe4294
+> Author: zhengliang <zhengliang6@huawei.com>
+> Date:   Mon Mar 4 09:32:25 2019 +0800
+> 
+>     f2fs: fix to data block override node segment by mistake
+>     
+>     [ Upstream commit a0770e13c8da83bdb64738c0209ab02dd3cfff8b ]
+>     
+>     v4: Rearrange the previous three versions.
+>     
+>     The following scenario could lead to data block override by mistake.
+>     
+>     TASK A            |  TASK kworker                                            |     TASK B                                            |       TASK C
+>                       |                                                          |                                                       |
+>     open              |                                                          |                                                       |
+>     write             |                                                          |                                                       |
+>     close             |                                                          |                                                       |
+>                       |  f2fs_write_data_pages                                   |                                                       |
+>                       |    f2fs_write_cache_pages                                |                                                       |
+>                       |      f2fs_outplace_write_data                            |                                                       |
+>                       |        f2fs_allocate_data_block (get block in seg S,     |                                                       |
+>                       |                                  S is full, and only     |                                                       |
+>                       |                                  have this valid data    |                                                       |
+>                       |                                  block)                  |                                                       |
+>                       |          allocate_segment                                |                                                       |
+>                       |          locate_dirty_segment (mark S as PRE)            |                                                       |
+>                       |        f2fs_submit_page_write (submit but is not         |                                                       |
+>                       |                                written on dev)           |                                                       |
+>     unlink            |                                                          |                                                       |
+>      iput_final       |                                                          |                                                       |
+>       f2fs_drop_inode |                                                          |                                                       |
+>         f2fs_truncate |                                                          |                                                       |
+>      (not evict)      |                                                          |                                                       |
+>                       |                                                          | write_checkpoint                                      |
+>                       |                                                          |  flush merged bio but not wait file data writeback    |
+>                       |                                                          |  set_prefree_as_free (mark S as FREE)                 |
+>                       |                                                          |                                                       | update NODE/DATA
+>                       |                                                          |                                                       | allocate_segment (select S)
+>                       |     writeback done                                       |                                                       |
+>     
+>     So we need to guarantee io complete before truncate inode in f2fs_drop_inode.
+>     
+>     Reviewed-by: Chao Yu <yuchao0@huawei.com>
+>     Signed-off-by: Zheng Liang <zhengliang6@huawei.com>
+>     Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+>     Signed-off-by: Sasha Levin <sashal@kernel.org>
+> 
+> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> index 7a9cc64f5ca37..b82b7163e0d08 100644
+> --- a/fs/f2fs/super.c
+> +++ b/fs/f2fs/super.c
+> @@ -890,6 +890,10 @@ static int f2fs_drop_inode(struct inode *inode)
+>  			sb_start_intwrite(inode->i_sb);
+>  			f2fs_i_size_write(inode, 0);
+>  
+> +			f2fs_submit_merged_write_cond(F2FS_I_SB(inode),
+> +					inode, NULL, 0, DATA);
+> +			truncate_inode_pages_final(inode->i_mapping);
+> +
+>  			if (F2FS_HAS_BLOCKS(inode))
+>  				f2fs_truncate(inode);
+>  
 
--- 
-Best regards,
-Shiping Ji
+This adds a build warning, which I think implies that this backport is
+not correct:
+
+  CC [M]  fs/f2fs/super.o
+In file included from ./include/uapi/linux/posix_types.h:5,
+                 from ./include/uapi/linux/types.h:14,
+                 from ./include/linux/types.h:6,
+                 from ./include/linux/list.h:5,
+                 from ./include/linux/module.h:9,
+                 from fs/f2fs/super.c:11:
+fs/f2fs/super.c: In function ‘f2fs_drop_inode’:
+./include/linux/stddef.h:8:14: warning: passing argument 3 of ‘f2fs_submit_merged_write_cond’ makes integer from pointer without a cast [-Wint-conversion]
+    8 | #define NULL ((void *)0)
+      |              ^~~~~~~~~~~
+      |              |
+      |              void *
+fs/f2fs/super.c:894:13: note: in expansion of macro ‘NULL’
+  894 |      inode, NULL, 0, DATA);
+      |             ^~~~
+In file included from fs/f2fs/super.c:30:
+fs/f2fs/f2fs.h:3037:32: note: expected ‘nid_t’ {aka ‘unsigned int’} but argument is of type ‘void *’
+ 3037 |     struct inode *inode, nid_t ino, pgoff_t idx,
+      |                          ~~~~~~^~~
+
+I'm going to drop this patch from the 4.19 tree because of this.
+
+thanks,
+
+greg k-h
