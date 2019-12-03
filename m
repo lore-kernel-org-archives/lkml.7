@@ -2,114 +2,189 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD70C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3003C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A8A22073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:13:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KwyB7r+E"
+	by mail.kernel.org (Postfix) with ESMTP id A0666206E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:13:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575367985;
+	bh=wI49/3MX3A5K4KXoKvz8MjUjQ7lmXO+cIlGX8yR3wXs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AG0zbvX7WE4IBwrtsmeuid+mExjy0Mk8HJvc7m1+c17wfSbqVUO4cVMsgATflz2uQ
+	 DG5sxp/DTyCwCNKI2eRmaPcFQfe5F0pXReU3lESjWbC/0CS3p9Zv6A80fB6NFCCxD7
+	 juLGBF1vA6TsirrXxGHM76/YXrtyb5wGrGHZpvBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbfLCKNB (ORCPT
+        id S1726319AbfLCKNE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 05:13:01 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:54022 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725773AbfLCKNA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 05:13:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575367979;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FtLx/oy4d5o//447y5luMsN0TKhrHJ0OoWvKUE0g2sc=;
-        b=KwyB7r+E1TGGqqsR8ZLeTvLuKHSU7XMZcE0n77axe6bjWqU3Rkj2bJzy+/gg850nHqZsrt
-        SME9OxPXH1n3YVB5UBb0/eQo/dP5JSF+aHjh2U/v3C4R6/smo43PyuL2k9fPVtJOVOWV3Z
-        Q514P0D+S8fRIdp5rzFeDZ85JOfNs2M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-243-X5C5DFFTPjWSBlFI11PdpQ-1; Tue, 03 Dec 2019 05:12:56 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 3 Dec 2019 05:13:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59464 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725773AbfLCKNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 05:13:02 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9EF1C8017DF;
-        Tue,  3 Dec 2019 10:12:54 +0000 (UTC)
-Received: from krava (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 04EAF5DA2C;
-        Tue,  3 Dec 2019 10:12:52 +0000 (UTC)
-Date:   Tue, 3 Dec 2019 11:12:52 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 3/3] perf record: adapt affinity to machines with
- #CPUs > 1K
-Message-ID: <20191203101252.GD17468@krava>
-References: <f1e6e809-9e41-e410-57eb-1740512285a1@linux.intel.com>
- <2095b034-bf53-c374-0e34-adc006b00fbb@linux.intel.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 22E5C206DF;
+        Tue,  3 Dec 2019 10:12:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575367981;
+        bh=wI49/3MX3A5K4KXoKvz8MjUjQ7lmXO+cIlGX8yR3wXs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Sc86W9/tccQOqQmYT3saFdznHpCbiKhhZ0lfmhYEUbg7DqCajtQ8cwkT4HGMqsFQg
+         bWcuPJo8EhusJxRV2NfJEIpb5L7QcVt2PMZ3cow5j4BzFTQNSoTVMCEM7NkLJ/834F
+         JUbhMmgAFoB883XHKUkBCUhzsbpQZstw1bHbNfuM=
+Date:   Tue, 3 Dec 2019 10:12:50 +0000
+From:   Will Deacon <will@kernel.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>, wahrenst@gmx.net,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, mbrugger@suse.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        Nicolas Dechense <nicolas.dechesne@linaro.org>
+Subject: Re: [PATCH v6 3/4] arm64: use both ZONE_DMA and ZONE_DMA32
+Message-ID: <20191203101249.GC6815@willie-the-truck>
+References: <20190911182546.17094-1-nsaenzjulienne@suse.de>
+ <20190911182546.17094-4-nsaenzjulienne@suse.de>
+ <CALAqxLVVcsmFrDKLRGRq7GewcW405yTOxG=KR3csVzQ6bXutkA@mail.gmail.com>
+ <CALAqxLUkPNf9JYyt+_VOrxq=Zq03veb1y-7aDx+_Vw+fF9i82A@mail.gmail.com>
+ <CALAqxLW7RTif_NPxFXnxfTm2_ST+6aNmE6X=3v4XsuojKH2mtg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <2095b034-bf53-c374-0e34-adc006b00fbb@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: X5C5DFFTPjWSBlFI11PdpQ-1
-X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
+In-Reply-To: <CALAqxLW7RTif_NPxFXnxfTm2_ST+6aNmE6X=3v4XsuojKH2mtg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 09:58:48AM +0300, Alexey Budankov wrote:
+Hi John,
 
-SNIP
+On Mon, Dec 02, 2019 at 10:03:17PM -0800, John Stultz wrote:
+> Ok, narrowing it down further, it seems its the following bit from the
+> patch:
+> 
+> > @@ -201,13 +212,18 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
+> >         struct memblock_region *reg;
+> >         unsigned long zone_size[MAX_NR_ZONES], zhole_size[MAX_NR_ZONES];
+> >         unsigned long max_dma32 = min;
+> > +       unsigned long max_dma = min;
+> >
+> >         memset(zone_size, 0, sizeof(zone_size));
+> >
+> > -       /* 4GB maximum for 32-bit only capable devices */
+> > +#ifdef CONFIG_ZONE_DMA
+> > +       max_dma = PFN_DOWN(arm64_dma_phys_limit);
+> > +       zone_size[ZONE_DMA] = max_dma - min;
+> > +       max_dma32 = max_dma;
+> > +#endif
+> >  #ifdef CONFIG_ZONE_DMA32
+> >         max_dma32 = PFN_DOWN(arm64_dma32_phys_limit);
+> > -       zone_size[ZONE_DMA32] = max_dma32 - min;
+> > +       zone_size[ZONE_DMA32] = max_dma32 - max_dma;
+> >  #endif
+> >         zone_size[ZONE_NORMAL] = max - max_dma32;
+> >
+> > @@ -219,11 +235,17 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
+> >
+> >                 if (start >= max)
+> >                         continue;
+> > -
+> > +#ifdef CONFIG_ZONE_DMA
+> > +               if (start < max_dma) {
+> > +                       unsigned long dma_end = min_not_zero(end, max_dma);
+> > +                       zhole_size[ZONE_DMA] -= dma_end - start;
+> > +               }
+> > +#endif
+> >  #ifdef CONFIG_ZONE_DMA32
+> >                 if (start < max_dma32) {
+> > -                       unsigned long dma_end = min(end, max_dma32);
+> > -                       zhole_size[ZONE_DMA32] -= dma_end - start;
+> > +                       unsigned long dma32_end = min(end, max_dma32);
+> > +                       unsigned long dma32_start = max(start, max_dma);
+> > +                       zhole_size[ZONE_DMA32] -= dma32_end - dma32_start;
+> >                 }
+> >  #endif
+> >                 if (end > max_dma32) {
+> 
+> The zhole_sizes end up being:
+> zhole_size: DMA: 67671, DMA32: 1145664 NORMAL: 0
+> 
+> This seems to be due to dma32_start being calculated as 786432 each
+> time - I'm guessing that's the max_dma value.
+> Where dma32_end is around 548800, but changes each iteration (so we
+> end up subtracting a negative value each pass, growing the size).
 
-> =20
-> -static void build_node_mask(int node, cpu_set_t *mask)
-> +static void build_node_mask(int node, struct mmap_cpu_mask *mask)
->  {
->  =09int c, cpu, nr_cpus;
->  =09const struct perf_cpu_map *cpu_map =3D NULL;
-> @@ -240,17 +242,23 @@ static void build_node_mask(int node, cpu_set_t *ma=
-sk)
->  =09for (c =3D 0; c < nr_cpus; c++) {
->  =09=09cpu =3D cpu_map->map[c]; /* map c index to online cpu index */
->  =09=09if (cpu__get_node(cpu) =3D=3D node)
-> -=09=09=09CPU_SET(cpu, mask);
-> +=09=09=09set_bit(cpu, mask->bits);
->  =09}
->  }
-> =20
-> -static void perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap=
-_params *mp)
-> +static int perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_=
-params *mp)
->  {
-> -=09CPU_ZERO(&map->affinity_mask);
-> +=09map->affinity_mask.nbits =3D cpu__max_cpu();
-> +=09map->affinity_mask.bits =3D bitmap_alloc(map->affinity_mask.nbits);
-> +=09if (!map->affinity_mask.bits)
-> +=09=09return -1;
+Yeah, this logic looks utterly buggered to me so I'm surprised that nobody
+else has seen the problem. In particlar, kernelci is reporting success
+on the same SoC :/
 
-hum, this one should be also behind (rec->opts.affinity !=3D PERF_AFFINITY_=
-SYS)
-condition, right? sry I haven't noticed that before..
+https://kernelci.org/boot/sdm845-db845c/
 
-other than that it looks all good
+The logs also don't seem to match up with the trees either. For example,
+looking at the boot logs for:
 
-thanks,
-jirka
+https://kernelci.org/boot/id/5de5fc60b1ed6e2d46960f08/
 
+It claims that the kernel is "next-2019-12-30" but the dmesg says:
+
+[    0.000000] Linux version 5.4.0 (KernelCI@b19b74fe311d) (gcc version
+8.3.0 (Debian 8.3.0-2)) #1 SMP PREEMPT Tue Dec 3 03:14:07 UTC 2019
+
+Which isn't great.
+
+Anyway, I've had a go at fixing it below but it's 100% untested. I think
+the issue is that your SoC has memblocks contained entirely within the
+ZONE_DMA region and we don't cater for that at all when processing the
+ZONE_DMA32 region.
+
+Will
+
+--->8
+
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index be9481cdf3b9..af365ce59ed6 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -242,19 +242,19 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
+ 		if (start < max_dma) {
+ 			unsigned long dma_end = min_not_zero(end, max_dma);
+ 			zhole_size[ZONE_DMA] -= dma_end - start;
++			start = dma_end;
+ 		}
+ #endif
+ #ifdef CONFIG_ZONE_DMA32
+-		if (start < max_dma32) {
++		if (start >= max_dma && start < max_dma32) {
+ 			unsigned long dma32_end = min(end, max_dma32);
+-			unsigned long dma32_start = max(start, max_dma);
+-			zhole_size[ZONE_DMA32] -= dma32_end - dma32_start;
++			zhole_size[ZONE_DMA32] -= dma32_end - start;
++			start = dma32_end;
+ 		}
+ #endif
+-		if (end > max_dma32) {
++		if (start >= max_dma32) {
+ 			unsigned long normal_end = min(end, max);
+-			unsigned long normal_start = max(start, max_dma32);
+-			zhole_size[ZONE_NORMAL] -= normal_end - normal_start;
++			zhole_size[ZONE_NORMAL] -= normal_end - start;
+ 		}
+ 	}
+ 
