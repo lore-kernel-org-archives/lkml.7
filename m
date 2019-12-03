@@ -2,153 +2,321 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D0B6C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7364BC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FD412084B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 327D62064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:12:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414752;
-	bh=3F2pxH644GYrnzt6iwQEkQ9qYogZ/qu94MAd/ic4aOE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0nnUG5QwXPiCKmgZ2edS3AxJw01tF+u0e9HjwO8B8UAzg1M7pO9qtyLJUA8m/k0hR
-	 K24OLwwj5Kj6zrdXkuffLDcFULTOXhFuSrNuIYhdReKnGaDlixQwUT5WfZePsRFbxj
-	 fvsl8amO6wxSPsfy19QQ7AlGjzN1JonCAnyScjp4=
+	s=default; t=1575414760;
+	bh=7M5ESWkYNflS2w6yTXBnSQ9sBjeRey8mJyzIc2GQCV4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZT7PLsexn0PiAT9fEQLUSehUHKuLqmKmjVC6XucgtzrE5DbPvS2BTHot4IyRSxS2g
+	 jJIHYwggpjFO0FzxQsPLCulK/dscScXYStrnWNHbJM8vJ+jbC9hQaKI58mJQryVOJ7
+	 OyMuT5ZBGyuKT+YXOdCu7j+/SpXwuTCtB+sXiWv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbfLCWjp (ORCPT
+        id S1728786AbfLCXMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:39:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50320 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728276AbfLCWjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:39:43 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94F532080F;
-        Tue,  3 Dec 2019 22:39:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412782;
-        bh=3F2pxH644GYrnzt6iwQEkQ9qYogZ/qu94MAd/ic4aOE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QGNbUESnnXu5+/wOYhH3+rHcCjdWDhh5/XPzPiCaU9q3r9v7EnUeUI+bPI44y+a44
-         XEoD7fBw22XZKnv4QO09PCblnDkNKOHh+mVKzxtBcATPUP1cT2XonHR9bG4AHIhUTa
-         qjpTLx+D9yGeYQ0l9or+7rkNKORhNX3R0davLUcI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marian Mihailescu <mihailescu2m@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 015/135] clk: samsung: exynos542x: Move G3D subsystem clocks to its sub-CMU
-Date:   Tue,  3 Dec 2019 23:34:15 +0100
-Message-Id: <20191203213008.333510326@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
-References: <20191203213005.828543156@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 3 Dec 2019 18:12:38 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33194 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727790AbfLCXMg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 18:12:36 -0500
+Received: by mail-ot1-f66.google.com with SMTP id d17so4639345otc.0;
+        Tue, 03 Dec 2019 15:12:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oDMPLgsxr46HrAbwjG546rWXXeRB/PKKtf3plvWYvp4=;
+        b=F7lv5vdXadV2UN9LhAT8fdP5kKq2s/DbtB1FpmiU0Qqm/beWhHc/X3UZfj0RUKuFL7
+         T7Fmd8J9jZ5hvUERi1cjDmgEDQrU65QvYE3Jk0nw5ckbHGgc2Q04opr+RlZ2X1Wmgdlz
+         3Y2v5cxDh+G/m5Q3RbtvCYzw8i6PGQ4P0myh1otrfvMZZfJ4ybruRPRjunohJ0Kl/yZk
+         8mMjr0oNwZwB+qQVhaFRl9PkFrVqZEv+MfrlBKjTer+1j5EUoVNed8O35jhrby9QzYrs
+         3ZyLT2Hs1XIazZa41STX0OVl+ODXmGyXksz6u9l3sRkUCH6NZOJJbaQTBcJJYqjpMvJY
+         KwnA==
+X-Gm-Message-State: APjAAAXjVaXpTWKIhSuJwdH8QGEejez6HeWTGcS8m3CDKUbG5oCb1gzO
+        vPD/Q5GSjVqWt0WJhcF5UmcaSHs=
+X-Google-Smtp-Source: APXvYqwpX018yWiQXsgwOgSjNyL0jWFUAAOPgzIxPfuGjJQiYIPLQJHICmzBiFzpvvv/tsztaDDLOQ==
+X-Received: by 2002:a9d:1ea9:: with SMTP id n38mr310885otn.38.1575414754937;
+        Tue, 03 Dec 2019 15:12:34 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h24sm1088851otn.29.2019.12.03.15.12.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2019 15:12:34 -0800 (PST)
+Date:   Tue, 3 Dec 2019 17:12:33 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     linux-leds@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH 1/2] dt-bindings: leds: Convert common LED binding to
+ schema
+Message-ID: <20191203231233.GA24738@bogus>
+References: <20191119194623.23854-1-robh@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191119194623.23854-1-robh@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+On Tue, Nov 19, 2019 at 01:46:22PM -0600, Rob Herring wrote:
+> Convert the common LEDs properties bindings to a schema. As trigger source
+> providers are different nodes, we need to split trigger source properties
+> to a separate file.
+> 
+> Bindings for LED controllers can reference the common schema for the LED
+> child nodes:
+> 
+> patternProperties:
+>   "^led@[0-4]":
+>     type: object
+>     allOf:
+>       - $ref: common.yaml#
+> 
+> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Dan Murphy <dmurphy@ti.com>
+> Cc: linux-leds@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/leds/common.txt       | 174 +------------
+>  .../devicetree/bindings/leds/common.yaml      | 228 ++++++++++++++++++
+>  .../bindings/leds/trigger-source.yaml         |  24 ++
+>  3 files changed, 253 insertions(+), 173 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/leds/common.yaml
+>  create mode 100644 Documentation/devicetree/bindings/leds/trigger-source.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> index 9fa6f9795d50..26d770ef3601 100644
+> --- a/Documentation/devicetree/bindings/leds/common.txt
+> +++ b/Documentation/devicetree/bindings/leds/common.txt
+> @@ -1,173 +1 @@
+> -* Common leds properties.
+> -
+> -LED and flash LED devices provide the same basic functionality as current
+> -regulators, but extended with LED and flash LED specific features like
+> -blinking patterns, flash timeout, flash faults and external flash strobe mode.
+> -
+> -Many LED devices expose more than one current output that can be connected
+> -to one or more discrete LED component. Since the arrangement of connections
+> -can influence the way of the LED device initialization, the LED components
+> -have to be tightly coupled with the LED device binding. They are represented
+> -by child nodes of the parent LED device binding.
+> -
+> -
+> -Optional properties for child nodes:
+> -- led-sources : List of device current outputs the LED is connected to. The
+> -		outputs are identified by the numbers that must be defined
+> -		in the LED device binding documentation.
+> -
+> -- function: LED functon. Use one of the LED_FUNCTION_* prefixed definitions
+> -	    from the header include/dt-bindings/leds/common.h.
+> -	    If there is no matching LED_FUNCTION available, add a new one.
+> -
+> -- color : Color of the LED. Use one of the LED_COLOR_ID_* prefixed definitions
+> -	  from the header include/dt-bindings/leds/common.h.
+> -	  If there is no matching LED_COLOR_ID available, add a new one.
+> -
+> -- function-enumerator: Integer to be used when more than one instance
+> -                       of the same function is needed, differing only with
+> -		       an ordinal number.
+> -
+> -- label : The label for this LED. If omitted, the label is taken from the node
+> -	  name (excluding the unit address). It has to uniquely identify
+> -	  a device, i.e. no other LED class device can be assigned the same
+> -	  label. This property is deprecated - use 'function' and 'color'
+> -	  properties instead. function-enumerator has no effect when this
+> -	  property is present.
+> -
+> -- default-state : The initial state of the LED. Valid values are "on", "off",
+> -  and "keep". If the LED is already on or off and the default-state property is
+> -  set the to same value, then no glitch should be produced where the LED
+> -  momentarily turns off (or on). The "keep" setting will keep the LED at
+> -  whatever its current state is, without producing a glitch.  The default is
+> -  off if this property is not present.
+> -
+> -- linux,default-trigger :  This parameter, if present, is a
+> -    string defining the trigger assigned to the LED.  Current triggers are:
+> -     "backlight" - LED will act as a back-light, controlled by the framebuffer
+> -		   system
+> -     "default-on" - LED will turn on (but for leds-gpio see "default-state"
+> -		    property in Documentation/devicetree/bindings/leds/leds-gpio.txt)
+> -     "heartbeat" - LED "double" flashes at a load average based rate
+> -     "disk-activity" - LED indicates disk activity
+> -     "ide-disk" - LED indicates IDE disk activity (deprecated),
+> -                  in new implementations use "disk-activity"
+> -     "timer" - LED flashes at a fixed, configurable rate
+> -     "pattern" - LED alters the brightness for the specified duration with one
+> -                 software timer (requires "led-pattern" property)
+> -
+> -- led-pattern : Array of integers with default pattern for certain triggers.
+> -                Each trigger may parse this property differently:
+> -                - one-shot : two numbers specifying delay on and delay off (in ms),
+> -                - timer : two numbers specifying delay on and delay off (in ms),
+> -                - pattern : the pattern is given by a series of tuples, of
+> -                  brightness and duration (in ms).  The exact format is
+> -                  described in:
+> -                  Documentation/devicetree/bindings/leds/leds-trigger-pattern.txt
+> -
+> -
+> -- led-max-microamp : Maximum LED supply current in microamperes. This property
+> -                     can be made mandatory for the board configurations
+> -                     introducing a risk of hardware damage in case an excessive
+> -                     current is set.
+> -                     For flash LED controllers with configurable current this
+> -                     property is mandatory for the LEDs in the non-flash modes
+> -                     (e.g. torch or indicator).
+> -
+> -- panic-indicator : This property specifies that the LED should be used,
+> -		    if at all possible, as a panic indicator.
+> -
+> -- trigger-sources : List of devices which should be used as a source triggering
+> -		    this LED activity. Some LEDs can be related to a specific
+> -		    device and should somehow indicate its state. E.g. USB 2.0
+> -		    LED may react to device(s) in a USB 2.0 port(s).
+> -		    Another common example is switch or router with multiple
+> -		    Ethernet ports each of them having its own LED assigned
+> -		    (assuming they are not hardwired). In such cases this
+> -		    property should contain phandle(s) of related source
+> -		    device(s).
+> -		    In many cases LED can be related to more than one device
+> -		    (e.g. one USB LED vs. multiple USB ports). Each source
+> -		    should be represented by a node in the device tree and be
+> -		    referenced by a phandle and a set of phandle arguments. A
+> -		    length of arguments should be specified by the
+> -		    #trigger-source-cells property in the source node.
+> -
+> -Required properties for flash LED child nodes:
+> -- flash-max-microamp : Maximum flash LED supply current in microamperes.
+> -- flash-max-timeout-us : Maximum timeout in microseconds after which the flash
+> -                         LED is turned off.
+> -
+> -For controllers that have no configurable current the flash-max-microamp
+> -property can be omitted.
+> -For controllers that have no configurable timeout the flash-max-timeout-us
+> -property can be omitted.
+> -
+> -* Trigger source providers
+> -
+> -Each trigger source should be represented by a device tree node. It may be e.g.
+> -a USB port or an Ethernet device.
+> -
+> -Required properties for trigger source:
+> -- #trigger-source-cells : Number of cells in a source trigger. Typically 0 for
+> -			  nodes of simple trigger sources (e.g. a specific USB
+> -			  port).
+> -
+> -* Examples
+> -
+> -#include <dt-bindings/leds/common.h>
+> -
+> -led-controller@0 {
+> -	compatible = "gpio-leds";
+> -
+> -	led0 {
+> -		function = LED_FUNCTION_STATUS;
+> -		linux,default-trigger = "heartbeat";
+> -		gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
+> -	};
+> -
+> -	led1 {
+> -		function = LED_FUNCTION_USB;
+> -		gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
+> -		trigger-sources = <&ohci_port1>, <&ehci_port1>;
+> -	};
+> -};
+> -
+> -led-controller@0 {
+> -	compatible = "maxim,max77693-led";
+> -
+> -	led {
+> -		function = LED_FUNCTION_FLASH;
+> -		color = <LED_COLOR_ID_WHITE>;
+> -		led-sources = <0>, <1>;
+> -		led-max-microamp = <50000>;
+> -		flash-max-microamp = <320000>;
+> -		flash-max-timeout-us = <500000>;
+> -	};
+> -};
+> -
+> -led-controller@30 {
+> -        compatible = "panasonic,an30259a";
+> -        reg = <0x30>;
+> -        #address-cells = <1>;
+> -        #size-cells = <0>;
+> -
+> -        led@1 {
+> -		reg = <1>;
+> -		linux,default-trigger = "heartbeat";
+> -		function = LED_FUNCTION_INDICATOR;
+> -		function-enumerator = <1>;
+> -        };
+> -
+> -        led@2 {
+> -		reg = <2>;
+> -		function = LED_FUNCTION_INDICATOR;
+> -		function-enumerator = <2>;
+> -        };
+> -
+> -        led@3 {
+> -		reg = <3>;
+> -		function = LED_FUNCTION_INDICATOR;
+> -		function-enumerator = <3>;
+> -        };
+> -};
+> +This file has moved to ./common.yaml.
+> diff --git a/Documentation/devicetree/bindings/leds/common.yaml b/Documentation/devicetree/bindings/leds/common.yaml
+> new file mode 100644
+> index 000000000000..16f0983277c8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/common.yaml
+> @@ -0,0 +1,228 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/common.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Common leds properties
+> +
+> +maintainers:
+> +  - Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> +  - Pavel Machek <pavel@ucw.cz>
+> +
+> +description:
+> +  LED and flash LED devices provide the same basic functionality as current
+> +  regulators, but extended with LED and flash LED specific features like
+> +  blinking patterns, flash timeout, flash faults and external flash strobe mode.
+> +
+> +  Many LED devices expose more than one current output that can be connected
+> +  to one or more discrete LED component. Since the arrangement of connections
+> +  can influence the way of the LED device initialization, the LED components
+> +  have to be tightly coupled with the LED device binding. They are represented
+> +  by child nodes of the parent LED device binding.
+> +
+> +properties:
+> +  led-sources:
+> +    description:
+> +      List of device current outputs the LED is connected to. The outputs are
+> +      identified by the numbers that must be defined in the LED device binding
+> +      documentation.
+> +    $ref: /schemas/types.yaml#definitions/uint32-array
+> +
+> +  function:
+> +    description:
+> +      LED functon. Use one of the LED_FUNCTION_* prefixed definitions from the
 
-[ Upstream commit c9f7567aff31348a3dcf54845f7e389f5df0c0c1 ]
+I noticed there's a typo in function that I copied over.
 
-G3D clocks require special handling of their parent bus clock during power
-domain on/off sequences. Those clocks were not initially added to the
-sub-CMU handler, because that time there was no open-source driver for the
-G3D (MALI Panfrost) hardware module and it was not possible to test it.
-
-This patch fixes this issue. Parent clock for G3D hardware block is now
-properly preserved during G3D power domain on/off sequence. This restores
-proper MALI Panfrost performance broken by commit 8686764fc071
-("ARM: dts: exynos: Add G3D power domain to Exynos542x").
-
-Reported-by: Marian Mihailescu <mihailescu2m@gmail.com>
-Fixes: b06a532bf1fa ("clk: samsung: Add Exynos5 sub-CMU clock driver")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Tested-by: Marian Mihailescu <mihailescu2m@gmail.com>
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/clk/samsung/clk-exynos5420.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index 7670cc596c742..dfa862d55246e 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -1172,8 +1172,6 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
- 	GATE(CLK_SCLK_ISP_SENSOR2, "sclk_isp_sensor2", "dout_isp_sensor2",
- 			GATE_TOP_SCLK_ISP, 12, CLK_SET_RATE_PARENT, 0),
- 
--	GATE(CLK_G3D, "g3d", "mout_user_aclk_g3d", GATE_IP_G3D, 9, 0, 0),
--
- 	/* CDREX */
- 	GATE(CLK_CLKM_PHY0, "clkm_phy0", "dout_sclk_cdrex",
- 			GATE_BUS_CDREX0, 0, 0, 0),
-@@ -1248,6 +1246,15 @@ static struct exynos5_subcmu_reg_dump exynos5x_gsc_suspend_regs[] = {
- 	{ DIV2_RATIO0, 0, 0x30 },	/* DIV dout_gscl_blk_300 */
- };
- 
-+static const struct samsung_gate_clock exynos5x_g3d_gate_clks[] __initconst = {
-+	GATE(CLK_G3D, "g3d", "mout_user_aclk_g3d", GATE_IP_G3D, 9, 0, 0),
-+};
-+
-+static struct exynos5_subcmu_reg_dump exynos5x_g3d_suspend_regs[] = {
-+	{ GATE_IP_G3D, 0x3ff, 0x3ff },	/* G3D gates */
-+	{ SRC_TOP5, 0, BIT(16) },	/* MUX mout_user_aclk_g3d */
-+};
-+
- static const struct samsung_div_clock exynos5x_mfc_div_clks[] __initconst = {
- 	DIV(0, "dout_mfc_blk", "mout_user_aclk333", DIV4_RATIO, 0, 2),
- };
-@@ -1320,6 +1327,14 @@ static const struct exynos5_subcmu_info exynos5x_gsc_subcmu = {
- 	.pd_name	= "GSC",
- };
- 
-+static const struct exynos5_subcmu_info exynos5x_g3d_subcmu = {
-+	.gate_clks	= exynos5x_g3d_gate_clks,
-+	.nr_gate_clks	= ARRAY_SIZE(exynos5x_g3d_gate_clks),
-+	.suspend_regs	= exynos5x_g3d_suspend_regs,
-+	.nr_suspend_regs = ARRAY_SIZE(exynos5x_g3d_suspend_regs),
-+	.pd_name	= "G3D",
-+};
-+
- static const struct exynos5_subcmu_info exynos5x_mfc_subcmu = {
- 	.div_clks	= exynos5x_mfc_div_clks,
- 	.nr_div_clks	= ARRAY_SIZE(exynos5x_mfc_div_clks),
-@@ -1351,6 +1366,7 @@ static const struct exynos5_subcmu_info exynos5800_mau_subcmu = {
- static const struct exynos5_subcmu_info *exynos5x_subcmus[] = {
- 	&exynos5x_disp_subcmu,
- 	&exynos5x_gsc_subcmu,
-+	&exynos5x_g3d_subcmu,
- 	&exynos5x_mfc_subcmu,
- 	&exynos5x_mscl_subcmu,
- };
-@@ -1358,6 +1374,7 @@ static const struct exynos5_subcmu_info *exynos5x_subcmus[] = {
- static const struct exynos5_subcmu_info *exynos5800_subcmus[] = {
- 	&exynos5x_disp_subcmu,
- 	&exynos5x_gsc_subcmu,
-+	&exynos5x_g3d_subcmu,
- 	&exynos5x_mfc_subcmu,
- 	&exynos5x_mscl_subcmu,
- 	&exynos5800_mau_subcmu,
--- 
-2.20.1
-
-
-
+Rob
