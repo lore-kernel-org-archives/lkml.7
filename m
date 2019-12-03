@@ -2,239 +2,159 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A125AC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 21:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF4FC43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 21:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60A4120833
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 21:10:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575407426;
-	bh=ltNmdxqxIGQe567NNfWixTfumigBYkWFwYoof3pYTG4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Fp4BOpJKJUNr8QNc9nDQTCWicXhGoQa5TVFhGEXRW8jG0vxH2XffBLRvVf1x50wj5
-	 hBMcY/8yyOiOlPHRzZpZuC3DJoFWFSeIm50yDcnFCXCwPrM9QyPxnnf6WBF0Tyix/+
-	 to0A5/oj0jSIEgenjLCHxB2FAmBLgtMc4aabDEIE=
+	by mail.kernel.org (Postfix) with ESMTP id 5CDDB205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 21:15:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfLCVKZ (ORCPT
+        id S1727520AbfLCVPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 16:10:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36638 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727389AbfLCVKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 16:10:25 -0500
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A7182080F;
-        Tue,  3 Dec 2019 21:10:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575407423;
-        bh=ltNmdxqxIGQe567NNfWixTfumigBYkWFwYoof3pYTG4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=kOoCqR6IHK7rRI4mucojzzczxQkwAVJAEtEXvL51ZJUVZm4OSgYVjI5k/+bvvL4E0
-         gJtxD/2teSIHv2WU3o5+QAvRuKpblLdOnytNmgvlGbtp9aVjpX+xpT+IXuEvgRtqVT
-         7rTHZTGq9jXTyJr1D0KlBaTDQ0Xufxi8ghAEL0Nw=
-Received: by mail-qk1-f178.google.com with SMTP id b8so4987263qkk.5;
-        Tue, 03 Dec 2019 13:10:23 -0800 (PST)
-X-Gm-Message-State: APjAAAW8p2d/Eubpq3ES//DJWwiwBSGJ25xfgobje/NqrdKHiZrAsLZc
-        8vMZ5CGXEpZkNldNY5KArFH5JFjW/sqM2JYN/w==
-X-Google-Smtp-Source: APXvYqw5cCekrl51lmCvDx3bZf7/WQkwHN4Nu6Wg11wZ3dcrVOu37slUMyUnbyfnyiyLiqi6uJJGahX5n61MjLh6dXg=
-X-Received: by 2002:ae9:f205:: with SMTP id m5mr7603140qkg.152.1575407422450;
- Tue, 03 Dec 2019 13:10:22 -0800 (PST)
+        Tue, 3 Dec 2019 16:15:52 -0500
+Received: from heinz.dinsnail.net ([81.169.187.250]:39488 "EHLO
+        heinz.dinsnail.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727430AbfLCVPw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 16:15:52 -0500
+Received: from heinz.dinsnail.net ([IPv6:0:0:0:0:0:0:0:1])
+        by heinz.dinsnail.net (8.15.2/8.15.2) with ESMTP id xB3LFE9k024551;
+        Tue, 3 Dec 2019 22:15:14 +0100
+Received: from eldalonde.UUCP (uucp@localhost)
+        by heinz.dinsnail.net (8.15.2/8.15.2/Submit) with bsmtp id xB3LFC7s024550;
+        Tue, 3 Dec 2019 22:15:12 +0100
+Received: from eldalonde.weiser.dinsnail.net (localhost [IPv6:0:0:0:0:0:0:0:1])
+        by eldalonde.weiser.dinsnail.net (8.15.2/8.15.2) with ESMTP id xB3LBk9Q000553;
+        Tue, 3 Dec 2019 22:11:46 +0100
+Received: (from michael@localhost)
+        by eldalonde.weiser.dinsnail.net (8.15.2/8.15.2/Submit) id xB3LBkLW000552;
+        Tue, 3 Dec 2019 22:11:46 +0100
+Date:   Tue, 3 Dec 2019 22:11:46 +0100
+From:   Michael Weiser <michael@weiser.dinsnail.net>
+To:     Dave Young <dyoung@redhat.com>
+Cc:     linux-efi@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>, x86@kernel.org,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: kexec_file overwrites reserved EFI ESRT memory
+Message-ID: <20191203211146.GA536@weiser.dinsnail.net>
+References: <20191122180552.GA32104@weiser.dinsnail.net>
+ <87blt3y949.fsf@x220.int.ebiederm.org>
+ <20191122210702.GE32104@weiser.dinsnail.net>
+ <20191125055201.GA6569@dhcp-128-65.nay.redhat.com>
+ <20191129152700.GA8286@weiser.dinsnail.net>
+ <20191202085829.GA15808@dhcp-128-65.nay.redhat.com>
+ <20191202090520.GA15874@dhcp-128-65.nay.redhat.com>
+ <20191202234541.GA27567@weiser.dinsnail.net>
+ <20191203115435.GA2606@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-References: <20191201150015.GC18573@shao2-debian> <CAGETcx9r0u=-WSnQ2ZS1KmZSVQqKwvpnhO-w41=jk8iF6BdALA@mail.gmail.com>
- <7e13b7f9-6c0f-0ab5-a6f9-5fb9b41257c9@gmail.com> <CAGETcx_PeYi-j+=0QOQR9c=_4n4becziS8WKKi77bXuNY1hufQ@mail.gmail.com>
-In-Reply-To: <CAGETcx_PeYi-j+=0QOQR9c=_4n4becziS8WKKi77bXuNY1hufQ@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 3 Dec 2019 15:10:11 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKBuCfCvFwbUQwTQxYAR1WL5r5Mnm_RBhHgH0b7_Bkg6w@mail.gmail.com>
-Message-ID: <CAL_JsqKBuCfCvFwbUQwTQxYAR1WL5r5Mnm_RBhHgH0b7_Bkg6w@mail.gmail.com>
-Subject: Re: 5e6669387e ("of/platform: Pause/resume sync state during init
- .."): [ 3.192726] WARNING: CPU: 1 PID: 1 at drivers/base/core.c:688 device_links_supplier_sync_state_resume
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        LKP <lkp@lists.01.org>, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191203115435.GA2606@dhcp-128-65.nay.redhat.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-dinsnail-net-MailScanner-Information: Please contact the ISP for more information
+X-dinsnail-net-MailScanner-ID: xB3LFE9k024551
+X-dinsnail-net-MailScanner: Found to be clean
+X-dinsnail-net-MailScanner-From: michael@weiser.dinsnail.net
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 2:05 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Tue, Dec 3, 2019 at 1:01 AM Frank Rowand <frowand.list@gmail.com> wrote:
-> >
-> > On 12/2/19 3:19 PM, Saravana Kannan wrote:
-> > > On Sun, Dec 1, 2019 at 7:00 AM kernel test robot <lkp@intel.com> wrote:
-> > >>
-> > >> Greetings,
-> > >>
-> > >> 0day kernel testing robot got the below dmesg and the first bad commit is
-> > >>
-> > >> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > >>
-> > >> commit 5e6669387e2287f25f09fd0abd279dae104cfa7e
-> > >> Author:     Saravana Kannan <saravanak@google.com>
-> > >> AuthorDate: Wed Sep 4 14:11:24 2019 -0700
-> > >> Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > >> CommitDate: Fri Oct 4 17:30:19 2019 +0200
-> > >>
-> > >>     of/platform: Pause/resume sync state during init and of_platform_populate()
-> > >>
-> > >>     When all the top level devices are populated from DT during kernel
-> > >>     init, the supplier devices could be added and probed before the
-> > >>     consumer devices are added and linked to the suppliers. To avoid the
-> > >>     sync_state() callback from being called prematurely, pause the
-> > >>     sync_state() callbacks before populating the devices and resume them
-> > >>     at late_initcall_sync().
-> > >>
-> > >>     Similarly, when children devices are populated from a module using
-> > >>     of_platform_populate(), there could be supplier-consumer dependencies
-> > >>     between the children devices that are populated. To avoid the same
-> > >>     problem with sync_state() being called prematurely, pause and resume
-> > >>     sync_state() callbacks across of_platform_populate().
-> > >>
-> > >>     Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > >>     Link: https://lore.kernel.org/r/20190904211126.47518-6-saravanak@google.com
-> > >>     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > >>
-> > >> fc5a251d0f  driver core: Add sync_state driver/bus callback
-> > >> 5e6669387e  of/platform: Pause/resume sync state during init and of_platform_populate()
-> > >> 81b6b96475  Merge branch 'master' of git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux; tag 'dma-mapping-5.5' of git://git.infradead.org/users/hch/dma-mapping
-> > >> +-------------------------------------------------------------------------+------------+------------+------------+
-> > >> |                                                                         | fc5a251d0f | 5e6669387e | 81b6b96475 |
-> > >> +-------------------------------------------------------------------------+------------+------------+------------+
-> > >> | boot_successes                                                          | 30         | 0          | 0          |
-> > >> | boot_failures                                                           | 1          | 11         | 22         |
-> > >> | Oops:#[##]                                                              | 1          |            |            |
-> > >> | EIP:unmap_vmas                                                          | 1          |            |            |
-> > >> | PANIC:double_fault                                                      | 1          |            |            |
-> > >> | Kernel_panic-not_syncing:Fatal_exception                                | 1          |            |            |
-> > >> | WARNING:at_drivers/base/core.c:#device_links_supplier_sync_state_resume | 0          | 11         | 22         |
-> > >> | EIP:device_links_supplier_sync_state_resume                             | 0          | 11         | 22         |
-> > >> +-------------------------------------------------------------------------+------------+------------+------------+
-> > >>
-> > >> If you fix the issue, kindly add following tag
-> > >> Reported-by: kernel test robot <lkp@intel.com>
-> > >>
-> > >> [    3.186107] OF: /testcase-data/phandle-tests/consumer-b: #phandle-cells = 2 found -1
-> > >> [    3.188595] platform testcase-data:testcase-device2: IRQ index 0 not found
-> > >> [    3.191047] ### dt-test ### end of unittest - 199 passed, 0 failed
-> > >> [    3.191932] ------------[ cut here ]------------
-> > >> [    3.192571] Unmatched sync_state pause/resume!
-> > >> [    3.192726] WARNING: CPU: 1 PID: 1 at drivers/base/core.c:688 device_links_supplier_sync_state_resume+0x27/0xc0
-> > >> [    3.195084] Modules linked in:
-> > >> [    3.195494] CPU: 1 PID: 1 Comm: swapper/0 Tainted: G                T 5.4.0-rc1-00005-g5e6669387e228 #1
-> > >> [    3.196674] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
-> > >> [    3.197693] EIP: device_links_supplier_sync_state_resume+0x27/0xc0
-> > >> [    3.198680] Code: 00 00 00 3e 8d 74 26 00 57 56 31 d2 53 b8 a0 d0 d9 c1 e8 6c b6 38 00 a1 e4 d0 d9 c1 85 c0 75 13 68 84 ba c4 c1 e8 29 30 b1 ff <0f> 0b 58 eb 7f 8d 74 26 00 83 e8 01 85 c0 a3 e4 d0 d9 c1 75 6f 8b
-> > >> [    3.201560] EAX: 00000022 EBX: 00000000 ECX: 00000000 EDX: 00000000
-> > >> [    3.202466] ESI: 000001ab EDI: c02c7f80 EBP: c1e87d27 ESP: c02c7f20
-> > >> [    3.203301] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00010282
-> > >> [    3.204258] CR0: 80050033 CR2: bfa1bf98 CR3: 01f28000 CR4: 00140690
-> > >> [    3.205022] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
-> > >> [    3.205919] DR6: fffe0ff0 DR7: 00000400
-> > >> [    3.206529] Call Trace:
-> > >> [    3.207011]  ? of_platform_sync_state_init+0x13/0x16
-> > >> [    3.207719]  ? do_one_initcall+0xda/0x260
-> > >> [    3.208247]  ? kernel_init_freeable+0x110/0x197
-> > >> [    3.208906]  ? rest_init+0x120/0x120
-> > >> [    3.209369]  ? kernel_init+0xa/0x100
-> > >> [    3.209775]  ? ret_from_fork+0x19/0x24
-> > >> [    3.210283] ---[ end trace 81d0f2d2ee65199b ]---
-> > >> [    3.210955] ALSA device list:
-> > >
-> > > Rob/Frank,
-> > >
-> > > This seems to be an issue with the unit test code not properly
-> > > cleaning up the state after it's done.
-> > >
-> > > Specifically, unittest_data_add() setting up of_root on systems where
-> > > there's no device tree (of_root == NULL). It doesn't clean up of_root
-> > > after the tests are done. This affects the of_have_populated_dt() API
-> > > that in turn affects calls to
-> > > device_links_supplier_sync_state_pause/resume(). I think unittests
-> > > shouldn't affect the of_have_populated_dt() API.
-> > There are at least a couple of reasons why the unittest devicetree data
-> > needs to remain after the point where devicetree unittests currently
-> > complete.  So cleaning up (removing the data) is not an option.
-> >
-> > I depend on the unittest devicetree entries still existing after the system
-> > boots and I can log into a shell for some validation of the final result of
-> > the devicetree data.
->
-> IMHO unittests shouldn't have a residual impact on the system after
-> they are done. So, I'll agree to disagree on this one.
+Hi Dave,
 
-They shouldn't be enabled in a production system either. Why would you
-want the extra boot time?
+On Tue, Dec 03, 2019 at 07:54:35PM +0800, Dave Young wrote:
 
-> > There is also a desire for the devicetree unittests to be able to be loaded
-> > as a module.  That work is not yet scheduled, but I do not want to preclude
-> > the possibility.  If unittests are loaded from a module then they will
-> > need some devicetree data to exist that is created in early boot.  That
-> > data will be in the devicetree when of_platform_sync_state_init() is
-> > invoked.
->
-> On a normal system, FDT is parsed and of_root is set (or not set) very
-> early on during setup_arch() before any of the initcall levels are
-> run. The return value of of_have_populated_dt() isn't expected to
-> change across initcall levels. But because of the way the unittest is
-> written (the of_root is changed at late_initcall() level) the return
-> value of of_have_populated_dt() changes across initcall levels. I
-> think that's a real problem with the unittest -- it's breaking API
-> semantics.
+> > Neither adding add_efi_memmap nor adding your patch and setting that option
+> > does make the ESRT memory region appear in /proc/iomem. kexec_file still
+> > loads the kernel across the ESRT region.
+> Hmm, sorry, my bad, actuall add_efi_memmap does not consider the
+> EFI_MEMORY_RUNTIME attribute, it only reads the memory descriptor types.
 
-I think what's really desired here is a 'Am I booting using DT' call.
+> Will read your replied information later, did not get time today, but
+> probably below chunk can help?
 
-> of_have_populated_dt() is being used to check if DT is present in the
-> system and different things are done based on that. We can't have that
-> value change across initcall levels.
->
-> Couple of thoughts:
-> 1. Don't run unit test if there is no live DT in the system?
+> diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+> index 3b9fd679cea9..516307617621 100644
+> --- a/arch/x86/platform/efi/quirks.c
+> +++ b/arch/x86/platform/efi/quirks.c
+> @@ -293,6 +293,8 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+>  	early_memunmap(new, new_size);
 
-That's pretty much the only case I do run. I use UML to run the tests.
+>  	efi_memmap_install(new_phys, num_entries);
+> +	e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
+> +	e820__update_table(e820_table);
+>  }
 
-> 2. If you don't want to do (1), then at least set up the unit test
-> data during setup_arch() instead of doing it at some initcall level?
+>  /*
 
-That further breaks making it a module. The plan is also to move to
-kunit which probably will preclude some hacky hook into setup_arch().
-Side effects may need to be fixed for kunit though.
+Yes, that did it:
 
-> 3. Can you use overlays for the unit tests if they are loaded as a module?
+00000000-00000fff : Reserved
+00001000-0009efff : System RAM
+0009f000-000fffff : Reserved
+  000a0000-000bffff : PCI Bus 0000:00
+  000e0000-000e3fff : PCI Bus 0000:00
+  000e4000-000e7fff : PCI Bus 0000:00
+  000e8000-000ebfff : PCI Bus 0000:00
+  000ec000-000effff : PCI Bus 0000:00
+  000f0000-000fffff : PCI Bus 0000:00
+    000f0000-000fffff : System ROM
+00100000-74dd1fff : System RAM
+  65000000-6affffff : Crash kernel
+74dd2000-74dd2fff : Reserved                   <----- ESRT
+74dd3000-763f5fff : System RAM
+763f6000-79974fff : Reserved
+79975000-799f1fff : ACPI Tables
+799f2000-79aa6fff : ACPI Non-volatile Storage
+  79a17000-79a17fff : USBC000:00
 
-That was the idea, yes.
+[    0.001381] esrt: Reserving ESRT space from 0x0000000074dd2f98 to 0x0000000074dd2fd0.
+[    0.001382] memblock_reserve: [0x0000000074dd2f98-0x0000000074dd2fcf] efi_mem_reserve+0x1d/0x2b
+[    0.001383] memblock_reserve: [0x000000000009e640-0x000000000009efcf] memblock_alloc_range_nid+0x93/0xfa
+[    0.001384] e820: update [mem 0x74dd2000-0x74dd2fff] usable ==> reserved
+[...]
+[    0.043610] PM: Registered nosave memory: [mem 0x00000000-0x00000fff]
+[    0.043611] memblock_alloc_try_nid: 32 bytes align=0x40 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 __register_nosave_region+0x6b/0xca
+[    0.043612] memblock_reserve: [0x000000047dff95c0-0x000000047dff95df] memblock_alloc_range_nid+0x93/0xfa
+[    0.043613] PM: Registered nosave memory: [mem 0x0009f000-0x000fffff]
+[    0.043615] memblock_alloc_try_nid: 32 bytes align=0x40 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 __register_nosave_region+0x6b/0xca
+[    0.043616] memblock_reserve: [0x000000047dff9580-0x000000047dff959f] memblock_alloc_range_nid+0x93/0xfa
+[    0.043617] PM: Registered nosave memory: [mem 0x74dd2000-0x74dd2fff]       <---- ESRT
+[    0.043618] memblock_alloc_try_nid: 32 bytes align=0x40 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 __register_nosave_region+0x6b/0xca
+[    0.043619] memblock_reserve: [0x000000047dff9540-0x000000047dff955f] memblock_alloc_range_nid+0x93/0xfa
+[    0.043620] PM: Registered nosave memory: [mem 0x763f6000-0x79974fff]
+[    0.043620] PM: Registered nosave memory: [mem 0x79975000-0x799f1fff]
+[    0.043621] PM: Registered nosave memory: [mem 0x799f2000-0x79aa6fff]
+[    0.043621] PM: Registered nosave memory: [mem 0x79aa7000-0x7a40dfff]
+[...]
+[    5.993928] PCI: pci_cache_line_size set to 64 bytes
+[    5.994563] e820: reserve RAM buffer [mem 0x0009f000-0x0009ffff]
+[    5.994565] e820: reserve RAM buffer [mem 0x74dd2000-0x77ffffff]            <----- ESRT
+[    5.994565] e820: reserve RAM buffer [mem 0x763f6000-0x77ffffff]
+[    5.994566] e820: reserve RAM buffer [mem 0x7a40f000-0x7bffffff]
+[    5.994567] e820: reserve RAM buffer [mem 0x47e000000-0x47fffffff]
+[    5.995513] acpi PNP0C14:02: duplicate WMI GUID 05901221-D566-11D1-B2F0-00A0C9062910 (first instance was on PNP0C14:01)
+[    5.995549] acpi PNP0C14:03: duplicate WMI GUID 05901221-D566-11D1-B2F0-00A0C9062910 (first instance was on PNP0C14:01)
+[...]
+[   86.508053] kexec-bzImage64: Loaded purgatory at 0x98000
+[   86.508056] kexec_file: Considering 0x1000-0x9efff
+[   86.508057] kexec-bzImage64: Loaded boot_param, command line and misc at 0x96000 bufsz=0x1240 memsz=0x1240
+[   86.508057] kexec_file: Considering 0x100000-0x74dd1fff
+[   86.508058] kexec-bzImage64: Loaded 64bit kernel at 0x72000000 bufsz=0x1140888 memsz=0x24b7000
+[   86.508058] kexec-bzImage64: Final command line is: 
+[   86.584668] kexec_file: Loading segment 0: buf=0x00000000d5ec82bc bufsz=0x5000 mem=0x98000 memsz=0x6000
+[   86.584672] kexec_file: Loading segment 1: buf=0x00000000af539c69 bufsz=0x1240 mem=0x96000 memsz=0x2000
+[   86.584674] kexec_file: Loading segment 2: buf=0x0000000029f9b9a8 bufsz=0x1140888 mem=0x72000000 memsz=0x24b7000           <---- not ESRT :)
 
-
-4. Make running the unittests a command line option instead of running
-if enabled. Still has side effects, but you have to explicitly run it.
-
-A module would still be my preference. If only there was someone
-interested in making everything a module... ;)
-
-> > > I was looking into writing a unittest patch to fix this, but I don't
-> > > know enough about the FDT parsing code to make sure I don't leak any
-> > > memory or free stuff that's in use. I'm not sure I can simply set
-> > > of_root = NULL if it was NULL before the unittest started. Let me know
-> > > how I should proceed or if you plan to write up a patch for this.
-> >
-> > Based on the above, "clean up" of the unittest data is not the solution.
-> >
-> > I haven't looked at the mechanism in device_links_supplier_sync_state_resume()
-> > that leads to the WARN yet.  But is does not seem reasonable for that code
-> > to be so sensitive to what valid data is in the devicetree that a WARN results.
->
-> Sure, I could easily fix it to work around this. But this seems to be
-> a genuine problem with the unittest setup IMO.
->
-> -Saravana
+And no more invalid version error message from the kexec'd kernel.
+-- 
+Thanks,
+Michael
