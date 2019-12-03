@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDE2C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B8D6C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB1F320863
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63D87217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413789;
-	bh=HtPp8zOK5oiK3coHwNOGOpHkANIkVBWdeaQA0EEL6+w=;
+	s=default; t=1575413794;
+	bh=Z8aICHbrIM347DJ5/MBMdz5RRjHh6rlblcjp0EeSyYs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u1BNcGlr6N+rjznT97CZjdvvDXItgeeJndw7ejg8fLranxjhfTIGCxdh63VAWc48R
-	 wnHifUGyo7FTiRbmx/TV1Zj+6/DJF8lPVUdxizy6/zF9S/Kpv7BI2MPSl9TJJNMhBW
-	 VdQkYXFi+aKNGru/nQo3aL2Aji8eobVLQ0FLSfGA=
+	b=h5yoXoA+XN5tlqTlWYbt3L9Iq9ALFEGopeRAdTu5jk4tYdeX5imVyY8TgzU5UZzzG
+	 xHvswBWPwpSoffQXoSiYFjeijLpQYW1yJoQECjP6+j21G0i5+92Ao1Sr6jtFjb3UdH
+	 ti1euJaV0wF2dUdWID0HKfTa1+LhLBsCrMhSvMFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730437AbfLCW42 (ORCPT
+        id S1730444AbfLCW4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:56:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51468 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:56:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730428AbfLCW40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:56:26 -0500
+        id S1730434AbfLCW42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:56:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16891214AF;
-        Tue,  3 Dec 2019 22:56:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B505520866;
+        Tue,  3 Dec 2019 22:56:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413785;
-        bh=HtPp8zOK5oiK3coHwNOGOpHkANIkVBWdeaQA0EEL6+w=;
+        s=default; t=1575413788;
+        bh=Z8aICHbrIM347DJ5/MBMdz5RRjHh6rlblcjp0EeSyYs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=outDsUzGTYMv0XytU2Cd2TEzdY5+wKzm4IiH8qTjQ7d5jNXrZU8RW1+eVWl+tagHl
-         IUPizMQtdd6mWAKybJWeg/RWYT953hsWn9rGAFpiG91M1Em1efpsUrvceqxTer6Dsd
-         N+PRLkEECUATgKVKveNW+pVpoSWSwylepvGoGZIY=
+        b=1CEQIKwYK3eOc16aO7G2BlbA0DK3N8Ea1bo8P2ukMElPkMFRe0sN1YCEIRv5m7kNM
+         MiT/E4m8ytrxvZT++2i0hsVpiIO16hKmOmjnltwq8/bkionWHHJoD0eaH+niD6PNHE
+         q+vJR6Ti2Y0MH0YMpWTP8Ze5HGaHLOl+ULGNzCmU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian Luo <luojian5@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 254/321] scsi: libsas: Check SMP PHY control function result
-Date:   Tue,  3 Dec 2019 23:35:20 +0100
-Message-Id: <20191203223440.349454536@linuxfoundation.org>
+Subject: [PATCH 4.19 263/321] mm, gup: add missing refcount overflow checks on s390
+Date:   Tue,  3 Dec 2019 23:35:29 +0100
+Message-Id: <20191203223440.811248012@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,48 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Vlastimil Babka <vbabka@suse.cz>
 
-[ Upstream commit 01929a65dfa13e18d89264ab1378854a91857e59 ]
+The mainline commit 8fde12ca79af ("mm: prevent get_user_pages() from
+overflowing page refcount") was backported to 4.19.y stable as commit
+d972ebbf42ba. The backport however missed that in 4.19, there are several
+arch-specific gup.c versions with fast gup implementations, so these do not
+prevent refcount overflow.
 
-Currently the SMP PHY control execution result is checked, however the
-function result for the command is not.
+This stable-only commit fixes the s390 version, and is based on the backport in
+SUSE SLES/openSUSE 4.12-based kernels.
 
-As such, we may be missing all potential errors, like SMP FUNCTION FAILED,
-INVALID REQUEST FRAME LENGTH, etc., meaning the PHY control request has
-failed.
+The remaining architectures with own gup.c are sparc, mips, sh. It's unlikely
+the known overflow scenario based on FUSE, which needs 140GB of RAM, is a
+problem for those architectures, and I don't feel confident enough to patch
+them.
 
-In some scenarios we need to ensure the function result is accepted, so add
-a check for this.
-
-Tested-by: Jian Luo <luojian5@huawei.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libsas/sas_expander.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/s390/mm/gup.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
-index f9d4a24c14b5a..3e74fe9257617 100644
---- a/drivers/scsi/libsas/sas_expander.c
-+++ b/drivers/scsi/libsas/sas_expander.c
-@@ -614,7 +614,14 @@ int sas_smp_phy_control(struct domain_device *dev, int phy_id,
- 	}
+diff --git a/arch/s390/mm/gup.c b/arch/s390/mm/gup.c
+index 2809d11c7a283..9b5b866d8adf1 100644
+--- a/arch/s390/mm/gup.c
++++ b/arch/s390/mm/gup.c
+@@ -39,7 +39,8 @@ static inline int gup_pte_range(pmd_t *pmdp, pmd_t pmd, unsigned long addr,
+ 		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
+ 		page = pte_page(pte);
+ 		head = compound_head(page);
+-		if (!page_cache_get_speculative(head))
++		if (unlikely(WARN_ON_ONCE(page_ref_count(head) < 0)
++		    || !page_cache_get_speculative(head)))
+ 			return 0;
+ 		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
+ 			put_page(head);
+@@ -77,7 +78,8 @@ static inline int gup_huge_pmd(pmd_t *pmdp, pmd_t pmd, unsigned long addr,
+ 		refs++;
+ 	} while (addr += PAGE_SIZE, addr != end);
  
- 	res = smp_execute_task(dev, pc_req, PC_REQ_SIZE, pc_resp,PC_RESP_SIZE);
--
-+	if (res) {
-+		pr_err("ex %016llx phy%02d PHY control failed: %d\n",
-+		       SAS_ADDR(dev->sas_addr), phy_id, res);
-+	} else if (pc_resp[2] != SMP_RESP_FUNC_ACC) {
-+		pr_err("ex %016llx phy%02d PHY control failed: function result 0x%x\n",
-+		       SAS_ADDR(dev->sas_addr), phy_id, pc_resp[2]);
-+		res = pc_resp[2];
-+	}
- 	kfree(pc_resp);
- 	kfree(pc_req);
- 	return res;
+-	if (!page_cache_add_speculative(head, refs)) {
++	if (unlikely(WARN_ON_ONCE(page_ref_count(head) < 0)
++	    || !page_cache_add_speculative(head, refs))) {
+ 		*nr -= refs;
+ 		return 0;
+ 	}
+@@ -151,7 +153,8 @@ static int gup_huge_pud(pud_t *pudp, pud_t pud, unsigned long addr,
+ 		refs++;
+ 	} while (addr += PAGE_SIZE, addr != end);
+ 
+-	if (!page_cache_add_speculative(head, refs)) {
++	if (unlikely(WARN_ON_ONCE(page_ref_count(head) < 0)
++	    || !page_cache_add_speculative(head, refs))) {
+ 		*nr -= refs;
+ 		return 0;
+ 	}
 -- 
 2.20.1
 
