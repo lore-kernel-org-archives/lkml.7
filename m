@@ -2,110 +2,135 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A104C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7604EC43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:58:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79249206E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56F29206E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:58:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfLCG57 (ORCPT
+        id S1727388AbfLCG6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 01:57:59 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41169 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727351AbfLCG57 (ORCPT
+        Tue, 3 Dec 2019 01:58:11 -0500
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:48225 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727351AbfLCG6L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 01:57:59 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ic288-0001nC-LO; Tue, 03 Dec 2019 07:57:52 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ic287-0005Qu-Jj; Tue, 03 Dec 2019 07:57:51 +0100
+        Tue, 3 Dec 2019 01:58:11 -0500
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="Ludovic.Desroches@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: EsL320TzSSXEuYAKN7rUavHCfzrytzh3c5AYr8n6uN8LVXRI7hcIGmjw3K5+EpGcXy7UoKZJnB
+ V8s7tIonVXD5nLaJfif12KarPV0dwET3ZpVpAepVMpuVYIEbrC3yxk5/aAK1GKuKYpTxcWs2f5
+ +bxIQscJv3l+dMduJY02hWkW3HXt6oauezXfFkcMiZj2YjAdJjuda4iUffxmbc/ZqOch/z21LB
+ 1NCTWgzdCYxA20vEHeDKPmlBsH0DnShF1bhau5qTmq4YbGKhnBCnkYWmg+qod3grC/in15bmVt
+ X5k=
+X-IronPort-AV: E=Sophos;i="5.69,272,1571727600"; 
+   d="scan'208";a="57585459"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Dec 2019 23:58:06 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 2 Dec 2019 23:58:00 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Mon, 2 Dec 2019 23:58:01 -0700
 Date:   Tue, 3 Dec 2019 07:57:51 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "rjui@broadcom.com" <rjui@broadcom.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "sbranden@broadcom.com" <sbranden@broadcom.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+To:     Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "wsa@the-dreams.de" <wsa@the-dreams.de>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alice Guo <alice.guo@nxp.com>
-Subject: Re: [PATCH 2/2] gpio: bcm-kona: use platform_irq_count
-Message-ID: <20191203065751.w23dypag4745qv7i@pengutronix.de>
-References: <1575352925-17271-1-git-send-email-peng.fan@nxp.com>
- <1575352925-17271-2-git-send-email-peng.fan@nxp.com>
+        "peda@axentia.se" <peda@axentia.se>,
+        "Codrin Ciubotariu - M19940" <Codrin.Ciubotariu@microchip.com>,
+        Nicolas Ferre - M43238 <Nicolas.Ferre@microchip.com>
+Subject: Re: [PATCH 1/3] dt-bindings: i2c: at91: cosmetic formatting of
+ compatible list
+Message-ID: <20191203065751.fgwwko3e63antodb@M43218.corp.atmel.com>
+Mail-Followup-To: Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "wsa@the-dreams.de" <wsa@the-dreams.de>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "peda@axentia.se" <peda@axentia.se>,
+        Codrin Ciubotariu - M19940 <Codrin.Ciubotariu@microchip.com>,
+        Nicolas Ferre - M43238 <Nicolas.Ferre@microchip.com>
+References: <1575276957-5615-1-git-send-email-eugen.hristev@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1575352925-17271-2-git-send-email-peng.fan@nxp.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <1575276957-5615-1-git-send-email-eugen.hristev@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 06:04:27AM +0000, Peng Fan wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+On Mon, Dec 02, 2019 at 09:56:35AM +0100, Eugen Hristev - M18282 wrote:
+> From: Eugen Hristev <eugen.hristev@microchip.com>
 > 
-> Use platform_irq_count to replace of_irq_count
+> Format the list of compatibles with one compatible per line.
 > 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> Suggested-by: Peter Rosin <peda@axentia.se>
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com> 
+
+Thanks
+
 > ---
+>  Documentation/devicetree/bindings/i2c/i2c-at91.txt | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
 > 
-> V1:
->  Code inspection, not tested
-> 
->  drivers/gpio/gpio-bcm-kona.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
-> index 4122683eb1f9..c50721980a7c 100644
-> --- a/drivers/gpio/gpio-bcm-kona.c
-> +++ b/drivers/gpio/gpio-bcm-kona.c
-> @@ -19,7 +19,6 @@
->  #include <linux/io.h>
->  #include <linux/gpio/driver.h>
->  #include <linux/of_device.h>
-> -#include <linux/of_irq.h>
->  #include <linux/init.h>
->  #include <linux/irqdomain.h>
->  #include <linux/irqchip/chained_irq.h>
-> @@ -586,7 +585,7 @@ static int bcm_kona_gpio_probe(struct platform_device *pdev)
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-at91.txt b/Documentation/devicetree/bindings/i2c/i2c-at91.txt
+> index 2210f43..d35cd63 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-at91.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-at91.txt
+> @@ -1,10 +1,16 @@
+>  I2C for Atmel platforms
 >  
->  	kona_gpio->gpio_chip = template_chip;
->  	chip = &kona_gpio->gpio_chip;
-> -	kona_gpio->num_bank = of_irq_count(dev->of_node);
-> +	kona_gpio->num_bank = platform_irq_count(pdev);
-
-of_irq_count returns 0 or a positive int while platform_irq_count might
-return a negative error code. This needs handling. Also I wonder why
-platform_irq_count() is better than of_irq_count() which would be good
-to describe in the commit log.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+>  Required properties :
+> -- compatible : Must be "atmel,at91rm9200-i2c", "atmel,at91sam9261-i2c",
+> -     "atmel,at91sam9260-i2c", "atmel,at91sam9g20-i2c", "atmel,at91sam9g10-i2c",
+> -     "atmel,at91sam9x5-i2c", "atmel,sama5d4-i2c", "atmel,sama5d2-i2c" or
+> -     "microchip,sam9x60-i2c"
+> +- compatible : Must be one of:
+> +	"atmel,at91rm9200-i2c",
+> +	"atmel,at91sam9261-i2c",
+> +	"atmel,at91sam9260-i2c",
+> +	"atmel,at91sam9g20-i2c",
+> +	"atmel,at91sam9g10-i2c",
+> +	"atmel,at91sam9x5-i2c",
+> +	"atmel,sama5d4-i2c",
+> +	"atmel,sama5d2-i2c",
+> +	"microchip,sam9x60-i2c".
+>  - reg: physical base address of the controller and length of memory mapped
+>       region.
+>  - interrupts: interrupt number to the cpu.
+> -- 
+> 2.7.4
+> 
