@@ -2,130 +2,116 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6795CC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AF8C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3546E2073C
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:19:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6D802080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:27:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h7QOH9fK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iqbReJki"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbfLCUTv (ORCPT
+        id S1727309AbfLCU14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 15:19:51 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56103 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726079AbfLCUTv (ORCPT
+        Tue, 3 Dec 2019 15:27:56 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34929 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbfLCU14 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 15:19:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575404390;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vvoBxuvp3G0/XLbvffQRipup1lCyNBJiGiUdnNoPbls=;
-        b=h7QOH9fKDTe8uO3xFTJ2KhQsA2cB/McXPPrqBTcP1ehOQd75gWcC0D0JDfzTEWefqzByjS
-        F5AKsNzJx4ate24mJFyEsBhJetX8KOeRfdlWxfecIqHFNE0VoZYKHvCu3cLTfH4k7q0R1K
-        6BcdOBQOC0zT8DTl0yZi35pV41pS4j4=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-24-aWMtr73wNcenDs-Qh4wH_g-1; Tue, 03 Dec 2019 15:19:48 -0500
-Received: by mail-qv1-f71.google.com with SMTP id a4so2993320qvn.14
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 12:19:48 -0800 (PST)
+        Tue, 3 Dec 2019 15:27:56 -0500
+Received: by mail-wr1-f65.google.com with SMTP id g17so5486113wro.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 12:27:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=QA6N7ZZcbmK8/a59EgCuBTRkEVqdTx5F9l4vgf5SIAE=;
+        b=iqbReJkif4rmiO17LjWyIiQlsRR+YKdoKyUcsImbQoY1qxYlcR/xn7t6ZMP8ZTX5XP
+         YzBl0yEeIeZB5QjWGDiJZiklZ4+CR7rVGQzTX283K/rKsY12MW/sKz00Y5GZG8OrMwyw
+         k/0aMiBkQJt8O17PZ9WcDSw2evEXbqRocbh0o2J2DYASPtpGqWOtMJfT2jf6+bnwPzGM
+         lRUbXZ8NxgzyiOw/i5+brLzjLb/XYkXHMnt5/+Rmn/sWLiF0eywLhHyCm/OpOmuXnoFW
+         L45+wjH7EvtAS58E9x3eZfGNAsiwVvZMtzDO48aj/iz2etcqi1/ezemrHtLb4UNi68o4
+         ts2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QmtzDLYDSTNcDSWhu8MKh0ZRRQ2IxQ2t+dts0IfGnuc=;
-        b=EaiSheX414WcpjobAnJMdMXpeyqojxM+W31GNjknW2Lio3VVv20ARluZ+0KcJzgxjs
-         TMv1lmMHUxzc1lMtEZfi07PE8Jfo4uprrcEib847xdpcPfdlaasmNOmvO6Y/bGTJNXq7
-         +vG+SiillDaWYmIl9XY6xh9nUgMD/B+vq5yQsCmTZRdO4+6EnPFRVbBI5vVwxg9oQYOT
-         fGWRJ0ZyRYZan6DC3gDeurgYdc+dehrrAbC99PN05jCbCqaaFBF3o52C1h80FDDhDPHH
-         SnwtHzobXnJLdQt9TZiXxowVZhVwPEcU8p0mkPo0OpxdrV8/jKWM913Q9c10fJByWwtC
-         yarg==
-X-Gm-Message-State: APjAAAVUggoVS1Ti7QDYdPedi/1RzW9iG+67slAexHr13X4Fcd0FNI0Q
-        1DAlpoF95KAgQkAnQ8Yu+KbkDeVdNw02T+3aQQr/QLnr7mT09XgHoXzqhDhjCefYF3FApr4kH/I
-        /QxYcqevQnMGmz++kjtbnO/FX
-X-Received: by 2002:a05:620a:210e:: with SMTP id l14mr7328301qkl.18.1575404388181;
-        Tue, 03 Dec 2019 12:19:48 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzNAGftONrxG7OOOmA1p2XeS+kBT15c+ObkoyL77kRsuzntoDuyINOMAAxBlSMFnthhkga2lw==
-X-Received: by 2002:a05:620a:210e:: with SMTP id l14mr7328279qkl.18.1575404387958;
-        Tue, 03 Dec 2019 12:19:47 -0800 (PST)
-Received: from redhat.com (bzq-79-181-48-215.red.bezeqint.net. [79.181.48.215])
-        by smtp.gmail.com with ESMTPSA id s44sm2425816qts.22.2019.12.03.12.19.44
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QA6N7ZZcbmK8/a59EgCuBTRkEVqdTx5F9l4vgf5SIAE=;
+        b=ifX8gmVMGge+hYof8/bWWSdeS7KhXzQ/BzufMd4/E457EAdW35JuY4mIVNsPCjcrnL
+         HVXDi4xDISjXKz1yM/lzaR/A9Z9H36iSQKBFj8vcohBMi6pJMN4anP4Vfhslc9NHN06M
+         ZPG4I0nbQxRBHay5sHDUAOhaVi/haP9Q+aFtpZvku5JWM9Bdhv7XdvY2F84h6biI76u0
+         9SKYvBpYq8JWAfxAsG7heHf7xqsiIgCq+voZhZDASbq3vJJpvFzBETqGkjmaQAG7wcDE
+         Dq69zbqZwjeyoJGHqXkQ3KQ2HNf5Qk+aMInzsEYygSOXZHnS2p3CGesmSR0LXYxeEZPQ
+         KFiQ==
+X-Gm-Message-State: APjAAAVGTq/o3qjSDzj1Ze3C6P9R0ew8NLYN8ai6V6qQXJ1bdUU+5UJd
+        +STE7mVxzpbGvGP4TpwU0WnDNoUtTtg=
+X-Google-Smtp-Source: APXvYqz+KBOCFuHHTV6IPNG0FoTL7bVS0hI56S+m6ry55qdXekRfxkSB2xM8yizjKwZNMvQ/1jZzVA==
+X-Received: by 2002:adf:e6cb:: with SMTP id y11mr7396518wrm.345.1575404873554;
+        Tue, 03 Dec 2019 12:27:53 -0800 (PST)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id 5sm5000176wrh.5.2019.12.03.12.27.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 12:19:47 -0800 (PST)
-Date:   Tue, 3 Dec 2019 15:19:42 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     linux-kernel@vger.kernel.org, Julio Faracco <jcfaracco@gmail.com>
-Cc:     netdev@vger.kernel.org, davem@davemloft.net, mst@redhat.com,
-        jasowang@redhat.com, virtualization@lists.linux-foundation.org,
-        dnmendes76@gmail.com
-Subject: [PATCH RFC net-next v8 2/3] mlx4: use new txqueue timeout argument
-Message-ID: <20191203201804.662066-3-mst@redhat.com>
-References: <20191203201804.662066-1-mst@redhat.com>
-MIME-Version: 1.0
-In-Reply-To: <20191203201804.662066-1-mst@redhat.com>
-X-Mailer: git-send-email 2.22.0.678.g13338e74b8
-X-Mutt-Fcc: =sent
-X-MC-Unique: aWMtr73wNcenDs-Qh4wH_g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+        Tue, 03 Dec 2019 12:27:52 -0800 (PST)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
+        ttayar@habana.ai
+Cc:     gregkh@linuxfoundation.org
+Subject: [PATCH] habanalabs: rate limit error msg on waiting for CS
+Date:   Tue,  3 Dec 2019 22:27:50 +0200
+Message-Id: <20191203202750.9498-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+In case a user submits a CS, and the submission fails, and the user doesn't
+check the return value and instead use the error return value as a valid
+sequence number of a CS and ask to wait on it, the driver will print an
+error and return an error code for that wait.
+
+The real problem happens if now the user ignores the error of the wait, and
+try to wait again and again. This can lead to a flood of error messages
+from the driver and even soft lockup event.
+
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
+ drivers/misc/habanalabs/command_submission.c | 5 +++--
+ drivers/misc/habanalabs/context.c            | 2 +-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-changes from v7:
-=09build fix
-
- drivers/net/ethernet/mellanox/mlx4/en_netdev.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx4/en_netdev.c b/drivers/net/e=
-thernet/mellanox/mlx4/en_netdev.c
-index aa348230bd39..2c2ff1f0ea6d 100644
---- a/drivers/net/ethernet/mellanox/mlx4/en_netdev.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/en_netdev.c
-@@ -1367,20 +1367,14 @@ static void mlx4_en_tx_timeout(struct net_device *d=
-ev, unsigned int txqueue)
- {
- =09struct mlx4_en_priv *priv =3D netdev_priv(dev);
- =09struct mlx4_en_dev *mdev =3D priv->mdev;
--=09int i;
-+=09struct mlx4_en_tx_ring *tx_ring =3D priv->tx_ring[TX][txqueue];
-=20
- =09if (netif_msg_timer(priv))
- =09=09en_warn(priv, "Tx timeout called on port:%d\n", priv->port);
-=20
--=09for (i =3D 0; i < priv->tx_ring_num[TX]; i++) {
--=09=09struct mlx4_en_tx_ring *tx_ring =3D priv->tx_ring[TX][i];
--
--=09=09if (!netif_tx_queue_stopped(netdev_get_tx_queue(dev, i)))
--=09=09=09continue;
--=09=09en_warn(priv, "TX timeout on queue: %d, QP: 0x%x, CQ: 0x%x, Cons: 0x=
-%x, Prod: 0x%x\n",
--=09=09=09i, tx_ring->qpn, tx_ring->sp_cqn,
--=09=09=09tx_ring->cons, tx_ring->prod);
--=09}
-+=09en_warn(priv, "TX timeout on queue: %d, QP: 0x%x, CQ: 0x%x, Cons: 0x%x,=
- Prod: 0x%x\n",
-+=09=09txqueue, tx_ring->qpn, tx_ring->sp_cqn,
-+=09=09tx_ring->cons, tx_ring->prod);
-=20
- =09priv->port_stats.tx_timeout++;
- =09en_dbg(DRV, priv, "Scheduling watchdog\n");
---=20
-MST
+diff --git a/drivers/misc/habanalabs/command_submission.c b/drivers/misc/habanalabs/command_submission.c
+index 8850f475a413..0bf08678431b 100644
+--- a/drivers/misc/habanalabs/command_submission.c
++++ b/drivers/misc/habanalabs/command_submission.c
+@@ -824,8 +824,9 @@ int hl_cs_wait_ioctl(struct hl_fpriv *hpriv, void *data)
+ 	memset(args, 0, sizeof(*args));
+ 
+ 	if (rc < 0) {
+-		dev_err(hdev->dev, "Error %ld on waiting for CS handle %llu\n",
+-			rc, seq);
++		dev_err_ratelimited(hdev->dev,
++				"Error %ld on waiting for CS handle %llu\n",
++				rc, seq);
+ 		if (rc == -ERESTARTSYS) {
+ 			args->out.status = HL_WAIT_CS_STATUS_INTERRUPTED;
+ 			rc = -EINTR;
+diff --git a/drivers/misc/habanalabs/context.c b/drivers/misc/habanalabs/context.c
+index 17db7b3dfb4c..2df6fb87e7ff 100644
+--- a/drivers/misc/habanalabs/context.c
++++ b/drivers/misc/habanalabs/context.c
+@@ -176,7 +176,7 @@ struct dma_fence *hl_ctx_get_fence(struct hl_ctx *ctx, u64 seq)
+ 	spin_lock(&ctx->cs_lock);
+ 
+ 	if (seq >= ctx->cs_sequence) {
+-		dev_notice(hdev->dev,
++		dev_notice_ratelimited(hdev->dev,
+ 			"Can't wait on seq %llu because current CS is at seq %llu\n",
+ 			seq, ctx->cs_sequence);
+ 		spin_unlock(&ctx->cs_lock);
+-- 
+2.17.1
 
