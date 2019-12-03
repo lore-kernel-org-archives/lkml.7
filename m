@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9F5C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3553DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E063520656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC7D020656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:04:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414239;
-	bh=TvnrklSzh6sXwmGAPCZ0w0s7Anb3NdKGb5fXdATgkoM=;
+	s=default; t=1575414245;
+	bh=lNfL3J5Jv4t6e3+pymIv4mFUXzovMgP8gXFma0Mw6yI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Czf25KQf9A5j7WnH21AYoyTqPMtFeggTkV2TEx1RPXu9mVVVZ+9pg6a8sLFWHuoFF
-	 tw7W/Vw6UamM3pv2nHxONVFA6frHWuh0unQXeVvUYtmnWCt1cBjwasWcpkfZUY6WKS
-	 QBBWnOH138rX9mhkMUsw4eHiQOWsbsunASno0mw8=
+	b=xtJehURKtaMM/00riaJ25O0+HzFW4f1UD+T2PJ29ordRS+Ep6P/hEJlycfUJfGySm
+	 mATUWMVm7BdoDqIdAMQqzZw0EUlw+FuIx0Ss8zTmM/al7S3dEVMTEG+H0ACsUJ2jLj
+	 G8Kb5fV9qm6t3J/l/dXVDnfTADo5Xbms4CglgIQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730480AbfLCXD5 (ORCPT
+        id S1730011AbfLCWwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:03:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45144 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:52:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729863AbfLCWwZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:52:25 -0500
+        id S1728147AbfLCWwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:52:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA1482084B;
-        Tue,  3 Dec 2019 22:52:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8789D207DD;
+        Tue,  3 Dec 2019 22:52:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413544;
-        bh=TvnrklSzh6sXwmGAPCZ0w0s7Anb3NdKGb5fXdATgkoM=;
+        s=default; t=1575413526;
+        bh=lNfL3J5Jv4t6e3+pymIv4mFUXzovMgP8gXFma0Mw6yI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XPBD3I85oHq/VIaOeoHN959p7yXJ0xuwH2CRxMw2Q6fi+FYk+Nqjul7OBzIwj/1mH
-         JRGYbkAqXE+A+YVO9qMJamUDKqygIi/FALHTLs6aE+131/0/bl1AkLuxcdjQ4P+qzY
-         SP3PJ1uo3sAQDPHd4Z78AOupJq22cAemgR0Uj05c=
+        b=j77gMziwVXlFIE/F8v6wt25QXRyMuA7jUtD6tNfWsxr6n0qBPxJ5YY4UBFb2nltXe
+         9SaRwFNXkRa2pdiUwPpRsoh68RO7YLBErv/WGtmvYzplIraeakZrxxzV1Ym+2oRsN9
+         bCD5AVFFtVZ6UQfITvp8mk39w9UkiX+PcR8d+Vc8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Varun Prakash <varun@chelsio.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 166/321] powerpc/prom: fix early DEBUG messages
-Date:   Tue,  3 Dec 2019 23:33:52 +0100
-Message-Id: <20191203223435.773630998@linuxfoundation.org>
+Subject: [PATCH 4.19 160/321] scsi: csiostor: fix incorrect dma device in case of vport
+Date:   Tue,  3 Dec 2019 23:33:46 +0100
+Message-Id: <20191203223435.465325471@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,53 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Varun Prakash <varun@chelsio.com>
 
-[ Upstream commit b18f0ae92b0a1db565c3e505fa87b6971ad3b641 ]
+[ Upstream commit 9934613edcb40b92a216122876cd3b7e76d08390 ]
 
-This patch fixes early DEBUG messages in prom.c:
-- Use %px instead of %p to see the addresses
-- Cast memblock_phys_mem_size() with (unsigned long long) to
-avoid build failure when phys_addr_t is not 64 bits.
+In case of ->vport_create() call scsi_add_host_with_dma() instead of
+scsi_add_host() to pass correct dma device.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Varun Prakash <varun@chelsio.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/prom.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/scsi/csiostor/csio_init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
-index c4d7078e5295f..8e88f78e57dba 100644
---- a/arch/powerpc/kernel/prom.c
-+++ b/arch/powerpc/kernel/prom.c
-@@ -129,7 +129,7 @@ static void __init move_device_tree(void)
- 		p = __va(memblock_alloc(size, PAGE_SIZE));
- 		memcpy(p, initial_boot_params, size);
- 		initial_boot_params = p;
--		DBG("Moved device tree to 0x%p\n", p);
-+		DBG("Moved device tree to 0x%px\n", p);
- 	}
+diff --git a/drivers/scsi/csiostor/csio_init.c b/drivers/scsi/csiostor/csio_init.c
+index ed2dae657964b..1793981337dd9 100644
+--- a/drivers/scsi/csiostor/csio_init.c
++++ b/drivers/scsi/csiostor/csio_init.c
+@@ -649,7 +649,7 @@ csio_shost_init(struct csio_hw *hw, struct device *dev,
+ 	if (csio_lnode_init(ln, hw, pln))
+ 		goto err_shost_put;
  
- 	DBG("<- move_device_tree\n");
-@@ -689,7 +689,7 @@ void __init early_init_devtree(void *params)
- {
- 	phys_addr_t limit;
+-	if (scsi_add_host(shost, dev))
++	if (scsi_add_host_with_dma(shost, dev, &hw->pdev->dev))
+ 		goto err_lnode_exit;
  
--	DBG(" -> early_init_devtree(%p)\n", params);
-+	DBG(" -> early_init_devtree(%px)\n", params);
- 
- 	/* Too early to BUG_ON(), do it by hand */
- 	if (!early_init_dt_verify(params))
-@@ -749,7 +749,7 @@ void __init early_init_devtree(void *params)
- 	memblock_allow_resize();
- 	memblock_dump_all();
- 
--	DBG("Phys. mem: %llx\n", memblock_phys_mem_size());
-+	DBG("Phys. mem: %llx\n", (unsigned long long)memblock_phys_mem_size());
- 
- 	/* We may need to relocate the flat tree, do it now.
- 	 * FIXME .. and the initrd too? */
+ 	return ln;
 -- 
 2.20.1
 
