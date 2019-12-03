@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4066C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91BA0C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAA3F207DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 641BC20684
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412799;
-	bh=du14ndf91YLkHmlHu5bNi99zWW8kirSW/m0S6cMn+1o=;
+	s=default; t=1575412801;
+	bh=tgTqtjQG6NGfPPv7jrHYBh94wvo1lsYwTXU/+/CmpLE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KUMo8op4jXR8zx7dzKHqDpnc9ZP8Nr0gampsVn+3NQQgX1bzaiA7SPDGiBe/v/FND
-	 +pAI7pdBL2TV6AxLXLif5vRMCGqbVdJae2WX8/jGiURzkxpOxfXjSmlRiqWMwXlje4
-	 viuMzywQfdrYB5CMorZh3JQ6EKakUHmhlsIdJ4NA=
+	b=V5Pi0KQLqwFlx27+uPb61AF3KLRFGZTSggbNiBhA/n4Aj1JrAToafDKRJqNf+e90w
+	 rqgj9F2NW9IwM8+jHf0cSjTGhFNUiYyuAfAkB4WmLjMLaNHvWMUVXZE9+pKLfUR09x
+	 OxAHn/DZPzNXQ6OPSMXju9NgZjBqNKFHyjOlg2uY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728332AbfLCWj6 (ORCPT
+        id S1728341AbfLCWkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:39:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51022 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:40:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727993AbfLCWj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:39:56 -0500
+        id S1728329AbfLCWj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:39:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1292B20684;
-        Tue,  3 Dec 2019 22:39:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A4EC20684;
+        Tue,  3 Dec 2019 22:39:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412794;
-        bh=du14ndf91YLkHmlHu5bNi99zWW8kirSW/m0S6cMn+1o=;
+        s=default; t=1575412797;
+        bh=tgTqtjQG6NGfPPv7jrHYBh94wvo1lsYwTXU/+/CmpLE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FkXfHy69YwvyYm5kRSihmcox1kinXlLMMNTSxws+NGx5oJlCBdn+AHWOs89RkOYbn
-         PKUiMtNx3/DqJlRTv2DkMjIXjHpOT0S844rezshGBuVAIQCpSUSzxktq01LoU7aC6T
-         bRAiZFZDOzEQHy6DvOczuGToImlZSZWUJ9t/zZh8=
+        b=P1yBEB9MMJWGDPGTdJrHKSUvsGgnYfZgp4PeipxFNOzaofdmnlhPTvQJ12dpsoNM4
+         WZ8mq+kGZisbCf44kPD5DuOFVfR3uzjmjtpodAgtNiOAKmwParHnUaBnWRHJv5HyWz
+         cL0hzKNxfTnKF8l3NzPSmTIhPP9NBbDFcVhf5I9E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 002/135] net: separate out the msghdr copy from ___sys_{send,recv}msg()
-Date:   Tue,  3 Dec 2019 23:34:02 +0100
-Message-Id: <20191203213006.151586635@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 020/135] pinctrl: cherryview: Allocate IRQ chip dynamic
+Date:   Tue,  3 Dec 2019 23:34:20 +0100
+Message-Id: <20191203213009.800350907@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -59,247 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 4257c8ca13b084550574b8c9a667d9c90ff746eb ]
+[ Upstream commit 67d33aecd030226f0a577eb683aaa6853ecf8f91 ]
 
-This is in preparation for enabling the io_uring helpers for sendmsg
-and recvmsg to first copy the header for validation before continuing
-with the operation.
+Keeping the IRQ chip definition static shares it with multiple instances
+of the GPIO chip in the system. This is bad and now we get this warning
+from GPIO library:
 
-There should be no functional changes in this patch.
+"detected irqchip that is shared with multiple gpiochips: please fix the driver."
 
-Acked-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Hence, move the IRQ chip definition from being driver static into the struct
+intel_pinctrl. So a unique IRQ chip is used for each GPIO chip instance.
+
+This patch is heavily based on the attachment to the bug by Christoph Marz.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=202543
+Fixes: 6e08d6bbebeb ("pinctrl: Add Intel Cherryview/Braswell pin controller support")
+Depends-on: 83b9dc11312f ("pinctrl: cherryview: Associate IRQ descriptors to irqdomain")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/socket.c | 141 ++++++++++++++++++++++++++++++++++-----------------
- 1 file changed, 95 insertions(+), 46 deletions(-)
+ drivers/pinctrl/intel/pinctrl-cherryview.c | 24 +++++++++++-----------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/net/socket.c b/net/socket.c
-index 6a9ab7a8b1d2c..fbe08d7df7732 100644
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -2232,15 +2232,10 @@ static int copy_msghdr_from_user(struct msghdr *kmsg,
- 	return err < 0 ? err : 0;
+diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
+index 17a248b723b9b..8dfaf8e8c3a09 100644
+--- a/drivers/pinctrl/intel/pinctrl-cherryview.c
++++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
+@@ -147,6 +147,7 @@ struct chv_pin_context {
+  * @pctldesc: Pin controller description
+  * @pctldev: Pointer to the pin controller device
+  * @chip: GPIO chip in this pin controller
++ * @irqchip: IRQ chip in this pin controller
+  * @regs: MMIO registers
+  * @intr_lines: Stores mapping between 16 HW interrupt wires and GPIO
+  *		offset (in GPIO number space)
+@@ -162,6 +163,7 @@ struct chv_pinctrl {
+ 	struct pinctrl_desc pctldesc;
+ 	struct pinctrl_dev *pctldev;
+ 	struct gpio_chip chip;
++	struct irq_chip irqchip;
+ 	void __iomem *regs;
+ 	unsigned intr_lines[16];
+ 	const struct chv_community *community;
+@@ -1466,16 +1468,6 @@ static int chv_gpio_irq_type(struct irq_data *d, unsigned int type)
+ 	return 0;
  }
  
--static int ___sys_sendmsg(struct socket *sock, struct user_msghdr __user *msg,
--			 struct msghdr *msg_sys, unsigned int flags,
--			 struct used_address *used_address,
--			 unsigned int allowed_msghdr_flags)
-+static int ____sys_sendmsg(struct socket *sock, struct msghdr *msg_sys,
-+			   unsigned int flags, struct used_address *used_address,
-+			   unsigned int allowed_msghdr_flags)
+-static struct irq_chip chv_gpio_irqchip = {
+-	.name = "chv-gpio",
+-	.irq_startup = chv_gpio_irq_startup,
+-	.irq_ack = chv_gpio_irq_ack,
+-	.irq_mask = chv_gpio_irq_mask,
+-	.irq_unmask = chv_gpio_irq_unmask,
+-	.irq_set_type = chv_gpio_irq_type,
+-	.flags = IRQCHIP_SKIP_SET_WAKE,
+-};
+-
+ static void chv_gpio_irq_handler(struct irq_desc *desc)
  {
--	struct compat_msghdr __user *msg_compat =
--	    (struct compat_msghdr __user *)msg;
--	struct sockaddr_storage address;
--	struct iovec iovstack[UIO_FASTIOV], *iov = iovstack;
- 	unsigned char ctl[sizeof(struct cmsghdr) + 20]
- 				__aligned(sizeof(__kernel_size_t));
- 	/* 20 is size of ipv6_pktinfo */
-@@ -2248,19 +2243,10 @@ static int ___sys_sendmsg(struct socket *sock, struct user_msghdr __user *msg,
- 	int ctl_len;
- 	ssize_t err;
- 
--	msg_sys->msg_name = &address;
--
--	if (MSG_CMSG_COMPAT & flags)
--		err = get_compat_msghdr(msg_sys, msg_compat, NULL, &iov);
--	else
--		err = copy_msghdr_from_user(msg_sys, msg, NULL, &iov);
--	if (err < 0)
--		return err;
--
- 	err = -ENOBUFS;
- 
- 	if (msg_sys->msg_controllen > INT_MAX)
--		goto out_freeiov;
-+		goto out;
- 	flags |= (msg_sys->msg_flags & allowed_msghdr_flags);
- 	ctl_len = msg_sys->msg_controllen;
- 	if ((MSG_CMSG_COMPAT & flags) && ctl_len) {
-@@ -2268,7 +2254,7 @@ static int ___sys_sendmsg(struct socket *sock, struct user_msghdr __user *msg,
- 		    cmsghdr_from_user_compat_to_kern(msg_sys, sock->sk, ctl,
- 						     sizeof(ctl));
- 		if (err)
--			goto out_freeiov;
-+			goto out;
- 		ctl_buf = msg_sys->msg_control;
- 		ctl_len = msg_sys->msg_controllen;
- 	} else if (ctl_len) {
-@@ -2277,7 +2263,7 @@ static int ___sys_sendmsg(struct socket *sock, struct user_msghdr __user *msg,
- 		if (ctl_len > sizeof(ctl)) {
- 			ctl_buf = sock_kmalloc(sock->sk, ctl_len, GFP_KERNEL);
- 			if (ctl_buf == NULL)
--				goto out_freeiov;
-+				goto out;
+ 	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
+@@ -1615,7 +1607,15 @@ static int chv_gpio_probe(struct chv_pinctrl *pctrl, int irq)
  		}
- 		err = -EFAULT;
- 		/*
-@@ -2323,7 +2309,47 @@ static int ___sys_sendmsg(struct socket *sock, struct user_msghdr __user *msg,
- out_freectl:
- 	if (ctl_buf != ctl)
- 		sock_kfree_s(sock->sk, ctl_buf, ctl_len);
--out_freeiov:
-+out:
-+	return err;
-+}
-+
-+static int sendmsg_copy_msghdr(struct msghdr *msg,
-+			       struct user_msghdr __user *umsg, unsigned flags,
-+			       struct iovec **iov)
-+{
-+	int err;
-+
-+	if (flags & MSG_CMSG_COMPAT) {
-+		struct compat_msghdr __user *msg_compat;
-+
-+		msg_compat = (struct compat_msghdr __user *) umsg;
-+		err = get_compat_msghdr(msg, msg_compat, NULL, iov);
-+	} else {
-+		err = copy_msghdr_from_user(msg, umsg, NULL, iov);
-+	}
-+	if (err < 0)
-+		return err;
-+
-+	return 0;
-+}
-+
-+static int ___sys_sendmsg(struct socket *sock, struct user_msghdr __user *msg,
-+			 struct msghdr *msg_sys, unsigned int flags,
-+			 struct used_address *used_address,
-+			 unsigned int allowed_msghdr_flags)
-+{
-+	struct sockaddr_storage address;
-+	struct iovec iovstack[UIO_FASTIOV], *iov = iovstack;
-+	ssize_t err;
-+
-+	msg_sys->msg_name = &address;
-+
-+	err = sendmsg_copy_msghdr(msg_sys, msg, flags, &iov);
-+	if (err < 0)
-+		return err;
-+
-+	err = ____sys_sendmsg(sock, msg_sys, flags, used_address,
-+				allowed_msghdr_flags);
- 	kfree(iov);
- 	return err;
- }
-@@ -2442,33 +2468,41 @@ SYSCALL_DEFINE4(sendmmsg, int, fd, struct mmsghdr __user *, mmsg,
- 	return __sys_sendmmsg(fd, mmsg, vlen, flags, true);
- }
- 
--static int ___sys_recvmsg(struct socket *sock, struct user_msghdr __user *msg,
--			 struct msghdr *msg_sys, unsigned int flags, int nosec)
-+static int recvmsg_copy_msghdr(struct msghdr *msg,
-+			       struct user_msghdr __user *umsg, unsigned flags,
-+			       struct sockaddr __user **uaddr,
-+			       struct iovec **iov)
- {
--	struct compat_msghdr __user *msg_compat =
--	    (struct compat_msghdr __user *)msg;
--	struct iovec iovstack[UIO_FASTIOV];
--	struct iovec *iov = iovstack;
--	unsigned long cmsg_ptr;
--	int len;
- 	ssize_t err;
- 
--	/* kernel mode address */
--	struct sockaddr_storage addr;
--
--	/* user mode address pointers */
--	struct sockaddr __user *uaddr;
--	int __user *uaddr_len = COMPAT_NAMELEN(msg);
--
--	msg_sys->msg_name = &addr;
-+	if (MSG_CMSG_COMPAT & flags) {
-+		struct compat_msghdr __user *msg_compat;
- 
--	if (MSG_CMSG_COMPAT & flags)
--		err = get_compat_msghdr(msg_sys, msg_compat, &uaddr, &iov);
--	else
--		err = copy_msghdr_from_user(msg_sys, msg, &uaddr, &iov);
-+		msg_compat = (struct compat_msghdr __user *) umsg;
-+		err = get_compat_msghdr(msg, msg_compat, uaddr, iov);
-+	} else {
-+		err = copy_msghdr_from_user(msg, umsg, uaddr, iov);
-+	}
- 	if (err < 0)
- 		return err;
- 
-+	return 0;
-+}
-+
-+static int ____sys_recvmsg(struct socket *sock, struct msghdr *msg_sys,
-+			   struct user_msghdr __user *msg,
-+			   struct sockaddr __user *uaddr,
-+			   unsigned int flags, int nosec)
-+{
-+	struct compat_msghdr __user *msg_compat =
-+					(struct compat_msghdr __user *) msg;
-+	int __user *uaddr_len = COMPAT_NAMELEN(msg);
-+	struct sockaddr_storage addr;
-+	unsigned long cmsg_ptr;
-+	int len;
-+	ssize_t err;
-+
-+	msg_sys->msg_name = &addr;
- 	cmsg_ptr = (unsigned long)msg_sys->msg_control;
- 	msg_sys->msg_flags = flags & (MSG_CMSG_CLOEXEC|MSG_CMSG_COMPAT);
- 
-@@ -2479,7 +2513,7 @@ static int ___sys_recvmsg(struct socket *sock, struct user_msghdr __user *msg,
- 		flags |= MSG_DONTWAIT;
- 	err = (nosec ? sock_recvmsg_nosec : sock_recvmsg)(sock, msg_sys, flags);
- 	if (err < 0)
--		goto out_freeiov;
-+		goto out;
- 	len = err;
- 
- 	if (uaddr != NULL) {
-@@ -2487,12 +2521,12 @@ static int ___sys_recvmsg(struct socket *sock, struct user_msghdr __user *msg,
- 					msg_sys->msg_namelen, uaddr,
- 					uaddr_len);
- 		if (err < 0)
--			goto out_freeiov;
-+			goto out;
  	}
- 	err = __put_user((msg_sys->msg_flags & ~MSG_CMSG_COMPAT),
- 			 COMPAT_FLAGS(msg));
- 	if (err)
--		goto out_freeiov;
-+		goto out;
- 	if (MSG_CMSG_COMPAT & flags)
- 		err = __put_user((unsigned long)msg_sys->msg_control - cmsg_ptr,
- 				 &msg_compat->msg_controllen);
-@@ -2500,10 +2534,25 @@ static int ___sys_recvmsg(struct socket *sock, struct user_msghdr __user *msg,
- 		err = __put_user((unsigned long)msg_sys->msg_control - cmsg_ptr,
- 				 &msg->msg_controllen);
- 	if (err)
--		goto out_freeiov;
-+		goto out;
- 	err = len;
-+out:
-+	return err;
-+}
-+
-+static int ___sys_recvmsg(struct socket *sock, struct user_msghdr __user *msg,
-+			 struct msghdr *msg_sys, unsigned int flags, int nosec)
-+{
-+	struct iovec iovstack[UIO_FASTIOV], *iov = iovstack;
-+	/* user mode address pointers */
-+	struct sockaddr __user *uaddr;
-+	ssize_t err;
-+
-+	err = recvmsg_copy_msghdr(msg_sys, msg, flags, &uaddr, &iov);
-+	if (err < 0)
-+		return err;
  
--out_freeiov:
-+	err = ____sys_recvmsg(sock, msg_sys, msg, uaddr, flags, nosec);
- 	kfree(iov);
- 	return err;
+-	ret = gpiochip_irqchip_add(chip, &chv_gpio_irqchip, 0,
++	pctrl->irqchip.name = "chv-gpio";
++	pctrl->irqchip.irq_startup = chv_gpio_irq_startup;
++	pctrl->irqchip.irq_ack = chv_gpio_irq_ack;
++	pctrl->irqchip.irq_mask = chv_gpio_irq_mask;
++	pctrl->irqchip.irq_unmask = chv_gpio_irq_unmask;
++	pctrl->irqchip.irq_set_type = chv_gpio_irq_type;
++	pctrl->irqchip.flags = IRQCHIP_SKIP_SET_WAKE;
++
++	ret = gpiochip_irqchip_add(chip, &pctrl->irqchip, 0,
+ 				   handle_bad_irq, IRQ_TYPE_NONE);
+ 	if (ret) {
+ 		dev_err(pctrl->dev, "failed to add IRQ chip\n");
+@@ -1632,7 +1632,7 @@ static int chv_gpio_probe(struct chv_pinctrl *pctrl, int irq)
+ 		}
+ 	}
+ 
+-	gpiochip_set_chained_irqchip(chip, &chv_gpio_irqchip, irq,
++	gpiochip_set_chained_irqchip(chip, &pctrl->irqchip, irq,
+ 				     chv_gpio_irq_handler);
+ 	return 0;
  }
 -- 
 2.20.1
