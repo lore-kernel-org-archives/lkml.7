@@ -2,123 +2,129 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A38FC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC0EC43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3A9920659
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:32:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575383538;
-	bh=teoj+pkX+uo820ZTvfymdlQ0pgxY7JClf8CSBm/VZYk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ByZgiGPhHhFo6fNkkMJ5ZKImk0WGUPtA9GTaQ4rico98RRzZGcfZa4OPELV6/iwXf
-	 zCFur7jI0i3DNdGkQ/2wZjjD8ulBFBu8In6F0AvaUvE9y6SITVzk5D6fZf1wz/1Yof
-	 4e4YDWtGvkwljnWFE6CyWMDo7YlVVIg/YaoNwaPk=
+	by mail.kernel.org (Postfix) with ESMTP id 4E9CB206EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:34:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="wCY14kfs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbfLCOcS (ORCPT
+        id S1726318AbfLCOd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 09:32:18 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36220 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfLCOcR (ORCPT
+        Tue, 3 Dec 2019 09:33:59 -0500
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:23797 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfLCOd7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 09:32:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=lHp+myS6pf4Jfc7A7zQQjP81X0wvMHMx0CwGmN1oWK0=; b=egqYvhOEsxCp5bOxO2pnJLKuL
-        ftuVLFeE1d5MsyaRITrv3FZ+fkI3ZWV0QwMMVogTy6OGYULANmJ0rt3JYeBXul2zFPwlwwTAPxwKv
-        FGu0H5HTmkIPyfOqt4xRQqFIB8MStA3U3DlyKGEhp1SKJUP+8NODfTKF7N+xlRQ7kuN90=;
-Received: from fw-tnat-cam1.arm.com ([217.140.106.49] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1ic9Df-0002kh-GP; Tue, 03 Dec 2019 14:32:03 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 36491D002FA; Tue,  3 Dec 2019 14:32:03 +0000 (GMT)
-Date:   Tue, 3 Dec 2019 14:32:03 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc:     kernel@puri.sm, Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] sound: codecs: gtm601: add Broadmobi bm818 sound
- profile
-Message-ID: <20191203143203.GK1998@sirena.org.uk>
-Mail-Followup-To: "Angus Ainslie (Purism)" <angus@akkea.ca>, kernel@puri.sm,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191202174831.13638-1-angus@akkea.ca>
- <20191202174831.13638-2-angus@akkea.ca>
+        Tue, 3 Dec 2019 09:33:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1575383639; x=1606919639;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=RXSZcs/qVPDPyswC2jRGt//36h8Hc2BlXBaBEjUudjQ=;
+  b=wCY14kfszZN+5M1gGz+TNBSn7W9LeJon/wiBTFc11q8Lq9THCvjcc7oW
+   Sc6DPB/6KJN0EHhr5PhhoNvA21EpjSePDgM6A9RTOr6W0mELeser6QsvB
+   1AnBz4aHiQZVkSQTM1CXlEaiyktC1obHotEMZ8c1lRmv9wW4PITwFhJoQ
+   M=;
+IronPort-SDR: coc3S0BFg7Yzigp7n7nUbxLeudhPKgshlx19TdBKmZeiBGKBdRS0F5W3etCiCBhBBo4Uwe2x2V
+ JWuoaX8mHwvw==
+X-IronPort-AV: E=Sophos;i="5.69,273,1571702400"; 
+   d="scan'208";a="12661880"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 03 Dec 2019 14:33:46 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com (Postfix) with ESMTPS id D515EA17D7;
+        Tue,  3 Dec 2019 14:33:45 +0000 (UTC)
+Received: from EX13D12UEA003.ant.amazon.com (10.43.61.184) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 3 Dec 2019 14:33:45 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
+ EX13D12UEA003.ant.amazon.com (10.43.61.184) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 3 Dec 2019 14:33:45 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.28.85.76) by
+ mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Tue, 3 Dec 2019 14:33:44 +0000
+Subject: Re: [PATCH] xen/blkback: Avoid unmapping unmapped grant pages
+To:     =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
+        <konrad.wilk@oracle.com>, <axboe@kernel.dk>
+CC:     <xen-devel@lists.xenproject.org>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, SeongJae Park <sjpark@amazon.de>
+References: <20191126153605.27564-1-sjpark@amazon.com>
+ <20191127091314.GK980@Air-de-Roger>
+From:   <sjpark@amazon.com>
+Message-ID: <11ff29ea-ee0f-1dd1-a93e-84d1dd45418e@amazon.com>
+Date:   Tue, 3 Dec 2019 15:33:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="YZQs1kEQY307C4ut"
-Content-Disposition: inline
-In-Reply-To: <20191202174831.13638-2-angus@akkea.ca>
-X-Cookie: Cleanliness is next to impossible.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191127091314.GK980@Air-de-Roger>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 27.11.19 10:13, Roger Pau Monné wrote:
+> On Tue, Nov 26, 2019 at 04:36:05PM +0100, SeongJae Park wrote:
+>> From: SeongJae Park <sjpark@amazon.de>
+>>
+>> For each I/O request, blkback first maps the foreign pages for the
+>> request to its local pages.  If an allocation of a local page for the
+>> mapping fails, it should unmap every mapping already made for the
+>> request.
+>>
+>> However, blkback's handling mechanism for the allocation failure does
+>> not mark the remaining foreign pages as unmapped.  Therefore, the unmap
+>> function merely tries to unmap every valid grant page for the request,
+>> including the pages not mapped due to the allocation failure.  On a
+>> system that fails the allocation frequently, this problem leads to
+>> following kernel crash.
+>>
+>>   [  372.012538] BUG: unable to handle kernel NULL pointer dereference at 0000000000000001
+>>   [  372.012546] IP: [<ffffffff814071ac>] gnttab_unmap_refs.part.7+0x1c/0x40
+>>   [  372.012557] PGD 16f3e9067 PUD 16426e067 PMD 0
+>>   [  372.012562] Oops: 0002 [#1] SMP
+>>   [  372.012566] Modules linked in: act_police sch_ingress cls_u32
+>>   ...
+>>   [  372.012746] Call Trace:
+>>   [  372.012752]  [<ffffffff81407204>] gnttab_unmap_refs+0x34/0x40
+>>   [  372.012759]  [<ffffffffa0335ae3>] xen_blkbk_unmap+0x83/0x150 [xen_blkback]
+>>   ...
+>>   [  372.012802]  [<ffffffffa0336c50>] dispatch_rw_block_io+0x970/0x980 [xen_blkback]
+>>   ...
+>>   Decompressing Linux... Parsing ELF... done.
+>>   Booting the kernel.
+>>   [    0.000000] Initializing cgroup subsys cpuset
+>>
+>> This commit fixes this problem by marking the grant pages of the given
+>> request that didn't mapped due to the allocation failure as invalid.
+>>
+>> Fixes: c6cc142dac52 ("xen-blkback: use balloon pages for all mappings")
+>>
+>> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+>> Reviewed-by: David Woodhouse <dwmw@amazon.de>
+>> Reviewed-by: Maximilian Heyne <mheyne@amazon.de>
+>> Reviewed-by: Paul Durrant <pdurrant@amazon.co.uk>
+> Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
+>
+> Thanks, Roger.
 
---YZQs1kEQY307C4ut
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Mon, Dec 02, 2019 at 10:48:30AM -0700, Angus Ainslie (Purism) wrote:
+May I ask some more comments?
 
-> +	if (np && of_device_is_compatible(np, "broadmobi,bm818"))
-> +		dai_driver = &bm818_dai;
 
-Rather than having a tree of these it'd be better if...
 
->  #if defined(CONFIG_OF)
->  static const struct of_device_id gtm601_codec_of_match[] = {
->  	{ .compatible = "option,gtm601", },
-> +	{ .compatible = "broadmobi,bm818", },
->  	{},
->  };
+Thanks,
 
-...this used the data you can provide along with the of_match as
-the dai_driver so the probe function doesn't have to know about
-the individual variants.
+SeongJae Park
 
---YZQs1kEQY307C4ut
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3mceIACgkQJNaLcl1U
-h9D6eQf/T/YMXLxjUSaHDNc3AzKq7rmVZaiaaG+DgfkilPDOorbOBrcpI9of4xTG
-59U9JeM9TLU3DNyTPO1aTK37vDTDq8y3wmkw5H2IRqldu46zxbSPqwzkeHdwBdNZ
-XPWhtvtg1pcAfPR3hqSvKQOk5+rKWDQxXthiVH5sukuB+p4kavijAnJWamv+D7QU
-LrSnZB9IQP17L2CfxVSKXouPphsnvD7sd8f/H+iElMtzDvYBB4iTFcnIBhpa9v6K
-rbR2dFgEc+egWZCVY+OVeFh/NGRDTu9CgcLz+D7rkivTNXjcbmoUCQ9ijEEF/sRk
-fdjT/0UJKPykUJvMEDbsmafVaq4J5g==
-=XMui
------END PGP SIGNATURE-----
-
---YZQs1kEQY307C4ut--
