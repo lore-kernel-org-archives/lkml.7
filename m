@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7F6C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9796DC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D80E62080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 603482080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412862;
-	bh=oqC+a1mAJO+/xTx5ZcTc9RFX81hYZCBJddP4MCD+bZA=;
+	s=default; t=1575412863;
+	bh=DbmV8Tc7S3hQcDoJhHZdPkFhSwiSaATw4JEzfkOUwB0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gg5XpjWC5xBSZGoBdsTgA/VBciff1lhOvK+36blUkFV3aKoxzeRrmHWrz6F/hdgxS
-	 zXB3yYy+mTVq7vi3WHaHmWZvCZrJrM7CVW8a7njqHH5t3ylViUTqsssucDN5i86iu9
-	 D9zk72032s7t5deBlK31RHeLah6fbKIdLdn88D+E=
+	b=v7ecZRwU4vU7+l+36qJx/LTrt7QvMKHliICUHQ34DJONb4zbbjtkSo0SFLGLLnPrW
+	 EaaMPoegw8p7MGLbSSnFpjpchUbFtwLJ07zctzgDKRbz2aUPf7/mqq5UsYWndkrDZk
+	 WGFlDpcc4BZwM00bGFeMjg7EncNbthhEwPfjgnEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbfLCWlA (ORCPT
+        id S1727969AbfLCWlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:41:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54694 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:41:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727969AbfLCWkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:40:52 -0500
+        id S1727731AbfLCWky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:40:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6032120684;
-        Tue,  3 Dec 2019 22:40:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBA3420684;
+        Tue,  3 Dec 2019 22:40:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412851;
-        bh=oqC+a1mAJO+/xTx5ZcTc9RFX81hYZCBJddP4MCD+bZA=;
+        s=default; t=1575412854;
+        bh=DbmV8Tc7S3hQcDoJhHZdPkFhSwiSaATw4JEzfkOUwB0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W7uerd2VxPEBajHlfEWp7/RYrJ3V8ZIH68pmKto4c8hzBewKBGWFhcImuJXNMYAQH
-         aItw9tkKPuaTgKKy+uyqeOCzDpATbtSNi9pTanGPHOsjXHN8mhjaQ9fD95/9MXee5E
-         UQaT5xwIlVMRc+zjPecocfIN9KYhfBxFveW6Dwt4=
+        b=AQeU2a+5Y0FYDighp77oQxeJkjrOCZNPu463iPVKwMMqp7R4b/44YhwzzsV8ULfW8
+         1n+VH7kyHCxRXacjd6Bc6xXU7z0XP9WSHMOAnSpqP7jMM6PHvk0/3YZeBQCIoCUDox
+         ynprr1Ij6AIB/VKxRnrlxaNCBEBh6MonhKlGBftg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 005/135] clk: meson: gxbb: let sar_adc_clk_div set the parent clock rate
-Date:   Tue,  3 Dec 2019 23:34:05 +0100
-Message-Id: <20191203213006.733032204@linuxfoundation.org>
+Subject: [PATCH 5.3 006/135] clk: at91: sam9x60: fix programmable clock
+Date:   Tue,  3 Dec 2019 23:34:06 +0100
+Message-Id: <20191203213006.960516373@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -61,39 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-[ Upstream commit 44b09b11b813b8550e6b976ea51593bc23bba8d1 ]
+[ Upstream commit 2200ab6a7403f4fcd052c55ca328fc942f9392b6 ]
 
-The meson-saradc driver manually sets the input clock for
-sar_adc_clk_sel. Update the GXBB clock driver (which is used on GXBB,
-GXL and GXM) so the rate settings on sar_adc_clk_div are propagated up
-to sar_adc_clk_sel which will let the common clock framework select the
-best matching parent clock if we want that.
+The prescaler mask for sam9x60 must be 0xff (8 bits).
+Being set to 0, means that we cannot set any prescaler, thus the
+programmable clocks do not work (except the case with prescaler 0)
+Set the mask accordingly in layout struct.
 
-This makes sar_adc_clk_div consistent with the axg-aoclk and g12a-aoclk
-drivers, which both also specify CLK_SET_RATE_PARENT.
-
-Fixes: 33d0fcdfe0e870 ("clk: gxbb: add the SAR ADC clocks and expose them")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Fixes: 01e2113de9a5 ("clk: at91: add sam9x60 pmc driver")
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Link: https://lkml.kernel.org/r/1569321191-27606-1-git-send-email-eugen.hristev@microchip.com
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/meson/gxbb.c | 1 +
+ drivers/clk/at91/sam9x60.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/meson/gxbb.c b/drivers/clk/meson/gxbb.c
-index dab16d9b1af8b..9834eb2c1b674 100644
---- a/drivers/clk/meson/gxbb.c
-+++ b/drivers/clk/meson/gxbb.c
-@@ -866,6 +866,7 @@ static struct clk_regmap gxbb_sar_adc_clk_div = {
- 		.ops = &clk_regmap_divider_ops,
- 		.parent_names = (const char *[]){ "sar_adc_clk_sel" },
- 		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
- 	},
+diff --git a/drivers/clk/at91/sam9x60.c b/drivers/clk/at91/sam9x60.c
+index 9790ddfa5b3cb..86238d5ecb4da 100644
+--- a/drivers/clk/at91/sam9x60.c
++++ b/drivers/clk/at91/sam9x60.c
+@@ -43,6 +43,7 @@ static const struct clk_pll_characteristics upll_characteristics = {
  };
  
+ static const struct clk_programmable_layout sam9x60_programmable_layout = {
++	.pres_mask = 0xff,
+ 	.pres_shift = 8,
+ 	.css_mask = 0x1f,
+ 	.have_slck_mck = 0,
 -- 
 2.20.1
 
