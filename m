@@ -2,67 +2,96 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0A0C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE12C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09935206EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FE28206EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:45:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZtGEgS5e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbfLCTpB (ORCPT
+        id S1727310AbfLCTpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 14:45:01 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36160 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbfLCTpA (ORCPT
+        Tue, 3 Dec 2019 14:45:13 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:45824 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726564AbfLCTpN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 14:45:00 -0500
-Received: from localhost (unknown [IPv6:2610:98:8005::647])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: krisman)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 28F2D28D559;
-        Tue,  3 Dec 2019 19:44:59 +0000 (GMT)
-From:   Gabriel Krisman Bertazi <krisman@collabora.com>
-To:     Daniel Rosenberg <drosen@google.com>
-Cc:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Eric Biggers <ebiggers@kernel.org>,
-        linux-fscrypt@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH 6/8] ext4: Use struct super_block's casefold data
-Organization: Collabora
-References: <20191203051049.44573-1-drosen@google.com>
-        <20191203051049.44573-7-drosen@google.com>
-Date:   Tue, 03 Dec 2019 14:44:56 -0500
-In-Reply-To: <20191203051049.44573-7-drosen@google.com> (Daniel Rosenberg's
-        message of "Mon, 2 Dec 2019 21:10:47 -0800")
-Message-ID: <85sgm1b3d3.fsf@collabora.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 3 Dec 2019 14:45:13 -0500
+Received: from [10.137.112.111] (unknown [131.107.147.111])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 55ED620B7185;
+        Tue,  3 Dec 2019 11:45:12 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 55ED620B7185
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1575402312;
+        bh=Ls9gfcdbAPHKGld7l6/oP5ZuS+qkiikvIWnUExXg588=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ZtGEgS5e17IvkRkOmW1pS5ev781eHSFwaQ7kQEot0AFEeeBaOV3oLZWGvgfYpB7bN
+         tZrYMNOmmU5eHBo3II1BYGL0ter0oSp7y1mjIzQcS0LGCO9hj6Jgb/v+gldEcoU2JM
+         q94ngUXI3xn2S2UY0lzwDFr79sQwo9/KlYGc02NA=
+Subject: Re: [PATCH v9 5/6] IMA: Add support to limit measuring keys
+To:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org
+References: <20191127015654.3744-1-nramas@linux.microsoft.com>
+ <20191127015654.3744-6-nramas@linux.microsoft.com>
+ <1575375945.5241.16.camel@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <2d20ce36-e24e-e238-4a82-286db9eeab97@linux.microsoft.com>
+Date:   Tue, 3 Dec 2019 11:45:31 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <1575375945.5241.16.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Daniel Rosenberg <drosen@google.com> writes:
+Hi Mimi,
 
-> Switch over to using the struct entries added to the VFS, and
-> remove the redundant dentry operations.
+On 12/3/2019 4:25 AM, Mimi Zohar wrote:
 
-getting this in VFS instead of per filesystem is gonna allow us to mix
-not only fscrypt with case-insensitive but also overlayfs.
+> 
+> A keyring can be created by any user with any keyring name, other than
+>   ones dot prefixed, which are limited to the trusted builtin keyrings.
+>   With a policy of "func=KEY_CHECK template=ima-buf keyrings=foo", for
+> example, keys loaded onto any keyring named "foo" will be measured.
+>   For files, the IMA policy may be constrained to a particular uid/gid.
+>   An additional method of identifying or constraining keyring names
+> needs to be defined.
+> 
+> Mimi
+> 
 
-Need to do a closer review, but thanks for doing this!!
+Are you expecting a functionality like the following?
 
--- 
-Gabriel Krisman Bertazi
+  => Measure keys added to keyring "foo", but exclude certain keys 
+(based on some key identifier)
+
+Sample policy might look like below:
+
+action=MEASURE func=KEY_CHECK keyrings=foo|bar
+action=DONT_MEASURE key_magic=blah
+
+So a key with key_magic "blah" will not be measured even though it is 
+added to the keyring "foo". But any other key added to "foo" will be 
+measured.
+
+What would the constraining field in the key may be - Can it be SHA256 
+hash of the public key? Or, some other unique identifier?
+
+Could you please clarify?
+
+thanks,
+  -lakshmi
