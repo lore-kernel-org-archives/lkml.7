@@ -2,54 +2,52 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE3EC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7225C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A020420674
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A63B020674
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:02:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414149;
-	bh=1lcF54AcbRONjDESSOA+6p0jhMgKCR+p52kcc7fQZc0=;
+	s=default; t=1575414154;
+	bh=1RMGphbcr6JtM+J9UMC6O9MEbcjofAiElGx6HGAXfr0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g3R6159u2qMejSWZuqJ29Oi9mIkIQAFkf8ypEcOogew9yJH7l9SLFS4BFSQHZGRDf
-	 2vynx8MKawYyYKAAY8Mlk4n2gHXevQHPvRCD1bB3qIVK9a2yIjcZBa4CbWqGZadVGk
-	 fbeo2/tGf0/RaKsDz2TBCVBLB5nlbbr7/J3ONlHU=
+	b=CIyDbkVKOb3p03R76qjNx01hiHEzpbjH5sgizjz8tRp0w8lRobk3WaKvY2BmuNqLs
+	 k2kwMd1Htlx7GWQoz1ccz+rZua48Osj0N9MX1zh3Pf6E0H4bVQJWfWMZ874iir53jb
+	 Ama/6jxG2O9txtNjMcBCNiq1akp0o3vVpCwhmxXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729652AbfLCWym (ORCPT
+        id S1730695AbfLCXCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:54:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48474 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 18:02:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728397AbfLCWyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:54:33 -0500
+        id S1730038AbfLCWyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:54:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9983F21582;
-        Tue,  3 Dec 2019 22:54:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 694C020866;
+        Tue,  3 Dec 2019 22:54:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413673;
-        bh=1lcF54AcbRONjDESSOA+6p0jhMgKCR+p52kcc7fQZc0=;
+        s=default; t=1575413678;
+        bh=1RMGphbcr6JtM+J9UMC6O9MEbcjofAiElGx6HGAXfr0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DWKczIaIWPXe43FkoUik1sFQuOMTa4BbTcCKh8YfcMjbUgDiumiH9mD2dpJ8YB4fN
-         yajI6GL1AJpiLsqonhuJOWYvFu5y4+9FeCa1HFBztUidKzeZKSEXZsGkrrlSC7LCVg
-         DveCAl9ckQvKKh14z15pXtG60vT7G7qVn3FjVMcw=
+        b=zXw84mdtoHB6YMMMiEzUP2h+MknwtcDVw099o5Jdespnk2FNyaskO+S0lpNNwOYU0
+         OMU5PeUF2kU6A6YPlCo5la/p5Q4NrRAS8i9VMpGv4uhrDw/QpKsNyX9jQ1M+nHbmEs
+         zDQt83v33QMbsUlt4QuAr3WH7GZuAiPKvHB2d66I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Edward Cree <ecree@solarflare.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 169/321] vfio/spapr_tce: Get rid of possible infinite loop
-Date:   Tue,  3 Dec 2019 23:33:55 +0100
-Message-Id: <20191203223435.927454925@linuxfoundation.org>
+Subject: [PATCH 4.19 221/321] sfc: suppress duplicate nvmem partition types in efx_ef10_mtd_probe
+Date:   Tue,  3 Dec 2019 23:34:47 +0100
+Message-Id: <20191203223438.615420676@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -62,54 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
+From: Edward Cree <ecree@solarflare.com>
 
-[ Upstream commit 517ad4ae8aa93dccdb9a88c27257ecb421c9e848 ]
+[ Upstream commit 3366463513f544c12c6b88c13da4462ee9e7a1a1 ]
 
-As a part of cleanup, the SPAPR TCE IOMMU subdriver releases preregistered
-memory. If there is a bug in memory release, the loop in
-tce_iommu_release() becomes infinite; this actually happened to me.
+Use a bitmap to keep track of which partition types we've already seen;
+ for duplicates, return -EEXIST from efx_ef10_mtd_probe_partition() and
+ thus skip adding that partition.
+Duplicate partitions occur because of the A/B backup scheme used by newer
+ sfc NICs.  Prior to this patch they cause sysfs_warn_dup errors because
+ they have the same name, causing us not to expose any MTDs at all.
 
-This makes the loop finite and prints a warning on every failure to make
-the code more bug prone.
-
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
-Acked-by: Alex Williamson <alex.williamson@redhat.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Edward Cree <ecree@solarflare.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/vfio_iommu_spapr_tce.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/sfc/ef10.c | 29 +++++++++++++++++++++--------
+ 1 file changed, 21 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/vfio/vfio_iommu_spapr_tce.c b/drivers/vfio/vfio_iommu_spapr_tce.c
-index 96721b154454f..ec53310f16136 100644
---- a/drivers/vfio/vfio_iommu_spapr_tce.c
-+++ b/drivers/vfio/vfio_iommu_spapr_tce.c
-@@ -371,6 +371,7 @@ static void tce_iommu_release(void *iommu_data)
- {
- 	struct tce_container *container = iommu_data;
- 	struct tce_iommu_group *tcegrp;
-+	struct tce_iommu_prereg *tcemem, *tmtmp;
- 	long i;
+diff --git a/drivers/net/ethernet/sfc/ef10.c b/drivers/net/ethernet/sfc/ef10.c
+index 7eeac3d6cfe89..a497aace7e4f4 100644
+--- a/drivers/net/ethernet/sfc/ef10.c
++++ b/drivers/net/ethernet/sfc/ef10.c
+@@ -6042,22 +6042,25 @@ static const struct efx_ef10_nvram_type_info efx_ef10_nvram_types[] = {
+ 	{ NVRAM_PARTITION_TYPE_LICENSE,		   0,    0, "sfc_license" },
+ 	{ NVRAM_PARTITION_TYPE_PHY_MIN,		   0xff, 0, "sfc_phy_fw" },
+ };
++#define EF10_NVRAM_PARTITION_COUNT	ARRAY_SIZE(efx_ef10_nvram_types)
  
- 	while (tce_groups_attached(container)) {
-@@ -393,13 +394,8 @@ static void tce_iommu_release(void *iommu_data)
- 		tce_iommu_free_table(container, tbl);
+ static int efx_ef10_mtd_probe_partition(struct efx_nic *efx,
+ 					struct efx_mcdi_mtd_partition *part,
+-					unsigned int type)
++					unsigned int type,
++					unsigned long *found)
+ {
+ 	MCDI_DECLARE_BUF(inbuf, MC_CMD_NVRAM_METADATA_IN_LEN);
+ 	MCDI_DECLARE_BUF(outbuf, MC_CMD_NVRAM_METADATA_OUT_LENMAX);
+ 	const struct efx_ef10_nvram_type_info *info;
+ 	size_t size, erase_size, outlen;
++	int type_idx = 0;
+ 	bool protected;
+ 	int rc;
+ 
+-	for (info = efx_ef10_nvram_types; ; info++) {
+-		if (info ==
+-		    efx_ef10_nvram_types + ARRAY_SIZE(efx_ef10_nvram_types))
++	for (type_idx = 0; ; type_idx++) {
++		if (type_idx == EF10_NVRAM_PARTITION_COUNT)
+ 			return -ENODEV;
++		info = efx_ef10_nvram_types + type_idx;
+ 		if ((type & ~info->type_mask) == info->type)
+ 			break;
+ 	}
+@@ -6070,6 +6073,13 @@ static int efx_ef10_mtd_probe_partition(struct efx_nic *efx,
+ 	if (protected)
+ 		return -ENODEV; /* hide it */
+ 
++	/* If we've already exposed a partition of this type, hide this
++	 * duplicate.  All operations on MTDs are keyed by the type anyway,
++	 * so we can't act on the duplicate.
++	 */
++	if (__test_and_set_bit(type_idx, found))
++		return -EEXIST;
++
+ 	part->nvram_type = type;
+ 
+ 	MCDI_SET_DWORD(inbuf, NVRAM_METADATA_IN_TYPE, type);
+@@ -6098,6 +6108,7 @@ static int efx_ef10_mtd_probe_partition(struct efx_nic *efx,
+ static int efx_ef10_mtd_probe(struct efx_nic *efx)
+ {
+ 	MCDI_DECLARE_BUF(outbuf, MC_CMD_NVRAM_PARTITIONS_OUT_LENMAX);
++	DECLARE_BITMAP(found, EF10_NVRAM_PARTITION_COUNT);
+ 	struct efx_mcdi_mtd_partition *parts;
+ 	size_t outlen, n_parts_total, i, n_parts;
+ 	unsigned int type;
+@@ -6126,11 +6137,13 @@ static int efx_ef10_mtd_probe(struct efx_nic *efx)
+ 	for (i = 0; i < n_parts_total; i++) {
+ 		type = MCDI_ARRAY_DWORD(outbuf, NVRAM_PARTITIONS_OUT_TYPE_ID,
+ 					i);
+-		rc = efx_ef10_mtd_probe_partition(efx, &parts[n_parts], type);
+-		if (rc == 0)
+-			n_parts++;
+-		else if (rc != -ENODEV)
++		rc = efx_ef10_mtd_probe_partition(efx, &parts[n_parts], type,
++						  found);
++		if (rc == -EEXIST || rc == -ENODEV)
++			continue;
++		if (rc)
+ 			goto fail;
++		n_parts++;
  	}
  
--	while (!list_empty(&container->prereg_list)) {
--		struct tce_iommu_prereg *tcemem;
--
--		tcemem = list_first_entry(&container->prereg_list,
--				struct tce_iommu_prereg, next);
--		WARN_ON_ONCE(tce_iommu_prereg_free(container, tcemem));
--	}
-+	list_for_each_entry_safe(tcemem, tmtmp, &container->prereg_list, next)
-+		WARN_ON(tce_iommu_prereg_free(container, tcemem));
- 
- 	tce_iommu_disable(container);
- 	if (container->mm)
+ 	rc = efx_mtd_add(efx, &parts[0].common, n_parts, sizeof(*parts));
 -- 
 2.20.1
 
