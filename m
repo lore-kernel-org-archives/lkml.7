@@ -8,69 +8,62 @@ X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F1CC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37195C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6DDC2073F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 057E92073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:13:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g7RcBsG1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B3F8X5qt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbfLCLNR (ORCPT
+        id S1726473AbfLCLNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 06:13:17 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:32961 "EHLO
+        Tue, 3 Dec 2019 06:13:35 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:32979 "EHLO
         mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbfLCLNR (ORCPT
+        with ESMTP id S1725838AbfLCLNf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 06:13:17 -0500
-Received: by mail-pl1-f193.google.com with SMTP id ay6so1584062plb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 03:13:17 -0800 (PST)
+        Tue, 3 Dec 2019 06:13:35 -0500
+Received: by mail-pl1-f193.google.com with SMTP id ay6so1584319plb.0;
+        Tue, 03 Dec 2019 03:13:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=PPxVVC8nLDBEci1WSeW2S69uGVw9UleHZ5a7bu0I1Xs=;
-        b=g7RcBsG1I43aqXOgX8NNWXdzwyKNnQzBaNigzS3hH9D+dPCt1yXrXC8KBQAxmAGw1V
-         xIVzEZChlfDG+nQak288bYsUyD9FbjuWB5Hzwm9gi3Sc7px/7s/hrq5rBogS1I/+NkHs
-         YlJ/+VAmQtSSMduDkdWU0dBpiA9oXDKOYfzFFxYwh8rKlAwK9S0R+nzfs0I5JMyJkcia
-         VKZR8p9/KzWzukCGkgsTulEh7Q+hcEUGvxxswb3M63yMSulPhT32jXbFavKL4bQwnGny
-         wl9QyR/fQTj4HCWqeF7iY3iuOaH5dRvExDdcoN2F9oeNqVKE+tn2djXq8qI967rtQEFd
-         9lHA==
+        bh=h6woE9Nax3taBQLO1Xq0hMJ7t3v77ZgaLEpNXtLBqYw=;
+        b=B3F8X5qtRbbpuiEJ5KoZjjMjpajVpJYhZXGs2tcTzF9PN88S6vz6kn4TquY5aSP8rA
+         /6KxjT3WzYkCvJXprpHjYKKCP6jG91EGzkiGrJ3s3iLFhQgQTZluQ2WJkudMe2R0cmVr
+         MijfHi/y5EV7mSWKWIw+lGwG2zDe8k6z9R7GspuI3g70azFphBbzzuMS+p8qkKCF5Fjf
+         5T1eyihX4vFjN37HQd9dnOYsMcyFjEb13iZzohoDDiDR8bCm32FhFE7+HIlLw9C7JtUy
+         apuOz8jd/31QyACZk7qSSRLQMKPNHJMlya73SYZIRfwiMp2eL/udLNi5NjV9w5CinxQp
+         FURw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=PPxVVC8nLDBEci1WSeW2S69uGVw9UleHZ5a7bu0I1Xs=;
-        b=KQPy2JBuVCHHzxx1CWjwVTsJ6yDJp7HmS1cfYAZFF4q5Q4aKWdO3J7gv15MAT8ZbxD
-         V/hFVSNU589YGzlgY7t289At/sFV5KFqdvXVnKceSHTq0m2CFFR6xzTNZ3HWujGGOEqB
-         9M9JvcFxbYGcfku6wBHrJC3GwW9t1CLdJzjb2rkAFa4zLJxEavYnEyP4q6c1ZTRp48Y3
-         Tt1dccOa/g2ECveTcTZbQSEqr9+FaEPOflQleM7GVkwkh4S7iogZLuUCffao8v7i/DgI
-         Vcwev4lOIXWpc0GPvDVLd5rB2icNxwdOCDXdA7cTqb86wCs7kjwoLdrMJAQQQQstrjKI
-         YhDA==
-X-Gm-Message-State: APjAAAWyhSkSD1pOtdY49O61KSTjglI5PbE5cFYPegPdstA5T6gJ599Q
-        jTlEtwb+91lYwjLRru+wAS4=
-X-Google-Smtp-Source: APXvYqwVXNPxflvrN2v14hE+cqab22DeGQaHc2v2d7g8tdd1ATtAmfxDtIDe+nffB7gaEjuEQcQb5w==
-X-Received: by 2002:a17:902:9692:: with SMTP id n18mr4397865plp.152.1575371596975;
-        Tue, 03 Dec 2019 03:13:16 -0800 (PST)
+        bh=h6woE9Nax3taBQLO1Xq0hMJ7t3v77ZgaLEpNXtLBqYw=;
+        b=r+Q1B0y43HtYCfpUNnNtOEosVCdSLP6tsVHCy/K3cJSlqMWhKVKlYQ9UV141rctlbO
+         B+HZ0sL3b0P09zskXOxjjgT30LsIh6pYYy29WxcrrYeqA0jAS1XxyILp7nXFxAF9rmm9
+         nh8Zk1BeeS8LMycNE5meNtF7fRzDTHpVAbvdCYv6GMZxRG6xwU/yow9c6yUjQNHrtxxF
+         yW8y7LLpenBqpPulwBugbTqWPofDfquj55QABpYkTvNhRBzBuiHc4N8tFPK6HYqfIc1d
+         3IXe8kJD7MEa6+swNu58wkrmNoy2SZa38ItnUmQtSsAFGI6WZu4/Q0taOWc/ILzgOZ/i
+         UKug==
+X-Gm-Message-State: APjAAAWhSMEMG2EmQvot0WiWcC1Ewd6skmBkgxS6GuvJK/qAEozfi8ik
+        8T53AjQFa0p62GoDKUYEUBs=
+X-Google-Smtp-Source: APXvYqxNr9bNu8ebjYlsuMvI4SKrQ+tzjKzSNR/YRzDXk3TZ2NUeM4oXUS0bEyVLWOb25rN6JfJs7w==
+X-Received: by 2002:a17:90a:2808:: with SMTP id e8mr4834004pjd.63.1575371615026;
+        Tue, 03 Dec 2019 03:13:35 -0800 (PST)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id p5sm3160077pgj.63.2019.12.03.03.13.09
+        by smtp.gmail.com with ESMTPSA id j4sm2614901pjf.25.2019.12.03.03.13.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 03:13:16 -0800 (PST)
+        Tue, 03 Dec 2019 03:13:34 -0800 (PST)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH resend] ASoC: fsl_audmix: add missed pm_runtime_disable
-Date:   Tue,  3 Dec 2019 19:13:03 +0800
-Message-Id: <20191203111303.12933-1-hslester96@gmail.com>
+Subject: [PATCH resend] media: pxa_camera: add missed tasklet_kill
+Date:   Tue,  3 Dec 2019 19:13:24 +0800
+Message-Id: <20191203111324.12997-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -80,50 +73,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver forgets to call pm_runtime_disable in probe failure
-and remove.
-Add the missed calls to fix it.
+This driver forgets to kill tasklet when probe fails and remove.
+Add the calls to fix it.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- sound/soc/fsl/fsl_audmix.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/media/platform/pxa_camera.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/fsl/fsl_audmix.c b/sound/soc/fsl/fsl_audmix.c
-index a1db1bce330f..5faecbeb5497 100644
---- a/sound/soc/fsl/fsl_audmix.c
-+++ b/sound/soc/fsl/fsl_audmix.c
-@@ -505,15 +505,20 @@ static int fsl_audmix_probe(struct platform_device *pdev)
- 					      ARRAY_SIZE(fsl_audmix_dai));
- 	if (ret) {
- 		dev_err(dev, "failed to register ASoC DAI\n");
--		return ret;
-+		goto err_disable_pm;
- 	}
+diff --git a/drivers/media/platform/pxa_camera.c b/drivers/media/platform/pxa_camera.c
+index 8d47ea0c33f8..43ae645d866b 100644
+--- a/drivers/media/platform/pxa_camera.c
++++ b/drivers/media/platform/pxa_camera.c
+@@ -2530,6 +2530,7 @@ static int pxa_camera_probe(struct platform_device *pdev)
+ 	v4l2_device_unregister(&pcdev->v4l2_dev);
+ exit_deactivate:
+ 	pxa_camera_deactivate(pcdev);
++	tasklet_kill(&pcdev->task_eof);
+ exit_free_dma:
+ 	dma_release_channel(pcdev->dma_chans[2]);
+ exit_free_dma_u:
+@@ -2544,6 +2545,7 @@ static int pxa_camera_remove(struct platform_device *pdev)
+ 	struct pxa_camera_dev *pcdev = dev_get_drvdata(&pdev->dev);
  
- 	priv->pdev = platform_device_register_data(dev, mdrv, 0, NULL, 0);
- 	if (IS_ERR(priv->pdev)) {
- 		ret = PTR_ERR(priv->pdev);
- 		dev_err(dev, "failed to register platform %s: %d\n", mdrv, ret);
-+		goto err_disable_pm;
- 	}
- 
-+	return 0;
-+
-+err_disable_pm:
-+	pm_runtime_disable(dev);
- 	return ret;
- }
- 
-@@ -521,6 +526,8 @@ static int fsl_audmix_remove(struct platform_device *pdev)
- {
- 	struct fsl_audmix *priv = dev_get_drvdata(&pdev->dev);
- 
-+	pm_runtime_disable(&pdev->dev);
-+
- 	if (priv->pdev)
- 		platform_device_unregister(priv->pdev);
- 
+ 	pxa_camera_deactivate(pcdev);
++	tasklet_kill(&pcdev->task_eof);
+ 	dma_release_channel(pcdev->dma_chans[0]);
+ 	dma_release_channel(pcdev->dma_chans[1]);
+ 	dma_release_channel(pcdev->dma_chans[2]);
 -- 
 2.24.0
 
