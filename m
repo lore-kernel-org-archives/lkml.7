@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EF8C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C37FAC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F34F2084B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 909D720656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:46:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413161;
-	bh=vrTu9F5jC4RL5sr9hqkoyrHflN/833s3zkjY/EcRUUc=;
+	s=default; t=1575413163;
+	bh=q8c7pSzDH6ofmpi3wekKse06815smYHyUWi3zQCd6d0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wo31jnKY/xga+oAG2wMpSKn6X9/0/05Tc91OIf+AXvFhiNPsalg6+j4eVSqLlwHKd
-	 MDFAa7r8zP6hqq/mU1j65FsKLzzGgR8pS7l16HnssbKjgrdTlGjmMIF5uPRtNEkpSt
-	 v2wYnHNm9tlnjjXNAteuDDcw/hLfb4SIaH/1lH5Q=
+	b=ett+zvdsdjgxO5iZ6mfCRWaK7aykikqd6GKpP85LMERx9Vq/TrGKl6nEPzwq3xr8p
+	 pOZSLnqqnmoesePAxwtzpz/WyOi/P0ujJfN2d3MS6sWAs5ai+GLxaBfdkF/+N8K7OL
+	 mJ1odb9g+CnlNxz1+GyW87JN6/3biUlu5TcKWRf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbfLCWp7 (ORCPT
+        id S1729150AbfLCWqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:45:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34966 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:46:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728971AbfLCWp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:45:57 -0500
+        id S1729141AbfLCWp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:45:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C59720656;
-        Tue,  3 Dec 2019 22:45:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AA8720803;
+        Tue,  3 Dec 2019 22:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413156;
-        bh=vrTu9F5jC4RL5sr9hqkoyrHflN/833s3zkjY/EcRUUc=;
+        s=default; t=1575413159;
+        bh=q8c7pSzDH6ofmpi3wekKse06815smYHyUWi3zQCd6d0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rAa1MW81SFHQfsO6cuTn2mXooLt6sdMyBMwHp25dP+v5BvPO/v69/Xd3AUdfw6T4I
-         fUjSimCHRW/wng4UkaRrppXN79z3XMvyPjPLDt06KtSYD9rHE2StkoImLjhdhBTcWw
-         yc3SH8ml1uUr4Ikjdujk3ZsrzJoq1K6l603nvypI=
+        b=B2EZ0d53EexUbmbXqi3OyM7xSDfo+op3AQFha+gMooyCdh1QFQxV6Eo9iA1Mod+Zx
+         KgVWPMjgbM/Nwua5Wlaoi2KOVSvFHDhOZPBOJSNOlgx9J81/5ZN5sYiikrP7fw6rhX
+         uQMq4hg2aGBS0DGStYPKbVPBdGvp3kNZ41lVLmwY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        stable@vger.kernel.org, Xiaochen Shen <xiaochen.shen@intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        pei.p.jia@intel.com, Reinette Chatre <reinette.chatre@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 020/321] idr: Fix idr_alloc_u32 on 32-bit systems
-Date:   Tue,  3 Dec 2019 23:31:26 +0100
-Message-Id: <20191203223428.170816737@linuxfoundation.org>
+Subject: [PATCH 4.19 021/321] x86/resctrl: Prevent NULL pointer dereference when reading mondata
+Date:   Tue,  3 Dec 2019 23:31:27 +0100
+Message-Id: <20191203223428.221829108@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,33 +65,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Wilcox (Oracle) <willy@infradead.org>
+From: Xiaochen Shen <xiaochen.shen@intel.com>
 
-[ Upstream commit b7e9728f3d7fc5c5c8508d99f1675212af5cfd49 ]
+[ Upstream commit 26467b0f8407cbd628fa5b7bcfd156e772004155 ]
 
-Attempting to allocate an entry at 0xffffffff when one is already
-present would succeed in allocating one at 2^32, which would confuse
-everything.  Return -ENOSPC in this case, as expected.
+When a mon group is being deleted, rdtgrp->flags is set to RDT_DELETED
+in rdtgroup_rmdir_mon() firstly. The structure of rdtgrp will be freed
+until rdtgrp->waitcount is dropped to 0 in rdtgroup_kn_unlock() later.
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+During the window of deleting a mon group, if an application calls
+rdtgroup_mondata_show() to read mondata under this mon group,
+'rdtgrp' returned from rdtgroup_kn_lock_live() is a NULL pointer when
+rdtgrp->flags is RDT_DELETED. And then 'rdtgrp' is passed in this path:
+rdtgroup_mondata_show() --> mon_event_read() --> mon_event_count().
+Thus it results in NULL pointer dereference in mon_event_count().
+
+Check 'rdtgrp' in rdtgroup_mondata_show(), and return -ENOENT
+immediately when reading mondata during the window of deleting a mon
+group.
+
+Fixes: d89b7379015f ("x86/intel_rdt/cqm: Add mon_data")
+Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: pei.p.jia@intel.com
+Cc: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/1572326702-27577-1-git-send-email-xiaochen.shen@intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/radix-tree.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/cpu/intel_rdt_ctrlmondata.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/lib/radix-tree.c b/lib/radix-tree.c
-index bc03ecc4dfd2f..e5cab5c4e3830 100644
---- a/lib/radix-tree.c
-+++ b/lib/radix-tree.c
-@@ -2172,7 +2172,7 @@ void __rcu **idr_get_free(struct radix_tree_root *root,
- 			offset = radix_tree_find_next_bit(node, IDR_FREE,
- 							offset + 1);
- 			start = next_index(start, node, offset);
--			if (start > max)
-+			if (start > max || start == 0)
- 				return ERR_PTR(-ENOSPC);
- 			while (offset == RADIX_TREE_MAP_SIZE) {
- 				offset = node->offset + 1;
+diff --git a/arch/x86/kernel/cpu/intel_rdt_ctrlmondata.c b/arch/x86/kernel/cpu/intel_rdt_ctrlmondata.c
+index c8b72aff55e00..2052e1e6a11c9 100644
+--- a/arch/x86/kernel/cpu/intel_rdt_ctrlmondata.c
++++ b/arch/x86/kernel/cpu/intel_rdt_ctrlmondata.c
+@@ -459,6 +459,10 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
+ 	int ret = 0;
+ 
+ 	rdtgrp = rdtgroup_kn_lock_live(of->kn);
++	if (!rdtgrp) {
++		ret = -ENOENT;
++		goto out;
++	}
+ 
+ 	md.priv = of->kn->priv;
+ 	resid = md.u.rid;
 -- 
 2.20.1
 
