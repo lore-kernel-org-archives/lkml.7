@@ -2,134 +2,160 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1317C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 401D4C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE9D2073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 074502073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:13:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kKEnSUAm"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="QpzpqVUB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbfLCLMC (ORCPT
+        id S1726323AbfLCLNE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 06:12:02 -0500
-Received: from mail-eopbgr80070.outbound.protection.outlook.com ([40.107.8.70]:18205
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        Tue, 3 Dec 2019 06:13:04 -0500
+Received: from mail-eopbgr770055.outbound.protection.outlook.com ([40.107.77.55]:33749
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725838AbfLCLMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 06:12:02 -0500
+        id S1725838AbfLCLNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 06:13:04 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CL9XRPnXdrBMietaZfDR/nAAg7Y8XKp5sMeDPmq60ryeDoH6nJHHEXMPbDXnO3xkh8NBoEaGVAQGUeCWHt7VczwihhudItJoW1Y+W2pYaJqTegAvJeRuoSnkNeZBrCgutWl+8vE7grfiU+E/s8Z5DzM5W8PY4/LIOPQkjY1CRPnntf0MBGMlUBA0aY/f78DCxV2sgvWU6pz2oXjzpDhC1YqGnRs5l9b/V0egr3zuSWMPSG7TWZwbXcjnbuSrSO/ZbuKBPD+dBKZ9Ez32orgBWMJvYGPY3pmUJbZchqEpxDnjO3XFLJXCiuOt8wZVDKFSgPL/uapVdIDn+aH1BpPlTg==
+ b=IDy9tLy7htd0iLVXI2nT9Vth/iCryBSluBWLsixPNi+UZFvr6O+zOySpaUIo+e+AhV5sQzyatDJXaWLkGG5RhYjnmEYtQ+Ttg+l7aKuQMWRlxsGOukJ53COOpWYKZHIRfqE6nn3uoBWlsVh0iv8NobP25a7jDrVp0DCbVtwIn7n2SpbZ11jdpebP2m4OJ5Yq4lAdrv/DixUq6rvmr0lO2EXE9U32T+Zp+LqYktJ+FbWw+VHn87VhTPApwzYgx4c+8qJWZodgdP41oFxSwa3C9/+MaZzWDrqJ8m5QpmXu7wZZj03tX86v+u4JeM/FNVHFvnlB3Av1r7M/LFgoiYy3gA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NJ7qwtDvIqSZv9u1Hhvcud5fBSfqRjp+An9nAV2Y3YQ=;
- b=O140DnWxiC9f3pip+IDGdAP4RxA8KRwpRDN51PSbFwmAM3Q9uFmvIKqP5mBJknUfdUdni8RAipzcH1B4VszBZgan+eja3SBH/fwky56aOYAm6zo4a4OGoI/uLUrmetGtC7XvJ+ABxbYMVi6yIGhWf4HgNjKeNxAbtqxVFJxTvWSISxNIu9mr/6zR7oxa/UjqoI1a+zJjEMJQPd7a8NtvmOzUjmXl1GwD7tfBRu7Rqx7Ps67tqZXEZTS8XiGAzQcr98xy0X6nZFtY4PGOZUm5Q5wpvljWXuYWsLP938vSuxAVsTfYdn+yZ/m+qCCP7/Y+4dyilKjD+Rx5mTTOiufpPg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ bh=4PghPG/WOgHq98k92wlVS7DW6YKMERHO0oIyNnO2uaA=;
+ b=TtSFwO0KcKLPlP6qasl4UP4WUGbE9h0tXXX97EtW1dfHXES0WpOi1cWyL7Oa6A02ub37LA0RQN04nEhWU9beflMTrdk9kDTsp1wmpV6leI5p1xnkSxGoo16zELwkOjDfc5UDCkSmrNLw6NoYG3H5QiZpvTt4kmN16mwKS/UsSk+VYnCVkK3/Uh0Lnunzv1tIzj8+DaNLYyeHiDDwuVJFV8t3DPC/+t9HlpnbR3fCMkywlp7a+YzqNYPOrTC6EOpFroKbbyHoyBH1c5PYFDwz54iPRc28f41BfKxeEFpIqsrevIqWfjuSy6EfqQWqIGtYvKG5lAAM08+hlztr/JVzCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NJ7qwtDvIqSZv9u1Hhvcud5fBSfqRjp+An9nAV2Y3YQ=;
- b=kKEnSUAmW6qrclsjmAoTjY5GFml8oEjBwFA5+OHIWmspv4QI6uZCjHOtbQFIUCpJgULfxhXG5n/cfKDtrRXt5E+KF4HU65YitbjPttwH2TLIHeS7a7fXt3iZG4M2gyZlS1oMSV6ui0pLnAGCcgsqSFa1DhfGUy16u24/ZY5RVWY=
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
- DB7PR04MB3979.eurprd04.prod.outlook.com (52.134.107.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.21; Tue, 3 Dec 2019 11:11:58 +0000
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::4182:4692:ffbd:43a0]) by DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::4182:4692:ffbd:43a0%6]) with mapi id 15.20.2495.014; Tue, 3 Dec 2019
- 11:11:57 +0000
-From:   Biwen Li <biwen.li@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "peda@axentia.se" <peda@axentia.se>, Leo Li <leoyang.li@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [EXT] Re: [v6,1/3] dt-bindings: i2c: support property idle-state
-Thread-Topic: [EXT] Re: [v6,1/3] dt-bindings: i2c: support property idle-state
-Thread-Index: AQHVppaRicWJy7UzukKbBemDeMZ+taenf6oAgADIACA=
-Date:   Tue, 3 Dec 2019 11:11:57 +0000
-Message-ID: <DB7PR04MB4490BD480231CD8EA46C01C08F420@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20191129092222.2706-1-biwen.li@nxp.com>
- <20191202231544.GA19159@bogus>
-In-Reply-To: <20191202231544.GA19159@bogus>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=biwen.li@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7fad6be9-bfd0-49e5-835d-08d777e19ce3
-x-ms-traffictypediagnostic: DB7PR04MB3979:|DB7PR04MB3979:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB3979744693FA89B3F7755B018F420@DB7PR04MB3979.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 02408926C4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(346002)(136003)(39860400002)(366004)(199004)(189003)(14454004)(81156014)(81166006)(305945005)(7736002)(478600001)(71190400001)(71200400001)(64756008)(66556008)(66446008)(9686003)(52536014)(74316002)(66476007)(66946007)(99286004)(316002)(54906003)(8676002)(86362001)(6916009)(8936002)(229853002)(25786009)(6506007)(55016002)(44832011)(2906002)(256004)(14444005)(186003)(6116002)(3846002)(26005)(102836004)(11346002)(446003)(33656002)(76116006)(6436002)(76176011)(7696005)(4744005)(4326008)(6246003)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB3979;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3wEmjkjuxFCuF35i2M9b/DEEZYRlRzgQ0llSVyitwY1oyqW0+tbvq4/Kr5VEFmcNcfaF2doLFseI3yxvayXjgKhgLmwLZS8Nk6LLhIe0p+bfbPoWmNzqq4PxspLcSprzyJ8Eradf7+m98ntehcBLul8zzJ9kiwZ1tW0vzG/Wd2t7DFFra7sB6tJQPGMoVj6pn7xgXvoYsAaNMDp3fS0s5OJ//VPtCgc8Ue6oZiArdPzNf08bvEL0qvhpmuSsiTDQJPfHWOgJGDjqwWcquZvFpjs5fvN6fBpGeVvL/OppbKQgMwngWylOcCqg52YeB5LV72wnByLE/9bAO8KW9QK3Py3tuiqSCRmHD6aesN+wRFtb4UeWz1qRlk5GagaAUMXYdWx42vlYVgRJ8hxKYcqinmMfTbcLnp5at8eS1PAcNB94Xieb4iRg75i0t4y/DH73
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ bh=4PghPG/WOgHq98k92wlVS7DW6YKMERHO0oIyNnO2uaA=;
+ b=QpzpqVUBUv4BEDyty4KTJ+99ZojXHwtsycHBvOjjsrBaO2lYYTXptTL5qtk8hhHr+/WFcscKNwMQvwhrAMiYogt+s1E7PQFWNWZnNCIJ4JjuwlWjGkEkJ5pM8b+Qx+PebIheubE+D/bpGPlNbe5GJ+G96e5GluyoRO7QP7uH+wM=
+Received: from BL0PR02CA0038.namprd02.prod.outlook.com (2603:10b6:207:3d::15)
+ by CH2PR02MB7094.namprd02.prod.outlook.com (2603:10b6:610:89::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.20; Tue, 3 Dec
+ 2019 11:12:21 +0000
+Received: from SN1NAM02FT035.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::207) by BL0PR02CA0038.outlook.office365.com
+ (2603:10b6:207:3d::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.23 via Frontend
+ Transport; Tue, 3 Dec 2019 11:12:21 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT035.mail.protection.outlook.com (10.152.72.145) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2474.17
+ via Frontend Transport; Tue, 3 Dec 2019 11:12:20 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1ic66O-0005t0-4A; Tue, 03 Dec 2019 03:12:20 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1ic66J-0007xX-1J; Tue, 03 Dec 2019 03:12:15 -0800
+Received: from xsj-pvapsmtp01 (xsj-mail.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xB3BC8WU020864;
+        Tue, 3 Dec 2019 03:12:08 -0800
+Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1ic66B-0007vg-OO; Tue, 03 Dec 2019 03:12:08 -0800
+From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
+To:     wg@grandegger.com, mkl@pengutronix.de, davem@davemloft.net,
+        michal.simek@xilinx.com, appanad@xilinx.com
+Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        git@xilinx.com, nagasure@xilinx.com,
+        Srinivas Neeli <srinivas.neeli@xilinx.com>
+Subject: [PATCH] can: xilinx_can: Fix missing Rx can packets on CANFD2.0
+Date:   Tue,  3 Dec 2019 16:42:02 +0530
+Message-Id: <1575371522-3030-1-git-send-email-srinivas.neeli@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(39860400002)(346002)(199004)(189003)(36386004)(50226002)(8936002)(16586007)(36756003)(6636002)(6666004)(356004)(50466002)(9786002)(48376002)(106002)(316002)(478600001)(81166006)(336012)(8676002)(5660300002)(2906002)(81156014)(107886003)(305945005)(7696005)(51416003)(26005)(44832011)(70586007)(2616005)(70206006)(4326008)(186003)(426003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB7094;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7fad6be9-bfd0-49e5-835d-08d777e19ce3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Dec 2019 11:11:57.8298
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5815e2f4-ba1c-49b6-4dda-08d777e1aa86
+X-MS-TrafficTypeDiagnostic: CH2PR02MB7094:
+X-Microsoft-Antispam-PRVS: <CH2PR02MB7094D457DDAB7D19FE2AD217AF420@CH2PR02MB7094.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
+X-Forefront-PRVS: 02408926C4
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: nJPM9Fm0KNS6qC8b+01O6F6qY4VxviFR/2limORUHztSQkFx12ZGPfyyAfesAQPsD2+dnrmjIo6dxt9CkBtTH+nIPUZV8dBJ9cBS4jU2xoii9l2pnhoL2wGmaTO8hPT+7slezajU/sRS2D0quHeLwlYfOLngrrZTIyfPIbiJ6A1lQINgkHjIac9SOCns3uWxlB2Q5aVU0EaR4NImBl0t96/BGq2pk4qwzZkLA+XIt3C7p4Dv8CtaAOVToA8boT/Ih3u//1Gn7KP9PihVMMFzCERkfWT/mgRjvhlTdt/FSCWkq5ZCeU6qsrEslTHIFv/BFMrszRdPNW9NydCjjNkEjPhZy9WCTVFjSlatr7b7DLOP01ZhEdWWDmM249JBgNQHWleF62qyzTZpYwNDnJ3QaDVn1gHuw0sO/4H52vKxVJgJ2raaDXhqk7ZBHBdH1Mlj
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Dec 2019 11:12:20.7369
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: g+fyrdodse+a31LU+cFIA8N+l/cN+vn7CX2+Y9OvMDRdJwe1D7JEHJl/K1V96zDLxFrVABmIE+iR4riFg5BVVw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB3979
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5815e2f4-ba1c-49b6-4dda-08d777e1aa86
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB7094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->=20
-> Caution: EXT Email
->=20
-> On Fri, 29 Nov 2019 17:22:20 +0800, Biwen Li wrote:
-> > This supports property idle-state
-> >
-> > Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> > ---
-> > Change in v6:
-> >       - none
-> >
-> > Change in v5:
-> >       - none
-> >
-> > Change in v4:
-> >       - none
-> >
-> > Change in v3:
-> >       - update subject and description
-> >       - add some information for property idle-state
-> >
-> > Change in v2:
-> >       - update subject and description
-> >       - add property idle-state
-> >
-> >  Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
->=20
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
->=20
-> If a tag was not added on purpose, please state why and what changed.
-Okay, got it, thanks.
+CANFD2.0 core uses BRAM for storing acceptance filter ID(AFID) and MASK
+(AFMASK)registers. So by default AFID and AFMASK registers contain random
+data. Due to random data, not able to receive all CAN ids.
+
+Initializing AFID and AFMASK registers with Zero before enabling
+acceptance filter to receive all packets irrespective of ID and Mask.
+
+Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
+Reviewed-by: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
+ drivers/net/can/xilinx_can.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/net/can/xilinx_can.c b/drivers/net/can/xilinx_can.c
+index 464af939cd8a..c1dbab8c896d 100644
+--- a/drivers/net/can/xilinx_can.c
++++ b/drivers/net/can/xilinx_can.c
+@@ -60,6 +60,8 @@ enum xcan_reg {
+ 	XCAN_TXMSG_BASE_OFFSET	= 0x0100, /* TX Message Space */
+ 	XCAN_RXMSG_BASE_OFFSET	= 0x1100, /* RX Message Space */
+ 	XCAN_RXMSG_2_BASE_OFFSET	= 0x2100, /* RX Message Space */
++	XCAN_AFR_2_MASK_OFFSET	= 0x0A00, /* Acceptance Filter MASK */
++	XCAN_AFR_2_ID_OFFSET	= 0x0A04, /* Acceptance Filter ID */
+ };
+ 
+ #define XCAN_FRAME_ID_OFFSET(frame_base)	((frame_base) + 0x00)
+@@ -1809,6 +1811,11 @@ static int xcan_probe(struct platform_device *pdev)
+ 
+ 	pm_runtime_put(&pdev->dev);
+ 
++	if (priv->devtype.flags & XCAN_FLAG_CANFD_2) {
++		priv->write_reg(priv, XCAN_AFR_2_ID_OFFSET, 0x00000000);
++		priv->write_reg(priv, XCAN_AFR_2_MASK_OFFSET, 0x00000000);
++	}
++
+ 	netdev_dbg(ndev, "reg_base=0x%p irq=%d clock=%d, tx buffers: actual %d, using %d\n",
+ 		   priv->reg_base, ndev->irq, priv->can.clock.freq,
+ 		   hw_tx_max, priv->tx_max);
+-- 
+2.7.4
+
