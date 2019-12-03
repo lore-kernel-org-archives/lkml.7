@@ -2,211 +2,133 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BA4C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3310EC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46E1E2073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06D892073F
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:50:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="PTM6wWmL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BMG9l3gl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbfLCNt3 (ORCPT
+        id S1726473AbfLCNuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 08:49:29 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:58424 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726086AbfLCNt3 (ORCPT
+        Tue, 3 Dec 2019 08:50:24 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43394 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbfLCNuW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 08:49:29 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB3DgIOx015268;
-        Tue, 3 Dec 2019 14:49:12 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=aUjKg25Cf5lmzJtCypgppJCtT5TP5s8zd2LxslojreM=;
- b=PTM6wWmLt9Y003352fCUqBlRRhPfMu0x8vr+cavl7iwkYIs3Wp/3h7xfKxYfKjchot8i
- 4ly7ScOQfx8Umpb5A+tPj107dduvFxTwslZ5ViHFkNU5cq5y2kCDuT7L4NQaTdShdDdq
- lGfnYg/C7qc8L2sYqP6rEYzTxCi8gfUXgVJtUQ2tWPmXpPpr9MSFDN963X93RxsdVwWL
- mLnmz96pGFKDlzQOYPI7rhpOB/7FGr0nM49Cq6oI3au8mVOdYO6Y9DYnnqiSlJVWgvac
- S9D2v0U2iO9IAb0Vhd+K0wT8GZ1qDkv/bj1ucor6g6qWHGHrROePzh3b7aF5nu6BzjgP Bg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wkg6kfhfa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 03 Dec 2019 14:49:11 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3F111100034;
-        Tue,  3 Dec 2019 14:49:11 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1B8502BC7AF;
-        Tue,  3 Dec 2019 14:49:11 +0100 (CET)
-Received: from localhost (10.75.127.46) by SFHDAG6NODE2.st.com (10.75.127.17)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 3 Dec 2019 14:49:10
- +0100
-From:   Pascal Paillet <p.paillet@st.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <p.paillet@st.com>
-Subject: [PATCH] regulator: Convert stm32-pwr regulator to json-schema
-Date:   Tue, 3 Dec 2019 14:49:10 +0100
-Message-ID: <20191203134910.26470-1-p.paillet@st.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 3 Dec 2019 08:50:22 -0500
+Received: by mail-lj1-f196.google.com with SMTP id a13so3858995ljm.10
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 05:50:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V2Z48S2RpCT7bsi6W8o9xAPWyHBrbdx8QNidFwrDG7o=;
+        b=BMG9l3glchxTcyzwEYZoeiPQ1Qf2dSE6m5plMBgskvfutAmc6yj49QbctF3o4z2oTB
+         cps93OWgeo9tBN5woaUXIeuQbi6wTX2/OWPsTo9jP+pi73R/oSh0rx6tceSQLrDFpI65
+         l8Y8XBgAtVdwxzND/FTSGV52KUoEBJBS6le14z1sVIR/WSQg3JxG0/FpflNiBAwQVk4a
+         gfPtpFOnN7vVbnlMNAlvPeVBJe9Phc2rtYgnw90J/nC3xrEJ6scm91fL4jUpHOsNyUxt
+         FjHhCcWANrj6bggMYyvjPor0jXKfdO4xamiI8KpJPMN8iH1Wvg7ko6ioSyRacz2fb3/L
+         GbzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V2Z48S2RpCT7bsi6W8o9xAPWyHBrbdx8QNidFwrDG7o=;
+        b=txyc/26DorxlDg2J9CQXldEAMzWTUgJxuswijLxSJkaNDHzehWE+N+e9DVfUiK0UI3
+         ERtpsk0mwNLCRFsSkiRDoWOw3ExCjO8i3Pu0APqBh/DIvOlYEU0XYlvmcRHZhkpVB0ND
+         gCi5eQW+oHmOn2DT/Kbw9LitwRqJWpbTIrHvItfZ61jkoNDc1yETPf/WxFDY/FtF4wud
+         JNlx1DaKMUsicNH6kTBTl9T5FY72aMEsTqB5xOX0IffXPxjNDM+7xfCOFdpUTgpjHq2J
+         uiSMuGhjBa4tx+4k7C1oMLJWtGCrzrc7ue0zM7X9wdeSVBLuNeN0tHB5gxjupMcblWqP
+         M1pw==
+X-Gm-Message-State: APjAAAVkQnoxVICGJ2tAs5dMdh8bBCuW+t9BTpqgpP7e+rwb+/qReAke
+        NBCS5cz1yjo1FSp2slprVk3r9oyw0W+9jNbRb3G0TQ==
+X-Google-Smtp-Source: APXvYqzb5uReRFeX5koEY/BY43USZn3g2h9ZdZxnYptuZH70/60NpjVjh2aKhOqsBsPE5+4y54vib9ipj2q5Hb+FAW4=
+X-Received: by 2002:a2e:7202:: with SMTP id n2mr2354490ljc.194.1575381019973;
+ Tue, 03 Dec 2019 05:50:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-03_03:2019-12-02,2019-12-03 signatures=0
+References: <20191126183451.GC29071@kernel.org> <87d0dexyij.fsf@toke.dk>
+ <20191126190450.GD29071@kernel.org> <CAEf4Bzbq3J9g7cP=KMqR=bMFcs=qPiNZwnkvCKz3-SAp_m0GzA@mail.gmail.com>
+ <20191126221018.GA22719@kernel.org> <20191126221733.GB22719@kernel.org>
+ <CAEf4BzbZLiJnUb+BdUMEwcgcKCjJBWx1895p8qS8rK2r5TYu3w@mail.gmail.com>
+ <20191126231030.GE3145429@mini-arch.hsd1.ca.comcast.net> <20191126155228.0e6ed54c@cakuba.netronome.com>
+ <20191127013901.GE29071@kernel.org> <20191127134553.GC22719@kernel.org>
+In-Reply-To: <20191127134553.GC22719@kernel.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 3 Dec 2019 19:20:08 +0530
+Message-ID: <CA+G9fYsK8zn3jqF=Wz6=8BBx4i1JTkv2h-LCbjE11UJkcz_NEA@mail.gmail.com>
+Subject: Re: [PATCH] libbpf: Use PRIu64 for sym->st_value to fix build on
+ 32-bit arches
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Stanislav Fomichev <sdf@fomichev.me>,
+        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau <kafai@fb.com>,
+        Namhyung Kim <namhyung@kernel.org>, bpf <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Leo Yan <leo.yan@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the stm32-pwr regulator binding to DT schema format using
-json-schema.
+Hi Arnaldo,
 
-Signed-off-by: Pascal Paillet <p.paillet@st.com>
----
- .../regulator/st,stm32mp1-pwr-reg.txt         | 43 ------------
- .../regulator/st,stm32mp1-pwr-reg.yaml        | 67 +++++++++++++++++++
- 2 files changed, 67 insertions(+), 43 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
- create mode 100644 Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml
+FYI,
 
-diff --git a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
-deleted file mode 100644
-index e372dd3f0c8a..000000000000
---- a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
-+++ /dev/null
-@@ -1,43 +0,0 @@
--STM32MP1 PWR Regulators
-------------------------
--
--Available Regulators in STM32MP1 PWR block are:
--  - reg11 for regulator 1V1
--  - reg18 for regulator 1V8
--  - usb33 for the swtich USB3V3
--
--Required properties:
--- compatible: Must be "st,stm32mp1,pwr-reg"
--- list of child nodes that specify the regulator reg11, reg18 or usb33
--  initialization data for defined regulators. The definition for each of
--  these nodes is defined using the standard binding for regulators found at
--  Documentation/devicetree/bindings/regulator/regulator.txt.
--- vdd-supply: phandle to the parent supply/regulator node for vdd input
--- vdd_3v3_usbfs-supply: phandle to the parent supply/regulator node for usb33
--
--Example:
--
--pwr_regulators: pwr@50001000 {
--	compatible = "st,stm32mp1,pwr-reg";
--	reg = <0x50001000 0x10>;
--	vdd-supply = <&vdd>;
--	vdd_3v3_usbfs-supply = <&vdd_usb>;
--
--	reg11: reg11 {
--		regulator-name = "reg11";
--		regulator-min-microvolt = <1100000>;
--		regulator-max-microvolt = <1100000>;
--	};
--
--	reg18: reg18 {
--		regulator-name = "reg18";
--		regulator-min-microvolt = <1800000>;
--		regulator-max-microvolt = <1800000>;
--	};
--
--	usb33: usb33 {
--		regulator-name = "usb33";
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml
-new file mode 100644
-index 000000000000..f661728ebdeb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml
-@@ -0,0 +1,67 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/st,stm32mp1-pwr-reg.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STM32MP1 PWR voltage regulators
-+
-+maintainers:
-+  - Pascal Paillet <p.paillet@st.com>
-+
-+allOf:
-+  - $ref: "regulator.yaml#"
-+
-+properties:
-+  compatible:
-+    const: st,stm32mp1,pwr-reg
-+
-+  reg:
-+    maxItems: 1
-+
-+  vdd-supply:
-+    description: Input supply phandle(s) for vdd input
-+
-+  vdd_3v3_usbfs-supply:
-+    description: Input supply phandle(s) for vdd_3v3_usbfs input
-+
-+patternProperties:
-+  "^(reg11|reg18|usb33)":
-+    type: object
-+
-+    allOf:
-+      - $ref: "regulator.yaml#"
-+
-+required:
-+   - compatible
-+   - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    pwr@50001000 {
-+      compatible = "st,stm32mp1,pwr-reg";
-+      reg = <0x50001000 0x10>;
-+      vdd-supply = <&vdd>;
-+      vdd_3v3_usbfs-supply = <&vdd_usb>;
-+
-+      reg11 {
-+        regulator-name = "reg11";
-+        regulator-min-microvolt = <1100000>;
-+        regulator-max-microvolt = <1100000>;
-+      };
-+
-+      reg18 {
-+        regulator-name = "reg18";
-+        regulator-min-microvolt = <1800000>;
-+        regulator-max-microvolt = <1800000>;
-+      };
-+
-+      usb33 {
-+        regulator-name = "usb33";
-+        regulator-min-microvolt = <3300000>;
-+        regulator-max-microvolt = <3300000>;
-+      };
-+    };
-+...
--- 
-2.17.1
+On Wed, 27 Nov 2019 at 19:15, Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+>
+> Another fix I'm carrying in my perf/core branch,
+>
+> Regards,
+>
+> - Arnaldo
+>
+> commit 98bb09f90a0ae33125fabc8f41529345382f1498
+> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Date:   Wed Nov 27 09:26:54 2019 -0300
+>
+>     libbpf: Use PRIu64 for sym->st_value to fix build on 32-bit arches
+>
+>     The st_value field is a 64-bit value, so use PRIu64 to fix this error on
+>     32-bit arches:
+>
+>       In file included from libbpf.c:52:
+>       libbpf.c: In function 'bpf_program__record_reloc':
+>       libbpf_internal.h:59:22: error: format '%lu' expects argument of type 'long unsigned int', but argument 3 has type 'Elf64_Addr' {aka 'const long long unsigned int'} [-Werror=format=]
+>         libbpf_print(level, "libbpf: " fmt, ##__VA_ARGS__); \
+>                             ^~~~~~~~~~
+>       libbpf_internal.h:62:27: note: in expansion of macro '__pr'
+>        #define pr_warn(fmt, ...) __pr(LIBBPF_WARN, fmt, ##__VA_ARGS__)
+>                                  ^~~~
+>       libbpf.c:1822:4: note: in expansion of macro 'pr_warn'
+>           pr_warn("bad call relo offset: %lu\n", sym->st_value);
+>           ^~~~~~~
+>       libbpf.c:1822:37: note: format string is defined here
+>           pr_warn("bad call relo offset: %lu\n", sym->st_value);
+>                                          ~~^
+>                                          %llu
 
+This build error is been noticed on Linux mainline kernel for 32-bit
+architectures from Nov 26.
+
+Full build log,
+https://ci.linaro.org/job/openembedded-lkft-linux-mainline/DISTRO=lkft,MACHINE=intel-core2-32,label=docker-lkft/2297/consoleText
+https://ci.linaro.org/job/openembedded-lkft-linux-mainline/
+
+- Naresh
