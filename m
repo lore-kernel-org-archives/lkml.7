@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F32F9C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DCBC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0A4220866
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79C2E2053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413552;
-	bh=qoWiZmhKyc5U9nJDESFCNNEjuf4zfvI/EeR6LBTUUF4=;
+	s=default; t=1575413555;
+	bh=HB5lXUSzpl8k8VPM+f95nsCXDStsmwdSJQzLR6O5n0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FZXnfxfmVZi3Fs1JR4oR5kTPDqU7w5jwhJIwtAjI+iuoIm4OKPYwgmzd/CECbEFbk
-	 ecGva5Wmr3j4jslz1rNmvn/4O6ClNUleqiFsKO115WSrRc8P5OFqV3uiGn5rrHqpPI
-	 VtpJykT94eSU8c7BDwuoeFQ3UX48qqT3x3S8BUmQ=
+	b=LkGDiwiaJl/t2+n6zy8M7Nd1sGuH1uy+N2gvLeTDpbLDMaLlFVj9wayxjfskeuSIA
+	 sFCEM4dB6YuNElgTxYR+DV/56Kho+G51DaK/C4c+eN4jKvWWSLBIvnfpX6Qi2vaHMh
+	 jeFjUrJY7hvj5+J08QeIKuyrmpz6OYMPmJKbDhLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729435AbfLCWwb (ORCPT
+        id S1730021AbfLCWw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:52:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45206 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:52:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730009AbfLCWw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:52:27 -0500
+        id S1729739AbfLCWwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:52:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50A8920865;
-        Tue,  3 Dec 2019 22:52:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DC0D20863;
+        Tue,  3 Dec 2019 22:52:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413546;
-        bh=qoWiZmhKyc5U9nJDESFCNNEjuf4zfvI/EeR6LBTUUF4=;
+        s=default; t=1575413541;
+        bh=HB5lXUSzpl8k8VPM+f95nsCXDStsmwdSJQzLR6O5n0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FVOzbKG2cUfbALM37wMXot3bgdLTW7qgUiAWIzVE4ocGkAsrEGHSXwep0ovBAT/my
-         ckfmfHTfpw3SPBhkD7PjPymvRzMGnmi8T/wWoIqNhQ/QuCsSPGHexD3lazAeZ0gXQp
-         HkCav+roZhMiyJdZn71Q14TBpwVSjXwQPYu9DjD4=
+        b=T7LF3RUfMsuZ/6d2XtUWhcRpvO/BMd+MZrTbHWi4p1ktx2YgsGjx5GRfIoMEYSdYU
+         rHuPFxOO8h9kpWViI5tTabYJIZPIEDxoY6z3r9QCCctdHBrJcMGx0WluicI2H8GXsT
+         3sz8ofWssTd+y02g4kbWkktnBkrD4M86n9lieY4E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 167/321] powerpc/mm: Make NULL pointer deferences explicit on bad page faults.
-Date:   Tue,  3 Dec 2019 23:33:53 +0100
-Message-Id: <20191203223435.824668480@linuxfoundation.org>
+Subject: [PATCH 4.19 130/321] vfio-mdev/samples: Use u8 instead of char for handle functions
+Date:   Tue,  3 Dec 2019 23:33:16 +0100
+Message-Id: <20191203223433.916135437@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,61 +61,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 49a502ea23bf9dec47f8f3c3960909ff409cd1bb ]
+[ Upstream commit 8ba35b3a0046d6573c98f00461d9bd1b86250d35 ]
 
-As several other arches including x86, this patch makes it explicit
-that a bad page fault is a NULL pointer dereference when the fault
-address is lower than PAGE_SIZE
+Clang warns:
 
-In the mean time, this page makes all bad_page_fault() messages
-shorter so that they remain on one single line. And it prefixes them
-by "BUG: " so that they get easily grepped.
+samples/vfio-mdev/mtty.c:592:39: warning: implicit conversion from 'int'
+to 'char' changes value from 162 to -94 [-Wconstant-conversion]
+                *buf = UART_MSR_DSR | UART_MSR_DDSR | UART_MSR_DCD;
+                     ~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~
+1 warning generated.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-[mpe: Avoid pr_cont()]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Turns out that all uses of buf in this function ultimately end up stored
+or cast to an unsigned type. Just use u8, which has the same number of
+bits but can store this larger number so Clang no longer warns.
+
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/fault.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ samples/vfio-mdev/mtty.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
-index 365526ee29b88..6e0ff8b600ced 100644
---- a/arch/powerpc/mm/fault.c
-+++ b/arch/powerpc/mm/fault.c
-@@ -633,21 +633,22 @@ void bad_page_fault(struct pt_regs *regs, unsigned long address, int sig)
- 	switch (TRAP(regs)) {
- 	case 0x300:
- 	case 0x380:
--		printk(KERN_ALERT "Unable to handle kernel paging request for "
--			"data at address 0x%08lx\n", regs->dar);
-+		pr_alert("BUG: %s at 0x%08lx\n",
-+			 regs->dar < PAGE_SIZE ? "Kernel NULL pointer dereference" :
-+			 "Unable to handle kernel data access", regs->dar);
- 		break;
- 	case 0x400:
- 	case 0x480:
--		printk(KERN_ALERT "Unable to handle kernel paging request for "
--			"instruction fetch\n");
-+		pr_alert("BUG: Unable to handle kernel instruction fetch%s",
-+			 regs->nip < PAGE_SIZE ? " (NULL pointer?)\n" : "\n");
- 		break;
- 	case 0x600:
--		printk(KERN_ALERT "Unable to handle kernel paging request for "
--			"unaligned access at address 0x%08lx\n", regs->dar);
-+		pr_alert("BUG: Unable to handle kernel unaligned access at 0x%08lx\n",
-+			 regs->dar);
- 		break;
- 	default:
--		printk(KERN_ALERT "Unable to handle kernel paging request for "
--			"unknown fault\n");
-+		pr_alert("BUG: Unable to handle unknown paging fault at 0x%08lx\n",
-+			 regs->dar);
- 		break;
+diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c
+index 7abb79d8313d9..f6732aa16bb1f 100644
+--- a/samples/vfio-mdev/mtty.c
++++ b/samples/vfio-mdev/mtty.c
+@@ -171,7 +171,7 @@ static struct mdev_state *find_mdev_state_by_uuid(uuid_le uuid)
+ 	return NULL;
+ }
+ 
+-void dump_buffer(char *buf, uint32_t count)
++void dump_buffer(u8 *buf, uint32_t count)
+ {
+ #if defined(DEBUG)
+ 	int i;
+@@ -250,7 +250,7 @@ static void mtty_create_config_space(struct mdev_state *mdev_state)
+ }
+ 
+ static void handle_pci_cfg_write(struct mdev_state *mdev_state, u16 offset,
+-				 char *buf, u32 count)
++				 u8 *buf, u32 count)
+ {
+ 	u32 cfg_addr, bar_mask, bar_index = 0;
+ 
+@@ -304,7 +304,7 @@ static void handle_pci_cfg_write(struct mdev_state *mdev_state, u16 offset,
+ }
+ 
+ static void handle_bar_write(unsigned int index, struct mdev_state *mdev_state,
+-				u16 offset, char *buf, u32 count)
++				u16 offset, u8 *buf, u32 count)
+ {
+ 	u8 data = *buf;
+ 
+@@ -475,7 +475,7 @@ static void handle_bar_write(unsigned int index, struct mdev_state *mdev_state,
+ }
+ 
+ static void handle_bar_read(unsigned int index, struct mdev_state *mdev_state,
+-			    u16 offset, char *buf, u32 count)
++			    u16 offset, u8 *buf, u32 count)
+ {
+ 	/* Handle read requests by guest */
+ 	switch (offset) {
+@@ -650,7 +650,7 @@ static void mdev_read_base(struct mdev_state *mdev_state)
  	}
- 	printk(KERN_ALERT "Faulting instruction address: 0x%08lx\n",
+ }
+ 
+-static ssize_t mdev_access(struct mdev_device *mdev, char *buf, size_t count,
++static ssize_t mdev_access(struct mdev_device *mdev, u8 *buf, size_t count,
+ 			   loff_t pos, bool is_write)
+ {
+ 	struct mdev_state *mdev_state;
+@@ -698,7 +698,7 @@ static ssize_t mdev_access(struct mdev_device *mdev, char *buf, size_t count,
+ #if defined(DEBUG_REGS)
+ 			pr_info("%s: BAR%d  WR @0x%llx %s val:0x%02x dlab:%d\n",
+ 				__func__, index, offset, wr_reg[offset],
+-				(u8)*buf, mdev_state->s[index].dlab);
++				*buf, mdev_state->s[index].dlab);
+ #endif
+ 			handle_bar_write(index, mdev_state, offset, buf, count);
+ 		} else {
+@@ -708,7 +708,7 @@ static ssize_t mdev_access(struct mdev_device *mdev, char *buf, size_t count,
+ #if defined(DEBUG_REGS)
+ 			pr_info("%s: BAR%d  RD @0x%llx %s val:0x%02x dlab:%d\n",
+ 				__func__, index, offset, rd_reg[offset],
+-				(u8)*buf, mdev_state->s[index].dlab);
++				*buf, mdev_state->s[index].dlab);
+ #endif
+ 		}
+ 		break;
+@@ -827,7 +827,7 @@ ssize_t mtty_read(struct mdev_device *mdev, char __user *buf, size_t count,
+ 		if (count >= 4 && !(*ppos % 4)) {
+ 			u32 val;
+ 
+-			ret =  mdev_access(mdev, (char *)&val, sizeof(val),
++			ret =  mdev_access(mdev, (u8 *)&val, sizeof(val),
+ 					   *ppos, false);
+ 			if (ret <= 0)
+ 				goto read_err;
+@@ -839,7 +839,7 @@ ssize_t mtty_read(struct mdev_device *mdev, char __user *buf, size_t count,
+ 		} else if (count >= 2 && !(*ppos % 2)) {
+ 			u16 val;
+ 
+-			ret = mdev_access(mdev, (char *)&val, sizeof(val),
++			ret = mdev_access(mdev, (u8 *)&val, sizeof(val),
+ 					  *ppos, false);
+ 			if (ret <= 0)
+ 				goto read_err;
+@@ -851,7 +851,7 @@ ssize_t mtty_read(struct mdev_device *mdev, char __user *buf, size_t count,
+ 		} else {
+ 			u8 val;
+ 
+-			ret = mdev_access(mdev, (char *)&val, sizeof(val),
++			ret = mdev_access(mdev, (u8 *)&val, sizeof(val),
+ 					  *ppos, false);
+ 			if (ret <= 0)
+ 				goto read_err;
+@@ -889,7 +889,7 @@ ssize_t mtty_write(struct mdev_device *mdev, const char __user *buf,
+ 			if (copy_from_user(&val, buf, sizeof(val)))
+ 				goto write_err;
+ 
+-			ret = mdev_access(mdev, (char *)&val, sizeof(val),
++			ret = mdev_access(mdev, (u8 *)&val, sizeof(val),
+ 					  *ppos, true);
+ 			if (ret <= 0)
+ 				goto write_err;
+@@ -901,7 +901,7 @@ ssize_t mtty_write(struct mdev_device *mdev, const char __user *buf,
+ 			if (copy_from_user(&val, buf, sizeof(val)))
+ 				goto write_err;
+ 
+-			ret = mdev_access(mdev, (char *)&val, sizeof(val),
++			ret = mdev_access(mdev, (u8 *)&val, sizeof(val),
+ 					  *ppos, true);
+ 			if (ret <= 0)
+ 				goto write_err;
+@@ -913,7 +913,7 @@ ssize_t mtty_write(struct mdev_device *mdev, const char __user *buf,
+ 			if (copy_from_user(&val, buf, sizeof(val)))
+ 				goto write_err;
+ 
+-			ret = mdev_access(mdev, (char *)&val, sizeof(val),
++			ret = mdev_access(mdev, (u8 *)&val, sizeof(val),
+ 					  *ppos, true);
+ 			if (ret <= 0)
+ 				goto write_err;
 -- 
 2.20.1
 
