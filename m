@@ -2,277 +2,165 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E10ECC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BF0C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2F9A2073C
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:11:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="jAKoN0zK"
+	by mail.kernel.org (Postfix) with ESMTP id 37F082073C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:11:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575411101;
+	bh=yV8JD0/MRHN7tQ3o/mx8oneY2Drn3aD4ChTwAw/nX4g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=o58D6HsGC/zMlV5ra9YD/VVb6RJOZBKEd2MZNgnWTAk5Hxo+Lraal4Bb3wXUA7/Ux
+	 9An708lOv5zVEhsmkP3dArzEBHXbOY++U52LVbx2uOwy8VVfgMKcAjplrbgY9OOMtT
+	 76Gx2K9O2vIKfcGthfV+gLJAbibio8D2XuGu8se0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727641AbfLCWLd (ORCPT
+        id S1727656AbfLCWLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:11:33 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38910 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727502AbfLCWLd (ORCPT
+        Tue, 3 Dec 2019 17:11:40 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45440 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727502AbfLCWLj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:11:33 -0500
-Received: by mail-pf1-f196.google.com with SMTP id x185so2529581pfc.5
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 14:11:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fKabNn9df0KKwioEHZ2TbPiYWD+uCzVkn8AhLZ5xjLU=;
-        b=jAKoN0zKxKrMrwP4ExWiJ+pG3n/C8x+s5yOCrN3Ch6VQerUB41CkmmAppCbIS++RHt
-         GsLxuKfii3/6PNKx27W9YU5Xv2hTHFZ6/aQTGybueMMGGdEwW4klIIm393nagvu4y5Cd
-         +7XCQrW5ZdLjgfFGxp4En9GTEsTCwdgWPWtiWMtre1OvtwK98PRgw6MvehBwy03UFIqW
-         Ckf/5aOWbSa13eAAyPI031gZL5kJdDXueSlDIJFIPXa1V4tiX06bUfxP5rmy++Me7GWW
-         koF9yOlNbDr3SgbhmI7YekjBM/9CofMBU5958TV6BqpphvjGyBwozfF9CX2SFRmku++J
-         gFWQ==
+        Tue, 3 Dec 2019 17:11:39 -0500
+Received: by mail-oi1-f193.google.com with SMTP id v10so2835663oiv.12;
+        Tue, 03 Dec 2019 14:11:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fKabNn9df0KKwioEHZ2TbPiYWD+uCzVkn8AhLZ5xjLU=;
-        b=lf+y5BYZLodeqdRl8MoFM34SpVRTPkURU2yxAMomgpjOTJJTouKDCWJ1SfQzGMC/kA
-         5KyjxUB+SbMq1lD8nGgy14PYWkvRtY9GXKh4rVdnftjaAsOM2GAPUF6bBKFPZz5mGwWC
-         lBZOTM19u4NwAuM5KIaR/nvlwAZwEkSQcT7c5tDL4CIF6RJijMAt+C5XTbcAi5L/3pG5
-         zim6jg1/tmMcrq05GWC31C1Y5QFGnPB2aOnv+LsEAeUgE5UNUAx32iqR6lynVMCYFl64
-         povLLMuA0Lbi6O4QCT5HPCBOMzDUXo9o3+V03qUf9/9sFAp2LsHGVt3t9zW00ekIYans
-         MKPA==
-X-Gm-Message-State: APjAAAUb7BqJeoBR4n3ecyl0sQeM4SOPyspq2GjCx83TrsAzxVESJEYd
-        QNkmt+4AjzfV7gYR4R/y38X89Q==
-X-Google-Smtp-Source: APXvYqz/J2vCzyEFtPRTDnWoMbG6QWpwBjzII9Uf4CLUG3UEFJy1opA8wCr2dxY/GJp7EXfAbvF3BA==
-X-Received: by 2002:a62:1a97:: with SMTP id a145mr119864pfa.244.1575411092312;
-        Tue, 03 Dec 2019 14:11:32 -0800 (PST)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id f30sm4499876pga.20.2019.12.03.14.11.31
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=477xV8KhxSU4eFJtRC9YkvcLWD2tDbYJIPfmHJ8cs4I=;
+        b=lFew31/q93Jl+RjRw6W++MjzuPwAv2yos1eIdY1tct5cGaRm0FmRzQR2DTh7p14fad
+         EHxSpfNsoVcyxmBlZkZqvSW96nHIA8xPCiIuD65VYKubY5BeLC77T7PlRbU+RFYhsUIC
+         KNU6JEhC29SbDYYpDGIu/PdW80Z3TiYB82paVYR5dWOtPXteKpP2bGQfh0pe4FAs4w+y
+         aos7QQ2Q9NTcp3LaNofOVeu4oQGvhua8F/4mK/xedoYxBT104z5hgNwF6czQmtDzdjAo
+         maYkmMP3Ui0cVxZZ6Jfins3/L9MJFxHafiW4W68s5zwqp58kq4kA/iwjtF7HXszmllwx
+         872w==
+X-Gm-Message-State: APjAAAXtcMPQpgalWE6jDYq0z3sM1USnVmcYM/QIt1zWMgfWWvIhGOrZ
+        AbPHCj9rMW80MH+ix2hD5Q==
+X-Google-Smtp-Source: APXvYqxGOcD+wXxTp7nqGCSZ7mOF2ARYJRHRh1NYspCna0wEbPtu3A+Sk2oM+XjkYzB91ANachrw0Q==
+X-Received: by 2002:aca:d80b:: with SMTP id p11mr183106oig.83.1575411098160;
+        Tue, 03 Dec 2019 14:11:38 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id f1sm1539410otq.4.2019.12.03.14.11.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 14:11:31 -0800 (PST)
-Date:   Tue, 3 Dec 2019 14:11:18 -0800
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Udo van den Heuvel <udovdh@xs4all.nl>,
-        Holger =?UTF-8?B?SG9mZnN0w6R0?= =?UTF-8?B?dGU=?= 
-        <holger@applied-asynchrony.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>
-Subject: Re: 5.4.1 WARNINGs with r8169
-Message-ID: <20191203141118.483edd2d@hermes.lan>
-In-Reply-To: <3a1706be-e236-6f08-73eb-734f0ae41bbb@gmail.com>
-References: <46e7dcf9-3c89-25c1-ccb8-336450047bec@xs4all.nl>
-        <aa3b11a5-eb7e-dc2c-e5b4-96e53942246d@applied-asynchrony.com>
-        <3a1706be-e236-6f08-73eb-734f0ae41bbb@gmail.com>
+        Tue, 03 Dec 2019 14:11:37 -0800 (PST)
+Date:   Tue, 3 Dec 2019 16:11:37 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, digetx@gmail.com,
+        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
+        sboyd@kernel.org, tglx@linutronix.de, mark.rutland@arm.com,
+        allison@lohutok.net, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        mturquette@baylibre.com, horms+renesas@verge.net.au,
+        Jisheng.Zhang@synaptics.com, krzk@kernel.org, arnd@arndb.de,
+        spujar@nvidia.com, josephl@nvidia.com, vidyas@nvidia.com,
+        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
+        markz@nvidia.com, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 15/17] dt-bindings: tegra186-pmc: Add Tegra PMC clock
+ bindings
+Message-ID: <20191203221137.GC22716@bogus>
+References: <1574146234-3871-1-git-send-email-skomatineni@nvidia.com>
+ <1574146234-3871-16-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1574146234-3871-16-git-send-email-skomatineni@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Dec 2019 20:58:04 +0100
-Heiner Kallweit <hkallweit1@gmail.com> wrote:
+On Mon, Nov 18, 2019 at 10:50:32PM -0800, Sowjanya Komatineni wrote:
+> Document clock bindings for pmc clocks clk_out_1, clk_out_2 and clk_out_3.
+> These clocks are part of Tegra PMC block and pmc node is the provider for
+> these clocks.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  .../bindings/arm/tegra/nvidia,tegra186-pmc.txt     | 44 ++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
+> index 2d89cdc39eb0..4576de92e4cc 100644
+> --- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
+> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
+> @@ -12,6 +12,10 @@ Required properties:
+>    - "aotag"
+>    - "scratch"
+>    - "misc" (Only for Tegra194)
+> +- #clock-cells : Should be 1 for Tegra30 and higher.
+> +  In clock consumers, this cell represents the PMC clock ID.
+> +  The assignments may be found in header file
+> +  <dt-bindings/soc/tegra-pmc.h>.
 
-> On 01.12.2019 10:52, Holger Hoffst=C3=A4tte wrote:
-> > (cc:'ing netdev & Heiner)
-> >=20
-> > Are you using Jumbo packets? If so please check the thread at
-> > https://lore.kernel.org/lkml/24034.56114.248207.524177@wylie.me.uk/
-> >=20
-> > Btw you should use a more descriptive Subject line, otherwise people mi=
-ght
-> > miss your message..
-> >=20
-> > -h
-> >=20
-> > -------- Forwarded Message --------
-> > Subject: 5.4.1 WARNINGs
-> > Date: Sun, 1 Dec 2019 08:06:37 +0100
-> > From: Udo van den Heuvel <udovdh@xs4all.nl>
-> > Organization: hierzo
-> > To: linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>
-> > Newsgroups: gmane.linux.kernel
-> >=20
-> > Hello,
-> >=20
-> > While booting into 5.4.1 I noticed these.
-> > Any advice please?
-> >=20
-> >=20
-> > Dec=C2=A0 1 07:59:28 vuurmuur named[1318]: resolver priming query compl=
-ete
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ------------[ cut here ]---------=
----
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: NETDEV WATCHDOG: eth0 (r8169): tr=
-ansmit
-> > queue 0 timed out
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: WARNING: CPU: 0 PID: 9 at
-> > net/sched/sch_generic.c:447 dev_watchdog+0x208/0x210
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: Modules linked in: act_police
-> > sch_ingress cls_u32 sch_sfq sch_cbq pppoe pppox ip6table_raw nf_log_ipv6
-> > ip6table_mangle xt_u32 xt_CT xt_nat nf_log_ipv4 nf_log_common
-> > xt_statistic nf_nat_sip nf_conntrack_sip xt_recent xt_string xt_lscan(O)
-> > xt_TARPIT(O) iptable_raw nf_nat_h323 nf_conntrack_h323 xt_TCPMSS
-> > xt_length xt_hl xt_tcpmss xt_owner xt_mac xt_mark xt_multiport xt_limit
-> > nf_nat_irc nf_conntrack_irc xt_LOG xt_DSCP xt_REDIRECT xt_MASQUERADE
-> > xt_dscp nf_nat_ftp nf_conntrack_ftp iptable_mangle iptable_nat
-> > mq_deadline 8021q ipt_REJECT nf_reject_ipv4 iptable_filter ip6t_REJECT
-> > nf_reject_ipv6 xt_state xt_conntrack ip6table_filter nct6775 ip6_tables
-> > sunrpc amdgpu mfd_core gpu_sched drm_kms_helper syscopyarea sysfillrect
-> > sysimgblt fb_sys_fops ttm snd_hda_codec_realtek snd_hda_codec_generic
-> > drm snd_hda_codec_hdmi snd_hda_intel drm_panel_orientation_quirks
-> > cfbfillrect snd_intel_nhlt amd_freq_sensitivity cfbimgblt snd_hda_codec
-> > aesni_intel cfbcopyarea i2c_algo_bit fb glue_helper
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: snd_hda_core crypto_simd fbdev sn=
-d_pcm
-> > cryptd pl2303 backlight snd_timer snd i2c_piix4 acpi_cpufreq sr_mod
-> > cdrom sd_mod autofs4
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: CPU: 0 PID: 9 Comm: ksoftirqd/0
-> > Tainted: G=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-O=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 5.4.1 #2
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: Hardware name: To Be Filled By O.=
-E.M.
-> > To Be Filled By O.E.M./QC5000M-ITX/PH, BIOS P1.10 05/06/2015
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: RIP: 0010:dev_watchdog+0x208/0x210
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: Code: 63 54 24 e0 eb 8d 4c 89 f7 =
-c6 05
-> > fc a0 b9 00 01 e8 6d fa fc ff 44 89 e9 48 89 c2 4c 89 f6 48 c7 c7 48 79
-> > dd 81 e8 98 5a b5 ff <0f> 0b eb bd 0f 1f 40 00 48 c7 47 08 00 00 00 00
-> > 48 c7 07 00 00 00
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: RSP: 0018:ffffc9000006fd68 EFLAGS=
-: 00010286
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: RAX: 0000000000000000 RBX:
-> > ffff88813a1d6400 RCX: 0000000000000006
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: RDX: 0000000000000007 RSI:
-> > ffffffff8203aa58 RDI: ffff88813b216250
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: RBP: ffff8881394ee460 R08:
-> > 0000000000080001 R09: 0000000000000002
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: R10: 0000000000000001 R11:
-> > 0000000000000001 R12: ffff8881394ee4b8
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: R13: 0000000000000000 R14:
-> > ffff8881394ee000 R15: ffff88813a1d6480
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: FS:=C2=A0 0000000000000000(0000)
-> > GS:ffff88813b200000(0000) knlGS:0000000000000000
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: CS:=C2=A0 0010 DS: 0000 ES: 0000 =
-CR0:
-> > 0000000080050033
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: CR2: 00007f09b9c20a78 CR3:
-> > 00000001385d4000 CR4: 00000000000406b0
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: Call Trace:
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? qdisc_put_unlocked+0x30/0x30
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? qdisc_put_unlocked+0x30/0x30
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: call_timer_fn.isra.0+0x78/0x110
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? add_timer_on+0xd0/0xd0
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: run_timer_softirq+0x19d/0x1c0
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? _raw_spin_unlock_irq+0x1f/0x40
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? finish_task_switch+0xb2/0x250
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? finish_task_switch+0x81/0x250
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: __do_softirq+0xcf/0x210
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: run_ksoftirqd+0x15/0x20
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: smpboot_thread_fn+0xe9/0x1f0
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: kthread+0xf1/0x130
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? sort_range+0x20/0x20
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? kthread_park+0x80/0x80
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ret_from_fork+0x22/0x40
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ---[ end trace e771bca3c459d7f9 ]=
----
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ------------[ cut here ]---------=
----
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: WARNING: CPU: 0 PID: 9 at
-> > net/sched/sch_generic.c:447 dev_watchdog+0x208/0x210
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: Modules linked in: act_police
-> > sch_ingress cls_u32 sch_sfq sch_cbq pppoe pppox ip6table_raw nf_log_ipv6
-> > ip6table_mangle xt_u32 xt_CT xt_nat nf_log_ipv4 nf_log_common
-> > xt_statistic nf_nat_sip nf_conntrack_sip xt_recent xt_string xt_lscan(O)
-> > xt_TARPIT(O) iptable_raw nf_nat_h323 nf_conntrack_h323 xt_TCPMSS
-> > xt_length xt_hl xt_tcpmss xt_owner xt_mac xt_mark xt_multiport xt_limit
-> > nf_nat_irc nf_conntrack_irc xt_LOG xt_DSCP xt_REDIRECT xt_MASQUERADE
-> > xt_dscp nf_nat_ftp nf_conntrack_ftp iptable_mangle iptable_nat
-> > mq_deadline 8021q ipt_REJECT nf_reject_ipv4 iptable_filter ip6t_REJECT
-> > nf_reject_ipv6 xt_state xt_conntrack ip6table_filter nct6775 ip6_tables
-> > sunrpc amdgpu mfd_core gpu_sched drm_kms_helper syscopyarea sysfillrect
-> > sysimgblt fb_sys_fops ttm snd_hda_codec_realtek snd_hda_codec_generic
-> > drm snd_hda_codec_hdmi snd_hda_intel drm_panel_orientation_quirks
-> > cfbfillrect snd_intel_nhlt amd_freq_sensitivity cfbimgblt snd_hda_codec
-> > aesni_intel cfbcopyarea i2c_algo_bit fb glue_helper
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: snd_hda_core crypto_simd fbdev sn=
-d_pcm
-> > cryptd pl2303 backlight snd_timer snd i2c_piix4 acpi_cpufreq sr_mod
-> > cdrom sd_mod autofs4
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: CPU: 0 PID: 9 Comm: ksoftirqd/0
-> > Tainted: G=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-O=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 5.4.1 #2
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: Hardware name: To Be Filled By O.=
-E.M.
-> > To Be Filled By O.E.M./QC5000M-ITX/PH, BIOS P1.10 05/06/2015
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: RIP: 0010:dev_watchdog+0x208/0x210
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: Code: 63 54 24 e0 eb 8d 4c 89 f7 =
-c6 05
-> > fc a0 b9 00 01 e8 6d fa fc ff 44 89 e9 48 89 c2 4c 89 f6 48 c7 c7 48 79
-> > dd 81 e8 98 5a b5 ff <0f> 0b eb bd 0f 1f 40 00 48 c7 47 08 00 00 00 00
-> > 48 c7 07 00 00 00
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: RSP: 0018:ffffc9000006fd68 EFLAGS=
-: 00010286
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: RAX: 0000000000000000 RBX:
-> > ffff88813a1d6400 RCX: 0000000000000006
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: RDX: 0000000000000007 RSI:
-> > ffffffff8203aa58 RDI: ffff88813b216250
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: RBP: ffff8881394ee460 R08:
-> > 0000000000080001 R09: 0000000000000002
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: R10: 0000000000000001 R11:
-> > 0000000000000001 R12: ffff8881394ee4b8
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: R13: 0000000000000000 R14:
-> > ffff8881394ee000 R15: ffff88813a1d6480
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: FS:=C2=A0 0000000000000000(0000)
-> > GS:ffff88813b200000(0000) knlGS:0000000000000000
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: CS:=C2=A0 0010 DS: 0000 ES: 0000 =
-CR0:
-> > 0000000080050033
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: CR2: 00007f09b9c20a78 CR3:
-> > 00000001385d4000 CR4: 00000000000406b0
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: Call Trace:
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? qdisc_put_unlocked+0x30/0x30
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? qdisc_put_unlocked+0x30/0x30
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: call_timer_fn.isra.0+0x78/0x110
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? add_timer_on+0xd0/0xd0
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: run_timer_softirq+0x19d/0x1c0
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? _raw_spin_unlock_irq+0x1f/0x40
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? finish_task_switch+0xb2/0x250
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? finish_task_switch+0x81/0x250
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: __do_softirq+0xcf/0x210
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: run_ksoftirqd+0x15/0x20
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: smpboot_thread_fn+0xe9/0x1f0
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: kthread+0xf1/0x130
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? sort_range+0x20/0x20
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? kthread_park+0x80/0x80
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ret_from_fork+0x22/0x40
-> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ---[ end trace e771bca3c459d7f9 ]=
----
-> >=20
-> >=20
-> > Kind regards,
-> > Udo
-> >  =20
-> If the problem persists, please create a ticket at bugzilla.kernel.org,
-> including:
->=20
-> - full dmesg log
-> - last known good kernel version
-> - whether problem persists if you switch the one interface with jumbo
->   packets to standard MTU
-> - best would be a bisect result
->=20
-> Heiner
+Kind of strange the header is shared, but the binding doc is not.
 
+>  
+>  Optional properties:
+>  - nvidia,invert-interrupt: If present, inverts the PMU interrupt signal.
+> @@ -130,3 +134,43 @@ Pinctrl client example:
+>  		pinctrl-1 = <&hdmi_on>;
+>  		pinctrl-names = "hdmi-on", "hdmi-off";
+>  	};
+> +
+> +== Clock Control ==
+> +
+> +Tegra PMC has 3 clocks clk_1, clk_2 and clk_3. Each of these clocks has
+> +source selection and enable/disable gate.
+> +Parent/source for these clocks can be either of clk_m, clk_m_div2, clk_m_div4,
+> +or extern clock from Tegra CAR module.
+> +
+> +Clock configuration example:
+> +	pmc: pmc@7000e400 {
+> +		compatible = "nvidia,tegra186-pmc";
+> +		reg = <0 0x0c360000 0 0x10000>,
+> +		      <0 0x0c370000 0 0x10000>,
+> +		      <0 0x0c380000 0 0x10000>,
+> +		      <0 0x0c390000 0 0x10000>;
+> +		reg-names = "pmc", "wake", "aotag", "scratch";
+> +		...
+> +		#clock-cells = <1>;
+> +		...
 
-Bugzilla.kernel.org is not used for networking bugs.
-This is not good advice, and would like to discourage more use of bugzilla.
-I am the only person who gets notified and I end up forwarding them
-to the mailing list.
+Once converted to schema, the examples have to compile and this won't. 
+They also have to be complete enough to pass validation checks.
+
+> +	};
+> +
+> +Clock consumer example:
+> +	host1x@50000000 {
+> +		...
+> +		vi@54080000 {
+> +		...
+> +		assigned-clocks = <&pmc TEGRA_PMC_CLK_OUT_3_MUX>;
+> +		assigned-clock-parents = <&tegra_car TEGRA210_CLK_EXTERN3>;
+
+Indentation is wrong.
+
+> +		};
+> +		...
+> +	};
+> +	...
+> +	i2c@7000c500 {
+> +		cam_sensor {
+> +		...
+> +		clocks = <&pmc TEGRA_PMC_CLK_OUT_3>;
+> +		clock-names = "mclk";
+
+Same here.
+
+> +		...
+> +		};
+> +	};
+> -- 
+> 2.7.4
+> 
