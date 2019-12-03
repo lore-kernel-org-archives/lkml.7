@@ -2,61 +2,52 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	PDS_BTC_ID,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0EE2C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6F0C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EC8F214AF
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D28C920862
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413492;
-	bh=PvrA4J+W8QBDfWcmIS4V90Fx1g6lwnCedsz7K6EiqCI=;
+	s=default; t=1575413498;
+	bh=CoEzIdgrHZSh/Pmxs+UK47acLtXWnbBfztsrTy8FYMs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=caYGNP4VI+BmwOhMaBzAfeNWMWt6GHdxoaIDGlfRxhfXJI8Q58i8RF7qDinPYhoWX
-	 zEXCABIBUPzSj4wBJEHtmurnxHaz3LHt+ApWz76iqUnDN/t0H6RMR4l5l5GVVdHWqh
-	 HSjh7LS10YDy+lybWd4qP15Sakilgw5O1TF7MRE4=
+	b=oZ614MaEu/sql9lBwNHA7T3r9h8UGOmx0POkrDXnkqlwEQT1a96/uwhyHc+lwIQrB
+	 FbwQofrbjHEA+BlsUc1NqLQZY+YAbOOep0M2K7kEn2P4468WXCRwL94E24E+/dWa/K
+	 yaTVLLEmI0iv2VSxpMDosiEeITHF1bPJXTD9xhH8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729903AbfLCWvb (ORCPT
+        id S1729919AbfLCWvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:51:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43558 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:51:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729882AbfLCWvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:51:25 -0500
+        id S1729904AbfLCWvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:51:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFCCC21582;
-        Tue,  3 Dec 2019 22:51:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B5C120848;
+        Tue,  3 Dec 2019 22:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413484;
-        bh=PvrA4J+W8QBDfWcmIS4V90Fx1g6lwnCedsz7K6EiqCI=;
+        s=default; t=1575413491;
+        bh=CoEzIdgrHZSh/Pmxs+UK47acLtXWnbBfztsrTy8FYMs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZpVGuDXEwvfViMnoTSgc20IiAh/vlIYIMxMwLy1lEFQnOK7tOMWMgeXLdm+1S6zxT
-         4IeS139TTbn+27F35JZ56h9wJhzV8ad1ZsOhC/feoGS7iYulCJZ31JiyXMj2WzNbaT
-         IKLmFyF4KSAMRdbuGOn60ffMRTne9guDBQ7hUr7w=
+        b=bFXr5HWg7LCu7M3MrX/s96rEM0UZSGlCtpP/o4pboDJqKT06IBH/zo2S2dLZriNsG
+         0sanLWMcMZvXYD5dSfr1tGXjFJ0BeJJ2peLeKdTeR5UoYwIWJRzPrUBGfNVG12Kdmn
+         qHtvlLazJXe5UA94gOfw0TkOXAWAuYTBo64bgMR4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrea Righi <righi.andrea@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yonghong Song <yhs@fb.com>, Ingo Molnar <mingo@kernel.org>,
+        stable@vger.kernel.org, Nick Bowler <nbowler@draconx.ca>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 128/321] kprobes: Blacklist symbols in arch-defined prohibited area
-Date:   Tue,  3 Dec 2019 23:33:14 +0100
-Message-Id: <20191203223433.811052655@linuxfoundation.org>
+Subject: [PATCH 4.19 148/321] xfs: Fix bulkstat compat ioctls on x32 userspace.
+Date:   Tue,  3 Dec 2019 23:33:34 +0100
+Message-Id: <20191203223434.852090814@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -69,147 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Nick Bowler <nbowler@draconx.ca>
 
-[ Upstream commit fb1a59fae8baa3f3c69b72a87ff94fc4fa5683ec ]
+[ Upstream commit 7ca860e3c1a74ad6bd8949364073ef1044cad758 ]
 
-Blacklist symbols in arch-defined probe-prohibited areas.
-With this change, user can see all symbols which are prohibited
-to probe in debugfs.
+The bulkstat family of ioctls are problematic on x32, because there is
+a mixup of native 32-bit and 64-bit conventions.  The xfs_fsop_bulkreq
+struct contains pointers and 32-bit integers so that matches the native
+32-bit layout, and that means the ioctl implementation goes into the
+regular compat path on x32.
 
-All archtectures which have custom prohibit areas should define
-its own arch_populate_kprobe_blacklist() function, but unless that,
-all symbols marked __kprobes are blacklisted.
+However, the 'ubuffer' member of that struct in turn refers to either
+struct xfs_inogrp or xfs_bstat (or an array of these).  On x32, those
+structures match the native 64-bit layout.  The compat implementation
+writes out the 32-bit version of these structures.  This is not the
+expected format for x32 userspace, causing problems.
 
-Reported-by: Andrea Righi <righi.andrea@gmail.com>
-Tested-by: Andrea Righi <righi.andrea@gmail.com>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Yonghong Song <yhs@fb.com>
-Link: http://lkml.kernel.org/r/154503485491.26176.15823229545155174796.stgit@devbox
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fortunately the functions which actually output these xfs_inogrp and
+xfs_bstat structures have an easy way to select which output format
+is required, so we just need a little tweak to select the right format
+on x32.
+
+Signed-off-by: Nick Bowler <nbowler@draconx.ca>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/kprobes.h |  3 ++
- kernel/kprobes.c        | 67 ++++++++++++++++++++++++++++++++---------
- 2 files changed, 56 insertions(+), 14 deletions(-)
+ fs/xfs/xfs_ioctl32.c | 34 ++++++++++++++++++++++++++++++----
+ 1 file changed, 30 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
-index 32cae0f35b9d4..9adb92ad24d3f 100644
---- a/include/linux/kprobes.h
-+++ b/include/linux/kprobes.h
-@@ -243,10 +243,13 @@ extern int arch_init_kprobes(void);
- extern void show_registers(struct pt_regs *regs);
- extern void kprobes_inc_nmissed_count(struct kprobe *p);
- extern bool arch_within_kprobe_blacklist(unsigned long addr);
-+extern int arch_populate_kprobe_blacklist(void);
- extern bool arch_kprobe_on_func_entry(unsigned long offset);
- extern bool kprobe_on_func_entry(kprobe_opcode_t *addr, const char *sym, unsigned long offset);
+diff --git a/fs/xfs/xfs_ioctl32.c b/fs/xfs/xfs_ioctl32.c
+index 4c34efcbf7e80..b044f7d36782c 100644
+--- a/fs/xfs/xfs_ioctl32.c
++++ b/fs/xfs/xfs_ioctl32.c
+@@ -241,6 +241,32 @@ xfs_compat_ioc_bulkstat(
+ 	int			done;
+ 	int			error;
  
- extern bool within_kprobe_blacklist(unsigned long addr);
-+extern int kprobe_add_ksym_blacklist(unsigned long entry);
-+extern int kprobe_add_area_blacklist(unsigned long start, unsigned long end);
- 
- struct kprobe_insn_cache {
- 	struct mutex mutex;
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index aed90788db5c1..f4e4095ec7eae 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -2096,6 +2096,47 @@ void dump_kprobe(struct kprobe *kp)
- }
- NOKPROBE_SYMBOL(dump_kprobe);
- 
-+int kprobe_add_ksym_blacklist(unsigned long entry)
-+{
-+	struct kprobe_blacklist_entry *ent;
-+	unsigned long offset = 0, size = 0;
++	/*
++	 * Output structure handling functions.  Depending on the command,
++	 * either the xfs_bstat and xfs_inogrp structures are written out
++	 * to userpace memory via bulkreq.ubuffer.  Normally the compat
++	 * functions and structure size are the correct ones to use ...
++	 */
++	inumbers_fmt_pf inumbers_func = xfs_inumbers_fmt_compat;
++	bulkstat_one_pf	bs_one_func = xfs_bulkstat_one_compat;
++	size_t bs_one_size = sizeof(struct compat_xfs_bstat);
 +
-+	if (!kernel_text_address(entry) ||
-+	    !kallsyms_lookup_size_offset(entry, &size, &offset))
-+		return -EINVAL;
-+
-+	ent = kmalloc(sizeof(*ent), GFP_KERNEL);
-+	if (!ent)
-+		return -ENOMEM;
-+	ent->start_addr = entry;
-+	ent->end_addr = entry + size;
-+	INIT_LIST_HEAD(&ent->list);
-+	list_add_tail(&ent->list, &kprobe_blacklist);
-+
-+	return (int)size;
-+}
-+
-+/* Add all symbols in given area into kprobe blacklist */
-+int kprobe_add_area_blacklist(unsigned long start, unsigned long end)
-+{
-+	unsigned long entry;
-+	int ret = 0;
-+
-+	for (entry = start; entry < end; entry += ret) {
-+		ret = kprobe_add_ksym_blacklist(entry);
-+		if (ret < 0)
-+			return ret;
-+		if (ret == 0)	/* In case of alias symbol */
-+			ret = 1;
++#ifdef CONFIG_X86_X32
++	if (in_x32_syscall()) {
++		/*
++		 * ... but on x32 the input xfs_fsop_bulkreq has pointers
++		 * which must be handled in the "compat" (32-bit) way, while
++		 * the xfs_bstat and xfs_inogrp structures follow native 64-
++		 * bit layout convention.  So adjust accordingly, otherwise
++		 * the data written out in compat layout will not match what
++		 * x32 userspace expects.
++		 */
++		inumbers_func = xfs_inumbers_fmt;
++		bs_one_func = xfs_bulkstat_one;
++		bs_one_size = sizeof(struct xfs_bstat);
 +	}
-+	return 0;
-+}
++#endif
 +
-+int __init __weak arch_populate_kprobe_blacklist(void)
-+{
-+	return 0;
-+}
-+
- /*
-  * Lookup and populate the kprobe_blacklist.
-  *
-@@ -2107,26 +2148,24 @@ NOKPROBE_SYMBOL(dump_kprobe);
- static int __init populate_kprobe_blacklist(unsigned long *start,
- 					     unsigned long *end)
- {
-+	unsigned long entry;
- 	unsigned long *iter;
--	struct kprobe_blacklist_entry *ent;
--	unsigned long entry, offset = 0, size = 0;
-+	int ret;
+ 	/* done = 1 if there are more stats to get and if bulkstat */
+ 	/* should be called again (unused here, but used in dmapi) */
  
- 	for (iter = start; iter < end; iter++) {
- 		entry = arch_deref_entry_point((void *)*iter);
--
--		if (!kernel_text_address(entry) ||
--		    !kallsyms_lookup_size_offset(entry, &size, &offset))
-+		ret = kprobe_add_ksym_blacklist(entry);
-+		if (ret == -EINVAL)
- 			continue;
--
--		ent = kmalloc(sizeof(*ent), GFP_KERNEL);
--		if (!ent)
--			return -ENOMEM;
--		ent->start_addr = entry;
--		ent->end_addr = entry + size;
--		INIT_LIST_HEAD(&ent->list);
--		list_add_tail(&ent->list, &kprobe_blacklist);
-+		if (ret < 0)
-+			return ret;
- 	}
--	return 0;
-+
-+	/* Symbols in __kprobes_text are blacklisted */
-+	ret = kprobe_add_area_blacklist((unsigned long)__kprobes_text_start,
-+					(unsigned long)__kprobes_text_end);
-+
-+	return ret ? : arch_populate_kprobe_blacklist();
- }
+@@ -272,15 +298,15 @@ xfs_compat_ioc_bulkstat(
  
- /* Module notifier call back, checking kprobes on the module */
+ 	if (cmd == XFS_IOC_FSINUMBERS_32) {
+ 		error = xfs_inumbers(mp, &inlast, &count,
+-				bulkreq.ubuffer, xfs_inumbers_fmt_compat);
++				bulkreq.ubuffer, inumbers_func);
+ 	} else if (cmd == XFS_IOC_FSBULKSTAT_SINGLE_32) {
+ 		int res;
+ 
+-		error = xfs_bulkstat_one_compat(mp, inlast, bulkreq.ubuffer,
+-				sizeof(compat_xfs_bstat_t), NULL, &res);
++		error = bs_one_func(mp, inlast, bulkreq.ubuffer,
++				bs_one_size, NULL, &res);
+ 	} else if (cmd == XFS_IOC_FSBULKSTAT_32) {
+ 		error = xfs_bulkstat(mp, &inlast, &count,
+-			xfs_bulkstat_one_compat, sizeof(compat_xfs_bstat_t),
++			bs_one_func, bs_one_size,
+ 			bulkreq.ubuffer, &done);
+ 	} else
+ 		error = -EINVAL;
 -- 
 2.20.1
 
