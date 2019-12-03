@@ -2,115 +2,102 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE2BC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 667CCC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8D2A206EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41025206EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:40:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbfLCNjo (ORCPT
+        id S1726443AbfLCNkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 08:39:44 -0500
-Received: from mx2.cyber.ee ([193.40.6.72]:58685 "EHLO mx2.cyber.ee"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725939AbfLCNjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 08:39:44 -0500
-Subject: Re: UBSAN: Undefined behaviour in arch/x86/events/intel/p6.c:116:29
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-References: <02f44ed5-13ac-f9c6-1f35-129c41006900@linux.ee>
- <20191202170633.GN2844@hirez.programming.kicks-ass.net>
-From:   Meelis Roos <mroos@linux.ee>
-Message-ID: <0676c6ec-4475-62dc-b202-a62deaedd2dd@linux.ee>
-Date:   Tue, 3 Dec 2019 15:39:49 +0200
+        Tue, 3 Dec 2019 08:40:02 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52968 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726189AbfLCNkB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 08:40:01 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB3DbvPV051585
+        for <linux-kernel@vger.kernel.org>; Tue, 3 Dec 2019 08:39:59 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wm6xbnwd4-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 08:39:58 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <kamalesh@linux.vnet.ibm.com>;
+        Tue, 3 Dec 2019 13:39:57 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 3 Dec 2019 13:39:54 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB3DdqR152756702
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 3 Dec 2019 13:39:52 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9C8ABA4066;
+        Tue,  3 Dec 2019 13:39:52 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B3CA6A4064;
+        Tue,  3 Dec 2019 13:39:50 +0000 (GMT)
+Received: from JAVRIS.in.ibm.com (unknown [9.85.70.93])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue,  3 Dec 2019 13:39:50 +0000 (GMT)
+Subject: Re: [PATCH 1/3] powerpc/pseries: Account for SPURR ticks on idle CPUs
+To:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <1574856072-30972-1-git-send-email-ego@linux.vnet.ibm.com>
+ <1574856072-30972-2-git-send-email-ego@linux.vnet.ibm.com>
+From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Date:   Tue, 3 Dec 2019 19:09:48 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191202170633.GN2844@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1574856072-30972-2-git-send-email-ego@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19120313-0008-0000-0000-0000033C5BAE
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120313-0009-0000-0000-00004A5B7680
+Message-Id: <6ec054a4-e87b-6d3f-c23f-bbb6b219c77a@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-03_03:2019-12-02,2019-12-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
+ suspectscore=0 lowpriorityscore=0 phishscore=0 priorityscore=1501
+ impostorscore=0 clxscore=1015 adultscore=0 mlxlogscore=999 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912030107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Does something like so fix it?
+On 11/27/19 5:31 PM, Gautham R. Shenoy wrote:
+> From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+> 
+> On PSeries LPARs, to compute the utilization, tools such as lparstat
+> need to know the [S]PURR ticks when the CPUs were busy or idle.
+> 
+> In the pseries cpuidle driver, we keep track of the idle PURR ticks in
+> the VPA variable "wait_state_cycles". This patch extends the support
+> to account for the idle SPURR ticks.
 
-Unfortunately not (tested on top of todays git):
+Thanks for working on it.
 
-[    0.000000] Linux version 5.4.0-11180-g76bb8b05960c-dirty (mroos@d600) (gcc version 9.2.1 20191109 (Debian 9.2.1-19)) #20 Tue Dec 3 15:14:51 EET 2019
-[...]
-[    8.774201] ================================================================================
-[    8.774256] UBSAN: Undefined behaviour in arch/x86/events/intel/p6.c:116:29
-[    8.774297] index 8 is out of range for type 'u64 [8]'
-[    8.774341] CPU: 0 PID: 1 Comm: swapper Not tainted 5.4.0-11180-g76bb8b05960c-dirty #20
-[    8.774345] Hardware name: Dell Computer Corporation Latitude D600                   /0X2034, BIOS A16 06/29/2005
-[    8.774349] Call Trace:
-[    8.774368]  dump_stack+0x16/0x19
-[    8.774377]  ubsan_epilogue+0xb/0x29
-[    8.774384]  __ubsan_handle_out_of_bounds.cold+0x43/0x48
-[    8.774396]  ? sysfs_add_file_mode_ns+0xad/0x180
-[    8.774406]  p6_pmu_event_map+0x3b/0x50
-[    8.774413]  is_visible+0x25/0x30
-[    8.774419]  ? collect_events+0x150/0x150
-[    8.774425]  internal_create_group+0xd8/0x3e0
-[    8.774431]  ? collect_events+0x150/0x150
-[    8.774438]  internal_create_groups.part.0+0x34/0x80
-[    8.774444]  sysfs_create_groups+0x10/0x20
-[    8.774454]  device_add+0x62a/0x710
-[    8.774463]  ? kvasprintf_const+0x59/0x90
-[    8.774471]  ? kfree_const+0xf/0x30
-[    8.774479]  ? kobject_set_name_vargs+0x6a/0xa0
-[    8.774489]  pmu_dev_alloc+0x8e/0xe0
-[    8.774497]  perf_event_sysfs_init+0x40/0x78
-[    8.774503]  ? stack_map_init+0x17/0x17
-[    8.774508]  do_one_initcall+0x7a/0x1b3
-[    8.774519]  ? do_early_param+0x75/0x75
-[    8.774528]  kernel_init_freeable+0x1ae/0x230
-[    8.774537]  ? rest_init+0x6d/0x6d
-[    8.774544]  kernel_init+0x9/0xf3
-[    8.774550]  ? rest_init+0x6d/0x6d
-[    8.774556]  ret_from_fork+0x2e/0x38
-[    8.774562] ================================================================================
-[    8.774606] ================================================================================
-[    8.774649] UBSAN: Undefined behaviour in arch/x86/events/intel/p6.c:116:29
-[    8.774690] load of address (ptrval) with insufficient space
-[    8.774727] for an object of type 'const u64'
-[    8.774765] CPU: 0 PID: 1 Comm: swapper Not tainted 5.4.0-11180-g76bb8b05960c-dirty #20
-[    8.774768] Hardware name: Dell Computer Corporation Latitude D600                   /0X2034, BIOS A16 06/29/2005
-[    8.774771] Call Trace:
-[    8.774777]  dump_stack+0x16/0x19
-[    8.774783]  ubsan_epilogue+0xb/0x29
-[    8.774789]  ubsan_type_mismatch_common.cold+0xd6/0xdb
-[    8.774797]  __ubsan_handle_type_mismatch_v1+0x2d/0x40
-[    8.774804]  p6_pmu_event_map+0x4b/0x50
-[    8.774809]  is_visible+0x25/0x30
-[    8.774815]  ? collect_events+0x150/0x150
-[    8.774820]  internal_create_group+0xd8/0x3e0
-[    8.774826]  ? collect_events+0x150/0x150
-[    8.774833]  internal_create_groups.part.0+0x34/0x80
-[    8.774839]  sysfs_create_groups+0x10/0x20
-[    8.774846]  device_add+0x62a/0x710
-[    8.774854]  ? kvasprintf_const+0x59/0x90
-[    8.774859]  ? kfree_const+0xf/0x30
-[    8.774865]  ? kobject_set_name_vargs+0x6a/0xa0
-[    8.774873]  pmu_dev_alloc+0x8e/0xe0
-[    8.774879]  perf_event_sysfs_init+0x40/0x78
-[    8.774884]  ? stack_map_init+0x17/0x17
-[    8.774890]  do_one_initcall+0x7a/0x1b3
-[    8.774897]  ? do_early_param+0x75/0x75
-[    8.774906]  kernel_init_freeable+0x1ae/0x230
-[    8.774913]  ? rest_init+0x6d/0x6d
-[    8.774920]  kernel_init+0x9/0xf3
-[    8.774926]  ? rest_init+0x6d/0x6d
-[    8.774932]  ret_from_fork+0x2e/0x38
-[    8.774937] ================================================================================
+> 
+> Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+
+Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
 
