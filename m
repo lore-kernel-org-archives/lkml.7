@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DBDC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D3BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 480C92080F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DB972080F
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413008;
-	bh=fTap50hOM9PnZz9jwJ7d7gNLsTKF+xqDJGkeYz8Vz6Y=;
+	s=default; t=1575413010;
+	bh=yPoiiB8nW+V4aZlHFa+hH08rvxh+w9pWkK2I9swro+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kVZtlHy+7/VEyTKJQITrB4Mn5eHERC7fE88akU4fLo3QRR27dnxRI/1KgTdXDVkoB
-	 zKkeKZUFpKbH6PMS+AB6wQey65R9h/lumLc+BHCmWcFW5nQu0od/3mI58wVtsgy23d
-	 zw0dq6+kpYYgcsymwf2gfAM3nWDgkGsyCK5u2uy0=
+	b=biNKDdkVQKHVfYv1wa/ZLmjLRJCrp9vWpM6vISTNbx9smBXYMCHDgc8VWdE3wxd+9
+	 kM9gqTiCHd+OaWc1slqFWvCVKd9LmjPA8GyHjgGudiTeXd9tUIv84l/kP9P71WBjMX
+	 TrfVNcXt2p0IlscTzlBp2o9NqKuUaXlht/SopzEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728632AbfLCWn1 (ORCPT
+        id S1728814AbfLCWn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:43:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58774 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:43:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728475AbfLCWnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:43:24 -0500
+        id S1728308AbfLCWnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:43:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DADF20803;
-        Tue,  3 Dec 2019 22:43:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F0662080F;
+        Tue,  3 Dec 2019 22:43:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413002;
-        bh=fTap50hOM9PnZz9jwJ7d7gNLsTKF+xqDJGkeYz8Vz6Y=;
+        s=default; t=1575413004;
+        bh=yPoiiB8nW+V4aZlHFa+hH08rvxh+w9pWkK2I9swro+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yQEPpgHb5znYilXwouZqxqIcIY5w4b4OBusJU0MUvqpKbK6YMXxzcSEqnOyAxpFi9
-         6x/3d+FmIZA+S6XeNiw4xCZ7JlSp5Xn26yq4esU5oZYpGeYPHpJ+7djLWo/QT8x0kW
-         f671tUlEzXxYqYBdOEUue/NDQx9V4EME2H+6/EbI=
+        b=fd61LxV3R1QLkk9j9ZcaWrmU8uDljDn0nOG0JlbN165bj8nSQ9P2iQQAG0jFAOHTa
+         YL33Tc/Mp09CIcoXQNDrRwm7ZmHP21NO8n4SRxk7V6p3V3xImi/oX/AmsVNS+mi9AG
+         m7MluptQRhbdES+7b9/1b7H9GY33gVRwJ+nblisg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        coverity-bot <keescook+coverity-bot@chromium.org>,
-        Ajay Singh <ajay.kathat@microchip.com>
-Subject: [PATCH 5.3 099/135] staging: wilc1000: fix illegal memory access in wilc_parse_join_bss_param()
-Date:   Tue,  3 Dec 2019 23:35:39 +0100
-Message-Id: <20191203213039.028949888@linuxfoundation.org>
+        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH 5.3 100/135] staging: rtl8192e: fix potential use after free
+Date:   Tue,  3 Dec 2019 23:35:40 +0100
+Message-Id: <20191203213039.266015745@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -60,61 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ajay Singh <ajay.kathat@microchip.com>
+From: Pan Bian <bianpan2016@163.com>
 
-commit c7e621bb981b76d3bfd8a595070ee8282ac4a32b upstream.
+commit b7aa39a2ed0112d07fc277ebd24a08a7b2368ab9 upstream.
 
-Do not copy the extended supported rates in 'param->supp_rates' if the
-array is already full with basic rates values. The array size check
-helped to avoid possible illegal memory access [1] while copying to
-'param->supp_rates' array.
+The variable skb is released via kfree_skb() when the return value of
+_rtl92e_tx is not zero. However, after that, skb is accessed again to
+read its length, which may result in a use after free bug. This patch
+fixes the bug by moving the release operation to where skb is never
+used later.
 
-1. https://marc.info/?l=linux-next&m=157301720517456&w=2
-
-Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-Addresses-Coverity-ID: 1487400 ("Memory - illegal accesses")
-Fixes: 4e0b0f42c9c7 ("staging: wilc1000: use struct to pack join parameters for FW")
-Cc: stable@vger.kernel.org
-Signed-off-by: Ajay Singh <ajay.kathat@microchip.com>
-Link: https://lore.kernel.org/r/20191106062127.3165-1-ajay.kathat@microchip.com
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1572965351-6745-1-git-send-email-bianpan2016@163.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/wilc1000/wilc_hif.c |   23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ drivers/staging/rtl8192e/rtl8192e/rtl_core.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/staging/wilc1000/wilc_hif.c
-+++ b/drivers/staging/wilc1000/wilc_hif.c
-@@ -477,16 +477,21 @@ void *wilc_parse_join_bss_param(struct c
- 		memcpy(&param->supp_rates[1], rates_ie + 2, rates_len);
+--- a/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
++++ b/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
+@@ -1616,14 +1616,15 @@ static void _rtl92e_hard_data_xmit(struc
+ 	memcpy((unsigned char *)(skb->cb), &dev, sizeof(dev));
+ 	skb_push(skb, priv->rtllib->tx_headroom);
+ 	ret = _rtl92e_tx(dev, skb);
+-	if (ret != 0)
+-		kfree_skb(skb);
+ 
+ 	if (queue_index != MGNT_QUEUE) {
+ 		priv->rtllib->stats.tx_bytes += (skb->len -
+ 						 priv->rtllib->tx_headroom);
+ 		priv->rtllib->stats.tx_packets++;
  	}
- 
--	supp_rates_ie = cfg80211_find_ie(WLAN_EID_EXT_SUPP_RATES, ies->data,
--					 ies->len);
--	if (supp_rates_ie) {
--		if (supp_rates_ie[1] > (WILC_MAX_RATES_SUPPORTED - rates_len))
--			param->supp_rates[0] = WILC_MAX_RATES_SUPPORTED;
--		else
--			param->supp_rates[0] += supp_rates_ie[1];
-+	if (rates_len < WILC_MAX_RATES_SUPPORTED) {
-+		supp_rates_ie = cfg80211_find_ie(WLAN_EID_EXT_SUPP_RATES,
-+						 ies->data, ies->len);
-+		if (supp_rates_ie) {
-+			u8 ext_rates = supp_rates_ie[1];
- 
--		memcpy(&param->supp_rates[rates_len + 1], supp_rates_ie + 2,
--		       (param->supp_rates[0] - rates_len));
-+			if (ext_rates > (WILC_MAX_RATES_SUPPORTED - rates_len))
-+				param->supp_rates[0] = WILC_MAX_RATES_SUPPORTED;
-+			else
-+				param->supp_rates[0] += ext_rates;
 +
-+			memcpy(&param->supp_rates[rates_len + 1],
-+			       supp_rates_ie + 2,
-+			       (param->supp_rates[0] - rates_len));
-+		}
- 	}
++	if (ret != 0)
++		kfree_skb(skb);
+ }
  
- 	ht_ie = cfg80211_find_ie(WLAN_EID_HT_CAPABILITY, ies->data, ies->len);
+ static int _rtl92e_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
 
 
