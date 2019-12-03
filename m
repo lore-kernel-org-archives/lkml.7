@@ -2,165 +2,82 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BF0C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E74DDC43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37F082073C
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:11:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9C952073C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575411101;
-	bh=yV8JD0/MRHN7tQ3o/mx8oneY2Drn3aD4ChTwAw/nX4g=;
+	s=default; t=1575411125;
+	bh=2+mUxustzPlC5CGQyGryca6Be+OVrhgg9b66NAQUyRw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=o58D6HsGC/zMlV5ra9YD/VVb6RJOZBKEd2MZNgnWTAk5Hxo+Lraal4Bb3wXUA7/Ux
-	 9An708lOv5zVEhsmkP3dArzEBHXbOY++U52LVbx2uOwy8VVfgMKcAjplrbgY9OOMtT
-	 76Gx2K9O2vIKfcGthfV+gLJAbibio8D2XuGu8se0=
+	b=S+xumNCW+cT2GsUk+G7GeUF5/wLJ1ALNZNVwa4F4VfB2vRNt61Xsvai6bpiZEFnud
+	 iXnTwyMUy9fc8uLrOAo2K71JUkF1Yo9fHYuucMk2slNP5zQGt+nhrMSkIpYb00c85V
+	 z58ei3GLHPTKhZJSwQVKF0ImcG0sdwRNfAX927c8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727656AbfLCWLk (ORCPT
+        id S1727664AbfLCWME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:11:40 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45440 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727502AbfLCWLj (ORCPT
+        Tue, 3 Dec 2019 17:12:04 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45487 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727502AbfLCWMD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:11:39 -0500
-Received: by mail-oi1-f193.google.com with SMTP id v10so2835663oiv.12;
-        Tue, 03 Dec 2019 14:11:38 -0800 (PST)
+        Tue, 3 Dec 2019 17:12:03 -0500
+Received: by mail-oi1-f196.google.com with SMTP id v10so2836722oiv.12;
+        Tue, 03 Dec 2019 14:12:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=477xV8KhxSU4eFJtRC9YkvcLWD2tDbYJIPfmHJ8cs4I=;
-        b=lFew31/q93Jl+RjRw6W++MjzuPwAv2yos1eIdY1tct5cGaRm0FmRzQR2DTh7p14fad
-         EHxSpfNsoVcyxmBlZkZqvSW96nHIA8xPCiIuD65VYKubY5BeLC77T7PlRbU+RFYhsUIC
-         KNU6JEhC29SbDYYpDGIu/PdW80Z3TiYB82paVYR5dWOtPXteKpP2bGQfh0pe4FAs4w+y
-         aos7QQ2Q9NTcp3LaNofOVeu4oQGvhua8F/4mK/xedoYxBT104z5hgNwF6czQmtDzdjAo
-         maYkmMP3Ui0cVxZZ6Jfins3/L9MJFxHafiW4W68s5zwqp58kq4kA/iwjtF7HXszmllwx
-         872w==
-X-Gm-Message-State: APjAAAXtcMPQpgalWE6jDYq0z3sM1USnVmcYM/QIt1zWMgfWWvIhGOrZ
-        AbPHCj9rMW80MH+ix2hD5Q==
-X-Google-Smtp-Source: APXvYqxGOcD+wXxTp7nqGCSZ7mOF2ARYJRHRh1NYspCna0wEbPtu3A+Sk2oM+XjkYzB91ANachrw0Q==
-X-Received: by 2002:aca:d80b:: with SMTP id p11mr183106oig.83.1575411098160;
-        Tue, 03 Dec 2019 14:11:38 -0800 (PST)
+        bh=pldoBT5ORXz4aapzHPt3ccAwmiFN0lj2178c3XaiQRo=;
+        b=GHII+SPUGu61cq9f9EygA+sDBDn/nUowmErILj25N/vyTM2TKzfHzFtC3snhf5x+3o
+         AoY/IIWvnNhP2NCUSR9kUC2yyczFC4KaSYgIByXOOavpd4KNrW9BOz+rXO97e/O5ulES
+         fUVyyiNkycrSI1JrmV8SCWzNdOix3ln74IUfMw7Uu56ZPoehCKMUE0ZcTJ/6BYWriACk
+         HoVOvCvufJnBBOrIunyfgQG8troB4jwmsBqtln2xxXHEfdFIPt54drxQSev3MA4wReK4
+         EbHd5B/XhOH4zIEOEI3jUfTJC7BUF5pVGzRuCac1W7yTaZhDGJyGOqONfJtATVsG/JPh
+         RWug==
+X-Gm-Message-State: APjAAAWQZWXuuJfJq1Qpxp9kp0yA1OtplPjRx7JuAU+Kd2HFIqW1IKmT
+        P847k0YOdigz4R5XSx4qFA==
+X-Google-Smtp-Source: APXvYqysvr90M90SJ2c9VBE2qhNi1oQIbDw7W8BDqJAjL+rSeTywUX/kbsja7PlOsf7oL6ErQP69kA==
+X-Received: by 2002:aca:4ad8:: with SMTP id x207mr208772oia.148.1575411122893;
+        Tue, 03 Dec 2019 14:12:02 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f1sm1539410otq.4.2019.12.03.14.11.37
+        by smtp.gmail.com with ESMTPSA id w12sm1486360otk.75.2019.12.03.14.12.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 14:11:37 -0800 (PST)
-Date:   Tue, 3 Dec 2019 16:11:37 -0600
+        Tue, 03 Dec 2019 14:12:02 -0800 (PST)
+Date:   Tue, 3 Dec 2019 16:12:01 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, digetx@gmail.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, tglx@linutronix.de, mark.rutland@arm.com,
-        allison@lohutok.net, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        mturquette@baylibre.com, horms+renesas@verge.net.au,
-        Jisheng.Zhang@synaptics.com, krzk@kernel.org, arnd@arndb.de,
-        spujar@nvidia.com, josephl@nvidia.com, vidyas@nvidia.com,
-        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
-        markz@nvidia.com, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 15/17] dt-bindings: tegra186-pmc: Add Tegra PMC clock
- bindings
-Message-ID: <20191203221137.GC22716@bogus>
-References: <1574146234-3871-1-git-send-email-skomatineni@nvidia.com>
- <1574146234-3871-16-git-send-email-skomatineni@nvidia.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 1/6] dt-bindings: display/ingenic: Add compatible string
+ for JZ4770
+Message-ID: <20191203221201.GA3201@bogus>
+References: <20191119141736.74607-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1574146234-3871-16-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <20191119141736.74607-1-paul@crapouillou.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 10:50:32PM -0800, Sowjanya Komatineni wrote:
-> Document clock bindings for pmc clocks clk_out_1, clk_out_2 and clk_out_3.
-> These clocks are part of Tegra PMC block and pmc node is the provider for
-> these clocks.
+On Tue, 19 Nov 2019 15:17:31 +0100, Paul Cercueil wrote:
+> Add a compatible string for the LCD controller found in the JZ4770 SoC.
 > 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  .../bindings/arm/tegra/nvidia,tegra186-pmc.txt     | 44 ++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
+>  Documentation/devicetree/bindings/display/ingenic,lcd.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
-> index 2d89cdc39eb0..4576de92e4cc 100644
-> --- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
-> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
-> @@ -12,6 +12,10 @@ Required properties:
->    - "aotag"
->    - "scratch"
->    - "misc" (Only for Tegra194)
-> +- #clock-cells : Should be 1 for Tegra30 and higher.
-> +  In clock consumers, this cell represents the PMC clock ID.
-> +  The assignments may be found in header file
-> +  <dt-bindings/soc/tegra-pmc.h>.
 
-Kind of strange the header is shared, but the binding doc is not.
-
->  
->  Optional properties:
->  - nvidia,invert-interrupt: If present, inverts the PMU interrupt signal.
-> @@ -130,3 +134,43 @@ Pinctrl client example:
->  		pinctrl-1 = <&hdmi_on>;
->  		pinctrl-names = "hdmi-on", "hdmi-off";
->  	};
-> +
-> +== Clock Control ==
-> +
-> +Tegra PMC has 3 clocks clk_1, clk_2 and clk_3. Each of these clocks has
-> +source selection and enable/disable gate.
-> +Parent/source for these clocks can be either of clk_m, clk_m_div2, clk_m_div4,
-> +or extern clock from Tegra CAR module.
-> +
-> +Clock configuration example:
-> +	pmc: pmc@7000e400 {
-> +		compatible = "nvidia,tegra186-pmc";
-> +		reg = <0 0x0c360000 0 0x10000>,
-> +		      <0 0x0c370000 0 0x10000>,
-> +		      <0 0x0c380000 0 0x10000>,
-> +		      <0 0x0c390000 0 0x10000>;
-> +		reg-names = "pmc", "wake", "aotag", "scratch";
-> +		...
-> +		#clock-cells = <1>;
-> +		...
-
-Once converted to schema, the examples have to compile and this won't. 
-They also have to be complete enough to pass validation checks.
-
-> +	};
-> +
-> +Clock consumer example:
-> +	host1x@50000000 {
-> +		...
-> +		vi@54080000 {
-> +		...
-> +		assigned-clocks = <&pmc TEGRA_PMC_CLK_OUT_3_MUX>;
-> +		assigned-clock-parents = <&tegra_car TEGRA210_CLK_EXTERN3>;
-
-Indentation is wrong.
-
-> +		};
-> +		...
-> +	};
-> +	...
-> +	i2c@7000c500 {
-> +		cam_sensor {
-> +		...
-> +		clocks = <&pmc TEGRA_PMC_CLK_OUT_3>;
-> +		clock-names = "mclk";
-
-Same here.
-
-> +		...
-> +		};
-> +	};
-> -- 
-> 2.7.4
-> 
+Acked-by: Rob Herring <robh@kernel.org>
