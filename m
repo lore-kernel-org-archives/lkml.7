@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B0EC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FEC4C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD9E20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E398020863
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413713;
-	bh=geeeVQ63UDrNG1JfFxbc//qDRyzxsQyqhEbu7hEACLY=;
+	s=default; t=1575413716;
+	bh=A/Gyt4u7QrLQqefxIrkznJtIypsCEwCYUtwHl31T/So=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TI3iTUvXujWiOIczCvGXkMg0LAQelHQeAbhPGbwgUOo+uh4FcFTa7Cfchv+sEykRZ
-	 J2Oj24EQmzl57S6zwiFXYDCRSjfDzo1AMj/Yr25j5odYBXwC9yLXfBL5TWnNX+b86u
-	 2fDSpMaXait8zC5JfywWOv7n6iigixltwBfsO5kw=
+	b=im/+K0ityVDV3uXbJktE4u+TDLylNouQZ6VMKHCtqJ6fyPY0Dw9YZR+8H5pYg64VP
+	 Ncqgzp1+Hf0W/rAWGVwOLfthSTx6rIf9aGYtEzUuPJg65+BL/Hiewz3Kc+bhOX8Mhm
+	 05bmg2pHp3AqEh9+BG5n0SJUpzSMT7G3PFeO2Efs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729537AbfLCWzM (ORCPT
+        id S1730259AbfLCWzO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:55:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49350 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:55:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729095AbfLCWzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:55:09 -0500
+        id S1730208AbfLCWzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:55:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D566820803;
-        Tue,  3 Dec 2019 22:55:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 593242053B;
+        Tue,  3 Dec 2019 22:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413709;
-        bh=geeeVQ63UDrNG1JfFxbc//qDRyzxsQyqhEbu7hEACLY=;
+        s=default; t=1575413706;
+        bh=A/Gyt4u7QrLQqefxIrkznJtIypsCEwCYUtwHl31T/So=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WICSmkavbHDbDoRuwMZC9k4Zb7FLxsIcPtxMdT9WXjf2M3OhHfuSjwZpEsyz9c21z
-         vQJOgrqJWV0i/RHz1xdjQpxpWQETKvUzClMubEGdg9aj3V+VoROSiNf3tOuZF2LAQu
-         H9vRkgC8sJVqXQHtGCwEEfGAe28L4Db1bh4lPTpI=
+        b=ovbfBS2pC+Lj7cyRQ5By+jgbmBnKuBgvla+2GnKDDxJMd+kSg0kgB/XfmSWV294+K
+         EWoaNlwXn4WSS5GuDwZ/3yHkSAp2IGQmC5+XKVXr3lvkd1AZqoVjqVULuZpsrZJ+JJ
+         +SKU9iZQtW5M8HsoaKty+EKR7dfMX3JFlAicyMu0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Ying Xue <ying.xue@windriver.com>,
+        Jon Maloy <maloy@donjonn.com>,
+        Hoang Le <hoang.h.le@dektech.com.au>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 232/321] ASoC: samsung: i2s: Fix prescaler setting for the secondary DAI
-Date:   Tue,  3 Dec 2019 23:34:58 +0100
-Message-Id: <20191203223439.187234389@linuxfoundation.org>
+Subject: [PATCH 4.19 231/321] tipc: fix skb may be leaky in tipc_link_input
+Date:   Tue,  3 Dec 2019 23:34:57 +0100
+Message-Id: <20191203223439.130939993@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -62,60 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Hoang Le <hoang.h.le@dektech.com.au>
 
-[ Upstream commit 323fb7b947b265753de34703dbbf8acc8ea3a4de ]
+[ Upstream commit 7384b538d3aed2ed49d3575483d17aeee790fb06 ]
 
-Make sure i2s->rclk_srcrate is properly initialized also during
-playback through the secondary DAI.
+When we free skb at tipc_data_input, we return a 'false' boolean.
+Then, skb passed to subcalling tipc_link_input in tipc_link_rcv,
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+<snip>
+1303 int tipc_link_rcv:
+...
+1354    if (!tipc_data_input(l, skb, l->inputq))
+1355        rc |= tipc_link_input(l, skb, l->inputq);
+</snip>
+
+Fix it by simple changing to a 'true' boolean when skb is being free-ed.
+Then, tipc_link_rcv will bypassed to subcalling tipc_link_input as above
+condition.
+
+Acked-by: Ying Xue <ying.xue@windriver.com>
+Acked-by: Jon Maloy <maloy@donjonn.com>
+Signed-off-by: Hoang Le <hoang.h.le@dektech.com.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/samsung/i2s.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ net/tipc/link.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/samsung/i2s.c b/sound/soc/samsung/i2s.c
-index ce00fe2f6aae3..d4bde4834ce5f 100644
---- a/sound/soc/samsung/i2s.c
-+++ b/sound/soc/samsung/i2s.c
-@@ -604,6 +604,7 @@ static int i2s_set_fmt(struct snd_soc_dai *dai,
- 	unsigned int fmt)
- {
- 	struct i2s_dai *i2s = to_info(dai);
-+	struct i2s_dai *other = get_other_dai(i2s);
- 	int lrp_shift, sdf_shift, sdf_mask, lrp_rlow, mod_slave;
- 	u32 mod, tmp = 0;
- 	unsigned long flags;
-@@ -661,7 +662,8 @@ static int i2s_set_fmt(struct snd_soc_dai *dai,
- 		 * CLK_I2S_RCLK_SRC clock is not exposed so we ensure any
- 		 * clock configuration assigned in DT is not overwritten.
- 		 */
--		if (i2s->rclk_srcrate == 0 && i2s->clk_data.clks == NULL)
-+		if (i2s->rclk_srcrate == 0 && i2s->clk_data.clks == NULL &&
-+		    other->clk_data.clks == NULL)
- 			i2s_set_sysclk(dai, SAMSUNG_I2S_RCLKSRC_0,
- 							0, SND_SOC_CLOCK_IN);
- 		break;
-@@ -699,6 +701,7 @@ static int i2s_hw_params(struct snd_pcm_substream *substream,
- 	struct snd_pcm_hw_params *params, struct snd_soc_dai *dai)
- {
- 	struct i2s_dai *i2s = to_info(dai);
-+	struct i2s_dai *other = get_other_dai(i2s);
- 	u32 mod, mask = 0, val = 0;
- 	struct clk *rclksrc;
- 	unsigned long flags;
-@@ -784,6 +787,9 @@ static int i2s_hw_params(struct snd_pcm_substream *substream,
- 	i2s->frmclk = params_rate(params);
- 
- 	rclksrc = i2s->clk_table[CLK_I2S_RCLK_SRC];
-+	if (!rclksrc || IS_ERR(rclksrc))
-+		rclksrc = other->clk_table[CLK_I2S_RCLK_SRC];
-+
- 	if (rclksrc && !IS_ERR(rclksrc))
- 		i2s->rclk_srcrate = clk_get_rate(rclksrc);
+diff --git a/net/tipc/link.c b/net/tipc/link.c
+index 6344aca4487b6..0fbf8ea18ce04 100644
+--- a/net/tipc/link.c
++++ b/net/tipc/link.c
+@@ -1114,7 +1114,7 @@ static bool tipc_data_input(struct tipc_link *l, struct sk_buff *skb,
+ 	default:
+ 		pr_warn("Dropping received illegal msg type\n");
+ 		kfree_skb(skb);
+-		return false;
++		return true;
+ 	};
+ }
  
 -- 
 2.20.1
