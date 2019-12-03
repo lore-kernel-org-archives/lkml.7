@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F9BCC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFC9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D04E620656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B67820656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:49:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413369;
-	bh=F66DdngBL+vukpTMT7DM9xZJGVecvMvU+cdbojN7Lrk=;
+	s=default; t=1575413375;
+	bh=x5uTloVlZUSZDG2pEyfA9m9Mh/alz08Ac7RdDVqdQwM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RHbQdByQEwxmBaWhHkJ8YnePBcd8fh4Psa2boNK74TmkXPRWK1OtEITSjOl6K1IdF
-	 QaG+JEssx2v2z1A5x+U0v7T0WbnpNl7Zz+S+6z717KWWw+H2/4MgB8kMFud2x4kiE9
-	 pcrDLHQl4I/0WVGtFxrCWuRT6L7YYmBy4fY5SQdo=
+	b=kOHLgXJgyMGMDLs0iVsffLvSWenHtvCbbyRKIhftGXky4UjiKuDW3zYXHjTsW6tFX
+	 WpjdM/i8lWA+yDCOokncopk2i9effRUGg9ByPYGj1OgAM+h5ZDJRdZ1OTrTpRq+aq6
+	 VZeZBSMRXzapFH9picpTjOSiWyyKdmgWnJo2jvF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729607AbfLCWt2 (ORCPT
+        id S1729620AbfLCWte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:49:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40466 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:49:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729598AbfLCWt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:49:26 -0500
+        id S1728727AbfLCWt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:49:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D44C20803;
-        Tue,  3 Dec 2019 22:49:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9E3B20848;
+        Tue,  3 Dec 2019 22:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413365;
-        bh=F66DdngBL+vukpTMT7DM9xZJGVecvMvU+cdbojN7Lrk=;
+        s=default; t=1575413368;
+        bh=x5uTloVlZUSZDG2pEyfA9m9Mh/alz08Ac7RdDVqdQwM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QU8wSzI/7cOk694p7ep0B8KjtoMmB4hub41ud0Z82+r6aTB89fL/CQOuK4WJOFQX9
-         rCHtAP/wDYsUVsBdG6xraRqbkxLjtJ9IkAOhp1z2zeqppFWImmzkWdBqXeB3ATOC9M
-         L21AIltBlQJBc1GpvApNZffvWXVsdkZCruD0PAIs=
+        b=ifcKgwamYJNzRAIuBjbIQweLGtvVZojKjecNdT+pqbH7IC5hvrzhu353x80+H/EIw
+         3/vfuUwJNVO69duZU78ZxH6MIhyLaWun7HkT7OZgP1C+3QaT4K+M9aWvAF0yH/wPGe
+         k7xSrfjlfF8ndwlrIg9JZCEXKK2gb4itwrAbBn+g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        Boris Brezillon <boris.brezillon@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Simek <michal.simek@xilinx.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 101/321] ubi: Do not drop UBI device reference before using
-Date:   Tue,  3 Dec 2019 23:32:47 +0100
-Message-Id: <20191203223432.409992040@linuxfoundation.org>
+Subject: [PATCH 4.19 102/321] microblaze: adjust the help to the real behavior
+Date:   Tue,  3 Dec 2019 23:32:48 +0100
+Message-Id: <20191203223432.461334672@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,39 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit e542087701f09418702673631a908429feb3eae0 ]
+[ Upstream commit bafcc61d998c1ca18f556d92a0e95335ac68c7da ]
 
-The UBI device reference is dropped but then the device is used as a
-parameter of ubi_err. The bug is introduced in changing ubi_err's
-behavior. The old ubi_err does not require a UBI device as its first
-parameter, but the new one does.
+"make ARCH=microblaze help" mentions simpleImage.<dt>.unstrip,
+but it is not a real Make target. It does not work because Makefile
+assumes "system.unstrip" is the name of DT.
 
-Fixes: 32608703310 ("UBI: Extend UBI layer debug/messaging capabilities")
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Reviewed-by: Boris Brezillon <boris.brezillon@bootlin.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+$ make ARCH=microblaze CROSS_COMPILE=microblaze-linux- simpleImage.system.unstrip
+  [ snip ]
+make[1]: *** No rule to make target 'arch/microblaze/boot/dts/system.unstrip.dtb', needed by 'arch/microblaze/boot/dts/system.dtb'.  Stop.
+make: *** [Makefile;1060: arch/microblaze/boot/dts] Error 2
+make: *** Waiting for unfinished jobs....
+
+simpleImage.<dt> works like a phony target that generates multiple
+images. Reflect the real behavior. I removed the DT directory path
+information because it is already explained a few lines below.
+
+While I am here, I deleted the redundant *_defconfig explanation.
+
+The top-level Makefile caters to list available defconfig files:
+
+  mmu_defconfig            - Build for mmu
+  nommu_defconfig          - Build for nommu
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/ubi/kapi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/microblaze/Makefile | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/mtd/ubi/kapi.c b/drivers/mtd/ubi/kapi.c
-index e9e9ecbcedcc3..0b8f0c46268da 100644
---- a/drivers/mtd/ubi/kapi.c
-+++ b/drivers/mtd/ubi/kapi.c
-@@ -227,9 +227,9 @@ out_unlock:
- out_free:
- 	kfree(desc);
- out_put_ubi:
--	ubi_put_device(ubi);
- 	ubi_err(ubi, "cannot open device %d, volume %d, error %d",
- 		ubi_num, vol_id, err);
-+	ubi_put_device(ubi);
- 	return ERR_PTR(err);
- }
- EXPORT_SYMBOL_GPL(ubi_open_volume);
+diff --git a/arch/microblaze/Makefile b/arch/microblaze/Makefile
+index 4f3ab57072652..eecf37276521c 100644
+--- a/arch/microblaze/Makefile
++++ b/arch/microblaze/Makefile
+@@ -91,11 +91,11 @@ define archhelp
+   echo '* linux.bin    - Create raw binary'
+   echo '  linux.bin.gz - Create compressed raw binary'
+   echo '  linux.bin.ub - Create U-Boot wrapped raw binary'
+-  echo '  simpleImage.<dt> - ELF image with $(arch)/boot/dts/<dt>.dts linked in'
+-  echo '                   - stripped elf with fdt blob'
+-  echo '  simpleImage.<dt>.unstrip - full ELF image with fdt blob'
+-  echo '  *_defconfig      - Select default config from arch/microblaze/configs'
+-  echo ''
++  echo '  simpleImage.<dt> - Create the following images with <dt>.dtb linked in'
++  echo '                    simpleImage.<dt>        : raw image'
++  echo '                    simpleImage.<dt>.ub     : raw image with U-Boot header'
++  echo '                    simpleImage.<dt>.unstrip: ELF (identical to vmlinux)'
++  echo '                    simpleImage.<dt>.strip  : stripped ELF'
+   echo '  Targets with <dt> embed a device tree blob inside the image'
+   echo '  These targets support board with firmware that does not'
+   echo '  support passing a device tree directly. Replace <dt> with the'
 -- 
 2.20.1
 
