@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A2FC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDE2C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 887DC20865
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB1F320863
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413786;
-	bh=DVaKPiUmHGKWMJgDHNMiWfSzaP1Ywwb9Top1BdaLCeo=;
+	s=default; t=1575413789;
+	bh=HtPp8zOK5oiK3coHwNOGOpHkANIkVBWdeaQA0EEL6+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lwMiH8wzrm+G8gorIV+dzQk8CJ5pyvmftx0ppaG6b/9XF/s77gnsvzic4lZhBXc4W
-	 nFqmc9VmiX7dX66PfNtAkTAIEDP4jix1wWJjVhudAtfmDxvmPGuhXtV9+T/WdsEij8
-	 ILViXMDSClZmTdtzKrbRRG87pICRFAT98S9K6azw=
+	b=u1BNcGlr6N+rjznT97CZjdvvDXItgeeJndw7ejg8fLranxjhfTIGCxdh63VAWc48R
+	 wnHifUGyo7FTiRbmx/TV1Zj+6/DJF8lPVUdxizy6/zF9S/Kpv7BI2MPSl9TJJNMhBW
+	 VdQkYXFi+aKNGru/nQo3aL2Aji8eobVLQ0FLSfGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730430AbfLCW4Z (ORCPT
+        id S1730437AbfLCW42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:56:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51300 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:56:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730335AbfLCW4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:56:20 -0500
+        id S1730428AbfLCW40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:56:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CA9220656;
-        Tue,  3 Dec 2019 22:56:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16891214AF;
+        Tue,  3 Dec 2019 22:56:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413780;
-        bh=DVaKPiUmHGKWMJgDHNMiWfSzaP1Ywwb9Top1BdaLCeo=;
+        s=default; t=1575413785;
+        bh=HtPp8zOK5oiK3coHwNOGOpHkANIkVBWdeaQA0EEL6+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fackK0Pzl1sDQ8ERjI7u5YA/say3tSKm9p3GxSOr37KYsEnssm9uQCdDs5G0e7i4Q
-         g6TJfJMmd9AWHbFgc1Th+VVwZY1Z7JfUrzgAKZY4RW83bhvZyM9suY+IuOQW0ZjsxX
-         qvxyOnolZfrRlwr65fThkQuOF6dOSt63XQeJDJx8=
+        b=outDsUzGTYMv0XytU2Cd2TEzdY5+wKzm4IiH8qTjQ7d5jNXrZU8RW1+eVWl+tagHl
+         IUPizMQtdd6mWAKybJWeg/RWYT953hsWn9rGAFpiG91M1Em1efpsUrvceqxTer6Dsd
+         N+PRLkEECUATgKVKveNW+pVpoSWSwylepvGoGZIY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        stable@vger.kernel.org, Jian Luo <luojian5@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 220/321] gpu: ipu-v3: pre: dont trigger update if buffer address doesnt change
-Date:   Tue,  3 Dec 2019 23:34:46 +0100
-Message-Id: <20191203223438.564186639@linuxfoundation.org>
+Subject: [PATCH 4.19 254/321] scsi: libsas: Check SMP PHY control function result
+Date:   Tue,  3 Dec 2019 23:35:20 +0100
+Message-Id: <20191203223440.349454536@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,59 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: John Garry <john.garry@huawei.com>
 
-[ Upstream commit eb0200a4357da100064971689d3a0e9e3cf57f33 ]
+[ Upstream commit 01929a65dfa13e18d89264ab1378854a91857e59 ]
 
-On a NOP double buffer update where current buffer address is the same
-as the next buffer address, the SDW_UPDATE bit clears too late. As we
-are now using this bit to determine when it is safe to signal flip
-completion to userspace this will delay completion of atomic commits
-where one plane doesn't change the buffer by a whole frame period.
+Currently the SMP PHY control execution result is checked, however the
+function result for the command is not.
 
-Fix this by remembering the last buffer address and just skip the
-double buffer update if it would not change the buffer address.
+As such, we may be missing all potential errors, like SMP FUNCTION FAILED,
+INVALID REQUEST FRAME LENGTH, etc., meaning the PHY control request has
+failed.
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-[p.zabel@pengutronix.de: initialize last_bufaddr in ipu_pre_configure]
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+In some scenarios we need to ensure the function result is accepted, so add
+a check for this.
+
+Tested-by: Jian Luo <luojian5@huawei.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/ipu-v3/ipu-pre.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/scsi/libsas/sas_expander.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/ipu-v3/ipu-pre.c b/drivers/gpu/ipu-v3/ipu-pre.c
-index 2f8db9d625514..4a28f3fbb0a28 100644
---- a/drivers/gpu/ipu-v3/ipu-pre.c
-+++ b/drivers/gpu/ipu-v3/ipu-pre.c
-@@ -106,6 +106,7 @@ struct ipu_pre {
- 	void			*buffer_virt;
- 	bool			in_use;
- 	unsigned int		safe_window_end;
-+	unsigned int		last_bufaddr;
- };
+diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
+index f9d4a24c14b5a..3e74fe9257617 100644
+--- a/drivers/scsi/libsas/sas_expander.c
++++ b/drivers/scsi/libsas/sas_expander.c
+@@ -614,7 +614,14 @@ int sas_smp_phy_control(struct domain_device *dev, int phy_id,
+ 	}
  
- static DEFINE_MUTEX(ipu_pre_list_mutex);
-@@ -185,6 +186,7 @@ void ipu_pre_configure(struct ipu_pre *pre, unsigned int width,
- 
- 	writel(bufaddr, pre->regs + IPU_PRE_CUR_BUF);
- 	writel(bufaddr, pre->regs + IPU_PRE_NEXT_BUF);
-+	pre->last_bufaddr = bufaddr;
- 
- 	val = IPU_PRE_PREF_ENG_CTRL_INPUT_PIXEL_FORMAT(0) |
- 	      IPU_PRE_PREF_ENG_CTRL_INPUT_ACTIVE_BPP(active_bpp) |
-@@ -242,7 +244,11 @@ void ipu_pre_update(struct ipu_pre *pre, unsigned int bufaddr)
- 	unsigned short current_yblock;
- 	u32 val;
- 
-+	if (bufaddr == pre->last_bufaddr)
-+		return;
-+
- 	writel(bufaddr, pre->regs + IPU_PRE_NEXT_BUF);
-+	pre->last_bufaddr = bufaddr;
- 
- 	do {
- 		if (time_after(jiffies, timeout)) {
+ 	res = smp_execute_task(dev, pc_req, PC_REQ_SIZE, pc_resp,PC_RESP_SIZE);
+-
++	if (res) {
++		pr_err("ex %016llx phy%02d PHY control failed: %d\n",
++		       SAS_ADDR(dev->sas_addr), phy_id, res);
++	} else if (pc_resp[2] != SMP_RESP_FUNC_ACC) {
++		pr_err("ex %016llx phy%02d PHY control failed: function result 0x%x\n",
++		       SAS_ADDR(dev->sas_addr), phy_id, pc_resp[2]);
++		res = pc_resp[2];
++	}
+ 	kfree(pc_resp);
+ 	kfree(pc_req);
+ 	return res;
 -- 
 2.20.1
 
