@@ -2,142 +2,99 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B2CC43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9760C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A00C2080F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:45:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QpxjuqLN"
+	by mail.kernel.org (Postfix) with ESMTP id 767E62084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:45:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575395150;
+	bh=SKTt++4ehKNxj9alaTIqGbxVRfRny7WlP66LscAM2Tw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=YGakA18YlYJHIWevN1tddYjzqXhvnEagNNfeYdioz63BKGm7BUeGZe7h1dRaWVg9+
+	 nXp1hU/Oh5J86F+ynvlrLg4myOfqrql5ay1ry7+Nl16jjsMZcxK2yZcR3x/fkXU3e7
+	 hpZAh3OTgynLlo1gPsATvsa67AN2JTlmfX4X3zys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbfLCRpo (ORCPT
+        id S1726970AbfLCRpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 12:45:44 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:43484 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbfLCRpo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 12:45:44 -0500
-Received: by mail-pj1-f67.google.com with SMTP id g4so1789347pjs.10
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 09:45:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=z7N6iQZ6w+KnK1x580YAK+IgWlbj+L7z26/RNYAhP3E=;
-        b=QpxjuqLNn8DPHEmW8Mne7bHFbkHFrWcadhd3+9wt8gWJJIslzBTmim1TD5pOW0dvaA
-         bC76EQ7govwprkNb75aGyD6KHY8ymXR5N5w6Caa7L8wSLQ8o6YSIh5c8qGyJKwLNR5rV
-         6tCVzWrx/V9AD8Wf/hpe4/4M2sZYDEa5fP87n24haNU0l1cBwtmastId7QhfBbfz8tpB
-         nWWGDUBjCE44/t64p3fJ3FPUQNbKUKjxqw+zdrcFFOL8bd+Lh7WxRAF0+EazzRUNLgF8
-         4eSmnS+upC3AWrGrfZYAOw40jtAJYKZ0evSwDw4C01BQqyVmi2IWQBkkHsc/FPsTTzL+
-         PB5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z7N6iQZ6w+KnK1x580YAK+IgWlbj+L7z26/RNYAhP3E=;
-        b=HvNHhqAqoVoGtrW74W0Q3otMTsErgPLxzfFbrwuSBHaPzetv4/pY6uk3OSvUnnxfvA
-         8xVRCDisvD6FaeovLELYhvdjcYc2CmW8XqD5H1q39M+0vOJVVNKzHgE7LUBtS/qBsxep
-         3oi5s5wfjnVpqI4x7KYS5SyJ8yvBF4nrfAL5k7rHGfPIgGztJhW04N0y5YO5pOv/H7AT
-         GAp5YUW+y8l7dwcUKm470uOOucbSqeCBN1DT5ZvraoEvGFGk1Ac6+CE1Zb/HA8jVnwNi
-         PElvtYyHB5haerQoUMGPgPxxpyxSSEeDy++668ACoIT0IODOK+lzoMX+JxLye8wq7Sxy
-         Iy1w==
-X-Gm-Message-State: APjAAAWitpI/zGTC3yXDWRAWREoG+B/+FKse7AdzinX/E6mHIpqcfdfn
-        qEY0/LF0c3bdGhLerstya3cKEjGrtfsHOL9QdDVOvA==
-X-Google-Smtp-Source: APXvYqykkKXbum3SSjV3LDPg92I2gZuwgqFvaKWHVvCaYAZ8GyCh+gaXA/1WQQhyvLYBi43QZL+p4VYGPLTqotMNZac=
-X-Received: by 2002:a17:90a:ff12:: with SMTP id ce18mr4019224pjb.117.1575395143149;
- Tue, 03 Dec 2019 09:45:43 -0800 (PST)
+        Tue, 3 Dec 2019 12:45:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37940 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726075AbfLCRpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 12:45:47 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D04E2080F;
+        Tue,  3 Dec 2019 17:45:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575395147;
+        bh=SKTt++4ehKNxj9alaTIqGbxVRfRny7WlP66LscAM2Tw=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=gYw6+tIZQ/sQMyEfngpumkCNKvB2OT3nDZHnl4akATGkutnFgKuSGvfHKSMZ2zTsy
+         s7t7yno/2mY5/QIbWbJrbKKKaA2eszlKkO1UNZivRqb4pWaJE75LUAY8K1bSYmnotl
+         SghMhXymJFyF9qd3lUG8otD4ZaynxA6f8v/ASrdk=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 0925E3522780; Tue,  3 Dec 2019 09:45:47 -0800 (PST)
+Date:   Tue, 3 Dec 2019 09:45:47 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Tejun Heo <tj@kernel.org>, jiangshanlai@gmail.com,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: Workqueues splat due to ending up on wrong CPU
+Message-ID: <20191203174547.GG2889@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191125230312.GP2889@paulmck-ThinkPad-P72>
+ <20191126183334.GE2867037@devbig004.ftw2.facebook.com>
+ <20191126220533.GU2889@paulmck-ThinkPad-P72>
+ <20191127155027.GA15170@paulmck-ThinkPad-P72>
+ <20191128161823.GA24667@paulmck-ThinkPad-P72>
+ <20191129155850.GA17002@paulmck-ThinkPad-P72>
+ <20191202015548.GA13391@paulmck-ThinkPad-P72>
+ <20191202201338.GH16681@devbig004.ftw2.facebook.com>
+ <20191202233944.GY2889@paulmck-ThinkPad-P72>
+ <20191203100010.GI2827@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <1575242724-4937-1-git-send-email-sj38.park@gmail.com>
- <20191203070025.GA4206@google.com> <CAEjAshraUy20gEEaff69=b11DhB7zbz8WHT=6wOuw6C2FyJwYA@mail.gmail.com>
- <CAEjAsho98ER1RQ6=++ECmoCJxw2mMrGqV4jAgW5wgfb8eEM9eQ@mail.gmail.com>
-In-Reply-To: <CAEjAsho98ER1RQ6=++ECmoCJxw2mMrGqV4jAgW5wgfb8eEM9eQ@mail.gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 3 Dec 2019 09:45:31 -0800
-Message-ID: <CAFd5g46qPPsKJFqs07Eiea0Nim=YDWbOUndJu=JbW--VcTb-ww@mail.gmail.com>
-Subject: Re: [PATCH 0/6] Fix nits in the kunit
-To:     SeongJae Park <sj38.park@gmail.com>
-Cc:     Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191203100010.GI2827@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 12:26 AM SeongJae Park <sj38.park@gmail.com> wrote:
->
-> You're right, the error was due to the assumption of the existence of the
-> build_dir.  The "kunit: Create default config in '--build_dir'" patch made the
-> bug.  I fixed it in the second version patchset[1].
->
-> [1] https://lore.kernel.org/linux-doc/1575361141-6806-1-git-send-email-sj38.park@gmail.com/
+On Tue, Dec 03, 2019 at 11:00:10AM +0100, Peter Zijlstra wrote:
+> On Mon, Dec 02, 2019 at 03:39:44PM -0800, Paul E. McKenney wrote:
+> 
+> > I think that I do not understand the code, but I never let that stop
+> > me from asking stupid questions!  ;-)
+> > 
+> > Suppose that a given worker is bound to a particular CPU, but has no
+> > work pending, and is therefore sleeping in the schedule() call near the
+> > end of worker_thread().  During this time, its CPU goes offline and then
+> > comes back online.  Doesn't this break that task's affinity to that CPU?
+> 
+> No. The thing about sleeping tasks is that they're not in fact on any
+> CPU at all. Only when a task wakes up do we concern ourselves with
+> placing it. If at that time we find the CPU it was constrained to is no
+> longer with us, then we go break affinity.
+> 
+> But if the CPU went away and came back while the task was asleep, it
+> will not notice anything.
 
-After trying your new patches, I am still getting the
-"FileNotFoundError" when the given build_dir has not been created.
+Good point, and yes, you have told me this before.
 
-> Thanks,
-> SeongJae Park
->
-> On Tue, Dec 3, 2019 at 8:10 AM SeongJae Park <sj38.park@gmail.com> wrote:
-> >
-> > On Tue, Dec 3, 2019 at 8:00 AM Brendan Higgins
-> > <brendanhiggins@google.com> wrote:
-> > >
-> > > On Mon, Dec 02, 2019 at 08:25:18AM +0900, SeongJae Park wrote:
-> > > > From: SeongJae Park <sjpark@amazon.de>
-> > > >
-> > > > This patchset contains trivial fixes for the kunit documentations and the
-> > > > wrapper python scripts.
-> > > >
-> > > > SeongJae Park (6):
-> > > >   docs/kunit/start: Use in-tree 'kunit_defconfig'
-> > > >   docs/kunit/start: Skip wrapper run command
-> > > >   kunit: Remove duplicated defconfig creation
-> > > >   kunit: Create default config in 'build_dir'
-> > > >   kunit: Place 'test.log' under the 'build_dir'
-> > > >   kunit: Rename 'kunitconfig' to '.kunitconfig'
-> > > >
-> > > >  Documentation/dev-tools/kunit/start.rst | 19 +++++--------------
-> > > >  tools/testing/kunit/kunit.py            | 10 ++++++----
-> > > >  tools/testing/kunit/kunit_kernel.py     |  6 +++---
-> > > >  3 files changed, 14 insertions(+), 21 deletions(-)
-> > >
-> > > I applied your patchset to torvalds/master, ran the command:
-> > >
-> > > tools/testing/kunit/kunit.py run --timeout=60 --jobs=8 --defconfig --build_dir=.kunit
-> > >
-> > > and got the error:
-> > >
-> > > Traceback (most recent call last):
-> > >   File "tools/testing/kunit/kunit.py", line 140, in <module>
-> > >     main(sys.argv[1:])
-> > >   File "tools/testing/kunit/kunit.py", line 123, in main
-> > >     create_default_kunitconfig()
-> > >   File "tools/testing/kunit/kunit.py", line 36, in create_default_kunitconfig
-> > >     kunit_kernel.KUNITCONFIG_PATH)
-> > >   File "/usr/lib/python3.7/shutil.py", line 121, in copyfile
-> > >     with open(dst, 'wb') as fdst:
-> > > FileNotFoundError: [Errno 2] No such file or directory: '.kunit/.kunitconfig'
-> > >
-> > > It seems that it expects the build_dir to already exist; however, I
-> > > don't think this is clear from the error message. Would you mind
-> > > addressing that here?
-> >
-> > Thank you for sharing this.  I will take a look!
-> >
-> >
-> > Thanks,
-> > SeongJae Park
-> > >
-> > > Cheers!
+Furthermore, in all of these cases, the process was supposed to be
+running on CPU 0, which cannot be taken offline on any of the systems
+under test.  Which is leading me to wonder if the workqueue CPU-online
+notifier is sometimes moving more kthreads to the newly onlined CPU than
+it is supposed to.  Tejun, could that be happening?
+
+							Thanx, Paul
