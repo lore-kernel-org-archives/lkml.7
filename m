@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF888C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 119EEC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A28DD2084B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBCD6207DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:52:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413531;
-	bh=pyr9XZsOoczspHONhp+UVZ78Qtz7fW0rhW4q539hLko=;
+	s=default; t=1575413535;
+	bh=rMifvJk44VUgDhLnKLoatsmGOruqWykVcVVtAmoDzZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TI6FvVbnUWzK1R54UmHiMkjsZlbf2Gc5PeaFAIFYKVmSPLPxBqIJ1QFc1uvrPOYVY
-	 iTA3kwnC0M/9biIaRTxLIcHogQlgMQnVt5NRO2U6WnkkY4ltJ0wUobyBaKif4TNIVJ
-	 jMOLD3di/DlX5gJBaWVfz56CYgjVwA2UjNi4NQqM=
+	b=sdZSyn6kX2nv61ECz33sM28kHO5Wi1jIik13npWoctDs0+0gw7z4L1U1mKpUWYmrP
+	 2gzcQmKJaQ7AMGuDh10N+KULBPYX6yYTLXrpZX2uuccBowvDGma4NrCSFLk1oUx58F
+	 h1jkCo2Ac8ymwf6NlKA+zP4BuhdX/7NrtSKZe85M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729991AbfLCWwK (ORCPT
+        id S1730000AbfLCWwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:52:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44638 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:52:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729831AbfLCWwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:52:04 -0500
+        id S1729831AbfLCWwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:52:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EE01207DD;
-        Tue,  3 Dec 2019 22:52:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43F37207DD;
+        Tue,  3 Dec 2019 22:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413522;
-        bh=pyr9XZsOoczspHONhp+UVZ78Qtz7fW0rhW4q539hLko=;
+        s=default; t=1575413531;
+        bh=rMifvJk44VUgDhLnKLoatsmGOruqWykVcVVtAmoDzZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2edWPRIt99SMbeABNMFnLH80g1tdtfRoxIxBXD5JAnVgAf/0U/hE4jiReeubK5HdJ
-         u5PTb/GZScZPO7XThBp0KpXUGQLUSfLFIUYY3aJ/aKaDAnCGNwJJodLeWa7weuCVSq
-         3GPjtmrHIJcszYDT9Xr63YYf0u09qHfhnR32oDdg=
+        b=kBVQCA1M4B8DQFtEPOaClsNOceSeegXAiQtNhljSJOXvH9ZUPM7vuGCpyBB0Veh9a
+         SkvOtxfLyT0hOGgG//RN9nm9irwzCJX8dPUtM1d1Db9Aa0s2n5hTqiteeWIJyf/FW4
+         ukKv85DNsvlz5iSoJOFJG7UaZFNYNFMrdMHGu3Rk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anatoliy Glagolev <glagolig@gmail.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Kyle Roeschley <kyle.roeschley@ni.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 159/321] scsi: qla2xxx: deadlock by configfs_depend_item
-Date:   Tue,  3 Dec 2019 23:33:45 +0100
-Message-Id: <20191203223435.414112415@linuxfoundation.org>
+Subject: [PATCH 4.19 162/321] ath6kl: Only use match sets when firmware supports it
+Date:   Tue,  3 Dec 2019 23:33:48 +0100
+Message-Id: <20191203223435.567703667@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,125 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anatoliy Glagolev <glagolig@gmail.com>
+From: Kyle Roeschley <kyle.roeschley@ni.com>
 
-[ Upstream commit 17b18eaa6f59044a5172db7d07149e31ede0f920 ]
+[ Upstream commit fb376a495fbdb886f38cfaf5a3805401b9e46f13 ]
 
-The intent of invoking configfs_depend_item in commit 7474f52a82d51
-("tcm_qla2xxx: Perform configfs depend/undepend for base_tpg")
-was to prevent a physical Fibre Channel port removal when
-virtual (NPIV) ports announced through that physical port are active.
-The change does not work as expected: it makes enabled physical port
-dependent on target configfs subsystem (the port's parent), something
-the configfs guarantees anyway.
+Commit dd45b7598f1c ("ath6kl: Include match ssid list in scheduled scan")
+merged the probed and matched SSID lists before sending them to the
+firmware. In the process, it assumed match set support is always available
+in ath6kl_set_probed_ssids, which breaks scans for hidden SSIDs. Now, check
+that the firmware supports matching SSIDs in scheduled scans before setting
+MATCH_SSID_FLAG.
 
-Besides, scheduling work in a worker thread and waiting for the work's
-completion is not really a valid workaround for the requirement not to call
-configfs_depend_item from a configfs callback: the call occasionally
-deadlocks.
-
-Thus, removing configfs_depend_item calls does not break anything and fixes
-the deadlock problem.
-
-Signed-off-by: Anatoliy Glagolev <glagolig@gmail.com>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: dd45b7598f1c ("ath6kl: Include match ssid list in scheduled scan")
+Signed-off-by: Kyle Roeschley <kyle.roeschley@ni.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/tcm_qla2xxx.c | 48 +++++-------------------------
- drivers/scsi/qla2xxx/tcm_qla2xxx.h |  3 --
- 2 files changed, 8 insertions(+), 43 deletions(-)
+ drivers/net/wireless/ath/ath6kl/cfg80211.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/tcm_qla2xxx.c b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-index b8c1a739dfbd1..654e1af7f542c 100644
---- a/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-+++ b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-@@ -926,38 +926,14 @@ static ssize_t tcm_qla2xxx_tpg_enable_show(struct config_item *item,
- 			atomic_read(&tpg->lport_tpg_enabled));
- }
+diff --git a/drivers/net/wireless/ath/ath6kl/cfg80211.c b/drivers/net/wireless/ath/ath6kl/cfg80211.c
+index e121187f371ff..6c98d7903ffb6 100644
+--- a/drivers/net/wireless/ath/ath6kl/cfg80211.c
++++ b/drivers/net/wireless/ath/ath6kl/cfg80211.c
+@@ -939,7 +939,7 @@ static int ath6kl_set_probed_ssids(struct ath6kl *ar,
+ 		else
+ 			ssid_list[i].flag = ANY_SSID_FLAG;
  
--static void tcm_qla2xxx_depend_tpg(struct work_struct *work)
--{
--	struct tcm_qla2xxx_tpg *base_tpg = container_of(work,
--				struct tcm_qla2xxx_tpg, tpg_base_work);
--	struct se_portal_group *se_tpg = &base_tpg->se_tpg;
--	struct scsi_qla_host *base_vha = base_tpg->lport->qla_vha;
--
--	if (!target_depend_item(&se_tpg->tpg_group.cg_item)) {
--		atomic_set(&base_tpg->lport_tpg_enabled, 1);
--		qlt_enable_vha(base_vha);
--	}
--	complete(&base_tpg->tpg_base_comp);
--}
--
--static void tcm_qla2xxx_undepend_tpg(struct work_struct *work)
--{
--	struct tcm_qla2xxx_tpg *base_tpg = container_of(work,
--				struct tcm_qla2xxx_tpg, tpg_base_work);
--	struct se_portal_group *se_tpg = &base_tpg->se_tpg;
--	struct scsi_qla_host *base_vha = base_tpg->lport->qla_vha;
--
--	if (!qlt_stop_phase1(base_vha->vha_tgt.qla_tgt)) {
--		atomic_set(&base_tpg->lport_tpg_enabled, 0);
--		target_undepend_item(&se_tpg->tpg_group.cg_item);
--	}
--	complete(&base_tpg->tpg_base_comp);
--}
--
- static ssize_t tcm_qla2xxx_tpg_enable_store(struct config_item *item,
- 		const char *page, size_t count)
- {
- 	struct se_portal_group *se_tpg = to_tpg(item);
-+	struct se_wwn *se_wwn = se_tpg->se_tpg_wwn;
-+	struct tcm_qla2xxx_lport *lport = container_of(se_wwn,
-+			struct tcm_qla2xxx_lport, lport_wwn);
-+	struct scsi_qla_host *vha = lport->qla_vha;
- 	struct tcm_qla2xxx_tpg *tpg = container_of(se_tpg,
- 			struct tcm_qla2xxx_tpg, se_tpg);
- 	unsigned long op;
-@@ -976,24 +952,16 @@ static ssize_t tcm_qla2xxx_tpg_enable_store(struct config_item *item,
- 		if (atomic_read(&tpg->lport_tpg_enabled))
- 			return -EEXIST;
- 
--		INIT_WORK(&tpg->tpg_base_work, tcm_qla2xxx_depend_tpg);
-+		atomic_set(&tpg->lport_tpg_enabled, 1);
-+		qlt_enable_vha(vha);
- 	} else {
- 		if (!atomic_read(&tpg->lport_tpg_enabled))
- 			return count;
- 
--		INIT_WORK(&tpg->tpg_base_work, tcm_qla2xxx_undepend_tpg);
-+		atomic_set(&tpg->lport_tpg_enabled, 0);
-+		qlt_stop_phase1(vha->vha_tgt.qla_tgt);
+-		if (n_match_ssid == 0)
++		if (ar->wiphy->max_match_sets != 0 && n_match_ssid == 0)
+ 			ssid_list[i].flag |= MATCH_SSID_FLAG;
  	}
--	init_completion(&tpg->tpg_base_comp);
--	schedule_work(&tpg->tpg_base_work);
--	wait_for_completion(&tpg->tpg_base_comp);
  
--	if (op) {
--		if (!atomic_read(&tpg->lport_tpg_enabled))
--			return -ENODEV;
--	} else {
--		if (atomic_read(&tpg->lport_tpg_enabled))
--			return -EPERM;
--	}
- 	return count;
- }
- 
-diff --git a/drivers/scsi/qla2xxx/tcm_qla2xxx.h b/drivers/scsi/qla2xxx/tcm_qla2xxx.h
-index 7550ba2831c36..147cf6c903666 100644
---- a/drivers/scsi/qla2xxx/tcm_qla2xxx.h
-+++ b/drivers/scsi/qla2xxx/tcm_qla2xxx.h
-@@ -48,9 +48,6 @@ struct tcm_qla2xxx_tpg {
- 	struct tcm_qla2xxx_tpg_attrib tpg_attrib;
- 	/* Returned by tcm_qla2xxx_make_tpg() */
- 	struct se_portal_group se_tpg;
--	/* Items for dealing with configfs_depend_item */
--	struct completion tpg_base_comp;
--	struct work_struct tpg_base_work;
- };
- 
- struct tcm_qla2xxx_fc_loopid {
 -- 
 2.20.1
 
