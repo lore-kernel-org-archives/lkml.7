@@ -4,49 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBE5C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD26BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7826B20863
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FF0C20656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:59:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413945;
-	bh=HLzYD/HbGyf9vZgF+em7Xrr/GbFuua27gc0B8hIZUeg=;
+	s=default; t=1575413948;
+	bh=xse6kgt5T0zLm987FtTsfxKSnjkyBAkCk5p8frhNgPk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ciabj2hhgxL04n/520K9BlxQF6jBTaIdS02bCPZw/Ux2fsNhy8k7R+3Kl6W+9jdFm
-	 AfVXzZqFcScF1p4ZMecj+R9c6/6rCyiSFzh21nDTTa0N9Vk5716S0XAyN6erCYR7g2
-	 WmxTQo6JxHUYLPU53VPKpaU5CWFBGQZP2sgwU5tU=
+	b=FvEpL3gZiuLDzI7yHwJDjOhDDK65mpWXQMWSyd9pocbrwbZEBE4fXCgFxf2br7ERJ
+	 GQAV9NiSfjkHhzKM6iLzECpk9FpGZltY5ZyHjefhtss0QX/DwuTDtm6XlKJ8fajl/6
+	 W8t6yjPbmG8pDw3q7nGAy6sgYhjS/SeK75or68Bo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730734AbfLCW7E (ORCPT
+        id S1730748AbfLCW7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:59:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55564 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:59:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729345AbfLCW7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:59:01 -0500
+        id S1730728AbfLCW7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:59:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76F4B20656;
-        Tue,  3 Dec 2019 22:59:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7A7C20803;
+        Tue,  3 Dec 2019 22:59:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413940;
-        bh=HLzYD/HbGyf9vZgF+em7Xrr/GbFuua27gc0B8hIZUeg=;
+        s=default; t=1575413943;
+        bh=xse6kgt5T0zLm987FtTsfxKSnjkyBAkCk5p8frhNgPk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oO9IDmKOUML+wPOrzTUJS48+j79Db4utPtlj0RkuPqvH7xF2m7MvE8pFt6P2rXCE0
-         z0R1cQfHy9QPPRYBDut1mSVIXhPRjLdBagMHUG3gG748k/Glh1lHW7HIE1yyE4uodN
-         m3lkxOddJX0vY303DhXuQXdlaFd9GiCES218kGzU=
+        b=rNsVxxg7d6RWxHbd7kPIZSKh44YDZuYotn+fTLSZ7sRFEcBdWJJxVUfUClMxnSgf5
+         7VFD5keOghIau6mncYXeoW4wfl108IXYgjt68aIiyJQjGmPPg0CacDkmV/GH91FrNj
+         fjaOdtKDntK9KXfKEHmBt2A5KZlnWii6GTdDkq4A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 4.19 321/321] platform/x86: hp-wmi: Fix ACPI errors caused by passing 0 as input size
-Date:   Tue,  3 Dec 2019 23:36:27 +0100
-Message-Id: <20191203223443.840827328@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <yellowriver2010@hotmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-mtd@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.19 299/321] mtd: rawnand: atmel: fix possible object reference leak
+Date:   Tue,  3 Dec 2019 23:36:05 +0100
+Message-Id: <20191203223442.705005398@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -59,63 +71,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Wen Yang <yellowriver2010@hotmail.com>
 
-commit f3e4f3fc8ee9729c4b1b27a478c68b713df53c0c upstream.
+commit a12085d13997ed15f745f33a0e01002541160179 upstream.
 
-The AML code implementing the WMI methods creates a variable length
-field to hold the input data we pass like this:
+of_find_device_by_node() takes a reference to the struct device
+when it finds a match via get_device, there is no need to call
+get_device() twice.
+We also should make sure to drop the reference to the device
+taken by of_find_device_by_node() on driver unbind.
 
-        CreateDWordField (Arg1, 0x0C, DSZI)
-        Local5 = DSZI /* \HWMC.DSZI */
-        CreateField (Arg1, 0x80, (Local5 * 0x08), DAIN)
-
-If we pass 0 as bios_args.datasize argument then (Local5 * 0x08)
-is 0 which results in these errors:
-
-[   71.973305] ACPI BIOS Error (bug): Attempt to CreateField of length zero (20190816/dsopcode-133)
-[   71.973332] ACPI Error: Aborting method \HWMC due to previous error (AE_AML_OPERAND_VALUE) (20190816/psparse-529)
-[   71.973413] ACPI Error: Aborting method \_SB.WMID.WMAA due to previous error (AE_AML_OPERAND_VALUE) (20190816/psparse-529)
-
-And in our HPWMI_WIRELESS2_QUERY calls always failing. for read commands
-like HPWMI_WIRELESS2_QUERY the DSZI value is not used / checked, except for
-read commands where extra input is needed to specify exactly what to read.
-
-So for HPWMI_WIRELESS2_QUERY we can safely pass the size of the expected
-output as insize to hp_wmi_perform_query(), as we are already doing for all
-other HPWMI_READ commands we send. Doing so fixes these errors.
-
-Cc: stable@vger.kernel.org
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=197007
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=201981
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1520703
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: f88fc122cc34 ("mtd: nand: Cleanup/rework the atmel_nand driver")
+Signed-off-by: Wen Yang <yellowriver2010@hotmail.com>
+Suggested-by: Boris Brezillon <bbrezillon@kernel.org>
+Reviewed-by: Boris Brezillon <bbrezillon@kernel.org>
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Tudor Ambarus <tudor.ambarus@microchip.com>
+Cc: Boris Brezillon <bbrezillon@kernel.org>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Richard Weinberger <richard@nod.at>
+Cc: David Woodhouse <dwmw2@infradead.org>
+Cc: Brian Norris <computersforpeace@gmail.com>
+Cc: Marek Vasut <marek.vasut@gmail.com>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
+Cc: linux-mtd@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/platform/x86/hp-wmi.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/mtd/nand/raw/atmel/pmecc.c |   21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -393,7 +393,7 @@ static int hp_wmi_rfkill2_refresh(void)
- 	int err, i;
+--- a/drivers/mtd/nand/raw/atmel/pmecc.c
++++ b/drivers/mtd/nand/raw/atmel/pmecc.c
+@@ -876,23 +876,32 @@ static struct atmel_pmecc *atmel_pmecc_g
+ {
+ 	struct platform_device *pdev;
+ 	struct atmel_pmecc *pmecc, **ptr;
++	int ret;
  
- 	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
--				   0, sizeof(state));
-+				   sizeof(state), sizeof(state));
- 	if (err)
- 		return err;
+ 	pdev = of_find_device_by_node(np);
+-	if (!pdev || !platform_get_drvdata(pdev))
++	if (!pdev)
+ 		return ERR_PTR(-EPROBE_DEFER);
++	pmecc = platform_get_drvdata(pdev);
++	if (!pmecc) {
++		ret = -EPROBE_DEFER;
++		goto err_put_device;
++	}
  
-@@ -790,7 +790,7 @@ static int __init hp_wmi_rfkill2_setup(s
- 	int err, i;
+ 	ptr = devres_alloc(devm_atmel_pmecc_put, sizeof(*ptr), GFP_KERNEL);
+-	if (!ptr)
+-		return ERR_PTR(-ENOMEM);
+-
+-	get_device(&pdev->dev);
+-	pmecc = platform_get_drvdata(pdev);
++	if (!ptr) {
++		ret = -ENOMEM;
++		goto err_put_device;
++	}
  
- 	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
--				   0, sizeof(state));
-+				   sizeof(state), sizeof(state));
- 	if (err)
- 		return err < 0 ? err : -EINVAL;
+ 	*ptr = pmecc;
  
+ 	devres_add(userdev, ptr);
+ 
+ 	return pmecc;
++
++err_put_device:
++	put_device(&pdev->dev);
++	return ERR_PTR(ret);
+ }
+ 
+ static const int atmel_pmecc_strengths[] = { 2, 4, 8, 12, 24, 32 };
 
 
