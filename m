@@ -2,54 +2,53 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	PDS_BTC_ID,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF0DC43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8478C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D96020863
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2A132053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413738;
-	bh=aBGta1FQVU8aqNnb8OLhtCuBnkmaBwv/fVv+4IHTpmw=;
+	s=default; t=1575413741;
+	bh=moSTdx0b15r8AFXw/a0cj2pHvsjwbdBEGVmg1DcRV+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nTP5Ub5Ssj0ZeXM+ijHGFVZsFuzWuSJc0DWS4KicHh8XJNRiIRfRkc2WULS9P+T2b
-	 HeZ+gvwStwZm+O/56ZfhcIoz4IBa5kPaKO4UDzCAwG2+cfOY1whgbyXPSOOerN/gzq
-	 eAoeZm7CZ3Q0LJvwn+KLeeV/3L/v4iFYAQ5i1biE=
+	b=U/VVmRLWDUwCppMKRHNexx9vWZlcJXdtjZTFfhkPrnVSaJuI7tHQFjUvInNhhK4Ck
+	 lTcyr1IXAzrAYUMs9nrr+aRxZ8RP2xq2KDceZOo8CaiyR6MQjwWtK/0EwKj3OQwWCp
+	 LRrOWGpZXFDR3N8pzHeNZyzjDEMXgflA9eJkCgjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730365AbfLCWzh (ORCPT
+        id S1730372AbfLCWzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:55:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50022 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:55:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730348AbfLCWze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:55:34 -0500
+        id S1730357AbfLCWzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:55:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 328F320674;
-        Tue,  3 Dec 2019 22:55:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F94A2053B;
+        Tue,  3 Dec 2019 22:55:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413733;
-        bh=aBGta1FQVU8aqNnb8OLhtCuBnkmaBwv/fVv+4IHTpmw=;
+        s=default; t=1575413736;
+        bh=moSTdx0b15r8AFXw/a0cj2pHvsjwbdBEGVmg1DcRV+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sid4ZfhpcjjXdrXVr+G64ZnaOvJc/ltCjJmOJzZK/gVnVwiQBNYZKvLAOzV79e7EP
-         mF9M6FjNpCqOwPuENDdoIF4AMkRcRIXQIiCdrPJHtbL6Vam/EbFCwIrzZhblBnxbQ8
-         Z4xavBT3gtLMXHrhc+RyxGXZhrikezW05NDWRHio=
+        b=EWCjyUstn1enZ7U66dFBd35gcTpr42Ka/vk6XBdMHLY5cY7ADpvhK7X5J6vkKpGHY
+         w0KZ10z5R/Ix2TYjPQof5MWqBmoyE2RnG7Qo2BV9dZ38RveP3HfmMyZVNWBrZBXyFh
+         M2u01ZqzUQr/zGRv9lcdTSpF8MpBhOgS7CcJjoLs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ying Xue <ying.xue@windriver.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 214/321] tipc: fix memory leak in tipc_nl_compat_publ_dump
-Date:   Tue,  3 Dec 2019 23:34:40 +0100
-Message-Id: <20191203223438.253860395@linuxfoundation.org>
+Subject: [PATCH 4.19 241/321] net: dev: Use unsigned integer as an argument to left-shift
+Date:   Tue,  3 Dec 2019 23:35:07 +0100
+Message-Id: <20191203223439.679216273@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -62,40 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit f87d8ad9233f115db92c6c087d58403b0009ed36 ]
+[ Upstream commit f4d7b3e23d259c44f1f1c39645450680fcd935d6 ]
 
-There is a memory leak in case genlmsg_put fails.
+1 << 31 is Undefined Behaviour according to the C standard.
+Use U type modifier to avoid theoretical overflow.
 
-Fix this by freeing *args* before return.
-
-Addresses-Coverity-ID: 1476406 ("Resource leak")
-Fixes: 46273cf7e009 ("tipc: fix a missing check of genlmsg_put")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Acked-by: Ying Xue <ying.xue@windriver.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tipc/netlink_compat.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ include/linux/netdevice.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/tipc/netlink_compat.c b/net/tipc/netlink_compat.c
-index fab0384d2b4b3..b4860084a8f56 100644
---- a/net/tipc/netlink_compat.c
-+++ b/net/tipc/netlink_compat.c
-@@ -983,8 +983,10 @@ static int tipc_nl_compat_publ_dump(struct tipc_nl_compat_msg *msg, u32 sock)
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index 8c2fec0bcb265..5ada5fd9652dd 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -3790,7 +3790,7 @@ static inline u32 netif_msg_init(int debug_value, int default_msg_enable_bits)
+ 	if (debug_value == 0)	/* no output */
+ 		return 0;
+ 	/* set low N bits */
+-	return (1 << debug_value) - 1;
++	return (1U << debug_value) - 1;
+ }
  
- 	hdr = genlmsg_put(args, 0, 0, &tipc_genl_family, NLM_F_MULTI,
- 			  TIPC_NL_PUBL_GET);
--	if (!hdr)
-+	if (!hdr) {
-+		kfree_skb(args);
- 		return -EMSGSIZE;
-+	}
- 
- 	nest = nla_nest_start(args, TIPC_NLA_SOCK);
- 	if (!nest) {
+ static inline void __netif_tx_lock(struct netdev_queue *txq, int cpu)
 -- 
 2.20.1
 
