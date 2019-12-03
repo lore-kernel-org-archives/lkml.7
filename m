@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADA1C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D50F9C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DB6C20684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A83DD2073C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412705;
-	bh=X0xSGi6xT4B5606Mrh/tfrSpMoE/QoK7hRlEwjUTq+s=;
+	s=default; t=1575412711;
+	bh=OctZyAQ5oT6et3iOr6pcJzgVHWL+2dgefaniPGCIhEU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R/aUE0OezVrNesyEIFqYEFfdWzoNZPdFMI92jk5CTLGFyVV7sZtvb6ohYr9lpkTFV
-	 egHUD6Ognwqghn5ahFo15ItaznmIk9gvGOvK4MqlhE9CZInAV7Z4oPitb3rHfEuGA1
-	 Xc1b4Z4J3Pm54lqvB6tNozKaIapbSAqjGZsswFx0=
+	b=dcbdqMnQGdHg9B4qdgGMO6JMdLizzGoO/OdZdsHl1akRC1VqQ9LRpeLVMAuoDe4ZD
+	 6paNoGdH9MePMQ6ujahBOQWRAUqleXF27l1R7LuEB/WwxeWwQgCC5UdJ50f3Qe1fV+
+	 GGeohp3etLpNY9fSA4urz05ALQP8BfILCn+JeyAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbfLCWiX (ORCPT
+        id S1727666AbfLCWib (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:38:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47268 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:38:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727969AbfLCWiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:38:19 -0500
+        id S1727989AbfLCWi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:38:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AFE720862;
-        Tue,  3 Dec 2019 22:38:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4516120684;
+        Tue,  3 Dec 2019 22:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412698;
-        bh=X0xSGi6xT4B5606Mrh/tfrSpMoE/QoK7hRlEwjUTq+s=;
+        s=default; t=1575412706;
+        bh=OctZyAQ5oT6et3iOr6pcJzgVHWL+2dgefaniPGCIhEU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iTGhNi0q/HIFNYvcd6jPm3l/9+3gC2dhft5MkXFwMkZqA9lmJ+GcDMJAijLRpxe13
-         beUDjg/yIQpG7+EecGSVb7V9sOSRgDOU+F6+hozPKdKqFttfzs8yS0d4kCFIRmyhbx
-         OjA3f7CG9/OhIVHvk5XHGj9/f6pap62pi5B7IFqU=
+        b=Nd7CmYGKyWA6t3DrZNGF+jyzW1Abftz5XXErXT7T+6giZkquG6Vvf62mCYBRk2Ezb
+         gtPopFe/IHDDH7J2joI0fv7Jvn5Hx3cU0rpS4BSGk32TDeoZTjm9b9StJnrtLWgWJ2
+         IaaCJICQ6Svxw6hcuJDoEEFwo+dI5uufGZ3lrgC0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Simon Horman <simon.horman@netronome.com>,
-        John Fastabend <john.fastabend@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 29/46] net/tls: take into account that bpf_exec_tx_verdict() may free the record
-Date:   Tue,  3 Dec 2019 23:35:49 +0100
-Message-Id: <20191203212744.480975788@linuxfoundation.org>
+Subject: [PATCH 5.4 32/46] selftests/tls: add a test for fragmented messages
+Date:   Tue,  3 Dec 2019 23:35:52 +0100
+Message-Id: <20191203212749.716161553@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203212705.175425505@linuxfoundation.org>
 References: <20191203212705.175425505@linuxfoundation.org>
@@ -64,63 +63,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit c329ef9684de9517d82af5b4758c9e1b64a8a11a ]
+[ Upstream commit 65190f77424d7b82c4aad7326c9cce6bd91a2fcc ]
 
-bpf_exec_tx_verdict() may free the record if tls_push_record()
-fails, or if the entire record got consumed by BPF. Re-check
-ctx->open_rec before touching the data.
+Add a sendmsg test with very fragmented messages. This should
+fill up sk_msg and test the boundary conditions.
 
-Fixes: d3b18ad31f93 ("tls: add bpf support to sk_msg handling")
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Reviewed-by: Simon Horman <simon.horman@netronome.com>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tls/tls_sw.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ tools/testing/selftests/net/tls.c |   60 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
---- a/net/tls/tls_sw.c
-+++ b/net/tls/tls_sw.c
-@@ -979,7 +979,7 @@ alloc_encrypted:
- 					num_async++;
- 				else if (ret == -ENOMEM)
- 					goto wait_for_memory;
--				else if (ret == -ENOSPC)
-+				else if (ctx->open_rec && ret == -ENOSPC)
- 					goto rollback_iter;
- 				else if (ret != -EAGAIN)
- 					goto send_end;
-@@ -1048,11 +1048,12 @@ wait_for_memory:
- 		ret = sk_stream_wait_memory(sk, &timeo);
- 		if (ret) {
- trim_sgl:
--			tls_trim_both_msgs(sk, orig_size);
-+			if (ctx->open_rec)
-+				tls_trim_both_msgs(sk, orig_size);
- 			goto send_end;
- 		}
+--- a/tools/testing/selftests/net/tls.c
++++ b/tools/testing/selftests/net/tls.c
+@@ -268,6 +268,38 @@ TEST_F(tls, sendmsg_single)
+ 	EXPECT_EQ(memcmp(buf, test_str, send_len), 0);
+ }
  
--		if (msg_en->sg.size < required_size)
-+		if (ctx->open_rec && msg_en->sg.size < required_size)
- 			goto alloc_encrypted;
- 	}
++#define MAX_FRAGS	64
++#define SEND_LEN	13
++TEST_F(tls, sendmsg_fragmented)
++{
++	char const *test_str = "test_sendmsg";
++	char buf[SEND_LEN * MAX_FRAGS];
++	struct iovec vec[MAX_FRAGS];
++	struct msghdr msg;
++	int i, frags;
++
++	for (frags = 1; frags <= MAX_FRAGS; frags++) {
++		for (i = 0; i < frags; i++) {
++			vec[i].iov_base = (char *)test_str;
++			vec[i].iov_len = SEND_LEN;
++		}
++
++		memset(&msg, 0, sizeof(struct msghdr));
++		msg.msg_iov = vec;
++		msg.msg_iovlen = frags;
++
++		EXPECT_EQ(sendmsg(self->fd, &msg, 0), SEND_LEN * frags);
++		EXPECT_EQ(recv(self->cfd, buf, SEND_LEN * frags, MSG_WAITALL),
++			  SEND_LEN * frags);
++
++		for (i = 0; i < frags; i++)
++			EXPECT_EQ(memcmp(buf + SEND_LEN * i,
++					 test_str, SEND_LEN), 0);
++	}
++}
++#undef MAX_FRAGS
++#undef SEND_LEN
++
+ TEST_F(tls, sendmsg_large)
+ {
+ 	void *mem = malloc(16384);
+@@ -694,6 +726,34 @@ TEST_F(tls, recv_lowat)
+ 	EXPECT_EQ(memcmp(send_mem, recv_mem + 10, 5), 0);
+ }
  
-@@ -1185,11 +1186,13 @@ wait_for_sndbuf:
- wait_for_memory:
- 		ret = sk_stream_wait_memory(sk, &timeo);
- 		if (ret) {
--			tls_trim_both_msgs(sk, msg_pl->sg.size);
-+			if (ctx->open_rec)
-+				tls_trim_both_msgs(sk, msg_pl->sg.size);
- 			goto sendpage_end;
- 		}
- 
--		goto alloc_payload;
-+		if (ctx->open_rec)
-+			goto alloc_payload;
- 	}
- 
- 	if (num_async) {
++TEST_F(tls, recv_rcvbuf)
++{
++	char send_mem[4096];
++	char recv_mem[4096];
++	int rcv_buf = 1024;
++
++	memset(send_mem, 0x1c, sizeof(send_mem));
++
++	EXPECT_EQ(setsockopt(self->cfd, SOL_SOCKET, SO_RCVBUF,
++			     &rcv_buf, sizeof(rcv_buf)), 0);
++
++	EXPECT_EQ(send(self->fd, send_mem, 512, 0), 512);
++	memset(recv_mem, 0, sizeof(recv_mem));
++	EXPECT_EQ(recv(self->cfd, recv_mem, sizeof(recv_mem), 0), 512);
++	EXPECT_EQ(memcmp(send_mem, recv_mem, 512), 0);
++
++	if (self->notls)
++		return;
++
++	EXPECT_EQ(send(self->fd, send_mem, 4096, 0), 4096);
++	memset(recv_mem, 0, sizeof(recv_mem));
++	EXPECT_EQ(recv(self->cfd, recv_mem, sizeof(recv_mem), 0), -1);
++	EXPECT_EQ(errno, EMSGSIZE);
++
++	EXPECT_EQ(recv(self->cfd, recv_mem, sizeof(recv_mem), 0), -1);
++	EXPECT_EQ(errno, EMSGSIZE);
++}
++
+ TEST_F(tls, bidir)
+ {
+ 	char const *test_str = "test_read";
 
 
