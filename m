@@ -2,138 +2,113 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 720CCC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37120C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FD70206EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:51:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bcu1flX4"
+	by mail.kernel.org (Postfix) with ESMTP id 0F12E20656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:51:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726114AbfLCKvW (ORCPT
+        id S1726190AbfLCKvw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 05:51:22 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36051 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfLCKvV (ORCPT
+        Tue, 3 Dec 2019 05:51:52 -0500
+Received: from esa2.mentor.iphmx.com ([68.232.141.98]:49850 "EHLO
+        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfLCKvv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 05:51:21 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z3so3091028wru.3;
-        Tue, 03 Dec 2019 02:51:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aVH1wKqnS/0tpLzx3r/GAf1NKCehOyA/BPLaY/A9mZw=;
-        b=bcu1flX4c17aWB0jdh6P6lZDIp/SLk/qdtJsKK+v1cgpyZysw5D8BZTfLyywHxESb/
-         VbPx8AvNhzB4UezAY9fDA6YZEIwwIbWLpRUT7ffXDaeqnOU+vtIbypDjkrn9knnOeTKC
-         lTKLKrvjcaTIsswNVoEAvjFcdX+t6BmlifXBAfwXCH9u4CLrNKNuFISMAOfA/L5bdHWy
-         /9jY3s23Uwo3yZJSAuqrE1qGmH7CgWfGkf+C1i0/V4a9wAiblr4Msd4W2DkxhHoWYHcM
-         7wdRPGB4fmqEulF7xyADd4vTG0DwEFv/aLwoThA10b2vKiINmT+yKPM/SJ6cmpjyUKkC
-         X1eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aVH1wKqnS/0tpLzx3r/GAf1NKCehOyA/BPLaY/A9mZw=;
-        b=e04dAZJCrx9mjPP0+eI9a687aclqvH3XgEM/NJiODUtOiwnc7VI2QLSeaqWeWcyt9K
-         Z8JuZuEUB/85FcYZPk4kTymmU0nnUUkfpn5Nnw0vjJnYaWnNGo4MfPTnxQitDqp4Tw66
-         oTb8nvmEfYqsJebhNvQ+qv4tONnTaRC/jv7DW5K5EofDdYKaTBwRR/UvE+Q6s337IEo8
-         O1/jKB5XWn7bYS0PPbSvNHcD9Pmv0DHYLu7gWVZGVJmj+r56E19tu5iWcPOCMoApBE31
-         1+yBXd+6pX/Es+usqYHWKWp9DY3lBKybSV0puWW3vJNp2JNXU/GEkIsToOETkD8QjRPB
-         N2Zg==
-X-Gm-Message-State: APjAAAXKByzlHccUxAJTnC6KCrBN6ynRC0k88U7+nPU/lzqM8UfpFvUB
-        l06zx9FFmaqmKqmg19d02/A=
-X-Google-Smtp-Source: APXvYqwmQ0zWTmSyqUGQ+uwoCR4ldO/zmwY8wc11jDimSnmv1YmHJBk/u09q6d+wdYGUiW8KtCogYA==
-X-Received: by 2002:adf:ef10:: with SMTP id e16mr4196456wro.336.1575370278677;
-        Tue, 03 Dec 2019 02:51:18 -0800 (PST)
-Received: from x230 (ipb218f57a.dynamic.kabel-deutschland.de. [178.24.245.122])
-        by smtp.gmail.com with ESMTPSA id m8sm2618228wmf.8.2019.12.03.02.51.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 02:51:17 -0800 (PST)
-From:   Eugeniu Rosca <roscaeugeniu@gmail.com>
-X-Google-Original-From: Eugeniu Rosca <erosca@de.adit-jv.com>
-Date:   Tue, 3 Dec 2019 11:51:03 +0100
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, qemu-devel@nongnu.org,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH v3 5/7] gpio: Add GPIO Aggregator/Repeater driver
-Message-ID: <20191203105103.GA20470@x230>
-References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20191127084253.16356-6-geert+renesas@glider.be>
+        Tue, 3 Dec 2019 05:51:51 -0500
+IronPort-SDR: CL1oci0CjYpmV82W31UJYtyw/2xDAlTlhLPJWfJKDaukkWCmWwVw8POQJELNydo6bYvC2uTeRq
+ zDSRH6iqRuceDNHvmOxTRciJHRsqOulBtrekVML3xNxDgWYi9C4sbTx7mRh8sJjh+a1rWOSx3k
+ DfrIdZYRg/peJ0Dj90qqmMxodB5hDaZ4PNvx698BD9tNpdjYyUnqDomyYD7covl6R89aaxwhm+
+ 6N7rqOmJXfjYs4+IKUFLWYjpgZwUt7agJwb8s5D/S/VpoPdyczNzGhVy4xb4SOxojSuOg+kKeo
+ XKc=
+X-IronPort-AV: E=Sophos;i="5.69,272,1571731200"; 
+   d="scan'208";a="43654481"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa2.mentor.iphmx.com with ESMTP; 03 Dec 2019 02:51:51 -0800
+IronPort-SDR: p4sJTNOtKCKtqUJ6AZsYjOR3ERGgpk48uCLfiUzzIsS6vs7gp0Pdo5JmeHk4C8lCnwKceE/m8b
+ Hg6o4GoyvKjTmQKDyOfKVH+pED7eTt79/Y/Ec19aK/wUByPvoj9OEYBQkvJo4Xly4494eMiwnG
+ tQjsm9WdIuZEM8X1gFFGBACyF/0xKL/sX7gCLoCmLNOOQb+L14Gyz4nHXdci5/1tJzCVLsVuQ2
+ H89tfV0eUw0/vqWs5egiLKLKUNhzd/OUBdb2xFKRfNWTBv+uTeBZmyzc/mtjmQRZmSC4sShg+y
+ 0zY=
+From:   "Schmid, Carsten" <Carsten_Schmid@mentor.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     "mingo@redhat.com" <mingo@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: AW: Crash in fair scheduler
+Thread-Topic: Crash in fair scheduler
+Thread-Index: AQHVqbfg64Wqju89WkedWbWijDxswKeoNgIAgAADvAA=
+Date:   Tue, 3 Dec 2019 10:51:46 +0000
+Message-ID: <656260cf50684c11a3122aca88dde0cb@SVR-IES-MBX-03.mgc.mentorg.com>
+References: <1575364273836.74450@mentor.com>
+ <20191203103046.GJ2827@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191203103046.GJ2827@hirez.programming.kicks-ass.net>
+Accept-Language: de-DE, en-IE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [137.202.0.90]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191127084253.16356-6-geert+renesas@glider.be>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+> > we had a crash in the fair scheduler and analysis shows that this could
+> happen again.
+> > Happened on 4.14.86 (LTS series) but failing code path still exists in 5.4-rc2
+> (and 4.14.147 too).
+> 
+> Please, do try if you can reproduce with Linus' latest git. I've no idea
+> what is, or is not, in those stable trees.
+> 
+unfortunately a once issue so far ...
 
-On Wed, Nov 27, 2019 at 09:42:51AM +0100, Geert Uytterhoeven wrote:
-> +static int gpio_aggregator_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct gpio_desc **descs;
-> +	struct gpiochip_fwd *fwd;
-> +	int i, n;
 
-FWIW/FTR, doing some blind creation and deletion of gpio aggregator
-chips [1] on R-Car H3ULCB overnight, kmemleak reported once [2]. Not
-sure this is something 100% reproducible.
+--- snip ---
 
-[1] while true; do \
-   echo e6055400.gpio 12,13 > /sys/bus/platform/drivers/gpio-aggregator/new_device; \
-   echo gpio-aggregator.0 > /sys/bus/platform/drivers/gpio-aggregator/delete_device; \
-   done 
+> > include/linux/rbtree.h:91:#define rb_first_cached(root) (root)-
+> >rb_leftmost
+> 
+> > struct sched_entity *__pick_first_entity(struct cfs_rq *cfs_rq)
+> > {
+> > 	struct rb_node *left = rb_first_cached(&cfs_rq->tasks_timeline);
+> >
+> > 	if (!left)
+> > 		return NULL; <<<<<<<<<< the case
+> >
+> > 	return rb_entry(left, struct sched_entity, run_node);
+> > }
+> 
+> This the problem, for some reason the rbtree code got that rb_leftmost
+> thing wrecked.
+> 
+Any known issue on rbtree code regarding this?
 
-[2] unreferenced object 0xffff0006d2c2e000 (size 128):
-  comm "kworker/3:1", pid 55, jiffies 4294676978 (age 38546.676s)
-  hex dump (first 32 bytes):
-    00 d9 d2 d3 06 00 ff ff 0c 00 e0 0f ff ff ff ff  ................
-    01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000a8e18c13>] slab_post_alloc_hook+0x8c/0x94
-    [<000000006f419a4f>] __kmalloc+0x170/0x218
-    [<0000000060d185ea>] kobj_map+0x78/0x1c0
-    [<00000000c96645f3>] cdev_add+0x68/0x94
-    [<00000000a7a5a8ac>] cdev_device_add+0x74/0x90
-    [<00000000497871d3>] gpiochip_setup_dev+0x84/0x1f0
-    [<00000000b993f95f>] gpiochip_add_data_with_key+0xbcc/0x11f0
-    [<00000000fd728c0e>] devm_gpiochip_add_data+0x60/0xa8
-    [<00000000442e34c1>] gpio_aggregator_probe+0x210/0x3c8
-    [<00000000076e13fb>] platform_drv_probe+0x70/0xe4
-    [<00000000de84b58b>] really_probe+0x2d8/0x434
-    [<00000000c95c9784>] driver_probe_device+0x15c/0x16c
-    [<00000000afb7dd4f>] __device_attach_driver+0xdc/0x120
-    [<00000000efa40cae>] bus_for_each_drv+0x12c/0x154
-    [<00000000c149acef>] __device_attach+0x148/0x1e0
-    [<00000000a74fd158>] device_initial_probe+0x24/0x30
+> > Is this a corner case nobody thought of or do we have cfs_rq data that is
+> unexpected in it's content?
+> 
+> No, the rbtree is corrupt. Your tree has a single node (which matches
+> with nr_running), but for some reason it thinks rb_leftmost is NULL.
+> This is wrong, if the tree is non-empty, it must have a leftmost
+> element.
+Is there a chance to find the left-most element in the core dump?
+Maybe i can dig deeper to find the root c ause then.
+Does any of the structs/data in this context point to some memory
+where i can continue to search?
+Where should rb_leftmost point to if only one node is in the tree?
+To the node itself?
 
--- 
-Best Regards,
-Eugeniu
+> 
+> Can you reproduce at will? If so, can you please try the latest kernel,
+> and or share the reproducer?
+Unfortunately this was a "once" issue so far; i haven't a reproducer yet.
+
+Thanks,
+Carsten
