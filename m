@@ -2,80 +2,112 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A662C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 927EBC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49E3220661
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7043520661
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:47:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726330AbfLCJrp (ORCPT
+        id S1726395AbfLCJrv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 04:47:45 -0500
-Received: from mx2.suse.de ([195.135.220.15]:56108 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725773AbfLCJro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 04:47:44 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id F041EAF47;
-        Tue,  3 Dec 2019 09:47:42 +0000 (UTC)
-Subject: Re: [PATCH v3 1/2] xen/xenbus: reference count registered modules
-To:     Paul Durrant <pdurrant@amazon.com>
-Cc:     xen-devel@lists.xenproject.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>
-References: <20191202114117.1264-1-pdurrant@amazon.com>
- <20191202114117.1264-2-pdurrant@amazon.com>
-From:   Jan Beulich <jbeulich@suse.com>
-Message-ID: <c784e57a-46ea-a839-8c0c-5a299aa5a64f@suse.com>
-Date:   Tue, 3 Dec 2019 10:47:55 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 3 Dec 2019 04:47:51 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:40483 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbfLCJrv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 04:47:51 -0500
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1ic4mb-0003Hm-Py; Tue, 03 Dec 2019 10:47:49 +0100
+Message-ID: <9e210702979c45c11d16bf5df97b75863da587d0.camel@pengutronix.de>
+Subject: Re: [PATCH v5 1/3] dmaengine: imx-sdma: fix buffer ownership
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Philipp Puschmann <philipp.puschmann@emlix.com>,
+        linux-kernel@vger.kernel.org
+Cc:     jlu@pengutronix.de, yibin.gong@nxp.com, fugang.duan@nxp.com,
+        dan.j.williams@intel.com, vkoul@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Date:   Tue, 03 Dec 2019 10:47:48 +0100
+In-Reply-To: <20190923135808.815-2-philipp.puschmann@emlix.com>
+References: <20190923135808.815-1-philipp.puschmann@emlix.com>
+         <20190923135808.815-2-philipp.puschmann@emlix.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <20191202114117.1264-2-pdurrant@amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02.12.2019 12:41, Paul Durrant wrote:
-> To prevent a PV driver module being removed whilst attached to its other
-> end, and hence xenbus calling into potentially invalid text, take a
-> reference on the module before calling the probe() method (dropping it if
-> unsuccessful) and drop the reference after returning from the remove()
-> method.
+On Mo, 2019-09-23 at 15:58 +0200, Philipp Puschmann wrote:
+> BD_DONE flag marks ownership of the buffer. When 1 SDMA owns the
+> buffer, when 0 ARM owns it. When processing the buffers in
+> sdma_update_channel_loop the ownership of the currently processed
+> buffer was set to SDMA again before running the callback function of
+> the buffer and while the sdma script may be running in parallel. So
+> there was the possibility to get the buffer overwritten by SDMA
+> before
+> it has been processed by kernel leading to kind of random errors in
+> the
+> upper layers, e.g. bluetooth.
 > 
-> Suggested-by: Jan Beulich <jbeulich@suse.com>
-> Signed-off-by: Paul Durrant <pdurrant@amazon.com>
+> Fixes: 1ec1e82f2510 ("dmaengine: Add Freescale i.MX SDMA support")
+> Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
 
-Reviewed-by: Jan Beulich <jbeulich@suse.com>
-with ...
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 
-> --- a/drivers/xen/xenbus/xenbus_probe.c
-> +++ b/drivers/xen/xenbus/xenbus_probe.c
-> @@ -232,9 +232,16 @@ int xenbus_dev_probe(struct device *_dev)
->  		return err;
->  	}
+> ---
+> 
+> Changelog v5:
+>  - no changes
+> 
+> Changelog v4:
+>  - fixed the fixes tag
 >  
-> +	if (!try_module_get(drv->driver.owner)) {
-> +		dev_warn(&dev->dev, "failed to acquire module reference on '%s'.\n",
-> +			 drv->driver.name);
+> Changelog v3:
+>  - use correct dma_wmb() instead of dma_wb()
+>  - add fixes tag
+> 
+> Changelog v2:
+>  - add dma_wb()
+>  
+>  drivers/dma/imx-sdma.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+> index 9ba74ab7e912..b42281604e54 100644
+> --- a/drivers/dma/imx-sdma.c
+> +++ b/drivers/dma/imx-sdma.c
+> @@ -802,7 +802,6 @@ static void sdma_update_channel_loop(struct
+> sdma_channel *sdmac)
+>  		*/
+>  
+>  		desc->chn_real_count = bd->mode.count;
+> -		bd->mode.status |= BD_DONE;
+>  		bd->mode.count = desc->period_len;
+>  		desc->buf_ptail = desc->buf_tail;
+>  		desc->buf_tail = (desc->buf_tail + 1) % desc->num_bd;
+> @@ -817,6 +816,9 @@ static void sdma_update_channel_loop(struct
+> sdma_channel *sdmac)
+>  		dmaengine_desc_get_callback_invoke(&desc->vd.tx, NULL);
+>  		spin_lock(&sdmac->vc.lock);
+>  
+> +		dma_wmb();
+> +		bd->mode.status |= BD_DONE;
+> +
+>  		if (error)
+>  			sdmac->status = old_status;
+>  	}
 
-... perhaps the full stop dropped here and ...
-
-> +		err = -ESRCH;
-> +		goto fail;
-> +        }
-
-... (definitely) indentation here changed to use a tab.
-
-Jan
