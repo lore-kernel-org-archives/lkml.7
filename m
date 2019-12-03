@@ -2,155 +2,162 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,PDS_BTC_ID,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7858FC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28ED1C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56AC2206EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:41:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F37ED2064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:45:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xTItXRhl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbfLCJlE (ORCPT
+        id S1726098AbfLCJpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 04:41:04 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:37763 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfLCJlD (ORCPT
+        Tue, 3 Dec 2019 04:45:54 -0500
+Received: from mail-lj1-f178.google.com ([209.85.208.178]:39378 "EHLO
+        mail-lj1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbfLCJpx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 04:41:03 -0500
-Received: from [192.168.100.1] ([78.238.229.36]) by mrelayeu.kundenserver.de
- (mreue011 [213.165.67.103]) with ESMTPSA (Nemesis) id
- 1MNc1T-1iQsYQ12xH-00P1Yn; Tue, 03 Dec 2019 10:40:53 +0100
-Subject: Re: [RFC v2] binfmt_misc: pass binfmt_misc flags to the interpreter
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>
-References: <20191122150830.15855-1-laurent@vivier.eu>
-From:   Laurent Vivier <laurent@vivier.eu>
-Message-ID: <27b62e32-1092-d334-6cc0-4029bda19a25@vivier.eu>
-Date:   Tue, 3 Dec 2019 10:40:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 3 Dec 2019 04:45:53 -0500
+Received: by mail-lj1-f178.google.com with SMTP id e10so3003150ljj.6
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 01:45:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=neTWFwuJR4Jukr2kV185rqamwxRtM5mkOfSfynGkp0Q=;
+        b=xTItXRhlAS9cxWUEh9q8wXyZXw8qmon9lBOU+YKk3+jsr5zYrJpuOg82lsWCWE9x9X
+         5ADlxer0aiEW2iYzfNSLNiOj63PrR3F1nhK2PdD9hq2kxZiTHUou7Za4v3ekOJ7tCxNy
+         uRMpB5tImy3zbNIFsWsk4L7/gH0FrKa1N+yCJoJNBcz+PC4S+b23G+oB15oopcBSChz8
+         vw7VojQo7xfiSfrnHHarbkiSjhP5VOgbvWWWTzDRZWe8vebQavuihtriA4mlUGNONjmQ
+         +H1/t6RNLmdxVGu0iujLQM/DXgUOSvnjT5FObcWKUE4m/qL+FYOTUVsV0EepEalnzDnn
+         /Rnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=neTWFwuJR4Jukr2kV185rqamwxRtM5mkOfSfynGkp0Q=;
+        b=MJf8wO8oA7uiCvAzoJ7+YNUbJnJgxaOxoPqlk2nYbO05ruo+2Igmo0dMK/0c6fE8Ec
+         5XDXyTsrPQUeV1YQoVyCfMOoMsC6d9Pzou0cCqmiNuslIfg41z2qpSNoSIhOp2Yt+DLL
+         zplqeXOstcalH+s00MYDq4fYwWXJ/jGOfRdV64C7+G0o8KDTCAifvkcnArVSW4+MBWn5
+         BG8O+7yHae4QlpVxn6lJniQkr6n3pmzujA6iFznq2kb/rslU368rXJvX2Zft/xO9/TBx
+         Rqc5QknEXCD1EzHBvbk6oXYkkWVCZARebfKJhHS9FvCqOFwDPpBeKhMdD1R7G83ywhW2
+         StZg==
+X-Gm-Message-State: APjAAAXDeIMV/ZA4nmQMm1rPk5jnDPYpSDf6IEh5FEgqX+DBruAS51OE
+        276OnlFriuu5TqVTi4Q7172dgDtwAuycKsRGHOIF+g==
+X-Google-Smtp-Source: APXvYqxO6Zl+Be503YP0jAYAavrPaOI2DIRf25Dn1MebkTGcAo5eS2qEtOQyNDnZeVQ/ba9f3n7gueV/EICnAEhnbiU=
+X-Received: by 2002:a2e:9a51:: with SMTP id k17mr1372846ljj.206.1575366350405;
+ Tue, 03 Dec 2019 01:45:50 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191122150830.15855-1-laurent@vivier.eu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:vEqQ39WOdCsrFQCuCjUa8VvyjX2ZQngTuPDxdeDo7C7kVlje/+K
- bJAYckn/GzqLOY5qskaUbacJHjpLF6sVDSyylRNCMRJkC9aQzE5RTJsG9u3ey22dpwO6AQo
- g2vBo4cWOjnimnuMJgaScKJ6xzbw+zlxHtIeev4K2fbFyfzQkAy+SDqCg2FdMvMcka5VnQ3
- 8mXwu5edQIacf92FA4+KQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:d+Gj1rrjLGA=:DQHLtUzCqCGwx0kY9K0OSF
- WCQvILpbUroJ/x4Wti7+xNpGziV6nPnMefh462T5fTDaQMLobue0guFqPePBw4CFAPrxX4JRL
- uijcIsWVFqY5WsgZHxfW7GvDVwWMZAsA1WvId3o7RP6CCA9VHRYO7VtU+wishSN028f0qNBI+
- XdxGYuH4HapIHpCncdmaJ1C0ostoCp6sRf8nYBxO8HXec7N8YQNmi/6SSIrhGMN9eBoEogO3c
- KOredgUm18CQJishcF7A/+QdtIjd3tKzapB+tZDdf6gbmztJra8gFOBFuESza1oTuwIGpXq4u
- ZdXhqLyE4RPlcTqssHB4OeWpISyEoNyIZhljDtX/5ujMj+t8Y3KN4nwzUQ9etziwos0Bmqn6+
- bX/6srhfpMfVtSsFwDlD7P2LqsJ+b9Z2LrVYxZp/a9uFIT+NJ6U55aXi9Kx5t0GvpyBAHSTWA
- GNsX49KT7jvImFinmCT209rW9X9hKB2IYTfWvT2WPEqcG8aP6b4br714qEW/4XuSDIEM0x/j9
- pBpMNMD9xZRc8M0c7nH510tGnJA+lZUnaPbtfzxS0+Dw3B9oh0dwxrBpYm+GliFWz3RHsMkgo
- KjsSBj6ihLp/tXnPZDdpgtLRb4+62uvETkffKZ/IvgBNJaFbgWK5Z/SZ6z+M5oOj+0/PF6Cl9
- 1YkgyBcJPBVw7AwZm5OtQUjhS4f2b4ycefmbi7NLsNz/1/4p54RQYqNAZMlh0IuuSDBxFBrSA
- G+b6p81i11copDmeGJYsm4r77+ERqAn42FambVw057oO9CCx8wSirUjSxxh/UKavxQGU/ELzK
- zAgZPTfUueOiNq86o2BCYVMsDZ5KYIkt3JDtxbnLfw02z285Of3RXOtyLINOg6sIMqpUbv8Yk
- x76YMZK190Z1NXTKrZi4pQXIQ3pb0Cj9LLSbhwlWI=
+References: <20191114113153.GB4213@ming.t460p> <20191114235415.GL4614@dread.disaster.area>
+ <20191115010824.GC4847@ming.t460p> <20191115045634.GN4614@dread.disaster.area>
+ <20191115070843.GA24246@ming.t460p> <20191128094003.752-1-hdanton@sina.com>
+ <CAKfTPtA23ErKGCEJVmg6vk-QoufkiUM3NbXd31mZmKnuwbTkFw@mail.gmail.com>
+ <20191202024625.GD24512@ming.t460p> <20191202040256.GE2695@dread.disaster.area>
+ <CAKfTPtD8Q97qJ_+hdCXQRt=gy7k96XrhnFmGYP1G88YSFW0vNA@mail.gmail.com> <20191202212210.GA32767@lorien.usersys.redhat.com>
+In-Reply-To: <20191202212210.GA32767@lorien.usersys.redhat.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 3 Dec 2019 10:45:38 +0100
+Message-ID: <CAKfTPtC7uycC3b2ngOFUqOh9-Fcz7h-151aaYJbLJFXrNq-gkw@mail.gmail.com>
+Subject: Re: single aio thread is migrated crazily by scheduler
+To:     Phil Auld <pauld@redhat.com>
+Cc:     Dave Chinner <david@fromorbit.com>, Ming Lei <ming.lei@redhat.com>,
+        Hillf Danton <hdanton@sina.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-fs <linux-fsdevel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rong Chen <rong.a.chen@intel.com>, Tejun Heo <tj@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping
+On Mon, 2 Dec 2019 at 22:22, Phil Auld <pauld@redhat.com> wrote:
+>
+> Hi Vincent,
+>
+> On Mon, Dec 02, 2019 at 02:45:42PM +0100 Vincent Guittot wrote:
+> > On Mon, 2 Dec 2019 at 05:02, Dave Chinner <david@fromorbit.com> wrote:
+>
+> ...
+>
+> > > So, we can fiddle with workqueues, but it doesn't address the
+> > > underlying issue that the scheduler appears to be migrating
+> > > non-bound tasks off a busy CPU too easily....
+> >
+> > The root cause of the problem is that the sched_wakeup_granularity_ns
+> > is in the same range or higher than load balance period. As Peter
+> > explained, This make the kworker waiting for the CPU for several load
+> > period and a transient unbalanced state becomes a stable one that the
+> > scheduler to fix. With default value, the scheduler doesn't try to
+> > migrate any task.
+>
+> There are actually two issues here.   With the high wakeup granularity
+> we get the user task actively migrated. This causes the significant
+> performance hit Ming was showing. With the fast wakeup_granularity
+> (or smaller IOs - 512 instead of 4k) we get, instead, the user task
+> migrated at wakeup to a new CPU for every IO completion.
 
-Thanks,
-Laurent
+Ok, I haven't noticed that this one was a problem too. Do we have perf
+regression ?
 
+>
+> This is the 11k migrations per sec doing 11k iops.  In this test it
+> is not by itself causing the measured performance issue. It generally
+> flips back and forth between 2 cpus for large periods. I think it is
+> crossing cache boundaries at times (but I have not looked closely
+> at the traces compared to the topology, yet).
 
-Le 22/11/2019 à 16:08, Laurent Vivier a écrit :
-> It can be useful to the interpreter to know which flags are in use.
-> 
-> For instance, knowing if the preserve-argv[0] is in use would
-> allow to skip the pathname argument.
-> 
-> This patch uses an unused auxiliary vector, AT_FLAGS,  to pass the
-> content of the binfmt flags (special flags: P, F, C, O).
-> 
-> Signed-off-by: Laurent Vivier <laurent@vivier.eu>
-> ---
-> 
-> Notes:
->     v2: only pass special flags (remove Magic and Enabled flags)
-> 
->  fs/binfmt_elf.c         | 2 +-
->  fs/binfmt_elf_fdpic.c   | 2 +-
->  fs/binfmt_misc.c        | 6 ++++++
->  include/linux/binfmts.h | 2 +-
->  4 files changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-> index c5642bcb6b46..7a34c03e5857 100644
-> --- a/fs/binfmt_elf.c
-> +++ b/fs/binfmt_elf.c
-> @@ -250,7 +250,7 @@ create_elf_tables(struct linux_binprm *bprm, struct elfhdr *exec,
->  	NEW_AUX_ENT(AT_PHENT, sizeof(struct elf_phdr));
->  	NEW_AUX_ENT(AT_PHNUM, exec->e_phnum);
->  	NEW_AUX_ENT(AT_BASE, interp_load_addr);
-> -	NEW_AUX_ENT(AT_FLAGS, 0);
-> +	NEW_AUX_ENT(AT_FLAGS, bprm->fmt_flags);
->  	NEW_AUX_ENT(AT_ENTRY, exec->e_entry);
->  	NEW_AUX_ENT(AT_UID, from_kuid_munged(cred->user_ns, cred->uid));
->  	NEW_AUX_ENT(AT_EUID, from_kuid_munged(cred->user_ns, cred->euid));
-> diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
-> index d86ebd0dcc3d..8fe839be125e 100644
-> --- a/fs/binfmt_elf_fdpic.c
-> +++ b/fs/binfmt_elf_fdpic.c
-> @@ -647,7 +647,7 @@ static int create_elf_fdpic_tables(struct linux_binprm *bprm,
->  	NEW_AUX_ENT(AT_PHENT,	sizeof(struct elf_phdr));
->  	NEW_AUX_ENT(AT_PHNUM,	exec_params->hdr.e_phnum);
->  	NEW_AUX_ENT(AT_BASE,	interp_params->elfhdr_addr);
-> -	NEW_AUX_ENT(AT_FLAGS,	0);
-> +	NEW_AUX_ENT(AT_FLAGS,	bprm->fmt_flags);
->  	NEW_AUX_ENT(AT_ENTRY,	exec_params->entry_addr);
->  	NEW_AUX_ENT(AT_UID,	(elf_addr_t) from_kuid_munged(cred->user_ns, cred->uid));
->  	NEW_AUX_ENT(AT_EUID,	(elf_addr_t) from_kuid_munged(cred->user_ns, cred->euid));
-> diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
-> index cdb45829354d..25a392f23409 100644
-> --- a/fs/binfmt_misc.c
-> +++ b/fs/binfmt_misc.c
-> @@ -48,6 +48,9 @@ enum {Enabled, Magic};
->  #define MISC_FMT_OPEN_BINARY (1 << 30)
->  #define MISC_FMT_CREDENTIALS (1 << 29)
->  #define MISC_FMT_OPEN_FILE (1 << 28)
-> +#define MISC_FMT_FLAGS_MASK (MISC_FMT_PRESERVE_ARGV0 | MISC_FMT_OPEN_BINARY | \
-> +			     MISC_FMT_CREDENTIALS | MISC_FMT_OPEN_FILE)
-> +
->  
->  typedef struct {
->  	struct list_head list;
-> @@ -149,6 +152,9 @@ static int load_misc_binary(struct linux_binprm *bprm)
->  	if (!fmt)
->  		return retval;
->  
-> +	/* pass special flags to the interpreter */
-> +	bprm->fmt_flags = fmt->flags & MISC_FMT_FLAGS_MASK;
-> +
->  	/* Need to be able to load the file after exec */
->  	retval = -ENOENT;
->  	if (bprm->interp_flags & BINPRM_FLAGS_PATH_INACCESSIBLE)
-> diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
-> index b40fc633f3be..dae0d0d7b84d 100644
-> --- a/include/linux/binfmts.h
-> +++ b/include/linux/binfmts.h
-> @@ -60,7 +60,7 @@ struct linux_binprm {
->  				   different for binfmt_{misc,script} */
->  	unsigned interp_flags;
->  	unsigned interp_data;
-> -	unsigned long loader, exec;
-> +	unsigned long loader, exec, fmt_flags;
->  
->  	struct rlimit rlim_stack; /* Saved RLIMIT_STACK used during exec. */
->  
-> 
+At task wake up, scheduler compares local and previous CPU to decide
+where to place the task and will then try to find an idle one which
+shares cache so I don't expect that it will cross cache boundary as
+local and previous are in your case.
 
+>
+> The active balances are what really hurts in thie case but I agree
+> that seems to be a tuning problem.
+>
+>
+> Cheers,
+> Phil
+>
+>
+> >
+> > Then, I agree that having an ack close to the request makes sense but
+> > forcing it on the exact same CPU is too restrictive IMO. Being able to
+> > use another CPU on the same core should not harm the performance and
+> > may even improve it. And that may still be the case while CPUs share
+> > their cache.
+> >
+> > >
+> > > -Dave.
+> > >
+> > > [*] Pay attention to the WQ_POWER_EFFICIENT definition for a work
+> > > queue: it's designed for interrupt routines that defer work via work
+> > > queues to avoid doing work on otherwise idle CPUs. It does this by
+> > > turning the per-cpu wq into an unbound wq so that work gets
+> > > scheduled on a non-idle CPUs in preference to the local idle CPU
+> > > which can then remain in low power states.
+> > >
+> > > That's the exact opposite of what using WQ_UNBOUND ends up doing in
+> > > this IO completion context: it pushes the work out over idle CPUs
+> > > rather than keeping them confined on the already busy CPUs where CPU
+> > > affinity allows the work to be done quickly. So while WQ_UNBOUND
+> > > avoids the user task being migrated frequently, it results in the
+> > > work being spread around many more CPUs and we burn more power to do
+> > > the same work.
+> > >
+> > > --
+> > > Dave Chinner
+> > > david@fromorbit.com
+> >
+>
+> --
+>
