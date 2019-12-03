@@ -2,135 +2,125 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4EBC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F866C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C13F2080F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44E19206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:16:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575357381;
+	bh=lHWxS9F5hSS5jVBbp1I/i9edw2Kjpzv5ypLC7gz0rPo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SwD9G2MmmGmuaCBXDJ6gDgGZSi0aMt6X7NFXq/unnLuRi2sI/lIWAIPYez0bVNUvx
+	 /rl22fBjIxTFEllLKRGEC8mTWI32up17K/a/AJzhnNqSUOwjVdxz4psZBnTzixhQEs
+	 jcdxMC+xBmM9PjuxT6f6gcZ0zXvLfYLsDCFv6p4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfLCHPm (ORCPT
+        id S1727447AbfLCHQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 02:15:42 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36115 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727372AbfLCHPm (ORCPT
+        Tue, 3 Dec 2019 02:16:20 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53410 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727372AbfLCHQT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 02:15:42 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ic2PI-00049O-93; Tue, 03 Dec 2019 08:15:36 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ic2PG-0006X3-VR; Tue, 03 Dec 2019 08:15:34 +0100
-Date:   Tue, 3 Dec 2019 08:15:34 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "rjui@broadcom.com" <rjui@broadcom.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "sbranden@broadcom.com" <sbranden@broadcom.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alice Guo <alice.guo@nxp.com>
-Subject: Re: [PATCH 2/2] gpio: bcm-kona: use platform_irq_count
-Message-ID: <20191203071534.zqxlizjkav4ul2n5@pengutronix.de>
-References: <1575352925-17271-1-git-send-email-peng.fan@nxp.com>
- <1575352925-17271-2-git-send-email-peng.fan@nxp.com>
- <20191203065751.w23dypag4745qv7i@pengutronix.de>
- <AM0PR04MB4481AD45530915B0BA18C45F88420@AM0PR04MB4481.eurprd04.prod.outlook.com>
+        Tue, 3 Dec 2019 02:16:19 -0500
+Received: by mail-wm1-f66.google.com with SMTP id u18so1809652wmc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 23:16:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=nm5A1amt4gZBv6FaNIeY6UwlHa3/CPSKkGpJ+nmg4WQ=;
+        b=vVcCo/FnN44L6dGlzg2plLMKtRWguBBQrM0LwKjHE7LW5lthXoidG7NRCsvrtNmYlN
+         VKgI3RS8dNBbyxtG2kwNnH8IiGRPGcJwvYCRhovyT57UCT7AOr+Vz79QHB5YVS3yFzLa
+         D6flrQcWainoiJJ32DRFIsbwZaLFgmJhbbXC5ZLgamF4ICJI2krCg6oVOEYDMb4RFPoa
+         szXzzqi7XjFDpS+fufQNgmrv2FI6auiWGcHGFIO6GqZrGWkag0JV89vCGJ+Mvu7fp8OS
+         SLgxkuw///IjvZgGh4nmHTuLA7bZJK15Gj77NEM7WgiJu39fX6j1afMbKcWmCe202I+V
+         PvEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=nm5A1amt4gZBv6FaNIeY6UwlHa3/CPSKkGpJ+nmg4WQ=;
+        b=NR7c7yq/lE+0Zc1uM13HSG03UcLOwX0t30XAp3W95kaLi/l3YdranK09CR8m+lAAcC
+         XklLevm+lUIFa6u20ntAbYGN+O0Ze8ALrOm1vfmtJNUHqRvdm24ottk3HaKxc4cKBoXM
+         Nv5yQi7Hh6h7NakhCDL60tD+XH5VxIyUi/yVrkPiiyuJA24Xvrt+Ls3cNdrx+1hnuXGR
+         /8kcuajRqfuGB/XW7zE8RTK48terQA5O4Ds49pQb3g3e/ahlhbfuWK3r2aL7fvdaLj2b
+         qe9m1SfJDBEyTntz2Eh5tY7GC2sp+UDFJY2a0aKlH4lPiikGg6KuNGzklivu62bepK4a
+         gPdw==
+X-Gm-Message-State: APjAAAWG8pgGGrxFR/0Xwku9Z2NfvO+XaDmhftaCFnrR6vYDLM2BLBFR
+        QmBOrW/vh4CPliCG1JdPhso=
+X-Google-Smtp-Source: APXvYqwOGNkR9MZbSoKGnc21fmMPfKDE0QLYW3yC/6u1+KlD5Aa4w0Pde4PpkjaXJRGuHaro/6ffBQ==
+X-Received: by 2002:a1c:4008:: with SMTP id n8mr9235273wma.121.1575357377685;
+        Mon, 02 Dec 2019 23:16:17 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id u1sm1925589wmc.3.2019.12.02.23.16.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 23:16:17 -0800 (PST)
+Date:   Tue, 3 Dec 2019 08:16:15 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     =?utf-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RESEND] sched/numa: expose per-task
+ pages-migration-failure
+Message-ID: <20191203071615.GD115767@gmail.com>
+References: <7038afda-dd08-f01f-5da0-afadf76f5533@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM0PR04MB4481AD45530915B0BA18C45F88420@AM0PR04MB4481.eurprd04.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <7038afda-dd08-f01f-5da0-afadf76f5533@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 07:00:40AM +0000, Peng Fan wrote:
-> > Subject: Re: [PATCH 2/2] gpio: bcm-kona: use platform_irq_count
-> > 
-> > On Tue, Dec 03, 2019 at 06:04:27AM +0000, Peng Fan wrote:
-> > > From: Peng Fan <peng.fan@nxp.com>
-> > >
-> > > Use platform_irq_count to replace of_irq_count
-> > >
-> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > ---
-> > >
-> > > V1:
-> > >  Code inspection, not tested
-> > >
-> > >  drivers/gpio/gpio-bcm-kona.c | 3 +--
-> > >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/gpio/gpio-bcm-kona.c
-> > > b/drivers/gpio/gpio-bcm-kona.c index 4122683eb1f9..c50721980a7c
-> > 100644
-> > > --- a/drivers/gpio/gpio-bcm-kona.c
-> > > +++ b/drivers/gpio/gpio-bcm-kona.c
-> > > @@ -19,7 +19,6 @@
-> > >  #include <linux/io.h>
-> > >  #include <linux/gpio/driver.h>
-> > >  #include <linux/of_device.h>
-> > > -#include <linux/of_irq.h>
-> > >  #include <linux/init.h>
-> > >  #include <linux/irqdomain.h>
-> > >  #include <linux/irqchip/chained_irq.h> @@ -586,7 +585,7 @@ static int
-> > > bcm_kona_gpio_probe(struct platform_device *pdev)
-> > >
-> > >  	kona_gpio->gpio_chip = template_chip;
-> > >  	chip = &kona_gpio->gpio_chip;
-> > > -	kona_gpio->num_bank = of_irq_count(dev->of_node);
-> > > +	kona_gpio->num_bank = platform_irq_count(pdev);
-> > 
-> > of_irq_count returns 0 or a positive int while platform_irq_count might return
-> > a negative error code. This needs handling. Also I wonder why
-> > platform_irq_count() is better than of_irq_count() which would be good to
-> > describe in the commit log.
+
+* 王贇 <yun.wang@linux.alibaba.com> wrote:
+
+> NUMA balancing will try to migrate pages between nodes, which
+> could caused by memory policy or numa group aggregation, while
+> the page migration could failed too for eg when the target node
+> run out of memory.
 > 
-> Inspired from https://lkml.org/lkml/2015/11/18/466
-> From Rob:
-> "
-> So I started looking at why you are using of_irq_count which drivers
-> shouldn't need to. In patch 5 you use it to allocate memory to store
-> the irq names, then use them here...
-> "
+> Since this is critical to the performance, admin should know
+> how serious the problem is, and take actions before it causing
+> too much performance damage, thus this patch expose the counter
+> as 'migfailed' in '/proc/PID/sched'.
 > 
-> Is this ok?
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Michal Koutný <mkoutny@suse.com>
+> Acked-by: Mel Gorman <mgorman@suse.de>
+> Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
+> ---
+>  kernel/sched/debug.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+> index f7e4579e746c..73c4809c8f37 100644
+> --- a/kernel/sched/debug.c
+> +++ b/kernel/sched/debug.c
+> @@ -848,6 +848,7 @@ static void sched_show_numa(struct task_struct *p, struct seq_file *m)
+>  	P(total_numa_faults);
+>  	SEQ_printf(m, "current_node=%d, numa_group_id=%d\n",
+>  			task_node(p), task_numa_group_id(p));
+> +	SEQ_printf(m, "migfailed=%lu\n", p->numa_faults_locality[2]);
 
-I would say something like:
+Any reason not to expose the other 2 fields of this array as well, which 
+show remote/local migrations?
 
-	platform_irq_count() is the more generic way (independent of
-	device trees) to determine the count of available interrupts. So
-	use this instead.
+Thanks,
 
-	As platform_irq_count() might return an error code (which
-	of_irq_count doesn't) some additional handling is necessary.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-K�nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+	Ingo
