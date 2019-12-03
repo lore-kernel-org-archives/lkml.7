@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D54C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0C6C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A06CD2073C
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D89BA20848
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412985;
-	bh=b/K4573lT1m1rjcTQI/G5X4LvK07LO0gE+dvSXDdXEY=;
+	s=default; t=1575412989;
+	bh=0i8+MroQvcCp4W7iTdzxkMdymi9RZSRFAFVF573fmOI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JA8wkQHYRdqNB4cekR+QrKxadY+aQvjOp83lgFbcvWj773Y54f7pt3mgkv37v2bvP
-	 nYz89BM0aUp4lsuj/gusBU9ymb7dlbQ4v6U6zxqOPnzNZ+ets+bzlFVedEEW/ss9Kg
-	 XsiCTUvZoCTzmqwyZJncrCDjQVhfgldY5ogFfUsE=
+	b=UYdctKaybDU5BNf/BWAue3XOwl2qrwCINjSv0HEkYDhMwQXZ1iwri/RHFpJQS5/5z
+	 oEXsT6xdXieStBH6fcDWl4eBFbmZs/08zlTw2jjXFyKZfxMN+FfIwPwJNNEnJyYkib
+	 U22rGsEnNGq6Vb/o4qfhODIxo1DoPFiDyk86ZEFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727689AbfLCWnE (ORCPT
+        id S1728772AbfLCWnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:43:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58172 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:43:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728738AbfLCWm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:42:59 -0500
+        id S1728766AbfLCWnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:43:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAAD320803;
-        Tue,  3 Dec 2019 22:42:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5353B206EC;
+        Tue,  3 Dec 2019 22:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412978;
-        bh=b/K4573lT1m1rjcTQI/G5X4LvK07LO0gE+dvSXDdXEY=;
+        s=default; t=1575412985;
+        bh=0i8+MroQvcCp4W7iTdzxkMdymi9RZSRFAFVF573fmOI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n6xNcl3T160D2BNZfqPGpVPadswKThqmFa6VRUZC6ddpliaEj5+0JE/rfMSzfFS3O
-         i9BXRIKGE65qOW7+afTYFnST0MVbiFVlV+Y3rr80cVk/4cODxXeYfzTMajQHAMfCoD
-         Hm2I64J7nmo0/I5zPAEBkuu/plg7H4HZl7a17SVs=
+        b=Nrfv4qbRLE3D1MafL8V2Cb4sIBVJiRk3xObZkeKtcBYxtoytnThkbwwO7jJsAXZPK
+         4MaJxxEeONEeqrAIeOynybruj39I2hzT+T5y0gCbbzYI1FFDg6yAWR0LUqcNJQBC2v
+         lDyrNRb5uBElCmBlwOiVNUG9uOkDzjOeej4aSZ0g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 082/135] drm/amdgpu: register gpu instance before fan boost feature enablment
-Date:   Tue,  3 Dec 2019 23:35:22 +0100
-Message-Id: <20191203213031.952845802@linuxfoundation.org>
+Subject: [PATCH 5.3 093/135] pwm: bcm-iproc: Prevent unloading the driver module while in use
+Date:   Tue,  3 Dec 2019 23:35:33 +0100
+Message-Id: <20191203213037.242644482@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -60,52 +63,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Quan <evan.quan@amd.com>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit 6a299d7aaa97dfde5988d8f9e2fa2c046b5793ff ]
+[ Upstream commit 24906a41eecb73d51974ade0847c21e429beec60 ]
 
-Otherwise, the feature enablement will be skipped due to wrong count.
+The owner member of struct pwm_ops must be set to THIS_MODULE to
+increase the reference count of the module such that the module cannot
+be removed while its code is in use.
 
-Fixes: beff74bc6e0fa91 ("drm/amdgpu: fix a race in GPU reset with IB test (v2)")
-Signed-off-by: Evan Quan <evan.quan@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controller")
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 7 +++++++
- drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c    | 1 -
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ drivers/pwm/pwm-bcm-iproc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-index 5a7f893cf7244..2877ce84aef2b 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -2788,6 +2788,13 @@ fence_driver_init:
- 			DRM_INFO("amdgpu: acceleration disabled, skipping benchmarks\n");
- 	}
+diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
+index d961a8207b1cb..31b01035d0ab3 100644
+--- a/drivers/pwm/pwm-bcm-iproc.c
++++ b/drivers/pwm/pwm-bcm-iproc.c
+@@ -187,6 +187,7 @@ static int iproc_pwmc_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ static const struct pwm_ops iproc_pwm_ops = {
+ 	.apply = iproc_pwmc_apply,
+ 	.get_state = iproc_pwmc_get_state,
++	.owner = THIS_MODULE,
+ };
  
-+	/*
-+	 * Register gpu instance before amdgpu_device_enable_mgpu_fan_boost.
-+	 * Otherwise the mgpu fan boost feature will be skipped due to the
-+	 * gpu instance is counted less.
-+	 */
-+	amdgpu_register_gpu_instance(adev);
-+
- 	/* enable clockgating, etc. after ib tests, etc. since some blocks require
- 	 * explicit gating rather than handling it automatically.
- 	 */
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-index 65f6619f0c0c4..e531ba9195a0f 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-@@ -190,7 +190,6 @@ int amdgpu_driver_load_kms(struct drm_device *dev, unsigned long flags)
- 		pm_runtime_put_autosuspend(dev->dev);
- 	}
- 
--	amdgpu_register_gpu_instance(adev);
- out:
- 	if (r) {
- 		/* balance pm_runtime_get_sync in amdgpu_driver_unload_kms */
+ static int iproc_pwmc_probe(struct platform_device *pdev)
 -- 
 2.20.1
 
