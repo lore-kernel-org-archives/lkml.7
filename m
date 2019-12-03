@@ -2,114 +2,154 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A83AC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 18:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA3B9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 18:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00D2820661
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 18:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89A9A20661
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 18:11:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="polSkby/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UfhJWpRk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727370AbfLCSJp (ORCPT
+        id S1727225AbfLCSLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 13:09:45 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34778 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727316AbfLCSJo (ORCPT
+        Tue, 3 Dec 2019 13:11:08 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43366 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbfLCSLI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 13:09:44 -0500
-Received: by mail-pf1-f194.google.com with SMTP id n13so2247737pff.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 10:09:44 -0800 (PST)
+        Tue, 3 Dec 2019 13:11:08 -0500
+Received: by mail-lf1-f65.google.com with SMTP id 9so2295499lfq.10;
+        Tue, 03 Dec 2019 10:11:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=loykSnf98Wtp3TswEHEtBrf07V1DthMDfsibxgCSjdE=;
-        b=polSkby/2rPftEWzAa2mR2P/AQVU1TyZPkOR2+OvDZVoDx/+YFkLk2AHfp422MbJws
-         MXF0fY0WkdAB2Obk+kK5NspG6Mladz7tkDLx/YrSbCL2WJuhzWHSEyHLw42lS1CmFoHJ
-         5F68HXn7NvaPWpyltr4OM080sSVvgDjTyPonfequpLY+neG1NkT1f/kyGfkvF2OJUXOO
-         Pm0Qy1/alLPv6wCPlGMkPZt1YkvkqT59u4Qh14NkuQmVo5cL7a2T+R8hN0u7EMA0EVXQ
-         GNo75rvQe7rfpfnUY0nAfZdc+UhViTY/ol6Ktgi5wS8Y9pxf+ABFSZF9td10pnED6g8b
-         oBvw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9g/Y/Bt40KbJDiW5JOJCnl3btsiJd4zL6Ayui/PxS9w=;
+        b=UfhJWpRkr9o6OerC+nd7VlQE/uyYA7iUskCVoHhYzPbBGCZZs8/RkUA0Yy2g5vZIoR
+         DZN4Ppim07wll+Egp+aWPIrF4DW101YwHwpGcPVbFSViq9ufGMdxiBpVqRmXHQqAJ/g2
+         0Wk775mVV48A4vG9NpcXMhzXwYO3bqAuDKXqVbzrlX1JEH9Xwk4Udz3Pm+h6hOHGgfs4
+         fBPPlA13r7G0vT4HJsuHK6Uahamvj4cdvEI7/8q7UAPfvVtEqgZSwkhNwlZpLbcCsM6k
+         /0c77BOovYKJlyst/tbOLxj3lJinwGtftpAzueP1Rgu7YunQ7em3LdosAuRFm8NAE+tm
+         EIpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=loykSnf98Wtp3TswEHEtBrf07V1DthMDfsibxgCSjdE=;
-        b=NBM3FbiLm82Fw2t7U0AOP5zl+9/N2fDoft5c86gASaPO5ogzHceqwZgIaNyk5apCJo
-         BSyg7VdLko67zIikyG3X5pudvmb7px9OiDvjQyhUMBO4sgNMfXs9XamZ6dtT3P+NNVCr
-         k7Y8lSHNSL5lBYGp8p/JDryvPnXHVfmLwXJln76oGtigRA/snJvpedmpkNvCwottkLvd
-         qPH0FttE7yI8e/QzshiR1DVEQAX2NMKo/O8ZfFXEwYYAgY9+HBZzJQMnsrldhINKjmcB
-         SvHe8NGuYpD8lfJY+BoxNaYJwrmnTRg0XvchVy9IPcHQilV+g7FsLjWQW6pe29LEsM0W
-         T6rQ==
-X-Gm-Message-State: APjAAAUWUdAH5fJP9hGnswdr/OJEAP2fmMUfV3k1WRSrdOYaLY4VMOvt
-        IJ8UuRBC0MkaJbpulJZ33qrxuw==
-X-Google-Smtp-Source: APXvYqwgcBHZb9FDCJA3pZujOlfUAYFHnofoTF/uSqyTQfnonhv6YHeyo017p/RUkIqtyKU4a20hZg==
-X-Received: by 2002:a62:5cc1:: with SMTP id q184mr6181056pfb.116.1575396584005;
-        Tue, 03 Dec 2019 10:09:44 -0800 (PST)
-Received: from cakuba.netronome.com (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
-        by smtp.gmail.com with ESMTPSA id x11sm4454147pfn.53.2019.12.03.10.09.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 10:09:43 -0800 (PST)
-Date:   Tue, 3 Dec 2019 10:09:31 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Tariq Toukan <tariqt@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, oss-drivers@netronome.com
-Subject: Re: [PATCH RFC v7 net-next 3/1] netronome: use the new txqueue
- timeout argument
-Message-ID: <20191203100931.43207030@cakuba.netronome.com>
-In-Reply-To: <20191203072757.429125-2-mst@redhat.com>
-References: <20191203071101.427592-1-mst@redhat.com>
-        <20191203072757.429125-2-mst@redhat.com>
-Organization: Netronome Systems, Ltd.
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9g/Y/Bt40KbJDiW5JOJCnl3btsiJd4zL6Ayui/PxS9w=;
+        b=FP4EbhRWPztiedp0DIxeVPqoLHylXDoGW5iUorAbWiZw8JuFZKlLIOMxrpiCgc+g4Z
+         1qWS+A+oF7o7ZsZWZV385d6mb9dbYBY6+r7WjzQiBSuFJNh6YJt0iah2UxszdgkVX65S
+         QSMlmhJ9KfgdkO31At54xAa+Ihk0q+WDFSBNyfl3Q2ipuMAI9znQkVOMM1PdJqf0vQ/I
+         P1CnVW+VOGH4h9MSHZ+P1Ucy9gUR7VKM7VfXDb4ArIfZrv4//H1jppdG78iQv3WlFjUI
+         vKZt2xXvwJnDFgxzcZoI2k5q5HXIvn93MYq/lavfjO1D+WZfO9kLWPath9UMdVAskOpj
+         /Ocg==
+X-Gm-Message-State: APjAAAUmUssZLx+UfwdNIdUtzw3lTymwE9+RMEnml4VCejKSg4yVHU13
+        a6/kqRP36Gehpn6hkzlJLMQJhItSN3XQX1AdfV4=
+X-Google-Smtp-Source: APXvYqx6dExbD8o0Glt5fztVJXYXC5iw9XbfbbKHxoGp7nWMkkWalgNU1aj+WSVgO/kDeG0wDxjJkLsn4DIspy4to90=
+X-Received: by 2002:ac2:531b:: with SMTP id c27mr3421907lfh.91.1575396665854;
+ Tue, 03 Dec 2019 10:11:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <1575242724-4937-1-git-send-email-sj38.park@gmail.com>
+ <20191203070025.GA4206@google.com> <CAEjAshraUy20gEEaff69=b11DhB7zbz8WHT=6wOuw6C2FyJwYA@mail.gmail.com>
+ <CAEjAsho98ER1RQ6=++ECmoCJxw2mMrGqV4jAgW5wgfb8eEM9eQ@mail.gmail.com> <CAFd5g46qPPsKJFqs07Eiea0Nim=YDWbOUndJu=JbW--VcTb-ww@mail.gmail.com>
+In-Reply-To: <CAFd5g46qPPsKJFqs07Eiea0Nim=YDWbOUndJu=JbW--VcTb-ww@mail.gmail.com>
+From:   SeongJae Park <sj38.park@gmail.com>
+Date:   Tue, 3 Dec 2019 19:10:39 +0100
+Message-ID: <CAEjAshpTAj_aYBUG1PWoyPajT69hWptXOZKwydg6duTNV5=aLQ@mail.gmail.com>
+Subject: Re: [PATCH 0/6] Fix nits in the kunit
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        SeongJae Park <sjpark@amazon.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Dec 2019 02:32:14 -0500, Michael S. Tsirkin wrote:
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
-> 
-> untested
-> 
->  drivers/net/ethernet/netronome/nfp/nfp_net_common.c | 7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_common.c b/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
-> index 41a808b14d76..26f1fb19d0aa 100644
-> --- a/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
-> +++ b/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
-> @@ -1323,13 +1323,8 @@ nfp_net_tx_ring_reset(struct nfp_net_dp *dp, struct nfp_net_tx_ring *tx_ring)
->  static void nfp_net_tx_timeout(struct net_device *netdev, unsigned int txqueue)
->  {
->  	struct nfp_net *nn = netdev_priv(netdev);
-> -	int i;
->  
-> -	for (i = 0; i < nn->dp.netdev->real_num_tx_queues; i++) {
-> -		if (!netif_tx_queue_stopped(netdev_get_tx_queue(netdev, i)))
-> -			continue;
-> -		nn_warn(nn, "TX timeout on ring: %d\n", i);
-> -	}
-> +	nn_warn(nn, "TX timeout on ring: %d\n", txqueue);
+On Tue, Dec 3, 2019 at 6:45 PM Brendan Higgins
+<brendanhiggins@google.com> wrote:
+>
+> On Tue, Dec 3, 2019 at 12:26 AM SeongJae Park <sj38.park@gmail.com> wrote:
+> >
+> > You're right, the error was due to the assumption of the existence of the
+> > build_dir.  The "kunit: Create default config in '--build_dir'" patch made the
+> > bug.  I fixed it in the second version patchset[1].
+> >
+> > [1] https://lore.kernel.org/linux-doc/1575361141-6806-1-git-send-email-sj38.park@gmail.com/
+>
+> After trying your new patches, I am still getting the
+> "FileNotFoundError" when the given build_dir has not been created.
 
-%u
+Sorry, apparently my mistake...  Sent v3 fixing it:
+https://lore.kernel.org/linux-kselftest/1575396508-21480-1-git-send-email-sj38.park@gmail.com/T/#t
 
->  	nn_warn(nn, "TX watchdog timeout\n");
 
-I think we can drop this warning now.
+Thanks,
+SeongJae Park
 
-With that:
 
-Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-
-Thanks!
+>
+> > Thanks,
+> > SeongJae Park
+> >
+> > On Tue, Dec 3, 2019 at 8:10 AM SeongJae Park <sj38.park@gmail.com> wrote:
+> > >
+> > > On Tue, Dec 3, 2019 at 8:00 AM Brendan Higgins
+> > > <brendanhiggins@google.com> wrote:
+> > > >
+> > > > On Mon, Dec 02, 2019 at 08:25:18AM +0900, SeongJae Park wrote:
+> > > > > From: SeongJae Park <sjpark@amazon.de>
+> > > > >
+> > > > > This patchset contains trivial fixes for the kunit documentations and the
+> > > > > wrapper python scripts.
+> > > > >
+> > > > > SeongJae Park (6):
+> > > > >   docs/kunit/start: Use in-tree 'kunit_defconfig'
+> > > > >   docs/kunit/start: Skip wrapper run command
+> > > > >   kunit: Remove duplicated defconfig creation
+> > > > >   kunit: Create default config in 'build_dir'
+> > > > >   kunit: Place 'test.log' under the 'build_dir'
+> > > > >   kunit: Rename 'kunitconfig' to '.kunitconfig'
+> > > > >
+> > > > >  Documentation/dev-tools/kunit/start.rst | 19 +++++--------------
+> > > > >  tools/testing/kunit/kunit.py            | 10 ++++++----
+> > > > >  tools/testing/kunit/kunit_kernel.py     |  6 +++---
+> > > > >  3 files changed, 14 insertions(+), 21 deletions(-)
+> > > >
+> > > > I applied your patchset to torvalds/master, ran the command:
+> > > >
+> > > > tools/testing/kunit/kunit.py run --timeout=60 --jobs=8 --defconfig --build_dir=.kunit
+> > > >
+> > > > and got the error:
+> > > >
+> > > > Traceback (most recent call last):
+> > > >   File "tools/testing/kunit/kunit.py", line 140, in <module>
+> > > >     main(sys.argv[1:])
+> > > >   File "tools/testing/kunit/kunit.py", line 123, in main
+> > > >     create_default_kunitconfig()
+> > > >   File "tools/testing/kunit/kunit.py", line 36, in create_default_kunitconfig
+> > > >     kunit_kernel.KUNITCONFIG_PATH)
+> > > >   File "/usr/lib/python3.7/shutil.py", line 121, in copyfile
+> > > >     with open(dst, 'wb') as fdst:
+> > > > FileNotFoundError: [Errno 2] No such file or directory: '.kunit/.kunitconfig'
+> > > >
+> > > > It seems that it expects the build_dir to already exist; however, I
+> > > > don't think this is clear from the error message. Would you mind
+> > > > addressing that here?
+> > >
+> > > Thank you for sharing this.  I will take a look!
+> > >
+> > >
+> > > Thanks,
+> > > SeongJae Park
+> > > >
+> > > > Cheers!
