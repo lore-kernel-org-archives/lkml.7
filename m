@@ -2,170 +2,170 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BB0C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F559C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 839D12080F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:49:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575406151;
-	bh=NqWUim3P4zCL/7IUtpQCZO9Xb5uEkYeYZizK/BXYMsI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=bAbpUy588IQDn8ScxWasE1E4/rRLVFQT7VYG4Cl46pDIqhO8WKoA6p9EeB2uYZzaD
-	 yuNi2XWBXsuhXyodEFJJSBFWYpMIwPZONXjMp/01VBGuhb11E+6aYnZ+u9KdWn2TwH
-	 fFbIlLRB+HCbWBgFSbI+ahJeGzRsLxsTYhYp21cY=
+	by mail.kernel.org (Postfix) with ESMTP id D62332080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:50:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OFewBgMH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbfLCUtK (ORCPT
+        id S1727492AbfLCUuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 15:49:10 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40551 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727244AbfLCUtK (ORCPT
+        Tue, 3 Dec 2019 15:50:00 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:26536 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727244AbfLCUuA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 15:49:10 -0500
-Received: by mail-pl1-f194.google.com with SMTP id g6so2161217plp.7;
-        Tue, 03 Dec 2019 12:49:10 -0800 (PST)
+        Tue, 3 Dec 2019 15:50:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575406198;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xOdDzoBHrdXt25B1TGbYRPetJRHb3vnq/I9dv5wRbj8=;
+        b=OFewBgMHwX/Agn5hj/dtgd8OVx05hcQ7ma2xldhtzACpuDsPl9fMmU3XHkAl4iWgut1Sri
+        yDf5POlKZIkIQF0MIg0JKm+6Lvv/8DAaMEEMpc7Lhv6skGlokJjTh0F1tUxSO3EUNrm068
+        qc4ixxFjU5ErVlvv1G6x4MHSKmO42p0=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-370-O5pVNd3bNHaRLNAaCf58pA-1; Tue, 03 Dec 2019 15:49:57 -0500
+Received: by mail-qv1-f71.google.com with SMTP id g6so3080835qvp.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 12:49:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=1G+L1iXyg9WsvAhiBU0plOD98ZEEqTeAJKnio8PQGVI=;
-        b=VAn4c43hRYNSW9YkW6dId/qpM9dnxo4p4wAtBaWee3y7TG49LiyZXvkwVZBFFV2ZG+
-         9wYbscEz9tKyiJ+3Ir1QqSAjKkXYERWTucu8usmLXmFvdcJ9PuWFZQhz6IYhXOBqvwsq
-         cfe4qD0Mw5F6jDWComWSKa3tXnCmDlpbBH5wPQ9ne3S4C7/owKORmvfCiOtGxlrguBtM
-         Mn4wyEDpUpOVlijoeQYv+YiMlMTj3oRUD1fmxLXZ5cYekS9bpulDPnjn1nkD1+h1fbJB
-         g3FY8seMYL4r30oxZoeb3GIWqVgBrwf8tCnyQWIBIfwvtZ0yFsIbn5DcVygIYF6F/s/k
-         FTQQ==
-X-Gm-Message-State: APjAAAXHAklSrQyMYm10YoX+omDdL9558g2cHPHwicaCZh0mw/gB2Rzz
-        q2llT/doQK+I9unIMGxBMeCCEedwnqg=
-X-Google-Smtp-Source: APXvYqx4TZrkwIhqDQl9aBJXa/SKofSy+menGC9K2DEaF74w1ikQ3eXm3kKGaRz2rKzU4/MOI4G61A==
-X-Received: by 2002:a17:902:6b8a:: with SMTP id p10mr7129455plk.10.1575406149016;
-        Tue, 03 Dec 2019 12:49:09 -0800 (PST)
-Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
-        by smtp.gmail.com with ESMTPSA id fz12sm3711580pjb.15.2019.12.03.12.49.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 12:49:08 -0800 (PST)
-From:   Paul Burton <paulburton@kernel.org>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Paul Burton <paulburton@kernel.org>,
-        stable@vger.kernel.org
-Subject: [PATCH] MIPS: Use __copy_{to,from}_user() for emulated FP loads/stores
-Date:   Tue,  3 Dec 2019 12:49:33 -0800
-Message-Id: <20191203204933.1642259-1-paulburton@kernel.org>
-X-Mailer: git-send-email 2.24.0
+        bh=xOdDzoBHrdXt25B1TGbYRPetJRHb3vnq/I9dv5wRbj8=;
+        b=hXb2lIm0wlFSJpoeolc48luCpNQuRj6RWRbFDhXHcCBP11iJSV/wQveqtgsRnF6KXB
+         TiRDC7XquwRyIfQYcMyh+oNK6psoS9Ek9h8isbVDCJgoJMaAwOfz87O3cg5HM7itFgPy
+         NKJr31EFU9YkkF6tdFSxhG4euO4FOgVXZnSjXWhpiBseZpTdeXZi36mWDIhTTxwVWdr6
+         Gdx4py+/fROvTILbZrooVRuwzBe3VuuLz6BBVxWconwunPZmAfSAZCP/Rdk8fhrPaEQU
+         x/sbRWHUTZGSqHP+fRH0os3NkYXq9i5lHyXJiRFKC05PyDTM9baOGOsq74MdpdW23D0J
+         uOcQ==
+X-Gm-Message-State: APjAAAXewriuLyc41g9AI+3ayLeq9dvr256F0ZKeOiMs9Trb11gZmaC/
+        VdI9jhrtyzjztzO9fzVRtXelFyy1l2LMLIw45u/XNjRE2VgPZyL+u4zEXZek/CKuojaIvnk5IoT
+        MI9o6nH1E5suXQIvMkK/SoC8U
+X-Received: by 2002:a37:9f57:: with SMTP id i84mr7320323qke.29.1575406196865;
+        Tue, 03 Dec 2019 12:49:56 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz2ZyKiDHR4+dc8jEsXnoRi77YclrtSWzxFwP5IV9PRHVu44DDdxVPdxPAro6RiwMRItglHtg==
+X-Received: by 2002:a37:9f57:: with SMTP id i84mr7320296qke.29.1575406196485;
+        Tue, 03 Dec 2019 12:49:56 -0800 (PST)
+Received: from [192.168.1.157] (pool-96-235-39-235.pitbpa.fios.verizon.net. [96.235.39.235])
+        by smtp.gmail.com with ESMTPSA id s127sm2405349qkc.44.2019.12.03.12.49.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Dec 2019 12:49:55 -0800 (PST)
+Subject: Re: [PATCH] netfilter: nf_flow_table_offload: Correct memcpy size for
+ flow_overload_mangle
+To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+References: <20191203160345.24743-1-labbott@redhat.com>
+ <20191203170114.GB377782@localhost.localdomain>
+From:   Laura Abbott <labbott@redhat.com>
+Message-ID: <9bc4b04b-a3cc-4e58-4c73-1d77b7ed05da@redhat.com>
+Date:   Tue, 3 Dec 2019 15:49:54 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191203170114.GB377782@localhost.localdomain>
+Content-Language: en-US
+X-MC-Unique: O5pVNd3bNHaRLNAaCf58pA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Our FPU emulator currently uses __get_user() & __put_user() to perform
-emulated loads & stores. This is problematic because __get_user() &
-__put_user() are only suitable for naturally aligned memory accesses,
-and the address we're accessing is entirely under the control of
-userland.
+On 12/3/19 12:01 PM, Marcelo Ricardo Leitner wrote:
+> On Tue, Dec 03, 2019 at 11:03:45AM -0500, Laura Abbott wrote:
+>> The sizes for memcpy in flow_offload_mangle don't match
+>> the source variables, leading to overflow errors on some
+>> build configurations:
+>>
+>> In function 'memcpy',
+>>      inlined from 'flow_offload_mangle' at net/netfilter/nf_flow_table_offload.c:112:2,
+>>      inlined from 'flow_offload_port_dnat' at net/netfilter/nf_flow_table_offload.c:373:2,
+>>      inlined from 'nf_flow_rule_route_ipv4' at net/netfilter/nf_flow_table_offload.c:424:3:
+>> ./include/linux/string.h:376:4: error: call to '__read_overflow2' declared with attribute error: detected read beyond size of object passed as 2nd parameter
+>>    376 |    __read_overflow2();
+>>        |    ^~~~~~~~~~~~~~~~~~
+>> make[2]: *** [scripts/Makefile.build:266: net/netfilter/nf_flow_table_offload.o] Error 1
+>>
+>> Fix this by using the corresponding type.
+>>
+>> Fixes: c29f74e0df7a ("netfilter: nf_flow_table: hardware offload support")
+>> Signed-off-by: Laura Abbott <labbott@redhat.com>
+>> ---
+>> Seen on a Fedora powerpc little endian build with -O3 but it looks like
+>> it is correctly catching an error with doing a memcpy outside the source
+>> variable.
+> 
+> Hi,
+> 
+> It is right but the fix is not. In that call trace:
+> 
+> flow_offload_port_dnat() {
+> ...
+>          u32 mask = ~htonl(0xffff);
+>          __be16 port;
+> ...
+>          flow_offload_mangle(entry, flow_offload_l4proto(flow), offset,
+> 	                            (u8 *)&port, (u8 *)&mask);
+> }
+> 
+> port should have a 32b storage as well, and aligned with the mask.
+> 
+>> ---
+>>   net/netfilter/nf_flow_table_offload.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/net/netfilter/nf_flow_table_offload.c b/net/netfilter/nf_flow_table_offload.c
+>> index c54c9a6cc981..526f894d0bdb 100644
+>> --- a/net/netfilter/nf_flow_table_offload.c
+>> +++ b/net/netfilter/nf_flow_table_offload.c
+>> @@ -108,8 +108,8 @@ static void flow_offload_mangle(struct flow_action_entry *entry,
+>>   	entry->id = FLOW_ACTION_MANGLE;
+>>   	entry->mangle.htype = htype;
+>>   	entry->mangle.offset = offset;
+>> -	memcpy(&entry->mangle.mask, mask, sizeof(u32));
+>> -	memcpy(&entry->mangle.val, value, sizeof(u32));
+>                                     ^^^^^         ^^^ which is &port in the call above
+>> +	memcpy(&entry->mangle.mask, mask, sizeof(u8));
+>> +	memcpy(&entry->mangle.val, value, sizeof(u8));
+> 
+> This fix would cause it to copy only the first byte, which is not the
+> intention.
+>
 
-This allows userland to cause a kernel panic by simply performing an
-unaligned floating point load or store - the kernel will handle the
-address error exception by attempting to emulate the instruction, and in
-the process it may generate another address error exception itself.
-This time the exception is taken with EPC pointing at the kernels FPU
-emulation code, and we hit a die_if_kernel() in
-emulate_load_store_insn().
+Thanks for the review. I took another look at fixing this and I
+think it might be better for the maintainer or someone who is more
+familiar with the code to fix this. I ended up down a rabbit
+hole trying to get the types to work and I wasn't confident about
+the casting.
 
-Fix this up by using __copy_from_user() instead of __get_user() and
-__copy_to_user() instead of __put_user(). These replacements will handle
-arbitrary alignment without problems.
-
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: <stable@vger.kernel.org> # v2.6.12+
----
- arch/mips/math-emu/cp1emu.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/arch/mips/math-emu/cp1emu.c b/arch/mips/math-emu/cp1emu.c
-index 710e1f804a54..d2009b4b5209 100644
---- a/arch/mips/math-emu/cp1emu.c
-+++ b/arch/mips/math-emu/cp1emu.c
-@@ -1056,7 +1056,7 @@ static int cop1Emulate(struct pt_regs *xcp, struct mips_fpu_struct *ctx,
- 			*fault_addr = dva;
- 			return SIGBUS;
- 		}
--		if (__get_user(dval, dva)) {
-+		if (__copy_from_user(&dval, dva, sizeof(u64))) {
- 			MIPS_FPU_EMU_INC_STATS(errors);
- 			*fault_addr = dva;
- 			return SIGSEGV;
-@@ -1074,7 +1074,7 @@ static int cop1Emulate(struct pt_regs *xcp, struct mips_fpu_struct *ctx,
- 			*fault_addr = dva;
- 			return SIGBUS;
- 		}
--		if (__put_user(dval, dva)) {
-+		if (__copy_to_user(dva, &dval, sizeof(u64))) {
- 			MIPS_FPU_EMU_INC_STATS(errors);
- 			*fault_addr = dva;
- 			return SIGSEGV;
-@@ -1090,7 +1090,7 @@ static int cop1Emulate(struct pt_regs *xcp, struct mips_fpu_struct *ctx,
- 			*fault_addr = wva;
- 			return SIGBUS;
- 		}
--		if (__get_user(wval, wva)) {
-+		if (__copy_from_user(&wval, wva, sizeof(u32))) {
- 			MIPS_FPU_EMU_INC_STATS(errors);
- 			*fault_addr = wva;
- 			return SIGSEGV;
-@@ -1108,7 +1108,7 @@ static int cop1Emulate(struct pt_regs *xcp, struct mips_fpu_struct *ctx,
- 			*fault_addr = wva;
- 			return SIGBUS;
- 		}
--		if (__put_user(wval, wva)) {
-+		if (__copy_to_user(wva, &wval, sizeof(u32))) {
- 			MIPS_FPU_EMU_INC_STATS(errors);
- 			*fault_addr = wva;
- 			return SIGSEGV;
-@@ -1486,7 +1486,7 @@ static int fpux_emu(struct pt_regs *xcp, struct mips_fpu_struct *ctx,
- 				*fault_addr = va;
- 				return SIGBUS;
- 			}
--			if (__get_user(val, va)) {
-+			if (__copy_from_user(&val, va, sizeof(u32))) {
- 				MIPS_FPU_EMU_INC_STATS(errors);
- 				*fault_addr = va;
- 				return SIGSEGV;
-@@ -1506,7 +1506,7 @@ static int fpux_emu(struct pt_regs *xcp, struct mips_fpu_struct *ctx,
- 				*fault_addr = va;
- 				return SIGBUS;
- 			}
--			if (put_user(val, va)) {
-+			if (__copy_to_user(va, &val, sizeof(u32))) {
- 				MIPS_FPU_EMU_INC_STATS(errors);
- 				*fault_addr = va;
- 				return SIGSEGV;
-@@ -1583,7 +1583,7 @@ static int fpux_emu(struct pt_regs *xcp, struct mips_fpu_struct *ctx,
- 				*fault_addr = va;
- 				return SIGBUS;
- 			}
--			if (__get_user(val, va)) {
-+			if (__copy_from_user(&val, va, sizeof(u64))) {
- 				MIPS_FPU_EMU_INC_STATS(errors);
- 				*fault_addr = va;
- 				return SIGSEGV;
-@@ -1602,7 +1602,7 @@ static int fpux_emu(struct pt_regs *xcp, struct mips_fpu_struct *ctx,
- 				*fault_addr = va;
- 				return SIGBUS;
- 			}
--			if (__put_user(val, va)) {
-+			if (__copy_to_user(va, &val, sizeof(u64))) {
- 				MIPS_FPU_EMU_INC_STATS(errors);
- 				*fault_addr = va;
- 				return SIGSEGV;
--- 
-2.24.0
+Thanks,
+Laura
+  
+>>   }
+>>   
+>>   static inline struct flow_action_entry *
+>> -- 
+>> 2.21.0
+>>
+> 
 
