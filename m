@@ -2,315 +2,206 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,PDS_BTC_ID,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05573C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0EC1C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2FC2206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:02:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A72252068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:08:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ACE03k+J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbfLCICb convert rfc822-to-8bit (ORCPT
+        id S1727131AbfLCIIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 03:02:31 -0500
-Received: from mga14.intel.com ([192.55.52.115]:23908 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727491AbfLCICa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 03:02:30 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Dec 2019 00:02:30 -0800
-X-IronPort-AV: E=Sophos;i="5.69,272,1571727600"; 
-   d="scan'208";a="200908546"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Dec 2019 00:02:27 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     allen.chen@ite.com.tw
-Cc:     Jau-Chih.Tseng@ite.com.tw, maxime.ripard@bootlin.com,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        airlied@linux.ie, pihsun@chromium.org, sean@poorly.run
-Subject: RE: [PATCH] drm/edid: fixup EDID 1.3 and 1.4 judge reduced-blanking timings logic
-In-Reply-To: <e2486891920843798e9af97209464833@ite.com.tw>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <1574761572-26585-1-git-send-email-allen.chen@ite.com.tw> <87pnhdobns.fsf@intel.com> <e2486891920843798e9af97209464833@ite.com.tw>
-Date:   Tue, 03 Dec 2019 10:02:25 +0200
-Message-ID: <87muc9kfam.fsf@intel.com>
+        Tue, 3 Dec 2019 03:08:36 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39786 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727059AbfLCIIg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 03:08:36 -0500
+Received: by mail-wr1-f67.google.com with SMTP id y11so2427918wrt.6
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 00:08:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0R64hlt7XwI/N3fKuGoKmEX8pew5cHbSg5pee7ssZ9M=;
+        b=ACE03k+J3bQYPwGdDs/MDRbltZ5w+dOYRY4LzkdTknCOZD557nirzb765JXZ7FZ8Ul
+         xv4aFc5ZN8JbbPfx/TescvxkpcO7bwV5Q8vW+IeHNgueM1NWrW7XVJM1r7A4LjDFK/k6
+         E+si2lf4uiq4Az948pp/rkYSasS92LC/fdTWYktd/Qt/Y0yitT/ok2VM9yx5xeeUSkW+
+         sLiRHq5pTyxiPkTvLa0o35awHgg8mNV27eVd/hm/W7aNs36bbOat00hLv8ycdIQ4Eahl
+         t7VPgrfpdsHwLOOYOTIOq8nrR6GQT4WGjgqCDJt6/0/Pv7j+SqmKkyuyhL+uKqodPUmi
+         8lXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0R64hlt7XwI/N3fKuGoKmEX8pew5cHbSg5pee7ssZ9M=;
+        b=ivcel2vHp3WI4i1kKVbI8QMfcbTN+ZxTKifxGaccfQ2aOryM+FNrS3oWTmerHk5J21
+         Huy1Gj1QFP8Zy1IiqRRW7KBl61vBXnZ+N2WrXvxjJ3Z/2ZuQzYONYBKzKe3MaY/b4WXO
+         uhu4s800xEnIH5PQjiMSS4WWCvWN/NGyYhg7Z1sP3QW5/JC12/WdxxyO84RMPPdI/E8W
+         VOOaBC1w/0rO0baBJt2g5P/ShztVPyJhqbOl7XfuCEj/jVbv6jyhWlZBmUpREFHb7/Pe
+         /S8j2EWyYekJt3jD/2GdyTDvMlMHSj8aT2m71SPjojKuxDEOiS6qpFtlWB5zotkTw+uf
+         3Crw==
+X-Gm-Message-State: APjAAAXNDu9PBXY2c9Xv4IK3Kqdi9Rpd8Xsvhpd4bmzmkRhaAVyIvti5
+        ZjEDEXMQU/N+XBW/Uc5lyjJTUg==
+X-Google-Smtp-Source: APXvYqz8AVR9cMm++hDehzZTHRh4xWczw0r4rSWNjQHKTYEvMNTRYnQzW4NwG/numStsR1+76rhwSw==
+X-Received: by 2002:adf:ebc6:: with SMTP id v6mr3569496wrn.75.1575360513938;
+        Tue, 03 Dec 2019 00:08:33 -0800 (PST)
+Received: from localhost.localdomain (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.googlemail.com with ESMTPSA id w12sm2084204wmi.17.2019.12.03.00.08.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2019 00:08:33 -0800 (PST)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>
+Subject: [PATCH v2] clk: walk orphan list on clock provider registration
+Date:   Tue,  3 Dec 2019 09:08:05 +0100
+Message-Id: <20191203080805.104628-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 03 Dec 2019, <allen.chen@ite.com.tw> wrote:
-> Hi Jani Nikula
->
->
->
-> Thanks for your suggestion and I have replied two comments below.
+So far, we walked the orphan list every time a new clock was registered
+in CCF. This was fine since the clocks were only referenced by name.
 
-Please read my question again.
+Now that the clock can be referenced through DT, it is not enough:
+* Controller A register first a reference clocks from controller B
+  through DT.
+* Controller B register all its clocks then register the provider.
 
-BR,
-Jani.
+Each time controller B registers a new clock, the orphan list is walked
+but it can't match since the provider is registered yet. When the
+provider is finally registered, the orphan list is not walked unless
+another clock is registered afterward.
 
->
->
->
-> -----Original Message-----
-> From: Jani Nikula [mailto:jani.nikula@linux.intel.com]
-> Sent: Wednesday, November 27, 2019 6:29 PM
-> To: Allen Chen (陳柏宇)
-> Cc: Jau-Chih Tseng (曾昭智); Maxime Ripard; Allen Chen (陳柏宇); open list; open list:DRM DRIVERS; David Airlie; Pi-Hsun Shih; Sean Paul
-> Subject: Re: [PATCH] drm/edid: fixup EDID 1.3 and 1.4 judge reduced-blanking timings logic
->
->
->
-> On Tue, 26 Nov 2019, allen <allen.chen@ite.com.tw> wrote:
->
->> According to VESA ENHANCED EXTENDED DISPLAY IDENTIFICATION DATA STANDARD
->
->> (Defines EDID Structure Version 1, Revision 4) page: 39
->
->> How to determine whether the monitor support RB timing or not?
->
->> EDID 1.4
->
->> First:  read detailed timing descriptor and make sure byte 0 = 0x00,
->
->>     byte 1 = 0x00, byte 2 = 0x00 and byte 3 = 0xFD
->
->> Second: read EDID bit 0 in feature support byte at address 18h = 1
->
->>     and detailed timing descriptor byte 10 = 0x04
->
->> Third:  if EDID bit 0 in feature support byte = 1 &&
->
->>     detailed timing descriptor byte 10 = 0x04
->
->>     then we can check byte 15, if bit 4 in byte 15 = 1 is support RB
->
->>         if EDID bit 0 in feature support byte != 1 ||
->
->>     detailed timing descriptor byte 10 != 0x04,
->
->>     then byte 15 can not be used
->
->>
->
->> The linux code is_rb function not follow the VESA's rule
->
->>
->
->> Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
->
->> Reported-by: kbuild test robot <lkp@intel.com>
->
->> ---
->
->>  drivers/gpu/drm/drm_edid.c | 36 ++++++++++++++++++++++++++++++------
->
->>  1 file changed, 30 insertions(+), 6 deletions(-)
->
->>
->
->> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
->
->> index f5926bf..e11e585 100644
->
->> --- a/drivers/gpu/drm/drm_edid.c
->
->> +++ b/drivers/gpu/drm/drm_edid.c
->
->> @@ -93,6 +93,12 @@ struct detailed_mode_closure {
->
->>    int modes;
->
->>  };
->
->>
->
->> +struct edid_support_rb_closure {
->
->> +   struct edid *edid;
->
->> +   bool valid_support_rb;
->
->> +   bool support_rb;
->
->> +};
->
->> +
->
->>  #define LEVEL_DMT 0
->
->>  #define LEVEL_GTF   1
->
->>  #define LEVEL_GTF2 2
->
->> @@ -2017,23 +2023,41 @@ struct drm_display_mode *drm_mode_find_dmt(struct drm_device *dev,
->
->>    }
->
->>  }
->
->>
->
->> +static bool
->
->> +is_display_descriptor(const u8 *r, u8 tag)
->
->> +{
->
->> +   return (!r[0] && !r[1] && !r[2] && r[3] == tag) ? true : false;
->
->> +}
->
->> +
->
->>  static void
->
->>  is_rb(struct detailed_timing *t, void *data)
->
->>  {
->
->>    u8 *r = (u8 *)t;
->
->> -    if (r[3] == EDID_DETAIL_MONITOR_RANGE)
->
->> -            if (r[15] & 0x10)
->
->> -                    *(bool *)data = true;
->
->> +   struct edid_support_rb_closure *closure = data;
->
->> +   struct edid *edid = closure->edid;
->
->> +
->
->> +   if (is_display_descriptor(r, EDID_DETAIL_MONITOR_RANGE)) {
->
->> +           if (edid->features & BIT(0) && r[10] == BIT(2)) {
->
->> +                   closure->valid_support_rb = true;
->
->> +                   closure->support_rb = (r[15] & 0x10) ? true : false;
->
->> +           }
->
->> +   }
->
->>  }
->
->>
->
->>  /* EDID 1.4 defines this explicitly.  For EDID 1.3, we guess, badly. */
->
->>  static bool
->
->>  drm_monitor_supports_rb(struct edid *edid)
->
->>  {
->
->> +   struct edid_support_rb_closure closure = {
->
->> +           .edid = edid,
->
->> +           .valid_support_rb = false,
->
->> +           .support_rb = false,
->
->> +   };
->
->> +
->
->>    if (edid->revision >= 4) {
->
->> -            bool ret = false;
->
->> -            drm_for_each_detailed_block((u8 *)edid, is_rb, &ret);
->
->> -            return ret;
->
->> +           drm_for_each_detailed_block((u8 *)edid, is_rb, &closure);
->
->> +           if (closure.valid_support_rb)
->
->> +                   return closure.support_rb;
->
->
->
-> Are you planning on extending the closure use somehow?
->
->
->
-> I did not look up the spec,
->
->
->
-> ==> iTE: as the picture below, from VESA E-EDID standard
->
-> [cid:image003.jpg@01D5A9EA.9B7364D0]
->
->
->
-> [cid:image005.jpg@01D5A9EA.9B7364D0]
->
->
->
-> if EDID bit 0 in feature support byte = 1 && detailed timing descriptor byte 10 = 0x04 then the CVT timing supported.
->
->
->
-> [cid:image009.jpg@01D5A9EA.9B7364D0]
->
->
->
-> If CVT timing supported then we can check byte 15 bit 4 to determine whether the reduced-blanking timings suported or not.
->
-> If CVT timing not supported then we can not use byte 15 to judge.
->
-> but purely on the code changes alone, you
->
-> could just move the edid->features bit check at this level, and not pass
->
-> it down, and nothing would change. I.e. don't iterate the EDID at all if
->
-> the bit is not set.
->
->
->
-> ð  iTE: We still have to check whether detailed timing descriptor byte 10 = 0x04 or not, so it is hard to check at this level
->
-> You also don't actually use the distinction between valid_support_rb
->
-> vs. support_rb for anything, so the closure just adds code.
->
->
->
-> BR,
->
-> Jani.
->
->
->
->
->
->>    }
->
->>
->
->>    return ((edid->input & DRM_EDID_INPUT_DIGITAL) != 0);
->
->
->
-> --
->
-> Jani Nikula, Intel Open Source Graphics Center
+This can lead to situation where some clocks remain orphaned even if
+the parent is available.
 
+Walking the orphan list on provider registration solves the problem.
+
+Reported-by: Jian Hu <jian.hu@amlogic.com>
+Fixes: fc0c209c147f ("clk: Allow parents to be specified without string names")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ drivers/clk/clk.c | 62 ++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 40 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index ef4416721777..df16a535e800 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -3249,6 +3249,41 @@ static inline void clk_debug_unregister(struct clk_core *core)
+ }
+ #endif
+ 
++static void clk_core_reparent_orphans_nolock(void)
++{
++	struct clk_core *orphan;
++	struct hlist_node *tmp2;
++
++	/*
++	 * walk the list of orphan clocks and reparent any that newly finds a
++	 * parent.
++	 */
++	hlist_for_each_entry_safe(orphan, tmp2, &clk_orphan_list, child_node) {
++		struct clk_core *parent = __clk_init_parent(orphan);
++
++		/*
++		 * We need to use __clk_set_parent_before() and _after() to
++		 * to properly migrate any prepare/enable count of the orphan
++		 * clock. This is important for CLK_IS_CRITICAL clocks, which
++		 * are enabled during init but might not have a parent yet.
++		 */
++		if (parent) {
++			/* update the clk tree topology */
++			__clk_set_parent_before(orphan, parent);
++			__clk_set_parent_after(orphan, parent, NULL);
++			__clk_recalc_accuracies(orphan);
++			__clk_recalc_rates(orphan, 0);
++		}
++	}
++}
++
++static void clk_core_reparent_orphans(void)
++{
++	clk_prepare_lock();
++	clk_core_reparent_orphans_nolock();
++	clk_prepare_unlock();
++}
++
+ /**
+  * __clk_core_init - initialize the data structures in a struct clk_core
+  * @core:	clk_core being initialized
+@@ -3259,8 +3294,6 @@ static inline void clk_debug_unregister(struct clk_core *core)
+ static int __clk_core_init(struct clk_core *core)
+ {
+ 	int ret;
+-	struct clk_core *orphan;
+-	struct hlist_node *tmp2;
+ 	unsigned long rate;
+ 
+ 	if (!core)
+@@ -3416,27 +3449,8 @@ static int __clk_core_init(struct clk_core *core)
+ 		clk_enable_unlock(flags);
+ 	}
+ 
+-	/*
+-	 * walk the list of orphan clocks and reparent any that newly finds a
+-	 * parent.
+-	 */
+-	hlist_for_each_entry_safe(orphan, tmp2, &clk_orphan_list, child_node) {
+-		struct clk_core *parent = __clk_init_parent(orphan);
++	clk_core_reparent_orphans_nolock();
+ 
+-		/*
+-		 * We need to use __clk_set_parent_before() and _after() to
+-		 * to properly migrate any prepare/enable count of the orphan
+-		 * clock. This is important for CLK_IS_CRITICAL clocks, which
+-		 * are enabled during init but might not have a parent yet.
+-		 */
+-		if (parent) {
+-			/* update the clk tree topology */
+-			__clk_set_parent_before(orphan, parent);
+-			__clk_set_parent_after(orphan, parent, NULL);
+-			__clk_recalc_accuracies(orphan);
+-			__clk_recalc_rates(orphan, 0);
+-		}
+-	}
+ 
+ 	kref_init(&core->ref);
+ out:
+@@ -4288,6 +4302,8 @@ int of_clk_add_provider(struct device_node *np,
+ 	mutex_unlock(&of_clk_mutex);
+ 	pr_debug("Added clock from %pOF\n", np);
+ 
++	clk_core_reparent_orphans();
++
+ 	ret = of_clk_set_defaults(np, true);
+ 	if (ret < 0)
+ 		of_clk_del_provider(np);
+@@ -4323,6 +4339,8 @@ int of_clk_add_hw_provider(struct device_node *np,
+ 	mutex_unlock(&of_clk_mutex);
+ 	pr_debug("Added clk_hw provider from %pOF\n", np);
+ 
++	clk_core_reparent_orphans();
++
+ 	ret = of_clk_set_defaults(np, true);
+ 	if (ret < 0)
+ 		of_clk_del_provider(np);
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+2.23.0
+
