@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 647D6C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DBDC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A7B820803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 480C92080F
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413005;
-	bh=klQsIEaLdkvQn9mXHsL/19l5ID92BD8wx7KpDUk+fkw=;
+	s=default; t=1575413008;
+	bh=fTap50hOM9PnZz9jwJ7d7gNLsTKF+xqDJGkeYz8Vz6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BTdJUT1WAaDjRaaLzHyngIPKld/yS0xQC2GwCYMO1FLSqOyxoaJNqCGVozn/eUHvo
-	 3IjUz8LLy4FcCRsm35HtQi4abQCucFCZ2Rquob+ZeQ6IKaY5mz94fpJDzVlMYwzfH7
-	 yqy0gtRJQwC2wyDrQloxBDmF961yhWAxYKU/of30=
+	b=kVZtlHy+7/VEyTKJQITrB4Mn5eHERC7fE88akU4fLo3QRR27dnxRI/1KgTdXDVkoB
+	 zKkeKZUFpKbH6PMS+AB6wQey65R9h/lumLc+BHCmWcFW5nQu0od/3mI58wVtsgy23d
+	 zw0dq6+kpYYgcsymwf2gfAM3nWDgkGsyCK5u2uy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728634AbfLCWnX (ORCPT
+        id S1728632AbfLCWn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:43:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58734 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:43:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728621AbfLCWnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:43:20 -0500
+        id S1728475AbfLCWnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:43:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19D242080F;
-        Tue,  3 Dec 2019 22:43:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DADF20803;
+        Tue,  3 Dec 2019 22:43:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412999;
-        bh=klQsIEaLdkvQn9mXHsL/19l5ID92BD8wx7KpDUk+fkw=;
+        s=default; t=1575413002;
+        bh=fTap50hOM9PnZz9jwJ7d7gNLsTKF+xqDJGkeYz8Vz6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mJdGdmIGRz3oLROk0L33hn8gQ8wGsx4+ziLVN0kqTRBdrP7pd+c12nvxaqS1Ew+CT
-         TPlaDKtZCT4TFGXJEbtt1bdKe5sN4xNzNfkneSmPGO3VDLOPO1bj6DqWInainGR3yB
-         ZhLjCOggbdaYksopKfkGK9eYso9a47O9CIjLPHgE=
+        b=yQEPpgHb5znYilXwouZqxqIcIY5w4b4OBusJU0MUvqpKbK6YMXxzcSEqnOyAxpFi9
+         6x/3d+FmIZA+S6XeNiw4xCZ7JlSp5Xn26yq4esU5oZYpGeYPHpJ+7djLWo/QT8x0kW
+         f671tUlEzXxYqYBdOEUue/NDQx9V4EME2H+6/EbI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mathias Kresin <dev@kresin.me>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: [PATCH 5.3 098/135] usb: dwc2: use a longer core rest timeout in dwc2_core_reset()
-Date:   Tue,  3 Dec 2019 23:35:38 +0100
-Message-Id: <20191203213038.401637058@linuxfoundation.org>
+        stable@vger.kernel.org,
+        coverity-bot <keescook+coverity-bot@chromium.org>,
+        Ajay Singh <ajay.kathat@microchip.com>
+Subject: [PATCH 5.3 099/135] staging: wilc1000: fix illegal memory access in wilc_parse_join_bss_param()
+Date:   Tue,  3 Dec 2019 23:35:39 +0100
+Message-Id: <20191203213039.028949888@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -59,40 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Kresin <dev@kresin.me>
+From: Ajay Singh <ajay.kathat@microchip.com>
 
-commit 6689f0f4bb14e50917ba42eb9b41c25e0184970c upstream.
+commit c7e621bb981b76d3bfd8a595070ee8282ac4a32b upstream.
 
-Testing on different generations of Lantiq MIPS SoC based boards, showed
-that it takes up to 1500 us until the core reset bit is cleared.
+Do not copy the extended supported rates in 'param->supp_rates' if the
+array is already full with basic rates values. The array size check
+helped to avoid possible illegal memory access [1] while copying to
+'param->supp_rates' array.
 
-The driver from the vendor SDK (ifxhcd) uses a 1 second timeout. Use the
-same timeout to fix wrong hang detections and make the driver work for
-Lantiq MIPS SoCs.
+1. https://marc.info/?l=linux-next&m=157301720517456&w=2
 
-At least till kernel 4.14 the hanging reset only caused a warning but
-the driver was probed successful. With kernel 4.19 errors out with
-EBUSY.
-
-Cc: linux-stable <stable@vger.kernel.org> # 4.19+
-Signed-off-by: Mathias Kresin <dev@kresin.me>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+Addresses-Coverity-ID: 1487400 ("Memory - illegal accesses")
+Fixes: 4e0b0f42c9c7 ("staging: wilc1000: use struct to pack join parameters for FW")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ajay Singh <ajay.kathat@microchip.com>
+Link: https://lore.kernel.org/r/20191106062127.3165-1-ajay.kathat@microchip.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/dwc2/core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/wilc1000/wilc_hif.c |   23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
---- a/drivers/usb/dwc2/core.c
-+++ b/drivers/usb/dwc2/core.c
-@@ -524,7 +524,7 @@ int dwc2_core_reset(struct dwc2_hsotg *h
- 	greset |= GRSTCTL_CSFTRST;
- 	dwc2_writel(hsotg, greset, GRSTCTL);
+--- a/drivers/staging/wilc1000/wilc_hif.c
++++ b/drivers/staging/wilc1000/wilc_hif.c
+@@ -477,16 +477,21 @@ void *wilc_parse_join_bss_param(struct c
+ 		memcpy(&param->supp_rates[1], rates_ie + 2, rates_len);
+ 	}
  
--	if (dwc2_hsotg_wait_bit_clear(hsotg, GRSTCTL, GRSTCTL_CSFTRST, 50)) {
-+	if (dwc2_hsotg_wait_bit_clear(hsotg, GRSTCTL, GRSTCTL_CSFTRST, 10000)) {
- 		dev_warn(hsotg->dev, "%s: HANG! Soft Reset timeout GRSTCTL GRSTCTL_CSFTRST\n",
- 			 __func__);
- 		return -EBUSY;
+-	supp_rates_ie = cfg80211_find_ie(WLAN_EID_EXT_SUPP_RATES, ies->data,
+-					 ies->len);
+-	if (supp_rates_ie) {
+-		if (supp_rates_ie[1] > (WILC_MAX_RATES_SUPPORTED - rates_len))
+-			param->supp_rates[0] = WILC_MAX_RATES_SUPPORTED;
+-		else
+-			param->supp_rates[0] += supp_rates_ie[1];
++	if (rates_len < WILC_MAX_RATES_SUPPORTED) {
++		supp_rates_ie = cfg80211_find_ie(WLAN_EID_EXT_SUPP_RATES,
++						 ies->data, ies->len);
++		if (supp_rates_ie) {
++			u8 ext_rates = supp_rates_ie[1];
+ 
+-		memcpy(&param->supp_rates[rates_len + 1], supp_rates_ie + 2,
+-		       (param->supp_rates[0] - rates_len));
++			if (ext_rates > (WILC_MAX_RATES_SUPPORTED - rates_len))
++				param->supp_rates[0] = WILC_MAX_RATES_SUPPORTED;
++			else
++				param->supp_rates[0] += ext_rates;
++
++			memcpy(&param->supp_rates[rates_len + 1],
++			       supp_rates_ie + 2,
++			       (param->supp_rates[0] - rates_len));
++		}
+ 	}
+ 
+ 	ht_ie = cfg80211_find_ie(WLAN_EID_HT_CAPABILITY, ies->data, ies->len);
 
 
