@@ -2,163 +2,138 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8A1C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E64ABC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 549592073C
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C37602070A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:52:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbfLCPr1 (ORCPT
+        id S1726516AbfLCPwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 10:47:27 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49150 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725997AbfLCPr0 (ORCPT
+        Tue, 3 Dec 2019 10:52:08 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:55669 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbfLCPwI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 10:47:26 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB3FhX50110151
-        for <linux-kernel@vger.kernel.org>; Tue, 3 Dec 2019 10:47:25 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wnp8rpcmj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 10:47:25 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Tue, 3 Dec 2019 15:47:23 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 3 Dec 2019 15:47:18 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB3FlHbE40304664
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Dec 2019 15:47:17 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CC7864C882;
-        Tue,  3 Dec 2019 15:47:17 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 532584C87F;
-        Tue,  3 Dec 2019 15:47:13 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.91.149])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  3 Dec 2019 15:47:12 +0000 (GMT)
-Subject: Re: [RFC 1/3] Introduce latency-tolerance as an per-task attribute
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, vincent.guittot@linaro.org,
-        patrick.bellasi@matbug.net, valentin.schneider@arm.com,
-        pavel@ucw.cz, dhaval.giani@oracle.com, qperret@qperret.net,
-        David.Laight@ACULAB.COM, morten.rasmussen@arm.com, pjt@google.com,
-        tj@kernel.org, dietmar.eggemann@arm.com, viresh.kumar@linaro.org,
-        rafael.j.wysocki@intel.com, daniel.lezcano@linaro.org
-References: <20191125094618.30298-1-parth@linux.ibm.com>
- <20191125094618.30298-2-parth@linux.ibm.com>
- <20191203083654.3ctttimdiujdt7tl@e107158-lin.cambridge.arm.com>
-From:   Parth Shah <parth@linux.ibm.com>
-Date:   Tue, 3 Dec 2019 21:17:11 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 3 Dec 2019 10:52:08 -0500
+Received: by mail-io1-f71.google.com with SMTP id z21so2675800iob.22
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 07:52:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=qWkyIPu2o6vdgwTgEGOSkN6/EDBPIm6eU4NPNmjP8sE=;
+        b=CblZ52t4IyIyWPawnWsZvaCoZHPVeb0doBP5uqE8JBPHhk69L2lfHohluWPwLfRgLj
+         PYQxoPACfcMPBDrIOlaEvM3SFXvbgl5UVdCKLYwHUPQQwa9tgLZiHNxzK8A6ISEcayDy
+         vTFc7jnD+eIJDRpq3StPwHLscFFWr8I4uuc90VtcBUDLTcTfY4n+FD2Ifb7F5tgxDoRv
+         ak/rqxWbMRZ2psf00JNgk9EL9TWVSEY28KCNWEN2ihL87aWrgjfNaYIkmUzdMagjy8Yf
+         y6FFXn9q0PdiHFBnSqvhxTrJtHnDstUhvWL17coQMwTxdOuBQzoq2u3/BtqMbgwBUCR6
+         waOw==
+X-Gm-Message-State: APjAAAXzK/SDOMvUCG8Weecj/9S8svz3ZftjuPR2vIeQ+CjsesXTNqX5
+        wv0aw7VWWYAqzD7QF50O+/AaCwvQGU2mfKZ8ANxAh5UMIsJp
+X-Google-Smtp-Source: APXvYqxRRjmcvHXXtfC8p3VqmQ496e1KHf7+NJNVYy0YhwBf9iB2IDre8Q3CFKBUOS2QdbxjInzY+v+6Xr9pVZTGUYCg05DmeGFs
 MIME-Version: 1.0
-In-Reply-To: <20191203083654.3ctttimdiujdt7tl@e107158-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19120315-0028-0000-0000-000003C427E1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120315-0029-0000-0000-00002487428C
-Message-Id: <59044b60-a7d8-9508-4975-06afdcfd33cd@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-03_04:2019-12-02,2019-12-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 clxscore=1015 impostorscore=0 bulkscore=0 adultscore=0
- spamscore=0 phishscore=0 mlxscore=0 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912030120
+X-Received: by 2002:a5d:8744:: with SMTP id k4mr2936669iol.227.1575388327907;
+ Tue, 03 Dec 2019 07:52:07 -0800 (PST)
+Date:   Tue, 03 Dec 2019 07:52:07 -0800
+In-Reply-To: <00000000000080f1d305988bb8ba@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ab3afd0598cead51@google.com>
+Subject: Re: BUG: unable to handle kernel paging request in ion_heap_clear_pages
+From:   syzbot <syzbot+be6ccf3081ce8afd1b56@syzkaller.appspotmail.com>
+To:     arve@android.com, christian@brauner.io, devel@driverdev.osuosl.org,
+        dja@axtens.net, dri-devel@lists.freedesktop.org,
+        dvyukov@google.com, gregkh@linuxfoundation.org,
+        joel@joelfernandes.org, kasan-dev@googlegroups.com,
+        labbott@redhat.com, linaro-mm-sig-owner@lists.linaro.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
+        maco@android.com, sumit.semwal@linaro.org,
+        syzkaller-bugs@googlegroups.com, tkjos@android.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+syzbot has found a reproducer for the following crash on:
 
+HEAD commit:    76bb8b05 Merge tag 'kbuild-v5.5' of git://git.kernel.org/p..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=159d0f36e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=dd226651cb0f364b
+dashboard link: https://syzkaller.appspot.com/bug?extid=be6ccf3081ce8afd1b56
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=171f677ae00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11db659ce00000
 
-On 12/3/19 2:06 PM, Qais Yousef wrote:
-> On 11/25/19 15:16, Parth Shah wrote:
->> Latency-tolerance indicates the latency requirements of a task with respect
->> to the other tasks in the system. The value of the attribute can be within
->> the range of [-20, 19] both inclusive to be in-line with the values just
->> like task nice values.
->>
->> latency_tolerance = -20 indicates the task to have the least latency as
->> compared to the tasks having latency_tolerance = +19.
->>
->> The latency_tolerance may affect only the CFS SCHED_CLASS by getting
->> latency requirements from the userspace.
->>
->> Signed-off-by: Parth Shah <parth@linux.ibm.com>
->> ---
->>  include/linux/sched.h                   |  3 +++
->>  include/linux/sched/latency_tolerance.h | 13 +++++++++++++
->>  2 files changed, 16 insertions(+)
->>  create mode 100644 include/linux/sched/latency_tolerance.h
->>
->> diff --git a/include/linux/sched.h b/include/linux/sched.h
->> index 2c2e56bd8913..bcc1c1d0856d 100644
->> --- a/include/linux/sched.h
->> +++ b/include/linux/sched.h
->> @@ -25,6 +25,7 @@
->>  #include <linux/resource.h>
->>  #include <linux/latencytop.h>
->>  #include <linux/sched/prio.h>
->> +#include <linux/sched/latency_tolerance.h>
->>  #include <linux/sched/types.h>
->>  #include <linux/signal_types.h>
->>  #include <linux/mm_types_task.h>
->> @@ -666,6 +667,8 @@ struct task_struct {
->>  #endif
->>  	int				on_rq;
->>  
->> +	int				latency_tolerance;
->> +
->>  	int				prio;
->>  	int				static_prio;
->>  	int				normal_prio;
->> diff --git a/include/linux/sched/latency_tolerance.h b/include/linux/sched/latency_tolerance.h
->> new file mode 100644
->> index 000000000000..7a00abe05bc4
->> --- /dev/null
->> +++ b/include/linux/sched/latency_tolerance.h
->> @@ -0,0 +1,13 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +#ifndef _LINUX_SCHED_LATENCY_TOLERANCE_H
->> +#define _LINUX_SCHED_LATENCY_TOLERANCE_H
-> 
-> nit: Add some description here explaining what latency tolerance is please. You
-> copy paste some text from your cover letter :)
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+be6ccf3081ce8afd1b56@syzkaller.appspotmail.com
 
-Sure. Will add some text here.
-
-> 
-> --
-> Qais Youesf
-> 
->> +
->> +#define MAX_LATENCY_TOLERANCE	19
->> +#define MIN_LATENCY_TOLERANCE	-20
->> +
->> +#define LATENCY_TOLERANCE_WIDTH	\
->> +	(MAX_LATENCY_TOLERANCE - MIN_LATENCY_TOLERANCE + 1)
->> +
->> +#define DEFAULT_LATENCY_TOLERANCE	0
->> +
->> +#endif /* _LINUX_SCHED_LATENCY_TOLERANCE_H */
->> -- 
->> 2.17.2
->>
+BUG: unable to handle page fault for address: fffff52000680000
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD 21ffee067 P4D 21ffee067 PUD aa51c067 PMD a8372067 PTE 0
+Oops: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 3666 Comm: ion_system_heap Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:memory_is_nonzero mm/kasan/generic.c:121 [inline]
+RIP: 0010:memory_is_poisoned_n mm/kasan/generic.c:135 [inline]
+RIP: 0010:memory_is_poisoned mm/kasan/generic.c:166 [inline]
+RIP: 0010:check_memory_region_inline mm/kasan/generic.c:182 [inline]
+RIP: 0010:check_memory_region+0x9c/0x1a0 mm/kasan/generic.c:192
+Code: c9 4d 0f 49 c1 49 c1 f8 03 45 85 c0 0f 84 10 01 00 00 41 83 e8 01 4e  
+8d 44 c0 08 eb 0d 48 83 c0 08 4c 39 c0 0f 84 a7 00 00 00 <48> 83 38 00 74  
+ed 4c 8d 40 08 eb 09 48 83 c0 01 49 39 c0 74 53 80
+RSP: 0018:ffffc9000cf87ab8 EFLAGS: 00010212
+RAX: fffff52000680000 RBX: fffff52000681600 RCX: ffffffff85d95629
+RDX: 0000000000000001 RSI: 000000000000b000 RDI: ffffc90003400000
+RBP: ffffc9000cf87ad0 R08: fffff52000681600 R09: 0000000000001600
+R10: fffff520006815ff R11: ffffc9000340afff R12: fffff52000680000
+R13: 000000000000b000 R14: 0000000000000000 R15: ffffc9000cf87d08
+FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffff52000680000 CR3: 00000000a6755000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  memset+0x24/0x40 mm/kasan/common.c:107
+  memset include/linux/string.h:365 [inline]
+  ion_heap_clear_pages+0x49/0x70 drivers/staging/android/ion/ion_heap.c:106
+  ion_heap_sglist_zero+0x245/0x270 drivers/staging/android/ion/ion_heap.c:130
+  ion_heap_buffer_zero+0xf5/0x150 drivers/staging/android/ion/ion_heap.c:145
+  ion_system_heap_free+0x1eb/0x250  
+drivers/staging/android/ion/ion_system_heap.c:163
+  ion_buffer_destroy+0x159/0x2d0 drivers/staging/android/ion/ion.c:93
+  ion_heap_deferred_free+0x29d/0x630  
+drivers/staging/android/ion/ion_heap.c:239
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Modules linked in:
+CR2: fffff52000680000
+---[ end trace 6d0e26662c48296a ]---
+RIP: 0010:memory_is_nonzero mm/kasan/generic.c:121 [inline]
+RIP: 0010:memory_is_poisoned_n mm/kasan/generic.c:135 [inline]
+RIP: 0010:memory_is_poisoned mm/kasan/generic.c:166 [inline]
+RIP: 0010:check_memory_region_inline mm/kasan/generic.c:182 [inline]
+RIP: 0010:check_memory_region+0x9c/0x1a0 mm/kasan/generic.c:192
+Code: c9 4d 0f 49 c1 49 c1 f8 03 45 85 c0 0f 84 10 01 00 00 41 83 e8 01 4e  
+8d 44 c0 08 eb 0d 48 83 c0 08 4c 39 c0 0f 84 a7 00 00 00 <48> 83 38 00 74  
+ed 4c 8d 40 08 eb 09 48 83 c0 01 49 39 c0 74 53 80
+RSP: 0018:ffffc9000cf87ab8 EFLAGS: 00010212
+RAX: fffff52000680000 RBX: fffff52000681600 RCX: ffffffff85d95629
+RDX: 0000000000000001 RSI: 000000000000b000 RDI: ffffc90003400000
+RBP: ffffc9000cf87ad0 R08: fffff52000681600 R09: 0000000000001600
+R10: fffff520006815ff R11: ffffc9000340afff R12: fffff52000680000
+R13: 000000000000b000 R14: 0000000000000000 R15: ffffc9000cf87d08
+FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffff52000680000 CR3: 00000000a6755000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
