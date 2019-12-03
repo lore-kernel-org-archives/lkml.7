@@ -2,180 +2,136 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B495C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D031C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 708A520803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:34:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ncYaZ0A+"
+	by mail.kernel.org (Postfix) with ESMTP id 152F3206EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:38:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726195AbfLCNe5 (ORCPT
+        id S1726214AbfLCNiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 08:34:57 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44713 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbfLCNe5 (ORCPT
+        Tue, 3 Dec 2019 08:38:05 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:28016 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725957AbfLCNiF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 08:34:57 -0500
-Received: by mail-lj1-f194.google.com with SMTP id c19so3786965lji.11
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 05:34:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kynqR1nbDFIkNKzP6Rkxf3MwtpXbGnrKe/XIiwd66B8=;
-        b=ncYaZ0A+JzkeM+ueWb7Kifpkxut0gtLLA1cbU1CdBhq8424ouIPeYcI8VrlUIZi2HK
-         ARuI9iS9mt9y1I2Wo0vzJ2wi8CrOnKV0UdWPOs1279yY+FtKokdBqoyts4c4cDI01F+i
-         hlxmeVO07Cs7w6gy5eVtSxPZQzb7yoeadp4A2qQ2Uv3F4W7Wy7CU7vOPY3A4jLu/XE+R
-         0re4qP/VHYbQ77R6oAx5r4E/U7/iTFiMyF/Muec79DsknnWcCLJ96uUmvv5gyjeC0Jdt
-         joEACFNe/3rxV3zC1kHfAv6q+0T0vnLD3bAXlJ/3mIBP1UbDBFTkWAQt0l7++SyIbWZA
-         G3uA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kynqR1nbDFIkNKzP6Rkxf3MwtpXbGnrKe/XIiwd66B8=;
-        b=GYQTAYFfRfT6Iq/K6hiCc41KI68ZxEJGb6MJx2hEz7dIKBGnQ7IchLzDKrahBrUG4p
-         SWORUQpeEED1jby1qLl5R1bChuI+1+/RDWCqgpPKds3kyF/truoTVjTxC/xPjuR4THST
-         3BtpekFrxYO6qqz58iwYL9TlOKCHRqyHiE1BrJ3/A2hdb89EirbZojF8i+GXGVjT/z6B
-         b8IPonuIfQKCMuAQchIQNrOHlI7HtGMzqortarElO7EBGnSxl0Loe0OMpkq1HENO/QVC
-         OIhDdHVuEGun2hSRATqrWeHgCK8KJPzu9e5Z52cO5696B7nrrfsglfZemEmgnYC7tRmv
-         AjLA==
-X-Gm-Message-State: APjAAAU7iY6Yv6pBCvj8jF5yDOwLufjGAgynXigPWPnLfCqXG/aPkdo3
-        QtXxVtIfnZZhQ6nn2DprnQ2+puK0oonO+JvQLoUW/g==
-X-Google-Smtp-Source: APXvYqyfksBIvduXxfZXQ1244/HfjibHAUIU18bKSJ12ttxuchYS0O2dIXjWalUWt92xwMvRluPOyqvnjHwrfiIu7y0=
-X-Received: by 2002:a2e:9a51:: with SMTP id k17mr1975431ljj.206.1575380094771;
- Tue, 03 Dec 2019 05:34:54 -0800 (PST)
+        Tue, 3 Dec 2019 08:38:05 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB3DbjGO141937
+        for <linux-kernel@vger.kernel.org>; Tue, 3 Dec 2019 08:38:04 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wnqm1kkjw-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 08:38:04 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <kamalesh@linux.vnet.ibm.com>;
+        Tue, 3 Dec 2019 13:38:02 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 3 Dec 2019 13:37:58 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB3DbvqM27066668
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 3 Dec 2019 13:37:57 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 39641A4065;
+        Tue,  3 Dec 2019 13:37:57 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 71B07A405F;
+        Tue,  3 Dec 2019 13:37:55 +0000 (GMT)
+Received: from JAVRIS.in.ibm.com (unknown [9.85.70.93])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue,  3 Dec 2019 13:37:55 +0000 (GMT)
+Subject: Re: [PATCH 2/3] powerpc/sysfs: Show idle_purr and idle_spurr for
+ every CPU
+To:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <1574856072-30972-1-git-send-email-ego@linux.vnet.ibm.com>
+ <1574856072-30972-3-git-send-email-ego@linux.vnet.ibm.com>
+From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Date:   Tue, 3 Dec 2019 19:07:53 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <20191114113153.GB4213@ming.t460p> <20191114235415.GL4614@dread.disaster.area>
- <20191115010824.GC4847@ming.t460p> <20191115045634.GN4614@dread.disaster.area>
- <20191115070843.GA24246@ming.t460p> <20191128094003.752-1-hdanton@sina.com>
- <CAKfTPtA23ErKGCEJVmg6vk-QoufkiUM3NbXd31mZmKnuwbTkFw@mail.gmail.com>
- <20191202024625.GD24512@ming.t460p> <20191202040256.GE2695@dread.disaster.area>
- <CAKfTPtD8Q97qJ_+hdCXQRt=gy7k96XrhnFmGYP1G88YSFW0vNA@mail.gmail.com> <20191202235321.GJ2695@dread.disaster.area>
-In-Reply-To: <20191202235321.GJ2695@dread.disaster.area>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Tue, 3 Dec 2019 14:34:43 +0100
-Message-ID: <CAKfTPtCX39HS5Qsqq4rjq=M_u25Wnu6xscmSbW=aEaqA6U-wLw@mail.gmail.com>
-Subject: Re: single aio thread is migrated crazily by scheduler
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Ming Lei <ming.lei@redhat.com>, Hillf Danton <hdanton@sina.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-fs <linux-fsdevel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rong Chen <rong.a.chen@intel.com>, Tejun Heo <tj@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1574856072-30972-3-git-send-email-ego@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19120313-0008-0000-0000-0000033C5B53
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120313-0009-0000-0000-00004A5B7624
+Message-Id: <9b8f82b0-86dd-d524-aae6-34f8c33bd2c2@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-03_03:2019-12-02,2019-12-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
+ lowpriorityscore=0 adultscore=0 clxscore=1015 priorityscore=1501
+ spamscore=0 suspectscore=0 bulkscore=0 mlxlogscore=999 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912030107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Dec 2019 at 00:53, Dave Chinner <david@fromorbit.com> wrote:
->
-> On Mon, Dec 02, 2019 at 02:45:42PM +0100, Vincent Guittot wrote:
-> > On Mon, 2 Dec 2019 at 05:02, Dave Chinner <david@fromorbit.com> wrote:
-> > >
-> > > On Mon, Dec 02, 2019 at 10:46:25AM +0800, Ming Lei wrote:
-> > > > On Thu, Nov 28, 2019 at 10:53:33AM +0100, Vincent Guittot wrote:
-> > > > > On Thu, 28 Nov 2019 at 10:40, Hillf Danton <hdanton@sina.com> wrote:
-> > > > > > --- a/fs/iomap/direct-io.c
-> > > > > > +++ b/fs/iomap/direct-io.c
-> > > > > > @@ -157,10 +157,8 @@ static void iomap_dio_bio_end_io(struct
-> > > > > >                         WRITE_ONCE(dio->submit.waiter, NULL);
-> > > > > >                         blk_wake_io_task(waiter);
-> > > > > >                 } else if (dio->flags & IOMAP_DIO_WRITE) {
-> > > > > > -                       struct inode *inode = file_inode(dio->iocb->ki_filp);
-> > > > > > -
-> > > > > >                         INIT_WORK(&dio->aio.work, iomap_dio_complete_work);
-> > > > > > -                       queue_work(inode->i_sb->s_dio_done_wq, &dio->aio.work);
-> > > > > > +                       schedule_work(&dio->aio.work);
-> > > > >
-> > > > > I'm not sure that this will make a real difference because it ends up
-> > > > > to call queue_work(system_wq, ...) and system_wq is bounded as well so
-> > > > > the work will still be pinned to a CPU
-> > > > > Using system_unbound_wq should make a difference because it doesn't
-> > > > > pin the work on a CPU
-> > > > >  +                       queue_work(system_unbound_wq, &dio->aio.work);
-> > > >
-> > > > Indeed, just run a quick test on my KVM guest, looks the following patch
-> > > > makes a difference:
-> > > >
-> > > > diff --git a/fs/direct-io.c b/fs/direct-io.c
-> > > > index 9329ced91f1d..2f4488b0ecec 100644
-> > > > --- a/fs/direct-io.c
-> > > > +++ b/fs/direct-io.c
-> > > > @@ -613,7 +613,8 @@ int sb_init_dio_done_wq(struct super_block *sb)
-> > > >  {
-> > > >         struct workqueue_struct *old;
-> > > >         struct workqueue_struct *wq = alloc_workqueue("dio/%s",
-> > > > -                                                     WQ_MEM_RECLAIM, 0,
-> > > > +                                                     WQ_MEM_RECLAIM |
-> > > > +                                                     WQ_UNBOUND, 0,
-> > > >                                                       sb->s_id);
-> > >
-> > > That's not an answer to the user task migration issue.
-> > >
-> > > That is, all this patch does is trade user task migration when the
-> > > CPU is busy for migrating all the queued work off the CPU so the
-> > > user task does not get migrated. IOWs, this forces all the queued
-> > > work to be migrated rather than the user task. IOWs, it does not
-> > > address the issue we've exposed in the scheduler between tasks with
-> > > competing CPU affinity scheduling requirements - it just hides the
-> > > symptom.
-> > >
-> > > Maintaining CPU affinity across dispatch and completion work has
-> > > been proven to be a significant performance win. Right throughout
-> > > the IO stack we try to keep this submitter/completion affinity,
-> > > and that's the whole point of using a bound wq in the first place:
-> > > efficient delayed batch processing of work on the local CPU.
-> >
-> > Do you really want to target the same CPU ? looks like what you really
-> > want to target the same cache instead
->
-> Well, yes, ideally we want to target the same cache, but we can't do
-> that with workqueues.
+On 11/27/19 5:31 PM, Gautham R. Shenoy wrote:
+> From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+> 
+> On Pseries LPARs, to calculate utilization, we need to know the
+> [S]PURR ticks when the CPUs were busy or idle.
+> 
+> The total PURR and SPURR ticks are already exposed via the per-cpu
+> sysfs files /sys/devices/system/cpu/cpuX/purr and
+> /sys/devices/system/cpu/cpuX/spurr.
+> 
+> This patch adds support for exposing the idle PURR and SPURR ticks via
+> /sys/devices/system/cpu/cpuX/idle_purr and
+> /sys/devices/system/cpu/cpuX/idle_spurr.
 
-Yes, this seems to be your main problem IMHO. You want to stay on the
-same cache and the only way to do so it to pin the work on one single
-CPU. But by doing so and increasing sched_wakeup_granularity_ns, the
-scheduler detects an imbalanced state because of pinned task that it
-wants to fix.
-Being able to set the work on a cpumask that covers the cache would be
-the solution so the scheduler would be able to select an idle CPU that
-share the cache instead of being pinned to a CPU
+The patch looks good to me, with a minor file mode nit pick mentioned below.
 
->
-> However, the block layer already does that same-cache steering for
-> it's directed completions (see __blk_mq_complete_request()), so we
-> are *already running in a "hot cache" CPU context* when we queue
-> work. When we queue to the same CPU, we are simply maintaining the
-> "cache-hot" context that we are already running in.
->
-> Besides, selecting a specific "hot cache" CPU and bind the work to
-> that CPU (via queue_work_on()) doesn't fix the scheduler problem -
-> it just moves it to another CPU. If the destination CPU is loaded
-> like the local CPU, then it's jsut going to cause migrations on the
-> destination CPU instead of the local CPU.
->
-> IOWs, this is -not a fix- for the scheduler making an incorrect
-> migration decisions when we are mixing bound and unbound tasks on
-> the local run queue. Yes, it will hide the problem from this
-> specific workload instance but it doesn't fix it. We'll just hit it
-> under heavier load, such as when production workloads start running
-> AIO submission from tens of CPUs at a time while burning near 100%
-> CPU in userspace.......
->
-> Cheers,
->
-> Dave.
-> --
-> Dave Chinner
-> david@fromorbit.com
+> 
+> Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+> ---
+>  arch/powerpc/kernel/sysfs.c | 32 ++++++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+> 
+> diff --git a/arch/powerpc/kernel/sysfs.c b/arch/powerpc/kernel/sysfs.c
+> index 80a676d..42ade55 100644
+> --- a/arch/powerpc/kernel/sysfs.c
+> +++ b/arch/powerpc/kernel/sysfs.c
+> @@ -1044,6 +1044,36 @@ static ssize_t show_physical_id(struct device *dev,
+>  }
+>  static DEVICE_ATTR(physical_id, 0444, show_physical_id, NULL);
+> 
+> +static ssize_t idle_purr_show(struct device *dev,
+> +			      struct device_attribute *attr, char *buf)
+> +{
+> +	struct cpu *cpu = container_of(dev, struct cpu, dev);
+> +	unsigned int cpuid = cpu->dev.id;
+> +	struct lppaca *cpu_lppaca_ptr = paca_ptrs[cpuid]->lppaca_ptr;
+> +	u64 idle_purr_cycles = be64_to_cpu(cpu_lppaca_ptr->wait_state_cycles);
+> +
+> +	return sprintf(buf, "%llx\n", idle_purr_cycles);
+> +}
+> +static DEVICE_ATTR_RO(idle_purr);
+
+per cpu purr/spurr sysfs file is created with file mode 0400. Using
+DEVICE_ATTR_RO for their idle_* variants will create sysfs files with 0444 as
+their file mode, you should probably use DEVICE_ATTR() with file mode 0400 to
+have consist permission for both variants.
+
+-- 
+Kamalesh
+
