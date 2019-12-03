@@ -2,83 +2,201 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9953C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B042C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6617207DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B6C520675
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:03:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbfLCPBu (ORCPT
+        id S1726549AbfLCPDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 10:01:50 -0500
-Received: from mx2.suse.de ([195.135.220.15]:50832 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726057AbfLCPBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 10:01:50 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E7323B458;
-        Tue,  3 Dec 2019 15:01:47 +0000 (UTC)
-Date:   Tue, 3 Dec 2019 16:01:46 +0100
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Xianting Tian <xianting_tian@126.com>
-Cc:     paolo.valente@linaro.org, axboe@kernel.dk, tj@kernel.org,
-        linux-block@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bfq: Replace kmalloc_node with kzalloc_node
-Message-ID: <20191203150146.GC20677@blackbody.suse.cz>
-References: <1574175746-8809-1-git-send-email-xianting_tian@126.com>
+        Tue, 3 Dec 2019 10:03:16 -0500
+Received: from foss.arm.com ([217.140.110.172]:43988 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726057AbfLCPDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 10:03:16 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E78F531B;
+        Tue,  3 Dec 2019 07:03:14 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3888E3F52E;
+        Tue,  3 Dec 2019 07:03:14 -0800 (PST)
+Date:   Tue, 3 Dec 2019 15:03:12 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     maz@kernel.org, linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        james.quinlan@broadcom.com, mbrugger@suse.com,
+        phil@raspberrypi.org, jeremy.linton@arm.com,
+        linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        Rob Herring <robh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 1/8] dt-bindings: PCI: Add bindings for brcmstb's PCIe
+ device
+Message-ID: <20191203150312.GD18399@e119886-lin.cambridge.arm.com>
+References: <20191203114743.1294-1-nsaenzjulienne@suse.de>
+ <20191203114743.1294-2-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="RIYY1s2vRbPFwWeW"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1574175746-8809-1-git-send-email-xianting_tian@126.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191203114743.1294-2-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Dec 03, 2019 at 12:47:34PM +0100, Nicolas Saenz Julienne wrote:
+> From: Jim Quinlan <james.quinlan@broadcom.com>
+> 
+> The DT bindings description of the brcmstb PCIe device is described.
+> This node can only be used for now on the Raspberry Pi 4.
+> 
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+> ---
 
---RIYY1s2vRbPFwWeW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
-Hi Xianting.
-
-On Tue, Nov 19, 2019 at 10:02:26AM -0500, Xianting Tian <xianting_tian@126.=
-com> wrote:
-> Replace kmalloc_node with kzalloc_node
-IIUC, your patch makes no functional change and from the message it's
-not clear what's the motivation. Could you please make the commit
-message more descriptive so that it can be evaluated?=20
-
-Michal
-
---RIYY1s2vRbPFwWeW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl3meNEACgkQia1+riC5
-qSjn/g/8DG+H4X+mWCbTBkuvpAzj2IA506EgGD7wEwtgteQBnS2xH2M81ub5aoN3
-hXXgwOGkqDD3A5TMunkWI5xSLgVZ2VafksCTJiCc67GPl6VjdeQZqwdH9g0XIexm
-IivfMGzgu5bMwv/phg3vus/kEOswc+vDY+kdyUaB9wL2gObQucdUWUrNx6/pqpM6
-v9U18KP6e5tmMubOFeawMEGKgeBqRlib9xylpKH/YuJbov9HQbZx2PN3LeP8E0bM
-5+GGdRMjMp8xd5xydruOnw/+0STQ2rYbm2yvEYlpUHu/G/YEi+oHcePaO6vI+Bfc
-QdEpbtuNqbkf9xDECElg09WOxs0KF+lAOoBXIUkYueCYL3noVnwQd8qj35zUuRee
-SRgUQngz2xPgAJVTkLajR/SilEBVdxX5WHhwsrEE/MUUGOS83STW5oosjSjrAH/i
-3U/LYrBAyEkOPcMWPQz0XxYV16Qa4ngK3rTAWh9WKnvk1yPYK1e2TaTxW5FGR/wj
-hokBpZ2IpMpD/eu1RQjAZH90JcQMsXXH5yxHLD3RH7zQ6kabbrbv4nYV44Oce1/l
-BLWZQhGVNtZvzrHZcd0RhLnrtP2Km+iB3KPvL9H5D1wDWr3Wj+6kmE9NiZMkmcjO
-hU67jTSELMNbLREnZx3Tc575bQKyOxcMpxoJljDr/7ht9LKD9jM=
-=ePfG
------END PGP SIGNATURE-----
-
---RIYY1s2vRbPFwWeW--
+> 
+> Changes since v2:
+>   - Add pci reference schema
+>   - Drop all default properties
+>   - Assume msi-controller and msi-parent are properly defined
+>   - Add num entries on multiple properties
+>   - use unevaluatedProperties
+>   - Update required properties
+>   - Fix license
+> 
+> Changes since v1:
+>   - Fix commit Subject
+>   - Remove linux,pci-domain
+> 
+> This was based on Jim's original submission[1], converted to yaml and
+> adapted to the RPi4 case.
+> 
+> [1] https://patchwork.kernel.org/patch/10605937/
+> 
+>  .../bindings/pci/brcm,stb-pcie.yaml           | 97 +++++++++++++++++++
+>  1 file changed, 97 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> new file mode 100644
+> index 000000000000..77d3e81a437b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> @@ -0,0 +1,97 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Brcmstb PCIe Host Controller Device Tree Bindings
+> +
+> +maintainers:
+> +  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/pci-bus.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: brcm,bcm2711-pcie # The Raspberry Pi 4
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - description: PCIe host controller
+> +      - description: builtin MSI controller
+> +
+> +  interrupt-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - const: pcie
+> +      - const: msi
+> +
+> +  ranges:
+> +    maxItems: 1
+> +
+> +  dma-ranges:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: sw_pcie
+> +
+> +  msi-controller:
+> +    description: Identifies the node as an MSI controller.
+> +
+> +  msi-parent:
+> +    description: MSI controller the device is capable of using.
+> +
+> +  brcm,enable-ssc:
+> +    description: Indicates usage of spread-spectrum clocking.
+> +    type: boolean
+> +
+> +required:
+> +  - reg
+> +  - dma-ranges
+> +  - "#interrupt-cells"
+> +  - interrupts
+> +  - interrupt-names
+> +  - interrupt-map-mask
+> +  - interrupt-map
+> +  - msi-controller
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    scb {
+> +            #address-cells = <2>;
+> +            #size-cells = <1>;
+> +            pcie0: pcie@7d500000 {
+> +                    compatible = "brcm,bcm2711-pcie";
+> +                    reg = <0x0 0x7d500000 0x9310>;
+> +                    device_type = "pci";
+> +                    #address-cells = <3>;
+> +                    #size-cells = <2>;
+> +                    #interrupt-cells = <1>;
+> +                    interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
+> +                                 <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
+> +                    interrupt-names = "pcie", "msi";
+> +                    interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+> +                    interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
+> +                    msi-parent = <&pcie0>;
+> +                    msi-controller;
+> +                    ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
+> +                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
+> +                    brcm,enable-ssc;
+> +            };
+> +    };
+> -- 
+> 2.24.0
+> 
