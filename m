@@ -2,170 +2,286 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E94F7C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9B2C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B32F220661
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:27:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cgHunmya"
+	by mail.kernel.org (Postfix) with ESMTP id BF92220661
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:28:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbfLCP1X (ORCPT
+        id S1727015AbfLCP2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 10:27:23 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32166 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726024AbfLCP1X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 10:27:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575386841;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=FtlIBMzr/kEBkvWypDLPUeXrjcgK/eBQwpmnVBeyJt0=;
-        b=cgHunmyatkhyuBFzL+cTAAu4PRw3qkGcrBF3509mlBB6DWgWxS4/n8S4J0jB7y1ecJHjUb
-        jmf3oQKF5l/tny6T3QqoexX7UHNRtq0+lfIt7VklehFBN+phpNy87dzwkySUSW5nTLqTkA
-        C+TFrTAeMdKF6eQmBeQoQXfUF+hVYF8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-382-p6AJ2c4COHSHAdJfajnfZQ-1; Tue, 03 Dec 2019 10:27:20 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ABB9810AC66A;
-        Tue,  3 Dec 2019 15:27:17 +0000 (UTC)
-Received: from [10.36.117.236] (ovpn-117-236.ams2.redhat.com [10.36.117.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 21F0619C68;
-        Tue,  3 Dec 2019 15:27:13 +0000 (UTC)
-Subject: Re: [PATCH v6 05/10] mm/memory_hotplug: Shrink zones when offlining
- memory
-To:     Oscar Salvador <osalvador@suse.de>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, x86@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-References: <20191006085646.5768-1-david@redhat.com>
- <20191006085646.5768-6-david@redhat.com> <20191203151030.GB2600@linux>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <9789e892-dd15-c37d-7c0a-0ccb4db1a987@redhat.com>
-Date:   Tue, 3 Dec 2019 16:27:12 +0100
+        Tue, 3 Dec 2019 10:28:25 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34268 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725997AbfLCP2Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 10:28:25 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2BD8169A7F;
+        Tue,  3 Dec 2019 15:28:22 +0000 (UTC)
+Subject: Re: [PATCH 3/6] clk: realtek: add common clock support for Realtek
+ SoCs
+To:     James Tai <james.tai@realtek.com>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        linux-realtek-soc@lists.infradead.org,
+        cylee12 <cylee12@realtek.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
+References: <20191203074513.9416-1-james.tai@realtek.com>
+ <20191203074513.9416-4-james.tai@realtek.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <90124940-e946-1163-8baa-5064d3d973c5@suse.de>
+Date:   Tue, 3 Dec 2019 16:28:21 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <20191203151030.GB2600@linux>
+In-Reply-To: <20191203074513.9416-4-james.tai@realtek.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: p6AJ2c4COHSHAdJfajnfZQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.12.19 16:10, Oscar Salvador wrote:
-> On Sun, Oct 06, 2019 at 10:56:41AM +0200, David Hildenbrand wrote:
->> Fixes: d0dc12e86b31 ("mm/memory_hotplug: optimize memory hotplug")
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->=20
-> I did not see anything wrong with the taken approach, and makes sense to =
-me.
-> The only thing that puzzles me is we seem to not balance spanned_pages
-> for ZONE_DEVICE anymore.
-> memremap_pages() increments them via move_pfn_range_to_zone, but we skip
-> ZONE_DEVICE in remove_pfn_range_from_zone.
+Hi James,
 
-Yes, documented e.g., in
+[dropping Palmer]
 
-commit 7ce700bf11b5e2cb84e4352bbdf2123a7a239c84
-Author: David Hildenbrand <david@redhat.com>
-Date:   Thu Nov 21 17:53:56 2019 -0800
+Am 03.12.19 um 08:45 schrieb James Tai:
+> From: cylee12 <cylee12@realtek.com>
 
-    mm/memory_hotplug: don't access uninitialized memmaps in
-shrink_zone_span()
+Please fix the author name.
 
-Needs some more thought - but is definitely not urgent (well, now it's
-at least no longer completely broken).
+> 
+> This patch adds common clock support for Realtek SoCs, including PLLs,
+> Mux clocks and Gate clocks.
 
->=20
-> That is not really related to this patch, so I might be missing something=
-,
-> but it caught my eye while reviewing this.
->=20
-> Anyway, for this one:
->=20
-> Reviewed-by: Oscar Salvador <osalvador@suse.de>
->=20
+Can you be more specific here, please? Is this compatible back to
+RTD1195 or RTD1295 or just 1619 forward? I only see RTD1619 in 5/6. And
+not a single .dtsi patch is included in this series for testing it.
 
-Thanks!
+> 
+> Signed-off-by: Cheng-Yu Lee <cylee12@realtek.com>
+> Signed-off-by: James Tai <james.tai@realtek.com>
+> ---
+>  drivers/clk/Kconfig                   |   1 +
+>  drivers/clk/Makefile                  |   1 +
+>  drivers/clk/realtek/Kconfig           |  10 +
+>  drivers/clk/realtek/Makefile          |   9 +
+>  drivers/clk/realtek/clk-pll-dif.c     |  81 ++++++
+>  drivers/clk/realtek/clk-pll-psaud.c   | 120 ++++++++
+>  drivers/clk/realtek/clk-pll.c         | 400 ++++++++++++++++++++++++++
+>  drivers/clk/realtek/clk-pll.h         | 151 ++++++++++
+>  drivers/clk/realtek/clk-regmap-gate.c |  89 ++++++
+>  drivers/clk/realtek/clk-regmap-gate.h |  26 ++
+>  drivers/clk/realtek/clk-regmap-mux.c  |  63 ++++
+>  drivers/clk/realtek/clk-regmap-mux.h  |  26 ++
+>  drivers/clk/realtek/common.c          | 320 +++++++++++++++++++++
+>  drivers/clk/realtek/common.h          | 123 ++++++++
+>  14 files changed, 1420 insertions(+)
 
->=20
-> off-topic: I __think__ we really need to trim the CC list.
+This patch is way too large for me to review. Please split this up
+further into logically self-contained, compile-testable patches.
 
-Yes we should :) - done.
+>  create mode 100644 drivers/clk/realtek/Kconfig
+>  create mode 100644 drivers/clk/realtek/Makefile
+>  create mode 100644 drivers/clk/realtek/clk-pll-dif.c
+>  create mode 100644 drivers/clk/realtek/clk-pll-psaud.c
+>  create mode 100644 drivers/clk/realtek/clk-pll.c
+>  create mode 100644 drivers/clk/realtek/clk-pll.h
+>  create mode 100644 drivers/clk/realtek/clk-regmap-gate.c
+>  create mode 100644 drivers/clk/realtek/clk-regmap-gate.h
+>  create mode 100644 drivers/clk/realtek/clk-regmap-mux.c
+>  create mode 100644 drivers/clk/realtek/clk-regmap-mux.h
+>  create mode 100644 drivers/clk/realtek/common.c
+>  create mode 100644 drivers/clk/realtek/common.h
+> 
+> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+> index c44247d0b83e..8e06487440ce 100644
+> --- a/drivers/clk/Kconfig
+> +++ b/drivers/clk/Kconfig
+> @@ -317,6 +317,7 @@ source "drivers/clk/mediatek/Kconfig"
+>  source "drivers/clk/meson/Kconfig"
+>  source "drivers/clk/mvebu/Kconfig"
+>  source "drivers/clk/qcom/Kconfig"
+> +source "drivers/clk/realtek/Kconfig"
+>  source "drivers/clk/renesas/Kconfig"
+>  source "drivers/clk/samsung/Kconfig"
+>  source "drivers/clk/sifive/Kconfig"
+> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+> index 0138fb14e6f8..71ea17f97f7d 100644
+> --- a/drivers/clk/Makefile
+> +++ b/drivers/clk/Makefile
+> @@ -95,6 +95,7 @@ obj-$(CONFIG_COMMON_CLK_NXP)		+= nxp/
+>  obj-$(CONFIG_MACH_PISTACHIO)		+= pistachio/
+>  obj-$(CONFIG_COMMON_CLK_PXA)		+= pxa/
+>  obj-$(CONFIG_COMMON_CLK_QCOM)		+= qcom/
+> +obj-$(CONFIG_COMMON_CLK_REALTEK)	+= realtek/
 
---=20
+Should we take the Renesas approach here and allow for COMPILE_TEST?
+
+>  obj-y					+= renesas/
+>  obj-$(CONFIG_ARCH_ROCKCHIP)		+= rockchip/
+>  obj-$(CONFIG_COMMON_CLK_SAMSUNG)	+= samsung/
+> diff --git a/drivers/clk/realtek/Kconfig b/drivers/clk/realtek/Kconfig
+> new file mode 100644
+> index 000000000000..5bca757dddfa
+> --- /dev/null
+> +++ b/drivers/clk/realtek/Kconfig
+> @@ -0,0 +1,10 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +config COMMON_CLK_REALTEK
+
+I would personally think that it's not necessary to prefix with COMMON_
+here, even if based on CONFIG_COMMON_CLK framework, since Realtek is no
+longer common. Stephen/Michael?
+
+Which brings us to the next aspect, is this really universally common
+for Realtek? Are they compatible with old MIPS SoCs and Arm SoCs from
+departments other than DHC? (e.g., Smart TV)
+If the answer to any of these is no, then please rename the Kconfig
+symbol to the oldest SoC for uniqueness, e.g., RTD1195.
+
+> +	bool "Clock driver for realtek"
+
+Spelling.
+
+> +	select MFD_SYSCON
+
+Please add help text and include SoC names.
+
+> +
+> +config CLK_PLL_PSAUD
+
+Too generic name.
+
+> +	bool
+> +
+> +config CLK_PLL_DIF
+
+Ditto.
+
+> +	bool
+> diff --git a/drivers/clk/realtek/Makefile b/drivers/clk/realtek/Makefile
+> new file mode 100644
+> index 000000000000..050d450db067
+> --- /dev/null
+> +++ b/drivers/clk/realtek/Makefile
+> @@ -0,0 +1,9 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +obj-$(CONFIG_COMMON_CLK_REALTEK) += clk-rtk.o
+> +
+> +clk-rtk-y += common.o
+> +clk-rtk-y += clk-regmap-mux.o
+> +clk-rtk-y += clk-regmap-gate.o
+> +clk-rtk-y += clk-pll.o
+> +clk-rtk-$(CONFIG_CLK_PLL_PSAUD) += clk-pll-psaud.o
+> +clk-rtk-$(CONFIG_CLK_PLL_DIF) += clk-pll-dif.o
+> diff --git a/drivers/clk/realtek/clk-pll-dif.c b/drivers/clk/realtek/clk-pll-dif.c
+> new file mode 100644
+> index 000000000000..d19efef2626e
+> --- /dev/null
+> +++ b/drivers/clk/realtek/clk-pll-dif.c
+> @@ -0,0 +1,81 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+
+Can you relicense this code as GPL-2.0-or-later? For Makefile and
+Kconfig it doesn't matter, just for low-level code that could become
+relevant for debuggers like OpenOCD, which is licensed GPLv2+.
+
+> +/*
+
+Care to elaborate here what "dif" is? :)
+
+> + * Copyright (c) 2019 Realtek Semiconductor Corporation
+> + * Author: Cheng-Yu Lee <cylee12@realtek.com>
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/clk.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/delay.h>
+
+Insert white line here?
+
+> +#include "common.h"
+> +#include "clk-pll.h"
+> +
+> +static int clk_pll_dif_enable(struct clk_hw *hw)
+> +{
+> +	struct clk_pll_dif *pll = to_clk_pll_dif(hw);
+> +
+> +	pr_debug("%pC: %s\n", hw->clk, __func__);
+
+Please review debug and info messages for whether they are still needed
+- in particular for info below I assume no.
+
+> +
+> +	clk_regmap_write(&pll->clkr, pll->pll_ofs + 0x0C, 0x00000048);
+> +	clk_regmap_write(&pll->clkr, pll->pll_ofs + 0x08, 0x00020c00);
+> +	clk_regmap_write(&pll->clkr, pll->pll_ofs + 0x04, 0x204004ca);
+> +	clk_regmap_write(&pll->clkr, pll->pll_ofs + 0x00, 0x8000a000);
+
+This is way too much dark magic!
+
+Start with giving the offsets symbolic names, please.
+
+Next, construct the value from symbolic constants. You will see me use
+BIT() and GENMASK() macros elsewhere; please adopt those conventions.
+
+> +	udelay(100);
+
+Is this from some internal datasheet? Otherwise, from some MCU clocks
+that I've previously implemented, I would expect there to be some status
+bit indicating readyness that we should poll rather than trusting a
+hardcoded delay. I don't see a single read below, nor any explanatory
+comment.
+
+> +
+> +	clk_regmap_write(&pll->clkr, pll->pll_ofs + 0x08, 0x00420c00);
+> +	udelay(50);
+> +
+> +	clk_regmap_write(&pll->clkr, pll->pll_ofs + 0x08, 0x00420c03);
+> +	udelay(200);
+> +
+> +	clk_regmap_write(&pll->clkr, pll->pll_ofs + 0x0C, 0x00000078);
+> +	udelay(100);
+> +
+> +	clk_regmap_write(&pll->clkr, pll->pll_ofs + 0x04, 0x204084ca);
+> +
+> +	/* ssc control */
+
+This lonely comment seems kind of redundant with ssc_ofs vs. pll_ofs.
+
+> +	clk_regmap_write(&pll->clkr, pll->ssc_ofs + 0x00, 0x00000004);
+> +	clk_regmap_write(&pll->clkr, pll->ssc_ofs + 0x04, 0x00006800);
+> +	clk_regmap_write(&pll->clkr, pll->ssc_ofs + 0x0C, 0x00000000);
+> +	clk_regmap_write(&pll->clkr, pll->ssc_ofs + 0x10, 0x00000000);
+> +	clk_regmap_write(&pll->clkr, pll->ssc_ofs + 0x08, 0x001e1f98);
+> +	clk_regmap_write(&pll->clkr, pll->ssc_ofs + 0x00, 0x00000005);
+> +	pll->status = 1;
+> +
+> +	return 0;
+> +}
+[snip]
+
+I'll stop reviewing here and am waiting for a v2.
+
 Thanks,
+Andreas
 
-David / dhildenb
-
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
