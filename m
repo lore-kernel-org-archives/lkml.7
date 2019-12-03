@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9368C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD4BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9764820684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:23:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6959A20684
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:23:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="S8r3MakW"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="dC1MsTLu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbfLCNXS (ORCPT
+        id S1726443AbfLCNXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 08:23:18 -0500
-Received: from pio-pvt-msa1.bahnhof.se ([79.136.2.40]:53694 "EHLO
-        pio-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726374AbfLCNXB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 3 Dec 2019 08:23:01 -0500
+Received: from pio-pvt-msa1.bahnhof.se ([79.136.2.40]:53670 "EHLO
+        pio-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbfLCNXA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 08:23:00 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 13C553F3BB;
-        Tue,  3 Dec 2019 14:23:00 +0100 (CET)
+        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 7A9263F54F;
+        Tue,  3 Dec 2019 14:22:58 +0100 (CET)
 Authentication-Results: pio-pvt-msa1.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b="S8r3MakW";
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b="dC1MsTLu";
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at bahnhof.se
 Received: from pio-pvt-msa1.bahnhof.se ([127.0.0.1])
         by localhost (pio-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id nI47Hg1oegk5; Tue,  3 Dec 2019 14:22:52 +0100 (CET)
+        with ESMTP id SyLkyzQfCfQE; Tue,  3 Dec 2019 14:22:52 +0100 (CET)
 Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
         (Authenticated sender: mb878879)
-        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id E98B03F387;
-        Tue,  3 Dec 2019 14:22:49 +0100 (CET)
+        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 0DF9C3F3BB;
+        Tue,  3 Dec 2019 14:22:52 +0100 (CET)
 Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 72D06362530;
+        by mail1.shipmail.org (Postfix) with ESMTPSA id DCBBF362537;
         Tue,  3 Dec 2019 14:22:49 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1575379369; bh=nW8buLNAfHYB2D7ORGSziu6wMzvhJOag52VEHcMvQ5E=;
+        t=1575379369; bh=Si99QK2cbXLDdnv9hJQ8qkIHANlsqR9lX9iKQM7FDlk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S8r3MakWtsAry23pkBSqlA08b3lbNn/1uBuFtigrbxY6goplLTpR52K8tr46G6lCx
-         fJSBODOqA5Zs9pFW5t8dkPu7IDd8mBwqG7+cGMgxt96Xz4cgZI+W3l1MyQH2C366ZG
-         JFeg2kOWCjE4nZwcVEv8bHXLH67txTZRApsXIC0Y=
+        b=dC1MsTLuwVfz/IbaLytrfUi1RaaD3Wd+Ev0HqvO129HNq7WLgqD8ImQDvTLX74Xxd
+         +JZYzvL2ILI0mO5Cjam35SbCZCO0LuydupSD21U/igTe2LHHG9GUnxeEKPykNUQLZl
+         SozyzXp8jksegPGwRwS228tnvmT8i9YDpYX9uqQo=
 From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
         <thomas_os@shipmail.org>
 To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
@@ -59,9 +59,9 @@ Cc:     pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
         Ralph Campbell <rcampbell@nvidia.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
         =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Subject: [PATCH 3/8] mm: Add vmf_insert_pfn_xxx_prot() for huge page-table entries
-Date:   Tue,  3 Dec 2019 14:22:34 +0100
-Message-Id: <20191203132239.5910-4-thomas_os@shipmail.org>
+Subject: [PATCH 6/8] drm: Add a drm_get_unmapped_area() helper
+Date:   Tue,  3 Dec 2019 14:22:37 +0100
+Message-Id: <20191203132239.5910-7-thomas_os@shipmail.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191203132239.5910-1-thomas_os@shipmail.org>
 References: <20191203132239.5910-1-thomas_os@shipmail.org>
@@ -75,8 +75,9 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Hellstrom <thellstrom@vmware.com>
 
-For graphics drivers needing to modify the page-protection, add
-huge page-table entries counterparts to vmf_insert_prn_prot().
+This helper is used to align user-space buffer object addresses to
+huge page boundaries, minimizing the chance of alignment mismatch
+between user-space addresses and physical addresses.
 
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Michal Hocko <mhocko@suse.com>
@@ -87,88 +88,177 @@ Cc: "Jérôme Glisse" <jglisse@redhat.com>
 Cc: "Christian König" <christian.koenig@amd.com>
 Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
 ---
- include/linux/huge_mm.h | 17 +++++++++++++++--
- mm/huge_memory.c        | 12 ++++++------
- 2 files changed, 21 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/drm_file.c | 130 +++++++++++++++++++++++++++++++++++++
+ include/drm/drm_file.h     |   5 ++
+ 2 files changed, 135 insertions(+)
 
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index 0b84e13e88e2..b721d42d0adc 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -47,8 +47,21 @@ extern bool move_huge_pmd(struct vm_area_struct *vma, unsigned long old_addr,
- extern int change_huge_pmd(struct vm_area_struct *vma, pmd_t *pmd,
- 			unsigned long addr, pgprot_t newprot,
- 			int prot_numa);
--vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write);
--vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write);
-+vm_fault_t vmf_insert_pfn_pmd_prot(struct vm_fault *vmf, pfn_t pfn,
-+				   pgprot_t pgprot, bool write);
-+static inline vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn,
-+					    bool write)
+diff --git a/drivers/gpu/drm/drm_file.c b/drivers/gpu/drm/drm_file.c
+index ea34bc991858..e5b4024cd397 100644
+--- a/drivers/gpu/drm/drm_file.c
++++ b/drivers/gpu/drm/drm_file.c
+@@ -31,6 +31,8 @@
+  * OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
++#include <uapi/asm/mman.h>
++
+ #include <linux/dma-fence.h>
+ #include <linux/module.h>
+ #include <linux/pci.h>
+@@ -41,6 +43,7 @@
+ #include <drm/drm_drv.h>
+ #include <drm/drm_file.h>
+ #include <drm/drm_print.h>
++#include <drm/drm_vma_manager.h>
+ 
+ #include "drm_crtc_internal.h"
+ #include "drm_internal.h"
+@@ -754,3 +757,130 @@ void drm_send_event(struct drm_device *dev, struct drm_pending_event *e)
+ 	spin_unlock_irqrestore(&dev->event_lock, irqflags);
+ }
+ EXPORT_SYMBOL(drm_send_event);
++
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++/*
++ * drm_addr_inflate() attempts to construct an aligned area by inflating
++ * the area size and skipping the unaligned start of the area.
++ * adapted from shmem_get_unmapped_area()
++ */
++static unsigned long drm_addr_inflate(unsigned long addr,
++				      unsigned long len,
++				      unsigned long pgoff,
++				      unsigned long flags,
++				      unsigned long huge_size)
 +{
-+	return vmf_insert_pfn_pmd_prot(vmf, pfn, vmf->vma->vm_page_prot, write);
-+}
-+vm_fault_t vmf_insert_pfn_pud_prot(struct vm_fault *vmf, pfn_t pfn,
-+				   pgprot_t pgprot, bool write);
-+static inline vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn,
-+					    bool write)
-+{
-+	return vmf_insert_pfn_pud_prot(vmf, pfn, vmf->vma->vm_page_prot, write);
++	unsigned long offset, inflated_len;
++	unsigned long inflated_addr;
++	unsigned long inflated_offset;
++
++	offset = (pgoff << PAGE_SHIFT) & (huge_size - 1);
++	if (offset && offset + len < 2 * huge_size)
++		return addr;
++	if ((addr & (huge_size - 1)) == offset)
++		return addr;
++
++	inflated_len = len + huge_size - PAGE_SIZE;
++	if (inflated_len > TASK_SIZE)
++		return addr;
++	if (inflated_len < len)
++		return addr;
++
++	inflated_addr = current->mm->get_unmapped_area(NULL, 0, inflated_len,
++						       0, flags);
++	if (IS_ERR_VALUE(inflated_addr))
++		return addr;
++	if (inflated_addr & ~PAGE_MASK)
++		return addr;
++
++	inflated_offset = inflated_addr & (huge_size - 1);
++	inflated_addr += offset - inflated_offset;
++	if (inflated_offset > offset)
++		inflated_addr += huge_size;
++
++	if (inflated_addr > TASK_SIZE - len)
++		return addr;
++
++	return inflated_addr;
 +}
 +
- enum transparent_hugepage_flag {
- 	TRANSPARENT_HUGEPAGE_FLAG,
- 	TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG,
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index f8d24fc3f4df..b472313709ed 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -811,11 +811,11 @@ static void insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
- 		pte_free(mm, pgtable);
- }
++/**
++ * drm_get_unmapped_area() - Get an unused user-space virtual memory area
++ * suitable for huge page table entries.
++ * @file: The struct file representing the address space being mmap()'d.
++ * @uaddr: Start address suggested by user-space.
++ * @len: Length of the area.
++ * @pgoff: The page offset into the address space.
++ * @flags: mmap flags
++ * @mgr: The address space manager used by the drm driver. This argument can
++ * probably be removed at some point when all drivers use the same
++ * address space manager.
++ *
++ * This function attempts to find an unused user-space virtual memory area
++ * that can accommodate the size we want to map, and that is properly
++ * aligned to facilitate huge page table entries matching actual
++ * huge pages or huge page aligned memory in buffer objects. Buffer objects
++ * are assumed to start at huge page boundary pfns (io memory) or be
++ * populated by huge pages aligned to the start of the buffer object
++ * (system- or coherent memory). Adapted from shmem_get_unmapped_area.
++ *
++ * Return: aligned user-space address.
++ */
++unsigned long drm_get_unmapped_area(struct file *file,
++				    unsigned long uaddr, unsigned long len,
++				    unsigned long pgoff, unsigned long flags,
++				    struct drm_vma_offset_manager *mgr)
++{
++	unsigned long addr;
++	unsigned long inflated_addr;
++	struct drm_vma_offset_node *node;
++
++	if (len > TASK_SIZE)
++		return -ENOMEM;
++
++	/* Adjust mapping offset to be zero at bo start */
++	drm_vma_offset_lock_lookup(mgr);
++	node = drm_vma_offset_lookup_locked(mgr, pgoff, 1);
++	if (node)
++		pgoff -= node->vm_node.start;
++	drm_vma_offset_unlock_lookup(mgr);
++
++	addr = current->mm->get_unmapped_area(file, uaddr, len, pgoff, flags);
++	if (IS_ERR_VALUE(addr))
++		return addr;
++	if (addr & ~PAGE_MASK)
++		return addr;
++	if (addr > TASK_SIZE - len)
++		return addr;
++
++	if (len < HPAGE_PMD_SIZE)
++		return addr;
++	if (flags & MAP_FIXED)
++		return addr;
++	/*
++	 * Our priority is to support MAP_SHARED mapped hugely;
++	 * and support MAP_PRIVATE mapped hugely too, until it is COWed.
++	 * But if caller specified an address hint, respect that as before.
++	 */
++	if (uaddr)
++		return addr;
++
++	inflated_addr = drm_addr_inflate(addr, len, pgoff, flags,
++					 HPAGE_PMD_SIZE);
++
++	if (IS_ENABLED(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD) &&
++	    len >= HPAGE_PUD_SIZE)
++		inflated_addr = drm_addr_inflate(inflated_addr, len, pgoff,
++						 flags, HPAGE_PUD_SIZE);
++	return inflated_addr;
++}
++#else /* CONFIG_TRANSPARENT_HUGEPAGE */
++unsigned long drm_get_unmapped_area(struct file *file,
++				    unsigned long uaddr, unsigned long len,
++				    unsigned long pgoff, unsigned long flags,
++				    struct drm_vma_offset_manager *mgr)
++{
++	return current->mm->get_unmapped_area(file, uaddr, len, pgoff, flags);
++}
++#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
++EXPORT_SYMBOL_GPL(drm_get_unmapped_area);
+diff --git a/include/drm/drm_file.h b/include/drm/drm_file.h
+index 67af60bb527a..4719cc80d547 100644
+--- a/include/drm/drm_file.h
++++ b/include/drm/drm_file.h
+@@ -386,5 +386,10 @@ void drm_event_cancel_free(struct drm_device *dev,
+ 			   struct drm_pending_event *p);
+ void drm_send_event_locked(struct drm_device *dev, struct drm_pending_event *e);
+ void drm_send_event(struct drm_device *dev, struct drm_pending_event *e);
++struct drm_vma_offset_manager;
++unsigned long drm_get_unmapped_area(struct file *file,
++				    unsigned long uaddr, unsigned long len,
++				    unsigned long pgoff, unsigned long flags,
++				    struct drm_vma_offset_manager *mgr);
  
--vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write)
-+vm_fault_t vmf_insert_pfn_pmd_prot(struct vm_fault *vmf, pfn_t pfn,
-+				   pgprot_t pgprot, bool write)
- {
- 	unsigned long addr = vmf->address & PMD_MASK;
- 	struct vm_area_struct *vma = vmf->vma;
--	pgprot_t pgprot = vma->vm_page_prot;
- 	pgtable_t pgtable = NULL;
- 
- 	/*
-@@ -843,7 +843,7 @@ vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write)
- 	insert_pfn_pmd(vma, addr, vmf->pmd, pfn, pgprot, write, pgtable);
- 	return VM_FAULT_NOPAGE;
- }
--EXPORT_SYMBOL_GPL(vmf_insert_pfn_pmd);
-+EXPORT_SYMBOL_GPL(vmf_insert_pfn_pmd_prot);
- 
- #ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
- static pud_t maybe_pud_mkwrite(pud_t pud, struct vm_area_struct *vma)
-@@ -889,11 +889,11 @@ static void insert_pfn_pud(struct vm_area_struct *vma, unsigned long addr,
- 	spin_unlock(ptl);
- }
- 
--vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write)
-+vm_fault_t vmf_insert_pfn_pud_prot(struct vm_fault *vmf, pfn_t pfn,
-+				   pgprot_t pgprot, bool write)
- {
- 	unsigned long addr = vmf->address & PUD_MASK;
- 	struct vm_area_struct *vma = vmf->vma;
--	pgprot_t pgprot = vma->vm_page_prot;
- 
- 	/*
- 	 * If we had pud_special, we could avoid all these restrictions,
-@@ -914,7 +914,7 @@ vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write)
- 	insert_pfn_pud(vma, addr, vmf->pud, pfn, pgprot, write);
- 	return VM_FAULT_NOPAGE;
- }
--EXPORT_SYMBOL_GPL(vmf_insert_pfn_pud);
-+EXPORT_SYMBOL_GPL(vmf_insert_pfn_pud_prot);
- #endif /* CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD */
- 
- static void touch_pmd(struct vm_area_struct *vma, unsigned long addr,
+ #endif /* _DRM_FILE_H_ */
 -- 
 2.21.0
 
