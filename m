@@ -2,156 +2,280 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86010C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 04:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18DA6C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 04:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E08D206E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 04:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7BE12073C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 04:57:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="NC7qCtI/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbfLCE5n (ORCPT
+        id S1727166AbfLCE5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 23:57:43 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49418 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727107AbfLCE5l (ORCPT
+        Mon, 2 Dec 2019 23:57:46 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36769 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727074AbfLCE5n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 23:57:41 -0500
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB34ptBx142070
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 23:57:40 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wkm47ctkd-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 23:57:39 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Tue, 3 Dec 2019 04:57:37 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 3 Dec 2019 04:57:30 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB34vTUx48955466
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Dec 2019 04:57:29 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1AA85A404D;
-        Tue,  3 Dec 2019 04:57:29 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BD2D9A4040;
-        Tue,  3 Dec 2019 04:57:28 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  3 Dec 2019 04:57:28 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 40E50A01B6;
-        Tue,  3 Dec 2019 15:57:26 +1100 (AEDT)
-Subject: Re: [PATCH v2 26/27] powerpc: Enable OpenCAPI Storage Class Memory
- driver on bare metal
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Andrew Donnellan <ajd@linux.ibm.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Date:   Tue, 03 Dec 2019 15:57:27 +1100
-In-Reply-To: <a993926f-72c0-af1c-220c-38dd90377ef0@linux.ibm.com>
-References: <20191203034655.51561-1-alastair@au1.ibm.com>
-         <20191203034655.51561-27-alastair@au1.ibm.com>
-         <a993926f-72c0-af1c-220c-38dd90377ef0@linux.ibm.com>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19120304-0028-0000-0000-000003C3D5B3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120304-0029-0000-0000-00002486ED8B
-Message-Id: <2734b940e2eb68e500a03bc5d90689e5948259c2.camel@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-02_06:2019-11-29,2019-12-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- spamscore=0 priorityscore=1501 lowpriorityscore=0 clxscore=1015
- impostorscore=0 adultscore=0 suspectscore=0 mlxlogscore=811 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912030043
+        Mon, 2 Dec 2019 23:57:43 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z3so1998917wru.3
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 20:57:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=nXvG0R/mHJhZtvaHjI5Fz8SYCNjqnqabYZE/lb6D4Xc=;
+        b=NC7qCtI/0/BtCxnhKEq1obTz/hQ+EygYwJfBd+NV3lUcEmxrvwuZnpHFO0Zy51lsbD
+         Qrc8q3e6bMJ6yRU7sNgwEX8INATHGLW5UjPuQljT7xsY6uRulblnbYayh9gdg+YHAHpY
+         XCOPSobaJZajoLV7U37DXSil9mh8zBs41FljI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=nXvG0R/mHJhZtvaHjI5Fz8SYCNjqnqabYZE/lb6D4Xc=;
+        b=b83f+jM4u6AYtNACJkwrMD5L1ImURnuOMN+FeUZE0PETR5rVYkFAohq8Et60aPAKHC
+         rwOVJRRNze/prq3EWlfTaSAiGlWkHNuHY5GqUvNirkxRGwgBs7FPU8aXg64JOnmPwCY2
+         z8L/4vUD5FqFriIF/IIb7pJR9fM3QI5dLfz+E1L7eXt3LXfV9BJFujfZ0n1xB8NmZ6Xy
+         i0RCl3U7+HxPc5T7JQ5pYHMYubKNACiUJ9SIYxGl1IvuKiZKN29SPt0/6kbum29tsIYc
+         EvBhCtLf7Ph0ECgcrH2CEfVnAhAFLP3Dnri0mS+3kxv94uivHNn3/cu2wEOcIr9CGodp
+         UDEQ==
+X-Gm-Message-State: APjAAAUlahoyGF7nAlG8chttqAYzu0HoV1FWsiZTMS1cE36DRBjW23pQ
+        Y+uj3auLVJk9mvYYclZXk8K3VQ==
+X-Google-Smtp-Source: APXvYqyeyhxkt64OSEDDMxPNkKbsKaW8g2BtcAUQCCwGuP7l2XKASAjsKBoPheHZqt+DSpNftSYo3g==
+X-Received: by 2002:adf:eb89:: with SMTP id t9mr2839721wrn.5.1575349060655;
+        Mon, 02 Dec 2019 20:57:40 -0800 (PST)
+Received: from mannams-OptiPlex-7010.dhcp.broadcom.net ([192.19.234.250])
+        by smtp.gmail.com with ESMTPSA id k4sm1667807wmk.26.2019.12.02.20.57.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 02 Dec 2019 20:57:40 -0800 (PST)
+From:   Srinath Mannam <srinath.mannam@broadcom.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Ray Jui <ray.jui@broadcom.com>,
+        Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: [PATCH v3 2/6] PCI: iproc: Add INTx support with better modeling
+Date:   Tue,  3 Dec 2019 10:27:02 +0530
+Message-Id: <1575349026-8743-3-git-send-email-srinath.mannam@broadcom.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1575349026-8743-1-git-send-email-srinath.mannam@broadcom.com>
+References: <1575349026-8743-1-git-send-email-srinath.mannam@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-12-03 at 15:54 +1100, Andrew Donnellan wrote:
-> On 3/12/19 2:46 pm, Alastair D'Silva wrote:
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> > 
-> > Enable OpenCAPI Storage Class Memory driver on bare metal
-> > 
-> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> 
-> I'd suggest a summary line more like
-> 
-> powerpc/configs: Enable OpenCAPI SCM driver in powernv_defconfig
-> 
-> and a commit message to match.
-> 
+From: Ray Jui <ray.jui@broadcom.com>
 
-OK.
+Add PCIe legacy interrupt INTx support to the iProc PCIe driver by
+modeling it with its own IRQ domain. All 4 interrupts INTA, INTB, INTC,
+INTD share the same interrupt line connected to the GIC in the system,
+while the status of each INTx can be obtained through the INTX CSR
+register
 
-> 
-> > ---
-> >   arch/powerpc/configs/powernv_defconfig | 4 ++++
-> >   1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/arch/powerpc/configs/powernv_defconfig
-> > b/arch/powerpc/configs/powernv_defconfig
-> > index 6658cceb928c..a8f46aece8a4 100644
-> > --- a/arch/powerpc/configs/powernv_defconfig
-> > +++ b/arch/powerpc/configs/powernv_defconfig
-> > @@ -352,3 +352,7 @@ CONFIG_KVM_BOOK3S_64=m
-> >   CONFIG_KVM_BOOK3S_64_HV=m
-> >   CONFIG_VHOST_NET=m
-> >   CONFIG_PRINTK_TIME=y
-> > +CONFIG_OCXL_SCM=m
-> > +CONFIG_DEV_DAX=m
-> > +CONFIG_DEV_DAX_PMEM=m
-> > +CONFIG_FS_DAX=m
-> > 
+Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+---
+ drivers/pci/controller/pcie-iproc.c | 100 +++++++++++++++++++++++++++++++++++-
+ drivers/pci/controller/pcie-iproc.h |   6 +++
+ 2 files changed, 104 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+index 2d457bf..e90c22e 100644
+--- a/drivers/pci/controller/pcie-iproc.c
++++ b/drivers/pci/controller/pcie-iproc.c
+@@ -14,6 +14,7 @@
+ #include <linux/delay.h>
+ #include <linux/interrupt.h>
+ #include <linux/irqchip/arm-gic-v3.h>
++#include <linux/irqchip/chained_irq.h>
+ #include <linux/platform_device.h>
+ #include <linux/of_address.h>
+ #include <linux/of_pci.h>
+@@ -270,6 +271,7 @@ enum iproc_pcie_reg {
+ 
+ 	/* enable INTx */
+ 	IPROC_PCIE_INTX_EN,
++	IPROC_PCIE_INTX_CSR,
+ 
+ 	/* outbound address mapping */
+ 	IPROC_PCIE_OARR0,
+@@ -314,6 +316,7 @@ static const u16 iproc_pcie_reg_paxb_bcma[] = {
+ 	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
+ 	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
+ 	[IPROC_PCIE_INTX_EN]		= 0x330,
++	[IPROC_PCIE_INTX_CSR]		= 0x334,
+ 	[IPROC_PCIE_LINK_STATUS]	= 0xf0c,
+ };
+ 
+@@ -325,6 +328,7 @@ static const u16 iproc_pcie_reg_paxb[] = {
+ 	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
+ 	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
+ 	[IPROC_PCIE_INTX_EN]		= 0x330,
++	[IPROC_PCIE_INTX_CSR]		= 0x334,
+ 	[IPROC_PCIE_OARR0]		= 0xd20,
+ 	[IPROC_PCIE_OMAP0]		= 0xd40,
+ 	[IPROC_PCIE_OARR1]		= 0xd28,
+@@ -341,6 +345,7 @@ static const u16 iproc_pcie_reg_paxb_v2[] = {
+ 	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
+ 	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
+ 	[IPROC_PCIE_INTX_EN]		= 0x330,
++	[IPROC_PCIE_INTX_CSR]		= 0x334,
+ 	[IPROC_PCIE_OARR0]		= 0xd20,
+ 	[IPROC_PCIE_OMAP0]		= 0xd40,
+ 	[IPROC_PCIE_OARR1]		= 0xd28,
+@@ -846,9 +851,95 @@ static int iproc_pcie_check_link(struct iproc_pcie *pcie)
+ 	return link_is_active ? 0 : -ENODEV;
+ }
+ 
+-static void iproc_pcie_enable(struct iproc_pcie *pcie)
++static int iproc_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
++			       irq_hw_number_t hwirq)
+ {
++	irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_simple_irq);
++	irq_set_chip_data(irq, domain->host_data);
++
++	return 0;
++}
++
++static const struct irq_domain_ops intx_domain_ops = {
++	.map = iproc_pcie_intx_map,
++};
++
++static void iproc_pcie_isr(struct irq_desc *desc)
++{
++	struct irq_chip *chip = irq_desc_get_chip(desc);
++	struct iproc_pcie *pcie;
++	struct device *dev;
++	unsigned long status;
++	u32 bit, virq;
++
++	chained_irq_enter(chip, desc);
++	pcie = irq_desc_get_handler_data(desc);
++	dev = pcie->dev;
++
++	/* go through INTx A, B, C, D until all interrupts are handled */
++	do {
++		status = iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_CSR);
++		for_each_set_bit(bit, &status, PCI_NUM_INTX) {
++			virq = irq_find_mapping(pcie->irq_domain, bit);
++			if (virq)
++				generic_handle_irq(virq);
++			else
++				dev_err(dev, "unexpected INTx%u\n", bit);
++		}
++	} while ((status & SYS_RC_INTX_MASK) != 0);
++
++	chained_irq_exit(chip, desc);
++}
++
++static int iproc_pcie_intx_enable(struct iproc_pcie *pcie)
++{
++	struct device *dev = pcie->dev;
++	struct device_node *node;
++	int ret;
++
+ 	iproc_pcie_write_reg(pcie, IPROC_PCIE_INTX_EN, SYS_RC_INTX_MASK);
++	/*
++	 * BCMA devices do not map INTx the same way as platform devices. All
++	 * BCMA needs is the above code to enable INTx
++	 */
++
++	node = of_get_compatible_child(dev->of_node, "brcm,iproc-intc");
++	if (node)
++		pcie->irq = of_irq_get(node, 0);
++
++	if (!node || pcie->irq <= 0)
++		return 0;
++
++	/* set IRQ handler */
++	irq_set_chained_handler_and_data(pcie->irq, iproc_pcie_isr, pcie);
++
++	/* add IRQ domain for INTx */
++	pcie->irq_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
++						 &intx_domain_ops, pcie);
++	if (!pcie->irq_domain) {
++		dev_err(dev, "failed to add INTx IRQ domain\n");
++		ret = -ENOMEM;
++		goto err_rm_handler_data;
++	}
++
++	return 0;
++
++err_rm_handler_data:
++	of_node_put(node);
++	irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
++
++	return ret;
++}
++
++static void iproc_pcie_intx_disable(struct iproc_pcie *pcie)
++{
++	iproc_pcie_write_reg(pcie, IPROC_PCIE_INTX_EN, 0x0);
++
++	if (pcie->irq <= 0)
++		return;
++
++	irq_domain_remove(pcie->irq_domain);
++	irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
+ }
+ 
+ static inline bool iproc_pcie_ob_is_valid(struct iproc_pcie *pcie,
+@@ -1537,7 +1628,11 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
+ 		goto err_power_off_phy;
+ 	}
+ 
+-	iproc_pcie_enable(pcie);
++	ret = iproc_pcie_intx_enable(pcie);
++	if (ret) {
++		dev_err(dev, "failed to enable INTx\n");
++		goto err_power_off_phy;
++	}
+ 
+ 	if (IS_ENABLED(CONFIG_PCI_MSI))
+ 		if (iproc_pcie_msi_enable(pcie))
+@@ -1582,6 +1677,7 @@ int iproc_pcie_remove(struct iproc_pcie *pcie)
+ 	pci_remove_root_bus(pcie->root_bus);
+ 
+ 	iproc_pcie_msi_disable(pcie);
++	iproc_pcie_intx_disable(pcie);
+ 
+ 	phy_power_off(pcie->phy);
+ 	phy_exit(pcie->phy);
+diff --git a/drivers/pci/controller/pcie-iproc.h b/drivers/pci/controller/pcie-iproc.h
+index 4f03ea5..103e568 100644
+--- a/drivers/pci/controller/pcie-iproc.h
++++ b/drivers/pci/controller/pcie-iproc.h
+@@ -74,6 +74,9 @@ struct iproc_msi;
+  * @ib: inbound mapping related parameters
+  * @ib_map: outbound mapping region related parameters
+  *
++ * @irq: interrupt line wired to the generic GIC for INTx
++ * @irq_domain: IRQ domain for INTx
++ *
+  * @need_msi_steer: indicates additional configuration of the iProc PCIe
+  * controller is required to steer MSI writes to external interrupt controller
+  * @msi: MSI data
+@@ -102,6 +105,9 @@ struct iproc_pcie {
+ 	struct iproc_pcie_ib ib;
+ 	const struct iproc_pcie_ib_map *ib_map;
+ 
++	int irq;
++	struct irq_domain *irq_domain;
++
+ 	bool need_msi_steer;
+ 	struct iproc_msi *msi;
+ };
 -- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
+2.7.4
 
