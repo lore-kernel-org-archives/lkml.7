@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B52DEC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4E4C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84CC720656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54AF120803
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:57:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413863;
-	bh=n2IUQ7KcrggrbiGPzFoO3Sp/A7B50+PCHP1UVCN2rUQ=;
+	s=default; t=1575413866;
+	bh=1ImAGbfbO79XG0lcwEnwZdk/L8stEiVejLFP8/pndKI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lYEXOCjowcWCufNbiDiaJhJnCrVOc+aghOupeZ7ozoDZYXgEc1nCFBtUUggk78fh5
-	 wF7ZpxmOOvd0tvh72JklOFtDHaAYzys8xF2KOBSlCYzhOXEV65DvjxTNyufi4EQk23
-	 mq44kFcPfV9huq9OuKGZsQ1tUIKOkVDVHxE48WBs=
+	b=qFooZPOEGPxOPpU3dIN9GvdHVcMTJGNTNBilcnV2gL9sG05z1UiM3ZIMlY6k+QRG6
+	 BBgkuZ16jL/O+ORQudbqwRoSYPN139F9kM8BCUoyRAo/hJodnZjPSjE1SWHpvAlnqO
+	 ixtW+fAJEodvJZ4c4vcLYeV+HHCjhl3yaLrEQxA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730573AbfLCW5m (ORCPT
+        id S1730580AbfLCW5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:57:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53458 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:57:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730566AbfLCW5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:57:38 -0500
+        id S1730108AbfLCW5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:57:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E3482053B;
-        Tue,  3 Dec 2019 22:57:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5426620656;
+        Tue,  3 Dec 2019 22:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413857;
-        bh=n2IUQ7KcrggrbiGPzFoO3Sp/A7B50+PCHP1UVCN2rUQ=;
+        s=default; t=1575413860;
+        bh=1ImAGbfbO79XG0lcwEnwZdk/L8stEiVejLFP8/pndKI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bjnUHWLk6JLB4MHeuDlraipzgBEQhOeTDQklr809i3RikjK/WZpVZHMUhWbttMm18
-         pTA0bcHh6/5MleAVgGZVitTbHcK0jGIyjEIAXitvKWG5Dr1eTBOSUkmPtZKKN028P2
-         Yah2pUEYYVbRt5f8JqPusirJhyFTiPwU4KxmrXpg=
+        b=B6Q91jBWBxFwb3VjteLGIXTo1668IsRovFc8xkgw2o+2vBsDVhHjDfQzJkn2RORll
+         W64zszCvqanT4wTAvbVspZtvFQiSqdulheyGcgXCHhx0fVDspxF0FnsUsPNnCw5HHX
+         SV3oMVLGIFopP7IpLE2qmoY2hrHIl15uYKi4oQgA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+        stable@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Simon Horman <simon.horman@netronome.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 288/321] openvswitch: remove another BUG_ON()
-Date:   Tue,  3 Dec 2019 23:35:54 +0100
-Message-Id: <20191203223442.118482563@linuxfoundation.org>
+Subject: [PATCH 4.19 289/321] selftests: bpf: test_sockmap: handle file creation failures gracefully
+Date:   Tue,  3 Dec 2019 23:35:55 +0100
+Message-Id: <20191203223442.182805646@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -59,49 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit 8a574f86652a4540a2433946ba826ccb87f398cc ]
+[ Upstream commit 4b67c515036313f3c3ecba3cb2babb9cbddb3f85 ]
 
-If we can't build the flow del notification, we can simply delete
-the flow, no need to crash the kernel. Still keep a WARN_ON to
-preserve debuggability.
+test_sockmap creates a temporary file to use for sendpage.
+this may fail for various reasons. Handle the error rather
+than segfault.
 
-Note: the BUG_ON() predates the Fixes tag, but this change
-can be applied only after the mentioned commit.
-
-v1 -> v2:
- - do not leak an skb on error
-
-Fixes: aed067783e50 ("openvswitch: Minimize ovs_flow_cmd_del critical section.")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/openvswitch/datapath.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ tools/testing/selftests/bpf/test_sockmap.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/net/openvswitch/datapath.c
-+++ b/net/openvswitch/datapath.c
-@@ -1345,7 +1345,10 @@ static int ovs_flow_cmd_del(struct sk_bu
- 						     OVS_FLOW_CMD_DEL,
- 						     ufid_flags);
- 			rcu_read_unlock();
--			BUG_ON(err < 0);
-+			if (WARN_ON_ONCE(err < 0)) {
-+				kfree_skb(reply);
-+				goto out_free;
-+			}
+--- a/tools/testing/selftests/bpf/test_sockmap.c
++++ b/tools/testing/selftests/bpf/test_sockmap.c
+@@ -248,6 +248,10 @@ static int msg_loop_sendpage(int fd, int
+ 	int i, fp;
  
- 			ovs_notify(&dp_flow_genl_family, reply, info);
- 		} else {
-@@ -1353,6 +1356,7 @@ static int ovs_flow_cmd_del(struct sk_bu
- 		}
- 	}
+ 	file = fopen(".sendpage_tst.tmp", "w+");
++	if (!file) {
++		perror("create file for sendpage");
++		return 1;
++	}
+ 	for (i = 0; i < iov_length * cnt; i++, k++)
+ 		fwrite(&k, sizeof(char), 1, file);
+ 	fflush(file);
+@@ -255,6 +259,11 @@ static int msg_loop_sendpage(int fd, int
+ 	fclose(file);
  
-+out_free:
- 	ovs_flow_free(flow, true);
- 	return 0;
- unlock:
+ 	fp = open(".sendpage_tst.tmp", O_RDONLY);
++	if (fp < 0) {
++		perror("reopen file for sendpage");
++		return 1;
++	}
++
+ 	clock_gettime(CLOCK_MONOTONIC, &s->start);
+ 	for (i = 0; i < cnt; i++) {
+ 		int sent = sendfile(fd, fp, NULL, iov_length);
 
 
