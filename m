@@ -2,113 +2,148 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 037E0C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB86C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCFAD206F0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:26:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575365195;
-	bh=sru8eq3Cr7bx4QiMdvafoc3zemYXXUyqjF9CRPlwlxY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ERAlTSyipVKLPa9sqFUvp3Txjfy5xjdE68Hc12A1X69uMgnftJHu3bTVWp0quoj0q
-	 CngzESL+DOJlQnYT+Axlfqi4Q4poa840vnhDumyFNMqetvetAftPXM1AKBquirg/th
-	 1fgeIszl7awR4XOwlUBNCBM1TBZgSmqIHXV3RovM=
+	by mail.kernel.org (Postfix) with ESMTP id 0443C206E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:26:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aDs2YAsO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbfLCJ0e (ORCPT
+        id S1726443AbfLCJ0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 04:26:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbfLCJ0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 04:26:34 -0500
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A68D020848
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Dec 2019 09:26:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575365194;
-        bh=sru8eq3Cr7bx4QiMdvafoc3zemYXXUyqjF9CRPlwlxY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=D593Kd8Y0qaE+X5Fw5v//tQuGm5o6xEmgpyBFKWB9RNM0CRDxlFT3RrwP200XvkIZ
-         /ysQOIkE4HR/BDOv8WzjMYknO64yO3xuqk240/BkTXi4TFRY4RpX4vDzSnAn+7ZFux
-         +4aEY7pEldnnuHFd43Ty/537uTCCt4ffNAflH/wc=
-Received: by mail-lf1-f53.google.com with SMTP id y19so2304937lfl.9
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 01:26:33 -0800 (PST)
-X-Gm-Message-State: APjAAAXTpetOujXvwz8WanW1pWzosvjS5lultUqQ5ZmqLfxpSdVS/LKd
-        11M8fRgc5GZgPl+cQL8pRz4TVxM0fq0aUqyWVrg=
-X-Google-Smtp-Source: APXvYqyDx2OvNOVw7duhGgLCqfN8u2bKDi2nl6vKYv1ayjrywJ3mH8wSOoJYi2cXIk961X6jyGqdI/EoqhTNLS9lllw=
-X-Received: by 2002:a19:4849:: with SMTP id v70mr2095784lfa.30.1575365191708;
- Tue, 03 Dec 2019 01:26:31 -0800 (PST)
+        Tue, 3 Dec 2019 04:26:55 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43990 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbfLCJ0y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 04:26:54 -0500
+Received: by mail-wr1-f67.google.com with SMTP id n1so2676399wra.10;
+        Tue, 03 Dec 2019 01:26:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SZdfC+gFtVklBpHF7XF3yKS4xbagQBubfYPugqhRugk=;
+        b=aDs2YAsOEnOy5MORl6ZJIiOEESJ7SrV+tBNsG7s0DhwI8IAa+WmSS2HHd4QyjWGSJ/
+         ldRTToqQ7fQK307trD2DA1pagxWm6spcShdYjO1bCT5zkFNurwT8D0qFsmSSEUBqQVn9
+         Z2Zj1HZOONpz9ZI8OlPB6cYCLrisPtiHZPkN+kZ/Qkwrv6OYQdkg4ifUYV0RgQrtxBHy
+         Ngqwe37IcYAgs+JB/PBz+qMv8mc+6lkEbD2x5TcMRk7CuL/LFUSdqB1iMLYZ4bG1D9G2
+         wj0QR3TKc67oNoo5knJzrwdTSto5TOtorlUqVKc7rBt0YKFHYhH+mW0TIY8+1NlWPXWq
+         fHAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SZdfC+gFtVklBpHF7XF3yKS4xbagQBubfYPugqhRugk=;
+        b=c1AdemUnx3odErCdLs+LsxlPTyI49QecveN/sDr4pYlv1bTx+tBjxZua0Z+sO6RbkR
+         BLqV+rkAx12Pxyo7NHFe0hw7feRtOhOXrr3r+HPD652yaaiP9yDYsbGXom7XxBJeDAT5
+         un3YcuudF2Oh84ITlNBGmltQ2TWfNIN6AZD0CNI4i6jhrMCALri4xfo91ZnbETbGwZYV
+         mUD3YsxHKGlYJanSXo6M9NWO7v/i/SUpIBsuUh8c+8Mm+/RCjievx+yXCp7r5Hb95dbq
+         vBTLJkdffJc4hA2taQ89kJf/mUabLrVoHIh6WWmpq0aOJhnEWVVC03we6SjAoXpTdGeO
+         Nxzg==
+X-Gm-Message-State: APjAAAX3SAyo34SWOyIVUxxYy27w3qJqh3oSsO6a/BsSCGUETXteo/1x
+        TF142FSfwbpTs9ULp4+KQDg=
+X-Google-Smtp-Source: APXvYqyWUu9z3na0YvFr46Iqp7ei5QNeidd0TaMx3re4eCOYeNXe9t/Q0pvxheWa/uyUnaKqbmgSNw==
+X-Received: by 2002:a5d:43c7:: with SMTP id v7mr3806207wrr.32.1575365212035;
+        Tue, 03 Dec 2019 01:26:52 -0800 (PST)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id v17sm2696979wrt.91.2019.12.03.01.26.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2019 01:26:50 -0800 (PST)
+Date:   Tue, 3 Dec 2019 09:26:49 +0000
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jorgen Hansen <jhansen@vmware.com>
+Subject: Re: [RFC PATCH 0/3] vsock: support network namespace
+Message-ID: <20191203092649.GB153510@stefanha-x1.localdomain>
+References: <20191128171519.203979-1-sgarzare@redhat.com>
 MIME-Version: 1.0
-References: <20191202211844.19629-1-enric.balletbo@collabora.com>
- <20191202211844.19629-2-enric.balletbo@collabora.com> <CAJKOXPdJSLoEX7+34imGuZ6CEE5unajL=byb+h9VT3Bejc353Q@mail.gmail.com>
- <3355589d-0b0d-f30f-624c-0f781ee9cd8d@collabora.com>
-In-Reply-To: <3355589d-0b0d-f30f-624c-0f781ee9cd8d@collabora.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Tue, 3 Dec 2019 17:26:20 +0800
-X-Gmail-Original-Message-ID: <CAJKOXPcrTp7baiPMYaaf_44w+b8GUBWs=X3YTgNZtxJVx0zbgw@mail.gmail.com>
-Message-ID: <CAJKOXPcrTp7baiPMYaaf_44w+b8GUBWs=X3YTgNZtxJVx0zbgw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] x86_64_defconfig: Normalize x86_64 defconfig
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        groeck@chromium.org, bleung@chromium.org, dtor@chromium.org,
-        fabien.lahoudere@collabora.com, guillaume.tucker@collabora.com,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Alexey Brodkin <alexey.brodkin@synopsys.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="XOIedfhf+7KOe/yw"
+Content-Disposition: inline
+In-Reply-To: <20191128171519.203979-1-sgarzare@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Dec 2019 at 17:05, Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> Hi Krzysztof,
->
-> Many thanks for your quick answer.
->
-> On 3/12/19 3:15, Krzysztof Kozlowski wrote:
-> > On Tue, 3 Dec 2019 at 05:18, Enric Balletbo i Serra
-> > <enric.balletbo@collabora.com> wrote:
-> >>
-> >> make savedefconfig result in some difference, lets normalize the
-> >> defconfig
-> >>
-> >
-> > No, for two reasons:
-> > 1. If running savedefconfig at all, split reordering items from
-> > removal of non needed options. This way we can see exactly what is
-> > being removed. This patch moves things around so it is not possible to
-> > understand what exactly you're doing here...
->
-> Ok, makes sense, I can do it, but if you don't really care of having the
-> defconfig sync with the savedefconfig output for the below reasons or others,
-> that's fine with me.
->
-> The reason I send the patch is because I think that, at least on some arm
-> defconfigs, they try to have the defconfig sync with the savedefconfig output,
-> the idea is to try to make patching the file easier, but I know this is usually
-> a pain.
 
-Till I saw DEBUG_FS removal and Steven's answer, I was all in in such
-patches from time to time. However now I think it's risky and instead
-manual cleanup of non-visible symbols is better.
+--XOIedfhf+7KOe/yw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Krzysztof
+On Thu, Nov 28, 2019 at 06:15:16PM +0100, Stefano Garzarella wrote:
+> Hi,
+> now that we have multi-transport upstream, I started to take a look to
+> support network namespace (netns) in vsock.
+>=20
+> As we partially discussed in the multi-transport proposal [1], it could
+> be nice to support network namespace in vsock to reach the following
+> goals:
+> - isolate host applications from guest applications using the same ports
+>   with CID_ANY
+> - assign the same CID of VMs running in different network namespaces
+> - partition VMs between VMMs or at finer granularity
+>=20
+> This preliminary implementation provides the following behavior:
+> - packets received from the host (received by G2H transports) are
+>   assigned to the default netns (init_net)
+> - packets received from the guest (received by H2G - vhost-vsock) are
+>   assigned to the netns of the process that opens /dev/vhost-vsock
+>   (usually the VMM, qemu in my tests, opens the /dev/vhost-vsock)
+>     - for vmci I need some suggestions, because I don't know how to do
+>       and test the same in the vmci driver, for now vmci uses the
+>       init_net
+> - loopback packets are exchanged only in the same netns
+>=20
+> Questions:
+> 1. Should we make configurable the netns (now it is init_net) where
+>    packets from the host should be delivered?
+
+Yes, it should be possible to have multiple G2H (e.g. virtio-vsock)
+devices and to assign them to different net namespaces.  Something like
+net/core/dev.c:dev_change_net_namespace() will eventually be needed.
+
+> 2. Should we provide an ioctl in vhost-vsock to configure the netns
+>    to use? (instead of using the netns of the process that opens
+>    /dev/vhost-vsock)
+
+Creating the vhost-vsock instance in the process' net namespace makes
+sense.  Maybe wait for a use case before adding an ioctl.
+
+> 3. Should we provide a way to disable the netns support in vsock?
+
+The code should follow CONFIG_NET_NS semantics.  I'm not sure what they
+are exactly since struct net is always defined, regardless of whether
+network namespaces are enabled.
+
+--XOIedfhf+7KOe/yw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl3mKlkACgkQnKSrs4Gr
+c8h54wf/eNE48AsDKZkZl+68dw3paeS7KLIQEPgUklUhfhqp/IHdX9uG2R88hvCl
+rMCQbGHSMQ+yb7gPxN1+0tVXFX7Rf2Cqed4Lwqfq0VvufS80FUk4GiQZKKgk4LRv
+/8x4or61TnKGbApxbJnQ+zdj1OirmGwrO8jEt4beMPgsfY80yzl6GcKwYwsOYzeg
+w+28vrKtnprab8l8D0DnVIggTtyep72rsGdeOi4KtSmrUoM8GVExUDmwBQtUJ4xo
+5+OJJjQ+EzPuKWxGIahFrZAHDGerrVHWyltH/LTq+BU0VNR+Ta726WWzDKVx7v6d
+YQm7/TdSAT3l9Id0uVC9+DEM455UIw==
+=v5qS
+-----END PGP SIGNATURE-----
+
+--XOIedfhf+7KOe/yw--
