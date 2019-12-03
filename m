@@ -2,129 +2,100 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC0EC43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D325C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E9CB206EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 153382073F
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:34:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="wCY14kfs"
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="NZgDZvai";
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="NZgDZvai"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbfLCOd7 (ORCPT
+        id S1726473AbfLCOeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 09:33:59 -0500
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:23797 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfLCOd7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 09:33:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1575383639; x=1606919639;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=RXSZcs/qVPDPyswC2jRGt//36h8Hc2BlXBaBEjUudjQ=;
-  b=wCY14kfszZN+5M1gGz+TNBSn7W9LeJon/wiBTFc11q8Lq9THCvjcc7oW
-   Sc6DPB/6KJN0EHhr5PhhoNvA21EpjSePDgM6A9RTOr6W0mELeser6QsvB
-   1AnBz4aHiQZVkSQTM1CXlEaiyktC1obHotEMZ8c1lRmv9wW4PITwFhJoQ
-   M=;
-IronPort-SDR: coc3S0BFg7Yzigp7n7nUbxLeudhPKgshlx19TdBKmZeiBGKBdRS0F5W3etCiCBhBBo4Uwe2x2V
- JWuoaX8mHwvw==
-X-IronPort-AV: E=Sophos;i="5.69,273,1571702400"; 
-   d="scan'208";a="12661880"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 03 Dec 2019 14:33:46 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com (Postfix) with ESMTPS id D515EA17D7;
-        Tue,  3 Dec 2019 14:33:45 +0000 (UTC)
-Received: from EX13D12UEA003.ant.amazon.com (10.43.61.184) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 3 Dec 2019 14:33:45 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D12UEA003.ant.amazon.com (10.43.61.184) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 3 Dec 2019 14:33:45 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.28.85.76) by
- mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Tue, 3 Dec 2019 14:33:44 +0000
-Subject: Re: [PATCH] xen/blkback: Avoid unmapping unmapped grant pages
-To:     =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
-        <konrad.wilk@oracle.com>, <axboe@kernel.dk>
-CC:     <xen-devel@lists.xenproject.org>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, SeongJae Park <sjpark@amazon.de>
-References: <20191126153605.27564-1-sjpark@amazon.com>
- <20191127091314.GK980@Air-de-Roger>
-From:   <sjpark@amazon.com>
-Message-ID: <11ff29ea-ee0f-1dd1-a93e-84d1dd45418e@amazon.com>
-Date:   Tue, 3 Dec 2019 15:33:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 3 Dec 2019 09:34:14 -0500
+Received: from node.akkea.ca ([192.155.83.177]:55906 "EHLO node.akkea.ca"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbfLCOeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 09:34:13 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by node.akkea.ca (Postfix) with ESMTP id 7A4D94E200E;
+        Tue,  3 Dec 2019 14:34:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1575383653; bh=9EZCdQydtdvIE92/1ypyPqXdksi6OLhJTwPHjark2o0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=NZgDZvaiITTRZLJm2hjTVrCkq4j07CdwftQQbzBYnVAXprfU/9TW/LjA6MMacJlWd
+         PPBL+EZnswgGUZEsPVg0YE0tqz2On/Tt3coap5qPzZ7ShrW4hQewVW02Pnvq99uEt8
+         AgwTldO/UJIXcQOvnCIQ0Qw7ghGGZp/FpIsApZMc=
+X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
+Received: from node.akkea.ca ([127.0.0.1])
+        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id zHo31eXuCngz; Tue,  3 Dec 2019 14:34:13 +0000 (UTC)
+Received: from www.akkea.ca (node.akkea.ca [192.155.83.177])
+        by node.akkea.ca (Postfix) with ESMTPSA id 152094E2003;
+        Tue,  3 Dec 2019 14:34:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1575383653; bh=9EZCdQydtdvIE92/1ypyPqXdksi6OLhJTwPHjark2o0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=NZgDZvaiITTRZLJm2hjTVrCkq4j07CdwftQQbzBYnVAXprfU/9TW/LjA6MMacJlWd
+         PPBL+EZnswgGUZEsPVg0YE0tqz2On/Tt3coap5qPzZ7ShrW4hQewVW02Pnvq99uEt8
+         AgwTldO/UJIXcQOvnCIQ0Qw7ghGGZp/FpIsApZMc=
 MIME-Version: 1.0
-In-Reply-To: <20191127091314.GK980@Air-de-Roger>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 03 Dec 2019 07:34:13 -0700
+From:   Angus Ainslie <angus@akkea.ca>
+To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc:     kernel@puri.sm, Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] Add the broadmobi BM818
+In-Reply-To: <20191203142759.GJ1998@sirena.org.uk>
+References: <20191202174831.13638-1-angus@akkea.ca>
+ <20191203142759.GJ1998@sirena.org.uk>
+Message-ID: <49c981e5419bbcedd271216350b4e777@akkea.ca>
+X-Sender: angus@akkea.ca
+User-Agent: Roundcube Webmail/1.3.6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27.11.19 10:13, Roger Pau Monné wrote:
-> On Tue, Nov 26, 2019 at 04:36:05PM +0100, SeongJae Park wrote:
->> From: SeongJae Park <sjpark@amazon.de>
->>
->> For each I/O request, blkback first maps the foreign pages for the
->> request to its local pages.  If an allocation of a local page for the
->> mapping fails, it should unmap every mapping already made for the
->> request.
->>
->> However, blkback's handling mechanism for the allocation failure does
->> not mark the remaining foreign pages as unmapped.  Therefore, the unmap
->> function merely tries to unmap every valid grant page for the request,
->> including the pages not mapped due to the allocation failure.  On a
->> system that fails the allocation frequently, this problem leads to
->> following kernel crash.
->>
->>   [  372.012538] BUG: unable to handle kernel NULL pointer dereference at 0000000000000001
->>   [  372.012546] IP: [<ffffffff814071ac>] gnttab_unmap_refs.part.7+0x1c/0x40
->>   [  372.012557] PGD 16f3e9067 PUD 16426e067 PMD 0
->>   [  372.012562] Oops: 0002 [#1] SMP
->>   [  372.012566] Modules linked in: act_police sch_ingress cls_u32
->>   ...
->>   [  372.012746] Call Trace:
->>   [  372.012752]  [<ffffffff81407204>] gnttab_unmap_refs+0x34/0x40
->>   [  372.012759]  [<ffffffffa0335ae3>] xen_blkbk_unmap+0x83/0x150 [xen_blkback]
->>   ...
->>   [  372.012802]  [<ffffffffa0336c50>] dispatch_rw_block_io+0x970/0x980 [xen_blkback]
->>   ...
->>   Decompressing Linux... Parsing ELF... done.
->>   Booting the kernel.
->>   [    0.000000] Initializing cgroup subsys cpuset
->>
->> This commit fixes this problem by marking the grant pages of the given
->> request that didn't mapped due to the allocation failure as invalid.
->>
->> Fixes: c6cc142dac52 ("xen-blkback: use balloon pages for all mappings")
->>
->> Signed-off-by: SeongJae Park <sjpark@amazon.de>
->> Reviewed-by: David Woodhouse <dwmw@amazon.de>
->> Reviewed-by: Maximilian Heyne <mheyne@amazon.de>
->> Reviewed-by: Paul Durrant <pdurrant@amazon.co.uk>
-> Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
->
-> Thanks, Roger.
+Hi Mark,
 
+On 2019-12-03 07:27, Mark Brown wrote:
+> On Mon, Dec 02, 2019 at 10:48:29AM -0700, Angus Ainslie (Purism) wrote:
+> 
+>>   sound: codecs: gtm601: add Broadmobi bm818 sound profile
+>>   ASoC: gtm601: add the broadmobi interface
+> 
+> These subject styles don't even agree with each other :( - please
+> try to be consistent with the style for the subsystem (the latter
+> one matches, the first one doesn't).
+> 
 
-May I ask some more comments?
+Ok I'll fix that. I pulled those out of previous commit messages of 
+those files.
 
+> Please also try to think about your CC lists when sending
+> patches, try to understand why everyone you're sending them to is
+> getting a copy - kernel maintainers get a lot of mail and sending
+> not obviously relevant patches to random people adds to that.
 
+I used the output of ./scripts/get_maintainer.pl . Is that not the 
+correct way to generate the CC list ?
 
-Thanks,
-
-SeongJae Park
-
-
+Thanks
+Angus
