@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5313C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E5FC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F8BA20865
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B17B20863
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412914;
-	bh=SQ88NzCVo4FfYtk3jHrQFqZQpHL9QPX0q0E6FyiuBbE=;
+	s=default; t=1575412917;
+	bh=FfefrJbWEyx89dWQUGF9mYlUXuopa8fzSZPZ4K0dL9Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QUWptOgids8y4WjuyKZxfg/tmHaSimVQqypQy2T0igcvrie7LCeF17xjtv/d3jKEG
-	 HvmgTqnKuW1c16PBiwahWg1sgkG/HcT8AIZjj1UhK/Ytz8WWybNp6Bi87Ao4RPg95l
-	 5JxNxXqYjnOH5bBU1b+93ic7WcwLLhAWyS+dpw18=
+	b=YpIz0FpyTTn9hfw1re5vD5bTFvoAvYcMnP3mBdVP8H0F+tj08xsAZd8kS+H6QxmrS
+	 ArxSA4vVcy+QDINfp5ZTjiRctW0O+ufpfv31DyH+IIIG96ivA3Y4OSPfii/6Tm1Vnt
+	 qcLIqo97ejwXZRFJRheaWh2LMquhzaF4vQ+OMus8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728600AbfLCWlw (ORCPT
+        id S1728606AbfLCWl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:41:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56394 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:41:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728587AbfLCWlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:41:47 -0500
+        id S1728595AbfLCWlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:41:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 307D1206EC;
-        Tue,  3 Dec 2019 22:41:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B39FB2084B;
+        Tue,  3 Dec 2019 22:41:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412906;
-        bh=SQ88NzCVo4FfYtk3jHrQFqZQpHL9QPX0q0E6FyiuBbE=;
+        s=default; t=1575412909;
+        bh=FfefrJbWEyx89dWQUGF9mYlUXuopa8fzSZPZ4K0dL9Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UHPScInDULYuCVQpvr9CM9oIvN4nZKLLrXeHrSnx4lqXibipTWoxNZMqXGnXFXDSU
-         tzrOSfIBCAB+JSHK71g3c6NErOzr6aZa4elAxM7Ib5OzkhSP1aa1+OlZOvP5r0GCfr
-         TwXjh0rx3eSMkn2C5sa0MMytbsci2VxISrgHSck4=
+        b=xk0XMSI6bmdQylxGvVBv/+D4vlBpBi5sueig0JhKeFXXRHcv/u/yG74vCttOI0Evq
+         nmqvW9vb6i024FE+IPIMPV3RKNBC1GD6DduH4pqEfuCVkYTQfmjTeTHnnP6opW5NUs
+         E0M1cIB9nTVU6jQq8OaXrJ9RBWm8AI1VP1TpODuA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Timo=20Schl=C3=BC=C3=9Fler?= <schluessler@krause.de>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
+        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Keith Busch <kbusch@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 062/135] can: mcp251x: mcp251x_restart_work_handler(): Fix potential force_quit race condition
-Date:   Tue,  3 Dec 2019 23:35:02 +0100
-Message-Id: <20191203213023.079828697@linuxfoundation.org>
+Subject: [PATCH 5.3 063/135] nvme-rdma: fix a segmentation fault during module unload
+Date:   Tue,  3 Dec 2019 23:35:03 +0100
+Message-Id: <20191203213023.672786472@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -61,44 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Timo Schlüßler <schluessler@krause.de>
+From: Max Gurtovoy <maxg@mellanox.com>
 
-[ Upstream commit 27a0e54bae09d2dd023a01254db506d61cc50ba1 ]
+[ Upstream commit 9ad9e8d6ca29c1446d81c6518ae634a2141dfd22 ]
 
-In mcp251x_restart_work_handler() the variable to stop the interrupt
-handler (priv->force_quit) is reset after the chip is restarted and thus
-a interrupt might occur.
+In case there are controllers that are not associated with any RDMA
+device (e.g. during unsuccessful reconnection) and the user will unload
+the module, these controllers will not be freed and will access already
+freed memory. The same logic appears in other fabric drivers as well.
 
-This patch fixes the potential race condition by resetting force_quit
-before enabling interrupts.
-
-Signed-off-by: Timo Schlüßler <schluessler@krause.de>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Fixes: 87fd125344d6 ("nvme-rdma: remove redundant reference between ib_device and tagset")
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/spi/mcp251x.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvme/host/rdma.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/can/spi/mcp251x.c b/drivers/net/can/spi/mcp251x.c
-index 5d6f8977df3f8..c0ee0fa909702 100644
---- a/drivers/net/can/spi/mcp251x.c
-+++ b/drivers/net/can/spi/mcp251x.c
-@@ -759,6 +759,7 @@ static void mcp251x_restart_work_handler(struct work_struct *ws)
- 	if (priv->after_suspend) {
- 		mcp251x_hw_reset(spi);
- 		mcp251x_setup(net, spi);
-+		priv->force_quit = 0;
- 		if (priv->after_suspend & AFTER_SUSPEND_RESTART) {
- 			mcp251x_set_normal_mode(spi);
- 		} else if (priv->after_suspend & AFTER_SUSPEND_UP) {
-@@ -770,7 +771,6 @@ static void mcp251x_restart_work_handler(struct work_struct *ws)
- 			mcp251x_hw_sleep(spi);
- 		}
- 		priv->after_suspend = 0;
--		priv->force_quit = 0;
- 	}
+diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
+index 842ef876724f7..439e66769f250 100644
+--- a/drivers/nvme/host/rdma.c
++++ b/drivers/nvme/host/rdma.c
+@@ -2118,8 +2118,16 @@ err_unreg_client:
  
- 	if (priv->restart_tx) {
+ static void __exit nvme_rdma_cleanup_module(void)
+ {
++	struct nvme_rdma_ctrl *ctrl;
++
+ 	nvmf_unregister_transport(&nvme_rdma_transport);
+ 	ib_unregister_client(&nvme_rdma_ib_client);
++
++	mutex_lock(&nvme_rdma_ctrl_mutex);
++	list_for_each_entry(ctrl, &nvme_rdma_ctrl_list, list)
++		nvme_delete_ctrl(&ctrl->ctrl);
++	mutex_unlock(&nvme_rdma_ctrl_mutex);
++	flush_workqueue(nvme_delete_wq);
+ }
+ 
+ module_init(nvme_rdma_init_module);
 -- 
 2.20.1
 
