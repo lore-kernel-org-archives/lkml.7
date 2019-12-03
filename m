@@ -2,92 +2,162 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1BBC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A55C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83E1B20640
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85D5020640
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:49:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbfLCIsy (ORCPT
+        id S1726179AbfLCItk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 03:48:54 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:46274 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfLCIsy (ORCPT
+        Tue, 3 Dec 2019 03:49:40 -0500
+Received: from retiisi.org.uk ([95.216.213.190]:45658 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725773AbfLCItk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 03:48:54 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4700E1500CC09;
-        Tue,  3 Dec 2019 00:48:53 -0800 (PST)
-Date:   Tue, 03 Dec 2019 00:48:50 -0800 (PST)
-Message-Id: <20191203.004850.2142378371017096251.davem@davemloft.net>
-To:     linyunsheng@huawei.com
-Cc:     tanhuazhong@huawei.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, salil.mehta@huawei.com,
-        yisen.zhuang@huawei.com, linuxarm@huawei.com,
-        jakub.kicinski@netronome.com
-Subject: Re: [PATCH net 1/3] net: hns3: fix for TX queue not restarted
- problem
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <2f017ae3-ddec-928c-16b7-5ed59e6fc8d6@huawei.com>
-References: <1575342535-2981-2-git-send-email-tanhuazhong@huawei.com>
-        <20191202.192539.1290120247243731738.davem@davemloft.net>
-        <2f017ae3-ddec-928c-16b7-5ed59e6fc8d6@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 03 Dec 2019 00:48:53 -0800 (PST)
+        Tue, 3 Dec 2019 03:49:40 -0500
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 3856E634C87;
+        Tue,  3 Dec 2019 10:48:51 +0200 (EET)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1ic3rW-0001NT-PP; Tue, 03 Dec 2019 10:48:50 +0200
+Date:   Tue, 3 Dec 2019 10:48:50 +0200
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, c.barrett@framos.com,
+        a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH 2/5] media: i2c: imx290: Add support for test pattern
+ generation
+Message-ID: <20191203084850.GA5282@valkosipuli.retiisi.org.uk>
+References: <20191129190541.30315-1-manivannan.sadhasivam@linaro.org>
+ <20191129190541.30315-3-manivannan.sadhasivam@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191129190541.30315-3-manivannan.sadhasivam@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
-Date: Tue, 3 Dec 2019 12:28:22 +0800
+Hi Manivannan,
 
-> On 2019/12/3 11:25, David Miller wrote:
->> From: Huazhong Tan <tanhuazhong@huawei.com>
->> Date: Tue, 3 Dec 2019 11:08:53 +0800
->> 
->>> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
->>> index ba05368..b2bb8e2 100644
->>> --- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
->>> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
->>> @@ -1286,13 +1286,16 @@ static bool hns3_skb_need_linearized(struct sk_buff *skb, unsigned int *bd_size,
->>>  	return false;
->>>  }
->>>  
->>> -static int hns3_nic_maybe_stop_tx(struct hns3_enet_ring *ring,
->>> +static int hns3_nic_maybe_stop_tx(struct net_device *netdev,
->>>  				  struct sk_buff **out_skb)
->>>  {
->>> +	struct hns3_nic_priv *priv = netdev_priv(netdev);
->>>  	unsigned int bd_size[HNS3_MAX_TSO_BD_NUM + 1U];
->>>  	struct sk_buff *skb = *out_skb;
->>> +	struct hns3_enet_ring *ring;
->>>  	unsigned int bd_num;
->>>  
->>> +	ring = &priv->ring[skb->queue_mapping];
->> 
->> Please just pass the ring pointer into hns3_nic_maybe_stop_tx() instead of
->> needlessly recalculating it.
+On Sat, Nov 30, 2019 at 12:35:38AM +0530, Manivannan Sadhasivam wrote:
+> Add support for generating following test patterns by IMX290:
 > 
-> The reason that I am passing the netdev instead of ring pointer is
-> that the netif_start_subqueue() need a netdev parameter, and the
-> netdev can not be derived from the ring pointer.
+> * Sequence Pattern 1
+> * Horizontal Color-bar Chart
+> * Vertical Color-bar Chart
+> * Sequence Pattern 2
+> * Gradation Pattern 1
+> * Gradation Pattern 2
+> * 000/555h Toggle Pattern
 > 
-> Do you think it is better to keep it as this patch, or add a new
-> netdevice parameter? like below:
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  drivers/media/i2c/imx290.c | 41 +++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 40 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
+> index 1d49910937fb..e218c959a729 100644
+> --- a/drivers/media/i2c/imx290.c
+> +++ b/drivers/media/i2c/imx290.c
+> @@ -26,12 +26,19 @@
+>  #define IMX290_REGHOLD 0x3001
+>  #define IMX290_XMSTA 0x3002
+>  #define IMX290_FR_FDG_SEL 0x3009
+> +#define IMX290_BLKLEVEL_LOW 0x300a
+> +#define IMX290_BLKLEVEL_HIGH 0x300b
+>  #define IMX290_GAIN 0x3014
+>  #define IMX290_HMAX_LOW 0x301c
+>  #define IMX290_HMAX_HIGH 0x301d
+> +#define IMX290_PGCTRL 0x308c
+>  #define IMX290_PHY_LANE_NUM 0x3407
+>  #define IMX290_CSI_LANE_MODE 0x3443
+>  
+> +#define IMX290_PGCTRL_REGEN BIT(0)
+> +#define IMX290_PGCTRL_THRU BIT(1)
+> +#define IMX290_PGCTRL_MODE(n) ((n) << 4)
+> +
+>  /* HMAX fields */
+>  #define IMX290_HMAX_2_1920 0x1130
+>  #define IMX290_HMAX_4_1920 0x0898
+> @@ -99,6 +106,17 @@ static const struct regmap_config imx290_regmap_config = {
+>  	.cache_type = REGCACHE_RBTREE,
+>  };
+>  
+> +static const char * const imx290_test_pattern_menu[] = {
+> +	"Disabled",
+> +	"Sequence Pattern 1",
+> +	"Horizontal Color-bar Chart",
+> +	"Vertical Color-bar Chart",
+> +	"Sequence Pattern 2",
+> +	"Gradation Pattern 1",
+> +	"Gradation Pattern 2",
+> +	"000/555h Toggle Pattern",
+> +};
+> +
+>  static const struct imx290_regval imx290_global_init_settings[] = {
+>  	{ 0x3007, 0x00 },
+>  	{ 0x3018, 0x65 },
+> @@ -394,6 +412,22 @@ static int imx290_set_ctrl(struct v4l2_ctrl *ctrl)
+>  	case V4L2_CID_GAIN:
+>  		ret = imx290_set_gain(imx290, ctrl->val);
+>  		break;
+> +	case V4L2_CID_TEST_PATTERN:
+> +		if (ctrl->val) {
+> +			imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW, 0x00);
+> +			imx290_write_reg(imx290, IMX290_BLKLEVEL_HIGH, 0x00);
+> +			mdelay(10);
 
-Just add the netdev parameter, in addition to the ring parameter.
+Any particular reason for a busy loop instead of sleeping? Same below.
 
-All arguments fit in the register argument passing conventions of
-various cpus so the cost of adding the parameter is zero.
+> +			imx290_write_reg(imx290, IMX290_PGCTRL,
+> +					 (u8)(IMX290_PGCTRL_REGEN |
+> +					 IMX290_PGCTRL_THRU |
+> +					 IMX290_PGCTRL_MODE(ctrl->val)));
+> +		} else {
+> +			imx290_write_reg(imx290, IMX290_PGCTRL, 0x00);
+> +			mdelay(10);
+> +			imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW, 0x3c);
+> +			imx290_write_reg(imx290, IMX290_BLKLEVEL_HIGH, 0x00);
+> +		}
+> +		break;
+>  	default:
+>  		ret = -EINVAL;
+>  		break;
+> @@ -878,7 +912,7 @@ static int imx290_probe(struct i2c_client *client)
+>  
+>  	mutex_init(&imx290->lock);
+>  
+> -	v4l2_ctrl_handler_init(&imx290->ctrls, 3);
+> +	v4l2_ctrl_handler_init(&imx290->ctrls, 4);
+>  
+>  	v4l2_ctrl_new_std(&imx290->ctrls, &imx290_ctrl_ops,
+>  			  V4L2_CID_GAIN, 0, 72, 1, 0);
+> @@ -896,6 +930,11 @@ static int imx290_probe(struct i2c_client *client)
+>  					       INT_MAX, 1,
+>  					       imx290_modes[0].pixel_rate);
+>  
+> +	v4l2_ctrl_new_std_menu_items(&imx290->ctrls, &imx290_ctrl_ops,
+> +				     V4L2_CID_TEST_PATTERN,
+> +				     ARRAY_SIZE(imx290_test_pattern_menu) - 1,
+> +				     0, 0, imx290_test_pattern_menu);
+> +
+>  	imx290->sd.ctrl_handler = &imx290->ctrls;
+>  
+>  	if (imx290->ctrls.error) {
+
+-- 
+Sakari Ailus
