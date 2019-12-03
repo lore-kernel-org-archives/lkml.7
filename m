@@ -2,126 +2,105 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FAFC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 078C9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01002206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9D0F2068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:40:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VDs4IfsA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cUiQ2WxJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727476AbfLCTge (ORCPT
+        id S1727060AbfLCTkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 14:36:34 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36911 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727376AbfLCTge (ORCPT
+        Tue, 3 Dec 2019 14:40:36 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:46015 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbfLCTkf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 14:36:34 -0500
-Received: by mail-pf1-f193.google.com with SMTP id s18so2345939pfm.4
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 11:36:34 -0800 (PST)
+        Tue, 3 Dec 2019 14:40:35 -0500
+Received: by mail-io1-f68.google.com with SMTP id i11so5062152ioi.12
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 11:40:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ImBkBwGZpmPmH6tbvsUiq2gNt6SbxRy0Wfq0GttqIxw=;
-        b=VDs4IfsAcHd+PFPQB6HWeiUp+gVdvGdE0+ewTVhg+PamnAq6CocOa6xGAnVYdesdbK
-         8/1gxFB8GEOJif8L/7/IgpFUYjEFhiSwQpK8d6r/eMM3VvJ3Wx1gKHDJo961Lmsvu53A
-         DBC+YeIz3pO+6nSSQ+q0OUXTcA8kx4+ejcyAK+nb/berHfg9gLOAKu/jbJSOnQMR/nxg
-         vCoaLVtaLD+WMERpmAQG38l6WVmO0+HM6pURwijBkvNUmLLdFWMLdOdXTPiRsDJTjUl4
-         X51Pe1cNkK+f3YwHDUH/ZmsN4S8mvVDME0gIiBm2HF1er5CzgRmreULwOViwIERnArgJ
-         pnBQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8ch+WNijaY6AsPxm0+XePiTtapq06gZNm+FnTtW+Yvk=;
+        b=cUiQ2WxJYfgxGRtIYYrBFgideFa64zwJVC0xM+vPn1heDbtP8PS8yhn2SslWuKeDcv
+         qhLffbJ3Uo+Xo+PBrM9d1srYRC+HpClcuPS7jDcp7nCHYvNKj3tAiPHBPOeKB6nyEJgr
+         hAziOs01GF/Nm9RN1Ac/APBu0vvoX7TLuXjbEo16RDF+snyauxsyRnPMV36z/iiP3SDn
+         hKDznvFTSRzqAqz2WkQLpDHNKsS+cvsRHjWorCY9fY2HMWbBfkQv7Akz/++xiyUkfxYF
+         soTgico8aclq+HXraOhqfo7I5eaUa1BR59m74mMTlpG6jLAnZo16mBg2DDLjOz1EzXtX
+         1Nwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ImBkBwGZpmPmH6tbvsUiq2gNt6SbxRy0Wfq0GttqIxw=;
-        b=ZC4zm48R0jlTC6qLFEjLRA1veUcPozklqPrThhhGWLO0KJhj4OaKZyEk+7CNOoK4oY
-         72liH47ZtvGPfUAYGlD3zGXVFmq6AF/rA257nELpcVdr1tang+mOKa3Fa2rSAWrlTFIS
-         +iYJ9O3VYfbSjpvX7goAqvWLsy4OV6pkuFIT6cuLqxRBLW9MJIEwU24O8tf7XwlsK5Sq
-         4lmpGhQ7ttGUP0Gye6anSqfWf1TpeNILGNwXMeQimk/HK8TteAqJoArx47vXR7sZiNze
-         bSvty0y2zxaWruDPlvqkYzsqfK0cAlQ/rup7Z0jEsmsVlKXIpBOzGMKxp3lY+2dymSsu
-         kCqQ==
-X-Gm-Message-State: APjAAAVRhRUj2YlkNJk0YA8gvUAIhhXUFqfw0QMmumaundNaqaSH1bFS
-        rHhDhAGCZ6wZjtN9gOugvBc=
-X-Google-Smtp-Source: APXvYqxt3hAhX2A8YwXedj6bpmagjXVtBdnukYYs03DbWi3z8mJFVPf83FkPpuxxxwzxN3TQrbIu9g==
-X-Received: by 2002:a65:6381:: with SMTP id h1mr7228654pgv.332.1575401793238;
-        Tue, 03 Dec 2019 11:36:33 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id u4sm3767788pjb.31.2019.12.03.11.36.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 11:36:32 -0800 (PST)
-Date:   Tue, 3 Dec 2019 11:36:30 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Stephen Oberholtzer <stevie@qrpff.net>
-Cc:     Benson Leung <bleung@chromium.org>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC] chromeos_laptop: Make touchscreen work on C720
-Message-ID: <20191203193630.GK50317@dtor-ws>
-References: <CAD_xR9dGuVLsZf1P3C-x7L8_WVkHHMfQCKdvR_ZRkeBXCOxW_w@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8ch+WNijaY6AsPxm0+XePiTtapq06gZNm+FnTtW+Yvk=;
+        b=fgzlccU8fNwb48PMiJn78ZDoHfHCvfwiME7dQBDeOcdTwCwGTsr6Urskex5gG4zMSH
+         XmAC119hQPWMA1QjLW/Ww1Y36VFPPzPjShxe2wHc/TthbJQ7DrZx02lkvl5Iaa/zqdm7
+         SUfMcK0fzvSDw+jT8yyu5HqX2oVNZ2/ebWccW4MY3ZxbqlY+2Pa8bAr8k+fLWXoup9ki
+         B7T9W6LhA0RJC6SR0dPAFX4jLkmEZw+owOFoD1sumPUU2lcLPYswyrnZetBwceHsV3Mg
+         rPlogf7AaW8hwcjAEHF5GXItXTfSStCXaxPOumm5GU8W1CEqDZ57n3336xhKQGmVkGuz
+         EdtQ==
+X-Gm-Message-State: APjAAAWmih74yUne5By8Q7GYdniDri+GT5dN8qbiMaj1NEBgQ56iKcl3
+        /0BayU7HCdDC085wTPTILInOe/dkA04a8S2BDDiMGg==
+X-Google-Smtp-Source: APXvYqycuBVBV4ixbORLjq5bU2odtfEntOXSTXVTJDzP7mv/SVY3vXetQWjJOUPobARr4NVuoGg3ywXDKlHjyRak6ng=
+X-Received: by 2002:a5e:df06:: with SMTP id f6mr3715528ioq.84.1575402034437;
+ Tue, 03 Dec 2019 11:40:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD_xR9dGuVLsZf1P3C-x7L8_WVkHHMfQCKdvR_ZRkeBXCOxW_w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191203004043.174977-1-matthewgarrett@google.com>
+ <CACdnJus7nHdr4p4H1j5as9eB=FG-uX+wy_tjvTQ5ObErDJHdow@mail.gmail.com> <CAKv+Gu8emrf7WbTyGc8QDykX_hZbrVtxJKkRVbGFhd8rd13yww@mail.gmail.com>
+In-Reply-To: <CAKv+Gu8emrf7WbTyGc8QDykX_hZbrVtxJKkRVbGFhd8rd13yww@mail.gmail.com>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Tue, 3 Dec 2019 11:40:23 -0800
+Message-ID: <CACdnJusMeC+G3wq_oDGTYi1CBMWDiuq4NdANTBmhNBTDu5zCug@mail.gmail.com>
+Subject: Re: [PATCH] [EFI,PCI] Allow disabling PCI busmastering on bridges
+ during boot
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Laszlo Ersek <lersek@redhat.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+On Tue, Dec 3, 2019 at 3:54 AM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
 
-On Tue, Dec 03, 2019 at 11:03:18AM -0500, Stephen Oberholtzer wrote:
-> From 627be71ee77f4fc20cdb55c6e0a06826fb43ca9d Mon Sep 17 00:00:00 2001
-> From: Stephen Oberholtzer <stevie@qrpff.net>
-> Date: Tue, 3 Dec 2019 02:20:28 -0500
-> Subject: [RFC] chromeos_laptop: Make touchscreen work on C720
-> 
-> I have an old Acer C720 Chromebook reflashed with MrChromebox, running
-> Debian.  When I did an upgrade, the touchscreen stopped working; I traced
-> it to the kernel.
-> 
-> After six hours of bisecting -- if anyone can tell me how to make a kernel
-> build take less than 2 hours of CPU time while bisecting, I'd greatly
-> appreciate it -- I tracked the problem to commit 7cf432bf0586
-> ("Input: atmel_mxt_ts - require device properties present when probing").
-> 
-> Looking at https://lkml.org/lkml/2018/5/3/955, it appears that the idea
-> was to reassign the responsibility for setting up ACPI data for
-> atmel_mxt_ts into chromeos_laptop, which makes a lot of sense, as that
-> would tidy up some potential maintenance issues.
-> 
-> However, that doesn't actually work.  The chromeos_laptop code appears to
-> categorize every Chromebook as exactly one of the following:
-> 
-> (A) Having I2C devices (declared using DECLARE_CROS_LAPTOP)
-> (B) Requiring ACPI munging (declared using DECLARE_ACPI_CROS_LAPTOP)
-> 
-> There's some stuff about a board_info.properties that looks like it's meant
-> to do the job for I2C devices, but it doesn't seem to do anything;
-> it *definitely* doesn't do what the atmel_mxt_ts driver is expecting.
-> 
-> On the other hand, when I apply the following patch to a recent kernel
-> (5.2 is the one I tested), my touchscreen works again.
-> 
-> I'm still not sure if the appropriate solution is to ensure that the
-> ACPI properties are set, or if atmel_mxt_ts should be checking both
-> ACPI properties and the I2C board_info.properties, however.
+> There is no reason this shouldn't apply to ARM, but disabling bus
+> mastering like that before the drivers themselves get a chance to do
+> so is likely to cause trouble. Network devices or storage controllers
+> that are still running and have live descriptor rings in DMA memory
+> shouldn't get the rug pulled from under their feet like that by
+> blindly disabling the BM attribute on all root ports before their
+> drivers have had the opportunity to do this cleanly.
 
-Acer C720 did not use ACPI to describe its devices, it relied on static
-board support to instantiate touchscreen and trackpad and other devices.
-Does the new kernel work with the original firmware (it should as that's
-what it's been tested with)?
+Yes, whether this causes problems is going to be influenced by the
+behaviour of the hardware on the system. That's why I'm not defaulting
+it to being enabled :)
 
-I see that MrChromebox BIOS declares the peripherals on Peppy via ACPI.
-I'd recommend reaching out and ask to update the binding (maybe switch
-from ATML0001 to PRP0001 and full OF-style binding to avoid confusion).
+> One trick we implemented in EDK2 for memory encryption was to do the
+> following (Laszlo, mind correcting me here if I am remembering this
+> wrong?)
+> - create an event X
+> - register an AtExitBootServices event that signals event X in its handler
+> - in the handler of event X, iterate over all PPBs to clear the bus
+> master attribute
+> - for bonus points, do the same for the PCIe devices themselves,
+> because root ports are known to exist that entirely ignore the BM
+> attribute
+>
+> This way, event X should get handled after all the drivers' EBS event
+> handlers have been called.
 
-Thanks.
-
--- 
-Dmitry
+Can we guarantee that this happens before IOMMU state teardown? I
+don't think there's a benefit to clearing the bit on endpoint devices,
+if they're malicious they're just going to turn it back on anyway.
