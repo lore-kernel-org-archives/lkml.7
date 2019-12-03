@@ -2,125 +2,114 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95712C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D48C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71D1620640
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 845C720659
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:48:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbfLCKqD (ORCPT
+        id S1726482AbfLCKsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 05:46:03 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:54071 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfLCKqD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 05:46:03 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1ic5gu-000196-VF; Tue, 03 Dec 2019 11:46:00 +0100
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <sha@pengutronix.de>)
-        id 1ic5gs-0007aN-U8; Tue, 03 Dec 2019 11:45:58 +0100
-Date:   Tue, 3 Dec 2019 11:45:58 +0100
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     naga suresh kumar <nagasureshkumarrelli@gmail.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Naga Sureshkumar Relli <nagasure@xilinx.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Michal Simek <michals@xilinx.com>,
-        siva durga paladugu <siva.durga.paladugu@xililnx.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>
-Subject: Re: ubifs mount failure
-Message-ID: <20191203104558.vpqav3oxsydoe4aw@pengutronix.de>
-References: <MN2PR02MB5727000CBE70BAF31F60FEE4AF420@MN2PR02MB5727.namprd02.prod.outlook.com>
- <20191203084134.tgzir4mtekpm5xbs@pengutronix.de>
- <MN2PR02MB57272E3343CA62ADBA0F97E5AF420@MN2PR02MB5727.namprd02.prod.outlook.com>
- <614898763.105471.1575364223372.JavaMail.zimbra@nod.at>
- <CALgLF9KPAk_AsecnTMmbdF5qbgqXe7HNOrNariNVbhSr6FVN2g@mail.gmail.com>
+        Tue, 3 Dec 2019 05:48:11 -0500
+Received: from mga03.intel.com ([134.134.136.65]:10649 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbfLCKsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 05:48:11 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Dec 2019 02:48:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,272,1571727600"; 
+   d="scan'208";a="293758935"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 03 Dec 2019 02:48:10 -0800
+Received: from [10.125.253.16] (abudanko-mobl.ccr.corp.intel.com [10.125.253.16])
+        by linux.intel.com (Postfix) with ESMTP id 3A5195802BC;
+        Tue,  3 Dec 2019 02:48:08 -0800 (PST)
+Subject: Re: [PATCH v4 3/3] perf record: adapt affinity to machines with #CPUs
+ > 1K
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <f1e6e809-9e41-e410-57eb-1740512285a1@linux.intel.com>
+ <2095b034-bf53-c374-0e34-adc006b00fbb@linux.intel.com>
+ <20191203101252.GD17468@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <cc0dd7dc-400f-7097-b371-e895c016aaae@linux.intel.com>
+Date:   Tue, 3 Dec 2019 13:48:05 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALgLF9KPAk_AsecnTMmbdF5qbgqXe7HNOrNariNVbhSr6FVN2g@mail.gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 11:45:00 up 148 days, 16:55, 148 users,  load average: 0.14, 0.11,
- 0.12
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20191203101252.GD17468@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 04:06:12PM +0530, naga suresh kumar wrote:
-> Hi Richard,
+
+
+On 03.12.2019 13:12, Jiri Olsa wrote:
+> On Mon, Dec 02, 2019 at 09:58:48AM +0300, Alexey Budankov wrote:
 > 
-> On Tue, Dec 3, 2019 at 2:40 PM Richard Weinberger <richard@nod.at> wrote:
-> >
-> > ----- Ursprüngliche Mail -----
-> > > Von: "Naga Sureshkumar Relli" <nagasure@xilinx.com>
-> > > https://elixir.bootlin.com/linux/v5.4/source/fs/ubifs/sb.c#L164
-> > > we are trying to allocate 4325376 (~4MB)
-> >
-> > 4MiB? Is ->min_io_size that large?
-> if you see https://elixir.bootlin.com/linux/latest/source/fs/ubifs/sb.c#L164
-> The size is actually ALIGN(tmp, c->min_io_size).
-> Here tmp is of 4325376 Bytes and min_io_size is 16384 Bytes
+> SNIP
+> 
+>>  
+>> -static void build_node_mask(int node, cpu_set_t *mask)
+>> +static void build_node_mask(int node, struct mmap_cpu_mask *mask)
+>>  {
+>>  	int c, cpu, nr_cpus;
+>>  	const struct perf_cpu_map *cpu_map = NULL;
+>> @@ -240,17 +242,23 @@ static void build_node_mask(int node, cpu_set_t *mask)
+>>  	for (c = 0; c < nr_cpus; c++) {
+>>  		cpu = cpu_map->map[c]; /* map c index to online cpu index */
+>>  		if (cpu__get_node(cpu) == node)
+>> -			CPU_SET(cpu, mask);
+>> +			set_bit(cpu, mask->bits);
+>>  	}
+>>  }
+>>  
+>> -static void perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_params *mp)
+>> +static int perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_params *mp)
+>>  {
+>> -	CPU_ZERO(&map->affinity_mask);
+>> +	map->affinity_mask.nbits = cpu__max_cpu();
+>> +	map->affinity_mask.bits = bitmap_alloc(map->affinity_mask.nbits);
+>> +	if (!map->affinity_mask.bits)
+>> +		return -1;
+> 
+> hum, this one should be also behind (rec->opts.affinity != PERF_AFFINITY_SYS)
+> condition, right? sry I haven't noticed that before..
 
-'tmp' contains bogus values. Try this:
+That has not been so far, but, probably like this:
 
-----------------------------8<--------------------------------
-
-From 34f687fce189085f55706b4cddcb288a08f4ee06 Mon Sep 17 00:00:00 2001
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Date: Tue, 3 Dec 2019 11:41:20 +0100
-Subject: [PATCH] ubifs: Fix wrong memory allocation
-
-In create_default_filesystem() when we allocate the idx node we must use
-the idx_node_size we calculated just one line before, not tmp, which
-contains completely other data.
-
-Fixes: c4de6d7e4319 ("ubifs: Refactor create_default_filesystem()")
-Reported-by: Naga Sureshkumar Relli <nagasure@xilinx.com>
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
----
- fs/ubifs/sb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/ubifs/sb.c b/fs/ubifs/sb.c
-index a551eb3e9b89..6681c18e52b8 100644
---- a/fs/ubifs/sb.c
-+++ b/fs/ubifs/sb.c
-@@ -161,7 +161,7 @@ static int create_default_filesystem(struct ubifs_info *c)
- 	sup = kzalloc(ALIGN(UBIFS_SB_NODE_SZ, c->min_io_size), GFP_KERNEL);
- 	mst = kzalloc(c->mst_node_alsz, GFP_KERNEL);
- 	idx_node_size = ubifs_idx_node_sz(c, 1);
--	idx = kzalloc(ALIGN(tmp, c->min_io_size), GFP_KERNEL);
-+	idx = kzalloc(ALIGN(idx_node_size, c->min_io_size), GFP_KERNEL);
- 	ino = kzalloc(ALIGN(UBIFS_INO_NODE_SZ, c->min_io_size), GFP_KERNEL);
- 	cs = kzalloc(ALIGN(UBIFS_CS_NODE_SZ, c->min_io_size), GFP_KERNEL);
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index 7f573f646431..832d2cb94b2c 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -269,7 +269,8 @@ int mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu)
+                return -1;
+        }
  
--- 
-2.24.0
+-       if (perf_mmap__setup_affinity_mask(map, mp)) {
++       if (mp->affinity != PERF_AFFINITY_SYS &&
++               perf_mmap__setup_affinity_mask(map, mp)) {
+                pr_debug2("failed to alloc mmap affinity mask, error %d\n",
+                          errno);
+                return -1;
 
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Thanks,
+Alexey
