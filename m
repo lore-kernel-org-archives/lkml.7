@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB0EC43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3FBC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ED9620865
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E54821555
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413770;
-	bh=P5MK6TYywY9tI5CraYsnaK8zbolAgZwzdiJIM/eB5SE=;
+	s=default; t=1575413773;
+	bh=WR6T0mnOrqv6UHDVnUtOymOZWoXeUtFqekFtmD/p8Bo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hSrHy3diboiozipyvSFmF/knmhMCkLD/+hNCyuAaVnAnXwFGORlgTya6ehfCAAjkd
-	 RJm8fzRUPJOfXE7stP6k5j8ScBgyt8E2/BelAi6iQvVVPvIanVGoGpxJ4sTde/EJ8J
-	 2enx8NsBEsL+o7KgsLJUEbJCizhkCr5mxSNuJZfg=
+	b=GudK1NYJ2dGTZwHRlpWDSBvPJYa/SN5vcb1+UsPkXuVHnOtpPrAqQkCFXURkAO5Js
+	 0W6MJqOiOgYheYtzK9qvYXqFgurQlH80YByoyBL1atDrWLjtFMq1lqew87DlRhp5Cx
+	 KH/FwjIHwiz2mrHh4dKPgTzV8Tl45WUmB12AevRc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbfLCW4J (ORCPT
+        id S1729852AbfLCW4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:56:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50722 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:56:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730236AbfLCW4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:56:02 -0500
+        id S1730234AbfLCW4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:56:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83DF220656;
-        Tue,  3 Dec 2019 22:56:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD48820865;
+        Tue,  3 Dec 2019 22:56:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413762;
-        bh=P5MK6TYywY9tI5CraYsnaK8zbolAgZwzdiJIM/eB5SE=;
+        s=default; t=1575413767;
+        bh=WR6T0mnOrqv6UHDVnUtOymOZWoXeUtFqekFtmD/p8Bo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EMAzsjds5dOJRHFCdzUHkJKWTd9Hf+TlA41B854CmTZ+SuS1AO25znXCDqYQkcVDS
-         /BueBgugyUVR0nG2dSK/QMaHM6jOhT61u7w9ouc8qq/d44rqkh+hBTB8l0A9t23uC6
-         kAP/Xg1lHVOEnyFiNFIy5XhcNRkYRhjAyz8k7d6g=
+        b=ypF/tfUwhl2Gd5OiEBaboING0ts6FFutU9F7cXc48VM9Ah3ccb7hmpwHg+Ommoh6l
+         opPyYXaooDHc4ujVy73CDHGIQKBLGPeEigLf0ZCrh3NVLFk1nJ05TOHDBM3yxZX0+m
+         5QS8HXq2TMpBh8tYdeqcokx9mVzTHcqu2iBfO0ek=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 215/321] net/core/neighbour: tell kmemleak about hash tables
-Date:   Tue,  3 Dec 2019 23:34:41 +0100
-Message-Id: <20191203223438.305235221@linuxfoundation.org>
+Subject: [PATCH 4.19 252/321] ACPI / APEI: Switch estatus pool to use vmalloc memory
+Date:   Tue,  3 Dec 2019 23:35:18 +0100
+Message-Id: <20191203223440.247127016@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,81 +61,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: James Morse <james.morse@arm.com>
 
-[ Upstream commit 85704cb8dcfd88d351bfc87faaeba1c8214f3177 ]
+[ Upstream commit 0ac234be1a9497498e57d958f4251f5257b116b4 ]
 
-This fixes false-positive kmemleak reports about leaked neighbour entries:
+The ghes code is careful to parse and round firmware's advertised
+memory requirements for CPER records, up to a maximum of 64K.
+However when ghes_estatus_pool_expand() does its work, it splits
+the requested size into PAGE_SIZE granules.
 
-unreferenced object 0xffff8885c6e4d0a8 (size 1024):
-  comm "softirq", pid 0, jiffies 4294922664 (age 167640.804s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 20 2c f3 83 ff ff ff ff  ........ ,......
-    08 c0 ef 5f 84 88 ff ff 01 8c 7d 02 01 00 00 00  ..._......}.....
-  backtrace:
-    [<00000000748509fe>] ip6_finish_output2+0x887/0x1e40
-    [<0000000036d7a0d8>] ip6_output+0x1ba/0x600
-    [<0000000027ea7dba>] ip6_send_skb+0x92/0x2f0
-    [<00000000d6e2111d>] udp_v6_send_skb.isra.24+0x680/0x15e0
-    [<000000000668a8be>] udpv6_sendmsg+0x18c9/0x27a0
-    [<000000004bd5fa90>] sock_sendmsg+0xb3/0xf0
-    [<000000008227b29f>] ___sys_sendmsg+0x745/0x8f0
-    [<000000008698009d>] __sys_sendmsg+0xde/0x170
-    [<00000000889dacf1>] do_syscall_64+0x9b/0x400
-    [<0000000081cdb353>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<000000005767ed39>] 0xffffffffffffffff
+This means if firmware generates 5K of CPER records, and correctly
+describes this in the table, __process_error() will silently fail as it
+is unable to allocate more than PAGE_SIZE.
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Switch the estatus pool to vmalloc() memory. On x86 vmalloc() memory
+may fault and be fixed up by vmalloc_fault(). To prevent this call
+vmalloc_sync_all() before an NMI handler could discover the memory.
+
+Signed-off-by: James Morse <james.morse@arm.com>
+Reviewed-by: Borislav Petkov <bp@suse.de>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/neighbour.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/acpi/apei/ghes.c | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/net/core/neighbour.c b/net/core/neighbour.c
-index c52d6e6b341cf..4721793babed5 100644
---- a/net/core/neighbour.c
-+++ b/net/core/neighbour.c
-@@ -18,6 +18,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/slab.h>
-+#include <linux/kmemleak.h>
- #include <linux/types.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-@@ -363,12 +364,14 @@ static struct neigh_hash_table *neigh_hash_alloc(unsigned int shift)
- 	ret = kmalloc(sizeof(*ret), GFP_ATOMIC);
- 	if (!ret)
- 		return NULL;
--	if (size <= PAGE_SIZE)
-+	if (size <= PAGE_SIZE) {
- 		buckets = kzalloc(size, GFP_ATOMIC);
--	else
-+	} else {
- 		buckets = (struct neighbour __rcu **)
- 			  __get_free_pages(GFP_ATOMIC | __GFP_ZERO,
- 					   get_order(size));
-+		kmemleak_alloc(buckets, size, 0, GFP_ATOMIC);
-+	}
- 	if (!buckets) {
- 		kfree(ret);
- 		return NULL;
-@@ -388,10 +391,12 @@ static void neigh_hash_free_rcu(struct rcu_head *head)
- 	size_t size = (1 << nht->hash_shift) * sizeof(struct neighbour *);
- 	struct neighbour __rcu **buckets = nht->hash_buckets;
- 
--	if (size <= PAGE_SIZE)
-+	if (size <= PAGE_SIZE) {
- 		kfree(buckets);
--	else
-+	} else {
-+		kmemleak_free(buckets);
- 		free_pages((unsigned long)buckets, get_order(size));
-+	}
- 	kfree(nht);
+diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+index 0c46b79e31b1e..73177b8a07bd1 100644
+--- a/drivers/acpi/apei/ghes.c
++++ b/drivers/acpi/apei/ghes.c
+@@ -170,40 +170,40 @@ static int ghes_estatus_pool_init(void)
+ 	return 0;
  }
  
+-static void ghes_estatus_pool_free_chunk_page(struct gen_pool *pool,
++static void ghes_estatus_pool_free_chunk(struct gen_pool *pool,
+ 					      struct gen_pool_chunk *chunk,
+ 					      void *data)
+ {
+-	free_page(chunk->start_addr);
++	vfree((void *)chunk->start_addr);
+ }
+ 
+ static void ghes_estatus_pool_exit(void)
+ {
+ 	gen_pool_for_each_chunk(ghes_estatus_pool,
+-				ghes_estatus_pool_free_chunk_page, NULL);
++				ghes_estatus_pool_free_chunk, NULL);
+ 	gen_pool_destroy(ghes_estatus_pool);
+ }
+ 
+ static int ghes_estatus_pool_expand(unsigned long len)
+ {
+-	unsigned long i, pages, size, addr;
+-	int ret;
++	unsigned long size, addr;
+ 
+ 	ghes_estatus_pool_size_request += PAGE_ALIGN(len);
+ 	size = gen_pool_size(ghes_estatus_pool);
+ 	if (size >= ghes_estatus_pool_size_request)
+ 		return 0;
+-	pages = (ghes_estatus_pool_size_request - size) / PAGE_SIZE;
+-	for (i = 0; i < pages; i++) {
+-		addr = __get_free_page(GFP_KERNEL);
+-		if (!addr)
+-			return -ENOMEM;
+-		ret = gen_pool_add(ghes_estatus_pool, addr, PAGE_SIZE, -1);
+-		if (ret)
+-			return ret;
+-	}
+ 
+-	return 0;
++	addr = (unsigned long)vmalloc(PAGE_ALIGN(len));
++	if (!addr)
++		return -ENOMEM;
++
++	/*
++	 * New allocation must be visible in all pgd before it can be found by
++	 * an NMI allocating from the pool.
++	 */
++	vmalloc_sync_all();
++
++	return gen_pool_add(ghes_estatus_pool, addr, PAGE_ALIGN(len), -1);
+ }
+ 
+ static int map_gen_v2(struct ghes *ghes)
 -- 
 2.20.1
 
