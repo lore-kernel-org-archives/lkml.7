@@ -2,109 +2,187 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14428C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EAB4C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D899C20656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:05:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qAfHc5tU"
+	by mail.kernel.org (Postfix) with ESMTP id 4BFA420674
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:05:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575414354;
+	bh=cPUc9BD9WzvMPqJG1za/uFkew6pNIQo4k/jUTu9jzNU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AnMNahaRxEHCNcRIIN3uzi2NxAgXwXOPwu4oYTTWsCWrNU+ZfBADRIxVqv2MHgi3E
+	 UqDGW+wFK0IFhPPeyPq2iCDNTCzmC+9r1Upaii00qIoUcgFLt85R8i3CQEb0ve7xfl
+	 TdzunmpjyVKF1tvueDHgrSiZo5XSlAQyK5F5GGl8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729651AbfLCWtm (ORCPT
+        id S1729713AbfLCXFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:49:42 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:33646 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729447AbfLCWti (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:49:38 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB3MY79D110765;
-        Tue, 3 Dec 2019 22:49:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=uYMuACAdoNAl6fAtZMdOLI9RRVa7NSCuglLVW02y4Vk=;
- b=qAfHc5tUR8AnZ+grEo2Tf/wPWys1CJCprYekENY6UUdzeO4NBXQsRnNdeoRnWFFAY71y
- zNME2blxqhZUPE1kvQ+Ihr5PD+qU8zi40EBdO3+d2s9gzDi4yLhHpTAVHa2IW+pgzXHi
- 1keQKv7Vj9cq3uwGnik3I4uVN2DmKJkT9XP5WXbIuSs9aLwIPwgtb8bDGb+NXPlLJah5
- xY3pUyiGF3oZsrf/NO2W5d+wofNZtqqQM6/Hovpbg0z9eJlB6AQlFtFSBoKiW19uNezl
- t+PbFit8ec8x0s0tlaiTWXZIXEtIzrOWvio2wvKPxaMS116pu63FlYVcD2WY+yhmpxBg 0g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2wkh2raqfm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Dec 2019 22:49:21 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB3MYHoO082700;
-        Tue, 3 Dec 2019 22:49:20 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2wnvqx4r8y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Dec 2019 22:49:20 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xB3MnHeU021188;
-        Tue, 3 Dec 2019 22:49:17 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 03 Dec 2019 14:49:17 -0800
-Date:   Tue, 3 Dec 2019 14:49:15 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        Christoph Hellwig <hch@lst.de>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Bob Peterson <rpeterso@redhat.com>,
-        cluster-devel <cluster-devel@redhat.com>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>
-Subject: Re: [GIT PULL] iomap: small cleanups for 5.5
-Message-ID: <20191203224915.GK7335@magnolia>
-References: <20191203160856.GC7323@magnolia>
- <CAHk-=wh3vin7WyMpBGWxZovGp51wa=U0T=TXqnQPVMBiEpdvsQ@mail.gmail.com>
+        Tue, 3 Dec 2019 18:05:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40834 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729392AbfLCWtj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:49:39 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 856782084B;
+        Tue,  3 Dec 2019 22:49:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575413379;
+        bh=cPUc9BD9WzvMPqJG1za/uFkew6pNIQo4k/jUTu9jzNU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tUP+74BUFEJIFNyPTtOZnJGyGhSINbBB4XIHR1LRo4v8VkxKZJcjzn2nvpet4ii9m
+         T1D3ZjXCgXx70H/k5oJm0NwFd0LBqQ/Wjix/jCsWA/hpBp1cPciHmbDDEHsEo84wK7
+         8dMZo0ogiclDacUT1Sqv7C2KJuWZdsbB25iXc2lY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 105/321] iwlwifi: move iwl_nvm_check_version() into dvm
+Date:   Tue,  3 Dec 2019 23:32:51 +0100
+Message-Id: <20191203223432.615096106@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
+References: <20191203223427.103571230@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wh3vin7WyMpBGWxZovGp51wa=U0T=TXqnQPVMBiEpdvsQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9460 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912030165
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9460 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912030165
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 01:21:01PM -0800, Linus Torvalds wrote:
-> On Tue, Dec 3, 2019 at 8:09 AM Darrick J. Wong <djwong@kernel.org> wrote:
-> > Please pull this series containing some more new iomap code for 5.5.
-> > There's not much this time -- just removing some local variables that
-> > don't need to exist in the iomap directio code.
-> 
-> Hmm. The tag message (which was also in the email thanks to git
-> request-pull) is very misleading.
-> 
-> Pulled, but please check these things.
+From: Luca Coelho <luciano.coelho@intel.com>
 
-Sorry about that sloppiness, I'll avoid that in the future.
+[ Upstream commit 64866e5da1eabd0c52ff45029b245f5465920031 ]
 
---D
+This function is only half-used by mvm (i.e. only the nvm_version part
+matters, since the calibration version is irrelevant), so it's
+pointless to export it from iwlwifi.  If mvm uses this function, it
+has the additional complexity of setting the calib version to a bogus
+value on all cfg structs.
 
->            Linus
+To avoid this, move the function to dvm and make a simple comparison
+of the nvm_version in mvm instead.
+
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/intel/iwlwifi/dvm/main.c | 17 +++++++++++++++++
+ .../wireless/intel/iwlwifi/iwl-eeprom-parse.c | 19 -------------------
+ .../wireless/intel/iwlwifi/iwl-eeprom-parse.h |  5 ++---
+ drivers/net/wireless/intel/iwlwifi/mvm/fw.c   |  4 +++-
+ 4 files changed, 22 insertions(+), 23 deletions(-)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/main.c b/drivers/net/wireless/intel/iwlwifi/dvm/main.c
+index 030482b357a3c..06dd4e81b7374 100644
+--- a/drivers/net/wireless/intel/iwlwifi/dvm/main.c
++++ b/drivers/net/wireless/intel/iwlwifi/dvm/main.c
+@@ -1227,6 +1227,23 @@ static int iwl_eeprom_init_hw_params(struct iwl_priv *priv)
+ 	return 0;
+ }
+ 
++static int iwl_nvm_check_version(struct iwl_nvm_data *data,
++				 struct iwl_trans *trans)
++{
++	if (data->nvm_version >= trans->cfg->nvm_ver ||
++	    data->calib_version >= trans->cfg->nvm_calib_ver) {
++		IWL_DEBUG_INFO(trans, "device EEPROM VER=0x%x, CALIB=0x%x\n",
++			       data->nvm_version, data->calib_version);
++		return 0;
++	}
++
++	IWL_ERR(trans,
++		"Unsupported (too old) EEPROM VER=0x%x < 0x%x CALIB=0x%x < 0x%x\n",
++		data->nvm_version, trans->cfg->nvm_ver,
++		data->calib_version,  trans->cfg->nvm_calib_ver);
++	return -EINVAL;
++}
++
+ static struct iwl_op_mode *iwl_op_mode_dvm_start(struct iwl_trans *trans,
+ 						 const struct iwl_cfg *cfg,
+ 						 const struct iwl_fw *fw,
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.c b/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.c
+index a4c96215933ba..a59bab8345f4e 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.c
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.c
+@@ -928,22 +928,3 @@ iwl_parse_eeprom_data(struct device *dev, const struct iwl_cfg *cfg,
+ 	return NULL;
+ }
+ IWL_EXPORT_SYMBOL(iwl_parse_eeprom_data);
+-
+-/* helper functions */
+-int iwl_nvm_check_version(struct iwl_nvm_data *data,
+-			     struct iwl_trans *trans)
+-{
+-	if (data->nvm_version >= trans->cfg->nvm_ver ||
+-	    data->calib_version >= trans->cfg->nvm_calib_ver) {
+-		IWL_DEBUG_INFO(trans, "device EEPROM VER=0x%x, CALIB=0x%x\n",
+-			       data->nvm_version, data->calib_version);
+-		return 0;
+-	}
+-
+-	IWL_ERR(trans,
+-		"Unsupported (too old) EEPROM VER=0x%x < 0x%x CALIB=0x%x < 0x%x\n",
+-		data->nvm_version, trans->cfg->nvm_ver,
+-		data->calib_version,  trans->cfg->nvm_calib_ver);
+-	return -EINVAL;
+-}
+-IWL_EXPORT_SYMBOL(iwl_nvm_check_version);
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.h b/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.h
+index 8be50ed12300f..c59dd47cf15d3 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.h
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.h
+@@ -7,6 +7,7 @@
+  *
+  * Copyright(c) 2008 - 2014 Intel Corporation. All rights reserved.
+  * Copyright(c) 2015 Intel Mobile Communications GmbH
++ * Copyright (C) 2018 Intel Corporation
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of version 2 of the GNU General Public License as
+@@ -33,6 +34,7 @@
+  *
+  * Copyright(c) 2005 - 2014 Intel Corporation. All rights reserved.
+  * Copyright(c) 2015 Intel Mobile Communications GmbH
++ * Copyright (C) 2018 Intel Corporation
+  * All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without
+@@ -122,9 +124,6 @@ struct iwl_nvm_data *
+ iwl_parse_eeprom_data(struct device *dev, const struct iwl_cfg *cfg,
+ 		      const u8 *eeprom, size_t eeprom_size);
+ 
+-int iwl_nvm_check_version(struct iwl_nvm_data *data,
+-			  struct iwl_trans *trans);
+-
+ int iwl_init_sband_channels(struct iwl_nvm_data *data,
+ 			    struct ieee80211_supported_band *sband,
+ 			    int n_channels, enum nl80211_band band);
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+index 2eba6d6f367f8..9808d954dca29 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+@@ -547,7 +547,9 @@ int iwl_run_init_mvm_ucode(struct iwl_mvm *mvm, bool read_nvm)
+ 	if (mvm->nvm_file_name)
+ 		iwl_mvm_load_nvm_to_nic(mvm);
+ 
+-	WARN_ON(iwl_nvm_check_version(mvm->nvm_data, mvm->trans));
++	WARN_ONCE(mvm->nvm_data->nvm_version < mvm->trans->cfg->nvm_ver,
++		  "Too old NVM version (0x%0x, required = 0x%0x)",
++		  mvm->nvm_data->nvm_version, mvm->trans->cfg->nvm_ver);
+ 
+ 	/*
+ 	 * abort after reading the nvm in case RF Kill is on, we will complete
+-- 
+2.20.1
+
+
+
