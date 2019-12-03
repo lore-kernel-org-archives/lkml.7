@@ -2,105 +2,109 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BFFC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FEC4C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B01E620803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0603A20833
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:09:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575389343;
+	bh=II2Re7DbLEzmE5QGm8g7+xtzJhss5SFBy59u/YHHGbc=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=eQzpGydhaWrtudTsRW6quXBa3UxJWbdT/fxmso4y3nhx7LvcqQbX2/oj+M9mYXrdn
+	 RYevbazt+Npr2EgmZprRCGfPLZ5KLQgzDPCEpaDVra3B5y7rfnUux1DP/XbxlvHNT4
+	 g38tIXwT89wHlqhuwI9/jzrlBd/ZJ0EapOLqJZv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfLCQIL (ORCPT
+        id S1727111AbfLCQJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 11:08:11 -0500
-Received: from foss.arm.com ([217.140.110.172]:44940 "EHLO foss.arm.com"
+        Tue, 3 Dec 2019 11:09:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726098AbfLCQIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 11:08:11 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A2D1131B;
-        Tue,  3 Dec 2019 08:08:10 -0800 (PST)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8C3C23F52E;
-        Tue,  3 Dec 2019 08:08:08 -0800 (PST)
-Date:   Tue, 3 Dec 2019 16:08:06 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Noam Stolero <noams@mellanox.com>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>, Qian Cai <cai@lca.pw>,
-        Tal Gilboa <talgi@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Amir Ancel <amira@mellanox.com>,
-        Matan Nir <matann@mellanox.com>, Bar Tuaf <bartu@mellanox.com>,
-        "brouer@redhat.com" <brouer@redhat.com>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH v3 0/3] mm: kmemleak: Use a memory pool for kmemleak
- object allocations
-Message-ID: <20191203160806.GB23522@arrakis.emea.arm.com>
-References: <20190812160642.52134-1-catalin.marinas@arm.com>
- <08847a90-c37b-890f-8d0e-3ae1c3a1dd71@mellanox.com>
+        id S1726114AbfLCQJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 11:09:01 -0500
+Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1298720803;
+        Tue,  3 Dec 2019 16:08:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575389341;
+        bh=II2Re7DbLEzmE5QGm8g7+xtzJhss5SFBy59u/YHHGbc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=U6o2veH80qspdetmd7FL+MAWqRv1jcItsZq6pQ+y6CaccFHqW0ZQTThF3vv7/wIQV
+         MlFsXQLWTU/6iLL8SSIm1O9clf1JFoiTAibzkbCDXkCmpcsXuadjqlvyBf8dBRrhPR
+         yB2vpNhBXZ5lsXc7xFGUPSEHrJ/Drn/9RmGuJDY0=
+Date:   Tue, 3 Dec 2019 08:08:56 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de, agruenba@redhat.com,
+        rpeterso@redhat.com, cluster-devel@redhat.com,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>
+Subject: [GIT PULL] iomap: small cleanups for 5.5
+Message-ID: <20191203160856.GC7323@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <08847a90-c37b-890f-8d0e-3ae1c3a1dd71@mellanox.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 03:51:50PM +0000, Noam Stolero wrote:
-> On 8/12/2019 7:06 PM, Catalin Marinas wrote:
-> >     Following the discussions on v2 of this patch(set) [1], this series
-> >     takes slightly different approach:
-> > 
-> >     - it implements its own simple memory pool that does not rely on the
-> >       slab allocator
-> > 
-> >     - drops the early log buffer logic entirely since it can now allocate
-> >       metadata from the memory pool directly before kmemleak is fully
-> >       initialised
-> > 
-> >     - CONFIG_DEBUG_KMEMLEAK_EARLY_LOG_SIZE option is renamed to
-> >       CONFIG_DEBUG_KMEMLEAK_MEM_POOL_SIZE
-> > 
-> >     - moves the kmemleak_init() call earlier (mm_init())
-> > 
-> >     - to avoid a separate memory pool for struct scan_area, it makes the
-> >       tool robust when such allocations fail as scan areas are rather an
-> >       optimisation
-> > 
-> >     [1] http://lkml.kernel.org/r/20190727132334.9184-1-catalin.marinas@arm.com
-> > 
-> >     Catalin Marinas (3):
-> >       mm: kmemleak: Make the tool tolerant to struct scan_area allocation
-> >         failures
-> >       mm: kmemleak: Simple memory allocation pool for kmemleak objects
-> >       mm: kmemleak: Use the memory pool for early allocations
-> > 
-> >      init/main.c       |   2 +-
-> >      lib/Kconfig.debug |  11 +-
-> >      mm/kmemleak.c     | 325 ++++++++++++----------------------------------
-> >      3 files changed, 91 insertions(+), 247 deletions(-)
-> 
-> We observe severe degradation in our network performance affecting all
-> of our NICs. The degradation is directly linked to this patch.
-> 
-> What we run:
-> Simple Iperf TCP loopback with 8 streams on ConnectX5-100GbE.
-> Since it's a loopback test, traffic goes from the socket through the IP
-> stack and back to the socket, without going through the NIC driver.
+Hi Linus,
 
-Something similar was reported before. Can you try commit 2abd839aa7e6
-("kmemleak: Do not corrupt the object_list during clean-up") and see if
-it fixes the problem for you? It was merged in 5.4-rc4.
+Please pull this series containing some more new iomap code for 5.5.
+There's not much this time -- just removing some local variables that
+don't need to exist in the iomap directio code.
 
--- 
-Catalin
+The branch merges cleanly against this morning's HEAD and survived a few
+days' worth of xfstests.  The merge was completely straightforward, so
+please let me know if you run into anything weird(er than my dorky tag
+message).
+
+--D
+
+The following changes since commit 419e9c38aa075ed0cd3c13d47e15954b686bcdb6:
+
+  iomap: Fix pipe page leakage during splicing (2019-11-22 08:36:02 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/iomap-5.5-merge-13
+
+for you to fetch changes up to 88cfd30e188fcf6fd8304586c936a6f22fb665e5:
+
+  iomap: remove unneeded variable in iomap_dio_rw() (2019-11-26 09:28:47 -0800)
+
+----------------------------------------------------------------
+New code for 5.5:
+- Make iomap_dio_rw callers explicitly tell us if they want us to wait
+- Port the xfs writeback code to iomap to complete the buffered io
+  library functions
+- Refactor the unshare code to share common pieces
+- Add support for performing copy on write with buffered writes
+- Other minor fixes
+- Fix unchecked return in iomap_bmap
+- Fix a type casting bug in a ternary statement in iomap_dio_bio_actor
+- Improve tracepoints for easier diagnostic ability
+- Fix pipe page leakage in directio reads
+- Clean up iter usage in directio paths
+
+----------------------------------------------------------------
+Jan Kara (1):
+      iomap: Do not create fake iter in iomap_dio_bio_actor()
+
+Johannes Thumshirn (1):
+      iomap: remove unneeded variable in iomap_dio_rw()
+
+ fs/iomap/direct-io.c | 39 ++++++++++++++++++++++-----------------
+ 1 file changed, 22 insertions(+), 17 deletions(-)
