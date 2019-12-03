@@ -2,84 +2,143 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E71C3C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A754C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF308206E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:04:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575389071;
-	bh=oDFsbxgD5A95Nwp80yYyEw0eJtZ1q1iqcErmr0CW5MU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=UmsX8dxTpNzQiSlA4Nkgm+1C7kyr2ZmP1rvHUw5iF0sLxcB5wQpjyr6XniJBicMMU
-	 kAo/0bg/y6ePYIANol2W7aHz5EQEemCXSNUniBeG+FdcmTUfJ/i6O1NZykKSF0I3zc
-	 EWy71keySNOpnmZr3kNDkJ7ucFL+0Ei01jxjOdxQ=
+	by mail.kernel.org (Postfix) with ESMTP id 0AF5E2073C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:06:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbfLCQEa (ORCPT
+        id S1727026AbfLCQGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 11:04:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55058 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726480AbfLCQEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 11:04:30 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF74D2068E;
-        Tue,  3 Dec 2019 16:04:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575389070;
-        bh=oDFsbxgD5A95Nwp80yYyEw0eJtZ1q1iqcErmr0CW5MU=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=HXbIwJZ4oEv1QVPreYfTg5bdyyYy94SFdJXuK7e5llmpYJ7ol0IsP3yeriHTiLXO8
-         NXgbFYOFEt8jkly/wdaKIcL8Oj24gLOuzZAyLf8ZK8LXwC5JOuc5AUb5U1Pa1q1O9v
-         y/R363m0AqGL+UdeaoJXaNj9RRE2FkLT4RlQ63ZY=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 9D4A93522780; Tue,  3 Dec 2019 08:04:24 -0800 (PST)
-Date:   Tue, 3 Dec 2019 08:04:24 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>, jiangshanlai@gmail.com,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: Workqueues splat due to ending up on wrong CPU
-Message-ID: <20191203160424.GD2889@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191125230312.GP2889@paulmck-ThinkPad-P72>
- <20191126183334.GE2867037@devbig004.ftw2.facebook.com>
- <20191126220533.GU2889@paulmck-ThinkPad-P72>
- <20191127155027.GA15170@paulmck-ThinkPad-P72>
- <20191128161823.GA24667@paulmck-ThinkPad-P72>
- <20191129155850.GA17002@paulmck-ThinkPad-P72>
- <20191202015548.GA13391@paulmck-ThinkPad-P72>
- <20191202201338.GH16681@devbig004.ftw2.facebook.com>
- <20191203095521.GH2827@hirez.programming.kicks-ass.net>
- <20191203154251.GC2196666@devbig004.ftw2.facebook.com>
+        Tue, 3 Dec 2019 11:06:51 -0500
+Received: from mx2.suse.de ([195.135.220.15]:51528 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725848AbfLCQGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 11:06:51 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id AD9186A2F7;
+        Tue,  3 Dec 2019 16:06:47 +0000 (UTC)
+Message-ID: <d1c87c83f38e74f0c6b0692248fe88dfd2bdec3e.camel@suse.de>
+Subject: Re: [PATCH v4 8/8] linux/log2.h: Use roundup/dow_pow_two() on 64bit
+ calculations
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Andrew Murray <andrew.murray@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        james.quinlan@broadcom.com, Matthias Brugger <mbrugger@suse.com>,
+        Phil Elwell <phil@raspberrypi.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-acpi@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        netdev <netdev@vger.kernel.org>, linux-rdma@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>
+Date:   Tue, 03 Dec 2019 17:06:43 +0100
+In-Reply-To: <CAL_JsqLMCXdnZag3jihV_dzuR+wFaVKFb7q_PdKTxTg0LVA6cw@mail.gmail.com>
+References: <20191203114743.1294-1-nsaenzjulienne@suse.de>
+         <20191203114743.1294-9-nsaenzjulienne@suse.de>
+         <CAL_JsqLMCXdnZag3jihV_dzuR+wFaVKFb7q_PdKTxTg0LVA6cw@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-VHC+bPmpbRjqhnK2ykxw"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191203154251.GC2196666@devbig004.ftw2.facebook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 07:42:51AM -0800, Tejun Heo wrote:
-> Hello,
-> 
-> On Tue, Dec 03, 2019 at 10:55:21AM +0100, Peter Zijlstra wrote:
-> > The below seems to not insta explode...
-> 
-> Paul, any chance you can run Peter's patch through your test?
 
-I will give it a shot and report results late tomorrow morning,
-Pacific Time.  (Yeah, slow, but beats the several-month test duration
-that would have been required previously!)
+--=-VHC+bPmpbRjqhnK2ykxw
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-							Thanx, Paul
+Hi Rob,
+
+On Tue, 2019-12-03 at 09:53 -0600, Rob Herring wrote:
+> On Tue, Dec 3, 2019 at 5:48 AM Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de> wrote:
+> > The function now is safe to use while expecting a 64bit value. Use it
+> > where relevant.
+>=20
+> What was wrong with the existing code? This is missing some context.
+
+You're right, I'll update it.
+
+For most of files changed the benefit here is factoring out a common patter=
+n
+using the standard function roundup/down_pow_two() which now provides corre=
+ct
+64bit results.
+
+As for of/device.c and arm64/iort.c it's more of a readability enhancement.=
+ I
+consider it's easier to understand than the current calculation as it abstr=
+acts
+the math.
+
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > ---
+> >  drivers/acpi/arm64/iort.c                        | 2 +-
+> >  drivers/net/ethernet/mellanox/mlx4/en_clock.c    | 3 ++-
+> >  drivers/of/device.c                              | 3 ++-
+>=20
+> In any case,
+>=20
+> Acked-by: Rob Herring <robh@kernel.org>
+>=20
+
+Thanks!
+
+Regards,
+Nicolas
+
+
+--=-VHC+bPmpbRjqhnK2ykxw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3miBMACgkQlfZmHno8
+x/5s+Af/a2icSd66GHrsABoMtUfJXpQclSae81ThRP5Bfx6+mK4Ty4en3T+IxOK+
+NPmneod0gjSfyqqQniFbEcmlKAd8wXyUnBCCi6urRvuqOWcw65h10DA3fQCivaOt
+NWn3FRWMlPZbBIAYr/XOcsdOOkbD+VaFE/PaBYmxU/rWaCLGMWpYYBhF/Vcm+ASd
+VPQ4g8AfxyGvQW9EgbmRTMC0k7kMP6qrpmgIjNWvUPyJ+8ytD2Zly2xvbVf9TqhX
+/PP/t19fWayTqhsg+B04K0aN0oriRqSFX44yvCOApKhLBSsF6Nyc40m2sreqKMYY
+98kwrOrux/Fb3OeV/Wzdhhh8VhH+Sg==
+=4wmf
+-----END PGP SIGNATURE-----
+
+--=-VHC+bPmpbRjqhnK2ykxw--
+
