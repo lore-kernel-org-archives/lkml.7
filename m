@@ -2,215 +2,81 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BITCOIN_SPAM_02,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,PDS_BTC_ID,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE0AC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5021EC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B62E206EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:09:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27A022073C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:11:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xhbiy6Or"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbfLCOJz (ORCPT
+        id S1726410AbfLCOLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 09:09:55 -0500
-Received: from mx2.suse.de ([195.135.220.15]:43782 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726017AbfLCOJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 09:09:55 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 85C8BAC9D;
-        Tue,  3 Dec 2019 14:09:50 +0000 (UTC)
-Subject: Re: [PATCH] bcache: add REQ_FUA to avoid data lost in writeback mode
-To:     kungf <wings.wyang@gmail.com>
-Cc:     kent.overstreet@gmail.com, linux-bcache@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191202102409.3980-1-wings.wyang@gmail.com>
- <785fe04f-f841-3083-66db-53fab7bc0577@suse.de>
- <CAMo46+q-usqgwHWhk2mcKMvK9yMY2kfN-t10wyqm+pv8L0HqYA@mail.gmail.com>
-From:   Coly Li <colyli@suse.de>
-Organization: SUSE Labs
-Message-ID: <74b8fcf6-b5e0-7cae-d860-0ed894bfe938@suse.de>
-Date:   Tue, 3 Dec 2019 22:09:32 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.2.2
+        Tue, 3 Dec 2019 09:11:11 -0500
+Received: from mail-vs1-f41.google.com ([209.85.217.41]:33240 "EHLO
+        mail-vs1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfLCOLL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 09:11:11 -0500
+Received: by mail-vs1-f41.google.com with SMTP id n27so2443493vsa.0;
+        Tue, 03 Dec 2019 06:11:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=qTLUegBYXPVqSzZ8JeB8YIYZDh+eRGVTe3arH73i1Hg=;
+        b=Xhbiy6OrTTxt/hCViobblDgaFs+4gw6bycEwq6/tOkvF+lgRF1BEfGAPoBLnE7U/Y2
+         +gnLcX6Fsc7SluFFge3jvj0bVQK8yLgUVufH7ts+yhYtu0hA6mwAFDMt8J+Wq9QWMFg+
+         VIDiIHVthFhl2knwEHl3jcjUH2Q9uYR+XN7n+EZ6H6C1QVOnEA0ga5y3wK88fvh70mcR
+         J+DO/5idC+hegm6yXRVzck6gaXYA2TxnTK7Pf4I3PSkOPGZEyxlS2Jillh1MvfAelNjJ
+         0MPhjq9G8i6f5VNBtuaokQ85rXoq4ykd3IQ9qUHUGKUKJW4IDp4dM4zzLz5FcVlGDgZp
+         QpSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=qTLUegBYXPVqSzZ8JeB8YIYZDh+eRGVTe3arH73i1Hg=;
+        b=VQsI9VTjSCeXWvgAMpdbxVaHLtpW6q4CW/LnvePqEkYxkBZNqMWN0KuZ78vrTHgnLV
+         LcoRiSLsUpTF/fMc0bpzv/ZIQQygoBkDxCLPPDNb5nQamG+TsMzPFviqcxPztht/0H6m
+         i4Jnhg7Y8yZ9+tG978/54lGoeZWoGdyEA2ReV2M0aI3LB5bAo5+5ywJH2E2jY86cT4Tx
+         DbkkplTxzF4yNjlFcC0n3AFtwCOi6+kJ9BON2E4akaYBvIz5HbKcjiTng9K199xKBtYN
+         IUPrrixQKJoFfLKWpBVw7UA9x4sMFw89X1XAoBP9WkRFTICEnvLRQswf6PbNBkXtnV64
+         2OQw==
+X-Gm-Message-State: APjAAAXdeQO2W5D7ZYBiPMJa18j6wuq0iSi2EspUXmUuUy4PidDtWrJD
+        HevqisTGu1SEUzdeumh6zDkJXkW6FhkjDtQcZ4o=
+X-Google-Smtp-Source: APXvYqzqHb2yKwVKshU3kZPfBLtKyqntzMHOciBiiSeYXfaYezKwTIVEeE+9Ppgk5FV95Idtp2s3vmJRbeEykzJduPA=
+X-Received: by 2002:a67:fa52:: with SMTP id j18mr2734055vsq.144.1575382270104;
+ Tue, 03 Dec 2019 06:11:10 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAMo46+q-usqgwHWhk2mcKMvK9yMY2kfN-t10wyqm+pv8L0HqYA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+From:   Pintu Agarwal <pintu.ping@gmail.com>
+Date:   Tue, 3 Dec 2019 19:40:59 +0530
+Message-ID: <CAOuPNLh8dsSCq850afbj4OiHhZ2swBWZP=BTUrXrXhdpTjZs+A@mail.gmail.com>
+Subject: interrupt handler not getting called after resume
+To:     Kernelnewbies <kernelnewbies@kernelnewbies.org>,
+        linux-pm@vger.kernel.org, open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/12/3 3:16 下午, kungf wrote:
-> 
-> 
-> On Mon, 2 Dec 2019 at 19:09, Coly Li <colyli@suse.de
-> <mailto:colyli@suse.de>> wrote:
->>
->> On 2019/12/2 6:24 下午, kungf wrote:
->> > data may lost when in the follow scene of writeback mode:
->> > 1. client write data1 to bcache
->> > 2. client fdatasync
->> > 3. bcache flush cache set and backing device
->> > if now data1 was not writed back to backing, it was only guaranteed
-> safe in cache.
->> > 4.then cache writeback data1 to backing with only REQ_OP_WRITE
->> > So data1 was not guaranteed in non-volatile storage,  it may lost if
->  power interruption
->> >
->>
->> Hi,
->>
->> Do you encounter such problem in real work load ? With bcache journal, I
->> don't see the possibility of data lost with your description.
->>
->> Correct me if I am wrong.
->>
->> Coly Li
->>
-> Hi Coly,
-> 
-> Sorry to confuse you.  As i known now, write_dirty function write dirty
-> to backing without FUA，and write_dirty_finish make dirty key clean,
-> it means the data indexed by the key will not be writeback again, am i
-> wrong?
+Hi All,
 
-Yes, you are right. This is the behavior as design. We don't guarantee
-the data will be on always on platter, this is what most storage systems do.
+I have one general query.
 
-> I only find that the backing device will be flushed when bcache get an
-> PREFLUSH bio, any other place  it will be flushed in journal?
-> 
+If an interrupt handler is NOT getting called (for one device) after
+the system resume (from snapshot image), then what could be the issue?
+Note:
+* The suspend worked perfectly fine.
+* The runtime suspend/resume of the system is also working fine.
 
-Storage system flushes its buffer when upper layer requires, that means
-if the application wants to make its writing data flushed on platter, it
-should explicitly issue a flush request.
+If anybody have experienced this situation and fixed it, please let us know.
+It will be a great input for further debugging.
 
-What you observe and test are all as designed IMHO. The I/O stack does
-not guarantee any data persistent on storage media unless an explicit
-flush request received from upper layer and returned to upper layer.
-
-Coly Li
-
-> I made a test that write bcache with dd，and then detach it, blktrace
-> the cache and backing device at the same time.
-> 1. close writeback
-> # echo 0 > /sys/block/bcache0/bcache/writeback_running
-> 2. write data with a fdatasync
-> #dd if=/dev/zero of=/dev/bcache0 bs=16k count=1 oflag=direct
-> 3. detach and trigger writeback
-> #echo b1f40ca5-37a3-4852-9abf-6abed96d71db >/sys/block/bcache0/bcache/detach
-> 
-> the blow text is blkparse result.
-> from cache blktrace blow, we can see 16k data write to cache set, and
-> then flush with op FWFSM (PREFLUSH| WRITE| FUA|SYNC|META )
-> ```
->   8,160 33        1     0.000000000 222844  A   W 630609920 + 32 <-
-> (8,167) 1464320
->   8,167 33        2     0.000000478 222844  Q   W 630609920 + 32 [dd]
->   8,167 33        3     0.000006167 222844  G   W 630609920 + 32 [dd]
->   8,167 33        5     0.000011385 222844  I   W 630609920 + 32 [dd]
->   8,167 33        6     0.000023890   948  D   W 630609920 + 32
-> [kworker/33:1H]
->   8,167 33        7     0.000111203     0  C   W 630609920 + 32 [0]
->   8,160 34        1     0.000167029 215616  A FWFSM 629153808 + 8 <-
-> (8,167) 8208
->   8,167 34        2     0.000167490 215616  Q FWFSM 629153808 + 8
-> [kworker/34:2]
->   8,167 34        3     0.000169061 215616  G FWFSM 629153808 + 8
-> [kworker/34:2]
->   8,167 34        4     0.000301308   949  D WFSM 629153808 + 8
-> [kworker/34:1H]
->   8,167 34        5     0.000348832     0  C WFSM 629153808 + 8 [0]
->   8,167 34        6     0.000349612     0  C WFSM 629153808 [0]
-> ```
-> 
-> from backing blktrace blow, the backing device first get flush op FWS
-> (PERFLUSH|WRITE|SYNC)  because of we stop writeback, then get W op after
-> detach,
-> the 16k data was writeback to backing device, and after this, the
-> backing device never get flush op, */it means that the 16k data we write
-> it's not safe in backing/*
-> */device, even we dd write with fdatasync./*
-> ```
->   8,144 33        1     0.000000000 222844  Q WSM 8 + 8 [dd]
->   8,144 33        2     0.000016609 222844  G WSM 8 + 8 [dd]
->   8,144 33        5     0.000020710 222844  I WSM 8 + 8 [dd]
->   8,144 33        6     0.000031967   948  D WSM 8 + 8 [kworker/33:1H]
->   8,144 33        7     0.000152945 88631  C  WS 16 + 32 [0]
->   8,144 34        1     0.000186127 215616  Q FWS [kworker/34:2]
->   8,144 34        2     0.000187006 215616  G FWS [kworker/34:2]
->   8,144 33        8     0.000326761     0  C WSM 8 + 8 [0]
->   8,144 34        3     0.020195027     0  C  WS 16 [0]
->   8,144 34        4     0.020195904     0  C FWS 16 [0]
->   8,144 23        1    19.415130395 215884  Q   W 16 + 32 [kworker/23:2]
->   8,144 23        2    19.415132072 215884  G   W 16 + 32 [kworker/23:2]
->   8,144 23        3    19.415133134 215884  I   W 16 + 32 [kworker/23:2]
->   8,144 23        4    19.415137776  1215  D   W 16 + 32 [kworker/23:1H]
->   8,144 23        5    19.416607260     0  C   W 16 + 32 [0]
->   8,144 24        1    19.416640754 222593  Q WSM 8 + 8 [bcache_writebac]
->   8,144 24        2    19.416642698 222593  G WSM 8 + 8 [bcache_writebac]
->   8,144 24        3    19.416643505 222593  I WSM 8 + 8 [bcache_writebac]
->   8,144 24        4    19.416650589  1107  D WSM 8 + 8 [kworker/24:1H]
->   8,144 24        5    19.416865258     0  C WSM 8 + 8 [0]
->   8,144 24        6    19.416871350 221889  Q WSM 8 + 8 [kworker/24:1]
->   8,144 24        7    19.416872201 221889  G WSM 8 + 8 [kworker/24:1]
->   8,144 24        8    19.416872542 221889  I WSM 8 + 8 [kworker/24:1]
->   8,144 24        9    19.416875458  1107  D WSM 8 + 8 [kworker/24:1H]
->   8,144 24       10    19.417076935     0  C WSM 8 + 8 [0]
-> ```
-> 
-> 
-> 
-> On Mon, 2 Dec 2019 at 19:09, Coly Li <colyli@suse.de
-> <mailto:colyli@suse.de>> wrote:
-> 
->     On 2019/12/2 6:24 下午, kungf wrote:
->     > data may lost when in the follow scene of writeback mode:
->     > 1. client write data1 to bcache
->     > 2. client fdatasync
->     > 3. bcache flush cache set and backing device
->     > if now data1 was not writed back to backing, it was only
->     guaranteed safe in cache.
->     > 4.then cache writeback data1 to backing with only REQ_OP_WRITE
->     > So data1 was not guaranteed in non-volatile storage,  it may lost
->     if  power interruption 
->     >
-> 
->     Hi,
-> 
->     Do you encounter such problem in real work load ? With bcache journal, I
->     don't see the possibility of data lost with your description.
-> 
->     Correct me if I am wrong.
-> 
->     Coly Li
-> 
->     > Signed-off-by: kungf <wings.wyang@gmail.com
->     <mailto:wings.wyang@gmail.com>>
->     > ---
->     >  drivers/md/bcache/writeback.c | 2 +-
->     >  1 file changed, 1 insertion(+), 1 deletion(-)
->     >
->     > diff --git a/drivers/md/bcache/writeback.c
->     b/drivers/md/bcache/writeback.c
->     > index 4a40f9eadeaf..e5cecb60569e 100644
->     > --- a/drivers/md/bcache/writeback.c
->     > +++ b/drivers/md/bcache/writeback.c
->     > @@ -357,7 +357,7 @@ static void write_dirty(struct closure *cl)
->     >        */
->     >       if (KEY_DIRTY(&w->key)) {
->     >               dirty_init(w);
->     > -             bio_set_op_attrs(&io->bio, REQ_OP_WRITE, 0);
->     > +             bio_set_op_attrs(&io->bio, REQ_OP_WRITE | REQ_FUA, 0);
->     >               io->bio.bi_iter.bi_sector = KEY_START(&w->key);
->     >               bio_set_dev(&io->bio, io->dc->bdev);
->     >               io->bio.bi_end_io       = dirty_endio;
->     >
-> 
+Regards,
+Pintu
