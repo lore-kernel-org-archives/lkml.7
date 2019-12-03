@@ -2,220 +2,155 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72355C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35354C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F15F205F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:16:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OZbFSGDb"
+	by mail.kernel.org (Postfix) with ESMTP id 15E832068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:16:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbfLCNQK (ORCPT
+        id S1726363AbfLCNQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 08:16:10 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36768 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725954AbfLCNQJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 08:16:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575378967;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fEQnMm9l2voQ0J2ySJrhOuYQvNTgK+ssK7Iqm4yZa/E=;
-        b=OZbFSGDbuwIzKApw0qcxpOT8JK8bfu3jPzF+rCWUiZuvEF8dd4uyeLeBQxiUXc7WZd9ZxR
-        I2Y+P0C3aLZrFAxWWMPDIGaNhYeal6FlFOq8pUOhW5MLpvqLShNgwF5qzB8XxFUdKPLiLM
-        JUiqoilC0nOokjaXYsw9FfI0kGSPFk4=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-238-s5eeLGFoMRq2Tc1u_0t3Eg-1; Tue, 03 Dec 2019 08:16:05 -0500
-Received: by mail-wr1-f71.google.com with SMTP id z10so1738834wrt.21
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 05:16:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=+B5QIazI4Ie4a7nGrqp3wfpkLneKCu2xyGaxRW5rTQ0=;
-        b=XJ+ajAvKiZU/SHgM7vhY62Tyj0pSqZv7wulCxvjmY4SDeTTL9KiLwa63LE8vAUIceZ
-         j2mUhbY1WpafNARj4wFoGgLX5KvE9KhnqMS7Gf1T8LSjhGmtv0ybs+oXxvhJF+KZvlw1
-         2dU2iapErlxr7ETaJgbIVgh9XjtAl+82Ow5FsPBvcd+SvNKe0QrQthkNS7e4GGI3FsF6
-         pqD1CY5aVMVRlYmx704fD/UxIGvZw6fklf17d2cXxtrKQlxXjHZ8p42ORXUMJQQWTWey
-         mSu/SxryncPX1wHc9RXAJnu73YCeCgQ25NCVIVzV1vKlLk+v7O2NR60QKaJITIWfKl2d
-         7i8Q==
-X-Gm-Message-State: APjAAAWUXEkCyUI8gqIrQ2otShzgwMK7oGXbeDbpwQNa1l/UFohyMWig
-        eQggOg3Nzf9VppZwvj3N3KZ/yQCBRRCZ2rD6JSBUoyfsHAjYLgM7UVaoNAS6wiNS9rmX0QQBnV5
-        q1GkRQ4LRRwool9flt8iHD3wC
-X-Received: by 2002:a7b:cf2d:: with SMTP id m13mr13176985wmg.163.1575378963917;
-        Tue, 03 Dec 2019 05:16:03 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx20PxwcKm/6OsHkVy+Mn1dllQJFtm8ala5wHB808COFtj4Q6UoP/+5NJY7Jwe7grE84SU2cQ==
-X-Received: by 2002:a7b:cf2d:: with SMTP id m13mr13176962wmg.163.1575378963645;
-        Tue, 03 Dec 2019 05:16:03 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id w17sm3631956wrt.89.2019.12.03.05.16.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 05:16:02 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        peterx@redhat.com
-Subject: Re: [PATCH v3 3/5] KVM: X86: Use APIC_DEST_* macros properly in kvm_lapic_irq.dest_mode
-In-Reply-To: <20191202201314.543-4-peterx@redhat.com>
-References: <20191202201314.543-1-peterx@redhat.com> <20191202201314.543-4-peterx@redhat.com>
-Date:   Tue, 03 Dec 2019 14:16:01 +0100
-Message-ID: <87wobdblda.fsf@vitty.brq.redhat.com>
+        Tue, 3 Dec 2019 08:16:46 -0500
+Received: from mx2.suse.de ([195.135.220.15]:40720 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726224AbfLCNQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 08:16:45 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3567AB162;
+        Tue,  3 Dec 2019 13:16:43 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 303B0DA7D9; Tue,  3 Dec 2019 14:16:38 +0100 (CET)
+Date:   Tue, 3 Dec 2019 14:16:38 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     David Sterba <dsterba@suse.com>, kbuild-all@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-crypto@vger.kernel.org
+Subject: Re: crypto/blake2b_generic.c:245:1: warning: the frame size of 1220
+ bytes is larger than 1024 bytes
+Message-ID: <20191203131638.GO2734@suse.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, kbuild test robot <lkp@intel.com>,
+        David Sterba <dsterba@suse.com>, kbuild-all@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-crypto@vger.kernel.org
+References: <201912010551.6rUbsvGE%lkp@intel.com>
 MIME-Version: 1.0
-X-MC-Unique: s5eeLGFoMRq2Tc1u_0t3Eg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201912010551.6rUbsvGE%lkp@intel.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Xu <peterx@redhat.com> writes:
+On Sun, Dec 01, 2019 at 05:54:53AM +0800, kbuild test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   32ef9553635ab1236c33951a8bd9b5af1c3b1646
+> commit: 91d689337fe8b7703608a2ec39aae700b99f3933 crypto: blake2b - add blake2b generic implementation
+> date:   4 weeks ago
+> config: arc-randconfig-a0031-20191201 (attached as .config)
+> compiler: arc-elf-gcc (GCC) 7.4.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         git checkout 91d689337fe8b7703608a2ec39aae700b99f3933
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.4.0 make.cross ARCH=arc 
 
-> We were using either APIC_DEST_PHYSICAL|APIC_DEST_LOGICAL or 0|1 to
-> fill in kvm_lapic_irq.dest_mode.  It's fine only because in most cases
-> when we check against dest_mode it's against APIC_DEST_PHYSICAL (which
-> equals to 0).  However, that's not consistent.  We'll have problem
-> when we want to start checking against APIC_DEST_PHYSICAL
+So this is for ARC.
 
-APIC_DEST_LOGICAL
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All warnings (new ones prefixed by >>):
+> 
+>    crypto/blake2b_generic.c: In function 'blake2b_compress':
+> >> crypto/blake2b_generic.c:245:1: warning: the frame size of 1220 bytes is larger than 1024 bytes [-Wframe-larger-than=]
 
-> which does not equals to 1.
->
-> This patch firstly introduces kvm_lapic_irq_dest_mode() helper to take
-> any boolean of destination mode and return the APIC_DEST_* macro.
-> Then, it replaces the 0|1 settings of irq.dest_mode with the helper.
->
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-> ---
->  arch/x86/include/asm/kvm_host.h | 5 +++++
->  arch/x86/kvm/ioapic.c           | 8 +++++---
->  arch/x86/kvm/irq_comm.c         | 7 ++++---
->  arch/x86/kvm/x86.c              | 2 +-
->  4 files changed, 15 insertions(+), 7 deletions(-)
->
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_h=
-ost.h
-> index b79cd6aa4075..f815c97b1b57 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1022,6 +1022,11 @@ struct kvm_lapic_irq {
->  =09bool msi_redir_hint;
->  };
-> =20
-> +static inline u16 kvm_lapic_irq_dest_mode(bool dest_mode)
-> +{
-> +=09return dest_mode ? APIC_DEST_LOGICAL : APIC_DEST_PHYSICAL;
-> +}
-> +
->  struct kvm_x86_ops {
->  =09int (*cpu_has_kvm_support)(void);          /* __init */
->  =09int (*disabled_by_bios)(void);             /* __init */
-> diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
-> index 9fd2dd89a1c5..901d85237d1c 100644
-> --- a/arch/x86/kvm/ioapic.c
-> +++ b/arch/x86/kvm/ioapic.c
-> @@ -331,7 +331,8 @@ static void ioapic_write_indirect(struct kvm_ioapic *=
-ioapic, u32 val)
->  =09=09=09irq.vector =3D e->fields.vector;
->  =09=09=09irq.delivery_mode =3D e->fields.delivery_mode << 8;
->  =09=09=09irq.dest_id =3D e->fields.dest_id;
-> -=09=09=09irq.dest_mode =3D e->fields.dest_mode;
-> +=09=09=09irq.dest_mode =3D
-> +=09=09=09    kvm_lapic_irq_dest_mode(e->fields.dest_mode);
->  =09=09=09bitmap_zero(&vcpu_bitmap, 16);
->  =09=09=09kvm_bitmap_or_dest_vcpus(ioapic->kvm, &irq,
->  =09=09=09=09=09=09 &vcpu_bitmap);
-> @@ -343,7 +344,8 @@ static void ioapic_write_indirect(struct kvm_ioapic *=
-ioapic, u32 val)
->  =09=09=09=09 * keep ioapic_handled_vectors synchronized.
->  =09=09=09=09 */
->  =09=09=09=09irq.dest_id =3D old_dest_id;
-> -=09=09=09=09irq.dest_mode =3D old_dest_mode;
-> +=09=09=09=09irq.dest_mode =3D
-> +=09=09=09=09    kvm_lapic_irq_dest_mode(e->fields.dest_mode);
->  =09=09=09=09kvm_bitmap_or_dest_vcpus(ioapic->kvm, &irq,
->  =09=09=09=09=09=09=09 &vcpu_bitmap);
->  =09=09=09}
-> @@ -369,7 +371,7 @@ static int ioapic_service(struct kvm_ioapic *ioapic, =
-int irq, bool line_status)
-> =20
->  =09irqe.dest_id =3D entry->fields.dest_id;
->  =09irqe.vector =3D entry->fields.vector;
-> -=09irqe.dest_mode =3D entry->fields.dest_mode;
-> +=09irqe.dest_mode =3D kvm_lapic_irq_dest_mode(entry->fields.dest_mode);
->  =09irqe.trig_mode =3D entry->fields.trig_mode;
->  =09irqe.delivery_mode =3D entry->fields.delivery_mode << 8;
->  =09irqe.level =3D 1;
-> diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
-> index 8ecd48d31800..5f59e5ebdbed 100644
-> --- a/arch/x86/kvm/irq_comm.c
-> +++ b/arch/x86/kvm/irq_comm.c
-> @@ -52,8 +52,8 @@ int kvm_irq_delivery_to_apic(struct kvm *kvm, struct kv=
-m_lapic *src,
->  =09unsigned long dest_vcpu_bitmap[BITS_TO_LONGS(KVM_MAX_VCPUS)];
->  =09unsigned int dest_vcpus =3D 0;
-> =20
-> -=09if (irq->dest_mode =3D=3D 0 && irq->dest_id =3D=3D 0xff &&
-> -=09=09=09kvm_lowest_prio_delivery(irq)) {
-> +=09if (irq->dest_mode =3D=3D APIC_DEST_PHYSICAL &&
-> +=09    irq->dest_id =3D=3D 0xff && kvm_lowest_prio_delivery(irq)) {
->  =09=09printk(KERN_INFO "kvm: apic: phys broadcast and lowest prio\n");
->  =09=09irq->delivery_mode =3D APIC_DM_FIXED;
->  =09}
-> @@ -114,7 +114,8 @@ void kvm_set_msi_irq(struct kvm *kvm, struct kvm_kern=
-el_irq_routing_entry *e,
->  =09=09irq->dest_id |=3D MSI_ADDR_EXT_DEST_ID(e->msi.address_hi);
->  =09irq->vector =3D (e->msi.data &
->  =09=09=09MSI_DATA_VECTOR_MASK) >> MSI_DATA_VECTOR_SHIFT;
-> -=09irq->dest_mode =3D (1 << MSI_ADDR_DEST_MODE_SHIFT) & e->msi.address_l=
-o;
-> +=09irq->dest_mode =3D kvm_lapic_irq_dest_mode(
-> +=09    (1 << MSI_ADDR_DEST_MODE_SHIFT) & e->msi.address_lo);
+1220 looks like a lot, the x86_64 asks for 288 bytes for
+blake2b_compress, this roughly matches the declarations and effects of
+inlining (2 x 16 x sizeof(u64) is 256).
 
-This usage is a bit fishy (I understand that it works, but),
-kvm_lapic_irq_dest_mode()'s input is bool (0/1) but here we're passing
-something different.
+I'm not familiar with ARC limitations regarding eg. 64 bit types so this
+would be my first guess that this requires more temporary stack space
+than other arches that can handle u64 just fine.
 
-I'm not sure kvm_lapic_irq_dest_mode() is even needed here, but in case
-it is I'd suggest to add '!!':
+>     }
+>     ^
+> 
+> vim +245 crypto/blake2b_generic.c
+> 
+>    183	
+>    184	#define G(r,i,a,b,c,d)                                  \
+>    185		do {                                            \
+>    186			a = a + b + m[blake2b_sigma[r][2*i+0]]; \
+>    187			d = ror64(d ^ a, 32);                   \
+>    188			c = c + d;                              \
+>    189			b = ror64(b ^ c, 24);                   \
+>    190			a = a + b + m[blake2b_sigma[r][2*i+1]]; \
+>    191			d = ror64(d ^ a, 16);                   \
+>    192			c = c + d;                              \
+>    193			b = ror64(b ^ c, 63);                   \
+>    194		} while (0)
+>    195	
+>    196	#define ROUND(r)                                \
+>    197		do {                                    \
+>    198			G(r,0,v[ 0],v[ 4],v[ 8],v[12]); \
+>    199			G(r,1,v[ 1],v[ 5],v[ 9],v[13]); \
+>    200			G(r,2,v[ 2],v[ 6],v[10],v[14]); \
+>    201			G(r,3,v[ 3],v[ 7],v[11],v[15]); \
+>    202			G(r,4,v[ 0],v[ 5],v[10],v[15]); \
+>    203			G(r,5,v[ 1],v[ 6],v[11],v[12]); \
+>    204			G(r,6,v[ 2],v[ 7],v[ 8],v[13]); \
+>    205			G(r,7,v[ 3],v[ 4],v[ 9],v[14]); \
+>    206		} while (0)
+>    207	
+>    208	static void blake2b_compress(struct blake2b_state *S,
+>    209				     const u8 block[BLAKE2B_BLOCKBYTES])
+>    210	{
+>    211		u64 m[16];
+>    212		u64 v[16];
+>    213		size_t i;
+>    214	
+>    215		for (i = 0; i < 16; ++i)
+>    216			m[i] = get_unaligned_le64(block + i * sizeof(m[i]));
+>    217	
+>    218		for (i = 0; i < 8; ++i)
+>    219			v[i] = S->h[i];
+>    220	
+>    221		v[ 8] = blake2b_IV[0];
+>    222		v[ 9] = blake2b_IV[1];
+>    223		v[10] = blake2b_IV[2];
+>    224		v[11] = blake2b_IV[3];
+>    225		v[12] = blake2b_IV[4] ^ S->t[0];
+>    226		v[13] = blake2b_IV[5] ^ S->t[1];
+>    227		v[14] = blake2b_IV[6] ^ S->f[0];
+>    228		v[15] = blake2b_IV[7] ^ S->f[1];
+>    229	
+>    230		ROUND(0);
+>    231		ROUND(1);
+>    232		ROUND(2);
+>    233		ROUND(3);
+>    234		ROUND(4);
+>    235		ROUND(5);
+>    236		ROUND(6);
+>    237		ROUND(7);
+>    238		ROUND(8);
+>    239		ROUND(9);
+>    240		ROUND(10);
+>    241		ROUND(11);
+>    242	
+>    243		for (i = 0; i < 8; ++i)
+>    244			S->h[i] = S->h[i] ^ v[i] ^ v[i + 8];
+>  > 245	}
 
- kvm_lapic_irq_dest_mode(!!((1 << MSI_ADDR_DEST_MODE_SHIFT) & e->msi.addres=
-s_lo))
-
-to make things explicit. I don't like how it looks though.
-
->  =09irq->trig_mode =3D (1 << MSI_DATA_TRIGGER_SHIFT) & e->msi.data;
->  =09irq->delivery_mode =3D e->msi.data & 0x700;
->  =09irq->msi_redir_hint =3D ((e->msi.address_lo
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 3ed167e039e5..3b00d662dc14 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -7356,7 +7356,7 @@ static void kvm_pv_kick_cpu_op(struct kvm *kvm, uns=
-igned long flags, int apicid)
->  =09struct kvm_lapic_irq lapic_irq;
-> =20
->  =09lapic_irq.shorthand =3D 0;
-> -=09lapic_irq.dest_mode =3D 0;
-> +=09lapic_irq.dest_mode =3D APIC_DEST_PHYSICAL;
->  =09lapic_irq.level =3D 0;
->  =09lapic_irq.dest_id =3D apicid;
->  =09lapic_irq.msi_redir_hint =3D false;
-
---=20
-Vitaly
-
+(rest of mail kept for reference)
