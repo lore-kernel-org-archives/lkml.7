@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A5BC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BE0C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DF2C2073C
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52AB8206EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:44:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413044;
-	bh=N+b0vuYWSBg71gFu4yFtCo20tGHuQRE5QfD4HUrU0KA=;
+	s=default; t=1575413047;
+	bh=nAX1jztnTArJns5G3zDXl5/umt/1KT8SVroE95f7pao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SUl/YTq7PHlFprrVJ+RM9NMX0E+RPBPlUsBOTk4222jyOvgMVHT0iLUi37e7VenM7
-	 ZsSNyVch7WSJTYD8suUKW+un+KHq87ok0mRpDdqM+L9WyeLI0PZrXPJvZGznnIlVNf
-	 B/ZY8tWYcsipeGm5XUln06YdmUqZ41pLDu4RKKfU=
+	b=amoT5ptlHvvsWO7y0IhnL4Jrg4cvDT6jNtEdfm9BmxEbp7k+TX8KKPbPqQFdmBgDc
+	 UZhzaSy5Gr+CTWry9KPAYkMUoQsDUbV92tknwDxWOkM4phjGPt1l5mwjWf6/OdQBpf
+	 gQGfDPPAUqWjoNRp0TMC0Z2VjgZtaYJkEjzTq/TQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbfLCWoC (ORCPT
+        id S1728915AbfLCWoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:44:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59694 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:44:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728897AbfLCWoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:44:01 -0500
+        id S1728897AbfLCWoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:44:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3159F206EC;
-        Tue,  3 Dec 2019 22:44:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA5162073C;
+        Tue,  3 Dec 2019 22:44:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413040;
-        bh=N+b0vuYWSBg71gFu4yFtCo20tGHuQRE5QfD4HUrU0KA=;
+        s=default; t=1575413043;
+        bh=nAX1jztnTArJns5G3zDXl5/umt/1KT8SVroE95f7pao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MTF2Zgz6cAWj4NsojAHuMQQzIOPHVpROnLTk+NM1lUfgwM0C9i1hy8Whd7lvtTKqC
-         N4bXyJ235uhbxxH2p8JbCc5t//VVNotbfaTD0VmPQdLlMMK4kCNgTI27NgKC04v5pa
-         aaaE9Biuef3l0dnZkTbWNWeGv9HJQABoOnh9j7rQ=
+        b=aUfIx4EbURUmg5rYYkHHxCsK/goKbmUrj5UsqDRZMtZ0Zk1YGnFyoIyJQpJPvrjo5
+         cezuLMJpnC4JVeAt4H06wADmscF7WDaYqaA6myzDWtYwK+XsEIOqjnjzI5vyzo0CqW
+         ofvHWgnA61iBDuMFRA3qVHWF5ACyJwe8H9zzh+M0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>,
-        Vladimir Oltean <olteanv@gmail.com>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 112/135] net: dsa: sja1105: fix sja1105_parse_rgmii_delays()
-Date:   Tue,  3 Dec 2019 23:35:52 +0100
-Message-Id: <20191203213042.231167118@linuxfoundation.org>
+Subject: [PATCH 5.3 113/135] net: macb: add missed tasklet_kill
+Date:   Tue,  3 Dec 2019 23:35:53 +0100
+Message-Id: <20191203213042.298448731@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -60,45 +59,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 9bca3a0a923fc3f0fb9e41391be1d0f291e86858 ]
+[ Upstream commit 61183b056b49e2937ff92a1424291ba36a6f6d05 ]
 
-This function was using configuration of port 0 in devicetree for all ports.
-In case CPU port was not 0, the delay settings was ignored. This resulted not
-working communication between CPU and the switch.
+This driver forgets to kill tasklet in remove.
+Add the call to fix it.
 
-Fixes: f5b8631c293b ("net: dsa: sja1105: Error out if RGMII delays are requested in DT")
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+Fixes: 032dc41ba6e2 ("net: macb: Handle HRESP error")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/sja1105/sja1105_main.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/cadence/macb_main.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/dsa/sja1105/sja1105_main.c
-+++ b/drivers/net/dsa/sja1105/sja1105_main.c
-@@ -591,15 +591,15 @@ static int sja1105_parse_rgmii_delays(st
- 	int i;
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -4393,6 +4393,7 @@ static int macb_remove(struct platform_d
+ 		mdiobus_free(bp->mii_bus);
  
- 	for (i = 0; i < SJA1105_NUM_PORTS; i++) {
--		if (ports->role == XMII_MAC)
-+		if (ports[i].role == XMII_MAC)
- 			continue;
- 
--		if (ports->phy_mode == PHY_INTERFACE_MODE_RGMII_RXID ||
--		    ports->phy_mode == PHY_INTERFACE_MODE_RGMII_ID)
-+		if (ports[i].phy_mode == PHY_INTERFACE_MODE_RGMII_RXID ||
-+		    ports[i].phy_mode == PHY_INTERFACE_MODE_RGMII_ID)
- 			priv->rgmii_rx_delay[i] = true;
- 
--		if (ports->phy_mode == PHY_INTERFACE_MODE_RGMII_TXID ||
--		    ports->phy_mode == PHY_INTERFACE_MODE_RGMII_ID)
-+		if (ports[i].phy_mode == PHY_INTERFACE_MODE_RGMII_TXID ||
-+		    ports[i].phy_mode == PHY_INTERFACE_MODE_RGMII_ID)
- 			priv->rgmii_tx_delay[i] = true;
- 
- 		if ((priv->rgmii_rx_delay[i] || priv->rgmii_tx_delay[i]) &&
+ 		unregister_netdev(dev);
++		tasklet_kill(&bp->hresp_err_tasklet);
+ 		pm_runtime_disable(&pdev->dev);
+ 		pm_runtime_dont_use_autosuspend(&pdev->dev);
+ 		if (!pm_runtime_suspended(&pdev->dev)) {
 
 
