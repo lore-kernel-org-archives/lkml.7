@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F4AC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0360DC43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 714212084B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C048920656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:48:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413317;
-	bh=uqhPIXMKfLyTsWEAtu6GVSKRK/3Tjp8n6QMtSKSox/0=;
+	s=default; t=1575413321;
+	bh=KuQUYgjE/jl4rzGGVvalCHJiUrChKVVEEiIPzv+P1Y8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VrCaPvoOVCfVaSSKm+xUdZSzKwYKpPISbI70BLk8IlZqwjqbhy+/m/kJeHwkJY28c
-	 uWSP5fw1KHq6Ov7MmX9CNAMzu+4iXViv/o+UjpC2ZDrysuDI7PnIcpWh22uEGnvrUd
-	 +nPa/Kv43RNr9NjmYJ7u0r8Yv3+W0yw3tZuiZ8sE=
+	b=IRLs71rCahEJVpqGWyxN/kG//lN6orT0DddbOwGCTWZkw5hYb4pZHnzlFdY6uf4Y0
+	 DhSpBMGV04eb7l5/7JgweyrbMcKOmrDPJmG/3gS0/GE1fV3MiQ0L0eTSqG2rxzvdMm
+	 IP+t0cgGUrltXp8dEx9uq22LF7ACx1LdqVwX+cp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729461AbfLCWsg (ORCPT
+        id S1729468AbfLCWsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:48:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39192 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:48:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728950AbfLCWsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:48:33 -0500
+        id S1729155AbfLCWsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:48:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B71AA20684;
-        Tue,  3 Dec 2019 22:48:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E04720656;
+        Tue,  3 Dec 2019 22:48:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413313;
-        bh=uqhPIXMKfLyTsWEAtu6GVSKRK/3Tjp8n6QMtSKSox/0=;
+        s=default; t=1575413315;
+        bh=KuQUYgjE/jl4rzGGVvalCHJiUrChKVVEEiIPzv+P1Y8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sv5EKpIap2xYSrep7KzKHl+c2kqFDI7zJi2CGI3jpCZTcoY7sBtsOIsS7czshAXMO
-         HFvLi2l0/QjqXWpIaguvPYfo+WpKUGwk/fiRiZ4wwXKQhiaQd8nev9fj5hH+mLCYKK
-         6e7vFklA7q/giKvlXyRNsuYStMDR096hxE0ODZxs=
+        b=KBa9Dsxd3DbyYwiW2WAl4+s1SmruLXoqvqeEUDgY19p8/xVazp5SSuV2OUa3Uf8Cc
+         E052nczFAEmGAFW8oViLXxEHdLk2LfVtjKzvIHT8YJXFCrTb/+Qo0+DijYVnHdFiXF
+         DVj5hpu0qfVhphdHgXRuNT/QQRpBSRKmvV5d25+c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Meyer <thomas@m3y3r.de>,
-        Kevin Hilman <khilman@baylibre.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Ahmed Zaki <anzaki@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 079/321] PM / AVS: SmartReflex: NULL check before some freeing functions is not needed
-Date:   Tue,  3 Dec 2019 23:32:25 +0100
-Message-Id: <20191203223431.270164388@linuxfoundation.org>
+Subject: [PATCH 4.19 044/321] mac80211: fix station inactive_time shortly after boot
+Date:   Tue,  3 Dec 2019 23:31:50 +0100
+Message-Id: <20191203223429.401517191@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,34 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Meyer <thomas@m3y3r.de>
+From: Ahmed Zaki <anzaki@gmail.com>
 
-[ Upstream commit 14d338a857f05f894ba3badd9e6d3039c68b8180 ]
+[ Upstream commit 285531f9e6774e3be71da6673d475ff1a088d675 ]
 
-NULL check before some freeing functions is not needed.
+In the first 5 minutes after boot (time of INITIAL_JIFFIES),
+ieee80211_sta_last_active() returns zero if last_ack is zero. This
+leads to "inactive time" showing jiffies_to_msecs(jiffies).
 
-Signed-off-by: Thomas Meyer <thomas@m3y3r.de>
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+ # iw wlan0 station get fc:ec:da:64:a6:dd
+ Station fc:ec:da:64:a6:dd (on wlan0)
+	inactive time:	4294894049 ms
+	.
+	.
+	connected time:	70 seconds
+
+Fix by returning last_rx if last_ack == 0.
+
+Signed-off-by: Ahmed Zaki <anzaki@gmail.com>
+Link: https://lore.kernel.org/r/20191031121243.27694-1-anzaki@gmail.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/avs/smartreflex.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ net/mac80211/sta_info.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/power/avs/smartreflex.c b/drivers/power/avs/smartreflex.c
-index 1360a7fa542c5..8760477d0e8af 100644
---- a/drivers/power/avs/smartreflex.c
-+++ b/drivers/power/avs/smartreflex.c
-@@ -1010,8 +1010,7 @@ static int omap_sr_remove(struct platform_device *pdev)
+diff --git a/net/mac80211/sta_info.c b/net/mac80211/sta_info.c
+index f34202242d24d..507409e3fd39c 100644
+--- a/net/mac80211/sta_info.c
++++ b/net/mac80211/sta_info.c
+@@ -2356,7 +2356,8 @@ unsigned long ieee80211_sta_last_active(struct sta_info *sta)
+ {
+ 	struct ieee80211_sta_rx_stats *stats = sta_get_last_rx_stats(sta);
  
- 	if (sr_info->autocomp_active)
- 		sr_stop_vddautocomp(sr_info);
--	if (sr_info->dbg_dir)
--		debugfs_remove_recursive(sr_info->dbg_dir);
-+	debugfs_remove_recursive(sr_info->dbg_dir);
- 
- 	pm_runtime_disable(&pdev->dev);
- 	list_del(&sr_info->node);
+-	if (time_after(stats->last_rx, sta->status_stats.last_ack))
++	if (!sta->status_stats.last_ack ||
++	    time_after(stats->last_rx, sta->status_stats.last_ack))
+ 		return stats->last_rx;
+ 	return sta->status_stats.last_ack;
+ }
 -- 
 2.20.1
 
