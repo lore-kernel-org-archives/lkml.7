@@ -2,194 +2,109 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE63C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C08D3C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3E6A20684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97E4C2068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:23:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="BxUbdzs8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IaOrcClV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbfLCFUc (ORCPT
+        id S1726819AbfLCFXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 00:20:32 -0500
-Received: from mailgw02.mediatek.com ([1.203.163.81]:53182 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727091AbfLCFUW (ORCPT
+        Tue, 3 Dec 2019 00:23:39 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35779 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbfLCFXi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 00:20:22 -0500
-X-UUID: b043a17ac2754401ab48507795c373b4-20191203
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=NgsysKXbS5nlDOD3N4g0hN4iMinhHgqdb3oRzZLJHmA=;
-        b=BxUbdzs8rfhBzS3w1ACTcIaHIYptfsfdrqnb0K3WCO1NQl4CY0A3IuoTC0UjXkwN10/5Z4NlccmV+XX72UoQEFQwZGK+QhJbsGqTPZEiPQKudXPdMPECKMwuYRTelK5oCs8pW5JcLh0A97qnOaMRjmSzx9bfCN/yQgPepdI9XDU=;
-X-UUID: b043a17ac2754401ab48507795c373b4-20191203
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1826436254; Tue, 03 Dec 2019 13:20:11 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 3 Dec 2019 13:19:17 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 3 Dec 2019 13:19:52 +0800
-Message-ID: <1575350410.31483.5.camel@mtksdaap41>
-Subject: Re: [PATCH v2] drm/mediatek: add ctm property support
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Tue, 3 Dec 2019 13:20:10 +0800
-In-Reply-To: <1575277423-31182-1-git-send-email-yongqiang.niu@mediatek.com>
-References: <1575277423-31182-1-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-TM-SNTS-SMTP: 91EF239877E5336093CDE7FE8F20BECC4E7AD49A185B12DDB0DBD8016543D4DC2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Tue, 3 Dec 2019 00:23:38 -0500
+Received: by mail-pf1-f194.google.com with SMTP id b19so1255570pfo.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 21:23:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=N6/Vfj+VnloKWDrO0keM08fpBsJsdBma6GiUwIrec4g=;
+        b=IaOrcClVOiytYPvZ/GyCl7kuuxS2MieZf3/zjMPjFrj1hz4nMh0GOUF3ReKo5ZnWXf
+         sPqyz5YDiyjHrw3XjxPMjk/o/XFjBsvHNSB/+lzcKq3tm8wl6TA/lG0zXQkUgQ0xYrla
+         ZdBYtFqJNDJYrLis5h4xdxE1egpYECrCh139U07hObomwBHkq0DSETdfgomv90oUAE5A
+         mSXh7q0x568TE1zri8FftVKmhxCnyoHwGFI+K6+WR0fmhxvjEOSdUiPm3U4KGcNPuk4J
+         /M+2yK+X1ATkKfbLKQsnmnWS5zuAmak7jSoX/81fPeooerKiexIomdAsxJG3OSY4J3tR
+         t+AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=N6/Vfj+VnloKWDrO0keM08fpBsJsdBma6GiUwIrec4g=;
+        b=fMUpFaznVwvzuD3av3nSu7XS06nufSSV9qw6bXzyU7XXhulKRFLY0Yh5P3O8T+gzjj
+         k+WC2PHM43GORcf5b0s5XKGTd4WKnUbWyHO5Y0HHNSJKzRyFgRfXikCO2/Zj6DHeH6Xl
+         q3rwY56fhBhP8R/ZsrWc3GfcPvEV4KilCkZlN721x2FmuddnNYvfmtZEp+bmDT+mBIIJ
+         UgVMw1C3tR6V1rSUqR5fMKDKDbv4MX3yyUfPBuD5SsOIvhC4VgiZWWn0qkfX+utxM4Nv
+         Q6n6Kk9ARw9As6Y5EOkZZ8GhzRdKaHCQKrJ0PAZd/BaWVo9l7ER/AK9Axz4jBZ6Tb7v+
+         +GbA==
+X-Gm-Message-State: APjAAAU/C+JWLCES9qT6v7Zmu9c06gUrHFF/OZjNstL/uv5RKYgVE8kt
+        kSZAVcl1h1C1WBc5FD1rKqiWE3s2eevhhw==
+X-Google-Smtp-Source: APXvYqzBmqmcs7hfpJvWbz3BETEGz2dOxflDfBhKP1dipSrFLRru5zt4EJ3eXlRAVFM7scft8Nk94A==
+X-Received: by 2002:a63:1a22:: with SMTP id a34mr3250138pga.403.1575350616626;
+        Mon, 02 Dec 2019 21:23:36 -0800 (PST)
+Received: from localhost ([14.96.109.134])
+        by smtp.gmail.com with ESMTPSA id d23sm1379850pfo.176.2019.12.02.21.23.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 02 Dec 2019 21:23:35 -0800 (PST)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, swboyd@chromium.org,
+        sivaa@codeaurora.org, Andy Gross <agross@kernel.org>
+Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [PATCH v2 0/9] thermal: tsens: Handle critical interrupts
+Date:   Tue,  3 Dec 2019 10:53:21 +0530
+Message-Id: <cover.1575349416.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFlvbmdxaWFuZzoNCg0KT24gTW9uLCAyMDE5LTEyLTAyIGF0IDE3OjAzICswODAwLCB5b25n
-cWlhbmcubml1QG1lZGlhdGVrLmNvbSB3cm90ZToNCj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9u
-Z3FpYW5nLm5pdUBtZWRpYXRlay5jb20+DQo+IA0KPiBhZGQgY3RtIHByb3BlcnR5IHN1cHBvcnQN
-Cj4gDQo+IENoYW5nZS1JZDogSTgxMTFkYTdiMzA5YjE4MDljNjMwMmU3NzQ4ZGQ5ZmQwNmRjOTdi
-ZGUNCg0KUmVtb3ZlIHRoaXMgQ2hhbmdlLUlkLg0KDQo+IFNpZ25lZC1vZmYtYnk6IFlvbmdxaWFu
-ZyBOaXUgPHlvbmdxaWFuZy5uaXVAbWVkaWF0ZWsuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvZ3B1
-L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYyAgICAgfCAxNSArKysrKystDQo+ICBkcml2ZXJz
-L2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jIHwgNjEgKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKy0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9j
-b21wLmggfCAxMSArKysrKysNCj4gIDMgZmlsZXMgY2hhbmdlZCwgODQgaW5zZXJ0aW9ucygrKSwg
-MyBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0
-ZWsvbXRrX2RybV9jcnRjLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRj
-LmMNCj4gaW5kZXggNGZiMzQ2Yy4uMTJkYzY4NCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUv
-ZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRp
-YXRlay9tdGtfZHJtX2NydGMuYw0KPiBAQCAtNjY2LDEwICs2NjYsMTMgQEAgc3RhdGljIHZvaWQg
-bXRrX2RybV9jcnRjX2F0b21pY19mbHVzaChzdHJ1Y3QgZHJtX2NydGMgKmNydGMsDQo+ICAJaW50
-IGk7DQo+ICANCj4gIAlpZiAoY3J0Yy0+c3RhdGUtPmNvbG9yX21nbXRfY2hhbmdlZCkNCj4gLQkJ
-Zm9yIChpID0gMDsgaSA8IG10a19jcnRjLT5kZHBfY29tcF9ucjsgaSsrKQ0KPiArCQlmb3IgKGkg
-PSAwOyBpIDwgbXRrX2NydGMtPmRkcF9jb21wX25yOyBpKyspIHsNCj4gIAkJCW10a19kZHBfZ2Ft
-bWFfc2V0KG10a19jcnRjLT5kZHBfY29tcFtpXSwNCj4gIAkJCQkJICBjcnRjLT5zdGF0ZSwNCj4g
-IAkJCQkJICBtdGtfY3J0Y19zdGF0ZS0+Y21kcV9oYW5kbGUpOw0KPiArCQkJbXRrX2RkcF9jdG1f
-c2V0KG10a19jcnRjLT5kZHBfY29tcFtpXSwgY3J0Yy0+c3RhdGUpOw0KDQpTb3JyeSwgSSdtIG5v
-dCBub3RpY2VkIHRoYXQgdGhlIGNvZGUgaGVyZSB3b3VsZCBub3Qgd3JpdGUgcmVnaXN0ZXIgaW4N
-CnZibGFuayBwZXJpb2QuIElmIGN0bSBjb3VsZCBiZSBzZXQgb3V0IG9mIHZibGFuayBwZXJpb2Qs
-IHBsYWNlIHRoZSBjb2RlDQpoZXJlIGFuZCBkbyBub3QgbmVlZCB0byBzdXBwb3J0IGNtZHEuIElm
-IGN0bSBzaG91bGQgYmUgc2V0IGluc2lkZSB2YmxhbmsNCnBlcmlvZCwgbW92ZSB0aGUgY29kZSB0
-byBtdGtfY3J0Y19kZHBfY29uZmlnKCkgYW5kIHN1cHBvcnQgY21kcQ0KaW50ZXJmYWNlLg0KDQo+
-ICsJCX0NCj4gKw0KPiAgI2lmZGVmIENPTkZJR19NVEtfQ01EUQ0KPiAgCWlmIChtdGtfY3J0Yy0+
-Y21kcV9jbGllbnQpIHsNCj4gIAkJZHJtX2F0b21pY19zdGF0ZV9nZXQob2xkX2F0b21pY19zdGF0
-ZSk7DQo+IEBAIC04MTksNiArODIyLDggQEAgaW50IG10a19kcm1fY3J0Y19jcmVhdGUoc3RydWN0
-IGRybV9kZXZpY2UgKmRybV9kZXYsDQo+ICAJaW50IHBpcGUgPSBwcml2LT5udW1fcGlwZXM7DQo+
-ICAJaW50IHJldDsNCj4gIAlpbnQgaTsNCj4gKwlib29sIGhhc19jdG0gPSBmYWxzZTsNCj4gKwl1
-aW50IGdhbW1hX2x1dF9zaXplID0gMDsNCj4gIA0KPiAgCWlmICghcGF0aCkNCj4gIAkJcmV0dXJu
-IDA7DQo+IEBAIC04NzAsNiArODc1LDEyIEBAIGludCBtdGtfZHJtX2NydGNfY3JlYXRlKHN0cnVj
-dCBkcm1fZGV2aWNlICpkcm1fZGV2LA0KPiAgCQl9DQo+ICANCj4gIAkJbXRrX2NydGMtPmRkcF9j
-b21wW2ldID0gY29tcDsNCj4gKw0KPiArCQlpZiAoY29tcF9pZCA9PSBERFBfQ09NUE9ORU5UX0ND
-T1JSKQ0KPiArCQkJaGFzX2N0bSA9IHRydWU7DQo+ICsNCj4gKwkJaWYgKGNvbXBfaWQgPT0gRERQ
-X0NPTVBPTkVOVF9HQU1NQSkNCj4gKwkJCWdhbW1hX2x1dF9zaXplID0gTVRLX0xVVF9TSVpFOw0K
-PiAgCX0NCj4gIA0KPiAgCWZvciAoaSA9IDA7IGkgPCBtdGtfY3J0Yy0+ZGRwX2NvbXBfbnI7IGkr
-KykNCj4gQEAgLTg5MSw3ICs5MDIsNyBAQCBpbnQgbXRrX2RybV9jcnRjX2NyZWF0ZShzdHJ1Y3Qg
-ZHJtX2RldmljZSAqZHJtX2RldiwNCj4gIAlpZiAocmV0IDwgMCkNCj4gIAkJcmV0dXJuIHJldDsN
-Cj4gIAlkcm1fbW9kZV9jcnRjX3NldF9nYW1tYV9zaXplKCZtdGtfY3J0Yy0+YmFzZSwgTVRLX0xV
-VF9TSVpFKTsNCj4gLQlkcm1fY3J0Y19lbmFibGVfY29sb3JfbWdtdCgmbXRrX2NydGMtPmJhc2Us
-IDAsIGZhbHNlLCBNVEtfTFVUX1NJWkUpOw0KPiArCWRybV9jcnRjX2VuYWJsZV9jb2xvcl9tZ210
-KCZtdGtfY3J0Yy0+YmFzZSwgMCwgaGFzX2N0bSwgZ2FtbWFfbHV0X3NpemUpOw0KPiAgCXByaXYt
-Pm51bV9waXBlcysrOw0KPiAgI2lmZGVmIENPTkZJR19NVEtfQ01EUQ0KPiAgCW10a19jcnRjLT5j
-bWRxX2NsaWVudCA9DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
-X2RybV9kZHBfY29tcC5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2Nv
-bXAuYw0KPiBpbmRleCA5Y2MxMmFmLi4yZmQ1MmJhIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dw
-dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMNCj4gQEAgLTM4LDcgKzM4LDE1IEBADQo+ICAj
-ZGVmaW5lIENDT1JSX0VOCQkJCUJJVCgwKQ0KPiAgI2RlZmluZSBESVNQX0NDT1JSX0NGRwkJCQkw
-eDAwMjANCj4gICNkZWZpbmUgQ0NPUlJfUkVMQVlfTU9ERQkJCUJJVCgwKQ0KPiArI2RlZmluZSBD
-Q09SUl9FTkdJTkVfRU4JCQkJQklUKDEpDQo+ICsjZGVmaW5lIENDT1JSX0dBTU1BX09GRgkJCQlC
-SVQoMikNCj4gKyNkZWZpbmUgQ0NPUlJfV0dBTVVUX1NSQ19DTElQCQkJQklUKDMpDQo+ICAjZGVm
-aW5lIERJU1BfQ0NPUlJfU0laRQkJCQkweDAwMzANCj4gKyNkZWZpbmUgRElTUF9DQ09SUl9DT0VG
-XzAJCQkweDAwODANCj4gKyNkZWZpbmUgRElTUF9DQ09SUl9DT0VGXzEJCQkweDAwODQNCj4gKyNk
-ZWZpbmUgRElTUF9DQ09SUl9DT0VGXzIJCQkweDAwODgNCj4gKyNkZWZpbmUgRElTUF9DQ09SUl9D
-T0VGXzMJCQkweDAwOEMNCj4gKyNkZWZpbmUgRElTUF9DQ09SUl9DT0VGXzQJCQkweDAwOTANCj4g
-IA0KPiAgI2RlZmluZSBESVNQX0RJVEhFUl9FTgkJCQkweDAwMDANCj4gICNkZWZpbmUgRElUSEVS
-X0VOCQkJCUJJVCgwKQ0KPiBAQCAtMTg3LDcgKzE5NSw3IEBAIHN0YXRpYyB2b2lkIG10a19jY29y
-cl9jb25maWcoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCwgdW5zaWduZWQgaW50IHcsDQo+ICAJ
-CQkgICAgIHVuc2lnbmVkIGludCBicGMsIHN0cnVjdCBjbWRxX3BrdCAqY21kcV9wa3QpDQo+ICB7
-DQo+ICAJbXRrX2RkcF93cml0ZShjbWRxX3BrdCwgaCA8PCAxNiB8IHcsIGNvbXAsIERJU1BfQ0NP
-UlJfU0laRSk7DQo+IC0JbXRrX2RkcF93cml0ZShjbWRxX3BrdCwgQ0NPUlJfUkVMQVlfTU9ERSwg
-Y29tcCwgRElTUF9DQ09SUl9DRkcpOw0KPiArCW10a19kZHBfd3JpdGUoY21kcV9wa3QsIENDT1JS
-X0VOR0lORV9FTiwgY29tcCwgRElTUF9DQ09SUl9DRkcpOw0KPiAgfQ0KPiAgDQo+ICBzdGF0aWMg
-dm9pZCBtdGtfY2NvcnJfc3RhcnQoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCkNCj4gQEAgLTIw
-MCw2ICsyMDgsNTYgQEAgc3RhdGljIHZvaWQgbXRrX2Njb3JyX3N0b3Aoc3RydWN0IG10a19kZHBf
-Y29tcCAqY29tcCkNCj4gIAl3cml0ZWxfcmVsYXhlZCgweDAsIGNvbXAtPnJlZ3MgKyBESVNQX0ND
-T1JSX0VOKTsNCj4gIH0NCj4gIA0KPiArLyogQ29udmVydHMgYSBEUk0gUzMxLjMyIHZhbHVlIHRv
-IHRoZSBIVyBTMC4xMSBmb3JtYXQuICovDQo+ICtzdGF0aWMgdTE2IG10a19jdG1fczMxXzMyX3Rv
-X3MwXzExKHU2NCBpbikNCj4gK3sNCj4gKwl1MTYgcjsNCj4gKw0KPiArCS8qIFNpZ24gYml0LiAq
-Lw0KPiArCXIgPSBpbiAmIEJJVF9VTEwoNjMpID8gQklUKDExKSA6IDA7DQo+ICsNCj4gKwlpZiAo
-KGluICYgR0VOTUFTS19VTEwoNjIsIDMzKSkgPiAwKSB7DQoNCmlmICgoaW4gJiBHRU5NQVNLX1VM
-TCg2MiwgMzIpKSA+IDApIHsNCg0KPiArCQkvKiBXZSBoYXZlIHplcm8gaW50ZWdlciBiaXRzIHNv
-IHdlIGNhbiBvbmx5IHNhdHVyYXRlIGhlcmUuICovDQo+ICsJCXIgfD0gR0VOTUFTSygxMCwgMCk7
-DQo+ICsJfSBlbHNlIHsNCj4gKwkJLyogT3RoZXJ3aXNlIHRha2UgdGhlIDkgbW9zdCBpbXBvcnRh
-bnQgZnJhY3Rpb25hbCBiaXRzLiAqLw0KPiArCQlyIHw9IChpbiA+PiAyMikgJiBHRU5NQVNLKDEw
-LCAwKTsNCg0KciB8PSAoaW4gPj4gMjEpICYgR0VOTUFTSygxMCwgMCk7DQoNClJlZ2FyZHMsDQpD
-Sw0KDQo+ICsJfQ0KPiArDQo+ICsJcmV0dXJuIHI7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyB2b2lk
-IG10a19jY29ycl9jdG1fc2V0KHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAsDQo+ICsJCQkgICAg
-ICBzdHJ1Y3QgZHJtX2NydGNfc3RhdGUgKnN0YXRlDQo+ICsJCQkgICAgICBzdHJ1Y3QgY21kcV9w
-a3QgKmNtZHFfcGt0KQ0KPiArew0KPiArCXN0cnVjdCBkcm1fcHJvcGVydHlfYmxvYiAqYmxvYiA9
-IHN0YXRlLT5jdG07DQo+ICsJc3RydWN0IGRybV9jb2xvcl9jdG0gKmN0bTsNCj4gKwljb25zdCB1
-NjQgKmlucHV0Ow0KPiArCXVpbnQxNl90IGNvZWZmc1s5XSA9IHsgMCB9Ow0KPiArCWludCBpOw0K
-PiArDQo+ICsJaWYgKCFibG9iKQ0KPiArCQlyZXR1cm47DQo+ICsNCj4gKwljdG0gPSAoc3RydWN0
-IGRybV9jb2xvcl9jdG0gKilibG9iLT5kYXRhOw0KPiArCWlucHV0ID0gY3RtLT5tYXRyaXg7DQo+
-ICsNCj4gKwlmb3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRShjb2VmZnMpOyBpKyspDQo+ICsJCWNv
-ZWZmc1tpXSA9IG10a19jdG1fczMxXzMyX3RvX3MwXzExKGlucHV0W2ldKTsNCj4gKw0KPiArCW10
-a19kZHBfd3JpdGUoY21kcV9wa3QsIGNvZWZmc1swXSA8PCAxNiB8IGNvZWZmc1sxXSwNCj4gKwkJ
-ICAgICAgY29tcCwgRElTUF9DQ09SUl9DT0VGXzApOw0KPiArCW10a19kZHBfd3JpdGUoY21kcV9w
-a3QsIGNvZWZmc1syXSA8PCAxNiB8IGNvZWZmc1szXSwNCj4gKwkJICAgICAgY29tcCwgRElTUF9D
-Q09SUl9DT0VGXzEpOw0KPiArCW10a19kZHBfd3JpdGUoY21kcV9wa3QsIGNvZWZmc1s0XSA8PCAx
-NiB8IGNvZWZmc1s1XSwNCj4gKwkJICAgICAgY29tcCwgRElTUF9DQ09SUl9DT0VGXzIpOw0KPiAr
-CW10a19kZHBfd3JpdGUoY21kcV9wa3QsIGNvZWZmc1s2XSA8PCAxNiB8IGNvZWZmc1s3XSwNCj4g
-KwkJICAgICAgY29tcCwgRElTUF9DQ09SUl9DT0VGXzMpOw0KPiArCW10a19kZHBfd3JpdGUoY21k
-cV9wa3QsIGNvZWZmc1s4XSA8PCAxNiwNCj4gKwkJICAgICAgY29tcCwgRElTUF9DQ09SUl9DT0VG
-XzQpOw0KPiArfQ0KPiArDQo+ICBzdGF0aWMgdm9pZCBtdGtfZGl0aGVyX2NvbmZpZyhzdHJ1Y3Qg
-bXRrX2RkcF9jb21wICpjb21wLCB1bnNpZ25lZCBpbnQgdywNCj4gIAkJCSAgICAgIHVuc2lnbmVk
-IGludCBoLCB1bnNpZ25lZCBpbnQgdnJlZnJlc2gsDQo+ICAJCQkgICAgICB1bnNpZ25lZCBpbnQg
-YnBjLCBzdHJ1Y3QgY21kcV9wa3QgKmNtZHFfcGt0KQ0KPiBAQCAtMjY5LDYgKzMyNyw3IEBAIHN0
-YXRpYyB2b2lkIG10a19nYW1tYV9zZXQoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCwNCj4gIAku
-Y29uZmlnID0gbXRrX2Njb3JyX2NvbmZpZywNCj4gIAkuc3RhcnQgPSBtdGtfY2NvcnJfc3RhcnQs
-DQo+ICAJLnN0b3AgPSBtdGtfY2NvcnJfc3RvcCwNCj4gKwkuY3RtX3NldCA9IG10a19jY29ycl9j
-dG1fc2V0LA0KPiAgfTsNCj4gIA0KPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfZGRwX2NvbXBf
-ZnVuY3MgZGRwX2RpdGhlciA9IHsNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRp
-YXRlay9tdGtfZHJtX2RkcF9jb21wLmggYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
-bV9kZHBfY29tcC5oDQo+IGluZGV4IDViMGEzZDQuLjRlM2U1YWEgMTAwNjQ0DQo+IC0tLSBhL2Ry
-aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmgNCj4gKysrIGIvZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaA0KPiBAQCAtOTUsNiArOTUsOSBA
-QCBzdHJ1Y3QgbXRrX2RkcF9jb21wX2Z1bmNzIHsNCj4gIAkJCSAgc3RydWN0IGNtZHFfcGt0ICpj
-bWRxX3BrdCk7DQo+ICAJdm9pZCAoKmJnY2xyX2luX29uKShzdHJ1Y3QgbXRrX2RkcF9jb21wICpj
-b21wKTsNCj4gIAl2b2lkICgqYmdjbHJfaW5fb2ZmKShzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21w
-KTsNCj4gKwl2b2lkICgqY3RtX3NldCkoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCwNCj4gKwkJ
-CXN0cnVjdCBkcm1fY3J0Y19zdGF0ZSAqc3RhdGUNCj4gKwkJCXN0cnVjdCBjbWRxX3BrdCAqY21k
-cV9wa3QpOw0KPiAgfTsNCj4gIA0KPiAgc3RydWN0IG10a19kZHBfY29tcCB7DQo+IEBAIC0yMTMs
-NiArMjE2LDE0IEBAIHN0YXRpYyBpbmxpbmUgdm9pZCBtdGtfZGRwX2NvbXBfYmdjbHJfaW5fb2Zm
-KHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXApDQo+ICAJCWNvbXAtPmZ1bmNzLT5iZ2Nscl9pbl9v
-ZmYoY29tcCk7DQo+ICB9DQo+ICANCj4gK3N0YXRpYyBpbmxpbmUgdm9pZCBtdGtfZGRwX2N0bV9z
-ZXQoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCwNCj4gKwkJCQkgICBzdHJ1Y3QgZHJtX2NydGNf
-c3RhdGUgKnN0YXRlDQo+ICsJCQkJICAgc3RydWN0IGNtZHFfcGt0ICpjbWRxX3BrdCkNCj4gK3sN
-Cj4gKwlpZiAoY29tcC0+ZnVuY3MgJiYgY29tcC0+ZnVuY3MtPmN0bV9zZXQpDQo+ICsJCWNvbXAt
-PmZ1bmNzLT5jdG1fc2V0KGNvbXAsIHN0YXRlKTsNCj4gK30NCj4gKw0KPiAgaW50IG10a19kZHBf
-Y29tcF9nZXRfaWQoc3RydWN0IGRldmljZV9ub2RlICpub2RlLA0KPiAgCQkJZW51bSBtdGtfZGRw
-X2NvbXBfdHlwZSBjb21wX3R5cGUpOw0KPiAgaW50IG10a19kZHBfY29tcF9pbml0KHN0cnVjdCBk
-ZXZpY2UgKmRldiwgc3RydWN0IGRldmljZV9ub2RlICpjb21wX25vZGUsDQoNCg==
+TSENS IP v2.x supports critical interrupts and v2.3+ adds watchdog support
+in case the FSM is stuck. Enable support in the driver.
+
+This series was generated on top of linux-next from 20191202 to capture
+const changes for msm8976 that is queued currently.
+
+Changes from v1:
+- Make tsens_features non-const to allow run time detection of features
+- Pass tsens_sensor around as a const
+- Fix a bug to release dev pointer in success path
+- Address review comments from Bjorn and Stephen (thanks for the review)
+- Add msm8998 and msm8996 DTSI changes for critical interrupts
+
+Amit Kucheria (9):
+  drivers: thermal: tsens: De-constify struct tsens_features
+  drivers: thermal: tsens: Pass around struct tsens_sensor as a constant
+  drivers: thermal: tsens: use simpler variables
+  drivers: thermal: tsens: Release device in success path
+  drivers: thermal: tsens: Add critical interrupt support
+  drivers: thermal: tsens: Add watchdog support
+  arm64: dts: sdm845: thermal: Add critical interrupt support
+  arm64: dts: msm8996: thermal: Add critical interrupt support
+  arm64: dts: msm8998: thermal: Add critical interrupt support
+
+ arch/arm64/boot/dts/qcom/msm8996.dtsi |  10 +-
+ arch/arm64/boot/dts/qcom/msm8998.dtsi |  10 +-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi  |  10 +-
+ drivers/thermal/qcom/tsens-8960.c     |   4 +-
+ drivers/thermal/qcom/tsens-common.c   | 188 +++++++++++++++++++++++---
+ drivers/thermal/qcom/tsens-v0_1.c     |   6 +-
+ drivers/thermal/qcom/tsens-v1.c       |   6 +-
+ drivers/thermal/qcom/tsens-v2.c       |  24 +++-
+ drivers/thermal/qcom/tsens.c          |  26 +++-
+ drivers/thermal/qcom/tsens.h          | 104 ++++++++++++--
+ 10 files changed, 332 insertions(+), 56 deletions(-)
+
+-- 
+2.17.1
 
