@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 032D3C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 962D3C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE4F22064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 662B82064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:03:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414202;
-	bh=cE1PO+QmHaBe5myBtegunEdnraOxCVMCTh1gItlg7xs=;
+	s=default; t=1575414209;
+	bh=pd3AeSBtOZjnIaMKLxGwzgSveNiz/pmLImr/pfQFtRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=krXgh5O5uuK6OPwlaX3ElZ4GmY4qJGUvgbek6+lp5F2HKtiGrurw45syNCaHuA4Bi
-	 wGYo6nD//JRrBlGr6cQaJ7yQm7ZysR1UIfrEtnqB9N/q59JCvSCTLh1QhYd7qgxY7U
-	 qz4/E1HmUecjPLKGtVHfMNHrFG84dDnQgzDGregk=
+	b=fhRbrmc2jpRNLSVnL2O3ApohbxBlWO4XpV0QzLC/tYR7DioXL/iPeCwamU+cnBwaX
+	 PJe+rxFB+dO36eRi8NhsZql9/Wrz9AiHR7PFJRUxLdYBFy0x7YfSTUIRklU2PE0mz/
+	 6MTyMJxTCqjByGExC0Zhpv2lL9o8fvYLaRCL+ia4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730123AbfLCXDV (ORCPT
+        id S1730092AbfLCWxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:03:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46434 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:53:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729760AbfLCWxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:53:16 -0500
+        id S1730066AbfLCWw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:52:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA09F2053B;
-        Tue,  3 Dec 2019 22:53:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B14442084F;
+        Tue,  3 Dec 2019 22:52:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413595;
-        bh=cE1PO+QmHaBe5myBtegunEdnraOxCVMCTh1gItlg7xs=;
+        s=default; t=1575413575;
+        bh=pd3AeSBtOZjnIaMKLxGwzgSveNiz/pmLImr/pfQFtRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NpJxRbRuY+Gtn+xX/cgCZSuAvMoVX6aMoBOTlCRY8T8DhVu+0dAmM6PlSWPsriYs9
-         kEfk5TASTbtawT8EwpmKNlp/KVBPpLb6UOXtVbIpqQcWTm9xbSUnwephXw8CnCMLE7
-         D+aytAFXbQs8Ro0Jm6t81b9FOwN3NUEABMrQwV2M=
+        b=tWEjxvALba7qju1WSSp7mwxIDfpoY08YgK+qKUkj49SkASs+ocUr1marCbL+R5lZR
+         B2vk0/S81zMmaaAs2XM03xR3NvCuBJPB/VMqIzfvVTt4D8cWgrfFHgOipMWXRq3qh4
+         p1u8yq9KdU1s0j51B4VfBvrhcP+o6DPqrz5KMb4c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 171/321] drbd: ignore "all zero" peer volume sizes in handshake
-Date:   Tue,  3 Dec 2019 23:33:57 +0100
-Message-Id: <20191203223436.029373914@linuxfoundation.org>
+        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 181/321] crypto: mxc-scc - fix build warnings on ARM64
+Date:   Tue,  3 Dec 2019 23:34:07 +0100
+Message-Id: <20191203223436.543308400@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -59,114 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars Ellenberg <lars.ellenberg@linbit.com>
+From: Fabio Estevam <festevam@gmail.com>
 
-[ Upstream commit 94c43a13b8d6e3e0dd77b3536b5e04a84936b762 ]
+[ Upstream commit 2326828ee40357b3d2b1359b8ca7526af201495b ]
 
-During handshake, if we are diskless ourselves, we used to accept any size
-presented by the peer.
+The following build warnings are seen when building for ARM64 allmodconfig:
 
-Which could be zero if that peer was just brought up and connected
-to us without having a disk attached first, in which case both
-peers would just "flip" their volume sizes.
+drivers/crypto/mxc-scc.c:181:20: warning: format '%d' expects argument of type 'int', but argument 5 has type 'size_t' {aka 'long unsigned int'} [-Wformat=]
+drivers/crypto/mxc-scc.c:186:21: warning: format '%d' expects argument of type 'int', but argument 4 has type 'size_t' {aka 'long unsigned int'} [-Wformat=]
+drivers/crypto/mxc-scc.c:277:21: warning: format '%d' expects argument of type 'int', but argument 4 has type 'size_t' {aka 'long unsigned int'} [-Wformat=]
+drivers/crypto/mxc-scc.c:339:3: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+drivers/crypto/mxc-scc.c:340:3: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
 
-Now, even a diskless node will ignore "zero" sizes
-presented by a diskless peer.
+Fix them by using the %zu specifier to print a size_t variable and using
+a plain %x to print the result of a readl().
 
-Also a currently Diskless Primary will refuse to shrink during handshake:
-it may be frozen, and waiting for a "suitable" local disk or peer to
-re-appear (on-no-data-accessible suspend-io). If the peer is smaller
-than what we used to be, it is not suitable.
-
-The logic for a diskless node during handshake is now supposed to be:
-believe the peer, if
- - I don't have a current size myself
- - we agree on the size anyways
- - I do have a current size, am Secondary, and he has the only disk
- - I do have a current size, am Primary, and he has the only disk,
-   which is larger than my current size
-
-Signed-off-by: Lars Ellenberg <lars.ellenberg@linbit.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/drbd/drbd_receiver.c | 33 +++++++++++++++++++++++++++---
- 1 file changed, 30 insertions(+), 3 deletions(-)
+ drivers/crypto/mxc-scc.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
-index 3cdadf75c82da..c9e8d61dea248 100644
---- a/drivers/block/drbd/drbd_receiver.c
-+++ b/drivers/block/drbd/drbd_receiver.c
-@@ -3980,6 +3980,7 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info
- 	struct o_qlim *o = (connection->agreed_features & DRBD_FF_WSAME) ? p->qlim : NULL;
- 	enum determine_dev_size dd = DS_UNCHANGED;
- 	sector_t p_size, p_usize, p_csize, my_usize;
-+	sector_t new_size, cur_size;
- 	int ldsc = 0; /* local disk size changed */
- 	enum dds_flags ddsf;
+diff --git a/drivers/crypto/mxc-scc.c b/drivers/crypto/mxc-scc.c
+index e01c46387df8d..519086730791b 100644
+--- a/drivers/crypto/mxc-scc.c
++++ b/drivers/crypto/mxc-scc.c
+@@ -178,12 +178,12 @@ static int mxc_scc_get_data(struct mxc_scc_ctx *ctx,
+ 	else
+ 		from = scc->black_memory;
  
-@@ -3987,6 +3988,7 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info
- 	if (!peer_device)
- 		return config_unknown_volume(connection, pi);
- 	device = peer_device->device;
-+	cur_size = drbd_get_capacity(device->this_bdev);
- 
- 	p_size = be64_to_cpu(p->d_size);
- 	p_usize = be64_to_cpu(p->u_size);
-@@ -3997,7 +3999,6 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info
- 	device->p_size = p_size;
- 
- 	if (get_ldev(device)) {
--		sector_t new_size, cur_size;
- 		rcu_read_lock();
- 		my_usize = rcu_dereference(device->ldev->disk_conf)->disk_size;
- 		rcu_read_unlock();
-@@ -4015,7 +4016,6 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info
- 		/* Never shrink a device with usable data during connect.
- 		   But allow online shrinking if we are connected. */
- 		new_size = drbd_new_dev_size(device, device->ldev, p_usize, 0);
--		cur_size = drbd_get_capacity(device->this_bdev);
- 		if (new_size < cur_size &&
- 		    device->state.disk >= D_OUTDATED &&
- 		    device->state.conn < C_CONNECTED) {
-@@ -4080,9 +4080,36 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info
- 		 *
- 		 * However, if he sends a zero current size,
- 		 * take his (user-capped or) backing disk size anyways.
-+		 *
-+		 * Unless of course he does not have a disk himself.
-+		 * In which case we ignore this completely.
- 		 */
-+		sector_t new_size = p_csize ?: p_usize ?: p_size;
- 		drbd_reconsider_queue_parameters(device, NULL, o);
--		drbd_set_my_capacity(device, p_csize ?: p_usize ?: p_size);
-+		if (new_size == 0) {
-+			/* Ignore, peer does not know nothing. */
-+		} else if (new_size == cur_size) {
-+			/* nothing to do */
-+		} else if (cur_size != 0 && p_size == 0) {
-+			drbd_warn(device, "Ignored diskless peer device size (peer:%llu != me:%llu sectors)!\n",
-+					(unsigned long long)new_size, (unsigned long long)cur_size);
-+		} else if (new_size < cur_size && device->state.role == R_PRIMARY) {
-+			drbd_err(device, "The peer's device size is too small! (%llu < %llu sectors); demote me first!\n",
-+					(unsigned long long)new_size, (unsigned long long)cur_size);
-+			conn_request_state(peer_device->connection, NS(conn, C_DISCONNECTING), CS_HARD);
-+			return -EIO;
-+		} else {
-+			/* I believe the peer, if
-+			 *  - I don't have a current size myself
-+			 *  - we agree on the size anyways
-+			 *  - I do have a current size, am Secondary,
-+			 *    and he has the only disk
-+			 *  - I do have a current size, am Primary,
-+			 *    and he has the only disk,
-+			 *    which is larger than my current size
-+			 */
-+			drbd_set_my_capacity(device, new_size);
-+		}
+-	dev_dbg(scc->dev, "pcopy: from 0x%p %d bytes\n", from,
++	dev_dbg(scc->dev, "pcopy: from 0x%p %zu bytes\n", from,
+ 		ctx->dst_nents * 8);
+ 	len = sg_pcopy_from_buffer(ablkreq->dst, ctx->dst_nents,
+ 				   from, ctx->size, ctx->offset);
+ 	if (!len) {
+-		dev_err(scc->dev, "pcopy err from 0x%p (len=%d)\n", from, len);
++		dev_err(scc->dev, "pcopy err from 0x%p (len=%zu)\n", from, len);
+ 		return -EINVAL;
  	}
  
- 	if (get_ldev(device)) {
+@@ -274,7 +274,7 @@ static int mxc_scc_put_data(struct mxc_scc_ctx *ctx,
+ 	len = sg_pcopy_to_buffer(req->src, ctx->src_nents,
+ 				 to, len, ctx->offset);
+ 	if (!len) {
+-		dev_err(scc->dev, "pcopy err to 0x%p (len=%d)\n", to, len);
++		dev_err(scc->dev, "pcopy err to 0x%p (len=%zu)\n", to, len);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -335,9 +335,9 @@ static void mxc_scc_ablkcipher_next(struct mxc_scc_ctx *ctx,
+ 		return;
+ 	}
+ 
+-	dev_dbg(scc->dev, "Start encryption (0x%p/0x%p)\n",
+-		(void *)readl(scc->base + SCC_SCM_RED_START),
+-		(void *)readl(scc->base + SCC_SCM_BLACK_START));
++	dev_dbg(scc->dev, "Start encryption (0x%x/0x%x)\n",
++		readl(scc->base + SCC_SCM_RED_START),
++		readl(scc->base + SCC_SCM_BLACK_START));
+ 
+ 	/* clear interrupt control registers */
+ 	writel(SCC_SCM_INTR_CTRL_CLR_INTR,
 -- 
 2.20.1
 
