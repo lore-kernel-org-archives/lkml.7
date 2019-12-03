@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E472EC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 906B4C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B817D20733
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70C742071F
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:50:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727477AbfLCDt6 (ORCPT
+        id S1727489AbfLCDuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 22:49:58 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44980 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726847AbfLCDsa (ORCPT
+        Mon, 2 Dec 2019 22:50:00 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:8882 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726824AbfLCDsa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Dec 2019 22:48:30 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB33klrn078438
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB33kcFo118297
         for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 22:48:29 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wm6rr0pby-1
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wkrj553j6-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
         for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 22:48:29 -0500
 Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
         Tue, 3 Dec 2019 03:48:25 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
         Tue, 3 Dec 2019 03:48:18 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB33mHuF56492174
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB33mHuf63307976
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Tue, 3 Dec 2019 03:48:17 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 59F82AE04D;
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 635DCA4057;
         Tue,  3 Dec 2019 03:48:17 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B7FD0AE045;
-        Tue,  3 Dec 2019 03:48:16 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 11606A4053;
+        Tue,  3 Dec 2019 03:48:17 +0000 (GMT)
 Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  3 Dec 2019 03:48:16 +0000 (GMT)
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  3 Dec 2019 03:48:17 +0000 (GMT)
 Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
         (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 85EACA03CE;
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id BDAD8A03D3;
         Tue,  3 Dec 2019 14:48:12 +1100 (AEDT)
 From:   "Alastair D'Silva" <alastair@au1.ibm.com>
 To:     alastair@d-silva.org
@@ -85,24 +85,24 @@ Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Alexey Kardashevskiy <aik@ozlabs.ru>,
         linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Subject: [PATCH v2 06/27] ocxl: Tally up the LPC memory on a link & allow it to be mapped
-Date:   Tue,  3 Dec 2019 14:46:34 +1100
+Subject: [PATCH v2 09/27] ocxl: Free detached contexts in ocxl_context_detach_all()
+Date:   Tue,  3 Dec 2019 14:46:37 +1100
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191203034655.51561-1-alastair@au1.ibm.com>
 References: <20191203034655.51561-1-alastair@au1.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19120303-0012-0000-0000-000003701286
+x-cbid: 19120303-0008-0000-0000-0000033C0FDE
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120303-0013-0000-0000-000021ABCCBB
-Message-Id: <20191203034655.51561-7-alastair@au1.ibm.com>
+x-cbparentid: 19120303-0009-0000-0000-00004A5B289A
+Message-Id: <20191203034655.51561-10-alastair@au1.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
  definitions=2019-12-02_06:2019-11-29,2019-12-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=3 adultscore=0
- spamscore=0 priorityscore=1501 mlxscore=0 bulkscore=0 mlxlogscore=888
- lowpriorityscore=0 impostorscore=0 phishscore=0 clxscore=1015
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ suspectscore=3 lowpriorityscore=0 clxscore=1015 priorityscore=1501
+ mlxscore=0 bulkscore=0 malwarescore=0 phishscore=0 impostorscore=0
+ mlxlogscore=811 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-1910280000 definitions=main-1912030032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -111,162 +111,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alastair D'Silva <alastair@d-silva.org>
 
-Tally up the LPC memory on an OpenCAPI link & allow it to be mapped
+ocxl_context_detach_all() is called from ocxl_function_close(), so
+there is no reason to leave the contexts allocated, as the caller
+can do nothing useful with them at that point.
+
+This also has the side-effect of freeing any allocated IRQs
+within the context.
 
 Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 ---
- drivers/misc/ocxl/core.c          | 10 ++++++
- drivers/misc/ocxl/link.c          | 60 +++++++++++++++++++++++++++++++
- drivers/misc/ocxl/ocxl_internal.h | 33 +++++++++++++++++
- 3 files changed, 103 insertions(+)
+ drivers/misc/ocxl/context.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
-index b7a09b21ab36..2531c6cf19a0 100644
---- a/drivers/misc/ocxl/core.c
-+++ b/drivers/misc/ocxl/core.c
-@@ -230,8 +230,18 @@ static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
- 	if (rc)
- 		goto err_free_pasid;
+diff --git a/drivers/misc/ocxl/context.c b/drivers/misc/ocxl/context.c
+index 994563a078eb..6cb36ef96e09 100644
+--- a/drivers/misc/ocxl/context.c
++++ b/drivers/misc/ocxl/context.c
+@@ -259,10 +259,11 @@ void ocxl_context_detach_all(struct ocxl_afu *afu)
+ {
+ 	struct ocxl_context *ctx;
+ 	int tmp;
++	int rc;
  
-+	if (afu->config.lpc_mem_size || afu->config.special_purpose_mem_size) {
-+		rc = ocxl_link_add_lpc_mem(afu->fn->link, afu->config.lpc_mem_offset,
-+					   afu->config.lpc_mem_size +
-+					   afu->config.special_purpose_mem_size);
-+		if (rc)
-+			goto err_free_mmio;
-+	}
+ 	mutex_lock(&afu->contexts_lock);
+ 	idr_for_each_entry(&afu->contexts_idr, ctx, tmp) {
+-		ocxl_context_detach(ctx);
++		rc = ocxl_context_detach(ctx);
+ 		/*
+ 		 * We are force detaching - remove any active mmio
+ 		 * mappings so userspace cannot interfere with the
+@@ -274,6 +275,9 @@ void ocxl_context_detach_all(struct ocxl_afu *afu)
+ 		if (ctx->mapping)
+ 			unmap_mapping_range(ctx->mapping, 0, 0, 1);
+ 		mutex_unlock(&ctx->mapping_lock);
 +
- 	return 0;
- 
-+err_free_mmio:
-+	unmap_mmio_areas(afu);
- err_free_pasid:
- 	reclaim_afu_pasid(afu);
- err_free_actag:
-diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
-index 58d111afd9f6..d8503f0dc6ec 100644
---- a/drivers/misc/ocxl/link.c
-+++ b/drivers/misc/ocxl/link.c
-@@ -84,6 +84,11 @@ struct ocxl_link {
- 	int dev;
- 	atomic_t irq_available;
- 	struct spa *spa;
-+	struct mutex lpc_mem_lock;
-+	u64 lpc_mem_sz; /* Total amount of LPC memory presented on the link */
-+	u64 lpc_mem;
-+	int lpc_consumers;
-+
- 	void *platform_data;
- };
- static struct list_head links_list = LIST_HEAD_INIT(links_list);
-@@ -396,6 +401,8 @@ static int alloc_link(struct pci_dev *dev, int PE_mask, struct ocxl_link **out_l
- 	if (rc)
- 		goto err_spa;
- 
-+	mutex_init(&link->lpc_mem_lock);
-+
- 	/* platform specific hook */
- 	rc = pnv_ocxl_spa_setup(dev, link->spa->spa_mem, PE_mask,
- 				&link->platform_data);
-@@ -711,3 +718,56 @@ void ocxl_link_free_irq(void *link_handle, int hw_irq)
- 	atomic_inc(&link->irq_available);
++		if (rc != -EBUSY)
++			ocxl_context_free(ctx);
+ 	}
+ 	mutex_unlock(&afu->contexts_lock);
  }
- EXPORT_SYMBOL_GPL(ocxl_link_free_irq);
-+
-+int ocxl_link_add_lpc_mem(void *link_handle, u64 offset, u64 size)
-+{
-+	struct ocxl_link *link = (struct ocxl_link *) link_handle;
-+
-+	// Check for overflow
-+	if (offset > (offset + size))
-+		return -EINVAL;
-+
-+	mutex_lock(&link->lpc_mem_lock);
-+	link->lpc_mem_sz = max(link->lpc_mem_sz, offset + size);
-+
-+	mutex_unlock(&link->lpc_mem_lock);
-+
-+	return 0;
-+}
-+
-+u64 ocxl_link_lpc_map(void *link_handle, struct pci_dev *pdev)
-+{
-+	struct ocxl_link *link = (struct ocxl_link *) link_handle;
-+	u64 lpc_mem;
-+
-+	mutex_lock(&link->lpc_mem_lock);
-+	if (link->lpc_mem) {
-+		lpc_mem = link->lpc_mem;
-+
-+		link->lpc_consumers++;
-+		mutex_unlock(&link->lpc_mem_lock);
-+		return lpc_mem;
-+	}
-+
-+	link->lpc_mem = pnv_ocxl_platform_lpc_setup(pdev, link->lpc_mem_sz);
-+	if (link->lpc_mem)
-+		link->lpc_consumers++;
-+	lpc_mem = link->lpc_mem;
-+	mutex_unlock(&link->lpc_mem_lock);
-+
-+	return lpc_mem;
-+}
-+
-+void ocxl_link_lpc_release(void *link_handle, struct pci_dev *pdev)
-+{
-+	struct ocxl_link *link = (struct ocxl_link *) link_handle;
-+
-+	mutex_lock(&link->lpc_mem_lock);
-+	WARN_ON(--link->lpc_consumers < 0);
-+	if (link->lpc_consumers == 0) {
-+		pnv_ocxl_platform_lpc_release(pdev);
-+		link->lpc_mem = 0;
-+	}
-+
-+	mutex_unlock(&link->lpc_mem_lock);
-+}
-diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
-index 97415afd79f3..20b417e00949 100644
---- a/drivers/misc/ocxl/ocxl_internal.h
-+++ b/drivers/misc/ocxl/ocxl_internal.h
-@@ -141,4 +141,37 @@ int ocxl_irq_offset_to_id(struct ocxl_context *ctx, u64 offset);
- u64 ocxl_irq_id_to_offset(struct ocxl_context *ctx, int irq_id);
- void ocxl_afu_irq_free_all(struct ocxl_context *ctx);
- 
-+/**
-+ * ocxl_link_add_lpc_mem() - Increment the amount of memory required by an OpenCAPI link
-+ *
-+ * @link_handle: The OpenCAPI link handle
-+ * @offset: The offset of the memory to add
-+ * @size: The amount of memory to increment by
-+ *
-+ * Return 0 on success, negative on overflow
-+ */
-+int ocxl_link_add_lpc_mem(void *link_handle, u64 offset, u64 size);
-+
-+/**
-+ * ocxl_link_lpc_map() - Map the LPC memory for an OpenCAPI device
-+ *
-+ * Since LPC memory belongs to a link, the whole LPC memory available
-+ * on the link bust be mapped in order to make it accessible to a device.
-+ *
-+ * @link_handle: The OpenCAPI link handle
-+ * @pdev: A device that is on the link
-+ */
-+u64 ocxl_link_lpc_map(void *link_handle, struct pci_dev *pdev);
-+
-+/**
-+ * ocxl_link_lpc_release() - Release the LPC memory device for an OpenCAPI device
-+ *
-+ * Offlines LPC memory on an OpenCAPI link for a device. If this is the
-+ * last device on the link to release the memory, unmap it from the link.
-+ *
-+ * @link_handle: The OpenCAPI link handle
-+ * @pdev: A device that is on the link
-+ */
-+void ocxl_link_lpc_release(void *link_handle, struct pci_dev *pdev);
-+
- #endif /* _OCXL_INTERNAL_H_ */
 -- 
 2.23.0
 
