@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0AEC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4066C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE27320684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAA3F207DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412797;
-	bh=6xyK8o/gOgI9IfBK/zYzjcmDxtLo1/v0Rv2IftUjTrg=;
+	s=default; t=1575412799;
+	bh=du14ndf91YLkHmlHu5bNi99zWW8kirSW/m0S6cMn+1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pCc1jl/hvi/pCNiC1YmffTqyjBkHraaKCf9W1B7LkL7scEDJkVK+39KEKDcV2RAHc
-	 QNON4EGu+WSU18bEee6Wi60WiYFqd6POh4fCzH+/b7wPi3lpyJiP+OPpE8+5MBln5z
-	 jWy5/rG3Nd82sBvNva9HTzzRhiisXDFzzo36dIPI=
+	b=KUMo8op4jXR8zx7dzKHqDpnc9ZP8Nr0gampsVn+3NQQgX1bzaiA7SPDGiBe/v/FND
+	 +pAI7pdBL2TV6AxLXLif5vRMCGqbVdJae2WX8/jGiURzkxpOxfXjSmlRiqWMwXlje4
+	 viuMzywQfdrYB5CMorZh3JQ6EKakUHmhlsIdJ4NA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbfLCWjz (ORCPT
+        id S1728332AbfLCWj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:39:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50876 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:39:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727963AbfLCWjw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:39:52 -0500
+        id S1727993AbfLCWj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:39:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B39D20862;
-        Tue,  3 Dec 2019 22:39:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1292B20684;
+        Tue,  3 Dec 2019 22:39:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412792;
-        bh=6xyK8o/gOgI9IfBK/zYzjcmDxtLo1/v0Rv2IftUjTrg=;
+        s=default; t=1575412794;
+        bh=du14ndf91YLkHmlHu5bNi99zWW8kirSW/m0S6cMn+1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MSPNWdEdUADByHjRADBvQjVs6zURtZxb8EiNfU5mw/SOM375y/dxAjuuBYUaT0yQs
-         N1yEpLiAqIJxSq5MDsEHZ4U8zhrc0anutmFzCBRJFLY3WMKt9eeWrxrV7v5CCXK0RB
-         7BUdyHI0sn9Fczz98UEshzQidFXKhoAzbF8i+NAw=
+        b=FkXfHy69YwvyYm5kRSihmcox1kinXlLMMNTSxws+NGx5oJlCBdn+AHWOs89RkOYbn
+         PKUiMtNx3/DqJlRTv2DkMjIXjHpOT0S844rezshGBuVAIQCpSUSzxktq01LoU7aC6T
+         bRAiZFZDOzEQHy6DvOczuGToImlZSZWUJ9t/zZh8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Reported-by: Marian Mihailescu" <mihailescu2m@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 019/135] clk: samsung: exynos5420: Preserve PLL configuration during suspend/resume
-Date:   Tue,  3 Dec 2019 23:34:19 +0100
-Message-Id: <20191203213009.670464810@linuxfoundation.org>
+        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 002/135] net: separate out the msghdr copy from ___sys_{send,recv}msg()
+Date:   Tue,  3 Dec 2019 23:34:02 +0100
+Message-Id: <20191203213006.151586635@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -62,48 +59,248 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit e9323b664ce29547d996195e8a6129a351c39108 ]
+[ Upstream commit 4257c8ca13b084550574b8c9a667d9c90ff746eb ]
 
-Properly save and restore all top PLL related configuration registers
-during suspend/resume cycle. So far driver only handled EPLL and RPLL
-clocks, all other were reset to default values after suspend/resume cycle.
-This caused for example lower G3D (MALI Panfrost) performance after system
-resume, even if performance governor has been selected.
+This is in preparation for enabling the io_uring helpers for sendmsg
+and recvmsg to first copy the header for validation before continuing
+with the operation.
 
-Reported-by: Reported-by: Marian Mihailescu <mihailescu2m@gmail.com>
-Fixes: 773424326b51 ("clk: samsung: exynos5420: add more registers to restore list")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+There should be no functional changes in this patch.
+
+Acked-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/samsung/clk-exynos5420.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ net/socket.c | 141 ++++++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 95 insertions(+), 46 deletions(-)
 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index dfa862d55246e..31466cd1842f8 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -165,12 +165,18 @@ static const unsigned long exynos5x_clk_regs[] __initconst = {
- 	GATE_BUS_CPU,
- 	GATE_SCLK_CPU,
- 	CLKOUT_CMU_CPU,
-+	CPLL_CON0,
-+	DPLL_CON0,
- 	EPLL_CON0,
- 	EPLL_CON1,
- 	EPLL_CON2,
- 	RPLL_CON0,
- 	RPLL_CON1,
- 	RPLL_CON2,
-+	IPLL_CON0,
-+	SPLL_CON0,
-+	VPLL_CON0,
-+	MPLL_CON0,
- 	SRC_TOP0,
- 	SRC_TOP1,
- 	SRC_TOP2,
+diff --git a/net/socket.c b/net/socket.c
+index 6a9ab7a8b1d2c..fbe08d7df7732 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -2232,15 +2232,10 @@ static int copy_msghdr_from_user(struct msghdr *kmsg,
+ 	return err < 0 ? err : 0;
+ }
+ 
+-static int ___sys_sendmsg(struct socket *sock, struct user_msghdr __user *msg,
+-			 struct msghdr *msg_sys, unsigned int flags,
+-			 struct used_address *used_address,
+-			 unsigned int allowed_msghdr_flags)
++static int ____sys_sendmsg(struct socket *sock, struct msghdr *msg_sys,
++			   unsigned int flags, struct used_address *used_address,
++			   unsigned int allowed_msghdr_flags)
+ {
+-	struct compat_msghdr __user *msg_compat =
+-	    (struct compat_msghdr __user *)msg;
+-	struct sockaddr_storage address;
+-	struct iovec iovstack[UIO_FASTIOV], *iov = iovstack;
+ 	unsigned char ctl[sizeof(struct cmsghdr) + 20]
+ 				__aligned(sizeof(__kernel_size_t));
+ 	/* 20 is size of ipv6_pktinfo */
+@@ -2248,19 +2243,10 @@ static int ___sys_sendmsg(struct socket *sock, struct user_msghdr __user *msg,
+ 	int ctl_len;
+ 	ssize_t err;
+ 
+-	msg_sys->msg_name = &address;
+-
+-	if (MSG_CMSG_COMPAT & flags)
+-		err = get_compat_msghdr(msg_sys, msg_compat, NULL, &iov);
+-	else
+-		err = copy_msghdr_from_user(msg_sys, msg, NULL, &iov);
+-	if (err < 0)
+-		return err;
+-
+ 	err = -ENOBUFS;
+ 
+ 	if (msg_sys->msg_controllen > INT_MAX)
+-		goto out_freeiov;
++		goto out;
+ 	flags |= (msg_sys->msg_flags & allowed_msghdr_flags);
+ 	ctl_len = msg_sys->msg_controllen;
+ 	if ((MSG_CMSG_COMPAT & flags) && ctl_len) {
+@@ -2268,7 +2254,7 @@ static int ___sys_sendmsg(struct socket *sock, struct user_msghdr __user *msg,
+ 		    cmsghdr_from_user_compat_to_kern(msg_sys, sock->sk, ctl,
+ 						     sizeof(ctl));
+ 		if (err)
+-			goto out_freeiov;
++			goto out;
+ 		ctl_buf = msg_sys->msg_control;
+ 		ctl_len = msg_sys->msg_controllen;
+ 	} else if (ctl_len) {
+@@ -2277,7 +2263,7 @@ static int ___sys_sendmsg(struct socket *sock, struct user_msghdr __user *msg,
+ 		if (ctl_len > sizeof(ctl)) {
+ 			ctl_buf = sock_kmalloc(sock->sk, ctl_len, GFP_KERNEL);
+ 			if (ctl_buf == NULL)
+-				goto out_freeiov;
++				goto out;
+ 		}
+ 		err = -EFAULT;
+ 		/*
+@@ -2323,7 +2309,47 @@ static int ___sys_sendmsg(struct socket *sock, struct user_msghdr __user *msg,
+ out_freectl:
+ 	if (ctl_buf != ctl)
+ 		sock_kfree_s(sock->sk, ctl_buf, ctl_len);
+-out_freeiov:
++out:
++	return err;
++}
++
++static int sendmsg_copy_msghdr(struct msghdr *msg,
++			       struct user_msghdr __user *umsg, unsigned flags,
++			       struct iovec **iov)
++{
++	int err;
++
++	if (flags & MSG_CMSG_COMPAT) {
++		struct compat_msghdr __user *msg_compat;
++
++		msg_compat = (struct compat_msghdr __user *) umsg;
++		err = get_compat_msghdr(msg, msg_compat, NULL, iov);
++	} else {
++		err = copy_msghdr_from_user(msg, umsg, NULL, iov);
++	}
++	if (err < 0)
++		return err;
++
++	return 0;
++}
++
++static int ___sys_sendmsg(struct socket *sock, struct user_msghdr __user *msg,
++			 struct msghdr *msg_sys, unsigned int flags,
++			 struct used_address *used_address,
++			 unsigned int allowed_msghdr_flags)
++{
++	struct sockaddr_storage address;
++	struct iovec iovstack[UIO_FASTIOV], *iov = iovstack;
++	ssize_t err;
++
++	msg_sys->msg_name = &address;
++
++	err = sendmsg_copy_msghdr(msg_sys, msg, flags, &iov);
++	if (err < 0)
++		return err;
++
++	err = ____sys_sendmsg(sock, msg_sys, flags, used_address,
++				allowed_msghdr_flags);
+ 	kfree(iov);
+ 	return err;
+ }
+@@ -2442,33 +2468,41 @@ SYSCALL_DEFINE4(sendmmsg, int, fd, struct mmsghdr __user *, mmsg,
+ 	return __sys_sendmmsg(fd, mmsg, vlen, flags, true);
+ }
+ 
+-static int ___sys_recvmsg(struct socket *sock, struct user_msghdr __user *msg,
+-			 struct msghdr *msg_sys, unsigned int flags, int nosec)
++static int recvmsg_copy_msghdr(struct msghdr *msg,
++			       struct user_msghdr __user *umsg, unsigned flags,
++			       struct sockaddr __user **uaddr,
++			       struct iovec **iov)
+ {
+-	struct compat_msghdr __user *msg_compat =
+-	    (struct compat_msghdr __user *)msg;
+-	struct iovec iovstack[UIO_FASTIOV];
+-	struct iovec *iov = iovstack;
+-	unsigned long cmsg_ptr;
+-	int len;
+ 	ssize_t err;
+ 
+-	/* kernel mode address */
+-	struct sockaddr_storage addr;
+-
+-	/* user mode address pointers */
+-	struct sockaddr __user *uaddr;
+-	int __user *uaddr_len = COMPAT_NAMELEN(msg);
+-
+-	msg_sys->msg_name = &addr;
++	if (MSG_CMSG_COMPAT & flags) {
++		struct compat_msghdr __user *msg_compat;
+ 
+-	if (MSG_CMSG_COMPAT & flags)
+-		err = get_compat_msghdr(msg_sys, msg_compat, &uaddr, &iov);
+-	else
+-		err = copy_msghdr_from_user(msg_sys, msg, &uaddr, &iov);
++		msg_compat = (struct compat_msghdr __user *) umsg;
++		err = get_compat_msghdr(msg, msg_compat, uaddr, iov);
++	} else {
++		err = copy_msghdr_from_user(msg, umsg, uaddr, iov);
++	}
+ 	if (err < 0)
+ 		return err;
+ 
++	return 0;
++}
++
++static int ____sys_recvmsg(struct socket *sock, struct msghdr *msg_sys,
++			   struct user_msghdr __user *msg,
++			   struct sockaddr __user *uaddr,
++			   unsigned int flags, int nosec)
++{
++	struct compat_msghdr __user *msg_compat =
++					(struct compat_msghdr __user *) msg;
++	int __user *uaddr_len = COMPAT_NAMELEN(msg);
++	struct sockaddr_storage addr;
++	unsigned long cmsg_ptr;
++	int len;
++	ssize_t err;
++
++	msg_sys->msg_name = &addr;
+ 	cmsg_ptr = (unsigned long)msg_sys->msg_control;
+ 	msg_sys->msg_flags = flags & (MSG_CMSG_CLOEXEC|MSG_CMSG_COMPAT);
+ 
+@@ -2479,7 +2513,7 @@ static int ___sys_recvmsg(struct socket *sock, struct user_msghdr __user *msg,
+ 		flags |= MSG_DONTWAIT;
+ 	err = (nosec ? sock_recvmsg_nosec : sock_recvmsg)(sock, msg_sys, flags);
+ 	if (err < 0)
+-		goto out_freeiov;
++		goto out;
+ 	len = err;
+ 
+ 	if (uaddr != NULL) {
+@@ -2487,12 +2521,12 @@ static int ___sys_recvmsg(struct socket *sock, struct user_msghdr __user *msg,
+ 					msg_sys->msg_namelen, uaddr,
+ 					uaddr_len);
+ 		if (err < 0)
+-			goto out_freeiov;
++			goto out;
+ 	}
+ 	err = __put_user((msg_sys->msg_flags & ~MSG_CMSG_COMPAT),
+ 			 COMPAT_FLAGS(msg));
+ 	if (err)
+-		goto out_freeiov;
++		goto out;
+ 	if (MSG_CMSG_COMPAT & flags)
+ 		err = __put_user((unsigned long)msg_sys->msg_control - cmsg_ptr,
+ 				 &msg_compat->msg_controllen);
+@@ -2500,10 +2534,25 @@ static int ___sys_recvmsg(struct socket *sock, struct user_msghdr __user *msg,
+ 		err = __put_user((unsigned long)msg_sys->msg_control - cmsg_ptr,
+ 				 &msg->msg_controllen);
+ 	if (err)
+-		goto out_freeiov;
++		goto out;
+ 	err = len;
++out:
++	return err;
++}
++
++static int ___sys_recvmsg(struct socket *sock, struct user_msghdr __user *msg,
++			 struct msghdr *msg_sys, unsigned int flags, int nosec)
++{
++	struct iovec iovstack[UIO_FASTIOV], *iov = iovstack;
++	/* user mode address pointers */
++	struct sockaddr __user *uaddr;
++	ssize_t err;
++
++	err = recvmsg_copy_msghdr(msg_sys, msg, flags, &uaddr, &iov);
++	if (err < 0)
++		return err;
+ 
+-out_freeiov:
++	err = ____sys_recvmsg(sock, msg_sys, msg, uaddr, flags, nosec);
+ 	kfree(iov);
+ 	return err;
+ }
 -- 
 2.20.1
 
