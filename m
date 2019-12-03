@@ -2,137 +2,208 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7897C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C702C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E87A2064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8C7D20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:46:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a+q5uqkV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PWrO0iJZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbfLCOqf (ORCPT
+        id S1726484AbfLCOq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 09:46:35 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45914 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfLCOqf (ORCPT
+        Tue, 3 Dec 2019 09:46:57 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:52120 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfLCOq4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 09:46:35 -0500
-Received: by mail-pg1-f194.google.com with SMTP id k1so1758381pgg.12;
-        Tue, 03 Dec 2019 06:46:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=wxiPeBgUd1a9onz26dY7+dYP7fNCqz8jpBXJLUxOt48=;
-        b=a+q5uqkV7Tc4V6707uPZPspzJ3zFW3Y2T8qbchA7q+XYLXEDtvMeP8QrEzDiexYymt
-         c4XUQSXRpSZK9NBCbiazLfwr/y430tDB7Kdy2EYIS2roYDjUdJUJTyqfka6AtsrsMZd+
-         SXJ57O2P9URw+aBfarXClxM1Z8y6W7Uq6OQ/2fhhLCJFrhS33Xvd27uw+BGlEbhkeAbp
-         7+1T3Psk2AXDj/CRxXLF+wsVcY7FJuzr7l+N+CxSEMeU2/vM//jWJjZpoKBEG4TOUtor
-         bylrl7pKcaDWOy3eXxoXAPu1Zn78c/6TERzpBCBmWmQxvajJkaBoFquN6ddK3Ed2WMjm
-         hHhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=wxiPeBgUd1a9onz26dY7+dYP7fNCqz8jpBXJLUxOt48=;
-        b=ESxgtMAFO1QjQ6Ydzv5l4KieA8ZWHT6hvzo3QrrW8Ir3SW1zsdU2BuVWE1lJpjQlNc
-         F5uX9Xq9nXCxtdk1X4fvouB+YNKSKi6tQrUaM53bHy/SHO5GqjRYUmK7SkY0MYzE4s9W
-         4wAulQF5o8x+WKbjsqeFibKs6zQ1Ihl2GWrMabQAgRkFRFmxp5G/JV+1H99PGII9zJo3
-         3EJWOyUYvnWWv8FtQcAqTFYir+VXgLBL0E6cgQs52vHb6i0jjQIzFfcXYkTpQC/IgXaX
-         RoY9E4egP9odlFGI21lHx0dOwSC0Zgt11k95HB0nKtG195GO6O7sPCDGpAmogASeZGkO
-         RN8w==
-X-Gm-Message-State: APjAAAW8rR0i8Ciot3JSM0u3cIMm+KL5FBD+oMKbWxMT3BWk9NJ2Joyt
-        ptYBkZEWwv0vVFgRlsr3s80=
-X-Google-Smtp-Source: APXvYqypuHdbhGfc4qW1ugmTW1S90u7fGNkdqBARrRaFLT43vp+P03iwjEFFe/MEsx4z/LNrYp3jLg==
-X-Received: by 2002:aa7:95a9:: with SMTP id a9mr5066805pfk.15.1575384394558;
-        Tue, 03 Dec 2019 06:46:34 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b23sm3019156pfo.62.2019.12.03.06.46.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 03 Dec 2019 06:46:33 -0800 (PST)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH] drivers: Fix boot problem on SuperH
-Date:   Tue,  3 Dec 2019 06:46:31 -0800
-Message-Id: <20191203144631.6629-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
+        Tue, 3 Dec 2019 09:46:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Mime-Version:
+        Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Df/63bTiz0MbvffoTq5LGNY0f3lhFWeKO2rB4GEICME=; b=PWrO0iJZ5Jov8iCg1pPsVunCpH
+        VKIXG5NVaIwAyuk9qs+FtWWaqb8GHI5HIot4d4zS3l6ToeM4RJ9C9bKwkp4Bq7bScIXW/DnbH4CAM
+        yX7WpR5Rv2X15OcVcVeilludvtzlx7C2WNs1b9A/WXTpW2K1+4qASeNrpmeCIvfBnuzi3prBumKoL
+        1d43Blr5eVn4L+04HYdlwEE6sDS2n1DiK04Ik3SKuX7a2ZpX7F3YDx9RfxvPzwchv65B5056Jwzg9
+        0mGFcU35sYGU5ydUEAQ4yMoYJV8mpZDrykj1RVEwaTNPitrVywJ5mMupy42gvs6mZnOLLA784MBjp
+        lfjSKxTw==;
+Received: from [54.239.6.185] (helo=u0c626add9cce5a.ant.amazon.com)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ic9S1-0000q1-9o; Tue, 03 Dec 2019 14:46:53 +0000
+Message-ID: <ae3451423c18f2e408245d745d1f28e311a2845c.camel@infradead.org>
+Subject: Re: [PATCH v3] virtio_console: allocate inbufs in add_port() only
+ if it is needed
+From:   Amit Shah <amit@infradead.org>
+To:     Laurent Vivier <lvivier@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     virtualization@lists.linux-foundation.org,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org,
+        Amit Shah <amit@kernel.org>
+Date:   Tue, 03 Dec 2019 15:46:50 +0100
+In-Reply-To: <20191114122548.24364-1-lvivier@redhat.com>
+References: <20191114122548.24364-1-lvivier@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SuperH images crash too eearly to display any console output. Bisect
-points to commit 507fd01d5333 ("drivers: move the early platform device
-support to arch/sh"). An analysis of that patch suggests that
-early_platform_cleanup() is now called at the wrong time. Restoring its
-call point fixes the problem.
+On Thu, 2019-11-14 at 13:25 +0100, Laurent Vivier wrote:
+> When we hot unplug a virtserialport and then try to hot plug again,
+> it fails:
+> 
+> (qemu) chardev-add socket,id=serial0,path=/tmp/serial0,server,nowait
+> (qemu) device_add virtserialport,bus=virtio-serial0.0,nr=2,\
+>                   chardev=serial0,id=serial0,name=serial0
+> (qemu) device_del serial0
+> (qemu) device_add virtserialport,bus=virtio-serial0.0,nr=2,\
+>                   chardev=serial0,id=serial0,name=serial0
+> kernel error:
+>   virtio-ports vport2p2: Error allocating inbufs
+> qemu error:
+>   virtio-serial-bus: Guest failure in adding port 2 for device \
+>                      virtio-serial0.0
+> 
+> This happens because buffers for the in_vq are allocated when the
+> port is
+> added but are not released when the port is unplugged.
+> 
+> They are only released when virtconsole is removed (see a7a69ec0d8e4)
+> 
+> To avoid the problem and to be symmetric, we could allocate all the
+> buffers
+> in init_vqs() as they are released in remove_vqs(), but it sounds
+> like
+> a waste of memory.
+> 
+> Rather than that, this patch changes add_port() logic to ignore
+> ENOSPC
+> error in fill_queue(), which means queue has already been filled.
+> 
+> Fixes: a7a69ec0d8e4 ("virtio_console: free buffers after reset")
+> Cc: mst@redhat.com
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Laurent Vivier <lvivier@redhat.com>
 
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-Fixes: 507fd01d5333 ("drivers: move the early platform device support to arch/sh")
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- arch/sh/drivers/platform_early.c | 11 ++---------
- drivers/base/platform.c          |  4 ++++
- 2 files changed, 6 insertions(+), 9 deletions(-)
+Reviewed-by: Amit Shah <amit@kernel.org>
 
-diff --git a/arch/sh/drivers/platform_early.c b/arch/sh/drivers/platform_early.c
-index f6d148451dfc..16f33bffd8fc 100644
---- a/arch/sh/drivers/platform_early.c
-+++ b/arch/sh/drivers/platform_early.c
-@@ -325,9 +325,9 @@ int __init sh_early_platform_driver_probe(char *class_str,
- }
- 
- /**
-- * sh_early_platform_cleanup - clean up early platform code
-+ * early_platform_cleanup - clean up early platform code
-  */
--static int __init sh_early_platform_cleanup(void)
-+void early_platform_cleanup(void)
- {
- 	struct platform_device *pd, *pd2;
- 
-@@ -337,11 +337,4 @@ static int __init sh_early_platform_cleanup(void)
- 		list_del(&pd->dev.devres_head);
- 		memset(&pd->dev.devres_head, 0, sizeof(pd->dev.devres_head));
- 	}
--
--	return 0;
- }
--/*
-- * This must happen once after all early devices are probed but before probing
-- * real platform devices.
-- */
--subsys_initcall(sh_early_platform_cleanup);
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 7c532548b0a6..3ba153e356ee 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -1325,10 +1325,14 @@ struct device *platform_find_device_by_driver(struct device *start,
- }
- EXPORT_SYMBOL_GPL(platform_find_device_by_driver);
- 
-+void __weak early_platform_cleanup(void) { }
-+
- int __init platform_bus_init(void)
- {
- 	int error;
- 
-+	early_platform_cleanup();
-+
- 	error = device_register(&platform_bus);
- 	if (error) {
- 		put_device(&platform_bus);
--- 
-2.17.1
+Thanks!
+
+> ---
+> 
+> Notes:
+>     v3: add a comment about ENOSPC error
+>     v2: making fill_queue return int and testing return code for
+> -ENOSPC
+> 
+>  drivers/char/virtio_console.c | 28 +++++++++++++---------------
+>  1 file changed, 13 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/char/virtio_console.c
+> b/drivers/char/virtio_console.c
+> index 7270e7b69262..3259426f01dc 100644
+> --- a/drivers/char/virtio_console.c
+> +++ b/drivers/char/virtio_console.c
+> @@ -1325,24 +1325,24 @@ static void set_console_size(struct port
+> *port, u16 rows, u16 cols)
+>  	port->cons.ws.ws_col = cols;
+>  }
+>  
+> -static unsigned int fill_queue(struct virtqueue *vq, spinlock_t
+> *lock)
+> +static int fill_queue(struct virtqueue *vq, spinlock_t *lock)
+>  {
+>  	struct port_buffer *buf;
+> -	unsigned int nr_added_bufs;
+> +	int nr_added_bufs;
+>  	int ret;
+>  
+>  	nr_added_bufs = 0;
+>  	do {
+>  		buf = alloc_buf(vq->vdev, PAGE_SIZE, 0);
+>  		if (!buf)
+> -			break;
+> +			return -ENOMEM;
+>  
+>  		spin_lock_irq(lock);
+>  		ret = add_inbuf(vq, buf);
+>  		if (ret < 0) {
+>  			spin_unlock_irq(lock);
+>  			free_buf(buf, true);
+> -			break;
+> +			return ret;
+>  		}
+>  		nr_added_bufs++;
+>  		spin_unlock_irq(lock);
+> @@ -1362,7 +1362,6 @@ static int add_port(struct ports_device
+> *portdev, u32 id)
+>  	char debugfs_name[16];
+>  	struct port *port;
+>  	dev_t devt;
+> -	unsigned int nr_added_bufs;
+>  	int err;
+>  
+>  	port = kmalloc(sizeof(*port), GFP_KERNEL);
+> @@ -1421,11 +1420,13 @@ static int add_port(struct ports_device
+> *portdev, u32 id)
+>  	spin_lock_init(&port->outvq_lock);
+>  	init_waitqueue_head(&port->waitqueue);
+>  
+> -	/* Fill the in_vq with buffers so the host can send us data. */
+> -	nr_added_bufs = fill_queue(port->in_vq, &port->inbuf_lock);
+> -	if (!nr_added_bufs) {
+> +	/* We can safely ignore ENOSPC because it means
+> +	 * the queue already has buffers. Buffers are removed
+> +	 * only by virtcons_remove(), not by unplug_port()
+> +	 */
+> +	err = fill_queue(port->in_vq, &port->inbuf_lock);
+> +	if (err < 0 && err != -ENOSPC) {
+>  		dev_err(port->dev, "Error allocating inbufs\n");
+> -		err = -ENOMEM;
+>  		goto free_device;
+>  	}
+>  
+> @@ -2059,14 +2060,11 @@ static int virtcons_probe(struct
+> virtio_device *vdev)
+>  	INIT_WORK(&portdev->control_work, &control_work_handler);
+>  
+>  	if (multiport) {
+> -		unsigned int nr_added_bufs;
+> -
+>  		spin_lock_init(&portdev->c_ivq_lock);
+>  		spin_lock_init(&portdev->c_ovq_lock);
+>  
+> -		nr_added_bufs = fill_queue(portdev->c_ivq,
+> -					   &portdev->c_ivq_lock);
+> -		if (!nr_added_bufs) {
+> +		err = fill_queue(portdev->c_ivq, &portdev->c_ivq_lock);
+> +		if (err < 0) {
+>  			dev_err(&vdev->dev,
+>  				"Error allocating buffers for control
+> queue\n");
+>  			/*
+> @@ -2077,7 +2075,7 @@ static int virtcons_probe(struct virtio_device
+> *vdev)
+>  					   VIRTIO_CONSOLE_DEVICE_READY,
+> 0);
+>  			/* Device was functional: we need full cleanup.
+> */
+>  			virtcons_remove(vdev);
+> -			return -ENOMEM;
+> +			return err;
+>  		}
+>  	} else {
+>  		/*
 
