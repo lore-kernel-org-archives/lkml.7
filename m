@@ -2,144 +2,115 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A70C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7D1C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7518420659
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96D1E20659
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:55:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575363322;
+	bh=m31aHcD0txfHJWKNc3ry756pAIVc76wigOfC41CiuM8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sGG0fWj5T/kewUPtSzXEn6d8en7o0lhN9ys1vd4/7XEyF5OKDF2U1eJMttMCTphH5
+	 cH/YWarcHOm924tub/APbWxEyiZa7hVtrEEXLjbjSLDb25ERB0k89UBGsGY3Rh42NK
+	 eFgnh0pCC+mc4wNyEcRWsGwT52KSSr63B7FBDhus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726114AbfLCIzH (ORCPT
+        id S1726186AbfLCIzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 03:55:07 -0500
-Received: from retiisi.org.uk ([95.216.213.190]:45714 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725773AbfLCIzG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 03:55:06 -0500
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Tue, 3 Dec 2019 03:55:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35414 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725773AbfLCIzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 03:55:21 -0500
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 3F903634C87;
-        Tue,  3 Dec 2019 10:54:18 +0200 (EET)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1ic3wn-0001NZ-OF; Tue, 03 Dec 2019 10:54:17 +0200
-Date:   Tue, 3 Dec 2019 10:54:17 +0200
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, c.barrett@framos.com,
-        a.brela@framos.com, peter.griffin@linaro.org
-Subject: Re: [PATCH 3/5] media: i2c: imx290: Add RAW12 mode support
-Message-ID: <20191203085417.GB5282@valkosipuli.retiisi.org.uk>
-References: <20191129190541.30315-1-manivannan.sadhasivam@linaro.org>
- <20191129190541.30315-4-manivannan.sadhasivam@linaro.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 2707720659
+        for <linux-kernel@vger.kernel.org>; Tue,  3 Dec 2019 08:55:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575363319;
+        bh=m31aHcD0txfHJWKNc3ry756pAIVc76wigOfC41CiuM8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=WS+GCjTdSmvP1K/ViX64PcBDw+zuAXYbYZN6tWV8P//zN2g6ESkoJDHzuoOjTCZ3l
+         iguq6sHUxBJsCQpdduX4/r6+qOa266CB+PM+cyKJZWrGpK5ryDLCKRrlLKRZTPgBXC
+         ax6uVafGMzRiKrIuvJb6KXjZOffOtCisuMWx9+4k=
+Received: by mail-lj1-f182.google.com with SMTP id d20so2780523ljc.12
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 00:55:19 -0800 (PST)
+X-Gm-Message-State: APjAAAUXlu8aGmxDmP1DbFLnNcOj0hPrZuKzyToWl3XIDCZZpuK0Xa8K
+        Do00MUrrVRukX8wPNjJKhdgKtrqMutPokRJNwvk=
+X-Google-Smtp-Source: APXvYqznGhY18iGzPMVXELvCtR8ehYByGaG/fsz3XPcxRM4rSVGa7ldqi9qmLor4YDyMLU4DcZEWUwxp1+oDS/K7bgU=
+X-Received: by 2002:a2e:b0db:: with SMTP id g27mr1954358ljl.74.1575363317362;
+ Tue, 03 Dec 2019 00:55:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191129190541.30315-4-manivannan.sadhasivam@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1574906800-19901-1-git-send-email-krzk@kernel.org>
+ <87a78gnyaz.fsf@intel.com> <ab3309596fac1c5a0cb4e0abed0cf1ee7ac13a3d.camel@perches.com>
+ <CAJKOXPdqn7+ucwqu2vJFL9ggCerpBz1qN6BSJvcsi4BQ3DU6fg@mail.gmail.com>
+In-Reply-To: <CAJKOXPdqn7+ucwqu2vJFL9ggCerpBz1qN6BSJvcsi4BQ3DU6fg@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Tue, 3 Dec 2019 16:55:05 +0800
+X-Gmail-Original-Message-ID: <CAJKOXPdJ=-yPR8-=4DiREXj6aA+Qufn_uFhViyWU+mSvqPu9cA@mail.gmail.com>
+Message-ID: <CAJKOXPdJ=-yPR8-=4DiREXj6aA+Qufn_uFhViyWU+mSvqPu9cA@mail.gmail.com>
+Subject: Re: [PATCH] checkpatch: Look for Kconfig indentation errors
+To:     Joe Perches <joe@perches.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Manivannan,
+On Tue, 3 Dec 2019 at 16:40, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> On Thu, 28 Nov 2019 at 17:35, Joe Perches <joe@perches.com> wrote:
+> >
+> > On Thu, 2019-11-28 at 11:29 +0200, Jani Nikula wrote:
+> > > On Thu, 28 Nov 2019, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > > > Kconfig should be indented with one tab for first level and tab+2 spaces
+> > > > for second level.  There are many mixups of this so add a checkpatch
+> > > > rule.
+> > > >
+> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > >
+> > > I agree unifying the indentation is nice, and without something like
+> > > this it'll start bitrotting before Krzysztof's done fixing them all... I
+> > > think there's been quite a few fixes merged lately.
+> > >
+> > > I approve of the idea, but I'm clueless about the implementation.
+> >
+> > I think that a grammar, or a least an array of words
+> > that are supposed to start on a tab should be used here.
+>
+> This won't work for wrong indentation of help text. This is quite
+> popular Kconfig indentation violation so worth checking. I can then
+> check for:
+> 1. any white-space violations before array of Kconfig words - that
+> 2. spaces mixed with tab before any text,
+> 3. just spaces before any text,
+> 4. tab + wrong number of spaces before any text.
+>
+> It would look like:
+> +               if ($realfile =~ /Kconfig/ &&
+> +                   (($rawline =~
+> /^\+\s+(?:config|menuconfig|choice|endchoice|if|endif|menu|endmenu|source|bool|tristate|prompt|help|---help---|depends|select)\b/
+> &&
+> +                     $rawline !~ /^\+\t[a-z-]/) ||
+> +                    $rawline =~ /^\+\t* +\t+ *[a-zA-Z0-9-]/ ||
+> +                    $rawline =~ /^\+\t( |   )[a-zA-Z0-9-]/)) {
 
-On Sat, Nov 30, 2019 at 12:35:39AM +0530, Manivannan Sadhasivam wrote:
-> IMX290 is capable of outputting frames in both Raw Bayer (packed) 10 and
-> 12 bit formats. Since the driver already supports RAW10 mode, let's add
-> the missing RAW12 mode as well.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  drivers/media/i2c/imx290.c | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
-> 
-> diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-> index e218c959a729..d5bb3a59ac46 100644
-> --- a/drivers/media/i2c/imx290.c
-> +++ b/drivers/media/i2c/imx290.c
-> @@ -75,6 +75,7 @@ struct imx290 {
->  	struct clk *xclk;
->  	struct regmap *regmap;
->  	int nlanes;
-> +	u8 bpp;
->  
->  	struct v4l2_subdev sd;
->  	struct v4l2_fwnode_endpoint ep;
-> @@ -98,6 +99,7 @@ struct imx290_pixfmt {
->  
->  static const struct imx290_pixfmt imx290_formats[] = {
->  	{ MEDIA_BUS_FMT_SRGGB10_1X10 },
-> +	{ MEDIA_BUS_FMT_SRGGB12_1X12 },
->  };
->  
->  static const struct regmap_config imx290_regmap_config = {
-> @@ -265,6 +267,18 @@ static const struct imx290_regval imx290_10bit_settings[] = {
->  	{ 0x300b, 0x00},
->  };
->  
-> +static const struct imx290_regval imx290_12bit_settings[] = {
-> +	{ 0x3005, 0x01 },
-> +	{ 0x3046, 0x01 },
-> +	{ 0x3129, 0x00 },
-> +	{ 0x317c, 0x00 },
-> +	{ 0x31ec, 0x0e },
-> +	{ 0x3441, 0x0c },
-> +	{ 0x3442, 0x0c },
-> +	{ 0x300a, 0xf0 },
-> +	{ 0x300b, 0x00 },
-> +};
-> +
->  /* supported link frequencies */
->  static const s64 imx290_link_freq[] = {
->  	IMX290_DEFAULT_LINK_FREQ,
-> @@ -550,6 +564,21 @@ static int imx290_write_current_format(struct imx290 *imx290,
->  			dev_err(imx290->dev, "Could not set format registers\n");
->  			return ret;
->  		}
-> +
-> +		imx290->bpp = 10;
-> +
-> +		break;
-> +	case MEDIA_BUS_FMT_SRGGB12_1X12:
-> +		ret = imx290_set_register_array(imx290, imx290_12bit_settings,
-> +						ARRAY_SIZE(
-> +							imx290_12bit_settings));
-> +		if (ret < 0) {
-> +			dev_err(imx290->dev, "Could not set format registers\n");
-> +			return ret;
-> +		}
-> +
-> +		imx290->bpp = 12;
-> +
->  		break;
->  	default:
->  		dev_err(imx290->dev, "Unknown pixel format\n");
-> @@ -910,6 +939,9 @@ static int imx290_probe(struct i2c_client *client)
->  		goto free_err;
->  	}
->  
-> +	/* Default bits per pixel value */
-> +	imx290->bpp = 10;
+This unfortunately fails if help text starts with one of syntax
+keywords (e.g. "if"). Isn't this getting over-complicated? The Kconfig
+is rather simple:
+1. no indentation,
+2. one tab,
+3. one tab + 2 spaces
+4. one tab + 2 spaces + some more spaces (e.g. help text)
 
-Where is the format being initialised at the moment? Nowhere?
-
-If that is the case, I think it should be fixed before this patch.
-
-> +
->  	mutex_init(&imx290->lock);
->  
->  	v4l2_ctrl_handler_init(&imx290->ctrls, 4);
-
--- 
-Kind regards,
-
-Sakari Ailus
+Best regards,
+Krzysztof
