@@ -2,302 +2,114 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,PDS_BTC_ID,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC853C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB0AC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7016820409
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70F4020409
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:12:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Oyk10zwb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726179AbfLCJLU (ORCPT
+        id S1726105AbfLCJMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 04:11:20 -0500
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:4806 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbfLCJLU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 04:11:20 -0500
-IronPort-SDR: rkBo+X6rzxLR/gT1Mm3jReAsMKj5uiqhWoP+B9QP/9/mmaMG7JVUSxP9LpyoBIh82z9wOzJpNm
- wyP3l7II8aDPnyaQex98c4XhE0fQ/0+2CY8wY1hP/6wEdCTSdjSDylsFPD+6ERhBaA3T4CrTBK
- PtcPe9PhMGg0tc0MQA/kl4yB4jbQJa992WeL4GW/uTYJQM9w2O/StWa1GOk8jYJPoS8rC6h1cF
- zTnY2U29iAJRP+3CmXwUUHVQSzin3Xv4kf1hjzFRCf3rMvdZbGq0JxdjM0pIxzv4qGo1eqBGEz
- 4P4=
-X-IronPort-AV: E=Sophos;i="5.69,272,1571731200"; 
-   d="txt'?scan'208";a="43711080"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa3.mentor.iphmx.com with ESMTP; 03 Dec 2019 01:11:18 -0800
-IronPort-SDR: 0kXlej1ZuqQxSEihCAeWrP4khCsqgndSQHRuFzts87Ob7MeKLrr0BqOaE6o3sOD8OSILAZSPU5
- MeJEYMF9FegfHh3mDRlfirupv3Qzfm6z0ylV4yCePud1hHI5IJ72yXaxt05wotryeGSE40m6b0
- PxmdQecNeKlGO5VDntby7UftBBR8iimJIFq59OdBJiRBFgo8Z4LM2pTrqC+VxNzC0c+Gy0mhKg
- dM9NtBh1o2MtsRaciFvDfgbQext/aPMgLh+nOKwBgKvZE78MimA+Bnb+T1xTKLJ0masqfpA0T9
- /Z8=
-From:   "Schmid, Carsten" <Carsten_Schmid@mentor.com>
-To:     "mingo@redhat.com" <mingo@redhat.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Crash in fair scheduler
-Thread-Topic: Crash in fair scheduler
-Thread-Index: AQHVqbfg64Wqju89WkedWbWijDxswA==
-Date:   Tue, 3 Dec 2019 09:11:14 +0000
-Message-ID: <1575364273836.74450@mentor.com>
-Accept-Language: de-DE, en-IE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [137.202.0.90]
-Content-Type: multipart/mixed; boundary="_002_157536427383674450mentorcom_"
+        Tue, 3 Dec 2019 04:12:34 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:34613 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725774AbfLCJMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 04:12:34 -0500
+Received: from localhost (mailhub1-ext [192.168.12.233])
+        by localhost (Postfix) with ESMTP id 47Rx8J0kcjz9vBK7;
+        Tue,  3 Dec 2019 10:12:32 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Oyk10zwb; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id tQkAB2K9bzU1; Tue,  3 Dec 2019 10:12:32 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47Rx8H6djZz9vBK2;
+        Tue,  3 Dec 2019 10:12:31 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1575364351; bh=Tfzyfftdxt7nNkAel0mvTxcsHw6cENeeVt1BDJa4Wwk=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=Oyk10zwbEQZj+hz/ApbAX7bZU2VISoBlDzphx0qgX4vuGI5JovpO7+XhDvgSS4Ht7
+         8HTSc9mACgVCHkmuTGygTYKD88Z8cVYQajNaAgNEy52275tEGgvrZkFa67Z5XWulIZ
+         cL/BkLM5Crlkacm12sfXyMktVPVbHlCut51DSplo=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 000188B7D7;
+        Tue,  3 Dec 2019 10:12:32 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id Ni-i5GC6tlVU; Tue,  3 Dec 2019 10:12:32 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 79DBB8B787;
+        Tue,  3 Dec 2019 10:12:32 +0100 (CET)
+Subject: Re: [PATCH 0/9] Improve boot command line handling
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, danielwa@cisco.com
+Cc:     linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1554195798.git.christophe.leroy@c-s.fr>
+Message-ID: <8eb90163-0e6b-c5ee-179a-c20773d54e58@c-s.fr>
+Date:   Tue, 3 Dec 2019 10:12:32 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
+In-Reply-To: <cover.1554195798.git.christophe.leroy@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---_002_157536427383674450mentorcom_
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
 
-Hi maintainers of the fair scheduler,=0A=
-=0A=
-we had a crash in the fair scheduler and analysis shows that this could hap=
-pen again.=0A=
-Happened on 4.14.86 (LTS series) but failing code path still exists in 5.4-=
-rc2 (and 4.14.147 too).=0A=
-=0A=
-I have collected relevant data from the core dump and put together with the=
- source.=0A=
-So i was able to explain why the crash happened, but as i am not an expert =
-on this=0A=
-scheduler stuff i can't tell if any of the data fed into the code path is o=
-k or not.=0A=
-=0A=
-In the analysis appended you can find the details; please check if we ran i=
-nto a corner=0A=
-case that nobody expected yet or if the data is somehow corrupted (i really=
- can't tell, for me it looks fine).=0A=
-Can you please check if this is a bug in the scheduler?=0A=
-=0A=
-To give some "surrounding" info:=0A=
-It looks like a task has slept for a long time, even through some suspend/r=
-esume cycles.=0A=
-When this task had to wake up, the failure occured.=0A=
-=0A=
-If you need more data from the core dump, let me know.=0A=
-=0A=
-Best regards=0A=
-Carsten=
 
---_002_157536427383674450mentorcom_
-Content-Type: text/plain; name="fair_scheduler_crash.txt"
-Content-Description: fair_scheduler_crash.txt
-Content-Disposition: attachment; filename="fair_scheduler_crash.txt";
-	size=11368; creation-date="Tue, 03 Dec 2019 09:06:35 GMT";
-	modification-date="Tue, 03 Dec 2019 09:06:35 GMT"
-Content-Transfer-Encoding: base64
+Le 02/04/2019 à 11:08, Christophe Leroy a écrit :
+> The purpose of this series is to improve and enhance the
+> handling of kernel boot arguments.
+> 
+> It is first focussed on powerpc but also extends the capability
+> for other arches.
+> 
+> This is based on suggestion from Daniel Walker <danielwa@cisco.com>
 
-T24ga2VybmVsIDQuMTQuODYgd2UgaGFkIGEga2VybmVsIGNyYXNoIGluIHRoZSBmYWlyIHNjaGVk
-dWxlci4KS2VybmVsIDQuMTQuODYgaXMgZnJvbSA0LjE0IExUUyBzZXJpZXMsIGFuZCBjdXJyZW50
-IDQuMTQgaGFzIG5vIGNoYW5nZSBpbiB0aGUgYWZmZWN0ZWQgY29kZSBwYXRoLgpBZGRpdGlvbmFs
-bHkgd2UgY29tcGFyZWQgdjUuNC1yYzIgc291cmNlLCB0aGVyZSBhcmUgY2hhbmdlcyBidXQgdGhl
-c2Ugd291bGRuJ3QgYWZmZWN0IHRoZSByZXN1bHQKYW5kIGxlYWQgdG8gdGhlIHNhbWUgY3Jhc2gg
-YXMgYSBzaW1pbGFyIGV4ZWN1dGlvbiBwYXRoIHdvdWxkIGJlIHRha2VuLgpTbyB3ZSBjb25jZW50
-cmF0ZSBvbiB0aGUgNC4xNC44NiBzb3VyY2UgaGVyZS4KClRoZSBjYWxsc3RhY2sgb2YgdGhlIGNy
-YXNoOgpbMjg0MzkuNjU2ODQ4XSBCVUc6IHVuYWJsZSB0byBoYW5kbGUga2VybmVsIE5VTEwgcG9p
-bnRlciBkZXJlZmVyZW5jZSBhdCAwMDAwMDAwMDAwMDAwMDM4ClsyODQzOS42NjU2NjJdIElQOiBz
-ZXRfbmV4dF9lbnRpdHkrMHgxNy8weDQ5MApbMjg0MzkuNjcwMjQ0XSBQR0QgMCBQNEQgMCAKWzI4
-NDM5LjY3MzA5Nl0gT29wczogMDAwMCBbIzFdIFBSRUVNUFQgU01QIE5PUFRJClsyODQzOS42Nzc5
-NzJdIE1vZHVsZXMgbGlua2VkIGluOiBiY21kaGQoTykgc3JfbW9kIGNkcm9tIHRudGZzKFBPKSB0
-ZXhmYXQoUE8pIHVzYl9zdG9yYWdlIGNvbmZpZ2ZzIHNxdWFzaGZzIHpsaWJfaW5mbGF0ZSB4el9k
-ZWMgYWg0IHhmcm00X21vZGVfdHJhbnNwb3J0IGVidF9pcCBlYnRhYmxlX2ZpbHRlciBlYnRhYmxl
-cyB4ZnJtX3VzZXIgeGZybV9hbGdvIGNsc191MzIgc2NoX2h0YiBpbnRlbF90Zm1fZ292ZXJub3Ig
-ZWNyeXB0ZnMgY2ZxX2lvc2NoZWQgc2RfbW9kIHNuZF9zb2NfYXBsX21ndV9odSBpbnRlbF9pcHU0
-X3BzeXMgaW50ZWxfaXB1NF9wc3lzX2Nzc2xpYiBpbnRlbF94aGNpX3VzYl9yb2xlX3N3aXRjaCBk
-d2MzIHJvbGVzIHVkY19jb3JlIGFkdjcyOHggc25kX3NvY19za2wgc2R3X2NubCBzbmRfc29jX2Fj
-cGlfaW50ZWxfbWF0Y2ggY29yZXRlbXAgc25kX3NvY19hY3BpIHNiaV9hcGwgaW50ZWxfaXB1NF9p
-c3lzIHNuZF9zb2NfY29yZSB2aWRlb2J1ZjJfZG1hX2NvbnRpZyBzbmRfY29tcHJlc3MgdmlkZW9i
-dWYyX21lbW9wcyBpcHU0X2FjcGkgaTJjX2k4MDEgaW50ZWxfaXB1NF9pc3lzX2Nzc2xpYiB2aWRl
-b2J1ZjJfdjRsMiBzbmRfc29jX3NrbF9pcGMgdmlkZW9idWYyX2NvcmUgYWhjaSBsaWJhaGNpIHNk
-d19idXMgeGhjaV9wY2kgbGliYXRhIHhoY2lfaGNkIGNyYzggc25kX3NvY19zc3RfaXBjIGNmZzgw
-MjExIHNuZF9zb2Nfc3N0X2RzcCBzY3NpX21vZCB1c2Jjb3JlIHNuZF9oZGFfZXh0X2NvcmUgcmZr
-aWxsIHVzYl9jb21tb24gZHdjM19wY2kgc25kX2hkYV9jb3JlIGludGVsX2lwdTRfbW11IHNuZF9w
-Y20KWzI4NDM5Ljc1NzE4NV0gIG1laV9tZSBzbmRfdGltZXIgaW50ZWxfaXB1NCBtZWkgc25kIGlv
-dmEgc291bmRjb3JlIG5mc2QgYXV0aF9ycGNnc3MgbG9ja2QgZ3JhY2Ugc3VucnBjIGxvb3AgZnVz
-ZSA4MDIxcSBicmlkZ2Ugc3RwIGxsYyBpbmFwNTYwdChPKSBpOTE1IHZpZGVvIGJhY2tsaWdodCBp
-bnRlbF9ndHQgaTJjX2FsZ29fYml0IGRybV9rbXNfaGVscGVyIGlnYl9hdmIoTykgZHJtIGZpcm13
-YXJlX2NsYXNzIHB0cCBod21vbiBzcGlfcHhhMnh4X3BsYXRmb3JtIHBwc19jb3JlIFtsYXN0IHVu
-bG9hZGVkOiBiY21kaGRdClsyODQzOS43ODYzMzRdIENQVTogMyBQSUQ6IDAgQ29tbTogc3dhcHBl
-ci8zIFRhaW50ZWQ6IFAgICAgIFUgICAgIE8gICAgNC4xNC44Ni1hcGwgIzEKWzI4NDM5Ljc5NDgw
-N10gdGFzazogZmZmZjk5YTk3ODk1YTU4MCB0YXNrLnN0YWNrOiBmZmZmYjIxMDAwMDc4MDAwClsy
-ODQzOS44MDE0MzBdIFJJUDogMDAxMDpzZXRfbmV4dF9lbnRpdHkrMHgxNy8weDQ5MApbMjg0Mzku
-ODA2NTk3XSBSU1A6IDAwMTg6ZmZmZmIyMTAwMDA3YmRiMCBFRkxBR1M6IDAwMDEwMDgyClsyODQz
-OS44MTI0NDRdIFJBWDogMDAwMDAwMDAwMDAwMDAwMCBSQlg6IDAwMDAwMDAwMDAwMDAwMDAgUkNY
-OiAwMDAwMDAwMDAwMDAwMDAwClsyODQzOS44MjA0MjhdIFJEWDogMDAwMDAwMDAwMDAwMDNlMSBS
-U0k6IDAwMDAwMDAwMDAwMDAwMDAgUkRJOiBmZmZmOTlhOTZkZGE5ODAwClsyODQzOS44Mjg0MDhd
-IFJCUDogZmZmZmIyMTAwMDA3YmRmMCBSMDg6IDAwMDAwMDAwMDAwMDAwMDAgUjA5OiAwMDAwMDAw
-MDAwMDAwMDAwClsyODQzOS44MzYzOTVdIFIxMDogMDAwMDAwMDAwMDAwMDAwMCBSMTE6IDAwMDAw
-NDJkZjEwMDU4ZGEgUjEyOiBmZmZmOTlhOTc4OTVhNTgwClsyODQzOS44NDQzODNdIFIxMzogZmZm
-Zjk5YTk2ZGRhOTgwMCBSMTQ6IDAwMDAwMDAwMDAwMDAwMDAgUjE1OiBmZmZmOTlhOTZkZGE5ODAw
-ClsyODQzOS44NTIzNzFdIEZTOiAgMDAwMDAwMDAwMDAwMDAwMCgwMDAwKSBHUzpmZmZmOTlhOTdm
-ZDgwMDAwKDAwMDApIGtubEdTOjAwMDAwMDAwMDAwMDAwMDAKWzI4NDM5Ljg2MTQyOV0gQ1M6ICAw
-MDEwIERTOiAwMDAwIEVTOiAwMDAwIENSMDogMDAwMDAwMDA4MDA1MDAzMwpbMjg0MzkuODY3ODY0
-XSBDUjI6IDAwMDAwMDAwMDAwMDAwMzggQ1IzOiAwMDAwMDAwMWY3YTY0MDAwIENSNDogMDAwMDAw
-MDAwMDM0MDZhMApbMjg0MzkuODc1ODUyXSBDYWxsIFRyYWNlOgpbMjg0MzkuODc4NTkwXSAgcGlj
-a19uZXh0X3Rhc2tfZmFpcisweDUxNy8weDU2MApbMjg0MzkuODgzMzY5XSAgX19zY2hlZHVsZSsw
-eGZhLzB4N2IwClsyODQzOS44ODcxNzJdICBzY2hlZHVsZV9pZGxlKzB4MWQvMHg0MApbMjg0Mzku
-ODkxMTcwXSAgZG9faWRsZSsweDEzNC8weDFhMApbMjg0MzkuODk0Nzc5XSAgY3B1X3N0YXJ0dXBf
-ZW50cnkrMHg2ZS8weDcwClsyODQzOS44OTkxNjhdICBzdGFydF9zZWNvbmRhcnkrMHgxYTcvMHgx
-ZjAKWzI4NDM5LjkwMzU1NV0gIHNlY29uZGFyeV9zdGFydHVwXzY0KzB4YTUvMHhiMApbMjg0Mzku
-OTA4MjMzXSBDb2RlOiA3MCA0NCAyOSBmNiA0MSA4OSBkNSBlOCA1OCBmOSBmZiBmZiBlOSAxMSBm
-ZiBmZiBmZiAwZiAxZiAwMCA1NSA0OCA4OSBlNSA0MSA1NyA0MSA1NiA0MSA1NSA0OSA4OSBmZCA0
-MSA1NCA1MyA0OCA4OSBmMyA0OCA4MyBlYyAxOCA8OGI+IDRlIDM4IDg1IGM5IDc1IDNkIDRkIDhi
-IGE1IGQwIDAwIDAwIDAwIDQxIDgzIGJjIDI0IGY4IDA4IDAwIApbMjg0MzkuOTI5NDIzXSBSSVA6
-IHNldF9uZXh0X2VudGl0eSsweDE3LzB4NDkwIFJTUDogZmZmZmIyMTAwMDA3YmRiMApbMjg0Mzku
-OTM2MjM4XSBDUjI6IDAwMDAwMDAwMDAwMDAwMzgKCkEgZHVtcCBvZiBjZnNfcnEgd2hpY2ggaXMg
-dXNlZCBoZXJlIChhIGJpdCBjb21wcmVzc2VkIHRvIGVhc2UgcmVhZGluZyk6CmNyYXNoPiAqIGNm
-c19ycSBmZmZmOTlhOTZkZGE5ODAwCnN0cnVjdCBjZnNfcnEgewogIGxvYWQgPSB7ICB3ZWlnaHQg
-PSAxMDQ4NTc2LCAgaW52X3dlaWdodCA9IDAgIH0sIAogIG5yX3J1bm5pbmcgPSAxLCAKICBoX25y
-X3J1bm5pbmcgPSAxLCAKICBleGVjX2Nsb2NrID0gMCwgCiAgbWluX3ZydW50aW1lID0gMTkwODk0
-OTIwMTAxLCAKICB0YXNrc190aW1lbGluZSA9IHsgIHJiX3Jvb3QgPSB7ICAgIHJiX25vZGUgPSAw
-eGZmZmY5OWE5NTAyZTBkMTAgIH0sICAgcmJfbGVmdG1vc3QgPSAweDAgIH0sIAogIGN1cnIgPSAw
-eDAsIAogIG5leHQgPSAweDAsIAogIGxhc3QgPSAweDAsIAogIHNraXAgPSAweDAsIAogIG5yX3Nw
-cmVhZF9vdmVyID0gMCwgCiAgYXZnID0geyBsYXN0X3VwZGF0ZV90aW1lID0gMjg0Mzk2NTY4MTQ1
-OTIsICBsb2FkX3N1bSA9IDc5NDg4NjIsICB1dGlsX3N1bSA9IDE4MzgwODgsCiAgICAgICAgICBw
-ZXJpb2RfY29udHJpYiA9IDI3OCwgIGxvYWRfYXZnID0gMTY3LCAgdXRpbF9hdmcgPSAzNyAgfSwg
-CiAgcnVubmFibGVfbG9hZF9zdW0gPSA1OTIwMzgyLCAKICBydW5uYWJsZV9sb2FkX2F2ZyA9IDEy
-NCwgCiAgdGdfbG9hZF9hdmdfY29udHJpYiA9IDE2NywgCiAgcHJvcGFnYXRlX2F2ZyA9IDAsIAog
-IHJlbW92ZWRfbG9hZF9hdmcgPSB7IGNvdW50ZXIgPSAwIH0sIAogIHJlbW92ZWRfdXRpbF9hdmcg
-PSB7IGNvdW50ZXIgPSAwIH0sIAogIGhfbG9hZCA9IDI2LCAKICBsYXN0X2hfbG9hZF91cGRhdGUg
-PSA0MzIzMTAzMzQ3LCAKICBoX2xvYWRfbmV4dCA9IDB4MCwgCiAgcnEgPSAweGZmZmY5OWE5N2Zk
-OWY1MDAsIAogIG9uX2xpc3QgPSAxLCAKICBsZWFmX2Nmc19ycV9saXN0ID0geyBuZXh0ID0gMHhm
-ZmZmOTlhOTc4MmFkNGUwLCBwcmV2ID0gMHhmZmZmOTlhOTc3OWJlY2UwIH0sIAogIHRnID0gMHhm
-ZmZmOTlhOTc3YjM1ZDQwLCAKICBydW50aW1lX2VuYWJsZWQgPSAwLCAKICBydW50aW1lX2V4cGly
-ZXMgPSAwLCAKICBydW50aW1lX3JlbWFpbmluZyA9IDAsIAogIHRocm90dGxlZF9jbG9jayA9IDAs
-IAogIHRocm90dGxlZF9jbG9ja190YXNrID0gMCwgCiAgdGhyb3R0bGVkX2Nsb2NrX3Rhc2tfdGlt
-ZSA9IDAsIAogIHRocm90dGxlZCA9IDAsIAogIHRocm90dGxlX2NvdW50ID0gMCwgCiAgdGhyb3R0
-bGVkX2xpc3QgPSB7IG5leHQgPSAweGZmZmY5OWE5NmRkYTk5MzAsIHByZXYgPSAweGZmZmY5OWE5
-NmRkYTk5MzAgfQp9CgphbmQgdGhlIGNvbXBsZXRlIHN0YWNrIGZyYW1lIG9mIHRoZSBjcmFzaCAo
-d2l0aCBzb21lIGNvbW1lbnRzIGFkZGVkLCByZW1vdmVkIHRoZSBjcmFzaCByZWxhdGVkIFRPUyk6
-CmNyYXNoPiBidCAtRkYKUElEOiAwICAgICAgVEFTSzogZmZmZjk5YTk3ODk1YTU4MCAgQ1BVOiAz
-ICAgQ09NTUFORDogInN3YXBwZXIvMyIKICMwIFtmZmZmYjIxMDAwMDdiYTIwXSBtYWNoaW5lX2tl
-eGVjIGF0IGZmZmZmZmZmYWEwMzVhNWYKLS0tIHNuaXAgLS0tCiAjOSBbZmZmZmIyMTAwMDA3YmQw
-MF0gcGFnZV9mYXVsdCBhdCBmZmZmZmZmZmFhNjAxMjE1CiAgICBbZXhjZXB0aW9uIFJJUDogc2V0
-X25leHRfZW50aXR5KzIzXQogICAgUklQOiBmZmZmZmZmZmFhMGFkMmU3ICBSU1A6IGZmZmZiMjEw
-MDAwN2JkYjAgIFJGTEFHUzogMDAwMTAwODIKICAgIFJBWDogMDAwMDAwMDAwMDAwMDAwMCAgUkJY
-OiAwMDAwMDAwMDAwMDAwMDAwICBSQ1g6IDAwMDAwMDAwMDAwMDAwMDAKICAgIFJEWDogMDAwMDAw
-MDAwMDAwMDNlMSAgUlNJOiAwMDAwMDAwMDAwMDAwMDAwICBSREk6IGZmZmY5OWE5NmRkYTk4MDAK
-ICAgIFJCUDogZmZmZmIyMTAwMDA3YmRmMCAgIFI4OiAwMDAwMDAwMDAwMDAwMDAwICAgUjk6IDAw
-MDAwMDAwMDAwMDAwMDAKICAgIFIxMDogMDAwMDAwMDAwMDAwMDAwMCAgUjExOiAwMDAwMDQyZGYx
-MDA1OGRhICBSMTI6IGZmZmY5OWE5Nzg5NWE1ODAKICAgIFIxMzogZmZmZjk5YTk2ZGRhOTgwMCAg
-UjE0OiAwMDAwMDAwMDAwMDAwMDAwICBSMTU6IGZmZmY5OWE5NmRkYTk4MDAKICAgIE9SSUdfUkFY
-OiBmZmZmZmZmZmZmZmZmZmZmICBDUzogMDAxMCAgU1M6IDAwMTgKICAgIGZmZmZiMjEwMDAwN2Jk
-MDg6IFtmZmZmOTlhOTZkZGE5ODAwOmttYWxsb2MtNTEyXSAwMDAwMDAwMDAwMDAwMDAwIAogICAg
-ZmZmZmIyMTAwMDA3YmQxODogW2ZmZmY5OWE5NmRkYTk4MDA6a21hbGxvYy01MTJdIFtmZmZmOTlh
-OTc4OTVhNTgwOnRhc2tfc3RydWN0XSAKICAgIGZmZmZiMjEwMDAwN2JkMjg6IGZmZmZiMjEwMDAw
-N2JkZjAgMDAwMDAwMDAwMDAwMDAwMCAKICAgIGZmZmZiMjEwMDAwN2JkMzg6IDAwMDAwNDJkZjEw
-MDU4ZGEgMDAwMDAwMDAwMDAwMDAwMCAKICAgIGZmZmZiMjEwMDAwN2JkNDg6IDAwMDAwMDAwMDAw
-MDAwMDAgMDAwMDAwMDAwMDAwMDAwMCAKICAgIGZmZmZiMjEwMDAwN2JkNTg6IDAwMDAwMDAwMDAw
-MDAwMDAgMDAwMDAwMDAwMDAwMDAwMCAKICAgIGZmZmZiMjEwMDAwN2JkNjg6IDAwMDAwMDAwMDAw
-MDAzZTEgMDAwMDAwMDAwMDAwMDAwMCAKICAgIGZmZmZiMjEwMDAwN2JkNzg6IFtmZmZmOTlhOTZk
-ZGE5ODAwOmttYWxsb2MtNTEyXSBmZmZmZmZmZmZmZmZmZmZmIAogICAgZmZmZmIyMTAwMDA3YmQ4
-ODogc2V0X25leHRfZW50aXR5KzIzIDAwMDAwMDAwMDAwMDAwMTAgCiAgICBmZmZmYjIxMDAwMDdi
-ZDk4OiAwMDAwMDAwMDAwMDEwMDgyIGZmZmZiMjEwMDAwN2JkYjAgCiAgICBmZmZmYjIxMDAwMDdi
-ZGE4OiAwMDAwMDAwMDAwMDAwMDE4IDAwMDAwMDAwMDAwMDAwMDIgCiAgICBmZmZmYjIxMDAwMDdi
-ZGI4OiAwMDAwMDAwMDAwMDAwMDAwIDAwMDAwMDAwMDAwMDAwMDAgCiAgICBmZmZmYjIxMDAwMDdi
-ZGM4OiBmZmZmOTlhOTdmZDlmNTAwIFtmZmZmOTlhOTc4OTVhNTgwOnRhc2tfc3RydWN0XSAKICAg
-IGZmZmZiMjEwMDAwN2JkZDg6IFtmZmZmOTlhOTc4OTVhYWI4OnRhc2tfc3RydWN0XSAwMDAwMDAw
-MDAwMDAwMDAwIAogICAgZmZmZmIyMTAwMDA3YmRlODogW2ZmZmY5OWE5NmRkYTk4MDA6a21hbGxv
-Yy01MTJdIGZmZmZiMjEwMDAwN2JlNjA6cmJwIAogICAgZmZmZmIyMTAwMDA3YmRmODogcGlja19u
-ZXh0X3Rhc2tfZmFpcisxMzAzIAogICAgCiMxMCBbZmZmZmIyMTAwMDA3YmRmOF0gcGlja19uZXh0
-X3Rhc2tfZmFpciBhdCBmZmZmZmZmZmFhMGI1NDU3CiAgICBmZmZmYjIxMDAwMDdiZTAwOiBmZmZm
-YjIxMDAwMDdiZTEwIAogICAgICAgICAgICAgICAgICAgICAgMDAwMDAwMDAwMDAwMDAxOCAKICAg
-IGZmZmZiMjEwMDAwN2JlMTA6IGZmZmY5OWE5N2ZkOWY1NjAgUVdPUkQgUFRSIGdzOjB4MjgKICAg
-ICAgICAgICAgICAgICAgICAgIGZmZmZiMjEwMDAwN2JlODAgCiAgICBmZmZmYjIxMDAwMDdiZTIw
-OiBbZmZmZjk5YTk3ODk1YTU4MDp0YXNrX3N0cnVjdF0gc2F2ZWQgcGFyYW0gKnByZXYKICAgICAg
-ICAgICAgICAgICAgICAgIGZmZmZiMjEwMDAwN2JlNDgKICAgIGZmZmZiMjEwMDAwN2JlMzA6IGYw
-NDhjZTc4MDk0NjRkMDAgZmZmZjk5YTk3ZmQ5ZjUwMD1yYnggCiAgICBmZmZmYjIxMDAwMDdiZTQw
-OiBbZmZmZjk5YTk3ODk1YTU4MDp0YXNrX3N0cnVjdF09cjEyIFtmZmZmOTlhOTc4OTVhYWI4OnRh
-c2tfc3RydWN0XT1yMTMgCiAgICBmZmZmYjIxMDAwMDdiZTUwOiAwMDAwMDAwMDAwMDAwMDAwPXIx
-NCAgMDAwMDAwMDAwMDAwMDAwMD1yMTUgIAogICAgZmZmZmIyMTAwMDA3YmU2MDogZmZmZmIyMTAw
-MDA3YmVjMD1yYnAgIF9fc2NoZWR1bGUrMjUwICAgCiAgICAKClRoZSBmYWlsaW5nIHBpZWNlIG9m
-IGNvZGUgaXMgaW4ga2VybmVsL3NjaGVkL2ZhaXIuYyAoTGluZSAzODczLCBLZXJuZWwgNC4xNC44
-NjsgTGluZSA0MTUzIEtlcm5lbCB2NS40LXJjMiksIGJlY2F1c2Ugc2UgaXMgTlVMTDoKc3RhdGlj
-IHZvaWQKc2V0X25leHRfZW50aXR5KHN0cnVjdCBjZnNfcnEgKmNmc19ycSwgc3RydWN0IHNjaGVk
-X2VudGl0eSAqc2UpCnsKCS8qICdjdXJyZW50JyBpcyBub3Qga2VwdCB3aXRoaW4gdGhlIHRyZWUu
-ICovCglpZiAoc2UtPm9uX3JxKSB7IDw8PDw8PDwgY3Jhc2ggaGVyZQoKc2V0X25leHRfZW50aXR5
-IGlzIGNhbGxlZCBmcm9tIHdpdGhpbiBwaWNrX25leHRfdGFza19mYWlyLCBmcm9tIHRoZSBmb2xs
-b3dpbmcgcGllY2Ugb2YgY29kZToKc3RhdGljIHN0cnVjdCB0YXNrX3N0cnVjdCAqCnBpY2tfbmV4
-dF90YXNrX2ZhaXIoc3RydWN0IHJxICpycSwgc3RydWN0IHRhc2tfc3RydWN0ICpwcmV2LCBzdHJ1
-Y3QgcnFfZmxhZ3MgKnJmKQp7CglzdHJ1Y3QgY2ZzX3JxICpjZnNfcnEgPSAmcnEtPmNmczsKCXN0
-cnVjdCBzY2hlZF9lbnRpdHkgKnNlOwoJc3RydWN0IHRhc2tfc3RydWN0ICpwOwoJaW50IG5ld190
-YXNrczsKCmFnYWluOgoJaWYgKCFjZnNfcnEtPm5yX3J1bm5pbmcpIC8vIHRoaXMgaXMgMSwgc28g
-d2UgYXJlIG5vdCBnb2luZyB0byBpZGxlCgkJZ290byBpZGxlOwoKI2lmZGVmIENPTkZJR19GQUlS
-X0dST1VQX1NDSEVECglpZiAocHJldi0+c2NoZWRfY2xhc3MgIT0gJmZhaXJfc2NoZWRfY2xhc3Mp
-IDw8PDw8IHRoaXMgaXMgdHJ1ZToKCQkJCQkJCWNyYXNoPiBwICZmYWlyX3NjaGVkX2NsYXNzCgkJ
-CQkJCQkkMSA9IChjb25zdCBzdHJ1Y3Qgc2NoZWRfY2xhc3MgKikgMHhmZmZmZmZmZmFhYTEwY2Mw
-IDw8PDwKCQkJCQkJCWNyYXNoPiAkcHJldj1mZmZmOTlhOTc4OTVhNTgwCgkJCQkJCQljcmFzaD4g
-Z2RiIHNldCAkcHJldj0oc3RydWN0IHRhc2tfc3RydWN0ICopMHhmZmZmOTlhOTc4OTVhNTgwCgkJ
-CQkJCQljcmFzaD4gcCAkcHJldi0+c2NoZWRfY2xhc3MKCQkJCQkJCSQyID0gKGNvbnN0IHN0cnVj
-dCBzY2hlZF9jbGFzcyAqKSAweGZmZmZmZmZmYWFhMTBiNDAgPDw8PAoJCWdvdG8gc2ltcGxlOyA8
-PDw8IHNvIHdlIGdvIHRvIHNpbXBsZQouLi4uCihMaW5lIDYzNjAsIEtlcm5lbCA0LjE0Ljg2OyBM
-aW5lIDY4MjAgS2VybmVsIHY1LjQtcmMyKQpzaW1wbGU6CiNlbmRpZgoKCXB1dF9wcmV2X3Rhc2so
-cnEsIHByZXYpOwoKCWRvIHsKCQlzZSA9IHBpY2tfbmV4dF9lbnRpdHkoY2ZzX3JxLCBOVUxMKTsg
-PDw8PCB0aGlzIHJldHVybnMgc2U9TlVMTAoJCXNldF9uZXh0X2VudGl0eShjZnNfcnEsIHNlKTsg
-PDw8PDw8PDwgaGVyZSB3ZSBjcmFzaAoJCWNmc19ycSA9IGdyb3VwX2Nmc19ycShzZSk7Cgl9IHdo
-aWxlIChjZnNfcnEpOwoKU28gd2h5IGlzIHNlID0gTlVMTCByZXR1cm5lZD8KCgpMb29raW5nIGF0
-IHBpY2tfbmV4dF9lbnRpdHkgYW5kIGNmc19ycSBmZWQgaW50byBpdCB0b2dldGhlciB3aXRoIGN1
-cnIgPSBOVUxMOgooTGluZSAzOTE1LCBLZXJuZWwgNC4xNC44NjsgTGluZSA0MTk2IEtlcm5lbCB2
-NS40LXJjMikKLyoKICogUGljayB0aGUgbmV4dCBwcm9jZXNzLCBrZWVwaW5nIHRoZXNlIHRoaW5n
-cyBpbiBtaW5kLCBpbiB0aGlzIG9yZGVyOgogKiAxKSBrZWVwIHRoaW5ncyBmYWlyIGJldHdlZW4g
-cHJvY2Vzc2VzL3Rhc2sgZ3JvdXBzCiAqIDIpIHBpY2sgdGhlICJuZXh0IiBwcm9jZXNzLCBzaW5j
-ZSBzb21lb25lIHJlYWxseSB3YW50cyB0aGF0IHRvIHJ1bgogKiAzKSBwaWNrIHRoZSAibGFzdCIg
-cHJvY2VzcywgZm9yIGNhY2hlIGxvY2FsaXR5CiAqIDQpIGRvIG5vdCBydW4gdGhlICJza2lwIiBw
-cm9jZXNzLCBpZiBzb21ldGhpbmcgZWxzZSBpcyBhdmFpbGFibGUKICovCnN0YXRpYyBzdHJ1Y3Qg
-c2NoZWRfZW50aXR5ICoKcGlja19uZXh0X2VudGl0eShzdHJ1Y3QgY2ZzX3JxICpjZnNfcnEsIHN0
-cnVjdCBzY2hlZF9lbnRpdHkgKmN1cnIpCnsKCXN0cnVjdCBzY2hlZF9lbnRpdHkgKmxlZnQgPSBf
-X3BpY2tfZmlyc3RfZW50aXR5KGNmc19ycSk7IDw8PDwgcmV0dXJucyBOVUxMCglzdHJ1Y3Qgc2No
-ZWRfZW50aXR5ICpzZTsKCiZjZnNfcnEtPnRhc2tzX3RpbWVsaW5lLT5yYl9sZWZ0bW9zdAogIHRh
-c2tzX3RpbWVsaW5lID0gewogICAgcmJfcm9vdCA9IHsKICAgICAgcmJfbm9kZSA9IDB4ZmZmZjk5
-YTk1MDJlMGQxMAogICAgfSwgCiAgICByYl9sZWZ0bW9zdCA9IDB4MAogIH0sIAppbmNsdWRlL2xp
-bnV4L3JidHJlZS5oOjkxOiNkZWZpbmUgcmJfZmlyc3RfY2FjaGVkKHJvb3QpIChyb290KS0+cmJf
-bGVmdG1vc3QKc3RydWN0IHNjaGVkX2VudGl0eSAqX19waWNrX2ZpcnN0X2VudGl0eShzdHJ1Y3Qg
-Y2ZzX3JxICpjZnNfcnEpCnsKCXN0cnVjdCByYl9ub2RlICpsZWZ0ID0gcmJfZmlyc3RfY2FjaGVk
-KCZjZnNfcnEtPnRhc2tzX3RpbWVsaW5lKTsKCglpZiAoIWxlZnQpCgkJcmV0dXJuIE5VTEw7IDw8
-PDw8PDw8PDwgdGhlIGNhc2UKCglyZXR1cm4gcmJfZW50cnkobGVmdCwgc3RydWN0IHNjaGVkX2Vu
-dGl0eSwgcnVuX25vZGUpOwp9CgpCYWNrIGluIHBpY2tfbmV4dF9lbnRpdHksIHdlIG5vdyBoYXZl
-CmN1cnIgPSBOVUxMCmxlZnQgPSBOVUxMCgoJLyoKCSAqIElmIGN1cnIgaXMgc2V0IHdlIGhhdmUg
-dG8gc2VlIGlmIGl0cyBsZWZ0IG9mIHRoZSBsZWZ0bW9zdCBlbnRpdHkKCSAqIHN0aWxsIGluIHRo
-ZSB0cmVlLCBwcm92aWRlZCB0aGVyZSB3YXMgYW55dGhpbmcgaW4gdGhlIHRyZWUgYXQgYWxsLgoJ
-ICovCglpZiAoIWxlZnQgPDw8IHRoaXMgaXMgdGhlIGNhc2UgaGVyZSA+Pj4+IHx8IChjdXJyICYm
-IGVudGl0eV9iZWZvcmUoY3VyciwgbGVmdCkpKQoJCWxlZnQgPSBjdXJyOyA8PDw8IHNvIHdlIHN0
-aWxsIGdldCBsZWZ0ID0gY3VyciA9IE5VTEwKCglzZSA9IGxlZnQ7IC8qIGlkZWFsbHkgd2UgcnVu
-IHRoZSBsZWZ0bW9zdCBlbnRpdHkgKi8gPDw8PCBidXQgd2Ugbm93IGhhdmUgc2UgPSBOVUxMID8/
-Pz8KCgkvKgoJICogQXZvaWQgcnVubmluZyB0aGUgc2tpcCBidWRkeSwgaWYgcnVubmluZyBzb21l
-dGhpbmcgZWxzZSBjYW4KCSAqIGJlIGRvbmUgd2l0aG91dCBnZXR0aW5nIHRvbyB1bmZhaXIuCgkg
-Ki8KCWlmIChjZnNfcnEtPnNraXAgPT0gc2UpIHsgPDw8PCB0aGF0J3MgZXF1YWwgaGVyZSwgc2Ug
-PSBOVUxMID0gMHgwID0gY2ZzX3JxLT5za2lwCgkJc3RydWN0IHNjaGVkX2VudGl0eSAqc2Vjb25k
-OwoKCQlpZiAoc2UgPT0gY3VycikgeyA8PDw8IGFuZCB0aGlzIHRvbywgTlVMTCA9IE5VTEwKCQkJ
-c2Vjb25kID0gX19waWNrX2ZpcnN0X2VudGl0eShjZnNfcnEpOyA8PDw8IHNvIHdlIGdldCBhZ2Fp
-biBOVUxMIGxpa2Ugd2UgZGlkIGZvciAqbGVmdAoJCX0gZWxzZSB7CgkJCXNlY29uZCA9IF9fcGlj
-a19uZXh0X2VudGl0eShzZSk7CgkJCWlmICghc2Vjb25kIHx8IChjdXJyICYmIGVudGl0eV9iZWZv
-cmUoY3Vyciwgc2Vjb25kKSkpCgkJCQlzZWNvbmQgPSBjdXJyOwoJCX0KCgkJaWYgKHNlY29uZCAm
-JiB3YWtldXBfcHJlZW1wdF9lbnRpdHkoc2Vjb25kLCBsZWZ0KSA8IDEpIDw8PDwgYXMgc2Vjb25k
-IGlzIGFsc28gTlVMTCBub3RoaW5nIGlzIGRvbmUgaGVyZSwgc2UgdW5jaGFuZ2VkCgkJCXNlID0g
-c2Vjb25kOwoJfQoKCS8qCgkgKiBQcmVmZXIgbGFzdCBidWRkeSwgdHJ5IHRvIHJldHVybiB0aGUg
-Q1BVIHRvIGEgcHJlZW1wdGVkIHRhc2suCgkgKi8KCWlmIChjZnNfcnEtPmxhc3QgJiYgd2FrZXVw
-X3ByZWVtcHRfZW50aXR5KGNmc19ycS0+bGFzdCwgbGVmdCkgPCAxKSA8PDw8IGNmc19ycS0+bGFz
-dCA9IDB4MCwgbm90IHRydWUsIHNlIHVuY2hhbmdlZAoJCXNlID0gY2ZzX3JxLT5sYXN0OwoKCS8q
-CgkgKiBTb21lb25lIHJlYWxseSB3YW50cyB0aGlzIHRvIHJ1bi4gSWYgaXQncyBub3QgdW5mYWly
-LCBydW4gaXQuCgkgKi8KCWlmIChjZnNfcnEtPm5leHQgJiYgd2FrZXVwX3ByZWVtcHRfZW50aXR5
-KGNmc19ycS0+bmV4dCwgbGVmdCkgPCAxKSA8PDw8IGNmc19ycS0+bmV4dCA9IDB4MCwgbm90IHRy
-dWUsIHNlIHVuY2hhbmdlZAoJCXNlID0gY2ZzX3JxLT5uZXh0OwoKCTw8PDwgd2UgcmVhY2ggdGhp
-cyBwb2ludCB3aXRoIHNlID0gTlVMTCA+Pj4+CgljbGVhcl9idWRkaWVzKGNmc19ycSwgc2UpOyA8
-PDw8IHRoaXMgZG9lc24ndCBjaGFuZ2UgYW55dGhpbmcgaW4gc2UKCglyZXR1cm4gc2U7IDw8PDwg
-c28gd2UgZ2V0IHNlPU5VTEwgYXMgYSByZXN1bHQuCn0KCklzIHRoaXMgYSBjb3JuZXIgY2FzZSBu
-b2JvZHkgdGhvdWdodCBvZiBvciBkbyB3ZSBoYXZlIGNmc19ycSBkYXRhIHRoYXQgaXMgdW5leHBl
-Y3RlZCBpbiBpdCdzIGNvbnRlbnQ/CgoKCg==
+Looks like nobody has been interested in that series.
 
---_002_157536427383674450mentorcom_--
+It doesn't apply anymore and I don't plan to rebase it, I'll retire it.
+
+Christophe
+
+
+> 
+> Christophe Leroy (9):
+>    powerpc: enable appending of CONFIG_CMDLINE to bootloader's cmdline.
+>    Add generic function to build command line.
+>    drivers: of: use cmdline building function
+>    powerpc/prom_init: get rid of PROM_SCRATCH_SIZE
+>    powerpc: convert to generic builtin command line
+>    Add capability to prepend the command line
+>    powerpc: add capability to prepend default command line
+>    Gives arches opportunity to use generically defined boot cmdline
+>      manipulation
+>    powerpc: use generic CMDLINE manipulations
+> 
+>   arch/powerpc/Kconfig                   | 23 ++------------
+>   arch/powerpc/kernel/prom_init.c        | 38 ++++++++++-------------
+>   arch/powerpc/kernel/prom_init_check.sh |  2 +-
+>   drivers/of/fdt.c                       | 23 +++-----------
+>   include/linux/cmdline.h                | 37 ++++++++++++++++++++++
+>   init/Kconfig                           | 56 ++++++++++++++++++++++++++++++++++
+>   6 files changed, 117 insertions(+), 62 deletions(-)
+>   create mode 100644 include/linux/cmdline.h
+> 
