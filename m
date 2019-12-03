@@ -2,102 +2,243 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CD1C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 12:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7911C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 12:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 275E720684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 12:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B74D20684
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 12:41:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726224AbfLCMlH (ORCPT
+        id S1726350AbfLCMlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 07:41:07 -0500
-Received: from mga03.intel.com ([134.134.136.65]:17530 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725997AbfLCMlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 07:41:07 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Dec 2019 04:41:07 -0800
-X-IronPort-AV: E=Sophos;i="5.69,273,1571727600"; 
-   d="scan'208";a="204962080"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Dec 2019 04:41:03 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Lyude Paul <lyude@redhat.com>, intel-gfx@lists.freedesktop.org
-Cc:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Lee Shawn C <shawn.c.lee@intel.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/5] drm/i915: Fix DPCD register order in intel_dp_aux_enable_backlight()
-In-Reply-To: <20191122231616.2574-4-lyude@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20191122231616.2574-1-lyude@redhat.com> <20191122231616.2574-4-lyude@redhat.com>
-Date:   Tue, 03 Dec 2019 14:41:00 +0200
-Message-ID: <87r21lintv.fsf@intel.com>
+        Tue, 3 Dec 2019 07:41:24 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34648 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725997AbfLCMlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 07:41:23 -0500
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 87ECA5F4C71101B31B1E;
+        Tue,  3 Dec 2019 20:41:21 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 3 Dec 2019 20:41:15 +0800
+From:   Hongbo Yao <yaohongbo@huawei.com>
+To:     <linuxarm@huawei.com>, <robdclark@gmail.com>, <sean@poorly.run>,
+        <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <linux-kernel@vger.kernel.org>
+CC:     <yaohongbo@huawei.com>
+Subject: [PATCH] drm/msm/dpu: Fix compile warnings
+Date:   Tue, 3 Dec 2019 20:38:58 +0800
+Message-ID: <20191203123858.17036-1-yaohongbo@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 Nov 2019, Lyude Paul <lyude@redhat.com> wrote:
-> For eDP panels, it appears it's expected that so long as the panel is in
-> DPCD control mode that the brightness value is never set to 0. Instead,
-> if the desired effect is to set the panel's backlight to 0 we're
-> expected to simply turn off the backlight through the
-> DP_EDP_DISPLAY_CONTROL_REGISTER.
->
-> We already do the latter correctly in intel_dp_aux_disable_backlight().
-> But, we make the mistake of writing the DPCD registers in the wrong
-> order when enabling the backlight in intel_dp_aux_enable_backlight()
-> since we currently enable the backlight through
-> DP_EDP_DISPLAY_CONTROL_REGISTER before writing the brightness level. On
-> the X1 Extreme 2nd Generation, this appears to have the potential of
-> confusing the panel in such a way that further attempts to set the
-> brightness don't actually change the backlight as expected and leave it
-> off. Presumably, this happens because the incorrect register writing
-> order briefly leaves the panel with DPCD mode enabled and a 0 brightness
-> level set.
->
-> So, reverse the order we write the DPCD registers when enabling the
-> panel backlight so that we write the brightness value first, and enable
-> the backlight second. This fix appears to be the final bit needed to get
-> the backlight on the ThinkPad X1 Extreme 2nd Generation's AMOLED screen
-> working.
->
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
+Using the following command will get compile warnings:
+make W=1 drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.o ARCH=arm64
 
-Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c: In function
+‘_dpu_crtc_program_lm_output_roi’:
+drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c:91:19: warning: variable
+‘dpu_crtc’ set but not used [-Wunused-but-set-variable]
+  struct dpu_crtc *dpu_crtc;
+                   ^~~~~~~~
+drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c: In function
+‘dpu_crtc_atomic_begin’:
+drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c:428:35: warning: variable
+‘smmu_state’ set but not used [-Wunused-but-set-variable]
+  struct dpu_crtc_smmu_state_data *smmu_state;
+                                   ^~~~~~~~~~
+drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c: In function
+‘dpu_crtc_atomic_flush’:
+drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c:489:25: warning: variable
+‘event_thread’ set but not used [-Wunused-but-set-variable]
+  struct msm_drm_thread *event_thread;
+                         ^~~~~~~~~~~~
+drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c: In function
+‘dpu_crtc_destroy_state’:
+drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c:565:19: warning: variable
+‘dpu_crtc’ set but not used [-Wunused-but-set-variable]
+  struct dpu_crtc *dpu_crtc;
+                   ^~~~~~~~
+drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c: In function
+‘dpu_crtc_duplicate_state’:
+drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c:664:19: warning: variable
+‘dpu_crtc’ set but not used [-Wunused-but-set-variable]
+  struct dpu_crtc *dpu_crtc;
+                   ^~~~~~~~
+drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c: In function
+‘dpu_crtc_disable’:
+drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c:693:26: warning: variable
+‘priv’ set but not used [-Wunused-but-set-variable]
+  struct msm_drm_private *priv;
+                          ^~~~
+drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c:691:27: warning: variable
+‘mode’ set but not used [-Wunused-but-set-variable]
+  struct drm_display_mode *mode;
+                           ^~~~
+drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c: In function ‘dpu_crtc_enable’:
+drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c:766:26: warning: variable
+‘priv’ set but not used [-Wunused-but-set-variable]
+  struct msm_drm_private *priv;
+                          ^~~~
+drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c: In function ‘dpu_crtc_init’:
+drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c:1292:18: warning: variable
+‘kms’ set but not used [-Wunused-but-set-variable]
+  struct dpu_kms *kms = NULL;
+                  ^~~
+drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c:663: warning: Excess function
+parameter 'Returns' description in 'dpu_crtc_duplicate_state'
 
-> ---
->  drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
-> index 0bf8772bc7bb..87b59db9ffe3 100644
-> --- a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
-> +++ b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
-> @@ -205,8 +205,9 @@ static void intel_dp_aux_enable_backlight(const struct intel_crtc_state *crtc_st
->  		}
->  	}
->  
-> +	intel_dp_aux_set_backlight(conn_state,
-> +				   connector->panel.backlight.level);
->  	set_aux_backlight_enable(intel_dp, true);
-> -	intel_dp_aux_set_backlight(conn_state, connector->panel.backlight.level);
->  }
->  
->  static void intel_dp_aux_disable_backlight(const struct drm_connector_state *old_conn_state)
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Hongbo Yao <yaohongbo@huawei.com>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c | 23 -----------------------
+ 1 file changed, 23 deletions(-)
 
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+index ce59adff06aa..00bf35d2ef24 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+@@ -88,11 +88,9 @@ static void _dpu_crtc_setup_blend_cfg(struct dpu_crtc_mixer *mixer,
+ 
+ static void _dpu_crtc_program_lm_output_roi(struct drm_crtc *crtc)
+ {
+-	struct dpu_crtc *dpu_crtc;
+ 	struct dpu_crtc_state *crtc_state;
+ 	int lm_idx, lm_horiz_position;
+ 
+-	dpu_crtc = to_dpu_crtc(crtc);
+ 	crtc_state = to_dpu_crtc_state(crtc->state);
+ 
+ 	lm_horiz_position = 0;
+@@ -425,7 +423,6 @@ static void dpu_crtc_atomic_begin(struct drm_crtc *crtc,
+ 	struct drm_encoder *encoder;
+ 	struct drm_device *dev;
+ 	unsigned long flags;
+-	struct dpu_crtc_smmu_state_data *smmu_state;
+ 
+ 	if (!crtc) {
+ 		DPU_ERROR("invalid crtc\n");
+@@ -443,7 +440,6 @@ static void dpu_crtc_atomic_begin(struct drm_crtc *crtc,
+ 	dpu_crtc = to_dpu_crtc(crtc);
+ 	cstate = to_dpu_crtc_state(crtc->state);
+ 	dev = crtc->dev;
+-	smmu_state = &dpu_crtc->smmu_state;
+ 
+ 	_dpu_crtc_setup_lm_bounds(crtc, crtc->state);
+ 
+@@ -486,7 +482,6 @@ static void dpu_crtc_atomic_flush(struct drm_crtc *crtc,
+ 	struct drm_device *dev;
+ 	struct drm_plane *plane;
+ 	struct msm_drm_private *priv;
+-	struct msm_drm_thread *event_thread;
+ 	unsigned long flags;
+ 	struct dpu_crtc_state *cstate;
+ 
+@@ -508,8 +503,6 @@ static void dpu_crtc_atomic_flush(struct drm_crtc *crtc,
+ 		return;
+ 	}
+ 
+-	event_thread = &priv->event_thread[crtc->index];
+-
+ 	if (dpu_crtc->event) {
+ 		DPU_DEBUG("already received dpu_crtc->event\n");
+ 	} else {
+@@ -562,7 +555,6 @@ static void dpu_crtc_atomic_flush(struct drm_crtc *crtc,
+ static void dpu_crtc_destroy_state(struct drm_crtc *crtc,
+ 		struct drm_crtc_state *state)
+ {
+-	struct dpu_crtc *dpu_crtc;
+ 	struct dpu_crtc_state *cstate;
+ 
+ 	if (!crtc || !state) {
+@@ -570,7 +562,6 @@ static void dpu_crtc_destroy_state(struct drm_crtc *crtc,
+ 		return;
+ 	}
+ 
+-	dpu_crtc = to_dpu_crtc(crtc);
+ 	cstate = to_dpu_crtc_state(state);
+ 
+ 	DPU_DEBUG("crtc%d\n", crtc->base.id);
+@@ -657,11 +648,9 @@ static void dpu_crtc_reset(struct drm_crtc *crtc)
+ /**
+  * dpu_crtc_duplicate_state - state duplicate hook
+  * @crtc: Pointer to drm crtc structure
+- * @Returns: Pointer to new drm_crtc_state structure
+  */
+ static struct drm_crtc_state *dpu_crtc_duplicate_state(struct drm_crtc *crtc)
+ {
+-	struct dpu_crtc *dpu_crtc;
+ 	struct dpu_crtc_state *cstate, *old_cstate;
+ 
+ 	if (!crtc || !crtc->state) {
+@@ -669,7 +658,6 @@ static struct drm_crtc_state *dpu_crtc_duplicate_state(struct drm_crtc *crtc)
+ 		return NULL;
+ 	}
+ 
+-	dpu_crtc = to_dpu_crtc(crtc);
+ 	old_cstate = to_dpu_crtc_state(crtc->state);
+ 	cstate = kmemdup(old_cstate, sizeof(*old_cstate), GFP_KERNEL);
+ 	if (!cstate) {
+@@ -688,9 +676,7 @@ static void dpu_crtc_disable(struct drm_crtc *crtc,
+ {
+ 	struct dpu_crtc *dpu_crtc;
+ 	struct dpu_crtc_state *cstate;
+-	struct drm_display_mode *mode;
+ 	struct drm_encoder *encoder;
+-	struct msm_drm_private *priv;
+ 	unsigned long flags;
+ 	bool release_bandwidth = false;
+ 
+@@ -700,8 +686,6 @@ static void dpu_crtc_disable(struct drm_crtc *crtc,
+ 	}
+ 	dpu_crtc = to_dpu_crtc(crtc);
+ 	cstate = to_dpu_crtc_state(crtc->state);
+-	mode = &cstate->base.adjusted_mode;
+-	priv = crtc->dev->dev_private;
+ 
+ 	DRM_DEBUG_KMS("crtc%d\n", crtc->base.id);
+ 
+@@ -763,14 +747,12 @@ static void dpu_crtc_enable(struct drm_crtc *crtc,
+ {
+ 	struct dpu_crtc *dpu_crtc;
+ 	struct drm_encoder *encoder;
+-	struct msm_drm_private *priv;
+ 	bool request_bandwidth;
+ 
+ 	if (!crtc || !crtc->dev || !crtc->dev->dev_private) {
+ 		DPU_ERROR("invalid crtc\n");
+ 		return;
+ 	}
+-	priv = crtc->dev->dev_private;
+ 
+ 	pm_runtime_get_sync(crtc->dev->dev);
+ 
+@@ -1288,13 +1270,8 @@ struct drm_crtc *dpu_crtc_init(struct drm_device *dev, struct drm_plane *plane,
+ {
+ 	struct drm_crtc *crtc = NULL;
+ 	struct dpu_crtc *dpu_crtc = NULL;
+-	struct msm_drm_private *priv = NULL;
+-	struct dpu_kms *kms = NULL;
+ 	int i;
+ 
+-	priv = dev->dev_private;
+-	kms = to_dpu_kms(priv->kms);
+-
+ 	dpu_crtc = kzalloc(sizeof(*dpu_crtc), GFP_KERNEL);
+ 	if (!dpu_crtc)
+ 		return ERR_PTR(-ENOMEM);
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+2.20.1
+
