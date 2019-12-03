@@ -2,135 +2,98 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7604EC43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F41FFC43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56F29206E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAFEA206E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:58:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575356298;
+	bh=NDzHjnZoROStmAmK2kEQvw3sr0Cov3rjYuViMaBgtXw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vV84F1xedZepy2LOptp+Op5t8pskqEIlvKUvNdcc3ENewVSZZso2JdWlg8Lbb0QdZ
+	 n44NM5kK4zjsrSvs1jsSGIvxm7VJXi3tzUbDgH/GIMbFlK11qUZnO20TTk3sU6rY+8
+	 xShZ2wqGGwuuqxmNWWtgLaH4IeHkJ/hoIuzWudHg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727388AbfLCG6L (ORCPT
+        id S1727408AbfLCG6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 01:58:11 -0500
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:48225 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727351AbfLCG6L (ORCPT
+        Tue, 3 Dec 2019 01:58:17 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43014 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727340AbfLCG6R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 01:58:11 -0500
-Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
-  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="Ludovic.Desroches@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa5.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: EsL320TzSSXEuYAKN7rUavHCfzrytzh3c5AYr8n6uN8LVXRI7hcIGmjw3K5+EpGcXy7UoKZJnB
- V8s7tIonVXD5nLaJfif12KarPV0dwET3ZpVpAepVMpuVYIEbrC3yxk5/aAK1GKuKYpTxcWs2f5
- +bxIQscJv3l+dMduJY02hWkW3HXt6oauezXfFkcMiZj2YjAdJjuda4iUffxmbc/ZqOch/z21LB
- 1NCTWgzdCYxA20vEHeDKPmlBsH0DnShF1bhau5qTmq4YbGKhnBCnkYWmg+qod3grC/in15bmVt
- X5k=
-X-IronPort-AV: E=Sophos;i="5.69,272,1571727600"; 
-   d="scan'208";a="57585459"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Dec 2019 23:58:06 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 2 Dec 2019 23:58:00 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Mon, 2 Dec 2019 23:58:01 -0700
-Date:   Tue, 3 Dec 2019 07:57:51 +0100
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "wsa@the-dreams.de" <wsa@the-dreams.de>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peda@axentia.se" <peda@axentia.se>,
-        "Codrin Ciubotariu - M19940" <Codrin.Ciubotariu@microchip.com>,
-        Nicolas Ferre - M43238 <Nicolas.Ferre@microchip.com>
-Subject: Re: [PATCH 1/3] dt-bindings: i2c: at91: cosmetic formatting of
- compatible list
-Message-ID: <20191203065751.fgwwko3e63antodb@M43218.corp.atmel.com>
-Mail-Followup-To: Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "wsa@the-dreams.de" <wsa@the-dreams.de>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peda@axentia.se" <peda@axentia.se>,
-        Codrin Ciubotariu - M19940 <Codrin.Ciubotariu@microchip.com>,
-        Nicolas Ferre - M43238 <Nicolas.Ferre@microchip.com>
-References: <1575276957-5615-1-git-send-email-eugen.hristev@microchip.com>
+        Tue, 3 Dec 2019 01:58:17 -0500
+Received: by mail-wr1-f66.google.com with SMTP id n1so2184523wra.10;
+        Mon, 02 Dec 2019 22:58:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zF74IGfN8k4r/66rDN9iUDHqi54WQbWfKDWkqcaxjZw=;
+        b=PdZ4+lTwKLhTadzoIBTD+MAdEKy2PGkrU15xlBIIWitCyv1IYwxpgI4BNaX5WW7Iu3
+         R3Bb34YpH513Zgxv+Pui8YnZ3U9hlnFrabHfQnt7AIpOg8tckDYAj/ZkCtSfBaBl1WPb
+         7oz1xCuo7Pdu7Dj2p5wy1C8DlL8jyLZqL5DMI7IMnL/m8Mh5Ck0GzH6hxT936JN/n/IJ
+         bfjdCSEvrhxWoi4E6jxbST7u01T+YN2iOnlFEKF1a8wHiZBFESivfIBmlHENFJTKNnnx
+         UgEdRfPqV08ZBNTdglKXGa/RJOBfw7HR9Sp9JfBnug7GqN+6TwqB1J3IjTmSz2c+5Exx
+         Y6fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zF74IGfN8k4r/66rDN9iUDHqi54WQbWfKDWkqcaxjZw=;
+        b=eC+HNcAR6Ewg0dW+axhxQ8zRnEBlFZCe0CxhTRYllDKJ1+BXvqNNbB6/csJu8qVPqc
+         a9DjyanZenFvabKLGhAmzObtxxRflss4AoYLxauem+9Jqfdd2VbVX+mG6TSu9ooj8EZ+
+         G29ie0Rfw7eHGvSjDEW11GyWtqqsIDp+tRgCxMq7C49SoYYGkVy2jHG4zhdDAdVH0Wgg
+         O45FMHA86oRsd4RdJ6N/iVDH0qmu9JMqZLNKV6PY0gMwmlwzxg/W9gsYoXSbh01chUUG
+         6GWFYAAQaEmdhMOpOKBbmBS20QwCgIOyHylGS+d39rcHnf+6EYcQfdWngSQ1+g5d1nZG
+         spyg==
+X-Gm-Message-State: APjAAAVVogUEDPljY9ZfWlQvVoMDb+B/CJy79TqERAXhCw2+ILmqOaTY
+        wFy54OB5OsS3ytgxz9y7cwU=
+X-Google-Smtp-Source: APXvYqzDUtSY4j2FaTqaOLrl5xV1xcEZrpY5GUGhDwiA72WNVMfQoHhvDxH5M8QSY5J/ezF6uJMc0Q==
+X-Received: by 2002:a5d:5284:: with SMTP id c4mr3141134wrv.376.1575356295012;
+        Mon, 02 Dec 2019 22:58:15 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id r15sm1915483wmh.21.2019.12.02.22.58.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 22:58:14 -0800 (PST)
+Date:   Tue, 3 Dec 2019 07:58:12 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dmitry Safonov <dima@arista.com>
+Subject: Re: linux-next: manual merge of the y2038 tree with the tip tree
+Message-ID: <20191203065812.GB115767@gmail.com>
+References: <20191127130139.0b16375c@canb.auug.org.au>
+ <20191203140259.33291393@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1575276957-5615-1-git-send-email-eugen.hristev@microchip.com>
+In-Reply-To: <20191203140259.33291393@canb.auug.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 09:56:35AM +0100, Eugen Hristev - M18282 wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> Format the list of compatibles with one compatible per line.
-> 
-> Suggested-by: Peter Rosin <peda@axentia.se>
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com> 
 
-Thanks
+* Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-at91.txt | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
+> Hi all,
 > 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-at91.txt b/Documentation/devicetree/bindings/i2c/i2c-at91.txt
-> index 2210f43..d35cd63 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-at91.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-at91.txt
-> @@ -1,10 +1,16 @@
->  I2C for Atmel platforms
->  
->  Required properties :
-> -- compatible : Must be "atmel,at91rm9200-i2c", "atmel,at91sam9261-i2c",
-> -     "atmel,at91sam9260-i2c", "atmel,at91sam9g20-i2c", "atmel,at91sam9g10-i2c",
-> -     "atmel,at91sam9x5-i2c", "atmel,sama5d4-i2c", "atmel,sama5d2-i2c" or
-> -     "microchip,sam9x60-i2c"
-> +- compatible : Must be one of:
-> +	"atmel,at91rm9200-i2c",
-> +	"atmel,at91sam9261-i2c",
-> +	"atmel,at91sam9260-i2c",
-> +	"atmel,at91sam9g20-i2c",
-> +	"atmel,at91sam9g10-i2c",
-> +	"atmel,at91sam9x5-i2c",
-> +	"atmel,sama5d4-i2c",
-> +	"atmel,sama5d2-i2c",
-> +	"microchip,sam9x60-i2c".
->  - reg: physical base address of the controller and length of memory mapped
->       region.
->  - interrupts: interrupt number to the cpu.
-> -- 
-> 2.7.4
-> 
+> This is now a conflict between the tip tree and Linus' tree.
+
+This too should be resolved in my latest update of the -next integration 
+branch tip:auto-latest.
+
+Thanks,
+
+	Ingo
