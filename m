@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C91A8C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 632FFC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 894C720684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A35B20684
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412695;
-	bh=V7L122m0JCzG3CnlKLZqRrIIAH7E7YKziM47LY8R0HQ=;
+	s=default; t=1575412698;
+	bh=2od75twyd8JsIVh0E+fMHEG4l6sBN9ezELJsWv4ca5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zBGFzZ/V7V70NNHOVxfodKLCMl8zUuH7SXV15WUYThyNndIYF5M3Y3U6JV6xtTyKa
-	 xktSFbx555uoNDRhV/H1j81L18WKDuidfrB2FCBh4crvP/lQxuL17XcBqJuXLodqxy
-	 fHKvyvZr22a/TxtU9RRzviw8Zd4zko1QeoGE6YGo=
+	b=fHq1aaQdZbqaGZFY7dbwYH96eBNdxsSflnhmemvybQ5jjUpnXqMq6jEotxGPM1L1t
+	 n83WukoITZEVDpfJMazBcdIhIE/MXWOZXnpL4omQv158Ep1h/K30jxeFUlu5qmZoZE
+	 kc+J0rab8FA1pHUM+k0egtlCimNFjuHmHe7QKP7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbfLCWiN (ORCPT
+        id S1727563AbfLCWiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:38:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47004 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:38:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727924AbfLCWiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:38:10 -0500
+        id S1727936AbfLCWiN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:38:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E01FC20684;
-        Tue,  3 Dec 2019 22:38:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60526207DD;
+        Tue,  3 Dec 2019 22:38:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412690;
-        bh=V7L122m0JCzG3CnlKLZqRrIIAH7E7YKziM47LY8R0HQ=;
+        s=default; t=1575412692;
+        bh=2od75twyd8JsIVh0E+fMHEG4l6sBN9ezELJsWv4ca5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aNAns0xYdf8sVoAAR+lufx6NlZ9PHsgmvVNO2UY/GZvw7yYQBpuoJfgBlOM6WZvIA
-         yo9Tk/GfG85zfYyW9bTgolwPfVmgv7YEKuEH58g7fERR/u2hB7tc/FGpUfPjpfzqpe
-         gd7yxQj4Hh3UpEqEqlFxzfJvuhGmQldlTitE+sok=
+        b=EoQiuuF2Pkia43sO0xZuMF7RxTmKU4tIzTyuiwWlBxB1f7spzuD7jSPXqGyRG8FwS
+         zdLS85qfXXBI+OrKKBi9JZgH7j1kAr4qGH9nIvDCY0dVKg2rNFpzCAMtvwg7U7VXbZ
+         vnJ8YFBfbzgtF+5acVTgcF6TppYkVqEyDt3jG1zs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 27/46] openvswitch: drop unneeded BUG_ON() in ovs_flow_cmd_build_info()
-Date:   Tue,  3 Dec 2019 23:35:47 +0100
-Message-Id: <20191203212742.616954608@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        youling257 <youling257@gmail.com>
+Subject: [PATCH 5.4 10/46] staging: rtl8723bs: Add 024c:0525 to the list of SDIO device-ids
+Date:   Tue,  3 Dec 2019 23:35:30 +0100
+Message-Id: <20191203212724.815744118@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203212705.175425505@linuxfoundation.org>
 References: <20191203212705.175425505@linuxfoundation.org>
@@ -59,40 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 8ffeb03fbba3b599690b361467bfd2373e8c450f ]
+commit 3d5f1eedbfd22ceea94b39989d6021b1958181f4 upstream.
 
-All the callers of ovs_flow_cmd_build_info() already deal with
-error return code correctly, so we can handle the error condition
-in a more gracefull way. Still dump a warning to preserve
-debuggability.
+Add 024c:0525 to the list of SDIO device-ids, based on a patch found
+in the Android X86 kernels. According to that patch this device id is
+used on the Alcatel Plus 10 device.
 
-v1 -> v2:
- - clarify the commit message
- - clean the skb and report the error (DaveM)
-
-Fixes: ccb1352e76cf ("net: Add Open vSwitch kernel components.")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-and-tested-by: youling257 <youling257@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191111113846.24940-1-hdegoede@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/openvswitch/datapath.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/net/openvswitch/datapath.c
-+++ b/net/openvswitch/datapath.c
-@@ -886,7 +886,10 @@ static struct sk_buff *ovs_flow_cmd_buil
- 	retval = ovs_flow_cmd_fill_info(flow, dp_ifindex, skb,
- 					info->snd_portid, info->snd_seq, 0,
- 					cmd, ufid_flags);
--	BUG_ON(retval < 0);
-+	if (WARN_ON_ONCE(retval < 0)) {
-+		kfree_skb(skb);
-+		skb = ERR_PTR(retval);
-+	}
- 	return skb;
- }
- 
+---
+ drivers/staging/rtl8723bs/os_dep/sdio_intf.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
++++ b/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
+@@ -18,6 +18,7 @@
+ static const struct sdio_device_id sdio_ids[] =
+ {
+ 	{ SDIO_DEVICE(0x024c, 0x0523), },
++	{ SDIO_DEVICE(0x024c, 0x0525), },
+ 	{ SDIO_DEVICE(0x024c, 0x0623), },
+ 	{ SDIO_DEVICE(0x024c, 0x0626), },
+ 	{ SDIO_DEVICE(0x024c, 0xb723), },
 
 
