@@ -2,201 +2,166 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BF4C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02AF0C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 442C7206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68A59206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:09:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="NxSgFEvp";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="qaQTVPpf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbfLCKJY (ORCPT
+        id S1726339AbfLCKJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 05:09:24 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:44909 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbfLCKJY (ORCPT
+        Tue, 3 Dec 2019 05:09:39 -0500
+Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:49308 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725773AbfLCKJj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 05:09:24 -0500
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1ic57Q-0005rk-2Z; Tue, 03 Dec 2019 11:09:20 +0100
-Received: from [IPv6:2a03:f580:87bc:d400:858e:130c:14c0:366e] (unknown [IPv6:2a03:f580:87bc:d400:858e:130c:14c0:366e])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits)
-         client-signature RSA-PSS (4096 bits))
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id D05E34873ED;
-        Tue,  3 Dec 2019 10:09:17 +0000 (UTC)
-Subject: Re: KMSAN: uninit-value in can_receive
-To:     Oliver Hartkopp <socketcan@hartkopp.net>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com>,
-        davem@davemloft.net, glider@google.com, linux-can@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-References: <0000000000005c08d10597a3a05d@google.com>
- <a5f73d92-fdf2-2590-c863-39a181dca8e1@hartkopp.net>
- <deedd609-6f3b-8035-47e1-252ab221faa1@pengutronix.de>
- <7934bc2b-597f-0bb3-be2d-32f3b07b4de9@hartkopp.net>
- <7f5c4546-0c1a-86ae-581e-0203b5fca446@pengutronix.de>
- <1f7d6ea7-152e-ff18-549c-b196d8b5e3a7@hartkopp.net>
- <9e06266a-67f3-7352-7b87-2b9144c7c9a9@gmail.com>
- <3142c032-e46a-531c-d1b8-d532e5b403a6@hartkopp.net>
- <92c04159-b83a-3e33-91da-25a727a692d0@gmail.com>
- <c1f80bac-bb75-e671-ba32-05cfae86569c@hartkopp.net>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <0f395f1e-b7d4-6254-2a0c-54029b4dc38f@pengutronix.de>
-Date:   Tue, 3 Dec 2019 11:09:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 3 Dec 2019 05:09:39 -0500
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB3A2coa011638;
+        Tue, 3 Dec 2019 02:09:10 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=proofpoint;
+ bh=50YHPMnClc61y8E3qh+3v63XznlfGECyAICWaX5OsL8=;
+ b=NxSgFEvpFkQE0pfwi0S2zOsQ7Kp5OywBjdntmVMR5LSNs9+UxlY8IORLUw5gxDjGVXe+
+ puse0yjeZzhyULeYjEhUz1YuHBwZrpLTBOfWLr0kaqc6DaM8r/LVTsjnrfU2YogXSajT
+ OyILl8wGJN8MZPIR2AWbBngGHCFcaTcD3Us0aKFcUZXSqqtUovv8o0UUzI5ALYKiTWKx
+ Qqu2blFJkV+gQF8FthNOQW7OGfnW1IGKd8z4bCE6X4I8PiSN7lcw3dWnFHpNO1HRQn+Y
+ 9t2lF09AeCZ3cwXe3a9hFPntde6gZSyuA0yxvDBsZPwiI8k4nzQQxJG6lZWdfqXMFsTO yg== 
+Received: from nam05-co1-obe.outbound.protection.outlook.com (mail-co1nam05lp2056.outbound.protection.outlook.com [104.47.48.56])
+        by mx0a-0014ca01.pphosted.com with ESMTP id 2wknv0ujrr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 03 Dec 2019 02:09:10 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WIujyRhxPgc1CNnZrBXvp2VTyzG1c3qdeovOU/FaO/VWwUmxXJJPnFjL7hYCi6WRuLhzz62rnaPULgRE5nDnrIpAQpx0V0yxqz7VPvlN2fl4eiTd+72cfX8S48YIIgQ+Xi8OLwCauhMejPA3sEbCWd9xbzZJpFXl0kbav4QhxQfyBaWhH5E9yWLw9cx2Ef1AOq23AY8Bafqc81pYeAlHxCDwcqWww5wYChhflDAzXSrIRspOid8+XtZHuv5v0FEA40w8EI2ExR0B05AC4+Wk9ls39c0Y60ui5WG3iN9+pTVa/jEhBA2WfBVSYc4O2oDJkv2tgFCBFe5R8inGNkSoJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=50YHPMnClc61y8E3qh+3v63XznlfGECyAICWaX5OsL8=;
+ b=Eyo/pnO89MdLrRwEUfe2DYMyHu2KbfBaqXG+pUnSp3E8gFI/NKVrCpWlTggFJEZLgznjLHV6lmlcqFD9Zt5wHUT8vMJEDcIRiaLPaG0fwlppnm/B1GoXEb/2nW5DeWUdBUVQzFw0zxtN0yFYHsnPL7HnNNll14Rcn7qRYJjqDJV0XSKpwI28UBuJ4Kp6YyZRGS/HGajg0ifnS3GktLjs/cH4yHqYcnAJ7Ks633B1W/roAwWoUeO4OlTz/+lwYIyHxKsx+gziPtr7NETmT5ndkFmm0V0oi3WX2RVcLHPAELmBvNeNNFAvsxrX6f1CZeTydgUvyWXCAU+/RZpkd/8SMA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 158.140.1.28) smtp.rcpttodomain=linux.ibm.com smtp.mailfrom=cadence.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=50YHPMnClc61y8E3qh+3v63XznlfGECyAICWaX5OsL8=;
+ b=qaQTVPpfmFranOx4hY9tQmxpRhh/71Hxb9qLtV6TT89Jo77AxgHTwbD/MQqX/799TSfvbHnMqoaC3JLI55b+CQHiKVbjLKwwVclXEvbIHHh29TnszCpjlmN8/xxWoWMr2ZI/nQsBZA2TlQrUbrdgpFY/LNotavrdrxSvNBLJMnM=
+Received: from CY1PR07CA0018.namprd07.prod.outlook.com
+ (2a01:111:e400:c60a::28) by BY5PR07MB6754.namprd07.prod.outlook.com
+ (2603:10b6:a03:195::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.19; Tue, 3 Dec
+ 2019 10:09:07 +0000
+Received: from MW2NAM12FT019.eop-nam12.prod.protection.outlook.com
+ (2a01:111:f400:fe5a::203) by CY1PR07CA0018.outlook.office365.com
+ (2a01:111:e400:c60a::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.19 via Frontend
+ Transport; Tue, 3 Dec 2019 10:09:06 +0000
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ cadence.com discourages use of 158.140.1.28 as permitted sender)
+Received: from sjmaillnx1.cadence.com (158.140.1.28) by
+ MW2NAM12FT019.mail.protection.outlook.com (10.13.180.86) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.18 via Frontend Transport; Tue, 3 Dec 2019 10:09:06 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by sjmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id xB3A92Au016941
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Tue, 3 Dec 2019 02:09:03 -0800
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Tue, 3 Dec 2019 11:09:01 +0100
+Received: from vleu-orange.cadence.com (10.160.88.83) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Tue, 3 Dec 2019 11:09:01 +0100
+Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id xB3A91h2024901;
+        Tue, 3 Dec 2019 11:09:01 +0100
+Received: (from sheebab@localhost)
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id xB3A8vUW024826;
+        Tue, 3 Dec 2019 11:08:57 +0100
+From:   sheebab <sheebab@cadence.com>
+To:     <alim.akhtar@samsung.com>, <avri.altman@wdc.com>,
+        <pedrom.sousa@synopsys.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <stanley.chu@mediatek.com>,
+        <beanhuo@micron.com>, <yuehaibing@huawei.com>,
+        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <vigneshr@ti.com>
+CC:     <mparab@cadence.com>, <rafalc@cadence.com>,
+        sheebab <sheebab@cadence.com>
+Subject: [PATCH] scsi: ufs: Disable autohibern8 feature in Cadence UFS
+Date:   Tue, 3 Dec 2019 11:07:15 +0100
+Message-ID: <1575367635-22662-1-git-send-email-sheebab@cadence.com>
+X-Mailer: git-send-email 2.4.5
 MIME-Version: 1.0
-In-Reply-To: <c1f80bac-bb75-e671-ba32-05cfae86569c@hartkopp.net>
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="f2B7MSGQBQp6YbVQWJU9Lrw0rJtRR0jeS"
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:158.140.1.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(39860400002)(396003)(376002)(36092001)(189003)(199004)(2616005)(2906002)(426003)(51416003)(356004)(6666004)(4744005)(36756003)(16586007)(316002)(336012)(186003)(26005)(54906003)(110136005)(8936002)(2201001)(8676002)(76130400001)(70586007)(42186006)(86362001)(246002)(50226002)(4326008)(107886003)(5660300002)(7636002)(305945005)(478600001)(87636003)(70206006)(26826003)(50466002)(48376002)(7416002)(921003)(83996005)(1121003)(2101003);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR07MB6754;H:sjmaillnx1.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:corp.Cadence.COM;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ba5795fa-6b1a-438d-03af-08d777d8d4bd
+X-MS-TrafficTypeDiagnostic: BY5PR07MB6754:
+X-Microsoft-Antispam-PRVS: <BY5PR07MB67543CD08BCABE862B997801A4420@BY5PR07MB6754.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-Forefront-PRVS: 02408926C4
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: K07IJPSn8a7kXgxz6racdf4gEl58V7gh+GZrCDW0BbH31tLX6HLlug1JjitZe5zcupDvKtKS2c32/aMn/8qSXD5H7j6iQmohjiriaH21ZUwLR2JgExOM6qh+hBtfrFq1qMZUevM8WwivhWOLX29g2kv3dPMZ9LC4DARiKhq0Rxra6mrEdzP/j2QtEZGz32RVw+yjLmuFsc7rfkV8ET6NWYwq/zYF6lcOfPFWvezmUtaZS82nX9F1JTIQGUuStUaUTQK2o88ER3nipxIGX6znBrdJe7kZlgpZ6bivk/S6gLhziiAhsjFRjeJ8mj2rO6S/F6eUEBH5pMj4MMOwjgY/lnES1jOrOoB61YCeu+Ai1uO7/8bNXaGNKTRLr03vVJ0+lCcVcTG6/YYQwq6dhQX2O1wIU93Qp+q9gfD5hO4trzPWoIwaBTbXrPkq1OzO7e8+
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Dec 2019 10:09:06.1442
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ba5795fa-6b1a-438d-03af-08d777d8d4bd
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.28];Helo=[sjmaillnx1.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR07MB6754
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-03_02:2019-11-29,2019-12-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 adultscore=0
+ spamscore=0 suspectscore=0 clxscore=1015 mlxlogscore=853 phishscore=0
+ impostorscore=0 malwarescore=0 bulkscore=0 lowpriorityscore=0
+ priorityscore=1501 mlxscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-1912030081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---f2B7MSGQBQp6YbVQWJU9Lrw0rJtRR0jeS
-Content-Type: multipart/mixed; boundary="At7nxJr8wb5hZye1lmWJKyOb0UJhSIXOC";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Oliver Hartkopp <socketcan@hartkopp.net>,
- Eric Dumazet <eric.dumazet@gmail.com>,
- syzbot <syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com>,
- davem@davemloft.net, glider@google.com, linux-can@vger.kernel.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- syzkaller-bugs@googlegroups.com
-Message-ID: <0f395f1e-b7d4-6254-2a0c-54029b4dc38f@pengutronix.de>
-Subject: Re: KMSAN: uninit-value in can_receive
-References: <0000000000005c08d10597a3a05d@google.com>
- <a5f73d92-fdf2-2590-c863-39a181dca8e1@hartkopp.net>
- <deedd609-6f3b-8035-47e1-252ab221faa1@pengutronix.de>
- <7934bc2b-597f-0bb3-be2d-32f3b07b4de9@hartkopp.net>
- <7f5c4546-0c1a-86ae-581e-0203b5fca446@pengutronix.de>
- <1f7d6ea7-152e-ff18-549c-b196d8b5e3a7@hartkopp.net>
- <9e06266a-67f3-7352-7b87-2b9144c7c9a9@gmail.com>
- <3142c032-e46a-531c-d1b8-d532e5b403a6@hartkopp.net>
- <92c04159-b83a-3e33-91da-25a727a692d0@gmail.com>
- <c1f80bac-bb75-e671-ba32-05cfae86569c@hartkopp.net>
-In-Reply-To: <c1f80bac-bb75-e671-ba32-05cfae86569c@hartkopp.net>
+This patch disables autohibern8 feature in Cadence UFS. 
+The autohibern8 feature has issues due to which unexpected interrupt
+trigger is happening. After the interrupt issue is sorted out autohibern8
+feature will be re-enabled
 
---At7nxJr8wb5hZye1lmWJKyOb0UJhSIXOC
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: sheebab <sheebab@cadence.com>
+---
+ drivers/scsi/ufs/cdns-pltfrm.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-On 11/20/19 9:10 PM, Oliver Hartkopp wrote:
-[...]
-> So the KMSAN detection was right at the end :-(
->=20
-> I'll take a closer look to enable PF_PACKET to send CAN frames again=20
-> which will fix up the entire  problem.
+diff --git a/drivers/scsi/ufs/cdns-pltfrm.c b/drivers/scsi/ufs/cdns-pltfrm.c
+index b2af04c57a39..882425d1166b 100644
+--- a/drivers/scsi/ufs/cdns-pltfrm.c
++++ b/drivers/scsi/ufs/cdns-pltfrm.c
+@@ -98,6 +98,12 @@ static int cdns_ufs_link_startup_notify(struct ufs_hba *hba,
+ 	 * completed.
+ 	 */
+ 	ufshcd_dme_set(hba, UIC_ARG_MIB(PA_LOCAL_TX_LCC_ENABLE), 0);
++
++	/*
++	 * Disabling Autohibern8 feature in cadence UFS
++	 * to mask unexpected interrupt trigger.
++	 */
++	hba->ahit = 0;
+ 
+ 	return 0;
+ }
+-- 
+2.17.1
 
-I'm going to send a pull request today. Do you already have a fix for thi=
-s?
-
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
-
-
---At7nxJr8wb5hZye1lmWJKyOb0UJhSIXOC--
-
---f2B7MSGQBQp6YbVQWJU9Lrw0rJtRR0jeS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl3mNEgACgkQWsYho5Hk
-nSDJXQf/fIq/7xN90kzcb37GjA+786hSOo75BmT1hys0AlmwhGfVDAnykpN8yOUS
-PXouEyLei42dgV3ISBtk3DBPv25P0asIaYe2OD9vyO7dxlZYb4QNe83+kDp7AQis
-wzXpTbjhdB/5IVcdDvk/d3NdTVdfADhZ2yvjp5n7ucJ4TtjVk8TbL9X3f1YW/lP/
-5i63Obt/apof1I9B9W9hx0ZbGJBnOpH5CGxJ+QgBERExoXUye/pKlfwe2UET0Miv
-/ASxLiHH+sR/sdNu7ItHn5eWAGZOpncAZJk2T6Lelc/77u3IeZaBtHXb0hQa946q
-WgYezs+opZzcLMl7nYbKJKl8kr6NMg==
-=y804
------END PGP SIGNATURE-----
-
---f2B7MSGQBQp6YbVQWJU9Lrw0rJtRR0jeS--
