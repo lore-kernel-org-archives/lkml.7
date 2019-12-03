@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CFAC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0ADC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20FA4215E5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53A162064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:09:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414544;
-	bh=8ToaJQ695p2SfwWZ5E3MFRCG42I9Nm3w5fQf1fuY/+M=;
+	s=default; t=1575414551;
+	bh=Aozy7mvmIKkmP6PcJtF3CLj0u5npcPm8oxfNLsn1C1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C52iWg6KQFxDY5yTVWF+lPU35zHFpaxoY3y17ljrqLdvFp380C+ckSiDzidq94vRh
-	 mLPcoF8L2oZN7OD2JisqJpLl6I/aYoX6PsndkyBKkQf6OZDIVHcrgxETu1iKecOhiw
-	 BZWpDnHcGn1rqraIDh2sGo9dveYIvGCGzF8OSd0U=
+	b=xZE5BcXaX70dV3zTBo2PeG4UeYtbv3Kjnd229dWCGUJoMDpNUwRSeMLH73g5DUvZ2
+	 BnTF6/pnu9y3uCzDoscxudUOTwAmzyb68WkaVqvxEdJZeW+dz2KV7kAbL7+rUDNnb9
+	 c3j37g3svPTNx1sgZIqsMnsVMI7cpZMeRak678AQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbfLCXJD (ORCPT
+        id S1728164AbfLCXJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:09:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32978 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 18:09:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727798AbfLCWow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:44:52 -0500
+        id S1727720AbfLCWom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:44:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 644882080F;
-        Tue,  3 Dec 2019 22:44:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E317C207DD;
+        Tue,  3 Dec 2019 22:44:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413091;
-        bh=8ToaJQ695p2SfwWZ5E3MFRCG42I9Nm3w5fQf1fuY/+M=;
+        s=default; t=1575413081;
+        bh=Aozy7mvmIKkmP6PcJtF3CLj0u5npcPm8oxfNLsn1C1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JCgnMg1D6o7nFoceNzqIJBGEQijX2DBzPlRHE3X+b+hCez2gUfpbQ3d/+9XwWGqDv
-         6rCg6RTUbeElqeCRHhtHd9Ksuj3T2LLmmmkzcbP8sgRQIGt89TQs81xZ90SMXYwqtz
-         FJ5CFuO96xMyRMvTrVZ+tRHxHX82mVJvyy7ZLY+I=
+        b=186DrpfJcb2ADntaazIjqhd0IoWHAloUo6M/wCM3G4dOC1bLVkXiGgKOd0AYLqz7G
+         yaHGbXofJci54v4ZgKymxsFK/Mux67lRG5KsVDL72/6S23wlzER9ltIpNX2vfLoInC
+         C/95aiwrP/aN5qY2vDLyyL1SNvhZgyJqkhAYQAdA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Wang <kevin1.wang@amd.com>,
-        Kenneth Feng <kenneth.feng@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 081/135] drm/amd/swSMU: fix smu workload bit map error
-Date:   Tue,  3 Dec 2019 23:35:21 +0100
-Message-Id: <20191203213031.319188482@linuxfoundation.org>
+Subject: [PATCH 5.3 087/135] net: stmmac: xgmac: Disable Flow Control when 1 or more queues are in AV
+Date:   Tue,  3 Dec 2019 23:35:27 +0100
+Message-Id: <20191203213034.577291467@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -61,51 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Wang <kevin1.wang@amd.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit 38264de0dce80d223f358ce47512378fae0de586 ]
+[ Upstream commit 132f2f20c9866325d12c155aca06d260f358d3cb ]
 
-fix workload bit (WORKLOAD_PPLIB_COMPUTE_BIT) map error
-on vega20 and navi asic.
+When in AVB mode we need to disable flow control to prevent MAC from
+pausing in TX side.
 
-fix commit:
-drm/amd/powerplay: add function get_workload_type_map for swsmu
-
-Signed-off-by: Kevin Wang <kevin1.wang@amd.com>
-Reviewed-by: Kenneth Feng <kenneth.feng@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: ec6ea8e3eee9 ("net: stmmac: Add CBS support in XGMAC2")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/powerplay/navi10_ppt.c | 2 +-
- drivers/gpu/drm/amd/powerplay/vega20_ppt.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/navi10_ppt.c b/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
-index 8bf9f541e7fe7..a0ef44d025d61 100644
---- a/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
-+++ b/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
-@@ -205,7 +205,7 @@ static int navi10_workload_map[] = {
- 	WORKLOAD_MAP(PP_SMC_POWER_PROFILE_POWERSAVING,		WORKLOAD_PPLIB_POWER_SAVING_BIT),
- 	WORKLOAD_MAP(PP_SMC_POWER_PROFILE_VIDEO,		WORKLOAD_PPLIB_VIDEO_BIT),
- 	WORKLOAD_MAP(PP_SMC_POWER_PROFILE_VR,			WORKLOAD_PPLIB_VR_BIT),
--	WORKLOAD_MAP(PP_SMC_POWER_PROFILE_COMPUTE,		WORKLOAD_PPLIB_CUSTOM_BIT),
-+	WORKLOAD_MAP(PP_SMC_POWER_PROFILE_COMPUTE,		WORKLOAD_PPLIB_COMPUTE_BIT),
- 	WORKLOAD_MAP(PP_SMC_POWER_PROFILE_CUSTOM,		WORKLOAD_PPLIB_CUSTOM_BIT),
- };
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+index a4f236e3593e7..28dc3b33606e1 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+@@ -441,6 +441,7 @@ static void dwxgmac2_enable_tso(void __iomem *ioaddr, bool en, u32 chan)
+ static void dwxgmac2_qmode(void __iomem *ioaddr, u32 channel, u8 qmode)
+ {
+ 	u32 value = readl(ioaddr + XGMAC_MTL_TXQ_OPMODE(channel));
++	u32 flow = readl(ioaddr + XGMAC_RX_FLOW_CTRL);
  
-diff --git a/drivers/gpu/drm/amd/powerplay/vega20_ppt.c b/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
-index 6a14497257e43..33ca6c581f219 100644
---- a/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
-+++ b/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
-@@ -219,7 +219,7 @@ static int vega20_workload_map[] = {
- 	WORKLOAD_MAP(PP_SMC_POWER_PROFILE_POWERSAVING,		WORKLOAD_PPLIB_POWER_SAVING_BIT),
- 	WORKLOAD_MAP(PP_SMC_POWER_PROFILE_VIDEO,		WORKLOAD_PPLIB_VIDEO_BIT),
- 	WORKLOAD_MAP(PP_SMC_POWER_PROFILE_VR,			WORKLOAD_PPLIB_VR_BIT),
--	WORKLOAD_MAP(PP_SMC_POWER_PROFILE_COMPUTE,		WORKLOAD_PPLIB_CUSTOM_BIT),
-+	WORKLOAD_MAP(PP_SMC_POWER_PROFILE_COMPUTE,		WORKLOAD_PPLIB_COMPUTE_BIT),
- 	WORKLOAD_MAP(PP_SMC_POWER_PROFILE_CUSTOM,		WORKLOAD_PPLIB_CUSTOM_BIT),
- };
+ 	value &= ~XGMAC_TXQEN;
+ 	if (qmode != MTL_QUEUE_AVB) {
+@@ -448,6 +449,7 @@ static void dwxgmac2_qmode(void __iomem *ioaddr, u32 channel, u8 qmode)
+ 		writel(0, ioaddr + XGMAC_MTL_TCx_ETS_CONTROL(channel));
+ 	} else {
+ 		value |= 0x1 << XGMAC_TXQEN_SHIFT;
++		writel(flow & (~XGMAC_RFE), ioaddr + XGMAC_RX_FLOW_CTRL);
+ 	}
  
+ 	writel(value, ioaddr +  XGMAC_MTL_TXQ_OPMODE(channel));
 -- 
 2.20.1
 
