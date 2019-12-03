@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB46DC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD56AC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8853120684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:47:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 942DD20803
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:47:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413226;
-	bh=p8Vp5uNKjcNilaqcwYrNFRcA9gpBPwD+1ufKOzif0mI=;
+	s=default; t=1575413230;
+	bh=4ZcsvoMK3RPGa38JXaoPa51rrnxfLzp8nAkqbLym/nk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZChno1wUg4kLDcGmdzDA/75NdCK+/fTq0H7ljbYsYdHCy8CHVnHwvQGqqjxBYL+T8
-	 xJiEyLU9Wf9fMYzoGTdAyEYYoLNsMNFsxvmpVZijSXYB+ArJviWIgmxymkQMDA90vB
-	 IMUSq7HlbmQnDsKDTHebY5vqvqMtiNTe4c3YXnbw=
+	b=GBsbHW28ifltuw0aNfAhLVIWxP/wW0De1Vk2XiugXNcDoWQVhPqIJZc8NEf+hyxfV
+	 6aAnRfTr0HwSlesCaImb2RdKc7jihqXIiSHHk+JJuTYp+3UdgtfXu0KwVuC8rbX7G/
+	 C98p3o3o/fGs6UMrMYtK3Hi3R6ipfsU0qRxkHbjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729141AbfLCWrF (ORCPT
+        id S1729011AbfLCWrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:47:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37048 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:47:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729263AbfLCWrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:47:02 -0500
+        id S1728366AbfLCWrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:47:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F19720656;
-        Tue,  3 Dec 2019 22:47:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B7E820848;
+        Tue,  3 Dec 2019 22:47:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413221;
-        bh=p8Vp5uNKjcNilaqcwYrNFRcA9gpBPwD+1ufKOzif0mI=;
+        s=default; t=1575413224;
+        bh=4ZcsvoMK3RPGa38JXaoPa51rrnxfLzp8nAkqbLym/nk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TpY8UuuUjZpo1uOFvBNb2hsBeJtXoX108bVfAOT9X4mcQmgC/j7AIPR4rLXIf4mJO
-         yI1NuSK0AVdAvrmosKBoUZ7VHxZJVB4XbIQ0Bx9Xpbg2yFkL4Tegjqt8sjT9LLKrBM
-         q+LWDzRJX+xlwY0aYg3gIhO3zWptOw+ULV3yzn3Y=
+        b=1o5r/nwfVHoFLuzBVtLW5H3K3jCIk3Du4JRU8SjK00u3JiC1JteMv9hl/eiRqM1sH
+         6h5IRrVZ87gWdhLSkFCq2Df9XhBvgZOnD6QjzfXE7oD/NX2NFaKaY/Y443IFxhmM/2
+         jeETSKszlpCpxwHU6RXfmWVx3QSjj9L1taGXWcfw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        "Reported-by: Marian Mihailescu" <mihailescu2m@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 008/321] ASoC: kirkwood: fix device remove ordering
-Date:   Tue,  3 Dec 2019 23:31:14 +0100
-Message-Id: <20191203223427.554244186@linuxfoundation.org>
+Subject: [PATCH 4.19 009/321] clk: samsung: exynos5420: Preserve PLL configuration during suspend/resume
+Date:   Tue,  3 Dec 2019 23:31:15 +0100
+Message-Id: <20191203223427.605281159@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,59 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit dc39596a906d5b604f4e64597b6e904fc14625e8 ]
+[ Upstream commit e9323b664ce29547d996195e8a6129a351c39108 ]
 
-The devm conversion of kirkwood was incorrect; on removal, devm takes
-effect after the "remove" function has returned.  So, the effect of
-the conversion was to change the order during remove from:
+Properly save and restore all top PLL related configuration registers
+during suspend/resume cycle. So far driver only handled EPLL and RPLL
+clocks, all other were reset to default values after suspend/resume cycle.
+This caused for example lower G3D (MALI Panfrost) performance after system
+resume, even if performance governor has been selected.
 
-  - snd_soc_unregister_component() (unpublishes interfaces)
-  - clk_disable_unprepare()
-  - cleanup resources
-
-After the conversion, this became:
-
-  - clk_disable_unprepare() - while the device may still be active
-  - snd_soc_unregister_component()
-  - cleanup resources
-
-Hence, it introduces a bug, where the internal clock for the device
-may be shut down before the device itself has been shut down.  It is
-known that Marvell SoCs, including Dove, locks up if registers for a
-peripheral that has its clocks disabled are accessed.
-
-Fixes: f98fc0f8154e ("ASoC: kirkwood: replace platform to component")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Link: https://lore.kernel.org/r/E1iNGyP-0004oN-BA@rmk-PC.armlinux.org.uk
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-by: Reported-by: Marian Mihailescu <mihailescu2m@gmail.com>
+Fixes: 773424326b51 ("clk: samsung: exynos5420: add more registers to restore list")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/kirkwood/kirkwood-i2s.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/clk/samsung/clk-exynos5420.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/sound/soc/kirkwood/kirkwood-i2s.c b/sound/soc/kirkwood/kirkwood-i2s.c
-index b84a504168473..4395bb7029a06 100644
---- a/sound/soc/kirkwood/kirkwood-i2s.c
-+++ b/sound/soc/kirkwood/kirkwood-i2s.c
-@@ -595,7 +595,7 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
- 		priv->ctl_rec |= KIRKWOOD_RECCTL_BURST_128;
- 	}
- 
--	err = devm_snd_soc_register_component(&pdev->dev, &kirkwood_soc_component,
-+	err = snd_soc_register_component(&pdev->dev, &kirkwood_soc_component,
- 					 soc_dai, 2);
- 	if (err) {
- 		dev_err(&pdev->dev, "snd_soc_register_component failed\n");
-@@ -618,6 +618,7 @@ static int kirkwood_i2s_dev_remove(struct platform_device *pdev)
- {
- 	struct kirkwood_dma_data *priv = dev_get_drvdata(&pdev->dev);
- 
-+	snd_soc_unregister_component(&pdev->dev);
- 	if (!IS_ERR(priv->extclk))
- 		clk_disable_unprepare(priv->extclk);
- 	clk_disable_unprepare(priv->clk);
+diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+index ce30862617a6e..d5af937212992 100644
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -171,12 +171,18 @@ static const unsigned long exynos5x_clk_regs[] __initconst = {
+ 	GATE_BUS_CPU,
+ 	GATE_SCLK_CPU,
+ 	CLKOUT_CMU_CPU,
++	CPLL_CON0,
++	DPLL_CON0,
+ 	EPLL_CON0,
+ 	EPLL_CON1,
+ 	EPLL_CON2,
+ 	RPLL_CON0,
+ 	RPLL_CON1,
+ 	RPLL_CON2,
++	IPLL_CON0,
++	SPLL_CON0,
++	VPLL_CON0,
++	MPLL_CON0,
+ 	SRC_TOP0,
+ 	SRC_TOP1,
+ 	SRC_TOP2,
 -- 
 2.20.1
 
