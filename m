@@ -2,246 +2,168 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD04C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1DDC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6A74206E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35343206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:38:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="mWiwb/7t"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VN/qJlFT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727219AbfLCFcz (ORCPT
+        id S1726901AbfLCFia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 00:32:55 -0500
-Received: from mail-eopbgr800057.outbound.protection.outlook.com ([40.107.80.57]:10304
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727044AbfLCFck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 00:32:40 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=evrI8h+hajCoiyrQgifrzfU57+KV+pFeSW76GA9L91jxYANi4fdkok970/h4xkvMjhLZDIogOUL1iVP2Wn+tW1ZNpgg2YeEw8ISs/5dI154YnL67HKGrWBjUCJuZU42OHdKrGjhoAI8tmjIp+jKGm+VGFgMkjGtQWdngU4Uph21kgfxoPOd1p8ycuSX+T4bZqesxw66/os6C1WKf6bpkvyV0XlhPRWzjgLYLs3KHoGzRenfw9b7x7V0jjTf1Qq3jbC7XjanMmYaZIg9iy9xP6B4X/2Z9pAM1ISzHpQzg6xOTWhRzRX69pATlGM0rwMRaGZFgcBzraHIWOlwJEhhz2Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TJHGGLuOWyMGN44N0vmISzbjuaHH1aMpsKdMq9cRTgo=;
- b=IxlGX05IwrWYbVKDjzdDlP8sg2hpsxNlYSuPdmY1n6UajdKgBOw1YfIz5imnlo1ZGXJH2OhlDuMKD/3AhDrjauOEEx9qQhbXIxH9fgY2OZA82s90ucatzvxIlJ8Yv29PBwb7nJaF5BeR0HY7/2FyQE6CWssmQJG5+O6hjpCsKoR0E1OmX/+lFUYCWTmSXo4F9E5m1hgFaw4R8WG/nQ8kxnS/COP5ACve7b/8nmC03hm8vfCFbo3eUf4F1bGwnTF6bUT4XD4XjlObUextLE/NJmc5qOQQPCl6iQ8Y6dawjJ0/clKme50/yRKefvHmrLEn7eMYNXoTriN+aHilOcPF1g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Tue, 3 Dec 2019 00:38:30 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:42086 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbfLCFia (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 00:38:30 -0500
+Received: by mail-oi1-f193.google.com with SMTP id j22so2157476oij.9
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 21:38:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TJHGGLuOWyMGN44N0vmISzbjuaHH1aMpsKdMq9cRTgo=;
- b=mWiwb/7t2jgVEAbnKN8hTB9+llGQ3CrT9yuyt+RrPqyrC2MibLEC8aIE8nkMcuVJyQNPX7io4IRb60w9bC6k2Ux3K0A9sDhRMaxYOkMLz4Zz/SWRtCHTY4VXHTBF7wB43bmKX+EfZxCFMpKaMScp4dDd/PM8CqS5ixoVVbTaGmE=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Rijo-john.Thomas@amd.com; 
-Received: from CY4PR12MB1925.namprd12.prod.outlook.com (10.175.62.7) by
- CY4PR12MB1430.namprd12.prod.outlook.com (10.168.167.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.22; Tue, 3 Dec 2019 05:32:28 +0000
-Received: from CY4PR12MB1925.namprd12.prod.outlook.com
- ([fe80::cd8b:1d7e:31c2:e8b4]) by CY4PR12MB1925.namprd12.prod.outlook.com
- ([fe80::cd8b:1d7e:31c2:e8b4%7]) with mapi id 15.20.2495.014; Tue, 3 Dec 2019
- 05:32:28 +0000
-From:   Rijo Thomas <Rijo-john.Thomas@amd.com>
-To:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Gary Hook <gary.hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
-Cc:     Rijo Thomas <Rijo-john.Thomas@amd.com>,
-        Nimesh Easow <Nimesh.Easow@amd.com>,
-        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [RFC PATCH v2 3/6] crypto: ccp - move SEV vdata to a dedicated data structure
-Date:   Tue,  3 Dec 2019 10:09:18 +0530
-Message-Id: <59470a43465aa3d535e3617a9a932085fb5ec53d.1575282249.git.Rijo-john.Thomas@amd.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1575282249.git.Rijo-john.Thomas@amd.com>
-References: <cover.1575282249.git.Rijo-john.Thomas@amd.com>
-Content-Type: text/plain
-X-ClientProxiedBy: MA1PR0101CA0006.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:21::16) To CY4PR12MB1925.namprd12.prod.outlook.com
- (2603:10b6:903:120::7)
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bxKEkxDBia5ioBHm8RVlU4uUCE2gbjwJh83vCZ7hmfs=;
+        b=VN/qJlFTMiKIOyz/f6dXusZ23v2/RNQY8O+QxV1cdLRjyPIXIQ1tgU7l7ssMK4Xswr
+         d4nvAG1H2SxlaWeTSQAKYwju0/RSGOjmNRKqSvfbfnDO5oLoJoNUjBWEXKaGDp7wnuWh
+         HIIonmMjcT4LaroBmHqnSjDUk0Jauysh/Z+6iNEqv69Xqxarx7UK3qe6efABgbT/DVV7
+         DS5E9h7hgRotmEdRre90KoAnGzu2GbsuB3m86dIcjwKBVe5FQtGdn+tDKxLm6oCR0nNF
+         8sUocBp03T5yBnEqskXALqgNYgA+9HsmKJ10YJ3dekrOdXLD/UjM+Ue76VeGKaaNRkIY
+         NnfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bxKEkxDBia5ioBHm8RVlU4uUCE2gbjwJh83vCZ7hmfs=;
+        b=CEKav9Dc3+My0Qv2snTQGe/RaVTHSrZpnbYYehleLjtguMumf03Nm8WEmAoC/iMdKk
+         OMTffhxazJnZQq8l/rzlBcgx9JY2v7wsijJIwtAbujfyeecfsDc97or2Uv/SXXb/FU27
+         tA7D+LXS1sfgg7PBP509XgtFDOGY3uGcRFw2t9zsfANyBjfxgJMY0zk7sQX5nc3EMbnQ
+         pD0OytJ5jt3aaJBY0GOjoISupEp+fVNiXojFLSDvKB9jP53YMGsVOs185UdI5RjSJy5+
+         fCpTJx37SIJr6ah/HR+LdJgXG5y+gJWFsjG5ydgRZPDDPdK4Xe1rcQsPfsQR/vZEuV7x
+         4dxg==
+X-Gm-Message-State: APjAAAXQMDPVFfqTw3avxzKY7Zj6sxxF0x78fA23URYZsaAVv0UYxDl9
+        N0CL742zJFZHf1y7OKPw+/crmJjHhMhsz5Edd6aWbQ==
+X-Google-Smtp-Source: APXvYqzOyctit94qUVdAD4+2E8DY1i265rqYPtq5w6+szwRcFQzPYSx1OiO04ERZDP2PnVBnzvSIzms9Y8NBmrpy+Ko=
+X-Received: by 2002:aca:c551:: with SMTP id v78mr2310770oif.161.1575351508779;
+ Mon, 02 Dec 2019 21:38:28 -0800 (PST)
 MIME-Version: 1.0
-X-Mailer: git-send-email 1.9.1
-X-Originating-IP: [165.204.156.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 4e09344f-209e-40c5-b305-08d777b22f95
-X-MS-TrafficTypeDiagnostic: CY4PR12MB1430:|CY4PR12MB1430:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CY4PR12MB14301B02B08472C74782551ECF420@CY4PR12MB1430.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2582;
-X-Forefront-PRVS: 02408926C4
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(39860400002)(366004)(376002)(346002)(199004)(189003)(81156014)(3846002)(50226002)(52116002)(305945005)(11346002)(2616005)(186003)(316002)(110136005)(6486002)(16586007)(26005)(48376002)(66556008)(66476007)(66946007)(54906003)(14444005)(5660300002)(6666004)(478600001)(14454004)(36756003)(51416003)(8676002)(8936002)(50466002)(99286004)(386003)(6436002)(446003)(25786009)(6506007)(76176011)(7736002)(118296001)(47776003)(6116002)(86362001)(6512007)(2906002)(66066001)(4326008)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1430;H:CY4PR12MB1925.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5A8OKqqMo/gnZlHsrZmPRRVWEF/OttM659p/k7lRPVxAuMvCxcvoAdcUjSnJL8OLbGCHljCCf40rnM4Z1CiYvAFAXrWTo0p7d5ez350UU0KvfyLpWBH1GVdGR4cRwdzPZZ3VF/duz0PUCiDNWxpVoCWnsTkyN8Z+pPdh+IpkpWf8mSOIuRSQRUxSA1H/F0Dw4GkoIjL2Dglp4nYKc6Vy5e/wcx2n9jBFjcho9K2d1QpWyhkmCWVbzIUi2w77efxkcrCrzm52AcPHje/LxFM1ZfowlXqiYASCqwjollQG08qMvDKQVUHDGpnyzz5X/inh/tHvkE7aGalVB6kQeAwROrQt5qvqaVG76OVfoIfO6nPeLaxEwB8lUxlN/lYm1EMRcs7JEg5iOy8r5/malvUlg4wdLOG8kTLWuKLhYKnyM6O1mYGwboZGJYHGdSC2ykjc
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4e09344f-209e-40c5-b305-08d777b22f95
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Dec 2019 05:32:28.9005
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1ccBA0ngHbES/4WD5K5jJcGYq6peAeLQDUuuchLBQqNeyBBf8l8i+sKb8tQPfl3eYZ3ed/H/zEgYgHbIMFGtsg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1430
+References: <20190911182546.17094-1-nsaenzjulienne@suse.de>
+ <20190911182546.17094-4-nsaenzjulienne@suse.de> <CALAqxLVVcsmFrDKLRGRq7GewcW405yTOxG=KR3csVzQ6bXutkA@mail.gmail.com>
+In-Reply-To: <CALAqxLVVcsmFrDKLRGRq7GewcW405yTOxG=KR3csVzQ6bXutkA@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Mon, 2 Dec 2019 21:38:17 -0800
+Message-ID: <CALAqxLUkPNf9JYyt+_VOrxq=Zq03veb1y-7aDx+_Vw+fF9i82A@mail.gmail.com>
+Subject: Re: [PATCH v6 3/4] arm64: use both ZONE_DMA and ZONE_DMA32
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>, wahrenst@gmx.net,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, mbrugger@suse.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Will Deacon <will@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        Nicolas Dechense <nicolas.dechesne@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PSP can support both SEV and TEE interface. Therefore, move
-SEV specific registers to a dedicated data structure.
-TEE interface specific registers will be added in a later
-patch.
+On Mon, Dec 2, 2019 at 9:08 PM John Stultz <john.stultz@linaro.org> wrote:
+>
+> On Wed, Sep 11, 2019 at 11:26 AM Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de> wrote:
+> > So far all arm64 devices have supported 32 bit DMA masks for their
+> > peripherals. This is not true anymore for the Raspberry Pi 4 as most of
+> > it's peripherals can only address the first GB of memory on a total of
+> > up to 4 GB.
+> >
+> > This goes against ZONE_DMA32's intent, as it's expected for ZONE_DMA32
+> > to be addressable with a 32 bit mask. So it was decided to re-introduce
+> > ZONE_DMA in arm64.
+> >
+> > ZONE_DMA will contain the lower 1G of memory, which is currently the
+> > memory area addressable by any peripheral on an arm64 device.
+> > ZONE_DMA32 will contain the rest of the 32 bit addressable memory.
+> >
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+>
+> Hey Nicolas,
+>   Testing the db845c with linus/master, I found a regression causing
+> system hangs in early boot:
+>
+> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x517f803c]
+> [    0.000000] Linux version 5.4.0-mainline-10675-g957a03b9e38f
+> (docker@a4ec90a1e72c) (gcc version 7.4.0 (Ubuntu/Linaro
+> 7.4.0-1ubuntu1~18.04.1)) #1209 SMP PREEMPT Tue Dec 3 00:23:15 UTC 2019
+> [    0.000000] Machine model: Thundercomm Dragonboard 845c
+> [    0.000000] earlycon: qcom_geni0 at MMIO 0x0000000000a84000
+> (options '115200n8')
+> [    0.000000] printk: bootconsole [qcom_geni0] enabled
+> [    0.000000] efi: Getting EFI parameters from FDT:
+> [    0.000000] efi: UEFI not found.
+> [    0.000000] cma: Reserved 16 MiB at 0x00000000ff000000
+> [    0.000000] psci: probing for conduit method from DT.
+> [    0.000000] psci: PSCIv1.1 detected in firmware.
+> [    0.000000] psci: Using standard PSCI v0.2 function IDs
+> [    0.000000] psci: MIGRATE_INFO_TYPE not supported.
+> [    0.000000] psci: SMC Calling Convention v1.0
+> [    0.000000] psci: OSI mode supported.
+> [    0.000000] percpu: Embedded 31 pages/cpu s87512 r8192 d31272 u126976
+> [    0.000000] Detected VIPT I-cache on CPU0
+> [    0.000000] CPU features: detected: GIC system register CPU interface
+> [    0.000000] CPU features: kernel page table isolation forced ON by KASLR
+> [    0.000000] CPU features: detected: Kernel page table isolation (KPTI)
+> [    0.000000] ARM_SMCCC_ARCH_WORKAROUND_1 missing from firmware
+> [    0.000000] CPU features: detected: Hardware dirty bit management
+> [    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: -188245
+> [    0.000000] Kernel command line: earlycon
+> firmware_class.path=/vendor/firmware/ androidboot.hardware=db845c
+> init=/init androidboot.boot_devices=soc/1d84000.ufshc
+> printk.devkmsg=on buildvariant=userdebug root=/dev/sda2
+> androidboot.bootdevice=1d84000.ufshc androidboot.serialno=c4e1189c
+> androidboot.baseband=sda
+> msm_drm.dsi_display0=dsi_lt9611_1080_video_display:
+> androidboot.slot_suffix=_a skip_initramfs rootwait ro init=/init
+>
+> <hangs indefinitely here>
+>
+> I bisected the issue down to this patch (1a8e1cef7603 upstream - the
+> previous patch a573cdd7973d works though I need to apply the
+> arm64_dma_phys_limit bit from this one as the previous patch doesn't
+> build on its own).
+>
+> In the above log:
+> [    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: -188245
+> looks the most suspect, and going back to the working a573cdd7973d +
+> build fix I see:
+> [    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 957419
+>
+> Do you have any suggestions for what might be going wrong?
 
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Jens Wiklander <jens.wiklander@linaro.org>
-Co-developed-by: Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>
-Signed-off-by: Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>
-Signed-off-by: Rijo Thomas <Rijo-john.Thomas@amd.com>
----
- drivers/crypto/ccp/sev-dev.c | 17 ++++++++++++-----
- drivers/crypto/ccp/sev-dev.h |  2 ++
- drivers/crypto/ccp/sp-dev.h  |  6 +++++-
- drivers/crypto/ccp/sp-pci.c  | 16 ++++++++++++----
- 4 files changed, 31 insertions(+), 10 deletions(-)
+Digging further, it seems the error is found in calculate_node_totalpages()
+ real_size = size - zone_absent_pages_in_node(pgdat->node_id, i,
+                                                  node_start_pfn, node_end_pfn,
+                                                  zholes_size);
 
-diff --git a/drivers/crypto/ccp/sev-dev.c b/drivers/crypto/ccp/sev-dev.c
-index ec595e6..a5bcbd5 100644
---- a/drivers/crypto/ccp/sev-dev.c
-+++ b/drivers/crypto/ccp/sev-dev.c
-@@ -65,7 +65,7 @@ static void sev_irq_handler(int irq, void *data, unsigned int status)
- 		return;
- 
- 	/* Check if it is SEV command completion: */
--	reg = ioread32(sev->io_regs + sev->psp->vdata->cmdresp_reg);
-+	reg = ioread32(sev->io_regs + sev->vdata->cmdresp_reg);
- 	if (reg & PSP_CMDRESP_RESP) {
- 		sev->int_rcvd = 1;
- 		wake_up(&sev->int_queue);
-@@ -82,7 +82,7 @@ static int sev_wait_cmd_ioc(struct sev_device *sev,
- 	if (!ret)
- 		return -ETIMEDOUT;
- 
--	*reg = ioread32(sev->io_regs + sev->psp->vdata->cmdresp_reg);
-+	*reg = ioread32(sev->io_regs + sev->vdata->cmdresp_reg);
- 
- 	return 0;
- }
-@@ -148,15 +148,15 @@ static int __sev_do_cmd_locked(int cmd, void *data, int *psp_ret)
- 	print_hex_dump_debug("(in):  ", DUMP_PREFIX_OFFSET, 16, 2, data,
- 			     sev_cmd_buffer_len(cmd), false);
- 
--	iowrite32(phys_lsb, sev->io_regs + psp->vdata->cmdbuff_addr_lo_reg);
--	iowrite32(phys_msb, sev->io_regs + psp->vdata->cmdbuff_addr_hi_reg);
-+	iowrite32(phys_lsb, sev->io_regs + sev->vdata->cmdbuff_addr_lo_reg);
-+	iowrite32(phys_msb, sev->io_regs + sev->vdata->cmdbuff_addr_hi_reg);
- 
- 	sev->int_rcvd = 0;
- 
- 	reg = cmd;
- 	reg <<= SEV_CMDRESP_CMD_SHIFT;
- 	reg |= SEV_CMDRESP_IOC;
--	iowrite32(reg, sev->io_regs + psp->vdata->cmdresp_reg);
-+	iowrite32(reg, sev->io_regs + sev->vdata->cmdresp_reg);
- 
- 	/* wait for command completion */
- 	ret = sev_wait_cmd_ioc(sev, &reg, psp_timeout);
-@@ -934,6 +934,13 @@ int sev_dev_init(struct psp_device *psp)
- 
- 	sev->io_regs = psp->io_regs;
- 
-+	sev->vdata = (struct sev_vdata *)psp->vdata->sev;
-+	if (!sev->vdata) {
-+		ret = -ENODEV;
-+		dev_err(dev, "sev: missing driver data\n");
-+		goto e_err;
-+	}
-+
- 	psp_set_sev_irq_handler(psp, sev_irq_handler, sev);
- 
- 	ret = sev_misc_init(sev);
-diff --git a/drivers/crypto/ccp/sev-dev.h b/drivers/crypto/ccp/sev-dev.h
-index d54fce1..bec0ba31 100644
---- a/drivers/crypto/ccp/sev-dev.h
-+++ b/drivers/crypto/ccp/sev-dev.h
-@@ -39,6 +39,8 @@ struct sev_device {
- 
- 	void __iomem *io_regs;
- 
-+	struct sev_vdata *vdata;
-+
- 	int state;
- 	unsigned int int_rcvd;
- 	wait_queue_head_t int_queue;
-diff --git a/drivers/crypto/ccp/sp-dev.h b/drivers/crypto/ccp/sp-dev.h
-index 53c1256..0394c75 100644
---- a/drivers/crypto/ccp/sp-dev.h
-+++ b/drivers/crypto/ccp/sp-dev.h
-@@ -39,10 +39,14 @@ struct ccp_vdata {
- 	const unsigned int rsamax;
- };
- 
--struct psp_vdata {
-+struct sev_vdata {
- 	const unsigned int cmdresp_reg;
- 	const unsigned int cmdbuff_addr_lo_reg;
- 	const unsigned int cmdbuff_addr_hi_reg;
-+};
-+
-+struct psp_vdata {
-+	const struct sev_vdata *sev;
- 	const unsigned int feature_reg;
- 	const unsigned int inten_reg;
- 	const unsigned int intsts_reg;
-diff --git a/drivers/crypto/ccp/sp-pci.c b/drivers/crypto/ccp/sp-pci.c
-index b29d2e6..733693d 100644
---- a/drivers/crypto/ccp/sp-pci.c
-+++ b/drivers/crypto/ccp/sp-pci.c
-@@ -262,19 +262,27 @@ static int sp_pci_resume(struct pci_dev *pdev)
- #endif
- 
- #ifdef CONFIG_CRYPTO_DEV_SP_PSP
--static const struct psp_vdata pspv1 = {
-+static const struct sev_vdata sevv1 = {
- 	.cmdresp_reg		= 0x10580,
- 	.cmdbuff_addr_lo_reg	= 0x105e0,
- 	.cmdbuff_addr_hi_reg	= 0x105e4,
-+};
-+
-+static const struct sev_vdata sevv2 = {
-+	.cmdresp_reg		= 0x10980,
-+	.cmdbuff_addr_lo_reg	= 0x109e0,
-+	.cmdbuff_addr_hi_reg	= 0x109e4,
-+};
-+
-+static const struct psp_vdata pspv1 = {
-+	.sev			= &sevv1,
- 	.feature_reg		= 0x105fc,
- 	.inten_reg		= 0x10610,
- 	.intsts_reg		= 0x10614,
- };
- 
- static const struct psp_vdata pspv2 = {
--	.cmdresp_reg		= 0x10980,
--	.cmdbuff_addr_lo_reg	= 0x109e0,
--	.cmdbuff_addr_hi_reg	= 0x109e4,
-+	.sev			= &sevv2,
- 	.feature_reg		= 0x109fc,
- 	.inten_reg		= 0x10690,
- 	.intsts_reg		= 0x10694,
--- 
-1.9.1
+Where for zone DMA32 size is 262144, but real_size is calculated as -883520.
 
+I've not traced through to figure out why zone_absent_pages_in_node is
+coming up with such a large number yet, but I'm about to crash so I
+wanted to share.
+
+thanks
+-john
