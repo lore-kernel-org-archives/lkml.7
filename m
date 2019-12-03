@@ -2,169 +2,139 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C676FC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E92C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B081206EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7130F20675
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:23:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W5EuS9IN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726179AbfLCLUn (ORCPT
+        id S1726319AbfLCLXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 06:20:43 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32676 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725907AbfLCLUn (ORCPT
+        Tue, 3 Dec 2019 06:23:44 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37096 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbfLCLXo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 06:20:43 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB3BGxIx116545
-        for <linux-kernel@vger.kernel.org>; Tue, 3 Dec 2019 06:20:42 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wnje9bhbe-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 06:20:41 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <sourabhjain@linux.ibm.com>;
-        Tue, 3 Dec 2019 11:20:39 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 3 Dec 2019 11:20:35 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB3BKYtl36110340
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Dec 2019 11:20:34 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BB18611C050;
-        Tue,  3 Dec 2019 11:20:34 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8BFF311C054;
-        Tue,  3 Dec 2019 11:20:33 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.124.35.31])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  3 Dec 2019 11:20:33 +0000 (GMT)
-Subject: Re: [PATCH v3 2/4] powerpc/fadump: reorganize /sys/kernel/fadump_*
- sysfs files
-To:     =?UTF-8?Q?Michal_Such=c3=a1nek?= <msuchanek@suse.de>
-Cc:     corbet@lwn.net, mahesh@linux.vnet.ibm.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@ozlabs.org, hbathini@linux.ibm.com
-References: <20191109122339.20484-1-sourabhjain@linux.ibm.com>
- <20191109122339.20484-3-sourabhjain@linux.ibm.com>
- <20191109125933.GF1384@kitsune.suse.cz>
- <8c1ec297-0c34-12de-2528-be436697215a@linux.ibm.com>
- <20191124184059.GP11661@kitsune.suse.cz>
-From:   Sourabh Jain <sourabhjain@linux.ibm.com>
-Date:   Tue, 3 Dec 2019 16:50:32 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 3 Dec 2019 06:23:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575372222;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WuFqg7CCNbXCyfmGNkYBuxM4f9aggv3dQzU4efpQoaA=;
+        b=W5EuS9INmUOboLFYE+a04gTYSMRe6KUwf23QhGg4eoYZ69XlUlTf1uoL+dClqVIehmTvEV
+        cQZDjFBA+oD3XoR/IozT7XEqBJJYYpWfQQyqQtaZIwwjpIObHjEw6z6YJYTeas5lmzD7lK
+        A39XCdI/FiPwmRVj4avAQmDYiMJZR80=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-19-DUbyUOuwMbmXWUsUzrN8ew-1; Tue, 03 Dec 2019 06:23:39 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DF5AB18036BC;
+        Tue,  3 Dec 2019 11:23:37 +0000 (UTC)
+Received: from krava (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 44B3560BFB;
+        Tue,  3 Dec 2019 11:23:36 +0000 (UTC)
+Date:   Tue, 3 Dec 2019 12:23:35 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 3/3] perf record: adapt affinity to machines with
+ #CPUs > 1K
+Message-ID: <20191203112335.GF17468@krava>
+References: <f1e6e809-9e41-e410-57eb-1740512285a1@linux.intel.com>
+ <2095b034-bf53-c374-0e34-adc006b00fbb@linux.intel.com>
+ <20191203101252.GD17468@krava>
+ <cc0dd7dc-400f-7097-b371-e895c016aaae@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191124184059.GP11661@kitsune.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19120311-4275-0000-0000-0000038A6BF5
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120311-4276-0000-0000-0000389E092D
-Message-Id: <a279ce08-89a4-d8e2-1364-b2b29f9a6433@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-03_02:2019-12-02,2019-12-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- mlxscore=0 malwarescore=0 suspectscore=0 priorityscore=1501
- lowpriorityscore=0 adultscore=0 spamscore=0 mlxlogscore=999 clxscore=1011
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912030092
+In-Reply-To: <cc0dd7dc-400f-7097-b371-e895c016aaae@linux.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: DUbyUOuwMbmXWUsUzrN8ew-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>>>  DEFINE_SHOW_ATTRIBUTE(fadump_region);
->>>>  
->>>>  static void fadump_init_files(void)
->>>> @@ -1435,6 +1448,11 @@ static void fadump_init_files(void)
->>>>  	struct dentry *debugfs_file;
->>>>  	int rc = 0;
->>>>  
->>>> +	fadump_kobj = kobject_create_and_add("fadump", kernel_kobj);
->>>> +	if (!fadump_kobj) {
->>>> +		pr_err("failed to create fadump kobject\n");
->>>> +		return;
->>>> +	}
->>>>  	rc = sysfs_create_file(kernel_kobj, &fadump_attr.attr);
->>>>  	if (rc)
->>>>  		printk(KERN_ERR "fadump: unable to create sysfs file"
->>>> @@ -1458,6 +1476,26 @@ static void fadump_init_files(void)
->>>>  			printk(KERN_ERR "fadump: unable to create sysfs file"
->>>>  				" fadump_release_mem (%d)\n", rc);
->>>>  	}
->>>> +	/* Replicating the following sysfs attributes under FADump kobject.
->>>> +	 *
->>>> +	 *	- fadump_enabled -> enabled
->>>> +	 *	- fadump_registered -> registered
->>>> +	 *	- fadump_release_mem -> release_mem
->>>> +	 */
->>>> +	rc = sysfs_create_file(fadump_kobj, &enable_attr.attr);
->>>> +	if (rc)
->>>> +		pr_err("unable to create enabled sysfs file (%d)\n",
->>>> +		       rc);
->>>> +	rc = sysfs_create_file(fadump_kobj, &register_attr.attr);
->>>> +	if (rc)
->>>> +		pr_err("unable to create registered sysfs file (%d)\n",
->>>> +		       rc);
->>>> +	if (fw_dump.dump_active) {
->>>> +		rc = sysfs_create_file(fadump_kobj, &release_attr.attr);
->>>> +		if (rc)
->>>> +			pr_err("unable to create release_mem sysfs file (%d)\n",
->>>> +			       rc);
->>>> +	}
->>>>  	return;
->>>>  }
->>> Hello,
->>>
->>
->> I’m so sorry for taking this long to write you back. 
->>
->>> wouldn't it make more sense to create the files in the new location and
->>> add a symlink at the old location?
->>
->> There are APIs which allow to create a symlink for an entire kobject but
->> I did not find a way to create symlink of an individual sysfs file.
->>
->> Do you have any approach in mind to achieve the same?
-> 
-> There is at least one example of plain symlink:
-> 
-> find /sys -type l -xtype f
-> /sys/kernel/security/evm
-> 
-> If there is no interface to do one sanely duplicationg the files is
-> better than nothing.
+On Tue, Dec 03, 2019 at 01:48:05PM +0300, Alexey Budankov wrote:
+>=20
+>=20
+> On 03.12.2019 13:12, Jiri Olsa wrote:
+> > On Mon, Dec 02, 2019 at 09:58:48AM +0300, Alexey Budankov wrote:
+> >=20
+> > SNIP
+> >=20
+> >> =20
+> >> -static void build_node_mask(int node, cpu_set_t *mask)
+> >> +static void build_node_mask(int node, struct mmap_cpu_mask *mask)
+> >>  {
+> >>  =09int c, cpu, nr_cpus;
+> >>  =09const struct perf_cpu_map *cpu_map =3D NULL;
+> >> @@ -240,17 +242,23 @@ static void build_node_mask(int node, cpu_set_t =
+*mask)
+> >>  =09for (c =3D 0; c < nr_cpus; c++) {
+> >>  =09=09cpu =3D cpu_map->map[c]; /* map c index to online cpu index */
+> >>  =09=09if (cpu__get_node(cpu) =3D=3D node)
+> >> -=09=09=09CPU_SET(cpu, mask);
+> >> +=09=09=09set_bit(cpu, mask->bits);
+> >>  =09}
+> >>  }
+> >> =20
+> >> -static void perf_mmap__setup_affinity_mask(struct mmap *map, struct m=
+map_params *mp)
+> >> +static int perf_mmap__setup_affinity_mask(struct mmap *map, struct mm=
+ap_params *mp)
+> >>  {
+> >> -=09CPU_ZERO(&map->affinity_mask);
+> >> +=09map->affinity_mask.nbits =3D cpu__max_cpu();
+> >> +=09map->affinity_mask.bits =3D bitmap_alloc(map->affinity_mask.nbits)=
+;
+> >> +=09if (!map->affinity_mask.bits)
+> >> +=09=09return -1;
+> >=20
+> > hum, this one should be also behind (rec->opts.affinity !=3D PERF_AFFIN=
+ITY_SYS)
+> > condition, right? sry I haven't noticed that before..
+>=20
+> That has not been so far, but, probably like this:
+>=20
+> diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+> index 7f573f646431..832d2cb94b2c 100644
+> --- a/tools/perf/util/mmap.c
+> +++ b/tools/perf/util/mmap.c
+> @@ -269,7 +269,8 @@ int mmap__mmap(struct mmap *map, struct mmap_params *=
+mp, int fd, int cpu)
+>                 return -1;
+>         }
+> =20
+> -       if (perf_mmap__setup_affinity_mask(map, mp)) {
+> +       if (mp->affinity !=3D PERF_AFFINITY_SYS &&
+> +               perf_mmap__setup_affinity_mask(map, mp)) {
+>                 pr_debug2("failed to alloc mmap affinity mask, error %d\n=
+",
+>                           errno);
+>                 return -1;
 
-Hello Michal,
+yes, that works too
 
-I found a function (__compat_only_sysfs_link_entry_to_kobj) that adds a symlink
-to a kobject.
-
-But the problem is __compat_only_sysfs_link_entry_to_kobj function keeps the
-symlink file name similar to sysfs file and has no option to change it.
-
-We can't use the __compat_only_sysfs_link_entry_to_kobj function directly because
-our symlink file name must be different from the target file name.
-
-	fadump_enabled -> fadump/enabled
-
-But the good thing is we can tweak the __compat_only_sysfs_link_entry_to_kobj
-function and allow the caller to change the sysmlink file name.
-
-So I am writing a separate patch that adds a wrapper function around the __compat_only_sysfs_link_entry_to_kobj function which will allow to have a custom symlink file name.
-
-Thanks,
-Sourabh Jain
+jirka
 
