@@ -2,232 +2,99 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C86C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31141C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60AA720705
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:43:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cnBoBZIy"
+	by mail.kernel.org (Postfix) with ESMTP id 10EA4206F0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:49:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727333AbfLCAnZ (ORCPT
+        id S1726057AbfLCAtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 19:43:25 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:38524 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbfLCAmD (ORCPT
+        Mon, 2 Dec 2019 19:49:00 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33964 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbfLCAtA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 19:42:03 -0500
-Received: by mail-lf1-f68.google.com with SMTP id r14so1410709lfm.5;
-        Mon, 02 Dec 2019 16:42:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=v4N1OcUBKXpOd3igKUZEfBbM0cyqXgkxpiVaaCCMo0w=;
-        b=cnBoBZIyK102YaUZ+RCdvvZo0+0KaVlNAZqiJGDc12MmRT+pSQ0hTfp5txPpZEoom0
-         4m4lBdMUe6gGh3lpWR3zr5iWo0MWlzryfUHC98ZvW+FCk4FsP79y80iTgqf9TDTbbsT8
-         tP0sR+PuV+FrEv5FDCWff3Sj2DMq/hvWW78D17JLZtXkTovPGyukgK3GA2no/1yxYE56
-         I3lcLkOTV5pBmTv+MpW2sUn48Q55IFYpjqwEHqLaB+Z/O3iXA9Ch3VjV9cwBmoQ1+oPi
-         PqYW2YniZbLMEQ8fIho0phek3lcOwLDS9PsWXRX1XhM5mJgubcyiGmPRXwtunciZFVoh
-         NzNQ==
+        Mon, 2 Dec 2019 19:49:00 -0500
+Received: by mail-pl1-f194.google.com with SMTP id h13so868424plr.1;
+        Mon, 02 Dec 2019 16:49:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=v4N1OcUBKXpOd3igKUZEfBbM0cyqXgkxpiVaaCCMo0w=;
-        b=MBR8VcXzMf6dK6L6cDG/v2hxqNr5C7/u7ojoImPrAHYxFJKKcpvpOwld4k4ABppDuu
-         Pfhnu+ZpKqLv1HYujVeEqdFHleTnLosZ1sMhAzSuMZnv+sQlPQOHTMmzGEtzyGi1gRTc
-         QM4y1oejCvhq5R32PtIZpVG4enEm7Ab8RmJb8HgnL1joqMEufJ2WjRoZPM/JWFx6o18E
-         E7tPAjr7f0DwJbArQw4LzpWW8V5v4Y3fX/fUGyGAlFHtGlo0Hpwjbl8XAgTaT8NSfhCA
-         80EBcgRQC/A4aYBeZQif2r0f8WD6SQ2/vFZtfywhPkzITJxyzgDrN4cBLQ4/LGxTMgRc
-         YfHg==
-X-Gm-Message-State: APjAAAUadHWc0NICGeiuim8waE1gY7wVUpkgPJyhub08Gbbt/FGWxlyk
-        UTZJ8ppK1tjogoWYTUZrWzM=
-X-Google-Smtp-Source: APXvYqw6Jf8V2Q4b3H3bL0Z+TWaZXzpmHICATpunlQj30SAJFSKTUJwEMFlcKl4SH8lPE6b5CuStIA==
-X-Received: by 2002:ac2:483c:: with SMTP id 28mr1081814lft.14.1575333719968;
-        Mon, 02 Dec 2019 16:41:59 -0800 (PST)
-Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id y21sm456384ljm.25.2019.12.02.16.41.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 16:41:59 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v8 00/19] Consolidate and improve NVIDIA Tegra CPUIDLE driver(s)
-Date:   Tue,  3 Dec 2019 03:40:57 +0300
-Message-Id: <20191203004116.11771-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        bh=gkqruUigiDLwGAs8n/4um0iYijs+j5UqnZLX14xEyPw=;
+        b=fYGNwNz6hWvNXHkEaPW2L/TlVoPEsRkkDioESZb0jTMpBYMXdPs8JorYD88XNAqVMI
+         FOISPgBgSsp2qsQ+AQ1QGpFOQJqWX7ivpXzrgAKJUwSE6PTN1Pgk/cZm1XyT+5UYtVIu
+         pXYDJ8izriH+wZ6qbN4fEDg9Fe34s5RbwsELrUrXmYzeQ47mKc23a423AQiNYv4O+6wf
+         fQEzO9qbrM/iEA4yBY3upRey0HLd6/rx/AYB3M531jYXz3JTuMooyUeYKNMPLg//C493
+         dUaNCnj1dIM/KoPITUzCgd4P52KYTK1QOsiv910oOlOBWhJ7ctf3mcKa2qdAu9vNsmOm
+         FzCg==
+X-Gm-Message-State: APjAAAXcRMnbaf+XfH9ZbCzj+CFwbJwDf5LVnnMYJIOv5ieNyPYKoNRx
+        EbYktKc0djBVxCtcvdiBxxE+ABvZ
+X-Google-Smtp-Source: APXvYqyA2GRBkC9z8d6c2ewOHiJ+bpqNv7hRXmwEyQSIOiiXEtRQjlIon/nX/3CvSP8FcYVUMKSZgQ==
+X-Received: by 2002:a17:90a:8d10:: with SMTP id c16mr2352771pjo.109.1575334139105;
+        Mon, 02 Dec 2019 16:48:59 -0800 (PST)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id c1sm733565pfa.51.2019.12.02.16.48.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Dec 2019 16:48:58 -0800 (PST)
+Subject: Re: [PATCH v7 1/2] loop: Report EOPNOTSUPP properly
+To:     Evan Green <evgreen@chromium.org>, Jens Axboe <axboe@kernel.dk>,
+        Martin K Petersen <martin.petersen@oracle.com>
+Cc:     Gwendal Grignou <gwendal@chromium.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Alexis Savery <asavery@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191114235008.185111-1-evgreen@chromium.org>
+ <20191114154903.v7.1.I0b2734bafaa1bd6831dec49cdb4730d04be60fc8@changeid>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <7d4508c7-a3fc-67f6-392e-50a6247898aa@acm.org>
+Date:   Mon, 2 Dec 2019 16:48:56 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191114154903.v7.1.I0b2734bafaa1bd6831dec49cdb4730d04be60fc8@changeid>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 11/14/19 3:50 PM, Evan Green wrote:
+> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+> index ef6e251857c8..6a9fe1f9fe84 100644
+> --- a/drivers/block/loop.c
+> +++ b/drivers/block/loop.c
+> @@ -461,7 +461,7 @@ static void lo_complete_rq(struct request *rq)
+>   	if (!cmd->use_aio || cmd->ret < 0 || cmd->ret == blk_rq_bytes(rq) ||
+>   	    req_op(rq) != REQ_OP_READ) {
+>   		if (cmd->ret < 0)
+> -			ret = BLK_STS_IOERR;
+> +			ret = errno_to_blk_status(cmd->ret);
+>   		goto end_io;
+>   	}
+>   
+> @@ -1950,7 +1950,10 @@ static void loop_handle_cmd(struct loop_cmd *cmd)
+>    failed:
+>   	/* complete non-aio request */
+>   	if (!cmd->use_aio || ret) {
+> -		cmd->ret = ret ? -EIO : 0;
+> +		if (ret == -EOPNOTSUPP)
+> +			cmd->ret = ret;
+> +		else
+> +			cmd->ret = ret ? -EIO : 0;
+>   		blk_mq_complete_request(rq);
+>   	}
+>   }
 
-This series does the following:
-
-  1. Unifies Tegra20/30/114 drivers into a single driver and moves it out
-     into common drivers/cpuidle/ directory.
-
-  2. Enables CPU cluster power-down idling state on Tegra30.
-
-In the end there is a quite nice clean up of the Tegra CPUIDLE drivers
-and of the Tegra's arch code in general. Please review, thanks!
-
-Changelog:
-
-v8: - Rebased on recent linux-next, now making use of
-      cpuidle_driver_state_disabled(). Added new patch to make this new API
-      usable by the updated Tegra cpuidle driver:
-
-        cpuidle: Avoid NULL dereference in cpuidle_driver_state_disabled()
-
-    - Added new patch to handle case where LP2 isn't available:
-
-        cpuidle: tegra: Disable CC6 state if LP2 unavailable
-
-v7: - drivers/cpuidle/cpuidle-tegra.c now includes an explicit comment that
-      clarifies the new terminology that is used for naming of the idling
-      states. This change was suggested by Peter De Schrijver in the review
-      comment to v6. See the comment to struct tegra_idle_driver in the code.
-
-    - (!) This series is now based on top of the "NVIDIA Tegra20 CPUFreq
-      driver major update" patchset. The conflict between these two series
-      is trivial to resolve, but still it's worth to mention about that.
-
-v6: - Addressed request from Thierry Reding to change the way patches are
-      organized by making changes in a more incremental manner.
-
-    - tegra_sleep_cpu() now checks for the secondary CPUs to be offline
-      in the "Make outer_disable() open-coded" patch.
-
-v5: - Rebased on a recent linux-next, fixed one minor conflict in Kconfig.
-
-    - Improved commit's message of the "Support CPU cluster power-down state
-      on Tegra30" patch.
-
-    - The "Support CPU cluster power-down state on Tegra30" patch is also
-      got split and now there is additional "Make outer_disable() open-coded"
-      patch.
-
-    - Made minor cosmetic changes to the "Introduce unified driver for
-      NVIDIA Tegra SoCs" patch by improving error message and renaming
-      one variable.
-
-v4: - Fixed compilation with !CONFIG_CACHE_L2X0 (and tested that it still
-      works).
-
-    - Replaced ktime_compare() with ktime_before() in the new driver,
-      for consistency.
-
-v3: - Addressed review comments that were made by Jon Hunter to v2 by
-      splitting patches into smaller (and simpler) chunks, better
-      documenting changes in the commit messages and using proper error
-      codes in the code.
-
-      Warnings are replaced with a useful error messages in the code of
-      "Introduce unified driver for NVIDIA Tegra SoCs" patch.
-
-      Secondary CPUs parking timeout increased to 100ms because I found
-      that it actually may happen to take more than 1ms if CPU is running
-      on a *very* low frequency.
-
-      Added diagnostic messages that are reporting Flow Controller state
-      when CPU parking fails.
-
-      Further polished cpuidle driver's code.
-
-      The coupled state entering is now aborted if there is a pending SGI
-      (Software Generated Interrupt) because it will be lost after GIC's
-      power-cycling. Like it was done by the old Tegra20 CPUIDLE driver.
-
-v2: - Added patches to enable the new cpuidle driver in the defconfigs:
-
-        ARM: multi_v7_defconfig: Enable Tegra cpuidle driver
-        ARM: tegra: Enable Tegra cpuidle driver in tegra_defconfig
-
-    - Dropped patches that removed CPUIDLE_FLAG_TIMER_STOP from the idling
-      states because that flag actually doesn't have any negative effects,
-      but still is correct for the case of a local CPU timer on older Tegra
-      SoCs:
-
-        cpuidle: tegra: Remove CPUIDLE_FLAG_TIMER_STOP from Tegra114/124 idle-state
-        cpuidle: tegra: Remove CPUIDLE_FLAG_TIMER_STOP from all states
-
-    - The "Add unified driver for NVIDIA Tegra SoCs" patch got more polish.
-      Tegra30 and Terga114 states are now squashed into a single common C7
-      state (following Parker TRM terminology, see 17.2.2.2 Power Management
-      States), more comments added, etc minor changes.
-
-Dmitry Osipenko (19):
-  ARM: tegra: Compile sleep-tegra20/30.S unconditionally
-  ARM: tegra: Add tegra_pm_park_secondary_cpu()
-  ARM: tegra: Remove pen-locking from cpuidle-tegra20
-  ARM: tegra: Change tegra_set_cpu_in_lp2() type to void
-  ARM: tegra: Propagate error from tegra_idle_lp2_last()
-  ARM: tegra: Expose PM functions required for new cpuidle driver
-  ARM: tegra: Rename some of the newly exposed PM functions
-  ARM: tegra: Make outer_disable() open-coded
-  arm: tegra20: cpuidle: Handle case where secondary CPU hangs on
-    entering LP2
-  arm: tegra20: cpuidle: Make abort_flag atomic
-  arm: tegra20/30: cpuidle: Remove unnecessary memory barrier
-  cpuidle: Avoid NULL dereference in cpuidle_driver_state_disabled()
-  cpuidle: Refactor and move out NVIDIA Tegra20 driver into
-    drivers/cpuidle
-  cpuidle: tegra: Squash Tegra30 driver into the common driver
-  cpuidle: tegra: Support CPU cluster power-down state on Tegra30
-  cpuidle: tegra: Squash Tegra114 driver into the common driver
-  cpuidle: tegra: Disable CC6 state if LP2 unavailable
-  ARM: multi_v7_defconfig: Enable Tegra cpuidle driver
-  ARM: tegra: Enable Tegra cpuidle driver in tegra_defconfig
-
- arch/arm/configs/multi_v7_defconfig           |   1 +
- arch/arm/configs/tegra_defconfig              |   1 +
- arch/arm/mach-tegra/Makefile                  |  19 +-
- arch/arm/mach-tegra/cpuidle-tegra114.c        |  89 -----
- arch/arm/mach-tegra/cpuidle-tegra20.c         | 212 ----------
- arch/arm/mach-tegra/cpuidle-tegra30.c         | 132 ------
- arch/arm/mach-tegra/cpuidle.c                 |  50 ---
- arch/arm/mach-tegra/cpuidle.h                 |  21 -
- arch/arm/mach-tegra/irq.c                     |   3 +-
- arch/arm/mach-tegra/pm.c                      |  54 ++-
- arch/arm/mach-tegra/pm.h                      |   4 -
- arch/arm/mach-tegra/reset-handler.S           |  11 -
- arch/arm/mach-tegra/reset.h                   |   9 +-
- arch/arm/mach-tegra/sleep-tegra20.S           | 170 --------
- arch/arm/mach-tegra/sleep-tegra30.S           |   6 +-
- arch/arm/mach-tegra/sleep.h                   |  15 -
- arch/arm/mach-tegra/tegra.c                   |   7 +-
- drivers/cpuidle/Kconfig.arm                   |   8 +
- drivers/cpuidle/Makefile                      |   1 +
- drivers/cpuidle/cpuidle-tegra.c               | 376 ++++++++++++++++++
- drivers/cpuidle/driver.c                      |   4 +
- include/soc/tegra/cpuidle.h                   |   2 +-
- .../mach-tegra => include/soc/tegra}/irq.h    |   8 +-
- include/soc/tegra/pm.h                        |  31 ++
- 24 files changed, 473 insertions(+), 761 deletions(-)
- delete mode 100644 arch/arm/mach-tegra/cpuidle-tegra114.c
- delete mode 100644 arch/arm/mach-tegra/cpuidle-tegra20.c
- delete mode 100644 arch/arm/mach-tegra/cpuidle-tegra30.c
- delete mode 100644 arch/arm/mach-tegra/cpuidle.c
- delete mode 100644 arch/arm/mach-tegra/cpuidle.h
- create mode 100644 drivers/cpuidle/cpuidle-tegra.c
- rename {arch/arm/mach-tegra => include/soc/tegra}/irq.h (59%)
-
--- 
-2.24.0
-
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
