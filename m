@@ -2,82 +2,103 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E74DDC43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0958DC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9C952073C
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:12:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575411125;
-	bh=2+mUxustzPlC5CGQyGryca6Be+OVrhgg9b66NAQUyRw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S+xumNCW+cT2GsUk+G7GeUF5/wLJ1ALNZNVwa4F4VfB2vRNt61Xsvai6bpiZEFnud
-	 iXnTwyMUy9fc8uLrOAo2K71JUkF1Yo9fHYuucMk2slNP5zQGt+nhrMSkIpYb00c85V
-	 z58ei3GLHPTKhZJSwQVKF0ImcG0sdwRNfAX927c8=
+	by mail.kernel.org (Postfix) with ESMTP id CB6B42080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:14:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727664AbfLCWME (ORCPT
+        id S1727796AbfLCWOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:12:04 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45487 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727502AbfLCWMD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:12:03 -0500
-Received: by mail-oi1-f196.google.com with SMTP id v10so2836722oiv.12;
-        Tue, 03 Dec 2019 14:12:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pldoBT5ORXz4aapzHPt3ccAwmiFN0lj2178c3XaiQRo=;
-        b=GHII+SPUGu61cq9f9EygA+sDBDn/nUowmErILj25N/vyTM2TKzfHzFtC3snhf5x+3o
-         AoY/IIWvnNhP2NCUSR9kUC2yyczFC4KaSYgIByXOOavpd4KNrW9BOz+rXO97e/O5ulES
-         fUVyyiNkycrSI1JrmV8SCWzNdOix3ln74IUfMw7Uu56ZPoehCKMUE0ZcTJ/6BYWriACk
-         HoVOvCvufJnBBOrIunyfgQG8troB4jwmsBqtln2xxXHEfdFIPt54drxQSev3MA4wReK4
-         EbHd5B/XhOH4zIEOEI3jUfTJC7BUF5pVGzRuCac1W7yTaZhDGJyGOqONfJtATVsG/JPh
-         RWug==
-X-Gm-Message-State: APjAAAWQZWXuuJfJq1Qpxp9kp0yA1OtplPjRx7JuAU+Kd2HFIqW1IKmT
-        P847k0YOdigz4R5XSx4qFA==
-X-Google-Smtp-Source: APXvYqysvr90M90SJ2c9VBE2qhNi1oQIbDw7W8BDqJAjL+rSeTywUX/kbsja7PlOsf7oL6ErQP69kA==
-X-Received: by 2002:aca:4ad8:: with SMTP id x207mr208772oia.148.1575411122893;
-        Tue, 03 Dec 2019 14:12:02 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w12sm1486360otk.75.2019.12.03.14.12.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 14:12:02 -0800 (PST)
-Date:   Tue, 3 Dec 2019 16:12:01 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 1/6] dt-bindings: display/ingenic: Add compatible string
- for JZ4770
-Message-ID: <20191203221201.GA3201@bogus>
-References: <20191119141736.74607-1-paul@crapouillou.net>
+        Tue, 3 Dec 2019 17:14:34 -0500
+Received: from mga01.intel.com ([192.55.52.88]:19309 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727502AbfLCWOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:14:34 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Dec 2019 14:14:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,275,1571727600"; 
+   d="scan'208";a="201159390"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga007.jf.intel.com with ESMTP; 03 Dec 2019 14:14:33 -0800
+Date:   Tue, 3 Dec 2019 14:14:33 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     James Hogan <jhogan@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>
+Subject: Re: [PATCH v3 00/15] KVM: Dynamically size memslot arrays
+Message-ID: <20191203221433.GK19877@linux.intel.com>
+References: <20191024230744.14543-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191119141736.74607-1-paul@crapouillou.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191024230744.14543-1-sean.j.christopherson@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Nov 2019 15:17:31 +0100, Paul Cercueil wrote:
-> Add a compatible string for the LCD controller found in the JZ4770 SoC.
+On Thu, Oct 24, 2019 at 04:07:29PM -0700, Sean Christopherson wrote:
+> The end goal of this series is to dynamically size the memslot array so
+> that KVM allocates memory based on the number of memslots in use, as
+> opposed to unconditionally allocating memory for the maximum number of
+> memslots.  On x86, each memslot consumes 88 bytes, and so with 2 address
+> spaces of 512 memslots, each VM consumes ~90k bytes for the memslots.
+> E.g. given a VM that uses a total of 30 memslots, dynamic sizing reduces
+> the memory footprint from 90k to ~2.6k bytes.
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  Documentation/devicetree/bindings/display/ingenic,lcd.txt | 1 +
->  1 file changed, 1 insertion(+)
+> The changes required to support dynamic sizing are relatively small,
+> e.g. are essentially contained in patches 14/15 and 15/15.  Patches 1-13
+> clean up the memslot code, which has gotten quite crusty, especially
+> __kvm_set_memory_region().  The clean up is likely not strictly necessary
+> to switch to dynamic sizing, but I didn't have a remotely reasonable
+> level of confidence in the correctness of the dynamic sizing without first
+> doing the clean up.
 > 
+> Christoffer, I added your Tested-by to the patches that I was confident
+> would be fully tested based on the desription of what you tested.  Let me
+> know if you disagree with any of 'em.
+> 
+> v3:
+>   - Fix build errors on PPC and MIPS due to missed params during
+>     refactoring [kbuild test robot].
+>   - Rename the helpers for update_memslots() and add comments describing
+>     the new algorithm and how it interacts with searching [Paolo].
+>   - Remove the unnecessary and obnoxious warning regarding memslots being
+>     a flexible array [Paolo].
+>   - Fix typos in the changelog of patch 09/15 [Christoffer].
+>   - Collect tags [Christoffer].
+> 
+> v2:
+>   - Split "Drop kvm_arch_create_memslot()" into three patches to move
+>     minor functional changes to standalone patches [Janosch].
+>   - Rebase to latest kvm/queue (f0574a1cea5b, "KVM: x86: fix ...")
+>   - Collect an Acked-by and a Reviewed-by
 
-Acked-by: Rob Herring <robh@kernel.org>
+Paolo, do you want me to rebase this to the latest kvm/queue?
