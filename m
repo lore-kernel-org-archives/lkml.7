@@ -2,116 +2,271 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AF8C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 672C2C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6D802080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:27:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iqbReJki"
+	by mail.kernel.org (Postfix) with ESMTP id 213A82080F
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:29:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575404991;
+	bh=2fgZfqcM0kGQexZnIO7eCk6K1w6S5q4plw3dGykL7Sk=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=kWlBgqWkPfwE7+QwMVJUFdz/WaO0tPnShIKx1fKNRVsa8Fn+Uod4RWpn2nokhpRnj
+	 CkA8mu2OtcmlH6QGjpij0v+ebRO/0HilnUyEsGoeEVPFmXyGjee1CTXggFm07Dv1Hi
+	 MFHOnCUHJnUvs+Q5rKE5a9cQk8lGaJGxoZnY6ZEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727309AbfLCU14 (ORCPT
+        id S1727361AbfLCU3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 15:27:56 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34929 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbfLCU14 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 15:27:56 -0500
-Received: by mail-wr1-f65.google.com with SMTP id g17so5486113wro.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 12:27:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=QA6N7ZZcbmK8/a59EgCuBTRkEVqdTx5F9l4vgf5SIAE=;
-        b=iqbReJkif4rmiO17LjWyIiQlsRR+YKdoKyUcsImbQoY1qxYlcR/xn7t6ZMP8ZTX5XP
-         YzBl0yEeIeZB5QjWGDiJZiklZ4+CR7rVGQzTX283K/rKsY12MW/sKz00Y5GZG8OrMwyw
-         k/0aMiBkQJt8O17PZ9WcDSw2evEXbqRocbh0o2J2DYASPtpGqWOtMJfT2jf6+bnwPzGM
-         lRUbXZ8NxgzyiOw/i5+brLzjLb/XYkXHMnt5/+Rmn/sWLiF0eywLhHyCm/OpOmuXnoFW
-         L45+wjH7EvtAS58E9x3eZfGNAsiwVvZMtzDO48aj/iz2etcqi1/ezemrHtLb4UNi68o4
-         ts2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=QA6N7ZZcbmK8/a59EgCuBTRkEVqdTx5F9l4vgf5SIAE=;
-        b=ifX8gmVMGge+hYof8/bWWSdeS7KhXzQ/BzufMd4/E457EAdW35JuY4mIVNsPCjcrnL
-         HVXDi4xDISjXKz1yM/lzaR/A9Z9H36iSQKBFj8vcohBMi6pJMN4anP4Vfhslc9NHN06M
-         ZPG4I0nbQxRBHay5sHDUAOhaVi/haP9Q+aFtpZvku5JWM9Bdhv7XdvY2F84h6biI76u0
-         9SKYvBpYq8JWAfxAsG7heHf7xqsiIgCq+voZhZDASbq3vJJpvFzBETqGkjmaQAG7wcDE
-         Dq69zbqZwjeyoJGHqXkQ3KQ2HNf5Qk+aMInzsEYygSOXZHnS2p3CGesmSR0LXYxeEZPQ
-         KFiQ==
-X-Gm-Message-State: APjAAAVGTq/o3qjSDzj1Ze3C6P9R0ew8NLYN8ai6V6qQXJ1bdUU+5UJd
-        +STE7mVxzpbGvGP4TpwU0WnDNoUtTtg=
-X-Google-Smtp-Source: APXvYqz+KBOCFuHHTV6IPNG0FoTL7bVS0hI56S+m6ry55qdXekRfxkSB2xM8yizjKwZNMvQ/1jZzVA==
-X-Received: by 2002:adf:e6cb:: with SMTP id y11mr7396518wrm.345.1575404873554;
-        Tue, 03 Dec 2019 12:27:53 -0800 (PST)
-Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id 5sm5000176wrh.5.2019.12.03.12.27.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 12:27:52 -0800 (PST)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
-        ttayar@habana.ai
-Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH] habanalabs: rate limit error msg on waiting for CS
-Date:   Tue,  3 Dec 2019 22:27:50 +0200
-Message-Id: <20191203202750.9498-1-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 3 Dec 2019 15:29:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726567AbfLCU3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 15:29:50 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B448E20659;
+        Tue,  3 Dec 2019 20:29:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575404988;
+        bh=2fgZfqcM0kGQexZnIO7eCk6K1w6S5q4plw3dGykL7Sk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Xr5wD6F0m3BLh7BvpDsqNQ6pFMYBTy8rsOu5VGt+8+f/mAIQoWrCSSyUcscIIyxp6
+         wKPRDH2Qeue68OStQbr6whf/zAAskCLlHMRTkxCgPWYYwKoCHSvgTzXDMNp38E4TiD
+         kp4n5hKGDzTifCmoTIoZIrGZrVSgdYjOoAmTb7FA=
+Date:   Tue, 3 Dec 2019 21:29:46 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jiri Slaby <jslaby@suse.cz>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: [GIT PULL] TTY/Serial patches for 5.5-rc1
+Message-ID: <20191203202946.GA3188593@kroah.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case a user submits a CS, and the submission fails, and the user doesn't
-check the return value and instead use the error return value as a valid
-sequence number of a CS and ask to wait on it, the driver will print an
-error and return an error code for that wait.
+The following changes since commit d6d5df1db6e9d7f8f76d2911707f7d5877251b02:
 
-The real problem happens if now the user ignores the error of the wait, and
-try to wait again and again. This can lead to a flood of error messages
-from the driver and even soft lockup event.
+  Linux 5.4-rc5 (2019-10-27 13:19:19 -0400)
 
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
----
- drivers/misc/habanalabs/command_submission.c | 5 +++--
- drivers/misc/habanalabs/context.c            | 2 +-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+are available in the Git repository at:
 
-diff --git a/drivers/misc/habanalabs/command_submission.c b/drivers/misc/habanalabs/command_submission.c
-index 8850f475a413..0bf08678431b 100644
---- a/drivers/misc/habanalabs/command_submission.c
-+++ b/drivers/misc/habanalabs/command_submission.c
-@@ -824,8 +824,9 @@ int hl_cs_wait_ioctl(struct hl_fpriv *hpriv, void *data)
- 	memset(args, 0, sizeof(*args));
- 
- 	if (rc < 0) {
--		dev_err(hdev->dev, "Error %ld on waiting for CS handle %llu\n",
--			rc, seq);
-+		dev_err_ratelimited(hdev->dev,
-+				"Error %ld on waiting for CS handle %llu\n",
-+				rc, seq);
- 		if (rc == -ERESTARTSYS) {
- 			args->out.status = HL_WAIT_CS_STATUS_INTERRUPTED;
- 			rc = -EINTR;
-diff --git a/drivers/misc/habanalabs/context.c b/drivers/misc/habanalabs/context.c
-index 17db7b3dfb4c..2df6fb87e7ff 100644
---- a/drivers/misc/habanalabs/context.c
-+++ b/drivers/misc/habanalabs/context.c
-@@ -176,7 +176,7 @@ struct dma_fence *hl_ctx_get_fence(struct hl_ctx *ctx, u64 seq)
- 	spin_lock(&ctx->cs_lock);
- 
- 	if (seq >= ctx->cs_sequence) {
--		dev_notice(hdev->dev,
-+		dev_notice_ratelimited(hdev->dev,
- 			"Can't wait on seq %llu because current CS is at seq %llu\n",
- 			seq, ctx->cs_sequence);
- 		spin_unlock(&ctx->cs_lock);
--- 
-2.17.1
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tags/tty-5.5-rc1
 
+for you to fetch changes up to 27ed14d0ecb38516b6f3c6fdcd62c25c9454f979:
+
+  Revert "serial/8250: Add support for NI-Serial PXI/PXIe+485 devices" (2019-11-27 14:24:13 +0100)
+
+----------------------------------------------------------------
+TTY/Serial patches for 5.5-rc1
+
+Here is the "big" tty and serial driver patches for 5.5-rc1.  It's a bit
+later in the merge window than normal as I wanted to make sure some
+last-minute patches applied to it were all sane.  They seem to be :)
+
+There's a lot of little stuff in here, for the tty core, and for lots of
+serial drivers:
+	- reverts of uartlite serial driver patches that were wrong
+	- msm-serial driver fixes
+	- serial core updates and fixes
+	- tty core fixes
+	- serial driver dma mapping api changes
+	- lots of other tiny fixes and updates for serial drivers
+
+All of these have been in linux-next for a while with no reported
+issues.
+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+----------------------------------------------------------------
+Akash Asthana (2):
+      tty: serial: qcom_geni_serial: IRQ cleanup
+      tty: serial: qcom_geni_serial: Wakeup over UART RX
+
+Andrey Smirnov (1):
+      dt-bindings: serial: lpuart: Drop unsupported RS485 bindings
+
+Andy Shevchenko (3):
+      serial: 8250_dw: Use devm_clk_get_optional() to get the input clock
+      serial: 8250_exar: Move Exar pieces to custom ->startup()
+      serial: 8250_dw: Avoid double error messaging when IRQ absent
+
+Ben Dooks (1):
+      serial: sirf: make register info static
+
+Chuhong Yuan (2):
+      tty: serial: uartlite: use clk_disable_unprepare to match clk_prepare_enable
+      serial: ifx6x60: add missed pm_runtime_disable
+
+Dmitry Torokhov (1):
+      tty: vt: keyboard: reject invalid keycodes
+
+Fabrice Gasnier (1):
+      serial: stm32: fix clearing interrupt error flags
+
+Felipe Balbi (1):
+      serial: 8250_lpss: Switch over to MSI interrupts
+
+Frank Wunderlich (1):
+      serial: 8250-mtk: Use platform_get_irq_optional() for optional irq
+
+Geert Uytterhoeven (1):
+      dt-bindings: serial: sh-sci: Document r8a77961 bindings
+
+Greg Kroah-Hartman (9):
+      Merge 5.4-rc3 into tty-next
+      Merge 5.4-rc5 into tty-next
+      Revert "tty:n_gsm.c: destroy port by tty_port_destroy()"
+      Revert "serial-uartlite: Use allocated structure instead of static ones"
+      Revert "serial-uartlite: Change logic how console_port is setup"
+      Revert "serial-uartlite: Add runtime support"
+      Revert "serial-uartlite: Do not use static struct uart_driver out of probe()"
+      Revert "serial-uartlite: Add get serial id if not provided"
+      Revert "serial-uartlite: Move the uart register"
+
+Heiko Schocher (1):
+      tty: 8250_of: Use software emulated RS485 direction control
+
+Je Yen Tam (1):
+      Revert "serial/8250: Add support for NI-Serial PXI/PXIe+485 devices"
+
+Jeffrey Hugo (1):
+      tty: serial: msm_serial: Fix flow control
+
+Jiangfeng Xiao (1):
+      serial: serial_core: Perform NULL checks for break_ctl ops
+
+Jiri Slaby (1):
+      tty: don't crash in tty_init_dev when missing tty_port
+
+Krzysztof Kozlowski (2):
+      tty: Fix Kconfig indentation
+      tty: Fix Kconfig indentation, continued
+
+Lanqing Liu (1):
+      serial: sprd: Add polling IO support
+
+Maximilian Luz (1):
+      serdev: Add ACPI devices by ResourceSource field
+
+Michal Simek (3):
+      serial: core: Use cons->index for preferred console registration
+      hvc: dcc: Add earlycon support
+      Revert "serial: core: Use cons->index for preferred console registration"
+
+Nicolas Pitre (1):
+      vcs: prevent write access to vcsu devices
+
+Oskar Senft (3):
+      drivers/tty/serial/8250: Make Aspeed VUART SIRQ polarity configurable
+      dt-bindings: serial: 8250: Add aspeed,sirq-polarity-sense.
+      arm: dts: aspeed: Add vuart aspeed,sirq-polarity-sense to aspeed-g5.dtsi
+
+Pascal Terjan (1):
+      Remove every trace of SERIAL_MAGIC
+
+Pavel Machek (1):
+      tty_ldisc: simplify tty_ldisc_autoload initialization
+
+Peng Fan (3):
+      tty: serial: fsl_lpuart: use the sg count from dma_map_sg
+      tty: serial: imx: use the sg count from dma_map_sg
+      tty: serial: pch_uart: correct usage of dma_unmap_sg
+
+Peter Ujfalusi (3):
+      tty: serial: amba-pl011: Use dma_request_chan() directly for channel request
+      tty: serial: tegra: Use dma_request_chan() directly for channel request
+      tty: serial: msm_serial: Use dma_request_chan() directly for channel request
+
+Philipp Puschmann (1):
+      serial: imx: adapt rx buffer and dma periods
+
+Philippe Schenker (3):
+      tty: serial: lpuart: Remove unnecessary code from set_mctrl
+      tty: serial: lpuart: Use defines that correspond to correct register
+      tty: serial: lpuart: Add RS485 support for 32-bit uart flavour
+
+Qian Cai (1):
+      tty/amba-pl011: fix a -Wunused-function warning
+
+Shubhrajyoti Datta (2):
+      serial-uartlite: Change logic how console_port is setup
+      serial-uartlite: Use allocated structure instead of static ones
+
+Stefan-Gabriel Mirea (1):
+      serial: fsl_linflexuart: Be consistent with the name
+
+Sudip Mukherjee (3):
+      tty: rocket: reduce stack usage
+      {tty: serial, nand: onenand}: samsung: rename to fix build warning
+      tty: remove unused argument from tty_open_by_driver()
+
+Vincent Whitchurch (1):
+      serial: pl011: Fix DMA ->flush_buffer()
+
+Xiaoming Ni (1):
+      tty:n_gsm.c: destroy port by tty_port_destroy()
+
+ Documentation/ABI/stable/sysfs-driver-aspeed-vuart |  11 +-
+ Documentation/admin-guide/kernel-parameters.txt    |   2 +-
+ Documentation/devicetree/bindings/serial/8250.txt  |   5 +
+ .../devicetree/bindings/serial/fsl-lpuart.txt      |   3 +-
+ .../bindings/serial/renesas,sci-serial.txt         |   6 +-
+ Documentation/process/magic-number.rst             |   1 -
+ .../translations/it_IT/process/magic-number.rst    |   1 -
+ .../translations/zh_CN/process/magic-number.rst    |   1 -
+ arch/arm/boot/dts/aspeed-g5.dtsi                   |   1 +
+ drivers/mtd/nand/onenand/Makefile                  |   2 +-
+ .../mtd/nand/onenand/{samsung.c => samsung_mtd.c}  |   0
+ drivers/net/wan/z85230.h                           |   2 -
+ drivers/tty/Kconfig                                |  40 +--
+ drivers/tty/amiserial.c                            |  84 ------
+ drivers/tty/hvc/Kconfig                            |  28 +-
+ drivers/tty/hvc/hvc_dcc.c                          |  28 ++
+ drivers/tty/rocket.c                               |  32 ++-
+ drivers/tty/serdev/core.c                          | 111 +++++++-
+ drivers/tty/serial/8250/8250_aspeed_vuart.c        |  84 ++++++
+ drivers/tty/serial/8250/8250_dw.c                  |  83 +++---
+ drivers/tty/serial/8250/8250_exar.c                |  19 ++
+ drivers/tty/serial/8250/8250_lpss.c                |  21 +-
+ drivers/tty/serial/8250/8250_mtk.c                 |   2 +-
+ drivers/tty/serial/8250/8250_of.c                  |  31 +++
+ drivers/tty/serial/8250/8250_pci.c                 | 292 +--------------------
+ drivers/tty/serial/8250/8250_port.c                |  14 -
+ drivers/tty/serial/8250/Kconfig                    |   3 +-
+ drivers/tty/serial/Kconfig                         | 104 ++++----
+ drivers/tty/serial/Makefile                        |   2 +-
+ drivers/tty/serial/amba-pl011.c                    |  12 +-
+ drivers/tty/serial/fsl_linflexuart.c               |   4 +-
+ drivers/tty/serial/fsl_lpuart.c                    |  84 ++++--
+ drivers/tty/serial/ifx6x60.c                       |   3 +
+ drivers/tty/serial/imx.c                           |   7 +-
+ drivers/tty/serial/msm_serial.c                    |  10 +-
+ drivers/tty/serial/pch_uart.c                      |   5 +-
+ drivers/tty/serial/qcom_geni_serial.c              |  68 ++++-
+ drivers/tty/serial/{samsung.c => samsung_tty.c}    |   0
+ drivers/tty/serial/serial-tegra.c                  |   3 +-
+ drivers/tty/serial/serial_core.c                   |   2 +-
+ drivers/tty/serial/sirfsoc_uart.h                  |   5 +-
+ drivers/tty/serial/sprd_serial.c                   |  33 +++
+ drivers/tty/serial/stm32-usart.c                   |   6 +-
+ drivers/tty/serial/uartlite.c                      |  97 ++-----
+ drivers/tty/tty_io.c                               |  14 +-
+ drivers/tty/tty_ldisc.c                            |   7 +-
+ drivers/tty/vt/keyboard.c                          |   2 +-
+ drivers/tty/vt/vc_screen.c                         |   3 +
+ include/uapi/linux/serial_core.h                   |   2 +-
+ 49 files changed, 665 insertions(+), 715 deletions(-)
+ rename drivers/mtd/nand/onenand/{samsung.c => samsung_mtd.c} (100%)
+ rename drivers/tty/serial/{samsung.c => samsung_tty.c} (100%)
