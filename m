@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9796DC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECD9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 603482080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 527CF2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412863;
-	bh=DbmV8Tc7S3hQcDoJhHZdPkFhSwiSaATw4JEzfkOUwB0=;
+	s=default; t=1575412866;
+	bh=1Wa7Y73D3XJhTks5us0CBd3ZwsIhfCstPHl28n/jOqg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v7ecZRwU4vU7+l+36qJx/LTrt7QvMKHliICUHQ34DJONb4zbbjtkSo0SFLGLLnPrW
-	 EaaMPoegw8p7MGLbSSnFpjpchUbFtwLJ07zctzgDKRbz2aUPf7/mqq5UsYWndkrDZk
-	 WGFlDpcc4BZwM00bGFeMjg7EncNbthhEwPfjgnEI=
+	b=Pv6yIECQqEjcTv+EuE6e5RfK0+f0O0p0kSDDUMLpcw1kp5A/gqFoF1xT+seMAxgIB
+	 vNLynaFdqZpR+zZY/+feSEgYA8u3sSaX3Hr2aTeFaYZVXKIjRRD4+bIIERTiHW0Rz4
+	 Cl4+QRSA3XvmPH/A6cE76KZGsWIOu4xnADAQUFGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbfLCWlC (ORCPT
+        id S1728480AbfLCWlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:41:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54834 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:41:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727731AbfLCWky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:40:54 -0500
+        id S1727812AbfLCWlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:41:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBA3420684;
-        Tue,  3 Dec 2019 22:40:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 074D820684;
+        Tue,  3 Dec 2019 22:40:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412854;
-        bh=DbmV8Tc7S3hQcDoJhHZdPkFhSwiSaATw4JEzfkOUwB0=;
+        s=default; t=1575412857;
+        bh=1Wa7Y73D3XJhTks5us0CBd3ZwsIhfCstPHl28n/jOqg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AQeU2a+5Y0FYDighp77oQxeJkjrOCZNPu463iPVKwMMqp7R4b/44YhwzzsV8ULfW8
-         1n+VH7kyHCxRXacjd6Bc6xXU7z0XP9WSHMOAnSpqP7jMM6PHvk0/3YZeBQCIoCUDox
-         ynprr1Ij6AIB/VKxRnrlxaNCBEBh6MonhKlGBftg=
+        b=uCpjKsZzhGWGraMA2ahSeD5U/l6BLGlUvbzlLTjGy6NHs9hPrHaeF8SM3Edf391FU
+         xHIkyBsiG6kNCflDR+YN3R/M8VC9eE0t+HBSngpLKAO+uzIoiumue+vDBX7qUO86m4
+         dS9s86CoCRrPxzYhUObRADCDEMt0uQTJ2hamhL54=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Brad Campbell <lists2009@fnarfbargle.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 006/135] clk: at91: sam9x60: fix programmable clock
-Date:   Tue,  3 Dec 2019 23:34:06 +0100
-Message-Id: <20191203213006.960516373@linuxfoundation.org>
+Subject: [PATCH 5.3 007/135] thunderbolt: Read DP IN adapter first two dwords in one go
+Date:   Tue,  3 Dec 2019 23:34:07 +0100
+Message-Id: <20191203213007.107464122@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -63,38 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-[ Upstream commit 2200ab6a7403f4fcd052c55ca328fc942f9392b6 ]
+[ Upstream commit fd5c46b754d4799afda8dcdd6851e0390aa4961a ]
 
-The prescaler mask for sam9x60 must be 0xff (8 bits).
-Being set to 0, means that we cannot set any prescaler, thus the
-programmable clocks do not work (except the case with prescaler 0)
-Set the mask accordingly in layout struct.
+When we discover existing DP tunnels the code checks whether DP IN
+adapter port is enabled by calling tb_dp_port_is_enabled() before it
+continues the discovery process. On Light Ridge (gen 1) controller
+reading only the first dword of the DP IN config space causes subsequent
+access to the same DP IN port path config space to fail or return
+invalid data as can be seen in the below splat:
 
-Fixes: 01e2113de9a5 ("clk: at91: add sam9x60 pmc driver")
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Link: https://lkml.kernel.org/r/1569321191-27606-1-git-send-email-eugen.hristev@microchip.com
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+  thunderbolt 0000:07:00.0: CFG_ERROR(0:d): Invalid config space or offset
+  Call Trace:
+   tb_cfg_read+0xb9/0xd0
+   __tb_path_deactivate_hop+0x98/0x210
+   tb_path_activate+0x228/0x7d0
+   tb_tunnel_restart+0x95/0x200
+   tb_handle_hotplug+0x30e/0x630
+   process_one_work+0x1b4/0x340
+   worker_thread+0x44/0x3d0
+   kthread+0xeb/0x120
+   ? process_one_work+0x340/0x340
+   ? kthread_park+0xa0/0xa0
+   ret_from_fork+0x1f/0x30
+
+If both DP In adapter config dwords are read in one go the issue does
+not reproduce. This is likely firmware bug but we can work it around by
+always reading the two dwords in one go. There should be no harm for
+other controllers either so can do it unconditionally.
+
+Link: https://lkml.org/lkml/2019/8/28/160
+Reported-by: Brad Campbell <lists2009@fnarfbargle.com>
+Tested-by: Brad Campbell <lists2009@fnarfbargle.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/at91/sam9x60.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/thunderbolt/switch.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/clk/at91/sam9x60.c b/drivers/clk/at91/sam9x60.c
-index 9790ddfa5b3cb..86238d5ecb4da 100644
---- a/drivers/clk/at91/sam9x60.c
-+++ b/drivers/clk/at91/sam9x60.c
-@@ -43,6 +43,7 @@ static const struct clk_pll_characteristics upll_characteristics = {
- };
+diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+index 5668a44e0653b..00daf5a7f46a5 100644
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -887,12 +887,13 @@ int tb_dp_port_set_hops(struct tb_port *port, unsigned int video,
+  */
+ bool tb_dp_port_is_enabled(struct tb_port *port)
+ {
+-	u32 data;
++	u32 data[2];
  
- static const struct clk_programmable_layout sam9x60_programmable_layout = {
-+	.pres_mask = 0xff,
- 	.pres_shift = 8,
- 	.css_mask = 0x1f,
- 	.have_slck_mck = 0,
+-	if (tb_port_read(port, &data, TB_CFG_PORT, port->cap_adap, 1))
++	if (tb_port_read(port, data, TB_CFG_PORT, port->cap_adap,
++			 ARRAY_SIZE(data)))
+ 		return false;
+ 
+-	return !!(data & (TB_DP_VIDEO_EN | TB_DP_AUX_EN));
++	return !!(data[0] & (TB_DP_VIDEO_EN | TB_DP_AUX_EN));
+ }
+ 
+ /**
+@@ -905,19 +906,21 @@ bool tb_dp_port_is_enabled(struct tb_port *port)
+  */
+ int tb_dp_port_enable(struct tb_port *port, bool enable)
+ {
+-	u32 data;
++	u32 data[2];
+ 	int ret;
+ 
+-	ret = tb_port_read(port, &data, TB_CFG_PORT, port->cap_adap, 1);
++	ret = tb_port_read(port, data, TB_CFG_PORT, port->cap_adap,
++			   ARRAY_SIZE(data));
+ 	if (ret)
+ 		return ret;
+ 
+ 	if (enable)
+-		data |= TB_DP_VIDEO_EN | TB_DP_AUX_EN;
++		data[0] |= TB_DP_VIDEO_EN | TB_DP_AUX_EN;
+ 	else
+-		data &= ~(TB_DP_VIDEO_EN | TB_DP_AUX_EN);
++		data[0] &= ~(TB_DP_VIDEO_EN | TB_DP_AUX_EN);
+ 
+-	return tb_port_write(port, &data, TB_CFG_PORT, port->cap_adap, 1);
++	return tb_port_write(port, data, TB_CFG_PORT, port->cap_adap,
++			     ARRAY_SIZE(data));
+ }
+ 
+ /* switch utility functions */
 -- 
 2.20.1
 
