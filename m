@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0C6C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40147C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D89BA20848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03C0E206EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412989;
-	bh=0i8+MroQvcCp4W7iTdzxkMdymi9RZSRFAFVF573fmOI=;
+	s=default; t=1575412993;
+	bh=r8RD+TSm9031sECWo8nDnwzU0EStJIFqQDq83ZJfoHc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UYdctKaybDU5BNf/BWAue3XOwl2qrwCINjSv0HEkYDhMwQXZ1iwri/RHFpJQS5/5z
-	 oEXsT6xdXieStBH6fcDWl4eBFbmZs/08zlTw2jjXFyKZfxMN+FfIwPwJNNEnJyYkib
-	 U22rGsEnNGq6Vb/o4qfhODIxo1DoPFiDyk86ZEFQ=
+	b=urSBG3rLby+8Jf3DXEvZNT0lHuB5VfuDs5Z3yYogr6PBWDqfpMi7UwvPVXf87JK7R
+	 bjHWB2byzWjKdoxC6M3Lxbs4Vy68eo4kkK81wIRmuJvkOJWzkSQnLr0Fi49C+3i+N4
+	 SUs8UZXM930OCDIkvOTa0Ka3oBxJHunWRF8usrI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728772AbfLCWnH (ORCPT
+        id S1728596AbfLCWnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:43:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58376 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:43:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728766AbfLCWnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:43:06 -0500
+        id S1728062AbfLCWnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:43:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5353B206EC;
-        Tue,  3 Dec 2019 22:43:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CCB520803;
+        Tue,  3 Dec 2019 22:43:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412985;
-        bh=0i8+MroQvcCp4W7iTdzxkMdymi9RZSRFAFVF573fmOI=;
+        s=default; t=1575412988;
+        bh=r8RD+TSm9031sECWo8nDnwzU0EStJIFqQDq83ZJfoHc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nrfv4qbRLE3D1MafL8V2Cb4sIBVJiRk3xObZkeKtcBYxtoytnThkbwwO7jJsAXZPK
-         4MaJxxEeONEeqrAIeOynybruj39I2hzT+T5y0gCbbzYI1FFDg6yAWR0LUqcNJQBC2v
-         lDyrNRb5uBElCmBlwOiVNUG9uOkDzjOeej4aSZ0g=
+        b=gt8IbxeNjcvr94q9u1ilwzGrIiFygN7B5/Qu1hf+ckuFgNESMMppRKdyqe9JKO3wW
+         wvbgGI1quzkklYhffQ/VjNtpJPtpWueWG7PuewACa00TCcktZOgLuePa32CicBCJLa
+         zid9F0Kj/4DHQk5MQ87a4ULZxaH0OM+ssQBEk2oE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 093/135] pwm: bcm-iproc: Prevent unloading the driver module while in use
-Date:   Tue,  3 Dec 2019 23:35:33 +0100
-Message-Id: <20191203213037.242644482@linuxfoundation.org>
+Subject: [PATCH 5.3 094/135] ice: fix potential infinite loop because loop counter being too small
+Date:   Tue,  3 Dec 2019 23:35:34 +0100
+Message-Id: <20191203213037.340554510@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -63,35 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 24906a41eecb73d51974ade0847c21e429beec60 ]
+[ Upstream commit 615457a226f042bffc3a1532afb244cab37460d4 ]
 
-The owner member of struct pwm_ops must be set to THIS_MODULE to
-increase the reference count of the module such that the module cannot
-be removed while its code is in use.
+Currently the for-loop counter i is a u8 however it is being checked
+against a maximum value hw->num_tx_sched_layers which is a u16. Hence
+there is a potential wrap-around of counter i back to zero if
+hw->num_tx_sched_layers is greater than 255.  Fix this by making i
+a u16.
 
-Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controller")
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Addresses-Coverity: ("Infinite loop")
+Fixes: b36c598c999c ("ice: Updates to Tx scheduler code")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-bcm-iproc.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/intel/ice/ice_sched.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
-index d961a8207b1cb..31b01035d0ab3 100644
---- a/drivers/pwm/pwm-bcm-iproc.c
-+++ b/drivers/pwm/pwm-bcm-iproc.c
-@@ -187,6 +187,7 @@ static int iproc_pwmc_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- static const struct pwm_ops iproc_pwm_ops = {
- 	.apply = iproc_pwmc_apply,
- 	.get_state = iproc_pwmc_get_state,
-+	.owner = THIS_MODULE,
- };
+diff --git a/drivers/net/ethernet/intel/ice/ice_sched.c b/drivers/net/ethernet/intel/ice/ice_sched.c
+index 2a232504379d2..602b0fd84c29e 100644
+--- a/drivers/net/ethernet/intel/ice/ice_sched.c
++++ b/drivers/net/ethernet/intel/ice/ice_sched.c
+@@ -1052,7 +1052,7 @@ enum ice_status ice_sched_query_res_alloc(struct ice_hw *hw)
+ 	struct ice_aqc_query_txsched_res_resp *buf;
+ 	enum ice_status status = 0;
+ 	__le16 max_sibl;
+-	u8 i;
++	u16 i;
  
- static int iproc_pwmc_probe(struct platform_device *pdev)
+ 	if (hw->layer_info)
+ 		return status;
 -- 
 2.20.1
 
