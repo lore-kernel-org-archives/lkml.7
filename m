@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1456C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0E2C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5DBF20684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:06:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C4482068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:06:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575353185;
-	bh=0IdTj408H9VDhD7k+XOPYN9S53vMdUcDRsF6ueMx+Y4=;
+	s=default; t=1575353198;
+	bh=dIreLY83seUdqZu6R1y9BdVoKulh8Q54BvasWnDIcXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cKBDtKXtOj5lrS5aK9rc0WZWwZfW8ShVm9uYv56ty7Efi8qqdDCyY/EGIelbsgMEk
-	 Uae343Z/lk5GNGn6gypA2j+YfHEy9Wf94KA+4xp2W+IeIKCxUZAv4xn7Ivnm9/D2Hf
-	 8YLp3DcOggP6nJ+h5GpZ3RDXIAQJfB2WJ0M2x6bY=
+	b=iETaOnjTa5oM6Lb1TG1joAo54SjLyCggmes98XgaYjVkXnApe4CxWgSKnvwuMPf+9
+	 y00WHUOgXeMMIr4TXKBIPLbyDFBAoMdxa6siBWRs9BtCF+Oo4rs+1W1EsS89N2pDGf
+	 41aGK7suN3TSmghzofaHHDNgnUm+h0Ujgu/NguaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727131AbfLCGGY (ORCPT
+        id S1727207AbfLCGGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 01:06:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44042 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 01:06:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726521AbfLCGGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 01:06:24 -0500
+        id S1726521AbfLCGGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 01:06:36 -0500
 Received: from localhost.localdomain (unknown [180.22.253.92])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4619020684;
-        Tue,  3 Dec 2019 06:06:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C31C02068E;
+        Tue,  3 Dec 2019 06:06:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575353183;
-        bh=0IdTj408H9VDhD7k+XOPYN9S53vMdUcDRsF6ueMx+Y4=;
+        s=default; t=1575353195;
+        bh=dIreLY83seUdqZu6R1y9BdVoKulh8Q54BvasWnDIcXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pqXdZgTne+g2oh1LFnjyQNSUtwe3ShS3lxPFjYD5xVIh2ut9c800/dx9nDRWL6GHz
-         bE5xucSlFhrsqLs7+cV19BHSqqy2ZYeA0BzUI/TZ9lCxzBsPmsd1qyStS4OJOGOzDq
-         ZcfAQvAUR3dahQ5OJEzqkkou0zVQw9wvFNV7GEWE=
+        b=gx0xrp3qzvwok1qlziS3AtgnxlYaKJ1UfSBycZ7LIHHbbE/qzXpMQs2GWf41Ydsqr
+         hsLowHot4PIiY86PlmVjdzesbkkF057mpg+pk2PTmB8IIGYXFpyovkVTN+G9sweJl3
+         q6K8dIZZGkcJ9sJ2kOwQfDt0InDykbrfJCxWiWlw=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>
 Cc:     Anders Roxell <anders.roxell@linaro.org>, paulmck@kernel.org,
@@ -48,9 +48,9 @@ Cc:     Anders Roxell <anders.roxell@linaro.org>, paulmck@kernel.org,
         David Miller <davem@davemloft.net>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [PATCH -tip V2 1/2] kprobes: Suppress the suspicious RCU warning on kprobes
-Date:   Tue,  3 Dec 2019 15:06:17 +0900
-Message-Id: <157535317763.16485.12112495601308191775.stgit@devnote2>
+Subject: [PATCH -tip V2 2/2] kprobes: Use non RCU traversal APIs on kprobe_tables if possible
+Date:   Tue,  3 Dec 2019 15:06:28 +0900
+Message-Id: <157535318870.16485.6366477974356032624.stgit@devnote2>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <157535316659.16485.11817291759382261088.stgit@devnote2>
 References: <157535316659.16485.11817291759382261088.stgit@devnote2>
@@ -63,46 +63,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Anders reported that the lockdep warns that suspicious
-RCU list usage in register_kprobe() (detected by
-CONFIG_PROVE_RCU_LIST.) This is because get_kprobe()
-access kprobe_table[] by hlist_for_each_entry_rcu()
-without rcu_read_lock.
+Current kprobes uses RCU traversal APIs on kprobe_tables
+even if it is safe because kprobe_mutex is locked.
 
-If we call get_kprobe() from the breakpoint handler context,
-it is run with preempt disabled, so this is not a problem.
-But in other cases, instead of rcu_read_lock(), we locks
-kprobe_mutex so that the kprobe_table[] is not updated.
-So, current code is safe, but still not good from the view
-point of RCU.
+Make those traversals to non-RCU APIs where the kprobe_mutex
+is locked.
 
-Joel suggested that we can silent that warning by passing
-lockdep_is_held() to the last argument of
-hlist_for_each_entry_rcu().
-
-Add lockdep_is_held(&kprobe_mutex) at the end of the
-hlist_for_each_entry_rcu() to suppress the warning.
-
-Reported-by: Anders Roxell <anders.roxell@linaro.org>
-Suggested-by: Joel Fernandes <joel@joelfernandes.org>
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- kernel/kprobes.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/kprobes.c |   29 ++++++++++++++++++++---------
+ 1 file changed, 20 insertions(+), 9 deletions(-)
 
 diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 53534aa258a6..f9ecb6d532fb 100644
+index f9ecb6d532fb..4caab01ace30 100644
 --- a/kernel/kprobes.c
 +++ b/kernel/kprobes.c
-@@ -326,7 +326,8 @@ struct kprobe *get_kprobe(void *addr)
- 	struct kprobe *p;
+@@ -46,6 +46,11 @@
  
- 	head = &kprobe_table[hash_ptr(addr, KPROBE_HASH_BITS)];
--	hlist_for_each_entry_rcu(p, head, hlist) {
-+	hlist_for_each_entry_rcu(p, head, hlist,
-+				 lockdep_is_held(&kprobe_mutex)) {
- 		if (p->addr == addr)
- 			return p;
+ 
+ static int kprobes_initialized;
++/* kprobe_table can be accessed by
++ * - Normal hlist traversal and RCU add/del under kprobe_mutex is held.
++ * Or
++ * - RCU hlist traversal under disabling preempt (breakpoint handlers)
++ */
+ static struct hlist_head kprobe_table[KPROBE_TABLE_SIZE];
+ static struct hlist_head kretprobe_inst_table[KPROBE_TABLE_SIZE];
+ 
+@@ -829,7 +834,7 @@ static void optimize_all_kprobes(void)
+ 	kprobes_allow_optimization = true;
+ 	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
+ 		head = &kprobe_table[i];
+-		hlist_for_each_entry_rcu(p, head, hlist)
++		hlist_for_each_entry(p, head, hlist)
+ 			if (!kprobe_disabled(p))
+ 				optimize_kprobe(p);
  	}
+@@ -856,7 +861,7 @@ static void unoptimize_all_kprobes(void)
+ 	kprobes_allow_optimization = false;
+ 	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
+ 		head = &kprobe_table[i];
+-		hlist_for_each_entry_rcu(p, head, hlist) {
++		hlist_for_each_entry(p, head, hlist) {
+ 			if (!kprobe_disabled(p))
+ 				unoptimize_kprobe(p, false);
+ 		}
+@@ -1479,12 +1484,14 @@ static struct kprobe *__get_valid_kprobe(struct kprobe *p)
+ {
+ 	struct kprobe *ap, *list_p;
+ 
++	lockdep_assert_held(&kprobe_mutex);
++
+ 	ap = get_kprobe(p->addr);
+ 	if (unlikely(!ap))
+ 		return NULL;
+ 
+ 	if (p != ap) {
+-		list_for_each_entry_rcu(list_p, &ap->list, list)
++		list_for_each_entry(list_p, &ap->list, list)
+ 			if (list_p == p)
+ 			/* kprobe p is a valid probe */
+ 				goto valid;
+@@ -1649,7 +1656,9 @@ static int aggr_kprobe_disabled(struct kprobe *ap)
+ {
+ 	struct kprobe *kp;
+ 
+-	list_for_each_entry_rcu(kp, &ap->list, list)
++	lockdep_assert_held(&kprobe_mutex);
++
++	list_for_each_entry(kp, &ap->list, list)
+ 		if (!kprobe_disabled(kp))
+ 			/*
+ 			 * There is an active probe on the list.
+@@ -1728,7 +1737,7 @@ static int __unregister_kprobe_top(struct kprobe *p)
+ 	else {
+ 		/* If disabling probe has special handlers, update aggrprobe */
+ 		if (p->post_handler && !kprobe_gone(p)) {
+-			list_for_each_entry_rcu(list_p, &ap->list, list) {
++			list_for_each_entry(list_p, &ap->list, list) {
+ 				if ((list_p != p) && (list_p->post_handler))
+ 					goto noclean;
+ 			}
+@@ -2042,13 +2051,15 @@ static void kill_kprobe(struct kprobe *p)
+ {
+ 	struct kprobe *kp;
+ 
++	lockdep_assert_held(&kprobe_mutex);
++
+ 	p->flags |= KPROBE_FLAG_GONE;
+ 	if (kprobe_aggrprobe(p)) {
+ 		/*
+ 		 * If this is an aggr_kprobe, we have to list all the
+ 		 * chained probes and mark them GONE.
+ 		 */
+-		list_for_each_entry_rcu(kp, &p->list, list)
++		list_for_each_entry(kp, &p->list, list)
+ 			kp->flags |= KPROBE_FLAG_GONE;
+ 		p->post_handler = NULL;
+ 		kill_optimized_kprobe(p);
+@@ -2217,7 +2228,7 @@ static int kprobes_module_callback(struct notifier_block *nb,
+ 	mutex_lock(&kprobe_mutex);
+ 	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
+ 		head = &kprobe_table[i];
+-		hlist_for_each_entry_rcu(p, head, hlist)
++		hlist_for_each_entry(p, head, hlist)
+ 			if (within_module_init((unsigned long)p->addr, mod) ||
+ 			    (checkcore &&
+ 			     within_module_core((unsigned long)p->addr, mod))) {
+@@ -2468,7 +2479,7 @@ static int arm_all_kprobes(void)
+ 	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
+ 		head = &kprobe_table[i];
+ 		/* Arm all kprobes on a best-effort basis */
+-		hlist_for_each_entry_rcu(p, head, hlist) {
++		hlist_for_each_entry(p, head, hlist) {
+ 			if (!kprobe_disabled(p)) {
+ 				err = arm_kprobe(p);
+ 				if (err)  {
+@@ -2511,7 +2522,7 @@ static int disarm_all_kprobes(void)
+ 	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
+ 		head = &kprobe_table[i];
+ 		/* Disarm all kprobes on a best-effort basis */
+-		hlist_for_each_entry_rcu(p, head, hlist) {
++		hlist_for_each_entry(p, head, hlist) {
+ 			if (!arch_trampoline_kprobe(p) && !kprobe_disabled(p)) {
+ 				err = disarm_kprobe(p, false);
+ 				if (err) {
 
