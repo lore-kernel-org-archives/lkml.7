@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29888C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA773C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF74920674
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90C3620866
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:58:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413925;
-	bh=4ex08+r/cuDKAQl9zddzX8LKdo5LBQJF5e9YP3pFHno=;
+	s=default; t=1575413929;
+	bh=ZmxwNmAwB4742Iu89EpDn11440DflLFePsLiljRqvwI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e+3k5o/9L9myu0TmNmZ6tWkEriENdjZ73crgO0vAz3CFiAsYvJMyZCXoHOF5RAb8X
-	 ClbAmZQGjM9z3G8VJ7yBYQx9jIW95gj+uYz6bqA1WvEeNlenU5E4YRpfnGV8CH/SB5
-	 cTeVpoR/MqP/HdUkjE6Qn9KTrmqymmxG42n3UhDY=
+	b=x+DH0sZS+Rinq6Xd1ji7XcKOhT4oEVfZSA3hMKAyLNNGQQQNd+JW05hs+RGucDDqG
+	 2tH/U+PfEWNxbpdlaJ/pLMsc4tiIBYGcLC/DrjebbL+qNY82JofoJFdUG6Jj4ppk5e
+	 JyegoTUK2HQ9MRaWFAi4CtfRtgMtjzrQljPEu5bc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730685AbfLCW6n (ORCPT
+        id S1730584AbfLCW6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:58:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55140 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:58:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730439AbfLCW6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:58:41 -0500
+        id S1730293AbfLCW6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:58:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08C5320865;
-        Tue,  3 Dec 2019 22:58:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 284C620866;
+        Tue,  3 Dec 2019 22:58:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413920;
-        bh=4ex08+r/cuDKAQl9zddzX8LKdo5LBQJF5e9YP3pFHno=;
+        s=default; t=1575413925;
+        bh=ZmxwNmAwB4742Iu89EpDn11440DflLFePsLiljRqvwI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yy+EMCwuwFsO23VTjNX6WtjfIGc+QvJzZOBK3v55HOpvD3l/519C3J3XBURo+4Tmq
-         /cW0D/GhL8ZOKkVK+kUJOeSXg6vgNr7UXdC/pyujWX1gkHCjHZRQlHVjvVUW1rp+ys
-         FJMeQym9szj9fwj/vYCxYl+NzuSFjoSrj8uUTLaE=
+        b=PPUAglgq84wtj6wWLrYWc1sCCBnbxg9HwEo4sWayymEA5pgzvk8IFCrCOcs78sn+n
+         T68yj1QGQkFsOqw9pGVK4YO2snHKlFeQrU4cqPkEUEGmDV+EluMsrFdviOnWyyxq93
+         gMSQipKmqbijkA5AbEId+DqrevLL+bFg4pJlt6Cs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH 4.19 314/321] pinctrl: stm32: fix memory leak issue
-Date:   Tue,  3 Dec 2019 23:36:20 +0100
-Message-Id: <20191203223443.481141861@linuxfoundation.org>
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.19 298/321] mtd: rawnand: atmel: Fix spelling mistake in error message
+Date:   Tue,  3 Dec 2019 23:36:04 +0100
+Message-Id: <20191203223442.654000786@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,102 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Torgue <alexandre.torgue@st.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-commit cd8c9b5a49576bf28990237715bc2cb2210ac80a upstream.
+commit e39bb786816453788836c367caefd72eceea380c upstream.
 
-configs is allocated by pinconf_generic_parse_dt_config(),
-pinctrl_utils_add_map_configs() duplicates configs so it can and has to
-be freed to prevent memory leaks.
+Wrong copy/paste from the previous block, the error message should
+refer to #size-cells instead of #address-cells.
 
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Fixes: f88fc122cc34 ("mtd: nand: Cleanup/rework the atmel_nand driver")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pinctrl/stm32/pinctrl-stm32.c |   26 ++++++++++++++++----------
- 1 file changed, 16 insertions(+), 10 deletions(-)
+ drivers/mtd/nand/raw/atmel/nand-controller.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -410,7 +410,7 @@ static int stm32_pctrl_dt_subnode_to_map
- 	unsigned int num_configs;
- 	bool has_config = 0;
- 	unsigned reserve = 0;
--	int num_pins, num_funcs, maps_per_pin, i, err;
-+	int num_pins, num_funcs, maps_per_pin, i, err = 0;
+--- a/drivers/mtd/nand/raw/atmel/nand-controller.c
++++ b/drivers/mtd/nand/raw/atmel/nand-controller.c
+@@ -1826,7 +1826,7 @@ static int atmel_nand_controller_add_nan
  
- 	pctl = pinctrl_dev_get_drvdata(pctldev);
- 
-@@ -437,41 +437,45 @@ static int stm32_pctrl_dt_subnode_to_map
- 	if (has_config && num_pins >= 1)
- 		maps_per_pin++;
- 
--	if (!num_pins || !maps_per_pin)
--		return -EINVAL;
-+	if (!num_pins || !maps_per_pin) {
-+		err = -EINVAL;
-+		goto exit;
-+	}
- 
- 	reserve = num_pins * maps_per_pin;
- 
- 	err = pinctrl_utils_reserve_map(pctldev, map,
- 			reserved_maps, num_maps, reserve);
- 	if (err)
--		return err;
-+		goto exit;
- 
- 	for (i = 0; i < num_pins; i++) {
- 		err = of_property_read_u32_index(node, "pinmux",
- 				i, &pinfunc);
- 		if (err)
--			return err;
-+			goto exit;
- 
- 		pin = STM32_GET_PIN_NO(pinfunc);
- 		func = STM32_GET_PIN_FUNC(pinfunc);
- 
- 		if (!stm32_pctrl_is_function_valid(pctl, pin, func)) {
- 			dev_err(pctl->dev, "invalid function.\n");
--			return -EINVAL;
-+			err = -EINVAL;
-+			goto exit;
- 		}
- 
- 		grp = stm32_pctrl_find_group_by_pin(pctl, pin);
- 		if (!grp) {
- 			dev_err(pctl->dev, "unable to match pin %d to group\n",
- 					pin);
--			return -EINVAL;
-+			err = -EINVAL;
-+			goto exit;
- 		}
- 
- 		err = stm32_pctrl_dt_node_to_map_func(pctl, pin, func, grp, map,
- 				reserved_maps, num_maps);
- 		if (err)
--			return err;
-+			goto exit;
- 
- 		if (has_config) {
- 			err = pinctrl_utils_add_map_configs(pctldev, map,
-@@ -479,11 +483,13 @@ static int stm32_pctrl_dt_subnode_to_map
- 					configs, num_configs,
- 					PIN_MAP_TYPE_CONFIGS_GROUP);
- 			if (err)
--				return err;
-+				goto exit;
- 		}
+ 	ret = of_property_read_u32(np, "#size-cells", &val);
+ 	if (ret) {
+-		dev_err(dev, "missing #address-cells property\n");
++		dev_err(dev, "missing #size-cells property\n");
+ 		return ret;
  	}
  
--	return 0;
-+exit:
-+	kfree(configs);
-+	return err;
- }
- 
- static int stm32_pctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
 
 
