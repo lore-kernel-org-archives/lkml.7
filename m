@@ -2,92 +2,125 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB7FC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D64EC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02A9D20661
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:57:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="y2yy33aQ"
+	by mail.kernel.org (Postfix) with ESMTP id 2A6E520661
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:58:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbfLCU50 (ORCPT
+        id S1727492AbfLCU6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 15:57:26 -0500
-Received: from frisell.zx2c4.com ([192.95.5.64]:46863 "EHLO frisell.zx2c4.com"
+        Tue, 3 Dec 2019 15:58:52 -0500
+Received: from mga18.intel.com ([134.134.136.126]:1643 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727244AbfLCU5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 15:57:25 -0500
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id fb4926cd;
-        Tue, 3 Dec 2019 20:02:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=from:to:cc
-        :subject:date:message-id:mime-version:content-transfer-encoding;
-         s=mail; bh=We/tViqcNSYyTT+iqYw0DQdfrxM=; b=y2yy33aQtdKHY/kHDnHh
-        hsMHQG5pe3IbrbK1MlDFz+yNgFh/zm44ZrAuWW/tcrNL/3qM2SQ6TOzjS1/lS6Vh
-        oltVIUx4FQ5UZ/1RdgJvBcfo/apDl4dseyILbBFqVkau+um8oqkYd1ofeyHhKZrL
-        vWJsHibHM6+lvMKmUrQTHqIKdCZ8LENU44FyRzKj92EtWpB+SxsVA9Xf4NHFoz5E
-        h++KU4dfEJYT72dHveRBF6/0ZRC1RH07JY80mF0pDr3YhKnQfX8UcKWvUVRQO3rq
-        iTETzDmOhiLSQaEmIQrRETnHbjkwzeB20S9b2yVpmfBEwV7e0/GHzsUaGuAxT7Mz
-        KA==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 388e7a3f (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Tue, 3 Dec 2019 20:02:43 +0000 (UTC)
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org
-Subject: [PATCH] x86/quirks: disable HPET on Intel Coffee Lake Refresh platforms
-Date:   Tue,  3 Dec 2019 21:57:16 +0100
-Message-Id: <20191203205716.1228-1-Jason@zx2c4.com>
+        id S1727244AbfLCU6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 15:58:51 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Dec 2019 12:58:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,274,1571727600"; 
+   d="scan'208";a="205128882"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga008.jf.intel.com with ESMTP; 03 Dec 2019 12:58:51 -0800
+Date:   Tue, 3 Dec 2019 12:58:51 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v5 2/4] x86/traps: Print address on #GP
+Message-ID: <20191203205850.GF19877@linux.intel.com>
+References: <20191127234916.31175-1-jannh@google.com>
+ <20191127234916.31175-2-jannh@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127234916.31175-2-jannh@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a follow up of fc5db58539b4 ("x86/quirks: Disable HPET on Intel
-Coffe Lake platforms"), which addressed the issue for 8th generation
-Coffee Lake. Intel has released Coffee Lake again for 9th generation,
-apparently still with the same bug:
+On Thu, Nov 28, 2019 at 12:49:14AM +0100, Jann Horn wrote:
 
-clocksource: timekeeping watchdog on CPU3: Marking clocksource 'tsc' as unstable because the skew is too large:
-clocksource:                       'hpet' wd_now: 24f422b8 wd_last: 247dea41 mask: ffffffff
-clocksource:                       'tsc' cs_now: 144d927c4e cs_last: 140ba6e2a0 mask: ffffffffffffffff
-tsc: Marking TSC unstable due to clocksource watchdog
-TSC found unstable after boot, most likely due to broken BIOS. Use 'tsc=unstable'.
-sched_clock: Marking unstable (26553416234, 4203921)<-(26567277071, -9656937)
-clocksource: Switched to clocksource hpet
+With a few nits below,
 
-So, we add another quirk for the chipset
+Reviewed-and-tested-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Cc: Feng Tang <feng.tang@intel.com>
-Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
----
- arch/x86/kernel/early-quirks.c | 2 ++
- 1 file changed, 2 insertions(+)
+> +#define GPFSTR "general protection fault"
+> +
+>  dotraplinkage void
+>  do_general_protection(struct pt_regs *regs, long error_code)
+>  {
+> -	const char *desc = "general protection fault";
+>  	struct task_struct *tsk;
+> +	char desc[sizeof(GPFSTR) + 50 + 2*sizeof(unsigned long) + 1] = GPFSTR;
 
-diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
-index 4cba91ec8049..a73f88dd7f86 100644
---- a/arch/x86/kernel/early-quirks.c
-+++ b/arch/x86/kernel/early-quirks.c
-@@ -712,6 +712,8 @@ static struct chipset early_qrk[] __initdata = {
- 		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
- 	{ PCI_VENDOR_ID_INTEL, 0x3ec4,
- 		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
-+	{ PCI_VENDOR_ID_INTEL, 0x3e20,
-+		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
- 	{ PCI_VENDOR_ID_BROADCOM, 0x4331,
- 	  PCI_CLASS_NETWORK_OTHER, PCI_ANY_ID, 0, apple_airport_reset},
- 	{}
--- 
-2.24.0
+Nit, x86 maintainers prefer inverse fir tree for variable declarations.
 
+>  
+>  	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
+>  	cond_local_irq_enable(regs);
+> @@ -540,6 +587,9 @@ do_general_protection(struct pt_regs *regs, long error_code)
+>  
+>  	tsk = current;
+>  	if (!user_mode(regs)) {
+> +		enum kernel_gp_hint hint = GP_NO_HINT;
+> +		unsigned long gp_addr;
+> +
+>  		if (fixup_exception(regs, X86_TRAP_GP, error_code, 0))
+>  			return;
+>  
+> @@ -556,8 +606,22 @@ do_general_protection(struct pt_regs *regs, long error_code)
+>  			return;
+>  
+>  		if (notify_die(DIE_GPF, desc, regs, error_code,
+> -			       X86_TRAP_GP, SIGSEGV) != NOTIFY_STOP)
+> -			die(desc, regs, error_code);
+> +			       X86_TRAP_GP, SIGSEGV) == NOTIFY_STOP)
+> +			return;
+> +
+> +		if (error_code)
+> +			snprintf(desc, sizeof(desc), "segment-related " GPFSTR);
+> +		else
+> +			hint = get_kernel_gp_address(regs, &gp_addr);
+> +
+> +		if (hint != GP_NO_HINT)
+> +			snprintf(desc, sizeof(desc), GPFSTR " %s 0x%lx",
+
+Nit, probably should have a comma before the hint, i.e. GPFSTR ", %s...".
+
+    general protection fault maybe for address 0xffffc9000017cf58: 0000 [#1] SMP
+    general protection fault probably for non-canonical address 0xdead000000000000: 0000 [#1] SMP
+
+  vs. 
+
+    general protection fault, maybe for address 0xffffc9000017cf58: 0000 [#1] SMP
+    general protection fault, probably for non-canonical address 0xdead000000000000: 0000 [#1] SMP
+
+> +				 (hint == GP_NON_CANONICAL) ?
+> +				 "probably for non-canonical address" :
+> +				 "maybe for address",
+> +				 gp_addr);
+> +
+> +		die(desc, regs, error_code);
+>  		return;
+>  	}
+>  
+> -- 
+> 2.24.0.432.g9d3f5f5b63-goog
+> 
