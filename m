@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA92DC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F79C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA41620684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D9A9207DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412891;
-	bh=z9Lv6c8+GmFz9VuW7PWrb5r+yWIK4n3hGIo4aYP7fRI=;
+	s=default; t=1575412894;
+	bh=HGoMbIUwGJLJFxfGybntghEW34hFVZUY+Ecadf8HQpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=prYTTiA5q39mV5TUt69R1o2Xl6DTRzSpSr2rqYxWcpxxFkEHb1/ixo4CWdmx4fdR0
-	 eu1QQ3/iPX0n7/srL+u6izGYZbZHzAuVk8GpFwTOhuAluhu4bZ4u5dTT+XWwcDwb2d
-	 AUOxp9grxNqKMOkE+2x7qke8+7i0Z/rq9vrUlsWw=
+	b=rLIJhg40XdDpe5muQLrH6dV5n8eB7EpVVAPrVCQbFJdE8jY/CImJidVekE1LmGd4n
+	 k8/pV+cRdZv1LXso54LYGFpsmNw4qle3S2xGuwx6KK75wb+AQmDtVvDPDy3sFEjCIj
+	 2vCLDONrd1cttmbsuPbqEmql0sxh/e8iOdmKqqrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728561AbfLCWla (ORCPT
+        id S1728113AbfLCWld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:41:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55944 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:41:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727988AbfLCWl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:41:28 -0500
+        id S1727981AbfLCWlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:41:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 657E020684;
-        Tue,  3 Dec 2019 22:41:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB516207DD;
+        Tue,  3 Dec 2019 22:41:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412887;
-        bh=z9Lv6c8+GmFz9VuW7PWrb5r+yWIK4n3hGIo4aYP7fRI=;
+        s=default; t=1575412890;
+        bh=HGoMbIUwGJLJFxfGybntghEW34hFVZUY+Ecadf8HQpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eWEQPSRYQQL2HQqszhIg6PmSoBPlrSAuuCufnhi+tbp3GbX6OjcG+beSI/d36HST6
-         NhHaR4kSt+dDVl7tt1upHXVtL2pbT2e6e/549uBLm9n76D+KWW1EXM+0CROaC9vpZz
-         tUFMkng2DJRpXx5PTJ1+CB5f7J3TZeEmha3OnCsE=
+        b=nv0Wt+zieGkn2bNSvGGbNwyUWjH3LAI/u3yjgBgGVV5jxHHuHejae7BfOFmVmGa1z
+         KdDLhuU0AfcWLrjR04QWvR5HW9N9nRrjrx1pg6BUEcVdfYNt3INck6r76qqwMkdy/k
+         TO6vrC58XNa2eM6nybIWQ+xzGfnsOKDRkRyHW6fw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>,
+        stable@vger.kernel.org,
+        Jeroen Hofstee <jhofstee@victronenergy.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 056/135] can: rx-offload: can_rx_offload_offload_one(): use ERR_PTR() to propagate error value in case of errors
-Date:   Tue,  3 Dec 2019 23:34:56 +0100
-Message-Id: <20191203213020.521176489@linuxfoundation.org>
+Subject: [PATCH 5.3 057/135] can: rx-offload: can_rx_offload_irq_offload_timestamp(): continue on error
+Date:   Tue,  3 Dec 2019 23:34:57 +0100
+Message-Id: <20191203213020.793997040@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -59,162 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Kleine-Budde <mkl@pengutronix.de>
+From: Jeroen Hofstee <jhofstee@victronenergy.com>
 
-[ Upstream commit d763ab3044f0bf50bd0e6179f6b2cf1c125d1d94 ]
+[ Upstream commit c2a9f74c9d18acfdcabd3361adc7eac82c537a66 ]
 
-Before this patch can_rx_offload_offload_one() returns a pointer to a
-skb containing the read CAN frame or a NULL pointer.
+In case of a resource shortage, i.e. the rx_offload queue will overflow
+or a skb fails to be allocated (due to OOM),
+can_rx_offload_offload_one() will call mailbox_read() to discard the
+mailbox and return an ERR_PTR.
 
-However the meaning of the NULL pointer is ambiguous, it can either mean
-the requested mailbox is empty or there was an error.
+However can_rx_offload_irq_offload_timestamp() bails out in the error
+case. In case of a resource shortage all mailboxes should be discarded,
+to avoid an IRQ storm and give the system some time to recover.
 
-This patch fixes this situation by returning:
-- pointer to skb on success
-- NULL pointer if mailbox is empty
-- ERR_PTR() in case of an error
+Since can_rx_offload_irq_offload_timestamp() is typically called from a
+while loop, all message will eventually be discarded. So let's continue
+on error instead to discard them directly.
 
-All users of can_rx_offload_offload_one() have been adopted, no
-functional change intended.
-
+Signed-off-by: Jeroen Hofstee <jhofstee@victronenergy.com>
 Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/rx-offload.c | 86 ++++++++++++++++++++++++++++++------
- 1 file changed, 73 insertions(+), 13 deletions(-)
+ drivers/net/can/rx-offload.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/net/can/rx-offload.c b/drivers/net/can/rx-offload.c
-index e224530a06300..3f5e040f0c712 100644
+index 3f5e040f0c712..2ea8676579a9c 100644
 --- a/drivers/net/can/rx-offload.c
 +++ b/drivers/net/can/rx-offload.c
-@@ -107,39 +107,95 @@ static int can_rx_offload_compare(struct sk_buff *a, struct sk_buff *b)
- 	return cb_b->timestamp - cb_a->timestamp;
- }
- 
--static struct sk_buff *can_rx_offload_offload_one(struct can_rx_offload *offload, unsigned int n)
-+/**
-+ * can_rx_offload_offload_one() - Read one CAN frame from HW
-+ * @offload: pointer to rx_offload context
-+ * @n: number of mailbox to read
-+ *
-+ * The task of this function is to read a CAN frame from mailbox @n
-+ * from the device and return the mailbox's content as a struct
-+ * sk_buff.
-+ *
-+ * If the struct can_rx_offload::skb_queue exceeds the maximal queue
-+ * length (struct can_rx_offload::skb_queue_len_max) or no skb can be
-+ * allocated, the mailbox contents is discarded by reading it into an
-+ * overflow buffer. This way the mailbox is marked as free by the
-+ * driver.
-+ *
-+ * Return: A pointer to skb containing the CAN frame on success.
-+ *
-+ *         NULL if the mailbox @n is empty.
-+ *
-+ *         ERR_PTR() in case of an error
-+ */
-+static struct sk_buff *
-+can_rx_offload_offload_one(struct can_rx_offload *offload, unsigned int n)
- {
--	struct sk_buff *skb = NULL;
-+	struct sk_buff *skb = NULL, *skb_error = NULL;
- 	struct can_rx_offload_cb *cb;
- 	struct can_frame *cf;
- 	int ret;
- 
--	/* If queue is full or skb not available, read to discard mailbox */
- 	if (likely(skb_queue_len(&offload->skb_queue) <
--		   offload->skb_queue_len_max))
-+		   offload->skb_queue_len_max)) {
- 		skb = alloc_can_skb(offload->dev, &cf);
-+		if (unlikely(!skb))
-+			skb_error = ERR_PTR(-ENOMEM);	/* skb alloc failed */
-+	} else {
-+		skb_error = ERR_PTR(-ENOBUFS);		/* skb_queue is full */
-+	}
- 
--	if (!skb) {
-+	/* If queue is full or skb not available, drop by reading into
-+	 * overflow buffer.
-+	 */
-+	if (unlikely(skb_error)) {
- 		struct can_frame cf_overflow;
- 		u32 timestamp;
- 
- 		ret = offload->mailbox_read(offload, &cf_overflow,
- 					    &timestamp, n);
--		if (ret) {
--			offload->dev->stats.rx_dropped++;
--			offload->dev->stats.rx_fifo_errors++;
--		}
- 
--		return NULL;
-+		/* Mailbox was empty. */
-+		if (unlikely(!ret))
-+			return NULL;
-+
-+		/* Mailbox has been read and we're dropping it or
-+		 * there was a problem reading the mailbox.
-+		 *
-+		 * Increment error counters in any case.
-+		 */
-+		offload->dev->stats.rx_dropped++;
-+		offload->dev->stats.rx_fifo_errors++;
-+
-+		/* There was a problem reading the mailbox, propagate
-+		 * error value.
-+		 */
-+		if (unlikely(ret < 0))
-+			return ERR_PTR(ret);
-+
-+		return skb_error;
- 	}
- 
- 	cb = can_rx_offload_get_cb(skb);
- 	ret = offload->mailbox_read(offload, cf, &cb->timestamp, n);
--	if (!ret) {
-+
-+	/* Mailbox was empty. */
-+	if (unlikely(!ret)) {
- 		kfree_skb(skb);
- 		return NULL;
- 	}
- 
-+	/* There was a problem reading the mailbox, propagate error value. */
-+	if (unlikely(ret < 0)) {
-+		kfree_skb(skb);
-+
-+		offload->dev->stats.rx_dropped++;
-+		offload->dev->stats.rx_fifo_errors++;
-+
-+		return ERR_PTR(ret);
-+	}
-+
-+	/* Mailbox was read. */
- 	return skb;
- }
- 
-@@ -159,7 +215,7 @@ int can_rx_offload_irq_offload_timestamp(struct can_rx_offload *offload, u64 pen
- 			continue;
+@@ -216,7 +216,7 @@ int can_rx_offload_irq_offload_timestamp(struct can_rx_offload *offload, u64 pen
  
  		skb = can_rx_offload_offload_one(offload, i);
--		if (!skb)
-+		if (IS_ERR_OR_NULL(skb))
- 			break;
+ 		if (IS_ERR_OR_NULL(skb))
+-			break;
++			continue;
  
  		__skb_queue_add_sort(&skb_queue, skb, can_rx_offload_compare);
-@@ -190,7 +246,11 @@ int can_rx_offload_irq_offload_fifo(struct can_rx_offload *offload)
- 	struct sk_buff *skb;
- 	int received = 0;
- 
--	while ((skb = can_rx_offload_offload_one(offload, 0))) {
-+	while (1) {
-+		skb = can_rx_offload_offload_one(offload, 0);
-+		if (IS_ERR_OR_NULL(skb))
-+			break;
-+
- 		skb_queue_tail(&offload->skb_queue, skb);
- 		received++;
  	}
 -- 
 2.20.1
