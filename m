@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0E2C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DA2C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C0FC20863
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A5B9207DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413516;
-	bh=QFLf3HJ6du181U9CDpuGFKVocaY+72lw3PwSNKydJss=;
+	s=default; t=1575413519;
+	bh=pLdwTcVv4nJzrMhSx9V+PXwEcP0b77bICeFw26wTwJA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R7W7TU4BIE5hzmZSk+yPRVTCQXv8pNEhisSi50aOaWUGjUi/Nm72NrU0LMpC4MQpJ
-	 OGOAKF/jLT0v7vbmwcQSLVDC00cM3Zlj/IXfFwU3ubQfp71L2seupK5SuD8Dkc/7oY
-	 YalqfBE8sE+syXj/Pece2PhDLPuuaEIp2v/zyNEE=
+	b=QJKHyFF7otxMEeua6eiMlgsHEZoBIViJ8bxUd1v2E3KntCgfu6g+OOiTjMggvQdQk
+	 AJo8e+Jb5gZaP4terJzPs1xfdkSZb7JZv7gbwOkveDEsF+2lxYNbVEnm3Evp7rCTNW
+	 KqqRVLugSI0Z/rBIc8RNVl1AbqK+X0eYHEy8tr54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729595AbfLCWvr (ORCPT
+        id S1729818AbfLCWv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:51:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44116 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:51:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729933AbfLCWvn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:51:43 -0500
+        id S1729952AbfLCWvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:51:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4E1520848;
-        Tue,  3 Dec 2019 22:51:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D850F2084F;
+        Tue,  3 Dec 2019 22:51:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413502;
-        bh=QFLf3HJ6du181U9CDpuGFKVocaY+72lw3PwSNKydJss=;
+        s=default; t=1575413510;
+        bh=pLdwTcVv4nJzrMhSx9V+PXwEcP0b77bICeFw26wTwJA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1R+i8eUXAKICdkIyJH1G/5Vf5m1Vu3WxU7QGvNNmzZHyPpSGgPstDCuviekK13V3j
-         d1hUwIxujBfhHSA8YAJoV9RSTS6EjxMbY4rU6TThIg3JmkFsrKbybPnU9DuXuAc5Py
-         TY8LYb0jaM2dntsEGCJu8Ay7S4xyLmySSDOFbRUw=
+        b=trNuNh57daJ7yDcVUh8mrMiIFKHX9Qz8RCA9mOaQOHJ1XSeNx4xG9owPU55X61Bvk
+         C4L3LuL82isfPoKzCmPAZQfCwCq14PXh/tojWN9e0jDoQbuoMtlnQ8OfA1TjZIIxfv
+         b++COHlzERDeYegF172x0UondyLf7w13ElehRN6o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Jonathan Bakker <xc-racer2@live.ca>,
+        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 152/321] powerpc/book3s/32: fix number of bats in p/v_block_mapped()
-Date:   Tue,  3 Dec 2019 23:33:38 +0100
-Message-Id: <20191203223435.056581723@linuxfoundation.org>
+Subject: [PATCH 4.19 155/321] Bluetooth: hci_bcm: Handle specific unknown packets after firmware loading
+Date:   Tue,  3 Dec 2019 23:33:41 +0100
+Message-Id: <20191203223435.209741772@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,42 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Jonathan Bakker <xc-racer2@live.ca>
 
-[ Upstream commit e93ba1b7eb5b188c749052df7af1c90821c5f320 ]
+[ Upstream commit 22bba80500fdf624a7cfbb65fdfa97a038ae224d ]
 
-This patch fixes the loop in p_block_mapped() and v_block_mapped()
-to scan the entire bat_addrs[] array.
+The Broadcom controller on aries S5PV210 boards sends out a couple of
+unknown packets after the firmware is loaded.  This will cause
+logging of errors such as:
+	Bluetooth: hci0: Frame reassembly failed (-84)
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+This is probably also the case with other boards, as there are related
+Android userspace patches for custom ROMs such as
+https://review.lineageos.org/#/c/LineageOS/android_system_bt/+/142721/
+Since this appears to be intended behaviour, treated them as diagnostic
+packets.
+
+Note that this is another variant of commit 01d5e44ace8a
+("Bluetooth: hci_bcm: Handle empty packet after firmware loading")
+
+Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/ppc_mmu_32.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/bluetooth/hci_bcm.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/arch/powerpc/mm/ppc_mmu_32.c b/arch/powerpc/mm/ppc_mmu_32.c
-index bea6c544e38f9..06783270a1242 100644
---- a/arch/powerpc/mm/ppc_mmu_32.c
-+++ b/arch/powerpc/mm/ppc_mmu_32.c
-@@ -52,7 +52,7 @@ struct batrange {		/* stores address ranges mapped by BATs */
- phys_addr_t v_block_mapped(unsigned long va)
- {
- 	int b;
--	for (b = 0; b < 4; ++b)
-+	for (b = 0; b < ARRAY_SIZE(bat_addrs); ++b)
- 		if (va >= bat_addrs[b].start && va < bat_addrs[b].limit)
- 			return bat_addrs[b].phys + (va - bat_addrs[b].start);
- 	return 0;
-@@ -64,7 +64,7 @@ phys_addr_t v_block_mapped(unsigned long va)
- unsigned long p_block_mapped(phys_addr_t pa)
- {
- 	int b;
--	for (b = 0; b < 4; ++b)
-+	for (b = 0; b < ARRAY_SIZE(bat_addrs); ++b)
- 		if (pa >= bat_addrs[b].phys
- 	    	    && pa < (bat_addrs[b].limit-bat_addrs[b].start)
- 		              +bat_addrs[b].phys)
+diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
+index aa6b7ed9fdf12..59e5fc5eec8f8 100644
+--- a/drivers/bluetooth/hci_bcm.c
++++ b/drivers/bluetooth/hci_bcm.c
+@@ -51,6 +51,12 @@
+ #define BCM_LM_DIAG_PKT 0x07
+ #define BCM_LM_DIAG_SIZE 63
+ 
++#define BCM_TYPE49_PKT 0x31
++#define BCM_TYPE49_SIZE 0
++
++#define BCM_TYPE52_PKT 0x34
++#define BCM_TYPE52_SIZE 0
++
+ #define BCM_AUTOSUSPEND_DELAY	5000 /* default autosleep delay */
+ 
+ /**
+@@ -564,12 +570,28 @@ finalize:
+ 	.lsize = 0, \
+ 	.maxlen = BCM_NULL_SIZE
+ 
++#define BCM_RECV_TYPE49 \
++	.type = BCM_TYPE49_PKT, \
++	.hlen = BCM_TYPE49_SIZE, \
++	.loff = 0, \
++	.lsize = 0, \
++	.maxlen = BCM_TYPE49_SIZE
++
++#define BCM_RECV_TYPE52 \
++	.type = BCM_TYPE52_PKT, \
++	.hlen = BCM_TYPE52_SIZE, \
++	.loff = 0, \
++	.lsize = 0, \
++	.maxlen = BCM_TYPE52_SIZE
++
+ static const struct h4_recv_pkt bcm_recv_pkts[] = {
+ 	{ H4_RECV_ACL,      .recv = hci_recv_frame },
+ 	{ H4_RECV_SCO,      .recv = hci_recv_frame },
+ 	{ H4_RECV_EVENT,    .recv = hci_recv_frame },
+ 	{ BCM_RECV_LM_DIAG, .recv = hci_recv_diag  },
+ 	{ BCM_RECV_NULL,    .recv = hci_recv_diag  },
++	{ BCM_RECV_TYPE49,  .recv = hci_recv_diag  },
++	{ BCM_RECV_TYPE52,  .recv = hci_recv_diag  },
+ };
+ 
+ static int bcm_recv(struct hci_uart *hu, const void *data, int count)
 -- 
 2.20.1
 
