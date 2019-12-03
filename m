@@ -2,57 +2,58 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7106C33CA0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6E9C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 735522072D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5866A20726
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:49:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbfLCDtH (ORCPT
+        id S1727303AbfLCDtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 22:49:07 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10300 "EHLO
+        Mon, 2 Dec 2019 22:49:08 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37334 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726990AbfLCDsd (ORCPT
+        by vger.kernel.org with ESMTP id S1726881AbfLCDsd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Dec 2019 22:48:33 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB33kl2D001818
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 22:48:32 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wn3pd3ey1-1
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB33kldv109365
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 22:48:30 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wm6v00yfr-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 22:48:32 -0500
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 22:48:30 -0500
 Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Tue, 3 Dec 2019 03:48:28 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Tue, 3 Dec 2019 03:48:26 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 3 Dec 2019 03:48:20 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB33mJeB45023540
+        Tue, 3 Dec 2019 03:48:18 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB33mHAa50790640
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Dec 2019 03:48:19 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2DBB64204F;
-        Tue,  3 Dec 2019 03:48:19 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 873FC42041;
-        Tue,  3 Dec 2019 03:48:18 +0000 (GMT)
+        Tue, 3 Dec 2019 03:48:17 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B97D74C046;
+        Tue,  3 Dec 2019 03:48:17 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 132AD4C044;
+        Tue,  3 Dec 2019 03:48:17 +0000 (GMT)
 Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  3 Dec 2019 03:48:18 +0000 (GMT)
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  3 Dec 2019 03:48:17 +0000 (GMT)
 Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
         (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 96F42A03EE;
-        Tue,  3 Dec 2019 14:48:13 +1100 (AEDT)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id D21B6A03DC;
+        Tue,  3 Dec 2019 14:48:12 +1100 (AEDT)
 From:   "Alastair D'Silva" <alastair@au1.ibm.com>
 To:     alastair@d-silva.org
 Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
@@ -85,25 +86,25 @@ Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Alexey Kardashevskiy <aik@ozlabs.ru>,
         linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Subject: [PATCH v2 24/27] nvdimm/ocxl: Implement Overwrite
-Date:   Tue,  3 Dec 2019 14:46:52 +1100
+Subject: [PATCH v2 10/27] nvdimm: Add driver for OpenCAPI Storage Class Memory
+Date:   Tue,  3 Dec 2019 14:46:38 +1100
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191203034655.51561-1-alastair@au1.ibm.com>
 References: <20191203034655.51561-1-alastair@au1.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19120303-4275-0000-0000-0000038A31E1
+x-cbid: 19120303-0012-0000-0000-000003701288
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120303-4276-0000-0000-0000389DCDDC
-Message-Id: <20191203034655.51561-25-alastair@au1.ibm.com>
+x-cbparentid: 19120303-0013-0000-0000-000021ABCCBD
+Message-Id: <20191203034655.51561-11-alastair@au1.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
  definitions=2019-12-02_06:2019-11-29,2019-12-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 mlxscore=0 adultscore=0 impostorscore=0 suspectscore=1
- bulkscore=0 lowpriorityscore=0 spamscore=0 clxscore=1015 mlxlogscore=999
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912030032
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ priorityscore=1501 impostorscore=0 adultscore=0 phishscore=0 bulkscore=0
+ suspectscore=4 lowpriorityscore=0 mlxlogscore=999 mlxscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1912030032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -111,270 +112,645 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alastair D'Silva <alastair@d-silva.org>
 
-The near storage command 'Secure Erase' overwrites all data on the
-media.
+This driver exposes LPC memory on OpenCAPI SCM cards
+as an NVDIMM, allowing the existing nvram infrastructure
+to be used.
 
-This patch hooks it up to the security function 'overwrite'.
+Namespace metadata is stored on the media itself, so
+scm_reserve_metadata() maps 1 section's worth of PMEM storage
+at the start to hold this. The rest of the PMEM range is registered
+with libnvdimm as an nvdimm. scm_ndctl_config_read/write/size() provide
+callbacks to libnvdimm to access the metadata.
 
 Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 ---
- drivers/nvdimm/ocxl/scm.c          | 164 ++++++++++++++++++++++++++++-
- drivers/nvdimm/ocxl/scm_internal.c |   1 +
- drivers/nvdimm/ocxl/scm_internal.h |  17 +++
- 3 files changed, 180 insertions(+), 2 deletions(-)
+ drivers/nvdimm/Kconfig             |   2 +
+ drivers/nvdimm/Makefile            |   2 +-
+ drivers/nvdimm/ocxl/Kconfig        |  15 +
+ drivers/nvdimm/ocxl/Makefile       |   7 +
+ drivers/nvdimm/ocxl/scm.c          | 519 +++++++++++++++++++++++++++++
+ drivers/nvdimm/ocxl/scm_internal.h |  28 ++
+ 6 files changed, 572 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/nvdimm/ocxl/Kconfig
+ create mode 100644 drivers/nvdimm/ocxl/Makefile
+ create mode 100644 drivers/nvdimm/ocxl/scm.c
+ create mode 100644 drivers/nvdimm/ocxl/scm_internal.h
 
-diff --git a/drivers/nvdimm/ocxl/scm.c b/drivers/nvdimm/ocxl/scm.c
-index a81eb5916eb3..8deb7862793c 100644
---- a/drivers/nvdimm/ocxl/scm.c
-+++ b/drivers/nvdimm/ocxl/scm.c
-@@ -169,6 +169,86 @@ static int scm_reserve_metadata(struct scm_data *scm_data,
- 	return 0;
- }
+diff --git a/drivers/nvdimm/Kconfig b/drivers/nvdimm/Kconfig
+index 36af7af6b7cf..d1bab36da61c 100644
+--- a/drivers/nvdimm/Kconfig
++++ b/drivers/nvdimm/Kconfig
+@@ -130,4 +130,6 @@ config NVDIMM_TEST_BUILD
+ 	  core devm_memremap_pages() implementation and other
+ 	  infrastructure.
  
++source "drivers/nvdimm/ocxl/Kconfig"
++
+ endif
+diff --git a/drivers/nvdimm/Makefile b/drivers/nvdimm/Makefile
+index 29203f3d3069..e33492128042 100644
+--- a/drivers/nvdimm/Makefile
++++ b/drivers/nvdimm/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-obj-$(CONFIG_LIBNVDIMM) += libnvdimm.o
++obj-$(CONFIG_LIBNVDIMM) += libnvdimm.o ocxl/
+ obj-$(CONFIG_BLK_DEV_PMEM) += nd_pmem.o
+ obj-$(CONFIG_ND_BTT) += nd_btt.o
+ obj-$(CONFIG_ND_BLK) += nd_blk.o
+diff --git a/drivers/nvdimm/ocxl/Kconfig b/drivers/nvdimm/ocxl/Kconfig
+new file mode 100644
+index 000000000000..24099b300f5e
+--- /dev/null
++++ b/drivers/nvdimm/ocxl/Kconfig
+@@ -0,0 +1,15 @@
++# SPDX-License-Identifier: GPL-2.0-only
++if LIBNVDIMM
++
++config OCXL_SCM
++	tristate "OpenCAPI Storage Class Memory"
++	depends on LIBNVDIMM && PPC_POWERNV && PCI && EEH
++	select ZONE_DEVICE
++	select OCXL
++	help
++	  Exposes devices that implement the OpenCAPI Storage Class Memory
++	  specification as persistent memory regions.
++
++	  Select N if unsure.
++
++endif
+diff --git a/drivers/nvdimm/ocxl/Makefile b/drivers/nvdimm/ocxl/Makefile
+new file mode 100644
+index 000000000000..74a1bd98848e
+--- /dev/null
++++ b/drivers/nvdimm/ocxl/Makefile
+@@ -0,0 +1,7 @@
++# SPDX-License-Identifier: GPL-2.0
++
++ccflags-$(CONFIG_PPC_WERROR)	+= -Werror
++
++obj-$(CONFIG_OCXL_SCM) += ocxlscm.o
++
++ocxlscm-y := scm.o
+diff --git a/drivers/nvdimm/ocxl/scm.c b/drivers/nvdimm/ocxl/scm.c
+new file mode 100644
+index 000000000000..571058a9e7b8
+--- /dev/null
++++ b/drivers/nvdimm/ocxl/scm.c
+@@ -0,0 +1,519 @@
++// SPDX-License-Identifier: GPL-2.0+
++// Copyright 2019 IBM Corp.
++
++/*
++ * A driver for Storage Class Memory, connected via OpenCAPI
++ */
++
++#include <linux/module.h>
++#include <misc/ocxl.h>
++#include <linux/ndctl.h>
++#include <linux/mm_types.h>
++#include <linux/memory_hotplug.h>
++#include "scm_internal.h"
++
++
++static const struct pci_device_id scm_pci_tbl[] = {
++	{ PCI_DEVICE(PCI_VENDOR_ID_IBM, 0x0625), },
++	{ }
++};
++
++MODULE_DEVICE_TABLE(pci, scm_pci_tbl);
++
++#define SCM_NUM_MINORS 256 // Total to reserve
++
++static dev_t scm_dev;
++static struct class *scm_class;
++static struct mutex minors_idr_lock;
++static struct idr minors_idr;
++
++static const struct attribute_group *scm_pmem_attribute_groups[] = {
++	&nvdimm_bus_attribute_group,
++	NULL,
++};
++
++static const struct attribute_group *scm_pmem_region_attribute_groups[] = {
++	&nd_region_attribute_group,
++	&nd_device_attribute_group,
++	&nd_mapping_attribute_group,
++	&nd_numa_attribute_group,
++	NULL,
++};
++
 +/**
-+ * scm_overwrite() - Overwrite all data on the card
++ * scm_ndctl_config_write() - Handle a ND_CMD_SET_CONFIG_DATA command from ndctl
++ * @scm_data: the SCM metadata
++ * @command: the incoming data to write
++ * Return: 0 on success, negative on failure
++ */
++static int scm_ndctl_config_write(struct scm_data *scm_data,
++				  struct nd_cmd_set_config_hdr *command)
++{
++	if (command->in_offset + command->in_length > SCM_LABEL_AREA_SIZE)
++		return -EINVAL;
++
++	memcpy_flushcache(scm_data->metadata_addr + command->in_offset, command->in_buf,
++			  command->in_length);
++
++	return 0;
++}
++
++/**
++ * scm_ndctl_config_read() - Handle a ND_CMD_GET_CONFIG_DATA command from ndctl
++ * @scm_data: the SCM metadata
++ * @command: the read request
++ * Return: 0 on success, negative on failure
++ */
++static int scm_ndctl_config_read(struct scm_data *scm_data,
++				 struct nd_cmd_get_config_data_hdr *command)
++{
++	if (command->in_offset + command->in_length > SCM_LABEL_AREA_SIZE)
++		return -EINVAL;
++
++	memcpy_mcsafe(command->out_buf, scm_data->metadata_addr + command->in_offset,
++		      command->in_length);
++
++	return 0;
++}
++
++/**
++ * scm_ndctl_config_size() - Handle a ND_CMD_GET_CONFIG_SIZE command from ndctl
++ * @scm_data: the SCM metadata
++ * @command: the read request
++ * Return: 0 on success, negative on failure
++ */
++static int scm_ndctl_config_size(struct nd_cmd_get_config_size *command)
++{
++	command->status = 0;
++	command->config_size = SCM_LABEL_AREA_SIZE;
++	command->max_xfer = PAGE_SIZE;
++
++	return 0;
++}
++
++static int scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
++		     struct nvdimm *nvdimm,
++		     unsigned int cmd, void *buf, unsigned int buf_len, int *cmd_rc)
++{
++	struct scm_data *scm_data = container_of(nd_desc, struct scm_data, bus_desc);
++
++	switch (cmd) {
++	case ND_CMD_GET_CONFIG_SIZE:
++		*cmd_rc = scm_ndctl_config_size(buf);
++		return 0;
++
++	case ND_CMD_GET_CONFIG_DATA:
++		*cmd_rc = scm_ndctl_config_read(scm_data, buf);
++		return 0;
++
++	case ND_CMD_SET_CONFIG_DATA:
++		*cmd_rc = scm_ndctl_config_write(scm_data, buf);
++		return 0;
++
++	default:
++		return -ENOTTY;
++	}
++}
++
++static ssize_t serial_show(struct device *dev,
++			   struct device_attribute *attr, char *buf)
++{
++	struct nvdimm *nvdimm = to_nvdimm(dev);
++	struct scm_data *scm_data = nvdimm_provider_data(nvdimm);
++	const struct ocxl_fn_config *config = ocxl_function_config(scm_data->ocxl_fn);
++
++	return sprintf(buf, "0x%llx\n", config->serial);
++}
++static DEVICE_ATTR_RO(serial);
++
++static struct attribute *scm_dimm_attributes[] = {
++	&dev_attr_serial.attr,
++	NULL,
++};
++
++static umode_t scm_dimm_attr_visible(struct kobject *kobj,
++				     struct attribute *a, int n)
++{
++	return a->mode;
++}
++
++static const struct attribute_group scm_dimm_attribute_group = {
++	.name = "ocxl",
++	.attrs = scm_dimm_attributes,
++	.is_visible = scm_dimm_attr_visible,
++};
++
++static const struct attribute_group *scm_dimm_attribute_groups[] = {
++	&nvdimm_attribute_group,
++	&nd_device_attribute_group,
++	&scm_dimm_attribute_group,
++	NULL,
++};
++
++/**
++ * scm_reserve_metadata() - Reserve space for nvdimm metadata
++ * @scm_data: The SCM device data
++ * @lpc_mem: The resource representing the LPC memory of the SCM device
++ */
++static int scm_reserve_metadata(struct scm_data *scm_data,
++				struct resource *lpc_mem)
++{
++	scm_data->metadata_addr = devm_memremap(&scm_data->dev, lpc_mem->start,
++						SCM_LABEL_AREA_SIZE, MEMREMAP_WB);
++	if (IS_ERR(scm_data->metadata_addr))
++		return PTR_ERR(scm_data->metadata_addr);
++
++	return 0;
++}
++
++/**
++ * scm_register_lpc_mem() - Discover persistent memory on a device and register it with the NVDIMM subsystem
 + * @scm_data: The SCM device data
 + * Return: 0 on success
 + */
-+int scm_overwrite(struct scm_data *scm_data)
++static int scm_register_lpc_mem(struct scm_data *scm_data)
++{
++	struct nd_region_desc region_desc;
++	struct nd_mapping_desc nd_mapping_desc;
++	struct resource *lpc_mem;
++	const struct ocxl_afu_config *config;
++	const struct ocxl_fn_config *fn_config;
++	int rc;
++	unsigned long nvdimm_cmd_mask = 0;
++	unsigned long nvdimm_flags = 0;
++	int target_node;
++	char serial[16+1];
++
++	// Set up the reserved metadata area
++	rc = ocxl_afu_map_lpc_mem(scm_data->ocxl_afu);
++	if (rc < 0)
++		return rc;
++
++	lpc_mem = ocxl_afu_lpc_mem(scm_data->ocxl_afu);
++	if (lpc_mem == NULL || lpc_mem->start == 0)
++		return -EINVAL;
++
++	config = ocxl_afu_config(scm_data->ocxl_afu);
++	fn_config = ocxl_function_config(scm_data->ocxl_fn);
++
++	rc = scm_reserve_metadata(scm_data, lpc_mem);
++	if (rc)
++		return rc;
++
++	scm_data->bus_desc.attr_groups = scm_pmem_attribute_groups;
++	scm_data->bus_desc.provider_name = "ocxl-scm";
++	scm_data->bus_desc.ndctl = scm_ndctl;
++	scm_data->bus_desc.module = THIS_MODULE;
++
++	scm_data->nvdimm_bus = nvdimm_bus_register(&scm_data->dev,
++			       &scm_data->bus_desc);
++	if (!scm_data->nvdimm_bus)
++		return -EINVAL;
++
++	scm_data->scm_res.start = (u64)lpc_mem->start + SCM_LABEL_AREA_SIZE;
++	scm_data->scm_res.end = (u64)lpc_mem->start + config->lpc_mem_size - 1;
++	scm_data->scm_res.name = "SCM persistent memory";
++
++	set_bit(ND_CMD_GET_CONFIG_SIZE, &nvdimm_cmd_mask);
++	set_bit(ND_CMD_GET_CONFIG_DATA, &nvdimm_cmd_mask);
++	set_bit(ND_CMD_SET_CONFIG_DATA, &nvdimm_cmd_mask);
++
++	set_bit(NDD_ALIASING, &nvdimm_flags);
++
++	snprintf(serial, sizeof(serial), "%llx", fn_config->serial);
++	nd_mapping_desc.nvdimm = nvdimm_create(scm_data->nvdimm_bus, scm_data,
++				 scm_dimm_attribute_groups,
++				 nvdimm_flags, nvdimm_cmd_mask,
++				 0, NULL);
++	if (!nd_mapping_desc.nvdimm)
++		return -ENOMEM;
++
++	if (nvdimm_bus_check_dimm_count(scm_data->nvdimm_bus, 1))
++		return -EINVAL;
++
++	nd_mapping_desc.start = scm_data->scm_res.start;
++	nd_mapping_desc.size = resource_size(&scm_data->scm_res);
++	nd_mapping_desc.position = 0;
++
++	scm_data->nd_set.cookie1 = fn_config->serial + 1; // allow for empty serial
++	scm_data->nd_set.cookie2 = fn_config->serial + 1;
++
++	target_node = of_node_to_nid(scm_data->pdev->dev.of_node);
++
++	memset(&region_desc, 0, sizeof(region_desc));
++	region_desc.res = &scm_data->scm_res;
++	region_desc.attr_groups = scm_pmem_region_attribute_groups;
++	region_desc.numa_node = NUMA_NO_NODE;
++	region_desc.target_node = target_node;
++	region_desc.num_mappings = 1;
++	region_desc.mapping = &nd_mapping_desc;
++	region_desc.nd_set = &scm_data->nd_set;
++
++	set_bit(ND_REGION_PAGEMAP, &region_desc.flags);
++	/*
++	 * NB: libnvdimm copies the data from ndr_desc into it's own
++	 * structures so passing a stack pointer is fine.
++	 */
++	scm_data->nd_region = nvdimm_pmem_region_create(scm_data->nvdimm_bus,
++			      &region_desc);
++	if (!scm_data->nd_region)
++		return -EINVAL;
++
++	dev_info(&scm_data->dev,
++		 "Onlining %lluMB of persistent memory\n",
++		 nd_mapping_desc.size / SZ_1M);
++
++	return 0;
++}
++
++/**
++ * allocate_scm_minor() - Allocate a minor number to use for an SCM device
++ * @scm_data: The SCM device to associate the minor with
++ * Return: the allocated minor number
++ */
++static int allocate_scm_minor(struct scm_data *scm_data)
++{
++	int minor;
++
++	mutex_lock(&minors_idr_lock);
++	minor = idr_alloc(&minors_idr, scm_data, 0, SCM_NUM_MINORS, GFP_KERNEL);
++	mutex_unlock(&minors_idr_lock);
++	return minor;
++}
++
++static void free_scm_minor(struct scm_data *scm_data)
++{
++	mutex_lock(&minors_idr_lock);
++	idr_remove(&minors_idr, MINOR(scm_data->dev.devt));
++	mutex_unlock(&minors_idr_lock);
++}
++
++/**
++ * free_scm() - Free all members of an SCM struct
++ * @scm_data: the SCM metadata to clear
++ */
++static void free_scm(struct scm_data *scm_data)
 +{
 +	int rc;
 +
-+	mutex_lock(&scm_data->ns_command.lock);
++	if (scm_data->nvdimm_bus)
++		nvdimm_bus_unregister(scm_data->nvdimm_bus);
 +
-+	rc = scm_ns_command_request(scm_data, NS_COMMAND_SECURE_ERASE);
-+	if (rc)
-+		goto out;
++	free_scm_minor(scm_data);
 +
-+	rc = scm_ns_command_execute(scm_data);
-+	if (rc)
-+		goto out;
++	if (scm_data->metadata_addr)
++		devm_memunmap(&scm_data->dev, scm_data->metadata_addr);
 +
-+	scm_data->overwrite_state = SCM_OVERWRITE_BUSY;
++	if (scm_data->ocxl_context) {
++		rc = ocxl_context_detach(scm_data->ocxl_context);
++		if (rc == -EBUSY)
++			dev_warn(&scm_data->dev, "Timeout detaching ocxl context\n");
++		else
++			ocxl_context_free(scm_data->ocxl_context);
 +
-+	return 0;
++	}
 +
-+out:
-+	mutex_unlock(&scm_data->ns_command.lock);
++	if (scm_data->ocxl_afu)
++		ocxl_afu_put(scm_data->ocxl_afu);
++
++	if (scm_data->ocxl_fn)
++		ocxl_function_close(scm_data->ocxl_fn);
++
++	kfree(scm_data);
++}
++
++/**
++ * free_scm_dev - Free an SCM device
++ * @dev: The device struct
++ */
++static void free_scm_dev(struct device *dev)
++{
++	struct scm_data *scm_data = container_of(dev, struct scm_data, dev);
++
++	free_scm(scm_data);
++}
++
++/**
++ * scm_register - Register an SCM device with the kernel
++ * @scm_data: the SCM metadata
++ * Return: 0 on success, negative on failure
++ */
++static int scm_register(struct scm_data *scm_data)
++{
++	int rc;
++	int minor = allocate_scm_minor(scm_data);
++
++	if (minor < 0)
++		return minor;
++
++	scm_data->dev.release = free_scm_dev;
++	rc = dev_set_name(&scm_data->dev, "ocxl-scm%d", minor);
++	if (rc < 0)
++		return rc;
++
++	scm_data->dev.devt = MKDEV(MAJOR(scm_dev), minor);
++	scm_data->dev.class = scm_class;
++	scm_data->dev.parent = &scm_data->pdev->dev;
++
++	rc = device_register(&scm_data->dev);
 +	return rc;
 +}
 +
 +/**
-+ * scm_secop_overwrite() - Overwrite all data on the card
-+ * @nvdimm: The nvdimm representation of the SCM device to start the overwrite on
-+ * @key_data: Unused (no security key implementation)
-+ * Return: 0 on success
++ * scm_remove() - Free an OpenCAPI Storage Class Memory device
++ * @pdev: the PCI device information struct
 + */
-+static int scm_secop_overwrite(struct nvdimm *nvdimm,
-+			       const struct nvdimm_key_data *key_data)
++static void scm_remove(struct pci_dev *pdev)
 +{
-+	struct scm_data *scm_data = nvdimm_provider_data(nvdimm);
++	if (PCI_FUNC(pdev->devfn) == 0) {
++		struct scm_function_0 *scm_func_0 = pci_get_drvdata(pdev);
 +
-+	return scm_overwrite(scm_data);
++		if (scm_func_0) {
++			ocxl_function_close(scm_func_0->ocxl_fn);
++			scm_func_0->ocxl_fn = NULL;
++		}
++	} else {
++		struct scm_data *scm_data = pci_get_drvdata(pdev);
++
++		if (scm_data)
++			device_unregister(&scm_data->dev);
++	}
 +}
 +
 +/**
-+ * scm_secop_query_overwrite() - Get the current overwrite state
-+ * @nvdimm: The nvdimm representation of the SCM device to start the overwrite on
-+ * Return: 0 if successful or idle, -EBUSY if busy, -EFAULT if failed
++ * scm_probe_function_0 - Set up function 0 for an OpenCAPI Storage Class Memory device
++ * This is important as it enables templates higher than 0 across all other functions,
++ * which in turn enables higher bandwidth accesses
++ * which in turn enables higher bandwidth accesses
++ * @pdev: the PCI device information struct
++ * Return: 0 on success, negative on failure
 + */
-+static int scm_secop_query_overwrite(struct nvdimm *nvdimm)
++static int scm_probe_function_0(struct pci_dev *pdev)
 +{
-+	struct scm_data *scm_data = nvdimm_provider_data(nvdimm);
++	struct scm_function_0 *scm_func_0 = NULL;
++	struct ocxl_fn *fn;
 +
-+	if (scm_data->overwrite_state == SCM_OVERWRITE_BUSY)
-+		return -EBUSY;
++	scm_func_0 = kzalloc(sizeof(*scm_func_0), GFP_KERNEL);
++	if (!scm_func_0)
++		return -ENOMEM;
 +
-+	if (scm_data->overwrite_state == SCM_OVERWRITE_FAILED)
-+		return -EFAULT;
++	scm_func_0->pdev = pdev;
++	fn = ocxl_function_open(pdev);
++	if (IS_ERR(fn)) {
++		kfree(scm_func_0);
++		dev_err(&pdev->dev, "failed to open OCXL function\n");
++		return PTR_ERR(fn);
++	}
++	scm_func_0->ocxl_fn = fn;
++
++	pci_set_drvdata(pdev, scm_func_0);
 +
 +	return 0;
 +}
 +
 +/**
-+ * scm_secop_get_flags() - return the security flags for the SCM device
++ * scm_probe - Init an OpenCAPI Storage Class Memory device
++ * @pdev: the PCI device information struct
++ * @ent: The entry from scm_pci_tbl
++ * Return: 0 on success, negative on failure
 + */
-+static unsigned long scm_secop_get_flags(struct nvdimm *nvdimm,
-+		enum nvdimm_passphrase_type ptype)
++static int scm_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 +{
-+	struct scm_data *scm_data = nvdimm_provider_data(nvdimm);
++	struct scm_data *scm_data = NULL;
 +
-+	if (scm_data->overwrite_state == SCM_OVERWRITE_BUSY)
-+		return BIT(NVDIMM_SECURITY_OVERWRITE);
++	if (PCI_FUNC(pdev->devfn) == 0)
++		return scm_probe_function_0(pdev);
++	else if (PCI_FUNC(pdev->devfn) != 1)
++		return 0;
 +
-+	return BIT(NVDIMM_SECURITY_DISABLED);
-+}
-+
-+static const struct nvdimm_security_ops sec_ops  = {
-+	.get_flags = scm_secop_get_flags,
-+	.overwrite = scm_secop_overwrite,
-+	.query_overwrite = scm_secop_query_overwrite,
-+};
-+
- /**
-  * scm_register_lpc_mem() - Discover persistent memory on a device and register it with the NVDIMM subsystem
-  * @scm_data: The SCM device data
-@@ -224,10 +304,10 @@ static int scm_register_lpc_mem(struct scm_data *scm_data)
- 	set_bit(NDD_ALIASING, &nvdimm_flags);
- 
- 	snprintf(serial, sizeof(serial), "%llx", fn_config->serial);
--	nd_mapping_desc.nvdimm = nvdimm_create(scm_data->nvdimm_bus, scm_data,
-+	nd_mapping_desc.nvdimm = __nvdimm_create(scm_data->nvdimm_bus, scm_data,
- 				 scm_dimm_attribute_groups,
- 				 nvdimm_flags, nvdimm_cmd_mask,
--				 0, NULL);
-+				 0, NULL, serial, &sec_ops);
- 	if (!nd_mapping_desc.nvdimm)
- 		return -ENOMEM;
- 
-@@ -1530,6 +1610,83 @@ static void scm_dump_error_log(struct scm_data *scm_data)
- 	kfree(buf);
- }
- 
-+static void scm_handle_nscra_doorbell(struct scm_data *scm_data)
-+{
-+	int rc;
-+
-+	if (scm_data->ns_command.op_code == NS_COMMAND_SECURE_ERASE) {
-+		u64 success, attempted;
-+
-+
-+		rc = scm_ns_response(scm_data);
-+		if (rc < 0) {
-+			scm_data->overwrite_state = SCM_OVERWRITE_FAILED;
-+			mutex_unlock(&scm_data->ns_command.lock);
-+			return;
-+		}
-+		if (rc != STATUS_SUCCESS)
-+			scm_warn_status(scm_data, "Unexpected status from overwrite", rc);
-+
-+		rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
-+					     scm_data->ns_command.response_offset +
-+					     NS_RESPONSE_SECURE_ERASE_ACCESSIBLE_SUCCESS,
-+					     OCXL_HOST_ENDIAN, &success);
-+		if (rc) {
-+			scm_data->overwrite_state = SCM_OVERWRITE_FAILED;
-+			mutex_unlock(&scm_data->ns_command.lock);
-+			return;
-+		}
-+
-+		rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
-+					     scm_data->ns_command.response_offset +
-+					     NS_RESPONSE_SECURE_ERASE_ACCESSIBLE_ATTEMPTED,
-+					     OCXL_HOST_ENDIAN, &attempted);
-+		if (rc) {
-+			scm_data->overwrite_state = SCM_OVERWRITE_FAILED;
-+			mutex_unlock(&scm_data->ns_command.lock);
-+			return;
-+		}
-+
-+		scm_data->overwrite_state = SCM_OVERWRITE_SUCCESS;
-+		if (success != attempted)
-+			scm_data->overwrite_state = SCM_OVERWRITE_FAILED;
-+
-+		dev_info(&scm_data->dev,
-+			 "Overwritten %llu/%llu accessible pages", success, attempted);
-+
-+		rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
-+					     scm_data->ns_command.response_offset +
-+					     NS_RESPONSE_SECURE_ERASE_DEFECTIVE_SUCCESS,
-+					     OCXL_HOST_ENDIAN, &success);
-+		if (rc) {
-+			scm_data->overwrite_state = SCM_OVERWRITE_FAILED;
-+			mutex_unlock(&scm_data->ns_command.lock);
-+			return;
-+		}
-+
-+		rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
-+					     scm_data->ns_command.response_offset +
-+					     NS_RESPONSE_SECURE_ERASE_DEFECTIVE_ATTEMPTED,
-+					     OCXL_HOST_ENDIAN, &attempted);
-+		if (rc) {
-+			scm_data->overwrite_state = SCM_OVERWRITE_FAILED;
-+			mutex_unlock(&scm_data->ns_command.lock);
-+			return;
-+		}
-+
-+		if (success != attempted)
-+			scm_data->overwrite_state = SCM_OVERWRITE_FAILED;
-+
-+		dev_info(&scm_data->dev,
-+			 "Overwritten %llu/%llu defective pages", success, attempted);
-+
-+		scm_ns_response_handled(scm_data);
-+
-+		mutex_unlock(&scm_data->ns_command.lock);
-+		return;
++	scm_data = kzalloc(sizeof(*scm_data), GFP_KERNEL);
++	if (!scm_data) {
++		dev_err(&pdev->dev, "Could not allocate SCM metadata\n");
++		goto err;
 +	}
++	scm_data->pdev = pdev;
++
++	pci_set_drvdata(pdev, scm_data);
++
++	scm_data->ocxl_fn = ocxl_function_open(pdev);
++	if (IS_ERR(scm_data->ocxl_fn)) {
++		kfree(scm_data);
++		scm_data = NULL;
++		pci_set_drvdata(pdev, NULL);
++		dev_err(&pdev->dev, "failed to open OCXL function\n");
++		goto err;
++	}
++
++	scm_data->ocxl_afu = ocxl_function_fetch_afu(scm_data->ocxl_fn, 0);
++	if (scm_data->ocxl_afu == NULL) {
++		dev_err(&pdev->dev, "Could not get OCXL AFU from function\n");
++		goto err;
++	}
++
++	ocxl_afu_get(scm_data->ocxl_afu);
++
++	if (scm_register(scm_data) < 0) {
++		dev_err(&pdev->dev, "Could not register SCM device with the kernel\n");
++		goto err;
++	}
++
++	// Resources allocated below here are cleaned up in the release handler
++
++	if (ocxl_context_alloc(&scm_data->ocxl_context, scm_data->ocxl_afu, NULL)) {
++		dev_err(&pdev->dev, "Could not allocate OCXL context\n");
++		goto err;
++	}
++
++	if (ocxl_context_attach(scm_data->ocxl_context, 0, NULL)) {
++		dev_err(&pdev->dev, "Could not attach ocxl context\n");
++		goto err;
++	}
++
++	if (scm_register_lpc_mem(scm_data)) {
++		dev_err(&pdev->dev, "Could not register OCXL SCM memory with libnvdimm\n");
++		goto err;
++	}
++
++	return 0;
++
++err:
++	/*
++	 * Further cleanup is done in the release handler via free_scm()
++	 * This allows us to keep the character device live to handle IOCTLs to
++	 * investigate issues if the card has an error
++	 */
++
++	dev_err(&pdev->dev,
++		"Error detected, will not register storage class memory\n");
++	return -ENXIO;
 +}
 +
- static irqreturn_t scm_imn0_handler(void *private)
- {
- 	struct scm_data *scm_data = private;
-@@ -1537,6 +1694,9 @@ static irqreturn_t scm_imn0_handler(void *private)
- 
- 	(void)scm_chi(scm_data, &chi);
- 
-+	if (chi & GLOBAL_MMIO_CHI_NSCRA)
-+		scm_handle_nscra_doorbell(scm_data);
-+
- 	if (chi & GLOBAL_MMIO_CHI_ELA) {
- 		dev_warn(&scm_data->dev, "Error log is available\n");
- 
-diff --git a/drivers/nvdimm/ocxl/scm_internal.c b/drivers/nvdimm/ocxl/scm_internal.c
-index 8fc849610eaa..db919a23c69b 100644
---- a/drivers/nvdimm/ocxl/scm_internal.c
-+++ b/drivers/nvdimm/ocxl/scm_internal.c
-@@ -173,6 +173,7 @@ int scm_ns_response_handled(const struct scm_data *scm_data)
- 				      OCXL_LITTLE_ENDIAN, GLOBAL_MMIO_CHI_NSCRA);
- }
- 
-+
- void scm_warn_status(const struct scm_data *scm_data, const char *message,
- 		     u8 status)
- {
-diff --git a/drivers/nvdimm/ocxl/scm_internal.h b/drivers/nvdimm/ocxl/scm_internal.h
-index af19813a7f75..4a29088612a9 100644
---- a/drivers/nvdimm/ocxl/scm_internal.h
-+++ b/drivers/nvdimm/ocxl/scm_internal.h
-@@ -70,6 +70,15 @@
- #define ADMIN_COMMAND_CMD_CAPS		0x08u
- #define ADMIN_COMMAND_MAX		0x08u
- 
-+#define NS_COMMAND_SECURE_ERASE	0x20ull
-+
-+#define NS_RESPONSE_SECURE_ERASE_ACCESSIBLE_SUCCESS 0x20
-+#define NS_RESPONSE_SECURE_ERASE_ACCESSIBLE_ATTEMPTED 0x28
-+#define NS_RESPONSE_SECURE_ERASE_DEFECTIVE_SUCCESS 0x30
-+#define NS_RESPONSE_SECURE_ERASE_DEFECTIVE_ATTEMPTED 0x38
-+
-+
-+
- #define STATUS_SUCCESS		0x00
- #define STATUS_MEM_UNAVAILABLE	0x20
- #define STATUS_BAD_OPCODE	0x50
-@@ -99,6 +108,13 @@ struct scm_function_0 {
- 	struct ocxl_fn *ocxl_fn;
- };
- 
-+enum overwrite_state {
-+	SCM_OVERWRITE_IDLE = 0,
-+	SCM_OVERWRITE_BUSY,
-+	SCM_OVERWRITE_SUCCESS,
-+	SCM_OVERWRITE_FAILED
++static struct pci_driver scm_pci_driver = {
++	.name = "ocxl-scm",
++	.id_table = scm_pci_tbl,
++	.probe = scm_probe,
++	.remove = scm_remove,
++	.shutdown = scm_remove,
 +};
 +
- struct scm_data {
- 	struct device dev;
- 	struct pci_dev *pdev;
-@@ -116,6 +132,7 @@ struct scm_data {
- 	void *metadata_addr;
- 	struct command_metadata admin_command;
- 	struct command_metadata ns_command;
-+	enum overwrite_state overwrite_state;
- 	struct resource scm_res;
- 	struct nd_region *nd_region;
- 	struct eventfd_ctx *ev_ctx;
++static int __init scm_init(void)
++{
++	int rc = 0;
++
++	rc = pci_register_driver(&scm_pci_driver);
++	if (rc)
++		return rc;
++
++	return 0;
++}
++
++static void scm_exit(void)
++{
++	pci_unregister_driver(&scm_pci_driver);
++}
++
++module_init(scm_init);
++module_exit(scm_exit);
++
++MODULE_DESCRIPTION("Storage Class Memory");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/nvdimm/ocxl/scm_internal.h b/drivers/nvdimm/ocxl/scm_internal.h
+new file mode 100644
+index 000000000000..6340012e0f8a
+--- /dev/null
++++ b/drivers/nvdimm/ocxl/scm_internal.h
+@@ -0,0 +1,28 @@
++// SPDX-License-Identifier: GPL-2.0+
++// Copyright 2019 IBM Corp.
++
++#include <linux/pci.h>
++#include <misc/ocxl.h>
++#include <linux/libnvdimm.h>
++#include <linux/mm.h>
++
++#define SCM_LABEL_AREA_SIZE	(1UL << PA_SECTION_SHIFT)
++
++struct scm_function_0 {
++	struct pci_dev *pdev;
++	struct ocxl_fn *ocxl_fn;
++};
++
++struct scm_data {
++	struct device dev;
++	struct pci_dev *pdev;
++	struct ocxl_fn *ocxl_fn;
++	struct nd_interleave_set nd_set;
++	struct nvdimm_bus_descriptor bus_desc;
++	struct nvdimm_bus *nvdimm_bus;
++	struct ocxl_afu *ocxl_afu;
++	struct ocxl_context *ocxl_context;
++	void *metadata_addr;
++	struct resource scm_res;
++	struct nd_region *nd_region;
++};
 -- 
 2.23.0
 
