@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D50F9C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E2BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A83DD2073C
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4198920803
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412711;
-	bh=OctZyAQ5oT6et3iOr6pcJzgVHWL+2dgefaniPGCIhEU=;
+	s=default; t=1575412714;
+	bh=9dFJH4pPKlk5GhffhpQUM7dSEIwNSARrX0h+XxeiS18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dcbdqMnQGdHg9B4qdgGMO6JMdLizzGoO/OdZdsHl1akRC1VqQ9LRpeLVMAuoDe4ZD
-	 6paNoGdH9MePMQ6ujahBOQWRAUqleXF27l1R7LuEB/WwxeWwQgCC5UdJ50f3Qe1fV+
-	 GGeohp3etLpNY9fSA4urz05ALQP8BfILCn+JeyAE=
+	b=XSWD5QDK3TTe0aApVng7D904dp5FqO6yGtKv0TYYA4mldlwbDMWhbgkghlK/mKvh+
+	 m2IKcZKoJ825mB+X/FN3j7YKcr9iOz7VOa8dka+8Px9tFDl6qjCj6yVYQ5qkFFvsPc
+	 yF9R480FF30g32kl+FZ6owmHOoXYY6WXJ0bhcqP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727666AbfLCWib (ORCPT
+        id S1728020AbfLCWid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:38:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47544 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:38:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727989AbfLCWi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:38:27 -0500
+        id S1728005AbfLCWi3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:38:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4516120684;
-        Tue,  3 Dec 2019 22:38:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA27120684;
+        Tue,  3 Dec 2019 22:38:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412706;
-        bh=OctZyAQ5oT6et3iOr6pcJzgVHWL+2dgefaniPGCIhEU=;
+        s=default; t=1575412709;
+        bh=9dFJH4pPKlk5GhffhpQUM7dSEIwNSARrX0h+XxeiS18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nd7CmYGKyWA6t3DrZNGF+jyzW1Abftz5XXErXT7T+6giZkquG6Vvf62mCYBRk2Ezb
-         gtPopFe/IHDDH7J2joI0fv7Jvn5Hx3cU0rpS4BSGk32TDeoZTjm9b9StJnrtLWgWJ2
-         IaaCJICQ6Svxw6hcuJDoEEFwo+dI5uufGZ3lrgC0=
+        b=NrsBZ35hv2/L+9+GwdaL/ONME8t97sunjN1Io1vLw8Muz5MOtEOJ28Df3b1vdi00P
+         LwFDS1uCwdw5VWBlyYGdF0+E6e+7OUFgq8m4BahkVFV9PSya7VQo2IZPBAfCQHqmt5
+         j4rC3lTVza4BN/9j8zH2j7yVhZM8RXb2FS4OBJMU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Simon Horman <simon.horman@netronome.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 32/46] selftests/tls: add a test for fragmented messages
-Date:   Tue,  3 Dec 2019 23:35:52 +0100
-Message-Id: <20191203212749.716161553@linuxfoundation.org>
+Subject: [PATCH 5.4 33/46] net/tls: remove the dead inplace_crypto code
+Date:   Tue,  3 Dec 2019 23:35:53 +0100
+Message-Id: <20191203212753.658284453@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203212705.175425505@linuxfoundation.org>
 References: <20191203212705.175425505@linuxfoundation.org>
@@ -63,94 +63,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit 65190f77424d7b82c4aad7326c9cce6bd91a2fcc ]
+[ Upstream commit 9e5ffed37df68d0ccfb2fdc528609e23a1e70ebe ]
 
-Add a sendmsg test with very fragmented messages. This should
-fill up sk_msg and test the boundary conditions.
+Looks like when BPF support was added by commit d3b18ad31f93
+("tls: add bpf support to sk_msg handling") and
+commit d829e9c4112b ("tls: convert to generic sk_msg interface")
+it broke/removed the support for in-place crypto as added by
+commit 4e6d47206c32 ("tls: Add support for inplace records
+encryption").
+
+The inplace_crypto member of struct tls_rec is dead, inited
+to zero, and sometimes set to zero again. It used to be
+set to 1 when record was allocated, but the skmsg code doesn't
+seem to have been written with the idea of in-place crypto
+in mind.
+
+Since non trivial effort is required to bring the feature back
+and we don't really have the HW to measure the benefit just
+remove the left over support for now to avoid confusing readers.
 
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Reviewed-by: Simon Horman <simon.horman@netronome.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/net/tls.c |   60 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+ include/net/tls.h |    1 -
+ net/tls/tls_sw.c  |    6 +-----
+ 2 files changed, 1 insertion(+), 6 deletions(-)
 
---- a/tools/testing/selftests/net/tls.c
-+++ b/tools/testing/selftests/net/tls.c
-@@ -268,6 +268,38 @@ TEST_F(tls, sendmsg_single)
- 	EXPECT_EQ(memcmp(buf, test_str, send_len), 0);
- }
+--- a/include/net/tls.h
++++ b/include/net/tls.h
+@@ -122,7 +122,6 @@ struct tls_rec {
+ 	struct list_head list;
+ 	int tx_ready;
+ 	int tx_flags;
+-	int inplace_crypto;
  
-+#define MAX_FRAGS	64
-+#define SEND_LEN	13
-+TEST_F(tls, sendmsg_fragmented)
-+{
-+	char const *test_str = "test_sendmsg";
-+	char buf[SEND_LEN * MAX_FRAGS];
-+	struct iovec vec[MAX_FRAGS];
-+	struct msghdr msg;
-+	int i, frags;
-+
-+	for (frags = 1; frags <= MAX_FRAGS; frags++) {
-+		for (i = 0; i < frags; i++) {
-+			vec[i].iov_base = (char *)test_str;
-+			vec[i].iov_len = SEND_LEN;
-+		}
-+
-+		memset(&msg, 0, sizeof(struct msghdr));
-+		msg.msg_iov = vec;
-+		msg.msg_iovlen = frags;
-+
-+		EXPECT_EQ(sendmsg(self->fd, &msg, 0), SEND_LEN * frags);
-+		EXPECT_EQ(recv(self->cfd, buf, SEND_LEN * frags, MSG_WAITALL),
-+			  SEND_LEN * frags);
-+
-+		for (i = 0; i < frags; i++)
-+			EXPECT_EQ(memcmp(buf + SEND_LEN * i,
-+					 test_str, SEND_LEN), 0);
-+	}
-+}
-+#undef MAX_FRAGS
-+#undef SEND_LEN
-+
- TEST_F(tls, sendmsg_large)
- {
- 	void *mem = malloc(16384);
-@@ -694,6 +726,34 @@ TEST_F(tls, recv_lowat)
- 	EXPECT_EQ(memcmp(send_mem, recv_mem + 10, 5), 0);
- }
+ 	struct sk_msg msg_plaintext;
+ 	struct sk_msg msg_encrypted;
+--- a/net/tls/tls_sw.c
++++ b/net/tls/tls_sw.c
+@@ -705,8 +705,7 @@ static int tls_push_record(struct sock *
+ 	}
  
-+TEST_F(tls, recv_rcvbuf)
-+{
-+	char send_mem[4096];
-+	char recv_mem[4096];
-+	int rcv_buf = 1024;
-+
-+	memset(send_mem, 0x1c, sizeof(send_mem));
-+
-+	EXPECT_EQ(setsockopt(self->cfd, SOL_SOCKET, SO_RCVBUF,
-+			     &rcv_buf, sizeof(rcv_buf)), 0);
-+
-+	EXPECT_EQ(send(self->fd, send_mem, 512, 0), 512);
-+	memset(recv_mem, 0, sizeof(recv_mem));
-+	EXPECT_EQ(recv(self->cfd, recv_mem, sizeof(recv_mem), 0), 512);
-+	EXPECT_EQ(memcmp(send_mem, recv_mem, 512), 0);
-+
-+	if (self->notls)
-+		return;
-+
-+	EXPECT_EQ(send(self->fd, send_mem, 4096, 0), 4096);
-+	memset(recv_mem, 0, sizeof(recv_mem));
-+	EXPECT_EQ(recv(self->cfd, recv_mem, sizeof(recv_mem), 0), -1);
-+	EXPECT_EQ(errno, EMSGSIZE);
-+
-+	EXPECT_EQ(recv(self->cfd, recv_mem, sizeof(recv_mem), 0), -1);
-+	EXPECT_EQ(errno, EMSGSIZE);
-+}
-+
- TEST_F(tls, bidir)
- {
- 	char const *test_str = "test_read";
+ 	i = msg_pl->sg.start;
+-	sg_chain(rec->sg_aead_in, 2, rec->inplace_crypto ?
+-		 &msg_en->sg.data[i] : &msg_pl->sg.data[i]);
++	sg_chain(rec->sg_aead_in, 2, &msg_pl->sg.data[i]);
+ 
+ 	i = msg_en->sg.end;
+ 	sk_msg_iter_var_prev(i);
+@@ -971,8 +970,6 @@ alloc_encrypted:
+ 			if (ret)
+ 				goto fallback_to_reg_send;
+ 
+-			rec->inplace_crypto = 0;
+-
+ 			num_zc++;
+ 			copied += try_to_copy;
+ 
+@@ -1171,7 +1168,6 @@ alloc_payload:
+ 
+ 		tls_ctx->pending_open_record_frags = true;
+ 		if (full_record || eor || sk_msg_full(msg_pl)) {
+-			rec->inplace_crypto = 0;
+ 			ret = bpf_exec_tx_verdict(msg_pl, sk, full_record,
+ 						  record_type, &copied, flags);
+ 			if (ret) {
 
 
