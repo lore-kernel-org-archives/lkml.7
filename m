@@ -4,69 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AAE9C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E86C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A2892080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C2F12073C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:15:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575411309;
-	bh=uxAYgjvrlHNlmiCCJJqc9Q/JExua1lXYWmd3ARgKnts=;
+	s=default; t=1575411325;
+	bh=pj39nrOFe4ea65wljyfcc7xFstiw+bxs5FMiUkLk6AI=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Im3QTVVGJrEznF6UjRVnfKdrvQzCnCJwIZNRDgaQtkK3EDA2s/qz0vAnFftYfwf7U
-	 6YAY+g9IZINXHA81tx4ep/qwg+XBHFlwTXVeT4iuiWMKmUeamFwRcoJMG3ia76Yzib
-	 /ahEzcH9Ankiyxt8KMuMeCsXsip9es+aUnxlCXmk=
+	b=FSwWzcj7BcQL1918p8p1vhNIK1CSg3AMeCKF0lORyMjxYfpThM+0Sfygw4CgyAayR
+	 bxufVAJd4cURkwMhcmbvkqb+No330uK/o7wS4pqKOAbMpUuprEl+Khyr8y4a/rdiCU
+	 lEjGH2QvMneTI59TVhzC5DqqYfkgYpxcAT2bJqsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbfLCWPI (ORCPT
+        id S1727877AbfLCWPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:15:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60678 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:15:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727836AbfLCWPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:15:05 -0500
-Subject: Re: [GIT PULL] iomap: small cleanups for 5.5
+        id S1727865AbfLCWPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:15:24 -0500
+Subject: Re: [GIT PULL] PCI changes for v5.5
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575411305;
-        bh=uxAYgjvrlHNlmiCCJJqc9Q/JExua1lXYWmd3ARgKnts=;
+        s=default; t=1575411323;
+        bh=pj39nrOFe4ea65wljyfcc7xFstiw+bxs5FMiUkLk6AI=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=kRoYWwWl0CPBdqprVYYTyLwIi8ius2GbIqlj69oudyF3ehvVhfIlHd0eDNdCNsok4
-         GzHPk8SsiAeGOW7ONJH3IWp1P0UfPV47gMy+Z0pjaXEE8Uig+7B3zyjlOu+jO0Qhvp
-         04OfXS/BGnJJndqMZNaV+4gHYtwiapbON1EnSD9g=
+        b=1fRMOR7fgozNo7pYi66IRj6zoajymfMi3CWRe8qxSeTENVQUkJsHaPs3xjP9hs7f6
+         A1E6f6xl2gpF12CM9067NRzSdFCNzJYsSDGo00o+dLjgcmQMK9v3uUF95CMiPxW/a+
+         E6DIH50ssZa7uo5m08nmvDxhIU42omWsdXoDlD5Q=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191203160856.GC7323@magnolia>
-References: <20191203160856.GC7323@magnolia>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191203160856.GC7323@magnolia>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
- tags/iomap-5.5-merge-13
-X-PR-Tracked-Commit-Id: 88cfd30e188fcf6fd8304586c936a6f22fb665e5
+In-Reply-To: <20191202234123.GA146608@google.com>
+References: <20191202234123.GA146608@google.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191202234123.GA146608@google.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
+ tags/pci-v5.5-changes
+X-PR-Tracked-Commit-Id: 7e124c40517218e079e580909de2652bddb60ff5
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2a31aca5006749f7d4655836c61d4a53bfae8e53
-Message-Id: <157541130508.3528.9113610201591318656.pr-tracker-bot@kernel.org>
-Date:   Tue, 03 Dec 2019 22:15:05 +0000
-To:     "Darrick J. Wong" <djwong@kernel.org>
+X-PR-Merge-Commit-Id: c3bed3b20e40ab44b98ac5f0471a5bd92a802f5a
+Message-Id: <157541132361.3528.5996115518433913641.pr-tracker-bot@kernel.org>
+Date:   Tue, 03 Dec 2019 22:15:23 +0000
+To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de, agruenba@redhat.com,
-        rpeterso@redhat.com, cluster-devel@redhat.com,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 3 Dec 2019 08:08:56 -0800:
+The pull request you sent on Mon, 2 Dec 2019 17:41:23 -0600:
 
-> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/iomap-5.5-merge-13
+> git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.5-changes
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2a31aca5006749f7d4655836c61d4a53bfae8e53
+https://git.kernel.org/torvalds/c/c3bed3b20e40ab44b98ac5f0471a5bd92a802f5a
 
 Thank you!
 
