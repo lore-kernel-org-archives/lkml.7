@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A1DC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0AEC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A9C12084F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE27320684
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412791;
-	bh=bfJajeQIb8sijPheFihRNFkc21fQtvyr5jOXGk+0Q/Y=;
+	s=default; t=1575412797;
+	bh=6xyK8o/gOgI9IfBK/zYzjcmDxtLo1/v0Rv2IftUjTrg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XzuwVxa55WQB54FfFJnXtYdBPa1FzGXdEK/NideYejin8znz4RrGsSlPp728cpHQb
-	 +y2Ac6Nw8inzqOP0XxDYdtNiaHKOLFPVTTlNuKITkZWMuqd7gb4G+Tour/ZLjeOx0C
-	 CI9wHaAW/ERRLBVR0q1xoTpa+8CalwyHb3JUnQZQ=
+	b=pCc1jl/hvi/pCNiC1YmffTqyjBkHraaKCf9W1B7LkL7scEDJkVK+39KEKDcV2RAHc
+	 QNON4EGu+WSU18bEee6Wi60WiYFqd6POh4fCzH+/b7wPi3lpyJiP+OPpE8+5MBln5z
+	 jWy5/rG3Nd82sBvNva9HTzzRhiisXDFzzo36dIPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbfLCWjt (ORCPT
+        id S1727741AbfLCWjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:39:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50588 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:39:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727967AbfLCWjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:39:47 -0500
+        id S1727963AbfLCWjw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:39:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CA062080F;
-        Tue,  3 Dec 2019 22:39:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B39D20862;
+        Tue,  3 Dec 2019 22:39:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412786;
-        bh=bfJajeQIb8sijPheFihRNFkc21fQtvyr5jOXGk+0Q/Y=;
+        s=default; t=1575412792;
+        bh=6xyK8o/gOgI9IfBK/zYzjcmDxtLo1/v0Rv2IftUjTrg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rgXFbPpAoullQmKd+0BRTaAkHr2eeALRyfrFz1xMUBHTiV4JsgUz9jRCqBpuiOPYL
-         OBJvZKIDu5G8Lq2kDezjN9KhumU/WiVpyo7cVCs8bQs8ri0BahNgqR6E7IhR2y34Dm
-         +JUc0N8D1ZD7LVcOtcyyCmfx+AIxsOktOovC6QHs=
+        b=MSPNWdEdUADByHjRADBvQjVs6zURtZxb8EiNfU5mw/SOM375y/dxAjuuBYUaT0yQs
+         N1yEpLiAqIJxSq5MDsEHZ4U8zhrc0anutmFzCBRJFLY3WMKt9eeWrxrV7v5CCXK0RB
+         7BUdyHI0sn9Fczz98UEshzQidFXKhoAzbF8i+NAw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        "Reported-by: Marian Mihailescu" <mihailescu2m@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 017/135] ASoC: kirkwood: fix device remove ordering
-Date:   Tue,  3 Dec 2019 23:34:17 +0100
-Message-Id: <20191203213009.198177109@linuxfoundation.org>
+Subject: [PATCH 5.3 019/135] clk: samsung: exynos5420: Preserve PLL configuration during suspend/resume
+Date:   Tue,  3 Dec 2019 23:34:19 +0100
+Message-Id: <20191203213009.670464810@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -60,59 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit dc39596a906d5b604f4e64597b6e904fc14625e8 ]
+[ Upstream commit e9323b664ce29547d996195e8a6129a351c39108 ]
 
-The devm conversion of kirkwood was incorrect; on removal, devm takes
-effect after the "remove" function has returned.  So, the effect of
-the conversion was to change the order during remove from:
+Properly save and restore all top PLL related configuration registers
+during suspend/resume cycle. So far driver only handled EPLL and RPLL
+clocks, all other were reset to default values after suspend/resume cycle.
+This caused for example lower G3D (MALI Panfrost) performance after system
+resume, even if performance governor has been selected.
 
-  - snd_soc_unregister_component() (unpublishes interfaces)
-  - clk_disable_unprepare()
-  - cleanup resources
-
-After the conversion, this became:
-
-  - clk_disable_unprepare() - while the device may still be active
-  - snd_soc_unregister_component()
-  - cleanup resources
-
-Hence, it introduces a bug, where the internal clock for the device
-may be shut down before the device itself has been shut down.  It is
-known that Marvell SoCs, including Dove, locks up if registers for a
-peripheral that has its clocks disabled are accessed.
-
-Fixes: f98fc0f8154e ("ASoC: kirkwood: replace platform to component")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Link: https://lore.kernel.org/r/E1iNGyP-0004oN-BA@rmk-PC.armlinux.org.uk
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-by: Reported-by: Marian Mihailescu <mihailescu2m@gmail.com>
+Fixes: 773424326b51 ("clk: samsung: exynos5420: add more registers to restore list")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/kirkwood/kirkwood-i2s.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/clk/samsung/clk-exynos5420.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/sound/soc/kirkwood/kirkwood-i2s.c b/sound/soc/kirkwood/kirkwood-i2s.c
-index c323ae314b554..eb38cdb37f0ea 100644
---- a/sound/soc/kirkwood/kirkwood-i2s.c
-+++ b/sound/soc/kirkwood/kirkwood-i2s.c
-@@ -591,7 +591,7 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
- 		priv->ctl_rec |= KIRKWOOD_RECCTL_BURST_128;
- 	}
- 
--	err = devm_snd_soc_register_component(&pdev->dev, &kirkwood_soc_component,
-+	err = snd_soc_register_component(&pdev->dev, &kirkwood_soc_component,
- 					 soc_dai, 2);
- 	if (err) {
- 		dev_err(&pdev->dev, "snd_soc_register_component failed\n");
-@@ -614,6 +614,7 @@ static int kirkwood_i2s_dev_remove(struct platform_device *pdev)
- {
- 	struct kirkwood_dma_data *priv = dev_get_drvdata(&pdev->dev);
- 
-+	snd_soc_unregister_component(&pdev->dev);
- 	if (!IS_ERR(priv->extclk))
- 		clk_disable_unprepare(priv->extclk);
- 	clk_disable_unprepare(priv->clk);
+diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+index dfa862d55246e..31466cd1842f8 100644
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -165,12 +165,18 @@ static const unsigned long exynos5x_clk_regs[] __initconst = {
+ 	GATE_BUS_CPU,
+ 	GATE_SCLK_CPU,
+ 	CLKOUT_CMU_CPU,
++	CPLL_CON0,
++	DPLL_CON0,
+ 	EPLL_CON0,
+ 	EPLL_CON1,
+ 	EPLL_CON2,
+ 	RPLL_CON0,
+ 	RPLL_CON1,
+ 	RPLL_CON2,
++	IPLL_CON0,
++	SPLL_CON0,
++	VPLL_CON0,
++	MPLL_CON0,
+ 	SRC_TOP0,
+ 	SRC_TOP1,
+ 	SRC_TOP2,
 -- 
 2.20.1
 
