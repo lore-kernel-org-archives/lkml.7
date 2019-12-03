@@ -2,79 +2,154 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33018C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CE9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE7902053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05E0C2068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:55:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aJd7FSvt"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="PJ20bU4T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727547AbfLCHsz (ORCPT
+        id S1727562AbfLCHzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 02:48:55 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58388 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727376AbfLCHsy (ORCPT
+        Tue, 3 Dec 2019 02:55:10 -0500
+Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:33388 "EHLO
+        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727466AbfLCHzJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 02:48:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575359333;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pkhTpBDfMGilBSgN0jOZ1InPL5ChpTlIvBxpVi2lXMU=;
-        b=aJd7FSvtmfc2lkcmNDQL8xy7L2jvMosn0jQh2Yzc6l1NR/6JD68pGfQl7c9pZoM+dmljJI
-        lithS9AHysQfeKLGuQjnwiSMGS5r/hmi4tmm6RcLM/7ums3y69fCqT6r9wFeaXrKYODb2d
-        AhJoOdKV7t0j1SeEKgT+/FIsODV7d4M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-122-LQfyTKLMNF22IjYnLy8cjQ-1; Tue, 03 Dec 2019 02:48:50 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 62D4218557C0;
-        Tue,  3 Dec 2019 07:48:49 +0000 (UTC)
-Received: from gondolin (ovpn-116-214.ams2.redhat.com [10.36.116.214])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 86A8D67E5F;
-        Tue,  3 Dec 2019 07:48:45 +0000 (UTC)
-Date:   Tue, 3 Dec 2019 08:48:43 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Cc:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <wanghaibin.wang@huawei.com>
-Subject: Re: [PATCH] KVM: Remove duplicated declaration of kvm_vcpu_kick
-Message-ID: <20191203084843.5a397060.cohuck@redhat.com>
-In-Reply-To: <20191203074408.1758-1-yuzenghui@huawei.com>
-References: <20191203074408.1758-1-yuzenghui@huawei.com>
-Organization: Red Hat GmbH
+        Tue, 3 Dec 2019 02:55:09 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 2F0E143DBE;
+        Tue,  3 Dec 2019 08:55:06 +0100 (CET)
+Authentication-Results: pio-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=PJ20bU4T;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id AnSnOLDcG8MU; Tue,  3 Dec 2019 08:55:04 +0100 (CET)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 173D043DBD;
+        Tue,  3 Dec 2019 08:55:02 +0100 (CET)
+Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 5A4CD36159C;
+        Tue,  3 Dec 2019 08:55:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1575359702; bh=B6pI3ZInjsvZ5idnRVMU+Gtaux07aLqnlZej3M2Wm4I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PJ20bU4TpCKoQQzN7UMBheTtKpCO0i2UznHHcHNVYLQQ8H4QuPjj5TQHwXg5XDJQi
+         88PhPrHxsBjpnqvwPBi3jwvxa9xo/tXHHMpXzBMXug8J4usgyW+MjeTpPwEFStqb2Y
+         Y+Cb2/M+dHIdrbXNnlqlKDUYt8eK1NXHV+M1TNk0=
+From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
+        <thomas_os@shipmail.org>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        dri-devel@vmware.com
+Cc:     pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+Subject: [PATCH 2/2] drm/ttm: Fix vm page protection handling
+Date:   Tue,  3 Dec 2019 08:54:46 +0100
+Message-Id: <20191203075446.60197-3-thomas_os@shipmail.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191203075446.60197-1-thomas_os@shipmail.org>
+References: <20191203075446.60197-1-thomas_os@shipmail.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: LQfyTKLMNF22IjYnLy8cjQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Dec 2019 15:44:08 +0800
-Zenghui Yu <yuzenghui@huawei.com> wrote:
+From: Thomas Hellstrom <thellstrom@vmware.com>
 
-> There are two declarations of kvm_vcpu_kick() in kvm_host.h where
-> one of them is redundant. Remove to keep the git grep a bit cleaner.
-> 
-> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-> ---
->  include/linux/kvm_host.h | 1 -
->  1 file changed, 1 deletion(-)
+We were using an ugly hack to set the page protection correctly.
+Fix that and instead use vmf_insert_mixed_prot() and / or
+vmf_insert_pfn_prot().
+Also get the default page protection from
+struct vm_area_struct::vm_page_prot rather than using vm_get_page_prot().
+This way we catch modifications done by the vm system for drivers that
+want write-notification.
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Ralph Campbell <rcampbell@nvidia.com>
+Cc: "Jérôme Glisse" <jglisse@redhat.com>
+Cc: "Christian König" <christian.koenig@amd.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+---
+ drivers/gpu/drm/ttm/ttm_bo_vm.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_bo_vm.c
+index e6495ca2630b..2098f8d4dfc5 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
++++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
+@@ -173,7 +173,6 @@ vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
+ 				    pgoff_t num_prefault)
+ {
+ 	struct vm_area_struct *vma = vmf->vma;
+-	struct vm_area_struct cvma = *vma;
+ 	struct ttm_buffer_object *bo = vma->vm_private_data;
+ 	struct ttm_bo_device *bdev = bo->bdev;
+ 	unsigned long page_offset;
+@@ -244,7 +243,7 @@ vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
+ 		goto out_io_unlock;
+ 	}
+ 
+-	cvma.vm_page_prot = ttm_io_prot(bo->mem.placement, prot);
++	prot = ttm_io_prot(bo->mem.placement, prot);
+ 	if (!bo->mem.bus.is_iomem) {
+ 		struct ttm_operation_ctx ctx = {
+ 			.interruptible = false,
+@@ -260,7 +259,7 @@ vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
+ 		}
+ 	} else {
+ 		/* Iomem should not be marked encrypted */
+-		cvma.vm_page_prot = pgprot_decrypted(cvma.vm_page_prot);
++		prot = pgprot_decrypted(prot);
+ 	}
+ 
+ 	/*
+@@ -284,10 +283,11 @@ vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
+ 		}
+ 
+ 		if (vma->vm_flags & VM_MIXEDMAP)
+-			ret = vmf_insert_mixed(&cvma, address,
+-					__pfn_to_pfn_t(pfn, PFN_DEV));
++			ret = vmf_insert_mixed_prot(vma, address,
++						    __pfn_to_pfn_t(pfn, PFN_DEV),
++						    prot);
+ 		else
+-			ret = vmf_insert_pfn(&cvma, address, pfn);
++			ret = vmf_insert_pfn_prot(vma, address, pfn, prot);
+ 
+ 		/* Never error on prefaulted PTEs */
+ 		if (unlikely((ret & VM_FAULT_ERROR))) {
+@@ -319,7 +319,7 @@ vm_fault_t ttm_bo_vm_fault(struct vm_fault *vmf)
+ 	if (ret)
+ 		return ret;
+ 
+-	prot = vm_get_page_prot(vma->vm_flags);
++	prot = vma->vm_page_prot;
+ 	ret = ttm_bo_vm_fault_reserved(vmf, prot, TTM_BO_VM_NUM_PREFAULT);
+ 	if (ret == VM_FAULT_RETRY && !(vmf->flags & FAULT_FLAG_RETRY_NOWAIT))
+ 		return ret;
+-- 
+2.21.0
 
