@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96714C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A19C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65D3220674
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F87B2064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414050;
-	bh=XI4eYl+AXLPIs4AC6NGottTKKCcMM/rYzhe4Q8RfOow=;
+	s=default; t=1575414054;
+	bh=ZbzCA+8tCD2OdOmVoHIvAZlA87DvMw3bhEqOki+cICI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oJUPQBtXTX/xOqMZcKIp7kn/PjtD2zjSC949ECkUx7Q7dD+Zdr+2UDYNxZJGBrQTp
-	 SOkGI+Flbv4XlRBwZdqIx+wYHtsnrFUu/xZ7MWa6+L8nrYfwBFkegZcwe/syNDxnYw
-	 yBOqRaYUD7bw8+1korhN4h2tUOa7rLljlevkmlb0=
+	b=ENgOMpeEbc2kNvvkoBkAvV9U8v4QAiHwL2SqPl6db14KR0naldksBU/2MKhMKbun7
+	 plC457mE12EOwo/eUE4M5r4upSXBdeSrUB03blWB3pMnRYPgjRBQVPu2WYVRz7URyg
+	 WCJHJwG0JlnKi5uIHF1HILu450A8wyMTrpGPW91Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730660AbfLCXAt (ORCPT
+        id S1730514AbfLCW5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:00:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52694 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:57:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729717AbfLCW5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:57:12 -0500
+        id S1730089AbfLCW5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:57:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACB982053B;
-        Tue,  3 Dec 2019 22:57:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26DA22053B;
+        Tue,  3 Dec 2019 22:57:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413832;
-        bh=XI4eYl+AXLPIs4AC6NGottTKKCcMM/rYzhe4Q8RfOow=;
+        s=default; t=1575413821;
+        bh=ZbzCA+8tCD2OdOmVoHIvAZlA87DvMw3bhEqOki+cICI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MmzgoL/dfXfwvWo8VM9hGMAUuu+aOWqOOtbEwtbqUz6txDy6Mhom/8nDCN/O1G+Kh
-         pi2rr7p7w78lTf1YG966NDgY/sxv8dsYCWFSayXT5WsSu9hotUNSEUbW9V0Mn2UcOH
-         Gr4SdiPr3njIiyWLDGO1KhpYzA5H7BJQCNxXAAYk=
+        b=RVqwfCxxE2maBr/4QdQG6R4eHOx3Z/pkd/9iyM//MmptBU/e4upkP9xe3MjsfEbeS
+         9wEMiCg3QKSWuJaPBU+yuc1RF2sfiZdJvxdVX0lMHYlwVvriDIGlqVQ7Kq11uYbJKv
+         XSPSmIiKRfJ3ora4E/s87wEwG5wqPsQHpyStvPkc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.19 279/321] pwm: Clear chip_data in pwm_put()
-Date:   Tue,  3 Dec 2019 23:35:45 +0100
-Message-Id: <20191203223441.640027205@linuxfoundation.org>
+        stable@vger.kernel.org, zang <dump@tzib.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH 4.19 275/321] thunderbolt: Power cycle the router if NVM authentication fails
+Date:   Tue,  3 Dec 2019 23:35:41 +0100
+Message-Id: <20191203223441.434753857@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -62,66 +59,156 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-commit e926b12c611c2095c7976e2ed31753ad6eb5ff1a upstream.
+commit 7a7ebfa85f4fac349f3ab219538c44efe18b0cf6 upstream.
 
-After a PWM is disposed by its user the per chip data becomes invalid.
-Clear the data in common code instead of the device drivers to get
-consistent behaviour. Before this patch only three of nine drivers
-cleaned up here.
+On zang's Dell XPS 13 9370 after Thunderbolt NVM firmware upgrade the
+Thunderbolt controller did not come back as expected. Only after the
+system was rebooted it became available again. It is not entirely clear
+what happened but I suspect the new NVM firmware image authentication
+failed for some reason. Regardless of this the router needs to be power
+cycled if NVM authentication fails in order to get it fully functional
+again.
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+This modifies the driver to issue a power cycle in case the NVM
+authentication fails immediately when dma_port_flash_update_auth()
+returns. We also need to call tb_switch_set_uuid() earlier to be able to
+fetch possible NVM authentication failure when DMA port is added.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=205457
+Reported-by: zang <dump@tzib.net>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pwm/core.c        |    1 +
- drivers/pwm/pwm-berlin.c  |    1 -
- drivers/pwm/pwm-pca9685.c |    1 -
- drivers/pwm/pwm-samsung.c |    1 -
- 4 files changed, 1 insertion(+), 3 deletions(-)
+ drivers/thunderbolt/switch.c |   54 +++++++++++++++++++++++++++++++++----------
+ 1 file changed, 42 insertions(+), 12 deletions(-)
 
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -874,6 +874,7 @@ void pwm_put(struct pwm_device *pwm)
- 	if (pwm->chip->ops->free)
- 		pwm->chip->ops->free(pwm->chip, pwm);
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -167,7 +167,7 @@ static int nvm_validate_and_write(struct
  
-+	pwm_set_chip_data(pwm, NULL);
- 	pwm->label = NULL;
- 
- 	module_put(pwm->chip->ops->owner);
---- a/drivers/pwm/pwm-berlin.c
-+++ b/drivers/pwm/pwm-berlin.c
-@@ -84,7 +84,6 @@ static void berlin_pwm_free(struct pwm_c
+ static int nvm_authenticate_host(struct tb_switch *sw)
  {
- 	struct berlin_pwm_channel *channel = pwm_get_chip_data(pwm);
+-	int ret;
++	int ret = 0;
  
--	pwm_set_chip_data(pwm, NULL);
- 	kfree(channel);
+ 	/*
+ 	 * Root switch NVM upgrade requires that we disconnect the
+@@ -175,6 +175,8 @@ static int nvm_authenticate_host(struct
+ 	 * already).
+ 	 */
+ 	if (!sw->safe_mode) {
++		u32 status;
++
+ 		ret = tb_domain_disconnect_all_paths(sw->tb);
+ 		if (ret)
+ 			return ret;
+@@ -183,7 +185,16 @@ static int nvm_authenticate_host(struct
+ 		 * everything goes well so getting timeout is expected.
+ 		 */
+ 		ret = dma_port_flash_update_auth(sw->dma_port);
+-		return ret == -ETIMEDOUT ? 0 : ret;
++		if (!ret || ret == -ETIMEDOUT)
++			return 0;
++
++		/*
++		 * Any error from update auth operation requires power
++		 * cycling of the host router.
++		 */
++		tb_sw_warn(sw, "failed to authenticate NVM, power cycling\n");
++		if (dma_port_flash_update_auth_status(sw->dma_port, &status) > 0)
++			nvm_set_auth_status(sw, status);
+ 	}
+ 
+ 	/*
+@@ -191,7 +202,7 @@ static int nvm_authenticate_host(struct
+ 	 * switch.
+ 	 */
+ 	dma_port_power_cycle(sw->dma_port);
+-	return 0;
++	return ret;
  }
  
---- a/drivers/pwm/pwm-pca9685.c
-+++ b/drivers/pwm/pwm-pca9685.c
-@@ -176,7 +176,6 @@ static void pca9685_pwm_gpio_free(struct
- 	pm_runtime_put(pca->chip.dev);
- 	mutex_lock(&pca->lock);
- 	pwm = &pca->chip.pwms[offset];
--	pwm_set_chip_data(pwm, NULL);
- 	mutex_unlock(&pca->lock);
- }
+ static int nvm_authenticate_device(struct tb_switch *sw)
+@@ -199,8 +210,16 @@ static int nvm_authenticate_device(struc
+ 	int ret, retries = 10;
  
---- a/drivers/pwm/pwm-samsung.c
-+++ b/drivers/pwm/pwm-samsung.c
-@@ -238,7 +238,6 @@ static int pwm_samsung_request(struct pw
- static void pwm_samsung_free(struct pwm_chip *chip, struct pwm_device *pwm)
- {
- 	devm_kfree(chip->dev, pwm_get_chip_data(pwm));
--	pwm_set_chip_data(pwm, NULL);
- }
+ 	ret = dma_port_flash_update_auth(sw->dma_port);
+-	if (ret && ret != -ETIMEDOUT)
++	switch (ret) {
++	case 0:
++	case -ETIMEDOUT:
++	case -EACCES:
++	case -EINVAL:
++		/* Power cycle is required */
++		break;
++	default:
+ 		return ret;
++	}
  
- static int pwm_samsung_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	/*
+ 	 * Poll here for the authentication status. It takes some time
+@@ -937,8 +956,6 @@ static ssize_t nvm_authenticate_store(st
+ 			 */
+ 			nvm_authenticate_start(sw);
+ 			ret = nvm_authenticate_host(sw);
+-			if (ret)
+-				nvm_authenticate_complete(sw);
+ 		} else {
+ 			ret = nvm_authenticate_device(sw);
+ 		}
+@@ -1332,13 +1349,16 @@ static int tb_switch_add_dma_port(struct
+ 	int ret;
+ 
+ 	switch (sw->generation) {
+-	case 3:
+-		break;
+-
+ 	case 2:
+ 		/* Only root switch can be upgraded */
+ 		if (tb_route(sw))
+ 			return 0;
++
++		/* fallthrough */
++	case 3:
++		ret = tb_switch_set_uuid(sw);
++		if (ret)
++			return ret;
+ 		break;
+ 
+ 	default:
+@@ -1359,6 +1379,19 @@ static int tb_switch_add_dma_port(struct
+ 		return 0;
+ 
+ 	/*
++	 * If there is status already set then authentication failed
++	 * when the dma_port_flash_update_auth() returned. Power cycling
++	 * is not needed (it was done already) so only thing we do here
++	 * is to unblock runtime PM of the root port.
++	 */
++	nvm_get_auth_status(sw, &status);
++	if (status) {
++		if (!tb_route(sw))
++			nvm_authenticate_complete(sw);
++		return 0;
++	}
++
++	/*
+ 	 * Check status of the previous flash authentication. If there
+ 	 * is one we need to power cycle the switch in any case to make
+ 	 * it functional again.
+@@ -1373,9 +1406,6 @@ static int tb_switch_add_dma_port(struct
+ 
+ 	if (status) {
+ 		tb_sw_info(sw, "switch flash authentication failed\n");
+-		ret = tb_switch_set_uuid(sw);
+-		if (ret)
+-			return ret;
+ 		nvm_set_auth_status(sw, status);
+ 	}
+ 
 
 
