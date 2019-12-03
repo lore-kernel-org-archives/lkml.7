@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7058C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1EBC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96B0F20684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CC67207DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414526;
-	bh=7TJDgx84nCACAaNLo8pxn2QH6mbY7YKuaYRX/WxnJX0=;
+	s=default; t=1575414530;
+	bh=1jaVvqrRRcxk8G/3Hlu0ZZYVZUHHzUghRnsT1CY3Qr8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UuxUzUXYpIb16vD6ozhAzW3PdFMuHrIteg+96TyQT4u60usplcVsyH1p4GHTtbXW2
-	 rjrGgEDj6+15htzYVDLemoHD3aBQbJeMdKWdYajQliVFOpXtGDid0YcNUZnFe8MLVN
-	 7v3MZOfzKsFIpEaPDdzpdMB6zLAtkOOK69Th962o=
+	b=nhkP5n9zImnqpa1aIfAVjE/OvcjNeenAtbgtn2YPPW+AZPQy9QCYDo5/4CThb6PCp
+	 Nue864NBvSF0mc7e7Bi9nrGCh5zsLIragJo59HLgnyBOfnhhtAklMrKqTT6ygDufLV
+	 H2FhhsjQdTEGFeSYNTLpLJCBNSOyKmPVFxjYyAFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbfLCXIp (ORCPT
+        id S1729002AbfLCXIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:08:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33810 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 18:08:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729026AbfLCWpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:45:18 -0500
+        id S1728776AbfLCWpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:45:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6314D20803;
-        Tue,  3 Dec 2019 22:45:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAFD220848;
+        Tue,  3 Dec 2019 22:45:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413117;
-        bh=7TJDgx84nCACAaNLo8pxn2QH6mbY7YKuaYRX/WxnJX0=;
+        s=default; t=1575413115;
+        bh=1jaVvqrRRcxk8G/3Hlu0ZZYVZUHHzUghRnsT1CY3Qr8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PYMBlZqDVW9GzvNO18JOiihTFFP5824AQLvdIvemc9EwKURFeoFQuz2NpmM+NvMp+
-         a36sTNEaEM8Do7LCbx3rI4rmI0mQUErEiV+PDcFj4qyouygVc7RuYkTyYUYXd/dx7n
-         hQ+uETR2JzJS2sZxeSiN2QgD6GmT/EzoGoBMBj28=
+        b=IBQbtPKHVAsxXq46WRg+J1v5gBKCuf4ASU8gvfj5r+1n17gTViFdXcHH6bImsXEPj
+         agQLo2MKkVxYJgYjNY7Gy84qaL2OEiuLl1h41NmYYuCkFgmpkrZZPbFmJY0soOqLyZ
+         /78dVLwzwt4sC83guVu8ZhiFAsNlzNurFOpAHmjY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+f8d6f8386ceacdbfff57@syzkaller.appspotmail.com,
-        syzbot+33d7ea72e47de3bdf4e1@syzkaller.appspotmail.com,
-        syzbot+44b6763edfc17144296f@syzkaller.appspotmail.com,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 5.3 132/135] ext4: add more paranoia checking in ext4_expand_extra_isize handling
-Date:   Tue,  3 Dec 2019 23:36:12 +0100
-Message-Id: <20191203213045.748648671@linuxfoundation.org>
+        Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 131/135] selftests: pmtu: use -oneline for ip route list cache
+Date:   Tue,  3 Dec 2019 23:36:11 +0100
+Message-Id: <20191203213045.675600377@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -62,93 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Theodore Ts'o <tytso@mit.edu>
+From: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
 
-commit 4ea99936a1630f51fc3a2d61a58ec4a1c4b7d55a upstream.
+[ Upstream commit 2745aea6750ff0d2c48285d25bdb00e5b636ec8b ]
 
-It's possible to specify a non-zero s_want_extra_isize via debugging
-option, and this can cause bad things(tm) to happen when using a file
-system with an inode size of 128 bytes.
+Some versions of iproute2 will output more than one line per entry, which
+will cause the test to fail, like:
 
-Add better checking when the file system is mounted, as well as when
-we are actually doing the trying to do the inode expansion.
+TEST: ipv6: list and flush cached exceptions                        [FAIL]
+  can't list cached exceptions
 
-Link: https://lore.kernel.org/r/20191110121510.GH23325@mit.edu
-Reported-by: syzbot+f8d6f8386ceacdbfff57@syzkaller.appspotmail.com
-Reported-by: syzbot+33d7ea72e47de3bdf4e1@syzkaller.appspotmail.com
-Reported-by: syzbot+44b6763edfc17144296f@syzkaller.appspotmail.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
+That happens, for example, with iproute2 4.15.0. When using the -oneline
+option, this will work just fine:
+
+TEST: ipv6: list and flush cached exceptions                        [ OK ]
+
+This also works just fine with a more recent version of iproute2, like
+5.4.0.
+
+For some reason, two lines are printed for the IPv4 test no matter what
+version of iproute2 is used. Use the same -oneline parameter there instead
+of counting the lines twice.
+
+Fixes: b964641e9925 ("selftests: pmtu: Make list_flush_ipv6_exception test more demanding")
+Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+Acked-by: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/ext4/inode.c |   15 +++++++++++++++
- fs/ext4/super.c |   21 ++++++++++++---------
- 2 files changed, 27 insertions(+), 9 deletions(-)
+ tools/testing/selftests/net/pmtu.sh |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -5942,8 +5942,23 @@ static int __ext4_expand_extra_isize(str
- {
- 	struct ext4_inode *raw_inode;
- 	struct ext4_xattr_ibody_header *header;
-+	unsigned int inode_size = EXT4_INODE_SIZE(inode->i_sb);
-+	struct ext4_inode_info *ei = EXT4_I(inode);
- 	int error;
+--- a/tools/testing/selftests/net/pmtu.sh
++++ b/tools/testing/selftests/net/pmtu.sh
+@@ -1249,8 +1249,7 @@ test_list_flush_ipv4_exception() {
+ 	done
+ 	run_cmd ${ns_a} ping -q -M want -i 0.1 -c 2 -s 1800 "${dst2}"
  
-+	/* this was checked at iget time, but double check for good measure */
-+	if ((EXT4_GOOD_OLD_INODE_SIZE + ei->i_extra_isize > inode_size) ||
-+	    (ei->i_extra_isize & 3)) {
-+		EXT4_ERROR_INODE(inode, "bad extra_isize %u (inode size %u)",
-+				 ei->i_extra_isize,
-+				 EXT4_INODE_SIZE(inode->i_sb));
-+		return -EFSCORRUPTED;
-+	}
-+	if ((new_extra_isize < ei->i_extra_isize) ||
-+	    (new_extra_isize < 4) ||
-+	    (new_extra_isize > inode_size - EXT4_GOOD_OLD_INODE_SIZE))
-+		return -EINVAL;	/* Should never happen */
-+
- 	raw_inode = ext4_raw_inode(iloc);
- 
- 	header = IHDR(inode, raw_inode);
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -3544,12 +3544,15 @@ static void ext4_clamp_want_extra_isize(
- {
- 	struct ext4_sb_info *sbi = EXT4_SB(sb);
- 	struct ext4_super_block *es = sbi->s_es;
-+	unsigned def_extra_isize = sizeof(struct ext4_inode) -
-+						EXT4_GOOD_OLD_INODE_SIZE;
- 
--	/* determine the minimum size of new large inodes, if present */
--	if (sbi->s_inode_size > EXT4_GOOD_OLD_INODE_SIZE &&
--	    sbi->s_want_extra_isize == 0) {
--		sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
--						     EXT4_GOOD_OLD_INODE_SIZE;
-+	if (sbi->s_inode_size == EXT4_GOOD_OLD_INODE_SIZE) {
-+		sbi->s_want_extra_isize = 0;
-+		return;
-+	}
-+	if (sbi->s_want_extra_isize < 4) {
-+		sbi->s_want_extra_isize = def_extra_isize;
- 		if (ext4_has_feature_extra_isize(sb)) {
- 			if (sbi->s_want_extra_isize <
- 			    le16_to_cpu(es->s_want_extra_isize))
-@@ -3562,10 +3565,10 @@ static void ext4_clamp_want_extra_isize(
- 		}
- 	}
- 	/* Check if enough inode space is available */
--	if (EXT4_GOOD_OLD_INODE_SIZE + sbi->s_want_extra_isize >
--							sbi->s_inode_size) {
--		sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
--						       EXT4_GOOD_OLD_INODE_SIZE;
-+	if ((sbi->s_want_extra_isize > sbi->s_inode_size) ||
-+	    (EXT4_GOOD_OLD_INODE_SIZE + sbi->s_want_extra_isize >
-+							sbi->s_inode_size)) {
-+		sbi->s_want_extra_isize = def_extra_isize;
- 		ext4_msg(sb, KERN_INFO,
- 			 "required extra inode space not available");
- 	}
+-	# Each exception is printed as two lines
+-	if [ "$(${ns_a} ip route list cache | wc -l)" -ne 202 ]; then
++	if [ "$(${ns_a} ip -oneline route list cache | wc -l)" -ne 101 ]; then
+ 		err "  can't list cached exceptions"
+ 		fail=1
+ 	fi
+@@ -1300,7 +1299,7 @@ test_list_flush_ipv6_exception() {
+ 		run_cmd ${ns_a} ping -q -M want -i 0.1 -w 1 -s 1800 "${dst_prefix1}${i}"
+ 	done
+ 	run_cmd ${ns_a} ping -q -M want -i 0.1 -w 1 -s 1800 "${dst2}"
+-	if [ "$(${ns_a} ip -6 route list cache | wc -l)" -ne 101 ]; then
++	if [ "$(${ns_a} ip -oneline -6 route list cache | wc -l)" -ne 101 ]; then
+ 		err "  can't list cached exceptions"
+ 		fail=1
+ 	fi
 
 
