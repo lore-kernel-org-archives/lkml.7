@@ -2,184 +2,135 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD663C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4EF6C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4A54206E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD81D206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:15:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbfLCKPH convert rfc822-to-8bit (ORCPT
+        id S1726138AbfLCKP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 05:15:07 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41948 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfLCKPH (ORCPT
+        Tue, 3 Dec 2019 05:15:26 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:38777 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbfLCKPZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 05:15:07 -0500
-Received: by mail-oi1-f194.google.com with SMTP id e9so2749064oif.8;
-        Tue, 03 Dec 2019 02:15:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=K//UtWMNAk6TcfdrCIFGgkw50sxyYpid+eTdEpciHyg=;
-        b=r0HDdljeejDAAFsZ69mMZ7oh3QwQ/IYmDW4AfIh9gqb4F+pDeph+cWphV1Z3a0Csaa
-         ogFl1y47D77/HkCNgsnS+e1P7Uoa1oByn+4qbM6wI/obe75ILyVcmWktBdnlz3MwZB+k
-         MspBcbpB+FhIHjbsJRxansqNJZds/v19eOQr4hPLL0l/oDD6jdpZHmDyXUiigBJc9rrC
-         9Xpr5WAZNpfYgFmSefUJj0SREIvmH9bFu//lyQzupaYZ6yTTikw/EOwdNvPnOll93xUF
-         uo/a4Ehf5LE5a9YjpEHCE/hLvPHWDjl6ocXFeWZms3hYECUZL3Lxwpp5A/l98imLrQHV
-         OYjA==
-X-Gm-Message-State: APjAAAWcczUDORdKIoo0/RwMGypTlGgYySgdfcc+SEJA/4wTElmWLxe1
-        q3hOqOwWqd7uj0LhPuMik0Gr48UAA9isQXDDXFI=
-X-Google-Smtp-Source: APXvYqwPikpQ7lOwDxfiOvQqyCVq3XI61fAbw0o1QpvVQxo4zDuULPLWJwoE1XPR3TT98NHhmDh1Kx99gshZ8mPj75A=
-X-Received: by 2002:aca:36c5:: with SMTP id d188mr3075823oia.54.1575368106196;
- Tue, 03 Dec 2019 02:15:06 -0800 (PST)
-MIME-Version: 1.0
-References: <20191003092913.10731-1-brgl@bgdev.pl> <20191003092912.G3pupKBmyct1r9ScP5Skuw9D-_ALcMVSnfMfHAlwe0Y@z>
- <20191202041440.GA1628@roeck-us.net> <CAMpxmJW3i4zmJJ14Xg65+T27kF3sgR1WG0K3FUT6+jeKtiHx=Q@mail.gmail.com>
- <3f8ffe03-98b8-423a-7cba-53961a5600cb@roeck-us.net> <CAMpxmJUmTF3FwacjvTrC+Vvzm8MscS9E=ZyWLbJV87LkQhqVow@mail.gmail.com>
- <5e7aafc9-deb9-9305-afea-2c86e310683f@roeck-us.net> <CAMRc=MebSL+WA-nHFkaUd0rHTmwLkv2e16D9oO1=PY8-sPnzzQ@mail.gmail.com>
-In-Reply-To: <CAMRc=MebSL+WA-nHFkaUd0rHTmwLkv2e16D9oO1=PY8-sPnzzQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 3 Dec 2019 11:14:54 +0100
-Message-ID: <CAMuHMdXDLfCUnNevNqGXUrtwa11yvyBn0Semq6EOPuJKtnwgLg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] drivers: move the early platform device support to arch/sh
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Tue, 3 Dec 2019 05:15:25 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ic5D7-0006Qc-Ml; Tue, 03 Dec 2019 11:15:13 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ic5D3-0002Xv-TN; Tue, 03 Dec 2019 11:15:09 +0100
+Date:   Tue, 3 Dec 2019 11:15:09 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Igor Plyatov <plyatov@gmail.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Slaby <jslaby@suse.com>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: Issue with imx_get_temp()
+Message-ID: <20191203101509.wte47aad5k4mqu2y@pengutronix.de>
+References: <08794fde-cdd0-287c-62bf-e2e3b8c80686@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <08794fde-cdd0-287c-62bf-e2e3b8c80686@gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 11:11:20 up 18 days,  1:29, 28 users,  load average: 0.10, 0.03,
+ 0.01
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bartosz, Günter,
+Hi Igor,
 
-On Tue, Dec 3, 2019 at 10:50 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> wt., 3 gru 2019 o 06:24 Guenter Roeck <linux@roeck-us.net> napisał(a):
-> > On 12/2/19 9:18 AM, Bartosz Golaszewski wrote:
-> > > pon., 2 gru 2019 o 14:03 Guenter Roeck <linux@roeck-us.net> napisał(a):
-> > >>
-> > >> On 12/1/19 11:40 PM, Bartosz Golaszewski wrote:
-> > >>> pon., 2 gru 2019 o 05:14 Guenter Roeck <linux@roeck-us.net> napisał(a):
-> > >>>>
-> > >>>> On Thu, Oct 03, 2019 at 11:29:12AM +0200, Bartosz Golaszewski wrote:
-> > >>>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >>>>>
-> > >>>>> SuperH is the only user of the current implementation of early platform
-> > >>>>> device support. We want to introduce a more robust approach to early
-> > >>>>> probing. As the first step - move all the current early platform code
-> > >>>>> to arch/sh.
-> > >>>>>
-> > >>>>> In order not to export internal drivers/base functions to arch code for
-> > >>>>> this temporary solution - copy the two needed routines for driver
-> > >>>>> matching from drivers/base/platform.c to arch/sh/drivers/platform_early.c.
-> > >>>>>
-> > >>>>> Also: call early_platform_cleanup() from subsys_initcall() so that it's
-> > >>>>> called after all early devices are probed.
-> > >>>>>
-> > >>>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >>>>
-> > >>>> Wondering ... has anyone tested this patch on affected hardware ?
-> > >>>> All my qemu boot tests (both sh and sheb) fail because of it.
-> > >>>> Bisect log below.
-> > >>>>
-> > >>>> Guenter
-> > >>>>
-> > >>>> ---
-> > >>>> # bad: [72c0870e3a05d9cd5466d08c3d2a3069ed0a2f9f] Merge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input
-> > >>>> # good: [89d57dddd7d319ded00415790a0bb3c954b7e386] Merge tag 'media/v5.5-1' of git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media
-> > >>>> git bisect start 'HEAD' '89d57dddd7d3'
-> > >>>> # good: [0a6cad5df541108cfd3fbd79eef48eb824c89bdc] Merge branch 'vmwgfx-coherent' of git://people.freedesktop.org/~thomash/linux into drm-next
-> > >>>> git bisect good 0a6cad5df541108cfd3fbd79eef48eb824c89bdc
-> > >>>> # bad: [9a3d7fd275be4559277667228902824165153c80] Merge tag 'driver-core-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core
-> > >>>> git bisect bad 9a3d7fd275be4559277667228902824165153c80
-> > >>>> # good: [59274c7164807d27b24e6c068dfe734f7bea4623] Merge tag 'usb-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb
-> > >>>> git bisect good 59274c7164807d27b24e6c068dfe734f7bea4623
-> > >>>> # good: [e71903106721dc53923e90aa484d78bc86c039a9] staging: mt7621-dma: align to match open parenthesis
-> > >>>> git bisect good e71903106721dc53923e90aa484d78bc86c039a9
-> > >>>> # good: [8f56e4ebe05c26c30e167519273843476e39e244] Merge tag 'char-misc-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc
-> > >>>> git bisect good 8f56e4ebe05c26c30e167519273843476e39e244
-> > >>>> # good: [8bde9f3d2a217d1635a7c7bdf8ad4c25c9a34b50] Merge tag 'iio-for-5.5c' of https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio into staging-next
-> > >>>> git bisect good 8bde9f3d2a217d1635a7c7bdf8ad4c25c9a34b50
-> > >>>> # bad: [0628cda318df6baec439ca6e6e274007492f1ccd] mac80211: Use debugfs_create_xul() helper
-> > >>>> git bisect bad 0628cda318df6baec439ca6e6e274007492f1ccd
-> > >>>> # bad: [03324507e66c7664c754b1ef92c5c3be24c78aa2] driver core: Allow fwnode_operations.add_links to differentiate errors
-> > >>>> git bisect bad 03324507e66c7664c754b1ef92c5c3be24c78aa2
-> > >>>> # bad: [313f5dbba41d905d59c820bb2d91ee6c661aff99] debugfs: remove return value of debugfs_create_u16()
-> > >>>> git bisect bad 313f5dbba41d905d59c820bb2d91ee6c661aff99
-> > >>>> # good: [d4387cd117414ba80230f27a514be5ca4a09cfcc] of: property: Create device links for all child-supplier depencencies
-> > >>>> git bisect good d4387cd117414ba80230f27a514be5ca4a09cfcc
-> > >>>> # bad: [c31e73121f4c1ec45a3e523ac6ce3ce6dafdcec1] base: soc: Handle custom soc information sysfs entries
-> > >>>> git bisect bad c31e73121f4c1ec45a3e523ac6ce3ce6dafdcec1
-> > >>>> # bad: [201e91091b1d47047f55580b5474e1239f4d17aa] sh: add the sh_ prefix to early platform symbols
-> > >>>> git bisect bad 201e91091b1d47047f55580b5474e1239f4d17aa
-> > >>>> # bad: [507fd01d5333338753a1cc26322dfc9f856c109f] drivers: move the early platform device support to arch/sh
-> > >>>> git bisect bad 507fd01d5333338753a1cc26322dfc9f856c109f
-> > >>>> # first bad commit: [507fd01d5333338753a1cc26322dfc9f856c109f] drivers: move the early platform device support to arch/sh
-> > >>>
-> > >>> Hi Guenter,
-> > >>>
-> > >>> can you post some bootlogs? Is it the same problem everywhere?
-> > >>>
-> > >>
-> > >> I don't have any useful logs. The boot fails too early for that.
-> > >>
-> > >
-> > > Yeah, it touched "early" devices after all...
-> > >
-> > >> Sorry, I don't understand "everywhere". It fails in mainline and -next, if that is what you mean.
-> > >
-> > > I referred to "All my qemu boot tests" when saying everywhere.
-> > >
-> > > I don't have any relevant HW - the idea for this patch is to stop
-> > > compiling for everyone a bunch of code that's only used by one largely
-> > > irrelevant architecture and free the namespace for a generic early
-> > > platform drivers implementation.
-> > >
-> > > How are you creating your SH qemu images? I'm seeing there's something
-> > > in buildroot for superh - maybe I'll be able to bearly_platform_cleanupuild something
-> > > useful.
-> > >
-> >
-> > Below is a possible fix. As I had suspected, the call to early_platform_cleanup()
-> > is in the wrong place.
-> >
->
-> This makes sense. If it fixes the issue - do you want to send it to Greg?
+On 19-12-02 16:45, Igor Plyatov wrote:
+> Dear all,
+> 
+> please� look at back-trace below. It happens on Freescale i.MX6 Quad.
+> 
+> Found a few of those during power on/off stress test in the climate chamber:
+> 
+> [    0.657596] ------------[ cut here ]------------
+> [    0.657626] WARNING: CPU: 3 PID: 150 at /home/geosig/development/oe-core-toradex-cr7/build/tmp-glibc/work-shared/cr7/kernel-source/kernel/irq/chip.c:242 __irq_startup+0x94/0xa8
+> [    0.657630] Modules linked in:
+> [    0.657643] CPU: 3 PID: 150 Comm: kworker/3:1 Not tainted 5.1.1 #1
+> [    0.657648] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
+> [    0.657660] Workqueue: events deferred_probe_work_func
+> [    0.657691] [<8011005c>] (unwind_backtrace) from [<8010b8c8>] (show_stack+0x10/0x14)
+> [    0.657709] [<8010b8c8>] (show_stack) from [<80857b04>] (dump_stack+0x88/0x9c)
+> [    0.657727] [<80857b04>] (dump_stack) from [<8011f308>] (__warn+0xdc/0xf4)
+> [    0.657741] [<8011f308>] (__warn) from [<8011f438>] (warn_slowpath_null+0x40/0x48)
+> [    0.657752] [<8011f438>] (warn_slowpath_null) from [<8016d1a8>] (__irq_startup+0x94/0xa8)
+> [    0.657762] [<8016d1a8>] (__irq_startup) from [<8016d208>] (irq_startup+0x4c/0x130)
+> [    0.657772] [<8016d208>] (irq_startup) from [<8016a6dc>] (enable_irq+0x44/0x90)
+> [    0.657790] [<8016a6dc>] (enable_irq) from [<8066f05c>] (imx_get_temp+0x1bc/0x1fc)
+> [    0.657804] [<8066f05c>] (imx_get_temp) from [<8066cd78>] (thermal_zone_get_temp+0x48/0x68)
+> [    0.657816] [<8066cd78>] (thermal_zone_get_temp) from [<8066a3e4>] (thermal_zone_device_update.part.3+0x28/0xcc)
+> [    0.657827] [<8066a3e4>] (thermal_zone_device_update.part.3) from [<8066afc4>] (thermal_zone_device_register+0x4ac/0x5ec)
+> [    0.657837] [<8066afc4>] (thermal_zone_device_register) from [<8066f580>] (imx_thermal_probe+0x3a8/0x61c)
+> [    0.657853] [<8066f580>] (imx_thermal_probe) from [<8054ae90>] (platform_drv_probe+0x48/0x98)
+> [    0.657864] [<8054ae90>] (platform_drv_probe) from [<805492a4>] (really_probe+0x228/0x2d0)
+> [    0.657875] [<805492a4>] (really_probe) from [<805494ac>] (driver_probe_device+0x60/0x174)
+> [    0.657892] [<805494ac>] (driver_probe_device) from [<805476f4>] (bus_for_each_drv+0x58/0xb8)
+> [    0.657903] [<805476f4>] (bus_for_each_drv) from [<80549008>] (__device_attach+0xd0/0x13c)
+> [    0.657914] [<80549008>] (__device_attach) from [<80548404>] (bus_probe_device+0x84/0x8c)
+> [    0.657923] [<80548404>] (bus_probe_device) from [<8054889c>] (deferred_probe_work_func+0x64/0x90)
+> [    0.657938] [<8054889c>] (deferred_probe_work_func) from [<80136fd0>] (process_one_work+0x204/0x420)
+> [    0.657952] [<80136fd0>] (process_one_work) from [<80137ddc>] (worker_thread+0x44/0x5bc)
+> [    0.657966] [<80137ddc>] (worker_thread) from [<8013cab0>] (kthread+0x144/0x14c)
+> [    0.657978] [<8013cab0>] (kthread) from [<801010e8>] (ret_from_fork+0x14/0x2c)
+> [    0.657984] Exception stack(0xd0ae1fb0 to 0xd0ae1ff8)
+> [    0.657992] 1fa0:                                     00000000 00000000 00000000 00000000
+> [    0.658002] 1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> [    0.658010] 1fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> [    0.658016] ---[ end trace 6bb553a60c0886bd ]---
+> 
+> Can somebody recommend, how to debug/resolve this issue?
 
-Which tree does this patch apply to?
-Oh, it's whitespace-damaged.
+Mh.. it seems that the irq gets enabled before a irq-handler is
+registered. As your backlog shows the thermal_zone_device_register()
+triggers a imx_get_temp() and during boot the irq_enabled is false and
+it seems that your temperature is below the alarm_temp. So in such a
+case the enable_irq() is executed. I don't know what happens if we
+enable a irq without a irq-handler.
 
-After applying it manually on top of current Linus' tree, (remote)
-SH7722-based Migo-R boots again, so
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Regards,
+  Marco 
 
-There's still an issue with crashing userspace, but that happens on v5.4
-too. Bisecting...
-
-Gr{oetje,eeting}s,
-
-                        Geert
+> Best wishes.
+> --
+> Igor Plyatov
+> 
+> 
+> 
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
