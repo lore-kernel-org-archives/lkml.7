@@ -2,132 +2,189 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86533C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 04:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1456BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 04:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6339D206E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 04:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB1502068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 04:05:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbfLCEBc (ORCPT
+        id S1726799AbfLCEF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 23:01:32 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51116 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726327AbfLCEBb (ORCPT
+        Mon, 2 Dec 2019 23:05:27 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:1292 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726327AbfLCEF1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 23:01:31 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB33pXmF088601
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 23:01:30 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wm6s60sbv-1
+        Mon, 2 Dec 2019 23:05:27 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB342XRX126299
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 23:05:25 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2wm6g97vgt-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 23:01:30 -0500
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 23:05:25 -0500
 Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Tue, 3 Dec 2019 04:01:27 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
+        Tue, 3 Dec 2019 04:05:23 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 3 Dec 2019 04:01:19 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB341IxU31391806
+        Tue, 3 Dec 2019 04:05:18 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB345HpG37355640
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Dec 2019 04:01:18 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9313D11C054;
-        Tue,  3 Dec 2019 04:01:18 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3EAC611C050;
-        Tue,  3 Dec 2019 04:01:18 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  3 Dec 2019 04:01:18 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id B6EF1A01B6;
-        Tue,  3 Dec 2019 15:01:15 +1100 (AEDT)
-Subject: Re: [PATCH v2 00/27] Add support for OpenCAPI SCM devices
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Date:   Tue, 03 Dec 2019 15:01:17 +1100
-In-Reply-To: <20191203035057.GR20752@bombadil.infradead.org>
-References: <20191203034655.51561-1-alastair@au1.ibm.com>
-         <20191203035057.GR20752@bombadil.infradead.org>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
+        Tue, 3 Dec 2019 04:05:17 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 891994C05C;
+        Tue,  3 Dec 2019 04:05:17 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C9B844C046;
+        Tue,  3 Dec 2019 04:05:13 +0000 (GMT)
+Received: from oc0525413822.ibm.com (unknown [9.85.173.229])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue,  3 Dec 2019 04:05:13 +0000 (GMT)
+Date:   Mon, 2 Dec 2019 20:05:09 -0800
+From:   Ram Pai <linuxram@us.ibm.com>
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, david@gibson.dropbear.id.au,
+        paulus@ozlabs.org, mdroth@linux.vnet.ibm.com, hch@lst.de,
+        andmike@us.ibm.com, sukadev@linux.vnet.ibm.com, mst@redhat.com,
+        ram.n.pai@gmail.com, cai@lca.pw, tglx@linutronix.de,
+        bauerman@linux.ibm.com, linux-kernel@vger.kernel.org
+Reply-To: Ram Pai <linuxram@us.ibm.com>
+References: <1575269124-17885-1-git-send-email-linuxram@us.ibm.com>
+ <1575269124-17885-2-git-send-email-linuxram@us.ibm.com>
+ <f08ace25-fa94-990b-1b6d-a1c0f30d6348@ozlabs.ru>
+ <20191203020850.GA12354@oc0525413822.ibm.com>
+ <0b56ce3e-6c32-5f3b-e7cc-0d419a61d71d@ozlabs.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0b56ce3e-6c32-5f3b-e7cc-0d419a61d71d@ozlabs.ru>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 X-TM-AS-GCONF: 00
-x-cbid: 19120304-0028-0000-0000-000003C3CD68
+x-cbid: 19120304-4275-0000-0000-0000038A335C
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120304-0029-0000-0000-00002486E529
-Message-Id: <1e3892815b9684e3fb4f84bd1935ea7e68cd07d8.camel@au1.ibm.com>
+x-cbparentid: 19120304-4276-0000-0000-0000389DCF51
+Message-Id: <20191203040509.GB12354@oc0525413822.ibm.com>
+Subject: RE: [PATCH v4 1/2] powerpc/pseries/iommu: Share the per-cpu TCE page with
+ the hypervisor.
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
  definitions=2019-12-02_06:2019-11-29,2019-12-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- mlxlogscore=629 suspectscore=0 clxscore=1015 priorityscore=1501
- phishscore=0 bulkscore=0 malwarescore=0 spamscore=0 impostorscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912030033
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ suspectscore=18 clxscore=1015 mlxlogscore=999 impostorscore=0
+ lowpriorityscore=0 adultscore=0 malwarescore=0 spamscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912030034
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-12-02 at 19:50 -0800, Matthew Wilcox wrote:
-> On Tue, Dec 03, 2019 at 02:46:28PM +1100, Alastair D'Silva wrote:
-> > This series adds support for OpenCAPI SCM devices, exposing
+On Tue, Dec 03, 2019 at 01:15:04PM +1100, Alexey Kardashevskiy wrote:
 > 
-> Could we _not_ introduce yet another term for persistent memory?
 > 
+> On 03/12/2019 13:08, Ram Pai wrote:
+> > On Tue, Dec 03, 2019 at 11:56:43AM +1100, Alexey Kardashevskiy wrote:
+> >>
+> >>
+> >> On 02/12/2019 17:45, Ram Pai wrote:
+> >>> H_PUT_TCE_INDIRECT hcall uses a page filled with TCE entries, as one of
+> >>> its parameters. One page is dedicated per cpu, for the lifetime of the
+> >>> kernel for this purpose. On secure VMs, contents of this page, when
+> >>> accessed by the hypervisor, retrieves encrypted TCE entries.  Hypervisor
+> >>> needs to know the unencrypted entries, to update the TCE table
+> >>> accordingly.  There is nothing secret or sensitive about these entries.
+> >>> Hence share the page with the hypervisor.
+> >>
+> >> This unsecures a page in the guest in a random place which creates an
+> >> additional attack surface which is hard to exploit indeed but
+> >> nevertheless it is there.
+> >> A safer option would be not to use the
+> >> hcall-multi-tce hyperrtas option (which translates FW_FEATURE_MULTITCE
+> >> in the guest).
+> > 
+> > 
+> > Hmm... How do we not use it?  AFAICT hcall-multi-tce option gets invoked
+> > automatically when IOMMU option is enabled.
+> 
+> It is advertised by QEMU but the guest does not have to use it.
 
-"Storage Class Memory" is an industry wide term, and is used repeatedly
-in the device specifications. It's not something that has been pulled
-out of thin air.
+Are you suggesting that even normal-guest, not use hcall-multi-tce?
+or just secure-guest?  
 
-The term is also already in use within the 'papr_scm' driver.
+> 
+> > This happens even
+> > on a normal VM when IOMMU is enabled.
+> > 
+> > 
+> >>
+> >> Also what is this for anyway? 
+> > 
+> > This is for sending indirect-TCE entries to the hypervisor.
+> > The hypervisor must be able to read those TCE entries, so that it can 
+> > use those entires to populate the TCE table with the correct mappings.
+> > 
+> >> if I understand things right, you cannot
+> >> map any random guest memory, you should only be mapping that 64MB-ish
+> >> bounce buffer array but 1) I do not see that happening (I may have
+> >> missed it) 2) it should be done once and it takes a little time for
+> >> whatever memory size we allow for bounce buffers anyway. Thanks,
+> > 
+> > Any random guest memory can be shared by the guest. 
+> 
+> Yes but we do not want this to be this random. 
 
--- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
+It is not sharing some random page. It is sharing a page that is
+ear-marked for communicating TCE entries. Yes the address of the page
+can be random, depending on where the allocator decides to allocate it.
+The purpose of the page is not random.
+
+That page is used for one specific purpose; to communicate the TCE
+entries to the hypervisor.  
+
+> I thought the whole idea
+> of swiotlb was to restrict the amount of shared memory to bare minimum,
+> what do I miss?
+
+I think, you are making a incorrect connection between this patch and
+SWIOTLB.  This patch has nothing to do with SWIOTLB.
+
+> 
+> > Maybe you are confusing this with the SWIOTLB bounce buffers used by
+> > PCI devices, to transfer data to the hypervisor?
+> 
+> Is not this for pci+swiotlb? 
+
+
+No. This patch is NOT for PCI+SWIOTLB.  The SWIOTLB pages are a
+different set of pages allocated and earmarked for bounce buffering.
+
+This patch is purely to help the hypervisor setup the TCE table, in the
+presence of a IOMMU.
+
+>The cover letter suggests it is for
+> virtio-scsi-_pci_ with 	iommu_platform=on which makes it a
+> normal pci device just like emulated XHCI. Thanks,
+
+Well, I guess, the cover letter is probably confusing. There are two
+patches, which togather enable virtio on secure guests, in the presence
+of IOMMU.
+
+The second patch enables virtio in the presence of a IOMMU, to use
+DMA_ops+SWIOTLB infrastructure, to correctly navigate the I/O to virtio
+devices.
+
+However that by itself wont work if the TCE entires are not correctly
+setup in the TCE tables.  The first patch; i.e this patch, helps
+accomplish that.
+
+Hope this clears up the confusion.
+RP
 
