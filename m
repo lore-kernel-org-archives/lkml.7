@@ -2,134 +2,84 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D055C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E71C3C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 744342068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:03:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dtYCn58+"
+	by mail.kernel.org (Postfix) with ESMTP id AF308206E4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:04:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575389071;
+	bh=oDFsbxgD5A95Nwp80yYyEw0eJtZ1q1iqcErmr0CW5MU=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=UmsX8dxTpNzQiSlA4Nkgm+1C7kyr2ZmP1rvHUw5iF0sLxcB5wQpjyr6XniJBicMMU
+	 kAo/0bg/y6ePYIANol2W7aHz5EQEemCXSNUniBeG+FdcmTUfJ/i6O1NZykKSF0I3zc
+	 EWy71keySNOpnmZr3kNDkJ7ucFL+0Ei01jxjOdxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbfLCQDz (ORCPT
+        id S1727206AbfLCQEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 11:03:55 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37958 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726131AbfLCQDy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 11:03:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575389033;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=L/S9YEoC00wo/Of2441RPzayHTUYnY3vnFh0QpGH2VA=;
-        b=dtYCn58+LwA3LmDHU2X/Nmo3uMCS2e2LbJXoYhdkLUNn+8OFMD5qQYLIB2zWsN0e/ZIh7h
-        lgP1JeOBzKVbvFqSU1GSysX6BdNR7C8m8liMl9qVtEC0/tHQ/XAjVSMfmXnlHu7M1qxctk
-        uiyGE0dEA25RXlNtHioQDAsdQliz3Zg=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-40-Ps-krIttNZSF5PHW70sGqA-1; Tue, 03 Dec 2019 11:03:49 -0500
-Received: by mail-qt1-f199.google.com with SMTP id u9so2751676qte.5
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 08:03:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ilQ0+r0UBu4+GolSe7bf072ArjOFjAUnGKdJuleehSk=;
-        b=bAU1OGrCvg011hKt4x/4AE3tFmHbbBZOWo3I6wtNqn59g6tB3cdPSjbMJhIOQqoVO1
-         ElFFhCGgoM7UfXj2Y/5Bq98USjqpdajXUnp8JBZFS/+Yl1c9hIzkGXbuBhHOuFk3FmK6
-         yIzFQ9o6bXMba9zns+K4o3vjU9jwi39qszKky5oYfwbOmXdhzJtuQgTVEGF0Z0rhq/do
-         wcq+VD6cbocIoS0D/+4NMKOKJjyCg5reO2pV1yT9W3pLKEDQKLfIqEpVGFaoK79HMb0M
-         WZYLpjUuq3kGGS9q8y5+br8vhOK+DcBl9xJ2lEjKNN/8Tm9ysRQ/kIfB/mvc+V18vDpv
-         whLQ==
-X-Gm-Message-State: APjAAAX1MDy37mxV9T+nVBPKsDxLOaW2lKwIs0+5aUOwxISOh9v0T//w
-        A/zciuiJkA68NZHQ4/58KhhWKP6whMtoIfGQb9bLAjiGYLFEWkDNI61QlIqRIcFSVzG1la3Z24N
-        2L7JJpEZrTN3OGiu9pgCFtw49
-X-Received: by 2002:ac8:461a:: with SMTP id p26mr5490197qtn.317.1575389028707;
-        Tue, 03 Dec 2019 08:03:48 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw4fOIwDRRPp6l7y0lv2pBkxHBG2W7El3I1jqcWKz1A9rg9pHTFG2qYGS/ZbAA+/l6HxaYdUQ==
-X-Received: by 2002:ac8:461a:: with SMTP id p26mr5490164qtn.317.1575389028362;
-        Tue, 03 Dec 2019 08:03:48 -0800 (PST)
-Received: from labbott-redhat.redhat.com (pool-96-235-39-235.pitbpa.fios.verizon.net. [96.235.39.235])
-        by smtp.gmail.com with ESMTPSA id i19sm1930260qki.124.2019.12.03.08.03.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 08:03:47 -0800 (PST)
-From:   Laura Abbott <labbott@redhat.com>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Laura Abbott <labbott@redhat.com>, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Subject: [PATCH] netfilter: nf_flow_table_offload: Correct memcpy size for flow_overload_mangle
-Date:   Tue,  3 Dec 2019 11:03:45 -0500
-Message-Id: <20191203160345.24743-1-labbott@redhat.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 3 Dec 2019 11:04:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55058 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726480AbfLCQEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 11:04:30 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF74D2068E;
+        Tue,  3 Dec 2019 16:04:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575389070;
+        bh=oDFsbxgD5A95Nwp80yYyEw0eJtZ1q1iqcErmr0CW5MU=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=HXbIwJZ4oEv1QVPreYfTg5bdyyYy94SFdJXuK7e5llmpYJ7ol0IsP3yeriHTiLXO8
+         NXgbFYOFEt8jkly/wdaKIcL8Oj24gLOuzZAyLf8ZK8LXwC5JOuc5AUb5U1Pa1q1O9v
+         y/R363m0AqGL+UdeaoJXaNj9RRE2FkLT4RlQ63ZY=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 9D4A93522780; Tue,  3 Dec 2019 08:04:24 -0800 (PST)
+Date:   Tue, 3 Dec 2019 08:04:24 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>, jiangshanlai@gmail.com,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: Workqueues splat due to ending up on wrong CPU
+Message-ID: <20191203160424.GD2889@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191125230312.GP2889@paulmck-ThinkPad-P72>
+ <20191126183334.GE2867037@devbig004.ftw2.facebook.com>
+ <20191126220533.GU2889@paulmck-ThinkPad-P72>
+ <20191127155027.GA15170@paulmck-ThinkPad-P72>
+ <20191128161823.GA24667@paulmck-ThinkPad-P72>
+ <20191129155850.GA17002@paulmck-ThinkPad-P72>
+ <20191202015548.GA13391@paulmck-ThinkPad-P72>
+ <20191202201338.GH16681@devbig004.ftw2.facebook.com>
+ <20191203095521.GH2827@hirez.programming.kicks-ass.net>
+ <20191203154251.GC2196666@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-X-MC-Unique: Ps-krIttNZSF5PHW70sGqA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191203154251.GC2196666@devbig004.ftw2.facebook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sizes for memcpy in flow_offload_mangle don't match
-the source variables, leading to overflow errors on some
-build configurations:
+On Tue, Dec 03, 2019 at 07:42:51AM -0800, Tejun Heo wrote:
+> Hello,
+> 
+> On Tue, Dec 03, 2019 at 10:55:21AM +0100, Peter Zijlstra wrote:
+> > The below seems to not insta explode...
+> 
+> Paul, any chance you can run Peter's patch through your test?
 
-In function 'memcpy',
-    inlined from 'flow_offload_mangle' at net/netfilter/nf_flow_table_offlo=
-ad.c:112:2,
-    inlined from 'flow_offload_port_dnat' at net/netfilter/nf_flow_table_of=
-fload.c:373:2,
-    inlined from 'nf_flow_rule_route_ipv4' at net/netfilter/nf_flow_table_o=
-ffload.c:424:3:
-./include/linux/string.h:376:4: error: call to '__read_overflow2' declared =
-with attribute error: detected read beyond size of object passed as 2nd par=
-ameter
-  376 |    __read_overflow2();
-      |    ^~~~~~~~~~~~~~~~~~
-make[2]: *** [scripts/Makefile.build:266: net/netfilter/nf_flow_table_offlo=
-ad.o] Error 1
+I will give it a shot and report results late tomorrow morning,
+Pacific Time.  (Yeah, slow, but beats the several-month test duration
+that would have been required previously!)
 
-Fix this by using the corresponding type.
-
-Fixes: c29f74e0df7a ("netfilter: nf_flow_table: hardware offload support")
-Signed-off-by: Laura Abbott <labbott@redhat.com>
----
-Seen on a Fedora powerpc little endian build with -O3 but it looks like
-it is correctly catching an error with doing a memcpy outside the source
-variable.
----
- net/netfilter/nf_flow_table_offload.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/net/netfilter/nf_flow_table_offload.c b/net/netfilter/nf_flow_=
-table_offload.c
-index c54c9a6cc981..526f894d0bdb 100644
---- a/net/netfilter/nf_flow_table_offload.c
-+++ b/net/netfilter/nf_flow_table_offload.c
-@@ -108,8 +108,8 @@ static void flow_offload_mangle(struct flow_action_entr=
-y *entry,
- =09entry->id =3D FLOW_ACTION_MANGLE;
- =09entry->mangle.htype =3D htype;
- =09entry->mangle.offset =3D offset;
--=09memcpy(&entry->mangle.mask, mask, sizeof(u32));
--=09memcpy(&entry->mangle.val, value, sizeof(u32));
-+=09memcpy(&entry->mangle.mask, mask, sizeof(u8));
-+=09memcpy(&entry->mangle.val, value, sizeof(u8));
- }
-=20
- static inline struct flow_action_entry *
---=20
-2.21.0
-
+							Thanx, Paul
