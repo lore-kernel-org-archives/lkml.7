@@ -2,51 +2,53 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,PDS_BTC_ID,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A232C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FA4C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E9F720684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 825252064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414793;
-	bh=LSTdpTaR8hFMPic0CKoXaJCg2EX49Lkv4RNvwW08Kyw=;
+	s=default; t=1575414801;
+	bh=XMIyt0Gn6jrtmYRjlka6sozVIKK78PjVdzAOQs2lAA8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mu2oFidszLnPQchFSdVbDm9bkn4NVruHGZVDS7TCWJqIxJdufDen33AF9phH2yTsM
-	 boI5b/AVWqqi+6TrzVXZI0XW8pbezxFONoTQAbvFyxvx8L1EYGjnE4v0uVIF3m8DfX
-	 YCm2754n3nTBaXejbRHcIb+UJ4fIjKFQLAFQJedo=
+	b=c8mitdKPBt4YE1La/7dV+L+hNr3F/adva9sm159zyFtKhT/xDq02bvjrMlTxz+8Sv
+	 81kQS9fDcNdTSe77hqm3JYefdHennPjwKiY0h0Z6JPN1hWp58YLdwuI0BIFDov/1Ur
+	 iXeDE5Z0HXDx9G7dVCpHu0xrjI93D6ZsBv3MCYc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728252AbfLCXNM (ORCPT
+        id S1728001AbfLCWi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:13:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48138 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:38:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727721AbfLCWin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:38:43 -0500
+        id S1727543AbfLCWiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:38:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C7E420803;
-        Tue,  3 Dec 2019 22:38:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE82B20803;
+        Tue,  3 Dec 2019 22:38:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412722;
-        bh=LSTdpTaR8hFMPic0CKoXaJCg2EX49Lkv4RNvwW08Kyw=;
+        s=default; t=1575412704;
+        bh=XMIyt0Gn6jrtmYRjlka6sozVIKK78PjVdzAOQs2lAA8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mgysItCqGVB/eqdU3+hI/KBK14Vy8BQk1IFuSnbIYW4yCRpRnScQYxNwzZsoD3DOo
-         eJ8qB1DYnaYe11rOcX7Nx13Y3xX3JuFqqyYTc7Ba00gRJxJ3ltibEusT6IC7ldxD/I
-         6OclnwoR6ajfhGWSZcPON5e7SQ3nhpMYbuxNmSq8=
+        b=jvVoVViEKgfpTtfH2SIFBigCKk/ar4JsnfcGyW+4GXnCqIGMhOUROYn5PVaALdWW6
+         nSrodItHRUVf/fAqwyEddfVTXRdw/AXxxtjjNL5+6mpL4BVXXb9j4PYmKWjUO+LAmx
+         2NYVEkgHiNtl4sln/lH5o+vekj+JaWxwBP549918=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabio DUrso <fabiodurso@hotmail.it>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.4 11/46] USB: serial: ftdi_sio: add device IDs for U-Blox C099-F9P
-Date:   Tue,  3 Dec 2019 23:35:31 +0100
-Message-Id: <20191203212725.867552506@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 31/46] net: skmsg: fix TLS 1.3 crash with full sk_msg
+Date:   Tue,  3 Dec 2019 23:35:51 +0100
+Message-Id: <20191203212748.151138279@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203212705.175425505@linuxfoundation.org>
 References: <20191203212705.175425505@linuxfoundation.org>
@@ -59,56 +61,214 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio D'Urso <fabiodurso@hotmail.it>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-commit c1a1f273d0825774c80896b8deb1c9ea1d0b91e3 upstream.
+[ Upstream commit 031097d9e079e40dce401031d1012e83d80eaf01 ]
 
-This device presents itself as a USB hub with three attached devices:
- - An ACM serial port connected to the GPS module (not affected by this
-   commit)
- - An FTDI serial port connected to the GPS module (1546:0502)
- - Another FTDI serial port connected to the ODIN-W2 radio module
-   (1546:0503)
+TLS 1.3 started using the entry at the end of the SG array
+for chaining-in the single byte content type entry. This mostly
+works:
 
-This commit registers U-Blox's VID and the PIDs of the second and third
-devices.
+[ E E E E E E . . ]
+  ^           ^
+   start       end
 
-Datasheet: https://www.u-blox.com/sites/default/files/C099-F9P-AppBoard-Mbed-OS3-FW_UserGuide_%28UBX-18063024%29.pdf
+                 E < content type
+               /
+[ E E E E E E C . ]
+  ^           ^
+   start       end
 
-Signed-off-by: Fabio D'Urso <fabiodurso@hotmail.it>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+(Where E denotes a populated SG entry; C denotes a chaining entry.)
+
+If the array is full, however, the end will point to the start:
+
+[ E E E E E E E E ]
+  ^
+   start
+   end
+
+And we end up overwriting the start:
+
+    E < content type
+   /
+[ C E E E E E E E ]
+  ^
+   start
+   end
+
+The sg array is supposed to be a circular buffer with start and
+end markers pointing anywhere. In case where start > end
+(i.e. the circular buffer has "wrapped") there is an extra entry
+reserved at the end to chain the two halves together.
+
+[ E E E E E E . . l ]
+
+(Where l is the reserved entry for "looping" back to front.
+
+As suggested by John, let's reserve another entry for chaining
+SG entries after the main circular buffer. Note that this entry
+has to be pointed to by the end entry so its position is not fixed.
+
+Examples of full messages:
+
+[ E E E E E E E E . l ]
+  ^               ^
+   start           end
+
+   <---------------.
+[ E E . E E E E E E l ]
+      ^ ^
+   end   start
+
+Now the end will always point to an unused entry, so TLS 1.3
+can always use it.
+
+Fixes: 130b392c6cd6 ("net: tls: Add tls 1.3 support")
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/serial/ftdi_sio.c     |    3 +++
- drivers/usb/serial/ftdi_sio_ids.h |    7 +++++++
- 2 files changed, 10 insertions(+)
+ include/linux/skmsg.h |   26 +++++++++++++-------------
+ net/core/filter.c     |    8 ++++----
+ net/core/skmsg.c      |    2 +-
+ net/ipv4/tcp_bpf.c    |    2 +-
+ 4 files changed, 19 insertions(+), 19 deletions(-)
 
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -1033,6 +1033,9 @@ static const struct usb_device_id id_tab
- 	/* Sienna devices */
- 	{ USB_DEVICE(FTDI_VID, FTDI_SIENNA_PID) },
- 	{ USB_DEVICE(ECHELON_VID, ECHELON_U20_PID) },
-+	/* U-Blox devices */
-+	{ USB_DEVICE(UBLOX_VID, UBLOX_C099F9P_ZED_PID) },
-+	{ USB_DEVICE(UBLOX_VID, UBLOX_C099F9P_ODIN_PID) },
- 	{ }					/* Terminating entry */
+--- a/include/linux/skmsg.h
++++ b/include/linux/skmsg.h
+@@ -14,6 +14,7 @@
+ #include <net/strparser.h>
+ 
+ #define MAX_MSG_FRAGS			MAX_SKB_FRAGS
++#define NR_MSG_FRAG_IDS			(MAX_MSG_FRAGS + 1)
+ 
+ enum __sk_action {
+ 	__SK_DROP = 0,
+@@ -29,11 +30,13 @@ struct sk_msg_sg {
+ 	u32				size;
+ 	u32				copybreak;
+ 	bool				copy[MAX_MSG_FRAGS];
+-	/* The extra element is used for chaining the front and sections when
+-	 * the list becomes partitioned (e.g. end < start). The crypto APIs
+-	 * require the chaining.
++	/* The extra two elements:
++	 * 1) used for chaining the front and sections when the list becomes
++	 *    partitioned (e.g. end < start). The crypto APIs require the
++	 *    chaining;
++	 * 2) to chain tailer SG entries after the message.
+ 	 */
+-	struct scatterlist		data[MAX_MSG_FRAGS + 1];
++	struct scatterlist		data[MAX_MSG_FRAGS + 2];
  };
  
---- a/drivers/usb/serial/ftdi_sio_ids.h
-+++ b/drivers/usb/serial/ftdi_sio_ids.h
-@@ -1558,3 +1558,10 @@
-  */
- #define UNJO_VID			0x22B7
- #define UNJO_ISODEBUG_V1_PID		0x150D
-+
-+/*
-+ * U-Blox products (http://www.u-blox.com).
-+ */
-+#define UBLOX_VID			0x1546
-+#define UBLOX_C099F9P_ZED_PID		0x0502
-+#define UBLOX_C099F9P_ODIN_PID		0x0503
+ /* UAPI in filter.c depends on struct sk_msg_sg being first element. */
+@@ -141,13 +144,13 @@ static inline void sk_msg_apply_bytes(st
+ 
+ static inline u32 sk_msg_iter_dist(u32 start, u32 end)
+ {
+-	return end >= start ? end - start : end + (MAX_MSG_FRAGS - start);
++	return end >= start ? end - start : end + (NR_MSG_FRAG_IDS - start);
+ }
+ 
+ #define sk_msg_iter_var_prev(var)			\
+ 	do {						\
+ 		if (var == 0)				\
+-			var = MAX_MSG_FRAGS - 1;	\
++			var = NR_MSG_FRAG_IDS - 1;	\
+ 		else					\
+ 			var--;				\
+ 	} while (0)
+@@ -155,7 +158,7 @@ static inline u32 sk_msg_iter_dist(u32 s
+ #define sk_msg_iter_var_next(var)			\
+ 	do {						\
+ 		var++;					\
+-		if (var == MAX_MSG_FRAGS)		\
++		if (var == NR_MSG_FRAG_IDS)		\
+ 			var = 0;			\
+ 	} while (0)
+ 
+@@ -172,9 +175,9 @@ static inline void sk_msg_clear_meta(str
+ 
+ static inline void sk_msg_init(struct sk_msg *msg)
+ {
+-	BUILD_BUG_ON(ARRAY_SIZE(msg->sg.data) - 1 != MAX_MSG_FRAGS);
++	BUILD_BUG_ON(ARRAY_SIZE(msg->sg.data) - 1 != NR_MSG_FRAG_IDS);
+ 	memset(msg, 0, sizeof(*msg));
+-	sg_init_marker(msg->sg.data, MAX_MSG_FRAGS);
++	sg_init_marker(msg->sg.data, NR_MSG_FRAG_IDS);
+ }
+ 
+ static inline void sk_msg_xfer(struct sk_msg *dst, struct sk_msg *src,
+@@ -195,14 +198,11 @@ static inline void sk_msg_xfer_full(stru
+ 
+ static inline bool sk_msg_full(const struct sk_msg *msg)
+ {
+-	return (msg->sg.end == msg->sg.start) && msg->sg.size;
++	return sk_msg_iter_dist(msg->sg.start, msg->sg.end) == MAX_MSG_FRAGS;
+ }
+ 
+ static inline u32 sk_msg_elem_used(const struct sk_msg *msg)
+ {
+-	if (sk_msg_full(msg))
+-		return MAX_MSG_FRAGS;
+-
+ 	return sk_msg_iter_dist(msg->sg.start, msg->sg.end);
+ }
+ 
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -2299,7 +2299,7 @@ BPF_CALL_4(bpf_msg_pull_data, struct sk_
+ 	WARN_ON_ONCE(last_sge == first_sge);
+ 	shift = last_sge > first_sge ?
+ 		last_sge - first_sge - 1 :
+-		MAX_SKB_FRAGS - first_sge + last_sge - 1;
++		NR_MSG_FRAG_IDS - first_sge + last_sge - 1;
+ 	if (!shift)
+ 		goto out;
+ 
+@@ -2308,8 +2308,8 @@ BPF_CALL_4(bpf_msg_pull_data, struct sk_
+ 	do {
+ 		u32 move_from;
+ 
+-		if (i + shift >= MAX_MSG_FRAGS)
+-			move_from = i + shift - MAX_MSG_FRAGS;
++		if (i + shift >= NR_MSG_FRAG_IDS)
++			move_from = i + shift - NR_MSG_FRAG_IDS;
+ 		else
+ 			move_from = i + shift;
+ 		if (move_from == msg->sg.end)
+@@ -2323,7 +2323,7 @@ BPF_CALL_4(bpf_msg_pull_data, struct sk_
+ 	} while (1);
+ 
+ 	msg->sg.end = msg->sg.end - shift > msg->sg.end ?
+-		      msg->sg.end - shift + MAX_MSG_FRAGS :
++		      msg->sg.end - shift + NR_MSG_FRAG_IDS :
+ 		      msg->sg.end - shift;
+ out:
+ 	msg->data = sg_virt(&msg->sg.data[first_sge]) + start - offset;
+--- a/net/core/skmsg.c
++++ b/net/core/skmsg.c
+@@ -421,7 +421,7 @@ static int sk_psock_skb_ingress(struct s
+ 	copied = skb->len;
+ 	msg->sg.start = 0;
+ 	msg->sg.size = copied;
+-	msg->sg.end = num_sge == MAX_MSG_FRAGS ? 0 : num_sge;
++	msg->sg.end = num_sge;
+ 	msg->skb = skb;
+ 
+ 	sk_psock_queue_msg(psock, msg);
+--- a/net/ipv4/tcp_bpf.c
++++ b/net/ipv4/tcp_bpf.c
+@@ -301,7 +301,7 @@ EXPORT_SYMBOL_GPL(tcp_bpf_sendmsg_redir)
+ static int tcp_bpf_send_verdict(struct sock *sk, struct sk_psock *psock,
+ 				struct sk_msg *msg, int *copied, int flags)
+ {
+-	bool cork = false, enospc = msg->sg.start == msg->sg.end;
++	bool cork = false, enospc = sk_msg_full(msg);
+ 	struct sock *sk_redir;
+ 	u32 tosend, delta = 0;
+ 	int ret;
 
 
