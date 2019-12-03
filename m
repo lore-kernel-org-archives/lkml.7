@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF735C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 917F9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 925E92084F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61EC32084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413501;
-	bh=nDCKH+QXe5/uO9xv628AIPEIftxmCLh79Dqpkw6412U=;
+	s=default; t=1575413505;
+	bh=EHE3Ew+coMhAAVPChOkrPQ2lLCcUeXZQLgaU2uMCdrM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sR3zKvuShoAGOiZIi8vTIB9dQ0KOSdiU7utxiIm/DvfetRJgZ/MbPtpI1aw+3WM+v
-	 r7Ip7USI4KfpiL8ZoIkukvxfcXRD5sLFiL4ZDx+Fg1sNT5JCa8iE24xckzA7NBORwH
-	 BWv4reUivvXGDF3OynUo+CeyZPB8eRuqw5pE4GcY=
+	b=lFVOEkQCGFP8oFj1g/nMy6NrYL+Lp8w7+Hq3JFcMW0Y9d8Y3OPCxtQ1EhN1IMZdCb
+	 25q5AVdrfgTTHXCRWbkCwp3q0hg833z6qwtrfwFimWsd2N2BUlKn/D6SmSiONWyRU/
+	 olrcgSJ8trhpfBADu84QpkHrevZhlsKSBcyEw1FE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729926AbfLCWvk (ORCPT
+        id S1729942AbfLCWvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:51:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43892 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:51:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729385AbfLCWve (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:51:34 -0500
+        id S1729755AbfLCWvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:51:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFCE920848;
-        Tue,  3 Dec 2019 22:51:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDF3820848;
+        Tue,  3 Dec 2019 22:51:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413494;
-        bh=nDCKH+QXe5/uO9xv628AIPEIftxmCLh79Dqpkw6412U=;
+        s=default; t=1575413499;
+        bh=EHE3Ew+coMhAAVPChOkrPQ2lLCcUeXZQLgaU2uMCdrM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RQI/mBXdJ5OyLZ7KCx3FGvpUxJUdZNCo2hQn5dXa+k5PL6euueQYB8GYaTDDwpD/D
-         424qkZ2BnFSRFO2Yp4J/aUUdXzHXnD1LgRlk4UQVoV/R7p0zH8vOi1cVgkEmaZrYir
-         exkYTIiSh7XgVB+IFvNLOV5TmhO4jrsqXoWJ5QmY=
+        b=KRSN8TiA5yUOg83ZUhDBcpSTOwAqE84A/sAfhBLO7qqkImiJ+tr7H1JwKImNnt/UZ
+         yiWn+ielF1o3K1rJ8sr/lXnVOxvUwR9EpT1tChGVwsS+dR4sbcx+E5wCFxK4ajjJzp
+         etLVQIQ3LfSOF+t9EaQOkjWqMQyWhtp4nL+xoW9k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 149/321] IB/qib: Fix an error code in qib_sdma_verbs_send()
-Date:   Tue,  3 Dec 2019 23:33:35 +0100
-Message-Id: <20191203223434.902949094@linuxfoundation.org>
+Subject: [PATCH 4.19 151/321] vxlan: Fix error path in __vxlan_dev_create()
+Date:   Tue,  3 Dec 2019 23:33:37 +0100
+Message-Id: <20191203223435.005301338@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,36 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Petr Machata <petrm@mellanox.com>
 
-[ Upstream commit 5050ae5fa3d54c8e83e1e447cc7e3591110a7f57 ]
+[ Upstream commit 6db9246871394b3a136cd52001a0763676563840 ]
 
-We accidentally return success on this error path.
+When a failure occurs in rtnl_configure_link(), the current code
+calls unregister_netdevice() to roll back the earlier call to
+register_netdevice(), and jumps to errout, which calls
+vxlan_fdb_destroy().
 
-Fixes: f931551bafe1 ("IB/qib: Add new qib driver for QLogic PCIe InfiniBand adapters")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+However unregister_netdevice() calls transitively ndo_uninit, which is
+vxlan_uninit(), and that already takes care of deleting the default FDB
+entry by calling vxlan_fdb_delete_default(). Since the entry added
+earlier in __vxlan_dev_create() is exactly the default entry, the
+cleanup code in the errout block always leads to double free and thus a
+panic.
+
+Besides, since vxlan_fdb_delete_default() always destroys the FDB entry
+with notification enabled, the deletion of the default entry is notified
+even before the addition was notified.
+
+Instead, move the unregister_netdevice() call after the manual destroy,
+which solves both problems.
+
+Fixes: 0241b836732f ("vxlan: fix default fdb entry netlink notify ordering during netdev create")
+Signed-off-by: Petr Machata <petrm@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/qib/qib_sdma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/vxlan.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/infiniband/hw/qib/qib_sdma.c b/drivers/infiniband/hw/qib/qib_sdma.c
-index d0723d4aef5c9..7424e88b0d918 100644
---- a/drivers/infiniband/hw/qib/qib_sdma.c
-+++ b/drivers/infiniband/hw/qib/qib_sdma.c
-@@ -576,8 +576,10 @@ retry:
- 		dw = (len + 3) >> 2;
- 		addr = dma_map_single(&ppd->dd->pcidev->dev, sge->vaddr,
- 				      dw << 2, DMA_TO_DEVICE);
--		if (dma_mapping_error(&ppd->dd->pcidev->dev, addr))
-+		if (dma_mapping_error(&ppd->dd->pcidev->dev, addr)) {
-+			ret = -ENOMEM;
- 			goto unmap;
-+		}
- 		sdmadesc[0] = 0;
- 		make_sdma_desc(ppd, sdmadesc, (u64) addr, dw, dwoffset);
- 		/* SDmaUseLargeBuf has to be set in every descriptor */
+diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
+index 2a536f84d5f69..d8a56df3933f0 100644
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -3213,6 +3213,7 @@ static int __vxlan_dev_create(struct net *net, struct net_device *dev,
+ 	struct vxlan_net *vn = net_generic(net, vxlan_net_id);
+ 	struct vxlan_dev *vxlan = netdev_priv(dev);
+ 	struct vxlan_fdb *f = NULL;
++	bool unregister = false;
+ 	int err;
+ 
+ 	err = vxlan_dev_configure(net, dev, conf, false, extack);
+@@ -3238,12 +3239,11 @@ static int __vxlan_dev_create(struct net *net, struct net_device *dev,
+ 	err = register_netdevice(dev);
+ 	if (err)
+ 		goto errout;
++	unregister = true;
+ 
+ 	err = rtnl_configure_link(dev, NULL);
+-	if (err) {
+-		unregister_netdevice(dev);
++	if (err)
+ 		goto errout;
+-	}
+ 
+ 	/* notify default fdb entry */
+ 	if (f)
+@@ -3251,9 +3251,16 @@ static int __vxlan_dev_create(struct net *net, struct net_device *dev,
+ 
+ 	list_add(&vxlan->next, &vn->vxlan_list);
+ 	return 0;
++
+ errout:
++	/* unregister_netdevice() destroys the default FDB entry with deletion
++	 * notification. But the addition notification was not sent yet, so
++	 * destroy the entry by hand here.
++	 */
+ 	if (f)
+ 		vxlan_fdb_destroy(vxlan, f, false);
++	if (unregister)
++		unregister_netdevice(dev);
+ 	return err;
+ }
+ 
 -- 
 2.20.1
 
