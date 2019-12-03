@@ -2,265 +2,206 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1EFC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 21:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37077C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 21:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D2FE2080F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 21:56:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575410160;
-	bh=B8d1q8o/fT9Ce39BJOKVcStdOI9SkKyf+R6OaOGxeR8=;
-	h=Date:From:To:Subject:List-ID:From;
-	b=FcyUF275JMJwRH4Z1oJjO5HQ+S3OYBSqJIgEvySZ4TbIa4pmdiMlE0MLfnT/uLNav
-	 kALECAIRI+PFe7dLnPVuMlo8pUmlD6J+uktWzUnnQxv0gnbsUx2gc+B6UQFBBC0i5U
-	 R3H/R/FfzNieK9O2aKvejVb5Z4eQcuC3TA2Y4tCw=
+	by mail.kernel.org (Postfix) with ESMTP id EDA982073F
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 21:58:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mch82JqO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbfLCVz7 (ORCPT
+        id S1727559AbfLCV6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 16:55:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53176 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727416AbfLCVz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 16:55:59 -0500
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EED952073F;
-        Tue,  3 Dec 2019 21:55:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575410158;
-        bh=B8d1q8o/fT9Ce39BJOKVcStdOI9SkKyf+R6OaOGxeR8=;
-        h=Date:From:To:Subject:From;
-        b=t3rIMqyhZ2/8no5HgGK2M0UT7C7QXknBybJavMvdE0aIpBNj63gk9b9cSB7B9K/91
-         5V0dnn6ItbFg6N4n+r4Uf/euj8RgphdxJyfjQs/50Gc/ZBM4XFcPWvCFNMOFfntUBC
-         Tv2Bue+Uq7Kfa4SplCa58qqh8GTE2UBmC2UVJ6sg=
-Date:   Tue, 03 Dec 2019 13:55:57 -0800
-From:   akpm@linux-foundation.org
-To:     broonie@kernel.org, mhocko@suse.cz, sfr@canb.auug.org.au,
-        linux-next@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        mm-commits@vger.kernel.org
-Subject:  mmotm 2019-12-03-13-55 uploaded
-Message-ID: <20191203215557.2SX9Z%akpm@linux-foundation.org>
-User-Agent: s-nail v14.9.13
+        Tue, 3 Dec 2019 16:58:08 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40235 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727502AbfLCV6H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 16:58:07 -0500
+Received: by mail-pl1-f194.google.com with SMTP id g6so2226303plp.7
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 13:58:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=PV23OO9Xr/Mc2OFDjoQ4/L3wl1TU63dPuuNGie4xRp8=;
+        b=Mch82JqOqey/ZSZD+MTASXQQ/KzjPgyFO6PzZBAjIsxytzS5sZEhXOPkr8rEweQsnp
+         zQjWcP8YBxtbcQAgY6djkHvMkkum7cZ83fYd3aroVaFrK5lZoP1+Y1giBrn7sUjGfXFq
+         JayJOXaVhLZQfeGk6h+BHiS5nQYvhBeFjRLf1waN82sogsPy4S7rVSD4+cKdsZCBmZEV
+         mWc7vZFjfMBLQ8dFCYSO0Q4p7nZaC3WHjtLAbOaiynzMf3mYpeUlKsh1cCfZTWsyrMB8
+         yclVkVxu3fxY8rmjkyk6ZtHbBEP/S3kXR4hOCH76CfgfLurfK6gQCm7c8C4DxH+HKB3O
+         EMUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=PV23OO9Xr/Mc2OFDjoQ4/L3wl1TU63dPuuNGie4xRp8=;
+        b=KQNZi8R5rUno5DqGeyf1IvTJNiczS7vPT70yS7FrjMmzbI51fgWsRqspKYqhrkik2W
+         F7mKh+UIyZUxVgyp8REx4mZNvAncfda+DSL8hIK49kGqaZybGUCveSZNBg1vblxm+Ci+
+         EVul5bZ9DzXX0tJ2uGDouYvIGyPQwVBL/8KYeeb2TnMo/2zIl3c8POkiuTNRBIdVCyuE
+         qg/yC4wAQylaUJoB8b31bRo3rpsty3Asb7Iab1WmR2dgHuGiWstGdwxoIE+Iiu4BXuHw
+         Ku6JrMaQVDYVbq1eJFCJWtyyUCQipTditpi3ZEutgo+0POkjXlkggweYMh90qR3hKN6N
+         NOLA==
+X-Gm-Message-State: APjAAAUbPYiODllFn+jbkFPUthd4MXxoti2esjv5EY95rKCd81eC/en1
+        h3/bN2nkvnQlW9+MWGW3sNLRQQ==
+X-Google-Smtp-Source: APXvYqzM1A0P0eBhwkQEGWlnx17IiWlbmP0btON81EiKW0le9Yr/mQiUFUctsqdEzPmj/GCoxhbAWQ==
+X-Received: by 2002:a17:90a:d807:: with SMTP id a7mr8219214pjv.15.1575410285936;
+        Tue, 03 Dec 2019 13:58:05 -0800 (PST)
+Received: from google.com ([2620:15c:202:201:bc61:d85d:eb16:9036])
+        by smtp.gmail.com with ESMTPSA id m27sm4747405pff.179.2019.12.03.13.58.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2019 13:58:04 -0800 (PST)
+Date:   Tue, 3 Dec 2019 13:58:00 -0800
+From:   Benson Leung <bleung@google.com>
+To:     torvalds@linux-foundation.org
+Cc:     bleung@kernel.org, gwendal@chromium.org, bleung@chromium.org,
+        bleung@google.com, enric.balletbo@collabora.com,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] chrome-platform changes for v5.5
+Message-ID: <20191203215800.GA34130@google.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mm-of-the-moment snapshot 2019-12-03-13-55 has been uploaded to
 
-   http://www.ozlabs.org/~akpm/mmotm/
+--jI8keyz6grp/JLjh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-mmotm-readme.txt says
+Hi Linus,
 
-README for mm-of-the-moment:
+The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
 
-http://www.ozlabs.org/~akpm/mmotm/
+  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
 
-This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-more than once a week.
+are available in the Git repository at:
 
-You will need quilt to apply these patches to the latest Linus release (5.x
-or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-http://ozlabs.org/~akpm/mmotm/series
+  git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git t=
+ags/tag-chrome-platform-for-v5.5
 
-The file broken-out.tar.gz contains two datestamp files: .DATE and
-.DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
-followed by the base kernel version against which this patch series is to
-be applied.
+for you to fetch changes up to 856a0a6e2d09d31fd8f00cc1fc6645196a509d56:
 
-This tree is partially included in linux-next.  To see which patches are
-included in linux-next, consult the `series' file.  Only the patches
-within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
-linux-next.
+  platform/chrome: wilco_ec: fix use after free issue (2019-12-02 12:14:42 =
++0100)
 
+----------------------------------------------------------------
+chrome platform changes for v5.5
 
-A full copy of the full kernel tree with the linux-next and mmotm patches
-already applied is available through git within an hour of the mmotm
-release.  Individual mmotm releases are tagged.  The master branch always
-points to the latest release, so it's constantly rebasing.
+* CrOS EC / MFD / IIO
+ - Contains tag-ib-chrome-mfd-iio-input-5.5, which is the first part of a
+   series from Gwendal to refactor sensor code between MFD, CrOS EC, iio
+   and input in order to add a new sensorhub driver and FIFO processing
 
-	https://github.com/hnaz/linux-mm
+* Wilco EC:
+ - Add support for Dell's USB PowerShare policy control, keyboard
+   backlight LED driver, and a new test_event file.
+ - Fixes use after free in wilco_ec's telemetry driver.
 
-The directory http://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
-contains daily snapshots of the -mm tree.  It is updated more frequently
-than mmotm, and is untested.
+* Misc:
+ - bugfix in cros_usbpd_logger (missing destroy workqueue).
 
-A git copy of this tree is also available at
+----------------------------------------------------------------
+Chuhong Yuan (1):
+      platform/chrome: cros_usbpd_logger: add missed destroy_workqueue in r=
+emove
 
-	https://github.com/hnaz/linux-mm
+Daniel Campello (3):
+      platform/chrome: wilco_ec: Add debugfs test_event file
+      platform/chrome: wilco_ec: Add Dell's USB PowerShare Policy control
+      platform/chrome: wilco_ec: Add keyboard backlight LED support
 
+Enric Balletbo i Serra (2):
+      Merge tag 'tag-ib-chrome-mfd-iio-input-5.5' into chrome-platform-5.5
+      platform/chrome: cros_ec: Add Kconfig default for cros-ec-sensorhub
 
+Enrico Granata (1):
+      platform/chrome: cros_ec: handle MKBP more events flag
 
-This mmotm tree contains the following patches against 5.4:
-(patches marked "*" will be included in linux-next)
+Gwendal Grignou (8):
+      platform/chrome: cros_ec: Put docs with the code
+      mfd / platform: cros_ec: Add sensor_count and make check_features pub=
+lic
+      iio / platform: cros_ec: Add cros-ec-sensorhub driver
+      mfd / platform / iio: cros_ec: Register sensor through sensorhub
+      platform/chrome: cros-ec: Record event timestamp in the hard irq
+      platform/chrome: cros_ec: Do not attempt to register a non-positive I=
+RQ number
+      Revert "Input: cros_ec_keyb - add back missing mask for event_type"
+      Revert "Input: cros_ec_keyb: mask out extra flags in event_type"
 
-  origin.patch
-* mm-kasan-fix-an-compile-error.patch
-* mm-memcg-slab-wait-for-root-kmem_cache-refcnt-killing-on-root-kmem_cache-destruction.patch
-* mm-vmstat-add-helpers-to-get-vmstat-item-names-for-each-enum-type.patch
-* mm-memcontrol-use-vmstat-names-for-printing-statistics.patch
-* mm-replace-is_zero_pfn-with-is_huge_zero_pmd-for-thp.patch
-* proc-change-nlink-under-proc_subdir_lock.patch
-* proc-delete-useless-len-variable.patch
-* proc-shuffle-struct-pde_opener.patch
-* proc-fix-confusing-macro-arg-name.patch
-* proc-fix-kconfig-indentation.patch
-* sysctl-inline-braces-for-ctl_table-and-ctl_table_header.patch
-* gitattributes-use-dts-diff-driver-for-dts-files.patch
-* linux-build_bugh-change-type-to-int.patch
-* linux-scch-make-uapi-linux-scch-self-contained.patch
-* arch-fix-kconfig-indentation.patch
-* get_maintainer-add-signatures-from-fixes-badcommit-lines-in-commit-message.patch
-* kernelh-update-comment-about-simple_strtofoo-functions.patch
-* auxdisplay-charlcd-deduplicate-simple_strtoul.patch
-* kernel-notifierc-intercepting-duplicate-registrations-to-avoid-infinite-loops.patch
-* kernel-notifierc-remove-notifier_chain_cond_register.patch
-* kernel-notifierc-remove-blocking_notifier_chain_cond_register.patch
-* kernel-profile-use-cpumask_available-to-check-for-null-cpumask.patch
-* kernel-sysc-avoid-copying-possible-padding-bytes-in-copy_to_user.patch
-* bitops-introduce-the-for_each_set_clump8-macro.patch
-* lib-test_bitmapc-add-for_each_set_clump8-test-cases.patch
-* gpio-104-dio-48e-utilize-for_each_set_clump8-macro.patch
-* gpio-104-idi-48-utilize-for_each_set_clump8-macro.patch
-* gpio-gpio-mm-utilize-for_each_set_clump8-macro.patch
-* gpio-ws16c48-utilize-for_each_set_clump8-macro.patch
-* gpio-pci-idio-16-utilize-for_each_set_clump8-macro.patch
-* gpio-pcie-idio-24-utilize-for_each_set_clump8-macro.patch
-* gpio-uniphier-utilize-for_each_set_clump8-macro.patch
-* gpio-74x164-utilize-the-for_each_set_clump8-macro.patch
-* thermal-intel-intel_soc_dts_iosf-utilize-for_each_set_clump8-macro.patch
-* gpio-pisosr-utilize-the-for_each_set_clump8-macro.patch
-* gpio-max3191x-utilize-the-for_each_set_clump8-macro.patch
-* gpio-pca953x-utilize-the-for_each_set_clump8-macro.patch
-* lib-rbtree-set-successors-parent-unconditionally.patch
-* lib-rbtree-get-successors-color-directly.patch
-* lib-test_meminitc-add-bulk-alloc-free-tests.patch
-* lib-fix-possible-incorrect-result-from-rational-fractions-helper.patch
-* lib-genallocc-export-symbol-addr_in_gen_pool.patch
-* lib-genallocc-rename-addr_in_gen_pool-to-gen_pool_has_addr.patch
-* checkpatch-improve-ignoring-camelcase-si-style-variants-like-ma.patch
-* checkpatch-reduce-is_maintained_obsolete-lookup-runtime.patch
-* epoll-simplify-ep_poll_safewake-for-config_debug_lock_alloc.patch
-* fs-epoll-remove-unnecessary-wakeups-of-nested-epoll.patch
-* selftests-add-epoll-selftests.patch
-* elf-delete-unused-interp_map_addr-argument.patch
-* elf-extract-elf_read-function.patch
-* init-fix-kconfig-indentation.patch
-* rapidio-fix-missing-include-of-linux-rio_drvh.patch
-* drivers-rapidio-rio-accessc-fix-missing-include-of-linux-rio_drvh.patch
-* drm-limit-to-int_max-in-create_blob-ioctl.patch
-* uaccess-disallow-int_max-copy-sizes.patch
-* kcov-remote-coverage-support.patch
-* usb-kcov-collect-coverage-from-hub_event.patch
-* vhost-kcov-collect-coverage-from-vhost_worker.patch
-* lib-ubsan-dont-seralize-ubsan-report.patch
-* arch-ipcbufh-make-uapi-asm-ipcbufh-self-contained.patch
-* arch-msgbufh-make-uapi-asm-msgbufh-self-contained.patch
-* arch-sembufh-make-uapi-asm-sembufh-self-contained.patch
-* lib-test_bitmap-force-argument-of-bitmap_parselist_user-to-proper-address-space.patch
-* lib-test_bitmap-undefine-macros-after-use.patch
-* lib-test_bitmap-name-exp_bytes-properly.patch
-* lib-test_bitmap-rename-exp-to-exp1-to-avoid-ambiguous-name.patch
-* lib-test_bitmap-move-exp1-and-exp2-upper-for-others-to-use.patch
-* lib-test_bitmap-fix-comment-about-this-file.patch
-* bitmap-introduce-bitmap_replace-helper.patch
-* gpio-pca953x-remove-redundant-variable-and-check-in-irq-handler.patch
-* gpio-pca953x-use-input-from-regs-structure-in-pca953x_irq_pending.patch
-* gpio-pca953x-convert-to-use-bitmap-api.patch
-* gpio-pca953x-tight-up-indentation.patch
-* alpha-use-pgtable-nopud-instead-of-4level-fixup.patch
-* arm-nommu-use-pgtable-nopud-instead-of-4level-fixup.patch
-* c6x-use-pgtable-nopud-instead-of-4level-fixup.patch
-* m68k-nommu-use-pgtable-nopud-instead-of-4level-fixup.patch
-* m68k-mm-use-pgtable-nopxd-instead-of-4level-fixup.patch
-* microblaze-use-pgtable-nopmd-instead-of-4level-fixup.patch
-* nds32-use-pgtable-nopmd-instead-of-4level-fixup.patch
-* parisc-use-pgtable-nopxd-instead-of-4level-fixup.patch
-* parisc-hugetlb-use-pgtable-nopxd-instead-of-4level-fixup.patch
-* sparc32-use-pgtable-nopud-instead-of-4level-fixup.patch
-* um-remove-unused-pxx_offset_proc-and-addr_pte-functions.patch
-* um-add-support-for-folded-p4d-page-tables.patch
-* mm-remove-__arch_has_4level_hack-and-include-asm-generic-4level-fixuph.patch
-* proc-kpageflags-prevent-an-integer-overflow-in-stable_page_flags.patch
-* proc-kpageflags-do-not-use-uninitialized-struct-pages.patch
-* mm-thp-tweak-reclaim-compaction-effort-of-local-only-and-all-node-allocations.patch
-* x86-mm-split-vmalloc_sync_all.patch
-* ramfs-support-o_tmpfile.patch
-  mm.patch
-* mm-avoid-slub-allocation-while-holding-list_lock.patch
-* mm-vmscan-expose-cgroup_ino-for-memcg-reclaim-tracepoints.patch
-* mm-pgmap-use-correct-alignment-when-looking-at-first-pfn-from-a-region.patch
-* mm-mmap-fix-the-adjusted-length-error.patch
-* mm-memmap_init-update-variable-name-in-memmap_init_zone.patch
-* mm-memory_hotplug-shrink-zones-when-offlining-memory.patch
-* mm-memory_hotplug-poison-memmap-in-remove_pfn_range_from_zone.patch
-* mm-memory_hotplug-we-always-have-a-zone-in-find_smallestbiggest_section_pfn.patch
-* mm-memory_hotplug-dont-check-for-all-holes-in-shrink_zone_span.patch
-* mm-memory_hotplug-drop-local-variables-in-shrink_zone_span.patch
-* mm-memory_hotplug-cleanup-__remove_pages.patch
-* mm-oom-avoid-printk-iteration-under-rcu.patch
-* mm-oom-avoid-printk-iteration-under-rcu-fix.patch
-* info-task-hung-in-generic_file_write_iter.patch
-* info-task-hung-in-generic_file_write-fix.patch
-* kernel-hung_taskc-monitor-killed-tasks.patch
-* string-add-stracpy-and-stracpy_pad-mechanisms.patch
-* documentation-checkpatch-prefer-stracpy-strscpy-over-strcpy-strlcpy-strncpy.patch
-* aio-simplify-read_events.patch
-* smp_mb__beforeafter_atomic-update-documentation.patch
-* ipc-mqueuec-remove-duplicated-code.patch
-* ipc-mqueuec-update-document-memory-barriers.patch
-* ipc-msgc-update-and-document-memory-barriers.patch
-* ipc-semc-document-and-update-memory-barriers.patch
-* ipc-consolidate-all-xxxctl_down-functions.patch
-  linux-next.patch
-  linux-next-git-rejects.patch
-* drivers-block-null_blk_mainc-fix-layout.patch
-* drivers-block-null_blk_mainc-fix-uninitialized-var-warnings.patch
-* pinctrl-fix-pxa2xxc-build-warnings.patch
-* hacking-group-sysrq-kgdb-ubsan-into-generic-kernel-debugging-instruments.patch
-* hacking-create-submenu-for-arch-special-debugging-options.patch
-* hacking-group-kernel-data-structures-debugging-together.patch
-* hacking-move-kernel-testing-and-coverage-options-to-same-submenu.patch
-* hacking-move-oops-into-lockups-and-hangs.patch
-* hacking-move-sched_stack_end_check-after-debug_stack_usage.patch
-* hacking-create-a-submenu-for-scheduler-debugging-options.patch
-* hacking-move-debug_bugverbose-to-printk-and-dmesg-options.patch
-* hacking-move-debug_fs-to-generic-kernel-debugging-instruments.patch
-* lib-fix-kconfig-indentation.patch
-* mm-add-generic-pd_leaf-macros.patch
-* arc-mm-add-pd_leaf-definitions.patch
-* arm-mm-add-pd_leaf-definitions.patch
-* arm64-mm-add-pd_leaf-definitions.patch
-* mips-mm-add-pd_leaf-definitions.patch
-* powerpc-mm-add-pd_leaf-definitions.patch
-* riscv-mm-add-pd_leaf-definitions.patch
-* s390-mm-add-pd_leaf-definitions.patch
-* sparc-mm-add-pd_leaf-definitions.patch
-* x86-mm-add-pd_leaf-definitions.patch
-* mm-pagewalk-add-p4d_entry-and-pgd_entry.patch
-* mm-pagewalk-allow-walking-without-vma.patch
-* mm-pagewalk-add-test_pd-callbacks.patch
-* mm-pagewalk-add-depth-parameter-to-pte_hole.patch
-* x86-mm-point-to-struct-seq_file-from-struct-pg_state.patch
-* x86-mmefi-convert-ptdump_walk_pgd_level-to-take-a-mm_struct.patch
-* x86-mm-convert-ptdump_walk_pgd_level_debugfs-to-take-an-mm_struct.patch
-* x86-mm-convert-ptdump_walk_pgd_level_core-to-take-an-mm_struct.patch
-* mm-add-generic-ptdump.patch
-* x86-mm-convert-dump_pagetables-to-use-walk_page_range.patch
-* arm64-mm-convert-mm-dumpc-to-use-walk_page_range.patch
-* arm64-mm-display-non-present-entries-in-ptdump.patch
-* mm-ptdump-reduce-level-numbers-by-1-in-note_page.patch
-* drivers-tty-serial-sh-scic-suppress-warning.patch
-* fix-read-buffer-overflow-in-delta-ipc.patch
-  make-sure-nobodys-leaking-resources.patch
-  releasing-resources-with-children.patch
-  mutex-subsystem-synchro-test-module.patch
-  kernel-forkc-export-kernel_thread-to-modules.patch
-  workaround-for-a-pci-restoring-bug.patch
+Krzysztof Kozlowski (1):
+      platform/chrome: cros_ec: Fix Kconfig indentation
+
+Nick Crews (1):
+      platform/chrome: wilco_ec: Add charging config driver
+
+Wen Yang (1):
+      platform/chrome: wilco_ec: fix use after free issue
+
+ Documentation/ABI/testing/sysfs-platform-wilco-ec  |  17 ++
+ drivers/iio/accel/cros_ec_accel_legacy.c           |   6 -
+ drivers/iio/common/cros_ec_sensors/Kconfig         |   2 +-
+ .../iio/common/cros_ec_sensors/cros_ec_sensors.c   |   6 -
+ .../common/cros_ec_sensors/cros_ec_sensors_core.c  |   4 +-
+ drivers/iio/light/cros_ec_light_prox.c             |   6 -
+ drivers/input/keyboard/cros_ec_keyb.c              |   6 +-
+ drivers/mfd/cros_ec_dev.c                          | 235 +-----------------
+ drivers/platform/chrome/Kconfig                    |  19 +-
+ drivers/platform/chrome/Makefile                   |   1 +
+ drivers/platform/chrome/cros_ec.c                  |  84 ++++++-
+ drivers/platform/chrome/cros_ec_ishtp.c            |  25 +-
+ drivers/platform/chrome/cros_ec_lpc.c              |  17 +-
+ drivers/platform/chrome/cros_ec_proto.c            | 267 +++++++++++++++++=
++---
+ drivers/platform/chrome/cros_ec_rpmsg.c            |  19 +-
+ drivers/platform/chrome/cros_ec_sensorhub.c        | 199 +++++++++++++++
+ drivers/platform/chrome/cros_usbpd_logger.c        |   1 +
+ drivers/platform/chrome/wilco_ec/Kconfig           |   2 +-
+ drivers/platform/chrome/wilco_ec/Makefile          |   3 +-
+ drivers/platform/chrome/wilco_ec/core.c            |  28 ++-
+ drivers/platform/chrome/wilco_ec/debugfs.c         |  47 +++-
+ drivers/platform/chrome/wilco_ec/keyboard_leds.c   | 191 +++++++++++++++
+ drivers/platform/chrome/wilco_ec/sysfs.c           |  91 +++++++
+ drivers/platform/chrome/wilco_ec/telemetry.c       |   2 +-
+ include/linux/platform_data/cros_ec_proto.h        | 138 +++--------
+ include/linux/platform_data/cros_ec_sensorhub.h    |  30 +++
+ include/linux/platform_data/wilco-ec.h             |  15 ++
+ 27 files changed, 1019 insertions(+), 442 deletions(-)
+ create mode 100644 drivers/platform/chrome/cros_ec_sensorhub.c
+ create mode 100644 drivers/platform/chrome/wilco_ec/keyboard_leds.c
+ create mode 100644 include/linux/platform_data/cros_ec_sensorhub.h
+
+--=20
+Benson Leung
+Staff Software Engineer
+Chrome OS Kernel
+Google Inc.
+bleung@google.com
+Chromium OS Project
+bleung@chromium.org
+
+--jI8keyz6grp/JLjh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCXebaaAAKCRBzbaomhzOw
+wnQ/AP9d4B/OfY77BHFmC9bXRpa4KaO5pcZz5siGGcrcdaiv+QEA4aRE6HACbx2M
+q/ToQmq+l2WPzHpWOiOvRD1j7FwYzgw=
+=BHOH
+-----END PGP SIGNATURE-----
+
+--jI8keyz6grp/JLjh--
