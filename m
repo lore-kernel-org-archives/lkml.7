@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54193C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7853C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24E3320803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BDEF2084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412729;
-	bh=1jaVvqrRRcxk8G/3Hlu0ZZYVZUHHzUghRnsT1CY3Qr8=;
+	s=default; t=1575412731;
+	bh=JxEp9mup7CCnqaZyUZA3/WKdzQze1ncSfpwctIWZd+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pu0Cl9kZiJ7E1sNxTIQ9Xzd0QpZUvg/ItAzeqIPwx9m2aohQFkLDww3zzUQ3jYgIk
-	 AK2Tfzpvq5wcGUSb6Eo319GfaemRV3Q0iO1cnLTFXx3L8j+JDtsbgbuqcUppoWVV+c
-	 H54gGSUI4zFmVV2E43p3DT0ZGRxzyYrpOHsONmbo=
+	b=H2NEeBR1qcGLeSPSxjDNZMrzeg5JUWFS5OFJnqKdpL6TJg1qHnqEl8DQT8ngl1Q+a
+	 +YsHpNR90T9TNoiDajhsK0h4ual+nEMzbSJuY+1OczdxeLY5w/IfqEjfzfAP5lFmq4
+	 lBGs03u+AODLJbIGxOBwPd5fLDn0Pk/Ggvum2gqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbfLCWis (ORCPT
+        id S1728085AbfLCWiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:38:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48212 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:38:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728064AbfLCWip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:38:45 -0500
+        id S1728070AbfLCWis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:38:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 798C120684;
-        Tue,  3 Dec 2019 22:38:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00CDB20684;
+        Tue,  3 Dec 2019 22:38:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412724;
-        bh=1jaVvqrRRcxk8G/3Hlu0ZZYVZUHHzUghRnsT1CY3Qr8=;
+        s=default; t=1575412727;
+        bh=JxEp9mup7CCnqaZyUZA3/WKdzQze1ncSfpwctIWZd+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eo/6VkApQM3W+32KTtxQv+btDmo9RPDJXGG19iFlHsltuGZunqapgCIxsVATN852Y
-         UDP/bRg/heI0WUQY1TVGed0cg3WRYwclKEWTl/uXyJvEoAr9PXCAgvxrVlSx9Sd5V/
-         maavT0PZuvU8VJS5dlhuERyXUtobbTqFMHHHjFUE=
+        b=ZQwM8M0tVzI3Kj4WEPvHmv9DgO1uv8VuBv5lA0/ibTkdlW9N7nYdFl08wqTBliWmL
+         7/z5ESItJDfdZcPMIvMClcZjC2Ea1lbdtW/NEvP10NgFOVbVDMgTIEBgjAr6M+sTW3
+         5GCV2bRKT/BxJqB2y+AB7JzVbp8N3L4BEe2s2++M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
-        Stefano Brivio <sbrivio@redhat.com>,
+        stable@vger.kernel.org, "Alan J. Wylie" <alan@wylie.me.uk>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 38/46] selftests: pmtu: use -oneline for ip route list cache
-Date:   Tue,  3 Dec 2019 23:35:58 +0100
-Message-Id: <20191203212801.005375736@linuxfoundation.org>
+Subject: [PATCH 5.4 39/46] r8169: fix jumbo configuration for RTL8168evl
+Date:   Tue,  3 Dec 2019 23:35:59 +0100
+Message-Id: <20191203212801.134488734@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203212705.175425505@linuxfoundation.org>
 References: <20191203212705.175425505@linuxfoundation.org>
@@ -61,57 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit 2745aea6750ff0d2c48285d25bdb00e5b636ec8b ]
+[ Upstream commit 14012c9f3bb922b9e0751ba43d15cc580a6049bf ]
 
-Some versions of iproute2 will output more than one line per entry, which
-will cause the test to fail, like:
+Alan reported [0] that network is broken since the referenced commit
+when using jumbo frames. This commit isn't wrong, it just revealed
+another issue that has been existing before. According to the vendor
+driver the RTL8168e-specific jumbo config doesn't apply for RTL8168evl.
 
-TEST: ipv6: list and flush cached exceptions                        [FAIL]
-  can't list cached exceptions
+[0] https://lkml.org/lkml/2019/11/30/119
 
-That happens, for example, with iproute2 4.15.0. When using the -oneline
-option, this will work just fine:
-
-TEST: ipv6: list and flush cached exceptions                        [ OK ]
-
-This also works just fine with a more recent version of iproute2, like
-5.4.0.
-
-For some reason, two lines are printed for the IPv4 test no matter what
-version of iproute2 is used. Use the same -oneline parameter there instead
-of counting the lines twice.
-
-Fixes: b964641e9925 ("selftests: pmtu: Make list_flush_ipv6_exception test more demanding")
-Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-Acked-by: Stefano Brivio <sbrivio@redhat.com>
+Fixes: 4ebcb113edcc ("r8169: fix jumbo packet handling on resume from suspend")
+Reported-by: Alan J. Wylie <alan@wylie.me.uk>
+Tested-by: Alan J. Wylie <alan@wylie.me.uk>
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/net/pmtu.sh |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/realtek/r8169_main.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/tools/testing/selftests/net/pmtu.sh
-+++ b/tools/testing/selftests/net/pmtu.sh
-@@ -1249,8 +1249,7 @@ test_list_flush_ipv4_exception() {
- 	done
- 	run_cmd ${ns_a} ping -q -M want -i 0.1 -c 2 -s 1800 "${dst2}"
- 
--	# Each exception is printed as two lines
--	if [ "$(${ns_a} ip route list cache | wc -l)" -ne 202 ]; then
-+	if [ "$(${ns_a} ip -oneline route list cache | wc -l)" -ne 101 ]; then
- 		err "  can't list cached exceptions"
- 		fail=1
- 	fi
-@@ -1300,7 +1299,7 @@ test_list_flush_ipv6_exception() {
- 		run_cmd ${ns_a} ping -q -M want -i 0.1 -w 1 -s 1800 "${dst_prefix1}${i}"
- 	done
- 	run_cmd ${ns_a} ping -q -M want -i 0.1 -w 1 -s 1800 "${dst2}"
--	if [ "$(${ns_a} ip -6 route list cache | wc -l)" -ne 101 ]; then
-+	if [ "$(${ns_a} ip -oneline -6 route list cache | wc -l)" -ne 101 ]; then
- 		err "  can't list cached exceptions"
- 		fail=1
- 	fi
+--- a/drivers/net/ethernet/realtek/r8169_main.c
++++ b/drivers/net/ethernet/realtek/r8169_main.c
+@@ -4118,7 +4118,7 @@ static void rtl_hw_jumbo_enable(struct r
+ 	case RTL_GIGA_MAC_VER_27 ... RTL_GIGA_MAC_VER_28:
+ 		r8168dp_hw_jumbo_enable(tp);
+ 		break;
+-	case RTL_GIGA_MAC_VER_31 ... RTL_GIGA_MAC_VER_34:
++	case RTL_GIGA_MAC_VER_31 ... RTL_GIGA_MAC_VER_33:
+ 		r8168e_hw_jumbo_enable(tp);
+ 		break;
+ 	default:
 
 
