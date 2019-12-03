@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7EEC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4ECC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FA5B20865
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F1CD20865
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412919;
-	bh=tl2BlP5KFSF/9iTakiKZ+ZmyzdBRYiZqwHFpFIWRalw=;
+	s=default; t=1575412923;
+	bh=Cob9II1USz9OZYAyMh+qKhCiH3vFEAJWdyas8rtimoE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bmznnRxqIxCcVx3zLS8Popt/LI6RP7HqF7k3yXUVOg2Nx3zPwGw4ltg3M88xwkS+j
-	 dLn8eiKKVsU7tUwHOqsiON7ja/BpC+5ulXkeVCJ5dd38bz3W4Hm5B88rkOST3c/hyx
-	 cI4hkOZN6D8AhrGxJW4wZ2MFtuLNA91wzFR/mL0o=
+	b=t4S1WSvU7JyOQuGDdXSpxuhkZA6TWXM6hqzhNMqODHROAIyfiPoNbCisub0H92NPi
+	 zFX/XOwSuV+o9FR1wRAlwzzqYC+a1nRIpD5eRPvqy3joAgJTmbF7UQikew053uMURc
+	 EFakaOwij5QxFvgdVRW5V4nxX8PxMqJfplHIjT9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728614AbfLCWl6 (ORCPT
+        id S1727885AbfLCWmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:41:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56532 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:42:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728599AbfLCWlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:41:52 -0500
+        id S1728613AbfLCWl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:41:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C9D6206EC;
-        Tue,  3 Dec 2019 22:41:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0708320862;
+        Tue,  3 Dec 2019 22:41:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412911;
-        bh=tl2BlP5KFSF/9iTakiKZ+ZmyzdBRYiZqwHFpFIWRalw=;
+        s=default; t=1575412917;
+        bh=Cob9II1USz9OZYAyMh+qKhCiH3vFEAJWdyas8rtimoE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O620BjaDHARqiviCQ7IwgtE9cRzrCtlY+SRj+MYWx4oAgr9HO0uEajIDFUG/6IVe7
-         cGc1lFkCYSNcTXXieguXxsnVRefzSLB8w8z/zAxPOD5EGOYboZ2cWI9NdxohaKqZmK
-         yy2GEXygcJ/2A3Vn6mO0/F6jW6yTn/BjDY0inbLg=
+        b=JaPixY+tSnPWY2O5MWBYz3AFaIyH07TK240diQS6zUsoMo1iCHrO7oGrKJlLmvv3n
+         GmFcT9zOr3KE4I04ueSpN36evM42YVr8rqf5gEGvgBmseoBQyGpq1gt54Uk1tLDN8E
+         f1z+eFdh9F19RNpjXWy6Shg8K5GHhHmou1zgX5Pc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>,
-        Anton Eidelman <anton@lightbitslabs.com>,
-        Keith Busch <kbusch@kernel.org>,
+        stable@vger.kernel.org, Xingyu Chen <xingyu.chen@amlogic.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 064/135] nvme-multipath: fix crash in nvme_mpath_clear_ctrl_paths
-Date:   Tue,  3 Dec 2019 23:35:04 +0100
-Message-Id: <20191203213024.261860605@linuxfoundation.org>
+Subject: [PATCH 5.3 066/135] watchdog: meson: Fix the wrong value of left time
+Date:   Tue,  3 Dec 2019 23:35:06 +0100
+Message-Id: <20191203213025.240489620@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -62,79 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anton Eidelman <anton@lightbitslabs.com>
+From: Xingyu Chen <xingyu.chen@amlogic.com>
 
-[ Upstream commit 763303a83a095a88c3a8a0d1abf97165db2e8bf5 ]
+[ Upstream commit 2c77734642d52448aca673e889b39f981110828b ]
 
-nvme_mpath_clear_ctrl_paths() iterates through
-the ctrl->namespaces list while holding ctrl->scan_lock.
-This does not seem to be the correct way of protecting
-from concurrent list modification.
+The left time value is wrong when we get it by sysfs. The left time value
+should be equal to preset timeout value minus elapsed time value. According
+to the Meson-GXB/GXL datasheets which can be found at [0], the timeout value
+is saved to BIT[0-15] of the WATCHDOG_TCNT, and elapsed time value is saved
+to BIT[16-31] of the WATCHDOG_TCNT.
 
-Specifically, nvme_scan_work() sorts ctrl->namespaces
-AFTER unlocking scan_lock.
+[0]: http://linux-meson.com
 
-This may result in the following (rare) crash in ctrl disconnect
-during scan_work:
-
-    BUG: kernel NULL pointer dereference, address: 0000000000000050
-    Oops: 0000 [#1] SMP PTI
-    CPU: 0 PID: 3995 Comm: nvme 5.3.5-050305-generic
-    RIP: 0010:nvme_mpath_clear_current_path+0xe/0x90 [nvme_core]
-    ...
-    Call Trace:
-     nvme_mpath_clear_ctrl_paths+0x3c/0x70 [nvme_core]
-     nvme_remove_namespaces+0x35/0xe0 [nvme_core]
-     nvme_do_delete_ctrl+0x47/0x90 [nvme_core]
-     nvme_sysfs_delete+0x49/0x60 [nvme_core]
-     dev_attr_store+0x17/0x30
-     sysfs_kf_write+0x3e/0x50
-     kernfs_fop_write+0x11e/0x1a0
-     __vfs_write+0x1b/0x40
-     vfs_write+0xb9/0x1a0
-     ksys_write+0x67/0xe0
-     __x64_sys_write+0x1a/0x20
-     do_syscall_64+0x5a/0x130
-     entry_SYSCALL_64_after_hwframe+0x44/0xa9
-    RIP: 0033:0x7f8d02bfb154
-
-Fix:
-After taking scan_lock in nvme_mpath_clear_ctrl_paths()
-down_read(&ctrl->namespaces_rwsem) as well to make list traversal safe.
-This will not cause deadlocks because taking scan_lock never happens
-while holding the namespaces_rwsem.
-Moreover, scan work downs namespaces_rwsem in the same order.
-
-Alternative: sort ctrl->namespaces in nvme_scan_work()
-while still holding the scan_lock.
-This would leave nvme_mpath_clear_ctrl_paths() without correct protection
-against ctrl->namespaces modification by anyone other than scan_work.
-
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+Fixes: 683fa50f0e18 ("watchdog: Add Meson GXBB Watchdog Driver")
+Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/multipath.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/watchdog/meson_gxbb_wdt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index d320684d25b20..a5c809c85f6d2 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -158,9 +158,11 @@ void nvme_mpath_clear_ctrl_paths(struct nvme_ctrl *ctrl)
- 	struct nvme_ns *ns;
+diff --git a/drivers/watchdog/meson_gxbb_wdt.c b/drivers/watchdog/meson_gxbb_wdt.c
+index d17c1a6ed7234..5a9ca10fbcfa0 100644
+--- a/drivers/watchdog/meson_gxbb_wdt.c
++++ b/drivers/watchdog/meson_gxbb_wdt.c
+@@ -89,8 +89,8 @@ static unsigned int meson_gxbb_wdt_get_timeleft(struct watchdog_device *wdt_dev)
  
- 	mutex_lock(&ctrl->scan_lock);
-+	down_read(&ctrl->namespaces_rwsem);
- 	list_for_each_entry(ns, &ctrl->namespaces, list)
- 		if (nvme_mpath_clear_current_path(ns))
- 			kblockd_schedule_work(&ns->head->requeue_work);
-+	up_read(&ctrl->namespaces_rwsem);
- 	mutex_unlock(&ctrl->scan_lock);
+ 	reg = readl(data->reg_base + GXBB_WDT_TCNT_REG);
+ 
+-	return ((reg >> GXBB_WDT_TCNT_CNT_SHIFT) -
+-		(reg & GXBB_WDT_TCNT_SETUP_MASK)) / 1000;
++	return ((reg & GXBB_WDT_TCNT_SETUP_MASK) -
++		(reg >> GXBB_WDT_TCNT_CNT_SHIFT)) / 1000;
  }
  
+ static const struct watchdog_ops meson_gxbb_wdt_ops = {
 -- 
 2.20.1
 
