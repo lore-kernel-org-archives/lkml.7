@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 304EFC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA537C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0C4120862
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D8EC20862
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:50:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413408;
-	bh=t2V8Sq0VvaON+weVpHvFiteFpdcQUZGqb6wrVV0MoQw=;
+	s=default; t=1575413412;
+	bh=O/VI7sXUGSsNwzPIEjdS0sm34QNGBeHgpdnhGgXZJwU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uaKfXZtVPpOtSlrLk7/JbCb+nB2GU728VD9pCd7kDbzdeJqjKlL5Vf+di9I38ihJl
-	 ixwNGcURxVJqB2E00ue6TTu+KvbV4qEnRJRqPpU15M80bLdikq2o4ZqIKOwbyL3K5c
-	 J2HMqoMQtQMjRzAguAFvwIWut2Ju2gx0PCIhrEA4=
+	b=I+NdpPuYkKYcV+GOhQXVK37ksXqB8SPXKfJgJwCy1VeWKJRLU7Ll/QbKcq7m4hIG1
+	 uwg6vHmYSZUSYPCGR5vsxlCD3+1mh7O2G9GoT8amgLkW777HF03VdMgClOIkD+Q+IL
+	 J6Hw7t1moHDUPrVgbdrSrX9jWXeMiWhyJzBF/bo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729704AbfLCWuG (ORCPT
+        id S1729543AbfLCWuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:50:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41278 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:50:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728250AbfLCWt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:49:58 -0500
+        id S1729684AbfLCWuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:50:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F09E2084B;
-        Tue,  3 Dec 2019 22:49:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEB2C2084B;
+        Tue,  3 Dec 2019 22:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413397;
-        bh=t2V8Sq0VvaON+weVpHvFiteFpdcQUZGqb6wrVV0MoQw=;
+        s=default; t=1575413400;
+        bh=O/VI7sXUGSsNwzPIEjdS0sm34QNGBeHgpdnhGgXZJwU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ErB6VvSdtySIrWlpHqucCeEG/mGUFDjvFOyD+uUGEmtGsjcZhdl2mct1Qv/p9FTjp
-         Iem+2T/3PTmzFHXhR1WZa9H3zgE0Ux4g34HdMhM/i6/QkZxo2O4UgGmvIRwqu/9YvH
-         GeEkwwKP+4JbuD1xnkH7No13geBITxTlsu1Is6vM=
+        b=wlDqx/68gwYpvj4+WkX1Caa9dYyR7uSFeP02FkkZubdt1pGqi6tc3ZtG8Ek1LfjVk
+         wwXSwwv8GhjQpmRda7A6+fV4rtE2V+guQk+1oxla+LFWy4NsLT4J7SbrXKcJvulgae
+         7rkDsRVCuuXXGNujJfIwk1I3LVjovmD1fpT3y8SE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Atul Gupta <atul.gupta@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 112/321] crypto/chelsio/chtls: listen fails with multiadapt
-Date:   Tue,  3 Dec 2019 23:32:58 +0100
-Message-Id: <20191203223432.978270676@linuxfoundation.org>
+        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Keith Busch <keith.busch@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 086/321] nvme: provide fallback for discard alloc failure
+Date:   Tue,  3 Dec 2019 23:32:32 +0100
+Message-Id: <20191203223431.629531090@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,147 +61,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Atul Gupta <atul.gupta@chelsio.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit 6422ccc5fbefbd219f3fab133f698e58f5aa44eb ]
+[ Upstream commit cb5b7262b011cfb793519bf97e54dff5282da23c ]
 
-listen fails when more than one tls capable device is
-registered. tls_hw_hash is called for each dev which loops
-again for each cdev_list causing listen failure. Hence
-call chtls_listen_start/stop for specific device than loop over all
-devices.
+When boxes are run near (or to) OOM, we have a problem with the discard
+page allocation in nvme. If we fail allocating the special page, we
+return busy, and it'll get retried. But since ordering is honored for
+dispatch requests, we can keep retrying this same IO and failing. Behind
+that IO could be requests that want to free memory, but they never get
+the chance.
 
-Signed-off-by: Atul Gupta <atul.gupta@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Allocate a fixed discard page per controller for a safe fallback, and use
+that if the initial allocation fails.
+
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reviewed-by: Keith Busch <keith.busch@intel.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/chelsio/chtls/chtls.h      |  5 +++
- drivers/crypto/chelsio/chtls/chtls_main.c | 50 ++++++++++++++---------
- 2 files changed, 36 insertions(+), 19 deletions(-)
+ drivers/nvme/host/core.c | 41 ++++++++++++++++++++++++++++++++++------
+ drivers/nvme/host/nvme.h |  3 +++
+ 2 files changed, 38 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/crypto/chelsio/chtls/chtls.h b/drivers/crypto/chelsio/chtls/chtls.h
-index 7725b6ee14efb..fcb6747ed29ea 100644
---- a/drivers/crypto/chelsio/chtls/chtls.h
-+++ b/drivers/crypto/chelsio/chtls/chtls.h
-@@ -153,6 +153,11 @@ struct chtls_dev {
- 	unsigned int cdev_state;
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 44da9fe5b27b8..250ccf3108e98 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -551,9 +551,19 @@ static blk_status_t nvme_setup_discard(struct nvme_ns *ns, struct request *req,
+ 	struct nvme_dsm_range *range;
+ 	struct bio *bio;
+ 
+-	range = kmalloc_array(segments, sizeof(*range), GFP_ATOMIC);
+-	if (!range)
+-		return BLK_STS_RESOURCE;
++	range = kmalloc_array(segments, sizeof(*range),
++				GFP_ATOMIC | __GFP_NOWARN);
++	if (!range) {
++		/*
++		 * If we fail allocation our range, fallback to the controller
++		 * discard page. If that's also busy, it's safe to return
++		 * busy, as we know we can make progress once that's freed.
++		 */
++		if (test_and_set_bit_lock(0, &ns->ctrl->discard_page_busy))
++			return BLK_STS_RESOURCE;
++
++		range = page_address(ns->ctrl->discard_page);
++	}
+ 
+ 	__rq_for_each_bio(bio, req) {
+ 		u64 slba = nvme_block_nr(ns, bio->bi_iter.bi_sector);
+@@ -568,7 +578,10 @@ static blk_status_t nvme_setup_discard(struct nvme_ns *ns, struct request *req,
+ 	}
+ 
+ 	if (WARN_ON_ONCE(n != segments)) {
+-		kfree(range);
++		if (virt_to_page(range) == ns->ctrl->discard_page)
++			clear_bit_unlock(0, &ns->ctrl->discard_page_busy);
++		else
++			kfree(range);
+ 		return BLK_STS_IOERR;
+ 	}
+ 
+@@ -653,8 +666,13 @@ void nvme_cleanup_cmd(struct request *req)
+ 				blk_rq_bytes(req) >> ns->lba_shift);
+ 	}
+ 	if (req->rq_flags & RQF_SPECIAL_PAYLOAD) {
+-		kfree(page_address(req->special_vec.bv_page) +
+-		      req->special_vec.bv_offset);
++		struct nvme_ns *ns = req->rq_disk->private_data;
++		struct page *page = req->special_vec.bv_page;
++
++		if (page == ns->ctrl->discard_page)
++			clear_bit_unlock(0, &ns->ctrl->discard_page_busy);
++		else
++			kfree(page_address(page) + req->special_vec.bv_offset);
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(nvme_cleanup_cmd);
+@@ -3551,6 +3569,7 @@ static void nvme_free_ctrl(struct device *dev)
+ 	ida_simple_remove(&nvme_instance_ida, ctrl->instance);
+ 	kfree(ctrl->effects);
+ 	nvme_mpath_uninit(ctrl);
++	kfree(ctrl->discard_page);
+ 
+ 	if (subsys) {
+ 		mutex_lock(&subsys->lock);
+@@ -3592,6 +3611,14 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
+ 	memset(&ctrl->ka_cmd, 0, sizeof(ctrl->ka_cmd));
+ 	ctrl->ka_cmd.common.opcode = nvme_admin_keep_alive;
+ 
++	BUILD_BUG_ON(NVME_DSM_MAX_RANGES * sizeof(struct nvme_dsm_range) >
++			PAGE_SIZE);
++	ctrl->discard_page = alloc_page(GFP_KERNEL);
++	if (!ctrl->discard_page) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
+ 	ret = ida_simple_get(&nvme_instance_ida, 0, 0, GFP_KERNEL);
+ 	if (ret < 0)
+ 		goto out;
+@@ -3629,6 +3656,8 @@ out_free_name:
+ out_release_instance:
+ 	ida_simple_remove(&nvme_instance_ida, ctrl->instance);
+ out:
++	if (ctrl->discard_page)
++		__free_page(ctrl->discard_page);
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(nvme_init_ctrl);
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index 2653e1f4196d5..cc4273f119894 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -238,6 +238,9 @@ struct nvme_ctrl {
+ 	u16 maxcmd;
+ 	int nr_reconnects;
+ 	struct nvmf_ctrl_options *opts;
++
++	struct page *discard_page;
++	unsigned long discard_page_busy;
  };
  
-+struct chtls_listen {
-+	struct chtls_dev *cdev;
-+	struct sock *sk;
-+};
-+
- struct chtls_hws {
- 	struct sk_buff_head sk_recv_queue;
- 	u8 txqid;
-diff --git a/drivers/crypto/chelsio/chtls/chtls_main.c b/drivers/crypto/chelsio/chtls/chtls_main.c
-index f59b044ebd255..2bf084afe9b58 100644
---- a/drivers/crypto/chelsio/chtls/chtls_main.c
-+++ b/drivers/crypto/chelsio/chtls/chtls_main.c
-@@ -55,24 +55,19 @@ static void unregister_listen_notifier(struct notifier_block *nb)
- static int listen_notify_handler(struct notifier_block *this,
- 				 unsigned long event, void *data)
- {
--	struct chtls_dev *cdev;
--	struct sock *sk;
--	int ret;
-+	struct chtls_listen *clisten;
-+	int ret = NOTIFY_DONE;
- 
--	sk = data;
--	ret =  NOTIFY_DONE;
-+	clisten = (struct chtls_listen *)data;
- 
- 	switch (event) {
- 	case CHTLS_LISTEN_START:
-+		ret = chtls_listen_start(clisten->cdev, clisten->sk);
-+		kfree(clisten);
-+		break;
- 	case CHTLS_LISTEN_STOP:
--		mutex_lock(&cdev_list_lock);
--		list_for_each_entry(cdev, &cdev_list, list) {
--			if (event == CHTLS_LISTEN_START)
--				ret = chtls_listen_start(cdev, sk);
--			else
--				chtls_listen_stop(cdev, sk);
--		}
--		mutex_unlock(&cdev_list_lock);
-+		chtls_listen_stop(clisten->cdev, clisten->sk);
-+		kfree(clisten);
- 		break;
- 	}
- 	return ret;
-@@ -90,8 +85,9 @@ static int listen_backlog_rcv(struct sock *sk, struct sk_buff *skb)
- 	return 0;
- }
- 
--static int chtls_start_listen(struct sock *sk)
-+static int chtls_start_listen(struct chtls_dev *cdev, struct sock *sk)
- {
-+	struct chtls_listen *clisten;
- 	int err;
- 
- 	if (sk->sk_protocol != IPPROTO_TCP)
-@@ -102,21 +98,33 @@ static int chtls_start_listen(struct sock *sk)
- 		return -EADDRNOTAVAIL;
- 
- 	sk->sk_backlog_rcv = listen_backlog_rcv;
-+	clisten = kmalloc(sizeof(*clisten), GFP_KERNEL);
-+	if (!clisten)
-+		return -ENOMEM;
-+	clisten->cdev = cdev;
-+	clisten->sk = sk;
- 	mutex_lock(&notify_mutex);
- 	err = raw_notifier_call_chain(&listen_notify_list,
--				      CHTLS_LISTEN_START, sk);
-+				      CHTLS_LISTEN_START, clisten);
- 	mutex_unlock(&notify_mutex);
- 	return err;
- }
- 
--static void chtls_stop_listen(struct sock *sk)
-+static void chtls_stop_listen(struct chtls_dev *cdev, struct sock *sk)
- {
-+	struct chtls_listen *clisten;
-+
- 	if (sk->sk_protocol != IPPROTO_TCP)
- 		return;
- 
-+	clisten = kmalloc(sizeof(*clisten), GFP_KERNEL);
-+	if (!clisten)
-+		return;
-+	clisten->cdev = cdev;
-+	clisten->sk = sk;
- 	mutex_lock(&notify_mutex);
- 	raw_notifier_call_chain(&listen_notify_list,
--				CHTLS_LISTEN_STOP, sk);
-+				CHTLS_LISTEN_STOP, clisten);
- 	mutex_unlock(&notify_mutex);
- }
- 
-@@ -138,15 +146,19 @@ static int chtls_inline_feature(struct tls_device *dev)
- 
- static int chtls_create_hash(struct tls_device *dev, struct sock *sk)
- {
-+	struct chtls_dev *cdev = to_chtls_dev(dev);
-+
- 	if (sk->sk_state == TCP_LISTEN)
--		return chtls_start_listen(sk);
-+		return chtls_start_listen(cdev, sk);
- 	return 0;
- }
- 
- static void chtls_destroy_hash(struct tls_device *dev, struct sock *sk)
- {
-+	struct chtls_dev *cdev = to_chtls_dev(dev);
-+
- 	if (sk->sk_state == TCP_LISTEN)
--		chtls_stop_listen(sk);
-+		chtls_stop_listen(cdev, sk);
- }
- 
- static void chtls_register_dev(struct chtls_dev *cdev)
+ struct nvme_subsystem {
 -- 
 2.20.1
 
