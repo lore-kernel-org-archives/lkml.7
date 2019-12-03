@@ -2,291 +2,363 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A40D4C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7754EC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 631592073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:49:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="G0fhdgPK";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="cXCj26N8"
+	by mail.kernel.org (Postfix) with ESMTP id 449EB2071F
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:49:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbfLCDtu (ORCPT
+        id S1727386AbfLCDta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 22:49:50 -0500
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:65119 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727377AbfLCDtg (ORCPT
+        Mon, 2 Dec 2019 22:49:30 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12778 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726896AbfLCDsb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 22:49:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1575344976; x=1606880976;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=NO9w9lB7AJuukixFLlNldJDxscUXD2JzMPM23TCSldU=;
-  b=G0fhdgPK9Zw8xzoxN+VPSP4K2utfhgDL0lQQrjz1mnD/vOAtZr3zy2eu
-   hFPZypG1+jsfgJ0qbMewUuyl66kBJjWkdnd1PmhEtFHcz05hoN89mALdN
-   ovjg60CuyFaVRW0YiSyqXmohktHyJ5U0OJC0eZvduD4FEyifjsGxWJ9Q/
-   saiuyK8ErhuSc/1yg0ON4g7otQTap8Wkg2+qC1Jem8apzK6Ax4yJJKJ6X
-   028IPGRoqU9s5617vgWSV2d3FTRFXGWHiBkBhs+YStzKHBUPF4Khhfo94
-   7O6pV7mPpgooNC9L3l0D01swAFxOuwT5LzJMwl/L+hHfZ6fBvLEU5ntQW
-   g==;
-IronPort-SDR: 3BmLAjAjAz0tAdzLDV85L+3TLCWzFzJFxyB50hYVj6qJhTVZ55KRvg19KxzrOgmTUkHDM9k3Hp
- cpOuHFGyGmMsl7Gor/ozBOCuhElKHdnb50KdLldymzqfOonTGzs4CQFXBvWl6kH9nKmcaeJKvo
- e1S0iozi8fTkmd2ZY04FOM4xvjiKyxVrzJN61F9wybP8yTpzvC0Do9bV/jxwdkU+Jw6iSNCBRN
- ZCWIzzrK+/wGAAl/3/ZyKmXQOnVXnXXK3nmdGobaonF6RE37XVjNWtXd/JY0cR2sjOp5OWHjxL
- Qnw=
-X-IronPort-AV: E=Sophos;i="5.69,271,1571673600"; 
-   d="scan'208";a="231947963"
-Received: from mail-sn1nam01lp2058.outbound.protection.outlook.com (HELO NAM01-SN1-obe.outbound.protection.outlook.com) ([104.47.32.58])
-  by ob1.hgst.iphmx.com with ESMTP; 03 Dec 2019 11:49:35 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IR44+wwizk5Esy/2u841jzoy36nt19cxe0G4VFTTMIJh/7WSB5gnCX6t/IH3pz2T5iDNo4ZNEMNm2W2iTI1sG0K34ozGCaZLjVP2GTf7286WPmWdrImsJwH2+FyBvtB3f6qpoz7E6yvGBJldhEzKwHKmWx0jRRARZkrjhYWb5nx6GbJfagsB3M+DEticow7FMCHdf8RVG2oBdt5ByBiwKPmn6GR29sWL9zyF4Y9MU8UcAarUoznlht3TCn7tmuAv2dUJ5e6zS9heoc8eRAQAihCLfKlRD1Mrhz7OKPtAB8imM5FzVx62wZhAaSgkO+lDppoky50biW/9OcMeE/C2fA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CNLQUEmoIThA+eYb+O5wL+CNfw3SQk64rwLApSwQsv0=;
- b=fovrgrfY9Mxws5IQJqAC5JIf7FVNgSplzEj6c9jaS0SjzfRa7cVk4Sy2Ws0AvAQdXljrSxhKcKwz2zhP4vf9WIM9l4+pHwpGNwFqwDb78r6zI8kJ9cAlWi8tle14Hp8I3PxxQbglBXD3eHa223wKOXwHMCLQFyP3TGiDr0PPgXaheO4Ae7nhj5T6xijyPyKBNRZfpLYZsUfAYk0Gf6cuM6B8tM4Tlz2prYrN+lIRtcIHIohHUaPT+UciYy6xzdPMPiY4pPFgRkSZHsxhRr8DYc2rRI/kEpEPnPMr4p623ZLcSOlWaOhl+xGTO4xFbpaSWbX2tDvkbHMQQtKY+gh51Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CNLQUEmoIThA+eYb+O5wL+CNfw3SQk64rwLApSwQsv0=;
- b=cXCj26N8zkssbpSdrUTw5n50aEZPPlfG/ePApXSyfjMpcSOtDcVTWolnqBn2YVPb09sXwxnYlQ9kQkzBcoIBSfrjBbnWeDAlmTLIMWZ9q8YWaAivuxXrVj12/lXJA0YeJ6ZZabyFWO4O8Te1V9GgXGA3IeQeeZcU4a5XYvRmhp8=
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
- MN2PR04MB5807.namprd04.prod.outlook.com (20.179.22.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.19; Tue, 3 Dec 2019 03:49:34 +0000
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::7949:d205:5ad1:1d30]) by MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::7949:d205:5ad1:1d30%7]) with mapi id 15.20.2495.014; Tue, 3 Dec 2019
- 03:49:34 +0000
-From:   Anup Patel <Anup.Patel@wdc.com>
-To:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-CC:     Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Anup Patel <anup@brainfault.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anup Patel <Anup.Patel@wdc.com>
-Subject: [PATCH v2 2/4] RISC-V: Enable QEMU virt machine support in defconfigs
-Thread-Topic: [PATCH v2 2/4] RISC-V: Enable QEMU virt machine support in
- defconfigs
-Thread-Index: AQHVqYyt4dS06imzoUaWBf5val2QOA==
-Date:   Tue, 3 Dec 2019 03:49:34 +0000
-Message-ID: <20191203034909.37385-3-anup.patel@wdc.com>
-References: <20191203034909.37385-1-anup.patel@wdc.com>
-In-Reply-To: <20191203034909.37385-1-anup.patel@wdc.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BY5PR16CA0027.namprd16.prod.outlook.com
- (2603:10b6:a03:1a0::40) To MN2PR04MB6061.namprd04.prod.outlook.com
- (2603:10b6:208:d8::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anup.Patel@wdc.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [12.169.102.154]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 6464c6d7-4ca5-43ee-54ef-08d777a3cf93
-x-ms-traffictypediagnostic: MN2PR04MB5807:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR04MB5807950AE40F111EF5980FCA8D420@MN2PR04MB5807.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:785;
-x-forefront-prvs: 02408926C4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39860400002)(376002)(366004)(346002)(136003)(189003)(199004)(1076003)(66556008)(6116002)(3846002)(66446008)(66476007)(64756008)(66946007)(25786009)(52116002)(76176011)(6506007)(386003)(186003)(305945005)(7736002)(26005)(102836004)(478600001)(316002)(71190400001)(71200400001)(14454004)(44832011)(446003)(256004)(14444005)(11346002)(2616005)(2906002)(66066001)(81166006)(8676002)(50226002)(81156014)(8936002)(110136005)(54906003)(4326008)(5660300002)(99286004)(2171002)(6436002)(36756003)(6486002)(6512007)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5807;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ZK38xy+nJYpUmm0OrBCFO9XBr4dVCDB2wVFX5tR6t3W94i0dFFW+h1DQJ3pYSTQiuRJ1mD19FAR+NfN9QIkMe2dWUDmR71EucmiqvCzlci5Bg8G0aP7vTvpVHPp4aQuyY6VWyUbLuculuiMNl8aH1CLvL68QDh2UAqHujuVWNT+Z0JyiKimA/4ASz2alxSGl4GjyFMrTZfjS0nCuYt3iN9VczzMBpONix0skiRtLdMjvMWF/RRMtSB497yMlkrpMdq0UjmFzlcg44oFmqyJ5/1W/RdegD84LZw3D9fBPeCbCA0RexIVYlctvQR0kUgKbTxOO7x7OTXM0bSESCTL9gRb9GITfOQ63sNnX0WyGs7Ruv0WYXkmXpBdxC94Hynoy46Yu8v79Rm3FU/a2jMh8FILOMRoVZ5JSYoW7uKKxW0sYCRgwwdAeojbKPD9hviCM
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 2 Dec 2019 22:48:31 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB33klOD006802
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 22:48:30 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wm6cy9se1-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 22:48:30 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Tue, 3 Dec 2019 03:48:26 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 3 Dec 2019 03:48:20 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB33mJe930998776
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 3 Dec 2019 03:48:19 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2870F4C052;
+        Tue,  3 Dec 2019 03:48:19 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 802D44C046;
+        Tue,  3 Dec 2019 03:48:18 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  3 Dec 2019 03:48:18 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 5663FA03E6;
+        Tue,  3 Dec 2019 14:48:13 +1100 (AEDT)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     alastair@d-silva.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Subject: [PATCH v2 18/27] nvdimm/ocxl: Add an IOCTL to report controller statistics
+Date:   Tue,  3 Dec 2019 14:46:46 +1100
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191203034655.51561-1-alastair@au1.ibm.com>
+References: <20191203034655.51561-1-alastair@au1.ibm.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6464c6d7-4ca5-43ee-54ef-08d777a3cf93
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Dec 2019 03:49:34.4676
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PoEcNtbRcvWbKgu2lxeSWSb9uq25GILac1Wagyh+jP4i9Ljx4zTBMbNB59JydHKkDFBFsVx+oGrNIsvxDRvpig==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5807
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19120303-0016-0000-0000-000002D0158D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120303-0017-0000-0000-000033320CA8
+Message-Id: <20191203034655.51561-19-alastair@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-02_06:2019-11-29,2019-12-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 priorityscore=1501 suspectscore=1 bulkscore=0 phishscore=0
+ mlxlogscore=712 adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912030032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have kconfig option for QEMU virt machine so let's enable it
-in RV32 and RV64 defconfigs. Also, we remove various VIRTIO configs
-from RV32 and RV64 defconfigs because these are now selected by
-QEMU virt machine kconfig option.
+From: Alastair D'Silva <alastair@d-silva.org>
 
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
-Reviewed-by: Atish Patra <atish.patra@wdc.com>
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+The controller can report a number of statistics that are useful
+in evaluating the performance and reliability of the card.
+
+This patch exposes this information via an IOCTL.
+
+Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 ---
- arch/riscv/configs/defconfig      | 15 +--------------
- arch/riscv/configs/rv32_defconfig | 16 +---------------
- 2 files changed, 2 insertions(+), 29 deletions(-)
+ drivers/nvdimm/ocxl/scm.c      | 185 +++++++++++++++++++++++++++++++++
+ include/uapi/nvdimm/ocxl-scm.h |  17 +++
+ 2 files changed, 202 insertions(+)
 
-diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-index 420a0dbef386..2515fe6417e1 100644
---- a/arch/riscv/configs/defconfig
-+++ b/arch/riscv/configs/defconfig
-@@ -15,6 +15,7 @@ CONFIG_BLK_DEV_INITRD=3Dy
- CONFIG_EXPERT=3Dy
- CONFIG_BPF_SYSCALL=3Dy
- CONFIG_SOC_SIFIVE=3Dy
-+CONFIG_SOC_VIRT=3Dy
- CONFIG_SMP=3Dy
- CONFIG_MODULES=3Dy
- CONFIG_MODULE_UNLOAD=3Dy
-@@ -30,7 +31,6 @@ CONFIG_IP_PNP_BOOTP=3Dy
- CONFIG_IP_PNP_RARP=3Dy
- CONFIG_NETLINK_DIAG=3Dy
- CONFIG_NET_9P=3Dy
--CONFIG_NET_9P_VIRTIO=3Dy
- CONFIG_PCI=3Dy
- CONFIG_PCIEPORTBUS=3Dy
- CONFIG_PCI_HOST_GENERIC=3Dy
-@@ -38,15 +38,12 @@ CONFIG_PCIE_XILINX=3Dy
- CONFIG_DEVTMPFS=3Dy
- CONFIG_DEVTMPFS_MOUNT=3Dy
- CONFIG_BLK_DEV_LOOP=3Dy
--CONFIG_VIRTIO_BLK=3Dy
- CONFIG_BLK_DEV_SD=3Dy
- CONFIG_BLK_DEV_SR=3Dy
--CONFIG_SCSI_VIRTIO=3Dy
- CONFIG_ATA=3Dy
- CONFIG_SATA_AHCI=3Dy
- CONFIG_SATA_AHCI_PLATFORM=3Dy
- CONFIG_NETDEVICES=3Dy
--CONFIG_VIRTIO_NET=3Dy
- CONFIG_MACB=3Dy
- CONFIG_E1000E=3Dy
- CONFIG_R8169=3Dy
-@@ -57,15 +54,12 @@ CONFIG_SERIAL_8250_CONSOLE=3Dy
- CONFIG_SERIAL_OF_PLATFORM=3Dy
- CONFIG_SERIAL_EARLYCON_RISCV_SBI=3Dy
- CONFIG_HVC_RISCV_SBI=3Dy
--CONFIG_VIRTIO_CONSOLE=3Dy
- CONFIG_HW_RANDOM=3Dy
--CONFIG_HW_RANDOM_VIRTIO=3Dy
- CONFIG_SPI=3Dy
- CONFIG_SPI_SIFIVE=3Dy
- # CONFIG_PTP_1588_CLOCK is not set
- CONFIG_DRM=3Dy
- CONFIG_DRM_RADEON=3Dy
--CONFIG_DRM_VIRTIO_GPU=3Dy
- CONFIG_FRAMEBUFFER_CONSOLE=3Dy
- CONFIG_USB=3Dy
- CONFIG_USB_XHCI_HCD=3Dy
-@@ -78,12 +72,6 @@ CONFIG_USB_STORAGE=3Dy
- CONFIG_USB_UAS=3Dy
- CONFIG_MMC=3Dy
- CONFIG_MMC_SPI=3Dy
--CONFIG_VIRTIO_PCI=3Dy
--CONFIG_VIRTIO_BALLOON=3Dy
--CONFIG_VIRTIO_INPUT=3Dy
--CONFIG_VIRTIO_MMIO=3Dy
--CONFIG_RPMSG_CHAR=3Dy
--CONFIG_RPMSG_VIRTIO=3Dy
- CONFIG_EXT4_FS=3Dy
- CONFIG_EXT4_FS_POSIX_ACL=3Dy
- CONFIG_AUTOFS4_FS=3Dy
-@@ -98,6 +86,5 @@ CONFIG_NFS_V4_2=3Dy
- CONFIG_ROOT_NFS=3Dy
- CONFIG_9P_FS=3Dy
- CONFIG_CRYPTO_USER_API_HASH=3Dy
--CONFIG_CRYPTO_DEV_VIRTIO=3Dy
- CONFIG_PRINTK_TIME=3Dy
- # CONFIG_RCU_TRACE is not set
-diff --git a/arch/riscv/configs/rv32_defconfig b/arch/riscv/configs/rv32_de=
-fconfig
-index 87ee6e62b64b..bbcf14fd6f40 100644
---- a/arch/riscv/configs/rv32_defconfig
-+++ b/arch/riscv/configs/rv32_defconfig
-@@ -14,6 +14,7 @@ CONFIG_CHECKPOINT_RESTORE=3Dy
- CONFIG_BLK_DEV_INITRD=3Dy
- CONFIG_EXPERT=3Dy
- CONFIG_BPF_SYSCALL=3Dy
-+CONFIG_SOC_VIRT=3Dy
- CONFIG_ARCH_RV32I=3Dy
- CONFIG_SMP=3Dy
- CONFIG_MODULES=3Dy
-@@ -30,7 +31,6 @@ CONFIG_IP_PNP_BOOTP=3Dy
- CONFIG_IP_PNP_RARP=3Dy
- CONFIG_NETLINK_DIAG=3Dy
- CONFIG_NET_9P=3Dy
--CONFIG_NET_9P_VIRTIO=3Dy
- CONFIG_PCI=3Dy
- CONFIG_PCIEPORTBUS=3Dy
- CONFIG_PCI_HOST_GENERIC=3Dy
-@@ -38,15 +38,12 @@ CONFIG_PCIE_XILINX=3Dy
- CONFIG_DEVTMPFS=3Dy
- CONFIG_DEVTMPFS_MOUNT=3Dy
- CONFIG_BLK_DEV_LOOP=3Dy
--CONFIG_VIRTIO_BLK=3Dy
- CONFIG_BLK_DEV_SD=3Dy
- CONFIG_BLK_DEV_SR=3Dy
--CONFIG_SCSI_VIRTIO=3Dy
- CONFIG_ATA=3Dy
- CONFIG_SATA_AHCI=3Dy
- CONFIG_SATA_AHCI_PLATFORM=3Dy
- CONFIG_NETDEVICES=3Dy
--CONFIG_VIRTIO_NET=3Dy
- CONFIG_MACB=3Dy
- CONFIG_E1000E=3Dy
- CONFIG_R8169=3Dy
-@@ -57,13 +54,10 @@ CONFIG_SERIAL_8250_CONSOLE=3Dy
- CONFIG_SERIAL_OF_PLATFORM=3Dy
- CONFIG_SERIAL_EARLYCON_RISCV_SBI=3Dy
- CONFIG_HVC_RISCV_SBI=3Dy
--CONFIG_VIRTIO_CONSOLE=3Dy
- CONFIG_HW_RANDOM=3Dy
--CONFIG_HW_RANDOM_VIRTIO=3Dy
- # CONFIG_PTP_1588_CLOCK is not set
- CONFIG_DRM=3Dy
- CONFIG_DRM_RADEON=3Dy
--CONFIG_DRM_VIRTIO_GPU=3Dy
- CONFIG_FRAMEBUFFER_CONSOLE=3Dy
- CONFIG_USB=3Dy
- CONFIG_USB_XHCI_HCD=3Dy
-@@ -74,13 +68,6 @@ CONFIG_USB_OHCI_HCD=3Dy
- CONFIG_USB_OHCI_HCD_PLATFORM=3Dy
- CONFIG_USB_STORAGE=3Dy
- CONFIG_USB_UAS=3Dy
--CONFIG_VIRTIO_PCI=3Dy
--CONFIG_VIRTIO_BALLOON=3Dy
--CONFIG_VIRTIO_INPUT=3Dy
--CONFIG_VIRTIO_MMIO=3Dy
--CONFIG_RPMSG_CHAR=3Dy
--CONFIG_RPMSG_VIRTIO=3Dy
--CONFIG_SIFIVE_PLIC=3Dy
- CONFIG_EXT4_FS=3Dy
- CONFIG_EXT4_FS_POSIX_ACL=3Dy
- CONFIG_AUTOFS4_FS=3Dy
-@@ -95,6 +82,5 @@ CONFIG_NFS_V4_2=3Dy
- CONFIG_ROOT_NFS=3Dy
- CONFIG_9P_FS=3Dy
- CONFIG_CRYPTO_USER_API_HASH=3Dy
--CONFIG_CRYPTO_DEV_VIRTIO=3Dy
- CONFIG_PRINTK_TIME=3Dy
- # CONFIG_RCU_TRACE is not set
---=20
-2.17.1
+diff --git a/drivers/nvdimm/ocxl/scm.c b/drivers/nvdimm/ocxl/scm.c
+index a520f209d626..54a2bac1cab7 100644
+--- a/drivers/nvdimm/ocxl/scm.c
++++ b/drivers/nvdimm/ocxl/scm.c
+@@ -806,6 +806,186 @@ static int scm_ioctl_controller_dump_complete(struct scm_data *scm_data)
+ 				    GLOBAL_MMIO_HCI_CONTROLLER_DUMP_COLLECTED);
+ }
+ 
++/**
++ * scm_controller_stats_header_parse() - Parse the first 64 bits of the controller stats admin command response
++ * @scm_data: the SCM metadata
++ * @length: out, returns the number of bytes in the response (excluding the 64 bit header)
++ */
++static int scm_controller_stats_header_parse(struct scm_data *scm_data,
++	u32 *length)
++{
++	int rc;
++	u64 val;
++
++	u16 data_identifier;
++	u32 data_length;
++
++	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
++				     scm_data->admin_command.data_offset,
++				     OCXL_LITTLE_ENDIAN, &val);
++	if (rc)
++		return rc;
++
++	data_identifier = val >> 48;
++	data_length = val & 0xFFFFFFFF;
++
++	if (data_identifier != 0x4353) {
++		dev_err(&scm_data->dev,
++			"Bad data identifier for controller stats, expected 'CS', got '%-.*s'\n",
++			2, (char *)&data_identifier);
++		return -EINVAL;
++	}
++
++	*length = data_length;
++	return 0;
++}
++
++static int scm_ioctl_controller_stats(struct scm_data *scm_data,
++				      struct scm_ioctl_controller_stats __user *uarg)
++{
++	struct scm_ioctl_controller_stats args;
++	u32 length;
++	int rc;
++	u64 val;
++
++	memset(&args, '\0', sizeof(args));
++
++	mutex_lock(&scm_data->admin_command.lock);
++
++	rc = scm_admin_command_request(scm_data, ADMIN_COMMAND_CONTROLLER_STATS);
++	if (rc)
++		goto out;
++
++	rc = ocxl_global_mmio_write64(scm_data->ocxl_afu,
++				      scm_data->admin_command.request_offset + 0x08,
++				      OCXL_LITTLE_ENDIAN, 0);
++	if (rc)
++		goto out;
++
++	rc = scm_admin_command_execute(scm_data);
++	if (rc)
++		goto out;
++
++
++	rc = scm_admin_command_complete_timeout(scm_data,
++						ADMIN_COMMAND_CONTROLLER_STATS);
++	if (rc < 0) {
++		dev_warn(&scm_data->dev, "Controller stats timed out\n");
++		goto out;
++	}
++
++	rc = scm_admin_response(scm_data);
++	if (rc < 0)
++		goto out;
++	if (rc != STATUS_SUCCESS) {
++		scm_warn_status(scm_data,
++				"Unexpected status from controller stats", rc);
++		goto out;
++	}
++
++	rc = scm_controller_stats_header_parse(scm_data, &length);
++	if (rc)
++		goto out;
++
++	if (length != 0x140)
++		scm_warn_status(scm_data,
++				"Unexpected length for controller stats data, expected 0x140, got 0x%x",
++				length);
++
++	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
++				     scm_data->admin_command.data_offset + 0x08 + 0x08,
++				     OCXL_LITTLE_ENDIAN, &val);
++	if (rc)
++		goto out;
++
++	args.reset_count = val >> 32;
++	args.reset_uptime = val & 0xFFFFFFFF;
++
++	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
++				     scm_data->admin_command.data_offset + 0x08 + 0x10,
++				     OCXL_LITTLE_ENDIAN, &val);
++	if (rc)
++		goto out;
++
++	args.power_on_uptime = val >> 32;
++
++	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
++				     scm_data->admin_command.data_offset + 0x08 + 0x40 + 0x08,
++				     OCXL_LITTLE_ENDIAN, &args.host_load_count);
++	if (rc)
++		goto out;
++
++	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
++				     scm_data->admin_command.data_offset + 0x08 + 0x40 + 0x10,
++				     OCXL_LITTLE_ENDIAN, &args.host_store_count);
++	if (rc)
++		goto out;
++
++	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
++				     scm_data->admin_command.data_offset + 0x08 + 0x40 + 0x18,
++				     OCXL_LITTLE_ENDIAN, &args.media_read_count);
++	if (rc)
++		goto out;
++
++	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
++				     scm_data->admin_command.data_offset + 0x08 + 0x40 + 0x20,
++				     OCXL_LITTLE_ENDIAN, &args.media_write_count);
++	if (rc)
++		goto out;
++
++	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
++				     scm_data->admin_command.data_offset + 0x08 + 0x40 + 0x28,
++				     OCXL_LITTLE_ENDIAN, &args.cache_hit_count);
++	if (rc)
++		goto out;
++
++	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
++				     scm_data->admin_command.data_offset + 0x08 + 0x40 + 0x30,
++				     OCXL_LITTLE_ENDIAN, &args.cache_miss_count);
++	if (rc)
++		goto out;
++
++	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
++				     scm_data->admin_command.data_offset + 0x08 + 0x40 + 0x38,
++				     OCXL_LITTLE_ENDIAN, &args.media_read_latency);
++	if (rc)
++		goto out;
++
++	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
++				     scm_data->admin_command.data_offset + 0x08 + 0x40 + 0x40,
++				     OCXL_LITTLE_ENDIAN, &args.media_write_latency);
++	if (rc)
++		goto out;
++
++	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
++				     scm_data->admin_command.data_offset + 0x08 + 0x40 + 0x48,
++				     OCXL_LITTLE_ENDIAN, &args.cache_read_latency);
++	if (rc)
++		goto out;
++
++	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
++				     scm_data->admin_command.data_offset + 0x08 + 0x40 + 0x50,
++				     OCXL_LITTLE_ENDIAN, &args.cache_write_latency);
++	if (rc)
++		goto out;
++
++	if (copy_to_user(uarg, &args, sizeof(args))) {
++		rc = -EFAULT;
++		goto out;
++	}
++
++	rc = scm_admin_response_handled(scm_data);
++	if (rc)
++		goto out;
++
++	rc = 0;
++	goto out;
++
++out:
++	mutex_unlock(&scm_data->admin_command.lock);
++	return rc;
++}
++
+ static long scm_file_ioctl(struct file *file, unsigned int cmd,
+ 			   unsigned long args)
+ {
+@@ -830,6 +1010,11 @@ static long scm_file_ioctl(struct file *file, unsigned int cmd,
+ 	case SCM_IOCTL_CONTROLLER_DUMP_COMPLETE:
+ 		rc = scm_ioctl_controller_dump_complete(scm_data);
+ 		break;
++
++	case SCM_IOCTL_CONTROLLER_STATS:
++		rc = scm_ioctl_controller_stats(scm_data,
++						(struct scm_ioctl_controller_stats __user *)args);
++		break;
+ 	}
+ 
+ 	return rc;
+diff --git a/include/uapi/nvdimm/ocxl-scm.h b/include/uapi/nvdimm/ocxl-scm.h
+index abd2dc9ea112..0a5de46c5acd 100644
+--- a/include/uapi/nvdimm/ocxl-scm.h
++++ b/include/uapi/nvdimm/ocxl-scm.h
+@@ -50,6 +50,22 @@ struct scm_ioctl_controller_dump_data {
+ 	__u64 reserved[8];
+ };
+ 
++struct scm_ioctl_controller_stats {
++	__u32 reset_count;
++	__u32 reset_uptime; // seconds
++	__u32 power_on_uptime; // seconds
++	__u64 host_load_count;
++	__u64 host_store_count;
++	__u64 media_read_count;
++	__u64 media_write_count;
++	__u64 cache_hit_count;
++	__u64 cache_miss_count;
++	__u64 media_read_latency; // nanoseconds
++	__u64 media_write_latency; // nanoseconds
++	__u64 cache_read_latency; // nanoseconds
++	__u64 cache_write_latency; // nanoseconds
++};
++
+ /* ioctl numbers */
+ #define SCM_MAGIC 0x5C
+ /* SCM devices */
+@@ -57,5 +73,6 @@ struct scm_ioctl_controller_dump_data {
+ #define SCM_IOCTL_CONTROLLER_DUMP _IO(SCM_MAGIC, 0x02)
+ #define SCM_IOCTL_CONTROLLER_DUMP_DATA _IOWR(SCM_MAGIC, 0x03, struct scm_ioctl_controller_dump_data)
+ #define SCM_IOCTL_CONTROLLER_DUMP_COMPLETE _IO(SCM_MAGIC, 0x04)
++#define SCM_IOCTL_CONTROLLER_STATS _IO(SCM_MAGIC, 0x05)
+ 
+ #endif /* _UAPI_OCXL_SCM_H */
+-- 
+2.23.0
 
