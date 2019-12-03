@@ -2,189 +2,235 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF03C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7B8C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5E7206E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:37:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575416245;
-	bh=oBlyMq4h1w80kqTkWb/Gz5L8T8126mtBIKddWWF/JAs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a7ntS32Du8EGDQ+mVPVtl9Z5Wg33QkALVqBQR1PtOFtp/m0WJYwExfMpJEdtXU+Mz
-	 f224W0m4Douz+8mbHJsVy+vPX2I5jSmUD4FkzPyFIGZg5AZYz+05byG+0dkkWABJ6N
-	 kjKHNdvsGFRGzfhUNQ2rubNy3UV1X2iDlHV3QLaE=
+	by mail.kernel.org (Postfix) with ESMTP id 1505C20656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:43:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uBxB61F3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbfLCXhY (ORCPT
+        id S1726755AbfLCXnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:37:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45894 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbfLCXhY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 18:37:24 -0500
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1858020656;
-        Tue,  3 Dec 2019 23:37:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575416242;
-        bh=oBlyMq4h1w80kqTkWb/Gz5L8T8126mtBIKddWWF/JAs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kWxdiItltSxMlKyb5CztyvIAdnfVgCNZeEr/34VKn0Vn0tjr44VDRCZ50Z7Pjm9bi
-         KaHf7BniYOUi6vXEBpW7zteiKtl74+T7CwxvHQmKXSlR3onpaT8hhtOM6kKmaA3U6E
-         MyDCopRdPyHVmbqLaRn9TGUEZI3xo3iEp5C3p9Ns=
-Date:   Tue, 3 Dec 2019 15:37:20 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Daniel Rosenberg <drosen@google.com>
-Cc:     Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-fscrypt@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        kernel-team@android.com
-Subject: Re: [PATCH 2/8] fscrypt: Don't allow v1 policies with casefolding
-Message-ID: <20191203233720.GC727@sol.localdomain>
-References: <20191203051049.44573-1-drosen@google.com>
- <20191203051049.44573-3-drosen@google.com>
+        Tue, 3 Dec 2019 18:43:03 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:37420 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbfLCXnC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 18:43:02 -0500
+Received: by mail-pj1-f67.google.com with SMTP id ep17so2165154pjb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 15:43:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1OxHtutk6hA28dBcP13TAqzlvKk2lKOdJ3WPlSn/d8Q=;
+        b=uBxB61F3xk/UPfo0PM/WCB9wWcWlnn9tx+m5s5ni7sO5yubFDPbYeUwsd1Xr9ZLHXk
+         qFffrP2WZ9fTLbOTRJCfW5JrjSTbEGBwKAIBQNV+3vHHKmL8kSBu87Xq2BeT1jOHSLVA
+         +f6wqWc/QSIsa+BdofFpZg0vu986rtLubTKRduvc/tWYcIMDwAioR181kAdCURwk3s5c
+         /EXNj4O6hQCPYh6Y4QChj1ba+yl2sYnOpUXPjkclbFZB4b/FYvPThE04WBsI0+SQG6qs
+         q97LPxZ5HwzxA5J8lR4mn/sRMTztmCgzniV91J0Ku8WOuUmgBK958reThbkupRKeI++P
+         H8dQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1OxHtutk6hA28dBcP13TAqzlvKk2lKOdJ3WPlSn/d8Q=;
+        b=SEfoEyZhD3nJXPsiExMPvrUokMjAVGAcFT/gclINh+HiFjoHLKbz9qDpbtkY7tObGz
+         oRH4aujPiuDoJhLpmKRIzByRLxK95NnpCf9RdTzPfoqkPKVELUo0FDUMJbXnV4y0qrSf
+         eyc3AgtNfDtyWVeXR86RNwzBZw8ZYRyLXE8LsTYTxYqoRnxN8hX4u7yiIMCdx+mN7S8D
+         ItlWbZlte5hE1auF67ub7LHN34gKQnABQa9PBOtsv8DMjywq6q3WyHhGCvDgg+OIZ6cp
+         yvg2HqKXZIUWDZwtLWwPW3HE/QXLAhLUCiW4Kut1vbt1lMlywmpt4mXmtkDPosPt4Co5
+         82Eg==
+X-Gm-Message-State: APjAAAXkt9cFBC3pmLSxxH9IFjrxaAMGIBlEJ6tCftG/UQzY02jUfrl3
+        oCTzROc4mVM6mW8oPl730zASLpzolmQabdYM+N5dRA==
+X-Google-Smtp-Source: APXvYqx74YmiLdGue6ov0CGItqQOhr5aoFMW+ZHNwajbQUlkcMKQiACOe6MPfcXVaEk15NyKto8aP2Tqx74SBbu6mW0=
+X-Received: by 2002:a17:902:8ec8:: with SMTP id x8mr519623plo.119.1575416581305;
+ Tue, 03 Dec 2019 15:43:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191203051049.44573-3-drosen@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191122185522.20582-1-ndesaulniers@google.com> <nycvar.YSQ.7.76.1911291614480.8537@knanqh.ubzr>
+In-Reply-To: <nycvar.YSQ.7.76.1911291614480.8537@knanqh.ubzr>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 3 Dec 2019 15:42:50 -0800
+Message-ID: <CAKwvOdmAFp=p=z8bhaRHf8uRhUBKpoAYtissyLTk5DC8f-=BUw@mail.gmail.com>
+Subject: Re: [PATCH] arm: explicitly place .fixup in .text
+To:     Nicolas Pitre <nico@fluxnic.net>,
+        Manoj Gupta <manojgupta@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kees Cook <keescook@chromium.org>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 09:10:43PM -0800, Daniel Rosenberg wrote:
-> Casefolding requires a derived key for computing the siphash.
-> This is available for v2 policies, but not v1, so we disallow it for v1.
-> 
-> Signed-off-by: Daniel Rosenberg <drosen@google.com>
-> ---
->  fs/crypto/policy.c      | 26 +++++++++++++++++++++++---
->  fs/inode.c              |  8 ++++++++
->  include/linux/fscrypt.h |  7 +++++++
->  3 files changed, 38 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/crypto/policy.c b/fs/crypto/policy.c
-> index 96f528071bed..94d96d3212d6 100644
-> --- a/fs/crypto/policy.c
-> +++ b/fs/crypto/policy.c
-> @@ -67,9 +67,9 @@ static bool supported_iv_ino_lblk_64_policy(
->   * fscrypt_supported_policy - check whether an encryption policy is supported
->   *
->   * Given an encryption policy, check whether all its encryption modes and other
-> - * settings are supported by this kernel.  (But we don't currently don't check
-> - * for crypto API support here, so attempting to use an algorithm not configured
-> - * into the crypto API will still fail later.)
-> + * settings are supported by this kernel on the given inode.  (But we don't
-> + * currently don't check for crypto API support here, so attempting to use an
-> + * algorithm not configured into the crypto API will still fail later.)
->   *
->   * Return: %true if supported, else %false
->   */
-> @@ -97,6 +97,12 @@ bool fscrypt_supported_policy(const union fscrypt_policy *policy_u,
->  			return false;
->  		}
->  
-> +		if (IS_CASEFOLDED(inode)) {
-> +			fscrypt_warn(inode,
-> +				     "v1 policy does not support casefolded directories");
-> +			return false;
-> +		}
-> +
->  		return true;
->  	}
->  	case FSCRYPT_POLICY_V2: {
-> @@ -530,3 +536,17 @@ int fscrypt_inherit_context(struct inode *parent, struct inode *child,
->  	return preload ? fscrypt_get_encryption_info(child): 0;
->  }
->  EXPORT_SYMBOL(fscrypt_inherit_context);
-> +
-> +int fscrypt_set_casefolding_allowed(struct inode *inode)
-> +{
-> +	union fscrypt_policy policy;
-> +	int ret = fscrypt_get_policy(inode, &policy);
-> +
-> +	if (ret < 0)
-> +		return ret;
+On Fri, Nov 29, 2019 at 1:33 PM Nicolas Pitre <nico@fluxnic.net> wrote:
+>
+> On Fri, 22 Nov 2019, Nick Desaulniers wrote:
+>
+> > From: Kees Cook <keescook@chromium.org>
+> >
+> > There's an implicit dependency on the section ordering of the orphaned
+> > section .fixup that can break arm_copy_from_user if the linker places
+> > the .fixup section before the .text section. Since .fixup is not
+> > explicitly placed in the existing ARM linker scripts, the linker is free
+> > to order it anywhere with respect to the rest of the sections.
+> >
+> > Multiple users from different distros (Raspbian, CrOS) reported kernel
+> > panics executing seccomp() syscall with Linux kernels linked with LLD.
+> >
+> > Documentation/x86/exception-tables.rst alludes to the ordering
+> > dependency. The relevant quote:
+> >
+> > ```
+> > NOTE:
+> > Due to the way that the exception table is built and needs to be ordered,
+> > only use exceptions for code in the .text section.  Any other section
+> > will cause the exception table to not be sorted correctly, and the
+> > exceptions will fail.
+> >
+> > Things changed when 64-bit support was added to x86 Linux. Rather than
+> > double the size of the exception table by expanding the two entries
+> > from 32-bits to 64 bits, a clever trick was used to store addresses
+> > as relative offsets from the table itself. The assembly code changed
+> > from::
+> >
+> >     .long 1b,3b
+> >   to:
+> >           .long (from) - .
+> >           .long (to) - .
+> >
+> > and the C-code that uses these values converts back to absolute addresses
+> > like this::
+> >
+> >         ex_insn_addr(const struct exception_table_entry *x)
+> >         {
+> >                 return (unsigned long)&x->insn + x->insn;
+> >         }
+> > ```
+> >
+> > Since the addresses stored in the __ex_table are RELATIVE offsets and
+> > not ABSOLUTE addresses, ordering the fixup anywhere that's not
+> > immediately preceding .text causes the relative offset of the faulting
+> > instruction to be wrong, causing the wrong (or no) address of the fixup
+> > handler to looked up in __ex_table.
+>
+> This explanation makes no sense.
+>
+> The above is valid only when ARCH_HAS_RELATIVE_EXTABLE is defined. On
+> ARM32 it is not, nor would it make sense to be.
 
-In fs/crypto/ we're trying to use 'err' rather than 'ret' when a variable can
-only be 0 or a negative errno value.  I.e.:
+Hmm...I thought that was the smoking gun. From the description in
+Documentation, I thought they meant that exception table entry lookup
+was changed to be homogeneous for 32b AND 64b arch's, but as you point
+out they're not.  Now with the reference to ARCH_HAS_RELATIVE_EXTABLE,
+I know to look through:
+include/asm-generic/extable.h
+include/linux/extable.h
+lib/extable.c
+kernel/extable.c
+arch/arm/mm/extable.c
+arch/arm/mm/fault.c (__do_kernel_fault() calls fixup_exception(),
+which is of interest).
 
-        union fscrypt_policy policy;
-        int err;
+Looks like the exception table is sorted by address of faulting
+instruction, then binary searched when an exception occurs.  Seems the
+exception table is like an array of pairs of addresses (address of
+faulting instruction from the get_user() call, address of fixup
+handler) (when !ARCH_HAS_RELATIVE_EXTABLE), IIUC.
 
-        err = fscrypt_get_policy(inode, &policy);
-        if (err)
-                return err;
+Reviewing the logs from the bugreport
+(https://bugs.chromium.org/p/chromium/issues/detail?id=1020633#c44)
+indeed the error string looks like the error message from
+__do_kernel_fault() in arch/arm/mm/fault.c where a call to
+fixup_exceptions() in arch/arm/mm/extable returned 1 because the call
+to search_exception_tables() in kernel/extable.c returned NULL.
 
-> +
-> +	if (policy.version == FSCRYPT_POLICY_V2)
-> +		return 0;
-> +	else
-> +		return -EINVAL;
-> +}
+So I was right that `no address of the fixup handler to (be) looked up
+in __ex_table`, but not quite right about *why* it fails to be looked
+up.
 
-In kernel code normally an early return is used in cases like this.  I.e.:
+search_exception_tables() in kernel/extable.c calls 3 functions:
+1. search_kernel_exception_table()
+2. search_module_extables()
+3. search_bpf_extables()
 
-	if (policy.version != FSCRYPT_POLICY_V2)
-		return -EINVAL;
+So the next question is which one of the above should have found the
+exception table entry, and why did it not when LLD placed the orphaned
+.fixup section BEFORE .text?  All three of the above do some
+processing on the address but in the end all call search_extable().
 
-	return 0;
+I really don't think kernel modules are involved.
 
-> @@ -2245,6 +2246,13 @@ int vfs_ioc_setflags_prepare(struct inode *inode, unsigned int oldflags,
->  	    !capable(CAP_LINUX_IMMUTABLE))
->  		return -EPERM;
->  
-> +	/*
-> +	 * When a directory is encrypted, the CASEFOLD flag can only be turned
-> +	 * on if the fscrypt policy supports it.
-> +	 */
-> +	if (IS_ENCRYPTED(inode) && (flags & ~oldflags & FS_CASEFOLD_FL))
-> +		return fscrypt_set_casefolding_allowed(inode);
-> +
->  	return 0;
->  }
->  EXPORT_SYMBOL(vfs_ioc_setflags_prepare);
+Since we're observing the fault via a call to seccomp(), which IIUC
+takes a BPF program when setting a filter (SECCOMP_SET_MODE_FILTER),
+I'm curious to look into search_bpf_extables() first.  Maybe
+constructing a BPF program involves insertion of special exception
+handler?  Looks like bpf programs are stored in an rb_tree called
+bpf_tree.  They have an auxiliary field that contains a pointer to an
+exception table entry.  "Auxiliary" makes it sounds optional, and the
+only assignment I can find to this field is in
+arch/x86/net/bpf_jit_comp.c, so I doubt it's relevant for arm.  It
+also just looks like it's zero initialized (bpf_prog_alloc_no_stats()
+in kernel/bpf/core.c) for arch generic code.
 
-This needs to only return early on error.  Otherwise when people add checks for
-more flags later, those checks will not be executed when the CASEFOLD flag is
-enabled on an encrypted directory.
+That leaves just search_kernel_exception_table().  I wonder if it
+fails because we put garbage entries in, or sorted it improperly?
 
-I.e.:
+Oh, and messing around with grep, it looks like entries to the
+exception table can be sorted at build time rather than boot time via
+CONFIG_BUILDTIME_EXTABLE_SORT?
 
-        if (IS_ENCRYPTED(inode) && (flags & ~oldflags & FS_CASEFOLD_FL)) {
-                err = fscrypt_set_casefolding_allowed(inode);
-                if (err)
-                        return err;
-        }
+I don't see the pr_notice from sort_main_extable() (kernel/extable.c
+called from start_kernel() in init/main.c) in the bugreports:
+https://bugs.chromium.org/p/chromium/issues/attachmentText?aid=421842
+https://github.com/ClangBuiltLinux/linux/issues/282
+(But IIRC, the log level may not be set to display these).
 
-I'm also wondering if this is the right level of abstraction.
-Maybe the API should be:
+CONFIG_BUILDTIME_EXTABLE_SORT is selected by arch/arm/Kconfig if
+CONFIG_MMU, which I highly suspect is already selected for the above
+two reports. (Would an arm32 based chromebook not have an MMU? I doubt
+it.)
 
-	err = fscrypt_ioc_setflags_prepare(inode, oldflags, flags);
-	if (err)
-		return err;
+So there may be an ordering dependency in scripts/sortextable.{c|h}?
+Neither mention `fixup`.
 
-Then the VFS code will be "obvious", and the comment:
+Will continue debugging more tomorrow or later this week, but please
+stop me if any of the above is also incorrect.  Some ideas for further
+experiments:
+- scripts/check_extable.sh sounds like some kind of validator.
+Manoj/Nathan, I wonder if you linked the problematic kernel with LLD
+than ran `./scripts/check_extable.sh vmlinux` if it would warn? Dunno
+about all those command line flags though.
+- if we apply a similar diff to the patch I posted, but force .fixup
+to be before .text for BFD (as LLD is placing the orphaned section
+currently), relinked with BFD and could reproduce the issue, that
+seems like proof about the implicit section ordering.
+```
+diff --git a/arch/arm/kernel/vmlinux.lds.S b/arch/arm/kernel/vmlinux.lds.S
+index 319ccb10846a..adfb5297f359 100644
+--- a/arch/arm/kernel/vmlinux.lds.S
++++ b/arch/arm/kernel/vmlinux.lds.S
+@@ -58,6 +58,7 @@ SECTIONS
+ #ifdef CONFIG_ARM_MPU
+        . = ALIGN(PMSAv8_MINALIGN);
+ #endif
++       .fixup : { *(.fixup) }
+        .text : {                       /* Real text segment            */
+                _stext = .;             /* Text and read-only data      */
+                ARM_TEXT
+```
 
-        /*
-         * When a directory is encrypted, the CASEFOLD flag can only be turned
-         * on if the fscrypt policy supports it.
-         */
-
-can be moved to the definition of fscrypt_ioc_setflags_prepare() in fs/crypto/.
-
-- Eric
+-- 
+Thanks,
+~Nick Desaulniers
