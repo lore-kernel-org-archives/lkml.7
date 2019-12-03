@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C233C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD301C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E34032084F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86D5F2073C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:40:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412827;
-	bh=Rpgx27oaH5pyEEWNHINeAj4AJ8nZJiR6iAKPlroSPAw=;
+	s=default; t=1575412832;
+	bh=4kPvRMRLgZy/2VSwiRkaGhNj7f40GzKfVOJEh+tET2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oSU+EVXF5aaM0LvfPuhI2Uw9Vd35ZvBPaPfY8BpBi34SXRelo5BGRi6etjw/gP4S4
-	 Ky/lFpFFwnBsr7p+XfZcpLOgcrdmYe5pkQ2u8PsKI/gtatIk7LgkS7Ed1KPRqSPloR
-	 Nqn6mY7FkAU1WBPGqVui3WIXUcUZmQehCaA0w2wA=
+	b=GR+CHd/gJboWZgrltX0N5LDdQTKjVzFk3TtWRjSKp2a12Cm+nd+kb61YlWHhWaSsE
+	 CBAGV8AzK5WrUsvf8BWuAqEJ3K2xYLS6TI/2IfiulQzdo+5nc8Vy7T+sWg9ppsxGDf
+	 OiMUpfXk7AyoQ/Wrn/lE/9SKS5HpfvHWVZ+6NHj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbfLCWkZ (ORCPT
+        id S1728095AbfLCWka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:40:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52596 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:40:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727870AbfLCWkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:40:19 -0500
+        id S1727635AbfLCWk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:40:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E773E20684;
-        Tue,  3 Dec 2019 22:40:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12F5920684;
+        Tue,  3 Dec 2019 22:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412818;
-        bh=Rpgx27oaH5pyEEWNHINeAj4AJ8nZJiR6iAKPlroSPAw=;
+        s=default; t=1575412826;
+        bh=4kPvRMRLgZy/2VSwiRkaGhNj7f40GzKfVOJEh+tET2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iuSfk10Q8BlBYor7c8cX2lJ88MQv8lMQTuzcVudnD88kY9dJQxsFe+gOoj7jTGDbX
-         t3kLo3rw7s5qKh+0sX3N3irdU+91dt75PQbQVY/aXvnL2IktiV7JQ+xvKmNAb8a09N
-         U0hJ6hF9Dj8JLngBv7ZTqblcejp+C0iJ5GVidwco=
+        b=dXdOrqY8t7AbY4aU/csztt7ThLQJfmVwmio20rooTPT5zERJaYdWfIz7x92KEbhYD
+         Md0zawZPNPSXIVWwihDdEKJzHAYsKDZc9vRMIf5nhNnhjlPgg2x7Lh0qf4z3CgtcEQ
+         kHKH9OX8E19VdClZz4GESijQg9v+4P5d+2sZ3WHQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Maxime Ripard <mripard@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 028/135] clk: at91: avoid sleeping early
-Date:   Tue,  3 Dec 2019 23:34:28 +0100
-Message-Id: <20191203213011.487609855@linuxfoundation.org>
+Subject: [PATCH 5.3 030/135] clk: sunxi-ng: a80: fix the zeroing of bits 16 and 18
+Date:   Tue,  3 Dec 2019 23:34:30 +0100
+Message-Id: <20191203213011.985095233@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -63,99 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 658fd65cf0b0d511de1718e48d9a28844c385ae0 ]
+[ Upstream commit cdfc2e2086bf9c465f44e2db25561373b084a113 ]
 
-It is not allowed to sleep to early in the boot process and this may lead
-to kernel issues if the bootloader didn't prepare the slow clock and main
-clock.
+The zero'ing of bits 16 and 18 is incorrect. Currently the code
+is masking with the bitwise-and of BIT(16) & BIT(18) which is
+0, so the updated value for val is always zero. Fix this by bitwise
+and-ing value with the correct mask that will zero bits 16 and 18.
 
-This results in the following error and dump stack on the AriettaG25:
-   bad: scheduling from the idle thread!
-
-Ensure it is possible to sleep, else simply have a delay.
-
-Reported-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Link: https://lkml.kernel.org/r/20190920153906.20887-1-alexandre.belloni@bootlin.com
-Fixes: 80eded6ce8bb ("clk: at91: add slow clks driver")
-Tested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Addresses-Coverity: (" Suspicious &= or |= constant expression")
+Fixes: b8eb71dcdd08 ("clk: sunxi-ng: Add A80 CCU")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/at91/clk-main.c |  5 ++++-
- drivers/clk/at91/sckc.c     | 20 ++++++++++++++++----
- 2 files changed, 20 insertions(+), 5 deletions(-)
+ drivers/clk/sunxi-ng/ccu-sun9i-a80.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/at91/clk-main.c b/drivers/clk/at91/clk-main.c
-index 311cea0c3ae2b..54b2b2dd2bb57 100644
---- a/drivers/clk/at91/clk-main.c
-+++ b/drivers/clk/at91/clk-main.c
-@@ -297,7 +297,10 @@ static int clk_main_probe_frequency(struct regmap *regmap)
- 		regmap_read(regmap, AT91_CKGR_MCFR, &mcfr);
- 		if (mcfr & AT91_PMC_MAINRDY)
- 			return 0;
--		usleep_range(MAINF_LOOP_MIN_WAIT, MAINF_LOOP_MAX_WAIT);
-+		if (system_state < SYSTEM_RUNNING)
-+			udelay(MAINF_LOOP_MIN_WAIT);
-+		else
-+			usleep_range(MAINF_LOOP_MIN_WAIT, MAINF_LOOP_MAX_WAIT);
- 	} while (time_before(prep_time, timeout));
+diff --git a/drivers/clk/sunxi-ng/ccu-sun9i-a80.c b/drivers/clk/sunxi-ng/ccu-sun9i-a80.c
+index dcac1391767f6..ef29582676f6e 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun9i-a80.c
++++ b/drivers/clk/sunxi-ng/ccu-sun9i-a80.c
+@@ -1224,7 +1224,7 @@ static int sun9i_a80_ccu_probe(struct platform_device *pdev)
  
- 	return -ETIMEDOUT;
-diff --git a/drivers/clk/at91/sckc.c b/drivers/clk/at91/sckc.c
-index 9bfe9a28294a7..fac0ca56d42d9 100644
---- a/drivers/clk/at91/sckc.c
-+++ b/drivers/clk/at91/sckc.c
-@@ -76,7 +76,10 @@ static int clk_slow_osc_prepare(struct clk_hw *hw)
+ 	/* Enforce d1 = 0, d2 = 0 for Audio PLL */
+ 	val = readl(reg + SUN9I_A80_PLL_AUDIO_REG);
+-	val &= (BIT(16) & BIT(18));
++	val &= ~(BIT(16) | BIT(18));
+ 	writel(val, reg + SUN9I_A80_PLL_AUDIO_REG);
  
- 	writel(tmp | osc->bits->cr_osc32en, sckcr);
- 
--	usleep_range(osc->startup_usec, osc->startup_usec + 1);
-+	if (system_state < SYSTEM_RUNNING)
-+		udelay(osc->startup_usec);
-+	else
-+		usleep_range(osc->startup_usec, osc->startup_usec + 1);
- 
- 	return 0;
- }
-@@ -187,7 +190,10 @@ static int clk_slow_rc_osc_prepare(struct clk_hw *hw)
- 
- 	writel(readl(sckcr) | osc->bits->cr_rcen, sckcr);
- 
--	usleep_range(osc->startup_usec, osc->startup_usec + 1);
-+	if (system_state < SYSTEM_RUNNING)
-+		udelay(osc->startup_usec);
-+	else
-+		usleep_range(osc->startup_usec, osc->startup_usec + 1);
- 
- 	return 0;
- }
-@@ -288,7 +294,10 @@ static int clk_sam9x5_slow_set_parent(struct clk_hw *hw, u8 index)
- 
- 	writel(tmp, sckcr);
- 
--	usleep_range(SLOWCK_SW_TIME_USEC, SLOWCK_SW_TIME_USEC + 1);
-+	if (system_state < SYSTEM_RUNNING)
-+		udelay(SLOWCK_SW_TIME_USEC);
-+	else
-+		usleep_range(SLOWCK_SW_TIME_USEC, SLOWCK_SW_TIME_USEC + 1);
- 
- 	return 0;
- }
-@@ -533,7 +542,10 @@ static int clk_sama5d4_slow_osc_prepare(struct clk_hw *hw)
- 		return 0;
- 	}
- 
--	usleep_range(osc->startup_usec, osc->startup_usec + 1);
-+	if (system_state < SYSTEM_RUNNING)
-+		udelay(osc->startup_usec);
-+	else
-+		usleep_range(osc->startup_usec, osc->startup_usec + 1);
- 	osc->prepared = true;
- 
- 	return 0;
+ 	/* Enforce P = 1 for both CPU cluster PLLs */
 -- 
 2.20.1
 
