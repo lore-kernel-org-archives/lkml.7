@@ -2,117 +2,151 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C47DC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A45AFC43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5213C206EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C6F5206EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:24:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MF6eDGvB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ocaq0D2M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfLCQV6 (ORCPT
+        id S1726810AbfLCQYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 11:21:58 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41442 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726330AbfLCQV5 (ORCPT
+        Tue, 3 Dec 2019 11:24:14 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36520 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfLCQYO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 11:21:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575390116;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Krr7ZwxuAitCp24WVDOUedZ/Q7sKuIWyB1AA5BQo0EE=;
-        b=MF6eDGvB00E3ILHQgVrxZsx7PlKMgM65N9uglVegZcJUo47HDztjNxWTqDqEo1M+c2g6Sp
-        cxUQAZfqb2DKS9Uwc2XQon8VBcTi7OXuZy11uozyk3GHTmR58rg/D6S9M3Uk3lwOzSWWhJ
-        J5fifXNv7MHXc946rJfotfbYssYf2M4=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-330-l4XJTMoMOEi2dnXyjt8vZQ-1; Tue, 03 Dec 2019 11:21:53 -0500
-Received: by mail-qt1-f197.google.com with SMTP id h14so1114553qtq.11
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 08:21:53 -0800 (PST)
+        Tue, 3 Dec 2019 11:24:14 -0500
+Received: by mail-pf1-f193.google.com with SMTP id b19so2100387pfd.3;
+        Tue, 03 Dec 2019 08:24:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UF68x/KuCHKog45NJwPbUxi85MNam/g/8jmiTNyQvwE=;
+        b=Ocaq0D2M6Zm1TRioVqqndRLyX8n+8aHCZRA7WPMFkKTdAb1BpVM9vr30wU5X3bsfKU
+         wJN+srOBZsZVj6I/npeZo3nofRj9nWyz0wUHJlUvYv0ic3hqz2ak6bvdOwvf52E5Nnv9
+         xp3hRHxCSWM5vj1Nwko8cGUUdfN4nNsnUIazQJtG5Vb82RsnnWIhRj7Uclnrh1zWBzuD
+         BP8mFsmoCHd0fWn7UJCQKouvJ7CYi37tG+dI4ydDv26GTi52rp0PHrk0TuFrjV7hybYk
+         u05dbMhPY3sgREdA4ptcbuQLwywlOpLPjPdcukjxcmtW+esMAsrF8LzdIFYYmIAzKc2Y
+         m4uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QBbNGfvUlTYS0yIz8xLqE+mI2O2biBkly1Uwosv+Za8=;
-        b=f8kJrd4CNhip4tQ75Kg58eApKJl9tevm5ZQC4TSirUYw99Y41ptow/ql033HVJEZZw
-         LDsdGszf905JrL5gk3VLxycPkLu7wc1gd9UkrhJn53L8J6JatQvlIcaJQ1hLKMW4la9/
-         1Txq4kQN0/agyRtKG+SwfqOmvt1SSi2f6paROVzN05HXCnhlQDSgpPcw2siyT3ocBSWF
-         b9oMp3shxtkq9t6ynKE6VQjZXoFhGuBFILhy3B6wjMjdMCcwZXOSJd/mQjvvyf3YJ+OV
-         EMO5kb6NGmCGjl+hyduAvxPuZCNU5oKRWmWCMrN0kw5SJu9RrpAKzr76GrBl7IK4Ognh
-         Ijpw==
-X-Gm-Message-State: APjAAAV6QOcVcG6lt3p+KmW8Y5gydNeIVCr5mIop1uXpsgRemXciXhGw
-        JgXGlDYvcsp6vWRIYHrBu6Wer84aErOE3B9A7mq3ygC9zKVqpuLeQgisGNfrjPiQIyodOnmmGF7
-        AAeCc3xxHx73ZgKHYJdka+wF1
-X-Received: by 2002:a05:620a:113a:: with SMTP id p26mr5917403qkk.491.1575390112972;
-        Tue, 03 Dec 2019 08:21:52 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx+ctfQIoW78w8OdbCo+kvI8ncqL4KHBecGiT6GAly/K7HMAi0YO7NohD2Vyk8qsxsJQy1OLQ==
-X-Received: by 2002:a05:620a:113a:: with SMTP id p26mr5917372qkk.491.1575390112700;
-        Tue, 03 Dec 2019 08:21:52 -0800 (PST)
-Received: from xz-x1 ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id h203sm2024678qke.90.2019.12.03.08.21.51
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UF68x/KuCHKog45NJwPbUxi85MNam/g/8jmiTNyQvwE=;
+        b=Ole5VYjCXNXP7M/vj2Is41ZEA+ZiZcGlmwlyaDX3OW3LOZj2ZL97eCYP2ckjBFkhlK
+         0MZVfRA/qquIqG6uQdNetfGtrz79bzQ1Cp7KlkiSDS0xQBg91gHyPGeKGeamxvszKrfM
+         8zZHsbVuFd/MLlj96fH9Ep3lY5ACjNu6kKnKM8w7l8hc+M+wSXwgNJEcdJqquQu1joD5
+         jDujcacxKgyNF/bM+rJ2l8XX5gzriF0Hjz+5LaOA8W/CXHDm59d2Q0udj+GOdeh4SUt2
+         590xqKqrc2gTRAe+ARbL/U5MoQdP8Sn7EUhSsLEWtuoSYrI3LbpG/flpGOyo1FhvS/Yv
+         yrXg==
+X-Gm-Message-State: APjAAAVsUa7ey/6q9ubm76Qdy24Kg7IKkGI2twx66eF2akNHs5QDMKMv
+        +L6vT2Sj/IopjOLZF7LjatX9pg2BdpY=
+X-Google-Smtp-Source: APXvYqzkMkKwlby+VAtipSB3PC7III49VAd83ljH9tCYZri4Rn7UPM7Oxw/yWV6jdhwEp+3vAerE5g==
+X-Received: by 2002:a63:e145:: with SMTP id h5mr5918290pgk.387.1575390252701;
+        Tue, 03 Dec 2019 08:24:12 -0800 (PST)
+Received: from localhost.hsd1.wa.comcast.net ([2601:602:847f:811f:babe:8e8d:b27e:e6d7])
+        by smtp.gmail.com with ESMTPSA id g10sm4052093pgh.35.2019.12.03.08.24.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 08:21:52 -0800 (PST)
-Date:   Tue, 3 Dec 2019 11:21:50 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, Nitesh Narayan Lal <nitesh@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/5] KVM: X86: Drop KVM_APIC_SHORT_MASK and
- KVM_APIC_DEST_MASK
-Message-ID: <20191203162150.GC17275@xz-x1>
-References: <20191202201314.543-1-peterx@redhat.com>
- <20191202201314.543-5-peterx@redhat.com>
- <87tv6hbl7v.fsf@vitty.brq.redhat.com>
+        Tue, 03 Dec 2019 08:24:11 -0800 (PST)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-crypto@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com
+Subject: [PATCH v5 0/4] enable CAAM's HWRNG as default
+Date:   Tue,  3 Dec 2019 08:23:53 -0800
+Message-Id: <20191203162357.21942-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <87tv6hbl7v.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-MC-Unique: l4XJTMoMOEi2dnXyjt8vZQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 02:19:16PM +0100, Vitaly Kuznetsov wrote:
-> > @@ -4519,9 +4519,9 @@ static int avic_incomplete_ipi_interception(struc=
-t vcpu_svm *svm)
-> >  =09=09 */
-> >  =09=09kvm_for_each_vcpu(i, vcpu, kvm) {
-> >  =09=09=09bool m =3D kvm_apic_match_dest(vcpu, apic,
-> > -=09=09=09=09=09=09     icrl & KVM_APIC_SHORT_MASK,
-> > +=09=09=09=09=09=09     icrl & APIC_SHORT_MASK,
-> >  =09=09=09=09=09=09     GET_APIC_DEST_FIELD(icrh),
-> > -=09=09=09=09=09=09     icrl & KVM_APIC_DEST_MASK);
-> > +=09=09=09=09=09=09     icrl & APIC_DEST_MASK);
-> > =20
-> >  =09=09=09if (m && !avic_vcpu_is_running(vcpu))
-> >  =09=09=09=09kvm_vcpu_wake_up(vcpu);
->=20
-> Personal taste but I would've preserved KVM_ prefix. The patch itself
-> looks correct, so
+Everyone:
 
-KVM apic uses apicdefs.h a lot, so I was trying to match them (APIC_*)
-with it.
+This series is a continuation of original [discussion]. I don't know
+if what's in the series is enough to use CAAMs HWRNG system wide, but
+I am hoping that with enough iterations and feedback it will be.
 
->=20
-> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Changes since [v1]:
 
-Thanks for the reviews,
+    - Original hw_random replaced with the one using output of TRNG directly
 
---=20
-Peter Xu
+    - SEC4 DRNG IP block exposed via crypto API
+
+    - Small fix regarding use of GFP_DMA added to the series
+
+Chagnes since [v2]:
+
+    - msleep in polling loop to avoid wasting CPU cycles
+
+    - caam_trng_read() bails out early if 'wait' is set to 'false'
+
+    - fixed typo in ZII's name
+
+Changes since [v3]:
+
+    - DRNG's .cra_name is now "stdrng"
+
+    - collected Reviewd-by tag from Lucas
+
+    - typo fixes in commit messages of the series
+
+Changes since [v4]:
+
+    - Dropped "crypto: caam - RNG4 TRNG errata" and "crypto: caam -
+      enable prediction resistance in HRWNG" to limit the scope of the
+      series. Those two patches are not yet ready and can be submitted
+      separately later.
+
+    - Collected Tested-by from Chris
+
+Feedback is welcome!
+
+Thanks,
+Andrey Smirnov
+
+[discussion] https://patchwork.kernel.org/patch/9850669/
+[v1] https://lore.kernel.org/lkml/20191029162916.26579-1-andrew.smirnov@gmail.com
+[v2] https://lore.kernel.org/lkml/20191118153843.28136-1-andrew.smirnov@gmail.com
+[v3] https://lore.kernel.org/lkml/20191120165341.32669-1-andrew.smirnov@gmail.com
+[v4] https://lore.kernel.org/lkml/20191121155554.1227-1-andrew.smirnov@gmail.com
+
+Andrey Smirnov (4):
+  crypto: caam - allocate RNG instantiation descriptor with GFP_DMA
+  crypto: caam - move RNG presence check into a shared function
+  crypto: caam - replace DRNG with TRNG for use with hw_random
+  crypto: caam - expose SEC4 DRNG via crypto RNG API
+
+ drivers/crypto/caam/Kconfig   |  15 +-
+ drivers/crypto/caam/Makefile  |   3 +-
+ drivers/crypto/caam/caamrng.c | 358 ----------------------------------
+ drivers/crypto/caam/ctrl.c    |  10 +-
+ drivers/crypto/caam/drng.c    | 174 +++++++++++++++++
+ drivers/crypto/caam/intern.h  |  32 ++-
+ drivers/crypto/caam/jr.c      |   3 +-
+ drivers/crypto/caam/regs.h    |  11 +-
+ drivers/crypto/caam/trng.c    |  89 +++++++++
+ 9 files changed, 320 insertions(+), 375 deletions(-)
+ delete mode 100644 drivers/crypto/caam/caamrng.c
+ create mode 100644 drivers/crypto/caam/drng.c
+ create mode 100644 drivers/crypto/caam/trng.c
+
+-- 
+2.21.0
 
