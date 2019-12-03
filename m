@@ -2,53 +2,54 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	PDS_BTC_ID,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8478C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C12E7C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2A132053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9155720674
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413741;
-	bh=moSTdx0b15r8AFXw/a0cj2pHvsjwbdBEGVmg1DcRV+o=;
+	s=default; t=1575413747;
+	bh=u0pEInAzhM+Of0cRAEW1Duv+Swgvq9rgar9zk6OYqZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U/VVmRLWDUwCppMKRHNexx9vWZlcJXdtjZTFfhkPrnVSaJuI7tHQFjUvInNhhK4Ck
-	 lTcyr1IXAzrAYUMs9nrr+aRxZ8RP2xq2KDceZOo8CaiyR6MQjwWtK/0EwKj3OQwWCp
-	 LRrOWGpZXFDR3N8pzHeNZyzjDEMXgflA9eJkCgjI=
+	b=qgHQUu/0ddnvEwTogRNsHcwCqOESx0ufa6n0YmvJgkshBFnuuZ5nfnatFdj/+b2BX
+	 520S4f/cmjci+v3eXi87BGiW1ZRuMGi2NvcQ3KKuhAeIgWp34bPUbqK5eSA0agkcxr
+	 83wJ2/33XfKT7DCaZoP00MVKG/27a4nyKanVgao8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730372AbfLCWzk (ORCPT
+        id S1729646AbfLCWzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:55:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50052 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:55:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730357AbfLCWzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:55:36 -0500
+        id S1730191AbfLCWzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:55:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F94A2053B;
-        Tue,  3 Dec 2019 22:55:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4008B2053B;
+        Tue,  3 Dec 2019 22:55:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413736;
-        bh=moSTdx0b15r8AFXw/a0cj2pHvsjwbdBEGVmg1DcRV+o=;
+        s=default; t=1575413743;
+        bh=u0pEInAzhM+Of0cRAEW1Duv+Swgvq9rgar9zk6OYqZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EWCjyUstn1enZ7U66dFBd35gcTpr42Ka/vk6XBdMHLY5cY7ADpvhK7X5J6vkKpGHY
-         w0KZ10z5R/Ix2TYjPQof5MWqBmoyE2RnG7Qo2BV9dZ38RveP3HfmMyZVNWBrZBXyFh
-         M2u01ZqzUQr/zGRv9lcdTSpF8MpBhOgS7CcJjoLs=
+        b=Db5ydlGOBS4B8dgxElwXhdoxcsKUd1jo65rE14xQrz00O0X3VG41DMFWKFvVE1EaE
+         saOa7pn0S9q/FXsvL5OR1uMrPtRn4u+R/ZlNych3bJTEa/TLA1Cqea0Ruj/D6Pjwub
+         KC0ndgzF2yR07Y7ksN9U3tocw69IGw/FqiDOIBdU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org, Yunsheng Lin <linyunsheng@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 241/321] net: dev: Use unsigned integer as an argument to left-shift
-Date:   Tue,  3 Dec 2019 23:35:07 +0100
-Message-Id: <20191203223439.679216273@linuxfoundation.org>
+Subject: [PATCH 4.19 244/321] net: hns3: Change fw error code NOT_EXEC to NOT_SUPPORTED
+Date:   Tue,  3 Dec 2019 23:35:10 +0100
+Message-Id: <20191203223439.834119609@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,33 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-[ Upstream commit f4d7b3e23d259c44f1f1c39645450680fcd935d6 ]
+[ Upstream commit 4a402f47cfce904051cd8b31bef4fe2910d9dce9 ]
 
-1 << 31 is Undefined Behaviour according to the C standard.
-Use U type modifier to avoid theoretical overflow.
+According to firmware error code definition, the error code of 2
+means NOT_SUPPORTED, this patch changes it to NOT_SUPPORTED.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/netdevice.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c | 2 ++
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index 8c2fec0bcb265..5ada5fd9652dd 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -3790,7 +3790,7 @@ static inline u32 netif_msg_init(int debug_value, int default_msg_enable_bits)
- 	if (debug_value == 0)	/* no output */
- 		return 0;
- 	/* set low N bits */
--	return (1 << debug_value) - 1;
-+	return (1U << debug_value) - 1;
- }
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
+index 690f62ed87dca..09a4d87429cea 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
+@@ -260,6 +260,8 @@ int hclge_cmd_send(struct hclge_hw *hw, struct hclge_desc *desc, int num)
  
- static inline void __netif_tx_lock(struct netdev_queue *txq, int cpu)
+ 			if (desc_ret == HCLGE_CMD_EXEC_SUCCESS)
+ 				retval = 0;
++			else if (desc_ret == HCLGE_CMD_NOT_SUPPORTED)
++				retval = -EOPNOTSUPP;
+ 			else
+ 				retval = -EIO;
+ 			hw->cmq.last_status = desc_ret;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
+index 821d4c2f84bd3..d7520686509fd 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
+@@ -39,7 +39,7 @@ struct hclge_cmq_ring {
+ enum hclge_cmd_return_status {
+ 	HCLGE_CMD_EXEC_SUCCESS	= 0,
+ 	HCLGE_CMD_NO_AUTH	= 1,
+-	HCLGE_CMD_NOT_EXEC	= 2,
++	HCLGE_CMD_NOT_SUPPORTED	= 2,
+ 	HCLGE_CMD_QUEUE_FULL	= 3,
+ };
+ 
 -- 
 2.20.1
 
