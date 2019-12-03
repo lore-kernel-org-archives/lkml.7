@@ -2,124 +2,138 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB94BC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B9EC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E6CF20640
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9C6E20640
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:33:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nCSNuOYA"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="iVydF1wQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726190AbfLCJdM (ORCPT
+        id S1726330AbfLCJdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 04:33:12 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:35204 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfLCJdL (ORCPT
+        Tue, 3 Dec 2019 04:33:39 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38192 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbfLCJdj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 04:33:11 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB39T0SS019198;
-        Tue, 3 Dec 2019 09:32:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2019-08-05;
- bh=G8qpUvWbIVhcVzKpHu2CsxlCDVgrkg66RsvLNXqXNl8=;
- b=nCSNuOYAh6ziBFF0IvuA1+h49z9QE5+f81FhUW+xvz5N615QMU+DQBVpxDaFhe+zD4+e
- 0tkwBdBH4HGiSulWTnoHb4OGNUGkGV+B6gJ0pZ52noPl63qjkJTyAGRiyt9kPcloPmtn
- resYoLRwvZpHy9uEpU1GqDxW9GG3C0vCGVf2AzkC2Mrq6xgATwxtBPGd698C9tkocwAG
- IuAQC9Vb+aAvdeODDqTZsTW98AgTmvFKWqUStR6bkRN1YqWVipOh1hp/UuIxbKgVC01d
- J9u0yLhc3w4hUVQb555MSFIkdw8bqSS60UTx+ZFt/t61CzwRLGKZ+REb673pDlQ5bl7t 5g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2wkgcq68cp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Dec 2019 09:32:54 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB39SvJJ021937;
-        Tue, 3 Dec 2019 09:32:53 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2wn4qpmbqb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Dec 2019 09:32:53 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xB39WpiG003982;
-        Tue, 3 Dec 2019 09:32:51 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 03 Dec 2019 01:32:50 -0800
-Date:   Tue, 3 Dec 2019 12:32:41 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Rong Chen <rong.a.chen@intel.com>
-Cc:     kbuild@lists.01.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
-        kbuild-all@lists.01.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [kbuild-all] Re: [PATCH next 2/3] debugfs: introduce
- debugfs_create_single[,_data]
-Message-ID: <20191203092643.GD1787@kadam>
-References: <20191203083847.GC1787@kadam>
- <06d63c3c-bab5-c19e-a51d-ac7c1ed0a80c@intel.com>
+        Tue, 3 Dec 2019 04:33:39 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p17so2625851wmi.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 01:33:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZaaTzB9B+KCHVUkdR37ZgN+trAYMPzah4PHL0bT6fiA=;
+        b=iVydF1wQ/0vgHkuScgqf254M2NgW1SCwaXfH8upjUBcTDJ+xqoU2DJYQvUB3zHCbA4
+         k8D4XT2StG+r/EPuGb7sb2JeoRzvniMPtuFUPZ16EInVXOmfmCC1xSuuWrkKSql6MU6/
+         SS231G5wNpT9fEsjpgqWU4f4FxrkcCDYJvkkc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=ZaaTzB9B+KCHVUkdR37ZgN+trAYMPzah4PHL0bT6fiA=;
+        b=jXyqB01cLcgALbKI2lgx6xeYsssELlpWYWQAK5RiPEqyqMkLEaOUtWlpOhpkXqcLc+
+         HR1DpzQFcHpQgvzCrOk3H0L/i+ROP5fEx1F5mGgyN0D1iWSFC6cydutqP+iPc5o5eSzQ
+         W8Ddtdc0sHJvPpD2seGn/wIfHeb3vEy6I+V3586rqmd/3xf6e9xSTYv/6BxUVApgsCgG
+         fBzbQm2UFwcRghcu3S3n6iFPSItA3/4fLKxhp/eU0qI8lLa2qcqxa+iU2LxQoSj4168r
+         iQfcxm6gJSeFgfGmyyCYT4/Vu8PK84znjMReOy/19vbZuRsUULHR3W1Abqz4LPOGZFB8
+         Yh/A==
+X-Gm-Message-State: APjAAAXDcCRQaErM/VSlWj5vNIjZyv5QhR0xNCEEIQ6PM0fFsReuup3X
+        d/0C8rEDRIzFVr+YNVGu0+89c+2DPfw=
+X-Google-Smtp-Source: APXvYqz+J633fcXdBMYZwoxzR3wo7HbfzMMPymK979NzaZ2U6MB3HPM+JckPDdwUIGCUS4tLBkdSgQ==
+X-Received: by 2002:a1c:8153:: with SMTP id c80mr33780098wmd.58.1575365617059;
+        Tue, 03 Dec 2019 01:33:37 -0800 (PST)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id z13sm2382476wmi.18.2019.12.03.01.33.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2019 01:33:36 -0800 (PST)
+Date:   Tue, 3 Dec 2019 10:33:34 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/dp_mst: Fix build on systems with
+ STACKTRACE_SUPPORT=n
+Message-ID: <20191203093334.GB624164@phenom.ffwll.local>
+Mail-Followup-To: Lyude Paul <lyude@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191202133650.11964-1-linux@roeck-us.net>
+ <CAMuHMdUz7gewcFPE=cnVENGdwVp6AZD7U4y1PtwXTAmoGmvGUg@mail.gmail.com>
+ <837a221f0fc89b9ef6d3fbd2ceae479a5c98818a.camel@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <06d63c3c-bab5-c19e-a51d-ac7c1ed0a80c@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9459 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912030077
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9459 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912030077
+In-Reply-To: <837a221f0fc89b9ef6d3fbd2ceae479a5c98818a.camel@redhat.com>
+X-Operating-System: Linux phenom 5.3.0-2-amd64 
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 05:02:54PM +0800, Rong Chen wrote:
+On Mon, Dec 02, 2019 at 01:49:47PM -0500, Lyude Paul wrote:
+> Reviewed-by: Lyude Paul <lyude@redhat.com>
 > 
+> I'll go ahead and push this to drm-misc-next, thanks!
+
+drm-misc-next-fixes since it's in the merge window. drm-misc-next is for
+5.6 already.
+-Daniel
+
 > 
-> On 12/3/19 4:38 PM, Dan Carpenter wrote:
-> > [ How do I fetch 0day git branchs?
-> >    git fetch https://github.com/0day-ci/linux/commits/Kefeng-Wang/debugfs-introduce-debugfs_create_single-seq-_data/20191129-173440
-> >    doesn't work. - dan ]
-> 
-> Hi Dan,
-> 
-> I can fetch it by the following steps:
-> 
-> nfs@shao2-debian:~/linux$ git remote add 0day-linux-review
-> https://github.com/0day-ci/linux.git
-> nfs@shao2-debian:~/linux$ git fetch --no-tags 0day-linux-review
-> Kefeng-Wang/debugfs-introduce-debugfs_create_single-seq-_data/20191129-173440
-> 
-> remote: Enumerating objects: 25261, done.
-> remote: Counting objects: 100% (25261/25261), done.
-> remote: Total 33246 (delta 25260), reused 25260 (delta 25260), pack-reused
-> 7985
-> Receiving objects: 100% (33246/33246), 12.03 MiB | 1.05 MiB/s, done.
-> Resolving deltas: 100% (28148/28148), completed with 6149 local objects.
-> From https://github.com/0day-ci/linux
->  * branch
-> Kefeng-Wang/debugfs-introduce-debugfs_create_single-seq-_data/20191129-173440
-> -> FETCH_HEAD
->  * [new branch]
-> Kefeng-Wang/debugfs-introduce-debugfs_create_single-seq-_data/20191129-173440
-> -> 0day-linux-review/Kefeng-Wang/debugfs-introduce-debugfs_create_single-seq-_data/20191129-173440
+> On Mon, 2019-12-02 at 16:20 +0100, Geert Uytterhoeven wrote:
+> > On Mon, Dec 2, 2019 at 2:41 PM Guenter Roeck <linux@roeck-us.net> wrote:
+> > > On systems with STACKTRACE_SUPPORT=n, we get:
+> > > 
+> > > WARNING: unmet direct dependencies detected for STACKTRACE
+> > >   Depends on [n]: STACKTRACE_SUPPORT
+> > >   Selected by [y]:
+> > >   - STACKDEPOT [=y]
+> > > 
+> > > and build errors such as:
+> > > 
+> > > m68k-linux-ld: kernel/stacktrace.o: in function `stack_trace_save':
+> > > (.text+0x11c): undefined reference to `save_stack_trace'
+> > > 
+> > > Add the missing deendency on STACKTRACE_SUPPORT.
+> > > 
+> > > Fixes: 12a280c72868 ("drm/dp_mst: Add topology ref history tracking for
+> > > debugging")
+> > > Cc: Lyude Paul <lyude@redhat.com>
+> > > Cc: Sean Paul <sean@poorly.run>
+> > > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> > 
+> > Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> > 
+> > Gr{oetje,eeting}s,
+> > 
+> >                         Geert
+> > 
+> -- 
+> Cheers,
+> 	Lyude Paul
 > 
 
-Tracking a remote is unworkably slow on my system.  It's way better to
-try fetch a specific branch if possible.
-
-regards,
-dan carpenter
-
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
