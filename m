@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F27C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E57CC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF96B20656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0287A20803
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:57:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413828;
-	bh=3zVEiVhIZndM5vNwKXDvLCFqWGmMpmx4nPveMKLCkpY=;
+	s=default; t=1575413832;
+	bh=yh+2c6J0zAyztqR0GF8zOuMWQhpHsSGmydaLfkOhlhY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HWJudqwyIoakwBPmvEGxuJhnWycEVAwnvobrmFTALhdcFRgpVxLw+ySVx/Xb/dbKf
-	 5pD8xr2gdZ+ZQnMxnxxsZAvRsxLEDW4V09EOZYcmfvq582N5tve5MCzOIBV+BMc3mO
-	 cdG779Qx4NbXKgsK7hLg16/5wqtEw2g7nq6HzPzU=
+	b=eudxnJ4L7/lDtdLt2hlCqX1GifiQxdCZqEp+LRWPWsb3gWuw4rxqdJMZll0NiQRyy
+	 CBC1KTHqq1gJSQDf3AeXVjonZeaD3EEUxIsD7daiYSMrYWJBfUpDUvnFCtWAK+4Tgu
+	 CSZy7QGUwYf9XeP+LI1c4/VUXluBBOhsguHYbCm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730522AbfLCW5H (ORCPT
+        id S1727049AbfLCW5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:57:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52340 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:57:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730491AbfLCW47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:56:59 -0500
+        id S1730509AbfLCW5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:57:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3BE62053B;
-        Tue,  3 Dec 2019 22:56:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DA3720656;
+        Tue,  3 Dec 2019 22:57:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413819;
-        bh=3zVEiVhIZndM5vNwKXDvLCFqWGmMpmx4nPveMKLCkpY=;
+        s=default; t=1575413824;
+        bh=yh+2c6J0zAyztqR0GF8zOuMWQhpHsSGmydaLfkOhlhY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=om/+d6H8sCb6EHxJbthCVqIpf/g1o6VG4zrqpfhVQ+gaRlpO+X/XDIyqOUFuuuEJQ
-         apavZ21oU4s5H8dhfKomYJL8s0BVtenI1dFLHKkAijnkbndSUMBaM8fg54VtrOR8/E
-         9gHPTy8AuytrKCh4Kb7GqVW1AXKlAW846o0h/0AU=
+        b=chjUQv9v9HMuyO55vm7oTIhFMwd+5dO/dh2gwe/cym9N+qzLIJJP6pxsYj2FiZYXr
+         PUftCuu4fwMWeQtPpGNAIeuumPQi0nsQ5l+OtDYEdlFBYWU1O5EBrGzUAnJOO4tCdx
+         H5LaaTlM/dXxjKetPn6JvsePhmmLuBj9khRjiJWs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Usyskin <alexander.usyskin@intel.com>,
-        Tomas Winkler <tomas.winkler@intel.com>
-Subject: [PATCH 4.19 274/321] mei: me: add comet point V device id
-Date:   Tue,  3 Dec 2019 23:35:40 +0100
-Message-Id: <20191203223441.382319372@linuxfoundation.org>
+        stable@vger.kernel.org, JD <jdtxs00@gmail.com>,
+        Paul Wouters <paul@nohats.ca>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 4.19 276/321] xfrm: Fix memleak on xfrm state destroy
+Date:   Tue,  3 Dec 2019 23:35:42 +0100
+Message-Id: <20191203223441.485499204@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,42 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Usyskin <alexander.usyskin@intel.com>
+From: Steffen Klassert <steffen.klassert@secunet.com>
 
-commit 82b29b9f72afdccb40ea5f3c13c6a3cb65a597bc upstream.
+commit 86c6739eda7d2a03f2db30cbee67a5fb81afa8ba upstream.
 
-Comet Point (Comet Lake) V device id.
+We leak the page that we use to create skb page fragments
+when destroying the xfrm_state. Fix this by dropping a
+page reference if a page was assigned to the xfrm_state.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-Link: https://lore.kernel.org/r/20191105150514.14010-2-tomas.winkler@intel.com
+Fixes: cac2661c53f3 ("esp4: Avoid skb_cow_data whenever possible")
+Reported-by: JD <jdtxs00@gmail.com>
+Reported-by: Paul Wouters <paul@nohats.ca>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/mei/hw-me-regs.h |    1 +
- drivers/misc/mei/pci-me.c     |    1 +
- 2 files changed, 2 insertions(+)
+ net/xfrm/xfrm_state.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/misc/mei/hw-me-regs.h
-+++ b/drivers/misc/mei/hw-me-regs.h
-@@ -141,6 +141,7 @@
- 
- #define MEI_DEV_ID_CMP_LP     0x02e0  /* Comet Point LP */
- #define MEI_DEV_ID_CMP_LP_3   0x02e4  /* Comet Point LP 3 (iTouch) */
-+#define MEI_DEV_ID_CMP_V      0xA3BA  /* Comet Point Lake V */
- 
- #define MEI_DEV_ID_ICP_LP     0x34E0  /* Ice Lake Point LP */
- 
---- a/drivers/misc/mei/pci-me.c
-+++ b/drivers/misc/mei/pci-me.c
-@@ -107,6 +107,7 @@ static const struct pci_device_id mei_me
- 
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_LP, MEI_ME_PCH12_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_LP_3, MEI_ME_PCH8_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_V, MEI_ME_PCH12_CFG)},
- 
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_ICP_LP, MEI_ME_PCH12_CFG)},
- 
+--- a/net/xfrm/xfrm_state.c
++++ b/net/xfrm/xfrm_state.c
+@@ -456,6 +456,8 @@ static void ___xfrm_state_destroy(struct
+ 		x->type->destructor(x);
+ 		xfrm_put_type(x->type);
+ 	}
++	if (x->xfrag.page)
++		put_page(x->xfrag.page);
+ 	xfrm_dev_state_free(x);
+ 	security_xfrm_state_free(x);
+ 	xfrm_state_free(x);
 
 
