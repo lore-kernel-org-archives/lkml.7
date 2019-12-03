@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DC4C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC41C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DBE521556
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52A362073C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412929;
-	bh=+8IZ96EPLEmXUSJ8lwICHSsmY2hTvpHusQvnP8QJU2c=;
+	s=default; t=1575412933;
+	bh=clDj2gRBvZtbxRJrZLLG3eR7xseTTPorXU+ZDUkwPKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xmipXKSaGCeOP8yzDGayAV/X/qutV+k47Ly9+xyF6Oz+eDtkWWMAmObeIzV7FPe2A
-	 8nS9I6/WnWv5HMv36h+URAmeFiAEml3BVBznvmcTq4MDDMQMqpNyweQL1Nl5FMmGJh
-	 RBOzTAZA+biGtMjN70f504mSgEMfp//vdp3h/foE=
+	b=d8m3NdrHS1pTExzoWXYd2O5y+qqsSGwLfjYy72f/WqMvTbCLj42tXls+mdnfbnNZ5
+	 1Le6C0TsNVwqlsgLw7P04VxXZg1sQH+oDBJQlLS3y/0ptIoqyNerf5PpSz7olh8yER
+	 GnhJruHIpBchFDCYAnpoXs+AmBANoixa+wxxstCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbfLCWmI (ORCPT
+        id S1728075AbfLCWmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:42:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56822 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:42:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728626AbfLCWmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:42:03 -0500
+        id S1728626AbfLCWmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:42:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDA532084B;
-        Tue,  3 Dec 2019 22:42:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B2BC20865;
+        Tue,  3 Dec 2019 22:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412923;
-        bh=+8IZ96EPLEmXUSJ8lwICHSsmY2hTvpHusQvnP8QJU2c=;
+        s=default; t=1575412929;
+        bh=clDj2gRBvZtbxRJrZLLG3eR7xseTTPorXU+ZDUkwPKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XZT+7aFAmD4aD5ccGltf+H11KPanO+y9c7pNDU8KtTJt2hYebMrrcvQ8L62zr/jCv
-         jDIQkjQhR3vV941e+MQDax6eL4c6O773ue4Zxg8UJIYhg/5j9XqWcd7YtM5FSjmG45
-         vtjthgxaNn/QfMeVh7CH+2EcjUUU03gAvTKRGIps=
+        b=xMrmD5hQ3J2mYcqEwiYH/K6eSLEC1SjUI6ebTUHsQe/Ow37ZbMuSerFtka6am1Ps4
+         bLR7uuaGzsVkQz4/wd67ibLPPGBUchr53mC0rSBqKFWnw4uXtTyaosgxeeYYubTqLT
+         5Vfd4K5ejY9mzAXFDWCL1ABeBIpVVYz3wQPurrhY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 068/135] watchdog: bd70528: Add MODULE_ALIAS to allow module auto loading
-Date:   Tue,  3 Dec 2019 23:35:08 +0100
-Message-Id: <20191203213025.805669276@linuxfoundation.org>
+Subject: [PATCH 5.3 069/135] ASoC: stm32: sai: add restriction on mmap support
+Date:   Tue,  3 Dec 2019 23:35:09 +0100
+Message-Id: <20191203213025.955287513@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -62,33 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+From: Olivier Moysan <olivier.moysan@st.com>
 
-[ Upstream commit 81363f248aecd2b5f10547af268a4dfaf8963489 ]
+[ Upstream commit eaf072e512d54c95b0977eda06cbca3151ace1e5 ]
 
-The bd70528 watchdog driver is probed by MFD driver. Add MODULE_ALIAS
-in order to allow udev to load the module when MFD sub-device cell for
-watchdog is added.
+Do not support mmap in S/PDIF mode. In S/PDIF mode
+the buffer has to be copied, to allow the channel status
+bits insertion.
 
-Fixes: bbc88a0ec9f37 ("watchdog: bd70528: Initial support for ROHM BD70528 watchdog block")
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Link: https://lore.kernel.org/r/20191104133654.28750-1-olivier.moysan@st.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/bd70528_wdt.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/stm/stm32_sai_sub.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/watchdog/bd70528_wdt.c b/drivers/watchdog/bd70528_wdt.c
-index b0152fef4fc7e..bc60e036627af 100644
---- a/drivers/watchdog/bd70528_wdt.c
-+++ b/drivers/watchdog/bd70528_wdt.c
-@@ -288,3 +288,4 @@ module_platform_driver(bd70528_wdt);
- MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
- MODULE_DESCRIPTION("BD70528 watchdog driver");
- MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:bd70528-wdt");
+diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
+index d7501f88aaa63..34e73071d4db8 100644
+--- a/sound/soc/stm/stm32_sai_sub.c
++++ b/sound/soc/stm/stm32_sai_sub.c
+@@ -1217,6 +1217,16 @@ static int stm32_sai_pcm_process_spdif(struct snd_pcm_substream *substream,
+ 	return 0;
+ }
+ 
++/* No support of mmap in S/PDIF mode */
++static const struct snd_pcm_hardware stm32_sai_pcm_hw_spdif = {
++	.info = SNDRV_PCM_INFO_INTERLEAVED,
++	.buffer_bytes_max = 8 * PAGE_SIZE,
++	.period_bytes_min = 1024,
++	.period_bytes_max = PAGE_SIZE,
++	.periods_min = 2,
++	.periods_max = 8,
++};
++
+ static const struct snd_pcm_hardware stm32_sai_pcm_hw = {
+ 	.info = SNDRV_PCM_INFO_INTERLEAVED | SNDRV_PCM_INFO_MMAP,
+ 	.buffer_bytes_max = 8 * PAGE_SIZE,
+@@ -1269,7 +1279,7 @@ static const struct snd_dmaengine_pcm_config stm32_sai_pcm_config = {
+ };
+ 
+ static const struct snd_dmaengine_pcm_config stm32_sai_pcm_config_spdif = {
+-	.pcm_hardware = &stm32_sai_pcm_hw,
++	.pcm_hardware = &stm32_sai_pcm_hw_spdif,
+ 	.prepare_slave_config = snd_dmaengine_pcm_prepare_slave_config,
+ 	.process = stm32_sai_pcm_process_spdif,
+ };
 -- 
 2.20.1
 
