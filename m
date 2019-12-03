@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0544C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94EE5C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 837802053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6343C21556
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413613;
-	bh=pkcgl8GLrGanjEtXFJT5zlPNjUrk/9i/0wS56xwsYuk=;
+	s=default; t=1575413616;
+	bh=7QflUn8NJxwfu7Hkt2g5UkU81Lbjg82NbTyERgjD6c4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s72O8WOMMYtx0Jdw6ckQZf1TPogA1ukPGsgxiAOy4OK7cG/DCAQ4iBr3dPaJIKNPg
-	 mTEJwY80osW+UGtcGVRI6w6TtXoZ7pq7XJYMF4FfnVqvtsh9kq+wVb9EM12Ehs1MIO
-	 l1TXM1+XtyaHAxphdveHS8xDiirocITQKRntYtuE=
+	b=JlO9g4I2bXgTHu18NwHitVh6k4RfcjIIJ+9XWkm8OREuT9b0RnvxUz9zBaoNbS93M
+	 FeKbJDkw24kGwKSVfb0wK3s9fHXxGaDaLNe9T3IczQ25HG8yt7Q9f3li1f1UF6H0hO
+	 ztjV9JSFxdTv5LRm1hV6FXg5eu0Bg87bYBh/aS4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730160AbfLCWxc (ORCPT
+        id S1730166AbfLCWxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:53:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46780 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:53:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730145AbfLCWx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:53:29 -0500
+        id S1729770AbfLCWxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:53:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A84972053B;
-        Tue,  3 Dec 2019 22:53:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2ECF12053B;
+        Tue,  3 Dec 2019 22:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413609;
-        bh=pkcgl8GLrGanjEtXFJT5zlPNjUrk/9i/0wS56xwsYuk=;
+        s=default; t=1575413611;
+        bh=7QflUn8NJxwfu7Hkt2g5UkU81Lbjg82NbTyERgjD6c4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IcazyrhRLjmeZXGHHDlvnOejbefvQAMZrp7o9rpxmj0dZi9quWvrlMwhFrVyx0UoY
-         oIMVu/Vt3hiXRdU0tcXTxkekmjK1a7jFv72a/C+I4pYNE2f6HGNydVuG9kpH+s4NKU
-         2IY8dOZH7Xn1I+3cMMCOdHjTbTbzkOoLsgwKiY9w=
+        b=FUZbS1m+R7+Qt2eYJq3eHRF6P5A4vbEn/UONcLYVS+N9U5V7q+eXfkwXyiwLVRJnW
+         TfEMy49J5CTMDAH/sBw63/GuQEUKRLW1jaE7T2oMs8OJEeLSyigfwfKOSimKgUb3Jh
+         Lg5OpogkDLe4UzR37RLF/9YuOvPIpm7tKMYjL+8A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 193/321] tipc: fix a missing check of genlmsg_put
-Date:   Tue,  3 Dec 2019 23:34:19 +0100
-Message-Id: <20191203223437.159758033@linuxfoundation.org>
+Subject: [PATCH 4.19 194/321] net: marvell: fix a missing check of acpi_match_device
+Date:   Tue,  3 Dec 2019 23:34:20 +0100
+Message-Id: <20191203223437.212729545@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -62,31 +62,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit 46273cf7e009231d2b6bc10a926e82b8928a9fb2 ]
+[ Upstream commit 92ee77d148bf06d8c52664be4d1b862583fd5c0e ]
 
-genlmsg_put could fail. The fix inserts a check of its return value, and
-if it fails, returns -EMSGSIZE.
+When acpi_match_device fails, its return value is NULL. Directly using
+the return value without a check may result in a NULL-pointer
+dereference. The fix checks if acpi_match_device fails, and if so,
+returns -EINVAL.
 
 Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tipc/netlink_compat.c | 2 ++
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/net/tipc/netlink_compat.c b/net/tipc/netlink_compat.c
-index 6494d6b5e1b24..fab0384d2b4b3 100644
---- a/net/tipc/netlink_compat.c
-+++ b/net/tipc/netlink_compat.c
-@@ -983,6 +983,8 @@ static int tipc_nl_compat_publ_dump(struct tipc_nl_compat_msg *msg, u32 sock)
- 
- 	hdr = genlmsg_put(args, 0, 0, &tipc_genl_family, NLM_F_MULTI,
- 			  TIPC_NL_PUBL_GET);
-+	if (!hdr)
-+		return -EMSGSIZE;
- 
- 	nest = nla_nest_start(args, TIPC_NLA_SOCK);
- 	if (!nest) {
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+index 1cc0e8fda4d5e..a50977ce40766 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -5132,6 +5132,8 @@ static int mvpp2_probe(struct platform_device *pdev)
+ 	if (has_acpi_companion(&pdev->dev)) {
+ 		acpi_id = acpi_match_device(pdev->dev.driver->acpi_match_table,
+ 					    &pdev->dev);
++		if (!acpi_id)
++			return -EINVAL;
+ 		priv->hw_version = (unsigned long)acpi_id->driver_data;
+ 	} else {
+ 		priv->hw_version =
 -- 
 2.20.1
 
