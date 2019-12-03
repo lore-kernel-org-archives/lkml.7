@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F149C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED65EC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 282062064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:13:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3EEE2064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:13:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414824;
-	bh=rbxxTSCTtzeyzH8V7lyMIsbwabxAb/eHcLvFhgCc4qA=;
+	s=default; t=1575414829;
+	bh=6hPF5tdZKwGefFuOFN1JDyKRb95J50q7shAcN+XnPRc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BO6lAsR30nqhGPjhXHHyyFEcHuDFxve94XCf11e5QPBmT4Id0uQR78GdfafPFbrdy
-	 /KA3lg0cf9+67fDtUUjPEK4Jo5hgTb0Lfbi2jAxbDx2JI5Hc3GgcBZIdz9grY73/+q
-	 dwRLWuzTnIWsUG5beDbVxXgk8RT4OCDB8+e8IluY=
+	b=Opbq+8MAkjPiUoNCs5rGDfDI8ApvrpFg2rDGcy8LHdDsjcM5EFciET++0xXfvmNCR
+	 N3IckQ1SlycMmUyd+setrkAcuM4KeGmq6VcnwIgmGEVMhf+fLcSHs4X1pU47ugkOlm
+	 UCosHHOJEztQZlcS45C7mEbe0HcevjecI+cu0qzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbfLCWht (ORCPT
+        id S1727751AbfLCWhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:37:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46186 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:37:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727782AbfLCWhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:37:45 -0500
+        id S1727714AbfLCWhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:37:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AE432158C;
-        Tue,  3 Dec 2019 22:37:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 380D2207DD;
+        Tue,  3 Dec 2019 22:37:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412664;
-        bh=rbxxTSCTtzeyzH8V7lyMIsbwabxAb/eHcLvFhgCc4qA=;
+        s=default; t=1575412653;
+        bh=6hPF5tdZKwGefFuOFN1JDyKRb95J50q7shAcN+XnPRc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kCrD1/Utpr7BG8+WVAo+gReJTnoz30uBVbwE8ILcA2gLXao/M/1XqN0fhLE2w7+05
-         tVU4nG1/kKVWu6LV8TuRmco1odSGhlYTjCW7uBlMcGy+6raAY8B42vfA6pNKciBp3Y
-         VbL4CTEPNdmjH8YFM4aUaCK9WFzrcTtjrCPWKZe8=
+        b=hdKY9pgWr27XG4zoaOoJD5ToyUF9y3X3d3CHFA20H7/qZ5bobliL5Zp7tchyR8nZK
+         /nJ/ClYRlEIhr8SxzjPJVpcx1fQVCFdGb98WDdmEoY2ow+vVm8E1D8UoMxJadc3RGB
+         ED6oymlYFaMgos3d5OOrNp5dYmIweY1oAi2h4n6w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 5.4 09/46] staging: rtl8723bs: Drop ACPI device ids
-Date:   Tue,  3 Dec 2019 23:35:29 +0100
-Message-Id: <20191203212723.466453730@linuxfoundation.org>
+        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH 5.4 05/46] driver core: platform: use the correct callback type for bus_find_device
+Date:   Tue,  3 Dec 2019 23:35:25 +0100
+Message-Id: <20191203212715.632735792@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203212705.175425505@linuxfoundation.org>
 References: <20191203212705.175425505@linuxfoundation.org>
@@ -58,38 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Sami Tolvanen <samitolvanen@google.com>
 
-commit 2d9d2491530a156b9a5614adf9dc79285e35d55e upstream.
+commit 492c88720d36eb662f9f10c1633f7726fbb07fc4 upstream.
 
-The driver only binds by SDIO device-ids, all the ACPI device-id does
-is causing the driver to load unnecessarily on devices where the DSDT
-contains a bogus OBDA8723 device.
+platform_find_device_by_driver calls bus_find_device and passes
+platform_match as the callback function. Casting the function to a
+mismatching type trips indirect call Control-Flow Integrity (CFI) checking.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+This change adds a callback function with the correct type and instead
+of casting the function, explicitly casts the second parameter to struct
+device_driver* as expected by platform_match.
+
+Fixes: 36f3313d6bff9 ("platform: Add platform_find_device_by_driver() helper")
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191111113846.24940-2-hdegoede@redhat.com
+Link: https://lore.kernel.org/r/20191112214156.3430-1-samitolvanen@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8723bs/os_dep/sdio_intf.c |    6 ------
- 1 file changed, 6 deletions(-)
+ drivers/base/platform.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-+++ b/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-@@ -23,13 +23,7 @@ static const struct sdio_device_id sdio_
- 	{ SDIO_DEVICE(0x024c, 0xb723), },
- 	{ /* end: all zeroes */				},
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -1278,6 +1278,11 @@ struct bus_type platform_bus_type = {
  };
--static const struct acpi_device_id acpi_ids[] = {
--	{"OBDA8723", 0x0000},
--	{}
--};
--
- MODULE_DEVICE_TABLE(sdio, sdio_ids);
--MODULE_DEVICE_TABLE(acpi, acpi_ids);
+ EXPORT_SYMBOL_GPL(platform_bus_type);
  
- static int rtw_drv_init(struct sdio_func *func, const struct sdio_device_id *id);
- static void rtw_dev_remove(struct sdio_func *func);
++static inline int __platform_match(struct device *dev, const void *drv)
++{
++	return platform_match(dev, (struct device_driver *)drv);
++}
++
+ /**
+  * platform_find_device_by_driver - Find a platform device with a given
+  * driver.
+@@ -1288,7 +1293,7 @@ struct device *platform_find_device_by_d
+ 					      const struct device_driver *drv)
+ {
+ 	return bus_find_device(&platform_bus_type, start, drv,
+-			       (void *)platform_match);
++			       __platform_match);
+ }
+ EXPORT_SYMBOL_GPL(platform_find_device_by_driver);
+ 
 
 
