@@ -2,116 +2,209 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66891C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDBCAC43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1FF206E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A444206E4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:37:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="une3qInd"
+	dkim=pass (1024-bit key) header.d=Lexmark.com header.i=@Lexmark.com header.b="YDNgM7db"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfLCQds (ORCPT
+        id S1726785AbfLCQhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 11:33:48 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35589 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726186AbfLCQdp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 11:33:45 -0500
-Received: by mail-wm1-f68.google.com with SMTP id u8so4266544wmu.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 08:33:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i7Rl2ommOFpZyqjc2xIe8+dnrgxiLpTR5CzNoZds2fo=;
-        b=une3qIndSJoWVUjUi/0G2NHM2XesEgfnFTKtTU+VgTVszaqX3h6Wb+mFixhVGnisgu
-         BkiRet5AUR6u9LLTh7N3nXmJPe6DST9mRqyMqbCjWaLz4kV7AzyBC5ZPQtRSjM6emySf
-         gnHSd9TIzowsdY17wvPIrfZQwL6KJWh6fdudKc/BOCYU95F2QnBBlSYcXaRidjd8NUVe
-         1/mHBV6Zy8wIObKW+ZcnpDneiahFLPFvIHmH9P6Tgysi7bk69dIaPrQExBB1uPenMzRa
-         jElTuYb07v2FBhGMX96XnDGH161CgmXXsBztnxjZjDBgfQUV2uOUsfCP9u8NtphdW7+y
-         SH3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i7Rl2ommOFpZyqjc2xIe8+dnrgxiLpTR5CzNoZds2fo=;
-        b=fDi7j1GBiJ3JVNuXVHxbUj6VILXKrVQTdfAlzk+EELBXA1kJuNhMcrAHhjmbMXTzZW
-         +mypiAR3GjkeeiMi6lR7fzPw/acR5ZvpHt0t23VowWhz/Dz50gv3FKdbY2fUchqFqwOr
-         RRH2C4jYuLd/8T+tpgcVCayUDuiYSFFGgpVFpDtlxt61YjQfQ0FDMMyFD+sVIydAnT/D
-         qWGGN7z3zIJLEKb0dfmMynAj8xV6WdnNVI97rnuvfBoMLhI3MTBDv4tyjEF54x7jCfsW
-         SfODLzH8VjfAAJ3c1p5e9tazrN2KUFlLig10QvKs+eXH+blmIBXCudz3+DASQaFEu+Bo
-         /vxQ==
-X-Gm-Message-State: APjAAAUe7EbjyrO1s/uAFUIYRnJ8ZQcZw2qkynSLSLA5SVsM8Or9WPWr
-        mCN4htMQVGPzW50GFxwJCVw+KjSmaPt4obRn0Syk2w==
-X-Google-Smtp-Source: APXvYqwin1u3AXgG2PuZ9aX89PaAGoHK2R75waW23arJcmIP7D3A/I5KQuhmkVgKQRud4tIQfFjqshT3/nlrzS64a9U=
-X-Received: by 2002:a05:600c:141:: with SMTP id w1mr15345919wmm.61.1575390822794;
- Tue, 03 Dec 2019 08:33:42 -0800 (PST)
+        Tue, 3 Dec 2019 11:37:11 -0500
+Received: from mail-eopbgr720091.outbound.protection.outlook.com ([40.107.72.91]:61985
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725848AbfLCQhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 11:37:11 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eAOJajBQeQnn3jjsWPdC29EfnAnUMQEqBk8omK+hUYzQal54GYZXtp0dtBKe3NBezENuUG6lxWq7sSB+MModKDUxCedfOIn+RwguXJBDRhlx/+T/leT820f+0ZmaErtx4Vz40wFtNDWn0EYe7b65inF/4QHcQJia6vltpn8YMFIqntk9E5ed/SGQzZZBMscU7IVDiXziHPluyUwyP/zeTRk2ppQ+Z+Gl9kS6VCp7TPdopK/LKggX/KULhGvIZYaPpBQEFVAZ7Snh3HYZrqBPe+ceTUwat/vNZsdAPVKVHO2w8L42PKrot2KmT6s8/jy1ZKK7bAk+VJoo/0/pqUQNzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=79yWg6ipj2rqJngPInEFgg0STwuUBqhFjiVYFyEFgfM=;
+ b=cZZRTedcwJy9DTBuBZXNoWSDGUWUAPT/G5QZt4Kj1WqDd6r6KTge97/FIARGGk/C0ml4VYIq0fQVhgx2Cws3XXx7Bz8f5NIvj9jqebcRURoNkvfrItF0fRh7x0i4ZGT1t4fQFU+BnD/GAxBOhifTRhBu6Ztf8ybgIwRshBEZ/o/q7bKuqxra9qFR+4FPTj3i1GnHm33g/0asgIiiagAjLnUxWrjXm5zzb/iZiAD1Dy0KUAbEpD2rtcFkr4YEXK+UpWZGIdWeg4XYb4ky74W6uCdi9LvFjUI1qa4gdjs0L9PE1aXzpeQwO+6BbF/U99O8002n40/PwCqhfj4Eg5vFDQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=lexmark.com; dmarc=pass action=none header.from=lexmark.com;
+ dkim=pass header.d=lexmark.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Lexmark.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=79yWg6ipj2rqJngPInEFgg0STwuUBqhFjiVYFyEFgfM=;
+ b=YDNgM7dbB6ERrXa6fcap5BDI8KODObwTHYEYowKbIBUZoCNnkljuetQHI7AB4aDf/0tKP8XoHHh7vNQt59XJWGpsWhbkxgq26G/Otk2apLZATkcQvuZDQCpToRT8E/QD2Of8aF+9CMPh8wzAdvRX7bWlN0AMLzzqEdb8ZmnTlzk=
+Received: from BN8PR10MB3379.namprd10.prod.outlook.com (20.179.140.29) by
+ BN8PR10MB3316.namprd10.prod.outlook.com (20.179.139.86) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.17; Tue, 3 Dec 2019 16:36:29 +0000
+Received: from BN8PR10MB3379.namprd10.prod.outlook.com
+ ([fe80::70e5:6f18:2e0f:62e8]) by BN8PR10MB3379.namprd10.prod.outlook.com
+ ([fe80::70e5:6f18:2e0f:62e8%2]) with mapi id 15.20.2495.014; Tue, 3 Dec 2019
+ 16:36:29 +0000
+From:   Zak Hays <zak.hays@lexmark.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+CC:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] thermal: armada-thermal: clear reset in armadaxp_init
+Thread-Topic: [PATCH 2/2] thermal: armada-thermal: clear reset in
+ armadaxp_init
+Thread-Index: AQHVo+iA1kyC2QuZu06OWcaFrvNw2qedirjRgAFRLACACcfSvg==
+Date:   Tue, 3 Dec 2019 16:36:29 +0000
+Message-ID: <BN8PR10MB3379AC7EF5E941B9234B7E628C420@BN8PR10MB3379.namprd10.prod.outlook.com>
+References: <1574721077-29892-1-git-send-email-zhays@lexmark.com>
+        <1574721077-29892-2-git-send-email-zhays@lexmark.com>
+        <MWHPR10MB13435C92C02136EE4582B1218C450@MWHPR10MB1343.namprd10.prod.outlook.com>,<20191127120018.679bf947@xps13>
+In-Reply-To: <20191127120018.679bf947@xps13>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=zak.hays@lexmark.com; 
+x-originating-ip: [192.146.101.90]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 49288bd2-7192-4cc6-b432-08d7780ef29a
+x-ms-traffictypediagnostic: BN8PR10MB3316:
+x-microsoft-antispam-prvs: <BN8PR10MB3316502D24DA3CAC21C7CEF18C420@BN8PR10MB3316.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 02408926C4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(396003)(346002)(136003)(39860400002)(376002)(54534003)(199004)(189003)(8936002)(6246003)(7696005)(55016002)(71190400001)(446003)(229853002)(186003)(44832011)(11346002)(6916009)(14444005)(3846002)(14454004)(4326008)(81156014)(81166006)(8676002)(6116002)(2906002)(256004)(86362001)(7736002)(6506007)(76176011)(26005)(33656002)(102836004)(53546011)(305945005)(71200400001)(99286004)(6436002)(54906003)(25786009)(74316002)(478600001)(52536014)(5660300002)(316002)(66476007)(66446008)(64756008)(66556008)(66946007)(9686003)(66574012)(76116006);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR10MB3316;H:BN8PR10MB3379.namprd10.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: lexmark.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: eR4/nQxg5uvI+ALNv+y/MttpMFeb/4/3jicmOUJP8r0FyZpVxY8kDQNcdczxK9J0YCq8iY8NuYv1zan3xZDVXfklmMTqkf8MqZqTPxp3SO9K+ICwANpvoW6ey1/A9XGbf7yMGIFQiy9KgqBNOFTdVrF9YlLgdNwx55g6kYWFLEQgg0vgrP6JrybcVe6dU4cJExYHD7Zo23dj/ZBIymMDavKrBSQjc+vZkoHccNdrPJAzB9r6lLdTwhTOOqnm2ju3ocXDdk5lzjIcKKa67/62kU/nQXjixDE66ai7NYfgUjQK2wTcWXUQWqo+hsFf0ZSl8TH/CAMXRlf+A0sN2tgQRoxjJTwes1mqqbUyEnb/1dfGa8mCI76SreZb/HpTwDyCgmxzAyYlQQFWyW87hTMK4ZXwnWI3vD8I4vaxCGBiJgxsvWMmNm5iHa34htorI8vl
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20191203004043.174977-1-matthewgarrett@google.com> <CALCETrWUYapn=vTbKnKFVQ3Y4vG0qHwux0ym_To2NWKPew+vrw@mail.gmail.com>
-In-Reply-To: <CALCETrWUYapn=vTbKnKFVQ3Y4vG0qHwux0ym_To2NWKPew+vrw@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Tue, 3 Dec 2019 16:33:37 +0000
-Message-ID: <CAKv+Gu8ohahrVVvMO0FfJPQL+Um5HoL=OFegTD25RwBP6rgLHQ@mail.gmail.com>
-Subject: Re: [PATCH] [EFI,PCI] Allow disabling PCI busmastering on bridges
- during boot
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Matthew Garrett <matthewgarrett@google.com>,
-        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Garrett <mjg59@google.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Lexmark.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 49288bd2-7192-4cc6-b432-08d7780ef29a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Dec 2019 16:36:29.0175
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 12709065-6e6c-41c9-9e4d-fb0a436969ce
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6sGpgFXEO6Gl4k9hoVnjtpnaK2cZEbxQnIYDA1M4Fk4TRvF6BBukybblWcNdkGytobsOf4cb80lrw1fl19JO4w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR10MB3316
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Dec 2019 at 15:30, Andy Lutomirski <luto@amacapital.net> wrote:
->
-> On Mon, Dec 2, 2019 at 4:41 PM Matthew Garrett
-> <matthewgarrett@google.com> wrote:
-> >
-> > Add an option to disable the busmaster bit in the control register on
-> > all PCI bridges before calling ExitBootServices() and passing control to
-> > the runtime kernel. System firmware may configure the IOMMU to prevent
-> > malicious PCI devices from being able to attack the OS via DMA. However,
-> > since firmware can't guarantee that the OS is IOMMU-aware, it will tear
-> > down IOMMU configuration when ExitBootServices() is called. This leaves
-> > a window between where a hostile device could still cause damage before
-> > Linux configures the IOMMU again.
-> >
-> > If CONFIG_EFI_NO_BUSMASTER is enabled or the "disable_busmaster=1"
-> > commandline argument is passed, the EFI stub will clear the busmaster
-> > bit on all PCI bridges before ExitBootServices() is called. This will
-> > prevent any malicious PCI devices from being able to perform DMA until
-> > the kernel reenables busmastering after configuring the IOMMU.
->
-> I hate to be an obnoxious bikeshedder, but I really dislike the
-> "disable_busmaster" name.  I read this and $SUBJECT as "for some
-> reason, the admin wants to operate the system with busmastering off".
-> What you really want is something more like "disable busmastering
-> before IOMMU initialization".  Maybe
-> "iommu.disable_busmaster_before_init"?
->
-> Similarly, EFI_NO_BUSMASTER sounds like a permanent state of affairs.
->
-> Would a similar patch apply to non-EFI boot?  That is, in a BIOS boot,
-> is busmastering on when the kernel is loaded?
->
-
-Yes, bus mastering is on, but since legacy BIOS may implement things
-like PS/2 emulation or other compatibility hacks where the PCI masters
-(devices or bridges) may need to be left enabled across the transition
-from firmware into the OS, I don't think it is wise to try and
-implement this feature for it.
-
-So the EFI stub is a reasonable place to put a feature like this,
-except for the fact that [on x86], it does not get invoked unless GRUB
-boots your kernel with 'linuxefi' rather than 'linux', and so in the
-majority of cases, I guess we are essentially doing legacy BIOS boot,
-even on UEFI systems.
+Hi Miqu=E8l,=0A=
+=0A=
+>The format of your patch is strange, there are additional empty lines=0A=
+>which are problematic.=0A=
+=0A=
+Apologies for the formatting. I'll try to fix that in that next patch set.=
+=0A=
+=0A=
+>Do you really want to write this register twice? Shouldn't you get rid=0A=
+>of the first regmap_write() above?=0A=
+=0A=
+I'm writing the register twice in order to pulse the reset line and ensure =
+the block is reset at init. This is similar to what was done in the driver =
+previously:=0A=
+=0A=
+        /* Reset the sensor */=0A=
+        reg =3D readl_relaxed(priv->control1);=0A=
+        writel((reg | PMU_TDC0_SW_RST_MASK), priv->control1);      <=3D Set=
+ the reset bit=0A=
+=0A=
+        writel(reg, priv->control1);                                       =
+                <=3D Immediately clear the bit=0A=
+=0A=
+I'm a little unsure that setting then immediately clearing reset is enough =
+time for the block to do a full reset but I can't find anything in AXP's do=
+cumentation to indicate a correct reset time. As such, I just emulated the =
+original process from earlier kernel versions. If you believe that a udelay=
+ should be added, I can add one in the next patch set.=0A=
+=0A=
+Thanks!=0A=
+Zak=0A=
+=0A=
+=0A=
+________________________________________=0A=
+From: Miquel Raynal <miquel.raynal@bootlin.com>=0A=
+Sent: Wednesday, November 27, 2019 6:00 AM=0A=
+To: Zak Hays=0A=
+Cc: Zhang Rui; Eduardo Valentin; Daniel Lezcano; Amit Kucheria; linux-pm@vg=
+er.kernel.org; linux-kernel@vger.kernel.org=0A=
+Subject: Re: [PATCH 2/2] thermal: armada-thermal: clear reset in armadaxp_i=
+nit=0A=
+=0A=
+Hi Zak,=0A=
+=0A=
+Zak Hays <zak.hays@lexmark.com> wrote on Tue, 26 Nov 2019 14:54:11=0A=
++0000:=0A=
+=0A=
+> The reset bit needs to be cleared in the init sequence otherwise it=0A=
+>=0A=
+> holds the block in reset.=0A=
+=0A=
+"thermal: armada: " is the right prefix for your title=0A=
+=0A=
+Your Signed-off-by should be here (git commit --amend -s)=0A=
+=0A=
+The format of your patch is strange, there are additional empty lines=0A=
+which are problematic.=0A=
+=0A=
+>=0A=
+> ---=0A=
+>=0A=
+>  drivers/thermal/armada_thermal.c | 3 +++=0A=
+>=0A=
+>  1 file changed, 3 insertions(+)=0A=
+>=0A=
+>=0A=
+>=0A=
+> diff --git a/drivers/thermal/armada_thermal.c b/drivers/thermal/armada_th=
+ermal.c=0A=
+>=0A=
+> index 88363812033c..8c4d1244ee7a 100644=0A=
+>=0A=
+> --- a/drivers/thermal/armada_thermal.c=0A=
+>=0A=
+> +++ b/drivers/thermal/armada_thermal.c=0A=
+>=0A=
+> @@ -155,6 +155,9 @@ static void armadaxp_init(struct platform_device *pde=
+v,=0A=
+>=0A=
+>=0A=
+>=0A=
+>          regmap_write(priv->syscon, data->syscon_control1_off, reg);=0A=
+>=0A=
+>=0A=
+>=0A=
+> +       reg &=3D ~PMU_TDC0_SW_RST_MASK;=0A=
+>=0A=
+> +       regmap_write(priv->syscon, data->syscon_control1_off, reg);=0A=
+>=0A=
+> +=0A=
+=0A=
+Do you really want to write this register twice? Shouldn't you get rid=0A=
+of the first regmap_write() above?=0A=
+=0A=
+>=0A=
+>          /* Enable the sensor */=0A=
+>=0A=
+>          regmap_read(priv->syscon, data->syscon_status_off, &reg);=0A=
+>=0A=
+>          reg &=3D ~PMU_TM_DISABLE_MASK;=0A=
+>=0A=
+=0A=
+In your next iteration, please use the '-v2' option with=0A=
+git-format-patch to get titles starting with "[PATCH v2 x/2] ..."=0A=
+automatically. Also write a changelog below the three dots '---'.=0A=
+=0A=
+Thanks,=0A=
+Miqu=E8l=0A=
