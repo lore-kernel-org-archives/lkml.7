@@ -2,206 +2,153 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2ACC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0AE5C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3B12206E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A010F206E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:49:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="rFg8xO07";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="SPpfwuCg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbfLCDte (ORCPT
+        id S1727425AbfLCDtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 22:49:34 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54000 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726718AbfLCDsb (ORCPT
+        Mon, 2 Dec 2019 22:49:35 -0500
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:65119 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727377AbfLCDta (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 22:48:31 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB33kn2A076963
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 22:48:30 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wknuapy7p-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 22:48:29 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Tue, 3 Dec 2019 03:48:25 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 3 Dec 2019 03:48:18 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB33mHrh28704874
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Dec 2019 03:48:17 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B644011C050;
-        Tue,  3 Dec 2019 03:48:17 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 13AB711C04C;
-        Tue,  3 Dec 2019 03:48:17 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  3 Dec 2019 03:48:17 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id EB68FA03DD;
-        Tue,  3 Dec 2019 14:48:12 +1100 (AEDT)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     alastair@d-silva.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Subject: [PATCH v2 11/27] nvdimm/ocxl: Add register addresses & status values to header
-Date:   Tue,  3 Dec 2019 14:46:39 +1100
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191203034655.51561-1-alastair@au1.ibm.com>
-References: <20191203034655.51561-1-alastair@au1.ibm.com>
+        Mon, 2 Dec 2019 22:49:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1575344969; x=1606880969;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=G0KUVm2FQzknDf4W8VHl6rHywV0n7uw1wTnadtoxEk0=;
+  b=rFg8xO07fPDJWVWKHr1rZPXPlVQxn5yoDNJdutP3e9UQwJoXH1bFIStR
+   7KllDVavhltxh833VoRzk0dE916rjik40tSb29mJpZewautZSQk3hxwUP
+   dUFFmkU/tSP/FwLmtUIWMsfAkqXEr8ClZyhFtMyW9ZqUnilRN5w1WEIgP
+   wvwvKMJ6FUH4hHyOEZMaKBVu10W1czWsjF+guYhlPvjUcUfkkk4DrH8zA
+   lpOHY8Olv4Sd6c517vLpoMoVvX12KSAt15Ypxlg26B51x9Ud3HNFwuwtz
+   BOGjaAQhnnAV9XGEf+2FrYmafdi25vmeQwm71522Dn0ZjXdFIrBTrMBXf
+   g==;
+IronPort-SDR: aEDeN4J7lxJ4dbFQzqDLnwjugW6VaSZFALpuTZR9/VB1WUFVNu0tlIeVzCodI6SOSutRauk+VA
+ k0Mf/b41VRLCQNzGIUUe0lx3it+2QmbpzCDi4s1vQJE3czlXC2gslUtWC9xpZosK5ixVvuKi8w
+ io/3sE5FEhk/a7IZIoJzV4UV/xekdsoRMQMKoW0K8umGfmYjJrDxySwOi3/kxo/ZUIqMxYaj7D
+ cYba7XgZD86cPI7KsLgzR+UsVKCwF0rztQ+wUs0KbvNXFY8Ebtmc+hoWHUIFDTKaX7cqxhUaXC
+ +XQ=
+X-IronPort-AV: E=Sophos;i="5.69,271,1571673600"; 
+   d="scan'208";a="231947957"
+Received: from mail-sn1nam01lp2053.outbound.protection.outlook.com (HELO NAM01-SN1-obe.outbound.protection.outlook.com) ([104.47.32.53])
+  by ob1.hgst.iphmx.com with ESMTP; 03 Dec 2019 11:49:28 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FLN6ipWazo9D7oI/nLbCKJJ7iKaC+avfECLQo0i7jQ2QnROoTsAOkDCsRcS1HxLsRusbHLadxA+PG5G4Dzu4rfqhhUZh/NmIff4rAkkJ2M+N3TjXKdrSghNJxvFHSMB8yzKkoBB6b2ozJLCz/SK1Kqix9Fg/i8yEmSwWhbZlxEaBVOGkADMj1KYmMUfwUslPwP3Ts8Iiz3nB9JiPTKvwWLb5R8WTG1joYsapsGSws2a/uvwSV/k9tFu58Fb5Ny8yGI2lkuqZVgcEDtXh7J8vmUBIr2P9sxVog+/WflbI13OaIR8wVZO9Sr3hQ46S8R0P7DhH4aybY/n2q2uwPlOQ3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gt+0R8J6QUOgksrjfWkj4r6f4wHsinWtPE6KFGtfKHI=;
+ b=AhQBSmxua6pF7Xemy1pLmsREKid3IVPmQkZHLrKfw6hnGK/nCy6E7bt8Rxd1wfmq9G4zTld165fUOejhbOzEQDdStRwrf+5brG4VqZlgaDPCLVueIKGD06F3YN6QXImXhNZT7dTjYDfqO/2gCzSpIJ3QWXyfW3jr5AAJeqA+V416tgdfRZpZX78B/oo/0c/5UZ8AHOlZv4uB/bsfRdxDU74Ot7rxoG8ogirEXHesKiFePCCRifJg7GniTNblBSP9BSdJPkRFuSkDMoU+DbIz234ApJ3eaabvVu+FDiUinc+ow9ArQmPsjYC5fXmBafJSy6RYAryB2vxE+TUTvdMNGg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gt+0R8J6QUOgksrjfWkj4r6f4wHsinWtPE6KFGtfKHI=;
+ b=SPpfwuCgdUzSclDC6lwYWOAH4vfd4yt83UC/Jbbq5BXLrSAvB8ucWPNG89ORmMg+Wl1zPw2rfZi02/qIiWVlONnp7hu2bPffHvR3yIxhhoOpGWSNJHa7dlJKGuoN1hO0nNw9ZfpvaI2hjlzudGbDitmY0PpqYB0yQSk4HCS2ZsY=
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
+ MN2PR04MB5807.namprd04.prod.outlook.com (20.179.22.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.19; Tue, 3 Dec 2019 03:49:28 +0000
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::7949:d205:5ad1:1d30]) by MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::7949:d205:5ad1:1d30%7]) with mapi id 15.20.2495.014; Tue, 3 Dec 2019
+ 03:49:27 +0000
+From:   Anup Patel <Anup.Patel@wdc.com>
+To:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>
+CC:     Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Anup Patel <anup@brainfault.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Anup Patel <Anup.Patel@wdc.com>
+Subject: [PATCH v2 0/4] QEMU Virt Machine Kconfig option
+Thread-Topic: [PATCH v2 0/4] QEMU Virt Machine Kconfig option
+Thread-Index: AQHVqYypfP5NcMqDjEOlOAueLUJ8PQ==
+Date:   Tue, 3 Dec 2019 03:49:27 +0000
+Message-ID: <20191203034909.37385-1-anup.patel@wdc.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BY5PR16CA0027.namprd16.prod.outlook.com
+ (2603:10b6:a03:1a0::40) To MN2PR04MB6061.namprd04.prod.outlook.com
+ (2603:10b6:208:d8::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Anup.Patel@wdc.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [12.169.102.154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 9f38179f-40ad-414c-6f52-08d777a3cb8c
+x-ms-traffictypediagnostic: MN2PR04MB5807:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR04MB58075A60402F1D0E198A36F08D420@MN2PR04MB5807.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:590;
+x-forefront-prvs: 02408926C4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39860400002)(376002)(366004)(346002)(136003)(189003)(199004)(1076003)(66556008)(6116002)(3846002)(66446008)(66476007)(64756008)(66946007)(25786009)(52116002)(6506007)(386003)(186003)(305945005)(7736002)(26005)(102836004)(478600001)(316002)(71190400001)(71200400001)(14454004)(44832011)(256004)(2616005)(2906002)(66066001)(81166006)(8676002)(50226002)(81156014)(8936002)(110136005)(54906003)(4744005)(4326008)(5660300002)(99286004)(2171002)(6436002)(36756003)(6486002)(6512007)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5807;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: oejHjTDKEPX0xVKkfhRkCrXNb0qxZWiuhCXLYLUvxlQSNXBCwtDOMzWe/WTALFokABtbA+FQ4CMdpBjpXgvVrCLI392DZiFpNu5XSt/h+YMWBW5kz+0Y2RT37uQx7EbpuOgnxREf2X4LItZUukkGXUwrVkOIsm1SeUMEtryzU+QLZuoTFpk0759+xUsP0Iv6sW1iJ0ojUv6TCAJcV7xEDpxXVkAEhw5W50aDnrz6U+PS+0S0gf2uQZCTeNOLqf16/csae7LQkq16lWV7TWRuMmo9gNKfcpDZSNx4GKTUqx1TervKnfKkA8VccmXzkfLmNSkAkVhwc4x3OFx9ss3jwo6NrVClCEVEd2syP6rOdoGGXKG8eBw8L/xbdpASL3TNYtpIUf7bY2bLfocIRaWDn3De5tshIeema/xv2CLo30Q7OtJZinBnW1D+MtTKibQp
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19120303-0012-0000-0000-00000370128A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120303-0013-0000-0000-000021ABCCBE
-Message-Id: <20191203034655.51561-12-alastair@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-02_06:2019-11-29,2019-12-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- bulkscore=0 adultscore=0 mlxlogscore=858 phishscore=0 spamscore=0
- lowpriorityscore=0 impostorscore=0 suspectscore=1 malwarescore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912030032
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9f38179f-40ad-414c-6f52-08d777a3cb8c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Dec 2019 03:49:27.7705
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7c+sevKMD00l7GzboaqmUk/bNR0hJe5/NXbGyqzefyZEtvFPjqEXz3AXLpftZncZ9cRj3yyGBBuHVxJcIOHv3Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5807
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alastair D'Silva <alastair@d-silva.org>
+This patch series primarily adds QEMU Virt machine kconfig opiton and
+does related RV32/RV64 defconfig updates.
 
-These values have been taken from the device specifications.
+This series can be found in riscv_soc_virt_v2 branch at:
+https//github.com/avpatel/linux.git
 
-Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
----
- drivers/nvdimm/ocxl/scm_internal.h | 72 ++++++++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+Changes since v1:
+ - Fixed commit description in PATCH2
+ - Rebased series on latest Linus's master branch at
+   commit 76bb8b05960c3d1668e6bee7624ed886cbd135ba
 
-diff --git a/drivers/nvdimm/ocxl/scm_internal.h b/drivers/nvdimm/ocxl/scm_internal.h
-index 6340012e0f8a..d6ab361f5de9 100644
---- a/drivers/nvdimm/ocxl/scm_internal.h
-+++ b/drivers/nvdimm/ocxl/scm_internal.h
-@@ -6,6 +6,78 @@
- #include <linux/libnvdimm.h>
- #include <linux/mm.h>
- 
-+#define GLOBAL_MMIO_CHI		0x000
-+#define GLOBAL_MMIO_CHIC	0x008
-+#define GLOBAL_MMIO_CHIE	0x010
-+#define GLOBAL_MMIO_CHIEC	0x018
-+#define GLOBAL_MMIO_HCI		0x020
-+#define GLOBAL_MMIO_HCIC	0x028
-+#define GLOBAL_MMIO_IMA0_OHP	0x040
-+#define GLOBAL_MMIO_IMA0_CFP	0x048
-+#define GLOBAL_MMIO_IMA1_OHP	0x050
-+#define GLOBAL_MMIO_IMA1_CFP	0x058
-+#define GLOBAL_MMIO_ACMA_CREQO	0x100
-+#define GLOBAL_MMIO_ACMA_CRSPO	0x104
-+#define GLOBAL_MMIO_ACMA_CDBO	0x108
-+#define GLOBAL_MMIO_ACMA_CDBS	0x10c
-+#define GLOBAL_MMIO_NSCMA_CREQO	0x120
-+#define GLOBAL_MMIO_NSCMA_CRSPO	0x124
-+#define GLOBAL_MMIO_NSCMA_CDBO	0x128
-+#define GLOBAL_MMIO_NSCMA_CDBS	0x12c
-+#define GLOBAL_MMIO_CSTS	0x140
-+#define GLOBAL_MMIO_FWVER	0x148
-+#define GLOBAL_MMIO_CCAP0	0x160
-+#define GLOBAL_MMIO_CCAP1	0x168
-+
-+#define GLOBAL_MMIO_CHI_ACRA	BIT_ULL(0)
-+#define GLOBAL_MMIO_CHI_NSCRA	BIT_ULL(1)
-+#define GLOBAL_MMIO_CHI_CRDY	BIT_ULL(4)
-+#define GLOBAL_MMIO_CHI_CFFS	BIT_ULL(5)
-+#define GLOBAL_MMIO_CHI_MA	BIT_ULL(6)
-+#define GLOBAL_MMIO_CHI_ELA	BIT_ULL(7)
-+#define GLOBAL_MMIO_CHI_CDA	BIT_ULL(8)
-+#define GLOBAL_MMIO_CHI_CHFS	BIT_ULL(9)
-+
-+#define GLOBAL_MMIO_CHI_ALL	(GLOBAL_MMIO_CHI_ACRA | \
-+				 GLOBAL_MMIO_CHI_NSCRA | \
-+				 GLOBAL_MMIO_CHI_CRDY | \
-+				 GLOBAL_MMIO_CHI_CFFS | \
-+				 GLOBAL_MMIO_CHI_MA | \
-+				 GLOBAL_MMIO_CHI_ELA | \
-+				 GLOBAL_MMIO_CHI_CDA | \
-+				 GLOBAL_MMIO_CHI_CHFS)
-+
-+#define GLOBAL_MMIO_HCI_ACRW				BIT_ULL(0)
-+#define GLOBAL_MMIO_HCI_NSCRW				BIT_ULL(1)
-+#define GLOBAL_MMIO_HCI_AFU_RESET			BIT_ULL(2)
-+#define GLOBAL_MMIO_HCI_FW_DEBUG			BIT_ULL(3)
-+#define GLOBAL_MMIO_HCI_CONTROLLER_DUMP			BIT_ULL(4)
-+#define GLOBAL_MMIO_HCI_CONTROLLER_DUMP_COLLECTED	BIT_ULL(5)
-+#define GLOBAL_MMIO_HCI_REQ_HEALTH_PERF			BIT_ULL(6)
-+
-+#define ADMIN_COMMAND_HEARTBEAT		0x00u
-+#define ADMIN_COMMAND_SHUTDOWN		0x01u
-+#define ADMIN_COMMAND_FW_UPDATE		0x02u
-+#define ADMIN_COMMAND_FW_DEBUG		0x03u
-+#define ADMIN_COMMAND_ERRLOG		0x04u
-+#define ADMIN_COMMAND_SMART		0x05u
-+#define ADMIN_COMMAND_CONTROLLER_STATS	0x06u
-+#define ADMIN_COMMAND_CONTROLLER_DUMP	0x07u
-+#define ADMIN_COMMAND_CMD_CAPS		0x08u
-+#define ADMIN_COMMAND_MAX		0x08u
-+
-+#define STATUS_SUCCESS		0x00
-+#define STATUS_MEM_UNAVAILABLE	0x20
-+#define STATUS_BAD_OPCODE	0x50
-+#define STATUS_BAD_REQUEST_PARM	0x51
-+#define STATUS_BAD_DATA_PARM	0x52
-+#define STATUS_DEBUG_BLOCKED	0x70
-+#define STATUS_FAIL		0xFF
-+
-+#define STATUS_FW_UPDATE_BLOCKED 0x21
-+#define STATUS_FW_ARG_INVALID	0x51
-+#define STATUS_FW_INVALID	0x52
-+
- #define SCM_LABEL_AREA_SIZE	(1UL << PA_SECTION_SHIFT)
- 
- struct scm_function_0 {
--- 
-2.23.0
+Anup Patel (4):
+  RISC-V: Add kconfig option for QEMU virt machine
+  RISC-V: Enable QEMU virt machine support in defconfigs
+  RISC-V: Select SYSCON Reboot and Poweroff for QEMU virt machine
+  RISC-V: Select Goldfish RTC driver for QEMU virt machine
+
+ arch/riscv/Kconfig.socs           | 24 ++++++++++++++++++++++++
+ arch/riscv/configs/defconfig      | 17 +++--------------
+ arch/riscv/configs/rv32_defconfig | 18 +++---------------
+ 3 files changed, 30 insertions(+), 29 deletions(-)
+
+--=20
+2.17.1
 
