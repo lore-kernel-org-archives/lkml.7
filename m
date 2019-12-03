@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4D2C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA415C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DDE42080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7384D2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412750;
-	bh=2ELfL9OX84l4z5rnpN4o6En67Cj8HDWtfSV7BDWTFBA=;
+	s=default; t=1575412755;
+	bh=Gvbq7mVM0/PgnucgqGPLHNcebP9gPhf52e++PEBwkx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ObLOchoDsAyU8rCSgcYZLBJibd4pCOmVxpB62nqkz+dQHyvRYviAnj3stPmeZ+Znx
-	 rF+fJW5bPopcqLPVyIFxUq+xGHIKOik5MO1WlTs/bbZ9lVRd5bvk94YMxuy9jZw/16
-	 YR1ZMjrYK6OYup5+Rck94kjsTs4oS+L8D9c3hxeU=
+	b=Qi8rvoRrtyzNHiBCvSowdCRDXf8UjAKftRAEeamiBCGNEFvMTK1YcKMwlbUxTpms5
+	 7Os4lz2jUHDawFwW6S/4Pv0KtftMIb1LBLh+7pfljF2eEk+CuOVShkLLnjQhhNLUII
+	 a7eZcrRyE0RUkbUrqRyFNoQj+43xGOzwwOFYkVF4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728148AbfLCWjI (ORCPT
+        id S1728172AbfLCWjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:39:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48850 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:39:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727781AbfLCWjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:39:06 -0500
+        id S1728150AbfLCWjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:39:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40F4D20684;
-        Tue,  3 Dec 2019 22:39:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2643E2084F;
+        Tue,  3 Dec 2019 22:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412745;
-        bh=2ELfL9OX84l4z5rnpN4o6En67Cj8HDWtfSV7BDWTFBA=;
+        s=default; t=1575412750;
+        bh=Gvbq7mVM0/PgnucgqGPLHNcebP9gPhf52e++PEBwkx4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Br8A6Q2Rk/YL7naAn9Zz1EbAbbT4iEHiWy1I/BOe5S6V2Uel8aXcqyIScTWXrQaPc
-         9zrj9ZJqazcnGyTtKCbJYLqze9l5Rl7P/8xmGO25kVShj7C8m0/B+eXyNb3O6dNbwb
-         8LRcGP5IVIfNFdmlnSlE3udnIHMVMPMhH03ce5pk=
+        b=kxzCXdfK9KkA3fCyUgwp7+aNk+BDX71KHnzzHTxPEydQKmIrsMn1Yj3TBIiUkNRiD
+         9bjeUBnmcIcFr4P+HJcYA4snHmLum+73bgN4I6Zxv0+Snks5mzzAmriCOYZF+VKl60
+         IgjqZAPtN8Mlz1rohsS5pzDq2Bi+UwYHBTzvXKtk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.4 46/46] platform/x86: hp-wmi: Fix ACPI errors caused by passing 0 as input size
-Date:   Tue,  3 Dec 2019 23:36:06 +0100
-Message-Id: <20191203212807.542118195@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Usyskin <alexander.usyskin@intel.com>,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: [PATCH 5.4 13/46] mei: me: add comet point V device id
+Date:   Tue,  3 Dec 2019 23:35:33 +0100
+Message-Id: <20191203212729.172658977@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203212705.175425505@linuxfoundation.org>
 References: <20191203212705.175425505@linuxfoundation.org>
@@ -59,63 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-commit f3e4f3fc8ee9729c4b1b27a478c68b713df53c0c upstream.
+commit 82b29b9f72afdccb40ea5f3c13c6a3cb65a597bc upstream.
 
-The AML code implementing the WMI methods creates a variable length
-field to hold the input data we pass like this:
+Comet Point (Comet Lake) V device id.
 
-        CreateDWordField (Arg1, 0x0C, DSZI)
-        Local5 = DSZI /* \HWMC.DSZI */
-        CreateField (Arg1, 0x80, (Local5 * 0x08), DAIN)
-
-If we pass 0 as bios_args.datasize argument then (Local5 * 0x08)
-is 0 which results in these errors:
-
-[   71.973305] ACPI BIOS Error (bug): Attempt to CreateField of length zero (20190816/dsopcode-133)
-[   71.973332] ACPI Error: Aborting method \HWMC due to previous error (AE_AML_OPERAND_VALUE) (20190816/psparse-529)
-[   71.973413] ACPI Error: Aborting method \_SB.WMID.WMAA due to previous error (AE_AML_OPERAND_VALUE) (20190816/psparse-529)
-
-And in our HPWMI_WIRELESS2_QUERY calls always failing. for read commands
-like HPWMI_WIRELESS2_QUERY the DSZI value is not used / checked, except for
-read commands where extra input is needed to specify exactly what to read.
-
-So for HPWMI_WIRELESS2_QUERY we can safely pass the size of the expected
-output as insize to hp_wmi_perform_query(), as we are already doing for all
-other HPWMI_READ commands we send. Doing so fixes these errors.
-
-Cc: stable@vger.kernel.org
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=197007
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=201981
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1520703
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Link: https://lore.kernel.org/r/20191105150514.14010-2-tomas.winkler@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/platform/x86/hp-wmi.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/misc/mei/hw-me-regs.h |    1 +
+ drivers/misc/mei/pci-me.c     |    1 +
+ 2 files changed, 2 insertions(+)
 
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -380,7 +380,7 @@ static int hp_wmi_rfkill2_refresh(void)
- 	int err, i;
+--- a/drivers/misc/mei/hw-me-regs.h
++++ b/drivers/misc/mei/hw-me-regs.h
+@@ -81,6 +81,7 @@
  
- 	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
--				   0, sizeof(state));
-+				   sizeof(state), sizeof(state));
- 	if (err)
- 		return err;
+ #define MEI_DEV_ID_CMP_LP     0x02e0  /* Comet Point LP */
+ #define MEI_DEV_ID_CMP_LP_3   0x02e4  /* Comet Point LP 3 (iTouch) */
++#define MEI_DEV_ID_CMP_V      0xA3BA  /* Comet Point Lake V */
  
-@@ -778,7 +778,7 @@ static int __init hp_wmi_rfkill2_setup(s
- 	int err, i;
+ #define MEI_DEV_ID_ICP_LP     0x34E0  /* Ice Lake Point LP */
  
- 	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
--				   0, sizeof(state));
-+				   sizeof(state), sizeof(state));
- 	if (err)
- 		return err < 0 ? err : -EINVAL;
+--- a/drivers/misc/mei/pci-me.c
++++ b/drivers/misc/mei/pci-me.c
+@@ -98,6 +98,7 @@ static const struct pci_device_id mei_me
+ 
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_LP, MEI_ME_PCH12_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_LP_3, MEI_ME_PCH8_CFG)},
++	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_V, MEI_ME_PCH12_CFG)},
+ 
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_ICP_LP, MEI_ME_PCH12_CFG)},
  
 
 
