@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB23C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EB7C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BBA9216C8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:54:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAED42053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:54:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413665;
-	bh=6N6utb28xFcbw1WnBmmazrCLf9h//ber+CLlhqfmkag=;
+	s=default; t=1575413668;
+	bh=8r2JsTAyGjsvZ0Gg6ZeGqXJwOS6tHIwxhleHmJXJ/Q4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n9mOJp1o6EJRyaCMTzeDEbESnvrkLqyvK+lu+ibEPKHLwWHYFHNlK24Q1IyT+tXBx
-	 vVr3rckg+rzSaFLhHZVYC8c8OOJWBX/fTZfc8WbT4MA/l2aNwa2LP4Z7Go+ej33LB8
-	 rhSDDLPfAYo1smKuq5Z+LQQxXKGx3mStWxGgrAeo=
+	b=m3Z2givWm4o2PQbIicRDdhU29+lmSm+9q7+sIyDpQsX9/lMUe9V7asPj3dEetsn6N
+	 UHvbF1L3gi4goVM2sRyl2JUMcPG/reWiSvfWStlXEXCTd1N7QoK1mnK4gSDaYBpir+
+	 84iEqEth4arS6GPVdQrnU5uGWBMrp/Fdd15p9iFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbfLCWyU (ORCPT
+        id S1730286AbfLCWy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:54:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48010 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:54:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729996AbfLCWyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:54:15 -0500
+        id S1730270AbfLCWyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:54:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D1FD2053B;
-        Tue,  3 Dec 2019 22:54:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3DFE2053B;
+        Tue,  3 Dec 2019 22:54:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413655;
-        bh=6N6utb28xFcbw1WnBmmazrCLf9h//ber+CLlhqfmkag=;
+        s=default; t=1575413663;
+        bh=8r2JsTAyGjsvZ0Gg6ZeGqXJwOS6tHIwxhleHmJXJ/Q4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i52HfPUQdzR/Vf6lndjcgQhmCNUhYejymT1K3XgnVwYs8xgrHirVdIJngmMxUHbnz
-         y1whCsAYcyd0Wn5GH7cIQrGoH6/zq9dxNCTCtoZWvY0vnitt2oopWrXk9pMYQl9+LQ
-         7IkojV4TuXgjEpqLNXTY0+dIotO3eS2tkJMs+lso=
+        b=skYij4SJ8F6CnFj+vXGi92Q3Aru/KMQCoDH78WHpHc/YLrHn8yCDfSOMNfd6QSBu6
+         ARGOYHOJYohXdpGSVNtmxqm/rTZsDU2NKigCwrDZ5P3SxPQIdrGLnDNVISlM9XWuaq
+         cZ64prz2QqanEjy0zSohZIoEEPswdtW8aujGLu+o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huang Shijie <sjhuang@iluvatar.ai>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Skidanov <alexey.skidanov@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 209/321] lib/genalloc.c: use vzalloc_node() to allocate the bitmap
-Date:   Tue,  3 Dec 2019 23:34:35 +0100
-Message-Id: <20191203223437.994770876@linuxfoundation.org>
+Subject: [PATCH 4.19 175/321] IB/rxe: Make counters thread safe
+Date:   Tue,  3 Dec 2019 23:34:01 +0100
+Message-Id: <20191203223436.234359386@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -62,50 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huang Shijie <sjhuang@iluvatar.ai>
+From: Parav Pandit <parav@mellanox.com>
 
-[ Upstream commit 6862d2fc81859f88c1f3f660886427893f2b4f3f ]
+[ Upstream commit d5108e69fe013ff47ab815b849caba9cc33ca1e5 ]
 
-Some devices may have big memory on chip, such as over 1G.  In some
-cases, the nbytes maybe bigger then 4M which is the bounday of the
-memory buddy system (4K default).
+Current rxe device counters are not thread safe.
+When multiple QPs are used, they can be racy.
+Make them thread safe by making it atomic64.
 
-So use vzalloc_node() to allocate the bitmap.  Also use vfree to free
-it.
-
-Link: http://lkml.kernel.org/r/20181225015701.6289-1-sjhuang@iluvatar.ai
-Signed-off-by: Huang Shijie <sjhuang@iluvatar.ai>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexey Skidanov <alexey.skidanov@intel.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 0b1e5b99a48b ("IB/rxe: Add port protocol stats")
+Signed-off-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/genalloc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/infiniband/sw/rxe/rxe_hw_counters.c | 2 +-
+ drivers/infiniband/sw/rxe/rxe_verbs.h       | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/lib/genalloc.c b/lib/genalloc.c
-index 5deb25c40a5a1..f365d71cdc774 100644
---- a/lib/genalloc.c
-+++ b/lib/genalloc.c
-@@ -187,7 +187,7 @@ int gen_pool_add_virt(struct gen_pool *pool, unsigned long virt, phys_addr_t phy
- 	int nbytes = sizeof(struct gen_pool_chunk) +
- 				BITS_TO_LONGS(nbits) * sizeof(long);
+diff --git a/drivers/infiniband/sw/rxe/rxe_hw_counters.c b/drivers/infiniband/sw/rxe/rxe_hw_counters.c
+index 6aeb7a165e469..ea4542a9d69e6 100644
+--- a/drivers/infiniband/sw/rxe/rxe_hw_counters.c
++++ b/drivers/infiniband/sw/rxe/rxe_hw_counters.c
+@@ -59,7 +59,7 @@ int rxe_ib_get_hw_stats(struct ib_device *ibdev,
+ 		return -EINVAL;
  
--	chunk = kzalloc_node(nbytes, GFP_KERNEL, nid);
-+	chunk = vzalloc_node(nbytes, nid);
- 	if (unlikely(chunk == NULL))
- 		return -ENOMEM;
+ 	for (cnt = 0; cnt  < ARRAY_SIZE(rxe_counter_name); cnt++)
+-		stats->value[cnt] = dev->stats_counters[cnt];
++		stats->value[cnt] = atomic64_read(&dev->stats_counters[cnt]);
  
-@@ -251,7 +251,7 @@ void gen_pool_destroy(struct gen_pool *pool)
- 		bit = find_next_bit(chunk->bits, end_bit, 0);
- 		BUG_ON(bit < end_bit);
+ 	return ARRAY_SIZE(rxe_counter_name);
+ }
+diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
+index a0ec28d2b71a4..6a75f96b90962 100644
+--- a/drivers/infiniband/sw/rxe/rxe_verbs.h
++++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
+@@ -409,16 +409,16 @@ struct rxe_dev {
+ 	spinlock_t		mmap_offset_lock; /* guard mmap_offset */
+ 	int			mmap_offset;
  
--		kfree(chunk);
-+		vfree(chunk);
- 	}
- 	kfree_const(pool->name);
- 	kfree(pool);
+-	u64			stats_counters[RXE_NUM_OF_COUNTERS];
++	atomic64_t		stats_counters[RXE_NUM_OF_COUNTERS];
+ 
+ 	struct rxe_port		port;
+ 	struct list_head	list;
+ 	struct crypto_shash	*tfm;
+ };
+ 
+-static inline void rxe_counter_inc(struct rxe_dev *rxe, enum rxe_counters cnt)
++static inline void rxe_counter_inc(struct rxe_dev *rxe, enum rxe_counters index)
+ {
+-	rxe->stats_counters[cnt]++;
++	atomic64_inc(&rxe->stats_counters[index]);
+ }
+ 
+ static inline struct rxe_dev *to_rdev(struct ib_device *dev)
 -- 
 2.20.1
 
