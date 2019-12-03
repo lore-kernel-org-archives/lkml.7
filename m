@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94EE5C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BA3C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6343C21556
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C504D215E5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413616;
-	bh=7QflUn8NJxwfu7Hkt2g5UkU81Lbjg82NbTyERgjD6c4=;
+	s=default; t=1575413619;
+	bh=pSfYKfebvfswSMG9aERDVNa+OxFdxdH6xAe+7HpCZGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JlO9g4I2bXgTHu18NwHitVh6k4RfcjIIJ+9XWkm8OREuT9b0RnvxUz9zBaoNbS93M
-	 FeKbJDkw24kGwKSVfb0wK3s9fHXxGaDaLNe9T3IczQ25HG8yt7Q9f3li1f1UF6H0hO
-	 ztjV9JSFxdTv5LRm1hV6FXg5eu0Bg87bYBh/aS4c=
+	b=y+Wwx4zP2S5P5v5DD3Od4Oyw6SmTSmFXOJuc6IZtX9tS+Vd+kac5MLW6pYvgTUZuR
+	 GL5OLKBwtteN1kkoynOIhezXykkMkRMLvWu5dk6B9G1KynfSVxWjlSiEltpi6jvfCB
+	 9XDq2AH6M6iJ3UNiqrpaWRt+gGlD+Y7cxeglT32o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730166AbfLCWxf (ORCPT
+        id S1730171AbfLCWxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:53:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46838 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:53:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729770AbfLCWxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:53:32 -0500
+        id S1730161AbfLCWxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:53:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2ECF12053B;
-        Tue,  3 Dec 2019 22:53:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3EEE20865;
+        Tue,  3 Dec 2019 22:53:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413611;
-        bh=7QflUn8NJxwfu7Hkt2g5UkU81Lbjg82NbTyERgjD6c4=;
+        s=default; t=1575413614;
+        bh=pSfYKfebvfswSMG9aERDVNa+OxFdxdH6xAe+7HpCZGE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FUZbS1m+R7+Qt2eYJq3eHRF6P5A4vbEn/UONcLYVS+N9U5V7q+eXfkwXyiwLVRJnW
-         TfEMy49J5CTMDAH/sBw63/GuQEUKRLW1jaE7T2oMs8OJEeLSyigfwfKOSimKgUb3Jh
-         Lg5OpogkDLe4UzR37RLF/9YuOvPIpm7tKMYjL+8A=
+        b=h5phQB4Np5j8xyAVZP0dXVGlrVhFR2HGTnBja8ZLBQ5bQVim76qN+mWfuvy4mjV4A
+         X62Dh8Kh8d496R5T2UBZCIEF85Vrd9u4uZUPYDvISGAeA6BZSJNyN76fH4w7tLrgh8
+         fO3oD3PfNked532v778pBa6bPo0nEM/jinCO98Mc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 194/321] net: marvell: fix a missing check of acpi_match_device
-Date:   Tue,  3 Dec 2019 23:34:20 +0100
-Message-Id: <20191203223437.212729545@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Peng Hao <peng.hao2@zte.com.cn>,
+        Zhao Qiang <qiang.zhao@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 195/321] net/wan/fsl_ucc_hdlc: Avoid double free in ucc_hdlc_probe()
+Date:   Tue,  3 Dec 2019 23:34:21 +0100
+Message-Id: <20191203223437.264747584@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,35 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit 92ee77d148bf06d8c52664be4d1b862583fd5c0e ]
+[ Upstream commit 40752b3eae29f8ca2378e978a02bd6dbeeb06d16 ]
 
-When acpi_match_device fails, its return value is NULL. Directly using
-the return value without a check may result in a NULL-pointer
-dereference. The fix checks if acpi_match_device fails, and if so,
-returns -EINVAL.
+This patch fixes potential double frees if register_hdlc_device() fails.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Reviewed-by: Peng Hao <peng.hao2@zte.com.cn>
+CC: Zhao Qiang <qiang.zhao@nxp.com>
+CC: "David S. Miller" <davem@davemloft.net>
+CC: netdev@vger.kernel.org
+CC: linuxppc-dev@lists.ozlabs.org
+CC: linux-kernel@vger.kernel.org
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/wan/fsl_ucc_hdlc.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index 1cc0e8fda4d5e..a50977ce40766 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -5132,6 +5132,8 @@ static int mvpp2_probe(struct platform_device *pdev)
- 	if (has_acpi_companion(&pdev->dev)) {
- 		acpi_id = acpi_match_device(pdev->dev.driver->acpi_match_table,
- 					    &pdev->dev);
-+		if (!acpi_id)
-+			return -EINVAL;
- 		priv->hw_version = (unsigned long)acpi_id->driver_data;
- 	} else {
- 		priv->hw_version =
+diff --git a/drivers/net/wan/fsl_ucc_hdlc.c b/drivers/net/wan/fsl_ucc_hdlc.c
+index 5f0366a125e26..0212f576a838c 100644
+--- a/drivers/net/wan/fsl_ucc_hdlc.c
++++ b/drivers/net/wan/fsl_ucc_hdlc.c
+@@ -1113,7 +1113,6 @@ static int ucc_hdlc_probe(struct platform_device *pdev)
+ 	if (register_hdlc_device(dev)) {
+ 		ret = -ENOBUFS;
+ 		pr_err("ucc_hdlc: unable to register hdlc device\n");
+-		free_netdev(dev);
+ 		goto free_dev;
+ 	}
+ 
 -- 
 2.20.1
 
