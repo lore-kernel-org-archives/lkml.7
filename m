@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD02C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFA7C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C04320803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FF4B20803
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412904;
-	bh=rVZzP/AuY95X8lLF2WPC13H6Ownzzvvg4e07Aeokemg=;
+	s=default; t=1575412906;
+	bh=dWq0ySzyJnxJdJhCQJbxx49QxdxOFKU1fwd+oyAFV/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2BeU6ZCMo+ShtE3pFAxaKViVoBFcygeJAgHPyHf5QPDhM2RrVgFyeSN1MW9dnEI3p
-	 DKbOlhSloKGnB7bEq8H/GcRTIpQzLB6aRfj3UL7j6NSqfIzZT6KJ+XVF0Z8FWWx4jH
-	 Fw4owTwAUurlBkNU/AwtKf21B0zyh7XDDORA4HWU=
+	b=NXlzZDn7WHFQGN++8FgdtXinzLCcFIkbKeEzLUFUIHdu8gNH4eIx9MBgGboUeNq+L
+	 FO6JFDl2+zGwkTDJbU5jysSJVhlSFMFoIh0IL48IlRlBXbntYkWaSf9FRmhWpRcQbK
+	 6Pt/ux7Zea1hqvD8jpamcAwAQS/rOJYEsLXkwh64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728578AbfLCWlm (ORCPT
+        id S1728160AbfLCWlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:41:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56136 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:41:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728010AbfLCWlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:41:37 -0500
+        id S1727693AbfLCWlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:41:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC224206EC;
-        Tue,  3 Dec 2019 22:41:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52584207DD;
+        Tue,  3 Dec 2019 22:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412896;
-        bh=rVZzP/AuY95X8lLF2WPC13H6Ownzzvvg4e07Aeokemg=;
+        s=default; t=1575412901;
+        bh=dWq0ySzyJnxJdJhCQJbxx49QxdxOFKU1fwd+oyAFV/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=phDpWh07NSfw36yYfTK2zYGmngx1k4BiMG4iGPP2dOmTlpsob2Aj8Ao/wQGIHjAUX
-         fGnBL/Jl/bCWT/Lq8S14Cq//CVy+/3xRlNkHnmDHSOzdufEiIiFbycceHrM3x3K+Oq
-         Ib99zmdmUZ1Pg0l8jDQVL1ftpDc8GVabXYSmHcws=
+        b=ty5SlETn7UoXOIsw6AN0zZy2r6Ph+Dll53tqaY79WUXocAbaN3S66qa8CmI7LJqQq
+         t4IgdPM/ThS++ftJyH86k6wi3WdzvZch/Nff3oki/N/EziOTAN7cYLD7K0bnf/DLAw
+         YI/c6y8H55Y7S8NLg+zAjn9UTmC4JR7CPyRG55mQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, noreply@ellerman.id.au,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        stable@vger.kernel.org, Michael Zhivich <mzhivich@akamai.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 041/135] fbdev: c2p: Fix link failure on non-inlining
-Date:   Tue,  3 Dec 2019 23:34:41 +0100
-Message-Id: <20191203213014.848583874@linuxfoundation.org>
+Subject: [PATCH 5.3 060/135] x86/tsc: Respect tsc command line paraemeter for clocksource_tsc_early
+Date:   Tue,  3 Dec 2019 23:35:00 +0100
+Message-Id: <20191203213022.231008467@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -62,76 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+From: Michael Zhivich <mzhivich@akamai.com>
 
-[ Upstream commit b330f3972f4f2a829d41fb9e9b552bec7d73a840 ]
+[ Upstream commit 63ec58b44fcc05efd1542045abd7faf056ac27d9 ]
 
-When the compiler decides not to inline the Chunky-to-Planar core
-functions, the build fails with:
+The introduction of clocksource_tsc_early broke the functionality of
+"tsc=reliable" and "tsc=nowatchdog" command line parameters, since
+clocksource_tsc_early is unconditionally registered with
+CLOCK_SOURCE_MUST_VERIFY and thus put on the watchdog list.
 
-    c2p_planar.c:(.text+0xd6): undefined reference to `c2p_unsupported'
-    c2p_planar.c:(.text+0x1dc): undefined reference to `c2p_unsupported'
-    c2p_iplan2.c:(.text+0xc4): undefined reference to `c2p_unsupported'
-    c2p_iplan2.c:(.text+0x150): undefined reference to `c2p_unsupported'
+This can cause the TSC to be declared unstable during boot:
 
-Fix this by marking the functions __always_inline.
+  clocksource: timekeeping watchdog on CPU0: Marking clocksource
+               'tsc-early' as unstable because the skew is too large:
+  clocksource: 'refined-jiffies' wd_now: fffb7018 wd_last: fffb6e9d
+               mask: ffffffff
+  clocksource: 'tsc-early' cs_now: 68a6a7070f6a0 cs_last: 68a69ab6f74d6
+               mask: ffffffffffffffff
+  tsc: Marking TSC unstable due to clocksource watchdog
 
-While this could be triggered before by manually enabling both
-CONFIG_OPTIMIZE_INLINING and CONFIG_CC_OPTIMIZE_FOR_SIZE, it was exposed
-in the m68k defconfig by commit ac7c3e4ff401b304 ("compiler: enable
-CONFIG_OPTIMIZE_INLINING forcibly").
+The corresponding elapsed times are cs_nsec=1224152026 and wd_nsec=378942392, so
+the watchdog differs from TSC by 0.84 seconds.
 
-Fixes: 9012d011660ea5cf ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
-Reported-by: noreply@ellerman.id.au
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190927094708.11563-1-geert@linux-m68k.org
+This happens when HPET is not available and jiffies are used as the TSC
+watchdog instead and the jiffies update is not happening due to lost timer
+interrupts in periodic mode, which can happen e.g. with expensive debug
+mechanisms enabled or under massive overload conditions in virtualized
+environments.
+
+Before the introduction of the early TSC clocksource the command line
+parameters "tsc=reliable" and "tsc=nowatchdog" could be used to work around
+this issue.
+
+Restore the behaviour by disabling the watchdog if requested on the kernel
+command line.
+
+[ tglx: Clarify changelog ]
+
+Fixes: aa83c45762a24 ("x86/tsc: Introduce early tsc clocksource")
+Signed-off-by: Michael Zhivich <mzhivich@akamai.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20191024175945.14338-1-mzhivich@akamai.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/c2p_core.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/kernel/tsc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/video/fbdev/c2p_core.h b/drivers/video/fbdev/c2p_core.h
-index e1035a865fb94..45a6d895a7d72 100644
---- a/drivers/video/fbdev/c2p_core.h
-+++ b/drivers/video/fbdev/c2p_core.h
-@@ -29,7 +29,7 @@ static inline void _transp(u32 d[], unsigned int i1, unsigned int i2,
+diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+index 57d87f79558f2..04dd3cc6c6edd 100644
+--- a/arch/x86/kernel/tsc.c
++++ b/arch/x86/kernel/tsc.c
+@@ -1505,6 +1505,9 @@ void __init tsc_init(void)
+ 		return;
+ 	}
  
- extern void c2p_unsupported(void);
- 
--static inline u32 get_mask(unsigned int n)
-+static __always_inline u32 get_mask(unsigned int n)
- {
- 	switch (n) {
- 	case 1:
-@@ -57,7 +57,7 @@ static inline u32 get_mask(unsigned int n)
-      *  Transpose operations on 8 32-bit words
-      */
- 
--static inline void transp8(u32 d[], unsigned int n, unsigned int m)
-+static __always_inline void transp8(u32 d[], unsigned int n, unsigned int m)
- {
- 	u32 mask = get_mask(n);
- 
-@@ -99,7 +99,7 @@ static inline void transp8(u32 d[], unsigned int n, unsigned int m)
-      *  Transpose operations on 4 32-bit words
-      */
- 
--static inline void transp4(u32 d[], unsigned int n, unsigned int m)
-+static __always_inline void transp4(u32 d[], unsigned int n, unsigned int m)
- {
- 	u32 mask = get_mask(n);
- 
-@@ -126,7 +126,7 @@ static inline void transp4(u32 d[], unsigned int n, unsigned int m)
-      *  Transpose operations on 4 32-bit words (reverse order)
-      */
- 
--static inline void transp4x(u32 d[], unsigned int n, unsigned int m)
-+static __always_inline void transp4x(u32 d[], unsigned int n, unsigned int m)
- {
- 	u32 mask = get_mask(n);
- 
++	if (tsc_clocksource_reliable || no_tsc_watchdog)
++		clocksource_tsc_early.flags &= ~CLOCK_SOURCE_MUST_VERIFY;
++
+ 	clocksource_register_khz(&clocksource_tsc_early, tsc_khz);
+ 	detect_art();
+ }
 -- 
 2.20.1
 
