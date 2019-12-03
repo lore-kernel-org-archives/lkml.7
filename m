@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBCFC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DF8C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E1A520865
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D34C20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:54:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413641;
-	bh=IiqYBFz+atwV5nFvmuzK7M6djh/sadmEpH84Yi6I5dU=;
+	s=default; t=1575413644;
+	bh=aSTWXn1mXOhWQyL0OsDJGPKyYnCAWp191htXRIztyUw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MNLhFjlWap2SCLIYHuKntrk8deusFKKeasPePQoPsTGI3EtmaCg8o02cZCB9l2iLD
-	 AKD+PJN8Y4BK2B4jAkmMYU5ErLA1i6MBqr8umNSdghz62rL2Pn1tQMOiVBjSoZnIIN
-	 kCBKF33itEb8A6MU99Om3V67eb8lVloMqWUMx8n0=
+	b=qdo9qd87fdTgKqeABxCVyhAEBMJ1KZNmaLhz9poaslr9fVvmrXKVRFVmudIpl5SzU
+	 khF85QzUzWhOO2RQkVC4g2P9CDFdAo5IjzOk5ECxP0YUfTAu0KZbiMdhhNyGe70I4l
+	 CWALasMCS9wCOXSuhNc9OHnEN/3Rtj3NZFnN6WeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730225AbfLCWyA (ORCPT
+        id S1730103AbfLCWyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:54:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47490 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:54:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730212AbfLCWxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:53:54 -0500
+        id S1730087AbfLCWyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:54:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D891820674;
-        Tue,  3 Dec 2019 22:53:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1550520674;
+        Tue,  3 Dec 2019 22:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413634;
-        bh=IiqYBFz+atwV5nFvmuzK7M6djh/sadmEpH84Yi6I5dU=;
+        s=default; t=1575413639;
+        bh=aSTWXn1mXOhWQyL0OsDJGPKyYnCAWp191htXRIztyUw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I5PaXPtc/ZDnuNCgqrnZiU1D0htM0OaNCl3dZLssDIS8T8VIvG8rEpVODpxAmGAo+
-         fg+8YXBftJrYBd0p44FDHSUSvgcTqEdlTUPWEfqSHGyIfZVELLSxgzkgO40QtJN0HY
-         FoEbaJ/5KU8ZdzePZCUMa5WS3de4n96w5dEpP+P4=
+        b=OT1Gik5a9+RO5lHEswtIkJN8pem/tXRF2YJvlDukbB2RzrE4G1ha3aQAbsfd0uCL9
+         mDi2Dl+GyvLR64SSPw+jGYNbSaTUCLTF4lw0pyznmqBxBVV96/7SWTmsYiO3nhaOn5
+         iqi8pieMmu0O6u0xnRf/sWuc1gMb31zNUYl38lUs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Devesh Sharma <devesh.sharma@broadcom.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 202/321] netfilter: nf_tables: fix a missing check of nla_put_failure
-Date:   Tue,  3 Dec 2019 23:34:28 +0100
-Message-Id: <20191203223437.631822664@linuxfoundation.org>
+Subject: [PATCH 4.19 204/321] infiniband: bnxt_re: qplib: Check the return value of send_message
+Date:   Tue,  3 Dec 2019 23:34:30 +0100
+Message-Id: <20191203223437.734205800@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,33 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit eb8950861c1bfd3eecc8f6faad213e3bca0dc395 ]
+[ Upstream commit 94edd87a1c59f3efa6fdf4e98d6d492e6cec6173 ]
 
-If nla_nest_start() may fail. The fix checks its return value and goes
-to nla_put_failure if it fails.
+In bnxt_qplib_map_tc2cos(), bnxt_qplib_rcfw_send_message() can return an
+error value but it is lost. Propagate this error to the callers.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Acked-By: Devesh Sharma <devesh.sharma@broadcom.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_api.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/infiniband/hw/bnxt_re/qplib_sp.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 289d079008ee8..ec0f8b5bde0aa 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -5737,6 +5737,8 @@ static int nf_tables_fill_flowtable_info(struct sk_buff *skb, struct net *net,
- 		goto nla_put_failure;
+diff --git a/drivers/infiniband/hw/bnxt_re/qplib_sp.c b/drivers/infiniband/hw/bnxt_re/qplib_sp.c
+index 4097f3fa25c5f..09e7d3dd30553 100644
+--- a/drivers/infiniband/hw/bnxt_re/qplib_sp.c
++++ b/drivers/infiniband/hw/bnxt_re/qplib_sp.c
+@@ -775,9 +775,8 @@ int bnxt_qplib_map_tc2cos(struct bnxt_qplib_res *res, u16 *cids)
+ 	req.cos0 = cpu_to_le16(cids[0]);
+ 	req.cos1 = cpu_to_le16(cids[1]);
  
- 	nest = nla_nest_start(skb, NFTA_FLOWTABLE_HOOK);
-+	if (!nest)
-+		goto nla_put_failure;
- 	if (nla_put_be32(skb, NFTA_FLOWTABLE_HOOK_NUM, htonl(flowtable->hooknum)) ||
- 	    nla_put_be32(skb, NFTA_FLOWTABLE_HOOK_PRIORITY, htonl(flowtable->priority)))
- 		goto nla_put_failure;
+-	bnxt_qplib_rcfw_send_message(rcfw, (void *)&req, (void *)&resp, NULL,
+-				     0);
+-	return 0;
++	return bnxt_qplib_rcfw_send_message(rcfw, (void *)&req, (void *)&resp,
++						NULL, 0);
+ }
+ 
+ int bnxt_qplib_get_roce_stats(struct bnxt_qplib_rcfw *rcfw,
 -- 
 2.20.1
 
