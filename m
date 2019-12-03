@@ -2,187 +2,175 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E58C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF9CC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D695A20803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE8D92080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:34:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XHmDbg3X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbfLCW3c (ORCPT
+        id S1727542AbfLCWe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:29:32 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:54117 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727131AbfLCW3c (ORCPT
+        Tue, 3 Dec 2019 17:34:57 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:42412 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727131AbfLCWe5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:29:32 -0500
-Received: from dread.disaster.area (pa49-179-150-192.pa.nsw.optusnet.com.au [49.179.150.192])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id DF15E3A16AB;
-        Wed,  4 Dec 2019 09:29:26 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1icGfd-0006VE-Vs; Wed, 04 Dec 2019 09:29:25 +1100
-Date:   Wed, 4 Dec 2019 09:29:25 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Ming Lei <ming.lei@redhat.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-fs <linux-fsdevel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rong Chen <rong.a.chen@intel.com>, Tejun Heo <tj@kernel.org>
-Subject: Re: single aio thread is migrated crazily by scheduler
-Message-ID: <20191203222925.GM2695@dread.disaster.area>
-References: <20191114113153.GB4213@ming.t460p>
- <20191114235415.GL4614@dread.disaster.area>
- <20191115010824.GC4847@ming.t460p>
- <20191115045634.GN4614@dread.disaster.area>
- <20191115070843.GA24246@ming.t460p>
- <20191128094003.752-1-hdanton@sina.com>
- <20191202090158.15016-1-hdanton@sina.com>
- <20191203131514.5176-1-hdanton@sina.com>
+        Tue, 3 Dec 2019 17:34:57 -0500
+Received: by mail-ed1-f65.google.com with SMTP id e10so4741318edv.9;
+        Tue, 03 Dec 2019 14:34:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ulyW2h3rie4VE9IxojxTAhNWYWCowopRoXSHKOE6/OQ=;
+        b=XHmDbg3XnAAbtSzXD/RDl+VIKHYWfbmKA4Y8dB73bxVM6pEwLogY+Dn4Y1M+imggWq
+         lkknihtVD7CNzhvqB3PZ259wIcPAYQJDB4qNceYhlTEkZsOhBNrFwOxKUj0UuBwuXAuB
+         wMl99DqJfpBNX1GJcJYf7FVxaqmB4McPbNvmRaeN55iI47JaEWP5FPQWZq5v6KJCRknU
+         eH/jOLDW+BJB9JcpV6scuztgzTtB2ysXlk5Bo0bPz+gYaLOPm+Nu6hxgqCxv/8kkKEvk
+         HI5B8gOHWLWsI4XcujQe+BLE8NkHeb+VGrGrXDGFG63xGUAvvvO9F5bdLvNDxAzrfSgB
+         uoOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ulyW2h3rie4VE9IxojxTAhNWYWCowopRoXSHKOE6/OQ=;
+        b=JAhDUYoIAnuVSCCw0X+LJJTpSgjl9affsfNbcOv41CIneAaXpgOOdIa23jv+zDjZi7
+         EKkOJYDQYrtrATohT6I5eK6sCpTOPdkovM85OqJbIzj4mBAyqwFuAz+nw5dP5pjlH6KD
+         He/zzRmf3dAh/bRQbJcD3K73p1FBz4QithA8rzX4MAlZmtFR7AXe2i3FF9CYu/H+823n
+         emGHAf5akI17ai4euQwuAPiOcZfnWeFz7JHtWEfaMuj5x9RMTCgjZlmoFCv10Ad4SnHE
+         ft/HgGiXxeBuGMD48JVddtrV3oXYjBQqNxVI+fTL3Ntk4h6v0rGhy1gtL2H8A0gTynhr
+         liUA==
+X-Gm-Message-State: APjAAAUVfgE05/4owu+cIdGGR/OPZxjrJXVpx9NUDIeTEdfi+dc+DyB8
+        /x9YrkjiCP8Kw3j3XAXsLCfmBombPXt326B7BBo=
+X-Google-Smtp-Source: APXvYqyFjUHyBCnFC1zFWu802ktlkJvjl1vV+IvKLITIItq8MWHWmCYLyUHnT72F7s8O1nTkQqJUN0fdZJuja0ba1DQ=
+X-Received: by 2002:a17:906:b797:: with SMTP id dt23mr1294244ejb.241.1575412495051;
+ Tue, 03 Dec 2019 14:34:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191203131514.5176-1-hdanton@sina.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=ZXpxJgW8/q3NVgupyyvOCQ==:117 a=ZXpxJgW8/q3NVgupyyvOCQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pxVhFHJ0LMsA:10
-        a=7-415B0cAAAA:8 a=LmalR2UegCLWsU6ZP5sA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+References: <1575011105-28172-1-git-send-email-harigovi@codeaurora.org> <20191203222232.GG228856@google.com>
+In-Reply-To: <20191203222232.GG228856@google.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 3 Dec 2019 14:34:44 -0800
+Message-ID: <CAF6AEGvsrXjNX25AgN__mnguohmmT1tgMdrG39i=dXUYQ4p-mQ@mail.gmail.com>
+Subject: Re: [PATCH v1] drm/msm: add support for 2.4.1 DSI version for sc7180 soc
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        nganji@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 09:15:14PM +0800, Hillf Danton wrote:
-> > IOWs, we are trying to ensure that we run the data IO completion on
-> > the CPU with that has that data hot in cache. When we are running
-> > millions of IOs every second, this matters -a lot-. IRQ steering is
-> > just a mechansim that is used to ensure completion processing hits
-> > hot caches.
-> 
-> Along the "CPU affinity" direction, a trade-off is made between CPU
-> affinity and cache affinity before lb can bear the ca scheme.
-> Completion works are queued in round robin on the CPUs that share
-> cache with the submission CPU.
-> 
-> --- a/fs/iomap/direct-io.c
-> +++ b/fs/iomap/direct-io.c
-> @@ -143,6 +143,42 @@ static inline void iomap_dio_set_error(s
->  	cmpxchg(&dio->error, 0, ret);
->  }
->  
-> +static DEFINE_PER_CPU(int, iomap_dio_bio_end_io_cnt);
-> +static DEFINE_PER_CPU(int, iomap_dio_bio_end_io_cpu);
-> +#define IOMAP_DIO_BIO_END_IO_BATCH 7
-> +
-> +static int iomap_dio_cpu_rr(void)
-> +{
-> +	int *io_cnt, *io_cpu;
-> +	int cpu, this_cpu;
-> +
-> +	io_cnt = get_cpu_ptr(&iomap_dio_bio_end_io_cnt);
-> +	io_cpu = this_cpu_ptr(&iomap_dio_bio_end_io_cpu);
-> +	this_cpu = smp_processor_id();
-> +
-> +	if (!(*io_cnt & IOMAP_DIO_BIO_END_IO_BATCH)) {
-> +		for (cpu = *io_cpu + 1; cpu < nr_cpu_id; cpu++)
-> +			if (cpu == this_cpu ||
-> +			    cpus_share_cache(cpu, this_cpu))
-> +				goto update_cpu;
-> +
-> +		for (cpu = 0; cpu < *io_cpu; cpu++)
-> +			if (cpu == this_cpu ||
-> +			    cpus_share_cache(cpu, this_cpu))
-> +				goto update_cpu;
+On Tue, Dec 3, 2019 at 2:22 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> Hi,
+>
+> On Fri, Nov 29, 2019 at 12:35:05PM +0530, Harigovindan P wrote:
+> > Changes in v1:
+> >       -Modify commit text to indicate DSI version and SOC detail(Jeffrey Hugo).
+> >       -Splitting visionox panel driver code out into a
+> >        different patch(set), since panel drivers are merged into
+> >        drm-next via a different tree(Rob Clark).
+>
+> The change log shouldn't be part of the commit message, please place it
+> after the '---' separator.
 
-Linear scans like this just don't scale. We can have thousands of
-CPUs in a system and maybe only 8 cores that share a local cache.
-And we can be completing millions of direct IO writes a second these
-days. A linear scan of (thousands - 8) cpu ids every so often is
-going to show up as long tail latency for the unfortunate IO that
-has to scan those thousands of non-matching CPU IDs to find a
-sibling, and we'll be doing that every handful of IOs that are
-completed on every CPU.
+jfyi, the changelog and version #'s showing up in final commit msg is
+one thing that drm does differently from other parts of the kernel.
+So it is ok to keep the changelog before "---".
 
-> +
-> +		cpu = this_cpu;
-> +update_cpu:
-> +		*io_cpu = cpu;
-> +	}
-> +
-> +	(*io_cnt)++;
-> +	cpu = *io_cpu;
-> +	put_cpu_ptr(&iomap_dio_bio_end_io_cnt);
-> +
-> +	return cpu;
-> +}
-> 
->  static void iomap_dio_bio_end_io(struct bio *bio)
->  {
->  	struct iomap_dio *dio = bio->bi_private;
-> @@ -158,9 +194,10 @@ static void iomap_dio_bio_end_io(struct
->  			blk_wake_io_task(waiter);
->  		} else if (dio->flags & IOMAP_DIO_WRITE) {
->  			struct inode *inode = file_inode(dio->iocb->ki_filp);
-> +			int cpu = iomap_dio_cpu_rr();
+But agreed about the need for a commit message (in addition to just
+the changelog)
 
-IMO, this sort of "limit work to sibling CPU cores" does not belong in
-general code. We have *lots* of workqueues that need this treatment,
-and it's not viable to add this sort of linear search loop to every
-workqueue and place we queue work. Besides....
+BR,
+-R
 
->  
->  			INIT_WORK(&dio->aio.work, iomap_dio_complete_work);
-> -			queue_work(inode->i_sb->s_dio_done_wq, &dio->aio.work);
-> +			queue_work_on(cpu, inode->i_sb->s_dio_done_wq, &dio->aio.work);
-
-.... as I've stated before, this *does not solve the scheduler
-problem*.  All this does is move the problem to the target CPU
-instead of seeing it on the local CPU.
-
-If we really want to hack around the load balancer problems in this
-way, then we need to add a new workqueue concurrency management type
-with behaviour that lies between the default of bound and WQ_UNBOUND.
-
-WQ_UNBOUND limits scheduling to within a numa node - see
-wq_update_unbound_numa() for how it sets up the cpumask attributes
-it applies to it's workers - but we need the work to be bound to
-within the local cache domain rather than a numa node. IOWs, set up
-the kworker task pool management structure with the right attributes
-(e.g. cpu masks) to define the cache domains, add all the hotplug
-code to make it work with CPU hotplug, then simply apply those
-attributes to the kworker task that is selected to execute the work.
-
-This allows the scheduler to migrate the kworker away from the local
-run queue without interrupting the currently scheduled task. The
-cpumask limits the task is configured with limit the scheduler to
-selecting the best CPU within the local cache domain, and we don't
-have to bind work to CPUs to get CPU cache friendly work scheduling.
-This also avoids overhead of per-queue_work_on() sibling CPU
-calculation, and all the code that wants to use this functionality
-needs to do is add a single flag at work queue init time (e.g.
-WQ_CACHEBOUND).
-
-IOWs, if the task migration behaviour cannot be easily fixed and so
-we need work queue users to be more flexible about work placement,
-then the solution needed here is "cpu cache local work queue
-scheduling" implemented in the work queue infrastructure, not in
-every workqueue user.
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+> I think at least a one line commit message besides the subject is
+> mandatory, so if you move the change log down you'll have to add
+> some short summary.
+>
+> > Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+> > ---
+> >  drivers/gpu/drm/msm/dsi/dsi_cfg.c | 21 +++++++++++++++++++++
+> >  drivers/gpu/drm/msm/dsi/dsi_cfg.h |  1 +
+> >  2 files changed, 22 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.c b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+> > index b7b7c1a..7b967dd 100644
+> > --- a/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+> > +++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+> > @@ -133,6 +133,10 @@ static const char * const dsi_sdm845_bus_clk_names[] = {
+> >       "iface", "bus",
+> >  };
+> >
+> > +static const char * const dsi_sc7180_bus_clk_names[] = {
+> > +     "iface", "bus",
+> > +};
+> > +
+> >  static const struct msm_dsi_config sdm845_dsi_cfg = {
+> >       .io_offset = DSI_6G_REG_SHIFT,
+> >       .reg_cfg = {
+> > @@ -147,6 +151,20 @@ static const struct msm_dsi_config sdm845_dsi_cfg = {
+> >       .num_dsi = 2,
+> >  };
+> >
+> > +static const struct msm_dsi_config sc7180_dsi_cfg = {
+> > +     .io_offset = DSI_6G_REG_SHIFT,
+> > +     .reg_cfg = {
+> > +             .num = 1,
+> > +             .regs = {
+> > +                     {"vdda", 21800, 4 },    /* 1.2 V */
+> > +             },
+> > +     },
+> > +     .bus_clk_names = dsi_sc7180_bus_clk_names,
+> > +     .num_bus_clks = ARRAY_SIZE(dsi_sc7180_bus_clk_names),
+> > +     .io_start = { 0xae94000 },
+> > +     .num_dsi = 1,
+> > +};
+> > +
+> >  const static struct msm_dsi_host_cfg_ops msm_dsi_v2_host_ops = {
+> >       .link_clk_enable = dsi_link_clk_enable_v2,
+> >       .link_clk_disable = dsi_link_clk_disable_v2,
+> > @@ -201,6 +219,9 @@ static const struct msm_dsi_cfg_handler dsi_cfg_handlers[] = {
+> >               &msm8998_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+> >       {MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_2_1,
+> >               &sdm845_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+> > +     {MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_4_1,
+> > +             &sc7180_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+> > +
+> >  };
+> >
+> >  const struct msm_dsi_cfg_handler *msm_dsi_cfg_get(u32 major, u32 minor)
+> > diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.h b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+> > index e2b7a7d..9919536 100644
+> > --- a/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+> > +++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+> > @@ -19,6 +19,7 @@
+> >  #define MSM_DSI_6G_VER_MINOR_V1_4_1  0x10040001
+> >  #define MSM_DSI_6G_VER_MINOR_V2_2_0  0x20000000
+> >  #define MSM_DSI_6G_VER_MINOR_V2_2_1  0x20020001
+> > +#define MSM_DSI_6G_VER_MINOR_V2_4_1  0x20040001
+> >
+> >  #define MSM_DSI_V2_VER_MINOR_8064    0x0
+> >
+> > --
+> > 2.7.4
+> >
