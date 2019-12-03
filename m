@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63019C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 815EEC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 300272064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AFC720865
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:06:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414399;
-	bh=MqOdMBcFN7cKpxoPq7s5s29VjuTXuCthvZFz0pCPqiI=;
+	s=default; t=1575414401;
+	bh=um8tu6uAw/zbChLCopYomwAWYNQNltHoeeW4RgTCtXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z9Xa0dQYwuHn+aZGoal2yLZltZ/C/uguhchj+L+ZgDuRQsQz+RY2ptJRlEJDX697N
-	 XwGIEZLa36lXJQg/nGeLhPYwatbyEEkPDtKjI65gjypS86MCytmEl73kjgk7eaPd/0
-	 WotdeK6FTC1ZWscO4+oO3evcHy7bg1A/sAbFymsc=
+	b=YjuqGsbup44bOnAOA7urbrtrb7BlhAlEoBiKrUSlTs68Wihmkycb21694S0GJm5iw
+	 yUTsXBVU2fqAnktRXz/nfJ3BFAbRHgDmRG5l+8A2Kl05+FTqhUUegn08BgpD7+29Bl
+	 gAQex8Hk6M7azKIjlJA9BNtwJ2QwRpfcmDKZuA8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729449AbfLCWsb (ORCPT
+        id S1729440AbfLCWsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:48:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39134 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:48:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729317AbfLCWs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:48:28 -0500
+        id S1729422AbfLCWsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:48:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3526820862;
-        Tue,  3 Dec 2019 22:48:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA3B120656;
+        Tue,  3 Dec 2019 22:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413307;
-        bh=MqOdMBcFN7cKpxoPq7s5s29VjuTXuCthvZFz0pCPqiI=;
+        s=default; t=1575413299;
+        bh=um8tu6uAw/zbChLCopYomwAWYNQNltHoeeW4RgTCtXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xVnuhXVWZfmQ7YneRNSsKvFjG9SGzV2N2VF9tCs6KbPohVzkh7eFeTVOdSfqy4DDB
-         16t7c0RPHGyVtOVkZf/bpNb0pgTqw7y6GtdnlLssfw6Kdocv8Sj1ZT4mQ1/2Pi/Qop
-         umZ8XFE5rENHQR+JqLshkg0AYlC/eT7r8zJTVAfA=
+        b=S2XQASogancISfoeepPr/Vz7LzHKuibinsIhAbqDhZolLDq0GwzVfnnNPy9tA75Pl
+         +/DbZf8a/vIfdW/ds8O3eiuzdIxDU96AbJE5v0Z37XdviQ16chVAoPWemIm/EZ9K4r
+         ZR0ZFZNTu3dKpriJ3OVSU/DBNiD/km+VCccs0URs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        "kernelci.org bot" <bot@kernelci.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Will Deacon <will.deacon@arm.com>,
+        stable@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>,
+        "Darren Hart (VMware)" <dvhart@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 077/321] arm64: preempt: Fix big-endian when checking preempt count in assembly
-Date:   Tue,  3 Dec 2019 23:32:23 +0100
-Message-Id: <20191203223431.166680020@linuxfoundation.org>
+Subject: [PATCH 4.19 074/321] platform/x86: mlx-platform: Fix LED configuration
+Date:   Tue,  3 Dec 2019 23:32:20 +0100
+Message-Id: <20191203223431.012941331@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -62,71 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will.deacon@arm.com>
+From: Vadim Pasternak <vadimp@mellanox.com>
 
-[ Upstream commit 7faa313f05cad184e8b17750f0cbe5216ac6debb ]
+[ Upstream commit 440f343df1996302d9a3904647ff11b689bf27bc ]
 
-Commit 396244692232 ("arm64: preempt: Provide our own implementation of
-asm/preempt.h") extended the preempt count field in struct thread_info
-to 64 bits, so that it consists of a 32-bit count plus a 32-bit flag
-indicating whether or not the current task needs rescheduling.
+Exchange LED configuration between msn201x and next generation systems
+types.
 
-Whilst the asm-offsets definition of TSK_TI_PREEMPT was updated to point
-to this new field, the assembly usage was left untouched meaning that a
-32-bit load from TSK_TI_PREEMPT on a big-endian machine actually returns
-the reschedule flag instead of the count.
+Bug was introduced when LED driver activation was added to mlx-platform.
+LED configuration for the three new system MQMB7, MSN37, MSN34 was
+assigned to MSN21 and vice versa. This bug affects MSN21 only and
+likely requires backport to v4.19.
 
-Whilst we could fix this by pointing TSK_TI_PREEMPT at the count field,
-we're actually better off reworking the two assembly users so that they
-operate on the whole 64-bit value in favour of inspecting the thread
-flags separately in order to determine whether a reschedule is needed.
-
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Reported-by: "kernelci.org bot" <bot@kernelci.org>
-Tested-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Fixes: 1189456b1cce ("platform/x86: mlx-platform: Add LED platform driver activation")
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/assembler.h | 8 +++-----
- arch/arm64/kernel/entry.S          | 6 ++----
- 2 files changed, 5 insertions(+), 9 deletions(-)
+ drivers/platform/x86/mlx-platform.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
-index 5a97ac8531682..0c100506a29aa 100644
---- a/arch/arm64/include/asm/assembler.h
-+++ b/arch/arm64/include/asm/assembler.h
-@@ -683,11 +683,9 @@ USER(\label, ic	ivau, \tmp2)			// invalidate I line PoU
- 	.macro		if_will_cond_yield_neon
- #ifdef CONFIG_PREEMPT
- 	get_thread_info	x0
--	ldr		w1, [x0, #TSK_TI_PREEMPT]
--	ldr		x0, [x0, #TSK_TI_FLAGS]
--	cmp		w1, #PREEMPT_DISABLE_OFFSET
--	csel		x0, x0, xzr, eq
--	tbnz		x0, #TIF_NEED_RESCHED, .Lyield_\@	// needs rescheduling?
-+	ldr		x0, [x0, #TSK_TI_PREEMPT]
-+	sub		x0, x0, #PREEMPT_DISABLE_OFFSET
-+	cbz		x0, .Lyield_\@
- 	/* fall through to endif_yield_neon */
- 	.subsection	1
- .Lyield_\@ :
-diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-index 5f800384cb9a8..bb68323530458 100644
---- a/arch/arm64/kernel/entry.S
-+++ b/arch/arm64/kernel/entry.S
-@@ -622,10 +622,8 @@ el1_irq:
- 	irq_handler
+diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+index d17db140cb1fc..69e28c12d5915 100644
+--- a/drivers/platform/x86/mlx-platform.c
++++ b/drivers/platform/x86/mlx-platform.c
+@@ -1421,7 +1421,7 @@ static int __init mlxplat_dmi_msn201x_matched(const struct dmi_system_id *dmi)
+ 	mlxplat_hotplug = &mlxplat_mlxcpld_msn201x_data;
+ 	mlxplat_hotplug->deferred_nr =
+ 		mlxplat_default_channels[i - 1][MLXPLAT_CPLD_GRP_CHNL_NUM - 1];
+-	mlxplat_led = &mlxplat_default_ng_led_data;
++	mlxplat_led = &mlxplat_msn21xx_led_data;
+ 	mlxplat_regs_io = &mlxplat_msn21xx_regs_io_data;
  
- #ifdef CONFIG_PREEMPT
--	ldr	w24, [tsk, #TSK_TI_PREEMPT]	// get preempt count
--	cbnz	w24, 1f				// preempt count != 0
--	ldr	x0, [tsk, #TSK_TI_FLAGS]	// get flags
--	tbz	x0, #TIF_NEED_RESCHED, 1f	// needs rescheduling?
-+	ldr	x24, [tsk, #TSK_TI_PREEMPT]	// get preempt count
-+	cbnz	x24, 1f				// preempt count != 0
- 	bl	el1_preempt
- 1:
- #endif
+ 	return 1;
+@@ -1439,7 +1439,7 @@ static int __init mlxplat_dmi_qmb7xx_matched(const struct dmi_system_id *dmi)
+ 	mlxplat_hotplug = &mlxplat_mlxcpld_default_ng_data;
+ 	mlxplat_hotplug->deferred_nr =
+ 		mlxplat_msn21xx_channels[MLXPLAT_CPLD_GRP_CHNL_NUM - 1];
+-	mlxplat_led = &mlxplat_msn21xx_led_data;
++	mlxplat_led = &mlxplat_default_ng_led_data;
+ 	mlxplat_fan = &mlxplat_default_fan_data;
+ 
+ 	return 1;
 -- 
 2.20.1
 
