@@ -2,208 +2,138 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C702C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBD7C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8C7D20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:46:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PWrO0iJZ"
+	by mail.kernel.org (Postfix) with ESMTP id A504F20661
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:47:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575384475;
+	bh=qoEpR+iz5sa+F9skDmBKFFgJNfBR3Zy5GUGd1/9m/gQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1Me7R70bnnhiovjVSwmULM9u+FvDETug/ZJdtM4usJx9ec2XarNJunBcbdZQ5rWJX
+	 doh2x4j0vd/HYkAQIDbfBdQowSy4RbVvRSJKE72dQq+yOItJeb9fkqdY1be9xWyRYA
+	 xl9U/sdNmAsY7lGl2hfhjUOiOMsGuG57CbBHMZpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbfLCOq5 (ORCPT
+        id S1726598AbfLCOry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 09:46:57 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:52120 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfLCOq4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 09:46:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Mime-Version:
-        Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Df/63bTiz0MbvffoTq5LGNY0f3lhFWeKO2rB4GEICME=; b=PWrO0iJZ5Jov8iCg1pPsVunCpH
-        VKIXG5NVaIwAyuk9qs+FtWWaqb8GHI5HIot4d4zS3l6ToeM4RJ9C9bKwkp4Bq7bScIXW/DnbH4CAM
-        yX7WpR5Rv2X15OcVcVeilludvtzlx7C2WNs1b9A/WXTpW2K1+4qASeNrpmeCIvfBnuzi3prBumKoL
-        1d43Blr5eVn4L+04HYdlwEE6sDS2n1DiK04Ik3SKuX7a2ZpX7F3YDx9RfxvPzwchv65B5056Jwzg9
-        0mGFcU35sYGU5ydUEAQ4yMoYJV8mpZDrykj1RVEwaTNPitrVywJ5mMupy42gvs6mZnOLLA784MBjp
-        lfjSKxTw==;
-Received: from [54.239.6.185] (helo=u0c626add9cce5a.ant.amazon.com)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ic9S1-0000q1-9o; Tue, 03 Dec 2019 14:46:53 +0000
-Message-ID: <ae3451423c18f2e408245d745d1f28e311a2845c.camel@infradead.org>
-Subject: Re: [PATCH v3] virtio_console: allocate inbufs in add_port() only
- if it is needed
-From:   Amit Shah <amit@infradead.org>
-To:     Laurent Vivier <lvivier@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     virtualization@lists.linux-foundation.org,
-        "Michael S . Tsirkin" <mst@redhat.com>,
+        Tue, 3 Dec 2019 09:47:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58556 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbfLCOry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 09:47:54 -0500
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7EB82070A;
+        Tue,  3 Dec 2019 14:47:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575384472;
+        bh=qoEpR+iz5sa+F9skDmBKFFgJNfBR3Zy5GUGd1/9m/gQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Yk3+kwHbCw67Q8MsoMwGkrd5CTloi+Cgz+s8OJTz8fohj85dg//2UtKabMoqyzHSX
+         lRhvnd9AvR6nddhBsnDYT7SIiQlgDLIm3XBrklMlrRWwZ4TrrHg7DMh4T8RTSMgsBR
+         S3dUK+58xtFa6ZyeTbtri6zHy807ej67tLHjKfjM=
+Received: by mail-qv1-f53.google.com with SMTP id p2so1582533qvo.10;
+        Tue, 03 Dec 2019 06:47:52 -0800 (PST)
+X-Gm-Message-State: APjAAAVVMbqNxprwq8bxRB66/KcOtXd3wZiKNDQZcnnhcDV2FC+UhJl2
+        /12UYRb9djvrXDEEz4KCeDn2Kzdh2TW/f7l/DA==
+X-Google-Smtp-Source: APXvYqxrMnC94tLm+z/m6J/edWdsA+e9+yTSEaG1G1r+Sc9Beij7suS2pnqDw5WIbatRieWqQvxMMTtm91WsEIvREJ0=
+X-Received: by 2002:ad4:450a:: with SMTP id k10mr5131884qvu.136.1575384471940;
+ Tue, 03 Dec 2019 06:47:51 -0800 (PST)
+MIME-Version: 1.0
+References: <cover.08e3a6c95159f017b753d0f240086d1a7923758b.1575369656.git-series.andrew@aj.id.au>
+In-Reply-To: <cover.08e3a6c95159f017b753d0f240086d1a7923758b.1575369656.git-series.andrew@aj.id.au>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 3 Dec 2019 08:47:40 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLMs1MsNXMFTCVdrkNNx5ktg0_Q=zf6xgiTkeys-T+CNg@mail.gmail.com>
+Message-ID: <CAL_JsqLMs1MsNXMFTCVdrkNNx5ktg0_Q=zf6xgiTkeys-T+CNg@mail.gmail.com>
+Subject: Re: [PATCH 00/14] ARM: dts: aspeed: Cleanup dtc warnings
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     linux-aspeed@lists.ozlabs.org, Joel Stanley <joel@jms.id.au>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        a.filippov@yadro.com, anoo@us.ibm.com,
+        Ken Chen <chen.kenyy@inventec.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org,
-        Amit Shah <amit@kernel.org>
-Date:   Tue, 03 Dec 2019 15:46:50 +0100
-In-Reply-To: <20191114122548.24364-1-lvivier@redhat.com>
-References: <20191114122548.24364-1-lvivier@redhat.com>
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stefan M Schaeckeler <sschaeck@cisco.com>, taoren@fb.com,
+        Patrick Venture <venture@google.com>,
+        John Wang <wangzqbj@inspur.com>, Xo Wang <xow@google.com>,
+        =?UTF-8?B?QnJpYW5DLlcg5qWK5ZiJ5YGJIFRBTyBZYW5n?= 
+        <yang.brianc.w@inventec.com>, yao.yuan@linaro.org
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-11-14 at 13:25 +0100, Laurent Vivier wrote:
-> When we hot unplug a virtserialport and then try to hot plug again,
-> it fails:
-> 
-> (qemu) chardev-add socket,id=serial0,path=/tmp/serial0,server,nowait
-> (qemu) device_add virtserialport,bus=virtio-serial0.0,nr=2,\
->                   chardev=serial0,id=serial0,name=serial0
-> (qemu) device_del serial0
-> (qemu) device_add virtserialport,bus=virtio-serial0.0,nr=2,\
->                   chardev=serial0,id=serial0,name=serial0
-> kernel error:
->   virtio-ports vport2p2: Error allocating inbufs
-> qemu error:
->   virtio-serial-bus: Guest failure in adding port 2 for device \
->                      virtio-serial0.0
-> 
-> This happens because buffers for the in_vq are allocated when the
-> port is
-> added but are not released when the port is unplugged.
-> 
-> They are only released when virtconsole is removed (see a7a69ec0d8e4)
-> 
-> To avoid the problem and to be symmetric, we could allocate all the
-> buffers
-> in init_vqs() as they are released in remove_vqs(), but it sounds
-> like
-> a waste of memory.
-> 
-> Rather than that, this patch changes add_port() logic to ignore
-> ENOSPC
-> error in fill_queue(), which means queue has already been filled.
-> 
-> Fixes: a7a69ec0d8e4 ("virtio_console: free buffers after reset")
-> Cc: mst@redhat.com
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Laurent Vivier <lvivier@redhat.com>
+On Tue, Dec 3, 2019 at 6:02 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> Hello,
+>
+> This series is based on an RFC-ish series I sent quite some time ago to which I
+> have only just been able to circle back. The previous discussion can be found
+> here:
+>
+> https://lore.kernel.org/lkml/20190726053959.2003-1-andrew@aj.id.au/
+>
+> I've split, shuffled and rebased the series a little, with at least one extra
+> cleanup for the g6 dtsi. This series is just the devicetree changes, the IPMI
+> KCS changes will be posted separately shortly.
+>
+> Combined with the KCS changes we achieve similar stats to the RFC series,
+> reducing 264 warnings to 6.
+>
+> I've added each patches' tags from last time, but please glance over them
+> again.
+>
+> Cheers,
+>
+> Andrew
+>
+> Andrew Jeffery (14):
+>   dt-bindings: pinctrl: aspeed: Add reg property as a hint
+>   dt-bindings: misc: Document reg for aspeed,p2a-ctrl nodes
+>   ARM: dts: aspeed-g5: Move EDAC node to APB
+>   ARM: dts: aspeed-g5: Use recommended generic node name for SDMC
+>   ARM: dts: aspeed-g5: Fix aspeed,external-nodes description
+>   ARM: dts: vesnin: Add unit address for memory node
+>   ARM: dts: fp5280g2: Cleanup gpio-keys-polled properties
+>   ARM: dts: swift: Cleanup gpio-keys-polled properties
+>   ARM: dts: witherspoon: Cleanup gpio-keys-polled properties
+>   ARM: dts: aspeed: Cleanup lpc-ctrl and snoop regs
+>   ARM: dts: aspeed: Add reg hints to syscon children
+>   ARM: dts: aspeed-g5: Sort LPC child nodes by unit address
+>   ARM: dts: aspeed-g6: Cleanup watchdog unit address
+>   ARM: dts: ibm-power9-dual: Add a unit address for OCC nodes
+>
+>  Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt            |  1 +
+>  Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml |  3 +++
+>  Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml |  3 +++
+>  arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts                  |  4 ----
+>  arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts              |  4 ----
+>  arch/arm/boot/dts/aspeed-bmc-inspur-fp5280g2.dts                      | 11 +++++++----
+>  arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dts                        |  4 ----
+>  arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts                          |  4 ----
+>  arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts                          |  4 ----
+>  arch/arm/boot/dts/aspeed-bmc-opp-swift.dts                            |  6 ------
+>  arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts                           |  2 +-
+>  arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts                      |  6 ------
+>  arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts                            |  2 --
+>  arch/arm/boot/dts/aspeed-g4.dtsi                                      | 21 ++++++++++++---------
+>  arch/arm/boot/dts/aspeed-g5.dtsi                                      | 49 ++++++++++++++++++++++++++-----------------------
+>  arch/arm/boot/dts/aspeed-g6.dtsi                                      |  2 +-
+>  arch/arm/boot/dts/ibm-power9-dual.dtsi                                |  4 ++--
+>  17 files changed, 56 insertions(+), 74 deletions(-)
 
-Reviewed-by: Amit Shah <amit@kernel.org>
+Other than patch 5, for the series:
 
-Thanks!
-
-> ---
-> 
-> Notes:
->     v3: add a comment about ENOSPC error
->     v2: making fill_queue return int and testing return code for
-> -ENOSPC
-> 
->  drivers/char/virtio_console.c | 28 +++++++++++++---------------
->  1 file changed, 13 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/char/virtio_console.c
-> b/drivers/char/virtio_console.c
-> index 7270e7b69262..3259426f01dc 100644
-> --- a/drivers/char/virtio_console.c
-> +++ b/drivers/char/virtio_console.c
-> @@ -1325,24 +1325,24 @@ static void set_console_size(struct port
-> *port, u16 rows, u16 cols)
->  	port->cons.ws.ws_col = cols;
->  }
->  
-> -static unsigned int fill_queue(struct virtqueue *vq, spinlock_t
-> *lock)
-> +static int fill_queue(struct virtqueue *vq, spinlock_t *lock)
->  {
->  	struct port_buffer *buf;
-> -	unsigned int nr_added_bufs;
-> +	int nr_added_bufs;
->  	int ret;
->  
->  	nr_added_bufs = 0;
->  	do {
->  		buf = alloc_buf(vq->vdev, PAGE_SIZE, 0);
->  		if (!buf)
-> -			break;
-> +			return -ENOMEM;
->  
->  		spin_lock_irq(lock);
->  		ret = add_inbuf(vq, buf);
->  		if (ret < 0) {
->  			spin_unlock_irq(lock);
->  			free_buf(buf, true);
-> -			break;
-> +			return ret;
->  		}
->  		nr_added_bufs++;
->  		spin_unlock_irq(lock);
-> @@ -1362,7 +1362,6 @@ static int add_port(struct ports_device
-> *portdev, u32 id)
->  	char debugfs_name[16];
->  	struct port *port;
->  	dev_t devt;
-> -	unsigned int nr_added_bufs;
->  	int err;
->  
->  	port = kmalloc(sizeof(*port), GFP_KERNEL);
-> @@ -1421,11 +1420,13 @@ static int add_port(struct ports_device
-> *portdev, u32 id)
->  	spin_lock_init(&port->outvq_lock);
->  	init_waitqueue_head(&port->waitqueue);
->  
-> -	/* Fill the in_vq with buffers so the host can send us data. */
-> -	nr_added_bufs = fill_queue(port->in_vq, &port->inbuf_lock);
-> -	if (!nr_added_bufs) {
-> +	/* We can safely ignore ENOSPC because it means
-> +	 * the queue already has buffers. Buffers are removed
-> +	 * only by virtcons_remove(), not by unplug_port()
-> +	 */
-> +	err = fill_queue(port->in_vq, &port->inbuf_lock);
-> +	if (err < 0 && err != -ENOSPC) {
->  		dev_err(port->dev, "Error allocating inbufs\n");
-> -		err = -ENOMEM;
->  		goto free_device;
->  	}
->  
-> @@ -2059,14 +2060,11 @@ static int virtcons_probe(struct
-> virtio_device *vdev)
->  	INIT_WORK(&portdev->control_work, &control_work_handler);
->  
->  	if (multiport) {
-> -		unsigned int nr_added_bufs;
-> -
->  		spin_lock_init(&portdev->c_ivq_lock);
->  		spin_lock_init(&portdev->c_ovq_lock);
->  
-> -		nr_added_bufs = fill_queue(portdev->c_ivq,
-> -					   &portdev->c_ivq_lock);
-> -		if (!nr_added_bufs) {
-> +		err = fill_queue(portdev->c_ivq, &portdev->c_ivq_lock);
-> +		if (err < 0) {
->  			dev_err(&vdev->dev,
->  				"Error allocating buffers for control
-> queue\n");
->  			/*
-> @@ -2077,7 +2075,7 @@ static int virtcons_probe(struct virtio_device
-> *vdev)
->  					   VIRTIO_CONSOLE_DEVICE_READY,
-> 0);
->  			/* Device was functional: we need full cleanup.
-> */
->  			virtcons_remove(vdev);
-> -			return -ENOMEM;
-> +			return err;
->  		}
->  	} else {
->  		/*
-
+Reviewed-by: Rob Herring <robh@kernel.org>
