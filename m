@@ -2,148 +2,215 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB86C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E71F6C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0443C206E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE05220640
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:31:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aDs2YAsO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nd1rHXvt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbfLCJ0z (ORCPT
+        id S1726115AbfLCJbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 04:26:55 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43990 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbfLCJ0y (ORCPT
+        Tue, 3 Dec 2019 04:31:24 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:58292 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725957AbfLCJbY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 04:26:54 -0500
-Received: by mail-wr1-f67.google.com with SMTP id n1so2676399wra.10;
-        Tue, 03 Dec 2019 01:26:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SZdfC+gFtVklBpHF7XF3yKS4xbagQBubfYPugqhRugk=;
-        b=aDs2YAsOEnOy5MORl6ZJIiOEESJ7SrV+tBNsG7s0DhwI8IAa+WmSS2HHd4QyjWGSJ/
-         ldRTToqQ7fQK307trD2DA1pagxWm6spcShdYjO1bCT5zkFNurwT8D0qFsmSSEUBqQVn9
-         Z2Zj1HZOONpz9ZI8OlPB6cYCLrisPtiHZPkN+kZ/Qkwrv6OYQdkg4ifUYV0RgQrtxBHy
-         Ngqwe37IcYAgs+JB/PBz+qMv8mc+6lkEbD2x5TcMRk7CuL/LFUSdqB1iMLYZ4bG1D9G2
-         wj0QR3TKc67oNoo5knJzrwdTSto5TOtorlUqVKc7rBt0YKFHYhH+mW0TIY8+1NlWPXWq
-         fHAQ==
+        Tue, 3 Dec 2019 04:31:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575365480;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ccF0ajXP8HBc8ijEIbPxb/SW3cou8LZhbpgUuAl6x/w=;
+        b=Nd1rHXvt1HPan8I5V8/39qYJAAOBbLOGc2hP5EzXSEZ3oPdSXgm98lLZXVF3NZLFu7GEny
+        d2WvN0I2pINAoBwMp9RCbN15UTWk44vLG50PW//inwB9go2ZKR6s9uOMLNE/gpzWY25s8f
+        3ciRHwqeJ49fqeer+iLQAdn+jduJ54E=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-432-BgxgNBrxPqWR3axuKaItxw-1; Tue, 03 Dec 2019 04:31:17 -0500
+Received: by mail-wr1-f72.google.com with SMTP id t3so1441489wrm.23
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 01:31:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SZdfC+gFtVklBpHF7XF3yKS4xbagQBubfYPugqhRugk=;
-        b=c1AdemUnx3odErCdLs+LsxlPTyI49QecveN/sDr4pYlv1bTx+tBjxZua0Z+sO6RbkR
-         BLqV+rkAx12Pxyo7NHFe0hw7feRtOhOXrr3r+HPD652yaaiP9yDYsbGXom7XxBJeDAT5
-         un3YcuudF2Oh84ITlNBGmltQ2TWfNIN6AZD0CNI4i6jhrMCALri4xfo91ZnbETbGwZYV
-         mUD3YsxHKGlYJanSXo6M9NWO7v/i/SUpIBsuUh8c+8Mm+/RCjievx+yXCp7r5Hb95dbq
-         vBTLJkdffJc4hA2taQ89kJf/mUabLrVoHIh6WWmpq0aOJhnEWVVC03we6SjAoXpTdGeO
-         Nxzg==
-X-Gm-Message-State: APjAAAX3SAyo34SWOyIVUxxYy27w3qJqh3oSsO6a/BsSCGUETXteo/1x
-        TF142FSfwbpTs9ULp4+KQDg=
-X-Google-Smtp-Source: APXvYqyWUu9z3na0YvFr46Iqp7ei5QNeidd0TaMx3re4eCOYeNXe9t/Q0pvxheWa/uyUnaKqbmgSNw==
-X-Received: by 2002:a5d:43c7:: with SMTP id v7mr3806207wrr.32.1575365212035;
-        Tue, 03 Dec 2019 01:26:52 -0800 (PST)
-Received: from localhost ([51.15.41.238])
-        by smtp.gmail.com with ESMTPSA id v17sm2696979wrt.91.2019.12.03.01.26.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 01:26:50 -0800 (PST)
-Date:   Tue, 3 Dec 2019 09:26:49 +0000
-From:   Stefan Hajnoczi <stefanha@gmail.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     netdev@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jorgen Hansen <jhansen@vmware.com>
-Subject: Re: [RFC PATCH 0/3] vsock: support network namespace
-Message-ID: <20191203092649.GB153510@stefanha-x1.localdomain>
-References: <20191128171519.203979-1-sgarzare@redhat.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pqLIE58UAw3dvThIrcQE32eMUDCSJr2Vnkr2jVztGkA=;
+        b=C/nHTwQfZHL6n4x/5qtIMhUPLP7Z0qH8yN3NwJtm7ocw8yleGVXWpK6uvJhXhHFGSp
+         MPeCkWfyUOoP3OJ6kYsiOUNEVpvE63cZxg+ZS7fzaPCwMEEqSU9Sa75g+CX0LUM/SDm/
+         bH4C+Og5eriJNmluHUemlWWEbLXgt+f/Hc29hmNqWDzEU1UlYKqpJhdyb2gp+41IsYoA
+         MBEoQBm35JJrIP1EHH5yigGxMVLzZnoCb+TM9Q/9l2xTKBm8jV5u4sBD9c7peFTLQYgD
+         6Olvn9rRpF/qP69NdL2fgA3B4Dx9HbzExYzkpIZDmrrwxJIKwAYOcwRJ/B/cjn2vLWTO
+         a7xg==
+X-Gm-Message-State: APjAAAWadGZboNF4qwVAEzSvW8JUIPZOV9LNWWl9HlFG+RhdtaGwBihx
+        y+azjsmnMwuaTsbj5PuU2PpJRVpR5iTz8d2MUMd0cZZOxOtBZjKb69zL1qYi1rhRevK8hB/qDP2
+        8e+5ZrUvpMocc0ZbFzSZfXYsK
+X-Received: by 2002:a1c:2745:: with SMTP id n66mr32903744wmn.171.1575365475980;
+        Tue, 03 Dec 2019 01:31:15 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxv/8chgzjepA9kVkC4EBIYQZG5mCLApSK9DTOrQR3Wnj2da3SiM30rKwmR/e/7TAIKVntRKA==
+X-Received: by 2002:a1c:2745:: with SMTP id n66mr32903710wmn.171.1575365475660;
+        Tue, 03 Dec 2019 01:31:15 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:8dc6:5dd5:2c0a:6a9a? ([2001:b07:6468:f312:8dc6:5dd5:2c0a:6a9a])
+        by smtp.gmail.com with ESMTPSA id r6sm2783864wrv.40.2019.12.03.01.31.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Dec 2019 01:31:15 -0800 (PST)
+Subject: Re: [PATCH 4.19 067/306] KVM: nVMX: move check_vmentry_postreqs()
+ call to nested_vmx_enter_non_root_mode()
+To:     Jack Wang <jack.wang.usish@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Sasha Levin <sashal@kernel.org>
+References: <20191127203114.766709977@linuxfoundation.org>
+ <20191127203119.676489279@linuxfoundation.org>
+ <CA+res+QKCAn8PsSgbkqXNAF0Ov5pOkj=732=M5seWj+-JFQOwQ@mail.gmail.com>
+ <20191202145105.GA571975@kroah.com>
+ <bccbfccd-0e96-29c3-b2ba-2b1800364b08@redhat.com>
+ <CA+res+SffBsmmeEBYfoDwyLHvL8nqW+O=ZKedWCxccmQ9X6itA@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <828cf8b7-11ac-e707-57b6-cb598cc37f1b@redhat.com>
+Date:   Tue, 3 Dec 2019 10:31:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="XOIedfhf+7KOe/yw"
-Content-Disposition: inline
-In-Reply-To: <20191128171519.203979-1-sgarzare@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CA+res+SffBsmmeEBYfoDwyLHvL8nqW+O=ZKedWCxccmQ9X6itA@mail.gmail.com>
+Content-Language: en-US
+X-MC-Unique: BgxgNBrxPqWR3axuKaItxw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---XOIedfhf+7KOe/yw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Nov 28, 2019 at 06:15:16PM +0100, Stefano Garzarella wrote:
-> Hi,
-> now that we have multi-transport upstream, I started to take a look to
-> support network namespace (netns) in vsock.
+On 03/12/19 10:21, Jack Wang wrote:
+> Paolo Bonzini <pbonzini@redhat.com> =E4=BA=8E2019=E5=B9=B412=E6=9C=882=E6=
+=97=A5=E5=91=A8=E4=B8=80 =E4=B8=8B=E5=8D=884:09=E5=86=99=E9=81=93=EF=BC=9A
+>>
+>> On 02/12/19 15:51, Greg Kroah-Hartman wrote:
+>>> On Mon, Dec 02, 2019 at 03:40:04PM +0100, Jack Wang wrote:
+>>>> Greg Kroah-Hartman <gregkh@linuxfoundation.org> =E4=BA=8E2019=E5=B9=B4=
+11=E6=9C=8827=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8B=E5=8D=8810:30=E5=86=99=
+=E9=81=93=EF=BC=9A
+>>>>>
+>>>>> From: Sean Christopherson <sean.j.christopherson@intel.com>
+>>>>>
+>>>>> [ Upstream commit 7671ce21b13b9596163a29f4712cb2451a9b97dc ]
+>>>>>
+>>>>> In preparation of supporting checkpoint/restore for nested state,
+>>>>> commit ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vmx_ru=
+n()")
+>>>>> modified check_vmentry_postreqs() to only perform the guest EFER
+>>>>> consistency checks when nested_run_pending is true.  But, in the
+>>>>> normal nested VMEntry flow, nested_run_pending is only set after
+>>>>> check_vmentry_postreqs(), i.e. the consistency check is being skipped=
+.
+>>>>>
+>>>>> Alternatively, nested_run_pending could be set prior to calling
+>>>>> check_vmentry_postreqs() in nested_vmx_run(), but placing the
+>>>>> consistency checks in nested_vmx_enter_non_root_mode() allows us
+>>>>> to split prepare_vmcs02() and interleave the preparation with
+>>>>> the consistency checks without having to change the call sites
+>>>>> of nested_vmx_enter_non_root_mode().  In other words, the rest
+>>>>> of the consistency check code in nested_vmx_run() will be joining
+>>>>> the postreqs checks in future patches.
+>>>>>
+>>>>> Fixes: ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vmx_ru=
+n()")
+>>>>> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+>>>>> Cc: Jim Mattson <jmattson@google.com>
+>>>>> Reviewed-by: Jim Mattson <jmattson@google.com>
+>>>>> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+>>>>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>>>>> ---
+>>>>>  arch/x86/kvm/vmx.c | 10 +++-------
+>>>>>  1 file changed, 3 insertions(+), 7 deletions(-)
+>>>>>
+>>>>> diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+>>>>> index fe7fdd666f091..bdf019f322117 100644
+>>>>> --- a/arch/x86/kvm/vmx.c
+>>>>> +++ b/arch/x86/kvm/vmx.c
+>>>>> @@ -12694,6 +12694,9 @@ static int enter_vmx_non_root_mode(struct kvm=
+_vcpu *vcpu, u32 *exit_qual)
+>>>>>         if (likely(!evaluate_pending_interrupts) && kvm_vcpu_apicv_ac=
+tive(vcpu))
+>>>>>                 evaluate_pending_interrupts |=3D vmx_has_apicv_interr=
+upt(vcpu);
+>>>>>
+>>>>> +       if (from_vmentry && check_vmentry_postreqs(vcpu, vmcs12, exit=
+_qual))
+>>>>> +               return EXIT_REASON_INVALID_STATE;
+>>>>> +
+>>>>>         enter_guest_mode(vcpu);
+>>>>>
+>>>>>         if (!(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CONTROL=
+S))
+>>>>> @@ -12836,13 +12839,6 @@ static int nested_vmx_run(struct kvm_vcpu *v=
+cpu, bool launch)
+>>>>>          */
+>>>>>         skip_emulated_instruction(vcpu);
+>>>>>
+>>>>> -       ret =3D check_vmentry_postreqs(vcpu, vmcs12, &exit_qual);
+>>>>> -       if (ret) {
+>>>>> -               nested_vmx_entry_failure(vcpu, vmcs12,
+>>>>> -                                        EXIT_REASON_INVALID_STATE, e=
+xit_qual);
+>>>>> -               return 1;
+>>>>> -       }
+>>>>> -
+>>>>>         /*
+>>>>>          * We're finally done with prerequisite checking, and can sta=
+rt with
+>>>>>          * the nested entry.
+>>>>> --
+>>>>> 2.20.1
+>>>>>
+>>>>>
+>>>>>
+>>>> Hi all,
+>>>>
+>>>> This commit caused many kvm-unit-tests regression, cherry-pick
+>>>> following commits from 4.20 fix the regression:
+>>>> d63907dc7dd1 ("KVM: nVMX: rename enter_vmx_non_root_mode to
+>>>> nested_vmx_enter_non_root_mode")
+>>>> a633e41e7362 ("KVM: nVMX: assimilate nested_vmx_entry_failure() into
+>>>> nested_vmx_enter_non_root_mode()")
+>>>
+>>> Now queued up, thanks!
+>>>
+>>> greg k-h
+>>>
+>>
+>> Why was it backported anyway?  Can everybody please just stop applying
+>> KVM patches to stable kernels unless CCed to stable@vger.kernel.org?
+>>
+>> I thought I had already asked Sasha to opt out of the autoselect
+>> nonsense after catching another bug that would have been introduced.
+>>
+>> Paolo
+>>
+> Hi Paolo,
 >=20
-> As we partially discussed in the multi-transport proposal [1], it could
-> be nice to support network namespace in vsock to reach the following
-> goals:
-> - isolate host applications from guest applications using the same ports
->   with CID_ANY
-> - assign the same CID of VMs running in different network namespaces
-> - partition VMs between VMMs or at finer granularity
+> Should we simply revert the patch, maybe also
+> 9fe573d539a8 ("KVM: nVMX: reset cache/shadows when switching loaded VMCS"=
+)
 >=20
-> This preliminary implementation provides the following behavior:
-> - packets received from the host (received by G2H transports) are
->   assigned to the default netns (init_net)
-> - packets received from the guest (received by H2G - vhost-vsock) are
->   assigned to the netns of the process that opens /dev/vhost-vsock
->   (usually the VMM, qemu in my tests, opens the /dev/vhost-vsock)
->     - for vmci I need some suggestions, because I don't know how to do
->       and test the same in the vmci driver, for now vmci uses the
->       init_net
-> - loopback packets are exchanged only in the same netns
+> Both of them are from one big patchset:
+> https://patchwork.kernel.org/cover/10616179/
 >=20
-> Questions:
-> 1. Should we make configurable the netns (now it is init_net) where
->    packets from the host should be delivered?
+> Revert both patches recover the regression I see on kvm-unit-tests.
 
-Yes, it should be possible to have multiple G2H (e.g. virtio-vsock)
-devices and to assign them to different net namespaces.  Something like
-net/core/dev.c:dev_change_net_namespace() will eventually be needed.
+Greg already included the patches that the bot missed, so it's okay.
 
-> 2. Should we provide an ioctl in vhost-vsock to configure the netns
->    to use? (instead of using the netns of the process that opens
->    /dev/vhost-vsock)
+Paolo
 
-Creating the vhost-vsock instance in the process' net namespace makes
-sense.  Maybe wait for a use case before adding an ioctl.
-
-> 3. Should we provide a way to disable the netns support in vsock?
-
-The code should follow CONFIG_NET_NS semantics.  I'm not sure what they
-are exactly since struct net is always defined, regardless of whether
-network namespaces are enabled.
-
---XOIedfhf+7KOe/yw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl3mKlkACgkQnKSrs4Gr
-c8h54wf/eNE48AsDKZkZl+68dw3paeS7KLIQEPgUklUhfhqp/IHdX9uG2R88hvCl
-rMCQbGHSMQ+yb7gPxN1+0tVXFX7Rf2Cqed4Lwqfq0VvufS80FUk4GiQZKKgk4LRv
-/8x4or61TnKGbApxbJnQ+zdj1OirmGwrO8jEt4beMPgsfY80yzl6GcKwYwsOYzeg
-w+28vrKtnprab8l8D0DnVIggTtyep72rsGdeOi4KtSmrUoM8GVExUDmwBQtUJ4xo
-5+OJJjQ+EzPuKWxGIahFrZAHDGerrVHWyltH/LTq+BU0VNR+Ta726WWzDKVx7v6d
-YQm7/TdSAT3l9Id0uVC9+DEM455UIw==
-=v5qS
------END PGP SIGNATURE-----
-
---XOIedfhf+7KOe/yw--
