@@ -2,87 +2,99 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C23C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 18:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ACD5C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 18:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 775A12080F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 18:52:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hjdnznll"
+	by mail.kernel.org (Postfix) with ESMTP id 09A2D20833
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 18:55:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575399308;
+	bh=Yy+NCK8f/msWH1RFOzNPSK4SvFfX6T8hNoJVioxkd3c=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=zo+INLyQYx4SjTkjvuwSXt8XFyBUmM/AZnq1bNVfVnXlBSHWD1krhyZPDeUI93Brd
+	 sdWnq1RJ4d3/8xby2LORs+T+RDFY2CLiV2rHRYk40da8t6eaYXqW4NviCBCorCL0Ow
+	 jXWIxBrjuTEj/N42WeUeDsZApdFq15isi2HtE2kQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727320AbfLCSww (ORCPT
+        id S1727338AbfLCSzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 13:52:52 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44208 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfLCSww (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 13:52:52 -0500
-Received: by mail-ot1-f68.google.com with SMTP id x3so3861162oto.11
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 10:52:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YkhAW1JPr4wZMcoCAUkgxrDKX3tQPoTOxDYTCkC3waU=;
-        b=Hjdnznllgz669BoJ6LQ0C+l+dL6PlscmUgAL1xpsNv/OaGjyoqdX7VSxhCQuBQ578j
-         I8wBqlCTN8W3TPwmh0VjoFP16rkUV57cnrlQ6rmTM3FC8LnYDp2RFyJCeImcGS3luMQN
-         5Pu14bEsp34hPT3kI0X555jj6yLIjO+w1v93OC6r6xrBW6ZD0k5NQJhT9WmTZxjzia0F
-         xClTWg5I6rE0qu76U55V/jhhlQzMFDFm+p/rNQMM3r8N24Nil2ykHLCSojd3IJ5Ir3sz
-         dSEbTT62wRkRO+leUKlpqJzb4pO7s+PblAW2no7YvZUBRXlG7NyK1Q/T7Jb3QsuPGAk4
-         BXQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YkhAW1JPr4wZMcoCAUkgxrDKX3tQPoTOxDYTCkC3waU=;
-        b=qTocXIDBgrkpj3reyKlWsLgEvZgSZ5BUfrk+2PwLofjG/qoorhLLO8yo+o4yzADdMp
-         uY8IQWGVm96V9UfHAhc9zp9xMDjKjCHArqlD6LRzpYEjFGkneAV6Rxca+L//Z2+ND44y
-         whw7CdHhMJ0fVOxA2OJDQ6dQbCpLC6237i7Ixl9lvszHKAgZkidcAqgUGvLPy4J2lML+
-         +/M9k34CRHd9ghPeA3aKBwlRvfJaNrvrdsFK9vy0QbR4ddAkzbzYQ8uRbzHQlNj0+EFk
-         x0BmSEkS8keY8zLczKUXrGCk/8b3LCeVNJA56Eq89qx8KV6PwiNT319JeFbPiJoGtZTH
-         eXvw==
-X-Gm-Message-State: APjAAAWfjkI11rFnShEhjGP7NQrZgY4L/QAPJrNx/FG0cWcKDPAmmCFk
-        2BToGRE5xQpwZ0tusmNRP3k//Y/tcapyfSStQrZ30Q==
-X-Google-Smtp-Source: APXvYqzs7Nq2HrpEsJ4z5tKrIRIy0SlwXh4gQuwIAJKfRwUoQoon8oTcC/R8n/ASFFf8Ve6Wlkan1uzWdKSQKA9MBuI=
-X-Received: by 2002:a9d:3af:: with SMTP id f44mr4158036otf.332.1575399171204;
- Tue, 03 Dec 2019 10:52:51 -0800 (PST)
-MIME-Version: 1.0
-References: <20191203121013.9280-1-will@kernel.org> <CALAqxLWbswQmLYJa_ODUDC0XJ5u=y_Nn074qcVAh1HZiTLNy1Q@mail.gmail.com>
-In-Reply-To: <CALAqxLWbswQmLYJa_ODUDC0XJ5u=y_Nn074qcVAh1HZiTLNy1Q@mail.gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 3 Dec 2019 10:52:40 -0800
-Message-ID: <CALAqxLUupqjxqWVs+Ei0QkOAWmQt7CEq-3LQsq3mzW9dFNDzhg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: mm: Fix initialisation of DMA zones on non-NUMA systems
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
+        Tue, 3 Dec 2019 13:55:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53396 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727158AbfLCSzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 13:55:06 -0500
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EEC72080F;
+        Tue,  3 Dec 2019 18:55:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575399306;
+        bh=Yy+NCK8f/msWH1RFOzNPSK4SvFfX6T8hNoJVioxkd3c=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=zTM8Uy09UCWKLIdm+QBh2uY/Zil1GYAbFu4QAy527mu/hBkjivKgq5wtEGh2IQh/t
+         W54LT0SqvmQxauDw5gmcYPTBRwKq0XdCBGzCD1NNa1xtZmhITV1rDVcBOec51OtIz5
+         Y0HpkRcKD2tZI0BQ+epu3UzLOBvZ7I/PTukPtZ/U=
+Message-ID: <aef16571cebc9979c73533c98b6b682618fd64a8.camel@kernel.org>
+Subject: Re: [PATCH v2 3/6] fs: ceph: Delete timespec64_trunc() usage
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Deepa Dinamani <deepa.kernel@gmail.com>, viro@zeniv.linux.org.uk,
+        linux-kernel@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, arnd@arndb.de,
+        ceph-devel@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>
+Date:   Tue, 03 Dec 2019 13:55:04 -0500
+In-Reply-To: <20191203051945.9440-4-deepa.kernel@gmail.com>
+References: <20191203051945.9440-1-deepa.kernel@gmail.com>
+         <20191203051945.9440-4-deepa.kernel@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 10:47 AM John Stultz <john.stultz@linaro.org> wrote:
->
-> On Tue, Dec 3, 2019 at 4:10 AM Will Deacon <will@kernel.org> wrote:
-> >
-> > John reports that the recently merged commit 1a8e1cef7603 ("arm64: use
-> > both ZONE_DMA and ZONE_DMA32") breaks the boot on his DB845C board:
->
-> I've also tripped on the same issue with the original HiKey board, and
-> can validate that this patch resolves the issue there.
->
-> Tested-by: John Stultz <john.stultz@linaro.org>
+On Mon, 2019-12-02 at 21:19 -0800, Deepa Dinamani wrote:
+> Since ceph always uses ns granularity, skip the
+> truncation which is a no-op.
+> 
+> Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+> Cc: jlayton@kernel.org
+> Cc: ceph-devel@vger.kernel.org
+> ---
+>  fs/ceph/mds_client.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+> index 068b029cf073..88687ed65cff 100644
+> --- a/fs/ceph/mds_client.c
+> +++ b/fs/ceph/mds_client.c
+> @@ -2069,7 +2069,6 @@ struct ceph_mds_request *
+>  ceph_mdsc_create_request(struct ceph_mds_client *mdsc, int op, int mode)
+>  {
+>  	struct ceph_mds_request *req = kzalloc(sizeof(*req), GFP_NOFS);
+> -	struct timespec64 ts;
+>  
+>  	if (!req)
+>  		return ERR_PTR(-ENOMEM);
+> @@ -2088,8 +2087,7 @@ ceph_mdsc_create_request(struct ceph_mds_client *mdsc, int op, int mode)
+>  	init_completion(&req->r_safe_completion);
+>  	INIT_LIST_HEAD(&req->r_unsafe_item);
+>  
+> -	ktime_get_coarse_real_ts64(&ts);
+> -	req->r_stamp = timespec64_trunc(ts, mdsc->fsc->sb->s_time_gran);
+> +	ktime_get_coarse_real_ts64(&req->r_stamp);
+>  
+>  	req->r_op = op;
+>  	req->r_direct_mode = mode;
 
-Also validated on db845c.
-Thanks so much for the quick fix!
--john
+Thanks Deepa. We'll plan to take this one in via the ceph tree.
+
+Cheers,
+-- 
+Jeff Layton <jlayton@kernel.org>
+
