@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9B4C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F149C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 999882084B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:13:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 282062064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414818;
-	bh=gt8vi2Iq2pfdPxheGywAQsdVHys7Hjf/ZxU4Cw6ccc8=;
+	s=default; t=1575414824;
+	bh=rbxxTSCTtzeyzH8V7lyMIsbwabxAb/eHcLvFhgCc4qA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pTd32wQKKLI0Mu1qlu3AbuFOttyXrE11YJlJIfTb51jWi/4v4ekQQ60pXGMjb32KG
-	 enr+ig/Azt3vIENGK5WD9aoDGQAcC2ahYLv8DpgrU/P2ZBB9RPIJ/wcdPqWBCt5hPE
-	 ES8ZHiPPxh2L5e3IT3u+wnJ1qU6EEcuwSzspPAwM=
+	b=BO6lAsR30nqhGPjhXHHyyFEcHuDFxve94XCf11e5QPBmT4Id0uQR78GdfafPFbrdy
+	 /KA3lg0cf9+67fDtUUjPEK4Jo5hgTb0Lfbi2jAxbDx2JI5Hc3GgcBZIdz9grY73/+q
+	 dwRLWuzTnIWsUG5beDbVxXgk8RT4OCDB8+e8IluY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbfLCWh4 (ORCPT
+        id S1727805AbfLCWht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:37:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46400 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:37:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727827AbfLCWhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:37:52 -0500
+        id S1727782AbfLCWhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:37:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBB172084B;
-        Tue,  3 Dec 2019 22:37:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AE432158C;
+        Tue,  3 Dec 2019 22:37:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412672;
-        bh=gt8vi2Iq2pfdPxheGywAQsdVHys7Hjf/ZxU4Cw6ccc8=;
+        s=default; t=1575412664;
+        bh=rbxxTSCTtzeyzH8V7lyMIsbwabxAb/eHcLvFhgCc4qA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L3PwyLGbCoAqn0gFn4c3ITtK1iVIbFPzM6psi1/swe+By1JmyG6st0b2uSSpuZeIx
-         FiZpQwSjWCYN6WY2zBEFjdsSF+7/dnzm5lgd7g6VJZZtHoB4a7khs75B67kwxnKWc+
-         80/lELrgTGCsX1aKbuzamD5McdVoHRioJRtT0QBU=
+        b=kCrD1/Utpr7BG8+WVAo+gReJTnoz30uBVbwE8ILcA2gLXao/M/1XqN0fhLE2w7+05
+         tVU4nG1/kKVWu6LV8TuRmco1odSGhlYTjCW7uBlMcGy+6raAY8B42vfA6pNKciBp3Y
+         VbL4CTEPNdmjH8YFM4aUaCK9WFzrcTtjrCPWKZe8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 20/46] net: macb: add missed tasklet_kill
-Date:   Tue,  3 Dec 2019 23:35:40 +0100
-Message-Id: <20191203212735.754638328@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 5.4 09/46] staging: rtl8723bs: Drop ACPI device ids
+Date:   Tue,  3 Dec 2019 23:35:29 +0100
+Message-Id: <20191203212723.466453730@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203212705.175425505@linuxfoundation.org>
 References: <20191203212705.175425505@linuxfoundation.org>
@@ -59,30 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 61183b056b49e2937ff92a1424291ba36a6f6d05 ]
+commit 2d9d2491530a156b9a5614adf9dc79285e35d55e upstream.
 
-This driver forgets to kill tasklet in remove.
-Add the call to fix it.
+The driver only binds by SDIO device-ids, all the ACPI device-id does
+is causing the driver to load unnecessarily on devices where the DSDT
+contains a bogus OBDA8723 device.
 
-Fixes: 032dc41ba6e2 ("net: macb: Handle HRESP error")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191111113846.24940-2-hdegoede@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/cadence/macb_main.c |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -4392,6 +4392,7 @@ static int macb_remove(struct platform_d
- 		mdiobus_free(bp->mii_bus);
+---
+ drivers/staging/rtl8723bs/os_dep/sdio_intf.c |    6 ------
+ 1 file changed, 6 deletions(-)
+
+--- a/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
++++ b/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
+@@ -23,13 +23,7 @@ static const struct sdio_device_id sdio_
+ 	{ SDIO_DEVICE(0x024c, 0xb723), },
+ 	{ /* end: all zeroes */				},
+ };
+-static const struct acpi_device_id acpi_ids[] = {
+-	{"OBDA8723", 0x0000},
+-	{}
+-};
+-
+ MODULE_DEVICE_TABLE(sdio, sdio_ids);
+-MODULE_DEVICE_TABLE(acpi, acpi_ids);
  
- 		unregister_netdev(dev);
-+		tasklet_kill(&bp->hresp_err_tasklet);
- 		pm_runtime_disable(&pdev->dev);
- 		pm_runtime_dont_use_autosuspend(&pdev->dev);
- 		if (!pm_runtime_suspended(&pdev->dev)) {
+ static int rtw_drv_init(struct sdio_func *func, const struct sdio_device_id *id);
+ static void rtw_dev_remove(struct sdio_func *func);
 
 
