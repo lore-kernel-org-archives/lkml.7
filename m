@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E86FC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A55C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 626E8214AF
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72C652053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413907;
-	bh=oU25JYGVk3YLHzHCGmBf/zGRZoUGL5FBoo8Zo7Ay7JQ=;
+	s=default; t=1575413911;
+	bh=lBGsPdVqWRIlpSzE9JQT9JoBoAkeI+DuX9UVhFt3syA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=USLEU3udHbZv2yhvTj+kPbBzr0okbATW80+Hf2MXrHbhj8uOQ7exPgXS7v8ylVPxY
-	 eE6NGCZ0oPAZ2o+i2hzr9yaiDJ1Nkma4d/3ECg0A5U7wA9hT1dK5OfnUA3sMxspjgW
-	 JvZbTb2CyQLgYsFDJ8BAoQ3yDztFyf2qY8KorC+c=
+	b=y/aeGtjTf/JJHFtoD7adxODAUOTBzhYFzZWdPOGWozJZM+tmOZ+OG7EbrcGtuAWqe
+	 EbZf8f7r319NwCBf+VdsnlrKkd2R6iaOgObsTWSDRpp1GK35T5oAuIRBNZPwBg3GEb
+	 gg0UIKEyDoi0DGZ0MQBwjVucrB/1uHyy4KRZ51WM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730648AbfLCW60 (ORCPT
+        id S1730089AbfLCW6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:58:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54696 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:58:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728692AbfLCW6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:58:20 -0500
+        id S1730121AbfLCW6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:58:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5E0C2053B;
-        Tue,  3 Dec 2019 22:58:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 904F820863;
+        Tue,  3 Dec 2019 22:58:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413899;
-        bh=oU25JYGVk3YLHzHCGmBf/zGRZoUGL5FBoo8Zo7Ay7JQ=;
+        s=default; t=1575413905;
+        bh=lBGsPdVqWRIlpSzE9JQT9JoBoAkeI+DuX9UVhFt3syA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ft/dv0LK553xVLdsZKJubYbR29RYsNBZsWEdL5Kvi1ka3AEM0JVPzxav9ViakQ91u
-         olnaTBVD5oFe4WnmykZKBI6uDMI/u1vqrLKOPRS9GttABe0bF5ELhSngnmZRD3N9DK
-         0U+M1l65LBBdJ+J6ULx8cVMIFghUV9fGul3KRi1w=
+        b=bK/l6evGiv5mfJT/elkVJvKpUJcKTcPjvabb4sR2lErXC/Yo31aAcr7bn59GwE19v
+         CGZCCPk5PqROHHz9aICKeX1WTRKm7BH3zqjcFXx9NCqiZ1Ie+d2OaJCpjEcHDP1Ct3
+         ItcSQX9lp6P6tDeU8exgzDhdMpgNHcB/CFwlgL9E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hugues Fruchet <hugues.fruchet@st.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Lionel Debieve <lionel.debieve@st.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH 4.19 306/321] media: stm32-dcmi: fix DMA corruption when stopping streaming
-Date:   Tue,  3 Dec 2019 23:36:12 +0100
-Message-Id: <20191203223443.065564186@linuxfoundation.org>
+Subject: [PATCH 4.19 308/321] hwrng: stm32 - fix unbalanced pm_runtime_enable
+Date:   Tue,  3 Dec 2019 23:36:14 +0100
+Message-Id: <20191203223443.169670189@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,88 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hugues Fruchet <hugues.fruchet@st.com>
+From: Lionel Debieve <lionel.debieve@st.com>
 
-commit b3ce6f6ff3c260ee53b0f2236e5fd950d46957da upstream.
+commit af0d4442dd6813de6e77309063beb064fa8e89ae upstream.
 
-Avoid call of dmaengine_terminate_all() between
-dmaengine_prep_slave_single() and dmaengine_submit() by locking
-the whole DMA submission sequence.
+No remove function implemented yet in the driver.
+Without remove function, the pm_runtime implementation
+complains when removing and probing again the driver.
 
-Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Lionel Debieve <lionel.debieve@st.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/platform/stm32/stm32-dcmi.c |   17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/char/hw_random/stm32-rng.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/media/platform/stm32/stm32-dcmi.c
-+++ b/drivers/media/platform/stm32/stm32-dcmi.c
-@@ -164,6 +164,9 @@ struct stm32_dcmi {
- 	int				errors_count;
- 	int				overrun_count;
- 	int				buffers_count;
+--- a/drivers/char/hw_random/stm32-rng.c
++++ b/drivers/char/hw_random/stm32-rng.c
+@@ -169,6 +169,13 @@ static int stm32_rng_probe(struct platfo
+ 	return devm_hwrng_register(dev, &priv->rng);
+ }
+ 
++static int stm32_rng_remove(struct platform_device *ofdev)
++{
++	pm_runtime_disable(&ofdev->dev);
 +
-+	/* Ensure DMA operations atomicity */
-+	struct mutex			dma_lock;
++	return 0;
++}
++
+ #ifdef CONFIG_PM
+ static int stm32_rng_runtime_suspend(struct device *dev)
+ {
+@@ -210,6 +217,7 @@ static struct platform_driver stm32_rng_
+ 		.of_match_table = stm32_rng_match,
+ 	},
+ 	.probe = stm32_rng_probe,
++	.remove = stm32_rng_remove,
  };
  
- static inline struct stm32_dcmi *notifier_to_dcmi(struct v4l2_async_notifier *n)
-@@ -314,6 +317,13 @@ static int dcmi_start_dma(struct stm32_d
- 		return ret;
- 	}
- 
-+	/*
-+	 * Avoid call of dmaengine_terminate_all() between
-+	 * dmaengine_prep_slave_single() and dmaengine_submit()
-+	 * by locking the whole DMA submission sequence
-+	 */
-+	mutex_lock(&dcmi->dma_lock);
-+
- 	/* Prepare a DMA transaction */
- 	desc = dmaengine_prep_slave_single(dcmi->dma_chan, buf->paddr,
- 					   buf->size,
-@@ -322,6 +332,7 @@ static int dcmi_start_dma(struct stm32_d
- 	if (!desc) {
- 		dev_err(dcmi->dev, "%s: DMA dmaengine_prep_slave_single failed for buffer phy=%pad size=%zu\n",
- 			__func__, &buf->paddr, buf->size);
-+		mutex_unlock(&dcmi->dma_lock);
- 		return -EINVAL;
- 	}
- 
-@@ -333,9 +344,12 @@ static int dcmi_start_dma(struct stm32_d
- 	dcmi->dma_cookie = dmaengine_submit(desc);
- 	if (dma_submit_error(dcmi->dma_cookie)) {
- 		dev_err(dcmi->dev, "%s: DMA submission failed\n", __func__);
-+		mutex_unlock(&dcmi->dma_lock);
- 		return -ENXIO;
- 	}
- 
-+	mutex_unlock(&dcmi->dma_lock);
-+
- 	dma_async_issue_pending(dcmi->dma_chan);
- 
- 	return 0;
-@@ -717,7 +731,9 @@ static void dcmi_stop_streaming(struct v
- 	spin_unlock_irq(&dcmi->irqlock);
- 
- 	/* Stop all pending DMA operations */
-+	mutex_lock(&dcmi->dma_lock);
- 	dmaengine_terminate_all(dcmi->dma_chan);
-+	mutex_unlock(&dcmi->dma_lock);
- 
- 	pm_runtime_put(dcmi->dev);
- 
-@@ -1719,6 +1735,7 @@ static int dcmi_probe(struct platform_de
- 
- 	spin_lock_init(&dcmi->irqlock);
- 	mutex_init(&dcmi->lock);
-+	mutex_init(&dcmi->dma_lock);
- 	init_completion(&dcmi->complete);
- 	INIT_LIST_HEAD(&dcmi->buffers);
- 
+ module_platform_driver(stm32_rng_driver);
 
 
