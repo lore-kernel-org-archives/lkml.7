@@ -2,204 +2,104 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FC9C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E45CC43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9DA2206F0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:50:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D503620705
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:55:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Jct2II0J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZyfN7qf/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbfLCAuD (ORCPT
+        id S1726060AbfLCAzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 19:50:03 -0500
-Received: from mail-eopbgr770135.outbound.protection.outlook.com ([40.107.77.135]:43926
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725853AbfLCAuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 19:50:03 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OG/Ld6C1MF2PZBIla7/375neOUziCUhykUEUMTZo+8L+d2j4nJ+LG22V5Hf0XCd72VELCryPUJxKYrwQQbVRgQmTCK4mX3cvnzEFGigAHYGJSHhBY8jAOinDz/IUbJapRKLgqGlURGexcPcTjn63ZGe4jDvLIs75fG/ivsnjQ4/XTGWEu65G1Umf5/lF3NAowK0UY8ONFTuCAkdmPXnlRT9/JyCQDEIpZdyt056zGH8tVBjySGhkgCuKJL2oiGV7K96BOgx6fpuePSL8NMmH6Jd8lElrzv7UuqN4gIhlwRnnGY4983NccUAjHcEN4dtf+UgIOrCqfF+xlpg3sonfcg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zF4fds46BzQhJPCg9S6bYc8NOr2F5rdwGH5DrTHcmIc=;
- b=UjrlzwERMHJ252ro/ui90DNhpfr+svMhk/PbnS6DiXT1cVwaJokzf2uMZKcd3PfASYl/LMnLD0qdKC+KQwIll+Wbayd+bHKekVi6FlBAq0lCyr0CO67B204zLDPY5nCK4EQLwjtvazlpb0AVk5rjp65NfBdd57r2pGH+RxvCbYy8VjoMrtP9BTCskFl5X6A0LaVmdTkRx73pG7GSflJqPEqXAZ7gsfTC1Te6S4H3im9cSlBeD3YOeem4YeX5PJWSRpgpIgL7+1fD8JlbRXVVdkHcTt646BA0+tI2svIJMOV0hBvLlJTCbas5JGFP1EXT6f/6jYE8lRKvu8BI6sBk3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zF4fds46BzQhJPCg9S6bYc8NOr2F5rdwGH5DrTHcmIc=;
- b=Jct2II0J7w9zOxDIAGDOY3uppgInJpb8apHkrvtUK+TouICPbOK57iGb7ENJk3FAmMJX66BKFqJIYwyGh+WV7LpFylvGRc22tAlzqakZqtCcP+VX+EV80eYrRUFH/MSoAhMXuqppmZdhue1vmQQOFhnzywWmEB5ogbR04GpW8OI=
-Received: from MW2PR2101MB1132.namprd21.prod.outlook.com (52.132.146.17) by
- MW2PR2101MB0938.namprd21.prod.outlook.com (52.132.146.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.2; Tue, 3 Dec 2019 00:49:57 +0000
-Received: from MW2PR2101MB1132.namprd21.prod.outlook.com
- ([fe80::5499:4a0f:6079:dcb3]) by MW2PR2101MB1132.namprd21.prod.outlook.com
- ([fe80::5499:4a0f:6079:dcb3%3]) with mapi id 15.20.2538.000; Tue, 3 Dec 2019
- 00:49:57 +0000
-From:   Long Li <longli@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXTERNAL] [PATCH 2/2] PCI: hv: Add support for protocol 1.3 and
- support PCI_BUS_RELATIONS2
-Thread-Topic: [EXTERNAL] [PATCH 2/2] PCI: hv: Add support for protocol 1.3 and
- support PCI_BUS_RELATIONS2
-Thread-Index: AQHVoaFcMccAfvEwC0apfMtqY7fC/6enlbaAgAALSyA=
-Date:   Tue, 3 Dec 2019 00:49:57 +0000
-Message-ID: <MW2PR2101MB1132621C7DA3BF2EE1AD1E84CE420@MW2PR2101MB1132.namprd21.prod.outlook.com>
-References: <1574474229-44840-1-git-send-email-longli@linuxonhyperv.com>
- <1574474229-44840-2-git-send-email-longli@linuxonhyperv.com>
- <PU1P153MB0169CFE46920BAEEE11CA9B7BF430@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-In-Reply-To: <PU1P153MB0169CFE46920BAEEE11CA9B7BF430@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-12-02T23:59:07.6209316Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f258566e-1d09-4e97-950d-9e44dee110b0;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=longli@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:1:eded:db5c:c6fe:798]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 76eca5b9-0093-4507-34e7-08d7778ab819
-x-ms-traffictypediagnostic: MW2PR2101MB0938:|MW2PR2101MB0938:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW2PR2101MB0938E232C8A097DD30A0E747CE420@MW2PR2101MB0938.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 02408926C4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(136003)(39860400002)(346002)(376002)(189003)(199004)(99286004)(14454004)(10290500003)(7696005)(6506007)(186003)(478600001)(74316002)(86362001)(2906002)(64756008)(81156014)(229853002)(76116006)(316002)(33656002)(256004)(2201001)(52536014)(66446008)(10090500001)(5660300002)(46003)(305945005)(76176011)(81166006)(9686003)(6116002)(25786009)(22452003)(6246003)(8990500004)(66476007)(102836004)(1511001)(66556008)(55016002)(7736002)(8936002)(71190400001)(71200400001)(110136005)(11346002)(446003)(2501003)(66946007)(6436002)(8676002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB0938;H:MW2PR2101MB1132.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jO+cK53koXammEVEKW/cHLkGAaibohJCcdznlhKOKq0lTSrq9j1goYbb6wNz2tVR9pdyWytdIJWAoG0G73gC6fvda9RzkSMTbfXXUgSQqdLjmKQ3c2qpo4LxuNrOxofXlRJwTt/UCCAZPcPyyRPvh8lf9c9qOX10k2j2f7uKDqJxAOwnjGqddSdxQvbNu7S7Z//d7ZL9UNmG65Nl2xyVEpgqVt0sErisl4bcEwBk8rLGaQH2sPHQ+pgoXcGUGjqPTUTB1KSTlEJHwCIiqdYL3jcSiIspRpIgPBIEUL2GbDa/th6RUA8V+gV2xfg/WQ9L+pBnWznZmIEYNLpi6A8Pi3rPzBobmFarVVdvT3POEz3Lm0Q2rfCnj/wDDkZD1y61dPuNc0Jw2E/Qrnt37XdwT9QEseSWcRVrotRcLenaF3uS97gCYvgPfn00cYEn7Ift
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 2 Dec 2019 19:55:05 -0500
+Received: from mail-qt1-f172.google.com ([209.85.160.172]:41516 "EHLO
+        mail-qt1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbfLCAzF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 19:55:05 -0500
+Received: by mail-qt1-f172.google.com with SMTP id v2so1919538qtv.8
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 16:55:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1mRpxlmsoKNTfeehFvIb6MBE5e9wkuGe6hyqrX+ecrI=;
+        b=ZyfN7qf/sihxxevvTNan+cC10AdbI0ju7pbqc9B8T7cBUaxAdjMBHj//JhwZe2c3A7
+         LeF5d3KwBkjvDPdmBVanhzJ47bAuxC24yRbkXRCd7IAcAwkgz9CgLWBS6npgK07beeqX
+         vhGNNiJ/zQgaDnTvDf3ZEVlmvyp7q+0X3dw4VtTpxPmlJeYeApBRNa5mHWsNu9eQGkVs
+         4wAtBa3vz5jqe7jZqqt6dwOKoQ/7SEnBZjZSOlzX+veNV1rYLiH0wCdh8nP8IzFi0mwe
+         yg96gPBU30VWkppn7kQ+W8PlVsSL/2YcIJxJvhKMAMixzwBTRwTIxNyCoxeFKw9Wtmha
+         S7lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1mRpxlmsoKNTfeehFvIb6MBE5e9wkuGe6hyqrX+ecrI=;
+        b=L6v7WSqP8bCW06Y6EygL3AO9cmC9AT/sdmnR21o53xXAwOCQSmPEjHUfEo4OQlodFT
+         VRy6cSZzjcL37XBmSpWuF7O2ZvMU8YCwC3Jj1XkjWmJrJMXE4uxAroOpmZr/nsMZM36w
+         X59fWYfhNnrY4yVdyKigeWTXRowLjyJ/wg0BXUtutfszN0bWCxRyNJXqOiTLvFtvahMc
+         xgBXF++4Id4Pd8BIWrBBNLAIENHY2M/jGAGjJXkhLNwhfS+vIBKS1IPZzr3YxLqxTBz8
+         BRs3uVkeUaeIYvyhCGilKjdDvbCmydru26zqjb2S3PyBR9XHusaStwg7CFgz78zdIpqK
+         S/Kw==
+X-Gm-Message-State: APjAAAWtJYkt7gFuze/Vdn39tk8LHHabJzH3fc1DfBiqtHQW9yysT8UA
+        IEhTBB+Ro5ybHsn2D+U9V9Q=
+X-Google-Smtp-Source: APXvYqxCx0qexFateEqmFNEC92dFPhvfHbT7Zi7vrTQXoGZ7r/aWj9MhGDun1uAuD29t8osmekc9ZQ==
+X-Received: by 2002:ac8:6f73:: with SMTP id u19mr2633079qtv.326.1575334504455;
+        Mon, 02 Dec 2019 16:55:04 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id x1sm712903qtf.81.2019.12.02.16.55.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 16:55:03 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 7A541405B6; Mon,  2 Dec 2019 21:55:00 -0300 (-03)
+Date:   Mon, 2 Dec 2019 21:55:00 -0300
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: perf probe -d failing to delete probes
+Message-ID: <20191203005500.GA3247@kernel.org>
+References: <20191129151324.GA26963@kernel.org>
+ <20191202185958.GH4063@kernel.org>
+ <20191202190452.GI4063@kernel.org>
+ <20191203071854.37e20e0455626f5c388b3cf3@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 76eca5b9-0093-4507-34e7-08d7778ab819
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Dec 2019 00:49:57.2187
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jDJVvKA9e13bm59bJwOrR1CDJu9kTYANrKrxtGbgPJneeIDXKv779HJFr/+BzMkqAU8AiFylna7nKSKkNt32jA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0938
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191203071854.37e20e0455626f5c388b3cf3@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->Subject: RE: [EXTERNAL] [PATCH 2/2] PCI: hv: Add support for protocol 1.3 =
-and
->support PCI_BUS_RELATIONS2
->
->> From: linux-hyperv-owner@vger.kernel.org
->> Sent: Friday, November 22, 2019 5:57 PM  ...
->> @@ -63,6 +63,7 @@
->>  enum pci_protocol_version_t {
->>  	PCI_PROTOCOL_VERSION_1_1 =3D PCI_MAKE_VERSION(1, 1),	/*
->Win10
->> */
->>  	PCI_PROTOCOL_VERSION_1_2 =3D PCI_MAKE_VERSION(1, 2),	/* RS1
->*/
->> +	PCI_PROTOCOL_VERSION_1_3 =3D PCI_MAKE_VERSION(1, 3),	/* VB
->*/
->>  };
->
->What is "VB" ? Can we use a more meaningful name here? :-)
+Em Tue, Dec 03, 2019 at 07:18:54AM +0900, Masami Hiramatsu escreveu:
+> Hi Arnaldo,
+> 
+> On Mon, 2 Dec 2019 16:04:52 -0300
+> Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> 
+> > Em Mon, Dec 02, 2019 at 03:59:58PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > > Em Fri, Nov 29, 2019 at 12:13:24PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > A workaround, now to find out why 'perf probe -d '*:*' and the other
+ 
+> Thank you for pointing it out. You can use '*' instead of '*:*' to list them all.
 
-Vibranium.
+It didn't work with either '*' or '*:*' or any other variant.
 
->
->> +struct pci_function_description2 {
->> +	u16	v_id;	/* vendor ID */
->> +	u16	d_id;	/* device ID */
->> +	u8	rev;
->> +	u8	prog_intf;
->> +	u8	subclass;
->> +	u8	base_class;
->> +	u32	subsystem_id;
->> +	union win_slot_encoding win_slot;
->
->space -> TAB?
->
->> +/*
->> + * Set NUMA node for the devices on the bus  */ static void
->> +pci_assign_numa_node(struct hv_pcibus_device *hbus)
->
->IMO we'd better add a "hv_" prefix to this function's name, otherwise it l=
-ooks
->more like a generic PCI subsystem API.
+> Anyway, there seems an inssue when I introduced multiprobe support.
+> I'll fix it soon.
 
-I will send v2 to address comments above.
+Thanks!
 
->
->> +{
->> +	struct pci_dev *dev;
->> +	struct pci_bus *bus =3D hbus->pci_bus;
->> +	struct hv_pci_dev *hv_dev;
->> +
->> +	list_for_each_entry(dev, &bus->devices, bus_list) {
->> +		hv_dev =3D get_pcichild_wslot(hbus, devfn_to_wslot(dev-
->>devfn));
->> +		if (!hv_dev)
->> +			continue;
->> +
->> +		if (hv_dev->desc.flags &
->HV_PCI_DEVICE_FLAG_NUMA_AFFINITY)
->> +			set_dev_node(&dev->dev, hv_dev-
->>desc.virtual_numa_node);
->> +	}
->> +}
->
->Can you please give a brief background introduction to dev->numa_node, e.g=
-.
->how is it used here? -- is it used when a PCI device driver (e.g. the mlx
->driver) asks the kernel to allocate memory for DMA, or allocate MSI interr=
-upts?
->How big is the performance gain in the tests? I'm curious as it looks uncl=
-ear to
->me how dev->numa_node is used by the PCI subsystem.
-
-numa_node can be used by a device driver (if it's numa aware) to setup its =
-internal data structures and allocate its MSI.
-
-As an example, you can look at "drivers/net/ethernet/mellanox/mlx4/main.c: =
-mlx4_load_one()":
-It stores the value at : dev->numa_node =3D dev_to_node(&pdev->dev);
-after that, dev->numa_node  is used through driver.
-
-numa_node is also exported though /sys to user-mode, so a NUMA aware applic=
-ation (e.g. MPI) can figure out how to pin itself to selected CPUs for the =
-best latency.
-
->
->Thanks,
->-- Dexuan
+- Arnaldo
