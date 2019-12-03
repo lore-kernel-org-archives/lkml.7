@@ -2,114 +2,154 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D48C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A33C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 845C720659
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2287F206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:49:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="onio2nto"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbfLCKsL (ORCPT
+        id S1726418AbfLCKtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 05:48:11 -0500
-Received: from mga03.intel.com ([134.134.136.65]:10649 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbfLCKsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 05:48:11 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Dec 2019 02:48:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,272,1571727600"; 
-   d="scan'208";a="293758935"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 03 Dec 2019 02:48:10 -0800
-Received: from [10.125.253.16] (abudanko-mobl.ccr.corp.intel.com [10.125.253.16])
-        by linux.intel.com (Postfix) with ESMTP id 3A5195802BC;
-        Tue,  3 Dec 2019 02:48:08 -0800 (PST)
-Subject: Re: [PATCH v4 3/3] perf record: adapt affinity to machines with #CPUs
- > 1K
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <f1e6e809-9e41-e410-57eb-1740512285a1@linux.intel.com>
- <2095b034-bf53-c374-0e34-adc006b00fbb@linux.intel.com>
- <20191203101252.GD17468@krava>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <cc0dd7dc-400f-7097-b371-e895c016aaae@linux.intel.com>
-Date:   Tue, 3 Dec 2019 13:48:05 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 3 Dec 2019 05:49:11 -0500
+Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:43986 "EHLO
+        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbfLCKtL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 05:49:11 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id 27DD63FE39;
+        Tue,  3 Dec 2019 11:49:09 +0100 (CET)
+Authentication-Results: pio-pvt-msa3.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=onio2nto;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id gTqlOwftKrLs; Tue,  3 Dec 2019 11:49:07 +0100 (CET)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id 0D0CC3FE37;
+        Tue,  3 Dec 2019 11:49:05 +0100 (CET)
+Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 47F3636034F;
+        Tue,  3 Dec 2019 11:49:05 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1575370145; bh=AFXw/uH1wuScMRXIYhAKW/HRfzazdRemAk3cLSieV/k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=onio2ntofvbf7V1zW/Jze0Ov8sW+GTZKwHTYJEzYwp+Iz7MHP2bKQUXAdOLkzvzF9
+         Xz6/9tX6vRLtU/7RX8xO3fvCbRAsPX3Q54iQ9QDd/thxymet8Tc+Lh93aR7FIx+uRv
+         Ghs2xzrJSrENP6/rgfs12l7OZClgeGuPheDOpKMA=
+From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
+        <thomas_os@shipmail.org>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Cc:     pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+Subject: [PATCH v2 1/2] mm: Add and export vmf_insert_mixed_prot()
+Date:   Tue,  3 Dec 2019 11:48:52 +0100
+Message-Id: <20191203104853.4378-2-thomas_os@shipmail.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191203104853.4378-1-thomas_os@shipmail.org>
+References: <20191203104853.4378-1-thomas_os@shipmail.org>
 MIME-Version: 1.0
-In-Reply-To: <20191203101252.GD17468@krava>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Thomas Hellstrom <thellstrom@vmware.com>
 
+The TTM module today uses a hack to be able to set a different page
+protection than struct vm_area_struct::vm_page_prot. To be able to do
+this properly, add and export vmf_insert_mixed_prot().
 
-On 03.12.2019 13:12, Jiri Olsa wrote:
-> On Mon, Dec 02, 2019 at 09:58:48AM +0300, Alexey Budankov wrote:
-> 
-> SNIP
-> 
->>  
->> -static void build_node_mask(int node, cpu_set_t *mask)
->> +static void build_node_mask(int node, struct mmap_cpu_mask *mask)
->>  {
->>  	int c, cpu, nr_cpus;
->>  	const struct perf_cpu_map *cpu_map = NULL;
->> @@ -240,17 +242,23 @@ static void build_node_mask(int node, cpu_set_t *mask)
->>  	for (c = 0; c < nr_cpus; c++) {
->>  		cpu = cpu_map->map[c]; /* map c index to online cpu index */
->>  		if (cpu__get_node(cpu) == node)
->> -			CPU_SET(cpu, mask);
->> +			set_bit(cpu, mask->bits);
->>  	}
->>  }
->>  
->> -static void perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_params *mp)
->> +static int perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_params *mp)
->>  {
->> -	CPU_ZERO(&map->affinity_mask);
->> +	map->affinity_mask.nbits = cpu__max_cpu();
->> +	map->affinity_mask.bits = bitmap_alloc(map->affinity_mask.nbits);
->> +	if (!map->affinity_mask.bits)
->> +		return -1;
-> 
-> hum, this one should be also behind (rec->opts.affinity != PERF_AFFINITY_SYS)
-> condition, right? sry I haven't noticed that before..
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Ralph Campbell <rcampbell@nvidia.com>
+Cc: "Jérôme Glisse" <jglisse@redhat.com>
+Cc: "Christian König" <christian.koenig@amd.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Acked-by: Christian König <christian.koenig@amd.com>
+---
+ include/linux/mm.h |  2 ++
+ mm/memory.c        | 15 +++++++++++----
+ 2 files changed, 13 insertions(+), 4 deletions(-)
 
-That has not been so far, but, probably like this:
-
-diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index 7f573f646431..832d2cb94b2c 100644
---- a/tools/perf/util/mmap.c
-+++ b/tools/perf/util/mmap.c
-@@ -269,7 +269,8 @@ int mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu)
-                return -1;
-        }
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index cc292273e6ba..29575d3c1e47 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2548,6 +2548,8 @@ vm_fault_t vmf_insert_pfn_prot(struct vm_area_struct *vma, unsigned long addr,
+ 			unsigned long pfn, pgprot_t pgprot);
+ vm_fault_t vmf_insert_mixed(struct vm_area_struct *vma, unsigned long addr,
+ 			pfn_t pfn);
++vm_fault_t vmf_insert_mixed_prot(struct vm_area_struct *vma, unsigned long addr,
++			pfn_t pfn, pgprot_t pgprot);
+ vm_fault_t vmf_insert_mixed_mkwrite(struct vm_area_struct *vma,
+ 		unsigned long addr, pfn_t pfn);
+ int vm_iomap_memory(struct vm_area_struct *vma, phys_addr_t start, unsigned long len);
+diff --git a/mm/memory.c b/mm/memory.c
+index b1ca51a079f2..4c26c27afb0a 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -1719,9 +1719,9 @@ static bool vm_mixed_ok(struct vm_area_struct *vma, pfn_t pfn)
+ }
  
--       if (perf_mmap__setup_affinity_mask(map, mp)) {
-+       if (mp->affinity != PERF_AFFINITY_SYS &&
-+               perf_mmap__setup_affinity_mask(map, mp)) {
-                pr_debug2("failed to alloc mmap affinity mask, error %d\n",
-                          errno);
-                return -1;
+ static vm_fault_t __vm_insert_mixed(struct vm_area_struct *vma,
+-		unsigned long addr, pfn_t pfn, bool mkwrite)
++		unsigned long addr, pfn_t pfn, pgprot_t pgprot,
++		bool mkwrite)
+ {
+-	pgprot_t pgprot = vma->vm_page_prot;
+ 	int err;
+ 
+ 	BUG_ON(!vm_mixed_ok(vma, pfn));
+@@ -1764,10 +1764,17 @@ static vm_fault_t __vm_insert_mixed(struct vm_area_struct *vma,
+ 	return VM_FAULT_NOPAGE;
+ }
+ 
++vm_fault_t vmf_insert_mixed_prot(struct vm_area_struct *vma, unsigned long addr,
++				 pfn_t pfn, pgprot_t pgprot)
++{
++	return __vm_insert_mixed(vma, addr, pfn, pgprot, false);
++}
++EXPORT_SYMBOL(vmf_insert_mixed_prot);
++
+ vm_fault_t vmf_insert_mixed(struct vm_area_struct *vma, unsigned long addr,
+ 		pfn_t pfn)
+ {
+-	return __vm_insert_mixed(vma, addr, pfn, false);
++	return __vm_insert_mixed(vma, addr, pfn, vma->vm_page_prot, false);
+ }
+ EXPORT_SYMBOL(vmf_insert_mixed);
+ 
+@@ -1779,7 +1786,7 @@ EXPORT_SYMBOL(vmf_insert_mixed);
+ vm_fault_t vmf_insert_mixed_mkwrite(struct vm_area_struct *vma,
+ 		unsigned long addr, pfn_t pfn)
+ {
+-	return __vm_insert_mixed(vma, addr, pfn, true);
++	return __vm_insert_mixed(vma, addr, pfn, vma->vm_page_prot, true);
+ }
+ EXPORT_SYMBOL(vmf_insert_mixed_mkwrite);
+ 
+-- 
+2.21.0
 
-Thanks,
-Alexey
