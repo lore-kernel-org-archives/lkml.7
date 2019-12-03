@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 418E0C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F284C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B94E20848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32A5120803
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413018;
-	bh=rbxxTSCTtzeyzH8V7lyMIsbwabxAb/eHcLvFhgCc4qA=;
+	s=default; t=1575413023;
+	bh=Bl5HF763uz37dvHlnO+fYfAMU1dfaMnL3BK6UUDKfgE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yv5mZpH5aY9kfaLZrsSche/g0ZVGzYKcKJpBs4ZIKM0Rz+vdF8sGoNppxSFeiOJwc
-	 NnzP6pkv+v9PXo6SpCuMF491DYXaawT/65j69gT5OF2CvtN2nv4Gyu9frDCBL0S4wd
-	 68FVaiV8LWq64+cAWTSdhyOGSBzI6vBwHaPgvnEY=
+	b=t49v9dXjJ9dXxTrzEcORmMwa6hlpJi4DTmWA2sGAeYjQv8jjo/Lpq3VCLLssjxwfN
+	 mfC6XgUKae+cab/8P1gbbjojDTwbN8BwCPgvBI2bvWidJ5DNnDzQpHGHZPkiGaY+Cd
+	 YDIjE2dDKzaMH39uD7hki+S3/Vwt5UhUEtgCT3Io=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbfLCWnd (ORCPT
+        id S1728838AbfLCWnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:43:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58950 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:43:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727644AbfLCWnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:43:31 -0500
+        id S1728631AbfLCWnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:43:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 412BE20803;
-        Tue,  3 Dec 2019 22:43:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1820D2080F;
+        Tue,  3 Dec 2019 22:43:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413009;
-        bh=rbxxTSCTtzeyzH8V7lyMIsbwabxAb/eHcLvFhgCc4qA=;
+        s=default; t=1575413017;
+        bh=Bl5HF763uz37dvHlnO+fYfAMU1dfaMnL3BK6UUDKfgE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LbHcKohSuswvpngSvke0bheUKOBtB9STruUlxzFLrwWCnpKjhU8K9AfJkcpFchB5f
-         Q8aWPIVgaoVUPSwQeRDkTmui5giW4dT+mvvlxB3G+yRlSzW7nvqCjEubbI65IrQ09F
-         NNLksugJu8c08iKp9agy+v4o20Ye2Ihv9Fd+lKlY=
+        b=Up6YCdSCQAnLnbc0krfrtdu8ziLQOSAwHi37Y5YcpRiWrbhhk2DMQXlmueKBRdENY
+         ajSlmI+55K2QFRrLttn3nUJnmyRP22jBGszRZ6HjQR5XVGkNnwDnGv5ehLJk80NoM1
+         Qz3dixSKb51aLyufPEXBiMJBGW/AZnKtd5vGBlRI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 5.3 101/135] staging: rtl8723bs: Drop ACPI device ids
-Date:   Tue,  3 Dec 2019 23:35:41 +0100
-Message-Id: <20191203213039.442786172@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Usyskin <alexander.usyskin@intel.com>,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: [PATCH 5.3 104/135] mei: bus: prefix device names on bus with the bus name
+Date:   Tue,  3 Dec 2019 23:35:44 +0100
+Message-Id: <20191203213040.249954854@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -58,38 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-commit 2d9d2491530a156b9a5614adf9dc79285e35d55e upstream.
+commit 7a2b9e6ec84588b0be65cc0ae45a65bac431496b upstream.
 
-The driver only binds by SDIO device-ids, all the ACPI device-id does
-is causing the driver to load unnecessarily on devices where the DSDT
-contains a bogus OBDA8723 device.
+Add parent device name to the name of devices on bus to avoid
+device names collisions for same client UUID available
+from different MEI heads. Namely this prevents sysfs collision under
+/sys/bus/mei/device/
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191111113846.24940-2-hdegoede@redhat.com
+In the device part leave just UUID other parameters that are
+required for device matching are not required here and are
+just bloating the name.
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Link: https://lore.kernel.org/r/20191105150514.14010-1-tomas.winkler@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8723bs/os_dep/sdio_intf.c |    6 ------
- 1 file changed, 6 deletions(-)
+ drivers/misc/mei/bus.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-+++ b/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-@@ -23,13 +23,7 @@ static const struct sdio_device_id sdio_
- 	{ SDIO_DEVICE(0x024c, 0xb723), },
- 	{ /* end: all zeroes */				},
- };
--static const struct acpi_device_id acpi_ids[] = {
--	{"OBDA8723", 0x0000},
--	{}
--};
--
- MODULE_DEVICE_TABLE(sdio, sdio_ids);
--MODULE_DEVICE_TABLE(acpi, acpi_ids);
+--- a/drivers/misc/mei/bus.c
++++ b/drivers/misc/mei/bus.c
+@@ -873,15 +873,16 @@ static const struct device_type mei_cl_d
  
- static int rtw_drv_init(struct sdio_func *func, const struct sdio_device_id *id);
- static void rtw_dev_remove(struct sdio_func *func);
+ /**
+  * mei_cl_bus_set_name - set device name for me client device
++ *  <controller>-<client device>
++ *  Example: 0000:00:16.0-55213584-9a29-4916-badf-0fb7ed682aeb
+  *
+  * @cldev: me client device
+  */
+ static inline void mei_cl_bus_set_name(struct mei_cl_device *cldev)
+ {
+-	dev_set_name(&cldev->dev, "mei:%s:%pUl:%02X",
+-		     cldev->name,
+-		     mei_me_cl_uuid(cldev->me_cl),
+-		     mei_me_cl_ver(cldev->me_cl));
++	dev_set_name(&cldev->dev, "%s-%pUl",
++		     dev_name(cldev->bus->dev),
++		     mei_me_cl_uuid(cldev->me_cl));
+ }
+ 
+ /**
 
 
