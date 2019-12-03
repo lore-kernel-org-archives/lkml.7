@@ -2,48 +2,49 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B7DC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BA2C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDAEE206E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 129A0206E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:49:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbfLCDtQ (ORCPT
+        id S1727350AbfLCDtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 22:49:16 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4348 "EHLO
+        Mon, 2 Dec 2019 22:49:23 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40302 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726926AbfLCDsc (ORCPT
+        by vger.kernel.org with ESMTP id S1726923AbfLCDsb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 22:48:32 -0500
+        Mon, 2 Dec 2019 22:48:31 -0500
 Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB33kmlc109499
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 22:48:31 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wm6v00yge-1
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB33kl0X109389
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 22:48:30 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wm6v00yg7-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
         for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 22:48:30 -0500
 Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
         Tue, 3 Dec 2019 03:48:27 -0000
 Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
         Tue, 3 Dec 2019 03:48:19 -0000
 Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB33mIqZ24707218
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB33mIIj24707220
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Dec 2019 03:48:18 GMT
+        Tue, 3 Dec 2019 03:48:19 GMT
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 90108AE057;
+        by IMSVA (Postfix) with ESMTP id DC467AE051;
         Tue,  3 Dec 2019 03:48:18 +0000 (GMT)
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3F513AE056;
+        by IMSVA (Postfix) with ESMTP id 3F3AEAE053;
         Tue,  3 Dec 2019 03:48:18 +0000 (GMT)
 Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
         by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
@@ -51,7 +52,7 @@ Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
 Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
         (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id BDBD5A03F0;
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id A91CAA03EF;
         Tue,  3 Dec 2019 14:48:13 +1100 (AEDT)
 From:   "Alastair D'Silva" <alastair@au1.ibm.com>
 To:     alastair@d-silva.org
@@ -85,23 +86,23 @@ Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Alexey Kardashevskiy <aik@ozlabs.ru>,
         linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Subject: [PATCH v2 26/27] powerpc: Enable OpenCAPI Storage Class Memory driver on bare metal
-Date:   Tue,  3 Dec 2019 14:46:54 +1100
+Subject: [PATCH v2 25/27] nvdimm/ocxl: Expose SMART data via ndctl
+Date:   Tue,  3 Dec 2019 14:46:53 +1100
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191203034655.51561-1-alastair@au1.ibm.com>
 References: <20191203034655.51561-1-alastair@au1.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19120303-0016-0000-0000-000002D0158C
+x-cbid: 19120303-0028-0000-0000-000003C3CC76
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120303-0017-0000-0000-000033320CA7
-Message-Id: <20191203034655.51561-27-alastair@au1.ibm.com>
+x-cbparentid: 19120303-0029-0000-0000-00002486E434
+Message-Id: <20191203034655.51561-26-alastair@au1.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
  definitions=2019-12-02_06:2019-11-29,2019-12-02 signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
  priorityscore=1501 impostorscore=0 adultscore=0 phishscore=0 bulkscore=0
- suspectscore=1 lowpriorityscore=0 mlxlogscore=524 mlxscore=0 spamscore=0
+ suspectscore=1 lowpriorityscore=0 mlxlogscore=999 mlxscore=0 spamscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
  definitions=main-1912030032
 Sender: linux-kernel-owner@vger.kernel.org
@@ -111,25 +112,236 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alastair D'Silva <alastair@d-silva.org>
 
-Enable OpenCAPI Storage Class Memory driver on bare metal
+This patch retrieves proprietary formatted SMART data and makes it
+available via ndctl. A later contribution will be made to ndctl to
+parse this data.
 
 Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 ---
- arch/powerpc/configs/powernv_defconfig | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/nvdimm/ocxl/scm.c          | 156 +++++++++++++++++++++++++++++
+ drivers/nvdimm/ocxl/scm_internal.h |  21 ++++
+ 2 files changed, 177 insertions(+)
 
-diff --git a/arch/powerpc/configs/powernv_defconfig b/arch/powerpc/configs/powernv_defconfig
-index 6658cceb928c..a8f46aece8a4 100644
---- a/arch/powerpc/configs/powernv_defconfig
-+++ b/arch/powerpc/configs/powernv_defconfig
-@@ -352,3 +352,7 @@ CONFIG_KVM_BOOK3S_64=m
- CONFIG_KVM_BOOK3S_64_HV=m
- CONFIG_VHOST_NET=m
- CONFIG_PRINTK_TIME=y
-+CONFIG_OCXL_SCM=m
-+CONFIG_DEV_DAX=m
-+CONFIG_DEV_DAX_PMEM=m
-+CONFIG_FS_DAX=m
+diff --git a/drivers/nvdimm/ocxl/scm.c b/drivers/nvdimm/ocxl/scm.c
+index 8deb7862793c..77b9e68870a3 100644
+--- a/drivers/nvdimm/ocxl/scm.c
++++ b/drivers/nvdimm/ocxl/scm.c
+@@ -94,6 +94,157 @@ static int scm_ndctl_config_size(struct nd_cmd_get_config_size *command)
+ 	return 0;
+ }
+ 
++static int read_smart_attrib(struct scm_data *scm_data, u16 offset,
++			     struct scm_smart_attribs *attribs)
++{
++	u64 val;
++	int rc;
++	struct scm_smart_attrib *attrib;
++	u8 attrib_id;
++
++	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu, offset, OCXL_LITTLE_ENDIAN,
++				     &val);
++	if (rc)
++		return rc;
++
++	attrib_id = (val >> 56) & 0xff;
++	switch (attrib_id) {
++	case SCM_SMART_ATTR_POWER_ON_HOURS:
++		attrib = &attribs->power_on_hours;
++		break;
++
++	case SCM_SMART_ATTR_TEMPERATURE:
++		attrib = &attribs->temperature;
++		break;
++
++	case SCM_SMART_ATTR_LIFE_REMAINING:
++		attrib = &attribs->life_remaining;
++		break;
++
++	default:
++		dev_warn(&scm_data->dev, "Unknown smart attrib '%d'", attrib_id);
++		return -ENOENT;
++	}
++
++	attrib->id = attrib_id;
++	attrib->attribute_flags = (val >> 40) & 0xffff;
++	attrib->current_val = (val >> 32) & 0xff;
++	attrib->threshold_val = (val >> 24) & 0xff;
++	attrib->worst_val = (val >> 16) & 0xff;
++
++	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu, offset + 0x08,
++				     OCXL_LITTLE_ENDIAN, &val);
++	if (rc)
++		return rc;
++
++	attrib->raw_val = val;
++
++	return 0;
++}
++
++/**
++ * scm_smart_header_parse() - Parse the first 64 bits of the SMART admin command response
++ * @scm_data: the SCM metadata
++ * @length: out, returns the number of bytes in the response (excluding the 64 bit header)
++ */
++static int scm_smart_header_parse(struct scm_data *scm_data, u32 *length)
++{
++	int rc;
++	u64 val;
++
++	u16 data_identifier;
++	u32 data_length;
++
++	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
++				     scm_data->admin_command.data_offset,
++				     OCXL_LITTLE_ENDIAN, &val);
++	if (rc)
++		return rc;
++
++	data_identifier = val >> 48;
++	data_length = val & 0xFFFFFFFF;
++
++	if (data_identifier != 0x534D) {
++		dev_err(&scm_data->dev,
++			"Bad data identifier for smart data, expected 'SM', got '%-.*s'\n",
++			2, (char *)&data_identifier);
++		return -EINVAL;
++	}
++
++	*length = data_length;
++	return 0;
++}
++
++static int scm_smart_update(struct scm_data *scm_data)
++{
++	u32 length, i;
++	int rc;
++
++	mutex_lock(&scm_data->admin_command.lock);
++
++	rc = scm_admin_command_request(scm_data, ADMIN_COMMAND_SMART);
++	if (rc)
++		goto out;
++
++	rc = scm_admin_command_execute(scm_data);
++	if (rc)
++		goto out;
++
++	rc = scm_admin_command_complete_timeout(scm_data, ADMIN_COMMAND_SMART);
++	if (rc < 0) {
++		dev_err(&scm_data->dev, "SMART timeout\n");
++		goto out;
++	}
++
++	rc = scm_admin_response(scm_data);
++	if (rc < 0)
++		goto out;
++	if (rc != STATUS_SUCCESS) {
++		scm_warn_status(scm_data, "Unexpected status from SMART", rc);
++		goto out;
++	}
++
++	rc = scm_smart_header_parse(scm_data, &length);
++	if (rc)
++		goto out;
++
++	length /= 0x10; // Length now contains the number of attributes
++
++	for (i = 0; i < length; i++)
++		read_smart_attrib(scm_data,
++				  scm_data->admin_command.data_offset + 0x08 + i * 0x10,
++				  &scm_data->smart);
++
++	rc = scm_admin_response_handled(scm_data);
++	if (rc)
++		goto out;
++
++	rc = 0;
++	goto out;
++
++out:
++	mutex_unlock(&scm_data->admin_command.lock);
++	return rc;
++}
++
++static int scm_ndctl_smart(struct scm_data *scm_data, void *buf,
++			   unsigned int buf_len)
++{
++	int rc;
++
++	if (buf_len != sizeof(scm_data->smart))
++		return -EINVAL;
++
++	rc = scm_smart_update(scm_data);
++	if (rc)
++		return rc;
++
++	memcpy(buf, &scm_data->smart, buf_len);
++
++	return 0;
++}
++
++
+ static int scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
+ 		     struct nvdimm *nvdimm,
+ 		     unsigned int cmd, void *buf, unsigned int buf_len, int *cmd_rc)
+@@ -101,6 +252,10 @@ static int scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
+ 	struct scm_data *scm_data = container_of(nd_desc, struct scm_data, bus_desc);
+ 
+ 	switch (cmd) {
++	case ND_CMD_SMART:
++		*cmd_rc = scm_ndctl_smart(scm_data, buf, buf_len);
++		return 0;
++
+ 	case ND_CMD_GET_CONFIG_SIZE:
+ 		*cmd_rc = scm_ndctl_config_size(buf);
+ 		return 0;
+@@ -300,6 +455,7 @@ static int scm_register_lpc_mem(struct scm_data *scm_data)
+ 	set_bit(ND_CMD_GET_CONFIG_SIZE, &nvdimm_cmd_mask);
+ 	set_bit(ND_CMD_GET_CONFIG_DATA, &nvdimm_cmd_mask);
+ 	set_bit(ND_CMD_SET_CONFIG_DATA, &nvdimm_cmd_mask);
++	set_bit(ND_CMD_SMART, &nvdimm_cmd_mask);
+ 
+ 	set_bit(NDD_ALIASING, &nvdimm_flags);
+ 
+diff --git a/drivers/nvdimm/ocxl/scm_internal.h b/drivers/nvdimm/ocxl/scm_internal.h
+index 4a29088612a9..d593fefe38d5 100644
+--- a/drivers/nvdimm/ocxl/scm_internal.h
++++ b/drivers/nvdimm/ocxl/scm_internal.h
+@@ -115,6 +115,26 @@ enum overwrite_state {
+ 	SCM_OVERWRITE_FAILED
+ };
+ 
++#define SCM_SMART_ATTR_POWER_ON_HOURS	0x09
++#define SCM_SMART_ATTR_TEMPERATURE	0xC2
++#define SCM_SMART_ATTR_LIFE_REMAINING	0xCA
++
++struct scm_smart_attrib {
++	__u8 id; /* See defines above */
++	__u16 attribute_flags;
++	__u8 current_val;
++	__u8 threshold_val;
++	__u8 worst_val;
++	__u8 reserved;
++	__u64 raw_val;
++};
++
++struct scm_smart_attribs {
++	struct scm_smart_attrib power_on_hours;
++	struct scm_smart_attrib temperature;
++	struct scm_smart_attrib life_remaining;
++};
++
+ struct scm_data {
+ 	struct device dev;
+ 	struct pci_dev *pdev;
+@@ -136,6 +156,7 @@ struct scm_data {
+ 	struct resource scm_res;
+ 	struct nd_region *nd_region;
+ 	struct eventfd_ctx *ev_ctx;
++	struct scm_smart_attribs smart;
+ 	char fw_version[8+1];
+ 	u32 timeouts[ADMIN_COMMAND_MAX+1];
+ 
 -- 
 2.23.0
 
