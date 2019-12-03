@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5AAC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 030FBC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E8F22084B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C73442084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413458;
-	bh=UxEp8ox6OzQg67AWkKUhgIDhv14VbLfTIqTETNkCDyU=;
+	s=default; t=1575413460;
+	bh=S615hVEhfTbt+JvODgP4V36d/mpY9ddDExp/9W+7x+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m6JesYqf64PlLJcmJ5ruBrA+dNSi/hfCNFyDZ3oOAPg0xrg1dziQsj5eJdRKcJKFZ
-	 5Yr551CHWi8us1JJgOVr56qWEeifwP4sbbuljmMIQ8x7pRNOI27a4Lv5JQ+QQjwNDp
-	 YoA0dGg9AujhpRFJfR4O0+94m5hCCG+2KwhE8eFQ=
+	b=jTuXaN87VTSWWjTz6v3pT69Wejv6r9feHMWrgDzMP6HJqjYIIzKaY3CYp4rfh431y
+	 R2jfLa7WMX6Z/J0QJYLnpPq96RoS+bg4HkN5n6SdPrBd1IAJQBwzgvJwcBNPikOMiS
+	 zPdXGU10cubazpxrbbwfvJmxv0OCqKg+uKYlyzjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729814AbfLCWu5 (ORCPT
+        id S1729821AbfLCWu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:50:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42782 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:50:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729594AbfLCWuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:50:55 -0500
+        id S1729811AbfLCWu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:50:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F8A32054F;
-        Tue,  3 Dec 2019 22:50:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A52F42084B;
+        Tue,  3 Dec 2019 22:50:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413454;
-        bh=UxEp8ox6OzQg67AWkKUhgIDhv14VbLfTIqTETNkCDyU=;
+        s=default; t=1575413457;
+        bh=S615hVEhfTbt+JvODgP4V36d/mpY9ddDExp/9W+7x+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mjEFN5Rqe6ezSQRiwre4KETt4a5uKtX12TjWbXbpn0OXgCyZPQRnECWYmThQZW2jh
-         4RvBVsP8f2Tw6bRmpDj+vajFbTcsepjFCy8Prlimp1a72B3fl9NIdqEIANaKcPxxLR
-         z4bmB2B7ZuherE4DZmSIbWCz8MamoSPOqVySNdVc=
+        b=i2z9SyCt2VOjaVuLxwQ6wmfhli3BRV05c4u3r2H3Ucwdm3iMJxF9OBx+s6Yk9gbTW
+         DidCelj5DQWxJ9V1n+H2DtZJfGxv1yp82lEhSxOS6WE9QqSSNs68qc/AXCeXQyBCuG
+         21gRRpj4Wd3YGYp9xTq3gUw3Lp8IOJufKZpQj29o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ross Lagerwall <ross.lagerwall@citrix.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        stable@vger.kernel.org,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 127/321] xen/pciback: Check dev_data before using it
-Date:   Tue,  3 Dec 2019 23:33:13 +0100
-Message-Id: <20191203223433.759938991@linuxfoundation.org>
+Subject: [PATCH 4.19 136/321] bnxt_en: Return linux standard errors in bnxt_ethtool.c
+Date:   Tue,  3 Dec 2019 23:33:22 +0100
+Message-Id: <20191203223434.237457992@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,36 +62,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ross Lagerwall <ross.lagerwall@citrix.com>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-[ Upstream commit 1669907e3d1abfa3f7586e2d55dbbc117b5adba2 ]
+[ Upstream commit 7c675421afef18253a86ffc383f57bc15ef32ea8 ]
 
-If pcistub_init_device fails, the release function will be called with
-dev_data set to NULL.  Check it before using it to avoid a NULL pointer
-dereference.
+Currently firmware specific errors are returned directly in flash_device
+and reset ethtool hooks. Modify it to return linux standard errors
+to userspace when flashing operations fail.
 
-Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/xen-pciback/pci_stub.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 56 +++++++++++++------
+ 1 file changed, 39 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/xen/xen-pciback/pci_stub.c b/drivers/xen/xen-pciback/pci_stub.c
-index 59661db144e51..097410a7cdb74 100644
---- a/drivers/xen/xen-pciback/pci_stub.c
-+++ b/drivers/xen/xen-pciback/pci_stub.c
-@@ -106,7 +106,8 @@ static void pcistub_device_release(struct kref *kref)
- 	 * is called from "unbind" which takes a device_lock mutex.
- 	 */
- 	__pci_reset_function_locked(dev);
--	if (pci_load_and_free_saved_state(dev, &dev_data->pci_saved_state))
-+	if (dev_data &&
-+	    pci_load_and_free_saved_state(dev, &dev_data->pci_saved_state))
- 		dev_info(&dev->dev, "Could not reload PCI state\n");
- 	else
- 		pci_restore_state(dev);
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+index da9b876899963..eaa285bf908b9 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+@@ -1444,14 +1444,22 @@ static int bnxt_flash_nvram(struct net_device *dev,
+ 	rc = hwrm_send_message(bp, &req, sizeof(req), FLASH_NVRAM_TIMEOUT);
+ 	dma_free_coherent(&bp->pdev->dev, data_len, kmem, dma_handle);
+ 
++	if (rc == HWRM_ERR_CODE_RESOURCE_ACCESS_DENIED) {
++		netdev_info(dev,
++			    "PF does not have admin privileges to flash the device\n");
++		rc = -EACCES;
++	} else if (rc) {
++		rc = -EIO;
++	}
+ 	return rc;
+ }
+ 
+ static int bnxt_firmware_reset(struct net_device *dev,
+ 			       u16 dir_type)
+ {
+-	struct bnxt *bp = netdev_priv(dev);
+ 	struct hwrm_fw_reset_input req = {0};
++	struct bnxt *bp = netdev_priv(dev);
++	int rc;
+ 
+ 	bnxt_hwrm_cmd_hdr_init(bp, &req, HWRM_FW_RESET, -1, -1);
+ 
+@@ -1491,7 +1499,15 @@ static int bnxt_firmware_reset(struct net_device *dev,
+ 		return -EINVAL;
+ 	}
+ 
+-	return hwrm_send_message(bp, &req, sizeof(req), HWRM_CMD_TIMEOUT);
++	rc = hwrm_send_message(bp, &req, sizeof(req), HWRM_CMD_TIMEOUT);
++	if (rc == HWRM_ERR_CODE_RESOURCE_ACCESS_DENIED) {
++		netdev_info(dev,
++			    "PF does not have admin privileges to reset the device\n");
++		rc = -EACCES;
++	} else if (rc) {
++		rc = -EIO;
++	}
++	return rc;
+ }
+ 
+ static int bnxt_flash_firmware(struct net_device *dev,
+@@ -1698,9 +1714,9 @@ static int bnxt_flash_package_from_file(struct net_device *dev,
+ 	struct hwrm_nvm_install_update_output *resp = bp->hwrm_cmd_resp_addr;
+ 	struct hwrm_nvm_install_update_input install = {0};
+ 	const struct firmware *fw;
++	int rc, hwrm_err = 0;
+ 	u32 item_len;
+ 	u16 index;
+-	int rc;
+ 
+ 	bnxt_hwrm_fw_set_time(bp);
+ 
+@@ -1743,15 +1759,16 @@ static int bnxt_flash_package_from_file(struct net_device *dev,
+ 			memcpy(kmem, fw->data, fw->size);
+ 			modify.host_src_addr = cpu_to_le64(dma_handle);
+ 
+-			rc = hwrm_send_message(bp, &modify, sizeof(modify),
+-					       FLASH_PACKAGE_TIMEOUT);
++			hwrm_err = hwrm_send_message(bp, &modify,
++						     sizeof(modify),
++						     FLASH_PACKAGE_TIMEOUT);
+ 			dma_free_coherent(&bp->pdev->dev, fw->size, kmem,
+ 					  dma_handle);
+ 		}
+ 	}
+ 	release_firmware(fw);
+-	if (rc)
+-		return rc;
++	if (rc || hwrm_err)
++		goto err_exit;
+ 
+ 	if ((install_type & 0xffff) == 0)
+ 		install_type >>= 16;
+@@ -1759,12 +1776,10 @@ static int bnxt_flash_package_from_file(struct net_device *dev,
+ 	install.install_type = cpu_to_le32(install_type);
+ 
+ 	mutex_lock(&bp->hwrm_cmd_lock);
+-	rc = _hwrm_send_message(bp, &install, sizeof(install),
+-				INSTALL_PACKAGE_TIMEOUT);
+-	if (rc) {
+-		rc = -EOPNOTSUPP;
++	hwrm_err = _hwrm_send_message(bp, &install, sizeof(install),
++				      INSTALL_PACKAGE_TIMEOUT);
++	if (hwrm_err)
+ 		goto flash_pkg_exit;
+-	}
+ 
+ 	if (resp->error_code) {
+ 		u8 error_code = ((struct hwrm_err_output *)resp)->cmd_err;
+@@ -1772,12 +1787,11 @@ static int bnxt_flash_package_from_file(struct net_device *dev,
+ 		if (error_code == NVM_INSTALL_UPDATE_CMD_ERR_CODE_FRAG_ERR) {
+ 			install.flags |= cpu_to_le16(
+ 			       NVM_INSTALL_UPDATE_REQ_FLAGS_ALLOWED_TO_DEFRAG);
+-			rc = _hwrm_send_message(bp, &install, sizeof(install),
+-						INSTALL_PACKAGE_TIMEOUT);
+-			if (rc) {
+-				rc = -EOPNOTSUPP;
++			hwrm_err = _hwrm_send_message(bp, &install,
++						      sizeof(install),
++						      INSTALL_PACKAGE_TIMEOUT);
++			if (hwrm_err)
+ 				goto flash_pkg_exit;
+-			}
+ 		}
+ 	}
+ 
+@@ -1788,6 +1802,14 @@ static int bnxt_flash_package_from_file(struct net_device *dev,
+ 	}
+ flash_pkg_exit:
+ 	mutex_unlock(&bp->hwrm_cmd_lock);
++err_exit:
++	if (hwrm_err == HWRM_ERR_CODE_RESOURCE_ACCESS_DENIED) {
++		netdev_info(dev,
++			    "PF does not have admin privileges to flash the device\n");
++		rc = -EACCES;
++	} else if (hwrm_err) {
++		rc = -EOPNOTSUPP;
++	}
+ 	return rc;
+ }
+ 
 -- 
 2.20.1
 
