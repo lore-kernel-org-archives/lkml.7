@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC9DC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 254FBC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6A1020803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:49:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D463F20656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:49:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413365;
-	bh=ABAw+0UN3/JtufQLU7PxhHLTB+FOGf2VHn3pTd88+wM=;
+	s=default; t=1575413367;
+	bh=NIBG/DzQYeupRi6YDd/Ko+G1upVp5K5Gk4rxGAwR4UQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lSJk6f/zSS5lkla3rge5as+ovvkYrhHlvps2QVwylMe6tX71x8qjAJfnVoHX6fWjj
-	 v/mPhVHJF1G5tixYwkaZdyPUMmj1KAp6nTYhuVS5G/Q5lGe4bsT2IB8tA7mlNeZW+B
-	 lVAT6vOZ0GW5/wy0rhvkOmSs+5HrlPabEWhd2mSM=
+	b=cHb0rxAvKeJOkX780z47Lv/kk2jm8YNP4A3tEV0ihDc2bKTAG19LEf853PVrVkdSs
+	 auNyINLj91q5FFHxv42vbGAdrS6+0g6P5zKLkculdoRGYOomCMyjsgK91/fEisnjri
+	 4N8mCFNdqCEp/gOdBOd6ISFpyCXffHmjF6OjAuOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729590AbfLCWtX (ORCPT
+        id S1729599AbfLCWt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:49:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40334 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:49:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727790AbfLCWtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:49:21 -0500
+        id S1729588AbfLCWtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:49:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 609AF20684;
-        Tue,  3 Dec 2019 22:49:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1BF520848;
+        Tue,  3 Dec 2019 22:49:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413360;
-        bh=ABAw+0UN3/JtufQLU7PxhHLTB+FOGf2VHn3pTd88+wM=;
+        s=default; t=1575413363;
+        bh=NIBG/DzQYeupRi6YDd/Ko+G1upVp5K5Gk4rxGAwR4UQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BVq6jTTHM9fNRSs9L9e4ODYFYrkyhqYb5iCoDNZRST88PuwuQGoXZ65jVDyL2H2Jq
-         RvDnZcHJspmb0BTC6ly0eBWLjpDmc9PlZpeaeqfTkDtJ+KK+mkSmCx0vR6j46XcRWf
-         WAiLGEh8N7Oo/ow+D5kT1SBS+27pZHDF0DJVI/W0=
+        b=NncSq99oJFNkgl5Ju4HK5UXSiiwF1/b4NlGGtQc2wKprmlphWuEq3btn3Qstnnf+i
+         3pfLlIT1j1VnpRf+NOOJ6MomTyJdEFjzsDwMD8pANtti5Olf13wnZyILotHVPTRIRM
+         As05q7ID1wGuO/pLOuaZN51UTcuEbrBFwX/E/Rfc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gabor Juhos <juhosg@openwrt.org>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
+        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
+        Boris Brezillon <boris.brezillon@bootlin.com>,
         Richard Weinberger <richard@nod.at>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 099/321] ubifs: Fix default compression selection in ubifs
-Date:   Tue,  3 Dec 2019 23:32:45 +0100
-Message-Id: <20191203223432.306953012@linuxfoundation.org>
+Subject: [PATCH 4.19 100/321] ubi: Put MTD device after it is not used
+Date:   Tue,  3 Dec 2019 23:32:46 +0100
+Message-Id: <20191203223432.358005360@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,54 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gabor Juhos <juhosg@openwrt.org>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit d62e98ed1efcaa94caa004f622944afdce5f1c3c ]
+[ Upstream commit b95f83ab762dd6211351b9140f99f43644076ca8 ]
 
-When ubifs is build without the LZO compressor and no compressor is
-given the creation of the default file system will fail. before
-selection the LZO compressor check if it is present and if not fall back
-to the zlib or none.
+The MTD device reference is dropped via put_mtd_device, however its
+field ->index is read and passed to ubi_msg. To fix this, the patch
+moves the reference dropping after calling ubi_msg.
 
-Signed-off-by: Gabor Juhos <juhosg@openwrt.org>
-Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Reviewed-by: Boris Brezillon <boris.brezillon@bootlin.com>
 Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ubifs/sb.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/mtd/ubi/build.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ubifs/sb.c b/fs/ubifs/sb.c
-index bf17f58908ff9..11dc3977fb64f 100644
---- a/fs/ubifs/sb.c
-+++ b/fs/ubifs/sb.c
-@@ -63,6 +63,17 @@
- /* Default time granularity in nanoseconds */
- #define DEFAULT_TIME_GRAN 1000000000
- 
-+static int get_default_compressor(struct ubifs_info *c)
-+{
-+	if (ubifs_compr_present(c, UBIFS_COMPR_LZO))
-+		return UBIFS_COMPR_LZO;
-+
-+	if (ubifs_compr_present(c, UBIFS_COMPR_ZLIB))
-+		return UBIFS_COMPR_ZLIB;
-+
-+	return UBIFS_COMPR_NONE;
-+}
-+
- /**
-  * create_default_filesystem - format empty UBI volume.
-  * @c: UBIFS file-system description object
-@@ -186,7 +197,7 @@ static int create_default_filesystem(struct ubifs_info *c)
- 	if (c->mount_opts.override_compr)
- 		sup->default_compr = cpu_to_le16(c->mount_opts.compr_type);
- 	else
--		sup->default_compr = cpu_to_le16(UBIFS_COMPR_LZO);
-+		sup->default_compr = cpu_to_le16(get_default_compressor(c));
- 
- 	generate_random_uuid(sup->uuid);
- 
+diff --git a/drivers/mtd/ubi/build.c b/drivers/mtd/ubi/build.c
+index d2a726654ff11..c120c8761fcd2 100644
+--- a/drivers/mtd/ubi/build.c
++++ b/drivers/mtd/ubi/build.c
+@@ -1101,10 +1101,10 @@ int ubi_detach_mtd_dev(int ubi_num, int anyway)
+ 	ubi_wl_close(ubi);
+ 	ubi_free_internal_volumes(ubi);
+ 	vfree(ubi->vtbl);
+-	put_mtd_device(ubi->mtd);
+ 	vfree(ubi->peb_buf);
+ 	vfree(ubi->fm_buf);
+ 	ubi_msg(ubi, "mtd%d is detached", ubi->mtd->index);
++	put_mtd_device(ubi->mtd);
+ 	put_device(&ubi->dev);
+ 	return 0;
+ }
 -- 
 2.20.1
 
