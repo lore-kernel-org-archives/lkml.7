@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 900ECC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 586D4C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53A2A20705
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 259A4206E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:43:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M8LSSJW2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n3LLOHE1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727268AbfLCAnG (ORCPT
+        id S1727308AbfLCAnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 19:43:06 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34453 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbfLCAmL (ORCPT
+        Mon, 2 Dec 2019 19:43:11 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41444 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbfLCAmJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 19:42:11 -0500
-Received: by mail-lj1-f196.google.com with SMTP id m6so1718548ljc.1;
-        Mon, 02 Dec 2019 16:42:09 -0800 (PST)
+        Mon, 2 Dec 2019 19:42:09 -0500
+Received: by mail-lj1-f194.google.com with SMTP id h23so1651442ljc.8;
+        Mon, 02 Dec 2019 16:42:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=7l0r4bTRWBpFt6PewqwjEw8TsFxPLheHYvKsASQ9K3g=;
-        b=M8LSSJW2Uw6JUYm3suu9jGhdrjBT/2FXbLuyyHC2Ei5uFD1uby5gn/OF8xlb/BxafZ
-         Q2hGs9EoxAvECDVLf9czllZPogYEr0TfAzNjyC/oNfp1+N3bkGwnZvFeQUc2MyJvf5bC
-         rs69VbhuNYCGJ+WpXf016rBk2yt5snxRRF/ufJHSngLwdPJkLN7uUw6ra3XcmNbilG/0
-         xcrV2Wh9oHo9brkhQfVChCtN0prh8dZgSCua4tmsXmVhumGrxnZA84dEI77GSyinQ30v
-         b6GCrw1WV0FDrThFHSeyZ6M/D5cJAaPIn23xqeTEuzanU2VmddPhL2LH967NSet8ggpM
-         MbTA==
+        bh=9DMFC/TKshEjchnH9K9TM7efWfj5kMXwrSGDV4MlU4Y=;
+        b=n3LLOHE1XGTBJhAl+hnm2O7bkvpmae1oWJspfu5Fp8zbjDkiD/Lvj/ktCgscgnvy5l
+         1t6Y7SNESeIr0I9ugKqc5R4WrTx+M3JBWyHGvrLnWZLI5A3/WtuEO29Mxjgc5btLre+D
+         nCv8GzH4uPKm1EFooV8B9NVpwnIDpCqoqikX6TW+KimrVNe1mtsaIxI0MKB681sglers
+         agdtjpFI5nAUPgggoRpwEyjBePSqFquVpJhKGdkf/9e7SeGNgLTXRFhHm+zG8NTusAT7
+         OtEc16z8naQzT5MJwyzS+GmNumjtgx7x9qlS0qs6XsCNuqAOIsAQTq1ZpunocYDuwL3l
+         ispg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=7l0r4bTRWBpFt6PewqwjEw8TsFxPLheHYvKsASQ9K3g=;
-        b=PBjPbbc9QT4BQ1WHbGfZsINdUkmOAITd6ZHbhBQiB0kT1zCkcPGXjwnyakCUDxwmuQ
-         5/l2/wCPHm6CskAJRI+Se94RFLhcoZcfWLncT5kpn1SVllz4bq0iYtic5ArajJV87tzw
-         +d4zKQeHX1P+P5pr7FJ+EIbccELukgT8tVn8cI/EyDlqqFkCOhrKeX/w7K9SERoP/PLF
-         huQbsyCBLiZ1sXtDyxDg4FdHL3Gz/wIm7enUuofV5XSY1soMPrXsEq6x2IhbcJuZ1XwT
-         uLPZE03G8pmEptEltC4Wsa7V+qJ5iJjWkvHp6zCr78M3brsLAL8sjWMctprT7/qJo4qk
-         sdvQ==
-X-Gm-Message-State: APjAAAWGn7ks3V7O3/ZXarbWOzpNRBMAy4BIzLcy+Otm+l73IdJ8phIw
-        Uzo8nZ0QEFJGTjPfHrI5AK/FqKDr
-X-Google-Smtp-Source: APXvYqwc02wIGwef/Bk9nH2aNaLXu30N6RCvcrkBGh7q8i/zFQKcjjkhR0KdUdf6poKZVhM+94Uy4Q==
-X-Received: by 2002:a2e:b537:: with SMTP id z23mr871541ljm.129.1575333728865;
-        Mon, 02 Dec 2019 16:42:08 -0800 (PST)
+        bh=9DMFC/TKshEjchnH9K9TM7efWfj5kMXwrSGDV4MlU4Y=;
+        b=ce4T7KtKU9oqIPs9o5WGqSXcGSa0V0IHeMKpvsMqAwWeL+y6UcfZoZrxB+Da/Nkt3M
+         v7R+IFOYjTZWfkBZ861+VGz3dSZbN9oECJueQKMROH5Gya1P4sa8BIw+oo2CViiuV8ws
+         i4UyeR4i/VE50VtQEenKSN2uCMvuGfSNa7kD9Hfl6YTBgAQEyWEI4DqrOe5uIBGXLccn
+         wCMZFf+qdlSY40a5Dt9O45Mh28zfEXYTto4akZjgrFQ53kJgrAYyyZY4etAlbVcqyl5D
+         JY1VSHpHmwLTZkggI0hjrG7pKeg/66/wmLs0H5nQD8n3Sxw2nrDIxeE3YF3XzrizSH/U
+         xr/A==
+X-Gm-Message-State: APjAAAXgh9BCBoXrHWIDRqrYECG7fzymJfVXN2dZt/if6pO2f2epzkpZ
+        Rro3rKMYBpIKYWC/GY8fOUk=
+X-Google-Smtp-Source: APXvYqwbneEmhey2S1vYkJZiB4v6pwV3qlHLdmY9aMKVT714fNtql+ZsCiHWnmHuN/eYc41IqKmH6A==
+X-Received: by 2002:a05:651c:112c:: with SMTP id e12mr880196ljo.169.1575333726868;
+        Mon, 02 Dec 2019 16:42:06 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id y21sm456384ljm.25.2019.12.02.16.42.07
+        by smtp.gmail.com with ESMTPSA id y21sm456384ljm.25.2019.12.02.16.42.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 16:42:08 -0800 (PST)
+        Mon, 02 Dec 2019 16:42:06 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -65,9 +65,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v8 07/19] ARM: tegra: Rename some of the newly exposed PM functions
-Date:   Tue,  3 Dec 2019 03:41:04 +0300
-Message-Id: <20191203004116.11771-8-digetx@gmail.com>
+Subject: [PATCH v8 05/19] ARM: tegra: Propagate error from tegra_idle_lp2_last()
+Date:   Tue,  3 Dec 2019 03:41:02 +0300
+Message-Id: <20191203004116.11771-6-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203004116.11771-1-digetx@gmail.com>
 References: <20191203004116.11771-1-digetx@gmail.com>
@@ -78,235 +78,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename some of the recently exposed PM functions, prefixing them with
-"tegra_pm_" in order to make the naming of the PM functions consistent.
+Technically cpu_suspend() may fail and it's never good to lose information
+about failure. For example things like cpuidle core could correctly sample
+idling time in the case of failure.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm/mach-tegra/cpuidle-tegra114.c |  6 +++---
- arch/arm/mach-tegra/cpuidle-tegra20.c  |  6 +++---
- arch/arm/mach-tegra/cpuidle-tegra30.c  |  8 ++++----
- arch/arm/mach-tegra/pm.c               | 10 +++++-----
- arch/arm/mach-tegra/sleep-tegra30.S    |  6 +++---
- include/soc/tegra/pm.h                 | 16 ++++++++--------
- 6 files changed, 26 insertions(+), 26 deletions(-)
+ arch/arm/mach-tegra/cpuidle-tegra20.c | 6 ++++--
+ arch/arm/mach-tegra/cpuidle-tegra30.c | 4 +---
+ arch/arm/mach-tegra/pm.c              | 8 ++++++--
+ arch/arm/mach-tegra/pm.h              | 2 +-
+ 4 files changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/mach-tegra/cpuidle-tegra114.c b/arch/arm/mach-tegra/cpuidle-tegra114.c
-index 2d8527837aeb..858c30cc5dc7 100644
---- a/arch/arm/mach-tegra/cpuidle-tegra114.c
-+++ b/arch/arm/mach-tegra/cpuidle-tegra114.c
-@@ -35,17 +35,17 @@ static int tegra114_idle_power_down(struct cpuidle_device *dev,
- {
- 	local_fiq_disable();
- 
--	tegra_set_cpu_in_lp2();
-+	tegra_pm_set_cpu_in_lp2();
- 	cpu_pm_enter();
- 
- 	call_firmware_op(prepare_idle, TF_PM_MODE_LP2_NOFLUSH_L2);
- 
- 	/* Do suspend by ourselves if the firmware does not implement it */
- 	if (call_firmware_op(do_idle, 0) == -ENOSYS)
--		cpu_suspend(0, tegra30_sleep_cpu_secondary_finish);
-+		cpu_suspend(0, tegra30_pm_secondary_cpu_suspend);
- 
- 	cpu_pm_exit();
--	tegra_clear_cpu_in_lp2();
-+	tegra_pm_clear_cpu_in_lp2();
- 
- 	local_fiq_enable();
- 
 diff --git a/arch/arm/mach-tegra/cpuidle-tegra20.c b/arch/arm/mach-tegra/cpuidle-tegra20.c
-index fdfe92068e38..9672c619f4bc 100644
+index f7d5041e73cc..9789541adb7d 100644
 --- a/arch/arm/mach-tegra/cpuidle-tegra20.c
 +++ b/arch/arm/mach-tegra/cpuidle-tegra20.c
-@@ -92,7 +92,7 @@ static bool tegra20_cpu_cluster_power_down(struct cpuidle_device *dev,
+@@ -87,15 +87,17 @@ static bool tegra20_cpu_cluster_power_down(struct cpuidle_device *dev,
+ 					   struct cpuidle_driver *drv,
+ 					   int index)
+ {
++	bool ret;
++
  	while (!tegra_cpu_rail_off_ready())
  		cpu_relax();
  
--	ret = !tegra_idle_lp2_last();
-+	ret = !tegra_pm_enter_lp2();
+-	tegra_idle_lp2_last();
++	ret = !tegra_idle_lp2_last();
  
  	if (cpu_online(1))
  		tegra20_wake_cpu1_from_reset();
-@@ -137,7 +137,7 @@ static int tegra20_idle_lp2_coupled(struct cpuidle_device *dev,
  
- 	local_fiq_disable();
- 
--	tegra_set_cpu_in_lp2();
-+	tegra_pm_set_cpu_in_lp2();
- 	cpu_pm_enter();
- 
- 	if (dev->cpu == 0)
-@@ -146,7 +146,7 @@ static int tegra20_idle_lp2_coupled(struct cpuidle_device *dev,
- 		entered_lp2 = tegra20_idle_enter_lp2_cpu_1(dev, drv, index);
- 
- 	cpu_pm_exit();
--	tegra_clear_cpu_in_lp2();
-+	tegra_pm_clear_cpu_in_lp2();
- 
- 	local_fiq_enable();
- 
-diff --git a/arch/arm/mach-tegra/cpuidle-tegra30.c b/arch/arm/mach-tegra/cpuidle-tegra30.c
-index 3e91c29891f7..a4f0add46a27 100644
---- a/arch/arm/mach-tegra/cpuidle-tegra30.c
-+++ b/arch/arm/mach-tegra/cpuidle-tegra30.c
-@@ -69,7 +69,7 @@ static bool tegra30_cpu_cluster_power_down(struct cpuidle_device *dev,
- 		return false;
- 	}
- 
--	return !tegra_idle_lp2_last();
-+	return !tegra_pm_enter_lp2();
+-	return true;
++	return ret;
  }
  
  #ifdef CONFIG_SMP
-@@ -79,7 +79,7 @@ static bool tegra30_cpu_core_power_down(struct cpuidle_device *dev,
- {
- 	smp_wmb();
+diff --git a/arch/arm/mach-tegra/cpuidle-tegra30.c b/arch/arm/mach-tegra/cpuidle-tegra30.c
+index a3ce8dabfe18..17cbd118abee 100644
+--- a/arch/arm/mach-tegra/cpuidle-tegra30.c
++++ b/arch/arm/mach-tegra/cpuidle-tegra30.c
+@@ -68,9 +68,7 @@ static bool tegra30_cpu_cluster_power_down(struct cpuidle_device *dev,
+ 		return false;
+ 	}
  
--	cpu_suspend(0, tegra30_sleep_cpu_secondary_finish);
-+	cpu_suspend(0, tegra30_pm_secondary_cpu_suspend);
- 
- 	return true;
+-	tegra_idle_lp2_last();
+-
+-	return true;
++	return !tegra_idle_lp2_last();
  }
-@@ -100,7 +100,7 @@ static int tegra30_idle_lp2(struct cpuidle_device *dev,
  
- 	local_fiq_disable();
- 
--	tegra_set_cpu_in_lp2();
-+	tegra_pm_set_cpu_in_lp2();
- 	cpu_pm_enter();
- 
- 	if (dev->cpu == 0)
-@@ -109,7 +109,7 @@ static int tegra30_idle_lp2(struct cpuidle_device *dev,
- 		entered_lp2 = tegra30_cpu_core_power_down(dev, drv, index);
- 
- 	cpu_pm_exit();
--	tegra_clear_cpu_in_lp2();
-+	tegra_pm_clear_cpu_in_lp2();
- 
- 	local_fiq_enable();
- 
+ #ifdef CONFIG_SMP
 diff --git a/arch/arm/mach-tegra/pm.c b/arch/arm/mach-tegra/pm.c
-index a094acaca307..7d9ef26e52a7 100644
+index a72f9a2d3cb7..a094acaca307 100644
 --- a/arch/arm/mach-tegra/pm.c
 +++ b/arch/arm/mach-tegra/pm.c
-@@ -110,7 +110,7 @@ static void suspend_cpu_complex(void)
- 	flowctrl_cpu_suspend_enter(cpu);
- }
- 
--void tegra_clear_cpu_in_lp2(void)
-+void tegra_pm_clear_cpu_in_lp2(void)
- {
- 	int phy_cpu_id = cpu_logical_map(smp_processor_id());
- 	u32 *cpu_in_lp2 = tegra_cpu_lp2_mask;
-@@ -123,7 +123,7 @@ void tegra_clear_cpu_in_lp2(void)
- 	spin_unlock(&tegra_lp2_lock);
- }
- 
--void tegra_set_cpu_in_lp2(void)
-+void tegra_pm_set_cpu_in_lp2(void)
- {
- 	int phy_cpu_id = cpu_logical_map(smp_processor_id());
- 	u32 *cpu_in_lp2 = tegra_cpu_lp2_mask;
-@@ -189,7 +189,7 @@ static void tegra_pm_set(enum tegra_suspend_mode mode)
+@@ -189,14 +189,16 @@ static void tegra_pm_set(enum tegra_suspend_mode mode)
  	tegra_pmc_enter_suspend_mode(mode);
  }
  
--int tegra_idle_lp2_last(void)
-+int tegra_pm_enter_lp2(void)
+-void tegra_idle_lp2_last(void)
++int tegra_idle_lp2_last(void)
  {
- 	int err;
++	int err;
++
+ 	tegra_pm_set(TEGRA_SUSPEND_LP2);
  
-@@ -356,7 +356,7 @@ static int tegra_suspend_enter(suspend_state_t state)
- 		tegra_suspend_enter_lp1();
- 		break;
- 	case TEGRA_SUSPEND_LP2:
--		tegra_set_cpu_in_lp2();
-+		tegra_pm_set_cpu_in_lp2();
- 		break;
- 	default:
- 		break;
-@@ -377,7 +377,7 @@ static int tegra_suspend_enter(suspend_state_t state)
- 		tegra_suspend_exit_lp1();
- 		break;
- 	case TEGRA_SUSPEND_LP2:
--		tegra_clear_cpu_in_lp2();
-+		tegra_pm_clear_cpu_in_lp2();
- 		break;
- 	default:
- 		break;
-diff --git a/arch/arm/mach-tegra/sleep-tegra30.S b/arch/arm/mach-tegra/sleep-tegra30.S
-index 3341a12bbb9c..5942cec9b6ef 100644
---- a/arch/arm/mach-tegra/sleep-tegra30.S
-+++ b/arch/arm/mach-tegra/sleep-tegra30.S
-@@ -262,11 +262,11 @@ ENTRY(tegra30_sleep_core_finish)
- ENDPROC(tegra30_sleep_core_finish)
+ 	cpu_cluster_pm_enter();
+ 	suspend_cpu_complex();
  
- /*
-- * tegra30_sleep_cpu_secondary_finish(unsigned long v2p)
-+ * tegra30_pm_secondary_cpu_suspend(unsigned long unused_arg)
-  *
-  * Enters LP2 on secondary CPU by exiting coherency and powergating the CPU.
-  */
--ENTRY(tegra30_sleep_cpu_secondary_finish)
-+ENTRY(tegra30_pm_secondary_cpu_suspend)
- 	mov	r7, lr
+-	cpu_suspend(PHYS_OFFSET - PAGE_OFFSET, &tegra_sleep_cpu);
++	err = cpu_suspend(PHYS_OFFSET - PAGE_OFFSET, &tegra_sleep_cpu);
  
- 	/* Flush and disable the L1 data cache */
-@@ -278,7 +278,7 @@ ENTRY(tegra30_sleep_cpu_secondary_finish)
- 	bl	tegra30_cpu_shutdown
- 	mov	r0, #1                          @ never return here
- 	ret	r7
--ENDPROC(tegra30_sleep_cpu_secondary_finish)
-+ENDPROC(tegra30_pm_secondary_cpu_suspend)
+ 	/*
+ 	 * Resume L2 cache if it wasn't re-enabled early during resume,
+@@ -208,6 +210,8 @@ void tegra_idle_lp2_last(void)
  
- /*
-  * tegra30_tear_down_cpu
-diff --git a/include/soc/tegra/pm.h b/include/soc/tegra/pm.h
-index 1974e8405098..08477d7bfab9 100644
---- a/include/soc/tegra/pm.h
-+++ b/include/soc/tegra/pm.h
-@@ -23,10 +23,10 @@ tegra_pm_validate_suspend_mode(enum tegra_suspend_mode mode);
- /* low-level resume entry point */
- void tegra_resume(void);
- 
--int tegra30_sleep_cpu_secondary_finish(unsigned long arg);
--void tegra_clear_cpu_in_lp2(void);
--void tegra_set_cpu_in_lp2(void);
--int tegra_idle_lp2_last(void);
-+int tegra30_pm_secondary_cpu_suspend(unsigned long arg);
-+void tegra_pm_clear_cpu_in_lp2(void);
-+void tegra_pm_set_cpu_in_lp2(void);
-+int tegra_pm_enter_lp2(void);
- int tegra_pm_park_secondary_cpu(unsigned long cpu);
- #else
- static inline enum tegra_suspend_mode
-@@ -39,20 +39,20 @@ static inline void tegra_resume(void)
- {
+ 	restore_cpu_complex();
+ 	cpu_cluster_pm_exit();
++
++	return err;
  }
  
--static inline int tegra30_sleep_cpu_secondary_finish(unsigned long arg)
-+static inline int tegra30_pm_secondary_cpu_suspend(unsigned long arg)
- {
- 	return -ENOTSUPP;
- }
+ enum tegra_suspend_mode tegra_pm_validate_suspend_mode(
+diff --git a/arch/arm/mach-tegra/pm.h b/arch/arm/mach-tegra/pm.h
+index 2c294f6365c0..7d72f31dee77 100644
+--- a/arch/arm/mach-tegra/pm.h
++++ b/arch/arm/mach-tegra/pm.h
+@@ -25,7 +25,7 @@ void tegra30_sleep_core_init(void);
  
--static inline void tegra_clear_cpu_in_lp2(void)
-+static inline void tegra_pm_clear_cpu_in_lp2(void)
- {
- }
+ void tegra_clear_cpu_in_lp2(void);
+ void tegra_set_cpu_in_lp2(void);
+-void tegra_idle_lp2_last(void);
++int tegra_idle_lp2_last(void);
+ extern void (*tegra_tear_down_cpu)(void);
  
--static inline void tegra_set_cpu_in_lp2(void)
-+static inline void tegra_pm_set_cpu_in_lp2(void)
- {
- }
- 
--static inline int tegra_idle_lp2_last(void)
-+static inline int tegra_pm_enter_lp2(void)
- {
- 	return -ENOTSUPP;
- }
+ #ifdef CONFIG_PM_SLEEP
 -- 
 2.24.0
 
