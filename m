@@ -2,127 +2,102 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5CBC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F96C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84F97206EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97F81206EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:14:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r0oYPeT0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbfLCUHH (ORCPT
+        id S1727188AbfLCUOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 15:07:07 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38724 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726549AbfLCUHH (ORCPT
+        Tue, 3 Dec 2019 15:14:40 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:44859 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbfLCUOk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 15:07:07 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB3JbGg1137232
-        for <linux-kernel@vger.kernel.org>; Tue, 3 Dec 2019 15:07:04 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wnehynnnu-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 15:07:04 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 3 Dec 2019 20:07:02 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 3 Dec 2019 20:06:59 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB3K6HcB40567262
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Dec 2019 20:06:17 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 24DF1A4053;
-        Tue,  3 Dec 2019 20:06:58 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 161CFA4055;
-        Tue,  3 Dec 2019 20:06:57 +0000 (GMT)
-Received: from dhcp-9-31-103-87.watson.ibm.com (unknown [9.31.103.87])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  3 Dec 2019 20:06:56 +0000 (GMT)
-Subject: Re: [PATCH v9 5/6] IMA: Add support to limit measuring keys
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org
-Date:   Tue, 03 Dec 2019 15:06:56 -0500
-In-Reply-To: <2d20ce36-e24e-e238-4a82-286db9eeab97@linux.microsoft.com>
-References: <20191127015654.3744-1-nramas@linux.microsoft.com>
-         <20191127015654.3744-6-nramas@linux.microsoft.com>
-         <1575375945.5241.16.camel@linux.ibm.com>
-         <2d20ce36-e24e-e238-4a82-286db9eeab97@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19120320-4275-0000-0000-0000038AAE63
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120320-4276-0000-0000-0000389E4DE6
-Message-Id: <1575403616.5241.76.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-03_06:2019-12-02,2019-12-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 spamscore=0 adultscore=0 malwarescore=0 bulkscore=0
- suspectscore=3 impostorscore=0 mlxlogscore=853 priorityscore=1501
- mlxscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912030144
+        Tue, 3 Dec 2019 15:14:40 -0500
+Received: by mail-qt1-f196.google.com with SMTP id g24so5098409qtq.11;
+        Tue, 03 Dec 2019 12:14:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=hsFoc2grURMCqHJk3/bdURAhFk0iV5nKoNBvEUJuOoU=;
+        b=r0oYPeT0dWKW6vbtNpxzFaHkL847f7O2oRZppJeekAmjqhAGscbeuhJcZS4FEXuF0d
+         Eivr8nfQXnGZGBhS6iwWfhO/pmXRfRhtz5+3qyoIL5QAKvgOXNPv77T2RzROQnHfG445
+         NFrmn9TWNxIJo2eVlLWS54UzF4gOULPWQYyW+DSrLBNJlx2U/wac5p1bZZya0hC8F6y2
+         FmaU0ZkOh1AcMi5TYArQyeTDNTtY7RTwT40rMExw5WOsABWpeqCmjAYcrKHff8GDHFPj
+         wxVezSv+Oe2IG/6luskAGi/qT2i7Rv3GbfOn3KNbh3Fs5HsGd5w4IPcQa5sIaRFaHCcQ
+         7JfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=hsFoc2grURMCqHJk3/bdURAhFk0iV5nKoNBvEUJuOoU=;
+        b=NYcFMIfCaAqa92XPVh0d0zmyqt4LBXhiTqTdQ0UMJNSYClbE++OqmNpFF/GUPjIW5W
+         8iyjkxjhXZQsvQpoTLAjYp9r6PGmi/CgjFvMq5MW1K/ZtIIGjj63wiOpaM1jQQJ4Dlxa
+         FTN0SdQkf2ODMWPk9Pt2s/51cSlpNQsJS4RmiikG2pt4gWF4RUPq2ixbTtKkzjxBAr65
+         o51I9CVch++3athlSiBev1eHgotkxYslqn54H9KrmWwNKTtSs+8wulVPnYGt1BSoJ7mk
+         qJPUXWb5TFFAvXlQJi52FrZzpnoXLBogUEB7j1nYAH45xt3Itkre+U985DSWEcfx2JU+
+         fVkg==
+X-Gm-Message-State: APjAAAU8pbdVZtgWmG/NUmhyfZgv3mKSZpYO/zseN1sqUQ+aN0XQc7K/
+        uYGImvw2WQETQl3auNyydA==
+X-Google-Smtp-Source: APXvYqydjbtdnetb3atoETs7iRjrH/Ds6KbWS01EyGo87g8Ha5IGxW3sg0uVv6yHnIYgY43xfuVNPQ==
+X-Received: by 2002:ac8:4794:: with SMTP id k20mr3159837qtq.382.1575404079285;
+        Tue, 03 Dec 2019 12:14:39 -0800 (PST)
+Received: from gabell.cable.rcn.com (209-6-122-159.s2973.c3-0.arl-cbr1.sbo-arl.ma.cable.rcncustomer.com. [209.6.122.159])
+        by smtp.gmail.com with ESMTPSA id l34sm2437104qtd.71.2019.12.03.12.14.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2019 12:14:38 -0800 (PST)
+From:   Masayoshi Mizuma <msys.mizuma@gmail.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-efi@vger.kernel.org
+Cc:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+        d.hatayama@fujitsu.com, Eric Biederman <ebiederm@xmission.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Subject: [PATCH v2 0/2] efi: arm64: Introduce /proc/efi/memreserve to tell the persistent pages
+Date:   Tue,  3 Dec 2019 15:14:08 -0500
+Message-Id: <20191203201410.28045-1-msys.mizuma@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-12-03 at 11:45 -0800, Lakshmi Ramasubramanian wrote:
-> Hi Mimi,
-> 
-> On 12/3/2019 4:25 AM, Mimi Zohar wrote:
-> 
-> > 
-> > A keyring can be created by any user with any keyring name, other than
-> >   ones dot prefixed, which are limited to the trusted builtin keyrings.
-> >   With a policy of "func=KEY_CHECK template=ima-buf keyrings=foo", for
-> > example, keys loaded onto any keyring named "foo" will be measured.
-> >   For files, the IMA policy may be constrained to a particular uid/gid.
-> >   An additional method of identifying or constraining keyring names
-> > needs to be defined.
-> > 
-> > Mimi
-> > 
-> 
-> Are you expecting a functionality like the following?
-> 
->   => Measure keys added to keyring "foo", but exclude certain keys 
-> (based on some key identifier)
-> 
-> Sample policy might look like below:
-> 
-> action=MEASURE func=KEY_CHECK keyrings=foo|bar
-> action=DONT_MEASURE key_magic=blah
-> 
-> So a key with key_magic "blah" will not be measured even though it is 
-> added to the keyring "foo". But any other key added to "foo" will be 
-> measured.
-> 
-> What would the constraining field in the key may be - Can it be SHA256 
-> hash of the public key? Or, some other unique identifier?
-> 
-> Could you please clarify?
+From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 
-Suppose both root and uid 1000 define a keyring named "foo".  The
-current "keyrings=foo" will measure all keys added to either keyring
-named "foo".  There needs to be a way to limit measuring keys to a
-particular keyring named "foo".
+kexec reboot sometime fails in early boot sequence on aarch64 machine.
+That is because kexec overwrites the LPI property tables and pending
+tables with the initrd.
 
-Mimi
+To avoid the overwrite, introduce /proc/efi/memreserve to tell the
+tables region to kexec so that kexec can avoid the memory region to
+locate initrd.
+
+kexec also needs a patch to handle /proc/efi/memreserve. I'm preparing
+the patch for kexec.
+
+Changelog
+    v2: - Change memreserve file location from sysfs to procfs.
+          memreserve may exceed the PAGE_SIZE in case efi_memreserve_root
+          has a lot of entries. So we cannot use sysfs_kf_seq_show().
+          Use seq_printf() in procfs instead.
+
+Masayoshi Mizuma (2):
+  efi: add /proc/efi directory
+  efi: arm64: Introduce /proc/efi/memreserve to tell the persistent
+    pages
+
+ drivers/firmware/efi/efi.c | 93 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 92 insertions(+), 1 deletion(-)
+
+-- 
+2.18.1
 
