@@ -2,237 +2,296 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94615C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B75C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61C54206EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F2FE20803
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:38:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="me/gELWw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbfLCRi0 (ORCPT
+        id S1727259AbfLCRi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 12:38:26 -0500
-Received: from mga18.intel.com ([134.134.136.126]:52343 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726823AbfLCRi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 12:38:26 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Dec 2019 09:38:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,273,1571727600"; 
-   d="scan'208";a="385401803"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga005.jf.intel.com with ESMTP; 03 Dec 2019 09:38:25 -0800
-Date:   Tue, 3 Dec 2019 09:43:08 -0800
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>, ashok.raj@intel.com,
-        kevin.tian@intel.com, Eric Auger <eric.auger@redhat.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH 4/5] iommu/vt-d: Consolidate pasid-based tlb
- invalidation
-Message-ID: <20191203094308.60e348df@jacob-builder>
-In-Reply-To: <20191122030449.28892-5-baolu.lu@linux.intel.com>
-References: <20191122030449.28892-1-baolu.lu@linux.intel.com>
-        <20191122030449.28892-5-baolu.lu@linux.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Tue, 3 Dec 2019 12:38:29 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54366 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfLCRi1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 12:38:27 -0500
+Received: by mail-wm1-f68.google.com with SMTP id b11so3831124wmj.4;
+        Tue, 03 Dec 2019 09:38:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hf1GEOTtUT5DFT9gZa5Emai2aUMzMaSb3KfXYC7NTBw=;
+        b=me/gELWwhGoTijaU04Rgwe9CJuiDhi3Ce6csKDhzn+z0JagSCiKzp4EdQrfOzVchHv
+         bLexUDAOkBQPlWjf3fP0B8Oy1rZk4oOeiSeVUXIUU0jW109DIvQWLm3IfgqUZDz7hHhw
+         LQ+5XwzGQZnLS/1FwPbKUjF0OcuprIzCbeUm+JeGHl8Qs1ZPbpa9Nr76dO5JfCwSYQpl
+         looVoXvDgzReK9iuFrtfFmVbben93dgBa+94dJtS2oYP6eMsg65QPaOd0/W5HQKRmsAj
+         bKfvD53jgTzhH3HPr6uHuPLBHWAtchIfwkxMUwpqtIBSe+N+5cagmkIeJD6Bo6Dj09R9
+         6MKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hf1GEOTtUT5DFT9gZa5Emai2aUMzMaSb3KfXYC7NTBw=;
+        b=Hs0DD7qaE42NFYFdFzMeIR8DXvIkb5TlWKsEuC3kNGTrxCp2wpmD17AgTbJ0eRaqE/
+         w/FDxzDGTPWYY8kklKAuzKAmSOh5pZvdD9bwTS2t/JkAJckItTnQ1h00fGTb187QbHZ1
+         cMYTrdFHrytkdVI7tT0aLzUR2nwamEQgrB0/wn2wntmZD/osCz2OVD7TWvjRMY7/VP8s
+         VL1nz7fdFRHfp3H/bA61OO1YJYtmhvY63+WG1BI0NX3DcpFU0VrkXwDDA2ipEWrivpbZ
+         uuEKBvTJ4EobK1o2rgih6TidFPeU/srH+lL0HQAV28qOKpWo4yOB93zXwJbu50Pg9gfb
+         zrNQ==
+X-Gm-Message-State: APjAAAXucK0r1Ayz6cH64jYMgt8ps7Lpha+Hgtix0WWWIx1HQPtZP4as
+        wAgs9Lr8wx1Ve+PtxqwECZU=
+X-Google-Smtp-Source: APXvYqyR8hLxgwCadstEPcB1ak4FGNcU8m8HZd0HQOX+9GD3bZWwWvwS4oprJKZPTRJpWd8UKzosiw==
+X-Received: by 2002:a05:600c:224d:: with SMTP id a13mr14779400wmm.70.1575394704767;
+        Tue, 03 Dec 2019 09:38:24 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id p10sm3536516wmi.15.2019.12.03.09.38.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 03 Dec 2019 09:38:22 -0800 (PST)
+Date:   Tue, 3 Dec 2019 18:38:21 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        linux-input@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Kirill Smelkov <kirr@nexedi.com>
+Subject: Re: [PATCH] Input: uinput - Add UI_SET_UNIQ ioctl handler
+Message-ID: <20191203173821.4u6uzxeaqnt3gyz3@pali>
+References: <20191127185139.65048-1-abhishekpandit@chromium.org>
+ <20191201145357.ybq5gfty4ulnfasq@pali>
+ <20191202012305.GQ248138@dtor-ws>
+ <20191202084750.k7lafzzrf3yq2tqs@pali>
+ <20191202175440.GA50317@dtor-ws>
+ <20191202185340.nae4lljten5jqp3y@pali>
+ <20191202193628.GI50317@dtor-ws>
+ <20191202230947.ld5ibnczdpkekfcm@pali>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="xlvpbxqyrlflyepa"
+Content-Disposition: inline
+In-Reply-To: <20191202230947.ld5ibnczdpkekfcm@pali>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 Nov 2019 11:04:48 +0800
-Lu Baolu <baolu.lu@linux.intel.com> wrote:
 
-> Merge pasid-based tlb invalidation into iommu->flush.p_iotlb_inv.
-> 
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> ---
->  drivers/iommu/intel-iommu.c | 43
-> +++++++++++++++++++++++++++++++++++++ drivers/iommu/intel-pasid.c |
-> 18 ++-------------- drivers/iommu/intel-svm.c   | 23
-> +++----------------- 3 files changed, 48 insertions(+), 36
-> deletions(-)
-> 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 4eeb18942d3c..fec78cc877c1 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -3032,6 +3032,48 @@ qi_flush_dev_iotlb(struct intel_iommu *iommu,
-> u16 sid, u16 pfsid, qi_submit_sync(&desc, iommu);
->  }
->  
-> +/* PASID-based IOTLB invalidation */
-> +static void
-> +qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u32 pasid, u64
-> addr,
-> +		unsigned long npages, bool ih)
-> +{
-> +	struct qi_desc desc = {.qw2 = 0, .qw3 = 0};
-> +
-> +	/*
-> +	 * npages == -1 means a PASID-selective invalidation,
-> otherwise,
-> +	 * a positive value for Page-selective-within-PASID
-> invalidation.
-> +	 * 0 is not a valid input.
-> +	 */
-> +	if (WARN_ON(!npages)) {
-> +		pr_err("Invalid input npages = %ld\n", npages);
-> +		return;
-> +	}
-> +
-> +	if (npages == -1) {
-> +		desc.qw0 = QI_EIOTLB_PASID(pasid) |
-> +				QI_EIOTLB_DID(did) |
-> +				QI_EIOTLB_GRAN(QI_GRAN_NONG_PASID) |
-> +				QI_EIOTLB_TYPE;
-> +		desc.qw1 = 0;
-Is this based on the latest kernel? seems to be missing the recent
-change for checking page selective cap. So I run into conflict.
+--xlvpbxqyrlflyepa
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-+       /*                                                                     
-+        * Do PASID granu IOTLB invalidation if page selective
-  capability is   
-+        * not
-  available.                                                      
-+
-  */                                                                    
-+       if (pages == -1 || !cap_pgsel_inv(svm->iommu->cap))
-  {                  
-+               desc.qw0 = QI_EIOTLB_PASID(svm->pasid)
-  |                       
+On Tuesday 03 December 2019 00:09:47 Pali Roh=C3=A1r wrote:
+> On Monday 02 December 2019 11:36:28 Dmitry Torokhov wrote:
+> > On Mon, Dec 02, 2019 at 07:53:40PM +0100, Pali Roh=C3=A1r wrote:
+> > > On Monday 02 December 2019 09:54:40 Dmitry Torokhov wrote:
+> > > > On Mon, Dec 02, 2019 at 09:47:50AM +0100, Pali Roh=C3=A1r wrote:
+> > > > > On Sunday 01 December 2019 17:23:05 Dmitry Torokhov wrote:
+> > > > > > Hi Pali,
+> > > > > >=20
+> > > > > > On Sun, Dec 01, 2019 at 03:53:57PM +0100, Pali Roh=C3=A1r wrote:
+> > > > > > > Hello!
+> > > > > > >=20
+> > > > > > > On Wednesday 27 November 2019 10:51:39 Abhishek Pandit-Subedi=
+ wrote:
+> > > > > > > > Support setting the uniq attribute of the input device. The=
+ uniq
+> > > > > > > > attribute is used as a unique identifier for the connected =
+device.
+> > > > > > > >=20
+> > > > > > > > For example, uinput devices created by BlueZ will store the=
+ address of
+> > > > > > > > the connected device as the uniq property.
+> > > > > > > >=20
+> > > > > > > > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chrom=
+ium.org>
+> > > > > > >=20
+> > > > > > > ...
+> > > > > > >=20
+> > > > > > > > diff --git a/include/uapi/linux/uinput.h b/include/uapi/lin=
+ux/uinput.h
+> > > > > > > > index c9e677e3af1d..d5b7767c1b02 100644
+> > > > > > > > --- a/include/uapi/linux/uinput.h
+> > > > > > > > +++ b/include/uapi/linux/uinput.h
+> > > > > > > > @@ -145,6 +145,7 @@ struct uinput_abs_setup {
+> > > > > > > >  #define UI_SET_PHYS		_IOW(UINPUT_IOCTL_BASE, 108, char*)
+> > > > > > > >  #define UI_SET_SWBIT		_IOW(UINPUT_IOCTL_BASE, 109, int)
+> > > > > > > >  #define UI_SET_PROPBIT		_IOW(UINPUT_IOCTL_BASE, 110, int)
+> > > > > > > > +#define UI_SET_UNIQ		_IOW(UINPUT_IOCTL_BASE, 111, char*)
+> > > > > > >=20
+> > > > > > > I think that usage of char* as type in _IOW would cause compa=
+tibility
+> > > > > > > problems like it is for UI_SET_PHYS (there is UI_SET_PHYS_COM=
+PAT). Size
+> > > > > > > of char* pointer depends on userspace (32 vs 64bit), so 32bit=
+ process on
+> > > > > > > 64bit kernel would not be able to call this new UI_SET_UNIQ i=
+octl.
+> > > > > > >=20
+> > > > > > > I would suggest to define this ioctl as e.g.:
+> > > > > > >=20
+> > > > > > >   #define UI_SET_UNIQ		_IOW(_IOC_WRITE, UINPUT_IOCTL_BASE, 11=
+1, 0)
+> > > > > > >=20
+> > > > > > > And then in uinput.c code handle it as:
+> > > > > > >=20
+> > > > > > >   case UI_SET_UNIQ & ~IOCSIZE_MASK:
+> > > > > > >=20
+> > > > > > > as part of section /* Now check variable-length commands */
+> > > > > >=20
+> > > > > > If we did not have UI_SET_PHYS in its current form, I'd agree w=
+ith you,
+> > > > > > but I think there is benefit in having UI_SET_UNIQ be similar to
+> > > > > > UI_SET_PHYS.
+> > > > >=20
+> > > > > I thought that ioctl is just number, so we can define it as we wa=
+nt. And
+> > > > > because uinput.c has already switch for variable-length commands =
+it
+> > > > > would be easy to use it. Final handling can be in separate functi=
+on like
+> > > > > for UI_SET_PHYS which can look like same.
+> > > >=20
+> > > > Yes, we can define ioctl number as whatever we want. What I was try=
+ing
+> > > > to say, right now users do this:
+> > > >=20
+> > > > 	rc =3D ioctl(fd, UI_SET_PHYS, "whatever");
+> > > > 	...
+> > > >=20
+> > > > and with UI_SET_UNIQ they expect the following to work:
+> > > >=20
+> > > > 	rc =3D ioctl(fd, UI_SET_UNIQ, "whatever");
+> > > > 	...
+> > >=20
+> > > And would not following definition
+> > >=20
+> > >   #define UI_SET_UNIQ _IOW(_IOC_WRITE, UINPUT_IOCTL_BASE, 111, 0)
+> > >=20
+> > > allow userspace to call
+> > >=20
+> > >   rc =3D ioctl(fd, UI_SET_UNIQ, "whatever");
+> > >=20
+> > > as you want?
+> >=20
+> > OK, so what you are saying is that we can have whatever in the size
+> > portion of ioctl number and simply ignore it in the driver
+>=20
+> Yes.
+>=20
+> > (and I do not
+> > think we need to do any of "UI_SET_UNIQ & ~IOCSIZE_MASK" really).
+>=20
+> You are right, we do not need to clear any IOCSIZE_MASK. As ioctl number
+> would be always sam constant number. So it would be really simple. So
+> original patch would work if UI_SET_UNIQ define would be changed to
+> above with _IOW() macro.
+>=20
+> > While this would work, I am not sure it is the best option as I think
+> > we'd have to comment extensively why we have arbitrary number in place
+> > of the size.
+>=20
+> Comment can be added. But this is as ioctl is going to accept variable
+> length array (not fixed array), zero value make sense for me (zero as we
+> do not know exact size).
+>=20
+> > And we still do not really save anything, as we still have to go through
+> > compat ioctl handler (since we have it already) and it is very simple to
+> > add a case for UI_SET_UNIQ there...
+>=20
+> Yes, compat ioctl is still used. But my proposed solution does not
+> involve to define a new compact ioctl number just for sizeof(char *).
+>=20
+> I'm looking at this particular problem from side, that there is no
+> reason to define two new ioctl numbers for UI_SET_UNIQ (one normal
+> number and one compat number), when one number is enough. It is one new
+> ioctl call, so one ioctl number should be enough.
+>=20
+> And also with my proposed solution with ioctl size=3D0 it simplify
+> implementation of UI_SET_UNIQ as it is not needed to implement also
+> UI_SET_UNIQ_COMPAT ioctl nor touch compat ioct code path. Basically
+> original patch (with changed UI_SET_UNIQ macro) is enough.
+>=20
+> But of of course, this is my view of this problem and I would not be
+> against your decision from maintainer position. Both solutions would
+> work correctly and bring same behavior for userspace applications.
 
-Seems missing this one in your base?
 
-Refs: v5.3-rc6-2-g8744daf4b069                              
-Author:     Jacob Pan <jacob.jun.pan@linux.intel.com>       
-AuthorDate: Mon Aug 26 08:53:29 2019 -0700                  
-Commit:     Joerg Roedel <jroedel@suse.de>                  
-CommitDate: Tue Sep 3 15:01:27 2019 +0200                   
-                                                            
-    iommu/vt-d: Remove global page flush support            
+Hi Dmitry!
 
-> +	} else {
-> +		int mask = ilog2(__roundup_pow_of_two(npages));
-> +		unsigned long align = (1ULL << (VTD_PAGE_SHIFT +
-> mask)); +
-> +		if (WARN_ON_ONCE(!ALIGN(addr, align)))
-> +			addr &= ~(align - 1);
-> +
-> +		desc.qw0 = QI_EIOTLB_PASID(pasid) |
-> +				QI_EIOTLB_DID(did) |
-> +				QI_EIOTLB_GRAN(QI_GRAN_PSI_PASID) |
-> +				QI_EIOTLB_TYPE;
-> +		desc.qw1 = QI_EIOTLB_ADDR(addr) |
-> +				QI_EIOTLB_IH(ih) |
-> +				QI_EIOTLB_AM(mask);
-> +	}
-> +
-> +	qi_submit_sync(&desc, iommu);
-> +}
-> +
->  static void intel_iommu_init_qi(struct intel_iommu *iommu)
->  {
->  	/*
-> @@ -3065,6 +3107,7 @@ static void intel_iommu_init_qi(struct
-> intel_iommu *iommu) iommu->flush.iotlb_inv = qi_flush_iotlb;
->  		iommu->flush.pc_inv = qi_flush_pasid;
->  		iommu->flush.dev_tlb_inv = qi_flush_dev_iotlb;
-> +		iommu->flush.p_iotlb_inv = qi_flush_piotlb;
->  		pr_info("%s: Using Queued invalidation\n",
-> iommu->name); }
->  }
-> diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
-> index 01dd9c86178b..78ff4eee8595 100644
-> --- a/drivers/iommu/intel-pasid.c
-> +++ b/drivers/iommu/intel-pasid.c
-> @@ -359,20 +359,6 @@ pasid_set_flpm(struct pasid_entry *pe, u64 value)
->  	pasid_set_bits(&pe->val[2], GENMASK_ULL(3, 2), value << 2);
->  }
->  
-> -static void
-> -iotlb_invalidation_with_pasid(struct intel_iommu *iommu, u16 did,
-> u32 pasid) -{
-> -	struct qi_desc desc;
-> -
-> -	desc.qw0 = QI_EIOTLB_PASID(pasid) | QI_EIOTLB_DID(did) |
-> -			QI_EIOTLB_GRAN(QI_GRAN_NONG_PASID) |
-> QI_EIOTLB_TYPE;
-> -	desc.qw1 = 0;
-> -	desc.qw2 = 0;
-> -	desc.qw3 = 0;
-> -
-> -	qi_submit_sync(&desc, iommu);
-> -}
-> -
->  static void
->  devtlb_invalidation_with_pasid(struct intel_iommu *iommu,
->  			       struct device *dev, int pasid)
-> @@ -409,7 +395,7 @@ void intel_pasid_tear_down_entry(struct
-> intel_iommu *iommu, clflush_cache_range(pte, sizeof(*pte));
->  
->  	iommu->flush.pc_inv(iommu, did, pasid, QI_PC_GRAN_PSWD);
-> -	iotlb_invalidation_with_pasid(iommu, did, pasid);
-> +	iommu->flush.p_iotlb_inv(iommu, did, pasid, 0, -1, 0);
->  
->  	/* Device IOTLB doesn't need to be flushed in caching mode.
-> */ if (!cap_caching_mode(iommu->cap))
-> @@ -425,7 +411,7 @@ static void pasid_flush_caches(struct intel_iommu
-> *iommu, 
->  	if (cap_caching_mode(iommu->cap)) {
->  		iommu->flush.pc_inv(iommu, did, pasid,
-> QI_PC_GRAN_PSWD);
-> -		iotlb_invalidation_with_pasid(iommu, did, pasid);
-> +		iommu->flush.p_iotlb_inv(iommu, did, pasid, 0, -1,
-> 0); } else {
->  		iommu_flush_write_buffer(iommu);
->  	}
-> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-> index f5594b9981a5..02c6b14f0568 100644
-> --- a/drivers/iommu/intel-svm.c
-> +++ b/drivers/iommu/intel-svm.c
-> @@ -118,27 +118,10 @@ static void intel_flush_svm_range_dev (struct
-> intel_svm *svm, struct intel_svm_d unsigned long address, unsigned
-> long pages, int ih) {
->  	struct qi_desc desc;
-> +	struct intel_iommu *iommu = svm->iommu;
->  
-> -	if (pages == -1) {
-> -		desc.qw0 = QI_EIOTLB_PASID(svm->pasid) |
-> -			QI_EIOTLB_DID(sdev->did) |
-> -			QI_EIOTLB_GRAN(QI_GRAN_NONG_PASID) |
-> -			QI_EIOTLB_TYPE;
-> -		desc.qw1 = 0;
-> -	} else {
-> -		int mask = ilog2(__roundup_pow_of_two(pages));
-> -
-> -		desc.qw0 = QI_EIOTLB_PASID(svm->pasid) |
-> -				QI_EIOTLB_DID(sdev->did) |
-> -				QI_EIOTLB_GRAN(QI_GRAN_PSI_PASID) |
-> -				QI_EIOTLB_TYPE;
-> -		desc.qw1 = QI_EIOTLB_ADDR(address) |
-> -				QI_EIOTLB_IH(ih) |
-> -				QI_EIOTLB_AM(mask);
-> -	}
-> -	desc.qw2 = 0;
-> -	desc.qw3 = 0;
-> -	qi_submit_sync(&desc, svm->iommu);
-> +	iommu->flush.p_iotlb_inv(iommu, sdev->did,
-> +				 svm->pasid, address, pages, ih);
->  
->  	if (sdev->dev_iotlb) {
->  		desc.qw0 = QI_DEV_EIOTLB_PASID(svm->pasid) |
+I was looking again at those _IOW defines for ioctl calls and I have
+another argument why not specify 'char *' in _IOW:
 
-[Jacob Pan]
+All ioctls in _IOW() specify as a third macro argument type which is
+passed as pointer to the third argument for ioctl() syscall.
+
+So e.g.:
+
+  #define EVIOCSCLOCKID _IOW('E', 0xa0, int)
+
+is called from userspace as:
+
+  int val;
+  ioctl(fd, EVIOCSCLOCKID, &val);
+
+Or
+
+  #define EVIOCSMASK _IOW('E', 0x93, struct input_mask)
+
+is called as:
+
+  struct input_mask val;
+  ioctl(fd, EVIOCSMASK, &val);
+
+So basically third argument for _IOW specify size of byte buffer passed
+as third argument for ioctl(). In _IOW is not specified pointer to
+struct input_mask, but struct input_mask itself.
+
+And in case you define
+
+  #define MY_NEW_IOCTL _IOW(UINPUT_IOCTL_BASE, 200, char*)
+
+then you by above usage you should pass data as:
+
+  char *val =3D "DATA";
+  ioctl(fd, MY_NEW_IOCTL, &val);
+
+Which is not same as just:
+
+  ioctl(fd, MY_NEW_IOCTL, "DATA");
+
+As in former case you passed pointer to pointer to data and in later
+case you passed only pointer to data.
+
+It just mean that UI_SET_PHYS is already defined inconsistently which is
+also reason why compat ioctl for it was introduced.
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--xlvpbxqyrlflyepa
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXeadigAKCRCL8Mk9A+RD
+UkWEAJ0adxjwIUFAhWq0sGgUKdFfXEXbZACgw7jPQCtZtVTFvbHVZ73GkK8cJcc=
+=4NDj
+-----END PGP SIGNATURE-----
+
+--xlvpbxqyrlflyepa--
