@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1F7C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0E2C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 776912084F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C0FC20863
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413513;
-	bh=Z+GRDGXvde3IqbQAMR4FdDnPTDNca8lROt2Va9pj+gk=;
+	s=default; t=1575413516;
+	bh=QFLf3HJ6du181U9CDpuGFKVocaY+72lw3PwSNKydJss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FnnFVKAsp3ghGWZx3ApaaRbHCREzDLTWQZLb1wE6gLO5z0gaZG5Y7OV1uLCTr5yDU
-	 4mPeNWaTVdqqHx9Y8hXLv5c2hAMcEtTxAZvUWpWxZPqJuMF2ABzN9awssQVgag1iqK
-	 Qw5r77ATErrUWflmFB6f9efY0/dWc9arb8X83SjQ=
+	b=R7W7TU4BIE5hzmZSk+yPRVTCQXv8pNEhisSi50aOaWUGjUi/Nm72NrU0LMpC4MQpJ
+	 OGOAKF/jLT0v7vbmwcQSLVDC00cM3Zlj/IXfFwU3ubQfp71L2seupK5SuD8Dkc/7oY
+	 YalqfBE8sE+syXj/Pece2PhDLPuuaEIp2v/zyNEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729957AbfLCWvw (ORCPT
+        id S1729595AbfLCWvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:51:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44220 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:51:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729659AbfLCWvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:51:48 -0500
+        id S1729933AbfLCWvn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:51:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AF9220848;
-        Tue,  3 Dec 2019 22:51:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4E1520848;
+        Tue,  3 Dec 2019 22:51:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413507;
-        bh=Z+GRDGXvde3IqbQAMR4FdDnPTDNca8lROt2Va9pj+gk=;
+        s=default; t=1575413502;
+        bh=QFLf3HJ6du181U9CDpuGFKVocaY+72lw3PwSNKydJss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HYL2xAKrxN0N5gVXDTbu1lsswCpkUw0wWC1iYDeG4MuRMOkM7myWmlldZ6wq7l+kS
-         ruE+3UXkWzPmkKzMHsNkkvXF1MIFuftLsAML+W5CNlYzuzWhjlwfdIpBkHyusrL0VG
-         +Plb4FPMpXQe8chgFDPGg2wJhTCE4+KArrcTJE/k=
+        b=1R+i8eUXAKICdkIyJH1G/5Vf5m1Vu3WxU7QGvNNmzZHyPpSGgPstDCuviekK13V3j
+         d1hUwIxujBfhHSA8YAJoV9RSTS6EjxMbY4rU6TThIg3JmkFsrKbybPnU9DuXuAc5Py
+         TY8LYb0jaM2dntsEGCJu8Ay7S4xyLmySSDOFbRUw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 154/321] drivers/regulator: fix a missing check of return value
-Date:   Tue,  3 Dec 2019 23:33:40 +0100
-Message-Id: <20191203223435.158947030@linuxfoundation.org>
+Subject: [PATCH 4.19 152/321] powerpc/book3s/32: fix number of bats in p/v_block_mapped()
+Date:   Tue,  3 Dec 2019 23:33:38 +0100
+Message-Id: <20191203223435.056581723@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,44 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit 966e927bf8cc6a44f8b72582a1d6d3ffc73b12ad ]
+[ Upstream commit e93ba1b7eb5b188c749052df7af1c90821c5f320 ]
 
-If palmas_smps_read() fails, we should not use the read data in "reg"
-which may contain random value. The fix inserts a check for the return
-value of palmas_smps_read(): If it fails, we return the error code
-upstream and stop using "reg".
+This patch fixes the loop in p_block_mapped() and v_block_mapped()
+to scan the entire bat_addrs[] array.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/palmas-regulator.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/powerpc/mm/ppc_mmu_32.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/palmas-regulator.c b/drivers/regulator/palmas-regulator.c
-index bb5ab7d78895b..c2cc392a27d40 100644
---- a/drivers/regulator/palmas-regulator.c
-+++ b/drivers/regulator/palmas-regulator.c
-@@ -443,13 +443,16 @@ static int palmas_ldo_write(struct palmas *palmas, unsigned int reg,
- static int palmas_set_mode_smps(struct regulator_dev *dev, unsigned int mode)
+diff --git a/arch/powerpc/mm/ppc_mmu_32.c b/arch/powerpc/mm/ppc_mmu_32.c
+index bea6c544e38f9..06783270a1242 100644
+--- a/arch/powerpc/mm/ppc_mmu_32.c
++++ b/arch/powerpc/mm/ppc_mmu_32.c
+@@ -52,7 +52,7 @@ struct batrange {		/* stores address ranges mapped by BATs */
+ phys_addr_t v_block_mapped(unsigned long va)
  {
- 	int id = rdev_get_id(dev);
-+	int ret;
- 	struct palmas_pmic *pmic = rdev_get_drvdata(dev);
- 	struct palmas_pmic_driver_data *ddata = pmic->palmas->pmic_ddata;
- 	struct palmas_regs_info *rinfo = &ddata->palmas_regs_info[id];
- 	unsigned int reg;
- 	bool rail_enable = true;
- 
--	palmas_smps_read(pmic->palmas, rinfo->ctrl_addr, &reg);
-+	ret = palmas_smps_read(pmic->palmas, rinfo->ctrl_addr, &reg);
-+	if (ret)
-+		return ret;
- 
- 	reg &= ~PALMAS_SMPS12_CTRL_MODE_ACTIVE_MASK;
- 
+ 	int b;
+-	for (b = 0; b < 4; ++b)
++	for (b = 0; b < ARRAY_SIZE(bat_addrs); ++b)
+ 		if (va >= bat_addrs[b].start && va < bat_addrs[b].limit)
+ 			return bat_addrs[b].phys + (va - bat_addrs[b].start);
+ 	return 0;
+@@ -64,7 +64,7 @@ phys_addr_t v_block_mapped(unsigned long va)
+ unsigned long p_block_mapped(phys_addr_t pa)
+ {
+ 	int b;
+-	for (b = 0; b < 4; ++b)
++	for (b = 0; b < ARRAY_SIZE(bat_addrs); ++b)
+ 		if (pa >= bat_addrs[b].phys
+ 	    	    && pa < (bat_addrs[b].limit-bat_addrs[b].start)
+ 		              +bat_addrs[b].phys)
 -- 
 2.20.1
 
