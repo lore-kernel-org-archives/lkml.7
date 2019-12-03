@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F276CC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB01C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9359206E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A32C6206E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:42:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="etsioX30"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KC+5/s44"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfLCAma (ORCPT
+        id S1727154AbfLCAmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 19:42:30 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46246 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfLCAmT (ORCPT
+        Mon, 2 Dec 2019 19:42:32 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38358 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726925AbfLCAmW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 19:42:19 -0500
-Received: by mail-lj1-f196.google.com with SMTP id z17so1624321ljk.13;
-        Mon, 02 Dec 2019 16:42:17 -0800 (PST)
+        Mon, 2 Dec 2019 19:42:22 -0500
+Received: by mail-lj1-f193.google.com with SMTP id k8so1686363ljh.5;
+        Mon, 02 Dec 2019 16:42:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=/vScFMEW5c6mcmahpQZvLBRpTO1V0ohLenYjntTCVwo=;
-        b=etsioX30uZHdnWnYOmYEBjJi3Q+cfI/5mmTEm5MQ6/zv24CfUkwa9OUTLzGD6T+CcY
-         hZ8Z/0ttdiKFxHbKRz7am+uBNHhRlPQw07qoQS/9v+vywxpRlJxvJtjyHFk85MOx2FYc
-         3ygHgWSlY8FYMk/pKX4oAzQqqzp+nKamEwGJB5/tWCNxSF3eNQwWCQ7h4hpzv3nn8Gei
-         1Cgx0/tohUMzIbHubYqrhGXtiETxkYXKjFQ515ImuYtWckNK1WfXH4/zIyrOR9DlLjXm
-         Pfm+NSm9EgDIJemDuCPn2LOaFiVLvO7G4tXd1R8db7Zm048i56ZRsHF2GO8WAVHq3PKe
-         rb6Q==
+        bh=d0mK1Z7qoFE2PZhFBqu+ALZHCAnCtCbOKYMTfyLZ6ec=;
+        b=KC+5/s44yjC+sGvGgutLBMU6HME7FKCgF+Tezsa0DgIckWH2D5WXBH4REhnM3dKW6O
+         WybjWeABQ8PkL58tiYzf5k8F0v4C5KqLiLiXIxU/SsdlcDehxaRuafXhQrDq/imdelt6
+         NC6HpZ9Jr8kvlMFXHDhzYauCItMi+dYq1Crba97nMzyGyuNhWt6EjkS0joX4buTTo4EA
+         IHqGgfXV/567S3CVvv1J08p8Ivdf8uXZMmcc2CwOu6//Y/g/540ofuVI10/EZuj4cnEs
+         YNhfZp/vuZ7Vm0ZlQPVsrLvtGMfoUeP2Xp2kRDrypqqrk9f9PPjNW+dFGOU2vwOIHJsq
+         aEjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=/vScFMEW5c6mcmahpQZvLBRpTO1V0ohLenYjntTCVwo=;
-        b=DW/HcnXzC4+KH3iyLXm+GHNdXlo5sXmEJlc/EiD9YYGc3adUQeIZ+IWMeHS1D47CfD
-         RMF6ipN4E0PsYOmL9B7SqCSzBn13BkO4GqVnbAb1REQj1kjb2TuaTMwen7p+XFLP2+5F
-         IVHZr0LQg9p6jTzTviVB0htbn+gw5JOXT2Vq3klM2uvkdod/EJdh6AlsoEVQANOAUxT3
-         Td5vclwxXD+1TKWKlU491YDsllCGd3nJxdxhlB8vXdDrmpP5YR658C7E2y2+hH1DqwA/
-         zW/Doj6/F3mgmu+y4sqIvhQsjiJjVIYQbDegc3yGiqIYDHOR1OIxqwTolLTu4U6eOXgj
-         IYSA==
-X-Gm-Message-State: APjAAAW7C/89gBLauD+BzGoInPlkAKz+ZnvbnGYFPR8xJ29yxq4bI2SD
-        2VFVVuNE4gu1YwuMUYFhv9PbgDkp
-X-Google-Smtp-Source: APXvYqz9xkaiorJSpQ2XyvedcG3TqAAgSLBV9czN755y6OVTLrynxhsLoLgj+T5w/yJy+Kztv6GZyw==
-X-Received: by 2002:a2e:9596:: with SMTP id w22mr864195ljh.21.1575333736974;
-        Mon, 02 Dec 2019 16:42:16 -0800 (PST)
+        bh=d0mK1Z7qoFE2PZhFBqu+ALZHCAnCtCbOKYMTfyLZ6ec=;
+        b=nVZmoRQewdscguT6ATuVR1W0tN2EEB/VjxsXFZxcFjv3efr5cnvtwAXrIQ9ibmHX2c
+         0i92zwWzDTX6M4WHNgji6jFCY46b9QDzHv6FL5Lf109L8idG+X7LAy7mV/HWrOoEu6FQ
+         ahiBhmnAR9Jadj+LfSncnZKOY+cbnEeOVsITGiDj/v/q3kGePO40GkkmE1FUUnfxgo+K
+         ZwLjiEjqmthiwDubVsDNDime31UKf689zwTdQ4Bgrv6/SI9+FOTRKxtBywFttdLLsK4O
+         3gm01mCWrPgzQxfsGgfpmX4dKoo7h50kIYm6iuch2cS7TfJmVkVwyCUUN3sdzmAn8iuw
+         iikg==
+X-Gm-Message-State: APjAAAVYZzvSCMtaWVanAd7FIs9k0hvI8q4XxwAq1kwAkx6UkdVidxP4
+        QWRWEUZFMWP9rG50HLBowI8=
+X-Google-Smtp-Source: APXvYqzuOaDi1w2VYKYtjXSXPnGq/WjZ67cZD2LiTfoJD/V2fG4riQ84gJiNZOska3OXND03onH5uw==
+X-Received: by 2002:a2e:978d:: with SMTP id y13mr878257lji.103.1575333740100;
+        Mon, 02 Dec 2019 16:42:20 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id y21sm456384ljm.25.2019.12.02.16.42.15
+        by smtp.gmail.com with ESMTPSA id y21sm456384ljm.25.2019.12.02.16.42.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 16:42:16 -0800 (PST)
+        Mon, 02 Dec 2019 16:42:19 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -65,9 +65,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v8 15/19] cpuidle: tegra: Support CPU cluster power-down state on Tegra30
-Date:   Tue,  3 Dec 2019 03:41:12 +0300
-Message-Id: <20191203004116.11771-16-digetx@gmail.com>
+Subject: [PATCH v8 18/19] ARM: multi_v7_defconfig: Enable Tegra cpuidle driver
+Date:   Tue,  3 Dec 2019 03:41:15 +0300
+Message-Id: <20191203004116.11771-19-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203004116.11771-1-digetx@gmail.com>
 References: <20191203004116.11771-1-digetx@gmail.com>
@@ -78,27 +78,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The new Tegra CPU Idle driver now has a unified code path for the coupled
-CC6 (LP2) state, this allows to enable the deepest idling state on Tegra30
-SoC where the whole CPU cluster is power-gated.
+The Tegra CPU Idle driver was moved out into driver/cpuidle/ directory and
+it is now a proper platform driver.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/cpuidle/cpuidle-tegra.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/cpuidle/cpuidle-tegra.c b/drivers/cpuidle/cpuidle-tegra.c
-index 828b30e352ef..bacc1d1532cd 100644
---- a/drivers/cpuidle/cpuidle-tegra.c
-+++ b/drivers/cpuidle/cpuidle-tegra.c
-@@ -312,7 +312,6 @@ static int tegra_cpuidle_probe(struct platform_device *pdev)
- 		tegra_idle_driver.states[TEGRA_C7].disabled = true;
- 		break;
- 	case TEGRA30:
--		tegra_idle_driver.states[TEGRA_CC6].disabled = true;
- 		break;
- 	default:
- 		return -EINVAL;
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 24962d0e71c7..293f0cea076c 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -113,6 +113,7 @@ CONFIG_CPU_IDLE=y
+ CONFIG_ARM_CPUIDLE=y
+ CONFIG_ARM_ZYNQ_CPUIDLE=y
+ CONFIG_ARM_EXYNOS_CPUIDLE=y
++CONFIG_ARM_TEGRA_CPUIDLE=y
+ CONFIG_KERNEL_MODE_NEON=y
+ CONFIG_RASPBERRYPI_FIRMWARE=y
+ CONFIG_TRUSTED_FOUNDATIONS=y
 -- 
 2.24.0
 
