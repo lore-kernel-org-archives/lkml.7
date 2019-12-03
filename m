@@ -2,376 +2,116 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 203AAC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C968DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D31DA2073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:27:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="THxzq+Wf"
+	by mail.kernel.org (Postfix) with ESMTP id A86682073C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:27:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbfLCR1E (ORCPT
+        id S1727308AbfLCR1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 12:27:04 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:37732 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727158AbfLCR0u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 12:26:50 -0500
-Received: by mail-pj1-f65.google.com with SMTP id ep17so1789615pjb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 09:26:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=g2tf2P5EW6ccOOB6IuRLEpkXKMEElN2z8PaZC3yQjBk=;
-        b=THxzq+WfZQ2K8WaJ+VoflSOKfd9OwR+NLRTYyv6FIHEUor0lCDbee9j3MOfbkENgz8
-         uDoKayJRBdWXd8OGKIYNb2Qf9/JNOMgX+dRmuEtc8vsoVaAA1PKaOPgEoHtba1rdiia/
-         M23zQ0r+GZfa2bUQJXUbLbHU/dqlPvZZqLypXNu3yldip+BJGSHQIU+PPuxGolk/Jur2
-         IDyNwtr02ND0xkTUA2kuJlIkN8h8oGndkqQIJ9CUKg6YFKdCp9p/afs4ekN2t6foj2S2
-         bURz4UuW83PgpGoagIsbfyqVLKzbo6gnprnk1PDrj/YNdhxsmq83XiuCVF1gdttMeE1A
-         jX0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=g2tf2P5EW6ccOOB6IuRLEpkXKMEElN2z8PaZC3yQjBk=;
-        b=HjKBO1ikUOHORFag7A58uSHcsLCWpdIzohSTJgcZJHEuhVt1GfGQkzZ963ayi8vIfS
-         3MakFRos2e5Q/qKfUw/YiF0NxgP8K0BT+sRrI18zJFJEO+RRdANKZG8pCMfANctIACvA
-         PWuh7LwO/dKsPOb79GXZ5Y1hF4thoU5tsWpCML20+jBuwRbRBjyM42ov52jc4KFmr4oA
-         7Z9TawXxKDjk3zxZYJ0ZTgrZHwtjcpNXaU7GcV3HLYHFTVMUQM7M998RmSd7w1+2u+d+
-         N244j4nwYG+iS5efP+mhHG7vHFjMrF1CxLONX18jV1mp4oDTH266N6ukXs/SWuZaYtoI
-         CH1w==
-X-Gm-Message-State: APjAAAWMr1DCWHV8M5PQxE951vOj6gw83XWTyipqMuoqX/xzCi5H0s9c
-        vfuv1rBJMHIiZDiqaScGKz4ACsLyZKM=
-X-Google-Smtp-Source: APXvYqxSI7S1nCYZZUEHToMmZ8+W6VRv7mYgXl+ItV6GIQWzK14wTV9p3dBGmZxBGQmIlbzmUR3Epg==
-X-Received: by 2002:a17:90a:804a:: with SMTP id e10mr6769479pjw.41.1575394009690;
-        Tue, 03 Dec 2019 09:26:49 -0800 (PST)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id l9sm4066177pgh.34.2019.12.03.09.26.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 09:26:49 -0800 (PST)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Dave Airlie <airlied@gmail.com>,
-        dri-devel@lists.freedesktop.org
-Subject: [RESEND][PATCH v16 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
-Date:   Tue,  3 Dec 2019 17:26:40 +0000
-Message-Id: <20191203172641.66642-5-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191203172641.66642-1-john.stultz@linaro.org>
-References: <20191203172641.66642-1-john.stultz@linaro.org>
+        Tue, 3 Dec 2019 12:27:09 -0500
+Received: from mga05.intel.com ([192.55.52.43]:11457 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727158AbfLCR1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 12:27:07 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Dec 2019 09:27:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,273,1571727600"; 
+   d="scan'208";a="213488485"
+Received: from unknown (HELO [10.7.201.139]) ([10.7.201.139])
+  by orsmga006.jf.intel.com with ESMTP; 03 Dec 2019 09:27:06 -0800
+Subject: Re: [PATCH] x86/fpu: Warn only when CPU-provided sizes less than
+ struct declaration
+To:     Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        jon.grimm@amd.com,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>
+References: <1575363688-36727-1-git-send-email-suravee.suthikulpanit@amd.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <b63e2111-b0c6-a716-3d99-88f91ad64e1d@intel.com>
+Date:   Tue, 3 Dec 2019 09:27:06 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <1575363688-36727-1-git-send-email-suravee.suthikulpanit@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds a CMA heap, which allows userspace to allocate
-a dma-buf of contiguous memory out of a CMA region.
+On 12/3/19 1:01 AM, Suravee Suthikulpanit wrote:
+> The current XCHECK_SZ macro warns if the XFEATURE size reported
+> by CPUID does not match the size of kernel structure. However, depending
+> on the hardware implementation, CPUID can report the XSAVE state size
+> larger than the size of C structures defined for each of the XSAVE state
+> due to padding.
 
-This code is an evolution of the Android ION implementation, so
-thanks to its original author and maintainters:
-  Benjamin Gaignard, Laura Abbott, and others!
+We have existing architecture for padding.  See xfeature_is_aligned(),
+for instance.  Are you saying that there are implementations out there
+that do padding which is not otherwise enumerated and that they do it
+within the size of the enumerated state?
 
-NOTE: This patch only adds the default CMA heap. We will enable
-selectively adding other CMA memory regions to the dmabuf heaps
-interface with a later patch (which requires a dt binding)
+> Such case should be safe and should not need to generate warning
+> message.
 
-Cc: Laura Abbott <labbott@redhat.com>
-Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: Liam Mark <lmark@codeaurora.org>
-Cc: Pratik Patel <pratikp@codeaurora.org>
-Cc: Brian Starkey <Brian.Starkey@arm.com>
-Cc: Vincent Donnefort <Vincent.Donnefort@arm.com>
-Cc: Sudipto Paul <Sudipto.Paul@arm.com>
-Cc: Andrew F. Davis <afd@ti.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Chenbo Feng <fengc@google.com>
-Cc: Alistair Strachan <astrachan@google.com>
-Cc: Hridya Valsaraju <hridya@google.com>
-Cc: Sandeep Patil <sspatil@google.com>
-Cc: Hillf Danton <hdanton@sina.com>
-Cc: Dave Airlie <airlied@gmail.com>
-Cc: dri-devel@lists.freedesktop.org
-Reviewed-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Reviewed-by: Brian Starkey <brian.starkey@arm.com>
-Acked-by: Sandeep Patil <sspatil@android.com>
-Acked-by: Laura Abbott <labbott@redhat.com>
-Tested-by: Ayan Kumar Halder <ayan.halder@arm.com>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
-v2:
-* Switch allocate to return dmabuf fd
-* Simplify init code
-* Checkpatch fixups
-v3:
-* Switch to inline function for to_cma_heap()
-* Minor cleanups suggested by Brian
-* Fold in new registration style from Andrew
-* Folded in changes from Andrew to use simplified page list
-  from the heap helpers
-v4:
-* Use the fd_flags when creating dmabuf fd (Suggested by
-  Benjamin)
-* Use precalculated pagecount (Suggested by Andrew)
-v6:
-* Changed variable names to improve clarity, as suggested
-  by Brian
-v7:
-* Use newly lower-cased init_heap_helper_buffer helper
-* Use new dmabuf export helper
-v8:
-* Make struct dma_heap_ops const (Suggested by Christoph)
-* Condense dma_heap_buffer and heap_helper_buffer (suggested by
-  Christoph)
-* Checkpatch whitespace fixups
-v9:
-* Removing needless check noted by Brian Starkey
-* Rename dma_heap_get_data->dma_heap_get_drvdata suggested
-  by Hilf Danton
-* Check signals after clearing memory pages to avoid doing
-  needless work if the task is killed as suggested by Hilf
-v12:
-* Rework to only add the default CMA heap
-v15:
-* Drop unused flags field from heap_helper_buffer as suggested
-  by Sandeep Patil
----
- drivers/dma-buf/heaps/Kconfig    |   8 ++
- drivers/dma-buf/heaps/Makefile   |   1 +
- drivers/dma-buf/heaps/cma_heap.c | 177 +++++++++++++++++++++++++++++++
- 3 files changed, 186 insertions(+)
- create mode 100644 drivers/dma-buf/heaps/cma_heap.c
-
-diff --git a/drivers/dma-buf/heaps/Kconfig b/drivers/dma-buf/heaps/Kconfig
-index 205052744169..a5eef06c4226 100644
---- a/drivers/dma-buf/heaps/Kconfig
-+++ b/drivers/dma-buf/heaps/Kconfig
-@@ -4,3 +4,11 @@ config DMABUF_HEAPS_SYSTEM
- 	help
- 	  Choose this option to enable the system dmabuf heap. The system heap
- 	  is backed by pages from the buddy allocator. If in doubt, say Y.
-+
-+config DMABUF_HEAPS_CMA
-+	bool "DMA-BUF CMA Heap"
-+	depends on DMABUF_HEAPS && DMA_CMA
-+	help
-+	  Choose this option to enable dma-buf CMA heap. This heap is backed
-+	  by the Contiguous Memory Allocator (CMA). If your system has these
-+	  regions, you should say Y here.
-diff --git a/drivers/dma-buf/heaps/Makefile b/drivers/dma-buf/heaps/Makefile
-index d1808eca2581..6e54cdec3da0 100644
---- a/drivers/dma-buf/heaps/Makefile
-+++ b/drivers/dma-buf/heaps/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-y					+= heap-helpers.o
- obj-$(CONFIG_DMABUF_HEAPS_SYSTEM)	+= system_heap.o
-+obj-$(CONFIG_DMABUF_HEAPS_CMA)		+= cma_heap.o
-diff --git a/drivers/dma-buf/heaps/cma_heap.c b/drivers/dma-buf/heaps/cma_heap.c
-new file mode 100644
-index 000000000000..626cf7fd033a
---- /dev/null
-+++ b/drivers/dma-buf/heaps/cma_heap.c
-@@ -0,0 +1,177 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * DMABUF CMA heap exporter
-+ *
-+ * Copyright (C) 2012, 2019 Linaro Ltd.
-+ * Author: <benjamin.gaignard@linaro.org> for ST-Ericsson.
-+ */
-+
-+#include <linux/cma.h>
-+#include <linux/device.h>
-+#include <linux/dma-buf.h>
-+#include <linux/dma-heap.h>
-+#include <linux/dma-contiguous.h>
-+#include <linux/err.h>
-+#include <linux/errno.h>
-+#include <linux/highmem.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/scatterlist.h>
-+#include <linux/sched/signal.h>
-+
-+#include "heap-helpers.h"
-+
-+struct cma_heap {
-+	struct dma_heap *heap;
-+	struct cma *cma;
-+};
-+
-+static void cma_heap_free(struct heap_helper_buffer *buffer)
-+{
-+	struct cma_heap *cma_heap = dma_heap_get_drvdata(buffer->heap);
-+	unsigned long nr_pages = buffer->pagecount;
-+	struct page *cma_pages = buffer->priv_virt;
-+
-+	/* free page list */
-+	kfree(buffer->pages);
-+	/* release memory */
-+	cma_release(cma_heap->cma, cma_pages, nr_pages);
-+	kfree(buffer);
-+}
-+
-+/* dmabuf heap CMA operations functions */
-+static int cma_heap_allocate(struct dma_heap *heap,
-+			     unsigned long len,
-+			     unsigned long fd_flags,
-+			     unsigned long heap_flags)
-+{
-+	struct cma_heap *cma_heap = dma_heap_get_drvdata(heap);
-+	struct heap_helper_buffer *helper_buffer;
-+	struct page *cma_pages;
-+	size_t size = PAGE_ALIGN(len);
-+	unsigned long nr_pages = size >> PAGE_SHIFT;
-+	unsigned long align = get_order(size);
-+	struct dma_buf *dmabuf;
-+	int ret = -ENOMEM;
-+	pgoff_t pg;
-+
-+	if (align > CONFIG_CMA_ALIGNMENT)
-+		align = CONFIG_CMA_ALIGNMENT;
-+
-+	helper_buffer = kzalloc(sizeof(*helper_buffer), GFP_KERNEL);
-+	if (!helper_buffer)
-+		return -ENOMEM;
-+
-+	init_heap_helper_buffer(helper_buffer, cma_heap_free);
-+	helper_buffer->heap = heap;
-+	helper_buffer->size = len;
-+
-+	cma_pages = cma_alloc(cma_heap->cma, nr_pages, align, false);
-+	if (!cma_pages)
-+		goto free_buf;
-+
-+	if (PageHighMem(cma_pages)) {
-+		unsigned long nr_clear_pages = nr_pages;
-+		struct page *page = cma_pages;
-+
-+		while (nr_clear_pages > 0) {
-+			void *vaddr = kmap_atomic(page);
-+
-+			memset(vaddr, 0, PAGE_SIZE);
-+			kunmap_atomic(vaddr);
-+			/*
-+			 * Avoid wasting time zeroing memory if the process
-+			 * has been killed by by SIGKILL
-+			 */
-+			if (fatal_signal_pending(current))
-+				goto free_cma;
-+
-+			page++;
-+			nr_clear_pages--;
-+		}
-+	} else {
-+		memset(page_address(cma_pages), 0, size);
-+	}
-+
-+	helper_buffer->pagecount = nr_pages;
-+	helper_buffer->pages = kmalloc_array(helper_buffer->pagecount,
-+					     sizeof(*helper_buffer->pages),
-+					     GFP_KERNEL);
-+	if (!helper_buffer->pages) {
-+		ret = -ENOMEM;
-+		goto free_cma;
-+	}
-+
-+	for (pg = 0; pg < helper_buffer->pagecount; pg++)
-+		helper_buffer->pages[pg] = &cma_pages[pg];
-+
-+	/* create the dmabuf */
-+	dmabuf = heap_helper_export_dmabuf(helper_buffer, fd_flags);
-+	if (IS_ERR(dmabuf)) {
-+		ret = PTR_ERR(dmabuf);
-+		goto free_pages;
-+	}
-+
-+	helper_buffer->dmabuf = dmabuf;
-+	helper_buffer->priv_virt = cma_pages;
-+
-+	ret = dma_buf_fd(dmabuf, fd_flags);
-+	if (ret < 0) {
-+		dma_buf_put(dmabuf);
-+		/* just return, as put will call release and that will free */
-+		return ret;
-+	}
-+
-+	return ret;
-+
-+free_pages:
-+	kfree(helper_buffer->pages);
-+free_cma:
-+	cma_release(cma_heap->cma, cma_pages, nr_pages);
-+free_buf:
-+	kfree(helper_buffer);
-+	return ret;
-+}
-+
-+static const struct dma_heap_ops cma_heap_ops = {
-+	.allocate = cma_heap_allocate,
-+};
-+
-+static int __add_cma_heap(struct cma *cma, void *data)
-+{
-+	struct cma_heap *cma_heap;
-+	struct dma_heap_export_info exp_info;
-+
-+	cma_heap = kzalloc(sizeof(*cma_heap), GFP_KERNEL);
-+	if (!cma_heap)
-+		return -ENOMEM;
-+	cma_heap->cma = cma;
-+
-+	exp_info.name = cma_get_name(cma);
-+	exp_info.ops = &cma_heap_ops;
-+	exp_info.priv = cma_heap;
-+
-+	cma_heap->heap = dma_heap_add(&exp_info);
-+	if (IS_ERR(cma_heap->heap)) {
-+		int ret = PTR_ERR(cma_heap->heap);
-+
-+		kfree(cma_heap);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int add_default_cma_heap(void)
-+{
-+	struct cma *default_cma = dev_get_cma_area(NULL);
-+	int ret = 0;
-+
-+	if (default_cma)
-+		ret = __add_cma_heap(default_cma, NULL);
-+
-+	return ret;
-+}
-+module_init(add_default_cma_heap);
-+MODULE_DESCRIPTION("DMA-BUF CMA Heap");
-+MODULE_LICENSE("GPL v2");
--- 
-2.17.1
-
+I've seen these error messages trip before, but only on pre-production
+processors with goofy microcode.  I'd be really suspicious that this is
+just papering over a processor issue.  Or, that perhaps the compacted
+form works but the standard form is broken somehow.
