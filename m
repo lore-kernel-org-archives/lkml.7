@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE93C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A31FDC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4406820726
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A42820726
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:23:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ANH+ejgm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OAsl82Oz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbfLCFXq (ORCPT
+        id S1727096AbfLCFXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 00:23:46 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43558 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726987AbfLCFXp (ORCPT
+        Tue, 3 Dec 2019 00:23:51 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39518 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727059AbfLCFXt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 00:23:45 -0500
-Received: by mail-pf1-f195.google.com with SMTP id h14so1231438pfe.10
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 21:23:45 -0800 (PST)
+        Tue, 3 Dec 2019 00:23:49 -0500
+Received: by mail-pg1-f196.google.com with SMTP id b137so1119055pga.6
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 21:23:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=3jEZWcL7GDtf1dkrmxImtelr/uLTAn26FhaUYUisOhw=;
-        b=ANH+ejgmPfpj3NzV3qtaOVx1ksjtj4W69naT7IoMuV1TjeGCfzrZrda08QEo0VfJoW
-         PQDnpU2Ta8Q+V8e77eF2OsPDDY4DlStmUCh1zqAAMVnCeuoIArFe9a2yjeboqGUBPg/c
-         1HG/HR+5jBsN8dyNCCq6daMvLh6b742dkK37EaponwduxnD0dYXqzAkF7PxRgz8pabV7
-         0OwuJ17wONmLe4ZNQhmjFDTsMFm0lblFyZ3mqQGfnWwoUVJiyB7KHZjmeh59ZMYjR/Y9
-         GXgXTFND0z5uh33fnzPx/WHvA0x2QbmlI1AP07kvsL2HnohhzXA5Vs9iIHmIPuoCHaSc
-         J4ug==
+        bh=jCnbshc6gwC9Lz7KrpZNRQtAnW1kUNCWIyQg9GLVi8g=;
+        b=OAsl82OzpSmTAhx0IKBHZKzsbwj/Z21pQqt+a4HJyo/HZFuWYG9T4G04aGZRPpDabt
+         +EEHPB/YWvTT1xhURL6ea6bIVo+plxAXVlqEIbZR06NB9Sh2Wq9iHh9wwy3WlzDu+HTw
+         uFjhM186omJhFZh1qp3s9THXC88LAjvd7sLJd4FM4Em2wk/cI/SNy0/OyPbVGovb4Q69
+         GJEWRkCGmkBjBwaoIDjgfYabTSvOlon7UJgG4w9P5zJVxHSdgpBOicTCBHw2ZvQPh4M2
+         bsPl8engt05uk4jXYpdp992AtjFowJHclWUqfPjTgcuzgsI2DEJPaghc7lXxnn+s0Qvw
+         e2qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=3jEZWcL7GDtf1dkrmxImtelr/uLTAn26FhaUYUisOhw=;
-        b=L/lvLXIDq6MU/OqPqPmEv+e6mm9DDLkeagjrnWz0lW9SF5oxNewOKdQuJzbJYjJDgs
-         3lIDoBGuQEjM73gwEBcC2+WWInH1QJkQYoJexvZOeB9Xf3GapKxeJuun444Um796/PBh
-         iQ8YI/iy+mpcCQYYEK/5QdeTkVNFT7uVSv51WAfhciRclBStYNVlaKJDVCl27GnWvOQc
-         zdTQ/fK0kCtVu19k12B7n7Jrn9X5X2mKvL+yzEK48fnrRAMYFqWozBPEWx7roHCrTG8i
-         wb9WTMdPD6/vy6IvQgYQH6EHTuCUMc21iZO+JxReL/06eR37Z15PDot5L5KEq+ahTtYR
-         +E1w==
-X-Gm-Message-State: APjAAAUSE00OEYUqPei0O+dd5PI9mxHpELLBeS6u4fpafHMqRGP9VTHg
-        5JBq9LzuOJmpacG4ewbXrWdw4qUy1FxByw==
-X-Google-Smtp-Source: APXvYqxOpO0V31DdYipTMzgAyt2QeL+WNvprU5q1bpRDMfG5vQZjOpkOe3TyskN+E7PuiClBUGB5XA==
-X-Received: by 2002:aa7:86ce:: with SMTP id h14mr2901081pfo.248.1575350624411;
-        Mon, 02 Dec 2019 21:23:44 -0800 (PST)
+        bh=jCnbshc6gwC9Lz7KrpZNRQtAnW1kUNCWIyQg9GLVi8g=;
+        b=Kd5GdiEUCb7saxzYW1acOdpFw+JOHvDWum0Jt3XDlaV+rKfl0Y/gFUz59gIJXPE2DN
+         Dxl31WQnc2EZAjiXdXhMbmL6d0kx0G5ohg/TrjdEw9vg1Wna/hDWnguA6Hen6Fx0ShlU
+         pdFNYEI1IAYZU4gWedxuiAoRss1Chs+K2RpXw3PKOn+qpy9IJdSDkzoRtNZRPV2t0kjk
+         O6lKSEEl3anOwHKzNYVTRul59F+qIo73AcFtt0VkT+M5htlFavw88vkJcAkfxCWljGWh
+         lcbCNR/VV75EE4E4988BA1s4YIG20U7QzW5kqJktmyQ1r54xYhZNXo5FCp5oZ2SdTnka
+         nuTQ==
+X-Gm-Message-State: APjAAAWDYmaxihAcJV/Rppia+rha3BbGlAvc22a9pLYf914AtnR1YDEP
+        kqZXMlQi6FQqnvBmof0k26vZzDSPuHo8Dw==
+X-Google-Smtp-Source: APXvYqw8o/ivZvCeU5FcoWoVFv5gCQhQQbbWRwtLMDtOtVpHS+BJUEGR4dGGFMZkC5woDR2/luVSEg==
+X-Received: by 2002:a63:6787:: with SMTP id b129mr3465932pgc.103.1575350627967;
+        Mon, 02 Dec 2019 21:23:47 -0800 (PST)
 Received: from localhost ([14.96.109.134])
-        by smtp.gmail.com with ESMTPSA id p16sm1509689pgm.8.2019.12.02.21.23.43
+        by smtp.gmail.com with ESMTPSA id z30sm1426685pff.131.2019.12.02.21.23.47
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Dec 2019 21:23:43 -0800 (PST)
+        Mon, 02 Dec 2019 21:23:47 -0800 (PST)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         bjorn.andersson@linaro.org, swboyd@chromium.org,
@@ -63,9 +63,9 @@ To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
 Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Amit Kucheria <amit.kucheria@verdurent.com>,
         linux-pm@vger.kernel.org
-Subject: [PATCH v2 2/9] drivers: thermal: tsens: Pass around struct tsens_sensor as a constant
-Date:   Tue,  3 Dec 2019 10:53:23 +0530
-Message-Id: <1d24d634859bebd57e346c3ec4c726a01b7644ba.1575349416.git.amit.kucheria@linaro.org>
+Subject: [PATCH v2 3/9] drivers: thermal: tsens: use simpler variables
+Date:   Tue,  3 Dec 2019 10:53:24 +0530
+Message-Id: <ff9298c401dd95e6c7590a7c882ca61cfbb15e16.1575349416.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1575349416.git.amit.kucheria@linaro.org>
 References: <cover.1575349416.git.amit.kucheria@linaro.org>
@@ -76,115 +76,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All the sensor data is initialised at init time. Lock it down by passing
-it to functions as a constant.
+We already dereference the sensor and save it into a variable. Use the
+variable directly to make the code easier to read.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 ---
- drivers/thermal/qcom/tsens-8960.c   |  2 +-
- drivers/thermal/qcom/tsens-common.c | 14 +++++++-------
- drivers/thermal/qcom/tsens.h        |  6 +++---
- 3 files changed, 11 insertions(+), 11 deletions(-)
+ drivers/thermal/qcom/tsens-common.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/thermal/qcom/tsens-8960.c b/drivers/thermal/qcom/tsens-8960.c
-index a383a57cfbbcb..2a28a5af209ec 100644
---- a/drivers/thermal/qcom/tsens-8960.c
-+++ b/drivers/thermal/qcom/tsens-8960.c
-@@ -245,7 +245,7 @@ static inline int code_to_mdegC(u32 adc_code, const struct tsens_sensor *s)
- 	return adc_code * slope + offset;
- }
- 
--static int get_temp_8960(struct tsens_sensor *s, int *temp)
-+static int get_temp_8960(const struct tsens_sensor *s, int *temp)
- {
- 	int ret;
- 	u32 code, trdy;
 diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
-index c8d57ee0a5bb2..c2df30a08b9e4 100644
+index c2df30a08b9e4..1cbc5a6e5b4fd 100644
 --- a/drivers/thermal/qcom/tsens-common.c
 +++ b/drivers/thermal/qcom/tsens-common.c
-@@ -128,7 +128,7 @@ static inline int code_to_degc(u32 adc_code, const struct tsens_sensor *s)
-  * Return: Temperature in milliCelsius on success, a negative errno will
-  * be returned in error cases
-  */
--static int tsens_hw_to_mC(struct tsens_sensor *s, int field)
-+static int tsens_hw_to_mC(const struct tsens_sensor *s, int field)
- {
- 	struct tsens_priv *priv = s->priv;
- 	u32 resolution;
-@@ -160,7 +160,7 @@ static int tsens_hw_to_mC(struct tsens_sensor *s, int field)
-  *
-  * Return: ADC code or temperature in deciCelsius.
-  */
--static int tsens_mC_to_hw(struct tsens_sensor *s, int temp)
-+static int tsens_mC_to_hw(const struct tsens_sensor *s, int temp)
- {
- 	struct tsens_priv *priv = s->priv;
+@@ -368,7 +368,7 @@ irqreturn_t tsens_irq_thread(int irq, void *data)
+ 			tsens_set_interrupt(priv, hw_id, UPPER, disable);
+ 			if (d.up_thresh > temp) {
+ 				dev_dbg(priv->dev, "[%u] %s: re-arm upper\n",
+-					priv->sensor[i].hw_id, __func__);
++					hw_id, __func__);
+ 				tsens_set_interrupt(priv, hw_id, UPPER, enable);
+ 			} else {
+ 				trigger = true;
+@@ -379,7 +379,7 @@ irqreturn_t tsens_irq_thread(int irq, void *data)
+ 			tsens_set_interrupt(priv, hw_id, LOWER, disable);
+ 			if (d.low_thresh < temp) {
+ 				dev_dbg(priv->dev, "[%u] %s: re-arm low\n",
+-					priv->sensor[i].hw_id, __func__);
++					hw_id, __func__);
+ 				tsens_set_interrupt(priv, hw_id, LOWER, enable);
+ 			} else {
+ 				trigger = true;
+@@ -392,7 +392,7 @@ irqreturn_t tsens_irq_thread(int irq, void *data)
+ 		if (trigger) {
+ 			dev_dbg(priv->dev, "[%u] %s: TZ update trigger (%d mC)\n",
+ 				hw_id, __func__, temp);
+-			thermal_zone_device_update(priv->sensor[i].tzd,
++			thermal_zone_device_update(s->tzd,
+ 						   THERMAL_EVENT_UNSPECIFIED);
+ 		} else {
+ 			dev_dbg(priv->dev, "[%u] %s: no violation:  %d\n",
+@@ -435,7 +435,7 @@ int tsens_set_trips(void *_sensor, int low, int high)
+ 	spin_unlock_irqrestore(&priv->ul_lock, flags);
  
-@@ -275,7 +275,7 @@ static int tsens_threshold_violated(struct tsens_priv *priv, u32 hw_id,
- }
+ 	dev_dbg(dev, "[%u] %s: (%d:%d)->(%d:%d)\n",
+-		s->hw_id, __func__, d.low_thresh, d.up_thresh, cl_low, cl_high);
++		hw_id, __func__, d.low_thresh, d.up_thresh, cl_low, cl_high);
  
- static int tsens_read_irq_state(struct tsens_priv *priv, u32 hw_id,
--				struct tsens_sensor *s, struct tsens_irq_data *d)
-+				const struct tsens_sensor *s, struct tsens_irq_data *d)
- {
- 	int ret;
- 
-@@ -346,10 +346,10 @@ irqreturn_t tsens_irq_thread(int irq, void *data)
- 
- 	for (i = 0; i < priv->num_sensors; i++) {
- 		bool trigger = false;
--		struct tsens_sensor *s = &priv->sensor[i];
-+		const struct tsens_sensor *s = &priv->sensor[i];
- 		u32 hw_id = s->hw_id;
- 
--		if (IS_ERR(priv->sensor[i].tzd))
-+		if (IS_ERR(s->tzd))
- 			continue;
- 		if (!tsens_threshold_violated(priv, hw_id, &d))
- 			continue;
-@@ -457,7 +457,7 @@ void tsens_disable_irq(struct tsens_priv *priv)
- 	regmap_field_write(priv->rf[INT_EN], 0);
- }
- 
--int get_temp_tsens_valid(struct tsens_sensor *s, int *temp)
-+int get_temp_tsens_valid(const struct tsens_sensor *s, int *temp)
- {
- 	struct tsens_priv *priv = s->priv;
- 	int hw_id = s->hw_id;
-@@ -486,7 +486,7 @@ int get_temp_tsens_valid(struct tsens_sensor *s, int *temp)
  	return 0;
  }
- 
--int get_temp_common(struct tsens_sensor *s, int *temp)
-+int get_temp_common(const struct tsens_sensor *s, int *temp)
- {
- 	struct tsens_priv *priv = s->priv;
- 	int hw_id = s->hw_id;
-diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
-index be364bf1d5a63..70dc34c805377 100644
---- a/drivers/thermal/qcom/tsens.h
-+++ b/drivers/thermal/qcom/tsens.h
-@@ -67,7 +67,7 @@ struct tsens_ops {
- 	/* mandatory callbacks */
- 	int (*init)(struct tsens_priv *priv);
- 	int (*calibrate)(struct tsens_priv *priv);
--	int (*get_temp)(struct tsens_sensor *s, int *temp);
-+	int (*get_temp)(const struct tsens_sensor *s, int *temp);
- 	/* optional callbacks */
- 	int (*enable)(struct tsens_priv *priv, int i);
- 	void (*disable)(struct tsens_priv *priv);
-@@ -494,8 +494,8 @@ struct tsens_priv {
- char *qfprom_read(struct device *dev, const char *cname);
- void compute_intercept_slope(struct tsens_priv *priv, u32 *pt1, u32 *pt2, u32 mode);
- int init_common(struct tsens_priv *priv);
--int get_temp_tsens_valid(struct tsens_sensor *s, int *temp);
--int get_temp_common(struct tsens_sensor *s, int *temp);
-+int get_temp_tsens_valid(const struct tsens_sensor *s, int *temp);
-+int get_temp_common(const struct tsens_sensor *s, int *temp);
- int tsens_enable_irq(struct tsens_priv *priv);
- void tsens_disable_irq(struct tsens_priv *priv);
- int tsens_set_trips(void *_sensor, int low, int high);
 -- 
 2.17.1
 
