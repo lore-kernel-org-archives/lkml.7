@@ -2,190 +2,112 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7579C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CD9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EDFB20684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1345720684
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:20:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vi7RSXxG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ztb0Rrey"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfLCFMD (ORCPT
+        id S1726720AbfLCFUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 00:12:03 -0500
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:34559 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbfLCFLX (ORCPT
+        Tue, 3 Dec 2019 00:20:05 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33870 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbfLCFUE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 00:11:23 -0500
-Received: by mail-pf1-f201.google.com with SMTP id q5so1465874pfh.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 21:11:23 -0800 (PST)
+        Tue, 3 Dec 2019 00:20:04 -0500
+Received: by mail-pf1-f195.google.com with SMTP id n13so1253073pff.1;
+        Mon, 02 Dec 2019 21:20:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=zioOGuJqnVPXe7Qe2SnSM0LE+ZxE0SKC1ZdBPwMzHHM=;
-        b=Vi7RSXxGowYOEm1R7PqAvvobd49Ow6l4LUuP+EyQ8x3TZm7tmSuo7w72xlUfos80tZ
-         E/5xpFoQ2wLEqy3sJx6GTasTyPD8TUZAvrKp4r5T0yV1jwHmX+TJe1LWpY208PzxANGu
-         ut5I1Zdm3X6yUrK3XUXnrofTbSEcTJfH5v7UnTEBqOPCK7VLMb4+XLPA7r9Qjv9XMHVe
-         bWves33Lu3GThFsqT1xtk/MGO/+WzHg4eXBqx/6CVZSf9UYCyUHFwBkAdhuz0Y7U38+n
-         Z0AY+6+IDGq3SiysmR0NHMCVZsgVSj58gcf1kCj0taMnx+Y5pxB4I/Abvbm2KLXatHqP
-         Kz5Q==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Lo1FIdw7u0NV2Tgo0tQfhnWJEQxmW3ioGg2cCeozVqA=;
+        b=Ztb0RreyoIgcYMObe/fxFbZfmUwBOO9ZNQVyf+0wUkqB4IUF8iX0Aj4QAEgwK2Y8HM
+         9R9J2WuuwQAzhlQ/JTsmxUblpgOZSEXSlTYpieISOLR+lxkkznNggFCdSHSHCjpIqfV7
+         /xfCn0FBK0DACW28QfMqcF/4QzP3mvELDENsDx94okHKtlscY7ccBwXgRl5XhA2ZeExO
+         JSpLajE42kSVi4FjSO+rDXerjrHBAEwhAUn3qReScV8VZLmL+FP5uXu88tMcR4sQc4xI
+         mZycIOiu7BQgSsmJ7DMs0dilebUnmKiNVXx2Vhj+jT13hSRhf6hCmXcJlxcxNITmsd5n
+         SpQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=zioOGuJqnVPXe7Qe2SnSM0LE+ZxE0SKC1ZdBPwMzHHM=;
-        b=tyJpRShb9YFmB7pKlC1ncG2cQpJsA06rsXv5MjYrx9whqksmVFiTa2xNmsS4lol9oa
-         0i/CS7gVYM92P+mVUTJE4WzPBCuXLUyfH2I29u8tHNf/LzzqeA3DnP+BnHDY7O4rjHj/
-         fAxZnjsAlr42qJyoTsBU8UsuftFEEl78jSfkxkJeEc3gp2Qa2MEbifGONzdbHFEXFb20
-         hcu/cbDEweg6hdBOBFMR3Bp0QMTsUo/UuNDIStpswigJ3/Lq44FtGSoUpI1afJQbe0hi
-         qyyHEjGuWVoXsAFtfS/KbQWFzA8zjAi7/1cJBrRzf2swQIzI5MPprYpwLTW44JJYoUGE
-         Uyzw==
-X-Gm-Message-State: APjAAAWVlCk0ArIqLC8XIJvOVYPZ0YEHMFrSyLGCjoNJ3D7tk3z+bdqg
-        Qc7UHHtwZiq0tMkDsaLMER3HZqOCyp8=
-X-Google-Smtp-Source: APXvYqwLhVT0aPs7pDtnMOWvm8ceiekoDOnf+r3AdcXHnYtS4fRpDhrmnGvkSNzLuI9YnCQKTgC4a5Cp4Jk=
-X-Received: by 2002:a63:6507:: with SMTP id z7mr3034832pgb.322.1575349882981;
- Mon, 02 Dec 2019 21:11:22 -0800 (PST)
-Date:   Mon,  2 Dec 2019 21:10:43 -0800
-In-Reply-To: <20191203051049.44573-1-drosen@google.com>
-Message-Id: <20191203051049.44573-3-drosen@google.com>
-Mime-Version: 1.0
-References: <20191203051049.44573-1-drosen@google.com>
-X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
-Subject: [PATCH 2/8] fscrypt: Don't allow v1 policies with casefolding
-From:   Daniel Rosenberg <drosen@google.com>
-To:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Eric Biggers <ebiggers@kernel.org>,
-        linux-fscrypt@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        kernel-team@android.com, Daniel Rosenberg <drosen@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Lo1FIdw7u0NV2Tgo0tQfhnWJEQxmW3ioGg2cCeozVqA=;
+        b=FaewhzjznJ8gUADr9XNN+Sz1PXWM16WhTsnJE1NL6gUhNfSMzvbJIbxPMCEoX8Vq2D
+         X8aDOPu58IjZTk5ck2GV7sv9G9RnUeTx+0etFFpYhB5iZ4XxNKJieFTTrTegEi+wkHsT
+         LAcKuItYWTkfDiS/0pnubibGXuN2zzgiMXrsoltE+CHrAJclhoYQVSUeQ6Cj+lTas1Jj
+         Kz7K6HdslPUy5JkRIUavM7ykHgtpAfLYq05OOVgcbgZoCmnwUUVHHAz6AndC3+tW3iRg
+         Trsldac6MyUEK7Afycy38xjJGIrTOqQZO+xOwCaULFn62k6ImLykQEdODta3YlDdhH9t
+         CAUg==
+X-Gm-Message-State: APjAAAVLcM/b68TpbUL7BB3k/7WNX5fh8moExhUHR7Q9Fvjmi5KtLKKq
+        z5qfrE+95gclFIeNeK9j6jZPbrJZ
+X-Google-Smtp-Source: APXvYqxzZDh2NfeBrYDTnnOf9/hdb2fm1fLorKVVSa377tbXVjQqr8t/Sr3B1HKNXY0bY7gwbZcU3Q==
+X-Received: by 2002:aa7:9465:: with SMTP id t5mr2899660pfq.18.1575350404175;
+        Mon, 02 Dec 2019 21:20:04 -0800 (PST)
+Received: from deepa-ubuntu.lan (c-98-234-52-230.hsd1.ca.comcast.net. [98.234.52.230])
+        by smtp.gmail.com with ESMTPSA id h9sm1451915pgk.84.2019.12.02.21.20.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 21:20:03 -0800 (PST)
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+To:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, arnd@arndb.de,
+        ceph-devel@vger.kernel.org, hirofumi@mail.parknet.co.jp,
+        jlayton@kernel.org, linux-cifs@vger.kernel.org,
+        linux-mtd@lists.infradead.org, richard@nod.at,
+        stfrench@microsoft.com
+Subject: [PATCH v2 0/6] Delete timespec64_trunc()
+Date:   Mon,  2 Dec 2019 21:19:39 -0800
+Message-Id: <20191203051945.9440-1-deepa.kernel@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Casefolding requires a derived key for computing the siphash.
-This is available for v2 policies, but not v1, so we disallow it for v1.
+This series aims at deleting timespec64_trunc().
+There is a new api: timestamp_truncate() that is the
+replacement api. The api additionally does a limits
+check on the filesystem timestamps.
 
-Signed-off-by: Daniel Rosenberg <drosen@google.com>
----
- fs/crypto/policy.c      | 26 +++++++++++++++++++++++---
- fs/inode.c              |  8 ++++++++
- include/linux/fscrypt.h |  7 +++++++
- 3 files changed, 38 insertions(+), 3 deletions(-)
+The suggestion to open code some of the truncate logic
+came from Al Viro. And, this does make the code in some
+filesystems easy to follow.
 
-diff --git a/fs/crypto/policy.c b/fs/crypto/policy.c
-index 96f528071bed..94d96d3212d6 100644
---- a/fs/crypto/policy.c
-+++ b/fs/crypto/policy.c
-@@ -67,9 +67,9 @@ static bool supported_iv_ino_lblk_64_policy(
-  * fscrypt_supported_policy - check whether an encryption policy is supported
-  *
-  * Given an encryption policy, check whether all its encryption modes and other
-- * settings are supported by this kernel.  (But we don't currently don't check
-- * for crypto API support here, so attempting to use an algorithm not configured
-- * into the crypto API will still fail later.)
-+ * settings are supported by this kernel on the given inode.  (But we don't
-+ * currently don't check for crypto API support here, so attempting to use an
-+ * algorithm not configured into the crypto API will still fail later.)
-  *
-  * Return: %true if supported, else %false
-  */
-@@ -97,6 +97,12 @@ bool fscrypt_supported_policy(const union fscrypt_policy *policy_u,
- 			return false;
- 		}
- 
-+		if (IS_CASEFOLDED(inode)) {
-+			fscrypt_warn(inode,
-+				     "v1 policy does not support casefolded directories");
-+			return false;
-+		}
-+
- 		return true;
- 	}
- 	case FSCRYPT_POLICY_V2: {
-@@ -530,3 +536,17 @@ int fscrypt_inherit_context(struct inode *parent, struct inode *child,
- 	return preload ? fscrypt_get_encryption_info(child): 0;
- }
- EXPORT_SYMBOL(fscrypt_inherit_context);
-+
-+int fscrypt_set_casefolding_allowed(struct inode *inode)
-+{
-+	union fscrypt_policy policy;
-+	int ret = fscrypt_get_policy(inode, &policy);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	if (policy.version == FSCRYPT_POLICY_V2)
-+		return 0;
-+	else
-+		return -EINVAL;
-+}
-diff --git a/fs/inode.c b/fs/inode.c
-index fef457a42882..b615ec272a1e 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -20,6 +20,7 @@
- #include <linux/ratelimit.h>
- #include <linux/list_lru.h>
- #include <linux/iversion.h>
-+#include <linux/fscrypt.h>
- #include <trace/events/writeback.h>
- #include "internal.h"
- 
-@@ -2245,6 +2246,13 @@ int vfs_ioc_setflags_prepare(struct inode *inode, unsigned int oldflags,
- 	    !capable(CAP_LINUX_IMMUTABLE))
- 		return -EPERM;
- 
-+	/*
-+	 * When a directory is encrypted, the CASEFOLD flag can only be turned
-+	 * on if the fscrypt policy supports it.
-+	 */
-+	if (IS_ENCRYPTED(inode) && (flags & ~oldflags & FS_CASEFOLD_FL))
-+		return fscrypt_set_casefolding_allowed(inode);
-+
- 	return 0;
- }
- EXPORT_SYMBOL(vfs_ioc_setflags_prepare);
-diff --git a/include/linux/fscrypt.h b/include/linux/fscrypt.h
-index e13ff68a99f0..028aed925e51 100644
---- a/include/linux/fscrypt.h
-+++ b/include/linux/fscrypt.h
-@@ -127,6 +127,8 @@ extern int fscrypt_ioctl_get_policy_ex(struct file *, void __user *);
- extern int fscrypt_has_permitted_context(struct inode *, struct inode *);
- extern int fscrypt_inherit_context(struct inode *, struct inode *,
- 					void *, bool);
-+extern int fscrypt_set_casefolding_allowed(struct inode *inode);
-+
- /* keyring.c */
- extern void fscrypt_sb_free(struct super_block *sb);
- extern int fscrypt_ioctl_add_key(struct file *filp, void __user *arg);
-@@ -361,6 +363,11 @@ static inline int fscrypt_inherit_context(struct inode *parent,
- 	return -EOPNOTSUPP;
- }
- 
-+static inline int fscrypt_set_casefolding_allowed(struct inode *inode)
-+{
-+	return 0;
-+}
-+
- /* keyring.c */
- static inline void fscrypt_sb_free(struct super_block *sb)
- {
+The series also does some update_time() cleanup as
+suggested by Al Viro.
+
+Deepa Dinamani (6):
+  fs: fat: Eliminate timespec64_trunc() usage
+  fs: cifs: Delete usage of timespec64_trunc
+  fs: ceph: Delete timespec64_trunc() usage
+  fs: ubifs: Eliminate timespec64_trunc() usage
+  fs: Delete timespec64_trunc()
+  fs: Do not overload update_time
+
+ fs/ceph/mds_client.c |  4 +---
+ fs/cifs/inode.c      | 13 +++++++------
+ fs/fat/misc.c        | 10 +++++++++-
+ fs/inode.c           | 33 +++------------------------------
+ fs/ubifs/sb.c        | 11 ++++-------
+ include/linux/fs.h   |  1 -
+ 6 files changed, 24 insertions(+), 48 deletions(-)
+
 -- 
-2.24.0.393.g34dc348eaf-goog
+Changes since v1:
+* Dropped the atime comparison (patch 2/7) taken through cifs tree.
+* Refactored update_time according to review comments.
+2.17.1
 
+Cc: ceph-devel@vger.kernel.org
+Cc: hirofumi@mail.parknet.co.jp
+Cc: jlayton@kernel.org
+Cc: linux-cifs@vger.kernel.org
+Cc: linux-mtd@lists.infradead.org
+Cc: richard@nod.at
+Cc: stfrench@microsoft.com
