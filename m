@@ -4,50 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFA7C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9312C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FF4B20803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78FAE206EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:41:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412906;
-	bh=dWq0ySzyJnxJdJhCQJbxx49QxdxOFKU1fwd+oyAFV/o=;
+	s=default; t=1575412910;
+	bh=CXGuL/+Zj1tzPKy5oPWPoR1umpi1OerSw3+E7vfGeT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NXlzZDn7WHFQGN++8FgdtXinzLCcFIkbKeEzLUFUIHdu8gNH4eIx9MBgGboUeNq+L
-	 FO6JFDl2+zGwkTDJbU5jysSJVhlSFMFoIh0IL48IlRlBXbntYkWaSf9FRmhWpRcQbK
-	 6Pt/ux7Zea1hqvD8jpamcAwAQS/rOJYEsLXkwh64=
+	b=nIF0CiSGR5sG1mgrDHtHr78ZEJvP9+ZhMyiwRpfcR7AhIuKR2fSUh5AQ/+er9v2Tb
+	 oWh/HWTVwIXogXjj+ggSkLbF3tXHKiErdG5TZaN+7ZN1/RBP6pE5jZyxZmp0MOyuZp
+	 32aZ1SMoRTmp4llCmQ2iUJsGSSOytS8XedvZerU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728160AbfLCWlp (ORCPT
+        id S1728594AbfLCWlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:41:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56274 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:41:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727693AbfLCWlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:41:42 -0500
+        id S1728256AbfLCWlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:41:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52584207DD;
-        Tue,  3 Dec 2019 22:41:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A399820684;
+        Tue,  3 Dec 2019 22:41:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412901;
-        bh=dWq0ySzyJnxJdJhCQJbxx49QxdxOFKU1fwd+oyAFV/o=;
+        s=default; t=1575412904;
+        bh=CXGuL/+Zj1tzPKy5oPWPoR1umpi1OerSw3+E7vfGeT4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ty5SlETn7UoXOIsw6AN0zZy2r6Ph+Dll53tqaY79WUXocAbaN3S66qa8CmI7LJqQq
-         t4IgdPM/ThS++ftJyH86k6wi3WdzvZch/Nff3oki/N/EziOTAN7cYLD7K0bnf/DLAw
-         YI/c6y8H55Y7S8NLg+zAjn9UTmC4JR7CPyRG55mQ=
+        b=S8qLN0CdFAjezNEMhbPyjJKuuwtRrU3YDcKIVdAfylHjWv9Y97GDpVo/u26hwS3Nx
+         AWNiMhZ/RuOZFoD36DVhG+8eXswJFVvmQVScsOPWW1uQWSaBf2Aj+uOEkQQPrLrcrv
+         Jhgge71N3a579UEKhEbGUo065iXpQ3dKL1N3g5L8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Zhivich <mzhivich@akamai.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 060/135] x86/tsc: Respect tsc command line paraemeter for clocksource_tsc_early
-Date:   Tue,  3 Dec 2019 23:35:00 +0100
-Message-Id: <20191203213022.231008467@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        linux-trace-devel@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 061/135] perf scripting engines: Iterate on tep event arrays directly
+Date:   Tue,  3 Dec 2019 23:35:01 +0100
+Message-Id: <20191203213022.529997869@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -60,66 +66,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Zhivich <mzhivich@akamai.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-[ Upstream commit 63ec58b44fcc05efd1542045abd7faf056ac27d9 ]
+[ Upstream commit 443b0636ea7386d01dc460b4a4264e125f710b53 ]
 
-The introduction of clocksource_tsc_early broke the functionality of
-"tsc=reliable" and "tsc=nowatchdog" command line parameters, since
-clocksource_tsc_early is unconditionally registered with
-CLOCK_SOURCE_MUST_VERIFY and thus put on the watchdog list.
+Instead of calling a useless (and broken) helper function to get the
+next event of a tep event array, just get the array directly and iterate
+over it.
 
-This can cause the TSC to be declared unstable during boot:
+Note, the broken part was from trace_find_next_event() which after this
+will no longer be used, and can be removed.
 
-  clocksource: timekeeping watchdog on CPU0: Marking clocksource
-               'tsc-early' as unstable because the skew is too large:
-  clocksource: 'refined-jiffies' wd_now: fffb7018 wd_last: fffb6e9d
-               mask: ffffffff
-  clocksource: 'tsc-early' cs_now: 68a6a7070f6a0 cs_last: 68a69ab6f74d6
-               mask: ffffffffffffffff
-  tsc: Marking TSC unstable due to clocksource watchdog
+Committer notes:
 
-The corresponding elapsed times are cs_nsec=1224152026 and wd_nsec=378942392, so
-the watchdog differs from TSC by 0.84 seconds.
+This fixes a segfault when generating python scripts from perf.data
+files with multiple tracepoint events, i.e. the following use case is
+fixed by this patch:
 
-This happens when HPET is not available and jiffies are used as the TSC
-watchdog instead and the jiffies update is not happening due to lost timer
-interrupts in periodic mode, which can happen e.g. with expensive debug
-mechanisms enabled or under massive overload conditions in virtualized
-environments.
+  # perf record -e sched:* sleep 1
+  [ perf record: Woken up 31 times to write data ]
+  [ perf record: Captured and wrote 0.031 MB perf.data (9 samples) ]
+  # perf script -g python
+  Segmentation fault (core dumped)
+  #
 
-Before the introduction of the early TSC clocksource the command line
-parameters "tsc=reliable" and "tsc=nowatchdog" could be used to work around
-this issue.
-
-Restore the behaviour by disabling the watchdog if requested on the kernel
-command line.
-
-[ tglx: Clarify changelog ]
-
-Fixes: aa83c45762a24 ("x86/tsc: Introduce early tsc clocksource")
-Signed-off-by: Michael Zhivich <mzhivich@akamai.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191024175945.14338-1-mzhivich@akamai.com
+Reported-by: Daniel Bristot de Oliveira <bristot@redhat.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Cc: linux-trace-devel@vger.kernel.org
+Link: http://lkml.kernel.org/r/20191017153733.630cd5eb@gandalf.local.home
+Link: http://lore.kernel.org/lkml/20191017210636.061448713@goodmis.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/tsc.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/util/scripting-engines/trace-event-perl.c   | 8 ++++++--
+ tools/perf/util/scripting-engines/trace-event-python.c | 9 +++++++--
+ 2 files changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index 57d87f79558f2..04dd3cc6c6edd 100644
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -1505,6 +1505,9 @@ void __init tsc_init(void)
- 		return;
- 	}
+diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
+index 61aa7f3df915b..6a0dcaee3f3ee 100644
+--- a/tools/perf/util/scripting-engines/trace-event-perl.c
++++ b/tools/perf/util/scripting-engines/trace-event-perl.c
+@@ -539,10 +539,11 @@ static int perl_stop_script(void)
  
-+	if (tsc_clocksource_reliable || no_tsc_watchdog)
-+		clocksource_tsc_early.flags &= ~CLOCK_SOURCE_MUST_VERIFY;
+ static int perl_generate_script(struct tep_handle *pevent, const char *outfile)
+ {
++	int i, not_first, count, nr_events;
++	struct tep_event **all_events;
+ 	struct tep_event *event = NULL;
+ 	struct tep_format_field *f;
+ 	char fname[PATH_MAX];
+-	int not_first, count;
+ 	FILE *ofp;
+ 
+ 	sprintf(fname, "%s.pl", outfile);
+@@ -603,8 +604,11 @@ sub print_backtrace\n\
+ }\n\n\
+ ");
+ 
++	nr_events = tep_get_events_count(pevent);
++	all_events = tep_list_events(pevent, TEP_EVENT_SORT_ID);
+ 
+-	while ((event = trace_find_next_event(pevent, event))) {
++	for (i = 0; all_events && i < nr_events; i++) {
++		event = all_events[i];
+ 		fprintf(ofp, "sub %s::%s\n{\n", event->system, event->name);
+ 		fprintf(ofp, "\tmy (");
+ 
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index 25dc1d765553b..df5ebb6af9fc8 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -1687,10 +1687,11 @@ static int python_stop_script(void)
+ 
+ static int python_generate_script(struct tep_handle *pevent, const char *outfile)
+ {
++	int i, not_first, count, nr_events;
++	struct tep_event **all_events;
+ 	struct tep_event *event = NULL;
+ 	struct tep_format_field *f;
+ 	char fname[PATH_MAX];
+-	int not_first, count;
+ 	FILE *ofp;
+ 
+ 	sprintf(fname, "%s.py", outfile);
+@@ -1735,7 +1736,11 @@ static int python_generate_script(struct tep_handle *pevent, const char *outfile
+ 	fprintf(ofp, "def trace_end():\n");
+ 	fprintf(ofp, "\tprint(\"in trace_end\")\n\n");
+ 
+-	while ((event = trace_find_next_event(pevent, event))) {
++	nr_events = tep_get_events_count(pevent);
++	all_events = tep_list_events(pevent, TEP_EVENT_SORT_ID);
 +
- 	clocksource_register_khz(&clocksource_tsc_early, tsc_khz);
- 	detect_art();
- }
++	for (i = 0; all_events && i < nr_events; i++) {
++		event = all_events[i];
+ 		fprintf(ofp, "def %s__%s(", event->system, event->name);
+ 		fprintf(ofp, "event_name, ");
+ 		fprintf(ofp, "context, ");
 -- 
 2.20.1
 
