@@ -2,56 +2,57 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA23C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1699BC33CA0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 773422071F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:48:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7C9F20726
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:48:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbfLCDsp (ORCPT
+        id S1727154AbfLCDst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 22:48:45 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42810 "EHLO
+        Mon, 2 Dec 2019 22:48:49 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50588 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726893AbfLCDsb (ORCPT
+        by vger.kernel.org with ESMTP id S1726925AbfLCDsb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Dec 2019 22:48:31 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB33koU5001352
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 22:48:30 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wm6myr937-1
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB33km8W058097
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 22:48:31 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2wm6g97ffj-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
         for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 22:48:30 -0500
 Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Tue, 3 Dec 2019 03:48:26 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Tue, 3 Dec 2019 03:48:27 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 3 Dec 2019 03:48:19 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB33mIc063111208
+        Tue, 3 Dec 2019 03:48:20 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB33mJmA39256506
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Dec 2019 03:48:18 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 97C144C04E;
+        Tue, 3 Dec 2019 03:48:19 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 24ABEAE051;
+        Tue,  3 Dec 2019 03:48:19 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 842B4AE055;
         Tue,  3 Dec 2019 03:48:18 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0002A4C044;
-        Tue,  3 Dec 2019 03:48:17 +0000 (GMT)
 Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  3 Dec 2019 03:48:17 +0000 (GMT)
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  3 Dec 2019 03:48:18 +0000 (GMT)
 Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
         (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 8DC01A03EB;
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 6FC63A03E9;
         Tue,  3 Dec 2019 14:48:13 +1100 (AEDT)
 From:   "Alastair D'Silva" <alastair@au1.ibm.com>
 To:     alastair@d-silva.org
@@ -85,25 +86,25 @@ Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Alexey Kardashevskiy <aik@ozlabs.ru>,
         linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Subject: [PATCH v2 23/27] nvdimm/ocxl: Add debug IOCTLs
-Date:   Tue,  3 Dec 2019 14:46:51 +1100
+Subject: [PATCH v2 21/27] nvdimm/ocxl: Support firmware update via sysfs
+Date:   Tue,  3 Dec 2019 14:46:49 +1100
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191203034655.51561-1-alastair@au1.ibm.com>
 References: <20191203034655.51561-1-alastair@au1.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19120303-4275-0000-0000-0000038A31DF
+x-cbid: 19120303-0028-0000-0000-000003C3CC75
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120303-4276-0000-0000-0000389DCDDA
-Message-Id: <20191203034655.51561-24-alastair@au1.ibm.com>
+x-cbparentid: 19120303-0029-0000-0000-00002486E435
+Message-Id: <20191203034655.51561-22-alastair@au1.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
  definitions=2019-12-02_06:2019-11-29,2019-12-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 lowpriorityscore=0 mlxscore=0 clxscore=1015
- mlxlogscore=999 spamscore=0 phishscore=0 suspectscore=1 adultscore=0
- bulkscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-1912030032
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ suspectscore=1 clxscore=1015 mlxlogscore=999 impostorscore=0
+ lowpriorityscore=0 adultscore=0 malwarescore=0 spamscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912030032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -111,353 +112,276 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alastair D'Silva <alastair@d-silva.org>
 
-These IOCTLs provide low level access to the card to aid in debugging
-controller/FPGA firmware.
+This patch allows the firmware of an OpenCAPI SCM card to be update by
+writing a firmware file to a file in sysfs.
 
 Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 ---
- drivers/nvdimm/ocxl/Kconfig    |   6 +
- drivers/nvdimm/ocxl/scm.c      | 249 +++++++++++++++++++++++++++++++++
- include/uapi/nvdimm/ocxl-scm.h |  32 +++++
- 3 files changed, 287 insertions(+)
+ drivers/nvdimm/ocxl/Makefile       |   2 +-
+ drivers/nvdimm/ocxl/scm.c          |   5 +
+ drivers/nvdimm/ocxl/scm_internal.c |  25 +++++
+ drivers/nvdimm/ocxl/scm_internal.h |  14 +++
+ drivers/nvdimm/ocxl/scm_sysfs.c    | 163 +++++++++++++++++++++++++++++
+ 5 files changed, 208 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/nvdimm/ocxl/scm_sysfs.c
 
-diff --git a/drivers/nvdimm/ocxl/Kconfig b/drivers/nvdimm/ocxl/Kconfig
-index 24099b300f5e..1df030cdd958 100644
---- a/drivers/nvdimm/ocxl/Kconfig
-+++ b/drivers/nvdimm/ocxl/Kconfig
-@@ -12,4 +12,10 @@ config OCXL_SCM
+diff --git a/drivers/nvdimm/ocxl/Makefile b/drivers/nvdimm/ocxl/Makefile
+index 9b6e31f0eb3e..b172cef39de4 100644
+--- a/drivers/nvdimm/ocxl/Makefile
++++ b/drivers/nvdimm/ocxl/Makefile
+@@ -4,4 +4,4 @@ ccflags-$(CONFIG_PPC_WERROR)	+= -Werror
  
- 	  Select N if unsure.
+ obj-$(CONFIG_OCXL_SCM) += ocxlscm.o
  
-+config OCXL_SCM_DEBUG
-+	bool "OpenCAPI Storage Class Memory debugging"
-+	depends on OCXL_SCM
-+	help
-+	  Enables low level IOCTLs for OpenCAPI SCM firmware development
-+
- endif
+-ocxlscm-y := scm.o scm_internal.o
++ocxlscm-y := scm.o scm_internal.o scm_sysfs.o
 diff --git a/drivers/nvdimm/ocxl/scm.c b/drivers/nvdimm/ocxl/scm.c
-index e8b34262f397..a81eb5916eb3 100644
+index d482b3213a02..8a30c887b5ed 100644
 --- a/drivers/nvdimm/ocxl/scm.c
 +++ b/drivers/nvdimm/ocxl/scm.c
-@@ -1098,6 +1098,235 @@ int scm_req_controller_health_perf(struct scm_data *scm_data)
- 				      GLOBAL_MMIO_HCI_REQ_HEALTH_PERF);
- }
+@@ -1503,6 +1503,11 @@ static int scm_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 		goto err;
+ 	}
  
-+#ifdef CONFIG_OCXL_SCM_DEBUG
-+/**
-+ * scm_enable_fwdebug() - Enable FW debug on the controller
-+ * @scm_data: a pointer to the SCM device data
-+ * Return: 0 on success, negative on failure
-+ */
-+static int scm_enable_fwdebug(const struct scm_data *scm_data)
++	if (scm_sysfs_add(scm_data)) {
++		dev_err(&pdev->dev, "Could not create SCM sysfs entries\n");
++		goto err;
++	}
++
+ 	elapsed = 0;
+ 	timeout = scm_data->readiness_timeout + scm_data->memory_available_timeout;
+ 	while (!scm_is_usable(scm_data)) {
+diff --git a/drivers/nvdimm/ocxl/scm_internal.c b/drivers/nvdimm/ocxl/scm_internal.c
+index c405f1d8afb8..8fc849610eaa 100644
+--- a/drivers/nvdimm/ocxl/scm_internal.c
++++ b/drivers/nvdimm/ocxl/scm_internal.c
+@@ -210,3 +210,28 @@ void scm_warn_status(const struct scm_data *scm_data, const char *message,
+ 
+ 	dev_warn(&scm_data->dev, "%s: %s (%x)\n", message, text, status);
+ }
++
++void scm_warn_status_fw_update(const struct scm_data *scm_data,
++			       const char *message, u8 status)
 +{
-+	return ocxl_global_mmio_set64(scm_data->ocxl_afu, GLOBAL_MMIO_HCI,
-+				      OCXL_LITTLE_ENDIAN,
-+				      GLOBAL_MMIO_HCI_FW_DEBUG);
++	const char *text;
++
++	switch (status) {
++	case STATUS_FW_UPDATE_BLOCKED:
++		text = "Firmware update is blocked, please try again later";
++		break;
++
++	case STATUS_FW_ARG_INVALID:
++		text = "Internal error in SCM firmware update mechanism";
++		break;
++
++	case STATUS_FW_INVALID:
++		text = "Firmware content is invalid, please verify firmware update file";
++		break;
++
++	default:
++		return scm_warn_status(scm_data, message, status);
++	}
++
++	dev_warn(&scm_data->dev, "%s: %s (%x)\n", message, text, status);
++}
+diff --git a/drivers/nvdimm/ocxl/scm_internal.h b/drivers/nvdimm/ocxl/scm_internal.h
+index 693fd59f8bde..af19813a7f75 100644
+--- a/drivers/nvdimm/ocxl/scm_internal.h
++++ b/drivers/nvdimm/ocxl/scm_internal.h
+@@ -137,6 +137,12 @@ struct scm_data {
+ 			   */
+ };
+ 
++/**
++ * Create sysfs entries for an SCM device
++ * scm_data: The SCM metadata
++ */
++int scm_sysfs_add(struct scm_data *scm_data);
++
+ /**
+  * scm_chi() - Get the value of the CHI register
+  * @scm_data: The SCM metadata
+@@ -230,3 +236,11 @@ int scm_ns_response_handled(const struct scm_data *scm_data);
+ void scm_warn_status(const struct scm_data *scm_data, const char *message,
+ 		     u8 status);
+ 
++/**
++ * scm_warn_status_fw_update() - Emit a kernel warning showing a command status.
++ * @scm_data: a pointer to the SCM device data
++ * @message: A message to accompany the warning
++ * @status: The command status
++ */
++void scm_warn_status_fw_update(const struct scm_data *scm_data,
++			       const char *message, u8 status);
+diff --git a/drivers/nvdimm/ocxl/scm_sysfs.c b/drivers/nvdimm/ocxl/scm_sysfs.c
+new file mode 100644
+index 000000000000..a04e8a74d0c5
+--- /dev/null
++++ b/drivers/nvdimm/ocxl/scm_sysfs.c
+@@ -0,0 +1,163 @@
++// SPDX-License-Identifier: GPL-2.0+
++// Copyright 2018 IBM Corp.
++
++#include <linux/sysfs.h>
++#include <linux/capability.h>
++#include <linux/limits.h>
++#include <linux/firmware.h>
++#include "scm_internal.h"
++
++static ssize_t fw_version_show(struct device *device,
++			       struct device_attribute *attr, char *buf)
++{
++	struct scm_data *scm_data = container_of(device, struct scm_data, dev);
++
++	return scnprintf(buf, PAGE_SIZE, "%s\n", scm_data->fw_version);
 +}
 +
-+/**
-+ * scm_disable_fwdebug() - Disable FW debug on the controller
-+ * @scm_data: a pointer to the SCM device data
-+ * Return: 0 on success, negative on failure
-+ */
-+static int scm_disable_fwdebug(const struct scm_data *scm_data)
-+{
-+	return ocxl_global_mmio_set64(scm_data->ocxl_afu, GLOBAL_MMIO_HCIC,
-+				      OCXL_LITTLE_ENDIAN,
-+				      GLOBAL_MMIO_HCI_FW_DEBUG);
-+}
++#define SCM_FWUPDATE_BLOCK_SIZE	32768
 +
-+static int scm_ioctl_fwdebug(struct scm_data *scm_data,
-+			     struct scm_ioctl_fwdebug __user *uarg)
++/**
++ * scm_update_firmware() - Write a 32kB block of data to firmware
++ * The block may be less than 32kB if it is the last one
++ *
++ * scm_data the SCM device metadata
++ * offset: the offset of the start of the block
++ * buf: the block data
++ * size: the size of the block
++ */
++static ssize_t scm_update_firmware(struct scm_data *scm_data, size_t offset,
++				   const char *buf, size_t size)
 +{
-+	struct scm_ioctl_fwdebug args;
++	int rc;
++	size_t i;
 +	u64 val;
-+	int i;
-+	int rc;
 +
-+	if (copy_from_user(&args, uarg, sizeof(args)))
-+		return -EFAULT;
-+
-+	// Buffer size must be a multiple of 8
-+	if ((args.buf_size & 0x07))
++	if (size > SCM_FWUPDATE_BLOCK_SIZE)
 +		return -EINVAL;
 +
-+	if (args.buf_size > scm_data->admin_command.data_size)
-+		return -EINVAL;
-+
-+	mutex_lock(&scm_data->admin_command.lock);
-+
-+	rc = scm_enable_fwdebug(scm_data);
-+	if (rc)
-+		goto out;
-+
-+	rc = scm_admin_command_request(scm_data, ADMIN_COMMAND_FW_DEBUG);
-+	if (rc)
-+		goto out;
-+
-+	// Write DebugAction & FunctionCode
-+	val = ((u64)args.debug_action << 56) | ((u64)args.function_code << 40);
-+
-+	rc = ocxl_global_mmio_write64(scm_data->ocxl_afu,
-+				      scm_data->admin_command.request_offset + 0x08,
-+				      OCXL_LITTLE_ENDIAN, val);
-+	if (rc)
-+		goto out;
-+
-+	rc = ocxl_global_mmio_write64(scm_data->ocxl_afu,
-+				      scm_data->admin_command.request_offset + 0x10,
-+				      OCXL_LITTLE_ENDIAN, args.debug_parameter_1);
-+	if (rc)
-+		goto out;
-+
-+	rc = ocxl_global_mmio_write64(scm_data->ocxl_afu,
-+				      scm_data->admin_command.request_offset + 0x18,
-+				      OCXL_LITTLE_ENDIAN, args.debug_parameter_2);
-+	if (rc)
-+		goto out;
-+
-+	for (i = 0x20; i < 0x38; i += 0x08)
-+		rc = ocxl_global_mmio_write64(scm_data->ocxl_afu,
-+					      scm_data->admin_command.request_offset + i,
-+					      OCXL_LITTLE_ENDIAN, 0);
-+	if (rc)
-+		goto out;
-+
-+
-+	// Populate admin command buffer
-+	if (args.buf_size) {
-+		for (i = 0; i < args.buf_size; i += sizeof(u64)) {
-+			u64 val;
-+
-+			if (copy_from_user(&val, &args.buf[i], sizeof(u64)))
-+				return -EFAULT;
-+
-+			rc = ocxl_global_mmio_write64(scm_data->ocxl_afu,
-+						      scm_data->admin_command.data_offset + i,
-+						      OCXL_HOST_ENDIAN, val);
-+			if (rc)
-+				goto out;
-+		}
-+	}
-+
-+	rc = scm_admin_command_execute(scm_data);
-+	if (rc)
-+		goto out;
-+
-+	rc = scm_admin_command_complete_timeout(scm_data,
-+						scm_data->timeouts[ADMIN_COMMAND_FW_DEBUG]);
-+	if (rc < 0)
-+		goto out;
-+
-+	rc = scm_admin_response(scm_data);
-+	if (rc < 0)
-+		goto out;
-+	if (rc != STATUS_SUCCESS) {
-+		scm_warn_status(scm_data, "Unexpected status from FW Debug", rc);
-+		goto out;
-+	}
-+
-+	if (args.buf_size) {
-+		for (i = 0; i < args.buf_size; i += sizeof(u64)) {
-+			u64 val;
-+
-+			rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
-+						     scm_data->admin_command.data_offset + i,
-+						     OCXL_HOST_ENDIAN, &val);
-+			if (rc)
-+				goto out;
-+
-+			if (copy_to_user(&args.buf[i], &val, sizeof(u64))) {
-+				rc = -EFAULT;
-+				goto out;
-+			}
-+		}
-+	}
-+
-+	rc = scm_admin_response_handled(scm_data);
-+	if (rc)
-+		goto out;
-+
-+	rc = scm_disable_fwdebug(scm_data);
-+	if (rc)
-+		goto out;
-+
-+out:
-+	mutex_unlock(&scm_data->admin_command.lock);
-+	return rc;
-+}
-+
-+static int scm_ioctl_shutdown(struct scm_data *scm_data)
-+{
-+	int rc;
-+
-+	mutex_lock(&scm_data->admin_command.lock);
-+
-+	rc = scm_admin_command_request(scm_data, ADMIN_COMMAND_SHUTDOWN);
-+	if (rc)
-+		goto out;
-+
-+	rc = scm_admin_command_execute(scm_data);
-+	if (rc)
-+		goto out;
-+
-+	rc = scm_admin_command_complete_timeout(scm_data, ADMIN_COMMAND_SHUTDOWN);
-+	if (rc < 0) {
-+		dev_warn(&scm_data->dev, "Shutdown timed out\n");
-+		goto out;
-+	}
-+
-+	rc = 0;
-+	goto out;
-+
-+out:
-+	mutex_unlock(&scm_data->admin_command.lock);
-+	return rc;
-+}
-+
-+static int scm_ioctl_mmio_write(struct scm_data *scm_data,
-+				struct scm_ioctl_mmio __user *uarg)
-+{
-+	struct scm_ioctl_mmio args;
-+
-+	if (copy_from_user(&args, uarg, sizeof(args)))
-+		return -EFAULT;
-+
-+	return ocxl_global_mmio_write64(scm_data->ocxl_afu, args.address,
-+					OCXL_LITTLE_ENDIAN, args.val);
-+}
-+
-+static int scm_ioctl_mmio_read(struct scm_data *scm_data,
-+			       struct scm_ioctl_mmio __user *uarg)
-+{
-+	struct scm_ioctl_mmio args;
-+	int rc;
-+
-+	if (copy_from_user(&args, uarg, sizeof(args)))
-+		return -EFAULT;
-+
-+	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu, args.address,
-+				     OCXL_LITTLE_ENDIAN, &args.val);
++	rc = scm_admin_command_request(scm_data, ADMIN_COMMAND_FW_UPDATE);
 +	if (rc)
 +		return rc;
 +
-+	if (copy_to_user(uarg, &args, sizeof(args)))
-+		return -EFAULT;
++	val = (((u64)offset) << 32) | size;
++	rc = ocxl_global_mmio_write64(scm_data->ocxl_afu,
++				      scm_data->admin_command.request_offset + 8,
++				      OCXL_LITTLE_ENDIAN, val);
++	if (rc)
++		return rc;
++
++	for (i = 0; i < size; i += 8) {
++		val = *(u64 *)(buf + i);
++		rc = ocxl_global_mmio_write64(scm_data->ocxl_afu,
++					      scm_data->admin_command.data_offset + i,
++					      OCXL_HOST_ENDIAN, val);
++		if (rc)
++			return rc;
++	}
++
++	rc = scm_admin_command_execute(scm_data);
++	if (rc)
++		return rc;
++
++	rc = scm_admin_command_complete_timeout(scm_data,
++						ADMIN_COMMAND_FW_UPDATE);
++	if (rc < 0) {
++		dev_err(&scm_data->dev, "Firmware update timeout\n");
++		return rc;
++	}
++
++	rc = scm_admin_response(scm_data);
++	if (rc < 0)
++		return rc;
++	if (rc != STATUS_SUCCESS) {
++		scm_warn_status_fw_update(scm_data, "FW Update", rc);
++		return rc;
++	}
 +
 +	return 0;
 +}
-+#else /* CONFIG_OCXL_SCM_DEBUG */
-+static int scm_ioctl_fwdebug(struct scm_data *scm_data,
-+			     struct scm_ioctl_fwdebug __user *uarg)
++
++/*
++ * Parse out a firmware filename from sysfs, retrieve it's contents and write it
++ * to the SCM device firmware storage
++ */
++static ssize_t fw_update_filename_store(struct device *device,
++					struct device_attribute *attr,
++					const char *buf, size_t size)
 +{
-+	return -EPERM;
++	char path[NAME_MAX+1];
++	const char *end;
++	const struct firmware *firmware = NULL;
++	size_t offset;
++	int rc;
++	struct scm_data *scm_data = container_of(device, struct scm_data, dev);
++
++	if (!capable(CAP_SYS_ADMIN))
++		return -EACCES;
++
++	end = strnchr(buf, size, '\n');
++	if (end == NULL)
++		end = buf + strnlen(buf, size);
++
++	if ((end - buf) > NAME_MAX) {
++		dev_err(device, "Firmware filename '%-.*s' too long\n",
++			(int)(end - buf), buf);
++		return -EIO;
++	}
++
++	memcpy(path, buf, end - buf);
++	path[end - buf] = '\0';
++
++	if (request_firmware(&firmware, path, device)) {
++		dev_err(device, "Firmware file %s not found\n", path);
++		return -EIO;
++	}
++
++	if (firmware->size % 8) {
++		release_firmware(firmware);
++		dev_err(device, "Firmware '%s' should be a multiple of 8 bytes", path);
++		return -EINVAL;
++	}
++
++	mutex_lock(&scm_data->admin_command.lock);
++
++	for (offset = 0; offset < firmware->size; offset += SCM_FWUPDATE_BLOCK_SIZE) {
++		size_t remainder = firmware->size - offset;
++		size_t block_size;
++
++		block_size = (remainder > SCM_FWUPDATE_BLOCK_SIZE) ?
++			      SCM_FWUPDATE_BLOCK_SIZE : remainder;
++		rc = scm_update_firmware(scm_data, offset,
++					 firmware->data + offset, block_size);
++		if (rc) {
++			mutex_unlock(&scm_data->admin_command.lock);
++			return -EFAULT;
++		}
++	}
++
++	mutex_unlock(&scm_data->admin_command.lock);
++
++	return size;
 +}
 +
-+static int scm_ioctl_shutdown(struct scm_data *scm_data)
++static struct device_attribute scm_attrs[] = {
++	__ATTR_RO(fw_version),
++	__ATTR_WO(fw_update_filename),
++};
++
++int scm_sysfs_add(struct scm_data *scm_data)
 +{
-+	return -EPERM;
++	int i, rc;
++
++	for (i = 0; i < ARRAY_SIZE(scm_attrs); i++) {
++		rc = device_create_file(&scm_data->dev, &scm_attrs[i]);
++		if (rc) {
++			for (; --i >= 0;)
++				device_remove_file(&scm_data->dev, &scm_attrs[i]);
++
++			return rc;
++		}
++	}
++	return 0;
 +}
-+
-+static int scm_ioctl_mmio_write(struct scm_data *scm_data,
-+				struct scm_ioctl_mmio __user *uarg)
-+{
-+	return -EPERM;
-+}
-+
-+static int scm_ioctl_mmio_read(struct scm_data *scm_data,
-+			       struct scm_ioctl_mmio __user *uarg)
-+{
-+	return -EPERM;
-+}
-+#endif /* CONFIG_OCXL_SCM_DEBUG */
-+
- static long scm_file_ioctl(struct file *file, unsigned int cmd,
- 			   unsigned long args)
- {
-@@ -1140,6 +1369,26 @@ static long scm_file_ioctl(struct file *file, unsigned int cmd,
- 	case SCM_IOCTL_REQUEST_HEALTH:
- 		rc = scm_req_controller_health_perf(scm_data);
- 		break;
-+
-+	case SCM_IOCTL_FWDEBUG:
-+		rc = scm_ioctl_fwdebug(scm_data,
-+				       (struct scm_ioctl_fwdebug __user *)args);
-+		break;
-+
-+	case SCM_IOCTL_SHUTDOWN:
-+		rc = scm_ioctl_shutdown(scm_data);
-+		break;
-+
-+	case SCM_IOCTL_MMIO_WRITE:
-+		rc = scm_ioctl_mmio_write(scm_data,
-+					  (struct scm_ioctl_mmio __user *)args);
-+		break;
-+
-+	case SCM_IOCTL_MMIO_READ:
-+		rc = scm_ioctl_mmio_read(scm_data,
-+					 (struct scm_ioctl_mmio __user *)args);
-+		break;
-+
- 	}
- 
- 	return rc;
-diff --git a/include/uapi/nvdimm/ocxl-scm.h b/include/uapi/nvdimm/ocxl-scm.h
-index 55a7ad59d614..6e0f25c5f9f3 100644
---- a/include/uapi/nvdimm/ocxl-scm.h
-+++ b/include/uapi/nvdimm/ocxl-scm.h
-@@ -6,6 +6,28 @@
- #include <linux/types.h>
- #include <linux/ioctl.h>
- 
-+enum scm_fwdebug_action {
-+	SCM_FWDEBUG_READ_CONTROLLER_MEMORY = 0x01,
-+	SCM_FWDEBUG_WRITE_CONTROLLER_MEMORY = 0x02,
-+	SCM_FWDEBUG_ENABLE_FUNCTION = 0x03,
-+	SCM_FWDEBUG_DISABLE_FUNCTION = 0x04,
-+	SCM_FWDEBUG_GET_PEL = 0x05, // Retrieve Persistent Error Log
-+};
-+
-+struct scm_ioctl_buffer_info {
-+	__u32	admin_command_buffer_size; // out
-+	__u32	near_storage_buffer_size; // out
-+};
-+
-+struct scm_ioctl_fwdebug { // All args are inputs
-+	enum scm_fwdebug_action debug_action;
-+	__u16 function_code;
-+	__u16 buf_size; // Size of optional data buffer
-+	__u64 debug_parameter_1;
-+	__u64 debug_parameter_2;
-+	__u8 *buf; // Pointer to optional in/out data buffer
-+};
-+
- #define SCM_ERROR_LOG_ACTION_RESET	(1 << (32-32))
- #define SCM_ERROR_LOG_ACTION_CHKFW	(1 << (53-32))
- #define SCM_ERROR_LOG_ACTION_REPLACE	(1 << (54-32))
-@@ -66,6 +88,11 @@ struct scm_ioctl_controller_stats {
- 	__u64 cache_write_latency; // nanoseconds
- };
- 
-+struct scm_ioctl_mmio {
-+	__u64 address; // Offset in global MMIO space
-+	__u64 val; // value to write/was read
-+};
-+
- struct scm_ioctl_eventfd {
- 	__s32 eventfd;
- 	__u32 reserved;
-@@ -92,4 +119,9 @@ struct scm_ioctl_eventfd {
- #define SCM_IOCTL_EVENT_CHECK	_IOR(SCM_MAGIC, 0x07, __u64)
- #define SCM_IOCTL_REQUEST_HEALTH _IO(SCM_MAGIC, 0x08)
- 
-+#define SCM_IOCTL_FWDEBUG	_IOWR(SCM_MAGIC, 0xf0, struct scm_ioctl_fwdebug)
-+#define SCM_IOCTL_MMIO_WRITE	_IOW(SCM_MAGIC, 0xf1, struct scm_ioctl_mmio)
-+#define SCM_IOCTL_MMIO_READ	_IOWR(SCM_MAGIC, 0xf2, struct scm_ioctl_mmio)
-+#define SCM_IOCTL_SHUTDOWN	_IO(SCM_MAGIC, 0xf3)
-+
- #endif /* _UAPI_OCXL_SCM_H */
 -- 
 2.23.0
 
