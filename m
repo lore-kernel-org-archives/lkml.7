@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCCDC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C34C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8720720674
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A42920803
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:54:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413680;
-	bh=W70HprwceHM95eqhp/i6jc2jryBT4sBo1lOQnbLjKaY=;
+	s=default; t=1575413685;
+	bh=cvFZvCXWVi56kGin9wBixbYsa4vDrv6sQdpsJCuvV0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OyYQyWOxrAjhVyqCYdCM01FSEjmHkk/rOzI8xpj4LoonJB9R7Wj+xXYw1P5dkP9tY
-	 /EWbPm846nJxJmwJaXtan7IfUhZxyCmBxzCjwIa+TmizXB2Alv5mYDwz45h9PWAXdU
-	 +D678wuPTOykw1w09nG1gkJ7vY6HIv1eKEbyeTfc=
+	b=sQm6Qkmijtgb6TYmiraUMjpLkiMM9/Zr/hujDqINgGmiLBq+y+sxEX21fSxi0GGZK
+	 iMsmndXO0Gua2rzVPwTj8j2DW5aErt1GX3Q+zh0SwnOlo9fqAiIELL5z5sxvbP/lKS
+	 FY/rkJDK9iyi59iEc/s3mgnDbSWHPZrQXxOY3V1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730292AbfLCWyj (ORCPT
+        id S1730304AbfLCWyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:54:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48354 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:54:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730288AbfLCWy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:54:28 -0500
+        id S1727937AbfLCWyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:54:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F7F52053B;
-        Tue,  3 Dec 2019 22:54:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 157CC20866;
+        Tue,  3 Dec 2019 22:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413668;
-        bh=W70HprwceHM95eqhp/i6jc2jryBT4sBo1lOQnbLjKaY=;
+        s=default; t=1575413675;
+        bh=cvFZvCXWVi56kGin9wBixbYsa4vDrv6sQdpsJCuvV0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PUEh16/cu/G4TC0P/4tsI5vh3mVxq7sakja7lXv88k4ROwcyYZ9H4KS9NaOtkFDf0
-         Hdh8L2XFoD4E4+YGZ8nqoD9Akhj/8g84+kRwszv8absxn9GCTu2t3mOLdLaor+ucKQ
-         B/KIfn/j9rgoe5kL+UBzGeIhkiqpNQETVCV/c8ao=
+        b=bHSXQvwT/++yF7cxqziH3bKfUNTasYBIZ+IUYnhfuCRIpxZ/AJpjooTKEAxYrEIu5
+         Kc/clvb/1afVSPk80CvwkO+d2O2rPQWX2VcE+4sjbV8ZmRN09OKVcipgyliO83/8oO
+         zk5fzPX7ChHpN6HypFNFytqtIpGJCsnY+LlMomVM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Huang Shijie <sjhuang@iluvatar.ai>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Skidanov <alexey.skidanov@intel.com>,
+        Olof Johansson <olof@lixom.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 177/321] regulator: tps65910: fix a missing check of return value
-Date:   Tue,  3 Dec 2019 23:34:03 +0100
-Message-Id: <20191203223436.338800816@linuxfoundation.org>
+Subject: [PATCH 4.19 212/321] lib/genalloc.c: include vmalloc.h
+Date:   Tue,  3 Dec 2019 23:34:38 +0100
+Message-Id: <20191203223438.149719034@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,36 +63,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Olof Johansson <olof@lixom.net>
 
-[ Upstream commit cd07e3701fa6a4c68f8493ee1d12caa18d46ec6a ]
+[ Upstream commit 35004f2e55807a1a1491db24ab512dd2f770a130 ]
 
-tps65910_reg_set_bits() may fail. The fix checks if it fails, and if so,
-returns with its error code.
+Fixes build break on most ARM/ARM64 defconfigs:
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+  lib/genalloc.c: In function 'gen_pool_add_virt':
+  lib/genalloc.c:190:10: error: implicit declaration of function 'vzalloc_node'; did you mean 'kzalloc_node'?
+  lib/genalloc.c:190:8: warning: assignment to 'struct gen_pool_chunk *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+  lib/genalloc.c: In function 'gen_pool_destroy':
+  lib/genalloc.c:254:3: error: implicit declaration of function 'vfree'; did you mean 'kfree'?
+
+Fixes: 6862d2fc8185 ('lib/genalloc.c: use vzalloc_node() to allocate the bitmap')
+Cc: Huang Shijie <sjhuang@iluvatar.ai>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexey Skidanov <alexey.skidanov@intel.com>
+Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/tps65910-regulator.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ lib/genalloc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/regulator/tps65910-regulator.c b/drivers/regulator/tps65910-regulator.c
-index 02ccdaa226a73..5ebb6ee73f077 100644
---- a/drivers/regulator/tps65910-regulator.c
-+++ b/drivers/regulator/tps65910-regulator.c
-@@ -1102,8 +1102,10 @@ static int tps65910_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, pmic);
+diff --git a/lib/genalloc.c b/lib/genalloc.c
+index f365d71cdc774..7e85d1e37a6ea 100644
+--- a/lib/genalloc.c
++++ b/lib/genalloc.c
+@@ -35,6 +35,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/genalloc.h>
+ #include <linux/of_device.h>
++#include <linux/vmalloc.h>
  
- 	/* Give control of all register to control port */
--	tps65910_reg_set_bits(pmic->mfd, TPS65910_DEVCTRL,
-+	err = tps65910_reg_set_bits(pmic->mfd, TPS65910_DEVCTRL,
- 				DEVCTRL_SR_CTL_I2C_SEL_MASK);
-+	if (err < 0)
-+		return err;
- 
- 	switch (tps65910_chip_id(tps65910)) {
- 	case TPS65910:
+ static inline size_t chunk_size(const struct gen_pool_chunk *chunk)
+ {
 -- 
 2.20.1
 
