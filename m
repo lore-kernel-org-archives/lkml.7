@@ -2,213 +2,177 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6463C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 01:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D50C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 01:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F353206E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 01:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B46E3206E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 01:40:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="j51GpkAS"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="rp3il1Lt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726079AbfLCBik (ORCPT
+        id S1726189AbfLCBkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 20:38:40 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:2248 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725899AbfLCBik (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 20:38:40 -0500
-X-UUID: b0881f0326c3448da76daf101593d0f0-20191203
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=sRwMLRyS13CHATbRSBNDwYj8Xi6G067HZgFuCYy6r9Q=;
-        b=j51GpkASqoKybtF0UEFO5GYzvYBVHTZAb0ja5+kX1aCTTMcI8k3yfEYB6avjzwA7Fnp7fMi9JgRoJ0HY1S0n3xJBZa9CksS1dbRyIoi9WY8Mvkkp6EJWqZ7VNqCYD1UHjvDxS16fa5ZjdZhfHY6Gu7d64/Q7Eq/hs3nTC3X2XVw=;
-X-UUID: b0881f0326c3448da76daf101593d0f0-20191203
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1907750908; Tue, 03 Dec 2019 09:38:35 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 3 Dec 2019 09:38:19 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 3 Dec 2019 09:38:14 +0800
-Message-ID: <1575337114.1155.4.camel@mtksdaap41>
-Subject: Re: [PATCH v1 6/6] drm/mediatek: apply CMDQ control flow
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-CC:     David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        YT Shen <yt.shen@mediatek.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>, <tfiga@chromium.org>,
-        <drinkcat@chromium.org>, <linux-kernel@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>,
-        Yongqiang Niu <yongqiang.niu@mediatek.com>
-Date:   Tue, 3 Dec 2019 09:38:34 +0800
-In-Reply-To: <20191128024238.9399-7-bibby.hsieh@mediatek.com>
-References: <20191128024238.9399-1-bibby.hsieh@mediatek.com>
-         <20191128024238.9399-7-bibby.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 2 Dec 2019 20:40:08 -0500
+Received: from onstation.org ([52.200.56.107]:44816 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725903AbfLCBkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 20:40:08 -0500
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 0E9DD3E908;
+        Tue,  3 Dec 2019 01:40:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1575337207;
+        bh=EW7ZDM5c2n54mYfG5qzAbt/1sak+DzvY68J3v0XZe1A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rp3il1LtXJzLhm2jL8NJ9MGPG2MBzaYmNAMXeExez1VZtDp8BHzI5nZR5ZXZYKebc
+         e761s2+MYD4aV0QZOGCWj0mXOVcfSOj6t83goKxrthzbasH6DZDJJ2i9cCXPYzS3UI
+         tisRG8JZsrzeFygCr/soNbu3M5SEwXyrbh36tLM4=
+Date:   Mon, 2 Dec 2019 20:40:06 -0500
+From:   Brian Masney <masneyb@onstation.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        MSM <linux-arm-msm@vger.kernel.org>, Sean Paul <sean@poorly.run>
+Subject: Re: [PATCH] drm/msm/mdp5: enable autocommit
+Message-ID: <20191203014006.GA7756@onstation.org>
+References: <20191112104854.20850-1-masneyb@onstation.org>
+ <CAOCk7NosRhRp3vZxg2Nx8106PQ0ryo5b68cUv605XUzCm6gYPA@mail.gmail.com>
+ <20191113112334.GA18702@onstation.org>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191113112334.GA18702@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEJpYmJ5Og0KDQpPbiBUaHUsIDIwMTktMTEtMjggYXQgMTA6NDIgKzA4MDAsIEJpYmJ5IEhz
-aWVoIHdyb3RlOg0KPiBVbmxpa2Ugb3RoZXIgU29DcywgTVQ4MTgzIGRvZXMgbm90IGhhdmUgInNo
-YWRvdyINCj4gcmVnaXN0ZXJzIGZvciBwZXJmb3JtYWluZyBhbiBhdG9taWMgdmlkZW8gbW9kZQ0K
-PiBzZXQgb3IgcGFnZSBmbGlwIGF0IHZibGFuay92c3luYy4NCj4gDQo+IFRoZSBDTURRIChDb21t
-ZW5kIFF1ZXVlKSBpbiBNVDgxODMgaXMgdXNlZCB0byBoZWxwDQo+IHVwZGF0ZSBhbGwgcmVsZXZh
-bnQgZGlzcGxheSBjb250cm9sbGVyIHJlZ2lzdGVycw0KPiB3aXRoIGNyaXRpY2FsIHRpbWUgbGlt
-YXRpb24uDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBZVCBTaGVuIDx5dC5zaGVuQG1lZGlhdGVrLmNv
-bT4NCj4gU2lnbmVkLW9mZi1ieTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNvbT4NCj4gU2lnbmVk
-LW9mZi1ieTogUGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT4NCj4gU2lnbmVk
-LW9mZi1ieTogQmliYnkgSHNpZWggPGJpYmJ5LmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gU2lnbmVk
-LW9mZi1ieTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+DQo+IC0t
-LQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jICAgICB8IDg2ICsr
-KysrKysrKysrKysrKysrKysrLQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1f
-ZGRwX2NvbXAuYyB8IDMxICsrKysrKysrDQo+ICAyIGZpbGVzIGNoYW5nZWQsIDExMyBpbnNlcnRp
-b25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2Ry
-bS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
-ZHJtX2NydGMuYw0KPiBpbmRleCBmY2Y0ZTc1NWUwYmQuLjFiNGU1MzdhYzNjMSAxMDA2NDQNCj4g
-LS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQo+ICsrKyBiL2Ry
-aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYw0KPiBAQCAtMTIsNiArMTIsOCBA
-QA0KPiAgI2luY2x1ZGUgPGRybS9kcm1fcGxhbmVfaGVscGVyLmg+DQo+ICAjaW5jbHVkZSA8ZHJt
-L2RybV9wcm9iZV9oZWxwZXIuaD4NCj4gICNpbmNsdWRlIDxkcm0vZHJtX3ZibGFuay5oPg0KPiAr
-I2luY2x1ZGUgPGxpbnV4L29mX2FkZHJlc3MuaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9zb2MvbWVk
-aWF0ZWsvbXRrLWNtZHEuaD4NCj4gIA0KPiAgI2luY2x1ZGUgIm10a19kcm1fZHJ2LmgiDQo+ICAj
-aW5jbHVkZSAibXRrX2RybV9jcnRjLmgiDQo+IEBAIC00Miw2ICs0NCw5IEBAIHN0cnVjdCBtdGtf
-ZHJtX2NydGMgew0KPiAgCXVuc2lnbmVkIGludAkJCWxheWVyX25yOw0KPiAgCWJvb2wJCQkJcGVu
-ZGluZ19wbGFuZXM7DQo+ICANCj4gKwlzdHJ1Y3QgY21kcV9jbGllbnQJCSpjbWRxX2NsaWVudDsN
-Cj4gKwl1MzIJCQkJY21kcV9ldmVudDsNCj4gKw0KPiAgCXZvaWQgX19pb21lbQkJCSpjb25maWdf
-cmVnczsNCj4gIAljb25zdCBzdHJ1Y3QgbXRrX21tc3lzX3JlZ19kYXRhICptbXN5c19yZWdfZGF0
-YTsNCj4gIAlzdHJ1Y3QgbXRrX2Rpc3BfbXV0ZXgJCSptdXRleDsNCj4gQEAgLTU2LDYgKzYxLDEx
-IEBAIHN0cnVjdCBtdGtfY3J0Y19zdGF0ZSB7DQo+ICAJdW5zaWduZWQgaW50CQkJcGVuZGluZ193
-aWR0aDsNCj4gIAl1bnNpZ25lZCBpbnQJCQlwZW5kaW5nX2hlaWdodDsNCj4gIAl1bnNpZ25lZCBp
-bnQJCQlwZW5kaW5nX3ZyZWZyZXNoOw0KPiArCXN0cnVjdCBjbWRxX3BrdAkJCSpjbWRxX2hhbmRs
-ZTsNCj4gK307DQo+ICsNCj4gK3N0cnVjdCBtdGtfY21kcV9jYl9kYXRhIHsNCj4gKwlzdHJ1Y3Qg
-Y21kcV9wa3QJCQkqY21kcV9oYW5kbGU7DQo+ICB9Ow0KPiAgDQo+ICBzdGF0aWMgaW5saW5lIHN0
-cnVjdCBtdGtfZHJtX2NydGMgKnRvX210a19jcnRjKHN0cnVjdCBkcm1fY3J0YyAqYykNCj4gQEAg
-LTIyOSw2ICsyMzksNDYgQEAgc3RydWN0IG10a19kZHBfY29tcCAqbXRrX2RybV9kZHBfY29tcF9m
-b3JfcGxhbmUoc3RydWN0IGRybV9jcnRjICpjcnRjLA0KPiAgCXJldHVybiBOVUxMOw0KPiAgfQ0K
-PiAgDQo+ICsjaWZkZWYgQ09ORklHX01US19DTURRDQo+ICtzdGF0aWMgdm9pZCBkZHBfY21kcV9j
-YihzdHJ1Y3QgY21kcV9jYl9kYXRhIGRhdGEpDQo+ICt7DQo+ICsJc3RydWN0IG10a19jbWRxX2Ni
-X2RhdGEgKmNiX2RhdGEgPSBkYXRhLmRhdGE7DQo+ICsNCj4gKwljbWRxX3BrdF9kZXN0cm95KGNi
-X2RhdGEtPmNtZHFfaGFuZGxlKTsNCj4gKwlrZnJlZShjYl9kYXRhKTsNCj4gK30NCj4gKw0KPiAr
-c3RhdGljIHZvaWQgbXRrX2NtZHFfYWNxdWlyZShzdHJ1Y3QgZHJtX2NydGMgKmNydGMpDQo+ICt7
-DQo+ICsJc3RydWN0IG10a19jcnRjX3N0YXRlICptdGtfY3J0Y19zdGF0ZSA9DQo+ICsJCQl0b19t
-dGtfY3J0Y19zdGF0ZShjcnRjLT5zdGF0ZSk7DQo+ICsJc3RydWN0IG10a19kcm1fY3J0YyAqbXRr
-X2NydGMgPSB0b19tdGtfY3J0YyhjcnRjKTsNCj4gKw0KPiArCW10a19jcnRjX3N0YXRlLT5jbWRx
-X2hhbmRsZSA9DQo+ICsJCQljbWRxX3BrdF9jcmVhdGUobXRrX2NydGMtPmNtZHFfY2xpZW50LA0K
-PiArCQkJCQlQQUdFX1NJWkUpOw0KDQpJIHdvdWxkIGxpa2UgdG8gcmVtb3ZlIGF0b21pYyBmZWF0
-dXJlIGluIGNtZHEgZHJpdmVyIGFuZCBkcm0gZHJpdmVyDQpjb3VsZCByZXVzZSB0aGUgcGt0LiBQ
-bGVhc2UgcmVmZXIgdG8gWzFdIGZvciBkZXRhaWwuDQoNClsxXQ0KaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4LW1lZGlhdGVrLzIwMTktSmFudWFyeS8wMTY4NjYuaHRt
-bA0KDQo+ICsJY21kcV9wa3RfY2xlYXJfZXZlbnQobXRrX2NydGNfc3RhdGUtPmNtZHFfaGFuZGxl
-LA0KPiArCQkJICAgICBtdGtfY3J0Yy0+Y21kcV9ldmVudCk7DQo+ICsJY21kcV9wa3Rfd2ZlKG10
-a19jcnRjX3N0YXRlLT5jbWRxX2hhbmRsZSwgbXRrX2NydGMtPmNtZHFfZXZlbnQpOw0KPiArfQ0K
-PiArDQo+ICtzdGF0aWMgdm9pZCBtdGtfY21kcV9yZWxlYXNlKHN0cnVjdCBkcm1fY3J0YyAqY3J0
-YykNCj4gK3sNCj4gKwlzdHJ1Y3QgbXRrX2NydGNfc3RhdGUgKm10a19jcnRjX3N0YXRlID0NCj4g
-KwkJCXRvX210a19jcnRjX3N0YXRlKGNydGMtPnN0YXRlKTsNCj4gKwlzdHJ1Y3QgbXRrX2NtZHFf
-Y2JfZGF0YSAqY2JfZGF0YTsNCj4gKw0KPiArCWNiX2RhdGEgPSBrbWFsbG9jKHNpemVvZigqY2Jf
-ZGF0YSksIEdGUF9LRVJORUwpOw0KPiArCWlmICghY2JfZGF0YSkgew0KPiArCQlEUk1fREVWX0VS
-Uk9SKGNydGMtPmRldi0+ZGV2LCAiRmFpbGVkIHRvIGFsbG9jIGNiX2RhdGFcbiIpOw0KPiArCQly
-ZXR1cm47DQo+ICsJfQ0KPiArDQo+ICsJY2JfZGF0YS0+Y21kcV9oYW5kbGUgPSBtdGtfY3J0Y19z
-dGF0ZS0+Y21kcV9oYW5kbGU7DQo+ICsJY21kcV9wa3RfZmx1c2hfYXN5bmMobXRrX2NydGNfc3Rh
-dGUtPmNtZHFfaGFuZGxlLA0KPiArCQkJICAgICBkZHBfY21kcV9jYiwgY2JfZGF0YSk7DQo+ICt9
-DQo+ICsjZW5kaWYNCj4gIHN0YXRpYyBpbnQgbXRrX2NydGNfZGRwX2h3X2luaXQoc3RydWN0IG10
-a19kcm1fY3J0YyAqbXRrX2NydGMpDQo+ICB7DQo+ICAJc3RydWN0IGRybV9jcnRjICpjcnRjID0g
-Jm10a19jcnRjLT5iYXNlOw0KPiBAQCAtMzgzLDcgKzQzMyw4IEBAIHN0YXRpYyB2b2lkIG10a19j
-cnRjX2RkcF9jb25maWcoc3RydWN0IGRybV9jcnRjICpjcnRjKQ0KPiAgCWlmIChzdGF0ZS0+cGVu
-ZGluZ19jb25maWcpIHsNCj4gIAkJbXRrX2RkcF9jb21wX2NvbmZpZyhjb21wLCBzdGF0ZS0+cGVu
-ZGluZ193aWR0aCwNCj4gIAkJCQkgICAgc3RhdGUtPnBlbmRpbmdfaGVpZ2h0LA0KPiAtCQkJCSAg
-ICBzdGF0ZS0+cGVuZGluZ192cmVmcmVzaCwgMCwgTlVMTCk7DQo+ICsJCQkJICAgIHN0YXRlLT5w
-ZW5kaW5nX3ZyZWZyZXNoLCAwLA0KPiArCQkJCSAgICBzdGF0ZS0+Y21kcV9oYW5kbGUpOw0KPiAg
-DQo+ICAJCXN0YXRlLT5wZW5kaW5nX2NvbmZpZyA9IGZhbHNlOw0KPiAgCX0NCj4gQEAgLTQwMyw3
-ICs0NTQsOCBAQCBzdGF0aWMgdm9pZCBtdGtfY3J0Y19kZHBfY29uZmlnKHN0cnVjdCBkcm1fY3J0
-YyAqY3J0YykNCj4gIA0KPiAgCQkJaWYgKGNvbXApDQo+ICAJCQkJbXRrX2RkcF9jb21wX2xheWVy
-X2NvbmZpZyhjb21wLCBsb2NhbF9sYXllciwNCj4gLQkJCQkJCQkgIHBsYW5lX3N0YXRlLCBOVUxM
-KTsNCj4gKwkJCQkJCQkgIHBsYW5lX3N0YXRlLA0KPiArCQkJCQkJCSAgc3RhdGUtPmNtZHFfaGFu
-ZGxlKTsNCj4gIAkJCXBsYW5lX3N0YXRlLT5wZW5kaW5nLmNvbmZpZyA9IGZhbHNlOw0KPiAgCQl9
-DQo+ICAJCW10a19jcnRjLT5wZW5kaW5nX3BsYW5lcyA9IGZhbHNlOw0KPiBAQCAtNDU0LDYgKzUw
-NiwxMyBAQCB2b2lkIG10a19kcm1fY3J0Y19jdXJzb3JfdXBkYXRlKHN0cnVjdCBkcm1fY3J0YyAq
-Y3J0Yywgc3RydWN0IGRybV9wbGFuZSAqcGxhbmUsDQo+ICAJCW10a19jcnRjX2RkcF9jb25maWco
-Y3J0Yyk7DQo+ICAJCW10a19kaXNwX211dGV4X3JlbGVhc2UobXRrX2NydGMtPm11dGV4KTsNCj4g
-IAl9DQo+ICsjaWZkZWYgQ09ORklHX01US19DTURRDQo+ICsJaWYgKG10a19jcnRjLT5jbWRxX2Ns
-aWVudCkgew0KPiArCQltdGtfY21kcV9hY3F1aXJlKGNydGMpOw0KPiArCQltdGtfY3J0Y19kZHBf
-Y29uZmlnKGNydGMpOw0KPiArCQltdGtfY21kcV9yZWxlYXNlKGNydGMpOw0KPiArCX0NCj4gKyNl
-bmRpZg0KPiAgCW11dGV4X3VubG9jaygmcHJpdi0+aHdfbG9jayk7DQo+ICB9DQo+ICANCj4gQEAg
-LTU3MCw2ICs2MjksMTMgQEAgc3RhdGljIHZvaWQgbXRrX2RybV9jcnRjX2F0b21pY19mbHVzaChz
-dHJ1Y3QgZHJtX2NydGMgKmNydGMsDQo+ICAJCW10a19jcnRjX2RkcF9jb25maWcoY3J0Yyk7DQo+
-ICAJCW10a19kaXNwX211dGV4X3JlbGVhc2UobXRrX2NydGMtPm11dGV4KTsNCj4gIAl9DQo+ICsj
-aWZkZWYgQ09ORklHX01US19DTURRDQo+ICsJaWYgKG10a19jcnRjLT5jbWRxX2NsaWVudCkgew0K
-PiArCQltdGtfY21kcV9hY3F1aXJlKGNydGMpOw0KPiArCQltdGtfY3J0Y19kZHBfY29uZmlnKGNy
-dGMpOw0KPiArCQltdGtfY21kcV9yZWxlYXNlKGNydGMpOw0KPiArCX0NCj4gKyNlbmRpZg0KDQpU
-aGlzIHBhcnQgaXMgYWxtb3N0IHRoZSBzYW1lIGFzIHRoZSBvbmUgaW4gbXRrX2RybV9jcnRjX2N1
-cnNvcl91cGRhdGUoKSwNCnRyeSB0byBtZXJnZSB0aGVtLg0KDQo+ICB9DQo+ICANCj4gIHN0YXRp
-YyBjb25zdCBzdHJ1Y3QgZHJtX2NydGNfZnVuY3MgbXRrX2NydGNfZnVuY3MgPSB7DQo+IEBAIC02
-MTksNyArNjg1LDcgQEAgdm9pZCBtdGtfY3J0Y19kZHBfaXJxKHN0cnVjdCBkcm1fY3J0YyAqY3J0
-Yywgc3RydWN0IG10a19kZHBfY29tcCAqY29tcCkNCj4gIAlzdHJ1Y3QgbXRrX2RybV9jcnRjICpt
-dGtfY3J0YyA9IHRvX210a19jcnRjKGNydGMpOw0KPiAgCXN0cnVjdCBtdGtfZHJtX3ByaXZhdGUg
-KnByaXYgPSBjcnRjLT5kZXYtPmRldl9wcml2YXRlOw0KPiAgDQo+IC0JaWYgKCFwcml2LT5kYXRh
-LT5zaGFkb3dfcmVnaXN0ZXIpDQo+ICsJaWYgKCFwcml2LT5kYXRhLT5zaGFkb3dfcmVnaXN0ZXIg
-JiYgIW10a19jcnRjLT5jbWRxX2NsaWVudCkNCj4gIAkJbXRrX2NydGNfZGRwX2NvbmZpZyhjcnRj
-KTsNCj4gIA0KPiAgCW10a19kcm1fZmluaXNoX3BhZ2VfZmxpcChtdGtfY3J0Yyk7DQo+IEBAIC03
-NjEsNiArODI3LDE4IEBAIGludCBtdGtfZHJtX2NydGNfY3JlYXRlKHN0cnVjdCBkcm1fZGV2aWNl
-ICpkcm1fZGV2LA0KPiAgCWRybV9tb2RlX2NydGNfc2V0X2dhbW1hX3NpemUoJm10a19jcnRjLT5i
-YXNlLCBNVEtfTFVUX1NJWkUpOw0KPiAgCWRybV9jcnRjX2VuYWJsZV9jb2xvcl9tZ210KCZtdGtf
-Y3J0Yy0+YmFzZSwgMCwgZmFsc2UsIE1US19MVVRfU0laRSk7DQo+ICAJcHJpdi0+bnVtX3BpcGVz
-Kys7DQo+IC0NCj4gKyNpZmRlZiBDT05GSUdfTVRLX0NNRFENCj4gKwltdGtfY3J0Yy0+Y21kcV9j
-bGllbnQgPQ0KPiArCQkJY21kcV9tYm94X2NyZWF0ZShkZXYsIGRybV9jcnRjX2luZGV4KCZtdGtf
-Y3J0Yy0+YmFzZSksDQo+ICsJCQkJCSAyMDAwKTsNCj4gKwlvZl9wcm9wZXJ0eV9yZWFkX3UzMl9p
-bmRleChkZXYtPm9mX25vZGUsICJtZWRpYXRlayxnY2UtZXZlbnRzIiwNCj4gKwkJCQkgICBkcm1f
-Y3J0Y19pbmRleCgmbXRrX2NydGMtPmJhc2UpLA0KPiArCQkJCSAgICZtdGtfY3J0Yy0+Y21kcV9l
-dmVudCk7DQo+ICsJaWYgKElTX0VSUihtdGtfY3J0Yy0+Y21kcV9jbGllbnQpKSB7DQo+ICsJCWRl
-dl9kYmcoZGV2LCAibXRrX2NydGMgJWQgZmFpbGVkIHRvIGNyZWF0ZSBtYWlsYm94IGNsaWVudCwg
-d3JpdGluZyByZWdpc3RlciBieSBDUFUgbm93XG4iLA0KPiArCQkJZHJtX2NydGNfaW5kZXgoJm10
-a19jcnRjLT5iYXNlKSk7DQo+ICsJCW10a19jcnRjLT5jbWRxX2NsaWVudCA9IE5VTEw7DQo+ICsJ
-fQ0KPiArI2VuZGlmDQo+ICAJcmV0dXJuIDA7DQo+ICB9DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jIGIvZHJpdmVycy9ncHUvZHJtL21l
-ZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYw0KPiBpbmRleCA2ZDBmMzQ5ZGRmODIuLjljYzEyYWYy
-YmMwNiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRw
-X2NvbXAuYw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29t
-cC5jDQo+IEBAIC0zNzAsNiArMzcwLDkgQEAgaW50IG10a19kZHBfY29tcF9pbml0KHN0cnVjdCBk
-ZXZpY2UgKmRldiwgc3RydWN0IGRldmljZV9ub2RlICpub2RlLA0KPiAgCQkgICAgICBjb25zdCBz
-dHJ1Y3QgbXRrX2RkcF9jb21wX2Z1bmNzICpmdW5jcykNCj4gIHsNCj4gIAlzdHJ1Y3QgcGxhdGZv
-cm1fZGV2aWNlICpjb21wX3BkZXY7DQo+ICsJc3RydWN0IHJlc291cmNlIHJlczsNCj4gKwlzdHJ1
-Y3QgY21kcV9jbGllbnRfcmVnICpjbWRxX3JlZzsNCj4gKwlpbnQgcmV0ID0gMDsNCj4gIA0KPiAg
-CWlmIChjb21wX2lkIDwgMCB8fCBjb21wX2lkID49IEREUF9DT01QT05FTlRfSURfTUFYKQ0KPiAg
-CQlyZXR1cm4gLUVJTlZBTDsNCj4gQEAgLTQwNCw2ICs0MDcsMzQgQEAgaW50IG10a19kZHBfY29t
-cF9pbml0KHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZV9ub2RlICpub2RlLA0KPiAg
-CX0NCj4gIAljb21wLT5kZXYgPSAmY29tcF9wZGV2LT5kZXY7DQo+ICANCj4gKyNpZmRlZiBDT05G
-SUdfTVRLX0NNRFENCj4gKwlpZiAob2ZfYWRkcmVzc190b19yZXNvdXJjZShub2RlLCAwLCAmcmVz
-KSAhPSAwKSB7DQo+ICsJCWRldl9lcnIoZGV2LCAiTWlzc2luZyByZWcgaW4gJXMgbm9kZVxuIiwN
-Cj4gKwkJCW5vZGUtPmZ1bGxfbmFtZSk7DQo+ICsJCXJldHVybiAtRUlOVkFMOw0KPiArCX0NCj4g
-Kwljb21wLT5yZWdzX3BhID0gcmVzLnN0YXJ0Ow0KPiArDQo+ICsJY29tcF9wZGV2ID0gb2ZfZmlu
-ZF9kZXZpY2VfYnlfbm9kZShub2RlKTsNCj4gKwlpZiAoIWNvbXBfcGRldikgew0KPiArCQlkZXZf
-d2FybihkZXYsICJXYWl0aW5nIGZvciBjb21wb25lbnQgZGV2aWNlICVzXG4iLA0KPiArCQkJIG5v
-ZGUtPmZ1bGxfbmFtZSk7DQo+ICsJCXJldHVybiAtRVBST0JFX0RFRkVSOw0KPiArCX0NCj4gKw0K
-PiArCWNtZHFfcmVnID0ga3phbGxvYyhzaXplb2YoKmNtZHFfcmVnKSwgR0ZQX0tFUk5FTCk7DQo+
-ICsJaWYgKCFjbWRxX3JlZykNCj4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+ICsNCj4gKwlyZXQgPSBj
-bWRxX2Rldl9nZXRfY2xpZW50X3JlZygmY29tcF9wZGV2LT5kZXYsIGNtZHFfcmVnLCAwKTsNCj4g
-KwlpZiAocmV0ICE9IDApDQo+ICsJCWRldl9kYmcoJmNvbXBfcGRldi0+ZGV2LA0KPiArCQkJImdl
-dCBtZWRpYXRlayxnY2UtY2xpZW50LXJlZyBmYWlsIVxuIik7DQo+ICsJZWxzZQ0KPiArCQljb21w
-LT5zdWJzeXMgPSBjbWRxX3JlZy0+c3Vic3lzOw0KPiArDQo+ICsJa2ZyZWUoY21kcV9yZWcpOw0K
-PiArI2VuZGlmDQoNCkkgd291bGQgbGlrZSB0byBtb3ZlIHRoaXMgcGFydCB0byB0aGUgcGF0Y2gg
-ImRybS9tZWRpYXRlazogc3VwcG9ydCBDTURRDQppbnRlcmZhY2UgaW4gZGRwIGNvbXBvbmVudCIu
-DQoNClJlZ2FyZHMsDQpDSw0KDQo+ICAJcmV0dXJuIDA7DQo+ICB9DQo+ICANCg0K
+Hi Jeffrey,
 
+On Wed, Nov 13, 2019 at 06:23:34AM -0500, Brian Masney wrote:
+> On Tue, Nov 12, 2019 at 08:38:27AM -0700, Jeffrey Hugo wrote:
+> > On Tue, Nov 12, 2019 at 3:49 AM Brian Masney <masneyb@onstation.org> wrote:
+> > >
+> > > Since the introduction of commit 2d99ced787e3 ("drm/msm: async commit
+> > > support"), command-mode panels began throwing the following errors:
+> > >
+> > >     msm fd900000.mdss: pp done time out, lm=0
+> > >
+> > > Let's fix this by enabling the autorefresh feature that's available in
+> > > the MDP starting at version 1.0. This will cause the MDP to
+> > > automatically send a frame to the panel every time the panel invokes
+> > > the TE signal, which will trigger the PP_DONE IRQ. This requires not
+> > > sending a START signal for command-mode panels.
+> > >
+> > > This fixes the error and gives us a counter for command-mode panels that
+> > > we can use to implement async commit support for the MDP5 in a follow up
+> > > patch.
+> > >
+> > > Signed-off-by: Brian Masney <masneyb@onstation.org>
+> > > Suggested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > > ---
+> > >  drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c | 15 ++++++++++++++-
+> > >  drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c  |  9 +--------
+> > >  2 files changed, 15 insertions(+), 9 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+> > > index 05cc04f729d6..539348cb6331 100644
+> > > --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+> > > +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+> > > @@ -456,6 +456,7 @@ static void mdp5_crtc_atomic_enable(struct drm_crtc *crtc,
+> > >  {
+> > >         struct mdp5_crtc *mdp5_crtc = to_mdp5_crtc(crtc);
+> > >         struct mdp5_crtc_state *mdp5_cstate = to_mdp5_crtc_state(crtc->state);
+> > > +       struct mdp5_pipeline *pipeline = &mdp5_cstate->pipeline;
+> > >         struct mdp5_kms *mdp5_kms = get_kms(crtc);
+> > >         struct device *dev = &mdp5_kms->pdev->dev;
+> > >
+> > > @@ -493,9 +494,21 @@ static void mdp5_crtc_atomic_enable(struct drm_crtc *crtc,
+> > >
+> > >         mdp_irq_register(&mdp5_kms->base, &mdp5_crtc->err);
+> > >
+> > > -       if (mdp5_cstate->cmd_mode)
+> > > +       if (mdp5_cstate->cmd_mode) {
+> > >                 mdp_irq_register(&mdp5_kms->base, &mdp5_crtc->pp_done);
+> > >
+> > > +               /*
+> > > +                * Enable autorefresh so we get regular ping/pong IRQs.
+> > > +                * - Bit 31 is the enable bit
+> > > +                * - Bits 0-15 represent the frame count, specifically how many
+> > > +                *   TE events before the MDP sends a frame.
+> > > +                */
+> > > +               mdp5_write(mdp5_kms,
+> > > +                          REG_MDP5_PP_AUTOREFRESH_CONFIG(pipeline->mixer->pp),
+> > > +                          BIT(31) | BIT(0));
+> > > +               crtc_flush_all(crtc);
+> > > +       }
+> > > +
+> > >         mdp5_crtc->enabled = true;
+> > >  }
+> > >
+> > > diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c
+> > > index 030279d7b64b..aee295abada3 100644
+> > > --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c
+> > > +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c
+> > > @@ -187,14 +187,7 @@ static bool start_signal_needed(struct mdp5_ctl *ctl,
+> > >         if (!ctl->encoder_enabled)
+> > >                 return false;
+> > >
+> > > -       switch (intf->type) {
+> > > -       case INTF_WB:
+> > > -               return true;
+> > > -       case INTF_DSI:
+> > > -               return intf->mode == MDP5_INTF_DSI_MODE_COMMAND;
+> > > -       default:
+> > > -               return false;
+> > > -       }
+> > > +       return intf->type == INTF_WB;
+> > >  }
+> > 
+> > I don't think this fully works.
+> > 
+> > The whole "flush" thing exists because the configuration is double
+> > buffered.  You write to the flush register to tell the hardware to
+> > pickup the new configuration, but it doesn't do that automatically.
+> > It only picks up the new config on the next "vsync".  When you have a
+> > video mode panel, you have the timing engine running, which drives
+> > that.  With a command mode panel, you have either the start signal, or
+> > the auto refresh to do the same, but you have a bit of a chicken and
+> > egg situation where if you are programming the hardware from scratch,
+> > autorefresh isn't already enabled to then pickup the config to enable
+> > autorefresh. In this case, you'll need a single start to kick
+> > everything off.  However, if say the bootloader already configured
+> > things and has autorefresh running, then you need to not do that start
+> > because you'll overload the DSI like you saw.
+> 
+> As part of my testing for this work, I added a log statement to
+> mdp5_crtc_pp_done_irq() and it shows that a PP_IRQ comes in consistently
+> every ~0.0166 seconds, which is about 60 HZ. Without this change, plus
+> the 3 commits I mentioned in an earlier email related to the async
+> commit support, the PP IRQs come in at a variety of times: between every
+> ~0.0140 and ~0.2224 seconds. That's why I assumed that this was working.
+> 
+> If I call send_start_signal() inside mdp5_crtc_atomic_enable(), then the
+> display does not work properly.
+
+I'd like to get the 'pp done time out' errors that are now occurring
+upstream for command-mode panels fixed. As I mentioned above, this patch
+fixes the problem on the Nexus 5 and the pp done interrupts are
+delivered at approximately 60 HZ. I don't have any other command-mode
+panels to test.
+
+I'm not sure how to proceed here since sending the start command breaks
+the display. I'm likely putting that command in the wrong spot.
+
+Brian
