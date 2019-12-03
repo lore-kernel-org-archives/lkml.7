@@ -2,126 +2,126 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 329D6C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 21:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AFEC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 21:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 047C220803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 21:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E743E2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 21:36:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M4qpAMzS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="urbzj+fb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727570AbfLCVe3 (ORCPT
+        id S1727527AbfLCVg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 16:34:29 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:53711 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727554AbfLCVe1 (ORCPT
+        Tue, 3 Dec 2019 16:36:58 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42866 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727430AbfLCVg6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 16:34:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575408866;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Qs1VjeG7KK4WQrVAKNIiY/1MqhAXX/lIQTckj+a0UkY=;
-        b=M4qpAMzS3OErhMWJdQPVPEzhmASZeHRSuhZY8cONv7IUBu1dYh6Q2oA9+Jho8trOz/LPTr
-        TI9Ths39js6jHF7y9eEUMwKAjX21eHYmMBpTtdWe19ubOvsUJ0dn/Fvw5qVUv9QZseRFik
-        FOCzGlmTYSvQ4La56NDFx/TlkfdiVgQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-271-hePFQX5GMaWVgE44x0-cCw-1; Tue, 03 Dec 2019 16:34:23 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6C305800D41;
-        Tue,  3 Dec 2019 21:34:21 +0000 (UTC)
-Received: from dhcp-25.97.bos.redhat.com (ovpn-123-35.rdu2.redhat.com [10.10.123.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ECEE15C297;
-        Tue,  3 Dec 2019 21:34:18 +0000 (UTC)
-From:   Aaron Conole <aconole@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     Pravin B Shelar <pshelar@ovn.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>, dev@openvswitch.org,
-        linux-kernel@vger.kernel.org,
-        Marcelo Leitner <mleitner@redhat.com>,
-        Paul Blakey <paulb@mellanox.com>,
-        Roi Dayan <roid@mellanox.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Subject: [PATCH 2/2] act_ct: support asymmetric conntrack
-Date:   Tue,  3 Dec 2019 16:34:14 -0500
-Message-Id: <20191203213414.24109-2-aconole@redhat.com>
-In-Reply-To: <20191203213414.24109-1-aconole@redhat.com>
-References: <20191203213414.24109-1-aconole@redhat.com>
+        Tue, 3 Dec 2019 16:36:58 -0500
+Received: by mail-pf1-f196.google.com with SMTP id l22so2479915pff.9;
+        Tue, 03 Dec 2019 13:36:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=M46RQcwxgINKa8vpC6RQJq2Z/PQ6+1z2D0+STFMlBWs=;
+        b=urbzj+fb0UgJ2kkk6FK8gZeFnG9Pq/7eGIL09MywLyrSLgc7gWFEFJMGlba57wpQre
+         U/QVyeD5K1RojUp3LtTMzsY+BcZJn7n4hkbGJGSJmg/KggF5UtJW4tu0vFa3CyNlckd6
+         uy+TyRW3zvg1jiQgsBUTraTrrXpFPZVwxW8H9kWybJ6NsC/Ah8VromsvK3wRr13zRLw2
+         zGPuzTnlZ1Y3BRlZhaPCETSdizhP4vGTS1ikgNd/WpMt9TmY990JhNsc6MbLla7/FdA+
+         pnWBnRJSozy3sS9S1yBHsojALEfXaIGW65K8MDWrCNitpu+Ay8O/Jwyq9tEgWAJy6HRx
+         x0nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=M46RQcwxgINKa8vpC6RQJq2Z/PQ6+1z2D0+STFMlBWs=;
+        b=AhLz0uRPASQvErdDV3i7HitXvgXFw6pEKE7f6FIy0uohwwoUOUBBxQE8nMA8nkSa6W
+         tU0FWqPvFThPhctFDEBBFElLnpaW7WFb+aiFWIajcs7EenIG8vir2vqu/vb/ZneA99F+
+         8O+Mvx1aFgvPODZzNZO+0i9Igj8YQwmoDA5M2N3SwfTVUo0mDZQyliT1PMrJ9ONK3NDi
+         MJq4PkT4X3DOe5RRI1hdjeS0CKRT45E4MvAu1OFeaTsdFgr2DK/ZzroxZEqKLp3e4JLM
+         YK+EcfhzVn6nwXlIxQWJIC8aygOLBbkOZi1wLZ2tnBs9twmQrOWVZurSP3PHgram0jW/
+         PaDw==
+X-Gm-Message-State: APjAAAWM7yBIu4tKUo4kdzaj0twtdI33eCa5N0xBKivKzDxsGHVZrJYD
+        t4fyTARTgIyJppZjN+uAHW8=
+X-Google-Smtp-Source: APXvYqwx9HpYfEdeX8KitmYjpnkNfmF/IvBAHRIQ0bmZBBtsrNU5eUEvackFZxQtljNcP1d0JoGxKw==
+X-Received: by 2002:a62:1447:: with SMTP id 68mr7217396pfu.53.1575409017456;
+        Tue, 03 Dec 2019 13:36:57 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id x11sm4765624pfn.53.2019.12.03.13.36.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 03 Dec 2019 13:36:56 -0800 (PST)
+Date:   Tue, 3 Dec 2019 13:36:55 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/7] sh: Modernize printing of kernel messages
+Message-ID: <20191203213655.GA3253@roeck-us.net>
+References: <20191203162645.19950-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: hePFQX5GMaWVgE44x0-cCw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191203162645.19950-1-geert+renesas@glider.be>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The act_ct TC module shares a common conntrack and NAT infrastructure
-exposed via netfilter.  It's possible that a packet needs both SNAT and
-DNAT manipulation, due to e.g. tuple collision.  Netfilter can support
-this because it runs through the NAT table twice - once on ingress and
-again after egress.  The act_ct action doesn't have such capability.
+On Tue, Dec 03, 2019 at 05:26:38PM +0100, Geert Uytterhoeven wrote:
+> 	Hi all,
+> 
+> This patch series fixes the broken lines in kernel output, which I
+> presume have been happening since commit 4bcc595ccd80decb ("printk:
+> reinstate KERN_CONT for printing continuat ion lines").
+> Most annoying are the ones in call traces and disassembly dumps, as they
+> cause lots of small bits of information to fly by your serial console.
+> 
+> Thanks!
+> 
+> Geert Uytterhoeven (7):
+>   sh: kernel: disassemble: Fix broken lines in disassembly dumps
+>   sh: dump_stack: Fix broken lines and ptrval in calltrace dumps
+>   sh: process: Fix broken lines in register dumps
+>   sh: sh2007: Modernize printing of kernel messages
+>   sh: pci: Modernize printing of kernel messages
+>   sh: machvec: Modernize printing of kernel messages
+>   sh: fault: Modernize printing of kernel messages
+> 
+Yes, the output does look a bit nicer with those patches applied.
 
-Like netfilter hook infrastructure, we should run through NAT twice to
-keep the symmetry.
+For the series:
 
-Fixes: b57dc7c13ea9 ("net/sched: Introduce action ct")
+Tested-by: Guenter Roeck <linux@roeck-us.net>
 
-Signed-off-by: Aaron Conole <aconole@redhat.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
----
-NOTE: this is a repost to see if the email client issues go away.
-
- net/sched/act_ct.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/net/sched/act_ct.c b/net/sched/act_ct.c
-index ae0de372b1c8..bf2d69335d4b 100644
---- a/net/sched/act_ct.c
-+++ b/net/sched/act_ct.c
-@@ -329,6 +329,7 @@ static int tcf_ct_act_nat(struct sk_buff *skb,
- =09=09=09  bool commit)
- {
- #if IS_ENABLED(CONFIG_NF_NAT)
-+=09int err;
- =09enum nf_nat_manip_type maniptype;
-=20
- =09if (!(ct_action & TCA_CT_ACT_NAT))
-@@ -359,7 +360,17 @@ static int tcf_ct_act_nat(struct sk_buff *skb,
- =09=09return NF_ACCEPT;
- =09}
-=20
--=09return ct_nat_execute(skb, ct, ctinfo, range, maniptype);
-+=09err =3D ct_nat_execute(skb, ct, ctinfo, range, maniptype);
-+=09if (err =3D=3D NF_ACCEPT &&
-+=09    ct->status & IPS_SRC_NAT && ct->status & IPS_DST_NAT) {
-+=09=09if (maniptype =3D=3D NF_NAT_MANIP_SRC)
-+=09=09=09maniptype =3D NF_NAT_MANIP_DST;
-+=09=09else
-+=09=09=09maniptype =3D NF_NAT_MANIP_SRC;
-+
-+=09=09err =3D ct_nat_execute(skb, ct, ctinfo, range, maniptype);
-+=09}
-+=09return err;
- #else
- =09return NF_ACCEPT;
- #endif
---=20
-2.21.0
-
+>  arch/sh/boards/board-sh2007.c    |   4 +-
+>  arch/sh/drivers/pci/common.c     |   6 +-
+>  arch/sh/drivers/pci/pci-sh7780.c |  23 ++++---
+>  arch/sh/drivers/pci/pci.c        |  11 ++--
+>  arch/sh/kernel/disassemble.c     | 103 ++++++++++++++++---------------
+>  arch/sh/kernel/dumpstack.c       |  24 +++----
+>  arch/sh/kernel/machvec.c         |   8 +--
+>  arch/sh/kernel/process_32.c      |  38 +++++-------
+>  arch/sh/mm/fault.c               |  39 ++++++------
+>  9 files changed, 124 insertions(+), 132 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
+> Gr{oetje,eeting}s,
+> 
+> 						Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+> 							    -- Linus Torvalds
