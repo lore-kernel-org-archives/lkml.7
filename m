@@ -2,93 +2,145 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FCBC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C78B8C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55D6D2073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:22:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575393760;
-	bh=dcPKLCZ7klKSSsRhT4cf6oRbg04lRe9CTSbvV+NSuzk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hBNV1UJwMzZHrml91/aRXIkRlDnZIDcNLDoStyLEqZI91Fp3dLujPcuRLQhZoGPAq
-	 ffgq+3kVoVRI68iua5/i9IJxtPyDGQXe7O5ifi6oZClMbAIpY9rPmI5rF8f8FRWLqS
-	 2+fYm/4iCZvt1gSWWd3ug8Sxc5SH4eQmZN+36/ak=
+	by mail.kernel.org (Postfix) with ESMTP id A595A206E4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:23:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfLCRWj (ORCPT
+        id S1727177AbfLCRXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 12:22:39 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36026 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbfLCRWi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 12:22:38 -0500
-Received: by mail-ot1-f66.google.com with SMTP id i4so3642699otr.3;
-        Tue, 03 Dec 2019 09:22:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cMsreEXFeCso0tiE1Nbi7IoMG046yHL0rtrvdWFtaho=;
-        b=UdX++vU+W5shqKM2CmjSHC4mtV4/zkER5JPF8buavtxok+Yz6+S4oIUE0tFaVG9yEY
-         fP6Fqv3nNdtVjp6aqi/QTmwdAr9lS5u/zLYyz+G2ihNTc0u4t5qQmb+c4vgKrG1xCYdG
-         g3va18qjIAF3HTW0H9wRiBdgoouOvlOXihQwZREkV2Phre/RJkXG1lLo9mYRRJ7YAt3J
-         C/mQ/5pzroruHJ/yTOH0VUWW03nFEsceqxDA1l7GT8LsqXYjtAS73WLaYGOx7otZtIJV
-         Jw25F/qGrnV4NbZe0MHb8XXl8hYLYFv51+D862ZH/QSU890hI5mG8lXS2iao4hUqExT9
-         Z2CQ==
-X-Gm-Message-State: APjAAAV/oPafFWVF470SGZA45MJ1su4auVsJJyNiWFC8mZ5bRWJTh2Pt
-        YOKoonAyNRpi5JzRYJhtvfwHQGw=
-X-Google-Smtp-Source: APXvYqzdAeQkbqgwFi1RtJ6Rg4XHcx5KcXKSdBUUJgdow8E/nrkzuK5u2+pt9+kZAbkm25CI2cr0YQ==
-X-Received: by 2002:a05:6830:120c:: with SMTP id r12mr4093703otp.327.1575393757792;
-        Tue, 03 Dec 2019 09:22:37 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id b81sm1376539oia.0.2019.12.03.09.22.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 09:22:36 -0800 (PST)
-Date:   Tue, 3 Dec 2019 11:22:35 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: Re: [PATCH 1/2] dt-bindings: msm: Rename cache-controller to
- system-cache-controller
-Message-ID: <20191203172235.GA18507@bogus>
-References: <cover.1573814758.git.saiprakash.ranjan@codeaurora.org>
- <83394ae827ce7c123228b749bcae2a2c470e88a4.1573814758.git.saiprakash.ranjan@codeaurora.org>
+        Tue, 3 Dec 2019 12:23:08 -0500
+Received: from mx2.suse.de ([195.135.220.15]:51018 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726422AbfLCRXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 12:23:08 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 83641B2074;
+        Tue,  3 Dec 2019 17:23:05 +0000 (UTC)
+Message-ID: <dd0d91b74853d1afa9bcb8a56a3ddbfa744ae116.camel@suse.de>
+Subject: Re: [PATCH v3 4/7] PCI: brcmstb: add Broadcom STB PCIe host
+ controller driver
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Jeremy Linton <jeremy.linton@arm.com>, andrew.murray@arm.com,
+        maz@kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     james.quinlan@broadcom.com, mbrugger@suse.com,
+        phil@raspberrypi.org, linux-pci@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-kernel@lists.infradead.org
+Date:   Tue, 03 Dec 2019 18:23:03 +0100
+In-Reply-To: <ddab6abd-68fb-543d-bb8e-057d92ac15ed@arm.com>
+References: <20191126091946.7970-1-nsaenzjulienne@suse.de>
+         <20191126091946.7970-5-nsaenzjulienne@suse.de>
+         <ddab6abd-68fb-543d-bb8e-057d92ac15ed@arm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-tiQfYVDELUAGwVd1u8VU"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <83394ae827ce7c123228b749bcae2a2c470e88a4.1573814758.git.saiprakash.ranjan@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Nov 2019 16:29:11 +0530, Sai Prakash Ranjan wrote:
-> DT schema checks for the node name 'cache-controller' and enforces
-> that there has to be a cache-level associated with it. But LLCC is
-> a system cache and does not have a cache-level property and hence
-> the dt binding check fails. So let us rename the LLCC cache-controller
-> to system-cache-controller which is the proper description and also
-> makes the schema happy.
-> 
-> Suggested-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/arm/msm/qcom,llcc.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
 
-Acked-by: Rob Herring <robh@kernel.org>
+--=-tiQfYVDELUAGwVd1u8VU
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, 2019-12-03 at 10:31 -0600, Jeremy Linton wrote:
+> Hi,
+>=20
+> On 11/26/19 3:19 AM, Nicolas Saenz Julienne wrote:
+> > From: Jim Quinlan <james.quinlan@broadcom.com>
+> >=20
+> > This adds a basic driver for Broadcom's STB PCIe controller, for now
+> > aimed at Raspberry Pi 4's SoC, bcm2711.
+> >=20
+> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> >=20
+> > ---
+> >=20
+> > Changes since v2:
+> >    - Correct rc_bar2_offset sign
+> >    - Invert IRQ clear and masking in setup code
+> >    - Use bitfield.h, redo all register ops while keeping the register
+> >      names intact
+> >    - Remove all SHIFT register definitions
+> >    - Get rid of all _RB writes
+> >    - Get rid of of_data
+> >    - Don't iterate over inexisting dma-ranges
+> >    - Add comment regarding dma-ranges validation
+> >    - Small cosmetic cleanups
+> >    - Fix license mismatch
+> >    - Set driver Kconfig tristate
+> >    - Didn't add any comment about the controller not being I/O coherent
+> >      for now as I wait for Jeremy's reply
+>=20
+> I guess its fine.. In answer to the original query. It seems that this=
+=20
+> PCIe bridge requires explicit cache operations for DMA from PCIe=20
+> endpoints. This wasn't obvious to me at first reading because I was=20
+> assuming the custom DMA ops were strictly to deal with the stated DMA=20
+> limits.
+
+Thanks, I now see what you meant.
+
+> So if you end up respinning, it still might be worthy mentioning=20
+> somewhere that this is a non-coherent PCIe implementation. I still hold=
+=20
+> much of my original reservations about pieces of this driver.=20
+> Particularly, how it might look if someone wanted to boot the RPi using=
+=20
+> ACPI on linux. But, I was shown a clever bit of AML recently, which=20
+> solves those problems for the RPi and the attached XHCI.
+
+I don't know much about ACPI, but ultimately if you're booting trough ACPI,
+you're unlikely to use device-tree at all, right? And if you where and this
+driver clashed with your ACPI implementation you'd simply have to disable i=
+t on
+the device-tree.
+
+> So, given how much time I've looked at the root port configuration/etc=
+=20
+> sections of this driver and I've not found a serious bug:
+>=20
+> Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
+
+Thanks!
+
+Regards,
+Nicolas
+
+
+--=-tiQfYVDELUAGwVd1u8VU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3mmfcACgkQlfZmHno8
+x/526wf/dHShet63is8+wboQUSa9Ik3p1r5FrbuSercRQWbob00Roa1615tbyVSg
+vJvel1G4DtTT/bDzL7xsp4eixx0NeInNcuJvv9bBveOzD5U1TAFdlHu4o2wVtFVF
+oqQevC+iJoMb4NX9qECr8NHoRgyBaw9fakVjgMRZ/xhqHQ1edsqJVjHcUHBVv6D8
+w4r5CbB3AYmidDDOCx62CO6xKq+zHWg6yAVbDbCnisIc/zWA/F+Lq7U0ukqEP1aF
+vthC/OvlaQXB7c9ui7cXtklRXL00yGBgpShG5TOQrNP1WInlUG5IkheQm3kdKYob
+4k2yRLGOlwt8fOiPz3s2RCWt6NtXRg==
+=ByNX
+-----END PGP SIGNATURE-----
+
+--=-tiQfYVDELUAGwVd1u8VU--
+
