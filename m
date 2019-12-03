@@ -2,226 +2,171 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2251FC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E60EC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA274206E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F76820675
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:27:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gU/PQQqi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727318AbfLCQ1d (ORCPT
+        id S1727325AbfLCQ1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 11:27:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60150 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726968AbfLCQ1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 11:27:33 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 166BE2068E;
-        Tue,  3 Dec 2019 16:27:32 +0000 (UTC)
-Date:   Tue, 3 Dec 2019 11:27:30 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Prateek Sood <prsood@codeaurora.org>
-Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
-        kaushalk@codeaurora.org
-Subject: Re: [PATCH] trace: circular dependency for trace_types_lock and
- event_mutex
-Message-ID: <20191203112730.77b334f6@gandalf.local.home>
-In-Reply-To: <0101016ecc80a1fa-27cc3e87-c16d-4cd6-b3c6-9c893010fdef-000000@us-west-2.amazonses.com>
-References: <0101016ecc80a1fa-27cc3e87-c16d-4cd6-b3c6-9c893010fdef-000000@us-west-2.amazonses.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 3 Dec 2019 11:27:54 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52676 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725848AbfLCQ1y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 11:27:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575390473;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+WnczAKQed6YpiIJYxujDrMx6sZk/yhl75EFdTgUL8M=;
+        b=gU/PQQqitQMNJbnfstjf3S59SCgxsGdrOXj5zM7UBHeoOdNIfjcdS0dq1v39FFt4EB7gtd
+        XSQ6K1eMJgUAbbdw2zp5789/fNM8HfuQqH1W9XIunoYGbfXNOwavwHNzfpTC3ELONYDmIA
+        l1U69YS3cesN4Nb6QEeUCMLxIdmExMk=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-23-EULFcBTAO264UuNegn3lSQ-1; Tue, 03 Dec 2019 11:27:51 -0500
+Received: by mail-qt1-f199.google.com with SMTP id d9so2789803qtq.13
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 08:27:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZSHaj65Ct3ZOf9flXzApJ7gvW4At2V+yKIUimhT/dHk=;
+        b=i1tLuA4E1UH3wJh3Su/udLVewrV+m9/qep2HRg9BtGxyuq7NfVwvVbYVxy19kfQVPw
+         i0rF1Ln/evCJZCSw7csQ2ZkVTHh8VsvBcfHwfVOQJKzqHsUjD6me/jsrl3OSs2hGCC6m
+         xaUYyp13CyCzbUzN8gFBkcLfW185iHgXUEKhmWFD8mNWDyqNw5pXFM+WGTMWGfaxSfVn
+         UaolaeBzTImYwXZfMt1vK0ehvblJCJPKcdbnd9EWatEoZMMnKZoKUv1pj0mYPSSsfBiI
+         JDq131TrnGs1MmVnS4zxd7e81b0FVpe6gBYYj/JDLuQYP5aSiU2l0mHqDoTy2XzgleXO
+         Nzzg==
+X-Gm-Message-State: APjAAAVd0mVhgHGNFzxhO5zCcan4L057sko0/yYw4Ek8FJUP8JgW3MVI
+        mTjWU6PlZ4dXCf+FbG5s2Ds9tDfF6fIg1aJ5VlTy3spDydC4sm0CULizNhTvLNfl2khzkn2ZOT3
+        69L/S4YtMUnU7QnMUNw5KwvXw
+X-Received: by 2002:a37:9485:: with SMTP id w127mr3842680qkd.128.1575390470031;
+        Tue, 03 Dec 2019 08:27:50 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyKKy4GZEoSBTWv3SIwooKspLWb4cJDbiCQx+onygw7OYAriklZioQoVK71vPsrpm59rrXIhA==
+X-Received: by 2002:a37:9485:: with SMTP id w127mr3842643qkd.128.1575390469634;
+        Tue, 03 Dec 2019 08:27:49 -0800 (PST)
+Received: from xz-x1 ([104.156.64.74])
+        by smtp.gmail.com with ESMTPSA id k50sm2086333qtc.90.2019.12.03.08.27.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2019 08:27:48 -0800 (PST)
+Date:   Tue, 3 Dec 2019 11:27:47 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, Nitesh Narayan Lal <nitesh@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 5/5] KVM: X86: Fix callers of kvm_apic_match_dest() to
+ use correct macros
+Message-ID: <20191203162747.GD17275@xz-x1>
+References: <20191202201314.543-1-peterx@redhat.com>
+ <20191202201314.543-6-peterx@redhat.com>
+ <87r21lbl0c.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <87r21lbl0c.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-MC-Unique: EULFcBTAO264UuNegn3lSQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Dec 03, 2019 at 02:23:47PM +0100, Vitaly Kuznetsov wrote:
+> Peter Xu <peterx@redhat.com> writes:
+>=20
+> > Callers of kvm_apic_match_dest() should always pass in APIC_DEST_*
+> > macros for either dest_mode and short_hand parameters.  Fix up all the
+> > callers of kvm_apic_match_dest() that are not following the rule.
+> >
+> > Reported-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > Reported-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> > Signed-off-by: Peter Xu <peterx@redhat.com>
+> > ---
+> >  arch/x86/kvm/ioapic.c   | 11 +++++++----
+> >  arch/x86/kvm/irq_comm.c |  3 ++-
+> >  2 files changed, 9 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
+> > index 901d85237d1c..1082ca8d11e5 100644
+> > --- a/arch/x86/kvm/ioapic.c
+> > +++ b/arch/x86/kvm/ioapic.c
+> > @@ -108,8 +108,9 @@ static void __rtc_irq_eoi_tracking_restore_one(stru=
+ct kvm_vcpu *vcpu)
+> >  =09union kvm_ioapic_redirect_entry *e;
+> > =20
+> >  =09e =3D &ioapic->redirtbl[RTC_GSI];
+> > -=09if (!kvm_apic_match_dest(vcpu, NULL, 0,=09e->fields.dest_id,
+> > -=09=09=09=09e->fields.dest_mode))
+> > +=09if (!kvm_apic_match_dest(vcpu, NULL, APIC_DEST_NOSHORT,
+> > +=09=09=09=09 e->fields.dest_id,
+> > +=09=09=09=09 kvm_lapic_irq_dest_mode(e->fields.dest_mode)))
+> >  =09=09return;
+> > =20
+> >  =09new_val =3D kvm_apic_pending_eoi(vcpu, e->fields.vector);
+> > @@ -237,6 +238,7 @@ void kvm_ioapic_scan_entry(struct kvm_vcpu *vcpu, u=
+long *ioapic_handled_vectors)
+> >  =09struct dest_map *dest_map =3D &ioapic->rtc_status.dest_map;
+> >  =09union kvm_ioapic_redirect_entry *e;
+> >  =09int index;
+> > +=09u16 dm;
+> > =20
+> >  =09spin_lock(&ioapic->lock);
+> > =20
+> > @@ -250,8 +252,9 @@ void kvm_ioapic_scan_entry(struct kvm_vcpu *vcpu, u=
+long *ioapic_handled_vectors)
+> >  =09=09if (e->fields.trig_mode =3D=3D IOAPIC_LEVEL_TRIG ||
+> >  =09=09    kvm_irq_has_notifier(ioapic->kvm, KVM_IRQCHIP_IOAPIC, index)=
+ ||
+> >  =09=09    index =3D=3D RTC_GSI) {
+> > -=09=09=09if (kvm_apic_match_dest(vcpu, NULL, 0,
+> > -=09=09=09             e->fields.dest_id, e->fields.dest_mode) ||
+> > +=09=09=09dm =3D kvm_lapic_irq_dest_mode(e->fields.dest_mode);
+>=20
+> Nit: you could've defined 'dm' right here in the block (after '{') but
+> in any case I'd suggest to stick to 'dest_mode' and not shorten it to
+> 'dm' for consistency.
+>=20
+> > +=09=09=09if (kvm_apic_match_dest(vcpu, NULL, APIC_DEST_NOSHORT,
+> > +=09=09=09=09=09=09e->fields.dest_id, dm) ||
+> >  =09=09=09    kvm_apic_pending_eoi(vcpu, e->fields.vector))
+> >  =09=09=09=09__set_bit(e->fields.vector,
+> >  =09=09=09=09=09  ioapic_handled_vectors);
+> > diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
+> > index 5f59e5ebdbed..e89c2160b39f 100644
+> > --- a/arch/x86/kvm/irq_comm.c
+> > +++ b/arch/x86/kvm/irq_comm.c
+> > @@ -417,7 +417,8 @@ void kvm_scan_ioapic_routes(struct kvm_vcpu *vcpu,
+> > =20
+> >  =09=09=09kvm_set_msi_irq(vcpu->kvm, entry, &irq);
+> > =20
+> > -=09=09=09if (irq.level && kvm_apic_match_dest(vcpu, NULL, 0,
+> > +=09=09=09if (irq.level &&
+> > +=09=09=09    kvm_apic_match_dest(vcpu, NULL, APIC_DEST_NOSHORT,
+> >  =09=09=09=09=09=09irq.dest_id, irq.dest_mode))
+> >  =09=09=09=09__set_bit(irq.vector, ioapic_handled_vectors);
+> >  =09=09}
+>=20
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-Hi Prateek,
+I'll move the declaration in with your r-b.  'dm' is a silly trick of
+mine to avoid the 80-char line limit.  Thanks,
 
-Thanks for the patch. Note, I think a better subject is:
-
- tracing: Fix lock inversion caused by trace_event_enable_tgid_record()
-
-
-On Tue, 3 Dec 2019 16:03:32 +0000
-Prateek Sood <prsood@codeaurora.org> wrote:
-
->        Task T2                             Task T3
-> trace_options_core_write()            subsystem_open()
-> 
->  mutex_lock(trace_types_lock)           mutex_lock(event_mutex)
-> 
->  set_tracer_flag()
-> 
->    trace_event_enable_tgid_record()       mutex_lock(trace_types_lock)
-> 
->     mutex_lock(event_mutex)
-> 
-> This gives a circular dependency deadlock between trace_types_lock and
-> event_mutex. To fix this invert the usage of trace_types_lock and event_mutex
-> in trace_options_core_write(). This keeps the sequence of lock usage consistent.
-> 
-> Change-Id: I3752a77c59555852c2241f7775ec4a1960c15c15
-
-What's this Change-Id? Something internal?
-
-I'll be adding:
-
- Link: http://lkml.kernel.org/r/0101016ecc80a1fa-27cc3e87-c16d-4cd6-b3c6-9c893010fdef-000000@us-west-2.amazonses.com
-
-I'll test this out, and probably even add a stable tag.
-
--- Steve
-
-
-
-> Signed-off-by: Prateek Sood <prsood@codeaurora.org>
-> ---
->  kernel/trace/trace.c              | 6 ++++++
->  kernel/trace/trace_events.c       | 8 ++++----
->  kernel/trace/trace_irqsoff.c      | 4 ++++
->  kernel/trace/trace_sched_wakeup.c | 4 ++++
->  4 files changed, 18 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 6a0ee91..2c09aa1 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -4590,6 +4590,8 @@ int trace_keep_overwrite(struct tracer *tracer, u32 mask, int set)
->  
->  int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
->  {
-> +	lockdep_assert_held(&event_mutex);
-> +
->  	/* do nothing if flag is already set */
->  	if (!!(tr->trace_flags & mask) == !!enabled)
->  		return 0;
-> @@ -4657,6 +4659,7 @@ static int trace_set_options(struct trace_array *tr, char *option)
->  
->  	cmp += len;
->  
-> +	mutex_lock(&event_mutex);
->  	mutex_lock(&trace_types_lock);
->  
->  	ret = match_string(trace_options, -1, cmp);
-> @@ -4667,6 +4670,7 @@ static int trace_set_options(struct trace_array *tr, char *option)
->  		ret = set_tracer_flag(tr, 1 << ret, !neg);
->  
->  	mutex_unlock(&trace_types_lock);
-> +	mutex_unlock(&event_mutex);
->  
->  	/*
->  	 * If the first trailing whitespace is replaced with '\0' by strstrip,
-> @@ -7972,9 +7976,11 @@ static void get_tr_index(void *data, struct trace_array **ptr,
->  	if (val != 0 && val != 1)
->  		return -EINVAL;
->  
-> +	mutex_lock(&event_mutex);
->  	mutex_lock(&trace_types_lock);
->  	ret = set_tracer_flag(tr, 1 << index, val);
->  	mutex_unlock(&trace_types_lock);
-> +	mutex_unlock(&event_mutex);
->  
->  	if (ret < 0)
->  		return ret;
-> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> index fba87d1..995061b 100644
-> --- a/kernel/trace/trace_events.c
-> +++ b/kernel/trace/trace_events.c
-> @@ -320,7 +320,8 @@ void trace_event_enable_cmd_record(bool enable)
->  	struct trace_event_file *file;
->  	struct trace_array *tr;
->  
-> -	mutex_lock(&event_mutex);
-> +	lockdep_assert_held(&event_mutex);
-> +
->  	do_for_each_event_file(tr, file) {
->  
->  		if (!(file->flags & EVENT_FILE_FL_ENABLED))
-> @@ -334,7 +335,6 @@ void trace_event_enable_cmd_record(bool enable)
->  			clear_bit(EVENT_FILE_FL_RECORDED_CMD_BIT, &file->flags);
->  		}
->  	} while_for_each_event_file();
-> -	mutex_unlock(&event_mutex);
->  }
->  
->  void trace_event_enable_tgid_record(bool enable)
-> @@ -342,7 +342,8 @@ void trace_event_enable_tgid_record(bool enable)
->  	struct trace_event_file *file;
->  	struct trace_array *tr;
->  
-> -	mutex_lock(&event_mutex);
-> +	lockdep_assert_held(&event_mutex);
-> +
->  	do_for_each_event_file(tr, file) {
->  		if (!(file->flags & EVENT_FILE_FL_ENABLED))
->  			continue;
-> @@ -356,7 +357,6 @@ void trace_event_enable_tgid_record(bool enable)
->  				  &file->flags);
->  		}
->  	} while_for_each_event_file();
-> -	mutex_unlock(&event_mutex);
->  }
->  
->  static int __ftrace_event_enable_disable(struct trace_event_file *file,
-> diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
-> index a745b0c..887cdb5 100644
-> --- a/kernel/trace/trace_irqsoff.c
-> +++ b/kernel/trace/trace_irqsoff.c
-> @@ -560,8 +560,10 @@ static int __irqsoff_tracer_init(struct trace_array *tr)
->  	save_flags = tr->trace_flags;
->  
->  	/* non overwrite screws up the latency tracers */
-> +	mutex_lock(&event_mutex);
->  	set_tracer_flag(tr, TRACE_ITER_OVERWRITE, 1);
->  	set_tracer_flag(tr, TRACE_ITER_LATENCY_FMT, 1);
-> +	mutex_unlock(&event_mutex);
->  
->  	tr->max_latency = 0;
->  	irqsoff_trace = tr;
-> @@ -586,8 +588,10 @@ static void __irqsoff_tracer_reset(struct trace_array *tr)
->  
->  	stop_irqsoff_tracer(tr, is_graph(tr));
->  
-> +	mutex_lock(&event_mutex);
->  	set_tracer_flag(tr, TRACE_ITER_LATENCY_FMT, lat_flag);
->  	set_tracer_flag(tr, TRACE_ITER_OVERWRITE, overwrite_flag);
-> +	mutex_unlock(&event_mutex);
->  	ftrace_reset_array_ops(tr);
->  
->  	irqsoff_busy = false;
-> diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
-> index 5e43b96..0bc67d1 100644
-> --- a/kernel/trace/trace_sched_wakeup.c
-> +++ b/kernel/trace/trace_sched_wakeup.c
-> @@ -671,8 +671,10 @@ static int __wakeup_tracer_init(struct trace_array *tr)
->  	save_flags = tr->trace_flags;
->  
->  	/* non overwrite screws up the latency tracers */
-> +	mutex_lock(&event_mutex);
->  	set_tracer_flag(tr, TRACE_ITER_OVERWRITE, 1);
->  	set_tracer_flag(tr, TRACE_ITER_LATENCY_FMT, 1);
-> +	mutex_unlock(&event_mutex);
->  
->  	tr->max_latency = 0;
->  	wakeup_trace = tr;
-> @@ -722,8 +724,10 @@ static void wakeup_tracer_reset(struct trace_array *tr)
->  	/* make sure we put back any tasks we are tracing */
->  	wakeup_reset(tr);
->  
-> +	mutex_lock(&event_mutex);
->  	set_tracer_flag(tr, TRACE_ITER_LATENCY_FMT, lat_flag);
->  	set_tracer_flag(tr, TRACE_ITER_OVERWRITE, overwrite_flag);
-> +	mutex_unlock(&event_mutex);
->  	ftrace_reset_array_ops(tr);
->  	wakeup_busy = false;
->  }
+--=20
+Peter Xu
 
