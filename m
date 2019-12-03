@@ -2,108 +2,111 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED65EC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B8ADC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3EEE2064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:13:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414829;
-	bh=6hPF5tdZKwGefFuOFN1JDyKRb95J50q7shAcN+XnPRc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Opbq+8MAkjPiUoNCs5rGDfDI8ApvrpFg2rDGcy8LHdDsjcM5EFciET++0xXfvmNCR
-	 N3IckQ1SlycMmUyd+setrkAcuM4KeGmq6VcnwIgmGEVMhf+fLcSHs4X1pU47ugkOlm
-	 UCosHHOJEztQZlcS45C7mEbe0HcevjecI+cu0qzA=
+	by mail.kernel.org (Postfix) with ESMTP id 3D10620684
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:19:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P2ym4D4f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727751AbfLCWhi (ORCPT
+        id S1727645AbfLCXTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:37:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45894 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727714AbfLCWhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:37:34 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 380D2207DD;
-        Tue,  3 Dec 2019 22:37:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412653;
-        bh=6hPF5tdZKwGefFuOFN1JDyKRb95J50q7shAcN+XnPRc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hdKY9pgWr27XG4zoaOoJD5ToyUF9y3X3d3CHFA20H7/qZ5bobliL5Zp7tchyR8nZK
-         /nJ/ClYRlEIhr8SxzjPJVpcx1fQVCFdGb98WDdmEoY2ow+vVm8E1D8UoMxJadc3RGB
-         ED6oymlYFaMgos3d5OOrNp5dYmIweY1oAi2h4n6w=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 5.4 05/46] driver core: platform: use the correct callback type for bus_find_device
-Date:   Tue,  3 Dec 2019 23:35:25 +0100
-Message-Id: <20191203212715.632735792@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191203212705.175425505@linuxfoundation.org>
-References: <20191203212705.175425505@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 3 Dec 2019 18:19:05 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39889 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727240AbfLCXTF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 18:19:05 -0500
+Received: by mail-pl1-f193.google.com with SMTP id o9so2304762plk.6
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 15:19:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9aXu3KlzmsFJZ6e1TagDw+H66vR2neNxwDhx8plTDXE=;
+        b=P2ym4D4fL1+2jZqsid93tZ5apni+LjMsWc92QordN593FLqJA+W4QsDirE/huNl5P1
+         knTb5ViKDuyT37oe2VN6u4X65E0qoBXrLkTPFAuJUi/5puCIe1qhO5AoFzYvaAhJhDJ/
+         ZGHsuAM2+IsfbemFqexEjQZ4n4aB/Wh5ZwyttSwHl/fUGPvWV8l/4obp0kKZH4Bn7wN8
+         NCNmGeMIhEC8bdCNINKJ3DfitAYpZweN1bWtt3twrfio7lymvab4N1QAZRZDbCoA8ly6
+         E8ZrLQ9Zp/SCypjcbsQgMv1HiPrzTDj5AEqazdjiq8h5eXDuVNBII9xFODUIIb0IxZ2V
+         PfHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9aXu3KlzmsFJZ6e1TagDw+H66vR2neNxwDhx8plTDXE=;
+        b=AV5kGwhXe5BxOYPlZLuDsbDrfv7KqMTT6UDseXrzkyrFm8fgzg1sZI6oUXPduspgwD
+         howaTvUvQcOine6nAtdujVS2NjoZRo7TezBptxK9Rtw8PWA+HT3RXzkvzqexCyT4xcl0
+         357pZLq8IvZebJoc24qpXqIF9fqaQjCRJv1gv79b4fILRQET9HOaVuMkls0xpjwckRt/
+         Q7eJhjXzp5AyNCzLHq0SkbAQENfqlzu1MzhbFj5hc6TRVdX8BHQKS1YSOLp2W8xL93iZ
+         nB0rvoAsfZttZB3fQ1hNfXQM7OfwbWLbs4d7sfPCwV1D+cNrrrj1sMSNMLeLxriuOgLL
+         3DmA==
+X-Gm-Message-State: APjAAAUq4FnYeBnQ2pGwUroBgsWCFAiMLpFFnoFaZdgmFau7sKqbxAv1
+        Qa6st9aQwGJm68Pb7CZ6Qw8X93eHe+fG33lOJwG1mA==
+X-Google-Smtp-Source: APXvYqwaPUhrCsgUEC6zT/MsYaJdSktVjMyOaLL/ZwQxaZzTYw2kYgyCxNVMDYa3yDWpwXTVusT3MTlJbF4W8DELTSA=
+X-Received: by 2002:a17:902:7c84:: with SMTP id y4mr417290pll.297.1575415143951;
+ Tue, 03 Dec 2019 15:19:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20191125202937.23133-1-roy.van.doormaal@prodrive-technologies.com>
+ <20191126074025.5112-1-roy.van.doormaal@prodrive-technologies.com>
+In-Reply-To: <20191126074025.5112-1-roy.van.doormaal@prodrive-technologies.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 3 Dec 2019 15:18:52 -0800
+Message-ID: <CAFd5g450nWm47mFi10W+J=oiaO_sV0fXh3SwH0zxX6ZF1qZ-Xw@mail.gmail.com>
+Subject: Re: [PATCH v2] irqchip/aspeed-i2c-ic: Fix irq domain name memory leak
+To:     Roy van Doormaal <roy.van.doormaal@prodrive-technologies.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>, linux-i2c@vger.kernel.org,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sami Tolvanen <samitolvanen@google.com>
+On Mon, Nov 25, 2019 at 11:41 PM Roy van Doormaal
+<roy.van.doormaal@prodrive-technologies.com> wrote:
+>
+> The aspeed irqchip driver overwrites the default irq domain name,
+> but doesn't free the existing domain name.
+> This patch frees the irq domain name before overwriting it.
+>
+> kmemleak trace:
+>
+> unreferenced object 0xb8004c40 (size 64):
+> comm "swapper", pid 0, jiffies 4294937303 (age 747.660s)
+> hex dump (first 32 bytes):
+> 3a 61 68 62 3a 61 70 62 3a 62 75 73 40 31 65 37 :ahb:apb:bus@1e7
+> 38 61 30 30 30 3a 69 6e 74 65 72 72 75 70 74 2d 8a000:interrupt-
+> backtrace:
+> [<086b59b8>] kmemleak_alloc+0xa8/0xc0
+> [<b5a3490c>] __kmalloc_track_caller+0x118/0x1a0
+> [<f59c7ced>] kvasprintf+0x5c/0xc0
+> [<49275eec>] kasprintf+0x30/0x50
+> [<5713064b>] __irq_domain_add+0x184/0x25c
+> [<53c594d0>] aspeed_i2c_ic_of_init+0x9c/0x128
+> [<d8d7017e>] of_irq_init+0x1ec/0x314
+> [<f8405bf1>] irqchip_init+0x1c/0x24
+> [<7ef974b3>] init_IRQ+0x30/0x90
+> [<87a1438f>] start_kernel+0x28c/0x458
+> [< (null)>] (null)
+> [<f0763fdf>] 0xffffffff
+>
+> Signed-off-by: Roy van Doormaal <roy.van.doormaal@prodrive-technologies.com>
 
-commit 492c88720d36eb662f9f10c1633f7726fbb07fc4 upstream.
+Acked-by: Brendan Higgins <brendanhiggins@google.com>
 
-platform_find_device_by_driver calls bus_find_device and passes
-platform_match as the callback function. Casting the function to a
-mismatching type trips indirect call Control-Flow Integrity (CFI) checking.
-
-This change adds a callback function with the correct type and instead
-of casting the function, explicitly casts the second parameter to struct
-device_driver* as expected by platform_match.
-
-Fixes: 36f3313d6bff9 ("platform: Add platform_find_device_by_driver() helper")
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191112214156.3430-1-samitolvanen@google.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/base/platform.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -1278,6 +1278,11 @@ struct bus_type platform_bus_type = {
- };
- EXPORT_SYMBOL_GPL(platform_bus_type);
- 
-+static inline int __platform_match(struct device *dev, const void *drv)
-+{
-+	return platform_match(dev, (struct device_driver *)drv);
-+}
-+
- /**
-  * platform_find_device_by_driver - Find a platform device with a given
-  * driver.
-@@ -1288,7 +1293,7 @@ struct device *platform_find_device_by_d
- 					      const struct device_driver *drv)
- {
- 	return bus_find_device(&platform_bus_type, start, drv,
--			       (void *)platform_match);
-+			       __platform_match);
- }
- EXPORT_SYMBOL_GPL(platform_find_device_by_driver);
- 
-
-
+Sorry for the delayed response.
