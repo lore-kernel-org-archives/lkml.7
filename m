@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61392C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E12EC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F1632068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EA212068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:27:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbfLCQ1Q (ORCPT
+        id S1727290AbfLCQ1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 11:27:16 -0500
-Received: from laurent.telenet-ops.be ([195.130.137.89]:34558 "EHLO
-        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727070AbfLCQ0u (ORCPT
+        Tue, 3 Dec 2019 11:27:15 -0500
+Received: from xavier.telenet-ops.be ([195.130.132.52]:40514 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727015AbfLCQ0u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 3 Dec 2019 11:26:50 -0500
 Received: from ramsan ([84.195.182.253])
-        by laurent.telenet-ops.be with bizsmtp
-        id ZUSm2100p5USYZQ01USmMd; Tue, 03 Dec 2019 17:26:47 +0100
+        by xavier.telenet-ops.be with bizsmtp
+        id ZUSm2100W5USYZQ01USmYT; Tue, 03 Dec 2019 17:26:47 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1icB0g-0007ff-JI; Tue, 03 Dec 2019 17:26:46 +0100
+        id 1icB0g-0007fe-IU; Tue, 03 Dec 2019 17:26:46 +0100
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1icB0g-0005Cl-IA; Tue, 03 Dec 2019 17:26:46 +0100
+        id 1icB0g-0005Ch-HR; Tue, 03 Dec 2019 17:26:46 +0100
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
         Rich Felker <dalias@libc.org>
@@ -37,9 +37,9 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Guenter Roeck <linux@roeck-us.net>, linux-sh@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 3/7] sh: process: Fix broken lines in register dumps
-Date:   Tue,  3 Dec 2019 17:26:41 +0100
-Message-Id: <20191203162645.19950-4-geert+renesas@glider.be>
+Subject: [PATCH 2/7] sh: dump_stack: Fix broken lines and ptrval in calltrace dumps
+Date:   Tue,  3 Dec 2019 17:26:40 +0100
+Message-Id: <20191203162645.19950-3-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191203162645.19950-1-geert+renesas@glider.be>
 References: <20191203162645.19950-1-geert+renesas@glider.be>
@@ -48,86 +48,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rejoin the broken lines by using pr_cont().
+Rejoin the broken lines by using pr_cont(), and use "%px" to print
+sensible addresses.
 Convert the remaining printk() calls to pr_*() while at it.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 Sample impact:
 
- PC is at dma_alloc_attrs+0x32/0xb0
- PR is at platform_resource_setup_memory+0xbc/0x150
--PC  : 8c043d06 SP  : 8f41fe9c SR  : 40000001
--TEA : 00000000
--R0  : 8c043cd4 R1  : 00000000 R2  : 00000000 R3  : 8c213e7c
-+PC  : 8c043cfa SP  : 8f41fe9c SR  : 40000001 TEA : 8c00369e
-+R0  : 8c043cc8 R1  : 00000000 R2  : 00000000 R3  : 8c213e7c
- R4  : 8c29cc38 R5  : 00100000 R6  : 8f41fecc R7  : 00000cc0
- R8  : 8c29cc38 R9  : 8c29720c R10 : 00000cc0 R11 : 00100000
--R12 : 00000000 R13 : 8f41fecc R14 : 8c274773
--MACH: 00000001 MACL: b16b1ded GBR : 09102e96 PR  : 8c2c0524
-+R12 : 00000000 R13 : 8f41fecc R14 : 8c27479f
-+MACH: 00000001 MACL: b16b1ded GBR : 004c5450 PR  : 8c2c0524
----
- arch/sh/kernel/process_32.c | 38 +++++++++++++++++--------------------
- 1 file changed, 17 insertions(+), 21 deletions(-)
+-Stack: (0x8e8b1d58 to 0x8e8b2000)
+-1d40:
+-
+-
+-
+-
+-
+-
+-8c09a2b4
+-8fb51b40
+-
+-1d60:
+-8fbf400c
+-00000000
+-8c09a7da
+-00000122
+-8fbf4010
+-00000001
+-00000002
+-8fbf4000
+-
+-1d80:
+-00000002
+-8fbf400c
+-0030f231
+-00000100
+-8e8b1db0
+-00000000
+-8e8b1dac
+-8c2b64b4
++Stack: (0x8eeabc80 to 0x8eeac000)
++bc80: 8c09a2a8 8fb5cce0 8fbf400c 00000000 8c09a7ce 00000122 8fbf4010 00000002
++bca0: 00000001 8fbf4000 00000001 8fbf400c 0030f231 00000100 8eeabcd8 00000000
++bcc0: 00001000 8c2b64b4 00460000 00000004 232d0f3f 8c21b788 8fb075a4 8fb50e44
 
-diff --git a/arch/sh/kernel/process_32.c b/arch/sh/kernel/process_32.c
-index a094633874c373ef..348c245124c2c227 100644
---- a/arch/sh/kernel/process_32.c
-+++ b/arch/sh/kernel/process_32.c
-@@ -30,34 +30,30 @@
+ [...]
+
+ Call trace:
+- [<(ptrval)>] free_pcppages_bulk+0x106/0x348
+- [<(ptrval)>] __get_free_pages+0xe/0x54
+- [<(ptrval)>] free_unref_page_list+0xca/0x12c
+- [<(ptrval)>] arch_local_irq_restore+0x0/0x24
+- [<(ptrval)>] free_unref_page_commit.isra.141+0x0/0x74
++ [<8c09a7ce>] free_pcppages_bulk+0x106/0x348
++ [<8c21b788>] _cond_resched+0x38/0x54
++ [<8c09bb5a>] free_unref_page_list+0xca/0x12c
++ [<8c002808>] arch_local_irq_restore+0x0/0x24
++ [<8c09aaf8>] free_unref_page_commit.isra.141+0x0/0x74
+---
+ arch/sh/kernel/dumpstack.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/arch/sh/kernel/dumpstack.c b/arch/sh/kernel/dumpstack.c
+index 9f1c9c11d62df46a..6009281f83442ae3 100644
+--- a/arch/sh/kernel/dumpstack.c
++++ b/arch/sh/kernel/dumpstack.c
+@@ -21,32 +21,32 @@ void dump_mem(const char *str, unsigned long bottom, unsigned long top)
+ 	unsigned long p;
+ 	int i;
  
- void show_regs(struct pt_regs * regs)
+-	printk("%s(0x%08lx to 0x%08lx)\n", str, bottom, top);
++	pr_info("%s(0x%08lx to 0x%08lx)\n", str, bottom, top);
+ 
+ 	for (p = bottom & ~31; p < top; ) {
+-		printk("%04lx: ", p & 0xffff);
++		pr_info("%04lx: ", p & 0xffff);
+ 
+ 		for (i = 0; i < 8; i++, p += 4) {
+ 			unsigned int val;
+ 
+ 			if (p < bottom || p >= top)
+-				printk("         ");
++				pr_cont("         ");
+ 			else {
+ 				if (__get_user(val, (unsigned int __user *)p)) {
+-					printk("\n");
++					pr_cont("\n");
+ 					return;
+ 				}
+-				printk("%08x ", val);
++				pr_cont("%08x ", val);
+ 			}
+ 		}
+-		printk("\n");
++		pr_cont("\n");
+ 	}
+ }
+ 
+ void printk_address(unsigned long address, int reliable)
  {
--	printk("\n");
-+	pr_info("\n");
- 	show_regs_print_info(KERN_DEFAULT);
+-	printk(" [<%p>] %s%pS\n", (void *) address,
+-			reliable ? "" : "? ", (void *) address);
++	pr_cont(" [<%px>] %s%pS\n", (void *)address, reliable ? "" : "? ",
++		(void *)address);
+ }
  
--	printk("PC is at %pS\n", (void *)instruction_pointer(regs));
--	printk("PR is at %pS\n", (void *)regs->pr);
-+	pr_info("PC is at %pS\n", (void *)instruction_pointer(regs));
-+	pr_info("PR is at %pS\n", (void *)regs->pr);
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+@@ -108,7 +108,7 @@ stack_reader_dump(struct task_struct *task, struct pt_regs *regs,
  
--	printk("PC  : %08lx SP  : %08lx SR  : %08lx ",
--	       regs->pc, regs->regs[15], regs->sr);
-+	pr_info("PC  : %08lx SP  : %08lx SR  : %08lx ", regs->pc,
-+		regs->regs[15], regs->sr);
- #ifdef CONFIG_MMU
--	printk("TEA : %08x\n", __raw_readl(MMU_TEA));
-+	pr_cont("TEA : %08x\n", __raw_readl(MMU_TEA));
- #else
+ static int print_trace_stack(void *data, char *name)
+ {
+-	printk("%s <%s> ", (char *)data, name);
++	pr_info("%s <%s> ", (char *)data, name);
+ 	return 0;
+ }
+ 
+@@ -117,7 +117,7 @@ static int print_trace_stack(void *data, char *name)
+  */
+ static void print_trace_address(void *data, unsigned long addr, int reliable)
+ {
+-	printk("%s", (char *)data);
++	pr_info("%s", (char *)data);
+ 	printk_address(addr, reliable);
+ }
+ 
+@@ -132,11 +132,11 @@ void show_trace(struct task_struct *tsk, unsigned long *sp,
+ 	if (regs && user_mode(regs))
+ 		return;
+ 
+-	printk("\nCall trace:\n");
++	pr_info("\nCall trace:\n");
+ 
+ 	unwind_stack(tsk, regs, sp, &print_trace_ops, "");
+ 
 -	printk("\n");
 +	pr_cont("\n");
- #endif
  
--	printk("R0  : %08lx R1  : %08lx R2  : %08lx R3  : %08lx\n",
--	       regs->regs[0],regs->regs[1],
--	       regs->regs[2],regs->regs[3]);
--	printk("R4  : %08lx R5  : %08lx R6  : %08lx R7  : %08lx\n",
--	       regs->regs[4],regs->regs[5],
--	       regs->regs[6],regs->regs[7]);
--	printk("R8  : %08lx R9  : %08lx R10 : %08lx R11 : %08lx\n",
--	       regs->regs[8],regs->regs[9],
--	       regs->regs[10],regs->regs[11]);
--	printk("R12 : %08lx R13 : %08lx R14 : %08lx\n",
--	       regs->regs[12],regs->regs[13],
--	       regs->regs[14]);
--	printk("MACH: %08lx MACL: %08lx GBR : %08lx PR  : %08lx\n",
--	       regs->mach, regs->macl, regs->gbr, regs->pr);
-+	pr_info("R0  : %08lx R1  : %08lx R2  : %08lx R3  : %08lx\n",
-+		regs->regs[0], regs->regs[1], regs->regs[2], regs->regs[3]);
-+	pr_info("R4  : %08lx R5  : %08lx R6  : %08lx R7  : %08lx\n",
-+		regs->regs[4], regs->regs[5], regs->regs[6], regs->regs[7]);
-+	pr_info("R8  : %08lx R9  : %08lx R10 : %08lx R11 : %08lx\n",
-+		regs->regs[8], regs->regs[9], regs->regs[10], regs->regs[11]);
-+	pr_info("R12 : %08lx R13 : %08lx R14 : %08lx\n",
-+		regs->regs[12], regs->regs[13], regs->regs[14]);
-+	pr_info("MACH: %08lx MACL: %08lx GBR : %08lx PR  : %08lx\n",
-+		regs->mach, regs->macl, regs->gbr, regs->pr);
- 
- 	show_trace(NULL, (unsigned long *)regs->regs[15], regs);
- 	show_code(regs);
+ 	if (!tsk)
+ 		tsk = current;
 -- 
 2.17.1
 
