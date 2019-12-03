@@ -2,149 +2,170 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C85C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E94F7C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76A1C20661
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B32F220661
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:27:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SYc5/Chk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cgHunmya"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfLCPYZ (ORCPT
+        id S1726928AbfLCP1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 10:24:25 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38090 "EHLO
+        Tue, 3 Dec 2019 10:27:23 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32166 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726024AbfLCPYZ (ORCPT
+        with ESMTP id S1726024AbfLCP1X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 10:24:25 -0500
+        Tue, 3 Dec 2019 10:27:23 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575386663;
+        s=mimecast20190719; t=1575386841;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=A0z0yQVPqG29ag0+Ol/YyJZXC41RYLDBg10RcYmTD30=;
-        b=SYc5/Chkz0Ja0RY67M0/PQA6fSb/4CMX1D7lrlaeq2sD3vU/+/oAox+TcCNzJaf6vj7Twt
-        Lvw5fA2ZL3ckI8Pv1ipfYZH7BhZ/DPSsxji56SjhCc/2s+oPovQWlQEOaVqGi9eNRqzBa/
-        Tp2vcajCxpFuKS1R8A3wzm/knCs//q8=
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=FtlIBMzr/kEBkvWypDLPUeXrjcgK/eBQwpmnVBeyJt0=;
+        b=cgHunmyatkhyuBFzL+cTAAu4PRw3qkGcrBF3509mlBB6DWgWxS4/n8S4J0jB7y1ecJHjUb
+        jmf3oQKF5l/tny6T3QqoexX7UHNRtq0+lfIt7VklehFBN+phpNy87dzwkySUSW5nTLqTkA
+        C+TFrTAeMdKF6eQmBeQoQXfUF+hVYF8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-40-VViTfyV5NWy7UWI2A6Fhtw-1; Tue, 03 Dec 2019 10:17:12 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-382-p6AJ2c4COHSHAdJfajnfZQ-1; Tue, 03 Dec 2019 10:27:20 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D51612A7E21;
-        Tue,  3 Dec 2019 15:17:10 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EA8D060C18;
-        Tue,  3 Dec 2019 15:17:09 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id xB3FH9uX006546;
-        Tue, 3 Dec 2019 10:17:09 -0500
-Received: from localhost (mpatocka@localhost)
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id xB3FH8mW006536;
-        Tue, 3 Dec 2019 10:17:08 -0500
-X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
-Date:   Tue, 3 Dec 2019 10:17:08 -0500 (EST)
-From:   Mikulas Patocka <mpatocka@redhat.com>
-X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-cc:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Michael Neuling <mikey@neuling.org>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: tty crash in Linux 4.6
-In-Reply-To: <20191116093614.GB408484@kroah.com>
-Message-ID: <alpine.LRH.2.02.1912031016030.6365@file01.intranet.prod.int.rdu2.redhat.com>
-References: <573A5996.3080305@hurleysoftware.com> <573B3F84.5050201@hurleysoftware.com> <573B5E4C.8030808@hurleysoftware.com> <alpine.LRH.2.02.1607071855150.19053@file01.intranet.prod.int.rdu2.redhat.com> <CAEjGV6zRghiCCMC1+-n+YPeA0Lrq=-vcvdoYpbwE4G=TXWzY3Q@mail.gmail.com>
- <87po3wusq1.fsf@linkitivity.dja.id.au> <20180322140554.GA3273@kroah.com> <alpine.LRH.2.02.1803270818150.30055@file01.intranet.prod.int.rdu2.redhat.com> <87k1td913u.fsf@linkitivity.dja.id.au> <d8ba132f-e174-2acc-e74c-4e9aed945c30@oracle.com>
- <20191116093614.GB408484@kroah.com>
-User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ABB9810AC66A;
+        Tue,  3 Dec 2019 15:27:17 +0000 (UTC)
+Received: from [10.36.117.236] (ovpn-117-236.ams2.redhat.com [10.36.117.236])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 21F0619C68;
+        Tue,  3 Dec 2019 15:27:13 +0000 (UTC)
+Subject: Re: [PATCH v6 05/10] mm/memory_hotplug: Shrink zones when offlining
+ memory
+To:     Oscar Salvador <osalvador@suse.de>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, x86@kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+References: <20191006085646.5768-1-david@redhat.com>
+ <20191006085646.5768-6-david@redhat.com> <20191203151030.GB2600@linux>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <9789e892-dd15-c37d-7c0a-0ccb4db1a987@redhat.com>
+Date:   Tue, 3 Dec 2019 16:27:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: VViTfyV5NWy7UWI2A6Fhtw-1
+In-Reply-To: <20191203151030.GB2600@linux>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: p6AJ2c4COHSHAdJfajnfZQ-1
 X-Mimecast-Spam-Score: 0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Sat, 16 Nov 2019, Greg Kroah-Hartman wrote:
-
-> On Fri, Nov 15, 2019 at 11:21:08AM -0800, Mike Kravetz wrote:
-> > On 4/11/18 9:09 AM, Daniel Axtens wrote:
-> > > Mikulas Patocka <mpatocka@redhat.com> writes:
-> > >=20
-> > >> On Thu, 22 Mar 2018, Greg Kroah-Hartman wrote:
-> > >>
-> > >>> On Fri, Mar 23, 2018 at 12:48:06AM +1100, Daniel Axtens wrote:
-> > >>>> Hi,
-> > >>>>
-> > >>>>>> This patch works, I've had no tty crashes since applying it.
-> > >>>>>>
-> > >>>>>> I've seen that you haven't sent this patch yet to Linux-4.7-rc a=
-nd
-> > >>>>>> Linux-4.6-stable. Will you? Or did you create a different patch?
-> > >>>>>
-> > >>>>> We are hitting this now on powerpc.  This patch never seemed to m=
-ake
-> > >>>>> it upstream (drivers/tty/tty_ldisc.c hasn't been touched in 1 yea=
-r).
-> > >>>>
-> > >>>> I seem to be hitting this too on a kernel that has the 4.6 changes
-> > >>>> backported to 4.4.
-> > >>>>
-> > >>>> Has there been any further progress on getting this accepted?
-> > >>>
-> > >>> Can you try applying 28b0f8a6962a ("tty: make n_tty_read() always a=
-bort
-> > >>> if hangup is in progress") to see if that helps out or not?
-> > >=20
-> > > Sorry for the delay in getting the test results; as with Mikulas,
-> > > 28b0f8a6962a does not help.
-> > >=20
-> > > Regards,
-> > > Daniel
-> > >=20
-> > >>>
-> > >>> thanks,
-> > >>>
-> > >>> greg k-h
-> > >>
-> > >> It doesn't help. I get the same crash as before.
-> > >>
-> > >> Mikulas
-> >=20
-> > Reviving a really old thread.
-> >=20
-> > It looks like this patch never got merged.
+On 03.12.19 16:10, Oscar Salvador wrote:
+> On Sun, Oct 06, 2019 at 10:56:41AM +0200, David Hildenbrand wrote:
+>> Fixes: d0dc12e86b31 ("mm/memory_hotplug: optimize memory hotplug")
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
 >=20
-> I do not see a patch in this email, so I have no idea what you are
-> referring to, sorry.
->=20
-> > Did it get resolved in some other way?  I ask because we have a
-> > customer who seems to have hit this issue.
->=20
-> Can you try with the latest kernel to see if it is resolved or not?
+> I did not see anything wrong with the taken approach, and makes sense to =
+me.
+> The only thing that puzzles me is we seem to not balance spanned_pages
+> for ZONE_DEVICE anymore.
+> memremap_pages() increments them via move_pfn_range_to_zone, but we skip
+> ZONE_DEVICE in remove_pfn_range_from_zone.
 
-I tested it on the kernel 5.4 and I couldn't reproduce the crash anymore.
+Yes, documented e.g., in
 
-Mikulas
+commit 7ce700bf11b5e2cb84e4352bbdf2123a7a239c84
+Author: David Hildenbrand <david@redhat.com>
+Date:   Thu Nov 21 17:53:56 2019 -0800
 
-> thanks,
+    mm/memory_hotplug: don't access uninitialized memmaps in
+shrink_zone_span()
+
+Needs some more thought - but is definitely not urgent (well, now it's
+at least no longer completely broken).
+
 >=20
-> greg k-h
+> That is not really related to this patch, so I might be missing something=
+,
+> but it caught my eye while reviewing this.
 >=20
+> Anyway, for this one:
+>=20
+> Reviewed-by: Oscar Salvador <osalvador@suse.de>
+>=20
+
+Thanks!
+
+>=20
+> off-topic: I __think__ we really need to trim the CC list.
+
+Yes we should :) - done.
+
+--=20
+Thanks,
+
+David / dhildenb
 
