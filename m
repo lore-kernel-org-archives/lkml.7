@@ -2,114 +2,156 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2667BC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2850BC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F410E206EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A548206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:48:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbfLCQry (ORCPT
+        id S1727059AbfLCQsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 11:47:54 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54570 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727070AbfLCQry (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 11:47:54 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB3GhlMR153359
-        for <linux-kernel@vger.kernel.org>; Tue, 3 Dec 2019 11:47:52 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wkrj5w4n2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 11:47:50 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 3 Dec 2019 16:47:48 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 3 Dec 2019 16:47:45 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB3GlihS29098084
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Dec 2019 16:47:44 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A0FE7A4054;
-        Tue,  3 Dec 2019 16:47:43 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 79031A4060;
-        Tue,  3 Dec 2019 16:47:42 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.191.79])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  3 Dec 2019 16:47:42 +0000 (GMT)
-Subject: Re: [PATCH v9 5/6] IMA: Add support to limit measuring keys
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org
-Date:   Tue, 03 Dec 2019 11:47:41 -0500
-In-Reply-To: <e2faf0d0-fee1-96fe-1120-c003761aa517@linux.microsoft.com>
-References: <20191127015654.3744-1-nramas@linux.microsoft.com>
-         <20191127015654.3744-6-nramas@linux.microsoft.com>
-         <1575375945.5241.16.camel@linux.ibm.com>
-         <e2faf0d0-fee1-96fe-1120-c003761aa517@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Tue, 3 Dec 2019 11:48:42 -0500
+Received: from foss.arm.com ([217.140.110.172]:45510 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726182AbfLCQsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 11:48:41 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA9C531B;
+        Tue,  3 Dec 2019 08:48:40 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C26B13F68E;
+        Tue,  3 Dec 2019 08:48:38 -0800 (PST)
+Subject: Re: [PATCH v3 4/7] PCI: brcmstb: add Broadcom STB PCIe host
+ controller driver
+To:     Jeremy Linton <jeremy.linton@arm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        andrew.murray@arm.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     mbrugger@suse.com, linux-pci@vger.kernel.org, phil@raspberrypi.org,
+        linux-rpi-kernel@lists.infradead.org, james.quinlan@broadcom.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20191126091946.7970-1-nsaenzjulienne@suse.de>
+ <20191126091946.7970-5-nsaenzjulienne@suse.de>
+ <ddab6abd-68fb-543d-bb8e-057d92ac15ed@arm.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <dda72ec5-3e05-a423-bfce-da34addc922c@arm.com>
+Date:   Tue, 3 Dec 2019 16:48:37 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <ddab6abd-68fb-543d-bb8e-057d92ac15ed@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19120316-4275-0000-0000-0000038A9660
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120316-4276-0000-0000-0000389E356B
-Message-Id: <1575391661.5241.47.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-03_05:2019-12-02,2019-12-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- suspectscore=0 lowpriorityscore=0 clxscore=1015 priorityscore=1501
- mlxscore=0 bulkscore=0 malwarescore=0 phishscore=0 impostorscore=0
- mlxlogscore=912 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912030125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-12-03 at 08:13 -0800, Lakshmi Ramasubramanian wrote:
-> On 12/3/2019 4:25 AM, Mimi Zohar wrote:
+On 03/12/2019 4:31 pm, Jeremy Linton wrote:
+> Hi,
 > 
-> Hi Mimi,
+> On 11/26/19 3:19 AM, Nicolas Saenz Julienne wrote:
+>> From: Jim Quinlan <james.quinlan@broadcom.com>
+>>
+>> This adds a basic driver for Broadcom's STB PCIe controller, for now
+>> aimed at Raspberry Pi 4's SoC, bcm2711.
+>>
+>> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+>> Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>>
+>> ---
+>>
+>> Changes since v2:
+>>    - Correct rc_bar2_offset sign
+>>    - Invert IRQ clear and masking in setup code
+>>    - Use bitfield.h, redo all register ops while keeping the register
+>>      names intact
+>>    - Remove all SHIFT register definitions
+>>    - Get rid of all _RB writes
+>>    - Get rid of of_data
+>>    - Don't iterate over inexisting dma-ranges
+>>    - Add comment regarding dma-ranges validation
+>>    - Small cosmetic cleanups
+>>    - Fix license mismatch
+>>    - Set driver Kconfig tristate
+>>    - Didn't add any comment about the controller not being I/O coherent
+>>      for now as I wait for Jeremy's reply
 > 
-> > Hi Lakshmi,
-> > 
-> > A keyring can be created by any user with any keyring name, other than
-> >   ones dot prefixed, which are limited to the trusted builtin keyrings.
-> >   With a policy of "func=KEY_CHECK template=ima-buf keyrings=foo", for
-> > example, keys loaded onto any keyring named "foo" will be measured.
-> >   For files, the IMA policy may be constrained to a particular uid/gid.
-> >   An additional method of identifying or constraining keyring names
-> > needs to be defined.
-> > 
-> 
-> I agree - this is a good idea.
-> 
-> Do you think this can be added as a separate patch set - enhancement to 
-> the current one, or should this be addressed in the current set?
-> 
-> I was just about to send an update today that addresses your latest 
-> comments. Will hold it if you think the above change should be included 
-> now. Please let me know.
+> I guess its fine.. In answer to the original query. It seems that this 
+> PCIe bridge requires explicit cache operations for DMA from PCIe 
+> endpoints. This wasn't obvious to me at first reading because I was 
+> assuming the custom DMA ops were strictly to deal with the stated DMA 
+> limits.
 
-I'm hoping that it won't be all that difficult to implement and could
-be included in this patch set as an additional patch.
+FWIW, although it might seem anathema to server folks, non-coherent PCI 
+is the overwhelming norm in embedded SoCs. Either way, provided the 
+presence or absence of coherency is correctly described via the DT 
+"dma-coherent" or ACPI _CCA property, then it's transparently handled by 
+the DMA API for the endpoint drivers and irrelevant to the host bridge 
+itself - after all, in principle the exact same root complex IP could be 
+integrated both coherently and non-coherently in different SoCs.
 
-Mimi
+Robin.
 
+> So if you end up respinning, it still might be worthy mentioning 
+> somewhere that this is a non-coherent PCIe implementation. I still hold 
+> much of my original reservations about pieces of this driver. 
+> Particularly, how it might look if someone wanted to boot the RPi using 
+> ACPI on linux. But, I was shown a clever bit of AML recently, which 
+> solves those problems for the RPi and the attached XHCI.
+> 
+> So, given how much time I've looked at the root port configuration/etc 
+> sections of this driver and I've not found a serious bug:
+> 
+> Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
+> 
+>>
+>> Changes since v1:
+>>    - Fix Kconfig
+>>    - Remove pci domain check
+>>    - Remove all MSI related code
+>>    - Remove supend/resume code
+>>    - Simplify link state wait routine
+>>    - Prefix all functions
+>>    - Use of_device_get_match_data()
+>>    - Use devm_clk_get_optional()
+>>    - Get rid of irq variable
+>>    - Use STB all over the driver
+>>    - Simplify map_bus() function
+>>    - Fix license mismatch
+>>    - Remove unused register definitions
+>>    - Small cleanups, spell errors
+>>
+>> This is based on Jim's original submission[1] but adapted and tailored
+>> specifically to bcm2711's needs (that's the Raspberry Pi 4). Support for
+>> the rest of the brcmstb family will soon follow once we get support for
+>> multiple dma-ranges in dma/direct.
+>>
+>> [1] https://patchwork.kernel.org/patch/10605959/
+>>
+>>   drivers/pci/controller/Kconfig        |   8 +
+>>   drivers/pci/controller/Makefile       |   1 +
+>>   drivers/pci/controller/pcie-brcmstb.c | 753 ++++++++++++++++++++++++++
+>>   3 files changed, 762 insertions(+)
+>>   create mode 100644 drivers/pci/controller/pcie-brcmstb.c
+>>
+> 
+> Thanks,
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
