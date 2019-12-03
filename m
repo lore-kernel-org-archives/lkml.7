@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F284C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9889FC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32A5120803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61E5520803
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:43:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413023;
-	bh=Bl5HF763uz37dvHlnO+fYfAMU1dfaMnL3BK6UUDKfgE=;
+	s=default; t=1575413025;
+	bh=Gvbq7mVM0/PgnucgqGPLHNcebP9gPhf52e++PEBwkx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t49v9dXjJ9dXxTrzEcORmMwa6hlpJi4DTmWA2sGAeYjQv8jjo/Lpq3VCLLssjxwfN
-	 mfC6XgUKae+cab/8P1gbbjojDTwbN8BwCPgvBI2bvWidJ5DNnDzQpHGHZPkiGaY+Cd
-	 YDIjE2dDKzaMH39uD7hki+S3/Vwt5UhUEtgCT3Io=
+	b=LvUNv7Gnw8KgcbH9YNqqLBYVmvkKwmfHKJgJ163l5uOoS2t6SbdpS8iNwO/s4AraX
+	 OYjNIg1dZR/1DwNqN4B4ooWeoG7uDwYgkqzf3dPzn/RUI3eNqzshDzpUa2Nt+Uy53n
+	 NIE7dvVkooZ/JlUTUxbX4hiorsWDPkBLoOHvYMbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728838AbfLCWnl (ORCPT
+        id S1728483AbfLCWnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:43:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59118 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:43:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728631AbfLCWnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:43:37 -0500
+        id S1728836AbfLCWnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:43:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1820D2080F;
-        Tue,  3 Dec 2019 22:43:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 827DE2073C;
+        Tue,  3 Dec 2019 22:43:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413017;
-        bh=Bl5HF763uz37dvHlnO+fYfAMU1dfaMnL3BK6UUDKfgE=;
+        s=default; t=1575413020;
+        bh=Gvbq7mVM0/PgnucgqGPLHNcebP9gPhf52e++PEBwkx4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Up6YCdSCQAnLnbc0krfrtdu8ziLQOSAwHi37Y5YcpRiWrbhhk2DMQXlmueKBRdENY
-         ajSlmI+55K2QFRrLttn3nUJnmyRP22jBGszRZ6HjQR5XVGkNnwDnGv5ehLJk80NoM1
-         Qz3dixSKb51aLyufPEXBiMJBGW/AZnKtd5vGBlRI=
+        b=EZLMn7CF4Lf3v/DGTxn1YjtTDG4FgagGamg/aEy3yqIdLOTgvL25gzmgtLHOvd+Vh
+         ctu8l2XnVLbEcNjDFSp9mrkbt0u6yV/iViBNFLZ+aSnqGKLTcxpHotAjGRpCpYRcGY
+         O6gCrS3KriehR0oZR3fO6uPbptlZtq3+rJVRleW8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Alexander Usyskin <alexander.usyskin@intel.com>,
         Tomas Winkler <tomas.winkler@intel.com>
-Subject: [PATCH 5.3 104/135] mei: bus: prefix device names on bus with the bus name
-Date:   Tue,  3 Dec 2019 23:35:44 +0100
-Message-Id: <20191203213040.249954854@linuxfoundation.org>
+Subject: [PATCH 5.3 105/135] mei: me: add comet point V device id
+Date:   Tue,  3 Dec 2019 23:35:45 +0100
+Message-Id: <20191203213040.474020711@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -62,49 +62,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-commit 7a2b9e6ec84588b0be65cc0ae45a65bac431496b upstream.
+commit 82b29b9f72afdccb40ea5f3c13c6a3cb65a597bc upstream.
 
-Add parent device name to the name of devices on bus to avoid
-device names collisions for same client UUID available
-from different MEI heads. Namely this prevents sysfs collision under
-/sys/bus/mei/device/
-
-In the device part leave just UUID other parameters that are
-required for device matching are not required here and are
-just bloating the name.
+Comet Point (Comet Lake) V device id.
 
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
 Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-Link: https://lore.kernel.org/r/20191105150514.14010-1-tomas.winkler@intel.com
+Link: https://lore.kernel.org/r/20191105150514.14010-2-tomas.winkler@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/mei/bus.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/misc/mei/hw-me-regs.h |    1 +
+ drivers/misc/mei/pci-me.c     |    1 +
+ 2 files changed, 2 insertions(+)
 
---- a/drivers/misc/mei/bus.c
-+++ b/drivers/misc/mei/bus.c
-@@ -873,15 +873,16 @@ static const struct device_type mei_cl_d
+--- a/drivers/misc/mei/hw-me-regs.h
++++ b/drivers/misc/mei/hw-me-regs.h
+@@ -81,6 +81,7 @@
  
- /**
-  * mei_cl_bus_set_name - set device name for me client device
-+ *  <controller>-<client device>
-+ *  Example: 0000:00:16.0-55213584-9a29-4916-badf-0fb7ed682aeb
-  *
-  * @cldev: me client device
-  */
- static inline void mei_cl_bus_set_name(struct mei_cl_device *cldev)
- {
--	dev_set_name(&cldev->dev, "mei:%s:%pUl:%02X",
--		     cldev->name,
--		     mei_me_cl_uuid(cldev->me_cl),
--		     mei_me_cl_ver(cldev->me_cl));
-+	dev_set_name(&cldev->dev, "%s-%pUl",
-+		     dev_name(cldev->bus->dev),
-+		     mei_me_cl_uuid(cldev->me_cl));
- }
+ #define MEI_DEV_ID_CMP_LP     0x02e0  /* Comet Point LP */
+ #define MEI_DEV_ID_CMP_LP_3   0x02e4  /* Comet Point LP 3 (iTouch) */
++#define MEI_DEV_ID_CMP_V      0xA3BA  /* Comet Point Lake V */
  
- /**
+ #define MEI_DEV_ID_ICP_LP     0x34E0  /* Ice Lake Point LP */
+ 
+--- a/drivers/misc/mei/pci-me.c
++++ b/drivers/misc/mei/pci-me.c
+@@ -98,6 +98,7 @@ static const struct pci_device_id mei_me
+ 
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_LP, MEI_ME_PCH12_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_LP_3, MEI_ME_PCH8_CFG)},
++	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_V, MEI_ME_PCH12_CFG)},
+ 
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_ICP_LP, MEI_ME_PCH12_CFG)},
+ 
 
 
