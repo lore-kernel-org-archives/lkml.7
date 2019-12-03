@@ -2,92 +2,261 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 928B7C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 992DEC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5944B20684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:10:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414617;
-	bh=kL71wP3leg6UsZPFuAZ/oDTnuSVOuvvCd5M1TGU+M5c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dhrEe4M6nW27yiEEJPzmd7ygOx9li6Wx/XuGf0bJ9r27Ax0rE15oVgHTxL+t8cHJi
-	 TFjlKo1oUPdLAYO1GnfcCPP5/5IlNBbD/j6TPB3/+7OjuyHrDlbBlCAq2hsKtKGEuC
-	 jz5GVGGR0mZwIEfeV1Nfj21SsokHOnPns5fxRXBg=
+	by mail.kernel.org (Postfix) with ESMTP id 536A520684
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:10:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UH1kpBk9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728728AbfLCWm4 (ORCPT
+        id S1728708AbfLCWmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:42:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58042 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728343AbfLCWmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:42:53 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 144B920803;
-        Tue,  3 Dec 2019 22:42:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412973;
-        bh=kL71wP3leg6UsZPFuAZ/oDTnuSVOuvvCd5M1TGU+M5c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mu89n6nWCB4/x7Ga+9ezMC+jNWG2sUaybFgAoL5trYiYA5FDqsyw1yImU5mZTgo+9
-         MJLqxn0DySULuKjd3Yrct6KtI0HaF58AdxG8KkKrmm7NkMogaxyrxVXQuD/POH8aKi
-         1PS1zBDRHHOPHsRQyygjl0z68QHJ0zFKxoBDi1NA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 048/135] netfilter: nf_tables: bogus EOPNOTSUPP on basechain update
-Date:   Tue,  3 Dec 2019 23:34:48 +0100
-Message-Id: <20191203213019.092932734@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
-References: <20191203213005.828543156@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 3 Dec 2019 17:42:50 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35663 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728687AbfLCWmn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:42:43 -0500
+Received: by mail-io1-f65.google.com with SMTP id v18so5766475iol.2;
+        Tue, 03 Dec 2019 14:42:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7IzGD4WRCCFYMOqCam4BvCa6vun6+n983tU2aRp2iZU=;
+        b=UH1kpBk9yKxRH0ypieqZa+Q2WXbRw/ZTqYTb4ya23oy+TxAYdo9Og5iWGMhFMjaWXY
+         417Ti/WAoNvtNAofwxvsCi2RnGdJnp+KhW1utFZKw0QBn0PyRgB3lYkKQdLwQFviOwii
+         2l3ZeYczQdFzTyHUTacoqa9GT+IGIsJ9R+4or/akKpbDtSE/qU5WngSUZ9TOC0XsYr1m
+         3CXFcccG3kkm/A01JgT8P5kRbEvp4ewj3qhyDCS49sudP5QWdKVVIh2BgUDZtHBQffXM
+         rp7SCSS+9PbzwgvGWBktmhbqXuK/mGeGUrJvSs2PZkMvx8mzZt4JAeBV88aWAKz7cNTW
+         jOsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7IzGD4WRCCFYMOqCam4BvCa6vun6+n983tU2aRp2iZU=;
+        b=dQJXY5FjChn4/b+V1w4ziuXP0jZ5xsrwJAfhcKZqPpswFCFY31p7JQ8wgmuHfzbUsn
+         sBl2tYNG4p8M/WnCrbPs/IMhHUcOt23TXLYpTN//bUFqfqNIFHlKrZXaRyrrO9FgN02y
+         s9SfLTAn2V0OXcFIjNbXldVmLQ8+JprY2pgK0X949J1/HPePVWaOqFlDLgel/1py0HpZ
+         3NsIrqE3EsTeFnZGaBPXfUjHblcXgjCI5aWXNDuJNo36LUXlPpIZHeNkGOYy7IjrB01g
+         fqONKo/5moPgHL07ur0tdqLj4tzBho520APG5Yt55F9gCxKRCU/Q248hlX23TqJrix2c
+         XxEg==
+X-Gm-Message-State: APjAAAU3pkm9934u7faKp/AdEwNkWtn8quJ09G2KF0z/s11+G4tvTJoW
+        +UZa/Ka1mlNB3KQIT3IRAjBSsCNoZkhOp8luM6c=
+X-Google-Smtp-Source: APXvYqxlocnGd3ImUL0RbOkWK2GwHagIyBlZUEDJ/dZeWGOnVpvNWlp5bM9omsnL4hVUCWHnsd3zxNVUxVAeuTS2AXY=
+X-Received: by 2002:a6b:5914:: with SMTP id n20mr531342iob.42.1575412962306;
+ Tue, 03 Dec 2019 14:42:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20191127141544.4277-1-leo.yan@linaro.org> <20191127141544.4277-3-leo.yan@linaro.org>
+ <CAOCk7NqZmBYN4tY0_V8xzvBfWShDCP8gTa60Aoc78wK2tXx=6A@mail.gmail.com> <20191203082325.GC28241@leoy-ThinkPad-X240s>
+In-Reply-To: <20191203082325.GC28241@leoy-ThinkPad-X240s>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Tue, 3 Dec 2019 15:42:31 -0700
+Message-ID: <CAOCk7NpYt_OVYB7yZz+U9OE7jdtdm4sKG9wzKY7_YvKKx2Q4fg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] tty: serial: msm_serial: Fix deadlock caused by
+ recursive output
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Nicolas Dechesne <nicolas.dechesne@linaro.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        linux-serial@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+On Tue, Dec 3, 2019 at 1:23 AM Leo Yan <leo.yan@linaro.org> wrote:
+>
+> On Mon, Dec 02, 2019 at 09:40:55AM -0700, Jeffrey Hugo wrote:
+> > On Wed, Nov 27, 2019 at 7:16 AM Leo Yan <leo.yan@linaro.org> wrote:
+> > >
+> > > The uart driver might run into deadlock caused by recursive output; the
+> > > basic flow is after uart driver has acquired the port spinlock, then it
+> > > invokes some functions, e.g. dma engine operations and allocate dma
+> > > descriptor with kzalloc(), if the system has very less free memory, the
+> > > kernel will give out warning by printing logs, thus recursive output
+> > > will happen and at the second time the attempting to acquire lock will
+> > > cause deadlock.  The detailed flow is shown as below:
+> > >
+> > >   msm_uart_irq()
+> > >     spin_lock_irqsave(&port->lock, flags)  => First time to acquire lock
+> > >     msm_handle_tx(port)
+> > >       msm_handle_tx_dma()
+> > >         dmaengine_prep_slave_single()
+> > >           bam_prep_slave_sg()
+> > >             kzalloc()
+> > >                __kmalloc()
+> > >                  ___slab_alloc()
+> > >                    alloc_pages_current()
+> > >                      __alloc_pages_nodemask()
+> > >                        warn_alloc()
+> > >                          printk()
+> > >                            msm_console_write()
+> > >                              __msm_console_write()
+> > >                                spin_lock(&port->lock) => Cause deadlock
+> > >
+> > > This patch fixes the deadlock issue for recursive output; it adds a
+> > > variable 'curr_user' to indicate the uart port is used by which CPU, if
+> > > the CPU has acquired spinlock and wants to execute recursive output,
+> > > it will directly bail out.  Here we don't choose to avoid locking and
+> > > print out log, the reason is in this case we don't want to reset the
+> > > uart port with function msm_reset_dm_count(); otherwise it can introduce
+> > > confliction with other flows and results in uart port malfunction and
+> > > later cannot output anymore.
+> >
+> > Is this not fixable?  Sure, fixing the deadlock is an improvement, but
+> > dropping logs (particularly a memory warning like in your example)
+> > seems undesirable.
+>
+> Thanks a lot for your reviewing, Jeffrey.
+>
+> Agreed with you for the concern.
+>
+> To be honest, I am not familiar with the msm uart driver, so have no
+> confidence which is the best way for uart port operations.  I can
+> think out one possible fixing is shown in below, if detects the lock
+> is not acquired then it will force to reset UART port before exit the
+> function __msm_console_write().
+>
+> This approach is not tested yet and it looks too arbitrary; I will
+> give a try for it.  At the meantime, welcome any insight suggestion
+> with proper register operations.
 
-[ Upstream commit 1ed012f6fd83e7ee7efd22e2c32f23efff015b30 ]
+According to the documentation, NCF_TX is only needed for SW transmit
+mode, where software is directly puttting characters in the fifo.  Its
+not needed for BAM mode.  According to your example, recursive console
+printing will only happen in BAM mode, and not in SW mode.  Perhaps if
+we put the NCF_TX uses to just the SW mode, we avoid the issue and can
+allow recursive printing?
 
-Userspace never includes the NFT_BASE_CHAIN flag, this flag is inferred
-from the NFTA_CHAIN_HOOK atribute. The chain update path does not allow
-to update flags at this stage, the existing sanity check bogusly hits
-EOPNOTSUPP in the basechain case if the offload flag is set on.
-
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/netfilter/nf_tables_api.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 3b81323fa0171..5dbc6bfb532cd 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -1922,6 +1922,7 @@ static int nf_tables_newchain(struct net *net, struct sock *nlsk,
- 		if (nlh->nlmsg_flags & NLM_F_REPLACE)
- 			return -EOPNOTSUPP;
- 
-+		flags |= chain->flags & NFT_BASE_CHAIN;
- 		return nf_tables_updchain(&ctx, genmask, policy, flags);
- 	}
- 
--- 
-2.20.1
-
-
-
+>
+> @@ -1572,6 +1579,7 @@ static inline struct uart_port *msm_get_port_from_line(unsigned int line)
+>  static void __msm_console_write(struct uart_port *port, const char *s,
+>                                 unsigned int count, bool is_uartdm)
+>  {
+> +       struct msm_port *msm_port = UART_TO_MSM(port);
+>         int i;
+>         int num_newlines = 0;
+>         bool replaced = false;
+> @@ -1593,6 +1601,8 @@ static void __msm_console_write(struct uart_port *port, const char *s,
+>                 locked = 0;
+>         else if (oops_in_progress)
+>                 locked = spin_trylock(&port->lock);
+> +       else if (cpumask_test_cpu(smp_processor_id(), &msm_port->curr_user))
+> +               return;
+>         else
+>                 spin_lock(&port->lock);
+>
+> @@ -1632,6 +1642,9 @@ static void __msm_console_write(struct uart_port *port, const char *s,
+>                 i += num_chars;
+>         }
+>
+> +       if (!locked && is_uartdm)
+> +               msm_reset(port);
+> +
+>         if (locked)
+>                 spin_unlock(&port->lock);
+>  }
+>
+> Thanks,
+> Leo
+>
+> > >
+> > > Fixes: 99693945013a ("tty: serial: msm: Add RX DMA support")
+> > > Fixes: 3a878c430fd6 ("tty: serial: msm: Add TX DMA support")
+> > > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > > ---
+> > >  drivers/tty/serial/msm_serial.c | 10 ++++++++++
+> > >  1 file changed, 10 insertions(+)
+> > >
+> > > diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
+> > > index 889538182e83..06076cd2948f 100644
+> > > --- a/drivers/tty/serial/msm_serial.c
+> > > +++ b/drivers/tty/serial/msm_serial.c
+> > > @@ -182,6 +182,7 @@ struct msm_port {
+> > >         bool                    break_detected;
+> > >         struct msm_dma          tx_dma;
+> > >         struct msm_dma          rx_dma;
+> > > +       struct cpumask          curr_user;
+> > >  };
+> > >
+> > >  #define UART_TO_MSM(uart_port) container_of(uart_port, struct msm_port, uart)
+> > > @@ -436,6 +437,7 @@ static void msm_complete_tx_dma(void *args)
+> > >         u32 val;
+> > >
+> > >         spin_lock_irqsave(&port->lock, flags);
+> > > +       cpumask_set_cpu(smp_processor_id(), &msm_port->curr_user);
+> > >
+> > >         /* Already stopped */
+> > >         if (!dma->count)
+> > > @@ -470,6 +472,7 @@ static void msm_complete_tx_dma(void *args)
+> > >
+> > >         msm_handle_tx(port);
+> > >  done:
+> > > +       cpumask_clear_cpu(smp_processor_id(), &msm_port->curr_user);
+> > >         spin_unlock_irqrestore(&port->lock, flags);
+> > >  }
+> > >
+> > > @@ -544,6 +547,7 @@ static void msm_complete_rx_dma(void *args)
+> > >         u32 val;
+> > >
+> > >         spin_lock_irqsave(&port->lock, flags);
+> > > +       cpumask_set_cpu(smp_processor_id(), &msm_port->curr_user);
+> > >
+> > >         /* Already stopped */
+> > >         if (!dma->count)
+> > > @@ -590,6 +594,7 @@ static void msm_complete_rx_dma(void *args)
+> > >
+> > >         msm_start_rx_dma(msm_port);
+> > >  done:
+> > > +       cpumask_clear_cpu(smp_processor_id(), &msm_port->curr_user);
+> > >         spin_unlock_irqrestore(&port->lock, flags);
+> > >
+> > >         if (count)
+> > > @@ -931,6 +936,7 @@ static irqreturn_t msm_uart_irq(int irq, void *dev_id)
+> > >         u32 val;
+> > >
+> > >         spin_lock_irqsave(&port->lock, flags);
+> > > +       cpumask_set_cpu(smp_processor_id(), &msm_port->curr_user);
+> > >         misr = msm_read(port, UART_MISR);
+> > >         msm_write(port, 0, UART_IMR); /* disable interrupt */
+> > >
+> > > @@ -962,6 +968,7 @@ static irqreturn_t msm_uart_irq(int irq, void *dev_id)
+> > >                 msm_handle_delta_cts(port);
+> > >
+> > >         msm_write(port, msm_port->imr, UART_IMR); /* restore interrupt */
+> > > +       cpumask_clear_cpu(smp_processor_id(), &msm_port->curr_user);
+> > >         spin_unlock_irqrestore(&port->lock, flags);
+> > >
+> > >         return IRQ_HANDLED;
+> > > @@ -1572,6 +1579,7 @@ static inline struct uart_port *msm_get_port_from_line(unsigned int line)
+> > >  static void __msm_console_write(struct uart_port *port, const char *s,
+> > >                                 unsigned int count, bool is_uartdm)
+> > >  {
+> > > +       struct msm_port *msm_port = UART_TO_MSM(port);
+> > >         int i;
+> > >         int num_newlines = 0;
+> > >         bool replaced = false;
+> > > @@ -1593,6 +1601,8 @@ static void __msm_console_write(struct uart_port *port, const char *s,
+> > >                 locked = 0;
+> > >         else if (oops_in_progress)
+> > >                 locked = spin_trylock(&port->lock);
+> > > +       else if (cpumask_test_cpu(smp_processor_id(), &msm_port->curr_user))
+> > > +               return;
+> > >         else
+> > >                 spin_lock(&port->lock);
+> > >
+> > > --
+> > > 2.17.1
+> > >
