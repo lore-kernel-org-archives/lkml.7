@@ -2,175 +2,160 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF9CC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 579F9C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE8D92080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29E8520675
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:36:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XHmDbg3X"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qmmaebzo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727542AbfLCWe5 (ORCPT
+        id S1727603AbfLCWgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:34:57 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:42412 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727131AbfLCWe5 (ORCPT
+        Tue, 3 Dec 2019 17:36:06 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44883 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727543AbfLCWgF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:34:57 -0500
-Received: by mail-ed1-f65.google.com with SMTP id e10so4741318edv.9;
-        Tue, 03 Dec 2019 14:34:55 -0800 (PST)
+        Tue, 3 Dec 2019 17:36:05 -0500
+Received: by mail-pg1-f194.google.com with SMTP id x7so2288031pgl.11
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 14:36:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ulyW2h3rie4VE9IxojxTAhNWYWCowopRoXSHKOE6/OQ=;
-        b=XHmDbg3XnAAbtSzXD/RDl+VIKHYWfbmKA4Y8dB73bxVM6pEwLogY+Dn4Y1M+imggWq
-         lkknihtVD7CNzhvqB3PZ259wIcPAYQJDB4qNceYhlTEkZsOhBNrFwOxKUj0UuBwuXAuB
-         wMl99DqJfpBNX1GJcJYf7FVxaqmB4McPbNvmRaeN55iI47JaEWP5FPQWZq5v6KJCRknU
-         eH/jOLDW+BJB9JcpV6scuztgzTtB2ysXlk5Bo0bPz+gYaLOPm+Nu6hxgqCxv/8kkKEvk
-         HI5B8gOHWLWsI4XcujQe+BLE8NkHeb+VGrGrXDGFG63xGUAvvvO9F5bdLvNDxAzrfSgB
-         uoOQ==
+        bh=r06+KrKZmbSJH6UUm02fNkOof8/gjixGbcfjblQ+qRs=;
+        b=qmmaebzoB44V44DUoG8FAhCTP3bWZxhuWc/e85o0mdI6Hg+gGv8FZsbinUlNKbd+cB
+         SML2TNJLyK+1Kz5vJTHNbPffrS+dZYi3mWcVJEvQXoePAoP/scqeV34UCbocwPR6YFB6
+         R4C/xrXvcfFez3m0kS8tQZ97SM/tpq2yM16XDitDpBR9BwH4IuYvXRNj9zz8dtypvU4Z
+         JgmqbL+mAilAq2eBnhxfjTy+simzyTz5k7LbYN9oWVWjzwPzTekeGkc9P3LScLtACFmK
+         MBXNDmluF4EhFW2ZAuR87z06qoWJveYtsGKQsHRz45F5zAAjEwhvdPwulQQGoFKsAC21
+         wGFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ulyW2h3rie4VE9IxojxTAhNWYWCowopRoXSHKOE6/OQ=;
-        b=JAhDUYoIAnuVSCCw0X+LJJTpSgjl9affsfNbcOv41CIneAaXpgOOdIa23jv+zDjZi7
-         EKkOJYDQYrtrATohT6I5eK6sCpTOPdkovM85OqJbIzj4mBAyqwFuAz+nw5dP5pjlH6KD
-         He/zzRmf3dAh/bRQbJcD3K73p1FBz4QithA8rzX4MAlZmtFR7AXe2i3FF9CYu/H+823n
-         emGHAf5akI17ai4euQwuAPiOcZfnWeFz7JHtWEfaMuj5x9RMTCgjZlmoFCv10Ad4SnHE
-         ft/HgGiXxeBuGMD48JVddtrV3oXYjBQqNxVI+fTL3Ntk4h6v0rGhy1gtL2H8A0gTynhr
-         liUA==
-X-Gm-Message-State: APjAAAUVfgE05/4owu+cIdGGR/OPZxjrJXVpx9NUDIeTEdfi+dc+DyB8
-        /x9YrkjiCP8Kw3j3XAXsLCfmBombPXt326B7BBo=
-X-Google-Smtp-Source: APXvYqyFjUHyBCnFC1zFWu802ktlkJvjl1vV+IvKLITIItq8MWHWmCYLyUHnT72F7s8O1nTkQqJUN0fdZJuja0ba1DQ=
-X-Received: by 2002:a17:906:b797:: with SMTP id dt23mr1294244ejb.241.1575412495051;
- Tue, 03 Dec 2019 14:34:55 -0800 (PST)
+        bh=r06+KrKZmbSJH6UUm02fNkOof8/gjixGbcfjblQ+qRs=;
+        b=oC8SPVHo0Q5f4Wng072F+2rDxyqvbRlMvb8oojgdO1GADAsOWfbiubTdnO7fCTZSHl
+         vZOaEm5u6ijuHPdx/hzmBN8gqSJQEQ8kdTB+Qkfav8Q+oeW9wg77i/zf9NyeVvKAy+UR
+         4WvP/7vidF+L9twT1yzmwYiKDDU1quBMl6r38K/JZNEAS4edbR30WELjIhy8+bsPMO5i
+         kPc/uZApfkW0K2s7xZARFCa+LjyapIjAOALSHN+rjEViUdziYWQsajr774Y4ITZqOpUy
+         bw8dl1H6/1ohcr1izwkmQQwi9yAtt/J4ukx5gvxoftPPPcIG+vcnPapgyZUpOP8MmnY7
+         GpbQ==
+X-Gm-Message-State: APjAAAUCnKlJ0XpVZwGIyCzRrPOEBmexGs8ADLfzfuKLbWb1WLpgzQUv
+        IzM26B1fBzxoJUtCh6l5JInvOjUX/z4M/cWD5j76LQ==
+X-Google-Smtp-Source: APXvYqxWObr1MDrGkYFSZAzjU0wyoXqLlbyFY+LBrt8mBQKO1DqOKm01gXn/4tlInbMN4BHmYN9VZEP1u5qBzoGNkK8=
+X-Received: by 2002:a63:480f:: with SMTP id v15mr7802935pga.201.1575412564268;
+ Tue, 03 Dec 2019 14:36:04 -0800 (PST)
 MIME-Version: 1.0
-References: <1575011105-28172-1-git-send-email-harigovi@codeaurora.org> <20191203222232.GG228856@google.com>
-In-Reply-To: <20191203222232.GG228856@google.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 3 Dec 2019 14:34:44 -0800
-Message-ID: <CAF6AEGvsrXjNX25AgN__mnguohmmT1tgMdrG39i=dXUYQ4p-mQ@mail.gmail.com>
-Subject: Re: [PATCH v1] drm/msm: add support for 2.4.1 DSI version for sc7180 soc
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Harigovindan P <harigovi@codeaurora.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        nganji@codeaurora.org
+References: <1575242724-4937-1-git-send-email-sj38.park@gmail.com>
+ <20191203070025.GA4206@google.com> <CAEjAshraUy20gEEaff69=b11DhB7zbz8WHT=6wOuw6C2FyJwYA@mail.gmail.com>
+ <CAEjAsho98ER1RQ6=++ECmoCJxw2mMrGqV4jAgW5wgfb8eEM9eQ@mail.gmail.com>
+ <CAFd5g46qPPsKJFqs07Eiea0Nim=YDWbOUndJu=JbW--VcTb-ww@mail.gmail.com> <CAEjAshpTAj_aYBUG1PWoyPajT69hWptXOZKwydg6duTNV5=aLQ@mail.gmail.com>
+In-Reply-To: <CAEjAshpTAj_aYBUG1PWoyPajT69hWptXOZKwydg6duTNV5=aLQ@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 3 Dec 2019 14:35:53 -0800
+Message-ID: <CAFd5g46VZ10FeKJspSQXWc+zHervGQk5brOxei+S53OO5kYfTQ@mail.gmail.com>
+Subject: Re: [PATCH 0/6] Fix nits in the kunit
+To:     SeongJae Park <sj38.park@gmail.com>
+Cc:     Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        SeongJae Park <sjpark@amazon.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 2:22 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+On Tue, Dec 3, 2019 at 10:11 AM SeongJae Park <sj38.park@gmail.com> wrote:
 >
-> Hi,
+> On Tue, Dec 3, 2019 at 6:45 PM Brendan Higgins
+> <brendanhiggins@google.com> wrote:
+> >
+> > On Tue, Dec 3, 2019 at 12:26 AM SeongJae Park <sj38.park@gmail.com> wrote:
+> > >
+> > > You're right, the error was due to the assumption of the existence of the
+> > > build_dir.  The "kunit: Create default config in '--build_dir'" patch made the
+> > > bug.  I fixed it in the second version patchset[1].
+> > >
+> > > [1] https://lore.kernel.org/linux-doc/1575361141-6806-1-git-send-email-sj38.park@gmail.com/
+> >
+> > After trying your new patches, I am still getting the
+> > "FileNotFoundError" when the given build_dir has not been created.
 >
-> On Fri, Nov 29, 2019 at 12:35:05PM +0530, Harigovindan P wrote:
-> > Changes in v1:
-> >       -Modify commit text to indicate DSI version and SOC detail(Jeffrey Hugo).
-> >       -Splitting visionox panel driver code out into a
-> >        different patch(set), since panel drivers are merged into
-> >        drm-next via a different tree(Rob Clark).
+> Sorry, apparently my mistake...  Sent v3 fixing it:
+> https://lore.kernel.org/linux-kselftest/1575396508-21480-1-git-send-email-sj38.park@gmail.com/T/#t
+
+Awesome, looks like that works now!
+
+Thanks for taking care of this!
+
+> Thanks,
+> SeongJae Park
 >
-> The change log shouldn't be part of the commit message, please place it
-> after the '---' separator.
-
-jfyi, the changelog and version #'s showing up in final commit msg is
-one thing that drm does differently from other parts of the kernel.
-So it is ok to keep the changelog before "---".
-
-But agreed about the need for a commit message (in addition to just
-the changelog)
-
-BR,
--R
-
-> I think at least a one line commit message besides the subject is
-> mandatory, so if you move the change log down you'll have to add
-> some short summary.
 >
-> > Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
-> > ---
-> >  drivers/gpu/drm/msm/dsi/dsi_cfg.c | 21 +++++++++++++++++++++
-> >  drivers/gpu/drm/msm/dsi/dsi_cfg.h |  1 +
-> >  2 files changed, 22 insertions(+)
 > >
-> > diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.c b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-> > index b7b7c1a..7b967dd 100644
-> > --- a/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-> > +++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-> > @@ -133,6 +133,10 @@ static const char * const dsi_sdm845_bus_clk_names[] = {
-> >       "iface", "bus",
-> >  };
-> >
-> > +static const char * const dsi_sc7180_bus_clk_names[] = {
-> > +     "iface", "bus",
-> > +};
-> > +
-> >  static const struct msm_dsi_config sdm845_dsi_cfg = {
-> >       .io_offset = DSI_6G_REG_SHIFT,
-> >       .reg_cfg = {
-> > @@ -147,6 +151,20 @@ static const struct msm_dsi_config sdm845_dsi_cfg = {
-> >       .num_dsi = 2,
-> >  };
-> >
-> > +static const struct msm_dsi_config sc7180_dsi_cfg = {
-> > +     .io_offset = DSI_6G_REG_SHIFT,
-> > +     .reg_cfg = {
-> > +             .num = 1,
-> > +             .regs = {
-> > +                     {"vdda", 21800, 4 },    /* 1.2 V */
-> > +             },
-> > +     },
-> > +     .bus_clk_names = dsi_sc7180_bus_clk_names,
-> > +     .num_bus_clks = ARRAY_SIZE(dsi_sc7180_bus_clk_names),
-> > +     .io_start = { 0xae94000 },
-> > +     .num_dsi = 1,
-> > +};
-> > +
-> >  const static struct msm_dsi_host_cfg_ops msm_dsi_v2_host_ops = {
-> >       .link_clk_enable = dsi_link_clk_enable_v2,
-> >       .link_clk_disable = dsi_link_clk_disable_v2,
-> > @@ -201,6 +219,9 @@ static const struct msm_dsi_cfg_handler dsi_cfg_handlers[] = {
-> >               &msm8998_dsi_cfg, &msm_dsi_6g_v2_host_ops},
-> >       {MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_2_1,
-> >               &sdm845_dsi_cfg, &msm_dsi_6g_v2_host_ops},
-> > +     {MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_4_1,
-> > +             &sc7180_dsi_cfg, &msm_dsi_6g_v2_host_ops},
-> > +
-> >  };
-> >
-> >  const struct msm_dsi_cfg_handler *msm_dsi_cfg_get(u32 major, u32 minor)
-> > diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.h b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
-> > index e2b7a7d..9919536 100644
-> > --- a/drivers/gpu/drm/msm/dsi/dsi_cfg.h
-> > +++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
-> > @@ -19,6 +19,7 @@
-> >  #define MSM_DSI_6G_VER_MINOR_V1_4_1  0x10040001
-> >  #define MSM_DSI_6G_VER_MINOR_V2_2_0  0x20000000
-> >  #define MSM_DSI_6G_VER_MINOR_V2_2_1  0x20020001
-> > +#define MSM_DSI_6G_VER_MINOR_V2_4_1  0x20040001
-> >
-> >  #define MSM_DSI_V2_VER_MINOR_8064    0x0
-> >
-> > --
-> > 2.7.4
-> >
+> > > Thanks,
+> > > SeongJae Park
+> > >
+> > > On Tue, Dec 3, 2019 at 8:10 AM SeongJae Park <sj38.park@gmail.com> wrote:
+> > > >
+> > > > On Tue, Dec 3, 2019 at 8:00 AM Brendan Higgins
+> > > > <brendanhiggins@google.com> wrote:
+> > > > >
+> > > > > On Mon, Dec 02, 2019 at 08:25:18AM +0900, SeongJae Park wrote:
+> > > > > > From: SeongJae Park <sjpark@amazon.de>
+> > > > > >
+> > > > > > This patchset contains trivial fixes for the kunit documentations and the
+> > > > > > wrapper python scripts.
+> > > > > >
+> > > > > > SeongJae Park (6):
+> > > > > >   docs/kunit/start: Use in-tree 'kunit_defconfig'
+> > > > > >   docs/kunit/start: Skip wrapper run command
+> > > > > >   kunit: Remove duplicated defconfig creation
+> > > > > >   kunit: Create default config in 'build_dir'
+> > > > > >   kunit: Place 'test.log' under the 'build_dir'
+> > > > > >   kunit: Rename 'kunitconfig' to '.kunitconfig'
+> > > > > >
+> > > > > >  Documentation/dev-tools/kunit/start.rst | 19 +++++--------------
+> > > > > >  tools/testing/kunit/kunit.py            | 10 ++++++----
+> > > > > >  tools/testing/kunit/kunit_kernel.py     |  6 +++---
+> > > > > >  3 files changed, 14 insertions(+), 21 deletions(-)
+> > > > >
+> > > > > I applied your patchset to torvalds/master, ran the command:
+> > > > >
+> > > > > tools/testing/kunit/kunit.py run --timeout=60 --jobs=8 --defconfig --build_dir=.kunit
+> > > > >
+> > > > > and got the error:
+> > > > >
+> > > > > Traceback (most recent call last):
+> > > > >   File "tools/testing/kunit/kunit.py", line 140, in <module>
+> > > > >     main(sys.argv[1:])
+> > > > >   File "tools/testing/kunit/kunit.py", line 123, in main
+> > > > >     create_default_kunitconfig()
+> > > > >   File "tools/testing/kunit/kunit.py", line 36, in create_default_kunitconfig
+> > > > >     kunit_kernel.KUNITCONFIG_PATH)
+> > > > >   File "/usr/lib/python3.7/shutil.py", line 121, in copyfile
+> > > > >     with open(dst, 'wb') as fdst:
+> > > > > FileNotFoundError: [Errno 2] No such file or directory: '.kunit/.kunitconfig'
+> > > > >
+> > > > > It seems that it expects the build_dir to already exist; however, I
+> > > > > don't think this is clear from the error message. Would you mind
+> > > > > addressing that here?
+> > > >
+> > > > Thank you for sharing this.  I will take a look!
+> > > >
+> > > >
+> > > > Thanks,
+> > > > SeongJae Park
+> > > > >
+> > > > > Cheers!
