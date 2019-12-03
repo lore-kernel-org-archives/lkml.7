@@ -2,51 +2,53 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	PDS_BTC_ID,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF3AC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 193E4C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7ECE2053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFA792158C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413776;
-	bh=2QDZ0dMDTHhItPAm/DVEGvPgpkbqGQphOwS5UzWuQL8=;
+	s=default; t=1575413777;
+	bh=wmuwLo9bIBTT0JivJn4LAhmhc3tLHqU1eGFflp9iTqU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hjSARIgTqf8UwpLZrEfr8q6wkgvh3jV3bG9J8kZGaQuryMzRdkgmOXfvlvbc8+92S
-	 3MjtQgEOlA8OjjqcK0ZaDQtrtFAZhSq4OwgJ+FAx/CtcZzzD+joHYSQUHWqaK0+aPD
-	 mrDDN4jvqC62ak7ZXYKZ54wM23AIwZyY3w2xWFAQ=
+	b=wG8hjKGI+8wEFiwPI1uF/jwc5n73t9S6UacdElrbLaU2M80YWdTBqSiOY2/sQrVZb
+	 vKefvS6r0DJSY0c2OOEwpHsJC7Ecz6yNydQGNBXqdm2F8/WJ1na6qKjrGlqD9lSoIS
+	 L0Mve6b4gUz2oKfdSvJx0urJUlFI3c6YV4tknzBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730413AbfLCW4O (ORCPT
+        id S1730418AbfLCW4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:56:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50954 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:56:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729945AbfLCW4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:56:11 -0500
+        id S1730217AbfLCW4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:56:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94BB72053B;
-        Tue,  3 Dec 2019 22:56:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 152E120656;
+        Tue,  3 Dec 2019 22:56:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413770;
-        bh=2QDZ0dMDTHhItPAm/DVEGvPgpkbqGQphOwS5UzWuQL8=;
+        s=default; t=1575413772;
+        bh=wmuwLo9bIBTT0JivJn4LAhmhc3tLHqU1eGFflp9iTqU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ph0OySAyVA9/6UniSEvpke1u0tREPclu+ii3BFkxev4fftblc7I2KYULCb6kwHjck
-         QnTJH/ny/DJ0nSdBdjtX7F+fFG28PODyC9P02VkQrkZhjmUUidGGLr+Tc+6HREP7KA
-         fU4Iax1Je8aObo2KSQdT3+7Mf/Y2/c8NwQY7ZtHw=
+        b=nOW5Ga3GMWjFCoKlnc/IY2zVvb+iOib7bijATZ72Y8CwG5meN0JljvwafyajvKJgl
+         2mTmMEA2060cnqQhHhiVRdD3X8BEIAomH0IlGb9KqBylo4Gs5MBpYZE1epZxW2oNKU
+         vxVQHFLTFfWuX/XkmpfG72ABR2G0clN9Kkg+N+IY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 216/321] ata: ahci: mvebu: do Armada 38x configuration only on relevant SoCs
-Date:   Tue,  3 Dec 2019 23:34:42 +0100
-Message-Id: <20191203223438.356530142@linuxfoundation.org>
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, Jens Axboe <axboe@fb.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 217/321] PCI/MSI: Return -ENOSPC from pci_alloc_irq_vectors_affinity()
+Date:   Tue,  3 Dec 2019 23:34:43 +0100
+Message-Id: <20191203223438.408663775@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -59,156 +61,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit 96dbcb40e4b1a387cdb9b21f43638c759aebb5a4 ]
+[ Upstream commit 77f88abd4a6f73a1a68dbdc0e3f21575fd508fc3 ]
 
-At the beginning, only Armada 38x SoCs where supported by the
-ahci_mvebu.c driver. Commit 15d3ce7b63bd ("ata: ahci_mvebu: add
-support for Armada 3700 variant") introduced Armada 3700 support. As
-opposed to Armada 38x SoCs, the 3700 variants do not have to configure
-mbus and the regret option. This patch took care of avoiding such
-configuration when not needed in the probe function, but failed to do
-the same in the resume path. While doing so looks harmless by
-experience, let's clean the driver logic and avoid doing this useless
-configuration with Armada 3700 SoCs.
+The API of pci_alloc_irq_vectors_affinity() says it returns -ENOSPC if
+fewer than @min_vecs interrupt vectors are available for @dev.
 
-Because the logic is very similar between these two places, it has
-been decided to factorize this code and put it in a "Armada 38x
-configuration function". This function is part of a new
-(per-compatible) platform data structure, so that the addition of such
-configuration function for Armada 3700 will be eased.
+However, if a device supports MSI-X but not MSI and a caller requests
+@min_vecs that can't be satisfied by MSI-X, we previously returned -EINVAL
+(from the failed attempt to enable MSI), not -ENOSPC.
 
-Fixes: 15d3ce7b63bd ("ata: ahci_mvebu: add support for Armada 3700 variant")
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+When -ENOSPC is returned, callers may reduce the number IRQs they request
+and try again.  Most callers can use the @min_vecs and @max_vecs
+parameters to avoid this retry loop, but that doesn't work when using IRQ
+affinity "nr_sets" because rebalancing the sets is driver-specific.
+
+This return value bug has been present since pci_alloc_irq_vectors() was
+added in v4.10 by aff171641d18 ("PCI: Provide sensible IRQ vector
+alloc/free routines"), but it wasn't an issue because @min_vecs/@max_vecs
+removed the need for callers to iteratively reduce the number of IRQs
+requested and retry the allocation, so they didn't need to distinguish
+-ENOSPC from -EINVAL.
+
+In v5.0, 6da4b3ab9a6e ("genirq/affinity: Add support for allocating
+interrupt sets") added IRQ sets to the interface, which reintroduced the
+need to check for -ENOSPC and possibly reduce the number of IRQs requested
+and retry the allocation.
+
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+[bhelgaas: changelog]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Jens Axboe <axboe@fb.com>
+Cc: Keith Busch <keith.busch@intel.com>
+Cc: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/ahci_mvebu.c | 68 ++++++++++++++++++++++++++++++----------
- 1 file changed, 51 insertions(+), 17 deletions(-)
+ drivers/pci/msi.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/ata/ahci_mvebu.c b/drivers/ata/ahci_mvebu.c
-index f9cb51be38ebf..a54214291481f 100644
---- a/drivers/ata/ahci_mvebu.c
-+++ b/drivers/ata/ahci_mvebu.c
-@@ -28,6 +28,10 @@
- #define AHCI_WINDOW_BASE(win)	(0x64 + ((win) << 4))
- #define AHCI_WINDOW_SIZE(win)	(0x68 + ((win) << 4))
- 
-+struct ahci_mvebu_plat_data {
-+	int (*plat_config)(struct ahci_host_priv *hpriv);
-+};
-+
- static void ahci_mvebu_mbus_config(struct ahci_host_priv *hpriv,
- 				   const struct mbus_dram_target_info *dram)
+diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+index af24ed50a2452..971dddf62374f 100644
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -1155,7 +1155,8 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+ 				   const struct irq_affinity *affd)
  {
-@@ -62,6 +66,22 @@ static void ahci_mvebu_regret_option(struct ahci_host_priv *hpriv)
- 	writel(0x80, hpriv->mmio + AHCI_VENDOR_SPECIFIC_0_DATA);
- }
+ 	static const struct irq_affinity msi_default_affd;
+-	int vecs = -ENOSPC;
++	int msix_vecs = -ENOSPC;
++	int msi_vecs = -ENOSPC;
  
-+static int ahci_mvebu_armada_380_config(struct ahci_host_priv *hpriv)
-+{
-+	const struct mbus_dram_target_info *dram;
-+	int rc = 0;
-+
-+	dram = mv_mbus_dram_info();
-+	if (dram)
-+		ahci_mvebu_mbus_config(hpriv, dram);
-+	else
-+		rc = -ENODEV;
-+
-+	ahci_mvebu_regret_option(hpriv);
-+
-+	return rc;
-+}
-+
- /**
-  * ahci_mvebu_stop_engine
-  *
-@@ -126,13 +146,10 @@ static int ahci_mvebu_resume(struct platform_device *pdev)
- {
- 	struct ata_host *host = platform_get_drvdata(pdev);
- 	struct ahci_host_priv *hpriv = host->private_data;
--	const struct mbus_dram_target_info *dram;
-+	const struct ahci_mvebu_plat_data *pdata = hpriv->plat_data;
- 
--	dram = mv_mbus_dram_info();
--	if (dram)
--		ahci_mvebu_mbus_config(hpriv, dram);
--
--	ahci_mvebu_regret_option(hpriv);
-+	if (pdata->plat_config)
-+		pdata->plat_config(hpriv);
- 
- 	return ahci_platform_resume_host(&pdev->dev);
- }
-@@ -154,28 +171,31 @@ static struct scsi_host_template ahci_platform_sht = {
- 
- static int ahci_mvebu_probe(struct platform_device *pdev)
- {
-+	const struct ahci_mvebu_plat_data *pdata;
- 	struct ahci_host_priv *hpriv;
--	const struct mbus_dram_target_info *dram;
- 	int rc;
- 
-+	pdata = of_device_get_match_data(&pdev->dev);
-+	if (!pdata)
-+		return -EINVAL;
-+
- 	hpriv = ahci_platform_get_resources(pdev, 0);
- 	if (IS_ERR(hpriv))
- 		return PTR_ERR(hpriv);
- 
-+	hpriv->plat_data = (void *)pdata;
-+
- 	rc = ahci_platform_enable_resources(hpriv);
- 	if (rc)
- 		return rc;
- 
- 	hpriv->stop_engine = ahci_mvebu_stop_engine;
- 
--	if (of_device_is_compatible(pdev->dev.of_node,
--				    "marvell,armada-380-ahci")) {
--		dram = mv_mbus_dram_info();
--		if (!dram)
--			return -ENODEV;
--
--		ahci_mvebu_mbus_config(hpriv, dram);
--		ahci_mvebu_regret_option(hpriv);
-+	pdata = hpriv->plat_data;
-+	if (pdata->plat_config) {
-+		rc = pdata->plat_config(hpriv);
-+		if (rc)
-+			goto disable_resources;
+ 	if (flags & PCI_IRQ_AFFINITY) {
+ 		if (!affd)
+@@ -1166,16 +1167,17 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
  	}
  
- 	rc = ahci_platform_init_host(pdev, hpriv, &ahci_mvebu_port_info,
-@@ -190,9 +210,23 @@ disable_resources:
- 	return rc;
- }
+ 	if (flags & PCI_IRQ_MSIX) {
+-		vecs = __pci_enable_msix_range(dev, NULL, min_vecs, max_vecs,
+-				affd);
+-		if (vecs > 0)
+-			return vecs;
++		msix_vecs = __pci_enable_msix_range(dev, NULL, min_vecs,
++						    max_vecs, affd);
++		if (msix_vecs > 0)
++			return msix_vecs;
+ 	}
  
-+static const struct ahci_mvebu_plat_data ahci_mvebu_armada_380_plat_data = {
-+	.plat_config = ahci_mvebu_armada_380_config,
-+};
-+
-+static const struct ahci_mvebu_plat_data ahci_mvebu_armada_3700_plat_data = {
-+	.plat_config = NULL,
-+};
-+
- static const struct of_device_id ahci_mvebu_of_match[] = {
--	{ .compatible = "marvell,armada-380-ahci", },
--	{ .compatible = "marvell,armada-3700-ahci", },
-+	{
-+		.compatible = "marvell,armada-380-ahci",
-+		.data = &ahci_mvebu_armada_380_plat_data,
-+	},
-+	{
-+		.compatible = "marvell,armada-3700-ahci",
-+		.data = &ahci_mvebu_armada_3700_plat_data,
-+	},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, ahci_mvebu_of_match);
+ 	if (flags & PCI_IRQ_MSI) {
+-		vecs = __pci_enable_msi_range(dev, min_vecs, max_vecs, affd);
+-		if (vecs > 0)
+-			return vecs;
++		msi_vecs = __pci_enable_msi_range(dev, min_vecs, max_vecs,
++						  affd);
++		if (msi_vecs > 0)
++			return msi_vecs;
+ 	}
+ 
+ 	/* use legacy irq if allowed */
+@@ -1186,7 +1188,9 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+ 		}
+ 	}
+ 
+-	return vecs;
++	if (msix_vecs == -ENOSPC)
++		return -ENOSPC;
++	return msi_vecs;
+ }
+ EXPORT_SYMBOL(pci_alloc_irq_vectors_affinity);
+ 
 -- 
 2.20.1
 
