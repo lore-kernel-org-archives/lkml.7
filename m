@@ -2,200 +2,135 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA93BC43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4EBC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BAEE2080F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C13F2080F
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:15:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbfLCHNp (ORCPT
+        id S1727426AbfLCHPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 02:13:45 -0500
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:62540 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727372AbfLCHNp (ORCPT
+        Tue, 3 Dec 2019 02:15:42 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36115 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727372AbfLCHPm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 02:13:45 -0500
-Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
-  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="Ludovic.Desroches@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa1.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: NBb0poChIeNC2g1/pnmYb12a4nso2OzZoC3QHgHdbzwTLpzTj+1VhA6MtmStdfI/rvmfXnmcCb
- pZxIRfYXKCmE5CAtiiwL+wr1n5Rm4yfD5+zk2Zq/X9bOfalkcii/IAcI2wCAOVSt9+7rpPDzjY
- n+IKIyWIFFshpYdihDcwsXNpAqC42yMINrjN1vxVJKHfKLLp45wYy1THgozqsn67MNGHqhXPPI
- 8qRD/jvBGp5IjXQaY9SkyLit0tKzQOt0DHiH8Xeq0AhLqwEE7s5OLUCShtTzd8CnzHOdopg0bk
- 8Bo=
-X-IronPort-AV: E=Sophos;i="5.69,272,1571727600"; 
-   d="scan'208";a="60401245"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Dec 2019 00:13:43 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 3 Dec 2019 00:13:42 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Tue, 3 Dec 2019 00:13:41 -0700
-Date:   Tue, 3 Dec 2019 08:13:32 +0100
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "wsa@the-dreams.de" <wsa@the-dreams.de>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
+        Tue, 3 Dec 2019 02:15:42 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ic2PI-00049O-93; Tue, 03 Dec 2019 08:15:36 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ic2PG-0006X3-VR; Tue, 03 Dec 2019 08:15:34 +0100
+Date:   Tue, 3 Dec 2019 08:15:34 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "rjui@broadcom.com" <rjui@broadcom.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peda@axentia.se" <peda@axentia.se>,
-        "Codrin Ciubotariu - M19940" <Codrin.Ciubotariu@microchip.com>,
-        Nicolas Ferre - M43238 <Nicolas.Ferre@microchip.com>
-Subject: Re: [PATCH 3/3] i2c: at91: remote default value initialization
-Message-ID: <20191203071332.zwpmeb65g7e7ckmj@M43218.corp.atmel.com>
-Mail-Followup-To: Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "wsa@the-dreams.de" <wsa@the-dreams.de>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peda@axentia.se" <peda@axentia.se>,
-        Codrin Ciubotariu - M19940 <Codrin.Ciubotariu@microchip.com>,
-        Nicolas Ferre - M43238 <Nicolas.Ferre@microchip.com>
-References: <1575276957-5615-1-git-send-email-eugen.hristev@microchip.com>
- <1575276957-5615-3-git-send-email-eugen.hristev@microchip.com>
+        Alice Guo <alice.guo@nxp.com>
+Subject: Re: [PATCH 2/2] gpio: bcm-kona: use platform_irq_count
+Message-ID: <20191203071534.zqxlizjkav4ul2n5@pengutronix.de>
+References: <1575352925-17271-1-git-send-email-peng.fan@nxp.com>
+ <1575352925-17271-2-git-send-email-peng.fan@nxp.com>
+ <20191203065751.w23dypag4745qv7i@pengutronix.de>
+ <AM0PR04MB4481AD45530915B0BA18C45F88420@AM0PR04MB4481.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1575276957-5615-3-git-send-email-eugen.hristev@microchip.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM0PR04MB4481AD45530915B0BA18C45F88420@AM0PR04MB4481.eurprd04.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 09:56:41AM +0100, Eugen Hristev - M18282 wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
+On Tue, Dec 03, 2019 at 07:00:40AM +0000, Peng Fan wrote:
+> > Subject: Re: [PATCH 2/2] gpio: bcm-kona: use platform_irq_count
+> > 
+> > On Tue, Dec 03, 2019 at 06:04:27AM +0000, Peng Fan wrote:
+> > > From: Peng Fan <peng.fan@nxp.com>
+> > >
+> > > Use platform_irq_count to replace of_irq_count
+> > >
+> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > ---
+> > >
+> > > V1:
+> > >  Code inspection, not tested
+> > >
+> > >  drivers/gpio/gpio-bcm-kona.c | 3 +--
+> > >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/gpio/gpio-bcm-kona.c
+> > > b/drivers/gpio/gpio-bcm-kona.c index 4122683eb1f9..c50721980a7c
+> > 100644
+> > > --- a/drivers/gpio/gpio-bcm-kona.c
+> > > +++ b/drivers/gpio/gpio-bcm-kona.c
+> > > @@ -19,7 +19,6 @@
+> > >  #include <linux/io.h>
+> > >  #include <linux/gpio/driver.h>
+> > >  #include <linux/of_device.h>
+> > > -#include <linux/of_irq.h>
+> > >  #include <linux/init.h>
+> > >  #include <linux/irqdomain.h>
+> > >  #include <linux/irqchip/chained_irq.h> @@ -586,7 +585,7 @@ static int
+> > > bcm_kona_gpio_probe(struct platform_device *pdev)
+> > >
+> > >  	kona_gpio->gpio_chip = template_chip;
+> > >  	chip = &kona_gpio->gpio_chip;
+> > > -	kona_gpio->num_bank = of_irq_count(dev->of_node);
+> > > +	kona_gpio->num_bank = platform_irq_count(pdev);
+> > 
+> > of_irq_count returns 0 or a positive int while platform_irq_count might return
+> > a negative error code. This needs handling. Also I wonder why
+> > platform_irq_count() is better than of_irq_count() which would be good to
+> > describe in the commit log.
 > 
-> Platform data structs are initialized by default with zero values.
-> Thus it becomes redundant to initialize them manually to zero (false).
-> Remove extra false initialization for field members in structs.
+> Inspired from https://lkml.org/lkml/2015/11/18/466
+> From Rob:
+> "
+> So I started looking at why you are using of_irq_count which drivers
+> shouldn't need to. In patch 5 you use it to allocate memory to store
+> the irq names, then use them here...
+> "
 > 
-> Suggested-by: Wolfram Sang <wsa@the-dreams.de>
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> Is this ok?
 
-Honestly, I prefer an explicit description than saving lines of code, in
-a glance you have all the details, don't need to go back to the
-structure definition.
+I would say something like:
 
-As it's a personal belief, I won't argue about it.
-Reviewed-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+	platform_irq_count() is the more generic way (independent of
+	device trees) to determine the count of available interrupts. So
+	use this instead.
 
-> ---
->  drivers/i2c/busses/i2c-at91-core.c | 39 --------------------------------------
->  1 file changed, 39 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-at91-core.c b/drivers/i2c/busses/i2c-at91-core.c
-> index 5137e62..3da1a8a 100644
-> --- a/drivers/i2c/busses/i2c-at91-core.c
-> +++ b/drivers/i2c/busses/i2c-at91-core.c
-> @@ -66,55 +66,26 @@ static struct at91_twi_pdata at91rm9200_config = {
->  	.clk_max_div = 5,
->  	.clk_offset = 3,
->  	.has_unre_flag = true,
-> -	.has_alt_cmd = false,
-> -	.has_hold_field = false,
-> -	.has_dig_filtr = false,
-> -	.has_adv_dig_filtr = false,
-> -	.has_ana_filtr = false,
->  };
->  
->  static struct at91_twi_pdata at91sam9261_config = {
->  	.clk_max_div = 5,
->  	.clk_offset = 4,
-> -	.has_unre_flag = false,
-> -	.has_alt_cmd = false,
-> -	.has_hold_field = false,
-> -	.has_dig_filtr = false,
-> -	.has_adv_dig_filtr = false,
-> -	.has_ana_filtr = false,
->  };
->  
->  static struct at91_twi_pdata at91sam9260_config = {
->  	.clk_max_div = 7,
->  	.clk_offset = 4,
-> -	.has_unre_flag = false,
-> -	.has_alt_cmd = false,
-> -	.has_hold_field = false,
-> -	.has_dig_filtr = false,
-> -	.has_adv_dig_filtr = false,
-> -	.has_ana_filtr = false,
->  };
->  
->  static struct at91_twi_pdata at91sam9g20_config = {
->  	.clk_max_div = 7,
->  	.clk_offset = 4,
-> -	.has_unre_flag = false,
-> -	.has_alt_cmd = false,
-> -	.has_hold_field = false,
-> -	.has_dig_filtr = false,
-> -	.has_adv_dig_filtr = false,
-> -	.has_ana_filtr = false,
->  };
->  
->  static struct at91_twi_pdata at91sam9g10_config = {
->  	.clk_max_div = 7,
->  	.clk_offset = 4,
-> -	.has_unre_flag = false,
-> -	.has_alt_cmd = false,
-> -	.has_hold_field = false,
-> -	.has_dig_filtr = false,
-> -	.has_adv_dig_filtr = false,
-> -	.has_ana_filtr = false,
->  };
->  
->  static const struct platform_device_id at91_twi_devtypes[] = {
-> @@ -142,23 +113,13 @@ static const struct platform_device_id at91_twi_devtypes[] = {
->  static struct at91_twi_pdata at91sam9x5_config = {
->  	.clk_max_div = 7,
->  	.clk_offset = 4,
-> -	.has_unre_flag = false,
-> -	.has_alt_cmd = false,
-> -	.has_hold_field = false,
-> -	.has_dig_filtr = false,
-> -	.has_adv_dig_filtr = false,
-> -	.has_ana_filtr = false,
->  };
->  
->  static struct at91_twi_pdata sama5d4_config = {
->  	.clk_max_div = 7,
->  	.clk_offset = 4,
-> -	.has_unre_flag = false,
-> -	.has_alt_cmd = false,
->  	.has_hold_field = true,
->  	.has_dig_filtr = true,
-> -	.has_adv_dig_filtr = false,
-> -	.has_ana_filtr = false,
->  };
->  
->  static struct at91_twi_pdata sama5d2_config = {
-> -- 
-> 2.7.4
-> 
+	As platform_irq_count() might return an error code (which
+	of_irq_count doesn't) some additional handling is necessary.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
