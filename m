@@ -2,97 +2,107 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED5D5C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E766FC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7BC620661
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDF9720661
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:56:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbfLCI4w (ORCPT
+        id S1726388AbfLCI44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 03:56:52 -0500
-Received: from smtprelay0117.hostedemail.com ([216.40.44.117]:37562 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725773AbfLCI4w (ORCPT
+        Tue, 3 Dec 2019 03:56:56 -0500
+Received: from retiisi.org.uk ([95.216.213.190]:45754 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725773AbfLCI4y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 03:56:52 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id A8A5718037C64;
-        Tue,  3 Dec 2019 08:56:50 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: taste11_3b9cb87ae0b31
-X-Filterd-Recvd-Size: 2898
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf18.hostedemail.com (Postfix) with ESMTPA;
-        Tue,  3 Dec 2019 08:56:49 +0000 (UTC)
-Message-ID: <ea57f41e30f962227855d4f60a93c89a6bf0b2f0.camel@perches.com>
-Subject: Re: [PATCH] checkpatch: Look for Kconfig indentation errors
-From:   Joe Perches <joe@perches.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Date:   Tue, 03 Dec 2019 00:56:16 -0800
-In-Reply-To: <CAJKOXPdqn7+ucwqu2vJFL9ggCerpBz1qN6BSJvcsi4BQ3DU6fg@mail.gmail.com>
-References: <1574906800-19901-1-git-send-email-krzk@kernel.org>
-         <87a78gnyaz.fsf@intel.com>
-         <ab3309596fac1c5a0cb4e0abed0cf1ee7ac13a3d.camel@perches.com>
-         <CAJKOXPdqn7+ucwqu2vJFL9ggCerpBz1qN6BSJvcsi4BQ3DU6fg@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Tue, 3 Dec 2019 03:56:54 -0500
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 3C202634C89;
+        Tue,  3 Dec 2019 10:56:05 +0200 (EET)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1ic3yW-0001Nf-SG; Tue, 03 Dec 2019 10:56:04 +0200
+Date:   Tue, 3 Dec 2019 10:56:04 +0200
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, c.barrett@framos.com,
+        a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH 4/5] media: i2c: imx290: Add support to enumerate all
+ frame sizes
+Message-ID: <20191203085604.GC5282@valkosipuli.retiisi.org.uk>
+References: <20191129190541.30315-1-manivannan.sadhasivam@linaro.org>
+ <20191129190541.30315-5-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191129190541.30315-5-manivannan.sadhasivam@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-12-03 at 16:40 +0800, Krzysztof Kozlowski wrote:
-> On Thu, 28 Nov 2019 at 17:35, Joe Perches <joe@perches.com> wrote:
-> > On Thu, 2019-11-28 at 11:29 +0200, Jani Nikula wrote:
-> > > On Thu, 28 Nov 2019, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > > > Kconfig should be indented with one tab for first level and tab+2 spaces
-> > > > for second level.  There are many mixups of this so add a checkpatch
-> > > > rule.
-> > > > 
-> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > 
-> > > I agree unifying the indentation is nice, and without something like
-> > > this it'll start bitrotting before Krzysztof's done fixing them all... I
-> > > think there's been quite a few fixes merged lately.
-> > > 
-> > > I approve of the idea, but I'm clueless about the implementation.
-> > 
-> > I think that a grammar, or a least an array of words
-> > that are supposed to start on a tab should be used here.
+On Sat, Nov 30, 2019 at 12:35:40AM +0530, Manivannan Sadhasivam wrote:
+> Add support to enumerate all frame sizes supported by IMX290. This is
+> required for using with userspace tools such as libcamera.
 > 
-> This won't work for wrong indentation of help text. This is quite
-> popular Kconfig indentation violation so worth checking. I can then
-> check for:
-> 1. any white-space violations before array of Kconfig words - that
-> 2. spaces mixed with tab before any text,
-> 3. just spaces before any text,
-> 4. tab + wrong number of spaces before any text.
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  drivers/media/i2c/imx290.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
 > 
-> It would look like:
-> +               if ($realfile =~ /Kconfig/ &&
-> +                   (($rawline =~
-> /^\+\s+(?:config|menuconfig|choice|endchoice|if|endif|menu|endmenu|source|bool|tristate|prompt|help|---help---|depends|select)\b/
+> diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
+> index d5bb3a59ac46..f26c4a0ee0a0 100644
+> --- a/drivers/media/i2c/imx290.c
+> +++ b/drivers/media/i2c/imx290.c
+> @@ -468,6 +468,25 @@ static int imx290_enum_mbus_code(struct v4l2_subdev *sd,
+>  	return 0;
+>  }
+>  
+> +static int imx290_enum_frame_size(struct v4l2_subdev *subdev,
+> +				  struct v4l2_subdev_pad_config *cfg,
+> +				  struct v4l2_subdev_frame_size_enum *fse)
+> +{
+> +	if ((fse->code != imx290_formats[0].code) &&
+> +	    (fse->code != imx290_formats[1].code))
 
-Many of these are not correct.
+Please use a loop over imx290_formats instead.
 
-config, menuconfig, choice, endchoice, source
-are primarily used at the beginning of a line.
+> +		return -EINVAL;
+> +
+> +	if (fse->index >= ARRAY_SIZE(imx290_modes))
+> +		return -EINVAL;
+> +
+> +	fse->min_width = imx290_modes[fse->index].width;
+> +	fse->max_width = imx290_modes[fse->index].width;
+> +	fse->min_height = imx290_modes[fse->index].height;
+> +	fse->max_height = imx290_modes[fse->index].height;
+> +
+> +	return 0;
+> +}
+> +
+>  static int imx290_get_fmt(struct v4l2_subdev *sd,
+>  			  struct v4l2_subdev_pad_config *cfg,
+>  			  struct v4l2_subdev_format *fmt)
+> @@ -820,6 +839,7 @@ static const struct v4l2_subdev_video_ops imx290_video_ops = {
+>  static const struct v4l2_subdev_pad_ops imx290_pad_ops = {
+>  	.init_cfg = imx290_entity_init_cfg,
+>  	.enum_mbus_code = imx290_enum_mbus_code,
+> +	.enum_frame_size = imx290_enum_frame_size,
+>  	.get_fmt = imx290_get_fmt,
+>  	.set_fmt = imx290_set_fmt,
+>  };
 
-if is odd as it's a logical block or test
+-- 
+Regards,
 
-It really needs a lex grammar to work properly.
-
-
-
+Sakari Ailus
