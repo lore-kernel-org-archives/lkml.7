@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F84C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADA1C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D9CC207DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DB6C20684
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412702;
-	bh=TJJCm1bg5b4jb297/34u1huue70jcy5oQ7aBzKWfPZY=;
+	s=default; t=1575412705;
+	bh=X0xSGi6xT4B5606Mrh/tfrSpMoE/QoK7hRlEwjUTq+s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yNpD2yzaRm1kekywk0Cwc1J0PTyQQd4//TR5M3aF2gGcp29SqpDDmTqgOXSJ1y9cE
-	 drnMnPPLE3jxsQjXikYyJS4zlNBBsDx1l/7wuhcudEB7nq4UdCmlEYzk6Ba+bd4ytX
-	 og4v32IoX82nqiuppoxafQBLHyos8B4R4HLZAlqM=
+	b=R/aUE0OezVrNesyEIFqYEFfdWzoNZPdFMI92jk5CTLGFyVV7sZtvb6ohYr9lpkTFV
+	 egHUD6Ognwqghn5ahFo15ItaznmIk9gvGOvK4MqlhE9CZInAV7Z4oPitb3rHfEuGA1
+	 Xc1b4Z4J3Pm54lqvB6tNozKaIapbSAqjGZsswFx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727974AbfLCWiT (ORCPT
+        id S1727984AbfLCWiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:38:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47182 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:38:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727953AbfLCWiR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:38:17 -0500
+        id S1727969AbfLCWiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:38:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B345E207DD;
-        Tue,  3 Dec 2019 22:38:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AFE720862;
+        Tue,  3 Dec 2019 22:38:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412696;
-        bh=TJJCm1bg5b4jb297/34u1huue70jcy5oQ7aBzKWfPZY=;
+        s=default; t=1575412698;
+        bh=X0xSGi6xT4B5606Mrh/tfrSpMoE/QoK7hRlEwjUTq+s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fw2lPM7dPT2DeY+plpzIi1k9T6yajZqgAAkm/zFRndkisbsAvg54pyTT5U8MVIFdf
-         c4jR+DG+K+5//cOSSNXEzIJp1FBoSWtwBgxB3cLoC5lJuWzFySyWCvN2SIyttuM8hf
-         WYXMbRmomhns3CnIbsf+26mNbq4vBclR8T60Bisg=
+        b=iTGhNi0q/HIFNYvcd6jPm3l/9+3gC2dhft5MkXFwMkZqA9lmJ+GcDMJAijLRpxe13
+         beUDjg/yIQpG7+EecGSVb7V9sOSRgDOU+F6+hozPKdKqFttfzs8yS0d4kCFIRmyhbx
+         OjA3f7CG9/OhIVHvk5XHGj9/f6pap62pi5B7IFqU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+        stable@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        John Fastabend <john.fastabend@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 28/46] openvswitch: remove another BUG_ON()
-Date:   Tue,  3 Dec 2019 23:35:48 +0100
-Message-Id: <20191203212743.041026742@linuxfoundation.org>
+Subject: [PATCH 5.4 29/46] net/tls: take into account that bpf_exec_tx_verdict() may free the record
+Date:   Tue,  3 Dec 2019 23:35:49 +0100
+Message-Id: <20191203212744.480975788@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203212705.175425505@linuxfoundation.org>
 References: <20191203212705.175425505@linuxfoundation.org>
@@ -59,49 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit 8a574f86652a4540a2433946ba826ccb87f398cc ]
+[ Upstream commit c329ef9684de9517d82af5b4758c9e1b64a8a11a ]
 
-If we can't build the flow del notification, we can simply delete
-the flow, no need to crash the kernel. Still keep a WARN_ON to
-preserve debuggability.
+bpf_exec_tx_verdict() may free the record if tls_push_record()
+fails, or if the entire record got consumed by BPF. Re-check
+ctx->open_rec before touching the data.
 
-Note: the BUG_ON() predates the Fixes tag, but this change
-can be applied only after the mentioned commit.
-
-v1 -> v2:
- - do not leak an skb on error
-
-Fixes: aed067783e50 ("openvswitch: Minimize ovs_flow_cmd_del critical section.")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Fixes: d3b18ad31f93 ("tls: add bpf support to sk_msg handling")
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
+Acked-by: John Fastabend <john.fastabend@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/openvswitch/datapath.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ net/tls/tls_sw.c |   13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
---- a/net/openvswitch/datapath.c
-+++ b/net/openvswitch/datapath.c
-@@ -1353,7 +1353,10 @@ static int ovs_flow_cmd_del(struct sk_bu
- 						     OVS_FLOW_CMD_DEL,
- 						     ufid_flags);
- 			rcu_read_unlock();
--			BUG_ON(err < 0);
-+			if (WARN_ON_ONCE(err < 0)) {
-+				kfree_skb(reply);
-+				goto out_free;
-+			}
- 
- 			ovs_notify(&dp_flow_genl_family, reply, info);
- 		} else {
-@@ -1361,6 +1364,7 @@ static int ovs_flow_cmd_del(struct sk_bu
+--- a/net/tls/tls_sw.c
++++ b/net/tls/tls_sw.c
+@@ -979,7 +979,7 @@ alloc_encrypted:
+ 					num_async++;
+ 				else if (ret == -ENOMEM)
+ 					goto wait_for_memory;
+-				else if (ret == -ENOSPC)
++				else if (ctx->open_rec && ret == -ENOSPC)
+ 					goto rollback_iter;
+ 				else if (ret != -EAGAIN)
+ 					goto send_end;
+@@ -1048,11 +1048,12 @@ wait_for_memory:
+ 		ret = sk_stream_wait_memory(sk, &timeo);
+ 		if (ret) {
+ trim_sgl:
+-			tls_trim_both_msgs(sk, orig_size);
++			if (ctx->open_rec)
++				tls_trim_both_msgs(sk, orig_size);
+ 			goto send_end;
  		}
+ 
+-		if (msg_en->sg.size < required_size)
++		if (ctx->open_rec && msg_en->sg.size < required_size)
+ 			goto alloc_encrypted;
  	}
  
-+out_free:
- 	ovs_flow_free(flow, true);
- 	return 0;
- unlock:
+@@ -1185,11 +1186,13 @@ wait_for_sndbuf:
+ wait_for_memory:
+ 		ret = sk_stream_wait_memory(sk, &timeo);
+ 		if (ret) {
+-			tls_trim_both_msgs(sk, msg_pl->sg.size);
++			if (ctx->open_rec)
++				tls_trim_both_msgs(sk, msg_pl->sg.size);
+ 			goto sendpage_end;
+ 		}
+ 
+-		goto alloc_payload;
++		if (ctx->open_rec)
++			goto alloc_payload;
+ 	}
+ 
+ 	if (num_async) {
 
 
