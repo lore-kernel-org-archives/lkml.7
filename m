@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D685BC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EC7C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8D1720674
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1476420863
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413731;
-	bh=MbC18X3Sfxye5skgXLrpnqugMo/Tin2MGO7PyG9qQWs=;
+	s=default; t=1575413737;
+	bh=aEig3xLJ0ayeEDQUT+Zv0DbOuIHBjOVxj1yI+WpZ7DI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t1hewTXKRS8CXOgugjS5ZAwKFeeU5bVG/qkHJC6eL9JhEBdQX8ObqcemyYTBkFo6f
-	 lEJ0I84p0A4IUZGOm6jkUfSKlcfNF0eZtbPCpSuzxDnehgdUIzb0yU394KSSPLKXrA
-	 UIk8TqYdtC/uOau34GEyP9zUEoe1gZevpPPF+Qac=
+	b=nSQoP7dyT9umJKkAdtN+haYEH9Aab8l20gu0V9gL6yZJ308q/rf9uqco0j9E9En/P
+	 vUCjon7C+laoZ6kA7OskiEzC6mp29DuxPNoRUxHZES3PxVkHlRRsJnLOy6GvnppZ3u
+	 MZbwFsNa9HmGAQigXUM05ovAPRvKo/2Rpiof08Co=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729432AbfLCWza (ORCPT
+        id S1730354AbfLCWzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:55:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49804 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:55:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730348AbfLCWz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:55:26 -0500
+        id S1728988AbfLCWz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:55:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 289E52053B;
-        Tue,  3 Dec 2019 22:55:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F72C217D9;
+        Tue,  3 Dec 2019 22:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413725;
-        bh=MbC18X3Sfxye5skgXLrpnqugMo/Tin2MGO7PyG9qQWs=;
+        s=default; t=1575413728;
+        bh=aEig3xLJ0ayeEDQUT+Zv0DbOuIHBjOVxj1yI+WpZ7DI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c8TtKqoEXQjM/Tsn4sB0yM5ddg8pzGEaVYYvJz4c/iHoANbUN0SdlfIRiB/yAsOZ4
-         rJLg2roFZ09eAjFHVYmKfxc8ZdiCN+w4/RCVxURaOTpz8TcDewFQCxt1oHHdKfBQwP
-         dmyPw/jwNPSd7ppVHC+7MffJQ2tKJhFRd7BsgMuY=
+        b=to8Rl+XOr0izzPN9LUbGwKFx8DtTg1fZ8jPQH3IB0/bFlsKYtW477sX5JcX1+Crwc
+         TNPXn9HCuquhAnIkgCetxAYvdyP5JpPJV8oA4dbu4sEsdDCheIvLCb1t43wiP9iigJ
+         IQQUM9k4ISDlK5iWyswQaFC23nDtCDcJ+EZH/BK4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcin Stojek <marcin.stojek@nokia.com>,
-        Maciej Kwiecien <maciej.kwiecien@nokia.com>,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Peng Sun <sironhide0null@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 238/321] sctp: dont compare hb_timer expire date before starting it
-Date:   Tue,  3 Dec 2019 23:35:04 +0100
-Message-Id: <20191203223439.513000733@linuxfoundation.org>
+Subject: [PATCH 4.19 239/321] bpf: decrease usercnt if bpf_map_new_fd() fails in bpf_map_get_fd_by_id()
+Date:   Tue,  3 Dec 2019 23:35:05 +0100
+Message-Id: <20191203223439.576369519@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -63,57 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maciej Kwiecien <maciej.kwiecien@nokia.com>
+From: Peng Sun <sironhide0null@gmail.com>
 
-[ Upstream commit d1f20c03f48102e52eb98b8651d129b83134cae4 ]
+[ Upstream commit 781e62823cb81b972dc8652c1827205cda2ac9ac ]
 
-hb_timer might not start at all for a particular transport because its
-start is conditional. In a result a node is not sending heartbeats.
+In bpf/syscall.c, bpf_map_get_fd_by_id() use bpf_map_inc_not_zero()
+to increase the refcount, both map->refcnt and map->usercnt. Then, if
+bpf_map_new_fd() fails, should handle map->usercnt too.
 
-Function sctp_transport_reset_hb_timer has two roles:
-    - initial start of hb_timer for a given transport,
-    - update expire date of hb_timer for a given transport.
-The function is optimized to update timer's expire only if it is before
-a new calculated one but this comparison is invalid for a timer which
-has not yet started. Such a timer has expire == 0 and if a new expire
-value is bigger than (MAX_JIFFIES / 2 + 2) then "time_before" macro will
-fail and timer will not start resulting in no heartbeat packets send by
-the node.
-
-This was found when association was initialized within first 5 mins
-after system boot due to jiffies init value which is near to MAX_JIFFIES.
-
-Test kernel version: 4.9.154 (ARCH=arm)
-hb_timer.expire = 0;                //initialized, not started timer
-new_expire = MAX_JIFFIES / 2 + 2;   //or more
-time_before(hb_timer.expire, new_expire) == false
-
-Fixes: ba6f5e33bdbb ("sctp: avoid refreshing heartbeat timer too often")
-Reported-by: Marcin Stojek <marcin.stojek@nokia.com>
-Tested-by: Marcin Stojek <marcin.stojek@nokia.com>
-Signed-off-by: Maciej Kwiecien <maciej.kwiecien@nokia.com>
-Reviewed-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: bd5f5f4ecb78 ("bpf: Add BPF_MAP_GET_FD_BY_ID")
+Signed-off-by: Peng Sun <sironhide0null@gmail.com>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sctp/transport.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/bpf/syscall.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/sctp/transport.c b/net/sctp/transport.c
-index 033696e6f74fb..ad158d311ffae 100644
---- a/net/sctp/transport.c
-+++ b/net/sctp/transport.c
-@@ -207,7 +207,8 @@ void sctp_transport_reset_hb_timer(struct sctp_transport *transport)
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 6e544e364821e..90bb0c05c10e9 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -1887,7 +1887,7 @@ static int bpf_map_get_fd_by_id(const union bpf_attr *attr)
  
- 	/* When a data chunk is sent, reset the heartbeat interval.  */
- 	expires = jiffies + sctp_transport_timeout(transport);
--	if (time_before(transport->hb_timer.expires, expires) &&
-+	if ((time_before(transport->hb_timer.expires, expires) ||
-+	     !timer_pending(&transport->hb_timer)) &&
- 	    !mod_timer(&transport->hb_timer,
- 		       expires + prandom_u32_max(transport->rto)))
- 		sctp_transport_hold(transport);
+ 	fd = bpf_map_new_fd(map, f_flags);
+ 	if (fd < 0)
+-		bpf_map_put(map);
++		bpf_map_put_with_uref(map);
+ 
+ 	return fd;
+ }
 -- 
 2.20.1
 
