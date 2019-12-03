@@ -2,435 +2,200 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=BITCOIN_SPAM_02,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,PDS_BTC_ID,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 183A4C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3EB4C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2E8820674
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D28120674
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:40:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q/DvUl8t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726057AbfLCLjg (ORCPT
+        id S1726138AbfLCLkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 06:39:36 -0500
-Received: from relay.sw.ru ([185.231.240.75]:56058 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbfLCLjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 06:39:36 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1ic6W4-0006fj-Kd; Tue, 03 Dec 2019 14:38:52 +0300
-Subject: Re: [PATCH] mm: fix hanging shrinker management on long
- do_shrink_slab
-To:     Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Chris Down <chris@chrisdown.name>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Konstantin Khorenko <khorenko@virtuozzo.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-References: <20191129214541.3110-1-ptikhomirov@virtuozzo.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <8717b035-e082-992b-d9b1-4b4887ef596b@virtuozzo.com>
-Date:   Tue, 3 Dec 2019 14:38:52 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191129214541.3110-1-ptikhomirov@virtuozzo.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 3 Dec 2019 06:40:04 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38778 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbfLCLkE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 06:40:04 -0500
+Received: by mail-pf1-f196.google.com with SMTP id x185so1732531pfc.5;
+        Tue, 03 Dec 2019 03:40:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=LdKkOlOJHruNAMRVN3m7zzds2dYKsN5d406veskx7yU=;
+        b=q/DvUl8tjGDzbwPvT9us5ksb3dUNHp/WL1RbalFOp8gSFlb2/aaU5zvwkxzVZQ09x8
+         sDVPYVpEiUry2maSH4/+eLdyC1LxbmLayjAN0F3lYmgNCgVXP/SAWOFaJFnv2aRgRfvH
+         MiF7yNpPP836EmC0+WHTkNUl0NFal0yQrJKO5BPEPFeEVa822NjEBxhQfs/deV2Sq8gN
+         UE4yNQJ4qVJLKPImP/ZLr9MLuelh9aqd0WVzrjZmmx6c46pircwV97VZOfHTgRMn5HlC
+         oOcgrfbTHXBL8FK5+jbi3kad83cUI1vfL/uQf+MRYnR0N0LO9pLVKwH9gnS8jcmP2KE/
+         WRbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=LdKkOlOJHruNAMRVN3m7zzds2dYKsN5d406veskx7yU=;
+        b=JHlibeSdEpy8GTyrseOjbOantAs+FFtuHZw9QcS6jqr6rM985oWzXY9ybTl9h0qAN8
+         BuFCMQZyldUvbSxWX5CFNgsV+sCg8iGTZAJr7JRQqvCLKohw+tmsDmjvHbLOcyUrs7hI
+         Dpz9c+J/aMw570ejyQfMQKo48kgCb8WGA+Ywx2WCcai58j0t4pTM5kNW4TUtyWWt24aJ
+         zSA83/dhYXUSiAB7dLJOhUfUA21HvnY0x/4Dzt+bb41JKNXoVMKspi3AFVdxWgL9UR3u
+         8rsO3ubvIJQ9/Jco3rFIekjw5Q9majcCttzsBPfzvpB7dCGXl1300TRwG/1cpZX8Hctl
+         bOGg==
+X-Gm-Message-State: APjAAAWNoHSRpb5/c42aQcc+yH0rADa6sEPlzsfU/ozapw5zjyvBTDVG
+        aGeRgrhv6QVBGH0+ubvefnY=
+X-Google-Smtp-Source: APXvYqx8dgfUh7P0sym8yzt6bWxKVT1O3GxDyYPl/DOmSQmShGtOGO2G75wBy78b8pJuZMCl52g4Qw==
+X-Received: by 2002:a63:da47:: with SMTP id l7mr4897956pgj.34.1575373203417;
+        Tue, 03 Dec 2019 03:40:03 -0800 (PST)
+Received: from wangyang5-l1.corp.qihoo.net ([104.192.108.10])
+        by smtp.gmail.com with ESMTPSA id m7sm3325358pgh.72.2019.12.03.03.39.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Dec 2019 03:40:02 -0800 (PST)
+Date:   Tue, 3 Dec 2019 19:39:56 +0800
+From:   kungf <wings.wyang@gmail.com>
+To:     Coly Li <colyli@suse.de>
+Cc:     kent.overstreet@gmail.com, linux-bcache@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bcache: add REQ_FUA to avoid data lost in writeback
+ mode
+Message-Id: <20191203193956.fe0ab4c2ec7eba4e55a3de89@gmail.com>
+In-Reply-To: <785fe04f-f841-3083-66db-53fab7bc0577@suse.de>
+References: <20191202102409.3980-1-wings.wyang@gmail.com>
+        <785fe04f-f841-3083-66db-53fab7bc0577@suse.de>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.30; i686-pc-mingw32)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30.11.2019 00:45, Pavel Tikhomirov wrote:
-> We have a problem that shrinker_rwsem can be held for a long time for
-> read in shrink_slab, at the same time any process which is trying to
-> manage shrinkers hangs.
-> 
-> The shrinker_rwsem is taken in shrink_slab while traversing shrinker_list.
-> It tries to shrink something on nfs (hard) but nfs server is dead at
-> these moment already and rpc will never succeed. Generally any shrinker
-> can take significant time to do_shrink_slab, so it's a bad idea to hold
-> the list lock here.
-> 
-> We have a similar problem in shrink_slab_memcg, except that we are
-> traversing shrinker_map+shrinker_idr there.
-> 
-> The idea of the patch is to inc a refcount to the chosen shrinker so it
-> won't disappear and release shrinker_rwsem while we are in
-> do_shrink_slab, after that we will reacquire shrinker_rwsem, dec
-> the refcount and continue the traversal.
-> 
-> We also need a wait_queue so that unregister_shrinker can wait for the
-> refcnt to become zero. Only after these we can safely remove the
-> shrinker from list and idr, and free the shrinker.
-> 
-> I've reproduced the nfs hang in do_shrink_slab with the patch applied on
-> ms kernel, all other mount/unmount pass fine without any hang.
-> 
-> Here is a reproduction on kernel without patch:
-> 
-> 1) Setup nfs on server node with some files in it (e.g. 200)
-> 
-> [server]# cat /etc/exports
-> /vz/nfs2 *(ro,no_root_squash,no_subtree_check,async)
-> 
-> 2) Hard mount it on client node
-> 
-> [client]# mount -ohard 10.94.3.40:/vz/nfs2 /mnt
-> 
-> 3) Open some (e.g. 200) files on the mount
-> 
-> [client]# for i in $(find /mnt/ -type f | head -n 200); \
->   do setsid sleep 1000 &>/dev/null <$i & done
-> 
-> 4) Kill all openers
-> 
-> [client]# killall sleep -9
-> 
-> 5) Put your network cable out on client node
-> 
-> 6) Drop caches on the client, it will hang on nfs while holding
->   shrinker_rwsem lock for read
-> 
-> [client]# echo 3 > /proc/sys/vm/drop_caches
-> 
->   crash> bt ...
->   PID: 18739  TASK: ...  CPU: 3   COMMAND: "bash"
->    #0 [...] __schedule at ...
->    #1 [...] schedule at ...
->    #2 [...] rpc_wait_bit_killable at ... [sunrpc]
->    #3 [...] __wait_on_bit at ...
->    #4 [...] out_of_line_wait_on_bit at ...
->    #5 [...] _nfs4_proc_delegreturn at ... [nfsv4]
->    #6 [...] nfs4_proc_delegreturn at ... [nfsv4]
->    #7 [...] nfs_do_return_delegation at ... [nfsv4]
->    #8 [...] nfs4_evict_inode at ... [nfsv4]
->    #9 [...] evict at ...
->   #10 [...] dispose_list at ...
->   #11 [...] prune_icache_sb at ...
->   #12 [...] super_cache_scan at ...
->   #13 [...] do_shrink_slab at ...
->   #14 [...] shrink_slab at ...
->   #15 [...] drop_slab_node at ...
->   #16 [...] drop_slab at ...
->   #17 [...] drop_caches_sysctl_handler at ...
->   #18 [...] proc_sys_call_handler at ...
->   #19 [...] vfs_write at ...
->   #20 [...] ksys_write at ...
->   #21 [...] do_syscall_64 at ...
->   #22 [...] entry_SYSCALL_64_after_hwframe at ...
-> 
-> 7) All other mount/umount activity now hangs with no luck to take
->   shrinker_rwsem for write.
-> 
-> [client]# mount -t tmpfs tmpfs /tmp
-> 
->   crash> bt ...
->   PID: 5464   TASK: ...  CPU: 3   COMMAND: "mount"
->    #0 [...] __schedule at ...
->    #1 [...] schedule at ...
->    #2 [...] rwsem_down_write_slowpath at ...
->    #3 [...] prealloc_shrinker at ...
->    #4 [...] alloc_super at ...
->    #5 [...] sget at ...
->    #6 [...] mount_nodev at ...
->    #7 [...] legacy_get_tree at ...
->    #8 [...] vfs_get_tree at ...
->    #9 [...] do_mount at ...
->   #10 [...] ksys_mount at ...
->   #11 [...] __x64_sys_mount at ...
->   #12 [...] do_syscall_64 at ...
->   #13 [...] entry_SYSCALL_64_after_hwframe at ...
-> 
-> That is on almost clean and almost mainstream Fedora kernel:
-> 
-> [client]# uname -a
-> Linux snorch 5.3.8-200.snorch.fc30.x86_64 #1 SMP Mon Nov 11 16:01:15 MSK
->   2019 x86_64 x86_64 x86_64 GNU/Linux
-> 
-> Signed-off-by: Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+On Mon, 2 Dec 2019 19:08:59 +0800
+Coly Li <colyli@suse.de> wrote:
 
-The approach looks OK for me, and despite it does not solve the problem
-completely, it improves the isolation. Also, we may use this to finally
-make shrink_slab() iterations lockless (or you may just send couple of
-patches on top of that :).
+> On 2019/12/2 6:24 pm, kungf wrote:
+> > data may lost when in the follow scene of writeback mode:
+> > 1. client write data1 to bcache
+> > 2. client fdatasync
+> > 3. bcache flush cache set and backing device
+> > if now data1 was not writed back to backing, it was only guaranteed saf=
+e in cache.
+> > 4.then cache writeback data1 to backing with only REQ_OP_WRITE
+> > So data1 was not guaranteed in non-volatile storage,  it may lost if  p=
+ower interruption=A0
+> >=20
+>=20
+> Hi,
+>=20
+> Do you encounter such problem in real work load ? With bcache journal, I
+> don't see the possibility of data lost with your description.
+>=20
+> Correct me if I am wrong.
+>=20
+> Coly Li
 
-Small cosmetic note. I'd removed comments in prealloc_shrinker() and
-free_preallocated_shrinker() since they just describe obvious actions,
-and we do not need to comment every line we do. But a small comment
-is needed about that synchronize_rcu() is to make wake_up on stable
-memory.
+Hi Coly?
 
-> ---
->  include/linux/memcontrol.h |   6 +++
->  include/linux/shrinker.h   |   6 +++
->  mm/memcontrol.c            |  16 ++++++
->  mm/vmscan.c                | 107 ++++++++++++++++++++++++++++++++++++-
->  4 files changed, 134 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-> index ae703ea3ef48..3717b94b6aa5 100644
-> --- a/include/linux/memcontrol.h
-> +++ b/include/linux/memcontrol.h
-> @@ -1348,6 +1348,8 @@ extern int memcg_expand_shrinker_maps(int new_id);
->  
->  extern void memcg_set_shrinker_bit(struct mem_cgroup *memcg,
->  				   int nid, int shrinker_id);
-> +extern void memcg_clear_shrinker_bit(struct mem_cgroup *memcg,
-> +				     int nid, int shrinker_id);
->  #else
->  #define mem_cgroup_sockets_enabled 0
->  static inline void mem_cgroup_sk_alloc(struct sock *sk) { };
-> @@ -1361,6 +1363,10 @@ static inline void memcg_set_shrinker_bit(struct mem_cgroup *memcg,
->  					  int nid, int shrinker_id)
->  {
->  }
-> +static inline void memcg_clear_shrinker_bit(struct mem_cgroup *memcg,
-> +					    int nid, int shrinker_id)
-> +{
-> +}
->  #endif
->  
->  struct kmem_cache *memcg_kmem_get_cache(struct kmem_cache *cachep);
-> diff --git a/include/linux/shrinker.h b/include/linux/shrinker.h
-> index 0f80123650e2..dd3bb43ed58d 100644
-> --- a/include/linux/shrinker.h
-> +++ b/include/linux/shrinker.h
-> @@ -2,6 +2,9 @@
->  #ifndef _LINUX_SHRINKER_H
->  #define _LINUX_SHRINKER_H
->  
-> +#include <linux/refcount.h>
-> +#include <linux/wait.h>
-> +
->  /*
->   * This struct is used to pass information from page reclaim to the shrinkers.
->   * We consolidate the values for easier extention later.
-> @@ -75,6 +78,9 @@ struct shrinker {
->  #endif
->  	/* objs pending delete, per node */
->  	atomic_long_t *nr_deferred;
-> +
-> +	refcount_t refcnt;
-> +	wait_queue_head_t wq;
->  };
->  #define DEFAULT_SEEKS 2 /* A good number if you don't know better. */
->  
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 01f3f8b665e9..81f45124feb7 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -442,6 +442,22 @@ void memcg_set_shrinker_bit(struct mem_cgroup *memcg, int nid, int shrinker_id)
->  	}
->  }
->  
-> +void memcg_clear_shrinker_bit(struct mem_cgroup *memcg,
-> +			      int nid, int shrinker_id)
-> +{
-> +	struct memcg_shrinker_map *map;
-> +
-> +	/*
-> +	 * The map for refcounted memcg can only be freed in
-> +	 * memcg_free_shrinker_map_rcu so we can safely protect
-> +	 * map with rcu_read_lock.
-> +	 */
-> +	rcu_read_lock();
-> +	map = rcu_dereference(memcg->nodeinfo[nid]->shrinker_map);
-> +	clear_bit(shrinker_id, map->map);
-> +	rcu_read_unlock();
-> +}
-> +
->  /**
->   * mem_cgroup_css_from_page - css of the memcg associated with a page
->   * @page: page of interest
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index ee4eecc7e1c2..59e46d65e902 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -393,6 +393,13 @@ int prealloc_shrinker(struct shrinker *shrinker)
->  	if (!shrinker->nr_deferred)
->  		return -ENOMEM;
->  
-> +	/*
-> +	 * Shrinker is not yet visible through shrinker_idr or shrinker_list,
-> +	 * so no locks required for initialization.
-> +	 */
-> +	refcount_set(&shrinker->refcnt, 1);
-> +	init_waitqueue_head(&shrinker->wq);
-> +
->  	if (shrinker->flags & SHRINKER_MEMCG_AWARE) {
->  		if (prealloc_memcg_shrinker(shrinker))
->  			goto free_deferred;
-> @@ -411,6 +418,9 @@ void free_prealloced_shrinker(struct shrinker *shrinker)
->  	if (!shrinker->nr_deferred)
->  		return;
->  
-> +	/* The shrinker shouldn't be used at these point. */
-> +	WARN_ON(!refcount_dec_and_test(&shrinker->refcnt));
-> +
->  	if (shrinker->flags & SHRINKER_MEMCG_AWARE)
->  		unregister_memcg_shrinker(shrinker);
->  
-> @@ -447,6 +457,15 @@ void unregister_shrinker(struct shrinker *shrinker)
->  {
->  	if (!shrinker->nr_deferred)
->  		return;
-> +
-> +	/*
-> +	 * If refcnt is not zero we need to wait these shrinker to finish all
-> +	 * it's do_shrink_slab() calls.
-> +	 */
-> +	if (!refcount_dec_and_test(&shrinker->refcnt))
-> +		wait_event(shrinker->wq,
-> +			   (refcount_read(&shrinker->refcnt) == 0));
-> +
->  	if (shrinker->flags & SHRINKER_MEMCG_AWARE)
->  		unregister_memcg_shrinker(shrinker);
->  	down_write(&shrinker_rwsem);
-> @@ -454,6 +473,9 @@ void unregister_shrinker(struct shrinker *shrinker)
->  	up_write(&shrinker_rwsem);
->  	kfree(shrinker->nr_deferred);
->  	shrinker->nr_deferred = NULL;
-> +
-> +	/* Pairs with rcu_read_lock in put_shrinker() */
-> +	synchronize_rcu();
->  }
->  EXPORT_SYMBOL(unregister_shrinker);
->  
-> @@ -589,6 +611,42 @@ static unsigned long do_shrink_slab(struct shrink_control *shrinkctl,
->  	return freed;
->  }
->  
-> +struct shrinker *get_shrinker(struct shrinker *shrinker)
-> +{
-> +	/*
-> +	 * Pairs with refcnt dec in unregister_shrinker(), if refcnt is zero
-> +	 * these shrinker is already in the middle of unregister_shrinker() and
-> +	 * we can't use it.
-> +	 */
-> +	if (!refcount_inc_not_zero(&shrinker->refcnt))
-> +		shrinker = NULL;
-> +	return shrinker;
-> +}
-> +
-> +void put_shrinker(struct shrinker *shrinker)
-> +{
-> +	/*
-> +	 * The rcu_read_lock pairs with synchronize_rcu() in
-> +	 * unregister_shrinker(), so that the shrinker is not freed
-> +	 * before the wake_up.
-> +	 */
-> +	rcu_read_lock();
-> +	if (!refcount_dec_and_test(&shrinker->refcnt)) {
-> +		/*
-> +		 * Pairs with smp_mb in
-> +		 * wait_event()->prepare_to_wait()
-> +		 */
-> +		smp_mb();
-> +		/*
-> +		 * If refcnt becomes zero, we already have an
-> +		 * unregister_shrinker() waiting for us to finish.
-> +		 */
-> +		if (waitqueue_active(&shrinker->wq))
-> +			wake_up(&shrinker->wq);
-> +	}
-> +	rcu_read_unlock();
-> +}
-> +
->  #ifdef CONFIG_MEMCG
->  static unsigned long shrink_slab_memcg(gfp_t gfp_mask, int nid,
->  			struct mem_cgroup *memcg, int priority)
-> @@ -628,9 +686,23 @@ static unsigned long shrink_slab_memcg(gfp_t gfp_mask, int nid,
->  		    !(shrinker->flags & SHRINKER_NONSLAB))
->  			continue;
->  
-> +		/*
-> +		 * Take a refcnt on a shrinker so that it can't be freed or
-> +		 * removed from shrinker_idr (and shrinker_list). These way we
-> +		 * can safely release shrinker_rwsem.
-> +		 *
-> +		 * We need to release shrinker_rwsem here as do_shrink_slab can
-> +		 * take too much time to finish (e.g. on nfs). And holding
-> +		 * global shrinker_rwsem can block registring and unregistring
-> +		 * of shrinkers.
-> +		 */
-> +		if (!get_shrinker(shrinker))
-> +			continue;
-> +		up_read(&shrinker_rwsem);
-> +
->  		ret = do_shrink_slab(&sc, shrinker, priority);
->  		if (ret == SHRINK_EMPTY) {
-> -			clear_bit(i, map->map);
-> +			memcg_clear_shrinker_bit(memcg, nid, i);
->  			/*
->  			 * After the shrinker reported that it had no objects to
->  			 * free, but before we cleared the corresponding bit in
-> @@ -655,6 +727,22 @@ static unsigned long shrink_slab_memcg(gfp_t gfp_mask, int nid,
->  		}
->  		freed += ret;
->  
-> +		/*
-> +		 * Re-aquire shrinker_rwsem, put refcount and reload
-> +		 * shrinker_map as it can be modified in
-> +		 * memcg_expand_one_shrinker_map if new shrinkers
-> +		 * were registred in the meanwhile.
-> +		 */
-> +		if (!down_read_trylock(&shrinker_rwsem)) {
-> +			freed = freed ? : 1;
-> +			put_shrinker(shrinker);
-> +			return freed;
-> +		}
-> +		put_shrinker(shrinker);
-> +		map = rcu_dereference_protected(
-> +				memcg->nodeinfo[nid]->shrinker_map,
-> +				true);
-> +
->  		if (rwsem_is_contended(&shrinker_rwsem)) {
->  			freed = freed ? : 1;
->  			break;
-> @@ -719,10 +807,27 @@ static unsigned long shrink_slab(gfp_t gfp_mask, int nid,
->  			.memcg = memcg,
->  		};
->  
-> +		/* See comment in shrink_slab_memcg. */
-> +		if (!get_shrinker(shrinker))
-> +			continue;
-> +		up_read(&shrinker_rwsem);
-> +
->  		ret = do_shrink_slab(&sc, shrinker, priority);
->  		if (ret == SHRINK_EMPTY)
->  			ret = 0;
->  		freed += ret;
-> +
-> +		/*
-> +		 * We can safely continue traverse of the shrinker_list as
-> +		 * our shrinker is still on the list due to refcount.
-> +		 */
-> +		if (!down_read_trylock(&shrinker_rwsem)) {
-> +			freed = freed ? : 1;
-> +			put_shrinker(shrinker);
-> +			goto out;
-> +		}
-> +		put_shrinker(shrinker);
-> +
->  		/*
->  		 * Bail out if someone want to register a new shrinker to
->  		 * prevent the regsitration from being stalled for long periods
-> 
+Sorry to confuse you. As i known now, write_dirty function write dirty to b=
+acking without FUA, and write_dirty_finish make dirty key clean,
+it means the data indexed by the key will not be writeback again, am i wron=
+g?
+I only find that the backing device will be flushed when bcache get an PREF=
+LUSH bio, any other place  it will be flushed in journal?
 
+I made a test that write bcache with dd, and then detach it, blktrace the c=
+ache and backing device at the same time.
+1. close writeback
+# echo 0 > /sys/block/bcache0/bcache/writeback_running
+2. write data with a fdatasync
+#dd if=3D/dev/zero of=3D/dev/bcache0 bs=3D16k count=3D1 oflag=3Ddirect
+3. detach and trigger writeback
+#echo b1f40ca5-37a3-4852-9abf-6abed96d71db >/sys/block/bcache0/bcache/detach
+
+the blow text is blkparse result.
+from cache blktrace blow, we can see 16k data write to cache set, and then =
+flush with op FWFSM(PREFLUSH|WRITE|FUA|SYNC|META)
+```
+  8,160 33        1     0.000000000 222844  A   W 630609920 + 32 <- (8,167)=
+ 1464320
+  8,167 33        2     0.000000478 222844  Q   W 630609920 + 32 [dd]
+  8,167 33        3     0.000006167 222844  G   W 630609920 + 32 [dd]
+  8,167 33        5     0.000011385 222844  I   W 630609920 + 32 [dd]
+  8,167 33        6     0.000023890   948  D   W 630609920 + 32 [kworker/33=
+:1H]
+  8,167 33        7     0.000111203     0  C   W 630609920 + 32 [0]
+  8,160 34        1     0.000167029 215616  A FWFSM 629153808 + 8 <- (8,167=
+) 8208
+  8,167 34        2     0.000167490 215616  Q FWFSM 629153808 + 8 [kworker/=
+34:2]
+  8,167 34        3     0.000169061 215616  G FWFSM 629153808 + 8 [kworker/=
+34:2]
+  8,167 34        4     0.000301308   949  D WFSM 629153808 + 8 [kworker/34=
+:1H]
+  8,167 34        5     0.000348832     0  C WFSM 629153808 + 8 [0]
+  8,167 34        6     0.000349612     0  C WFSM 629153808 [0]
+```
+
+from backing blktrace blow, the backing device first get flush op FWS(PERFL=
+USH|WRITE|SYNC) because of we stop writeback, then get W op after detach,
+the 16k data was writeback to backing device, and after this, the backing d=
+evice never get flush op, it means that the 16k data we write it's not safe
+in backing device, even we had write with fdatasync.
+```
+  8,144 33        1     0.000000000 222844  Q WSM 8 + 8 [dd]
+  8,144 33        2     0.000016609 222844  G WSM 8 + 8 [dd]
+  8,144 33        5     0.000020710 222844  I WSM 8 + 8 [dd]
+  8,144 33        6     0.000031967   948  D WSM 8 + 8 [kworker/33:1H]
+  8,144 33        7     0.000152945 88631  C  WS 16 + 32 [0]
+  8,144 34        1     0.000186127 215616  Q FWS [kworker/34:2]
+  8,144 34        2     0.000187006 215616  G FWS [kworker/34:2]
+  8,144 33        8     0.000326761     0  C WSM 8 + 8 [0]
+  8,144 34        3     0.020195027     0  C  WS 16 [0]
+  8,144 34        4     0.020195904     0  C FWS 16 [0]
+  8,144 23        1    19.415130395 215884  Q   W 16 + 32 [kworker/23:2]
+  8,144 23        2    19.415132072 215884  G   W 16 + 32 [kworker/23:2]
+  8,144 23        3    19.415133134 215884  I   W 16 + 32 [kworker/23:2]
+  8,144 23        4    19.415137776  1215  D   W 16 + 32 [kworker/23:1H]
+  8,144 23        5    19.416607260     0  C   W 16 + 32 [0]
+  8,144 24        1    19.416640754 222593  Q WSM 8 + 8 [bcache_writebac]
+  8,144 24        2    19.416642698 222593  G WSM 8 + 8 [bcache_writebac]
+  8,144 24        3    19.416643505 222593  I WSM 8 + 8 [bcache_writebac]
+  8,144 24        4    19.416650589  1107  D WSM 8 + 8 [kworker/24:1H]
+  8,144 24        5    19.416865258     0  C WSM 8 + 8 [0]
+  8,144 24        6    19.416871350 221889  Q WSM 8 + 8 [kworker/24:1]
+  8,144 24        7    19.416872201 221889  G WSM 8 + 8 [kworker/24:1]
+  8,144 24        8    19.416872542 221889  I WSM 8 + 8 [kworker/24:1]
+  8,144 24        9    19.416875458  1107  D WSM 8 + 8 [kworker/24:1H]
+  8,144 24       10    19.417076935     0  C WSM 8 + 8 [0]
+```
+>=20
+> > Signed-off-by: kungf <wings.wyang@gmail.com>
+> > ---
+> >  drivers/md/bcache/writeback.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/md/bcache/writeback.c b/drivers/md/bcache/writebac=
+k.c
+> > index 4a40f9eadeaf..e5cecb60569e 100644
+> > --- a/drivers/md/bcache/writeback.c
+> > +++ b/drivers/md/bcache/writeback.c
+> > @@ -357,7 +357,7 @@ static void write_dirty(struct closure *cl)
+> >  	 */
+> >  	if (KEY_DIRTY(&w->key)) {
+> >  		dirty_init(w);
+> > -		bio_set_op_attrs(&io->bio, REQ_OP_WRITE, 0);
+> > +		bio_set_op_attrs(&io->bio, REQ_OP_WRITE | REQ_FUA, 0);
+> >  		io->bio.bi_iter.bi_sector =3D KEY_START(&w->key);
+> >  		bio_set_dev(&io->bio, io->dc->bdev);
+> >  		io->bio.bi_end_io	=3D dirty_endio;
+> >=20
+>=20
+--=20
+kungf <wings.wyang@gmail.com>
