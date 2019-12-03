@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 962D3C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 818DEC43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 662B82064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C7492064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:03:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414209;
-	bh=pd3AeSBtOZjnIaMKLxGwzgSveNiz/pmLImr/pfQFtRo=;
+	s=default; t=1575414212;
+	bh=wLBO30qA8tZlK3OT5pGv0t3ty/ImslmbiEW2j4YjAG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fhRbrmc2jpRNLSVnL2O3ApohbxBlWO4XpV0QzLC/tYR7DioXL/iPeCwamU+cnBwaX
-	 PJe+rxFB+dO36eRi8NhsZql9/Wrz9AiHR7PFJRUxLdYBFy0x7YfSTUIRklU2PE0mz/
-	 6MTyMJxTCqjByGExC0Zhpv2lL9o8fvYLaRCL+ia4=
+	b=I8vOaJ/cZIsglAA97Mg2t/Ia2yrUDRQJv272WbPtoI6D7HNQbkY1/eIJ15kPW0SHg
+	 tgQGPLKupZZTIS7OwalHYdvEp8tnR6RDKrHKJ9wGHnQYQ9TS2Arl1zy9LKWBFpkm3a
+	 j3SVDFlIKA3zQyKbTgmBDUPEidIpJgbJiD3ynQ/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730092AbfLCWxC (ORCPT
+        id S1730083AbfLCWxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:53:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45910 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:53:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730066AbfLCWw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:52:56 -0500
+        id S1729817AbfLCWw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:52:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B14442084F;
-        Tue,  3 Dec 2019 22:52:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32BCE207DD;
+        Tue,  3 Dec 2019 22:52:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413575;
-        bh=pd3AeSBtOZjnIaMKLxGwzgSveNiz/pmLImr/pfQFtRo=;
+        s=default; t=1575413577;
+        bh=wLBO30qA8tZlK3OT5pGv0t3ty/ImslmbiEW2j4YjAG0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tWEjxvALba7qju1WSSp7mwxIDfpoY08YgK+qKUkj49SkASs+ocUr1marCbL+R5lZR
-         B2vk0/S81zMmaaAs2XM03xR3NvCuBJPB/VMqIzfvVTt4D8cWgrfFHgOipMWXRq3qh4
-         p1u8yq9KdU1s0j51B4VfBvrhcP+o6DPqrz5KMb4c=
+        b=XS+vvluup/X85tI2PtYCA3SQfhaPRzhxe3DVXlB/MEdqDemdgFjP+YzFP5eTXbm2n
+         UGv8GXyFIZpSlVJQkGiOHPrGbiYEtw5JXCgt7VlSxCbROczLWC9Xtva9T7ymQh9ZUb
+         CKqeaQaGbj3wwGH6gCL0d1dvqKz5VynU70qEjIq0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Alexander Shiyan <shc_work@mail.ru>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 181/321] crypto: mxc-scc - fix build warnings on ARM64
-Date:   Tue,  3 Dec 2019 23:34:07 +0100
-Message-Id: <20191203223436.543308400@linuxfoundation.org>
+Subject: [PATCH 4.19 182/321] pwm: clps711x: Fix period calculation
+Date:   Tue,  3 Dec 2019 23:34:08 +0100
+Message-Id: <20191203223436.593781214@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,69 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+From: Alexander Shiyan <shc_work@mail.ru>
 
-[ Upstream commit 2326828ee40357b3d2b1359b8ca7526af201495b ]
+[ Upstream commit b0f17570b8203c22f139459c86cfbaa0311313ed ]
 
-The following build warnings are seen when building for ARM64 allmodconfig:
+Commit e39c0df1be5a ("pwm: Introduce the pwm_args concept") has
+changed the variable for the period for clps711x-pwm driver, so now
+pwm_get/set_period() works with pwm->state.period variable instead
+of pwm->args.period.
+This patch changes the period variable in other places where it is used.
 
-drivers/crypto/mxc-scc.c:181:20: warning: format '%d' expects argument of type 'int', but argument 5 has type 'size_t' {aka 'long unsigned int'} [-Wformat=]
-drivers/crypto/mxc-scc.c:186:21: warning: format '%d' expects argument of type 'int', but argument 4 has type 'size_t' {aka 'long unsigned int'} [-Wformat=]
-drivers/crypto/mxc-scc.c:277:21: warning: format '%d' expects argument of type 'int', but argument 4 has type 'size_t' {aka 'long unsigned int'} [-Wformat=]
-drivers/crypto/mxc-scc.c:339:3: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-drivers/crypto/mxc-scc.c:340:3: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-
-Fix them by using the %zu specifier to print a size_t variable and using
-a plain %x to print the result of a readl().
-
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/mxc-scc.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/pwm/pwm-clps711x.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/crypto/mxc-scc.c b/drivers/crypto/mxc-scc.c
-index e01c46387df8d..519086730791b 100644
---- a/drivers/crypto/mxc-scc.c
-+++ b/drivers/crypto/mxc-scc.c
-@@ -178,12 +178,12 @@ static int mxc_scc_get_data(struct mxc_scc_ctx *ctx,
- 	else
- 		from = scc->black_memory;
+diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
+index 26ec24e457b12..7e16b7def0dcb 100644
+--- a/drivers/pwm/pwm-clps711x.c
++++ b/drivers/pwm/pwm-clps711x.c
+@@ -48,7 +48,7 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
+ static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
+ {
+ 	/* Duty cycle 0..15 max */
+-	return DIV_ROUND_CLOSEST(v * 0xf, pwm_get_period(pwm));
++	return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
+ }
  
--	dev_dbg(scc->dev, "pcopy: from 0x%p %d bytes\n", from,
-+	dev_dbg(scc->dev, "pcopy: from 0x%p %zu bytes\n", from,
- 		ctx->dst_nents * 8);
- 	len = sg_pcopy_from_buffer(ablkreq->dst, ctx->dst_nents,
- 				   from, ctx->size, ctx->offset);
- 	if (!len) {
--		dev_err(scc->dev, "pcopy err from 0x%p (len=%d)\n", from, len);
-+		dev_err(scc->dev, "pcopy err from 0x%p (len=%zu)\n", from, len);
+ static int clps711x_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+@@ -71,7 +71,7 @@ static int clps711x_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	struct clps711x_chip *priv = to_clps711x_chip(chip);
+ 	unsigned int duty;
+ 
+-	if (period_ns != pwm_get_period(pwm))
++	if (period_ns != pwm->args.period)
  		return -EINVAL;
- 	}
  
-@@ -274,7 +274,7 @@ static int mxc_scc_put_data(struct mxc_scc_ctx *ctx,
- 	len = sg_pcopy_to_buffer(req->src, ctx->src_nents,
- 				 to, len, ctx->offset);
- 	if (!len) {
--		dev_err(scc->dev, "pcopy err to 0x%p (len=%d)\n", to, len);
-+		dev_err(scc->dev, "pcopy err to 0x%p (len=%zu)\n", to, len);
- 		return -EINVAL;
- 	}
- 
-@@ -335,9 +335,9 @@ static void mxc_scc_ablkcipher_next(struct mxc_scc_ctx *ctx,
- 		return;
- 	}
- 
--	dev_dbg(scc->dev, "Start encryption (0x%p/0x%p)\n",
--		(void *)readl(scc->base + SCC_SCM_RED_START),
--		(void *)readl(scc->base + SCC_SCM_BLACK_START));
-+	dev_dbg(scc->dev, "Start encryption (0x%x/0x%x)\n",
-+		readl(scc->base + SCC_SCM_RED_START),
-+		readl(scc->base + SCC_SCM_BLACK_START));
- 
- 	/* clear interrupt control registers */
- 	writel(SCC_SCM_INTR_CTRL_CLR_INTR,
+ 	duty = clps711x_get_duty(pwm, duty_ns);
 -- 
 2.20.1
 
