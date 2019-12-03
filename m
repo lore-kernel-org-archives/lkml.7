@@ -2,53 +2,51 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	PDS_BTC_ID,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3FBC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF3AC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E54821555
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7ECE2053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413773;
-	bh=WR6T0mnOrqv6UHDVnUtOymOZWoXeUtFqekFtmD/p8Bo=;
+	s=default; t=1575413776;
+	bh=2QDZ0dMDTHhItPAm/DVEGvPgpkbqGQphOwS5UzWuQL8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GudK1NYJ2dGTZwHRlpWDSBvPJYa/SN5vcb1+UsPkXuVHnOtpPrAqQkCFXURkAO5Js
-	 0W6MJqOiOgYheYtzK9qvYXqFgurQlH80YByoyBL1atDrWLjtFMq1lqew87DlRhp5Cx
-	 KH/FwjIHwiz2mrHh4dKPgTzV8Tl45WUmB12AevRc=
+	b=hjSARIgTqf8UwpLZrEfr8q6wkgvh3jV3bG9J8kZGaQuryMzRdkgmOXfvlvbc8+92S
+	 3MjtQgEOlA8OjjqcK0ZaDQtrtFAZhSq4OwgJ+FAx/CtcZzzD+joHYSQUHWqaK0+aPD
+	 mrDDN4jvqC62ak7ZXYKZ54wM23AIwZyY3w2xWFAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729852AbfLCW4M (ORCPT
+        id S1730413AbfLCW4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:56:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50860 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:56:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730234AbfLCW4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:56:08 -0500
+        id S1729945AbfLCW4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:56:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD48820865;
-        Tue,  3 Dec 2019 22:56:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94BB72053B;
+        Tue,  3 Dec 2019 22:56:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413767;
-        bh=WR6T0mnOrqv6UHDVnUtOymOZWoXeUtFqekFtmD/p8Bo=;
+        s=default; t=1575413770;
+        bh=2QDZ0dMDTHhItPAm/DVEGvPgpkbqGQphOwS5UzWuQL8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ypF/tfUwhl2Gd5OiEBaboING0ts6FFutU9F7cXc48VM9Ah3ccb7hmpwHg+Ommoh6l
-         opPyYXaooDHc4ujVy73CDHGIQKBLGPeEigLf0ZCrh3NVLFk1nJ05TOHDBM3yxZX0+m
-         5QS8HXq2TMpBh8tYdeqcokx9mVzTHcqu2iBfO0ek=
+        b=ph0OySAyVA9/6UniSEvpke1u0tREPclu+ii3BFkxev4fftblc7I2KYULCb6kwHjck
+         QnTJH/ny/DJ0nSdBdjtX7F+fFG28PODyC9P02VkQrkZhjmUUidGGLr+Tc+6HREP7KA
+         fU4Iax1Je8aObo2KSQdT3+7Mf/Y2/c8NwQY7ZtHw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 252/321] ACPI / APEI: Switch estatus pool to use vmalloc memory
-Date:   Tue,  3 Dec 2019 23:35:18 +0100
-Message-Id: <20191203223440.247127016@linuxfoundation.org>
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 216/321] ata: ahci: mvebu: do Armada 38x configuration only on relevant SoCs
+Date:   Tue,  3 Dec 2019 23:34:42 +0100
+Message-Id: <20191203223438.356530142@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,91 +59,156 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-[ Upstream commit 0ac234be1a9497498e57d958f4251f5257b116b4 ]
+[ Upstream commit 96dbcb40e4b1a387cdb9b21f43638c759aebb5a4 ]
 
-The ghes code is careful to parse and round firmware's advertised
-memory requirements for CPER records, up to a maximum of 64K.
-However when ghes_estatus_pool_expand() does its work, it splits
-the requested size into PAGE_SIZE granules.
+At the beginning, only Armada 38x SoCs where supported by the
+ahci_mvebu.c driver. Commit 15d3ce7b63bd ("ata: ahci_mvebu: add
+support for Armada 3700 variant") introduced Armada 3700 support. As
+opposed to Armada 38x SoCs, the 3700 variants do not have to configure
+mbus and the regret option. This patch took care of avoiding such
+configuration when not needed in the probe function, but failed to do
+the same in the resume path. While doing so looks harmless by
+experience, let's clean the driver logic and avoid doing this useless
+configuration with Armada 3700 SoCs.
 
-This means if firmware generates 5K of CPER records, and correctly
-describes this in the table, __process_error() will silently fail as it
-is unable to allocate more than PAGE_SIZE.
+Because the logic is very similar between these two places, it has
+been decided to factorize this code and put it in a "Armada 38x
+configuration function". This function is part of a new
+(per-compatible) platform data structure, so that the addition of such
+configuration function for Armada 3700 will be eased.
 
-Switch the estatus pool to vmalloc() memory. On x86 vmalloc() memory
-may fault and be fixed up by vmalloc_fault(). To prevent this call
-vmalloc_sync_all() before an NMI handler could discover the memory.
-
-Signed-off-by: James Morse <james.morse@arm.com>
-Reviewed-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 15d3ce7b63bd ("ata: ahci_mvebu: add support for Armada 3700 variant")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/apei/ghes.c | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ drivers/ata/ahci_mvebu.c | 68 ++++++++++++++++++++++++++++++----------
+ 1 file changed, 51 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 0c46b79e31b1e..73177b8a07bd1 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -170,40 +170,40 @@ static int ghes_estatus_pool_init(void)
- 	return 0;
- }
+diff --git a/drivers/ata/ahci_mvebu.c b/drivers/ata/ahci_mvebu.c
+index f9cb51be38ebf..a54214291481f 100644
+--- a/drivers/ata/ahci_mvebu.c
++++ b/drivers/ata/ahci_mvebu.c
+@@ -28,6 +28,10 @@
+ #define AHCI_WINDOW_BASE(win)	(0x64 + ((win) << 4))
+ #define AHCI_WINDOW_SIZE(win)	(0x68 + ((win) << 4))
  
--static void ghes_estatus_pool_free_chunk_page(struct gen_pool *pool,
-+static void ghes_estatus_pool_free_chunk(struct gen_pool *pool,
- 					      struct gen_pool_chunk *chunk,
- 					      void *data)
- {
--	free_page(chunk->start_addr);
-+	vfree((void *)chunk->start_addr);
- }
- 
- static void ghes_estatus_pool_exit(void)
- {
- 	gen_pool_for_each_chunk(ghes_estatus_pool,
--				ghes_estatus_pool_free_chunk_page, NULL);
-+				ghes_estatus_pool_free_chunk, NULL);
- 	gen_pool_destroy(ghes_estatus_pool);
- }
- 
- static int ghes_estatus_pool_expand(unsigned long len)
- {
--	unsigned long i, pages, size, addr;
--	int ret;
-+	unsigned long size, addr;
- 
- 	ghes_estatus_pool_size_request += PAGE_ALIGN(len);
- 	size = gen_pool_size(ghes_estatus_pool);
- 	if (size >= ghes_estatus_pool_size_request)
- 		return 0;
--	pages = (ghes_estatus_pool_size_request - size) / PAGE_SIZE;
--	for (i = 0; i < pages; i++) {
--		addr = __get_free_page(GFP_KERNEL);
--		if (!addr)
--			return -ENOMEM;
--		ret = gen_pool_add(ghes_estatus_pool, addr, PAGE_SIZE, -1);
--		if (ret)
--			return ret;
--	}
- 
--	return 0;
-+	addr = (unsigned long)vmalloc(PAGE_ALIGN(len));
-+	if (!addr)
-+		return -ENOMEM;
++struct ahci_mvebu_plat_data {
++	int (*plat_config)(struct ahci_host_priv *hpriv);
++};
 +
-+	/*
-+	 * New allocation must be visible in all pgd before it can be found by
-+	 * an NMI allocating from the pool.
-+	 */
-+	vmalloc_sync_all();
-+
-+	return gen_pool_add(ghes_estatus_pool, addr, PAGE_ALIGN(len), -1);
+ static void ahci_mvebu_mbus_config(struct ahci_host_priv *hpriv,
+ 				   const struct mbus_dram_target_info *dram)
+ {
+@@ -62,6 +66,22 @@ static void ahci_mvebu_regret_option(struct ahci_host_priv *hpriv)
+ 	writel(0x80, hpriv->mmio + AHCI_VENDOR_SPECIFIC_0_DATA);
  }
  
- static int map_gen_v2(struct ghes *ghes)
++static int ahci_mvebu_armada_380_config(struct ahci_host_priv *hpriv)
++{
++	const struct mbus_dram_target_info *dram;
++	int rc = 0;
++
++	dram = mv_mbus_dram_info();
++	if (dram)
++		ahci_mvebu_mbus_config(hpriv, dram);
++	else
++		rc = -ENODEV;
++
++	ahci_mvebu_regret_option(hpriv);
++
++	return rc;
++}
++
+ /**
+  * ahci_mvebu_stop_engine
+  *
+@@ -126,13 +146,10 @@ static int ahci_mvebu_resume(struct platform_device *pdev)
+ {
+ 	struct ata_host *host = platform_get_drvdata(pdev);
+ 	struct ahci_host_priv *hpriv = host->private_data;
+-	const struct mbus_dram_target_info *dram;
++	const struct ahci_mvebu_plat_data *pdata = hpriv->plat_data;
+ 
+-	dram = mv_mbus_dram_info();
+-	if (dram)
+-		ahci_mvebu_mbus_config(hpriv, dram);
+-
+-	ahci_mvebu_regret_option(hpriv);
++	if (pdata->plat_config)
++		pdata->plat_config(hpriv);
+ 
+ 	return ahci_platform_resume_host(&pdev->dev);
+ }
+@@ -154,28 +171,31 @@ static struct scsi_host_template ahci_platform_sht = {
+ 
+ static int ahci_mvebu_probe(struct platform_device *pdev)
+ {
++	const struct ahci_mvebu_plat_data *pdata;
+ 	struct ahci_host_priv *hpriv;
+-	const struct mbus_dram_target_info *dram;
+ 	int rc;
+ 
++	pdata = of_device_get_match_data(&pdev->dev);
++	if (!pdata)
++		return -EINVAL;
++
+ 	hpriv = ahci_platform_get_resources(pdev, 0);
+ 	if (IS_ERR(hpriv))
+ 		return PTR_ERR(hpriv);
+ 
++	hpriv->plat_data = (void *)pdata;
++
+ 	rc = ahci_platform_enable_resources(hpriv);
+ 	if (rc)
+ 		return rc;
+ 
+ 	hpriv->stop_engine = ahci_mvebu_stop_engine;
+ 
+-	if (of_device_is_compatible(pdev->dev.of_node,
+-				    "marvell,armada-380-ahci")) {
+-		dram = mv_mbus_dram_info();
+-		if (!dram)
+-			return -ENODEV;
+-
+-		ahci_mvebu_mbus_config(hpriv, dram);
+-		ahci_mvebu_regret_option(hpriv);
++	pdata = hpriv->plat_data;
++	if (pdata->plat_config) {
++		rc = pdata->plat_config(hpriv);
++		if (rc)
++			goto disable_resources;
+ 	}
+ 
+ 	rc = ahci_platform_init_host(pdev, hpriv, &ahci_mvebu_port_info,
+@@ -190,9 +210,23 @@ disable_resources:
+ 	return rc;
+ }
+ 
++static const struct ahci_mvebu_plat_data ahci_mvebu_armada_380_plat_data = {
++	.plat_config = ahci_mvebu_armada_380_config,
++};
++
++static const struct ahci_mvebu_plat_data ahci_mvebu_armada_3700_plat_data = {
++	.plat_config = NULL,
++};
++
+ static const struct of_device_id ahci_mvebu_of_match[] = {
+-	{ .compatible = "marvell,armada-380-ahci", },
+-	{ .compatible = "marvell,armada-3700-ahci", },
++	{
++		.compatible = "marvell,armada-380-ahci",
++		.data = &ahci_mvebu_armada_380_plat_data,
++	},
++	{
++		.compatible = "marvell,armada-3700-ahci",
++		.data = &ahci_mvebu_armada_3700_plat_data,
++	},
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, ahci_mvebu_of_match);
 -- 
 2.20.1
 
