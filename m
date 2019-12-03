@@ -2,53 +2,55 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,PDS_BTC_ID,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FA4C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08870C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 825252064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE1FC2064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414801;
-	bh=XMIyt0Gn6jrtmYRjlka6sozVIKK78PjVdzAOQs2lAA8=;
+	s=default; t=1575414803;
+	bh=DX3MlaJR24u347KXFwaZUu2joPNmxXCZOAJEq0+M8AE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c8mitdKPBt4YE1La/7dV+L+hNr3F/adva9sm159zyFtKhT/xDq02bvjrMlTxz+8Sv
-	 81kQS9fDcNdTSe77hqm3JYefdHennPjwKiY0h0Z6JPN1hWp58YLdwuI0BIFDov/1Ur
-	 iXeDE5Z0HXDx9G7dVCpHu0xrjI93D6ZsBv3MCYc8=
+	b=KdtEewMuq5zH326YAu6LmoeMrSm0qR3sq0YWO0iUBJWyBbVOOEUBalg/MJn9L3Q5z
+	 KWljNUlxuN6ZXNRV0TGMXgPLptdOIh3itEgjMDjRkrq00Pp/pibKLIQ32oPlvEZiC8
+	 ZmlMp4PGmasGRhvEtqOyrM7jOEDbTJBSaTWYy0bg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbfLCWi3 (ORCPT
+        id S1727992AbfLCWi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:38:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47438 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:38:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727543AbfLCWiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:38:25 -0500
+        id S1727981AbfLCWiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:38:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE82B20803;
-        Tue,  3 Dec 2019 22:38:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51F8F20684;
+        Tue,  3 Dec 2019 22:38:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412704;
-        bh=XMIyt0Gn6jrtmYRjlka6sozVIKK78PjVdzAOQs2lAA8=;
+        s=default; t=1575412701;
+        bh=DX3MlaJR24u347KXFwaZUu2joPNmxXCZOAJEq0+M8AE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jvVoVViEKgfpTtfH2SIFBigCKk/ar4JsnfcGyW+4GXnCqIGMhOUROYn5PVaALdWW6
-         nSrodItHRUVf/fAqwyEddfVTXRdw/AXxxtjjNL5+6mpL4BVXXb9j4PYmKWjUO+LAmx
-         2NYVEkgHiNtl4sln/lH5o+vekj+JaWxwBP549918=
+        b=P6bGnEOuP2x+0v0K5rmJxxiU+VTgn5DF5dt9IGGKhn2BvcbsReI2hHAGu95uegbwp
+         7xvy9rAcqxUroT40vJmvIrLQk6myaGx2thlPxG0EayIApMGSKhGbQPrGEv0L+7bcsa
+         eLv3svgtL56aXhx3qVDYVm5R/TRp/VeD5f/27HoI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
+        syzbot+df0d4ec12332661dd1f9@syzkaller.appspotmail.com,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Simon Horman <simon.horman@netronome.com>,
+        John Fastabend <john.fastabend@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 31/46] net: skmsg: fix TLS 1.3 crash with full sk_msg
-Date:   Tue,  3 Dec 2019 23:35:51 +0100
-Message-Id: <20191203212748.151138279@linuxfoundation.org>
+Subject: [PATCH 5.4 30/46] net/tls: free the record on encryption error
+Date:   Tue,  3 Dec 2019 23:35:50 +0100
+Message-Id: <20191203212746.426711233@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203212705.175425505@linuxfoundation.org>
 References: <20191203212705.175425505@linuxfoundation.org>
@@ -63,212 +65,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit 031097d9e079e40dce401031d1012e83d80eaf01 ]
+[ Upstream commit d10523d0b3d78153ee58d19853ced26c9004c8c4 ]
 
-TLS 1.3 started using the entry at the end of the SG array
-for chaining-in the single byte content type entry. This mostly
-works:
+When tls_do_encryption() fails the SG lists are left with the
+SG_END and SG_CHAIN marks in place. One could hope that once
+encryption fails we will never see the record again, but that
+is in fact not true. Commit d3b18ad31f93 ("tls: add bpf support
+to sk_msg handling") added special handling to ENOMEM and ENOSPC
+errors which mean we may see the same record re-submitted.
 
-[ E E E E E E . . ]
-  ^           ^
-   start       end
+As suggested by John free the record, the BPF code is already
+doing just that.
 
-                 E < content type
-               /
-[ E E E E E E C . ]
-  ^           ^
-   start       end
-
-(Where E denotes a populated SG entry; C denotes a chaining entry.)
-
-If the array is full, however, the end will point to the start:
-
-[ E E E E E E E E ]
-  ^
-   start
-   end
-
-And we end up overwriting the start:
-
-    E < content type
-   /
-[ C E E E E E E E ]
-  ^
-   start
-   end
-
-The sg array is supposed to be a circular buffer with start and
-end markers pointing anywhere. In case where start > end
-(i.e. the circular buffer has "wrapped") there is an extra entry
-reserved at the end to chain the two halves together.
-
-[ E E E E E E . . l ]
-
-(Where l is the reserved entry for "looping" back to front.
-
-As suggested by John, let's reserve another entry for chaining
-SG entries after the main circular buffer. Note that this entry
-has to be pointed to by the end entry so its position is not fixed.
-
-Examples of full messages:
-
-[ E E E E E E E E . l ]
-  ^               ^
-   start           end
-
-   <---------------.
-[ E E . E E E E E E l ]
-      ^ ^
-   end   start
-
-Now the end will always point to an unused entry, so TLS 1.3
-can always use it.
-
-Fixes: 130b392c6cd6 ("net: tls: Add tls 1.3 support")
+Reported-by: syzbot+df0d4ec12332661dd1f9@syzkaller.appspotmail.com
+Fixes: d3b18ad31f93 ("tls: add bpf support to sk_msg handling")
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Reviewed-by: Simon Horman <simon.horman@netronome.com>
+Acked-by: John Fastabend <john.fastabend@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/skmsg.h |   26 +++++++++++++-------------
- net/core/filter.c     |    8 ++++----
- net/core/skmsg.c      |    2 +-
- net/ipv4/tcp_bpf.c    |    2 +-
- 4 files changed, 19 insertions(+), 19 deletions(-)
+ net/tls/tls_sw.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/include/linux/skmsg.h
-+++ b/include/linux/skmsg.h
-@@ -14,6 +14,7 @@
- #include <net/strparser.h>
+--- a/net/tls/tls_sw.c
++++ b/net/tls/tls_sw.c
+@@ -766,8 +766,14 @@ static int bpf_exec_tx_verdict(struct sk
  
- #define MAX_MSG_FRAGS			MAX_SKB_FRAGS
-+#define NR_MSG_FRAG_IDS			(MAX_MSG_FRAGS + 1)
- 
- enum __sk_action {
- 	__SK_DROP = 0,
-@@ -29,11 +30,13 @@ struct sk_msg_sg {
- 	u32				size;
- 	u32				copybreak;
- 	bool				copy[MAX_MSG_FRAGS];
--	/* The extra element is used for chaining the front and sections when
--	 * the list becomes partitioned (e.g. end < start). The crypto APIs
--	 * require the chaining.
-+	/* The extra two elements:
-+	 * 1) used for chaining the front and sections when the list becomes
-+	 *    partitioned (e.g. end < start). The crypto APIs require the
-+	 *    chaining;
-+	 * 2) to chain tailer SG entries after the message.
- 	 */
--	struct scatterlist		data[MAX_MSG_FRAGS + 1];
-+	struct scatterlist		data[MAX_MSG_FRAGS + 2];
- };
- 
- /* UAPI in filter.c depends on struct sk_msg_sg being first element. */
-@@ -141,13 +144,13 @@ static inline void sk_msg_apply_bytes(st
- 
- static inline u32 sk_msg_iter_dist(u32 start, u32 end)
- {
--	return end >= start ? end - start : end + (MAX_MSG_FRAGS - start);
-+	return end >= start ? end - start : end + (NR_MSG_FRAG_IDS - start);
- }
- 
- #define sk_msg_iter_var_prev(var)			\
- 	do {						\
- 		if (var == 0)				\
--			var = MAX_MSG_FRAGS - 1;	\
-+			var = NR_MSG_FRAG_IDS - 1;	\
- 		else					\
- 			var--;				\
- 	} while (0)
-@@ -155,7 +158,7 @@ static inline u32 sk_msg_iter_dist(u32 s
- #define sk_msg_iter_var_next(var)			\
- 	do {						\
- 		var++;					\
--		if (var == MAX_MSG_FRAGS)		\
-+		if (var == NR_MSG_FRAG_IDS)		\
- 			var = 0;			\
- 	} while (0)
- 
-@@ -172,9 +175,9 @@ static inline void sk_msg_clear_meta(str
- 
- static inline void sk_msg_init(struct sk_msg *msg)
- {
--	BUILD_BUG_ON(ARRAY_SIZE(msg->sg.data) - 1 != MAX_MSG_FRAGS);
-+	BUILD_BUG_ON(ARRAY_SIZE(msg->sg.data) - 1 != NR_MSG_FRAG_IDS);
- 	memset(msg, 0, sizeof(*msg));
--	sg_init_marker(msg->sg.data, MAX_MSG_FRAGS);
-+	sg_init_marker(msg->sg.data, NR_MSG_FRAG_IDS);
- }
- 
- static inline void sk_msg_xfer(struct sk_msg *dst, struct sk_msg *src,
-@@ -195,14 +198,11 @@ static inline void sk_msg_xfer_full(stru
- 
- static inline bool sk_msg_full(const struct sk_msg *msg)
- {
--	return (msg->sg.end == msg->sg.start) && msg->sg.size;
-+	return sk_msg_iter_dist(msg->sg.start, msg->sg.end) == MAX_MSG_FRAGS;
- }
- 
- static inline u32 sk_msg_elem_used(const struct sk_msg *msg)
- {
--	if (sk_msg_full(msg))
--		return MAX_MSG_FRAGS;
--
- 	return sk_msg_iter_dist(msg->sg.start, msg->sg.end);
- }
- 
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -2299,7 +2299,7 @@ BPF_CALL_4(bpf_msg_pull_data, struct sk_
- 	WARN_ON_ONCE(last_sge == first_sge);
- 	shift = last_sge > first_sge ?
- 		last_sge - first_sge - 1 :
--		MAX_SKB_FRAGS - first_sge + last_sge - 1;
-+		NR_MSG_FRAG_IDS - first_sge + last_sge - 1;
- 	if (!shift)
- 		goto out;
- 
-@@ -2308,8 +2308,8 @@ BPF_CALL_4(bpf_msg_pull_data, struct sk_
- 	do {
- 		u32 move_from;
- 
--		if (i + shift >= MAX_MSG_FRAGS)
--			move_from = i + shift - MAX_MSG_FRAGS;
-+		if (i + shift >= NR_MSG_FRAG_IDS)
-+			move_from = i + shift - NR_MSG_FRAG_IDS;
- 		else
- 			move_from = i + shift;
- 		if (move_from == msg->sg.end)
-@@ -2323,7 +2323,7 @@ BPF_CALL_4(bpf_msg_pull_data, struct sk_
- 	} while (1);
- 
- 	msg->sg.end = msg->sg.end - shift > msg->sg.end ?
--		      msg->sg.end - shift + MAX_MSG_FRAGS :
-+		      msg->sg.end - shift + NR_MSG_FRAG_IDS :
- 		      msg->sg.end - shift;
- out:
- 	msg->data = sg_virt(&msg->sg.data[first_sge]) + start - offset;
---- a/net/core/skmsg.c
-+++ b/net/core/skmsg.c
-@@ -421,7 +421,7 @@ static int sk_psock_skb_ingress(struct s
- 	copied = skb->len;
- 	msg->sg.start = 0;
- 	msg->sg.size = copied;
--	msg->sg.end = num_sge == MAX_MSG_FRAGS ? 0 : num_sge;
-+	msg->sg.end = num_sge;
- 	msg->skb = skb;
- 
- 	sk_psock_queue_msg(psock, msg);
---- a/net/ipv4/tcp_bpf.c
-+++ b/net/ipv4/tcp_bpf.c
-@@ -301,7 +301,7 @@ EXPORT_SYMBOL_GPL(tcp_bpf_sendmsg_redir)
- static int tcp_bpf_send_verdict(struct sock *sk, struct sk_psock *psock,
- 				struct sk_msg *msg, int *copied, int flags)
- {
--	bool cork = false, enospc = msg->sg.start == msg->sg.end;
-+	bool cork = false, enospc = sk_msg_full(msg);
- 	struct sock *sk_redir;
- 	u32 tosend, delta = 0;
- 	int ret;
+ 	policy = !(flags & MSG_SENDPAGE_NOPOLICY);
+ 	psock = sk_psock_get(sk);
+-	if (!psock || !policy)
+-		return tls_push_record(sk, flags, record_type);
++	if (!psock || !policy) {
++		err = tls_push_record(sk, flags, record_type);
++		if (err) {
++			*copied -= sk_msg_free(sk, msg);
++			tls_free_open_rec(sk);
++		}
++		return err;
++	}
+ more_data:
+ 	enospc = sk_msg_full(msg);
+ 	if (psock->eval == __SK_NONE) {
 
 
