@@ -2,103 +2,114 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05381C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 18:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A83AC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 18:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCD9020661
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 18:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00D2820661
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 18:09:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hKyaRaxt"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="polSkby/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbfLCSJB (ORCPT
+        id S1727370AbfLCSJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 13:09:01 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38962 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727206AbfLCSIp (ORCPT
+        Tue, 3 Dec 2019 13:09:45 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34778 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727316AbfLCSJo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 13:08:45 -0500
-Received: by mail-wr1-f65.google.com with SMTP id y11so4891722wrt.6;
-        Tue, 03 Dec 2019 10:08:44 -0800 (PST)
+        Tue, 3 Dec 2019 13:09:44 -0500
+Received: by mail-pf1-f194.google.com with SMTP id n13so2247737pff.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 10:09:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Fspx7bIXXs0k8mMRF6gpjQkO0Aw1T/BQQAXOr83Gdx0=;
-        b=hKyaRaxtc9iaT45IweuHESVDA4caCMdb7T+Bl1ZoEQFIDVQgv2OARPq3JfRa03Q192
-         9InfjsvAfjiqt/tLV+H+pC2aSWfpiUNEZIRbflt25FMjU7iJHCDqp+nkdVU2fgA449WF
-         Fsaa4iCWFLL6I6OKI3cViC3jIRyO+p/5+oVbHNNVrRHPPgRKs/G0YIdCtteldfv1bxJP
-         TWS3VANBwEqvldoIp38N48uM4PUw7VUGssv0D15HYtw5FvBeXN6S08byGRl6Rq+GNklY
-         +QpDyL2nowooD2FyfsBYd5MV3mHZGNkr5/DZlUewlwP7ublaINeg09j3ok3JdbS6Qb/d
-         rpAA==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=loykSnf98Wtp3TswEHEtBrf07V1DthMDfsibxgCSjdE=;
+        b=polSkby/2rPftEWzAa2mR2P/AQVU1TyZPkOR2+OvDZVoDx/+YFkLk2AHfp422MbJws
+         MXF0fY0WkdAB2Obk+kK5NspG6Mladz7tkDLx/YrSbCL2WJuhzWHSEyHLw42lS1CmFoHJ
+         5F68HXn7NvaPWpyltr4OM080sSVvgDjTyPonfequpLY+neG1NkT1f/kyGfkvF2OJUXOO
+         Pm0Qy1/alLPv6wCPlGMkPZt1YkvkqT59u4Qh14NkuQmVo5cL7a2T+R8hN0u7EMA0EVXQ
+         GNo75rvQe7rfpfnUY0nAfZdc+UhViTY/ol6Ktgi5wS8Y9pxf+ABFSZF9td10pnED6g8b
+         oBvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Fspx7bIXXs0k8mMRF6gpjQkO0Aw1T/BQQAXOr83Gdx0=;
-        b=MJiD4C5OOrBgwsHFRR8eVtR8bhPZnwkWQIUPxnir5QCmt3d4ocxa1E1eowi2x7r2fw
-         Ev4IVnvg4gKDfF31Re94UchVlkZeZoyFWUGdRSw43E305H3r/uHmAVVgV0q9F3PAhFej
-         jzAWvyPEbnn2TqDVilY+eQWbDILwav6MFDRdLJjrf6lbgx7YtHJo3Er9Vk+pRA/H9jvv
-         g1BvnvDW2v0wL0KIUSEkdiNHFW79zvtQkhr+Lde30yhADqYppiGAMjSZ6U6GjZpmNpaF
-         8cttwet1dtkIRXVhNt6ENqT8owMupyuzR+41A2mUuYb08/GE/6ub/CqcF6SyfPS+jWHD
-         3eig==
-X-Gm-Message-State: APjAAAUOtr2qPM11nPvJxF3OHHZmIBB7hFpiAD34CMVrD8rOLDaATaCW
-        z8Ma/ceYw9vs1ld10s00pXk=
-X-Google-Smtp-Source: APXvYqxwVeda6AJH+unoZ0ri/RM91nuhADVTjGSRVMc86r3Jhdn9f0i+Kl1S+MwTlxxIOjvXgzOitQ==
-X-Received: by 2002:adf:f606:: with SMTP id t6mr6450005wrp.85.1575396523754;
-        Tue, 03 Dec 2019 10:08:43 -0800 (PST)
-Received: from localhost.localdomain (cable-86-56-100-90.cust.telecolumbus.net. [86.56.100.90])
-        by smtp.gmail.com with ESMTPSA id f11sm3847641wmc.25.2019.12.03.10.08.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 03 Dec 2019 10:08:42 -0800 (PST)
-From:   SeongJae Park <sj38.park@gmail.com>
-To:     brendanhiggins@google.com
-Cc:     corbet@lwn.net, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, shuah@kernel.org,
-        sj38.park@gmail.com, sjpark@amazon.de
-Subject: [PATCH v3 2/5] kunit: Remove duplicated defconfig creation
-Date:   Wed,  4 Dec 2019 03:08:25 +0900
-Message-Id: <1575396508-21480-3-git-send-email-sj38.park@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1575396508-21480-1-git-send-email-sj38.park@gmail.com>
-References: <1575396508-21480-1-git-send-email-sj38.park@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=loykSnf98Wtp3TswEHEtBrf07V1DthMDfsibxgCSjdE=;
+        b=NBM3FbiLm82Fw2t7U0AOP5zl+9/N2fDoft5c86gASaPO5ogzHceqwZgIaNyk5apCJo
+         BSyg7VdLko67zIikyG3X5pudvmb7px9OiDvjQyhUMBO4sgNMfXs9XamZ6dtT3P+NNVCr
+         k7Y8lSHNSL5lBYGp8p/JDryvPnXHVfmLwXJln76oGtigRA/snJvpedmpkNvCwottkLvd
+         qPH0FttE7yI8e/QzshiR1DVEQAX2NMKo/O8ZfFXEwYYAgY9+HBZzJQMnsrldhINKjmcB
+         SvHe8NGuYpD8lfJY+BoxNaYJwrmnTRg0XvchVy9IPcHQilV+g7FsLjWQW6pe29LEsM0W
+         T6rQ==
+X-Gm-Message-State: APjAAAUWUdAH5fJP9hGnswdr/OJEAP2fmMUfV3k1WRSrdOYaLY4VMOvt
+        IJ8UuRBC0MkaJbpulJZ33qrxuw==
+X-Google-Smtp-Source: APXvYqwgcBHZb9FDCJA3pZujOlfUAYFHnofoTF/uSqyTQfnonhv6YHeyo017p/RUkIqtyKU4a20hZg==
+X-Received: by 2002:a62:5cc1:: with SMTP id q184mr6181056pfb.116.1575396584005;
+        Tue, 03 Dec 2019 10:09:44 -0800 (PST)
+Received: from cakuba.netronome.com (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
+        by smtp.gmail.com with ESMTPSA id x11sm4454147pfn.53.2019.12.03.10.09.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2019 10:09:43 -0800 (PST)
+Date:   Tue, 3 Dec 2019 10:09:31 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Tariq Toukan <tariqt@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, oss-drivers@netronome.com
+Subject: Re: [PATCH RFC v7 net-next 3/1] netronome: use the new txqueue
+ timeout argument
+Message-ID: <20191203100931.43207030@cakuba.netronome.com>
+In-Reply-To: <20191203072757.429125-2-mst@redhat.com>
+References: <20191203071101.427592-1-mst@redhat.com>
+        <20191203072757.429125-2-mst@redhat.com>
+Organization: Netronome Systems, Ltd.
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On Tue, 3 Dec 2019 02:32:14 -0500, Michael S. Tsirkin wrote:
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> ---
+> 
+> untested
+> 
+>  drivers/net/ethernet/netronome/nfp/nfp_net_common.c | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_common.c b/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
+> index 41a808b14d76..26f1fb19d0aa 100644
+> --- a/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
+> +++ b/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
+> @@ -1323,13 +1323,8 @@ nfp_net_tx_ring_reset(struct nfp_net_dp *dp, struct nfp_net_tx_ring *tx_ring)
+>  static void nfp_net_tx_timeout(struct net_device *netdev, unsigned int txqueue)
+>  {
+>  	struct nfp_net *nn = netdev_priv(netdev);
+> -	int i;
+>  
+> -	for (i = 0; i < nn->dp.netdev->real_num_tx_queues; i++) {
+> -		if (!netif_tx_queue_stopped(netdev_get_tx_queue(netdev, i)))
+> -			continue;
+> -		nn_warn(nn, "TX timeout on ring: %d\n", i);
+> -	}
+> +	nn_warn(nn, "TX timeout on ring: %d\n", txqueue);
 
-'--defconfig' option is handled by the 'main() of the 'kunit.py' but
-again handled in following 'run_tests()'.  This commit removes this
-duplicated handling of the option in the 'run_tests()'.
+%u
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
----
- tools/testing/kunit/kunit.py | 3 ---
- 1 file changed, 3 deletions(-)
+>  	nn_warn(nn, "TX watchdog timeout\n");
 
-diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
-index efe06d6..f8f2695 100755
---- a/tools/testing/kunit/kunit.py
-+++ b/tools/testing/kunit/kunit.py
-@@ -37,9 +37,6 @@ def create_default_kunitconfig():
- 
- def run_tests(linux: kunit_kernel.LinuxSourceTree,
- 	      request: KunitRequest) -> KunitResult:
--	if request.defconfig:
--		create_default_kunitconfig()
--
- 	config_start = time.time()
- 	success = linux.build_reconfig(request.build_dir)
- 	config_end = time.time()
--- 
-2.7.4
+I think we can drop this warning now.
 
+With that:
+
+Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+
+Thanks!
