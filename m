@@ -2,97 +2,137 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BD8C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 04:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBF2C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 04:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B272206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 04:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B92D020640
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 04:35:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GY2QtC3I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfLCE2b (ORCPT
+        id S1726843AbfLCEfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 23:28:31 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51518 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726480AbfLCE2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 23:28:31 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 3AF1518A4BC35D85D188;
-        Tue,  3 Dec 2019 12:28:29 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Tue, 3 Dec 2019
- 12:28:22 +0800
-Subject: Re: [PATCH net 1/3] net: hns3: fix for TX queue not restarted problem
-To:     David Miller <davem@davemloft.net>, <tanhuazhong@huawei.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>
-References: <1575342535-2981-1-git-send-email-tanhuazhong@huawei.com>
- <1575342535-2981-2-git-send-email-tanhuazhong@huawei.com>
- <20191202.192539.1290120247243731738.davem@davemloft.net>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <2f017ae3-ddec-928c-16b7-5ed59e6fc8d6@huawei.com>
-Date:   Tue, 3 Dec 2019 12:28:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
-MIME-Version: 1.0
-In-Reply-To: <20191202.192539.1290120247243731738.davem@davemloft.net>
+        Mon, 2 Dec 2019 23:35:38 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:57405 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbfLCEfi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 23:35:38 -0500
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191203043534epoutp03653e19f9d9ea6d1dbef7d9a23d55739a~cwmsGp9kv3139331393epoutp03M
+        for <linux-kernel@vger.kernel.org>; Tue,  3 Dec 2019 04:35:34 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191203043534epoutp03653e19f9d9ea6d1dbef7d9a23d55739a~cwmsGp9kv3139331393epoutp03M
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1575347734;
+        bh=P9rxL3OL4SEg0KsZyLRZeF48h8yL9UuF4kxFDbXNgnA=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=GY2QtC3IXCVaDQucCO0ryWIl5qiRI0YULNDevAaMfkq+HQJA0UnIfp6eM2BHdsXbK
+         3lv705s7juQk+CR8RCnDDrW7tSHd926F5/v0tuFx6qWFl9OxX1yXh88crGCAPb6Tym
+         0rJOoLtlW5O/6D18B3cLfQrvdhkAwuk6HAld/r4s=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+        20191203043533epcas5p1c22e61b0256413395a992db05ed9a378~cwmrbCSDT1744717447epcas5p1h;
+        Tue,  3 Dec 2019 04:35:33 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        02.05.19629.516E5ED5; Tue,  3 Dec 2019 13:35:33 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191203043533epcas5p19bfc21e2b03db7f27c6d84cda6824d27~cwmrFfHUG1745117451epcas5p1L;
+        Tue,  3 Dec 2019 04:35:33 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191203043533epsmtrp26c955d363851275865794cb3f9fd7069~cwmrEpCCV2179821798epsmtrp2c;
+        Tue,  3 Dec 2019 04:35:33 +0000 (GMT)
+X-AuditID: b6c32a4b-32dff70000014cad-de-5de5e615dc45
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        DE.3E.10238.516E5ED5; Tue,  3 Dec 2019 13:35:33 +0900 (KST)
+Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
+        [107.108.73.139]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191203043531epsmtip112ec90d213a7f631732fdf252fca5a7b~cwmpKRZf72615026150epsmtip1W;
+        Tue,  3 Dec 2019 04:35:31 +0000 (GMT)
+From:   Sriram Dash <sriram.dash@samsung.com>
+To:     linux-kernel@vger.kernel.org, mkl@pengutronix.de,
+        linux-can@vger.kernel.org, wg@grandegger.com
+Cc:     mchehab+samsung@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, robh@kernel.org, dmurphy@ti.com,
+        rcsekar@samsung.com, pankaj.dubey@samsung.com,
+        pankj.sharma@samsung.com, Sriram Dash <sriram.dash@samsung.com>
+Subject: [PATCH] MAINTAINERS: add myself as maintainer of MCAN MMIO device
+ driver
+Date:   Tue,  3 Dec 2019 09:59:09 +0530
+Message-Id: <1575347349-32689-1-git-send-email-sriram.dash@samsung.com>
+X-Mailer: git-send-email 2.7.4
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmleLIzCtJLcpLzFFi42LZdlhTU1f02dNYg6bzBhZzzrewWHSf3sJq
+        0bx4PZvFqu9TmS0u75rDZvH+UyeTxfpFU1gsFm39wm6xvOs+s8WsCztYLf7v2cFucWM9u8XS
+        eztZHXg9tqy8yeTx8dJtRo9NqzrZPPbPXcPu0f/XwKNvyypGj+M3tjN5fN4kF8ARxWWTkpqT
+        WZZapG+XwJXxYddV9oIG9op9J16yNDD+YO1i5OSQEDCR+PL9E3MXIxeHkMBuRokjCxcxQjif
+        GCV+TJvDBOF8Y5S4cGwLI0zLz8NN7CC2kMBeRolzr/khilqYJC7/fgBWxCagLbH5yUWguRwc
+        IgIpEvO+uIDUMAs8Y5Q4teQiE0iNsECwxOVjO8HqWQRUJR78mAtm8wq4Sxx51csMsUxO4ua5
+        TrD7JASOsEn82L0R6nAXiZ03/kBdJCzx6vgWdghbSuLzu71sEHa2xOW+51CDSiRmvFrIAmHb
+        Sxy4MocF5DhmAU2J9bv0QcLMAnwSvb+fMIGEJQR4JTrahCCqVSVe3d4MNV1a4sDa00wQtofE
+        u3WXmCDhECvx6tAU9gmMMrMQhi5gZFzFKJlaUJybnlpsWmCcl1quV5yYW1yal66XnJ+7iRGc
+        NLS8dzBuOudziFGAg1GJh/fAnyexQqyJZcWVuYcYJTiYlUR4t0k8jRXiTUmsrEotyo8vKs1J
+        LT7EKM3BoiTOO4n1aoyQQHpiSWp2ampBahFMlomDU6qB0UHvQ0roRzmTnHdzTnysMWiLmtHc
+        sumisDXP3P7Lez805di7WayMj068EJVpNSNk+su0Lxx9OcvP3u941ceaXCru+jZi4vSbG1LE
+        /jjF7eetKtk8J+6p3ow/T+NSJNfVtp7oV7uyuLUghEMtcJq21+77C5wapHf5mj3o/R7QXjjx
+        tKHzit0rlViKMxINtZiLihMB94sF2RYDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKLMWRmVeSWpSXmKPExsWy7bCSnK7os6exBl96xC3mnG9hseg+vYXV
+        onnxejaLVd+nMltc3jWHzeL9p04mi/WLprBYLNr6hd1iedd9ZotZF3awWvzfs4Pd4sZ6doul
+        93ayOvB6bFl5k8nj46XbjB6bVnWyeeyfu4bdo/+vgUffllWMHsdvbGfy+LxJLoAjissmJTUn
+        syy1SN8ugSvjw66r7AUN7BX7TrxkaWD8wdrFyMkhIWAi8fNwEzuILSSwm1HiyETxLkYOoLi0
+        xM+7uhAlwhIr/z0HKuECKmlikvjb1sMGkmAT0JbY/OQiM0i9iECGxLX3+iA1zAIfGCVO3loI
+        ViMsEChx4dJrJhCbRUBV4sGPuYwgNq+Au8SRV73MEAvkJG6e62SewMizgJFhFaNkakFxbnpu
+        sWGBYV5quV5xYm5xaV66XnJ+7iZGcGBqae5gvLwk/hCjAAejEg/vgT9PYoVYE8uKK3MPMUpw
+        MCuJ8G6TeBorxJuSWFmVWpQfX1Sak1p8iFGag0VJnPdp3rFIIYH0xJLU7NTUgtQimCwTB6dU
+        A+NkwduPEg8yRGlkcYpPebHUa/V+JS49Fy3/n32Nfz+KSBtH/BZ041z9Vf1D36YNHS/NtY3t
+        ftWq3fVLXOmpXmzbOnn7ffOLXz5UvixeMbfCcnfFnQbZJGYdv+W3feMkd38ODJyqpd3/UyHo
+        +Y1znB/fX7a067J5/UAvMYPNyp8l47VfIeP640osxRmJhlrMRcWJAMm9yZtIAgAA
+X-CMS-MailID: 20191203043533epcas5p19bfc21e2b03db7f27c6d84cda6824d27
+X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20191203043533epcas5p19bfc21e2b03db7f27c6d84cda6824d27
+References: <CGME20191203043533epcas5p19bfc21e2b03db7f27c6d84cda6824d27@epcas5p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/12/3 11:25, David Miller wrote:
-> From: Huazhong Tan <tanhuazhong@huawei.com>
-> Date: Tue, 3 Dec 2019 11:08:53 +0800
-> 
->> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
->> index ba05368..b2bb8e2 100644
->> --- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
->> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
->> @@ -1286,13 +1286,16 @@ static bool hns3_skb_need_linearized(struct sk_buff *skb, unsigned int *bd_size,
->>  	return false;
->>  }
->>  
->> -static int hns3_nic_maybe_stop_tx(struct hns3_enet_ring *ring,
->> +static int hns3_nic_maybe_stop_tx(struct net_device *netdev,
->>  				  struct sk_buff **out_skb)
->>  {
->> +	struct hns3_nic_priv *priv = netdev_priv(netdev);
->>  	unsigned int bd_size[HNS3_MAX_TSO_BD_NUM + 1U];
->>  	struct sk_buff *skb = *out_skb;
->> +	struct hns3_enet_ring *ring;
->>  	unsigned int bd_num;
->>  
->> +	ring = &priv->ring[skb->queue_mapping];
-> 
-> Please just pass the ring pointer into hns3_nic_maybe_stop_tx() instead of
-> needlessly recalculating it.
+Since we are actively working on MMIO MCAN device driver,
+as discussed with Marc, I am adding myself as a maintainer.
 
-The reason that I am passing the netdev instead of ring pointer is
-that the netif_start_subqueue() need a netdev parameter, and the
-netdev can not be derived from the ring pointer.
+Signed-off-by: Sriram Dash <sriram.dash@samsung.com>
+---
+ MAINTAINERS | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Do you think it is better to keep it as this patch, or add a new
-netdevice parameter? like below:
-
-static int hns3_nic_maybe_stop_tx(struct net_device *netdev,
-				  struct hns3_enet_ring *ring,
-				  struct sk_buff **out_skb)
-
-
-
-> 
-> Thank you.
-> 
-> .
-> 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index fc36fe5..64ecf11 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10082,6 +10082,15 @@ W:	https://linuxtv.org
+ S:	Maintained
+ F:	drivers/media/radio/radio-maxiradio*
+ 
++MCAN MMIO DEVICE DRIVER
++M:	Sriram Dash <sriram.dash@samsung.com>
++L:	linux-can@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/net/can/m_can.txt
++F:	drivers/net/can/m_can/m_can_platform.c
++F:	drivers/net/can/m_can/m_can.c
++F:	drivers/net/can/m_can/m_can.h
++
+ MCP4018 AND MCP4531 MICROCHIP DIGITAL POTENTIOMETER DRIVERS
+ M:	Peter Rosin <peda@axentia.se>
+ L:	linux-iio@vger.kernel.org
+-- 
+2.7.4
 
