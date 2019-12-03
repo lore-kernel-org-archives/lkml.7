@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B99C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E6DC43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6C472158C
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A01A20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:57:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413838;
-	bh=hg3O3/S4lttXG+2JlF6GAvLeIN89WGF2hMXQbXeBU/Q=;
+	s=default; t=1575413843;
+	bh=GYUwYBLbPvTeBue7pRSHLIh9EK/b9Y9ty9FB+eIcFBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SNUpZH/8SQ5oqRYKNLTf3WcxFmafXNh74ob9LW3I1bZZIsraOYrFAlN4ttMUuvHT6
-	 SBVmqJemHQqLO8lqKrS1wI4jjJWvRy71gAc6ko/TPidsvnRJz/HG3Rt929jDwxJrHG
-	 q2Jz2Y9H57K+FG31XDT7ngn4owSwqhzom1/SL/6w=
+	b=0bRNTmb3Xl6S3JTDnNvfDaZ1LA5h/lY5uXYy93wh/KNm8T6GZCJho5B9Txp1AV2eX
+	 Pkb8F/V0Bv3S+7vB6c/bp7gjnbn/Md1RnjR3O6F0hzEcH7RhukgmuUsO4/GNyKs0Ob
+	 w/MhFAWEamcXlXKNqtxxJMgq34FFhox638f+2PBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730339AbfLCW5Q (ORCPT
+        id S1730543AbfLCW5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:57:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52624 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:57:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730526AbfLCW5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:57:10 -0500
+        id S1729539AbfLCW5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:57:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CC9020865;
-        Tue,  3 Dec 2019 22:57:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A67F2053B;
+        Tue,  3 Dec 2019 22:57:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413829;
-        bh=hg3O3/S4lttXG+2JlF6GAvLeIN89WGF2hMXQbXeBU/Q=;
+        s=default; t=1575413839;
+        bh=GYUwYBLbPvTeBue7pRSHLIh9EK/b9Y9ty9FB+eIcFBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mHb+o8CKyjzmtw7zmVVRYExBjRn2+20MLBqLqHlWBknL0MQIME4v8uqN4Agb6rltC
-         04ZF0tG63FXDXjg2WCL9VfOyCXpQQJH9dwmoY7RKZAiFQBfo/yWu67S1z8bIgY37Yk
-         aLprnI5CORgwkgsmoYUQQnzVKXeCSnYDNmphiViU=
+        b=hvW55LPNn2MCDOgxIbKk6apD/8a768o+kXLrdaa88+Oc0zfm2mVZu3PrbSMIarZ16
+         dSE4QniiFeg/TqvQcVfkxfG/gN4kjW28xdT1ParydWxFBtmzYMZ58cKQmM0QWw8731
+         QhedN3EQMOplQXwTRE9sb69X2BjZAgLxFWqPWeDU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luca Ceresoli <luca@lucaceresoli.net>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.19 278/321] net: macb: fix error format in dev_err()
-Date:   Tue,  3 Dec 2019 23:35:44 +0100
-Message-Id: <20191203223441.589593297@linuxfoundation.org>
+        stable@vger.kernel.org, Menglong Dong <dong.menglong@zte.com.cn>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 282/321] macvlan: schedule bc_work even if error
+Date:   Tue,  3 Dec 2019 23:35:48 +0100
+Message-Id: <20191203223441.807130327@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -62,88 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luca Ceresoli <luca@lucaceresoli.net>
+From: Menglong Dong <dong.menglong@zte.com.cn>
 
-commit f413cbb332a0b5251a790f396d0eb4ebcade5dec upstream.
+[ Upstream commit 1d7ea55668878bb350979c377fc72509dd6f5b21 ]
 
-Errors are negative numbers. Using %u shows them as very large positive
-numbers such as 4294967277 that don't make sense. Use the %d format
-instead, and get a much nicer -19.
+While enqueueing a broadcast skb to port->bc_queue, schedule_work()
+is called to add port->bc_work, which processes the skbs in
+bc_queue, to "events" work queue. If port->bc_queue is full, the
+skb will be discarded and schedule_work(&port->bc_work) won't be
+called. However, if port->bc_queue is full and port->bc_work is not
+running or pending, port->bc_queue will keep full and schedule_work()
+won't be called any more, and all broadcast skbs to macvlan will be
+discarded. This case can happen:
 
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-Fixes: b48e0bab142f ("net: macb: Migrate to devm clock interface")
-Fixes: 93b31f48b3ba ("net/macb: unify clock management")
-Fixes: 421d9df0628b ("net/macb: merge at91_ether driver into macb driver")
-Fixes: aead88bd0e99 ("net: ethernet: macb: Add support for rx_clk")
-Fixes: f5473d1d44e4 ("net: macb: Support clock management for tsu_clk")
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+macvlan_process_broadcast() is the pending function of port->bc_work,
+it moves all the skbs in port->bc_queue to the queue "list", and
+processes the skbs in "list". During this, new skbs will keep being
+added to port->bc_queue in macvlan_broadcast_enqueue(), and
+port->bc_queue may already full when macvlan_process_broadcast()
+return. This may happen, especially when there are a lot of real-time
+threads and the process is preempted.
+
+Fix this by calling schedule_work(&port->bc_work) even if
+port->bc_work is full in macvlan_broadcast_enqueue().
+
+Fixes: 412ca1550cbe ("macvlan: Move broadcasts into a work queue")
+Signed-off-by: Menglong Dong <dong.menglong@zte.com.cn>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/ethernet/cadence/macb_main.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/net/macvlan.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -3328,7 +3328,7 @@ static int macb_clk_init(struct platform
- 		if (!err)
- 			err = -ENODEV;
- 
--		dev_err(&pdev->dev, "failed to get macb_clk (%u)\n", err);
-+		dev_err(&pdev->dev, "failed to get macb_clk (%d)\n", err);
- 		return err;
+--- a/drivers/net/macvlan.c
++++ b/drivers/net/macvlan.c
+@@ -363,10 +363,11 @@ static void macvlan_broadcast_enqueue(st
  	}
+ 	spin_unlock(&port->bc_queue.lock);
  
-@@ -3337,7 +3337,7 @@ static int macb_clk_init(struct platform
- 		if (!err)
- 			err = -ENODEV;
++	schedule_work(&port->bc_work);
++
+ 	if (err)
+ 		goto free_nskb;
  
--		dev_err(&pdev->dev, "failed to get hclk (%u)\n", err);
-+		dev_err(&pdev->dev, "failed to get hclk (%d)\n", err);
- 		return err;
- 	}
+-	schedule_work(&port->bc_work);
+ 	return;
  
-@@ -3351,25 +3351,25 @@ static int macb_clk_init(struct platform
- 
- 	err = clk_prepare_enable(*pclk);
- 	if (err) {
--		dev_err(&pdev->dev, "failed to enable pclk (%u)\n", err);
-+		dev_err(&pdev->dev, "failed to enable pclk (%d)\n", err);
- 		return err;
- 	}
- 
- 	err = clk_prepare_enable(*hclk);
- 	if (err) {
--		dev_err(&pdev->dev, "failed to enable hclk (%u)\n", err);
-+		dev_err(&pdev->dev, "failed to enable hclk (%d)\n", err);
- 		goto err_disable_pclk;
- 	}
- 
- 	err = clk_prepare_enable(*tx_clk);
- 	if (err) {
--		dev_err(&pdev->dev, "failed to enable tx_clk (%u)\n", err);
-+		dev_err(&pdev->dev, "failed to enable tx_clk (%d)\n", err);
- 		goto err_disable_hclk;
- 	}
- 
- 	err = clk_prepare_enable(*rx_clk);
- 	if (err) {
--		dev_err(&pdev->dev, "failed to enable rx_clk (%u)\n", err);
-+		dev_err(&pdev->dev, "failed to enable rx_clk (%d)\n", err);
- 		goto err_disable_txclk;
- 	}
- 
-@@ -3839,7 +3839,7 @@ static int at91ether_clk_init(struct pla
- 
- 	err = clk_prepare_enable(*pclk);
- 	if (err) {
--		dev_err(&pdev->dev, "failed to enable pclk (%u)\n", err);
-+		dev_err(&pdev->dev, "failed to enable pclk (%d)\n", err);
- 		return err;
- 	}
- 
+ free_nskb:
 
 
