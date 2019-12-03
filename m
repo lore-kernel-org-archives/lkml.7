@@ -2,134 +2,114 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B07AC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2667BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68887206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:47:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CdzFujST"
+	by mail.kernel.org (Postfix) with ESMTP id F410E206EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:47:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfLCQri (ORCPT
+        id S1727111AbfLCQry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 11:47:38 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:42078 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfLCQri (ORCPT
+        Tue, 3 Dec 2019 11:47:54 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54570 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727070AbfLCQry (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 11:47:38 -0500
-Received: by mail-qt1-f195.google.com with SMTP id j5so4394706qtq.9
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 08:47:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kpLW4+KBKC6+++fy2CkOyNZVdF+06Q7ITsR6tw96vos=;
-        b=CdzFujSTmuuhIBF3/5QBVwnMq1Ebiw0TNuO1H0GryrK2l/e5ltTktcxhdb6RkWuKH3
-         9BXU1wGN+OdXCmwRMLRWLqYZV0mkKmq5ot4Ji4TkUeeIsPb2Pr8/i5F3s2Dub0AALgUu
-         d5BIJ++q3ZZJXCgxHONBHfAhaK0+oxD49cJAUctFMAV6ThnxyVsDLRfIjdtRPNBtuOIE
-         XgfUCejJD4NjewxHKzIfGugOaisG2af1+iDIZVB8d+V9E6+TY1fWNRIdm1KJ6yggCeAA
-         B/Dm2uvZzGE8Du3MkNZrmv72+RkU7xs6P1mrrXhaKqQtQZxj13iW62ezC/fFHMwafepD
-         LyqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kpLW4+KBKC6+++fy2CkOyNZVdF+06Q7ITsR6tw96vos=;
-        b=U0T20uLTa2vPqhaITh+MeTxFKaiM2bEQmLmUGlx9qmkrvM7ndb94knMv34asFV7y5E
-         m3gy+y3TIqDKUyAW4/T3JZj7rZxK45/U3mw07BVxfN6TaYuCDg+wErfl0h5VyUrr5UYb
-         0mJZ0ki6jAX5kptLI2BKVILjWjEUSzJ3wIZYJUBhSj3eh5olJR1JM42j29NiDyz1XUT9
-         VyoWRrkIs/kv9xgPBuzbRy1QNcyiavtRC3i706+Pajc9F579YcT8hIN7dTLsFeUGKRX7
-         21WT/XjzoZn7si4cgrdFltZMQwhuUskUZWlQiJyWJPGo6IBKViD2q1ty1wtdjQ3HF8bI
-         sdCQ==
-X-Gm-Message-State: APjAAAWCMRG3M7oBvXuMS0DTzU1R3UKRUCZHHa5hEu/mTGKINWvwiYEa
-        Tn5npOY3nqJGhT5EGHHQiKVrdx59Jd1H60pjGor2XQ==
-X-Google-Smtp-Source: APXvYqxYAfVYzcBQqzY8M6/6NJdEMGC/11QBvfJGgQcOPTqmt53UtXeQCKjQYt5E9An2PS+idDwqh4H1BlqSqvSseYo=
-X-Received: by 2002:ac8:6651:: with SMTP id j17mr6016484qtp.115.1575391657081;
- Tue, 03 Dec 2019 08:47:37 -0800 (PST)
-MIME-Version: 1.0
-References: <20191119125805.4266-1-benjamin.gaignard@st.com>
- <f6f32b4d8d8e271953f887c50793f9d64d48e7b3.camel@intel.com> <6ad4ff49-240b-a665-d229-20e177fa6b2f@st.com>
-In-Reply-To: <6ad4ff49-240b-a665-d229-20e177fa6b2f@st.com>
-From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Tue, 3 Dec 2019 17:47:26 +0100
-Message-ID: <CA+M3ks4b222JuwrmujLrTwXZJC-aE0mo9B+fNg-9NgH7X8=y3w@mail.gmail.com>
-Subject: Re: [PATCH] drm/crtc-helper: drm_connector_get_single_encoder
- prototype is missing
-To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Cc:     "Souza, Jose" <jose.souza@intel.com>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "mripard@kernel.org" <mripard@kernel.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "sean@poorly.run" <sean@poorly.run>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+        Tue, 3 Dec 2019 11:47:54 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB3GhlMR153359
+        for <linux-kernel@vger.kernel.org>; Tue, 3 Dec 2019 11:47:52 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wkrj5w4n2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 11:47:50 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 3 Dec 2019 16:47:48 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 3 Dec 2019 16:47:45 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB3GlihS29098084
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 3 Dec 2019 16:47:44 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A0FE7A4054;
+        Tue,  3 Dec 2019 16:47:43 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 79031A4060;
+        Tue,  3 Dec 2019 16:47:42 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.191.79])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  3 Dec 2019 16:47:42 +0000 (GMT)
+Subject: Re: [PATCH v9 5/6] IMA: Add support to limit measuring keys
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org
+Date:   Tue, 03 Dec 2019 11:47:41 -0500
+In-Reply-To: <e2faf0d0-fee1-96fe-1120-c003761aa517@linux.microsoft.com>
+References: <20191127015654.3744-1-nramas@linux.microsoft.com>
+         <20191127015654.3744-6-nramas@linux.microsoft.com>
+         <1575375945.5241.16.camel@linux.ibm.com>
+         <e2faf0d0-fee1-96fe-1120-c003761aa517@linux.microsoft.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19120316-4275-0000-0000-0000038A9660
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120316-4276-0000-0000-0000389E356B
+Message-Id: <1575391661.5241.47.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-03_05:2019-12-02,2019-12-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ suspectscore=0 lowpriorityscore=0 clxscore=1015 priorityscore=1501
+ mlxscore=0 bulkscore=0 malwarescore=0 phishscore=0 impostorscore=0
+ mlxlogscore=912 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912030125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le mer. 20 nov. 2019 =C3=A0 00:28, Benjamin GAIGNARD
-<benjamin.gaignard@st.com> a =C3=A9crit :
->
->
-> On 11/19/19 7:53 PM, Souza, Jose wrote:
-> > On Tue, 2019-11-19 at 13:58 +0100, Benjamin Gaignard wrote:
-> >> Include drm_crtc_helper_internal.h to provide
-> >> drm_connector_get_single_encoder
-> >> prototype.
-> >>
-> >> Fixes: a92462d6bf493 ("drm/connector: Share with non-atomic drivers
-> >> the function to get the single encoder")
-> > drm_connector_get_single_encoder() is implemented before the use in
-> > this file so it is not broken, no need of a fixes tag.
-> >
-> > Reviewed-by: Jos=C3=A9 Roberto de Souza <jose.souza@intel.com>
->
-> I will remove fixe tag before push it.
->
-> Thanks,
->
-> Benjamin
+On Tue, 2019-12-03 at 08:13 -0800, Lakshmi Ramasubramanian wrote:
+> On 12/3/2019 4:25 AM, Mimi Zohar wrote:
+> 
+> Hi Mimi,
+> 
+> > Hi Lakshmi,
+> > 
+> > A keyring can be created by any user with any keyring name, other than
+> >   ones dot prefixed, which are limited to the trusted builtin keyrings.
+> >   With a policy of "func=KEY_CHECK template=ima-buf keyrings=foo", for
+> > example, keys loaded onto any keyring named "foo" will be measured.
+> >   For files, the IMA policy may be constrained to a particular uid/gid.
+> >   An additional method of identifying or constraining keyring names
+> > needs to be defined.
+> > 
+> 
+> I agree - this is a good idea.
+> 
+> Do you think this can be added as a separate patch set - enhancement to 
+> the current one, or should this be addressed in the current set?
+> 
+> I was just about to send an update today that addresses your latest 
+> comments. Will hold it if you think the above change should be included 
+> now. Please let me know.
 
-Applied on drm-misc-next with out Fixes tag.
-Thanks for the review.
+I'm hoping that it won't be all that difficult to implement and could
+be included in this patch set as an additional patch.
 
-Benjamin
+Mimi
 
->
-> >
-> >> Cc: Jos=C3=A9 Roberto de Souza <jose.souza@intel.com>
-> >>
-> >> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> >> ---
-> >>   drivers/gpu/drm/drm_crtc_helper.c | 2 ++
-> >>   1 file changed, 2 insertions(+)
-> >>
-> >> diff --git a/drivers/gpu/drm/drm_crtc_helper.c
-> >> b/drivers/gpu/drm/drm_crtc_helper.c
-> >> index 499b05aaccfc..93a4eec429e8 100644
-> >> --- a/drivers/gpu/drm/drm_crtc_helper.c
-> >> +++ b/drivers/gpu/drm/drm_crtc_helper.c
-> >> @@ -48,6 +48,8 @@
-> >>   #include <drm/drm_print.h>
-> >>   #include <drm/drm_vblank.h>
-> >>
-> >> +#include "drm_crtc_helper_internal.h"
-> >> +
-> >>   /**
-> >>    * DOC: overview
-> >>    *
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
