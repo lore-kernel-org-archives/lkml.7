@@ -1,177 +1,262 @@
-Return-Path: <SRS0=LniW=ZY=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA36C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB7DC43141
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BFDA20678
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Dec 2019 23:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1A3920722
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:00:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="U9wEliua"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="a+4vUUM7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbfLBX75 (ORCPT
+        id S1726452AbfLCAAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 18:59:57 -0500
-Received: from mail-eopbgr1320110.outbound.protection.outlook.com ([40.107.132.110]:30791
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725775AbfLBX75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 18:59:57 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Al1pN+r0zLUWuutcljsXM1hTEevN/xC4d0KDN2EwWHn26/5pWmO8zDVuANIkbVm2RRYqo5zYMLqEdIm3xXhgJmnoisQFbWfKmPiuO9qio7TITboFpOG9ttD4tJV9mTnl65VW7C/RjjDSVEyZRPL35qqW8+cCsrfFBIEc8/v5gba/l7ZrEHSQ/p6jmWb32tlnGMVG9/Jplxg/msOcusd0RvY1ZYvfhWNRFRjl0Sl0sXksDpIVtTIfLMVVYF5T2nNe5A5d3bLrv0/fbqRXUExU3TF7FhFI3iBJith0+q7zEKxn6lH+VmnIBrHNRbaJFGbU4LUcnHj6LF5Owuk6zAa2Og==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oe2L8bzEnwGmX3GLscAK1iL+8v4xS+dj4heGcxrolHU=;
- b=C0kNYsnGkTHIZiaSjSDEHOHH+1nm2w3IlHaC3782VeVEJAYidAm95nFNu4koFp+msu/nBhpPmsHYZgabaVYUs5+VjvzA13/eMzTelf/KOzF7JCfWovCPWF+gHM1xjF7KAGa4dNBTMF+pL2GVd/POS3qdhbHpjuoTL4odrFptemfXZ/7pZ5p5X14AzxPv9dlceXR3DSD8fMeD5Y/WHFVMj1hVykWRtFvszu/JOHED7mwSe+KJ+nE1K275W2QtxGfU0P2NFkWzVXsrwxmcrDR2lxbC/VXy3dtoLr9JeDk0UJztFgn/q2ibRdJHsdPXdxbGX0uNskj5N/L0ssRE+ecuQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oe2L8bzEnwGmX3GLscAK1iL+8v4xS+dj4heGcxrolHU=;
- b=U9wEliuaUqPlZPue0rYinMeWfEiPE60Ql2JjYmHGnpOi2j/+ddHPA5NThpiRsT8capJRTuo7ek9lgxbUyzVjiI3jZZSmAf00cEvK79w7mBvJxkhfOm0l254Qr1/2bAdLyxtRl50tuItvm/o+GH5oM+B5bhVyv9Ni/cud3LuXVCo=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0106.APCP153.PROD.OUTLOOK.COM (10.170.188.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.0; Mon, 2 Dec 2019 23:59:09 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::704b:f2b6:33d:557a]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::704b:f2b6:33d:557a%9]) with mapi id 15.20.2538.000; Mon, 2 Dec 2019
- 23:59:09 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Long Li <longli@microsoft.com>
-Subject: RE: [EXTERNAL] [PATCH 2/2] PCI: hv: Add support for protocol 1.3 and
- support PCI_BUS_RELATIONS2
-Thread-Topic: [EXTERNAL] [PATCH 2/2] PCI: hv: Add support for protocol 1.3 and
- support PCI_BUS_RELATIONS2
-Thread-Index: AQHVoaFkXIxw3tqrZk6POfn/+X8rjaenViVA
-Date:   Mon, 2 Dec 2019 23:59:09 +0000
-Message-ID: <PU1P153MB0169CFE46920BAEEE11CA9B7BF430@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1574474229-44840-1-git-send-email-longli@linuxonhyperv.com>
- <1574474229-44840-2-git-send-email-longli@linuxonhyperv.com>
-In-Reply-To: <1574474229-44840-2-git-send-email-longli@linuxonhyperv.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-12-02T23:59:07.6209316Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f258566e-1d09-4e97-950d-9e44dee110b0;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:3:8f1:d9c8:629b:7ac]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d469e003-f1c3-4799-5da5-08d777839f83
-x-ms-traffictypediagnostic: PU1P153MB0106:|PU1P153MB0106:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB0106191546EC58344414616ABF430@PU1P153MB0106.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0239D46DB6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(376002)(39860400002)(366004)(346002)(189003)(199004)(33656002)(478600001)(10290500003)(2906002)(4326008)(107886003)(66446008)(64756008)(46003)(66476007)(2201001)(9686003)(55016002)(5660300002)(1511001)(22452003)(316002)(7736002)(305945005)(74316002)(256004)(6436002)(10090500001)(110136005)(52536014)(229853002)(2501003)(99286004)(86362001)(102836004)(186003)(8990500004)(6506007)(71190400001)(71200400001)(81156014)(7696005)(25786009)(76176011)(8936002)(11346002)(446003)(81166006)(8676002)(6116002)(76116006)(66556008)(66946007)(6246003)(14454004)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0106;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: dXPe3l5ZheOj+jAcRZ9iBtT+ZqpEirKRYI+woxcpqgnBTEellY69RvSPSrGjlJuJCQSv1u041ncnir83zeBhvzhVLlGUzo2tbcQ54Lfb7+mhCFVnrjNP4gNxy02q66RY2x39ffNfRLTE0C4yUOEO9aHu25Uplis/REFAXXRjCNdLJfCPxAfnrJcTzz7U0C7LhppOGJEcsfsxp0nhnBQ5ZPvZ5AHlYD5sZd8mVERikccteNSz3a6sHBp/3FyyHgzbMTcOl6MR1QbIwsLRFDFqgo9RYFhkpvkBcXrfp2fNlurlaReL/a5HgR7yFfjj+PCE5CR8jRAhjRWyTgdYjSuTbo4rPIxZfL4pnckjkxZs3vTQXNT2TJXUpoSFNl9Xwd3UJ5tT2XIofcAMHQf29nJLmXoM1mARnUagS8m4dcPMcYl9hbZ87NvnY9tAk1X/fK6r
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 2 Dec 2019 19:00:45 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:51065 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725775AbfLCAAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 19:00:45 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47RhvX1h2lz9sP3;
+        Tue,  3 Dec 2019 11:00:39 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1575331241;
+        bh=ehUuKtq21c7JP3KxhQWOn6j7URCI+Jki4iw3Ti1zz6c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=a+4vUUM7/0EjzX+2stCMoiovqMuVaN0/Pjbl7HBD8Rl+Lsw4Jz5qrj8/fuGSmzVuw
+         51i5Iv1y81jAXig8h+Ii7mZBFzmFijQmO+jdyHW6Tjf7h/QJjoU1+kzsHY1DgoSJk2
+         sCxwgIwxRHAXYhrg2twqVMIWvA7mDK/mzE5C24JnUp6l5bFhJBNHw8YE7Kexz/ZTC8
+         7drAN0FequacPH8xhiNfPWZgQY0gfQG43aOtpea1WrUhr498grCDTLVgjeoFVpEKNL
+         xi18fUs5qv1Vm2aNe5++GEp9XV13UjyBupKfjQgBT4n2PA7QZUUt9/AEpMKv5DofbZ
+         wK2PtkRyU7EgQ==
+Date:   Tue, 3 Dec 2019 11:00:39 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus <torvalds@linux-foundation.org>
+Subject: Re: linux-next: manual merge of the y2038 tree with the xfs tree
+Message-ID: <20191203110039.2ec22a17@canb.auug.org.au>
+In-Reply-To: <20191030153046.01efae4a@canb.auug.org.au>
+References: <20191030153046.01efae4a@canb.auug.org.au>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d469e003-f1c3-4799-5da5-08d777839f83
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Dec 2019 23:59:09.2674
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZPAiaL7+Ulvk6KRnZIMdxDsQXs8lBKY2VwFBileeHujXAc7acF7XB6D6J/LSNaPovtpVTbCxM/s8LTKHfC8UOw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0106
+Content-Type: multipart/signed; boundary="Sig_/5_edYof0YP+3JTXH5TkWab8";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: linux-hyperv-owner@vger.kernel.org
-> Sent: Friday, November 22, 2019 5:57 PM
->  ...
-> @@ -63,6 +63,7 @@
->  enum pci_protocol_version_t {
->  	PCI_PROTOCOL_VERSION_1_1 =3D PCI_MAKE_VERSION(1, 1),	/* Win10
-> */
->  	PCI_PROTOCOL_VERSION_1_2 =3D PCI_MAKE_VERSION(1, 2),	/* RS1 */
-> +	PCI_PROTOCOL_VERSION_1_3 =3D PCI_MAKE_VERSION(1, 3),	/* VB */
+--Sig_/5_edYof0YP+3JTXH5TkWab8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+This conflict is now between the xfs tree and Linus' tree (and the
+merge fix up patch below needs applying to that merge.
+
+On Wed, 30 Oct 2019 15:31:10 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the y2038 tree got a conflict in:
+>=20
+>   fs/compat_ioctl.c
+>=20
+> between commit:
+>=20
+>   837a6e7f5cdb ("fs: add generic UNRESVSP and ZERO_RANGE ioctl handlers")
+>=20
+> from the xfs tree and commits:
+>   011da44bc5b6 ("compat: move FS_IOC_RESVSP_32 handling to fs/ioctl.c")
+>   37ecf8b20abd ("compat_sys_ioctl(): make parallel to do_vfs_ioctl()")
+>=20
+> from the y2038 tree.
+>=20
+> I fixed it up (see below and the added patch) and can carry the fix as
+> necessary. This is now fixed as far as linux-next is concerned, but any
+> non trivial conflicts should be mentioned to your upstream maintainer
+> when your tree is submitted for merging.  You may also want to consider
+> cooperating with the maintainer of the conflicting tree to minimise any
+> particularly complex conflicts.
+>=20
+> From af387ea192196ffd141234e7e45bcfbc2be1a4fc Mon Sep 17 00:00:00 2001
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Wed, 30 Oct 2019 15:05:29 +1100
+> Subject: [PATCH] fix up for "compat: move FS_IOC_RESVSP_32 handling to
+>  fs/ioctl.c"
+>=20
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  fs/ioctl.c             | 4 ++--
+>  include/linux/falloc.h | 7 +++++--
+>  2 files changed, 7 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/fs/ioctl.c b/fs/ioctl.c
+> index 455ad38c8610..2f5e4e5b97e1 100644
+> --- a/fs/ioctl.c
+> +++ b/fs/ioctl.c
+> @@ -495,7 +495,7 @@ int ioctl_preallocate(struct file *filp, int mode, vo=
+id __user *argp)
+>  /* on ia32 l_start is on a 32-bit boundary */
+>  #if defined CONFIG_COMPAT && defined(CONFIG_X86_64)
+>  /* just account for different alignment */
+> -int compat_ioctl_preallocate(struct file *file,
+> +int compat_ioctl_preallocate(struct file *file, int mode,
+>  				struct space_resv_32 __user *argp)
+>  {
+>  	struct inode *inode =3D file_inode(file);
+> @@ -517,7 +517,7 @@ int compat_ioctl_preallocate(struct file *file,
+>  		return -EINVAL;
+>  	}
+> =20
+> -	return vfs_fallocate(file, FALLOC_FL_KEEP_SIZE, sr.l_start, sr.l_len);
+> +	return vfs_fallocate(file, mode | FALLOC_FL_KEEP_SIZE, sr.l_start, sr.l=
+_len);
+>  }
+>  #endif
+> =20
+> diff --git a/include/linux/falloc.h b/include/linux/falloc.h
+> index 63c4f0d615bc..ab42b72424f0 100644
+> --- a/include/linux/falloc.h
+> +++ b/include/linux/falloc.h
+> @@ -45,10 +45,13 @@ struct space_resv_32 {
+>  	__s32		l_pad[4];	/* reserve area */
 >  };
+> =20
+> -#define FS_IOC_RESVSP_32		_IOW ('X', 40, struct space_resv_32)
+> +#define FS_IOC_RESVSP_32	_IOW ('X', 40, struct space_resv_32)
+> +#define FS_IOC_UNRESVSP_32	_IOW ('X', 41, struct space_resv_32)
+>  #define FS_IOC_RESVSP64_32	_IOW ('X', 42, struct space_resv_32)
+> +#define FS_IOC_UNRESVSP64_32	_IOW ('X', 43, struct space_resv_32)
+> +#define FS_IOC_ZERO_RANGE_32	_IOW ('X', 57, struct space_resv_32)
+> =20
+> -int compat_ioctl_preallocate(struct file *, struct space_resv_32 __user =
+*);
+> +int compat_ioctl_preallocate(struct file *, int mode, struct space_resv_=
+32 __user *);
+> =20
+>  #endif
+> =20
+> --=20
+> 2.23.0
+>=20
+> --=20
+> Cheers,
+> Stephen Rothwell
+>=20
+> diff --cc fs/compat_ioctl.c
+> index 62e530814cef,9ae90d728c0f..000000000000
+> --- a/fs/compat_ioctl.c
+> +++ b/fs/compat_ioctl.c
+> @@@ -1020,51 -165,38 +165,57 @@@ COMPAT_SYSCALL_DEFINE3(ioctl, unsigned=20
+>   	case FIONBIO:
+>   	case FIOASYNC:
+>   	case FIOQSIZE:
+> - 		break;
+> -=20
+> - #if defined(CONFIG_IA64) || defined(CONFIG_X86_64)
+> + 	case FS_IOC_FIEMAP:
+> + 	case FIGETBSZ:
+> + 	case FICLONERANGE:
+> + 	case FIDEDUPERANGE:
+> + 		goto found_handler;
+> + 	/*
+> + 	 * The next group is the stuff handled inside file_ioctl().
+> + 	 * For regular files these never reach ->ioctl(); for
+> + 	 * devices, sockets, etc. they do and one (FIONREAD) is
+> + 	 * even accepted in some cases.  In all those cases
+> + 	 * argument has the same type, so we can handle these
+> + 	 * here, shunting them towards do_vfs_ioctl().
+> + 	 * ->compat_ioctl() will never see any of those.
+> + 	 */
+> + 	/* pointer argument, never actually handled by ->ioctl() */
+> + 	case FIBMAP:
+> + 		goto found_handler;
+> + 	/* handled by some ->ioctl(); always a pointer to int */
+> + 	case FIONREAD:
+> + 		goto found_handler;
+> + 	/* these two get messy on amd64 due to alignment differences */
+> + #if defined(CONFIG_X86_64)
+>   	case FS_IOC_RESVSP_32:
+>   	case FS_IOC_RESVSP64_32:
+>  -		error =3D compat_ioctl_preallocate(f.file, compat_ptr(arg));
+>  +		error =3D compat_ioctl_preallocate(f.file, 0, compat_ptr(arg));
+>  +		goto out_fput;
+>  +	case FS_IOC_UNRESVSP_32:
+>  +	case FS_IOC_UNRESVSP64_32:
+>  +		error =3D compat_ioctl_preallocate(f.file, FALLOC_FL_PUNCH_HOLE,
+>  +				compat_ptr(arg));
+>  +		goto out_fput;
+>  +	case FS_IOC_ZERO_RANGE_32:
+>  +		error =3D compat_ioctl_preallocate(f.file, FALLOC_FL_ZERO_RANGE,
+>  +				compat_ptr(arg));
+>   		goto out_fput;
+>   #else
+>   	case FS_IOC_RESVSP:
+>   	case FS_IOC_RESVSP64:
+>  -		goto found_handler;
+>  +		error =3D ioctl_preallocate(f.file, 0, compat_ptr(arg));
+>  +		goto out_fput;
+>  +	case FS_IOC_UNRESVSP:
+>  +	case FS_IOC_UNRESVSP64:
+>  +		error =3D ioctl_preallocate(f.file, FALLOC_FL_PUNCH_HOLE,
+>  +				compat_ptr(arg));
+>  +		goto out_fput;
+>  +	case FS_IOC_ZERO_RANGE:
+>  +		error =3D ioctl_preallocate(f.file, FALLOC_FL_ZERO_RANGE,
+>  +				compat_ptr(arg));
+>  +		goto out_fput;
+>   #endif
+>  =20
+> - 	case FICLONE:
+> - 	case FICLONERANGE:
+> - 	case FIDEDUPERANGE:
+> - 	case FS_IOC_FIEMAP:
+> - 		goto do_ioctl;
+> -=20
+> - 	case FIBMAP:
+> - 	case FIGETBSZ:
+> - 	case FIONREAD:
+> - 		if (S_ISREG(file_inode(f.file)->i_mode))
+> - 			break;
+> - 		/*FALL THROUGH*/
+> -=20
+>   	default:
+>   		if (f.file->f_op->compat_ioctl) {
+>   			error =3D f.file->f_op->compat_ioctl(f.file, cmd, arg);
 
-What is "VB" ? Can we use a more meaningful name here? :-)
+--=20
+Cheers,
+Stephen Rothwell
 
-> +struct pci_function_description2 {
-> +	u16	v_id;	/* vendor ID */
-> +	u16	d_id;	/* device ID */
-> +	u8	rev;
-> +	u8	prog_intf;
-> +	u8	subclass;
-> +	u8	base_class;
-> +	u32	subsystem_id;
-> +	union win_slot_encoding win_slot;
+--Sig_/5_edYof0YP+3JTXH5TkWab8
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-space -> TAB?
+-----BEGIN PGP SIGNATURE-----
 
-> +/*
-> + * Set NUMA node for the devices on the bus
-> + */
-> +static void pci_assign_numa_node(struct hv_pcibus_device *hbus)
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3lpacACgkQAVBC80lX
+0Gxefgf/eFC5Ja1WCb8ObxkHw12SrZfMlHLZ3b/7qM0WvkkgUXa4VD6Dxyg5bbzY
+/h2Qpm7WT2lcmEoKn3zujfXc4DHEJlkewLk2MZA4PS522C0mHaTG7joC5OUnNocr
+luluGD/DHU4H96lkrMg5r+q5JYbs6upiuVcFP+1sOA9xgeuqmcx7/IytlDTuBRCK
+dJZj1sm2BnBjZbml/9kdnCXxoD/ZAnX4+rFK4L9rMDPlkXOee+jn+o6xPuz5sl5/
+hY2t/oZ08f8bKnguN471ChdE8YwAiWHN/6oDUBO/6qusdFwZreJfId0H3dhZ8CUG
+Omg3ObpWTZXRZuz0eWieTWN+VA3M6w==
+=bZuD
+-----END PGP SIGNATURE-----
 
-IMO we'd better add a "hv_" prefix to this function's name, otherwise it lo=
-oks
-more like a generic PCI subsystem API.
-
-> +{
-> +	struct pci_dev *dev;
-> +	struct pci_bus *bus =3D hbus->pci_bus;
-> +	struct hv_pci_dev *hv_dev;
-> +
-> +	list_for_each_entry(dev, &bus->devices, bus_list) {
-> +		hv_dev =3D get_pcichild_wslot(hbus, devfn_to_wslot(dev->devfn));
-> +		if (!hv_dev)
-> +			continue;
-> +
-> +		if (hv_dev->desc.flags & HV_PCI_DEVICE_FLAG_NUMA_AFFINITY)
-> +			set_dev_node(&dev->dev, hv_dev->desc.virtual_numa_node);
-> +	}
-> +}
-
-Can you please give a brief background introduction to dev->numa_node,
-e.g. how is it used here? -- is it used when a PCI device driver (e.g. the =
-mlx
-driver) asks the kernel to allocate memory for DMA, or allocate MSI interru=
-pts?
-How big is the performance gain in the tests? I'm curious as it looks uncle=
-ar
-to me how dev->numa_node is used by the PCI subsystem.
-
-Thanks,
--- Dexuan
+--Sig_/5_edYof0YP+3JTXH5TkWab8--
