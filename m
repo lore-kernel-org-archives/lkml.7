@@ -2,154 +2,141 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE86C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B03F3C43141
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 147EC20726
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8367C2073C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:11:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oBqcKe8G"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K1e8TPhp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbfLCFIv (ORCPT
+        id S1726661AbfLCFLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 00:08:51 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40242 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfLCFIv (ORCPT
+        Tue, 3 Dec 2019 00:11:19 -0500
+Received: from mail-pj1-f74.google.com ([209.85.216.74]:42837 "EHLO
+        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfLCFLS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 00:08:51 -0500
-Received: by mail-ot1-f66.google.com with SMTP id i15so1809529oto.7
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 21:08:50 -0800 (PST)
+        Tue, 3 Dec 2019 00:11:18 -0500
+Received: by mail-pj1-f74.google.com with SMTP id v35so1264635pjv.9
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 21:11:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WZKMAVxtDLCraxcIiN00SsJEJBiXhWtyCoaPrnrSK7s=;
-        b=oBqcKe8GwpzMfWCzOpz6k8A9kpdP/IpogOa4QMVMi1V41uaJwMzkXho7ydtuEMajNz
-         szdX7Xtr7bE/4qsM0T2BFq8e80vtNeL84dLeM/iqGREr49p8N2c53zCmQa+n950nVR6Z
-         6iGPayd+018+WDpv5SCby8xhrf+/42Npi3JOslIr4vH65sAgSziSEZGuefAlnAJocoBn
-         id++ytyCPP/m9lOSO70QGToIxsNbT+MBZz33hSF1z/NGLHQr2n4eusakZHYVnS/cRl7g
-         tqkF2YKPkJGN/mt88IQpUZ6SPZUwQmO8hGjGrYvQrv6Yq9v3/NTajW6FAB8XUZFC01vr
-         bafw==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=JS26lqPOsyf+GCzfh2q7I14K35HWfvfL+jqbIeTiEhs=;
+        b=K1e8TPhpNMFVfy3zpUvxGh3rgUGzKKm5sRwldvLEOIz/KQFH4IXBVzoD7xIeXW+sI+
+         OHuBZYRP4c76okFVaCmF7t+ZhiyQ47NNKd8za4hEYxZ/9eN2nJNM68LEf9dSAhEHOwN4
+         a9+fCrUqBS2/vijwnB/zHYZ3QZP70NycgF/0gJuHNVgL4OVsK9mXOkllWTRUysHBF+wa
+         Gak/gb8gp9GJqewrQ7lybxNuknjIdN/43X38dwmp6wpmPxfFAzDAyu5634JeWK/S45eI
+         j3VRm8PmCQYeh3ZNcfCFmHhOhd5swp1KGjEMgNcsj8Lz9Zt42UsPXNuvXXoYDhc3LwDH
+         UWxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WZKMAVxtDLCraxcIiN00SsJEJBiXhWtyCoaPrnrSK7s=;
-        b=nr0JmURrOhEW9b7Si5y6aXIeQjH4G6sv76y/hgcHhq+9NVIydLJgGBTa8LNi8fePn5
-         5z85dpacou+wkmKGEZHS5AKiz1eFK/SjuAOtlQnP7rdVGmB2cUiWtwZ2vp92/Ru8XlMU
-         5d21P5tWfymZ1zU7h6nf3lgpiw9N/uqN32ZRh/Awf0YAB26XIuBFdGJ95fGw2sH8CmTI
-         o/w9tELgZpN5eCEFBDLW8oTdzLm5thBqh0ozoZs6PepdgEx0SERsffujwkh05SQUpKoE
-         7dgea9KPgiByZq41H7hEewpI35S/RbI/q2vSXKlAUCdY0TObP8WQYLc7aqiWBh+TKZYH
-         Fc1Q==
-X-Gm-Message-State: APjAAAWSZT8YfWB3/sXVWU81a0dKZhZhpn1Km/aDSs918/pln6kXesIh
-        Kfi6uj4/LKrcWjXws2lxQDlvuZCl2AR29VsZkxWi4A==
-X-Google-Smtp-Source: APXvYqzEJd0JnrQikt41atghBrKjPPeBmz9MNjbEqllktVwshO8ISesIC+M+S9vKnsCFZYOczBBF7MBhb09xnC6+tFw=
-X-Received: by 2002:a9d:66ca:: with SMTP id t10mr1941618otm.352.1575349730156;
- Mon, 02 Dec 2019 21:08:50 -0800 (PST)
-MIME-Version: 1.0
-References: <20190911182546.17094-1-nsaenzjulienne@suse.de> <20190911182546.17094-4-nsaenzjulienne@suse.de>
-In-Reply-To: <20190911182546.17094-4-nsaenzjulienne@suse.de>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Mon, 2 Dec 2019 21:08:38 -0800
-Message-ID: <CALAqxLVVcsmFrDKLRGRq7GewcW405yTOxG=KR3csVzQ6bXutkA@mail.gmail.com>
-Subject: Re: [PATCH v6 3/4] arm64: use both ZONE_DMA and ZONE_DMA32
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>, wahrenst@gmx.net,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, mbrugger@suse.com,
-        linux-rpi-kernel@lists.infradead.org, phill@raspberrypi.org,
-        Will Deacon <will@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Nicolas Dechense <nicolas.dechesne@linaro.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=JS26lqPOsyf+GCzfh2q7I14K35HWfvfL+jqbIeTiEhs=;
+        b=sxV5dUFFh7RA+BAOgEk63wZLOWnEIgyoHq2dnTdrRTggRRIeU3yvXnwvRhE+WRealT
+         I/xHEhP8Bh7I5a33TqXHFCrQT9A5h1PbPz7/fKR9WsVgb3VYCdeGTFq0yaNcxdgi0iwH
+         FU1nKeT9S8amIgcz+de0db/INA3iUFg874w8el9s4LEMuNUEa4E4ahp/2zZDJMgx7bFP
+         aEnY2TlgSwl9PJ8fGqRQvGNA2rllQ6LHT0eO2Jlo95TAjzC7RI3Xe+z09Q4hUfgkdqmj
+         kjbqdTrKaj3E8AQAemFrWmjWKP4NocPMehxrU5xIjcgauXTuwpp5LNtt9xChp/shY2qr
+         WA3Q==
+X-Gm-Message-State: APjAAAX5rpLCaIz25vOJHBF+TL4gDjxChsmiJ4uvytutOrIO2srNGfWg
+        4OqMdyJMPZ1OHld+YyBy9Es9LGPSNYM=
+X-Google-Smtp-Source: APXvYqwAUHq1SM7kgd3huIBZdhakSOyUU8oN/jfGh2+n4qRA8Pa17aUBVqzak3AMNCxa4UE+GvJKUKnGXqc=
+X-Received: by 2002:a63:4104:: with SMTP id o4mr3339080pga.169.1575349877576;
+ Mon, 02 Dec 2019 21:11:17 -0800 (PST)
+Date:   Mon,  2 Dec 2019 21:10:41 -0800
+Message-Id: <20191203051049.44573-1-drosen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
+Subject: [PATCH 0/8] Support for Casefolding and Encryption
+From:   Daniel Rosenberg <drosen@google.com>
+To:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Eric Biggers <ebiggers@kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel-team@android.com, Daniel Rosenberg <drosen@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 11:26 AM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
-> So far all arm64 devices have supported 32 bit DMA masks for their
-> peripherals. This is not true anymore for the Raspberry Pi 4 as most of
-> it's peripherals can only address the first GB of memory on a total of
-> up to 4 GB.
->
-> This goes against ZONE_DMA32's intent, as it's expected for ZONE_DMA32
-> to be addressable with a 32 bit mask. So it was decided to re-introduce
-> ZONE_DMA in arm64.
->
-> ZONE_DMA will contain the lower 1G of memory, which is currently the
-> memory area addressable by any peripheral on an arm64 device.
-> ZONE_DMA32 will contain the rest of the 32 bit addressable memory.
->
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Ext4 and F2FS currently both support casefolding and encryption, but not at the
+same time. These patches aim to rectify that.
 
-Hey Nicolas,
-  Testing the db845c with linus/master, I found a regression causing
-system hangs in early boot:
+Since directory names are stored case preserved, we cannot just take the hash
+of the ciphertext. Instead we use the siphash of the casefolded name. With this
+we no longer have a direct path from an encrypted name to the hash without the
+key. To deal with this, fscrypt now always includes the hash in the name it
+presents when the key is not present. There is a pre-existing bug where you can
+change parts of the hash and still match the name so long as the disruption to
+the hash does not happen to affect lookup on that filesystem. I'm not sure how
+to fix that without making ext4 lookups slower in the more common case.
 
-[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x517f803c]
-[    0.000000] Linux version 5.4.0-mainline-10675-g957a03b9e38f
-(docker@a4ec90a1e72c) (gcc version 7.4.0 (Ubuntu/Linaro
-7.4.0-1ubuntu1~18.04.1)) #1209 SMP PREEMPT Tue Dec 3 00:23:15 UTC 2019
-[    0.000000] Machine model: Thundercomm Dragonboard 845c
-[    0.000000] earlycon: qcom_geni0 at MMIO 0x0000000000a84000
-(options '115200n8')
-[    0.000000] printk: bootconsole [qcom_geni0] enabled
-[    0.000000] efi: Getting EFI parameters from FDT:
-[    0.000000] efi: UEFI not found.
-[    0.000000] cma: Reserved 16 MiB at 0x00000000ff000000
-[    0.000000] psci: probing for conduit method from DT.
-[    0.000000] psci: PSCIv1.1 detected in firmware.
-[    0.000000] psci: Using standard PSCI v0.2 function IDs
-[    0.000000] psci: MIGRATE_INFO_TYPE not supported.
-[    0.000000] psci: SMC Calling Convention v1.0
-[    0.000000] psci: OSI mode supported.
-[    0.000000] percpu: Embedded 31 pages/cpu s87512 r8192 d31272 u126976
-[    0.000000] Detected VIPT I-cache on CPU0
-[    0.000000] CPU features: detected: GIC system register CPU interface
-[    0.000000] CPU features: kernel page table isolation forced ON by KASLR
-[    0.000000] CPU features: detected: Kernel page table isolation (KPTI)
-[    0.000000] ARM_SMCCC_ARCH_WORKAROUND_1 missing from firmware
-[    0.000000] CPU features: detected: Hardware dirty bit management
-[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: -188245
-[    0.000000] Kernel command line: earlycon
-firmware_class.path=/vendor/firmware/ androidboot.hardware=db845c
-init=/init androidboot.boot_devices=soc/1d84000.ufshc
-printk.devkmsg=on buildvariant=userdebug root=/dev/sda2
-androidboot.bootdevice=1d84000.ufshc androidboot.serialno=c4e1189c
-androidboot.baseband=sda
-msm_drm.dsi_display0=dsi_lt9611_1080_video_display:
-androidboot.slot_suffix=_a skip_initramfs rootwait ro init=/init
+I moved the identical dcache operations for ext4 and f2fs into the VFS, as any
+filesystem that uses casefolding will need the same code. This will also allow
+further optimizations to that path, although my current changes don't take
+advantage of that yet.
 
-<hangs indefinitely here>
+For Ext4, this also means that we need to store the hash on disk. We only do so
+for encrypted and casefolded directories to avoid on disk format changes.
+Previously encryption and casefolding could not live on the same filesystem,
+and we're relaxing that requirement. F2fs is a bit more straightforward since
+it already stores hashes on disk.
 
-I bisected the issue down to this patch (1a8e1cef7603 upstream - the
-previous patch a573cdd7973d works though I need to apply the
-arm64_dma_phys_limit bit from this one as the previous patch doesn't
-build on its own).
+I've updated the related tools with just enough to enable the feature. I still
+need to adjust their respective fsck's, although without access to the keys,
+they won't be able to verify the hashes of casefolded and encrypted names.
 
-In the above log:
-[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: -188245
-looks the most suspect, and going back to the working a573cdd7973d +
-build fix I see:
-[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 957419
 
-Do you have any suggestions for what might be going wrong?
+Daniel Rosenberg (8):
+  fscrypt: Add siphash and hash key for policy v2
+  fscrypt: Don't allow v1 policies with casefolding
+  fscrypt: Change format of no-key token
+  vfs: Fold casefolding into vfs
+  f2fs: Handle casefolding with Encryption
+  ext4: Use struct super_blocks' casefold data
+  ext4: Hande casefolding with encryption
+  ext4: Optimize match for casefolded encrypted dirs
 
-thanks
--john
+ Documentation/filesystems/ext4/directory.rst |  27 ++
+ fs/crypto/Kconfig                            |   1 +
+ fs/crypto/fname.c                            | 204 +++++++++---
+ fs/crypto/fscrypt_private.h                  |   9 +
+ fs/crypto/keysetup.c                         |  29 +-
+ fs/crypto/policy.c                           |  26 +-
+ fs/dcache.c                                  |  35 ++
+ fs/ext4/dir.c                                |  72 +----
+ fs/ext4/ext4.h                               |  87 +++--
+ fs/ext4/hash.c                               |  26 +-
+ fs/ext4/ialloc.c                             |   5 +-
+ fs/ext4/inline.c                             |  41 +--
+ fs/ext4/namei.c                              | 318 ++++++++++++-------
+ fs/ext4/super.c                              |  21 +-
+ fs/f2fs/dir.c                                | 115 +++----
+ fs/f2fs/f2fs.h                               |  14 +-
+ fs/f2fs/hash.c                               |  25 +-
+ fs/f2fs/inline.c                             |   9 +-
+ fs/f2fs/super.c                              |  17 +-
+ fs/f2fs/sysfs.c                              |   8 +-
+ fs/inode.c                                   |   8 +
+ fs/namei.c                                   |  43 ++-
+ include/linux/fs.h                           |  12 +
+ include/linux/fscrypt.h                      | 107 +++----
+ 24 files changed, 797 insertions(+), 462 deletions(-)
+
+-- 
+2.24.0.393.g34dc348eaf-goog
+
