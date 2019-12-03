@@ -2,199 +2,147 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7F9C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D03C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A570720640
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:56:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vY+fK0/0"
+	by mail.kernel.org (Postfix) with ESMTP id CD2792073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:57:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575395834;
+	bh=2kktFZXD9CwoMbSmBlBwAhAuQvCLLNSXzvolzrrYLkA=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=AwxmHJshE5YvxRMdnpHpg/+0OV1L04T67oxWFK3Qaxto/WBpbfihZnCEM7xt1xPEF
+	 TFsT6SLuTVCMfL9torKz2TotGpG3SdXzVofqOqBbVXAskNlSbIFk3MAZFq76L6roGP
+	 Ee4/eUFesRJBHFd6wSc7JtvD3Aeu2t+SeaG8+R4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfLCR4X (ORCPT
+        id S1727093AbfLCR5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 12:56:23 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36823 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbfLCR4X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 12:56:23 -0500
-Received: by mail-lj1-f194.google.com with SMTP id r19so4884748ljg.3
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 09:56:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:cc
-         :content-transfer-encoding;
-        bh=xKJZIaHtKKjuYtXbsDuWM2Dl2PKeFrJbutUCYZbgryc=;
-        b=vY+fK0/0iOXoXphfCYAqMfmDz09jvFcyg+NSgTRbjfMEFLh5TTHOygTc+OAlKgbFtl
-         KP1JeWTXn6Nbz87qpP1lDqVKuyLJ2K9Dr2085WxZsQaVHqX0QI5r67HxcGEEu8v+dUeE
-         0sqhAcsXEiDpV38F0K+QhAgOALvhB0pXKauCiYIq9P72XGNM5ujpjdXycWrvzZXQCjC4
-         3HMwrTyvWM8l5hx7ffuhz81FeTembMKmirRAsU68ad1RDy+dlCCdlWpuwlL9k0SsxizK
-         +Z3q4tE7QyoYz0Bo4AELFwQFBjD39mqRda3XpcYC4Y6Brjwq+ZwBndwIh20jKwdI2Pq5
-         NFjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:cc:content-transfer-encoding;
-        bh=xKJZIaHtKKjuYtXbsDuWM2Dl2PKeFrJbutUCYZbgryc=;
-        b=ML8099NIpkID3m6dZlAADDf2osvX3lf+j4mEdnQ7ZF0dUXlH3tjKRaFa6lHKSv0blA
-         hRstFNDIcM9i1KOeMn43WrafYcPWfxtlvH/K8y6On4aS8DNfjdRXIILsxNdgyeX99GiH
-         vZrhda3KYbLW7GViNns9XyMIg4z6pAeo2bryfpALI9gzKxa5lJTIlUGH20ZfAFCUxLe1
-         tCWUu8wj8ui+5GRqYZyCChUqfyUTxAXQs9cusmcvB0DBCSYIagXBK7R9E5DAIwHckiiX
-         1/RfYGvkwF66GI8n34MEbuIiwNNSX1wdKzJgMUYjJ026dAAdeGJf0ChfxG0A5F3Kh7VZ
-         3DOQ==
-X-Gm-Message-State: APjAAAXYDLWHHTKemOt4qPZkXGCNJxS+Lnd6XibjKtxIXDg9XY0CdrFT
-        Pld1poXd0EQQsPMaKx3rs+LQPGD6LB0byFZRnAw=
-X-Received: by 2002:a2e:97cf:: with SMTP id m15mt2980334ljj.130.1575395779796;
- Tue, 03 Dec 2019 09:56:19 -0800 (PST)
+        Tue, 3 Dec 2019 12:57:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40596 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726074AbfLCR5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 12:57:13 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53F3D20674;
+        Tue,  3 Dec 2019 17:57:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575395832;
+        bh=2kktFZXD9CwoMbSmBlBwAhAuQvCLLNSXzvolzrrYLkA=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=hI3NOZiCUI9g1G+djYFq5JeGstQs+WuqJrQiddfYqVVLV8zruMzt2OiVa5zCkvhCE
+         ev5xBCJDwjvEkzFj/5YzjU9g5wHgWbwfq3Vvg1rePHNZEjwjAcUd5Zf/b2s8xfHD+g
+         Kfw2bOkvzI40czmGQR9IQNZqH3V5tfp+Qx1LIctg=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 2D8D33522780; Tue,  3 Dec 2019 09:57:12 -0800 (PST)
+Date:   Tue, 3 Dec 2019 09:57:12 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        David Miller <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -tip] kprobes: Lock rcu_read_lock() while searching kprobe
+Message-ID: <20191203175712.GI2889@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <157527193358.11113.14859628506665612104.stgit@devnote2>
+ <20191202210854.GD17234@google.com>
+ <20191203071329.GC115767@gmail.com>
 MIME-Version: 1.0
-References: <20191112203154.101534-1-wvw@google.com> <20191112204223.115589-1-wvw@google.com>
- <57162b7c-cf34-2b55-a17c-40d96a0ab105@linaro.org>
-In-Reply-To: <57162b7c-cf34-2b55-a17c-40d96a0ab105@linaro.org>
-From:   Wei Wang <wei.vince.wang@gmail.com>
-Date:   Tue, 3 Dec 2019 09:55:43 -0800
-Message-ID: <CAMFybE4aSo7AK20T0Hkjo-R-BkjaYtqz-FMF8pS_p_GeLg5tJA@mail.gmail.com>
-Subject: Re: [PATCH v2] thermal: Fix deadlock in thermal thermal_zone_device_check
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191203071329.GC115767@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 9:15 AM Daniel Lezcano <daniel.lezcano@linaro.org> w=
-rote:
->
-> On 12/11/2019 21:42, Wei Wang wrote:
-> > commit [2] changed cancel_delayed_work to cancel_delayed_work_sync to
-> > avoid a use-after-free issue. However, cancel_delayed_work_sync could b=
-e
-> > called insides the WQ causing deadlock [1].
-> >
-> > [1]
-> > [54109.642398] c0   1162 kworker/u17:1   D    0 11030      2 0x00000000
-> > [54109.642437] c0   1162 Workqueue: thermal_passive_wq thermal_zone_dev=
-ice_check
-> > [54109.642447] c0   1162 Call trace:
-> > [54109.642456] c0   1162  __switch_to+0x138/0x158
-> > [54109.642467] c0   1162  __schedule+0xba4/0x1434
-> > [54109.642480] c0   1162  schedule_timeout+0xa0/0xb28
-> > [54109.642492] c0   1162  wait_for_common+0x138/0x2e8
-> > [54109.642511] c0   1162  flush_work+0x348/0x40c
-> > [54109.642522] c0   1162  __cancel_work_timer+0x180/0x218
-> > [54109.642544] c0   1162  handle_thermal_trip+0x2c4/0x5a4
-> > [54109.642553] c0   1162  thermal_zone_device_update+0x1b4/0x25c
-> > [54109.642563] c0   1162  thermal_zone_device_check+0x18/0x24
-> > [54109.642574] c0   1162  process_one_work+0x3cc/0x69c
-> > [54109.642583] c0   1162  worker_thread+0x49c/0x7c0
-> > [54109.642593] c0   1162  kthread+0x17c/0x1b0
-> > [54109.642602] c0   1162  ret_from_fork+0x10/0x18
-> > [54109.643051] c0   1162 kworker/u17:2   D    0 16245      2 0x00000000
-> > [54109.643067] c0   1162 Workqueue: thermal_passive_wq thermal_zone_dev=
-ice_check
-> > [54109.643077] c0   1162 Call trace:
-> > [54109.643085] c0   1162  __switch_to+0x138/0x158
-> > [54109.643095] c0   1162  __schedule+0xba4/0x1434
-> > [54109.643104] c0   1162  schedule_timeout+0xa0/0xb28
-> > [54109.643114] c0   1162  wait_for_common+0x138/0x2e8
-> > [54109.643122] c0   1162  flush_work+0x348/0x40c
-> > [54109.643131] c0   1162  __cancel_work_timer+0x180/0x218
-> > [54109.643141] c0   1162  handle_thermal_trip+0x2c4/0x5a4
-> > [54109.643150] c0   1162  thermal_zone_device_update+0x1b4/0x25c
-> > [54109.643159] c0   1162  thermal_zone_device_check+0x18/0x24
-> > [54109.643167] c0   1162  process_one_work+0x3cc/0x69c
-> > [54109.643177] c0   1162  worker_thread+0x49c/0x7c0
-> > [54109.643186] c0   1162  kthread+0x17c/0x1b0
-> > [54109.643195] c0   1162  ret_from_fork+0x10/0x18
-> > [54109.644500] c0   1162 cat             D    0  7766      1 0x00000001
-> > [54109.644515] c0   1162 Call trace:
-> > [54109.644524] c0   1162  __switch_to+0x138/0x158
-> > [54109.644536] c0   1162  __schedule+0xba4/0x1434
-> > [54109.644546] c0   1162  schedule_preempt_disabled+0x80/0xb0
-> > [54109.644555] c0   1162  __mutex_lock+0x3a8/0x7f0
-> > [54109.644563] c0   1162  __mutex_lock_slowpath+0x14/0x20
-> > [54109.644575] c0   1162  thermal_zone_get_temp+0x84/0x360
-> > [54109.644586] c0   1162  temp_show+0x30/0x78
-> > [54109.644609] c0   1162  dev_attr_show+0x5c/0xf0
-> > [54109.644628] c0   1162  sysfs_kf_seq_show+0xcc/0x1a4
-> > [54109.644636] c0   1162  kernfs_seq_show+0x48/0x88
-> > [54109.644656] c0   1162  seq_read+0x1f4/0x73c
-> > [54109.644664] c0   1162  kernfs_fop_read+0x84/0x318
-> > [54109.644683] c0   1162  __vfs_read+0x50/0x1bc
-> > [54109.644692] c0   1162  vfs_read+0xa4/0x140
-> > [54109.644701] c0   1162  SyS_read+0xbc/0x144
-> > [54109.644708] c0   1162  el0_svc_naked+0x34/0x38
-> > [54109.845800] c0   1162 D 720.000s 1->7766->7766 cat [panic]
-> >
-> > Fixes commit 1851799e1d29 ("thermal: Fix use-after-free when
-> > unregistering thermal zone device") [2]
->
-> It does not fix the problem actually. It is preferable to revert the
-> commit 1851799e1d29.
->
-The problem as you mentioned is "This one (WQ) blocks because
-cancel_delayed_work_sync is owning the lock which in turn waits for
-the work to end"
-AFAICT, thermal_zone_device_unregister should not take tz->lock and
-either be called in WQ context.
+On Tue, Dec 03, 2019 at 08:13:29AM +0100, Ingo Molnar wrote:
+> 
+> * Joel Fernandes <joel@joelfernandes.org> wrote:
+> 
+> > On Mon, Dec 02, 2019 at 04:32:13PM +0900, Masami Hiramatsu wrote:
+> > > Anders reported that the lockdep warns that suspicious
+> > > RCU list usage in register_kprobe() (detected by
+> > > CONFIG_PROVE_RCU_LIST.) This is because get_kprobe()
+> > > access kprobe_table[] by hlist_for_each_entry_rcu()
+> > > without rcu_read_lock.
+> > > 
+> > > If we call get_kprobe() from the breakpoint handler context,
+> > > it is run with preempt disabled, so this is not a problem.
+> > > But in other cases, instead of rcu_read_lock(), we locks
+> > > kprobe_mutex so that the kprobe_table[] is not updated.
+> > > So, current code is safe, but still not good from the view
+> > > point of RCU.
+> > > 
+> > > Let's lock the rcu_read_lock() around get_kprobe() and
+> > > ensure kprobe_mutex is locked at those points.
+> > > 
+> > > Note that we can safely unlock rcu_read_lock() soon after
+> > > accessing the list, because we are sure the found kprobe has
+> > > never gone before unlocking kprobe_mutex. Unless locking
+> > > kprobe_mutex, caller must hold rcu_read_lock() until it
+> > > finished operations on that kprobe.
+> > > 
+> > > Reported-by: Anders Roxell <anders.roxell@linaro.org>
+> > > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > 
+> > Instead of this, can you not just pass the lockdep_is_held() expression as
+> > the last argument to list_for_each_entry_rcu() to silence the warning? Then
+> > it will be a simpler patch.
+> 
+> Come on, we do not silence warnings!
+> 
+> If it's safely inside the lock then why not change it from 
+> hlist_for_each_entry_rcu() to hlist_for_each_entry()?
+> 
+> I do think that 'lockdep flag' inside hlist_for_each_entry_rcu():
+> 
+> /**
+>  * hlist_for_each_entry_rcu - iterate over rcu list of given type
+>  * @pos:        the type * to use as a loop cursor.
+>  * @head:       the head for your list.
+>  * @member:     the name of the hlist_node within the struct.
+>  * @cond:       optional lockdep expression if called from non-RCU protection.
+>  *
+>  * This list-traversal primitive may safely run concurrently with
+>  * the _rcu list-mutation primitives such as hlist_add_head_rcu()
+>  * as long as the traversal is guarded by rcu_read_lock().
+>  */
+> #define hlist_for_each_entry_rcu(pos, head, member, cond...)            \
+> 
+> is actively harmful. Why is it there?
 
->
-> The cancel delayed work sync takes the mutex while a cat
-> /sys/class/thermal/thermal_zone0/temp happens which takes the mutex also
-> and at the same moment a thermal_zone_device_update() call is done in
-> the workqueue context. This one blocks because cancel_delayed_work_sync
-> is owning the lock which in turn waits for the work to end.
->
-> IMO, that deserves a deeper investigation with the mutex. Probably the
-> fix would be to refcount the thermal zone device and see if we can get
-> rid of the mutex in some places. If the refcounting is used, the
-> function thermal_zone_device_unregister() will be called with the
-> guarantee nobody will use it and the mutex can be removed.
->
-> > Signed-off-by: Wei Wang <wvw@google.com>
-> > ---
-> >  drivers/thermal/thermal_core.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_c=
-ore.c
-> > index d4481cc8958f..c28271817e43 100644
-> > --- a/drivers/thermal/thermal_core.c
-> > +++ b/drivers/thermal/thermal_core.c
-> > @@ -304,7 +304,7 @@ static void thermal_zone_device_set_polling(struct =
-thermal_zone_device *tz,
-> >                                &tz->poll_queue,
-> >                                msecs_to_jiffies(delay));
-> >       else
-> > -             cancel_delayed_work_sync(&tz->poll_queue);
-> > +             cancel_delayed_work(&tz->poll_queue);
-> >  }
-> >
-> >  static void monitor_thermal_zone(struct thermal_zone_device *tz)
-> > @@ -1414,7 +1414,7 @@ void thermal_zone_device_unregister(struct therma=
-l_zone_device *tz)
-> >
-> >       mutex_unlock(&thermal_list_lock);
-> >
-> > -     thermal_zone_device_set_polling(tz, 0);
-> > +     cancel_delayed_work_sync(&tz->poll_queue);
-> >
-> >       thermal_set_governor(tz, NULL);
-> >
-> >
->
->
-> --
->  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
-RM SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
->
+For cases where common code might be invoked both from the reader
+(with RCU protection) and from the updater (protected by some
+lock).  This common code can then use the optional argument to
+hlist_for_each_entry_rcu() to truthfully tell lockdep that it might be
+called with either form of protection in place.
+
+This also combines with the __rcu tag used to mark RCU-protected
+pointers, in which case sparse complains when a non-RCU API is applied
+to these pointers, to get back to your earlier question about use of
+hlist_for_each_entry_rcu() within the update-side lock.
+
+But what are you seeing as actively harmful about all of this?
+What should we be doing instead?
+
+If you are suggesting that KCSAN might replace sparse's use of __rcu,
+I have been attempting to think along those lines, but thus far without
+any success.  In contrast, I am starting to think that lockdep has made
+the sparse __acquires() and __releases() tags obsolete.
+
+Or am I missing your point?
+
+							Thanx, Paul
