@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6242C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7894C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F32D21582
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79D0120674
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413634;
-	bh=/PKAD3AkTjyL9c8QHOk65inIyuVXFHetGmXfEQaBdZw=;
+	s=default; t=1575413637;
+	bh=Oj8oGygn/LIQ5/PgpE11S4gI61AYHg12G7VY130aoEA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0+H2GZJ8SbHIjH0Upt5jXr0Z6o0LmLoktEiuSPkO/WpHyqKg3OOVUS5Wx1GlsHTaU
-	 E0hcbK71MMH53d5glCNKqNVViHfNQcS/V3g+tw+Wwrr6OH6PsaCBkzeGp7t0929SfJ
-	 lvPGxc5rPBKPK88IsywTpd868az98oxIRHBgRrrE=
+	b=XqihpKQZKW45TIjr2aACep4kd9lL+YHodJaYuGM0TvRQv2sHFu7wJIXAiRuEwyo+i
+	 BIW9Qzhm7HgYC48qgyB7Yc8pafOUqLo/Onzy+pXrabrJzrsVMIEX0wAP6XxW4WIxBX
+	 C+V8dXTGqSM2E9M3/a5zee7X2jHObXiW1lRPOJMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729958AbfLCWxx (ORCPT
+        id S1730214AbfLCWx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:53:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47310 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:53:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730198AbfLCWxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:53:50 -0500
+        id S1730055AbfLCWxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:53:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E068F21582;
-        Tue,  3 Dec 2019 22:53:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EC1221555;
+        Tue,  3 Dec 2019 22:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413629;
-        bh=/PKAD3AkTjyL9c8QHOk65inIyuVXFHetGmXfEQaBdZw=;
+        s=default; t=1575413631;
+        bh=Oj8oGygn/LIQ5/PgpE11S4gI61AYHg12G7VY130aoEA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uSVioDquWM4OwjfbWIkcAhBZ47chunpLCNhuPEC1xbnKo1LMBQLp3Smx+uu1A9EHr
-         fmSmzJK+54jIYgilOVyN1bPBrNWAMnl5I108xJXdMLx7nbgN/JeIuUyQPh684gL7eK
-         PKg+c+eoSCBM/kwreGkIRJ7Fpwx6XKVNPa4qBgLc=
+        b=aIn00BCcRe2HmF03M/KRMhSvHTEDn4924727MQd6FZ7dL/b4ZSrOjYJRM/GF9do9U
+         6H5uNmSzT+DeMg3VoTqQlR1JvibRiV3RruTLGyods8Zy6EvCgb2OKVqFEQzLm2C20G
+         tjDKQSqfkZqcOwYtkp+F88pX5w3AtRBkHr0KuYdg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wentao Wang <witallwang@gmail.com>,
+        stable@vger.kernel.org, Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 200/321] mm/page_alloc.c: deduplicate __memblock_free_early() and memblock_free()
-Date:   Tue,  3 Dec 2019 23:34:26 +0100
-Message-Id: <20191203223437.527630884@linuxfoundation.org>
+Subject: [PATCH 4.19 201/321] tools/vm/page-types.c: fix "kpagecount returned fewer pages than expected" failures
+Date:   Tue,  3 Dec 2019 23:34:27 +0100
+Message-Id: <20191203223437.579205158@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -62,39 +65,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wentao Wang <witallwang@gmail.com>
+From: Anthony Yznaga <anthony.yznaga@oracle.com>
 
-[ Upstream commit d31cfe7bff9109476da92c245b56083e9b48d60a ]
+[ Upstream commit b6fb87b8e3ff1ef6bcf68470f24a97c984554d5a ]
 
-Link: http://lkml.kernel.org/r/C8ECE1B7A767434691FEEFA3A01765D72AFB8E78@MX203CL03.corp.emc.com
-Signed-off-by: Wentao Wang <witallwang@gmail.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
+Because kpagecount_read() fakes success if map counts are not being
+collected, clamp the page count passed to it by walk_pfn() to the pages
+value returned by the preceding call to kpageflags_read().
+
+Link: http://lkml.kernel.org/r/1543962269-26116-1-git-send-email-anthony.yznaga@oracle.com
+Fixes: 7f1d23e60718 ("tools/vm/page-types.c: include shared map counts")
+Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
+Reviewed-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: David Rientjes <rientjes@google.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/memblock.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ tools/vm/page-types.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 237944479d25a..bb4e32c6b19e9 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -1537,12 +1537,7 @@ void * __init memblock_virt_alloc_try_nid(
-  */
- void __init __memblock_free_early(phys_addr_t base, phys_addr_t size)
- {
--	phys_addr_t end = base + size - 1;
--
--	memblock_dbg("%s: [%pa-%pa] %pF\n",
--		     __func__, &base, &end, (void *)_RET_IP_);
--	kmemleak_free_part_phys(base, size);
--	memblock_remove_range(&memblock.reserved, base, size);
-+	memblock_free(base, size);
- }
+diff --git a/tools/vm/page-types.c b/tools/vm/page-types.c
+index 37908a83ddc27..1ff3a6c0367b0 100644
+--- a/tools/vm/page-types.c
++++ b/tools/vm/page-types.c
+@@ -701,7 +701,7 @@ static void walk_pfn(unsigned long voffset,
+ 		if (kpagecgroup_read(cgi, index, pages) != pages)
+ 			fatal("kpagecgroup returned fewer pages than expected");
  
- /**
+-		if (kpagecount_read(cnt, index, batch) != pages)
++		if (kpagecount_read(cnt, index, pages) != pages)
+ 			fatal("kpagecount returned fewer pages than expected");
+ 
+ 		for (i = 0; i < pages; i++)
 -- 
 2.20.1
 
