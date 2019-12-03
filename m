@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C92C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A003C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 432912064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 638AF2064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414482;
-	bh=eaOmP9/0R+knqulXgInpzT8veyirzkDjMqIqUJlwDXg=;
+	s=default; t=1575414487;
+	bh=OkQcdxTstU1Pzv002g0q7wkNAXVtWVcDMkq6fJScZ2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dzWFBmg97YdznTSSW1Nb+HyG7ASk2BkZ4Zg/F9p2Ta3K8kMdXyC3924ikYhU8wzDr
-	 RQydF5L5PKwdatnEXkgxW/RIDRDTMNAs9EE2hK2AkZhuxCsw4CatomvR0BZuwf3Puc
-	 AqxnGaFSmYKLKAX5dDF+3whzf61yyiBiheh5gvig=
+	b=c/xa4MmfaxDBPrwULpXBnek5RyRchjy0rXqxg0o5DY85JtbiKHIP3XVr0mzk97jWx
+	 jP7LoSb252aus4je+r+ygAHFdKje6k4+zarLQx6c69Fg+yzCOt9rQFdxmtH2LllYPz
+	 DrMGudEz3dfevndlZmEV5IxS5aLDRAgIPPOAVai4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729257AbfLCXIB (ORCPT
+        id S1729360AbfLCXIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:08:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35816 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 18:08:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729172AbfLCWqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:46:20 -0500
+        id S1729012AbfLCWqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:46:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD0E220656;
-        Tue,  3 Dec 2019 22:46:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0A4420656;
+        Tue,  3 Dec 2019 22:46:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413180;
-        bh=eaOmP9/0R+knqulXgInpzT8veyirzkDjMqIqUJlwDXg=;
+        s=default; t=1575413175;
+        bh=OkQcdxTstU1Pzv002g0q7wkNAXVtWVcDMkq6fJScZ2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wrU7ycWW0Oq44adQdqjg9vPcYW4tYuNuQrvc8H7mZ3FvOTWfF/ur3cRyIL00oQfwf
-         bFmkgf4lbzav/wEXkWfC4e3JsFkdkmnW38oVm9DYpFUUDwASwznBwHz/emNBxpOIm2
-         kO03+rs9zByeYfA9yN0sCNRikptg1iqntkGt/eSU=
+        b=dYFEGoM7PLvVvK479VYVmZylkVmlMhujptVHxyJYTNT89W/54jgnMK9IK/8lIwsgZ
+         uG8fsoCoMxg08vkyu0dkhodpJqNvR/Vb8SuMye8DPk0GLL0azCqpijqO2Eg+r3vfb9
+         BjKJ0nscVdkESe9FNoYBy2AMdF+KqjgHuzwrBf0g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>,
+        stable@vger.kernel.org,
+        Jeroen Hofstee <jhofstee@victronenergy.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 029/321] can: rx-offload: can_rx_offload_offload_one(): do not increase the skb_queue beyond skb_queue_len_max
-Date:   Tue,  3 Dec 2019 23:31:35 +0100
-Message-Id: <20191203223428.633153096@linuxfoundation.org>
+Subject: [PATCH 4.19 027/321] can: c_can: D_CAN: c_can_chip_config(): perform a sofware reset on open
+Date:   Tue,  3 Dec 2019 23:31:33 +0100
+Message-Id: <20191203223428.531216022@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -59,40 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Kleine-Budde <mkl@pengutronix.de>
+From: Jeroen Hofstee <jhofstee@victronenergy.com>
 
-[ Upstream commit a2dc3f5e1022a5ede8af9ab89a144f1e69db8636 ]
+[ Upstream commit 23c5a9488f076bab336177cd1d1a366bd8ddf087 ]
 
-The skb_queue is a linked list, holding the skb to be processed in the
-next NAPI call.
+When the CAN interface is closed it the hardwre is put in power down
+mode, but does not reset the error counters / state. Reset the D_CAN on
+open, so the reported state and the actual state match.
 
-Without this patch, the queue length in can_rx_offload_offload_one() is
-limited to skb_queue_len_max + 1. As the skb_queue is a linked list, no
-array or other resources are accessed out-of-bound, however this
-behaviour is counterintuitive.
+According to [1], the C_CAN module doesn't have the software reset.
 
-This patch limits the rx-offload skb_queue length to skb_queue_len_max.
+[1] http://www.bosch-semiconductors.com/media/ip_modules/pdf_2/c_can_fd8/users_manual_c_can_fd8_r210_1.pdf
 
-Fixes: d254586c3453 ("can: rx-offload: Add support for HW fifo based irq offloading")
+Signed-off-by: Jeroen Hofstee <jhofstee@victronenergy.com>
 Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/rx-offload.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/can/c_can/c_can.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/drivers/net/can/rx-offload.c b/drivers/net/can/rx-offload.c
-index a90005eac8b17..e32b65599a5f2 100644
---- a/drivers/net/can/rx-offload.c
-+++ b/drivers/net/can/rx-offload.c
-@@ -124,7 +124,7 @@ static struct sk_buff *can_rx_offload_offload_one(struct can_rx_offload *offload
- 	int ret;
+diff --git a/drivers/net/can/c_can/c_can.c b/drivers/net/can/c_can/c_can.c
+index 9b61bfbea6cd1..24c6015f6c92b 100644
+--- a/drivers/net/can/c_can/c_can.c
++++ b/drivers/net/can/c_can/c_can.c
+@@ -52,6 +52,7 @@
+ #define CONTROL_EX_PDR		BIT(8)
  
- 	/* If queue is full or skb not available, read to discard mailbox */
--	if (likely(skb_queue_len(&offload->skb_queue) <=
-+	if (likely(skb_queue_len(&offload->skb_queue) <
- 		   offload->skb_queue_len_max))
- 		skb = alloc_can_skb(offload->dev, &cf);
+ /* control register */
++#define CONTROL_SWR		BIT(15)
+ #define CONTROL_TEST		BIT(7)
+ #define CONTROL_CCE		BIT(6)
+ #define CONTROL_DISABLE_AR	BIT(5)
+@@ -572,6 +573,26 @@ static void c_can_configure_msg_objects(struct net_device *dev)
+ 				   IF_MCONT_RCV_EOB);
+ }
  
++static int c_can_software_reset(struct net_device *dev)
++{
++	struct c_can_priv *priv = netdev_priv(dev);
++	int retry = 0;
++
++	if (priv->type != BOSCH_D_CAN)
++		return 0;
++
++	priv->write_reg(priv, C_CAN_CTRL_REG, CONTROL_SWR | CONTROL_INIT);
++	while (priv->read_reg(priv, C_CAN_CTRL_REG) & CONTROL_SWR) {
++		msleep(20);
++		if (retry++ > 100) {
++			netdev_err(dev, "CCTRL: software reset failed\n");
++			return -EIO;
++		}
++	}
++
++	return 0;
++}
++
+ /*
+  * Configure C_CAN chip:
+  * - enable/disable auto-retransmission
+@@ -581,6 +602,11 @@ static void c_can_configure_msg_objects(struct net_device *dev)
+ static int c_can_chip_config(struct net_device *dev)
+ {
+ 	struct c_can_priv *priv = netdev_priv(dev);
++	int err;
++
++	err = c_can_software_reset(dev);
++	if (err)
++		return err;
+ 
+ 	/* enable automatic retransmission */
+ 	priv->write_reg(priv, C_CAN_CTRL_REG, CONTROL_ENABLE_AR);
 -- 
 2.20.1
 
