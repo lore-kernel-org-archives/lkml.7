@@ -2,142 +2,193 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AE0C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45DEBC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A62E4206E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:58:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="abn0siPG"
+	by mail.kernel.org (Postfix) with ESMTP id 18A97206E4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:58:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575388737;
+	bh=0WERqZV6Vj6Tny6kL1uWFaFzjd1fwN4u+V1D8uSbG0c=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=p0B0fYH1z3zRbg9F1XcOl+dpOTOTqXGS0gruUqtvnYFdRw3Tb76Fcp/fAJj80kddu
+	 yMz2u/TWpBONhiLc0TFKTjZZARE+rORHdd2lgdxKYLXCG49yURX8l0F/Zvw4JqIIk1
+	 AWRdVFAGaLymnHiCM7/uLTCh0yf1eyQ73GX+FF5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbfLCP6x (ORCPT
+        id S1726991AbfLCP6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 10:58:53 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:58360 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbfLCP6w (ORCPT
+        Tue, 3 Dec 2019 10:58:55 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:53916 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726796AbfLCP6w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 3 Dec 2019 10:58:52 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB3FsCFB167734;
-        Tue, 3 Dec 2019 15:58:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
- bh=vRbK+BHOHolKnG3spmB1q9qIIX/CoVm5hzmk62chmCA=;
- b=abn0siPGzuIrSp3j24etYksoSJjLBzqI/QaoMWxEbXW/i9w2LJgit2+1CVkrST3biZf/
- 6fHVFCR2GRLslObThCgeutgqx0qzD60dTmdLLBr/V5zCVk6H+ZAm3tiAfa4lExC+IWR2
- dbMxe6PO70uTBQQXKD2jVEuN4ZIwKnpfUdLiXTtL4y+VrBpPNsqFcBz80M3uRtIHthN+
- aj7MfWKeEEzQHFoGEkbKqIBy9UKgn8ztw3bD6/RpPSHIWyFX5jYENUeh10x255NO0fit
- xvoryBmzh3aFz9vXeKVhu7otivowx9bUB9sDowuzgE0WUsKiVRkk6f2OBfuNspEoh7zV vw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2wkgcq8k4q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Dec 2019 15:58:35 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB3Fs8vj009867;
-        Tue, 3 Dec 2019 15:58:35 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2wn8k2tnrp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Dec 2019 15:58:35 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xB3FwXDB002024;
-        Tue, 3 Dec 2019 15:58:33 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 03 Dec 2019 07:58:32 -0800
-Date:   Tue, 3 Dec 2019 10:58:41 -0500
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-Subject: RFD: multithreading in padata
-Message-ID: <20191203155841.56egvxekxgf5xctw@ca-dmjordan1.us.oracle.com>
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1icAZc-00084G-W2; Tue, 03 Dec 2019 16:58:49 +0100
+To:     Yao HongBo <yaohongbo@huawei.com>
+Subject: Re: ITS restore/save state when HCC =?UTF-8?Q?=3D=3D=20=30?=
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9460 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912030121
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9460 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912030121
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 03 Dec 2019 15:58:48 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>,
+        Yangyingliang <yangyingliang@huawei.com>,
+        Linuxarm <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <james.morse@arm.com>
+In-Reply-To: <c8649d75-a9b8-4680-c253-3172774ac33d@huawei.com>
+References: <fd89d78030914d19939a1fc1c6eb5048@huawei.com>
+ <e04e35e0a14f1507ac4a3d56899adcae@www.loen.fr>
+ <c8649d75-a9b8-4680-c253-3172774ac33d@huawei.com>
+Message-ID: <c03d0b67a814288402b90bcdba600d26@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: yaohongbo@huawei.com, guohanjun@huawei.com, yangyingliang@huawei.com, linuxarm@huawei.com, linux-kernel@vger.kernel.org, james.morse@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[resending in modified form since this didn't seem to reach the lists]
++ James, who wrote most (if not all) of the arm64 hibernate code
 
-Hi,
+On 2019-12-03 02:23, Yao HongBo wrote:
+> On 12/2/2019 9:22 PM, Marc Zyngier wrote:
+>> Hi Yaohongbo,
+>>
+>> In the future, please refrain from sending HTML emails, they
+>> don't render very well and force me to reformat your email
+>> by hand.
+>
+> Sorry. I'll pay attention to this next time.
+>
+>> On 2019-12-02 12:52, yaohongbo wrote:
+>>> Hi, marc.
+>>>
+>>> I met a problem with GIC ITS when I try to power off gic logic in
+>>> suspend.
+>>>
+>>> In hisilicon hip08, the value of GIC_TYPER.HCC is zero, so that
+>>> ITS_FLAGS_SAVE_SUSPEND_STATE will have no chance to be set to 1.
+>>
+>> And that's a good thing. HCC indicates that you have collections 
+>> that
+>> are backed by registers, and not memory. Which means that once the 
+>> GIC
+>> is powered off, the state is lost.
+>>
+>>> It goes well for s4, when I simply remove the condition judgement 
+>>> in
+>>> the code.
+>>
+>> What is "s4"? Doing so means you are reprogramming the ITS with 
+>> mappings
+>> that already exist in the tables, and that is UNPRED territory.
+>
+> Sorry, I didn't describe it clearly.
+> S4 means "suspend to disk".
+> In s4, The its will reinit and malloc an new its address.
 
-padata has been undergoing some surgery lately[0] and now seems ready for
-another enhancement: splitting up and multithreading CPU-intensive kernel work.
+Huh, hibernate... Yeah, this is not expected to work, I'm afraid.
 
-I'm planning to send an RFC for this, but I wanted to post some thoughts on the
-design and a work-in-progress branch first to see if the direction looks ok.
+> My expectation is to reprogram the ITS with original mappings. If
+> ITS_FLAGS_SAVE_SUSPEND_STATE
+> is not set, i'll have no chance to use the original its table 
+> mappings.
+>
+> What should i do if i want to restore its state with hcc == 0?
 
-Quoting from an earlier series[1], this is the problem I'm trying to solve:
+HCC is the least of the problems, and there are plenty more issues:
 
-  A single CPU can spend an excessive amount of time in the kernel operating
-  on large amounts of data.  Often these situations arise during initialization-
-  and destruction-related tasks, where the data involved scales with system
-  size.  These long-running jobs can slow startup and shutdown of applications
-  and the system itself while extra CPUs sit idle.
-      
-There are several paths where this problem exists, but here are three to start:
+- I'm not sure what guarantees that the tables are at the same
+   address in the booting kernel and the the resumed kernel.
+   That covers all the ITS tables and as well as the RDs'.
 
- - struct page initialization (at boot-time, during memory hotplug, and for
-   persistent memory)
- - VFIO page pinning (kvm guest initialization)
- - fallocating a HugeTLB page (database initialization)
+- It could well be that restoring the ITS base addresses is enough
+   for everything to resume correctly, but this needs some serious
+   investigation. Worse case, we will need to replay the whole of
+   the ITS programming.
 
-padata is a general mechanism for parallel work and so seems natural for this
-functionality[2], but now it can only manage a series of small, ordered jobs.
+- This is going to interact more or less badly with the normal suspend
+   to RAM code...
 
-The coming RFC will bring enhancements to split up a large job among a set of
-helper threads according to the user's wishes, load balance the work between
-them, set concurrency limits to control the overall number of helpers in the
-system and per NUMA node, and run extra helper threads beyond the first at a
-low priority level so as not to disturb other activity on the system for the
-sake of an optimization.  (While extra helpers are run at low priority for most
-of the job, their priority is raised one by one at job end to match the
-caller's to avoid starvation on a busy system.)
+- The ITS is only the tip of the iceberg. The whole of the SMMU setup
+   needs to be replayed, or devices won't resume correctly (I just tried
+   on a D05).
 
-The existing padata interfaces and features will remain, but serialization
-becomes optional because these sorts of jobs don't need it.
+Anyway, with the hack below, I've been able to get D05 to resume
+up to the point where devices try to do DMA, and then it was dead.
+There is definitely some work to be done there...
 
-The advantage to enhancing padata rather than having the multithreading stand
-alone is that there would be one central place in the kernel to manage the
-number of helper threads that run at any given time.  A machine's idle CPU
-resources can be harnessed yet controlled (the low priority idea) to provide
-the right amount of multithreading for the system.
+         M.
 
-Here's a work-in-progress branch with some of this already done in the last
-five patches.
+diff --git a/drivers/irqchip/irq-gic-v3-its.c 
+b/drivers/irqchip/irq-gic-v3-its.c
+index 4ba31de4a875..a05fc6bac203 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -27,6 +27,7 @@
+  #include <linux/of_platform.h>
+  #include <linux/percpu.h>
+  #include <linux/slab.h>
++#include <linux/suspend.h>
+  #include <linux/syscore_ops.h>
 
-    git://oss.oracle.com/git/linux-dmjordan.git padata-mt-wip
-    https://oss.oracle.com/git/gitweb.cgi?p=linux-dmjordan.git;a=shortlog;h=refs/heads/padata-mt-wip
+  #include <linux/irqchip.h>
+@@ -42,6 +43,7 @@
+  #define ITS_FLAGS_WORKAROUND_CAVIUM_22375	(1ULL << 1)
+  #define ITS_FLAGS_WORKAROUND_CAVIUM_23144	(1ULL << 2)
+  #define ITS_FLAGS_SAVE_SUSPEND_STATE		(1ULL << 3)
++#define ITS_FLAGS_SAVE_HIBERNATE_STATE		(1ULL << 4)
 
-Thoughts?  Questions?
+  #define RDIST_FLAGS_PROPBASE_NEEDS_FLUSHING	(1 << 0)
+  #define RDIST_FLAGS_RD_TABLES_PREALLOCATED	(1 << 1)
+@@ -3517,8 +3519,16 @@ static int its_save_disable(void)
+  	raw_spin_lock(&its_lock);
+  	list_for_each_entry(its, &its_nodes, entry) {
+  		void __iomem *base;
++		u64 flags;
 
-Thanks.
+-		if (!(its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE))
++		if (system_entering_hibernation())
++			its->flags |= ITS_FLAGS_SAVE_HIBERNATE_STATE;
++
++		flags = its->flags;
++		flags &= (ITS_FLAGS_SAVE_SUSPEND_STATE |
++			  ITS_FLAGS_SAVE_HIBERNATE_STATE);
++
++		if (!flags)
+  			continue;
 
-Daniel
+  		base = its->base;
+@@ -3559,11 +3569,17 @@ static void its_restore_enable(void)
+  	raw_spin_lock(&its_lock);
+  	list_for_each_entry(its, &its_nodes, entry) {
+  		void __iomem *base;
++		u64 flags;
+  		int i;
 
-[0] https://lore.kernel.org/linux-crypto/?q=s%3Apadata+d%3A20190101..
-[1] https://lore.kernel.org/lkml/20181105165558.11698-1-daniel.m.jordan@oracle.com/
-[2] https://lore.kernel.org/lkml/20181107103554.GL9781@hirez.programming.kicks-ass.net/
+-		if (!(its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE))
++		flags = its->flags;
++		flags &= (ITS_FLAGS_SAVE_SUSPEND_STATE |
++			  ITS_FLAGS_SAVE_HIBERNATE_STATE);
++		if (!flags)
+  			continue;
+
++		its->flags &= ~ITS_FLAGS_SAVE_HIBERNATE_STATE;
++
+  		base = its->base;
+
+  		/*
+
+-- 
+Jazz is not dead. It just smells funny...
