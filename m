@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5AA6C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDA6C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 950B920862
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72CA92084F
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:52:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413576;
-	bh=j7KbmtmkT44bfLvNzW6tYCDaM4Eo1gsgtSpVmt6J7mM=;
+	s=default; t=1575413579;
+	bh=nQfw2bvRLVdTkcx1yOgkN4Nc+XNvTeGBrr7DNoc4GdI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FiWx9X3JLkKBwAJG9rsbrCwUBvEd80/pLyLB5zbq77BERsyarpBbuOxClEnqjpqx+
-	 8qhxj5uhqbxtx+FNyCZf+CILIFo0on+/PLU9fyTXhhZMLCHDGZwQvF7CGQFJyq3qS/
-	 Xl0qnJMRXzIRtblJf6liP1mhamCgNxmNLLhQq874=
+	b=VU1EJk1js53qgOzN3EVzOmNQawJussR9BtSKNliH+TKV7t4enNwLAs3zpzJHnEA2i
+	 rxhXwyTMpFBgsdBCOVI02ejdgoe179gavhWkUNbJ53KwAUXqqS0ea28Fs6Ck5PjWkC
+	 ekbKJPu17xRJvMJ3XKnNQoifvqViHfEMq0FCyftk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730068AbfLCWwz (ORCPT
+        id S1730067AbfLCWw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:52:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45856 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:52:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729914AbfLCWwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:52:53 -0500
+        id S1729951AbfLCWwu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:52:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 380AC214AF;
-        Tue,  3 Dec 2019 22:52:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7C7F20866;
+        Tue,  3 Dec 2019 22:52:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413572;
-        bh=j7KbmtmkT44bfLvNzW6tYCDaM4Eo1gsgtSpVmt6J7mM=;
+        s=default; t=1575413570;
+        bh=nQfw2bvRLVdTkcx1yOgkN4Nc+XNvTeGBrr7DNoc4GdI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uYkpC7IpJhns4nHugd2/xw1k4hNMJppYqU9q93KNxZIB6EUnPgjLMYx2MbSgJqmqd
-         g5TUVqjb4MGLoAswmfNUQGPJmuhttNCxf37a+Z0K4q60NmBk1a/OKdepTWaq0SK1eM
-         5jZFzWmmb0ghhuV5Dbsa4Dq1p3QoJ3aO/dTpvEkw=
+        b=XQTf8kHRy4cuBIS6xPVeBhQM8YfBFWy3V0C4uR3Ceh/rVT3tVjQDquSQJuL0JTk+e
+         IWySb0G4I33/mmS2KXVouPzR8xF6fBKUQIeuZZDVlnsi0lteOmiEX7gB6Mj9p1XqMX
+         UK+9NRNNhsIgLOtSgR+o7tREQs4fMppzU9B4cLik=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 180/321] powerpc: Fix HMIs on big-endian with CONFIG_RELOCATABLE=y
-Date:   Tue,  3 Dec 2019 23:34:06 +0100
-Message-Id: <20191203223436.492214219@linuxfoundation.org>
+Subject: [PATCH 4.19 179/321] powerpc/pseries: Fix node leak in update_lmb_associativity_index()
+Date:   Tue,  3 Dec 2019 23:34:05 +0100
+Message-Id: <20191203223436.441465025@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,38 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 505a314fb28ce122091691c51426fa85c084e115 ]
+[ Upstream commit 47918bc68b7427e961035949cc1501a864578a69 ]
 
-HMIs will crash the kernel due to
+In update_lmb_associativity_index() we lookup dr_node using
+of_find_node_by_path() which takes a reference for us. In the
+non-error case we forget to drop the reference. Note that
+find_aa_index() does modify properties of the node, but doesn't need
+an extra reference held once it's returned.
 
-	BRANCH_LINK_TO_FAR(hmi_exception_realmode)
-
-Calling into the OPD instead of the actual code.
-
-Fixes: 2337d207288f ("powerpc/64: CONFIG_RELOCATABLE support for hmi interrupts")
-Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-[mpe: Use DOTSYM() rather than #ifdef]
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/exceptions-64s.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/platforms/pseries/hotplug-memory.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
-index 90af86f143a91..e1dab9b1e4478 100644
---- a/arch/powerpc/kernel/exceptions-64s.S
-+++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -1123,7 +1123,7 @@ TRAMP_REAL_BEGIN(hmi_exception_early)
- 	EXCEPTION_PROLOG_COMMON_2(PACA_EXGEN)
- 	EXCEPTION_PROLOG_COMMON_3(0xe60)
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
--	BRANCH_LINK_TO_FAR(hmi_exception_realmode) /* Function call ABI */
-+	BRANCH_LINK_TO_FAR(DOTSYM(hmi_exception_realmode)) /* Function call ABI */
- 	cmpdi	cr0,r3,0
+diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
+index d93ff494e7781..7f86bc3eaadec 100644
+--- a/arch/powerpc/platforms/pseries/hotplug-memory.c
++++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
+@@ -202,6 +202,7 @@ static int update_lmb_associativity_index(struct drmem_lmb *lmb)
  
- 	/* Windup the stack. */
+ 	aa_index = find_aa_index(dr_node, ala_prop, lmb_assoc);
+ 
++	of_node_put(dr_node);
+ 	dlpar_free_cc_nodes(lmb_node);
+ 
+ 	if (aa_index < 0) {
 -- 
 2.20.1
 
