@@ -2,80 +2,70 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8C9C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8A8C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D9DE206EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:49:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575402572;
-	bh=XZYdwxIyyXzrV+GgI6eO+IzRghYU+tO8fxY7E4KpR+4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=1TiVkZn/BkPiFR/ACVpJ0s7f1qhgb9pQ61CRzWftryZfuTTG0ZYnrfJ+tCmaqgA0P
-	 hhIEHrtkX7J2YMBLI03xrADePISCnxBb2XXxZxUKInu0CdKgx4VKC0Ub+yrEeHW5at
-	 Ke+Cpq1CLY28oDiGWkKB781VyKf5AfDwI5dxH0C8=
+	by mail.kernel.org (Postfix) with ESMTP id 543A32073F
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:57:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727389AbfLCTtb (ORCPT
+        id S1727389AbfLCT5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 14:49:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39494 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726893AbfLCTtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 14:49:31 -0500
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 381D220803;
-        Tue,  3 Dec 2019 19:49:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575402570;
-        bh=XZYdwxIyyXzrV+GgI6eO+IzRghYU+tO8fxY7E4KpR+4=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=GBGFpXZ8pmDVTbUWqrO01MKmWInej3wCsbBIxpEFNf77grDTPWjQz5crY7RW0GAUl
-         YAx2r1XowsvtsipWC5N7w+JAc3z71BDEHBGfg9CsuDuqPwegHUm6rojrKv9LmC8Al4
-         0Mc/VUmeti9VYQhTCOqKTcthgIqrObblIWLiZ5Zk=
-Message-ID: <24dc8c6760b3ea2797c13558d8eca124e2c629f1.camel@kernel.org>
-Subject: Re: [PATCH v2 3/6] fs: ceph: Delete timespec64_trunc() usage
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Deepa Dinamani <deepa.kernel@gmail.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>
-Date:   Tue, 03 Dec 2019 14:49:29 -0500
-In-Reply-To: <CABeXuvouZTBnugzNhDq2EUt8o9U-frV-xh8vsbxf+Jx6Mm4FEQ@mail.gmail.com>
-References: <20191203051945.9440-1-deepa.kernel@gmail.com>
-         <20191203051945.9440-4-deepa.kernel@gmail.com>
-         <aef16571cebc9979c73533c98b6b682618fd64a8.camel@kernel.org>
-         <CABeXuvouZTBnugzNhDq2EUt8o9U-frV-xh8vsbxf+Jx6Mm4FEQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
-MIME-Version: 1.0
+        Tue, 3 Dec 2019 14:57:43 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:52050 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726955AbfLCT5n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 14:57:43 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6FFF11510CE14;
+        Tue,  3 Dec 2019 11:57:42 -0800 (PST)
+Date:   Tue, 03 Dec 2019 11:57:41 -0800 (PST)
+Message-Id: <20191203.115741.976811473066862969.davem@davemloft.net>
+To:     linyunsheng@huawei.com
+Cc:     tanhuazhong@huawei.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, salil.mehta@huawei.com,
+        yisen.zhuang@huawei.com, linuxarm@huawei.com,
+        jakub.kicinski@netronome.com
+Subject: Re: [PATCH net 2/3] net: hns3: fix a use after free problem in
+ hns3_nic_maybe_stop_tx()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <138d0858-7240-ff75-a38c-55e10eefc28d@huawei.com>
+References: <1575342535-2981-3-git-send-email-tanhuazhong@huawei.com>
+        <20191202.192840.1366675580449158510.davem@davemloft.net>
+        <138d0858-7240-ff75-a38c-55e10eefc28d@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 03 Dec 2019 11:57:42 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-12-03 at 11:41 -0800, Deepa Dinamani wrote:
-> > Thanks Deepa. We'll plan to take this one in via the ceph tree.
+From: Yunsheng Lin <linyunsheng@huawei.com>
+Date: Tue, 3 Dec 2019 12:22:11 +0800
+
+> 2. When skb_copy() returns success, the hns3_nic_maybe_stop_tx()
+> returns -EBUSY when there are not no enough space in the ring to
+> send the skb to hardware, and hns3_nic_net_xmit() will return
+> NETDEV_TX_BUSY to the upper layer, the upper layer will resend the old
+> skb later when driver wakes up the queue, but the old skb has been freed
+> by the hns3_nic_maybe_stop_tx(). Because when using the skb_copy() to
+> linearize a skb, it will return a new linearized skb, and the old skb is
+> freed, the upper layer does not have a reference to the new skb and resend
+> using the old skb, which casues a use after freed problem.
 > 
-> Actually, deletion of the timespec64_trunc() will depend on this
-> patch. Can we merge the series through a common tree? Otherwise,
-> whoever takes the [PATCH 6/7] ("fs:
-> Delete timespec64_trunc()") would have to depend on your tree. If you
-> are ok with the change, can you ack it?
+> This patch is trying to fixes the case 2.
 > 
-> Thanks,
-> Deepa
+> Maybe I should mention why hns3_nic_maybe_stop_tx() returns -EBUSY to
+> better describe the problem?
 
-Sure, no problem if that works better for you.
-
-Acked-by: Jeff Layton <jlayton@kernel.org>
-
+I think it would help understand the code path you are fixing, yes.
