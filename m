@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C90C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D12C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08A7520862
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30BC420866
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:47:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413245;
-	bh=l0X75f7TRRc1czvTM/xQiDqe0ZSZj58WQSkaPybaDq4=;
+	s=default; t=1575413250;
+	bh=uMgmPvrDLDsbL0dY3dsmfSahB5TPRLdrqSc2NbbB570=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qLMRIIfD6LQc2QuPMqnJV8M+aOJrAgfxJ9dc4JIUg7P7d/FpHwz17ELJe+yNFIQm9
-	 zIYDzlUami2StpXe3thgaJjnHn4F3jGCjh5Xe9IPl7r9H9gen3jBWrjEjsrM+/Af/r
-	 bo2i0EcIlB25q21ZLU0bJPkNQUFMc85Ez5BTzsHg=
+	b=vv88yjJCvuKJqDSDLIP9f+Er9sxGEgN3hCKdtUtXsET4h0yaNp1k/Rj9QI774WKzB
+	 +zq3BRycK4rx579KAStZPTHY+GFm2Y+czGS8BhpOrM4oaNXbbt7SbazRnHryqFonit
+	 +76RDSMJYBVax43516TqekvGFwlKzZa6xxsGOTSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728687AbfLCWrX (ORCPT
+        id S1729319AbfLCWr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:47:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37532 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:47:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728624AbfLCWrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:47:20 -0500
+        id S1729045AbfLCWr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:47:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 250E72084B;
-        Tue,  3 Dec 2019 22:47:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A07652084B;
+        Tue,  3 Dec 2019 22:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413239;
-        bh=l0X75f7TRRc1czvTM/xQiDqe0ZSZj58WQSkaPybaDq4=;
+        s=default; t=1575413245;
+        bh=uMgmPvrDLDsbL0dY3dsmfSahB5TPRLdrqSc2NbbB570=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lUD+3k++Y78qUDuMWtIDK4O4kAUuyPNIObBqNN5ygq/jkO8KGbfwYHkTvG+qHToEX
-         H9epYQXE1RIzdkyOYOvlEs6QKRHP/EDz+6JTTAe4kl/UPMJur/8PkbvY1B8iQqYdwf
-         jgYoC0oJhye0by4e/ce5dP391g6sJY7UJTQ4r130=
+        b=rzuxpuo6wmc4vEgV/XpOQyOH62/4Jj6y/70hwa4U39qkn/LpczzFO3ZOnQxhRRRI/
+         mfaxgaC3lreWRsIaYIhFVeQbeUWTK3VxgdtHGbhQt97EnC3bmZcbcKkEsWYQ76Sbdb
+         eTD14zYko+MHJItzMaJ3qgopFswCMzLFXPmMW8mA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>,
+        stable@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 053/321] ARM: debug-imx: only define DEBUG_IMX_UART_PORT if needed
-Date:   Tue,  3 Dec 2019 23:31:59 +0100
-Message-Id: <20191203223429.921945108@linuxfoundation.org>
+Subject: [PATCH 4.19 055/321] ARM: dts: imx53: Fix memory node duplication
+Date:   Tue,  3 Dec 2019 23:32:01 +0100
+Message-Id: <20191203223430.024205236@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,65 +61,146 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Fabio Estevam <festevam@gmail.com>
 
-[ Upstream commit 7c41ea57beb2aee96fa63091a457b1a2826f3c42 ]
+[ Upstream commit e8fd17b900a4a1e3a8bef7b44727cbad35db05a7 ]
 
-If debugging on i.MX is enabled DEBUG_IMX_UART_PORT defines which UART
-is used for the debug output. If however debugging is off don't only
-hide the then unused config item but drop it completely by using a
-dependency instead of a conditional prompt.
+Boards based on imx53 have duplicate memory nodes:
 
-This fixes DEBUG_IMX_UART_PORT being present in the kernel config even
-if DEBUG_LL is disabled.
+- One coming from the board dts file: memory@
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+- One coming from the imx53.dtsi file.
+
+Fix the duplication by removing the memory node from the dtsi file
+and by adding 'device_type = "memory";' in the board dts.
+
+Reported-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/Kconfig.debug | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ arch/arm/boot/dts/imx53-ard.dts         | 1 +
+ arch/arm/boot/dts/imx53-cx9020.dts      | 1 +
+ arch/arm/boot/dts/imx53-m53.dtsi        | 1 +
+ arch/arm/boot/dts/imx53-qsb-common.dtsi | 1 +
+ arch/arm/boot/dts/imx53-smd.dts         | 1 +
+ arch/arm/boot/dts/imx53-tqma53.dtsi     | 1 +
+ arch/arm/boot/dts/imx53-tx53.dtsi       | 1 +
+ arch/arm/boot/dts/imx53-usbarmory.dts   | 1 +
+ arch/arm/boot/dts/imx53.dtsi            | 2 --
+ 9 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index f6fcb8a798890..f95a90dfc282a 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -1432,21 +1432,21 @@ config DEBUG_OMAP2PLUS_UART
- 	depends on ARCH_OMAP2PLUS
+diff --git a/arch/arm/boot/dts/imx53-ard.dts b/arch/arm/boot/dts/imx53-ard.dts
+index 117bd002dd1d1..7d5a48250f867 100644
+--- a/arch/arm/boot/dts/imx53-ard.dts
++++ b/arch/arm/boot/dts/imx53-ard.dts
+@@ -19,6 +19,7 @@
+ 	compatible = "fsl,imx53-ard", "fsl,imx53";
  
- config DEBUG_IMX_UART_PORT
--	int "i.MX Debug UART Port Selection" if DEBUG_IMX1_UART || \
--						DEBUG_IMX25_UART || \
--						DEBUG_IMX21_IMX27_UART || \
--						DEBUG_IMX31_UART || \
--						DEBUG_IMX35_UART || \
--						DEBUG_IMX50_UART || \
--						DEBUG_IMX51_UART || \
--						DEBUG_IMX53_UART || \
--						DEBUG_IMX6Q_UART || \
--						DEBUG_IMX6SL_UART || \
--						DEBUG_IMX6SX_UART || \
--						DEBUG_IMX6UL_UART || \
--						DEBUG_IMX7D_UART
-+	int "i.MX Debug UART Port Selection"
-+	depends on DEBUG_IMX1_UART || \
-+		   DEBUG_IMX25_UART || \
-+		   DEBUG_IMX21_IMX27_UART || \
-+		   DEBUG_IMX31_UART || \
-+		   DEBUG_IMX35_UART || \
-+		   DEBUG_IMX50_UART || \
-+		   DEBUG_IMX51_UART || \
-+		   DEBUG_IMX53_UART || \
-+		   DEBUG_IMX6Q_UART || \
-+		   DEBUG_IMX6SL_UART || \
-+		   DEBUG_IMX6SX_UART || \
-+		   DEBUG_IMX6UL_UART || \
-+		   DEBUG_IMX7D_UART
- 	default 1
--	depends on ARCH_MXC
- 	help
- 	  Choose UART port on which kernel low-level debug messages
- 	  should be output.
+ 	memory@70000000 {
++		device_type = "memory";
+ 		reg = <0x70000000 0x40000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx53-cx9020.dts b/arch/arm/boot/dts/imx53-cx9020.dts
+index cf70ebc4399a2..c875e23ee45fb 100644
+--- a/arch/arm/boot/dts/imx53-cx9020.dts
++++ b/arch/arm/boot/dts/imx53-cx9020.dts
+@@ -22,6 +22,7 @@
+ 	};
+ 
+ 	memory@70000000 {
++		device_type = "memory";
+ 		reg = <0x70000000 0x20000000>,
+ 		      <0xb0000000 0x20000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/imx53-m53.dtsi b/arch/arm/boot/dts/imx53-m53.dtsi
+index ce45f08e30514..db2e5bce9b6a1 100644
+--- a/arch/arm/boot/dts/imx53-m53.dtsi
++++ b/arch/arm/boot/dts/imx53-m53.dtsi
+@@ -16,6 +16,7 @@
+ 	compatible = "aries,imx53-m53", "denx,imx53-m53", "fsl,imx53";
+ 
+ 	memory@70000000 {
++		device_type = "memory";
+ 		reg = <0x70000000 0x20000000>,
+ 		      <0xb0000000 0x20000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/imx53-qsb-common.dtsi b/arch/arm/boot/dts/imx53-qsb-common.dtsi
+index 50dde84b72ed7..f00dda334976a 100644
+--- a/arch/arm/boot/dts/imx53-qsb-common.dtsi
++++ b/arch/arm/boot/dts/imx53-qsb-common.dtsi
+@@ -11,6 +11,7 @@
+ 	};
+ 
+ 	memory@70000000 {
++		device_type = "memory";
+ 		reg = <0x70000000 0x20000000>,
+ 		      <0xb0000000 0x20000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/imx53-smd.dts b/arch/arm/boot/dts/imx53-smd.dts
+index 462071c9ddd73..09071ca11c6cf 100644
+--- a/arch/arm/boot/dts/imx53-smd.dts
++++ b/arch/arm/boot/dts/imx53-smd.dts
+@@ -12,6 +12,7 @@
+ 	compatible = "fsl,imx53-smd", "fsl,imx53";
+ 
+ 	memory@70000000 {
++		device_type = "memory";
+ 		reg = <0x70000000 0x40000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx53-tqma53.dtsi b/arch/arm/boot/dts/imx53-tqma53.dtsi
+index a72b8981fc3bd..c77d58f06c949 100644
+--- a/arch/arm/boot/dts/imx53-tqma53.dtsi
++++ b/arch/arm/boot/dts/imx53-tqma53.dtsi
+@@ -17,6 +17,7 @@
+ 	compatible = "tq,tqma53", "fsl,imx53";
+ 
+ 	memory@70000000 {
++		device_type = "memory";
+ 		reg = <0x70000000 0x40000000>; /* Up to 1GiB */
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx53-tx53.dtsi b/arch/arm/boot/dts/imx53-tx53.dtsi
+index 54cf3e67069a9..4ab135906949f 100644
+--- a/arch/arm/boot/dts/imx53-tx53.dtsi
++++ b/arch/arm/boot/dts/imx53-tx53.dtsi
+@@ -51,6 +51,7 @@
+ 
+ 	/* Will be filled by the bootloader */
+ 	memory@70000000 {
++		device_type = "memory";
+ 		reg = <0x70000000 0>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx53-usbarmory.dts b/arch/arm/boot/dts/imx53-usbarmory.dts
+index f6268d0ded296..ee6263d1c2d3d 100644
+--- a/arch/arm/boot/dts/imx53-usbarmory.dts
++++ b/arch/arm/boot/dts/imx53-usbarmory.dts
+@@ -58,6 +58,7 @@
+ 	};
+ 
+ 	memory@70000000 {
++		device_type = "memory";
+ 		reg = <0x70000000 0x20000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
+index b6b0818343c4e..8accbe16b7584 100644
+--- a/arch/arm/boot/dts/imx53.dtsi
++++ b/arch/arm/boot/dts/imx53.dtsi
+@@ -23,10 +23,8 @@
+ 	 * The decompressor and also some bootloaders rely on a
+ 	 * pre-existing /chosen node to be available to insert the
+ 	 * command line and merge other ATAGS info.
+-	 * Also for U-Boot there must be a pre-existing /memory node.
+ 	 */
+ 	chosen {};
+-	memory { device_type = "memory"; };
+ 
+ 	aliases {
+ 		ethernet0 = &fec;
 -- 
 2.20.1
 
