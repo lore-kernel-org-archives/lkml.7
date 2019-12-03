@@ -2,133 +2,129 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2D0C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B64D6C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2A512073F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:52:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575391979;
-	bh=9lhZiHfm0cFNL65g+4OVMkdlfm0IqJwsTBHm9mt3QQc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Sv2Hx9OdoWbyvi1+4ZEzUlbe+WgpEnGw0vmhesSoFSmsjGRz55R0AGrdhwZXuDt2R
-	 7T6iHgJ+v57tHJsq9Y0I+gudQ2fds/h1Y7GY/fhONj2NaI/g69xf5F37XiWuMk6lsu
-	 T0FOs6frhDlUANwcZObT7Y98S2lLLZHZqXkblq44=
+	by mail.kernel.org (Postfix) with ESMTP id 8CC722073F
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:54:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="uoPG9cTR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbfLCQw5 (ORCPT
+        id S1727060AbfLCQyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 11:52:57 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:40664 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbfLCQw5 (ORCPT
+        Tue, 3 Dec 2019 11:54:10 -0500
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:41538 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726473AbfLCQyK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 11:52:57 -0500
-Received: by mail-lf1-f67.google.com with SMTP id y5so3569173lfy.7;
-        Tue, 03 Dec 2019 08:52:55 -0800 (PST)
+        Tue, 3 Dec 2019 11:54:10 -0500
+Received: by mail-vk1-f193.google.com with SMTP id p191so1259507vkf.8
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 08:54:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AcM7UEIp8ymleTTTyVFIALYBt+4goDjQpS4y6N2B+wI=;
+        b=uoPG9cTRt/hqq0DuB5ne0h2K4POk21yL2O8Fa6xz0FrVObCVI0zSRWTUcGvf4krFI/
+         asiNumPnrPNLb7J4jVBdwacvkkz384DBFcnw7JLMkl7zvQNAImvxP21kiwvtk4e2XxeN
+         9kI7AnlY7SAN8D7iwzo6JmHQGvQHxHq7oeT/P1vwBRWUmuNX/MSDJAk8mJKiOA9QTqhS
+         JqeP6vA6UUUt7PMLJCfMTubv/VQLY3QEn8i/RNiwvMVecT/NMo1BCqWJVavnYqYI6Ogv
+         4pYiZcgGDJzgVPPp7Mfu4D8R5AFJNSw18GYlBT8lM77MTOqjwLCKpCZ6pJAKjrwCOpq7
+         JC7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CINu8kwJ3/pozCYLOw1eHYh+k5bZA/5ppRAlDtMjvfg=;
-        b=d4yeZutzdxhWfKAG1Q6/BMv2Skmai4ykwX8zAN58WR0pZoT3lvvrGGMZxMRJnbXZPP
-         zooBLs5bIOvccAb4cNzpCnnkEGmJEf+qq0QEpyfqxHxTP7RlNrN8BuKzzakB/lJPQgAU
-         yaUODYNJ6FgVkNGnjLScXoSadRx+VKdyWo+mvgS0qZeNBB/9SMJQeEnhmz3MIPVGA2kd
-         W+beDR06MAExXRL9wmfGHHuB6EdcwzlSByoty/fnO5FaNmSy8tJeFMgQ7VBWNPcLAVKQ
-         YGGjoLHThj3vzpSGPlAYtMGP1Q/QrlQB+JS9kozZVdJkL/vKoXMHCFClO9fMYhaM1bcL
-         kjwQ==
-X-Gm-Message-State: APjAAAW+rdWzM0lVoDCWlXAGFUvX8qZ3v/v9lmUCWE1L7qgdAI7M48a9
-        x319OPhUJcTEUa6A2xMs4Ys=
-X-Google-Smtp-Source: APXvYqx41aguGS+jp/QeI9IlKVT+iM1RPBrdRSa2hyDW+XXcFW87LhZHMu5KFyPepTNf1XrQRA5UFg==
-X-Received: by 2002:ac2:5195:: with SMTP id u21mr3322208lfi.141.1575391974516;
-        Tue, 03 Dec 2019 08:52:54 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id g14sm1659970ljj.37.2019.12.03.08.52.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 08:52:53 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1icBQ5-000409-47; Tue, 03 Dec 2019 17:53:01 +0100
-Date:   Tue, 3 Dec 2019 17:53:01 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Ikjoon Jang <ikjn@chromium.org>
-Cc:     linux-usb@vger.kernel.org,
-        GregKroah-Hartman <gregkh@linuxfoundation.org>,
-        RobHerring <robh+dt@kernel.org>,
-        MarkRutland <mark.rutland@arm.com>,
-        AlanStern <stern@rowland.harvard.edu>,
-        SuwanKim <suwan.kim027@gmail.com>,
-        "GustavoA . R . Silva" <gustavo@embeddedor.com>,
-        JohanHovold <johan@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, drinkcat@chromium.org
-Subject: Re: [PATCH v4 2/2] usb: overridable hub bInterval by device node
-Message-ID: <20191203165301.GH10631@localhost>
-References: <20191203101552.199339-1-ikjn@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AcM7UEIp8ymleTTTyVFIALYBt+4goDjQpS4y6N2B+wI=;
+        b=fxm0pBEiC2ZG/s7r/Ogrs+66lbykYWPy3LAI+DIj7efc1u8cjquN6wQwarT1QBtQvN
+         Ab+s+eAdW2eZ/N8nDwZjXcza7bDTi4QKXGz2LNnyg342nbWvInW545FYLwThwkb5GMV9
+         QgHuLrUrlyiavNt7zWbMAhO+CjuSsMpsUy2pIxl9sbK5nOfunFuVwH4bBDXYGBcKCujO
+         rBXz0f51WFFb0g3nZ6tr3RtcDTJEM+xHlXp+p+i4O/8Brp+w0Nd85rGrovFKowXMdEbB
+         njvCvTrD1iVONHCnsCjvICeDPTIsjht3fmKc8gvBohdzq0fRu7HuxxTeS709vkSMaLd5
+         PoTg==
+X-Gm-Message-State: APjAAAXUnXawehI/SsqdU29ovffVmuDf2xZVLN+793HmdDTf8+TzzaTe
+        2GNac/AEZB5r+tKSTK4HEyJHcRmgugyLTwXG75OFGw==
+X-Google-Smtp-Source: APXvYqwWfxtECH6IzRO2KWDRHz/G7gB6OReuBEbvIF27Ze3wf/2BXsYSC4Slvqkh+Z8aSkU/Vruvxo83JKiIBbSncWs=
+X-Received: by 2002:a1f:bdd0:: with SMTP id n199mr4259634vkf.86.1575392048634;
+ Tue, 03 Dec 2019 08:54:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191203101552.199339-1-ikjn@chromium.org>
+References: <1568859503-19725-1-git-send-email-thara.gopinath@linaro.org> <1568859503-19725-2-git-send-email-thara.gopinath@linaro.org>
+In-Reply-To: <1568859503-19725-2-git-send-email-thara.gopinath@linaro.org>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Tue, 3 Dec 2019 22:23:57 +0530
+Message-ID: <CAHLCerMif4ZyUwO-r04Ds3AZuRQNtw5bfFjWa9nOhTovMxVYOA@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: thermal: Introduce monitor-falling
+ parameter to thermal trip point binding
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 06:15:52PM +0800, Ikjoon Jang wrote:
-> This patch enables hub device to override its own endpoint descriptor's
-> bInterval when the hub has a device node with "hub,interval" property.
-> 
-> When we know reducing autosuspend delay for built-in HIDs is better for
-> power saving, we can reduce it to the optimal value. But if a parent hub
-> has a long bInterval, mouse lags a lot from more frequent autosuspend.
-> So this enables overriding bInterval for a hard wired hub device only
-> when we know that reduces the power consumption.
-
-I think I saw you argue about why this shouldn't simply be configured at
-runtime. Please include that here too, I can't seem to remember why...
-
-> Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
-> Acked-by: Alan Stern <stern@rowland.harvard.edu>
+On Thu, Sep 19, 2019 at 7:48 AM Thara Gopinath
+<thara.gopinath@linaro.org> wrote:
+>
+> Introduce a new binding parameter to thermal trip point description
+> to indicate whether the temperature level specified by the trip point
+> is monitored for a rise or fall in temperature.
+>
+> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 > ---
->  drivers/usb/core/config.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/usb/core/config.c b/drivers/usb/core/config.c
-> index 5f40117e68e7..95ec5af42a1c 100644
-> --- a/drivers/usb/core/config.c
-> +++ b/drivers/usb/core/config.c
-> @@ -6,6 +6,7 @@
->  #include <linux/usb.h>
->  #include <linux/usb/ch9.h>
->  #include <linux/usb/hcd.h>
-> +#include <linux/usb/of.h>
->  #include <linux/usb/quirks.h>
->  #include <linux/module.h>
->  #include <linux/slab.h>
-> @@ -257,6 +258,14 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno, int inum,
->  	memcpy(&endpoint->desc, d, n);
->  	INIT_LIST_HEAD(&endpoint->urb_list);
->  
-> +	/* device node property overrides bInterval */
-> +	if (usb_of_has_combined_node(to_usb_device(ddev))) {
+>  Documentation/devicetree/bindings/thermal/thermal.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
+> index ca14ba9..849a2a9 100644
+> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+> @@ -90,6 +90,14 @@ Required properties:
+>         "critical":     Hardware not reliable.
+>    Type: string
+>
+> +Optional property:
+> +- monitor-falling:     Indicate whether the system action is kick
 
-Not only hubs have combined nodes so you probably need to check
-bDeviceClass here instead.
+Stray space after :
 
-> +		u32 interval = 0;
-> +		if (!of_property_read_u32(ddev->of_node, "hub,interval",
-> +				    &interval))
-> +			d->bInterval = min_t(u8, interval, 255);
+> +  Type: boolean                started when the temperature falls below or rises
 
-You want min_t(u32, ...) here to avoid surprises when someone specifies
-a value > 255.
+Unnecessary tab after boolean (I'll fix up the rest of the file in the
+yaml conversion)
 
-> +	}
+I suggest not making this boolean. Just use the property as a flag by
+itself to denote a falling trip point. No need to deal with true/false
+values.
+
+Similarly, the sysfs file would show up only in case of a trip that
+sets this flag and just contain a 1, for example.
+
+> +                       above the trip temperature level indicated in
+> +                       "temperature".If true, the trip point is monitored
+
+Add space after full stop.
+
+
+> +                       for falling temperature else the trip point is
+> +                       monitored for rising temperature.
 > +
->  	/*
->  	 * Fix up bInterval values outside the legal range.
->  	 * Use 10 or 8 ms if no proper value can be guessed.
-
-Johan
+>  * Cooling device maps
+>
+>  The cooling device maps node is a node to describe how cooling devices
+> --
+> 2.1.4
+>
