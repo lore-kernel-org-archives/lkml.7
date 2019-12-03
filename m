@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1211AC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F6AC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7D242158C
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB8B42158C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413585;
-	bh=su1n9rIFco9QybKw4v3E7bYzZ5i2FUYnqUp43IBNZ6w=;
+	s=default; t=1575413590;
+	bh=pBpKq8YAfrzjP6r5Cix8xgkbdENAqmPfCWGwTiL6DOs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uT4h+5beWTVu9Dh6rf4nBkLA2utFoivTUCzjfdPeyDgjKWspeS6ALX0WLngpahsIV
-	 HCOdOVgFY9tOUalIHGIG62/7eY+f6p3ha7DYhbA/IrfneixkPp50zCWKOmPLZC0X9w
-	 T5w+K/R4IGUERpgyCgMBoAd5M9jPDUC8hV9NL81k=
+	b=WiPXe1c9IUcg85hpolL7NnSXBWjuGYHOs5QNOhigPq+4rTzdHTxl2MGSPyieIJfts
+	 jjfriLNR3U0q/yqpqT5bT1SqoTU7YgJlQJ3d0hr92bbJjrK57+VkdocbT45U32ZnvX
+	 m7xr4f5XP3lUclNsm0wHeoXqWLESJPqOYr6vXtyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730107AbfLCWxF (ORCPT
+        id S1730112AbfLCWxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:53:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46074 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:53:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730093AbfLCWxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:53:03 -0500
+        id S1729296AbfLCWxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:53:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E42D207DD;
-        Tue,  3 Dec 2019 22:53:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 939F920866;
+        Tue,  3 Dec 2019 22:53:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413582;
-        bh=su1n9rIFco9QybKw4v3E7bYzZ5i2FUYnqUp43IBNZ6w=;
+        s=default; t=1575413588;
+        bh=pBpKq8YAfrzjP6r5Cix8xgkbdENAqmPfCWGwTiL6DOs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x96LpU1Gf9xJn3IP+ZnEVAPaxXan4Yj20Anq3P0N4SGOs+b3JUBBpVJuLRXNqMltG
-         V1Y8MGu+xEOQsgnalSx15632dKshe9eyEYaTfe8N7odSzVyf+psKXl09arFbeXn7QY
-         V1FbDm7OlgFVSYqvXmDOMwt/1W/PB+fwMUNnjZz0=
+        b=PwYYSgnfOu5Yn8hlD96KVPGTexrrVKB9nCQNTRf+rKVPe1D02uAEs1q6shTk4XkDn
+         PS6wi9Rdm5gVNCH/aSie6P6k0VbmP5/Al7udqqbT6j7+8hEVO0Q8+U6r177VNK87SM
+         /qF2qsBfaiinXw5yMO37JDdqIq7169ZEqYVlaDZQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 184/321] net/net_namespace: Check the return value of register_pernet_subsys()
-Date:   Tue,  3 Dec 2019 23:34:10 +0100
-Message-Id: <20191203223436.695979889@linuxfoundation.org>
+Subject: [PATCH 4.19 186/321] f2fs: fix to dirty inode synchronously
+Date:   Tue,  3 Dec 2019 23:34:12 +0100
+Message-Id: <20191203223436.798577872@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,36 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 0eb987c874dc93f9c9d85a6465dbde20fdd3884c ]
+[ Upstream commit b32e019049e959ee10ec359893c9dd5d057dad55 ]
 
-In net_ns_init(), register_pernet_subsys() could fail while registering
-network namespace subsystems. The fix checks the return value and
-sends a panic() on failure.
+If user change inode's i_flags via ioctl, let's add it into global
+dirty list, so that checkpoint can guarantee its persistence before
+fsync, it can make checkpoint keeping strong consistency.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/net_namespace.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/f2fs/file.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
-index 6dab186d4b8f6..c60123dff8039 100644
---- a/net/core/net_namespace.c
-+++ b/net/core/net_namespace.c
-@@ -913,7 +913,8 @@ static int __init net_ns_init(void)
- 	init_net_initialized = true;
- 	up_write(&pernet_ops_rwsem);
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index c7ea122997695..187bf7e260c99 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -1667,7 +1667,7 @@ static int __f2fs_ioc_setflags(struct inode *inode, unsigned int flags)
  
--	register_pernet_subsys(&net_ns_ops);
-+	if (register_pernet_subsys(&net_ns_ops))
-+		panic("Could not register network namespace subsystems");
+ 	inode->i_ctime = current_time(inode);
+ 	f2fs_set_inode_flags(inode);
+-	f2fs_mark_inode_dirty_sync(inode, false);
++	f2fs_mark_inode_dirty_sync(inode, true);
+ 	return 0;
+ }
  
- 	rtnl_register(PF_UNSPEC, RTM_NEWNSID, rtnl_net_newid, NULL,
- 		      RTNL_FLAG_DOIT_UNLOCKED);
 -- 
 2.20.1
 
