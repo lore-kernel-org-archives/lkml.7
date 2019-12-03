@@ -2,92 +2,189 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F50EC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF03C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B189820656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:37:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="de947gFn"
+	by mail.kernel.org (Postfix) with ESMTP id 9F5E7206E4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:37:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575416245;
+	bh=oBlyMq4h1w80kqTkWb/Gz5L8T8126mtBIKddWWF/JAs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=a7ntS32Du8EGDQ+mVPVtl9Z5Wg33QkALVqBQR1PtOFtp/m0WJYwExfMpJEdtXU+Mz
+	 f224W0m4Douz+8mbHJsVy+vPX2I5jSmUD4FkzPyFIGZg5AZYz+05byG+0dkkWABJ6N
+	 kjKHNdvsGFRGzfhUNQ2rubNy3UV1X2iDlHV3QLaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbfLCXg7 (ORCPT
+        id S1727113AbfLCXhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:36:59 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:43348 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbfLCXg7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 18:36:59 -0500
-Received: from [10.137.112.111] (unknown [131.107.147.111])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 8BAC120B7185;
-        Tue,  3 Dec 2019 15:36:58 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8BAC120B7185
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1575416218;
-        bh=lumjR+WsAH17zIElti4at56HiP3oZKr0jeW3mqpgrHY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=de947gFnmNyOixr7N1TMZYsinoGV2xsUKN/WwfHNuRjXgU61OunOF3SifgKSmF89G
-         bRi33LhmfBFfM/IFU2Yu66gQvpR3cgchy6aY4zm9ohJ6QAoEEtnJ4fz2nu5HSPCeTw
-         tz7djkOq501rwSmZC9Tc6rKg2AJjuDbXf14n6PTs=
-Subject: Re: [PATCH v9 5/6] IMA: Add support to limit measuring keys
-To:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org
-References: <20191127015654.3744-1-nramas@linux.microsoft.com>
- <20191127015654.3744-6-nramas@linux.microsoft.com>
- <1575375945.5241.16.camel@linux.ibm.com>
- <2d20ce36-e24e-e238-4a82-286db9eeab97@linux.microsoft.com>
- <1575403616.5241.76.camel@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <89bb3226-3a2e-c7fa-fff9-3a422739481c@linux.microsoft.com>
-Date:   Tue, 3 Dec 2019 15:37:17 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 3 Dec 2019 18:37:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45894 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726144AbfLCXhY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 18:37:24 -0500
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1858020656;
+        Tue,  3 Dec 2019 23:37:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575416242;
+        bh=oBlyMq4h1w80kqTkWb/Gz5L8T8126mtBIKddWWF/JAs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kWxdiItltSxMlKyb5CztyvIAdnfVgCNZeEr/34VKn0Vn0tjr44VDRCZ50Z7Pjm9bi
+         KaHf7BniYOUi6vXEBpW7zteiKtl74+T7CwxvHQmKXSlR3onpaT8hhtOM6kKmaA3U6E
+         MyDCopRdPyHVmbqLaRn9TGUEZI3xo3iEp5C3p9Ns=
+Date:   Tue, 3 Dec 2019 15:37:20 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Daniel Rosenberg <drosen@google.com>
+Cc:     Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel-team@android.com
+Subject: Re: [PATCH 2/8] fscrypt: Don't allow v1 policies with casefolding
+Message-ID: <20191203233720.GC727@sol.localdomain>
+References: <20191203051049.44573-1-drosen@google.com>
+ <20191203051049.44573-3-drosen@google.com>
 MIME-Version: 1.0
-In-Reply-To: <1575403616.5241.76.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191203051049.44573-3-drosen@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/3/2019 12:06 PM, Mimi Zohar wrote:
-
-> Suppose both root and uid 1000 define a keyring named "foo".  The
-> current "keyrings=foo" will measure all keys added to either keyring
-> named "foo".  There needs to be a way to limit measuring keys to a
-> particular keyring named "foo".
+On Mon, Dec 02, 2019 at 09:10:43PM -0800, Daniel Rosenberg wrote:
+> Casefolding requires a derived key for computing the siphash.
+> This is available for v2 policies, but not v1, so we disallow it for v1.
 > 
-> Mimi
+> Signed-off-by: Daniel Rosenberg <drosen@google.com>
+> ---
+>  fs/crypto/policy.c      | 26 +++++++++++++++++++++++---
+>  fs/inode.c              |  8 ++++++++
+>  include/linux/fscrypt.h |  7 +++++++
+>  3 files changed, 38 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/crypto/policy.c b/fs/crypto/policy.c
+> index 96f528071bed..94d96d3212d6 100644
+> --- a/fs/crypto/policy.c
+> +++ b/fs/crypto/policy.c
+> @@ -67,9 +67,9 @@ static bool supported_iv_ino_lblk_64_policy(
+>   * fscrypt_supported_policy - check whether an encryption policy is supported
+>   *
+>   * Given an encryption policy, check whether all its encryption modes and other
+> - * settings are supported by this kernel.  (But we don't currently don't check
+> - * for crypto API support here, so attempting to use an algorithm not configured
+> - * into the crypto API will still fail later.)
+> + * settings are supported by this kernel on the given inode.  (But we don't
+> + * currently don't check for crypto API support here, so attempting to use an
+> + * algorithm not configured into the crypto API will still fail later.)
+>   *
+>   * Return: %true if supported, else %false
+>   */
+> @@ -97,6 +97,12 @@ bool fscrypt_supported_policy(const union fscrypt_policy *policy_u,
+>  			return false;
+>  		}
+>  
+> +		if (IS_CASEFOLDED(inode)) {
+> +			fscrypt_warn(inode,
+> +				     "v1 policy does not support casefolded directories");
+> +			return false;
+> +		}
+> +
+>  		return true;
+>  	}
+>  	case FSCRYPT_POLICY_V2: {
+> @@ -530,3 +536,17 @@ int fscrypt_inherit_context(struct inode *parent, struct inode *child,
+>  	return preload ? fscrypt_get_encryption_info(child): 0;
+>  }
+>  EXPORT_SYMBOL(fscrypt_inherit_context);
+> +
+> +int fscrypt_set_casefolding_allowed(struct inode *inode)
+> +{
+> +	union fscrypt_policy policy;
+> +	int ret = fscrypt_get_policy(inode, &policy);
+> +
+> +	if (ret < 0)
+> +		return ret;
 
-Thanks for clarifying.
+In fs/crypto/ we're trying to use 'err' rather than 'ret' when a variable can
+only be 0 or a negative errno value.  I.e.:
 
-Suppose two different non-root users create keyring with the same name 
-"foo" and, say, both are measured, how would we know which keyring 
-measurement belongs to which user?
+        union fscrypt_policy policy;
+        int err;
 
-Wouldn't it be sufficient to include only keyrings created by "root" 
-(UID value 0) in the key measurement? This will include all the builtin 
-trusted keyrings (such as .builtin_trusted_keys, 
-.secondary_trusted_keys, .ima, .evm, etc.).
+        err = fscrypt_get_policy(inode, &policy);
+        if (err)
+                return err;
 
-What would be the use case for including keyrings created by non-root 
-users in key measurement?
+> +
+> +	if (policy.version == FSCRYPT_POLICY_V2)
+> +		return 0;
+> +	else
+> +		return -EINVAL;
+> +}
 
-Also, since the UID for non-root users can be any integer value (greater 
-than 0), can an an administrator craft a generic IMA policy that would 
-be applicable to all clients in an enterprise?
+In kernel code normally an early return is used in cases like this.  I.e.:
 
-thanks,
-  -lakshmi
+	if (policy.version != FSCRYPT_POLICY_V2)
+		return -EINVAL;
 
+	return 0;
 
+> @@ -2245,6 +2246,13 @@ int vfs_ioc_setflags_prepare(struct inode *inode, unsigned int oldflags,
+>  	    !capable(CAP_LINUX_IMMUTABLE))
+>  		return -EPERM;
+>  
+> +	/*
+> +	 * When a directory is encrypted, the CASEFOLD flag can only be turned
+> +	 * on if the fscrypt policy supports it.
+> +	 */
+> +	if (IS_ENCRYPTED(inode) && (flags & ~oldflags & FS_CASEFOLD_FL))
+> +		return fscrypt_set_casefolding_allowed(inode);
+> +
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL(vfs_ioc_setflags_prepare);
+
+This needs to only return early on error.  Otherwise when people add checks for
+more flags later, those checks will not be executed when the CASEFOLD flag is
+enabled on an encrypted directory.
+
+I.e.:
+
+        if (IS_ENCRYPTED(inode) && (flags & ~oldflags & FS_CASEFOLD_FL)) {
+                err = fscrypt_set_casefolding_allowed(inode);
+                if (err)
+                        return err;
+        }
+
+I'm also wondering if this is the right level of abstraction.
+Maybe the API should be:
+
+	err = fscrypt_ioc_setflags_prepare(inode, oldflags, flags);
+	if (err)
+		return err;
+
+Then the VFS code will be "obvious", and the comment:
+
+        /*
+         * When a directory is encrypted, the CASEFOLD flag can only be turned
+         * on if the fscrypt policy supports it.
+         */
+
+can be moved to the definition of fscrypt_ioc_setflags_prepare() in fs/crypto/.
+
+- Eric
