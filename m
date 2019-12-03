@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD3C3C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13192C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5E520656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:05:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE99E20656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:05:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414338;
-	bh=ZhYdnqrQS3F5kpXHrKSeIvpgv9N6bcqn9/aggzXh2+0=;
+	s=default; t=1575414343;
+	bh=pXd5XbYFAKM+vKsxh5u0AOvnhFw4ZOeWx/jVfX3EWbk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JBFbU5QIfEy35ctqY7wANW980SSohhtox31Cvd+9JIFPsz4mFG5Y96uRXgf1kK9Hj
-	 ysgcP2+fpytZRLKSOOcsOuKLG9qjgamjR0in7neFewv2vIB9YJUAgwk1Y7o/VPEFWt
-	 tk6T5dLqGmynyr//uImjbs16Zk1lrSVFtfz3bYq8=
+	b=US2y/IBf0he7zAavQxYbgsktFuL7JNdC+gwNA4rK/O+PVqmtP+uqsAxLiA8SBH5kf
+	 sso/wLZId2wseJfORR6drqdVVrZXHgDq5K7HaEgY6QzOn++tGXZbwYA/4natE1OWHV
+	 Hj0ZjUpzVlwsDU0LorAn2sI+sbGCNwy18Y4NNdXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730075AbfLCXFh (ORCPT
+        id S1730088AbfLCXFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:05:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41608 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 18:05:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729706AbfLCWuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:50:08 -0500
+        id S1729697AbfLCWuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:50:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 664032084B;
-        Tue,  3 Dec 2019 22:50:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFA222084B;
+        Tue,  3 Dec 2019 22:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413407;
-        bh=ZhYdnqrQS3F5kpXHrKSeIvpgv9N6bcqn9/aggzXh2+0=;
+        s=default; t=1575413405;
+        bh=pXd5XbYFAKM+vKsxh5u0AOvnhFw4ZOeWx/jVfX3EWbk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nyelvraSY2FqgKJXebIUs2XDHlpl9oUwfpLDtnUNpKGw1lm7A/rNB+fmbwEyVmcPA
-         kZJNnZOGsFDK7ym4GQAt0Qmoa1KjgSLgenaM3mGii2NAnmmyz9p9hGTlKeV/4wTovQ
-         ZcE0sETi7Ny3FZmf1dkU1/0J+QUIvcmAwoTo6DF8=
+        b=zliteuTc3MpKgSRn6pBGAhoiWQC5FXhyd9Pbg5tLp8hwNfU9h5cvcIvVAXQgNYgy0
+         Ph5L8h+rE63VWTAHuhmwhsm2WC0ev9emCqbva3ynLKdyLD6Earl4PnZfA0qVJgP8us
+         5lEAgCkz/7zt4It8h47R4ViTKDxm0jMGFw3NovOQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Boris Brezillon <boris.brezillon@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
+        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 115/321] mtd: rawnand: sunxi: Write pageprog related opcodes to WCMD_SET
-Date:   Tue,  3 Dec 2019 23:33:01 +0100
-Message-Id: <20191203223433.131001848@linuxfoundation.org>
+Subject: [PATCH 4.19 114/321] mmc: meson-gx: make sure the descriptor is stopped on errors
+Date:   Tue,  3 Dec 2019 23:33:00 +0100
+Message-Id: <20191203223433.080279238@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,35 +60,178 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Brezillon <boris.brezillon@bootlin.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit 732774437ae01d9882e60314e303898e63c7f038 ]
+[ Upstream commit 18f92bc02f1739b5c4d5b70009fbb7eada45bca3 ]
 
-The opcodes used by the controller when doing batched page prog should
-be written in NFC_REG_WCMD_SET not FC_REG_RCMD_SET. Luckily, the
-default NFC_REG_WCMD_SET value matches the one we set in the driver
-which explains why we didn't notice the problem.
+On errors, if we don't stop the descriptor chain, it may continue to
+run and raise IRQ after we have called mmc_request_done(). This is bad
+because we won't be able to get cmd anymore and properly deal with the
+IRQ.
 
-Fixes: 614049a8d904 ("mtd: nand: sunxi: add support for DMA assisted operations")
-Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+This patch makes sure the descriptor chain is stopped before
+calling mmc_request_done()
+
+Fixes: 79ed05e329c3 ("mmc: meson-gx: add support for descriptor chain mode")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/raw/sunxi_nand.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mmc/host/meson-gx-mmc.c | 73 ++++++++++++++++++++++++++++-----
+ 1 file changed, 63 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/mtd/nand/raw/sunxi_nand.c b/drivers/mtd/nand/raw/sunxi_nand.c
-index 1f0b7ee38df56..5b5f4d25a3e12 100644
---- a/drivers/mtd/nand/raw/sunxi_nand.c
-+++ b/drivers/mtd/nand/raw/sunxi_nand.c
-@@ -1397,7 +1397,7 @@ static int sunxi_nfc_hw_ecc_write_page_dma(struct mtd_info *mtd,
- 	sunxi_nfc_randomizer_enable(mtd);
+diff --git a/drivers/mmc/host/meson-gx-mmc.c b/drivers/mmc/host/meson-gx-mmc.c
+index ddd98cdd33bcd..72f34a58928ca 100644
+--- a/drivers/mmc/host/meson-gx-mmc.c
++++ b/drivers/mmc/host/meson-gx-mmc.c
+@@ -21,6 +21,7 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
++#include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
+@@ -90,9 +91,11 @@
+ #define   CFG_CLK_ALWAYS_ON BIT(18)
+ #define   CFG_CHK_DS BIT(20)
+ #define   CFG_AUTO_CLK BIT(23)
++#define   CFG_ERR_ABORT BIT(27)
  
- 	writel((NAND_CMD_RNDIN << 8) | NAND_CMD_PAGEPROG,
--	       nfc->regs + NFC_REG_RCMD_SET);
-+	       nfc->regs + NFC_REG_WCMD_SET);
+ #define SD_EMMC_STATUS 0x48
+ #define   STATUS_BUSY BIT(31)
++#define   STATUS_DESC_BUSY BIT(30)
+ #define   STATUS_DATI GENMASK(23, 16)
  
- 	dma_async_issue_pending(nfc->dmac);
+ #define SD_EMMC_IRQ_EN 0x4c
+@@ -930,6 +933,7 @@ static void meson_mmc_start_cmd(struct mmc_host *mmc, struct mmc_command *cmd)
+ 
+ 	cmd_cfg |= FIELD_PREP(CMD_CFG_CMD_INDEX_MASK, cmd->opcode);
+ 	cmd_cfg |= CMD_CFG_OWNER;  /* owned by CPU */
++	cmd_cfg |= CMD_CFG_ERROR; /* stop in case of error */
+ 
+ 	meson_mmc_set_response_bits(cmd, &cmd_cfg);
+ 
+@@ -1024,6 +1028,17 @@ static irqreturn_t meson_mmc_irq(int irq, void *dev_id)
+ 	u32 irq_en, status, raw_status;
+ 	irqreturn_t ret = IRQ_NONE;
+ 
++	irq_en = readl(host->regs + SD_EMMC_IRQ_EN);
++	raw_status = readl(host->regs + SD_EMMC_STATUS);
++	status = raw_status & irq_en;
++
++	if (!status) {
++		dev_dbg(host->dev,
++			"Unexpected IRQ! irq_en 0x%08x - status 0x%08x\n",
++			 irq_en, raw_status);
++		return IRQ_NONE;
++	}
++
+ 	if (WARN_ON(!host) || WARN_ON(!host->cmd))
+ 		return IRQ_NONE;
+ 
+@@ -1031,22 +1046,18 @@ static irqreturn_t meson_mmc_irq(int irq, void *dev_id)
+ 
+ 	cmd = host->cmd;
+ 	data = cmd->data;
+-	irq_en = readl(host->regs + SD_EMMC_IRQ_EN);
+-	raw_status = readl(host->regs + SD_EMMC_STATUS);
+-	status = raw_status & irq_en;
+-
+ 	cmd->error = 0;
+ 	if (status & IRQ_CRC_ERR) {
+ 		dev_dbg(host->dev, "CRC Error - status 0x%08x\n", status);
+ 		cmd->error = -EILSEQ;
+-		ret = IRQ_HANDLED;
++		ret = IRQ_WAKE_THREAD;
+ 		goto out;
+ 	}
+ 
+ 	if (status & IRQ_TIMEOUTS) {
+ 		dev_dbg(host->dev, "Timeout - status 0x%08x\n", status);
+ 		cmd->error = -ETIMEDOUT;
+-		ret = IRQ_HANDLED;
++		ret = IRQ_WAKE_THREAD;
+ 		goto out;
+ 	}
+ 
+@@ -1071,17 +1082,49 @@ out:
+ 	/* ack all enabled interrupts */
+ 	writel(irq_en, host->regs + SD_EMMC_STATUS);
+ 
++	if (cmd->error) {
++		/* Stop desc in case of errors */
++		u32 start = readl(host->regs + SD_EMMC_START);
++
++		start &= ~START_DESC_BUSY;
++		writel(start, host->regs + SD_EMMC_START);
++	}
++
+ 	if (ret == IRQ_HANDLED)
+ 		meson_mmc_request_done(host->mmc, cmd->mrq);
+-	else if (ret == IRQ_NONE)
+-		dev_warn(host->dev,
+-			 "Unexpected IRQ! status=0x%08x, irq_en=0x%08x\n",
+-			 raw_status, irq_en);
+ 
+ 	spin_unlock(&host->lock);
+ 	return ret;
+ }
+ 
++static int meson_mmc_wait_desc_stop(struct meson_host *host)
++{
++	int loop;
++	u32 status;
++
++	/*
++	 * It may sometimes take a while for it to actually halt. Here, we
++	 * are giving it 5ms to comply
++	 *
++	 * If we don't confirm the descriptor is stopped, it might raise new
++	 * IRQs after we have called mmc_request_done() which is bad.
++	 */
++	for (loop = 50; loop; loop--) {
++		status = readl(host->regs + SD_EMMC_STATUS);
++		if (status & (STATUS_BUSY | STATUS_DESC_BUSY))
++			udelay(100);
++		else
++			break;
++	}
++
++	if (status & (STATUS_BUSY | STATUS_DESC_BUSY)) {
++		dev_err(host->dev, "Timed out waiting for host to stop\n");
++		return -ETIMEDOUT;
++	}
++
++	return 0;
++}
++
+ static irqreturn_t meson_mmc_irq_thread(int irq, void *dev_id)
+ {
+ 	struct meson_host *host = dev_id;
+@@ -1092,6 +1135,13 @@ static irqreturn_t meson_mmc_irq_thread(int irq, void *dev_id)
+ 	if (WARN_ON(!cmd))
+ 		return IRQ_NONE;
+ 
++	if (cmd->error) {
++		meson_mmc_wait_desc_stop(host);
++		meson_mmc_request_done(host->mmc, cmd->mrq);
++
++		return IRQ_HANDLED;
++	}
++
+ 	data = cmd->data;
+ 	if (meson_mmc_bounce_buf_read(data)) {
+ 		xfer_bytes = data->blksz * data->blocks;
+@@ -1132,6 +1182,9 @@ static void meson_mmc_cfg_init(struct meson_host *host)
+ 	cfg |= FIELD_PREP(CFG_RC_CC_MASK, ilog2(SD_EMMC_CFG_CMD_GAP));
+ 	cfg |= FIELD_PREP(CFG_BLK_LEN_MASK, ilog2(SD_EMMC_CFG_BLK_SIZE));
+ 
++	/* abort chain on R/W errors */
++	cfg |= CFG_ERR_ABORT;
++
+ 	writel(cfg, host->regs + SD_EMMC_CFG);
+ }
  
 -- 
 2.20.1
