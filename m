@@ -2,302 +2,134 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17699C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D055C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB8FC2068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 744342068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:03:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=qrpff.net header.i=@qrpff.net header.b="Ay7mqLpc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dtYCn58+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbfLCQDl (ORCPT
+        id S1727201AbfLCQDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 11:03:41 -0500
-Received: from bonobo.elm.relay.mailchannels.net ([23.83.212.22]:62195 "EHLO
-        bonobo.elm.relay.mailchannels.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726131AbfLCQDk (ORCPT
+        Tue, 3 Dec 2019 11:03:55 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37958 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726131AbfLCQDy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 11:03:40 -0500
-X-Sender-Id: dreamhost|x-authsender|stevie@qrpff.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 23DE31A0E5A
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Dec 2019 16:03:39 +0000 (UTC)
-Received: from pdx1-sub0-mail-a9.g.dreamhost.com (100-96-4-107.trex.outbound.svc.cluster.local [100.96.4.107])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 35CEE1A0AE0
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Dec 2019 16:03:38 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|stevie@qrpff.net
-Received: from pdx1-sub0-mail-a9.g.dreamhost.com ([TEMPUNAVAIL].
- [64.90.62.162])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-        by 0.0.0.0:2500 (trex/5.18.5);
-        Tue, 03 Dec 2019 16:03:39 +0000
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|stevie@qrpff.net
-X-MailChannels-Auth-Id: dreamhost
-X-Lyrical-Fearful: 4590fa411b991331_1575389018625_620993541
-X-MC-Loop-Signature: 1575389018625:4043353571
-X-MC-Ingress-Time: 1575389018624
-Received: from pdx1-sub0-mail-a9.g.dreamhost.com (localhost [127.0.0.1])
-        by pdx1-sub0-mail-a9.g.dreamhost.com (Postfix) with ESMTP id E4240AF64D
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Dec 2019 08:03:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=qrpff.net; h=mime-version
-        :from:date:message-id:subject:to:cc:content-type; s=qrpff.net;
-         bh=77WoW3CkLyIvTb55IWHyUNylFDU=; b=Ay7mqLpcOlXW88JLFTrS1ruLZ3AE
-        OPpyM6VV14yG6S6DEX9cCoEg738k5JLyfOTmWx0Ji6jy5UqQ9pruq6d0Ho+oJyUR
-        /uxTYIetDoOYgqE9PacognOInxkCJRevrC3YhdzSRBA/WcGJlI/bkF6yFvcRhyAP
-        iuVUL6kw9V8vtxE=
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stevie@qrpff.net)
-        by pdx1-sub0-mail-a9.g.dreamhost.com (Postfix) with ESMTPSA id A279AAF63D
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Dec 2019 08:03:31 -0800 (PST)
-Received: by mail-lj1-f179.google.com with SMTP id z17so4388719ljk.13
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 08:03:31 -0800 (PST)
-X-Gm-Message-State: APjAAAWKZ0NgEIetnU1i3M/O5C6IGRrSOx5BTeR0mzfeGjnz/6UUpbXo
-        9avgq+btXscLZnT+VO9ypbcn78fiKXvVVgzX/8g=
-X-Google-Smtp-Source: APXvYqxnYtyAULgy0CLVafmglqQYuBJM2g0N7H4XjCt/asq8qw6Msu0aT9JUoTab9GNHYZlPouOW5eCykIphcX9s5eY=
-X-Received: by 2002:a2e:4704:: with SMTP id u4mr3062360lja.117.1575389009625;
- Tue, 03 Dec 2019 08:03:29 -0800 (PST)
+        Tue, 3 Dec 2019 11:03:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575389033;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=L/S9YEoC00wo/Of2441RPzayHTUYnY3vnFh0QpGH2VA=;
+        b=dtYCn58+LwA3LmDHU2X/Nmo3uMCS2e2LbJXoYhdkLUNn+8OFMD5qQYLIB2zWsN0e/ZIh7h
+        lgP1JeOBzKVbvFqSU1GSysX6BdNR7C8m8liMl9qVtEC0/tHQ/XAjVSMfmXnlHu7M1qxctk
+        uiyGE0dEA25RXlNtHioQDAsdQliz3Zg=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-40-Ps-krIttNZSF5PHW70sGqA-1; Tue, 03 Dec 2019 11:03:49 -0500
+Received: by mail-qt1-f199.google.com with SMTP id u9so2751676qte.5
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 08:03:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ilQ0+r0UBu4+GolSe7bf072ArjOFjAUnGKdJuleehSk=;
+        b=bAU1OGrCvg011hKt4x/4AE3tFmHbbBZOWo3I6wtNqn59g6tB3cdPSjbMJhIOQqoVO1
+         ElFFhCGgoM7UfXj2Y/5Bq98USjqpdajXUnp8JBZFS/+Yl1c9hIzkGXbuBhHOuFk3FmK6
+         yIzFQ9o6bXMba9zns+K4o3vjU9jwi39qszKky5oYfwbOmXdhzJtuQgTVEGF0Z0rhq/do
+         wcq+VD6cbocIoS0D/+4NMKOKJjyCg5reO2pV1yT9W3pLKEDQKLfIqEpVGFaoK79HMb0M
+         WZYLpjUuq3kGGS9q8y5+br8vhOK+DcBl9xJ2lEjKNN/8Tm9ysRQ/kIfB/mvc+V18vDpv
+         whLQ==
+X-Gm-Message-State: APjAAAX1MDy37mxV9T+nVBPKsDxLOaW2lKwIs0+5aUOwxISOh9v0T//w
+        A/zciuiJkA68NZHQ4/58KhhWKP6whMtoIfGQb9bLAjiGYLFEWkDNI61QlIqRIcFSVzG1la3Z24N
+        2L7JJpEZrTN3OGiu9pgCFtw49
+X-Received: by 2002:ac8:461a:: with SMTP id p26mr5490197qtn.317.1575389028707;
+        Tue, 03 Dec 2019 08:03:48 -0800 (PST)
+X-Google-Smtp-Source: APXvYqw4fOIwDRRPp6l7y0lv2pBkxHBG2W7El3I1jqcWKz1A9rg9pHTFG2qYGS/ZbAA+/l6HxaYdUQ==
+X-Received: by 2002:ac8:461a:: with SMTP id p26mr5490164qtn.317.1575389028362;
+        Tue, 03 Dec 2019 08:03:48 -0800 (PST)
+Received: from labbott-redhat.redhat.com (pool-96-235-39-235.pitbpa.fios.verizon.net. [96.235.39.235])
+        by smtp.gmail.com with ESMTPSA id i19sm1930260qki.124.2019.12.03.08.03.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2019 08:03:47 -0800 (PST)
+From:   Laura Abbott <labbott@redhat.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Laura Abbott <labbott@redhat.com>, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Subject: [PATCH] netfilter: nf_flow_table_offload: Correct memcpy size for flow_overload_mangle
+Date:   Tue,  3 Dec 2019 11:03:45 -0500
+Message-Id: <20191203160345.24743-1-labbott@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-DH-BACKEND: pdx1-sub0-mail-a9
-From:   Stephen Oberholtzer <stevie@qrpff.net>
-Date:   Tue, 3 Dec 2019 11:03:18 -0500
-X-Gmail-Original-Message-ID: <CAD_xR9dGuVLsZf1P3C-x7L8_WVkHHMfQCKdvR_ZRkeBXCOxW_w@mail.gmail.com>
-Message-ID: <CAD_xR9dGuVLsZf1P3C-x7L8_WVkHHMfQCKdvR_ZRkeBXCOxW_w@mail.gmail.com>
-Subject: [RFC] chromeos_laptop: Make touchscreen work on C720
-To:     Benson Leung <bleung@chromium.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-MC-Unique: Ps-krIttNZSF5PHW70sGqA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From 627be71ee77f4fc20cdb55c6e0a06826fb43ca9d Mon Sep 17 00:00:00 2001
-From: Stephen Oberholtzer <stevie@qrpff.net>
-Date: Tue, 3 Dec 2019 02:20:28 -0500
-Subject: [RFC] chromeos_laptop: Make touchscreen work on C720
+The sizes for memcpy in flow_offload_mangle don't match
+the source variables, leading to overflow errors on some
+build configurations:
 
-I have an old Acer C720 Chromebook reflashed with MrChromebox, running
-Debian.  When I did an upgrade, the touchscreen stopped working; I traced
-it to the kernel.
+In function 'memcpy',
+    inlined from 'flow_offload_mangle' at net/netfilter/nf_flow_table_offlo=
+ad.c:112:2,
+    inlined from 'flow_offload_port_dnat' at net/netfilter/nf_flow_table_of=
+fload.c:373:2,
+    inlined from 'nf_flow_rule_route_ipv4' at net/netfilter/nf_flow_table_o=
+ffload.c:424:3:
+./include/linux/string.h:376:4: error: call to '__read_overflow2' declared =
+with attribute error: detected read beyond size of object passed as 2nd par=
+ameter
+  376 |    __read_overflow2();
+      |    ^~~~~~~~~~~~~~~~~~
+make[2]: *** [scripts/Makefile.build:266: net/netfilter/nf_flow_table_offlo=
+ad.o] Error 1
 
-After six hours of bisecting -- if anyone can tell me how to make a kernel
-build take less than 2 hours of CPU time while bisecting, I'd greatly
-appreciate it -- I tracked the problem to commit 7cf432bf0586
-("Input: atmel_mxt_ts - require device properties present when probing").
+Fix this by using the corresponding type.
 
-Looking at https://lkml.org/lkml/2018/5/3/955, it appears that the idea
-was to reassign the responsibility for setting up ACPI data for
-atmel_mxt_ts into chromeos_laptop, which makes a lot of sense, as that
-would tidy up some potential maintenance issues.
-
-However, that doesn't actually work.  The chromeos_laptop code appears to
-categorize every Chromebook as exactly one of the following:
-
-(A) Having I2C devices (declared using DECLARE_CROS_LAPTOP)
-(B) Requiring ACPI munging (declared using DECLARE_ACPI_CROS_LAPTOP)
-
-There's some stuff about a board_info.properties that looks like it's meant
-to do the job for I2C devices, but it doesn't seem to do anything;
-it *definitely* doesn't do what the atmel_mxt_ts driver is expecting.
-
-On the other hand, when I apply the following patch to a recent kernel
-(5.2 is the one I tested), my touchscreen works again.
-
-I'm still not sure if the appropriate solution is to ensure that the
-ACPI properties are set, or if atmel_mxt_ts should be checking both
-ACPI properties and the I2C board_info.properties, however.
-
->8------------------------------------------------------8<
-
-Fixes: 7cf432bf058 ("Input: atmel_mxt_ts - require device properties
-present when probing")
-
-The ACPI data for the Atmel touchscreen found in many Chromebooks is
-incomplete.  Originally, the atmel_mxt_ts driver had a whitelist of known
-Chromebooks, but that changed in commit 7cf432bf0586 ("Input: atmel_mxt_ts
- - require device properties present when probing").
-As of that commit, the atmel_mxt_ts driver expects the chromeos_laptop
-driver to inject the required ACPI properties into the device node.
-
-However, this doesn't actually work in all cases -- particularly, the Acer
-C720.  This is because the C720's definition does not contain any rules to
-set up the ACPI properties for the touchscreen.
-
-Signed-off-by: Stephen Oberholtzer <stevie@qrpff.net>
-
+Fixes: c29f74e0df7a ("netfilter: nf_flow_table: hardware offload support")
+Signed-off-by: Laura Abbott <labbott@redhat.com>
 ---
- drivers/platform/chrome/chromeos_laptop.c | 47 +++++++++++++++--------
- 1 file changed, 31 insertions(+), 16 deletions(-)
+Seen on a Fedora powerpc little endian build with -O3 but it looks like
+it is correctly catching an error with doing a memcpy outside the source
+variable.
+---
+ net/netfilter/nf_flow_table_offload.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/chrome/chromeos_laptop.c
-b/drivers/platform/chrome/chromeos_laptop.c
-index 7abbb6167766..b6487a19f04a 100644
---- a/drivers/platform/chrome/chromeos_laptop.c
-+++ b/drivers/platform/chrome/chromeos_laptop.c
-@@ -228,16 +228,28 @@ static struct notifier_block
-chromeos_laptop_i2c_notifier = {
-     .notifier_call = chromeos_laptop_i2c_notifier_call,
- };
-
--#define DECLARE_CROS_LAPTOP(_name)                    \
--static const struct chromeos_laptop _name __initconst = {        \
-+#define _DECLARE_I2C_CROS_LAPTOP(_name)                    \
-     .i2c_peripherals    = _name##_peripherals,            \
--    .num_i2c_peripherals    = ARRAY_SIZE(_name##_peripherals),    \
-+    .num_i2c_peripherals    = ARRAY_SIZE(_name##_peripherals),
-+
-+#define _DECLARE_ACPI_CROS_LAPTOP(_name)                \
-+    .acpi_peripherals    = _name##_peripherals,            \
-+    .num_acpi_peripherals    = ARRAY_SIZE(_name##_peripherals),
-+
-+#define DECLARE_I2C_CROS_LAPTOP(_name)                    \
-+static const struct chromeos_laptop _name __initconst = {        \
-+    _DECLARE_I2C_CROS_LAPTOP(_name)                    \
+diff --git a/net/netfilter/nf_flow_table_offload.c b/net/netfilter/nf_flow_=
+table_offload.c
+index c54c9a6cc981..526f894d0bdb 100644
+--- a/net/netfilter/nf_flow_table_offload.c
++++ b/net/netfilter/nf_flow_table_offload.c
+@@ -108,8 +108,8 @@ static void flow_offload_mangle(struct flow_action_entr=
+y *entry,
+ =09entry->id =3D FLOW_ACTION_MANGLE;
+ =09entry->mangle.htype =3D htype;
+ =09entry->mangle.offset =3D offset;
+-=09memcpy(&entry->mangle.mask, mask, sizeof(u32));
+-=09memcpy(&entry->mangle.val, value, sizeof(u32));
++=09memcpy(&entry->mangle.mask, mask, sizeof(u8));
++=09memcpy(&entry->mangle.val, value, sizeof(u8));
  }
+=20
+ static inline struct flow_action_entry *
+--=20
+2.21.0
 
- #define DECLARE_ACPI_CROS_LAPTOP(_name)                    \
- static const struct chromeos_laptop _name __initconst = {        \
--    .acpi_peripherals    = _name##_peripherals,            \
--    .num_acpi_peripherals    = ARRAY_SIZE(_name##_peripherals),    \
-+    _DECLARE_ACPI_CROS_LAPTOP(_name)                \
-+}
-+
-+#define DECLARE_I2C_ACPI_CROS_LAPTOP(_name, _acpiname)            \
-+static const struct chromeos_laptop _name __initconst = {        \
-+    _DECLARE_I2C_CROS_LAPTOP(_name)                    \
-+    _DECLARE_ACPI_CROS_LAPTOP(_acpiname)                \
- }
-
- static struct i2c_peripheral samsung_series_5_550_peripherals[] __initdata = {
-@@ -259,7 +271,7 @@ static struct i2c_peripheral
-samsung_series_5_550_peripherals[] __initdata = {
-         .type        = I2C_ADAPTER_SMBUS,
-     },
- };
--DECLARE_CROS_LAPTOP(samsung_series_5_550);
-+DECLARE_I2C_CROS_LAPTOP(samsung_series_5_550);
-
- static struct i2c_peripheral samsung_series_5_peripherals[] __initdata = {
-     /* Light Sensor. */
-@@ -270,7 +282,7 @@ static struct i2c_peripheral
-samsung_series_5_peripherals[] __initdata = {
-         .type        = I2C_ADAPTER_SMBUS,
-     },
- };
--DECLARE_CROS_LAPTOP(samsung_series_5);
-+DECLARE_I2C_CROS_LAPTOP(samsung_series_5);
-
- static const int chromebook_pixel_tp_keys[] __initconst = {
-     KEY_RESERVED,
-@@ -332,7 +344,7 @@ static struct i2c_peripheral
-chromebook_pixel_peripherals[] __initdata = {
-         .type        = I2C_ADAPTER_PANEL,
-     },
- };
--DECLARE_CROS_LAPTOP(chromebook_pixel);
-+DECLARE_I2C_CROS_LAPTOP(chromebook_pixel);
-
- static struct i2c_peripheral hp_chromebook_14_peripherals[] __initdata = {
-     /* Touchpad. */
-@@ -345,7 +357,7 @@ static struct i2c_peripheral
-hp_chromebook_14_peripherals[] __initdata = {
-         .type        = I2C_ADAPTER_DESIGNWARE,
-     },
- };
--DECLARE_CROS_LAPTOP(hp_chromebook_14);
-+DECLARE_I2C_CROS_LAPTOP(hp_chromebook_14);
-
- static struct i2c_peripheral dell_chromebook_11_peripherals[] __initdata = {
-     /* Touchpad. */
-@@ -367,7 +379,7 @@ static struct i2c_peripheral
-dell_chromebook_11_peripherals[] __initdata = {
-         .type        = I2C_ADAPTER_DESIGNWARE,
-     },
- };
--DECLARE_CROS_LAPTOP(dell_chromebook_11);
-+DECLARE_I2C_CROS_LAPTOP(dell_chromebook_11);
-
- static struct i2c_peripheral toshiba_cb35_peripherals[] __initdata = {
-     /* Touchpad. */
-@@ -380,7 +392,7 @@ static struct i2c_peripheral
-toshiba_cb35_peripherals[] __initdata = {
-         .type        = I2C_ADAPTER_DESIGNWARE,
-     },
- };
--DECLARE_CROS_LAPTOP(toshiba_cb35);
-+DECLARE_I2C_CROS_LAPTOP(toshiba_cb35);
-
- static struct i2c_peripheral acer_c7_chromebook_peripherals[] __initdata = {
-     /* Touchpad. */
-@@ -393,7 +405,7 @@ static struct i2c_peripheral
-acer_c7_chromebook_peripherals[] __initdata = {
-         .type        = I2C_ADAPTER_SMBUS,
-     },
- };
--DECLARE_CROS_LAPTOP(acer_c7_chromebook);
-+DECLARE_I2C_CROS_LAPTOP(acer_c7_chromebook);
-
- static struct i2c_peripheral acer_ac700_peripherals[] __initdata = {
-     /* Light Sensor. */
-@@ -404,7 +416,7 @@ static struct i2c_peripheral
-acer_ac700_peripherals[] __initdata = {
-         .type        = I2C_ADAPTER_SMBUS,
-     },
- };
--DECLARE_CROS_LAPTOP(acer_ac700);
-+DECLARE_I2C_CROS_LAPTOP(acer_ac700);
-
- static struct i2c_peripheral acer_c720_peripherals[] __initdata = {
-     /* Touchscreen. */
-@@ -452,7 +464,8 @@ static struct i2c_peripheral
-acer_c720_peripherals[] __initdata = {
-         .pci_devid    = PCI_DEVID(0, PCI_DEVFN(0x15, 0x2)),
-     },
- };
--DECLARE_CROS_LAPTOP(acer_c720);
-+
-+/* C720 also needs generic_atmel ACPI stuff declared below. */
-
- static struct i2c_peripheral
- hp_pavilion_14_chromebook_peripherals[] __initdata = {
-@@ -466,7 +479,7 @@ hp_pavilion_14_chromebook_peripherals[] __initdata = {
-         .type        = I2C_ADAPTER_SMBUS,
-     },
- };
--DECLARE_CROS_LAPTOP(hp_pavilion_14_chromebook);
-+DECLARE_I2C_CROS_LAPTOP(hp_pavilion_14_chromebook);
-
- static struct i2c_peripheral cr48_peripherals[] __initdata = {
-     /* Light Sensor. */
-@@ -477,7 +490,7 @@ static struct i2c_peripheral cr48_peripherals[]
-__initdata = {
-         .type        = I2C_ADAPTER_SMBUS,
-     },
- };
--DECLARE_CROS_LAPTOP(cr48);
-+DECLARE_I2C_CROS_LAPTOP(cr48);
-
- static const u32 samus_touchpad_buttons[] __initconst = {
-     KEY_RESERVED,
-@@ -520,6 +533,8 @@ static struct acpi_peripheral
-generic_atmel_peripherals[] __initdata = {
- };
- DECLARE_ACPI_CROS_LAPTOP(generic_atmel);
-
-+DECLARE_I2C_ACPI_CROS_LAPTOP(acer_c720, generic_atmel);
-+
- static const struct dmi_system_id chromeos_laptop_dmi_table[] __initconst = {
-     {
-         .ident = "Samsung Series 5 550",
--- 
-2.20.1
