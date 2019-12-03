@@ -4,49 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DEBC43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6CDC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B9D520848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67CAD20862
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412759;
-	bh=Sn94HdVLW/OEn/8TqLeKciNkLqOP6DkWHZCCKHmmbSk=;
+	s=default; t=1575412761;
+	bh=3YuYJgHzPeqfnu9iRUvtg9XL7Q+BuK2tpsB3QoGyXMI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dmn8rbSC2WFt+72pDxtd26QXR4HBuMg/dH239gfSurciHwgPy07hJzh9bha2OUjDY
-	 rvTgii3j949/Jo3oXZphWcgBlgObXyEOhkVvQd6BtW/6jV3TF1ajkmXfw/lKuWcHEX
-	 2/Xd+6MuxoBXWiSPLHJogmKPPPFKBXVEbkSAAyKM=
+	b=T+2GLfuA36GcQzsAJY0LL/Gp1ZFV9ma9LkT7GTikWIFfGhyVpBRQdauJlN5ydkIp/
+	 y9TE4aGUx84CfjKOgbjmoLNaKDmNOZMo3UY9/u8wzIkR3sgincLpxEFWf5AqwDzs4I
+	 LPiVRj3C5GNHRq0xWeUptG6mch1ynHZvFAuTtY8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbfLCWjR (ORCPT
+        id S1728188AbfLCWjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:39:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49066 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:39:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728171AbfLCWjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:39:14 -0500
+        id S1727836AbfLCWjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:39:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 922AE207DD;
-        Tue,  3 Dec 2019 22:39:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6122E2073C;
+        Tue,  3 Dec 2019 22:39:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412753;
-        bh=Sn94HdVLW/OEn/8TqLeKciNkLqOP6DkWHZCCKHmmbSk=;
+        s=default; t=1575412755;
+        bh=3YuYJgHzPeqfnu9iRUvtg9XL7Q+BuK2tpsB3QoGyXMI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZTuaS/2QdIyQe+Vke0Y5PDblhSPmyO+BdVSm45JYhz9gKurheW0c9/T7VcnfL8+HG
-         uBf3yhEB+Kp9a6DB3182xYwVUx63vo8crs2irzYCAI1N/neUuJVmpHJLR9OM2UuXbZ
-         IkGwNGXErmx8y/xtwNPcVapeIY0FEHPXUhXE6gmc=
+        b=wZqETis+E9fdXXzsH8ZXCtUa7ed1qhaVwXeyOMohVmLZs+VjzgKiVOlIP7L2sAHcD
+         loZ3PAK/xBQ50vrVCBHPKO/apv1FG/x7P4lNoFssGNVfhM7hxiOyV/AP0elWRBEZdU
+         xRKpiiMK1awVzu/rwvjzTjOAyIwh0+RpY71d3IZI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, zang <dump@tzib.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH 5.4 14/46] thunderbolt: Power cycle the router if NVM authentication fails
-Date:   Tue,  3 Dec 2019 23:35:34 +0100
-Message-Id: <20191203212729.315284594@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Borislav Petkov <bp@suse.de>, Rik van Riel <riel@surriel.com>,
+        Aubrey Li <aubrey.li@intel.com>,
+        Austin Clements <austin@google.com>,
+        Barret Rhoden <brho@google.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        David Chase <drchase@golang.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, ian@airs.com,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Bleecher Snyder <josharian@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
+Subject: [PATCH 5.4 15/46] x86/fpu: Dont cache access to fpu_fpregs_owner_ctx
+Date:   Tue,  3 Dec 2019 23:35:35 +0100
+Message-Id: <20191203212732.978208719@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203212705.175425505@linuxfoundation.org>
 References: <20191203212705.175425505@linuxfoundation.org>
@@ -59,156 +69,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-commit 7a7ebfa85f4fac349f3ab219538c44efe18b0cf6 upstream.
+commit 59c4bd853abcea95eccc167a7d7fd5f1a5f47b98 upstream.
 
-On zang's Dell XPS 13 9370 after Thunderbolt NVM firmware upgrade the
-Thunderbolt controller did not come back as expected. Only after the
-system was rebooted it became available again. It is not entirely clear
-what happened but I suspect the new NVM firmware image authentication
-failed for some reason. Regardless of this the router needs to be power
-cycled if NVM authentication fails in order to get it fully functional
-again.
+The state/owner of the FPU is saved to fpu_fpregs_owner_ctx by pointing
+to the context that is currently loaded. It never changed during the
+lifetime of a task - it remained stable/constant.
 
-This modifies the driver to issue a power cycle in case the NVM
-authentication fails immediately when dma_port_flash_update_auth()
-returns. We also need to call tb_switch_set_uuid() earlier to be able to
-fetch possible NVM authentication failure when DMA port is added.
+After deferred FPU registers loading until return to userland was
+implemented, the content of fpu_fpregs_owner_ctx may change during
+preemption and must not be cached.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=205457
-Reported-by: zang <dump@tzib.net>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+This went unnoticed for some time and was now noticed, in particular
+since gcc 9 is caching that load in copy_fpstate_to_sigframe() and
+reusing it in the retry loop:
+
+  copy_fpstate_to_sigframe()
+    load fpu_fpregs_owner_ctx and save on stack
+    fpregs_lock()
+    copy_fpregs_to_sigframe() /* failed */
+    fpregs_unlock()
+         *** PREEMPTION, another uses FPU, changes fpu_fpregs_owner_ctx ***
+
+    fault_in_pages_writeable() /* succeed, retry */
+
+    fpregs_lock()
+	__fpregs_load_activate()
+	  fpregs_state_valid() /* uses fpu_fpregs_owner_ctx from stack */
+    copy_fpregs_to_sigframe() /* succeeds, random FPU content */
+
+This is a comparison of the assembly produced by gcc 9, without vs with this
+patch:
+
+| # arch/x86/kernel/fpu/signal.c:173:      if (!access_ok(buf, size))
+|        cmpq    %rdx, %rax      # tmp183, _4
+|        jb      .L190   #,
+|-# arch/x86/include/asm/fpu/internal.h:512:       return fpu == this_cpu_read_stable(fpu_fpregs_owner_ctx) && cpu == fpu->last_cpu;
+|-#APP
+|-# 512 "arch/x86/include/asm/fpu/internal.h" 1
+|-       movq %gs:fpu_fpregs_owner_ctx,%rax      #, pfo_ret__
+|-# 0 "" 2
+|-#NO_APP
+|-       movq    %rax, -88(%rbp) # pfo_ret__, %sfp
+…
+|-# arch/x86/include/asm/fpu/internal.h:512:       return fpu == this_cpu_read_stable(fpu_fpregs_owner_ctx) && cpu == fpu->last_cpu;
+|-       movq    -88(%rbp), %rcx # %sfp, pfo_ret__
+|-       cmpq    %rcx, -64(%rbp) # pfo_ret__, %sfp
+|+# arch/x86/include/asm/fpu/internal.h:512:       return fpu == this_cpu_read(fpu_fpregs_owner_ctx) && cpu == fpu->last_cpu;
+|+#APP
+|+# 512 "arch/x86/include/asm/fpu/internal.h" 1
+|+       movq %gs:fpu_fpregs_owner_ctx(%rip),%rax        # fpu_fpregs_owner_ctx, pfo_ret__
+|+# 0 "" 2
+|+# arch/x86/include/asm/fpu/internal.h:512:       return fpu == this_cpu_read(fpu_fpregs_owner_ctx) && cpu == fpu->last_cpu;
+|+#NO_APP
+|+       cmpq    %rax, -64(%rbp) # pfo_ret__, %sfp
+
+Use this_cpu_read() instead this_cpu_read_stable() to avoid caching of
+fpu_fpregs_owner_ctx during preemption points.
+
+The Fixes: tag points to the commit where deferred FPU loading was
+added. Since this commit, the compiler is no longer allowed to move the
+load of fpu_fpregs_owner_ctx somewhere else / outside of the locked
+section. A task preemption will change its value and stale content will
+be observed.
+
+ [ bp: Massage. ]
+
+Debugged-by: Austin Clements <austin@google.com>
+Debugged-by: David Chase <drchase@golang.org>
+Debugged-by: Ian Lance Taylor <ian@airs.com>
+Fixes: 5f409e20b7945 ("x86/fpu: Defer FPU state load until return to userspace")
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Rik van Riel <riel@surriel.com>
+Tested-by: Borislav Petkov <bp@suse.de>
+Cc: Aubrey Li <aubrey.li@intel.com>
+Cc: Austin Clements <austin@google.com>
+Cc: Barret Rhoden <brho@google.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: David Chase <drchase@golang.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: ian@airs.com
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Josh Bleecher Snyder <josharian@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20191128085306.hxfa2o3knqtu4wfn@linutronix.de
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=205663
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/thunderbolt/switch.c |   54 +++++++++++++++++++++++++++++++++----------
- 1 file changed, 42 insertions(+), 12 deletions(-)
+ arch/x86/include/asm/fpu/internal.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/thunderbolt/switch.c
-+++ b/drivers/thunderbolt/switch.c
-@@ -168,7 +168,7 @@ static int nvm_validate_and_write(struct
+--- a/arch/x86/include/asm/fpu/internal.h
++++ b/arch/x86/include/asm/fpu/internal.h
+@@ -509,7 +509,7 @@ static inline void __fpu_invalidate_fpre
  
- static int nvm_authenticate_host(struct tb_switch *sw)
+ static inline int fpregs_state_valid(struct fpu *fpu, unsigned int cpu)
  {
--	int ret;
-+	int ret = 0;
- 
- 	/*
- 	 * Root switch NVM upgrade requires that we disconnect the
-@@ -176,6 +176,8 @@ static int nvm_authenticate_host(struct
- 	 * already).
- 	 */
- 	if (!sw->safe_mode) {
-+		u32 status;
-+
- 		ret = tb_domain_disconnect_all_paths(sw->tb);
- 		if (ret)
- 			return ret;
-@@ -184,7 +186,16 @@ static int nvm_authenticate_host(struct
- 		 * everything goes well so getting timeout is expected.
- 		 */
- 		ret = dma_port_flash_update_auth(sw->dma_port);
--		return ret == -ETIMEDOUT ? 0 : ret;
-+		if (!ret || ret == -ETIMEDOUT)
-+			return 0;
-+
-+		/*
-+		 * Any error from update auth operation requires power
-+		 * cycling of the host router.
-+		 */
-+		tb_sw_warn(sw, "failed to authenticate NVM, power cycling\n");
-+		if (dma_port_flash_update_auth_status(sw->dma_port, &status) > 0)
-+			nvm_set_auth_status(sw, status);
- 	}
- 
- 	/*
-@@ -192,7 +203,7 @@ static int nvm_authenticate_host(struct
- 	 * switch.
- 	 */
- 	dma_port_power_cycle(sw->dma_port);
--	return 0;
-+	return ret;
+-	return fpu == this_cpu_read_stable(fpu_fpregs_owner_ctx) && cpu == fpu->last_cpu;
++	return fpu == this_cpu_read(fpu_fpregs_owner_ctx) && cpu == fpu->last_cpu;
  }
  
- static int nvm_authenticate_device(struct tb_switch *sw)
-@@ -200,8 +211,16 @@ static int nvm_authenticate_device(struc
- 	int ret, retries = 10;
- 
- 	ret = dma_port_flash_update_auth(sw->dma_port);
--	if (ret && ret != -ETIMEDOUT)
-+	switch (ret) {
-+	case 0:
-+	case -ETIMEDOUT:
-+	case -EACCES:
-+	case -EINVAL:
-+		/* Power cycle is required */
-+		break;
-+	default:
- 		return ret;
-+	}
- 
- 	/*
- 	 * Poll here for the authentication status. It takes some time
-@@ -1246,8 +1265,6 @@ static ssize_t nvm_authenticate_store(st
- 			 */
- 			nvm_authenticate_start(sw);
- 			ret = nvm_authenticate_host(sw);
--			if (ret)
--				nvm_authenticate_complete(sw);
- 		} else {
- 			ret = nvm_authenticate_device(sw);
- 		}
-@@ -1690,13 +1707,16 @@ static int tb_switch_add_dma_port(struct
- 	int ret;
- 
- 	switch (sw->generation) {
--	case 3:
--		break;
--
- 	case 2:
- 		/* Only root switch can be upgraded */
- 		if (tb_route(sw))
- 			return 0;
-+
-+		/* fallthrough */
-+	case 3:
-+		ret = tb_switch_set_uuid(sw);
-+		if (ret)
-+			return ret;
- 		break;
- 
- 	default:
-@@ -1721,6 +1741,19 @@ static int tb_switch_add_dma_port(struct
- 		return 0;
- 
- 	/*
-+	 * If there is status already set then authentication failed
-+	 * when the dma_port_flash_update_auth() returned. Power cycling
-+	 * is not needed (it was done already) so only thing we do here
-+	 * is to unblock runtime PM of the root port.
-+	 */
-+	nvm_get_auth_status(sw, &status);
-+	if (status) {
-+		if (!tb_route(sw))
-+			nvm_authenticate_complete(sw);
-+		return 0;
-+	}
-+
-+	/*
- 	 * Check status of the previous flash authentication. If there
- 	 * is one we need to power cycle the switch in any case to make
- 	 * it functional again.
-@@ -1735,9 +1768,6 @@ static int tb_switch_add_dma_port(struct
- 
- 	if (status) {
- 		tb_sw_info(sw, "switch flash authentication failed\n");
--		ret = tb_switch_set_uuid(sw);
--		if (ret)
--			return ret;
- 		nvm_set_auth_status(sw, status);
- 	}
- 
+ /*
 
 
