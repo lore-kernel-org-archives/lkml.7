@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D182FC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C86E2C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A20F92073C
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FDA72073C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:38:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412716;
-	bh=L1VuuR2aHnGuXPFOaUKF5kxM3+Aapq+94Dmtx7408LA=;
+	s=default; t=1575412721;
+	bh=fGEGqqPn/RtkHfVgz6CHl74WTaoHeZ1ndAUeCWAUmQU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RAYJuiitFZeAtJFav0V1X2UNdzT1xy5lJ8/EoWb/bRApnjJro4Xnx/gH1XHGBVe/X
-	 +TK7/1hq/w5MNJgmn30lRYOEdUTZkJaQYPg7QXe4vWAWwPeTlGcApfC20ceTHp2uBm
-	 Ewwvdm0NH8JgCo42TXQp2xoZ4G+uoDMpHhNOE870=
+	b=ORRO3q5oXhDtf/cbWsFL0/DOPrQnK+Iaa0DxulS8EVMYPVaVddPDBZJpH8+qu8AYk
+	 GPCtSa7HvWjp/ZPK8JG4iWtOB4A4Pse+zEn2GIFaD1qIzpMkOXIK/X3RYJQ00ENuWE
+	 yMgW+dCAM7+kjeB6CZlGZ2eUr9t9rWiKuMvAHaP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbfLCWif (ORCPT
+        id S1728039AbfLCWik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:38:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47690 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:38:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728017AbfLCWic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:38:32 -0500
+        id S1728023AbfLCWie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:38:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FB5820684;
-        Tue,  3 Dec 2019 22:38:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6D6320684;
+        Tue,  3 Dec 2019 22:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412711;
-        bh=L1VuuR2aHnGuXPFOaUKF5kxM3+Aapq+94Dmtx7408LA=;
+        s=default; t=1575412714;
+        bh=fGEGqqPn/RtkHfVgz6CHl74WTaoHeZ1ndAUeCWAUmQU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hadJVSH5fjb94Hecd9eiBXrfbndaEkHDSVCyzwYYPQyV2tjxfZN04AN0dvYvQazOo
-         5FUvNBoyDp8N1k3tfS18bVBV5Yfat8idNPE0jyLkb5Kz0N9/YKSPrFFiMDlf9Hua1E
-         955GRSox5UjicRFFIl9WVbyTvQzj+B65m20YunHQ=
+        b=x1xHkXLsxJiOKHjxvJfUBvkCuaTWl2OKC39BdKvTJO2Z1sR75Faygnq+4l37IZxUr
+         qTa3xcjuynsOvtuA8ExMmCBiw9dMBTNIvdN7RlBVdoEbDKzF+O7NbTLueJQ6KFnJ+H
+         FTpxlZouHsvuNFH6aedlW9pq+P61dLAX8uUIkBs4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Simon Horman <simon.horman@netronome.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 34/46] net/tls: use sg_next() to walk sg entries
-Date:   Tue,  3 Dec 2019 23:35:54 +0100
-Message-Id: <20191203212754.733031040@linuxfoundation.org>
+Subject: [PATCH 5.4 35/46] selftests: bpf: test_sockmap: handle file creation failures gracefully
+Date:   Tue,  3 Dec 2019 23:35:55 +0100
+Message-Id: <20191203212756.099294275@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203212705.175425505@linuxfoundation.org>
 References: <20191203212705.175425505@linuxfoundation.org>
@@ -63,76 +63,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit c5daa6cccdc2f94aca2c9b3fa5f94e4469997293 ]
+[ Upstream commit 4b67c515036313f3c3ecba3cb2babb9cbddb3f85 ]
 
-Partially sent record cleanup path increments an SG entry
-directly instead of using sg_next(). This should not be a
-problem today, as encrypted messages should be always
-allocated as arrays. But given this is a cleanup path it's
-easy to miss was this ever to change. Use sg_next(), and
-simplify the code.
+test_sockmap creates a temporary file to use for sendpage.
+this may fail for various reasons. Handle the error rather
+than segfault.
 
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Reviewed-by: Simon Horman <simon.horman@netronome.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/tls.h  |    2 +-
- net/tls/tls_main.c |   13 ++-----------
- net/tls/tls_sw.c   |    3 ++-
- 3 files changed, 5 insertions(+), 13 deletions(-)
+ tools/testing/selftests/bpf/test_sockmap.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/include/net/tls.h
-+++ b/include/net/tls.h
-@@ -395,7 +395,7 @@ int tls_push_sg(struct sock *sk, struct
- 		int flags);
- int tls_push_partial_record(struct sock *sk, struct tls_context *ctx,
- 			    int flags);
--bool tls_free_partial_record(struct sock *sk, struct tls_context *ctx);
-+void tls_free_partial_record(struct sock *sk, struct tls_context *ctx);
+--- a/tools/testing/selftests/bpf/test_sockmap.c
++++ b/tools/testing/selftests/bpf/test_sockmap.c
+@@ -332,6 +332,10 @@ static int msg_loop_sendpage(int fd, int
+ 	int i, fp;
  
- static inline struct tls_msg *tls_msg(struct sk_buff *skb)
- {
---- a/net/tls/tls_main.c
-+++ b/net/tls/tls_main.c
-@@ -209,24 +209,15 @@ int tls_push_partial_record(struct sock
- 	return tls_push_sg(sk, ctx, sg, offset, flags);
- }
+ 	file = fopen(".sendpage_tst.tmp", "w+");
++	if (!file) {
++		perror("create file for sendpage");
++		return 1;
++	}
+ 	for (i = 0; i < iov_length * cnt; i++, k++)
+ 		fwrite(&k, sizeof(char), 1, file);
+ 	fflush(file);
+@@ -339,6 +343,11 @@ static int msg_loop_sendpage(int fd, int
+ 	fclose(file);
  
--bool tls_free_partial_record(struct sock *sk, struct tls_context *ctx)
-+void tls_free_partial_record(struct sock *sk, struct tls_context *ctx)
- {
- 	struct scatterlist *sg;
- 
--	sg = ctx->partially_sent_record;
--	if (!sg)
--		return false;
--
--	while (1) {
-+	for (sg = ctx->partially_sent_record; sg; sg = sg_next(sg)) {
- 		put_page(sg_page(sg));
- 		sk_mem_uncharge(sk, sg->length);
--
--		if (sg_is_last(sg))
--			break;
--		sg++;
- 	}
- 	ctx->partially_sent_record = NULL;
--	return true;
- }
- 
- static void tls_write_space(struct sock *sk)
---- a/net/tls/tls_sw.c
-+++ b/net/tls/tls_sw.c
-@@ -2084,7 +2084,8 @@ void tls_sw_release_resources_tx(struct
- 	/* Free up un-sent records in tx_list. First, free
- 	 * the partially sent record if any at head of tx_list.
- 	 */
--	if (tls_free_partial_record(sk, tls_ctx)) {
-+	if (tls_ctx->partially_sent_record) {
-+		tls_free_partial_record(sk, tls_ctx);
- 		rec = list_first_entry(&ctx->tx_list,
- 				       struct tls_rec, list);
- 		list_del(&rec->list);
+ 	fp = open(".sendpage_tst.tmp", O_RDONLY);
++	if (fp < 0) {
++		perror("reopen file for sendpage");
++		return 1;
++	}
++
+ 	clock_gettime(CLOCK_MONOTONIC, &s->start);
+ 	for (i = 0; i < cnt; i++) {
+ 		int sent = sendfile(fd, fp, NULL, iov_length);
 
 
