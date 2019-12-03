@@ -4,191 +4,325 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77ED5C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BACDBC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5996320684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:48:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 830CF207DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:48:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbfLCLsb (ORCPT
+        id S1726930AbfLCLsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 06:48:31 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49446 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725907AbfLCLrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 06:47:53 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 78EF7B168;
-        Tue,  3 Dec 2019 11:47:50 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     andrew.murray@arm.com, maz@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     james.quinlan@broadcom.com, mbrugger@suse.com,
-        phil@raspberrypi.org, jeremy.linton@arm.com,
-        linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v4 1/8] dt-bindings: PCI: Add bindings for brcmstb's PCIe device
-Date:   Tue,  3 Dec 2019 12:47:34 +0100
-Message-Id: <20191203114743.1294-2-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191203114743.1294-1-nsaenzjulienne@suse.de>
-References: <20191203114743.1294-1-nsaenzjulienne@suse.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 3 Dec 2019 06:48:54 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:58890 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725907AbfLCLsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 06:48:54 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3D37D200EE8;
+        Tue,  3 Dec 2019 12:48:52 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C5A952000D1;
+        Tue,  3 Dec 2019 12:48:44 +0100 (CET)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id EA3A14028F;
+        Tue,  3 Dec 2019 19:48:34 +0800 (SGT)
+From:   Biwen Li <biwen.li@nxp.com>
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, wsa@the-dreams.de,
+        leoyang.li@nxp.com, aisheng.dong@nxp.com, xiaoning.wang@nxp.com,
+        o.rempel@pengutronix.de
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, laurentiu.tudor@nxp.com,
+        jiafei.pan@nxp.com, xiaobo.xie@nxp.com, Biwen Li <biwen.li@nxp.com>
+Subject: [v6] i2c: imx: support slave mode for imx I2C driver
+Date:   Tue,  3 Dec 2019 19:48:09 +0800
+Message-Id: <20191203114809.21226-1-biwen.li@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Quinlan <james.quinlan@broadcom.com>
+The patch supports slave mode for imx I2C driver
 
-The DT bindings description of the brcmstb PCIe device is described.
-This node can only be used for now on the Raspberry Pi 4.
-
-Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Reviewed-by: Rob Herring <robh@kernel.org>
-
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
 ---
+Change in v6:
+	- delete robust logs and comments
+	- not read status register again in master isr.
 
-Changes since v2:
-  - Add pci reference schema
-  - Drop all default properties
-  - Assume msi-controller and msi-parent are properly defined
-  - Add num entries on multiple properties
-  - use unevaluatedProperties
-  - Update required properties
-  - Fix license
+Change in v5:
+	- fix a bug that cannot determine in what mode(master mode or
+	  slave mode)
 
-Changes since v1:
-  - Fix commit Subject
-  - Remove linux,pci-domain
+Change in v4:
+	- add MACRO CONFIG_I2C_SLAVE to fix compilation issue
 
-This was based on Jim's original submission[1], converted to yaml and
-adapted to the RPi4 case.
+Change in v3:
+	- support layerscape and i.mx platform
 
-[1] https://patchwork.kernel.org/patch/10605937/
+Change in v2:
+	- remove MACRO CONFIG_I2C_SLAVE
 
- .../bindings/pci/brcm,stb-pcie.yaml           | 97 +++++++++++++++++++
- 1 file changed, 97 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+ drivers/i2c/busses/i2c-imx.c | 199 +++++++++++++++++++++++++++++++----
+ 1 file changed, 181 insertions(+), 18 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-new file mode 100644
-index 000000000000..77d3e81a437b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-@@ -0,0 +1,97 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+index a3b61336fe55..40ccfca600bf 100644
+--- a/drivers/i2c/busses/i2c-imx.c
++++ b/drivers/i2c/busses/i2c-imx.c
+@@ -203,6 +203,9 @@ struct imx_i2c_struct {
+ 	struct pinctrl_state *pinctrl_pins_gpio;
+ 
+ 	struct imx_i2c_dma	*dma;
++#if IS_ENABLED(CONFIG_I2C_SLAVE)
++	struct i2c_client	*slave;
++#endif
+ };
+ 
+ static const struct imx_i2c_hwdata imx1_i2c_hwdata = {
+@@ -279,6 +282,14 @@ static inline unsigned char imx_i2c_read_reg(struct imx_i2c_struct *i2c_imx,
+ 	return readb(i2c_imx->base + (reg << i2c_imx->hwdata->regshift));
+ }
+ 
++/* Set up i2c controller register and i2c status register to default value. */
++static void i2c_imx_reset_regs(struct imx_i2c_struct *i2c_imx)
++{
++	imx_i2c_write_reg(i2c_imx->hwdata->i2cr_ien_opcode ^ I2CR_IEN,
++			i2c_imx, IMX_I2C_I2CR);
++	imx_i2c_write_reg(i2c_imx->hwdata->i2sr_clr_opcode, i2c_imx, IMX_I2C_I2SR);
++}
 +
-+title: Brcmstb PCIe Host Controller Device Tree Bindings
+ /* Functions for DMA support */
+ static void i2c_imx_dma_request(struct imx_i2c_struct *i2c_imx,
+ 						dma_addr_t phy_addr)
+@@ -588,23 +599,25 @@ static void i2c_imx_stop(struct imx_i2c_struct *i2c_imx)
+ 	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
+ }
+ 
+-static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
++static void i2c_imx_clr_if_bit(unsigned int status, struct imx_i2c_struct *i2c_imx)
+ {
+-	struct imx_i2c_struct *i2c_imx = dev_id;
+-	unsigned int temp;
++	status &= ~I2SR_IIF;
++	status |= (i2c_imx->hwdata->i2sr_clr_opcode & I2SR_IIF);
++	imx_i2c_write_reg(status, i2c_imx, IMX_I2C_I2SR);
++}
+ 
+-	temp = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
+-	if (temp & I2SR_IIF) {
+-		/* save status register */
+-		i2c_imx->i2csr = temp;
+-		temp &= ~I2SR_IIF;
+-		temp |= (i2c_imx->hwdata->i2sr_clr_opcode & I2SR_IIF);
+-		imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2SR);
+-		wake_up(&i2c_imx->queue);
+-		return IRQ_HANDLED;
+-	}
++static void i2c_imx_clr_al_bit(unsigned int status, struct imx_i2c_struct *i2c_imx)
++{
++	status &= ~I2SR_IAL;
++	status |= (i2c_imx->hwdata->i2sr_clr_opcode & I2SR_IAL);
++	imx_i2c_write_reg(status, i2c_imx, IMX_I2C_I2SR);
++}
+ 
+-	return IRQ_NONE;
++static irqreturn_t i2c_imx_master_isr(struct imx_i2c_struct *i2c_imx)
++{
++	wake_up(&i2c_imx->queue);
 +
-+maintainers:
-+  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
++	return IRQ_HANDLED;
+ }
+ 
+ static int i2c_imx_dma_write(struct imx_i2c_struct *i2c_imx,
+@@ -900,6 +913,13 @@ static int i2c_imx_xfer(struct i2c_adapter *adapter,
+ 
+ 	dev_dbg(&i2c_imx->adapter.dev, "<%s>\n", __func__);
+ 
++#if IS_ENABLED(CONFIG_I2C_SLAVE)
++	if (i2c_imx->slave) {
++		dev_err(&i2c_imx->adapter.dev, "Please not do operations of master mode in slave mode");
++		return -EBUSY;
++	}
++#endif
 +
-+allOf:
-+  - $ref: /schemas/pci/pci-bus.yaml#
+ 	result = pm_runtime_get_sync(i2c_imx->adapter.dev.parent);
+ 	if (result < 0)
+ 		goto out;
+@@ -1048,11 +1068,157 @@ static u32 i2c_imx_func(struct i2c_adapter *adapter)
+ 		| I2C_FUNC_SMBUS_READ_BLOCK_DATA;
+ }
+ 
++#if IS_ENABLED(CONFIG_I2C_SLAVE)
++static int i2c_imx_slave_init(struct imx_i2c_struct *i2c_imx)
++{
++	int temp;
 +
-+properties:
-+  compatible:
-+    const: brcm,bcm2711-pcie # The Raspberry Pi 4
++	/* Resume */
++	temp = pm_runtime_get_sync(i2c_imx->adapter.dev.parent);
++	if (temp < 0) {
++		dev_err(&i2c_imx->adapter.dev, "failed to resume i2c controller");
++		return temp;
++	}
 +
-+  reg:
-+    maxItems: 1
++	/* Set slave addr. */
++	imx_i2c_write_reg((i2c_imx->slave->addr << 1), i2c_imx, IMX_I2C_IADR);
 +
-+  interrupts:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - description: PCIe host controller
-+      - description: builtin MSI controller
++	i2c_imx_reset_regs(i2c_imx);
 +
-+  interrupt-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - const: pcie
-+      - const: msi
++	/* Enable module */
++	temp = i2c_imx->hwdata->i2cr_ien_opcode;
++	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
 +
-+  ranges:
-+    maxItems: 1
++	/* Enable interrupt from i2c module */
++	temp |= I2CR_IIEN;
++	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
 +
-+  dma-ranges:
-+    maxItems: 1
++	/* Wait controller to be stable */
++	usleep_range(50, 150);
++	return 0;
++}
 +
-+  clocks:
-+    maxItems: 1
++static irqreturn_t i2c_imx_slave_isr(struct imx_i2c_struct *i2c_imx)
++{
++	unsigned int status, ctl;
++	u8 value;
 +
-+  clock-names:
-+    items:
-+      - const: sw_pcie
++	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
++	ctl = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2CR);
++	if (status & I2SR_IAL) { /* Arbitration lost */
++		i2c_imx_clr_al_bit(status, i2c_imx);
++	} else if (status & I2SR_IAAS) { /* Addressed as a slave */
++		if (status & I2SR_SRW) { /* Master wants to read from us*/
++			dev_dbg(&i2c_imx->adapter.dev, "read requested");
++			i2c_slave_event(i2c_imx->slave, I2C_SLAVE_READ_REQUESTED, &value);
 +
-+  msi-controller:
-+    description: Identifies the node as an MSI controller.
++			/* Slave transmit */
++			ctl |= I2CR_MTX;
++			imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
 +
-+  msi-parent:
-+    description: MSI controller the device is capable of using.
++			/* Send data */
++			imx_i2c_write_reg(value, i2c_imx, IMX_I2C_I2DR);
++		} else { /* Master wants to write to us */
++			dev_dbg(&i2c_imx->adapter.dev, "write requested");
++			i2c_slave_event(i2c_imx->slave,	I2C_SLAVE_WRITE_REQUESTED, &value);
 +
-+  brcm,enable-ssc:
-+    description: Indicates usage of spread-spectrum clocking.
-+    type: boolean
++			/* Slave receive */
++			ctl &= ~I2CR_MTX;
++			imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
++			/* Dummy read */
++			imx_i2c_read_reg(i2c_imx, IMX_I2C_I2DR);
++		}
++	} else if (!(ctl & I2CR_MTX)) { /* Receive mode */
++			if (status & I2SR_IBB) { /* No STOP signal detected */
++				ctl &= ~I2CR_MTX;
++				imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
 +
-+required:
-+  - reg
-+  - dma-ranges
-+  - "#interrupt-cells"
-+  - interrupts
-+  - interrupt-names
-+  - interrupt-map-mask
-+  - interrupt-map
-+  - msi-controller
++				value = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2DR);
++				i2c_slave_event(i2c_imx->slave,	I2C_SLAVE_WRITE_RECEIVED, &value);
++			} else { /* STOP signal is detected */
++				dev_dbg(&i2c_imx->adapter.dev,
++					"STOP signal detected");
++				i2c_slave_event(i2c_imx->slave, I2C_SLAVE_STOP, &value);
++			}
++	} else if (!(status & I2SR_RXAK)) {	/* Transmit mode received ACK */
++		ctl |= I2CR_MTX;
++		imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
 +
-+unevaluatedProperties: false
++		i2c_slave_event(i2c_imx->slave,	I2C_SLAVE_READ_PROCESSED, &value);
 +
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
++		imx_i2c_write_reg(value, i2c_imx, IMX_I2C_I2DR);
++	} else { /* Transmit mode received NAK */
++		ctl &= ~I2CR_MTX;
++		imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
++		imx_i2c_read_reg(i2c_imx, IMX_I2C_I2DR);
++	}
++	return IRQ_HANDLED;
++}
 +
-+    scb {
-+            #address-cells = <2>;
-+            #size-cells = <1>;
-+            pcie0: pcie@7d500000 {
-+                    compatible = "brcm,bcm2711-pcie";
-+                    reg = <0x0 0x7d500000 0x9310>;
-+                    device_type = "pci";
-+                    #address-cells = <3>;
-+                    #size-cells = <2>;
-+                    #interrupt-cells = <1>;
-+                    interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-+                                 <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-+                    interrupt-names = "pcie", "msi";
-+                    interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+                    interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
-+                    msi-parent = <&pcie0>;
-+                    msi-controller;
-+                    ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
-+                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
-+                    brcm,enable-ssc;
-+            };
-+    };
++static int i2c_imx_reg_slave(struct i2c_client *client)
++{
++	struct imx_i2c_struct *i2c_imx = i2c_get_adapdata(client->adapter);
++	int ret;
++	if (i2c_imx->slave)
++		return -EBUSY;
++
++	i2c_imx->slave = client;
++
++	ret = i2c_imx_slave_init(i2c_imx);
++
++	return ret;
++}
++
++static int i2c_imx_unreg_slave(struct i2c_client *client)
++{
++	struct imx_i2c_struct *i2c_imx = i2c_get_adapdata(client->adapter);
++
++	if (!i2c_imx->slave)
++		return -EINVAL;
++
++	/* Reset slave address. */
++	imx_i2c_write_reg(0, i2c_imx, IMX_I2C_IADR);
++
++	i2c_imx_reset_regs(i2c_imx);
++
++	i2c_imx->slave = NULL;
++
++	/* Suspend */
++	pm_runtime_put_sync(i2c_imx->adapter.dev.parent);
++
++	return 0;
++}
++#endif
++
+ static const struct i2c_algorithm i2c_imx_algo = {
+ 	.master_xfer	= i2c_imx_xfer,
+ 	.functionality	= i2c_imx_func,
++#if IS_ENABLED(CONFIG_I2C_SLAVE)
++	.reg_slave	= i2c_imx_reg_slave,
++	.unreg_slave	= i2c_imx_unreg_slave,
++#endif
+ };
+ 
++static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
++{
++	struct imx_i2c_struct *i2c_imx = dev_id;
++	unsigned int status;
++
++	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
++
++	if (status & I2SR_IIF) {
++		i2c_imx_clr_if_bit(status, i2c_imx);
++#if IS_ENABLED(CONFIG_I2C_SLAVE)
++		if (i2c_imx->slave)
++			return i2c_imx_slave_isr(i2c_imx);
++#endif
++		i2c_imx->i2csr = status;
++		return i2c_imx_master_isr(i2c_imx);
++	}
++
++	return IRQ_NONE;
++}
++
+ static int i2c_imx_probe(struct platform_device *pdev)
+ {
+ 	struct imx_i2c_struct *i2c_imx;
+@@ -1148,10 +1314,7 @@ static int i2c_imx_probe(struct platform_device *pdev)
+ 	clk_notifier_register(i2c_imx->clk, &i2c_imx->clk_change_nb);
+ 	i2c_imx_set_clk(i2c_imx, clk_get_rate(i2c_imx->clk));
+ 
+-	/* Set up chip registers to defaults */
+-	imx_i2c_write_reg(i2c_imx->hwdata->i2cr_ien_opcode ^ I2CR_IEN,
+-			i2c_imx, IMX_I2C_I2CR);
+-	imx_i2c_write_reg(i2c_imx->hwdata->i2sr_clr_opcode, i2c_imx, IMX_I2C_I2SR);
++	i2c_imx_reset_regs(i2c_imx);
+ 
+ 	/* Init optional bus recovery function */
+ 	ret = i2c_imx_init_recovery_info(i2c_imx, pdev);
 -- 
-2.24.0
+2.17.1
 
