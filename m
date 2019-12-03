@@ -6,53 +6,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7754EC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E472EC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 449EB2071F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B817D20733
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:49:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbfLCDta (ORCPT
+        id S1727477AbfLCDt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 22:49:30 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12778 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726896AbfLCDsb (ORCPT
+        Mon, 2 Dec 2019 22:49:58 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44980 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726847AbfLCDsa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 22:48:31 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB33klOD006802
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 22:48:30 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wm6cy9se1-1
+        Mon, 2 Dec 2019 22:48:30 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB33klrn078438
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 22:48:29 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wm6rr0pby-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 22:48:30 -0500
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 22:48:29 -0500
 Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Tue, 3 Dec 2019 03:48:26 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Tue, 3 Dec 2019 03:48:25 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 3 Dec 2019 03:48:20 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB33mJe930998776
+        Tue, 3 Dec 2019 03:48:18 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB33mHuF56492174
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Dec 2019 03:48:19 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2870F4C052;
-        Tue,  3 Dec 2019 03:48:19 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 802D44C046;
-        Tue,  3 Dec 2019 03:48:18 +0000 (GMT)
+        Tue, 3 Dec 2019 03:48:17 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 59F82AE04D;
+        Tue,  3 Dec 2019 03:48:17 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B7FD0AE045;
+        Tue,  3 Dec 2019 03:48:16 +0000 (GMT)
 Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  3 Dec 2019 03:48:18 +0000 (GMT)
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  3 Dec 2019 03:48:16 +0000 (GMT)
 Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
         (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 5663FA03E6;
-        Tue,  3 Dec 2019 14:48:13 +1100 (AEDT)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 85EACA03CE;
+        Tue,  3 Dec 2019 14:48:12 +1100 (AEDT)
 From:   "Alastair D'Silva" <alastair@au1.ibm.com>
 To:     alastair@d-silva.org
 Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
@@ -85,24 +85,24 @@ Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Alexey Kardashevskiy <aik@ozlabs.ru>,
         linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Subject: [PATCH v2 18/27] nvdimm/ocxl: Add an IOCTL to report controller statistics
-Date:   Tue,  3 Dec 2019 14:46:46 +1100
+Subject: [PATCH v2 06/27] ocxl: Tally up the LPC memory on a link & allow it to be mapped
+Date:   Tue,  3 Dec 2019 14:46:34 +1100
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191203034655.51561-1-alastair@au1.ibm.com>
 References: <20191203034655.51561-1-alastair@au1.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19120303-0016-0000-0000-000002D0158D
+x-cbid: 19120303-0012-0000-0000-000003701286
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120303-0017-0000-0000-000033320CA8
-Message-Id: <20191203034655.51561-19-alastair@au1.ibm.com>
+x-cbparentid: 19120303-0013-0000-0000-000021ABCCBB
+Message-Id: <20191203034655.51561-7-alastair@au1.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
  definitions=2019-12-02_06:2019-11-29,2019-12-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 priorityscore=1501 suspectscore=1 bulkscore=0 phishscore=0
- mlxlogscore=712 adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=3 adultscore=0
+ spamscore=0 priorityscore=1501 mlxscore=0 bulkscore=0 mlxlogscore=888
+ lowpriorityscore=0 impostorscore=0 phishscore=0 clxscore=1015
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-1910280000 definitions=main-1912030032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -111,254 +111,162 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alastair D'Silva <alastair@d-silva.org>
 
-The controller can report a number of statistics that are useful
-in evaluating the performance and reliability of the card.
-
-This patch exposes this information via an IOCTL.
+Tally up the LPC memory on an OpenCAPI link & allow it to be mapped
 
 Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 ---
- drivers/nvdimm/ocxl/scm.c      | 185 +++++++++++++++++++++++++++++++++
- include/uapi/nvdimm/ocxl-scm.h |  17 +++
- 2 files changed, 202 insertions(+)
+ drivers/misc/ocxl/core.c          | 10 ++++++
+ drivers/misc/ocxl/link.c          | 60 +++++++++++++++++++++++++++++++
+ drivers/misc/ocxl/ocxl_internal.h | 33 +++++++++++++++++
+ 3 files changed, 103 insertions(+)
 
-diff --git a/drivers/nvdimm/ocxl/scm.c b/drivers/nvdimm/ocxl/scm.c
-index a520f209d626..54a2bac1cab7 100644
---- a/drivers/nvdimm/ocxl/scm.c
-+++ b/drivers/nvdimm/ocxl/scm.c
-@@ -806,6 +806,186 @@ static int scm_ioctl_controller_dump_complete(struct scm_data *scm_data)
- 				    GLOBAL_MMIO_HCI_CONTROLLER_DUMP_COLLECTED);
- }
+diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
+index b7a09b21ab36..2531c6cf19a0 100644
+--- a/drivers/misc/ocxl/core.c
++++ b/drivers/misc/ocxl/core.c
+@@ -230,8 +230,18 @@ static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
+ 	if (rc)
+ 		goto err_free_pasid;
  
-+/**
-+ * scm_controller_stats_header_parse() - Parse the first 64 bits of the controller stats admin command response
-+ * @scm_data: the SCM metadata
-+ * @length: out, returns the number of bytes in the response (excluding the 64 bit header)
-+ */
-+static int scm_controller_stats_header_parse(struct scm_data *scm_data,
-+	u32 *length)
-+{
-+	int rc;
-+	u64 val;
-+
-+	u16 data_identifier;
-+	u32 data_length;
-+
-+	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
-+				     scm_data->admin_command.data_offset,
-+				     OCXL_LITTLE_ENDIAN, &val);
-+	if (rc)
-+		return rc;
-+
-+	data_identifier = val >> 48;
-+	data_length = val & 0xFFFFFFFF;
-+
-+	if (data_identifier != 0x4353) {
-+		dev_err(&scm_data->dev,
-+			"Bad data identifier for controller stats, expected 'CS', got '%-.*s'\n",
-+			2, (char *)&data_identifier);
-+		return -EINVAL;
++	if (afu->config.lpc_mem_size || afu->config.special_purpose_mem_size) {
++		rc = ocxl_link_add_lpc_mem(afu->fn->link, afu->config.lpc_mem_offset,
++					   afu->config.lpc_mem_size +
++					   afu->config.special_purpose_mem_size);
++		if (rc)
++			goto err_free_mmio;
 +	}
 +
-+	*length = data_length;
+ 	return 0;
+ 
++err_free_mmio:
++	unmap_mmio_areas(afu);
+ err_free_pasid:
+ 	reclaim_afu_pasid(afu);
+ err_free_actag:
+diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
+index 58d111afd9f6..d8503f0dc6ec 100644
+--- a/drivers/misc/ocxl/link.c
++++ b/drivers/misc/ocxl/link.c
+@@ -84,6 +84,11 @@ struct ocxl_link {
+ 	int dev;
+ 	atomic_t irq_available;
+ 	struct spa *spa;
++	struct mutex lpc_mem_lock;
++	u64 lpc_mem_sz; /* Total amount of LPC memory presented on the link */
++	u64 lpc_mem;
++	int lpc_consumers;
++
+ 	void *platform_data;
+ };
+ static struct list_head links_list = LIST_HEAD_INIT(links_list);
+@@ -396,6 +401,8 @@ static int alloc_link(struct pci_dev *dev, int PE_mask, struct ocxl_link **out_l
+ 	if (rc)
+ 		goto err_spa;
+ 
++	mutex_init(&link->lpc_mem_lock);
++
+ 	/* platform specific hook */
+ 	rc = pnv_ocxl_spa_setup(dev, link->spa->spa_mem, PE_mask,
+ 				&link->platform_data);
+@@ -711,3 +718,56 @@ void ocxl_link_free_irq(void *link_handle, int hw_irq)
+ 	atomic_inc(&link->irq_available);
+ }
+ EXPORT_SYMBOL_GPL(ocxl_link_free_irq);
++
++int ocxl_link_add_lpc_mem(void *link_handle, u64 offset, u64 size)
++{
++	struct ocxl_link *link = (struct ocxl_link *) link_handle;
++
++	// Check for overflow
++	if (offset > (offset + size))
++		return -EINVAL;
++
++	mutex_lock(&link->lpc_mem_lock);
++	link->lpc_mem_sz = max(link->lpc_mem_sz, offset + size);
++
++	mutex_unlock(&link->lpc_mem_lock);
++
 +	return 0;
 +}
 +
-+static int scm_ioctl_controller_stats(struct scm_data *scm_data,
-+				      struct scm_ioctl_controller_stats __user *uarg)
++u64 ocxl_link_lpc_map(void *link_handle, struct pci_dev *pdev)
 +{
-+	struct scm_ioctl_controller_stats args;
-+	u32 length;
-+	int rc;
-+	u64 val;
++	struct ocxl_link *link = (struct ocxl_link *) link_handle;
++	u64 lpc_mem;
 +
-+	memset(&args, '\0', sizeof(args));
++	mutex_lock(&link->lpc_mem_lock);
++	if (link->lpc_mem) {
++		lpc_mem = link->lpc_mem;
 +
-+	mutex_lock(&scm_data->admin_command.lock);
-+
-+	rc = scm_admin_command_request(scm_data, ADMIN_COMMAND_CONTROLLER_STATS);
-+	if (rc)
-+		goto out;
-+
-+	rc = ocxl_global_mmio_write64(scm_data->ocxl_afu,
-+				      scm_data->admin_command.request_offset + 0x08,
-+				      OCXL_LITTLE_ENDIAN, 0);
-+	if (rc)
-+		goto out;
-+
-+	rc = scm_admin_command_execute(scm_data);
-+	if (rc)
-+		goto out;
-+
-+
-+	rc = scm_admin_command_complete_timeout(scm_data,
-+						ADMIN_COMMAND_CONTROLLER_STATS);
-+	if (rc < 0) {
-+		dev_warn(&scm_data->dev, "Controller stats timed out\n");
-+		goto out;
++		link->lpc_consumers++;
++		mutex_unlock(&link->lpc_mem_lock);
++		return lpc_mem;
 +	}
 +
-+	rc = scm_admin_response(scm_data);
-+	if (rc < 0)
-+		goto out;
-+	if (rc != STATUS_SUCCESS) {
-+		scm_warn_status(scm_data,
-+				"Unexpected status from controller stats", rc);
-+		goto out;
-+	}
++	link->lpc_mem = pnv_ocxl_platform_lpc_setup(pdev, link->lpc_mem_sz);
++	if (link->lpc_mem)
++		link->lpc_consumers++;
++	lpc_mem = link->lpc_mem;
++	mutex_unlock(&link->lpc_mem_lock);
 +
-+	rc = scm_controller_stats_header_parse(scm_data, &length);
-+	if (rc)
-+		goto out;
-+
-+	if (length != 0x140)
-+		scm_warn_status(scm_data,
-+				"Unexpected length for controller stats data, expected 0x140, got 0x%x",
-+				length);
-+
-+	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
-+				     scm_data->admin_command.data_offset + 0x08 + 0x08,
-+				     OCXL_LITTLE_ENDIAN, &val);
-+	if (rc)
-+		goto out;
-+
-+	args.reset_count = val >> 32;
-+	args.reset_uptime = val & 0xFFFFFFFF;
-+
-+	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
-+				     scm_data->admin_command.data_offset + 0x08 + 0x10,
-+				     OCXL_LITTLE_ENDIAN, &val);
-+	if (rc)
-+		goto out;
-+
-+	args.power_on_uptime = val >> 32;
-+
-+	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
-+				     scm_data->admin_command.data_offset + 0x08 + 0x40 + 0x08,
-+				     OCXL_LITTLE_ENDIAN, &args.host_load_count);
-+	if (rc)
-+		goto out;
-+
-+	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
-+				     scm_data->admin_command.data_offset + 0x08 + 0x40 + 0x10,
-+				     OCXL_LITTLE_ENDIAN, &args.host_store_count);
-+	if (rc)
-+		goto out;
-+
-+	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
-+				     scm_data->admin_command.data_offset + 0x08 + 0x40 + 0x18,
-+				     OCXL_LITTLE_ENDIAN, &args.media_read_count);
-+	if (rc)
-+		goto out;
-+
-+	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
-+				     scm_data->admin_command.data_offset + 0x08 + 0x40 + 0x20,
-+				     OCXL_LITTLE_ENDIAN, &args.media_write_count);
-+	if (rc)
-+		goto out;
-+
-+	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
-+				     scm_data->admin_command.data_offset + 0x08 + 0x40 + 0x28,
-+				     OCXL_LITTLE_ENDIAN, &args.cache_hit_count);
-+	if (rc)
-+		goto out;
-+
-+	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
-+				     scm_data->admin_command.data_offset + 0x08 + 0x40 + 0x30,
-+				     OCXL_LITTLE_ENDIAN, &args.cache_miss_count);
-+	if (rc)
-+		goto out;
-+
-+	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
-+				     scm_data->admin_command.data_offset + 0x08 + 0x40 + 0x38,
-+				     OCXL_LITTLE_ENDIAN, &args.media_read_latency);
-+	if (rc)
-+		goto out;
-+
-+	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
-+				     scm_data->admin_command.data_offset + 0x08 + 0x40 + 0x40,
-+				     OCXL_LITTLE_ENDIAN, &args.media_write_latency);
-+	if (rc)
-+		goto out;
-+
-+	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
-+				     scm_data->admin_command.data_offset + 0x08 + 0x40 + 0x48,
-+				     OCXL_LITTLE_ENDIAN, &args.cache_read_latency);
-+	if (rc)
-+		goto out;
-+
-+	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
-+				     scm_data->admin_command.data_offset + 0x08 + 0x40 + 0x50,
-+				     OCXL_LITTLE_ENDIAN, &args.cache_write_latency);
-+	if (rc)
-+		goto out;
-+
-+	if (copy_to_user(uarg, &args, sizeof(args))) {
-+		rc = -EFAULT;
-+		goto out;
-+	}
-+
-+	rc = scm_admin_response_handled(scm_data);
-+	if (rc)
-+		goto out;
-+
-+	rc = 0;
-+	goto out;
-+
-+out:
-+	mutex_unlock(&scm_data->admin_command.lock);
-+	return rc;
++	return lpc_mem;
 +}
 +
- static long scm_file_ioctl(struct file *file, unsigned int cmd,
- 			   unsigned long args)
- {
-@@ -830,6 +1010,11 @@ static long scm_file_ioctl(struct file *file, unsigned int cmd,
- 	case SCM_IOCTL_CONTROLLER_DUMP_COMPLETE:
- 		rc = scm_ioctl_controller_dump_complete(scm_data);
- 		break;
++void ocxl_link_lpc_release(void *link_handle, struct pci_dev *pdev)
++{
++	struct ocxl_link *link = (struct ocxl_link *) link_handle;
 +
-+	case SCM_IOCTL_CONTROLLER_STATS:
-+		rc = scm_ioctl_controller_stats(scm_data,
-+						(struct scm_ioctl_controller_stats __user *)args);
-+		break;
- 	}
- 
- 	return rc;
-diff --git a/include/uapi/nvdimm/ocxl-scm.h b/include/uapi/nvdimm/ocxl-scm.h
-index abd2dc9ea112..0a5de46c5acd 100644
---- a/include/uapi/nvdimm/ocxl-scm.h
-+++ b/include/uapi/nvdimm/ocxl-scm.h
-@@ -50,6 +50,22 @@ struct scm_ioctl_controller_dump_data {
- 	__u64 reserved[8];
- };
- 
-+struct scm_ioctl_controller_stats {
-+	__u32 reset_count;
-+	__u32 reset_uptime; // seconds
-+	__u32 power_on_uptime; // seconds
-+	__u64 host_load_count;
-+	__u64 host_store_count;
-+	__u64 media_read_count;
-+	__u64 media_write_count;
-+	__u64 cache_hit_count;
-+	__u64 cache_miss_count;
-+	__u64 media_read_latency; // nanoseconds
-+	__u64 media_write_latency; // nanoseconds
-+	__u64 cache_read_latency; // nanoseconds
-+	__u64 cache_write_latency; // nanoseconds
-+};
++	mutex_lock(&link->lpc_mem_lock);
++	WARN_ON(--link->lpc_consumers < 0);
++	if (link->lpc_consumers == 0) {
++		pnv_ocxl_platform_lpc_release(pdev);
++		link->lpc_mem = 0;
++	}
 +
- /* ioctl numbers */
- #define SCM_MAGIC 0x5C
- /* SCM devices */
-@@ -57,5 +73,6 @@ struct scm_ioctl_controller_dump_data {
- #define SCM_IOCTL_CONTROLLER_DUMP _IO(SCM_MAGIC, 0x02)
- #define SCM_IOCTL_CONTROLLER_DUMP_DATA _IOWR(SCM_MAGIC, 0x03, struct scm_ioctl_controller_dump_data)
- #define SCM_IOCTL_CONTROLLER_DUMP_COMPLETE _IO(SCM_MAGIC, 0x04)
-+#define SCM_IOCTL_CONTROLLER_STATS _IO(SCM_MAGIC, 0x05)
++	mutex_unlock(&link->lpc_mem_lock);
++}
+diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
+index 97415afd79f3..20b417e00949 100644
+--- a/drivers/misc/ocxl/ocxl_internal.h
++++ b/drivers/misc/ocxl/ocxl_internal.h
+@@ -141,4 +141,37 @@ int ocxl_irq_offset_to_id(struct ocxl_context *ctx, u64 offset);
+ u64 ocxl_irq_id_to_offset(struct ocxl_context *ctx, int irq_id);
+ void ocxl_afu_irq_free_all(struct ocxl_context *ctx);
  
- #endif /* _UAPI_OCXL_SCM_H */
++/**
++ * ocxl_link_add_lpc_mem() - Increment the amount of memory required by an OpenCAPI link
++ *
++ * @link_handle: The OpenCAPI link handle
++ * @offset: The offset of the memory to add
++ * @size: The amount of memory to increment by
++ *
++ * Return 0 on success, negative on overflow
++ */
++int ocxl_link_add_lpc_mem(void *link_handle, u64 offset, u64 size);
++
++/**
++ * ocxl_link_lpc_map() - Map the LPC memory for an OpenCAPI device
++ *
++ * Since LPC memory belongs to a link, the whole LPC memory available
++ * on the link bust be mapped in order to make it accessible to a device.
++ *
++ * @link_handle: The OpenCAPI link handle
++ * @pdev: A device that is on the link
++ */
++u64 ocxl_link_lpc_map(void *link_handle, struct pci_dev *pdev);
++
++/**
++ * ocxl_link_lpc_release() - Release the LPC memory device for an OpenCAPI device
++ *
++ * Offlines LPC memory on an OpenCAPI link for a device. If this is the
++ * last device on the link to release the memory, unmap it from the link.
++ *
++ * @link_handle: The OpenCAPI link handle
++ * @pdev: A device that is on the link
++ */
++void ocxl_link_lpc_release(void *link_handle, struct pci_dev *pdev);
++
+ #endif /* _OCXL_INTERNAL_H_ */
 -- 
 2.23.0
 
