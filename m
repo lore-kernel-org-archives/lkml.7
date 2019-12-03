@@ -2,228 +2,112 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9E1C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AABC43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D7A20684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:59:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="eurCXLVg"
+	by mail.kernel.org (Postfix) with ESMTP id 67BFB2084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:59:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfLCF6X (ORCPT
+        id S1727101AbfLCF7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 00:58:23 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:25237 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726521AbfLCF6W (ORCPT
+        Tue, 3 Dec 2019 00:59:21 -0500
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:52370 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726521AbfLCF7V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 00:58:22 -0500
-X-UUID: 3a06eefe93504e0a9011c5495f370241-20191203
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=gQqcAbItPJZOgRGUKH/mNqtTCzALL4Ct7jtKjeo6Ew4=;
-        b=eurCXLVgNGTKryG2SGv9PhGB4FUTd9MSny58gtDcVqNECiaPlkrVHgUkgu6v4jYaD1B5SpSRIVNeF2XoiC7iMFognjX3eC8Va/G/XWi66s1zifog8i0hCCM1ykVxSEXR0CnW4BEboAzRa+iQoXLgl2zdLavyGv35OXJpQFq3tZ8=;
-X-UUID: 3a06eefe93504e0a9011c5495f370241-20191203
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1162639195; Tue, 03 Dec 2019 13:58:12 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 3 Dec 2019 13:58:00 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 3 Dec 2019 13:58:53 +0800
-Message-ID: <1575352691.3410.2.camel@mtksdaap41>
-Subject: Re: [PATCH v1 6/6] drm/mediatek: apply CMDQ control flow
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     CK Hu <ck.hu@mediatek.com>
-CC:     David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        YT Shen <yt.shen@mediatek.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>, <tfiga@chromium.org>,
-        <drinkcat@chromium.org>, <linux-kernel@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>,
-        Yongqiang Niu <yongqiang.niu@mediatek.com>
-Date:   Tue, 3 Dec 2019 13:58:11 +0800
-In-Reply-To: <1575337114.1155.4.camel@mtksdaap41>
-References: <20191128024238.9399-1-bibby.hsieh@mediatek.com>
-         <20191128024238.9399-7-bibby.hsieh@mediatek.com>
-         <1575337114.1155.4.camel@mtksdaap41>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 3 Dec 2019 00:59:21 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0Tjn1MiF_1575352754;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0Tjn1MiF_1575352754)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 03 Dec 2019 13:59:16 +0800
+Subject: [PATCH v3 0/2] sched/numa: introduce numa locality
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
+ <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
+Message-ID: <040def80-9c38-4bcc-e4a8-8a0d10f131ed@linux.alibaba.com>
+Date:   Tue, 3 Dec 2019 13:59:14 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTEyLTAzIGF0IDA5OjM4ICswODAwLCBDSyBIdSB3cm90ZToNCj4gSGksIEJp
-YmJ5Og0KPiANCj4gT24gVGh1LCAyMDE5LTExLTI4IGF0IDEwOjQyICswODAwLCBCaWJieSBIc2ll
-aCB3cm90ZToNCj4gPiBVbmxpa2Ugb3RoZXIgU29DcywgTVQ4MTgzIGRvZXMgbm90IGhhdmUgInNo
-YWRvdyINCj4gPiByZWdpc3RlcnMgZm9yIHBlcmZvcm1haW5nIGFuIGF0b21pYyB2aWRlbyBtb2Rl
-DQo+ID4gc2V0IG9yIHBhZ2UgZmxpcCBhdCB2YmxhbmsvdnN5bmMuDQo+ID4gDQo+ID4gVGhlIENN
-RFEgKENvbW1lbmQgUXVldWUpIGluIE1UODE4MyBpcyB1c2VkIHRvIGhlbHANCj4gPiB1cGRhdGUg
-YWxsIHJlbGV2YW50IGRpc3BsYXkgY29udHJvbGxlciByZWdpc3RlcnMNCj4gPiB3aXRoIGNyaXRp
-Y2FsIHRpbWUgbGltYXRpb24uDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogWVQgU2hlbiA8eXQu
-c2hlbkBtZWRpYXRlay5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogQ0sgSHUgPGNrLmh1QG1lZGlh
-dGVrLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwIFphYmVsIDxwLnphYmVsQHBlbmd1
-dHJvbml4LmRlPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEJpYmJ5IEhzaWVoIDxiaWJieS5oc2llaEBt
-ZWRpYXRlay5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5n
-Lm5pdUBtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
-ay9tdGtfZHJtX2NydGMuYyAgICAgfCA4NiArKysrKysrKysrKysrKysrKysrKy0NCj4gPiAgZHJp
-dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYyB8IDMxICsrKysrKysrDQo+
-ID4gIDIgZmlsZXMgY2hhbmdlZCwgMTEzIGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+
-ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Ny
-dGMuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYw0KPiA+IGluZGV4
-IGZjZjRlNzU1ZTBiZC4uMWI0ZTUzN2FjM2MxIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvZ3B1
-L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYw0KPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9t
-ZWRpYXRlay9tdGtfZHJtX2NydGMuYw0KPiA+IEBAIC0xMiw2ICsxMiw4IEBADQo+ID4gICNpbmNs
-dWRlIDxkcm0vZHJtX3BsYW5lX2hlbHBlci5oPg0KPiA+ICAjaW5jbHVkZSA8ZHJtL2RybV9wcm9i
-ZV9oZWxwZXIuaD4NCj4gPiAgI2luY2x1ZGUgPGRybS9kcm1fdmJsYW5rLmg+DQo+ID4gKyNpbmNs
-dWRlIDxsaW51eC9vZl9hZGRyZXNzLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9zb2MvbWVkaWF0
-ZWsvbXRrLWNtZHEuaD4NCj4gPiAgDQo+ID4gICNpbmNsdWRlICJtdGtfZHJtX2Rydi5oIg0KPiA+
-ICAjaW5jbHVkZSAibXRrX2RybV9jcnRjLmgiDQo+ID4gQEAgLTQyLDYgKzQ0LDkgQEAgc3RydWN0
-IG10a19kcm1fY3J0YyB7DQo+ID4gIAl1bnNpZ25lZCBpbnQJCQlsYXllcl9ucjsNCj4gPiAgCWJv
-b2wJCQkJcGVuZGluZ19wbGFuZXM7DQo+ID4gIA0KPiA+ICsJc3RydWN0IGNtZHFfY2xpZW50CQkq
-Y21kcV9jbGllbnQ7DQo+ID4gKwl1MzIJCQkJY21kcV9ldmVudDsNCj4gPiArDQo+ID4gIAl2b2lk
-IF9faW9tZW0JCQkqY29uZmlnX3JlZ3M7DQo+ID4gIAljb25zdCBzdHJ1Y3QgbXRrX21tc3lzX3Jl
-Z19kYXRhICptbXN5c19yZWdfZGF0YTsNCj4gPiAgCXN0cnVjdCBtdGtfZGlzcF9tdXRleAkJKm11
-dGV4Ow0KPiA+IEBAIC01Niw2ICs2MSwxMSBAQCBzdHJ1Y3QgbXRrX2NydGNfc3RhdGUgew0KPiA+
-ICAJdW5zaWduZWQgaW50CQkJcGVuZGluZ193aWR0aDsNCj4gPiAgCXVuc2lnbmVkIGludAkJCXBl
-bmRpbmdfaGVpZ2h0Ow0KPiA+ICAJdW5zaWduZWQgaW50CQkJcGVuZGluZ192cmVmcmVzaDsNCj4g
-PiArCXN0cnVjdCBjbWRxX3BrdAkJCSpjbWRxX2hhbmRsZTsNCj4gPiArfTsNCj4gPiArDQo+ID4g
-K3N0cnVjdCBtdGtfY21kcV9jYl9kYXRhIHsNCj4gPiArCXN0cnVjdCBjbWRxX3BrdAkJCSpjbWRx
-X2hhbmRsZTsNCj4gPiAgfTsNCj4gPiAgDQo+ID4gIHN0YXRpYyBpbmxpbmUgc3RydWN0IG10a19k
-cm1fY3J0YyAqdG9fbXRrX2NydGMoc3RydWN0IGRybV9jcnRjICpjKQ0KPiA+IEBAIC0yMjksNiAr
-MjM5LDQ2IEBAIHN0cnVjdCBtdGtfZGRwX2NvbXAgKm10a19kcm1fZGRwX2NvbXBfZm9yX3BsYW5l
-KHN0cnVjdCBkcm1fY3J0YyAqY3J0YywNCj4gPiAgCXJldHVybiBOVUxMOw0KPiA+ICB9DQo+ID4g
-IA0KPiA+ICsjaWZkZWYgQ09ORklHX01US19DTURRDQo+ID4gK3N0YXRpYyB2b2lkIGRkcF9jbWRx
-X2NiKHN0cnVjdCBjbWRxX2NiX2RhdGEgZGF0YSkNCj4gPiArew0KPiA+ICsJc3RydWN0IG10a19j
-bWRxX2NiX2RhdGEgKmNiX2RhdGEgPSBkYXRhLmRhdGE7DQo+ID4gKw0KPiA+ICsJY21kcV9wa3Rf
-ZGVzdHJveShjYl9kYXRhLT5jbWRxX2hhbmRsZSk7DQo+ID4gKwlrZnJlZShjYl9kYXRhKTsNCj4g
-PiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIHZvaWQgbXRrX2NtZHFfYWNxdWlyZShzdHJ1Y3QgZHJt
-X2NydGMgKmNydGMpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBtdGtfY3J0Y19zdGF0ZSAqbXRrX2Ny
-dGNfc3RhdGUgPQ0KPiA+ICsJCQl0b19tdGtfY3J0Y19zdGF0ZShjcnRjLT5zdGF0ZSk7DQo+ID4g
-KwlzdHJ1Y3QgbXRrX2RybV9jcnRjICptdGtfY3J0YyA9IHRvX210a19jcnRjKGNydGMpOw0KPiA+
-ICsNCj4gPiArCW10a19jcnRjX3N0YXRlLT5jbWRxX2hhbmRsZSA9DQo+ID4gKwkJCWNtZHFfcGt0
-X2NyZWF0ZShtdGtfY3J0Yy0+Y21kcV9jbGllbnQsDQo+ID4gKwkJCQkJUEFHRV9TSVpFKTsNCj4g
-DQo+IEkgd291bGQgbGlrZSB0byByZW1vdmUgYXRvbWljIGZlYXR1cmUgaW4gY21kcSBkcml2ZXIg
-YW5kIGRybSBkcml2ZXINCj4gY291bGQgcmV1c2UgdGhlIHBrdC4gUGxlYXNlIHJlZmVyIHRvIFsx
-XSBmb3IgZGV0YWlsLg0KPiANCj4gWzFdDQo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL3Bp
-cGVybWFpbC9saW51eC1tZWRpYXRlay8yMDE5LUphbnVhcnkvMDE2ODY2Lmh0bWwNCkhpLCBDSywN
-Cg0KVGhhbmtzIGZvciBhbGwgdGhlIGNvbW1lbnRzLg0KSSB3aWxsIGNoYW5nZSB0aGVtIGluIG15
-IG5leHQgdmVyc2lvbi4NCg0KQWJvdXQgdGhlIGF0b21pYyBmZWF0dXJlIHJlbW92aW5nLCBJIHRo
-aW5rIHdlIGFscmVhZHkgbWFkZSBub3RlIGF0IGhlcmUuDQpMZXQncyBmaXggdGhlbSBhZnRlciB0
-aGUgYXRvbWljIGZlYXR1cmUgcmVtb3ZlZCByZWFsbHkuDQoNCkJpYmJ5DQo+IA0KPiA+ICsJY21k
-cV9wa3RfY2xlYXJfZXZlbnQobXRrX2NydGNfc3RhdGUtPmNtZHFfaGFuZGxlLA0KPiA+ICsJCQkg
-ICAgIG10a19jcnRjLT5jbWRxX2V2ZW50KTsNCj4gPiArCWNtZHFfcGt0X3dmZShtdGtfY3J0Y19z
-dGF0ZS0+Y21kcV9oYW5kbGUsIG10a19jcnRjLT5jbWRxX2V2ZW50KTsNCj4gPiArfQ0KPiA+ICsN
-Cj4gPiArc3RhdGljIHZvaWQgbXRrX2NtZHFfcmVsZWFzZShzdHJ1Y3QgZHJtX2NydGMgKmNydGMp
-DQo+ID4gK3sNCj4gPiArCXN0cnVjdCBtdGtfY3J0Y19zdGF0ZSAqbXRrX2NydGNfc3RhdGUgPQ0K
-PiA+ICsJCQl0b19tdGtfY3J0Y19zdGF0ZShjcnRjLT5zdGF0ZSk7DQo+ID4gKwlzdHJ1Y3QgbXRr
-X2NtZHFfY2JfZGF0YSAqY2JfZGF0YTsNCj4gPiArDQo+ID4gKwljYl9kYXRhID0ga21hbGxvYyhz
-aXplb2YoKmNiX2RhdGEpLCBHRlBfS0VSTkVMKTsNCj4gPiArCWlmICghY2JfZGF0YSkgew0KPiA+
-ICsJCURSTV9ERVZfRVJST1IoY3J0Yy0+ZGV2LT5kZXYsICJGYWlsZWQgdG8gYWxsb2MgY2JfZGF0
-YVxuIik7DQo+ID4gKwkJcmV0dXJuOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCWNiX2RhdGEtPmNt
-ZHFfaGFuZGxlID0gbXRrX2NydGNfc3RhdGUtPmNtZHFfaGFuZGxlOw0KPiA+ICsJY21kcV9wa3Rf
-Zmx1c2hfYXN5bmMobXRrX2NydGNfc3RhdGUtPmNtZHFfaGFuZGxlLA0KPiA+ICsJCQkgICAgIGRk
-cF9jbWRxX2NiLCBjYl9kYXRhKTsNCj4gPiArfQ0KPiA+ICsjZW5kaWYNCj4gPiAgc3RhdGljIGlu
-dCBtdGtfY3J0Y19kZHBfaHdfaW5pdChzdHJ1Y3QgbXRrX2RybV9jcnRjICptdGtfY3J0YykNCj4g
-PiAgew0KPiA+ICAJc3RydWN0IGRybV9jcnRjICpjcnRjID0gJm10a19jcnRjLT5iYXNlOw0KPiA+
-IEBAIC0zODMsNyArNDMzLDggQEAgc3RhdGljIHZvaWQgbXRrX2NydGNfZGRwX2NvbmZpZyhzdHJ1
-Y3QgZHJtX2NydGMgKmNydGMpDQo+ID4gIAlpZiAoc3RhdGUtPnBlbmRpbmdfY29uZmlnKSB7DQo+
-ID4gIAkJbXRrX2RkcF9jb21wX2NvbmZpZyhjb21wLCBzdGF0ZS0+cGVuZGluZ193aWR0aCwNCj4g
-PiAgCQkJCSAgICBzdGF0ZS0+cGVuZGluZ19oZWlnaHQsDQo+ID4gLQkJCQkgICAgc3RhdGUtPnBl
-bmRpbmdfdnJlZnJlc2gsIDAsIE5VTEwpOw0KPiA+ICsJCQkJICAgIHN0YXRlLT5wZW5kaW5nX3Zy
-ZWZyZXNoLCAwLA0KPiA+ICsJCQkJICAgIHN0YXRlLT5jbWRxX2hhbmRsZSk7DQo+ID4gIA0KPiA+
-ICAJCXN0YXRlLT5wZW5kaW5nX2NvbmZpZyA9IGZhbHNlOw0KPiA+ICAJfQ0KPiA+IEBAIC00MDMs
-NyArNDU0LDggQEAgc3RhdGljIHZvaWQgbXRrX2NydGNfZGRwX2NvbmZpZyhzdHJ1Y3QgZHJtX2Ny
-dGMgKmNydGMpDQo+ID4gIA0KPiA+ICAJCQlpZiAoY29tcCkNCj4gPiAgCQkJCW10a19kZHBfY29t
-cF9sYXllcl9jb25maWcoY29tcCwgbG9jYWxfbGF5ZXIsDQo+ID4gLQkJCQkJCQkgIHBsYW5lX3N0
-YXRlLCBOVUxMKTsNCj4gPiArCQkJCQkJCSAgcGxhbmVfc3RhdGUsDQo+ID4gKwkJCQkJCQkgIHN0
-YXRlLT5jbWRxX2hhbmRsZSk7DQo+ID4gIAkJCXBsYW5lX3N0YXRlLT5wZW5kaW5nLmNvbmZpZyA9
-IGZhbHNlOw0KPiA+ICAJCX0NCj4gPiAgCQltdGtfY3J0Yy0+cGVuZGluZ19wbGFuZXMgPSBmYWxz
-ZTsNCj4gPiBAQCAtNDU0LDYgKzUwNiwxMyBAQCB2b2lkIG10a19kcm1fY3J0Y19jdXJzb3JfdXBk
-YXRlKHN0cnVjdCBkcm1fY3J0YyAqY3J0Yywgc3RydWN0IGRybV9wbGFuZSAqcGxhbmUsDQo+ID4g
-IAkJbXRrX2NydGNfZGRwX2NvbmZpZyhjcnRjKTsNCj4gPiAgCQltdGtfZGlzcF9tdXRleF9yZWxl
-YXNlKG10a19jcnRjLT5tdXRleCk7DQo+ID4gIAl9DQo+ID4gKyNpZmRlZiBDT05GSUdfTVRLX0NN
-RFENCj4gPiArCWlmIChtdGtfY3J0Yy0+Y21kcV9jbGllbnQpIHsNCj4gPiArCQltdGtfY21kcV9h
-Y3F1aXJlKGNydGMpOw0KPiA+ICsJCW10a19jcnRjX2RkcF9jb25maWcoY3J0Yyk7DQo+ID4gKwkJ
-bXRrX2NtZHFfcmVsZWFzZShjcnRjKTsNCj4gPiArCX0NCj4gPiArI2VuZGlmDQo+ID4gIAltdXRl
-eF91bmxvY2soJnByaXYtPmh3X2xvY2spOw0KPiA+ICB9DQo+ID4gIA0KPiA+IEBAIC01NzAsNiAr
-NjI5LDEzIEBAIHN0YXRpYyB2b2lkIG10a19kcm1fY3J0Y19hdG9taWNfZmx1c2goc3RydWN0IGRy
-bV9jcnRjICpjcnRjLA0KPiA+ICAJCW10a19jcnRjX2RkcF9jb25maWcoY3J0Yyk7DQo+ID4gIAkJ
-bXRrX2Rpc3BfbXV0ZXhfcmVsZWFzZShtdGtfY3J0Yy0+bXV0ZXgpOw0KPiA+ICAJfQ0KPiA+ICsj
-aWZkZWYgQ09ORklHX01US19DTURRDQo+ID4gKwlpZiAobXRrX2NydGMtPmNtZHFfY2xpZW50KSB7
-DQo+ID4gKwkJbXRrX2NtZHFfYWNxdWlyZShjcnRjKTsNCj4gPiArCQltdGtfY3J0Y19kZHBfY29u
-ZmlnKGNydGMpOw0KPiA+ICsJCW10a19jbWRxX3JlbGVhc2UoY3J0Yyk7DQo+ID4gKwl9DQo+ID4g
-KyNlbmRpZg0KPiANCj4gVGhpcyBwYXJ0IGlzIGFsbW9zdCB0aGUgc2FtZSBhcyB0aGUgb25lIGlu
-IG10a19kcm1fY3J0Y19jdXJzb3JfdXBkYXRlKCksDQo+IHRyeSB0byBtZXJnZSB0aGVtLg0KPiAN
-Cj4gPiAgfQ0KPiA+ICANCj4gPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fY3J0Y19mdW5jcyBt
-dGtfY3J0Y19mdW5jcyA9IHsNCj4gPiBAQCAtNjE5LDcgKzY4NSw3IEBAIHZvaWQgbXRrX2NydGNf
-ZGRwX2lycShzdHJ1Y3QgZHJtX2NydGMgKmNydGMsIHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAp
-DQo+ID4gIAlzdHJ1Y3QgbXRrX2RybV9jcnRjICptdGtfY3J0YyA9IHRvX210a19jcnRjKGNydGMp
-Ow0KPiA+ICAJc3RydWN0IG10a19kcm1fcHJpdmF0ZSAqcHJpdiA9IGNydGMtPmRldi0+ZGV2X3By
-aXZhdGU7DQo+ID4gIA0KPiA+IC0JaWYgKCFwcml2LT5kYXRhLT5zaGFkb3dfcmVnaXN0ZXIpDQo+
-ID4gKwlpZiAoIXByaXYtPmRhdGEtPnNoYWRvd19yZWdpc3RlciAmJiAhbXRrX2NydGMtPmNtZHFf
-Y2xpZW50KQ0KPiA+ICAJCW10a19jcnRjX2RkcF9jb25maWcoY3J0Yyk7DQo+ID4gIA0KPiA+ICAJ
-bXRrX2RybV9maW5pc2hfcGFnZV9mbGlwKG10a19jcnRjKTsNCj4gPiBAQCAtNzYxLDYgKzgyNywx
-OCBAQCBpbnQgbXRrX2RybV9jcnRjX2NyZWF0ZShzdHJ1Y3QgZHJtX2RldmljZSAqZHJtX2RldiwN
-Cj4gPiAgCWRybV9tb2RlX2NydGNfc2V0X2dhbW1hX3NpemUoJm10a19jcnRjLT5iYXNlLCBNVEtf
-TFVUX1NJWkUpOw0KPiA+ICAJZHJtX2NydGNfZW5hYmxlX2NvbG9yX21nbXQoJm10a19jcnRjLT5i
-YXNlLCAwLCBmYWxzZSwgTVRLX0xVVF9TSVpFKTsNCj4gPiAgCXByaXYtPm51bV9waXBlcysrOw0K
-PiA+IC0NCj4gPiArI2lmZGVmIENPTkZJR19NVEtfQ01EUQ0KPiA+ICsJbXRrX2NydGMtPmNtZHFf
-Y2xpZW50ID0NCj4gPiArCQkJY21kcV9tYm94X2NyZWF0ZShkZXYsIGRybV9jcnRjX2luZGV4KCZt
-dGtfY3J0Yy0+YmFzZSksDQo+ID4gKwkJCQkJIDIwMDApOw0KPiA+ICsJb2ZfcHJvcGVydHlfcmVh
-ZF91MzJfaW5kZXgoZGV2LT5vZl9ub2RlLCAibWVkaWF0ZWssZ2NlLWV2ZW50cyIsDQo+ID4gKwkJ
-CQkgICBkcm1fY3J0Y19pbmRleCgmbXRrX2NydGMtPmJhc2UpLA0KPiA+ICsJCQkJICAgJm10a19j
-cnRjLT5jbWRxX2V2ZW50KTsNCj4gPiArCWlmIChJU19FUlIobXRrX2NydGMtPmNtZHFfY2xpZW50
-KSkgew0KPiA+ICsJCWRldl9kYmcoZGV2LCAibXRrX2NydGMgJWQgZmFpbGVkIHRvIGNyZWF0ZSBt
-YWlsYm94IGNsaWVudCwgd3JpdGluZyByZWdpc3RlciBieSBDUFUgbm93XG4iLA0KPiA+ICsJCQlk
-cm1fY3J0Y19pbmRleCgmbXRrX2NydGMtPmJhc2UpKTsNCj4gPiArCQltdGtfY3J0Yy0+Y21kcV9j
-bGllbnQgPSBOVUxMOw0KPiA+ICsJfQ0KPiA+ICsjZW5kaWYNCj4gPiAgCXJldHVybiAwOw0KPiA+
-ICB9DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rk
-cF9jb21wLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jDQo+
-ID4gaW5kZXggNmQwZjM0OWRkZjgyLi45Y2MxMmFmMmJjMDYgMTAwNjQ0DQo+ID4gLS0tIGEvZHJp
-dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYw0KPiA+ICsrKyBiL2RyaXZl
-cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMNCj4gPiBAQCAtMzcwLDYgKzM3
-MCw5IEBAIGludCBtdGtfZGRwX2NvbXBfaW5pdChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBk
-ZXZpY2Vfbm9kZSAqbm9kZSwNCj4gPiAgCQkgICAgICBjb25zdCBzdHJ1Y3QgbXRrX2RkcF9jb21w
-X2Z1bmNzICpmdW5jcykNCj4gPiAgew0KPiA+ICAJc3RydWN0IHBsYXRmb3JtX2RldmljZSAqY29t
-cF9wZGV2Ow0KPiA+ICsJc3RydWN0IHJlc291cmNlIHJlczsNCj4gPiArCXN0cnVjdCBjbWRxX2Ns
-aWVudF9yZWcgKmNtZHFfcmVnOw0KPiA+ICsJaW50IHJldCA9IDA7DQo+ID4gIA0KPiA+ICAJaWYg
-KGNvbXBfaWQgPCAwIHx8IGNvbXBfaWQgPj0gRERQX0NPTVBPTkVOVF9JRF9NQVgpDQo+ID4gIAkJ
-cmV0dXJuIC1FSU5WQUw7DQo+ID4gQEAgLTQwNCw2ICs0MDcsMzQgQEAgaW50IG10a19kZHBfY29t
-cF9pbml0KHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZV9ub2RlICpub2RlLA0KPiA+
-ICAJfQ0KPiA+ICAJY29tcC0+ZGV2ID0gJmNvbXBfcGRldi0+ZGV2Ow0KPiA+ICANCj4gPiArI2lm
-ZGVmIENPTkZJR19NVEtfQ01EUQ0KPiA+ICsJaWYgKG9mX2FkZHJlc3NfdG9fcmVzb3VyY2Uobm9k
-ZSwgMCwgJnJlcykgIT0gMCkgew0KPiA+ICsJCWRldl9lcnIoZGV2LCAiTWlzc2luZyByZWcgaW4g
-JXMgbm9kZVxuIiwNCj4gPiArCQkJbm9kZS0+ZnVsbF9uYW1lKTsNCj4gPiArCQlyZXR1cm4gLUVJ
-TlZBTDsNCj4gPiArCX0NCj4gPiArCWNvbXAtPnJlZ3NfcGEgPSByZXMuc3RhcnQ7DQo+ID4gKw0K
-PiA+ICsJY29tcF9wZGV2ID0gb2ZfZmluZF9kZXZpY2VfYnlfbm9kZShub2RlKTsNCj4gPiArCWlm
-ICghY29tcF9wZGV2KSB7DQo+ID4gKwkJZGV2X3dhcm4oZGV2LCAiV2FpdGluZyBmb3IgY29tcG9u
-ZW50IGRldmljZSAlc1xuIiwNCj4gPiArCQkJIG5vZGUtPmZ1bGxfbmFtZSk7DQo+ID4gKwkJcmV0
-dXJuIC1FUFJPQkVfREVGRVI7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJY21kcV9yZWcgPSBremFs
-bG9jKHNpemVvZigqY21kcV9yZWcpLCBHRlBfS0VSTkVMKTsNCj4gPiArCWlmICghY21kcV9yZWcp
-DQo+ID4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gKw0KPiA+ICsJcmV0ID0gY21kcV9kZXZfZ2V0
-X2NsaWVudF9yZWcoJmNvbXBfcGRldi0+ZGV2LCBjbWRxX3JlZywgMCk7DQo+ID4gKwlpZiAocmV0
-ICE9IDApDQo+ID4gKwkJZGV2X2RiZygmY29tcF9wZGV2LT5kZXYsDQo+ID4gKwkJCSJnZXQgbWVk
-aWF0ZWssZ2NlLWNsaWVudC1yZWcgZmFpbCFcbiIpOw0KPiA+ICsJZWxzZQ0KPiA+ICsJCWNvbXAt
-PnN1YnN5cyA9IGNtZHFfcmVnLT5zdWJzeXM7DQo+ID4gKw0KPiA+ICsJa2ZyZWUoY21kcV9yZWcp
-Ow0KPiA+ICsjZW5kaWYNCj4gDQo+IEkgd291bGQgbGlrZSB0byBtb3ZlIHRoaXMgcGFydCB0byB0
-aGUgcGF0Y2ggImRybS9tZWRpYXRlazogc3VwcG9ydCBDTURRDQo+IGludGVyZmFjZSBpbiBkZHAg
-Y29tcG9uZW50Ii4NCj4gDQo+IFJlZ2FyZHMsDQo+IENLDQo+IA0KPiA+ICAJcmV0dXJuIDA7DQo+
-ID4gIH0NCj4gPiAgDQo+IA0KPiANCg0K
+Since last patch set:
+  Because the locality region concept is too complicated, we tried to
+  decouple the time factor from it now as Michal commented.
+
+  Now the numa_stat just expose the local/remote page accessing counter
+  , gathering from all the tasks in hierarchy. This should be much more
+  easier to understand, also the meaning of counter is straightforward.
+
+  Now we have just one locality percentage for each cgroup, to represent
+  how NUMA Balancing is working and imply NUMA efficiency.
+
+Modern production environment could use hundreds of cgroup to control
+the resources for different workloads, along with the complicated
+resource binding.
+
+On NUMA platforms where we have multiple nodes, things become even more
+complicated, we hope there are more local memory access to improve the
+performance, and NUMA Balancing keep working hard to achieve that,
+however, wrong memory policy or node binding could easily waste the
+effort, result a lot of remote page accessing.
+
+We need to notice such problems, then we got chance to fix it before
+there are too much damages, however, there are no good monitoring
+approach yet to help catch the mouse who introduced the remote access.
+
+This patch set is trying to fill in the missing pieces， by introduce
+the per-cgroup NUMA locality info, with this new statistics, we could
+achieve the daily monitoring on NUMA efficiency, to give warning when
+things going too wrong.
+
+Please check the second patch for more details.
+
+Michael Wang (2):
+  sched/numa: introduce per-cgroup NUMA locality info
+  sched/numa: documentation for per-cgroup numa statistics
+
+ Documentation/admin-guide/cg-numa-stat.rst      | 176 ++++++++++++++++++++++++
+ Documentation/admin-guide/index.rst             |   1 +
+ Documentation/admin-guide/kernel-parameters.txt |   4 +
+ Documentation/admin-guide/sysctl/kernel.rst     |   9 ++
+ include/linux/sched.h                           |  15 ++
+ include/linux/sched/sysctl.h                    |   6 +
+ init/Kconfig                                    |  11 ++
+ kernel/sched/core.c                             |  75 ++++++++++
+ kernel/sched/fair.c                             |  62 +++++++++
+ kernel/sched/sched.h                            |  12 ++
+ kernel/sysctl.c                                 |  11 ++
+ 11 files changed, 382 insertions(+)
+ create mode 100644 Documentation/admin-guide/cg-numa-stat.rst
+
+-- 
+2.14.4.44.g2045bb6
 
