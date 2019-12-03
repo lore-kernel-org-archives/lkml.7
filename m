@@ -4,58 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F623C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE5DC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4924D2080F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD0DB20863
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:40:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412844;
-	bh=aCuHffhspeFM8lqvonn/tz1sHFj1a5E3DwArfrnGxko=;
+	s=default; t=1575412846;
+	bh=Y3JzWDCNjD/s/xO5SK0WpMAQ7VKjLb8pxh3zBIVmCuY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yrh4OoadGQysT9U6TvvmnC/IjuMzrFQCWSGi95CypalYVoUJ/JAV38Lyo9XnClV68
-	 13GIZ1gnZJ4n5Xuua78EgCUFas5gzKRXfEodczYobG+3OAKfpDZQ5+g2cRC2eAXS5Y
-	 LeccdW8qiLlnEVQeUdXuhHqsthXK7KZxACCf047A=
+	b=wu96cjuKtaTffbHC7A2sEcWrBqhvH3mj8JrYg0rIppH5AJm0BAEhJUZnSfo8IlzrK
+	 iJcaIlxjRsL4retH66SHCCdQWFGbq3Kzt0WYPFeOeG0LRaRDZQnte9Rahakz1dZn7Q
+	 NMpkJm2hhP26TbkMNlAamiqOomjU1QvEkLBwTQkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbfLCWkn (ORCPT
+        id S1728446AbfLCWkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:40:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53680 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:40:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728410AbfLCWke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:40:34 -0500
+        id S1728138AbfLCWkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:40:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F4F120865;
-        Tue,  3 Dec 2019 22:40:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53CD42084B;
+        Tue,  3 Dec 2019 22:40:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412833;
-        bh=aCuHffhspeFM8lqvonn/tz1sHFj1a5E3DwArfrnGxko=;
+        s=default; t=1575412841;
+        bh=Y3JzWDCNjD/s/xO5SK0WpMAQ7VKjLb8pxh3zBIVmCuY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SOzlUg4V93dsW5Aub/vzm1jvZkuXBrafkRQdtBzq1cmFvqS0ia746V5lrwqs8CEV5
-         px0S6FJtzaYVq6yabfexyHxGQ8K/xh1z8fZ3BmwGUlXmUxImItNC+zfMhy7yuuzZCf
-         Mfq0HhWH9HSlEKukyKg7IiVa3e+CqPqDtPd8jywI=
+        b=z2u2at9q/6m3fqrn0OoLzWP9Bn9oV+yfCyqQkrhTjuLYHvcja4A8DfaX/Kba3VpXn
+         OVdAXw5q+TYcma5rGdP1VtMHpBLNKR7nFXtqfkUJIOD6WG9fW4O/2sx3CREImU10Hy
+         Ui7kih170GJJb1cutEpLjvC4Tzsimn4GA/df8bfE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        KP Singh <kpsingh@google.com>,
-        Song Liu <songliubraving@fb.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 033/135] samples/bpf: fix build by setting HAVE_ATTR_TEST to zero
-Date:   Tue,  3 Dec 2019 23:34:33 +0100
-Message-Id: <20191203213012.721079232@linuxfoundation.org>
+Subject: [PATCH 5.3 036/135] idr: Fix idr_get_next_ul race with idr_remove
+Date:   Tue,  3 Dec 2019 23:34:36 +0100
+Message-Id: <20191203213013.337775167@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -68,42 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Björn Töpel <bjorn.topel@intel.com>
+From: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-[ Upstream commit 04ec044b7d30800296824783df7d9728d16d7567 ]
+[ Upstream commit 5a74ac4c4a97bd8b7dba054304d598e2a882fea6 ]
 
-To remove that test_attr__{enabled/open} are used by perf-sys.h, we
-set HAVE_ATTR_TEST to zero.
+Commit 5c089fd0c734 ("idr: Fix idr_get_next race with idr_remove")
+neglected to fix idr_get_next_ul().  As far as I can tell, nobody's
+actually using this interface under the RCU read lock, but fix it now
+before anybody decides to use it.
 
-Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
-Tested-by: KP Singh <kpsingh@google.com>
-Acked-by: Song Liu <songliubraving@fb.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: bpf@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: http://lore.kernel.org/bpf/20191001113307.27796-3-bjorn.topel@gmail.com
+Fixes: 5c089fd0c734 ("idr: Fix idr_get_next race with idr_remove")
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/bpf/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ lib/idr.c | 31 +++++++++++--------------------
+ 1 file changed, 11 insertions(+), 20 deletions(-)
 
-diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-index 1d9be26b4edd7..42b571cde1778 100644
---- a/samples/bpf/Makefile
-+++ b/samples/bpf/Makefile
-@@ -176,6 +176,7 @@ KBUILD_HOSTCFLAGS += -I$(srctree)/tools/lib/bpf/
- KBUILD_HOSTCFLAGS += -I$(srctree)/tools/testing/selftests/bpf/
- KBUILD_HOSTCFLAGS += -I$(srctree)/tools/lib/ -I$(srctree)/tools/include
- KBUILD_HOSTCFLAGS += -I$(srctree)/tools/perf
-+KBUILD_HOSTCFLAGS += -DHAVE_ATTR_TEST=0
+diff --git a/lib/idr.c b/lib/idr.c
+index 66a3748924828..c2cf2c52bbde5 100644
+--- a/lib/idr.c
++++ b/lib/idr.c
+@@ -215,7 +215,7 @@ int idr_for_each(const struct idr *idr,
+ EXPORT_SYMBOL(idr_for_each);
  
- HOSTCFLAGS_bpf_load.o += -I$(objtree)/usr/include -Wno-unused-variable
+ /**
+- * idr_get_next() - Find next populated entry.
++ * idr_get_next_ul() - Find next populated entry.
+  * @idr: IDR handle.
+  * @nextid: Pointer to an ID.
+  *
+@@ -224,7 +224,7 @@ EXPORT_SYMBOL(idr_for_each);
+  * to the ID of the found value.  To use in a loop, the value pointed to by
+  * nextid must be incremented by the user.
+  */
+-void *idr_get_next(struct idr *idr, int *nextid)
++void *idr_get_next_ul(struct idr *idr, unsigned long *nextid)
+ {
+ 	struct radix_tree_iter iter;
+ 	void __rcu **slot;
+@@ -245,18 +245,14 @@ void *idr_get_next(struct idr *idr, int *nextid)
+ 	}
+ 	if (!slot)
+ 		return NULL;
+-	id = iter.index + base;
+-
+-	if (WARN_ON_ONCE(id > INT_MAX))
+-		return NULL;
  
+-	*nextid = id;
++	*nextid = iter.index + base;
+ 	return entry;
+ }
+-EXPORT_SYMBOL(idr_get_next);
++EXPORT_SYMBOL(idr_get_next_ul);
+ 
+ /**
+- * idr_get_next_ul() - Find next populated entry.
++ * idr_get_next() - Find next populated entry.
+  * @idr: IDR handle.
+  * @nextid: Pointer to an ID.
+  *
+@@ -265,22 +261,17 @@ EXPORT_SYMBOL(idr_get_next);
+  * to the ID of the found value.  To use in a loop, the value pointed to by
+  * nextid must be incremented by the user.
+  */
+-void *idr_get_next_ul(struct idr *idr, unsigned long *nextid)
++void *idr_get_next(struct idr *idr, int *nextid)
+ {
+-	struct radix_tree_iter iter;
+-	void __rcu **slot;
+-	unsigned long base = idr->idr_base;
+ 	unsigned long id = *nextid;
++	void *entry = idr_get_next_ul(idr, &id);
+ 
+-	id = (id < base) ? 0 : id - base;
+-	slot = radix_tree_iter_find(&idr->idr_rt, &iter, id);
+-	if (!slot)
++	if (WARN_ON_ONCE(id > INT_MAX))
+ 		return NULL;
+-
+-	*nextid = iter.index + base;
+-	return rcu_dereference_raw(*slot);
++	*nextid = id;
++	return entry;
+ }
+-EXPORT_SYMBOL(idr_get_next_ul);
++EXPORT_SYMBOL(idr_get_next);
+ 
+ /**
+  * idr_replace() - replace pointer for given ID.
 -- 
 2.20.1
 
