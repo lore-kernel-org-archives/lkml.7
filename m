@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA4BC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 745DAC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E24DE2064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 434162073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:10:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414638;
-	bh=DGfUc6OPcdg+selrsf0vCRMAyp9NIYMTOzMVaFuB3xs=;
+	s=default; t=1575414641;
+	bh=dPW9hbrxxDEY8iGHzWJEA3C6WLw9z0HxL6tSx0XjRlk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=in0J/PgmpWmSWQtpbmsnuGK4ph6vtMExrTW2ncK4qthsb49YdsFU6bvOzoauDmUlF
-	 Q9k6jKVktNeOsjm2tNnQJAJ0UBEMhN56d18DHBWQCLmpUtMIbL0M8SU06GpDZNyejt
-	 LDxNXGmHUsXStYrleX/6bZSLyVGQQDA6Kogezc0U=
+	b=pm7nOaX/VS2vprSJaXnQXcmHEduskdCCeraSOpCBlY62mjUvFLkR6u/qCvv5721UW
+	 FW9uo+A0tUv+mCWT5gCOYnJHh6ToY1XCu8KcSnrjYleUDGo+iphs0J5NQ13MxEWYod
+	 arzPKICAxroVsjZNrmOdvadzwaSNBqQ8PUSAIGN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728647AbfLCWmT (ORCPT
+        id S1728946AbfLCXKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:42:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57138 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 18:10:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728626AbfLCWmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:42:17 -0500
+        id S1728440AbfLCWmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:42:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE17E2073C;
-        Tue,  3 Dec 2019 22:42:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71D7F206EC;
+        Tue,  3 Dec 2019 22:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412936;
-        bh=DGfUc6OPcdg+selrsf0vCRMAyp9NIYMTOzMVaFuB3xs=;
+        s=default; t=1575412938;
+        bh=dPW9hbrxxDEY8iGHzWJEA3C6WLw9z0HxL6tSx0XjRlk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pG07fZ7XRAjsg+o6P/4Ae7J0hjEPm2KmLUkTQ2a9dBWOgiUusck31L/TlTsl6BTqC
-         w+f6ahzBA0N0O7a7HA2muSZJlfM3pZnAkAig7OA98fAi7GL34udtlrl+DYS9YfA80w
-         MdSXO4bx2+hEHduwFQU9Y+7PmxLYCxe6mo95YAmc=
+        b=VmLZSv8x4334C/GwkTgPiApYhWd1oewF2JoWVahcsiGIGygefPMO+BrDy5oV+K16b
+         S3v7ANQr9z5dbR4s2AW9fUOCjq5SfraARpfbZR6Mk9FazEd17tW1WhArIgCm4IJbNe
+         oHMJcXQy0WiWMEbdeahUmpBPcznwDYi1Au3YVjxs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jaska Uimonen <jaska.uimonen@intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Dragos Tarcatu <dragos_tarcatu@mentor.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 072/135] ASoC: SOF: topology: Fix bytes control size checks
-Date:   Tue,  3 Dec 2019 23:35:12 +0100
-Message-Id: <20191203213026.735283478@linuxfoundation.org>
+Subject: [PATCH 5.3 073/135] mm/gup_benchmark: fix MAP_HUGETLB case
+Date:   Tue,  3 Dec 2019 23:35:13 +0100
+Message-Id: <20191203213027.362378108@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -63,58 +63,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dragos Tarcatu <dragos_tarcatu@mentor.com>
+From: John Hubbard <jhubbard@nvidia.com>
 
-[ Upstream commit 9508ef5a980f5d847cad9b932b6ada8f2a3466c1 ]
+[ Upstream commit 64801d19eba156170340c76f70ade743defcb8ce ]
 
-When using the example SOF amp widget topology, KASAN dumps this
-when the AMP bytes kcontrol gets loaded:
+The MAP_HUGETLB ("-H" option) of gup_benchmark fails:
 
-[ 9.579548] BUG: KASAN: slab-out-of-bounds in
-sof_control_load+0x8cc/0xac0 [snd_sof]
-[ 9.588194] Write of size 40 at addr ffff8882314559dc by task
-systemd-udevd/2411
+  $ sudo ./gup_benchmark -H
+  mmap: Invalid argument
 
-Fix that by rejecting the topology if the bytes data size > max_size
+This is because gup_benchmark.c is passing in a file descriptor to
+mmap(), but the fd came from opening up the /dev/zero file.  This
+confuses the mmap syscall implementation, which thinks that, if the
+caller did not specify MAP_ANONYMOUS, then the file must be a huge page
+file.  So it attempts to verify that the file really is a huge page
+file, as you can see here:
 
-Fixes: 311ce4fe7637d ("ASoC: SOF: Add support for loading topologies")
-Reviewed-by: Jaska Uimonen <jaska.uimonen@intel.com>
-Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Signed-off-by: Dragos Tarcatu <dragos_tarcatu@mentor.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20191106145816.9367-1-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+ksys_mmap_pgoff()
+{
+    if (!(flags & MAP_ANONYMOUS)) {
+        retval = -EINVAL;
+        if (unlikely(flags & MAP_HUGETLB && !is_file_hugepages(file)))
+            goto out_fput; /* THIS IS WHERE WE END UP */
+
+    else if (flags & MAP_HUGETLB) {
+        ...proceed normally, /dev/zero is ok here...
+
+...and of course is_file_hugepages() returns "false" for the /dev/zero
+file.
+
+The problem is that the user space program, gup_benchmark.c, really just
+wants anonymous memory here.  The simplest way to get that is to pass
+MAP_ANONYMOUS whenever MAP_HUGETLB is specified, so that's what this
+patch does.
+
+Link: http://lkml.kernel.org/r/20191021212435.398153-2-jhubbard@nvidia.com
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
+Cc: Keith Busch <keith.busch@intel.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sof/topology.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ tools/testing/selftests/vm/gup_benchmark.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/sof/topology.c b/sound/soc/sof/topology.c
-index 96230329e678f..355f04663f576 100644
---- a/sound/soc/sof/topology.c
-+++ b/sound/soc/sof/topology.c
-@@ -533,15 +533,16 @@ static int sof_control_load_bytes(struct snd_soc_component *scomp,
- 	struct soc_bytes_ext *sbe = (struct soc_bytes_ext *)kc->private_value;
- 	int max_size = sbe->max;
- 
--	if (le32_to_cpu(control->priv.size) > max_size) {
-+	/* init the get/put bytes data */
-+	scontrol->size = sizeof(struct sof_ipc_ctrl_data) +
-+		le32_to_cpu(control->priv.size);
-+
-+	if (scontrol->size > max_size) {
- 		dev_err(sdev->dev, "err: bytes data size %d exceeds max %d.\n",
--			control->priv.size, max_size);
-+			scontrol->size, max_size);
- 		return -EINVAL;
- 	}
- 
--	/* init the get/put bytes data */
--	scontrol->size = sizeof(struct sof_ipc_ctrl_data) +
--		le32_to_cpu(control->priv.size);
- 	scontrol->control_data = kzalloc(max_size, GFP_KERNEL);
- 	cdata = scontrol->control_data;
- 	if (!scontrol->control_data)
+diff --git a/tools/testing/selftests/vm/gup_benchmark.c b/tools/testing/selftests/vm/gup_benchmark.c
+index c0534e298b512..8e9929ce64cdb 100644
+--- a/tools/testing/selftests/vm/gup_benchmark.c
++++ b/tools/testing/selftests/vm/gup_benchmark.c
+@@ -71,7 +71,7 @@ int main(int argc, char **argv)
+ 			flags |= MAP_SHARED;
+ 			break;
+ 		case 'H':
+-			flags |= MAP_HUGETLB;
++			flags |= (MAP_HUGETLB | MAP_ANONYMOUS);
+ 			break;
+ 		default:
+ 			return -1;
 -- 
 2.20.1
 
