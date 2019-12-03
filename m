@@ -2,122 +2,96 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FC2C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C845FC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F0592080F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:50:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413423;
-	bh=ixzM77mmAEzKa7tBc5NRii33XANhKZZ0LS4L+LzBBAE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PoRBC0pqfd777+1nJWVy6NCHTS+bYo8dze3MfVgZaJirXdTdRYH1nX1s5C8QKWrHm
-	 IiqqilNr0lBu1ljWwzoujbmpC/HFtqTAPH4ol+9AF7JMex1ECHbQiNOKsi1gXAI/Ps
-	 4yx5ZuSJQHmAVLAcaxe3PK5D9iQFxPKTs3+TPDL8=
+	by mail.kernel.org (Postfix) with ESMTP id 8390220863
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:50:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IUFc8UxN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729742AbfLCWuV (ORCPT
+        id S1729754AbfLCWuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:50:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41830 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729731AbfLCWuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:50:19 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA09D20656;
-        Tue,  3 Dec 2019 22:50:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413418;
-        bh=ixzM77mmAEzKa7tBc5NRii33XANhKZZ0LS4L+LzBBAE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wDHlWWjvE00zLBHRIeyiqpEpqUh8YWs+nGMZ8PkZRpIweZ2AwN/rckcRIZXR1ohaQ
-         g0ArDOQEn9x7kJvXvEfJytNAAVE6jniQ9WwlumvhDrwgBpl37Hq3rj5jul5ZGseD6R
-         42BPpQpdmwaXkfp0cJhvJck78ewkQ84axiBtpNVA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anand Jain <anand.jain@oracle.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 119/321] btrfs: dev-replace: set result code of cancel by status of scrub
-Date:   Tue,  3 Dec 2019 23:33:05 +0100
-Message-Id: <20191203223433.348700452@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
-References: <20191203223427.103571230@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 3 Dec 2019 17:50:24 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:44262 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729745AbfLCWuW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:50:22 -0500
+Received: by mail-pj1-f65.google.com with SMTP id w5so2095015pjh.11
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 14:50:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s72VU58n1uZlGbJBRTu2xgBYvYdIHK25ECXlG0jy3sU=;
+        b=IUFc8UxNwCnljk1TUZeICIsFef5PK+xyx1Cbp5WCC/NRyAH/tbCYjBIAeLuROBwikS
+         7ZJl3nv42a8U9RgG63oQnfjnPKIovit6eCqoPDdhkLgzn5hRk1/nRxJt7ld9HCyyhMlk
+         JILbzRmnm3Y+5cdd/BwZZBnNhnO2dK6/enplmbtWP4BBQol0Ci2cwRgE+JclK44wH0Mw
+         ysEBvJVUVGDWQIELvgX4F94BvuaB1Sa/wk0WN9TVAehOEWdcUBsOn+qYzcqu8cpkUMhu
+         vttwNNE5r1wOhr9igAx4QihOT1fd5iRS1B7bEO+mKA2grij7zGOPJU69UqyOw6P7TKu5
+         SvPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s72VU58n1uZlGbJBRTu2xgBYvYdIHK25ECXlG0jy3sU=;
+        b=AStU3BQaV5pVPxWrc34zV5UbT19EHNG/uve0uNpgaKEI+7hNhBUjWqsMRqpOTCjkj3
+         Dl7A1qjH5kQg9D7EWoC7f5EJi165L63Bao2bFxtEDCjroZoeKyfhbz705nmRyhrO5bmn
+         WL9yPYOjwKGogMHiaup4u8LfbqFewHkFXcW/+ISyahEv8DIbAMCmDoA4pBwhMYfq6/Kx
+         Oj3DSryUuro4Eg8razu82iEbBk+AE0QfMRGx3Yr0s25QTzzwi3+SHRXfDS2yZkKZEvju
+         2orS1D+AhRHgc7EHBG6iyw+HowAmOQdUEEYpZIM5sE8F4OSUPHTIoiWcvD0F/g4WeNO0
+         7v1Q==
+X-Gm-Message-State: APjAAAVYFIx6/UKCyWwOffuPaA4mhwueqOpvvftd6PTIt0Opq1M+eIQT
+        yZa/C/kV1BsrbSLKML5o8WXEaNIgh1cJeqWut3KZrQ==
+X-Google-Smtp-Source: APXvYqwiLcG4Ak+RbWUBVrzm1Y963nmdTKtkyVteu+4h4xn9QeAIwv9XGtBGLGW8JW3XRdI9kKo1W/hNsqcZZ8MX+Ho=
+X-Received: by 2002:a17:90a:c390:: with SMTP id h16mr8324726pjt.131.1575413421318;
+ Tue, 03 Dec 2019 14:50:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1575374868-32601-1-git-send-email-alan.maguire@oracle.com> <1575374868-32601-7-git-send-email-alan.maguire@oracle.com>
+In-Reply-To: <1575374868-32601-7-git-send-email-alan.maguire@oracle.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 3 Dec 2019 14:50:10 -0800
+Message-ID: <CAFd5g47y8t7ZveLvgiTBVBkFE4-zJmPgMykjPNkm03X63Aimnw@mail.gmail.com>
+Subject: Re: [PATCH v5 linux-kselftest-test 6/6] kunit: update documentation
+ to describe module-based build
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        catalin.marinas@arm.com, joe.lawrence@redhat.com,
+        penguin-kernel@i-love.sakura.ne.jp, urezki@gmail.com,
+        andriy.shevchenko@linux.intel.com,
+        Jonathan Corbet <corbet@lwn.net>,
+        David Gow <davidgow@google.com>, adilger.kernel@dilger.ca,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Knut Omang <knut.omang@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anand Jain <anand.jain@oracle.com>
+On Tue, Dec 3, 2019 at 4:08 AM Alan Maguire <alan.maguire@oracle.com> wrote:
+>
+> Documentation should describe how to build kunit and tests as
+> modules.
+>
+> Co-developed-by: Knut Omang <knut.omang@oracle.com>
+> Signed-off-by: Knut Omang <knut.omang@oracle.com>
+> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-[ Upstream commit b47dda2ef6d793b67fd5979032dcd106e3f0a5c9 ]
-
-The device-replace needs to check the result code of the scrub workers
-in btrfs_dev_replace_cancel and distinguish if successful cancel
-operation and when the there was no operation running.
-
-If btrfs_scrub_cancel() fails, return
-BTRFS_IOCTL_DEV_REPLACE_RESULT_NOT_STARTED so that user can try
-to cancel the replace again.
-
-Signed-off-by: Anand Jain <anand.jain@oracle.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-[ update changelog ]
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/btrfs/dev-replace.c | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
-
-diff --git a/fs/btrfs/dev-replace.c b/fs/btrfs/dev-replace.c
-index 23b13fbecdc22..96763805787ed 100644
---- a/fs/btrfs/dev-replace.c
-+++ b/fs/btrfs/dev-replace.c
-@@ -810,16 +810,23 @@ int btrfs_dev_replace_cancel(struct btrfs_fs_info *fs_info)
- 		btrfs_dev_replace_write_unlock(dev_replace);
- 		break;
- 	case BTRFS_IOCTL_DEV_REPLACE_STATE_STARTED:
--		result = BTRFS_IOCTL_DEV_REPLACE_RESULT_NO_ERROR;
- 		tgt_device = dev_replace->tgtdev;
- 		src_device = dev_replace->srcdev;
- 		btrfs_dev_replace_write_unlock(dev_replace);
--		btrfs_scrub_cancel(fs_info);
--		/* btrfs_dev_replace_finishing() will handle the cleanup part */
--		btrfs_info_in_rcu(fs_info,
--			"dev_replace from %s (devid %llu) to %s canceled",
--			btrfs_dev_name(src_device), src_device->devid,
--			btrfs_dev_name(tgt_device));
-+		ret = btrfs_scrub_cancel(fs_info);
-+		if (ret < 0) {
-+			result = BTRFS_IOCTL_DEV_REPLACE_RESULT_NOT_STARTED;
-+		} else {
-+			result = BTRFS_IOCTL_DEV_REPLACE_RESULT_NO_ERROR;
-+			/*
-+			 * btrfs_dev_replace_finishing() will handle the
-+			 * cleanup part
-+			 */
-+			btrfs_info_in_rcu(fs_info,
-+				"dev_replace from %s (devid %llu) to %s canceled",
-+				btrfs_dev_name(src_device), src_device->devid,
-+				btrfs_dev_name(tgt_device));
-+		}
- 		break;
- 	case BTRFS_IOCTL_DEV_REPLACE_STATE_SUSPENDED:
- 		/*
--- 
-2.20.1
-
-
-
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
