@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24EB8C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C66C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2A642064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C643420656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:06:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414364;
-	bh=v6CWCIDmY/jllLV2uivZ+MJ32Cm9zV+Rz3VmAy4p4M0=;
+	s=default; t=1575414370;
+	bh=MqCGkEaFKEvYpnpR5yjcDLhn3RcaqfJeMd3Ts7sMgNM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UIGYer2GsyTwFhzBvKpTlOju5pctZezi8xM5Wo0FqRXk1ZRJpowryd8kTYMRiBuQ/
-	 h/kHl5ihdHHA74J3WXOLalS8CnMPjNbW8smMX2luvxO+aTLvOIx5VRD49OukPfZMbX
-	 2lNf0HN1m07otY/EcwV4LpJ0qGNlajhV/vHiqSls=
+	b=ezvf/2JbPody12T1wWoZX28dFbh4DAsO8GmHUELJ92V22WXKervdlr1UikinGhzQL
+	 nFgu6+3mPBeh3Sus8DZvgxcR8h2cJIJFFOlpEVDEyep269/bpZd+92pW0lOID9hnvg
+	 Zt6EtYxMMJnD/7fRrEdh3Iq+d6Y8MzeeckoyF0Bo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729612AbfLCWtd (ORCPT
+        id S1729567AbfLCWtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:49:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40626 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:49:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728916AbfLCWtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:49:31 -0500
+        id S1729559AbfLCWtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:49:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6ABDC20656;
-        Tue,  3 Dec 2019 22:49:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55A8220684;
+        Tue,  3 Dec 2019 22:49:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413370;
-        bh=v6CWCIDmY/jllLV2uivZ+MJ32Cm9zV+Rz3VmAy4p4M0=;
+        s=default; t=1575413352;
+        bh=MqCGkEaFKEvYpnpR5yjcDLhn3RcaqfJeMd3Ts7sMgNM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L2Q+LgGMlxzp7ZEQ+QdZpFYCqF7b3MQgeqS6aTC7mrNHMeFI0dK80Bge2khuWp4NI
-         ERGarAez+3IKBFyHssHpoQjFXfowy1DZ1wd+RR8S0e6Rop4MicBg/u5Wywab551GQ8
-         3q2gKrd7SwnUGu6DnP6sxzX3UotqQtpFRlB8vhog=
+        b=HxF9BIy//Iq/yRrjqSJg9rilW0keTxlqt28wVaC9z7g69Bfl9LD1gAgqZCz0DjjTb
+         Wd/GKkPpVxTZ9n6SG1nBy1NkosE9QB/6rdoO9cIUtJ1ZjRCDXW6PWAXCElTHLqV0rO
+         KvSIgEDLjJDIUnNw6Z1pTV6zQF/CZv3EMYF0lufA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Giridhar Malavali <gmalavali@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Shenghui Wang <shhuiw@foxmail.com>,
+        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 085/321] scsi: qla2xxx: Fix for FC-NVMe discovery for NPIV port
-Date:   Tue,  3 Dec 2019 23:32:31 +0100
-Message-Id: <20191203223431.578092382@linuxfoundation.org>
+Subject: [PATCH 4.19 096/321] bcache: do not mark writeback_running too early
+Date:   Tue,  3 Dec 2019 23:32:42 +0100
+Message-Id: <20191203223432.153600792@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,60 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Giridhar Malavali <gmalavali@marvell.com>
+From: Shenghui Wang <shhuiw@foxmail.com>
 
-[ Upstream commit 835aa4f2691e4ed4ed16de81f3cabf17a87a164f ]
+[ Upstream commit 79b791466e525c98f6aeee9acf5726e7b27f4231 ]
 
-This patch fixes NVMe discovery by setting SKIP_PRLI flag, so that PRLI is
-driven by driver and is retried when the NPIV port is detected to have NVMe
-capability.
+A fresh backing device is not attached to any cache_set, and
+has no writeback kthread created until first attached to some
+cache_set.
 
-Signed-off-by: Giridhar Malavali <gmalavali@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+But bch_cached_dev_writeback_init run
+"
+	dc->writeback_running		= true;
+	WARN_ON(test_and_clear_bit(BCACHE_DEV_WB_RUNNING,
+			&dc->disk.flags));
+"
+for any newly formatted backing devices.
+
+For a fresh standalone backing device, we can get something like
+following even if no writeback kthread created:
+------------------------
+/sys/block/bcache0/bcache# cat writeback_running
+1
+/sys/block/bcache0/bcache# cat writeback_rate_debug
+rate:		512.0k/sec
+dirty:		0.0k
+target:		0.0k
+proportional:	0.0k
+integral:	0.0k
+change:		0.0k/sec
+next io:	-15427384ms
+
+The none ZERO fields are misleading as no alive writeback kthread yet.
+
+Set dc->writeback_running false as no writeback thread created in
+bch_cached_dev_writeback_init().
+
+We have writeback thread created and woken up in bch_cached_dev_writeback
+_start(). Set dc->writeback_running true before bch_writeback_queue()
+called, as a writeback thread will check if dc->writeback_running is true
+before writing back dirty data, and hung if false detected.
+
+After the change, we can get the following output for a fresh standalone
+backing device:
+-----------------------
+/sys/block/bcache0/bcache$ cat writeback_running
+0
+/sys/block/bcache0/bcache# cat writeback_rate_debug
+rate:		0.0k/sec
+dirty:		0.0k
+target:		0.0k
+proportional:	0.0k
+integral:	0.0k
+change:		0.0k/sec
+next io:	0ms
+
+v1 -> v2:
+  Set dc->writeback_running before bch_writeback_queue() called,
+
+Signed-off-by: Shenghui Wang <shhuiw@foxmail.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_attr.c |  2 ++
- drivers/scsi/qla2xxx/qla_init.c | 10 ++++------
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/md/bcache/writeback.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_attr.c b/drivers/scsi/qla2xxx/qla_attr.c
-index 15d493f30810f..3e9c49b3184f1 100644
---- a/drivers/scsi/qla2xxx/qla_attr.c
-+++ b/drivers/scsi/qla2xxx/qla_attr.c
-@@ -2161,6 +2161,8 @@ qla24xx_vport_delete(struct fc_vport *fc_vport)
- 	    test_bit(FCPORT_UPDATE_NEEDED, &vha->dpc_flags))
- 		msleep(1000);
+diff --git a/drivers/md/bcache/writeback.c b/drivers/md/bcache/writeback.c
+index ba5395fd386d5..b5fc3c6c7178e 100644
+--- a/drivers/md/bcache/writeback.c
++++ b/drivers/md/bcache/writeback.c
+@@ -781,7 +781,7 @@ void bch_cached_dev_writeback_init(struct cached_dev *dc)
+ 	bch_keybuf_init(&dc->writeback_keys);
  
-+	qla_nvme_delete(vha);
-+
- 	qla24xx_disable_vp(vha);
- 	qla2x00_wait_for_sess_deletion(vha);
+ 	dc->writeback_metadata		= true;
+-	dc->writeback_running		= true;
++	dc->writeback_running		= false;
+ 	dc->writeback_percent		= 10;
+ 	dc->writeback_delay		= 30;
+ 	atomic_long_set(&dc->writeback_rate.rate, 1024);
+@@ -810,6 +810,7 @@ int bch_cached_dev_writeback_start(struct cached_dev *dc)
+ 		destroy_workqueue(dc->writeback_write_wq);
+ 		return PTR_ERR(dc->writeback_thread);
+ 	}
++	dc->writeback_running = true;
  
-diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
-index 653d535e3052f..f7dd289779b14 100644
---- a/drivers/scsi/qla2xxx/qla_init.c
-+++ b/drivers/scsi/qla2xxx/qla_init.c
-@@ -242,15 +242,13 @@ qla2x00_async_login(struct scsi_qla_host *vha, fc_port_t *fcport,
- 	qla2x00_init_timer(sp, qla2x00_get_async_timeout(vha) + 2);
- 
- 	sp->done = qla2x00_async_login_sp_done;
--	if (N2N_TOPO(fcport->vha->hw) && fcport_is_bigger(fcport)) {
-+	if (N2N_TOPO(fcport->vha->hw) && fcport_is_bigger(fcport))
- 		lio->u.logio.flags |= SRB_LOGIN_PRLI_ONLY;
--	} else {
-+	else
- 		lio->u.logio.flags |= SRB_LOGIN_COND_PLOGI;
- 
--		if (fcport->fc4f_nvme)
--			lio->u.logio.flags |= SRB_LOGIN_SKIP_PRLI;
--
--	}
-+	if (fcport->fc4f_nvme)
-+		lio->u.logio.flags |= SRB_LOGIN_SKIP_PRLI;
- 
- 	ql_dbg(ql_dbg_disc, vha, 0x2072,
- 	    "Async-login - %8phC hdl=%x, loopid=%x portid=%02x%02x%02x "
+ 	WARN_ON(test_and_set_bit(BCACHE_DEV_WB_RUNNING, &dc->disk.flags));
+ 	schedule_delayed_work(&dc->writeback_rate_update,
 -- 
 2.20.1
 
