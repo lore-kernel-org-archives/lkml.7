@@ -2,138 +2,199 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6529FC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7F9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3702F20803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A570720640
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 17:56:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PL7geI4O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vY+fK0/0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfLCRyi (ORCPT
+        id S1726991AbfLCR4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 12:54:38 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:32772 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726182AbfLCRyi (ORCPT
+        Tue, 3 Dec 2019 12:56:23 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36823 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726763AbfLCR4X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 12:54:38 -0500
-Received: by mail-pj1-f66.google.com with SMTP id r67so1826318pjb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 09:54:37 -0800 (PST)
+        Tue, 3 Dec 2019 12:56:23 -0500
+Received: by mail-lj1-f194.google.com with SMTP id r19so4884748ljg.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 09:56:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vMR4WSw9F9B8/N0dfexGWtdZzcUtKJESett3rr24Dyo=;
-        b=PL7geI4O2Fegkq9yVA+r/GhMN4DROVlNgMIuRR9dEPslr5jnEu/k2ykh47MLjQ9s4B
-         A8hXLjzFm2rX9taFdenyTtLyS/xz2RqrOOdcUWfUrCem8+qIF6AxZDy0z6H3LmnqFAAC
-         StlGOh8VJ+JMbnkCwYuEEBpY9NMV0mSRNzFKIvuWc8KCD4txqAHLCMN+T8OWf+F1DGEb
-         Z3WlFR9nkh+yUbnN6ThV2BOHs9dp0Kd1ZqtPmgyfHH3VJQD1yNnnSBXo12EU1z3IZT8w
-         +QIwtR5O+j2PjTH4oYvqBdZ2L/EOAth91+DFGmi+Faliyp013UcmyJZyuujnzD3mELTy
-         tt5Q==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:cc
+         :content-transfer-encoding;
+        bh=xKJZIaHtKKjuYtXbsDuWM2Dl2PKeFrJbutUCYZbgryc=;
+        b=vY+fK0/0iOXoXphfCYAqMfmDz09jvFcyg+NSgTRbjfMEFLh5TTHOygTc+OAlKgbFtl
+         KP1JeWTXn6Nbz87qpP1lDqVKuyLJ2K9Dr2085WxZsQaVHqX0QI5r67HxcGEEu8v+dUeE
+         0sqhAcsXEiDpV38F0K+QhAgOALvhB0pXKauCiYIq9P72XGNM5ujpjdXycWrvzZXQCjC4
+         3HMwrTyvWM8l5hx7ffuhz81FeTembMKmirRAsU68ad1RDy+dlCCdlWpuwlL9k0SsxizK
+         +Z3q4tE7QyoYz0Bo4AELFwQFBjD39mqRda3XpcYC4Y6Brjwq+ZwBndwIh20jKwdI2Pq5
+         NFjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vMR4WSw9F9B8/N0dfexGWtdZzcUtKJESett3rr24Dyo=;
-        b=HKf+ZfAHHl0RKCmrx64VzvEE9UEESa7BPAcGgL4axdZtCL0eufWYZPKNfeqN/GWUvq
-         /ZfOSQBJQzHTTPH9M51+cNpAdUMJJ33E665NNmOdAb8nqWPGl0NkbGzST7MFUv6IKP5c
-         mKsSATVf56lFAVfViQd1ITxpB19S5ztnsM1gOCvnTS/WC4Og/kBtmLpIyO/m9w/YMgXU
-         c7MRhr/b6G5gfUJcaBgr8eMlVQFyNOPFVOJFFoJlVscPU8uKvb0WYqqxr1ZdKEoDcZ18
-         e1SBXNKlbd/R7VeLSH3ePcy8Xlw+REAFTgn65L18Zb/wWbJqT71+FYYo2QkBXsyF3HHm
-         jeSw==
-X-Gm-Message-State: APjAAAVgbD64vFzv5nGe+pxgo9/QW7vzyBlk3quty3JdoyEvyhQ/x3cy
-        126kP1jrr2e1vqA/F37Vu6ykA4eaid9kmRxHM+NG0A==
-X-Google-Smtp-Source: APXvYqwzA5c1dosL6azbOI6mxwJKJwVTHQFZgXh+dkZsKqQMYvUExNucuTAYkzJJB5rdeM4ynwUTKNPgznxOPpjFWnc=
-X-Received: by 2002:a17:90a:c390:: with SMTP id h16mr6899357pjt.131.1575395677060;
- Tue, 03 Dec 2019 09:54:37 -0800 (PST)
+         :message-id:subject:cc:content-transfer-encoding;
+        bh=xKJZIaHtKKjuYtXbsDuWM2Dl2PKeFrJbutUCYZbgryc=;
+        b=ML8099NIpkID3m6dZlAADDf2osvX3lf+j4mEdnQ7ZF0dUXlH3tjKRaFa6lHKSv0blA
+         hRstFNDIcM9i1KOeMn43WrafYcPWfxtlvH/K8y6On4aS8DNfjdRXIILsxNdgyeX99GiH
+         vZrhda3KYbLW7GViNns9XyMIg4z6pAeo2bryfpALI9gzKxa5lJTIlUGH20ZfAFCUxLe1
+         tCWUu8wj8ui+5GRqYZyCChUqfyUTxAXQs9cusmcvB0DBCSYIagXBK7R9E5DAIwHckiiX
+         1/RfYGvkwF66GI8n34MEbuIiwNNSX1wdKzJgMUYjJ026dAAdeGJf0ChfxG0A5F3Kh7VZ
+         3DOQ==
+X-Gm-Message-State: APjAAAXYDLWHHTKemOt4qPZkXGCNJxS+Lnd6XibjKtxIXDg9XY0CdrFT
+        Pld1poXd0EQQsPMaKx3rs+LQPGD6LB0byFZRnAw=
+X-Received: by 2002:a2e:97cf:: with SMTP id m15mt2980334ljj.130.1575395779796;
+ Tue, 03 Dec 2019 09:56:19 -0800 (PST)
 MIME-Version: 1.0
-References: <1575374868-32601-1-git-send-email-alan.maguire@oracle.com> <1575374868-32601-4-git-send-email-alan.maguire@oracle.com>
-In-Reply-To: <1575374868-32601-4-git-send-email-alan.maguire@oracle.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 3 Dec 2019 09:54:25 -0800
-Message-ID: <CAFd5g47dRP9HvsZD3sqzzfbAthNq8gxEdh57owo3CqVHLNOf6w@mail.gmail.com>
-Subject: Re: [PATCH v5 linux-kselftest-test 3/6] kunit: allow kunit tests to
- be loaded as a module
-To:     Alan Maguire <alan.maguire@oracle.com>,
-        "Theodore Ts'o" <tytso@mit.edu>, Iurii Zaikin <yzaikin@google.com>,
-        David Gow <davidgow@google.com>
-Cc:     "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        catalin.marinas@arm.com, joe.lawrence@redhat.com,
-        penguin-kernel@i-love.sakura.ne.jp, urezki@gmail.com,
-        andriy.shevchenko@linux.intel.com,
-        Jonathan Corbet <corbet@lwn.net>, adilger.kernel@dilger.ca,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Knut Omang <knut.omang@oracle.com>
+References: <20191112203154.101534-1-wvw@google.com> <20191112204223.115589-1-wvw@google.com>
+ <57162b7c-cf34-2b55-a17c-40d96a0ab105@linaro.org>
+In-Reply-To: <57162b7c-cf34-2b55-a17c-40d96a0ab105@linaro.org>
+From:   Wei Wang <wei.vince.wang@gmail.com>
+Date:   Tue, 3 Dec 2019 09:55:43 -0800
+Message-ID: <CAMFybE4aSo7AK20T0Hkjo-R-BkjaYtqz-FMF8pS_p_GeLg5tJA@mail.gmail.com>
+Subject: Re: [PATCH v2] thermal: Fix deadlock in thermal thermal_zone_device_check
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 4:08 AM Alan Maguire <alan.maguire@oracle.com> wrote:
+On Tue, Dec 3, 2019 at 9:15 AM Daniel Lezcano <daniel.lezcano@linaro.org> w=
+rote:
 >
-> As tests are added to kunit, it will become less feasible to execute
-> all built tests together.  By supporting modular tests we provide
-> a simple way to do selective execution on a running system; specifying
+> On 12/11/2019 21:42, Wei Wang wrote:
+> > commit [2] changed cancel_delayed_work to cancel_delayed_work_sync to
+> > avoid a use-after-free issue. However, cancel_delayed_work_sync could b=
+e
+> > called insides the WQ causing deadlock [1].
+> >
+> > [1]
+> > [54109.642398] c0   1162 kworker/u17:1   D    0 11030      2 0x00000000
+> > [54109.642437] c0   1162 Workqueue: thermal_passive_wq thermal_zone_dev=
+ice_check
+> > [54109.642447] c0   1162 Call trace:
+> > [54109.642456] c0   1162  __switch_to+0x138/0x158
+> > [54109.642467] c0   1162  __schedule+0xba4/0x1434
+> > [54109.642480] c0   1162  schedule_timeout+0xa0/0xb28
+> > [54109.642492] c0   1162  wait_for_common+0x138/0x2e8
+> > [54109.642511] c0   1162  flush_work+0x348/0x40c
+> > [54109.642522] c0   1162  __cancel_work_timer+0x180/0x218
+> > [54109.642544] c0   1162  handle_thermal_trip+0x2c4/0x5a4
+> > [54109.642553] c0   1162  thermal_zone_device_update+0x1b4/0x25c
+> > [54109.642563] c0   1162  thermal_zone_device_check+0x18/0x24
+> > [54109.642574] c0   1162  process_one_work+0x3cc/0x69c
+> > [54109.642583] c0   1162  worker_thread+0x49c/0x7c0
+> > [54109.642593] c0   1162  kthread+0x17c/0x1b0
+> > [54109.642602] c0   1162  ret_from_fork+0x10/0x18
+> > [54109.643051] c0   1162 kworker/u17:2   D    0 16245      2 0x00000000
+> > [54109.643067] c0   1162 Workqueue: thermal_passive_wq thermal_zone_dev=
+ice_check
+> > [54109.643077] c0   1162 Call trace:
+> > [54109.643085] c0   1162  __switch_to+0x138/0x158
+> > [54109.643095] c0   1162  __schedule+0xba4/0x1434
+> > [54109.643104] c0   1162  schedule_timeout+0xa0/0xb28
+> > [54109.643114] c0   1162  wait_for_common+0x138/0x2e8
+> > [54109.643122] c0   1162  flush_work+0x348/0x40c
+> > [54109.643131] c0   1162  __cancel_work_timer+0x180/0x218
+> > [54109.643141] c0   1162  handle_thermal_trip+0x2c4/0x5a4
+> > [54109.643150] c0   1162  thermal_zone_device_update+0x1b4/0x25c
+> > [54109.643159] c0   1162  thermal_zone_device_check+0x18/0x24
+> > [54109.643167] c0   1162  process_one_work+0x3cc/0x69c
+> > [54109.643177] c0   1162  worker_thread+0x49c/0x7c0
+> > [54109.643186] c0   1162  kthread+0x17c/0x1b0
+> > [54109.643195] c0   1162  ret_from_fork+0x10/0x18
+> > [54109.644500] c0   1162 cat             D    0  7766      1 0x00000001
+> > [54109.644515] c0   1162 Call trace:
+> > [54109.644524] c0   1162  __switch_to+0x138/0x158
+> > [54109.644536] c0   1162  __schedule+0xba4/0x1434
+> > [54109.644546] c0   1162  schedule_preempt_disabled+0x80/0xb0
+> > [54109.644555] c0   1162  __mutex_lock+0x3a8/0x7f0
+> > [54109.644563] c0   1162  __mutex_lock_slowpath+0x14/0x20
+> > [54109.644575] c0   1162  thermal_zone_get_temp+0x84/0x360
+> > [54109.644586] c0   1162  temp_show+0x30/0x78
+> > [54109.644609] c0   1162  dev_attr_show+0x5c/0xf0
+> > [54109.644628] c0   1162  sysfs_kf_seq_show+0xcc/0x1a4
+> > [54109.644636] c0   1162  kernfs_seq_show+0x48/0x88
+> > [54109.644656] c0   1162  seq_read+0x1f4/0x73c
+> > [54109.644664] c0   1162  kernfs_fop_read+0x84/0x318
+> > [54109.644683] c0   1162  __vfs_read+0x50/0x1bc
+> > [54109.644692] c0   1162  vfs_read+0xa4/0x140
+> > [54109.644701] c0   1162  SyS_read+0xbc/0x144
+> > [54109.644708] c0   1162  el0_svc_naked+0x34/0x38
+> > [54109.845800] c0   1162 D 720.000s 1->7766->7766 cat [panic]
+> >
+> > Fixes commit 1851799e1d29 ("thermal: Fix use-after-free when
+> > unregistering thermal zone device") [2]
 >
-> CONFIG_KUNIT=y
-> CONFIG_KUNIT_EXAMPLE_TEST=m
+> It does not fix the problem actually. It is preferable to revert the
+> commit 1851799e1d29.
 >
-> ...means we can simply "insmod example-test.ko" to run the tests.
->
-> To achieve this we need to do the following:
->
-> o export the required symbols in kunit
-> o string-stream tests utilize non-exported symbols so for now we skip
->   building them when CONFIG_KUNIT_TEST=m.
-> o support a new way of declaring test suites.  Because a module cannot
->   do multiple late_initcall()s, we provide a kunit_test_suites() macro
->   to declare multiple suites within the same module at once.
-> o some test module names would have been too general ("test-test"
->   and "example-test" for kunit tests, "inode-test" for ext4 tests);
->   rename these as appropriate ("kunit-test", "kunit-example-test"
->   and "ext4-inode-test" respectively).
->
-> Co-developed-by: Knut Omang <knut.omang@oracle.com>
-> Signed-off-by: Knut Omang <knut.omang@oracle.com>
-> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+The problem as you mentioned is "This one (WQ) blocks because
+cancel_delayed_work_sync is owning the lock which in turn waits for
+the work to end"
+AFAICT, thermal_zone_device_unregister should not take tz->lock and
+either be called in WQ context.
 
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-
-> ---
->  fs/ext4/Kconfig                                    |  2 +-
->  fs/ext4/Makefile                                   |  5 ++++
->  fs/ext4/inode-test.c                               |  4 ++-
->  include/kunit/test.h                               | 35 +++++++++++++++-------
->  kernel/sysctl-test.c                               |  4 ++-
->  lib/Kconfig.debug                                  |  4 +--
->  lib/kunit/Kconfig                                  |  4 +--
->  lib/kunit/Makefile                                 | 10 +++++--
->  lib/kunit/assert.c                                 |  8 +++++
->  lib/kunit/{example-test.c => kunit-example-test.c} |  4 ++-
->  lib/kunit/{test-test.c => kunit-test.c}            |  5 ++--
->  lib/kunit/string-stream-test.c                     |  2 +-
->  lib/kunit/test.c                                   |  8 +++++
->  lib/kunit/try-catch.c                              |  2 ++
->  lib/list-test.c                                    |  4 ++-
->  15 files changed, 76 insertions(+), 25 deletions(-)
->  rename lib/kunit/{example-test.c => kunit-example-test.c} (97%)
->  rename lib/kunit/{test-test.c => kunit-test.c} (98%)
-
-Ted, David, and Iurii, can you each review/ack for the bits that each
-of you own?
-
-Thanks for all your hard work on this Alan!
+>
+> The cancel delayed work sync takes the mutex while a cat
+> /sys/class/thermal/thermal_zone0/temp happens which takes the mutex also
+> and at the same moment a thermal_zone_device_update() call is done in
+> the workqueue context. This one blocks because cancel_delayed_work_sync
+> is owning the lock which in turn waits for the work to end.
+>
+> IMO, that deserves a deeper investigation with the mutex. Probably the
+> fix would be to refcount the thermal zone device and see if we can get
+> rid of the mutex in some places. If the refcounting is used, the
+> function thermal_zone_device_unregister() will be called with the
+> guarantee nobody will use it and the mutex can be removed.
+>
+> > Signed-off-by: Wei Wang <wvw@google.com>
+> > ---
+> >  drivers/thermal/thermal_core.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_c=
+ore.c
+> > index d4481cc8958f..c28271817e43 100644
+> > --- a/drivers/thermal/thermal_core.c
+> > +++ b/drivers/thermal/thermal_core.c
+> > @@ -304,7 +304,7 @@ static void thermal_zone_device_set_polling(struct =
+thermal_zone_device *tz,
+> >                                &tz->poll_queue,
+> >                                msecs_to_jiffies(delay));
+> >       else
+> > -             cancel_delayed_work_sync(&tz->poll_queue);
+> > +             cancel_delayed_work(&tz->poll_queue);
+> >  }
+> >
+> >  static void monitor_thermal_zone(struct thermal_zone_device *tz)
+> > @@ -1414,7 +1414,7 @@ void thermal_zone_device_unregister(struct therma=
+l_zone_device *tz)
+> >
+> >       mutex_unlock(&thermal_list_lock);
+> >
+> > -     thermal_zone_device_set_polling(tz, 0);
+> > +     cancel_delayed_work_sync(&tz->poll_queue);
+> >
+> >       thermal_set_governor(tz, NULL);
+> >
+> >
+>
+>
+> --
+>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
+RM SoCs
+>
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+>
