@@ -2,118 +2,92 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0363C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58416C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF8672054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:30:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pjJDdnHT"
+	by mail.kernel.org (Postfix) with ESMTP id 2F709205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:31:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726319AbfLCKaw (ORCPT
+        id S1726363AbfLCKb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 05:30:52 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:50526 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfLCKaw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 05:30:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Rna2JaW2M6WY+wWsRwUd4SfBNEf14oDaBk5RQKMA9hg=; b=pjJDdnHT+AUhQe+9+Mdn8NFb0
-        vOqy8/jX7I+kbZrJPaPBfN8LcK3afWqNHTnEUwy2JTe9agZ8sz80sPhtcpW/3DVijarJUtpp/SYBE
-        fAawQaC/dPFVGExiRkIMSpLX7T+b88IC9ufnNPjrS6Awg7t54s0ti0Odtv/VcmIBp/1miFqmh7OBD
-        VTh1WnSIAbdaCVAOPiytgFL8wKSboB/EInhh2f4GzvsP632cDSTDw11glWvR9ob3lg9IY16ZzEJHe
-        lwwdvimjxPLjPeQ1FnkS1v2FH0w7EfDqTzPrw/vqFrHMBZfH449nH3opiyW9ZxAg+QuWfAQ8263n6
-        gzyvSuMVQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ic5SC-0006Kd-HL; Tue, 03 Dec 2019 10:30:48 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id ABB3B303144;
-        Tue,  3 Dec 2019 11:29:30 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E53BC2061BAF9; Tue,  3 Dec 2019 11:30:46 +0100 (CET)
-Date:   Tue, 3 Dec 2019 11:30:46 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Schmid, Carsten" <Carsten_Schmid@mentor.com>
-Cc:     "mingo@redhat.com" <mingo@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: Crash in fair scheduler
-Message-ID: <20191203103046.GJ2827@hirez.programming.kicks-ass.net>
-References: <1575364273836.74450@mentor.com>
+        Tue, 3 Dec 2019 05:31:29 -0500
+Received: from mga09.intel.com ([134.134.136.24]:41774 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbfLCKb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 05:31:29 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Dec 2019 02:31:28 -0800
+X-IronPort-AV: E=Sophos;i="5.69,272,1571727600"; 
+   d="scan'208";a="213367267"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Dec 2019 02:31:26 -0800
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 7E18E20976; Tue,  3 Dec 2019 12:31:23 +0200 (EET)
+Date:   Tue, 3 Dec 2019 12:31:23 +0200
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 211/306] media: ov13858: Check for possible null
+ pointer
+Message-ID: <20191203103123.GA32127@paasikivi.fi.intel.com>
+References: <20191127203114.766709977@linuxfoundation.org>
+ <20191127203130.540872040@linuxfoundation.org>
+ <20191203102250.GA27320@amd>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1575364273836.74450@mentor.com>
+In-Reply-To: <20191203102250.GA27320@amd>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 09:11:14AM +0000, Schmid, Carsten wrote:
-> Hi maintainers of the fair scheduler,
+Hi Pavel,
+
+On Tue, Dec 03, 2019 at 11:22:50AM +0100, Pavel Machek wrote:
+> Hi!
 > 
-> we had a crash in the fair scheduler and analysis shows that this could happen again.
-> Happened on 4.14.86 (LTS series) but failing code path still exists in 5.4-rc2 (and 4.14.147 too).
-
-Please, do try if you can reproduce with Linus' latest git. I've no idea
-what is, or is not, in those stable trees.
-
-> crash> * cfs_rq ffff99a96dda9800
-> struct cfs_rq {
->   load = {  weight = 1048576,  inv_weight = 0  }, 
->   nr_running = 1, 
->   h_nr_running = 1, 
->   exec_clock = 0, 
->   min_vruntime = 190894920101, 
->   tasks_timeline = {  rb_root = {    rb_node = 0xffff99a9502e0d10  },   rb_leftmost = 0x0  }, 
->   curr = 0x0, 
->   next = 0x0, 
->   last = 0x0, 
->   skip = 0x0, 
-
-
-> &cfs_rq->tasks_timeline->rb_leftmost
->   tasks_timeline = {
->     rb_root = {
->       rb_node = 0xffff99a9502e0d10
->     }, 
->     rb_leftmost = 0x0
->   }, 
-
-> include/linux/rbtree.h:91:#define rb_first_cached(root) (root)->rb_leftmost
-
-> struct sched_entity *__pick_first_entity(struct cfs_rq *cfs_rq)
-> {
-> 	struct rb_node *left = rb_first_cached(&cfs_rq->tasks_timeline);
+> > From: Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>
+> > 
+> > [ Upstream commit 35629182eb8f931b0de6ed38c0efac58e922c801 ]
+> > 
+> > Check for possible null pointer to avoid crash.
 > 
-> 	if (!left)
-> 		return NULL; <<<<<<<<<< the case
+> > diff --git a/drivers/media/i2c/ov13858.c b/drivers/media/i2c/ov13858.c
+> > index 0e7a85c4996c7..afd66d243403b 100644
+> > --- a/drivers/media/i2c/ov13858.c
+> > +++ b/drivers/media/i2c/ov13858.c
+> > @@ -1612,7 +1612,8 @@ static int ov13858_init_controls(struct ov13858 *ov13858)
+> >  				OV13858_NUM_OF_LINK_FREQS - 1,
+> >  				0,
+> >  				link_freq_menu_items);
+> > -	ov13858->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> > +	if (ov13858->link_freq)
+> > +		ov13858->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> >  
+> >  	pixel_rate_max = link_freq_to_pixel_rate(link_freq_menu_items[0]);
+> >  	pixel_rate_min =
 > 
-> 	return rb_entry(left, struct sched_entity, run_node);
-> }
+> I don't think this is right fix. If ov13858->link_freq initialization
+> fails, we want to fail the initialization, not present
+> half-initialized device to userland, no?
 
-This the problem, for some reason the rbtree code got that rb_leftmost
-thing wrecked.
+The patch fixes the problem. The rest could be debated, but LMML is the
+right place for that debate.
 
-> Is this a corner case nobody thought of or do we have cfs_rq data that is unexpected in it's content?
+-- 
+Regard,s
 
-No, the rbtree is corrupt. Your tree has a single node (which matches
-with nr_running), but for some reason it thinks rb_leftmost is NULL.
-This is wrong, if the tree is non-empty, it must have a leftmost
-element.
-
-Can you reproduce at will? If so, can you please try the latest kernel,
-and or share the reproducer?
+Sakari Ailus
