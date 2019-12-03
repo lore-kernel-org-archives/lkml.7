@@ -2,167 +2,162 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5004EC43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 12:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE658C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 12:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DD90206EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 12:10:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qJ0o9Qc2"
+	by mail.kernel.org (Postfix) with ESMTP id 8D2FD206EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 12:10:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575375058;
+	bh=mM13KHxBngohOxFi/TTFeMlKRJJ80enDLR3A+PBKNYg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=liv22Ka60zIJr/YdBUccieJgEDbieARzCd2dpQwza0H2Ve30fPiz1SQbCmDgPyoJ2
+	 z60obhtEnD3rzIto5uzOgB17jY/pPlxgqM3BYNBjNn2+F+gkUwyvKj8PM5QRsOd1K4
+	 MtIIyAz7Or6shI0Y+vlzHdrKyjcfwGLn+sbpM8M0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbfLCMKp (ORCPT
+        id S1726422AbfLCMK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 07:10:45 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:47574 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfLCMKp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 07:10:45 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB3BsiGg148452;
-        Tue, 3 Dec 2019 12:08:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2019-08-05;
- bh=PAN8N/BNBLs9CxXc911l9Xu6pKmv8bJSEV2cpQz7Xw8=;
- b=qJ0o9Qc2pcXFFDbYVEBMf5tZmDJeh/P0NcTBhPWBlzLjo6EAX6dgcp1+Mh012weFyHdc
- xsZiuvFU2GoRWsQpaySCb90xVIqwUJ9jnJAssud46wbZHBvEycBXbVmwHX4I8vkMU1ag
- mWG3j88uRF+L9qAO0cc0Zt3I+61a8RqqFXXpfUI+I8qs2HNlXOKIk470V/aH4EO8PD7l
- bghc6RCKKAHzWdXla10aCegpFdFQFXovhn9bB2g4XbxKKzBslCVxuOw9iECmF4tVmUBb
- uBVTOQN1mG37SdpMTHZTOpaq9Ktm9CUXk8hAR9enGwgwJHpaZ9o1SfKzlOfDuQp9lvSM Og== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2wkgcq75tm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Dec 2019 12:08:19 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB3BsWV4195197;
-        Tue, 3 Dec 2019 12:08:19 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2wn8k2gxs5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Dec 2019 12:08:19 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xB3C8C4l025088;
-        Tue, 3 Dec 2019 12:08:12 GMT
-Received: from dhcp-10-175-211-120.vpn.oracle.com (/10.175.211.120)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 03 Dec 2019 04:08:12 -0800
-From:   Alan Maguire <alan.maguire@oracle.com>
-To:     brendanhiggins@google.com, linux-kselftest@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
-        keescook@chromium.org, yzaikin@google.com,
-        akpm@linux-foundation.org, yamada.masahiro@socionext.com,
-        catalin.marinas@arm.com, joe.lawrence@redhat.com,
-        penguin-kernel@i-love.sakura.ne.jp, urezki@gmail.com,
-        andriy.shevchenko@linux.intel.com, corbet@lwn.net,
-        davidgow@google.com, adilger.kernel@dilger.ca, tytso@mit.edu,
-        mcgrof@kernel.org, linux-doc@vger.kernel.org,
-        Alan Maguire <alan.maguire@oracle.com>
-Subject: [PATCH v5 linux-kselftest-test 0/6] kunit: support building core/tests as modules
-Date:   Tue,  3 Dec 2019 12:07:42 +0000
-Message-Id: <1575374868-32601-1-git-send-email-alan.maguire@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9459 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912030096
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9459 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912030096
+        Tue, 3 Dec 2019 07:10:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44336 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725773AbfLCMK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 07:10:57 -0500
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F49C20659;
+        Tue,  3 Dec 2019 12:10:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575375056;
+        bh=mM13KHxBngohOxFi/TTFeMlKRJJ80enDLR3A+PBKNYg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=YJq54cNGOravzW6GKl2E/rJ1C/BJibT6H/beqkESWRLue1bUynPWXuNY7N+wW6/zH
+         fP7avqLbUEo+Q7OMcHsTF0rM2UBgQF8zMof3ZaYih+p45LV7/+89Bz82xezXXTFoVx
+         q4jsxxEKSoz9xBFXRYeOKrjzRBsG7dddYcExEwRk=
+From:   Will Deacon <will@kernel.org>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        John Stultz <john.stultz@linaro.org>
+Subject: [PATCH] arm64: mm: Fix initialisation of DMA zones on non-NUMA systems
+Date:   Tue,  3 Dec 2019 12:10:13 +0000
+Message-Id: <20191203121013.9280-1-will@kernel.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current kunit execution model is to provide base kunit functionality
-and tests built-in to the kernel.  The aim of this series is to allow
-building kunit itself and tests as modules.  This in turn allows a
-simple form of selective execution; load the module you wish to test.
-In doing so, kunit itself (if also built as a module) will be loaded as
-an implicit dependency.
+John reports that the recently merged commit 1a8e1cef7603 ("arm64: use
+both ZONE_DMA and ZONE_DMA32") breaks the boot on his DB845C board:
 
-Because this requires a core API modification - if a module delivers
-multiple suites, they must be declared with the kunit_test_suites()
-macro - we're proposing this patch set as a candidate to be applied to the
-test tree before too many kunit consumers appear.  We attempt to deal
-with existing consumers in patch 3.
+  | Booting Linux on physical CPU 0x0000000000 [0x517f803c]
+  | Linux version 5.4.0-mainline-10675-g957a03b9e38f
+  | Machine model: Thundercomm Dragonboard 845c
+  | [...]
+  | Built 1 zonelists, mobility grouping on.  Total pages: -188245
+  | Kernel command line: earlycon
+  | firmware_class.path=/vendor/firmware/ androidboot.hardware=db845c
+  | init=/init androidboot.boot_devices=soc/1d84000.ufshc
+  | printk.devkmsg=on buildvariant=userdebug root=/dev/sda2
+  | androidboot.bootdevice=1d84000.ufshc androidboot.serialno=c4e1189c
+  | androidboot.baseband=sda
+  | msm_drm.dsi_display0=dsi_lt9611_1080_video_display:
+  | androidboot.slot_suffix=_a skip_initramfs rootwait ro init=/init
+  |
+  | <hangs indefinitely here>
 
-Changes since v4:
- - fixed signoff chain to use Co-developed-by: prior to Knut's signoff
-   (Stephen, all patches)
- - added Reviewed-by, Tested-by for patches 1, 2, 4 and 6
- - updated comment describing try-catch-impl.h (Stephen, patch 2)
- - fixed MODULE_LICENSEs to be GPL v2 (Stephen, patches 3, 5)
- - added __init to kunit_init() (Stephen, patch 5)
+This is because, when CONFIG_NUMA=n, zone_sizes_init() fails to handle
+memblocks that fall entirely within the ZONE_DMA region and erroneously ends up
+trying to add a negatively-sized region into the following ZONE_DMA32, which is
+later interpreted as a large unsigned region by the core MM code.
 
-Changes since v3:
- - removed symbol lookup patch for separate submission later
- - removed use of sysctl_hung_task_timeout_seconds (patch 4, as discussed
-   with Brendan and Stephen)
- - disabled build of string-stream-test when CONFIG_KUNIT_TEST=m; this
-   is to avoid having to deal with symbol lookup issues
- - changed string-stream-impl.h back to string-stream.h (Brendan)
- - added module build support to new list, ext4 tests
+Rework the non-NUMA implementation of zone_sizes_init() so that the start
+address of the memblock being processed is adjusted according to the end of the
+previous zone, which is then range-checked before updating the hole information
+of subsequent zones.
 
-Changes since v2:
- - moved string-stream.h header to lib/kunit/string-stream-impl.h (Brendan)
-   (patch 1)
- - split out non-exported interfaces in try-catch-impl.h (Brendan)
-   (patch 2)
- - added kunit_find_symbol() and KUNIT_INIT_SYMBOL to lookup non-exported
-   symbols (patches 3, 4)
- - removed #ifdef MODULE around module licenses (Randy, Brendan, Andy)
-   (patch 4)
- - replaced kunit_test_suite() with kunit_test_suites() rather than
-   supporting both (Brendan) (patch 4)
- - lookup sysctl_hung_task_timeout_secs as kunit may be built as a module
-   and the symbol may not be available (patch 5)
+Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/lkml/CALAqxLVVcsmFrDKLRGRq7GewcW405yTOxG=KR3csVzQ6bXutkA@mail.gmail.com
+Fixes: 1a8e1cef7603 ("arm64: use both ZONE_DMA and ZONE_DMA32")
+Reported-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Will Deacon <will@kernel.org>
+---
+ arch/arm64/mm/init.c | 25 +++++++++++--------------
+ 1 file changed, 11 insertions(+), 14 deletions(-)
 
-Alan Maguire (6):
-  kunit: move string-stream.h to lib/kunit
-  kunit: hide unexported try-catch interface in try-catch-impl.h
-  kunit: allow kunit tests to be loaded as a module
-  kunit: remove timeout dependence on sysctl_hung_task_timeout_seconds
-  kunit: allow kunit to be loaded as a module
-  kunit: update documentation to describe module-based build
+Compile-tested only.
 
- Documentation/dev-tools/kunit/faq.rst              |  3 +-
- Documentation/dev-tools/kunit/index.rst            |  3 ++
- Documentation/dev-tools/kunit/usage.rst            | 16 ++++++++++
- fs/ext4/Kconfig                                    |  2 +-
- fs/ext4/Makefile                                   |  5 +++
- fs/ext4/inode-test.c                               |  4 ++-
- include/kunit/assert.h                             |  3 +-
- include/kunit/test.h                               | 35 ++++++++++++++------
- include/kunit/try-catch.h                          | 10 ------
- kernel/sysctl-test.c                               |  4 ++-
- lib/Kconfig.debug                                  |  4 +--
- lib/kunit/Kconfig                                  |  6 ++--
- lib/kunit/Makefile                                 | 14 +++++---
- lib/kunit/assert.c                                 | 10 ++++++
- lib/kunit/{example-test.c => kunit-example-test.c} |  4 ++-
- lib/kunit/{test-test.c => kunit-test.c}            |  7 ++--
- lib/kunit/string-stream-test.c                     |  5 +--
- lib/kunit/string-stream.c                          |  3 +-
- {include => lib}/kunit/string-stream.h             |  0
- lib/kunit/test.c                                   | 25 ++++++++++++++-
- lib/kunit/try-catch-impl.h                         | 27 ++++++++++++++++
- lib/kunit/try-catch.c                              | 37 +++++-----------------
- lib/list-test.c                                    |  4 ++-
- 23 files changed, 160 insertions(+), 71 deletions(-)
- rename lib/kunit/{example-test.c => kunit-example-test.c} (97%)
- rename lib/kunit/{test-test.c => kunit-test.c} (98%)
- rename {include => lib}/kunit/string-stream.h (100%)
- create mode 100644 lib/kunit/try-catch-impl.h
-
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index be9481cdf3b9..b65dffdfb201 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -214,15 +214,14 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
+ {
+ 	struct memblock_region *reg;
+ 	unsigned long zone_size[MAX_NR_ZONES], zhole_size[MAX_NR_ZONES];
+-	unsigned long max_dma32 = min;
+-	unsigned long __maybe_unused max_dma = min;
++	unsigned long __maybe_unused max_dma, max_dma32;
+ 
+ 	memset(zone_size, 0, sizeof(zone_size));
+ 
++	max_dma = max_dma32 = min;
+ #ifdef CONFIG_ZONE_DMA
+-	max_dma = PFN_DOWN(arm64_dma_phys_limit);
++	max_dma = max_dma32 = PFN_DOWN(arm64_dma_phys_limit);
+ 	zone_size[ZONE_DMA] = max_dma - min;
+-	max_dma32 = max_dma;
+ #endif
+ #ifdef CONFIG_ZONE_DMA32
+ 	max_dma32 = PFN_DOWN(arm64_dma32_phys_limit);
+@@ -236,25 +235,23 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
+ 		unsigned long start = memblock_region_memory_base_pfn(reg);
+ 		unsigned long end = memblock_region_memory_end_pfn(reg);
+ 
+-		if (start >= max)
+-			continue;
+ #ifdef CONFIG_ZONE_DMA
+-		if (start < max_dma) {
+-			unsigned long dma_end = min_not_zero(end, max_dma);
++		if (start >= min && start < max_dma) {
++			unsigned long dma_end = min(end, max_dma);
+ 			zhole_size[ZONE_DMA] -= dma_end - start;
++			start = dma_end;
+ 		}
+ #endif
+ #ifdef CONFIG_ZONE_DMA32
+-		if (start < max_dma32) {
++		if (start >= max_dma && start < max_dma32) {
+ 			unsigned long dma32_end = min(end, max_dma32);
+-			unsigned long dma32_start = max(start, max_dma);
+-			zhole_size[ZONE_DMA32] -= dma32_end - dma32_start;
++			zhole_size[ZONE_DMA32] -= dma32_end - start;
++			start = dma32_end;
+ 		}
+ #endif
+-		if (end > max_dma32) {
++		if (start >= max_dma32 && start < max) {
+ 			unsigned long normal_end = min(end, max);
+-			unsigned long normal_start = max(start, max_dma32);
+-			zhole_size[ZONE_NORMAL] -= normal_end - normal_start;
++			zhole_size[ZONE_NORMAL] -= normal_end - start;
+ 		}
+ 	}
+ 
 -- 
-1.8.3.1
+2.17.1
 
