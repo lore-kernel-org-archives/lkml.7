@@ -2,156 +2,200 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0E6C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 02:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99705C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 02:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E06E20659
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 02:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B88220659
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 02:09:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726114AbfLCCIA (ORCPT
+        id S1726189AbfLCCJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 21:08:00 -0500
-Received: from mail.loongson.cn ([114.242.206.163]:41560 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725919AbfLCCH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 21:07:59 -0500
-Received: from [10.130.0.36] (unknown [123.138.236.242])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxr9dyw+VdzjYGAA--.0S3;
-        Tue, 03 Dec 2019 10:07:47 +0800 (CST)
-Subject: Re: [PATCH] fs: introduce is_dot_dotdot helper for cleanup
-To:     Matthew Wilcox <willy@infradead.org>
-References: <1575281413-6753-1-git-send-email-yangtiezhu@loongson.cn>
- <20191202200302.GN20752@bombadil.infradead.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <357ad021-a58c-ad46-42bd-d5012126276f@loongson.cn>
-Date:   Tue, 3 Dec 2019 10:07:41 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Mon, 2 Dec 2019 21:09:06 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39758 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725919AbfLCCJG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 21:09:06 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB327F73069406
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 21:09:04 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wm6rqxa1w-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 21:09:04 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
+        Tue, 3 Dec 2019 02:09:02 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 3 Dec 2019 02:08:58 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB328vHp56230038
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 3 Dec 2019 02:08:57 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 538F311C052;
+        Tue,  3 Dec 2019 02:08:57 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7644211C04C;
+        Tue,  3 Dec 2019 02:08:53 +0000 (GMT)
+Received: from oc0525413822.ibm.com (unknown [9.85.173.229])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue,  3 Dec 2019 02:08:53 +0000 (GMT)
+Date:   Mon, 2 Dec 2019 18:08:50 -0800
+From:   Ram Pai <linuxram@us.ibm.com>
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, david@gibson.dropbear.id.au,
+        paulus@ozlabs.org, mdroth@linux.vnet.ibm.com, hch@lst.de,
+        andmike@us.ibm.com, sukadev@linux.vnet.ibm.com, mst@redhat.com,
+        ram.n.pai@gmail.com, cai@lca.pw, tglx@linutronix.de,
+        bauerman@linux.ibm.com, linux-kernel@vger.kernel.org
+Reply-To: Ram Pai <linuxram@us.ibm.com>
+References: <1575269124-17885-1-git-send-email-linuxram@us.ibm.com>
+ <1575269124-17885-2-git-send-email-linuxram@us.ibm.com>
+ <f08ace25-fa94-990b-1b6d-a1c0f30d6348@ozlabs.ru>
 MIME-Version: 1.0
-In-Reply-To: <20191202200302.GN20752@bombadil.infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Dxr9dyw+VdzjYGAA--.0S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxZF4UCFy7tr4kXr1rJrWDurg_yoW5XryDpa
-        y8Ja9FgFn7tFyUC3Wjqr4DX3yY93yxXr1DGr90va47ursIvrn0ga4rAr4j93s7tFWDur4r
-        X390yr45u34FyaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUBEb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I
-        8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
-        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xK
-        xwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r1q6r43MxkIecxEwVAFwVW8Jw
-        CF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
-        6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64
-        vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-        Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMI
-        IF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07b5nQbUUUUU
-        =
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f08ace25-fa94-990b-1b6d-a1c0f30d6348@ozlabs.ru>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19120302-0028-0000-0000-000003C3C298
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120302-0029-0000-0000-00002486DA25
+Message-Id: <20191203020850.GA12354@oc0525413822.ibm.com>
+Subject: RE: [PATCH v4 1/2] powerpc/pseries/iommu: Share the per-cpu TCE page with
+ the hypervisor.
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-02_06:2019-11-29,2019-12-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=48 adultscore=0
+ spamscore=0 priorityscore=1501 mlxscore=0 bulkscore=0 mlxlogscore=999
+ lowpriorityscore=0 impostorscore=0 phishscore=0 clxscore=1015
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912030018
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/03/2019 04:03 AM, Matthew Wilcox wrote:
-> On Mon, Dec 02, 2019 at 06:10:13PM +0800, Tiezhu Yang wrote:
->> There exists many similar and duplicate codes to check "." and "..",
->> so introduce is_dot_dotdot helper to make the code more clean.
-> The idea is good.  The implementation is, I'm afraid, badly chosen.
-> Did you benchmark this change at all?  In general, you should prefer the
-> core kernel implementation to that of some less-interesting filesystems.
-> I measured the performance with the attached test program on my laptop
-> (Core-i7 Kaby Lake):
->
-> qstr . time_1 0.020531 time_2 0.005786
-> qstr .. time_1 0.017892 time_2 0.008798
-> qstr a time_1 0.017633 time_2 0.003634
-> qstr matthew time_1 0.011820 time_2 0.003605
-> qstr .a time_1 0.017909 time_2 0.008710
-> qstr , time_1 0.017631 time_2 0.003619
->
-> The results are quite stable:
->
-> qstr . time_1 0.021137 time_2 0.005780
-> qstr .. time_1 0.017964 time_2 0.008675
-> qstr a time_1 0.017899 time_2 0.003654
-> qstr matthew time_1 0.011821 time_2 0.003620
-> qstr .a time_1 0.017889 time_2 0.008662
-> qstr , time_1 0.017764 time_2 0.003613
->
-> Feel free to suggest some different strings we could use for testing.
-> These seemed like interesting strings to test with.  It's always possible
-> I've messed up something with this benchmark that causes it to not
-> accurately represent the performance of each algorithm, so please check
-> that too.
+On Tue, Dec 03, 2019 at 11:56:43AM +1100, Alexey Kardashevskiy wrote:
+> 
+> 
+> On 02/12/2019 17:45, Ram Pai wrote:
+> > H_PUT_TCE_INDIRECT hcall uses a page filled with TCE entries, as one of
+> > its parameters. One page is dedicated per cpu, for the lifetime of the
+> > kernel for this purpose. On secure VMs, contents of this page, when
+> > accessed by the hypervisor, retrieves encrypted TCE entries.  Hypervisor
+> > needs to know the unencrypted entries, to update the TCE table
+> > accordingly.  There is nothing secret or sensitive about these entries.
+> > Hence share the page with the hypervisor.
+> 
+> This unsecures a page in the guest in a random place which creates an
+> additional attack surface which is hard to exploit indeed but
+> nevertheless it is there.
+> A safer option would be not to use the
+> hcall-multi-tce hyperrtas option (which translates FW_FEATURE_MULTITCE
+> in the guest).
 
-[Sorry to resend this email because the mail list server
-was denied due to it is not plain text.]
 
-Hi Matthew,
+Hmm... How do we not use it?  AFAICT hcall-multi-tce option gets invoked
+automatically when IOMMU option is enabled.  This happens even
+on a normal VM when IOMMU is enabled. 
 
-Thanks for your reply and suggestion. I measured the
-performance with the test program, the following
-implementation is better for various of test cases:
 
-bool is_dot_dotdot(const struct qstr *str)
-{
-         if (unlikely(str->name[0] == '.')) {
-                 if (str->len < 2 || (str->len == 2 && str->name[1] == '.'))
-                         return true;
-         }
+> 
+> Also what is this for anyway? 
 
-         return false;
-}
+This is for sending indirect-TCE entries to the hypervisor.
+The hypervisor must be able to read those TCE entries, so that it can 
+use those entires to populate the TCE table with the correct mappings.
 
-I will send a v2 patch used with this implementation.
+> if I understand things right, you cannot
+> map any random guest memory, you should only be mapping that 64MB-ish
+> bounce buffer array but 1) I do not see that happening (I may have
+> missed it) 2) it should be done once and it takes a little time for
+> whatever memory size we allow for bounce buffers anyway. Thanks,
 
-Thanks,
+Any random guest memory can be shared by the guest. 
 
-Tiezhu Yang
+Maybe you are confusing this with the SWIOTLB bounce buffers used by PCI
+devices, to transfer data to the hypervisor?
 
->
->> +bool is_dot_dotdot(const struct qstr *str)
->> +{
->> +	if (str->len == 1 && str->name[0] == '.')
->> +		return true;
->> +
->> +	if (str->len == 2 && str->name[0] == '.' && str->name[1] == '.')
->> +		return true;
->> +
->> +	return false;
->> +}
->> +EXPORT_SYMBOL(is_dot_dotdot);
->> diff --git a/fs/namei.c b/fs/namei.c
->> index 2dda552..7730a3b 100644
->> --- a/fs/namei.c
->> +++ b/fs/namei.c
->> @@ -2458,10 +2458,8 @@ static int lookup_one_len_common(const char *name, struct dentry *base,
->>   	if (!len)
->>   		return -EACCES;
->>   
->> -	if (unlikely(name[0] == '.')) {
->> -		if (len < 2 || (len == 2 && name[1] == '.'))
->> -			return -EACCES;
->> -	}
->> +	if (unlikely(is_dot_dotdot(this)))
->> +		return -EACCES;
->>   
->>   	while (len--) {
->>   		unsigned int c = *(const unsigned char *)name++;
+> 
+> 
+> > 
+> > Signed-off-by: Ram Pai <linuxram@us.ibm.com>
+> > ---
+> >  arch/powerpc/platforms/pseries/iommu.c | 23 ++++++++++++++++++++---
+> >  1 file changed, 20 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
+> > index 6ba081d..0720831 100644
+> > --- a/arch/powerpc/platforms/pseries/iommu.c
+> > +++ b/arch/powerpc/platforms/pseries/iommu.c
+> > @@ -37,6 +37,7 @@
+> >  #include <asm/mmzone.h>
+> >  #include <asm/plpar_wrappers.h>
+> >  #include <asm/svm.h>
+> > +#include <asm/ultravisor.h>
+> >  
+> >  #include "pseries.h"
+> >  
+> > @@ -179,6 +180,23 @@ static int tce_build_pSeriesLP(struct iommu_table *tbl, long tcenum,
+> >  
+> >  static DEFINE_PER_CPU(__be64 *, tce_page);
+> >  
+> > +/*
+> > + * Allocate a tce page.  If secure VM, share the page with the hypervisor.
+> > + *
+> > + * NOTE: the TCE page is shared with the hypervisor explicitly and remains
+> > + * shared for the lifetime of the kernel. It is implicitly unshared at kernel
+> > + * shutdown through a UV_UNSHARE_ALL_PAGES ucall.
+> > + */
+> > +static __be64 *alloc_tce_page(void)
+> > +{
+> > +	__be64 *tcep = (__be64 *)__get_free_page(GFP_ATOMIC);
+> > +
+> > +	if (tcep && is_secure_guest())
+> > +		uv_share_page(PHYS_PFN(__pa(tcep)), 1);
+> > +
+> > +	return tcep;
+> > +}
+> > +
+> >  static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
+> >  				     long npages, unsigned long uaddr,
+> >  				     enum dma_data_direction direction,
+> > @@ -206,8 +224,7 @@ static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
+> >  	 * from iommu_alloc{,_sg}()
+> >  	 */
+> >  	if (!tcep) {
+> > -		tcep = (__be64 *)__get_free_page(GFP_ATOMIC);
+> > -		/* If allocation fails, fall back to the loop implementation */
+> > +		tcep = alloc_tce_page();
+> >  		if (!tcep) {
+> >  			local_irq_restore(flags);
+> >  			return tce_build_pSeriesLP(tbl, tcenum, npages, uaddr,
+> > @@ -405,7 +422,7 @@ static int tce_setrange_multi_pSeriesLP(unsigned long start_pfn,
+> >  	tcep = __this_cpu_read(tce_page);
+> >  
+> >  	if (!tcep) {
+> > -		tcep = (__be64 *)__get_free_page(GFP_ATOMIC);
+> > +		tcep = alloc_tce_page();
+> >  		if (!tcep) {
+> >  			local_irq_enable();
+> >  			return -ENOMEM;
+> > 
+> 
+> -- 
+> Alexey
+
+-- 
+Ram Pai
 
