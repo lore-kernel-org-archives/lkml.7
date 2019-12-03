@@ -4,54 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D06DAC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BDEC43141
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 998B12064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E451A2064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414508;
-	bh=7Okz4y6hrxVIRsklu/VZlG95BXottGN8NoHpUOaltx0=;
+	s=default; t=1575414516;
+	bh=5UeLwMA8GjwdgJAx5gN06GWImJNf48vZifNNOHnnO9A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RyHUeiY725msnIqJkmiwkpV0KXPF/NNWTVr1o7alJ2gRyiPpwoep84K214rHqA4Mj
-	 Vd9/j9lU4MC4KsD68+UVVpHn8hpswx2lMZ3sy8uqOAb0kJccKLlMMPJV8xEnvvp5W9
-	 1N3yHiZnVZcpiXxkp/eYL/MzsmmPWHB99OFwPXDQ=
+	b=Q9juCfA5dgUvbgO58XpeE5VPAFhIywilHlloXsB2sHiDvOcDDkfLQKLOgaOdJOHSk
+	 ZwbrnkXGytFJDz+k9Nn/4BkPiCZdsLzOpxqqOcuh38TXPhbgWKaerqxJabRtb09bjx
+	 iywQ9fmhwUI5IVAeXeWK7946MTGQYdMivCaJT9F0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729387AbfLCXI2 (ORCPT
+        id S1729060AbfLCWpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:08:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34440 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:45:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728955AbfLCWpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:45:41 -0500
+        id S1729035AbfLCWp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:45:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 773C620803;
-        Tue,  3 Dec 2019 22:45:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E9B720803;
+        Tue,  3 Dec 2019 22:45:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413140;
-        bh=7Okz4y6hrxVIRsklu/VZlG95BXottGN8NoHpUOaltx0=;
+        s=default; t=1575413126;
+        bh=5UeLwMA8GjwdgJAx5gN06GWImJNf48vZifNNOHnnO9A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MDhzB0/CDANCc9fu8m+PnRzqtzWvpFBOyvFlE62jVYhoD4SKknOUIcox+Kk9DVcKe
-         QjZpMuKzC4IDOn5qLX5Yqk3Y2AOgDbFElTj+NgCvC5XV9pcB1t/5jSjkX5v59hEj+n
-         8OdkAwIJ7zCIABWYTVrXi69cPWQXwpU0+nwwqcug=
+        b=ISxt7qKD+chTim6q8lak+9FudE/fv0BWUMlqjL2sa3ojHk787M+CRZvC6zE5DCvOT
+         m8NC2ukfc0G/fmYZcjVhypkLcxq3W3jWSD+X61Ei5wdkYSBUzm7BGJgMGDlUsZXQ3l
+         psWaApGKCysZLz8Pq43r0BKiQSBxBVwh1XbT5uyc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Maxime Ripard <mripard@kernel.org>,
+        stable@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 015/321] clk: sunxi-ng: a80: fix the zeroing of bits 16 and 18
-Date:   Tue,  3 Dec 2019 23:31:21 +0100
-Message-Id: <20191203223427.914558380@linuxfoundation.org>
+Subject: [PATCH 4.19 001/321] clk: meson: gxbb: let sar_adc_clk_div set the parent clock rate
+Date:   Tue,  3 Dec 2019 23:31:07 +0100
+Message-Id: <20191203223427.196896630@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,37 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit cdfc2e2086bf9c465f44e2db25561373b084a113 ]
+[ Upstream commit 44b09b11b813b8550e6b976ea51593bc23bba8d1 ]
 
-The zero'ing of bits 16 and 18 is incorrect. Currently the code
-is masking with the bitwise-and of BIT(16) & BIT(18) which is
-0, so the updated value for val is always zero. Fix this by bitwise
-and-ing value with the correct mask that will zero bits 16 and 18.
+The meson-saradc driver manually sets the input clock for
+sar_adc_clk_sel. Update the GXBB clock driver (which is used on GXBB,
+GXL and GXM) so the rate settings on sar_adc_clk_div are propagated up
+to sar_adc_clk_sel which will let the common clock framework select the
+best matching parent clock if we want that.
 
-Addresses-Coverity: (" Suspicious &= or |= constant expression")
-Fixes: b8eb71dcdd08 ("clk: sunxi-ng: Add A80 CCU")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
+This makes sar_adc_clk_div consistent with the axg-aoclk and g12a-aoclk
+drivers, which both also specify CLK_SET_RATE_PARENT.
+
+Fixes: 33d0fcdfe0e870 ("clk: gxbb: add the SAR ADC clocks and expose them")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun9i-a80.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/meson/gxbb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun9i-a80.c b/drivers/clk/sunxi-ng/ccu-sun9i-a80.c
-index 8936ef87652c0..c14bf782b2b33 100644
---- a/drivers/clk/sunxi-ng/ccu-sun9i-a80.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun9i-a80.c
-@@ -1231,7 +1231,7 @@ static int sun9i_a80_ccu_probe(struct platform_device *pdev)
+diff --git a/drivers/clk/meson/gxbb.c b/drivers/clk/meson/gxbb.c
+index 4d4f6d842c31c..d94b65061b9f1 100644
+--- a/drivers/clk/meson/gxbb.c
++++ b/drivers/clk/meson/gxbb.c
+@@ -836,6 +836,7 @@ static struct clk_regmap gxbb_sar_adc_clk_div = {
+ 		.ops = &clk_regmap_divider_ops,
+ 		.parent_names = (const char *[]){ "sar_adc_clk_sel" },
+ 		.num_parents = 1,
++		.flags = CLK_SET_RATE_PARENT,
+ 	},
+ };
  
- 	/* Enforce d1 = 0, d2 = 0 for Audio PLL */
- 	val = readl(reg + SUN9I_A80_PLL_AUDIO_REG);
--	val &= (BIT(16) & BIT(18));
-+	val &= ~(BIT(16) | BIT(18));
- 	writel(val, reg + SUN9I_A80_PLL_AUDIO_REG);
- 
- 	/* Enforce P = 1 for both CPU cluster PLLs */
 -- 
 2.20.1
 
