@@ -2,343 +2,135 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 448B0C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 18:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C57A3C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 18:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1D85206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 18:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90DCF2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 18:45:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gejj9Eql"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XNFVfbfC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727300AbfLCSgb (ORCPT
+        id S1727158AbfLCSpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 13:36:31 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:38891 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbfLCSga (ORCPT
+        Tue, 3 Dec 2019 13:45:34 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:38519 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfLCSpe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 13:36:30 -0500
-Received: by mail-qk1-f195.google.com with SMTP id b8so4466071qkk.5
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 10:36:29 -0800 (PST)
+        Tue, 3 Dec 2019 13:45:34 -0500
+Received: by mail-pj1-f68.google.com with SMTP id l4so1865650pjt.5
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 10:45:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=iIghzkTJDXhOtS2BqafSdKFWhwqyAcUqruKZBs39zss=;
-        b=gejj9Eql6fbFKy89IMDnfzf1/A/zmvL8yysZfMsRmFZ/d/ICp7UJHo0cJZpbOJgzW0
-         D+Ggp1f8jM6/SSY2Mt2qHFgD3uCn6WiOZNSYJgEkSVK8IvcAJxVE7b2Y1PA1mAmgchpN
-         XF3nha63iK4asZE3VgCInBY7jM2VtsH+Q4RRgqjG/6CzJuBdKVYIQSmjEVqi+3BvJIKs
-         l0uAqYrJFp1+iYvhRxG/MbhrQ6n77OwZz08TEvacFqeudF2yM9w/WsE27CGt1Z6xfdnr
-         kFHncAfOpClgkV/hgbRNxD3IeUSErvQIXVviirAgqMc96eHWBxRxrycqhTdMVaZMhhNS
-         Yizw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bG8Nt6cVodf34zynBURXT0B9txwe3S1q7fxCr2Als+4=;
+        b=XNFVfbfC7D0GHt+6f17UiXwk5O1VQiJ9OqACo8IuzMrbOpSouHNZB4OUQfjJ34Xjc7
+         ijHp49f03VSRiLfBb6wCJS6WGBk0M+hgYqwBskCc0JbS8dxIy+TnmyPfKu+aTUSflR9G
+         mHmeGQzJZZPgeOgdEIMR72fk0f199IwgQ9rlHrtEkKOVdnoiPC82tvtLNzTc7POPrOQ/
+         DA5TI2WvOiHU7ExYS7VixDjB/pZ2HnpjLFGnydGmakwQ/RbVUIEEcx10+D9Oq6DgUO6o
+         ySTQVf9t6dyl83TCX+3hhU4djYIBm58Pabp+js0rioH8HgwUy5ehHAskL7fHOT/wGHnJ
+         SeVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iIghzkTJDXhOtS2BqafSdKFWhwqyAcUqruKZBs39zss=;
-        b=BlAZ7vJdnmQ5dOR1vDmXwRpIffmal1EVZp48ALEjNv7q3SHKNJ3V1AUb2OgABvildq
-         2OzbijIyXORKZToB6UJ9nWevMm/OutngUf7iZ35iTgvrbEKz//kFJDnngTrqCkLihtJc
-         BjtoglT4u3uujmfWHAwhbGePEkX9ecW/CjlY7Nq3wx84DQJ12NXbAkAcbLW0kbjzEx2R
-         6aXsdKIdytGPuL7K1q9mVwM8NiyTxqnaPtPDG3YLxSPVgoTS/Tpcr+g/FXeJkxDhOCzV
-         ZcS03EhiJjWRRRp3byaXprZvAAH2zOTYUJ6yrx2OwfiiOhr13E4PTkxUGHjRjsLxxTgq
-         uQOw==
-X-Gm-Message-State: APjAAAUwY4JVafjpoEe8ibY0gqYMU7vqNkXQwgPQwsYax+wATC3w7/cj
-        8RGlcngqr6MrEFAGeOKED6g=
-X-Google-Smtp-Source: APXvYqySIQ7G7lJXvdtqqNbGIVDLqv36K8SLQ/7D7kv+rAQKEwgcC6I8+vLhWVAgl7JJKFnwun5nLQ==
-X-Received: by 2002:ae9:e30e:: with SMTP id v14mr6482602qkf.344.1575398189053;
-        Tue, 03 Dec 2019 10:36:29 -0800 (PST)
-Received: from quaco.ghostprotocols.net (187-26-220-133.3g.claro.net.br. [187.26.220.133])
-        by smtp.gmail.com with ESMTPSA id y200sm2210531qkb.1.2019.12.03.10.36.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 10:36:27 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CA858405B6; Tue,  3 Dec 2019 15:36:23 -0300 (-03)
-Date:   Tue, 3 Dec 2019 15:36:23 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 0/3] perf record: adapt NUMA awareness to machines
- with #CPUs > 1K
-Message-ID: <20191203183623.GA3290@kernel.org>
-References: <d1aead99-474a-46d3-36be-36dbb8e5581b@linux.intel.com>
- <20191203121745.GA14125@krava>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bG8Nt6cVodf34zynBURXT0B9txwe3S1q7fxCr2Als+4=;
+        b=C+2JVFP7uhJnGlWxXPvds3O0batpy2Gro5mzdEhWiww2TWkFidGlZjh/VE/FPNaA1I
+         By9S0EDd3xUMOAs0kSv/7AWD/NLoWwkGhllIqI5Jm7GOChH4H5LjtLcuEPHlQoRAx+l+
+         k8lwhYve0pFyrasS8PsajIOiMbgT/CiJwjCCyEvAHSNnXVXa96K/CCtAjXnWweL8br8J
+         VnKTUPyP9IhVUsuhBl7OMw03BE0QnjWuxpyWm2L9i5Nh1tZ3M1GmSH8wFHI/qn80accp
+         K4J+O7XyzCAPBLqNGJapi0qr4UeYkNc0S3kw0ArMWHgHL+hshM1zPKk/xudI8rdJdair
+         Dlog==
+X-Gm-Message-State: APjAAAVv+MD7CriwnM0kUH3jgSNrLsJCA9DxiEP514moBQK4DdCVr8A+
+        Vg4OW7oVGe9rlY7t24j7m/9yi1x3zJXHD5OaNN8BC6F5JMA=
+X-Google-Smtp-Source: APXvYqyJSYetniu+3O10Y+swpRRlYVv6h/vvB7BpZkKQn3U4GNGfYC5OL6WuMn+ci7f92JAk5XdjkjrWgC9nKuqHGD0=
+X-Received: by 2002:a17:902:8ec8:: with SMTP id x8mr6052422plo.119.1575398733219;
+ Tue, 03 Dec 2019 10:45:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191203121745.GA14125@krava>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191123195321.41305-1-natechancellor@gmail.com>
+ <157453950786.2524.16955749910067219709@skylake-alporthouse-com>
+ <CAKwvOdniXqn3xt3-W0Pqi-X1nWjJ2vUVofjCm1O-UPXZ7_4rXw@mail.gmail.com> <157538056769.7230.15356495786856166580@skylake-alporthouse-com>
+In-Reply-To: <157538056769.7230.15356495786856166580@skylake-alporthouse-com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 3 Dec 2019 10:45:22 -0800
+Message-ID: <CAKwvOd=ov789Lixdq8QE+MVXeYyh=W_sODSuj++4T8uF-hpVMw@mail.gmail.com>
+Subject: Re: [PATCH] drm/i915: Remove tautological compare in eb_relocate_vma
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        intel-gfx@lists.freedesktop.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Dec 03, 2019 at 01:17:45PM +0100, Jiri Olsa escreveu:
-> On Tue, Dec 03, 2019 at 02:41:29PM +0300, Alexey Budankov wrote:
-> > 
-> > Current implementation of cpu_set_t type by glibc has internal cpu
-> > mask size limitation of no more than 1024 CPUs. This limitation confines
-> > NUMA awareness of Perf tool in record mode, thru --affinity option,
-> > to the first 1024 CPUs on machines with larger amount of CPUs.
-> > 
-> > This patch set enables Perf tool to overcome 1024 CPUs limitation by
-> > using a dedicated struct mmap_cpu_mask type and applying tool's bitmap
-> > API operations to manipulate affinity masks of the tool's thread and
-> > the mmaped data buffers.
-> > 
-> > tools bitmap API has been extended with bitmap_free() function and
-> > bitmap_equal() operation whose implementation is derived from the
-> > kernel one.
-> > 
-> > ---
-> > Changes in v5:
-> > - avoided allocation of mmap affinity masks in case of 
-> >   rec->opts.affinity == PERF_AFFINITY_SYS
-> 
-> Acked-by: Jiri Olsa <jolsa@redhat.com>
+On Tue, Dec 3, 2019 at 5:42 AM Chris Wilson <chris@chris-wilson.co.uk> wrote:
+>
+> Quoting Nick Desaulniers (2019-12-02 19:18:20)
+> > On Sat, Nov 23, 2019 at 12:05 PM Chris Wilson <chris@chris-wilson.co.uk> wrote:
+> > >
+> > > Quoting Nathan Chancellor (2019-11-23 19:53:22)
+> > > > -Wtautological-compare was recently added to -Wall in LLVM, which
+> > > > exposed an if statement in i915 that is always false:
+> > > >
+> > > > ../drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c:1485:22: warning:
+> > > > result of comparison of constant 576460752303423487 with expression of
+> > > > type 'unsigned int' is always false
+> > > > [-Wtautological-constant-out-of-range-compare]
+> > > >         if (unlikely(remain > N_RELOC(ULONG_MAX)))
+> > > >             ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+> > > >
+> > > > Since remain is an unsigned int, it can never be larger than UINT_MAX,
+> > > > which is less than ULONG_MAX / sizeof(struct drm_i915_gem_relocation_entry).
+> > > > Remove this statement to fix the warning.
+> > >
+> > > The check should remain as we do want to document the overflow
+> > > calculation, and it should represent the types used -- it's much easier
+> >
+> > What do you mean "represent the types used?"  Are you concerned that
+> > the type of drm_i915_gem_exec_object2->relocation_count might change
+> > in the future?
+>
+> We may want to change the restriction, yes.
+>
+> > > to review a stub than trying to find a missing overflow check. If the
+> > > overflow cannot happen as the types are wide enough, no problem, the
+> > > compiler can remove the known false branch.
+> >
+> > What overflow are you trying to protect against here?
+>
+> These values are under user control, our validation steps should be
+> clear and easy to check. If we have the types wrong, if the checks are
+> wrong, we need to fix them. If the code is removed because it can be
+> evaluated by the compiler to be redundant, it is much harder for us to
+> verify that we have tried to validate user input.
+>
+> > > Tautology here has a purpose for conveying information to the reader.
+> >
+> > Well leaving a warning unaddressed is also not a solution.  Either
+> > replace it with a comment or turn off the warning for your subdir.
+>
+> My personal preference would be to use a bunch of central macros for the
+> various type/kmalloc overflows, and have the warnings suppressed there
+> since they are very much about documenting user input validation.
+> -Chris
 
-Applied to my local perf/core branch, going thru tests.
-
-- Arnaldo
- 
-> thanks,
-> jirka
-> 
-> > Changes in v4:
-> > - renamed perf_mmap__print_cpu_mask() to mmap_cpu_mask__scnprintf()
-> > - avoided checking mask bits for NULL prior calling bitmask_free()
-> > - avoided thread affinity mask allocation for case of 
-> >   rec->opts.affinity == PERF_AFFINITY_SYS
-> > Changes in v3:
-> > - implemented perf_mmap__print_cpu_mask() function
-> > - use perf_mmap__print_cpu_mask() to log thread and mmap cpus masks
-> >   when verbose level is equal to 2
-> > Changes in v2:
-> > - implemented bitmap_free() for symmetry with bitmap_alloc()
-> > - capitalized MMAP_CPU_MASK_BYTES() macro
-> > - returned -1 from perf_mmap__setup_affinity_mask()
-> > - implemented releasing of masks using bitmap_free()
-> > - moved debug printing under -vv option
-> > 
-> > ---
-> > Alexey Budankov (3):
-> >   tools bitmap: implement bitmap_equal() operation at bitmap API
-> >   perf mmap: declare type for cpu mask of arbitrary length
-> >   perf record: adapt affinity to machines with #CPUs > 1K
-> > 
-> >  tools/include/linux/bitmap.h | 30 +++++++++++++++++++++++++++
-> >  tools/lib/bitmap.c           | 15 ++++++++++++++
-> >  tools/perf/builtin-record.c  | 28 +++++++++++++++++++------
-> >  tools/perf/util/mmap.c       | 40 ++++++++++++++++++++++++++++++------
-> >  tools/perf/util/mmap.h       | 13 +++++++++++-
-> >  5 files changed, 113 insertions(+), 13 deletions(-)
-> > 
-> > ---
-> > Validation:
-> > 
-> > # tools/perf/perf record -vv -- ls
-> > Using CPUID GenuineIntel-6-5E-3
-> > intel_pt default config: tsc,mtc,mtc_period=3,psb_period=3,pt,branch
-> > nr_cblocks: 0
-> > affinity: SYS
-> > mmap flush: 1
-> > comp level: 0
-> > ------------------------------------------------------------
-> > perf_event_attr:
-> >   size                             120
-> >   { sample_period, sample_freq }   4000
-> >   sample_type                      IP|TID|TIME|PERIOD
-> >   read_format                      ID
-> >   disabled                         1
-> >   inherit                          1
-> >   mmap                             1
-> >   comm                             1
-> >   freq                             1
-> >   enable_on_exec                   1
-> >   task                             1
-> >   precise_ip                       3
-> >   sample_id_all                    1
-> >   exclude_guest                    1
-> >   mmap2                            1
-> >   comm_exec                        1
-> >   ksymbol                          1
-> >   bpf_event                        1
-> > ------------------------------------------------------------
-> > sys_perf_event_open: pid 23718  cpu 0  group_fd -1  flags 0x8 = 4
-> > sys_perf_event_open: pid 23718  cpu 1  group_fd -1  flags 0x8 = 5
-> > sys_perf_event_open: pid 23718  cpu 2  group_fd -1  flags 0x8 = 6
-> > sys_perf_event_open: pid 23718  cpu 3  group_fd -1  flags 0x8 = 9
-> > sys_perf_event_open: pid 23718  cpu 4  group_fd -1  flags 0x8 = 10
-> > sys_perf_event_open: pid 23718  cpu 5  group_fd -1  flags 0x8 = 11
-> > sys_perf_event_open: pid 23718  cpu 6  group_fd -1  flags 0x8 = 12
-> > sys_perf_event_open: pid 23718  cpu 7  group_fd -1  flags 0x8 = 13
-> > mmap size 528384B
-> > 0x7f3e06e060b8: mmap mask[8]: 
-> > 0x7f3e06e16180: mmap mask[8]: 
-> > 0x7f3e06e26248: mmap mask[8]: 
-> > 0x7f3e06e36310: mmap mask[8]: 
-> > 0x7f3e06e463d8: mmap mask[8]: 
-> > 0x7f3e06e564a0: mmap mask[8]: 
-> > 0x7f3e06e66568: mmap mask[8]: 
-> > 0x7f3e06e76630: mmap mask[8]: 
-> > ------------------------------------------------------------
-> > perf_event_attr:
-> >   type                             1
-> >   size                             120
-> >   config                           0x9
-> >   watermark                        1
-> >   sample_id_all                    1
-> >   bpf_event                        1
-> >   { wakeup_events, wakeup_watermark } 1
-> > ------------------------------------------------------------
-> > sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 14
-> > sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 15
-> > sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 16
-> > sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 17
-> > sys_perf_event_open: pid -1  cpu 4  group_fd -1  flags 0x8 = 18
-> > sys_perf_event_open: pid -1  cpu 5  group_fd -1  flags 0x8 = 19
-> > sys_perf_event_open: pid -1  cpu 6  group_fd -1  flags 0x8 = 20
-> > sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 21
-> > mmap size 528384B
-> > 0x7f3e0697d0b8: mmap mask[8]: 
-> > 0x7f3e0698d180: mmap mask[8]: 
-> > 0x7f3e0699d248: mmap mask[8]: 
-> > 0x7f3e069ad310: mmap mask[8]: 
-> > 0x7f3e069bd3d8: mmap mask[8]: 
-> > 0x7f3e069cd4a0: mmap mask[8]: 
-> > 0x7f3e069dd568: mmap mask[8]: 
-> > 0x7f3e069ed630: mmap mask[8]: 
-> > Synthesizing TSC conversion information
-> > arch			      copy     Documentation  init     kernel	 MAINTAINERS	  modules.builtin.modinfo  perf.data	  scripts   System.map	vmlinux
-> > block			      COPYING  drivers	      ipc      lbuild	 Makefile	  modules.order		   perf.data.old  security  tools	vmlinux.o
-> > certs			      CREDITS  fs	      Kbuild   lib	 mm		  Module.symvers	   README	  sound     usr
-> > config-5.2.7-100.fc29.x86_64  crypto   include	      Kconfig  LICENSES  modules.builtin  net			   samples	  stdio     virt
-> > [ perf record: Woken up 1 times to write data ]
-> > Looking at the vmlinux_path (8 entries long)
-> > Using vmlinux for symbols
-> > [ perf record: Captured and wrote 0.013 MB perf.data (8 samples) ]
-> > 
-> > tools/perf/perf record -vv --affinity=cpu -- ls
-> > thread mask[8]: empty
-> > Using CPUID GenuineIntel-6-5E-3
-> > intel_pt default config: tsc,mtc,mtc_period=3,psb_period=3,pt,branch
-> > nr_cblocks: 0
-> > affinity: CPU
-> > mmap flush: 1
-> > comp level: 0
-> > ------------------------------------------------------------
-> > perf_event_attr:
-> >   size                             120
-> >   { sample_period, sample_freq }   4000
-> >   sample_type                      IP|TID|TIME|PERIOD
-> >   read_format                      ID
-> >   disabled                         1
-> >   inherit                          1
-> >   mmap                             1
-> >   comm                             1
-> >   freq                             1
-> >   enable_on_exec                   1
-> >   task                             1
-> >   precise_ip                       3
-> >   sample_id_all                    1
-> >   exclude_guest                    1
-> >   mmap2                            1
-> >   comm_exec                        1
-> >   ksymbol                          1
-> >   bpf_event                        1
-> > ------------------------------------------------------------
-> > sys_perf_event_open: pid 23713  cpu 0  group_fd -1  flags 0x8 = 4
-> > sys_perf_event_open: pid 23713  cpu 1  group_fd -1  flags 0x8 = 5
-> > sys_perf_event_open: pid 23713  cpu 2  group_fd -1  flags 0x8 = 6
-> > sys_perf_event_open: pid 23713  cpu 3  group_fd -1  flags 0x8 = 9
-> > sys_perf_event_open: pid 23713  cpu 4  group_fd -1  flags 0x8 = 10
-> > sys_perf_event_open: pid 23713  cpu 5  group_fd -1  flags 0x8 = 11
-> > sys_perf_event_open: pid 23713  cpu 6  group_fd -1  flags 0x8 = 12
-> > sys_perf_event_open: pid 23713  cpu 7  group_fd -1  flags 0x8 = 13
-> > mmap size 528384B
-> > 0x7f3e005bc0b8: mmap mask[8]: 0
-> > 0x7f3e005cc180: mmap mask[8]: 1
-> > 0x7f3e005dc248: mmap mask[8]: 2
-> > 0x7f3e005ec310: mmap mask[8]: 3
-> > 0x7f3e005fc3d8: mmap mask[8]: 4
-> > 0x7f3e0060c4a0: mmap mask[8]: 5
-> > 0x7f3e0061c568: mmap mask[8]: 6
-> > 0x7f3e0062c630: mmap mask[8]: 7
-> > ------------------------------------------------------------
-> > perf_event_attr:
-> >   type                             1
-> >   size                             120
-> >   config                           0x9
-> >   watermark                        1
-> >   sample_id_all                    1
-> >   bpf_event                        1
-> >   { wakeup_events, wakeup_watermark } 1
-> > ------------------------------------------------------------
-> > sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 14
-> > sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 15
-> > sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 16
-> > sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 17
-> > sys_perf_event_open: pid -1  cpu 4  group_fd -1  flags 0x8 = 18
-> > sys_perf_event_open: pid -1  cpu 5  group_fd -1  flags 0x8 = 19
-> > sys_perf_event_open: pid -1  cpu 6  group_fd -1  flags 0x8 = 20
-> > sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 21
-> > mmap size 528384B
-> > 0x7f3e001330b8: mmap mask[8]: 
-> > 0x7f3e00143180: mmap mask[8]: 
-> > 0x7f3e00153248: mmap mask[8]: 
-> > 0x7f3e00163310: mmap mask[8]: 
-> > 0x7f3e001733d8: mmap mask[8]: 
-> > 0x7f3e001834a0: mmap mask[8]: 
-> > 0x7f3e00193568: mmap mask[8]: 
-> > 0x7f3e001a3630: mmap mask[8]: 
-> > Synthesizing TSC conversion information
-> > 0x9c9ff0: thread mask[8]: 0
-> > 0x9c9ff0: thread mask[8]: 1
-> > 0x9c9ff0: thread mask[8]: 2
-> > 0x9c9ff0: thread mask[8]: 3
-> > 0x9c9ff0: thread mask[8]: 4
-> > arch			      copy     Documentation  init     kernel	 MAINTAINERS	  modules.builtin.modinfo  perf.data	  scripts   System.map	vmlinux
-> > block			      COPYING  drivers	      ipc      lbuild	 Makefile	  modules.order		   perf.data.old  security  tools	vmlinux.o
-> > certs			      CREDITS  fs	      Kbuild   lib	 mm		  Module.symvers	   README	  sound     usr
-> > config-5.2.7-100.fc29.x86_64  crypto   include	      Kconfig  LICENSES  modules.builtin  net			   samples	  stdio     virt
-> > 0x9c9ff0: thread mask[8]: 5
-> > 0x9c9ff0: thread mask[8]: 6
-> > 0x9c9ff0: thread mask[8]: 7
-> > 0x9c9ff0: thread mask[8]: 0
-> > 0x9c9ff0: thread mask[8]: 1
-> > 0x9c9ff0: thread mask[8]: 2
-> > 0x9c9ff0: thread mask[8]: 3
-> > 0x9c9ff0: thread mask[8]: 4
-> > 0x9c9ff0: thread mask[8]: 5
-> > 0x9c9ff0: thread mask[8]: 6
-> > 0x9c9ff0: thread mask[8]: 7
-> > [ perf record: Woken up 0 times to write data ]
-> > 0x9c9ff0: thread mask[8]: 0
-> > 0x9c9ff0: thread mask[8]: 1
-> > 0x9c9ff0: thread mask[8]: 2
-> > 0x9c9ff0: thread mask[8]: 3
-> > 0x9c9ff0: thread mask[8]: 4
-> > 0x9c9ff0: thread mask[8]: 5
-> > 0x9c9ff0: thread mask[8]: 6
-> > 0x9c9ff0: thread mask[8]: 7
-> > Looking at the vmlinux_path (8 entries long)
-> > Using vmlinux for symbols
-> > ...
-> > [ perf record: Captured and wrote 0.013 MB perf.data (10 samples) ]
-> > 
+Is kmalloc_array what you're looking for?  Looks like it has the
+`check_mul_overflow` call in it.
 
 -- 
-
-- Arnaldo
+Thanks,
+~Nick Desaulniers
