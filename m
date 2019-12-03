@@ -2,127 +2,289 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98821C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 446D5C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74585206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:01:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07252206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:01:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FVwj4XgB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbfLCKBH (ORCPT
+        id S1726480AbfLCKBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 05:01:07 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40556 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfLCKBH (ORCPT
+        Tue, 3 Dec 2019 05:01:25 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33332 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbfLCKBY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 05:01:07 -0500
-Received: by mail-ot1-f68.google.com with SMTP id i15so2368290oto.7
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 02:01:06 -0800 (PST)
+        Tue, 3 Dec 2019 05:01:24 -0500
+Received: by mail-wr1-f65.google.com with SMTP id b6so2934802wrq.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 02:01:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jQIevCoSayO5mABJEaJom6eHlTPvcl/9fnieGQtn3ao=;
+        b=FVwj4XgBPgXjS+8lWeZ8IRD3X0Cnoq1oMwViav7k+6tVhGA0BFilOooN1JT9Hwf+tI
+         bc5YQzA6GO/xzlbErE4KtAvlEbUmDGuVZ8FHFVtnc5hUE8T0SEbKHq05ONbxn2Z1yQ/C
+         BauxyD/BBJC6M2T9RUCU/R83tzw/P2JvHqnlYKW26o3FHKL3a8N5B3fO4m/nxp/l7j+Y
+         VSvKYOVyVfQ+nQBgZTwkHMRpeiPmNyItVgQqqmymWSQj/drBackVonNhtzlxVCYFcVs1
+         jMBShp/2IM6cAlzissz1rqOKlXztg+PJZuTPq6g7pbO0c3+Py7HVbLWN+pboum4P1xhI
+         JU+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0wiAub3vzlftP2graQzrpLrtRhdsOZaHnDMFjil2lmw=;
-        b=Bt2TwjVMNJ19KGD/Go0rNU4KwDtE1xhrGXjej2+VSE6JSO35EOXJnhhTfDRbUn6QdQ
-         yQLJRNxOfcUPX4eVA4bXyrvbmPQm9wRqApWt1c69sAKObkcSEQI7E7JAZzU4qY3hGrdH
-         gD7CMNQTZJywxgnwYMts7rLv3Rsd8L8DuG2xZZME1tVVxy/n8tjDR7IwCXikf0K6p4Mh
-         k0eRbRXG9AdKcABLF9gNKt3rRPiBWj07Fj+bapsvW1HUayfaGGZ0r8VliUGxP0zZCyQh
-         +ZvhFMwskWZIbUZN/CWruvtCd4z061uGX3roCRtLnEcsbWNfL9x4wkC8BlKpnP17xLGr
-         fa+g==
-X-Gm-Message-State: APjAAAUrvy8GxXusbExbs1P9n70WeTzUS3sU3U3M0wQ+iN4FK9SWfJLu
-        axlxCweaAysGmvHwXyXwTBcXxg0nkbak+eS82yc=
-X-Google-Smtp-Source: APXvYqzTkVEN+mWRsQthMuxVu6alFZya5fNOxqC07BvWRSXuqRqfLaXbokC+m6d0aUQK0kmbbnfSOQi8ZGDzyA607q0=
-X-Received: by 2002:a9d:5d10:: with SMTP id b16mr2534384oti.250.1575367265909;
- Tue, 03 Dec 2019 02:01:05 -0800 (PST)
+        bh=jQIevCoSayO5mABJEaJom6eHlTPvcl/9fnieGQtn3ao=;
+        b=VLq6re4/m6pmWLIlPdExaXNm+HwigCrrFr06E+L0xu1B4pAF+I9E9cktWekgJMRpt3
+         VNqGNWkYXSrpc3ashLWTvaWz/zNJtPK+MlSuwRN8wUu9wP2t6zLfJ9CUSbJv1IUzO59p
+         ebGf/Umw3ZfOJPCrQOHjD574hakzTdicyWnMD02Jnuws9UC/JmJORuDakQyGSnrpCIJt
+         2nca9CRCq+e3gA4uVLnkj8X+k69ZeAjlXDsW45Rot6vTJq51RX326qrQxaSZV21uvxEG
+         5nFPe1X6a0bMqLFOBtVxyUBZZhv4fK0clSyUiI7QnCRnJamYO+s4Skyss3eb8hXO2Fjz
+         0pZw==
+X-Gm-Message-State: APjAAAU1WkOGxUJ77d8MAFuwqf423n+TsOec3YVBGOYpQMtZ3nIOPeOq
+        55LCk4r5DXhzuU6z+q/OXBh77EFx013LFgeDD/UjAw==
+X-Google-Smtp-Source: APXvYqztx+xg3DCcamivIfbN85FsZEDQM+QMzRwaR2gQicJ96Nvu8D8lbpbksgNCSevYXeac7l7bb4rkY8HbjocJ31E=
+X-Received: by 2002:adf:cf0a:: with SMTP id o10mr2219319wrj.325.1575367280740;
+ Tue, 03 Dec 2019 02:01:20 -0800 (PST)
 MIME-Version: 1.0
-References: <20191202211844.19629-1-enric.balletbo@collabora.com>
- <20191202211844.19629-2-enric.balletbo@collabora.com> <CAJKOXPdJSLoEX7+34imGuZ6CEE5unajL=byb+h9VT3Bejc353Q@mail.gmail.com>
- <3355589d-0b0d-f30f-624c-0f781ee9cd8d@collabora.com> <CAJKOXPcrTp7baiPMYaaf_44w+b8GUBWs=X3YTgNZtxJVx0zbgw@mail.gmail.com>
-In-Reply-To: <CAJKOXPcrTp7baiPMYaaf_44w+b8GUBWs=X3YTgNZtxJVx0zbgw@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 3 Dec 2019 11:00:54 +0100
-Message-ID: <CAMuHMdXdWASPa3yr04N5w9jTt3=jC_H20yVpcG1J1_Sx0PRtgA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] x86_64_defconfig: Normalize x86_64 defconfig
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Dmitry Torokhov <dtor@chromium.org>,
-        fabien.lahoudere@collabora.com,
-        Guillaume Tucker <guillaume.tucker@collabora.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+References: <20191122180552.GA32104@weiser.dinsnail.net> <87blt3y949.fsf@x220.int.ebiederm.org>
+ <20191122210702.GE32104@weiser.dinsnail.net> <20191125055201.GA6569@dhcp-128-65.nay.redhat.com>
+ <20191129152700.GA8286@weiser.dinsnail.net> <20191202085829.GA15808@dhcp-128-65.nay.redhat.com>
+ <20191202090520.GA15874@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20191202090520.GA15874@dhcp-128-65.nay.redhat.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 3 Dec 2019 10:01:16 +0000
+Message-ID: <CAKv+Gu-eizr4+LZiM_EtusTjfwdM2Gho8Eq2o-sdo1vwD7GBKw@mail.gmail.com>
+Subject: Re: kexec_file overwrites reserved EFI ESRT memory
+To:     Dave Young <dyoung@redhat.com>, James Morse <james.morse@arm.com>
+Cc:     Michael Weiser <michael@weiser.dinsnail.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Kexec Mailing List <kexec@lists.infradead.org>,
         "the arch/x86 maintainers" <x86@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Alexey Brodkin <alexey.brodkin@synopsys.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
-
-On Tue, Dec 3, 2019 at 10:26 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On Tue, 3 Dec 2019 at 17:05, Enric Balletbo i Serra
-> <enric.balletbo@collabora.com> wrote:
-> > On 3/12/19 3:15, Krzysztof Kozlowski wrote:
-> > > On Tue, 3 Dec 2019 at 05:18, Enric Balletbo i Serra
-> > > <enric.balletbo@collabora.com> wrote:
-> > >>
-> > >> make savedefconfig result in some difference, lets normalize the
-> > >> defconfig
-> > >>
-> > >
-> > > No, for two reasons:
-> > > 1. If running savedefconfig at all, split reordering items from
-> > > removal of non needed options. This way we can see exactly what is
-> > > being removed. This patch moves things around so it is not possible to
-> > > understand what exactly you're doing here...
-> >
-> > Ok, makes sense, I can do it, but if you don't really care of having the
-> > defconfig sync with the savedefconfig output for the below reasons or others,
-> > that's fine with me.
-> >
-> > The reason I send the patch is because I think that, at least on some arm
-> > defconfigs, they try to have the defconfig sync with the savedefconfig output,
-> > the idea is to try to make patching the file easier, but I know this is usually
-> > a pain.
+On Mon, 2 Dec 2019 at 09:05, Dave Young <dyoung@redhat.com> wrote:
 >
-> Till I saw DEBUG_FS removal and Steven's answer, I was all in in such
-> patches from time to time. However now I think it's risky and instead
-> manual cleanup of non-visible symbols is better.
+> Add more cc
+> On 12/02/19 at 04:58pm, Dave Young wrote:
+> > On 11/29/19 at 04:27pm, Michael Weiser wrote:
+> > > Hello Dave,
+> > >
+> > > On Mon, Nov 25, 2019 at 01:52:01PM +0800, Dave Young wrote:
+> > >
+> > > > > > Fundamentally when deciding where to place a new kernel kexec (either
+> > > > > > user space or the in kernel kexec_file implementation) needs to be able
+> > > > > > to ask the question which memory ares are reserved.
+> > > [...]
+> > > > > > So my question is why doesn't the ESRT reservation wind up in
+> > > > > > /proc/iomem?
+> > > > >
+> > > > > My guess is that the focus was that some EFI structures need to be kept
+> > > > > around accross the life cycle of *one* running kernel and
+> > > > > memblock_reserve() was enough for that. Marking them so they survive
+> > > > > kexecing another kernel might just never have cropped up thus far. Ard
+> > > > > or Matt would know.
+> > > > Can you check your un-reserved memory, if your memory falls into EFI
+> > > > BOOT* then in X86 you can use something like below if it is not covered:
+> > >
+> > > > void __init efi_esrt_init(void)
+> > > > {
+> > > > ...
+> > > >   pr_info("Reserving ESRT space from %pa to %pa.\n", &esrt_data, &end);
+> > > >   if (md.type == EFI_BOOT_SERVICES_DATA)
+> > > >           efi_mem_reserve(esrt_data, esrt_data_size);
+> > > > ...
+> > > > }
+> > >
+> > > Please bear with me if I'm a bit slow on the uptake here: On my machine,
+> > > the esrt module reports at boot:
+> > >
+> > > [    0.001244] esrt: Reserving ESRT space from 0x0000000074dd2f98 to 0x0000000074dd2fd0.
+> > >
+> > > This area is of type "Boot Data" (== BOOT_SERVICES_DATA) which makes the
+> > > code you quote reserve it using memblock_reserve() shown by
+> > > memblock=debug:
+> > >
+> > > [    0.001246] memblock_reserve: [0x0000000074dd2f98-0x0000000074dd2fcf] efi_mem_reserve+0x1d/0x2b
+> > >
+> > > It also calls into arch/x86/platform/efi/quirks.c:efi_arch_mem_reserve()
+> > > which tags it as EFI_MEMORY_RUNTIME while the surrounding ones aren't
+> > > as shown by efi=debug:
+> > >
+> > > [    0.178111] efi: mem10: [Boot Data          |   |  |  |  |  |  |  |  |   |WB|WT|WC|UC] range=[0x0000000074dd3000-0x0000000075becfff] (14MB)
+> > > [    0.178113] efi: mem11: [Boot Data          |RUN|  |  |  |  |  |  |  |   |WB|WT|WC|UC] range=[0x0000000074dd2000-0x0000000074dd2fff] (0MB)
+> > > [    0.178114] efi: mem12: [Boot Data          |   |  |  |  |  |  |  |  |   |WB|WT|WC|UC] range=[0x000000006d635000-0x0000000074dd1fff] (119MB)
+> > >
+> > > This prevents arch/x86/platform/efi/quirks.c:efi_free_boot_services()
+> > > from calling __memblock_free_late() on it. And indeed, memblock=debug does
+> > > not report this area as being free'd while the surrounding ones are:
+> > >
+> > > [    0.178369] __memblock_free_late: [0x0000000074dd3000-0x0000000075becfff] efi_free_boot_services+0x126/0x1f8
+> > > [    0.178658] __memblock_free_late: [0x000000006d635000-0x0000000074dd1fff] efi_free_boot_services+0x126/0x1f8
+> > >
+> > > The esrt area does not show up in /proc/iomem though:
+> > >
+> > > 00100000-763f5fff : System RAM
+> > >   62000000-62a00d80 : Kernel code
+> > >   62c00000-62f15fff : Kernel rodata
+> > >   63000000-630ea8bf : Kernel data
+> > >   63fed000-641fffff : Kernel bss
+> > >   65000000-6affffff : Crash kernel
+> > >
+> > > And thus kexec loads the new kernel right over that area as shown when
+> > > enabling -DDEBUG on kexec_file.c (0x74dd3000 being inbetween 0x73000000
+> > > and 0x73000000+0x24be000 = 0x754be000):
+> > >
+> > > [  650.007695] kexec_file: Loading segment 0: buf=0x000000003a9c84d6 bufsz=0x5000 mem=0x98000 memsz=0x6000
+> > > [  650.007699] kexec_file: Loading segment 1: buf=0x0000000017b2b9e6 bufsz=0x1240 mem=0x96000 memsz=0x2000
+> > > [  650.007703] kexec_file: Loading segment 2: buf=0x00000000fdf72ba2 bufsz=0x1150888 mem=0x73000000 memsz=0x24be000
+> > >
+> > > ... because it looks for any memory hole large enough in iomem resources
+> > > tagged as System RAM, which 0x74dd2000-0x74dd2fff would then need to be
+> > > excluded from on my system.
+> > >
+> > > Looking some more at efi_arch_mem_reserve() I see that it also registers
+> > > the area with efi.memmap and installs it using efi_memmap_install().
+> > > which seems to call memremap(MEMREMAP_WB) on it. From my understanding
+> > > of the comments in the source of memremap(), MEMREMAP_WB does specifically
+> > > *not* reserve that memory in any way.
+> > >
+> > > > Unfortunately I noticed there are different requirements/ways for
+> > > > different types of "reserved" memory.  But that is another topic..
+> > >
+> > > I tried to reserve the area with something like this:
+> > >
+> > > t a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+> > > index 4de244683a7e..b86a5df027a2 100644
+> > > --- a/arch/x86/platform/efi/quirks.c
+> > > +++ b/arch/x86/platform/efi/quirks.c
+> > > @@ -249,6 +249,7 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+> > >         efi_memory_desc_t md;
+> > >         int num_entries;
+> > >         void *new;
+> > > +       struct resource *res;
+> > >
+> > >         if (efi_mem_desc_lookup(addr, &md) ||
+> > >             md.type != EFI_BOOT_SERVICES_DATA) {
+> > > @@ -294,6 +295,21 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+> > >         early_memunmap(new, new_size);
+> > >
+> > >         efi_memmap_install(new_phys, num_entries);
+> > > +
+> > > +       res = memblock_alloc(sizeof(*res), SMP_CACHE_BYTES);
+> > > +       if (!res) {
+> > > +               pr_err("Failed to allocate EFI io resource allocator for "
+> > > +                               "0x%llx:0x%llx", mr.range.start, mr.range.end);
+> > > +               return;
+> > > +       }
+> > > +
+> > > +       res->start      = mr.range.start;
+> > > +       res->end        = mr.range.end;
+> > > +       res->name       = "EFI runtime";
+> > > +       res->flags      = IORESOURCE_MEM | IORESOURCE_BUSY;
+> > > +       res->desc       = IORES_DESC_NONE;
+> > > +
+> > > +       insert_resource(&iomem_resource, res);
+> > >  }
+> > >
+> > >  /*
+> > >
+> > > ... but failed miserably in terms of the kernel not booting because I
+> > > have no experience whatsoever in programming and debugging early kernel
+> > > init. But I am somewhat keen to ride the learning curve here. :)
+> > >
+> > > Am I on the right track or were you a couple of leaps ahead of me
+> > > already and I just didn't get the question?
+> >
+> > It seems a serious problem, the EFI modified memmap does not get an
+> > /proc/iomem resource update, but kexec_file relies on /proc/iomem in
+> > X86.
+> >
+> > Can you try below diff see if it works for you? (not tested, and need
+> > explicitly 'add_efi_memmap' in kernel cmdline param)
+> >
+> > There is an question from Sai about why add_efi_memmap is not enabled by
+> > default:
+> > https://www.spinics.net/lists/linux-mm/msg185166.html
+> >
+> > Long time ago the add_efi_memmap is only enabled in case we explict
+> > enable it on cmdline, I'm not sure if we can do it by default, maybe we
+> > should.   Need opinion from X86 maintainers..
+> >
+> > diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
+> > index 43a82e59c59d..eddaac6131cf 100644
+> > --- a/arch/x86/include/asm/efi.h
+> > +++ b/arch/x86/include/asm/efi.h
+> > @@ -243,6 +243,7 @@ static inline bool efi_is_64bit(void)
+> >
+> >  extern bool efi_reboot_required(void);
+> >  extern bool efi_is_table_address(unsigned long phys_addr);
+> > +extern void do_add_efi_memmap(void);
+> >
+> >  #else
+> >  static inline void parse_efi_setup(u64 phys_addr, u32 data_len) {}
+> > diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+> > index 425e025341db..39e28ec76522 100644
+> > --- a/arch/x86/platform/efi/efi.c
+> > +++ b/arch/x86/platform/efi/efi.c
+> > @@ -149,10 +149,12 @@ void __init efi_find_mirror(void)
+> >   * (zeropage) memory map.
+> >   */
+> >
+> > -static void __init do_add_efi_memmap(void)
+> > +void __init do_add_efi_memmap(void)
+> >  {
+> >       efi_memory_desc_t *md;
+> >
+> > +     if (!add_efi_memmap)
+> > +             return;
+> >       for_each_efi_memory_desc(md) {
+> >               unsigned long long start = md->phys_addr;
+> >               unsigned long long size = md->num_pages << EFI_PAGE_SHIFT;
+> > @@ -224,8 +226,7 @@ int __init efi_memblock_x86_reserve_range(void)
+> >       if (rv)
+> >               return rv;
+> >
+> > -     if (add_efi_memmap)
+> > -             do_add_efi_memmap();
+> > +     do_add_efi_memmap();
+> >
+> >       WARN(efi.memmap.desc_version != 1,
+> >            "Unexpected EFI_MEMORY_DESCRIPTOR version %ld",
+> > diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+> > index 3b9fd679cea9..cfda591e51e3 100644
+> > --- a/arch/x86/platform/efi/quirks.c
+> > +++ b/arch/x86/platform/efi/quirks.c
+> > @@ -496,6 +496,7 @@ void __init efi_free_boot_services(void)
+> >               pr_err("Could not install new EFI memmap\n");
+> >               return;
+> >       }
+> > +     do_add_efi_memmap();
+> >  }
+> >
+> >  /*
+>
 
-IMHO, it's the maintainer's responsibility to refresh the defconfig(s)
-regularly, from known good config(s).
+We are seeing related issues on ARM where memory referenced by UEFI
+configuration tables is clobbered by the kexec tools.
 
-I.e. you start from a known good .config, run "make oldconfig", verify
-the changes by comparing the .config before/after, and run "make
-savedefconfig" afterwards.
-
-You do not run blindly "make <my>_defconfig && make savedefconfig", as
-that means you'll miss out on new options you may want, and will loose
-old options that are no longer selected by other options.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Given that these tables may be located in EFI boot services data
+regions, which the kernel itself knows not to touch during early boot,
+I think the solution here is to teach the kexec userland tools to
+avoid such regions when placing the kernel, initrd and other bits
+(such as the DT on ARM) in memory.
