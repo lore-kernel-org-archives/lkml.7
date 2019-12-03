@@ -2,114 +2,108 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40AB8C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C056C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F1C4205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:36:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E333205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:36:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="boobbRiK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbfLCOgj (ORCPT
+        id S1726718AbfLCOgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 09:36:39 -0500
-Received: from mx2.suse.de ([195.135.220.15]:34784 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725957AbfLCOgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 09:36:38 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C21A3B365;
-        Tue,  3 Dec 2019 14:36:36 +0000 (UTC)
-Date:   Tue, 3 Dec 2019 15:36:35 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        kexec@lists.infradead.org
-Subject: Re: [RFC PATCH v5 1/3] printk-rb: new printk ringbuffer
- implementation (writer)
-Message-ID: <20191203143635.cc6hh6bscr6kw4zw@pathway.suse.cz>
-References: <20191128015235.12940-1-john.ogness@linutronix.de>
- <20191128015235.12940-2-john.ogness@linutronix.de>
- <20191202154841.qikvuvqt4btudxzg@pathway.suse.cz>
- <87fti1bipb.fsf@linutronix.de>
+        Tue, 3 Dec 2019 09:36:51 -0500
+Received: from mail-lf1-f41.google.com ([209.85.167.41]:36878 "EHLO
+        mail-lf1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725957AbfLCOgu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 09:36:50 -0500
+Received: by mail-lf1-f41.google.com with SMTP id b15so3166682lfc.4;
+        Tue, 03 Dec 2019 06:36:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=MWlNOpLYUXyynuUbBoIlviu99rJXrCd1w27Szcg8nxQ=;
+        b=boobbRiKrIPjTW6itg9nafPgOCtMvWmGC+ptOoIn5x21f/zUx5kM10rE0nzo4pSTyr
+         op0gr1Irwb5qdB0agrw0bFdeZGASEocLnYXJF72RlBDdjxMKu706I6gXAFiscKk3/bWx
+         KYM05YFPnzhzQ0uG1n/NEOW8XX5gn987+4RQqOlw/fQvtehhzWRRsqZzeyr7/5iFaOtA
+         JKk6/1fXdf9O0PT6UXfkYmrglOdQLtSbfU2f1+UDQCE3lDTSIyDQfUfkAB5nhpNXouAW
+         VTuqE7uRpjx2Hi0zA+r4S2sDwaC7FCWOB8WVODyAic0sGkujN1IuRLS6v5O2zeFYl7kE
+         F/RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=MWlNOpLYUXyynuUbBoIlviu99rJXrCd1w27Szcg8nxQ=;
+        b=AKV8tinKCZo3t2OhpRAaGf2G8lSWsWx34KHGvNq2FYVZWEqhnrST90lpNSw8+zdgM2
+         w5PBnmIvzltT6yYzhSyG41tgrOU9pv7NbkuMikKlOEWY9yAP4A6uFy6e5qxFM/MEgobb
+         d+B7bX+k5ZqthYkBMN/YpfLGcrfVnAvGtLj+9iTJwJ7EQza5H2c8PCKWEWGTka6Xv6JH
+         bszKOnEcbhLUDZaL+OOnI4WASPLSU4FRYQrCXX1nBd5wlJ1joKw9mRBswEpXWKJA6sAk
+         ynKcAprE4stikqZWBVHb4913+UOStB8CUIx4Cl44r8CKNbTNmVumAdyuKzzI/1XXLMz0
+         QeYg==
+X-Gm-Message-State: APjAAAUzAbiEtVKEb82owQblnl54nXw03a2FRIFuRfT9Qtjz851ZY6WJ
+        YgcX9Ke1zschY4pt+tsfBp8j0Uk9Ftk=
+X-Google-Smtp-Source: APXvYqxz+iqVJ1nXYsxcFQM+E9DEQaIYjcDD18Lb+xCZkg87RKMsYuZ0gozZM4Pc+YR3dILDlKilrA==
+X-Received: by 2002:ac2:428d:: with SMTP id m13mr2986962lfh.64.1575383808313;
+        Tue, 03 Dec 2019 06:36:48 -0800 (PST)
+Received: from [192.168.1.10] ([95.174.107.249])
+        by smtp.gmail.com with ESMTPSA id l28sm1454032lfk.21.2019.12.03.06.36.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Dec 2019 06:36:47 -0800 (PST)
+Subject: Re: Issue with imx_get_temp()
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Marco Felsch <m.felsch@pengutronix.de>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>, linux-pm@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <08794fde-cdd0-287c-62bf-e2e3b8c80686@gmail.com>
+ <20191203101509.wte47aad5k4mqu2y@pengutronix.de>
+ <CAOMZO5Cn993y9VeFN6hPO3-cfNnUKiuFd_rqAZ8htz=dO6t6ig@mail.gmail.com>
+ <CAOMZO5BniszDhWKkoWY=P62kv9cY160r9P=pjpbSOZasxJvdBA@mail.gmail.com>
+From:   Igor Plyatov <plyatov@gmail.com>
+Message-ID: <77fff313-3f40-6b5e-fe30-5a65a189bdff@gmail.com>
+Date:   Tue, 3 Dec 2019 17:36:46 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87fti1bipb.fsf@linutronix.de>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <CAOMZO5BniszDhWKkoWY=P62kv9cY160r9P=pjpbSOZasxJvdBA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2019-12-03 15:13:36, John Ogness wrote:
-> On 2019-12-02, Petr Mladek <pmladek@suse.com> wrote:
-> >> +/*
-> >> + * Sanity checker for reserve size. The ringbuffer code assumes that a data
-> >> + * block does not exceed the maximum possible size that could fit within the
-> >> + * ringbuffer. This function provides that basic size check so that the
-> >> + * assumption is safe.
-> >> + */
-> >> +static bool data_check_size(struct prb_data_ring *data_ring, unsigned int size)
-> >> +{
-> >> +	struct prb_data_block *db = NULL;
-> >> +
-> >> +	/* Writers are not allowed to write data-less records. */
-> >> +	if (size == 0)
-> >> +		return false;
-> >
-> > I would personally let this decision to the API caller.
-> >
-> > The code actually have to support data-less records. They are used
-> > when the descriptor is reserved but the data block can't get reserved.
-> 
-> Exactly. Data-less records are how the ringbuffer identifies that data
-> has been lost. If users were allowed to store data-less records, that
-> destinction is no longer possible (unless I created some extra field in
-> the descriptor). Does it even make sense for printk to store data-less
-> records explicitly?
+Dear Fabio,
 
-From my POV, it does not make much sense.
+> Does the following patch help?
+> http://code.bulix.org/l3rz2e-982595
 
-> The current printk implementation silently ignores empty messages.
+Thank you!
 
-I am not able to find it. I only see that empty continuous framgments
-are ignored in log_output(). Normal empty lines seems to be strored.
+Patch applied and will be tested.
 
-Well, I can't see any usecase for this. I think that we could ignore
-all empty strings.
+I will inform you about results.
 
+Best wishes
 
-> > The above statement might create false feeling that it could not
-> > happen later in the code. It might lead to bugs in writer code.
-> 
-> Then let me change the statement to describe that data-less records are
-> used internally by the ringbuffer and cannot be explicitly created by
-> writers.
+--
 
-Sounds godo to me.
+Igor Plyatov
 
-> > Also reader API users might not expect to get a "valid" data-less
-> > record.
-> 
-> Readers will never see them. The reader API implementation skips over
-> data-less records.
-
-Yeah. They will see bump in the seq number. We would need to
-distinguish empty records and lost records as you wrote above.
-It looks better to ignore empty records already during write.
-
-Best Regards,
-Petr
