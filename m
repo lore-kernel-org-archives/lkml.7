@@ -2,108 +2,93 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C056C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C7CC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E333205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F4B420661
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:37:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="boobbRiK"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="a35jPxts"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfLCOgv (ORCPT
+        id S1726766AbfLCOhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 09:36:51 -0500
-Received: from mail-lf1-f41.google.com ([209.85.167.41]:36878 "EHLO
-        mail-lf1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbfLCOgu (ORCPT
+        Tue, 3 Dec 2019 09:37:09 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42462 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725957AbfLCOhJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 09:36:50 -0500
-Received: by mail-lf1-f41.google.com with SMTP id b15so3166682lfc.4;
-        Tue, 03 Dec 2019 06:36:49 -0800 (PST)
+        Tue, 3 Dec 2019 09:37:09 -0500
+Received: by mail-io1-f66.google.com with SMTP id f82so3919469ioa.9
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 06:37:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=MWlNOpLYUXyynuUbBoIlviu99rJXrCd1w27Szcg8nxQ=;
-        b=boobbRiKrIPjTW6itg9nafPgOCtMvWmGC+ptOoIn5x21f/zUx5kM10rE0nzo4pSTyr
-         op0gr1Irwb5qdB0agrw0bFdeZGASEocLnYXJF72RlBDdjxMKu706I6gXAFiscKk3/bWx
-         KYM05YFPnzhzQ0uG1n/NEOW8XX5gn987+4RQqOlw/fQvtehhzWRRsqZzeyr7/5iFaOtA
-         JKk6/1fXdf9O0PT6UXfkYmrglOdQLtSbfU2f1+UDQCE3lDTSIyDQfUfkAB5nhpNXouAW
-         VTuqE7uRpjx2Hi0zA+r4S2sDwaC7FCWOB8WVODyAic0sGkujN1IuRLS6v5O2zeFYl7kE
-         F/RA==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=qGRbXUbqd8Z04mtkdXBEuHQg2LkRCVP7LlXsnOJdoYc=;
+        b=a35jPxtshV8+pMg3W3CCCGSqlVGoB1OuQXVQZIKX5SfRQ/C6xoX3NgNI/KLPHUoz/+
+         frqVxdDd3L1rWzUg9Xsl4MbHtvgc6ts2mfVf38VPaGTBbusI4xrxHkxAP9kEjVCE9Q/3
+         nB/uItPGJVSLLETsjYO6iTi3UZrVPnFYzSG3iqJM7/qgb/lBYdm6DrrT79c14qRz7KC5
+         bolEx/oZAaESAAVP91g8jC6gLJUfJF0JK7Z2Y1U25ThPi7atVlWTVFy8//i68yx/LZAH
+         lCYEYn689f9WMK4hWVOQd/T4l7AcCjc8/BNr4inDpiUYCmTijK2PQ3Z9KiyscdgoI/bk
+         IiIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=MWlNOpLYUXyynuUbBoIlviu99rJXrCd1w27Szcg8nxQ=;
-        b=AKV8tinKCZo3t2OhpRAaGf2G8lSWsWx34KHGvNq2FYVZWEqhnrST90lpNSw8+zdgM2
-         w5PBnmIvzltT6yYzhSyG41tgrOU9pv7NbkuMikKlOEWY9yAP4A6uFy6e5qxFM/MEgobb
-         d+B7bX+k5ZqthYkBMN/YpfLGcrfVnAvGtLj+9iTJwJ7EQza5H2c8PCKWEWGTka6Xv6JH
-         bszKOnEcbhLUDZaL+OOnI4WASPLSU4FRYQrCXX1nBd5wlJ1joKw9mRBswEpXWKJA6sAk
-         ynKcAprE4stikqZWBVHb4913+UOStB8CUIx4Cl44r8CKNbTNmVumAdyuKzzI/1XXLMz0
-         QeYg==
-X-Gm-Message-State: APjAAAUzAbiEtVKEb82owQblnl54nXw03a2FRIFuRfT9Qtjz851ZY6WJ
-        YgcX9Ke1zschY4pt+tsfBp8j0Uk9Ftk=
-X-Google-Smtp-Source: APXvYqxz+iqVJ1nXYsxcFQM+E9DEQaIYjcDD18Lb+xCZkg87RKMsYuZ0gozZM4Pc+YR3dILDlKilrA==
-X-Received: by 2002:ac2:428d:: with SMTP id m13mr2986962lfh.64.1575383808313;
-        Tue, 03 Dec 2019 06:36:48 -0800 (PST)
-Received: from [192.168.1.10] ([95.174.107.249])
-        by smtp.gmail.com with ESMTPSA id l28sm1454032lfk.21.2019.12.03.06.36.47
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qGRbXUbqd8Z04mtkdXBEuHQg2LkRCVP7LlXsnOJdoYc=;
+        b=uRWu1o6Rwfec/40MGO/Td2ESmW4zb5P3RwiiA/VZoQ3comhMjFrVNEdDOYDEEzs1HE
+         dLPGPtEp66HMk0Es9bcU1WKESOWgsDYes+L0awWtRIhsCgiemApTYg4E6ZWPWlP/301V
+         G3G9bKIQZuJ+cF1JrBly3jk6NS1l/ezTHOpv4yjU/Ne5txH2a+NBxPSneiFG3s4Rf2XC
+         IzVNqyiX/pBZOO0vGUGxAzhUqkSZkcOvVoLYrAAJNgAGvcgJOhZ9XvS5ra+O58NuXzdX
+         Qmh/gPCjA2VyYrrH4hF4FixjaZH9ijolt0BT8g3qx8dSh4WFBBQRcHDG7lwGi1cRpj+I
+         iIYA==
+X-Gm-Message-State: APjAAAUr3hSUxCcpbpavQw0cSjsER/rAvMNd/iPyJUpyc7dRZnTnEBd4
+        8uyP9jMS7QR3ijDBRgyq5L3AyYCPo737tw==
+X-Google-Smtp-Source: APXvYqx7Se/ijQfs6J2k9GORA/0UsUMppOuD8JOSqRuCsVgQeEecviXe/bYZtk/e5A5YYZ3jIOqGnw==
+X-Received: by 2002:a6b:4e1a:: with SMTP id c26mr2364220iob.122.1575383826510;
+        Tue, 03 Dec 2019 06:37:06 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id 3sm712249iow.71.2019.12.03.06.37.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Dec 2019 06:36:47 -0800 (PST)
-Subject: Re: Issue with imx_get_temp()
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Marco Felsch <m.felsch@pengutronix.de>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>, linux-pm@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <08794fde-cdd0-287c-62bf-e2e3b8c80686@gmail.com>
- <20191203101509.wte47aad5k4mqu2y@pengutronix.de>
- <CAOMZO5Cn993y9VeFN6hPO3-cfNnUKiuFd_rqAZ8htz=dO6t6ig@mail.gmail.com>
- <CAOMZO5BniszDhWKkoWY=P62kv9cY160r9P=pjpbSOZasxJvdBA@mail.gmail.com>
-From:   Igor Plyatov <plyatov@gmail.com>
-Message-ID: <77fff313-3f40-6b5e-fe30-5a65a189bdff@gmail.com>
-Date:   Tue, 3 Dec 2019 17:36:46 +0300
+        Tue, 03 Dec 2019 06:37:05 -0800 (PST)
+Subject: Re: [PATCH v2] block: optimise bvec_iter_advance()
+To:     Pavel Begunkov <asml.silence@gmail.com>, nivedita@alum.mit.edu,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1575144884.git.asml.silence@gmail.com>
+ <b1408bd6cc3f04fe22ce64f97174b6fbf9ffea40.1575144884.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <4eb4a426-8180-ec2a-974b-2b8cdd5f285c@kernel.dk>
+Date:   Tue, 3 Dec 2019 07:37:04 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <CAOMZO5BniszDhWKkoWY=P62kv9cY160r9P=pjpbSOZasxJvdBA@mail.gmail.com>
+In-Reply-To: <b1408bd6cc3f04fe22ce64f97174b6fbf9ffea40.1575144884.git.asml.silence@gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Fabio,
+On 11/30/19 1:23 PM, Pavel Begunkov wrote:
+> bvec_iter_advance() is quite popular, but compilers fail to do proper
+> alias analysis and optimise it good enough. The assembly is checked
+> for gcc 9.2, x86-64.
+> 
+> - remove @iter->bi_size from min(...), as it's always less than @bytes.
+> Modify at the beginning and forget about it.
+> 
+> - the compiler isn't able to collapse memory dependencies and remove
+> writes in the loop. Help it by explicitely using local vars.
 
-> Does the following patch help?
-> http://code.bulix.org/l3rz2e-982595
+Applied, thanks.
 
-Thank you!
-
-Patch applied and will be tested.
-
-I will inform you about results.
-
-Best wishes
-
---
-
-Igor Plyatov
+-- 
+Jens Axboe
 
