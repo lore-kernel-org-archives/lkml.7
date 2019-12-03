@@ -2,92 +2,114 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A996C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E664C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 036E02064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:04:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=valentin-vidic.from.hr header.i=@valentin-vidic.from.hr header.b="IboLnfXA"
+	by mail.kernel.org (Postfix) with ESMTP id F1EF42064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:04:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575414278;
+	bh=n5Vt1p9Nt6F39gITxhiMCrYn3e5qmSvtYiyUgcZWeAs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=O0qVp3Dx9ok4I6SXydTw2s/zkZ5pQcfImTGwiAYSWg678nl71vttlbvJDg/Unp0lM
+	 YuQLlEkaVWIX87UIviYXZtVFseVNdbXM5O2WeP5zR2P0a69BEEO0JO+WcokW0wmwiX
+	 8augAVVQoh9i4W53pp6DIV+irUUZjkNPsy45DORU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730434AbfLCXEa (ORCPT
+        id S1729451AbfLCWve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:04:30 -0500
-Received: from valentin-vidic.from.hr ([94.229.67.141]:59581 "EHLO
-        valentin-vidic.from.hr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729913AbfLCWvi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:51:38 -0500
-X-Greylist: delayed 368 seconds by postgrey-1.27 at vger.kernel.org; Tue, 03 Dec 2019 17:51:37 EST
-X-Virus-Scanned: Debian amavisd-new at valentin-vidic.from.hr
-Received: by valentin-vidic.from.hr (Postfix, from userid 1000)
-        id 30A4B239; Tue,  3 Dec 2019 23:45:22 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-        d=valentin-vidic.from.hr; s=2017; t=1575413122;
-        bh=pW9/x/Zaa3RBLFywltpoZxMRWGFuvmhPgETDh4Fc5RA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=IboLnfXAwYBH5cDl563Z2p5sUk3zV8gtKgyIx/XyP86yTJ2r3n79OTDACpt5Eis1+
-         BcK+IDjy82l6MgnAupVWz3UcXYSnEGXouP3E5jEmlwISUFL9yLAPJGTmVB3sTqSlgX
-         TQ4TrXqInWPMqIjejWn4MQea7aBs2cYhCYpkG1A4xoaVav2+pcb7e50BGATudGcSZY
-         J3mYfEEQiRX/Rc57jvKXturlpqbDFohMPjbZhNUVsyd59TqroBUQcTS2Ni48zW9JDi
-         ZviYxGuIOKP8IPfkF9f7ANI44vSDADmp7E4I2eDUa5aN6uCTYV1iA/xvvjXoTpYO7p
-         zYMWszZNzrsKA==
-From:   Valentin Vidic <vvidic@valentin-vidic.from.hr>
-To:     Boris Pismenny <borisp@mellanox.com>,
-        Aviad Yehezkel <aviadye@mellanox.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Valentin Vidic <vvidic@valentin-vidic.from.hr>
-Subject: [PATCH] net/tls: Fix return values for setsockopt
-Date:   Tue,  3 Dec 2019 23:44:58 +0100
-Message-Id: <20191203224458.24338-1-vvidic@valentin-vidic.from.hr>
-X-Mailer: git-send-email 2.20.1
+        Tue, 3 Dec 2019 17:51:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43726 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729896AbfLCWv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:51:29 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCA40214AF;
+        Tue,  3 Dec 2019 22:51:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575413489;
+        bh=n5Vt1p9Nt6F39gITxhiMCrYn3e5qmSvtYiyUgcZWeAs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=h7Bz593ZOefePkHUAIp95ZMW0yPHotnZ7PNi/I6QCKFdnTlN+jFUlO+WA1cpfqG1Y
+         /MZnLZ5x0AeM24cjuc4WkAecu0r19WVf3BwM71fzQWzJoedBnFUg9fDPD76WEDPUh7
+         vgy9y7zYxNNgkgDYgOd73XaDsxVpxZWef3ZpkL7I=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Nick Bowler <nbowler@draconx.ca>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 147/321] xfs: Align compat attrlist_by_handle with native implementation.
+Date:   Tue,  3 Dec 2019 23:33:33 +0100
+Message-Id: <20191203223434.800521954@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
+References: <20191203223427.103571230@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ENOTSUPP is not available in userspace:
+From: Nick Bowler <nbowler@draconx.ca>
 
-  setsockopt failed, 524, Unknown error 524
+[ Upstream commit c456d64449efe37da50832b63d91652a85ea1d20 ]
 
-Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
+While inspecting the ioctl implementations, I noticed that the compat
+implementation of XFS_IOC_ATTRLIST_BY_HANDLE does not do exactly the
+same thing as the native implementation.  Specifically, the "cursor"
+does not appear to be written out to userspace on the compat path,
+like it is on the native path.
+
+This adjusts the compat implementation to copy out the cursor just
+like the native implementation does.  The attrlist cursor does not
+require any special compat handling.  This fixes xfstests xfs/269
+on both IA-32 and x32 userspace, when running on an amd64 kernel.
+
+Signed-off-by: Nick Bowler <nbowler@draconx.ca>
+Fixes: 0facef7fb053b ("xfs: in _attrlist_by_handle, copy the cursor back to userspace")
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tls/tls_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/xfs/xfs_ioctl32.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
-index bdca31ffe6da..5830b8e02a36 100644
---- a/net/tls/tls_main.c
-+++ b/net/tls/tls_main.c
-@@ -496,7 +496,7 @@ static int do_tls_setsockopt_conf(struct sock *sk, char __user *optval,
- 	/* check version */
- 	if (crypto_info->version != TLS_1_2_VERSION &&
- 	    crypto_info->version != TLS_1_3_VERSION) {
--		rc = -ENOTSUPP;
-+		rc = -EINVAL;
- 		goto err_crypto_info;
- 	}
+diff --git a/fs/xfs/xfs_ioctl32.c b/fs/xfs/xfs_ioctl32.c
+index fba115f4103ac..4c34efcbf7e80 100644
+--- a/fs/xfs/xfs_ioctl32.c
++++ b/fs/xfs/xfs_ioctl32.c
+@@ -336,6 +336,7 @@ xfs_compat_attrlist_by_handle(
+ {
+ 	int			error;
+ 	attrlist_cursor_kern_t	*cursor;
++	compat_xfs_fsop_attrlist_handlereq_t __user *p = arg;
+ 	compat_xfs_fsop_attrlist_handlereq_t al_hreq;
+ 	struct dentry		*dentry;
+ 	char			*kbuf;
+@@ -370,6 +371,11 @@ xfs_compat_attrlist_by_handle(
+ 	if (error)
+ 		goto out_kfree;
  
-@@ -723,7 +723,7 @@ static int tls_init(struct sock *sk)
- 	 * share the ulp context.
- 	 */
- 	if (sk->sk_state != TCP_ESTABLISHED)
--		return -ENOTSUPP;
-+		return -ENOTCONN;
++	if (copy_to_user(&p->pos, cursor, sizeof(attrlist_cursor_kern_t))) {
++		error = -EFAULT;
++		goto out_kfree;
++	}
++
+ 	if (copy_to_user(compat_ptr(al_hreq.buffer), kbuf, al_hreq.buflen))
+ 		error = -EFAULT;
  
- 	/* allocate tls context */
- 	write_lock_bh(&sk->sk_callback_lock);
 -- 
 2.20.1
+
+
 
