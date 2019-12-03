@@ -2,137 +2,128 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBF2C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 04:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36205C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 04:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B92D020640
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 04:35:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GY2QtC3I"
+	by mail.kernel.org (Postfix) with ESMTP id 0E0102068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 04:48:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbfLCEfi (ORCPT
+        id S1726819AbfLCEsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 23:35:38 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:57405 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbfLCEfi (ORCPT
+        Mon, 2 Dec 2019 23:48:08 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12586 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726480AbfLCEsH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 23:35:38 -0500
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191203043534epoutp03653e19f9d9ea6d1dbef7d9a23d55739a~cwmsGp9kv3139331393epoutp03M
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Dec 2019 04:35:34 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191203043534epoutp03653e19f9d9ea6d1dbef7d9a23d55739a~cwmsGp9kv3139331393epoutp03M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1575347734;
-        bh=P9rxL3OL4SEg0KsZyLRZeF48h8yL9UuF4kxFDbXNgnA=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=GY2QtC3IXCVaDQucCO0ryWIl5qiRI0YULNDevAaMfkq+HQJA0UnIfp6eM2BHdsXbK
-         3lv705s7juQk+CR8RCnDDrW7tSHd926F5/v0tuFx6qWFl9OxX1yXh88crGCAPb6Tym
-         0rJOoLtlW5O/6D18B3cLfQrvdhkAwuk6HAld/r4s=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-        20191203043533epcas5p1c22e61b0256413395a992db05ed9a378~cwmrbCSDT1744717447epcas5p1h;
-        Tue,  3 Dec 2019 04:35:33 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        02.05.19629.516E5ED5; Tue,  3 Dec 2019 13:35:33 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191203043533epcas5p19bfc21e2b03db7f27c6d84cda6824d27~cwmrFfHUG1745117451epcas5p1L;
-        Tue,  3 Dec 2019 04:35:33 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191203043533epsmtrp26c955d363851275865794cb3f9fd7069~cwmrEpCCV2179821798epsmtrp2c;
-        Tue,  3 Dec 2019 04:35:33 +0000 (GMT)
-X-AuditID: b6c32a4b-32dff70000014cad-de-5de5e615dc45
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        DE.3E.10238.516E5ED5; Tue,  3 Dec 2019 13:35:33 +0900 (KST)
-Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
-        [107.108.73.139]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191203043531epsmtip112ec90d213a7f631732fdf252fca5a7b~cwmpKRZf72615026150epsmtip1W;
-        Tue,  3 Dec 2019 04:35:31 +0000 (GMT)
-From:   Sriram Dash <sriram.dash@samsung.com>
-To:     linux-kernel@vger.kernel.org, mkl@pengutronix.de,
-        linux-can@vger.kernel.org, wg@grandegger.com
-Cc:     mchehab+samsung@kernel.org, davem@davemloft.net,
-        gregkh@linuxfoundation.org, robh@kernel.org, dmurphy@ti.com,
-        rcsekar@samsung.com, pankaj.dubey@samsung.com,
-        pankj.sharma@samsung.com, Sriram Dash <sriram.dash@samsung.com>
-Subject: [PATCH] MAINTAINERS: add myself as maintainer of MCAN MMIO device
- driver
-Date:   Tue,  3 Dec 2019 09:59:09 +0530
-Message-Id: <1575347349-32689-1-git-send-email-sriram.dash@samsung.com>
-X-Mailer: git-send-email 2.7.4
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmleLIzCtJLcpLzFFi42LZdlhTU1f02dNYg6bzBhZzzrewWHSf3sJq
-        0bx4PZvFqu9TmS0u75rDZvH+UyeTxfpFU1gsFm39wm6xvOs+s8WsCztYLf7v2cFucWM9u8XS
-        eztZHXg9tqy8yeTx8dJtRo9NqzrZPPbPXcPu0f/XwKNvyypGj+M3tjN5fN4kF8ARxWWTkpqT
-        WZZapG+XwJXxYddV9oIG9op9J16yNDD+YO1i5OSQEDCR+PL9E3MXIxeHkMBuRokjCxcxQjif
-        GCV+TJvDBOF8Y5S4cGwLI0zLz8NN7CC2kMBeRolzr/khilqYJC7/fgBWxCagLbH5yUWguRwc
-        IgIpEvO+uIDUMAs8Y5Q4teQiE0iNsECwxOVjO8HqWQRUJR78mAtm8wq4Sxx51csMsUxO4ua5
-        TrD7JASOsEn82L0R6nAXiZ03/kBdJCzx6vgWdghbSuLzu71sEHa2xOW+51CDSiRmvFrIAmHb
-        Sxy4MocF5DhmAU2J9bv0QcLMAnwSvb+fMIGEJQR4JTrahCCqVSVe3d4MNV1a4sDa00wQtofE
-        u3WXmCDhECvx6tAU9gmMMrMQhi5gZFzFKJlaUJybnlpsWmCcl1quV5yYW1yal66XnJ+7iRGc
-        NLS8dzBuOudziFGAg1GJh/fAnyexQqyJZcWVuYcYJTiYlUR4t0k8jRXiTUmsrEotyo8vKs1J
-        LT7EKM3BoiTOO4n1aoyQQHpiSWp2ampBahFMlomDU6qB0UHvQ0roRzmTnHdzTnysMWiLmtHc
-        sumisDXP3P7Lez805di7WayMj068EJVpNSNk+su0Lxx9OcvP3u941ceaXCru+jZi4vSbG1LE
-        /jjF7eetKtk8J+6p3ow/T+NSJNfVtp7oV7uyuLUghEMtcJq21+77C5wapHf5mj3o/R7QXjjx
-        tKHzit0rlViKMxINtZiLihMB94sF2RYDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKLMWRmVeSWpSXmKPExsWy7bCSnK7os6exBl96xC3mnG9hseg+vYXV
-        onnxejaLVd+nMltc3jWHzeL9p04mi/WLprBYLNr6hd1iedd9ZotZF3awWvzfs4Pd4sZ6doul
-        93ayOvB6bFl5k8nj46XbjB6bVnWyeeyfu4bdo/+vgUffllWMHsdvbGfy+LxJLoAjissmJTUn
-        syy1SN8ugSvjw66r7AUN7BX7TrxkaWD8wdrFyMkhIWAi8fNwEzuILSSwm1HiyETxLkYOoLi0
-        xM+7uhAlwhIr/z0HKuECKmlikvjb1sMGkmAT0JbY/OQiM0i9iECGxLX3+iA1zAIfGCVO3loI
-        ViMsEChx4dJrJhCbRUBV4sGPuYwgNq+Au8SRV73MEAvkJG6e62SewMizgJFhFaNkakFxbnpu
-        sWGBYV5quV5xYm5xaV66XnJ+7iZGcGBqae5gvLwk/hCjAAejEg/vgT9PYoVYE8uKK3MPMUpw
-        MCuJ8G6TeBorxJuSWFmVWpQfX1Sak1p8iFGag0VJnPdp3rFIIYH0xJLU7NTUgtQimCwTB6dU
-        A+NkwduPEg8yRGlkcYpPebHUa/V+JS49Fy3/n32Nfz+KSBtH/BZ041z9Vf1D36YNHS/NtY3t
-        ftWq3fVLXOmpXmzbOnn7ffOLXz5UvixeMbfCcnfFnQbZJGYdv+W3feMkd38ODJyqpd3/UyHo
-        +Y1znB/fX7a067J5/UAvMYPNyp8l47VfIeP640osxRmJhlrMRcWJAMm9yZtIAgAA
-X-CMS-MailID: 20191203043533epcas5p19bfc21e2b03db7f27c6d84cda6824d27
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20191203043533epcas5p19bfc21e2b03db7f27c6d84cda6824d27
-References: <CGME20191203043533epcas5p19bfc21e2b03db7f27c6d84cda6824d27@epcas5p1.samsung.com>
+        Mon, 2 Dec 2019 23:48:07 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB34l4l0024074
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 23:48:06 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wm6s61vjp-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 23:48:06 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
+        Tue, 3 Dec 2019 04:48:03 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 3 Dec 2019 04:47:55 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB34lsqd54722746
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 3 Dec 2019 04:47:55 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D8F1111C050;
+        Tue,  3 Dec 2019 04:47:54 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8365A11C04C;
+        Tue,  3 Dec 2019 04:47:54 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  3 Dec 2019 04:47:54 +0000 (GMT)
+Received: from [9.81.204.28] (unknown [9.81.204.28])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 1E457A01B6;
+        Tue,  3 Dec 2019 15:47:51 +1100 (AEDT)
+Subject: Re: [PATCH v2 02/27] nvdimm: remove prototypes for nonexistent
+ functions
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+References: <20191203034655.51561-1-alastair@au1.ibm.com>
+ <20191203034655.51561-3-alastair@au1.ibm.com>
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+Date:   Tue, 3 Dec 2019 15:47:51 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20191203034655.51561-3-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19120304-0020-0000-0000-00000392D376
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120304-0021-0000-0000-000021E9F1E2
+Message-Id: <7d78054e-54a2-5fbc-5570-474e58cefe63@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-02_06:2019-11-29,2019-12-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ mlxlogscore=694 suspectscore=0 clxscore=1015 priorityscore=1501
+ phishscore=0 bulkscore=0 malwarescore=0 spamscore=0 impostorscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912030042
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we are actively working on MMIO MCAN device driver,
-as discussed with Marc, I am adding myself as a maintainer.
+On 3/12/19 2:46 pm, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> These functions don't exist, so remove the prototypes for them.
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> Reviewed-by: Frederic Barrat <fbarrat@linux.ibm.com>
 
-Signed-off-by: Sriram Dash <sriram.dash@samsung.com>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fc36fe5..64ecf11 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10082,6 +10082,15 @@ W:	https://linuxtv.org
- S:	Maintained
- F:	drivers/media/radio/radio-maxiradio*
- 
-+MCAN MMIO DEVICE DRIVER
-+M:	Sriram Dash <sriram.dash@samsung.com>
-+L:	linux-can@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/net/can/m_can.txt
-+F:	drivers/net/can/m_can/m_can_platform.c
-+F:	drivers/net/can/m_can/m_can.c
-+F:	drivers/net/can/m_can/m_can.h
-+
- MCP4018 AND MCP4531 MICROCHIP DIGITAL POTENTIOMETER DRIVERS
- M:	Peter Rosin <peda@axentia.se>
- L:	linux-iio@vger.kernel.org
 -- 
-2.7.4
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
 
