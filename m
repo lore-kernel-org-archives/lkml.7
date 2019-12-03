@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7B4C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0991C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12CA420674
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FA9B20863
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:59:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413980;
-	bh=mbcxVdp4s/ty4G3JdaSIo/9yjvlwPPsjwjG58fNirxY=;
+	s=default; t=1575413982;
+	bh=VeOfFR/MlblkVzYBRlCoJb5qQ47Er/IwMm3cLCj+7mM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KCItjtHlhuRGigKWESLnFrpS6H9q9xNnPd8tXrrYRS0reEaIo1wIEg7T3y4O8RxLt
-	 RVyMjZAA04UYA/OihNNWwWjmkCgbTzvwQMh412Bcr4ICRnUgjfeiKIO9aYc17FitGr
-	 dZ+czJ/R3PaTgLFzXLrwefqrotnDmatvcAYLx5PA=
+	b=zt1KGRr668T2A4Q7lTYX5BE96Y5t/u7+GQlor4/OgqoZy2YLCtxTGIOg1D8604TwP
+	 5rMSB0b9WSXxaWzGnRhJwfUlynu58SzuzZhBXXWUR3BrPWa5vNUM/Qb/KL62kZbDJ1
+	 HEYIf2KhNrUpR61wuYlj6Nu+t3RKay5lPAEE9MdQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730669AbfLCW7j (ORCPT
+        id S1728980AbfLCW7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:59:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55700 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:59:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729364AbfLCW7I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:59:08 -0500
+        id S1728845AbfLCW64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:58:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3AFE20865;
-        Tue,  3 Dec 2019 22:59:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5CD220656;
+        Tue,  3 Dec 2019 22:58:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413948;
-        bh=mbcxVdp4s/ty4G3JdaSIo/9yjvlwPPsjwjG58fNirxY=;
+        s=default; t=1575413935;
+        bh=VeOfFR/MlblkVzYBRlCoJb5qQ47Er/IwMm3cLCj+7mM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xGi0wiRJLotsGX2/i3iq8bgiudmX04ZwCytCafRbI+HHo2Z8dOnQxFKG+3miYgyX3
-         d+nKLlus4FucoWnG+w8TMAANNM6tqjftOlQco12n2m65BY624zSKTVdBOXAt2jIvYU
-         kv9VZnxWdCKTD4cP2vFMaseY8MpOgLQ+64LuIrqA=
+        b=Oi2zhyF0kp6Cmvw5tTHjt20ILNQNreX9HI/0LxSk2GwDnkQNSa/Ck4uVV3tEfLkbP
+         vg1ZLKjIRcaSstR9Pi9jNVawtyTN06HEGabEEWP5E4NRlocclMLGKTRz6o+K584Wtf
+         Xg71o8TokdRltTmvCOAorcP6kBjM0Ae3L1KpN8/M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.19 301/321] drm/atmel-hlcdc: revert shift by 8
-Date:   Tue,  3 Dec 2019 23:36:07 +0100
-Message-Id: <20191203223442.809046337@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: [PATCH 4.19 319/321] dmaengine: stm32-dma: check whether length is aligned on FIFO threshold
+Date:   Tue,  3 Dec 2019 23:36:25 +0100
+Message-Id: <20191203223443.738270452@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,35 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
+From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 
-commit cbb32079149dbf557fa3f7bab8fa3c5fec857da7 upstream.
+commit cc832dc8e32785a730ba07c3a357e17c201a5df8 upstream.
 
-Revert shift by 8 of state->base.alpha. This introduced a
-regression on planes.
+When a period length is not multiple of FIFO some data may be stuck
+within FIFO.
 
-Fixes: 7f73c10b256b ("drm/atmel-hclcdc: Convert to the new generic alpha property")
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/1556195748-11106-7-git-send-email-claudiu.beznea@microchip.com
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Burst/FIFO Threshold/Period or buffer length check has to be hardened
+
+In any case DMA will grant any request from client but will degraded
+any parameters whether awkward.
+
+Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/stm32-dma.c |   20 ++++++--------------
+ 1 file changed, 6 insertions(+), 14 deletions(-)
 
---- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
-+++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
-@@ -382,7 +382,7 @@ atmel_hlcdc_plane_update_general_setting
- 			cfg |= ATMEL_HLCDC_LAYER_LAEN;
- 		else
- 			cfg |= ATMEL_HLCDC_LAYER_GAEN |
--			       ATMEL_HLCDC_LAYER_GA(state->base.alpha >> 8);
-+			       ATMEL_HLCDC_LAYER_GA(state->base.alpha);
- 	}
+--- a/drivers/dma/stm32-dma.c
++++ b/drivers/dma/stm32-dma.c
+@@ -308,20 +308,12 @@ static bool stm32_dma_fifo_threshold_is_
  
- 	if (state->disc_h && state->disc_w)
+ static bool stm32_dma_is_burst_possible(u32 buf_len, u32 threshold)
+ {
+-	switch (threshold) {
+-	case STM32_DMA_FIFO_THRESHOLD_FULL:
+-		if (buf_len >= STM32_DMA_MAX_BURST)
+-			return true;
+-		else
+-			return false;
+-	case STM32_DMA_FIFO_THRESHOLD_HALFFULL:
+-		if (buf_len >= STM32_DMA_MAX_BURST / 2)
+-			return true;
+-		else
+-			return false;
+-	default:
+-		return false;
+-	}
++	/*
++	 * Buffer or period length has to be aligned on FIFO depth.
++	 * Otherwise bytes may be stuck within FIFO at buffer or period
++	 * length.
++	 */
++	return ((buf_len % ((threshold + 1) * 4)) == 0);
+ }
+ 
+ static u32 stm32_dma_get_best_burst(u32 buf_len, u32 max_burst, u32 threshold,
 
 
