@@ -7,58 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD26BC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB2AC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FF0C20656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 629C120803
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:59:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413948;
-	bh=xse6kgt5T0zLm987FtTsfxKSnjkyBAkCk5p8frhNgPk=;
+	s=default; t=1575413956;
+	bh=+VVthImIyyeUHD5JnsPr9zqBqs/M5+BBgzlheJPEASg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FvEpL3gZiuLDzI7yHwJDjOhDDK65mpWXQMWSyd9pocbrwbZEBE4fXCgFxf2br7ERJ
-	 GQAV9NiSfjkHhzKM6iLzECpk9FpGZltY5ZyHjefhtss0QX/DwuTDtm6XlKJ8fajl/6
-	 W8t6yjPbmG8pDw3q7nGAy6sgYhjS/SeK75or68Bo=
+	b=mhxg5RvWNJKox+pTFQJw+Ubbamxe467f2TJx5wDcJVBwO0+zuCYBkC5dEjxpL/UO0
+	 J7GNeNpU+2lmHcWHnIAxoHbL36GXCUI1XCtrcbkjY3JL1kTfTgac5fXFJSqjdzGN0S
+	 b+p1iKb6snx+j4LDxjoHrigK4FdUbOKnMygTlXoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730748AbfLCW7H (ORCPT
+        id S1730763AbfLCW7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:59:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55608 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:59:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730728AbfLCW7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:59:04 -0500
+        id S1730751AbfLCW7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:59:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7A7C20803;
-        Tue,  3 Dec 2019 22:59:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 531F52053B;
+        Tue,  3 Dec 2019 22:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413943;
-        bh=xse6kgt5T0zLm987FtTsfxKSnjkyBAkCk5p8frhNgPk=;
+        s=default; t=1575413950;
+        bh=+VVthImIyyeUHD5JnsPr9zqBqs/M5+BBgzlheJPEASg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rNsVxxg7d6RWxHbd7kPIZSKh44YDZuYotn+fTLSZ7sRFEcBdWJJxVUfUClMxnSgf5
-         7VFD5keOghIau6mncYXeoW4wfl108IXYgjt68aIiyJQjGmPPg0CacDkmV/GH91FrNj
-         fjaOdtKDntK9KXfKEHmBt2A5KZlnWii6GTdDkq4A=
+        b=vRljNE+f24H7N+HuT+2inR4YEpV2JqC4QyvZzbRAj5AuRL778GGllal1J1/k7VmB0
+         IiOjFA10++JzKNyScc5O29rSbdOfJ1csooSscH9kcIIkHQPXjwK6CsEoRE2wtdOJHM
+         df0IR6u8vAMo/sHBoqy0dWTt5+G43478K04roLCM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <yellowriver2010@hotmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-mtd@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.19 299/321] mtd: rawnand: atmel: fix possible object reference leak
-Date:   Tue,  3 Dec 2019 23:36:05 +0100
-Message-Id: <20191203223442.705005398@linuxfoundation.org>
+        stable@vger.kernel.org, Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: [PATCH 4.19 302/321] mailbox: stm32_ipcc: add spinlock to fix channels concurrent access
+Date:   Tue,  3 Dec 2019 23:36:08 +0100
+Message-Id: <20191203223442.860584761@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -71,83 +61,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <yellowriver2010@hotmail.com>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
 
-commit a12085d13997ed15f745f33a0e01002541160179 upstream.
+commit dba9a3dfe912dc47c9dbc9ba1f5f65adbf9aea0f upstream.
 
-of_find_device_by_node() takes a reference to the struct device
-when it finds a match via get_device, there is no need to call
-get_device() twice.
-We also should make sure to drop the reference to the device
-taken by of_find_device_by_node() on driver unbind.
+Add spinlock protection on IPCC register update to avoid race condition.
+Without this fix, stm32_ipcc_set_bits and stm32_ipcc_clr_bits can be
+called in parallel for different channels. This results in register
+corruptions.
 
-Fixes: f88fc122cc34 ("mtd: nand: Cleanup/rework the atmel_nand driver")
-Signed-off-by: Wen Yang <yellowriver2010@hotmail.com>
-Suggested-by: Boris Brezillon <bbrezillon@kernel.org>
-Reviewed-by: Boris Brezillon <bbrezillon@kernel.org>
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Tudor Ambarus <tudor.ambarus@microchip.com>
-Cc: Boris Brezillon <bbrezillon@kernel.org>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: David Woodhouse <dwmw2@infradead.org>
-Cc: Brian Norris <computersforpeace@gmail.com>
-Cc: Marek Vasut <marek.vasut@gmail.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc: linux-mtd@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Reviewed-by: Fabien Dessenne <fabien.dessenne@st.com>
+Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/nand/raw/atmel/pmecc.c |   21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+ drivers/mailbox/stm32-ipcc.c |   37 +++++++++++++++++++++++++++----------
+ 1 file changed, 27 insertions(+), 10 deletions(-)
 
---- a/drivers/mtd/nand/raw/atmel/pmecc.c
-+++ b/drivers/mtd/nand/raw/atmel/pmecc.c
-@@ -876,23 +876,32 @@ static struct atmel_pmecc *atmel_pmecc_g
+--- a/drivers/mailbox/stm32-ipcc.c
++++ b/drivers/mailbox/stm32-ipcc.c
+@@ -50,6 +50,7 @@ struct stm32_ipcc {
+ 	void __iomem *reg_base;
+ 	void __iomem *reg_proc;
+ 	struct clk *clk;
++	spinlock_t lock; /* protect access to IPCC registers */
+ 	int irqs[IPCC_IRQ_NUM];
+ 	int wkp;
+ 	u32 proc_id;
+@@ -58,14 +59,24 @@ struct stm32_ipcc {
+ 	u32 xmr;
+ };
+ 
+-static inline void stm32_ipcc_set_bits(void __iomem *reg, u32 mask)
++static inline void stm32_ipcc_set_bits(spinlock_t *lock, void __iomem *reg,
++				       u32 mask)
  {
- 	struct platform_device *pdev;
- 	struct atmel_pmecc *pmecc, **ptr;
-+	int ret;
- 
- 	pdev = of_find_device_by_node(np);
--	if (!pdev || !platform_get_drvdata(pdev))
-+	if (!pdev)
- 		return ERR_PTR(-EPROBE_DEFER);
-+	pmecc = platform_get_drvdata(pdev);
-+	if (!pmecc) {
-+		ret = -EPROBE_DEFER;
-+		goto err_put_device;
-+	}
- 
- 	ptr = devres_alloc(devm_atmel_pmecc_put, sizeof(*ptr), GFP_KERNEL);
--	if (!ptr)
--		return ERR_PTR(-ENOMEM);
--
--	get_device(&pdev->dev);
--	pmecc = platform_get_drvdata(pdev);
-+	if (!ptr) {
-+		ret = -ENOMEM;
-+		goto err_put_device;
-+	}
- 
- 	*ptr = pmecc;
- 
- 	devres_add(userdev, ptr);
- 
- 	return pmecc;
++	unsigned long flags;
 +
-+err_put_device:
-+	put_device(&pdev->dev);
-+	return ERR_PTR(ret);
++	spin_lock_irqsave(lock, flags);
+ 	writel_relaxed(readl_relaxed(reg) | mask, reg);
++	spin_unlock_irqrestore(lock, flags);
  }
  
- static const int atmel_pmecc_strengths[] = { 2, 4, 8, 12, 24, 32 };
+-static inline void stm32_ipcc_clr_bits(void __iomem *reg, u32 mask)
++static inline void stm32_ipcc_clr_bits(spinlock_t *lock, void __iomem *reg,
++				       u32 mask)
+ {
++	unsigned long flags;
++
++	spin_lock_irqsave(lock, flags);
+ 	writel_relaxed(readl_relaxed(reg) & ~mask, reg);
++	spin_unlock_irqrestore(lock, flags);
+ }
+ 
+ static irqreturn_t stm32_ipcc_rx_irq(int irq, void *data)
+@@ -92,7 +103,7 @@ static irqreturn_t stm32_ipcc_rx_irq(int
+ 
+ 		mbox_chan_received_data(&ipcc->controller.chans[chan], NULL);
+ 
+-		stm32_ipcc_set_bits(ipcc->reg_proc + IPCC_XSCR,
++		stm32_ipcc_set_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XSCR,
+ 				    RX_BIT_CHAN(chan));
+ 
+ 		ret = IRQ_HANDLED;
+@@ -121,7 +132,7 @@ static irqreturn_t stm32_ipcc_tx_irq(int
+ 		dev_dbg(dev, "%s: chan:%d tx\n", __func__, chan);
+ 
+ 		/* mask 'tx channel free' interrupt */
+-		stm32_ipcc_set_bits(ipcc->reg_proc + IPCC_XMR,
++		stm32_ipcc_set_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XMR,
+ 				    TX_BIT_CHAN(chan));
+ 
+ 		mbox_chan_txdone(&ipcc->controller.chans[chan], 0);
+@@ -141,10 +152,12 @@ static int stm32_ipcc_send_data(struct m
+ 	dev_dbg(ipcc->controller.dev, "%s: chan:%d\n", __func__, chan);
+ 
+ 	/* set channel n occupied */
+-	stm32_ipcc_set_bits(ipcc->reg_proc + IPCC_XSCR, TX_BIT_CHAN(chan));
++	stm32_ipcc_set_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XSCR,
++			    TX_BIT_CHAN(chan));
+ 
+ 	/* unmask 'tx channel free' interrupt */
+-	stm32_ipcc_clr_bits(ipcc->reg_proc + IPCC_XMR, TX_BIT_CHAN(chan));
++	stm32_ipcc_clr_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XMR,
++			    TX_BIT_CHAN(chan));
+ 
+ 	return 0;
+ }
+@@ -163,7 +176,8 @@ static int stm32_ipcc_startup(struct mbo
+ 	}
+ 
+ 	/* unmask 'rx channel occupied' interrupt */
+-	stm32_ipcc_clr_bits(ipcc->reg_proc + IPCC_XMR, RX_BIT_CHAN(chan));
++	stm32_ipcc_clr_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XMR,
++			    RX_BIT_CHAN(chan));
+ 
+ 	return 0;
+ }
+@@ -175,7 +189,7 @@ static void stm32_ipcc_shutdown(struct m
+ 					       controller);
+ 
+ 	/* mask rx/tx interrupt */
+-	stm32_ipcc_set_bits(ipcc->reg_proc + IPCC_XMR,
++	stm32_ipcc_set_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XMR,
+ 			    RX_BIT_CHAN(chan) | TX_BIT_CHAN(chan));
+ 
+ 	clk_disable_unprepare(ipcc->clk);
+@@ -208,6 +222,8 @@ static int stm32_ipcc_probe(struct platf
+ 	if (!ipcc)
+ 		return -ENOMEM;
+ 
++	spin_lock_init(&ipcc->lock);
++
+ 	/* proc_id */
+ 	if (of_property_read_u32(np, "st,proc-id", &ipcc->proc_id)) {
+ 		dev_err(dev, "Missing st,proc-id\n");
+@@ -259,9 +275,10 @@ static int stm32_ipcc_probe(struct platf
+ 	}
+ 
+ 	/* mask and enable rx/tx irq */
+-	stm32_ipcc_set_bits(ipcc->reg_proc + IPCC_XMR,
++	stm32_ipcc_set_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XMR,
+ 			    RX_BIT_MASK | TX_BIT_MASK);
+-	stm32_ipcc_set_bits(ipcc->reg_proc + IPCC_XCR, XCR_RXOIE | XCR_TXOIE);
++	stm32_ipcc_set_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XCR,
++			    XCR_RXOIE | XCR_TXOIE);
+ 
+ 	/* wakeup */
+ 	if (of_property_read_bool(np, "wakeup-source")) {
 
 
