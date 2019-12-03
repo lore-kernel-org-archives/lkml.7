@@ -2,120 +2,81 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FFDC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFC5C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A971D206E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:25:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iTkUhZcw"
+	by mail.kernel.org (Postfix) with ESMTP id 43282206E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:25:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbfLCJZT (ORCPT
+        id S1726224AbfLCJZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 04:25:19 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28369 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725774AbfLCJZS (ORCPT
+        Tue, 3 Dec 2019 04:25:55 -0500
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:39596 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725774AbfLCJZy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 04:25:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575365117;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/I8RoZB7HxxHtNAPWRVDK9HEHCVNsmOjnJke2ajqDM0=;
-        b=iTkUhZcwz8LQ3STqwWTH5bDwzm2zpwkt3NcjetvUpAolmMK8ogF28J7Ikr5fgdyXb2U+XF
-        PGbNDFRebuWKNMbcrMpwKqtYNRPDC2XbkNsWAjgkSdY7s/fdAH97npVV8HMY1J7i0GBkeJ
-        YN516g1jCk85mQfH8B6KETf4c+Nme/M=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-229-5J8t3HomMduur_xMWDv3ng-1; Tue, 03 Dec 2019 04:25:16 -0500
-Received: by mail-wm1-f72.google.com with SMTP id l11so1149364wmi.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 01:25:16 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=0g5Aa2bIudfU/XFfP7AfbfIOG+59B11fV9VXQfZXGs4=;
-        b=CuynDD+832hBo4q/GmET3zEIiXmuhfcPNumZp/QQ1r9u+s6YvD8i2JGlcTudLABn9Z
-         eD6zcUqp1xgmKXiBrghzhhPwjr5Q4nKh9vZ+ku2HtZyiAbRsrMwjoFGiHWpEQfgsINpX
-         zMgNLnKyb1Tjiz8EPJWDFRjdajXLclTRS/rvn0dpoJjO2PDvEPTt/sdwYpvq1In8qfYZ
-         t6nBk+zLFSIh9JPXQUspCCNah3ucg+22oS+KxO6ne/4dXsMPxlT6HP8oFCVZmG0hf+ru
-         hrWNRW3xKu6EYhKNbJ5o1EDCNCbGUiLg7dE07qCqu1IDDSVv4E+IHnx6ccMN//qZ7eak
-         AD/A==
-X-Gm-Message-State: APjAAAXKp13KKFbLIzOh+qdHsZ9nUWMtpLOQzfCDRBjM491LoHACp43a
-        dcwQFNPAMwK3jZLxwNUlycbEGCVLxCe8YxpVogUsmVK3Zl861x9F1ioU7xioiZt1Yex7lM3OxfE
-        dzMqnX3gHiqTc3GkjZVI2qrDJ
-X-Received: by 2002:a5d:438c:: with SMTP id i12mr4123165wrq.196.1575365114861;
-        Tue, 03 Dec 2019 01:25:14 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzzEWXwWzryTExqHKw8nJKWRk8EEzSfa7nZJtQ7apF/mzzDLVtxzY2DrxKGbUUeWpobgKr7ug==
-X-Received: by 2002:a5d:438c:: with SMTP id i12mr4123146wrq.196.1575365114666;
-        Tue, 03 Dec 2019 01:25:14 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id u10sm2196064wmd.1.2019.12.03.01.25.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 01:25:14 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        peterx@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/5] KVM: X86: Fix kvm_bitmap_or_dest_vcpus() to use irq shorthand
-In-Reply-To: <20191202201314.543-2-peterx@redhat.com>
-References: <20191202201314.543-1-peterx@redhat.com> <20191202201314.543-2-peterx@redhat.com>
-Date:   Tue, 03 Dec 2019 10:25:13 +0100
-Message-ID: <875zixdame.fsf@vitty.brq.redhat.com>
+        Tue, 3 Dec 2019 04:25:54 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0Tjo4jQE_1575365150;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0Tjo4jQE_1575365150)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 03 Dec 2019 17:25:52 +0800
+Subject: Re: [PATCH RESEND] sched/numa: expose per-task
+ pages-migration-failure
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <7038afda-dd08-f01f-5da0-afadf76f5533@linux.alibaba.com>
+ <20191203071615.GD115767@gmail.com>
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Message-ID: <d67d273c-41e7-d046-cdd1-0b2faae2ed07@linux.alibaba.com>
+Date:   Tue, 3 Dec 2019 17:25:49 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-X-MC-Unique: 5J8t3HomMduur_xMWDv3ng-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191203071615.GD115767@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Xu <peterx@redhat.com> writes:
+On 2019/12/3 下午3:16, Ingo Molnar wrote:
+[snip]
+>>  kernel/sched/debug.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+>> index f7e4579e746c..73c4809c8f37 100644
+>> --- a/kernel/sched/debug.c
+>> +++ b/kernel/sched/debug.c
+>> @@ -848,6 +848,7 @@ static void sched_show_numa(struct task_struct *p, struct seq_file *m)
+>>  	P(total_numa_faults);
+>>  	SEQ_printf(m, "current_node=%d, numa_group_id=%d\n",
+>>  			task_node(p), task_numa_group_id(p));
+>> +	SEQ_printf(m, "migfailed=%lu\n", p->numa_faults_locality[2]);
+> 
+> Any reason not to expose the other 2 fields of this array as well, which 
+> show remote/local migrations?
 
-> The 3rd parameter of kvm_apic_match_dest() is the irq shorthand,
-> rather than the irq delivery mode.
->
-> Fixes: 7ee30bc132c683d06a6d9e360e39e483e3990708
+The rest are local/remote faults counter, AFAIK not related to
+migration, when the CPU triggered PF is from the same node of page
+(before migration), local faults increased.
 
-Better expressed as
+Regards,
+Michael Wang
 
-Fixes: 7ee30bc132c6 ("KVM: x86: deliver KVM IOAPIC scan request to target v=
-CPUs")
-
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-> ---
->  arch/x86/kvm/lapic.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index cf9177b4a07f..1eabe58bb6d5 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -1151,7 +1151,7 @@ void kvm_bitmap_or_dest_vcpus(struct kvm *kvm, stru=
-ct kvm_lapic_irq *irq,
->  =09=09=09if (!kvm_apic_present(vcpu))
->  =09=09=09=09continue;
->  =09=09=09if (!kvm_apic_match_dest(vcpu, NULL,
-> -=09=09=09=09=09=09 irq->delivery_mode,
-> +=09=09=09=09=09=09 irq->shorthand,
->  =09=09=09=09=09=09 irq->dest_id,
->  =09=09=09=09=09=09 irq->dest_mode))
->  =09=09=09=09continue;
-
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-
---=20
-Vitaly
-
+> 
+> Thanks,
+> 
+> 	Ingo
+> 
