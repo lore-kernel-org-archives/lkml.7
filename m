@@ -2,89 +2,178 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74289C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C337C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56B5520661
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A59A20637
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:38:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbfLCHgk (ORCPT
+        id S1727491AbfLCHis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 02:36:40 -0500
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2525 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727444AbfLCHgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 02:36:39 -0500
-Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 7819FD447DA005F45EFD;
-        Tue,  3 Dec 2019 15:36:36 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 3 Dec 2019 15:36:36 +0800
-Received: from architecture4 (10.160.196.180) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Tue, 3 Dec 2019 15:36:35 +0800
-Date:   Tue, 3 Dec 2019 15:41:54 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Daniel Rosenberg <drosen@google.com>
-CC:     Theodore Ts'o <tytso@mit.edu>, <linux-ext4@vger.kernel.org>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        Eric Biggers <ebiggers@kernel.org>,
-        <linux-fscrypt@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jonathan Corbet <corbet@lwn.net>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        <kernel-team@android.com>
-Subject: Re: [PATCH 4/8] vfs: Fold casefolding into vfs
-Message-ID: <20191203074154.GA216261@architecture4>
-References: <20191203051049.44573-1-drosen@google.com>
- <20191203051049.44573-5-drosen@google.com>
+        Tue, 3 Dec 2019 02:38:48 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:57125 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727386AbfLCHis (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 02:38:48 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ic2lf-0006ab-40; Tue, 03 Dec 2019 08:38:43 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ic2ld-0007Cq-KN; Tue, 03 Dec 2019 08:38:41 +0100
+Date:   Tue, 3 Dec 2019 08:38:41 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "rjui@broadcom.com" <rjui@broadcom.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alice Guo <alice.guo@nxp.com>
+Subject: Re: [PATCH 2/2] gpio: bcm-kona: use platform_irq_count
+Message-ID: <20191203073841.6j5viopvzpuckmzo@pengutronix.de>
+References: <1575352925-17271-1-git-send-email-peng.fan@nxp.com>
+ <1575352925-17271-2-git-send-email-peng.fan@nxp.com>
+ <20191203065751.w23dypag4745qv7i@pengutronix.de>
+ <AM0PR04MB4481AD45530915B0BA18C45F88420@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20191203071534.zqxlizjkav4ul2n5@pengutronix.de>
+ <AM0PR04MB4481DE4769CA2504B3EDD4C588420@AM0PR04MB4481.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191203051049.44573-5-drosen@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.160.196.180]
-X-ClientProxiedBy: dggeme719-chm.china.huawei.com (10.1.199.115) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM0PR04MB4481DE4769CA2504B3EDD4C588420@AM0PR04MB4481.eurprd04.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 09:10:45PM -0800, Daniel Rosenberg wrote:
-> Ext4 and F2fs are both using casefolding, and they, along with any other
-> filesystem that adds the feature, will be using identical dentry_ops.
-> Additionally, those dentry ops interfere with the dentry_ops required
-> for fscrypt once we add support for casefolding and encryption.
-> Moving this into the vfs removes code duplication as well as the
-> complication with encryption.
+On Tue, Dec 03, 2019 at 07:23:14AM +0000, Peng Fan wrote:
+> > Subject: Re: [PATCH 2/2] gpio: bcm-kona: use platform_irq_count
+> > 
+> > On Tue, Dec 03, 2019 at 07:00:40AM +0000, Peng Fan wrote:
+> > > > Subject: Re: [PATCH 2/2] gpio: bcm-kona: use platform_irq_count
+> > > >
+> > > > On Tue, Dec 03, 2019 at 06:04:27AM +0000, Peng Fan wrote:
+> > > > > From: Peng Fan <peng.fan@nxp.com>
+> > > > >
+> > > > > Use platform_irq_count to replace of_irq_count
+> > > > >
+> > > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > > > ---
+> > > > >
+> > > > > V1:
+> > > > >  Code inspection, not tested
+> > > > >
+> > > > >  drivers/gpio/gpio-bcm-kona.c | 3 +--
+> > > > >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/gpio/gpio-bcm-kona.c
+> > > > > b/drivers/gpio/gpio-bcm-kona.c index 4122683eb1f9..c50721980a7c
+> > > > 100644
+> > > > > --- a/drivers/gpio/gpio-bcm-kona.c
+> > > > > +++ b/drivers/gpio/gpio-bcm-kona.c
+> > > > > @@ -19,7 +19,6 @@
+> > > > >  #include <linux/io.h>
+> > > > >  #include <linux/gpio/driver.h>
+> > > > >  #include <linux/of_device.h>
+> > > > > -#include <linux/of_irq.h>
+> > > > >  #include <linux/init.h>
+> > > > >  #include <linux/irqdomain.h>
+> > > > >  #include <linux/irqchip/chained_irq.h> @@ -586,7 +585,7 @@ static
+> > > > > int bcm_kona_gpio_probe(struct platform_device *pdev)
+> > > > >
+> > > > >  	kona_gpio->gpio_chip = template_chip;
+> > > > >  	chip = &kona_gpio->gpio_chip;
+> > > > > -	kona_gpio->num_bank = of_irq_count(dev->of_node);
+> > > > > +	kona_gpio->num_bank = platform_irq_count(pdev);
+> > > >
+> > > > of_irq_count returns 0 or a positive int while platform_irq_count
+> > > > might return a negative error code. This needs handling. Also I
+> > > > wonder why
+> > > > platform_irq_count() is better than of_irq_count() which would be
+> > > > good to describe in the commit log.
+> > >
+> > > Inspired from
+> > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml
+> > > .org%2Flkml%2F2015%2F11%2F18%2F466&amp;data=02%7C01%7Cpeng.f
+> > an%40nxp.c
+> > >
+> > om%7C46364bf12479463df7d308d777c09b39%7C686ea1d3bc2b4c6fa92cd9
+> > 9c5c3016
+> > >
+> > 35%7C0%7C0%7C637109541440912984&amp;sdata=awTvwwmo4692Hx7IJ
+> > H%2BllEVJH7
+> > > ngINufoMH8UsosU%2BA%3D&amp;reserved=0
+> > > From Rob:
+> > > "
+> > > So I started looking at why you are using of_irq_count which drivers
+> > > shouldn't need to. In patch 5 you use it to allocate memory to store
+> > > the irq names, then use them here...
+> > > "
+> > >
+> > > Is this ok?
+> > 
+> > I would say something like:
+> > 
+> > 	platform_irq_count() is the more generic way (independent of
+> > 	device trees) to determine the count of available interrupts. So
+> > 	use this instead.
+> > 
+> > 	As platform_irq_count() might return an error code (which
+> > 	of_irq_count doesn't) some additional handling is necessary.
 > 
-> Currently this is pretty close to just moving the existing f2fs/ext4
-> code up a level into the vfs, although there is a lot of room for
-> improvement now.
+> Thanks, how about this change?
+> @@ -586,11 +585,15 @@ static int bcm_kona_gpio_probe(struct platform_device *pdev)
 > 
-> Signed-off-by: Daniel Rosenberg <drosen@google.com>
+>         kona_gpio->gpio_chip = template_chip;
+>         chip = &kona_gpio->gpio_chip;
+> -       kona_gpio->num_bank = of_irq_count(dev->of_node);
+> -       if (kona_gpio->num_bank == 0) {
+> +       ret = platform_irq_count(pdev);
+> +       if (!ret) {
+>                 dev_err(dev, "Couldn't determine # GPIO banks\n");
+>                 return -ENOENT;
+> +       } else if (ret < 0) {
+> +               return ret;
 
-I'm afraid that such vfs modification is unneeded.
+This is inconsitent. In the ret==0 case you emit an error message, in
+the ret < 0 case you don't. I think the sensible approach would be to
+do:
 
-Just a quick glance it seems just can be replaced by introducing some
-.d_cmp, .d_hash helpers (or with little modification) and most non-Android
-emulated storage files are not casefolded (even in Android).
+	if (ret == 0) {
+		dev_err(dev, "Couldn't determine # GPIO banks\n");
+		return -ENOENT;
+	} else if (ret < 0) {
+		if (ret != -EPROBE_DEFER)
+			dev_err(dev, "Failed to determine count of GPIO banks (%pe)\n", ERR_PTR(ret));
+		return ret;
+	}
 
-"those dentry ops interfere with the dentry_ops required for fscrypt",
-I don't think it's a real diffculty and it could be done with some
-better approach instead.
+Best regards
+Uwe
 
-Thanks,
-Gao Xiang
-
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
