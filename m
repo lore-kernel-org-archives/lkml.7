@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E4DC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 171C9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 507EC2080F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC70D2073C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412766;
-	bh=4Hi7puFYa9ZD/tWeZe+cdHnTgvx3uxgPBqtlp1x6mX4=;
+	s=default; t=1575412768;
+	bh=yPoiiB8nW+V4aZlHFa+hH08rvxh+w9pWkK2I9swro+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SV+iNB2+d8btLdiGqsoNy5Kku8rm47Mb8ewQSP85kJ5eJ8RHG9b2VeKLegziIL4+G
-	 BSqd3M1MEvBKyqjmgalVJFI5NQKn5iP3k9sNF2PKeB0GkTH7b+6FsZJyuNx3py2nVK
-	 KdrVcDXF3W8NaJaizeOGXvRPZnQykETUumwoWJ7g=
+	b=yObPdbx7LKp6IXlmNWov+28sumKIszWE6qwuY7V6tI7dch7Nmj6LL3RO/05aRnDap
+	 nlv1X5UJXyOjdv9j2R4muf1fSKlJTU+IAMJvpsZZ2B7f4W2ebJqOn3EgyJ+mLaO/gq
+	 oUkXjU3Sm7ou7u6VbEgpZysvqmwryflROR37+o5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbfLCWjZ (ORCPT
+        id S1728218AbfLCWj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:39:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49298 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:39:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727850AbfLCWjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:39:19 -0500
+        id S1727872AbfLCWjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:39:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4BDE207DD;
-        Tue,  3 Dec 2019 22:39:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF16F207DD;
+        Tue,  3 Dec 2019 22:39:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412758;
-        bh=4Hi7puFYa9ZD/tWeZe+cdHnTgvx3uxgPBqtlp1x6mX4=;
+        s=default; t=1575412763;
+        bh=yPoiiB8nW+V4aZlHFa+hH08rvxh+w9pWkK2I9swro+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sEEJmQkr85TyA++YBeasVmLoubQC4/Did/d5PNzK3B58xG3bTlgQidmJ1SKQ6ILrw
-         jlqR1AvDZDaOn5nzk/3poWHpBEvSsVcM7YjZXj6nvuqiDvHYs5+fRcv79ncaEonFon
-         COLKqeTTAD7CybjZWLJgqED50rVwFv+pEkw7cTU0=
+        b=SFVV8yKizovC3i7sK/1WRWcvD0izFZ4m8q6gGb2Ogg8Nnf1HFKftcBf5z5+ZjEW2I
+         Uh9Au1BasDDY7yXmqpaW+XdJsAIYM+wRY5HkiD3bXr4aVplaySXeGXluYm+HsrS1JB
+         E1XYPX9/4e1uXBUfWjlWySvW6oPZq6yRlbUUs4+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeroen de Borst <jeroendb@google.com>,
-        Catherine Sullivan <csully@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 16/46] gve: Fix the queue page list allocated pages count
-Date:   Tue,  3 Dec 2019 23:35:36 +0100
-Message-Id: <20191203212733.526080403@linuxfoundation.org>
+        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH 5.4 08/46] staging: rtl8192e: fix potential use after free
+Date:   Tue,  3 Dec 2019 23:35:28 +0100
+Message-Id: <20191203212722.065206368@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203212705.175425505@linuxfoundation.org>
 References: <20191203212705.175425505@linuxfoundation.org>
@@ -60,42 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeroen de Borst <jeroendb@google.com>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit a95069ecb7092d03b2ea1c39ee04514fe9627540 ]
+commit b7aa39a2ed0112d07fc277ebd24a08a7b2368ab9 upstream.
 
-In gve_alloc_queue_page_list(), when a page allocation fails,
-qpl->num_entries will be wrong.  In this case priv->num_registered_pages
-can underflow in gve_free_queue_page_list(), causing subsequent calls
-to gve_alloc_queue_page_list() to fail.
+The variable skb is released via kfree_skb() when the return value of
+_rtl92e_tx is not zero. However, after that, skb is accessed again to
+read its length, which may result in a use after free bug. This patch
+fixes the bug by moving the release operation to where skb is never
+used later.
 
-Fixes: f5cedc84a30d ("gve: Add transmit and receive support")
-Signed-off-by: Jeroen de Borst <jeroendb@google.com>
-Reviewed-by: Catherine Sullivan <csully@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1572965351-6745-1-git-send-email-bianpan2016@163.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/google/gve/gve_main.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/google/gve/gve_main.c
-+++ b/drivers/net/ethernet/google/gve/gve_main.c
-@@ -544,7 +544,7 @@ static int gve_alloc_queue_page_list(str
- 	}
+---
+ drivers/staging/rtl8192e/rtl8192e/rtl_core.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+--- a/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
++++ b/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
+@@ -1616,14 +1616,15 @@ static void _rtl92e_hard_data_xmit(struc
+ 	memcpy((unsigned char *)(skb->cb), &dev, sizeof(dev));
+ 	skb_push(skb, priv->rtllib->tx_headroom);
+ 	ret = _rtl92e_tx(dev, skb);
+-	if (ret != 0)
+-		kfree_skb(skb);
  
- 	qpl->id = id;
--	qpl->num_entries = pages;
-+	qpl->num_entries = 0;
- 	qpl->pages = kvzalloc(pages * sizeof(*qpl->pages), GFP_KERNEL);
- 	/* caller handles clean up */
- 	if (!qpl->pages)
-@@ -562,6 +562,7 @@ static int gve_alloc_queue_page_list(str
- 		/* caller handles clean up */
- 		if (err)
- 			return -ENOMEM;
-+		qpl->num_entries++;
+ 	if (queue_index != MGNT_QUEUE) {
+ 		priv->rtllib->stats.tx_bytes += (skb->len -
+ 						 priv->rtllib->tx_headroom);
+ 		priv->rtllib->stats.tx_packets++;
  	}
- 	priv->num_registered_pages += pages;
++
++	if (ret != 0)
++		kfree_skb(skb);
+ }
  
+ static int _rtl92e_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
 
 
