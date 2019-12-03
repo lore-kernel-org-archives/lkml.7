@@ -2,203 +2,151 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59BBEC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1699C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2442B2068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99C632068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:32:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Eo2Tw1qp"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="IKss/fU+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbfLCFa1 (ORCPT
+        id S1727024AbfLCFcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 00:30:27 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:53112 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbfLCFa0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 00:30:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=fasHx2KRVQANkAag/rtzNmdYDi10qgh4xlJuuHfsM7I=; b=Eo2Tw1qpTglRUBzzKh4KHekHS
-        MG9I0TAHFIY17B2RpTzLKPVWZ+X/jaHOGUDa/fVa+4pZWAKehkeqd+uAhmdrUBZw2tS9W8B4+6SUv
-        02RYQRnO+xCCCRh5IKgL1pHFiwxUL4oIDt8noq9UyQDLvP6O/qk+aX5y3C6VqWdB+XxUb6BN+XtdV
-        RNZLAHC5Wc+HIFCV5oAsJcyWdij865PYUk8WAPtIEJIDOrMCYQnt/ZIbUlx4aY9KVo5BWP97n95gw
-        wileGc5m4doam4/bw72H3DJOqddWzASrdMpJ60C5d2fH6IFtD3/5PPQthd/TkMOsmhRyW67sZwBX/
-        uF3q3pCCg==;
-Received: from [2601:1c0:6280:3f0::5a22]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ic0lU-0007lO-O8; Tue, 03 Dec 2019 05:30:24 +0000
-Subject: Re: [PATCH v3 3/3] kcsan: Prefer __always_inline for fast-path
-To:     Marco Elver <elver@google.com>
-Cc:     mark.rutland@arm.com, paulmck@kernel.org,
-        linux-kernel@vger.kernel.org, will@kernel.org,
-        peterz@infradead.org, boqun.feng@gmail.com, arnd@arndb.de,
-        dvyukov@google.com, linux-arch@vger.kernel.org,
-        kasan-dev@googlegroups.com
-References: <20191126140406.164870-1-elver@google.com>
- <20191126140406.164870-3-elver@google.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <00ee3b40-0e37-c9ac-3209-d07b233a0c1d@infradead.org>
-Date:   Mon, 2 Dec 2019 21:30:22 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 3 Dec 2019 00:32:13 -0500
+Received: from mail-eopbgr690089.outbound.protection.outlook.com ([40.107.69.89]:35200
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725907AbfLCFcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 00:32:13 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JeQ6z8QD+pZNXk3ONfS/zPksgi6bYODld2V06G7iCr8b/Vkx4MotoAmAFgr+LsWKU9ebaYhjW5Apz77rsCTX6Zp55MuDWOi+Y9sQRTP9+gODQb8C6RJxErKTu7hjsfb9toIS5030X+xyokMHhp3mqWoLNfacStv2cYfOwbFCoHztkNa0d/o5wxF0w5hsYF4gfBRv33jRDtp4HSWjJoFhYahHGtkeCgIw6j+2BQ5VWoSggEAiYYRWy3yXm3I1ZAGZLtDZrq7E6GnGWBw6+u0JELo4J6jtQSx9Vg3Ujq6DFR36zq2KtFS9p69ohSq8jBHAvkWjW3baPTpQr0ohUgwAVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gTEEFD06D0EkWGzivoVVxvmD+yuMFI4cJFO52RLEY7M=;
+ b=jtTg+eCPs00MBHYxmKZlhaG/ahK8iK2DGyPd8SNv10UNEMDezpKDgnaKLOCXOKV3EOd30XgkS3s6AUMGn1AmFj9uu/x/wNpZtn9uLJY//7To08MouxtakLOqPxYwnbUI7GMdCbUu1kW+AL8DXfBlOLyAiOELK4MoVOdUhMlzXgR1FO251zTCZDzaHm8iBeRJbD3rLfWZ55VBO+1cknVDkgOoCVercvwPzyz+orZeEsqYGK0hyNMeb3LU4G5gre52uNQS4MvMEGFIkc4QMlwUi/2cMDYdgPMZesZsEOSFYx4SMOJfq1Z2NyZPnYCKihHEvfRv5GItNoyWca1Sxyr5Og==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gTEEFD06D0EkWGzivoVVxvmD+yuMFI4cJFO52RLEY7M=;
+ b=IKss/fU+myvqyB9HSdQJGQ9ICEE7HwS0RbeT29jChV+ePgKd3zyeAbE9TnEfaDy6Ftibw4CSKq7jTFklmLSxCsbZlrSE2HUtzl35uGhE5pEVuW+o2PxJMJ4/0Q8hgkC1+85jyq090nUyI8mJqHR79qgqiWFC7dALEAkeRxjbShk=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Rijo-john.Thomas@amd.com; 
+Received: from CY4PR12MB1925.namprd12.prod.outlook.com (10.175.62.7) by
+ CY4PR12MB1430.namprd12.prod.outlook.com (10.168.167.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.22; Tue, 3 Dec 2019 05:32:10 +0000
+Received: from CY4PR12MB1925.namprd12.prod.outlook.com
+ ([fe80::cd8b:1d7e:31c2:e8b4]) by CY4PR12MB1925.namprd12.prod.outlook.com
+ ([fe80::cd8b:1d7e:31c2:e8b4%7]) with mapi id 15.20.2495.014; Tue, 3 Dec 2019
+ 05:32:09 +0000
+From:   Rijo Thomas <Rijo-john.Thomas@amd.com>
+To:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Gary Hook <gary.hook@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+Cc:     Rijo Thomas <Rijo-john.Thomas@amd.com>,
+        Nimesh Easow <Nimesh.Easow@amd.com>,
+        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: [RFC PATCH v2 0/6] Add TEE interface support to AMD Secure Processor driver
+Date:   Tue,  3 Dec 2019 10:09:15 +0530
+Message-Id: <cover.1575282249.git.Rijo-john.Thomas@amd.com>
+X-Mailer: git-send-email 1.9.1
+Content-Type: text/plain
+X-ClientProxiedBy: MA1PR0101CA0006.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:21::16) To CY4PR12MB1925.namprd12.prod.outlook.com
+ (2603:10b6:903:120::7)
 MIME-Version: 1.0
-In-Reply-To: <20191126140406.164870-3-elver@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Mailer: git-send-email 1.9.1
+X-Originating-IP: [165.204.156.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 98ff1c47-f031-4742-257f-08d777b22434
+X-MS-TrafficTypeDiagnostic: CY4PR12MB1430:|CY4PR12MB1430:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CY4PR12MB1430D2530248DC59B0097E97CF420@CY4PR12MB1430.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2150;
+X-Forefront-PRVS: 02408926C4
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(39860400002)(366004)(376002)(346002)(199004)(189003)(81156014)(3846002)(50226002)(52116002)(305945005)(2616005)(186003)(316002)(110136005)(6486002)(16586007)(26005)(48376002)(66556008)(66476007)(66946007)(54906003)(14444005)(5660300002)(6666004)(478600001)(14454004)(36756003)(51416003)(8676002)(8936002)(50466002)(99286004)(386003)(6436002)(25786009)(6506007)(7736002)(47776003)(6116002)(86362001)(6512007)(2906002)(66066001)(4326008)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1430;H:CY4PR12MB1925.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: rsWiK3Whcu/mMXkR/TLDdyNdhblj8xEuy8i4Pj96CSTT2tNJO8Hma4utVLWQjxOehGsxxF+9I+zL1gPClczB5pI1drpUuuzlwrnSpIfkAns3faHKRsAjbeG9hNu1nyETCEIOlJ84Kn+QQrnYgxbPlB4qCDphLEmNxJjXiCLaXCQXZilS5sThnIrK4EOUD6Hxji0czR6SDpbnfRswnK2QCS/H85plLpn1JVtZU7/XfaIYa8oO4Gbqza82rCsO46G/YYNd/v/6yWDGJTgbAjHu9N+A5Vs8wQYoDsIWwKDYRhwb6A9/eCZM/7SDrVt+VKTLObyNSYyBGH5RLjRgywdpXt/NjOzF8jtctprWaWvGKMf8o8e6yr0KVR7M3RItuCkXGQJPMngiyj1HACP4vM/DhHYAHsfM+Lx0SF5njgK6paSTpVfRxY5GAwfINfnDqXDa
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 98ff1c47-f031-4742-257f-08d777b22434
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Dec 2019 05:32:09.7273
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +zeAkGPnKd7c1SqTE3+trEovj7Dszdd4QeJOZK6enT5fB+csNBp3zkdViuBAA8g+QlxNwySq+TiqONfi3N7B5w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1430
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/26/19 6:04 AM, Marco Elver wrote:
-> Prefer __always_inline for fast-path functions that are called outside
-> of user_access_save, to avoid generating UACCESS warnings when
-> optimizing for size (CC_OPTIMIZE_FOR_SIZE). It will also avoid future
-> surprises with compiler versions that change the inlining heuristic even
-> when optimizing for performance.
-> 
-> Report: http://lkml.kernel.org/r/58708908-84a0-0a81-a836-ad97e33dbb62@infradead.org
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Marco Elver <elver@google.com>
+The goal of this patch series is to introduce TEE (Trusted Execution
+Environment) interface support to AMD Secure Processor driver. The
+TEE is a secure area of a processor which ensures that sensitive data
+is stored, processed and protected in an isolated and trusted
+environment. The Platform Security Processor (PSP) is a dedicated
+processor which provides TEE to enable HW platform security. It offers
+protection against software attacks generated in Rich Operating System
+(Rich OS) such as Linux running on x86.
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+Based on the platform feature support, the PSP is capable of supporting
+either SEV (Secure Encrypted Virtualization) and/or TEE. The first three
+patches in this series is about moving SEV specific functions and data
+structures from PSP device driver file to a dedicated SEV interface
+driver file. The last two patches add TEE interface support to AMD
+Secure Processor driver. This TEE interface will be used by AMD-TEE
+driver to submit command buffers for processing in PSP Trusted Execution
+Environment.
 
-Thanks.
+v2:
+* Rebased the patches on cryptodev-2.6 tree with base commit
+  d158367682cd (crypto: atmel - Fix selection of CRYPTO_AUTHENC)
+* Regenerated patch with correct diff-stat to show file rename
+* Used Co-developed-by: tag to give proper credit to co-author
 
-> ---
-> Rebased on: locking/kcsan branch of tip tree.
-> ---
->  kernel/kcsan/atomic.h   |  2 +-
->  kernel/kcsan/core.c     | 16 +++++++---------
->  kernel/kcsan/encoding.h | 14 +++++++-------
->  3 files changed, 15 insertions(+), 17 deletions(-)
-> 
-> diff --git a/kernel/kcsan/atomic.h b/kernel/kcsan/atomic.h
-> index 576e03ddd6a3..a9c193053491 100644
-> --- a/kernel/kcsan/atomic.h
-> +++ b/kernel/kcsan/atomic.h
-> @@ -18,7 +18,7 @@
->   * than cast to volatile. Eventually, we hope to be able to remove this
->   * function.
->   */
-> -static inline bool kcsan_is_atomic(const volatile void *ptr)
-> +static __always_inline bool kcsan_is_atomic(const volatile void *ptr)
->  {
->  	/* only jiffies for now */
->  	return ptr == &jiffies;
-> diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-> index 3314fc29e236..c616fec639cd 100644
-> --- a/kernel/kcsan/core.c
-> +++ b/kernel/kcsan/core.c
-> @@ -78,10 +78,8 @@ static atomic_long_t watchpoints[CONFIG_KCSAN_NUM_WATCHPOINTS + NUM_SLOTS-1];
->   */
->  static DEFINE_PER_CPU(long, kcsan_skip);
->  
-> -static inline atomic_long_t *find_watchpoint(unsigned long addr,
-> -					     size_t size,
-> -					     bool expect_write,
-> -					     long *encoded_watchpoint)
-> +static __always_inline atomic_long_t *
-> +find_watchpoint(unsigned long addr, size_t size, bool expect_write, long *encoded_watchpoint)
->  {
->  	const int slot = watchpoint_slot(addr);
->  	const unsigned long addr_masked = addr & WATCHPOINT_ADDR_MASK;
-> @@ -146,7 +144,7 @@ insert_watchpoint(unsigned long addr, size_t size, bool is_write)
->   *	2. the thread that set up the watchpoint already removed it;
->   *	3. the watchpoint was removed and then re-used.
->   */
-> -static inline bool
-> +static __always_inline bool
->  try_consume_watchpoint(atomic_long_t *watchpoint, long encoded_watchpoint)
->  {
->  	return atomic_long_try_cmpxchg_relaxed(watchpoint, &encoded_watchpoint, CONSUMED_WATCHPOINT);
-> @@ -160,7 +158,7 @@ static inline bool remove_watchpoint(atomic_long_t *watchpoint)
->  	return atomic_long_xchg_relaxed(watchpoint, INVALID_WATCHPOINT) != CONSUMED_WATCHPOINT;
->  }
->  
-> -static inline struct kcsan_ctx *get_ctx(void)
-> +static __always_inline struct kcsan_ctx *get_ctx(void)
->  {
->  	/*
->  	 * In interrupts, use raw_cpu_ptr to avoid unnecessary checks, that would
-> @@ -169,7 +167,7 @@ static inline struct kcsan_ctx *get_ctx(void)
->  	return in_task() ? &current->kcsan_ctx : raw_cpu_ptr(&kcsan_cpu_ctx);
->  }
->  
-> -static inline bool is_atomic(const volatile void *ptr)
-> +static __always_inline bool is_atomic(const volatile void *ptr)
->  {
->  	struct kcsan_ctx *ctx = get_ctx();
->  
-> @@ -193,7 +191,7 @@ static inline bool is_atomic(const volatile void *ptr)
->  	return kcsan_is_atomic(ptr);
->  }
->  
-> -static inline bool should_watch(const volatile void *ptr, int type)
-> +static __always_inline bool should_watch(const volatile void *ptr, int type)
->  {
->  	/*
->  	 * Never set up watchpoints when memory operations are atomic.
-> @@ -226,7 +224,7 @@ static inline void reset_kcsan_skip(void)
->  	this_cpu_write(kcsan_skip, skip_count);
->  }
->  
-> -static inline bool kcsan_is_enabled(void)
-> +static __always_inline bool kcsan_is_enabled(void)
->  {
->  	return READ_ONCE(kcsan_enabled) && get_ctx()->disable_count == 0;
->  }
-> diff --git a/kernel/kcsan/encoding.h b/kernel/kcsan/encoding.h
-> index b63890e86449..f03562aaf2eb 100644
-> --- a/kernel/kcsan/encoding.h
-> +++ b/kernel/kcsan/encoding.h
-> @@ -59,10 +59,10 @@ encode_watchpoint(unsigned long addr, size_t size, bool is_write)
->  		      (addr & WATCHPOINT_ADDR_MASK));
->  }
->  
-> -static inline bool decode_watchpoint(long watchpoint,
-> -				     unsigned long *addr_masked,
-> -				     size_t *size,
-> -				     bool *is_write)
-> +static __always_inline bool decode_watchpoint(long watchpoint,
-> +					      unsigned long *addr_masked,
-> +					      size_t *size,
-> +					      bool *is_write)
->  {
->  	if (watchpoint == INVALID_WATCHPOINT ||
->  	    watchpoint == CONSUMED_WATCHPOINT)
-> @@ -78,13 +78,13 @@ static inline bool decode_watchpoint(long watchpoint,
->  /*
->   * Return watchpoint slot for an address.
->   */
-> -static inline int watchpoint_slot(unsigned long addr)
-> +static __always_inline int watchpoint_slot(unsigned long addr)
->  {
->  	return (addr / PAGE_SIZE) % CONFIG_KCSAN_NUM_WATCHPOINTS;
->  }
->  
-> -static inline bool matching_access(unsigned long addr1, size_t size1,
-> -				   unsigned long addr2, size_t size2)
-> +static __always_inline bool matching_access(unsigned long addr1, size_t size1,
-> +					    unsigned long addr2, size_t size2)
->  {
->  	unsigned long end_range1 = addr1 + size1 - 1;
->  	unsigned long end_range2 = addr2 + size2 - 1;
-> 
+Rijo Thomas (6):
+  crypto: ccp - rename psp-dev files to sev-dev
+  crypto: ccp - create a generic psp-dev file
+  crypto: ccp - move SEV vdata to a dedicated data structure
+  crypto: ccp - check whether PSP supports SEV or TEE before
+    initialization
+  crypto: ccp - add TEE support for Raven Ridge
+  crypto: ccp - provide in-kernel API to submit TEE commands
 
+ drivers/crypto/ccp/Makefile  |    4 +-
+ drivers/crypto/ccp/psp-dev.c | 1020 ++++------------------------------------
+ drivers/crypto/ccp/psp-dev.h |   50 +-
+ drivers/crypto/ccp/sev-dev.c | 1053 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/crypto/ccp/sev-dev.h |   62 +++
+ drivers/crypto/ccp/sp-dev.h  |   17 +-
+ drivers/crypto/ccp/sp-pci.c  |   43 +-
+ drivers/crypto/ccp/tee-dev.c |  364 +++++++++++++++
+ drivers/crypto/ccp/tee-dev.h |  110 +++++
+ include/linux/psp-tee.h      |   73 +++
+ 10 files changed, 1827 insertions(+), 969 deletions(-)
+ create mode 100644 drivers/crypto/ccp/sev-dev.c
+ create mode 100644 drivers/crypto/ccp/sev-dev.h
+ create mode 100644 drivers/crypto/ccp/tee-dev.c
+ create mode 100644 drivers/crypto/ccp/tee-dev.h
+ create mode 100644 include/linux/psp-tee.h
 
--- 
-~Randy
+--
+1.9.1
 
