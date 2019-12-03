@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA537C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CC0C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D8EC20862
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:50:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 197942080F
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413412;
-	bh=O/VI7sXUGSsNwzPIEjdS0sm34QNGBeHgpdnhGgXZJwU=;
+	s=default; t=1575413420;
+	bh=Ig6GLgtVxG8RAfqsFCQe+ELgsgqLjsT/38hfFIajrIY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I+NdpPuYkKYcV+GOhQXVK37ksXqB8SPXKfJgJwCy1VeWKJRLU7Ll/QbKcq7m4hIG1
-	 uwg6vHmYSZUSYPCGR5vsxlCD3+1mh7O2G9GoT8amgLkW777HF03VdMgClOIkD+Q+IL
-	 J6Hw7t1moHDUPrVgbdrSrX9jWXeMiWhyJzBF/bo8=
+	b=Ec899eSXFuPI7QzqrPNQuA/N92Ggq9c7UHioieanNGUT0am/n2YYzt7LYV07rET6x
+	 rfrjjuQ43QVPZBluirtEgNs24N6/475O/1+qSRkUpl7Lycgs9XMfCG3gS5j5//+vHj
+	 TK5P2KlrLL+H/6zK9T8dwtdmgudv38ZNSmvYttUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729543AbfLCWuK (ORCPT
+        id S1729568AbfLCWuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:50:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41354 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:50:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729684AbfLCWuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:50:01 -0500
+        id S1729550AbfLCWuN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:50:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEB2C2084B;
-        Tue,  3 Dec 2019 22:49:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A4CC2084B;
+        Tue,  3 Dec 2019 22:50:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413400;
-        bh=O/VI7sXUGSsNwzPIEjdS0sm34QNGBeHgpdnhGgXZJwU=;
+        s=default; t=1575413412;
+        bh=Ig6GLgtVxG8RAfqsFCQe+ELgsgqLjsT/38hfFIajrIY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wlDqx/68gwYpvj4+WkX1Caa9dYyR7uSFeP02FkkZubdt1pGqi6tc3ZtG8Ek1LfjVk
-         wwXSwwv8GhjQpmRda7A6+fV4rtE2V+guQk+1oxla+LFWy4NsLT4J7SbrXKcJvulgae
-         7rkDsRVCuuXXGNujJfIwk1I3LVjovmD1fpT3y8SE=
+        b=TdMDyptmaG6czaQbc50rY2NROXgZ9jy2r3dJhyWewuiojIRxYFGRO6QVePbz37LYO
+         2hWHK6HAEspK0kpNx5HWtxdpQEz0DZzcPVw10mq6ygd6RyNH+CJ6md3QBlQQcF8oyx
+         KzZvH61SuxWfcJ6/7YF2LUNtssntMl0ce+gR3jGE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Keith Busch <keith.busch@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 086/321] nvme: provide fallback for discard alloc failure
-Date:   Tue,  3 Dec 2019 23:32:32 +0100
-Message-Id: <20191203223431.629531090@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Anand Jain <anand.jain@oracle.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 117/321] btrfs: Check for missing device before bio submission in btrfs_map_bio
+Date:   Tue,  3 Dec 2019 23:33:03 +0100
+Message-Id: <20191203223433.233907706@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,131 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Nikolay Borisov <nborisov@suse.com>
 
-[ Upstream commit cb5b7262b011cfb793519bf97e54dff5282da23c ]
+[ Upstream commit fc8a168aa9ab1680c2bd52bf9db7c994e0f2524f ]
 
-When boxes are run near (or to) OOM, we have a problem with the discard
-page allocation in nvme. If we fail allocating the special page, we
-return busy, and it'll get retried. But since ordering is honored for
-dispatch requests, we can keep retrying this same IO and failing. Behind
-that IO could be requests that want to free memory, but they never get
-the chance.
+Before btrfs_map_bio submits all stripe bios it does a number of checks
+to ensure the device for every stripe is present. However, it doesn't do
+a DEV_STATE_MISSING check, instead this is relegated to the lower level
+btrfs_schedule_bio (in the async submission case, sync submission
+doesn't check DEV_STATE_MISSING at all). Additionally
+btrfs_schedule_bios does the duplicate device->bdev check which has
+already been performed in btrfs_map_bio.
 
-Allocate a fixed discard page per controller for a safe fallback, and use
-that if the initial allocation fails.
+This patch moves the DEV_STATE_MISSING check in btrfs_map_bio and
+removes the duplicate device->bdev check. Doing so ensures that no bio
+cloning/submission happens for both async/sync requests in the face of
+missing device. This makes the async io submission path slightly shorter
+in terms of instruction count. No functional changes.
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Reviewed-by: Keith Busch <keith.busch@intel.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: Anand Jain <anand.jain@oracle.com>
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 41 ++++++++++++++++++++++++++++++++++------
- drivers/nvme/host/nvme.h |  3 +++
- 2 files changed, 38 insertions(+), 6 deletions(-)
+ fs/btrfs/volumes.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 44da9fe5b27b8..250ccf3108e98 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -551,9 +551,19 @@ static blk_status_t nvme_setup_discard(struct nvme_ns *ns, struct request *req,
- 	struct nvme_dsm_range *range;
- 	struct bio *bio;
+diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+index a8297e7489d98..f84c18e86c816 100644
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -6106,12 +6106,6 @@ static noinline void btrfs_schedule_bio(struct btrfs_device *device,
+ 	int should_queue = 1;
+ 	struct btrfs_pending_bios *pending_bios;
  
--	range = kmalloc_array(segments, sizeof(*range), GFP_ATOMIC);
--	if (!range)
--		return BLK_STS_RESOURCE;
-+	range = kmalloc_array(segments, sizeof(*range),
-+				GFP_ATOMIC | __GFP_NOWARN);
-+	if (!range) {
-+		/*
-+		 * If we fail allocation our range, fallback to the controller
-+		 * discard page. If that's also busy, it's safe to return
-+		 * busy, as we know we can make progress once that's freed.
-+		 */
-+		if (test_and_set_bit_lock(0, &ns->ctrl->discard_page_busy))
-+			return BLK_STS_RESOURCE;
-+
-+		range = page_address(ns->ctrl->discard_page);
-+	}
+-	if (test_bit(BTRFS_DEV_STATE_MISSING, &device->dev_state) ||
+-	    !device->bdev) {
+-		bio_io_error(bio);
+-		return;
+-	}
+-
+ 	/* don't bother with additional async steps for reads, right now */
+ 	if (bio_op(bio) == REQ_OP_READ) {
+ 		btrfsic_submit_bio(bio);
+@@ -6240,7 +6234,8 @@ blk_status_t btrfs_map_bio(struct btrfs_fs_info *fs_info, struct bio *bio,
  
- 	__rq_for_each_bio(bio, req) {
- 		u64 slba = nvme_block_nr(ns, bio->bi_iter.bi_sector);
-@@ -568,7 +578,10 @@ static blk_status_t nvme_setup_discard(struct nvme_ns *ns, struct request *req,
- 	}
- 
- 	if (WARN_ON_ONCE(n != segments)) {
--		kfree(range);
-+		if (virt_to_page(range) == ns->ctrl->discard_page)
-+			clear_bit_unlock(0, &ns->ctrl->discard_page_busy);
-+		else
-+			kfree(range);
- 		return BLK_STS_IOERR;
- 	}
- 
-@@ -653,8 +666,13 @@ void nvme_cleanup_cmd(struct request *req)
- 				blk_rq_bytes(req) >> ns->lba_shift);
- 	}
- 	if (req->rq_flags & RQF_SPECIAL_PAYLOAD) {
--		kfree(page_address(req->special_vec.bv_page) +
--		      req->special_vec.bv_offset);
-+		struct nvme_ns *ns = req->rq_disk->private_data;
-+		struct page *page = req->special_vec.bv_page;
-+
-+		if (page == ns->ctrl->discard_page)
-+			clear_bit_unlock(0, &ns->ctrl->discard_page_busy);
-+		else
-+			kfree(page_address(page) + req->special_vec.bv_offset);
- 	}
- }
- EXPORT_SYMBOL_GPL(nvme_cleanup_cmd);
-@@ -3551,6 +3569,7 @@ static void nvme_free_ctrl(struct device *dev)
- 	ida_simple_remove(&nvme_instance_ida, ctrl->instance);
- 	kfree(ctrl->effects);
- 	nvme_mpath_uninit(ctrl);
-+	kfree(ctrl->discard_page);
- 
- 	if (subsys) {
- 		mutex_lock(&subsys->lock);
-@@ -3592,6 +3611,14 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
- 	memset(&ctrl->ka_cmd, 0, sizeof(ctrl->ka_cmd));
- 	ctrl->ka_cmd.common.opcode = nvme_admin_keep_alive;
- 
-+	BUILD_BUG_ON(NVME_DSM_MAX_RANGES * sizeof(struct nvme_dsm_range) >
-+			PAGE_SIZE);
-+	ctrl->discard_page = alloc_page(GFP_KERNEL);
-+	if (!ctrl->discard_page) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
- 	ret = ida_simple_get(&nvme_instance_ida, 0, 0, GFP_KERNEL);
- 	if (ret < 0)
- 		goto out;
-@@ -3629,6 +3656,8 @@ out_free_name:
- out_release_instance:
- 	ida_simple_remove(&nvme_instance_ida, ctrl->instance);
- out:
-+	if (ctrl->discard_page)
-+		__free_page(ctrl->discard_page);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(nvme_init_ctrl);
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 2653e1f4196d5..cc4273f119894 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -238,6 +238,9 @@ struct nvme_ctrl {
- 	u16 maxcmd;
- 	int nr_reconnects;
- 	struct nvmf_ctrl_options *opts;
-+
-+	struct page *discard_page;
-+	unsigned long discard_page_busy;
- };
- 
- struct nvme_subsystem {
+ 	for (dev_nr = 0; dev_nr < total_devs; dev_nr++) {
+ 		dev = bbio->stripes[dev_nr].dev;
+-		if (!dev || !dev->bdev ||
++		if (!dev || !dev->bdev || test_bit(BTRFS_DEV_STATE_MISSING,
++						   &dev->dev_state) ||
+ 		    (bio_op(first_bio) == REQ_OP_WRITE &&
+ 		    !test_bit(BTRFS_DEV_STATE_WRITEABLE, &dev->dev_state))) {
+ 			bbio_error(bbio, first_bio, logical);
 -- 
 2.20.1
 
