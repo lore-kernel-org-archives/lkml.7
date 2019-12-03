@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 000E0C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F58C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C49D220684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 252DA2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412783;
-	bh=agtIT+Fb/8Aqb7w95t51UZyWZdd2rx3ZbCQuZGwZNb4=;
+	s=default; t=1575412788;
+	bh=pBxMfA/LO0cfq4iF5n+Gp0OohudChbk11rq/YDa8EcE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P6DnWbVnd+E4YrGdZNJagcGOSBTKF6nklVqh9kJfBf3mKx+YtrUx2NOeYRmuC8hSF
-	 oiAcACdQR/oQE+hAB9kW+zTRZBACYDBkIv8AOazSekMQYEqy86qSB2Pvgra3lH6ood
-	 8sKI5It2omS5vqizwb0esVcWd7YuojPMp46sflbU=
+	b=w7CkCu5VpGdyy1OqOIbKqr8Tp3V3ICK2ZGGZi9EOYubQyTlAFnm9A5LKd4tp0YG+B
+	 Bn9P1utsmyayGZJ4CeI68yXWf3lGH3rnhYSGBSX/YSkRFw8auie2x+jNLCpJCIkd13
+	 j5V0G4ZFKFXwOiE4PhfryeGbYbamAvw01SJO2YgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbfLCWjm (ORCPT
+        id S1727954AbfLCWjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:39:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50200 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:39:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728266AbfLCWjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:39:40 -0500
+        id S1728285AbfLCWjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:39:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AECC20684;
-        Tue,  3 Dec 2019 22:39:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16A2920684;
+        Tue,  3 Dec 2019 22:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412779;
-        bh=agtIT+Fb/8Aqb7w95t51UZyWZdd2rx3ZbCQuZGwZNb4=;
+        s=default; t=1575412784;
+        bh=pBxMfA/LO0cfq4iF5n+Gp0OohudChbk11rq/YDa8EcE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mej2HppyD1vhLBzvdmWJES6igAH/QLAjclpL9sc3FaQ+PV/BuCfNVH2mmFDJi+/5B
-         4LfU5ciWjb0yEVFv6HzlCGxDbyGPyUmeE0300/zk3v5QSCrm2fIh3VVlALEL5TgVYr
-         /ALYqfxbFkziMjpUgbsAQdPTg8UMiNvR8uCqTd5c=
+        b=j6jjfVuCZygD8zbRVZdQafdz0ApaEiuYKuTsPjTdvv5lAtsPvrlLTLCoxIQyjS/qA
+         10jegVuD4jSKKVPnaFdTFMl9TdcLOLa70aj7qi7lz6jzwJdzAeXNXrBzGrg6hVUg4F
+         UcOyn5lpEd0ouSTnvPLYB0497J0D+0yU4biL78eE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        kbuild test robot <lkp@intel.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 014/135] clk: samsung: exynos5433: Fix error paths
-Date:   Tue,  3 Dec 2019 23:34:14 +0100
-Message-Id: <20191203213008.174948129@linuxfoundation.org>
+Subject: [PATCH 5.3 016/135] ASoC: kirkwood: fix external clock probe defer
+Date:   Tue,  3 Dec 2019 23:34:16 +0100
+Message-Id: <20191203213008.857821884@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -64,69 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit faac3604d05e8015567124e5ee79edc3f1568a89 ]
+[ Upstream commit 4523817d51bc3b2ef38da768d004fda2c8bc41de ]
 
-Add checking the value returned by samsung_clk_alloc_reg_dump() and
-devm_kcalloc(). While fixing this, also release all gathered clocks.
+When our call to get the external clock fails, we forget to clean up
+the enabled internal clock correctly.  Enable the clock after we have
+obtained all our resources.
 
-Fixes: 523d3de41f02 ("clk: samsung: exynos5433: Add support for runtime PM")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-[s.nawrocki: squashed patch from K. Kozlowski adding missing slab.h header]
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Fixes: 84aac6c79bfd ("ASoC: kirkwood: fix loss of external clock at probe time")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Link: https://lore.kernel.org/r/E1iNGyK-0004oF-6A@rmk-PC.armlinux.org.uk
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/samsung/clk-exynos5433.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ sound/soc/kirkwood/kirkwood-i2s.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
-index 7824c2ba3d8e6..4b1aa9382ad28 100644
---- a/drivers/clk/samsung/clk-exynos5433.c
-+++ b/drivers/clk/samsung/clk-exynos5433.c
-@@ -13,6 +13,7 @@
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
-+#include <linux/slab.h>
+diff --git a/sound/soc/kirkwood/kirkwood-i2s.c b/sound/soc/kirkwood/kirkwood-i2s.c
+index 3446a113f482e..c323ae314b554 100644
+--- a/sound/soc/kirkwood/kirkwood-i2s.c
++++ b/sound/soc/kirkwood/kirkwood-i2s.c
+@@ -559,10 +559,6 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
+ 		return PTR_ERR(priv->clk);
+ 	}
  
- #include <dt-bindings/clock/exynos5433.h>
- 
-@@ -5584,6 +5585,8 @@ static int __init exynos5433_cmu_probe(struct platform_device *pdev)
- 
- 	data->clk_save = samsung_clk_alloc_reg_dump(info->clk_regs,
- 						    info->nr_clk_regs);
-+	if (!data->clk_save)
-+		return -ENOMEM;
- 	data->nr_clk_save = info->nr_clk_regs;
- 	data->clk_suspend = info->suspend_regs;
- 	data->nr_clk_suspend = info->nr_suspend_regs;
-@@ -5592,12 +5595,19 @@ static int __init exynos5433_cmu_probe(struct platform_device *pdev)
- 	if (data->nr_pclks > 0) {
- 		data->pclks = devm_kcalloc(dev, sizeof(struct clk *),
- 					   data->nr_pclks, GFP_KERNEL);
+-	err = clk_prepare_enable(priv->clk);
+-	if (err < 0)
+-		return err;
 -
-+		if (!data->pclks) {
-+			kfree(data->clk_save);
-+			return -ENOMEM;
-+		}
- 		for (i = 0; i < data->nr_pclks; i++) {
- 			struct clk *clk = of_clk_get(dev->of_node, i);
- 
--			if (IS_ERR(clk))
-+			if (IS_ERR(clk)) {
-+				kfree(data->clk_save);
-+				while (--i >= 0)
-+					clk_put(data->pclks[i]);
- 				return PTR_ERR(clk);
-+			}
- 			data->pclks[i] = clk;
+ 	priv->extclk = devm_clk_get(&pdev->dev, "extclk");
+ 	if (IS_ERR(priv->extclk)) {
+ 		if (PTR_ERR(priv->extclk) == -EPROBE_DEFER)
+@@ -578,6 +574,10 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
  		}
  	}
+ 
++	err = clk_prepare_enable(priv->clk);
++	if (err < 0)
++		return err;
++
+ 	/* Some sensible defaults - this reflects the powerup values */
+ 	priv->ctl_play = KIRKWOOD_PLAYCTL_SIZE_24;
+ 	priv->ctl_rec = KIRKWOOD_RECCTL_SIZE_24;
 -- 
 2.20.1
 
