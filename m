@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C12E7C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13352C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9155720674
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8B8420803
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413747;
-	bh=u0pEInAzhM+Of0cRAEW1Duv+Swgvq9rgar9zk6OYqZU=;
+	s=default; t=1575413749;
+	bh=E0sg7lpUyL7wlDReSjiLpi7Lh69WU5Wh/tgGnAYTUWY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qgHQUu/0ddnvEwTogRNsHcwCqOESx0ufa6n0YmvJgkshBFnuuZ5nfnatFdj/+b2BX
-	 520S4f/cmjci+v3eXi87BGiW1ZRuMGi2NvcQ3KKuhAeIgWp34bPUbqK5eSA0agkcxr
-	 83wJ2/33XfKT7DCaZoP00MVKG/27a4nyKanVgao8=
+	b=CBBTRtfy7x5D1XrTSv9LdKcEPneKuTd1sA7CU2X2eIkhhFs9/SlAkWX3qL3YC9WhL
+	 m9/kXKBwhy0HA31xfSRYsLTVYNXYGIeWEJoHD3Vc9804WWdHKzaDB7ZmrjiRfmG48y
+	 a+22EU7Sq6tcWsi/He344EfuIdMmyj5Ia+XEWkyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729646AbfLCWzq (ORCPT
+        id S1730376AbfLCWzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:55:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50262 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:55:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730191AbfLCWzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:55:44 -0500
+        id S1730366AbfLCWzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:55:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4008B2053B;
-        Tue,  3 Dec 2019 22:55:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DB692053B;
+        Tue,  3 Dec 2019 22:55:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413743;
-        bh=u0pEInAzhM+Of0cRAEW1Duv+Swgvq9rgar9zk6OYqZU=;
+        s=default; t=1575413738;
+        bh=E0sg7lpUyL7wlDReSjiLpi7Lh69WU5Wh/tgGnAYTUWY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Db5ydlGOBS4B8dgxElwXhdoxcsKUd1jo65rE14xQrz00O0X3VG41DMFWKFvVE1EaE
-         saOa7pn0S9q/FXsvL5OR1uMrPtRn4u+R/ZlNych3bJTEa/TLA1Cqea0Ruj/D6Pjwub
-         KC0ndgzF2yR07Y7ksN9U3tocw69IGw/FqiDOIBdU=
+        b=EcvGsBeVWZAxtGbPd9NO+XarI8y0MWOw/UFbZAdY6ghP4leiDEJhwpA7F9CcBGWEi
+         LbM3XH0stFbZ2Ko1y4VYCqrCKoaudqqSdt5fOwX0YdEXXbvOrGwzX33o9B521IbpTR
+         9X+p+C5KlpM9rPcOgGZb6F8ByLmYrpDE+mePB0+U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunsheng Lin <linyunsheng@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 244/321] net: hns3: Change fw error code NOT_EXEC to NOT_SUPPORTED
-Date:   Tue,  3 Dec 2019 23:35:10 +0100
-Message-Id: <20191203223439.834119609@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        syzbot+7857962b4d45e602b8ad@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 242/321] kvm: properly check debugfs dentry before using it
+Date:   Tue,  3 Dec 2019 23:35:08 +0100
+Message-Id: <20191203223439.731003476@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -62,49 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[ Upstream commit 4a402f47cfce904051cd8b31bef4fe2910d9dce9 ]
+[ Upstream commit 8ed0579c12b2fe56a1fac2f712f58fc26c1dc49b ]
 
-According to firmware error code definition, the error code of 2
-means NOT_SUPPORTED, this patch changes it to NOT_SUPPORTED.
+debugfs can now report an error code if something went wrong instead of
+just NULL.  So if the return value is to be used as a "real" dentry, it
+needs to be checked if it is an error before dereferencing it.
 
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This is now happening because of ff9fb72bc077 ("debugfs: return error
+values, not NULL").  syzbot has found a way to trigger multiple debugfs
+files attempting to be created, which fails, and then the error code
+gets passed to dentry_path_raw() which obviously does not like it.
+
+Reported-by: Eric Biggers <ebiggers@kernel.org>
+Reported-and-tested-by: syzbot+7857962b4d45e602b8ad@syzkaller.appspotmail.com
+Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+Cc: kvm@vger.kernel.org
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c | 2 ++
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ virt/kvm/kvm_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-index 690f62ed87dca..09a4d87429cea 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-@@ -260,6 +260,8 @@ int hclge_cmd_send(struct hclge_hw *hw, struct hclge_desc *desc, int num)
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index df3fc0f214ece..9502b1a44232c 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -3990,7 +3990,7 @@ static void kvm_uevent_notify_change(unsigned int type, struct kvm *kvm)
+ 	}
+ 	add_uevent_var(env, "PID=%d", kvm->userspace_pid);
  
- 			if (desc_ret == HCLGE_CMD_EXEC_SUCCESS)
- 				retval = 0;
-+			else if (desc_ret == HCLGE_CMD_NOT_SUPPORTED)
-+				retval = -EOPNOTSUPP;
- 			else
- 				retval = -EIO;
- 			hw->cmq.last_status = desc_ret;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-index 821d4c2f84bd3..d7520686509fd 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-@@ -39,7 +39,7 @@ struct hclge_cmq_ring {
- enum hclge_cmd_return_status {
- 	HCLGE_CMD_EXEC_SUCCESS	= 0,
- 	HCLGE_CMD_NO_AUTH	= 1,
--	HCLGE_CMD_NOT_EXEC	= 2,
-+	HCLGE_CMD_NOT_SUPPORTED	= 2,
- 	HCLGE_CMD_QUEUE_FULL	= 3,
- };
+-	if (kvm->debugfs_dentry) {
++	if (!IS_ERR_OR_NULL(kvm->debugfs_dentry)) {
+ 		char *tmp, *p = kmalloc(PATH_MAX, GFP_KERNEL);
  
+ 		if (p) {
 -- 
 2.20.1
 
