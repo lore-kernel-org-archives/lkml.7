@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84861C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 021C0C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 535902053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCA1C2053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:00:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414031;
-	bh=0ZBnX/DuZmv5v8xJjkeBSU3Wb94hK1fxSKt4C6i+pd0=;
+	s=default; t=1575414038;
+	bh=aC1dVxvdq8PyZZwSvJVJJu1e/NRFcdnQdCPGZ0CjNE8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iLYsMwsF1FyUROlkIr4aap7A+j2GCPiUhIIEzLzn9nhCBgJvakIzo/bZKtD+JkbB/
-	 hNVl3C2ynWq9E/4oC19j6/w0hoEHAOxaGn5mag6KF7Vp+uLLyAX/Y4z+hG965FGGOf
-	 L6brX1Cs7qifM/jX1Q4EIR0zb2g9Pir5y/6Gygiw=
+	b=mPBUcOhMzMFkqu34Ef5gQaQVaJM+ESVOx/Wy3Un2bi0YZJBw9J5YJ/UtDeVMoN5Ya
+	 VUF4iiLsXhHQvE45u9Yey1DAg/by9OxXRRSxdAA9098DxR3sdUDjSZ+WmCIUSRuYKq
+	 KHj+C3E98OuNrb1poawMSgIb+30r02iJAWczCM50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730595AbfLCXAa (ORCPT
+        id S1730611AbfLCXAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:00:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53678 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 18:00:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730163AbfLCW5q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:57:46 -0500
+        id S1726593AbfLCW52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:57:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F6EF20656;
-        Tue,  3 Dec 2019 22:57:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F04520656;
+        Tue,  3 Dec 2019 22:57:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413865;
-        bh=0ZBnX/DuZmv5v8xJjkeBSU3Wb94hK1fxSKt4C6i+pd0=;
+        s=default; t=1575413847;
+        bh=aC1dVxvdq8PyZZwSvJVJJu1e/NRFcdnQdCPGZ0CjNE8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mYyuHSbsjQHSbVAJSZHUZAF3jtUgytuHH7Fp4YX0apkmvJfPdAUr0nHUQZ40z0RWi
-         8QzYZu7yBlyPqpjL3ufEKxZ4wDof2ZnA/n+tzyCmUqdduDUhQJUhdLNx6IaUBGiIXE
-         dtitYZ68RD3eRrb6v719bgRa3KJoN27ZMbCaIJic=
+        b=n7bb7fkUezNH+p0z1jNoI0hHXT9YUqpYhP61pT4RPdM2EeX3SWgxETd6HeNtxCwM4
+         kB+75c4DOnmTXhbGJparQLbM7BPkZoUxZgj66LyT3SN0F6t5iU4U5LgkDcLc/piEmF
+         5Yq+iaXicQ3UqQicLnbwuY18MGJ4y53ZlHgEMqmQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+e3b35fe7918ff0ee474e@syzkaller.appspotmail.com,
-        Xin Long <lucien.xin@gmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 4.19 291/321] sctp: cache netns in sctp_ep_common
-Date:   Tue,  3 Dec 2019 23:35:57 +0100
-Message-Id: <20191203223442.285078326@linuxfoundation.org>
+        stable@vger.kernel.org, Qi Jun Ding <qding@redhat.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 284/321] openvswitch: fix flow command message size
+Date:   Tue,  3 Dec 2019 23:35:50 +0100
+Message-Id: <20191203223441.910383949@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -62,110 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Paolo Abeni <pabeni@redhat.com>
 
-[ Upstream commit 312434617cb16be5166316cf9d08ba760b1042a1 ]
+[ Upstream commit 4e81c0b3fa93d07653e2415fa71656b080a112fd ]
 
-This patch is to fix a data-race reported by syzbot:
+When user-space sets the OVS_UFID_F_OMIT_* flags, and the relevant
+flow has no UFID, we can exceed the computed size, as
+ovs_nla_put_identifier() will always dump an OVS_FLOW_ATTR_KEY
+attribute.
+Take the above in account when computing the flow command message
+size.
 
-  BUG: KCSAN: data-race in sctp_assoc_migrate / sctp_hash_obj
-
-  write to 0xffff8880b67c0020 of 8 bytes by task 18908 on cpu 1:
-    sctp_assoc_migrate+0x1a6/0x290 net/sctp/associola.c:1091
-    sctp_sock_migrate+0x8aa/0x9b0 net/sctp/socket.c:9465
-    sctp_accept+0x3c8/0x470 net/sctp/socket.c:4916
-    inet_accept+0x7f/0x360 net/ipv4/af_inet.c:734
-    __sys_accept4+0x224/0x430 net/socket.c:1754
-    __do_sys_accept net/socket.c:1795 [inline]
-    __se_sys_accept net/socket.c:1792 [inline]
-    __x64_sys_accept+0x4e/0x60 net/socket.c:1792
-    do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
-    entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-  read to 0xffff8880b67c0020 of 8 bytes by task 12003 on cpu 0:
-    sctp_hash_obj+0x4f/0x2d0 net/sctp/input.c:894
-    rht_key_get_hash include/linux/rhashtable.h:133 [inline]
-    rht_key_hashfn include/linux/rhashtable.h:159 [inline]
-    rht_head_hashfn include/linux/rhashtable.h:174 [inline]
-    head_hashfn lib/rhashtable.c:41 [inline]
-    rhashtable_rehash_one lib/rhashtable.c:245 [inline]
-    rhashtable_rehash_chain lib/rhashtable.c:276 [inline]
-    rhashtable_rehash_table lib/rhashtable.c:316 [inline]
-    rht_deferred_worker+0x468/0xab0 lib/rhashtable.c:420
-    process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
-    worker_thread+0xa0/0x800 kernel/workqueue.c:2415
-    kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
-    ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-
-It was caused by rhashtable access asoc->base.sk when sctp_assoc_migrate
-is changing its value. However, what rhashtable wants is netns from asoc
-base.sk, and for an asoc, its netns won't change once set. So we can
-simply fix it by caching netns since created.
-
-Fixes: d6c0256a60e6 ("sctp: add the rhashtable apis for sctp global transport hashtable")
-Reported-by: syzbot+e3b35fe7918ff0ee474e@syzkaller.appspotmail.com
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fixes: 74ed7ab9264c ("openvswitch: Add support for unique flow IDs.")
+Reported-by: Qi Jun Ding <qding@redhat.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/sctp/structs.h |    3 +++
- net/sctp/associola.c       |    1 +
- net/sctp/endpointola.c     |    1 +
- net/sctp/input.c           |    4 ++--
- 4 files changed, 7 insertions(+), 2 deletions(-)
+ net/openvswitch/datapath.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/include/net/sctp/structs.h
-+++ b/include/net/sctp/structs.h
-@@ -1247,6 +1247,9 @@ struct sctp_ep_common {
- 	/* What socket does this endpoint belong to?  */
- 	struct sock *sk;
- 
-+	/* Cache netns and it won't change once set */
-+	struct net *net;
-+
- 	/* This is where we receive inbound chunks.  */
- 	struct sctp_inq	  inqueue;
- 
---- a/net/sctp/associola.c
-+++ b/net/sctp/associola.c
-@@ -80,6 +80,7 @@ static struct sctp_association *sctp_ass
- 	/* Discarding const is appropriate here.  */
- 	asoc->ep = (struct sctp_endpoint *)ep;
- 	asoc->base.sk = (struct sock *)sk;
-+	asoc->base.net = sock_net(sk);
- 
- 	sctp_endpoint_hold(asoc->ep);
- 	sock_hold(asoc->base.sk);
---- a/net/sctp/endpointola.c
-+++ b/net/sctp/endpointola.c
-@@ -165,6 +165,7 @@ static struct sctp_endpoint *sctp_endpoi
- 
- 	/* Remember who we are attached to.  */
- 	ep->base.sk = sk;
-+	ep->base.net = sock_net(sk);
- 	sock_hold(ep->base.sk);
- 
- 	return ep;
---- a/net/sctp/input.c
-+++ b/net/sctp/input.c
-@@ -815,7 +815,7 @@ static inline int sctp_hash_cmp(struct r
- 	if (!sctp_transport_hold(t))
- 		return err;
- 
--	if (!net_eq(sock_net(t->asoc->base.sk), x->net))
-+	if (!net_eq(t->asoc->base.net, x->net))
- 		goto out;
- 	if (x->lport != htons(t->asoc->base.bind_addr.port))
- 		goto out;
-@@ -830,7 +830,7 @@ static inline __u32 sctp_hash_obj(const
+--- a/net/openvswitch/datapath.c
++++ b/net/openvswitch/datapath.c
+@@ -697,9 +697,13 @@ static size_t ovs_flow_cmd_msg_size(cons
  {
- 	const struct sctp_transport *t = data;
- 	const union sctp_addr *paddr = &t->ipaddr;
--	const struct net *net = sock_net(t->asoc->base.sk);
-+	const struct net *net = t->asoc->base.net;
- 	__be16 lport = htons(t->asoc->base.bind_addr.port);
- 	__u32 addr;
+ 	size_t len = NLMSG_ALIGN(sizeof(struct ovs_header));
  
+-	/* OVS_FLOW_ATTR_UFID */
++	/* OVS_FLOW_ATTR_UFID, or unmasked flow key as fallback
++	 * see ovs_nla_put_identifier()
++	 */
+ 	if (sfid && ovs_identifier_is_ufid(sfid))
+ 		len += nla_total_size(sfid->ufid_len);
++	else
++		len += nla_total_size(ovs_key_attr_size());
+ 
+ 	/* OVS_FLOW_ATTR_KEY */
+ 	if (!sfid || should_fill_key(sfid, ufid_flags))
 
 
