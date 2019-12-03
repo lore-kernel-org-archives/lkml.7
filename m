@@ -2,59 +2,58 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BDEC43141
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EB0C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E451A2064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B7902064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414516;
-	bh=5UeLwMA8GjwdgJAx5gN06GWImJNf48vZifNNOHnnO9A=;
+	s=default; t=1575414517;
+	bh=MP99nh/TM0pE6NtJsYqybo9a6kDwZHzSSkrdsojSgnY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q9juCfA5dgUvbgO58XpeE5VPAFhIywilHlloXsB2sHiDvOcDDkfLQKLOgaOdJOHSk
-	 ZwbrnkXGytFJDz+k9Nn/4BkPiCZdsLzOpxqqOcuh38TXPhbgWKaerqxJabRtb09bjx
-	 iywQ9fmhwUI5IVAeXeWK7946MTGQYdMivCaJT9F0=
+	b=G4ngernwvgEYrarG3O/vr50igoZ4QvLzeaw+BK10R+eNUla4st0L2FqqG5OqW8iyT
+	 Z7Jj3YG0FHHZ8M1SKWI2zdjg4a9aEB2ZqKILM6dpsKtOvpbQwkRpNs9qZ78wlFxGiz
+	 W09BLlSu43gvUQ+NqA4xPg4fhvfHZYteJ93dItns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729060AbfLCWpa (ORCPT
+        id S1729042AbfLCWpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:45:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34014 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:45:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729035AbfLCWp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:45:26 -0500
+        id S1729032AbfLCWpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:45:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E9B720803;
-        Tue,  3 Dec 2019 22:45:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15D8220803;
+        Tue,  3 Dec 2019 22:45:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413126;
-        bh=5UeLwMA8GjwdgJAx5gN06GWImJNf48vZifNNOHnnO9A=;
+        s=default; t=1575413120;
+        bh=MP99nh/TM0pE6NtJsYqybo9a6kDwZHzSSkrdsojSgnY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ISxt7qKD+chTim6q8lak+9FudE/fv0BWUMlqjL2sa3ojHk787M+CRZvC6zE5DCvOT
-         m8NC2ukfc0G/fmYZcjVhypkLcxq3W3jWSD+X61Ei5wdkYSBUzm7BGJgMGDlUsZXQ3l
-         psWaApGKCysZLz8Pq43r0BKiQSBxBVwh1XbT5uyc=
+        b=2a127N5pBW+yyL0dMYkngzWpfgdifzJ50DVvK9vywry3/JsJlDhRLMPjZLeF9dJLt
+         5mwSqvqZTfIySC+0bhqIuInP2byH3LSdgIehIaHlrYJXRciuk8WMwfhXj6sDG61GF0
+         /weuv7l76Ns6OSK8Vf1cCqcQaVwlpAwYCEH1e208=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 001/321] clk: meson: gxbb: let sar_adc_clk_div set the parent clock rate
-Date:   Tue,  3 Dec 2019 23:31:07 +0100
-Message-Id: <20191203223427.196896630@linuxfoundation.org>
+        stable@vger.kernel.org, Candle Sun <candle.sun@unisoc.com>,
+        Nianfu Bai <nianfu.bai@unisoc.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Siarhei Vishniakou <svv@google.com>
+Subject: [PATCH 5.3 133/135] HID: core: check whether Usage Page item is after Usage ID items
+Date:   Tue,  3 Dec 2019 23:36:13 +0100
+Message-Id: <20191203213045.992118661@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
-References: <20191203223427.103571230@linuxfoundation.org>
+In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
+References: <20191203213005.828543156@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,41 +62,173 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Candle Sun <candle.sun@unisoc.com>
 
-[ Upstream commit 44b09b11b813b8550e6b976ea51593bc23bba8d1 ]
+commit 1cb0d2aee26335d0bccf29100c7bed00ebece851 upstream.
 
-The meson-saradc driver manually sets the input clock for
-sar_adc_clk_sel. Update the GXBB clock driver (which is used on GXBB,
-GXL and GXM) so the rate settings on sar_adc_clk_div are propagated up
-to sar_adc_clk_sel which will let the common clock framework select the
-best matching parent clock if we want that.
+Upstream commit 58e75155009c ("HID: core: move Usage Page concatenation
+to Main item") adds support for Usage Page item after Usage ID items
+(such as keyboards manufactured by Primax).
 
-This makes sar_adc_clk_div consistent with the axg-aoclk and g12a-aoclk
-drivers, which both also specify CLK_SET_RATE_PARENT.
+Usage Page concatenation in Main item works well for following report
+descriptor patterns:
 
-Fixes: 33d0fcdfe0e870 ("clk: gxbb: add the SAR ADC clocks and expose them")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+    USAGE_PAGE (Keyboard)                   05 07
+    USAGE_MINIMUM (Keyboard LeftControl)    19 E0
+    USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
+    LOGICAL_MINIMUM (0)                     15 00
+    LOGICAL_MAXIMUM (1)                     25 01
+    REPORT_SIZE (1)                         75 01
+    REPORT_COUNT (8)                        95 08
+    INPUT (Data,Var,Abs)                    81 02
+
+-------------
+
+    USAGE_MINIMUM (Keyboard LeftControl)    19 E0
+    USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
+    LOGICAL_MINIMUM (0)                     15 00
+    LOGICAL_MAXIMUM (1)                     25 01
+    REPORT_SIZE (1)                         75 01
+    REPORT_COUNT (8)                        95 08
+    USAGE_PAGE (Keyboard)                   05 07
+    INPUT (Data,Var,Abs)                    81 02
+
+But it makes the parser act wrong for the following report
+descriptor pattern(such as some Gamepads):
+
+    USAGE_PAGE (Button)                     05 09
+    USAGE (Button 1)                        09 01
+    USAGE (Button 2)                        09 02
+    USAGE (Button 4)                        09 04
+    USAGE (Button 5)                        09 05
+    USAGE (Button 7)                        09 07
+    USAGE (Button 8)                        09 08
+    USAGE (Button 14)                       09 0E
+    USAGE (Button 15)                       09 0F
+    USAGE (Button 13)                       09 0D
+    USAGE_PAGE (Consumer Devices)           05 0C
+    USAGE (Back)                            0a 24 02
+    USAGE (HomePage)                        0a 23 02
+    LOGICAL_MINIMUM (0)                     15 00
+    LOGICAL_MAXIMUM (1)                     25 01
+    REPORT_SIZE (1)                         75 01
+    REPORT_COUNT (11)                       95 0B
+    INPUT (Data,Var,Abs)                    81 02
+
+With Usage Page concatenation in Main item, parser recognizes all the
+11 Usages as consumer keys, it is not the HID device's real intention.
+
+This patch checks whether Usage Page is really defined after Usage ID
+items by comparing usage page using status.
+
+Usage Page concatenation on currently defined Usage Page will always
+do in local parsing when Usage ID items encountered.
+
+When Main item is parsing, concatenation will do again with last
+defined Usage Page if this page has not been used in the previous
+usages concatenation.
+
+Signed-off-by: Candle Sun <candle.sun@unisoc.com>
+Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
+Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Cc: Siarhei Vishniakou <svv@google.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/clk/meson/gxbb.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/hid/hid-core.c |   51 +++++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 45 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/clk/meson/gxbb.c b/drivers/clk/meson/gxbb.c
-index 4d4f6d842c31c..d94b65061b9f1 100644
---- a/drivers/clk/meson/gxbb.c
-+++ b/drivers/clk/meson/gxbb.c
-@@ -836,6 +836,7 @@ static struct clk_regmap gxbb_sar_adc_clk_div = {
- 		.ops = &clk_regmap_divider_ops,
- 		.parent_names = (const char *[]){ "sar_adc_clk_sel" },
- 		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
- 	},
- };
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -212,6 +212,18 @@ static unsigned hid_lookup_collection(st
+ }
  
--- 
-2.20.1
-
+ /*
++ * Concatenate usage which defines 16 bits or less with the
++ * currently defined usage page to form a 32 bit usage
++ */
++
++static void complete_usage(struct hid_parser *parser, unsigned int index)
++{
++	parser->local.usage[index] &= 0xFFFF;
++	parser->local.usage[index] |=
++		(parser->global.usage_page & 0xFFFF) << 16;
++}
++
++/*
+  * Add a usage to the temporary parser table.
+  */
+ 
+@@ -222,6 +234,14 @@ static int hid_add_usage(struct hid_pars
+ 		return -1;
+ 	}
+ 	parser->local.usage[parser->local.usage_index] = usage;
++
++	/*
++	 * If Usage item only includes usage id, concatenate it with
++	 * currently defined usage page
++	 */
++	if (size <= 2)
++		complete_usage(parser, parser->local.usage_index);
++
+ 	parser->local.usage_size[parser->local.usage_index] = size;
+ 	parser->local.collection_index[parser->local.usage_index] =
+ 		parser->collection_stack_ptr ?
+@@ -543,13 +563,32 @@ static int hid_parser_local(struct hid_p
+  * usage value."
+  */
+ 
+-static void hid_concatenate_usage_page(struct hid_parser *parser)
++static void hid_concatenate_last_usage_page(struct hid_parser *parser)
+ {
+ 	int i;
++	unsigned int usage_page;
++	unsigned int current_page;
++
++	if (!parser->local.usage_index)
++		return;
+ 
+-	for (i = 0; i < parser->local.usage_index; i++)
+-		if (parser->local.usage_size[i] <= 2)
+-			parser->local.usage[i] += parser->global.usage_page << 16;
++	usage_page = parser->global.usage_page;
++
++	/*
++	 * Concatenate usage page again only if last declared Usage Page
++	 * has not been already used in previous usages concatenation
++	 */
++	for (i = parser->local.usage_index - 1; i >= 0; i--) {
++		if (parser->local.usage_size[i] > 2)
++			/* Ignore extended usages */
++			continue;
++
++		current_page = parser->local.usage[i] >> 16;
++		if (current_page == usage_page)
++			break;
++
++		complete_usage(parser, i);
++	}
+ }
+ 
+ /*
+@@ -561,7 +600,7 @@ static int hid_parser_main(struct hid_pa
+ 	__u32 data;
+ 	int ret;
+ 
+-	hid_concatenate_usage_page(parser);
++	hid_concatenate_last_usage_page(parser);
+ 
+ 	data = item_udata(item);
+ 
+@@ -772,7 +811,7 @@ static int hid_scan_main(struct hid_pars
+ 	__u32 data;
+ 	int i;
+ 
+-	hid_concatenate_usage_page(parser);
++	hid_concatenate_last_usage_page(parser);
+ 
+ 	data = item_udata(item);
+ 
 
 
