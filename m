@@ -2,100 +2,133 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E3EC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63019C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9DA92073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:06:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RQtd+Q+J"
+	by mail.kernel.org (Postfix) with ESMTP id 300272064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:06:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575414399;
+	bh=MqOdMBcFN7cKpxoPq7s5s29VjuTXuCthvZFz0pCPqiI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=z9Xa0dQYwuHn+aZGoal2yLZltZ/C/uguhchj+L+ZgDuRQsQz+RY2ptJRlEJDX697N
+	 XwGIEZLa36lXJQg/nGeLhPYwatbyEEkPDtKjI65gjypS86MCytmEl73kjgk7eaPd/0
+	 WotdeK6FTC1ZWscO4+oO3evcHy7bg1A/sAbFymsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729465AbfLCXGd (ORCPT
+        id S1729449AbfLCWsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:06:33 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43933 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728823AbfLCXGa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 18:06:30 -0500
-Received: by mail-pl1-f195.google.com with SMTP id q16so2282769plr.10
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 15:06:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Y2iAUprUf3pSOMTinMI9+8tya2E8oBWIGOekFGX5HtE=;
-        b=RQtd+Q+Jq3oz26YIhHqXhGktsZlvdyT9W6nrwbKCBKWRL7ZTHS787L7uBYipiIuaj0
-         t2LGZD3jBENoo8sWRPYby5PA1LhyYsxqw21isJh37AehCw93QsAqUDZuq0cA7E8xfb3Y
-         ZRrQzh32e0Rodb7O//iAPRQf0KFSv7TJrLfAwCF1lTUki4OZomF7ih5Pja27/hkMFFvd
-         BUevFk6R/3E1YWJkpNBkUS9TuI0QccztX4CJSI3/xTIVegPjSgybEJgJnsoBJDL+NAyX
-         RzB0Daj07rp+bSWj/JG12eLEmrWyliRC+gVc50JRjCBX2OgKmyn3A/1+8VkMy6MwYd9b
-         5hOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y2iAUprUf3pSOMTinMI9+8tya2E8oBWIGOekFGX5HtE=;
-        b=I6MscERsstRqBJ0q9Sp4CCJw+nFOZECXJz3AlrgSDnFi2pPFNst6gn63QpRXQbvC5M
-         f83CvZme/nvVmr8c8PaFqbONlZYQUnevarJr1ytQUoqlAnLpLeoTmNeS3L+dr/WvYl0Y
-         mSnDu6VWsBE+nz/9zgIaCFMZeVeWeg88Crx40i+4w7rIVAikwyxeG4LfwJCEg5msBifo
-         xCZ9fNIpuHdIPOvzA0qXREjR2neBvCbaeU/RoTNcVFa2ht1OZC9htEJuYKzlw0VQ0ADB
-         LB9fS8h546oOCKXBvOFAHINq0eGSdrmYHFNR+YPGl4JuB9xNILxWKIUCSN9va9MUvdnC
-         pz6w==
-X-Gm-Message-State: APjAAAVLUTSUqiJm372a8sICfTW+aALSrbDV7Ms19vCTz7jgp1KKgykD
-        0TONWCCSZMvnNioa3X8am5bxFYsYMbzUfFKIU5N7qA==
-X-Google-Smtp-Source: APXvYqwoExgGqnGZkIzdVLbdVbyPMv/m/oFfgdibsdNl5+1hS5tfHV2K1vCgTDj2i/m7J0guJkjxOOZDsOKAKgfVUv0=
-X-Received: by 2002:a17:90a:c390:: with SMTP id h16mr8400706pjt.131.1575414389181;
- Tue, 03 Dec 2019 15:06:29 -0800 (PST)
+        Tue, 3 Dec 2019 17:48:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39134 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729317AbfLCWs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:48:28 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3526820862;
+        Tue,  3 Dec 2019 22:48:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575413307;
+        bh=MqOdMBcFN7cKpxoPq7s5s29VjuTXuCthvZFz0pCPqiI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xVnuhXVWZfmQ7YneRNSsKvFjG9SGzV2N2VF9tCs6KbPohVzkh7eFeTVOdSfqy4DDB
+         16t7c0RPHGyVtOVkZf/bpNb0pgTqw7y6GtdnlLssfw6Kdocv8Sj1ZT4mQ1/2Pi/Qop
+         umZ8XFE5rENHQR+JqLshkg0AYlC/eT7r8zJTVAfA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "kernelci.org bot" <bot@kernelci.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 077/321] arm64: preempt: Fix big-endian when checking preempt count in assembly
+Date:   Tue,  3 Dec 2019 23:32:23 +0100
+Message-Id: <20191203223431.166680020@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
+References: <20191203223427.103571230@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <1575374868-32601-1-git-send-email-alan.maguire@oracle.com>
-In-Reply-To: <1575374868-32601-1-git-send-email-alan.maguire@oracle.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 3 Dec 2019 15:06:17 -0800
-Message-ID: <CAFd5g45VsXEXX--z-tjZWOTLgodnUwnOgyGqJVgy4xbz_YZFTQ@mail.gmail.com>
-Subject: Re: [PATCH v5 linux-kselftest-test 0/6] kunit: support building
- core/tests as modules
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        catalin.marinas@arm.com, joe.lawrence@redhat.com,
-        penguin-kernel@i-love.sakura.ne.jp, urezki@gmail.com,
-        andriy.shevchenko@linux.intel.com,
-        Jonathan Corbet <corbet@lwn.net>,
-        David Gow <davidgow@google.com>, adilger.kernel@dilger.ca,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 4:08 AM Alan Maguire <alan.maguire@oracle.com> wrote:
->
-> The current kunit execution model is to provide base kunit functionality
-> and tests built-in to the kernel.  The aim of this series is to allow
-> building kunit itself and tests as modules.  This in turn allows a
-> simple form of selective execution; load the module you wish to test.
-> In doing so, kunit itself (if also built as a module) will be loaded as
-> an implicit dependency.
->
-> Because this requires a core API modification - if a module delivers
-> multiple suites, they must be declared with the kunit_test_suites()
-> macro - we're proposing this patch set as a candidate to be applied to the
-> test tree before too many kunit consumers appear.  We attempt to deal
-> with existing consumers in patch 3.
+From: Will Deacon <will.deacon@arm.com>
 
-Tested-by: Brendan Higgins <brendanhiggins@google.com>
+[ Upstream commit 7faa313f05cad184e8b17750f0cbe5216ac6debb ]
+
+Commit 396244692232 ("arm64: preempt: Provide our own implementation of
+asm/preempt.h") extended the preempt count field in struct thread_info
+to 64 bits, so that it consists of a 32-bit count plus a 32-bit flag
+indicating whether or not the current task needs rescheduling.
+
+Whilst the asm-offsets definition of TSK_TI_PREEMPT was updated to point
+to this new field, the assembly usage was left untouched meaning that a
+32-bit load from TSK_TI_PREEMPT on a big-endian machine actually returns
+the reschedule flag instead of the count.
+
+Whilst we could fix this by pointing TSK_TI_PREEMPT at the count field,
+we're actually better off reworking the two assembly users so that they
+operate on the whole 64-bit value in favour of inspecting the thread
+flags separately in order to determine whether a reschedule is needed.
+
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Reported-by: "kernelci.org bot" <bot@kernelci.org>
+Tested-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/include/asm/assembler.h | 8 +++-----
+ arch/arm64/kernel/entry.S          | 6 ++----
+ 2 files changed, 5 insertions(+), 9 deletions(-)
+
+diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
+index 5a97ac8531682..0c100506a29aa 100644
+--- a/arch/arm64/include/asm/assembler.h
++++ b/arch/arm64/include/asm/assembler.h
+@@ -683,11 +683,9 @@ USER(\label, ic	ivau, \tmp2)			// invalidate I line PoU
+ 	.macro		if_will_cond_yield_neon
+ #ifdef CONFIG_PREEMPT
+ 	get_thread_info	x0
+-	ldr		w1, [x0, #TSK_TI_PREEMPT]
+-	ldr		x0, [x0, #TSK_TI_FLAGS]
+-	cmp		w1, #PREEMPT_DISABLE_OFFSET
+-	csel		x0, x0, xzr, eq
+-	tbnz		x0, #TIF_NEED_RESCHED, .Lyield_\@	// needs rescheduling?
++	ldr		x0, [x0, #TSK_TI_PREEMPT]
++	sub		x0, x0, #PREEMPT_DISABLE_OFFSET
++	cbz		x0, .Lyield_\@
+ 	/* fall through to endif_yield_neon */
+ 	.subsection	1
+ .Lyield_\@ :
+diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
+index 5f800384cb9a8..bb68323530458 100644
+--- a/arch/arm64/kernel/entry.S
++++ b/arch/arm64/kernel/entry.S
+@@ -622,10 +622,8 @@ el1_irq:
+ 	irq_handler
+ 
+ #ifdef CONFIG_PREEMPT
+-	ldr	w24, [tsk, #TSK_TI_PREEMPT]	// get preempt count
+-	cbnz	w24, 1f				// preempt count != 0
+-	ldr	x0, [tsk, #TSK_TI_FLAGS]	// get flags
+-	tbz	x0, #TIF_NEED_RESCHED, 1f	// needs rescheduling?
++	ldr	x24, [tsk, #TSK_TI_PREEMPT]	// get preempt count
++	cbnz	x24, 1f				// preempt count != 0
+ 	bl	el1_preempt
+ 1:
+ #endif
+-- 
+2.20.1
+
+
+
