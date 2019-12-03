@@ -2,133 +2,114 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A14BC43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 243FBC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5163C206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:17:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575368262;
-	bh=5ySN3e5aUDRbhiQLCPyxs/vWIneLIy4KAn4LJwCq6Qs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j7in4hnZmg0EFF6iGGsPa/ggoiEMYA2LSE84Lp3CcsQiCTwIgB9SCxWiSGD7xcXdu
-	 cKLznib+hy9eXFZHWf8A2IaFaXu3tg4/H+TIAzYAcOVNb01N60NWGj4e8fOZhYHMkp
-	 OClMJSvNXqWuimnmZAtRJ8scNUh1Zmrzjzd2uPSM=
+	by mail.kernel.org (Postfix) with ESMTP id D81A32068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 10:19:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="YMuMnML3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726319AbfLCKRl (ORCPT
+        id S1726086AbfLCKTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 05:17:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbfLCKRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 05:17:41 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBC562068E;
-        Tue,  3 Dec 2019 10:17:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575368260;
-        bh=5ySN3e5aUDRbhiQLCPyxs/vWIneLIy4KAn4LJwCq6Qs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kMScm8GSzW4KeDWfSNSKzpGeRbVVCFvwkHxu3o+HncYmc1ZMD9uM8+flajxYG3OSj
-         /3ciRNYMo3BiZw+E7eMtEjiYd7+acvkY5XsvqH5JshHzGPG8kNDM9bW1JHSNuNlDOg
-         pVuRor6iCytI5GH4UIuH6jiB6DLUtCW0mKX2yae8=
-Date:   Tue, 3 Dec 2019 10:17:20 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Neal Liu <neal.liu@mediatek.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Lars Persson <lists@bofh.nu>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Crystal Guo =?utf-8?B?KOmDreaZtik=?= <Crystal.Guo@mediatek.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Matt Mackall <mpm@selenic.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v5 3/3] hwrng: add mtk-sec-rng driver
-Message-ID: <20191203101720.GD6815@willie-the-truck>
-References: <1574864578-467-1-git-send-email-neal.liu@mediatek.com>
- <1574864578-467-4-git-send-email-neal.liu@mediatek.com>
- <CADnJP=uhD=J2NrpSwiX8oCTd-u_q05=HhsAV-ErCsXNDwVS0rA@mail.gmail.com>
- <1575027046.24848.4.camel@mtkswgap22>
- <CAKv+Gu_um7eRYXbieW7ogDX5mmZaxP7JQBJM9CajK+6CsO5RgQ@mail.gmail.com>
- <20191202191146.79e6368c@why>
+        Tue, 3 Dec 2019 05:19:34 -0500
+Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:41036 "EHLO
+        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbfLCKTe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 05:19:34 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id 3B53A3FDA5;
+        Tue,  3 Dec 2019 11:19:32 +0100 (CET)
+Authentication-Results: pio-pvt-msa3.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=YMuMnML3;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id hQkhPGnONfL2; Tue,  3 Dec 2019 11:19:31 +0100 (CET)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id 2BC023FD9A;
+        Tue,  3 Dec 2019 11:19:25 +0100 (CET)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 2AEFE3601A7;
+        Tue,  3 Dec 2019 11:19:25 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1575368365; bh=afmISXO+p2gaSUWsPbJMmeK9hMl4gLJ2+yXmeqSMwW4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=YMuMnML3YxQG85m3nectiquUE+7pOb8+v2/BHajWPV5+3wTVSKY9zD6WkShdRlAYP
+         nRr3kUEqVN8KFqaxGml5jft/pecEj6eZBSHJC9djpaQjgSr+xudRlUjAJhtxLiNUMS
+         qgcKUC2/I/x+BfmmOhsQkUJcegagbtE2x7KicYII=
+Subject: Re: [PATCH 2/2] drm/ttm: Fix vm page protection handling
+To:     =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
+References: <20191203075446.60197-1-thomas_os@shipmail.org>
+ <20191203075446.60197-3-thomas_os@shipmail.org>
+ <20191203095502.hw3r33ioax2x4kvt@box>
+ <c1f35529-6e3c-2ba5-bd86-e7cc04cbc1b1@amd.com>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <5a8b8351-0960-305b-6606-96b673d7b729@shipmail.org>
+Date:   Tue, 3 Dec 2019 11:19:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191202191146.79e6368c@why>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <c1f35529-6e3c-2ba5-bd86-e7cc04cbc1b1@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 07:11:46PM +0000, Marc Zyngier wrote:
-> On Mon, 2 Dec 2019 16:12:09 +0000
-> Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
-> 
-> > (adding some more arm64 folks)
-> > 
-> > On Fri, 29 Nov 2019 at 11:30, Neal Liu <neal.liu@mediatek.com> wrote:
-> > >
-> > > On Fri, 2019-11-29 at 18:02 +0800, Lars Persson wrote:  
-> > > > Hi Neal,
-> > > >
-> > > > On Wed, Nov 27, 2019 at 3:23 PM Neal Liu <neal.liu@mediatek.com> wrote:  
-> > > > >
-> > > > > For MediaTek SoCs on ARMv8 with TrustZone enabled, peripherals like
-> > > > > entropy sources is not accessible from normal world (linux) and
-> > > > > rather accessible from secure world (ATF/TEE) only. This driver aims
-> > > > > to provide a generic interface to ATF rng service.
-> > > > >  
-> > > >
-> > > > I am working on several SoCs that also will need this kind of driver
-> > > > to get entropy from Arm trusted firmware.
-> > > > If you intend to make this a generic interface, please clean up the
-> > > > references to MediaTek and give it a more generic name. For example
-> > > > "Arm Trusted Firmware random number driver".
-> > > >
-> > > > It will also be helpful if the SMC call number is configurable.
-> > > >
-> > > > - Lars  
-> > >
-> > > Yes, I'm trying to make this to a generic interface. I'll try to make
-> > > HW/platform related dependency to be configurable and let it more
-> > > generic.
-> > > Thanks for your suggestion.
-> > >  
-> > 
-> > I don't think it makes sense for each arm64 platform to expose an
-> > entropy source via SMC calls in a slightly different way, and model it
-> > as a h/w driver. Instead, we should try to standardize this, and
-> > perhaps expose it via the architectural helpers that already exist
-> > (get_random_seed_long() and friends), so they get plugged into the
-> > kernel random pool driver directly.
-> 
-> Absolutely. I'd love to see a standard, ARM-specified, virtualizable
-> RNG that is abstracted from the HW.
+On 12/3/19 10:58 AM, Christian König wrote:
+> Am 03.12.19 um 10:55 schrieb Kirill A. Shutemov:
+>> On Tue, Dec 03, 2019 at 08:54:46AM +0100, Thomas Hellström (VMware) 
+>> wrote:
+>>> From: Thomas Hellstrom <thellstrom@vmware.com>
+>>>
+>>> We were using an ugly hack to set the page protection correctly.
+>>> Fix that and instead use vmf_insert_mixed_prot() and / or
+>>> vmf_insert_pfn_prot().
+>>> Also get the default page protection from
+>>> struct vm_area_struct::vm_page_prot rather than using 
+>>> vm_get_page_prot().
+>>> This way we catch modifications done by the vm system for drivers that
+>>> want write-notification.
+>> Hm. Why doesn't your VMA have the right prot flags in the first 
+>> place? Why
+>> do you need to override them? More context, please.
+>
+> TTM allows for graphics buffer to move between system and IO memory. 
+> So the prot flags can change on the fly for a VMA.
+>
+I'll add that and some additional info to the commit message. And fix 
+that CC'd dri-devel address.
 
-Same here. I hacked up some initial code for doing this with KVM [1], but
-I'd much rather it was part of a standard service specification so that
-we could use the same interface for talking to the firmware and the
-hypervisor.
+Thanks,
+Thomas
 
-Will
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=kvm/hvc
+
+
+
+> Regards,
+> Christian.
+
+
