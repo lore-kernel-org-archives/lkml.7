@@ -2,55 +2,56 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49556C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 04:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F10C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 04:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21EBA206E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 04:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F4D8206E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 04:57:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="WLmdWgto"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="IgneEgiu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfLCE5d (ORCPT
+        id S1727109AbfLCE5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 23:57:33 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43901 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726968AbfLCE5c (ORCPT
+        Mon, 2 Dec 2019 23:57:40 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33660 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727074AbfLCE5h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 23:57:32 -0500
-Received: by mail-wr1-f67.google.com with SMTP id n1so1926710wra.10
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 20:57:30 -0800 (PST)
+        Mon, 2 Dec 2019 23:57:37 -0500
+Received: by mail-wm1-f66.google.com with SMTP id y23so1414589wma.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 20:57:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=pbRW1viad/GHjUmf3l7SOTRxkxISCKNgTFW5qUzFG18=;
-        b=WLmdWgtocCq7SfivDEJxGQ0qYWEVC1FNP6Ngu0ZWhp++etMTGHgs+n3xeIFW14fTiV
-         yhMj5yJWWCPDS2EsRAWEKGXN55BwurbaZnbUTdFro30TSZBmm596DFT99kyC5Rb5b2Zp
-         hE6zmZw+W99FOnPwPVSHB2AwA5Hq6AacNcqZg=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=DNbjBu2ZoQvj/Rdtwyfg9/ny54LKUFtnkpIxH0rGJgw=;
+        b=IgneEgiudM4dhaaT84m2HLx76XXFsgx7G+w69ktuYbVN+4NPtabS6SzrKMZeVV/o+0
+         IJ1aQAetS7xf6kvwH2UJizjzP3es1gKKH6RB+glnvQAT2HHMa53vqr8OgzDBUfej0Z9i
+         2Fypg52a+TW8NLIts/3Eii9AR91WnOK2oxu7s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=pbRW1viad/GHjUmf3l7SOTRxkxISCKNgTFW5qUzFG18=;
-        b=hDTVmYDEaM5sYbLumMGfJamBU5gd/r/7ikHPd9V8tZCf1gcNq8JB3t5rX3bwcqyhsn
-         MveSjxp9dm13nMUGtkEM8q/Vm8YzEQ4IC6JwrTEQPq4AYlsaUzJzOFiyMpWD8EpEnlvI
-         bIOhgepskzz13+tr0vfOHvdCVwfN6TELWOl0Ghi+ZFc1wcJkgeVTuUlxmVY075J8zg+A
-         +J5olZMdoCFCZhBrPgtnfuJc+v26Hbpk5pnP0FqF9u4amB9+m/DuZmt07A9vzDWgmPSY
-         vsTIPfpjL6f7IThGZBG/kVHH3kVhs33//ruyK7g54MU7sobJa/pFO3YQicB3bgAD5Fje
-         CUew==
-X-Gm-Message-State: APjAAAWrwt5p+mCTaHiZggLwQiLHV8u7aOaAIjwUYkCRepdSSwNw7lgM
-        tE6ujctYjMf5ixaUV5ns3DxJUQ==
-X-Google-Smtp-Source: APXvYqyUrHD9fDQwouHUkuIiwPBscZSDLCvUsyiXCIoV/4MEv6faKFnYd8o4XCGdWtnIMoM9UkEcaw==
-X-Received: by 2002:a5d:5284:: with SMTP id c4mr2679212wrv.376.1575349049792;
-        Mon, 02 Dec 2019 20:57:29 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=DNbjBu2ZoQvj/Rdtwyfg9/ny54LKUFtnkpIxH0rGJgw=;
+        b=hHL45GfoUfFArplBAlizfWKVUyGH/pi9XRzfL9iex3db5n/rxWT1Ajff8+A+5YnLJk
+         8TbolVHTqT2ZnjDxZDEd4O8yuduDvocU9/pAc/qZFfQ1vDfPVgOXagYHyjHHWo+u/q9/
+         6rJPLS9Fil0NAhrwIGOFFRf7OBl0xmCQAds6Sv+raMq0Cr5MSI8LGPJ196ClBBzq7S9p
+         bKovv/a53z/kjwvsqa1Z2dC9bZyyA7xykZbDVK4nkwoSgzginYkvKMO1/AWHrO93Hqm+
+         akalinjUUpanAUgaTfiCQc/Hzv3XXzd1CcRMgPzWYUIYDqxi1MqvFCCUQ7W49qf7UoWR
+         GtSA==
+X-Gm-Message-State: APjAAAUEqG90zZGAv8F1GG8fKLevTUZ1SSAOUO9ivEPb+jSBQcemrzhO
+        a2uNztAWJFT4jeyQvqNd0qBdqw==
+X-Google-Smtp-Source: APXvYqy1L/hk7jc6Vua1eOQ6zF9HW6W5OyAgAMHGiBpjQlMl56SBWkEWvpdI05EBRsPwMIKUCJzloA==
+X-Received: by 2002:a1c:7c06:: with SMTP id x6mr33613750wmc.34.1575349055230;
+        Mon, 02 Dec 2019 20:57:35 -0800 (PST)
 Received: from mannams-OptiPlex-7010.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id k4sm1667807wmk.26.2019.12.02.20.57.24
+        by smtp.gmail.com with ESMTPSA id k4sm1667807wmk.26.2019.12.02.20.57.30
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 02 Dec 2019 20:57:29 -0800 (PST)
+        Mon, 02 Dec 2019 20:57:34 -0800 (PST)
 From:   Srinath Mannam <srinath.mannam@broadcom.com>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -61,53 +62,122 @@ To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Arnd Bergmann <arnd@arndb.de>
 Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ray Jui <ray.jui@broadcom.com>,
         Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH v3 0/6] PAXB INTx support with proper model
-Date:   Tue,  3 Dec 2019 10:27:00 +0530
-Message-Id: <1575349026-8743-1-git-send-email-srinath.mannam@broadcom.com>
+Subject: [PATCH v3 1/6] dt-bindings: pci: Update iProc PCI binding for INTx support
+Date:   Tue,  3 Dec 2019 10:27:01 +0530
+Message-Id: <1575349026-8743-2-git-send-email-srinath.mannam@broadcom.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1575349026-8743-1-git-send-email-srinath.mannam@broadcom.com>
+References: <1575349026-8743-1-git-send-email-srinath.mannam@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series adds PCIe legacy interrupt (INTx) support to the iProc
-PCIe driver by modeling it with its own IRQ domain. All 4 interrupts INTA,
-INTB, INTC, INTD share the same interrupt line connected to the GIC
-in the system. This is now modeled by using its own IRQ domain.
+From: Ray Jui <ray.jui@broadcom.com>
 
-Also update all relevant devicetree files to adapt to the new model.
+Update the iProc PCIe binding document for better modeling of the legacy
+interrupt (INTx) support
 
-This patch set is based on Linux-5.4.
+Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+---
+ .../devicetree/bindings/pci/brcm,iproc-pcie.txt    | 48 ++++++++++++++++++----
+ 1 file changed, 41 insertions(+), 7 deletions(-)
 
-Changes from v2:
-  - Addressed Lorenzo's comments
-    - Corrected INTx to PIN mapping.
-
-Changes from v1:
-  - Addressed Rob, Lorenzo, Arnd's comments
-    - Used child node for interrupt controller.
-  - Addressed Andy Shevchenko's comments
-    - Replaced while loop with do-while.
-
-Ray Jui (6):
-  dt-bindings: pci: Update iProc PCI binding for INTx support
-  PCI: iproc: Add INTx support with better modeling
-  arm: dts: Change PCIe INTx mapping for Cygnus
-  arm: dts: Change PCIe INTx mapping for NSP
-  arm: dts: Change PCIe INTx mapping for HR2
-  arm64: dts: Change PCIe INTx mapping for NS2
-
- .../devicetree/bindings/pci/brcm,iproc-pcie.txt    |  48 ++++++++--
- arch/arm/boot/dts/bcm-cygnus.dtsi                  |  30 ++++++-
- arch/arm/boot/dts/bcm-hr2.dtsi                     |  30 ++++++-
- arch/arm/boot/dts/bcm-nsp.dtsi                     |  45 ++++++++--
- arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi   |  28 +++++-
- drivers/pci/controller/pcie-iproc.c                | 100 ++++++++++++++++++++-
- drivers/pci/controller/pcie-iproc.h                |   6 ++
- 7 files changed, 260 insertions(+), 27 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
+index df065aa..d3f833a 100644
+--- a/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
+@@ -13,9 +13,6 @@ controller, used in Stingray
+   PAXB-based root complex is used for external endpoint devices. PAXC-based
+ root complex is connected to emulated endpoint devices internal to the ASIC
+ - reg: base address and length of the PCIe controller I/O register space
+-- #interrupt-cells: set to <1>
+-- interrupt-map-mask and interrupt-map, standard PCI properties to define the
+-  mapping of the PCIe interface to interrupt numbers
+ - linux,pci-domain: PCI domain ID. Should be unique for each host controller
+ - bus-range: PCI bus numbers covered
+ - #address-cells: set to <3>
+@@ -41,6 +38,21 @@ Required:
+ - brcm,pcie-ob-axi-offset: The offset from the AXI address to the internal
+ address used by the iProc PCIe core (not the PCIe address)
+ 
++Legacy interrupt (INTx) support (optional):
++
++Note INTx is for PAXB only.
++- interrupt-map-mask and interrupt-map, standard PCI properties to define
++the mapping of the PCIe interface to interrupt numbers
++
++In addition, a sub-node that describes the legacy interrupt controller built
++into the PCIe controller.
++This sub-node must have the following properties:
++ - compatible: must be "brcm,iproc-intc"
++ - interrupt-controller: claims itself as an interrupt controller for INTx
++ - #interrupt-cells: set to <1>
++ - interrupts: interrupt line wired to the generic GIC for INTx support
++ - interrupt-parent: Phandle to the parent interrupt controller
++
+ MSI support (optional):
+ 
+ For older platforms without MSI integrated in the GIC, iProc PCIe core provides
+@@ -77,8 +89,11 @@ Example:
+ 		reg = <0x18012000 0x1000>;
+ 
+ 		#interrupt-cells = <1>;
+-		interrupt-map-mask = <0 0 0 0>;
+-		interrupt-map = <0 0 0 0 &gic GIC_SPI 100 IRQ_TYPE_NONE>;
++		interrupt-map-mask = <0 0 0 7>;
++		interrupt-map = <0 0 0 1 &pcie0_intc 0>,
++				<0 0 0 2 &pcie0_intc 1>,
++				<0 0 0 3 &pcie0_intc 2>,
++				<0 0 0 4 &pcie0_intc 3>;
+ 
+ 		linux,pci-domain = <0>;
+ 
+@@ -98,6 +113,14 @@ Example:
+ 
+ 		msi-parent = <&msi0>;
+ 
++		pcie0_intc: interrupt-controller {
++			compatible = "brcm,iproc-intc";
++			interrupt-controller;
++			#interrupt-cells = <1>;
++			interrupt-parent = <&gic>;
++			interrupts = <GIC_SPI 100 IRQ_TYPE_NONE>;
++		};
++
+ 		/* iProc event queue based MSI */
+ 		msi0: msi@18012000 {
+ 			compatible = "brcm,iproc-msi";
+@@ -115,8 +138,11 @@ Example:
+ 		reg = <0x18013000 0x1000>;
+ 
+ 		#interrupt-cells = <1>;
+-		interrupt-map-mask = <0 0 0 0>;
+-		interrupt-map = <0 0 0 0 &gic GIC_SPI 106 IRQ_TYPE_NONE>;
++		interrupt-map-mask = <0 0 0 7>;
++		interrupt-map = <0 0 0 1 &pcie1_intc 0>,
++				<0 0 0 2 &pcie1_intc 1>,
++				<0 0 0 3 &pcie1_intc 2>,
++				<0 0 0 4 &pcie1_intc 3>;
+ 
+ 		linux,pci-domain = <1>;
+ 
+@@ -130,4 +156,12 @@ Example:
+ 
+ 		phys = <&phy 1 6>;
+ 		phy-names = "pcie-phy";
++
++		pcie1_intc: interrupt-controller {
++			compatible = "brcm,iproc-intc";
++			interrupt-controller;
++			#interrupt-cells = <1>;
++			interrupt-parent = <&gic>;
++			interrupts = <GIC_SPI 106 IRQ_TYPE_NONE>;
++		};
+ 	};
 -- 
 2.7.4
 
