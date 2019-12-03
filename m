@@ -2,56 +2,53 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1020C33CA0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2605C432C0
 	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78C012073B
+	by mail.kernel.org (Postfix) with ESMTP id A41A1206DF
 	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:48:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbfLCDs3 (ORCPT
+        id S1726928AbfLCDsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 22:48:29 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30876 "EHLO
+        Mon, 2 Dec 2019 22:48:31 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35460 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726469AbfLCDs2 (ORCPT
+        by vger.kernel.org with ESMTP id S1726319AbfLCDs3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 22:48:28 -0500
+        Mon, 2 Dec 2019 22:48:29 -0500
 Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB33kmi1093340
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 22:48:26 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wm6g99bkx-1
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB33kndI093450
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Dec 2019 22:48:27 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2wm6g99bmu-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 22:48:26 -0500
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 22:48:27 -0500
 Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Tue, 3 Dec 2019 03:48:24 -0000
+        Tue, 3 Dec 2019 03:48:25 -0000
 Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
         Tue, 3 Dec 2019 03:48:17 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB33mGp362390408
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB33mGhc35586160
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Tue, 3 Dec 2019 03:48:16 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EDB2B4203F;
-        Tue,  3 Dec 2019 03:48:15 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 549B34204B;
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EB13852057;
         Tue,  3 Dec 2019 03:48:15 +0000 (GMT)
 Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4998B5205A;
         Tue,  3 Dec 2019 03:48:15 +0000 (GMT)
 Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
         (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 30B52A01B6;
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 4D7DAA03CB;
         Tue,  3 Dec 2019 14:48:12 +1100 (AEDT)
 From:   "Alastair D'Silva" <alastair@au1.ibm.com>
 To:     alastair@d-silva.org
@@ -85,22 +82,24 @@ Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Alexey Kardashevskiy <aik@ozlabs.ru>,
         linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Subject: [PATCH v2 00/27] Add support for OpenCAPI SCM devices
-Date:   Tue,  3 Dec 2019 14:46:28 +1100
+Subject: [PATCH v2 03/27] powerpc: Add OPAL calls for LPC memory alloc/release
+Date:   Tue,  3 Dec 2019 14:46:31 +1100
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191203034655.51561-1-alastair@au1.ibm.com>
+References: <20191203034655.51561-1-alastair@au1.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19120303-0008-0000-0000-0000033C0FDC
+x-cbid: 19120303-4275-0000-0000-0000038A31DB
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120303-0009-0000-0000-00004A5B2899
-Message-Id: <20191203034655.51561-1-alastair@au1.ibm.com>
+x-cbparentid: 19120303-4276-0000-0000-0000389DCDD7
+Message-Id: <20191203034655.51561-4-alastair@au1.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
  definitions=2019-12-02_06:2019-11-29,2019-12-02 signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
  lowpriorityscore=0 bulkscore=0 phishscore=0 priorityscore=1501
- impostorscore=0 suspectscore=3 spamscore=0 mlxscore=0 adultscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ impostorscore=0 suspectscore=1 spamscore=0 mlxscore=0 adultscore=0
+ mlxlogscore=808 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-1910280000 definitions=main-1912030032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -109,101 +108,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alastair D'Silva <alastair@d-silva.org>
 
-This series adds support for OpenCAPI SCM devices, exposing
-them as nvdimms so that we can make use of the existing
-infrastructure.
+Add OPAL calls for LPC memory alloc/release
 
-V2:
-  - "powerpc: Map & release OpenCAPI LPC memory"
-      - Fix #if -> #ifdef
-      - use pci_dev_id to get the bdfn
-      - use __be64 to hold be data
-      - indent check_hotplug_memory_addressable correctly 
-      - Remove export of check_hotplug_memory_addressable
-  - "ocxl: Conditionally bind SCM devices to the generic OCXL driver"
-      - Improve patch description and remove redundant default
-  - "nvdimm: Add driver for OpenCAPI Storage Class Memory"
-      - Mark a few funcs as static as identified by the 0day bot
-      - Add OCXL dependancies to OCXL_SCM
-      - Use memcpy_mcsafe in scm_ndctl_config_read
-      - Rename scm_foo_offset_0x00 to scm_foo_header_parse & add docs
-      - Name DIMM attribs "ocxl" rather than "scm"
-      - Split out into base + many feature patches
-  - "powerpc: Enable OpenCAPI Storage Class Memory driver on bare metal"
-      - Build DEV_DAX & friends as modules
-  - "ocxl: Conditionally bind SCM devices to the generic OCXL driver"
-      - Patch dropped (easy enough to maintain this out of tree for development)
-  - "ocxl: Tally up the LPC memory on a link & allow it to be mapped"
-      - Add a warning if an unmatched lpc_release is called
-  - "ocxl: Add functions to map/unmap LPC memory"
-      - Use EXPORT_SYMBOL_GPL
+Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
+Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
+---
+ arch/powerpc/include/asm/opal-api.h        | 2 ++
+ arch/powerpc/include/asm/opal.h            | 3 +++
+ arch/powerpc/platforms/powernv/opal-call.c | 2 ++
+ 3 files changed, 7 insertions(+)
 
-
-Alastair D'Silva (27):
-  memory_hotplug: Add a bounds check to __add_pages
-  nvdimm: remove prototypes for nonexistent functions
-  powerpc: Add OPAL calls for LPC memory alloc/release
-  mm/memory_hotplug: Allow check_hotplug_memory_addressable to be called
-    from drivers
-  powerpc: Map & release OpenCAPI LPC memory
-  ocxl: Tally up the LPC memory on a link & allow it to be mapped
-  ocxl: Add functions to map/unmap LPC memory
-  ocxl: Save the device serial number in ocxl_fn
-  ocxl: Free detached contexts in ocxl_context_detach_all()
-  nvdimm: Add driver for OpenCAPI Storage Class Memory
-  nvdimm/ocxl: Add register addresses & status values to header
-  nvdimm/ocxl: Read the capability registers & wait for device ready
-  nvdimm/ocxl: Add support for Admin commands
-  nvdimm/ocxl: Add support for near storage commands
-  nvdimm/ocxl: Register a character device for userspace to interact
-    with
-  nvdimm/ocxl: Implement the Read Error Log command
-  nvdimm/ocxl: Add controller dump IOCTLs
-  nvdimm/ocxl: Add an IOCTL to report controller statistics
-  nvdimm/ocxl: Forward events to userspace
-  nvdimm/ocxl: Add an IOCTL to request controller health & perf data
-  nvdimm/ocxl: Support firmware update via sysfs
-  nvdimm/ocxl: Implement the heartbeat command
-  nvdimm/ocxl: Add debug IOCTLs
-  nvdimm/ocxl: Implement Overwrite
-  nvdimm/ocxl: Expose SMART data via ndctl
-  powerpc: Enable OpenCAPI Storage Class Memory driver on bare metal
-  MAINTAINERS: Add myself & nvdimm/ocxl to ocxl
-
- MAINTAINERS                                |    3 +
- arch/powerpc/configs/powernv_defconfig     |    4 +
- arch/powerpc/include/asm/opal-api.h        |    2 +
- arch/powerpc/include/asm/opal.h            |    3 +
- arch/powerpc/include/asm/pnv-ocxl.h        |    2 +
- arch/powerpc/platforms/powernv/ocxl.c      |   42 +
- arch/powerpc/platforms/powernv/opal-call.c |    2 +
- drivers/misc/ocxl/config.c                 |   50 +
- drivers/misc/ocxl/context.c                |    6 +-
- drivers/misc/ocxl/core.c                   |   60 +
- drivers/misc/ocxl/link.c                   |   60 +
- drivers/misc/ocxl/ocxl_internal.h          |   36 +
- drivers/nvdimm/Kconfig                     |    2 +
- drivers/nvdimm/Makefile                    |    2 +-
- drivers/nvdimm/nd-core.h                   |    4 -
- drivers/nvdimm/ocxl/Kconfig                |   21 +
- drivers/nvdimm/ocxl/Makefile               |    7 +
- drivers/nvdimm/ocxl/scm.c                  | 2220 ++++++++++++++++++++
- drivers/nvdimm/ocxl/scm_internal.c         |  238 +++
- drivers/nvdimm/ocxl/scm_internal.h         |  284 +++
- drivers/nvdimm/ocxl/scm_sysfs.c            |  163 ++
- include/linux/memory_hotplug.h             |    5 +
- include/misc/ocxl.h                        |   19 +
- include/uapi/nvdimm/ocxl-scm.h             |  127 ++
- mm/memory_hotplug.c                        |   21 +
- 25 files changed, 3377 insertions(+), 6 deletions(-)
- create mode 100644 drivers/nvdimm/ocxl/Kconfig
- create mode 100644 drivers/nvdimm/ocxl/Makefile
- create mode 100644 drivers/nvdimm/ocxl/scm.c
- create mode 100644 drivers/nvdimm/ocxl/scm_internal.c
- create mode 100644 drivers/nvdimm/ocxl/scm_internal.h
- create mode 100644 drivers/nvdimm/ocxl/scm_sysfs.c
- create mode 100644 include/uapi/nvdimm/ocxl-scm.h
-
+diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
+index 378e3997845a..2c88c02e69ed 100644
+--- a/arch/powerpc/include/asm/opal-api.h
++++ b/arch/powerpc/include/asm/opal-api.h
+@@ -208,6 +208,8 @@
+ #define OPAL_HANDLE_HMI2			166
+ #define	OPAL_NX_COPROC_INIT			167
+ #define OPAL_XIVE_GET_VP_STATE			170
++#define OPAL_NPU_MEM_ALLOC			171
++#define OPAL_NPU_MEM_RELEASE			172
+ #define OPAL_MPIPL_UPDATE			173
+ #define OPAL_MPIPL_REGISTER_TAG			174
+ #define OPAL_MPIPL_QUERY_TAG			175
+diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
+index a0cf8fba4d12..4db135fb54ab 100644
+--- a/arch/powerpc/include/asm/opal.h
++++ b/arch/powerpc/include/asm/opal.h
+@@ -39,6 +39,9 @@ int64_t opal_npu_spa_clear_cache(uint64_t phb_id, uint32_t bdfn,
+ 				uint64_t PE_handle);
+ int64_t opal_npu_tl_set(uint64_t phb_id, uint32_t bdfn, long cap,
+ 			uint64_t rate_phys, uint32_t size);
++int64_t opal_npu_mem_alloc(uint64_t phb_id, uint32_t bdfn,
++			uint64_t size, uint64_t *bar);
++int64_t opal_npu_mem_release(uint64_t phb_id, uint32_t bdfn);
+ 
+ int64_t opal_console_write(int64_t term_number, __be64 *length,
+ 			   const uint8_t *buffer);
+diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
+index a2aa5e433ac8..27c4b93c774c 100644
+--- a/arch/powerpc/platforms/powernv/opal-call.c
++++ b/arch/powerpc/platforms/powernv/opal-call.c
+@@ -287,6 +287,8 @@ OPAL_CALL(opal_pci_set_pbcq_tunnel_bar,		OPAL_PCI_SET_PBCQ_TUNNEL_BAR);
+ OPAL_CALL(opal_sensor_read_u64,			OPAL_SENSOR_READ_U64);
+ OPAL_CALL(opal_sensor_group_enable,		OPAL_SENSOR_GROUP_ENABLE);
+ OPAL_CALL(opal_nx_coproc_init,			OPAL_NX_COPROC_INIT);
++OPAL_CALL(opal_npu_mem_alloc,			OPAL_NPU_MEM_ALLOC);
++OPAL_CALL(opal_npu_mem_release,			OPAL_NPU_MEM_RELEASE);
+ OPAL_CALL(opal_mpipl_update,			OPAL_MPIPL_UPDATE);
+ OPAL_CALL(opal_mpipl_register_tag,		OPAL_MPIPL_REGISTER_TAG);
+ OPAL_CALL(opal_mpipl_query_tag,			OPAL_MPIPL_QUERY_TAG);
 -- 
 2.23.0
 
