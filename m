@@ -2,98 +2,91 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F41FFC43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E93C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAFEA206E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:58:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575356298;
-	bh=NDzHjnZoROStmAmK2kEQvw3sr0Cov3rjYuViMaBgtXw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vV84F1xedZepy2LOptp+Op5t8pskqEIlvKUvNdcc3ENewVSZZso2JdWlg8Lbb0QdZ
-	 n44NM5kK4zjsrSvs1jsSGIvxm7VJXi3tzUbDgH/GIMbFlK11qUZnO20TTk3sU6rY+8
-	 xShZ2wqGGwuuqxmNWWtgLaH4IeHkJ/hoIuzWudHg=
+	by mail.kernel.org (Postfix) with ESMTP id 49106206E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:58:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="U9np6V2j";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="Vw2lnnHe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727408AbfLCG6R (ORCPT
+        id S1727420AbfLCG6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 01:58:17 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43014 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727340AbfLCG6R (ORCPT
+        Tue, 3 Dec 2019 01:58:41 -0500
+Received: from a27-185.smtp-out.us-west-2.amazonses.com ([54.240.27.185]:33938
+        "EHLO a27-185.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727337AbfLCG6l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 01:58:17 -0500
-Received: by mail-wr1-f66.google.com with SMTP id n1so2184523wra.10;
-        Mon, 02 Dec 2019 22:58:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zF74IGfN8k4r/66rDN9iUDHqi54WQbWfKDWkqcaxjZw=;
-        b=PdZ4+lTwKLhTadzoIBTD+MAdEKy2PGkrU15xlBIIWitCyv1IYwxpgI4BNaX5WW7Iu3
-         R3Bb34YpH513Zgxv+Pui8YnZ3U9hlnFrabHfQnt7AIpOg8tckDYAj/ZkCtSfBaBl1WPb
-         7oz1xCuo7Pdu7Dj2p5wy1C8DlL8jyLZqL5DMI7IMnL/m8Mh5Ck0GzH6hxT936JN/n/IJ
-         bfjdCSEvrhxWoi4E6jxbST7u01T+YN2iOnlFEKF1a8wHiZBFESivfIBmlHENFJTKNnnx
-         UgEdRfPqV08ZBNTdglKXGa/RJOBfw7HR9Sp9JfBnug7GqN+6TwqB1J3IjTmSz2c+5Exx
-         Y6fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zF74IGfN8k4r/66rDN9iUDHqi54WQbWfKDWkqcaxjZw=;
-        b=eC+HNcAR6Ewg0dW+axhxQ8zRnEBlFZCe0CxhTRYllDKJ1+BXvqNNbB6/csJu8qVPqc
-         a9DjyanZenFvabKLGhAmzObtxxRflss4AoYLxauem+9Jqfdd2VbVX+mG6TSu9ooj8EZ+
-         G29ie0Rfw7eHGvSjDEW11GyWtqqsIDp+tRgCxMq7C49SoYYGkVy2jHG4zhdDAdVH0Wgg
-         O45FMHA86oRsd4RdJ6N/iVDH0qmu9JMqZLNKV6PY0gMwmlwzxg/W9gsYoXSbh01chUUG
-         6GWFYAAQaEmdhMOpOKBbmBS20QwCgIOyHylGS+d39rcHnf+6EYcQfdWngSQ1+g5d1nZG
-         spyg==
-X-Gm-Message-State: APjAAAVVogUEDPljY9ZfWlQvVoMDb+B/CJy79TqERAXhCw2+ILmqOaTY
-        wFy54OB5OsS3ytgxz9y7cwU=
-X-Google-Smtp-Source: APXvYqzDUtSY4j2FaTqaOLrl5xV1xcEZrpY5GUGhDwiA72WNVMfQoHhvDxH5M8QSY5J/ezF6uJMc0Q==
-X-Received: by 2002:a5d:5284:: with SMTP id c4mr3141134wrv.376.1575356295012;
-        Mon, 02 Dec 2019 22:58:15 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id r15sm1915483wmh.21.2019.12.02.22.58.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 22:58:14 -0800 (PST)
-Date:   Tue, 3 Dec 2019 07:58:12 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dmitry Safonov <dima@arista.com>
-Subject: Re: linux-next: manual merge of the y2038 tree with the tip tree
-Message-ID: <20191203065812.GB115767@gmail.com>
-References: <20191127130139.0b16375c@canb.auug.org.au>
- <20191203140259.33291393@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191203140259.33291393@canb.auug.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 3 Dec 2019 01:58:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575356320;
+        h=From:To:Cc:Subject:Date:Message-Id;
+        bh=WY+EofIbsJ0ATyBUY39PBUF9SD8Hg6K0NfdwhCSeY68=;
+        b=U9np6V2j3j2/rhzPirWafSVsRxLjxu4xlrUfB0RRV6Y3aUsTTgePVSCxd6XtG9Gm
+        d0D4cY7kurDRvalGbjKBe9HPkrzQnS/4Gz4+I5R+1efN8do7Dx3scApodCVTPW7mJ6C
+        Yx3yHRuZoKhTOtdWOaNp6h5qeZFHvw96Q4r/0Bqk=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575356320;
+        h=From:To:Cc:Subject:Date:Message-Id:Feedback-ID;
+        bh=WY+EofIbsJ0ATyBUY39PBUF9SD8Hg6K0NfdwhCSeY68=;
+        b=Vw2lnnHe/3cJm1euDEd9MqLD3tNCdpGXkU4bh+e1zN4k7gvgw+/hUViEbbvlG3qr
+        zvw1VbNpfjTs25/7V65vAb0OXtDgbM2ob4lk7RADmHmd0UT31Lwnnf2Is7oAFQzyZV/
+        pXBeAKWYykD0XJJ8LbeTeySP5+3EhJq4T45xwJ20=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 428FCC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        cang@codeaurora.org
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Evan Green <evgreen@chromium.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] scsi: ufs: Give an unique ID to each ufs-bsg
+Date:   Tue, 3 Dec 2019 06:58:40 +0000
+Message-ID: <0101016eca8dc9d7-d24468d3-04d2-4ef3-a906-abe8b8cbcd3d-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 1.9.1
+X-SES-Outgoing: 2019.12.03-54.240.27.185
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Considering there can be multiple UFS hosts in SoC, give each ufs-bsg an
+unique ID by appending the scsi host number to its device name.
 
-* Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+Fixes: df032bf27 (scsi: ufs: Add a bsg endpoint that supports UPIUs)
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-> Hi all,
-> 
-> This is now a conflict between the tip tree and Linus' tree.
+diff --git a/drivers/scsi/ufs/ufs_bsg.c b/drivers/scsi/ufs/ufs_bsg.c
+index dc2f6d2..d2197a3 100644
+--- a/drivers/scsi/ufs/ufs_bsg.c
++++ b/drivers/scsi/ufs/ufs_bsg.c
+@@ -202,7 +202,7 @@ int ufs_bsg_probe(struct ufs_hba *hba)
+ 	bsg_dev->parent = get_device(parent);
+ 	bsg_dev->release = ufs_bsg_node_release;
+ 
+-	dev_set_name(bsg_dev, "ufs-bsg");
++	dev_set_name(bsg_dev, "ufs-bsg%u", shost->host_no);
+ 
+ 	ret = device_add(bsg_dev);
+ 	if (ret)
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-This too should be resolved in my latest update of the -next integration 
-branch tip:auto-latest.
-
-Thanks,
-
-	Ingo
