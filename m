@@ -7,101 +7,78 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A10C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2530CC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7638620803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE7D320640
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:28:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DWtDNKTC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DBua2pl6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbfLCT1l (ORCPT
+        id S1727433AbfLCT2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 14:27:41 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:40969 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726932AbfLCT1l (ORCPT
+        Tue, 3 Dec 2019 14:28:36 -0500
+Received: from mail-pf1-f180.google.com ([209.85.210.180]:38611 "EHLO
+        mail-pf1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbfLCT2g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 14:27:41 -0500
-Received: by mail-pj1-f66.google.com with SMTP id ca19so1901482pjb.8;
-        Tue, 03 Dec 2019 11:27:40 -0800 (PST)
+        Tue, 3 Dec 2019 14:28:36 -0500
+Received: by mail-pf1-f180.google.com with SMTP id x185so2335454pfc.5
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 11:28:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0PgT9Sm6MTMXuNLnykZQsd6rodt9b9uQNxM2B4NE8NA=;
-        b=DWtDNKTCoDd8AVCIaKWfQfjF6A4gU6y0pXYZm1LWLNrAeN5pJ9Y396tGvuAKw2+hjS
-         9I0LbSyqQ7l9MmBlbcleBIcWLxNqWH2bsVLpQ+ej/42KKf0q3gq/rnkxuw6tkqD5Iju4
-         MAlpnzmxV8tZ8LLrVN/c+JoRc0dk9pz8WRgp/Y+xcIAGODoylB4pay2xzNuzBhRz2VsS
-         95AyBS/cKU80PT2U9kwEHMkM1ATpRNwkmL30hBQckrBKSZq3//5quE+bwi0lOB6eXZMt
-         2akPUnbWrXS8XxcfKD5SXmiaP6FvnzlR+5jSGWF7M3GKsCanmAcbZgk34LXmIxqC9Lpv
-         2IyQ==
+        bh=V8NL17ON/XicxfpTxuuNh/N53BkIMVDrR4l3b9XAw50=;
+        b=DBua2pl6UC5qpJtQzjq+yHw5VLDF82o8M/HdpRyfjcqfq1N7V/z2IdQEM1QkuFQt/e
+         H9l14xZSV09e1WNj6fni0dLH0JrTln7Q9sb9eifN2fMvpFXjiIOyy/fUQxvPUqlx+kr3
+         PF0X7+UwHrNzUb40DKWYREz6vcIVZ5kWR8BTYwLnpgwD3L/QHc+L7LtwKCFriU0YsUeb
+         xjGyaJvVOpPGeoBN7NI/4axq8L/VYXBsRdsfeIu/pxpaTvGJW0sIWy/pNEbXkmXSt/4J
+         xdKEFJQ5jjK9SqIVejfRKnko0T0Helhy7PRuHMHOoxnSSWo6Od4KwwO51Kk9+Uilsy0L
+         UR5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0PgT9Sm6MTMXuNLnykZQsd6rodt9b9uQNxM2B4NE8NA=;
-        b=lVPPJLKx2uAkeBeV9JvW/RIcaWuIkjlVZnGf5yI6zvI9jjCzvLBCLDCEcPB71D3Kpy
-         nByuIoC23mdxSldcTjIeXeap/7F9g9whCJf78haWWtlHO6ImALCo/0aTpMMLXLPwcNSo
-         WkqjCVy6yR1m2wItoy43SzdfqmkL1m7erob4epyJwlmkSEgA2t3ofu3LLSKVLBGaIhxy
-         DVWCfOOEVsaf7CYdXatnpDb+0wUnZvzpQYLIGhMFAmomrzbtYQigG3TMyVZPBmjYT+BX
-         xdsYtn/RdVerN2PfU9HPPszGSPc9fuiUiiHwznmZ+YaLDWrd1MMdrK/9mcCn/+vdaWZC
-         kF6w==
-X-Gm-Message-State: APjAAAXmp/QKxDq6vRQj+gMWkYcEL9sXP5tC6LNOIwU0fYL095bUbzsF
-        CWfE2rDXuppe3er9n6SciygcPp8UCjktsf42w0c=
-X-Google-Smtp-Source: APXvYqwc1SheFyTjSmLHWhBW+YXY6ussA8W4aKKbrfYIk26KUHYQylX/y9/Hfdg+UU5PNMTEH5UyuW8U8XCJn2rOjDc=
-X-Received: by 2002:a17:90b:3109:: with SMTP id gc9mr7346216pjb.30.1575401260458;
- Tue, 03 Dec 2019 11:27:40 -0800 (PST)
+        bh=V8NL17ON/XicxfpTxuuNh/N53BkIMVDrR4l3b9XAw50=;
+        b=Wwx0QXlBa4dRqjp1UUHcUG1DWhzLGc8iZQzb1j7cOhpu/FmNGxVbpD0NCYB9G3mV+0
+         RYYgdq0EFAx5RYVL0opUNbS7t1Q5VMtSzPzWQI0Ix1h7ASxib19kEH9Fe4oeaDw8qK+N
+         HyWJMexP/JLkLB0lftuz0ATACtKm14jLStZcLXhud5/UXr+Kq51M2woiIfazuAmOLjs6
+         /rzA/IKOLSRXWlLB2yYSm1Gezmk2VhSExhoiG/7gb+SFrSksg7xcDjlvGpr7rmOj25vL
+         +Y7/wXov11ga0Ht8r99iHbcD41zi8FRKKaizQgwUYPdbo6bA3w9fnghosFGvZG8SD1U4
+         +IMQ==
+X-Gm-Message-State: APjAAAVEXy0cn6OsllsmwT8yf/OXVqSt78jN5zN6f4mrzMZmYCYHQfH7
+        KzyTeMWBVxmsoiOu6SglZ0mK2tbQRiRiStSYCIE=
+X-Google-Smtp-Source: APXvYqy4s4dfPk7xp2Ss+1hclHrZ6TwmfmX1otoaNzVldov/oHG+i44rkEm6Tq7d+xrqJkcj9Q+MvNI+CsRFw7hpZYA=
+X-Received: by 2002:a62:2a4c:: with SMTP id q73mr6480011pfq.94.1575401315515;
+ Tue, 03 Dec 2019 11:28:35 -0800 (PST)
 MIME-Version: 1.0
-References: <1575349026-8743-1-git-send-email-srinath.mannam@broadcom.com>
- <1575349026-8743-3-git-send-email-srinath.mannam@broadcom.com> <20191203155514.GE18399@e119886-lin.cambridge.arm.com>
-In-Reply-To: <20191203155514.GE18399@e119886-lin.cambridge.arm.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 3 Dec 2019 21:27:30 +0200
-Message-ID: <CAHp75Vf7d=Gw24MTq2q3BKspkLEDDM24GVK4Zh_4zfZEzVuZjw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/6] PCI: iproc: Add INTx support with better modeling
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Srinath Mannam <srinath.mannam@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pci@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ray Jui <ray.jui@broadcom.com>
+References: <20191129004855.18506-1-xiyou.wangcong@gmail.com>
+ <20191129004855.18506-3-xiyou.wangcong@gmail.com> <20191202165921.GB30032@infradead.org>
+In-Reply-To: <20191202165921.GB30032@infradead.org>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Tue, 3 Dec 2019 11:28:24 -0800
+Message-ID: <CAM_iQpUC0v=0BETLP0=9O89g38Crx5pMB9jcvx3cEkafT+vUkg@mail.gmail.com>
+Subject: Re: [Patch v2 2/3] iommu: optimize iova_magazine_free_pfns()
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 5:55 PM Andrew Murray <andrew.murray@arm.com> wrote:
-> On Tue, Dec 03, 2019 at 10:27:02AM +0530, Srinath Mannam wrote:
-
-> > +     /* go through INTx A, B, C, D until all interrupts are handled */
-> > +     do {
-> > +             status = iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_CSR);
+On Mon, Dec 2, 2019 at 8:59 AM Christoph Hellwig <hch@infradead.org> wrote:
 >
-> By performing this read once and outside of the do/while loop you may improve
-> performance. I wonder how probable it is to get another INTx whilst handling
-> one?
+> > +     return (mag && mag->size == IOVA_MAG_SIZE);
+>
+> > +     return (!mag || mag->size == 0);
+>
+> No need for the braces in both cases.
 
-May I ask how it can be improved?
-One read will be needed any way, and so does this code.
+The current code is already this, I don't want to mix coding style
+changes with a non-coding-style change. You can always remove
+them in a separated patch if you feel necessary.
 
-> > +             for_each_set_bit(bit, &status, PCI_NUM_INTX) {
-> > +                     virq = irq_find_mapping(pcie->irq_domain, bit);
-> > +                     if (virq)
-> > +                             generic_handle_irq(virq);
-> > +                     else
-> > +                             dev_err(dev, "unexpected INTx%u\n", bit);
-> > +             }
-> > +     } while ((status & SYS_RC_INTX_MASK) != 0);
-
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks.
