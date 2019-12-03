@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4786AC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C35ECC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1894B20803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 969F02073C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:39:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575412773;
-	bh=vYI+vGSC1ZWE4PZB7cBETX+gWlmKph+RXwAAx5znR1Y=;
+	s=default; t=1575412775;
+	bh=bIMdWTVVXmga78CVUUepiAkLfk2lRuJIMByI9p4aMec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sl14OQ7LCi7lWMCTuahSY9wSkSJ7hpPB61m7eKYcasNhUE0pBuuyaLP3AnryrRW7i
-	 45LLMBVB8dvvtwHIzmP5JCYUc0YxxweZncQKxJqpyRoV46BSpOckxAsdqIM6urs+Ea
-	 ED2XYmLyfXyTCy6+jO1xO/IbmmV4h66fJqEc+F+c=
+	b=sA+kM30JzGo/SM9OeFcvL27q/FywikoHmRbHIS7eDggq2dso+rYCGS62FpRHBUQCH
+	 ZBhPptFM5K3UxapHMpmXW9L75Y/2bfsRfhzmIexzeSjpTq3MDvTchwtWEtlD8dPdha
+	 bVY5aupfC3zrPf/ZXIzn6I8CCsqgjoPZWVAP9ekk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728239AbfLCWjb (ORCPT
+        id S1728245AbfLCWje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:39:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49560 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:39:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728213AbfLCWj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:39:26 -0500
+        id S1728232AbfLCWjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:39:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4247D20803;
-        Tue,  3 Dec 2019 22:39:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AC592073C;
+        Tue,  3 Dec 2019 22:39:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412765;
-        bh=vYI+vGSC1ZWE4PZB7cBETX+gWlmKph+RXwAAx5znR1Y=;
+        s=default; t=1575412770;
+        bh=bIMdWTVVXmga78CVUUepiAkLfk2lRuJIMByI9p4aMec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CvlnaC7vQVLr4eHw+5ANZ5RBKccD1/t04xP9nd3AZzqzna6t8b0jyrETMOcgL7YTl
-         bd1c/3i2fCgLlJDTU8kT5ukLq5tUjynj1b5qA8kuGi/raGeK+LD5vZ//aoQBeKigw5
-         EPtYF/5GV6A56zQnElkyNkkqjDF5F8zeSSgxdzuo=
+        b=w1ucBK4Ex5IEbtg4O7GFL71g0qR0t8YEBhH7PoCa22ULIfeyJnebMTmuVrxF63/QZ
+         z25LGQ8VZxVWl+UW3wZyZX5v5nipTz4dp9oLBe39ujEdkl/O1FRyZqRrpaXKyDlWlc
+         hAV/kJv5tcc/faW97ngkLtws3U04l1tFViWGWHms=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 001/135] io_uring: async workers should inherit the user creds
-Date:   Tue,  3 Dec 2019 23:34:01 +0100
-Message-Id: <20191203213006.034386207@linuxfoundation.org>
+Subject: [PATCH 5.3 011/135] ASoC: msm8916-wcd-analog: Fix RX1 selection in RDAC2 MUX
+Date:   Tue,  3 Dec 2019 23:34:11 +0100
+Message-Id: <20191203213007.741201071@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,131 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit 181e448d8709e517c9c7b523fcd209f24eb38ca7 ]
+[ Upstream commit 9110d1b0e229cebb1ffce0c04db2b22beffd513d ]
 
-If we don't inherit the original task creds, then we can confuse users
-like fuse that pass creds in the request header. See link below on
-identical aio issue.
+According to the PM8916 Hardware Register Description,
+CDC_D_CDC_CONN_HPHR_DAC_CTL has only a single bit (RX_SEL)
+to switch between RX1 (0) and RX2 (1). It is not possible to
+disable it entirely to achieve the "ZERO" state.
 
-Link: https://lore.kernel.org/linux-fsdevel/26f0d78e-99ca-2f1b-78b9-433088053a61@scylladb.com/T/#u
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+However, at the moment the "RDAC2 MUX" mixer defines three possible
+values ("ZERO", "RX2" and "RX1"). Setting the mixer to "ZERO"
+actually configures it to RX1. Setting the mixer to "RX1" has
+(seemingly) no effect.
+
+Remove "ZERO" and replace it with "RX1" to fix this.
+
+Fixes: 585e881e5b9e ("ASoC: codecs: Add msm8916-wcd analog codec")
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Link: https://lore.kernel.org/r/20191020153007.206070-1-stephan@gerhold.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ sound/soc/codecs/msm8916-wcd-analog.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 56c23dee98117..f563a581b924c 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -260,6 +260,8 @@ struct io_ring_ctx {
+diff --git a/sound/soc/codecs/msm8916-wcd-analog.c b/sound/soc/codecs/msm8916-wcd-analog.c
+index 368b6c09474bb..aa9a8ac987dc0 100644
+--- a/sound/soc/codecs/msm8916-wcd-analog.c
++++ b/sound/soc/codecs/msm8916-wcd-analog.c
+@@ -306,7 +306,7 @@ struct pm8916_wcd_analog_priv {
+ };
  
- 	struct user_struct	*user;
+ static const char *const adc2_mux_text[] = { "ZERO", "INP2", "INP3" };
+-static const char *const rdac2_mux_text[] = { "ZERO", "RX2", "RX1" };
++static const char *const rdac2_mux_text[] = { "RX1", "RX2" };
+ static const char *const hph_text[] = { "ZERO", "Switch", };
  
-+	struct cred		*creds;
-+
- 	struct completion	ctx_done;
+ static const struct soc_enum hph_enum = SOC_ENUM_SINGLE_VIRT(
+@@ -321,7 +321,7 @@ static const struct soc_enum adc2_enum = SOC_ENUM_SINGLE_VIRT(
  
- 	struct {
-@@ -1633,8 +1635,11 @@ static void io_poll_complete_work(struct work_struct *work)
- 	struct io_poll_iocb *poll = &req->poll;
- 	struct poll_table_struct pt = { ._key = poll->events };
- 	struct io_ring_ctx *ctx = req->ctx;
-+	const struct cred *old_cred;
- 	__poll_t mask = 0;
+ /* RDAC2 MUX */
+ static const struct soc_enum rdac2_mux_enum = SOC_ENUM_SINGLE(
+-			CDC_D_CDC_CONN_HPHR_DAC_CTL, 0, 3, rdac2_mux_text);
++			CDC_D_CDC_CONN_HPHR_DAC_CTL, 0, 2, rdac2_mux_text);
  
-+	old_cred = override_creds(ctx->creds);
-+
- 	if (!READ_ONCE(poll->canceled))
- 		mask = vfs_poll(poll->file, &pt) & poll->events;
- 
-@@ -1649,7 +1654,7 @@ static void io_poll_complete_work(struct work_struct *work)
- 	if (!mask && !READ_ONCE(poll->canceled)) {
- 		add_wait_queue(poll->head, &poll->wait);
- 		spin_unlock_irq(&ctx->completion_lock);
--		return;
-+		goto out;
- 	}
- 	list_del_init(&req->list);
- 	io_poll_complete(ctx, req, mask);
-@@ -1657,6 +1662,8 @@ static void io_poll_complete_work(struct work_struct *work)
- 
- 	io_cqring_ev_posted(ctx);
- 	io_put_req(req);
-+out:
-+	revert_creds(old_cred);
- }
- 
- static int io_poll_wake(struct wait_queue_entry *wait, unsigned mode, int sync,
-@@ -1906,10 +1913,12 @@ static void io_sq_wq_submit_work(struct work_struct *work)
- 	struct io_ring_ctx *ctx = req->ctx;
- 	struct mm_struct *cur_mm = NULL;
- 	struct async_list *async_list;
-+	const struct cred *old_cred;
- 	LIST_HEAD(req_list);
- 	mm_segment_t old_fs;
- 	int ret;
- 
-+	old_cred = override_creds(ctx->creds);
- 	async_list = io_async_list_from_sqe(ctx, req->submit.sqe);
- restart:
- 	do {
-@@ -2017,6 +2026,7 @@ static void io_sq_wq_submit_work(struct work_struct *work)
- 		unuse_mm(cur_mm);
- 		mmput(cur_mm);
- 	}
-+	revert_creds(old_cred);
- }
- 
- /*
-@@ -2354,6 +2364,7 @@ static int io_sq_thread(void *data)
- {
- 	struct io_ring_ctx *ctx = data;
- 	struct mm_struct *cur_mm = NULL;
-+	const struct cred *old_cred;
- 	mm_segment_t old_fs;
- 	DEFINE_WAIT(wait);
- 	unsigned inflight;
-@@ -2363,6 +2374,7 @@ static int io_sq_thread(void *data)
- 
- 	old_fs = get_fs();
- 	set_fs(USER_DS);
-+	old_cred = override_creds(ctx->creds);
- 
- 	timeout = inflight = 0;
- 	while (!kthread_should_park()) {
-@@ -2473,6 +2485,7 @@ static int io_sq_thread(void *data)
- 		unuse_mm(cur_mm);
- 		mmput(cur_mm);
- 	}
-+	revert_creds(old_cred);
- 
- 	kthread_parkme();
- 
-@@ -3142,6 +3155,8 @@ static void io_ring_ctx_free(struct io_ring_ctx *ctx)
- 		io_unaccount_mem(ctx->user,
- 				ring_pages(ctx->sq_entries, ctx->cq_entries));
- 	free_uid(ctx->user);
-+	if (ctx->creds)
-+		put_cred(ctx->creds);
- 	kfree(ctx);
- }
- 
-@@ -3419,6 +3434,12 @@ static int io_uring_create(unsigned entries, struct io_uring_params *p)
- 	ctx->account_mem = account_mem;
- 	ctx->user = user;
- 
-+	ctx->creds = prepare_creds();
-+	if (!ctx->creds) {
-+		ret = -ENOMEM;
-+		goto err;
-+	}
-+
- 	ret = io_allocate_scq_urings(ctx, p);
- 	if (ret)
- 		goto err;
+ static const struct snd_kcontrol_new spkr_switch[] = {
+ 	SOC_DAPM_SINGLE("Switch", CDC_A_SPKR_DAC_CTL, 7, 1, 0)
 -- 
 2.20.1
 
