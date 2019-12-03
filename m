@@ -2,133 +2,155 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A01E5C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D2AC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DC5F20656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6084206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:07:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="lNROxTJb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbfLCHCC (ORCPT
+        id S1727386AbfLCHHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 02:02:02 -0500
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:5237 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727282AbfLCHCC (ORCPT
+        Tue, 3 Dec 2019 02:07:23 -0500
+Received: from mailgw02.mediatek.com ([1.203.163.81]:3856 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727282AbfLCHHW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 02:02:02 -0500
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
-  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="Ludovic.Desroches@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: sXlx3woo87bn8n13DyiB7JOkMCWIdXI0/a627Q8iPGDmP7TpoDXyjK5UJ3Bdemcn+hiMVlAbpY
- K2wzg3hVsxsEvjxq9awRD1DGtL7cSG3L2hGG1OrITol5wFnUTuIqd6p6rFeUS+baggxvr+mBAu
- 0KDwGhFtF5WQeLNVPE8PeGcmLiZUUjx1FtD5NrADRKcLcXJCXBnvitS6ivfc1CwBxqVlUhtsd5
- CPS84MPsBzg7M3jaRWW/hHRfpLGfO46qboHvYWEgBOmKqRAyExZOBIeZL43eq0ct1XlimcT/1M
- LeQ=
-X-IronPort-AV: E=Sophos;i="5.69,272,1571727600"; 
-   d="scan'208";a="57262689"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Dec 2019 00:02:01 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 3 Dec 2019 00:01:30 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Tue, 3 Dec 2019 00:01:30 -0700
-Date:   Tue, 3 Dec 2019 08:01:21 +0100
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "wsa@the-dreams.de" <wsa@the-dreams.de>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
+        Tue, 3 Dec 2019 02:07:22 -0500
+X-UUID: 7e161b5462db4b618ec92a20f92f27ad-20191203
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=a2/k+pZCKbnpnNDdJ057Q34lgkPRSTIuTEW5pkAOW5I=;
+        b=lNROxTJbk/qYF7V1MbERVZJPAVXIPi0gV1DQFmE3iy+SL6PPEnqRPtS1EIC1nXVmVTNnRs4kBLdbyqzphYKQRr5XQIBaj2+rHmQydFj7qYeL106/2MIomCI2bHfV2pyP/q7LpQFjY6RRRZQeQISjRhs86lqXnb+Pb4FJ56sScVc=;
+X-UUID: 7e161b5462db4b618ec92a20f92f27ad-20191203
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 28068314; Tue, 03 Dec 2019 15:07:14 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 3 Dec 2019 15:06:49 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 3 Dec 2019 15:06:53 +0800
+Message-ID: <1575356831.22432.7.camel@mtksdaap41>
+Subject: Re: [PATCH v1, 2/2] drm/mediatek: Fix external display vblank
+ timeout issue
+From:   CK Hu <ck.hu@mediatek.com>
+To:     <yongqiang.niu@mediatek.com>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peda@axentia.se" <peda@axentia.se>,
-        "Codrin Ciubotariu - M19940" <Codrin.Ciubotariu@microchip.com>,
-        Nicolas Ferre - M43238 <Nicolas.Ferre@microchip.com>
-Subject: Re: [PATCH v2 2/3] i2c: at91: fix clk_offset for sam9x60
-Message-ID: <20191203070121.ebba7qc7mvo6jcgy@M43218.corp.atmel.com>
-Mail-Followup-To: Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "wsa@the-dreams.de" <wsa@the-dreams.de>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peda@axentia.se" <peda@axentia.se>,
-        Codrin Ciubotariu - M19940 <Codrin.Ciubotariu@microchip.com>,
-        Nicolas Ferre - M43238 <Nicolas.Ferre@microchip.com>
-References: <1575276957-5615-2-git-send-email-eugen.hristev@microchip.com>
- <1575277244-6507-1-git-send-email-eugen.hristev@microchip.com>
+        <linux-mediatek@lists.infradead.org>
+Date:   Tue, 3 Dec 2019 15:07:11 +0800
+In-Reply-To: <1574817475-22378-3-git-send-email-yongqiang.niu@mediatek.com>
+References: <1574817475-22378-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1574817475-22378-3-git-send-email-yongqiang.niu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <1575277244-6507-1-git-send-email-eugen.hristev@microchip.com>
+X-TM-SNTS-SMTP: 92258CFB5CB2D6F8CD1B7935ED5D6D036C039F473DD1311588CF292D18E5CE3E2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 10:01:17AM +0100, Eugen Hristev - M18282 wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> In SAM9X60 datasheet, FLEX_TWI_CWGR register rescription mentions clock
+SGksIFlvbmdxaWFuZzoNCg0KSSB3b3VsZCBsaWtlIHRoZSB0aXRsZSBjb3VsZCBjbGVhcmx5IGV4
+cHJlc3Mgd2hhdCBkb2VzIHRoaXMgcGF0Y2ggZG8uIEkNCnRoaW5rIHdoYXQgdGhpcyBwYXRjaCBk
+byBpcyB0byBpbXBsZW1lbnQgcHJlcGFyZS91bnByZXBhcmUgaW50ZXJmYWNlIGZvcg0KZHBpIGRy
+aXZlci4gQW5kIHlvdSBjb3VsZCBkZXNjcmliZSB3aHkgZG8gdGhpcyBpbiBjb21taXQgbWVzc2Fn
+ZS4NCg0KDQpPbiBXZWQsIDIwMTktMTEtMjcgYXQgMDk6MTcgKzA4MDAsIHlvbmdxaWFuZy5uaXVA
+bWVkaWF0ZWsuY29tIHdyb3RlOg0KPiBGcm9tOiBZb25ncWlhbmcgTml1IDx5b25ncWlhbmcubml1
+QG1lZGlhdGVrLmNvbT4NCj4gDQo+IEZpeCBleHRlcm5hbCBkaXNwbGF5IHZibGFuayB0aW1lb3V0
+IGlzc3VlDQoNCkkgdGhpbmsgeW91IG1vdmUgZHBpX3Bvd2VyX29uIHRvIG1vcmUgZWFybHkgc3Rh
+Z2UuIEJ1dCB3aHkgdGhpcyB3b3VsZA0KZml4IHZibGFuayB0aW1lb3V0LiBQbGVhc2UgZGVzY3Jp
+YmUgbW9yZSBhYm91dCB0aGlzIHNvIHRoYXQgSSB3b3VsZA0KYWdyZWUgdGhpcyBwYXRjaC4gDQoN
+ClRoaXMgaXMgYSBidWcgZml4LCBzbyBwbGVhc2UgYWRkIGEgJ0ZpeGVzJyB0YWcuDQoNCj4gDQo+
+IFNpZ25lZC1vZmYtYnk6IFlvbmdxaWFuZyBOaXUgPHlvbmdxaWFuZy5uaXVAbWVkaWF0ZWsuY29t
+Pg0KPiAtLS0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHBpLmMgICAgICAgICAg
+fCAxNCArKysrKysrKystLS0tLQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1f
+Y3J0Yy5jICAgICB8ICA2ICsrKysrKw0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
+cm1fZGRwX2NvbXAuaCB8IDE0ICsrKysrKysrKysrKysrDQo+ICAzIGZpbGVzIGNoYW5nZWQsIDI5
+IGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9ncHUvZHJtL21lZGlhdGVrL210a19kcGkuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
+dGtfZHBpLmMNCj4gaW5kZXggYmU2ZDk1Yy4uMzhjYWJiZSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVy
+cy9ncHUvZHJtL21lZGlhdGVrL210a19kcGkuYw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVk
+aWF0ZWsvbXRrX2RwaS5jDQo+IEBAIC0zODcsOCArMzg3LDEyIEBAIHN0YXRpYyBpbnQgbXRrX2Rw
+aV9wb3dlcl9vbihzdHJ1Y3QgbXRrX2RwaSAqZHBpKQ0KPiAgew0KPiAgCWludCByZXQ7DQo+ICAN
+Cj4gLQlpZiAoKytkcGktPnJlZmNvdW50ICE9IDEpDQo+ICsJaWYgKCsrZHBpLT5yZWZjb3VudCAh
+PSAxKSB7DQo+ICsJCWRldl93YXJuKGRwaS0+ZGV2LCAiJXMgcmVmY291bnQ6ICVkXG4iLCBfX2Z1
+bmNfXywgZHBpLT5yZWZjb3VudCk7DQo+ICAJCXJldHVybiAwOw0KPiArCX0NCj4gKw0KPiArCURS
+TV9ERUJVR19EUklWRVIoIiVzIHJlZmNvdW50ICVkXG4iLCBfX2Z1bmNfXywgZHBpLT5yZWZjb3Vu
+dCk7DQo+ICANCj4gIAlyZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUoZHBpLT5lbmdpbmVfY2xrKTsN
+Cj4gIAlpZiAocmV0KSB7DQo+IEBAIC01NjMsMTQgKzU2NywxNCBAQCBzdGF0aWMgaW50IG10a19k
+cGlfYXRvbWljX2NoZWNrKHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlciwNCj4gIAkuYXRvbWlj
+X2NoZWNrID0gbXRrX2RwaV9hdG9taWNfY2hlY2ssDQo+ICB9Ow0KPiAgDQo+IC1zdGF0aWMgdm9p
+ZCBtdGtfZHBpX3N0YXJ0KHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXApDQo+ICtzdGF0aWMgdm9p
+ZCBtdGtfZHBpX3ByZXBhcmUoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCkNCj4gIHsNCj4gIAlz
+dHJ1Y3QgbXRrX2RwaSAqZHBpID0gY29udGFpbmVyX29mKGNvbXAsIHN0cnVjdCBtdGtfZHBpLCBk
+ZHBfY29tcCk7DQo+ICANCj4gIAltdGtfZHBpX3Bvd2VyX29uKGRwaSk7DQo+ICB9DQo+ICANCj4g
+LXN0YXRpYyB2b2lkIG10a19kcGlfc3RvcChzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wKQ0KPiAr
+c3RhdGljIHZvaWQgbXRrX2RwaV91bnByZXBhcmUoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCkN
+Cj4gIHsNCj4gIAlzdHJ1Y3QgbXRrX2RwaSAqZHBpID0gY29udGFpbmVyX29mKGNvbXAsIHN0cnVj
+dCBtdGtfZHBpLCBkZHBfY29tcCk7DQo+ICANCj4gQEAgLTU3OCw4ICs1ODIsOCBAQCBzdGF0aWMg
+dm9pZCBtdGtfZHBpX3N0b3Aoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCkNCj4gIH0NCj4gIA0K
+PiAgc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfZGRwX2NvbXBfZnVuY3MgbXRrX2RwaV9mdW5jcyA9
+IHsNCj4gLQkuc3RhcnQgPSBtdGtfZHBpX3N0YXJ0LA0KPiAtCS5zdG9wID0gbXRrX2RwaV9zdG9w
+LA0KPiArCS5wcmVwYXJlID0gbXRrX2RwaV9wcmVwYXJlLA0KPiArCS51bnByZXBhcmUgPSBtdGtf
+ZHBpX3VucHJlcGFyZSwNCj4gIH07DQo+ICANCj4gIHN0YXRpYyBpbnQgbXRrX2RwaV9iaW5kKHN0
+cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLCB2b2lkICpkYXRhKQ0KPiBk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jIGIvZHJp
+dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQo+IGluZGV4IDdlY2EwMmYuLmE2
+ZDNkOTcgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Ny
+dGMuYw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMNCj4g
+QEAgLTM0NSw2ICszNDUsOSBAQCBzdGF0aWMgaW50IG10a19jcnRjX2RkcF9od19pbml0KHN0cnVj
+dCBtdGtfZHJtX2NydGMgKm10a19jcnRjKQ0KPiAgCQlyZXR1cm4gcmV0Ow0KPiAgCX0NCj4gIA0K
+PiArCWZvciAoaSA9IDA7IGkgPCBtdGtfY3J0Yy0+ZGRwX2NvbXBfbnI7IGkrKykNCj4gKwkJbXRr
+X2RkcF9jb21wX3ByZXBhcmUobXRrX2NydGMtPmRkcF9jb21wW2ldKTsNCj4gKw0KPiAgCXJldCA9
+IG10a19kaXNwX211dGV4X3ByZXBhcmUobXRrX2NydGMtPm11dGV4KTsNCj4gIAlpZiAocmV0IDwg
+MCkgew0KPiAgCQlEUk1fRVJST1IoIkZhaWxlZCB0byBlbmFibGUgbXV0ZXggY2xvY2s6ICVkXG4i
+LCByZXQpOw0KPiBAQCAtNDM0LDYgKzQzNyw5IEBAIHN0YXRpYyB2b2lkIG10a19jcnRjX2RkcF9o
+d19maW5pKHN0cnVjdCBtdGtfZHJtX2NydGMgKm10a19jcnRjKQ0KPiAgCW10a19jcnRjX2RkcF9j
+bGtfZGlzYWJsZShtdGtfY3J0Yyk7DQo+ICAJbXRrX2Rpc3BfbXV0ZXhfdW5wcmVwYXJlKG10a19j
+cnRjLT5tdXRleCk7DQo+ICANCj4gKwlmb3IgKGkgPSAwOyBpIDwgbXRrX2NydGMtPmRkcF9jb21w
+X25yOyBpKyspDQo+ICsJCW10a19kZHBfY29tcF91bnByZXBhcmUobXRrX2NydGMtPmRkcF9jb21w
+W2ldKTsNCj4gKw0KPiAgCXBtX3J1bnRpbWVfcHV0KGRybS0+ZGV2KTsNCj4gIA0KPiAgCWlmIChj
+cnRjLT5zdGF0ZS0+ZXZlbnQgJiYgIWNydGMtPnN0YXRlLT5hY3RpdmUpIHsNCj4gZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmggYi9kcml2ZXJz
+L2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oDQo+IGluZGV4IDViMGEzZDQuLjA5
+N2I5MGQgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rk
+cF9jb21wLmgNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2Nv
+bXAuaA0KPiBAQCAtNzgsNiArNzgsOCBAQCBzdHJ1Y3QgbXRrX2RkcF9jb21wX2Z1bmNzIHsNCj4g
+IAl2b2lkICgqc3RvcCkoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCk7DQo+ICAJdm9pZCAoKmVu
+YWJsZV92YmxhbmspKHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAsIHN0cnVjdCBkcm1fY3J0YyAq
+Y3J0Yyk7DQo+ICAJdm9pZCAoKmRpc2FibGVfdmJsYW5rKShzdHJ1Y3QgbXRrX2RkcF9jb21wICpj
+b21wKTsNCj4gKwl2b2lkICgqcHJlcGFyZSkoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCk7DQo+
+ICsJdm9pZCAoKnVucHJlcGFyZSkoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCk7DQo+ICAJdW5z
+aWduZWQgaW50ICgqc3VwcG9ydGVkX3JvdGF0aW9ucykoc3RydWN0IG10a19kZHBfY29tcCAqY29t
+cCk7DQo+ICAJdW5zaWduZWQgaW50ICgqbGF5ZXJfbnIpKHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNv
+bXApOw0KPiAgCXZvaWQgKCpsYXllcl9vbikoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCwgdW5z
+aWduZWQgaW50IGlkeCwNCj4gQEAgLTExNyw2ICsxMTksMTggQEAgc3RhdGljIGlubGluZSB2b2lk
+IG10a19kZHBfY29tcF9jb25maWcoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCwNCj4gIAkJY29t
+cC0+ZnVuY3MtPmNvbmZpZyhjb21wLCB3LCBoLCB2cmVmcmVzaCwgYnBjLCBjbWRxX3BrdCk7DQo+
+ICB9DQo+ICANCj4gK3N0YXRpYyBpbmxpbmUgdm9pZCBtdGtfZGRwX2NvbXBfcHJlcGFyZShzdHJ1
+Y3QgbXRrX2RkcF9jb21wICpjb21wKQ0KPiArew0KPiArCWlmIChjb21wLT5mdW5jcyAmJiBjb21w
+LT5mdW5jcy0+cHJlcGFyZSkNCj4gKwkJY29tcC0+ZnVuY3MtPnByZXBhcmUoY29tcCk7DQo+ICt9
+DQo+ICsNCj4gK3N0YXRpYyBpbmxpbmUgdm9pZCBtdGtfZGRwX2NvbXBfdW5wcmVwYXJlKHN0cnVj
+dCBtdGtfZGRwX2NvbXAgKmNvbXApDQo+ICt7DQo+ICsJaWYgKGNvbXAtPmZ1bmNzICYmIGNvbXAt
+PmZ1bmNzLT51bnByZXBhcmUpDQo+ICsJCWNvbXAtPmZ1bmNzLT51bnByZXBhcmUoY29tcCk7DQo+
+ICt9DQo+ICsNCj4gIHN0YXRpYyBpbmxpbmUgdm9pZCBtdGtfZGRwX2NvbXBfc3RhcnQoc3RydWN0
+IG10a19kZHBfY29tcCAqY29tcCkNCj4gIHsNCj4gIAlpZiAoY29tcC0+ZnVuY3MgJiYgY29tcC0+
+ZnVuY3MtPnN0YXJ0KQ0KDQo=
 
-typo here: description
-
-> offset of 3 cycles (compared to 4 in eg. SAMA5D3).
-> This is the same offset as in SAMA5D2.
-> 
-> Fixes: b00277923743 ("i2c: at91: add new platform support for sam9x60")
-> Suggested-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-
-Thanks
-
-> ---
-> 
-> Sorry, wrong subject line. Modified to SAM9X60 .
-> 
-> 
->  drivers/i2c/busses/i2c-at91-core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-at91-core.c b/drivers/i2c/busses/i2c-at91-core.c
-> index e13af48..5137e62 100644
-> --- a/drivers/i2c/busses/i2c-at91-core.c
-> +++ b/drivers/i2c/busses/i2c-at91-core.c
-> @@ -174,7 +174,7 @@ static struct at91_twi_pdata sama5d2_config = {
->  
->  static struct at91_twi_pdata sam9x60_config = {
->  	.clk_max_div = 7,
-> -	.clk_offset = 4,
-> +	.clk_offset = 3,
->  	.has_unre_flag = true,
->  	.has_alt_cmd = true,
->  	.has_hold_field = true,
-> -- 
-> 2.7.4
-> 
