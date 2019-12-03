@@ -2,136 +2,155 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D031C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAE2C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 152F3206EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEA46206EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:38:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MrlPBp6S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726214AbfLCNiF (ORCPT
+        id S1726374AbfLCNiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 08:38:05 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:28016 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725957AbfLCNiF (ORCPT
+        Tue, 3 Dec 2019 08:38:25 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46945 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726291AbfLCNiY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 08:38:05 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB3DbjGO141937
-        for <linux-kernel@vger.kernel.org>; Tue, 3 Dec 2019 08:38:04 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wnqm1kkjw-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 08:38:04 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <kamalesh@linux.vnet.ibm.com>;
-        Tue, 3 Dec 2019 13:38:02 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 3 Dec 2019 13:37:58 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB3DbvqM27066668
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Dec 2019 13:37:57 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 39641A4065;
-        Tue,  3 Dec 2019 13:37:57 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 71B07A405F;
-        Tue,  3 Dec 2019 13:37:55 +0000 (GMT)
-Received: from JAVRIS.in.ibm.com (unknown [9.85.70.93])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue,  3 Dec 2019 13:37:55 +0000 (GMT)
-Subject: Re: [PATCH 2/3] powerpc/sysfs: Show idle_purr and idle_spurr for
- every CPU
-To:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <1574856072-30972-1-git-send-email-ego@linux.vnet.ibm.com>
- <1574856072-30972-3-git-send-email-ego@linux.vnet.ibm.com>
-From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Date:   Tue, 3 Dec 2019 19:07:53 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 3 Dec 2019 08:38:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575380304;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=j86gFYchvxCAdw1aMDtjnplAIlCiAIyuvE/UGPPey4g=;
+        b=MrlPBp6SYPDlc7pHGsHe3QqwA4B5jyN2t/w9gDVIdjy/Goj+KAvjtpqQSrYMWbafnnqhwz
+        R17Ru0zL2D2bhsz/cV7hqCOhiugVaiNI3B7a+vWLmxw7+inEjoBke1z7Iy8Dt/dVA6dTkL
+        FKxNGrTW1WzPbKHT30nYJuF/LfapKS4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-415-0wNpRvzAOSKhHDhgWywmsA-1; Tue, 03 Dec 2019 08:38:22 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 252CE802B63;
+        Tue,  3 Dec 2019 13:38:21 +0000 (UTC)
+Received: from lacos-laptop-7.usersys.redhat.com (ovpn-117-183.ams2.redhat.com [10.36.117.183])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 94CDB5C3FD;
+        Tue,  3 Dec 2019 13:38:19 +0000 (UTC)
+Subject: Re: [PATCH] [EFI,PCI] Allow disabling PCI busmastering on bridges
+ during boot
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Matthew Garrett <mjg59@google.com>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191203004043.174977-1-matthewgarrett@google.com>
+ <CACdnJus7nHdr4p4H1j5as9eB=FG-uX+wy_tjvTQ5ObErDJHdow@mail.gmail.com>
+ <CAKv+Gu8emrf7WbTyGc8QDykX_hZbrVtxJKkRVbGFhd8rd13yww@mail.gmail.com>
+From:   Laszlo Ersek <lersek@redhat.com>
+Message-ID: <9c58f2d2-5712-0972-6ea7-092500f37cf9@redhat.com>
+Date:   Tue, 3 Dec 2019 14:38:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <1574856072-30972-3-git-send-email-ego@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAKv+Gu8emrf7WbTyGc8QDykX_hZbrVtxJKkRVbGFhd8rd13yww@mail.gmail.com>
 Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: 0wNpRvzAOSKhHDhgWywmsA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19120313-0008-0000-0000-0000033C5B53
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120313-0009-0000-0000-00004A5B7624
-Message-Id: <9b8f82b0-86dd-d524-aae6-34f8c33bd2c2@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-03_03:2019-12-02,2019-12-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- lowpriorityscore=0 adultscore=0 clxscore=1015 priorityscore=1501
- spamscore=0 suspectscore=0 bulkscore=0 mlxlogscore=999 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912030107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/27/19 5:31 PM, Gautham R. Shenoy wrote:
-> From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+On 12/03/19 12:54, Ard Biesheuvel wrote:
+> (+ Laszlo)
 > 
-> On Pseries LPARs, to calculate utilization, we need to know the
-> [S]PURR ticks when the CPUs were busy or idle.
-> 
-> The total PURR and SPURR ticks are already exposed via the per-cpu
-> sysfs files /sys/devices/system/cpu/cpuX/purr and
-> /sys/devices/system/cpu/cpuX/spurr.
-> 
-> This patch adds support for exposing the idle PURR and SPURR ticks via
-> /sys/devices/system/cpu/cpuX/idle_purr and
-> /sys/devices/system/cpu/cpuX/idle_spurr.
+> On Tue, 3 Dec 2019 at 00:43, Matthew Garrett <mjg59@google.com> wrote:
+>>
+>> On Mon, Dec 2, 2019 at 4:40 PM Matthew Garrett
+>> <matthewgarrett@google.com> wrote:
+>>>
+>>> Add an option to disable the busmaster bit in the control register on
+>>> all PCI bridges before calling ExitBootServices() and passing control to
+>>> the runtime kernel. System firmware may configure the IOMMU to prevent
+>>> malicious PCI devices from being able to attack the OS via DMA. However,
+>>> since firmware can't guarantee that the OS is IOMMU-aware, it will tear
+>>> down IOMMU configuration when ExitBootServices() is called. This leaves
+>>> a window between where a hostile device could still cause damage before
+>>> Linux configures the IOMMU again.
 
-The patch looks good to me, with a minor file mode nit pick mentioned below.
+(1) This vaguely reminds me of
+<https://bugzilla.tianocore.org/show_bug.cgi?id=675>.
+
+
+(2) I'm not 100% convinced this threat model -- I hope I'm using the
+right term -- is useful. A PCI device will likely not "itself" set up
+DMA (maliciously or not) without a matching driver. The driver will
+likely come from the device too (option ROM). The driver will program
+the device to do DMA. So, whatever the system firwmare does wrt. the
+IOMMU for OS protection purposes, the device driver from the option ROM
+can undo.
+
+Is this a scenario where we trust the device driver that comes from the
+device's ROM BAR (let's say after the driver passes Secure Boot
+verification and after we measure it into the TPM), but don't trust the
+silicon jammed in the motherboard that presents the driver?
+
+
+(3) I never understood why the default behavior (or rather, "only"
+behavior) for system firmware wrt. the IOMMU at EBS was "whitelist
+everything". Why not "blacklist everything"?
+
+I understand the compat perspective, but the OS should at least be able
+to request such a full blackout through OsIndications or whatever. (With
+the SEV IOMMU driver in OVMF, that's what we do -- we set everything to
+encrypted.)
+
+>> I don't know enough about ARM to know if this makes sense there as well. Anyone?
+> 
+> There is no reason this shouldn't apply to ARM, but disabling bus
+> mastering like that before the drivers themselves get a chance to do
+> so is likely to cause trouble. Network devices or storage controllers
+> that are still running and have live descriptor rings in DMA memory
+> shouldn't get the rug pulled from under their feet like that by
+> blindly disabling the BM attribute on all root ports before their
+> drivers have had the opportunity to do this cleanly.
+
+I agree.
 
 > 
-> Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-> ---
->  arch/powerpc/kernel/sysfs.c | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
+> One trick we implemented in EDK2 for memory encryption was to do the
+> following (Laszlo, mind correcting me here if I am remembering this
+> wrong?)
+> - create an event X
+> - register an AtExitBootServices event that signals event X in its handler
+> - in the handler of event X, iterate over all PPBs to clear the bus
+> master attribute
+> - for bonus points, do the same for the PCIe devices themselves,
+> because root ports are known to exist that entirely ignore the BM
+> attribute
 > 
-> diff --git a/arch/powerpc/kernel/sysfs.c b/arch/powerpc/kernel/sysfs.c
-> index 80a676d..42ade55 100644
-> --- a/arch/powerpc/kernel/sysfs.c
-> +++ b/arch/powerpc/kernel/sysfs.c
-> @@ -1044,6 +1044,36 @@ static ssize_t show_physical_id(struct device *dev,
->  }
->  static DEVICE_ATTR(physical_id, 0444, show_physical_id, NULL);
-> 
-> +static ssize_t idle_purr_show(struct device *dev,
-> +			      struct device_attribute *attr, char *buf)
-> +{
-> +	struct cpu *cpu = container_of(dev, struct cpu, dev);
-> +	unsigned int cpuid = cpu->dev.id;
-> +	struct lppaca *cpu_lppaca_ptr = paca_ptrs[cpuid]->lppaca_ptr;
-> +	u64 idle_purr_cycles = be64_to_cpu(cpu_lppaca_ptr->wait_state_cycles);
-> +
-> +	return sprintf(buf, "%llx\n", idle_purr_cycles);
-> +}
-> +static DEVICE_ATTR_RO(idle_purr);
+> This way, event X should get handled after all the drivers' EBS event
+> handlers have been called.
 
-per cpu purr/spurr sysfs file is created with file mode 0400. Using
-DEVICE_ATTR_RO for their idle_* variants will create sysfs files with 0444 as
-their file mode, you should probably use DEVICE_ATTR() with file mode 0400 to
-have consist permission for both variants.
+Yes. Please see the commit message and the code comments in the
+following edk2 commit:
 
--- 
-Kamalesh
+https://github.com/tianocore/edk2/commit/7aee391fa3d0
+
+I'm unsure how portable it is to platforms that are not derived from edk2.
+
+Thanks!
+Laszlo
 
