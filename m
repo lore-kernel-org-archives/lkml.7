@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A79A9C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B9DC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7521F207DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D184207DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:44:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413053;
-	bh=2AC5dinst3Ntp9oN+hLsaPSDW5/oiPHCqmHwbgE47Q8=;
+	s=default; t=1575413055;
+	bh=7Uq8hPue3t0dzfQ6bCUXlb0fNvdGnrh/7ADWJ5X9b/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ro/wQFnHlZB2in9D4p0TG0sdncTg1YswwE2i1VmXYVvSMdTNJcPpgMQR7Y2J5SZi8
-	 Y/L/LMXWXmk5a+UPG5grqxikNuuVZhh6FP/Qp/46TCIPs3ngMCjn5JldoM5dndgKz9
-	 /V5FdTE+TYzM87yvQMw9kbc2KogDGbF2ikwExw7w=
+	b=fKMiX58mQMWAu2On6GWzuFGVn55c0gWPR/7LAj3wN7/cW4ElT312DgbVPPnu5b1Gw
+	 06MjXjLaj7w7q7l0WpA/CQnBa53QCaHqMRKR307FrrCXXQkRMer9cdpzXBESNC27LD
+	 Ak0dIgrWtpc9GrH+JdmNl5GzQfzeiC/HWuh3TzC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728922AbfLCWoM (ORCPT
+        id S1728927AbfLCWoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:44:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59918 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:44:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728916AbfLCWoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:44:09 -0500
+        id S1728897AbfLCWoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:44:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ADC0206EC;
-        Tue,  3 Dec 2019 22:44:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 883FE206EC;
+        Tue,  3 Dec 2019 22:44:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413048;
-        bh=2AC5dinst3Ntp9oN+hLsaPSDW5/oiPHCqmHwbgE47Q8=;
+        s=default; t=1575413051;
+        bh=7Uq8hPue3t0dzfQ6bCUXlb0fNvdGnrh/7ADWJ5X9b/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iWAncrs/YUm/C/odp0ZrR3mL5kKkiAdaiAIPVJI0kYEx3aCgYfmKMWVzvDCc89PiC
-         doegAZdkdlGFZAWFTlWIpYdZO/8oy15N/xxYH7MuVyLLTLMFOj2+mYYmzn46zLJVx3
-         lWlKCzu8Ta/sT28ytvOfZsk0gsOsxKHT7r3z0FvY=
+        b=AO32SfXqQx5lhcskQp5NFdldjnXjQE7CMT6y1BfVsXh/Kfc/ni7cZbO/OmOubrp/y
+         rOYJd8mwrYuC+X5AeH1V4CMNcxYJkEBAl93kE92KFpke7iCgBcRAc8S1iiXBI3yoxk
+         YiFSGj+gB2l58JBff17hphrJVTB7JWZI6Ri9icVA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dust Li <dust.li@linux.alibaba.com>,
-        Tony Lu <tonylu@linux.alibaba.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
+        stable@vger.kernel.org, Qi Jun Ding <qding@redhat.com>,
+        Paolo Abeni <pabeni@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 115/135] net: sched: fix `tc -s class show` no bstats on class with nolock subqueues
-Date:   Tue,  3 Dec 2019 23:35:55 +0100
-Message-Id: <20191203213043.050109353@linuxfoundation.org>
+Subject: [PATCH 5.3 116/135] openvswitch: fix flow command message size
+Date:   Tue,  3 Dec 2019 23:35:56 +0100
+Message-Id: <20191203213043.318682472@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -61,83 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dust Li <dust.li@linux.alibaba.com>
+From: Paolo Abeni <pabeni@redhat.com>
 
-[ Upstream commit 14e54ab9143fa60794d13ea0a66c792a2046a8f3 ]
+[ Upstream commit 4e81c0b3fa93d07653e2415fa71656b080a112fd ]
 
-When a classful qdisc's child qdisc has set the flag
-TCQ_F_CPUSTATS (pfifo_fast for example), the child qdisc's
-cpu_bstats should be passed to gnet_stats_copy_basic(),
-but many classful qdisc didn't do that. As a result,
-`tc -s class show dev DEV` always return 0 for bytes and
-packets in this case.
+When user-space sets the OVS_UFID_F_OMIT_* flags, and the relevant
+flow has no UFID, we can exceed the computed size, as
+ovs_nla_put_identifier() will always dump an OVS_FLOW_ATTR_KEY
+attribute.
+Take the above in account when computing the flow command message
+size.
 
-Pass the child qdisc's cpu_bstats to gnet_stats_copy_basic()
-to fix this issue.
-
-The qstats also has this problem, but it has been fixed
-in 5dd431b6b9 ("net: sched: introduce and use qstats read...")
-and bstats still remains buggy.
-
-Fixes: 22e0f8b9322c ("net: sched: make bstats per cpu and estimator RCU safe")
-Signed-off-by: Dust Li <dust.li@linux.alibaba.com>
-Signed-off-by: Tony Lu <tonylu@linux.alibaba.com>
-Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
+Fixes: 74ed7ab9264c ("openvswitch: Add support for unique flow IDs.")
+Reported-by: Qi Jun Ding <qding@redhat.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_mq.c     |    3 ++-
- net/sched/sch_mqprio.c |    4 ++--
- net/sched/sch_multiq.c |    2 +-
- net/sched/sch_prio.c   |    2 +-
- 4 files changed, 6 insertions(+), 5 deletions(-)
+ net/openvswitch/datapath.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/net/sched/sch_mq.c
-+++ b/net/sched/sch_mq.c
-@@ -245,7 +245,8 @@ static int mq_dump_class_stats(struct Qd
- 	struct netdev_queue *dev_queue = mq_queue_get(sch, cl);
+--- a/net/openvswitch/datapath.c
++++ b/net/openvswitch/datapath.c
+@@ -701,9 +701,13 @@ static size_t ovs_flow_cmd_msg_size(cons
+ {
+ 	size_t len = NLMSG_ALIGN(sizeof(struct ovs_header));
  
- 	sch = dev_queue->qdisc_sleeping;
--	if (gnet_stats_copy_basic(&sch->running, d, NULL, &sch->bstats) < 0 ||
-+	if (gnet_stats_copy_basic(&sch->running, d, sch->cpu_bstats,
-+				  &sch->bstats) < 0 ||
- 	    qdisc_qstats_copy(d, sch) < 0)
- 		return -1;
- 	return 0;
---- a/net/sched/sch_mqprio.c
-+++ b/net/sched/sch_mqprio.c
-@@ -557,8 +557,8 @@ static int mqprio_dump_class_stats(struc
- 		struct netdev_queue *dev_queue = mqprio_queue_get(sch, cl);
+-	/* OVS_FLOW_ATTR_UFID */
++	/* OVS_FLOW_ATTR_UFID, or unmasked flow key as fallback
++	 * see ovs_nla_put_identifier()
++	 */
+ 	if (sfid && ovs_identifier_is_ufid(sfid))
+ 		len += nla_total_size(sfid->ufid_len);
++	else
++		len += nla_total_size(ovs_key_attr_size());
  
- 		sch = dev_queue->qdisc_sleeping;
--		if (gnet_stats_copy_basic(qdisc_root_sleeping_running(sch),
--					  d, NULL, &sch->bstats) < 0 ||
-+		if (gnet_stats_copy_basic(qdisc_root_sleeping_running(sch), d,
-+					  sch->cpu_bstats, &sch->bstats) < 0 ||
- 		    qdisc_qstats_copy(d, sch) < 0)
- 			return -1;
- 	}
---- a/net/sched/sch_multiq.c
-+++ b/net/sched/sch_multiq.c
-@@ -330,7 +330,7 @@ static int multiq_dump_class_stats(struc
- 
- 	cl_q = q->queues[cl - 1];
- 	if (gnet_stats_copy_basic(qdisc_root_sleeping_running(sch),
--				  d, NULL, &cl_q->bstats) < 0 ||
-+				  d, cl_q->cpu_bstats, &cl_q->bstats) < 0 ||
- 	    qdisc_qstats_copy(d, cl_q) < 0)
- 		return -1;
- 
---- a/net/sched/sch_prio.c
-+++ b/net/sched/sch_prio.c
-@@ -356,7 +356,7 @@ static int prio_dump_class_stats(struct
- 
- 	cl_q = q->queues[cl - 1];
- 	if (gnet_stats_copy_basic(qdisc_root_sleeping_running(sch),
--				  d, NULL, &cl_q->bstats) < 0 ||
-+				  d, cl_q->cpu_bstats, &cl_q->bstats) < 0 ||
- 	    qdisc_qstats_copy(d, cl_q) < 0)
- 		return -1;
- 
+ 	/* OVS_FLOW_ATTR_KEY */
+ 	if (!sfid || should_fill_key(sfid, ufid_flags))
 
 
