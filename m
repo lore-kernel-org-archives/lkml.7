@@ -2,156 +2,314 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9DCC43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F14FC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 351EF20684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:51:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575373873;
-	bh=zrwFlvXIoyYXgEDfGx6efgE7yp3Q9uDLj44V2/s7VgM=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=A4Y06J9SfBFzVSXILsb8Qacwj1A+r1bjkzSIV4212ka434tWTjkTOcsKI5g70ESRQ
-	 +EuyZ2t7hZMXbelz/+5Y+2fgVUb6NOQIlN8aamJfqX3RVrNcOGJKnuLihQDEplw2vG
-	 +MkBhH6MNhEPDCM2q10a7iL8av9B/sh3qzahHAtE=
+	by mail.kernel.org (Postfix) with ESMTP id E71CE206EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:52:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726131AbfLCLvM (ORCPT
+        id S1726195AbfLCLwO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 06:51:12 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:39275 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725907AbfLCLvM (ORCPT
+        Tue, 3 Dec 2019 06:52:14 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:48003 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725907AbfLCLwN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 06:51:12 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1ic6hv-0004Si-8u; Tue, 03 Dec 2019 12:51:07 +0100
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCH] PCI: layerscape: Add the SRIOV support in host side
-X-PHP-Originating-Script: 0:main.inc
+        Tue, 3 Dec 2019 06:52:13 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-91-CBow-5o7OwykLHvgGd3Sjw-1; Tue, 03 Dec 2019 11:52:10 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 3 Dec 2019 11:52:09 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 3 Dec 2019 11:52:09 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH] x86: Optimise x86 IP checksum code
+Thread-Topic: [PATCH] x86: Optimise x86 IP checksum code
+Thread-Index: AdWpzyHtgEC6Bj0rR0OBHDPJtRbpCg==
+Date:   Tue, 3 Dec 2019 11:52:09 +0000
+Message-ID: <c92db041c78e4d81a70aaf4249393901@AcuMS.aculab.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Tue, 03 Dec 2019 11:51:07 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <robh+dt@kernel.org>, <frowand.list@gmail.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        <lorenzo.pieralisi@arm.com>, <andrew.murray@arm.com>,
-        <bhelgaas@google.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>
-In-Reply-To: <AM5PR04MB3299A5A504DEFEF3E137A27CF5420@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20191202104506.27916-1-xiaowei.bao@nxp.com>
- <606a00a2edcf077aa868319e0daa4dbc@www.loen.fr>
- <AM5PR04MB3299A5A504DEFEF3E137A27CF5420@AM5PR04MB3299.eurprd04.prod.outlook.com>
-Message-ID: <3dcdf44eb76390730658e3f4d932620c@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: xiaowei.bao@nxp.com, robh+dt@kernel.org, frowand.list@gmail.com, minghuan.lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, lorenzo.pieralisi@arm.com, andrew.murray@arm.com, bhelgaas@google.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhiqiang.hou@nxp.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+X-MC-Unique: CBow-5o7OwykLHvgGd3Sjw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-03 01:42, Xiaowei Bao wrote:
->> -----Original Message-----
->> From: Marc Zyngier <maz@misterjones.org>
->> Sent: 2019年12月2日 20:48
->> To: Xiaowei Bao <xiaowei.bao@nxp.com>
->> Cc: robh+dt@kernel.org; frowand.list@gmail.com; M.h. Lian
->> <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy Zang
->> <roy.zang@nxp.com>; lorenzo.pieralisi@arm.com; 
->> andrew.murray@arm.com;
->> bhelgaas@google.com; devicetree@vger.kernel.org;
->> linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org;
->> linux-arm-kernel@lists.infradead.org; Z.q. Hou 
->> <zhiqiang.hou@nxp.com>
->> Subject: Re: [PATCH] PCI: layerscape: Add the SRIOV support in host 
->> side
->>
->> On 2019-12-02 10:45, Xiaowei Bao wrote:
->> > GIC get the map relations of devid and stream id from the msi-map
->> > property of DTS, our platform add this property in u-boot base on 
->> the
->> > PCIe device in the bus, but if enable the vf device in kernel, the 
->> vf
->> > device msi-map will not set, so the vf device can't work, this 
->> patch
->> > purpose is that manage the stream id and device id map relations
->> > dynamically in kernel, and make the new PCIe device work in 
->> kernel.
->> >
->> > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
->> > ---
->> >  drivers/of/irq.c                            |  9 +++
->> >  drivers/pci/controller/dwc/pci-layerscape.c | 94
->> > +++++++++++++++++++++++++++++
->> >  drivers/pci/probe.c                         |  6 ++
->> >  drivers/pci/remove.c                        |  6 ++
->> >  4 files changed, 115 insertions(+)
->> >
->> > diff --git a/drivers/of/irq.c b/drivers/of/irq.c index
->> > a296eaf..791e609 100644
->> > --- a/drivers/of/irq.c
->> > +++ b/drivers/of/irq.c
->> > @@ -576,6 +576,11 @@ void __init of_irq_init(const struct 
->> of_device_id
->> > *matches)
->> >  	}
->> >  }
->> >
->> > +u32 __weak ls_pcie_streamid_fix(struct device *dev, u32 rid) {
->> > +	return rid;
->> > +}
->> > +
->> >  static u32 __of_msi_map_rid(struct device *dev, struct 
->> device_node
->> > **np,
->> >  			    u32 rid_in)
->> >  {
->> > @@ -590,6 +595,10 @@ static u32 __of_msi_map_rid(struct device 
->> *dev,
->> > struct device_node **np,
->> >  		if (!of_map_rid(parent_dev->of_node, rid_in, "msi-map",
->> >  				"msi-map-mask", np, &rid_out))
->> >  			break;
->> > +
->> > +	if (rid_out == rid_in)
->> > +		rid_out = ls_pcie_streamid_fix(parent_dev, rid_in);
->>
->> Over my dead body. Get your firmware to properly program the LUT so 
->> that it
->> presents the ITS with a reasonable topology. There is absolutely no 
->> way this
->> kind of change makes it into the kernel.
->
-> Sorry for this, I know it is not reasonable, but I have no other way,
-> as I know, ARM
-> get the mapping of stream ID to request ID from the msi-map property
-> of DTS, if
-> add a new device which need the stream ID and try to get it from the
-> msi-map of DTS,
-> it will failed and not work, yes? So could you give me a better
-> advice to fix this issue,
-> I would really appreciate any comments or suggestions, thanks a lot.
+Performance improvements to the amd64 IP checksum code.
+Summing to alternate registers almost doubles the performance
+(probably 4 to 6.2 bytes/clock) on Ivy Bridge cpu.
+Loop carrying the carry flag improves Haswell from 7 to 8 bytes/clock.
+Older cpu will still approach 4 bytes/clock.
+All achieved with a less loop unrolling - improving the performance
+for small buffers that are not a multiple of the loop span
 
-Why can't firmware expose an msi-map/msi-map-mask that has a large
-enough range to ensure mapping of VFs? What are the limitations of
-the LUT that would prevent this from being configured before the
-kernel boots?
+Signed-off-by: David Laight <david.laight@aculab.com>
+--
 
-Thanks,
+I spent far too long looking at this for some code that has to calculate the
+UDP checksum before sending packets through a raw IPv4 socket.
 
-         M.
+Prior to Ivy (maybe Sandy) bridge adc always took two clocks, so the adc chain
+can only run at 4 bytes/clock (the same as 32bit adds to a 64 bit register).
+In Ivy bridge the 'carry' flag is available a clock earlier so 8 bytes/clock
+is a potential limit.
+
+In order to 'loop carry' the carry flag some ingenuity is needed.
+
+I did get about 12 bytes/clock using adox/adcx but that would need run-time
+patching and some AMD cpu that support the instructions run them very slowly.
+
+arch/x86/lib/csum-partial_64.c | 192 +++++++++++++++++++++--------------------
+ 1 file changed, 98 insertions(+), 94 deletions(-)
+
+diff --git a/arch/x86/lib/csum-partial_64.c b/arch/x86/lib/csum-partial_64.c
+index e7925d6..7f25ab2 100644
+--- a/arch/x86/lib/csum-partial_64.c
++++ b/arch/x86/lib/csum-partial_64.c
+@@ -10,113 +10,118 @@
+ #include <linux/export.h>
+ #include <asm/checksum.h>
+ 
+-static inline unsigned short from32to16(unsigned a) 
+-{
+-	unsigned short b = a >> 16; 
+-	asm("addw %w2,%w0\n\t"
+-	    "adcw $0,%w0\n" 
+-	    : "=r" (b)
+-	    : "0" (b), "r" (a));
+-	return b;
+-}
+-
+ /*
+  * Do a 64-bit checksum on an arbitrary memory area.
+  * Returns a 32bit checksum.
+  *
+  * This isn't as time critical as it used to be because many NICs
+  * do hardware checksumming these days.
++ *
++ * All Intel cpus prior to Ivy Bridge (mayby Sandy Bridge) have a 2 clock
++ * latency on the result of adc.
++ * This limits any adc loop to 4 bytes/clock - the same as a C loop
++ * that adds 32 bit values to a 64 bit register.
++ * On Ivy bridge the adc result latency is still 2 clocks, but the carry
++ * latency is reduced to 1 clock.
++ * So summing to alternate registers increases the throughput to approaching
++ * 8 bytes/clock.
++ * Older cpu (eg core 2) have a 6+ clock delay accessing any of the flags
++ * after a partial update (eg adc after inc).
++ * The stange 'jecxz' loop avoids this.
++ * The Ivy bridge then needs the loop unrolling once more to approach
++ * 8 bytes per clock.
+  * 
+- * Things tried and found to not make it faster:
+- * Manual Prefetching
+- * Unrolling to an 128 bytes inner loop.
+- * Using interleaving with more registers to break the carry chains.
++ * On 7th gen cpu using adox/adoc can get 12 bytes/clock (maybe 16?)
++ * provided the loop is unrolled further than the one below.
++ * But some other cpu that support the adx take 6 clocks for each.
++ *
++ * The 'sum' value on entry is added in, it can exceed 32 bits but
++ * must not get to 56 bits.
+  */
+-static unsigned do_csum(const unsigned char *buff, unsigned len)
++static unsigned do_csum(const unsigned char *buff, long len, u64 sum)
+ {
+-	unsigned odd, count;
+-	unsigned long result = 0;
++	unsigned int src_align;
++	u64 sum_0 = 0, sum_1;
++	long len_tmp;
++	bool odd = false;
+ 
+-	if (unlikely(len == 0))
+-		return result; 
+-	odd = 1 & (unsigned long) buff;
+-	if (unlikely(odd)) {
+-		result = *buff << 8;
+-		len--;
+-		buff++;
+-	}
+-	count = len >> 1;		/* nr of 16-bit words.. */
+-	if (count) {
+-		if (2 & (unsigned long) buff) {
+-			result += *(unsigned short *)buff;
+-			count--;
+-			len -= 2;
+-			buff += 2;
++	/* 64bit align the base address */
++	src_align = (unsigned long)buff & 7;
++	if (src_align) {
++		if (unlikely(src_align & 1)) {
++			sum <<= 8;
++			/* The extra flag generates better code! */
++			odd = true;
+ 		}
+-		count >>= 1;		/* nr of 32-bit words.. */
+-		if (count) {
+-			unsigned long zero;
+-			unsigned count64;
+-			if (4 & (unsigned long) buff) {
+-				result += *(unsigned int *) buff;
+-				count--;
+-				len -= 4;
+-				buff += 4;
+-			}
+-			count >>= 1;	/* nr of 64-bit words.. */
++		buff -= src_align;
++		len += src_align;
++		if (likely(src_align == 4))
++			sum_0 = *(u32 *)(buff + 4);
++		else
++			/* Mask off unwanted low bytes from full 64bit word */
++			sum_0 = *(u64 *)buff & (~0ull << (src_align * 8));
++		if (unlikely(len < 8)) {
++			/* Mask off the unwanted high bytes */
++			sum += sum_0 & ~(~0ull << (len * 8));
++			goto reduce_32;
++		}
++		len -= 8;
++		buff += 8;
++	}
+ 
+-			/* main loop using 64byte blocks */
+-			zero = 0;
+-			count64 = count >> 3;
+-			while (count64) { 
+-				asm("addq 0*8(%[src]),%[res]\n\t"
+-				    "adcq 1*8(%[src]),%[res]\n\t"
+-				    "adcq 2*8(%[src]),%[res]\n\t"
+-				    "adcq 3*8(%[src]),%[res]\n\t"
+-				    "adcq 4*8(%[src]),%[res]\n\t"
+-				    "adcq 5*8(%[src]),%[res]\n\t"
+-				    "adcq 6*8(%[src]),%[res]\n\t"
+-				    "adcq 7*8(%[src]),%[res]\n\t"
+-				    "adcq %[zero],%[res]"
+-				    : [res] "=r" (result)
+-				    : [src] "r" (buff), [zero] "r" (zero),
+-				    "[res]" (result));
+-				buff += 64;
+-				count64--;
+-			}
++	/* Read first 8 bytes to 16 byte align the loop below */
++	sum_1 = len & 8 ? *(u64 *)buff : 0;
+ 
+-			/* last up to 7 8byte blocks */
+-			count %= 8; 
+-			while (count) { 
+-				asm("addq %1,%0\n\t"
+-				    "adcq %2,%0\n" 
+-					    : "=r" (result)
+-				    : "m" (*(unsigned long *)buff), 
+-				    "r" (zero),  "0" (result));
+-				--count; 
+-				buff += 8;
+-			}
+-			result = add32_with_carry(result>>32,
+-						  result&0xffffffff); 
++	/* The main loop uses negative offsets from the end of the buffer */
++	buff += len;
+ 
+-			if (len & 4) {
+-				result += *(unsigned int *) buff;
+-				buff += 4;
+-			}
+-		}
+-		if (len & 2) {
+-			result += *(unsigned short *) buff;
+-			buff += 2;
+-		}
++	/* Add in trailing bytes to 64bit align the length */
++	if (len & 7) {
++		unsigned int tail_len = len & 7;
++		buff -= tail_len;
++		if (likely(tail_len == 4))
++			sum += *(u32 *)buff;
++		else
++			/* Mask off the unwanted high bytes */
++			sum += *(u64 *)buff & ~(~0ull << (tail_len * 8));
+ 	}
+-	if (len & 1)
+-		result += *buff;
+-	result = add32_with_carry(result>>32, result & 0xffffffff); 
+-	if (unlikely(odd)) { 
+-		result = from32to16(result);
+-		result = ((result >> 8) & 0xff) | ((result & 0xff) << 8);
+-	}
+-	return result;
++
++	/* Align and negate len so that we need to sum [buff[len]..buf[0]) */
++	len = -(len & ~15);
++
++	/*
++	 * Align the byte count to a multiple of 16 then
++	 * add 64 bit words to alternating registers.
++	 * Finally reduce to 64 bits.
++	 */
++	asm(	"	bt    $4, %[len]\n"
++		"	jnc   10f\n"
++		"	add   (%[buff], %[len]), %[sum_0]\n"
++		"	adc   8(%[buff], %[len]), %[sum_1]\n"
++		"	lea   16(%[len]), %[len]\n"
++		"10:	jecxz 20f\n"
++		"	adc   (%[buff], %[len]), %[sum_0]\n"
++		"	adc   8(%[buff], %[len]), %[sum_1]\n"
++		"	lea   32(%[len]), %[len_tmp]\n"
++		"	adc   16(%[buff], %[len]), %[sum_0]\n"
++		"	adc   24(%[buff], %[len]), %[sum_1]\n"
++		"	mov   %[len_tmp], %[len]\n"
++		"	jmp   10b\n"
++		"20:	adc   %[sum_0], %[sum]\n"
++		"	adc   %[sum_1], %[sum]\n"
++		"	adc   $0, %[sum]\n"
++	    : [sum] "+&r" (sum), [sum_0] "+&r" (sum_0), [sum_1] "+&r" (sum_1),
++	    	[len] "+&c" (len), [len_tmp] "=&r" (len_tmp)
++	    : [buff] "r" (buff)
++	    : "memory" );
++
++reduce_32:
++	sum = add32_with_carry(sum>>32, sum & 0xffffffff); 
++
++	if (unlikely(odd))
++		return __builtin_bswap32(sum);
++
++	return sum;
+ }
+ 
+ /*
+@@ -133,8 +138,7 @@ static unsigned do_csum(const unsigned char *buff, unsigned len)
+  */
+ __wsum csum_partial(const void *buff, int len, __wsum sum)
+ {
+-	return (__force __wsum)add32_with_carry(do_csum(buff, len),
+-						(__force u32)sum);
++	return do_csum(buff, len, (__force u32)sum);
+ }
+ EXPORT_SYMBOL(csum_partial);
+ 
 -- 
-Jazz is not dead. It just smells funny...
+1.8.1.2
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
