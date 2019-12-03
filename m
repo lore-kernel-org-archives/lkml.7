@@ -2,71 +2,103 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60867C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A8B0C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 436F52068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:12:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E728C2073F
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:13:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="npXjDGoy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726186AbfLCNM5 (ORCPT
+        id S1726374AbfLCNNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 08:12:57 -0500
-Received: from comms.puri.sm ([159.203.221.185]:60682 "EHLO comms.puri.sm"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725954AbfLCNM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 08:12:56 -0500
-X-Greylist: delayed 528 seconds by postgrey-1.27 at vger.kernel.org; Tue, 03 Dec 2019 08:12:56 EST
-Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id 6C488E0301;
-        Tue,  3 Dec 2019 05:04:07 -0800 (PST)
-Received: from comms.puri.sm ([127.0.0.1])
-        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id PfiCBJBd9cA1; Tue,  3 Dec 2019 05:04:06 -0800 (PST)
-From:   Martin Kepplinger <martin.kepplinger@puri.sm>
-To:     robh@kernel.org, mark.rutland@arm.com
-Cc:     kernel@pengutronix.de, linux-imx@nxp.com, kernel@puri.sm,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Martin Kepplinger <martin.kepplinger@puri.sm>
-Subject: [PATCH] arm64: dts: imx8mq-librem5-devkit: add accelerometer and gyro sensor
-Date:   Tue,  3 Dec 2019 14:03:36 +0100
-Message-Id: <20191203130336.18763-1-martin.kepplinger@puri.sm>
-Content-Transfer-Encoding: 8bit
+        Tue, 3 Dec 2019 08:13:00 -0500
+Received: from mail-lf1-f49.google.com ([209.85.167.49]:38505 "EHLO
+        mail-lf1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbfLCNM7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 08:12:59 -0500
+Received: by mail-lf1-f49.google.com with SMTP id r14so2915060lfm.5;
+        Tue, 03 Dec 2019 05:12:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xL+wwaRMBv9RSY39RaXiUDci1/m24RW4l6zvHxar+tc=;
+        b=npXjDGoyg1aRDYuFip3UFWBcqi0KI7PGwXUdKKMaSdLZpbuXsmOVKspSp1dIxAxMK0
+         +ytYzmmCzX1PU2SZhocTG4K4m/HLJqopdsCf9sk2eUzKOaN7ub6w5/2dVrGoEnbDUu7D
+         yo89c1d7rrj6rgfHD5PwOD5w7lwR/sCyDn01KfwaO8wUyH2CAnB1P5V7ManXBcSr60FK
+         /OvqlFAr/s561m5JLSabtK2+h4DwQAMoHV/8CAmunaUWbKtxs4u/mi9FrzQ+ClxVU5Y1
+         ndsL0wmPosCTTmN/gk/vYwcowBklRHotxOzVcQa84/p5wDUAPTLPLJgCvBxq9DwYZomM
+         4uNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xL+wwaRMBv9RSY39RaXiUDci1/m24RW4l6zvHxar+tc=;
+        b=Mhe2BZ3LhMXaUGvYGLg4GXXFhqGERNEi5Adsw8n5qVISgn0XZbHc+uNFY1OYhP55PR
+         VFbi+MYinWHWO7HAwvzKO709Wx76VKwF7f+R7ProaXAI3fdsybPnf5uPR3QOnzcqlt/I
+         D7WBgOUQ1pLuaaLIT1trmvexFjNkIhAJqgzav/jgwsN+Og5iRnNm0rhWy3iZN68G24+2
+         5b4XnndJzfnsYJHPwkC6sRG58kvKmkt2ToMf7aBzKANFmsyPxgdQE65e3W/rafG1+tEx
+         TFXds4AUfC+XPd99UUWNVF3Gllp4ioZpQ3nVBa7RFqALmkTYaHxZTovZjQRWI/g4J0vO
+         JYJg==
+X-Gm-Message-State: APjAAAX9ijGw7TPu9pnWV+QktLNMbNXtmFZff6TyNkX0BGry56QcrKLk
+        lKpzWGBp2gFq2jdW2f2XDmvt4DP337OILkBpIfA=
+X-Google-Smtp-Source: APXvYqyYlRr2czlmWkaMRwNWwQhGg3p+za24wre1ZLqjna9dtb+Jb7nGBb3H9ISdXGBmfc2ddR6+wWglH31E2UJpZ9g=
+X-Received: by 2002:ac2:4119:: with SMTP id b25mr2718591lfi.90.1575378776541;
+ Tue, 03 Dec 2019 05:12:56 -0800 (PST)
+MIME-Version: 1.0
+References: <08794fde-cdd0-287c-62bf-e2e3b8c80686@gmail.com>
+ <20191203101509.wte47aad5k4mqu2y@pengutronix.de> <CAOMZO5Cn993y9VeFN6hPO3-cfNnUKiuFd_rqAZ8htz=dO6t6ig@mail.gmail.com>
+In-Reply-To: <CAOMZO5Cn993y9VeFN6hPO3-cfNnUKiuFd_rqAZ8htz=dO6t6ig@mail.gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 3 Dec 2019 10:13:11 -0300
+Message-ID: <CAOMZO5BniszDhWKkoWY=P62kv9cY160r9P=pjpbSOZasxJvdBA@mail.gmail.com>
+Subject: Re: Issue with imx_get_temp()
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Igor Plyatov <plyatov@gmail.com>, Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>, linux-pm@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that there is driver support, describe the accel and gyro sensor parts
-of the LSM9DS1 IMU.
+On Tue, Dec 3, 2019 at 9:04 AM Fabio Estevam <festevam@gmail.com> wrote:
+>
+> Hi Marco,
+>
+> On Tue, Dec 3, 2019 at 7:15 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
+>
+> > Mh.. it seems that the irq gets enabled before a irq-handler is
+> > registered. As your backlog shows the thermal_zone_device_register()
+> > triggers a imx_get_temp() and during boot the irq_enabled is false and
+> > it seems that your temperature is below the alarm_temp. So in such a
+> > case the enable_irq() is executed. I don't know what happens if we
+> > enable a irq without a irq-handler.
+>
+> I think your analysis makes sense.
+>
+> Should we move the ' data->irq_enabled = true' just prior to calling
+> thermal_zone_device_register()?
 
-Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
----
- arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+Or maybe we could call thermal_zone_device_register() later?
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-index 683a11035643..7a92704c53ec 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-@@ -415,6 +415,13 @@
- 	pinctrl-0 = <&pinctrl_i2c3>;
- 	status = "okay";
- 
-+	accel_gyro@6a {
-+		compatible = "st,lsm9ds1-imu";
-+		reg = <0x6a>;
-+		vdd-supply = <&reg_3v3_p>;
-+		vddio-supply = <&reg_3v3_p>;
-+	};
-+
- 	magnetometer@1e	{
- 		compatible = "st,lsm9ds1-magn";
- 		reg = <0x1e>;
--- 
-2.20.1
+Igor,
 
+Does the following patch help?
+http://code.bulix.org/l3rz2e-982595
