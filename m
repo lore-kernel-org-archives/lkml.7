@@ -2,111 +2,94 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB08C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 12:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB62C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 12:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF8AB20684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 12:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4693A2070A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 12:27:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575376068;
+	bh=3P5USAcp0mKQWvyvt0d9zvEji4+zn7AmEjAHvZ5jy0g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=b0QDXRg3C7GA+7nsaCet7+3JVjPgM2FVaFuh0AIydrEBnAP3WOaprSe01zA/Cm9hy
+	 LpYJnNfDBeXXvLaHZdSOhVnLvCGyONmyuqlzVNv5KkJG3ALurVRfSQc8m4m7HrHZGi
+	 /2BsJvlNwsYw1i7hyk0Vmhk3I/s+Rv/siGrWKfk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726319AbfLCMZ4 (ORCPT
+        id S1726138AbfLCM1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 07:25:56 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59962 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725907AbfLCMZ4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 07:25:56 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB3CMvdF170787
-        for <linux-kernel@vger.kernel.org>; Tue, 3 Dec 2019 07:25:52 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wnp8rcbn3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 07:25:52 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 3 Dec 2019 12:25:50 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 3 Dec 2019 12:25:48 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB3CP7YJ49611108
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Dec 2019 12:25:07 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 50C9DA4055;
-        Tue,  3 Dec 2019 12:25:47 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 49AC7A4051;
-        Tue,  3 Dec 2019 12:25:46 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.191.79])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  3 Dec 2019 12:25:46 +0000 (GMT)
-Subject: Re: [PATCH v9 5/6] IMA: Add support to limit measuring keys
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org
-Date:   Tue, 03 Dec 2019 07:25:45 -0500
-In-Reply-To: <20191127015654.3744-6-nramas@linux.microsoft.com>
-References: <20191127015654.3744-1-nramas@linux.microsoft.com>
-         <20191127015654.3744-6-nramas@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19120312-0016-0000-0000-000002D0578F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120312-0017-0000-0000-0000333250B9
-Message-Id: <1575375945.5241.16.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-03_02:2019-12-02,2019-12-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=732
- suspectscore=0 clxscore=1015 impostorscore=0 bulkscore=0 adultscore=0
- spamscore=0 phishscore=0 mlxscore=0 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912030098
+        Tue, 3 Dec 2019 07:27:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50738 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725907AbfLCM1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 07:27:47 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B0A520684;
+        Tue,  3 Dec 2019 12:27:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575376066;
+        bh=3P5USAcp0mKQWvyvt0d9zvEji4+zn7AmEjAHvZ5jy0g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DNCO7eScWmDjfnTQrODrhFR5I8C4DXW3CqkpLt56rYTP9+CWC+KQvWUFagjM/Xwq2
+         ovJrHhkctL6Jqehif5CNDbNDboPzo+jYbx3gtsfQWzMy/kWQdKCyL077QZBYyiOva5
+         jIJmdr4vu8KNOQAr2GAEZmlztbrDaAageBc33Onw=
+Date:   Tue, 3 Dec 2019 13:27:44 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 185/306] net: hns3: bugfix for buffer not free
+ problem during resetting
+Message-ID: <20191203122744.GB2131225@kroah.com>
+References: <20191127203114.766709977@linuxfoundation.org>
+ <20191127203128.798931840@linuxfoundation.org>
+ <20191129110010.GA4313@amd>
+ <20191129143108.GA3708972@kroah.com>
+ <20191129222401.GA29788@amd>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191129222401.GA29788@amd>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lakshmi,
-
-On Tue, 2019-11-26 at 17:56 -0800, Lakshmi Ramasubramanian wrote:
-> Limit measuring keys to those keys being loaded onto a given set of
-> keyrings only.
+On Fri, Nov 29, 2019 at 11:24:01PM +0100, Pavel Machek wrote:
+> Hi!
 > 
-> This patch defines a new IMA policy option namely "keyrings=" that
-> can be used to specify a set of keyrings. If this option is specified
-> in the policy for "measure func=KEY_CHECK" then only the keys
-> loaded onto a keyring given in the "keyrings=" option are measured.
+> > > > From: Huazhong Tan <tanhuazhong@huawei.com>
+> > > > 
+> > > > [ Upstream commit 73b907a083b8a8c1c62cb494bc9fbe6ae086c460 ]
+> > > > 
+> > > > When hns3_get_ring_config()/hns3_queue_to_ring()/
+> > > > hns3_get_vector_ring_chain() failed during resetting, the allocated
+> > > > memory has not been freed before these three functions return. So
+> > > > this patch adds error handler in these functions to fix it.
+> > > 
+> > > Correct me if I'm wrong, but... this introduces use-after-free:
+> > > Should it do devm_kfree(&pdev->dev, cur_chain); ?
+> > 
+> > I think Sasha tried to backport a fix for this patch, but that fix broke
+> > the build :(
+> > 
+> > If you want to provide a working backport, I'll be glad to take it.
 > 
-> Added a new parameter namely "keyring" (name of the keyring) to
-> process_buffer_measurement(). The keyring name is passed to
-> ima_get_action() to determine the required action.
-> ima_match_rules() is updated to check keyring in the policy, if
-> specified, for KEY_CHECK function.
+> Actually it looks like problem originated in mainline, and there was
+> more than one problem with this patch.
 > 
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+> cda69d244585bc4497d3bb878c22fe2b6ad647c1 should fix it; it needs to be
+> back-ported, too.
 
-A keyring can be created by any user with any keyring name, other than
- ones dot prefixed, which are limited to the trusted builtin keyrings.
- With a policy of "func=KEY_CHECK template=ima-buf keyrings=foo", for
-example, keys loaded onto any keyring named "foo" will be measured.
- For files, the IMA policy may be constrained to a particular uid/gid.
- An additional method of identifying or constraining keyring names
-needs to be defined.
+Yes, that is the one, can you provide a working backport for this?
 
-Mimi 
+thanks,
 
+greg k-h
