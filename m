@@ -2,188 +2,111 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CEEBC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39AE5C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33DA7206EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:54:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K2My4Zra"
+	by mail.kernel.org (Postfix) with ESMTP id 15E272068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:56:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbfLCLyy (ORCPT
+        id S1726195AbfLCL4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 06:54:54 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52281 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725838AbfLCLyx (ORCPT
+        Tue, 3 Dec 2019 06:56:36 -0500
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:36079 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbfLCL4f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 06:54:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575374091;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=aW7ZugmwoIcjuikyDZkzt+LN1JeujEo0YrxdZrd3z4A=;
-        b=K2My4Zra8emhqbCnytsr1OpN5wx1NhAULAhkDg+Q257/0TOmdj4kbtRIcrcLosMMMiJzpn
-        Mq7ZKT25wqd8i+7UX+mlC2Y4JderVNC37EHbPafEZfbD0uwivEAyazsyVNSCdbzga9F6QO
-        O8PbbhULBYaB45faIa4172/5BH8Z+AM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-326-j1FCUGnRMrGppNhHKyqOxg-1; Tue, 03 Dec 2019 06:54:48 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6289A107ACC4;
-        Tue,  3 Dec 2019 11:54:46 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-100.pek2.redhat.com [10.72.12.100])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8901F5C290;
-        Tue,  3 Dec 2019 11:54:39 +0000 (UTC)
-Date:   Tue, 3 Dec 2019 19:54:35 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Michael Weiser <michael@weiser.dinsnail.net>
-Cc:     linux-efi@vger.kernel.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>, x86@kernel.org,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: kexec_file overwrites reserved EFI ESRT memory
-Message-ID: <20191203115435.GA2606@dhcp-128-65.nay.redhat.com>
-References: <20191122180552.GA32104@weiser.dinsnail.net>
- <87blt3y949.fsf@x220.int.ebiederm.org>
- <20191122210702.GE32104@weiser.dinsnail.net>
- <20191125055201.GA6569@dhcp-128-65.nay.redhat.com>
- <20191129152700.GA8286@weiser.dinsnail.net>
- <20191202085829.GA15808@dhcp-128-65.nay.redhat.com>
- <20191202090520.GA15874@dhcp-128-65.nay.redhat.com>
- <20191202234541.GA27567@weiser.dinsnail.net>
+        Tue, 3 Dec 2019 06:56:35 -0500
+Received: from 2606-a000-111b-43ee-0000-0000-0000-115f.inf6.spectrum.com ([2606:a000:111b:43ee::115f] helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1ic6mu-0007R5-Rd; Tue, 03 Dec 2019 06:56:23 -0500
+Date:   Tue, 3 Dec 2019 06:56:16 -0500
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        syzbot <syzbot+b2bf2652983d23734c5c@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        LKML <linux-kernel@vger.kernel.org>, linux-sctp@vger.kernel.org,
+        Xin Long <lucien.xin@gmail.com>, mvohra@vmware.com,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        William Tu <u9012063@gmail.com>,
+        Vladislav Yasevich <vyasevich@gmail.com>,
+        websitedesignservices4u@gmail.com,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Subject: Re: kernel BUG at net/core/skbuff.c:LINE! (3)
+Message-ID: <20191203115616.GA4707@hmswarspite.think-freely.org>
+References: <001a114372a6074e6505642b7f72@google.com>
+ <000000000000039751059891760e@google.com>
+ <CACT4Y+Yrg8JxWABi4CJgBG7GpBSCmT0DHr_eZhQA-ikLH-X5Yw@mail.gmail.com>
+ <20191202183912.GC377783@localhost.localdomain>
+ <CACT4Y+ZpZVYgA-oiE_YYC49LRA2=iTQLxOaKTA3TEYBt8KjFbw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191202234541.GA27567@weiser.dinsnail.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: j1FCUGnRMrGppNhHKyqOxg-1
-X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
+In-Reply-To: <CACT4Y+ZpZVYgA-oiE_YYC49LRA2=iTQLxOaKTA3TEYBt8KjFbw@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/03/19 at 12:45am, Michael Weiser wrote:
-> Hi Dave,
->=20
-> On Mon, Dec 02, 2019 at 05:05:20PM +0800, Dave Young wrote:
->=20
-> > > It seems a serious problem, the EFI modified memmap does not get an
-> > > /proc/iomem resource update, but kexec_file relies on /proc/iomem in
-> > > X86.
-> > >=20
-> > > There is an question from Sai about why add_efi_memmap is not enabled=
- by
-> > > default:
-> > > https://www.spinics.net/lists/linux-mm/msg185166.html
->=20
-> Incidentally, a data point I did not think to mention: I do boot the
-> kernel as EFI application directly from the firmware as a boot entry
-> with compiled in initrd and command line:
->=20
-> $ grep EFI nobak/kernel/linux/.config
-> CONFIG_EFI=3Dy
-> CONFIG_EFI_STUB=3Dy
-> # CONFIG_EFI_MIXED is not set
-> CONFIG_DMI_SCAN_MACHINE_NON_EFI_FALLBACK=3Dy
-> # EFI (Extensible Firmware Interface) Support
-> CONFIG_EFI_VARS=3Dm
-> CONFIG_EFI_ESRT=3Dy
-> CONFIG_EFI_VARS_PSTORE=3Dm
-> # CONFIG_EFI_VARS_PSTORE_DEFAULT_DISABLE is not set
-> CONFIG_EFI_RUNTIME_MAP=3Dy
-> # CONFIG_EFI_FAKE_MEMMAP is not set
-> CONFIG_EFI_RUNTIME_WRAPPERS=3Dy
-> # CONFIG_EFI_BOOTLOADER_CONTROL is not set
-> # CONFIG_EFI_CAPSULE_LOADER is not set
-> # CONFIG_EFI_TEST is not set
-> # CONFIG_EFI_RCI2_TABLE is not set
-> # end of EFI (Extensible Firmware Interface) Support
-> CONFIG_UEFI_CPER=3Dy
-> CONFIG_UEFI_CPER_X86=3Dy
-> CONFIG_EFI_EARLYCON=3Dy
-> CONFIG_EFI_PARTITION=3Dy
-> CONFIG_FB_EFI=3Dy
-> CONFIG_EFIVAR_FS=3Dy
-> # CONFIG_EFI_PGT_DUMP is not set
->=20
-> $ grep CMDLINE nobak/kernel/linux/.config
-> CONFIG_CMDLINE_BOOL=3Dy
-> CONFIG_CMDLINE=3D"root=3DUUID=3D97[...]e4 rd.luks.uuid=3D8a[...]c3 rd.luk=
-s.allow-discards=3D8a[...]c3 mem_sleep_default=3Ddeep resume=3DUUID=3D97[..=
-.]e4 resume_offset=3D96256 efi=3Ddebug memblock=3Ddebug"
-> CONFIG_CMDLINE_OVERRIDE=3Dy
-> # CONFIG_BLK_CMDLINE_PARSER is not set
-> # CONFIG_CMDLINE_PARTITION is not set
-> CONFIG_FB_CMDLINE=3Dy
->=20
-> $ efibootmgr -v
-> BootCurrent: 000A
-> Timeout: 2 seconds
-> BootOrder: 000A,0009,0008,0005,0007,0006,0004,0002,0001,0000,0003
-> [...]
-> Boot0005* gentoo-5.4.0-next-20191127+-clear
-> HD(1,GPT,e7[...]f2,0x800,0x64000)/File(\kernel-5.4.0-next-20191127+-clear=
-)
-> [...]
-> Boot000A* gentoo-5.4.1-gentoo
-> HD(1,GPT,e7[...]f2,0x800,0x64000)/File(\kernel-5.4.1-gentoo)
->=20
-> So there's no boot loader that could construct an e820 table for the
-> kernel to consume. I understand it's then up to the EFI stub to come up
-> with a e820 table from the EFI memory map.
->=20
-> > > Long time ago the add_efi_memmap is only enabled in case we explict
-> > > enable it on cmdline, I'm not sure if we can do it by default, maybe =
-we
-> > > should.   Need opinion from X86 maintainers..
-> > > Can you try below diff see if it works for you? (not tested, and need
-> > > explicitly 'add_efi_memmap' in kernel cmdline param)
->=20
-> Neither adding add_efi_memmap nor adding your patch and setting that opti=
-on
-> does make the ESRT memory region appear in /proc/iomem. kexec_file still
-> loads the kernel across the ESRT region.
->=20
+On Tue, Dec 03, 2019 at 09:42:14AM +0100, Dmitry Vyukov wrote:
+> On Mon, Dec 2, 2019 at 7:39 PM Marcelo Ricardo Leitner
+> <marcelo.leitner@gmail.com> wrote:
+> >
+> > On Sat, Nov 30, 2019 at 04:37:56PM +0100, Dmitry Vyukov wrote:
+> > > On Sat, Nov 30, 2019 at 3:50 PM syzbot
+> > > <syzbot+b2bf2652983d23734c5c@syzkaller.appspotmail.com> wrote:
+> > > >
+> > > > syzbot has bisected this bug to:
+> > > >
+> > > > commit 84e54fe0a5eaed696dee4019c396f8396f5a908b
+> > > > Author: William Tu <u9012063@gmail.com>
+> > > > Date:   Tue Aug 22 16:40:28 2017 +0000
+> > > >
+> > > >      gre: introduce native tunnel support for ERSPAN
+> > > >
+> > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=158a2f86e00000
+> > > > start commit:   f9f1e414 Merge tag 'for-linus-4.16-rc1-tag' of git://git.k..
+> > > > git tree:       upstream
+> > > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=178a2f86e00000
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=138a2f86e00000
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=34a80ee1ac29767b
+> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=b2bf2652983d23734c5c
+> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=147bfebd800000
+> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13d8d543800000
+> > > >
+> > > > Reported-by: syzbot+b2bf2652983d23734c5c@syzkaller.appspotmail.com
+> > > > Fixes: 84e54fe0a5ea ("gre: introduce native tunnel support for ERSPAN")
+> > > >
+> > > > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> > >
+> > > Humm... the repro contains syz_emit_ethernet, wonder if it's
+> > > remote-triggerable...
+> >
+> > The call trace is still from the tx path. Packet never left the system
+> > in this case.
+> 
+> My understanding is that this does not necessarily mean that the
+> remote side is not involved. There is enough state on the host for L4
+> protocols, so that the remote side can mess things and then the bad
+> thing will happen with local trigger. But that local trigger can be
+> just anything trivial that everybody does.
+> 
+But thats not really helpful.  Unless you see an explicit path from the receive
+side to ip6_append_data, Theres no real way for a received packet to reach this
+code, so we can't really call it remotely triggerable.
 
-Hmm, sorry, my bad, actuall add_efi_memmap does not consider the
-EFI_MEMORY_RUNTIME attribute, it only reads the memory descriptor types.
+My guess is, since this is coming from the rawv6_sendmsg path, that the raw
+protocol is somehow not marshaling its data in a way that ip6_append_data
+expects.
 
-Will read your replied information later, did not get time today, but
-probably below chunk can help?
-
-diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.=
-c
-index 3b9fd679cea9..516307617621 100644
---- a/arch/x86/platform/efi/quirks.c
-+++ b/arch/x86/platform/efi/quirks.c
-@@ -293,6 +293,8 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 =
-size)
- =09early_memunmap(new, new_size);
-=20
- =09efi_memmap_install(new_phys, num_entries);
-+=09e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
-+=09e820__update_table(e820_table);
- }
-=20
- /*
-
-Thanks
-Dave
+Neil
 
