@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F308C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41533C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED30B20656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E6BD20684
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:46:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413197;
-	bh=+YuJKEMJzx+aMgGrjmXZEOgaNUXK8o3GhNm3FzyZ0uY=;
+	s=default; t=1575413202;
+	bh=HJIMmg4bFMw3QQFQHg2hsidB0buLvQM3GwFp4muuUxI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AsL9GQ+3MECTvvRdr5Ro+RNhKvWUK1ZqhBJfOfBpWKr8oxEkLS3W/eT2+aE0twDpy
-	 a6W6Cp3CLKnq+MOF8NgSYf6zleQ5nnp7hIl5y9dcpXQVsH/5mcles6CTjTvwiPVdkV
-	 Mbxn1QDLYD+Sc+lwlgyDZlcQ1pSSOgzpWG0rS518=
+	b=clCbRtgNYOsFN3ud9Ui+d4KP011HvvzKkRDHx/gAJzY4V8u6z6YmNG/7tRGW/Oo4D
+	 5zd/k0MHnSlneuBdZ/fIMiwEBH9mEtR4v+X0jY+Kf87hGxklU3TgsX6/yvOTFysIKs
+	 xrffP8QvnfgxHHz7Q2sWF4m9l2PMYTF6P2TWJzSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729066AbfLCWqg (ORCPT
+        id S1729226AbfLCWql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:46:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36192 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:46:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728944AbfLCWqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:46:31 -0500
+        id S1728829AbfLCWqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:46:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D55A2084B;
-        Tue,  3 Dec 2019 22:46:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F08AD2084B;
+        Tue,  3 Dec 2019 22:46:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413190;
-        bh=+YuJKEMJzx+aMgGrjmXZEOgaNUXK8o3GhNm3FzyZ0uY=;
+        s=default; t=1575413195;
+        bh=HJIMmg4bFMw3QQFQHg2hsidB0buLvQM3GwFp4muuUxI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qeeK5KCSecyCgAXC+b8yFFdyoBHxdg4CFZIVpNUeFdCHbR6i7zc8trMHjcWHLghca
-         PmHOQ9PBUD37QIsKlTbbdGRKQjRr6Z8eoqiuYDCtjNBzcBZ6tSu6D3htsGK1XihgpU
-         3cC2g8xqdOpSnDG4McYA9eiA83hKc7oF/RXosf1o=
+        b=g3pl4MxcVt+qevtUv35x29D/Mm8pz9Otwj5fblBbCkuLRgHurIZrkMq6so6Gr12Gu
+         5URLE9qWKULNkq5TDfe/+cwzfoWECqEJq6zXb3LnIDcIcfbr4+Oso49RbLScnkB92F
+         36Z9YOXnWjZm/p9TDp2cTX1PmIdSATdIswndyZl4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Jeroen Hofstee <jhofstee@victronenergy.com>,
+        =?UTF-8?q?Martin=20Hundeb=C3=B8ll?= <martin@geanix.com>,
         Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 032/321] can: rx-offload: can_rx_offload_irq_offload_timestamp(): continue on error
-Date:   Tue,  3 Dec 2019 23:31:38 +0100
-Message-Id: <20191203223428.785734407@linuxfoundation.org>
+Subject: [PATCH 4.19 034/321] can: flexcan: increase error counters if skb enqueueing via can_rx_offload_queue_sorted() fails
+Date:   Tue,  3 Dec 2019 23:31:40 +0100
+Message-Id: <20191203223428.889570507@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,43 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeroen Hofstee <jhofstee@victronenergy.com>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
 
-[ Upstream commit c2a9f74c9d18acfdcabd3361adc7eac82c537a66 ]
+[ Upstream commit 758124335a9dd649ab820bfb5b328170919ee7dc ]
 
-In case of a resource shortage, i.e. the rx_offload queue will overflow
-or a skb fails to be allocated (due to OOM),
-can_rx_offload_offload_one() will call mailbox_read() to discard the
-mailbox and return an ERR_PTR.
+The call to can_rx_offload_queue_sorted() may fail and return an error
+(in the current implementation due to resource shortage). The passed skb
+is consumed.
 
-However can_rx_offload_irq_offload_timestamp() bails out in the error
-case. In case of a resource shortage all mailboxes should be discarded,
-to avoid an IRQ storm and give the system some time to recover.
+This patch adds incrementing of the appropriate error counters to let
+the device statistics reflect that there's a problem.
 
-Since can_rx_offload_irq_offload_timestamp() is typically called from a
-while loop, all message will eventually be discarded. So let's continue
-on error instead to discard them directly.
-
-Signed-off-by: Jeroen Hofstee <jhofstee@victronenergy.com>
+Reported-by: Martin Hundebøll <martin@geanix.com>
 Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/rx-offload.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/can/flexcan.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/can/rx-offload.c b/drivers/net/can/rx-offload.c
-index 1b3ce70c55bc7..0dded7a1067bb 100644
---- a/drivers/net/can/rx-offload.c
-+++ b/drivers/net/can/rx-offload.c
-@@ -225,7 +225,7 @@ int can_rx_offload_irq_offload_timestamp(struct can_rx_offload *offload, u64 pen
+diff --git a/drivers/net/can/flexcan.c b/drivers/net/can/flexcan.c
+index 581e84d8e2c89..bfe13c6627bed 100644
+--- a/drivers/net/can/flexcan.c
++++ b/drivers/net/can/flexcan.c
+@@ -566,6 +566,7 @@ static void flexcan_irq_bus_err(struct net_device *dev, u32 reg_esr)
+ 	struct can_frame *cf;
+ 	bool rx_errors = false, tx_errors = false;
+ 	u32 timestamp;
++	int err;
  
- 		skb = can_rx_offload_offload_one(offload, i);
- 		if (IS_ERR_OR_NULL(skb))
--			break;
-+			continue;
+ 	timestamp = priv->read(&regs->timer) << 16;
  
- 		__skb_queue_add_sort(&skb_queue, skb, can_rx_offload_compare);
- 	}
+@@ -614,7 +615,9 @@ static void flexcan_irq_bus_err(struct net_device *dev, u32 reg_esr)
+ 	if (tx_errors)
+ 		dev->stats.tx_errors++;
+ 
+-	can_rx_offload_queue_sorted(&priv->offload, skb, timestamp);
++	err = can_rx_offload_queue_sorted(&priv->offload, skb, timestamp);
++	if (err)
++		dev->stats.rx_fifo_errors++;
+ }
+ 
+ static void flexcan_irq_state(struct net_device *dev, u32 reg_esr)
+@@ -627,6 +630,7 @@ static void flexcan_irq_state(struct net_device *dev, u32 reg_esr)
+ 	int flt;
+ 	struct can_berr_counter bec;
+ 	u32 timestamp;
++	int err;
+ 
+ 	timestamp = priv->read(&regs->timer) << 16;
+ 
+@@ -658,7 +662,9 @@ static void flexcan_irq_state(struct net_device *dev, u32 reg_esr)
+ 	if (unlikely(new_state == CAN_STATE_BUS_OFF))
+ 		can_bus_off(dev);
+ 
+-	can_rx_offload_queue_sorted(&priv->offload, skb, timestamp);
++	err = can_rx_offload_queue_sorted(&priv->offload, skb, timestamp);
++	if (err)
++		dev->stats.rx_fifo_errors++;
+ }
+ 
+ static inline struct flexcan_priv *rx_offload_to_priv(struct can_rx_offload *offload)
 -- 
 2.20.1
 
