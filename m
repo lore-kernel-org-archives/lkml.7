@@ -2,53 +2,52 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 241AEC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F32F9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E74012084B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0A4220866
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:52:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413548;
-	bh=0BKgJK0ru3iRADVaPyo5g95TkJZb3iLxgNnyE9BBUxQ=;
+	s=default; t=1575413552;
+	bh=qoWiZmhKyc5U9nJDESFCNNEjuf4zfvI/EeR6LBTUUF4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f97b0DctuoNPCYBlPz4pvHO6Pq+pddT2W7SVULmjCZtycL7hAckUuTyhGlabi3Mhc
-	 r5m7RD/VwGzXibWTVLVSzX5lWgTVFvs3SnN0a4LeTDOlaFUkBqROLLkvQUGL9zc980
-	 XMSVOR6UFJkpygM3fgZz6UL+gOv0MLdOr3c98XXA=
+	b=FZXnfxfmVZi3Fs1JR4oR5kTPDqU7w5jwhJIwtAjI+iuoIm4OKPYwgmzd/CECbEFbk
+	 ecGva5Wmr3j4jslz1rNmvn/4O6ClNUleqiFsKO115WSrRc8P5OFqV3uiGn5rrHqpPI
+	 VtpJykT94eSU8c7BDwuoeFQ3UX48qqT3x3S8BUmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729736AbfLCWw0 (ORCPT
+        id S1729435AbfLCWwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:52:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45022 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:52:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730009AbfLCWwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:52:20 -0500
+        id S1730009AbfLCWw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:52:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE62A2084B;
-        Tue,  3 Dec 2019 22:52:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50A8920865;
+        Tue,  3 Dec 2019 22:52:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413539;
-        bh=0BKgJK0ru3iRADVaPyo5g95TkJZb3iLxgNnyE9BBUxQ=;
+        s=default; t=1575413546;
+        bh=qoWiZmhKyc5U9nJDESFCNNEjuf4zfvI/EeR6LBTUUF4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f5c5hUHTp7Gq0seKtv8ZuU7FjoDUKrWxhKBxE5Yqx6UUT43eCexhEOFJg/rntZh44
-         y1gvuEXvo6GLAC0MBXvU/vgW3I9UJEH8HvChY21ZyGVHJ8COwTJs5g6LQEq270M9su
-         F03hlnZuY7Zq1po2NKd2v3paXysdnyJUiGigibTQ=
+        b=FVOzbKG2cUfbALM37wMXot3bgdLTW7qgUiAWIzVE4ocGkAsrEGHSXwep0ovBAT/my
+         ckfmfHTfpw3SPBhkD7PjPymvRzMGnmi8T/wWoIqNhQ/QuCsSPGHexD3lazAeZ0gXQp
+         HkCav+roZhMiyJdZn71Q14TBpwVSjXwQPYu9DjD4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joel Stanley <joel@jms.id.au>,
-        Nick Desaulniers <ndesaulniers@google.com>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 165/321] powerpc/32: Avoid unsupported flags with clang
-Date:   Tue,  3 Dec 2019 23:33:51 +0100
-Message-Id: <20191203223435.722372817@linuxfoundation.org>
+Subject: [PATCH 4.19 167/321] powerpc/mm: Make NULL pointer deferences explicit on bad page faults.
+Date:   Tue,  3 Dec 2019 23:33:53 +0100
+Message-Id: <20191203223435.824668480@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,83 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joel Stanley <joel@jms.id.au>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit 72e7bcc2cdf82bf03caaa5e6c9b0134c2fc2ee7d ]
+[ Upstream commit 49a502ea23bf9dec47f8f3c3960909ff409cd1bb ]
 
-When building for ppc32 with clang these flags are unsupported:
+As several other arches including x86, this patch makes it explicit
+that a bad page fault is a NULL pointer dereference when the fault
+address is lower than PAGE_SIZE
 
-  -ffixed-r2 and -mmultiple
+In the mean time, this page makes all bad_page_fault() messages
+shorter so that they remain on one single line. And it prefixes them
+by "BUG: " so that they get easily grepped.
 
-llvm's lib/Target/PowerPC/PPCRegisterInfo.cpp marks r2 as reserved on
-when building for SVR4ABI and !ppc64:
-
-  // The SVR4 ABI reserves r2 and r13
-  if (Subtarget.isSVR4ABI()) {
-    // We only reserve r2 if we need to use the TOC pointer. If we have no
-    // explicit uses of the TOC pointer (meaning we're a leaf function with
-    // no constant-pool loads, etc.) and we have no potential uses inside an
-    // inline asm block, then we can treat r2 has an ordinary callee-saved
-    // register.
-    const PPCFunctionInfo *FuncInfo = MF.getInfo<PPCFunctionInfo>();
-    if (!TM.isPPC64() || FuncInfo->usesTOCBasePtr() || MF.hasInlineAsm())
-      markSuperRegs(Reserved, PPC::R2);  // System-reserved register
-    markSuperRegs(Reserved, PPC::R13); // Small Data Area pointer register
-  }
-
-This means we can safely omit -ffixed-r2 when building for 32-bit
-targets.
-
-The -mmultiple/-mno-multiple flags are not supported by clang, so
-platforms that might support multiple miss out on using multiple word
-instructions.
-
-We wrap these flags in cc-option so that when Clang gains support the
-kernel will be able use these flags.
-
-Clang 8 can then build a ppc44x_defconfig which boots in Qemu:
-
-  make CC=clang-8 ARCH=powerpc CROSS_COMPILE=powerpc-linux-gnu-  ppc44x_defconfig
-  ./scripts/config -e CONFIG_DEVTMPFS -d DEVTMPFS_MOUNT
-  make CC=clang-8 ARCH=powerpc CROSS_COMPILE=powerpc-linux-gnu-
-
-  qemu-system-ppc -M bamboo \
-   -kernel arch/powerpc/boot/zImage \
-   -dtb arch/powerpc/boot/dts/bamboo.dtb \
-   -initrd ~/ppc32-440-rootfs.cpio \
-   -nographic -serial stdio -monitor pty -append "console=ttyS0"
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/261
-Link: https://bugs.llvm.org/show_bug.cgi?id=39556
-Link: https://bugs.llvm.org/show_bug.cgi?id=39555
-Signed-off-by: Joel Stanley <joel@jms.id.au>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+[mpe: Avoid pr_cont()]
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/Makefile | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/powerpc/mm/fault.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
-index c4c03992ee828..dfcb698ec8f3b 100644
---- a/arch/powerpc/Makefile
-+++ b/arch/powerpc/Makefile
-@@ -145,7 +145,14 @@ endif
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mcmodel=medium,$(call cc-option,-mminimal-toc))
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mno-pointers-to-nested-functions)
- 
--CFLAGS-$(CONFIG_PPC32)	:= -ffixed-r2 $(MULTIPLEWORD)
-+# Clang unconditionally reserves r2 on ppc32 and does not support the flag
-+# https://bugs.llvm.org/show_bug.cgi?id=39555
-+CFLAGS-$(CONFIG_PPC32)	:= $(call cc-option, -ffixed-r2)
-+
-+# Clang doesn't support -mmultiple / -mno-multiple
-+# https://bugs.llvm.org/show_bug.cgi?id=39556
-+CFLAGS-$(CONFIG_PPC32)	+= $(call cc-option, $(MULTIPLEWORD))
-+
- CFLAGS-$(CONFIG_PPC32)	+= $(call cc-option,-mno-readonly-in-sdata)
- 
- ifdef CONFIG_PPC_BOOK3S_64
+diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+index 365526ee29b88..6e0ff8b600ced 100644
+--- a/arch/powerpc/mm/fault.c
++++ b/arch/powerpc/mm/fault.c
+@@ -633,21 +633,22 @@ void bad_page_fault(struct pt_regs *regs, unsigned long address, int sig)
+ 	switch (TRAP(regs)) {
+ 	case 0x300:
+ 	case 0x380:
+-		printk(KERN_ALERT "Unable to handle kernel paging request for "
+-			"data at address 0x%08lx\n", regs->dar);
++		pr_alert("BUG: %s at 0x%08lx\n",
++			 regs->dar < PAGE_SIZE ? "Kernel NULL pointer dereference" :
++			 "Unable to handle kernel data access", regs->dar);
+ 		break;
+ 	case 0x400:
+ 	case 0x480:
+-		printk(KERN_ALERT "Unable to handle kernel paging request for "
+-			"instruction fetch\n");
++		pr_alert("BUG: Unable to handle kernel instruction fetch%s",
++			 regs->nip < PAGE_SIZE ? " (NULL pointer?)\n" : "\n");
+ 		break;
+ 	case 0x600:
+-		printk(KERN_ALERT "Unable to handle kernel paging request for "
+-			"unaligned access at address 0x%08lx\n", regs->dar);
++		pr_alert("BUG: Unable to handle kernel unaligned access at 0x%08lx\n",
++			 regs->dar);
+ 		break;
+ 	default:
+-		printk(KERN_ALERT "Unable to handle kernel paging request for "
+-			"unknown fault\n");
++		pr_alert("BUG: Unable to handle unknown paging fault at 0x%08lx\n",
++			 regs->dar);
+ 		break;
+ 	}
+ 	printk(KERN_ALERT "Faulting instruction address: 0x%08lx\n",
 -- 
 2.20.1
 
