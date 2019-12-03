@@ -2,315 +2,163 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5B2C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFA8C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2680820726
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F6A820684
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:03:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rwTTgtN9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfLCGC2 (ORCPT
+        id S1727193AbfLCGDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 01:02:28 -0500
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:41629 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726521AbfLCGC1 (ORCPT
+        Tue, 3 Dec 2019 01:03:31 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42924 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbfLCGDa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 01:02:27 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R481e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0TjnKXaQ_1575352938;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TjnKXaQ_1575352938)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 03 Dec 2019 14:02:22 +0800
-Subject: [PATCH v3 2/2] sched/numa: documentation for per-cgroup numa
- statistics
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
- <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
- <040def80-9c38-4bcc-e4a8-8a0d10f131ed@linux.alibaba.com>
-Message-ID: <d295141d-e1bf-10f5-a489-a7055ca6d509@linux.alibaba.com>
-Date:   Tue, 3 Dec 2019 14:02:18 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Tue, 3 Dec 2019 01:03:30 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 66so1882811otd.9
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 22:03:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=em0mwcnekNPSrQ/TlvXcfMqa65n+WTC4RKGqGuPqh0E=;
+        b=rwTTgtN9QbUVjkYn/DftNihRoNzWlKozTXKK/Oz6EFiI5FCqNX3eA84Ik8dRuF6uYZ
+         fCpfslNuibOwIMTM8B6vcT82vvAxvndKCEQVWFa/W7ZYPo5Jzzxwd4YYtTRhOccZ+sd0
+         v/KFd7bfR/bhY/p4sv6qW5SZLwZlHpEwTw59RoYxzG8SraSQxdLkXRL30s7tjJUFFcKZ
+         qOTz6F+tUWH3tYfZC6ysvC5G4w28oNKF8gfoDV4lyrTARKXv8vUV2tB/AkcUPdmw2XbR
+         h/huoCaLj6772I7cwpfHgH/ZdYGfc13dvkKgH3c9tA9IR/l8unPzFyY1pMcA42zsUTso
+         /y+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=em0mwcnekNPSrQ/TlvXcfMqa65n+WTC4RKGqGuPqh0E=;
+        b=dftYcbAI5mOWJZaA/VlGF/arAI622IaPLW/9g4L0KQ0+T3joTfOrwyfws9ztWFv5CZ
+         I+9cmUM1HkuUu2qfiB9J7Fn9lQ6mPBJ4eVHUbrfkyGlsNuC2WUD9BhYmkjMrd6eXBoko
+         KCO43OcDL43V0TxIrheBMTuioLlCn+PDPfMtudtewxXGBmsxcBOTkXmBxcWyFTDAK3JC
+         NbKj+2LJdWxXcOPDTiKb9oR2lLg6sfGAHDW0JaukjhtNCb2eAAg3GyRG2lM5TSdrkQFv
+         c7Sab6F2mjO4vQPr65tr1QgwoEDSEAaGojt6ijMI9OegxnC9WO0Z1sa+KiOPm77HH/e5
+         mw6g==
+X-Gm-Message-State: APjAAAVk+zjsHa4bwk5hD0JpHaTCWpAHQY5kNQhCfA0hbY6fmdLDuQHZ
+        5U4VaRPAbZ9Wk8Gu2U6uvW0ju5g19BtCsJ8jfXR1zA==
+X-Google-Smtp-Source: APXvYqyUwjjUt6uilPV5TuiM+Ljl5ziWLr7U6mbVF1pTfEgj/j/jZ1ejlryeTCkLK1bytyv33a+7IyXMakumOsoc9E0=
+X-Received: by 2002:a9d:3af:: with SMTP id f44mr1989987otf.332.1575353009553;
+ Mon, 02 Dec 2019 22:03:29 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <040def80-9c38-4bcc-e4a8-8a0d10f131ed@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190911182546.17094-1-nsaenzjulienne@suse.de>
+ <20190911182546.17094-4-nsaenzjulienne@suse.de> <CALAqxLVVcsmFrDKLRGRq7GewcW405yTOxG=KR3csVzQ6bXutkA@mail.gmail.com>
+ <CALAqxLUkPNf9JYyt+_VOrxq=Zq03veb1y-7aDx+_Vw+fF9i82A@mail.gmail.com>
+In-Reply-To: <CALAqxLUkPNf9JYyt+_VOrxq=Zq03veb1y-7aDx+_Vw+fF9i82A@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Mon, 2 Dec 2019 22:03:17 -0800
+Message-ID: <CALAqxLW7RTif_NPxFXnxfTm2_ST+6aNmE6X=3v4XsuojKH2mtg@mail.gmail.com>
+Subject: Re: [PATCH v6 3/4] arm64: use both ZONE_DMA and ZONE_DMA32
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>, wahrenst@gmx.net,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, mbrugger@suse.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Will Deacon <will@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        Nicolas Dechense <nicolas.dechesne@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the description for 'numa_locality', also a new doc to explain
-the details on how to deal with the per-cgroup numa statistics.
+On Mon, Dec 2, 2019 at 9:38 PM John Stultz <john.stultz@linaro.org> wrote:
+> On Mon, Dec 2, 2019 at 9:08 PM John Stultz <john.stultz@linaro.org> wrote:
+> > Hey Nicolas,
+> >   Testing the db845c with linus/master, I found a regression causing
+> > system hangs in early boot:
+...
+> > In the above log:
+> > [    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: -188245
+> > looks the most suspect, and going back to the working a573cdd7973d +
+> > build fix I see:
+> > [    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 957419
+> >
+> > Do you have any suggestions for what might be going wrong?
+>
+> Digging further, it seems the error is found in calculate_node_totalpages()
+>  real_size = size - zone_absent_pages_in_node(pgdat->node_id, i,
+>                                                   node_start_pfn, node_end_pfn,
+>                                                   zholes_size);
+>
+> Where for zone DMA32 size is 262144, but real_size is calculated as -883520.
+>
+> I've not traced through to figure out why zone_absent_pages_in_node is
+> coming up with such a large number yet, but I'm about to crash so I
+> wanted to share.
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Michal Koutný <mkoutny@suse.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Iurii Zaikin <yzaikin@google.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
----
- Documentation/admin-guide/cg-numa-stat.rst      | 176 ++++++++++++++++++++++++
- Documentation/admin-guide/index.rst             |   1 +
- Documentation/admin-guide/kernel-parameters.txt |   4 +
- Documentation/admin-guide/sysctl/kernel.rst     |   9 ++
- include/linux/sched.h                           |  10 +-
- init/Kconfig                                    |   4 +-
- kernel/sched/fair.c                             |   4 +-
- 7 files changed, 200 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/admin-guide/cg-numa-stat.rst
+Ok, narrowing it down further, it seems its the following bit from the patch:
 
-diff --git a/Documentation/admin-guide/cg-numa-stat.rst b/Documentation/admin-guide/cg-numa-stat.rst
-new file mode 100644
-index 000000000000..49167db36f37
---- /dev/null
-+++ b/Documentation/admin-guide/cg-numa-stat.rst
-@@ -0,0 +1,176 @@
-+===============================
-+Per-cgroup NUMA statistics
-+===============================
-+
-+Background
-+----------
-+
-+On NUMA platforms, remote memory accessing always has a performance penalty.
-+Although we have NUMA balancing working hard to maximize the access locality,
-+there are still situations it can't help.
-+
-+This could happen in modern production environment. When a large number of
-+cgroups are used to classify and control resources, this creates a complex
-+configuration for memory policy, CPUs and NUMA nodes. In such cases NUMA
-+balancing could end up with the wrong memory policy or exhausted local NUMA
-+node, which would lead to low percentage of local page accesses.
-+
-+We need to detect such cases, figure out which workloads from which cgroup
-+have introduced the issues, then we get chance to do adjustment to avoid
-+performance degradation.
-+
-+However, there are no hardware counters for per-task local/remote accessing
-+info, we don't know how many remote page accesses have occurred for a
-+particular task.
-+
-+NUMA Locality
-+-------------
-+
-+Fortunately, we have NUMA Balancing which scans task's mapping and triggers
-+page fault periodically, giving us the opportunity to record per-task page
-+accessing info, when the CPU fall into PF is from the same node of pages, we
-+consider task as doing local page accessing, otherwise the remote page
-+accessing, we call these two counter the locality info.
-+
-+On each tick, we acquire the locality info of current task on that CPU, update
-+the increments into it's cgroup, becoming the group locality info.
-+
-+By "echo 1 > /proc/sys/kernel/numa_locality" at runtime or adding boot parameter
-+'numa_locality', we will enable the accounting of per-cgroup NUMA locality info,
-+the 'cpu.numa_stat' entry of CPU cgroup will show statistics::
-+
-+  page_access local=NR_LOCAL_PAGE_ACCESS remote=NR_REMOTE_PAGE_ACCESS
-+
-+We define 'NUMA locality' as::
-+
-+  NR_LOCAL_PAGE_ACCESS * 100 / (NR_LOCAL_PAGE_ACCESS + NR_REMOTE_PAGE_ACCESS)
-+
-+This per-cgroup percentage number help to represent the NUMA Balancing behavior.
-+
-+Note that the accounting is hierarchical, which means the NUMA locality info for
-+a given group represent not only the workload of this group, but also the
-+workloads of all its descendants.
-+
-+For example the 'cpu.numa_stat' show::
-+
-+  page_access local=129909383 remote=18265810
-+
-+The NUMA locality calculated as::
-+
-+  129909383 * 100 / (129909383 + 18265810) = 87.67
-+
-+Thus we know the workload of this group and its descendants have totally done
-+129909383 times of local page accessing and 18265810 times of remotes, locality
-+is 87.67% which imply most of the memory access are local.
-+
-+NUMA Consumption
-+----------------
-+
-+There are also other cgroup entry help us to estimate NUMA efficiency, which is
-+'cpuacct.usage_percpu' and 'memory.numa_stat'.
-+
-+By reading 'cpuacct.usage_percpu' we will get per-cpu runtime (in nanoseconds)
-+info (in hierarchy) as::
-+
-+  CPU_0_RUNTIME CPU_1_RUNTIME CPU_2_RUNTIME ... CPU_X_RUNTIME
-+
-+Combined with the info from::
-+
-+  cat /sys/devices/system/node/nodeX/cpulist
-+
-+We would be able to accumulate the runtime of CPUs into NUMA nodes, to get the
-+per-cgroup node runtime info.
-+
-+By reading 'memory.numa_stat' we will get per-cgroup node memory consumption
-+info as::
-+
-+  total=TOTAL_MEM N0=MEM_ON_NODE0 N1=MEM_ON_NODE1 ... NX=MEM_ON_NODEX
-+
-+Together we call these the per-cgroup NUMA consumption info, tell us how many
-+resources a particular workload has consumed, on a particular NUMA node.
-+
-+Monitoring
-+----------
-+
-+By monitoring the increments of locality info, we can easily know whether NUMA
-+Balancing is working well for a particular workload.
-+
-+For example we take a 5 seconds sample period, then on each sampling we have::
-+
-+  local_diff = last_nr_local_page_access - nr_local_page_access
-+  remote_diff = last_nr_remote_page_access - nr_remote_page_access
-+
-+and we get the locality in this period as::
-+
-+  locality = local_diff * 100 / (local_diff + remote_diff)
-+
-+We can plot a line for locality, when the line close to 100% things are good,
-+when getting close to 0% something is wrong, we can pick a proper watermark to
-+trigger warning message.
-+
-+You may want to drop the data if the local/remote_diff is too small, which
-+implies there are not many available pages for NUMA Balancing to scan, ignoring
-+would be fine since most likely the workload is insensitive to NUMA, or the
-+memory topology is already good enough.
-+
-+Monitoring root group helps you control the overall situation, while you may
-+also want to monitor all the leaf groups which contain the workloads, this
-+helps to catch the mouse.
-+
-+Try to put your workload into also the cpuacct & memory cgroup, when NUMA
-+Balancing is disabled or locality becomes too small, we may want to monitoring
-+the per-node runtime & memory info to see if the node consumption meet the
-+requirements.
-+
-+For NUMA node X on each sampling we have::
-+
-+  runtime_X_diff = runtime_X - last_runtime_X
-+  runtime_all_diff = runtime_all - last_runtime_all
-+
-+  runtime_percent_X = runtime_X_diff * 100 / runtime_all_diff
-+  memory_percent_X = memory_X * 100 / memory_all
-+
-+These two percentages are usually matched on each node, workload should execute
-+mostly on the node that contains most of its memory, but it's not guaranteed.
-+
-+The workload may only access a small part of its memory, in such cases although
-+the majority of memory are remotely, locality could still be good.
-+
-+Thus to tell if things are fine or not depends on the understanding of system
-+resource deployment, however, if you find node X got 100% memory percent but 0%
-+runtime percent, definitely something is wrong.
-+
-+Troubleshooting
-+---------------
-+
-+After identifying which workload introduced the bad locality, check:
-+
-+1). Is the workload bound to a particular NUMA node?
-+2). Has any NUMA node run out of resources?
-+
-+There are several ways to bind task's memory with a NUMA node, the strict way
-+like the MPOL_BIND memory policy or 'cpuset.mems' will limit the memory
-+node where to allocate pages. In this situation, admin should make sure the
-+task is allowed to run on the CPUs of that NUMA node, and make sure there are
-+available CPU resource there.
-+
-+There are also ways to bind task's CPU with a NUMA node, like 'cpuset.cpus' or
-+sched_setaffinity() syscall. In this situation, NUMA Balancing help to migrate
-+pages into that node, admin should make sure there are available memory there.
-+
-+Admin could try to rebind or unbind the NUMA node to erase the damage, make a
-+change then observe the statistics to see if things get better until the
-+situation is acceptable.
-+
-+Highlights
-+----------
-+
-+For some tasks, NUMA Balancing may found no necessary to scan pages, and
-+locality could always be 0 or small number, don't pay attention to them
-+since they most likely insensitive to NUMA.
-+
-+There is no accounting until the option is turned on, so enable it in advance
-+if you want to have the whole history.
-+
-+We have per-task migfailed counter to tell how many page migration has been
-+failed for a particular task, you will find it in /proc/PID/sched entry.
-diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-index 4405b7485312..c75a3fdfcd94 100644
---- a/Documentation/admin-guide/index.rst
-+++ b/Documentation/admin-guide/index.rst
-@@ -112,6 +112,7 @@ configure specific aspects of kernel behavior to your liking.
-    video-output
-    wimax/index
-    xfs
-+   cg-numa-stat
+> @@ -201,13 +212,18 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
+>         struct memblock_region *reg;
+>         unsigned long zone_size[MAX_NR_ZONES], zhole_size[MAX_NR_ZONES];
+>         unsigned long max_dma32 = min;
+> +       unsigned long max_dma = min;
+>
+>         memset(zone_size, 0, sizeof(zone_size));
+>
+> -       /* 4GB maximum for 32-bit only capable devices */
+> +#ifdef CONFIG_ZONE_DMA
+> +       max_dma = PFN_DOWN(arm64_dma_phys_limit);
+> +       zone_size[ZONE_DMA] = max_dma - min;
+> +       max_dma32 = max_dma;
+> +#endif
+>  #ifdef CONFIG_ZONE_DMA32
+>         max_dma32 = PFN_DOWN(arm64_dma32_phys_limit);
+> -       zone_size[ZONE_DMA32] = max_dma32 - min;
+> +       zone_size[ZONE_DMA32] = max_dma32 - max_dma;
+>  #endif
+>         zone_size[ZONE_NORMAL] = max - max_dma32;
+>
+> @@ -219,11 +235,17 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
+>
+>                 if (start >= max)
+>                         continue;
+> -
+> +#ifdef CONFIG_ZONE_DMA
+> +               if (start < max_dma) {
+> +                       unsigned long dma_end = min_not_zero(end, max_dma);
+> +                       zhole_size[ZONE_DMA] -= dma_end - start;
+> +               }
+> +#endif
+>  #ifdef CONFIG_ZONE_DMA32
+>                 if (start < max_dma32) {
+> -                       unsigned long dma_end = min(end, max_dma32);
+> -                       zhole_size[ZONE_DMA32] -= dma_end - start;
+> +                       unsigned long dma32_end = min(end, max_dma32);
+> +                       unsigned long dma32_start = max(start, max_dma);
+> +                       zhole_size[ZONE_DMA32] -= dma32_end - dma32_start;
+>                 }
+>  #endif
+>                 if (end > max_dma32) {
 
- .. only::  subproject and html
+The zhole_sizes end up being:
+zhole_size: DMA: 67671, DMA32: 1145664 NORMAL: 0
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 0945611b3877..9d9e57d19af3 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3227,6 +3227,10 @@
- 	numa_balancing=	[KNL,X86] Enable or disable automatic NUMA balancing.
- 			Allowed values are enable and disable
+This seems to be due to dma32_start being calculated as 786432 each
+time - I'm guessing that's the max_dma value.
+Where dma32_end is around 548800, but changes each iteration (so we
+end up subtracting a negative value each pass, growing the size).
 
-+	numa_locality	[KNL] Enable per-cgroup numa locality info.
-+			Useful to debug NUMA efficiency problems when there are
-+			lots of per-cgroup workloads.
-+
- 	numa_zonelist_order= [KNL, BOOT] Select zonelist order for NUMA.
- 			'node', 'default' can be specified
- 			This can be set from sysctl after boot.
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index 7e203b3ed331..efa995e757fd 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -572,6 +572,15 @@ rate for each task.
- numa_balancing_scan_size_mb is how many megabytes worth of pages are
- scanned for a given scan.
-
-+numa_locality:
-+=============
-+
-+Enables/disables per-cgroup NUMA locality info.
-+
-+0: disabled (default).
-+1: enabled.
-+
-+Check Documentation/admin-guide/cg-numa-stat.rst for details.
-
- osrelease, ostype & version:
- ============================
--- 
-2.14.4.44.g2045bb6
-
+thanks
+-john
