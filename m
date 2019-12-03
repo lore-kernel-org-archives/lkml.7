@@ -2,53 +2,53 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BA4C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 406F7C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFDC92073C
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13A172073C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:45:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413096;
-	bh=OWfCKaB2Nn/jWj+jLTsqNNgX25+36blG7TPdm0AhVCk=;
+	s=default; t=1575413100;
+	bh=OctZyAQ5oT6et3iOr6pcJzgVHWL+2dgefaniPGCIhEU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hnIUVt1QzCGoHlglYpEputOGpkjxbS0dFNa6oAINV8yiWfgdGqx8dZ66Q1l0lwj/R
-	 O3Vetfnw1WDeQXp2MmjUUcPGjfFMy4NJXT3ch35L7p36+vUCZFQmL5OzWbfdV35ZxF
-	 eK+7fNVkfoOcjQxqUkK9QTk6hNI75q649h3EfWDE=
+	b=BOs/jeN5E0S2RojB95naWGXQce+S2nntOSCAO7o4lghhjQnSOL5Dp9M5qIKHI7WE7
+	 zoo1RJBaEPYU1YG/M7LxLbVY9ii3WafpGMAIIpYZu6kNfM9PIxs966UXzQn2Tuu6Qn
+	 6E8YYANLnXfiZXqXi+DOC58woANXulSzARMkzPT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbfLCWoy (ORCPT
+        id S1728983AbfLCWo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:44:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32880 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:44:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728673AbfLCWou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:44:50 -0500
+        id S1728673AbfLCWoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:44:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF07220803;
-        Tue,  3 Dec 2019 22:44:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE6CE2073C;
+        Tue,  3 Dec 2019 22:44:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413089;
-        bh=OWfCKaB2Nn/jWj+jLTsqNNgX25+36blG7TPdm0AhVCk=;
+        s=default; t=1575413094;
+        bh=OctZyAQ5oT6et3iOr6pcJzgVHWL+2dgefaniPGCIhEU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HEAZZgjFnBD04EfTMR/DO6Rmi3+GWjvj71os4KNU0XwDWQkAtoq2zFXMOAIQIw+yC
-         33RQpjX4a3xkIb+1qy7JWxd4Kboa4qs/X/sqMN2TXW8CEHnt4/NDCxHx+0b0YIXlrR
-         0sAmU/giZ8hOLjbGAEpizZoX1QkB1qdqjrxmv0XE=
+        b=c1YyjMv5J3tDcm1c9V31e6aRkOFkqjaGtq7NHCdd2XzAFqlcuYUDtJRiqtr7/87jS
+         1a4jDeWS0b4PKKFs4dY8+DM9mtpm7l4MTu/Wx7THJarG7xDO7gnP+FZrCXxBAzcKaq
+         b60M5tGdrGSlDMQgH06UqUVNtiK0uKvzJZaOIV6s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes@sipsolutions.net>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 090/135] net/fq_impl: Switch to kvmalloc() for memory allocation
-Date:   Tue,  3 Dec 2019 23:35:30 +0100
-Message-Id: <20191203213036.344531573@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 125/135] selftests/tls: add a test for fragmented messages
+Date:   Tue,  3 Dec 2019 23:36:05 +0100
+Message-Id: <20191203213044.842266412@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -61,51 +61,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit 71e67c3bd127cfe7863f54e4b087eba1cc8f9a7a ]
+[ Upstream commit 65190f77424d7b82c4aad7326c9cce6bd91a2fcc ]
 
-The FQ implementation used by mac80211 allocates memory using kmalloc(),
-which can fail; and Johannes reported that this actually happens in
-practice.
+Add a sendmsg test with very fragmented messages. This should
+fill up sk_msg and test the boundary conditions.
 
-To avoid this, switch the allocation to kvmalloc() instead; this also
-brings fq_impl in line with all the FQ qdiscs.
-
-Fixes: 557fc4a09803 ("fq: add fair queuing framework")
-Reported-by: Johannes Berg <johannes@sipsolutions.net>
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Link: https://lore.kernel.org/r/20191105155750.547379-1-toke@redhat.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/fq_impl.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/tls.c |   60 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
-diff --git a/include/net/fq_impl.h b/include/net/fq_impl.h
-index 107c0d700ed6f..38a9a3d1222b7 100644
---- a/include/net/fq_impl.h
-+++ b/include/net/fq_impl.h
-@@ -313,7 +313,7 @@ static int fq_init(struct fq *fq, int flows_cnt)
- 	fq->limit = 8192;
- 	fq->memory_limit = 16 << 20; /* 16 MBytes */
- 
--	fq->flows = kcalloc(fq->flows_cnt, sizeof(fq->flows[0]), GFP_KERNEL);
-+	fq->flows = kvcalloc(fq->flows_cnt, sizeof(fq->flows[0]), GFP_KERNEL);
- 	if (!fq->flows)
- 		return -ENOMEM;
- 
-@@ -331,7 +331,7 @@ static void fq_reset(struct fq *fq,
- 	for (i = 0; i < fq->flows_cnt; i++)
- 		fq_flow_reset(fq, &fq->flows[i], free_func);
- 
--	kfree(fq->flows);
-+	kvfree(fq->flows);
- 	fq->flows = NULL;
+--- a/tools/testing/selftests/net/tls.c
++++ b/tools/testing/selftests/net/tls.c
+@@ -268,6 +268,38 @@ TEST_F(tls, sendmsg_single)
+ 	EXPECT_EQ(memcmp(buf, test_str, send_len), 0);
  }
  
--- 
-2.20.1
-
++#define MAX_FRAGS	64
++#define SEND_LEN	13
++TEST_F(tls, sendmsg_fragmented)
++{
++	char const *test_str = "test_sendmsg";
++	char buf[SEND_LEN * MAX_FRAGS];
++	struct iovec vec[MAX_FRAGS];
++	struct msghdr msg;
++	int i, frags;
++
++	for (frags = 1; frags <= MAX_FRAGS; frags++) {
++		for (i = 0; i < frags; i++) {
++			vec[i].iov_base = (char *)test_str;
++			vec[i].iov_len = SEND_LEN;
++		}
++
++		memset(&msg, 0, sizeof(struct msghdr));
++		msg.msg_iov = vec;
++		msg.msg_iovlen = frags;
++
++		EXPECT_EQ(sendmsg(self->fd, &msg, 0), SEND_LEN * frags);
++		EXPECT_EQ(recv(self->cfd, buf, SEND_LEN * frags, MSG_WAITALL),
++			  SEND_LEN * frags);
++
++		for (i = 0; i < frags; i++)
++			EXPECT_EQ(memcmp(buf + SEND_LEN * i,
++					 test_str, SEND_LEN), 0);
++	}
++}
++#undef MAX_FRAGS
++#undef SEND_LEN
++
+ TEST_F(tls, sendmsg_large)
+ {
+ 	void *mem = malloc(16384);
+@@ -694,6 +726,34 @@ TEST_F(tls, recv_lowat)
+ 	EXPECT_EQ(memcmp(send_mem, recv_mem + 10, 5), 0);
+ }
+ 
++TEST_F(tls, recv_rcvbuf)
++{
++	char send_mem[4096];
++	char recv_mem[4096];
++	int rcv_buf = 1024;
++
++	memset(send_mem, 0x1c, sizeof(send_mem));
++
++	EXPECT_EQ(setsockopt(self->cfd, SOL_SOCKET, SO_RCVBUF,
++			     &rcv_buf, sizeof(rcv_buf)), 0);
++
++	EXPECT_EQ(send(self->fd, send_mem, 512, 0), 512);
++	memset(recv_mem, 0, sizeof(recv_mem));
++	EXPECT_EQ(recv(self->cfd, recv_mem, sizeof(recv_mem), 0), 512);
++	EXPECT_EQ(memcmp(send_mem, recv_mem, 512), 0);
++
++	if (self->notls)
++		return;
++
++	EXPECT_EQ(send(self->fd, send_mem, 4096, 0), 4096);
++	memset(recv_mem, 0, sizeof(recv_mem));
++	EXPECT_EQ(recv(self->cfd, recv_mem, sizeof(recv_mem), 0), -1);
++	EXPECT_EQ(errno, EMSGSIZE);
++
++	EXPECT_EQ(recv(self->cfd, recv_mem, sizeof(recv_mem), 0), -1);
++	EXPECT_EQ(errno, EMSGSIZE);
++}
++
+ TEST_F(tls, bidir)
+ {
+ 	char const *test_str = "test_read";
 
 
