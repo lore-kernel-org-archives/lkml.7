@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED59C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC20C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4E1D2064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 263DB2064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:10:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414592;
-	bh=HoAFqpYfa74MQHwNePRBAUOnqHPBhxifuXH9ekCuqMM=;
+	s=default; t=1575414603;
+	bh=Oqj7gHsXnFP2pmn2Qi83jcoJYfWeViXDHc+v9myvd/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qNCu1OHTv/dvKjNc7zm0TG/U1kAtXP9xl79P9HbfbAfYe/iHIllOUB0vLBTJ+3lOy
-	 2L6qQPbcNSi3nbR9/CBtzOc467aFEDA3uzEr+ZBnInTMi7QnryuvpGAOkHVtXHcPHd
-	 vnCWRs1gYja1OkgrF+PlFUe0OvvjuxOXKTfJsCIo=
+	b=Q8IgvLnDFSgRgTc9SS4H3nLplErbdTxl+OTKAXK3lQAp5fYa4eI5mfKKdFGJBmMns
+	 qzSOIw8YyvOE1P3HMxdFX6sRQ8A5H2a1C7l6wRR9ecaJ49GEr2TwZwvNK1giSWSVUD
+	 2B8uz4xfiA3Gc+fSguzxEPnN9CX9oeSsDeAj3ZCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729083AbfLCXJv (ORCPT
+        id S1728502AbfLCWnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:09:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58902 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:43:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728260AbfLCWn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:43:27 -0500
+        id S1728564AbfLCWnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:43:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B12EA20803;
-        Tue,  3 Dec 2019 22:43:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54D5D20684;
+        Tue,  3 Dec 2019 22:43:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413007;
-        bh=HoAFqpYfa74MQHwNePRBAUOnqHPBhxifuXH9ekCuqMM=;
+        s=default; t=1575412980;
+        bh=Oqj7gHsXnFP2pmn2Qi83jcoJYfWeViXDHc+v9myvd/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i3KNQiatbK7zUNYFyu+w+1r6LFutrWKBYdZSZWZWFn/e0roBozFnYUXmPxscr+1dV
-         OZVDVuKB0Ds/P//om9gETwSR8IroWZAxr1XM4lUZxqZtbTpQK3x9R2xB83zu4Q1IJ0
-         8bZNfe0RRv2SjYKrkO7f11yi6FyxRRxwF67t3AjI=
+        b=p5Rbmn6BHFfOimK1XXzM887yXC0w62QRmz3z2qlQATAVEfbcz/NJICpv6Eg8+FvyB
+         Mog8Jzu9lZB9CAtxkgNp3c9JJJqRRPbDVev//cD8eatAmMLD1v3hIBh86QEFUtyYFu
+         L0gPuCh9escxCdgXzqE8I/tSoRlz30109G50Qhfs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, changzhu <Changfeng.Zhu@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Ahmed Zaki <anzaki@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 083/135] drm/amdgpu: add warning for GRBM 1-cycle delay issue in gfx9
-Date:   Tue,  3 Dec 2019 23:35:23 +0100
-Message-Id: <20191203213032.716189710@linuxfoundation.org>
+Subject: [PATCH 5.3 091/135] mac80211: fix station inactive_time shortly after boot
+Date:   Tue,  3 Dec 2019 23:35:31 +0100
+Message-Id: <20191203213036.421397975@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -61,40 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: changzhu <Changfeng.Zhu@amd.com>
+From: Ahmed Zaki <anzaki@gmail.com>
 
-[ Upstream commit 440a7a54e7ec012ec8b27c27e460dfd6f9a24ddb ]
+[ Upstream commit 285531f9e6774e3be71da6673d475ff1a088d675 ]
 
-It needs to add warning to update firmware in gfx9
-in case that firmware is too old to have function to
-realize dummy read in cp firmware.
+In the first 5 minutes after boot (time of INITIAL_JIFFIES),
+ieee80211_sta_last_active() returns zero if last_ack is zero. This
+leads to "inactive time" showing jiffies_to_msecs(jiffies).
 
-Signed-off-by: changzhu <Changfeng.Zhu@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+ # iw wlan0 station get fc:ec:da:64:a6:dd
+ Station fc:ec:da:64:a6:dd (on wlan0)
+	inactive time:	4294894049 ms
+	.
+	.
+	connected time:	70 seconds
+
+Fix by returning last_rx if last_ack == 0.
+
+Signed-off-by: Ahmed Zaki <anzaki@gmail.com>
+Link: https://lore.kernel.org/r/20191031121243.27694-1-anzaki@gmail.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ net/mac80211/sta_info.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-index 75faa56f243a4..b1388d3e72f74 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-@@ -538,6 +538,13 @@ static void gfx_v9_0_check_fw_write_wait(struct amdgpu_device *adev)
- 	adev->gfx.me_fw_write_wait = false;
- 	adev->gfx.mec_fw_write_wait = false;
+diff --git a/net/mac80211/sta_info.c b/net/mac80211/sta_info.c
+index 5fb368cc26338..0030b13c2f501 100644
+--- a/net/mac80211/sta_info.c
++++ b/net/mac80211/sta_info.c
+@@ -2455,7 +2455,8 @@ unsigned long ieee80211_sta_last_active(struct sta_info *sta)
+ {
+ 	struct ieee80211_sta_rx_stats *stats = sta_get_last_rx_stats(sta);
  
-+	if ((adev->gfx.mec_fw_version < 0x000001a5) ||
-+	    (adev->gfx.mec_feature_version < 46) ||
-+	    (adev->gfx.pfp_fw_version < 0x000000b7) ||
-+	    (adev->gfx.pfp_feature_version < 46))
-+		DRM_WARN_ONCE("Warning: check cp_fw_version and update it to realize \
-+			      GRBM requires 1-cycle delay in cp firmware\n");
-+
- 	switch (adev->asic_type) {
- 	case CHIP_VEGA10:
- 		if ((adev->gfx.me_fw_version >= 0x0000009c) &&
+-	if (time_after(stats->last_rx, sta->status_stats.last_ack))
++	if (!sta->status_stats.last_ack ||
++	    time_after(stats->last_rx, sta->status_stats.last_ack))
+ 		return stats->last_rx;
+ 	return sta->status_stats.last_ack;
+ }
 -- 
 2.20.1
 
