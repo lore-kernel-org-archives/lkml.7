@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A31FDC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6267BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A42820726
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2547E2073C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:23:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OAsl82Oz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RlW/Wke8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfLCFXv (ORCPT
+        id S1727156AbfLCFXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 00:23:51 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39518 "EHLO
+        Tue, 3 Dec 2019 00:23:55 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34639 "EHLO
         mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727059AbfLCFXt (ORCPT
+        with ESMTP id S1727059AbfLCFXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 00:23:49 -0500
-Received: by mail-pg1-f196.google.com with SMTP id b137so1119055pga.6
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 21:23:48 -0800 (PST)
+        Tue, 3 Dec 2019 00:23:53 -0500
+Received: by mail-pg1-f196.google.com with SMTP id r11so1130498pgf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 21:23:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=jCnbshc6gwC9Lz7KrpZNRQtAnW1kUNCWIyQg9GLVi8g=;
-        b=OAsl82OzpSmTAhx0IKBHZKzsbwj/Z21pQqt+a4HJyo/HZFuWYG9T4G04aGZRPpDabt
-         +EEHPB/YWvTT1xhURL6ea6bIVo+plxAXVlqEIbZR06NB9Sh2Wq9iHh9wwy3WlzDu+HTw
-         uFjhM186omJhFZh1qp3s9THXC88LAjvd7sLJd4FM4Em2wk/cI/SNy0/OyPbVGovb4Q69
-         GJEWRkCGmkBjBwaoIDjgfYabTSvOlon7UJgG4w9P5zJVxHSdgpBOicTCBHw2ZvQPh4M2
-         bsPl8engt05uk4jXYpdp992AtjFowJHclWUqfPjTgcuzgsI2DEJPaghc7lXxnn+s0Qvw
-         e2qg==
+        bh=dPgz2TLGaXm8AZ5IU/e4WWLoSFiMiQO40kFKZ/olifE=;
+        b=RlW/Wke8DNfq5+TindW3a7DNLR09DVaesqF1xwIrlU7rF0EUhASXBKcdEv9gChCMzZ
+         XYOazRvnQp5BEKikwNaDgdpOXqIZGn3q6lanaKG0VVk49ZOEbdZeDfoipfCq5ELIMQj1
+         l+zmNmnCi30CeiFDdCpZFNLjVkhEZwrSF5TTeCJsP86nGSsRgQFi17NQBUwsLWN3lPG4
+         XYVktpX4JahsUhum0NFi75QXwlGDhJzOsawFqpujLOvLJB5PyoyN6ODaS4V7T8uSFZTh
+         //laIC4A0qj7KfbwbD+XBv++Ues5+BnYRmsODvf/kbCaKBOLc+fIzic6drSvmxvM7SDf
+         z2yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=jCnbshc6gwC9Lz7KrpZNRQtAnW1kUNCWIyQg9GLVi8g=;
-        b=Kd5GdiEUCb7saxzYW1acOdpFw+JOHvDWum0Jt3XDlaV+rKfl0Y/gFUz59gIJXPE2DN
-         Dxl31WQnc2EZAjiXdXhMbmL6d0kx0G5ohg/TrjdEw9vg1Wna/hDWnguA6Hen6Fx0ShlU
-         pdFNYEI1IAYZU4gWedxuiAoRss1Chs+K2RpXw3PKOn+qpy9IJdSDkzoRtNZRPV2t0kjk
-         O6lKSEEl3anOwHKzNYVTRul59F+qIo73AcFtt0VkT+M5htlFavw88vkJcAkfxCWljGWh
-         lcbCNR/VV75EE4E4988BA1s4YIG20U7QzW5kqJktmyQ1r54xYhZNXo5FCp5oZ2SdTnka
-         nuTQ==
-X-Gm-Message-State: APjAAAWDYmaxihAcJV/Rppia+rha3BbGlAvc22a9pLYf914AtnR1YDEP
-        kqZXMlQi6FQqnvBmof0k26vZzDSPuHo8Dw==
-X-Google-Smtp-Source: APXvYqw8o/ivZvCeU5FcoWoVFv5gCQhQQbbWRwtLMDtOtVpHS+BJUEGR4dGGFMZkC5woDR2/luVSEg==
-X-Received: by 2002:a63:6787:: with SMTP id b129mr3465932pgc.103.1575350627967;
-        Mon, 02 Dec 2019 21:23:47 -0800 (PST)
+        bh=dPgz2TLGaXm8AZ5IU/e4WWLoSFiMiQO40kFKZ/olifE=;
+        b=Da5i5HgyO1q0yr6pEZJBzlzMIDMiocfx48/x5lOlqkw3/9UIKTNsMk4hY9BgH+9mL+
+         uhZgVpZL+E74VcZHN4o1Q+BxEdev4tYd+pfiI+x5pMxXyp7zbhBusKAQl5NOt48on8hJ
+         /YFmjS0FTyLpgc0WxkBGdbQP8E+7+aCguA2GmJ0CU5ae5PTnJmMON85wcdSxFDLVEAoc
+         or7JuanEBzAkV3Lbiz7swYa7tcd9Fskicz+WJ9fGHyILpvg6v5eG2WHDtE+VJQg94q90
+         0THOULkhmiWDvEz2/Bxf4iWWM692r78VXVLZcBQTrBdDDGyQmaFQm+59riaAz5BQBn0D
+         qKsw==
+X-Gm-Message-State: APjAAAXDr7IJF6hFNQVplQmPfaAvl/QVF0i4D9vK5qZCrp4pKjdEeCKA
+        jxNLrIOI3LauDbADUNitO6y2MJ8apxcXeg==
+X-Google-Smtp-Source: APXvYqylmspoWJ46AcNlcJaiTcm8u1XOhBNgM1Yg5iDosjeRJVqyvHVAbi4h9+HiQGANGd2ojEB1+A==
+X-Received: by 2002:a63:f006:: with SMTP id k6mr3420716pgh.380.1575350631471;
+        Mon, 02 Dec 2019 21:23:51 -0800 (PST)
 Received: from localhost ([14.96.109.134])
-        by smtp.gmail.com with ESMTPSA id z30sm1426685pff.131.2019.12.02.21.23.47
+        by smtp.gmail.com with ESMTPSA id f10sm1388888pfd.28.2019.12.02.21.23.50
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Dec 2019 21:23:47 -0800 (PST)
+        Mon, 02 Dec 2019 21:23:51 -0800 (PST)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         bjorn.andersson@linaro.org, swboyd@chromium.org,
@@ -63,9 +63,9 @@ To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
 Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Amit Kucheria <amit.kucheria@verdurent.com>,
         linux-pm@vger.kernel.org
-Subject: [PATCH v2 3/9] drivers: thermal: tsens: use simpler variables
-Date:   Tue,  3 Dec 2019 10:53:24 +0530
-Message-Id: <ff9298c401dd95e6c7590a7c882ca61cfbb15e16.1575349416.git.amit.kucheria@linaro.org>
+Subject: [PATCH v2 4/9] drivers: thermal: tsens: Release device in success path
+Date:   Tue,  3 Dec 2019 10:53:25 +0530
+Message-Id: <b8a2349eb80a4992d386b05fcde9a7a32bf9850b.1575349416.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1575349416.git.amit.kucheria@linaro.org>
 References: <cover.1575349416.git.amit.kucheria@linaro.org>
@@ -76,54 +76,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We already dereference the sensor and save it into a variable. Use the
-variable directly to make the code easier to read.
+We don't currently call put_device in case of successfully initialising
+the device.
+
+Allow control to fall thru so we can use same code to put_device and
+return error.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 ---
- drivers/thermal/qcom/tsens-common.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/thermal/qcom/tsens-common.c | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
-index c2df30a08b9e4..1cbc5a6e5b4fd 100644
+index 1cbc5a6e5b4fd..e84e94a6f1a73 100644
 --- a/drivers/thermal/qcom/tsens-common.c
 +++ b/drivers/thermal/qcom/tsens-common.c
-@@ -368,7 +368,7 @@ irqreturn_t tsens_irq_thread(int irq, void *data)
- 			tsens_set_interrupt(priv, hw_id, UPPER, disable);
- 			if (d.up_thresh > temp) {
- 				dev_dbg(priv->dev, "[%u] %s: re-arm upper\n",
--					priv->sensor[i].hw_id, __func__);
-+					hw_id, __func__);
- 				tsens_set_interrupt(priv, hw_id, UPPER, enable);
- 			} else {
- 				trigger = true;
-@@ -379,7 +379,7 @@ irqreturn_t tsens_irq_thread(int irq, void *data)
- 			tsens_set_interrupt(priv, hw_id, LOWER, disable);
- 			if (d.low_thresh < temp) {
- 				dev_dbg(priv->dev, "[%u] %s: re-arm low\n",
--					priv->sensor[i].hw_id, __func__);
-+					hw_id, __func__);
- 				tsens_set_interrupt(priv, hw_id, LOWER, enable);
- 			} else {
- 				trigger = true;
-@@ -392,7 +392,7 @@ irqreturn_t tsens_irq_thread(int irq, void *data)
- 		if (trigger) {
- 			dev_dbg(priv->dev, "[%u] %s: TZ update trigger (%d mC)\n",
- 				hw_id, __func__, temp);
--			thermal_zone_device_update(priv->sensor[i].tzd,
-+			thermal_zone_device_update(s->tzd,
- 						   THERMAL_EVENT_UNSPECIFIED);
- 		} else {
- 			dev_dbg(priv->dev, "[%u] %s: no violation:  %d\n",
-@@ -435,7 +435,7 @@ int tsens_set_trips(void *_sensor, int low, int high)
- 	spin_unlock_irqrestore(&priv->ul_lock, flags);
+@@ -687,8 +687,6 @@ int __init init_common(struct tsens_priv *priv)
+ 	tsens_enable_irq(priv);
+ 	tsens_debug_init(op);
  
- 	dev_dbg(dev, "[%u] %s: (%d:%d)->(%d:%d)\n",
--		s->hw_id, __func__, d.low_thresh, d.up_thresh, cl_low, cl_high);
-+		hw_id, __func__, d.low_thresh, d.up_thresh, cl_low, cl_high);
- 
- 	return 0;
- }
+-	return 0;
+-
+ err_put_device:
+ 	put_device(&op->dev);
+ 	return ret;
 -- 
 2.17.1
 
