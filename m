@@ -2,178 +2,121 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF81FC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDEC3C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADF2620659
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA26E20659
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:08:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575410934;
+	bh=6PSVahxJVhz0cExddxVYD59tVZAiFyByptvoAe29BE0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1SstSUkCZm4Gw7tGQUNFR95XgDTmz+EqVHTlW8pUiw8hjE91XzbuUQ9GMr5zq//Pm
+	 w9WK6K0KBwYuAq0VI7VQKs3iRfetFfbJtGj+4n6WGRuYsjJ6Tn+CSIyMktf/JuI/Aw
+	 wAs+9OMXkXZ0mKBx6JH3fZxR6ZdtVDMozc7aTKmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727610AbfLCWHy (ORCPT
+        id S1727630AbfLCWIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:07:54 -0500
-Received: from mga07.intel.com ([134.134.136.100]:13784 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727516AbfLCWHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:07:54 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Dec 2019 14:07:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,275,1571727600"; 
-   d="scan'208";a="208640056"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga007.fm.intel.com with ESMTP; 03 Dec 2019 14:07:52 -0800
-Date:   Tue, 3 Dec 2019 14:07:52 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH v4 3/6] KVM: X86: Use APIC_DEST_* macros properly in
- kvm_lapic_irq.dest_mode
-Message-ID: <20191203220752.GJ19877@linux.intel.com>
-References: <20191203165903.22917-1-peterx@redhat.com>
- <20191203165903.22917-4-peterx@redhat.com>
+        Tue, 3 Dec 2019 17:08:53 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39509 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727502AbfLCWIx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:08:53 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 77so4440789oty.6;
+        Tue, 03 Dec 2019 14:08:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sZSEyNMhlnvTODh/Dzk1OL0mgOPADvbuG7TDe97dXpg=;
+        b=lF5FQi3KJf4YdyrXVxNHu09mQWjg2/hAebLN9+2rE+IeO3XN1KJoR9gyC3j6aIFT3P
+         ZhrJvqAy9iYwjzBK6OT+EfyDGJuFwmWJxGV+A/u9BW6xtbzYN2fv+5ObFB/7KlxwaJ3o
+         4Bc4A3miLEvo/o+61AP6EN1nz16RS2sYW6o7n7hTj6sOLWNPEyw7Mqu4EXLYC93VmKIo
+         flcyeTw1nHcbsyu7AJtvkFoddVtHd+FlkBNUcreXeQvSGdH4cqhVUiKdEGGpmxgvjcBZ
+         TpJhpmgPGKPsV/D5iyFcIsndI9ww8GE5pm2HicoVXrCjVDthXdRv7CChkFnzv/6srwzy
+         G8LQ==
+X-Gm-Message-State: APjAAAX3ldQxxGszWP1kw6n5GDtFsuluOW2wBFU2NGx/ME1bM1CO90tD
+        OEEeFWXtg6jXnY8mj50dSw==
+X-Google-Smtp-Source: APXvYqz+spF9crZkJb7aFq4Od/HWX5LxZsgAanqY1RB5HuHt0Q6YDaWEARPcPrgcEjgE+1jA3LKq4A==
+X-Received: by 2002:a05:6830:4a7:: with SMTP id l7mr78129otd.372.1575410932229;
+        Tue, 03 Dec 2019 14:08:52 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id v24sm1483990ote.38.2019.12.03.14.08.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2019 14:08:51 -0800 (PST)
+Date:   Tue, 3 Dec 2019 16:08:51 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, digetx@gmail.com,
+        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
+        sboyd@kernel.org, tglx@linutronix.de, mark.rutland@arm.com,
+        allison@lohutok.net, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        mturquette@baylibre.com, horms+renesas@verge.net.au,
+        Jisheng.Zhang@synaptics.com, krzk@kernel.org, arnd@arndb.de,
+        spujar@nvidia.com, josephl@nvidia.com, vidyas@nvidia.com,
+        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
+        markz@nvidia.com, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 03/17] dt-bindings: soc: tegra-pmc: Add Tegra PMC
+ clock ids
+Message-ID: <20191203220850.GB22716@bogus>
+References: <1574146234-3871-1-git-send-email-skomatineni@nvidia.com>
+ <1574146234-3871-4-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191203165903.22917-4-peterx@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1574146234-3871-4-git-send-email-skomatineni@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 11:59:00AM -0500, Peter Xu wrote:
-> We were using either APIC_DEST_PHYSICAL|APIC_DEST_LOGICAL or 0|1 to
-> fill in kvm_lapic_irq.dest_mode.  It's fine only because in most cases
-> when we check against dest_mode it's against APIC_DEST_PHYSICAL (which
-> equals to 0).  However, that's not consistent.  We'll have problem
-> when we want to start checking against APIC_DEST_LOGICAL, which does
-> not equals to 1.
+On Mon, Nov 18, 2019 at 10:50:20PM -0800, Sowjanya Komatineni wrote:
+> Tegra PMC has clk_out_1, clk_out_2, clk_out_3 clocks and each of
+> these clocks has mux and a gate as a part of PMC controller.
 > 
-> This patch firstly introduces kvm_lapic_irq_dest_mode() helper to take
-> any boolean of destination mode and return the APIC_DEST_* macro.
-> Then, it replaces the 0|1 settings of irq.dest_mode with the helper.
+> This patch adds ids for each of these PMC clock mux and gates to
+> use with the devicetree.
 > 
-> Signed-off-by: Peter Xu <peterx@redhat.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
->  arch/x86/include/asm/kvm_host.h | 5 +++++
->  arch/x86/kvm/ioapic.c           | 9 ++++++---
->  arch/x86/kvm/irq_comm.c         | 7 ++++---
->  arch/x86/kvm/x86.c              | 2 +-
->  4 files changed, 16 insertions(+), 7 deletions(-)
+>  include/dt-bindings/soc/tegra-pmc.h | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>  create mode 100644 include/dt-bindings/soc/tegra-pmc.h
+
+This should be part of the binding patch.
+
 > 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index b79cd6aa4075..f815c97b1b57 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1022,6 +1022,11 @@ struct kvm_lapic_irq {
->  	bool msi_redir_hint;
->  };
->  
-> +static inline u16 kvm_lapic_irq_dest_mode(bool dest_mode)
-> +{
-> +	return dest_mode ? APIC_DEST_LOGICAL : APIC_DEST_PHYSICAL;
-
-IMO this belongs in ioapic.c as it's specifically provided for converting
-an I/O APIC redirection entry into a local APIC destination mode.  Without
-the I/O APIC context, %true==APIC_DEST_LOGICAL looks like a completely
-arbitrary decision.  And if it's in ioapic.c, it can take the union
-of a bool, which avoids the casting and shortens the callers.  E.g.:
-
-static u64 ioapic_to_lapic_dest_mode(union kvm_ioapic_redirect_entry *e)
-{
-	return e->fields.dest_mode ?  APIC_DEST_LOGICAL : APIC_DEST_PHYSICAL;
-}
-
-The other option would be to use the same approach as delivery_mode and
-open code the shift.
-
-> +}
+> diff --git a/include/dt-bindings/soc/tegra-pmc.h b/include/dt-bindings/soc/tegra-pmc.h
+> new file mode 100644
+> index 000000000000..fa1ccfc2514b
+> --- /dev/null
+> +++ b/include/dt-bindings/soc/tegra-pmc.h
+> @@ -0,0 +1,16 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2019-2020, NVIDIA CORPORATION.  All rights reserved.
+> + */
 > +
->  struct kvm_x86_ops {
->  	int (*cpu_has_kvm_support)(void);          /* __init */
->  	int (*disabled_by_bios)(void);             /* __init */
-> diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
-> index 9fd2dd89a1c5..e623a4f8d27e 100644
-> --- a/arch/x86/kvm/ioapic.c
-> +++ b/arch/x86/kvm/ioapic.c
-> @@ -331,7 +331,8 @@ static void ioapic_write_indirect(struct kvm_ioapic *ioapic, u32 val)
->  			irq.vector = e->fields.vector;
->  			irq.delivery_mode = e->fields.delivery_mode << 8;
->  			irq.dest_id = e->fields.dest_id;
-> -			irq.dest_mode = e->fields.dest_mode;
-> +			irq.dest_mode =
-> +			    kvm_lapic_irq_dest_mode(!!e->fields.dest_mode);
->  			bitmap_zero(&vcpu_bitmap, 16);
->  			kvm_bitmap_or_dest_vcpus(ioapic->kvm, &irq,
->  						 &vcpu_bitmap);
-> @@ -343,7 +344,9 @@ static void ioapic_write_indirect(struct kvm_ioapic *ioapic, u32 val)
->  				 * keep ioapic_handled_vectors synchronized.
->  				 */
->  				irq.dest_id = old_dest_id;
-> -				irq.dest_mode = old_dest_mode;
-> +				irq.dest_mode =
-> +				    kvm_lapic_irq_dest_mode(
-> +					!!e->fields.dest_mode);
->  				kvm_bitmap_or_dest_vcpus(ioapic->kvm, &irq,
->  							 &vcpu_bitmap);
->  			}
-> @@ -369,7 +372,7 @@ static int ioapic_service(struct kvm_ioapic *ioapic, int irq, bool line_status)
->  
->  	irqe.dest_id = entry->fields.dest_id;
->  	irqe.vector = entry->fields.vector;
-> -	irqe.dest_mode = entry->fields.dest_mode;
-> +	irqe.dest_mode = kvm_lapic_irq_dest_mode(!!entry->fields.dest_mode);
->  	irqe.trig_mode = entry->fields.trig_mode;
->  	irqe.delivery_mode = entry->fields.delivery_mode << 8;
->  	irqe.level = 1;
-> diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
-> index 8ecd48d31800..22108ed66a76 100644
-> --- a/arch/x86/kvm/irq_comm.c
-> +++ b/arch/x86/kvm/irq_comm.c
-> @@ -52,8 +52,8 @@ int kvm_irq_delivery_to_apic(struct kvm *kvm, struct kvm_lapic *src,
->  	unsigned long dest_vcpu_bitmap[BITS_TO_LONGS(KVM_MAX_VCPUS)];
->  	unsigned int dest_vcpus = 0;
->  
-> -	if (irq->dest_mode == 0 && irq->dest_id == 0xff &&
-> -			kvm_lowest_prio_delivery(irq)) {
-> +	if (irq->dest_mode == APIC_DEST_PHYSICAL &&
-> +	    irq->dest_id == 0xff && kvm_lowest_prio_delivery(irq)) {
->  		printk(KERN_INFO "kvm: apic: phys broadcast and lowest prio\n");
->  		irq->delivery_mode = APIC_DM_FIXED;
->  	}
-> @@ -114,7 +114,8 @@ void kvm_set_msi_irq(struct kvm *kvm, struct kvm_kernel_irq_routing_entry *e,
->  		irq->dest_id |= MSI_ADDR_EXT_DEST_ID(e->msi.address_hi);
->  	irq->vector = (e->msi.data &
->  			MSI_DATA_VECTOR_MASK) >> MSI_DATA_VECTOR_SHIFT;
-> -	irq->dest_mode = (1 << MSI_ADDR_DEST_MODE_SHIFT) & e->msi.address_lo;
-> +	irq->dest_mode = kvm_lapic_irq_dest_mode(
-> +	    !!((1 << MSI_ADDR_DEST_MODE_SHIFT) & e->msi.address_lo));
->  	irq->trig_mode = (1 << MSI_DATA_TRIGGER_SHIFT) & e->msi.data;
->  	irq->delivery_mode = e->msi.data & 0x700;
->  	irq->msi_redir_hint = ((e->msi.address_lo
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 3ed167e039e5..3b00d662dc14 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -7356,7 +7356,7 @@ static void kvm_pv_kick_cpu_op(struct kvm *kvm, unsigned long flags, int apicid)
->  	struct kvm_lapic_irq lapic_irq;
->  
->  	lapic_irq.shorthand = 0;
-> -	lapic_irq.dest_mode = 0;
-> +	lapic_irq.dest_mode = APIC_DEST_PHYSICAL;
->  	lapic_irq.level = 0;
->  	lapic_irq.dest_id = apicid;
->  	lapic_irq.msi_redir_hint = false;
+> +#ifndef _DT_BINDINGS_SOC_TEGRA_PMC_H
+> +#define _DT_BINDINGS_SOC_TEGRA_PMC_H
+> +
+> +#define TEGRA_PMC_CLK_OUT_1_MUX		0
+> +#define TEGRA_PMC_CLK_OUT_1		1
+> +#define TEGRA_PMC_CLK_OUT_2_MUX		2
+> +#define TEGRA_PMC_CLK_OUT_2		3
+> +#define TEGRA_PMC_CLK_OUT_3_MUX		4
+> +#define TEGRA_PMC_CLK_OUT_3		5
+> +
+> +#endif	/* _DT_BINDINGS_SOC_TEGRA_PMC_H */
 > -- 
-> 2.21.0
+> 2.7.4
 > 
