@@ -2,109 +2,94 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FEC4C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9A9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0603A20833
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:09:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575389343;
-	bh=II2Re7DbLEzmE5QGm8g7+xtzJhss5SFBy59u/YHHGbc=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=eQzpGydhaWrtudTsRW6quXBa3UxJWbdT/fxmso4y3nhx7LvcqQbX2/oj+M9mYXrdn
-	 RYevbazt+Npr2EgmZprRCGfPLZ5KLQgzDPCEpaDVra3B5y7rfnUux1DP/XbxlvHNT4
-	 g38tIXwT89wHlqhuwI9/jzrlBd/ZJ0EapOLqJZv8=
+	by mail.kernel.org (Postfix) with ESMTP id 32A5320803
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:09:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="j0N/i9Wx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbfLCQJC (ORCPT
+        id S1727154AbfLCQJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 3 Dec 2019 11:09:05 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:54174 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727113AbfLCQJC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 3 Dec 2019 11:09:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56552 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726114AbfLCQJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 11:09:01 -0500
-Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1298720803;
-        Tue,  3 Dec 2019 16:08:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+Received: from [10.137.112.111] (unknown [131.107.147.111])
+        by linux.microsoft.com (Postfix) with ESMTPSA id AFB6B20B7185;
+        Tue,  3 Dec 2019 08:09:01 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AFB6B20B7185
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1575389341;
-        bh=II2Re7DbLEzmE5QGm8g7+xtzJhss5SFBy59u/YHHGbc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=U6o2veH80qspdetmd7FL+MAWqRv1jcItsZq6pQ+y6CaccFHqW0ZQTThF3vv7/wIQV
-         MlFsXQLWTU/6iLL8SSIm1O9clf1JFoiTAibzkbCDXkCmpcsXuadjqlvyBf8dBRrhPR
-         yB2vpNhBXZ5lsXc7xFGUPSEHrJ/Drn/9RmGuJDY0=
-Date:   Tue, 3 Dec 2019 08:08:56 -0800
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de, agruenba@redhat.com,
-        rpeterso@redhat.com, cluster-devel@redhat.com,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>
-Subject: [GIT PULL] iomap: small cleanups for 5.5
-Message-ID: <20191203160856.GC7323@magnolia>
+        bh=cA2NvMvX1jL063jiAdOXXSP1Gwaopiy2VeenLg73h9E=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=j0N/i9Wx4wwKdNtHrm2WiqBSSaRnzd0P4Nju3IvAxxS1CcFNHA3MS/3Q3Os/4QHLJ
+         2VDp4boCAXWBWDXj/bLxU3qp2OP7YXQDEMkLUN4VO6HVwQAK0bZLSdCq2QjyWVbTG9
+         gjmLXK0hvdRzNV5jLvVrMYJiEbObjEC6RYJyjR5o=
+Subject: Re: [PATCH v0 2/2] IMA: Call queue functions to measure keys
+To:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org
+References: <20191127025212.3077-1-nramas@linux.microsoft.com>
+ <20191127025212.3077-3-nramas@linux.microsoft.com>
+ <1575331353.4793.471.camel@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <e89dcb1c-c463-919a-aabb-e285d884a914@linux.microsoft.com>
+Date:   Tue, 3 Dec 2019 08:09:20 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1575331353.4793.471.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Thanks for reviewing the changes Mimi. I'll address your comments in the 
+next update.
 
-Please pull this series containing some more new iomap code for 5.5.
-There's not much this time -- just removing some local variables that
-don't need to exist in the iomap directio code.
+> 
+> Overwriting the initial policy is highly recommended, but not everyone
+> defines a custom policy.  Should there be a time limit or some other
+> criteria before deleting the key measurement queue?
+> 
+> Mimi
 
-The branch merges cleanly against this morning's HEAD and survived a few
-days' worth of xfstests.  The merge was completely straightforward, so
-please let me know if you run into anything weird(er than my dorky tag
-message).
+For the above, I feel checking for the presence of custom policy, if 
+that is possible, would be a more deterministic approach compared to 
+having a time limit.
 
---D
+On my machine, systemd loads the custom IMA policy from 
+/etc/ima/ima-policy if that file is present. Is this the recommended way 
+to configure custom IMA policy? If yes, can the IMA initialization 
+function check for the presence of the above file?
 
-The following changes since commit 419e9c38aa075ed0cd3c13d47e15954b686bcdb6:
+Another way to address this issue is to define a new CONFIG parameter to 
+determine whether or not to support deferred processing of keys. If this 
+config is chosen, custom IMA policy must be defined.
 
-  iomap: Fix pipe page leakage during splicing (2019-11-22 08:36:02 -0800)
+Least preferred option would be to leave the queued keys as is if custom 
+policy is not defined - at the cost of, maybe, a non-trivial amount of 
+kernel memory consumed.
 
-are available in the Git repository at:
+If detection of custom policy is not possible, then define a timer to 
+drain the key measurement queue.
 
-  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/iomap-5.5-merge-13
+Please let me know which approach you think is optimal.
 
-for you to fetch changes up to 88cfd30e188fcf6fd8304586c936a6f22fb665e5:
+thanks,
+  -lakshmi
 
-  iomap: remove unneeded variable in iomap_dio_rw() (2019-11-26 09:28:47 -0800)
-
-----------------------------------------------------------------
-New code for 5.5:
-- Make iomap_dio_rw callers explicitly tell us if they want us to wait
-- Port the xfs writeback code to iomap to complete the buffered io
-  library functions
-- Refactor the unshare code to share common pieces
-- Add support for performing copy on write with buffered writes
-- Other minor fixes
-- Fix unchecked return in iomap_bmap
-- Fix a type casting bug in a ternary statement in iomap_dio_bio_actor
-- Improve tracepoints for easier diagnostic ability
-- Fix pipe page leakage in directio reads
-- Clean up iter usage in directio paths
-
-----------------------------------------------------------------
-Jan Kara (1):
-      iomap: Do not create fake iter in iomap_dio_bio_actor()
-
-Johannes Thumshirn (1):
-      iomap: remove unneeded variable in iomap_dio_rw()
-
- fs/iomap/direct-io.c | 39 ++++++++++++++++++++++-----------------
- 1 file changed, 22 insertions(+), 17 deletions(-)
