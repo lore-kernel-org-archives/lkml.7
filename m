@@ -2,52 +2,54 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C50C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4783BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5A1320656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 106D520656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:57:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413875;
-	bh=f22FDCR3WqLNWGLPTUVymr8HLIizD922/Aj4S0NdCNo=;
+	s=default; t=1575413879;
+	bh=iuNjQ46ZvPenrzQWoSNSZF0zXRLuNcDpd2AvYkeFFKw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oVbljyIqjhux3dK/63Zc0iUhAU4nE7aFPkX2IXu+A/sXcpNNFyscAN90uPVA0skcF
-	 uJpg7OLZL36GPTgxLEn9FrtyByblunhUvJ7bW1ejE53IWZkAkl4fdCFOBJe7pKGB5U
-	 YZHtUNmgKxtQ95/R9a9X9+0neFd0/d2U1Y5Y0Nvk=
+	b=vOS/tTd0ZWR1ZGis3/5lvbvn54dE2GPuGweh0kS7OMejBYDdEMS9ed18Q8xkSYpl+
+	 y5e9ZJS78IsJftJDMusN9IWcBkychn3xFI5yt3HYvkdxWDTXBaYqtZ+9wDqKCES2v/
+	 5UQvt12emTtgIXwDoBrv8FN5zKZb7I2RxWhZZkYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730604AbfLCW5y (ORCPT
+        id S1730609AbfLCW56 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:57:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53832 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:57:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730594AbfLCW5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:57:51 -0500
+        id S1729866AbfLCW55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:57:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 382FB20656;
-        Tue,  3 Dec 2019 22:57:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39C8F2053B;
+        Tue,  3 Dec 2019 22:57:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413870;
-        bh=f22FDCR3WqLNWGLPTUVymr8HLIizD922/Aj4S0NdCNo=;
+        s=default; t=1575413875;
+        bh=iuNjQ46ZvPenrzQWoSNSZF0zXRLuNcDpd2AvYkeFFKw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F9+X/18vC6pfTMuvk1BHtSuk3JVfYXNnX8FCjj2w/fMElDhvDWCEygCvw6ZpCclJR
-         M9jvmZr5yIhkqSzN3dgTAO8zU42ONRec72DTnT5Ie/UC5MKtN6CaF7V2wSTDe6fA4y
-         Jyte2kgSN/Ntd+WE3t/f+ccjOL/eJjpvk4MWDVqU=
+        b=1y452eiujOFiivufFdQ/DePcWIsodPKF90IzKGgzUBa2ZC2hfFpEf+mwSij3n9bsG
+         W/f8nOg4lfaprvdL8eC8Pt9y89xHUFjMCukHEPoc4d9oyI6skM47OOt1Szz4laufbq
+         cCtjZ2tWhO6HSossI6bvPF3FlRsmpYVWo9wnbkpQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yixian Liu <liuyixian@huawei.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 257/321] RDMA/hns: Fix the state of rereg mr
-Date:   Tue,  3 Dec 2019 23:35:23 +0100
-Message-Id: <20191203223440.504039837@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+f8d6f8386ceacdbfff57@syzkaller.appspotmail.com,
+        syzbot+33d7ea72e47de3bdf4e1@syzkaller.appspotmail.com,
+        syzbot+44b6763edfc17144296f@syzkaller.appspotmail.com,
+        Theodore Tso <tytso@mit.edu>, stable@kernel.org
+Subject: [PATCH 4.19 294/321] ext4: add more paranoia checking in ext4_expand_extra_isize handling
+Date:   Tue,  3 Dec 2019 23:36:00 +0100
+Message-Id: <20191203223442.449933084@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,36 +62,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yixian Liu <liuyixian@huawei.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-[ Upstream commit ab22bf05216a6bb4812448f3a8609489047cf311 ]
+commit 4ea99936a1630f51fc3a2d61a58ec4a1c4b7d55a upstream.
 
-The state of mr after reregister operation should be set to valid
-state. Otherwise, it will keep the same as the state before reregistered.
+It's possible to specify a non-zero s_want_extra_isize via debugging
+option, and this can cause bad things(tm) to happen when using a file
+system with an inode size of 128 bytes.
 
-Signed-off-by: Yixian Liu <liuyixian@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Add better checking when the file system is mounted, as well as when
+we are actually doing the trying to do the inode expansion.
+
+Link: https://lore.kernel.org/r/20191110121510.GH23325@mit.edu
+Reported-by: syzbot+f8d6f8386ceacdbfff57@syzkaller.appspotmail.com
+Reported-by: syzbot+33d7ea72e47de3bdf4e1@syzkaller.appspotmail.com
+Reported-by: syzbot+44b6763edfc17144296f@syzkaller.appspotmail.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/ext4/inode.c |   15 +++++++++++++++
+ fs/ext4/super.c |   21 ++++++++++++---------
+ 2 files changed, 27 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-index 1eda8a22a4252..a5ec900a14ae9 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-@@ -1776,6 +1776,9 @@ static int hns_roce_v2_rereg_write_mtpt(struct hns_roce_dev *hr_dev,
- 	struct hns_roce_v2_mpt_entry *mpt_entry = mb_buf;
- 	int ret = 0;
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -5904,8 +5904,23 @@ static int __ext4_expand_extra_isize(str
+ {
+ 	struct ext4_inode *raw_inode;
+ 	struct ext4_xattr_ibody_header *header;
++	unsigned int inode_size = EXT4_INODE_SIZE(inode->i_sb);
++	struct ext4_inode_info *ei = EXT4_I(inode);
+ 	int error;
  
-+	roce_set_field(mpt_entry->byte_4_pd_hop_st, V2_MPT_BYTE_4_MPT_ST_M,
-+		       V2_MPT_BYTE_4_MPT_ST_S, V2_MPT_ST_VALID);
++	/* this was checked at iget time, but double check for good measure */
++	if ((EXT4_GOOD_OLD_INODE_SIZE + ei->i_extra_isize > inode_size) ||
++	    (ei->i_extra_isize & 3)) {
++		EXT4_ERROR_INODE(inode, "bad extra_isize %u (inode size %u)",
++				 ei->i_extra_isize,
++				 EXT4_INODE_SIZE(inode->i_sb));
++		return -EFSCORRUPTED;
++	}
++	if ((new_extra_isize < ei->i_extra_isize) ||
++	    (new_extra_isize < 4) ||
++	    (new_extra_isize > inode_size - EXT4_GOOD_OLD_INODE_SIZE))
++		return -EINVAL;	/* Should never happen */
 +
- 	if (flags & IB_MR_REREG_PD) {
- 		roce_set_field(mpt_entry->byte_4_pd_hop_st, V2_MPT_BYTE_4_PD_M,
- 			       V2_MPT_BYTE_4_PD_S, pdn);
--- 
-2.20.1
-
+ 	raw_inode = ext4_raw_inode(iloc);
+ 
+ 	header = IHDR(inode, raw_inode);
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -3517,12 +3517,15 @@ static void ext4_clamp_want_extra_isize(
+ {
+ 	struct ext4_sb_info *sbi = EXT4_SB(sb);
+ 	struct ext4_super_block *es = sbi->s_es;
++	unsigned def_extra_isize = sizeof(struct ext4_inode) -
++						EXT4_GOOD_OLD_INODE_SIZE;
+ 
+-	/* determine the minimum size of new large inodes, if present */
+-	if (sbi->s_inode_size > EXT4_GOOD_OLD_INODE_SIZE &&
+-	    sbi->s_want_extra_isize == 0) {
+-		sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
+-						     EXT4_GOOD_OLD_INODE_SIZE;
++	if (sbi->s_inode_size == EXT4_GOOD_OLD_INODE_SIZE) {
++		sbi->s_want_extra_isize = 0;
++		return;
++	}
++	if (sbi->s_want_extra_isize < 4) {
++		sbi->s_want_extra_isize = def_extra_isize;
+ 		if (ext4_has_feature_extra_isize(sb)) {
+ 			if (sbi->s_want_extra_isize <
+ 			    le16_to_cpu(es->s_want_extra_isize))
+@@ -3535,10 +3538,10 @@ static void ext4_clamp_want_extra_isize(
+ 		}
+ 	}
+ 	/* Check if enough inode space is available */
+-	if (EXT4_GOOD_OLD_INODE_SIZE + sbi->s_want_extra_isize >
+-							sbi->s_inode_size) {
+-		sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
+-						       EXT4_GOOD_OLD_INODE_SIZE;
++	if ((sbi->s_want_extra_isize > sbi->s_inode_size) ||
++	    (EXT4_GOOD_OLD_INODE_SIZE + sbi->s_want_extra_isize >
++							sbi->s_inode_size)) {
++		sbi->s_want_extra_isize = def_extra_isize;
+ 		ext4_msg(sb, KERN_INFO,
+ 			 "required extra inode space not available");
+ 	}
 
 
