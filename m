@@ -2,155 +2,156 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35354C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5434AC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15E832068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 271ED205F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:19:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IrK7GVhT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbfLCNQq (ORCPT
+        id S1726182AbfLCNTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 08:16:46 -0500
-Received: from mx2.suse.de ([195.135.220.15]:40720 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726224AbfLCNQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 08:16:45 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3567AB162;
-        Tue,  3 Dec 2019 13:16:43 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 303B0DA7D9; Tue,  3 Dec 2019 14:16:38 +0100 (CET)
-Date:   Tue, 3 Dec 2019 14:16:38 +0100
-From:   David Sterba <dsterba@suse.cz>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     David Sterba <dsterba@suse.com>, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-crypto@vger.kernel.org
-Subject: Re: crypto/blake2b_generic.c:245:1: warning: the frame size of 1220
- bytes is larger than 1024 bytes
-Message-ID: <20191203131638.GO2734@suse.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, kbuild test robot <lkp@intel.com>,
-        David Sterba <dsterba@suse.com>, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-crypto@vger.kernel.org
-References: <201912010551.6rUbsvGE%lkp@intel.com>
+        Tue, 3 Dec 2019 08:19:23 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25126 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726074AbfLCNTW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 08:19:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575379162;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RsqTwzDz1hPQy7QgqBrZxDGgK8E7PuyP6TQRTEXbU4o=;
+        b=IrK7GVhTS9T+7FP8gbG/V+F9O4OdcpFZgQi9GfUkC2D/uorbMIG3sWz8cMo5eKdTcW/NQw
+        7tCgcEtI16nc0/Hy5ZSK1Bx6ajb/B0KRUEZUVBi+NgYocN9IdrOsYkHDsvCJzMS72Ptc1y
+        1ZRzsvRXC4rgWTkRFJj8oahfWj7Zu4I=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-71-59VCwmrdNnaCFSpFKBRdSw-1; Tue, 03 Dec 2019 08:19:21 -0500
+Received: by mail-wm1-f71.google.com with SMTP id o135so971005wme.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 05:19:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=R+4oYdpXVhG27DrGdRFr0rgKSjpFlrL/zqNo6puEy68=;
+        b=GchSU7bKxowxpq/SLZNituK73WtbJnHvz0nrvFanE8JSy7WpD9F6Omrj7g3ZmxN0EK
+         w258t/Y+13znH8AnKm9z4T302nizkPVUBNytVPRetyRTW6i37j4i6z54u8fwax+fi4WS
+         C1ovczK4KFG4nn2CaxS3pNUJtvaYPY90j6+ZMMgkiA2NiuXmxXLi4djKbBC+rnxVuZF1
+         eWySGnUb0+ZSTpUr7/rkEEMz+dPE/3EsEEMx6b9jN/S/w/+BmgY0jsV281YCrZpNVYlJ
+         IcMKD0fNCE0UExexIDHVebWtjffnO3nW7+v/NmCvtly3UJI+14Q7bSzTzttYeHVVjJ/M
+         sxZw==
+X-Gm-Message-State: APjAAAVwNZ6sowkLUc0zajkmVqEOZf3PmyJEVSM4QEvLAw/Ee0FAuudl
+        +MMCSuv6/hs2o3B1/WmoLb7+tYBjhN6EIYfEAdQxmE0zZQT7TqklIXUdD7150EL2OKGKEuhhbzP
+        e/ia/GO8f4HB6Nsez+alMDp+J
+X-Received: by 2002:a05:600c:54b:: with SMTP id k11mr17828552wmc.63.1575379158962;
+        Tue, 03 Dec 2019 05:19:18 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz9ey1HX98M6op+nW7G5+PeaFJJEIB66tjCaDd5HPacoO8E3rkc9kHYHItztc2JTgSAWe0t6Q==
+X-Received: by 2002:a05:600c:54b:: with SMTP id k11mr17828539wmc.63.1575379158731;
+        Tue, 03 Dec 2019 05:19:18 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id z64sm3195018wmg.30.2019.12.03.05.19.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2019 05:19:16 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/5] KVM: X86: Drop KVM_APIC_SHORT_MASK and KVM_APIC_DEST_MASK
+In-Reply-To: <20191202201314.543-5-peterx@redhat.com>
+References: <20191202201314.543-1-peterx@redhat.com> <20191202201314.543-5-peterx@redhat.com>
+Date:   Tue, 03 Dec 2019 14:19:16 +0100
+Message-ID: <87tv6hbl7v.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201912010551.6rUbsvGE%lkp@intel.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-MC-Unique: 59VCwmrdNnaCFSpFKBRdSw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 01, 2019 at 05:54:53AM +0800, kbuild test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   32ef9553635ab1236c33951a8bd9b5af1c3b1646
-> commit: 91d689337fe8b7703608a2ec39aae700b99f3933 crypto: blake2b - add blake2b generic implementation
-> date:   4 weeks ago
-> config: arc-randconfig-a0031-20191201 (attached as .config)
-> compiler: arc-elf-gcc (GCC) 7.4.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         git checkout 91d689337fe8b7703608a2ec39aae700b99f3933
->         # save the attached .config to linux build tree
->         GCC_VERSION=7.4.0 make.cross ARCH=arc 
+Peter Xu <peterx@redhat.com> writes:
 
-So this is for ARC.
+> We have both APIC_SHORT_MASK and KVM_APIC_SHORT_MASK defined for the
+> shorthand mask.  Similarly, we have both APIC_DEST_MASK and
+> KVM_APIC_DEST_MASK defined for the destination mode mask.
+>
+> Drop the KVM_APIC_* macros and replace the only user of them to use
+> the APIC_DEST_* macros instead.  At the meantime, move APIC_SHORT_MASK
+> and APIC_DEST_MASK from lapic.c to lapic.h.
+>
+> Signed-off-by: Peter Xu <peterx@redhat.com>
+> ---
+>  arch/x86/kvm/lapic.c | 3 ---
+>  arch/x86/kvm/lapic.h | 5 +++--
+>  arch/x86/kvm/svm.c   | 4 ++--
+>  3 files changed, 5 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index 1eabe58bb6d5..805c18178bbf 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -56,9 +56,6 @@
+>  #define APIC_VERSION=09=09=09(0x14UL | ((KVM_APIC_LVT_NUM - 1) << 16))
+>  #define LAPIC_MMIO_LENGTH=09=09(1 << 12)
+>  /* followed define is not in apicdef.h */
+> -#define APIC_SHORT_MASK=09=09=090xc0000
+> -#define APIC_DEST_NOSHORT=09=090x0
+> -#define APIC_DEST_MASK=09=09=090x800
+>  #define MAX_APIC_VECTOR=09=09=09256
+>  #define APIC_VECTORS_PER_REG=09=0932
+> =20
+> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+> index 0b9bbadd1f3c..5a9f29ed9a4b 100644
+> --- a/arch/x86/kvm/lapic.h
+> +++ b/arch/x86/kvm/lapic.h
+> @@ -10,8 +10,9 @@
+>  #define KVM_APIC_SIPI=09=091
+>  #define KVM_APIC_LVT_NUM=096
+> =20
+> -#define KVM_APIC_SHORT_MASK=090xc0000
+> -#define KVM_APIC_DEST_MASK=090x800
+> +#define APIC_SHORT_MASK=09=09=090xc0000
+> +#define APIC_DEST_NOSHORT=09=090x0
+> +#define APIC_DEST_MASK=09=09=090x800
+> =20
+>  #define APIC_BUS_CYCLE_NS       1
+>  #define APIC_BUS_FREQUENCY      (1000000000ULL / APIC_BUS_CYCLE_NS)
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 362e874297e4..65a27a7e9cb1 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -4519,9 +4519,9 @@ static int avic_incomplete_ipi_interception(struct =
+vcpu_svm *svm)
+>  =09=09 */
+>  =09=09kvm_for_each_vcpu(i, vcpu, kvm) {
+>  =09=09=09bool m =3D kvm_apic_match_dest(vcpu, apic,
+> -=09=09=09=09=09=09     icrl & KVM_APIC_SHORT_MASK,
+> +=09=09=09=09=09=09     icrl & APIC_SHORT_MASK,
+>  =09=09=09=09=09=09     GET_APIC_DEST_FIELD(icrh),
+> -=09=09=09=09=09=09     icrl & KVM_APIC_DEST_MASK);
+> +=09=09=09=09=09=09     icrl & APIC_DEST_MASK);
+> =20
+>  =09=09=09if (m && !avic_vcpu_is_running(vcpu))
+>  =09=09=09=09kvm_vcpu_wake_up(vcpu);
 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All warnings (new ones prefixed by >>):
-> 
->    crypto/blake2b_generic.c: In function 'blake2b_compress':
-> >> crypto/blake2b_generic.c:245:1: warning: the frame size of 1220 bytes is larger than 1024 bytes [-Wframe-larger-than=]
+Personal taste but I would've preserved KVM_ prefix. The patch itself
+looks correct, so
 
-1220 looks like a lot, the x86_64 asks for 288 bytes for
-blake2b_compress, this roughly matches the declarations and effects of
-inlining (2 x 16 x sizeof(u64) is 256).
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-I'm not familiar with ARC limitations regarding eg. 64 bit types so this
-would be my first guess that this requires more temporary stack space
-than other arches that can handle u64 just fine.
+--=20
+Vitaly
 
->     }
->     ^
-> 
-> vim +245 crypto/blake2b_generic.c
-> 
->    183	
->    184	#define G(r,i,a,b,c,d)                                  \
->    185		do {                                            \
->    186			a = a + b + m[blake2b_sigma[r][2*i+0]]; \
->    187			d = ror64(d ^ a, 32);                   \
->    188			c = c + d;                              \
->    189			b = ror64(b ^ c, 24);                   \
->    190			a = a + b + m[blake2b_sigma[r][2*i+1]]; \
->    191			d = ror64(d ^ a, 16);                   \
->    192			c = c + d;                              \
->    193			b = ror64(b ^ c, 63);                   \
->    194		} while (0)
->    195	
->    196	#define ROUND(r)                                \
->    197		do {                                    \
->    198			G(r,0,v[ 0],v[ 4],v[ 8],v[12]); \
->    199			G(r,1,v[ 1],v[ 5],v[ 9],v[13]); \
->    200			G(r,2,v[ 2],v[ 6],v[10],v[14]); \
->    201			G(r,3,v[ 3],v[ 7],v[11],v[15]); \
->    202			G(r,4,v[ 0],v[ 5],v[10],v[15]); \
->    203			G(r,5,v[ 1],v[ 6],v[11],v[12]); \
->    204			G(r,6,v[ 2],v[ 7],v[ 8],v[13]); \
->    205			G(r,7,v[ 3],v[ 4],v[ 9],v[14]); \
->    206		} while (0)
->    207	
->    208	static void blake2b_compress(struct blake2b_state *S,
->    209				     const u8 block[BLAKE2B_BLOCKBYTES])
->    210	{
->    211		u64 m[16];
->    212		u64 v[16];
->    213		size_t i;
->    214	
->    215		for (i = 0; i < 16; ++i)
->    216			m[i] = get_unaligned_le64(block + i * sizeof(m[i]));
->    217	
->    218		for (i = 0; i < 8; ++i)
->    219			v[i] = S->h[i];
->    220	
->    221		v[ 8] = blake2b_IV[0];
->    222		v[ 9] = blake2b_IV[1];
->    223		v[10] = blake2b_IV[2];
->    224		v[11] = blake2b_IV[3];
->    225		v[12] = blake2b_IV[4] ^ S->t[0];
->    226		v[13] = blake2b_IV[5] ^ S->t[1];
->    227		v[14] = blake2b_IV[6] ^ S->f[0];
->    228		v[15] = blake2b_IV[7] ^ S->f[1];
->    229	
->    230		ROUND(0);
->    231		ROUND(1);
->    232		ROUND(2);
->    233		ROUND(3);
->    234		ROUND(4);
->    235		ROUND(5);
->    236		ROUND(6);
->    237		ROUND(7);
->    238		ROUND(8);
->    239		ROUND(9);
->    240		ROUND(10);
->    241		ROUND(11);
->    242	
->    243		for (i = 0; i < 8; ++i)
->    244			S->h[i] = S->h[i] ^ v[i] ^ v[i + 8];
->  > 245	}
-
-(rest of mail kept for reference)
