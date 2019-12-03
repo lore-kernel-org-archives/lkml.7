@@ -2,140 +2,192 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D49C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 02:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7D4C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 02:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4EEC206DC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 02:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5353720661
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 02:24:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JOfNcYP+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbfLCCXR (ORCPT
+        id S1726469AbfLCCYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 21:23:17 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6738 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725954AbfLCCXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 21:23:17 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D3460D6C91A6AB2F5720;
-        Tue,  3 Dec 2019 10:23:15 +0800 (CST)
-Received: from [127.0.0.1] (10.57.71.8) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Tue, 3 Dec 2019
- 10:23:10 +0800
-Subject: Re: ITS restore/save state when HCC == 0
-To:     Marc Zyngier <maz@kernel.org>
-CC:     "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>,
-        Yangyingliang <yangyingliang@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>
-References: <fd89d78030914d19939a1fc1c6eb5048@huawei.com>
- <e04e35e0a14f1507ac4a3d56899adcae@www.loen.fr>
-From:   Yao HongBo <yaohongbo@huawei.com>
-Message-ID: <c8649d75-a9b8-4680-c253-3172774ac33d@huawei.com>
-Date:   Tue, 3 Dec 2019 10:23:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.0
+        Mon, 2 Dec 2019 21:24:01 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:48942 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726057AbfLCCYA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 21:24:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575339838;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=O0EX3vVcvGDZXblDe7Rv/FsS5mhTO0YUbuVmRSPhwMA=;
+        b=JOfNcYP+tQLdE4QsiUXNjjhhJ7qei9NVmFOCzyJuMMcCkN+TkDyY8K/L3poDUxkNMXUvHc
+        L4oRMqPqH3LjuKwO5FUijqMNUi1si1oT1BdE54gRE9dnPP5AgTpzEBGGtWu10WdSliG0xV
+        eyAyQQ83IIACz6AjGPGCt9AJqFVx8CI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-368-2M_xvtKyM3isUt9S-04QCw-1; Mon, 02 Dec 2019 21:23:55 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7833CDB62;
+        Tue,  3 Dec 2019 02:23:52 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-19.pek2.redhat.com [10.72.8.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9E10B10016DA;
+        Tue,  3 Dec 2019 02:23:41 +0000 (UTC)
+Date:   Tue, 3 Dec 2019 10:23:37 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Andrea Vai <andrea.vai@unipv.it>
+Cc:     "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        USB list <linux-usb@vger.kernel.org>,
+        SCSI development list <linux-scsi@vger.kernel.org>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Theodore Ts'o <tytso@mit.edu>
+Subject: Re: AW: Slow I/O on USB media after commit
+ f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
+Message-ID: <20191203022337.GE25002@ming.t460p>
+References: <20191126023253.GA24501@ming.t460p>
+ <0598fe2754bf0717d81f7e72d3e9b3230c608cc6.camel@unipv.it>
+ <alpine.LNX.2.21.1.1911271055200.8@nippy.intranet>
+ <cb6e84781c4542229a3f31572cef19ab@SVR-IES-MBX-03.mgc.mentorg.com>
+ <c1358b840b3a4971aa35a25d8495c2c8953403ea.camel@unipv.it>
+ <20191128091712.GD15549@ming.t460p>
+ <f82fd5129e3dcacae703a689be60b20a7fedadf6.camel@unipv.it>
+ <20191129005734.GB1829@ming.t460p>
+ <20191129023555.GA8620@ming.t460p>
+ <320b315b9c87543d4fb919ecbdf841596c8fbcea.camel@unipv.it>
 MIME-Version: 1.0
-In-Reply-To: <e04e35e0a14f1507ac4a3d56899adcae@www.loen.fr>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.57.71.8]
-X-CFilter-Loop: Reflected
+In-Reply-To: <320b315b9c87543d4fb919ecbdf841596c8fbcea.camel@unipv.it>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: 2M_xvtKyM3isUt9S-04QCw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Nov 29, 2019 at 03:41:01PM +0100, Andrea Vai wrote:
+> Il giorno ven, 29/11/2019 alle 10.35 +0800, Ming Lei ha scritto:
+> > On Fri, Nov 29, 2019 at 08:57:34AM +0800, Ming Lei wrote:
+> >=20
+> > > [...]
+> >=20
+> > > Andrea, can you collect the following log when running the test
+> > > on current new(bad) kernel?
+> > >=20
+> > > =09/usr/share/bcc/tools/stackcount  -K blk_mq_make_request
+> >=20
+> > Instead, please run the following trace, given insert may be
+> > called from other paths, such as flush plug:
+> >=20
+> > =09/usr/share/bcc/tools/stackcount -K t:block:block_rq_insert
+>=20
+> Attached, for new (patched) bad kernel.
+>=20
+> Produced by: start the trace script (with the pendrive already
+> plugged), wait some seconds, run the test (1 trial, 1 GB), wait for
+> the test to finish, stop the trace.
+>=20
+> The copy took ~1700 seconds.
+
+See the two path[1][2] of inserting request, and path[1] is triggered
+4358 times, and the path[2] is triggered 5763 times.
+
+The path[2] is expected behaviour. Not sure path [1] is correct, given
+ext4_release_file() is supposed to be called when this inode is
+released. That means the file is closed 4358 times during 1GB file
+copying to usb storage.
+
+Cc filesystem list.
 
 
-On 12/2/2019 9:22 PM, Marc Zyngier wrote:
-> Hi Yaohongbo,
-> 
-> In the future, please refrain from sending HTML emails, they
-> don't render very well and force me to reformat your email
-> by hand.
+[1] insert requests when returning to user mode from syscall
 
-Sorry. I'll pay attention to this next time.
+  b'blk_mq_sched_request_inserted'
+  b'blk_mq_sched_request_inserted'
+  b'dd_insert_requests'
+  b'blk_mq_sched_insert_requests'
+  b'blk_mq_flush_plug_list'
+  b'blk_flush_plug_list'
+  b'io_schedule_prepare'
+  b'io_schedule'
+  b'rq_qos_wait'
+  b'wbt_wait'
+  b'__rq_qos_throttle'
+  b'blk_mq_make_request'
+  b'generic_make_request'
+  b'submit_bio'
+  b'ext4_io_submit'
+  b'ext4_writepages'
+  b'do_writepages'
+  b'__filemap_fdatawrite_range'
+  b'ext4_release_file'
+  b'__fput'
+  b'task_work_run'
+  b'exit_to_usermode_loop'
+  b'do_syscall_64'
+  b'entry_SYSCALL_64_after_hwframe'
+    4358
 
-> On 2019-12-02 12:52, yaohongbo wrote:
->> Hi, marc.
->>
->> I met a problem with GIC ITS when I try to power off gic logic in
->> suspend.
->>
->> In hisilicon hip08, the value of GIC_TYPER.HCC is zero, so that
->> ITS_FLAGS_SAVE_SUSPEND_STATE will have no chance to be set to 1.
-> 
-> And that's a good thing. HCC indicates that you have collections that
-> are backed by registers, and not memory. Which means that once the GIC
-> is powered off, the state is lost.
-> 
->> It goes well for s4, when I simply remove the condition judgement in
->> the code.
-> 
-> What is "s4"? Doing so means you are reprogramming the ITS with mappings
-> that already exist in the tables, and that is UNPRED territory.
+[2] insert requests from writeback wq context
 
-Sorry, I didn't describe it clearly.
-S4 means "suspend to disk".
-In s4, The its will reinit and malloc an new its address.
-
-My expectation is to reprogram the ITS with original mappings. If ITS_FLAGS_SAVE_SUSPEND_STATE
-is not set, i'll have no chance to use the original its table mappings.
-
-What should i do if i want to restore its state with hcc == 0?
+  b'blk_mq_sched_request_inserted'
+  b'blk_mq_sched_request_inserted'
+  b'dd_insert_requests'
+  b'blk_mq_sched_insert_requests'
+  b'blk_mq_flush_plug_list'
+  b'blk_flush_plug_list'
+  b'io_schedule_prepare'
+  b'io_schedule'
+  b'rq_qos_wait'
+  b'wbt_wait'
+  b'__rq_qos_throttle'
+  b'blk_mq_make_request'
+  b'generic_make_request'
+  b'submit_bio'
+  b'ext4_io_submit'
+  b'ext4_bio_write_page'
+  b'mpage_submit_page'
+  b'mpage_process_page_bufs'
+  b'mpage_prepare_extent_to_map'
+  b'ext4_writepages'
+  b'do_writepages'
+  b'__writeback_single_inode'
+  b'writeback_sb_inodes'
+  b'__writeback_inodes_wb'
+  b'wb_writeback'
+  b'wb_workfn'
+  b'process_one_work'
+  b'worker_thread'
+  b'kthread'
+  b'ret_from_fork'
+    5763
 
 Thanks,
-Hongbo.
-> <quote>
-> Behavior is unpredictable if there are interrupts that are mapped to the
-> specified collection and the collection is currently mapped to a Redistributor
-> [...]
-> </quote>
-> 
->> --- a/drivers/irqchip/irq-gic-v3-its.c
->>
->> +++ b/drivers/irqchip/irq-gic-v3-its.c
->>
->> @@ -3670,8 +3670,8 @@ static int __init its_probe_one(struct resource
->> *res,
->>
->>  ctlr |= GITS_CTLR_ImDe;
->>
->>  writel_relaxed(ctlr, its->base + GITS_CTLR);
->>
->> - if (GITS_TYPER_HCC(typer))
->>
->> - its->flags |= ITS_FLAGS_SAVE_SUSPEND_STATE;
->>
->> + its->flags |= ITS_FLAGS_SAVE_SUSPEND_STATE;
->>
->>  err = its_init_domain(handle, its);
->>
->>  if (err)
->>
->> @@ -4005,3 +4005,17 @@ int __init its_init(struct fwnode_handle
->> *handle, struct rdists *rdists,
->>
->>  return 0;
->>
->> }
->>
->> Do you have any suggestion for this case?
-> 
-> The expectations are that across a GIC power-off, the firmware
-> will restore the state of the GIC (recondiguring the various
-> memory tables), and that this is enough for the ITS to be
-> functional again, having reloaded its state from memory.
-> 
-> Does firmware perform this on your machine? Or are there
-> implementation-specific issues that require the ITS to be
-> reprogrammed?
-> 
-> Thanks,
-> 
->         M.
+Ming
 
