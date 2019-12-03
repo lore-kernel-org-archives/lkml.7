@@ -2,343 +2,132 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC55C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E83F4C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E112206E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C02B4206E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 00:41:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W0qq15I9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qtA92IPc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbfLCAlA (ORCPT
+        id S1726298AbfLCAlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 19:41:00 -0500
-Received: from mail-qv1-f74.google.com ([209.85.219.74]:45542 "EHLO
-        mail-qv1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbfLCAk7 (ORCPT
+        Mon, 2 Dec 2019 19:41:50 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36552 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbfLCAlt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 19:40:59 -0500
-Received: by mail-qv1-f74.google.com with SMTP id g9so1035295qvx.12
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 16:40:58 -0800 (PST)
+        Mon, 2 Dec 2019 19:41:49 -0500
+Received: by mail-pl1-f193.google.com with SMTP id k20so854130pls.3;
+        Mon, 02 Dec 2019 16:41:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=cweK0cFHCK4yx0cTGNuyeGTbb9cMk/2TpbmrW6OL2sw=;
-        b=W0qq15I9A33Pt5mZvrv6dJdSPB6iojbWP8Zax5IPxgmEOG1ort9oMIgJQQf1QX/8Qv
-         PjNN1225YdINRa2bTwJyPiTK8dP7lmFuNK7qJEW5qc/bihVlCdgMFREPILWnKXpA8Csx
-         OZzyDH2Arves+rRlklEqKICnNZ3UEIwnO4CSQ83J8pMmY9tBHTVXrBKBPhlNPxDqm+Se
-         GwqosI8eYXvJ5JebLNcY0/PGfJ6nzTEMceiNf+Idy4up37MKByfWhHR4k3eS4YE97tr6
-         FBEIhiLaI8oriKqO8LvaGle6/aZI4gbpS52PxeGEc2aMzKgqViA4/NuFlBBgPTX7rZ4F
-         GnZA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=5F3LmlLJ3DLUlNEK9V6ggwNn0/WBf54z3A3fMxHOMC0=;
+        b=qtA92IPcnLG8L/fIoNQ7renoQI235C29BpF+GTBOhKseLGiUYRw7Y8Jb9SvIJklV/c
+         BI/ishToIJ/57CniabwqzeLc32C0/Anc7yWa85UGB+sybPbEp0eul2XJxG4axDzice+U
+         BYJBA34aiDqHU6FTXNM03itIr5CCaW2BHMzpNuw0mpOz3utGO9el+KKP/BXZZMyD/W52
+         TyHRDJ+grfB1aaIVFHSZIjvoho2JBlEQubRthLR7c4MvTP3LdLIgGq3EZZB/jka2pO/3
+         KLDNj60VOR+SZkeb8wKLS/wGNF6WoLfleh7MQMN8iK2ths7wB5yFa17MFYEDqLH1tYIb
+         eKrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=cweK0cFHCK4yx0cTGNuyeGTbb9cMk/2TpbmrW6OL2sw=;
-        b=CPZxhpx1WSotItaXTEb9r4RA0cNdrVXnGmvzCbCc+hdE8BfuXKQ49Yc61KlwCf5AWb
-         61ysO3Vak8QkCBDPsf67ns2977g+6SLgUC5M3REqo5nyKpjFFsEXlXsr5jG6ZUhzaVxB
-         iAUujbd6X6u2XKQOQ2gFaxNl2tGDv1t77xf3pE8ETLHGFuSZ1Dw873gmdTsA1P+YmKhB
-         5/gL+kFHXqxlW384r5ctQe3Tjoz4gt1KUnhOUpR6Qmoze23lbKvaBM5sSGbmueSUuUAS
-         54fni6Y+9ArEJthaSVWk1CApmFy/34ItLeErN2SiFX4ga7aJDWfpkdgP9gNruvsm9sz+
-         Sfug==
-X-Gm-Message-State: APjAAAU43yPvx7XNl5hZU2WBfoeWI/F05O9PU3XhQm4U1NzP609muQCG
-        vRkxOhTdBzJY8YzWUpg+9Z02GSgBnPyCo2FFjhRdzQ==
-X-Google-Smtp-Source: APXvYqzJ/iOyZ3XPZdQoev6FW/o7vVmLPZdrpFojAKHBDC43lOmRb7fvsN2exWdsjplWuRxxks00U7YnmChdHLWUF3bJbg==
-X-Received: by 2002:aed:3344:: with SMTP id u62mr2536933qtd.73.1575333658016;
- Mon, 02 Dec 2019 16:40:58 -0800 (PST)
-Date:   Mon,  2 Dec 2019 16:40:43 -0800
-Message-Id: <20191203004043.174977-1-matthewgarrett@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
-Subject: [PATCH] [EFI,PCI] Allow disabling PCI busmastering on bridges during boot
-From:   Matthew Garrett <matthewgarrett@google.com>
-To:     linux-efi@vger.kernel.org
-Cc:     ard.biesheuvel@linaro.org, x86@kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Matthew Garrett <mjg59@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=5F3LmlLJ3DLUlNEK9V6ggwNn0/WBf54z3A3fMxHOMC0=;
+        b=Rv9RFHJCV53gYC7O7Ucwe8jF2ZRcgVtrQhWvqpyc3EX81Ldf8f+uflAaeyMC8Hde6b
+         YB6vGoWMmO7VqMDjWCQ44BBQU5BAFmeME+v+29LTnS1N096kcVJnCjUtQsrEzSuWvh+C
+         hC2Z7+3MKBfJc7WQwdmk6vhEoECWFq2VG50L9QhghlwGBOJcfFIhGcPqy9rV+hZIbjzn
+         w1vPB4j9s4KbAQIp6NdJGmqmjxIvLIPvhiiBGOtAECWC3YPMN8LRmV/2UUTpKPql2OWt
+         WQb2c7K1vb8QspBeNt9HSXCTSC/9QMwp18YEmE6S9C/Hd8YG71UsZGWecHefOQWLKqRO
+         kG3Q==
+X-Gm-Message-State: APjAAAUxKkGRngJq5VKzNUKZs5gK359N4wxp0QNF8NjHM8O4X/P3taSH
+        8wbAKvSX+qXGmyEN3Xd0sAM=
+X-Google-Smtp-Source: APXvYqyLRZcpTsfPKjdg4qt6LU+Ifi6fGkc9DXr47Aaci1PiH2RfLpmCvEa3U2aM3JKz+3kKz/jYqA==
+X-Received: by 2002:a17:90a:1aa3:: with SMTP id p32mr2418600pjp.8.1575333709070;
+        Mon, 02 Dec 2019 16:41:49 -0800 (PST)
+Received: from debian.net.fpt ([2405:4800:58f7:32f8:99ed:5ecf:a28d:555e])
+        by smtp.gmail.com with ESMTPSA id x4sm688788pff.143.2019.12.02.16.41.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 16:41:48 -0800 (PST)
+From:   Phong Tran <tranmanphong@gmail.com>
+To:     mchehab@kernel.org, gregkh@linuxfoundation.org,
+        allison@lohutok.net, tglx@linutronix.de,
+        syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        glider@google.com, syzkaller-bugs@googlegroups.com,
+        Phong Tran <tranmanphong@gmail.com>
+Subject: [PATCH] media: dvb: check return value digitv_ctrl_msg
+Date:   Tue,  3 Dec 2019 07:41:38 +0700
+Message-Id: <20191203004138.21223-1-tranmanphong@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <0000000000004f3d820596d8c51c@google.com>
+References: <0000000000004f3d820596d8c51c@google.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an option to disable the busmaster bit in the control register on
-all PCI bridges before calling ExitBootServices() and passing control to
-the runtime kernel. System firmware may configure the IOMMU to prevent
-malicious PCI devices from being able to attack the OS via DMA. However,
-since firmware can't guarantee that the OS is IOMMU-aware, it will tear
-down IOMMU configuration when ExitBootServices() is called. This leaves
-a window between where a hostile device could still cause damage before
-Linux configures the IOMMU again.
+For fixing syzbot "KMSAN: uninit-value in digitv_rc_query"
 
-If CONFIG_EFI_NO_BUSMASTER is enabled or the "disable_busmaster=1"
-commandline argument is passed, the EFI stub will clear the busmaster
-bit on all PCI bridges before ExitBootServices() is called. This will
-prevent any malicious PCI devices from being able to perform DMA until
-the kernel reenables busmastering after configuring the IOMMU.
+In scenario testing for syzbot, failure reading from
+digitv_ctrl_msg() [1].
 
-This option will cause failures with some poorly behaved hardware and
-should not be enabled without testing. The kernel commandline option
-"disable_busmaster=0" or "disable_busmaster=1" may be used to override
-the default.
+Eg:
+[   91.846657][ T3844] dvb-usb: bulk message failed: -22 (7/0)
 
-Signed-off-by: Matthew Garrett <mjg59@google.com>
+digitv_rc_query() always return 0. But in this case a wrong thing happens.
+
+Reported-by: syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com
+Tested-by: syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com
+
+[1]: https://syzkaller.appspot.com/text?tag=CrashLog&x=16860a63600000
+[2]: https://groups.google.com/d/msg/syzkaller-bugs/-TXIJAZ0J9Q/T4PEUQoeAQAJ
+
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
 ---
- .../admin-guide/kernel-parameters.txt         |  5 ++
- arch/x86/boot/compressed/eboot.c              |  2 +
- drivers/firmware/efi/Kconfig                  | 23 +++++
- drivers/firmware/efi/libstub/Makefile         |  2 +-
- .../firmware/efi/libstub/efi-stub-helper.c    | 19 ++++
- drivers/firmware/efi/libstub/efistub.h        |  1 +
- drivers/firmware/efi/libstub/pci.c            | 88 +++++++++++++++++++
- include/linux/efi.h                           |  2 +
- 8 files changed, 141 insertions(+), 1 deletion(-)
- create mode 100644 drivers/firmware/efi/libstub/pci.c
+ drivers/media/usb/dvb-usb/digitv.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 8dee8f68fe15..2d538f27f861 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -881,6 +881,11 @@
- 			The feature only exists starting from
- 			Arch Perfmon v4 (Skylake and newer).
- 
-+	disable_busmaster= [X86, EFI]
-+			Format: <int>
-+			Disable the busmaster bit on all PCI bridges in the
-+			EFI boot stub if 1, leave in the default state if 0.
-+
- 	disable_ddw	[PPC/PSERIES]
- 			Disable Dynamic DMA Window support. Use this if
- 			to workaround buggy firmware.
-diff --git a/arch/x86/boot/compressed/eboot.c b/arch/x86/boot/compressed/eboot.c
-index 82bc60c8acb2..2f5226b32a6e 100644
---- a/arch/x86/boot/compressed/eboot.c
-+++ b/arch/x86/boot/compressed/eboot.c
-@@ -137,6 +137,8 @@ static void setup_efi_pci(struct boot_params *params)
- 	struct setup_data *data;
- 	int i;
- 
-+	efi_pci_disable_bridge_busmaster(sys_table);
-+
- 	status = efi_call_early(locate_handle,
- 				EFI_LOCATE_BY_PROTOCOL,
- 				&pci_proto, NULL, &size, pci_handle);
-diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-index b248870a9806..b1651b40424e 100644
---- a/drivers/firmware/efi/Kconfig
-+++ b/drivers/firmware/efi/Kconfig
-@@ -194,6 +194,29 @@ config EFI_RCI2_TABLE
- 
- 	  Say Y here for Dell EMC PowerEdge systems.
- 
-+config EFI_NO_BUSMASTER
-+       bool "Clear Busmaster bit on PCI bridges before ExitBootServices()"
-+       depends on X86 || COMPILE_TEST
-+       help
-+	  Disable the busmaster bit in the control register on all PCI bridges
-+	  before calling ExitBootServices() and passing control to the runtime
-+	  kernel. System firmware may configure the IOMMU to prevent malicious
-+	  PCI devices from being able to attack the OS via DMA. However, since
-+	  firmware can't guarantee that the OS is IOMMU-aware, it will tear
-+	  down IOMMU configuration when ExitBootServices() is called. This
-+	  leaves a window between where a hostile device could still cause
-+	  damage before Linux configures the IOMMU again.
-+
-+	  If you say Y here, the EFI stub will clear the busmaster bit on all
-+	  PCI bridges before ExitBootServices() is called. This will prevent
-+	  any malicious PCI devices from being able to perform DMA until the
-+	  kernel reenables busmastering after configuring the IOMMU.
-+
-+	  This option will cause failures with some poorly behaved hardware
-+	  and should not be enabled without testing. The kernel commandline
-+	  option "disable_busmaster=0" or "disable_busmaster=1" may be used
-+	  to override this option.
-+
- endmenu
- 
- config UEFI_CPER
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index ee0661ddb25b..6536ee851334 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -38,7 +38,7 @@ OBJECT_FILES_NON_STANDARD	:= y
- # Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
- KCOV_INSTRUMENT			:= n
- 
--lib-y				:= efi-stub-helper.o gop.o secureboot.o tpm.o
-+lib-y				:= efi-stub-helper.o gop.o pci.o secureboot.o tpm.o
- 
- # include the stub's generic dependencies from lib/ when building for ARM/arm64
- arm-deps-y := fdt_rw.c fdt_ro.c fdt_wip.c fdt.c fdt_empty_tree.c fdt_sw.c
-diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
-index 35dbc2791c97..69faeeba1cdb 100644
---- a/drivers/firmware/efi/libstub/efi-stub-helper.c
-+++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-@@ -32,6 +32,8 @@ static unsigned long __chunk_size = EFI_READ_CHUNK_SIZE;
- static int __section(.data) __nokaslr;
- static int __section(.data) __quiet;
- static int __section(.data) __novamap;
-+static int __section(.data) __disable_busmaster =
-+	IS_ENABLED(CONFIG_EFI_NO_BUSMASTER);
- 
- int __pure nokaslr(void)
+diff --git a/drivers/media/usb/dvb-usb/digitv.c b/drivers/media/usb/dvb-usb/digitv.c
+index dd5bb230cec1..61bc8945e6b9 100644
+--- a/drivers/media/usb/dvb-usb/digitv.c
++++ b/drivers/media/usb/dvb-usb/digitv.c
+@@ -231,17 +231,21 @@ static struct rc_map_table rc_map_digitv_table[] = {
+ static int digitv_rc_query(struct dvb_usb_device *d, u32 *event, int *state)
  {
-@@ -46,6 +48,11 @@ int __pure novamap(void)
- 	return __novamap;
- }
+ 	int i;
+-	u8 key[5];
++	u8 key[5] = { 0 };
+ 	u8 b[4] = { 0 };
++	int ret;
  
-+int __pure nobusmaster(void)
-+{
-+	return __disable_busmaster;
-+}
-+
- #define EFI_MMAP_NR_SLACK_SLOTS	8
+ 	*event = 0;
+ 	*state = REMOTE_NO_KEY_PRESSED;
  
- struct file_info {
-@@ -458,6 +465,18 @@ efi_status_t efi_parse_options(char const *cmdline)
- 	if (str == cmdline || (str && str > cmdline && *(str - 1) == ' '))
- 		__quiet = 1;
+-	digitv_ctrl_msg(d,USB_READ_REMOTE,0,NULL,0,&key[1],4);
+-
++	ret = digitv_ctrl_msg(d, USB_READ_REMOTE, 0, NULL, 0, &key[1], 4);
++	if (ret < 0)
++		return ret;
+ 	/* Tell the device we've read the remote. Not sure how necessary
+ 	   this is, but the Nebula SDK does it. */
+-	digitv_ctrl_msg(d,USB_WRITE_REMOTE,0,b,4,NULL,0);
++	ret = digitv_ctrl_msg(d, USB_WRITE_REMOTE, 0, b, 4, NULL, 0);
++	if (ret < 0)
++		return ret;
  
-+	str = strstr(cmdline, "disable_busmaster=");
-+	if (str) {
-+		switch (*(str + strlen("disable_busmaster="))) {
-+		case '0':
-+			__disable_busmaster = 0;
-+			break;
-+		case '1':
-+			__disable_busmaster = 1;
-+			break;
-+		}
-+	}
-+
- 	/*
- 	 * If no EFI parameters were specified on the cmdline we've got
- 	 * nothing to do.
-diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-index 7f1556fd867d..12f5f80f6851 100644
---- a/drivers/firmware/efi/libstub/efistub.h
-+++ b/drivers/firmware/efi/libstub/efistub.h
-@@ -28,6 +28,7 @@
- extern int __pure nokaslr(void);
- extern int __pure is_quiet(void);
- extern int __pure novamap(void);
-+extern int __pure nobusmaster(void);
- 
- #define pr_efi(sys_table, msg)		do {				\
- 	if (!is_quiet()) efi_printk(sys_table, "EFI stub: "msg);	\
-diff --git a/drivers/firmware/efi/libstub/pci.c b/drivers/firmware/efi/libstub/pci.c
-new file mode 100644
-index 000000000000..dc0db8a1e248
---- /dev/null
-+++ b/drivers/firmware/efi/libstub/pci.c
-@@ -0,0 +1,88 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * PCI-related functions used by the EFI stub on multiple
-+ * architectures.
-+ *
-+ * Copyright 2019 Google, LLC
-+ */
-+
-+#include <linux/efi.h>
-+#include <linux/pci.h>
-+
-+#include <asm/efi.h>
-+
-+#include "efistub.h"
-+
-+void efi_pci_disable_bridge_busmaster(efi_system_table_t *sys_table)
-+{
-+	efi_status_t status;
-+	void **pci_handle = NULL;
-+	efi_guid_t pci_proto = EFI_PCI_IO_PROTOCOL_GUID;
-+	unsigned long size = 0;
-+	unsigned long nr_pci;
-+	u16 class, command;
-+	int i;
-+
-+	if (!nobusmaster())
-+		return;
-+
-+	status = efi_call_early(locate_handle,
-+				EFI_LOCATE_BY_PROTOCOL,
-+				&pci_proto, NULL, &size, pci_handle);
-+
-+	if (status == EFI_BUFFER_TOO_SMALL) {
-+		status = efi_call_early(allocate_pool,
-+					EFI_LOADER_DATA,
-+					size, (void **)&pci_handle);
-+
-+		if (status != EFI_SUCCESS) {
-+			efi_printk(sys_table, "Failed to allocate memory for 'pci_handle'\n");
-+			return;
-+		}
-+
-+		status = efi_call_early(locate_handle,
-+					EFI_LOCATE_BY_PROTOCOL, &pci_proto,
-+					NULL, &size, pci_handle);
-+	}
-+
-+	if (status != EFI_SUCCESS)
-+		goto free_handle;
-+
-+	nr_pci = size / (efi_is_64bit() ? sizeof(u64) : sizeof(u32));
-+	for (i = 0; i < nr_pci; i++) {
-+		efi_pci_io_protocol_t *pci = NULL;
-+
-+		status = efi_call_early(handle_protocol,
-+					efi_is_64bit() ? ((u64 *)pci_handle)[i]
-+						       : ((u32 *)pci_handle)[i],
-+					&pci_proto, (void **)&pci);
-+		if (status != EFI_SUCCESS || !pci)
-+			continue;
-+
-+		status = efi_call_proto(efi_pci_io_protocol, pci.read, pci,
-+					EfiPciIoWidthUint16, PCI_CLASS_DEVICE,
-+					1, &class);
-+
-+		if (status != EFI_SUCCESS || class != PCI_CLASS_BRIDGE_PCI)
-+			continue;
-+
-+		/* Disable busmastering */
-+		status = efi_call_proto(efi_pci_io_protocol, pci.read, pci,
-+					EfiPciIoWidthUint16, PCI_COMMAND, 1,
-+					&command);
-+		if (status != EFI_SUCCESS ||
-+		    !(command & PCI_COMMAND_MASTER))
-+			continue;
-+
-+		command &= ~PCI_COMMAND_MASTER;
-+		status = efi_call_proto(efi_pci_io_protocol, pci.write, pci,
-+					EfiPciIoWidthUint16, PCI_COMMAND, 1,
-+					&command);
-+		if (status != EFI_SUCCESS)
-+			efi_printk(sys_table,
-+				   "Failed to disable PCI busmastering\n");
-+	}
-+
-+free_handle:
-+	efi_call_early(free_pool, pci_handle);
-+}
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index d87acf62958e..b0de9b4a0ad1 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -1647,6 +1647,8 @@ efi_enable_reset_attack_mitigation(efi_system_table_t *sys_table_arg) { }
- 
- void efi_retrieve_tpm2_eventlog(efi_system_table_t *sys_table);
- 
-+void efi_pci_disable_bridge_busmaster(efi_system_table_t *sys_table);
-+
- /*
-  * Arch code can implement the following three template macros, avoiding
-  * reptition for the void/non-void return cases of {__,}efi_call_virt():
+ 	/* if something is inside the buffer, simulate key press */
+ 	if (key[1] != 0)
 -- 
-2.24.0.393.g34dc348eaf-goog
+2.20.1
 
