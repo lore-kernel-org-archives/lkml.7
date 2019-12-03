@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A38C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35908C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C11420803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEAEA20803
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:48:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413288;
-	bh=7xewnJeJ8wvHZnKDS85LFPSw2Dl2V6Zdfz+YH65mXK4=;
+	s=default; t=1575413292;
+	bh=6ziXoorEpCDVd81qU1RUbKYkrr9kZ2VkhGB1ugj7cXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XG97KPjxy5NqgZmiFqXVpNbOwHGJ2Aqj5EBzLq5Zg7tevWBI0qjkw5scZQpVd9p8a
-	 adMo49yX+ZN5FZd6KEWDiAowJa4mFA/KUWMRtIv9F/doKIiYAZNIbOJNmRoBcjfD9Q
-	 7ATlfHMWwQQP3ZgH6tsva0sYdpFDbJVWoOFlKtng=
+	b=Jb1dKcrv3EY74Z53iuAyqtqYKi6VXOQBtjzt4u42bEUlqQSu3Yiso+F30Itth52tx
+	 DvJ/P5HIn1dFzfZk2lazk0hq5md4qM8L51o9N7YBK60Ac9PlkI/fB92ZvBjWLj7MIx
+	 3ensP4QyhLrm1C0uvYVnQFgpAOV2Aeutz7tHRvgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729400AbfLCWsH (ORCPT
+        id S1729407AbfLCWsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:48:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38542 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:48:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729383AbfLCWsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:48:04 -0500
+        id S1729396AbfLCWsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:48:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45EF920656;
-        Tue,  3 Dec 2019 22:48:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED2E620656;
+        Tue,  3 Dec 2019 22:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413283;
-        bh=7xewnJeJ8wvHZnKDS85LFPSw2Dl2V6Zdfz+YH65mXK4=;
+        s=default; t=1575413286;
+        bh=6ziXoorEpCDVd81qU1RUbKYkrr9kZ2VkhGB1ugj7cXc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FZRQCPBAiF4onGT7hB79Y3TSIGk+Y5t0j42y09xEHdeofgMGYEgLQ7WMsyBkbzE+d
-         SAThXDPqQElWlW2mTbD2dq97dam8N4tQhl39ADUkgkhPthVFCrZNEKIZDjBpZNTisO
-         AKAYty3TdqNyHqJAu+KVXYJx7NgsarT7s9tU4Nas=
+        b=kldZUAHwHejz1e4fddtUy+NNVz1f6eehkeyDxoghDKoF+aKmUEenHLYdB5g2gXNV9
+         jJZk68vU78kToTYweLoNmRsDLG4fGhSgpmr6lGHff/lMXn9CmbpDgQTbA49tZYKXUj
+         Fysb4x/IJtur1zod3ok0P2PKwxC9XS5zeLrA2TKw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helge Deller <deller@gmx.de>,
+        stable@vger.kernel.org, Johannes Berg <johannes@sipsolutions.net>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 069/321] parisc: Fix HP SDC hpa address output
-Date:   Tue,  3 Dec 2019 23:32:15 +0100
-Message-Id: <20191203223430.756152094@linuxfoundation.org>
+Subject: [PATCH 4.19 043/321] net/fq_impl: Switch to kvmalloc() for memory allocation
+Date:   Tue,  3 Dec 2019 23:31:49 +0100
+Message-Id: <20191203223429.350978817@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -59,34 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-[ Upstream commit c4bff35ca1bfba886da6223c9fed76a2b1382b8e ]
+[ Upstream commit 71e67c3bd127cfe7863f54e4b087eba1cc8f9a7a ]
 
-Show the hpa address of the HP SDC instead of a hashed value, e.g.:
-HP SDC: HP SDC at 0xf0201000, IRQ 23 (NMI IRQ 24)
+The FQ implementation used by mac80211 allocates memory using kmalloc(),
+which can fail; and Johannes reported that this actually happens in
+practice.
 
-Signed-off-by: Helge Deller <deller@gmx.de>
+To avoid this, switch the allocation to kvmalloc() instead; this also
+brings fq_impl in line with all the FQ qdiscs.
+
+Fixes: 557fc4a09803 ("fq: add fair queuing framework")
+Reported-by: Johannes Berg <johannes@sipsolutions.net>
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Link: https://lore.kernel.org/r/20191105155750.547379-1-toke@redhat.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/serio/hp_sdc.c | 4 ++--
+ include/net/fq_impl.h | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/input/serio/hp_sdc.c b/drivers/input/serio/hp_sdc.c
-index 0b8a25c58d02e..654252361653d 100644
---- a/drivers/input/serio/hp_sdc.c
-+++ b/drivers/input/serio/hp_sdc.c
-@@ -884,8 +884,8 @@ static int __init hp_sdc_init(void)
- 			"HP SDC NMI", &hp_sdc))
- 		goto err2;
+diff --git a/include/net/fq_impl.h b/include/net/fq_impl.h
+index 89a012905ef0b..4b3e18ff8e6f2 100644
+--- a/include/net/fq_impl.h
++++ b/include/net/fq_impl.h
+@@ -312,7 +312,7 @@ static int fq_init(struct fq *fq, int flows_cnt)
+ 	fq->limit = 8192;
+ 	fq->memory_limit = 16 << 20; /* 16 MBytes */
  
--	printk(KERN_INFO PREFIX "HP SDC at 0x%p, IRQ %d (NMI IRQ %d)\n",
--	       (void *)hp_sdc.base_io, hp_sdc.irq, hp_sdc.nmi);
-+	pr_info(PREFIX "HP SDC at 0x%08lx, IRQ %d (NMI IRQ %d)\n",
-+	       hp_sdc.base_io, hp_sdc.irq, hp_sdc.nmi);
+-	fq->flows = kcalloc(fq->flows_cnt, sizeof(fq->flows[0]), GFP_KERNEL);
++	fq->flows = kvcalloc(fq->flows_cnt, sizeof(fq->flows[0]), GFP_KERNEL);
+ 	if (!fq->flows)
+ 		return -ENOMEM;
  
- 	hp_sdc_status_in8();
- 	hp_sdc_data_in8();
+@@ -330,7 +330,7 @@ static void fq_reset(struct fq *fq,
+ 	for (i = 0; i < fq->flows_cnt; i++)
+ 		fq_flow_reset(fq, &fq->flows[i], free_func);
+ 
+-	kfree(fq->flows);
++	kvfree(fq->flows);
+ 	fq->flows = NULL;
+ }
+ 
 -- 
 2.20.1
 
