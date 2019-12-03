@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C901BC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 923B7C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90AFD20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56EF920656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:06:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414379;
-	bh=qcEG6w2/GDNSrFO6+mPfxkBVtMr5NJCSsxklqfbSFtQ=;
+	s=default; t=1575414382;
+	bh=y2gv8xEar5MnSsiYUg2qsTu6rIPCQ4tw1v5g5MAJbh4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mfS6PGaOqRnB5+IfVdN7Z+0fR0D+zG6fgNQDrFxMIDOL1AnjJaLcSjV+qekrjRt2g
-	 EmK7S6i/yOyS6d9hZ8I+iUpKOdVY3HUeHL1KlegZC/DUmGGRUfM0WN+GLN1xg3rC/h
-	 Cf833NcVaLFd8wAEH3oIDLoe9BQFI20Uemasv3U4=
+	b=pgYpYV5kkxn0Z0bPsdN8VtULXb3sMHw0L6lwA5lv1lgGuFzj9+fD7DoDh5xhJqSpz
+	 zSPoK6dTbpT5U2ALaVj1dU8oGIC6XqeMZMK6jvw1nhEIao+Z/qXmfgI0HLncvyEi2+
+	 0Hb+LP7aM6q80L7hUiRh+HgyRGCEAgNFcM7XtBf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbfLCWtC (ORCPT
+        id S1728945AbfLCWtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:49:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39812 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:49:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729075AbfLCWs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:48:57 -0500
+        id S1728436AbfLCWtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:49:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7820120803;
-        Tue,  3 Dec 2019 22:48:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFED92080F;
+        Tue,  3 Dec 2019 22:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413336;
-        bh=qcEG6w2/GDNSrFO6+mPfxkBVtMr5NJCSsxklqfbSFtQ=;
+        s=default; t=1575413339;
+        bh=y2gv8xEar5MnSsiYUg2qsTu6rIPCQ4tw1v5g5MAJbh4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iE5UI842XUTyffcfAcf2lmYp3XTg6OW9RUJURlEZ0oWjViP4EncfaCzU15PnZgkSw
-         4dypExn5sj1dsYTKqb56zaQfgFfnQRCzGjLKSfA9uTWf5QI2pPP6L3dse0IJ33UvxB
-         hzOkCiIcuX/8bSKn4qb2xfbuhR2afD3pfAE5zZGE=
+        b=erHBZf5qWwZNByfUsjVKv+x+GOnobgowhTEZORKNCnFom2DZywF5jL5qLJrTH/3Kx
+         PtYhkKb5+5rJxmCmrf3ehniKqmfA7s9hm15IbavSqXIAv1D6aPZXMWnwNQp9/d0xs5
+         RFHKwc2qlTTue2l6x1lC1+/qqNTUy8Sv107dh05M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 049/321] scsi: lpfc: Fix dif and first burst use in write commands
-Date:   Tue,  3 Dec 2019 23:31:55 +0100
-Message-Id: <20191203223429.659802243@linuxfoundation.org>
+Subject: [PATCH 4.19 040/321] net: bcmgenet: reapply manual settings to the PHY
+Date:   Tue,  3 Dec 2019 23:31:46 +0100
+Message-Id: <20191203223429.197353317@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,75 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit 7c4042a4d0b7532cfbc90478fd3084b2dab5849e ]
+[ Upstream commit 0686bd9d5e6863f60e4bb1e78e6fe7bb217a0890 ]
 
-When dif and first burst is used in a write command wqe, the driver was not
-properly setting fields in the io command request. This resulted in no dif
-bytes being sent and invalid xfer_rdy's, resulting in the io being aborted
-by the hardware.
+The phy_init_hw() function may reset the PHY to a configuration
+that does not match manual network settings stored in the phydev
+structure. If the phy state machine is polled rather than event
+driven this can create a timing hazard where the phy state machine
+might alter the settings stored in the phydev structure from the
+value read from the BMCR.
 
-Correct the wqe initializaton when both dif and first burst are used.
+This commit follows invocations of phy_init_hw() by the bcmgenet
+driver with invocations of the genphy_config_aneg() function to
+ensure that the BMCR is written to match the settings held in the
+phydev structure. This prevents the risk of manual settings being
+accidentally altered.
 
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 1c1008c793fa ("net: bcmgenet: add main driver file")
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_scsi.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_scsi.c b/drivers/scsi/lpfc/lpfc_scsi.c
-index 666495f21c246..425b83618a2e5 100644
---- a/drivers/scsi/lpfc/lpfc_scsi.c
-+++ b/drivers/scsi/lpfc/lpfc_scsi.c
-@@ -2732,6 +2732,7 @@ lpfc_bg_scsi_prep_dma_buf_s3(struct lpfc_hba *phba,
- 	int datasegcnt, protsegcnt, datadir = scsi_cmnd->sc_data_direction;
- 	int prot_group_type = 0;
- 	int fcpdl;
-+	struct lpfc_vport *vport = phba->pport;
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+index 6f7278d2ce4f2..b7d75011cede5 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -2619,8 +2619,10 @@ static void bcmgenet_irq_task(struct work_struct *work)
+ 	spin_unlock_irq(&priv->lock);
  
- 	/*
- 	 * Start the lpfc command prep by bumping the bpl beyond fcp_cmnd
-@@ -2837,6 +2838,14 @@ lpfc_bg_scsi_prep_dma_buf_s3(struct lpfc_hba *phba,
- 	 */
- 	iocb_cmd->un.fcpi.fcpi_parm = fcpdl;
+ 	if (status & UMAC_IRQ_PHY_DET_R &&
+-	    priv->dev->phydev->autoneg != AUTONEG_ENABLE)
++	    priv->dev->phydev->autoneg != AUTONEG_ENABLE) {
+ 		phy_init_hw(priv->dev->phydev);
++		genphy_config_aneg(priv->dev->phydev);
++	}
  
-+	/*
-+	 * For First burst, we may need to adjust the initial transfer
-+	 * length for DIF
-+	 */
-+	if (iocb_cmd->un.fcpi.fcpi_XRdy &&
-+	    (fcpdl < vport->cfg_first_burst_size))
-+		iocb_cmd->un.fcpi.fcpi_XRdy = fcpdl;
-+
- 	return 0;
- err:
- 	if (lpfc_cmd->seg_cnt)
-@@ -3401,6 +3410,7 @@ lpfc_bg_scsi_prep_dma_buf_s4(struct lpfc_hba *phba,
- 	int datasegcnt, protsegcnt, datadir = scsi_cmnd->sc_data_direction;
- 	int prot_group_type = 0;
- 	int fcpdl;
-+	struct lpfc_vport *vport = phba->pport;
+ 	/* Link UP/DOWN event */
+ 	if (status & UMAC_IRQ_LINK_EVENT)
+@@ -3673,6 +3675,7 @@ static int bcmgenet_resume(struct device *d)
+ 	phy_init_hw(dev->phydev);
  
- 	/*
- 	 * Start the lpfc command prep by bumping the sgl beyond fcp_cmnd
-@@ -3516,6 +3526,14 @@ lpfc_bg_scsi_prep_dma_buf_s4(struct lpfc_hba *phba,
- 	 */
- 	iocb_cmd->un.fcpi.fcpi_parm = fcpdl;
+ 	/* Speed settings must be restored */
++	genphy_config_aneg(dev->phydev);
+ 	bcmgenet_mii_config(priv->dev, false);
  
-+	/*
-+	 * For First burst, we may need to adjust the initial transfer
-+	 * length for DIF
-+	 */
-+	if (iocb_cmd->un.fcpi.fcpi_XRdy &&
-+	    (fcpdl < vport->cfg_first_burst_size))
-+		iocb_cmd->un.fcpi.fcpi_XRdy = fcpdl;
-+
- 	/*
- 	 * If the OAS driver feature is enabled and the lun is enabled for
- 	 * OAS, set the oas iocb related flags.
+ 	bcmgenet_set_hw_addr(priv, dev->dev_addr);
 -- 
 2.20.1
 
