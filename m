@@ -2,254 +2,277 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A45AC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E10ECC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B97520659
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2F9A2073C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:11:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Uxij5SEn"
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="jAKoN0zK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727627AbfLCWK4 (ORCPT
+        id S1727641AbfLCWLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:10:56 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:3265 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727502AbfLCWKz (ORCPT
+        Tue, 3 Dec 2019 17:11:33 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38910 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727502AbfLCWLd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:10:55 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5de6dd710000>; Tue, 03 Dec 2019 14:10:57 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 03 Dec 2019 14:10:53 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 03 Dec 2019 14:10:53 -0800
-Received: from [10.2.160.125] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 3 Dec
- 2019 22:10:52 +0000
-Subject: Re: [PATCH v1 11/17] dt-bindings: clock: tegra: Remove pmc clock ids
- from clock dt-bindings
-To:     Rob Herring <robh@kernel.org>
-CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <digetx@gmail.com>, <mperttunen@nvidia.com>,
-        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
-        <tglx@linutronix.de>, <mark.rutland@arm.com>,
-        <allison@lohutok.net>, <pdeschrijver@nvidia.com>,
-        <pgaikwad@nvidia.com>, <mturquette@baylibre.com>,
-        <horms+renesas@verge.net.au>, <Jisheng.Zhang@synaptics.com>,
-        <krzk@kernel.org>, <arnd@arndb.de>, <spujar@nvidia.com>,
-        <josephl@nvidia.com>, <vidyas@nvidia.com>,
-        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
-        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1574146234-3871-1-git-send-email-skomatineni@nvidia.com>
- <1574146234-3871-12-git-send-email-skomatineni@nvidia.com>
- <20191203220727.GA22716@bogus>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <a91cd992-a3cd-1d33-d2a7-7f617f3246e9@nvidia.com>
-Date:   Tue, 3 Dec 2019 14:11:14 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 3 Dec 2019 17:11:33 -0500
+Received: by mail-pf1-f196.google.com with SMTP id x185so2529581pfc.5
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 14:11:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=fKabNn9df0KKwioEHZ2TbPiYWD+uCzVkn8AhLZ5xjLU=;
+        b=jAKoN0zKxKrMrwP4ExWiJ+pG3n/C8x+s5yOCrN3Ch6VQerUB41CkmmAppCbIS++RHt
+         GsLxuKfii3/6PNKx27W9YU5Xv2hTHFZ6/aQTGybueMMGGdEwW4klIIm393nagvu4y5Cd
+         +7XCQrW5ZdLjgfFGxp4En9GTEsTCwdgWPWtiWMtre1OvtwK98PRgw6MvehBwy03UFIqW
+         Ckf/5aOWbSa13eAAyPI031gZL5kJdDXueSlDIJFIPXa1V4tiX06bUfxP5rmy++Me7GWW
+         koF9yOlNbDr3SgbhmI7YekjBM/9CofMBU5958TV6BqpphvjGyBwozfF9CX2SFRmku++J
+         gFWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=fKabNn9df0KKwioEHZ2TbPiYWD+uCzVkn8AhLZ5xjLU=;
+        b=lf+y5BYZLodeqdRl8MoFM34SpVRTPkURU2yxAMomgpjOTJJTouKDCWJ1SfQzGMC/kA
+         5KyjxUB+SbMq1lD8nGgy14PYWkvRtY9GXKh4rVdnftjaAsOM2GAPUF6bBKFPZz5mGwWC
+         lBZOTM19u4NwAuM5KIaR/nvlwAZwEkSQcT7c5tDL4CIF6RJijMAt+C5XTbcAi5L/3pG5
+         zim6jg1/tmMcrq05GWC31C1Y5QFGnPB2aOnv+LsEAeUgE5UNUAx32iqR6lynVMCYFl64
+         povLLMuA0Lbi6O4QCT5HPCBOMzDUXo9o3+V03qUf9/9sFAp2LsHGVt3t9zW00ekIYans
+         MKPA==
+X-Gm-Message-State: APjAAAUb7BqJeoBR4n3ecyl0sQeM4SOPyspq2GjCx83TrsAzxVESJEYd
+        QNkmt+4AjzfV7gYR4R/y38X89Q==
+X-Google-Smtp-Source: APXvYqz/J2vCzyEFtPRTDnWoMbG6QWpwBjzII9Uf4CLUG3UEFJy1opA8wCr2dxY/GJp7EXfAbvF3BA==
+X-Received: by 2002:a62:1a97:: with SMTP id a145mr119864pfa.244.1575411092312;
+        Tue, 03 Dec 2019 14:11:32 -0800 (PST)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id f30sm4499876pga.20.2019.12.03.14.11.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2019 14:11:31 -0800 (PST)
+Date:   Tue, 3 Dec 2019 14:11:18 -0800
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Udo van den Heuvel <udovdh@xs4all.nl>,
+        Holger =?UTF-8?B?SG9mZnN0w6R0?= =?UTF-8?B?dGU=?= 
+        <holger@applied-asynchrony.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>
+Subject: Re: 5.4.1 WARNINGs with r8169
+Message-ID: <20191203141118.483edd2d@hermes.lan>
+In-Reply-To: <3a1706be-e236-6f08-73eb-734f0ae41bbb@gmail.com>
+References: <46e7dcf9-3c89-25c1-ccb8-336450047bec@xs4all.nl>
+        <aa3b11a5-eb7e-dc2c-e5b4-96e53942246d@applied-asynchrony.com>
+        <3a1706be-e236-6f08-73eb-734f0ae41bbb@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191203220727.GA22716@bogus>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1575411057; bh=LPH3zXUwTaWfeUSAAlE2Mh6Y2Q53HmCDv53m3bnxiQA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=Uxij5SEnpRFKFgg1onCr30pOyn/zSxJBrUwHARDApnh8Izvzmv9CrbYPeWX+yYjE8
-         fvPjHsI8XvU2Tmq9j9fcg+PS553hmNSGtYsiTI/mEl2aNmgAf2o2OxPaVToxOyMjHS
-         GDJ4w0TusRm+9VdVqJaQNUzFu2U8B99q+GygNYAK2sr9YViib9ZPjW3FkWNHvkySA2
-         zB0XcG4droS3xu0TDT/EYQspNTcM0iVavHCBqaIK2qRdIJU5vdhvsB8/6rv4HQfC0V
-         KNt4ri3FFHCbiJ0XyRWn54f6ZqpDn0BWU0sQRyDM/hn/ERw8OFlCdeyLyKKUk/vvgH
-         mCGHpqyLlD63A==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 3 Dec 2019 20:58:04 +0100
+Heiner Kallweit <hkallweit1@gmail.com> wrote:
 
-On 12/3/19 2:07 PM, Rob Herring wrote:
-> On Mon, Nov 18, 2019 at 10:50:28PM -0800, Sowjanya Komatineni wrote:
->> clk_out_1, clk_out_2, clk_out_3, blink are part of Tegra pmc clocks.
->>
->> This patch removes ids for these clocks from Tegra clock dt-bindings.
-> Your commit message should answer why, not what.
->
-> This is not a backwards compatible change if any of these IDs are used.
+> On 01.12.2019 10:52, Holger Hoffst=C3=A4tte wrote:
+> > (cc:'ing netdev & Heiner)
+> >=20
+> > Are you using Jumbo packets? If so please check the thread at
+> > https://lore.kernel.org/lkml/24034.56114.248207.524177@wylie.me.uk/
+> >=20
+> > Btw you should use a more descriptive Subject line, otherwise people mi=
+ght
+> > miss your message..
+> >=20
+> > -h
+> >=20
+> > -------- Forwarded Message --------
+> > Subject: 5.4.1 WARNINGs
+> > Date: Sun, 1 Dec 2019 08:06:37 +0100
+> > From: Udo van den Heuvel <udovdh@xs4all.nl>
+> > Organization: hierzo
+> > To: linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>
+> > Newsgroups: gmane.linux.kernel
+> >=20
+> > Hello,
+> >=20
+> > While booting into 5.4.1 I noticed these.
+> > Any advice please?
+> >=20
+> >=20
+> > Dec=C2=A0 1 07:59:28 vuurmuur named[1318]: resolver priming query compl=
+ete
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ------------[ cut here ]---------=
+---
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: NETDEV WATCHDOG: eth0 (r8169): tr=
+ansmit
+> > queue 0 timed out
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: WARNING: CPU: 0 PID: 9 at
+> > net/sched/sch_generic.c:447 dev_watchdog+0x208/0x210
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: Modules linked in: act_police
+> > sch_ingress cls_u32 sch_sfq sch_cbq pppoe pppox ip6table_raw nf_log_ipv6
+> > ip6table_mangle xt_u32 xt_CT xt_nat nf_log_ipv4 nf_log_common
+> > xt_statistic nf_nat_sip nf_conntrack_sip xt_recent xt_string xt_lscan(O)
+> > xt_TARPIT(O) iptable_raw nf_nat_h323 nf_conntrack_h323 xt_TCPMSS
+> > xt_length xt_hl xt_tcpmss xt_owner xt_mac xt_mark xt_multiport xt_limit
+> > nf_nat_irc nf_conntrack_irc xt_LOG xt_DSCP xt_REDIRECT xt_MASQUERADE
+> > xt_dscp nf_nat_ftp nf_conntrack_ftp iptable_mangle iptable_nat
+> > mq_deadline 8021q ipt_REJECT nf_reject_ipv4 iptable_filter ip6t_REJECT
+> > nf_reject_ipv6 xt_state xt_conntrack ip6table_filter nct6775 ip6_tables
+> > sunrpc amdgpu mfd_core gpu_sched drm_kms_helper syscopyarea sysfillrect
+> > sysimgblt fb_sys_fops ttm snd_hda_codec_realtek snd_hda_codec_generic
+> > drm snd_hda_codec_hdmi snd_hda_intel drm_panel_orientation_quirks
+> > cfbfillrect snd_intel_nhlt amd_freq_sensitivity cfbimgblt snd_hda_codec
+> > aesni_intel cfbcopyarea i2c_algo_bit fb glue_helper
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: snd_hda_core crypto_simd fbdev sn=
+d_pcm
+> > cryptd pl2303 backlight snd_timer snd i2c_piix4 acpi_cpufreq sr_mod
+> > cdrom sd_mod autofs4
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: CPU: 0 PID: 9 Comm: ksoftirqd/0
+> > Tainted: G=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+O=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 5.4.1 #2
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: Hardware name: To Be Filled By O.=
+E.M.
+> > To Be Filled By O.E.M./QC5000M-ITX/PH, BIOS P1.10 05/06/2015
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: RIP: 0010:dev_watchdog+0x208/0x210
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: Code: 63 54 24 e0 eb 8d 4c 89 f7 =
+c6 05
+> > fc a0 b9 00 01 e8 6d fa fc ff 44 89 e9 48 89 c2 4c 89 f6 48 c7 c7 48 79
+> > dd 81 e8 98 5a b5 ff <0f> 0b eb bd 0f 1f 40 00 48 c7 47 08 00 00 00 00
+> > 48 c7 07 00 00 00
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: RSP: 0018:ffffc9000006fd68 EFLAGS=
+: 00010286
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: RAX: 0000000000000000 RBX:
+> > ffff88813a1d6400 RCX: 0000000000000006
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: RDX: 0000000000000007 RSI:
+> > ffffffff8203aa58 RDI: ffff88813b216250
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: RBP: ffff8881394ee460 R08:
+> > 0000000000080001 R09: 0000000000000002
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: R10: 0000000000000001 R11:
+> > 0000000000000001 R12: ffff8881394ee4b8
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: R13: 0000000000000000 R14:
+> > ffff8881394ee000 R15: ffff88813a1d6480
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: FS:=C2=A0 0000000000000000(0000)
+> > GS:ffff88813b200000(0000) knlGS:0000000000000000
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: CS:=C2=A0 0010 DS: 0000 ES: 0000 =
+CR0:
+> > 0000000080050033
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: CR2: 00007f09b9c20a78 CR3:
+> > 00000001385d4000 CR4: 00000000000406b0
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: Call Trace:
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? qdisc_put_unlocked+0x30/0x30
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? qdisc_put_unlocked+0x30/0x30
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: call_timer_fn.isra.0+0x78/0x110
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? add_timer_on+0xd0/0xd0
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: run_timer_softirq+0x19d/0x1c0
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? _raw_spin_unlock_irq+0x1f/0x40
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? finish_task_switch+0xb2/0x250
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? finish_task_switch+0x81/0x250
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: __do_softirq+0xcf/0x210
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: run_ksoftirqd+0x15/0x20
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: smpboot_thread_fn+0xe9/0x1f0
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: kthread+0xf1/0x130
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? sort_range+0x20/0x20
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? kthread_park+0x80/0x80
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ret_from_fork+0x22/0x40
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ---[ end trace e771bca3c459d7f9 ]=
+---
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ------------[ cut here ]---------=
+---
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: WARNING: CPU: 0 PID: 9 at
+> > net/sched/sch_generic.c:447 dev_watchdog+0x208/0x210
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: Modules linked in: act_police
+> > sch_ingress cls_u32 sch_sfq sch_cbq pppoe pppox ip6table_raw nf_log_ipv6
+> > ip6table_mangle xt_u32 xt_CT xt_nat nf_log_ipv4 nf_log_common
+> > xt_statistic nf_nat_sip nf_conntrack_sip xt_recent xt_string xt_lscan(O)
+> > xt_TARPIT(O) iptable_raw nf_nat_h323 nf_conntrack_h323 xt_TCPMSS
+> > xt_length xt_hl xt_tcpmss xt_owner xt_mac xt_mark xt_multiport xt_limit
+> > nf_nat_irc nf_conntrack_irc xt_LOG xt_DSCP xt_REDIRECT xt_MASQUERADE
+> > xt_dscp nf_nat_ftp nf_conntrack_ftp iptable_mangle iptable_nat
+> > mq_deadline 8021q ipt_REJECT nf_reject_ipv4 iptable_filter ip6t_REJECT
+> > nf_reject_ipv6 xt_state xt_conntrack ip6table_filter nct6775 ip6_tables
+> > sunrpc amdgpu mfd_core gpu_sched drm_kms_helper syscopyarea sysfillrect
+> > sysimgblt fb_sys_fops ttm snd_hda_codec_realtek snd_hda_codec_generic
+> > drm snd_hda_codec_hdmi snd_hda_intel drm_panel_orientation_quirks
+> > cfbfillrect snd_intel_nhlt amd_freq_sensitivity cfbimgblt snd_hda_codec
+> > aesni_intel cfbcopyarea i2c_algo_bit fb glue_helper
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: snd_hda_core crypto_simd fbdev sn=
+d_pcm
+> > cryptd pl2303 backlight snd_timer snd i2c_piix4 acpi_cpufreq sr_mod
+> > cdrom sd_mod autofs4
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: CPU: 0 PID: 9 Comm: ksoftirqd/0
+> > Tainted: G=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+O=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 5.4.1 #2
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: Hardware name: To Be Filled By O.=
+E.M.
+> > To Be Filled By O.E.M./QC5000M-ITX/PH, BIOS P1.10 05/06/2015
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: RIP: 0010:dev_watchdog+0x208/0x210
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: Code: 63 54 24 e0 eb 8d 4c 89 f7 =
+c6 05
+> > fc a0 b9 00 01 e8 6d fa fc ff 44 89 e9 48 89 c2 4c 89 f6 48 c7 c7 48 79
+> > dd 81 e8 98 5a b5 ff <0f> 0b eb bd 0f 1f 40 00 48 c7 47 08 00 00 00 00
+> > 48 c7 07 00 00 00
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: RSP: 0018:ffffc9000006fd68 EFLAGS=
+: 00010286
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: RAX: 0000000000000000 RBX:
+> > ffff88813a1d6400 RCX: 0000000000000006
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: RDX: 0000000000000007 RSI:
+> > ffffffff8203aa58 RDI: ffff88813b216250
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: RBP: ffff8881394ee460 R08:
+> > 0000000000080001 R09: 0000000000000002
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: R10: 0000000000000001 R11:
+> > 0000000000000001 R12: ffff8881394ee4b8
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: R13: 0000000000000000 R14:
+> > ffff8881394ee000 R15: ffff88813a1d6480
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: FS:=C2=A0 0000000000000000(0000)
+> > GS:ffff88813b200000(0000) knlGS:0000000000000000
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: CS:=C2=A0 0010 DS: 0000 ES: 0000 =
+CR0:
+> > 0000000080050033
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: CR2: 00007f09b9c20a78 CR3:
+> > 00000001385d4000 CR4: 00000000000406b0
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: Call Trace:
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? qdisc_put_unlocked+0x30/0x30
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? qdisc_put_unlocked+0x30/0x30
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: call_timer_fn.isra.0+0x78/0x110
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? add_timer_on+0xd0/0xd0
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: run_timer_softirq+0x19d/0x1c0
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? _raw_spin_unlock_irq+0x1f/0x40
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? finish_task_switch+0xb2/0x250
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? finish_task_switch+0x81/0x250
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: __do_softirq+0xcf/0x210
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: run_ksoftirqd+0x15/0x20
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: smpboot_thread_fn+0xe9/0x1f0
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: kthread+0xf1/0x130
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? sort_range+0x20/0x20
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ? kthread_park+0x80/0x80
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ret_from_fork+0x22/0x40
+> > Dec=C2=A0 1 07:59:34 vuurmuur kernel: ---[ end trace e771bca3c459d7f9 ]=
+---
+> >=20
+> >=20
+> > Kind regards,
+> > Udo
+> >  =20
+> If the problem persists, please create a ticket at bugzilla.kernel.org,
+> including:
+>=20
+> - full dmesg log
+> - last known good kernel version
+> - whether problem persists if you switch the one interface with jumbo
+>   packets to standard MTU
+> - best would be a bisect result
+>=20
+> Heiner
 
-Only Tegra210 samsung platform is using one of these clocks and this 
-series includes samsung platform device tree update to change provider 
-to PMC and use PMC clock ids.
 
-Sure, Will update commit message to explain the reason for moving these 
-clocks to PMC...
-
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   include/dt-bindings/clock/tegra114-car.h        | 14 +++++++-------
->>   include/dt-bindings/clock/tegra124-car-common.h | 14 +++++++-------
->>   include/dt-bindings/clock/tegra20-car.h         |  2 +-
->>   include/dt-bindings/clock/tegra210-car.h        | 14 +++++++-------
->>   include/dt-bindings/clock/tegra30-car.h         | 14 +++++++-------
->>   5 files changed, 29 insertions(+), 29 deletions(-)
->>
->> diff --git a/include/dt-bindings/clock/tegra114-car.h b/include/dt-bindings/clock/tegra114-car.h
->> index bb5c2c999c05..9175cd0571b5 100644
->> --- a/include/dt-bindings/clock/tegra114-car.h
->> +++ b/include/dt-bindings/clock/tegra114-car.h
->> @@ -270,10 +270,10 @@
->>   #define TEGRA114_CLK_AUDIO3 242
->>   #define TEGRA114_CLK_AUDIO4 243
->>   #define TEGRA114_CLK_SPDIF 244
->> -#define TEGRA114_CLK_CLK_OUT_1 245
->> -#define TEGRA114_CLK_CLK_OUT_2 246
->> -#define TEGRA114_CLK_CLK_OUT_3 247
->> -#define TEGRA114_CLK_BLINK 248
->> +/* 245 */
->> +/* 246 */
->> +/* 247 */
->> +/* 248 */
->>   /* 249 */
->>   /* 250 */
->>   /* 251 */
->> @@ -333,9 +333,9 @@
->>   #define TEGRA114_CLK_AUDIO3_MUX 303
->>   #define TEGRA114_CLK_AUDIO4_MUX 304
->>   #define TEGRA114_CLK_SPDIF_MUX 305
->> -#define TEGRA114_CLK_CLK_OUT_1_MUX 306
->> -#define TEGRA114_CLK_CLK_OUT_2_MUX 307
->> -#define TEGRA114_CLK_CLK_OUT_3_MUX 308
->> +/* 306 */
->> +/* 307 */
->> +/* 308 */
->>   #define TEGRA114_CLK_DSIA_MUX 309
->>   #define TEGRA114_CLK_DSIB_MUX 310
->>   #define TEGRA114_CLK_XUSB_SS_DIV2 311
->> diff --git a/include/dt-bindings/clock/tegra124-car-common.h b/include/dt-bindings/clock/tegra124-car-common.h
->> index 0c4f5be0a742..90a0c5e7eb5f 100644
->> --- a/include/dt-bindings/clock/tegra124-car-common.h
->> +++ b/include/dt-bindings/clock/tegra124-car-common.h
->> @@ -269,10 +269,10 @@
->>   #define TEGRA124_CLK_AUDIO3 242
->>   #define TEGRA124_CLK_AUDIO4 243
->>   #define TEGRA124_CLK_SPDIF 244
->> -#define TEGRA124_CLK_CLK_OUT_1 245
->> -#define TEGRA124_CLK_CLK_OUT_2 246
->> -#define TEGRA124_CLK_CLK_OUT_3 247
->> -#define TEGRA124_CLK_BLINK 248
->> +/* 245 */
->> +/* 246 */
->> +/* 247 */
->> +/* 248 */
->>   /* 249 */
->>   /* 250 */
->>   /* 251 */
->> @@ -332,9 +332,9 @@
->>   #define TEGRA124_CLK_AUDIO3_MUX 303
->>   #define TEGRA124_CLK_AUDIO4_MUX 304
->>   #define TEGRA124_CLK_SPDIF_MUX 305
->> -#define TEGRA124_CLK_CLK_OUT_1_MUX 306
->> -#define TEGRA124_CLK_CLK_OUT_2_MUX 307
->> -#define TEGRA124_CLK_CLK_OUT_3_MUX 308
->> +/* 306 */
->> +/* 307 */
->> +/* 308 */
->>   /* 309 */
->>   /* 310 */
->>   #define TEGRA124_CLK_SOR0_LVDS 311 /* deprecated */
->> diff --git a/include/dt-bindings/clock/tegra20-car.h b/include/dt-bindings/clock/tegra20-car.h
->> index b21a0eb32921..fe541f627965 100644
->> --- a/include/dt-bindings/clock/tegra20-car.h
->> +++ b/include/dt-bindings/clock/tegra20-car.h
->> @@ -131,7 +131,7 @@
->>   #define TEGRA20_CLK_CCLK 108
->>   #define TEGRA20_CLK_HCLK 109
->>   #define TEGRA20_CLK_PCLK 110
->> -#define TEGRA20_CLK_BLINK 111
->> +/* 111 */
->>   #define TEGRA20_CLK_PLL_A 112
->>   #define TEGRA20_CLK_PLL_A_OUT0 113
->>   #define TEGRA20_CLK_PLL_C 114
->> diff --git a/include/dt-bindings/clock/tegra210-car.h b/include/dt-bindings/clock/tegra210-car.h
->> index 44f60623f99b..a3d8d3e75728 100644
->> --- a/include/dt-bindings/clock/tegra210-car.h
->> +++ b/include/dt-bindings/clock/tegra210-car.h
->> @@ -304,10 +304,10 @@
->>   #define TEGRA210_CLK_AUDIO3 274
->>   #define TEGRA210_CLK_AUDIO4 275
->>   #define TEGRA210_CLK_SPDIF 276
->> -#define TEGRA210_CLK_CLK_OUT_1 277
->> -#define TEGRA210_CLK_CLK_OUT_2 278
->> -#define TEGRA210_CLK_CLK_OUT_3 279
->> -#define TEGRA210_CLK_BLINK 280
->> +/* 277 */
->> +/* 278 */
->> +/* 279 */
->> +/* 280 */
->>   #define TEGRA210_CLK_SOR0_LVDS 281 /* deprecated */
->>   #define TEGRA210_CLK_SOR0_OUT 281
->>   #define TEGRA210_CLK_SOR1_OUT 282
->> @@ -386,9 +386,9 @@
->>   #define TEGRA210_CLK_AUDIO3_MUX 353
->>   #define TEGRA210_CLK_AUDIO4_MUX 354
->>   #define TEGRA210_CLK_SPDIF_MUX 355
->> -#define TEGRA210_CLK_CLK_OUT_1_MUX 356
->> -#define TEGRA210_CLK_CLK_OUT_2_MUX 357
->> -#define TEGRA210_CLK_CLK_OUT_3_MUX 358
->> +/* 356 */
->> +/* 357 */
->> +/* 358 */
->>   #define TEGRA210_CLK_DSIA_MUX 359
->>   #define TEGRA210_CLK_DSIB_MUX 360
->>   /* 361 */
->> diff --git a/include/dt-bindings/clock/tegra30-car.h b/include/dt-bindings/clock/tegra30-car.h
->> index 3c90f1535551..20ef2462d9e1 100644
->> --- a/include/dt-bindings/clock/tegra30-car.h
->> +++ b/include/dt-bindings/clock/tegra30-car.h
->> @@ -230,11 +230,11 @@
->>   #define TEGRA30_CLK_AUDIO3 204
->>   #define TEGRA30_CLK_AUDIO4 205
->>   #define TEGRA30_CLK_SPDIF 206
->> -#define TEGRA30_CLK_CLK_OUT_1 207 /* (extern1) */
->> -#define TEGRA30_CLK_CLK_OUT_2 208 /* (extern2) */
->> -#define TEGRA30_CLK_CLK_OUT_3 209 /* (extern3) */
->> +/* 207 */
->> +/* 208 */
->> +/* 209 */
->>   #define TEGRA30_CLK_SCLK 210
->> -#define TEGRA30_CLK_BLINK 211
->> +/* 211 */
->>   #define TEGRA30_CLK_CCLK_G 212
->>   #define TEGRA30_CLK_CCLK_LP 213
->>   #define TEGRA30_CLK_TWD 214
->> @@ -260,9 +260,9 @@
->>   /* 297 */
->>   /* 298 */
->>   /* 299 */
->> -#define TEGRA30_CLK_CLK_OUT_1_MUX 300
->> -#define TEGRA30_CLK_CLK_OUT_2_MUX 301
->> -#define TEGRA30_CLK_CLK_OUT_3_MUX 302
->> +/* 300 */
->> +/* 301 */
->> +/* 302 */
->>   #define TEGRA30_CLK_AUDIO0_MUX 303
->>   #define TEGRA30_CLK_AUDIO1_MUX 304
->>   #define TEGRA30_CLK_AUDIO2_MUX 305
->> -- 
->> 2.7.4
->>
+Bugzilla.kernel.org is not used for networking bugs.
+This is not good advice, and would like to discourage more use of bugzilla.
+I am the only person who gets notified and I end up forwarding them
+to the mailing list.
