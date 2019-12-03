@@ -2,90 +2,220 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19912C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72355C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAFA32070A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F15F205F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 13:16:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OZbFSGDb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbfLCNNH (ORCPT
+        id S1726182AbfLCNQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 08:13:07 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:38946 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725954AbfLCNNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 08:13:06 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0A6C04729755A59EEE63;
-        Tue,  3 Dec 2019 21:13:03 +0800 (CST)
-Received: from [127.0.0.1] (10.133.219.224) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Tue, 3 Dec 2019
- 21:13:01 +0800
-Subject: Re: [PATCH] UBI: fix use after free in ubi_remove_volume()
-To:     Wen Yang <wenyang@linux.alibaba.com>,
-        Richard Weinberger <richard@nod.at>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
-        <xlpang@linux.alibaba.com>
-References: <20191130093317.31352-1-wenyang@linux.alibaba.com>
-From:   Hou Tao <houtao1@huawei.com>
-Message-ID: <65b49705-e28c-e077-c0de-c5167e34d1c5@huawei.com>
-Date:   Tue, 3 Dec 2019 21:13:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.8.0
+        Tue, 3 Dec 2019 08:16:10 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36768 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725954AbfLCNQJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 08:16:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575378967;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fEQnMm9l2voQ0J2ySJrhOuYQvNTgK+ssK7Iqm4yZa/E=;
+        b=OZbFSGDbuwIzKApw0qcxpOT8JK8bfu3jPzF+rCWUiZuvEF8dd4uyeLeBQxiUXc7WZd9ZxR
+        I2Y+P0C3aLZrFAxWWMPDIGaNhYeal6FlFOq8pUOhW5MLpvqLShNgwF5qzB8XxFUdKPLiLM
+        JUiqoilC0nOokjaXYsw9FfI0kGSPFk4=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-238-s5eeLGFoMRq2Tc1u_0t3Eg-1; Tue, 03 Dec 2019 08:16:05 -0500
+Received: by mail-wr1-f71.google.com with SMTP id z10so1738834wrt.21
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 05:16:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=+B5QIazI4Ie4a7nGrqp3wfpkLneKCu2xyGaxRW5rTQ0=;
+        b=XJ+ajAvKiZU/SHgM7vhY62Tyj0pSqZv7wulCxvjmY4SDeTTL9KiLwa63LE8vAUIceZ
+         j2mUhbY1WpafNARj4wFoGgLX5KvE9KhnqMS7Gf1T8LSjhGmtv0ybs+oXxvhJF+KZvlw1
+         2dU2iapErlxr7ETaJgbIVgh9XjtAl+82Ow5FsPBvcd+SvNKe0QrQthkNS7e4GGI3FsF6
+         pqD1CY5aVMVRlYmx704fD/UxIGvZw6fklf17d2cXxtrKQlxXjHZ8p42ORXUMJQQWTWey
+         mSu/SxryncPX1wHc9RXAJnu73YCeCgQ25NCVIVzV1vKlLk+v7O2NR60QKaJITIWfKl2d
+         7i8Q==
+X-Gm-Message-State: APjAAAWUXEkCyUI8gqIrQ2otShzgwMK7oGXbeDbpwQNa1l/UFohyMWig
+        eQggOg3Nzf9VppZwvj3N3KZ/yQCBRRCZ2rD6JSBUoyfsHAjYLgM7UVaoNAS6wiNS9rmX0QQBnV5
+        q1GkRQ4LRRwool9flt8iHD3wC
+X-Received: by 2002:a7b:cf2d:: with SMTP id m13mr13176985wmg.163.1575378963917;
+        Tue, 03 Dec 2019 05:16:03 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx20PxwcKm/6OsHkVy+Mn1dllQJFtm8ala5wHB808COFtj4Q6UoP/+5NJY7Jwe7grE84SU2cQ==
+X-Received: by 2002:a7b:cf2d:: with SMTP id m13mr13176962wmg.163.1575378963645;
+        Tue, 03 Dec 2019 05:16:03 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id w17sm3631956wrt.89.2019.12.03.05.16.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2019 05:16:02 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        peterx@redhat.com
+Subject: Re: [PATCH v3 3/5] KVM: X86: Use APIC_DEST_* macros properly in kvm_lapic_irq.dest_mode
+In-Reply-To: <20191202201314.543-4-peterx@redhat.com>
+References: <20191202201314.543-1-peterx@redhat.com> <20191202201314.543-4-peterx@redhat.com>
+Date:   Tue, 03 Dec 2019 14:16:01 +0100
+Message-ID: <87wobdblda.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191130093317.31352-1-wenyang@linux.alibaba.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.219.224]
-X-CFilter-Loop: Reflected
+X-MC-Unique: s5eeLGFoMRq2Tc1u_0t3Eg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Hou Tao <houtao1@huawei.com>
+Peter Xu <peterx@redhat.com> writes:
 
-On 2019/11/30 17:33, Wen Yang wrote:
-> We can't use "vol" after it has been freed.
-> 
-> Fixes: 493cfaeaa0c9 ("mtd: utilize new cdev_device_add helper function")
-> Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-> Cc: Richard Weinberger <richard@nod.at>
-> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-> Cc: Vignesh Raghavendra <vigneshr@ti.com>
-> Cc: linux-mtd@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
+> We were using either APIC_DEST_PHYSICAL|APIC_DEST_LOGICAL or 0|1 to
+> fill in kvm_lapic_irq.dest_mode.  It's fine only because in most cases
+> when we check against dest_mode it's against APIC_DEST_PHYSICAL (which
+> equals to 0).  However, that's not consistent.  We'll have problem
+> when we want to start checking against APIC_DEST_PHYSICAL
+
+APIC_DEST_LOGICAL
+
+> which does not equals to 1.
+>
+> This patch firstly introduces kvm_lapic_irq_dest_mode() helper to take
+> any boolean of destination mode and return the APIC_DEST_* macro.
+> Then, it replaces the 0|1 settings of irq.dest_mode with the helper.
+>
+> Signed-off-by: Peter Xu <peterx@redhat.com>
 > ---
->  drivers/mtd/ubi/vmt.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mtd/ubi/vmt.c b/drivers/mtd/ubi/vmt.c
-> index 139ee13..8ff1478 100644
-> --- a/drivers/mtd/ubi/vmt.c
-> +++ b/drivers/mtd/ubi/vmt.c
-> @@ -375,7 +375,6 @@ int ubi_remove_volume(struct ubi_volume_desc *desc, int no_vtbl)
->  	}
->  
->  	cdev_device_del(&vol->cdev, &vol->dev);
-> -	put_device(&vol->dev);
->  
->  	spin_lock(&ubi->volumes_lock);
->  	ubi->rsvd_pebs -= reserved_pebs;
-> @@ -388,6 +387,8 @@ int ubi_remove_volume(struct ubi_volume_desc *desc, int no_vtbl)
->  	if (!no_vtbl)
->  		self_check_volumes(ubi);
->  
-> +	put_device(&vol->dev);
+>  arch/x86/include/asm/kvm_host.h | 5 +++++
+>  arch/x86/kvm/ioapic.c           | 8 +++++---
+>  arch/x86/kvm/irq_comm.c         | 7 ++++---
+>  arch/x86/kvm/x86.c              | 2 +-
+>  4 files changed, 15 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_h=
+ost.h
+> index b79cd6aa4075..f815c97b1b57 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1022,6 +1022,11 @@ struct kvm_lapic_irq {
+>  =09bool msi_redir_hint;
+>  };
+> =20
+> +static inline u16 kvm_lapic_irq_dest_mode(bool dest_mode)
+> +{
+> +=09return dest_mode ? APIC_DEST_LOGICAL : APIC_DEST_PHYSICAL;
+> +}
 > +
->  	return 0;
->  
->  out_err:
-> 
+>  struct kvm_x86_ops {
+>  =09int (*cpu_has_kvm_support)(void);          /* __init */
+>  =09int (*disabled_by_bios)(void);             /* __init */
+> diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
+> index 9fd2dd89a1c5..901d85237d1c 100644
+> --- a/arch/x86/kvm/ioapic.c
+> +++ b/arch/x86/kvm/ioapic.c
+> @@ -331,7 +331,8 @@ static void ioapic_write_indirect(struct kvm_ioapic *=
+ioapic, u32 val)
+>  =09=09=09irq.vector =3D e->fields.vector;
+>  =09=09=09irq.delivery_mode =3D e->fields.delivery_mode << 8;
+>  =09=09=09irq.dest_id =3D e->fields.dest_id;
+> -=09=09=09irq.dest_mode =3D e->fields.dest_mode;
+> +=09=09=09irq.dest_mode =3D
+> +=09=09=09    kvm_lapic_irq_dest_mode(e->fields.dest_mode);
+>  =09=09=09bitmap_zero(&vcpu_bitmap, 16);
+>  =09=09=09kvm_bitmap_or_dest_vcpus(ioapic->kvm, &irq,
+>  =09=09=09=09=09=09 &vcpu_bitmap);
+> @@ -343,7 +344,8 @@ static void ioapic_write_indirect(struct kvm_ioapic *=
+ioapic, u32 val)
+>  =09=09=09=09 * keep ioapic_handled_vectors synchronized.
+>  =09=09=09=09 */
+>  =09=09=09=09irq.dest_id =3D old_dest_id;
+> -=09=09=09=09irq.dest_mode =3D old_dest_mode;
+> +=09=09=09=09irq.dest_mode =3D
+> +=09=09=09=09    kvm_lapic_irq_dest_mode(e->fields.dest_mode);
+>  =09=09=09=09kvm_bitmap_or_dest_vcpus(ioapic->kvm, &irq,
+>  =09=09=09=09=09=09=09 &vcpu_bitmap);
+>  =09=09=09}
+> @@ -369,7 +371,7 @@ static int ioapic_service(struct kvm_ioapic *ioapic, =
+int irq, bool line_status)
+> =20
+>  =09irqe.dest_id =3D entry->fields.dest_id;
+>  =09irqe.vector =3D entry->fields.vector;
+> -=09irqe.dest_mode =3D entry->fields.dest_mode;
+> +=09irqe.dest_mode =3D kvm_lapic_irq_dest_mode(entry->fields.dest_mode);
+>  =09irqe.trig_mode =3D entry->fields.trig_mode;
+>  =09irqe.delivery_mode =3D entry->fields.delivery_mode << 8;
+>  =09irqe.level =3D 1;
+> diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
+> index 8ecd48d31800..5f59e5ebdbed 100644
+> --- a/arch/x86/kvm/irq_comm.c
+> +++ b/arch/x86/kvm/irq_comm.c
+> @@ -52,8 +52,8 @@ int kvm_irq_delivery_to_apic(struct kvm *kvm, struct kv=
+m_lapic *src,
+>  =09unsigned long dest_vcpu_bitmap[BITS_TO_LONGS(KVM_MAX_VCPUS)];
+>  =09unsigned int dest_vcpus =3D 0;
+> =20
+> -=09if (irq->dest_mode =3D=3D 0 && irq->dest_id =3D=3D 0xff &&
+> -=09=09=09kvm_lowest_prio_delivery(irq)) {
+> +=09if (irq->dest_mode =3D=3D APIC_DEST_PHYSICAL &&
+> +=09    irq->dest_id =3D=3D 0xff && kvm_lowest_prio_delivery(irq)) {
+>  =09=09printk(KERN_INFO "kvm: apic: phys broadcast and lowest prio\n");
+>  =09=09irq->delivery_mode =3D APIC_DM_FIXED;
+>  =09}
+> @@ -114,7 +114,8 @@ void kvm_set_msi_irq(struct kvm *kvm, struct kvm_kern=
+el_irq_routing_entry *e,
+>  =09=09irq->dest_id |=3D MSI_ADDR_EXT_DEST_ID(e->msi.address_hi);
+>  =09irq->vector =3D (e->msi.data &
+>  =09=09=09MSI_DATA_VECTOR_MASK) >> MSI_DATA_VECTOR_SHIFT;
+> -=09irq->dest_mode =3D (1 << MSI_ADDR_DEST_MODE_SHIFT) & e->msi.address_l=
+o;
+> +=09irq->dest_mode =3D kvm_lapic_irq_dest_mode(
+> +=09    (1 << MSI_ADDR_DEST_MODE_SHIFT) & e->msi.address_lo);
+
+This usage is a bit fishy (I understand that it works, but),
+kvm_lapic_irq_dest_mode()'s input is bool (0/1) but here we're passing
+something different.
+
+I'm not sure kvm_lapic_irq_dest_mode() is even needed here, but in case
+it is I'd suggest to add '!!':
+
+ kvm_lapic_irq_dest_mode(!!((1 << MSI_ADDR_DEST_MODE_SHIFT) & e->msi.addres=
+s_lo))
+
+to make things explicit. I don't like how it looks though.
+
+>  =09irq->trig_mode =3D (1 << MSI_DATA_TRIGGER_SHIFT) & e->msi.data;
+>  =09irq->delivery_mode =3D e->msi.data & 0x700;
+>  =09irq->msi_redir_hint =3D ((e->msi.address_lo
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 3ed167e039e5..3b00d662dc14 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -7356,7 +7356,7 @@ static void kvm_pv_kick_cpu_op(struct kvm *kvm, uns=
+igned long flags, int apicid)
+>  =09struct kvm_lapic_irq lapic_irq;
+> =20
+>  =09lapic_irq.shorthand =3D 0;
+> -=09lapic_irq.dest_mode =3D 0;
+> +=09lapic_irq.dest_mode =3D APIC_DEST_PHYSICAL;
+>  =09lapic_irq.level =3D 0;
+>  =09lapic_irq.dest_id =3D apicid;
+>  =09lapic_irq.msi_redir_hint =3D false;
+
+--=20
+Vitaly
 
