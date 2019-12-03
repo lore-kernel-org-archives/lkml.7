@@ -2,143 +2,122 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67007C43603
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA95C2BBE2
 	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7C5D24697
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBC14216C8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:02:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfLDGjJ (ORCPT
+        id S1726901AbfLDGCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 01:39:09 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:56764 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbfLDGjI (ORCPT
+        Wed, 4 Dec 2019 01:02:04 -0500
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.113]:38183 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725791AbfLDGCD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 01:39:08 -0500
-Received: by mail-il1-f197.google.com with SMTP id e5so5011879ile.23
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 22:39:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=6MrFjmAUs8q+JuxhUcHMoFYDZHCeKWA92wbX92h6xAY=;
-        b=dy+ZVLQaFLo5sbz6RBwHrLUpXVdeBHALIwyGeHWCGst08RKGa5dUG6aTgfMwcJFmZk
-         pz62FtzcwYmBg84zWDbiRlphSec3LkJyM9SpcIPxGfYWLvDY4XHjUu53pWystZxRIj1v
-         AUNN+pOho5cOQgCi+Ubf2gcNhk130VfRWz3b+Quc3tIbkiZecSNp36bMBToqEMSXmtFL
-         aYXilqfdqlZ+T/ywuZfosfSZRFCTwfZqWYkp5xYH/5fUxqx+IoEmZMg8oSpyg8bbsY88
-         ys5JxQ5B15M7Pgu7Zgzg2We0a9I5Hwfw4QjeS5JAqI61hrw8TQNu14QnGQfMkBLxYeTJ
-         WUgw==
-X-Gm-Message-State: APjAAAX0oyEu9cwEaVm84zXjGtIrmJ91dGLL5xjM4b+66R+0rQlIXkEF
-        l0hIdgp2lTJs4T6IxXjynmB5SN1O6ampSrQ8NnDGxD3Sx5nk
-X-Google-Smtp-Source: APXvYqxU7F/G4HQpCmgCl6VMhHLxzWV8DaaedviICUwi+ZTtF2Sg3TxrPUxI7MDqH/iC+rVEaoDCsqX6X5w4ukzbgRQUz5P/qLMi
+        Wed, 4 Dec 2019 01:02:03 -0500
+Received: from [85.158.142.201] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-2.bemta.az-b.eu-central-1.aws.symcld.net id 87/F4-12310-7DB47ED5; Wed, 04 Dec 2019 06:01:59 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFKsWRWlGSWpSXmKPExsVy8IPnUd3r3s9
+  jDbp6RC3mnG9hsZh/5ByrxeFFLxgtmhevZ7O4+ekbq8XlXXPYLJZev8hk0br3CLvF/z072C12
+  793I5MDlsWbeGkaPLStvMnnsnHWX3WPTqk42j/1z17B7fN4kF8AWxZqZl5RfkcCasf3wKvaCy
+  ZwVLxYtY25gnMLRxcjFISSwjlHi6d6N7F2MnEBOhcTG14eYQGxegQiJJbPes4HYnAJmEn29Bx
+  ghakwlGuZ1soDYbAI6Eo9mrgerZxFQkfjYehKsRlggVuLI+6MsIAtEBPYySmz595odxGEW2M0
+  o8eHCAWaIDYISJ2c+AZvELCAhcfDFC2aIDVoS59asApskIWAvMf39VaA4B5CtL9F4LBYibCjx
+  fdY3FgjbXGLXuutMExgFZyGZOgvJ1AWMTKsYLZOKMtMzSnITM3N0DQ0MdA0NjXVNdI2MTPQSq
+  3ST9FJLdZNT80qKEoGyeonlxXrFlbnJOSl6eaklmxiB0ZRSyPJgB2PH17d6hxglOZiURHk3P3
+  4WK8SXlJ9SmZFYnBFfVJqTWnyIUYaDQ0mC18rzeayQYFFqempFWmYOMLJh0hIcPEoivAxeQGn
+  e4oLE3OLMdIjUKUZdjp1H5y1iFmLJy89LlRLn5QApEgApyijNgxsBSzKXGGWlhHkZGRgYhHgK
+  UotyM0tQ5V8xinMwKgnzKoFM4cnMK4Hb9AroCCagIw5UPgM5oiQRISXVwLT6ony/j/qVbwnrO
+  Y7qvbHbfp3z/abriWflfW2Pf9reO9tL9kzCQ5nly6fYWy3663HXaAnrrVOvVTc0va4XSSv6tv
+  Re9iFRNnvePeL7tst2cqWHH5WpuXshr61N+5/DpK9Se5mcIs4/4fxtdlfvfdlh2VvVOqvtTqU
+  pl0uUmte5yG6zehnBu+GhEafJz0+xDhxq4UUrGUVfntmW+lhV+Y9wB0fp40a7Y6Yr2IubXKft
+  853pZfN7TuHuWiHb9tZrDB6bviwRanwieinX441UYdV8i2tKD0ovH5HxrHutLPTkru4nhtbrB
+  f+0pYIu7xcVXS58zrhGfJvKLSsZwW9sVhv4XOLSU0X/+e0sP7k0RomlOCPRUIu5qDgRAJrpJN
+  KtAwAA
+X-Env-Sender: roy.im.opensource@diasemi.com
+X-Msg-Ref: server-10.tower-246.messagelabs.com!1575439318!946274!1
+X-Originating-IP: [193.240.73.197]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.44.22; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 30465 invoked from network); 4 Dec 2019 06:01:59 -0000
+Received: from unknown (HELO sw-ex-cashub01.diasemi.com) (193.240.73.197)
+  by server-10.tower-246.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 4 Dec 2019 06:01:59 -0000
+Received: from swsrvapps-01.diasemi.com (10.20.28.141) by
+ SW-EX-CASHUB01.diasemi.com (10.20.16.140) with Microsoft SMTP Server id
+ 14.3.468.0; Wed, 4 Dec 2019 06:01:56 +0000
+Received: by swsrvapps-01.diasemi.com (Postfix, from userid 22266)      id
+ 1270A3FC0F; Tue,  3 Dec 2019 07:11:54 +0000 (GMT)
+Message-ID: <0e2b1bf7e5d5868cf7437ec7f347352420ba65ea.1575344415.git.Roy.Im@diasemi.com>
+In-Reply-To: <cover.1575344415.git.Roy.Im@diasemi.com>
+References: <cover.1575344415.git.Roy.Im@diasemi.com>
+From:   Roy Im <roy.im.opensource@diasemi.com>
+Date:   Tue, 3 Dec 2019 12:40:15 +0900
+Subject: [PATCH V8 1/3] MAINTAINERS: da7280 updates to the Dialog
+ Semiconductor search terms
+To:     <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
+        <samsung@kernel.org>, Rob Herring <robh@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Support Opensource <support.opensource@diasemi.com>,
+        <devicetree@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:45d2:: with SMTP id z79mr2120571ilj.76.1575441547914;
- Tue, 03 Dec 2019 22:39:07 -0800 (PST)
-Date:   Tue, 03 Dec 2019 22:39:07 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d3f9030598db1101@google.com>
-Subject: WARNING in mark_buffer_dirty (2)
-From:   syzbot <syzbot+60da3d6a696457b98553@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain
+X-KSE-AttachmentFiltering-Interceptor-Info: protection disabled
+X-KSE-ServerInfo: sw-ex-cashub01.diasemi.com, 9
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 04/12/2019 05:22:00
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+This patch adds the da7280 bindings doc and driver to the Dialog
+Semiconductor support list.
 
-syzbot found the following crash on:
-
-HEAD commit:    81b6b964 Merge branch 'master' of git://git.kernel.org/pub..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14d35a96e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=333b76551307b2a0
-dashboard link: https://syzkaller.appspot.com/bug?extid=60da3d6a696457b98553
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+60da3d6a696457b98553@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 8537 at fs/buffer.c:1088 mark_buffer_dirty+0x524/0x6c0  
-fs/buffer.c:1088
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 8537 Comm: syz-executor.1 Not tainted 5.4.0-syzkaller #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS  
-rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  panic+0x2e3/0x75c kernel/panic.c:221
-  __warn.cold+0x2f/0x3e kernel/panic.c:582
-  report_bug+0x289/0x300 lib/bug.c:195
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  fixup_bug arch/x86/kernel/traps.c:169 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:mark_buffer_dirty+0x524/0x6c0 fs/buffer.c:1088
-Code: 02 00 0f 85 9e 01 00 00 48 8b 3b be 04 00 00 00 e8 51 e7 fc ff e8 4c  
-d2 a8 ff 5b 41 5c 41 5d 41 5e 41 5f 5d c3 e8 3c d2 a8 ff <0f> 0b e9 2c fb  
-ff ff e8 30 d2 a8 ff 0f 0b e9 53 fb ff ff e8 24 d2
-RSP: 0000:ffff8880656d72f8 EFLAGS: 00010293
-RAX: ffff88806dd68140 RBX: ffff888077cd9738 RCX: ffffffff81cc070e
-RDX: 0000000000000000 RSI: ffffffff81cc0be4 RDI: 0000000000000001
-RBP: ffff8880656d7320 R08: ffff88806dd68140 R09: ffffed100ef9b2e8
-R10: ffffed100ef9b2e7 R11: ffff888077cd973f R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: ffff888070b421f8
-  __ext4_handle_dirty_metadata+0x3f7/0x600 fs/ext4/ext4_jbd2.c:298
-  ext4_free_blocks+0xeab/0x24d0 fs/ext4/mballoc.c:4940
-  ext4_remove_blocks fs/ext4/extents.c:2678 [inline]
-  ext4_ext_rm_leaf fs/ext4/extents.c:2831 [inline]
-  ext4_ext_remove_space+0x2491/0x5650 fs/ext4/extents.c:3076
-  ext4_ext_truncate+0x1b5/0x200 fs/ext4/extents.c:4599
-  ext4_truncate+0xc6e/0x13c0 fs/ext4/inode.c:4511
-  ext4_evict_inode+0x9d4/0x14e0 fs/ext4/inode.c:289
-  evict+0x306/0x680 fs/inode.c:574
-  iput_final fs/inode.c:1563 [inline]
-  iput+0x55d/0x900 fs/inode.c:1589
-  dentry_unlink_inode+0x2d9/0x400 fs/dcache.c:374
-  __dentry_kill+0x38b/0x600 fs/dcache.c:579
-  dentry_kill fs/dcache.c:698 [inline]
-  dput+0x62f/0xe10 fs/dcache.c:859
-  path_put+0x31/0x70 fs/namei.c:482
-  free_fs_struct+0x25/0x70 fs/fs_struct.c:91
-  exit_fs+0xf0/0x130 fs/fs_struct.c:108
-  do_exit+0x8bd/0x2ef0 kernel/exit.c:793
-  do_group_exit+0x135/0x360 kernel/exit.c:895
-  get_signal+0x47c/0x24f0 kernel/signal.c:2734
-  do_signal+0x87/0x1700 arch/x86/kernel/signal.c:815
-  exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:160
-  prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
-  do_syscall_64+0x676/0x790 arch/x86/entry/common.c:304
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45a759
-Code: Bad RIP value.
-RSP: 002b:00007faf7cbeacf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-RAX: fffffffffffffe00 RBX: 000000000071bf08 RCX: 000000000045a759
-RDX: 0000000000000000 RSI: 0000000000000080 RDI: 000000000071bf08
-RBP: 000000000071bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000071bf0c
-R13: 00007ffc79ee6e9f R14: 00007faf7cbcb000 R15: 0000000000000003
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
+Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
 
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+v8: No changes.
+v7: No changes.
+v6: No changes.
+v5: No changes.
+v4: No changes.
+v3: No changes.
+v2: No changes.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 9d3a5c5..def5e3e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4819,6 +4819,7 @@ S:	Supported
+ F:	Documentation/hwmon/da90??.rst
+ F:	Documentation/devicetree/bindings/mfd/da90*.txt
+ F:	Documentation/devicetree/bindings/input/da90??-onkey.txt
++F:	Documentation/devicetree/bindings/input/dlg,da72??.txt
+ F:	Documentation/devicetree/bindings/thermal/da90??-thermal.txt
+ F:	Documentation/devicetree/bindings/regulator/da92*.txt
+ F:	Documentation/devicetree/bindings/regulator/slg51000.txt
+@@ -4828,6 +4829,7 @@ F:	drivers/gpio/gpio-da90??.c
+ F:	drivers/hwmon/da90??-hwmon.c
+ F:	drivers/iio/adc/da91??-*.c
+ F:	drivers/input/misc/da90??_onkey.c
++F:	drivers/input/misc/da72??.[ch]
+ F:	drivers/input/touchscreen/da9052_tsi.c
+ F:	drivers/leds/leds-da90??.c
+ F:	drivers/mfd/da903x.c
+-- 
+end-of-patch for PATCH V8
+
