@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC28C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D30A4C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF40320656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9916120674
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414313;
-	bh=phDPJ1vUMNfzDKLbY2iav8Z5Vj1yusXlB66sPyGRnAY=;
+	s=default; t=1575414315;
+	bh=VvhhZrywDZUEE5Wva2ZTjgLplEjrDFba8pD+RLwlyD0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0iEaBpLvsgrgP82RClJ8tEy8l3ym9+AlZax1JRZxMgXSnAPlr+l9z+F7FpVbbE4KB
-	 WyhIbgKy2ojFHgVlXT8c1d1VG/izARijgLDygq0zgZ4dDs3Njj4evG8vzN+4IRR1pZ
-	 4XWsSaMcfU3exJiX00kiskNvFrfaF40Bf8mkrJTs=
+	b=ssiSSUsMLVJI/Nb0Nv9w3Ooze5vlngh3WnbxuyRYsZuMdGuS2yd1A4ehieN4qvJ2H
+	 yGn29WkQWREmvXDRar/xTPRoc1pbkskFnBNjMQpR/WQ0BdbZ8Bm0CLJj0RgWL9ZycX
+	 4RBmcAe1XnxVAFaQZFFTk57N4nEKxAFqxWgywfwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729934AbfLCXFN (ORCPT
+        id S1729995AbfLCXFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:05:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42400 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 18:05:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729784AbfLCWuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:50:40 -0500
+        id S1729780AbfLCWuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:50:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AE662084F;
-        Tue,  3 Dec 2019 22:50:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09E2B2084B;
+        Tue,  3 Dec 2019 22:50:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413438;
-        bh=phDPJ1vUMNfzDKLbY2iav8Z5Vj1yusXlB66sPyGRnAY=;
+        s=default; t=1575413436;
+        bh=VvhhZrywDZUEE5Wva2ZTjgLplEjrDFba8pD+RLwlyD0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a6TiLhTYxszfqElhpgGDJX3TlqBIDi5YSvH+dD8UDAWx/kYG6nWyYcPZ2PZmOVYDM
-         ZwsDIjqhWw/X9a4Knc94hDbXGSr1NQrcVvwF3he5bGUKbwNKf8eFHVrZPKTCMzyZbl
-         WA0qQJU0r9Ozf+OR+7fPChmzmeSls98PTs0yvZLg=
+        b=bu9ASkYzgqms8ureSDCN2/5pDH2L1CL8TZeVHFtytj1wPZZeCFmbgTZHJjDLH/EM3
+         IItUghlhb5QNKurMx43p2qN1RdyxBbgek3w+9ELdgMe/OfZYIRccQ+FD1AJYple4qM
+         zlfwgeC7b09XFw5U10jEvkbjwBxcEYeWnwIJUj18=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org,
+        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 088/321] crypto: user - support incremental algorithm dumps
-Date:   Tue,  3 Dec 2019 23:32:34 +0100
-Message-Id: <20191203223431.731974654@linuxfoundation.org>
+Subject: [PATCH 4.19 125/321] serial: 8250: Rate limit serial port rx interrupts during input overruns
+Date:   Tue,  3 Dec 2019 23:33:11 +0100
+Message-Id: <20191203223433.657269821@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,114 +60,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>
 
-[ Upstream commit 0ac6b8fb23c724b015d9ca70a89126e8d1563166 ]
+[ Upstream commit 6d7f677a2afa1c82d7fc7af7f9159cbffd5dc010 ]
 
-CRYPTO_MSG_GETALG in NLM_F_DUMP mode sometimes doesn't return all
-registered crypto algorithms, because it doesn't support incremental
-dumps.  crypto_dump_report() only permits itself to be called once, yet
-the netlink subsystem allocates at most ~64 KiB for the skb being dumped
-to.  Thus only the first recvmsg() returns data, and it may only include
-a subset of the crypto algorithms even if the user buffer passed to
-recvmsg() is large enough to hold all of them.
+When a serial port gets faulty or gets flooded with inputs, its interrupt
+handler starts to work double time to get the characters to the workqueue
+for the tty layer to handle them. When this busy time on the serial/tty
+subsystem happens during boot, where it is also busy on the userspace
+trying to initialise, some processes can continuously get preempted
+and will be on hold until the interrupts subside.
 
-Fix this by using one of the arguments in the netlink_callback structure
-to keep track of the current position in the algorithm list.  Then
-userspace can do multiple recvmsg() on the socket after sending the dump
-request.  This is the way netlink dumps work elsewhere in the kernel;
-it's unclear why this was different (probably just an oversight).
+The fix is to backoff on processing received characters for a specified
+amount of time when an input overrun is seen (received a new character
+before the previous one is processed). This only stops receive and will
+continue to transmit characters to serial port. After the backoff period
+is done, it receive will be re-enabled. This is optional and will only
+be enabled by setting 'overrun-throttle-ms' in the dts.
 
-Also fix an integer overflow when calculating the dump buffer size hint.
-
-Fixes: a38f7907b926 ("crypto: Add userspace configuration API")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/crypto_user.c | 37 ++++++++++++++++++++-----------------
- 1 file changed, 20 insertions(+), 17 deletions(-)
+ drivers/tty/serial/8250/8250_core.c | 25 +++++++++++++++++++++++++
+ drivers/tty/serial/8250/8250_fsl.c  | 23 ++++++++++++++++++++++-
+ drivers/tty/serial/8250/8250_of.c   |  5 +++++
+ include/linux/serial_8250.h         |  4 ++++
+ 4 files changed, 56 insertions(+), 1 deletion(-)
 
-diff --git a/crypto/crypto_user.c b/crypto/crypto_user.c
-index 3cca814348a26..74cb166097cd2 100644
---- a/crypto/crypto_user.c
-+++ b/crypto/crypto_user.c
-@@ -296,30 +296,33 @@ drop_alg:
- 
- static int crypto_dump_report(struct sk_buff *skb, struct netlink_callback *cb)
- {
--	struct crypto_alg *alg;
-+	const size_t start_pos = cb->args[0];
-+	size_t pos = 0;
- 	struct crypto_dump_info info;
--	int err;
--
--	if (cb->args[0])
--		goto out;
--
--	cb->args[0] = 1;
-+	struct crypto_alg *alg;
-+	int res;
- 
- 	info.in_skb = cb->skb;
- 	info.out_skb = skb;
- 	info.nlmsg_seq = cb->nlh->nlmsg_seq;
- 	info.nlmsg_flags = NLM_F_MULTI;
- 
-+	down_read(&crypto_alg_sem);
- 	list_for_each_entry(alg, &crypto_alg_list, cra_list) {
--		err = crypto_report_alg(alg, &info);
--		if (err)
--			goto out_err;
-+		if (pos >= start_pos) {
-+			res = crypto_report_alg(alg, &info);
-+			if (res == -EMSGSIZE)
-+				break;
-+			if (res)
-+				goto out;
-+		}
-+		pos++;
- 	}
--
-+	cb->args[0] = pos;
-+	res = skb->len;
- out:
--	return skb->len;
--out_err:
--	return err;
-+	up_read(&crypto_alg_sem);
-+	return res;
+diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
+index 8fe3d0ed229ed..0e65d4261f94c 100644
+--- a/drivers/tty/serial/8250/8250_core.c
++++ b/drivers/tty/serial/8250/8250_core.c
+@@ -946,6 +946,21 @@ static struct uart_8250_port *serial8250_find_match_or_unused(struct uart_port *
+ 	return NULL;
  }
  
- static int crypto_dump_report_done(struct netlink_callback *cb)
-@@ -503,7 +506,7 @@ static int crypto_user_rcv_msg(struct sk_buff *skb, struct nlmsghdr *nlh,
- 	if ((type == (CRYPTO_MSG_GETALG - CRYPTO_MSG_BASE) &&
- 	    (nlh->nlmsg_flags & NLM_F_DUMP))) {
- 		struct crypto_alg *alg;
--		u16 dump_alloc = 0;
-+		unsigned long dump_alloc = 0;
- 
- 		if (link->dump == NULL)
- 			return -EINVAL;
-@@ -511,16 +514,16 @@ static int crypto_user_rcv_msg(struct sk_buff *skb, struct nlmsghdr *nlh,
- 		down_read(&crypto_alg_sem);
- 		list_for_each_entry(alg, &crypto_alg_list, cra_list)
- 			dump_alloc += CRYPTO_REPORT_MAXSIZE;
-+		up_read(&crypto_alg_sem);
- 
- 		{
- 			struct netlink_dump_control c = {
- 				.dump = link->dump,
- 				.done = link->done,
--				.min_dump_alloc = dump_alloc,
-+				.min_dump_alloc = min(dump_alloc, 65535UL),
- 			};
- 			err = netlink_dump_start(crypto_nlsk, skb, nlh, &c);
++static void serial_8250_overrun_backoff_work(struct work_struct *work)
++{
++	struct uart_8250_port *up =
++	    container_of(to_delayed_work(work), struct uart_8250_port,
++			 overrun_backoff);
++	struct uart_port *port = &up->port;
++	unsigned long flags;
++
++	spin_lock_irqsave(&port->lock, flags);
++	up->ier |= UART_IER_RLSI | UART_IER_RDI;
++	up->port.read_status_mask |= UART_LSR_DR;
++	serial_out(up, UART_IER, up->ier);
++	spin_unlock_irqrestore(&port->lock, flags);
++}
++
+ /**
+  *	serial8250_register_8250_port - register a serial port
+  *	@up: serial port template
+@@ -1060,6 +1075,16 @@ int serial8250_register_8250_port(struct uart_8250_port *up)
+ 			ret = 0;
  		}
--		up_read(&crypto_alg_sem);
- 
- 		return err;
  	}
++
++	/* Initialise interrupt backoff work if required */
++	if (up->overrun_backoff_time_ms > 0) {
++		uart->overrun_backoff_time_ms = up->overrun_backoff_time_ms;
++		INIT_DELAYED_WORK(&uart->overrun_backoff,
++				  serial_8250_overrun_backoff_work);
++	} else {
++		uart->overrun_backoff_time_ms = 0;
++	}
++
+ 	mutex_unlock(&serial_mutex);
+ 
+ 	return ret;
+diff --git a/drivers/tty/serial/8250/8250_fsl.c b/drivers/tty/serial/8250/8250_fsl.c
+index 6640a4c7ddd1d..bb9571eed275d 100644
+--- a/drivers/tty/serial/8250/8250_fsl.c
++++ b/drivers/tty/serial/8250/8250_fsl.c
+@@ -45,8 +45,29 @@ int fsl8250_handle_irq(struct uart_port *port)
+ 
+ 	lsr = orig_lsr = up->port.serial_in(&up->port, UART_LSR);
+ 
+-	if (lsr & (UART_LSR_DR | UART_LSR_BI))
++	/* Process incoming characters first */
++	if ((lsr & (UART_LSR_DR | UART_LSR_BI)) &&
++	    (up->ier & (UART_IER_RLSI | UART_IER_RDI))) {
+ 		lsr = serial8250_rx_chars(up, lsr);
++	}
++
++	/* Stop processing interrupts on input overrun */
++	if ((orig_lsr & UART_LSR_OE) && (up->overrun_backoff_time_ms > 0)) {
++		unsigned long delay;
++
++		up->ier = port->serial_in(port, UART_IER);
++		if (up->ier & (UART_IER_RLSI | UART_IER_RDI)) {
++			port->ops->stop_rx(port);
++		} else {
++			/* Keep restarting the timer until
++			 * the input overrun subsides.
++			 */
++			cancel_delayed_work(&up->overrun_backoff);
++		}
++
++		delay = msecs_to_jiffies(up->overrun_backoff_time_ms);
++		schedule_delayed_work(&up->overrun_backoff, delay);
++	}
+ 
+ 	serial8250_modem_status(up);
+ 
+diff --git a/drivers/tty/serial/8250/8250_of.c b/drivers/tty/serial/8250/8250_of.c
+index 98125de2f0a6c..2488de1c4bc4b 100644
+--- a/drivers/tty/serial/8250/8250_of.c
++++ b/drivers/tty/serial/8250/8250_of.c
+@@ -244,6 +244,11 @@ static int of_platform_serial_probe(struct platform_device *ofdev)
+ 	if (of_property_read_bool(ofdev->dev.of_node, "auto-flow-control"))
+ 		port8250.capabilities |= UART_CAP_AFE;
+ 
++	if (of_property_read_u32(ofdev->dev.of_node,
++			"overrun-throttle-ms",
++			&port8250.overrun_backoff_time_ms) != 0)
++		port8250.overrun_backoff_time_ms = 0;
++
+ 	ret = serial8250_register_8250_port(&port8250);
+ 	if (ret < 0)
+ 		goto err_dispose;
+diff --git a/include/linux/serial_8250.h b/include/linux/serial_8250.h
+index 18e21427bce43..5a655ba8d2730 100644
+--- a/include/linux/serial_8250.h
++++ b/include/linux/serial_8250.h
+@@ -134,6 +134,10 @@ struct uart_8250_port {
+ 	void			(*dl_write)(struct uart_8250_port *, int);
+ 
+ 	struct uart_8250_em485 *em485;
++
++	/* Serial port overrun backoff */
++	struct delayed_work overrun_backoff;
++	u32 overrun_backoff_time_ms;
+ };
+ 
+ static inline struct uart_8250_port *up_to_u8250p(struct uart_port *up)
 -- 
 2.20.1
 
