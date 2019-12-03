@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB61C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D63C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05F6A2084B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 084072084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:44:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413079;
-	bh=Fqy2V9pstkUaLR5WHnRKMDI0Hyl7tpgth3ERKdbjpQw=;
+	s=default; t=1575413082;
+	bh=DX3MlaJR24u347KXFwaZUu2joPNmxXCZOAJEq0+M8AE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BfplzZIvTGUrBe3tMLku94CgUrIBPtFSfLdq11ndp9pAS4Q5yVSHjvSMpjm6rqovp
-	 vXhfTAD40GE3bNs2MfU6LH1d8oSe4yKgc01ZafQQPyPzxb/C5GMHqUDyG1E9nimAPs
-	 kWE6Zmnw+YQrQtGYzQPRruhDDFdQinzCymxzTlM8=
+	b=UKMSKgjNffV6ygCmRmpEtFcZk9MmA0qAm25voDt6dXWHoI2H0p8mkd7EPgvpj+qET
+	 HgwKthbAnq5eTubtOIF36CG+RotQwZvXOA86DrByL+tRqMsnxfyqx7qtKYqv9HPkr4
+	 B43ALCMEgY71MoyVumMxC+vF/9EbOXsvWzXLNq8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728723AbfLCWoh (ORCPT
+        id S1728958AbfLCWok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:44:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60608 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:44:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728091AbfLCWoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:44:32 -0500
+        id S1728484AbfLCWoh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:44:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E22B2084F;
-        Tue,  3 Dec 2019 22:44:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F01CE20803;
+        Tue,  3 Dec 2019 22:44:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413071;
-        bh=Fqy2V9pstkUaLR5WHnRKMDI0Hyl7tpgth3ERKdbjpQw=;
+        s=default; t=1575413076;
+        bh=DX3MlaJR24u347KXFwaZUu2joPNmxXCZOAJEq0+M8AE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TTk6biJsWme+oDfPtnEEoTIcYN2YPO1uLZTLag9UK9zHwdEGHjAwiDluWtBHtkpnt
-         pciT1J/DrWX65bgd5x0G6DFDjehBgRyikH/vy3Fqn3XA2dX0DoMZaNGtR6dVpYOyfD
-         3E+tLT9AKTws91N6YUee7a7dh+N02Xycc2v3FiMo=
+        b=rKwgIbk7AQ8ces+yi8Vxl7NJumHYCs7YtmelPmr2qxK9Y9p67UCYsAbk9cbLS1YP+
+         5dZB6wsy+y4isLNTgoin72wu4LSwMzuWu43gU3jT6z+/Ki71sn5kj6LHeSUMchcdEx
+         37HhMuf+xc3MOy1noJSAP63/WmmqTPKMv+/jqiMM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+        stable@vger.kernel.org,
+        syzbot+df0d4ec12332661dd1f9@syzkaller.appspotmail.com,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        John Fastabend <john.fastabend@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 121/135] openvswitch: remove another BUG_ON()
-Date:   Tue,  3 Dec 2019 23:36:01 +0100
-Message-Id: <20191203213044.359229942@linuxfoundation.org>
+Subject: [PATCH 5.3 123/135] net/tls: free the record on encryption error
+Date:   Tue,  3 Dec 2019 23:36:03 +0100
+Message-Id: <20191203213044.695046895@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -59,49 +63,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit 8a574f86652a4540a2433946ba826ccb87f398cc ]
+[ Upstream commit d10523d0b3d78153ee58d19853ced26c9004c8c4 ]
 
-If we can't build the flow del notification, we can simply delete
-the flow, no need to crash the kernel. Still keep a WARN_ON to
-preserve debuggability.
+When tls_do_encryption() fails the SG lists are left with the
+SG_END and SG_CHAIN marks in place. One could hope that once
+encryption fails we will never see the record again, but that
+is in fact not true. Commit d3b18ad31f93 ("tls: add bpf support
+to sk_msg handling") added special handling to ENOMEM and ENOSPC
+errors which mean we may see the same record re-submitted.
 
-Note: the BUG_ON() predates the Fixes tag, but this change
-can be applied only after the mentioned commit.
+As suggested by John free the record, the BPF code is already
+doing just that.
 
-v1 -> v2:
- - do not leak an skb on error
-
-Fixes: aed067783e50 ("openvswitch: Minimize ovs_flow_cmd_del critical section.")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Reported-by: syzbot+df0d4ec12332661dd1f9@syzkaller.appspotmail.com
+Fixes: d3b18ad31f93 ("tls: add bpf support to sk_msg handling")
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
+Acked-by: John Fastabend <john.fastabend@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/openvswitch/datapath.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ net/tls/tls_sw.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/net/openvswitch/datapath.c
-+++ b/net/openvswitch/datapath.c
-@@ -1350,7 +1350,10 @@ static int ovs_flow_cmd_del(struct sk_bu
- 						     OVS_FLOW_CMD_DEL,
- 						     ufid_flags);
- 			rcu_read_unlock();
--			BUG_ON(err < 0);
-+			if (WARN_ON_ONCE(err < 0)) {
-+				kfree_skb(reply);
-+				goto out_free;
-+			}
+--- a/net/tls/tls_sw.c
++++ b/net/tls/tls_sw.c
+@@ -766,8 +766,14 @@ static int bpf_exec_tx_verdict(struct sk
  
- 			ovs_notify(&dp_flow_genl_family, reply, info);
- 		} else {
-@@ -1358,6 +1361,7 @@ static int ovs_flow_cmd_del(struct sk_bu
- 		}
- 	}
- 
-+out_free:
- 	ovs_flow_free(flow, true);
- 	return 0;
- unlock:
+ 	policy = !(flags & MSG_SENDPAGE_NOPOLICY);
+ 	psock = sk_psock_get(sk);
+-	if (!psock || !policy)
+-		return tls_push_record(sk, flags, record_type);
++	if (!psock || !policy) {
++		err = tls_push_record(sk, flags, record_type);
++		if (err) {
++			*copied -= sk_msg_free(sk, msg);
++			tls_free_open_rec(sk);
++		}
++		return err;
++	}
+ more_data:
+ 	enospc = sk_msg_full(msg);
+ 	if (psock->eval == __SK_NONE) {
 
 
