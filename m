@@ -2,82 +2,116 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06AE0C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66891C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCF3F206E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E1FF206E4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:33:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oRdLWz80"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="une3qInd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfLCQdo (ORCPT
+        id S1726970AbfLCQds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 11:33:44 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:51290 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbfLCQdo (ORCPT
+        Tue, 3 Dec 2019 11:33:48 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35589 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbfLCQdp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 11:33:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=bmHoVTlf0pCpIQSoAotql3m5fbx6C4BbcKfSAm0A92U=; b=oRdLWz80LB9JS+CxEFpCP+w0q
-        jwYiGS1ZNRht3ecXNBDcRRpHZAKkGmtOZWAj+s7RytRgR2akpqHJkZ2hQ4Eeyb9OBquqvmVzVPdlL
-        a1Nk5J18bjum26pM9/XAdPGM2USIDIBIoeBz6g5v1W+2TaCyHGJqrKw4T4HWDQWgssUfe6TlhmQfP
-        sKZSsmL2VTn/7w93PaVNCpFyF5s7ZbqpxyULBE7mIes4a4anGd/XjpOdoz/uYniiDn83Q+saBx9rJ
-        lSAQEIW5X74UbbEdRNlQlM4izZVUIzmmDBnMIv01IxRWii8dOrpWwodwZ19miSPsHfm4TrZW7tSxN
-        pu5fnxCZQ==;
-Received: from [2601:1c0:6280:3f0::5a22]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1icB7O-0002Hq-HS; Tue, 03 Dec 2019 16:33:42 +0000
-Subject: Re: linux-next: Tree for Dec 3 (pinctrl-equilibrium)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-References: <20191203155405.31404722@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <1a78124d-bef9-46da-aef4-60f85fddfceb@infradead.org>
-Date:   Tue, 3 Dec 2019 08:33:41 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 3 Dec 2019 11:33:45 -0500
+Received: by mail-wm1-f68.google.com with SMTP id u8so4266544wmu.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 08:33:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=i7Rl2ommOFpZyqjc2xIe8+dnrgxiLpTR5CzNoZds2fo=;
+        b=une3qIndSJoWVUjUi/0G2NHM2XesEgfnFTKtTU+VgTVszaqX3h6Wb+mFixhVGnisgu
+         BkiRet5AUR6u9LLTh7N3nXmJPe6DST9mRqyMqbCjWaLz4kV7AzyBC5ZPQtRSjM6emySf
+         gnHSd9TIzowsdY17wvPIrfZQwL6KJWh6fdudKc/BOCYU95F2QnBBlSYcXaRidjd8NUVe
+         1/mHBV6Zy8wIObKW+ZcnpDneiahFLPFvIHmH9P6Tgysi7bk69dIaPrQExBB1uPenMzRa
+         jElTuYb07v2FBhGMX96XnDGH161CgmXXsBztnxjZjDBgfQUV2uOUsfCP9u8NtphdW7+y
+         SH3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=i7Rl2ommOFpZyqjc2xIe8+dnrgxiLpTR5CzNoZds2fo=;
+        b=fDi7j1GBiJ3JVNuXVHxbUj6VILXKrVQTdfAlzk+EELBXA1kJuNhMcrAHhjmbMXTzZW
+         +mypiAR3GjkeeiMi6lR7fzPw/acR5ZvpHt0t23VowWhz/Dz50gv3FKdbY2fUchqFqwOr
+         RRH2C4jYuLd/8T+tpgcVCayUDuiYSFFGgpVFpDtlxt61YjQfQ0FDMMyFD+sVIydAnT/D
+         qWGGN7z3zIJLEKb0dfmMynAj8xV6WdnNVI97rnuvfBoMLhI3MTBDv4tyjEF54x7jCfsW
+         SfODLzH8VjfAAJ3c1p5e9tazrN2KUFlLig10QvKs+eXH+blmIBXCudz3+DASQaFEu+Bo
+         /vxQ==
+X-Gm-Message-State: APjAAAUe7EbjyrO1s/uAFUIYRnJ8ZQcZw2qkynSLSLA5SVsM8Or9WPWr
+        mCN4htMQVGPzW50GFxwJCVw+KjSmaPt4obRn0Syk2w==
+X-Google-Smtp-Source: APXvYqwin1u3AXgG2PuZ9aX89PaAGoHK2R75waW23arJcmIP7D3A/I5KQuhmkVgKQRud4tIQfFjqshT3/nlrzS64a9U=
+X-Received: by 2002:a05:600c:141:: with SMTP id w1mr15345919wmm.61.1575390822794;
+ Tue, 03 Dec 2019 08:33:42 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191203155405.31404722@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191203004043.174977-1-matthewgarrett@google.com> <CALCETrWUYapn=vTbKnKFVQ3Y4vG0qHwux0ym_To2NWKPew+vrw@mail.gmail.com>
+In-Reply-To: <CALCETrWUYapn=vTbKnKFVQ3Y4vG0qHwux0ym_To2NWKPew+vrw@mail.gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 3 Dec 2019 16:33:37 +0000
+Message-ID: <CAKv+Gu8ohahrVVvMO0FfJPQL+Um5HoL=OFegTD25RwBP6rgLHQ@mail.gmail.com>
+Subject: Re: [PATCH] [EFI,PCI] Allow disabling PCI busmastering on bridges
+ during boot
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Matthew Garrett <matthewgarrett@google.com>,
+        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Garrett <mjg59@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/2/19 8:54 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Please do not add any material for v5.6 to your linux-next included
-> trees until after v5.5-rc1 has been released.
-> 
-> Changes since 20191202:
-> 
+On Tue, 3 Dec 2019 at 15:30, Andy Lutomirski <luto@amacapital.net> wrote:
+>
+> On Mon, Dec 2, 2019 at 4:41 PM Matthew Garrett
+> <matthewgarrett@google.com> wrote:
+> >
+> > Add an option to disable the busmaster bit in the control register on
+> > all PCI bridges before calling ExitBootServices() and passing control to
+> > the runtime kernel. System firmware may configure the IOMMU to prevent
+> > malicious PCI devices from being able to attack the OS via DMA. However,
+> > since firmware can't guarantee that the OS is IOMMU-aware, it will tear
+> > down IOMMU configuration when ExitBootServices() is called. This leaves
+> > a window between where a hostile device could still cause damage before
+> > Linux configures the IOMMU again.
+> >
+> > If CONFIG_EFI_NO_BUSMASTER is enabled or the "disable_busmaster=1"
+> > commandline argument is passed, the EFI stub will clear the busmaster
+> > bit on all PCI bridges before ExitBootServices() is called. This will
+> > prevent any malicious PCI devices from being able to perform DMA until
+> > the kernel reenables busmastering after configuring the IOMMU.
+>
+> I hate to be an obnoxious bikeshedder, but I really dislike the
+> "disable_busmaster" name.  I read this and $SUBJECT as "for some
+> reason, the admin wants to operate the system with busmastering off".
+> What you really want is something more like "disable busmastering
+> before IOMMU initialization".  Maybe
+> "iommu.disable_busmaster_before_init"?
+>
+> Similarly, EFI_NO_BUSMASTER sounds like a permanent state of affairs.
+>
+> Would a similar patch apply to non-EFI boot?  That is, in a BIOS boot,
+> is busmastering on when the kernel is loaded?
+>
 
-on x86_64:
-# CONFIG_OF is not set
+Yes, bus mastering is on, but since legacy BIOS may implement things
+like PS/2 emulation or other compatibility hacks where the PCI masters
+(devices or bridges) may need to be left enabled across the transition
+from firmware into the OS, I don't think it is wise to try and
+implement this feature for it.
 
-
-ld: drivers/pinctrl/pinctrl-equilibrium.o: in function `pinconf_generic_dt_node_to_map_all':
-pinctrl-equilibrium.c:(.text+0xb): undefined reference to `pinconf_generic_dt_node_to_map'
-
-Probably depends on OF.
-
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+So the EFI stub is a reasonable place to put a feature like this,
+except for the fact that [on x86], it does not get invoked unless GRUB
+boots your kernel with 'linuxefi' rather than 'linux', and so in the
+majority of cases, I guess we are essentially doing legacy BIOS boot,
+even on UEFI systems.
