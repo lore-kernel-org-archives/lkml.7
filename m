@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D074DC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58258C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A60C920675
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C44D20881
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:27:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbfLCQ07 (ORCPT
+        id S1727254AbfLCQ1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 11:26:59 -0500
-Received: from albert.telenet-ops.be ([195.130.137.90]:40810 "EHLO
-        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726819AbfLCQ0u (ORCPT
+        Tue, 3 Dec 2019 11:27:05 -0500
+Received: from andre.telenet-ops.be ([195.130.132.53]:36292 "EHLO
+        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbfLCQ0u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 3 Dec 2019 11:26:50 -0500
 Received: from ramsan ([84.195.182.253])
-        by albert.telenet-ops.be with bizsmtp
-        id ZUSm2100W5USYZQ06USmq9; Tue, 03 Dec 2019 17:26:47 +0100
+        by andre.telenet-ops.be with bizsmtp
+        id ZUSm2100p5USYZQ01USmiK; Tue, 03 Dec 2019 17:26:47 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1icB0g-0007fc-I3; Tue, 03 Dec 2019 17:26:46 +0100
+        id 1icB0g-0007fm-LB; Tue, 03 Dec 2019 17:26:46 +0100
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1icB0g-0005Cf-Go; Tue, 03 Dec 2019 17:26:46 +0100
+        id 1icB0g-0005Cr-Ji; Tue, 03 Dec 2019 17:26:46 +0100
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
         Rich Felker <dalias@libc.org>
@@ -37,9 +37,9 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Guenter Roeck <linux@roeck-us.net>, linux-sh@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/7] sh: kernel: disassemble: Fix broken lines in disassembly dumps
-Date:   Tue,  3 Dec 2019 17:26:39 +0100
-Message-Id: <20191203162645.19950-2-geert+renesas@glider.be>
+Subject: [PATCH 5/7] sh: pci: Modernize printing of kernel messages
+Date:   Tue,  3 Dec 2019 17:26:43 +0100
+Message-Id: <20191203162645.19950-6-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191203162645.19950-1-geert+renesas@glider.be>
 References: <20191203162645.19950-1-geert+renesas@glider.be>
@@ -48,318 +48,165 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rejoin the broken lines by using pr_cont().
-Convert the remaining printk() calls to pr_*() while at it.
+  - Convert from printk() to pr_*(),
+  - Add missing continuations,
+  - Join broken messages.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
-Sample impact:
-
- Code:
--  8c043d00:
--bf.s
--8c043d08
--
--  8c043d02:
--tst
--r2
--,
--r2
--
--  8c043d04:
--bf
--8c043d08
--
--->8c043d06:
--trapa
--#62
--
--  8c043d08:
--mov.l
--8c043d78 <dma_alloc_attrs+0xa4/0xb0>
--,
--r0
--  ! 8c044d14 <dma_alloc_from_dev_coherent+0x0/0x38>
--
--  8c043d0a:
--mov
--r15
--,
--r7
--
--  8c043d0c:
--mov
--r13
--,
--r6
--
--  8c043d0e:
--add
--#4
--,
--r7
--
--  8c043d10:
--mov
--r11
--,
--r5
--
-+  8c043cf4:  bf.s      8c043cfc
-+  8c043cf6:  tst       r2, r2
-+  8c043cf8:  bf        8c043cfc
-+->8c043cfa:  trapa     #62
-+  8c043cfc:  mov.l     8c043d6c <dma_alloc_attrs+0xa4/0xb0>, r0  ! 8c044d08 <dma_alloc_from_dev_coherent+0x0/0x38>
-+  8c043cfe:  mov       r15, r7
-+  8c043d00:  mov       r13, r6
-+  8c043d02:  add       #4, r7
-+  8c043d04:  mov       r11, r5
+Compile-tested only.
 ---
- arch/sh/kernel/disassemble.c | 103 ++++++++++++++++++-----------------
- 1 file changed, 52 insertions(+), 51 deletions(-)
+ arch/sh/drivers/pci/common.c     |  6 +++---
+ arch/sh/drivers/pci/pci-sh7780.c | 23 +++++++++++------------
+ arch/sh/drivers/pci/pci.c        | 11 +++++------
+ 3 files changed, 19 insertions(+), 21 deletions(-)
 
-diff --git a/arch/sh/kernel/disassemble.c b/arch/sh/kernel/disassemble.c
-index 845543780cc55014..08e1af63edd9623c 100644
---- a/arch/sh/kernel/disassemble.c
-+++ b/arch/sh/kernel/disassemble.c
-@@ -376,148 +376,148 @@ static void print_sh_insn(u32 memaddr, u16 insn)
- 		}
+diff --git a/arch/sh/drivers/pci/common.c b/arch/sh/drivers/pci/common.c
+index fe163ecd07197073..2fd2b77e12cec1f2 100644
+--- a/arch/sh/drivers/pci/common.c
++++ b/arch/sh/drivers/pci/common.c
+@@ -54,7 +54,7 @@ int __init pci_is_66mhz_capable(struct pci_channel *hose,
+ 	int cap66 = -1;
+ 	u16 stat;
  
- 	ok:
--		printk("%-8s  ", op->name);
-+		pr_cont("%-8s  ", op->name);
- 		lastsp = (op->arg[0] == A_END);
- 		disp_pc = 0;
- 		for (n = 0; n < 6 && op->arg[n] != A_END; n++) {
- 			if (n && op->arg[1] != A_END)
--				printk(", ");
-+				pr_cont(", ");
- 			switch (op->arg[n]) {
- 			case A_IMM:
--				printk("#%d", (char)(imm));
-+				pr_cont("#%d", (char)(imm));
- 				break;
- 			case A_R0:
--				printk("r0");
-+				pr_cont("r0");
- 				break;
- 			case A_REG_N:
--				printk("r%d", rn);
-+				pr_cont("r%d", rn);
- 				break;
- 			case A_INC_N:
--				printk("@r%d+", rn);
-+				pr_cont("@r%d+", rn);
- 				break;
- 			case A_DEC_N:
--				printk("@-r%d", rn);
-+				pr_cont("@-r%d", rn);
- 				break;
- 			case A_IND_N:
--				printk("@r%d", rn);
-+				pr_cont("@r%d", rn);
- 				break;
- 			case A_DISP_REG_N:
--				printk("@(%d,r%d)", imm, rn);
-+				pr_cont("@(%d,r%d)", imm, rn);
- 				break;
- 			case A_REG_M:
--				printk("r%d", rm);
-+				pr_cont("r%d", rm);
- 				break;
- 			case A_INC_M:
--				printk("@r%d+", rm);
-+				pr_cont("@r%d+", rm);
- 				break;
- 			case A_DEC_M:
--				printk("@-r%d", rm);
-+				pr_cont("@-r%d", rm);
- 				break;
- 			case A_IND_M:
--				printk("@r%d", rm);
-+				pr_cont("@r%d", rm);
- 				break;
- 			case A_DISP_REG_M:
--				printk("@(%d,r%d)", imm, rm);
-+				pr_cont("@(%d,r%d)", imm, rm);
- 				break;
- 			case A_REG_B:
--				printk("r%d_bank", rb);
-+				pr_cont("r%d_bank", rb);
- 				break;
- 			case A_DISP_PC:
- 				disp_pc = 1;
- 				disp_pc_addr = imm + 4 + (memaddr & relmask);
--				printk("%08x <%pS>", disp_pc_addr,
--				       (void *)disp_pc_addr);
-+				pr_cont("%08x <%pS>", disp_pc_addr,
-+					(void *)disp_pc_addr);
- 				break;
- 			case A_IND_R0_REG_N:
--				printk("@(r0,r%d)", rn);
-+				pr_cont("@(r0,r%d)", rn);
- 				break;
- 			case A_IND_R0_REG_M:
--				printk("@(r0,r%d)", rm);
-+				pr_cont("@(r0,r%d)", rm);
- 				break;
- 			case A_DISP_GBR:
--				printk("@(%d,gbr)",imm);
-+				pr_cont("@(%d,gbr)", imm);
- 				break;
- 			case A_R0_GBR:
--				printk("@(r0,gbr)");
-+				pr_cont("@(r0,gbr)");
- 				break;
- 			case A_BDISP12:
- 			case A_BDISP8:
--				printk("%08x", imm + memaddr);
-+				pr_cont("%08x", imm + memaddr);
- 				break;
- 			case A_SR:
--				printk("sr");
-+				pr_cont("sr");
- 				break;
- 			case A_GBR:
--				printk("gbr");
-+				pr_cont("gbr");
- 				break;
- 			case A_VBR:
--				printk("vbr");
-+				pr_cont("vbr");
- 				break;
- 			case A_SSR:
--				printk("ssr");
-+				pr_cont("ssr");
- 				break;
- 			case A_SPC:
--				printk("spc");
-+				pr_cont("spc");
- 				break;
- 			case A_MACH:
--				printk("mach");
-+				pr_cont("mach");
- 				break;
- 			case A_MACL:
--				printk("macl");
-+				pr_cont("macl");
- 				break;
- 			case A_PR:
--				printk("pr");
-+				pr_cont("pr");
- 				break;
- 			case A_SGR:
--				printk("sgr");
-+				pr_cont("sgr");
- 				break;
- 			case A_DBR:
--				printk("dbr");
-+				pr_cont("dbr");
- 				break;
- 			case FD_REG_N:
- 			case F_REG_N:
--				printk("fr%d", rn);
-+				pr_cont("fr%d", rn);
- 				break;
- 			case F_REG_M:
--				printk("fr%d", rm);
-+				pr_cont("fr%d", rm);
- 				break;
- 			case DX_REG_N:
- 				if (rn & 1) {
--					printk("xd%d", rn & ~1);
-+					pr_cont("xd%d", rn & ~1);
- 					break;
- 				}
- 				/* else, fall through */
- 			case D_REG_N:
--				printk("dr%d", rn);
-+				pr_cont("dr%d", rn);
- 				break;
- 			case DX_REG_M:
- 				if (rm & 1) {
--					printk("xd%d", rm & ~1);
-+					pr_cont("xd%d", rm & ~1);
- 					break;
- 				}
- 				/* else, fall through */
- 			case D_REG_M:
--				printk("dr%d", rm);
-+				pr_cont("dr%d", rm);
- 				break;
- 			case FPSCR_M:
- 			case FPSCR_N:
--				printk("fpscr");
-+				pr_cont("fpscr");
- 				break;
- 			case FPUL_M:
- 			case FPUL_N:
--				printk("fpul");
-+				pr_cont("fpul");
- 				break;
- 			case F_FR0:
--				printk("fr0");
-+				pr_cont("fr0");
- 				break;
- 			case V_REG_N:
--				printk("fv%d", rn*4);
-+				pr_cont("fv%d", rn*4);
- 				break;
- 			case V_REG_M:
--				printk("fv%d", rm*4);
-+				pr_cont("fv%d", rm*4);
- 				break;
- 			case XMTRX_M4:
--				printk("xmtrx");
-+				pr_cont("xmtrx");
- 				break;
- 			default:
- 				return;
-@@ -532,7 +532,7 @@ static void print_sh_insn(u32 memaddr, u16 insn)
- 			else
- 				__get_user(val, (u32 *)disp_pc_addr);
+-	printk(KERN_INFO "PCI: Checking 66MHz capabilities...\n");
++	pr_info("PCI: Checking 66MHz capabilities...\n");
  
--			printk("  ! %08x <%pS>", val, (void *)val);
-+			pr_cont("  ! %08x <%pS>", val, (void *)val);
- 		}
- 
- 		return;
-@@ -541,7 +541,7 @@ static void print_sh_insn(u32 memaddr, u16 insn)
- 
- 	}
- 
--	printk(".word 0x%x%x%x%x", nibs[0], nibs[1], nibs[2], nibs[3]);
-+	pr_info(".word 0x%x%x%x%x", nibs[0], nibs[1], nibs[2], nibs[3]);
- }
- 
- void show_code(struct pt_regs *regs)
-@@ -552,20 +552,21 @@ void show_code(struct pt_regs *regs)
- 	if (regs->pc & 0x1)
- 		return;
- 
--	printk("Code:\n");
-+	pr_info("Code:\n");
- 
- 	for (i = -3 ; i < 6 ; i++) {
- 		unsigned short insn;
- 
- 		if (__get_user(insn, pc + i)) {
--			printk(" (Bad address in pc)\n");
-+			pr_err(" (Bad address in pc)\n");
- 			break;
- 		}
- 
--		printk("%s%08lx:  ", (i ? "  ": "->"), (unsigned long)(pc + i));
-+		pr_info("%s%08lx:  ", (i ? "  " : "->"),
-+			(unsigned long)(pc + i));
- 		print_sh_insn((unsigned long)(pc + i), insn);
+ 	for (pci_devfn = 0; pci_devfn < 0xff; pci_devfn++) {
+ 		if (PCI_FUNC(pci_devfn))
+@@ -134,7 +134,7 @@ unsigned int pcibios_handle_status_errors(unsigned long addr,
+ 		pcibios_report_status(PCI_STATUS_REC_TARGET_ABORT |
+ 				      PCI_STATUS_SIG_TARGET_ABORT |
+ 				      PCI_STATUS_REC_MASTER_ABORT, 1);
 -		printk("\n");
 +		pr_cont("\n");
+ 
+ 		cmd |= PCI_STATUS_REC_TARGET_ABORT;
+ 	}
+@@ -143,7 +143,7 @@ unsigned int pcibios_handle_status_errors(unsigned long addr,
+ 		printk(KERN_DEBUG "PCI: parity error detected: ");
+ 		pcibios_report_status(PCI_STATUS_PARITY |
+ 				      PCI_STATUS_DETECTED_PARITY, 1);
+-		printk("\n");
++		pr_cont("\n");
+ 
+ 		cmd |= PCI_STATUS_PARITY | PCI_STATUS_DETECTED_PARITY;
+ 
+diff --git a/arch/sh/drivers/pci/pci-sh7780.c b/arch/sh/drivers/pci/pci-sh7780.c
+index 287b3a68570cf0ff..9a624a6ee3547924 100644
+--- a/arch/sh/drivers/pci/pci-sh7780.c
++++ b/arch/sh/drivers/pci/pci-sh7780.c
+@@ -148,7 +148,7 @@ static irqreturn_t sh7780_pci_serr_irq(int irq, void *dev_id)
+ 
+ 	printk(KERN_DEBUG "PCI: system error received: ");
+ 	pcibios_report_status(PCI_STATUS_SIG_SYSTEM_ERROR, 1);
+-	printk("\n");
++	pr_cont("\n");
+ 
+ 	/* Deassert SERR */
+ 	__raw_writel(SH4_PCIINTM_SDIM, hose->reg_base + SH4_PCIINTM);
+@@ -179,7 +179,7 @@ static int __init sh7780_pci_setup_irqs(struct pci_channel *hose)
+ 	ret = request_irq(hose->serr_irq, sh7780_pci_serr_irq, 0,
+ 			  "PCI SERR interrupt", hose);
+ 	if (unlikely(ret)) {
+-		printk(KERN_ERR "PCI: Failed hooking SERR IRQ\n");
++		pr_err("PCI: Failed hooking SERR IRQ\n");
+ 		return ret;
  	}
  
--	printk("\n");
-+	pr_info("\n");
+@@ -250,7 +250,7 @@ static int __init sh7780_pci_init(void)
+ 	const char *type;
+ 	int ret, i;
+ 
+-	printk(KERN_NOTICE "PCI: Starting initialization.\n");
++	pr_notice("PCI: Starting initialization.\n");
+ 
+ 	chan->reg_base = 0xfe040000;
+ 
+@@ -270,7 +270,7 @@ static int __init sh7780_pci_init(void)
+ 
+ 	id = __raw_readw(chan->reg_base + PCI_VENDOR_ID);
+ 	if (id != PCI_VENDOR_ID_RENESAS) {
+-		printk(KERN_ERR "PCI: Unknown vendor ID 0x%04x.\n", id);
++		pr_err("PCI: Unknown vendor ID 0x%04x.\n", id);
+ 		return -ENODEV;
+ 	}
+ 
+@@ -281,14 +281,13 @@ static int __init sh7780_pci_init(void)
+ 	       (id == PCI_DEVICE_ID_RENESAS_SH7785) ? "SH7785" :
+ 					  NULL;
+ 	if (unlikely(!type)) {
+-		printk(KERN_ERR "PCI: Found an unsupported Renesas host "
+-		       "controller, device id 0x%04x.\n", id);
++		pr_err("PCI: Found an unsupported Renesas host controller, device id 0x%04x.\n",
++		       id);
+ 		return -EINVAL;
+ 	}
+ 
+-	printk(KERN_NOTICE "PCI: Found a Renesas %s host "
+-	       "controller, revision %d.\n", type,
+-	       __raw_readb(chan->reg_base + PCI_REVISION_ID));
++	pr_notice("PCI: Found a Renesas %s host controller, revision %d.\n",
++		  type, __raw_readb(chan->reg_base + PCI_REVISION_ID));
+ 
+ 	/*
+ 	 * Now throw it in to register initialization mode and
+@@ -395,9 +394,9 @@ static int __init sh7780_pci_init(void)
+ 
+ 	sh7780_pci66_init(chan);
+ 
+-	printk(KERN_NOTICE "PCI: Running at %dMHz.\n",
+-	       (__raw_readw(chan->reg_base + PCI_STATUS) & PCI_STATUS_66MHZ) ?
+-	       66 : 33);
++	pr_notice("PCI: Running at %dMHz.\n",
++		  (__raw_readw(chan->reg_base + PCI_STATUS) & PCI_STATUS_66MHZ)
++		  ? 66 : 33);
+ 
+ 	return 0;
+ 
+diff --git a/arch/sh/drivers/pci/pci.c b/arch/sh/drivers/pci/pci.c
+index c7784e1569644d76..6ab0b7377f6634fc 100644
+--- a/arch/sh/drivers/pci/pci.c
++++ b/arch/sh/drivers/pci/pci.c
+@@ -120,8 +120,7 @@ int register_pci_controller(struct pci_channel *hose)
+ 	 * Do not panic here but later - this might happen before console init.
+ 	 */
+ 	if (!hose->io_map_base) {
+-		printk(KERN_WARNING
+-		       "registering PCI controller with io_map_base unset\n");
++		pr_warn("registering PCI controller with io_map_base unset\n");
+ 	}
+ 
+ 	/*
+@@ -145,7 +144,7 @@ int register_pci_controller(struct pci_channel *hose)
+ 	for (--i; i >= 0; i--)
+ 		release_resource(&hose->resources[i]);
+ 
+-	printk(KERN_WARNING "Skipping PCI bus scan due to resource conflict\n");
++	pr_warn("Skipping PCI bus scan due to resource conflict\n");
+ 	return -1;
  }
+ 
+@@ -213,8 +212,8 @@ pcibios_bus_report_status_early(struct pci_channel *hose,
+ 					pci_devfn, PCI_STATUS,
+ 					status & status_mask);
+ 		if (warn)
+-			printk("(%02x:%02x: %04X) ", current_bus,
+-			       pci_devfn, status);
++			pr_cont("(%02x:%02x: %04X) ", current_bus, pci_devfn,
++				status);
+ 	}
+ }
+ 
+@@ -249,7 +248,7 @@ pcibios_bus_report_status(struct pci_bus *bus, unsigned int status_mask,
+ 		pci_write_config_word(dev, PCI_STATUS, status & status_mask);
+ 
+ 		if (warn)
+-			printk("(%s: %04X) ", pci_name(dev), status);
++			pr_cont("(%s: %04X) ", pci_name(dev), status);
+ 	}
+ 
+ 	list_for_each_entry(dev, &bus->devices, bus_list)
 -- 
 2.17.1
 
