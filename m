@@ -2,245 +2,163 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC93C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D355CC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3E2C206EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A45F520661
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:41:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dRDTh2Hj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbfLCOjz (ORCPT
+        id S1726410AbfLCOlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 09:39:55 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:39882 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfLCOjz (ORCPT
+        Tue, 3 Dec 2019 09:41:13 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44574 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfLCOlM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 09:39:55 -0500
-Received: by mail-ed1-f65.google.com with SMTP id v16so3348086edy.6;
-        Tue, 03 Dec 2019 06:39:54 -0800 (PST)
+        Tue, 3 Dec 2019 09:41:12 -0500
+Received: by mail-qk1-f195.google.com with SMTP id i18so3573813qkl.11;
+        Tue, 03 Dec 2019 06:41:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vXhD/Cg42jzYXyNOmi+P51+bDzKABFgmqewXbwdhiSk=;
+        b=dRDTh2Hj0zfw0Y+ySTQkBAU7i7qdkFlw/LNWWR+faN6evr5Ox1mXGMcF9Ai5IetlRf
+         7KaAx/kf4dUxrfnaAsjq0pT7p4YIkqh96IQKizZdGg0MheEiJv4vkFI8sgvqIroZjJ2S
+         9z2uq1luL160NGANBP50NvBWurbNnGKxSqId2NgowdHRkqM7N+/cBp6wO5PW94F6dGl6
+         4TKB7IkcKxinHV9u/piVO3uB9lx0sJE377C5D5A0wTUeGrOMK0sT3AXvJUL3Mg1rgFX4
+         rGCrksL0cG3q4SgVzE/tVIf8RpI7W5uCnrkX0SBPlB+QLsfAxLbSF9q6ay7q28jvIJdm
+         FCiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oPEnXL1XzID9qd2Be+10pgTMy8eYDYLQQ70JFSTiM08=;
-        b=Vl8jiiuVXWwr7ClOguZmELloyPTHl48gSZxaDbOpMHPc4LMpIhj1b4FcSyfIIldnEh
-         q97wCH0YXJXSQc1YhnwFxOt21ElKghviSZH1/wK+lZmWlePXtKXuZ40H3bJ7IRvTt1Vx
-         u2ztVxE8IHjiIHM4sgCOACoXlCQ3G+2cuWTOKvDErMISUhsWqO8zh3EGOGzCcsmoXPfN
-         fTGFqO6RuReobNNmt56EAuUeUAYiCt60qup4/4npR40b468uZi2+qalbQRRQXiPZWI9g
-         9uFRXFse47eT3C9xA5YbF/fiEgTdqZFP58RkP+6Bka3xfmE7JLSNMP50/4/suHS9eDdt
-         Q8WQ==
-X-Gm-Message-State: APjAAAWCuDYN9JWKX9DrY1VaSeNH0UnMGrTngIJrfnQbsbpKMPagvV+R
-        rcZiM7ZcuKbIUyasGbf26/goLOKUB3I=
-X-Google-Smtp-Source: APXvYqx8rHY4hUXdqC96vmhZCGi3TG+rHw7CaW1Ns+CQfqV9O4Kjd2dVdSltIy5XqzuCTu2ObDkpyw==
-X-Received: by 2002:a17:906:3e90:: with SMTP id a16mr6314076ejj.265.1575383992262;
-        Tue, 03 Dec 2019 06:39:52 -0800 (PST)
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com. [209.85.221.49])
-        by smtp.gmail.com with ESMTPSA id w1sm89451edr.76.2019.12.03.06.39.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Dec 2019 06:39:51 -0800 (PST)
-Received: by mail-wr1-f49.google.com with SMTP id b6so4043909wrq.0;
-        Tue, 03 Dec 2019 06:39:51 -0800 (PST)
-X-Received: by 2002:a5d:6b88:: with SMTP id n8mr5834386wrx.288.1575383991083;
- Tue, 03 Dec 2019 06:39:51 -0800 (PST)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vXhD/Cg42jzYXyNOmi+P51+bDzKABFgmqewXbwdhiSk=;
+        b=EGYQespowV7DV2hGVdXpCfiStD57NqElMc3tWB6ISBpVV78vue8bOexKsSy8SJFT1i
+         T3Z+MDk7t0N6CJAPj4PtbeIVZ4dPwsmhTz7YqkYIA2nRlbHoFRqvVeaLbFBfGvmDiYn9
+         7mXEcwrdZNp3AcAAAvnpQkZE7ZqCnouzyAcrKTxkpq1kCVg1yCu0ZWDVUzLiArxRo+Km
+         NcMWUhPPnc7243WzDfKetZlwP3pDVxqzJHRacgFr3K3O0sGRvpdsyq6Z83OnPtZoocmI
+         d/2bUMB5sIQjI+QO+K9bUEYTYKrYi1hCJukRIE9NKKJVKI5L6/Fi43WOWpVxp8MAVP23
+         SkAw==
+X-Gm-Message-State: APjAAAW9OsDb1akagDkMz/uvazPYXihCy69S4KZVAA6Smxeio6JPPchN
+        zTU3I6ipT7mpmNkGops7/d0=
+X-Google-Smtp-Source: APXvYqyXniDHUkFbSP7EpOte5PHY8jktoIGaL43k/lR3zWNKsmV0wcQJ/pjpRobQYuEvOIG8qzi39A==
+X-Received: by 2002:a05:620a:131a:: with SMTP id o26mr4903868qkj.160.1575384071571;
+        Tue, 03 Dec 2019 06:41:11 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id j7sm1780104qkd.46.2019.12.03.06.41.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2019 06:41:10 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 2FBC3405B6; Tue,  3 Dec 2019 11:41:07 -0300 (-03)
+Date:   Tue, 3 Dec 2019 11:41:07 -0300
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Stanislav Fomichev <sdf@fomichev.me>,
+        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau <kafai@fb.com>,
+        Namhyung Kim <namhyung@kernel.org>, bpf <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH] libbpf: Use PRIu64 for sym->st_value to fix build on
+ 32-bit arches
+Message-ID: <20191203144107.GC3247@kernel.org>
+References: <20191126190450.GD29071@kernel.org>
+ <CAEf4Bzbq3J9g7cP=KMqR=bMFcs=qPiNZwnkvCKz3-SAp_m0GzA@mail.gmail.com>
+ <20191126221018.GA22719@kernel.org>
+ <20191126221733.GB22719@kernel.org>
+ <CAEf4BzbZLiJnUb+BdUMEwcgcKCjJBWx1895p8qS8rK2r5TYu3w@mail.gmail.com>
+ <20191126231030.GE3145429@mini-arch.hsd1.ca.comcast.net>
+ <20191126155228.0e6ed54c@cakuba.netronome.com>
+ <20191127013901.GE29071@kernel.org>
+ <20191127134553.GC22719@kernel.org>
+ <CA+G9fYsK8zn3jqF=Wz6=8BBx4i1JTkv2h-LCbjE11UJkcz_NEA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191203134816.5319-1-jagan@amarulasolutions.com> <20191203134816.5319-4-jagan@amarulasolutions.com>
-In-Reply-To: <20191203134816.5319-4-jagan@amarulasolutions.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Tue, 3 Dec 2019 22:39:41 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67kQ391QJhQYYYEdchHpRYBUDji=iYMZ9fKY3aCw0He-Q@mail.gmail.com>
-Message-ID: <CAGb2v67kQ391QJhQYYYEdchHpRYBUDji=iYMZ9fKY3aCw0He-Q@mail.gmail.com>
-Subject: Re: [PATCH v12 3/7] drm/sun4i: dsi: Add has_mod_clk quirk
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYsK8zn3jqF=Wz6=8BBx4i1JTkv2h-LCbjE11UJkcz_NEA@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 9:48 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
->
-> As per the user manual, look like mod clock is not mandatory
-> for all Allwinner MIPI DSI controllers, it is connected to
-> CLK_DSI_SCLK for A31 and not available in A64.
->
-> So add has_mod_clk quirk and process the mod clk accordingly.
->
-> Tested-by: Merlijn Wajer <merlijn@wizzup.org>
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> ---
-> Changes for v12:
-> - none
->
->  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 38 ++++++++++++++++++--------
->  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h |  5 ++++
->  2 files changed, 32 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> index c958ca9bae63..8c4c541224dd 100644
-> --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> @@ -11,6 +11,7 @@
->  #include <linux/crc-ccitt.h>
->  #include <linux/module.h>
->  #include <linux/of_address.h>
-> +#include <linux/of_device.h>
->  #include <linux/phy/phy-mipi-dphy.h>
->  #include <linux/phy/phy.h>
->  #include <linux/platform_device.h>
-> @@ -1093,6 +1094,7 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
->         dsi->dev = dev;
->         dsi->host.ops = &sun6i_dsi_host_ops;
->         dsi->host.dev = dev;
-> +       dsi->variant = of_device_get_match_data(dev);
->
->         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->         base = devm_ioremap_resource(dev, res);
-> @@ -1120,17 +1122,20 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
->                 return PTR_ERR(dsi->reset);
->         }
->
-> -       dsi->mod_clk = devm_clk_get(dev, "mod");
-> -       if (IS_ERR(dsi->mod_clk)) {
-> -               dev_err(dev, "Couldn't get the DSI mod clock\n");
-> -               return PTR_ERR(dsi->mod_clk);
-> +       if (dsi->variant->has_mod_clk) {
-> +               dsi->mod_clk = devm_clk_get(dev, "mod");
-> +               if (IS_ERR(dsi->mod_clk)) {
-> +                       dev_err(dev, "Couldn't get the DSI mod clock\n");
-> +                       return PTR_ERR(dsi->mod_clk);
-> +               }
->         }
->
->         /*
->          * In order to operate properly, that clock seems to be always
->          * set to 297MHz.
->          */
-> -       clk_set_rate_exclusive(dsi->mod_clk, 297000000);
-> +       if (dsi->variant->has_mod_clk)
-> +               clk_set_rate_exclusive(dsi->mod_clk, 297000000);
+Em Tue, Dec 03, 2019 at 07:20:08PM +0530, Naresh Kamboju escreveu:
+> Hi Arnaldo,
+> 
+> FYI,
+> 
+> On Wed, 27 Nov 2019 at 19:15, Arnaldo Carvalho de Melo
+> <arnaldo.melo@gmail.com> wrote:
+> >
+> > Another fix I'm carrying in my perf/core branch,
+> >
+> > Regards,
+> >
+> > - Arnaldo
+> >
+> > commit 98bb09f90a0ae33125fabc8f41529345382f1498
+> > Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Date:   Wed Nov 27 09:26:54 2019 -0300
+> >
+> >     libbpf: Use PRIu64 for sym->st_value to fix build on 32-bit arches
+> >
+> >     The st_value field is a 64-bit value, so use PRIu64 to fix this error on
+> >     32-bit arches:
+> >
+> >       In file included from libbpf.c:52:
+> >       libbpf.c: In function 'bpf_program__record_reloc':
+> >       libbpf_internal.h:59:22: error: format '%lu' expects argument of type 'long unsigned int', but argument 3 has type 'Elf64_Addr' {aka 'const long long unsigned int'} [-Werror=format=]
+> >         libbpf_print(level, "libbpf: " fmt, ##__VA_ARGS__); \
+> >                             ^~~~~~~~~~
+> >       libbpf_internal.h:62:27: note: in expansion of macro '__pr'
+> >        #define pr_warn(fmt, ...) __pr(LIBBPF_WARN, fmt, ##__VA_ARGS__)
+> >                                  ^~~~
+> >       libbpf.c:1822:4: note: in expansion of macro 'pr_warn'
+> >           pr_warn("bad call relo offset: %lu\n", sym->st_value);
+> >           ^~~~~~~
+> >       libbpf.c:1822:37: note: format string is defined here
+> >           pr_warn("bad call relo offset: %lu\n", sym->st_value);
+> >                                          ~~^
+> >                                          %llu
+> 
+> This build error is been noticed on Linux mainline kernel for 32-bit
+> architectures from Nov 26.
 
-The clk API can handle NULL pointers, so you don't need to add the if here...
+Right, the fix is in the bpf tree:
 
->
->         dsi->dphy = devm_phy_get(dev, "dphy");
->         if (IS_ERR(dsi->dphy)) {
-> @@ -1160,7 +1165,8 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
->  err_pm_disable:
->         pm_runtime_disable(dev);
->  err_unprotect_clk:
-> -       clk_rate_exclusive_put(dsi->mod_clk);
-> +       if (dsi->variant->has_mod_clk)
-> +               clk_rate_exclusive_put(dsi->mod_clk);
+https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git/commit/?id=7c3977d1e804
 
-and here...
+Should go upstream soon.
 
->         return ret;
->  }
->
-> @@ -1172,7 +1178,8 @@ static int sun6i_dsi_remove(struct platform_device *pdev)
->         component_del(&pdev->dev, &sun6i_dsi_ops);
->         mipi_dsi_host_unregister(&dsi->host);
->         pm_runtime_disable(dev);
-> -       clk_rate_exclusive_put(dsi->mod_clk);
-> +       if (dsi->variant->has_mod_clk)
-> +               clk_rate_exclusive_put(dsi->mod_clk);
+- Arnaldo
+ 
+> Full build log,
+> https://ci.linaro.org/job/openembedded-lkft-linux-mainline/DISTRO=lkft,MACHINE=intel-core2-32,label=docker-lkft/2297/consoleText
+> https://ci.linaro.org/job/openembedded-lkft-linux-mainline/
+> 
+> - Naresh
 
-and here ...
+-- 
 
->
->         return 0;
->  }
-> @@ -1189,7 +1196,8 @@ static int __maybe_unused sun6i_dsi_runtime_resume(struct device *dev)
->         }
->
->         reset_control_deassert(dsi->reset);
-> -       clk_prepare_enable(dsi->mod_clk);
-> +       if (dsi->variant->has_mod_clk)
-> +               clk_prepare_enable(dsi->mod_clk);
-
-and here...
-
->
->         /*
->          * Enable the DSI block.
-> @@ -1217,7 +1225,8 @@ static int __maybe_unused sun6i_dsi_runtime_suspend(struct device *dev)
->  {
->         struct sun6i_dsi *dsi = dev_get_drvdata(dev);
->
-> -       clk_disable_unprepare(dsi->mod_clk);
-> +       if (dsi->variant->has_mod_clk)
-> +               clk_disable_unprepare(dsi->mod_clk);
-
-and here.
-
->         reset_control_assert(dsi->reset);
->         regulator_disable(dsi->regulator);
->
-> @@ -1230,9 +1239,16 @@ static const struct dev_pm_ops sun6i_dsi_pm_ops = {
->                            NULL)
->  };
->
-> +static const struct sun6i_dsi_variant sun6i_a31_mipi_dsi = {
-> +       .has_mod_clk = true,
-> +};
-> +
->  static const struct of_device_id sun6i_dsi_of_table[] = {
-> -       { .compatible = "allwinner,sun6i-a31-mipi-dsi" },
-> -       { }
-> +       {
-> +               .compatible = "allwinner,sun6i-a31-mipi-dsi",
-> +               .data = &sun6i_a31_mipi_dsi,
-> +       },
-> +       { /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, sun6i_dsi_of_table);
->
-> diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-> index 3f4846f581ef..d791c9f6fccf 100644
-> --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-> +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-> @@ -15,6 +15,10 @@
->
->  #define SUN6I_DSI_TCON_DIV     4
->
-> +struct sun6i_dsi_variant {
-> +       bool                    has_mod_clk;
-> +};
-> +
-
-You could choose to put this above the probe function, since this isn't used
-anywhere else, and a pointer field doesn't need the full definition.
-
-ChenYu
-
->  struct sun6i_dsi {
->         struct drm_connector    connector;
->         struct drm_encoder      encoder;
-> @@ -31,6 +35,7 @@ struct sun6i_dsi {
->         struct sun4i_drv        *drv;
->         struct mipi_dsi_device  *device;
->         struct drm_panel        *panel;
-> +       const struct sun6i_dsi_variant  *variant;
->  };
->
->  static inline struct sun6i_dsi *host_to_sun6i_dsi(struct mipi_dsi_host *host)
-> --
-> 2.18.0.321.gffc6fa0e3
->
+- Arnaldo
