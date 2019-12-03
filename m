@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC20C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E063C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 263DB2064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:10:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B16C2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:10:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414603;
-	bh=Oqj7gHsXnFP2pmn2Qi83jcoJYfWeViXDHc+v9myvd/s=;
+	s=default; t=1575414608;
+	bh=X86Vrv6PGSZskU4BlGggirNMOdnUzV9a7k70PO/RSQw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q8IgvLnDFSgRgTc9SS4H3nLplErbdTxl+OTKAXK3lQAp5fYa4eI5mfKKdFGJBmMns
-	 qzSOIw8YyvOE1P3HMxdFX6sRQ8A5H2a1C7l6wRR9ecaJ49GEr2TwZwvNK1giSWSVUD
-	 2B8uz4xfiA3Gc+fSguzxEPnN9CX9oeSsDeAj3ZCE=
+	b=A9hppgZyAO0bwDYAStxnJwLcfWUaDJzau7gJRaoXdi0VUDdqWSz8HfI+PKOvO3tFh
+	 MZEi4zneXRyG+XiJ+W0lkq5YGQLDDXlipD9Y36LObTnC/rQE5/zMSKTryXGMYvYdl4
+	 YX8JkruGBLTxg8nUqVlgJclxP04L2CL0TgDyre9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbfLCWnG (ORCPT
+        id S1728763AbfLCXKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:43:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58238 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 18:10:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728564AbfLCWnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:43:01 -0500
+        id S1728755AbfLCWnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:43:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54D5D20684;
-        Tue,  3 Dec 2019 22:43:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD47420684;
+        Tue,  3 Dec 2019 22:43:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412980;
-        bh=Oqj7gHsXnFP2pmn2Qi83jcoJYfWeViXDHc+v9myvd/s=;
+        s=default; t=1575412983;
+        bh=X86Vrv6PGSZskU4BlGggirNMOdnUzV9a7k70PO/RSQw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p5Rbmn6BHFfOimK1XXzM887yXC0w62QRmz3z2qlQATAVEfbcz/NJICpv6Eg8+FvyB
-         Mog8Jzu9lZB9CAtxkgNp3c9JJJqRRPbDVev//cD8eatAmMLD1v3hIBh86QEFUtyYFu
-         L0gPuCh9escxCdgXzqE8I/tSoRlz30109G50Qhfs=
+        b=ysS6ZqwziLLsFuIg20Pk7xzUrvya/ldfhilKXwpdAXZ19Np7rB979tqTVO9IUEyq+
+         tIloASziXbRxRcRQMIRmGfoNj1mxNVqdHO2F74L1w1QK2ag9KYcIPbeSj0TbPB5xOo
+         zZsP7H3ifMW1MkBhyWj+aTNFxV0ZwgxBH63H6BGc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ahmed Zaki <anzaki@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 091/135] mac80211: fix station inactive_time shortly after boot
-Date:   Tue,  3 Dec 2019 23:35:31 +0100
-Message-Id: <20191203213036.421397975@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 092/135] block: drbd: remove a stray unlock in __drbd_send_protocol()
+Date:   Tue,  3 Dec 2019 23:35:32 +0100
+Message-Id: <20191203213036.714906816@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
 References: <20191203213005.828543156@linuxfoundation.org>
@@ -60,45 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahmed Zaki <anzaki@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 285531f9e6774e3be71da6673d475ff1a088d675 ]
+[ Upstream commit 8e9c523016cf9983b295e4bc659183d1fa6ef8e0 ]
 
-In the first 5 minutes after boot (time of INITIAL_JIFFIES),
-ieee80211_sta_last_active() returns zero if last_ack is zero. This
-leads to "inactive time" showing jiffies_to_msecs(jiffies).
+There are two callers of this function and they both unlock the mutex so
+this ends up being a double unlock.
 
- # iw wlan0 station get fc:ec:da:64:a6:dd
- Station fc:ec:da:64:a6:dd (on wlan0)
-	inactive time:	4294894049 ms
-	.
-	.
-	connected time:	70 seconds
-
-Fix by returning last_rx if last_ack == 0.
-
-Signed-off-by: Ahmed Zaki <anzaki@gmail.com>
-Link: https://lore.kernel.org/r/20191031121243.27694-1-anzaki@gmail.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 44ed167da748 ("drbd: rcu_read_lock() and rcu_dereference() for tconn->net_conf")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/sta_info.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/block/drbd/drbd_main.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/net/mac80211/sta_info.c b/net/mac80211/sta_info.c
-index 5fb368cc26338..0030b13c2f501 100644
---- a/net/mac80211/sta_info.c
-+++ b/net/mac80211/sta_info.c
-@@ -2455,7 +2455,8 @@ unsigned long ieee80211_sta_last_active(struct sta_info *sta)
- {
- 	struct ieee80211_sta_rx_stats *stats = sta_get_last_rx_stats(sta);
+diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
+index 5b248763a6724..a18155cdce416 100644
+--- a/drivers/block/drbd/drbd_main.c
++++ b/drivers/block/drbd/drbd_main.c
+@@ -786,7 +786,6 @@ int __drbd_send_protocol(struct drbd_connection *connection, enum drbd_packet cm
  
--	if (time_after(stats->last_rx, sta->status_stats.last_ack))
-+	if (!sta->status_stats.last_ack ||
-+	    time_after(stats->last_rx, sta->status_stats.last_ack))
- 		return stats->last_rx;
- 	return sta->status_stats.last_ack;
- }
+ 	if (nc->tentative && connection->agreed_pro_version < 92) {
+ 		rcu_read_unlock();
+-		mutex_unlock(&sock->mutex);
+ 		drbd_err(connection, "--dry-run is not supported by peer");
+ 		return -EOPNOTSUPP;
+ 	}
 -- 
 2.20.1
 
