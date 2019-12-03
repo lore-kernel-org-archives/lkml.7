@@ -2,163 +2,103 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D355CC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2510C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A45F520661
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:41:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dRDTh2Hj"
+	by mail.kernel.org (Postfix) with ESMTP id A6AAF20661
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 14:41:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575384088;
+	bh=+FbdlYOrEhEFd+qUmhp/mneo9uxFC5fE3+DKIbwjTIw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aIwPj1RdUu0rxu7RqFxGWb7sdq/m14s0b+g3RZnT+MzoeELLh0PVs/7pdzf9dbeQP
+	 /WxzcdB0atYEw/J888X+i8ZGS7VxwQj3s9CyLP5A1FXa32/TaSEphDe41NRPVjxSJo
+	 O8pMXVkqKVPrWCwv0iPk245JD7lTgMa+8gB+sz9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfLCOlN (ORCPT
+        id S1726473AbfLCOl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 09:41:13 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44574 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbfLCOlM (ORCPT
+        Tue, 3 Dec 2019 09:41:27 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51638 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfLCOl1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 09:41:12 -0500
-Received: by mail-qk1-f195.google.com with SMTP id i18so3573813qkl.11;
-        Tue, 03 Dec 2019 06:41:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vXhD/Cg42jzYXyNOmi+P51+bDzKABFgmqewXbwdhiSk=;
-        b=dRDTh2Hj0zfw0Y+ySTQkBAU7i7qdkFlw/LNWWR+faN6evr5Ox1mXGMcF9Ai5IetlRf
-         7KaAx/kf4dUxrfnaAsjq0pT7p4YIkqh96IQKizZdGg0MheEiJv4vkFI8sgvqIroZjJ2S
-         9z2uq1luL160NGANBP50NvBWurbNnGKxSqId2NgowdHRkqM7N+/cBp6wO5PW94F6dGl6
-         4TKB7IkcKxinHV9u/piVO3uB9lx0sJE377C5D5A0wTUeGrOMK0sT3AXvJUL3Mg1rgFX4
-         rGCrksL0cG3q4SgVzE/tVIf8RpI7W5uCnrkX0SBPlB+QLsfAxLbSF9q6ay7q28jvIJdm
-         FCiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vXhD/Cg42jzYXyNOmi+P51+bDzKABFgmqewXbwdhiSk=;
-        b=EGYQespowV7DV2hGVdXpCfiStD57NqElMc3tWB6ISBpVV78vue8bOexKsSy8SJFT1i
-         T3Z+MDk7t0N6CJAPj4PtbeIVZ4dPwsmhTz7YqkYIA2nRlbHoFRqvVeaLbFBfGvmDiYn9
-         7mXEcwrdZNp3AcAAAvnpQkZE7ZqCnouzyAcrKTxkpq1kCVg1yCu0ZWDVUzLiArxRo+Km
-         NcMWUhPPnc7243WzDfKetZlwP3pDVxqzJHRacgFr3K3O0sGRvpdsyq6Z83OnPtZoocmI
-         d/2bUMB5sIQjI+QO+K9bUEYTYKrYi1hCJukRIE9NKKJVKI5L6/Fi43WOWpVxp8MAVP23
-         SkAw==
-X-Gm-Message-State: APjAAAW9OsDb1akagDkMz/uvazPYXihCy69S4KZVAA6Smxeio6JPPchN
-        zTU3I6ipT7mpmNkGops7/d0=
-X-Google-Smtp-Source: APXvYqyXniDHUkFbSP7EpOte5PHY8jktoIGaL43k/lR3zWNKsmV0wcQJ/pjpRobQYuEvOIG8qzi39A==
-X-Received: by 2002:a05:620a:131a:: with SMTP id o26mr4903868qkj.160.1575384071571;
-        Tue, 03 Dec 2019 06:41:11 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id j7sm1780104qkd.46.2019.12.03.06.41.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 06:41:10 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2FBC3405B6; Tue,  3 Dec 2019 11:41:07 -0300 (-03)
-Date:   Tue, 3 Dec 2019 11:41:07 -0300
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Stanislav Fomichev <sdf@fomichev.me>,
-        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau <kafai@fb.com>,
-        Namhyung Kim <namhyung@kernel.org>, bpf <bpf@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH] libbpf: Use PRIu64 for sym->st_value to fix build on
- 32-bit arches
-Message-ID: <20191203144107.GC3247@kernel.org>
-References: <20191126190450.GD29071@kernel.org>
- <CAEf4Bzbq3J9g7cP=KMqR=bMFcs=qPiNZwnkvCKz3-SAp_m0GzA@mail.gmail.com>
- <20191126221018.GA22719@kernel.org>
- <20191126221733.GB22719@kernel.org>
- <CAEf4BzbZLiJnUb+BdUMEwcgcKCjJBWx1895p8qS8rK2r5TYu3w@mail.gmail.com>
- <20191126231030.GE3145429@mini-arch.hsd1.ca.comcast.net>
- <20191126155228.0e6ed54c@cakuba.netronome.com>
- <20191127013901.GE29071@kernel.org>
- <20191127134553.GC22719@kernel.org>
- <CA+G9fYsK8zn3jqF=Wz6=8BBx4i1JTkv2h-LCbjE11UJkcz_NEA@mail.gmail.com>
+        Tue, 3 Dec 2019 09:41:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Fp1zIL2SAEar9dlKMYM/RfsmIkwJExCTW8u8xALWSC4=; b=SVtk5WFRlwEs+eVTFb0dxpn/a
+        +g7p4XXuEkIrnH0632RPHUvw2hjP1m+sPepNvWNLcm3CfleuHd95OCxIO5RnaEgCeHgWjVhcQR29g
+        14ZZZhbHLQvrHxt+snCURi55qiO4J1T/wTKzvL/UZ4nHok/xkXdTqC5Rro5rT270VGApE=;
+Received: from fw-tnat-cam1.arm.com ([217.140.106.49] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1ic9KY-0002mV-9f; Tue, 03 Dec 2019 14:39:10 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 03672D003B4; Tue,  3 Dec 2019 14:39:10 +0000 (GMT)
+Date:   Tue, 3 Dec 2019 14:39:09 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Olivier Moysan <olivier.moysan@st.com>
+Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org, apatard@mandriva.com
+Subject: Re: [PATCH] ASoC: cs42l51: add dac mux widget in codec routes
+Message-ID: <20191203143909.GL1998@sirena.org.uk>
+References: <20191203141627.29471-1-olivier.moysan@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="kaF1vgn83Aa7CiXN"
 Content-Disposition: inline
-In-Reply-To: <CA+G9fYsK8zn3jqF=Wz6=8BBx4i1JTkv2h-LCbjE11UJkcz_NEA@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191203141627.29471-1-olivier.moysan@st.com>
+X-Cookie: Cleanliness is next to impossible.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Dec 03, 2019 at 07:20:08PM +0530, Naresh Kamboju escreveu:
-> Hi Arnaldo,
-> 
-> FYI,
-> 
-> On Wed, 27 Nov 2019 at 19:15, Arnaldo Carvalho de Melo
-> <arnaldo.melo@gmail.com> wrote:
-> >
-> > Another fix I'm carrying in my perf/core branch,
-> >
-> > Regards,
-> >
-> > - Arnaldo
-> >
-> > commit 98bb09f90a0ae33125fabc8f41529345382f1498
-> > Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Date:   Wed Nov 27 09:26:54 2019 -0300
-> >
-> >     libbpf: Use PRIu64 for sym->st_value to fix build on 32-bit arches
-> >
-> >     The st_value field is a 64-bit value, so use PRIu64 to fix this error on
-> >     32-bit arches:
-> >
-> >       In file included from libbpf.c:52:
-> >       libbpf.c: In function 'bpf_program__record_reloc':
-> >       libbpf_internal.h:59:22: error: format '%lu' expects argument of type 'long unsigned int', but argument 3 has type 'Elf64_Addr' {aka 'const long long unsigned int'} [-Werror=format=]
-> >         libbpf_print(level, "libbpf: " fmt, ##__VA_ARGS__); \
-> >                             ^~~~~~~~~~
-> >       libbpf_internal.h:62:27: note: in expansion of macro '__pr'
-> >        #define pr_warn(fmt, ...) __pr(LIBBPF_WARN, fmt, ##__VA_ARGS__)
-> >                                  ^~~~
-> >       libbpf.c:1822:4: note: in expansion of macro 'pr_warn'
-> >           pr_warn("bad call relo offset: %lu\n", sym->st_value);
-> >           ^~~~~~~
-> >       libbpf.c:1822:37: note: format string is defined here
-> >           pr_warn("bad call relo offset: %lu\n", sym->st_value);
-> >                                          ~~^
-> >                                          %llu
-> 
-> This build error is been noticed on Linux mainline kernel for 32-bit
-> architectures from Nov 26.
 
-Right, the fix is in the bpf tree:
+--kaF1vgn83Aa7CiXN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git/commit/?id=7c3977d1e804
+On Tue, Dec 03, 2019 at 03:16:27PM +0100, Olivier Moysan wrote:
 
-Should go upstream soon.
+> -	SND_SOC_DAPM_DAC_E("Left DAC", "Left HiFi Playback",
+> -		CS42L51_POWER_CTL1, 5, 1,
+> -		cs42l51_pdn_event, SND_SOC_DAPM_PRE_POST_PMD),
+> -	SND_SOC_DAPM_DAC_E("Right DAC", "Right HiFi Playback",
+> -		CS42L51_POWER_CTL1, 6, 1,
+> -		cs42l51_pdn_event, SND_SOC_DAPM_PRE_POST_PMD),
+> +	SND_SOC_DAPM_DAC_E("Left DAC", NULL, CS42L51_POWER_CTL1, 5, 1,
+> +			   cs42l51_pdn_event, SND_SOC_DAPM_PRE_POST_PMD),
+> +	SND_SOC_DAPM_DAC_E("Right DAC", NULL, CS42L51_POWER_CTL1, 6, 1,
+> +			   cs42l51_pdn_event, SND_SOC_DAPM_PRE_POST_PMD),
 
-- Arnaldo
- 
-> Full build log,
-> https://ci.linaro.org/job/openembedded-lkft-linux-mainline/DISTRO=lkft,MACHINE=intel-core2-32,label=docker-lkft/2297/consoleText
-> https://ci.linaro.org/job/openembedded-lkft-linux-mainline/
-> 
-> - Naresh
+This looks like an unrelated formatting change?
 
--- 
+--kaF1vgn83Aa7CiXN
+Content-Type: application/pgp-signature; name="signature.asc"
 
-- Arnaldo
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3mc40ACgkQJNaLcl1U
+h9CUawf9E5BprJC3A8QmnT0q77HnN92qqStvFvpZ7Q+v1APD/Orb+E4kskU/mHiN
+B5qpYUUgoYUGyeTSG4nlSpBOG6nG2O7cpuaGz0ObLfybVJRGI7UgTIU+OtMm34DL
+HzyhFvaYhg7xYbtj0m2LNLEgUWTwY2L7ktbZachaCpAjDs9IRSE/Eint/DSKl5SN
+2X+nFXeDTl7Ig0vE26pukGume2hbhrnozhZIU1P4r4F965QBd4T2/490LXOWandk
+xTCSMOJIkL7SBsXSlu2nwY6vYn9QBsuF/OMSfC1VqY05lxeqCcg/RJZLJj2aKizM
+kPKMYjCzJLneVYT+7IsywZGFeIfH2Q==
+=Bvzr
+-----END PGP SIGNATURE-----
+
+--kaF1vgn83Aa7CiXN--
