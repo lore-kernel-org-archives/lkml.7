@@ -2,87 +2,121 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D62C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C925C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDFE32064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 095592073C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:18:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbfLCIQz (ORCPT
+        id S1726491AbfLCISL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 03:16:55 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51326 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726186AbfLCIQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 03:16:55 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 755A1C86D53108544065;
-        Tue,  3 Dec 2019 16:16:52 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Tue, 3 Dec 2019
- 16:16:45 +0800
-To:     <clm@fb.com>, <josef@toxicpanda.com>, <dsterba@suse.com>,
-        <linux-btrfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
-        "linfeilong@huawei.com" <linfeilong@huawei.com>
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Subject: [PATCH] btrfs: remove unused condition check in btrfs_page_mkwrite()
-Message-ID: <a84442bc-304b-2514-272e-ea89aae4b992@huawei.com>
-Date:   Tue, 3 Dec 2019 16:16:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 3 Dec 2019 03:18:11 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39478 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbfLCISK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 03:18:10 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 77so2148995oty.6;
+        Tue, 03 Dec 2019 00:18:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gBtOE1GdWf2jzATlRbrF8r8Pac6d5nQ4OzH7cwGAR94=;
+        b=b+m13b3CkvQfHjFMmIRLCWHuM3weg+qEBDCakTYL5msGW+URm18UNn563N0Kqw0ut0
+         xP+lH3/HGq2BMU+spjBBYcC9Cb+78tpW7yy3ySLggmRmVByCMwTFY/4Ucgo7Akiw1A75
+         mKq37EDgN3klAjpfcS9hSaEsn9XhutvYasivZbdaNzFibSZb9eIiq/vjmdYT4bGqye72
+         69xqvTZx6uZbXcVaAdCu+pl7J5bICfLM9oM9eT7tn7grjfm7cRGDm/txW5VVZiZgdymC
+         7cmXLlpLlGXahovpcl0/xVYTkBbjErfggae43lJxfDghOHpRjJJGJmo0ixWOGHuKJ+vc
+         ZRPQ==
+X-Gm-Message-State: APjAAAVRpMyApozG4Ibe0l5j8+hA7Rzmk6Tvm+WtGxmLkU6Kbl8uBdd3
+        jMSNYPA4mZ0hGvW5CIcvZwYnulIG/ppA1P/HhL8=
+X-Google-Smtp-Source: APXvYqzBuvWMWrwsEDDhZ2tcNfeX7um84g4QQ5ld7WP0VV8LQtkLVFpjZhnV4oe+jaJ4tYQpo65700XzoJh4+uCOqZU=
+X-Received: by 2002:a9d:3a37:: with SMTP id j52mr2353717otc.39.1575361089532;
+ Tue, 03 Dec 2019 00:18:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+References: <20191127084253.16356-1-geert+renesas@glider.be>
+ <20191127084253.16356-6-geert+renesas@glider.be> <585c4ad9-31fc-e87e-07c4-b8d6aa09c7e4@mentor.com>
+In-Reply-To: <585c4ad9-31fc-e87e-07c4-b8d6aa09c7e4@mentor.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 3 Dec 2019 09:17:58 +0100
+Message-ID: <CAMuHMdW-n8ao7t7156WYxRg7v8+ojXsRgHGUOax=9nBo2F5xOw@mail.gmail.com>
+Subject: Re: [PATCH v3 5/7] gpio: Add GPIO Aggregator/Repeater driver
+To:     Harish Jenny K N <harish_kandiga@mentor.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The condition '!ret2' is always true. so remove the unused condition
-check.
+Hi Harish,
 
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
----
- fs/btrfs/inode.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+On Tue, Dec 3, 2019 at 6:42 AM Harish Jenny K N
+<harish_kandiga@mentor.com> wrote:
+> > +static int gpio_aggregator_probe(struct platform_device *pdev)
+> > +{
+> > +     struct device *dev = &pdev->dev;
+> > +     struct gpio_desc **descs;
+> > +     struct gpiochip_fwd *fwd;
+> > +     int i, n;
+> > +
+> > +     n = gpiod_count(dev, NULL);
+> > +     if (n < 0)
+> > +             return n;
+> > +
+> > +     descs = devm_kmalloc_array(dev, n, sizeof(*descs), GFP_KERNEL);
+> > +     if (!descs)
+> > +             return -ENOMEM;
+> > +
+> > +     for (i = 0; i < n; i++) {
+> > +             descs[i] = devm_gpiod_get_index(dev, NULL, i, GPIOD_ASIS);
+>
+> can you please add this check as well as we need to return EPROBE_DEFER.
+>
+> if (desc[i] == ERR_PTR(-ENOENT))
+> <                 return -EPROBE_DEFER;
 
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index 56032c518b26..eef2432597e2 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -9073,7 +9073,6 @@ vm_fault_t btrfs_page_mkwrite(struct vm_fault *vmf)
- 		ret = VM_FAULT_SIGBUS;
- 		goto out_unlock;
- 	}
--	ret2 = 0;
+So gpiod_get_index() nevers return -EPROBE_DEFER, but returns -ENOENT
+instead?
+How can a driver distinguish between "GPIO not found" and "gpiochip driver
+not yet initialized"?
+Worse, so the *_optional() variants will return NULL in both cases, too, so
+the caller will always fall back to optional GPIO not present?
 
- 	/* page is wholly or partially inside EOF */
- 	if (page_start + PAGE_SIZE > size)
-@@ -9097,12 +9096,10 @@ vm_fault_t btrfs_page_mkwrite(struct vm_fault *vmf)
+Or am I missing something?
 
- 	unlock_extent_cached(io_tree, page_start, page_end, &cached_state);
+Gr{oetje,eeting}s,
 
--	if (!ret2) {
--		btrfs_delalloc_release_extents(BTRFS_I(inode), PAGE_SIZE);
--		sb_end_pagefault(inode->i_sb);
--		extent_changeset_free(data_reserved);
--		return VM_FAULT_LOCKED;
--	}
-+	btrfs_delalloc_release_extents(BTRFS_I(inode), PAGE_SIZE);
-+	sb_end_pagefault(inode->i_sb);
-+	extent_changeset_free(data_reserved);
-+	return VM_FAULT_LOCKED;
+                        Geert
 
- out_unlock:
- 	unlock_page(page);
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
