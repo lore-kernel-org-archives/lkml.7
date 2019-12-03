@@ -2,102 +2,153 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 037DEC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7058C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2D4620684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iXMrnw93"
+	by mail.kernel.org (Postfix) with ESMTP id 96B0F20684
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575414526;
+	bh=7TJDgx84nCACAaNLo8pxn2QH6mbY7YKuaYRX/WxnJX0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UuxUzUXYpIb16vD6ozhAzW3PdFMuHrIteg+96TyQT4u60usplcVsyH1p4GHTtbXW2
+	 rjrGgEDj6+15htzYVDLemoHD3aBQbJeMdKWdYajQliVFOpXtGDid0YcNUZnFe8MLVN
+	 7v3MZOfzKsFIpEaPDdzpdMB6zLAtkOOK69Th962o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728848AbfLCWpW (ORCPT
+        id S1728939AbfLCXIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:45:22 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42343 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728773AbfLCWpP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:45:15 -0500
-Received: by mail-pf1-f194.google.com with SMTP id l22so2556509pff.9
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 14:45:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qd7P+RAsKeedZrqHSNazeNqcDpe7+eVvkyWsa2Q207Q=;
-        b=iXMrnw93nP/soNBqfRzeL/LguWO2PkOg2jKyU1LfmhQ8cwNGaFd8qWTj1ngdPLbuZs
-         2V4t+5GyeScz7/QEokG4fQ+4fgTCRXC5hc6v+uUyIW/eepTWFvSu+HQA017iTYKOaN1t
-         fNOxy5KxTaiI/RBqvWjCH8e03nPVxe/jBysKTJWN9v9olf6QeUWbxPqaMdVSFELa+ZnT
-         Yh8wD4+Cagsxb4NudI+PNBY6O5OnrZ7ihaB8UKAHI4Xq1X7o2bVir7T3/0hy0/wiWvJR
-         2qSKD1ImpOVpVwTR7efn5Oxc4qTw24IFdfabSYnAt8ljytwn9zlOfL5FjtOq2T+VwFa5
-         DMmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qd7P+RAsKeedZrqHSNazeNqcDpe7+eVvkyWsa2Q207Q=;
-        b=S84n0KvfBj5y/0HeYkMtHMPj52nMulE9GZCHM4/FzHVG8gBW1b7JsYlzcJu7QSZ1LK
-         eGl7kUmF02k2SZUwUOoU4iDpEnyxUt5ithG6suOg8nCZGjj+vEtGea2lTcNSfziugXvW
-         JTjNCbLZhFezvaDkbVhMd0rdT14gRfxMXCQna4Vo3ifSaD0qx5EClFOl6Uxmq7UjJz43
-         ly//BfE/Z3J6dcsWo3iFr6bBMpDW+PovK6YJKxGW4JYk7tMxWLZ54sVD98lgPZiEFLW7
-         +H1Wrt67H0UhB8RXzUY0lbkUaihoYvK5C0288cpeeO6v1SIbdzWv5Z86sNU8fhIjJche
-         laQQ==
-X-Gm-Message-State: APjAAAWBodaLM8TRRBNp3hkRm58c9f1Z/Xjy+mh5euH4LDMO3BSeCrgX
-        Osy45+1RHl8PV2EQH2gFaQ7Y7AbUcXrFpI+P9Wj48ypbGGGS3g==
-X-Google-Smtp-Source: APXvYqwcKBHbJdc+KCshtot/o7I0++tDm8qDfLRf4tv06Kw+/aPlM9T1C8nXAryH6sAPWx+2axjFe1oWQ0uD10x8T1Q=
-X-Received: by 2002:a63:480f:: with SMTP id v15mr22272pga.201.1575413114597;
- Tue, 03 Dec 2019 14:45:14 -0800 (PST)
+        Tue, 3 Dec 2019 18:08:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33810 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729026AbfLCWpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:45:18 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6314D20803;
+        Tue,  3 Dec 2019 22:45:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575413117;
+        bh=7TJDgx84nCACAaNLo8pxn2QH6mbY7YKuaYRX/WxnJX0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PYMBlZqDVW9GzvNO18JOiihTFFP5824AQLvdIvemc9EwKURFeoFQuz2NpmM+NvMp+
+         a36sTNEaEM8Do7LCbx3rI4rmI0mQUErEiV+PDcFj4qyouygVc7RuYkTyYUYXd/dx7n
+         hQ+uETR2JzJS2sZxeSiN2QgD6GmT/EzoGoBMBj28=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+f8d6f8386ceacdbfff57@syzkaller.appspotmail.com,
+        syzbot+33d7ea72e47de3bdf4e1@syzkaller.appspotmail.com,
+        syzbot+44b6763edfc17144296f@syzkaller.appspotmail.com,
+        Theodore Tso <tytso@mit.edu>, stable@kernel.org
+Subject: [PATCH 5.3 132/135] ext4: add more paranoia checking in ext4_expand_extra_isize handling
+Date:   Tue,  3 Dec 2019 23:36:12 +0100
+Message-Id: <20191203213045.748648671@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
+References: <20191203213005.828543156@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <1575374868-32601-1-git-send-email-alan.maguire@oracle.com> <1575374868-32601-5-git-send-email-alan.maguire@oracle.com>
-In-Reply-To: <1575374868-32601-5-git-send-email-alan.maguire@oracle.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 3 Dec 2019 14:45:03 -0800
-Message-ID: <CAFd5g45vriC61WvPL_FMbTUjJTRqHW6_Le=7PcMiR-rFmf_9wQ@mail.gmail.com>
-Subject: Re: [PATCH v5 linux-kselftest-test 4/6] kunit: remove timeout
- dependence on sysctl_hung_task_timeout_seconds
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        catalin.marinas@arm.com, joe.lawrence@redhat.com,
-        penguin-kernel@i-love.sakura.ne.jp, urezki@gmail.com,
-        andriy.shevchenko@linux.intel.com,
-        Jonathan Corbet <corbet@lwn.net>,
-        David Gow <davidgow@google.com>, adilger.kernel@dilger.ca,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Knut Omang <knut.omang@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 4:08 AM Alan Maguire <alan.maguire@oracle.com> wrote:
->
-> In discussion of how to handle timeouts, it was noted that if
-> sysctl_hung_task_timeout_seconds is exceeded for a kunit test,
-> the test task will be killed and an oops generated.  This should
-> suffice as a means of debugging such timeout issues for now.
->
-> Hence remove use of sysctl_hung_task_timeout_secs, which has the
-> added benefit of avoiding the need to export that symbol from
-> the core kernel.
->
-> Co-developed-by: Knut Omang <knut.omang@oracle.com>
-> Signed-off-by: Knut Omang <knut.omang@oracle.com>
-> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+From: Theodore Ts'o <tytso@mit.edu>
 
-Acked-by: Brendan Higgins <brendanhiggins@google.com>
+commit 4ea99936a1630f51fc3a2d61a58ec4a1c4b7d55a upstream.
+
+It's possible to specify a non-zero s_want_extra_isize via debugging
+option, and this can cause bad things(tm) to happen when using a file
+system with an inode size of 128 bytes.
+
+Add better checking when the file system is mounted, as well as when
+we are actually doing the trying to do the inode expansion.
+
+Link: https://lore.kernel.org/r/20191110121510.GH23325@mit.edu
+Reported-by: syzbot+f8d6f8386ceacdbfff57@syzkaller.appspotmail.com
+Reported-by: syzbot+33d7ea72e47de3bdf4e1@syzkaller.appspotmail.com
+Reported-by: syzbot+44b6763edfc17144296f@syzkaller.appspotmail.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/ext4/inode.c |   15 +++++++++++++++
+ fs/ext4/super.c |   21 ++++++++++++---------
+ 2 files changed, 27 insertions(+), 9 deletions(-)
+
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -5942,8 +5942,23 @@ static int __ext4_expand_extra_isize(str
+ {
+ 	struct ext4_inode *raw_inode;
+ 	struct ext4_xattr_ibody_header *header;
++	unsigned int inode_size = EXT4_INODE_SIZE(inode->i_sb);
++	struct ext4_inode_info *ei = EXT4_I(inode);
+ 	int error;
+ 
++	/* this was checked at iget time, but double check for good measure */
++	if ((EXT4_GOOD_OLD_INODE_SIZE + ei->i_extra_isize > inode_size) ||
++	    (ei->i_extra_isize & 3)) {
++		EXT4_ERROR_INODE(inode, "bad extra_isize %u (inode size %u)",
++				 ei->i_extra_isize,
++				 EXT4_INODE_SIZE(inode->i_sb));
++		return -EFSCORRUPTED;
++	}
++	if ((new_extra_isize < ei->i_extra_isize) ||
++	    (new_extra_isize < 4) ||
++	    (new_extra_isize > inode_size - EXT4_GOOD_OLD_INODE_SIZE))
++		return -EINVAL;	/* Should never happen */
++
+ 	raw_inode = ext4_raw_inode(iloc);
+ 
+ 	header = IHDR(inode, raw_inode);
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -3544,12 +3544,15 @@ static void ext4_clamp_want_extra_isize(
+ {
+ 	struct ext4_sb_info *sbi = EXT4_SB(sb);
+ 	struct ext4_super_block *es = sbi->s_es;
++	unsigned def_extra_isize = sizeof(struct ext4_inode) -
++						EXT4_GOOD_OLD_INODE_SIZE;
+ 
+-	/* determine the minimum size of new large inodes, if present */
+-	if (sbi->s_inode_size > EXT4_GOOD_OLD_INODE_SIZE &&
+-	    sbi->s_want_extra_isize == 0) {
+-		sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
+-						     EXT4_GOOD_OLD_INODE_SIZE;
++	if (sbi->s_inode_size == EXT4_GOOD_OLD_INODE_SIZE) {
++		sbi->s_want_extra_isize = 0;
++		return;
++	}
++	if (sbi->s_want_extra_isize < 4) {
++		sbi->s_want_extra_isize = def_extra_isize;
+ 		if (ext4_has_feature_extra_isize(sb)) {
+ 			if (sbi->s_want_extra_isize <
+ 			    le16_to_cpu(es->s_want_extra_isize))
+@@ -3562,10 +3565,10 @@ static void ext4_clamp_want_extra_isize(
+ 		}
+ 	}
+ 	/* Check if enough inode space is available */
+-	if (EXT4_GOOD_OLD_INODE_SIZE + sbi->s_want_extra_isize >
+-							sbi->s_inode_size) {
+-		sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
+-						       EXT4_GOOD_OLD_INODE_SIZE;
++	if ((sbi->s_want_extra_isize > sbi->s_inode_size) ||
++	    (EXT4_GOOD_OLD_INODE_SIZE + sbi->s_want_extra_isize >
++							sbi->s_inode_size)) {
++		sbi->s_want_extra_isize = def_extra_isize;
+ 		ext4_msg(sb, KERN_INFO,
+ 			 "required extra inode space not available");
+ 	}
+
+
