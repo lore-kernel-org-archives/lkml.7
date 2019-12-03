@@ -4,75 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83592C33C9A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 12:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B09BC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 12:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5552E206EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 12:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BDAA2068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 12:03:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="GGvhoydV";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="f8bekuom"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="fXL0NvN0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OvqiKA1k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbfLCMDJ (ORCPT
+        id S1726804AbfLCMDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 07:03:09 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:43379 "EHLO
+        Tue, 3 Dec 2019 07:03:14 -0500
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:59669 "EHLO
         out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726673AbfLCMDI (ORCPT
+        by vger.kernel.org with ESMTP id S1726673AbfLCMDM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 07:03:08 -0500
+        Tue, 3 Dec 2019 07:03:12 -0500
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 5D465223F2;
-        Tue,  3 Dec 2019 07:03:07 -0500 (EST)
+        by mailout.nyi.internal (Postfix) with ESMTP id 678DD223CD;
+        Tue,  3 Dec 2019 07:03:11 -0500 (EST)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 03 Dec 2019 07:03:07 -0500
+  by compute4.internal (MEProxy); Tue, 03 Dec 2019 07:03:11 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
         :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=7tglTbsrzj15B
-        FYdwtCNlMSUTM/CZ/wbtl0qCFh3E+0=; b=GGvhoydVUQlN4HGmCxhiL2YtAsL9h
-        y6Dq1zMIjxR2CBPg9wCnoRmNLZ8zGprdX41nDxFWaMK8CGcgd7xf8JsGbwjj+Qa9
-        1j/rfgvu0KXkD1h9+mf3xppWzfscljlHx4KxWKJN6D0YA1d4Qgsf6viz6O0/jqdk
-        4We6S68LN1QI9gcVOKqDvxiuHCIdjZYZjvYfvP+NwdZr6KxcqveQmy7h9kTANje4
-        dBzOHMqZZzeSU4T0hcGRcIUFXf6Zv1uwRL+2G68/HRXH0U7STzMi4XxJO5hnapQr
-        VwhLOJ3GhJpGOOvogDjZyg8k5gi5NSxjf673boBiMWzoCw7GU2DB8Kvxw==
+        :mime-version:content-transfer-encoding; s=fm1; bh=PCLgeyjEmKJVx
+        dVpuK/Lt0i4thMBkeilCIZdg4t3xm8=; b=fXL0NvN0X4skl+hU9FH0/6yLwtDJJ
+        NutsYa+jnJwuMsuqmwIEJNq0+6DmKCFCNjjuT9ge/sxdF8E6HonA0vzc0MnM9cE4
+        DiOou0/ZVAnMhbTRVCd3sQVl/xK9ZecbOHqpoL4cSt16ZetLpDKJexCt07FFmk6y
+        DV9EOUsCaj9vzVwvPqR4ikc69uP9nbbHFV8LKEwX9P3IUEPjWYWeiZwldg2ht94F
+        qeKzl+nPC7cPRVz9GaFP/Tja8BA/hr5UgwlLeXIJhw6KhFacpzSLgTDIb9N4D/yi
+        amq5dvj2VQu/LMV7jbUKZREdqcW80aCe04ZIAldtjvNIL4x+wHTJGNdGg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=7tglTbsrzj15BFYdwtCNlMSUTM/CZ/wbtl0qCFh3E+0=; b=f8bekuom
-        KnsH3MnC4rVm+vWVIp2F0mRuE7fC3DKJhwBGyg3Lsfxbbfs0njAKaSqxYjapVT2z
-        nP/S6wK0L7eA5Gh8sdz3cBjh504qBOQS7EGBmWBSILRb7A+sMMVm+NPbcmkak8l/
-        DHYqhHOP3jC/f2F0xloFoiGT/WiuPjTC1OIo/DR5NK6JdXyEdQMIp1XNRzHbaC10
-        qDkpEnZsWpFjWgJmyosbcJPzNmP6A9W41Z7iXteS/UNqwRt8jIzfbtxunG8LT0Yr
-        J64c8XY426w+nfAJzX9BT+JcZINQNp2kTSHJ63LJxe98EwRU4x4wM5gl7aRuKSYl
-        OhMrMcAHxUJENQ==
-X-ME-Sender: <xms:-07mXTYq7A3QCVF_gcYOC1XYtyuKRs03NnwuB6eJWHhv5RqDU_kzRg>
+        fm1; bh=PCLgeyjEmKJVxdVpuK/Lt0i4thMBkeilCIZdg4t3xm8=; b=OvqiKA1k
+        /xE3GXVxbEb+aw2heRU+J2ZsdcGi4sw52FlX624jUM3mSZjq5m4ZcIfwFxH7Y41x
+        aQ7TLeOIfbj430YsNd+fJnQ4BytH8ITkX2cUo5ZoKPc2tbxXqmzgQISh4FfCgyUg
+        ouJZ0+7eez+pYsdPT/c3AsExCV5b9nzKnVOJwhfJEa9tHAtPwr04TJgTfGh0D/7n
+        gxEUewdWbGgXXJ3ZUuUNechD9dd/ujGulf/JY1XwJsumCqr23jTQjCSM2Ajk2wh7
+        6vSeD42xdZdgpgGSOY1W8ev4naZa+X+ZAlREmrhwC6XaX2JODIiZJBof6FSHhC2s
+        Mxv6b3fFOQWErw==
+X-ME-Sender: <xms:_07mXfZ4RKqP1eGWgujakp2Ez-Fum8CPA1iLXjHU1TfvtGdCXNAcZw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudejjedgfeejucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeetnhgurhgv
     ficulfgvfhhfvghrhicuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfkphepudduke
     drvdduuddrledvrddufeenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifsegr
-    jhdrihgurdgruhenucevlhhushhtvghrufhiiigvpeeh
-X-ME-Proxy: <xmx:-07mXWfA9jEhiNCLRTW9ZDBw8K0wXlO3gwsBsAHgMTBtqNyUt9eRcQ>
-    <xmx:-07mXXFbKR50YClm5Ber4YI8gMxD91yvxyYQM9uHA23t-Hh_qnioww>
-    <xmx:-07mXTDT12r7upPIc8QFCoKC35KKk2Pr0f4mlzWdHsycdUR2w9_ODA>
-    <xmx:-07mXVmWdDtKyOBN_9n3szeI6c3j6HChFNtV4htDM910RSS3WF8OkQ>
+    jhdrihgurdgruhenucevlhhushhtvghrufhiiigvpeei
+X-ME-Proxy: <xmx:_07mXRVnUJuT5gTnoSYYNV3WWpSPw_1oZd_sj0-9aGz1f-Y99WYASQ>
+    <xmx:_07mXVUpA8CQLA2Riqu2y5KjnwefNa21IsgOMag1PxF9QWUmtneXuQ>
+    <xmx:_07mXdLjRUPj5mgBfi8Hip5-ZMEZ9aqyc3e6VyfZ_oifhjph13UIvQ>
+    <xmx:_07mXTeVIiarc6YSA9AjLsiPTQ-9UBsbTr3c7bwjudEPKjgJhFp3Cw>
 Received: from mistburn.lan (unknown [118.211.92.13])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4177A30600D2;
-        Tue,  3 Dec 2019 07:03:03 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id ACA2130600D2;
+        Tue,  3 Dec 2019 07:03:07 -0500 (EST)
 From:   Andrew Jeffery <andrew@aj.id.au>
 To:     linux-aspeed@lists.ozlabs.org
 Cc:     joel@jms.id.au, robh+dt@kernel.org, mark.rutland@arm.com,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Alexander Filippov <a.filippov@yadro.com>
-Subject: [PATCH 06/14] ARM: dts: vesnin: Add unit address for memory node
-Date:   Tue,  3 Dec 2019 22:34:07 +1030
-Message-Id: <5542cc20633c5d185262e3acc1ff6a81a6327a34.1575369656.git-series.andrew@aj.id.au>
+        linux-kernel@vger.kernel.org, John Wang <wangzqbj@inspur.com>,
+        Adriana Kobylak <anoo@us.ibm.com>
+Subject: [PATCH 07/14] ARM: dts: fp5280g2: Cleanup gpio-keys-polled properties
+Date:   Tue,  3 Dec 2019 22:34:08 +1030
+Message-Id: <ca7ab33d96a8c20c1b09602ec6aee33374f7c5fb.1575369656.git-series.andrew@aj.id.au>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.08e3a6c95159f017b753d0f240086d1a7923758b.1575369656.git-series.andrew@aj.id.au>
 References: <cover.08e3a6c95159f017b753d0f240086d1a7923758b.1575369656.git-series.andrew@aj.id.au>
@@ -83,31 +83,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following warnings:
+dtbs_check gave the following warning:
 
-    arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dt.yaml: /: memory: False schema does not allow {'reg': [[1073741824, 536870912]]}
-    arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dt.yaml: memory: 'device_type' is a required property
+    Warning (avoid_unnecessary_addr_size): /gpio-keys-polled: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
 
-Cc: Alexander Filippov <a.filippov@yadro.com>
+Cc: John Wang <wangzqbj@inspur.com>
 Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 Reviewed-by: Joel Stanley <joel@jms.id.au>
-Tested-by: Alexander Filippov <a.filippov@yadro.com>
+Reviewed-by: Adriana Kobylak <anoo@us.ibm.com>
+Tested-by: Adriana Kobylak <anoo@us.ibm.com>
 ---
- arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/aspeed-bmc-inspur-fp5280g2.dts | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-index affd2c8743b1..c46aec4baec9 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-@@ -14,7 +14,7 @@
- 		bootargs = "console=ttyS4,115200 earlyprintk";
- 	};
+diff --git a/arch/arm/boot/dts/aspeed-bmc-inspur-fp5280g2.dts b/arch/arm/boot/dts/aspeed-bmc-inspur-fp5280g2.dts
+index d69da58476fe..d6bb0c91d2d3 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-inspur-fp5280g2.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-inspur-fp5280g2.dts
+@@ -94,8 +94,6 @@
  
--	memory {
-+	memory@40000000 {
- 		reg = <0x40000000 0x20000000>;
- 	};
+ 	gpio-keys-polled {
+ 		compatible = "gpio-keys-polled";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+ 		poll-interval = <1000>;
  
+ 		fan0-presence {
 -- 
 git-series 0.9.1
