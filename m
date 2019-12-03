@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13352C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AEDC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8B8420803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9CC92053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:55:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413749;
-	bh=E0sg7lpUyL7wlDReSjiLpi7Lh69WU5Wh/tgGnAYTUWY=;
+	s=default; t=1575413753;
+	bh=X6vTzpowZmATaq3N5YPTSWrjBYpQFFtRixxK+r2C46s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CBBTRtfy7x5D1XrTSv9LdKcEPneKuTd1sA7CU2X2eIkhhFs9/SlAkWX3qL3YC9WhL
-	 m9/kXKBwhy0HA31xfSRYsLTVYNXYGIeWEJoHD3Vc9804WWdHKzaDB7ZmrjiRfmG48y
-	 a+22EU7Sq6tcWsi/He344EfuIdMmyj5Ia+XEWkyU=
+	b=fal0gxyncXd6zZvtMgXNKlA8O8lLcHMKU+M2LfNGwnilK8/wZyNRTL+nHV0ggXNa9
+	 574BzDtpqjfxckaC0F3qjhGAaeaiO5eVhyeHQZq5tLhyCgB8c4RRoXm+0w8/7IM5wP
+	 UvtaqQ9jxQ94oVCYFLXObyG9BxBy4f8Rum9bjrUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730376AbfLCWzp (ORCPT
+        id S1729321AbfLCWzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:55:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50136 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:55:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730366AbfLCWzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:55:39 -0500
+        id S1730191AbfLCWzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:55:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DB692053B;
-        Tue,  3 Dec 2019 22:55:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6286020656;
+        Tue,  3 Dec 2019 22:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413738;
-        bh=E0sg7lpUyL7wlDReSjiLpi7Lh69WU5Wh/tgGnAYTUWY=;
+        s=default; t=1575413746;
+        bh=X6vTzpowZmATaq3N5YPTSWrjBYpQFFtRixxK+r2C46s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EcvGsBeVWZAxtGbPd9NO+XarI8y0MWOw/UFbZAdY6ghP4leiDEJhwpA7F9CcBGWEi
-         LbM3XH0stFbZ2Ko1y4VYCqrCKoaudqqSdt5fOwX0YdEXXbvOrGwzX33o9B521IbpTR
-         9X+p+C5KlpM9rPcOgGZb6F8ByLmYrpDE+mePB0+U=
+        b=mxGGHAa5nnTASBiKO4CQQrVlWZiZXW1BbkkBoztywrTlDygYGs4ssCfjrQI1H1dXE
+         2CbsGw5WEkXXrfY9MaLncTv5ICQA9zrEGt9cKKcU3qvSWhy4FK8dwq3rVAG6cpcE+N
+         a7k+TaMl/dXBwaj9HEqCyielCSeC2SKUFob9PhoU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        syzbot+7857962b4d45e602b8ad@syzkaller.appspotmail.com
-Subject: [PATCH 4.19 242/321] kvm: properly check debugfs dentry before using it
-Date:   Tue,  3 Dec 2019 23:35:08 +0100
-Message-Id: <20191203223439.731003476@linuxfoundation.org>
+        stable@vger.kernel.org, Yunsheng Lin <linyunsheng@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 245/321] net: hns3: fix PFC not setting problem for DCB module
+Date:   Tue,  3 Dec 2019 23:35:11 +0100
+Message-Id: <20191203223439.885488392@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -63,44 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-[ Upstream commit 8ed0579c12b2fe56a1fac2f712f58fc26c1dc49b ]
+[ Upstream commit d3ad430ac531e65f29c9737f86744c425c9173ef ]
 
-debugfs can now report an error code if something went wrong instead of
-just NULL.  So if the return value is to be used as a "real" dentry, it
-needs to be checked if it is an error before dereferencing it.
+The PFC enabling is based on user priority, currently it is
+based on TC, which may cause PFC not setting correctly when pri
+to TC mapping is not one to one relation.
 
-This is now happening because of ff9fb72bc077 ("debugfs: return error
-values, not NULL").  syzbot has found a way to trigger multiple debugfs
-files attempting to be created, which fails, and then the error code
-gets passed to dentry_path_raw() which obviously does not like it.
+This patch adds pfc_en in tm_info to fix it.
 
-Reported-by: Eric Biggers <ebiggers@kernel.org>
-Reported-and-tested-by: syzbot+7857962b4d45e602b8ad@syzkaller.appspotmail.com
-Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-Cc: kvm@vger.kernel.org
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: cacde272dd00 ("net: hns3: Add hclge_dcb module for the support of DCB feature")
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- virt/kvm/kvm_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c  | 7 ++++---
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h | 1 +
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c   | 2 +-
+ 3 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index df3fc0f214ece..9502b1a44232c 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -3990,7 +3990,7 @@ static void kvm_uevent_notify_change(unsigned int type, struct kvm *kvm)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
+index 92f19384e2585..a75d7c826fc2b 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
+@@ -245,6 +245,9 @@ static int hclge_ieee_setpfc(struct hnae3_handle *h, struct ieee_pfc *pfc)
+ 	    hdev->flag & HCLGE_FLAG_MQPRIO_ENABLE)
+ 		return -EINVAL;
+ 
++	if (pfc->pfc_en == hdev->tm_info.pfc_en)
++		return 0;
++
+ 	prio_tc = hdev->tm_info.prio_tc;
+ 	pfc_map = 0;
+ 
+@@ -257,10 +260,8 @@ static int hclge_ieee_setpfc(struct hnae3_handle *h, struct ieee_pfc *pfc)
+ 		}
  	}
- 	add_uevent_var(env, "PID=%d", kvm->userspace_pid);
  
--	if (kvm->debugfs_dentry) {
-+	if (!IS_ERR_OR_NULL(kvm->debugfs_dentry)) {
- 		char *tmp, *p = kmalloc(PATH_MAX, GFP_KERNEL);
+-	if (pfc_map == hdev->tm_info.hw_pfc_map)
+-		return 0;
+-
+ 	hdev->tm_info.hw_pfc_map = pfc_map;
++	hdev->tm_info.pfc_en = pfc->pfc_en;
  
- 		if (p) {
+ 	return hclge_pause_setup_hw(hdev);
+ }
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+index 1528fb3fa6be6..260b1e7796908 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+@@ -249,6 +249,7 @@ struct hclge_tm_info {
+ 	struct hclge_tc_info tc_info[HNAE3_MAX_TC];
+ 	enum hclge_fc_mode fc_mode;
+ 	u8 hw_pfc_map; /* Allow for packet drop or not on this TC */
++	u8 pfc_en;	/* PFC enabled or not for user priority */
+ };
+ 
+ struct hclge_comm_stats_str {
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
+index 0d45d045706c7..3180ae4528895 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
+@@ -1162,7 +1162,7 @@ static int hclge_pfc_setup_hw(struct hclge_dev *hdev)
+ 				HCLGE_RX_MAC_PAUSE_EN_MSK;
+ 
+ 	return hclge_pfc_pause_en_cfg(hdev, enable_bitmap,
+-				      hdev->tm_info.hw_pfc_map);
++				      hdev->tm_info.pfc_en);
+ }
+ 
+ /* Each Tc has a 1024 queue sets to backpress, it divides to
 -- 
 2.20.1
 
