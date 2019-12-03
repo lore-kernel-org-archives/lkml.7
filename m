@@ -2,100 +2,89 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA155C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A229FC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EDA62070A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:44:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 837142070A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 15:44:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbfLCPow (ORCPT
+        id S1727083AbfLCPoz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 10:44:52 -0500
-Received: from muru.com ([72.249.23.125]:44012 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726098AbfLCPow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 10:44:52 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id E047F804F;
-        Tue,  3 Dec 2019 15:45:28 +0000 (UTC)
-Date:   Tue, 3 Dec 2019 07:44:47 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Nishanth Menon <nm@ti.com>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        =?utf-8?B?QW5kcsOp?= Roth <neolynx@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] ARM: OMAP2+: Fix warnings with broken
- omap2_set_init_voltage()
-Message-ID: <20191203154447.GC35479@atomide.com>
-References: <20190924233222.52757-1-tony@atomide.com>
- <8FFD44DB-73F8-4807-91E1-C97DA8F781BA@goldelico.com>
- <20191202213929.GB35479@atomide.com>
- <EE749881-C3DB-4BBE-85FE-E5AF3D34884F@goldelico.com>
- <BAF5B057-1017-4174-8C3F-4B49B31E2E0D@goldelico.com>
+        Tue, 3 Dec 2019 10:44:55 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:50188 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfLCPox (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 10:44:53 -0500
+Received: from [81.92.17.157] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1icAII-0004gq-Tv; Tue, 03 Dec 2019 15:40:55 +0000
+Date:   Tue, 3 Dec 2019 16:40:52 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Adrian Reber <areber@redhat.com>
+Subject: Re: [PATCH 18/23] tools headers UAPI: Sync sched.h with the kernel
+Message-ID: <20191203154051.2inrcde6frjkm3ph@wittgenstein>
+References: <20191203135606.24902-1-acme@kernel.org>
+ <20191203135606.24902-19-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <BAF5B057-1017-4174-8C3F-4B49B31E2E0D@goldelico.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191203135606.24902-19-acme@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [191203 12:31]:
-> Ok, dev_pm_opp_find_freq_ceil() is doing what it should do and it
-> returns the first OPP higher or equal than the frequency passed in.
->
-> The real reason for the warning is that the same OPP table is used
-> for vdd_mpu_iva and vdd_core and it appears as if "core" (l3_ick)
-> runs at 200 MHz which does not correspond to a valid OPP.
-
-OK
-
-> So to silcence the warning it suffices to remove
+On Tue, Dec 03, 2019 at 10:56:01AM -0300, Arnaldo Carvalho de Melo wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
 > 
-> 	omap2_set_init_voltage("core", "l3_ick", "l3_main");
+> To get the changes in:
 > 
-> The question is now what l3_ick has to do with the OPPs at all
-> and how it should interwork with OPPs and cpufreq.
+>   0acefef58451 ("Merge tag 'threads-v5.5' of git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux")
+>   49cb2fc42ce4 ("fork: extend clone3() to support setting a PID")
+>   fa729c4df558 ("clone3: validate stack arguments")
+>   b612e5df4587 ("clone3: add CLONE_CLEAR_SIGHAND")
+> 
+> This file gets rebuilt, but no changes ensues:
+> 
+>    CC       /tmp/build/perf/trace/beauty/clone.o
+> 
+> This addresses this perf build warning:
+> 
+>   Warning: Kernel ABI header at 'tools/include/uapi/linux/sched.h' differs from latest version at 'include/uapi/linux/sched.h'
+>   diff -u tools/include/uapi/linux/sched.h include/uapi/linux/sched.
+> 
+> The CLONE_CLEAR_SIGHAND one will be used in tools/perf/trace/beauty/clone.c
+> in a followup patch to show that string when this bit is set in the
+> syscall arg. Keeping a copy of this file allows us to build this in
+> older systems and have the binary support printing that flag whenever
+> that system gets its kernel updated to one where this feature is
+> present.
+> 
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Adrian Reber <areber@redhat.com>
+> Cc: Christian Brauner <christian.brauner@ubuntu.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Link: https://lkml.kernel.org/n/tip-nprqsvvzbhzoy64cbvos6c5b@git.kernel.org
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-So what changed then for iva in your configuration then?
-
-At least I'm getting errors for both for 34xx and dm3730 with
-Linux next and reverted commit cf395f7ddb9e ("ARM: OMAP2+: Fix
-warnings with broken omap2_set_init_voltage()"):
-
-omap2_set_init_voltage: unable to find boot up OPP for vdd_mpu_iva
-omap2_set_init_voltage: unable to set vdd_mpu_iva
-omap2_set_init_voltage: unable to find boot up OPP for vdd_core
-omap2_set_init_voltage: unable to set vdd_core
-
-Then for fixing this code, seems like this can all happen from
-a regular device driver init based on the dts data.. We've had
-PM init completely ignore these errors already for years so
-whatever dependency there might be seems non-critical :)
-
-> Or does all this mean we may need a second OPP fable for vdd_core
-> and 200 MHz? But what would it be good for? I have not seen any
-> reference for "core-OPPs" in the TRM.
-
-OK yeah sounds like all the domains need an opp table.
-
-Also, I recall some SoCs having a dependency between having to
-run DSP at a lower rate for higher MPU rates, not sure if omap3
-has such dependencies though.
-
-Regards,
-
-Tony
+Thanks!
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
