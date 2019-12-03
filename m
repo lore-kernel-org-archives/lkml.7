@@ -6,59 +6,42 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC87C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6C5C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B48A2073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D1492073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 11:09:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726190AbfLCLEW (ORCPT
+        id S1726131AbfLCLJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 06:04:22 -0500
-Received: from relay.sw.ru ([185.231.240.75]:53806 "EHLO relay.sw.ru"
+        Tue, 3 Dec 2019 06:09:28 -0500
+Received: from foss.arm.com ([217.140.110.172]:40460 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725907AbfLCLEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 06:04:21 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1ic5y8-0005ik-KU; Tue, 03 Dec 2019 14:03:48 +0300
-Subject: Re: [PATCH] mm: fix hanging shrinker management on long
- do_shrink_slab
-To:     Shakeel Butt <shakeelb@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc:     Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Cgroups <cgroups@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Konstantin Khorenko <khorenko@virtuozzo.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-nfs@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-References: <20191129214541.3110-1-ptikhomirov@virtuozzo.com>
- <4e2d959a-0b0e-30aa-59b4-8e37728e9793@virtuozzo.com>
- <CALvZod7rhaOBUNR=Pt5a1vAEPimrwN=41dmDD9dekCGztAe=NQ@mail.gmail.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <01bdd7bd-3730-71f7-725c-42779ead9a12@virtuozzo.com>
-Date:   Tue, 3 Dec 2019 14:03:47 +0300
+        id S1725838AbfLCLJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 06:09:28 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B20430E;
+        Tue,  3 Dec 2019 03:09:27 -0800 (PST)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D85FA3F68E;
+        Tue,  3 Dec 2019 03:09:26 -0800 (PST)
+Subject: Re: Crash in fair scheduler
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1575364273836.74450@mentor.com>
+ <564e45cb-8230-9c3d-24a8-b58e6e88349f@arm.com>
+ <944927a7-b578-c6f9-a73d-25c5b0a39adb@arm.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <e6178a95-c02e-4fe9-49ee-7446e0d73882@arm.com>
+Date:   Tue, 3 Dec 2019 11:09:25 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CALvZod7rhaOBUNR=Pt5a1vAEPimrwN=41dmDD9dekCGztAe=NQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <944927a7-b578-c6f9-a73d-25c5b0a39adb@arm.com>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -66,128 +49,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.12.2019 03:13, Shakeel Butt wrote:
-> On Mon, Dec 2, 2019 at 8:37 AM Andrey Ryabinin <aryabinin@virtuozzo.com> wrote:
->>
->>
->> On 11/30/19 12:45 AM, Pavel Tikhomirov wrote:
->>> We have a problem that shrinker_rwsem can be held for a long time for
->>> read in shrink_slab, at the same time any process which is trying to
->>> manage shrinkers hangs.
->>>
->>> The shrinker_rwsem is taken in shrink_slab while traversing shrinker_list.
->>> It tries to shrink something on nfs (hard) but nfs server is dead at
->>> these moment already and rpc will never succeed. Generally any shrinker
->>> can take significant time to do_shrink_slab, so it's a bad idea to hold
->>> the list lock here.
->>>
->>> We have a similar problem in shrink_slab_memcg, except that we are
->>> traversing shrinker_map+shrinker_idr there.
->>>
->>> The idea of the patch is to inc a refcount to the chosen shrinker so it
->>> won't disappear and release shrinker_rwsem while we are in
->>> do_shrink_slab, after that we will reacquire shrinker_rwsem, dec
->>> the refcount and continue the traversal.
->>>
->>> We also need a wait_queue so that unregister_shrinker can wait for the
->>> refcnt to become zero. Only after these we can safely remove the
->>> shrinker from list and idr, and free the shrinker.
->>>
->>> I've reproduced the nfs hang in do_shrink_slab with the patch applied on
->>> ms kernel, all other mount/unmount pass fine without any hang.
->>>
->>> Here is a reproduction on kernel without patch:
->>>
->>> 1) Setup nfs on server node with some files in it (e.g. 200)
->>>
->>> [server]# cat /etc/exports
->>> /vz/nfs2 *(ro,no_root_squash,no_subtree_check,async)
->>>
->>> 2) Hard mount it on client node
->>>
->>> [client]# mount -ohard 10.94.3.40:/vz/nfs2 /mnt
->>>
->>> 3) Open some (e.g. 200) files on the mount
->>>
->>> [client]# for i in $(find /mnt/ -type f | head -n 200); \
->>>   do setsid sleep 1000 &>/dev/null <$i & done
->>>
->>> 4) Kill all openers
->>>
->>> [client]# killall sleep -9
->>>
->>> 5) Put your network cable out on client node
->>>
->>> 6) Drop caches on the client, it will hang on nfs while holding
->>>   shrinker_rwsem lock for read
->>>
->>> [client]# echo 3 > /proc/sys/vm/drop_caches
->>>
->>>   crash> bt ...
->>>   PID: 18739  TASK: ...  CPU: 3   COMMAND: "bash"
->>>    #0 [...] __schedule at ...
->>>    #1 [...] schedule at ...
->>>    #2 [...] rpc_wait_bit_killable at ... [sunrpc]
->>>    #3 [...] __wait_on_bit at ...
->>>    #4 [...] out_of_line_wait_on_bit at ...
->>>    #5 [...] _nfs4_proc_delegreturn at ... [nfsv4]
->>>    #6 [...] nfs4_proc_delegreturn at ... [nfsv4]
->>>    #7 [...] nfs_do_return_delegation at ... [nfsv4]
->>>    #8 [...] nfs4_evict_inode at ... [nfsv4]
->>>    #9 [...] evict at ...
->>>   #10 [...] dispose_list at ...
->>>   #11 [...] prune_icache_sb at ...
->>>   #12 [...] super_cache_scan at ...
->>>   #13 [...] do_shrink_slab at ...
->>>   #14 [...] shrink_slab at ...
->>>   #15 [...] drop_slab_node at ...
->>>   #16 [...] drop_slab at ...
->>>   #17 [...] drop_caches_sysctl_handler at ...
->>>   #18 [...] proc_sys_call_handler at ...
->>>   #19 [...] vfs_write at ...
->>>   #20 [...] ksys_write at ...
->>>   #21 [...] do_syscall_64 at ...
->>>   #22 [...] entry_SYSCALL_64_after_hwframe at ...
->>>
->>> 7) All other mount/umount activity now hangs with no luck to take
->>>   shrinker_rwsem for write.
->>>
->>> [client]# mount -t tmpfs tmpfs /tmp
->>>
->>>   crash> bt ...
->>>   PID: 5464   TASK: ...  CPU: 3   COMMAND: "mount"
->>>    #0 [...] __schedule at ...
->>>    #1 [...] schedule at ...
->>>    #2 [...] rwsem_down_write_slowpath at ...
->>>    #3 [...] prealloc_shrinker at ...
->>>    #4 [...] alloc_super at ...
->>>    #5 [...] sget at ...
->>>    #6 [...] mount_nodev at ...
->>>    #7 [...] legacy_get_tree at ...
->>>    #8 [...] vfs_get_tree at ...
->>>    #9 [...] do_mount at ...
->>>   #10 [...] ksys_mount at ...
->>>   #11 [...] __x64_sys_mount at ...
->>>   #12 [...] do_syscall_64 at ...
->>>   #13 [...] entry_SYSCALL_64_after_hwframe at ...
->>>
->>
->>
->> I don't think this patch solves the problem, it only fixes one minor symptom of it.
->> The actual problem here the reclaim hang in the nfs.
->> It means that any process, including kswapd, may go into nfs inode reclaim and stuck there.
->>
->> Even mount() itself has GFP_KERNEL allocations in its path, so it still might stuck there even with your patch.
->>
->> I think this should be handled on nfs/vfs level by making  inode eviction during reclaim more asynchronous.
+On 03/12/2019 10:40, Dietmar Eggemann wrote:
+> On 03/12/2019 11:30, Valentin Schneider wrote:
+>> On 03/12/2019 09:11, Schmid, Carsten wrote:
 > 
-> Though I agree that we should be fixing shrinkers to not get stuck
-> (and be more async), I still think the problem this patch is solving
-> is worth fixing. On machines running multiple workloads, one job stuck
-> in slab shrinker and blocking all other unrelated jobs wanting
-> shrinker_rwsem, breaks the isolation and causes DoS.
+> [...]
+> 
+>> That looks a lot like a recent issue we've had, see
+>>
+>>   https://lore.kernel.org/lkml/20191108131909.428842459@infradead.org/
+>>
+>> The issue is caused by
+>>   
+>>   67692435c411 ("sched: Rework pick_next_task() slow-path")
+>>
+>> which 5.4-rc2 has (without the fix which landed in -rc7) but 4.14 really
+>> shouldn't, unless the kernel you're using has had core scheduling somehow
+>> backported to it?
+>>
+>> I've only scraped the surface but I'd like to first ask: can you reproduce
+>> the issue on v5.4 final ?
+> 
+> Can't be. 4.14.86 does not have ("sched: Rework pick_next_task()
+> slow-path").
+> 
 
-This makes jobs isolated till global reclaim occurs. In that case any process
-(including kswapd) become stuck, and nothing will help. But (as it was spoken
-in this list some time ago) many people configure their workload in the way
-they don't have global reclaim, and they may get some profit from this.
+Right, which is why I wondered if the kernel under test had had that 
+backported to it for some reason (e.g. core scheduling). Peter pointed out
+that this is a slightly different issue (nr_running matches the rbt), so
+this is probably unrelated.
