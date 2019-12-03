@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48665C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43EB0C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DC4F20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 077A52064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414161;
-	bh=ihPG//jNFj6mdLcSyAiHByfXaouHt8MxyYWi42hQ/NQ=;
+	s=default; t=1575414168;
+	bh=AK+0iL2K88+4zjkWg6cRz/Q8lxIKszoqmc5G3IFXL+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L3DP3QTpg0mcszqu2BMKCFnoLVMZNlH/EkzreHCLe6oD3JM0CR+3P4j8ffWy0efVX
-	 0ZF2/ocZV+1tirPc7zObJnZQRF6ZNFZJH7LY/6xpuh07piU6uY5s4QzpWABTFCjKSk
-	 OEgzMHnC1rxIAxCQ5K9QUztn/KRaqRxSI/muwUOA=
+	b=XugrA95HfPe4oM+Wy0svOxpgD6yr9id0BvhaDBD7jwfQK1SfHfqznLV33ZjR3dWqs
+	 gbqo0Uqo9KG5HUjV0RQ0RtwBJbU/07ZU6qK2foCV2slLkO0etZJnLMn3M1eZ2p+fxF
+	 MWmw7yA3mwuHcaQ28Lq7bFH2gju63zvEBHMCZ0TY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730703AbfLCXCj (ORCPT
+        id S1730114AbfLCWyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:02:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48302 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:54:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728033AbfLCWy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:54:26 -0500
+        id S1728742AbfLCWyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:54:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2925620674;
-        Tue,  3 Dec 2019 22:54:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1AA720674;
+        Tue,  3 Dec 2019 22:54:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413665;
-        bh=ihPG//jNFj6mdLcSyAiHByfXaouHt8MxyYWi42hQ/NQ=;
+        s=default; t=1575413645;
+        bh=AK+0iL2K88+4zjkWg6cRz/Q8lxIKszoqmc5G3IFXL+c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q4++BbNGtEKxJMh9D6x1cMzoOzZ6iuHfiaJwN3fq//nd7sWRtNPoXap3O5WofYDwx
-         fYi+l3JFbSc3epfwVnuSkzThhHo/+BzkyL0VbfF0J+pGGY1gLOfWvnjMAkWdhvTIq4
-         ouwM2nyCQrslPf5TkyR1MWZ9XOIYIQ/se+ZBo4Ac=
+        b=a8oQiIuKMuTIIUOJEXpJQp9nVrXkc2OpeVg1Q9Q2ozzyKPT8qgrdBIfpn3n+fopk1
+         34KTMIhVErLzdt1siSMOjVeNMgc4x/V50ZEfXYbxx2avCdPE3CzMj5/UGJjGZXtyVs
+         23XbTqnC3r3nSIJtex/GxNEisWbEAw4K1cGhV9nk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        James Morse <james.morse@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 176/321] bpf/cpumap: make sure frame_size for build_skb is aligned if headroom isnt
-Date:   Tue,  3 Dec 2019 23:34:02 +0100
-Message-Id: <20191203223436.285585148@linuxfoundation.org>
+Subject: [PATCH 4.19 206/321] firmware: arm_sdei: fix wrong of_node_put() in init function
+Date:   Tue,  3 Dec 2019 23:34:32 +0100
+Message-Id: <20191203223437.838369982@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,41 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jesper Dangaard Brouer <brouer@redhat.com>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-[ Upstream commit 77ea5f4cbe2084db9ab021ba73fb7eadf1610884 ]
+[ Upstream commit c3790b3799f8d75d93d26f6fd7bb569fc8c8b0cb ]
 
-The frame_size passed to build_skb must be aligned, else it is
-possible that the embedded struct skb_shared_info gets unaligned.
+After finding a "firmware" dt node arm_sdei tries to match it's
+compatible string with it. To do so it's calling of_find_matching_node()
+which already takes care of decreasing the refcount on the "firmware"
+node. We are then incorrectly decreasing the refcount on that node
+again.
 
-For correctness make sure that xdpf->headroom in included in the
-alignment. No upstream drivers can hit this, as all XDP drivers provide
-an aligned headroom.  This was discovered when playing with implementing
-XDP support for mvneta, which have a 2 bytes DSA header, and this
-Marvell ARM64 platform didn't like doing atomic operations on an
-unaligned skb_shinfo(skb)->dataref addresses.
+This patch removes the unwarranted call to of_node_put().
 
-Fixes: 1c601d829ab0 ("bpf: cpumap xdp_buff to skb conversion and allocation")
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/cpumap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/firmware/arm_sdei.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/kernel/bpf/cpumap.c b/kernel/bpf/cpumap.c
-index 24aac0d0f4127..8974b3755670e 100644
---- a/kernel/bpf/cpumap.c
-+++ b/kernel/bpf/cpumap.c
-@@ -183,7 +183,7 @@ static struct sk_buff *cpu_map_build_skb(struct bpf_cpu_map_entry *rcpu,
- 	 * is not at a fixed memory location, with mixed length
- 	 * packets, which is bad for cache-line hotness.
- 	 */
--	frame_size = SKB_DATA_ALIGN(xdpf->len) + xdpf->headroom +
-+	frame_size = SKB_DATA_ALIGN(xdpf->len + xdpf->headroom) +
- 		SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
+index 1ea71640fdc21..dffb47c6b4801 100644
+--- a/drivers/firmware/arm_sdei.c
++++ b/drivers/firmware/arm_sdei.c
+@@ -1017,7 +1017,6 @@ static bool __init sdei_present_dt(void)
+ 		return false;
  
- 	pkt_data_start = xdpf->data - xdpf->headroom;
+ 	np = of_find_matching_node(fw_np, sdei_of_match);
+-	of_node_put(fw_np);
+ 	if (!np)
+ 		return false;
+ 
 -- 
 2.20.1
 
