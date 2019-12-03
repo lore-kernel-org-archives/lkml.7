@@ -2,251 +2,220 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BEABC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4724C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E26F220803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 19:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9423D2073C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:06:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TmDKhxB1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oVFaXK5i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbfLCT6P (ORCPT
+        id S1727287AbfLCUF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 14:58:15 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39275 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbfLCT6O (ORCPT
+        Tue, 3 Dec 2019 15:05:59 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41632 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbfLCUF7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 14:58:14 -0500
-Received: by mail-wr1-f65.google.com with SMTP id y11so5319522wrt.6;
-        Tue, 03 Dec 2019 11:58:12 -0800 (PST)
+        Tue, 3 Dec 2019 15:05:59 -0500
+Received: by mail-ot1-f67.google.com with SMTP id r27so4100999otc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 12:05:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=CBmRo49Lo8cfcyru0UHxO4qs5bM9xRwQrORrymcUuDo=;
-        b=TmDKhxB13oaAvch3zyGEVa1Ddwx/qtLh4KAp/G4WjAa2zEkJ+Hjt5ocFZzMxcf/Orr
-         xx5PkYFyVSouK/aOKXmvht6FfdZPLxL4nbCVH0Mt7eKokLkGRNtT5lw/VpslMyQmAuUs
-         WlNIN354XCvaMcznbCn5wfrHy4d1rnnmofqr/nmyvxhxK0SOzUzIGoweBWFeyCdCVqvu
-         BadBULlpw4Z/UCKgNol/GVuoq7c7yBb+CRxR4xwVVdfPS4zamVYDEUa+N+4x/dF86Six
-         6d5TJr4XjInzh1tsWBaG7KRt7BzT7YVCba0UzALtB4rZVA4/5hlj1AylOEY/11jAmhPr
-         7XtQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w5GBnM/FqUZ16kHKh9xIw2C3n/uU929jXebODLC4J08=;
+        b=oVFaXK5inZ0k2XSlwzB2C8qU9s/TgGyoRhegTH2mum4SVc5BYvt4/2Xobl2opUErto
+         rYAA6EgpD2Cl+IW2GUVbGM1XHhU/DUaYX7BUh54nTtffvxgil33c+9ISX0EzjPnuS3IK
+         QeGWU3GZX5MU8GQaAyAOtLyJTW2YxkCPonriS9E+nFLYuJujIBdWdyhAIynmKExyNItr
+         IP+LNImguQ2pamxLQfwLT1jxp0GInasU9PgzbIP9PA8MBDm2xYJQL6j37XeBzXRFZlb8
+         ZWIht/io1NwxHrPv6Pruil9N/c6xQi/D0RVSwvx7nJn0a/ZWa42KC+GqEYrPX8rzVf/q
+         lLZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CBmRo49Lo8cfcyru0UHxO4qs5bM9xRwQrORrymcUuDo=;
-        b=Hf63iMOoHWRU+BytYhR5Y5V01rdYaCKNsMidu9cxS8x0wCIEFPLyqTPDxwDTarjYsQ
-         wOS/HJWDz9dWTWsVvzmnRro+JlQYDCNcg6QQ5vvMD0gKXQUH9c61fZCAsHSrhyycvnn4
-         0vp2uMeLPMjQ0yR2uksEriE748ywozlVDUtw68itBudx11XK+zS/N0q2kBVWKmoevGZE
-         OIPLSOPdTEXHiio26yomzm9QBfe4WXo066SKOXnscdkVmo1nb8qo+cSdNhIa5Zgdz3EA
-         7a6e75zozMBow5r0iOnjxOugMC6hoRJ2WxfDEX7iDI9YBU1yN24MRhuU1fmknareTicL
-         Qhkw==
-X-Gm-Message-State: APjAAAVXWgEA3j8+eCf/AboIMyXzUYI9ZTeq8YBS5EhavBm5lFfhJmbW
-        z5yvQdO8TqTSEQp6xJQZRKB5+AAW
-X-Google-Smtp-Source: APXvYqxc3D8on5Tft3tHM0Whf36pjSxEksV+ohOCtugP9dEXPfBq0A8mUSJ9B7l7QmhysRUxmCV0fQ==
-X-Received: by 2002:a5d:6390:: with SMTP id p16mr7390241wru.170.1575403091323;
-        Tue, 03 Dec 2019 11:58:11 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f4a:6300:c5aa:b1f:2ae:5783? (p200300EA8F4A6300C5AA0B1F02AE5783.dip0.t-ipconnect.de. [2003:ea:8f4a:6300:c5aa:b1f:2ae:5783])
-        by smtp.googlemail.com with ESMTPSA id g74sm3998266wme.5.2019.12.03.11.58.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Dec 2019 11:58:10 -0800 (PST)
-Subject: Re: 5.4.1 WARNINGs with r8169
-To:     Udo van den Heuvel <udovdh@xs4all.nl>
-References: <46e7dcf9-3c89-25c1-ccb8-336450047bec@xs4all.nl>
- <aa3b11a5-eb7e-dc2c-e5b4-96e53942246d@applied-asynchrony.com>
-Cc:     =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <3a1706be-e236-6f08-73eb-734f0ae41bbb@gmail.com>
-Date:   Tue, 3 Dec 2019 20:58:04 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w5GBnM/FqUZ16kHKh9xIw2C3n/uU929jXebODLC4J08=;
+        b=UTUZxgamlQAne7AVXatrCcHsywB+sjjaqzqUbgdTs08S17P3te+9NsAONRMFLt4dHn
+         DVDmNy8P3USRAKe50qqFm2bTtPt0gvaqEvjXqbcb1Q41s58LZ2GrKPaajmOBm2ZhPTON
+         V5bbe/3KaZ7jfiCE1c18oZqy8TKmC2hYyPb3KIqxew2JiHfWOW3SdY0C9ptoG0Ez6uYQ
+         ZI/9QXtd92bbc0iLqDt81ETuGfhRnBMoBH255USrFpuX3Jc747zdd2dFfB/AAzTSDr4V
+         tyFAaoBNU6jD+LHJMpHtXKMMMqhruMVyCHn2QrYA7cE/BgmVT8OPPjLp8g9a1j5Y3jYy
+         KnrQ==
+X-Gm-Message-State: APjAAAW17uUBgtq/3xNBH+p5vtM0gGeczUld5NgZqDzu4Su/MFifYXgY
+        L0M9cP4K95OQl/qxaIlvmOAO1Uik8tioiMGAxo0BXg==
+X-Google-Smtp-Source: APXvYqxMsYkXcx3YUHk6qQQknR2Wcv7nyNj/ersFEAyzLgpkV44TUTNwF7MF0Km4cL6TZQoro1s5CuJBeGKGZQNUr6k=
+X-Received: by 2002:a05:6830:22ee:: with SMTP id t14mr4451229otc.236.1575403557473;
+ Tue, 03 Dec 2019 12:05:57 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <aa3b11a5-eb7e-dc2c-e5b4-96e53942246d@applied-asynchrony.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191201150015.GC18573@shao2-debian> <CAGETcx9r0u=-WSnQ2ZS1KmZSVQqKwvpnhO-w41=jk8iF6BdALA@mail.gmail.com>
+ <7e13b7f9-6c0f-0ab5-a6f9-5fb9b41257c9@gmail.com>
+In-Reply-To: <7e13b7f9-6c0f-0ab5-a6f9-5fb9b41257c9@gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 3 Dec 2019 12:05:21 -0800
+Message-ID: <CAGETcx_PeYi-j+=0QOQR9c=_4n4becziS8WKKi77bXuNY1hufQ@mail.gmail.com>
+Subject: Re: 5e6669387e ("of/platform: Pause/resume sync state during init
+ .."): [ 3.192726] WARNING: CPU: 1 PID: 1 at drivers/base/core.c:688 device_links_supplier_sync_state_resume
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        LKP <lkp@lists.01.org>, kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01.12.2019 10:52, Holger Hoffstätte wrote:
-> (cc:'ing netdev & Heiner)
-> 
-> Are you using Jumbo packets? If so please check the thread at
-> https://lore.kernel.org/lkml/24034.56114.248207.524177@wylie.me.uk/
-> 
-> Btw you should use a more descriptive Subject line, otherwise people might
-> miss your message..
-> 
-> -h
-> 
-> -------- Forwarded Message --------
-> Subject: 5.4.1 WARNINGs
-> Date: Sun, 1 Dec 2019 08:06:37 +0100
-> From: Udo van den Heuvel <udovdh@xs4all.nl>
-> Organization: hierzo
-> To: linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>
-> Newsgroups: gmane.linux.kernel
-> 
-> Hello,
-> 
-> While booting into 5.4.1 I noticed these.
-> Any advice please?
-> 
-> 
-> Dec  1 07:59:28 vuurmuur named[1318]: resolver priming query complete
-> Dec  1 07:59:34 vuurmuur kernel: ------------[ cut here ]------------
-> Dec  1 07:59:34 vuurmuur kernel: NETDEV WATCHDOG: eth0 (r8169): transmit
-> queue 0 timed out
-> Dec  1 07:59:34 vuurmuur kernel: WARNING: CPU: 0 PID: 9 at
-> net/sched/sch_generic.c:447 dev_watchdog+0x208/0x210
-> Dec  1 07:59:34 vuurmuur kernel: Modules linked in: act_police
-> sch_ingress cls_u32 sch_sfq sch_cbq pppoe pppox ip6table_raw nf_log_ipv6
-> ip6table_mangle xt_u32 xt_CT xt_nat nf_log_ipv4 nf_log_common
-> xt_statistic nf_nat_sip nf_conntrack_sip xt_recent xt_string xt_lscan(O)
-> xt_TARPIT(O) iptable_raw nf_nat_h323 nf_conntrack_h323 xt_TCPMSS
-> xt_length xt_hl xt_tcpmss xt_owner xt_mac xt_mark xt_multiport xt_limit
-> nf_nat_irc nf_conntrack_irc xt_LOG xt_DSCP xt_REDIRECT xt_MASQUERADE
-> xt_dscp nf_nat_ftp nf_conntrack_ftp iptable_mangle iptable_nat
-> mq_deadline 8021q ipt_REJECT nf_reject_ipv4 iptable_filter ip6t_REJECT
-> nf_reject_ipv6 xt_state xt_conntrack ip6table_filter nct6775 ip6_tables
-> sunrpc amdgpu mfd_core gpu_sched drm_kms_helper syscopyarea sysfillrect
-> sysimgblt fb_sys_fops ttm snd_hda_codec_realtek snd_hda_codec_generic
-> drm snd_hda_codec_hdmi snd_hda_intel drm_panel_orientation_quirks
-> cfbfillrect snd_intel_nhlt amd_freq_sensitivity cfbimgblt snd_hda_codec
-> aesni_intel cfbcopyarea i2c_algo_bit fb glue_helper
-> Dec  1 07:59:34 vuurmuur kernel: snd_hda_core crypto_simd fbdev snd_pcm
-> cryptd pl2303 backlight snd_timer snd i2c_piix4 acpi_cpufreq sr_mod
-> cdrom sd_mod autofs4
-> Dec  1 07:59:34 vuurmuur kernel: CPU: 0 PID: 9 Comm: ksoftirqd/0
-> Tainted: G           O      5.4.1 #2
-> Dec  1 07:59:34 vuurmuur kernel: Hardware name: To Be Filled By O.E.M.
-> To Be Filled By O.E.M./QC5000M-ITX/PH, BIOS P1.10 05/06/2015
-> Dec  1 07:59:34 vuurmuur kernel: RIP: 0010:dev_watchdog+0x208/0x210
-> Dec  1 07:59:34 vuurmuur kernel: Code: 63 54 24 e0 eb 8d 4c 89 f7 c6 05
-> fc a0 b9 00 01 e8 6d fa fc ff 44 89 e9 48 89 c2 4c 89 f6 48 c7 c7 48 79
-> dd 81 e8 98 5a b5 ff <0f> 0b eb bd 0f 1f 40 00 48 c7 47 08 00 00 00 00
-> 48 c7 07 00 00 00
-> Dec  1 07:59:34 vuurmuur kernel: RSP: 0018:ffffc9000006fd68 EFLAGS: 00010286
-> Dec  1 07:59:34 vuurmuur kernel: RAX: 0000000000000000 RBX:
-> ffff88813a1d6400 RCX: 0000000000000006
-> Dec  1 07:59:34 vuurmuur kernel: RDX: 0000000000000007 RSI:
-> ffffffff8203aa58 RDI: ffff88813b216250
-> Dec  1 07:59:34 vuurmuur kernel: RBP: ffff8881394ee460 R08:
-> 0000000000080001 R09: 0000000000000002
-> Dec  1 07:59:34 vuurmuur kernel: R10: 0000000000000001 R11:
-> 0000000000000001 R12: ffff8881394ee4b8
-> Dec  1 07:59:34 vuurmuur kernel: R13: 0000000000000000 R14:
-> ffff8881394ee000 R15: ffff88813a1d6480
-> Dec  1 07:59:34 vuurmuur kernel: FS:  0000000000000000(0000)
-> GS:ffff88813b200000(0000) knlGS:0000000000000000
-> Dec  1 07:59:34 vuurmuur kernel: CS:  0010 DS: 0000 ES: 0000 CR0:
-> 0000000080050033
-> Dec  1 07:59:34 vuurmuur kernel: CR2: 00007f09b9c20a78 CR3:
-> 00000001385d4000 CR4: 00000000000406b0
-> Dec  1 07:59:34 vuurmuur kernel: Call Trace:
-> Dec  1 07:59:34 vuurmuur kernel: ? qdisc_put_unlocked+0x30/0x30
-> Dec  1 07:59:34 vuurmuur kernel: ? qdisc_put_unlocked+0x30/0x30
-> Dec  1 07:59:34 vuurmuur kernel: call_timer_fn.isra.0+0x78/0x110
-> Dec  1 07:59:34 vuurmuur kernel: ? add_timer_on+0xd0/0xd0
-> Dec  1 07:59:34 vuurmuur kernel: run_timer_softirq+0x19d/0x1c0
-> Dec  1 07:59:34 vuurmuur kernel: ? _raw_spin_unlock_irq+0x1f/0x40
-> Dec  1 07:59:34 vuurmuur kernel: ? finish_task_switch+0xb2/0x250
-> Dec  1 07:59:34 vuurmuur kernel: ? finish_task_switch+0x81/0x250
-> Dec  1 07:59:34 vuurmuur kernel: __do_softirq+0xcf/0x210
-> Dec  1 07:59:34 vuurmuur kernel: run_ksoftirqd+0x15/0x20
-> Dec  1 07:59:34 vuurmuur kernel: smpboot_thread_fn+0xe9/0x1f0
-> Dec  1 07:59:34 vuurmuur kernel: kthread+0xf1/0x130
-> Dec  1 07:59:34 vuurmuur kernel: ? sort_range+0x20/0x20
-> Dec  1 07:59:34 vuurmuur kernel: ? kthread_park+0x80/0x80
-> Dec  1 07:59:34 vuurmuur kernel: ret_from_fork+0x22/0x40
-> Dec  1 07:59:34 vuurmuur kernel: ---[ end trace e771bca3c459d7f9 ]---
-> Dec  1 07:59:34 vuurmuur kernel: ------------[ cut here ]------------
-> Dec  1 07:59:34 vuurmuur kernel: WARNING: CPU: 0 PID: 9 at
-> net/sched/sch_generic.c:447 dev_watchdog+0x208/0x210
-> Dec  1 07:59:34 vuurmuur kernel: Modules linked in: act_police
-> sch_ingress cls_u32 sch_sfq sch_cbq pppoe pppox ip6table_raw nf_log_ipv6
-> ip6table_mangle xt_u32 xt_CT xt_nat nf_log_ipv4 nf_log_common
-> xt_statistic nf_nat_sip nf_conntrack_sip xt_recent xt_string xt_lscan(O)
-> xt_TARPIT(O) iptable_raw nf_nat_h323 nf_conntrack_h323 xt_TCPMSS
-> xt_length xt_hl xt_tcpmss xt_owner xt_mac xt_mark xt_multiport xt_limit
-> nf_nat_irc nf_conntrack_irc xt_LOG xt_DSCP xt_REDIRECT xt_MASQUERADE
-> xt_dscp nf_nat_ftp nf_conntrack_ftp iptable_mangle iptable_nat
-> mq_deadline 8021q ipt_REJECT nf_reject_ipv4 iptable_filter ip6t_REJECT
-> nf_reject_ipv6 xt_state xt_conntrack ip6table_filter nct6775 ip6_tables
-> sunrpc amdgpu mfd_core gpu_sched drm_kms_helper syscopyarea sysfillrect
-> sysimgblt fb_sys_fops ttm snd_hda_codec_realtek snd_hda_codec_generic
-> drm snd_hda_codec_hdmi snd_hda_intel drm_panel_orientation_quirks
-> cfbfillrect snd_intel_nhlt amd_freq_sensitivity cfbimgblt snd_hda_codec
-> aesni_intel cfbcopyarea i2c_algo_bit fb glue_helper
-> Dec  1 07:59:34 vuurmuur kernel: snd_hda_core crypto_simd fbdev snd_pcm
-> cryptd pl2303 backlight snd_timer snd i2c_piix4 acpi_cpufreq sr_mod
-> cdrom sd_mod autofs4
-> Dec  1 07:59:34 vuurmuur kernel: CPU: 0 PID: 9 Comm: ksoftirqd/0
-> Tainted: G           O      5.4.1 #2
-> Dec  1 07:59:34 vuurmuur kernel: Hardware name: To Be Filled By O.E.M.
-> To Be Filled By O.E.M./QC5000M-ITX/PH, BIOS P1.10 05/06/2015
-> Dec  1 07:59:34 vuurmuur kernel: RIP: 0010:dev_watchdog+0x208/0x210
-> Dec  1 07:59:34 vuurmuur kernel: Code: 63 54 24 e0 eb 8d 4c 89 f7 c6 05
-> fc a0 b9 00 01 e8 6d fa fc ff 44 89 e9 48 89 c2 4c 89 f6 48 c7 c7 48 79
-> dd 81 e8 98 5a b5 ff <0f> 0b eb bd 0f 1f 40 00 48 c7 47 08 00 00 00 00
-> 48 c7 07 00 00 00
-> Dec  1 07:59:34 vuurmuur kernel: RSP: 0018:ffffc9000006fd68 EFLAGS: 00010286
-> Dec  1 07:59:34 vuurmuur kernel: RAX: 0000000000000000 RBX:
-> ffff88813a1d6400 RCX: 0000000000000006
-> Dec  1 07:59:34 vuurmuur kernel: RDX: 0000000000000007 RSI:
-> ffffffff8203aa58 RDI: ffff88813b216250
-> Dec  1 07:59:34 vuurmuur kernel: RBP: ffff8881394ee460 R08:
-> 0000000000080001 R09: 0000000000000002
-> Dec  1 07:59:34 vuurmuur kernel: R10: 0000000000000001 R11:
-> 0000000000000001 R12: ffff8881394ee4b8
-> Dec  1 07:59:34 vuurmuur kernel: R13: 0000000000000000 R14:
-> ffff8881394ee000 R15: ffff88813a1d6480
-> Dec  1 07:59:34 vuurmuur kernel: FS:  0000000000000000(0000)
-> GS:ffff88813b200000(0000) knlGS:0000000000000000
-> Dec  1 07:59:34 vuurmuur kernel: CS:  0010 DS: 0000 ES: 0000 CR0:
-> 0000000080050033
-> Dec  1 07:59:34 vuurmuur kernel: CR2: 00007f09b9c20a78 CR3:
-> 00000001385d4000 CR4: 00000000000406b0
-> Dec  1 07:59:34 vuurmuur kernel: Call Trace:
-> Dec  1 07:59:34 vuurmuur kernel: ? qdisc_put_unlocked+0x30/0x30
-> Dec  1 07:59:34 vuurmuur kernel: ? qdisc_put_unlocked+0x30/0x30
-> Dec  1 07:59:34 vuurmuur kernel: call_timer_fn.isra.0+0x78/0x110
-> Dec  1 07:59:34 vuurmuur kernel: ? add_timer_on+0xd0/0xd0
-> Dec  1 07:59:34 vuurmuur kernel: run_timer_softirq+0x19d/0x1c0
-> Dec  1 07:59:34 vuurmuur kernel: ? _raw_spin_unlock_irq+0x1f/0x40
-> Dec  1 07:59:34 vuurmuur kernel: ? finish_task_switch+0xb2/0x250
-> Dec  1 07:59:34 vuurmuur kernel: ? finish_task_switch+0x81/0x250
-> Dec  1 07:59:34 vuurmuur kernel: __do_softirq+0xcf/0x210
-> Dec  1 07:59:34 vuurmuur kernel: run_ksoftirqd+0x15/0x20
-> Dec  1 07:59:34 vuurmuur kernel: smpboot_thread_fn+0xe9/0x1f0
-> Dec  1 07:59:34 vuurmuur kernel: kthread+0xf1/0x130
-> Dec  1 07:59:34 vuurmuur kernel: ? sort_range+0x20/0x20
-> Dec  1 07:59:34 vuurmuur kernel: ? kthread_park+0x80/0x80
-> Dec  1 07:59:34 vuurmuur kernel: ret_from_fork+0x22/0x40
-> Dec  1 07:59:34 vuurmuur kernel: ---[ end trace e771bca3c459d7f9 ]---
-> 
-> 
-> Kind regards,
-> Udo
-> 
-If the problem persists, please create a ticket at bugzilla.kernel.org,
-including:
+On Tue, Dec 3, 2019 at 1:01 AM Frank Rowand <frowand.list@gmail.com> wrote:
+>
+> On 12/2/19 3:19 PM, Saravana Kannan wrote:
+> > On Sun, Dec 1, 2019 at 7:00 AM kernel test robot <lkp@intel.com> wrote:
+> >>
+> >> Greetings,
+> >>
+> >> 0day kernel testing robot got the below dmesg and the first bad commit is
+> >>
+> >> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> >>
+> >> commit 5e6669387e2287f25f09fd0abd279dae104cfa7e
+> >> Author:     Saravana Kannan <saravanak@google.com>
+> >> AuthorDate: Wed Sep 4 14:11:24 2019 -0700
+> >> Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >> CommitDate: Fri Oct 4 17:30:19 2019 +0200
+> >>
+> >>     of/platform: Pause/resume sync state during init and of_platform_populate()
+> >>
+> >>     When all the top level devices are populated from DT during kernel
+> >>     init, the supplier devices could be added and probed before the
+> >>     consumer devices are added and linked to the suppliers. To avoid the
+> >>     sync_state() callback from being called prematurely, pause the
+> >>     sync_state() callbacks before populating the devices and resume them
+> >>     at late_initcall_sync().
+> >>
+> >>     Similarly, when children devices are populated from a module using
+> >>     of_platform_populate(), there could be supplier-consumer dependencies
+> >>     between the children devices that are populated. To avoid the same
+> >>     problem with sync_state() being called prematurely, pause and resume
+> >>     sync_state() callbacks across of_platform_populate().
+> >>
+> >>     Signed-off-by: Saravana Kannan <saravanak@google.com>
+> >>     Link: https://lore.kernel.org/r/20190904211126.47518-6-saravanak@google.com
+> >>     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >>
+> >> fc5a251d0f  driver core: Add sync_state driver/bus callback
+> >> 5e6669387e  of/platform: Pause/resume sync state during init and of_platform_populate()
+> >> 81b6b96475  Merge branch 'master' of git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux; tag 'dma-mapping-5.5' of git://git.infradead.org/users/hch/dma-mapping
+> >> +-------------------------------------------------------------------------+------------+------------+------------+
+> >> |                                                                         | fc5a251d0f | 5e6669387e | 81b6b96475 |
+> >> +-------------------------------------------------------------------------+------------+------------+------------+
+> >> | boot_successes                                                          | 30         | 0          | 0          |
+> >> | boot_failures                                                           | 1          | 11         | 22         |
+> >> | Oops:#[##]                                                              | 1          |            |            |
+> >> | EIP:unmap_vmas                                                          | 1          |            |            |
+> >> | PANIC:double_fault                                                      | 1          |            |            |
+> >> | Kernel_panic-not_syncing:Fatal_exception                                | 1          |            |            |
+> >> | WARNING:at_drivers/base/core.c:#device_links_supplier_sync_state_resume | 0          | 11         | 22         |
+> >> | EIP:device_links_supplier_sync_state_resume                             | 0          | 11         | 22         |
+> >> +-------------------------------------------------------------------------+------------+------------+------------+
+> >>
+> >> If you fix the issue, kindly add following tag
+> >> Reported-by: kernel test robot <lkp@intel.com>
+> >>
+> >> [    3.186107] OF: /testcase-data/phandle-tests/consumer-b: #phandle-cells = 2 found -1
+> >> [    3.188595] platform testcase-data:testcase-device2: IRQ index 0 not found
+> >> [    3.191047] ### dt-test ### end of unittest - 199 passed, 0 failed
+> >> [    3.191932] ------------[ cut here ]------------
+> >> [    3.192571] Unmatched sync_state pause/resume!
+> >> [    3.192726] WARNING: CPU: 1 PID: 1 at drivers/base/core.c:688 device_links_supplier_sync_state_resume+0x27/0xc0
+> >> [    3.195084] Modules linked in:
+> >> [    3.195494] CPU: 1 PID: 1 Comm: swapper/0 Tainted: G                T 5.4.0-rc1-00005-g5e6669387e228 #1
+> >> [    3.196674] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+> >> [    3.197693] EIP: device_links_supplier_sync_state_resume+0x27/0xc0
+> >> [    3.198680] Code: 00 00 00 3e 8d 74 26 00 57 56 31 d2 53 b8 a0 d0 d9 c1 e8 6c b6 38 00 a1 e4 d0 d9 c1 85 c0 75 13 68 84 ba c4 c1 e8 29 30 b1 ff <0f> 0b 58 eb 7f 8d 74 26 00 83 e8 01 85 c0 a3 e4 d0 d9 c1 75 6f 8b
+> >> [    3.201560] EAX: 00000022 EBX: 00000000 ECX: 00000000 EDX: 00000000
+> >> [    3.202466] ESI: 000001ab EDI: c02c7f80 EBP: c1e87d27 ESP: c02c7f20
+> >> [    3.203301] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00010282
+> >> [    3.204258] CR0: 80050033 CR2: bfa1bf98 CR3: 01f28000 CR4: 00140690
+> >> [    3.205022] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
+> >> [    3.205919] DR6: fffe0ff0 DR7: 00000400
+> >> [    3.206529] Call Trace:
+> >> [    3.207011]  ? of_platform_sync_state_init+0x13/0x16
+> >> [    3.207719]  ? do_one_initcall+0xda/0x260
+> >> [    3.208247]  ? kernel_init_freeable+0x110/0x197
+> >> [    3.208906]  ? rest_init+0x120/0x120
+> >> [    3.209369]  ? kernel_init+0xa/0x100
+> >> [    3.209775]  ? ret_from_fork+0x19/0x24
+> >> [    3.210283] ---[ end trace 81d0f2d2ee65199b ]---
+> >> [    3.210955] ALSA device list:
+> >
+> > Rob/Frank,
+> >
+> > This seems to be an issue with the unit test code not properly
+> > cleaning up the state after it's done.
+> >
+> > Specifically, unittest_data_add() setting up of_root on systems where
+> > there's no device tree (of_root == NULL). It doesn't clean up of_root
+> > after the tests are done. This affects the of_have_populated_dt() API
+> > that in turn affects calls to
+> > device_links_supplier_sync_state_pause/resume(). I think unittests
+> > shouldn't affect the of_have_populated_dt() API.
+> There are at least a couple of reasons why the unittest devicetree data
+> needs to remain after the point where devicetree unittests currently
+> complete.  So cleaning up (removing the data) is not an option.
+>
+> I depend on the unittest devicetree entries still existing after the system
+> boots and I can log into a shell for some validation of the final result of
+> the devicetree data.
 
-- full dmesg log
-- last known good kernel version
-- whether problem persists if you switch the one interface with jumbo
-  packets to standard MTU
-- best would be a bisect result
+IMHO unittests shouldn't have a residual impact on the system after
+they are done. So, I'll agree to disagree on this one.
 
-Heiner
+> There is also a desire for the devicetree unittests to be able to be loaded
+> as a module.  That work is not yet scheduled, but I do not want to preclude
+> the possibility.  If unittests are loaded from a module then they will
+> need some devicetree data to exist that is created in early boot.  That
+> data will be in the devicetree when of_platform_sync_state_init() is
+> invoked.
+
+On a normal system, FDT is parsed and of_root is set (or not set) very
+early on during setup_arch() before any of the initcall levels are
+run. The return value of of_have_populated_dt() isn't expected to
+change across initcall levels. But because of the way the unittest is
+written (the of_root is changed at late_initcall() level) the return
+value of of_have_populated_dt() changes across initcall levels. I
+think that's a real problem with the unittest -- it's breaking API
+semantics.
+
+of_have_populated_dt() is being used to check if DT is present in the
+system and different things are done based on that. We can't have that
+value change across initcall levels.
+
+Couple of thoughts:
+1. Don't run unit test if there is no live DT in the system?
+2. If you don't want to do (1), then at least set up the unit test
+data during setup_arch() instead of doing it at some initcall level?
+3. Can you use overlays for the unit tests if they are loaded as a module?
+
+> > I was looking into writing a unittest patch to fix this, but I don't
+> > know enough about the FDT parsing code to make sure I don't leak any
+> > memory or free stuff that's in use. I'm not sure I can simply set
+> > of_root = NULL if it was NULL before the unittest started. Let me know
+> > how I should proceed or if you plan to write up a patch for this.
+>
+> Based on the above, "clean up" of the unittest data is not the solution.
+>
+> I haven't looked at the mechanism in device_links_supplier_sync_state_resume()
+> that leads to the WARN yet.  But is does not seem reasonable for that code
+> to be so sensitive to what valid data is in the devicetree that a WARN results.
+
+Sure, I could easily fix it to work around this. But this seems to be
+a genuine problem with the unittest setup IMO.
+
+-Saravana
