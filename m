@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 193E4C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2928C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFA792158C
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A59BF214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:56:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413777;
-	bh=wmuwLo9bIBTT0JivJn4LAhmhc3tLHqU1eGFflp9iTqU=;
+	s=default; t=1575413780;
+	bh=940R+45sMDdBrThN1I64ybkEZNw1jFVAXuEA7+0r2W4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wG8hjKGI+8wEFiwPI1uF/jwc5n73t9S6UacdElrbLaU2M80YWdTBqSiOY2/sQrVZb
-	 vKefvS6r0DJSY0c2OOEwpHsJC7Ecz6yNydQGNBXqdm2F8/WJ1na6qKjrGlqD9lSoIS
-	 L0Mve6b4gUz2oKfdSvJx0urJUlFI3c6YV4tknzBE=
+	b=KVgonamUJeyS1DNLqfv58nIif6qoQ/5OU1dEnjZDIYJi6nrt6rYKIc5Fd92yHm8m4
+	 zxUEQHjfWrEMljAj7P4JQD57vSUbuCyCc2r7Ha12yIEB0XhjQJqbXdqhO+r7/ueWq3
+	 FH4oYpn4Y/OGZCkeidRq+1WOuJZHEAtGjvzrdDTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730418AbfLCW4Q (ORCPT
+        id S1730421AbfLCW4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:56:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51040 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:56:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730217AbfLCW4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:56:13 -0500
+        id S1729885AbfLCW4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:56:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 152E120656;
-        Tue,  3 Dec 2019 22:56:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88D5320865;
+        Tue,  3 Dec 2019 22:56:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413772;
-        bh=wmuwLo9bIBTT0JivJn4LAhmhc3tLHqU1eGFflp9iTqU=;
+        s=default; t=1575413775;
+        bh=940R+45sMDdBrThN1I64ybkEZNw1jFVAXuEA7+0r2W4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nOW5Ga3GMWjFCoKlnc/IY2zVvb+iOib7bijATZ72Y8CwG5meN0JljvwafyajvKJgl
-         2mTmMEA2060cnqQhHhiVRdD3X8BEIAomH0IlGb9KqBylo4Gs5MBpYZE1epZxW2oNKU
-         vxVQHFLTFfWuX/XkmpfG72ABR2G0clN9Kkg+N+IY=
+        b=aVCtzjgchh6z5Lnhz/GncORmslXUJQ8tYgSIFZ1SZgJZVis0qqYrL07RpqGeM0Skg
+         9rMxe0JPVRenDEFmVm09CD7QkunuUHCSumNCUY1mqzYqs2ls87YlCHtQsDWSHgAVq4
+         9ye7tLOBR7xYGj1RvZFtyPU9t2tL0GoBFJ358M38=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, Jens Axboe <axboe@fb.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 217/321] PCI/MSI: Return -ENOSPC from pci_alloc_irq_vectors_affinity()
-Date:   Tue,  3 Dec 2019 23:34:43 +0100
-Message-Id: <20191203223438.408663775@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 218/321] net/core/neighbour: fix kmemleak minimal reference count for hash tables
+Date:   Tue,  3 Dec 2019 23:34:44 +0100
+Message-Id: <20191203223438.461210885@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,95 +62,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit 77f88abd4a6f73a1a68dbdc0e3f21575fd508fc3 ]
+[ Upstream commit 01b833ab44c9e484060aad72267fc7e71beb559b ]
 
-The API of pci_alloc_irq_vectors_affinity() says it returns -ENOSPC if
-fewer than @min_vecs interrupt vectors are available for @dev.
+This should be 1 for normal allocations, 0 disables leak reporting.
 
-However, if a device supports MSI-X but not MSI and a caller requests
-@min_vecs that can't be satisfied by MSI-X, we previously returned -EINVAL
-(from the failed attempt to enable MSI), not -ENOSPC.
-
-When -ENOSPC is returned, callers may reduce the number IRQs they request
-and try again.  Most callers can use the @min_vecs and @max_vecs
-parameters to avoid this retry loop, but that doesn't work when using IRQ
-affinity "nr_sets" because rebalancing the sets is driver-specific.
-
-This return value bug has been present since pci_alloc_irq_vectors() was
-added in v4.10 by aff171641d18 ("PCI: Provide sensible IRQ vector
-alloc/free routines"), but it wasn't an issue because @min_vecs/@max_vecs
-removed the need for callers to iteratively reduce the number of IRQs
-requested and retry the allocation, so they didn't need to distinguish
--ENOSPC from -EINVAL.
-
-In v5.0, 6da4b3ab9a6e ("genirq/affinity: Add support for allocating
-interrupt sets") added IRQ sets to the interface, which reintroduced the
-need to check for -ENOSPC and possibly reduce the number of IRQs requested
-and retry the allocation.
-
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-[bhelgaas: changelog]
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Jens Axboe <axboe@fb.com>
-Cc: Keith Busch <keith.busch@intel.com>
-Cc: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Reported-by: Cong Wang <xiyou.wangcong@gmail.com>
+Fixes: 85704cb8dcfd ("net/core/neighbour: tell kmemleak about hash tables")
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/msi.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ net/core/neighbour.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-index af24ed50a2452..971dddf62374f 100644
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -1155,7 +1155,8 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
- 				   const struct irq_affinity *affd)
- {
- 	static const struct irq_affinity msi_default_affd;
--	int vecs = -ENOSPC;
-+	int msix_vecs = -ENOSPC;
-+	int msi_vecs = -ENOSPC;
- 
- 	if (flags & PCI_IRQ_AFFINITY) {
- 		if (!affd)
-@@ -1166,16 +1167,17 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+diff --git a/net/core/neighbour.c b/net/core/neighbour.c
+index 4721793babed5..7597afee70680 100644
+--- a/net/core/neighbour.c
++++ b/net/core/neighbour.c
+@@ -370,7 +370,7 @@ static struct neigh_hash_table *neigh_hash_alloc(unsigned int shift)
+ 		buckets = (struct neighbour __rcu **)
+ 			  __get_free_pages(GFP_ATOMIC | __GFP_ZERO,
+ 					   get_order(size));
+-		kmemleak_alloc(buckets, size, 0, GFP_ATOMIC);
++		kmemleak_alloc(buckets, size, 1, GFP_ATOMIC);
  	}
- 
- 	if (flags & PCI_IRQ_MSIX) {
--		vecs = __pci_enable_msix_range(dev, NULL, min_vecs, max_vecs,
--				affd);
--		if (vecs > 0)
--			return vecs;
-+		msix_vecs = __pci_enable_msix_range(dev, NULL, min_vecs,
-+						    max_vecs, affd);
-+		if (msix_vecs > 0)
-+			return msix_vecs;
- 	}
- 
- 	if (flags & PCI_IRQ_MSI) {
--		vecs = __pci_enable_msi_range(dev, min_vecs, max_vecs, affd);
--		if (vecs > 0)
--			return vecs;
-+		msi_vecs = __pci_enable_msi_range(dev, min_vecs, max_vecs,
-+						  affd);
-+		if (msi_vecs > 0)
-+			return msi_vecs;
- 	}
- 
- 	/* use legacy irq if allowed */
-@@ -1186,7 +1188,9 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
- 		}
- 	}
- 
--	return vecs;
-+	if (msix_vecs == -ENOSPC)
-+		return -ENOSPC;
-+	return msi_vecs;
- }
- EXPORT_SYMBOL(pci_alloc_irq_vectors_affinity);
- 
+ 	if (!buckets) {
+ 		kfree(ret);
 -- 
 2.20.1
 
