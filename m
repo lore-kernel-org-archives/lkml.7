@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E57CC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4CDC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0287A20803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 152F520674
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:57:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413832;
-	bh=yh+2c6J0zAyztqR0GF8zOuMWQhpHsSGmydaLfkOhlhY=;
+	s=default; t=1575413835;
+	bh=Kbrdk6gUhA9oPjNwOJm4QFALTESiSeqyghcvP1iJWYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eudxnJ4L7/lDtdLt2hlCqX1GifiQxdCZqEp+LRWPWsb3gWuw4rxqdJMZll0NiQRyy
-	 CBC1KTHqq1gJSQDf3AeXVjonZeaD3EEUxIsD7daiYSMrYWJBfUpDUvnFCtWAK+4Tgu
-	 CSZy7QGUwYf9XeP+LI1c4/VUXluBBOhsguHYbCm8=
+	b=lMiKhFIJYaOATCp3LsEqVflLr/qc9YNExLFaOPBG6boAxYV3HqBSW6SFtQLDN7XyU
+	 m4Th+ItcVnmoldR3LgdVyTY9vT81gZcOMorrDs3aiTao+gOWqPYZ+MLDSzNHGkRass
+	 T0pxcDdpTD1LayPf2kHyGVVjYbX49I1gjmYJBIVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbfLCW5K (ORCPT
+        id S1728920AbfLCW5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:57:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52482 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:57:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730509AbfLCW5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:57:05 -0500
+        id S1730520AbfLCW5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:57:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DA3720656;
-        Tue,  3 Dec 2019 22:57:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C4412053B;
+        Tue,  3 Dec 2019 22:57:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413824;
-        bh=yh+2c6J0zAyztqR0GF8zOuMWQhpHsSGmydaLfkOhlhY=;
+        s=default; t=1575413827;
+        bh=Kbrdk6gUhA9oPjNwOJm4QFALTESiSeqyghcvP1iJWYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=chjUQv9v9HMuyO55vm7oTIhFMwd+5dO/dh2gwe/cym9N+qzLIJJP6pxsYj2FiZYXr
-         PUftCuu4fwMWeQtPpGNAIeuumPQi0nsQ5l+OtDYEdlFBYWU1O5EBrGzUAnJOO4tCdx
-         H5LaaTlM/dXxjKetPn6JvsePhmmLuBj9khRjiJWs=
+        b=MfEOpiUnvjPkc0X41rcSUk+glWw7+n6QeFr+ARoEY95PEhBC1wnONPO7geHt9mIc1
+         PHsC6UKLj+7LoQ7fElgVwtDluphs2NhshNzToC2TMR9UHpoWqo1IXt8zfspxW1PSot
+         FQlkgzzcS8f3sBhC2BEey0AzrmK1Q9c7KN9sjjJU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, JD <jdtxs00@gmail.com>,
-        Paul Wouters <paul@nohats.ca>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 4.19 276/321] xfrm: Fix memleak on xfrm state destroy
-Date:   Tue,  3 Dec 2019 23:35:42 +0100
-Message-Id: <20191203223441.485499204@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.19 277/321] media: v4l2-ctrl: fix flags for DO_WHITE_BALANCE
+Date:   Tue,  3 Dec 2019 23:35:43 +0100
+Message-Id: <20191203223441.537425529@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,34 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steffen Klassert <steffen.klassert@secunet.com>
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-commit 86c6739eda7d2a03f2db30cbee67a5fb81afa8ba upstream.
+commit a0816e5088baab82aa738d61a55513114a673c8e upstream.
 
-We leak the page that we use to create skb page fragments
-when destroying the xfrm_state. Fix this by dropping a
-page reference if a page was assigned to the xfrm_state.
+Control DO_WHITE_BALANCE is a button, with read only and execute-on-write flags.
+Adding this control in the proper list in the fill function.
 
-Fixes: cac2661c53f3 ("esp4: Avoid skb_cow_data whenever possible")
-Reported-by: JD <jdtxs00@gmail.com>
-Reported-by: Paul Wouters <paul@nohats.ca>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+After adding it here, we can see output of v4l2-ctl -L
+do_white_balance 0x0098090d (button) : flags=write-only, execute-on-write
+
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/xfrm/xfrm_state.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/v4l2-core/v4l2-ctrls.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/xfrm/xfrm_state.c
-+++ b/net/xfrm/xfrm_state.c
-@@ -456,6 +456,8 @@ static void ___xfrm_state_destroy(struct
- 		x->type->destructor(x);
- 		xfrm_put_type(x->type);
- 	}
-+	if (x->xfrag.page)
-+		put_page(x->xfrag.page);
- 	xfrm_dev_state_free(x);
- 	security_xfrm_state_free(x);
- 	xfrm_state_free(x);
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -1145,6 +1145,7 @@ void v4l2_ctrl_fill(u32 id, const char *
+ 	case V4L2_CID_FLASH_STROBE_STOP:
+ 	case V4L2_CID_AUTO_FOCUS_START:
+ 	case V4L2_CID_AUTO_FOCUS_STOP:
++	case V4L2_CID_DO_WHITE_BALANCE:
+ 		*type = V4L2_CTRL_TYPE_BUTTON;
+ 		*flags |= V4L2_CTRL_FLAG_WRITE_ONLY |
+ 			  V4L2_CTRL_FLAG_EXECUTE_ON_WRITE;
 
 
