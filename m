@@ -2,92 +2,113 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F11C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC55C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0826420726
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F17AD20637
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 07:36:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbfLCHf3 (ORCPT
+        id S1727486AbfLCHgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 02:35:29 -0500
-Received: from mga04.intel.com ([192.55.52.120]:33808 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727386AbfLCHf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 02:35:29 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 23:35:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,272,1571727600"; 
-   d="scan'208";a="235778260"
-Received: from brentlu-desk0.itwn.intel.com ([10.5.253.11])
-  by fmsmga004.fm.intel.com with ESMTP; 02 Dec 2019 23:35:27 -0800
-From:   Brent Lu <brent.lu@intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     Support Opensource <support.opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org,
-        Brent Lu <brent.lu@intel.com>
-Subject: [PATCH] ASoC: da7219: remove SRM lock check retry
-Date:   Tue,  3 Dec 2019 15:31:05 +0800
-Message-Id: <1575358265-17905-1-git-send-email-brent.lu@intel.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 3 Dec 2019 02:36:05 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:38837 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727386AbfLCHgE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 02:36:04 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xB37ZkLc014023, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xB37ZkLc014023
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 3 Dec 2019 15:35:46 +0800
+Received: from james-BS01.localdomain (172.21.190.33) by
+ RTITCASV01.realtek.com.tw (172.21.6.18) with Microsoft SMTP Server id
+ 14.3.468.0; Tue, 3 Dec 2019 15:35:45 +0800
+From:   James Tai <james.tai@realtek.com>
+To:     =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+CC:     Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Cheng-Yu Lee <cylee12@realtek.com>,
+        <devicetree@vger.kernel.org>
+Subject: [PATCH 0/6] arm64: Realtek RTD1619 clock and reset controllers
+Date:   Tue, 3 Dec 2019 15:35:34 +0800
+Message-ID: <20191203073540.9321-1-james.tai@realtek.com>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For platforms not able to provide WCLK in the PREPARED runtime state, it
-takes 400ms for codec driver to print the message "SRM failed to lock" in
-the da7219_dai_event() function which is called when DAPM widgets are
-powering up. The latency penalty to audio input/output is too much so the
-retry (8 times) and delay (50ms each retry) are removed.
+Hi Andreas,
 
-Another reason is current Cold output latency requirement in Android CDD is
-500ms but will be reduced to 200ms for 2021 platforms. With the 400ms
-latency it would be difficult to pass the Android CTS test.
+This series adds clock and reset controllers for the Realtek RTD1619 SoC.
 
-Signed-off-by: Brent Lu <brent.lu@intel.com>
----
- sound/soc/codecs/da7219.c | 3 ++-
- sound/soc/codecs/da7219.h | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+Cc: Andreas Färber <afaerber@suse.de>
+Cc: Cheng-Yu Lee <cylee12@realtek.com>
+Cc: devicetree@vger.kernel.org
 
-diff --git a/sound/soc/codecs/da7219.c b/sound/soc/codecs/da7219.c
-index f83a6ea..042e701 100644
---- a/sound/soc/codecs/da7219.c
-+++ b/sound/soc/codecs/da7219.c
-@@ -833,7 +833,8 @@ static int da7219_dai_event(struct snd_soc_dapm_widget *w,
- 				srm_lock = true;
- 			} else {
- 				++i;
--				msleep(50);
-+				if (i < DA7219_SRM_CHECK_RETRIES)
-+					msleep(50);
- 			}
- 		} while ((i < DA7219_SRM_CHECK_RETRIES) && (!srm_lock));
- 
-diff --git a/sound/soc/codecs/da7219.h b/sound/soc/codecs/da7219.h
-index 88b67fe..3149986 100644
---- a/sound/soc/codecs/da7219.h
-+++ b/sound/soc/codecs/da7219.h
-@@ -770,7 +770,7 @@
- #define DA7219_PLL_INDIV_36_TO_54_MHZ_VAL	16
- 
- /* SRM */
--#define DA7219_SRM_CHECK_RETRIES	8
-+#define DA7219_SRM_CHECK_RETRIES	1
- 
- /* System Controller */
- #define DA7219_SYS_STAT_CHECK_RETRIES	6
+cylee12 (6):
+  dt-bindings: clock: add bindings for RTD1619 clocks
+  dt-bindings: reset: add bindings for rtd1619 reset controls
+  clk: realtek: add common clock support for Realtek SoCs
+  clk: realtek: add reset controller support for Realtek SoCs
+  clk: realtek: add rtd1619 controllers
+  dt-bindings: clk: realtek: add rtd1619 clock controller bindings
+
+ .../bindings/clock/realtek,clocks.txt         |  38 ++
+ drivers/clk/Kconfig                           |   1 +
+ drivers/clk/Makefile                          |   1 +
+ drivers/clk/realtek/Kconfig                   |  21 +
+ drivers/clk/realtek/Makefile                  |  12 +
+ drivers/clk/realtek/clk-pll-dif.c             |  81 +++
+ drivers/clk/realtek/clk-pll-psaud.c           | 120 ++++
+ drivers/clk/realtek/clk-pll.c                 | 400 +++++++++++++
+ drivers/clk/realtek/clk-pll.h                 | 151 +++++
+ drivers/clk/realtek/clk-regmap-gate.c         |  89 +++
+ drivers/clk/realtek/clk-regmap-gate.h         |  26 +
+ drivers/clk/realtek/clk-regmap-mux.c          |  63 ++
+ drivers/clk/realtek/clk-regmap-mux.h          |  26 +
+ drivers/clk/realtek/clk-rtd1619-cc.c          | 553 ++++++++++++++++++
+ drivers/clk/realtek/clk-rtd1619-ic.c          | 112 ++++
+ drivers/clk/realtek/common.c                  | 320 ++++++++++
+ drivers/clk/realtek/common.h                  | 123 ++++
+ drivers/clk/realtek/reset.c                   | 107 ++++
+ drivers/clk/realtek/reset.h                   |  37 ++
+ include/dt-bindings/clock/rtk,clock-rtd1619.h |  88 +++
+ include/dt-bindings/reset/rtk,reset-rtd1619.h | 124 ++++
+ 21 files changed, 2493 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/realtek,clocks.txt
+ create mode 100644 drivers/clk/realtek/Kconfig
+ create mode 100644 drivers/clk/realtek/Makefile
+ create mode 100644 drivers/clk/realtek/clk-pll-dif.c
+ create mode 100644 drivers/clk/realtek/clk-pll-psaud.c
+ create mode 100644 drivers/clk/realtek/clk-pll.c
+ create mode 100644 drivers/clk/realtek/clk-pll.h
+ create mode 100644 drivers/clk/realtek/clk-regmap-gate.c
+ create mode 100644 drivers/clk/realtek/clk-regmap-gate.h
+ create mode 100644 drivers/clk/realtek/clk-regmap-mux.c
+ create mode 100644 drivers/clk/realtek/clk-regmap-mux.h
+ create mode 100644 drivers/clk/realtek/clk-rtd1619-cc.c
+ create mode 100644 drivers/clk/realtek/clk-rtd1619-ic.c
+ create mode 100644 drivers/clk/realtek/common.c
+ create mode 100644 drivers/clk/realtek/common.h
+ create mode 100644 drivers/clk/realtek/reset.c
+ create mode 100644 drivers/clk/realtek/reset.h
+ create mode 100644 include/dt-bindings/clock/rtk,clock-rtd1619.h
+ create mode 100644 include/dt-bindings/reset/rtk,reset-rtd1619.h
+
 -- 
-2.7.4
+2.24.0
 
