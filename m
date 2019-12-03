@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FB3C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBE5C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C356D20863
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7826B20863
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:59:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413938;
-	bh=cOpTOn6Epw/sJcpdJOqtdkwi6b0HMpyZ4aSbTlCajiI=;
+	s=default; t=1575413945;
+	bh=HLzYD/HbGyf9vZgF+em7Xrr/GbFuua27gc0B8hIZUeg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rc2TQnaMAZ0cmTqjscJsPqbJjCydGjN/5qhRjpuvXBwxgMzGY91WPv1GcLBhCdKVJ
-	 slBXqxbcmlr5WVXsVuuaWBLOX1qy8L89tSRrcJtZG0wtnVtGDWmUyufxKOe7IRzdeO
-	 tWx6jYFfxR9Wwkdq9Yhd/wELvsl+6kRSyDFbiHFA=
+	b=Ciabj2hhgxL04n/520K9BlxQF6jBTaIdS02bCPZw/Ux2fsNhy8k7R+3Kl6W+9jdFm
+	 AfVXzZqFcScF1p4ZMecj+R9c6/6rCyiSFzh21nDTTa0N9Vk5716S0XAyN6erCYR7g2
+	 WmxTQo6JxHUYLPU53VPKpaU5CWFBGQZP2sgwU5tU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730723AbfLCW65 (ORCPT
+        id S1730734AbfLCW7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:58:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55418 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:59:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730585AbfLCW6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:58:53 -0500
+        id S1729345AbfLCW7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:59:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61BE220866;
-        Tue,  3 Dec 2019 22:58:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76F4B20656;
+        Tue,  3 Dec 2019 22:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413932;
-        bh=cOpTOn6Epw/sJcpdJOqtdkwi6b0HMpyZ4aSbTlCajiI=;
+        s=default; t=1575413940;
+        bh=HLzYD/HbGyf9vZgF+em7Xrr/GbFuua27gc0B8hIZUeg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BS5NVQ7u6OTRbeIkDDZ6/S+7QnMJxBDiT7LB6FTAF2jePMl97k9yzQ3ATYrSkYZTr
-         xxLYJ451mVJxWLXK1z4oWC6sc2Br+gyQVak1pOVEy3+Y3DEj/JXYgU8aRD7xZ9UZDm
-         Y+SslbRLIEB01/LpSx2k1xU99kMeqG1fDpA3nua8=
+        b=oO9IDmKOUML+wPOrzTUJS48+j79Db4utPtlj0RkuPqvH7xF2m7MvE8pFt6P2rXCE0
+         z0R1cQfHy9QPPRYBDut1mSVIXhPRjLdBagMHUG3gG748k/Glh1lHW7HIE1yyE4uodN
+         m3lkxOddJX0vY303DhXuQXdlaFd9GiCES218kGzU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <yellowriver2010@hotmail.com>,
-        Olivier Moysan <olivier.moysan@st.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH 4.19 318/321] ASoC: stm32: sai: add missing put_device()
-Date:   Tue,  3 Dec 2019 23:36:24 +0100
-Message-Id: <20191203223443.685790572@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 4.19 321/321] platform/x86: hp-wmi: Fix ACPI errors caused by passing 0 as input size
+Date:   Tue,  3 Dec 2019 23:36:27 +0100
+Message-Id: <20191203223443.840827328@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,50 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <yellowriver2010@hotmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 1c3816a194870e7a6622345dab7fb56c7d708613 upstream.
+commit f3e4f3fc8ee9729c4b1b27a478c68b713df53c0c upstream.
 
-The of_find_device_by_node() takes a reference to the underlying device
-structure, we should release that reference.
+The AML code implementing the WMI methods creates a variable length
+field to hold the input data we pass like this:
 
-Fixes: 7dd0d835582f ("ASoC: stm32: sai: simplify sync modes management")
-Signed-off-by: Wen Yang <yellowriver2010@hotmail.com>
-Acked-by: Olivier Moysan <olivier.moysan@st.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+        CreateDWordField (Arg1, 0x0C, DSZI)
+        Local5 = DSZI /* \HWMC.DSZI */
+        CreateField (Arg1, 0x80, (Local5 * 0x08), DAIN)
+
+If we pass 0 as bios_args.datasize argument then (Local5 * 0x08)
+is 0 which results in these errors:
+
+[   71.973305] ACPI BIOS Error (bug): Attempt to CreateField of length zero (20190816/dsopcode-133)
+[   71.973332] ACPI Error: Aborting method \HWMC due to previous error (AE_AML_OPERAND_VALUE) (20190816/psparse-529)
+[   71.973413] ACPI Error: Aborting method \_SB.WMID.WMAA due to previous error (AE_AML_OPERAND_VALUE) (20190816/psparse-529)
+
+And in our HPWMI_WIRELESS2_QUERY calls always failing. for read commands
+like HPWMI_WIRELESS2_QUERY the DSZI value is not used / checked, except for
+read commands where extra input is needed to specify exactly what to read.
+
+So for HPWMI_WIRELESS2_QUERY we can safely pass the size of the expected
+output as insize to hp_wmi_perform_query(), as we are already doing for all
+other HPWMI_READ commands we send. Doing so fixes these errors.
+
+Cc: stable@vger.kernel.org
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=197007
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=201981
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1520703
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/stm/stm32_sai.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/platform/x86/hp-wmi.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/sound/soc/stm/stm32_sai.c
-+++ b/sound/soc/stm/stm32_sai.c
-@@ -112,16 +112,21 @@ static int stm32_sai_set_sync(struct stm
- 	if (!sai_provider) {
- 		dev_err(&sai_client->pdev->dev,
- 			"SAI sync provider data not found\n");
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto out_put_dev;
- 	}
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -393,7 +393,7 @@ static int hp_wmi_rfkill2_refresh(void)
+ 	int err, i;
  
- 	/* Configure sync client */
- 	ret = stm32_sai_sync_conf_client(sai_client, synci);
- 	if (ret < 0)
--		return ret;
-+		goto out_put_dev;
+ 	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
+-				   0, sizeof(state));
++				   sizeof(state), sizeof(state));
+ 	if (err)
+ 		return err;
  
- 	/* Configure sync provider */
--	return stm32_sai_sync_conf_provider(sai_provider, synco);
-+	ret = stm32_sai_sync_conf_provider(sai_provider, synco);
-+
-+out_put_dev:
-+	put_device(&pdev->dev);
-+	return ret;
- }
+@@ -790,7 +790,7 @@ static int __init hp_wmi_rfkill2_setup(s
+ 	int err, i;
  
- static int stm32_sai_probe(struct platform_device *pdev)
+ 	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
+-				   0, sizeof(state));
++				   sizeof(state), sizeof(state));
+ 	if (err)
+ 		return err < 0 ? err : -EINVAL;
+ 
 
 
