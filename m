@@ -2,94 +2,101 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEEFC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6A2C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E130206E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C912206F0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:44:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iq0/EIA9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MZUIf5jn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbfLCXnO (ORCPT
+        id S1726653AbfLCXob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:43:14 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:57184 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbfLCXnN (ORCPT
+        Tue, 3 Dec 2019 18:44:31 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45483 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbfLCXob (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 18:43:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=OPqV2nFrcb2kveUIO3yew2jRvZwyS9xTFWvVWcs/spM=; b=iq0/EIA9iexEmIjjiLPdaYHs4
-        7BdmVMdoj3wljvzDO3pkZVaF1Wr0nxYgJgLm3fzx5EA5oSg+H3hMxQ302BVueNhBS+2AkjSGdRog8
-        TVyD5WtJiUIXVsHeLGp5wibrlD0aHaf0qlEmkm0MOUJNN+hBEovPsNViw+t59+Sowqng5rt+oip9D
-        gjUNPEFXB2RUoagAaA9p1uUBh/Js94QdDNn3/JbSK5TETsO90oTHighhyYgl2DRnGXc9E8kBZhCMz
-        P2zTagF5/f6w1g2Mz8pGi03vG6/Yt1MAjE1RXhCeNHF+7sI6h9EFzrmcyHal8J27DPH9WdJ+Ej+FH
-        zBpFDIvOQ==;
-Received: from [2601:1c0:6280:3f0::5a22]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1icHp1-0003aR-6R; Tue, 03 Dec 2019 23:43:11 +0000
-Subject: Re: linux-next: Tree for Dec 3 (switchdev & TI_CPSW_SWITCHDEV)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Ivan Vecera <ivecera@redhat.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        linux-omap@vger.kernel.org
-References: <20191203155405.31404722@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <58aebf62-54f8-9084-147b-801ea65327bb@infradead.org>
-Date:   Tue, 3 Dec 2019 15:43:09 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 3 Dec 2019 18:44:31 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 2so2613889pfg.12
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 15:44:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RmVwi65CWiJjwCJUR0CFb8uCvZ6Xi+9s8UtGSyRd46k=;
+        b=MZUIf5jnSV7XWugzNbjYEJQilfXNtwyyP5KRIeWEbvC8koooPV6r+OX+f4CPnp5HIr
+         UPttTaGiY5cZeuO68HkXYF1zbXFbgNJXB0tybDsLlJaafZYuTzoV+I+kldkVXP2X7Axm
+         iTdlacJqYZ43+ojAzHaF/lJWCc8bFIFCpmD6J/0QePnso0ukb478GzP0Op8ZFw3qW3uR
+         MIXDD/rsPJpTqszvu7O+lbHLoh28HGNkNaf73lRTn+u3JXvhWBw0kkGvJxAYaYAUbpiW
+         4NJubPjdkIDP7cArLCISmyKmAptza1qRgXCZxSU8/+wTHcd0thCY7wU3X/6kxdz7nKD2
+         vMbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RmVwi65CWiJjwCJUR0CFb8uCvZ6Xi+9s8UtGSyRd46k=;
+        b=pZWfMD2SlND6/SfEWQuTLTfYbb1xsZM3CgYleiS86JD5E2tfWh0Dfxf8OsEgrhUu0y
+         pfim2VDaIjSMtH8xbp2FRkt2V6myrJaZQehwUGqSESFa3Mp/58uR5aRjT6fYox2usadt
+         U0Mc4yabwENeF+JHXYmt3gNiOqzcfOR3fmB0Tng9zLtSvpBMAyA7zEptPDsakAnF5dsW
+         xGrBnA6ZHqIUOcyUinqPWMOOQutFQ7pe3MXErJW1oknW/OKXxCUfMwlaCNffgMF/ngc9
+         ebraEVU1jIz0RH9aMNbRh8kM9WOzW1vZVG699vW81xfiigYerf1E3RjvmeCketDCHRvF
+         8ewQ==
+X-Gm-Message-State: APjAAAWgwS95gvX4bfZd5BVpfSJAvdmvp2wuBtZmKNwHBWECKd5IQ2Oq
+        cJWFzYtgw6GGYj/tXM4yrxkymq5CiGkSKf9tbIo3oA==
+X-Google-Smtp-Source: APXvYqyv4i+NpsBtYtRV3LYVXtRCPYQX4vOZgjxEtoC6uhZ4RpjVYWwnLfHiarLH5P/evG9t3D/1hcDpDqsveH3CAeY=
+X-Received: by 2002:a63:480f:: with SMTP id v15mr278308pga.201.1575416669991;
+ Tue, 03 Dec 2019 15:44:29 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191203155405.31404722@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191121235058.21653-1-davidgow@google.com>
+In-Reply-To: <20191121235058.21653-1-davidgow@google.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 3 Dec 2019 15:44:18 -0800
+Message-ID: <CAFd5g46Z_vVb92Y-sfWi68=HFy5+kukZXvT9usEEnhBUvPg3AQ@mail.gmail.com>
+Subject: Re: [PATCH kselftest/test] kunit: Always print actual pointer values
+ in asserts
+To:     David Gow <davidgow@google.com>, Kees Cook <keescook@chromium.org>
+Cc:     shuah <shuah@kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/2/19 8:54 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Please do not add any material for v5.6 to your linux-next included
-> trees until after v5.5-rc1 has been released.
-> 
-> Changes since 20191202:
+On Thu, Nov 21, 2019 at 3:51 PM David Gow <davidgow@google.com> wrote:
+>
+> KUnit assertions and expectations will print the values being tested. If
+> these are pointers (e.g., KUNIT_EXPECT_PTR_EQ(test, a, b)), these
+> pointers are currently printed with the %pK format specifier, which -- to
+> prevent information leaks which may compromise, e.g., ASLR -- are often
+> either hashed or replaced with ____ptrval____ or similar, making debugging
+> tests difficult.
+>
+> By replacing %pK with %px as Documentation/core-api/printk-formats.rst
+> suggests, we disable this security feature for KUnit assertions and
+> expectations, allowing the actual pointer values to be printed. Given
+> that KUnit is not intended for use in production kernels, and the
+> pointers are only printed on failing tests, this seems like a worthwhile
+> tradeoff.
 
-I am seeing this (happens to be on i386; I doubt that it matters):
-CONFIG_COMPILE_TEST=y
+I agree. However, I also remember that others in the past yelled at me
+for assuming that KUnit would not be built into production kernels.
 
+I feel like +Kees Cook would have a good opinion on this (or will at
+least CC the right people).
 
-WARNING: unmet direct dependencies detected for NET_SWITCHDEV
-  Depends on [n]: NET [=y] && INET [=n]
-  Selected by [y]:
-  - TI_CPSW_SWITCHDEV [=y] && NETDEVICES [=y] && ETHERNET [=y] && NET_VENDOR_TI [=y] && (ARCH_DAVINCI || ARCH_OMAP2PLUS || COMPILE_TEST [=y])
+>
+> Signed-off-by: David Gow <davidgow@google.com>
 
-because TI_CPSW_SWITCHDEV blindly selects NET_SWITCHDEV even though
-INET is not set/enabled, while NET_SWITCHDEV depends on INET.
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
 
-However, the build succeeds, including net/switchdev/*.
-
-So why does NET_SWITCHDEV depend on INET?
-
-It looks like TI_CPSW_SWITCHDEV should depend on INET (based on the
-Kconfig rules), but in practice it doesn't seem to matter to the build.
-
-thanks.
--- 
-~Randy
-
+Thanks!
