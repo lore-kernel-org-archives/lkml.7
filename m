@@ -2,68 +2,163 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CF4C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF44C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5B912070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7C562068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 03:12:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfLCDJA (ORCPT
+        id S1726486AbfLCDMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 22:09:00 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7187 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726142AbfLCDIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 22:08:46 -0500
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 76D60534AC1FFA763A07;
-        Tue,  3 Dec 2019 11:08:43 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 3 Dec 2019 11:08:34 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net 0/3] net: hns3: fixes for -net
-Date:   Tue, 3 Dec 2019 11:08:52 +0800
-Message-ID: <1575342535-2981-1-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+        Mon, 2 Dec 2019 22:12:15 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:8620 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726186AbfLCDMO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 22:12:14 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB338fJu039177;
+        Mon, 2 Dec 2019 22:12:10 -0500
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wm6snqf1y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 Dec 2019 22:12:10 -0500
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xB33BRZO029645;
+        Tue, 3 Dec 2019 03:12:09 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma04dal.us.ibm.com with ESMTP id 2wkg26pg31-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 03 Dec 2019 03:12:09 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB33C7AZ32964986
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 3 Dec 2019 03:12:07 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A4D54136055;
+        Tue,  3 Dec 2019 03:12:07 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 67F9B136051;
+        Tue,  3 Dec 2019 03:12:05 +0000 (GMT)
+Received: from jarvis.ext.hansenpartnership.com (unknown [9.80.221.34])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue,  3 Dec 2019 03:12:05 +0000 (GMT)
+Message-ID: <1575342724.24227.41.camel@linux.ibm.com>
+Subject: Re: One question about trusted key of keyring in Linux kernel.
+From:   James Bottomley <jejb@linux.ibm.com>
+To:     "Zhao, Shirley" <shirley.zhao@intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
+        "Zhu, Bing" <bing.zhu@intel.com>,
+        "Chen, Luhai" <luhai.chen@intel.com>
+Date:   Mon, 02 Dec 2019 19:12:04 -0800
+In-Reply-To: <A888B25CD99C1141B7C254171A953E8E4909E62E@shsmsx102.ccr.corp.intel.com>
+References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
+         <1573659978.17949.83.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
+         <1574877977.3551.5.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E49096521@shsmsx102.ccr.corp.intel.com>
+         <1575057916.6220.7.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909BA3B@shsmsx102.ccr.corp.intel.com>
+         <1575260220.4080.17.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909D360@shsmsx102.ccr.corp.intel.com>
+         <1575267453.4080.26.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909E381@shsmsx102.ccr.corp.intel.com>
+         <1575269075.4080.31.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909E399@shsmsx102.ccr.corp.intel.com>
+         <1575312932.24227.13.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909E62E@shsmsx102.ccr.corp.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-02_06:2019-11-29,2019-12-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ suspectscore=0 clxscore=1015 malwarescore=0 adultscore=0 impostorscore=0
+ phishscore=0 mlxlogscore=999 spamscore=0 priorityscore=1501
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912030028
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series includes misc fixes for the HNS3 ethernet driver.
+On Tue, 2019-12-03 at 02:11 +0000, Zhao, Shirley wrote:
+> Thanks so much for you feedback, James. 
+> And glad to hear that the API will be made more friendly. 
+> 
+> But I have a little confused about the call stack. 
+> From the document, https://github.com/torvalds/linux/blob/master/Docu
+> mentation/security/keys/trusted-encrypted.rst and 
+> https://github.com/zfsonlinux/dracut/tree/master/modules.d/97masterke
+> y, the trusted key is a random number and generated by TPM2.0 and
+> sealed with TPM2.0 2048 RSA key. 
 
-[patch 1/3] fixes a TX queue not restarted problem.
+Well, um, that document seems to be based on TPM 1.2 ... a lot of what
+it says isn't quite true for TPM 2.0.  For instance all TPM 2.0 primary
+keys come with a symmetric component, so the sealed data in TPM 2.0 is
+actually symmetrically encrypted to a primary key.
 
-[patch 2/3] fixes a use-after-free issue.
+> The 2048 RSA key is generated by tpm2_createprimary, and it can be
+> got by the TPM2.0 handle, just the "keyhandle" used in the following
+> keyctl command. 
+> $ keyctl add trusted kmk "new 32 keyhandle=0x81000001 hash=sha256
+> policydigest=`cat pcr7.policy`" @u
 
-[patch 3/3] fixes a VF ID issue for setting VF VLAN.
+The problem TPM 2.0 has is that most of them can't generate prime
+numbers very fast, so even through the kernel could generate the RSA
+primary, it would usually take far too long, so if you want to use a
+RSA primary you have to pre-generate one and place it in NV storage;
+the TCG recommends doing this at handle 81000001, which is what you
+have above.  However, the more modern way is to derive an elliptic
+curve key primary key every time ... EC keys can be generated by most
+TPMs in 10s of milliseconds, so the primary doesn't need to be present
+in NVRAM.
 
+THe kernel should be using the EC primary method for the parent.  The
+only exception is when the key has an intermediate parent, and then it
+can be simply loaded from a file.
 
-Jian Shen (1):
-  net: hns3: fix VF ID issue for setting VF VLAN
+> If reboot, to re-load the trusted key back to keyring, just call
+> tpm2_unseal is enough, don't need to call tpm2_load to load the
+> TPM2.0 2048 RSA key.
+> If the trusted key is also protected by policy, then the policy will
+> be checked during tpm2_unseal. 
+> 
+> After check the source code, the call stack is mostly like: 
+> SYSCALL_DEFINE5(add_key,...) --> key_create_or_update() -->
+> __key_instantiate_and_link() -->  trusted_instantiate() -->
+> tpm2_unseal_trusted() --> tpm2_unseal_cmd().
 
-Yunsheng Lin (2):
-  net: hns3: fix for TX queue not restarted problem
-  net: hns3: fix a use after free problem in hns3_nic_maybe_stop_tx()
+Well, the API is confusing, but the code seems to imply the parent
+should be present somehow.  A key in NVRAM, like 81000001 is always
+present so it doesn't need to be loaded it can just be used as is.
 
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    | 53 ++++++++++++----------
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 18 +++-----
- 2 files changed, 34 insertions(+), 37 deletions(-)
+> Another problem here is, to build the policy to unseal the key, it
+> need to start an policy session, and transfer the session handle to
+> TPM2.0 unseal command. 
+> In my keyctl command, I use tpm2.0 command to start the session and
+> get the handle, put it into the keyctl command like:
+> keyctl add trusted kmk "load `cat kmk.blob` keyhandle=0x81000001
+> policyhandle=0x3000000" @u
 
--- 
-2.7.4
+As I said, using policy handles simply won't scale, so we need to use
+the actual policy instead ... thus the policy should be passed into the
+kernel  as part of the trusted key and the kernel itself would generate
+a policy session from the policy statements ... this approach is aready
+proven to be useful and functional in the tpm2 openssl engine code.
+
+James
 
