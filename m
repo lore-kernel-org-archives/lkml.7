@@ -2,150 +2,178 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B23DC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 04:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0DAC43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7187F2054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 04:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A22C206E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:02:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="JyHSTtEq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="POxFZTmn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfLCE6G (ORCPT
+        id S1726308AbfLCFC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 23:58:06 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35611 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727259AbfLCE6E (ORCPT
+        Tue, 3 Dec 2019 00:02:57 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:34813 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbfLCFC4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 23:58:04 -0500
-Received: by mail-wr1-f66.google.com with SMTP id g17so2021008wro.2
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 20:58:03 -0800 (PST)
+        Tue, 3 Dec 2019 00:02:56 -0500
+Received: by mail-ua1-f67.google.com with SMTP id w20so871681uap.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 21:02:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ovwMqTunBsTOC/CqSHDUi6kBW0F5coIGszg1T7U+mmc=;
-        b=JyHSTtEqJjBunwy7X6C8u0emC8YOkh//6Huc6rS1+xcedJ3UizEM5ZQ/oF0Z3ZbzoG
-         LBMVE4VHnS2u5w9kuBLc9nuYTSq+3/h+m+K1OMNqtstxQaMjMMTjUjWCNSVmwSAjx5TS
-         o/Vb5DygLM1Qe07q6f75jMdySlqCy26WdiP2c=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7ERmn5rq1lNnKn/P5AfwLSlBRWPm9K3lY7uKonmiuBQ=;
+        b=POxFZTmnXWUJj/QSh7bNjrQKeTsKp9x3JT1UUj5Ox6CqdlasjfT0Sd+kJ3yIifanpH
+         HW2KVRp/PAkRCh2/C7bnkMFPgn4E1kk6Bzfl6NKEJgMromg15+AgJGXTCKsn4fDbGhNN
+         OSh5T7Lb8Ux1Hea4sE7xKWAMtj2ar9CYDt0pFzeBeufb8xWPARB2lBCWO9vTD8ITG15l
+         6tte8NbCCmSfn4qKmeTnC0WLC2yg8+vRWEd31YGTDiCbzpmVDG7f7SM2yJwQz9r5509K
+         uLrb+EceyEOJqhtbWNSDxAD+Ll3BJHT3t2BjpEjLLZYAgHbkeB1sHX4dS8mduopLI8uj
+         7NWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ovwMqTunBsTOC/CqSHDUi6kBW0F5coIGszg1T7U+mmc=;
-        b=V8Ru501tq3AlA/jEXYBMFGPuTdWsyYJ0xGY0LK0GZRJAmO+Q7Im5o8hu5Om7/rnq89
-         9Lz8wH3XU96eUzB9HujcprDzUZgYZgdwCvB0af7YRdWzmo6awK3KBg4mUVYDppUaBp4N
-         f4H0i/3QHYWQm4OETAQCzcmPSLxhdbec6hBf40Z90RsbP1mpj0ZrVXhKcRELPQQXZN/L
-         Ie7uxms3UEX+x8+IVIGpu+HKsVZWzq9ckKl+D6oQOyxOQ0gz6E77k7m761jlJC7fO3NF
-         ubMmcfNgIq4JAJ4lQBDWAYG5+f6arxoXr5+7nEFZlwx4rTCokoq4FKZbxr07adf7nghr
-         wGgQ==
-X-Gm-Message-State: APjAAAWb27MlyH6AHedfqG4i59v/uwgvU4fz7Hdwgy9o+MVSACWARTwh
-        iNZ4F6plyIBFpjr0H/UHf8mHXw==
-X-Google-Smtp-Source: APXvYqz9UG6+uRLARgRC4h9K9ngpNM/yLeVYRm7UAEuQb7CC8hxxsUUj/XOI97lXY4CwxOy7a5RBnw==
-X-Received: by 2002:adf:f108:: with SMTP id r8mr2821276wro.390.1575349082332;
-        Mon, 02 Dec 2019 20:58:02 -0800 (PST)
-Received: from mannams-OptiPlex-7010.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id k4sm1667807wmk.26.2019.12.02.20.57.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 02 Dec 2019 20:58:01 -0800 (PST)
-From:   Srinath Mannam <srinath.mannam@broadcom.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Ray Jui <ray.jui@broadcom.com>,
-        Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH v3 6/6] arm64: dts: Change PCIe INTx mapping for NS2
-Date:   Tue,  3 Dec 2019 10:27:06 +0530
-Message-Id: <1575349026-8743-7-git-send-email-srinath.mannam@broadcom.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1575349026-8743-1-git-send-email-srinath.mannam@broadcom.com>
-References: <1575349026-8743-1-git-send-email-srinath.mannam@broadcom.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7ERmn5rq1lNnKn/P5AfwLSlBRWPm9K3lY7uKonmiuBQ=;
+        b=UiQAao3ZHMWbbIEV9TsTuOlfabKL5Wi+AnFaxi79zXBI4yz1yBcDYEOjp7zFuBe8FB
+         U7DniThgRq8kAzkQ4hex1bDs+ZjfugicJOrHEkP47MZgtO7fokDIjjlUbF+9qMDtOdN/
+         vnVoxaRGxvYfu/qinLC33NGGn3R9/k5eAeiwTItfCmoc0v0td113KBnVPacNVqQ7nnAN
+         /CfCTZ7+92YlHenqTYjAnKomIDtTyukYcMRDnPunFZDm31sKxwJ7OQacB5kIgbOTFnYl
+         UbhOxNIDhmd4vjX/n7+bsNbuexSGFBm4luP0rVYrqfrr5PyjSFDrdYtKlB1Nz1ejzwOw
+         k7ew==
+X-Gm-Message-State: APjAAAV/cOwNSmLzZYTCP868Wbvz9F6ZGPY48FI0FDXGT2xVkkeLrEdz
+        8Ts/zP0VWeDcMKeKD4Ds0lJGX3QGCFU+1WWe8FFY3g==
+X-Google-Smtp-Source: APXvYqyk8mjX0oY3ryDpuMEExI9RS0dYRl+SayJdvhnyj2hjEpQI3jjLtCw/e3hNiCcN7gK3acNuNVLsVTiJEV5H3RE=
+X-Received: by 2002:ab0:7027:: with SMTP id u7mr2136566ual.94.1575349375038;
+ Mon, 02 Dec 2019 21:02:55 -0800 (PST)
+MIME-Version: 1.0
+References: <cover.1573499020.git.amit.kucheria@linaro.org>
+ <4b949a4f401a7f9d403ed0f0c16c7feb083f3524.1573499020.git.amit.kucheria@linaro.org>
+ <20191112193852.GC3140946@builder> <CAHLCerN1VXhU0VQWN15PB2R16mkCV0i6Mn3+LW=xXtB5_7Z6JQ@mail.gmail.com>
+ <20191128214339.GL82109@yoga>
+In-Reply-To: <20191128214339.GL82109@yoga>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 3 Dec 2019 10:32:43 +0530
+Message-ID: <CAHLCerPmdTTfANng2uNnTRs0-Sz+jtstOD9N0MbLEvV3DYDUFw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] drivers: thermal: tsens: Add critical interrupt support
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Stephen Boyd <swboyd@chromium.org>, sivaa@codeaurora.org,
+        Andy Gross <agross@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ray Jui <ray.jui@broadcom.com>
+On Fri, Nov 29, 2019 at 3:13 AM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Thu 28 Nov 10:46 PST 2019, Amit Kucheria wrote:
+>
+> > On Wed, Nov 13, 2019 at 1:08 AM Bjorn Andersson
+> > <bjorn.andersson@linaro.org> wrote:
+> > >
+> > > On Mon 11 Nov 11:21 PST 2019, Amit Kucheria wrote:
+> > >
+> > > > TSENS IP v2.x adds critical threshold interrupt support for each sensor
+> > > > in addition to the upper/lower threshold interrupt. Add support in the
+> > > > driver.
+> > > >
+> > > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > > > ---
+> > > >  drivers/thermal/qcom/tsens-common.c | 129 ++++++++++++++++++++++++++--
+> > > >  drivers/thermal/qcom/tsens-v2.c     |   8 +-
+> > > >  drivers/thermal/qcom/tsens.c        |  21 +++++
+> > > >  drivers/thermal/qcom/tsens.h        |  73 ++++++++++++++++
+> > > >  4 files changed, 220 insertions(+), 11 deletions(-)
+> > > >
+> > > > diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
+> > > > index 4359a4247ac3..2989cb952cdb 100644
+> > > > --- a/drivers/thermal/qcom/tsens-common.c
+> > > > +++ b/drivers/thermal/qcom/tsens-common.c
+> > > > @@ -23,6 +23,10 @@
+> > > >   * @low_thresh:     lower threshold temperature value
+> > > >   * @low_irq_mask:   mask register for lower threshold irqs
+> > > >   * @low_irq_clear:  clear register for lower threshold irqs
+> > > > + * @crit_viol:      critical threshold violated
+> > >
+> > > "violated" as in "temperature is above crit_thresh"?
+> >
+> > Yes.
+> >
+> > >
+> > > > + * @crit_thresh:    critical threshold temperature value
+> > > > + * @crit_irq_mask:  mask register for critical threshold irqs
+> > > > + * @crit_irq_clear: clear register for critical threshold irqs
+> > > >   *
+> > > [..]
+> > > > diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+> > > > index 7d317660211e..784c4976c4f9 100644
+> > > > --- a/drivers/thermal/qcom/tsens.c
+> > > > +++ b/drivers/thermal/qcom/tsens.c
+> > > > @@ -121,6 +121,27 @@ static int tsens_register(struct tsens_priv *priv)
+> > > >
+> > > >       enable_irq_wake(irq);
+> > > >
+> > > > +     if (tsens_version(priv) > VER_1_X) {
+> > > > +             irq = platform_get_irq_byname(pdev, "critical");
+> > > > +             if (irq < 0) {
+> > >
+> > > Treating this as a fatal error breaks backwards compatibility with
+> > > current devicetree; and even within your patch series, tsens should fail
+> > > to probe between this patch and the application of patch 3.
+> >
+> > Good catch.
+> >
+> > > Please flip this around and do:
+> > >
+> > > irq = platform_get_irq_byname(pdev, "critical");
+> > > if (irq >= 0 && tsens_version(priv) > VER_1_X) {
+> > >         request_irq()...
+> > > }
+> >
+> > Won't this still break with current devicetree since irq < 0 until
+> > patch 3? Or are you saying we shouldn't check for
+> > platform_get_irq_byname() failure?
+> >
+>
+> I'm trying to say that dtsi without "critical" defined should cause the
+> driver to simply skip this segment, not fail to initialize.
+>
+> > I can see two ways out:
+> > 1. We patch the dtsi before the code change.
+>
+> You're expected to maintain backwards compatibility with existing dtb
+> files out there. The support for critical interrupt is an additional
+> feature, so you should be able to do this by detecting if "critical" is
+> defined (e.g. by checking the return value of
+> platform_get_irq_byname()).
+>
+> > 2. We make critical interrupt failure non-fatal by just printing some
+> > messages and still returning success.
+> >
+>
+> Try to make it as specific as possible (without adding a bunch of code)
+> and throw in a dev_info() if no "critical" is found.
 
-Change the PCIe INTx mapping to model the 4 INTx interrupts in the
-IRQ domain of the iProc PCIe controller itself
+I believe I have now addressed the problem in v2 explicitly overriding
+the return value in case of failure in the critical interrupt irq
+setup path and simply printing a warning.
 
-Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
----
- arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi | 28 ++++++++++++++++++++----
- 1 file changed, 24 insertions(+), 4 deletions(-)
+In hindsight, critical interrupt support should've been added in the
+same series as uplow interrupt support so avoid having to support
+"intermediate" DTS file state for one kernel version.
 
-diff --git a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-index 15f7b0e..489bfd5 100644
---- a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-@@ -117,8 +117,11 @@
- 		dma-coherent;
- 
- 		#interrupt-cells = <1>;
--		interrupt-map-mask = <0 0 0 0>;
--		interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 1 &pcie0_intc 0>,
-+				<0 0 0 2 &pcie0_intc 1>,
-+				<0 0 0 3 &pcie0_intc 2>,
-+				<0 0 0 4 &pcie0_intc 3>;
- 
- 		linux,pci-domain = <0>;
- 
-@@ -140,6 +143,13 @@
- 		phy-names = "pcie-phy";
- 
- 		msi-parent = <&v2m0>;
-+		pcie0_intc: interrupt-controller {
-+			compatible = "brcm,iproc-intc";
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH>;
-+		};
- 	};
- 
- 	pcie4: pcie@50020000 {
-@@ -148,8 +158,11 @@
- 		dma-coherent;
- 
- 		#interrupt-cells = <1>;
--		interrupt-map-mask = <0 0 0 0>;
--		interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 1 &pcie4_intc 0>,
-+				<0 0 0 2 &pcie4_intc 1>,
-+				<0 0 0 3 &pcie4_intc 2>,
-+				<0 0 0 4 &pcie4_intc 3>;
- 
- 		linux,pci-domain = <4>;
- 
-@@ -171,6 +184,13 @@
- 		phy-names = "pcie-phy";
- 
- 		msi-parent = <&v2m0>;
-+		pcie4_intc: interrupt-controller {
-+			compatible = "brcm,iproc-intc";
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
-+		};
- 	};
- 
- 	pcie8: pcie@60c00000 {
--- 
-2.7.4
-
+Regards,
+Amit
