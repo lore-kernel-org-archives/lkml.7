@@ -2,179 +2,100 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D447C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A5FC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 593702080F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:41:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cTDujX+k"
+	by mail.kernel.org (Postfix) with ESMTP id 5D6ED2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 20:47:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727416AbfLCUlW (ORCPT
+        id S1727439AbfLCUrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 15:41:22 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:40090 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726990AbfLCUlW (ORCPT
+        Tue, 3 Dec 2019 15:47:05 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:43683 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727244AbfLCUrF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 15:41:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575405680;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=GFJmVPRnRJZZHh/nJkFtQILkfSrbn6sTsBqRNNHGUY0=;
-        b=cTDujX+kvJ0akPcO4wkSdsWXSkVRsWYUSz44ZjGsXkekwpjme328ZsV5NiejYH6GrYRhKZ
-        y7IGK29YfKE5sm7fncw/El+GEEzArOSStGoIJX2LygDwp3rys6lNg9jBhhQXkfInC8ubLj
-        NHWXHZtnMPufaZmKuXbvPThm/4WdfeA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-371-rhIgtziNMdSH-EUKhPqxxQ-1; Tue, 03 Dec 2019 15:41:19 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2248C8017CC;
-        Tue,  3 Dec 2019 20:41:17 +0000 (UTC)
-Received: from llong.com (ovpn-124-16.rdu2.redhat.com [10.10.124.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B860E1001938;
-        Tue,  3 Dec 2019 20:41:08 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        Dou Liyang <douly.fnst@cn.fujitsu.com>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH] x86/tsc: Fix incorrect enabling of __use_tsc static_key
-Date:   Tue,  3 Dec 2019 15:40:53 -0500
-Message-Id: <20191203204053.12956-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: rhIgtziNMdSH-EUKhPqxxQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+        Tue, 3 Dec 2019 15:47:05 -0500
+Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1M3lsh-1iby5d3Iv5-000sKw; Tue, 03 Dec 2019 21:47:03 +0100
+Received: by mail-qk1-f174.google.com with SMTP id d124so4891472qke.6;
+        Tue, 03 Dec 2019 12:47:02 -0800 (PST)
+X-Gm-Message-State: APjAAAXXAJY26MQBYJk/CfYVmnFjW3E5gDKr01ljkfIEcOXXjuQhNRAR
+        2mS2PNL7iIdn3oDQ7djN0ikm8wussPasfXIMhq0=
+X-Google-Smtp-Source: APXvYqyCL1nx3H8yloTzwg1qIvaIaWi+0O78fCl00vzsL0T2m7PxololIGC/m3cyRi/77ySVOb4TUODjZNeQxdqki54=
+X-Received: by 2002:a37:84a:: with SMTP id 71mr7167297qki.138.1575406021507;
+ Tue, 03 Dec 2019 12:47:01 -0800 (PST)
+MIME-Version: 1.0
+References: <20191201184814.GA7335@magnolia> <CAHk-=wi+0suvJAw8hxLkKJHgYwRy-0vg4-dw9_Co6nQHK-XF9Q@mail.gmail.com>
+ <20191202235821.GF7335@magnolia>
+In-Reply-To: <20191202235821.GF7335@magnolia>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 3 Dec 2019 21:46:45 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2rrTN=ZED4pHX1WLCV+RUitN3G5XKSt5ZC20TUoB_TZA@mail.gmail.com>
+Message-ID: <CAK8P3a2rrTN=ZED4pHX1WLCV+RUitN3G5XKSt5ZC20TUoB_TZA@mail.gmail.com>
+Subject: Re: [GIT PULL] xfs: new code for 5.5
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Eric Sandeen <sandeen@sandeen.net>,
+        Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:IzqS+0q5AgCDjh/XU9VEFNWJmQ9QaNbxXgycHP+0Hy6dTqbYWSN
+ 664IrJVqPd9tG8iEujSsm1vaVUV5yy+nZKIZzWEFEi4MkAR5huJboYb8GnfjFAsabcvDmBR
+ r818Rw4JUJZNwZDKzPDwp4Xz2Dy4v6lh/e2vMhciOo6kb/zo846CSBi/ToQkYdsLZKcXEYI
+ EAaSKYNSF0zQZYi2noYCg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:gNLw0+BIRCI=:5jya/Vkje2O+w3lC2YrHmz
+ gXa3/7Q8nRdBMorSAhsBtWh5P/dhDmHSZcHzYhusYWRn4FzhhDIG+FiGSKenXD9P9alS5VLWv
+ 8R+4JmYL47JJNPvrIYwzKIiqPkKHbmdg3uLufrFXChGTYHDg2uRSd3mzt1SDIYuBHR0wglkK7
+ 6Oi3r3YpkvronU62hrsKny7WCcP0N4r17azIosnmRP7Mbys8Yq6IMerReHCDKQFewo/lBmIVI
+ Fjd+LSt3LKmIdRKRIdoBLXcOcnHzdY00NfOgiOOao15EsOhIbK5KUnJdcZAUmDLtTNKmEw8CL
+ 14N5Ut1XP4bzi96eAmft6RZ1K3Toa/peHMSnBohSmyWNHt5XQcsLy4oqCUzUTDNDfmHWMB26V
+ kXr2Vwh7NT29Z/zpwXKsqmZ+PvFg5PL1bi6PqTUlCia5G2JUvBHwQ234/9a+MG+hlCR8kgglr
+ fRC76TNQIWG5NPVka3IHW/WPJZCK2kY9ci9bMnBRZJ8cL5Ey1ZTbzNTurE7ybW23g2PVl3iO+
+ 2So2XCu5laXlwpQTBSCewYIrTiZTP9sN7kLzwYprU+/wOrCfgzSP5eIKgePvlrLFtXx7Lmwwh
+ LVGgYyTLV0+kYyHCE0ULyUxDKnpO5UJHqbsNZpXXlgprtg9uF0XOALmw20JBh0YxydN3dyPYo
+ XEzuZipJ+6j4osqaqTrl7bmEuiEYJGoee6Od1nlMiyXo/3nLTJhivflEbYeHHW8skyR6fVugD
+ hBbYC/Jn2lF3/kB7isrJU+BQxiJy3WTO2zxGOBUMrAE6eSdnWeuJP8ezIuS9h+dJvdNoULQfM
+ KLIO0vUGcd9izEKxEofuJSnnyUKbas5+4jDvQ9x4ruTmZmxqK27W5u/CVg8P+/yB4KJYDx8Af
+ OiHS3lFgitMdAJGsI3zw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After applying the commit 4763f03d3d18 ("x86/tsc: Use TSC as sched clock
-early") and the commit 608008a45798 ("x86/tsc: Consolidate init code"),
-some x86 systems boot up with the following warnings:
+On Tue, Dec 3, 2019 at 12:59 AM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+> On Mon, Dec 02, 2019 at 03:22:31PM -0800, Linus Torvalds wrote:
+> Yeah, that looks correct to me.  Stephen's solution backed out the
+> changes that Arnd made for the !x86_64 compat ioctl case, so I or
+> someone would have had to re-apply them.
+>
+> > There was some other minor difference too, but it's also possible I
+> > could have messed up, so cc'ing Stephen and Arnd on this just in case
+> > they have comments.
+>
+> <nod> Thanks for sorting this out.
 
-[    0.000000] tsc: Fast TSC calibration using PIT
-[    0.000000] tsc: Detected 2599.853 MHz processor
-[    0.000000] ------------[ cut here ]------------
-[    0.000000] static_key_enable_cpuslocked(): static key
-'__use_tsc+0x0/0x10' used before call to jump_label_init()
-[    0.000000] WARNING: CPU: 0 PID: 0 at kernel/jump_label.c:132 static_key=
-_enable_cpuslocked+0x7b/0x80
-[    0.000000] Modules linked in:
-[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.18.0-154.el8.x86_6=
-4 #1
-[    0.000000] Hardware name: Dell Inc. PowerEdge R730/072T6D, BIOS 2.4.3 0=
-1/17/2017
-[    0.000000] RIP: 0010:static_key_enable_cpuslocked+0x7b/0x80
-  :
-[    0.000000] Call Trace:
-[    0.000000]  ? static_key_enable+0x16/0x20
-[    0.000000]  ? setup_arch+0x43f/0xf68
-[    0.000000]  ? printk+0x58/0x6f
-[    0.000000]  ? start_kernel+0x63/0x55b
-[    0.000000]  ? load_ucode_bsp+0xfb/0x12e
-[    0.000000]  ? secondary_startup_64+0xb7/0xc0
-[    0.000000] ---[ end trace fc2166797a50a8e0 ]---
-  :
-[ 1781.404905] INFO: NMI handler (nmi_cpu_backtrace_handler) took too long =
-to run: 1.000 msecs
-[ 1781.409905] INFO: NMI handler (nmi_cpu_backtrace_handler) took too long =
-to run: 1.000 msecs
-[ 1781.412905] INFO: NMI handler (nmi_cpu_backtrace_handler) took too long =
-to run: 1.000 msecs
-[ 1781.578905] INFO: NMI handler (nmi_cpu_backtrace_handler) took too long =
-to run: 1.000 msecs
-[ 1781.973905] INFO: NMI handler (nmi_cpu_backtrace_handler) took too long =
-to run: 1.000 msecs
-  :
+Yes, this is the right solution. Note that this part of the series originally
+came from Al Viro, but I added more patches following the same idea.
 
-In this particular case,
+While working on a follow-up series, I now also noticed that the
+FS_IOC_RESVSP compat handler has always been broken for
+x32 user space. I don't think anyone cares, but my series in [1]
+addresses this as well by handling FS_IOC_RESVSP/
+FS_IOC_UNRESVSP/FS_IOC_ZERO_RANGE on x86-64 as
+well, in addition to FS_IOC_RESVSP_32 etc.
 
-  setup_arch() =3D> tsc_early_init()
-               =3D> tsc_enable_sched_clock()
-               =3D> static_branch_enable()
+       Arnd
 
-However, jump_label_init() is called after setup_arch(). Before the
-2 commits listed above, static_branch_enable() was only called in
-tsc_init() which is after jump_label_init().
-
-Since sched_clock() is used by the NMI handler to compute the elapsed
-time and a 1000 HZ jiffies has a granularity of 1ms, the NMI warning
-will be printed whenever the jiffies changes while in the middle of the
-NMI handler. On systems that generate GHES NMI frequently, the constant
-spewing of warning messages will significantly impact the performance
-and usability of those systems.
-
-To fix this problem, the static_branch_enable() is now taken out of
-tsc_enable_sched_clock() and put back into tsc_init() like before. That
-effective reverts commit 4763f03d3d18 ("x86/tsc: Use TSC as sched
-clock early").
-
-Fixes: 4763f03d3d18 ("x86/tsc: Use TSC as sched clock early")
-Fixes: 608008a45798 ("x86/tsc: Consolidate init code")
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- arch/x86/kernel/tsc.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index 7e322e2daaf5..1e3a72040399 100644
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -1444,12 +1444,11 @@ static unsigned long __init get_loops_per_jiffy(voi=
-d)
- =09return lpj;
- }
-=20
--static void __init tsc_enable_sched_clock(void)
-+static void __init tsc_init_sched_clock(void)
- {
- =09/* Sanitize TSC ADJUST before cyc2ns gets initialized */
- =09tsc_store_and_check_tsc_adjust(true);
- =09cyc2ns_init_boot_cpu();
--=09static_branch_enable(&__use_tsc);
- }
-=20
- void __init tsc_early_init(void)
-@@ -1463,7 +1462,7 @@ void __init tsc_early_init(void)
- =09=09return;
- =09loops_per_jiffy =3D get_loops_per_jiffy();
-=20
--=09tsc_enable_sched_clock();
-+=09tsc_init_sched_clock();
- }
-=20
- void __init tsc_init(void)
-@@ -1487,10 +1486,11 @@ void __init tsc_init(void)
- =09=09=09setup_clear_cpu_cap(X86_FEATURE_TSC_DEADLINE_TIMER);
- =09=09=09return;
- =09=09}
--=09=09tsc_enable_sched_clock();
-+=09=09tsc_init_sched_clock();
- =09}
-=20
- =09cyc2ns_init_secondary_cpus();
-+=09static_branch_enable(&__use_tsc);
-=20
- =09if (!no_sched_irq_time)
- =09=09enable_sched_clock_irqtime();
---=20
-2.18.1
-
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git
+compat-ioctl-endgame
