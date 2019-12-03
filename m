@@ -2,163 +2,148 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFA8C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB37C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F6A820684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD2D420684
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:04:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rwTTgtN9"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="e8ncpEu3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfLCGDb (ORCPT
+        id S1727159AbfLCGE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 01:03:31 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42924 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbfLCGDa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 01:03:30 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 66so1882811otd.9
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 22:03:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=em0mwcnekNPSrQ/TlvXcfMqa65n+WTC4RKGqGuPqh0E=;
-        b=rwTTgtN9QbUVjkYn/DftNihRoNzWlKozTXKK/Oz6EFiI5FCqNX3eA84Ik8dRuF6uYZ
-         fCpfslNuibOwIMTM8B6vcT82vvAxvndKCEQVWFa/W7ZYPo5Jzzxwd4YYtTRhOccZ+sd0
-         v/KFd7bfR/bhY/p4sv6qW5SZLwZlHpEwTw59RoYxzG8SraSQxdLkXRL30s7tjJUFFcKZ
-         qOTz6F+tUWH3tYfZC6ysvC5G4w28oNKF8gfoDV4lyrTARKXv8vUV2tB/AkcUPdmw2XbR
-         h/huoCaLj6772I7cwpfHgH/ZdYGfc13dvkKgH3c9tA9IR/l8unPzFyY1pMcA42zsUTso
-         /y+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=em0mwcnekNPSrQ/TlvXcfMqa65n+WTC4RKGqGuPqh0E=;
-        b=dftYcbAI5mOWJZaA/VlGF/arAI622IaPLW/9g4L0KQ0+T3joTfOrwyfws9ztWFv5CZ
-         I+9cmUM1HkuUu2qfiB9J7Fn9lQ6mPBJ4eVHUbrfkyGlsNuC2WUD9BhYmkjMrd6eXBoko
-         KCO43OcDL43V0TxIrheBMTuioLlCn+PDPfMtudtewxXGBmsxcBOTkXmBxcWyFTDAK3JC
-         NbKj+2LJdWxXcOPDTiKb9oR2lLg6sfGAHDW0JaukjhtNCb2eAAg3GyRG2lM5TSdrkQFv
-         c7Sab6F2mjO4vQPr65tr1QgwoEDSEAaGojt6ijMI9OegxnC9WO0Z1sa+KiOPm77HH/e5
-         mw6g==
-X-Gm-Message-State: APjAAAVk+zjsHa4bwk5hD0JpHaTCWpAHQY5kNQhCfA0hbY6fmdLDuQHZ
-        5U4VaRPAbZ9Wk8Gu2U6uvW0ju5g19BtCsJ8jfXR1zA==
-X-Google-Smtp-Source: APXvYqyUwjjUt6uilPV5TuiM+Ljl5ziWLr7U6mbVF1pTfEgj/j/jZ1ejlryeTCkLK1bytyv33a+7IyXMakumOsoc9E0=
-X-Received: by 2002:a9d:3af:: with SMTP id f44mr1989987otf.332.1575353009553;
- Mon, 02 Dec 2019 22:03:29 -0800 (PST)
+        Tue, 3 Dec 2019 01:04:27 -0500
+Received: from mail-eopbgr140081.outbound.protection.outlook.com ([40.107.14.81]:15454
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726521AbfLCGE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 01:04:26 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cdyazBItDTBW8xFeZuo3AV0TCDUD+2aRb0Qci/nH85agMmm3a5nbEKGo4LYmtvoMknbb9EPBTT07jsWu3+40iyivdQ9KSGyAyvii8kik8VPHD2jIEzsse76pvygP5B/fFONwRJ4ISk65tQqYkeGrukGnprBHS8pGigET3j/1Mj08dt9x9tcC1EYzi9rpPTJrqsLJzz3eJBtm7Tb43HQ6p7DzTUm/R7oBQ5t6BmIjdsuKNsz2C0b4fbD2bFoORbit8RQ2kzbd20E2YUNNj8xPvY/3UnOt9pcDXTkkDVqRMS7hX+ZgMGaETjaU1bhK2Gbv6NZK4pJ3T7LaGqHjoxxtHg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1AJvhOrjWXY8Cde7pIWJ6/TqHSbVnmBTAaREaIxIzYw=;
+ b=X6MqI1Gz0xg9LFIg6RtXlturhk8jjdF95JUaz9uRNdbRhkR6gdkpMxkO5wo/KHu5ETYK/DuHfDY88XyohoTAI5e1D0LrI5CkvXhzOFMRIpsetA8bAiQlxvL/zlWdUNM2lx26BoHmwvXW15rMgtzRhJAbDhRpIQY69fERjxiLPvxZt2hLpnt7OHGB/tTd13zlDOAEnGDFcTSpbqZFX+HD2YjjcSm06BaxL4prMKNnMOHwJBkXvL7VY5aA/1KTAYHqmDNIWIljV+I2ZoZ9UvEaZTVIwrbiGfGVDzfmU9hfRwC1KTHI0HZliiopvCqQ0TY9IBe6QPHSbYB//raRcVUnXw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1AJvhOrjWXY8Cde7pIWJ6/TqHSbVnmBTAaREaIxIzYw=;
+ b=e8ncpEu3oY1EsgRbFKL9t/HTz++JBz5X2QN4bCFs8H9WPXTE3xg/fcUzGCLtL0yZLndJDnyB4l+c5hJRyWB718vlQaP8yH7H5b3nb82yIzjCK4If9Yuh+vzcDhhX9I5rPx/mPPa4LYe8Pzcft3LLQBcKFoBPCGi9mQY/z0pa7OQ=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB6993.eurprd04.prod.outlook.com (52.132.212.7) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.18; Tue, 3 Dec 2019 06:04:22 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c%4]) with mapi id 15.20.2495.014; Tue, 3 Dec 2019
+ 06:04:22 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "rjui@broadcom.com" <rjui@broadcom.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh@kernel.org" <robh@kernel.org>
+CC:     "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alice Guo <alice.guo@nxp.com>, Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH 1/2] gpio: mvebu: use platform_irq_count
+Thread-Topic: [PATCH 1/2] gpio: mvebu: use platform_irq_count
+Thread-Index: AQHVqZ+C2ZbmEZTAyUWwsa6EK7twoQ==
+Date:   Tue, 3 Dec 2019 06:04:22 +0000
+Message-ID: <1575352925-17271-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK0PR01CA0049.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:a6::13) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d74b764c-9a04-4a83-cd5a-08d777b6a455
+x-ms-traffictypediagnostic: AM0PR04MB6993:|AM0PR04MB6993:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB6993B5D3BD90B83B70763C6F88420@AM0PR04MB6993.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:792;
+x-forefront-prvs: 02408926C4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(39860400002)(346002)(366004)(199004)(189003)(102836004)(305945005)(7736002)(71200400001)(81156014)(81166006)(8676002)(71190400001)(86362001)(50226002)(5660300002)(66556008)(2201001)(66946007)(66476007)(64756008)(66446008)(6486002)(8936002)(66066001)(2501003)(2616005)(36756003)(44832011)(256004)(186003)(6436002)(7416002)(478600001)(14454004)(6116002)(4326008)(54906003)(3846002)(110136005)(316002)(25786009)(26005)(2906002)(386003)(6506007)(99286004)(52116002)(6512007)(4744005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6993;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: qaf5J2slBfkgniPKk0Id/IOwwaLJgaQ/Bd51b2rCfVbnNwgIFRTu3rXlp9FkQTHJg8911WJ8r4lTMjNTBRgUneJxr2ioYaW3Pyt4tEuf21Hru/H41kteBEC6baaPBrRjYLxJkjRrKaDKwJRLMiLG5BwxvQSTbe/FYWeVgM+8f+KuOoBQNVhRd9+iN7lOzZEbTgoAAhAW1RKRsYLERZCW6SCdWHHx4I7cQ08Cz0g7+vaft9NtQEdm/WFslaAxmFgTHZs3ROgpw1RT87P++DH+6VOguOjv+RFDJN3L3wpkKfKI3sXu1wCb9wqgVEeHNUF9ZjYNldbn4B3gMMkXmjXWI6p960PSI7vVLo+fPzHHOhhhKc458dc9rAuewjm9G/z8g9RcIOC1She6ofTATW2s7+N9elnKSsRQVoy/8eQPY3YVD6OGG+2VUrx5s3AOPi6Q
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190911182546.17094-1-nsaenzjulienne@suse.de>
- <20190911182546.17094-4-nsaenzjulienne@suse.de> <CALAqxLVVcsmFrDKLRGRq7GewcW405yTOxG=KR3csVzQ6bXutkA@mail.gmail.com>
- <CALAqxLUkPNf9JYyt+_VOrxq=Zq03veb1y-7aDx+_Vw+fF9i82A@mail.gmail.com>
-In-Reply-To: <CALAqxLUkPNf9JYyt+_VOrxq=Zq03veb1y-7aDx+_Vw+fF9i82A@mail.gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Mon, 2 Dec 2019 22:03:17 -0800
-Message-ID: <CALAqxLW7RTif_NPxFXnxfTm2_ST+6aNmE6X=3v4XsuojKH2mtg@mail.gmail.com>
-Subject: Re: [PATCH v6 3/4] arm64: use both ZONE_DMA and ZONE_DMA32
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>, wahrenst@gmx.net,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, mbrugger@suse.com,
-        linux-rpi-kernel@lists.infradead.org,
-        Will Deacon <will@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Nicolas Dechense <nicolas.dechesne@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d74b764c-9a04-4a83-cd5a-08d777b6a455
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Dec 2019 06:04:22.5052
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: UZIQn9dnu93xfFk/PMh1yrtYJMGSeklSeuxSRR3kGMH1/IEof8aZKYCtzE8wmPAtkc5FEZGAmHWi3IX0FS+T9w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6993
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 2, 2019 at 9:38 PM John Stultz <john.stultz@linaro.org> wrote:
-> On Mon, Dec 2, 2019 at 9:08 PM John Stultz <john.stultz@linaro.org> wrote:
-> > Hey Nicolas,
-> >   Testing the db845c with linus/master, I found a regression causing
-> > system hangs in early boot:
-...
-> > In the above log:
-> > [    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: -188245
-> > looks the most suspect, and going back to the working a573cdd7973d +
-> > build fix I see:
-> > [    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 957419
-> >
-> > Do you have any suggestions for what might be going wrong?
->
-> Digging further, it seems the error is found in calculate_node_totalpages()
->  real_size = size - zone_absent_pages_in_node(pgdat->node_id, i,
->                                                   node_start_pfn, node_end_pfn,
->                                                   zholes_size);
->
-> Where for zone DMA32 size is 262144, but real_size is calculated as -883520.
->
-> I've not traced through to figure out why zone_absent_pages_in_node is
-> coming up with such a large number yet, but I'm about to crash so I
-> wanted to share.
+From: Peng Fan <peng.fan@nxp.com>
 
-Ok, narrowing it down further, it seems its the following bit from the patch:
+Use platform_irq_count to replace of_irq_count
 
-> @@ -201,13 +212,18 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
->         struct memblock_region *reg;
->         unsigned long zone_size[MAX_NR_ZONES], zhole_size[MAX_NR_ZONES];
->         unsigned long max_dma32 = min;
-> +       unsigned long max_dma = min;
->
->         memset(zone_size, 0, sizeof(zone_size));
->
-> -       /* 4GB maximum for 32-bit only capable devices */
-> +#ifdef CONFIG_ZONE_DMA
-> +       max_dma = PFN_DOWN(arm64_dma_phys_limit);
-> +       zone_size[ZONE_DMA] = max_dma - min;
-> +       max_dma32 = max_dma;
-> +#endif
->  #ifdef CONFIG_ZONE_DMA32
->         max_dma32 = PFN_DOWN(arm64_dma32_phys_limit);
-> -       zone_size[ZONE_DMA32] = max_dma32 - min;
-> +       zone_size[ZONE_DMA32] = max_dma32 - max_dma;
->  #endif
->         zone_size[ZONE_NORMAL] = max - max_dma32;
->
-> @@ -219,11 +235,17 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
->
->                 if (start >= max)
->                         continue;
-> -
-> +#ifdef CONFIG_ZONE_DMA
-> +               if (start < max_dma) {
-> +                       unsigned long dma_end = min_not_zero(end, max_dma);
-> +                       zhole_size[ZONE_DMA] -= dma_end - start;
-> +               }
-> +#endif
->  #ifdef CONFIG_ZONE_DMA32
->                 if (start < max_dma32) {
-> -                       unsigned long dma_end = min(end, max_dma32);
-> -                       zhole_size[ZONE_DMA32] -= dma_end - start;
-> +                       unsigned long dma32_end = min(end, max_dma32);
-> +                       unsigned long dma32_start = max(start, max_dma);
-> +                       zhole_size[ZONE_DMA32] -= dma32_end - dma32_start;
->                 }
->  #endif
->                 if (end > max_dma32) {
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
 
-The zhole_sizes end up being:
-zhole_size: DMA: 67671, DMA32: 1145664 NORMAL: 0
+V1:
+ Code inspection, not tested
 
-This seems to be due to dma32_start being calculated as 786432 each
-time - I'm guessing that's the max_dma value.
-Where dma32_end is around 548800, but changes each iteration (so we
-end up subtracting a negative value each pass, growing the size).
+ drivers/gpio/gpio-mvebu.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-thanks
--john
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index 993bbeb3c006..ecfedcdadc0d 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -46,7 +46,6 @@
+ #include <linux/irqdomain.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/of_device.h>
+-#include <linux/of_irq.h>
+ #include <linux/pinctrl/consumer.h>
+ #include <linux/platform_device.h>
+ #include <linux/pwm.h>
+@@ -1102,7 +1101,7 @@ static int mvebu_gpio_probe(struct platform_device *p=
+dev)
+ 		soc_variant =3D MVEBU_GPIO_SOC_VARIANT_ORION;
+=20
+ 	/* Some gpio controllers do not provide irq support */
+-	have_irqs =3D of_irq_count(np) !=3D 0;
++	have_irqs =3D platform_irq_count(pdev) !=3D 0;
+=20
+ 	mvchip =3D devm_kzalloc(&pdev->dev, sizeof(struct mvebu_gpio_chip),
+ 			      GFP_KERNEL);
+--=20
+2.16.4
+
