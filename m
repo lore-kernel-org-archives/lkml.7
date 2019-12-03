@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3A2C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 737B6C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAA7420684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:06:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42F962073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414407;
-	bh=cWK1kp03Or15lWIONAwKQIPs6G7BvNiBb99QgZGfv+E=;
+	s=default; t=1575414416;
+	bh=qQ7ADBan6Cki+gjs7P4HZzdhbGN9+BaZSrq2OioHsOM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k7R3fTnfm3SfkrS86umdB5glOeG7HIwoi0hTZHRyZskHW0id91N+Mt7l4uN+QK8xj
-	 2AM5vMrYz4VgV/mz7jflYs4hh5ITituQ3tWm+UzOlaBZ3JKkS+4lCbxhMfFwYcvlgj
-	 w2KU21gPjpaIs2Gc+iZwz5GBJO/6b0B9LrBZjHuc=
+	b=HZlV+8EAnIgqnQOjiWSdwsHxyun3GbFf0iUBXRGk/lMsT67fRfRGqkbJwS2GunIJu
+	 DrB2hg6kYPTWD/uycDKSj1V3OvndNpBQ+WUVuz9FgXuCRF+ypgid750jD+tU83A156
+	 2btP4pYnUNsnm7ZFnJsBed3FLOtQyOvZQP8GeHYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729593AbfLCXGq (ORCPT
+        id S1729384AbfLCWsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:06:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39054 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:48:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728187AbfLCWsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:48:25 -0500
+        id S1729354AbfLCWr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:47:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC31820656;
-        Tue,  3 Dec 2019 22:48:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FA1420684;
+        Tue,  3 Dec 2019 22:47:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413305;
-        bh=cWK1kp03Or15lWIONAwKQIPs6G7BvNiBb99QgZGfv+E=;
+        s=default; t=1575413275;
+        bh=qQ7ADBan6Cki+gjs7P4HZzdhbGN9+BaZSrq2OioHsOM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v5eG8xQVh++RcJ5Jxwzuaq/0BG0YtQFdwcu7O52PpW2kCUlF4CfMi1KobdjYnEW4e
-         00Bnp67dLjRNPIy2dcEDgyn11DzOYHm4jPQS6VONtG4TUkHwTsudUBH8VXZS9VHBBK
-         pIBOeQNlYnGDAWJV2HCV/MNslb6Vi3ZHS44q1erI=
+        b=IE0mln7vNUGN9cFet09Jo0RBuYaMsc2i3J5Ct4qRSPDWIYmuyzjrd+WtXXAyvI2tc
+         WNn2wJkWP5SEuaB518YzYyGwiH63y4qFVwLWv8RR9aDsMUKtuQD/ZySEVJo+CI5eel
+         PpNOEA4koFiD7pPCEAw2WeIjRd195WrHr04zH/lI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lijun Ou <oulijun@huawei.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 076/321] RDMA/hns: Fix the bug while use multi-hop of pbl
-Date:   Tue,  3 Dec 2019 23:32:22 +0100
-Message-Id: <20191203223431.115229525@linuxfoundation.org>
+Subject: [PATCH 4.19 066/321] ARM: dts: imx25: Fix memory node duplication
+Date:   Tue,  3 Dec 2019 23:32:12 +0100
+Message-Id: <20191203223430.602770010@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,40 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lijun Ou <oulijun@huawei.com>
+From: Fabio Estevam <festevam@gmail.com>
 
-[ Upstream commit 4af07f01f7a787ba5158352b98c9e3cb74995a1c ]
+[ Upstream commit 59d8bb363f563e4a147a291037bf979cb8ff9a59 ]
 
-It will prevent multiply overflow when defines the pbl for u64 type.
+Boards based on imx25 have duplicate memory nodes:
 
-Signed-off-by: Lijun Ou <oulijun@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+- One coming from the board dts file: memory@
+
+- One coming from the imx25.dtsi file.
+
+Fix the duplication by removing the memory node from the dtsi file
+and by adding 'device_type = "memory";' in the board dts.
+
+Reported-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_mr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi | 1 +
+ arch/arm/boot/dts/imx25-karo-tx25.dts        | 1 +
+ arch/arm/boot/dts/imx25-pdk.dts              | 1 +
+ arch/arm/boot/dts/imx25.dtsi                 | 2 --
+ 4 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_mr.c b/drivers/infiniband/hw/hns/hns_roce_mr.c
-index 41a538d23b802..c68596d4e8037 100644
---- a/drivers/infiniband/hw/hns/hns_roce_mr.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_mr.c
-@@ -1017,14 +1017,14 @@ struct ib_mr *hns_roce_reg_user_mr(struct ib_pd *pd, u64 start, u64 length,
- 			goto err_umem;
- 		}
- 	} else {
--		int pbl_size = 1;
-+		u64 pbl_size = 1;
+diff --git a/arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi b/arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi
+index e316fe08837a3..e4d7da267532d 100644
+--- a/arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi
++++ b/arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi
+@@ -18,6 +18,7 @@
+ 	compatible = "eukrea,cpuimx25", "fsl,imx25";
  
- 		bt_size = (1 << (hr_dev->caps.pbl_ba_pg_sz + PAGE_SHIFT)) / 8;
- 		for (i = 0; i < hr_dev->caps.pbl_hop_num; i++)
- 			pbl_size *= bt_size;
- 		if (n > pbl_size) {
- 			dev_err(dev,
--			    " MR len %lld err. MR page num is limited to %d!\n",
-+			    " MR len %lld err. MR page num is limited to %lld!\n",
- 			    length, pbl_size);
- 			ret = -EINVAL;
- 			goto err_umem;
+ 	memory@80000000 {
++		device_type = "memory";
+ 		reg = <0x80000000 0x4000000>; /* 64M */
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx25-karo-tx25.dts b/arch/arm/boot/dts/imx25-karo-tx25.dts
+index 5cb6967866c0a..f37e9a75a3ca7 100644
+--- a/arch/arm/boot/dts/imx25-karo-tx25.dts
++++ b/arch/arm/boot/dts/imx25-karo-tx25.dts
+@@ -37,6 +37,7 @@
+ 	};
+ 
+ 	memory@80000000 {
++		device_type = "memory";
+ 		reg = <0x80000000 0x02000000 0x90000000 0x02000000>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx25-pdk.dts b/arch/arm/boot/dts/imx25-pdk.dts
+index a5626b46ac4e1..f8544a9e46330 100644
+--- a/arch/arm/boot/dts/imx25-pdk.dts
++++ b/arch/arm/boot/dts/imx25-pdk.dts
+@@ -12,6 +12,7 @@
+ 	compatible = "fsl,imx25-pdk", "fsl,imx25";
+ 
+ 	memory@80000000 {
++		device_type = "memory";
+ 		reg = <0x80000000 0x4000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
+index 85c15ee632727..8c8ad80de4614 100644
+--- a/arch/arm/boot/dts/imx25.dtsi
++++ b/arch/arm/boot/dts/imx25.dtsi
+@@ -12,10 +12,8 @@
+ 	 * The decompressor and also some bootloaders rely on a
+ 	 * pre-existing /chosen node to be available to insert the
+ 	 * command line and merge other ATAGS info.
+-	 * Also for U-Boot there must be a pre-existing /memory node.
+ 	 */
+ 	chosen {};
+-	memory { device_type = "memory"; };
+ 
+ 	aliases {
+ 		ethernet0 = &fec;
 -- 
 2.20.1
 
