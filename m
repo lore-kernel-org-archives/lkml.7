@@ -2,94 +2,96 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE00EC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 02:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E35BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 02:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B013D20684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 02:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F0F720674
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 02:52:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZKQ9aFJ8"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="I6Dkus0A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbfLCCrN (ORCPT
+        id S1726422AbfLCCwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 21:47:13 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:41538 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbfLCCrK (ORCPT
+        Mon, 2 Dec 2019 21:52:44 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:34337 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbfLCCwo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 21:47:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ZcADr+fqCjkrKggMHp7c9VH2W4nKJ3vIQ/9FqtJ6+po=; b=ZKQ9aFJ8e7Bhuk3ldud6Rv7p/
-        Je8/Oq4ghvtMDdZ8xuWLgrVCOvrGyDituzDk4crgA+cEk4nin2pU4fg8ut/8BbnezXZ6fW1zs4puf
-        /NEQvnTLJjDVL6Ne/aiKA2DvBXW7SGEVg45+6RXCl/tkSRT2ggQfv9XtCwMTjM4HgP0RHeMLXzfaZ
-        ILM/mwJWbX0+PMA+ItQzDIs6Fqmba7YXOgvaGwWfO7qJ1qR0yYQSrlf1tldOt/v/ylTnZztvmEbhf
-        IuVdNzza1Der/TDr1frVSMfl/TZhKmijCNYX8JpZOXLykJreuOp23+d5Rg82kK6DIuCCRwCEEXOry
-        J95N0jq/A==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ibyDB-0006M1-QQ; Tue, 03 Dec 2019 02:46:49 +0000
-Date:   Mon, 2 Dec 2019 18:46:49 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs: introduce is_dot_dotdot helper for cleanup
-Message-ID: <20191203024649.GQ20752@bombadil.infradead.org>
-References: <1575281413-6753-1-git-send-email-yangtiezhu@loongson.cn>
- <20191202200302.GN20752@bombadil.infradead.org>
- <357ad021-a58c-ad46-42bd-d5012126276f@loongson.cn>
+        Mon, 2 Dec 2019 21:52:44 -0500
+Received: by mail-il1-f194.google.com with SMTP id w13so1786744ilo.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Dec 2019 18:52:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=9a59J4/n1AJmUmJtyY3EBK1ZgWP2sXRGZlKEO7TjHDg=;
+        b=I6Dkus0A1zcyC8FpvqgYiEao4PzOUVJlmjTTAsd1NtiEZqneNsKmScNe6EqHdHAuET
+         bQXoNsbEGQ6hdZEjPM4mu8zezeb9Q3DQTlZ52rNeVa8BIet8kOK/6RGtHN6LMuymwtmV
+         4+pGxAnjd9wF2WlYBZV1gnpXFxtHzhY6lv0ompiHJvXmzsZk0UmUJjfIJtqvHOvIuriB
+         9lCZckZlU3YdvZ7OjFU9KRdyZ4c0lpBr4k8erJwrbyUKPHAq8brfome60EvGwb0h4ctB
+         F12TUkNkTIYmE87hwRP4RNKqVsG+mbov1/CyAp3uhwlhHu7kzL9Y5C8qnMySKEc07ZwT
+         XmoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=9a59J4/n1AJmUmJtyY3EBK1ZgWP2sXRGZlKEO7TjHDg=;
+        b=itQwNPRi+twVwi/xvdFRsDxic/PtP2u8693UZrFgRdLdfrBBNoLYnUAEBEjnzoYvcP
+         MvuRH4BnVVzsYalCF295IdjwuwbmldLhrWj8HqCDSZFhalpZ4AwRmZOHkfNLzmAdVVXr
+         eoIGBRemk8jUqIz06+Hh+tgDIz+FgmZo2SMtKKKfcXfg3e95IxxU39qrE93aNEPFIx7f
+         aBqLyOnzW7JgaXRip8/9kKrW9VXR36qJMx35sZNCcEuQCPOOqhFqeuo3u7RMqZVHkNKL
+         0NQKoVyyqgBudJmJSCzdmqrdqE7aAS+YJxlChW3XDux1Emd0t6fbBYunf44gf6PUZAVn
+         br0g==
+X-Gm-Message-State: APjAAAX0oDtN+Klu2/2vPhPZUT4VEPA2I8VagkJPMQvhrGcx12nXt+wP
+        Wf4U88I93rfFbSwCtfNijPyZStS2I9c=
+X-Google-Smtp-Source: APXvYqyGxEOgv+6aRdE/einrQivQppOfpe5EoSs6xxHHdyb4nYkSN49ooLQSRZuOSBM9l73NBR15dA==
+X-Received: by 2002:a92:601:: with SMTP id x1mr2530261ilg.35.1575341563259;
+        Mon, 02 Dec 2019 18:52:43 -0800 (PST)
+Received: from localhost (67-0-26-4.albq.qwest.net. [67.0.26.4])
+        by smtp.gmail.com with ESMTPSA id q3sm406923ilk.15.2019.12.02.18.52.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 18:52:42 -0800 (PST)
+Date:   Mon, 2 Dec 2019 18:52:42 -0800 (PST)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     Christoph Hellwig <hch@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] generic ioremap for 5.5
+In-Reply-To: <CAHk-=whpKDQze+kcCw5e-TK2J4T9-qACQ_o7XAtTO+dD+FJOsw@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.9999.1912021851400.56420@viisi.sifive.com>
+References: <20191125192758.GA13913@infradead.org> <CAHk-=whpKDQze+kcCw5e-TK2J4T9-qACQ_o7XAtTO+dD+FJOsw@mail.gmail.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <357ad021-a58c-ad46-42bd-d5012126276f@loongson.cn>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 10:07:41AM +0800, Tiezhu Yang wrote:
-> On 12/03/2019 04:03 AM, Matthew Wilcox wrote:
-> > On Mon, Dec 02, 2019 at 06:10:13PM +0800, Tiezhu Yang wrote:
-> > > There exists many similar and duplicate codes to check "." and "..",
-> > > so introduce is_dot_dotdot helper to make the code more clean.
-> > The idea is good.  The implementation is, I'm afraid, badly chosen.
-> > Did you benchmark this change at all?  In general, you should prefer the
-> 
-> Thanks for your reply and suggestion. I measured the
-> performance with the test program, the following
-> implementation is better for various of test cases:
-> 
-> bool is_dot_dotdot(const struct qstr *str)
-> {
->         if (unlikely(str->name[0] == '.')) {
->                 if (str->len < 2 || (str->len == 2 && str->name[1] == '.'))
->                         return true;
->         }
-> 
->         return false;
-> }
-> 
-> I will send a v2 patch used with this implementation.
+On Thu, 28 Nov 2019, Linus Torvalds wrote:
 
-Well, hang on.  If you haven't done any benchmarking, please do so
-before sending a v2.  In particular, you've now moved this to being a
-function call.  That might slow things down, or it might speed things up.
-I also don't know if passing a qstr is going to be the right API --
-let's hear from the filesystems affected by the API change that they're
-OK with this change.
+> On Mon, Nov 25, 2019 at 11:28 AM Christoph Hellwig <hch@infradead.org> wrote:
+> >
+> > There are two conflicts with the riscv tree - one is a trivial makefile
+> > context one with the nommu support, and the other is the split of the
+> > riscv <asm/io.h> which means that the removals in this pull request need
+> > to be applied to the new location that they were moved to in the riscv
+> > tree.
+> 
+> The conflict was trivial to fix up, but since I don't do RISC-V
+> cross-builds, I'd like PaulW to please check that there weren't any
+> surprising semantic issues too - or that I didn't mess up.
+> 
+> Paul? (It's not actually pushed out yet, it's still building, but the
+> ioremap merge should be there in a moment)
+
+Looks good to me, and passes basic tests with both QEMU and hardware.  
+
+thanks,
+
+- Paul
