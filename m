@@ -2,125 +2,186 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF64C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B04C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FB77206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:58:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="uJAZO2E1"
+	by mail.kernel.org (Postfix) with ESMTP id AC351206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:59:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726079AbfLCJ6X (ORCPT
+        id S1726254AbfLCJ7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 04:58:23 -0500
-Received: from mail-eopbgr680057.outbound.protection.outlook.com ([40.107.68.57]:39688
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725773AbfLCJ6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 04:58:23 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=E1Utp1grA+a/D1iQ8zj0NAcgVN8u4xAZMFaStLJsoSeckggszGJEn+n1IRc5Cf/cWfqA9pI14fyrx8GkqhkOfJonULEYakL/+Sx54rUOHzvE6gGav9P3RvqLjlo1ooQIcY9p5sEFx4I+2oqMmkNicKLX/JjVVAG1FjO1DTb1vq3/qF8CrX4Eav8cUVAZJFmZyN3KNfM6KpENFSWI2y6wHe5ex4Gm0/FpSKcvD6whrF+qFiMFd0ixLoDPTpO7RCRMRzJLVm482W6/nz+xtH3d5ueeVjNJjTrA6o2VLpUYpXgfylB2sB5E4UgQwAKJdNFsw8nOd/gMXJ6YiV+6Gb3seQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HOCf11jeNVYXEtc5bvdpGgBXHZ1TnDm7c+KlJM6MpKI=;
- b=hvnt1rMyqAlC1v8eoNTWidm2WioIJrzdeB20b/MiV8MZIGibbdxfe5tF/0ONRoHS9jSokcAjlBXCoC0QfRZVcXZ79wDtQTMi3NH3ql9SC+2WHhiuC1EIpsS4gAf4MsjYGyOp0qB2h9wTvhko5uN4fR328QnGYGw9r/JvG+vn68Ia6lfZQKCZQepi4JNeAD/QWJozxLWV+aT+pHt6ZIa672n5srGubRifH9xP+JsbWxNu8I8lS6n0TbR+Fy1az7DMrZ53b5mG2Wky708fJCj3CPrCA9Fe0ERpXVQeaqZrmUNpB6j5LqCI5/emPa7VW855RV0BI3TDrkNdVvjwSItmGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HOCf11jeNVYXEtc5bvdpGgBXHZ1TnDm7c+KlJM6MpKI=;
- b=uJAZO2E1lm6CiAXAighvpBPOZ6gLnf3c9sVy8Oe8hL4QlyVZ7K1kO/VqNecMbN/QcNse7hBquSyFKPuBJbTJltSRK9TqCKmBzm8CxRIQIqEO3mgKi09pUewRKKktOY9XMg0pZDMjLujQWr1R8UsCt5o+rvgXOP5BwXRjSAzNo7U=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Christian.Koenig@amd.com; 
-Received: from DM5PR12MB1705.namprd12.prod.outlook.com (10.175.88.22) by
- DM5PR12MB1561.namprd12.prod.outlook.com (10.172.37.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.20; Tue, 3 Dec 2019 09:58:17 +0000
-Received: from DM5PR12MB1705.namprd12.prod.outlook.com
- ([fe80::80df:f8b:e547:df84]) by DM5PR12MB1705.namprd12.prod.outlook.com
- ([fe80::80df:f8b:e547:df84%12]) with mapi id 15.20.2495.014; Tue, 3 Dec 2019
- 09:58:17 +0000
-Subject: Re: [PATCH 2/2] drm/ttm: Fix vm page protection handling
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        dri-devel@vmware.com, pv-drivers@vmware.com,
-        linux-graphics-maintainer@vmware.com,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
-References: <20191203075446.60197-1-thomas_os@shipmail.org>
- <20191203075446.60197-3-thomas_os@shipmail.org>
- <20191203095502.hw3r33ioax2x4kvt@box>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Message-ID: <c1f35529-6e3c-2ba5-bd86-e7cc04cbc1b1@amd.com>
-Date:   Tue, 3 Dec 2019 10:58:09 +0100
+        Tue, 3 Dec 2019 04:59:06 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58005 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbfLCJ7G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 04:59:06 -0500
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1ic4xH-0004We-Po; Tue, 03 Dec 2019 10:58:51 +0100
+Received: from [IPv6:2a03:f580:87bc:d400:858e:130c:14c0:366e] (unknown [IPv6:2a03:f580:87bc:d400:858e:130c:14c0:366e])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits)
+         client-signature RSA-PSS (4096 bits))
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id 52F1A4873B3;
+        Tue,  3 Dec 2019 09:55:05 +0000 (UTC)
+Subject: Re: [PATCH] MAINTAINERS: add myself as maintainer of MCAN MMIO device
+ driver
+To:     Sriram Dash <sriram.dash@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-can@vger.kernel.org,
+        wg@grandegger.com
+Cc:     mchehab+samsung@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, robh@kernel.org, dmurphy@ti.com,
+        rcsekar@samsung.com, pankaj.dubey@samsung.com,
+        pankj.sharma@samsung.com
+References: <CGME20191203043533epcas5p19bfc21e2b03db7f27c6d84cda6824d27@epcas5p1.samsung.com>
+ <1575347349-32689-1-git-send-email-sriram.dash@samsung.com>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <9c9b1f4d-e092-957a-150c-41f2348810e5@pengutronix.de>
+Date:   Tue, 3 Dec 2019 10:55:01 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
-In-Reply-To: <20191203095502.hw3r33ioax2x4kvt@box>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-ClientProxiedBy: AM0PR01CA0110.eurprd01.prod.exchangelabs.com
- (2603:10a6:208:168::15) To DM5PR12MB1705.namprd12.prod.outlook.com
- (2603:10b6:3:10c::22)
 MIME-Version: 1.0
-X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: dad1d722-6ccc-41db-8872-08d777d751ea
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1561:
-X-Microsoft-Antispam-PRVS: <DM5PR12MB156141F43192DA5534D9A22C83420@DM5PR12MB1561.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2657;
-X-Forefront-PRVS: 02408926C4
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(346002)(366004)(396003)(39860400002)(189003)(199004)(81166006)(58126008)(110136005)(54906003)(6666004)(2906002)(316002)(7736002)(305945005)(66574012)(81156014)(2870700001)(99286004)(46003)(8676002)(65956001)(2616005)(14444005)(6116002)(4326008)(11346002)(446003)(25786009)(31686004)(6486002)(14454004)(6246003)(186003)(86362001)(229853002)(6436002)(50466002)(478600001)(4744005)(66556008)(66476007)(52116002)(76176011)(66946007)(2486003)(6506007)(386003)(8936002)(36756003)(5660300002)(7416002)(6512007)(23676004)(31696002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1561;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vBhSrnjkZB/vYcanaNS6H/VutpcS0xEVepwaha+lXSAloAuXfYd6COYlX6e/H95rL9jnALS2Vp1Jd8i1HvEXQYX8t8CpCQkiHTa2YJNHrfQGepZ2zXIKkx4rdhtd92xo+Dd1Omju5Bt2vL+aTD7Xrsn2OY6J8SiR96Q7KmlxZpfkHMtjqYW1s28MV//RvBFZSKlA4QVzvSjNNHmIZdNL6XdMTASzDxlVbNWXm583lnd00sD5xCiglO9S6g1+gMfgmQ/5XZJk2CZBjytoX2/gd8juyhY4semBe/YahXD7XlcMENsQP9E5zJ7RS/VJJ8PEVCsMIBfsfL2xuGhGPYyx5/syKdx/cTMCf7nvDoMsgtH3QXoX0zF+X/ygSWddInZHIEfJet/Zd4L7sKGvi3LoGi+tGCYlE8ijOs8kICCcONXDBD6ECZBiMREVzDKELyri
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dad1d722-6ccc-41db-8872-08d777d751ea
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Dec 2019 09:58:17.6871
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ca96OyC1Bhwfp/OsQSiWBT4OSDQ3PKEknhOAdolc1OYprE6c8HHqjm9Wwhs5RVeO
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1561
+In-Reply-To: <1575347349-32689-1-git-send-email-sriram.dash@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="AgPODyPcIAY4cJ8CKaolPkD5tAQR8qlUo"
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 03.12.19 um 10:55 schrieb Kirill A. Shutemov:
-> On Tue, Dec 03, 2019 at 08:54:46AM +0100, Thomas Hellström (VMware) wrote:
->> From: Thomas Hellstrom <thellstrom@vmware.com>
->>
->> We were using an ugly hack to set the page protection correctly.
->> Fix that and instead use vmf_insert_mixed_prot() and / or
->> vmf_insert_pfn_prot().
->> Also get the default page protection from
->> struct vm_area_struct::vm_page_prot rather than using vm_get_page_prot().
->> This way we catch modifications done by the vm system for drivers that
->> want write-notification.
-> Hm. Why doesn't your VMA have the right prot flags in the first place? Why
-> do you need to override them? More context, please.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--AgPODyPcIAY4cJ8CKaolPkD5tAQR8qlUo
+Content-Type: multipart/mixed; boundary="PMj6IRNcR0cQVRbqraVAABpoCo0rGJrMh";
+ protected-headers="v1"
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Sriram Dash <sriram.dash@samsung.com>, linux-kernel@vger.kernel.org,
+ linux-can@vger.kernel.org, wg@grandegger.com
+Cc: mchehab+samsung@kernel.org, davem@davemloft.net,
+ gregkh@linuxfoundation.org, robh@kernel.org, dmurphy@ti.com,
+ rcsekar@samsung.com, pankaj.dubey@samsung.com, pankj.sharma@samsung.com
+Message-ID: <9c9b1f4d-e092-957a-150c-41f2348810e5@pengutronix.de>
+Subject: Re: [PATCH] MAINTAINERS: add myself as maintainer of MCAN MMIO device
+ driver
+References: <CGME20191203043533epcas5p19bfc21e2b03db7f27c6d84cda6824d27@epcas5p1.samsung.com>
+ <1575347349-32689-1-git-send-email-sriram.dash@samsung.com>
+In-Reply-To: <1575347349-32689-1-git-send-email-sriram.dash@samsung.com>
 
-TTM allows for graphics buffer to move between system and IO memory. So 
-the prot flags can change on the fly for a VMA.
+--PMj6IRNcR0cQVRbqraVAABpoCo0rGJrMh
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Christian.
+On 12/3/19 5:29 AM, Sriram Dash wrote:
+> Since we are actively working on MMIO MCAN device driver,
+> as discussed with Marc, I am adding myself as a maintainer.
+>=20
+> Signed-off-by: Sriram Dash <sriram.dash@samsung.com>
+> ---
+
+Added to linux-can.
+
+Tnx,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+
+
+--PMj6IRNcR0cQVRbqraVAABpoCo0rGJrMh--
+
+--AgPODyPcIAY4cJ8CKaolPkD5tAQR8qlUo
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl3mMPUACgkQWsYho5Hk
+nSCPqwgAuOqh+sGM+elUOahNy8zlT0jJUsD5IlZDpXrkto1wfFfTpcp9iDNYWaIx
+uM19pwnc09Jg+S7pkHSFWIGDM0JExgKGwyJ47G04tA4PzBLqcmIUfVbEE8rmzYYQ
+1MQtmkx62Kms3v2OG/Wv1NPWLGAroeD9X+l+pq+jjvrKygZ5QCezj4CNZqwz6KHv
+vmm+U0zNuaR6WjHOrSBVE3MM4gAjhQrBhNsT6F0jaCobatj7lGIrVRA8f9PCRr7H
+0AOXpK9yNyI684MByoxzxqLjDayTREUTFjcEUdtY9ORzf+pdvp4BUTc1Y7PzS0oP
+dZRqRYbMMTq9R2cHzc9pqN357KW62A==
+=a+Sh
+-----END PGP SIGNATURE-----
+
+--AgPODyPcIAY4cJ8CKaolPkD5tAQR8qlUo--
