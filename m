@@ -2,113 +2,121 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05756C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EA1C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5B6520409
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74503206E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:18:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575364696;
+	bh=HbSHcV5BJo+8R8xmjwxSvwHVTJEBb+W1qSt8gJw5qPU=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=buvKiko2mslD/EUo32heXovyzKiYYIDacKG0sXqj3TAjqC8wyhPIw3Nq+H6q+TPeu
+	 A4dVdwyyS1mznK65/ly+WbG6g9ue5NafSZjlg/HeAkiia7BmLg5Mf4BIFNG5eWknHr
+	 ztppiDQwDG34iiTg9yWyWhryfyny7XB8ELIlAqIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726060AbfLCJPl (ORCPT
+        id S1726087AbfLCJSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 04:15:41 -0500
-Received: from mx2.suse.de ([195.135.220.15]:37984 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725773AbfLCJPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 04:15:41 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6A984B023;
-        Tue,  3 Dec 2019 09:15:39 +0000 (UTC)
-Date:   Tue, 3 Dec 2019 10:15:36 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Philip Li <philip.li@intel.com>
-Cc:     kbuild test robot <lkp@intel.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        kbuild-all@lists.01.org, joe@perches.com,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        tj@kernel.org, arnd@arndb.de, sergey.senozhatsky@gmail.com,
-        rostedt@goodmis.org
-Subject: Re: [kbuild-all] Re: [PATCH 3/4] printk: Drop pr_warning definition
-Message-ID: <20191203091536.k6jvrwpo3qjukamd@pathway.suse.cz>
-References: <20191128004752.35268-4-wangkefeng.wang@huawei.com>
- <201911281545.4mGpcG7D%lkp@intel.com>
- <20191129115347.ltzif5jstfxh3h3t@pathway.suse.cz>
- <20191130090316.GA5419@intel.com>
+        Tue, 3 Dec 2019 04:18:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41048 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725773AbfLCJSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 04:18:15 -0500
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0553206E0;
+        Tue,  3 Dec 2019 09:18:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575364694;
+        bh=HbSHcV5BJo+8R8xmjwxSvwHVTJEBb+W1qSt8gJw5qPU=;
+        h=From:Date:Subject:To:Cc:From;
+        b=dk0Fg08C4EVDTP+pLzY0yrupf1Jjk8XJPuJ4QdmriGV8AiWraQqXsnz8QmNAk877k
+         sfqNaM5+kBwZDLbdF6JoHEmuuOESSqedZDdheKHPDzJl9Mks5zXk1x3/xzYCLcxBiD
+         OM9hmpxX2wcYoJX9qXZ5Z5ICNtkMcgZJHEFSUrzw=
+Received: by mail-wm1-f54.google.com with SMTP id p17so2599939wma.1;
+        Tue, 03 Dec 2019 01:18:13 -0800 (PST)
+X-Gm-Message-State: APjAAAXRYf7aoqdCKTjv2xRWS8qYUHrciBUMRwYOlfAevA9sr4xIZvdY
+        H2+S3Tp/kw3EX7ZQWYI9jro0OuXvQ9BS+CiQoiU=
+X-Google-Smtp-Source: APXvYqwi6BrYe0Q9/wGK25IymqSmUDgapH0cTTtuFjVya6iYOXV+W89jAU+pgiBj+LmCicozQ73AlAtJM786Zi3Zw24=
+X-Received: by 2002:a7b:c216:: with SMTP id x22mr32913819wmi.51.1575364692336;
+ Tue, 03 Dec 2019 01:18:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191130090316.GA5419@intel.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+From:   Chen-Yu Tsai <wens@kernel.org>
+Date:   Tue, 3 Dec 2019 17:17:59 +0800
+X-Gmail-Original-Message-ID: <CAGb2v66k7+KMgVPYy0i9CF9VyNnNQEMP0y0AyCrrLX7PBKN+Jw@mail.gmail.com>
+Message-ID: <CAGb2v66k7+KMgVPYy0i9CF9VyNnNQEMP0y0AyCrrLX7PBKN+Jw@mail.gmail.com>
+Subject: Parallel Camera Interface Timings, Signal Definitions and Polarity?
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 2019-11-30 17:03:16, Philip Li wrote:
-> On Fri, Nov 29, 2019 at 12:53:47PM +0100, Petr Mladek wrote:
-> > On Thu 2019-11-28 15:14:36, kbuild test robot wrote:
-> > > Hi Kefeng,
-> > > 
-> > > Thank you for the patch! Yet something to improve:
-> > > 
-> > > [auto build test ERROR on wq/for-next]
-> > > [cannot apply to pmladek/for-next v5.4 next-20191127]
-> > > [if your patch is applied to the wrong git tree, please drop us a note to help
-> > > improve the system. BTW, we also suggest to use '--base' option to specify the
-> > > base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> > > 
-> > > url:    https://github.com/0day-ci/linux/commits/Kefeng-Wang/part2-kill-pr_warning-from-kernel/20191128-085343
-> > > base:   https://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git for-next
-> > > config: i386-defconfig (attached as .config)
-> > > compiler: gcc-7 (Debian 7.4.0-14) 7.4.0
-> > > reproduce:
-> > >         # save the attached .config to linux build tree
-> > >         make ARCH=i386 
-> > > 
-> > > If you fix the issue, kindly add following tag
-> > > Reported-by: kbuild test robot <lkp@intel.com>
-> > > 
-> > > All errors (new ones prefixed by >>):
-> > > 
-> > >    drivers/platform/x86/eeepc-laptop.c: In function 'eeepc_rfkill_hotplug':
-> > > >> drivers/platform/x86/eeepc-laptop.c:581:3: error: implicit declaration of function 'pr_warning'; did you mean 'acpi_warning'? [-Werror=implicit-function-declaration]
-> > >       pr_warning("Unable to find port\n");
-> > >       ^~~~~~~~~~
-> > >       acpi_warning
-> > >    cc1: some warnings being treated as errors
-> > 
-> > [...]
-> > 
-> > These are false positives. These pr_warning() calls have already been
-> > removed in mainline via a pull request from printk.git.
-> thanks, we will check this to improve.
-> 
-> > 
-> > Best Regards.
-> > Petr
-> > 
-> > 
-> > tj/wq.git for-next branch is outdated.
-> > This branch is outdated. The 
-> Thanks for the info Petr, we will look into this to resolve the out of
-> dated base. In this case, do you have any recommended base to use?
+Hi everyone,
 
-Good question. These kind of problems should be solved in linux-next
-git tree.
+Recently, Ond=C5=99ej posted a patch fixing the polarity of VSYNC/HSYNC
+signals in the sun6i-csi driver [1].
 
-Well, I am not sure how often you see these false positives. I think
-that they happen only where there is some global change that affects
-many subsystems and is done in more stages.
+Allwinner documents use the terms VSYNC and HSYNC in their camera
+sensor interface hardware description, but based on the timing diagrams
+included, they actually mean VREF (or inverted VSYNC) and HREF instead:
+the polarity is reversed, and HSYNC is active only when valid data is
+being sent over the parallel bus.
 
-In this case, we removed most pr_warning() users in one patchset. Then
-we removed the remaining (new) users and the function definition
-in another patchset. It might be a corner case that does not need
-any changes on your side.
+Based on my limited experience, it seems camera sensors mostly use VSYNC
+and HREF, where VSYNC is defined to be a pulse that is sent after a full
+frame or field has been transmitted, and HREF is a level signal which is
+active when there is valid data during a horizontal line.
 
-Best Regards,
-Petr
-most 
+I'm guessing we (sunxi / Allwinner) are not the only platform to get it
+wrong. Is there a concrete definition of what VSYNC and HSYNC mean, and
+what active high vs active low correspond to?
+
+For SYNC signals, I would assume the pulse portion is the active part,
+so a signal such as the following would be considered active low.
+
+    ________      ____________
+            |    |
+            |    |
+            |____|  <- active low SYNC pulse
+
+
+Also, if HSYNC is used instead of HREF, there doesn't seem to be a way
+to specify how long the horizontal back porch is, i.e. how many clock
+cycles should the hardware skip before capturing data. Same goes for
+VSYNC instead of VREF.
+
+Does the hardware work because we got lucky that sensors use HREF,
+which means no horizontal back porch when HREF is considered an inverted
+HSYNC, and no vertical back porch because HREF is only asserted starting
+with the first valid line, instead of having preceding blanking lines?
+
+The device tree bindings only have hsync-active and vsync-active. VREF
+and HREF are only mentioned in passing in the header file [2], without
+describing the differences or how to specify which type of signal is
+used. I believe this deserves some clarification and improvement. This
+would help authors of new hardware drivers immensely.
+
+Any thoughts or comments on the matter?
+
+
+Regards
+ChenYu
+
+[1] https://lkml.org/lkml/2019/11/27/1816
+[2] https://elixir.bootlin.com/linux/latest/source/include/media/v4l2-media=
+bus.h#L27
