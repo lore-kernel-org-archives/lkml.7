@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6237EC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5AAC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 362422054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8F22084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413453;
-	bh=1mDTrOw4fA067XJ1Z8S423pPoOETpotNdsL5AjXaYng=;
+	s=default; t=1575413458;
+	bh=UxEp8ox6OzQg67AWkKUhgIDhv14VbLfTIqTETNkCDyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FLnHRTIILgYUR8EhA6Cb4dcCYyjDir1ymh3m6BLqH7GTk/Op+uiE4d+m0Qy1tcJyK
-	 4y5h/S9IlT36Bl2Q3Luih8rXPnhaHnVB1IB3vLMQwgDqUnxuRMARbBIAsrHfTBlBZq
-	 KVGUyzrVrwau9XTtUcxlBc+jDHdnMMkm48Gjor1o=
+	b=m6JesYqf64PlLJcmJ5ruBrA+dNSi/hfCNFyDZ3oOAPg0xrg1dziQsj5eJdRKcJKFZ
+	 5Yr551CHWi8us1JJgOVr56qWEeifwP4sbbuljmMIQ8x7pRNOI27a4Lv5JQ+QQjwNDp
+	 YoA0dGg9AujhpRFJfR4O0+94m5hCCG+2KwhE8eFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729238AbfLCWuw (ORCPT
+        id S1729814AbfLCWu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:50:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42592 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:50:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729555AbfLCWur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:50:47 -0500
+        id S1729594AbfLCWuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:50:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97B8D20848;
-        Tue,  3 Dec 2019 22:50:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F8A32054F;
+        Tue,  3 Dec 2019 22:50:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413447;
-        bh=1mDTrOw4fA067XJ1Z8S423pPoOETpotNdsL5AjXaYng=;
+        s=default; t=1575413454;
+        bh=UxEp8ox6OzQg67AWkKUhgIDhv14VbLfTIqTETNkCDyU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SpNhXbqf5ix5pcRrei6f6zwrXKTIhyzaGjegI8YFU6NpeI1ke4f8+mJq6b2AlFWda
-         uI0nGH+C2t/TQyaNbRcCiuzLHuos1K3LiGms31Kod27R4R9akT3ohL/Q381CLHOCWE
-         tdOC+xGUec0dXejB89igNXgA80fqc7l7mLUuJWGw=
+        b=mjEFN5Rqe6ezSQRiwre4KETt4a5uKtX12TjWbXbpn0OXgCyZPQRnECWYmThQZW2jh
+         4RvBVsP8f2Tw6bRmpDj+vajFbTcsepjFCy8Prlimp1a72B3fl9NIdqEIANaKcPxxLR
+         z4bmB2B7ZuherE4DZmSIbWCz8MamoSPOqVySNdVc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Ross Lagerwall <ross.lagerwall@citrix.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 091/321] mwifiex: debugfs: correct histogram spacing, formatting
-Date:   Tue,  3 Dec 2019 23:32:37 +0100
-Message-Id: <20191203223431.886039610@linuxfoundation.org>
+Subject: [PATCH 4.19 127/321] xen/pciback: Check dev_data before using it
+Date:   Tue,  3 Dec 2019 23:33:13 +0100
+Message-Id: <20191203223433.759938991@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,65 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
+From: Ross Lagerwall <ross.lagerwall@citrix.com>
 
-[ Upstream commit 4cb777c64e030778c569f605398d7604d8aabc0f ]
+[ Upstream commit 1669907e3d1abfa3f7586e2d55dbbc117b5adba2 ]
 
-Currently, snippets of this file look like:
+If pcistub_init_device fails, the release function will be called with
+dev_data set to NULL.  Check it before using it to avoid a NULL pointer
+dereference.
 
-rx rates (in Mbps): 0=1M   1=2M2=5.5M  3=11M   4=6M   5=9M  6=12M
-7=18M  8=24M  9=36M  10=48M  11=54M12-27=MCS0-15(BW20) 28-43=MCS0-15(BW40)
-44-53=MCS0-9(VHT:BW20)54-63=MCS0-9(VHT:BW40)64-73=MCS0-9(VHT:BW80)
-...
-noise_flr[--96dBm] = 22
-noise_flr[--95dBm] = 149
-noise_flr[--94dBm] = 9
-noise_flr[--93dBm] = 2
-
-We're missing some spaces, and we're adding a minus sign ('-') on values
-that are already negative signed integers.
-
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/debugfs.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ drivers/xen/xen-pciback/pci_stub.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/debugfs.c b/drivers/net/wireless/marvell/mwifiex/debugfs.c
-index cce70252fd96b..cbe4493b32664 100644
---- a/drivers/net/wireless/marvell/mwifiex/debugfs.c
-+++ b/drivers/net/wireless/marvell/mwifiex/debugfs.c
-@@ -273,15 +273,13 @@ mwifiex_histogram_read(struct file *file, char __user *ubuf,
- 		     "total samples = %d\n",
- 		     atomic_read(&phist_data->num_samples));
- 
--	p += sprintf(p, "rx rates (in Mbps): 0=1M   1=2M");
--	p += sprintf(p, "2=5.5M  3=11M   4=6M   5=9M  6=12M\n");
--	p += sprintf(p, "7=18M  8=24M  9=36M  10=48M  11=54M");
--	p += sprintf(p, "12-27=MCS0-15(BW20) 28-43=MCS0-15(BW40)\n");
-+	p += sprintf(p,
-+		     "rx rates (in Mbps): 0=1M   1=2M 2=5.5M  3=11M   4=6M   5=9M  6=12M\n"
-+		     "7=18M  8=24M  9=36M  10=48M  11=54M 12-27=MCS0-15(BW20) 28-43=MCS0-15(BW40)\n");
- 
- 	if (ISSUPP_11ACENABLED(priv->adapter->fw_cap_info)) {
--		p += sprintf(p, "44-53=MCS0-9(VHT:BW20)");
--		p += sprintf(p, "54-63=MCS0-9(VHT:BW40)");
--		p += sprintf(p, "64-73=MCS0-9(VHT:BW80)\n\n");
-+		p += sprintf(p,
-+			     "44-53=MCS0-9(VHT:BW20) 54-63=MCS0-9(VHT:BW40) 64-73=MCS0-9(VHT:BW80)\n\n");
- 	} else {
- 		p += sprintf(p, "\n");
- 	}
-@@ -310,7 +308,7 @@ mwifiex_histogram_read(struct file *file, char __user *ubuf,
- 	for (i = 0; i < MWIFIEX_MAX_NOISE_FLR; i++) {
- 		value = atomic_read(&phist_data->noise_flr[i]);
- 		if (value)
--			p += sprintf(p, "noise_flr[-%02ddBm] = %d\n",
-+			p += sprintf(p, "noise_flr[%02ddBm] = %d\n",
- 				(int)(i-128), value);
- 	}
- 	for (i = 0; i < MWIFIEX_MAX_SIG_STRENGTH; i++) {
+diff --git a/drivers/xen/xen-pciback/pci_stub.c b/drivers/xen/xen-pciback/pci_stub.c
+index 59661db144e51..097410a7cdb74 100644
+--- a/drivers/xen/xen-pciback/pci_stub.c
++++ b/drivers/xen/xen-pciback/pci_stub.c
+@@ -106,7 +106,8 @@ static void pcistub_device_release(struct kref *kref)
+ 	 * is called from "unbind" which takes a device_lock mutex.
+ 	 */
+ 	__pci_reset_function_locked(dev);
+-	if (pci_load_and_free_saved_state(dev, &dev_data->pci_saved_state))
++	if (dev_data &&
++	    pci_load_and_free_saved_state(dev, &dev_data->pci_saved_state))
+ 		dev_info(&dev->dev, "Could not reload PCI state\n");
+ 	else
+ 		pci_restore_state(dev);
 -- 
 2.20.1
 
