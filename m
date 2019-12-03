@@ -2,203 +2,124 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA93AC43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB94BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC00620640
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E6CF20640
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:33:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nCSNuOYA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbfLCJcQ (ORCPT
+        id S1726190AbfLCJdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 04:32:16 -0500
-Received: from mx2.suse.de ([195.135.220.15]:46220 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725773AbfLCJcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 04:32:16 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E96CBAF13;
-        Tue,  3 Dec 2019 09:32:13 +0000 (UTC)
-Subject: Re: [PATCH 1/6] dt-bindings: clock: add bindings for RTD1619 clocks
-To:     James Tai <james.tai@realtek.com>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-realtek-soc@lists.infradead.org,
-        cylee12 <cylee12@realtek.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-References: <20191203074513.9416-1-james.tai@realtek.com>
- <20191203074513.9416-2-james.tai@realtek.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <f069747b-7f10-f47c-684d-11138b8fd129@suse.de>
-Date:   Tue, 3 Dec 2019 10:32:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 3 Dec 2019 04:33:12 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:35204 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbfLCJdL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 04:33:11 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB39T0SS019198;
+        Tue, 3 Dec 2019 09:32:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2019-08-05;
+ bh=G8qpUvWbIVhcVzKpHu2CsxlCDVgrkg66RsvLNXqXNl8=;
+ b=nCSNuOYAh6ziBFF0IvuA1+h49z9QE5+f81FhUW+xvz5N615QMU+DQBVpxDaFhe+zD4+e
+ 0tkwBdBH4HGiSulWTnoHb4OGNUGkGV+B6gJ0pZ52noPl63qjkJTyAGRiyt9kPcloPmtn
+ resYoLRwvZpHy9uEpU1GqDxW9GG3C0vCGVf2AzkC2Mrq6xgATwxtBPGd698C9tkocwAG
+ IuAQC9Vb+aAvdeODDqTZsTW98AgTmvFKWqUStR6bkRN1YqWVipOh1hp/UuIxbKgVC01d
+ J9u0yLhc3w4hUVQb555MSFIkdw8bqSS60UTx+ZFt/t61CzwRLGKZ+REb673pDlQ5bl7t 5g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2wkgcq68cp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Dec 2019 09:32:54 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB39SvJJ021937;
+        Tue, 3 Dec 2019 09:32:53 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2wn4qpmbqb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Dec 2019 09:32:53 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xB39WpiG003982;
+        Tue, 3 Dec 2019 09:32:51 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 03 Dec 2019 01:32:50 -0800
+Date:   Tue, 3 Dec 2019 12:32:41 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Rong Chen <rong.a.chen@intel.com>
+Cc:     kbuild@lists.01.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
+        kbuild-all@lists.01.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [kbuild-all] Re: [PATCH next 2/3] debugfs: introduce
+ debugfs_create_single[,_data]
+Message-ID: <20191203092643.GD1787@kadam>
+References: <20191203083847.GC1787@kadam>
+ <06d63c3c-bab5-c19e-a51d-ac7c1ed0a80c@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191203074513.9416-2-james.tai@realtek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <06d63c3c-bab5-c19e-a51d-ac7c1ed0a80c@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9459 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912030077
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9459 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912030077
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James and Cheng-Yu,
-
-Am 03.12.19 um 08:45 schrieb James Tai:
-> From: cylee12 <cylee12@realtek.com>
-
-Please fix the author (git commit --amend --author="...") and use an
-appropriate git config setting (and communication to your team) to avoid
-this reoccurring for new commits - already pointed out to James.
-
-BTW I wonder why we have so many seemingly unrelated people in CC
-(Mediatek, RISC-V) that the patches and responses keep hanging in
-mailing list moderation?
-
+On Tue, Dec 03, 2019 at 05:02:54PM +0800, Rong Chen wrote:
 > 
-> Add devicetree binding for Realtek RTD1619 clocks.
 > 
-> Signed-off-by: Cheng-Yu Lee <cylee12@realtek.com>
-> Signed-off-by: James Tai <james.tai@realtek.com>
-> ---
->  include/dt-bindings/clock/rtk,clock-rtd1619.h | 88 +++++++++++++++++++
->  1 file changed, 88 insertions(+)
->  create mode 100644 include/dt-bindings/clock/rtk,clock-rtd1619.h
+> On 12/3/19 4:38 PM, Dan Carpenter wrote:
+> > [ How do I fetch 0day git branchs?
+> >    git fetch https://github.com/0day-ci/linux/commits/Kefeng-Wang/debugfs-introduce-debugfs_create_single-seq-_data/20191129-173440
+> >    doesn't work. - dan ]
 > 
-> diff --git a/include/dt-bindings/clock/rtk,clock-rtd1619.h b/include/dt-bindings/clock/rtk,clock-rtd1619.h
-> new file mode 100644
-> index 000000000000..497f9b914857
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/rtk,clock-rtd1619.h
+> Hi Dan,
+> 
+> I can fetch it by the following steps:
+> 
+> nfs@shao2-debian:~/linux$ git remote add 0day-linux-review
+> https://github.com/0day-ci/linux.git
+> nfs@shao2-debian:~/linux$ git fetch --no-tags 0day-linux-review
+> Kefeng-Wang/debugfs-introduce-debugfs_create_single-seq-_data/20191129-173440
+> 
+> remote: Enumerating objects: 25261, done.
+> remote: Counting objects: 100% (25261/25261), done.
+> remote: Total 33246 (delta 25260), reused 25260 (delta 25260), pack-reused
+> 7985
+> Receiving objects: 100% (33246/33246), 12.03 MiB | 1.05 MiB/s, done.
+> Resolving deltas: 100% (28148/28148), completed with 6149 local objects.
+> From https://github.com/0day-ci/linux
+> †* branch
+> Kefeng-Wang/debugfs-introduce-debugfs_create_single-seq-_data/20191129-173440
+> -> FETCH_HEAD
+> †* [new branch]
+> Kefeng-Wang/debugfs-introduce-debugfs_create_single-seq-_data/20191129-173440
+> -> 0day-linux-review/Kefeng-Wang/debugfs-introduce-debugfs_create_single-seq-_data/20191129-173440
+> 
 
-NAK for the filename. "rtk," is not a registered vendor prefix [1], so
-you cannot use it anywhere in bindings. Please use the registered prefix
-"realtek," and compare the other Realtek bindings headers that got
-accepted already. The order of SoC vs. name seems wrong.
+Tracking a remote is unworkably slow on my system.  It's way better to
+try fetch a specific branch if possible.
 
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/vendor-prefixes.yaml
+regards,
+dan carpenter
 
-> @@ -0,0 +1,88 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-
-Why restrict these trivial numbers to GPLv2? Please compare the .dtsi
-and .yaml files where this may get #include'd, and keep non-Linux OSes
-such as BSDs in mind for any DT bindings; it's supposed to be an
-OS-neutral interface contract that anyone can implement.
-
-> +#ifndef __DT_BINDINGS_RTK_CLOCK_RTD1619_H
-> +#define __DT_BINDINGS_RTK_CLOCK_RTD1619_H
-
-May need adjustments based on the filename, same for the #endif.
-
-> +
-> +#define CC_PLL_SCPU 0
-> +#define CC_PLL_BUS 2
-
-Please tab-indent the indices for readability.
-
-> +#define CC_CLK_SYS 3
-> +#define CC_CLK_SYS_SB2 4
-> +#define CC_PLL_DCSB 5
-> +#define CC_CLK_SYSH 6
-> +#define CC_PLL_DDSA 7
-> +#define CC_PLL_DDSB 8
-> +#define CC_PLL_GPU 9
-> +#define CC_CLK_GPU 10
-> +#define CC_PLL_VE1 11
-> +#define CC_PLL_VE2 12
-> +#define CC_CLK_VE1 13
-> +#define CC_CLK_VE2 14
-> +#define CC_CLK_VE3 15
-> +#define CC_CLK_VE2_BPU 16
-> +#define CC_PLL_DIF 17
-> +#define CC_PLL_PSAUD1A 18
-> +#define CC_PLL_PSAUD2A 19
-> +
-> +#define CC_CKE_MISC 33
-> +#define CC_CKE_PCIE0 34
-> +#define CC_CKE_GSPI 35
-> +#define CC_CKE_SDS 36
-> +#define CC_CKE_HDMI 37
-> +#define CC_CKE_LSADC 38
-> +#define CC_CKE_SE 39
-> +#define CC_CKE_CP 40
-> +#define CC_CKE_MD 41
-> +#define CC_CKE_TP 42
-> +#define CC_CKE_RSA 43
-> +#define CC_CKE_NF 44
-> +#define CC_CKE_EMMC 45
-> +#define CC_CKE_SD 46
-> +#define CC_CKE_SDIO_IP 47
-> +#define CC_CKE_MIPI 48
-> +#define CC_CKE_EMMC_IP 49
-> +#define CC_CKE_SDIO 50
-> +#define CC_CKE_SD_IP 51
-> +#define CC_CKE_CABLERX 52
-> +#define CC_CKE_TPB 53
-> +#define CC_CKE_SC1 54
-> +#define CC_CKE_I2C3 55
-> +#define CC_CKE_JPEG 56
-> +#define CC_CKE_SC0 57
-> +#define CC_CKE_HDMIRX 58
-> +#define CC_CKE_HSE 59
-> +#define CC_CKE_UR2 60
-> +#define CC_CKE_UR1 61
-> +#define CC_CKE_FAN 62
-> +#define CC_CKE_SATA_WRAP_SYS 63
-> +#define CC_CKE_SATA_WRAP_SYSH 64
-> +#define CC_CKE_SATA_MAC_SYSH 65
-> +#define CC_CKE_R2RDSC 66
-> +#define CC_CKE_PCIE1 67
-> +#define CC_CKE_I2C4 68
-> +#define CC_CKE_I2C5 69
-> +#define CC_CKE_EDP 70
-> +#define CC_CKE_TSIO_TRX 71
-> +#define CC_CKE_TVE 72
-> +#define CC_CKE_VO 73
-> +
-> +#define CC_CLK_MAX 74
-> +
-> +
-> +#define IC_CKE_CEC0 2
-> +#define IC_CKE_CBUSRX_SYS 3
-> +#define IC_CKE_CBUSTX_SYS 4
-> +#define IC_CKE_CBUS_SYS 5
-> +#define IC_CKE_CBUS_OSC 6
-> +#define IC_CKE_IR 7
-> +#define IC_CKE_UR0 8
-> +#define IC_CKE_I2C0 9
-> +#define IC_CKE_I2C1 10
-> +#define IC_CKE_ETN_250M 11
-> +#define IC_CKE_ETN_SYS 12
-> +#define IC_CKE_USB_DRD 13
-> +#define IC_CKE_USB_HOST 14
-> +#define IC_CKE_USB_U3_HOST 15
-> +#define IC_CKE_USB 16
-> +#define IC_CLK_MAX 17
-> +
-> +#endif /* __DT_BINDINGS_RTK_CLOCK_RTD1619_H */
-> +
-
-Trailing empty line.
-
-Regards,
-Andreas
-
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N√ºrnberg, Germany
-GF: Felix Imend√∂rffer
-HRB 36809 (AG N√ºrnberg)
