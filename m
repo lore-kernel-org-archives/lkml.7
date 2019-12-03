@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58163C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E780C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F6E620684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D6CE20684
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:13:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414776;
-	bh=Bl5HF763uz37dvHlnO+fYfAMU1dfaMnL3BK6UUDKfgE=;
+	s=default; t=1575414780;
+	bh=MP99nh/TM0pE6NtJsYqybo9a6kDwZHzSSkrdsojSgnY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QskVU2gMJMLPrmYyJeuHyHC0bV7Vt0Jhc0CFn/Z3uSyAE/CG7Dzd5TCswrLmskUaY
-	 CeowFBs4hHU2FEUAOeDDF/2pvuhuilLv2UvuHwejCMib8NfrdFrABgRjBO9cO6j6HZ
-	 JJnEvIRbLAlhOg99cdc8yPa81v6IPh2LmKISaMgs=
+	b=pniGFuW1zZhCCr4Bwnkr6/InPgTtrwdOH3AYbw32SyA0AiP6cUq80zuuIoVWbN7f8
+	 N0G3ZmY+KLBG357saDZZuq33L8AJKC2BvfZmJhhNPNtjqKjIe2V4ZOrhAO9v8+q7ry
+	 S1EcmDxNWLraJp6QPhSH0JEb2KILea/k0iHji5w4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbfLCWjL (ORCPT
+        id S1728129AbfLCWjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:39:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48910 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:39:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727798AbfLCWjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:39:08 -0500
+        id S1728117AbfLCWjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:39:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB87A207DD;
-        Tue,  3 Dec 2019 22:39:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19EDD20684;
+        Tue,  3 Dec 2019 22:38:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575412748;
-        bh=Bl5HF763uz37dvHlnO+fYfAMU1dfaMnL3BK6UUDKfgE=;
+        s=default; t=1575412740;
+        bh=MP99nh/TM0pE6NtJsYqybo9a6kDwZHzSSkrdsojSgnY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DTkOKbPo5XBEwISpnh9doLBQMqMyhrcliqrzrP0BkoczzqOmf/4OUk/ElKbecnPpK
-         LrtjHXIL5dWsS2b8h6OoTXT6Npw+lDptvuT10oDtqvHSvsTmma/34meJvEwwyjWc/V
-         07co0CfcKl4HesCZQbIUlg2vqHb9bOuWU/VnfQoY=
+        b=0u0p0iLLjAf5EWRIiyeG1XlzoqYLInBmVNRFQ65BO3Lmg8wH2osjAbTxmzIjBMnzE
+         RZNIjG/UrOnIkMHuE0ClCzzEF0n0obzCBZe6EcJpalAKLZbroc46nuEEmH6HzK5g+B
+         EekK0lQB2MCytw5L4tu1tgyZcK6yoyK4gxJ18D/Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Usyskin <alexander.usyskin@intel.com>,
-        Tomas Winkler <tomas.winkler@intel.com>
-Subject: [PATCH 5.4 12/46] mei: bus: prefix device names on bus with the bus name
-Date:   Tue,  3 Dec 2019 23:35:32 +0100
-Message-Id: <20191203212727.053014834@linuxfoundation.org>
+        stable@vger.kernel.org, Candle Sun <candle.sun@unisoc.com>,
+        Nianfu Bai <nianfu.bai@unisoc.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Siarhei Vishniakou <svv@google.com>
+Subject: [PATCH 5.4 44/46] HID: core: check whether Usage Page item is after Usage ID items
+Date:   Tue,  3 Dec 2019 23:36:04 +0100
+Message-Id: <20191203212806.707201166@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203212705.175425505@linuxfoundation.org>
 References: <20191203212705.175425505@linuxfoundation.org>
@@ -60,51 +62,173 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Usyskin <alexander.usyskin@intel.com>
+From: Candle Sun <candle.sun@unisoc.com>
 
-commit 7a2b9e6ec84588b0be65cc0ae45a65bac431496b upstream.
+commit 1cb0d2aee26335d0bccf29100c7bed00ebece851 upstream.
 
-Add parent device name to the name of devices on bus to avoid
-device names collisions for same client UUID available
-from different MEI heads. Namely this prevents sysfs collision under
-/sys/bus/mei/device/
+Upstream commit 58e75155009c ("HID: core: move Usage Page concatenation
+to Main item") adds support for Usage Page item after Usage ID items
+(such as keyboards manufactured by Primax).
 
-In the device part leave just UUID other parameters that are
-required for device matching are not required here and are
-just bloating the name.
+Usage Page concatenation in Main item works well for following report
+descriptor patterns:
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-Link: https://lore.kernel.org/r/20191105150514.14010-1-tomas.winkler@intel.com
+    USAGE_PAGE (Keyboard)                   05 07
+    USAGE_MINIMUM (Keyboard LeftControl)    19 E0
+    USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
+    LOGICAL_MINIMUM (0)                     15 00
+    LOGICAL_MAXIMUM (1)                     25 01
+    REPORT_SIZE (1)                         75 01
+    REPORT_COUNT (8)                        95 08
+    INPUT (Data,Var,Abs)                    81 02
+
+-------------
+
+    USAGE_MINIMUM (Keyboard LeftControl)    19 E0
+    USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
+    LOGICAL_MINIMUM (0)                     15 00
+    LOGICAL_MAXIMUM (1)                     25 01
+    REPORT_SIZE (1)                         75 01
+    REPORT_COUNT (8)                        95 08
+    USAGE_PAGE (Keyboard)                   05 07
+    INPUT (Data,Var,Abs)                    81 02
+
+But it makes the parser act wrong for the following report
+descriptor pattern(such as some Gamepads):
+
+    USAGE_PAGE (Button)                     05 09
+    USAGE (Button 1)                        09 01
+    USAGE (Button 2)                        09 02
+    USAGE (Button 4)                        09 04
+    USAGE (Button 5)                        09 05
+    USAGE (Button 7)                        09 07
+    USAGE (Button 8)                        09 08
+    USAGE (Button 14)                       09 0E
+    USAGE (Button 15)                       09 0F
+    USAGE (Button 13)                       09 0D
+    USAGE_PAGE (Consumer Devices)           05 0C
+    USAGE (Back)                            0a 24 02
+    USAGE (HomePage)                        0a 23 02
+    LOGICAL_MINIMUM (0)                     15 00
+    LOGICAL_MAXIMUM (1)                     25 01
+    REPORT_SIZE (1)                         75 01
+    REPORT_COUNT (11)                       95 0B
+    INPUT (Data,Var,Abs)                    81 02
+
+With Usage Page concatenation in Main item, parser recognizes all the
+11 Usages as consumer keys, it is not the HID device's real intention.
+
+This patch checks whether Usage Page is really defined after Usage ID
+items by comparing usage page using status.
+
+Usage Page concatenation on currently defined Usage Page will always
+do in local parsing when Usage ID items encountered.
+
+When Main item is parsing, concatenation will do again with last
+defined Usage Page if this page has not been used in the previous
+usages concatenation.
+
+Signed-off-by: Candle Sun <candle.sun@unisoc.com>
+Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
+Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Cc: Siarhei Vishniakou <svv@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/mei/bus.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/hid/hid-core.c |   51 +++++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 45 insertions(+), 6 deletions(-)
 
---- a/drivers/misc/mei/bus.c
-+++ b/drivers/misc/mei/bus.c
-@@ -873,15 +873,16 @@ static const struct device_type mei_cl_d
- 
- /**
-  * mei_cl_bus_set_name - set device name for me client device
-+ *  <controller>-<client device>
-+ *  Example: 0000:00:16.0-55213584-9a29-4916-badf-0fb7ed682aeb
-  *
-  * @cldev: me client device
-  */
- static inline void mei_cl_bus_set_name(struct mei_cl_device *cldev)
- {
--	dev_set_name(&cldev->dev, "mei:%s:%pUl:%02X",
--		     cldev->name,
--		     mei_me_cl_uuid(cldev->me_cl),
--		     mei_me_cl_ver(cldev->me_cl));
-+	dev_set_name(&cldev->dev, "%s-%pUl",
-+		     dev_name(cldev->bus->dev),
-+		     mei_me_cl_uuid(cldev->me_cl));
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -212,6 +212,18 @@ static unsigned hid_lookup_collection(st
  }
  
- /**
+ /*
++ * Concatenate usage which defines 16 bits or less with the
++ * currently defined usage page to form a 32 bit usage
++ */
++
++static void complete_usage(struct hid_parser *parser, unsigned int index)
++{
++	parser->local.usage[index] &= 0xFFFF;
++	parser->local.usage[index] |=
++		(parser->global.usage_page & 0xFFFF) << 16;
++}
++
++/*
+  * Add a usage to the temporary parser table.
+  */
+ 
+@@ -222,6 +234,14 @@ static int hid_add_usage(struct hid_pars
+ 		return -1;
+ 	}
+ 	parser->local.usage[parser->local.usage_index] = usage;
++
++	/*
++	 * If Usage item only includes usage id, concatenate it with
++	 * currently defined usage page
++	 */
++	if (size <= 2)
++		complete_usage(parser, parser->local.usage_index);
++
+ 	parser->local.usage_size[parser->local.usage_index] = size;
+ 	parser->local.collection_index[parser->local.usage_index] =
+ 		parser->collection_stack_ptr ?
+@@ -543,13 +563,32 @@ static int hid_parser_local(struct hid_p
+  * usage value."
+  */
+ 
+-static void hid_concatenate_usage_page(struct hid_parser *parser)
++static void hid_concatenate_last_usage_page(struct hid_parser *parser)
+ {
+ 	int i;
++	unsigned int usage_page;
++	unsigned int current_page;
++
++	if (!parser->local.usage_index)
++		return;
+ 
+-	for (i = 0; i < parser->local.usage_index; i++)
+-		if (parser->local.usage_size[i] <= 2)
+-			parser->local.usage[i] += parser->global.usage_page << 16;
++	usage_page = parser->global.usage_page;
++
++	/*
++	 * Concatenate usage page again only if last declared Usage Page
++	 * has not been already used in previous usages concatenation
++	 */
++	for (i = parser->local.usage_index - 1; i >= 0; i--) {
++		if (parser->local.usage_size[i] > 2)
++			/* Ignore extended usages */
++			continue;
++
++		current_page = parser->local.usage[i] >> 16;
++		if (current_page == usage_page)
++			break;
++
++		complete_usage(parser, i);
++	}
+ }
+ 
+ /*
+@@ -561,7 +600,7 @@ static int hid_parser_main(struct hid_pa
+ 	__u32 data;
+ 	int ret;
+ 
+-	hid_concatenate_usage_page(parser);
++	hid_concatenate_last_usage_page(parser);
+ 
+ 	data = item_udata(item);
+ 
+@@ -772,7 +811,7 @@ static int hid_scan_main(struct hid_pars
+ 	__u32 data;
+ 	int i;
+ 
+-	hid_concatenate_usage_page(parser);
++	hid_concatenate_last_usage_page(parser);
+ 
+ 	data = item_udata(item);
+ 
 
 
