@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FDBC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 978F6C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9AC421555
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6676D20865
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413593;
-	bh=nlJQSV6D7K30L7axStfXLfJKfWWZC5V9NsCTqszuzXo=;
+	s=default; t=1575413595;
+	bh=89gxeJGzthezn63gW8QWdpmf0myFbNkTNKcj5J4kHOA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qONnKQLGW7QYGK28Jq+1GwAR71ZMuSPsW9aUrDePscHnhY7ActJQx/1HRfbFRzNWE
-	 xhsqtXTC5LvencOWNfUQthh9IU7cXk/l7R1sOUnw/Lvf5gbt2voXOH9p9/mpTqCw51
-	 zMXbgu3VetXTF6lgHSvOxik/BAYQ5qfx9BXdIiL8=
+	b=ytpmer+oz8l1ykIKrN2gMosc1PHbiKMwTlLHshAqg/d2OQuDf0LvFK5d8Adf7HUg+
+	 xfydIU+pOnZuutxV1PY1QzRa5qYeTsBzsKWKfcx/45RXLy5aaWvIre8iBx1ac9wCXO
+	 2ymO2bDQTnUlcLikofDgBqt6Vm3mr8U7tJyH0HOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730120AbfLCWxM (ORCPT
+        id S1730125AbfLCWxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:53:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46156 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:53:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729974AbfLCWxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:53:06 -0500
+        id S1730116AbfLCWxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:53:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21DE920863;
-        Tue,  3 Dec 2019 22:53:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C2BC21555;
+        Tue,  3 Dec 2019 22:53:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413585;
-        bh=nlJQSV6D7K30L7axStfXLfJKfWWZC5V9NsCTqszuzXo=;
+        s=default; t=1575413590;
+        bh=89gxeJGzthezn63gW8QWdpmf0myFbNkTNKcj5J4kHOA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JJKp6mgCZ1JG2AQqucbuhj862XbyIS2ArdyEaH727+fkRZQuPNNxhNcrIQGuypNph
-         hDfuYaXw/mCaRe1tRYgEbB7xjjv9AbeI7LazhzI40O255k9+LimG6KkIB+p3dAwpXb
-         5EA8+w2X7Gr31teDWzjmhPcXnvg+rNYa4SJNk7Lc=
+        b=trsbNULwr9UN1LbWQWhpnVF/6jos2j/y+ELXL2NVW9ZimVdZFMfQTSJHqhoQWv0Z/
+         PoLcoxyi4Bt2t9HI1jFHZM3pkPh8SbmzenTWYhWLTF0KGt+lv94JXDg74XdH/DoC+E
+         +3N20vz0JwmKsz0bjemEacgxLuEIxVhN3M5hQK6w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiuyang Sun <sunqiuyang@huawei.com>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Richard Weinberger <richard@nod.at>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 185/321] f2fs: fix block address for __check_sit_bitmap
-Date:   Tue,  3 Dec 2019 23:34:11 +0100
-Message-Id: <20191203223436.747401927@linuxfoundation.org>
+Subject: [PATCH 4.19 187/321] um: Include sys/uio.h to have writev()
+Date:   Tue,  3 Dec 2019 23:34:13 +0100
+Message-Id: <20191203223436.849266168@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,34 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiuyang Sun <sunqiuyang@huawei.com>
+From: Richard Weinberger <richard@nod.at>
 
-[ Upstream commit 9249dded7b5cb539a8c8698b25d08a3c15261470 ]
+[ Upstream commit 0053102a869f1b909904b1b85ac282e2744deaab ]
 
-Should use lstart (logical start address) instead of start (in dev) here.
-This fixes a bug in multi-device scenarios.
+sys/uio.h gives us writev(), otherwise the build might fail on
+some systems.
 
-Signed-off-by: Qiuyang Sun <sunqiuyang@huawei.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: 49da7e64f33e ("High Performance UML Vector Network Driver")
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/segment.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/um/drivers/vector_user.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 43a07514c3574..a807a8d5e38f0 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -1103,7 +1103,7 @@ submit:
- 		list_move_tail(&dc->list, wait_list);
+diff --git a/arch/um/drivers/vector_user.c b/arch/um/drivers/vector_user.c
+index 4d6a78e31089f..00c4c2735a5f7 100644
+--- a/arch/um/drivers/vector_user.c
++++ b/arch/um/drivers/vector_user.c
+@@ -30,6 +30,7 @@
+ #include <stdlib.h>
+ #include <os.h>
+ #include <um_malloc.h>
++#include <sys/uio.h>
+ #include "vector_user.h"
  
- 		/* sanity check on discard range */
--		__check_sit_bitmap(sbi, start, start + len);
-+		__check_sit_bitmap(sbi, lstart, lstart + len);
- 
- 		bio->bi_private = dc;
- 		bio->bi_end_io = f2fs_submit_discard_endio;
+ #define ID_GRE 0
 -- 
 2.20.1
 
