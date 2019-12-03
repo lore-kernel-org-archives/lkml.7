@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C66C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F21BEC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C643420656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBB6020656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:06:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414370;
-	bh=MqCGkEaFKEvYpnpR5yjcDLhn3RcaqfJeMd3Ts7sMgNM=;
+	s=default; t=1575414373;
+	bh=nqrDeAiqwjw67y0i2EHRlzpeX2mJIKdZBClni9COesA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ezvf/2JbPody12T1wWoZX28dFbh4DAsO8GmHUELJ92V22WXKervdlr1UikinGhzQL
-	 nFgu6+3mPBeh3Sus8DZvgxcR8h2cJIJFFOlpEVDEyep269/bpZd+92pW0lOID9hnvg
-	 Zt6EtYxMMJnD/7fRrEdh3Iq+d6Y8MzeeckoyF0Bo=
+	b=AiH+S7Nm8nit1c7h3GN1VpJE/weo43L93+eJTuZ5MTs2XV0JehEeX8TGpiaSiQ/9W
+	 owVgBwLMsh04fm9QOnTRav/hvRsX/GAV7xsEhb/Pzk0cRqOhtJIL7c4IEj27uqOa7M
+	 xYx4nyHjOshITJLPiYBs8WpM/2DzdJpGdWE1GxVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729567AbfLCWtQ (ORCPT
+        id S1729554AbfLCWtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:49:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40152 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:49:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729559AbfLCWtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:49:13 -0500
+        id S1729547AbfLCWtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:49:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55A8220684;
-        Tue,  3 Dec 2019 22:49:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 955CE20684;
+        Tue,  3 Dec 2019 22:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413352;
-        bh=MqCGkEaFKEvYpnpR5yjcDLhn3RcaqfJeMd3Ts7sMgNM=;
+        s=default; t=1575413347;
+        bh=nqrDeAiqwjw67y0i2EHRlzpeX2mJIKdZBClni9COesA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HxF9BIy//Iq/yRrjqSJg9rilW0keTxlqt28wVaC9z7g69Bfl9LD1gAgqZCz0DjjTb
-         Wd/GKkPpVxTZ9n6SG1nBy1NkosE9QB/6rdoO9cIUtJ1ZjRCDXW6PWAXCElTHLqV0rO
-         KvSIgEDLjJDIUnNw6Z1pTV6zQF/CZv3EMYF0lufA=
+        b=QpQxCeoY2nqdvylUr7jVZe7sv4lcBYP0TgW0ETc1iEZ9AuHu2x70e7CDQCcmkxovP
+         /5qlhv20SeHFbvphiS7tuS2iVgaWhY4QvDs5jJG/vz4pqSzNWuW1X2rRWUa/0WBGk4
+         JZrLLFuYlw/0Ik5xCbM44IFyNa/Z9M+ed3gYDI4k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shenghui Wang <shhuiw@foxmail.com>,
-        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 096/321] bcache: do not mark writeback_running too early
-Date:   Tue,  3 Dec 2019 23:32:42 +0100
-Message-Id: <20191203223432.153600792@linuxfoundation.org>
+Subject: [PATCH 4.19 094/321] rtl818x: fix potential use after free
+Date:   Tue,  3 Dec 2019 23:32:40 +0100
+Message-Id: <20191203223432.051347388@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -60,93 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shenghui Wang <shhuiw@foxmail.com>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit 79b791466e525c98f6aeee9acf5726e7b27f4231 ]
+[ Upstream commit afbb1947db94eacc5a13302eee88a9772fb78935 ]
 
-A fresh backing device is not attached to any cache_set, and
-has no writeback kthread created until first attached to some
-cache_set.
+entry is released via usb_put_urb just after calling usb_submit_urb.
+However, entry is used if the submission fails, resulting in a use after
+free bug. The patch fixes this.
 
-But bch_cached_dev_writeback_init run
-"
-	dc->writeback_running		= true;
-	WARN_ON(test_and_clear_bit(BCACHE_DEV_WB_RUNNING,
-			&dc->disk.flags));
-"
-for any newly formatted backing devices.
-
-For a fresh standalone backing device, we can get something like
-following even if no writeback kthread created:
-------------------------
-/sys/block/bcache0/bcache# cat writeback_running
-1
-/sys/block/bcache0/bcache# cat writeback_rate_debug
-rate:		512.0k/sec
-dirty:		0.0k
-target:		0.0k
-proportional:	0.0k
-integral:	0.0k
-change:		0.0k/sec
-next io:	-15427384ms
-
-The none ZERO fields are misleading as no alive writeback kthread yet.
-
-Set dc->writeback_running false as no writeback thread created in
-bch_cached_dev_writeback_init().
-
-We have writeback thread created and woken up in bch_cached_dev_writeback
-_start(). Set dc->writeback_running true before bch_writeback_queue()
-called, as a writeback thread will check if dc->writeback_running is true
-before writing back dirty data, and hung if false detected.
-
-After the change, we can get the following output for a fresh standalone
-backing device:
------------------------
-/sys/block/bcache0/bcache$ cat writeback_running
-0
-/sys/block/bcache0/bcache# cat writeback_rate_debug
-rate:		0.0k/sec
-dirty:		0.0k
-target:		0.0k
-proportional:	0.0k
-integral:	0.0k
-change:		0.0k/sec
-next io:	0ms
-
-v1 -> v2:
-  Set dc->writeback_running before bch_writeback_queue() called,
-
-Signed-off-by: Shenghui Wang <shhuiw@foxmail.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+ACKed-by: Larry Finger <Larry.Finger@lwfinger.net>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/writeback.c | 3 ++-
+ drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/md/bcache/writeback.c b/drivers/md/bcache/writeback.c
-index ba5395fd386d5..b5fc3c6c7178e 100644
---- a/drivers/md/bcache/writeback.c
-+++ b/drivers/md/bcache/writeback.c
-@@ -781,7 +781,7 @@ void bch_cached_dev_writeback_init(struct cached_dev *dc)
- 	bch_keybuf_init(&dc->writeback_keys);
- 
- 	dc->writeback_metadata		= true;
--	dc->writeback_running		= true;
-+	dc->writeback_running		= false;
- 	dc->writeback_percent		= 10;
- 	dc->writeback_delay		= 30;
- 	atomic_long_set(&dc->writeback_rate.rate, 1024);
-@@ -810,6 +810,7 @@ int bch_cached_dev_writeback_start(struct cached_dev *dc)
- 		destroy_workqueue(dc->writeback_write_wq);
- 		return PTR_ERR(dc->writeback_thread);
+diff --git a/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c b/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c
+index 9a1d15b3ce453..518caaaf8a987 100644
+--- a/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c
++++ b/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c
+@@ -444,12 +444,13 @@ static int rtl8187_init_urbs(struct ieee80211_hw *dev)
+ 		skb_queue_tail(&priv->rx_queue, skb);
+ 		usb_anchor_urb(entry, &priv->anchored);
+ 		ret = usb_submit_urb(entry, GFP_KERNEL);
+-		usb_put_urb(entry);
+ 		if (ret) {
+ 			skb_unlink(skb, &priv->rx_queue);
+ 			usb_unanchor_urb(entry);
++			usb_put_urb(entry);
+ 			goto err;
+ 		}
++		usb_put_urb(entry);
  	}
-+	dc->writeback_running = true;
+ 	return ret;
  
- 	WARN_ON(test_and_set_bit(BCACHE_DEV_WB_RUNNING, &dc->disk.flags));
- 	schedule_delayed_work(&dc->writeback_rate_update,
 -- 
 2.20.1
 
