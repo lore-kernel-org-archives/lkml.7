@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFE1C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC63C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E90A20803
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC23420863
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:46:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413180;
-	bh=/vaTvR14aracHKWxFI1nwBvHEUr4TWkn1zIqaBp2qOk=;
+	s=default; t=1575413182;
+	bh=J4IGNW/9vAhjBmCzGthwBreJTfmm0otLMjSIxpqY4gg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KXcuarjodYLBgWJAY5Uj9gHWJgGL4HrSkWPr3wHHWnDg1hxSvuMUoRAOietIE20NN
-	 IzXtjWGxVKU08fgrysQBJcd7MzDyqvdqpn+PvdWcXDNlIEF/mmB/j0Oft/8lS6z+jc
-	 J9RtaoMEY+jC4zfPY7jQByGSdSfMIl+VeTSzZBuk=
+	b=KlusX952plNApkbOxPKuvLLpAUskszgyXQ/HrOjOR8R7jP84NBrs/ENxImjF4S3Z9
+	 zrmje72oya4sE2HBNh6BrjkdEu0b1fHh4nwZhLqTRW6azXsMZOrzNdu8fTjkpgFIrV
+	 eZLQiZy6ll66PPXvvqagHaYx4mo2dcjmYIntfhyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729170AbfLCWqT (ORCPT
+        id S1728923AbfLCWqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:46:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35502 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:46:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729161AbfLCWqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:46:10 -0500
+        id S1728530AbfLCWqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:46:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA02A20656;
-        Tue,  3 Dec 2019 22:46:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38A5E206DF;
+        Tue,  3 Dec 2019 22:46:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413170;
-        bh=/vaTvR14aracHKWxFI1nwBvHEUr4TWkn1zIqaBp2qOk=;
+        s=default; t=1575413172;
+        bh=J4IGNW/9vAhjBmCzGthwBreJTfmm0otLMjSIxpqY4gg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jlTLm3wEFf37C6x/tO3OuDXzI+vye9ugJpII41KmkzI0DOS/Y/y0O1c/FaJsfuGxF
-         4eH2LjNLlH0XTGV/H6Drbztb/KjXyHSapLao8j+o0RSm7OQJ/7kv38L3pTUe78QDf3
-         1Q0UyOTUawILFsn9whpvYlok5SIdmUxqGgQo8U+Y=
+        b=CDlMGgdB8KAh3PZN0ObWO4UUCf17bHxVyRfcjaatOr5J6liM++7enymWPVcGHjqny
+         7a+KuTDLfIL/cK2rc5WVXIwxwkbEfMRtry+sBZuzNyV62eUvMSXYdq5Tw9L3p1M25m
+         eyEK7ksOVHidpul4rZ7S3WnaSgrAcH6GyrpYBKUA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Yan <tom.ty89@gmail.com>,
-        =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org,
+        Jeroen Hofstee <jhofstee@victronenergy.com>,
+        Stephane Grosjean <s.grosjean@peak-system.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 025/321] bridge: ebtables: dont crash when using dnat target in output chains
-Date:   Tue,  3 Dec 2019 23:31:31 +0100
-Message-Id: <20191203223428.428836835@linuxfoundation.org>
+Subject: [PATCH 4.19 026/321] can: peak_usb: report bus recovery as well
+Date:   Tue,  3 Dec 2019 23:31:32 +0100
+Message-Id: <20191203223428.480056924@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -62,61 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Jeroen Hofstee <jhofstee@victronenergy.com>
 
-[ Upstream commit b23c0742c2ce7e33ed79d10e451f70fdb5ca85d1 ]
+[ Upstream commit 128a1b87d3ceb2ba449d5aadb222fe22395adeb0 ]
 
-xt_in() returns NULL in the output hook, skip the pkt_type change for
-that case, redirection only makes sense in broute/prerouting hooks.
+While the state changes are reported when the error counters increase
+and decrease, there is no event when the bus recovers and the error
+counters decrease again. So add those as well.
 
-Reported-by: Tom Yan <tom.ty89@gmail.com>
-Cc: Linus Lüssing <linus.luessing@c0d3.blue>
-Fixes: cf3cb246e277d ("bridge: ebtables: fix reception of frames DNAT-ed to bridge device/port")
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Change the state going downward to be ERROR_PASSIVE -> ERROR_WARNING ->
+ERROR_ACTIVE instead of directly to ERROR_ACTIVE again.
+
+Signed-off-by: Jeroen Hofstee <jhofstee@victronenergy.com>
+Cc: Stephane Grosjean <s.grosjean@peak-system.com>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bridge/netfilter/ebt_dnat.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ drivers/net/can/usb/peak_usb/pcan_usb.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/net/bridge/netfilter/ebt_dnat.c b/net/bridge/netfilter/ebt_dnat.c
-index dfc86a0199dab..1d8c834d90189 100644
---- a/net/bridge/netfilter/ebt_dnat.c
-+++ b/net/bridge/netfilter/ebt_dnat.c
-@@ -19,7 +19,6 @@ static unsigned int
- ebt_dnat_tg(struct sk_buff *skb, const struct xt_action_param *par)
- {
- 	const struct ebt_nat_info *info = par->targinfo;
--	struct net_device *dev;
+diff --git a/drivers/net/can/usb/peak_usb/pcan_usb.c b/drivers/net/can/usb/peak_usb/pcan_usb.c
+index 61f33c2fb1cd7..215cd74800df4 100644
+--- a/drivers/net/can/usb/peak_usb/pcan_usb.c
++++ b/drivers/net/can/usb/peak_usb/pcan_usb.c
+@@ -444,8 +444,8 @@ static int pcan_usb_decode_error(struct pcan_usb_msg_context *mc, u8 n,
+ 		}
+ 		if ((n & PCAN_USB_ERROR_BUS_LIGHT) == 0) {
+ 			/* no error (back to active state) */
+-			mc->pdev->dev.can.state = CAN_STATE_ERROR_ACTIVE;
+-			return 0;
++			new_state = CAN_STATE_ERROR_ACTIVE;
++			break;
+ 		}
+ 		break;
  
- 	if (!skb_make_writable(skb, 0))
- 		return EBT_DROP;
-@@ -32,10 +31,22 @@ ebt_dnat_tg(struct sk_buff *skb, const struct xt_action_param *par)
- 		else
- 			skb->pkt_type = PACKET_MULTICAST;
- 	} else {
--		if (xt_hooknum(par) != NF_BR_BROUTING)
--			dev = br_port_get_rcu(xt_in(par))->br->dev;
--		else
-+		const struct net_device *dev;
-+
-+		switch (xt_hooknum(par)) {
-+		case NF_BR_BROUTING:
- 			dev = xt_in(par);
-+			break;
-+		case NF_BR_PRE_ROUTING:
-+			dev = br_port_get_rcu(xt_in(par))->br->dev;
-+			break;
-+		default:
-+			dev = NULL;
-+			break;
-+		}
-+
-+		if (!dev) /* NF_BR_LOCAL_OUT */
-+			return info->target;
+@@ -468,9 +468,9 @@ static int pcan_usb_decode_error(struct pcan_usb_msg_context *mc, u8 n,
+ 		}
  
- 		if (ether_addr_equal(info->mac, dev->dev_addr))
- 			skb->pkt_type = PACKET_HOST;
+ 		if ((n & PCAN_USB_ERROR_BUS_HEAVY) == 0) {
+-			/* no error (back to active state) */
+-			mc->pdev->dev.can.state = CAN_STATE_ERROR_ACTIVE;
+-			return 0;
++			/* no error (back to warning state) */
++			new_state = CAN_STATE_ERROR_WARNING;
++			break;
+ 		}
+ 		break;
+ 
+@@ -509,6 +509,11 @@ static int pcan_usb_decode_error(struct pcan_usb_msg_context *mc, u8 n,
+ 		mc->pdev->dev.can.can_stats.error_warning++;
+ 		break;
+ 
++	case CAN_STATE_ERROR_ACTIVE:
++		cf->can_id |= CAN_ERR_CRTL;
++		cf->data[1] = CAN_ERR_CRTL_ACTIVE;
++		break;
++
+ 	default:
+ 		/* CAN_STATE_MAX (trick to handle other errors) */
+ 		cf->can_id |= CAN_ERR_CRTL;
 -- 
 2.20.1
 
