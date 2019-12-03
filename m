@@ -2,163 +2,117 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB08C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22790C43215
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61CDE206EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:50:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W+ZWlwnw"
+	by mail.kernel.org (Postfix) with ESMTP id 038F42068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 16:52:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbfLCQuM (ORCPT
+        id S1727090AbfLCQwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 11:50:12 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:33393 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbfLCQuL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 11:50:11 -0500
-Received: by mail-qk1-f193.google.com with SMTP id c124so4133252qkg.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 08:50:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=a9/PBomxUuzf05dVa0qKQjlWzeKSr/09qta+lJxPwCo=;
-        b=W+ZWlwnwP8+cRP6PtLMf9H9SyirlbdAZ6JnCoz9a4ikMgXcfKrMmOP6g0nedHY+NHS
-         hD6BM99v4GDrfxxsEUDE2K5Z7yDS883J3EzLLoCx38I1pcXiWmC+FeAhTKDuQiChYcL0
-         VS5e3EPlPZHcawDb0kJ2d++QzTVz4PsCiHEQpg16kOMhm8DlemOxp4MgrqjSD/odc6Oe
-         5HG/2QSKWFi7QZcTxNnaiMbIu2aCbbGz4ZxGMiDfGxGi3B9bxBOeZoI+n1Q4Y61+I/ME
-         b+KbU19jcWEGxTnDo862eoaaXCvaAMvgWX76bbuV7hJUgs6dduuxywcZ5KibsmrYlnyy
-         YgPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=a9/PBomxUuzf05dVa0qKQjlWzeKSr/09qta+lJxPwCo=;
-        b=SwhiRO4j9TR9J46nQzYwHz4B44Ov4ZRQMD3CcXx7+GfqO8A2ePyg+uqfLsBn3oT2bg
-         d1+4+7MLxy0tX+qarJQAEyKfiIwZJYlZDVHeJCkkmJ7bLxpeOFvRfiF3pdm+RzVWCjgV
-         amYh0B0uPF3nIFe883KnEN6DF2IYHAB3DUum5NwRlkmYlSTOhA/ei8c/ZMB3eJei0f1c
-         frRisejopZU2LLaTD34g8cPfrfgtaJ7DMXLOGE7mOZGueB2EUnN25DVBoLO5TOOlbbrA
-         epHgCacfXN/c1VeLjb5QdVONcDG/zU7D5VZcyLWgVuFexrVhX6sbdByGVYIgMALXjTn6
-         BSzA==
-X-Gm-Message-State: APjAAAXAx6mVUQY4+w3TNBbjkK3kppas04xy/eLIQz+SCHhmH6euIEme
-        vlp0GLpf8KjKA8ESQR6cGKQBfS08gwtkUwhR/oGxiA==
-X-Google-Smtp-Source: APXvYqyyMSapp57PMKRK9e7v/eq30nlueUFP+6Kk+2LK/nnTcOGxgsOUzP7MRoCBv1l3I+FaZJfyM1xV+rQ9cjpaRAQ=
-X-Received: by 2002:a37:6087:: with SMTP id u129mr5948252qkb.219.1575391810641;
- Tue, 03 Dec 2019 08:50:10 -0800 (PST)
+        Tue, 3 Dec 2019 11:52:00 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2152 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726473AbfLCQv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 11:51:59 -0500
+Received: from lhreml705-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id D941CE4FB6CFD69213C3;
+        Tue,  3 Dec 2019 16:51:57 +0000 (GMT)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ lhreml705-cah.china.huawei.com (10.201.108.46) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 3 Dec 2019 16:51:57 +0000
+Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 3 Dec 2019
+ 16:51:57 +0000
+Date:   Tue, 3 Dec 2019 16:51:54 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Jonathan Cameron <jic23@kernel.org>,
+        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "rodrigorsdc@gmail.com" <rodrigorsdc@gmail.com>,
+        "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
+        "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>
+Subject: Re: [PATCH v4] dt-bindings: iio: accel: add binding documentation
+ for ADIS16240
+Message-ID: <20191203165154.00005793@Huawei.com>
+In-Reply-To: <20191203163850.GN1998@sirena.org.uk>
+References: <20191123051927.5016-1-rodrigorsdc@gmail.com>
+        <20191123114119.7b0c3447@archlinux>
+        <a55b9c576eded8c91a985aabbba89180561ab156.camel@analog.com>
+        <20191201114032.1a972dda@archlinux>
+        <20191203163850.GN1998@sirena.org.uk>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <20191119134706.10893-1-benjamin.gaignard@st.com>
-In-Reply-To: <20191119134706.10893-1-benjamin.gaignard@st.com>
-From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Tue, 3 Dec 2019 17:50:00 +0100
-Message-ID: <CA+M3ks7gN7kpau1hN94vq0nhOfdc=9KFoSrM4TJE_2diyMMiRA@mail.gmail.com>
-Subject: Re: [PATCH] drm/modes: remove unused variables
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.57]
+X-ClientProxiedBy: lhreml718-chm.china.huawei.com (10.201.108.69) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le mer. 20 nov. 2019 =C3=A0 00:29, Benjamin Gaignard
-<benjamin.gaignard@st.com> a =C3=A9crit :
->
-> When compiling with W=3D1 few warnings about unused variables show up.
-> This patch removes all the involved variables.
->
+On Tue, 3 Dec 2019 16:38:50 +0000
+Mark Brown <broonie@kernel.org> wrote:
 
-Gentle ping to reviewers.
-Thanks,
-Benjamin
+> On Sun, Dec 01, 2019 at 11:40:32AM +0000, Jonathan Cameron wrote:
+> 
+> > +CC Mark as we probably need a more general view point on
+> > the question of whether SPI mode should be enforced by binding
+> > or in the driver.  
+> 
+> Not sure I see the question here, I think I was missing a bit of
+> the conversation?  It's perfectly fine for a driver to specify a
+> mode, if the hardware always uses some unusual mode then there's
+> no sense in forcing every single DT to set the same mode.  On the
+> other hand if there's some configuration for the driver that was
+> handling some board specific configuration that there's already
+> some generic SPI support for setting then it seems odd to have a
+> custom driver specific configuration mechanism.
+> 
 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  drivers/gpu/drm/drm_modes.c | 22 +++-------------------
->  1 file changed, 3 insertions(+), 19 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
-> index 88232698d7a0..aca901aff042 100644
-> --- a/drivers/gpu/drm/drm_modes.c
-> +++ b/drivers/gpu/drm/drm_modes.c
-> @@ -233,7 +233,7 @@ struct drm_display_mode *drm_cvt_mode(struct drm_devi=
-ce *dev, int hdisplay,
->                 /* 3) Nominal HSync width (% of line period) - default 8 =
-*/
->  #define CVT_HSYNC_PERCENTAGE   8
->                 unsigned int hblank_percentage;
-> -               int vsyncandback_porch, vback_porch, hblank;
-> +               int vsyncandback_porch, hblank;
->
->                 /* estimated the horizontal period */
->                 tmp1 =3D HV_FACTOR * 1000000  -
-> @@ -249,7 +249,6 @@ struct drm_display_mode *drm_cvt_mode(struct drm_devi=
-ce *dev, int hdisplay,
->                 else
->                         vsyncandback_porch =3D tmp1;
->                 /* 10. Find number of lines in back porch */
-> -               vback_porch =3D vsyncandback_porch - vsync;
->                 drm_mode->vtotal =3D vdisplay_rnd + 2 * vmargin +
->                                 vsyncandback_porch + CVT_MIN_V_PORCH;
->                 /* 5) Definition of Horizontal blanking time limitation *=
-/
-> @@ -386,9 +385,8 @@ drm_gtf_mode_complex(struct drm_device *dev, int hdis=
-play, int vdisplay,
->         int top_margin, bottom_margin;
->         int interlace;
->         unsigned int hfreq_est;
-> -       int vsync_plus_bp, vback_porch;
-> -       unsigned int vtotal_lines, vfieldrate_est, hperiod;
-> -       unsigned int vfield_rate, vframe_rate;
-> +       int vsync_plus_bp;
-> +       unsigned int vtotal_lines;
->         int left_margin, right_margin;
->         unsigned int total_active_pixels, ideal_duty_cycle;
->         unsigned int hblank, total_pixels, pixel_freq;
-> @@ -451,23 +449,9 @@ drm_gtf_mode_complex(struct drm_device *dev, int hdi=
-splay, int vdisplay,
->         /* [V SYNC+BP] =3D RINT(([MIN VSYNC+BP] * hfreq_est / 1000000)) *=
-/
->         vsync_plus_bp =3D MIN_VSYNC_PLUS_BP * hfreq_est / 1000;
->         vsync_plus_bp =3D (vsync_plus_bp + 500) / 1000;
-> -       /*  9. Find the number of lines in V back porch alone: */
-> -       vback_porch =3D vsync_plus_bp - V_SYNC_RQD;
->         /*  10. Find the total number of lines in Vertical field period: =
-*/
->         vtotal_lines =3D vdisplay_rnd + top_margin + bottom_margin +
->                         vsync_plus_bp + GTF_MIN_V_PORCH;
-> -       /*  11. Estimate the Vertical field frequency: */
-> -       vfieldrate_est =3D hfreq_est / vtotal_lines;
-> -       /*  12. Find the actual horizontal period: */
-> -       hperiod =3D 1000000 / (vfieldrate_rqd * vtotal_lines);
-> -
-> -       /*  13. Find the actual Vertical field frequency: */
-> -       vfield_rate =3D hfreq_est / vtotal_lines;
-> -       /*  14. Find the Vertical frame frequency: */
-> -       if (interlaced)
-> -               vframe_rate =3D vfield_rate / 2;
-> -       else
-> -               vframe_rate =3D vfield_rate;
->         /*  15. Find number of pixels in left margin: */
->         if (margins)
->                 left_margin =3D (hdisplay_rnd * GTF_MARGIN_PERCENTAGE + 5=
-00) /
-> --
-> 2.15.0
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+If the driver picks a mode because that's what it says on the datasheet
+it prevents odd board configurations from working.  The question
+becomes whether it makes sense in general to assume those odd board
+conditions don't exist until we actually have one, or to assume that
+they might and push the burden on to all DT files.
+
+Traditionally in IIO at least we've mostly taken the view the DT
+should be right and complete and had bindings state what normal
+parameters must be for it to work (assuming no inverters etc)
+
+If we encode it in the driver, and we later meet such a board we
+end up with a custom dance to query the DT parameters again and
+only override if present.
+
+We can't rely on the core SPI handling because I don't think
+there is any means of specifying a default.
+
+We can adopt the view that in general these weird boards with inverters
+are weird and just handle them when they occur.  Sounds like that is your
+preference, at least for new parts.
+
+For old ones we have no idea if there are boards out there using
+them with inverters so easiest is probably to just carry on putting them
+in the DT bindings.
+
+Jonathan
+
+
