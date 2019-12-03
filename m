@@ -2,53 +2,52 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	PDS_BTC_ID,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A003C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5D3C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 638AF2064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23E772064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414487;
-	bh=OkQcdxTstU1Pzv002g0q7wkNAXVtWVcDMkq6fJScZ2M=;
+	s=default; t=1575414495;
+	bh=lJh3RkMtFWDI0wGx4wOr6RiA9sQ7klQH6rhWkBo+7Ac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c/xa4MmfaxDBPrwULpXBnek5RyRchjy0rXqxg0o5DY85JtbiKHIP3XVr0mzk97jWx
-	 jP7LoSb252aus4je+r+ygAHFdKje6k4+zarLQx6c69Fg+yzCOt9rQFdxmtH2LllYPz
-	 DrMGudEz3dfevndlZmEV5IxS5aLDRAgIPPOAVai4=
+	b=QSOaZGXZgG2do8nixGVcibCIZVwyymVRmp8zu/aVynbMPUkNGm/MKwn0uLio4PJWY
+	 IOWlRCzPirXoVFKl4h+Y18feaPOdunt57FmxdhJSJr/nwF1DNe/R2idXjjGPetO7r/
+	 L9EUhPJvnlJXycc7BzN+iXUINxRDe3ErIWJNvInY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729360AbfLCXIG (ORCPT
+        id S1729123AbfLCWp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:08:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35636 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:45:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729012AbfLCWqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:46:15 -0500
+        id S1729113AbfLCWpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:45:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0A4420656;
-        Tue,  3 Dec 2019 22:46:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15CD22084F;
+        Tue,  3 Dec 2019 22:45:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413175;
-        bh=OkQcdxTstU1Pzv002g0q7wkNAXVtWVcDMkq6fJScZ2M=;
+        s=default; t=1575413151;
+        bh=lJh3RkMtFWDI0wGx4wOr6RiA9sQ7klQH6rhWkBo+7Ac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dYFEGoM7PLvVvK479VYVmZylkVmlMhujptVHxyJYTNT89W/54jgnMK9IK/8lIwsgZ
-         uG8fsoCoMxg08vkyu0dkhodpJqNvR/Vb8SuMye8DPk0GLL0azCqpijqO2Eg+r3vfb9
-         BjKJ0nscVdkESe9FNoYBy2AMdF+KqjgHuzwrBf0g=
+        b=yrRjB8bv7d8xsVNElOeZZBoP0mChFZBAFurWlch2Kri5EqQSadE0f2klJuitEiidr
+         PbYOB6qzhfrLA7C1DLhCcFFsOAk9RAH+UMiw/O0+ZAGgK4uDcrBkvKvwppvEHbz/yw
+         Idjkb4lp17omS4oFGA1RTYH2xPnikKZ4rgiIqPc4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Jeroen Hofstee <jhofstee@victronenergy.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 027/321] can: c_can: D_CAN: c_can_chip_config(): perform a sofware reset on open
-Date:   Tue,  3 Dec 2019 23:31:33 +0100
-Message-Id: <20191203223428.531216022@linuxfoundation.org>
+Subject: [PATCH 4.19 019/321] idr: Fix integer overflow in idr_for_each_entry
+Date:   Tue,  3 Dec 2019 23:31:25 +0100
+Message-Id: <20191203223428.119431642@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,76 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeroen Hofstee <jhofstee@victronenergy.com>
+From: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-[ Upstream commit 23c5a9488f076bab336177cd1d1a366bd8ddf087 ]
+[ Upstream commit f6341c5af4e6e15041be39976d16deca789555fa ]
 
-When the CAN interface is closed it the hardwre is put in power down
-mode, but does not reset the error counters / state. Reset the D_CAN on
-open, so the reported state and the actual state match.
+If there is an entry at INT_MAX then idr_for_each_entry() will increment
+id after handling it.  This is undefined behaviour, and is caught by
+UBSAN.  Adding 1U to id forces the operation to be carried out as an
+unsigned addition which (when assigned to id) will result in INT_MIN.
+Since there is never an entry stored at INT_MIN, idr_get_next() will
+return NULL, ending the loop as expected.
 
-According to [1], the C_CAN module doesn't have the software reset.
-
-[1] http://www.bosch-semiconductors.com/media/ip_modules/pdf_2/c_can_fd8/users_manual_c_can_fd8_r210_1.pdf
-
-Signed-off-by: Jeroen Hofstee <jhofstee@victronenergy.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/c_can/c_can.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ include/linux/idr.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/can/c_can/c_can.c b/drivers/net/can/c_can/c_can.c
-index 9b61bfbea6cd1..24c6015f6c92b 100644
---- a/drivers/net/can/c_can/c_can.c
-+++ b/drivers/net/can/c_can/c_can.c
-@@ -52,6 +52,7 @@
- #define CONTROL_EX_PDR		BIT(8)
+diff --git a/include/linux/idr.h b/include/linux/idr.h
+index 3ec8628ce17f0..b6c6151c7446f 100644
+--- a/include/linux/idr.h
++++ b/include/linux/idr.h
+@@ -185,7 +185,7 @@ static inline void idr_preload_end(void)
+  * is convenient for a "not found" value.
+  */
+ #define idr_for_each_entry(idr, entry, id)			\
+-	for (id = 0; ((entry) = idr_get_next(idr, &(id))) != NULL; ++id)
++	for (id = 0; ((entry) = idr_get_next(idr, &(id))) != NULL; id += 1U)
  
- /* control register */
-+#define CONTROL_SWR		BIT(15)
- #define CONTROL_TEST		BIT(7)
- #define CONTROL_CCE		BIT(6)
- #define CONTROL_DISABLE_AR	BIT(5)
-@@ -572,6 +573,26 @@ static void c_can_configure_msg_objects(struct net_device *dev)
- 				   IF_MCONT_RCV_EOB);
- }
- 
-+static int c_can_software_reset(struct net_device *dev)
-+{
-+	struct c_can_priv *priv = netdev_priv(dev);
-+	int retry = 0;
-+
-+	if (priv->type != BOSCH_D_CAN)
-+		return 0;
-+
-+	priv->write_reg(priv, C_CAN_CTRL_REG, CONTROL_SWR | CONTROL_INIT);
-+	while (priv->read_reg(priv, C_CAN_CTRL_REG) & CONTROL_SWR) {
-+		msleep(20);
-+		if (retry++ > 100) {
-+			netdev_err(dev, "CCTRL: software reset failed\n");
-+			return -EIO;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- /*
-  * Configure C_CAN chip:
-  * - enable/disable auto-retransmission
-@@ -581,6 +602,11 @@ static void c_can_configure_msg_objects(struct net_device *dev)
- static int c_can_chip_config(struct net_device *dev)
- {
- 	struct c_can_priv *priv = netdev_priv(dev);
-+	int err;
-+
-+	err = c_can_software_reset(dev);
-+	if (err)
-+		return err;
- 
- 	/* enable automatic retransmission */
- 	priv->write_reg(priv, C_CAN_CTRL_REG, CONTROL_ENABLE_AR);
+ /**
+  * idr_for_each_entry_ul() - Iterate over an IDR's elements of a given type.
 -- 
 2.20.1
 
