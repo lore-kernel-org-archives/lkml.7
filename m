@@ -2,162 +2,222 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A55C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 949AEC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85D5020640
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4688B20640
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 08:49:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tRxPtyuw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726179AbfLCItk (ORCPT
+        id S1726254AbfLCItu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 03:49:40 -0500
-Received: from retiisi.org.uk ([95.216.213.190]:45658 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725773AbfLCItk (ORCPT
+        Tue, 3 Dec 2019 03:49:50 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:49966 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbfLCItu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 03:49:40 -0500
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 3856E634C87;
-        Tue,  3 Dec 2019 10:48:51 +0200 (EET)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1ic3rW-0001NT-PP; Tue, 03 Dec 2019 10:48:50 +0200
-Date:   Tue, 3 Dec 2019 10:48:50 +0200
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, c.barrett@framos.com,
-        a.brela@framos.com, peter.griffin@linaro.org
-Subject: Re: [PATCH 2/5] media: i2c: imx290: Add support for test pattern
- generation
-Message-ID: <20191203084850.GA5282@valkosipuli.retiisi.org.uk>
-References: <20191129190541.30315-1-manivannan.sadhasivam@linaro.org>
- <20191129190541.30315-3-manivannan.sadhasivam@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191129190541.30315-3-manivannan.sadhasivam@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 3 Dec 2019 03:49:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Mime-Version:Content-Type:References:
+        In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WwFDtZgasQwOVeBM51FCw3HTZE84OeLDdPuKuPl8FPg=; b=tRxPtyuw+67n7FDwchSgFnZoQ
+        PJsxkWKEoif914fqHljEaVN3+offZt1ZjzMMsAqfmLd1a5k4cLfr8qsSWFNK216vsPdE1AgRpL0RN
+        NGh82hHZT2leuNekhN/raX34n77cQLbeDozlfVwX15iyyjFEE9E8chBACyX6s3RC9iCKYyetqWdOB
+        1GNO4aYbrEZuBR0wdMJA0LLuQY1JXoQL09QlwIpknMbSf1dSck5DHl1gMNdKl2NAvinIFo6r9dtPH
+        PyXti870ATLhUyegw2GNcjuq44lYrvbq7oFOyGQSutFSK6Hkrn6KPKfa8sPX8Xi+r4g1STilDgSfi
+        O/63V5PeA==;
+Received: from 54-240-197-228.amazon.com ([54.240.197.228] helo=freeip.amazon.com)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ic3sD-0005Af-NQ; Tue, 03 Dec 2019 08:49:34 +0000
+Message-ID: <22759c43f440eecee60b2d318b6f8e8fe2587bcb.camel@infradead.org>
+Subject: Re: [PATCH 0/5] iommu/vt-d: Consolidate various cache flush ops
+From:   David Woodhouse <dwmw2@infradead.org>
+To:     Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>
+Cc:     ashok.raj@intel.com, jacob.jun.pan@linux.intel.com,
+        kevin.tian@intel.com, Eric Auger <eric.auger@redhat.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Date:   Tue, 03 Dec 2019 08:49:30 +0000
+In-Reply-To: <20191122030449.28892-1-baolu.lu@linux.intel.com>
+References: <20191122030449.28892-1-baolu.lu@linux.intel.com>
+Content-Type: multipart/signed; micalg="sha-256";
+        protocol="application/x-pkcs7-signature";
+        boundary="=-nKLBqJ9F3U+5FqcatPT0"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by merlin.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Manivannan,
 
-On Sat, Nov 30, 2019 at 12:35:38AM +0530, Manivannan Sadhasivam wrote:
-> Add support for generating following test patterns by IMX290:
-> 
-> * Sequence Pattern 1
-> * Horizontal Color-bar Chart
-> * Vertical Color-bar Chart
-> * Sequence Pattern 2
-> * Gradation Pattern 1
-> * Gradation Pattern 2
-> * 000/555h Toggle Pattern
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  drivers/media/i2c/imx290.c | 41 +++++++++++++++++++++++++++++++++++++-
->  1 file changed, 40 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-> index 1d49910937fb..e218c959a729 100644
-> --- a/drivers/media/i2c/imx290.c
-> +++ b/drivers/media/i2c/imx290.c
-> @@ -26,12 +26,19 @@
->  #define IMX290_REGHOLD 0x3001
->  #define IMX290_XMSTA 0x3002
->  #define IMX290_FR_FDG_SEL 0x3009
-> +#define IMX290_BLKLEVEL_LOW 0x300a
-> +#define IMX290_BLKLEVEL_HIGH 0x300b
->  #define IMX290_GAIN 0x3014
->  #define IMX290_HMAX_LOW 0x301c
->  #define IMX290_HMAX_HIGH 0x301d
-> +#define IMX290_PGCTRL 0x308c
->  #define IMX290_PHY_LANE_NUM 0x3407
->  #define IMX290_CSI_LANE_MODE 0x3443
->  
-> +#define IMX290_PGCTRL_REGEN BIT(0)
-> +#define IMX290_PGCTRL_THRU BIT(1)
-> +#define IMX290_PGCTRL_MODE(n) ((n) << 4)
-> +
->  /* HMAX fields */
->  #define IMX290_HMAX_2_1920 0x1130
->  #define IMX290_HMAX_4_1920 0x0898
-> @@ -99,6 +106,17 @@ static const struct regmap_config imx290_regmap_config = {
->  	.cache_type = REGCACHE_RBTREE,
->  };
->  
-> +static const char * const imx290_test_pattern_menu[] = {
-> +	"Disabled",
-> +	"Sequence Pattern 1",
-> +	"Horizontal Color-bar Chart",
-> +	"Vertical Color-bar Chart",
-> +	"Sequence Pattern 2",
-> +	"Gradation Pattern 1",
-> +	"Gradation Pattern 2",
-> +	"000/555h Toggle Pattern",
-> +};
-> +
->  static const struct imx290_regval imx290_global_init_settings[] = {
->  	{ 0x3007, 0x00 },
->  	{ 0x3018, 0x65 },
-> @@ -394,6 +412,22 @@ static int imx290_set_ctrl(struct v4l2_ctrl *ctrl)
->  	case V4L2_CID_GAIN:
->  		ret = imx290_set_gain(imx290, ctrl->val);
->  		break;
-> +	case V4L2_CID_TEST_PATTERN:
-> +		if (ctrl->val) {
-> +			imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW, 0x00);
-> +			imx290_write_reg(imx290, IMX290_BLKLEVEL_HIGH, 0x00);
-> +			mdelay(10);
+--=-nKLBqJ9F3U+5FqcatPT0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Any particular reason for a busy loop instead of sleeping? Same below.
+On Fri, 2019-11-22 at 11:04 +0800, Lu Baolu wrote:
+> Intel VT-d 3.0 introduces more caches and interfaces for software to
+> flush when it runs in the scalable mode. Currently various cache flush
+> helpers are scattered around. This consolidates them by putting them in
+> the existing iommu_flush structure.
+>=20
+> /* struct iommu_flush - Intel IOMMU cache invalidation ops
+>  *
+>  * @cc_inv: invalidate context cache
+>  * @iotlb_inv: Invalidate IOTLB and paging structure caches when software
+>  *             has changed second-level tables.
+>  * @p_iotlb_inv: Invalidate IOTLB and paging structure caches when softwa=
+re
+>  *               has changed first-level tables.
+>  * @pc_inv: invalidate pasid cache
+>  * @dev_tlb_inv: invalidate cached mappings used by requests-without-PASI=
+D
+>  *               from the Device-TLB on a endpoint device.
+>  * @p_dev_tlb_inv: invalidate cached mappings used by requests-with-PASID
+>  *                 from the Device-TLB on an endpoint device
+>  */
+> struct iommu_flush {
+>         void (*cc_inv)(struct intel_iommu *iommu, u16 did,
+>                        u16 sid, u8 fm, u64 type);
+>         void (*iotlb_inv)(struct intel_iommu *iommu, u16 did, u64 addr,
+>                           unsigned int size_order, u64 type);
+>         void (*p_iotlb_inv)(struct intel_iommu *iommu, u16 did, u32 pasid=
+,
+>                             u64 addr, unsigned long npages, bool ih);
+>         void (*pc_inv)(struct intel_iommu *iommu, u16 did, u32 pasid,
+>                        u64 granu);
+>         void (*dev_tlb_inv)(struct intel_iommu *iommu, u16 sid, u16 pfsid=
+,
+>                             u16 qdep, u64 addr, unsigned int mask);
+>         void (*p_dev_tlb_inv)(struct intel_iommu *iommu, u16 sid, u16 pfs=
+id,
+>                               u32 pasid, u16 qdep, u64 addr,
+>                               unsigned long npages);
+> };
+>=20
+> The name of each cache flush ops is defined according to the spec section=
+ 6.5
+> so that people are easy to look up them in the spec.
 
-> +			imx290_write_reg(imx290, IMX290_PGCTRL,
-> +					 (u8)(IMX290_PGCTRL_REGEN |
-> +					 IMX290_PGCTRL_THRU |
-> +					 IMX290_PGCTRL_MODE(ctrl->val)));
-> +		} else {
-> +			imx290_write_reg(imx290, IMX290_PGCTRL, 0x00);
-> +			mdelay(10);
-> +			imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW, 0x3c);
-> +			imx290_write_reg(imx290, IMX290_BLKLEVEL_HIGH, 0x00);
-> +		}
-> +		break;
->  	default:
->  		ret = -EINVAL;
->  		break;
-> @@ -878,7 +912,7 @@ static int imx290_probe(struct i2c_client *client)
->  
->  	mutex_init(&imx290->lock);
->  
-> -	v4l2_ctrl_handler_init(&imx290->ctrls, 3);
-> +	v4l2_ctrl_handler_init(&imx290->ctrls, 4);
->  
->  	v4l2_ctrl_new_std(&imx290->ctrls, &imx290_ctrl_ops,
->  			  V4L2_CID_GAIN, 0, 72, 1, 0);
-> @@ -896,6 +930,11 @@ static int imx290_probe(struct i2c_client *client)
->  					       INT_MAX, 1,
->  					       imx290_modes[0].pixel_rate);
->  
-> +	v4l2_ctrl_new_std_menu_items(&imx290->ctrls, &imx290_ctrl_ops,
-> +				     V4L2_CID_TEST_PATTERN,
-> +				     ARRAY_SIZE(imx290_test_pattern_menu) - 1,
-> +				     0, 0, imx290_test_pattern_menu);
-> +
->  	imx290->sd.ctrl_handler = &imx290->ctrls;
->  
->  	if (imx290->ctrls.error) {
+Hm, indirect function calls are quite expensive these days.
 
--- 
-Sakari Ailus
+I would have preferred to go in the opposite direction, since surely
+aren't going to have *many* of these implementations. Currently there's
+only one for register-based and one for queued invalidation, right?
+Even if VT-d 3.0 throws an extra version in, I think I'd prefer to take
+out the indirection completely and have an if/then helper.
+
+Would love to see a microbenchmark of unmap operations before and after
+this patch series with retpoline enabled, to see the effect.
+
+
+
+
+--=-nKLBqJ9F3U+5FqcatPT0
+Content-Type: application/x-pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCECow
+ggUcMIIEBKADAgECAhEA4rtJSHkq7AnpxKUY8ZlYZjANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
+A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
+bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTkwMTAyMDAwMDAwWhcNMjIwMTAxMjM1
+OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZyYWRlYWQub3JnMIIBIjANBgkqhkiG9w0B
+AQEFAAOCAQ8AMIIBCgKCAQEAsv3wObLTCbUA7GJqKj9vHGf+Fa+tpkO+ZRVve9EpNsMsfXhvFpb8
+RgL8vD+L133wK6csYoDU7zKiAo92FMUWaY1Hy6HqvVr9oevfTV3xhB5rQO1RHJoAfkvhy+wpjo7Q
+cXuzkOpibq2YurVStHAiGqAOMGMXhcVGqPuGhcVcVzVUjsvEzAV9Po9K2rpZ52FE4rDkpDK1pBK+
+uOAyOkgIg/cD8Kugav5tyapydeWMZRJQH1vMQ6OVT24CyAn2yXm2NgTQMS1mpzStP2ioPtTnszIQ
+Ih7ASVzhV6csHb8Yrkx8mgllOyrt9Y2kWRRJFm/FPRNEurOeNV6lnYAXOymVJwIDAQABo4IB0zCC
+Ac8wHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFLfuNf820LvaT4AK
+xrGK3EKx1DE7MA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
+BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
+dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
+LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
+Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
+Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
+KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAeBgNVHREEFzAVgRNkd213MkBpbmZy
+YWRlYWQub3JnMA0GCSqGSIb3DQEBCwUAA4IBAQALbSykFusvvVkSIWttcEeifOGGKs7Wx2f5f45b
+nv2ghcxK5URjUvCnJhg+soxOMoQLG6+nbhzzb2rLTdRVGbvjZH0fOOzq0LShq0EXsqnJbbuwJhK+
+PnBtqX5O23PMHutP1l88AtVN+Rb72oSvnD+dK6708JqqUx2MAFLMevrhJRXLjKb2Mm+/8XBpEw+B
+7DisN4TMlLB/d55WnT9UPNHmQ+3KFL7QrTO8hYExkU849g58Dn3Nw3oCbMUgny81ocrLlB2Z5fFG
+Qu1AdNiBA+kg/UxzyJZpFbKfCITd5yX49bOriL692aMVDyqUvh8fP+T99PqorH4cIJP6OxSTdxKM
+MIIFHDCCBASgAwIBAgIRAOK7SUh5KuwJ6cSlGPGZWGYwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
+ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTE5MDEwMjAwMDAwMFoXDTIyMDEwMTIz
+NTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCASIwDQYJKoZIhvcN
+AQEBBQADggEPADCCAQoCggEBALL98Dmy0wm1AOxiaio/bxxn/hWvraZDvmUVb3vRKTbDLH14bxaW
+/EYC/Lw/i9d98CunLGKA1O8yogKPdhTFFmmNR8uh6r1a/aHr301d8YQea0DtURyaAH5L4cvsKY6O
+0HF7s5DqYm6tmLq1UrRwIhqgDjBjF4XFRqj7hoXFXFc1VI7LxMwFfT6PStq6WedhROKw5KQytaQS
+vrjgMjpICIP3A/CroGr+bcmqcnXljGUSUB9bzEOjlU9uAsgJ9sl5tjYE0DEtZqc0rT9oqD7U57My
+ECIewElc4VenLB2/GK5MfJoJZTsq7fWNpFkUSRZvxT0TRLqznjVepZ2AFzsplScCAwEAAaOCAdMw
+ggHPMB8GA1UdIwQYMBaAFIKvbIz4xf6WYXzoHz0rcUhexIvAMB0GA1UdDgQWBBS37jX/NtC72k+A
+CsaxitxCsdQxOzAOBgNVHQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEF
+BQcDBAYIKwYBBQUHAwIwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAwUwKzApBggrBgEFBQcCARYd
+aHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2Ny
+bC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFp
+bENBLmNybDCBiwYIKwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2Nh
+LmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3J0MCQG
+CCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
+cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAC20spBbrL71ZEiFrbXBHonzhhirO1sdn+X+O
+W579oIXMSuVEY1LwpyYYPrKMTjKECxuvp24c829qy03UVRm742R9Hzjs6tC0oatBF7KpyW27sCYS
+vj5wbal+TttzzB7rT9ZfPALVTfkW+9qEr5w/nSuu9PCaqlMdjABSzHr64SUVy4ym9jJvv/FwaRMP
+gew4rDeEzJSwf3eeVp0/VDzR5kPtyhS+0K0zvIWBMZFPOPYOfA59zcN6AmzFIJ8vNaHKy5QdmeXx
+RkLtQHTYgQPpIP1Mc8iWaRWynwiE3ecl+PWzq4i+vdmjFQ8qlL4fHz/k/fT6qKx+HCCT+jsUk3cS
+jDCCBeYwggPOoAMCAQICEGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRp
+b24gQXV0aG9yaXR5MB4XDTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYT
+AkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNV
+BAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50
+aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+AQEAvrOeV6wodnVAFsc4A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQPTRI5Or1u6zf
++bGBSyD9aH95dDSmeny1nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivlJTRENf+RKwrB6vcf
+WlP8dSsE3Rfywq09N0ZfxcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG9qrxpZxyb4o4yNNwTqza
+aPpGRqXB7IMjtf7tTmU2jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoSWY66nJN/VCJv5ym6Q0mdCbDK
+CMPybTjoNCQuelc0IAaO4nLUXk0BOSxSxt8kCvsUtQIDAQABo4IBPDCCATgwHwYDVR0jBBgwFoAU
+u69+Aj36pvE8hI6t7jiY7NkyMtQwHQYDVR0OBBYEFIKvbIz4xf6WYXzoHz0rcUhexIvAMA4GA1Ud
+DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8E
+RTBDMEGgP6A9hjtodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9u
+QXV0aG9yaXR5LmNybDBxBggrBgEFBQcBAQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29t
+b2RvY2EuY29tL0NPTU9ET1JTQUFkZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2Nz
+cC5jb21vZG9jYS5jb20wDQYJKoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2
+SQgG1NgvNc3fQP7TcePo7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs
+0j8CGpfb+SJA3GaBQ+394k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDM
+KVmU/PUWNMKSTvtlenlxBhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+
+E2pvOUtY+hPebuPtTbq7vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfH
+M5tdhYF/8v5UY5g2xANPECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4
+jkhJiA7EuTecP/CFtR72uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJM/1t
+yZR2niOYihZ+FCbtf3D9mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJUmpvVdZ4o
+gnzgXtgtdk3ShrtOS1iAN2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTKTlL8YXLI8nAb
+R9HWdFqzcOoB/hxfEyIQpx9/s81rgzdEZOofSlZHynoSMYIDyjCCA8YCAQEwga0wgZcxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
+ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA4rtJSHkq7AnpxKUY8ZlYZjANBglghkgB
+ZQMEAgEFAKCCAe0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTkx
+MjAzMDg0OTMxWjAvBgkqhkiG9w0BCQQxIgQgRxZyrTjhuFtfsBnPVtOpN++j2t7tsEKMnA97rydD
+DMkwgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
+TWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQx
+PTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
+aWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMIHABgsqhkiG9w0BCRACCzGBsKCBrTCBlzELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
+A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
+bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMA0GCSqGSIb3
+DQEBAQUABIIBAEUpmQB82Q7RiDSKiP8sIM6m2WFR3YsUbu4/YU/XrfKNEyKjMM26yb/RCZ5w8Qcs
+WRn+4XzlOzfBHNHbGc7C8tWVYal44aQprVN/82ZJw8EdysdWKA4W4QGPC5Zpr6y1fgWfqs3BKIUz
+rENQ54meX7V5I6AC2akxfCTESx2DsOQl7evKfNPruM7gyzj1wcmx2U6IGDxfrdmxQO9lIzdVKkJ8
+l9YTbghtJ1o3aNM0VbWq15HArDB0qA4DS31x6eI2UONDNyv1nAKAo97Vn9/jSas9AauRwVMkOWJv
+kpuzi9vbWVnVhLXS8EQQYPA9Mzz7WCecSR3BvcTblOb1iHNyRYcAAAAAAAA=
+
+
+--=-nKLBqJ9F3U+5FqcatPT0--
+
