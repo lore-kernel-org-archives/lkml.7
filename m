@@ -2,150 +2,424 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C9DC43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB2EC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7630206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60F76206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 05:43:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KPpbG0aW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbfLCFmv (ORCPT
+        id S1727060AbfLCFn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 00:42:51 -0500
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:55187 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbfLCFmu (ORCPT
+        Tue, 3 Dec 2019 00:43:27 -0500
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:38547 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726805AbfLCFn1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 00:42:50 -0500
-IronPort-SDR: 1d3cbX4jmGzyde8PjnivFnq6fHbKai6sEc2kaYive6h0RWkvQ9drIjeWjGmvYIS4gVLu+D52Pt
- +VI56eTKrIhDRNQIZWo3o+GjrnShHDSZy+DLArkSlkFA3JQmurvLnvMKyv9EK1EweKjyav/4Lj
- 8WSSo3b/Vv9QQM0ZMJuQ0P3Vcq1cvwcSXLOWUxweHnwpl4EJ+GLaUPURonYjl83Ysy5YEpAkRn
- 5niHbKsU2PiUqGbla+ej3PYmfz0hPgFw7+mp8m4s46N6dQ3TGTi3TScTUpnXcLRWk8/nNc706n
- aTM=
-X-IronPort-AV: E=Sophos;i="5.69,272,1571731200"; 
-   d="scan'208";a="45589576"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa1.mentor.iphmx.com with ESMTP; 02 Dec 2019 21:42:50 -0800
-IronPort-SDR: 6qW7kvfV2RJQ+o/o5f2nDujbmBSwumb85KO+OiaQHueozhtxi3wK5lBcFsz8N2dtJn1QT92VPT
- Qgv43tx44fcY6bo6t1sgDkAQ2/TB6bY50B/bcNaNCkLbDDm0xne8hal71H0BF7iCi91KHq8gYV
- l4H+1KNiIKYYMMtq23CtXeCb0XUbkF3MqlcarsOUStxXqUmileh72a7vzHfPC790pHde63/MTs
- gsV2+TivzEA3wls2h/41pYkDHtbxnyvWVV/rC52Hep9lVTvn/oImikOQ6lqgMEgARN2n4oTAx6
- phw=
-Subject: Re: [PATCH v3 5/7] gpio: Add GPIO Aggregator/Repeater driver
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>
-CC:     Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        <linux-gpio@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <qemu-devel@nongnu.org>
-References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20191127084253.16356-6-geert+renesas@glider.be>
-From:   Harish Jenny K N <harish_kandiga@mentor.com>
-Message-ID: <585c4ad9-31fc-e87e-07c4-b8d6aa09c7e4@mentor.com>
-Date:   Tue, 3 Dec 2019 11:12:38 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 3 Dec 2019 00:43:27 -0500
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id 2D2E1C8F;
+        Tue,  3 Dec 2019 00:43:25 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute7.internal (MEProxy); Tue, 03 Dec 2019 00:43:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:message-id:mime-version:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=Au0sk+
+        xl/cZ8hI+5WvyE3tKwAjfm2QQqUf4iEBuIseM=; b=KPpbG0aWTbWbuuFica4AC1
+        ePvz1sgqjSuHxawCY/9vnuPNC+mOYXnUOAnTFQCNZXGH+54yZZauDnNjS6NMtbsR
+        LVYj1Z+2FSKNLia1h+ezU1dJ+DpM3v9RANFCse6kUJh5o9Q9sUFwFsa4qycljS9I
+        fecL8TydfmrA4aOYPp8MJf0WYLFm2ebvIet8lKsepO14Hflqslpr1a8bGwhD1qov
+        bZwIhtAFjnNcrpRrVp+3UxssohYFlMU2om6yiGmCZq8Axh3LMiE6s7pd6q8bGvRy
+        RIDJk89Owh6DeR6zug1c2DE4uGrFZup1zv2AXzQZWJdatholiFHBFuGIKDlm10xA
+        ==
+X-ME-Sender: <xms:_PXlXXfR9er6umCQBchZbkqvuPv_iwXvOTYlgyvLktd4gtEuIsIMSg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudejiedgkeegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffogggtohfgsehtkeertdertdejnecuhfhrohhmpeforghrvghk
+    ucforghrtgiihihkohifshhkihdqifpkrhgvtghkihcuoehmrghrmhgrrhgvkhesihhnvh
+    hishhisghlvghthhhinhhgshhlrggsrdgtohhmqeenucffohhmrghinhepmhgrrhhkmhgr
+    ihhlrdhorhhgpdhinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomhenucfkpheple
+    durdeihedrfeegrdeffeenucfrrghrrghmpehmrghilhhfrhhomhepmhgrrhhmrghrvghk
+    sehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomhenucevlhhushhtvghrufhiii
+    gvpedt
+X-ME-Proxy: <xmx:_PXlXYsgZ4dOqNbtQXkYZtf79T_8XzNQw7iMvptSWiZJGJajuRZQdQ>
+    <xmx:_PXlXWh0-r9rq9CngzcSi4VdhmQ4hHyU6MAem2FOubaSrjBEhdgavQ>
+    <xmx:_PXlXWvVoHhL1XcDapcU6N0fmhE1CiKw5vMYUYhp5DsuU-JS-7I1Jg>
+    <xmx:_PXlXQHnVCrGSaS9Ww_Fq-hVBnO21H_RYTBdtFVd6TxTOqf_7-Hjcw>
+Received: from localhost.localdomain (ip5b412221.dynamic.kabel-deutschland.de [91.65.34.33])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B07B980059;
+        Tue,  3 Dec 2019 00:43:22 -0500 (EST)
+From:   =?UTF-8?q?Marek=20Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>
+To:     xen-devel@lists.xenproject.org
+Cc:     =?UTF-8?q?Marek=20Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>,
+        Simon Gaiser <simon@invisiblethingslab.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Ross Lagerwall <ross.lagerwall@citrix.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v1] xen-pciback: optionally allow interrupt enable flag writes
+Date:   Tue,  3 Dec 2019 06:41:56 +0100
+Message-Id: <20191203054222.7966-1-marmarek@invisiblethingslab.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20191127084253.16356-6-geert+renesas@glider.be>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
+Organization: Invisible Things Lab
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: SVR-IES-MBX-08.mgc.mentorg.com (139.181.222.8) To
- svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+QEMU running in a stubdom needs to be able to set INTX_DISABLE, and the
+MSI(-X) enable flags in the PCI config space. This adds an attribute
+'allow_interrupt_control' which when set for a PCI device allows writes
+to this flag(s). The toolstack will need to set this for stubdoms.
+When enabled, guest (stubdomain) will be allowed to set relevant enable
+flags, but only one at a time - i.e. it refuses to enable more than one
+of INTx, MSI, MSI-X at a time.
 
-> +static int gpio_aggregator_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct gpio_desc **descs;
-> +	struct gpiochip_fwd *fwd;
-> +	int i, n;
-> +
-> +	n = gpiod_count(dev, NULL);
-> +	if (n < 0)
-> +		return n;
-> +
-> +	descs = devm_kmalloc_array(dev, n, sizeof(*descs), GFP_KERNEL);
-> +	if (!descs)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < n; i++) {
-> +		descs[i] = devm_gpiod_get_index(dev, NULL, i, GPIOD_ASIS);
+This functionality is needed only for config space access done by device
+model (stubdomain) serving a HVM with the actual PCI device. It is not
+necessary and unsafe to enable direct access to those bits for PV domain
+with the device attached. For PV domains, there are separate protocol
+messages (XEN_PCI_OP_{enable,disable}_{msi,msix}) for this purpose.
+Those ops in addition to setting enable bits, also configure MSI(-X) in
+dom0 kernel - which is undesirable for PCI passthrough to HVM guests.
 
-can you please add this check as well as we need to return EPROBE_DEFER.
+This should not introduce any new security issues since a malicious
+guest (or stubdom) can already generate MSIs through other ways, see
+[1] page 8. Additionally, when qemu runs in dom0, it already have direct
+access to those bits.
 
-if (desc[i] == ERR_PTR(-ENOENT))
-<                 return -EPROBE_DEFER;
+This is the second iteration of this feature. First was proposed as a
+direct Xen interface through a new hypercall, but ultimately it was
+rejected by the maintainer, because of mixing pciback and hypercalls for
+PCI config space access isn't a good design. Full discussion at [2].
 
+[1]: https://invisiblethingslab.com/resources/2011/Software%20Attacks%20on%20Intel%20VT-d.pdf
+[2]: https://xen.markmail.org/thread/smpgpws4umdzizze
 
-> +		if (IS_ERR(descs[i]))
-> +			return PTR_ERR(descs[i]);
-> +	}
-> +
-> +	fwd = gpiochip_fwd_create(dev, n, descs);
-> +	if (IS_ERR(fwd))
-> +		return PTR_ERR(fwd);
-> +
-> +	platform_set_drvdata(pdev, fwd);
-> +	return 0;
-> +}
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id gpio_aggregator_dt_ids[] = {
-> +	{ .compatible = "gpio-repeater" },
-> +	/*
-> +	 * Add GPIO-operated devices controlled from userspace below,
-> +	 * or use "driver_override" in sysfs
-> +	 */
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, gpio_aggregator_dt_ids);
-> +#endif
-> +
-> +static struct platform_driver gpio_aggregator_driver = {
-> +	.probe = gpio_aggregator_probe,
-> +	.driver = {
-> +		.name = DRV_NAME,
-> +		.groups = gpio_aggregator_groups,
-> +		.of_match_table = of_match_ptr(gpio_aggregator_dt_ids),
-> +	},
-> +};
-> +
-> +static int __init gpio_aggregator_init(void)
-> +{
-> +	return platform_driver_register(&gpio_aggregator_driver);
-> +}
-> +module_init(gpio_aggregator_init);
-> +
-> +static void __exit gpio_aggregator_exit(void)
-> +{
-> +	gpio_aggregator_remove_all();
-> +	platform_driver_unregister(&gpio_aggregator_driver);
-> +}
-> +module_exit(gpio_aggregator_exit);
-> +
-> +MODULE_AUTHOR("Geert Uytterhoeven <geert+renesas@glider.be>");
-> +MODULE_DESCRIPTION("GPIO Aggregator/Repeater");
-> +MODULE_LICENSE("GPL v2");
+[part of the commit message and sysfs handling]
+Signed-off-by: Simon Gaiser <simon@invisiblethingslab.com>
+[the rest]
+Signed-off-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+---
+I'm not very happy about code duplication regarding MSI/MSI-X/INTx
+exclusivity test, but I don't have better ideas how to structure it. Any
+suggestions?
+---
+ .../xen/xen-pciback/conf_space_capability.c   | 113 ++++++++++++++++++
+ drivers/xen/xen-pciback/conf_space_header.c   |  30 +++++
+ drivers/xen/xen-pciback/pci_stub.c            |  66 ++++++++++
+ drivers/xen/xen-pciback/pciback.h             |   1 +
+ 4 files changed, 210 insertions(+)
 
-
+diff --git a/drivers/xen/xen-pciback/conf_space_capability.c b/drivers/xen/xen-pciback/conf_space_capability.c
+index e5694133ebe5..c5a7c58ff3e3 100644
+--- a/drivers/xen/xen-pciback/conf_space_capability.c
++++ b/drivers/xen/xen-pciback/conf_space_capability.c
+@@ -189,6 +189,109 @@ static const struct config_field caplist_pm[] = {
+ 	{}
+ };
+ 
++static struct msi_msix_field_config {
++	u16 enable_bit;  /* bit for enabling MSI/MSI-X */
++	int other_cap;  /* the other capability for exclusiveness check */
++} msi_field_config = {
++	.enable_bit = PCI_MSI_FLAGS_ENABLE,
++	.other_cap = PCI_CAP_ID_MSIX,
++}, msix_field_config = {
++	.enable_bit = PCI_MSIX_FLAGS_ENABLE,
++	.other_cap = PCI_CAP_ID_MSI,
++};
++
++static void *msi_field_init(struct pci_dev *dev, int offset)
++{
++	return &msi_field_config;
++}
++
++static void *msix_field_init(struct pci_dev *dev, int offset)
++{
++	return &msix_field_config;
++}
++
++static int msi_msix_flags_write(struct pci_dev *dev, int offset, u16 new_value,
++			 void *data)
++{
++	int err;
++	u16 old_value;
++	struct msi_msix_field_config *field_config = data;
++	struct xen_pcibk_dev_data *dev_data = pci_get_drvdata(dev);
++	int other_cap_offset;
++	u16 other_cap_enable_bit;
++	u16 other_cap_value;
++
++	if (xen_pcibk_permissive || dev_data->permissive)
++		goto write;
++
++	err = pci_read_config_word(dev, offset, &old_value);
++	if (err)
++		return err;
++
++	if (new_value == old_value)
++		return 0;
++
++	if (!dev_data->allow_interrupt_control ||
++	    (new_value ^ old_value) & ~field_config->enable_bit)
++		return PCIBIOS_SET_FAILED;
++
++	if (new_value & field_config->enable_bit) {
++		/* don't allow enabling together with INTx */
++		err = pci_read_config_word(dev, PCI_COMMAND, &other_cap_value);
++		if (err)
++			return err;
++		if (!(other_cap_value & PCI_COMMAND_INTX_DISABLE))
++			return PCIBIOS_SET_FAILED;
++
++		/* and the other MSI(-X) */
++		switch (field_config->other_cap) {
++		case PCI_CAP_ID_MSI:
++			other_cap_offset = dev->msi_cap + PCI_MSI_FLAGS;
++			other_cap_enable_bit = PCI_MSI_FLAGS_ENABLE;
++			break;
++		case PCI_CAP_ID_MSIX:
++			other_cap_offset = dev->msix_cap + PCI_MSIX_FLAGS;
++			other_cap_enable_bit = PCI_MSIX_FLAGS_ENABLE;
++			break;
++		default:
++			BUG_ON(1);
++		}
++		err = pci_read_config_word(dev,
++					   other_cap_offset,
++					   &other_cap_value);
++		if (err)
++			return err;
++
++		if (other_cap_value & other_cap_enable_bit)
++			return PCIBIOS_SET_FAILED;
++	}
++
++write:
++	return pci_write_config_word(dev, offset, new_value);
++}
++
++static const struct config_field caplist_msix[] = {
++	{
++		.offset    = PCI_MSIX_FLAGS,
++		.size      = 2,
++		.init      = msix_field_init,
++		.u.w.read  = xen_pcibk_read_config_word,
++		.u.w.write = msi_msix_flags_write,
++	},
++	{}
++};
++
++static const struct config_field caplist_msi[] = {
++	{
++		.offset    = PCI_MSI_FLAGS,
++		.size      = 2,
++		.init      = msi_field_init,
++		.u.w.read  = xen_pcibk_read_config_word,
++		.u.w.write = msi_msix_flags_write,
++	},
++	{}
++};
++
+ static struct xen_pcibk_config_capability xen_pcibk_config_capability_pm = {
+ 	.capability = PCI_CAP_ID_PM,
+ 	.fields = caplist_pm,
+@@ -197,11 +300,21 @@ static struct xen_pcibk_config_capability xen_pcibk_config_capability_vpd = {
+ 	.capability = PCI_CAP_ID_VPD,
+ 	.fields = caplist_vpd,
+ };
++static struct xen_pcibk_config_capability xen_pcibk_config_capability_msi = {
++	.capability = PCI_CAP_ID_MSI,
++	.fields = caplist_msi,
++};
++static struct xen_pcibk_config_capability xen_pcibk_config_capability_msix = {
++	.capability = PCI_CAP_ID_MSIX,
++	.fields = caplist_msix,
++};
+ 
+ int xen_pcibk_config_capability_init(void)
+ {
+ 	register_capability(&xen_pcibk_config_capability_vpd);
+ 	register_capability(&xen_pcibk_config_capability_pm);
++	register_capability(&xen_pcibk_config_capability_msi);
++	register_capability(&xen_pcibk_config_capability_msix);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/xen/xen-pciback/conf_space_header.c b/drivers/xen/xen-pciback/conf_space_header.c
+index 10ae24b5a76e..1e0fff02e21b 100644
+--- a/drivers/xen/xen-pciback/conf_space_header.c
++++ b/drivers/xen/xen-pciback/conf_space_header.c
+@@ -64,6 +64,7 @@ static int command_write(struct pci_dev *dev, int offset, u16 value, void *data)
+ 	int err;
+ 	u16 val;
+ 	struct pci_cmd_info *cmd = data;
++	u16 cap_value;
+ 
+ 	dev_data = pci_get_drvdata(dev);
+ 	if (!pci_is_enabled(dev) && is_enable_cmd(value)) {
+@@ -117,6 +118,35 @@ static int command_write(struct pci_dev *dev, int offset, u16 value, void *data)
+ 		pci_clear_mwi(dev);
+ 	}
+ 
++	if (dev_data && dev_data->allow_interrupt_control) {
++		if (!(cmd->val & PCI_COMMAND_INTX_DISABLE) &&
++		    (value & PCI_COMMAND_INTX_DISABLE)) {
++			pci_intx(dev, 0);
++		} else if ((cmd->val & PCI_COMMAND_INTX_DISABLE) &&
++		    !(value & PCI_COMMAND_INTX_DISABLE)) {
++			/* Do not allow enabling INTx together with MSI or MSI-X. */
++			/* Do not trust dev->msi(x)_enabled here, as enabling could be done
++			 * bypassing the pci_*msi* functions, by the qemu.
++			 */
++			err = pci_read_config_word(dev,
++						   dev->msi_cap + PCI_MSI_FLAGS,
++						   &cap_value);
++			if (!err && (cap_value & PCI_MSI_FLAGS_ENABLE))
++				err = -EBUSY;
++			if (!err)
++				err = pci_read_config_word(dev,
++							   dev->msix_cap + PCI_MSIX_FLAGS,
++							   &cap_value);
++			if (!err && (cap_value & PCI_MSIX_FLAGS_ENABLE))
++				err = -EBUSY;
++			if (err)
++				pr_warn("%s: cannot enable INTx (%d)\n",
++					pci_name(dev), err);
++			else
++				pci_intx(dev, 1);
++		}
++	}
++
+ 	cmd->val = value;
+ 
+ 	if (!xen_pcibk_permissive && (!dev_data || !dev_data->permissive))
+diff --git a/drivers/xen/xen-pciback/pci_stub.c b/drivers/xen/xen-pciback/pci_stub.c
+index 097410a7cdb7..7af93d65ed51 100644
+--- a/drivers/xen/xen-pciback/pci_stub.c
++++ b/drivers/xen/xen-pciback/pci_stub.c
+@@ -304,6 +304,8 @@ void pcistub_put_pci_dev(struct pci_dev *dev)
+ 	xen_pcibk_config_reset_dev(dev);
+ 	xen_pcibk_config_free_dyn_fields(dev);
+ 
++	dev_data->allow_interrupt_control = 0;
++
+ 	xen_unregister_device_domain_owner(dev);
+ 
+ 	spin_lock_irqsave(&found_psdev->lock, flags);
+@@ -1431,6 +1433,65 @@ static ssize_t permissive_show(struct device_driver *drv, char *buf)
+ }
+ static DRIVER_ATTR_RW(permissive);
+ 
++static ssize_t allow_interrupt_control_store(struct device_driver *drv,
++					     const char *buf, size_t count)
++{
++	int domain, bus, slot, func;
++	int err;
++	struct pcistub_device *psdev;
++	struct xen_pcibk_dev_data *dev_data;
++
++	err = str_to_slot(buf, &domain, &bus, &slot, &func);
++	if (err)
++		goto out;
++
++	psdev = pcistub_device_find(domain, bus, slot, func);
++	if (!psdev) {
++		err = -ENODEV;
++		goto out;
++	}
++
++	dev_data = pci_get_drvdata(psdev->dev);
++	/* the driver data for a device should never be null at this point */
++	if (!dev_data) {
++		err = -ENXIO;
++		goto release;
++	}
++	dev_data->allow_interrupt_control = 1;
++release:
++	pcistub_device_put(psdev);
++out:
++	if (!err)
++		err = count;
++	return err;
++}
++
++static ssize_t allow_interrupt_control_show(struct device_driver *drv,
++					    char *buf)
++{
++	struct pcistub_device *psdev;
++	struct xen_pcibk_dev_data *dev_data;
++	size_t count = 0;
++	unsigned long flags;
++
++	spin_lock_irqsave(&pcistub_devices_lock, flags);
++	list_for_each_entry(psdev, &pcistub_devices, dev_list) {
++		if (count >= PAGE_SIZE)
++			break;
++		if (!psdev->dev)
++			continue;
++		dev_data = pci_get_drvdata(psdev->dev);
++		if (!dev_data || !dev_data->allow_interrupt_control)
++			continue;
++		count +=
++		    scnprintf(buf + count, PAGE_SIZE - count, "%s\n",
++			      pci_name(psdev->dev));
++	}
++	spin_unlock_irqrestore(&pcistub_devices_lock, flags);
++	return count;
++}
++static DRIVER_ATTR_RW(allow_interrupt_control);
++
+ static void pcistub_exit(void)
+ {
+ 	driver_remove_file(&xen_pcibk_pci_driver.driver, &driver_attr_new_slot);
+@@ -1440,6 +1501,8 @@ static void pcistub_exit(void)
+ 	driver_remove_file(&xen_pcibk_pci_driver.driver, &driver_attr_quirks);
+ 	driver_remove_file(&xen_pcibk_pci_driver.driver,
+ 			   &driver_attr_permissive);
++	driver_remove_file(&xen_pcibk_pci_driver.driver,
++			   &driver_attr_allow_interrupt_control);
+ 	driver_remove_file(&xen_pcibk_pci_driver.driver,
+ 			   &driver_attr_irq_handlers);
+ 	driver_remove_file(&xen_pcibk_pci_driver.driver,
+@@ -1530,6 +1593,9 @@ static int __init pcistub_init(void)
+ 	if (!err)
+ 		err = driver_create_file(&xen_pcibk_pci_driver.driver,
+ 					 &driver_attr_permissive);
++	if (!err)
++		err = driver_create_file(&xen_pcibk_pci_driver.driver,
++					 &driver_attr_allow_interrupt_control);
+ 
+ 	if (!err)
+ 		err = driver_create_file(&xen_pcibk_pci_driver.driver,
+diff --git a/drivers/xen/xen-pciback/pciback.h b/drivers/xen/xen-pciback/pciback.h
+index 263c059bff90..ce1077e32466 100644
+--- a/drivers/xen/xen-pciback/pciback.h
++++ b/drivers/xen/xen-pciback/pciback.h
+@@ -45,6 +45,7 @@ struct xen_pcibk_dev_data {
+ 	struct list_head config_fields;
+ 	struct pci_saved_state *pci_saved_state;
+ 	unsigned int permissive:1;
++	unsigned int allow_interrupt_control:1;
+ 	unsigned int warned_on_write:1;
+ 	unsigned int enable_intx:1;
+ 	unsigned int isr_on:1; /* Whether the IRQ handler is installed. */
+-- 
+2.21.0
 
