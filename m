@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDA6C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2447C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72CA92084F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:52:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1C3520863
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 22:53:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575413579;
-	bh=nQfw2bvRLVdTkcx1yOgkN4Nc+XNvTeGBrr7DNoc4GdI=;
+	s=default; t=1575413584;
+	bh=L7kOZ2DuuxrBOah1HpwY0bLme+c1Dzk3lN0xbxhInE8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VU1EJk1js53qgOzN3EVzOmNQawJussR9BtSKNliH+TKV7t4enNwLAs3zpzJHnEA2i
-	 rxhXwyTMpFBgsdBCOVI02ejdgoe179gavhWkUNbJ53KwAUXqqS0ea28Fs6Ck5PjWkC
-	 ekbKJPu17xRJvMJ3XKnNQoifvqViHfEMq0FCyftk=
+	b=QN9bQCoptAKvP6PAMiTt/C7DFnVSgswUAe7u1rcMDB3Xw5ldKtB5OvchsYxe/XLG6
+	 ImcOoZbkyLfJ+cvBnaqsK0MVDgWpeQDQJjm7vfiv14VtS5snSwsXa3LhYeZf4lyZT4
+	 k3eXFStGMnUAlGyrcZCVRWO25/6onIPueM0k0c5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730067AbfLCWw6 (ORCPT
+        id S1729541AbfLCWxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:52:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45798 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 17:53:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729951AbfLCWwu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:52:50 -0500
+        id S1730078AbfLCWxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:53:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7C7F20866;
-        Tue,  3 Dec 2019 22:52:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE81920862;
+        Tue,  3 Dec 2019 22:52:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413570;
-        bh=nQfw2bvRLVdTkcx1yOgkN4Nc+XNvTeGBrr7DNoc4GdI=;
+        s=default; t=1575413580;
+        bh=L7kOZ2DuuxrBOah1HpwY0bLme+c1Dzk3lN0xbxhInE8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XQTf8kHRy4cuBIS6xPVeBhQM8YfBFWy3V0C4uR3Ceh/rVT3tVjQDquSQJuL0JTk+e
-         IWySb0G4I33/mmS2KXVouPzR8xF6fBKUQIeuZZDVlnsi0lteOmiEX7gB6Mj9p1XqMX
-         UK+9NRNNhsIgLOtSgR+o7tREQs4fMppzU9B4cLik=
+        b=XhKanbveyr+ASEY3/PvjS6mYhnMI4aMpvZAKBwbr0fr98Ppb8NyDkV3Qt2yYSuuEu
+         9oQNNKg28Vyx7a2qM1h4KsobVSDHTAuP6Z9kTbtUed8E5vT8oZKqGx+OKOeRJ/fkIK
+         2GUJFoLeacUkCwxD1mCAJ4MvpEq0UAgik4chMJPw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 179/321] powerpc/pseries: Fix node leak in update_lmb_associativity_index()
-Date:   Tue,  3 Dec 2019 23:34:05 +0100
-Message-Id: <20191203223436.441465025@linuxfoundation.org>
+Subject: [PATCH 4.19 183/321] net/netlink_compat: Fix a missing check of nla_parse_nested
+Date:   Tue,  3 Dec 2019 23:34:09 +0100
+Message-Id: <20191203223436.645103976@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -59,34 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit 47918bc68b7427e961035949cc1501a864578a69 ]
+[ Upstream commit 89dfd0083751d00d5d7ead36f6d8b045bf89c5e1 ]
 
-In update_lmb_associativity_index() we lookup dr_node using
-of_find_node_by_path() which takes a reference for us. In the
-non-error case we forget to drop the reference. Note that
-find_aa_index() does modify properties of the node, but doesn't need
-an extra reference held once it's returned.
+In tipc_nl_compat_sk_dump(), if nla_parse_nested() fails, it could return
+an error. To be consistent with other invocations of the function call,
+on error, the fix passes the return value upstream.
 
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/hotplug-memory.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/tipc/netlink_compat.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
-index d93ff494e7781..7f86bc3eaadec 100644
---- a/arch/powerpc/platforms/pseries/hotplug-memory.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
-@@ -202,6 +202,7 @@ static int update_lmb_associativity_index(struct drmem_lmb *lmb)
+diff --git a/net/tipc/netlink_compat.c b/net/tipc/netlink_compat.c
+index 318c541970ecd..6494d6b5e1b24 100644
+--- a/net/tipc/netlink_compat.c
++++ b/net/tipc/netlink_compat.c
+@@ -1030,8 +1030,11 @@ static int tipc_nl_compat_sk_dump(struct tipc_nl_compat_msg *msg,
+ 		u32 node;
+ 		struct nlattr *con[TIPC_NLA_CON_MAX + 1];
  
- 	aa_index = find_aa_index(dr_node, ala_prop, lmb_assoc);
+-		nla_parse_nested(con, TIPC_NLA_CON_MAX,
+-				 sock[TIPC_NLA_SOCK_CON], NULL, NULL);
++		err = nla_parse_nested(con, TIPC_NLA_CON_MAX,
++				       sock[TIPC_NLA_SOCK_CON], NULL, NULL);
++
++		if (err)
++			return err;
  
-+	of_node_put(dr_node);
- 	dlpar_free_cc_nodes(lmb_node);
- 
- 	if (aa_index < 0) {
+ 		node = nla_get_u32(con[TIPC_NLA_CON_NODE]);
+ 		tipc_tlv_sprintf(msg->rep, "  connected to <%u.%u.%u:%u>",
 -- 
 2.20.1
 
