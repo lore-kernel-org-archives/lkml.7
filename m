@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3586FC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F93C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F35E220656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFAC02064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 23:01:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575414092;
-	bh=DqeW1U78vlTUIlsSZ6UY5jGKiwesidoeQuHKuMlvuJg=;
+	s=default; t=1575414095;
+	bh=vTnqRBhSJThxK31D6vHxdhMGVr8Vgn7F/eGcARVmDAE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a12xxliSF0jLVSlA7dYvOj74FZmD8oyyNIddUP8RTXFv3IMX9TlJSN87X2bhmnOqL
-	 ArhKuFMjQkPWzb8LkgPm5IQSYrHtVpYy7jg4Ztn/AewKdF+ei4ramLGAgMiLAaD3Gw
-	 6HY+CSdyclq47LL/6QRwd/hMtBRCrvqzAk3dtAbs=
+	b=2JCW9wG2JaITso3SPNrIuP5P7qxsieoyUZgDzFmest1HncM7DkkQXEtjcRYlmFKR/
+	 01dovRICGDhAmCfFzcTETrBVddddXy+dsy8rai6ECKmzFrZN0KrymnN3/cCxzESrlc
+	 52Q30T2bmdedmzRWq8G5/LSu/A4b2iMpAk/fjMM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730488AbfLCXBa (ORCPT
+        id S1730645AbfLCXBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 18:01:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50762 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 18:01:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728357AbfLCW4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 17:56:05 -0500
+        id S1730297AbfLCWzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:55:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 624122053B;
-        Tue,  3 Dec 2019 22:56:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F048B2053B;
+        Tue,  3 Dec 2019 22:55:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575413764;
-        bh=DqeW1U78vlTUIlsSZ6UY5jGKiwesidoeQuHKuMlvuJg=;
+        s=default; t=1575413754;
+        bh=vTnqRBhSJThxK31D6vHxdhMGVr8Vgn7F/eGcARVmDAE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qYDfR28zXSNrblCIrr8eQXm7hf68b9pWZ5DCEbugWpd++J7mM6ME1OffW/s0OhxU7
-         ItGvmrxWUXsGMxPpefF++o1jgo1mcC08eZ/r+iARK/Dho3x7Mtd4/vLUAZhI0fVPDa
-         q8VvbjU7U/P4nl3clTDTc4CpREPWfa/Or0GJgRWA=
+        b=PzUB4jlBL6mNJ8NVSlYeK57q++EPb0+lEV1nxNIzQXjmVdQLO4rBcZgYC0ECzCah4
+         f0PgYf3pKFHWY3cNDsVluhKTvn5Sb7rZMjWpXvlp4wDt+K8ZDCAVGwxNC6kEkYp7+j
+         cXrmw5cXVWyfnpkxxquc5uKRGi1uclq4tyk/SIWE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
-        James Morse <james.morse@arm.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 251/321] ACPI / APEI: Dont wait to serialise with oops messages when panic()ing
-Date:   Tue,  3 Dec 2019 23:35:17 +0100
-Message-Id: <20191203223440.195603776@linuxfoundation.org>
+        stable@vger.kernel.org, Aaron Ma <aaron.ma@canonical.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 248/321] iommu/amd: Fix NULL dereference bug in match_hid_uid
+Date:   Tue,  3 Dec 2019 23:35:14 +0100
+Message-Id: <20191203223440.039765771@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203223427.103571230@linuxfoundation.org>
 References: <20191203223427.103571230@linuxfoundation.org>
@@ -61,52 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Aaron Ma <aaron.ma@canonical.com>
 
-[ Upstream commit 78b0b690f6558ed788dccafa45965325dd11ba89 ]
+[ Upstream commit bb6bccba390c7d743c1e4427de4ef284c8cc6869 ]
 
-oops_begin() exists to group printk() messages with the oops message
-printed by die(). To reach this caller we know that platform firmware
-took this error first, then notified the OS via NMI with a 'panic'
-severity.
+Add a non-NULL check to fix potential NULL pointer dereference
+Cleanup code to call function once.
 
-Don't wait for another CPU to release the die-lock before panic()ing,
-our only goal is to print this fatal error and panic().
-
-This code is always called in_nmi(), and since commit 42a0bb3f7138
-("printk/nmi: generic solution for safe printk in NMI"), it has been
-safe to call printk() from this context. Messages are batched in a
-per-cpu buffer and printed via irq-work, or a call back from panic().
-
-Link: https://patchwork.kernel.org/patch/10313555/
-Acked-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+Fixes: 2bf9a0a12749b ('iommu/amd: Add iommu support for ACPI HID devices')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/apei/ghes.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/iommu/amd_iommu.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index f008ba7c9cedc..0c46b79e31b1e 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -33,7 +33,6 @@
- #include <linux/interrupt.h>
- #include <linux/timer.h>
- #include <linux/cper.h>
--#include <linux/kdebug.h>
- #include <linux/platform_device.h>
- #include <linux/mutex.h>
- #include <linux/ratelimit.h>
-@@ -949,7 +948,6 @@ static int ghes_notify_nmi(unsigned int cmd, struct pt_regs *regs)
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 1f2ed44de2438..fe18804a50083 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -139,10 +139,14 @@ static struct lock_class_key reserved_rbtree_key;
+ static inline int match_hid_uid(struct device *dev,
+ 				struct acpihid_map_entry *entry)
+ {
++	struct acpi_device *adev = ACPI_COMPANION(dev);
+ 	const char *hid, *uid;
  
- 		sev = ghes_severity(ghes->estatus->error_severity);
- 		if (sev >= GHES_SEV_PANIC) {
--			oops_begin();
- 			ghes_print_queued_estatus();
- 			__ghes_panic(ghes);
- 		}
+-	hid = acpi_device_hid(ACPI_COMPANION(dev));
+-	uid = acpi_device_uid(ACPI_COMPANION(dev));
++	if (!adev)
++		return -ENODEV;
++
++	hid = acpi_device_hid(adev);
++	uid = acpi_device_uid(adev);
+ 
+ 	if (!hid || !(*hid))
+ 		return -ENODEV;
 -- 
 2.20.1
 
