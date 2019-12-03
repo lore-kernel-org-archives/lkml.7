@@ -6,62 +6,60 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBF3C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 01:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DAEBC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 01:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 222CC20705
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 01:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F1FC206DC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 01:30:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575336621;
-	bh=t0492yjQtzcuOnpNEzTssNPJaZmkH18aG64RsUtFj+M=;
+	s=default; t=1575336625;
+	bh=2HHNi9jt2CEjhhglrUy3+GonDpvuMHpqSRE7j1QJELo=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=IocSZ8Qzr/sDA/8FTBbOAn6tdxN5isYWa/HE1uVI40NKqWgQbabvrtoEzy+J2KQIV
-	 3qJaoXLxL2GNoNMvZyJxFdB4fcWLe2hL+eDimLHyPPG/pC0Yc5jioIFPqEe/1sZtAV
-	 TE1A1IyBg+2SuUaHu+mZI9ApkP/tYeaK+HWpGKs0=
+	b=qDkobS3cozVrzGPOxmmNqr75VNrAZhJ6zgMI4Stzrl6fxCgooXU6z1jOR2Wn8X6Lc
+	 pxE6n/sKR9p3Q1CHjGOh+kVAgLKS2II5iHuxsfgOs7QvqWTin+ZTGZ+ISustaVSsys
+	 8bAsQtuKbbfzNSqemgqgMQz3uBcDWneOIOWfcuOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbfLCBaU (ORCPT
+        id S1726533AbfLCBaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Dec 2019 20:30:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60988 "EHLO mail.kernel.org"
+        Mon, 2 Dec 2019 20:30:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725899AbfLCBaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Dec 2019 20:30:18 -0500
-Subject: Re: [GIT PULL] UBI/UBIFS/JFFS2 changes for v5.5-rc1
+        id S1725899AbfLCBaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Dec 2019 20:30:21 -0500
+Subject: Re: [GIT PULL] OpenRISC updates for v5.5
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575336618;
-        bh=t0492yjQtzcuOnpNEzTssNPJaZmkH18aG64RsUtFj+M=;
+        s=default; t=1575336621;
+        bh=2HHNi9jt2CEjhhglrUy3+GonDpvuMHpqSRE7j1QJELo=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=hyD3chR9f+ve08UXF5blHs5WYigCEmCMA6mNFKa8sQyTm6tg/lT7EKhxk/7eLVBEi
-         uMpNN5zkJDZpbf1BLWo/liWZfgr62cb/w9KexVJlmtfr2xbloAgv/YqWczP9pbQ8kB
-         kCyVD4Z0g/5OuGxvzkSYp3cX309gZKJ7VpcwrRlk=
+        b=cTasfkY68100KpxSVud6QK7y2niwnJx7hq0+Mr+9bAhC8Sj93MdklSXh0diHTFVLd
+         JobIScItUtpCFb5WRZoapw7XaaFlgE233QVUvvS6rV0osrIJJWtduMXtCNnVeg5wKB
+         fwshiyOBgL2Agt9jQqA23RD6RYILK7CTzy+qnzIk=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <1044415561.103245.1575231527451.JavaMail.zimbra@nod.at>
-References: <1044415561.103245.1575231527451.JavaMail.zimbra@nod.at>
+In-Reply-To: <20191202115510.GO24874@lianli.shorne-pla.net>
+References: <20191202115510.GO24874@lianli.shorne-pla.net>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <1044415561.103245.1575231527451.JavaMail.zimbra@nod.at>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rw/ubifs.git
- tags/upstream-5.5-rc1
-X-PR-Tracked-Commit-Id: 6e78c01fde9023e0701f3af880c1fd9de6e4e8e3
+X-PR-Tracked-Message-Id: <20191202115510.GO24874@lianli.shorne-pla.net>
+X-PR-Tracked-Remote: git://github.com/openrisc/linux.git tags/for-linus
+X-PR-Tracked-Commit-Id: 0ecdcaa6d5e78649578ff32c37556a4140b64edf
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e3a251e366e1a007c7ce7b2809b67f4dece6b17c
-Message-Id: <157533661816.4888.1012998876032231528.pr-tracker-bot@kernel.org>
-Date:   Tue, 03 Dec 2019 01:30:18 +0000
-To:     Richard Weinberger <richard@nod.at>
-Cc:     torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>
+X-PR-Merge-Commit-Id: 120e47686a00144ef1195cfc137645d1bed46d23
+Message-Id: <157533662106.4888.4608498727365693870.pr-tracker-bot@kernel.org>
+Date:   Tue, 03 Dec 2019 01:30:21 +0000
+To:     Stafford Horne <shorne@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 1 Dec 2019 21:18:47 +0100 (CET):
+The pull request you sent on Mon, 2 Dec 2019 20:55:10 +0900:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rw/ubifs.git tags/upstream-5.5-rc1
+> git://github.com/openrisc/linux.git tags/for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e3a251e366e1a007c7ce7b2809b67f4dece6b17c
+https://git.kernel.org/torvalds/c/120e47686a00144ef1195cfc137645d1bed46d23
 
 Thank you!
 
