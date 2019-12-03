@@ -2,115 +2,110 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C16C43215
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A104C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 693AC206E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:57:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575356235;
-	bh=P8E3lQArwGwWxaQGqcgaCFiySpIwEK52qYEJc/FtTdE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EJW09WFgAXNf8finUxyf/Ap2fLXOYBabqkS/1jvN2bo3ML2wr4xVEaALH2Txhj61x
-	 3VfrGDN0deXNgi6arP5uBA2ni3XVHDKd2V1Ot6YDW94j5fDhkvs+UgRm7tk5jFlnkL
-	 qBp7Y9ixkZuYVZaU7NVrJXlJ+vCsX1q8mbMAQZCY=
+	by mail.kernel.org (Postfix) with ESMTP id 79249206E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 06:58:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfLCG5O (ORCPT
+        id S1727372AbfLCG57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 01:57:14 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35550 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727192AbfLCG5N (ORCPT
+        Tue, 3 Dec 2019 01:57:59 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:41169 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727351AbfLCG57 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 01:57:13 -0500
-Received: by mail-wr1-f66.google.com with SMTP id g17so2275489wro.2;
-        Mon, 02 Dec 2019 22:57:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rTUIIMa2Hzz+bG0D78hRLm6CQ+jqv7MwcIq2lP6UkG8=;
-        b=XzpQHiVedEvbcc5uDZ3UD9P6PNM/Q9mKkCl7qz8mmb+djhAofY7885Yx4cRDxHu2nc
-         edoVj/oa0yjA7TJ+EkooBjqeB8G4y9ScfVYSqcG/V5iT1dGg9/SNbaD6TxNcmgyhmJKT
-         ecT0QGp151RbjwAGDaHyTeH/FVB/KHKGM1dctwO1JMJu/nM5fbAFl1dcSEETRokjZHzs
-         w895yd37IjUhPsQBHQ7rwUdbTuLD0FzJqp/mQA+iRxAtjjji8tBbW3QvT8KNcD/2PThT
-         Cvb+7JKUaeBZUd4D1yktjHEvOr1Pz0WsSd8j9vivbulxa8k0Tnd50MCVgH/M+z7ZmDbk
-         j0iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rTUIIMa2Hzz+bG0D78hRLm6CQ+jqv7MwcIq2lP6UkG8=;
-        b=P/8jUhBfEvAMrtfTxc3H4pWDuyeaHIg5j4T1/wdBkr+aH5CNurx1GKDO8TANEW9u+w
-         KHetiaGxrsURyVoEbKbQlHKCMWCDlvjVsAnaZJaTZZeKKSUrBy+Xkdk2CdxI2beresd+
-         CZIJYh1oE5hc95gN9bMLVAHesWH1SJy9zpJYG9lqq3p19dA8ge7o7VvLpnAZuDwmDFze
-         4SzYUiQstOefXF1LxFJLRX5h00oXYCmZIh5ZAHaweL16iShkaHLQ2oNs7tqh0b8JJr+5
-         MSFIfzKWkcuBaTdQ7BBN26xLEvii/lphVjLGFL5DuDlydSTS8LE0BwzPUFWLiEWBHuyh
-         nRuA==
-X-Gm-Message-State: APjAAAXbst/C1hhXwCCqXnAJi4kVgxNUhe0IJHA0ukEqLwv3zdMnm2UW
-        u6K5UfQ8USZukxMYjE4F+i8=
-X-Google-Smtp-Source: APXvYqy24hL+4+zcTBHsYMEZud/htdzwnF7c7NYz5GXAwY2IVKKbL+AkbNL6cOjQdMi9sPgNYY54Aw==
-X-Received: by 2002:a5d:5308:: with SMTP id e8mr3288902wrv.77.1575356231839;
-        Mon, 02 Dec 2019 22:57:11 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id x7sm2258024wrq.41.2019.12.02.22.57.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 22:57:11 -0800 (PST)
-Date:   Tue, 3 Dec 2019 07:57:09 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the tip tree with Linus' tree
-Message-ID: <20191203065709.GA115767@gmail.com>
-References: <20191203131024.6e36ed88@canb.auug.org.au>
+        Tue, 3 Dec 2019 01:57:59 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ic288-0001nC-LO; Tue, 03 Dec 2019 07:57:52 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ic287-0005Qu-Jj; Tue, 03 Dec 2019 07:57:51 +0100
+Date:   Tue, 3 Dec 2019 07:57:51 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "rjui@broadcom.com" <rjui@broadcom.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alice Guo <alice.guo@nxp.com>
+Subject: Re: [PATCH 2/2] gpio: bcm-kona: use platform_irq_count
+Message-ID: <20191203065751.w23dypag4745qv7i@pengutronix.de>
+References: <1575352925-17271-1-git-send-email-peng.fan@nxp.com>
+ <1575352925-17271-2-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191203131024.6e36ed88@canb.auug.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1575352925-17271-2-git-send-email-peng.fan@nxp.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Dec 03, 2019 at 06:04:27AM +0000, Peng Fan wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> Use platform_irq_count to replace of_irq_count
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+> 
+> V1:
+>  Code inspection, not tested
+> 
+>  drivers/gpio/gpio-bcm-kona.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
+> index 4122683eb1f9..c50721980a7c 100644
+> --- a/drivers/gpio/gpio-bcm-kona.c
+> +++ b/drivers/gpio/gpio-bcm-kona.c
+> @@ -19,7 +19,6 @@
+>  #include <linux/io.h>
+>  #include <linux/gpio/driver.h>
+>  #include <linux/of_device.h>
+> -#include <linux/of_irq.h>
+>  #include <linux/init.h>
+>  #include <linux/irqdomain.h>
+>  #include <linux/irqchip/chained_irq.h>
+> @@ -586,7 +585,7 @@ static int bcm_kona_gpio_probe(struct platform_device *pdev)
+>  
+>  	kona_gpio->gpio_chip = template_chip;
+>  	chip = &kona_gpio->gpio_chip;
+> -	kona_gpio->num_bank = of_irq_count(dev->of_node);
+> +	kona_gpio->num_bank = platform_irq_count(pdev);
 
-* Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+of_irq_count returns 0 or a positive int while platform_irq_count might
+return a negative error code. This needs handling. Also I wonder why
+platform_irq_count() is better than of_irq_count() which would be good
+to describe in the commit log.
 
-> Hi all,
-> 
-> Today's linux-next merge of the tip tree got a conflict in:
-> 
->   arch/x86/mm/pat_interval.c
-> 
-> between commit:
-> 
->   91298f1a302d ("x86/mm/pat: Fix off-by-one bugs in interval tree search")
-> 
-> from Linus' tree and commits:
-> 
->   70bfed57a6de ("x86/mm/pat: Move the memtype related files to arch/x86/mm/pat/")
-> 
-> from the tip tree.
-> 
-> I fixed it up (I just removed the file - there may be further updates
-> required) and can carry the fix as necessary. This is now fixed as far as
-> linux-next is concerned, but any non trivial conflicts should be mentioned
-> to your upstream maintainer when your tree is submitted for merging.
-> You may also want to consider cooperating with the maintainer of the
-> conflicting tree to minimise any particularly complex conflicts.
+Best regards
+Uwe
 
-No, the correct resolution is to apply the 91298f1a302d fix to the new 
-file - which is in -tip and which I've now also pushed out to -next, so 
--next should pick it up tomorrow.
-
-Thanks,
-
-	Ingo
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
