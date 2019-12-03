@@ -2,397 +2,184 @@ Return-Path: <SRS0=Tfva=ZZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_DIGITS,
-	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE155C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D48B0C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78511206EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A85C420675
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Dec 2019 09:55:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1FZDNl87"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbfLCJzK (ORCPT
+        id S1726480AbfLCJzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 04:55:10 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:35014 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbfLCJzI (ORCPT
+        Tue, 3 Dec 2019 04:55:33 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:50276 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbfLCJzd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 04:55:08 -0500
-Received: by mail-io1-f71.google.com with SMTP id x10so2040982iob.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 01:55:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=bRVPJYxVJKQcYwA+gQ6WPDZdzXEVmV0aqa8OHhQhGOM=;
-        b=bVDdZYLT+DyxIJ3oFCoejGChQWdk+kAM6Ny0E5Wt8Aq5YN4LFyWbecQzj8tzomK4hd
-         4XZwn0s9tSt5/Xp5Xjp5Nw9PuJDbhR+qxet12HhVtmgq2cdBVCyKkZ4fORVANamG3SSZ
-         yjMoyxm6kDhBbDzJcXvz+tNNzS5249/Bo1GItkYP2RhBE8KAjaBpDV9cIePsG98yZxd1
-         ZXoWa35RY29m7+NdRuHu3A0CdokhaxELKHRhGH4lqAmObmj0k+6xpNsN8R2M0IwAnSQV
-         4E+456Xr/Vl4Xfcbtf22O66/iPCybv3eyuc6G6vaYZfN3IOqvuH80dbfKlIQASb7uzxr
-         0bZQ==
-X-Gm-Message-State: APjAAAVyAyRF571yltWiFJvNG56t3rCLohOFI9AMmrHfsqtjtCeubM3J
-        JyEDr+MtAPDndrOWMZ2YT6YyO493OIZCGuYn7OzTr9NMhZ8v
-X-Google-Smtp-Source: APXvYqwFKt0qoy7uD36l5bn/ZcG+6QR/ZtvUAq8iWV3M17Sh+WWda33OjZJ9eKmlPeQ3ii5xqnd50Mowcjj1Qjf8TOCqBgk3wslU
+        Tue, 3 Dec 2019 04:55:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=eF/WrQZnJQmBzVjTVYwqD09kkKPWxMNLd8gvp2wBnTo=; b=1FZDNl87jk79c9ZWj+ObQc2Tp
+        XJJS87FZgf+DXj0gDSSjlMZX4c+yeOAfDDmrltHXvvDht/VS/Ks0nzq3PjW1p0MRTWsbmDgESZmKa
+        147LsuPCnK8lYanN2+unBDuKVJ50HoQMuAFWO7knQfO+ILR4aOSI+le8M5wFZUQzA7IiD70bluz7K
+        aFbF+0Z11MWMpkddwgqNcunBG2z/4QqHENRkbubMvC0lX9dm7YbIBZI1ORUJb0mS3f2fOxTmax5Tg
+        FjeyQu7p5e0bGqHyrZKinztm1watCmDqayFR33xzpNHLN9jSQJF+6qUggmfHZBikk82PfNALVp7m4
+        nj+N0Mivw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ic4tx-0005uE-EC; Tue, 03 Dec 2019 09:55:25 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BC84D301A79;
+        Tue,  3 Dec 2019 10:54:05 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id F202820230B0A; Tue,  3 Dec 2019 10:55:21 +0100 (CET)
+Date:   Tue, 3 Dec 2019 10:55:21 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>, jiangshanlai@gmail.com,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: Workqueues splat due to ending up on wrong CPU
+Message-ID: <20191203095521.GH2827@hirez.programming.kicks-ass.net>
+References: <20191125230312.GP2889@paulmck-ThinkPad-P72>
+ <20191126183334.GE2867037@devbig004.ftw2.facebook.com>
+ <20191126220533.GU2889@paulmck-ThinkPad-P72>
+ <20191127155027.GA15170@paulmck-ThinkPad-P72>
+ <20191128161823.GA24667@paulmck-ThinkPad-P72>
+ <20191129155850.GA17002@paulmck-ThinkPad-P72>
+ <20191202015548.GA13391@paulmck-ThinkPad-P72>
+ <20191202201338.GH16681@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:1f16:: with SMTP id i22mr4038062ile.206.1575366907559;
- Tue, 03 Dec 2019 01:55:07 -0800 (PST)
-Date:   Tue, 03 Dec 2019 01:55:07 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ea90600598c9b089@google.com>
-Subject: possible deadlock in __dev_queue_xmit (3)
-From:   syzbot <syzbot+3b165dac15094065651e@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191202201338.GH16681@devbig004.ftw2.facebook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, Dec 02, 2019 at 12:13:38PM -0800, Tejun Heo wrote:
+> Hello, Paul.
+> 
+> (cc'ing scheduler folks - workqueue rescuer is very occassionally
+> triggering a warning which says that it isn't on the cpu it should be
+> on under rcu cpu hotplug torture test.  It's checking smp_processor_id
+> is the expected one after a successful set_cpus_allowed_ptr() call.)
+> 
+> On Sun, Dec 01, 2019 at 05:55:48PM -0800, Paul E. McKenney wrote:
+> > > And hyperthreading seems to have done the trick!  One splat thus far,
+> > > shown below.  The run should complete this evening, Pacific Time.
+> > 
+> > That was the only one for that run, but another 24*56-hour run got three
+> > more.  All of them expected to be on CPU 0 (which never goes offline, so
+> > why?) and the "XXX" diagnostic never did print.
+> 
+> Heh, I didn't expect that, so maybe set_cpus_allowed_ptr() is
+> returning 0 while not migrating the rescuer task to the target cpu for
+> some reason?
+> 
+> The rescuer is always calling to migrate itself, so it must always be
+> running.  set_cpus_allowed_ptr() migrates live ones by calling
+> stop_one_cpu() which schedules a migration function which runs from a
+> highpri task on the target cpu.  Please take a look at the following.
+> 
+>   static bool cpu_stop_queue_work(unsigned int cpu, struct cpu_stop_work *work)
+>   {
+>           ...
+> 	  enabled = stopper->enabled;
+> 	  if (enabled)
+> 		  __cpu_stop_queue_work(stopper, work, &wakeq);
+> 	  else if (work->done)
+> 		  cpu_stop_signal_done(work->done);
+>           ...
+>   }
+> 
+> So, if stopper->enabled is clear, it'll signal completion without
+> running the work.
 
-syzbot found the following crash on:
+Is there ever a valid case for this? That is, why isn't that a WARN()?
 
-HEAD commit:    419593da Add linux-next specific files for 20191129
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=14709712e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2f4b95d6f8310863
-dashboard link: https://syzkaller.appspot.com/bug?extid=3b165dac15094065651e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> stopper->enabled is cleared during cpu hotunplug
+> and restored from bringup_cpu() while cpu is being brought back up.
+> 
+>   static int bringup_wait_for_ap(unsigned int cpu)
+>   {
+>           ...
+> 	  stop_machine_unpark(cpu);
+>           ....
+>   }
+> 
+>   static int bringup_cpu(unsigned int cpu)
+>   {
+> 	  ...
+> 	  ret = __cpu_up(cpu, idle);
+>           ...
+> 	  return bringup_wait_for_ap(cpu);
+>   }
+> 
+> __cpu_up() is what marks the cpu online and once the cpu is online,
+> kthreads are free to migrate into the cpu, so it looks like there's a
+> brief window where a cpu is marked online but the stopper thread is
+> still disabled meaning that a kthread may schedule into the cpu but
+> not out of it, which would explain the symptom that you were seeing.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Yes.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+3b165dac15094065651e@syzkaller.appspotmail.com
+> It could be that I'm misreading the code.  What do you guys think?
 
-======================================================
-WARNING: possible circular locking dependency detected
-5.4.0-next-20191129-syzkaller #0 Not tainted
-------------------------------------------------------
-syz-executor.3/2879 is trying to acquire lock:
-ffff88809435b218 (&dev->qdisc_tx_busylock_key#71){+...}, at: spin_lock  
-include/linux/spinlock.h:338 [inline]
-ffff88809435b218 (&dev->qdisc_tx_busylock_key#71){+...}, at: __dev_xmit_skb  
-net/core/dev.c:3644 [inline]
-ffff88809435b218 (&dev->qdisc_tx_busylock_key#71){+...}, at:  
-__dev_queue_xmit+0x2dce/0x35c0 net/core/dev.c:3982
-
-but task is already holding lock:
-ffff8880a9b9cc98 (&dev->qdisc_xmit_lock_key#312){+.-.}, at: spin_lock  
-include/linux/spinlock.h:338 [inline]
-ffff8880a9b9cc98 (&dev->qdisc_xmit_lock_key#312){+.-.}, at: __netif_tx_lock  
-include/linux/netdevice.h:3929 [inline]
-ffff8880a9b9cc98 (&dev->qdisc_xmit_lock_key#312){+.-.}, at:  
-sch_direct_xmit+0x2e0/0xd30 net/sched/sch_generic.c:311
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (&dev->qdisc_xmit_lock_key#312){+.-.}:
-        __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-        _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-        spin_lock include/linux/spinlock.h:338 [inline]
-        __netif_tx_lock include/linux/netdevice.h:3929 [inline]
-        sch_direct_xmit+0x2e0/0xd30 net/sched/sch_generic.c:311
-        __dev_xmit_skb net/core/dev.c:3621 [inline]
-        __dev_queue_xmit+0x270a/0x35c0 net/core/dev.c:3982
-        dev_queue_xmit+0x18/0x20 net/core/dev.c:4046
-        neigh_resolve_output net/core/neighbour.c:1490 [inline]
-        neigh_resolve_output+0x5c4/0x990 net/core/neighbour.c:1470
-        neigh_output include/net/neighbour.h:511 [inline]
-        ip6_finish_output2+0x109a/0x25c0 net/ipv6/ip6_output.c:116
-        __ip6_finish_output+0x444/0xaa0 net/ipv6/ip6_output.c:142
-        ip6_finish_output+0x38/0x1f0 net/ipv6/ip6_output.c:152
-        NF_HOOK_COND include/linux/netfilter.h:296 [inline]
-        ip6_output+0x25e/0x880 net/ipv6/ip6_output.c:175
-        dst_output include/net/dst.h:436 [inline]
-        NF_HOOK include/linux/netfilter.h:307 [inline]
-        NF_HOOK include/linux/netfilter.h:301 [inline]
-        mld_sendpack+0x9c2/0xed0 net/ipv6/mcast.c:1682
-        mld_send_cr net/ipv6/mcast.c:1978 [inline]
-        mld_ifc_timer_expire+0x454/0x950 net/ipv6/mcast.c:2477
-        call_timer_fn+0x1ac/0x780 kernel/time/timer.c:1404
-        expire_timers kernel/time/timer.c:1449 [inline]
-        __run_timers kernel/time/timer.c:1773 [inline]
-        __run_timers kernel/time/timer.c:1740 [inline]
-        run_timer_softirq+0x6c3/0x1790 kernel/time/timer.c:1786
-        __do_softirq+0x262/0x98c kernel/softirq.c:292
-        invoke_softirq kernel/softirq.c:373 [inline]
-        irq_exit+0x19b/0x1e0 kernel/softirq.c:413
-        exiting_irq arch/x86/include/asm/apic.h:536 [inline]
-        smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1137
-        apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
-        arch_local_irq_restore arch/x86/include/asm/paravirt.h:752 [inline]
-        slab_alloc mm/slab.c:3313 [inline]
-        __do_kmalloc mm/slab.c:3654 [inline]
-        __kmalloc+0x2b8/0x770 mm/slab.c:3665
-        kmalloc include/linux/slab.h:561 [inline]
-        tomoyo_realpath_from_path+0xc5/0x660 security/tomoyo/realpath.c:252
-        tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
-        tomoyo_path_number_perm+0x1dd/0x520 security/tomoyo/file.c:723
-        tomoyo_file_ioctl+0x23/0x30 security/tomoyo/tomoyo.c:341
-        security_file_ioctl+0x77/0xc0 security/security.c:1409
-        ksys_ioctl+0x57/0xd0 fs/ioctl.c:747
-        __do_sys_ioctl fs/ioctl.c:756 [inline]
-        __se_sys_ioctl fs/ioctl.c:754 [inline]
-        __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
-        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #0 (&dev->qdisc_tx_busylock_key#71){+...}:
-        check_prev_add kernel/locking/lockdep.c:2476 [inline]
-        check_prevs_add kernel/locking/lockdep.c:2581 [inline]
-        validate_chain kernel/locking/lockdep.c:2971 [inline]
-        __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3955
-        lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
-        __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-        _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-        spin_lock include/linux/spinlock.h:338 [inline]
-        __dev_xmit_skb net/core/dev.c:3644 [inline]
-        __dev_queue_xmit+0x2dce/0x35c0 net/core/dev.c:3982
-        dev_queue_xmit+0x18/0x20 net/core/dev.c:4046
-        neigh_resolve_output net/core/neighbour.c:1490 [inline]
-        neigh_resolve_output+0x5c4/0x990 net/core/neighbour.c:1470
-        neigh_output include/net/neighbour.h:511 [inline]
-        ip6_finish_output2+0x109a/0x25c0 net/ipv6/ip6_output.c:116
-        __ip6_finish_output+0x444/0xaa0 net/ipv6/ip6_output.c:142
-        ip6_finish_output+0x38/0x1f0 net/ipv6/ip6_output.c:152
-        NF_HOOK_COND include/linux/netfilter.h:296 [inline]
-        ip6_output+0x25e/0x880 net/ipv6/ip6_output.c:175
-        dst_output include/net/dst.h:436 [inline]
-        NF_HOOK include/linux/netfilter.h:307 [inline]
-        ndisc_send_skb+0xf1f/0x1490 net/ipv6/ndisc.c:505
-        ndisc_send_ns+0x3a9/0x850 net/ipv6/ndisc.c:647
-        ndisc_solicit+0x2ed/0x470 net/ipv6/ndisc.c:739
-        neigh_probe+0xd0/0x120 net/core/neighbour.c:1012
-        __neigh_event_send+0x3e3/0x17c0 net/core/neighbour.c:1172
-        neigh_event_send include/net/neighbour.h:445 [inline]
-        neigh_resolve_output+0x5ee/0x990 net/core/neighbour.c:1474
-        neigh_output include/net/neighbour.h:511 [inline]
-        ip6_finish_output2+0x109a/0x25c0 net/ipv6/ip6_output.c:116
-        __ip6_finish_output+0x444/0xaa0 net/ipv6/ip6_output.c:142
-        ip6_finish_output+0x38/0x1f0 net/ipv6/ip6_output.c:152
-        NF_HOOK_COND include/linux/netfilter.h:296 [inline]
-        ip6_output+0x25e/0x880 net/ipv6/ip6_output.c:175
-        dst_output include/net/dst.h:436 [inline]
-        ip6_local_out+0xbb/0x1b0 net/ipv6/output_core.c:179
-        ip6_send_skb+0xbb/0x350 net/ipv6/ip6_output.c:1795
-        ip6_push_pending_frames+0xc8/0xf0 net/ipv6/ip6_output.c:1815
-        icmpv6_push_pending_frames+0x34b/0x540 net/ipv6/icmp.c:285
-        icmp6_send+0x1a7f/0x1f90 net/ipv6/icmp.c:598
-        icmpv6_send+0xec/0x220 net/ipv6/ip6_icmp.c:43
-        ip6_link_failure+0x2b/0x530 net/ipv6/route.c:2641
-        dst_link_failure include/net/dst.h:419 [inline]
-        ip_tunnel_xmit+0x1738/0x2d0c net/ipv4/ip_tunnel.c:824
-        __gre_xmit+0x5e9/0x9a0 net/ipv4/ip_gre.c:448
-        erspan_xmit+0x912/0x28f0 net/ipv4/ip_gre.c:683
-        __netdev_start_xmit include/linux/netdevice.h:4442 [inline]
-        netdev_start_xmit include/linux/netdevice.h:4456 [inline]
-        xmit_one net/core/dev.c:3420 [inline]
-        dev_hard_start_xmit+0x1a3/0x9b0 net/core/dev.c:3436
-        sch_direct_xmit+0x372/0xd30 net/sched/sch_generic.c:313
-        __dev_xmit_skb net/core/dev.c:3660 [inline]
-        __dev_queue_xmit+0x1cc9/0x35c0 net/core/dev.c:3982
-        dev_queue_xmit+0x18/0x20 net/core/dev.c:4046
-        neigh_resolve_output net/core/neighbour.c:1490 [inline]
-        neigh_resolve_output+0x5c4/0x990 net/core/neighbour.c:1470
-        neigh_output include/net/neighbour.h:511 [inline]
-        ip6_finish_output2+0x109a/0x25c0 net/ipv6/ip6_output.c:116
-        __ip6_finish_output+0x444/0xaa0 net/ipv6/ip6_output.c:142
-        ip6_finish_output+0x38/0x1f0 net/ipv6/ip6_output.c:152
-        NF_HOOK_COND include/linux/netfilter.h:296 [inline]
-        ip6_output+0x25e/0x880 net/ipv6/ip6_output.c:175
-        dst_output include/net/dst.h:436 [inline]
-        NF_HOOK include/linux/netfilter.h:307 [inline]
-        rawv6_send_hdrinc net/ipv6/raw.c:687 [inline]
-        rawv6_sendmsg+0x203b/0x3860 net/ipv6/raw.c:944
-        inet_sendmsg+0x9e/0xe0 net/ipv4/af_inet.c:807
-        sock_sendmsg_nosec net/socket.c:639 [inline]
-        sock_sendmsg+0xd7/0x130 net/socket.c:659
-        sock_write_iter+0x27c/0x3e0 net/socket.c:991
-        call_write_iter include/linux/fs.h:1902 [inline]
-        aio_write+0x2f2/0x540 fs/aio.c:1580
-        __io_submit_one fs/aio.c:1812 [inline]
-        io_submit_one+0xfbd/0x2ec0 fs/aio.c:1859
-        __do_sys_io_submit fs/aio.c:1918 [inline]
-        __se_sys_io_submit fs/aio.c:1888 [inline]
-        __x64_sys_io_submit+0x1bd/0x540 fs/aio.c:1888
-        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-other info that might help us debug this:
-
-  Possible unsafe locking scenario:
-
-        CPU0                    CPU1
-        ----                    ----
-   lock(&dev->qdisc_xmit_lock_key#312);
-                                lock(&dev->qdisc_tx_busylock_key#71);
-                                lock(&dev->qdisc_xmit_lock_key#312);
-   lock(&dev->qdisc_tx_busylock_key#71);
-
-  *** DEADLOCK ***
-
-12 locks held by syz-executor.3/2879:
-  #0: ffffffff891ad880 (rcu_read_lock){....}, at: l3mdev_l3_out  
-include/net/l3mdev.h:179 [inline]
-  #0: ffffffff891ad880 (rcu_read_lock){....}, at: l3mdev_ip6_out  
-include/net/l3mdev.h:200 [inline]
-  #0: ffffffff891ad880 (rcu_read_lock){....}, at: rawv6_send_hdrinc  
-net/ipv6/raw.c:677 [inline]
-  #0: ffffffff891ad880 (rcu_read_lock){....}, at:  
-rawv6_sendmsg+0x1e28/0x3860 net/ipv6/raw.c:944
-  #1: ffffffff891ad840 (rcu_read_lock_bh){....}, at: lwtunnel_xmit_redirect  
-include/net/lwtunnel.h:92 [inline]
-  #1: ffffffff891ad840 (rcu_read_lock_bh){....}, at:  
-ip6_finish_output2+0x214/0x25c0 net/ipv6/ip6_output.c:102
-  #2: ffffffff891ad840 (rcu_read_lock_bh){....}, at:  
-__dev_queue_xmit+0x20a/0x35c0 net/core/dev.c:3948
-  #3: ffff88809435b138 (&dev->qdisc_running_key#128){+...}, at:  
-dev_queue_xmit+0x18/0x20 net/core/dev.c:4046
-  #4: ffff8880a9b9cc98 (&dev->qdisc_xmit_lock_key#312){+.-.}, at: spin_lock  
-include/linux/spinlock.h:338 [inline]
-  #4: ffff8880a9b9cc98 (&dev->qdisc_xmit_lock_key#312){+.-.}, at:  
-__netif_tx_lock include/linux/netdevice.h:3929 [inline]
-  #4: ffff8880a9b9cc98 (&dev->qdisc_xmit_lock_key#312){+.-.}, at:  
-sch_direct_xmit+0x2e0/0xd30 net/sched/sch_generic.c:311
-  #5: ffffffff891ad880 (rcu_read_lock){....}, at: icmpv6_send+0x0/0x220  
-net/ipv6/ip6_icmp.c:31
-  #6: ffff88806e2194e0 (k-slock-AF_INET6){+.-.}, at: spin_trylock  
-include/linux/spinlock.h:348 [inline]
-  #6: ffff88806e2194e0 (k-slock-AF_INET6){+.-.}, at: icmpv6_xmit_lock  
-net/ipv6/icmp.c:117 [inline]
-  #6: ffff88806e2194e0 (k-slock-AF_INET6){+.-.}, at: icmp6_send+0xde8/0x1f90  
-net/ipv6/icmp.c:519
-  #7: ffffffff891ad880 (rcu_read_lock){....}, at: icmp6_send+0x13cd/0x1f90  
-net/ipv6/icmp.c:579
-  #8: ffffffff891ad840 (rcu_read_lock_bh){....}, at: lwtunnel_xmit_redirect  
-include/net/lwtunnel.h:92 [inline]
-  #8: ffffffff891ad840 (rcu_read_lock_bh){....}, at:  
-ip6_finish_output2+0x214/0x25c0 net/ipv6/ip6_output.c:102
-  #9: ffffffff891ad880 (rcu_read_lock){....}, at: ip6_nd_hdr  
-net/ipv6/ndisc.c:463 [inline]
-  #9: ffffffff891ad880 (rcu_read_lock){....}, at:  
-ndisc_send_skb+0x7fe/0x1490 net/ipv6/ndisc.c:499
-  #10: ffffffff891ad840 (rcu_read_lock_bh){....}, at: lwtunnel_xmit_redirect  
-include/net/lwtunnel.h:92 [inline]
-  #10: ffffffff891ad840 (rcu_read_lock_bh){....}, at:  
-ip6_finish_output2+0x214/0x25c0 net/ipv6/ip6_output.c:102
-  #11: ffffffff891ad840 (rcu_read_lock_bh){....}, at:  
-__dev_queue_xmit+0x20a/0x35c0 net/core/dev.c:3948
-
-stack backtrace:
-CPU: 0 PID: 2879 Comm: syz-executor.3 Not tainted  
-5.4.0-next-20191129-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  print_circular_bug.isra.0.cold+0x163/0x172 kernel/locking/lockdep.c:1685
-  check_noncircular+0x32e/0x3e0 kernel/locking/lockdep.c:1809
-  check_prev_add kernel/locking/lockdep.c:2476 [inline]
-  check_prevs_add kernel/locking/lockdep.c:2581 [inline]
-  validate_chain kernel/locking/lockdep.c:2971 [inline]
-  __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3955
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
-  __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-  _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-  spin_lock include/linux/spinlock.h:338 [inline]
-  __dev_xmit_skb net/core/dev.c:3644 [inline]
-  __dev_queue_xmit+0x2dce/0x35c0 net/core/dev.c:3982
-  dev_queue_xmit+0x18/0x20 net/core/dev.c:4046
-  neigh_resolve_output net/core/neighbour.c:1490 [inline]
-  neigh_resolve_output+0x5c4/0x990 net/core/neighbour.c:1470
-  neigh_output include/net/neighbour.h:511 [inline]
-  ip6_finish_output2+0x109a/0x25c0 net/ipv6/ip6_output.c:116
-  __ip6_finish_output+0x444/0xaa0 net/ipv6/ip6_output.c:142
-  ip6_finish_output+0x38/0x1f0 net/ipv6/ip6_output.c:152
-  NF_HOOK_COND include/linux/netfilter.h:296 [inline]
-  ip6_output+0x25e/0x880 net/ipv6/ip6_output.c:175
-  dst_output include/net/dst.h:436 [inline]
-  NF_HOOK include/linux/netfilter.h:307 [inline]
-  ndisc_send_skb+0xf1f/0x1490 net/ipv6/ndisc.c:505
-  ndisc_send_ns+0x3a9/0x850 net/ipv6/ndisc.c:647
-  ndisc_solicit+0x2ed/0x470 net/ipv6/ndisc.c:739
-  neigh_probe+0xd0/0x120 net/core/neighbour.c:1012
-  __neigh_event_send+0x3e3/0x17c0 net/core/neighbour.c:1172
-  neigh_event_send include/net/neighbour.h:445 [inline]
-  neigh_resolve_output+0x5ee/0x990 net/core/neighbour.c:1474
-  neigh_output include/net/neighbour.h:511 [inline]
-  ip6_finish_output2+0x109a/0x25c0 net/ipv6/ip6_output.c:116
-  __ip6_finish_output+0x444/0xaa0 net/ipv6/ip6_output.c:142
-  ip6_finish_output+0x38/0x1f0 net/ipv6/ip6_output.c:152
-  NF_HOOK_COND include/linux/netfilter.h:296 [inline]
-  ip6_output+0x25e/0x880 net/ipv6/ip6_output.c:175
-  dst_output include/net/dst.h:436 [inline]
-  ip6_local_out+0xbb/0x1b0 net/ipv6/output_core.c:179
-  ip6_send_skb+0xbb/0x350 net/ipv6/ip6_output.c:1795
-  ip6_push_pending_frames+0xc8/0xf0 net/ipv6/ip6_output.c:1815
-  icmpv6_push_pending_frames+0x34b/0x540 net/ipv6/icmp.c:285
-  icmp6_send+0x1a7f/0x1f90 net/ipv6/icmp.c:598
-  icmpv6_send+0xec/0x220 net/ipv6/ip6_icmp.c:43
-  ip6_link_failure+0x2b/0x530 net/ipv6/route.c:2641
-  dst_link_failure include/net/dst.h:419 [inline]
-  ip_tunnel_xmit+0x1738/0x2d0c net/ipv4/ip_tunnel.c:824
-  __gre_xmit+0x5e9/0x9a0 net/ipv4/ip_gre.c:448
-  erspan_xmit+0x912/0x28f0 net/ipv4/ip_gre.c:683
-  __netdev_start_xmit include/linux/netdevice.h:4442 [inline]
-  netdev_start_xmit include/linux/netdevice.h:4456 [inline]
-  xmit_one net/core/dev.c:3420 [inline]
-  dev_hard_start_xmit+0x1a3/0x9b0 net/core/dev.c:3436
-  sch_direct_xmit+0x372/0xd30 net/sched/sch_generic.c:313
-  __dev_xmit_skb net/core/dev.c:3660 [inline]
-  __dev_queue_xmit+0x1cc9/0x35c0 net/core/dev.c:3982
-  dev_queue_xmit+0x18/0x20 net/core/dev.c:4046
-  neigh_resolve_output net/core/neighbour.c:1490 [inline]
-  neigh_resolve_output+0x5c4/0x990 net/core/neighbour.c:1470
-  neigh_output include/net/neighbour.h:511 [inline]
-  ip6_finish_output2+0x109a/0x25c0 net/ipv6/ip6_output.c:116
-  __ip6_finish_output+0x444/0xaa0 net/ipv6/ip6_output.c:142
-  ip6_finish_output+0x38/0x1f0 net/ipv6/ip6_output.c:152
-  NF_HOOK_COND include/linux/netfilter.h:296 [inline]
-  ip6_output+0x25e/0x880 net/ipv6/ip6_output.c:175
-  dst_output include/net/dst.h:436 [inline]
-  NF_HOOK include/linux/netfilter.h:307 [inline]
-  rawv6_send_hdrinc net/ipv6/raw.c:687 [inline]
-  rawv6_sendmsg+0x203b/0x3860 net/ipv6/raw.c:944
-  inet_sendmsg+0x9e/0xe0 net/ipv4/af_inet.c:807
-  sock_sendmsg_nosec net/socket.c:639 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:659
-  sock_write_iter+0x27c/0x3e0 net/socket.c:991
-  call_write_iter include/linux/fs.h:1902 [inline]
-  aio_write+0x2f2/0x540 fs/aio.c:1580
-  __io_submit_one fs/aio.c:1812 [inline]
-  io_submit_one+0xfbd/0x2ec0 fs/aio.c:1859
-  __do_sys_io_submit fs/aio.c:1918 [inline]
-  __se_sys_io_submit fs/aio.c:1888 [inline]
-  __x64_sys_io_submit+0x1bd/0x540 fs/aio.c:1888
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45a679
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fbd60c44c78 EFLAGS: 00000246 ORIG_RAX: 00000000000000d1
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a679
-RDX: 0000000020356ff0 RSI: 0000000000000001 RDI: 00007fbd60c24000
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fbd60c456d4
-R13: 00000000004c1d83 R14: 00000000004d6060 R15: 00000000ffffffff
-syz-executor.3 (2879) used greatest stack depth: 20000 bytes left
-
+The below seems to not insta explode...
 
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ kernel/cpu.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index a59cc980adad..9eaedd002f41 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -525,8 +525,7 @@ static int bringup_wait_for_ap(unsigned int cpu)
+ 	if (WARN_ON_ONCE((!cpu_online(cpu))))
+ 		return -ECANCELED;
+ 
+-	/* Unpark the stopper thread and the hotplug thread of the target cpu */
+-	stop_machine_unpark(cpu);
++	/* Unpark the hotplug thread of the target cpu */
+ 	kthread_unpark(st->thread);
+ 
+ 	/*
+@@ -1089,8 +1088,8 @@ void notify_cpu_starting(unsigned int cpu)
+ 
+ /*
+  * Called from the idle task. Wake up the controlling task which brings the
+- * stopper and the hotplug thread of the upcoming CPU up and then delegates
+- * the rest of the online bringup to the hotplug thread.
++ * hotplug thread of the upcoming CPU up and then delegates the rest of the
++ * online bringup to the hotplug thread.
+  */
+ void cpuhp_online_idle(enum cpuhp_state state)
+ {
+@@ -1100,6 +1099,12 @@ void cpuhp_online_idle(enum cpuhp_state state)
+ 	if (state != CPUHP_AP_ONLINE_IDLE)
+ 		return;
+ 
++	/*
++	 * Unpark the stopper thread before we start the idle thread; this
++	 * ensures the stopper is always available.
++	 */
++	stop_machine_unpark(smp_processor_id());
++
+ 	st->state = CPUHP_AP_ONLINE_IDLE;
+ 	complete_ap_thread(st, true);
+ }
