@@ -2,125 +2,139 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C01C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CF4C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93F892081B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:14:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575472469;
-	bh=1ybAm1ALf3cAvtTcV4k+XXr/muJrjJDFhDi9LQbvSlQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R//IuP7meLMZKUNddxQ+W7jwzrQqjwB4KbtYE676dzO07gs7xybX+dejq+anD6eJg
-	 mx7KO/k8P+p3tmcEbuLV46/jCb8m0/JQgLYPNk2k+xDb+iyWrCLAkO0vF9JurBsyKi
-	 43rVsGFg23ilZhFJb/VR13UkOgtv/0wnKsFtW+bU=
+	by mail.kernel.org (Postfix) with ESMTP id D0090206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:16:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="QeS7Ngnx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbfLDPO2 (ORCPT
+        id S1728211AbfLDPQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:14:28 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44708 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727828AbfLDPO1 (ORCPT
+        Wed, 4 Dec 2019 10:16:00 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:42140 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727828AbfLDPQA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:14:27 -0500
-Received: by mail-ot1-f67.google.com with SMTP id x3so6575165oto.11;
-        Wed, 04 Dec 2019 07:14:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=o+hFN8IqKVNoUmQrkJu8TMIhc+FtW0Kt3XLH9BBCFME=;
-        b=RC+VQrvdq6Fn2W/J4LSNsOim5dSVmWu9zfGe8uUuYd2PaD279V+zCLMJ1fgohT2726
-         pk5MdA82NF9Alf5PsgB4kuLt2L6Z4X3o69D+PcBBB2Us+o0ZuDm5d1DfiB8uZzWvIqOU
-         Ry2afhImrVRV7l2K4/mJnDySW9hPoEEdy8iFlRxg/pKICupbRBkvKGgSa7yhgjAM6ZoO
-         Qh4PxZjebk9qKRLuxzCjtk8gmjFm7xQi6Y6Im+G0l1uBpHdan1m8RF1wYLwyXIh9d1PB
-         xpRO6n4Ply4xoLWyhobTsqCvvkZ3/5q30eqcZsTvgg0Cc9nCzFW7udWqLUxVbI/d2eHw
-         rR2Q==
-X-Gm-Message-State: APjAAAVme4igybeYnlrVcSYCNZHuNTo9L38KxuKULrPwtb1pkfdX0qEL
-        o/2bahStyJ+kyGFSji1oDxekvdE=
-X-Google-Smtp-Source: APXvYqyDpd68LHA7Vc9YToHmwTS2jPtEct42aCrQlGcX6wCzwAM7xJgp3Zq+bIy220TGHyd0vLRcsg==
-X-Received: by 2002:a9d:5c88:: with SMTP id a8mr992823oti.348.1575472466619;
-        Wed, 04 Dec 2019 07:14:26 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r13sm2372907oic.52.2019.12.04.07.14.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 07:14:25 -0800 (PST)
-Date:   Wed, 4 Dec 2019 09:14:24 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Khouloud Touil <ktouil@baylibre.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        baylibre-upstreaming@groups.io,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: nvmem: new optional property
- write-protect-gpios
-Message-ID: <20191204151424.GA20683@bogus>
-References: <20191120142038.30746-1-ktouil@baylibre.com>
- <20191120142038.30746-2-ktouil@baylibre.com>
- <CACRpkdaZrvPObjyN4kasARzKZ9=PiAcvTzXzWkmC7R+Ay5tU8w@mail.gmail.com>
- <CAMpxmJWSgYjcGdR7Zrj-=nA+H8cYfZUriHQPxN=8zgPDvD-wTA@mail.gmail.com>
- <CACRpkdaW82pgQivc0VVgqqVv4fgXxMyGD3Lo8YHcMK7aGPDKaw@mail.gmail.com>
- <CAMpxmJU_0MzroyD_ZF5WOxpZz3dkADLOmW7aKpWdJ7GCvo-RnA@mail.gmail.com>
- <CACRpkdaPQKxfC66yhG=xdmCOGGd9PjDVCwZquKb+4HmuS_=kNA@mail.gmail.com>
- <CALL1Z1xpcGyh_f3ooRT+gGApoAnS7YBMd2hUKqnt+pTcAFoeAg@mail.gmail.com>
- <CACRpkdYEEypRZOaO3Ta9aDgizNeLyUOSraBEhKaZcHaJV+o0gQ@mail.gmail.com>
- <CAMRc=MfVod5ODvsQbVBny1+Yvre1F971uR_DqsvoiYATvUfoXw@mail.gmail.com>
+        Wed, 4 Dec 2019 10:16:00 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB4FBqIn030960;
+        Wed, 4 Dec 2019 16:15:45 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=mi6sicS/6WmqRtJHRFBWFt0P7fH4La+GpgRzv4TMpAY=;
+ b=QeS7NgnxeWH6y67qc90NxJ+EvWDr1Xf5L0eBiExsnYmb+sSqtL9d9+SfAkfNqGXWCwWF
+ mjcdnK74mUSiW++ng/bMLVgi5x6LymSxphtsB2Kc8gMF4VFOpC+wWHdMypAWSxJxQcQx
+ +zPICe6JBQ3BK/OyoLnI4XOO2gnpDoIdBh+G5foKYSeraKiEk0bULzhzCQKZ90qjkm73
+ +WMr8TxWv++JP/0D6VaUM9wjwdEDJ9oJVsexbRt/uWIYm4ENIkBU7LRU2z97o26PU9F3
+ r1FZSSQkrmeLI1+Oj3ye3q6GM/csjW4MxyV/cGSD0U2Kf37kySC3K3qpTgX5h8YlXDrv WQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2wkg6knqqc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Dec 2019 16:15:45 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C5CFC10002A;
+        Wed,  4 Dec 2019 16:15:44 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9398C2C144D;
+        Wed,  4 Dec 2019 16:15:44 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.44) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 4 Dec
+ 2019 16:15:43 +0100
+Subject: Re: [PATCH v2 0/6] STM32 DT: Updates for SOC diversity
+To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>, <arnd@arndb.de>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+References: <20191129180602.28470-1-alexandre.torgue@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <a88cb8e2-052e-5c1b-9e64-9f937030b3fe@st.com>
+Date:   Wed, 4 Dec 2019 16:15:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MfVod5ODvsQbVBny1+Yvre1F971uR_DqsvoiYATvUfoXw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191129180602.28470-1-alexandre.torgue@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-04_03:2019-12-04,2019-12-04 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 09:47:01AM +0100, Bartosz Golaszewski wrote:
-> czw., 28 lis 2019 o 14:45 Linus Walleij <linus.walleij@linaro.org> napisał(a):
-> >
-> > On Tue, Nov 26, 2019 at 4:18 PM Khouloud Touil <ktouil@baylibre.com> wrote:
-> >
-> > > [Me]
-> > >> 4. The code still need to be modified to set the value
-> > >>    to "1" to assert the line since the gpiolib now handles
-> > >>    the inversion semantics.
-> >
-> > > By saying "assert the wp" do you mean enable the write operation or
-> > > block it ?
-> >
-> > Yeah one more layer of confusion, sorry :/
-> >
-> > By "asserting WP" I mean driving the line to a state where
-> > writing to the EEPROM is enabled, i.e. the default state is
-> > that the EEPROM is write protected and when you "assert"
-> > WP it becomes writable.
-> >
-> > If you feel the inverse semantics are more intuitive (such that
-> > WP comes up asserted and thus write protected), be my
-> > guest :D
-> >
-> 
-> Ha! I've always assumed that "to assert the write-protect pin" means
-> to *protect* the EEPROM from writing. That's why it comes up as
-> asserted (logical '1' in the driver) and we need to deassert it (drive
-> it low, logical '0' in the driver) to enable writing. This is the
-> current behavior and I'd say in this case it's just a matter of very
-> explicit statement that this is how it works in the DT binding?
-> 
-> Rob: any thoughts on this?
+Hi
 
-I agree with you. If it was called write-enable-gpios, then assert would 
-be to enable writing.
+On 11/29/19 7:05 PM, Alexandre Torgue wrote:
+> Changes since v1:
+>   -According to Arnd comment, move chosen and aliases nodes to dts board file.
+> 
+> 
+> This series updates stm32mp device tree files in order to handle the STM32MP15
+> part numbers diversity. STM32MP15 part numbers are built in this way:
+> 
+> -STM32MP15X: X = [1, 3, 7] for IPs diversity:
+>   -STM32MP151 = basic part
+>   -STM32MP153 = STM32MP151  + a second CPU A7 + MCAN(x2)
+>   -STM32MP157 = STM32MP153 + DSI + GPU
+> 
+> -STMM32MP15xY: Y = [a, c] for security diversity:
+>   -STM32MP15xA: basic part.
+>   -STM32MP15xC: adds crypto IP.
+> 
+> -STM32MP15xxZZ: ZZ = [aa, ab, ac, ad] for packages (IO) diversity:
+>   -STM32MP15xxAA: TFBGA448 18x18
+>   -STM32MP15xxAB: LFBGA354 16x16
+>   -STM32MP15xxAC: TFBGA361 12x12
+>   -STM32MP15xxAD: TFBGA257 10x10
+> 
+> New device tree files are created and some existing are renamed to match with
+> this split.
+> 
+> In this way it is easy to assemble (by inclusion) those files to match with the
+> SOC partnumber used on board, and then it's simpler for users to create their
+> own device tree board file using the correct SOC.
+> 
+> For more details:
+> 
+> See STM32MP151 [1], STM32MP153 [2], STM32MP157 [3] reference manuals:
+>   [1] https://www.st.com/resource/en/reference_manual/dm00366349.pdf
+>   [2] https://www.st.com/resource/en/reference_manual/dm00366355.pdf
+>   [3] https://www.st.com/resource/en/reference_manual/dm00327659.pdf
+> 
+> Product family:
+>   https://www.st.com/en/microcontrollers-microprocessors/stm32-arm-cortex-mpus.html#products
+> 
+> regards
+> Alex
+> 
+> Alexandre Torgue (6):
+>    ARM: dts: stm32: Adapt stm32mp157 pinctrl to manage STM32MP15xx SOCs
+>      family
+>    ARM: dts: stm32: Update stm32mp157 pinctrl files
+>    ARM: dts: stm32: Introduce new STM32MP15 SOCs: STM32MP151 and
+>      STM32MP153
+>    ARM: dts: stm32: Manage security diversity for STM32M15x SOCs
+>    ARM: dts: stm32: Adapt STM32MP157 DK boards to stm32 DT diversity
+>    ARM: dts: stm32: Adapt STM32MP157C ED1 board to STM32 DT diversity
+>
 
-Rob
+Series applied on stm32-next.
+
+Regards
+Alex
+
+
