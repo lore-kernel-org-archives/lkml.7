@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F028FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D16C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC11320675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64535206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:12:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483172;
-	bh=cOvGadzz/Ilq3zzfuxDAcHCG50XJYvtc3zrOv6YrSSo=;
+	s=default; t=1575483176;
+	bh=oqoXrjybaQcbpavSA2Ct70GdEPmxLqSSsipp5kfREaw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qcHTiJ+ZNXaNm/1kNGh/7gad6LcWM1/9Ed/1KvRZqsWGhqCjFQf8wdju/7vzeb2Kh
-	 VOvZvuYCqszqq5z9JUIy3uskibUmTqCohSslyPyCMKnGFpdTMsw/oyWp2U9opusK1H
-	 IgC+v1Z9SINvYr+oeQ+1Jg8Gddyj7NTg2BKSuwzE=
+	b=o69ook2tz7NmXyal+uP9BxpjiINFAEWPlzl6owN9ESdVNwLQpJaNX2D7ikmR0Rirg
+	 cXcSoyJ2pLLWuPDKFzfNoeUt1uDhu2beL80GxLBWddrKHuEsw1sxoIJ25e/Nw/TzS8
+	 1bZ0AX0y/JoqCVmDKPYRClDncWmd1M/Y8toHUvbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731668AbfLDSMv (ORCPT
+        id S1731674AbfLDSMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:12:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41624 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:12:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731163AbfLDSMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:12:47 -0500
+        id S1730887AbfLDSMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:12:52 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 606DA20675;
-        Wed,  4 Dec 2019 18:12:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3047920674;
+        Wed,  4 Dec 2019 18:12:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483166;
-        bh=cOvGadzz/Ilq3zzfuxDAcHCG50XJYvtc3zrOv6YrSSo=;
+        s=default; t=1575483171;
+        bh=oqoXrjybaQcbpavSA2Ct70GdEPmxLqSSsipp5kfREaw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=akB+nLloHt6aJu1ppbLmJacQNXEpPpEDa6WlQ5rQv7qEFI/NWI5YkUDKwYLLqOXVY
-         6KYCRcnwmxv+PwZv61B5/kBrGlSJscua29ECRbla45/+fOIhqH59OeDpg1awqjs9gl
-         qkSUjqc88VMWK6C7twI0bKMBUxvjTV+P3PqP1VrA=
+        b=mnT7gSI7ft5IHVRk54op0+KdA+7sIkw+e4oWgF9tiuTWyTXIoNusIjsSo1fK+Vs5s
+         F8EUdscbbXMyVheA+1gNZfa2OeSOyRB06x1IpscgFI+xuzK7OKX3unFNsFTyqIo2EM
+         /mKkSV1UvDRO1c6ycEONfW0PE8XYZjcuyzoo2I58=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 077/125] net: dsa: bcm_sf2: Propagate error value from mdio_write
-Date:   Wed,  4 Dec 2019 18:56:22 +0100
-Message-Id: <20191204175323.721819604@linuxfoundation.org>
+Subject: [PATCH 4.9 079/125] tipc: fix a missing check of genlmsg_put
+Date:   Wed,  4 Dec 2019 18:56:24 +0100
+Message-Id: <20191204175323.831905702@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -62,37 +62,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit e49505f7255be8ced695919c08a29bf2c3d79616 ]
+[ Upstream commit 46273cf7e009231d2b6bc10a926e82b8928a9fb2 ]
 
-Both bcm_sf2_sw_indir_rw and mdiobus_write_nested could fail, so let's
-return their error codes upstream.
+genlmsg_put could fail. The fix inserts a check of its return value, and
+if it fails, returns -EMSGSIZE.
 
 Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/bcm_sf2.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ net/tipc/netlink_compat.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index c2cd540e9c9ec..a3a8d7b62f3fb 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -405,11 +405,10 @@ static int bcm_sf2_sw_mdio_write(struct mii_bus *bus, int addr, int regnum,
- 	 * send them to our master MDIO bus controller
- 	 */
- 	if (addr == BRCM_PSEUDO_PHY_ADDR && priv->indir_phy_mask & BIT(addr))
--		bcm_sf2_sw_indir_rw(priv, 0, addr, regnum, val);
-+		return bcm_sf2_sw_indir_rw(priv, 0, addr, regnum, val);
- 	else
--		mdiobus_write_nested(priv->master_mii_bus, addr, regnum, val);
--
--	return 0;
-+		return mdiobus_write_nested(priv->master_mii_bus, addr,
-+				regnum, val);
- }
+diff --git a/net/tipc/netlink_compat.c b/net/tipc/netlink_compat.c
+index 63a913b238735..454ed8ea194c8 100644
+--- a/net/tipc/netlink_compat.c
++++ b/net/tipc/netlink_compat.c
+@@ -974,6 +974,8 @@ static int tipc_nl_compat_publ_dump(struct tipc_nl_compat_msg *msg, u32 sock)
  
- static irqreturn_t bcm_sf2_switch_0_isr(int irq, void *dev_id)
+ 	hdr = genlmsg_put(args, 0, 0, &tipc_genl_family, NLM_F_MULTI,
+ 			  TIPC_NL_PUBL_GET);
++	if (!hdr)
++		return -EMSGSIZE;
+ 
+ 	nest = nla_nest_start(args, TIPC_NLA_SOCK);
+ 	if (!nest) {
 -- 
 2.20.1
 
