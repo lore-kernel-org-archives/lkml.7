@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C529C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D81C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E0C3206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF66220863
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:13:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483211;
-	bh=jBC81i7U8izKqPJ1jAPMmeyW0nekulh1PNMe8Er95Kk=;
+	s=default; t=1575483215;
+	bh=Ok3I6A0cc8kL/J20hG8eQcCcmH4Ge5h24qRJu31z9wo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fl2/m9t+HvcdD+rhlXg25wD4Op0MW7S/+aQI7Sh//z+BLbt+EJl+OrksZh2K8NDLP
-	 xgUI8Ecw8K6mkxM7JRFMSnlzyZj7QZsPLPVZMVkS0TPIEX5cZFaq1GAlFdLjR0kA/N
-	 yBaEM4eKxFKEAccOX+MkfJ5Kq1bcajn4Mf666S4M=
+	b=EZjuUK/WKq1Rn34axFURnvrlLqrk9gDPWEryseuYbjvsNsikhTuWpnNYSUV1R1CJH
+	 r2U1UAEZjPX1Mtwb5SdHUKN4IEL/BubM8uRx+vu3HfiogZZuHwyEFOztpod9mlfW4G
+	 j85VVU60vzOOOX0yo+mA6zCVZWnqTRuHvLUd+0ec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731756AbfLDSN2 (ORCPT
+        id S1731777AbfLDSNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:13:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42402 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:13:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731741AbfLDSNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:13:21 -0500
+        id S1731753AbfLDSN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:13:27 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8771206DF;
-        Wed,  4 Dec 2019 18:13:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 123EF20674;
+        Wed,  4 Dec 2019 18:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483200;
-        bh=jBC81i7U8izKqPJ1jAPMmeyW0nekulh1PNMe8Er95Kk=;
+        s=default; t=1575483207;
+        bh=Ok3I6A0cc8kL/J20hG8eQcCcmH4Ge5h24qRJu31z9wo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GX4Fh+F31+lbZtSzHPcfU1CO9a9whGaJt/Yvp15OOsUBnn7+BqIaS9XqTUu5yRTfR
-         YxGzzNpPesYLXoSzP0nuiI5QoBr87P8Otv0MID5PaHRLVFucVe91elzZOegY+DJov4
-         QSCs+KXDudmFDeBzTtCeZL5KB9lR5Ydaa77zdpUs=
+        b=L6611LUK1b4ghR6PBGkCDcvm0QcwN55GWg+aHUvWHSrG62EwCybAA30barIjVS1Da
+         tPyOfl2GzAwrU7C3tCp9pUWFLKuuVZ98BGths0CMlJrKsSA1VTlEu/w1PYeYPsAdRo
+         vsXGzPUsHHSFrwVSPRgoUOCodVa9JxomPNwgQRKM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ying Xue <ying.xue@windriver.com>,
-        Jon Maloy <maloy@donjonn.com>,
-        Hoang Le <hoang.h.le@dektech.com.au>,
+        stable@vger.kernel.org, Marcin Stojek <marcin.stojek@nokia.com>,
+        Maciej Kwiecien <maciej.kwiecien@nokia.com>,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 094/125] tipc: fix skb may be leaky in tipc_link_input
-Date:   Wed,  4 Dec 2019 18:56:39 +0100
-Message-Id: <20191204175324.790391062@linuxfoundation.org>
+Subject: [PATCH 4.9 097/125] sctp: dont compare hb_timer expire date before starting it
+Date:   Wed,  4 Dec 2019 18:56:42 +0100
+Message-Id: <20191204175325.005448999@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -62,46 +63,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hoang Le <hoang.h.le@dektech.com.au>
+From: Maciej Kwiecien <maciej.kwiecien@nokia.com>
 
-[ Upstream commit 7384b538d3aed2ed49d3575483d17aeee790fb06 ]
+[ Upstream commit d1f20c03f48102e52eb98b8651d129b83134cae4 ]
 
-When we free skb at tipc_data_input, we return a 'false' boolean.
-Then, skb passed to subcalling tipc_link_input in tipc_link_rcv,
+hb_timer might not start at all for a particular transport because its
+start is conditional. In a result a node is not sending heartbeats.
 
-<snip>
-1303 int tipc_link_rcv:
-...
-1354    if (!tipc_data_input(l, skb, l->inputq))
-1355        rc |= tipc_link_input(l, skb, l->inputq);
-</snip>
+Function sctp_transport_reset_hb_timer has two roles:
+    - initial start of hb_timer for a given transport,
+    - update expire date of hb_timer for a given transport.
+The function is optimized to update timer's expire only if it is before
+a new calculated one but this comparison is invalid for a timer which
+has not yet started. Such a timer has expire == 0 and if a new expire
+value is bigger than (MAX_JIFFIES / 2 + 2) then "time_before" macro will
+fail and timer will not start resulting in no heartbeat packets send by
+the node.
 
-Fix it by simple changing to a 'true' boolean when skb is being free-ed.
-Then, tipc_link_rcv will bypassed to subcalling tipc_link_input as above
-condition.
+This was found when association was initialized within first 5 mins
+after system boot due to jiffies init value which is near to MAX_JIFFIES.
 
-Acked-by: Ying Xue <ying.xue@windriver.com>
-Acked-by: Jon Maloy <maloy@donjonn.com>
-Signed-off-by: Hoang Le <hoang.h.le@dektech.com.au>
+Test kernel version: 4.9.154 (ARCH=arm)
+hb_timer.expire = 0;                //initialized, not started timer
+new_expire = MAX_JIFFIES / 2 + 2;   //or more
+time_before(hb_timer.expire, new_expire) == false
+
+Fixes: ba6f5e33bdbb ("sctp: avoid refreshing heartbeat timer too often")
+Reported-by: Marcin Stojek <marcin.stojek@nokia.com>
+Tested-by: Marcin Stojek <marcin.stojek@nokia.com>
+Signed-off-by: Maciej Kwiecien <maciej.kwiecien@nokia.com>
+Reviewed-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tipc/link.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sctp/transport.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/tipc/link.c b/net/tipc/link.c
-index 4e8647aef01c1..c7406c1fdc14b 100644
---- a/net/tipc/link.c
-+++ b/net/tipc/link.c
-@@ -1063,7 +1063,7 @@ static bool tipc_data_input(struct tipc_link *l, struct sk_buff *skb,
- 	default:
- 		pr_warn("Dropping received illegal msg type\n");
- 		kfree_skb(skb);
--		return false;
-+		return true;
- 	};
- }
+diff --git a/net/sctp/transport.c b/net/sctp/transport.c
+index 03d71cd97ec08..5c78942550e97 100644
+--- a/net/sctp/transport.c
++++ b/net/sctp/transport.c
+@@ -205,7 +205,8 @@ void sctp_transport_reset_hb_timer(struct sctp_transport *transport)
  
+ 	/* When a data chunk is sent, reset the heartbeat interval.  */
+ 	expires = jiffies + sctp_transport_timeout(transport);
+-	if (time_before(transport->hb_timer.expires, expires) &&
++	if ((time_before(transport->hb_timer.expires, expires) ||
++	     !timer_pending(&transport->hb_timer)) &&
+ 	    !mod_timer(&transport->hb_timer,
+ 		       expires + prandom_u32_max(transport->rto)))
+ 		sctp_transport_hold(transport);
 -- 
 2.20.1
 
