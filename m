@@ -2,53 +2,54 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64CA8C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A49EC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31C022086D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 256002086D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:00:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482425;
-	bh=+dhwOKoTwp3bRqCgfQD7aUTOSt0rDYzemDVM9IYjrdA=;
+	s=default; t=1575482428;
+	bh=IDBQpqKVBAOAaxrln5nPfxfusa9Xx5BrmNRQKJ4nojc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P22yzy9zcFv61k19jFCF1ZQtCdsCYk9ZbMnAADVho38zzIzO/p7B0q7HTPLkyHXoP
-	 XqkNzJLH/JXi8ekVPVp+bKmyVATgUg8B8kYqZ4tg2gnJLYAFNiI5CRuf7YSlwtnBiE
-	 UC3t71FVhUhP4j5kO+jbemL+Arz25PyinUHHNa5E=
+	b=Cger2yzX3fokYtID8sqBybAmXA+NL3/F+N6+9S6PiEoDN4b9fXXbTmnN9IeiEr4OF
+	 9m+WjJ+1anP2AFQ8VL3Aasq0C3wptCzg2B59cgVrcbVVuYlUkuERTON06bZrShR63x
+	 G+Z4Ds8gQetzstH1mbYFLT1ZCXo0pKuzFnwdx9Ck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729341AbfLDSAY (ORCPT
+        id S1727958AbfLDSA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:00:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38766 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:00:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729325AbfLDSAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:00:22 -0500
+        id S1729339AbfLDSAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:00:24 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF7452081B;
-        Wed,  4 Dec 2019 18:00:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36F262073B;
+        Wed,  4 Dec 2019 18:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482421;
-        bh=+dhwOKoTwp3bRqCgfQD7aUTOSt0rDYzemDVM9IYjrdA=;
+        s=default; t=1575482423;
+        bh=IDBQpqKVBAOAaxrln5nPfxfusa9Xx5BrmNRQKJ4nojc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lC7xblT/A9rvbptgO6YfhH2oOxZ0Q9X3Lr4TjVXP8KQ/w5ssmdjNMalHrT03qIXhu
-         CltMUR/OF7NPDoJLldfOYGNmGFzbdpfsKllH0RbnHNTB0k3qxfyIngCL18hZAM4ORo
-         grQi/yIPAs37S3cXqwUXN/ImJJ8Q0nbJXP/1FlP0=
+        b=LPV/mBTpIkReF30PiAO1LEHrklwbeu8vm35IQcQkqOgxPwTSCmNAqbbjNfHWlV0NJ
+         T2pUdwq8wctYurEx/O5vs9dGCdmOgoKsFf8LVZPdwR8j955G3vA8sZeNw/Ud/UY+HS
+         iZ4J5iyWdqtfi/a+/7c7IhGf9P6/DPdZgwihvbE0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anatoliy Glagolev <glagolig@gmail.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 44/92] scsi: qla2xxx: deadlock by configfs_depend_item
-Date:   Wed,  4 Dec 2019 18:49:44 +0100
-Message-Id: <20191204174333.159782454@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.4 80/92] media: v4l2-ctrl: fix flags for DO_WHITE_BALANCE
+Date:   Wed,  4 Dec 2019 18:50:20 +0100
+Message-Id: <20191204174335.032162156@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204174327.215426506@linuxfoundation.org>
 References: <20191204174327.215426506@linuxfoundation.org>
@@ -61,127 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anatoliy Glagolev <glagolig@gmail.com>
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-[ Upstream commit 17b18eaa6f59044a5172db7d07149e31ede0f920 ]
+commit a0816e5088baab82aa738d61a55513114a673c8e upstream.
 
-The intent of invoking configfs_depend_item in commit 7474f52a82d51
-("tcm_qla2xxx: Perform configfs depend/undepend for base_tpg")
-was to prevent a physical Fibre Channel port removal when
-virtual (NPIV) ports announced through that physical port are active.
-The change does not work as expected: it makes enabled physical port
-dependent on target configfs subsystem (the port's parent), something
-the configfs guarantees anyway.
+Control DO_WHITE_BALANCE is a button, with read only and execute-on-write flags.
+Adding this control in the proper list in the fill function.
 
-Besides, scheduling work in a worker thread and waiting for the work's
-completion is not really a valid workaround for the requirement not to call
-configfs_depend_item from a configfs callback: the call occasionally
-deadlocks.
+After adding it here, we can see output of v4l2-ctl -L
+do_white_balance 0x0098090d (button) : flags=write-only, execute-on-write
 
-Thus, removing configfs_depend_item calls does not break anything and fixes
-the deadlock problem.
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Anatoliy Glagolev <glagolig@gmail.com>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/tcm_qla2xxx.c | 48 +++++-------------------------
- drivers/scsi/qla2xxx/tcm_qla2xxx.h |  3 --
- 2 files changed, 8 insertions(+), 43 deletions(-)
+ drivers/media/v4l2-core/v4l2-ctrls.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/qla2xxx/tcm_qla2xxx.c b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-index 81af294f15a7d..b1233ce6cb475 100644
---- a/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-+++ b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-@@ -793,38 +793,14 @@ static ssize_t tcm_qla2xxx_tpg_enable_show(struct config_item *item,
- 			atomic_read(&tpg->lport_tpg_enabled));
- }
- 
--static void tcm_qla2xxx_depend_tpg(struct work_struct *work)
--{
--	struct tcm_qla2xxx_tpg *base_tpg = container_of(work,
--				struct tcm_qla2xxx_tpg, tpg_base_work);
--	struct se_portal_group *se_tpg = &base_tpg->se_tpg;
--	struct scsi_qla_host *base_vha = base_tpg->lport->qla_vha;
--
--	if (!target_depend_item(&se_tpg->tpg_group.cg_item)) {
--		atomic_set(&base_tpg->lport_tpg_enabled, 1);
--		qlt_enable_vha(base_vha);
--	}
--	complete(&base_tpg->tpg_base_comp);
--}
--
--static void tcm_qla2xxx_undepend_tpg(struct work_struct *work)
--{
--	struct tcm_qla2xxx_tpg *base_tpg = container_of(work,
--				struct tcm_qla2xxx_tpg, tpg_base_work);
--	struct se_portal_group *se_tpg = &base_tpg->se_tpg;
--	struct scsi_qla_host *base_vha = base_tpg->lport->qla_vha;
--
--	if (!qlt_stop_phase1(base_vha->vha_tgt.qla_tgt)) {
--		atomic_set(&base_tpg->lport_tpg_enabled, 0);
--		target_undepend_item(&se_tpg->tpg_group.cg_item);
--	}
--	complete(&base_tpg->tpg_base_comp);
--}
--
- static ssize_t tcm_qla2xxx_tpg_enable_store(struct config_item *item,
- 		const char *page, size_t count)
- {
- 	struct se_portal_group *se_tpg = to_tpg(item);
-+	struct se_wwn *se_wwn = se_tpg->se_tpg_wwn;
-+	struct tcm_qla2xxx_lport *lport = container_of(se_wwn,
-+			struct tcm_qla2xxx_lport, lport_wwn);
-+	struct scsi_qla_host *vha = lport->qla_vha;
- 	struct tcm_qla2xxx_tpg *tpg = container_of(se_tpg,
- 			struct tcm_qla2xxx_tpg, se_tpg);
- 	unsigned long op;
-@@ -843,24 +819,16 @@ static ssize_t tcm_qla2xxx_tpg_enable_store(struct config_item *item,
- 		if (atomic_read(&tpg->lport_tpg_enabled))
- 			return -EEXIST;
- 
--		INIT_WORK(&tpg->tpg_base_work, tcm_qla2xxx_depend_tpg);
-+		atomic_set(&tpg->lport_tpg_enabled, 1);
-+		qlt_enable_vha(vha);
- 	} else {
- 		if (!atomic_read(&tpg->lport_tpg_enabled))
- 			return count;
- 
--		INIT_WORK(&tpg->tpg_base_work, tcm_qla2xxx_undepend_tpg);
-+		atomic_set(&tpg->lport_tpg_enabled, 0);
-+		qlt_stop_phase1(vha->vha_tgt.qla_tgt);
- 	}
--	init_completion(&tpg->tpg_base_comp);
--	schedule_work(&tpg->tpg_base_work);
--	wait_for_completion(&tpg->tpg_base_comp);
- 
--	if (op) {
--		if (!atomic_read(&tpg->lport_tpg_enabled))
--			return -ENODEV;
--	} else {
--		if (atomic_read(&tpg->lport_tpg_enabled))
--			return -EPERM;
--	}
- 	return count;
- }
- 
-diff --git a/drivers/scsi/qla2xxx/tcm_qla2xxx.h b/drivers/scsi/qla2xxx/tcm_qla2xxx.h
-index 3bbf4cb6fd97e..344f4eab5403c 100644
---- a/drivers/scsi/qla2xxx/tcm_qla2xxx.h
-+++ b/drivers/scsi/qla2xxx/tcm_qla2xxx.h
-@@ -47,9 +47,6 @@ struct tcm_qla2xxx_tpg {
- 	struct tcm_qla2xxx_tpg_attrib tpg_attrib;
- 	/* Returned by tcm_qla2xxx_make_tpg() */
- 	struct se_portal_group se_tpg;
--	/* Items for dealing with configfs_depend_item */
--	struct completion tpg_base_comp;
--	struct work_struct tpg_base_work;
- };
- 
- struct tcm_qla2xxx_fc_loopid {
--- 
-2.20.1
-
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -991,6 +991,7 @@ void v4l2_ctrl_fill(u32 id, const char *
+ 	case V4L2_CID_FLASH_STROBE_STOP:
+ 	case V4L2_CID_AUTO_FOCUS_START:
+ 	case V4L2_CID_AUTO_FOCUS_STOP:
++	case V4L2_CID_DO_WHITE_BALANCE:
+ 		*type = V4L2_CTRL_TYPE_BUTTON;
+ 		*flags |= V4L2_CTRL_FLAG_WRITE_ONLY |
+ 			  V4L2_CTRL_FLAG_EXECUTE_ON_WRITE;
 
 
