@@ -2,140 +2,149 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCC1C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEF6C2BBE2
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFB3D2084F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:59:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37F262084F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:59:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HXM7s6A9"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="aC1slvFa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbfLDH7c (ORCPT
+        id S1727345AbfLDH7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 02:59:32 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29114 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725839AbfLDH7c (ORCPT
+        Wed, 4 Dec 2019 02:59:53 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:27072 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726679AbfLDH7x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 02:59:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575446371;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Y5kFSk3WfohLawK+ouQUq7MzOpCu6jHAThUpUuz9xKY=;
-        b=HXM7s6A9ZXPBLCmhbraikqQdmap5Gusuf3nqYSxH89UFT7bRX/cuoH5zxlUDzQ/D0a3EZ8
-        /9WwePc++CfzWv3uiuB4nozKMT/p38cSIvi3w7QywFGR29MmE978Xep+FbHv6Z3YspJpyx
-        4anDeoN218xGVSB3cX0sTUJ3wgaR5dY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-134-GImN9KY2Oae3TC4z5ol6cQ-1; Wed, 04 Dec 2019 02:59:27 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 13272107ACC7;
-        Wed,  4 Dec 2019 07:59:26 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-85.pek2.redhat.com [10.72.12.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A092A1001902;
-        Wed,  4 Dec 2019 07:59:21 +0000 (UTC)
-Date:   Wed, 4 Dec 2019 15:59:17 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     linux-efi@vger.kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michael Weiser <michael@weiser.dinsnail.net>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        kexec@lists.infradead.org, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] x86/efi: update e820 about reserved EFI boot services
- data to fix kexec breakage
-Message-ID: <20191204075917.GA10587@dhcp-128-65.nay.redhat.com>
-References: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com>
+        Wed, 4 Dec 2019 02:59:53 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB47xgXj006913;
+        Wed, 4 Dec 2019 02:59:45 -0500
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2101.outbound.protection.outlook.com [104.47.55.101])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2wkp76jkqj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Dec 2019 02:59:45 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PTokhyBaXTzfcijCCcc/aCFmfkpNM7vgXA+YGAqr/+0+Go0TwIGwjGzOi+kM8WgXUBusAviGj6fodw3Y/5u2M0Es+73X6gcvxKT5eTNeAUNgekc8dC1DruW47pNAgIwV63b5+Zyafdg/K0HZM5gJNeNr8qG+OmeoClHNBnKqMmpqZt48ANfsLyoryW2mDq9mkRl/2gijpbnuQWaxniXaTk+BPIwDDXBO5TBg39pZvqHgZBT/vLj1bHZNX7762RIVzH6+9Yu0e7o717jMi9FYq+S+yaaRkWHsICqijTjcjyoOkhuf7AzdR9BSqpiixA4WoKNRsxSGoUsxZ5CnFwSuuw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=toob3OX5/OlJqul4x5WXd+ISn28GGz0UHhJn4xkvWmo=;
+ b=FhfSIixRI4QnhxYBpoF5RVCBeN5Tu+J3eht2LdCCy/WBDLxP1EK8oF4tuikZ22N6T1PuVZsp0y9Vf2ZbWrqVxAaoWeAD6TxOWDQbgHDPmOaDoQeasJ3Qedj8dQFHiK+vEKlvrlFf24TrU+BxAIn6mZqYc8TdLMY0nboU6LZOPOfHB8Am+Xd/bxQ9UcDJtvefd7KlpxdXmWSMNwKwIYF6EIJ0a+uZ3hUU2duaumS50ONf2tyyT+GKBaE68wiCRl+E4ZKzpaer+8QKbCRnLwVSd7RJK/4jbmL/oJ/m0Yt+bQaiqF93826OtJVeDI/Q1HDAKJkfPWzB9V4Q/DySd26/JA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.55) smtp.rcpttodomain=linuxfoundation.org smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=toob3OX5/OlJqul4x5WXd+ISn28GGz0UHhJn4xkvWmo=;
+ b=aC1slvFazvITktSPQh9oNbMI8i2BhYUn2mlej/QRA0PXNXETH+Ysp+Bh508M+me2cv5pXfzYcpYJNIU3JeV/mo00KDjStudiLSSSSzfQRLH1GsKVUbiTuws1xm9p0UwZ/EcS6z8SbqS5xnf8ouOIcPp34Lmuf4v+T7RrYNaBwsc=
+Received: from BN6PR03CA0010.namprd03.prod.outlook.com (2603:10b6:404:23::20)
+ by DM6PR03MB5291.namprd03.prod.outlook.com (2603:10b6:5:229::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.13; Wed, 4 Dec
+ 2019 07:59:43 +0000
+Received: from CY1NAM02FT040.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::208) by BN6PR03CA0010.outlook.office365.com
+ (2603:10b6:404:23::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.17 via Frontend
+ Transport; Wed, 4 Dec 2019 07:59:43 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ CY1NAM02FT040.mail.protection.outlook.com (10.152.75.135) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2474.17
+ via Frontend Transport; Wed, 4 Dec 2019 07:59:42 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id xB47xgCY018394
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Tue, 3 Dec 2019 23:59:42 -0800
+Received: from saturn.ad.analog.com (10.48.65.119) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Wed, 4 Dec 2019 02:59:41 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <gregkh@linuxfoundation.org>, <peterhuewe@gmx.de>,
+        <jarkko.sakkinen@linux.intel.com>, <jgg@ziepe.ca>, <arnd@arndb.de>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] tpm_tis_spi: use new `delay` structure for SPI transfer delays
+Date:   Wed, 4 Dec 2019 10:00:49 +0200
+Message-ID: <20191204080049.32701-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: GImN9KY2Oae3TC4z5ol6cQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(396003)(346002)(39860400002)(376002)(199004)(189003)(1076003)(5660300002)(26005)(186003)(70206006)(70586007)(426003)(356004)(316002)(14444005)(86362001)(336012)(51416003)(7696005)(7636002)(305945005)(50466002)(2906002)(106002)(48376002)(478600001)(4326008)(50226002)(246002)(110136005)(54906003)(2616005)(2870700001)(8676002)(8936002)(44832011)(107886003)(36756003)(81973001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB5291;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f95888c4-df36-4320-feda-08d7788febf3
+X-MS-TrafficTypeDiagnostic: DM6PR03MB5291:
+X-Microsoft-Antispam-PRVS: <DM6PR03MB5291640D30E506F6279B4888F95D0@DM6PR03MB5291.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:826;
+X-Forefront-PRVS: 0241D5F98C
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: bg9NJMpWiKqq34TXt5XQGDrK6uL+7zdh9Es52scARanQXSEGQUhaAqj+jREXHBE51yBB10VCCv6mt3zTQifXLt8VFeIZQttcStAHhd2FBepD9tol3pq1VPmIqwgjsVAvKxiU4l0eMIEylO9byMCP0bdVKX4ZvFxOXJbj08F280gmVS2tqZp/aFvgy9pKJo2Qo9b4D9MOI/dmiON5y2PKZj4YAffgVfIrXT2NsjEns/j7P/fq755KosB3UfPHo3bXwm/Tv8MAOP7QP4dcnpXb1tGx1STIgzMngFU1cw8NLJ6+ELC5V/c14lK43tF3y1UN8LoKlX3rF70zZp8vRk3fOyZmbelHVTFGBmea/cbdd91w9ETsrLWBmRboYs3xQfkuX4R17fOQ4VntmpQ8ZF35Zl3sRpnoKRUK1uS5Ju9BWrkuqsmiVz+QfnhP8nbozK3lixaNc+QjygDxHj4jlTLCtVsVU9vyCDdR74G1CJu30Qsdnde36w+nitqczwIugpwf
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2019 07:59:42.9106
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f95888c4-df36-4320-feda-08d7788febf3
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB5291
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-04_01:2019-12-04,2019-12-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ mlxscore=0 malwarescore=0 adultscore=0 priorityscore=1501 clxscore=1011
+ mlxlogscore=999 suspectscore=0 phishscore=0 spamscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1912040058
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/04/19 at 03:52pm, Dave Young wrote:
-> Michael Weiser reported he got below error during a kexec rebooting:
-> esrt: Unsupported ESRT version 2904149718861218184.
->=20
-> The ESRT memory stays in EFI boot services data, and it was reserved
-> in kernel via efi_mem_reserve().  The initial purpose of the reservation
-> is to reuse the EFI boot services data across kexec reboot. For example
-> the BGRT image data and some ESRT memory like Michael reported.=20
->=20
-> But although the memory is reserved it is not updated in X86 e820 table.
-> And kexec_file_load iterate system ram in io resource list to find places
-> for kernel, initramfs and other stuff. In Michael's case the kexec loaded
-> initramfs overwritten the ESRT memory and then the failure happened.
+In a recent change to the SPI subsystem [1], a new `delay` struct was added
+to replace the `delay_usecs`. This change replaces the current `delay_secs`
+with `delay` for this driver.
 
-s/overwritten/overwrote :)  If need a repost please let me know..
+The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
+that both `delay_usecs` & `delay` are used (in this order to preserve
+backwards compatibility).
 
->=20
-> Since kexec_file_load depends on the e820 to be updated, just fix this
-> by updating the reserved EFI boot services memory as reserved type in e82=
-0.
->=20
-> Originally any memory descriptors with EFI_MEMORY_RUNTIME attribute are
-> bypassed in the reservation code path because they are assumed as reserve=
-d.
-> But the reservation is still needed for multiple kexec reboot.
-> And it is the only possible case we come here thus just drop the code
-> chunk then everything works without side effects.=20
->=20
-> On my machine the ESRT memory sits in an EFI runtime data range, it does
-> not trigger the problem, but I successfully tested with BGRT instead.
-> both kexec_load and kexec_file_load work and kdump works as well.
->=20
-> Signed-off-by: Dave Young <dyoung@redhat.com>
-> ---
->  arch/x86/platform/efi/quirks.c |    6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->=20
-> --- linux-x86.orig/arch/x86/platform/efi/quirks.c
-> +++ linux-x86/arch/x86/platform/efi/quirks.c
-> @@ -260,10 +260,6 @@ void __init efi_arch_mem_reserve(phys_ad
->  =09=09return;
->  =09}
-> =20
-> -=09/* No need to reserve regions that will never be freed. */
-> -=09if (md.attribute & EFI_MEMORY_RUNTIME)
-> -=09=09return;
-> -
->  =09size +=3D addr % EFI_PAGE_SIZE;
->  =09size =3D round_up(size, EFI_PAGE_SIZE);
->  =09addr =3D round_down(addr, EFI_PAGE_SIZE);
-> @@ -293,6 +289,8 @@ void __init efi_arch_mem_reserve(phys_ad
->  =09early_memunmap(new, new_size);
-> =20
->  =09efi_memmap_install(new_phys, num_entries);
-> +=09e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
-> +=09e820__update_table(e820_table);
->  }
-> =20
->  /*
+[1] commit bebcfd272df6485 ("spi: introduce `delay` field for
+`spi_transfer` + spi_transfer_delay_exec()")
 
-Michael, could you a one more test and provide a tested-by if it works
-for you?
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/char/tpm/tpm_tis_spi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thanks
-Dave
+diff --git a/drivers/char/tpm/tpm_tis_spi.c b/drivers/char/tpm/tpm_tis_spi.c
+index 19513e622053..1990e79afaed 100644
+--- a/drivers/char/tpm/tpm_tis_spi.c
++++ b/drivers/char/tpm/tpm_tis_spi.c
+@@ -105,7 +105,8 @@ static int tpm_tis_spi_transfer(struct tpm_tis_data *data, u32 addr, u16 len,
+ 
+ 		spi_xfer.cs_change = 0;
+ 		spi_xfer.len = transfer_len;
+-		spi_xfer.delay_usecs = 5;
++		spi_xfer.delay.value = 5;
++		spi_xfer.delay.unit = SPI_DELAY_UNIT_USECS;
+ 
+ 		if (in) {
+ 			spi_xfer.tx_buf = NULL;
+-- 
+2.20.1
 
