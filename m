@@ -2,125 +2,180 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6211AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D631C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C92BF205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E23DD20656
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:32:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=valentin-vidic.from.hr header.i=@valentin-vidic.from.hr header.b="JvdlIsyO"
+	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="E0M3GOom"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728581AbfLDSaN (ORCPT
+        id S1728458AbfLDScB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:30:13 -0500
-Received: from valentin-vidic.from.hr ([94.229.67.141]:35815 "EHLO
-        valentin-vidic.from.hr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728273AbfLDSaN (ORCPT
+        Wed, 4 Dec 2019 13:32:01 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:34916 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728274AbfLDScA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:30:13 -0500
-X-Virus-Scanned: Debian amavisd-new at valentin-vidic.from.hr
-Received: by valentin-vidic.from.hr (Postfix, from userid 1000)
-        id 3E978239; Wed,  4 Dec 2019 19:30:06 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-        d=valentin-vidic.from.hr; s=2017; t=1575484206;
-        bh=1INDlaCJpLn0+6hFM2qct798lptXvkxMEEVD7w8HTnE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JvdlIsyO7/kU9WQYpMjEaFJiIk89QPGWPjXwoB5h2q5HNFQUPHDoLGq5VJ8MI7txM
-         0j0JR18glCTZ7O8GTTHDwD+pyZqcn3Ha4FsH9XBZWWMQ3jB/aVn7ci0vUDVbFLawiv
-         d4ycgDXPPEGXABJoz6h4CALIDr5syFFWloJhcAC8ez40ynlpTQi3U12iC34FLthIJR
-         IqGZYceR+xmj4cuJ8mT6piv/2H5cldoj/ZIjHUhuqPKGrA0otJFiHHgGXx8A3e9+WB
-         awgSSUbmxytmQJvv6lOS1NNfdBef/mtYqMzVaAt7A4+I+6Asc4HqzODwc+KqxWZLqO
-         ijt7aIv8rVK8g==
-From:   Valentin Vidic <vvidic@valentin-vidic.from.hr>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     Boris Pismenny <borisp@mellanox.com>,
-        Aviad Yehezkel <aviadye@mellanox.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Valentin Vidic <vvidic@valentin-vidic.from.hr>
-Subject: [PATCH v2] net/tls: Fix return values for setsockopt
-Date:   Wed,  4 Dec 2019 19:29:40 +0100
-Message-Id: <20191204182940.29007-1-vvidic@valentin-vidic.from.hr>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191203145535.5a416ef3@cakuba.netronome.com>
-References: <20191203145535.5a416ef3@cakuba.netronome.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 4 Dec 2019 13:32:00 -0500
+Received: by mail-pj1-f65.google.com with SMTP id w23so164994pjd.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 10:32:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=xKr4sE6dEN+r+0kQ3EZBQMimlSGfH5cfmp2nYCABRlc=;
+        b=E0M3GOomCYtZmEJ82tRl5Js7fdBtuFlFdMq/KX+ceyYzlpr6jRnd7tROzghqefxgAJ
+         D7BR5Mu+zflyGgem81vPw6TCr5uW2AKuHficePOa6RpGdhy+H8H3wpJ+EurUQGZDDDUY
+         M4UOjtS65FFdZRjnVxZ/vg+bVNn+UI+TM2oTnzmHBnTo44nt47L5HuTqUYnEjlETFoku
+         YILAbKqYY3eFmj49YvpSxJMT5GY6Ac7hx+FcABepR3ubunnDp1EVdgK95O6NeGGauAS2
+         KHGHzNTxNdnRf8pc+oI+2uu2iBcBgN9CifY6qa7xw2KK/SS8U/C5BjXRxVDn28/o9ek8
+         4mEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=xKr4sE6dEN+r+0kQ3EZBQMimlSGfH5cfmp2nYCABRlc=;
+        b=q6GncvwowVflajeHsH9BjX6P+vhMXOk4KhbTlGiUL+NZ8J9Z897kZGyBTVopoB3ITd
+         9CEkIUry2VflALNH0B8yDkkpPQPLMfFnhg/uE9uthe5O1TO60D2vZoWyz6abgHKejn5E
+         nEWbRRBbD6eZc2pdC777iPJGu1uj3YVaBarctbegwS2eHrzkfgUHQrJmKO5Xv2fbEyeh
+         x+i3rrHAW2T0HvUI/lajKf6b+xmqWK+CydynzrLxhEgiGGEJOdMWdN23jRGyAzWKlsB0
+         CVhJpUx1Db3pCrxvPlptQa4lQ5oQcHLpVnAQO341LnbYitX7AbGStMhv/TvTF1AnMO4Y
+         438Q==
+X-Gm-Message-State: APjAAAUW9X7lyJTeyquKgTLS9++t4f//vXdbdOfzNuRDqG5tmc5dqoEn
+        WoD/Wxk3VgKwfsa2mrDZP1ax+lG2smVlgw==
+X-Google-Smtp-Source: APXvYqxSKfBQOnG76aGXKyB6X52I6K4bMHdueAby/SHJUCxV9Al6Z2HVRDrHLKVsVYHWZzazlhHCTQ==
+X-Received: by 2002:a17:90a:f005:: with SMTP id bt5mr4788603pjb.16.1575484319602;
+        Wed, 04 Dec 2019 10:31:59 -0800 (PST)
+Received: from cabot-wlan.adilger.int (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
+        by smtp.gmail.com with ESMTPSA id u24sm8641357pfh.48.2019.12.04.10.31.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Dec 2019 10:31:57 -0800 (PST)
+From:   Andreas Dilger <adilger@dilger.ca>
+Message-Id: <23F33101-065E-445A-AE5C-D05E35E2B78B@dilger.ca>
+Content-Type: multipart/signed;
+ boundary="Apple-Mail=_444EEA50-3065-49C0-A153-021AF493BF2F";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: [RFC] Thing 1: Shardmap fox Ext4
+Date:   Wed, 4 Dec 2019 11:31:50 -0700
+In-Reply-To: <76ddbdba-55ba-3426-2e29-0fa17db9b6d8@phunq.net>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+To:     Daniel Phillips <daniel@phunq.net>
+References: <176a1773-f5ea-e686-ec7b-5f0a46c6f731@phunq.net>
+ <20191127142508.GB5143@mit.edu>
+ <c3636a43-6ae9-25d4-9483-34770b6929d0@phunq.net>
+ <20191128022817.GE22921@mit.edu>
+ <3b5f28e5-2b88-47bb-1b32-5c2fed989f0b@phunq.net>
+ <20191130175046.GA6655@mit.edu>
+ <76ddbdba-55ba-3426-2e29-0fa17db9b6d8@phunq.net>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ENOTSUPP is not available in userspace:
 
-  setsockopt failed, 524, Unknown error 524
+--Apple-Mail=_444EEA50-3065-49C0-A153-021AF493BF2F
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
----
-v2: update error code in selftest
+On Dec 1, 2019, at 1:21 AM, Daniel Phillips <daniel@phunq.net> wrote:
+>>> Important example: how is atomic directory commit going to work for
+>>> Ext4?
+>>=20
+>> The same way all metadata updates work in ext4.  Which is to say, you
+>> need to declare the maximum number of 4k metadata blocks that an
+>> operation might need to change when calling ext4_journal_start() to
+>> create a handle; and before modifying a 4k block, you need to call
+>> ext4_journal_get_write_access(), passing in the handle and the =
+block's
+>> buffer_head.  After modifying the block, you must call
+>> ext4_handle_dirty_metadata() on the buffer_head.  And when you are
+>> doing with the changes in an atomic metadata operation, you call
+>> ext4_journal_stop() on the handle.
+>>=20
+>> This hasn't changed since the days of ext3 and htree.
+>=20
+> OK good. And I presume that directory updates are prevented until
+> the journal transaction is at least fully written to buffers. Maybe
+> delayed until the journal transaction is actually committed?
+>=20
+> In Tux3 we don't block directory updates during backend commit, and I
+> just assumed that Ext4 and others also do that now, so thanks for the
+> correction. As far I can see, there will be no new issue with =
+Shardmap,
+> as you say. My current plan is that user space mmap will become kmap =
+in
+> kernel. I am starting on this part for Tux3 right now. My goal is to
+> refine the current Shardmap data access api to hide the fact that mmap
+> is used in user space but kmap in kernel. Again, I wish we actually =
+had
+> mmap in kernel and maybe we should consider properly supporting it in
+> the future, perhaps by improving kmalloc.
+>=20
+> One thing we do a bit differently frou our traditional fs is, in the
+> common, unfragmented case, mass inserts go into the same block until
+> the block is full. So we get a significant speedup by avoiding a page
+> cache lookup and kmap per insert. Borrowing a bit of mechanism from
+> the persistent memory version of Shardmap, we create the new entries
+> in a separate cache page. Then, on commit, copy this "front buffer" to
+> the page cache. I think that will translate pretty well to Ext4 also.
 
- net/tls/tls_main.c                | 4 ++--
- tools/testing/selftests/net/tls.c | 8 ++------
- 2 files changed, 4 insertions(+), 8 deletions(-)
+One important use case that we have for Lustre that is not yet in the
+upstream ext4[*] is the ability to do parallel directory operations.
+This means we can create, lookup, and/or unlink entries in the same
+directory concurrently, to increase parallelism for large directories.
 
-diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
-index bdca31ffe6da..5830b8e02a36 100644
---- a/net/tls/tls_main.c
-+++ b/net/tls/tls_main.c
-@@ -496,7 +496,7 @@ static int do_tls_setsockopt_conf(struct sock *sk, char __user *optval,
- 	/* check version */
- 	if (crypto_info->version != TLS_1_2_VERSION &&
- 	    crypto_info->version != TLS_1_3_VERSION) {
--		rc = -ENOTSUPP;
-+		rc = -EINVAL;
- 		goto err_crypto_info;
- 	}
- 
-@@ -723,7 +723,7 @@ static int tls_init(struct sock *sk)
- 	 * share the ulp context.
- 	 */
- 	if (sk->sk_state != TCP_ESTABLISHED)
--		return -ENOTSUPP;
-+		return -ENOTCONN;
- 
- 	/* allocate tls context */
- 	write_lock_bh(&sk->sk_callback_lock);
-diff --git a/tools/testing/selftests/net/tls.c b/tools/testing/selftests/net/tls.c
-index 1c8f194d6556..97c056ab43d9 100644
---- a/tools/testing/selftests/net/tls.c
-+++ b/tools/testing/selftests/net/tls.c
-@@ -25,10 +25,6 @@
- #define TLS_PAYLOAD_MAX_LEN 16384
- #define SOL_TLS 282
- 
--#ifndef ENOTSUPP
--#define ENOTSUPP 524
--#endif
--
- FIXTURE(tls_basic)
- {
- 	int fd, cfd;
-@@ -1145,11 +1141,11 @@ TEST(non_established) {
- 	/* TLS ULP not supported */
- 	if (errno == ENOENT)
- 		return;
--	EXPECT_EQ(errno, ENOTSUPP);
-+	EXPECT_EQ(errno, ENOTCONN);
- 
- 	ret = setsockopt(sfd, IPPROTO_TCP, TCP_ULP, "tls", sizeof("tls"));
- 	EXPECT_EQ(ret, -1);
--	EXPECT_EQ(errno, ENOTSUPP);
-+	EXPECT_EQ(errno, ENOTCONN);
- 
- 	ret = getsockname(sfd, &addr, &len);
- 	ASSERT_EQ(ret, 0);
--- 
-2.20.1
+This is implemented by progressively locking the htree root and index
+blocks (typically read-only), then leaf blocks (read-only for lookup,
+read-write for insert/delete).  This provides improved parallelism
+as the directory grows in size.
 
+Will there be some similar ability in Shardmap to have parallel ops?
+Also, does Shardmap have the ability to shrink as entries are removed?
+
+Cheers, Andreas
+
+[*] we've tried to submit the pdirops patch a couple of times, but the
+main blocker is that the VFS has a single directory mutex and couldn't
+use the added functionality without significant VFS changes.
+Patch at =
+https://git.whamcloud.com/?p=3Dfs/lustre-release.git;f=3Dldiskfs/kernel_pa=
+tches/patches/rhel8/ext4-pdirop.patch;hb=3DHEAD
+
+
+--Apple-Mail=_444EEA50-3065-49C0-A153-021AF493BF2F
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl3n+5cACgkQcqXauRfM
+H+A/DQ//WqdN82NF1pjjP1M2v8Zb0W4X2lctDcL9xqIXRh1wzu1EpiKzTn754OWs
+Wi7KfHBxSwa6yh9qfx2/DrzuGy38ion7gncucx+CdN0r2ykvM52kp1mMN+LC4Mtm
+pmIPMui+hDkYRi6RnUVa4l/MNOVBiuXLjAu+NhwHZvzPJTvHvogoRRoMOZx+Ll+i
+Y1Lpo7AGIhCNo8ois1uaiU0JkjU8JwTkX7RcKHOlWChD6esBWXJPhZ/s4R8NS1Yo
+89B7sUgs9OA6JaKz2S9lRAQtLbUiLN3YfZa9ELtAH0SXI+iWZRbXnUE8ly8+tcN2
+b/vjd+HwqAYHus1kCmMR1Te4I/059d3YjBKZtqah8CAWiU3SjqQwLApi/VJbWA0D
+RGjH2pwlUOZIZStzsA9t2UEFWWqoWGs52W3rdJWJNftVErWhrzN2S/WCZHO5EWLA
+QbuHbfa1TrKZPTv61kPRnwMQ1YNHNxsXg341SlUnGBu1JduT1JXk+ZebGhiESG1n
+SSrpLgEATk05xqNDXIhN9gala9FVf1J6DQp3tC7Wa5JmpyKz6Lt+VHuywOiIqFR4
+nItNg/LENhVjpJc69fA4SQnvHPu8Bh2EZYQKQ+/JLrBN+CtCFt5uFWgc2h+twO3d
+hwsbgUULa2NL0MnjLu91zFkityCyBfpEz5HIKRzMn3XWUJqA4Hk=
+=Wb6G
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_444EEA50-3065-49C0-A153-021AF493BF2F--
