@@ -2,109 +2,173 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_DIGITS,
-	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FDCC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 075B4C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 711A22077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:25:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tavjmU/Q"
+	by mail.kernel.org (Postfix) with ESMTP id CEC322077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:26:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575487602;
+	bh=ktCkSMc3xOFusPlzOBLfyD+iztBQ46wxjl+lXy3N1Ko=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=y9MKATQUcQGoepvl0jBKrMB4jFY4xsKDlscYbng4J3/bNHZCc1fytA2RoFWJVDUUK
+	 aYVejNEmk/96h8qYO3qn12kNNmZxdIJmz/FY9B52rE3Di3PcESOwTCYe8haPCCf24w
+	 aazLJxsG6+KJd7wdNIzGJhl3lNeb39bbQk3PRrHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729300AbfLDTZi (ORCPT
+        id S1729312AbfLDT0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 14:25:38 -0500
-Received: from mail-oi1-f172.google.com ([209.85.167.172]:42983 "EHLO
-        mail-oi1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728598AbfLDTZf (ORCPT
+        Wed, 4 Dec 2019 14:26:41 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35783 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728598AbfLDT0l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 14:25:35 -0500
-Received: by mail-oi1-f172.google.com with SMTP id j22so307100oij.9;
-        Wed, 04 Dec 2019 11:25:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pFUOvAm3fm348kgwrvmev1YNw19TgoAC7QPtF9q0W9g=;
-        b=tavjmU/Q3DfvERF7bhd3q/fapLDjBaceWr0h20GkAqynBwFQMUwfUlK4JhVKg6DNba
-         YcTrdtYwr9rzEBR4ioJALzSV7YV3HPPFYHcud6qn6L+QOAR5ZZWOyyXYIc+k/MqSde7Q
-         KfnTP5KxI5P4mbTDuXUJp8Qyp6pBDieNXRGyaw6F2q4sBWmws/FiBMXMsX82JHHH7Ri2
-         zda5XYPi19vtq2GGB512vz3f72AXQfAZO7gQo89mrt/EjTshdpJ7t2GNV6x3qATQYnSo
-         e5CFH7FHMs+hgaDF/YiW2ZIpHhfzssyZNkz+XapRCUModCWBJN82m2lpiTFd5a6Q+IoE
-         wDRA==
+        Wed, 4 Dec 2019 14:26:41 -0500
+Received: by mail-oi1-f193.google.com with SMTP id k196so360121oib.2;
+        Wed, 04 Dec 2019 11:26:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pFUOvAm3fm348kgwrvmev1YNw19TgoAC7QPtF9q0W9g=;
-        b=SJVX5HZYLhIkVgczuwf0obe7Fuc4Yzo2RlatqXA7mSkje2WmWP51Y/wDo/kD66nrYW
-         UChWeqXmZQfQhKiENiYsyrSDLCi85zHRbSUVLLtLFITZ2xmSiNOcigAxuSoD4PKzgznk
-         Y2xk7K8p2i0OSeGwzxS3Z1zRxZQPbH15Yew8SLnN0qAeF0JPceKnjdB64QBgyS0OFTQc
-         xugaslIa6W7bISqPGcaJBNjORdDKjjVCLGFbJ+ikSr/WXoK/b8QiAC1V3hoXGBrvngm2
-         lBXAsC+E6Kirnk+FX1N6qVerzPODku4Bvdnit1CjEWtN55gvcmmiGgmmyDwcIywiE0pT
-         SVOw==
-X-Gm-Message-State: APjAAAXUNojqU+Qtz7n3GpxOUsUdQ6hVQag7DJ728FlSwJlP6cv485gp
-        QhqUm0nsQL3dvLGLPj43KaeIdCBku6+sVEirlWW4KkpL
-X-Google-Smtp-Source: APXvYqygeXnEPPwtKFRW0Y36WS+lxc9iXT3BUpe6OWDmYYx7OmzTFEQc+TYv16vi+70aFchYa1GmHEKib44SVaBMTL0=
-X-Received: by 2002:aca:c3c6:: with SMTP id t189mr4090470oif.98.1575487535056;
- Wed, 04 Dec 2019 11:25:35 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QEYmt+88G565IC6LTTQd0m6TuuMzboUhXwXWSfb6lpw=;
+        b=Ds/6mX4b/TCRm55MXxF1S/v3hcAl6FGwQXgkCwnJTUrvQdxKHLhCs2fScgbXL07+QO
+         qSUADZWJLlZwujUv7/qKjDoAV3w1XB63eB3peNqCvB7sqOEGGBJJuOpV3KwoerQH9pML
+         OuJI7BsdV4kHJ6DS8MmByYt0eWd5e4uE++OQvrcBpsNl1m8+O5GYSeqlZn7fhJ6MCo20
+         QrBSb4gERhlCiEKlEwu3Az4qZdi+QNqSKnBCuLtaUQx+7+1MTc8rPWOWjrOQjjeHt11S
+         CX+B1DqqaA7PmbnudA8kpIbW+fETdTdYOj9GTrhV7DQikx6oNXJKwf6xG+LIM+lJj4xI
+         lUQg==
+X-Gm-Message-State: APjAAAXkLK99oA4lGiLVQh7Jtc05hT5KlRp3EaZWnSnavevCV+2ygFhY
+        jIIylvtAEkOmEHqjf5kkmQ==
+X-Google-Smtp-Source: APXvYqz/iitGqmzi/IbQOgpS92w6HiwU32hDyJqwif2rbQwBLEuTPwfH9acMxZSOQ/FyuvEcqo7jGw==
+X-Received: by 2002:aca:7583:: with SMTP id q125mr4218753oic.100.1575487600190;
+        Wed, 04 Dec 2019 11:26:40 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id i25sm2499520oto.72.2019.12.04.11.26.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 11:26:39 -0800 (PST)
+Date:   Wed, 4 Dec 2019 13:26:39 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Orson Zhai <orson.zhai@unisoc.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kevin.tang@unisoc.com, baolin.wang@unisoc.com,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: Re: [PATCH V2 1/2] dt-bindings: syscon: Add syscon-names to refer to
+ syscon easily
+Message-ID: <20191204192639.GA15786@bogus>
+References: <20191120154148.22067-1-orson.zhai@unisoc.com>
+ <20191120154148.22067-2-orson.zhai@unisoc.com>
+ <20191204163830.GA25135@bogus>
+ <CAK8P3a3_r6z6Qk133=4gUzJ0rYmMH7sDDqpEF8ZVXS_bc3OtkQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <CAOuPNLh8dsSCq850afbj4OiHhZ2swBWZP=BTUrXrXhdpTjZs+A@mail.gmail.com>
- <CAK7N6vpawfLSVcHCg_3aQ0M8L=j77ZeGfmUZ-J4hpUkWu0fkWA@mail.gmail.com> <CAOuPNLii26WcDnwD7ZkMX6ux7VRspw7nMEKJK0QF+j95YCHPOw@mail.gmail.com>
-In-Reply-To: <CAOuPNLii26WcDnwD7ZkMX6ux7VRspw7nMEKJK0QF+j95YCHPOw@mail.gmail.com>
-From:   anish singh <anish198519851985@gmail.com>
-Date:   Wed, 4 Dec 2019 11:25:23 -0800
-Message-ID: <CAK7N6vrSKM8pU0+gquCu1x52GjBTaqFbwqtj_v8dzd+3-g4D1A@mail.gmail.com>
-Subject: Re: interrupt handler not getting called after resume
-To:     Pintu Agarwal <pintu.ping@gmail.com>
-Cc:     Kernelnewbies <kernelnewbies@kernelnewbies.org>,
-        linux-pm@vger.kernel.org, open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a3_r6z6Qk133=4gUzJ0rYmMH7sDDqpEF8ZVXS_bc3OtkQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 1:49 AM Pintu Agarwal <pintu.ping@gmail.com> wrote:
->
-> On Wed, 4 Dec 2019 at 00:28, anish singh <anish198519851985@gmail.com> wrote:
-> >
-> > On Tue, Dec 3, 2019 at 6:12 AM Pintu Agarwal <pintu.ping@gmail.com> wrote:
+On Wed, Dec 04, 2019 at 06:00:17PM +0100, Arnd Bergmann wrote:
+> On Wed, Dec 4, 2019 at 5:38 PM Rob Herring <robh@kernel.org> wrote:
+> > On Wed, Nov 20, 2019 at 11:41:47PM +0800, Orson Zhai wrote:
+> > > Make life easier when syscon consumer want to access multiple syscon
+> > > nodes with dozens of items.
+> > > Add syscon-names and relative properties to help to manage different
+> > > cases when accessing more than one syscon node even with arguments.
 > > >
-> > > Hi All,
+> > > Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
+> > > ---
+> > >  .../devicetree/bindings/mfd/syscon.txt        | 43 +++++++++++++++++++
+> > >  1 file changed, 43 insertions(+)
 > > >
-> > > I have one general query.
-> > >
-> > > If an interrupt handler is NOT getting called (for one device) after
-> > > the system resume (from snapshot image), then what could be the issue?
+> > > diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
+> > > index 25d9e9c2fd53..4c7bdb74bb0a 100644
+> > > --- a/Documentation/devicetree/bindings/mfd/syscon.txt
+> > > +++ b/Documentation/devicetree/bindings/mfd/syscon.txt
+> > > @@ -30,3 +30,46 @@ hwlock1: hwspinlock@40500000 {
+> > >         reg = <0x40500000 0x1000>;
+> > >         #hwlock-cells = <1>;
+> > >  };
+> > > +
+> > > +
+> > > +
+> > > +==Syscon Name==
+> > > +
+> > > +Syscon name is a helper to be used in consumer nodes who refer to system
+> > > +controller node. It provides a way to refer to syscon node by names with
+> > > +phandle args in syscon consumer node. It will help people who have a lot
+> > > +of syscon references to be managed. It is not a must feature and has no
+> > > +effect to syscon node itself at all.
+> > > +
+> > > +Required properties:
+> > > +- syscons: List of phandles and any number of arguments if needed. Arguments
+> > > +  is specific to differnet vendors and its usage should be described at each
+> > > +  vendor's bindings. For example: In Unisoc SoCs, the 1st arg will be treated
+> > > +  as register address offset and the 2nd is bit mask.
+> > > +
+> > > +- syscon-names:        List of syscon node name strings sorted in the same order as
+> > > +  what it represents in property syscons.
+> > > +
+> > > +Optional property:
+> > > +- #.*-cells: Represents the number of arguments in single phandle in syscons
+> > > +  list. ".*" is vendor specific. If this property is not set, default value
+> > > +  will be 0.
 > >
-> > Most likely during resume the interrupt was not enabled. So check
-> > irq status registers to see in the working and non working case.
+> > This breaks the normal pattern of how '#.*-cells' works. While Arnd
+> > suggests removing it, I don't think that works well either with having a
+> > generic 'syscons' property. That means every syscon in a system has to
+> > have the same number of cells.
 > >
-> Oh sorry, I forgot to mention one thing.
-> After resume, I can see that the interrupts are visible under /proc/interrupts.
-> # cat /proc/interrupts
->            CPU0       CPU1
-> [...]
-> 416:          1          0       IPU  (null)
-> 417:          0          0       IPU  (null)
-> 418:          0          0       IPU  imx_drm  ===> HDMI
-> 419:       2242       2       IPU  imx_drm   ===> LCD
-> [...]
->
-> The interrupts are coming only for LCD display and thus its irq
-> handler is getting called.
-> But the interrupts are not coming for HDMI case, thus HDMI gives
-> "vblank timeout issue".
+> > I don't really want to see syscon binding expanded. Really, I'd like
+> > 'syscon' to go away. It's nothing more than a flag to create a regmap.
+> 
+> Not expanding the syscon binding is the point about not having a #*-cells:
+> In the examples that Orson listed, the cell count would always be
+> specific to the user of the syscon regmap, and not interpreted by the
+> syscon itself.
+> 
+> > I think it is better to keep the property names specific to exactly what
+> > the functionality is for each syscon phandle rather than a generic
+> > binding.
+> >
+> > What are the eamples of where you want to use this?
+> 
+> I think generally speaking this would be useful for random registers that
+> logically belong to one device but are grouped with other unrelated
+> registers in a syscon, and that are in a different register offset for
+> each chip that has them. Using named properties instead of a list
+> of phandle/arg tuples with names is clearly a simpler alternative
+> and more like we do it today, but I can also see some API simplification
+> with Orson's patch without the binding getting out of hand.
 
-Is it something to do with MHL cable? Have you used scope
-to find out if the interrupt was actually triggered?
+I understand when a phandle to a syscon is used. That's nothing new. 
+What's special about Unisoc SoC that needs something new/different? 
+I saw there's a large number of syscons, but I don't understand what's 
+in them. 
 
-> Apart from this I also tried calling enable_irq(irq) after resume, but
-> it did not help much.
+If the API is this:
+
+struct regmap *syscon_regmap_lookup_by_name(struct device_node *np,                                                    
+                                       const char *name,
+                                       int arg_count, __u32 *out_args)
+
+How is 'name' being an entry in syscon-names simpler than just being the 
+property name? The implementation for the latter would certainly be 
+simpler.
+
+It also makes the property unparseable without knowledge outside of the 
+DT (i.e. in the driver). I suppose if the number of cells for each entry 
+is fixed, we could count the number of syscon-names entries to figure 
+out the stride. But then if one entry needs a lot of cells, then they 
+all have to have padding cells.
+
+Rob
