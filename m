@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 942F8C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 138B0C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C4192084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D360D206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:09:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482960;
-	bh=O4H8gKKIofBTYa/ahR2HGrSqNn62ReqrOkWXmkecmG8=;
+	s=default; t=1575482963;
+	bh=2t/IrvB4eJyhojy7MPif2j02JqHk+eNwDHMPvDXIcdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zpEuxxDMHFxcbuYBz0jbYZy933h8vR/r+dvut7uZzuus0Bqsxf8yvw9akaqVBzzNL
-	 A1z3mLCzjaGfrMXohXZxn5Umybj18lqPLi5naNF7uDIxbmewoPTb2i5WQW8S4LYdCb
-	 NTKPc5vF6m6v8xOckZHnz1cwxn7wbAVep2NGtHyk=
+	b=EJjPCQ21pCLa3CT83ujc4rdxRV6ittGMfxYmYVVPTM0KsoyA40WaZh0hZhrs5Nu2b
+	 U7OSs+PSgk9YTvcnxWCZmJkaGCYfuWTi418S85Ea55hX2iY/1JcJZRnof3LsVvZeDy
+	 8UQnIc0DqQgcCW73WIuSo0C9vJfboVRXVeu+zxtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730571AbfLDSJT (ORCPT
+        id S1731050AbfLDSJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:09:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34412 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:09:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731021AbfLDSJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:09:10 -0500
+        id S1731026AbfLDSJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:09:13 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A421820675;
-        Wed,  4 Dec 2019 18:09:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1862120674;
+        Wed,  4 Dec 2019 18:09:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482950;
-        bh=O4H8gKKIofBTYa/ahR2HGrSqNn62ReqrOkWXmkecmG8=;
+        s=default; t=1575482952;
+        bh=2t/IrvB4eJyhojy7MPif2j02JqHk+eNwDHMPvDXIcdE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=skNItj/2Y5Cek6Sjnx+Y/Hp16YWFxEbo6OLKP5E+c1boFeT4gqXiDvx9/WYEWFWgH
-         xI4KySnPIj5LJD7890z2KggqppORopYqc0DV75P1PgpN/mq2cVK1uHliLZexPZPpLO
-         9I7/n4qqSbCVD7Yd8xezZqvjGFIx76SOh0N3jAg8=
+        b=1iNZjC62PusGuXklXtIiWUWHfJMxYC75tiAPhb9MdOtjSZkfNu1Os9pZP3tDJtKAB
+         KGDSdNVoyMN7B7cWhaMcvkvQ7+msxklXXoQbBADSyZjoq32BWvUKPhLf+s3ncjOnq/
+         xzwtrDmwKUPHPW3iISpaIqjHBDiYyhSGe7HQm9uk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lionel Debieve <lionel.debieve@st.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH 4.14 201/209] hwrng: stm32 - fix unbalanced pm_runtime_enable
-Date:   Wed,  4 Dec 2019 18:56:53 +0100
-Message-Id: <20191204175337.324862662@linuxfoundation.org>
+Subject: [PATCH 4.14 202/209] mailbox: mailbox-test: fix null pointer if no mmio
+Date:   Wed,  4 Dec 2019 18:56:54 +0100
+Message-Id: <20191204175337.394459343@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -60,46 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lionel Debieve <lionel.debieve@st.com>
+From: Fabien Dessenne <fabien.dessenne@st.com>
 
-commit af0d4442dd6813de6e77309063beb064fa8e89ae upstream.
+commit 6899b4f7c99c72968e58e502f96084f74f6e5e86 upstream.
 
-No remove function implemented yet in the driver.
-Without remove function, the pm_runtime implementation
-complains when removing and probing again the driver.
+Fix null pointer issue if resource_size is called with no ioresource.
 
-Signed-off-by: Lionel Debieve <lionel.debieve@st.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/hw_random/stm32-rng.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/mailbox/mailbox-test.c |   14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
---- a/drivers/char/hw_random/stm32-rng.c
-+++ b/drivers/char/hw_random/stm32-rng.c
-@@ -166,6 +166,13 @@ static int stm32_rng_probe(struct platfo
- 	return devm_hwrng_register(dev, &priv->rng);
- }
+--- a/drivers/mailbox/mailbox-test.c
++++ b/drivers/mailbox/mailbox-test.c
+@@ -363,22 +363,24 @@ static int mbox_test_probe(struct platfo
  
-+static int stm32_rng_remove(struct platform_device *ofdev)
-+{
-+	pm_runtime_disable(&ofdev->dev);
-+
-+	return 0;
-+}
-+
- #ifdef CONFIG_PM
- static int stm32_rng_runtime_suspend(struct device *dev)
- {
-@@ -202,6 +209,7 @@ static struct platform_driver stm32_rng_
- 		.of_match_table = stm32_rng_match,
- 	},
- 	.probe = stm32_rng_probe,
-+	.remove = stm32_rng_remove,
- };
+ 	/* It's okay for MMIO to be NULL */
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	size = resource_size(res);
+ 	tdev->tx_mmio = devm_ioremap_resource(&pdev->dev, res);
+-	if (PTR_ERR(tdev->tx_mmio) == -EBUSY)
++	if (PTR_ERR(tdev->tx_mmio) == -EBUSY) {
+ 		/* if reserved area in SRAM, try just ioremap */
++		size = resource_size(res);
+ 		tdev->tx_mmio = devm_ioremap(&pdev->dev, res->start, size);
+-	else if (IS_ERR(tdev->tx_mmio))
++	} else if (IS_ERR(tdev->tx_mmio)) {
+ 		tdev->tx_mmio = NULL;
++	}
  
- module_platform_driver(stm32_rng_driver);
+ 	/* If specified, second reg entry is Rx MMIO */
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	size = resource_size(res);
+ 	tdev->rx_mmio = devm_ioremap_resource(&pdev->dev, res);
+-	if (PTR_ERR(tdev->rx_mmio) == -EBUSY)
++	if (PTR_ERR(tdev->rx_mmio) == -EBUSY) {
++		size = resource_size(res);
+ 		tdev->rx_mmio = devm_ioremap(&pdev->dev, res->start, size);
+-	else if (IS_ERR(tdev->rx_mmio))
++	} else if (IS_ERR(tdev->rx_mmio)) {
+ 		tdev->rx_mmio = tdev->tx_mmio;
++	}
+ 
+ 	tdev->tx_channel = mbox_test_request_channel(pdev, "tx");
+ 	tdev->rx_channel = mbox_test_request_channel(pdev, "rx");
 
 
