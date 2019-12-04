@@ -2,166 +2,133 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5539AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3A0C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 271ED21835
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA52A20656
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:21:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MtSlA/Og"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="XFyzL5rT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbfLDXST (ORCPT
+        id S1728368AbfLDXVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 18:18:19 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:36316 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728060AbfLDXSS (ORCPT
+        Wed, 4 Dec 2019 18:21:02 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:37799 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728011AbfLDXVC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 18:18:18 -0500
-Received: by mail-pj1-f66.google.com with SMTP id n96so451809pjc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 15:18:18 -0800 (PST)
+        Wed, 4 Dec 2019 18:21:02 -0500
+Received: by mail-qv1-f65.google.com with SMTP id t7so577683qve.4
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 15:21:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bMFgfwVDLyNfP+n9tPTAj8QY4bC2HsMSOAGKRA9gakw=;
-        b=MtSlA/OgS15E0uba3TIek4yo6Dv72Ih5Vz8TtayNLcYj9ko9Y5pcJja4pXlDi+U5B2
-         OzrIhaayNaSUVeiGvMc3+qo1sSa3EgJ+AupbHkkOI9WA9YMvGRb8L6EbA1y0nROXEUzq
-         DLekXMbit5LGIAikGGF/a6V21GXdqB1vVViqVj9DWbn3bDTmE1RQTdmSpi3ceBVwG8X4
-         +RdlDSRJZH67fNHiUDPIpFR2b9qTJvdcCugWSM4lang0P7FFhrNPfmnNSsvwOGYMAa/t
-         Da8KmVghIDsNP9WG/dmjuj/U+HPlXUbXm2G7PwKgGY8EAOc1R7+MLdFwE4WaevwUll23
-         YYAA==
+        d=soleen.com; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GKIfn1X+i6X56lqVXfyDzwPMZCzheNRzcKTaF4L1NP0=;
+        b=XFyzL5rTBwrAztY5nL0Ms1sPvQucTdFNTX8M14EOWrh36IgXf4zoI522rtxEKRoa52
+         iLqCy/91jRbUTDBGb3bllaMoyeqCln4xl1FZqj+b3eCzWUr5TgFGFbAmfZ/qpae4CijU
+         35EW4FQh7ww/prBUP0rcMSvO++mJcfO+k+fB3+BP0A1lGoquComcKT6UDiDreQjckSUg
+         k2hjQvUPo2N86qG8pbxlMAC6Kn6AAxDYJsEGt+O6B9zeTaxWSo/9qm7e42sxKv/Xabey
+         MFKaBloUYjQUJ5KZCxkfZDaZn+HAuOoWlPpNu3Gh25wuUFzC7MSzHyNs/Xar9ayJQjzK
+         BvGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bMFgfwVDLyNfP+n9tPTAj8QY4bC2HsMSOAGKRA9gakw=;
-        b=H5ay/DtGp1YZVIVFeTbSJdsJp+faTsaXTMuQcV3TFjuK4XVtJsuf5ZgVFkZWflUgqi
-         WqJmvoU2BroIn2WiNkJmBF/LFQED7DHSUTgF4CoTqzoedhImUj87Gb5MtklMOmwVrLYL
-         LbdFjK0JoM4bTMemdzvm0hq9Yny8KxAe5c7kMcc0AjDrjXf+K2SPLeO6cGyXigAWzVuy
-         Q2qjQ/QQITTySGRC0KMm1XIHVQNd4ULGPPGXsXN9UqhcW361PLPZCK5SoSx58/BOiMIX
-         1nj82UdwtjCxn578+gjk0FXvJ30js8mPEol1EBeT/CaJVSE1Bq85GBJy1PQyk8ArFo2u
-         QUrA==
-X-Gm-Message-State: APjAAAW0PgRFwjXuvydxSoa2G0PuXPuQqxiGOBYifSdHTyy3aUiM2/Ft
-        SFpzSTpO9Cu5bw+zukXSxpZdhsrJI4FrYBPQD6cTyg==
-X-Google-Smtp-Source: APXvYqxyypwjL3djnDA4vB8jmSAsCckKucoAckitJOpn/REINR7zthvw1tWILnDJLcTdY3b7XdQhBRvlBPMCVLzrJ40=
-X-Received: by 2002:a17:902:8216:: with SMTP id x22mr5812405pln.179.1575501497559;
- Wed, 04 Dec 2019 15:18:17 -0800 (PST)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GKIfn1X+i6X56lqVXfyDzwPMZCzheNRzcKTaF4L1NP0=;
+        b=tqatoBQobvBedum+QK0tB7xUUHxhYaZg/t+841DG0mzjrtSLkJi3yysGizt+1F5qEa
+         ggH5m4EJxDG+Vko92x6R0q05Ra4SPr9uSrzvEKPjIGtw059gkBtZ1JPRyxV6CG7zop6W
+         UTxeKpQ7gtGs4gccFEI2gq/dPE8U8T9kdWKcdW/b/zXMEk0NcCewLcrclmIMgaa9I4EC
+         1gr+Oy0IajsfBXv4+edKrRPp3BjDtAlkJz040FaaN41Ql8PnyD8/NR0fR0xPZFH+H7cM
+         o0MDWjgbmHUwN2OSXu8l0TP3luV1vQAXrBqz3IgQhiMvv3AgV2hSQ2GTTkNNYe9cps3r
+         iEWQ==
+X-Gm-Message-State: APjAAAWEf9UWfOi1TkfzB8JlilOHZufNlVsiqQUBke72ovWI93j15OAd
+        +JBIiEE7W76Uqfjn4x6XxUv3gA==
+X-Google-Smtp-Source: APXvYqwN8rVvbdjEWOZ3Dsr7ynba65KMLwXI/KiByr8BhvRWV22aS+4kNOZAN22diwAm+JbXcarUcQ==
+X-Received: by 2002:ad4:4949:: with SMTP id o9mr4823945qvy.189.1575501661393;
+        Wed, 04 Dec 2019 15:21:01 -0800 (PST)
+Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
+        by smtp.gmail.com with ESMTPSA id t38sm4667864qta.78.2019.12.04.15.20.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 15:21:00 -0800 (PST)
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
+        linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+        will@kernel.org, steve.capper@arm.com,
+        linux-arm-kernel@lists.infradead.org, maz@kernel.org,
+        james.morse@arm.com, vladimir.murzin@arm.com, mark.rutland@arm.com,
+        tglx@linutronix.de, gregkh@linuxfoundation.org,
+        allison@lohutok.net, info@metux.net, alexios.zavras@intel.com,
+        sstabellini@kernel.org, boris.ostrovsky@oracle.com,
+        jgross@suse.com, stefan@agner.ch, yamada.masahiro@socionext.com,
+        xen-devel@lists.xenproject.org, linux@armlinux.org.uk,
+        andrew.cooper3@citrix.com, julien@xen.org
+Subject: [PATCH v4 0/6] Use C inlines for uaccess
+Date:   Wed,  4 Dec 2019 18:20:52 -0500
+Message-Id: <20191204232058.2500117-1-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20191204225446.202981-1-dima@golovin.in>
-In-Reply-To: <20191204225446.202981-1-dima@golovin.in>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 4 Dec 2019 15:18:05 -0800
-Message-ID: <CAKwvOdm-bhuJMRRN3tyNdb88+_TFd4m3b-7gX0-91VG4djzp+Q@mail.gmail.com>
-Subject: Re: [PATCH] x86/boot: kbuild: allow readelf executable to be specified
-To:     Dmitry Golovin <dima@golovin.in>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Ross Philipson <ross.philipson@oracle.com>,
-        Ross Burton <ross.burton@intel.com>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        tony.luck@intel.com, fenghua.yu@intel.com,
-        linux-ia64@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 2:55 PM Dmitry Golovin <dima@golovin.in> wrote:
->
-> Introduce a new READELF variable to top-level Makefile, so the name of
-> readelf binary can be specified.
+Changelog:
 
-Thanks for the patch!
+v4:
+	- Split the first patch into two as Julien Grall 
+	- Also as Mark Rutland suggested removed alternatives
+	  from __asm_flush_cache_user_range.
+v3:
+	- Added Acked-by from Stefano Stabellini
+	- Addressed comments from Mark Rutland
+v2:
+	- Addressed Russell King's concern by not adding
+	  uaccess_* to ARM.
+	- Removed the accidental change to xtensa
 
-This is a general cleanup that should improve cross compilation
-(readelf should be treated as ever binary in the list like
-objcopy/objdump/etc), and allow us to use binutils substitutes for
-readelf that aren't called `readelf` (ie. `llvm-readelf`).
+Convert the remaining uaccess_* calls from ASM macros to C inlines.
 
->
-> Before this change the name of the binary was hardcoded to
-> "$(CROSS_COMPILE)readelf" which might not be present for every
-> toolchain.
->
-> This allows to build with LLVM Object Reader by using make parameter
-> READELF=llvm-readelf.
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/771
-> Signed-off-by: Dmitry Golovin <dima@golovin.in>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
+These patches apply against linux-next. I boot tested ARM64, and
+compile tested ARM change
 
-No need to explicitly CC me; I monitor our list like a hawk.
+Previous discussions:
+v3: https://lore.kernel.org/lkml/20191127184453.229321-1-pasha.tatashin@soleen.com
+v2: https://lore.kernel.org/lkml/20191122022406.590141-1-pasha.tatashin@soleen.com
+v1: https://lore.kernel.org/lkml/20191121184805.414758-1-pasha.tatashin@soleen.com
 
-> ---
->  Makefile                          | 3 ++-
->  arch/x86/boot/compressed/Makefile | 2 +-
->  2 files changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index 999a197d67d2..612a55d25442 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -414,6 +414,7 @@ STRIP               = $(CROSS_COMPILE)strip
->  OBJCOPY                = $(CROSS_COMPILE)objcopy
->  OBJDUMP                = $(CROSS_COMPILE)objdump
->  OBJSIZE                = $(CROSS_COMPILE)size
-> +READELF                = $(CROSS_COMPILE)readelf
->  PAHOLE         = pahole
->  LEX            = flex
->  YACC           = bison
-> @@ -472,7 +473,7 @@ GCC_PLUGINS_CFLAGS :=
->  CLANG_FLAGS :=
->
->  export ARCH SRCARCH CONFIG_SHELL BASH HOSTCC KBUILD_HOSTCFLAGS CROSS_COMPILE AS LD CC
-> -export CPP AR NM STRIP OBJCOPY OBJDUMP OBJSIZE PAHOLE LEX YACC AWK INSTALLKERNEL
-> +export CPP AR NM STRIP OBJCOPY OBJDUMP OBJSIZE READELF PAHOLE LEX YACC AWK INSTALLKERNEL
->  export PERL PYTHON PYTHON2 PYTHON3 CHECK CHECKFLAGS MAKE UTS_MACHINE HOSTCXX
->  export KBUILD_HOSTCXXFLAGS KBUILD_HOSTLDFLAGS KBUILD_HOSTLDLIBS LDFLAGS_MODULE
->
-> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-> index aa976adb7094..1dac210f7d44 100644
-> --- a/arch/x86/boot/compressed/Makefile
-> +++ b/arch/x86/boot/compressed/Makefile
-> @@ -103,7 +103,7 @@ vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_thunk_$(BITS).o
->  quiet_cmd_check_data_rel = DATAREL $@
->  define cmd_check_data_rel
->         for obj in $(filter %.o,$^); do \
-> -               ${CROSS_COMPILE}readelf -S $$obj | grep -qF .rel.local && { \
-> +               $(READELF) -S $$obj | grep -qF .rel.local && { \
+Pavel Tatashin (6):
+  arm/arm64/xen: hypercall.h add includes guards
+  arm/arm64/xen: use C inlines for privcmd_call
+  arm64: remove uaccess_ttbr0 asm macros from cache functions
+  arm64: remove __asm_flush_icache_range
+  arm64: move ARM64_HAS_CACHE_DIC/_IDC from asm to C
+  arm64: remove the rest of asm-uaccess.h
 
-Grepping the kernel sources for `READELF`, it looks like
-arch/ia64/Makefile makes the same mistake. Would you mind fixing both
-cases in the same patch (v2)?  I'm also curious about it's use in
-arch/ia64/scripts/unwcheck.py, and scripts/faddr2line. +ia64
-maintainers and list.
-
-I think if you simply remove the assignment on line 17 of
-arch/ia64/Makefile you should be fine.
-
->                         echo "error: $$obj has data relocations!" >&2; \
->                         exit 1; \
->                 } || true; \
-> --
-> 2.23.0
->
-
+ arch/arm/include/asm/assembler.h       |  2 +-
+ arch/arm/include/asm/xen/hypercall.h   | 10 ++++
+ arch/arm/xen/enlighten.c               |  2 +-
+ arch/arm/xen/hypercall.S               |  4 +-
+ arch/arm64/include/asm/asm-uaccess.h   | 61 -----------------------
+ arch/arm64/include/asm/cacheflush.h    | 51 +++++++++++++++++--
+ arch/arm64/include/asm/xen/hypercall.h | 28 +++++++++++
+ arch/arm64/kernel/entry.S              | 27 +++++++++-
+ arch/arm64/lib/clear_user.S            |  2 +-
+ arch/arm64/lib/copy_from_user.S        |  2 +-
+ arch/arm64/lib/copy_in_user.S          |  2 +-
+ arch/arm64/lib/copy_to_user.S          |  2 +-
+ arch/arm64/mm/cache.S                  | 68 +++++---------------------
+ arch/arm64/mm/flush.c                  |  3 +-
+ arch/arm64/xen/hypercall.S             | 19 +------
+ include/xen/arm/hypercall.h            | 12 ++---
+ 16 files changed, 143 insertions(+), 152 deletions(-)
+ delete mode 100644 arch/arm64/include/asm/asm-uaccess.h
 
 -- 
-Thanks,
-~Nick Desaulniers
+2.24.0
+
