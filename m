@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95714C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D777FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B3AD20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADF4920675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:00:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482413;
-	bh=F8bm6cUbhQzAHQ+PL99yZE/aTt2ybXW/03/U7caOBbs=;
+	s=default; t=1575482415;
+	bh=9vNUBEm3iSdcJ3wWOLFUtnZXXvnk48gtvjt/MMCjFCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mC+fpy4cwMreIsM1onPGfP0oPmkWAFvgAXKcwSD1z9pxUnMN6fHiK49g0Y7AP1dMl
-	 NGyIjFfILN1ByVWUuBcXLeOi9L7DasPicWdAm0X5CSmU1cXX1Y44MEOZHf873gXSR5
-	 Pg2N/VgFVSOawP3xze4l6wbJR45q6BsvFLGDZodk=
+	b=KTkOPhFnSAepoFjyLPoAW3qX3NBG49m2bMGpvsxPbLIEzEGbDJxCsgxTSv+hH7UX6
+	 opexOP1gPeZsIOZ2gJY5FDWh11WXdTEXyTD1eKwjlj4a2Ia8pNBJlwxKFUtbdGbx9r
+	 C4OoPxTeBFUn+wKy0cOfDQHu76T6CtgbwjaPXJLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729287AbfLDSAM (ORCPT
+        id S1729293AbfLDSAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:00:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38006 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:00:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729272AbfLDSAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:00:07 -0500
+        id S1728842AbfLDSAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:00:09 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45E352081B;
-        Wed,  4 Dec 2019 18:00:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7DF120675;
+        Wed,  4 Dec 2019 18:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482406;
-        bh=F8bm6cUbhQzAHQ+PL99yZE/aTt2ybXW/03/U7caOBbs=;
+        s=default; t=1575482409;
+        bh=9vNUBEm3iSdcJ3wWOLFUtnZXXvnk48gtvjt/MMCjFCI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vkTMN6v8BxD5xY0yrBIvshFeHsUoLqnOSIiB9F6Tn99F4XWeT3kXUooSIy7fXKnx+
-         J6avvxy+B6CWZaalaHXj4g5u2RvK8lpbwtjvDR43AM0lmBr+TXfoMXYzlgZZTJ2zUF
-         cwu/Hve6C5hopSfHjm/QRNcbq+P0zJaVlCdnFC1w=
+        b=GA62T12ekZ90UKf2vzdXhXCnQpi9cl1BaJaoKI2fyFxpESrQbk47SwtCgcwm96S1/
+         YKAXNCy51BKZWtNQN2M4x5vCk2eFAtoMnsZGXqqcTxxJOY6VJIK3UUP/WoZMqRMtHb
+         4KfWywr0Axt6UvYVarGwrVi8c0AUy9G7LM06jS84=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian Luo <luojian5@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Gen Zhang <blackgod016574@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 74/92] scsi: libsas: Check SMP PHY control function result
-Date:   Wed,  4 Dec 2019 18:50:14 +0100
-Message-Id: <20191204174334.726112310@linuxfoundation.org>
+Subject: [PATCH 4.4 75/92] powerpc/pseries/dlpar: Fix a missing check in dlpar_parse_cc_property()
+Date:   Wed,  4 Dec 2019 18:50:15 +0100
+Message-Id: <20191204174334.777008121@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204174327.215426506@linuxfoundation.org>
 References: <20191204174327.215426506@linuxfoundation.org>
@@ -61,48 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Gen Zhang <blackgod016574@gmail.com>
 
-[ Upstream commit 01929a65dfa13e18d89264ab1378854a91857e59 ]
+[ Upstream commit efa9ace68e487ddd29c2b4d6dd23242158f1f607 ]
 
-Currently the SMP PHY control execution result is checked, however the
-function result for the command is not.
+In dlpar_parse_cc_property(), 'prop->name' is allocated by kstrdup().
+kstrdup() may return NULL, so it should be checked and handle error.
+And prop should be freed if 'prop->name' is NULL.
 
-As such, we may be missing all potential errors, like SMP FUNCTION FAILED,
-INVALID REQUEST FRAME LENGTH, etc., meaning the PHY control request has
-failed.
-
-In some scenarios we need to ensure the function result is accepted, so add
-a check for this.
-
-Tested-by: Jian Luo <luojian5@huawei.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libsas/sas_expander.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/powerpc/platforms/pseries/dlpar.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
-index b7e4493d3dc16..7e8274938a3ee 100644
---- a/drivers/scsi/libsas/sas_expander.c
-+++ b/drivers/scsi/libsas/sas_expander.c
-@@ -603,7 +603,14 @@ int sas_smp_phy_control(struct domain_device *dev, int phy_id,
- 	}
+diff --git a/arch/powerpc/platforms/pseries/dlpar.c b/arch/powerpc/platforms/pseries/dlpar.c
+index a8efed3b46916..551ba5b35df9d 100644
+--- a/arch/powerpc/platforms/pseries/dlpar.c
++++ b/arch/powerpc/platforms/pseries/dlpar.c
+@@ -55,6 +55,10 @@ static struct property *dlpar_parse_cc_property(struct cc_workarea *ccwa)
  
- 	res = smp_execute_task(dev, pc_req, PC_REQ_SIZE, pc_resp,PC_RESP_SIZE);
--
-+	if (res) {
-+		pr_err("ex %016llx phy%02d PHY control failed: %d\n",
-+		       SAS_ADDR(dev->sas_addr), phy_id, res);
-+	} else if (pc_resp[2] != SMP_RESP_FUNC_ACC) {
-+		pr_err("ex %016llx phy%02d PHY control failed: function result 0x%x\n",
-+		       SAS_ADDR(dev->sas_addr), phy_id, pc_resp[2]);
-+		res = pc_resp[2];
+ 	name = (char *)ccwa + be32_to_cpu(ccwa->name_offset);
+ 	prop->name = kstrdup(name, GFP_KERNEL);
++	if (!prop->name) {
++		dlpar_free_cc_property(prop);
++		return NULL;
 +	}
- 	kfree(pc_resp);
- 	kfree(pc_req);
- 	return res;
+ 
+ 	prop->length = be32_to_cpu(ccwa->prop_length);
+ 	value = (char *)ccwa + be32_to_cpu(ccwa->prop_offset);
 -- 
 2.20.1
 
