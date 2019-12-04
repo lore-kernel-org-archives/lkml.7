@@ -2,202 +2,189 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E04E2C2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59611C2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAD09207DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 313B12081B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:28:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="cPNuQoPs"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jhlZU+2R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728370AbfLDP2H (ORCPT
+        id S1728386AbfLDP2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:28:07 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37386 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728287AbfLDP2H (ORCPT
+        Wed, 4 Dec 2019 10:28:12 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:35456 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728287AbfLDP2L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:28:07 -0500
-Received: by mail-wr1-f66.google.com with SMTP id w15so9137682wru.4
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 07:28:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from:cc;
-        bh=n0PMYgXBxpTJTwUFndMR8j8g1X+3mghMk/wqd/jqgb4=;
-        b=cPNuQoPsK/IaM6bjnT9f9fznnLZV6W3amrqNwE5KT0g0fAzb0IB/r7CZzMMmqG5ooF
-         bH1J5zqnHViwUlMvEZUMnhKSdwt5CVERjPLQwXJJ59xzXl4TkPThLLFguRiCuTZqZLgh
-         p8o9z51+Io63YGZ1D9Y3mBoy3VbQcM+CbjGLvPNMOhaoW6Hz6VFWLzT4xI3Xe6Ft6jSG
-         SWNl6f5cKTA5UVJI9eL/iWIM3Xqav0Ge9KFr1dzDqT+TaR4jNStC23Z+6MfNvMlDZFg5
-         vHOUT9n0pWZu63JbNZUgt5Wr8SRaNB8EYuYCYVvGYsz6+agsYFdQQOU/RNfLOp2vMOnS
-         7XbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from:cc;
-        bh=n0PMYgXBxpTJTwUFndMR8j8g1X+3mghMk/wqd/jqgb4=;
-        b=ssoJvp1IQlNNdxv6l82wqAt2phbxE134YESyBx9mkIjH0khvm0TeEsHuiT/Pbo+cgV
-         /y0LX/bpa7EueLQI8K2ijdVgwMfxMU3IM9sB8gkUPc0fNR2hsDEhqhS2idUJ4QsPCzzs
-         DxOXdlPCkMePCLrLC9GVXw0G3fq3C6uIv7IWa6Asfw9X5kl+RWUXD2DNB6isMDgQflv2
-         QWStJwMD27SJmpSp5TkxCwdMS5pw7Ph2dMQMuTFDxuArH9KcdYtf7JqZljJydduqKf9T
-         QcBRiEfvMsnrFZn0W9l6hUkKmlwPanI3mr6+jyI2PC46HZdg4Q5lsP67PjbkJRpnYJB9
-         Tl0A==
-X-Gm-Message-State: APjAAAXpUJoZXdcisPAuMHEELq9V/usUfk/q2GsgW1Qzhiu1W9LENQoS
-        H6CuG2DLKCyRtauIiub3mBF04Q==
-X-Google-Smtp-Source: APXvYqzg1TyHqcrLbHlAbi08TX3/2GpmskSRV7ZVEsEDmRuvJ1eZlWpKFOWi870svMg0kU8UUNR6OA==
-X-Received: by 2002:adf:eb46:: with SMTP id u6mr4788809wrn.239.1575473284403;
-        Wed, 04 Dec 2019 07:28:04 -0800 (PST)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id b2sm8607869wrr.76.2019.12.04.07.28.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 07:28:03 -0800 (PST)
-Message-ID: <5de7d083.1c69fb81.82fe2.b0da@mx.google.com>
-Date:   Wed, 04 Dec 2019 07:28:03 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: bisect
-X-Kernelci-Kernel: v5.4-9340-g16839329da69
-X-Kernelci-Tree: ardb
-X-Kernelci-Branch: for-kernelci
-X-Kernelci-Lab-Name: lab-collabora
-Subject: ardb/for-kernelci bisection: boot on rk3288-rock2-square
-To:     tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
-        enric.balletbo@collabora.com, khilman@baylibre.com,
-        mgalka@collabora.com, Ard Biesheuvel <ardb@kernel.org>,
-        broonie@kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
+        Wed, 4 Dec 2019 10:28:11 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB4FOJ5Z121548;
+        Wed, 4 Dec 2019 15:27:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
+ bh=AN47JONeK8oCX+YPtCKA7vbhhvfwmEGZgeS7UlEbne0=;
+ b=jhlZU+2Rzbv6gVANMI57IXf4244XikpH3LuIp0X0SonT0d1oWbooii/I/o40Vc417Vkm
+ JXnLIm8pTR2vkCTK0/YGs2RkZ9AT47NhF9QLRaIiycld3boG2vIUSOK7WG2KGBWj697F
+ cfBINSL1CSr5qFdSYb+vlUfZO8JozZlscwcZeuOJwVwdwMD8aQNIIl+nANbYSaLZiw9J
+ qH/wOseYpTNM3ZceqU0TrZpTbiEf1qbrx+R+AEtGFAqNlePYWdjGoiGAFTz+t+W8sOGJ
+ 2Xv/lT4fpuEC27mEEcxqLdmbyfl5UnqL3NojSts8/VGvgBgaTuzKZzloiXwGD750KS8G 5Q== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2wkfuufa02-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Dec 2019 15:27:51 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB4FOGXE011427;
+        Wed, 4 Dec 2019 15:27:51 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2wp17e470u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Dec 2019 15:27:51 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xB4FRnmC001349;
+        Wed, 4 Dec 2019 15:27:49 GMT
+Received: from dhcp-10-175-179-22.vpn.oracle.com (/10.175.179.22)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 04 Dec 2019 07:27:49 -0800
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     brendanhiggins@google.com, linux-kselftest@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
+        keescook@chromium.org, yzaikin@google.com,
+        akpm@linux-foundation.org, yamada.masahiro@socionext.com,
+        catalin.marinas@arm.com, joe.lawrence@redhat.com,
+        penguin-kernel@i-love.sakura.ne.jp, urezki@gmail.com,
+        andriy.shevchenko@linux.intel.com, corbet@lwn.net,
+        davidgow@google.com, adilger.kernel@dilger.ca, tytso@mit.edu,
+        mcgrof@kernel.org, linux-doc@vger.kernel.org,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Knut Omang <knut.omang@oracle.com>
+Subject: [PATCH v6 linux-kselftest-test 1/6] kunit: move string-stream.h to lib/kunit
+Date:   Wed,  4 Dec 2019 15:27:09 +0000
+Message-Id: <1575473234-5443-2-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1575473234-5443-1-git-send-email-alan.maguire@oracle.com>
+References: <1575473234-5443-1-git-send-email-alan.maguire@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9461 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912040128
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9461 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912040128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-* This automated bisection report was sent to you on the basis  *
-* that you may be involved with the breaking commit it has      *
-* found.  No manual investigation has been done to verify it,   *
-* and the root cause of the problem may be somewhere else.      *
-*                                                               *
-* If you do send a fix, please include this trailer:            *
-*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-*                                                               *
-* Hope this helps!                                              *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+string-stream interfaces are not intended for external use;
+move them from include/kunit to lib/kunit accordingly.
 
-ardb/for-kernelci bisection: boot on rk3288-rock2-square
+Co-developed-by: Knut Omang <knut.omang@oracle.com>
+Signed-off-by: Knut Omang <knut.omang@oracle.com>
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Tested-by: Brendan Higgins <brendanhiggins@google.com>
+---
+ include/kunit/assert.h                 | 3 ++-
+ lib/kunit/assert.c                     | 2 ++
+ lib/kunit/string-stream-test.c         | 3 ++-
+ lib/kunit/string-stream.c              | 3 ++-
+ {include => lib}/kunit/string-stream.h | 0
+ lib/kunit/test.c                       | 2 ++
+ 6 files changed, 10 insertions(+), 3 deletions(-)
+ rename {include => lib}/kunit/string-stream.h (100%)
 
-Summary:
-  Start:      16839329da69 enable extra tests by default
-  Details:    https://kernelci.org/boot/id/5de791acd6451dc5be960f08
-  Plain log:  https://storage.kernelci.org//ardb/for-kernelci/v5.4-9340-g16=
-839329da69/arm/multi_v7_defconfig+CONFIG_SMP=3Dn/gcc-8/lab-collabora/boot-r=
-k3288-rock2-square.txt
-  HTML log:   https://storage.kernelci.org//ardb/for-kernelci/v5.4-9340-g16=
-839329da69/arm/multi_v7_defconfig+CONFIG_SMP=3Dn/gcc-8/lab-collabora/boot-r=
-k3288-rock2-square.html
-  Result:     16839329da69 enable extra tests by default
+diff --git a/include/kunit/assert.h b/include/kunit/assert.h
+index db6a0fc..ad889b5 100644
+--- a/include/kunit/assert.h
++++ b/include/kunit/assert.h
+@@ -9,10 +9,11 @@
+ #ifndef _KUNIT_ASSERT_H
+ #define _KUNIT_ASSERT_H
+ 
+-#include <kunit/string-stream.h>
+ #include <linux/err.h>
++#include <linux/kernel.h>
+ 
+ struct kunit;
++struct string_stream;
+ 
+ /**
+  * enum kunit_assert_type - Type of expectation/assertion.
+diff --git a/lib/kunit/assert.c b/lib/kunit/assert.c
+index 86013d4..9aca71c 100644
+--- a/lib/kunit/assert.c
++++ b/lib/kunit/assert.c
+@@ -7,6 +7,8 @@
+  */
+ #include <kunit/assert.h>
+ 
++#include "string-stream.h"
++
+ void kunit_base_assert_format(const struct kunit_assert *assert,
+ 			      struct string_stream *stream)
+ {
+diff --git a/lib/kunit/string-stream-test.c b/lib/kunit/string-stream-test.c
+index 76cc05e..6c70dc8 100644
+--- a/lib/kunit/string-stream-test.c
++++ b/lib/kunit/string-stream-test.c
+@@ -6,10 +6,11 @@
+  * Author: Brendan Higgins <brendanhiggins@google.com>
+  */
+ 
+-#include <kunit/string-stream.h>
+ #include <kunit/test.h>
+ #include <linux/slab.h>
+ 
++#include "string-stream.h"
++
+ static void string_stream_test_empty_on_creation(struct kunit *test)
+ {
+ 	struct string_stream *stream = alloc_string_stream(test, GFP_KERNEL);
+diff --git a/lib/kunit/string-stream.c b/lib/kunit/string-stream.c
+index e6d17aa..3503920 100644
+--- a/lib/kunit/string-stream.c
++++ b/lib/kunit/string-stream.c
+@@ -6,11 +6,12 @@
+  * Author: Brendan Higgins <brendanhiggins@google.com>
+  */
+ 
+-#include <kunit/string-stream.h>
+ #include <kunit/test.h>
+ #include <linux/list.h>
+ #include <linux/slab.h>
+ 
++#include "string-stream.h"
++
+ struct string_stream_fragment_alloc_context {
+ 	struct kunit *test;
+ 	int len;
+diff --git a/include/kunit/string-stream.h b/lib/kunit/string-stream.h
+similarity index 100%
+rename from include/kunit/string-stream.h
+rename to lib/kunit/string-stream.h
+diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+index c83c0fa..36ebf47 100644
+--- a/lib/kunit/test.c
++++ b/lib/kunit/test.c
+@@ -11,6 +11,8 @@
+ #include <linux/kernel.h>
+ #include <linux/sched/debug.h>
+ 
++#include "string-stream.h"
++
+ static void kunit_set_failure(struct kunit *test)
+ {
+ 	WRITE_ONCE(test->success, false);
+-- 
+1.8.3.1
 
-Checks:
-  revert:     PASS
-  verify:     PASS
-
-Parameters:
-  Tree:       ardb
-  URL:        git://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git
-  Branch:     for-kernelci
-  Target:     rk3288-rock2-square
-  CPU arch:   arm
-  Lab:        lab-collabora
-  Compiler:   gcc-8
-  Config:     multi_v7_defconfig+CONFIG_SMP=3Dn
-  Test suite: boot
-
-Breaking commit found:
-
----------------------------------------------------------------------------=
-----
-commit 16839329da69263e7360f3819bae01bcf4b220ec
-Author: Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue Dec 3 12:29:31 2019 +0000
-
-    enable extra tests by default
-
-diff --git a/crypto/Kconfig b/crypto/Kconfig
-index 5575d48473bd..36af840aa820 100644
---- a/crypto/Kconfig
-+++ b/crypto/Kconfig
-@@ -140,7 +140,6 @@ if CRYPTO_MANAGER2
- =
-
- config CRYPTO_MANAGER_DISABLE_TESTS
- 	bool "Disable run-time self tests"
--	default y
- 	help
- 	  Disable run-time self tests that normally take place at
- 	  algorithm registration.
-@@ -148,6 +147,7 @@ config CRYPTO_MANAGER_DISABLE_TESTS
- config CRYPTO_MANAGER_EXTRA_TESTS
- 	bool "Enable extra run-time crypto self tests"
- 	depends on DEBUG_KERNEL && !CRYPTO_MANAGER_DISABLE_TESTS
-+	default y
- 	help
- 	  Enable extra run-time self tests of registered crypto algorithms,
- 	  including randomized fuzz tests.
-diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-index 88f33c0efb23..5df87bcf6c4d 100644
---- a/crypto/testmgr.c
-+++ b/crypto/testmgr.c
-@@ -40,7 +40,7 @@ static bool notests;
- module_param(notests, bool, 0644);
- MODULE_PARM_DESC(notests, "disable crypto self-tests");
- =
-
--static bool panic_on_fail;
-+static bool panic_on_fail =3D true;
- module_param(panic_on_fail, bool, 0444);
- =
-
- #ifdef CONFIG_CRYPTO_MANAGER_EXTRA_TESTS
----------------------------------------------------------------------------=
-----
-
-
-Git bisection log:
-
----------------------------------------------------------------------------=
-----
-git bisect start
-# good: [b94ae8ad9fe79da61231999f347f79645b909bda] Merge tag 'seccomp-v5.5-=
-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux
-git bisect good b94ae8ad9fe79da61231999f347f79645b909bda
-# bad: [16839329da69263e7360f3819bae01bcf4b220ec] enable extra tests by def=
-ault
-git bisect bad 16839329da69263e7360f3819bae01bcf4b220ec
-# good: [25cbf24a7eec7c3dee4113b2e98b572e128009b7] crypto: aead - move cryp=
-to_aead_maxauthsize() to <crypto/aead.h>
-git bisect good 25cbf24a7eec7c3dee4113b2e98b572e128009b7
-# good: [7b19c7a82950ed034645fa92adce29cd6163ed3e] crypto: testmgr - check =
-skcipher min_keysize
-git bisect good 7b19c7a82950ed034645fa92adce29cd6163ed3e
-# good: [062752a354aaf03b46b86cba5fdaa2fd5c932860] crypto: testmgr - create=
- struct aead_extra_tests_ctx
-git bisect good 062752a354aaf03b46b86cba5fdaa2fd5c932860
-# good: [2cd56a00fff8584e342164c65e6b55da61f79c4a] crypto: testmgr - genera=
-te inauthentic AEAD test vectors
-git bisect good 2cd56a00fff8584e342164c65e6b55da61f79c4a
-# first bad commit: [16839329da69263e7360f3819bae01bcf4b220ec] enable extra=
- tests by default
----------------------------------------------------------------------------=
-----
