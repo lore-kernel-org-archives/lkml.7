@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99944C2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD2F1C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5994920863
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F54020863
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482770;
-	bh=q/nXUueN+PhY2qiBQi4R8Z9iq0FW4Qo7pZkcszenzB0=;
+	s=default; t=1575482774;
+	bh=cvFZvCXWVi56kGin9wBixbYsa4vDrv6sQdpsJCuvV0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HqHEsQtrWdgBzSgxVJIyBY4k0JblsShRhtEl9m2MqzD9Ko0W8BMPcI59kkw+iP54g
-	 Vv+LA2F02Y7rlOfs1VMj4ETem45iN9T4nvNcTZGmj3Lwx+gEB7wOPoGMMgSiP5JJGf
-	 bFa/30/IeX4+JrWXKhbe5Ogg+cx3VPEWTza8vK/U=
+	b=IBtlE5AgydCyUQP1K54jjRvNjjh+WZsXPqtke8T8dr1P6uNtBUJcfALZe6Sop5/yh
+	 uVsaDwHe5iyG2WmGVduCB+gTYZsGZeNd36YT9M1rJ9H3/HHm/bbrVriOvF8evgay98
+	 eSU1prsMhWHs0jX/vSsdOmUd/IVT4rTMNo5U4ZZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730503AbfLDSGJ (ORCPT
+        id S1730515AbfLDSGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:06:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53540 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:06:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728331AbfLDSGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:06:01 -0500
+        id S1730495AbfLDSGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:06:06 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D87420675;
-        Wed,  4 Dec 2019 18:06:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB03E2081B;
+        Wed,  4 Dec 2019 18:06:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482761;
-        bh=q/nXUueN+PhY2qiBQi4R8Z9iq0FW4Qo7pZkcszenzB0=;
+        s=default; t=1575482766;
+        bh=cvFZvCXWVi56kGin9wBixbYsa4vDrv6sQdpsJCuvV0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QVahyrZyqAHCcqgISyaTbr1eKiOTjzW/Om4MaA1L3mqGQx4awFIQs/9aUO1pqI2dv
-         SGMwCwGrCFalZ5XLUznYndFQbngNFjQTC+zjx54e+gdcS7xVwj9wtk9ZOP+suUSFi7
-         yNbFRNVWQjIHdgv8n2MG4/VFzssbipXvBIMTwljI=
+        b=MyTA0fVhOQuflOBBTZOlyyJnbxCXb6/I6ePS00chuMVMLATqTX2eFTjiGRW9q+LUn
+         GXBuOH+/zHEoYtOXvMrWeyU3KABHweyyWcVS0yY2xrOuYKm319r3W53cX6ei9LkWN5
+         epohRcyuBcX4tRECFP9GGRvA6Peh+RtQlksflUU0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yi Wang <wang.yi59@zte.com.cn>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
+        stable@vger.kernel.org, Huang Shijie <sjhuang@iluvatar.ai>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Skidanov <alexey.skidanov@intel.com>,
+        Olof Johansson <olof@lixom.net>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 123/209] fork: fix some -Wmissing-prototypes warnings
-Date:   Wed,  4 Dec 2019 18:55:35 +0100
-Message-Id: <20191204175331.534849390@linuxfoundation.org>
+Subject: [PATCH 4.14 125/209] lib/genalloc.c: include vmalloc.h
+Date:   Wed,  4 Dec 2019 18:55:37 +0100
+Message-Id: <20191204175331.680647044@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -63,81 +63,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yi Wang <wang.yi59@zte.com.cn>
+From: Olof Johansson <olof@lixom.net>
 
-[ Upstream commit fb5bf31722d0805a3f394f7d59f2e8cd07acccb7 ]
+[ Upstream commit 35004f2e55807a1a1491db24ab512dd2f770a130 ]
 
-We get a warning when building kernel with W=1:
+Fixes build break on most ARM/ARM64 defconfigs:
 
-  kernel/fork.c:167:13: warning: no previous prototype for `arch_release_thread_stack' [-Wmissing-prototypes]
-  kernel/fork.c:779:13: warning: no previous prototype for `fork_init' [-Wmissing-prototypes]
+  lib/genalloc.c: In function 'gen_pool_add_virt':
+  lib/genalloc.c:190:10: error: implicit declaration of function 'vzalloc_node'; did you mean 'kzalloc_node'?
+  lib/genalloc.c:190:8: warning: assignment to 'struct gen_pool_chunk *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+  lib/genalloc.c: In function 'gen_pool_destroy':
+  lib/genalloc.c:254:3: error: implicit declaration of function 'vfree'; did you mean 'kfree'?
 
-Add the missing declaration in head file to fix this.
-
-Also, remove arch_release_thread_stack() completely because no arch
-seems to implement it since bb9d81264 (arch: remove tile port).
-
-Link: http://lkml.kernel.org/r/1542170087-23645-1-git-send-email-wang.yi59@zte.com.cn
-Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Mike Rapoport <rppt@linux.ibm.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Fixes: 6862d2fc8185 ('lib/genalloc.c: use vzalloc_node() to allocate the bitmap')
+Cc: Huang Shijie <sjhuang@iluvatar.ai>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexey Skidanov <alexey.skidanov@intel.com>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/sched/task.h | 2 ++
- init/main.c                | 1 -
- kernel/fork.c              | 5 -----
- 3 files changed, 2 insertions(+), 6 deletions(-)
+ lib/genalloc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
-index a74ec619ac510..11b4fba82950f 100644
---- a/include/linux/sched/task.h
-+++ b/include/linux/sched/task.h
-@@ -39,6 +39,8 @@ void __noreturn do_task_dead(void);
+diff --git a/lib/genalloc.c b/lib/genalloc.c
+index f365d71cdc774..7e85d1e37a6ea 100644
+--- a/lib/genalloc.c
++++ b/lib/genalloc.c
+@@ -35,6 +35,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/genalloc.h>
+ #include <linux/of_device.h>
++#include <linux/vmalloc.h>
  
- extern void proc_caches_init(void);
- 
-+extern void fork_init(void);
-+
- extern void release_task(struct task_struct * p);
- 
- #ifdef CONFIG_HAVE_COPY_THREAD_TLS
-diff --git a/init/main.c b/init/main.c
-index 51067e2db509d..b1ab36fe1a55c 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -98,7 +98,6 @@
- static int kernel_init(void *);
- 
- extern void init_IRQ(void);
--extern void fork_init(void);
- extern void radix_tree_init(void);
- 
- /*
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 3352fdbd5e20d..3d9d6a28e21d9 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -162,10 +162,6 @@ static inline void free_task_struct(struct task_struct *tsk)
- }
- #endif
- 
--void __weak arch_release_thread_stack(unsigned long *stack)
--{
--}
--
- #ifndef CONFIG_ARCH_THREAD_STACK_ALLOCATOR
- 
- /*
-@@ -348,7 +344,6 @@ static void release_task_stack(struct task_struct *tsk)
- 		return;  /* Better to leak the stack than to free prematurely */
- 
- 	account_kernel_stack(tsk, -1);
--	arch_release_thread_stack(tsk->stack);
- 	free_thread_stack(tsk);
- 	tsk->stack = NULL;
- #ifdef CONFIG_VMAP_STACK
+ static inline size_t chunk_size(const struct gen_pool_chunk *chunk)
+ {
 -- 
 2.20.1
 
