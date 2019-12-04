@@ -7,44 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4FEC0044D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFFCC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A0B024659
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12AE62084F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:54:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbfLDHyH (ORCPT
+        id S1727443AbfLDHyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 02:54:07 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56129 "EHLO
+        Wed, 4 Dec 2019 02:54:12 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56123 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727321AbfLDHyE (ORCPT
+        with ESMTP id S1727313AbfLDHyF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 02:54:04 -0500
+        Wed, 4 Dec 2019 02:54:05 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1icPTy-0004RS-Bf; Wed, 04 Dec 2019 08:53:58 +0100
+        id 1icPTx-0004UW-NE; Wed, 04 Dec 2019 08:53:57 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0F2AA1C2563;
-        Wed,  4 Dec 2019 08:53:53 +0100 (CET)
-Date:   Wed, 04 Dec 2019 07:53:52 -0000
-From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 286CC1C264A;
+        Wed,  4 Dec 2019 08:53:54 +0100 (CET)
+Date:   Wed, 04 Dec 2019 07:53:54 -0000
+From:   "tip-bot2 for Andi Kleen" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] tools headers uapi: Sync linux/stat.h with the
- kernel sources
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+Subject: [tip: perf/urgent] perf stat: Use affinity for enabling/disabling events
+Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <tip-thcy60dpry5qrpn7nmc58bwg@git.kernel.org>
-References: <tip-thcy60dpry5qrpn7nmc58bwg@git.kernel.org>
+In-Reply-To: <20191121001522.180827-13-andi@firstfloor.org>
+References: <20191121001522.180827-13-andi@firstfloor.org>
 MIME-Version: 1.0
-Message-ID: <157544603294.21853.9731827151832315062.tip-bot2@tip-bot2>
+Message-ID: <157544603406.21853.4873090291378641316.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,52 +56,98 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     c66f2566db340b04c113ea1d930651246d9d4049
-Gitweb:        https://git.kernel.org/tip/c66f2566db340b04c113ea1d930651246d9d4049
-Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Mon, 02 Dec 2019 12:24:52 -03:00
+Commit-ID:     704e2f5b700da4c912635cf161c3e982737eb89e
+Gitweb:        https://git.kernel.org/tip/704e2f5b700da4c912635cf161c3e982737eb89e
+Author:        Andi Kleen <ak@linux.intel.com>
+AuthorDate:    Wed, 20 Nov 2019 16:15:22 -08:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Mon, 02 Dec 2019 12:24:52 -03:00
+CommitterDate: Fri, 29 Nov 2019 12:20:45 -03:00
 
-tools headers uapi: Sync linux/stat.h with the kernel sources
+perf stat: Use affinity for enabling/disabling events
 
-To pick the changes from:
+Restructure event enabling/disabling to use affinity, which
+minimizes the number of IPIs needed.
 
-  3ad2522c64cf ("statx: define STATX_ATTR_VERITY")
+Before on a large test case with 94 CPUs:
 
-That don't trigger any changes in tooling.
+  % time     seconds  usecs/call     calls    errors syscall
+  ------ ----------- ----------- --------- --------- ----------------
+   54.65    1.899986          22     84812       660 ioctl
 
-This silences this perf build warning:
+after:
 
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/stat.h' differs from latest version at 'include/uapi/linux/stat.h'
-  diff -u tools/include/uapi/linux/stat.h include/uapi/linux/stat.h
+   39.21    0.930451          10     84796       644 ioctl
 
-At some point we wi'll beautify structs passed in pointers to syscalls
-and then we'll need to have tables for these defines, for now update the
-file to silence the warning as this file is used for doing this type of
-number -> string translations for other defines found in these file.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Eric Biggers <ebiggers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-thcy60dpry5qrpn7nmc58bwg@git.kernel.org
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Link: http://lore.kernel.org/lkml/20191121001522.180827-13-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/stat.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/evlist.c | 40 ++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 37 insertions(+), 3 deletions(-)
 
-diff --git a/tools/include/uapi/linux/stat.h b/tools/include/uapi/linux/stat.h
-index 7b35e98..ad80a5c 100644
---- a/tools/include/uapi/linux/stat.h
-+++ b/tools/include/uapi/linux/stat.h
-@@ -167,8 +167,8 @@ struct statx {
- #define STATX_ATTR_APPEND		0x00000020 /* [I] File is append-only */
- #define STATX_ATTR_NODUMP		0x00000040 /* [I] File is not to be dumped */
- #define STATX_ATTR_ENCRYPTED		0x00000800 /* [I] File requires key to decrypt in fs */
--
- #define STATX_ATTR_AUTOMOUNT		0x00001000 /* Dir: Automount trigger */
-+#define STATX_ATTR_VERITY		0x00100000 /* [I] Verity protected file */
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 096a4ea..1548237 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -378,11 +378,28 @@ bool evsel__cpu_iter_skip(struct evsel *ev, int cpu)
+ void evlist__disable(struct evlist *evlist)
+ {
+ 	struct evsel *pos;
++	struct affinity affinity;
++	int cpu, i;
++
++	if (affinity__setup(&affinity) < 0)
++		return;
++
++	evlist__for_each_cpu(evlist, i, cpu) {
++		affinity__set(&affinity, cpu);
  
++		evlist__for_each_entry(evlist, pos) {
++			if (evsel__cpu_iter_skip(pos, cpu))
++				continue;
++			if (pos->disabled || !perf_evsel__is_group_leader(pos) || !pos->core.fd)
++				continue;
++			evsel__disable_cpu(pos, pos->cpu_iter - 1);
++		}
++	}
++	affinity__cleanup(&affinity);
+ 	evlist__for_each_entry(evlist, pos) {
+-		if (pos->disabled || !perf_evsel__is_group_leader(pos) || !pos->core.fd)
++		if (!perf_evsel__is_group_leader(pos) || !pos->core.fd)
+ 			continue;
+-		evsel__disable(pos);
++		pos->disabled = true;
+ 	}
  
- #endif /* _UAPI_LINUX_STAT_H */
+ 	evlist->enabled = false;
+@@ -391,11 +408,28 @@ void evlist__disable(struct evlist *evlist)
+ void evlist__enable(struct evlist *evlist)
+ {
+ 	struct evsel *pos;
++	struct affinity affinity;
++	int cpu, i;
+ 
++	if (affinity__setup(&affinity) < 0)
++		return;
++
++	evlist__for_each_cpu(evlist, i, cpu) {
++		affinity__set(&affinity, cpu);
++
++		evlist__for_each_entry(evlist, pos) {
++			if (evsel__cpu_iter_skip(pos, cpu))
++				continue;
++			if (!perf_evsel__is_group_leader(pos) || !pos->core.fd)
++				continue;
++			evsel__enable_cpu(pos, pos->cpu_iter - 1);
++		}
++	}
++	affinity__cleanup(&affinity);
+ 	evlist__for_each_entry(evlist, pos) {
+ 		if (!perf_evsel__is_group_leader(pos) || !pos->core.fd)
+ 			continue;
+-		evsel__enable(pos);
++		pos->disabled = false;
+ 	}
+ 
+ 	evlist->enabled = true;
