@@ -2,233 +2,164 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6563CC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B43FC0044D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34CB92084F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D21A2084F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:55:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575446131;
+	bh=Lb3nemcb9R7mljnWpkCKv1Yn0oxJJhwN6/4ioz1hZ5A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aNanTvcG79dpEScc27HBEhsmuyEqBZDdEnsTfa7/6WhPaqM0aVTsqiqGltqhhfyiH
+	 VhJLLhw3A2srWCoV5VhvvqVv39kb9FPfpNBmannDs7lO7YGIUXJSgqQCgOIaKT+e24
+	 hSW1ziQ3LsFiIVAy4vfePZOfrXkeBU39Wva09+8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727663AbfLDHzV (ORCPT
+        id S1727451AbfLDHza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 02:55:21 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56107 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbfLDHyE (ORCPT
+        Wed, 4 Dec 2019 02:55:30 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45880 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726856AbfLDHza (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 02:54:04 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1icPTy-0004Vs-Op; Wed, 04 Dec 2019 08:53:58 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 747A31C264B;
-        Wed,  4 Dec 2019 08:53:54 +0100 (CET)
-Date:   Wed, 04 Dec 2019 07:53:54 -0000
-From:   "tip-bot2 for Andi Kleen" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf stat: Use affinity for reading
-Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191121001522.180827-11-andi@firstfloor.org>
-References: <20191121001522.180827-11-andi@firstfloor.org>
+        Wed, 4 Dec 2019 02:55:30 -0500
+Received: by mail-lf1-f66.google.com with SMTP id 203so5284457lfa.12;
+        Tue, 03 Dec 2019 23:55:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=HtkivZBfXW8xPuS5rhk5w6nuW6W4kAYRPy9pdM4dJ+E=;
+        b=btrEjsK+1YjS66nqCBcUA8vnICeA+hjizys7/ZujzuHIiNl7HH3Bxik8h3axHHIxUW
+         7QQ11YfImJLjWULvDmNj6po/N8Aq31lSCLU9Ky3OPqXoGnSUg7sbJ8U+7gZBBZftmFIc
+         mNJn6dOHliFL6PIVwVbOitHy9PbA9HuKixRODy9u0ALsAsq0Wd3cSWrcIEzoQhI05K6y
+         7K2m5xA5NEeHZHBLBVxD4LeoNOPFbHcCVvES8d4SO688FP8A5rqyLOrSn+vQPeuBmn4H
+         5xGi5ZLLnlKrH/XJKHDArIfHE6/tR2UmHzoAry1M0BEzIUoCxZpP44aeTEJwbcaKKBls
+         sLmQ==
+X-Gm-Message-State: APjAAAW7u6976Yk/5q/Q/3RvWUvYNoWgPfWGCLJ4lj6Xam9rsdoeVVjW
+        z+XEmQ86zhPzFdr1e+dkfiw=
+X-Google-Smtp-Source: APXvYqxTYNz2ToQ6maz5hD/npVXS7ml7RLVheYsAoH5Vcd+r/fnc/M7OrTdKeax3pCn5eMxYCrglrQ==
+X-Received: by 2002:ac2:48b6:: with SMTP id u22mr1281287lfg.164.1575446127352;
+        Tue, 03 Dec 2019 23:55:27 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id u2sm2752309lfd.4.2019.12.03.23.55.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2019 23:55:26 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1icPVV-0003JY-2n; Wed, 04 Dec 2019 08:55:33 +0100
+Date:   Wed, 4 Dec 2019 08:55:33 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Ikjoon Jang <ikjn@chromium.org>
+Cc:     Johan Hovold <johan@kernel.org>, linux-usb@vger.kernel.org,
+        GregKroah-Hartman <gregkh@linuxfoundation.org>,
+        RobHerring <robh+dt@kernel.org>,
+        MarkRutland <mark.rutland@arm.com>,
+        AlanStern <stern@rowland.harvard.edu>,
+        SuwanKim <suwan.kim027@gmail.com>,
+        "GustavoA . R . Silva" <gustavo@embeddedor.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nicolas Boichat <drinkcat@chromium.org>
+Subject: Re: [PATCH v4 2/2] usb: overridable hub bInterval by device node
+Message-ID: <20191204075533.GI10631@localhost>
+References: <20191203101552.199339-1-ikjn@chromium.org>
+ <20191203165301.GH10631@localhost>
+ <CAATdQgCqYrd_aXN5GDsso+F3WadNx3DQKK3Efk3tgkrv2VXjyw@mail.gmail.com>
 MIME-Version: 1.0
-Message-ID: <157544603437.21853.15835096734986773458.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAATdQgCqYrd_aXN5GDsso+F3WadNx3DQKK3Efk3tgkrv2VXjyw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
+On Wed, Dec 04, 2019 at 03:04:53PM +0800, Ikjoon Jang wrote:
+> On Wed, Dec 4, 2019 at 12:52 AM Johan Hovold <johan@kernel.org> wrote:
+> >
+> > On Tue, Dec 03, 2019 at 06:15:52PM +0800, Ikjoon Jang wrote:
+> > > This patch enables hub device to override its own endpoint descriptor's
+> > > bInterval when the hub has a device node with "hub,interval" property.
+> > >
+> > > When we know reducing autosuspend delay for built-in HIDs is better for
+> > > power saving, we can reduce it to the optimal value. But if a parent hub
+> > > has a long bInterval, mouse lags a lot from more frequent autosuspend.
+> > > So this enables overriding bInterval for a hard wired hub device only
+> > > when we know that reduces the power consumption.
+> >
+> > I think I saw you argue about why this shouldn't simply be configured at
+> > runtime. Please include that here too, I can't seem to remember why...
+> 
+> Okay.
+> 
+> >
+> > > Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+> > > Acked-by: Alan Stern <stern@rowland.harvard.edu>
+> > > ---
+> > >  drivers/usb/core/config.c | 9 +++++++++
+> > >  1 file changed, 9 insertions(+)
+> > >
+> > > diff --git a/drivers/usb/core/config.c b/drivers/usb/core/config.c
+> > > index 5f40117e68e7..95ec5af42a1c 100644
+> > > --- a/drivers/usb/core/config.c
+> > > +++ b/drivers/usb/core/config.c
+> > > @@ -6,6 +6,7 @@
+> > >  #include <linux/usb.h>
+> > >  #include <linux/usb/ch9.h>
+> > >  #include <linux/usb/hcd.h>
+> > > +#include <linux/usb/of.h>
+> > >  #include <linux/usb/quirks.h>
+> > >  #include <linux/module.h>
+> > >  #include <linux/slab.h>
+> > > @@ -257,6 +258,14 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno, int inum,
+> > >       memcpy(&endpoint->desc, d, n);
+> > >       INIT_LIST_HEAD(&endpoint->urb_list);
+> > >
+> > > +     /* device node property overrides bInterval */
+> > > +     if (usb_of_has_combined_node(to_usb_device(ddev))) {
+> >
+> > Not only hubs have combined nodes so you probably need to check
+> > bDeviceClass here instead.
+> 
+> yes, you're right, I didn't think of that case:
+> if (to_usb_device(ddev)->descriptor.bDeviceClass == USB_CLASS_HUB &&
+> ddev->of_node && !of_property_read_u32(...))
+> 
+> Or is it better to check bInterfaceClass, for composite devices with a
+> hub interface inside?
+> if (ifp->desc.bInterfaceClass == USB_CLASS_HUB && ddev->of_node &&
+> !of_property_read_u32(...))
+> 
+> I think checking bInterfaceClass is better.
 
-Commit-ID:     4b49ab708d1804bc8b2fcdde79844b8bc98f7ef6
-Gitweb:        https://git.kernel.org/tip/4b49ab708d1804bc8b2fcdde79844b8bc98f7ef6
-Author:        Andi Kleen <ak@linux.intel.com>
-AuthorDate:    Wed, 20 Nov 2019 16:15:20 -08:00
-Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Fri, 29 Nov 2019 12:20:45 -03:00
+Yep, that seems better (but please use two conditionals for
+readability).
 
-perf stat: Use affinity for reading
+But related to my question above, why do you need to do this during
+enumeration? Why not just set the lower interval value in the hub
+driver?
 
-Restructure event reading to use affinity to minimize the number of IPIs
-needed.
+> > > +             u32 interval = 0;
+> > > +             if (!of_property_read_u32(ddev->of_node, "hub,interval",
+> > > +                                 &interval))
+> > > +                     d->bInterval = min_t(u8, interval, 255);
+> >
+> > You want min_t(u32, ...) here to avoid surprises when someone specifies
+> > a value > 255.
+> 
+> yes, thanks.
 
-Before on a large test case with 94 CPUs:
+And I guess you should really be honouring bInterval as a maximum value,
+right?
 
-  % time     seconds  usecs/call     calls    errors syscall
-  ------ ----------- ----------- --------- --------- ----------------
-    3.16    0.106079           4     22082           read
+> > > +     }
+> > > +
+> > >       /*
+> > >        * Fix up bInterval values outside the legal range.
+> > >        * Use 10 or 8 ms if no proper value can be guessed.
 
-After:
-
-    3.43    0.081295           3     22082           read
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lore.kernel.org/lkml/20191121001522.180827-11-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-stat.c | 97 +++++++++++++++++++++-----------------
- tools/perf/util/evsel.h   |  1 +-
- 2 files changed, 57 insertions(+), 41 deletions(-)
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index cf8516e..a098c2e 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -266,15 +266,10 @@ static int read_single_counter(struct evsel *counter, int cpu,
-  * Read out the results of a single counter:
-  * do not aggregate counts across CPUs in system-wide mode
-  */
--static int read_counter(struct evsel *counter, struct timespec *rs)
-+static int read_counter_cpu(struct evsel *counter, struct timespec *rs, int cpu)
- {
- 	int nthreads = perf_thread_map__nr(evsel_list->core.threads);
--	int ncpus, cpu, thread;
--
--	if (target__has_cpu(&target) && !target__has_per_thread(&target))
--		ncpus = perf_evsel__nr_cpus(counter);
--	else
--		ncpus = 1;
-+	int thread;
- 
- 	if (!counter->supported)
- 		return -ENOENT;
-@@ -283,40 +278,38 @@ static int read_counter(struct evsel *counter, struct timespec *rs)
- 		nthreads = 1;
- 
- 	for (thread = 0; thread < nthreads; thread++) {
--		for (cpu = 0; cpu < ncpus; cpu++) {
--			struct perf_counts_values *count;
--
--			count = perf_counts(counter->counts, cpu, thread);
--
--			/*
--			 * The leader's group read loads data into its group members
--			 * (via perf_evsel__read_counter) and sets threir count->loaded.
--			 */
--			if (!perf_counts__is_loaded(counter->counts, cpu, thread) &&
--			    read_single_counter(counter, cpu, thread, rs)) {
--				counter->counts->scaled = -1;
--				perf_counts(counter->counts, cpu, thread)->ena = 0;
--				perf_counts(counter->counts, cpu, thread)->run = 0;
--				return -1;
--			}
-+		struct perf_counts_values *count;
- 
--			perf_counts__set_loaded(counter->counts, cpu, thread, false);
-+		count = perf_counts(counter->counts, cpu, thread);
- 
--			if (STAT_RECORD) {
--				if (perf_evsel__write_stat_event(counter, cpu, thread, count)) {
--					pr_err("failed to write stat event\n");
--					return -1;
--				}
--			}
-+		/*
-+		 * The leader's group read loads data into its group members
-+		 * (via perf_evsel__read_counter()) and sets their count->loaded.
-+		 */
-+		if (!perf_counts__is_loaded(counter->counts, cpu, thread) &&
-+		    read_single_counter(counter, cpu, thread, rs)) {
-+			counter->counts->scaled = -1;
-+			perf_counts(counter->counts, cpu, thread)->ena = 0;
-+			perf_counts(counter->counts, cpu, thread)->run = 0;
-+			return -1;
-+		}
-+
-+		perf_counts__set_loaded(counter->counts, cpu, thread, false);
- 
--			if (verbose > 1) {
--				fprintf(stat_config.output,
--					"%s: %d: %" PRIu64 " %" PRIu64 " %" PRIu64 "\n",
--						perf_evsel__name(counter),
--						cpu,
--						count->val, count->ena, count->run);
-+		if (STAT_RECORD) {
-+			if (perf_evsel__write_stat_event(counter, cpu, thread, count)) {
-+				pr_err("failed to write stat event\n");
-+				return -1;
- 			}
- 		}
-+
-+		if (verbose > 1) {
-+			fprintf(stat_config.output,
-+				"%s: %d: %" PRIu64 " %" PRIu64 " %" PRIu64 "\n",
-+					perf_evsel__name(counter),
-+					cpu,
-+					count->val, count->ena, count->run);
-+		}
- 	}
- 
- 	return 0;
-@@ -325,15 +318,37 @@ static int read_counter(struct evsel *counter, struct timespec *rs)
- static void read_counters(struct timespec *rs)
- {
- 	struct evsel *counter;
--	int ret;
-+	struct affinity affinity;
-+	int i, ncpus, cpu;
-+
-+	if (affinity__setup(&affinity) < 0)
-+		return;
-+
-+	ncpus = perf_cpu_map__nr(evsel_list->core.all_cpus);
-+	if (!target__has_cpu(&target) || target__has_per_thread(&target))
-+		ncpus = 1;
-+	evlist__for_each_cpu(evsel_list, i, cpu) {
-+		if (i >= ncpus)
-+			break;
-+		affinity__set(&affinity, cpu);
-+
-+		evlist__for_each_entry(evsel_list, counter) {
-+			if (evsel__cpu_iter_skip(counter, cpu))
-+				continue;
-+			if (!counter->err) {
-+				counter->err = read_counter_cpu(counter, rs,
-+								counter->cpu_iter - 1);
-+			}
-+		}
-+	}
-+	affinity__cleanup(&affinity);
- 
- 	evlist__for_each_entry(evsel_list, counter) {
--		ret = read_counter(counter, rs);
--		if (ret)
-+		if (counter->err)
- 			pr_debug("failed to read counter %s\n", counter->name);
--
--		if (ret == 0 && perf_stat_process_counter(&stat_config, counter))
-+		if (counter->err == 0 && perf_stat_process_counter(&stat_config, counter))
- 			pr_warning("failed to process counter %s\n", counter->name);
-+		counter->err = 0;
- 	}
- }
- 
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index ca82a93..c8af4bc 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -86,6 +86,7 @@ struct evsel {
- 	struct list_head	config_terms;
- 	struct bpf_object	*bpf_obj;
- 	int			bpf_fd;
-+	int			err;
- 	bool			auto_merge_stats;
- 	bool			merged_stat;
- 	const char *		metric_expr;
+Johan
