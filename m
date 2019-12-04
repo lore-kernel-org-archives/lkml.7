@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DB7C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FE3C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC414205ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B894E205ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:22:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483726;
-	bh=CcGoJg+UihYBaV8Tf12lR+9gsdgjxSjD2C2kvFXqYcg=;
+	s=default; t=1575483731;
+	bh=GQas2avcl0NjPgNPlaAfiSvtV+EZURLJOYzb58XTsXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=noGCAmYmVz2+qDQFc850cHmshic9OZ5rPR6/E/ovtgvI8yWLSfOOygo8fgkvkXhFW
-	 wrsihiLLj9gaIe1X4NEGiEWOUp1x43geWzThw64ryQ3w8Opupoqj07ceK5//YeIsaA
-	 51GXx+LIx5kairAIYvV3CHd9zwsGM77yasZedGmI=
+	b=AlXDGOG0333KeBBSec0+qv9iTCIvH3a4WV82W3Z3KL0g6al52RiaqyYkSk3kBAJIN
+	 dqJFNz9S3gK7Du07KFCCoJqJe+0Hr6qGLtBN/AMre9A3kTXEBQYEZcT1HpUx2ERvIw
+	 HqCGYDWbm21fCBHlB/KIs2bfotBV7daAJOJu7pG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731156AbfLDSWF (ORCPT
+        id S1729865AbfLDSFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:22:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52896 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:05:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729776AbfLDSFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:05:46 -0500
+        id S1730022AbfLDSFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:05:31 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AC7D20659;
-        Wed,  4 Dec 2019 18:05:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC1322081B;
+        Wed,  4 Dec 2019 18:05:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482745;
-        bh=CcGoJg+UihYBaV8Tf12lR+9gsdgjxSjD2C2kvFXqYcg=;
+        s=default; t=1575482730;
+        bh=GQas2avcl0NjPgNPlaAfiSvtV+EZURLJOYzb58XTsXI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WV0SKNYv7xUHczwgmcrOkJHxPsWG4HMP0JhEVf0AVmyw2QymHqp7oehCQxvfPEOoW
-         LlqGqGxEwMl/KXOsAmsNxYHoBmb/i7IabE70bac6xCrCB2K8MCED6mKhLFWv1enUTS
-         ydjFxk/okd8fhrgGOumQL0g/Gq4muaFtFWT+a9Do=
+        b=JgbRub/z6tik/1Bah5q43O3imJtMhny4g4AeGVP31XpSrorisSDbKtpfAO9rKEe25
+         tK9ehV3E/KF7GlEtdlH+cTumljxO4aVWRH9eYvsN8TL3VJG6RpbnYqI0fm2pmcxmKN
+         hr27kORxAF/dfnXObYSUDpfRMAVI+EMvm+dTMvbc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Peng Hao <peng.hao2@zte.com.cn>,
-        Zhao Qiang <qiang.zhao@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 118/209] net/wan/fsl_ucc_hdlc: Avoid double free in ucc_hdlc_probe()
-Date:   Wed,  4 Dec 2019 18:55:30 +0100
-Message-Id: <20191204175331.248253856@linuxfoundation.org>
+        stable@vger.kernel.org, Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 112/209] um: Make GCOV depend on !KCOV
+Date:   Wed,  4 Dec 2019 18:55:24 +0100
+Message-Id: <20191204175330.337779127@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -62,37 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Richard Weinberger <richard@nod.at>
 
-[ Upstream commit 40752b3eae29f8ca2378e978a02bd6dbeeb06d16 ]
+[ Upstream commit 550ed0e2036663b35cec12374b835444f9c60454 ]
 
-This patch fixes potential double frees if register_hdlc_device() fails.
+Both do more or less the same thing and are mutually exclusive.
+If both are enabled the build will fail.
+Sooner or later we can kill UML's GCOV.
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Reviewed-by: Peng Hao <peng.hao2@zte.com.cn>
-CC: Zhao Qiang <qiang.zhao@nxp.com>
-CC: "David S. Miller" <davem@davemloft.net>
-CC: netdev@vger.kernel.org
-CC: linuxppc-dev@lists.ozlabs.org
-CC: linux-kernel@vger.kernel.org
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wan/fsl_ucc_hdlc.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/um/Kconfig.debug | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wan/fsl_ucc_hdlc.c b/drivers/net/wan/fsl_ucc_hdlc.c
-index 18b648648adb2..289dff262948d 100644
---- a/drivers/net/wan/fsl_ucc_hdlc.c
-+++ b/drivers/net/wan/fsl_ucc_hdlc.c
-@@ -1114,7 +1114,6 @@ static int ucc_hdlc_probe(struct platform_device *pdev)
- 	if (register_hdlc_device(dev)) {
- 		ret = -ENOBUFS;
- 		pr_err("ucc_hdlc: unable to register hdlc device\n");
--		free_netdev(dev);
- 		goto free_dev;
- 	}
- 
+diff --git a/arch/um/Kconfig.debug b/arch/um/Kconfig.debug
+index 967d3109689ff..39d44bfb241d5 100644
+--- a/arch/um/Kconfig.debug
++++ b/arch/um/Kconfig.debug
+@@ -19,6 +19,7 @@ config GPROF
+ config GCOV
+ 	bool "Enable gcov support"
+ 	depends on DEBUG_INFO
++	depends on !KCOV
+ 	help
+ 	  This option allows developers to retrieve coverage data from a UML
+ 	  session.
 -- 
 2.20.1
 
