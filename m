@@ -2,52 +2,52 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	PDS_BTC_ID,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84BA4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2FDC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5200E20863
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E4712086D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:11:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483091;
-	bh=bd+l4JctyoeYXCZJ2Dfc0BfpyirtBreCT9vLJuWcGOo=;
+	s=default; t=1575483094;
+	bh=NvrQw7QKrw6deC5tWLOAh/fQD/q5N773PT0/67Lg21w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GWEG1QVhyoc+1DdZ+GazYL+1KmfFD7saLX30hSq2OdlaFO8cb7KTuTHonLKLajByk
-	 65UTaditC0u/rY+B8swsDHHhkMEXZqTcggvqQ19uziODZzluHbl2tTIDwkpvTukHYN
-	 2ROuNTTtnpq+daSjBuHOo4gcH+6vYIpD2ahr7Dug=
+	b=FAM+59+gF6ubCRkG1CjeeKJrCsPQrC+IhMDqFMTL3gDubDwcEGZcKxkDfE+qouZ0n
+	 HCJUaYu+Zmg0qHF3eyS+vF52DHX0Ko4AazyxnTPTYK8l9R3ozxF57YGiX9DS+mASfK
+	 qLSwXx6yq6xrRNwSQ7T9TeGxWLRcEwO75DpBhIws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731449AbfLDSLa (ORCPT
+        id S1731460AbfLDSLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:11:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39642 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:11:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731440AbfLDSL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:11:27 -0500
+        id S1731445AbfLDSLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:11:30 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 447432089C;
-        Wed,  4 Dec 2019 18:11:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2C352084B;
+        Wed,  4 Dec 2019 18:11:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483086;
-        bh=bd+l4JctyoeYXCZJ2Dfc0BfpyirtBreCT9vLJuWcGOo=;
+        s=default; t=1575483089;
+        bh=NvrQw7QKrw6deC5tWLOAh/fQD/q5N773PT0/67Lg21w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rjAkDddWKbBZKSztYunsL3NkbmvQzbBsrvnWNi7T+M8kZfp/QSP7mRuEmP/LiJHif
-         1o1ddUmZv/5bCOHDvV0Oz8kR//CJSDCxyHeFK6xj5J4CLvPLPSU1HJut6Anv/MDNxg
-         AlLw8vc2Edi06WRwzMsrKohkNWQXiVbfru9oXizQ=
+        b=zfexd94xnuXUYQwafXV92FJHlfH/BIU+G9f4NGjD8Bo+91zynF0IgBvMa7ne6qt11
+         S74uSlBjKPzM4ZLcJE53uh0XhYBuqFK5TxAzTnCUbhM1Jd9MkS0JixTbYPILt9LAPx
+         q2KXTxWV1C8hYQKvUjhSNd1iPWQ4245lvYKXRnYI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Nick Bowler <nbowler@draconx.ca>,
         "Darrick J. Wong" <darrick.wong@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 047/125] xfs: Align compat attrlist_by_handle with native implementation.
-Date:   Wed,  4 Dec 2019 18:55:52 +0100
-Message-Id: <20191204175321.829538950@linuxfoundation.org>
+Subject: [PATCH 4.9 048/125] xfs: Fix bulkstat compat ioctls on x32 userspace.
+Date:   Wed,  4 Dec 2019 18:55:53 +0100
+Message-Id: <20191204175321.892795502@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -62,52 +62,90 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nick Bowler <nbowler@draconx.ca>
 
-[ Upstream commit c456d64449efe37da50832b63d91652a85ea1d20 ]
+[ Upstream commit 7ca860e3c1a74ad6bd8949364073ef1044cad758 ]
 
-While inspecting the ioctl implementations, I noticed that the compat
-implementation of XFS_IOC_ATTRLIST_BY_HANDLE does not do exactly the
-same thing as the native implementation.  Specifically, the "cursor"
-does not appear to be written out to userspace on the compat path,
-like it is on the native path.
+The bulkstat family of ioctls are problematic on x32, because there is
+a mixup of native 32-bit and 64-bit conventions.  The xfs_fsop_bulkreq
+struct contains pointers and 32-bit integers so that matches the native
+32-bit layout, and that means the ioctl implementation goes into the
+regular compat path on x32.
 
-This adjusts the compat implementation to copy out the cursor just
-like the native implementation does.  The attrlist cursor does not
-require any special compat handling.  This fixes xfstests xfs/269
-on both IA-32 and x32 userspace, when running on an amd64 kernel.
+However, the 'ubuffer' member of that struct in turn refers to either
+struct xfs_inogrp or xfs_bstat (or an array of these).  On x32, those
+structures match the native 64-bit layout.  The compat implementation
+writes out the 32-bit version of these structures.  This is not the
+expected format for x32 userspace, causing problems.
+
+Fortunately the functions which actually output these xfs_inogrp and
+xfs_bstat structures have an easy way to select which output format
+is required, so we just need a little tweak to select the right format
+on x32.
 
 Signed-off-by: Nick Bowler <nbowler@draconx.ca>
-Fixes: 0facef7fb053b ("xfs: in _attrlist_by_handle, copy the cursor back to userspace")
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_ioctl32.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/xfs/xfs_ioctl32.c | 34 ++++++++++++++++++++++++++++++----
+ 1 file changed, 30 insertions(+), 4 deletions(-)
 
 diff --git a/fs/xfs/xfs_ioctl32.c b/fs/xfs/xfs_ioctl32.c
-index 321f57721b922..8f18756ee405e 100644
+index 8f18756ee405e..6b7ed221726db 100644
 --- a/fs/xfs/xfs_ioctl32.c
 +++ b/fs/xfs/xfs_ioctl32.c
-@@ -346,6 +346,7 @@ xfs_compat_attrlist_by_handle(
- {
+@@ -251,6 +251,32 @@ xfs_compat_ioc_bulkstat(
+ 	int			done;
  	int			error;
- 	attrlist_cursor_kern_t	*cursor;
-+	compat_xfs_fsop_attrlist_handlereq_t __user *p = arg;
- 	compat_xfs_fsop_attrlist_handlereq_t al_hreq;
- 	struct dentry		*dentry;
- 	char			*kbuf;
-@@ -380,6 +381,11 @@ xfs_compat_attrlist_by_handle(
- 	if (error)
- 		goto out_kfree;
  
-+	if (copy_to_user(&p->pos, cursor, sizeof(attrlist_cursor_kern_t))) {
-+		error = -EFAULT;
-+		goto out_kfree;
-+	}
++	/*
++	 * Output structure handling functions.  Depending on the command,
++	 * either the xfs_bstat and xfs_inogrp structures are written out
++	 * to userpace memory via bulkreq.ubuffer.  Normally the compat
++	 * functions and structure size are the correct ones to use ...
++	 */
++	inumbers_fmt_pf inumbers_func = xfs_inumbers_fmt_compat;
++	bulkstat_one_pf	bs_one_func = xfs_bulkstat_one_compat;
++	size_t bs_one_size = sizeof(struct compat_xfs_bstat);
 +
- 	if (copy_to_user(compat_ptr(al_hreq.buffer), kbuf, al_hreq.buflen))
- 		error = -EFAULT;
++#ifdef CONFIG_X86_X32
++	if (in_x32_syscall()) {
++		/*
++		 * ... but on x32 the input xfs_fsop_bulkreq has pointers
++		 * which must be handled in the "compat" (32-bit) way, while
++		 * the xfs_bstat and xfs_inogrp structures follow native 64-
++		 * bit layout convention.  So adjust accordingly, otherwise
++		 * the data written out in compat layout will not match what
++		 * x32 userspace expects.
++		 */
++		inumbers_func = xfs_inumbers_fmt;
++		bs_one_func = xfs_bulkstat_one;
++		bs_one_size = sizeof(struct xfs_bstat);
++	}
++#endif
++
+ 	/* done = 1 if there are more stats to get and if bulkstat */
+ 	/* should be called again (unused here, but used in dmapi) */
  
+@@ -282,15 +308,15 @@ xfs_compat_ioc_bulkstat(
+ 
+ 	if (cmd == XFS_IOC_FSINUMBERS_32) {
+ 		error = xfs_inumbers(mp, &inlast, &count,
+-				bulkreq.ubuffer, xfs_inumbers_fmt_compat);
++				bulkreq.ubuffer, inumbers_func);
+ 	} else if (cmd == XFS_IOC_FSBULKSTAT_SINGLE_32) {
+ 		int res;
+ 
+-		error = xfs_bulkstat_one_compat(mp, inlast, bulkreq.ubuffer,
+-				sizeof(compat_xfs_bstat_t), NULL, &res);
++		error = bs_one_func(mp, inlast, bulkreq.ubuffer,
++				bs_one_size, NULL, &res);
+ 	} else if (cmd == XFS_IOC_FSBULKSTAT_32) {
+ 		error = xfs_bulkstat(mp, &inlast, &count,
+-			xfs_bulkstat_one_compat, sizeof(compat_xfs_bstat_t),
++			bs_one_func, bs_one_size,
+ 			bulkreq.ubuffer, &done);
+ 	} else
+ 		error = -EINVAL;
 -- 
 2.20.1
 
