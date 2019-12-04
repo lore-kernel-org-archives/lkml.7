@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E93C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F38C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2808120833
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FC6620675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:17:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483463;
-	bh=qIgDX2z+lr7L+kdpozSslehcZI5zrr+JOqcoBwxWbXE=;
+	s=default; t=1575483472;
+	bh=rbDfZ37pyFkTziq+H9O55VekzIqVmSm6qVNT7/Ygp88=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iKKsS59Tx31EY5gnVlXhBYrrbGGtQzQe6DfnjJji3azqsUF90uOTK6Tj5IBHBrY/R
-	 Ly5x1tvJdj3hQZORcYA5e90OZu+POJyoFXqEAtszBjKoL5P1d2V8cB1nJc4nXmuU3i
-	 4LTgMQIswq3/2fsGyfYSXiqEpAmZdbu9mdA5Jelo=
+	b=R2y+CYCDduHT6PZHT/An+szHpOUb8xKGvHvlxQwCn1Zlsuflg+TkTc17wMjVhu0Ic
+	 2bsArqyhWGKrswr1y8k6HGKvkio8+2NAJyYDqP4iav5t17mzikNWKx52xS5ScSSQXa
+	 ki6380YPn50yn4x+vGctNK5GWKSfDQf5uoHq3I2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731470AbfLDSLg (ORCPT
+        id S1731557AbfLDSRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:11:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39782 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:17:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731454AbfLDSLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:11:32 -0500
+        id S1731431AbfLDSLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:11:24 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34B7920862;
-        Wed,  4 Dec 2019 18:11:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D71802084B;
+        Wed,  4 Dec 2019 18:11:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483091;
-        bh=qIgDX2z+lr7L+kdpozSslehcZI5zrr+JOqcoBwxWbXE=;
+        s=default; t=1575483084;
+        bh=rbDfZ37pyFkTziq+H9O55VekzIqVmSm6qVNT7/Ygp88=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bip+nWpon1wzKgBUcgckWM+Y30wuUlqqDQzrxJgt6PFfPeNZt9ICu6WH15gUp6Z9q
-         2I4hjovRMwxsZHLgOiclKrxA3/wqYD+TJZIYXcaW3WEdzZh5IuAm/hXTBsZlyXCg+g
-         QpnjbSGw64XAV3Z4xaXClJ8WLajqMvrvguUbAl/4=
+        b=HFX5VbZZMwZCWOrSRZEo7YI/qstubkYWoFCXcYD1oEwR7MfD30kIxG6fzwnYQfpQT
+         i6M4263QBPjZ38QA9+Nu0PUzioEjSdr+dCenz8vc5ygRKt2tc3UUT1vLFg9xqeDqQ9
+         7Ohob/eWrE1T2oXpqOLPjUBnwZarqtzEf9N5PPGY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 049/125] IB/qib: Fix an error code in qib_sdma_verbs_send()
-Date:   Wed,  4 Dec 2019 18:55:54 +0100
-Message-Id: <20191204175321.970408955@linuxfoundation.org>
+Subject: [PATCH 4.9 046/125] gfs2: take jdata unstuff into account in do_grow
+Date:   Wed,  4 Dec 2019 18:55:51 +0100
+Message-Id: <20191204175321.766471076@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -60,36 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit 5050ae5fa3d54c8e83e1e447cc7e3591110a7f57 ]
+[ Upstream commit bc0205612bbd4dd4026d4ba6287f5643c37366ec ]
 
-We accidentally return success on this error path.
+Before this patch, function do_grow would not reserve enough journal
+blocks in the transaction to unstuff jdata files while growing them.
+This patch adds the logic to add one more block if the file to grow
+is jdata.
 
-Fixes: f931551bafe1 ("IB/qib: Add new qib driver for QLogic PCIe InfiniBand adapters")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/qib/qib_sdma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/gfs2/bmap.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/infiniband/hw/qib/qib_sdma.c b/drivers/infiniband/hw/qib/qib_sdma.c
-index 891873b38a1e6..5f3f197678b78 100644
---- a/drivers/infiniband/hw/qib/qib_sdma.c
-+++ b/drivers/infiniband/hw/qib/qib_sdma.c
-@@ -600,8 +600,10 @@ retry:
- 		dw = (len + 3) >> 2;
- 		addr = dma_map_single(&ppd->dd->pcidev->dev, sge->vaddr,
- 				      dw << 2, DMA_TO_DEVICE);
--		if (dma_mapping_error(&ppd->dd->pcidev->dev, addr))
-+		if (dma_mapping_error(&ppd->dd->pcidev->dev, addr)) {
-+			ret = -ENOMEM;
- 			goto unmap;
-+		}
- 		sdmadesc[0] = 0;
- 		make_sdma_desc(ppd, sdmadesc, (u64) addr, dw, dwoffset);
- 		/* SDmaUseLargeBuf has to be set in every descriptor */
+diff --git a/fs/gfs2/bmap.c b/fs/gfs2/bmap.c
+index 39af17b407f00..d83e99fa98b3a 100644
+--- a/fs/gfs2/bmap.c
++++ b/fs/gfs2/bmap.c
+@@ -1236,6 +1236,8 @@ static int do_grow(struct inode *inode, u64 size)
+ 	}
+ 
+ 	error = gfs2_trans_begin(sdp, RES_DINODE + RES_STATFS + RES_RG_BIT +
++				 (unstuff &&
++				  gfs2_is_jdata(ip) ? RES_JDATA : 0) +
+ 				 (sdp->sd_args.ar_quota == GFS2_QUOTA_OFF ?
+ 				  0 : RES_QUOTA), 0);
+ 	if (error)
 -- 
 2.20.1
 
