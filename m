@@ -2,178 +2,126 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14447C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 337CCC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE40320675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4A5220675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:55:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vOCiY0JF"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="CmqYRADb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbfLDRyg (ORCPT
+        id S1728197AbfLDRzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:54:36 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51233 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727852AbfLDRyg (ORCPT
+        Wed, 4 Dec 2019 12:55:44 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:42013 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726934AbfLDRzo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:54:36 -0500
-Received: by mail-wm1-f67.google.com with SMTP id g206so672203wme.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 09:54:34 -0800 (PST)
+        Wed, 4 Dec 2019 12:55:44 -0500
+Received: by mail-ed1-f68.google.com with SMTP id e10so126143edv.9
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 09:55:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bv62CozvCA1B6P8J26EHB66T5kbk3JQPOnjXd+X5TW4=;
-        b=vOCiY0JFlFJIOQ4t6cY7uj6DYbT/XQHPgmVwJBK58KtBnR1FKoGNsTcWdQ11AjcYJP
-         Glk9PdpSMhfV06xy5ZdCmEAS8WfcawnjBqZFtA0STHLvFnf2Dm581iFqKn/LvmN8UO8l
-         pZ6rDQ8geX2DvykxtCwazNXMkm3102e7bEslLqFfO0ooI+Qfu21/cGpy2z1L0jZI85Gk
-         6s2RtLehmYLsqFf6Xsqwl1SRKkgZN5NQG//ENRxXVcWIMWP4aIGypyLpYQq8l3w2+FBC
-         qQpQuwtprRfseuRnuS/KFKAAYMEDWTvPEhExLMsLszmTGBbID5ZBzy4KWxhSPzHlxBLh
-         TDIw==
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/QBiOCr7c4l7fZjKklo3yZ4ZIuYTkAcsgsNgIGBN47E=;
+        b=CmqYRADbzr0G4HWvjRmoRSG65lHFiqcXXzx9WbxdkJJtwwFPkv6L6uhvSr8NbL8H00
+         3ezARPSmbB3svk8QCSrCaesCNvwd3cCxpBYJrVUau6Y/wlyJqh4o0Q61o4n/Vfy08utU
+         rk0ZgwPE6al6bX+5S8CbsYWWOIQm0TFRdeFGOXwPBKse5ivL13zdlezYWKuVzPkN9uth
+         L9C3RaP8eZOybLz1t2XIHf9h1vtWINA35xwdU/D152hAFrl/3hd7BxjnxP8o466XkLlX
+         QUO4JYN8wnAWLeM4QY3xtEPmN3f51q8sFeXANuD1LkDioIr9xfYxmX1myGmWjpW/iUdR
+         5UIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bv62CozvCA1B6P8J26EHB66T5kbk3JQPOnjXd+X5TW4=;
-        b=jun8clvRFTWvc9HDhwZ315FA1EBBpq4LbzqqK2FwHP5mmGR6y/y0cDXyuE6HW6RrDS
-         0DTV8z9Heie81FtrxpJIykJ1CgH6hUfCjQbQxE2Pi613n2hk8d1HAkYLs3FVu4vWHxMI
-         aS0w99+TYjGMIA7jqITNQOyV76MI2V1DZTBRA6LS+LMxyJ98kwWjtuD9e4IMfu9z9JSC
-         dYJhL9nLrYIkH9rWbLSWYU4EY9tcX98LWzCrut3jf16g4zQosuPlrSflkYbwS/T20ycA
-         YbU16b9v9JuSb26LcZVPe4tT6cvLdSIVuL9gg/FX4KLvcv7K+0spOMhQiSoozOZ59lVx
-         RT0w==
-X-Gm-Message-State: APjAAAW5P/oDhvm467t2A+DXWZuQ7+WKzGt5Z47gRfboTrxGdNUF2XSk
-        aMASvAdPSAA7oxW9emI7+eQ=
-X-Google-Smtp-Source: APXvYqyceCn6Gp0C/kLGj6Vew2ePfjRGNgtHAXl98hIOMNq+0dwhCEImPUeHM2CaiHrC6X8BTOpVkQ==
-X-Received: by 2002:a1c:9c54:: with SMTP id f81mr856058wme.89.1575482073493;
-        Wed, 04 Dec 2019 09:54:33 -0800 (PST)
-Received: from localhost.localdomain ([2a02:a03f:404e:f500:ccf8:1f84:3636:b143])
-        by smtp.gmail.com with ESMTPSA id t1sm8343990wma.43.2019.12.04.09.54.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 09:54:32 -0800 (PST)
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: [PATCH] fix cast of gfp_t to ulong in __def_gfpflag_names
-Date:   Wed,  4 Dec 2019 18:54:25 +0100
-Message-Id: <20191204175425.71855-1-luc.vanoostenryck@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/QBiOCr7c4l7fZjKklo3yZ4ZIuYTkAcsgsNgIGBN47E=;
+        b=U64Y+1M9hYqHwGdhDnIWgO0eczQw5SWH6x0Wd8fmWyd1py+WvRRF3AXC7yw/uJCVLh
+         i6dtP49MAOx4vALKzvhhKRv9OmmGs8x/fie0je+K0b+kX3UaOYadShvjRXWm9B3B+1oS
+         6fvpqCN9ueJ8Z+3jG42ULWDf+xwgawPc4AZBOoH/5QogB1QejVaJucw9P34HGQ+Urkfw
+         YPXVXIQ2iPe7bNHjV2BfdSVEOF1lgZyGnt4FKbEwukSn2OEQcQObFVQH2wVVfp9O7ehz
+         CIB4ibXfna7t6wjRZWrXnigeBkvPRHojVLL+Ioo4/2nIh4KLpBVeeodsvmpLbvvCSLdh
+         2VYw==
+X-Gm-Message-State: APjAAAXQx+1641QDAinrRDUWrn/5lH8eChRgRpD096WmTQRBFvH/PPCP
+        86sG34C5BZmWivYSMsbny5TL3USFRslkLYwRJRDXDg==
+X-Google-Smtp-Source: APXvYqx7i07mE15LTmdSADtpXZLOKFffb5f4NXu7AgyOJ73gnljvL0fH/4Msr28AHfBKwp3ckEATIvL1W63kFa6ISew=
+X-Received: by 2002:a50:84ab:: with SMTP id 40mr5637114edq.14.1575482142681;
+ Wed, 04 Dec 2019 09:55:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191127184453.229321-1-pasha.tatashin@soleen.com>
+ <20191127184453.229321-2-pasha.tatashin@soleen.com> <957930d0-8317-9086-c7a1-8de857f358c2@xen.org>
+ <e785a585-8b71-8a49-285e-2bcb1437500b@citrix.com>
+In-Reply-To: <e785a585-8b71-8a49-285e-2bcb1437500b@citrix.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Wed, 4 Dec 2019 12:55:31 -0500
+Message-ID: <CA+CK2bDV5pUYb5c-mkA9heE-CMg1MZdC=zz6zkDJDUZuuUpOmA@mail.gmail.com>
+Subject: Re: [Xen-devel] [PATCH 1/3] arm/arm64/xen: use C inlines for privcmd_call
+To:     Andrew Cooper <andrew.cooper3@citrix.com>
+Cc:     Julien Grall <julien@xen.org>, James Morris <jmorris@namei.org>,
+        Sasha Levin <sashal@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, steve.capper@arm.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        allison@lohutok.net, info@metux.net, alexios.zavras@intel.com,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        boris.ostrovsky@oracle.com, jgross@suse.com,
+        Stefan Agner <stefan@agner.ch>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        xen-devel@lists.xenproject.org,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The macro '__def_gfpflag_names' is used to define arrays of
-struct trace_print_flags. This structure is defined as being
-a pair of 'unsigned long' - 'const char *'.
+On Fri, Nov 29, 2019 at 10:10 AM Andrew Cooper
+<andrew.cooper3@citrix.com> wrote:
+>
+> On 29/11/2019 15:05, Julien Grall wrote:
+> > Hi,
+> >
+> > On 27/11/2019 18:44, Pavel Tatashin wrote:
+> >> diff --git a/arch/arm64/include/asm/xen/hypercall.h
+> >> b/arch/arm64/include/asm/xen/hypercall.h
+> >> index 3522cbaed316..1a74fb28607f 100644
+> >> --- a/arch/arm64/include/asm/xen/hypercall.h
+> >> +++ b/arch/arm64/include/asm/xen/hypercall.h
+> >> @@ -1 +1,29 @@
+> >> +#ifndef _ASM_ARM64_XEN_HYPERCALL_H
+> >> +#define _ASM_ARM64_XEN_HYPERCALL_H
+> >>   #include <xen/arm/hypercall.h>
+> >> +#include <linux/uaccess.h>
+> >> +
+> >> +static inline long privcmd_call(unsigned int call, unsigned long a1,
+> >> +                unsigned long a2, unsigned long a3,
+> >> +                unsigned long a4, unsigned long a5)
+> >
+> > I realize that privcmd_call is the only hypercall using Software PAN
+> > at the moment. However, dm_op needs the same as hypercall will be
+> > issued from userspace as well.
+>
+> And dm_op() won't be the only example as we continue in cleaning up the
+> gaping hole that is privcmd.
+>
+> > So I was wondering whether we should create a generic function (e.g.
+> > do_xen_hypercall() or do_xen_user_hypercall()) to cover the two
+> > hypercalls?
+>
+> Probably a good idea.
 
-However, the macro __def_gfpflag_names is used to for GFP flags
-and thus take entries of type gfp_t (plus their name) which
-is a bitwise type, non-convertible to usual integers.
-These entries are casted to 'unsigned long' but this doesn't
-prevent Sparse to rughtfully complain:
-	warning: cast from restricted gfp_t
+It sounds good to me, but let's keep it outside of this series.
 
-The correct way to cast a bitwise type to a normal integer
-(which is OK here) is to use '__force'.
-
-So, fix the cast by adding the '__force' required for such casts.
-
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
----
- include/trace/events/mmflags.h | 70 +++++++++++++++++-----------------
- 1 file changed, 35 insertions(+), 35 deletions(-)
-
-diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
-index a1675d43777e..3b85bbf79115 100644
---- a/include/trace/events/mmflags.h
-+++ b/include/trace/events/mmflags.h
-@@ -14,41 +14,41 @@
-  */
- 
- #define __def_gfpflag_names						\
--	{(unsigned long)GFP_TRANSHUGE,		"GFP_TRANSHUGE"},	\
--	{(unsigned long)GFP_TRANSHUGE_LIGHT,	"GFP_TRANSHUGE_LIGHT"}, \
--	{(unsigned long)GFP_HIGHUSER_MOVABLE,	"GFP_HIGHUSER_MOVABLE"},\
--	{(unsigned long)GFP_HIGHUSER,		"GFP_HIGHUSER"},	\
--	{(unsigned long)GFP_USER,		"GFP_USER"},		\
--	{(unsigned long)GFP_KERNEL_ACCOUNT,	"GFP_KERNEL_ACCOUNT"},	\
--	{(unsigned long)GFP_KERNEL,		"GFP_KERNEL"},		\
--	{(unsigned long)GFP_NOFS,		"GFP_NOFS"},		\
--	{(unsigned long)GFP_ATOMIC,		"GFP_ATOMIC"},		\
--	{(unsigned long)GFP_NOIO,		"GFP_NOIO"},		\
--	{(unsigned long)GFP_NOWAIT,		"GFP_NOWAIT"},		\
--	{(unsigned long)GFP_DMA,		"GFP_DMA"},		\
--	{(unsigned long)__GFP_HIGHMEM,		"__GFP_HIGHMEM"},	\
--	{(unsigned long)GFP_DMA32,		"GFP_DMA32"},		\
--	{(unsigned long)__GFP_HIGH,		"__GFP_HIGH"},		\
--	{(unsigned long)__GFP_ATOMIC,		"__GFP_ATOMIC"},	\
--	{(unsigned long)__GFP_IO,		"__GFP_IO"},		\
--	{(unsigned long)__GFP_FS,		"__GFP_FS"},		\
--	{(unsigned long)__GFP_NOWARN,		"__GFP_NOWARN"},	\
--	{(unsigned long)__GFP_RETRY_MAYFAIL,	"__GFP_RETRY_MAYFAIL"},	\
--	{(unsigned long)__GFP_NOFAIL,		"__GFP_NOFAIL"},	\
--	{(unsigned long)__GFP_NORETRY,		"__GFP_NORETRY"},	\
--	{(unsigned long)__GFP_COMP,		"__GFP_COMP"},		\
--	{(unsigned long)__GFP_ZERO,		"__GFP_ZERO"},		\
--	{(unsigned long)__GFP_NOMEMALLOC,	"__GFP_NOMEMALLOC"},	\
--	{(unsigned long)__GFP_MEMALLOC,		"__GFP_MEMALLOC"},	\
--	{(unsigned long)__GFP_HARDWALL,		"__GFP_HARDWALL"},	\
--	{(unsigned long)__GFP_THISNODE,		"__GFP_THISNODE"},	\
--	{(unsigned long)__GFP_RECLAIMABLE,	"__GFP_RECLAIMABLE"},	\
--	{(unsigned long)__GFP_MOVABLE,		"__GFP_MOVABLE"},	\
--	{(unsigned long)__GFP_ACCOUNT,		"__GFP_ACCOUNT"},	\
--	{(unsigned long)__GFP_WRITE,		"__GFP_WRITE"},		\
--	{(unsigned long)__GFP_RECLAIM,		"__GFP_RECLAIM"},	\
--	{(unsigned long)__GFP_DIRECT_RECLAIM,	"__GFP_DIRECT_RECLAIM"},\
--	{(unsigned long)__GFP_KSWAPD_RECLAIM,	"__GFP_KSWAPD_RECLAIM"}\
-+	{(__force ulong)GFP_TRANSHUGE,		"GFP_TRANSHUGE"},	\
-+	{(__force ulong)GFP_TRANSHUGE_LIGHT,	"GFP_TRANSHUGE_LIGHT"}, \
-+	{(__force ulong)GFP_HIGHUSER_MOVABLE,	"GFP_HIGHUSER_MOVABLE"},\
-+	{(__force ulong)GFP_HIGHUSER,		"GFP_HIGHUSER"},	\
-+	{(__force ulong)GFP_USER,		"GFP_USER"},		\
-+	{(__force ulong)GFP_KERNEL_ACCOUNT,	"GFP_KERNEL_ACCOUNT"},	\
-+	{(__force ulong)GFP_KERNEL,		"GFP_KERNEL"},		\
-+	{(__force ulong)GFP_NOFS,		"GFP_NOFS"},		\
-+	{(__force ulong)GFP_ATOMIC,		"GFP_ATOMIC"},		\
-+	{(__force ulong)GFP_NOIO,		"GFP_NOIO"},		\
-+	{(__force ulong)GFP_NOWAIT,		"GFP_NOWAIT"},		\
-+	{(__force ulong)GFP_DMA,		"GFP_DMA"},		\
-+	{(__force ulong)__GFP_HIGHMEM,		"__GFP_HIGHMEM"},	\
-+	{(__force ulong)GFP_DMA32,		"GFP_DMA32"},		\
-+	{(__force ulong)__GFP_HIGH,		"__GFP_HIGH"},		\
-+	{(__force ulong)__GFP_ATOMIC,		"__GFP_ATOMIC"},	\
-+	{(__force ulong)__GFP_IO,		"__GFP_IO"},		\
-+	{(__force ulong)__GFP_FS,		"__GFP_FS"},		\
-+	{(__force ulong)__GFP_NOWARN,		"__GFP_NOWARN"},	\
-+	{(__force ulong)__GFP_RETRY_MAYFAIL,	"__GFP_RETRY_MAYFAIL"},	\
-+	{(__force ulong)__GFP_NOFAIL,		"__GFP_NOFAIL"},	\
-+	{(__force ulong)__GFP_NORETRY,		"__GFP_NORETRY"},	\
-+	{(__force ulong)__GFP_COMP,		"__GFP_COMP"},		\
-+	{(__force ulong)__GFP_ZERO,		"__GFP_ZERO"},		\
-+	{(__force ulong)__GFP_NOMEMALLOC,	"__GFP_NOMEMALLOC"},	\
-+	{(__force ulong)__GFP_MEMALLOC,		"__GFP_MEMALLOC"},	\
-+	{(__force ulong)__GFP_HARDWALL,		"__GFP_HARDWALL"},	\
-+	{(__force ulong)__GFP_THISNODE,		"__GFP_THISNODE"},	\
-+	{(__force ulong)__GFP_RECLAIMABLE,	"__GFP_RECLAIMABLE"},	\
-+	{(__force ulong)__GFP_MOVABLE,		"__GFP_MOVABLE"},	\
-+	{(__force ulong)__GFP_ACCOUNT,		"__GFP_ACCOUNT"},	\
-+	{(__force ulong)__GFP_WRITE,		"__GFP_WRITE"},		\
-+	{(__force ulong)__GFP_RECLAIM,		"__GFP_RECLAIM"},	\
-+	{(__force ulong)__GFP_DIRECT_RECLAIM,	"__GFP_DIRECT_RECLAIM"},\
-+	{(__force ulong)__GFP_KSWAPD_RECLAIM,	"__GFP_KSWAPD_RECLAIM"}\
- 
- #define show_gfp_flags(flags)						\
- 	(flags) ? __print_flags(flags, "|",				\
--- 
-2.24.0
-
+Thank you,
+Pasha
