@@ -2,110 +2,215 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F80DC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB9AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5637D2068E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:01:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="TSXHE2l8"
+	by mail.kernel.org (Postfix) with ESMTP id 8D2A620640
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:03:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575446619;
+	bh=F1nrffZyx9IP6HTi5rdrkh8ln730ipRbzD9q1kB4o34=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=M40Qdoo6juyVC0Oa+hQkTyk2w1K1BE06HsiOE5a6uEd5EpoyBTIzR3LeJm2hR6eoB
+	 T/8dTpignHZqvq7uMdoS2+SftlT7IMYiXLUhw/X1yYqP85J2AxNMT3ccGJ5p/jfkx8
+	 iyObTpZkF9sOWdGrFkR1l4QTCsBSR2D+Cl4Vx5Gk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727327AbfLDIBW (ORCPT
+        id S1727154AbfLDIDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 03:01:22 -0500
-Received: from mail-eopbgr30095.outbound.protection.outlook.com ([40.107.3.95]:46833
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726166AbfLDIBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 03:01:22 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bKRy3CQN7hcc7nw2q48a5v983hsH8EjbkdglEM/yD4dBFzgEbr6iT+nlXxqOR6kCXve9GS8dUVnjFixwZ7h6PnQUMls7x9csVfvQFVhDJhbE1v9vvr1FGka5+o1JenxZJi0UlGJPS0YcseQReVOBkvllfnoDW6XYxYYnq51fXR3sRUU8ce+sqxbQi8wwWJFkB3KdLIJKo4M3DDTfBuj8SsF3grd3GaDYa70UnccISbaXhHFavbZGDYhsQxjHmr5xuxkFHd/55CfkhG029W+71TcjDsg3IY5O7fZy+BFrFUdIwNbaks7pumGgmopw80oLloUX4zNrkIaZtY2IIVvQ7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I0yz5/jE4M1nIRvENs4Ba+fYNQnxZ/vxcr26vXwfNTY=;
- b=EmOMkGl16LElTzV+SJwgjQT3nLu6nuh6R5qs5TwCFL4Zi+AYprzrIy8KB9uBrP3eF+2AwHXJoPCDVGgPChv3UZI7UbYVGHpCQiM8q62na5dcH9rceyAEFDf7bIgkGmSiULlB6BXVeaIG2ru4LdoRPDOGE45c4lW8gUtTly4IzO55XpYXdcDjVuAp1PGf+i1nhGPYlZIqS8Hu8W0j+lyBFzwFaLnIfGNCyfIUkzwrHW8zmRbWPq3V6j4TurkqHiIYCApHtlNDVFSrpMcnaUVq1XXQ89ftB3Y7JvrU1kdZPUD30n1ZBpUVzAF+Mh0e/S+8juhC5wDfV+gN/wgNocZyEg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
- dkim=pass header.d=habana.ai; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I0yz5/jE4M1nIRvENs4Ba+fYNQnxZ/vxcr26vXwfNTY=;
- b=TSXHE2l8nTIIW8QXk68WQRrK1sacvc/QI7hT4mPpQgwar957xjLKQZErCGMYn0OP32NDu1iCF9jPF5GoyJsndTXANXlzbtwubB6njVLC0qamPp4BC431aN7naxho0uXWHZpCTRVoumzHxFk62MdFitQfMxuWurSw1lIyh2fYc1E=
-Received: from VI1PR02MB3054.eurprd02.prod.outlook.com (10.175.244.155) by
- VI1PR02MB5197.eurprd02.prod.outlook.com (20.178.80.31) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.21; Wed, 4 Dec 2019 08:01:17 +0000
-Received: from VI1PR02MB3054.eurprd02.prod.outlook.com
- ([fe80::78f1:dc96:ee1a:bccd]) by VI1PR02MB3054.eurprd02.prod.outlook.com
- ([fe80::78f1:dc96:ee1a:bccd%6]) with mapi id 15.20.2495.014; Wed, 4 Dec 2019
- 08:01:17 +0000
-From:   Tomer Tayar <ttayar@habana.ai>
-To:     Oded Gabbay <oded.gabbay@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Omer Shpigelman <oshpigelman@habana.ai>
-CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Subject: RE: [PATCH] habanalabs: rate limit error msg on waiting for CS
-Thread-Topic: [PATCH] habanalabs: rate limit error msg on waiting for CS
-Thread-Index: AQHVqhgl8B9dKNMjIkGYpb/62LwdIKepm1Aw
-Date:   Wed, 4 Dec 2019 08:01:17 +0000
-Message-ID: <VI1PR02MB305448F610A65F0BD205737DD25D0@VI1PR02MB3054.eurprd02.prod.outlook.com>
-References: <20191203202750.9498-1-oded.gabbay@gmail.com>
-In-Reply-To: <20191203202750.9498-1-oded.gabbay@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ttayar@habana.ai; 
-x-originating-ip: [31.154.181.186]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 51f6c6b0-5522-48d5-3557-08d778902441
-x-ms-traffictypediagnostic: VI1PR02MB5197:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR02MB51971E4FAEE5177E2996C0C0D25D0@VI1PR02MB5197.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0241D5F98C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(396003)(366004)(39840400004)(136003)(189003)(199004)(76176011)(7696005)(256004)(102836004)(186003)(11346002)(55016002)(53546011)(26005)(6506007)(2906002)(6116002)(6436002)(33656002)(4326008)(3846002)(5660300002)(6246003)(446003)(2501003)(76116006)(4744005)(52536014)(66476007)(66946007)(86362001)(66556008)(64756008)(71200400001)(71190400001)(9686003)(66446008)(305945005)(99286004)(7736002)(25786009)(74316002)(81166006)(14454004)(229853002)(478600001)(110136005)(316002)(8936002)(81156014)(8676002)(6636002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR02MB5197;H:VI1PR02MB3054.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: habana.ai does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: m/yFgSDREeE57b1jLPXXA11LqDrxpp2zs2OppcwiuPH/QrYIpoZoxAu+DzPpAfgXWSV8X4kf0I5cNEObGDRxOVLk9/iJ0u/Tho43Djj++NsJP2eq07D4ThMHu46tolgcxOhTkBSysw6dyRxxbHuty48/5Kd0TqsvmmgqEQ+3SOFqBh0YM/u+hwpkkPOTHEYr399/OEftFcHVk2WS+UCz7r/HOteM3XfbFo5iiwjk+VfktylwiQgVd50tTlJK8YUNtsfqWRfKU+XeFpUWAOSqg5NRukp3JizELRp2OQ4bFCB0U/dj0q5Uo47152Ddl0iwlTCYTgmOSu1Qs1sI7VQSnRU5DqjFH4RVqEsQ5hZlvsrYtszZ0+ZkItxvS6Kw6+gN2PQHZp0Q2Bdlq8Z8tzizvRKTOMQeDPGUgVCFfcb0ALCBmxEiptkgzTtQhQ8cKFY4
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: habana.ai
-X-MS-Exchange-CrossTenant-Network-Message-Id: 51f6c6b0-5522-48d5-3557-08d778902441
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2019 08:01:17.2862
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OwkHND9ZZwET0lG7yC1fzJCaF+H4XdgErjBEg0lBSDbGa1CdOCwGtrVCdenD4/Pn+DjlomZ2uJbCzAbeNCWQog==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR02MB5197
+        Wed, 4 Dec 2019 03:03:38 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:43648 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725839AbfLDIDi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 03:03:38 -0500
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=big-swifty.misterjones.org)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1icPdH-0005rb-4E; Wed, 04 Dec 2019 09:03:35 +0100
+Date:   Wed, 04 Dec 2019 08:03:33 +0000
+Message-ID: <86lfrszfe2.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Ivid Suvarna <ivid.suvarna@gmail.com>
+Cc:     Yao HongBo <yaohongbo@huawei.com>,
+        "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>,
+        Yangyingliang <yangyingliang@huawei.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        james.morse@arm.com
+Subject: Re: ITS restore/save state when HCC == 0
+In-Reply-To: <CABXF_AA+93p+1yVeDwmeMG3cn_2vUbvycN7TeV=8cDJ6bd8Leg@mail.gmail.com>
+References: <fd89d78030914d19939a1fc1c6eb5048@huawei.com>
+        <e04e35e0a14f1507ac4a3d56899adcae@www.loen.fr>
+        <c8649d75-a9b8-4680-c253-3172774ac33d@huawei.com>
+        <c03d0b67a814288402b90bcdba600d26@www.loen.fr>
+        <CABXF_AA+93p+1yVeDwmeMG3cn_2vUbvycN7TeV=8cDJ6bd8Leg@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: ivid.suvarna@gmail.com, yaohongbo@huawei.com, guohanjun@huawei.com, yangyingliang@huawei.com, linuxarm@huawei.com, linux-kernel@vger.kernel.org, james.morse@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 22:28, Oded Gabbay <oded.gabbay@gmail.com> wrote:
-> In case a user submits a CS, and the submission fails, and the user doesn=
-'t
-> check the return value and instead use the error return value as a valid
-> sequence number of a CS and ask to wait on it, the driver will print an
-> error and return an error code for that wait.
->=20
-> The real problem happens if now the user ignores the error of the wait, a=
-nd
-> try to wait again and again. This can lead to a flood of error messages
-> from the driver and even soft lockup event.
->=20
-> Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+On Wed, 04 Dec 2019 06:13:23 +0000,
+Ivid Suvarna <ivid.suvarna@gmail.com> wrote:
+> 
+> On Tue, Dec 3, 2019 at 9:46 PM Marc Zyngier <maz@kernel.org> wrote:
+> >
+> > + James, who wrote most (if not all) of the arm64 hibernate code
+> >
+> > On 2019-12-03 02:23, Yao HongBo wrote:
+> > > On 12/2/2019 9:22 PM, Marc Zyngier wrote:
+> > >> Hi Yaohongbo,
+> > >>
+> > >> In the future, please refrain from sending HTML emails, they
+> > >> don't render very well and force me to reformat your email
+> > >> by hand.
+> > >
+> > > Sorry. I'll pay attention to this next time.
+> > >
+> > >> On 2019-12-02 12:52, yaohongbo wrote:
+> > >>> Hi, marc.
+> > >>>
+> > >>> I met a problem with GIC ITS when I try to power off gic logic in
+> > >>> suspend.
+> > >>>
+> > >>> In hisilicon hip08, the value of GIC_TYPER.HCC is zero, so that
+> > >>> ITS_FLAGS_SAVE_SUSPEND_STATE will have no chance to be set to 1.
+> > >>
+> > >> And that's a good thing. HCC indicates that you have collections
+> > >> that
+> > >> are backed by registers, and not memory. Which means that once the
+> > >> GIC
+> > >> is powered off, the state is lost.
+> > >>
+> > >>> It goes well for s4, when I simply remove the condition judgement
+> > >>> in
+> > >>> the code.
+> > >>
+> > >> What is "s4"? Doing so means you are reprogramming the ITS with
+> > >> mappings
+> > >> that already exist in the tables, and that is UNPRED territory.
+> > >
+> > > Sorry, I didn't describe it clearly.
+> > > S4 means "suspend to disk".
+> > > In s4, The its will reinit and malloc an new its address.
+> >
+> > Huh, hibernate... Yeah, this is not expected to work, I'm afraid.
+> >
+> > > My expectation is to reprogram the ITS with original mappings. If
+> > > ITS_FLAGS_SAVE_SUSPEND_STATE
+> > > is not set, i'll have no chance to use the original its table
+> > > mappings.
+> > >
+> > > What should i do if i want to restore its state with hcc == 0?
+> >
+> > HCC is the least of the problems, and there are plenty more issues:
+> >
+> > - I'm not sure what guarantees that the tables are at the same
+> >    address in the booting kernel and the the resumed kernel.
+> >    That covers all the ITS tables and as well as the RDs'.
+> >
+> > - It could well be that restoring the ITS base addresses is enough
+> >    for everything to resume correctly, but this needs some serious
+> >    investigation. Worse case, we will need to replay the whole of
+> >    the ITS programming.
+> >
+> > - This is going to interact more or less badly with the normal suspend
+> >    to RAM code...
+> >
+> > - The ITS is only the tip of the iceberg. The whole of the SMMU setup
+> >    needs to be replayed, or devices won't resume correctly (I just tried
+> >    on a D05).
+> >
+> > Anyway, with the hack below, I've been able to get D05 to resume
+> > up to the point where devices try to do DMA, and then it was dead.
+> > There is definitely some work to be done there...
+> >
+> >          M.
+> >
+> > diff --git a/drivers/irqchip/irq-gic-v3-its.c
+> > b/drivers/irqchip/irq-gic-v3-its.c
+> > index 4ba31de4a875..a05fc6bac203 100644
+> > --- a/drivers/irqchip/irq-gic-v3-its.c
+> > +++ b/drivers/irqchip/irq-gic-v3-its.c
+> > @@ -27,6 +27,7 @@
+> >   #include <linux/of_platform.h>
+> >   #include <linux/percpu.h>
+> >   #include <linux/slab.h>
+> > +#include <linux/suspend.h>
+> >   #include <linux/syscore_ops.h>
+> >
+> >   #include <linux/irqchip.h>
+> > @@ -42,6 +43,7 @@
+> >   #define ITS_FLAGS_WORKAROUND_CAVIUM_22375     (1ULL << 1)
+> >   #define ITS_FLAGS_WORKAROUND_CAVIUM_23144     (1ULL << 2)
+> >   #define ITS_FLAGS_SAVE_SUSPEND_STATE          (1ULL << 3)
+> > +#define ITS_FLAGS_SAVE_HIBERNATE_STATE         (1ULL << 4)
+> >
+> >   #define RDIST_FLAGS_PROPBASE_NEEDS_FLUSHING   (1 << 0)
+> >   #define RDIST_FLAGS_RD_TABLES_PREALLOCATED    (1 << 1)
+> > @@ -3517,8 +3519,16 @@ static int its_save_disable(void)
+> >         raw_spin_lock(&its_lock);
+> >         list_for_each_entry(its, &its_nodes, entry) {
+> >                 void __iomem *base;
+> > +               u64 flags;
+> >
+> > -               if (!(its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE))
+> > +               if (system_entering_hibernation())
+> > +                       its->flags |= ITS_FLAGS_SAVE_HIBERNATE_STATE;
+> > +
+> > +               flags = its->flags;
+> > +               flags &= (ITS_FLAGS_SAVE_SUSPEND_STATE |
+> > +                         ITS_FLAGS_SAVE_HIBERNATE_STATE);
+> > +
+> > +               if (!flags)
+> >                         continue;
+> >
+> >                 base = its->base;
+> > @@ -3559,11 +3569,17 @@ static void its_restore_enable(void)
+> >         raw_spin_lock(&its_lock);
+> >         list_for_each_entry(its, &its_nodes, entry) {
+> >                 void __iomem *base;
+> > +               u64 flags;
+> >                 int i;
+> >
+> > -               if (!(its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE))
+> > +               flags = its->flags;
+> > +               flags &= (ITS_FLAGS_SAVE_SUSPEND_STATE |
+> > +                         ITS_FLAGS_SAVE_HIBERNATE_STATE);
+> > +               if (!flags)
+> >                         continue;
+> >
+> > +               its->flags &= ~ITS_FLAGS_SAVE_HIBERNATE_STATE;
+> > +
+> >                 base = its->base;
+> >
+> >                 /*
+> 
+> How about this one to reinit GIC for restore:
+>  - https://source.codeaurora.org/quic/la/kernel/msm-4.14/commit/drivers/irqchip/irq-gic-v3.c?h=msm-4.14&id=b0079fb73c08e195498ba2b2ea9623b0cc0f5fed
 
-Reviewed-by: Tomer Tayar <ttayar@habana.ai>
+That's not what we're concerned with at the moment, as there is much
+more state that is currently missing. Save/restoring registers is the
+easy part. What needs to be fixed is the way RD memory tables
+potentially get moved around (and how they can then survive a kexec).
+
+Once we've solved these issues, we'll look at the register state which
+is likely to already be correct anyway.
+
+	M.
+
+-- 
+Jazz is not dead, it just smells funny.
