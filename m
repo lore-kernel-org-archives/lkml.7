@@ -2,180 +2,90 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA7DC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6F9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 043BF2077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9DC420803
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:14:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575465261;
+	bh=xl+BgZikPZ3S+p4qh8p4csjvgehmP3T3fZ5LJMF7bxI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=p7rR/jUWok1UWTYU35S2FNX9Czo2uQCvUebBVHZEcZjiHPqFfgrgqzDThqquVip7c
+	 mYZgybHOVchLF7KY0wiHjlN4aFjM69tvDw/yqfeQlr/XgXMDlrdd6OHiQB3yaGzSX/
+	 9vgeBhDYOe6HibMR/x4xUWwIeV5OEQ5qyV9rDgnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbfLDNNT (ORCPT
+        id S1727901AbfLDNOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 08:13:19 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:54624 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727503AbfLDNNS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 08:13:18 -0500
-X-AuditID: c0a8fbf4-199ff70000001fa6-63-5de7b0eb7d76
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id A2.69.08102.BE0B7ED5; Wed,  4 Dec 2019 14:13:15 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Wed, 4 Dec 2019 14:13:09 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "corbet@lwn.net" <corbet@lwn.net>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "hofrat@osadl.org" <hofrat@osadl.org>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>
-Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
- regulator bindings
-Thread-Topic: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
- regulator bindings
-Thread-Index: AQHVndzxthsd4Y8wKkm7W/92Uslk+KeRDPcAgAAbkICAAZUNgIAACqYAgAAMmACADvFigIAASP2AgARwk4CAAFfQAIAADk+AgAMPioCAAAc/gA==
-Date:   Wed, 4 Dec 2019 13:13:08 +0000
-Message-ID: <6f7b96c71bd1257b0b218a092f8aca7f32ef5468.camel@fi.rohmeurope.com>
-References: <20191118162502.GJ9761@sirena.org.uk>
-         <fd1e4e652840346bd990c769eabe2f966bda4ed6.camel@fi.rohmeurope.com>
-         <20191119181325.GD3634@sirena.org.uk>
-         <fa69d01504817e3260d2b023ae2637aa2f1b2862.camel@fi.rohmeurope.com>
-         <20191119193636.GH3634@sirena.org.uk>
-         <eb685cc78b936bc61ed9f7fbfa18c96398b00909.camel@fi.rohmeurope.com>
-         <20191129120925.GA5747@sirena.org.uk>
-         <297fa021fb243072dbbb7bca455e57c13e8c6843.camel@fi.rohmeurope.com>
-         <20191202131140.GD1998@sirena.org.uk>
-         <72a1f4c5768b8c08c2669ea01e60d1b614095a43.camel@fi.rohmeurope.com>
-         <20191204124717.GR1998@sirena.org.uk>
-In-Reply-To: <20191204124717.GR1998@sirena.org.uk>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E29DC36A17B17E458D37862181597998@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Wed, 4 Dec 2019 08:14:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43638 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726832AbfLDNOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 08:14:19 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6F622077B;
+        Wed,  4 Dec 2019 13:14:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575465258;
+        bh=xl+BgZikPZ3S+p4qh8p4csjvgehmP3T3fZ5LJMF7bxI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tejZatGaBwPto/vJPb2ZmY5UwQ44Wyg8wvdwP3PLS6KqJYMGkA1DbjnZ514Uzpozv
+         Sd2JcwuEOPxk8SxpXWjxFoNtKfV7DG7r7q993pUfxBi7A22EYAfBj9N8NOrp3XJrLN
+         pCN0QaEpmym124GP2ZlFwB9mFgYKeY95PMCAPTh0=
+Date:   Wed, 4 Dec 2019 21:14:07 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
+        Marc Zyngier <maz@kernel.org>, netdev@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2 0/2] ARM: dts: ls1021a: define and use external
+ interrupt lines
+Message-ID: <20191204131404.GN3365@dragon>
+References: <20191114110254.32171-1-linux@rasmusvillemoes.dk>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02TbUxTVxjHc+47yHXHAnIsk2SdmUGizr2eD2QhW6Z3X4zJzJZMOryMu5ZY
-        WnZbjGyZkjmFVsY004mdoLzUIRahFV/WlIR0VVw3cZ0KLJMpo+N1A0UtYbBu91oVPp3nPP/n
-        //+dD8/hSM1JVssVmm2SbBZNOiaR6mya9awebxvWPx+cWoYbwzdYXD5xgsX3a0IUPjQQYXCk
-        sxzgY8FuGu/7sZ3G9ZPVNLbbK2j829k2Cl8+cwvgWw8uAhy9XkHgg3PfEvhu5e80rtvbSOEz
-        x+YAvuY7yuCzf50G+NKp6wxuCfaz2NUbJvBR12UKT07ZCRwOvYn7QxcZvDvcR+I9HUEWx3o8
-        FK7q3pCTIbhr3UCY7NvDCrXuT4TvnP2s0OAfJQRvs50Rbvb4GaGh6itaGKn8nhKiPx2ghKr2
-        ZiAM1bVSQlffeUI4XDtDCE2nplnhnjdjE3xvUXa+aNv+dqHBvPa1rYuMl6qvssWOrB1Rj48s
-        A3OZDpDAIfgSuvPNF8ABEjkNvAFQd7jr0aULoF8mrpAOwHEMzEaOX1nVkAJXo0P/NDDqDAmP
-        JKGRCd9DIRluRe3jg1R8SETHo7OE6k2BO1Gg16C2KbgCtU5dJdWahxvR1w/ayDjrJoWu/Ryj
-        VSEBvoDGZq48rAFcjuxlE4RakzANeYem6firIWr0x4MQTEWjg7FHfR3qmBmgVC4JM1Grb228
-        zEGfN+XEU55BB/cNsPEnLEE/HIlQ+8FS5wKAc97snDc7F5idC8zHAd0MUJFYaDKINmndGlkq
-        WSNbjEXK8YGlyAviq3f/Avgv8FYAEBwIgGUcoUvl/3hnWK9ZnG8pKDWKVmOeXGKSrAGAOFKX
-        wp9Df+o1fIFY+rEkWx5L6RylS+NXDhzQa6DK2iZJxZL8WH2a43SI33taCV0iSwZpx4eFJtu8
-        THAJaniiNsUqmQskWSyxGfPU7cizKuuhSkkKd2OrYuetxWKR0o1bQyCL2z9aU09ywRpXPamh
-        zBazpE3jx9VRqI4aS8xPQGMgjQO6ZP4NVU1S/t+TnDEFQSiIztIhFWET5yVtGajyPuvamerH
-        +am9S5d77lWacr34wsmnNry+u244J99zruwVJxAz+j7dvCK2vuOj9zPPa/8Op0frx18d26xf
-        f/d2edKmL9/99+W6zBFf0+LZF6vTs9O7d23Pes7VOfRZJFcvVASS0aoew+HIrhYweHta2uZ3
-        x1baclvEO+7Z/tCWinIdZTWK61aRslX8Hy9zvqE8BAAA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191114110254.32171-1-linux@rasmusvillemoes.dk>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiBXZWQsIDIwMTktMTItMDQgYXQgMTI6NDcgKzAwMDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+
-IE9uIE1vbiwgRGVjIDAyLCAyMDE5IGF0IDAyOjAyOjQxUE0gKzAwMDAsIFZhaXR0aW5lbiwgTWF0
-dGkgd3JvdGU6DQo+ID4gT24gTW9uLCAyMDE5LTEyLTAyIGF0IDEzOjExICswMDAwLCBNYXJrIEJy
-b3duIHdyb3RlOg0KPiA+ID4gTm8sIGxvb2sgYXQgdGhlIGJpbmRpbmdzIC0gd2Ugc3VwcG9ydCBh
-IGJ1bmNoIG9mIGRpZmZlcmVudA0KPiA+ID4gc3VzcGVuZCBzdGF0ZXMgbWF0Y2hpbmcgdGhlIGRp
-ZmZlcmVudCBzdXNwZW5kIHN0YXRlcyB0aGF0IHRoZQ0KPiA+ID4ga2VybmVsIGFzIGEgd2hvbGUg
-c3VwcG9ydHMuICBXZSBkb24ndCBhc3N1bWUgdGhhdCB0aGUgZGV2aWNlIHdpbGwNCj4gPiA+IGtu
-b3cgdGhpcyBidXQgeW91IGNhbiBhbHdheXMgdXNlIHRoZSBjdXJyZW50IHN1c3BlbmQgd2UncmUg
-Z29pbmcNCj4gPiA+IGZvciB0byBkZWNpZGUgd2hlcmUgdG8gdXBkYXRlLg0KPiA+IEhtLiBTbyBp
-ZiBJIHVuZGVyc3RhbmQgdGhpcyBjb3JyZWN0bHksIHlvdSBtZWFuIHVzZXIgc2hvdWxkIHNldCB0
-aGUNCj4gPiBzdXNwZW5kICd0YXJnZXQnIC0gYW5kIHRoZW4gY2FsbCB0aGUgc2V0X3N1c3BlbmRf
-dm9sdGFnZSBmb3IgdGhpcw0KPiA+IHN0YXRlLiBUbyBzZXQgdm9sdGFnZXMgZm9yIGFsbCBzdGF0
-ZXMgb25lIHNob3VsZCBkbyBsb29wDQo+IA0KPiBUaGUgZ2VuZXJhbCBpZGVhIGlzIHRoYXQgd2Ug
-c2V0IHRoZSBzdXNwZW5kIHN0YXRlIGR1cmluZyB0aGUNCj4gcHJvY2VzcyBvZiBzdXNwZW5kaW5n
-IHJhdGhlciB0aGFuIGluIGFkdmFuY2UgLSB0aGF0IHdheSB3aGVuIHRoZQ0KPiBoYXJkd2FyZSBk
-b2Vzbid0IHVuZGVyc3RhbmQgZGlmZmVyZW50IHR5cGVzIG9mIHN1c3BzZW5kIHRoaW5ncw0KPiB3
-b3JrIGZpbmUuDQoNCk9rLiBTbyB2b2x0YWdlIGZvciB0aGUgc3BlY2lmaWMgc3VzcGVuZCBzdGF0
-ZSBpcyBzZXQganVzdCBiZWZvcmUgZ29pbmcNCnRvIHN1c3BlbmQgLSB3aGVuIHRoZSB0YXJnZXQg
-c3VzcGVuZCBzdGF0ZSBpcyBhbHJlYWR5IHNlbGVjdGVkLiBNYWtlcw0Kc2Vuc2UuIFRoYW5rcy4N
-Cg0KPiA+IGdldF9jdXJyZW50X21vZGUoKQ0KPiA+IGZvcl9hbGxfbW9kZXMoKSB7DQo+ID4gCXNl
-dF9tb2RlKCkNCj4gPiAJc2V0X3ZvbHRhZ2UoKQ0KPiA+IH0NCj4gPiByZXN0b3JlX29yaWdpbmFs
-X21vZGUoKQ0KPiA+IGFtIEkgb24gYSByaWdodCB0cmFjaz8gSSdsbCB0cnkgdG8gc2VlIGlmIEkg
-Y2FuIGZpbmQgc29tZSBleGFtcGxlcw0KPiA+IG9mDQo+ID4gdGhpcyAtIHRoYW5rcy4NCj4gDQo+
-IEkgZG9uJ3QgdW5kZXJzdGFuZCB0aGUgc2F2ZSBhbmQgcmVzdG9yZSBvZiBtb2RlPw0KDQpJIHdh
-cyB0aGlua2luZyB0aGF0IHRoZXJlIGlzIHNvbWUgJ2NhaGNlZCBzdXNwZW5kIHRhcmdldCBzdGF0
-ZScgaW4NCmZyYW1ld29yay4gVGhpcyBnZXQgbW9kZSBpcyBwc2V1ZG8tY29kZSBmb3IgZ2V0dGlu
-ZyB0aGUgc3VzcGVuZCBtb2RlDQpmcm9tIGZyYW1ld29yayAtICJyZXN0b3JlIG1vZGUiIGlzIHJl
-dHVybmluZyBiYWNrIHRoZSAib3JpZ2luYWwgbW9kZSINCmFmdGVyIHZvbHRhZ2VzIGZvciBhbGwg
-bW9kZXMgYXJlIHNldC4gQnV0IHBsZWFzZSBpZ25vcmUgdGhpcyAtIEkgdGhpbmsNCkkgY2FwdHVy
-ZWQgeW91ciBtZXNzYWdlIGFscmVhZHkgOikNCg0KPiAgIElmIHNldHRpbmcgdGhlDQo+IHN1c3Bl
-bmQgY29uZmlndXJhdGlvbiBhZmZlY3RzIHRoZSBydW50aW1lIHN0YXRlIHRoZW4gdGhlIGhhcmR3
-YXJlDQo+IGRvZXNuJ3Qgc3VwcG9ydCBzdXNwZW5kIGNvbmZpZ3VyYXRpb24uDQoNCk5vLCBpdCBk
-b2VzIG5vdC4gSSBwcm9iYWJseSBleHBsYWluZWQgdGhpcyBiYWRseS4NCg0KPiANCj4gPiA+IFRo
-ZSBmcmFtZXdvcmsgZG9lc24ndCBjYXJlIGhvdyBhIGRldmljZSBpcyBjb250cm9sbGVkLCB0aGF0
-J3MgdXANCj4gPiA+IHRvIHRoZSBkZXZpY2UuICBMaWtlIEkgc2FpZCBJIHJlY29tbWVuZCBmaWd1
-cmluZyBvdXQgd2hhdA0KPiA+ID4gdm9sdGFnZXMgYXJlIHVzZWZ1bCB0byBoYXZlIHF1aWNrIGFj
-Y2VzcyB0byBhdCBydW50aW1lLCBmb3INCj4gPiA+IGV4YW1wbGUgaXQncyBsaWtlbHkgdGhhdCBp
-dCdzIGdvb2QgdG8gaGF2ZSBxdWljayBhY2Nlc3MgdG8gdGhlDQo+ID4gPiBoaWdoZXN0IHZvbHRh
-Z2UgdGhhdCdzIGJlZW4gc2V0IChhbmQvb3IgdGhlIHRvcCBvZiB0aGUNCj4gPiA+IGNvbnN0cmFp
-bnRzKS4NCj4gPiBQcm9ibGVtIGlzIHRoYXQgdGhlIHJ1bi1sZXZlbCBjb250cm9sbGVkIHJlZ3Vs
-YXRvciBjYW4ndCBiZQ0KPiA+IGluZGl2aWR1YWxseSBjb250cm9sbGVkICh1bmxlc3MgaXQgaXMg
-b25seSByZWd1bGF0b3IgaW4gdGhlIGdyb3VwKS4NCj4gPiBJDQo+IA0KPiBSZWd1bGF0b3JzIHRo
-YXQgaGF2ZSB0byBiZSBjb250cm9sbGVkIGVuIG1hc3NlIGFyZW4ndCByZWFsbHkNCj4gc3VwcG9y
-dGVkIGJ5IHRoZSBBUEksIGl0IG9ubHkgdW5kZXJzdGFuZHMgcmVndWxhdG9ycyB0aGF0IGFyZQ0K
-PiBpbmRpdmlkdWFsbHkgY29udHJvbGxhYmxlLg0KDQpUaGFua3MuIFRoaXMgd2FzIHRoZSBwaWVj
-ZSBvZiBpbmZvcm1hdGlvbiBJIHdhbnRlZCBhbmQgYXNzdW1lZC4gVGh1cw0KdGhlIHBhdGNoIDEy
-IGRpZCBpbnRyb2R1Y2UgbmV3IGluLWtlcm5lbCBBUElzIC0gYnV0IGFzIEkgc2FpZCwgd2UgZG9u
-J3QNCmhhdmUgYW55IGluLXRyZWUgc29jcyB1c2luZyBCRDcxODI4IFJVTjAsIC4uLiwgUlVOMyBz
-dGF0ZXMgZm9yIG5vdyBzbw0KSSdsbCBkcm9wIHRoZSBwYXRjaCAxMiBhbmQgbGVhdmUgb25seSB0
-aGUgYmFzaWMgc3VwcG9ydCBmb3INCmluZGl2aWR1YWxseSBjb250cm9sbGFibGUgcmVndWxhdG9y
-cy4NCg0KPiA+IEJ1dCBqdXN0IHRvIGNvbmZpcm0sIEkgbWVhbnQgZm9yIGV4YW1wbGUgYXNzaWdu
-aW5nIGJ1Y2tzIDEsMiw2IGFuZA0KPiA+IDcNCj4gPiBpbnRvIGEgZ3JvdXAgd2hpY2ggJ3N0YXRl
-JyBpcyBjaGFuZ2VkIHZpYSBHUElPIGxpbmUuIFNheSAnc3RhdGVzJw0KPiA+IGFyZQ0KPiA+IFJV
-TjAsIFJVTjEuIEZvciBlYWNoIG9mIHRoZXNlIGJ1Y2tzIHdlIGNhbiBkZWZpbmUgYSB2b2x0YWdl
-IGFuZA0KPiA+IGVuYWJsZS9kaXNhYmxlIHN0YXR1cyB3aGljaCBpcyB0byBiZSB1c2VkIG9uIFJV
-TjAsIGFuZCBhbm90aGVyDQo+ID4gdm9sdGFnZS9zdGF0ZSB0dXBsZSBmb3IgUlVOMS4NCj4gDQo+
-IFNvIHlvdSBjb3VsZCBhbHNvIGp1c3QgY3JlYXRlIGEgZ3JvdXAgY29uc2lzdGluZyBvZiBhIHNp
-bmdsZQ0KPiByZWd1bGF0b3I/ICBUaGF0IHdvdWxkIGJlIGZpbmUgZm9yIHRoZSBBUEkuDQoNCkkg
-dGhpbmsgSSBvbmNlIGFnYWluIGV4cGxhaW5lZCBteXNlbGYgYmFkbHkuIFRoZXJlIGNhbiBiZSBv
-bmx5IG9uZQ0KZ3JvdXAgd2l0aCA0IFJVTiBzdGF0ZXMgc2VsZWN0ZWQgYnkgY29tYmluYXRpb24g
-b2YgMiBHUElPIGxpbmVzLiBidWNrcw0KMSwyLDYgYW5kIDcgY2FuIGVhY2ggZWl0aGVyIGJlIGFz
-c2lnbmVkIGludG8gdGhpcyBvbmUgZ3JvdXAgb3INCmNvbnRyb2xsZWQgaW5kaXZpZHVhbGx5IHZp
-YSBJMkMuIEJ1dCBJIGRvdWJ0IGFzc2lnbmluZyBvbmx5IG9uZSBvZiB0aGUNCmJ1Y2tzIGluIHRo
-aXMgZ3JvdXAgaXMgdGhlIHR5cGljYWwgdXNlLWNhc2UuIFdoYXQgd2Ugd291bGQgbmVlZCB3b3Vs
-ZA0KcmVhbGx5IGJlIHRoZSAnZW4tbWFzc2UnIGNvbnRyb2wgLSBlaXRoZXIgdmlhIEdQSU8gb3Ig
-STJDIC0gYnV0IEkgZG9uJ3QNCndhbnQgdG8gc3VnZ2VzdCBhbnkgZnJhbWV3b3JrIGV4cGFuc2lv
-biBhcyBJIGRvbid0IGhhdmUgcHJvcGVyIGluLXRyZWUNCnVzZS1jYXNlIGZvciB0aGlzIGFzIG9m
-IG5vdyA6KSBTbyBJJ2xsIGZvcmdldCB0aGlzIGZvciBub3cgKGFuZCB0aGFua3MNCmZvciBhbGwg
-dGhlIGhlbHAhKSBhbmQgZHJvcCB0aGUgcGF0Y2ggMTIgZnJvbSBzZXJpZXMuIEknbGwgc2VlIGlm
-IEkgY2FuDQpzZW5kIHVwZGF0ZWQgc2VyaWVzIHRvbW9ycm93IC0gb3IgbGF0ZXN0IGVhcmx5IG5l
-eHQgd2VlayA6KQ0KDQpCciwNCglNYXR0aSBWYWl0dGluZW4NCg0K
+On Thu, Nov 14, 2019 at 12:02:51PM +0100, Rasmus Villemoes wrote:
+> A device tree binding documentation as well as a driver implementing
+> support for the external interrupt lines on the ls1021a has been
+> merged into irqchip-next, so will very likely appear in v5.5. See
+> 
+> 87cd38dfd9e6 dt/bindings: Add bindings for Layerscape external irqs
+> 0dcd9f872769 irqchip: Add support for Layerscape external interrupt lines
+> 
+> present in next-20191114.
+> 
+> These patches simply add the extirq node to the ls1021a.dtsi and make
+> use of it on the LS1021A-TSN board. I hope these can be picked up so
+> they also land in v5.5, so we don't have to wait a full extra release
+> cycle.
+
+Sorry.  I usually send queued patches around -rc6 timeline to my
+arm-soc maintainers.  Patches coming later than that will be scheduled
+for the next release unless critical fixes.
+> 
+> v2: fix interrupt type in 2/2 (s/IRQ_TYPE_EDGE_FALLING/IRQ_TYPE_LEVEL_LOW/).
+> 
+> Rasmus Villemoes (1):
+>   ARM: dts: ls1021a: add node describing external interrupt lines
+> 
+> Vladimir Oltean (1):
+>   ARM: dts: ls1021a-tsn: Use interrupts for the SGMII PHYs
+
+Applied both, thanks.
