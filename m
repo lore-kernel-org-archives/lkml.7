@@ -2,54 +2,54 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A569C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60598C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F364F206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F728215F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482805;
-	bh=wNd1Ypc07C+SO24ci5vdLe9kWhtQsRuetC3eZJESgBM=;
+	s=default; t=1575482809;
+	bh=Qfbrh3CAl/9De393ORqQNDprdkPEaFRcGApPRM3ToAc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zTi6eeI0+RB/mDRHF5biq5KAv0FHI2/BF2YKwZHbmJUQACw2ldGi19VBU5bjr3E4F
-	 OVoqbTpHiPLkYXKwqlUEvM53dO7u+vd/Yp79Wxif4x3riBS5GfMUV4gxt00HeNYt29
-	 s7NVeaC3Gy7UJW+wK2CXzTQ/VKtvnA96f/ADNnX4=
+	b=jDR/uTm+vqnMMEaULKqewvLAhtSQi3YKJy8iyE+I2xKZasGKpp/tPN5LVNuhkkVNH
+	 /agrwOPVdaEuFZy6oWU5dph9RClTTvKr/P5U1hLTtJd6HOCWC+GUQk24QX4oL8p/0/
+	 9EN58QSAF/BhNsTPD4qddj+Hqt+hAEqPWa8o2QZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbfLDSGo (ORCPT
+        id S1730617AbfLDSGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:06:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55440 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:06:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730600AbfLDSGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:06:43 -0500
+        id S1728490AbfLDSGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:06:46 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50E6020674;
-        Wed,  4 Dec 2019 18:06:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2F3520675;
+        Wed,  4 Dec 2019 18:06:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482802;
-        bh=wNd1Ypc07C+SO24ci5vdLe9kWhtQsRuetC3eZJESgBM=;
+        s=default; t=1575482805;
+        bh=Qfbrh3CAl/9De393ORqQNDprdkPEaFRcGApPRM3ToAc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P+cN6IqLxp1Kf5+IOOtujV8zANVxnGjEtQOP61eIghNTxFFFquw1iGFj4xcYpzRj4
-         CsofAN3pHNqW9jUyiizTp/IQRCl3xDgr2mATxD2KcETQMaRNz0dV4CMqIIPMWezGzS
-         RczyYQQORGNBr/gukapY9miJXfyIKt602HWicJvA=
+        b=MQyq6/yKgp9sbPWfGb7GpO3N4TiNhj64aauWxFF0UNY/Z8fqGo1n2K5KkpFVwPTgb
+         cueRXsKchQnRwOlen+gTLtNMREGrxpDPJalYv2noAXCT1HA9IqLDdmnkwLHOzF0CuS
+         23td3Mk8rPXK+qjD23Y+hzkol7ZLdsoxLf6P5Dl8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ying Xue <ying.xue@windriver.com>,
-        Jon Maloy <maloy@donjonn.com>,
-        Hoang Le <hoang.h.le@dektech.com.au>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 138/209] tipc: fix skb may be leaky in tipc_link_input
-Date:   Wed,  4 Dec 2019 18:55:50 +0100
-Message-Id: <20191204175332.783192524@linuxfoundation.org>
+Subject: [PATCH 4.14 097/209] vfio/spapr_tce: Get rid of possible infinite loop
+Date:   Wed,  4 Dec 2019 18:55:09 +0100
+Message-Id: <20191204175328.542496478@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -62,46 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hoang Le <hoang.h.le@dektech.com.au>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-[ Upstream commit 7384b538d3aed2ed49d3575483d17aeee790fb06 ]
+[ Upstream commit 517ad4ae8aa93dccdb9a88c27257ecb421c9e848 ]
 
-When we free skb at tipc_data_input, we return a 'false' boolean.
-Then, skb passed to subcalling tipc_link_input in tipc_link_rcv,
+As a part of cleanup, the SPAPR TCE IOMMU subdriver releases preregistered
+memory. If there is a bug in memory release, the loop in
+tce_iommu_release() becomes infinite; this actually happened to me.
 
-<snip>
-1303 int tipc_link_rcv:
-...
-1354    if (!tipc_data_input(l, skb, l->inputq))
-1355        rc |= tipc_link_input(l, skb, l->inputq);
-</snip>
+This makes the loop finite and prints a warning on every failure to make
+the code more bug prone.
 
-Fix it by simple changing to a 'true' boolean when skb is being free-ed.
-Then, tipc_link_rcv will bypassed to subcalling tipc_link_input as above
-condition.
-
-Acked-by: Ying Xue <ying.xue@windriver.com>
-Acked-by: Jon Maloy <maloy@donjonn.com>
-Signed-off-by: Hoang Le <hoang.h.le@dektech.com.au>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
+Acked-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tipc/link.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/vfio/vfio_iommu_spapr_tce.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/net/tipc/link.c b/net/tipc/link.c
-index 631bfc7e9127e..da749916faac4 100644
---- a/net/tipc/link.c
-+++ b/net/tipc/link.c
-@@ -1073,7 +1073,7 @@ static bool tipc_data_input(struct tipc_link *l, struct sk_buff *skb,
- 	default:
- 		pr_warn("Dropping received illegal msg type\n");
- 		kfree_skb(skb);
--		return false;
-+		return true;
- 	};
- }
+diff --git a/drivers/vfio/vfio_iommu_spapr_tce.c b/drivers/vfio/vfio_iommu_spapr_tce.c
+index b4c68f3b82be9..eba9aaf3cc17c 100644
+--- a/drivers/vfio/vfio_iommu_spapr_tce.c
++++ b/drivers/vfio/vfio_iommu_spapr_tce.c
+@@ -409,6 +409,7 @@ static void tce_iommu_release(void *iommu_data)
+ {
+ 	struct tce_container *container = iommu_data;
+ 	struct tce_iommu_group *tcegrp;
++	struct tce_iommu_prereg *tcemem, *tmtmp;
+ 	long i;
  
+ 	while (tce_groups_attached(container)) {
+@@ -431,13 +432,8 @@ static void tce_iommu_release(void *iommu_data)
+ 		tce_iommu_free_table(container, tbl);
+ 	}
+ 
+-	while (!list_empty(&container->prereg_list)) {
+-		struct tce_iommu_prereg *tcemem;
+-
+-		tcemem = list_first_entry(&container->prereg_list,
+-				struct tce_iommu_prereg, next);
+-		WARN_ON_ONCE(tce_iommu_prereg_free(container, tcemem));
+-	}
++	list_for_each_entry_safe(tcemem, tmtmp, &container->prereg_list, next)
++		WARN_ON(tce_iommu_prereg_free(container, tcemem));
+ 
+ 	tce_iommu_disable(container);
+ 	if (container->mm)
 -- 
 2.20.1
 
