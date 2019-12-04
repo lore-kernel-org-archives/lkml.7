@@ -6,47 +6,49 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80930C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E10C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FBE520637
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B71D20637
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:25:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727350AbfLDIZL (ORCPT
+        id S1727219AbfLDIZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 4 Dec 2019 03:25:11 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:48394 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbfLDIZK (ORCPT
+Received: from mail-il1-f197.google.com ([209.85.166.197]:56584 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfLDIZK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 4 Dec 2019 03:25:10 -0500
-Received: by mail-il1-f199.google.com with SMTP id 4so5272847ill.15
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 00:25:10 -0800 (PST)
+Received: by mail-il1-f197.google.com with SMTP id e5so5193137ile.23
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 00:25:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=xR5WgA40E8BOPKf4qd5fJUmP6cRoyoo4UJ5r6074hn8=;
-        b=k3tB9oby4Q8YHNsc3fFFUtWrNECm+kG+DgwaBQraUQPuHWlriYJMTzp50ghFOC/5Js
-         kzkokEwmg7kKCjSG2tWV/chPD/fRlGnlWiLSqpLzQGOcwuQlT+kDyxiaDYvg/FxDKXta
-         CNwA+v63Z8OlsaEjhaLUfS3KK7dI1bcsfLQJ2mJcXlf/ppojYHshPK9xmluEOwZU5yfp
-         B2Iwz6E0bdjiB/wgGgSWEUJTcDkpwh/om6/XdzFgeH3J92YPJ0LfY3f9JTykB1HY3Dn/
-         YiC2zCSlZEoeG9nkj4RSfJwrF1U1DeZMUVXBgzWjzFn3+5/NxYr0ubgaaYTHVpjhlPiL
-         9Riw==
-X-Gm-Message-State: APjAAAU6vuOBGrNPskwTuIkeUqQrgC+2tNiUGAEXqbzgr5D9khDYS9dz
-        M7LlXMZe3yAG/i3RI9oAwsTrgKN8OzNXHyGnRiyE6FonruyU
-X-Google-Smtp-Source: APXvYqyOc6oa87Us5ks53P3kXDpiYH+nWSitUPPB+dpT3Y/Gn//ub3pWsT526I8W2a+JsOvnHH3OLLBOojLC8RoVYpUIr5K4N+IX
+        bh=2cEbeBD4AwlS2HZ8HF8Ggnp8dQCTypz93AZ8GB5LeME=;
+        b=Fbi7dxNAHxAI9rNVVs66kh6DCGUolDe5QRBS+i0z+aCYDkG8C9rMB8QS1O+OkH+gCU
+         pzOCM/s1aTZirdHa2gcGrrDovBIqJwF2dRtUZ2+FqazvQXGKlrQYLspaaxrCVltuey3B
+         rjwwSofbR43H/PYIdy9J0kvQbWKOcHwfWiC6idU/dVTxCvBTILhQqK99q0a94rfpOJPj
+         +vU/OCywuup+BYLpB1Ro1Cr+FxxRWMOGQFQv1tDncxspFjnF0QVDl3LhXADxhJJm8oCK
+         zcFNTfgwW9DkUILrWsepCmoq9ueb+XLXD8i4+9o40U7+bAE3KJK0cSkH+jYFmG20CKJk
+         Jhcg==
+X-Gm-Message-State: APjAAAWAaU2/oBLQWXA5ftJGUK9rKX81yxZUQC/duoAE1LntyPtxRT16
+        WaIt2p095QJwhW3qMqrqXhHnxhuTBO7T3cakwY5hJUd94xpZ
+X-Google-Smtp-Source: APXvYqylfg0AJYJdMW9vDSIGwHGUqOCGx5SNZx078ScZ9SSlf2BYyPIPN73Cp4ENjFxpb2qpVM0/9fdZBhJXrF8PgqLTMLADYub/
 MIME-Version: 1.0
-X-Received: by 2002:a02:5489:: with SMTP id t131mr1905663jaa.40.1575447909716;
+X-Received: by 2002:a92:5c8a:: with SMTP id d10mr2505342ilg.137.1575447909525;
  Wed, 04 Dec 2019 00:25:09 -0800 (PST)
 Date:   Wed, 04 Dec 2019 00:25:09 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000055ac40598dc8d46@google.com>
-Subject: KASAN: slab-out-of-bounds Read in linear_transfer (3)
-From:   syzbot <syzbot+f153bde47a62e0b05f83@syzkaller.appspotmail.com>
-To:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        perex@perex.cz, syzkaller-bugs@googlegroups.com, tiwai@suse.com,
-        tiwai@suse.de
+Message-ID: <000000000000027a850598dc8df1@google.com>
+Subject: general protection fault in do_con_write
+From:   syzbot <syzbot+017265e8553724e514e8@syzkaller.appspotmail.com>
+To:     daniel.vetter@ffwll.ch, ghalat@redhat.com,
+        gregkh@linuxfoundation.org, jslaby@suse.com,
+        linux-kernel@vger.kernel.org, nico@fluxnic.net, sam@ravnborg.org,
+        syzkaller-bugs@googlegroups.com, textshell@uchuujin.de,
+        tomli@tomli.me
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,103 +61,48 @@ syzbot found the following crash on:
 
 HEAD commit:    76bb8b05 Merge tag 'kbuild-v5.5' of git://git.kernel.org/p..
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1416a90ee00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1535d196e00000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=dd226651cb0f364b
-dashboard link: https://syzkaller.appspot.com/bug?extid=f153bde47a62e0b05f83
+dashboard link: https://syzkaller.appspot.com/bug?extid=017265e8553724e514e8
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10fe9e41e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1522042ae00000
-
-The bug was bisected to:
-
-commit 65766ee0bf7fe8b3be80e2e1c3ef54ad59b29476
-Author: Takashi Iwai <tiwai@suse.de>
-Date:   Fri Nov 9 10:59:45 2018 +0000
-
-     ALSA: oss: Use kvzalloc() for local buffer allocations
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1727742ae00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=14a7742ae00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=10a7742ae00000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14a2bb7ae00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16c20cdee00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+f153bde47a62e0b05f83@syzkaller.appspotmail.com
-Fixes: 65766ee0bf7f ("ALSA: oss: Use kvzalloc() for local buffer  
-allocations")
+Reported-by: syzbot+017265e8553724e514e8@syzkaller.appspotmail.com
 
-==================================================================
-BUG: KASAN: slab-out-of-bounds in memcpy include/linux/string.h:380 [inline]
-BUG: KASAN: slab-out-of-bounds in do_convert sound/core/oss/linear.c:48  
-[inline]
-BUG: KASAN: slab-out-of-bounds in convert sound/core/oss/linear.c:81  
-[inline]
-BUG: KASAN: slab-out-of-bounds in linear_transfer  
-sound/core/oss/linear.c:110 [inline]
-BUG: KASAN: slab-out-of-bounds in linear_transfer+0x6de/0x970  
-sound/core/oss/linear.c:88
-Read of size 1 at addr ffff8880a3eb5540 by task syz-executor567/8984
-
-CPU: 0 PID: 8984 Comm: syz-executor567 Not tainted 5.4.0-syzkaller #0
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 9613 Comm: syz-executor287 Not tainted 5.4.0-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
+RIP: 0010:do_con_write.part.0+0xa01/0x1ef0 drivers/tty/vt/vt.c:2760
+Code: 7e fe ff ff 45 01 ef e8 8d cc 95 fd 48 8b 85 c8 fe ff ff 80 38 00 0f  
+85 71 12 00 00 49 8b 9e a0 03 00 00 48 89 d8 48 c1 e8 03 <42> 0f b6 14 20  
+48 89 d8 83 e0 07 83 c0 01 38 d0 7c 08 84 d2 0f 85
+RSP: 0018:ffffc90001d776e8 EFLAGS: 00010203
+RAX: 0000000020000001 RBX: 000000010000000e RCX: ffffffff83df2da0
+RDX: 0000000000000000 RSI: ffffffff83df2df3 RDI: 0000000000000003
+RBP: ffffc90001d77878 R08: ffff88809a546580 R09: ffff88809a546e10
+R10: fffffbfff14b0ab0 R11: ffffffff8a585587 R12: dffffc0000000000
+R13: 0000000000000000 R14: ffff88809b2b9000 R15: 00000000000007fe
+FS:  0000000001678880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f9ea7b34000 CR3: 00000000985d9000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
-  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-  kasan_report+0x12/0x20 mm/kasan/common.c:638
-  check_memory_region_inline mm/kasan/generic.c:185 [inline]
-  check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
-  memcpy+0x24/0x50 mm/kasan/common.c:124
-  memcpy include/linux/string.h:380 [inline]
-  do_convert sound/core/oss/linear.c:48 [inline]
-  convert sound/core/oss/linear.c:81 [inline]
-  linear_transfer sound/core/oss/linear.c:110 [inline]
-  linear_transfer+0x6de/0x970 sound/core/oss/linear.c:88
-  snd_pcm_plug_read_transfer+0x197/0x2e0 sound/core/oss/pcm_plugin.c:651
-  snd_pcm_oss_read2+0x1f0/0x3f0 sound/core/oss/pcm_oss.c:1460
-  snd_pcm_oss_read1 sound/core/oss/pcm_oss.c:1517 [inline]
-  snd_pcm_oss_read+0x548/0x6a0 sound/core/oss/pcm_oss.c:2741
-  __vfs_read+0x8a/0x110 fs/read_write.c:425
-  vfs_read+0x1f0/0x440 fs/read_write.c:461
-  ksys_read+0x14f/0x290 fs/read_write.c:587
-  __do_sys_read fs/read_write.c:597 [inline]
-  __se_sys_read fs/read_write.c:595 [inline]
-  __x64_sys_read+0x73/0xb0 fs/read_write.c:595
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x445a99
-Code: e8 dc bd 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb 11 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f2955880ce8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-RAX: ffffffffffffffda RBX: 00000000006dbc28 RCX: 0000000000445a99
-RDX: 0000000000001000 RSI: 0000000020000380 RDI: 0000000000000003
-RBP: 00000000006dbc20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc2c
-R13: 00007ffd9643eb4f R14: 00007f29558819c0 R15: 20c49ba5e353f7cf
-
-Allocated by task 8984:
-  save_stack+0x23/0x90 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_kmalloc mm/kasan/common.c:512 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:485
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:526
-  __do_kmalloc_node mm/slab.c:3616 [inline]
-  __kmalloc_node+0x4e/0x70 mm/slab.c:3623
-  kmalloc_node include/linux/slab.h:579 [inline]
-  kvmalloc_node+0x68/0x100 mm/util.c:574
-  kvmalloc include/linux/mm.h:655 [inline]
-  kvzalloc include/linux/mm.h:663 [inline]
-  snd_pcm_plugin_alloc+0x585/0x770 sound/core/oss/pcm_plugin.c:70
-  snd_pcm_plug_alloc+0x146/0x330 sound/core/oss/pcm_plugin.c:129
-  snd_pcm_oss_change_params_locked+0x210f/0x3750  
-sound/core/oss/pcm_oss.c:1024
-  snd_pcm_oss_change_params+0x7b/0xd0 sound/core/oss/pcm_oss.c:1087
-  snd_pcm_oss_get_active_substream+0x136/0x190 sound/core/oss/pcm_oss.c:1104
-  snd_pcm_oss_get_rate sound/core/oss/pcm_oss.c:1754 [inline]
-  snd_pcm_oss_set_rate sound/core/oss/pcm_oss.c:1746 [inline]
-  snd_pcm_oss_ioctl+0x1794/0x33a0 sound/core/oss/pcm_oss.c:2593
+  do_con_write drivers/tty/vt/vt.c:3146 [inline]
+  con_put_char+0xfa/0x110 drivers/tty/vt/vt.c:3145
+  tty_put_char+0xc5/0x160 drivers/tty/tty_io.c:3031
+  __process_echoes+0x37c/0xa40 drivers/tty/n_tty.c:708
+  flush_echoes drivers/tty/n_tty.c:829 [inline]
+  __receive_buf drivers/tty/n_tty.c:1648 [inline]
+  n_tty_receive_buf_common+0xc77/0x2b70 drivers/tty/n_tty.c:1742
+  n_tty_receive_buf+0x31/0x40 drivers/tty/n_tty.c:1771
+  tiocsti drivers/tty/tty_io.c:2198 [inline]
+  tty_ioctl+0x949/0x14f0 drivers/tty/tty_io.c:2574
   vfs_ioctl fs/ioctl.c:47 [inline]
   file_ioctl fs/ioctl.c:545 [inline]
   do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
@@ -165,29 +112,33 @@ sound/core/oss/pcm_oss.c:1024
   __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
   do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 0:
-(stack is not available)
-
-The buggy address belongs to the object at ffff8880a3eb5500
-  which belongs to the cache kmalloc-64 of size 64
-The buggy address is located 0 bytes to the right of
-  64-byte region [ffff8880a3eb5500, ffff8880a3eb5540)
-The buggy address belongs to the page:
-page:ffffea00028fad40 refcount:1 mapcount:0 mapping:ffff8880aa400380  
-index:0x0
-raw: 00fffe0000000200 ffffea00027da7c8 ffff8880aa401348 ffff8880aa400380
-raw: 0000000000000000 ffff8880a3eb5000 0000000100000020 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8880a3eb5400: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff8880a3eb5480: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> ffff8880a3eb5500: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
-                                            ^
-  ffff8880a3eb5580: 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc fc
-  ffff8880a3eb5600: 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
+RIP: 0033:0x444099
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b d8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fffde6924f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000004002e0 RCX: 0000000000444099
+RDX: 0000000020000040 RSI: 0000000000005412 RDI: 0000000000000004
+RBP: 00000000006ce018 R08: 00000000004002e0 R09: 00000000004002e0
+R10: 000000000000000f R11: 0000000000000246 R12: 0000000000401da0
+R13: 0000000000401e30 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 7e8070a124b9d12d ]---
+RIP: 0010:do_con_write.part.0+0xa01/0x1ef0 drivers/tty/vt/vt.c:2760
+Code: 7e fe ff ff 45 01 ef e8 8d cc 95 fd 48 8b 85 c8 fe ff ff 80 38 00 0f  
+85 71 12 00 00 49 8b 9e a0 03 00 00 48 89 d8 48 c1 e8 03 <42> 0f b6 14 20  
+48 89 d8 83 e0 07 83 c0 01 38 d0 7c 08 84 d2 0f 85
+RSP: 0018:ffffc90001d776e8 EFLAGS: 00010203
+RAX: 0000000020000001 RBX: 000000010000000e RCX: ffffffff83df2da0
+RDX: 0000000000000000 RSI: ffffffff83df2df3 RDI: 0000000000000003
+RBP: ffffc90001d77878 R08: ffff88809a546580 R09: ffff88809a546e10
+R10: fffffbfff14b0ab0 R11: ffffffff8a585587 R12: dffffc0000000000
+R13: 0000000000000000 R14: ffff88809b2b9000 R15: 00000000000007fe
+FS:  0000000001678880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f9ea7b34000 CR3: 00000000985d9000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
 ---
@@ -197,6 +148,5 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this bug report. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 syzbot can test patches for this bug, for details see:
 https://goo.gl/tpsmEJ#testing-patches
