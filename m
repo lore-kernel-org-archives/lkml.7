@@ -2,140 +2,177 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E4CC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E4EC2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E603B20661
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABE05206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:20:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ji6VCDz9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbfLDJRw (ORCPT
+        id S1727227AbfLDJUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 04:17:52 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:46235 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725971AbfLDJRw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 04:17:52 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1icQn5-0007vG-6A; Wed, 04 Dec 2019 10:17:47 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1icQn4-0004L3-9K; Wed, 04 Dec 2019 10:17:46 +0100
-Date:   Wed, 4 Dec 2019 10:17:46 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "rjui@broadcom.com" <rjui@broadcom.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "sbranden@broadcom.com" <sbranden@broadcom.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
+        Wed, 4 Dec 2019 04:20:04 -0500
+Received: from mail-eopbgr30060.outbound.protection.outlook.com ([40.107.3.60]:38533
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725922AbfLDJUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 04:20:03 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ellcuqNu/Jy7Eaav6mjOgR6dVMucSadJUblpUKdT84Se1flGGF/JYlCgCBLHRoJPAvIUq/92/FLjmkkrBjFaR3+oKCkn5yCkuQmJWks4wZhanGN2lAT7hMckAUKj0j4ZGupdwxKPNZdPvWzVE4x1AYsg7jh3f+P2M09y2CmhNPYe7q1mq9MFoQXWjOWmcSvfZMTARvEkFCKfAkknBJrzp9fBAYL/6MJOd/rdqmrUR/WjA3/SRx5Pwv5lK/qLQy5irWggkfgKvFaCyH3nEjfHFN/FfaBHzl1mJnNGvAHIzirJpzXKLnGZD/fG+zdMxnRVhg/gQ+J6g9ZEobvhTGlXAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qZVyHOgk7TYJe2eRsgGmRu9EdrfHo3xF1bFy1m0FNtU=;
+ b=GfzxvPKZ22KM5OInCZLJV3gU+V/VRsT/6Zq2OylRtYxpZKkGeEIJpBWAwlDROefWBpshFYwvWPnlNXr2nCPIfIQ2WKqNDhGAbaGxbVTfvTLG+wkRav90HnvnMBBoTgL+TzCuNqszPGfO8zUK3+zw5PnTI14/22cJMc+OXVrLpnIVZEuq0doFTJ+cbcGTyI70mxmsAGCobWAgXwyG2Mr05xMuAt3pHOmtlfSSkgbQjhORxwojLE33JBa2TkTnhW2judg/vXG0/L6+tjjPwodopFmkTCcKzkAeF24RhLf0h56+DAR40SMM14r3/ssT3t9YdpgsBrCbTN3bLWUqgzkn9g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qZVyHOgk7TYJe2eRsgGmRu9EdrfHo3xF1bFy1m0FNtU=;
+ b=ji6VCDz9QlNDv1Pf3/2Gg1AQ/owNit8VgByAmu58rbDCRW89FB+gHXDgAob+qiCIFwFUaLMXd7uN5W/JfVPSs4ThzG8Y4iouRBDs8xecl5ksXrWwfLOjmyOfkLvvXsruwQU810i94cDzgIwlwp/mDDGGanBOJIF3MtbmzOhzzPI=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.232.15) by
+ VE1PR04MB6350.eurprd04.prod.outlook.com (20.179.234.91) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.18; Wed, 4 Dec 2019 09:19:59 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::100:f42b:82a1:68c2]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::100:f42b:82a1:68c2%7]) with mapi id 15.20.2495.014; Wed, 4 Dec 2019
+ 09:19:59 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Philipp Puschmann <philipp.puschmann@emlix.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "jlu@pengutronix.de" <jlu@pengutronix.de>,
+        Andy Duan <fugang.duan@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
         dl-linux-imx <linux-imx@nxp.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alice Guo <alice.guo@nxp.com>
-Subject: Re: [PATCH v2 2/2] gpio: bcm-kona: use platform_irq_count
-Message-ID: <20191204091746.vql5yuajtzmr25lp@pengutronix.de>
-References: <1575433106-16171-1-git-send-email-peng.fan@nxp.com>
- <1575433106-16171-2-git-send-email-peng.fan@nxp.com>
- <20191204072744.b7ytzi5gffjcq6sj@pengutronix.de>
- <AM0PR04MB4481D76A9779C2DA7B1331C3885D0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH v5 1/3] dmaengine: imx-sdma: fix buffer ownership
+Thread-Topic: [PATCH v5 1/3] dmaengine: imx-sdma: fix buffer ownership
+Thread-Index: AQHVchby6WsIv+QhqUqHYVdym6wSTaeqHbhA
+Date:   Wed, 4 Dec 2019 09:19:59 +0000
+Message-ID: <VE1PR04MB6638A9E882D40FB7F8CB7F14895D0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <20190923135808.815-1-philipp.puschmann@emlix.com>
+ <20190923135808.815-2-philipp.puschmann@emlix.com>
+In-Reply-To: <20190923135808.815-2-philipp.puschmann@emlix.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f160f391-13ae-403e-f335-08d7789b22c9
+x-ms-traffictypediagnostic: VE1PR04MB6350:|VE1PR04MB6350:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB63509C5B616A63AE92B97C9B895D0@VE1PR04MB6350.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0241D5F98C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(396003)(39860400002)(376002)(346002)(54534003)(189003)(199004)(86362001)(4001150100001)(6506007)(8936002)(7736002)(81166006)(76116006)(2906002)(66446008)(9686003)(71190400001)(6116002)(71200400001)(33656002)(478600001)(5660300002)(305945005)(52536014)(99286004)(14454004)(26005)(2501003)(7696005)(3846002)(81156014)(74316002)(76176011)(102836004)(14444005)(11346002)(66946007)(66556008)(8676002)(186003)(229853002)(7416002)(256004)(446003)(25786009)(4326008)(110136005)(54906003)(64756008)(6246003)(316002)(66476007)(6436002)(55016002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6350;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: DqRbV/VNwT0dJeGLtRISVBiy2xibEFS8vrKif1RMiP6FQodk9R1wiFNgkmNL8uj7bPb02snlETBZEg0wmf0Ezva80CTwKcbxI0OaXY2VsmGLmrcGik/1EcivKqRMZ+JBP4jesXnXOZtD9HTO8SddcMsmeOQOrfmvH8MscXa6hdkb3B88LkAioF+SDVrDZ7y6RTlVmwG5vlL0sjZ6LXKapLlbSsE1/H1TCrkm5fAJjeVKnjIC3l2YpsWWAhNTA8jtilgycnrqRts01qtOkUqFLNH5Fji540q+oHySFYwokX/8Q+KQJBlPUGInahSNCbNHPBnjRgUyk72XCTxH2CpyMpqFAOW+Obekkzt/6Cw9gohfEEi8vuIUxP3a6K50ScTHav261orUMyZ9mkh+wiN3ZJv/pFoI3MB4M5eAD3INVTfN6QlFr0djufPO3lM1wFtYVa/Ym3fgQ5Pal5ZTZIlwqoUvbPOyFRBhgNeCNxXjG86a70Q99vTlL8KB+QYeNpES
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM0PR04MB4481D76A9779C2DA7B1331C3885D0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f160f391-13ae-403e-f335-08d7789b22c9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2019 09:19:59.3749
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: PL+N9ws3Zt9VOmqrwTRm7mkdqaM3Whjr79+TdTMjCche7qQXX7temTU4G0rwKnX1EjL3dDPLiRmvPN84gpD8iQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6350
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 08:41:14AM +0000, Peng Fan wrote:
-> > Subject: Re: [PATCH v2 2/2] gpio: bcm-kona: use platform_irq_count
-> > 
-> > On Wed, Dec 04, 2019 at 04:20:45AM +0000, Peng Fan wrote:
-> > > From: Peng Fan <peng.fan@nxp.com>
-> > >
-> > > platform_irq_count() is the more generic way (independent of device
-> > > trees) to determine the count of available interrupts. So use this
-> > > instead.
-> > >
-> > > As platform_irq_count() might return an error code (which of_irq_count
-> > > doesn't) some additional handling is necessary.
-> > >
-> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > ---
-> > >
-> > > V2:
-> > >  Update commit log, and add err handling  Not tested, just code
-> > > inspection
-> > >
-> > >  drivers/gpio/gpio-bcm-kona.c | 12 +++++++++---
-> > >  1 file changed, 9 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/gpio/gpio-bcm-kona.c
-> > > b/drivers/gpio/gpio-bcm-kona.c index 4122683eb1f9..52ff56166263
-> > 100644
-> > > --- a/drivers/gpio/gpio-bcm-kona.c
-> > > +++ b/drivers/gpio/gpio-bcm-kona.c
-> > > @@ -19,7 +19,6 @@
-> > >  #include <linux/io.h>
-> > >  #include <linux/gpio/driver.h>
-> > >  #include <linux/of_device.h>
-> > > -#include <linux/of_irq.h>
-> > >  #include <linux/init.h>
-> > >  #include <linux/irqdomain.h>
-> > >  #include <linux/irqchip/chained_irq.h> @@ -586,11 +585,18 @@ static
-> > > int bcm_kona_gpio_probe(struct platform_device *pdev)
-> > >
-> > >  	kona_gpio->gpio_chip = template_chip;
-> > >  	chip = &kona_gpio->gpio_chip;
-> > > -	kona_gpio->num_bank = of_irq_count(dev->of_node);
-> > > -	if (kona_gpio->num_bank == 0) {
-> > > +	ret = platform_irq_count(pdev);
-> > > +	if (!ret) {
-> > >  		dev_err(dev, "Couldn't determine # GPIO banks\n");
-> > >  		return -ENOENT;
-> > > +	} else if (ret < 0) {
-> > > +		if (ret != -EPROBE_DEFER)
-> > > +			dev_err(dev, "Couldn't determine GPIO banks: %d\n",
-> > > +				ret);
-> > 
-> > You can use the new %pe feature here:
-> 
-> Checkpatch reports warning:
-> 
-> WARNING: Invalid vsprintf pointer extension '%pe'
-> #49: FILE: drivers/gpio/gpio-bcm-kona.c:593:
-> +               if (ret != -EPROBE_DEFER)
-> +                       dev_err(dev, "Couldn't determine GPIO banks: (%pe)\n",
-> +                               ERR_PTR(ret));
+On 2019-9-23 Philipp Puschmann <philipp.puschmann@emlix.com> wrote:
+> BD_DONE flag marks ownership of the buffer. When 1 SDMA owns the buffer,
+> when 0 ARM owns it. When processing the buffers in
+> sdma_update_channel_loop the ownership of the currently processed buffer
+> was set to SDMA again before running the callback function of the buffer =
+and
+> while the sdma script may be running in parallel. So there was the possib=
+ility to
+> get the buffer overwritten by SDMA before it has been processed by kernel
+Does this patch need indeed? I don't think any difference here move done fl=
+ag
+before callback or after callback, because callback never care this flag an=
+d actually
+done flag is setup for next time rather than this time. Basically, this fla=
+g should be
+set to 1 quickly asap so that sdma could use this bd asap. If delay the fla=
+g may cause
+sdma channel stop since all BDs consumed. Could you try again your case wit=
+hout
+this patch?
+> leading to kind of random errors in the upper layers, e.g. bluetooth.
+>=20
+> Fixes: 1ec1e82f2510 ("dmaengine: Add Freescale i.MX SDMA support")
+> Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
+> ---
+>=20
+> Changelog v5:
+>  - no changes
+>=20
+> Changelog v4:
+>  - fixed the fixes tag
+>=20
+> Changelog v3:
+>  - use correct dma_wmb() instead of dma_wb()
+>  - add fixes tag
+>=20
+> Changelog v2:
+>  - add dma_wb()
+>=20
+>  drivers/dma/imx-sdma.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c index
+> 9ba74ab7e912..b42281604e54 100644
+> --- a/drivers/dma/imx-sdma.c
+> +++ b/drivers/dma/imx-sdma.c
+> @@ -802,7 +802,6 @@ static void sdma_update_channel_loop(struct
+> sdma_channel *sdmac)
+>  		*/
+>=20
+>  		desc->chn_real_count =3D bd->mode.count;
+> -		bd->mode.status |=3D BD_DONE;
+>  		bd->mode.count =3D desc->period_len;
+>  		desc->buf_ptail =3D desc->buf_tail;
+>  		desc->buf_tail =3D (desc->buf_tail + 1) % desc->num_bd; @@ -817,6
+> +816,9 @@ static void sdma_update_channel_loop(struct sdma_channel
+> *sdmac)
+>  		dmaengine_desc_get_callback_invoke(&desc->vd.tx, NULL);
+>  		spin_lock(&sdmac->vc.lock);
+>=20
+> +		dma_wmb();
+> +		bd->mode.status |=3D BD_DONE;
+> +
+>  		if (error)
+>  			sdmac->status =3D old_status;
+>  	}
+> --
+> 2.23.0
 
-Then you test with a tree older than
-1d28122131b263f169a7f2d288178a56c69ee076. Then you also might not have
-57f5677e535ba24b8926a7125be2ef8d7f09323c which you need to make %pe
-work.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
