@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C58C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDA4C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05A3420675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A939A20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:15:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483346;
-	bh=Nf0DVFVuptbAyQMUFY7AZ2jp/QtCcsFowue809GM62E=;
+	s=default; t=1575483350;
+	bh=3UYTPmBAQW/svZFcNquzT/A11hrYjh5lf4XFdXscCdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G86Jj+BJpaqClUIeAV8cvGpzJpS5F8x9yj/HnwibBMvKUBQBEqqYH4+S6JyABNUR+
-	 7JHES32QEU4Izr8NFqrs7HnnZ/Too5JoT5mwhUDIeYIq/8+XRzOYmFpiVsBv9pXe7M
-	 B68Fry5Mvz1Zo5hdDG/BE1u7bu4j/rAnTtyyGvSo=
+	b=vZHVylAMhZZ19uSzKv6lDrStik/8b724QrM1ncOmAW7QscBJVJ7rrrMk8uZVVJmWn
+	 c21zbqUSD4E67QbT0fNG5fbokioF2wH1EkWs+TOdnAi9tlBBQyPK8+Duw5R83hEtGO
+	 bFMxmlN+YCX3PkKYqTFSCMtGdMRMcfdjp/x4WDpo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731846AbfLDSN7 (ORCPT
+        id S1731824AbfLDSPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:13:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43120 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:15:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729497AbfLDSNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:13:52 -0500
+        id S1731840AbfLDSN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:13:57 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D4E820674;
-        Wed,  4 Dec 2019 18:13:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2589220674;
+        Wed,  4 Dec 2019 18:13:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483231;
-        bh=Nf0DVFVuptbAyQMUFY7AZ2jp/QtCcsFowue809GM62E=;
+        s=default; t=1575483236;
+        bh=3UYTPmBAQW/svZFcNquzT/A11hrYjh5lf4XFdXscCdE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gpScb04dAu9gjAUbmRltamSV679CqOlSsDFmWxJHUS2WXG4pF0J5bJlpLE/u/z9Da
-         LPNGmyXPKmjQfm6CS8snct+enLrJWcMuNvw0wZ8cInrJFzW2pz/0aKhz3M4g+TBDC1
-         32kTEBsZH9ZJkSxXTDD16BBYfnm1+gDFIazX0t0Y=
+        b=f4kDEpXLJSRENxu+ZfhzXN6lVFAbp4GSN0JrDZcymbDGqwqL7PmkP+nEByjJqUO9v
+         prpCg1NgBc3RuHfZGN5xXlpk3NCrCLnMw0q8hl2B5ZTnXXdI/ocU2p8Vsva7C/PaFM
+         sNkVODPWzwiU1NBpK8TBo9UalPlUOGdLq8L26by0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.9 106/125] clk: at91: fix update bit maps on CFG_MOR write
-Date:   Wed,  4 Dec 2019 18:56:51 +0100
-Message-Id: <20191204175325.558671905@linuxfoundation.org>
+        stable@vger.kernel.org, Fabio DUrso <fabiodurso@hotmail.it>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.9 108/125] USB: serial: ftdi_sio: add device IDs for U-Blox C099-F9P
+Date:   Wed,  4 Dec 2019 18:56:53 +0100
+Message-Id: <20191204175325.680119492@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -63,38 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+From: Fabio D'Urso <fabiodurso@hotmail.it>
 
-commit 263eaf8f172d9f44e15d6aca85fe40ec18d2c477 upstream.
+commit c1a1f273d0825774c80896b8deb1c9ea1d0b91e3 upstream.
 
-The regmap update bits call was not selecting the proper mask, considering
-the bits which was updating.
-Update the mask from call to also include OSCBYPASS.
-Removed MOSCEN which was not updated.
+This device presents itself as a USB hub with three attached devices:
+ - An ACM serial port connected to the GPS module (not affected by this
+   commit)
+ - An FTDI serial port connected to the GPS module (1546:0502)
+ - Another FTDI serial port connected to the ODIN-W2 radio module
+   (1546:0503)
 
-Fixes: 1bdf02326b71 ("clk: at91: make use of syscon/regmap internally")
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Link: https://lkml.kernel.org/r/1568042692-11784-1-git-send-email-eugen.hristev@microchip.com
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Reviewed-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+This commit registers U-Blox's VID and the PIDs of the second and third
+devices.
+
+Datasheet: https://www.u-blox.com/sites/default/files/C099-F9P-AppBoard-Mbed-OS3-FW_UserGuide_%28UBX-18063024%29.pdf
+
+Signed-off-by: Fabio D'Urso <fabiodurso@hotmail.it>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/at91/clk-main.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/serial/ftdi_sio.c     |    3 +++
+ drivers/usb/serial/ftdi_sio_ids.h |    7 +++++++
+ 2 files changed, 10 insertions(+)
 
---- a/drivers/clk/at91/clk-main.c
-+++ b/drivers/clk/at91/clk-main.c
-@@ -162,7 +162,7 @@ at91_clk_register_main_osc(struct regmap
- 	if (bypass)
- 		regmap_update_bits(regmap,
- 				   AT91_CKGR_MOR, MOR_KEY_MASK |
--				   AT91_PMC_MOSCEN,
-+				   AT91_PMC_OSCBYPASS,
- 				   AT91_PMC_OSCBYPASS | AT91_PMC_KEY);
+--- a/drivers/usb/serial/ftdi_sio.c
++++ b/drivers/usb/serial/ftdi_sio.c
+@@ -1028,6 +1028,9 @@ static const struct usb_device_id id_tab
+ 	/* Sienna devices */
+ 	{ USB_DEVICE(FTDI_VID, FTDI_SIENNA_PID) },
+ 	{ USB_DEVICE(ECHELON_VID, ECHELON_U20_PID) },
++	/* U-Blox devices */
++	{ USB_DEVICE(UBLOX_VID, UBLOX_C099F9P_ZED_PID) },
++	{ USB_DEVICE(UBLOX_VID, UBLOX_C099F9P_ODIN_PID) },
+ 	{ }					/* Terminating entry */
+ };
  
- 	hw = &osc->hw;
+--- a/drivers/usb/serial/ftdi_sio_ids.h
++++ b/drivers/usb/serial/ftdi_sio_ids.h
+@@ -1557,3 +1557,10 @@
+  */
+ #define UNJO_VID			0x22B7
+ #define UNJO_ISODEBUG_V1_PID		0x150D
++
++/*
++ * U-Blox products (http://www.u-blox.com).
++ */
++#define UBLOX_VID			0x1546
++#define UBLOX_C099F9P_ZED_PID		0x0502
++#define UBLOX_C099F9P_ODIN_PID		0x0503
 
 
