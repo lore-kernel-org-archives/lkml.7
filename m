@@ -2,132 +2,210 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DED8C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEBFC0044D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24A4C206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C694620863
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:12:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EYkrsiJ2"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="vkd8sJik"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbfLDHLq (ORCPT
+        id S1727374AbfLDHMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 02:11:46 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39104 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725958AbfLDHLp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 02:11:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575443504;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=a3GIPUfE5I/ZyJJRgqWyUDcz6F8Tn8l5oMVwt7sXiPo=;
-        b=EYkrsiJ2gPNCRrqnmh6zt8P7DtfyQajaUpPbEDyofmvBp7PN85hlt7c95yOss8krXt3oLO
-        h/wNwaLxstrN1FM+DPU72fYgouUrKm1F8jzlw/vrIJwdM3zqmtn46fTpYYeEEjDX6XMyuv
-        fqighRxYd+NFiSDGBec1EPCewSPy15U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-338-7Dzj02e6PQOVam7-eHRalg-1; Wed, 04 Dec 2019 02:11:41 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F13C418A8CA1;
-        Wed,  4 Dec 2019 07:11:39 +0000 (UTC)
-Received: from lacos-laptop-7.usersys.redhat.com (ovpn-116-154.ams2.redhat.com [10.36.116.154])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2870860C85;
-        Wed,  4 Dec 2019 07:11:37 +0000 (UTC)
-Subject: Re: [PATCH] [EFI,PCI] Allow disabling PCI busmastering on bridges
- during boot
-To:     Matthew Garrett <mjg59@google.com>,
+        Wed, 4 Dec 2019 02:12:23 -0500
+Received: from mail-eopbgr760077.outbound.protection.outlook.com ([40.107.76.77]:12403
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726599AbfLDHMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 02:12:21 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MX4wW2Ut46E8QmCPjvbrnUViB7zycerHo2rtzoZOLn9tLsqJrk8CdG6mrSKh5lRCHjKki5+xCh1tvNPv28m68pGfCAamfhWWBcte90bCxwbuP4N+EJl8cyqnqeriKcD33bn3b/Lrt1bS/xaUydq5/PBrQork9Sslvh5Xa26zgJWrhO6J0Mb3e3FeCrYlB5nKDcK4k9cqrozp5U/S0i5hFSKsbCjNzOfu8AxV5acEoBlx31LObhRiiw2E7AgcLnT2g6CusPLKsrGGSEUa6iyJiUdA0fWtozehslQC+53SGFndXPdzhR0ZJrkZ7HMCQueqWBncM/PVghanrvjfwGFsfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Jfn44zHyr/xtMEAFzx9HGhBo/37PTt4/xd7UMknOIFc=;
+ b=Bsq7D8WcCGEKtMAdIKyvxNry7iz3S599FBY/J0jc+/WiAeE+fCn/mi0Kqg5kQVGj3/CbqFfxeJWxOrnzjn+uPM+lOkr4Xl5DPFnLyKW1hKw79KajZfpcDavhNLeam0VHDQ0fvlu5H4mXi61c3Z9imzzeJKHuvf//2cn8gvAsYfh98QOnHrzUE2YiVXcKE3lf+mdvwRhEZd3U649BnTgOX/+3aNpk88DESNtC/Cd7RBQ0H0LTJlY8xZbd5iaDC4U86K1HoscvpIe8RCS6ngGTSvaEB9vv7G6Zigmd7RAeDve1GdkUKgbSqopGHdLc0mqf6h6lAzDkDdnNsZchmo8Oig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Jfn44zHyr/xtMEAFzx9HGhBo/37PTt4/xd7UMknOIFc=;
+ b=vkd8sJikpBj1RaBVyHJh3EKz0CupvgwoU+XFG1SNp1XmWEWhfyGXK3n3AnDBo07n2SAm/bOiwWGFOstMNRTp7U1k+citmirDQPV/gwuRNEjma32J6Xh6+2pLZAvCOIoOBcHDXYKNN35CpHR2fIHFiafZJMOidb5wR64RnwIZ7Rk=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Rijo-john.Thomas@amd.com; 
+Received: from CY4PR12MB1925.namprd12.prod.outlook.com (10.175.62.7) by
+ CY4PR12MB1400.namprd12.prod.outlook.com (10.168.165.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.12; Wed, 4 Dec 2019 07:11:37 +0000
+Received: from CY4PR12MB1925.namprd12.prod.outlook.com
+ ([fe80::cd8b:1d7e:31c2:e8b4]) by CY4PR12MB1925.namprd12.prod.outlook.com
+ ([fe80::cd8b:1d7e:31c2:e8b4%7]) with mapi id 15.20.2495.014; Wed, 4 Dec 2019
+ 07:11:37 +0000
+From:   Rijo Thomas <Rijo-john.Thomas@amd.com>
+To:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Gary Hook <gary.hook@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+Cc:     Rijo Thomas <Rijo-john.Thomas@amd.com>,
+        Nimesh Easow <Nimesh.Easow@amd.com>,
+        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20191203004043.174977-1-matthewgarrett@google.com>
- <CACdnJus7nHdr4p4H1j5as9eB=FG-uX+wy_tjvTQ5ObErDJHdow@mail.gmail.com>
- <CAKv+Gu8emrf7WbTyGc8QDykX_hZbrVtxJKkRVbGFhd8rd13yww@mail.gmail.com>
- <CACdnJusMeC+G3wq_oDGTYi1CBMWDiuq4NdANTBmhNBTDu5zCug@mail.gmail.com>
-From:   Laszlo Ersek <lersek@redhat.com>
-Message-ID: <41cecdd8-f411-00c4-be82-be5d4d13fcb1@redhat.com>
-Date:   Wed, 4 Dec 2019 08:11:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+Subject: [RFC PATCH v3 1/6] crypto: ccp - rename psp-dev files to sev-dev
+Date:   Wed,  4 Dec 2019 11:48:58 +0530
+Message-Id: <57c6797e99b1f62ff13222c8f0ee4687e8617a48.1575438845.git.Rijo-john.Thomas@amd.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <cover.1575438845.git.Rijo-john.Thomas@amd.com>
+References: <cover.1575438845.git.Rijo-john.Thomas@amd.com>
+Content-Type: text/plain
+X-ClientProxiedBy: MAXPR0101CA0065.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:e::27) To CY4PR12MB1925.namprd12.prod.outlook.com
+ (2603:10b6:903:120::7)
 MIME-Version: 1.0
-In-Reply-To: <CACdnJusMeC+G3wq_oDGTYi1CBMWDiuq4NdANTBmhNBTDu5zCug@mail.gmail.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: 7Dzj02e6PQOVam7-eHRalg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+X-Mailer: git-send-email 1.9.1
+X-Originating-IP: [165.204.156.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 31fd1705-63ca-4788-ce1a-08d7788933df
+X-MS-TrafficTypeDiagnostic: CY4PR12MB1400:|CY4PR12MB1400:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CY4PR12MB1400C478704CBFDB9F1DEF4CCF5D0@CY4PR12MB1400.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Forefront-PRVS: 0241D5F98C
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(366004)(39860400002)(396003)(346002)(199004)(189003)(2616005)(66556008)(2906002)(66476007)(50466002)(48376002)(478600001)(14454004)(50226002)(11346002)(36756003)(81156014)(26005)(54906003)(110136005)(81166006)(3846002)(66946007)(8936002)(446003)(8676002)(5660300002)(6486002)(6116002)(386003)(186003)(6436002)(4326008)(99286004)(25786009)(6506007)(14444005)(118296001)(76176011)(16586007)(316002)(86362001)(52116002)(7736002)(51416003)(6666004)(6512007)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1400;H:CY4PR12MB1925.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: RMbTVE6Qql1HqxMmRvKTu0IvrTURSru368FCTsCBCLMvuAGMREiP3ox7i1lg+RPvOR9ctcarjKRtJWsSL1HcPC8ZL2Oata7E5rSScAQ+nQd/jZkjB/s9zZt662s03SGjTjv6CHKKjDYqKKU8OFrFWYLBP5F56VXyORXAyLHLvVOeZPzxtVFYnGnPjTqVjpjLz+0wqhSW0bV9//GZR2hlyQ6TjS20rmXbFdoQYyqYU8p0E3PKw/zJkNkkLPzJfr47nGUFvu8DDWxNHqZ239rqbpDQv/eLOT4IYYXGs2fZEXZYXWRVBH0pg9F+nnAjOCUqCY/kutL8SQ5eIpCVXSnu+ysXxB8samcfhXa5/RZvaziUD4XTY8cyrSXWqfkoysLhpSIrTIS4pHgb0GnC7/hkEa7dHbFBQJeWiRkUr6ZIme5wkwR6uhjtAOeYUyBMSKpb
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 31fd1705-63ca-4788-ce1a-08d7788933df
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2019 07:11:37.7320
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /IYZMqpVwR5gC8PdvlxW4bU/mI0Sz4Bnj4R91ceI1q7/JIjfnroCOYcjUPoUrBEoDL8jRG2SexlQnAXcI6opPw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1400
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/03/19 20:40, Matthew Garrett wrote:
-> On Tue, Dec 3, 2019 at 3:54 AM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
-> 
->> There is no reason this shouldn't apply to ARM, but disabling bus
->> mastering like that before the drivers themselves get a chance to do
->> so is likely to cause trouble. Network devices or storage controllers
->> that are still running and have live descriptor rings in DMA memory
->> shouldn't get the rug pulled from under their feet like that by
->> blindly disabling the BM attribute on all root ports before their
->> drivers have had the opportunity to do this cleanly.
-> 
-> Yes, whether this causes problems is going to be influenced by the
-> behaviour of the hardware on the system. That's why I'm not defaulting
-> it to being enabled :)
-> 
->> One trick we implemented in EDK2 for memory encryption was to do the
->> following (Laszlo, mind correcting me here if I am remembering this
->> wrong?)
->> - create an event X
->> - register an AtExitBootServices event that signals event X in its handler
->> - in the handler of event X, iterate over all PPBs to clear the bus
->> master attribute
->> - for bonus points, do the same for the PCIe devices themselves,
->> because root ports are known to exist that entirely ignore the BM
->> attribute
->>
->> This way, event X should get handled after all the drivers' EBS event
->> handlers have been called.
-> 
-> Can we guarantee that this happens before IOMMU state teardown?
+This is a preliminary patch for creating a generic PSP device driver
+file, which will have support for both SEV and TEE (Trusted Execution
+Environment) interface.
 
-In OVMF, the handler of "event X" is in the IOMMU driver itself, so it's
-the IOMMU driver that takes care of blacklisting everything *after*
-other drivers had a chance to clean up.
+This patch does not introduce any new functionality, but simply renames
+psp-dev.c and psp-dev.h files to sev-dev.c and sev-dev.h files
+respectively.
 
-But in this case, we'd have to insert the PPB clearing *before* the
-(platform's) IOMMU driver's EBS handler (because the latter is going to
-deny, not permit, everything); and we can't modify the IOMMU driver.
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Jens Wiklander <jens.wiklander@linaro.org>
+Co-developed-by: Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>
+Signed-off-by: Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>
+Signed-off-by: Rijo Thomas <Rijo-john.Thomas@amd.com>
+---
+ drivers/crypto/ccp/Makefile                 | 2 +-
+ drivers/crypto/ccp/{psp-dev.c => sev-dev.c} | 6 +++---
+ drivers/crypto/ccp/{psp-dev.h => sev-dev.h} | 8 ++++----
+ drivers/crypto/ccp/sp-pci.c                 | 2 +-
+ 4 files changed, 9 insertions(+), 9 deletions(-)
+ rename drivers/crypto/ccp/{psp-dev.c => sev-dev.c} (99%)
+ rename drivers/crypto/ccp/{psp-dev.h => sev-dev.h} (90%)
 
-I guess we could install an EBS handler with TPL_NOTIFY (PciIo usage
-appears permitted at TPL_NOTIFY, from "Table 27. TPL Restrictions"). But:
-- if the IOMMU driver's EBS handler is also to be enqueued at
-TPL_NOTIFY, then the order will be unspecified
-- if a PCI driver sets up an EBS handler at TPL_CALLBACK, then in our
-handler we could shut down a PPB in front of a device bound by that
-driver too early.
-
-Handling dependencies between event notification functions is a
-never-ending struggle in UEFI, AFAICT.
-
-> I don't think there's a benefit to clearing the bit on endpoint devices,
-> if they're malicious they're just going to turn it back on anyway.
-> 
-
-Thanks
-Laszlo
+diff --git a/drivers/crypto/ccp/Makefile b/drivers/crypto/ccp/Makefile
+index 6b86f1e..9dafcf2 100644
+--- a/drivers/crypto/ccp/Makefile
++++ b/drivers/crypto/ccp/Makefile
+@@ -8,7 +8,7 @@ ccp-$(CONFIG_CRYPTO_DEV_SP_CCP) += ccp-dev.o \
+ 	    ccp-dmaengine.o
+ ccp-$(CONFIG_CRYPTO_DEV_CCP_DEBUGFS) += ccp-debugfs.o
+ ccp-$(CONFIG_PCI) += sp-pci.o
+-ccp-$(CONFIG_CRYPTO_DEV_SP_PSP) += psp-dev.o
++ccp-$(CONFIG_CRYPTO_DEV_SP_PSP) += sev-dev.o
+ 
+ obj-$(CONFIG_CRYPTO_DEV_CCP_CRYPTO) += ccp-crypto.o
+ ccp-crypto-objs := ccp-crypto-main.o \
+diff --git a/drivers/crypto/ccp/psp-dev.c b/drivers/crypto/ccp/sev-dev.c
+similarity index 99%
+rename from drivers/crypto/ccp/psp-dev.c
+rename to drivers/crypto/ccp/sev-dev.c
+index 5ff842c..9a8c523 100644
+--- a/drivers/crypto/ccp/psp-dev.c
++++ b/drivers/crypto/ccp/sev-dev.c
+@@ -1,8 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * AMD Platform Security Processor (PSP) interface
++ * AMD Secure Encrypted Virtualization (SEV) interface
+  *
+- * Copyright (C) 2016,2018 Advanced Micro Devices, Inc.
++ * Copyright (C) 2016,2019 Advanced Micro Devices, Inc.
+  *
+  * Author: Brijesh Singh <brijesh.singh@amd.com>
+  */
+@@ -22,7 +22,7 @@
+ #include <linux/firmware.h>
+ 
+ #include "sp-dev.h"
+-#include "psp-dev.h"
++#include "sev-dev.h"
+ 
+ #define DEVICE_NAME		"sev"
+ #define SEV_FW_FILE		"amd/sev.fw"
+diff --git a/drivers/crypto/ccp/psp-dev.h b/drivers/crypto/ccp/sev-dev.h
+similarity index 90%
+rename from drivers/crypto/ccp/psp-dev.h
+rename to drivers/crypto/ccp/sev-dev.h
+index dd516b3..e861647 100644
+--- a/drivers/crypto/ccp/psp-dev.h
++++ b/drivers/crypto/ccp/sev-dev.h
+@@ -2,13 +2,13 @@
+ /*
+  * AMD Platform Security Processor (PSP) interface driver
+  *
+- * Copyright (C) 2017-2018 Advanced Micro Devices, Inc.
++ * Copyright (C) 2017-2019 Advanced Micro Devices, Inc.
+  *
+  * Author: Brijesh Singh <brijesh.singh@amd.com>
+  */
+ 
+-#ifndef __PSP_DEV_H__
+-#define __PSP_DEV_H__
++#ifndef __SEV_DEV_H__
++#define __SEV_DEV_H__
+ 
+ #include <linux/device.h>
+ #include <linux/spinlock.h>
+@@ -64,4 +64,4 @@ struct psp_device {
+ 	u8 build;
+ };
+ 
+-#endif /* __PSP_DEV_H */
++#endif /* __SEV_DEV_H */
+diff --git a/drivers/crypto/ccp/sp-pci.c b/drivers/crypto/ccp/sp-pci.c
+index b29d2e6..473cf14 100644
+--- a/drivers/crypto/ccp/sp-pci.c
++++ b/drivers/crypto/ccp/sp-pci.c
+@@ -22,7 +22,7 @@
+ #include <linux/ccp.h>
+ 
+ #include "ccp-dev.h"
+-#include "psp-dev.h"
++#include "sev-dev.h"
+ 
+ #define MSIX_VECTORS			2
+ 
+-- 
+1.9.1
 
