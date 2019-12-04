@@ -2,237 +2,95 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E33C2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7A3C2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CB3D20833
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AA3220637
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:46:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="D1ekevAW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hk5xGXTl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbfLDMpT (ORCPT
+        id S1727902AbfLDMqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 07:45:19 -0500
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:45811 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbfLDMpT (ORCPT
+        Wed, 4 Dec 2019 07:46:02 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35246 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727848AbfLDMqB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 07:45:19 -0500
-Received: by mail-ua1-f66.google.com with SMTP id w10so2683584uar.12
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 04:45:18 -0800 (PST)
+        Wed, 4 Dec 2019 07:46:01 -0500
+Received: by mail-pl1-f193.google.com with SMTP id s10so3149349plp.2;
+        Wed, 04 Dec 2019 04:46:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=I9943LC2W7GsN2VUvqciqhs/8irYc/Qkc8ElGhd6zWY=;
-        b=D1ekevAWvG+e76RI65wfYbzcBE//kYMXdoapAplUlqEKsH4lspdwwbuzCIsIT2rtnh
-         teHLwE8FcjmIdJ49WoIO3Bf/vg4AcQL7Yv79j4W0JTj/5Rx7UxGyWPInSerl/AM+bSvW
-         orZxCtyqnmw2Qq/FMPznXPj0oUldse3cTNv7YVtcHf5lhwwN/LN57yq1yI8lYTuEngev
-         VkDvmAwvtRUgHtsdWqsAYP27U9sCFGQVBeHYsA2CwWd92QIjCLCq7Mm1k9EIlW1+xtDs
-         qpsKc57ER7izsMdTaHgEOanMx2naxLKsqvXDiCbBFL3YS7pS4HlBCNYocQ/XzbAvnz83
-         ykGA==
+        bh=7KRyugQkUo1uugWvFUnJA54Xc08BpIiKwl8qPG7HyXI=;
+        b=Hk5xGXTlyDmBDUPDKmXASJB5PmhzzcuKE+nEmqt9PciCUeNJJQVFgIl7W7TGqr17GR
+         a49gzV5UP20H961EF6e+CNubW4ctF5diI8L2q3bQ4z/FW9/t7hHZ+M28MJmSATQhYdy2
+         CieHfUXgz7glYYd27j4iQRiniB5IGXdpdmVCw7mOgX4MW6xVAexnZdYxDYUhWmMOrqOe
+         bCZeZ0fNCqR4x7+Q+WWEfExljhS0pTapWWerIrf9eb5EOTw0upfUhgOz9O8rcVUcucxz
+         /g9PbIK0mMHTrP6nZOTtdlsg0CSTKoR6pxn7WrMlt7XWd5r2J61KjTxYiWlr8FslOy8q
+         WKrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=I9943LC2W7GsN2VUvqciqhs/8irYc/Qkc8ElGhd6zWY=;
-        b=HWaBppUJBosDSaFvKm2eblhUpOejvKm+mvsROYmOlzZeUQQ3NE2gFpdQQtbXTKL2Ee
-         DtP8Q/L4tcUkj41x60xI0dHkUVGOZFmq/PzQzwjo9urvINDInqj/0QEPVgOccrl70n9L
-         7EzRcihTDxEs51fkCBaaKPMon5Xb3XndHUD0Gz3Vm8a4fyH0IJ3RVsmr9gmNE6MQimkg
-         7g04umULLy/eTJB/v2nU1tdJNMDYDeUSYCzxnxMGYaDLjz18exqucY+a+PYT6/olJ+Tu
-         EWLZxpnot3+tO8lppVSTrw+U+M/uh9fQLRli9vh04xzzpwJKipsyJX8uke+wdbxDuTeW
-         5wqg==
-X-Gm-Message-State: APjAAAXKtwJcEpMzvyZBVtRZ9y93Odtk3XkRDqa/bT/c0NePX1Ouyy0H
-        GBNWcz2M8YXDoKukS0rx1GOA/CCJm3X5uCboJE5YS45kmF0qJQ==
-X-Google-Smtp-Source: APXvYqzuDbb/FE6aisnhUS4N4Cr5qvRQgmOLAGnNdex1jh+7Kfj7K66vq/MMKaXX5/JENpgqwfDSOBiCzC2R8WXXQus=
-X-Received: by 2002:ab0:7027:: with SMTP id u7mr2326314ual.94.1575463517590;
- Wed, 04 Dec 2019 04:45:17 -0800 (PST)
+        bh=7KRyugQkUo1uugWvFUnJA54Xc08BpIiKwl8qPG7HyXI=;
+        b=Qd5YTX8flTEeyA2B9bnIPuceGq8/LYKF9VJTBrHGi2l/n5gM2FQ0arJQsZay4IOkh+
+         8QF5GkeIoNiqQJiWkeyJxwkrYD0cwP21Uwp9P3wn7f7KBNVrk2gsPeT0of9dicsy1oia
+         WMWkwDpmfAwct98Qy65wBRgwoYXfKN7HcugGKbaAjNAkQflCoH6K/lkaantL7P9R7dkV
+         FxGppZGRt1ylXex7EGXW+PSM3lZ2l/C3RlSbhfE/aalOtkXW0rb3dnHprewqr8NX591c
+         rRILQZa3YYT46EXm5VpAK2pa9vmHb1bfe5GvW5wipLt5ndFqsJTOV1GjPGaukyf2EM5f
+         jENw==
+X-Gm-Message-State: APjAAAWKWrRoz+vnDv/oObWceOblUCDU96Ufch7hHyAniiQMWzOzFULR
+        WO10kPNqfLjKnrP6HfTngEXLfCtJzxeCGYPdcFg=
+X-Google-Smtp-Source: APXvYqx5iQSiV1wQnkV4BNF3rmbOCPq+eI8fHf5jbJrBDG2+C4r89XluCNntE3UR+ht2Yoe7YWM3aa6is42jDhhTFKg=
+X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr3195916pjq.132.1575463560991;
+ Wed, 04 Dec 2019 04:46:00 -0800 (PST)
 MIME-Version: 1.0
-References: <20191015061349.141448-1-wvw@google.com> <CAHLCerNffKDgJKqaVTH3Kp_QfBLtm2M4H80xFDy=2fGXTVQR+w@mail.gmail.com>
- <CAHLCerN0CWOox-_=ywVO40R9LCahBRoU6Myg3Ca3p_TkZyJAMw@mail.gmail.com>
- <CAGXk5yp4uSCESvve5j_LbCr7b_55DqBagjNr_Dsdi=HppSpBPg@mail.gmail.com>
- <CAHLCerN4ymf7LOGQPRLuAwirwCUaQGynrnUMfgU6+frDswey5A@mail.gmail.com> <CAGXk5ypP0qSm-GMbHJy+hQtYN1hw6Ow6XgeO9JDni0bD1bFSVg@mail.gmail.com>
-In-Reply-To: <CAGXk5ypP0qSm-GMbHJy+hQtYN1hw6Ow6XgeO9JDni0bD1bFSVg@mail.gmail.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Wed, 4 Dec 2019 18:15:06 +0530
-Message-ID: <CAHLCerOD2wOJq7QNGBOcLvkMz4wvc1+6Hk2+ZD__NFged3tLcw@mail.gmail.com>
-Subject: Re: [PATCH] thermal: create softlink by name for thermal_zone and cooling_device
-To:     Wei Wang <wvw@google.com>
-Cc:     Wei Wang <wei.vince.wang@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20191204101042.4275-6-cleger@kalray.eu>
+In-Reply-To: <20191204101042.4275-6-cleger@kalray.eu>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 4 Dec 2019 14:45:51 +0200
+Message-ID: <CAHp75VcqqqAv1iiwjNqGVcadmdzbjHt8f_ap7DKd3LWC=wwkhw@mail.gmail.com>
+Subject: Re: [PATCH 5/5] dt-bindings: pinctrl: dw: move sps,dwapb-gpio.txt to pinctrl
+To:     Clement Leger <cleger@kalray.eu>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 11:22 PM Wei Wang <wvw@google.com> wrote:
+On Wed, Dec 4, 2019 at 12:13 PM Clement Leger <cleger@kalray.eu> wrote:
 >
-> On Sun, Nov 10, 2019 at 9:26 PM Amit Kucheria
-> <amit.kucheria@verdurent.com> wrote:
-> >
-> > On Thu, Oct 17, 2019 at 3:04 AM Wei Wang <wvw@google.com> wrote:
-> > >
-> > > On Wed, Oct 16, 2019 at 10:16 AM Amit Kucheria
-> > > <amit.kucheria@verdurent.com> wrote:
-> > > >
-> > > > On Wed, Oct 16, 2019 at 10:20 PM Amit Kucheria
-> > > > <amit.kucheria@verdurent.com> wrote:
-> > > > >
-> > > > > On Tue, Oct 15, 2019 at 11:43 AM Wei Wang <wvw@google.com> wrote:
-> > > > > >
-> > > > > > The paths thermal_zone%d and cooling_device%d are not intuitive and the
-> > > > > > numbers are subject to change due to device tree change. This usually
-> > > > > > leads to tree traversal in userspace code.
-> > > > > > The patch creates `tz-by-name' and `cdev-by-name' for thermal zone and
-> > > > > > cooling_device respectively.
-> > > > >
-> > > > > I like this.
-> > > > >
-> > > > > > Signed-off-by: Wei Wang <wvw@google.com>
-> > > > > > ---
-> > > > > >  drivers/thermal/thermal_core.c | 23 +++++++++++++++++++++--
-> > > > > >  1 file changed, 21 insertions(+), 2 deletions(-)
-> > > > > >
-> > > > > > diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-> > > > > > index d4481cc8958f..0ff8fb1d7b0a 100644
-> > > > > > --- a/drivers/thermal/thermal_core.c
-> > > > > > +++ b/drivers/thermal/thermal_core.c
-> > > > > > @@ -22,6 +22,7 @@
-> > > > > >  #include <net/netlink.h>
-> > > > > >  #include <net/genetlink.h>
-> > > > > >  #include <linux/suspend.h>
-> > > > > > +#include <linux/kobject.h>
-> > > > > >
-> > > > > >  #define CREATE_TRACE_POINTS
-> > > > > >  #include <trace/events/thermal.h>
-> > > > > > @@ -46,6 +47,8 @@ static DEFINE_MUTEX(poweroff_lock);
-> > > > > >
-> > > > > >  static atomic_t in_suspend;
-> > > > > >  static bool power_off_triggered;
-> > > > > > +static struct kobject *cdev_link_kobj;
-> > > > > > +static struct kobject *tz_link_kobj;
-> > > > > >
-> > > > > >  static struct thermal_governor *def_governor;
-> > > > > >
-> > > > > > @@ -954,7 +957,7 @@ __thermal_cooling_device_register(struct device_node *np,
-> > > > > >         struct thermal_zone_device *pos = NULL;
-> > > > > >         int result;
-> > > > > >
-> > > > > > -       if (type && strlen(type) >= THERMAL_NAME_LENGTH)
-> > > > > > +       if (!type || !type[0] || strlen(type) >= THERMAL_NAME_LENGTH)
-> > > > > >                 return ERR_PTR(-EINVAL);
-> > > > >
-> > > > > This should be a separate fix, if needed.
-> > > Agree, but the link now requires that "" as invalid _type_.
-> >
-> > I'm not sure I understand. What does this change have to do with
-> > adding symlinks below?
-> >
->
-> cdev->type will be used later in sysfs_create_link and adding "" as
-> symlink is kind of bad practise AIUI.
->
+> Since the driver has been moved to pinctrl and now supports it, move the
+> documentation into pinctrl folder. In the same time, add documentation
+> for pinctrl properties such has snps,has-pinctrl and description of pin
+> alternate functions.
 
-Perhaps I'm being dense here, in which case my apologies.
+> +- snps,has-pinctrl : If present, register the pinctrl controller.
 
-But what stops us from splitting the patch into two?
-1. Make type == "" as invalid by using your change above and fixing up
-the strlcpy(cdev->type....) further down.
-2. Create the actual symlinks in a separate patch.
+I'm wondering why we can't always assume pin control?
 
-Regards,
-Amit
+> -F:     Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+> +F:     Documentation/devicetree/bindings/pinctrl/snps-dwapb-gpio.txt
 
-> > > > >
-> > > > > >         if (!ops || !ops->get_max_state || !ops->get_cur_state ||
-> > > > > > @@ -989,9 +992,15 @@ __thermal_cooling_device_register(struct device_node *np,
-> > > > > >                 return ERR_PTR(result);
-> > > > > >         }
-> > > > > >
-> > > > > > -       /* Add 'this' new cdev to the global cdev list */
-> > > > > > +       /* Add 'this' new cdev to the global cdev list and create link*/
-> > > > > >         mutex_lock(&thermal_list_lock);
-> > > > > >         list_add(&cdev->node, &thermal_cdev_list);
-> > > > > > +       if (!cdev_link_kobj)
-> > > > > > +               cdev_link_kobj = kobject_create_and_add("cdev-by-name",
-> > > > > > +                                               cdev->device.kobj.parent);
-> > > > > > +       if (!cdev_link_kobj || sysfs_create_link(cdev_link_kobj,
-> > > > > > +                                               &cdev->device.kobj, cdev->type))
-> > > > > > +               dev_err(&cdev->device, "Failed to create cdev-by-name link\n");
-> > > > >
-> > > > > Any reason not to use the following form instead? It seems easier to read.
-> > > > >
-> > > > > if (!cdev_link_kobj) {
-> > > > >                cdev_link_kobj = kobject_create_and_add("cdev-by-name",
-> > > > >                                                cdev->device.kobj.parent);
-> > > > >               ret = sysfs_create_link(cdev_link_kobj,
-> > > > >                                               &cdev->device.kobj, cdev->type))
-> > > > >               if (ret)
-> > > > >                        dev_err(&cdev->device, "Failed to create
-> > > > > cdev-by-name link\n");
-> > > > > }
-> > > >
-> > > > I can now see why you had to do that - none of the other links would
-> > > > get created after the first one.
-> > > >
-> > > > Perhaps create the directories in the __init functions and only create
-> > > > the links here?
-> > > >
-> > > AFAICT, this is no such API except the private get_device_parent()
-> > > under driver/base/. Also the lazy initialization makes sense in such
-> > > case when there is no thermal device attached. Looks like the class
-> > > dir is also lazy-initialized when first device registered
-> > > https://elixir.bootlin.com/linux/v5.3.5/source/drivers/base/core.c#L1790.
-> >
-> > OK.
-> >
-> > > >
-> > > > > >         mutex_unlock(&thermal_list_lock);
-> > > > > >
-> > > > > >         /* Update binding information for 'this' new cdev */
-> > > > > > @@ -1157,6 +1166,8 @@ void thermal_cooling_device_unregister(struct thermal_cooling_device *cdev)
-> > > > > >                         }
-> > > > > >                 }
-> > > > > >         }
-> > > > > > +       if (cdev_link_kobj)
-> > > > > > +               sysfs_remove_link(cdev_link_kobj, cdev->type);
-> > > > > >
-> > > > > >         mutex_unlock(&thermal_list_lock);
-> > > > > >
-> > > > > > @@ -1340,6 +1351,12 @@ thermal_zone_device_register(const char *type, int trips, int mask,
-> > > > > >
-> > > > > >         mutex_lock(&thermal_list_lock);
-> > > > > >         list_add_tail(&tz->node, &thermal_tz_list);
-> > > > > > +       if (!tz_link_kobj)
-> > > > > > +               tz_link_kobj = kobject_create_and_add("tz-by-name",
-> > > > > > +                                               tz->device.kobj.parent);
-> > > > > > +       if (!tz_link_kobj || sysfs_create_link(tz_link_kobj,
-> > > > > > +                                               &tz->device.kobj, tz->type))
-> > > > > > +               dev_err(&tz->device, "Failed to create tz-by-name link\n");
-> > > > >
-> > > > > Same as above.
-> > > > >
-> > > > > >         mutex_unlock(&thermal_list_lock);
-> > > > > >
-> > > > > >         /* Bind cooling devices for this zone */
-> > > > > > @@ -1411,6 +1428,8 @@ void thermal_zone_device_unregister(struct thermal_zone_device *tz)
-> > > > > >                         }
-> > > > > >                 }
-> > > > > >         }
-> > > > > > +       if (tz_link_kobj)
-> > > > > > +               sysfs_remove_link(tz_link_kobj, tz->type);
-> > > > > >
-> > > > > >         mutex_unlock(&thermal_list_lock);
-> > > > > >
-> > > > > > --
-> > > > > > 2.23.0.700.g56cf767bdb-goog
-> > > > > >
+I guess this should be a part of patch 2 when you move driver w/o
+changes to a new folder.
+
+-- 
+With Best Regards,
+Andy Shevchenko
