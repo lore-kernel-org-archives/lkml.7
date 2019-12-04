@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE45C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B29DC2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91EEE205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:25:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61372205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:25:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483915;
-	bh=HzwGEnNtDZVMMu7FAHSRHg9PbEd0qAwU8A/e3PfjkaY=;
+	s=default; t=1575483918;
+	bh=/vaTvR14aracHKWxFI1nwBvHEUr4TWkn1zIqaBp2qOk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rld1kMkkl4p4jDePZEoFDcG+/VW5SaDy7fSsgN3BiJu7WRjgEFctRKVlV6kYCO4Tl
-	 SGvDFLh/ky5wgmLyQ7n9aCh0EEhxBOYX/jmR5KM/Uwt6ulTQXskYlgwen7In4C1tyr
-	 J3+38fe8tVWrjD9YAFjBrlRpsAIoxJNxu1rGcKx4=
+	b=jllBN0lOUnM7kxUoNcmleNCY9bX8R+gWtP2jCVMlGJvRFKl1+cO/nb0qLPvm6u8Vz
+	 HXTgJjkDbC4j19kKikJw76xjSKJ/+rZ/WlpvFJqs2YNmMwyuXV2C5S0x73y94h7Kw5
+	 5OcFQ4cWKx53v1KkV41ZlTuqbcVgsfkoeGP2SfEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728937AbfLDSBX (ORCPT
+        id S1730203AbfLDSZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:01:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41400 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:25:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729160AbfLDSBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:01:17 -0500
+        id S1729555AbfLDSBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:01:22 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FE4920659;
-        Wed,  4 Dec 2019 18:01:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4466220659;
+        Wed,  4 Dec 2019 18:01:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482476;
-        bh=HzwGEnNtDZVMMu7FAHSRHg9PbEd0qAwU8A/e3PfjkaY=;
+        s=default; t=1575482481;
+        bh=/vaTvR14aracHKWxFI1nwBvHEUr4TWkn1zIqaBp2qOk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kMYWVfrfBedMM6rCGlMomcNQJunUCJptlE1CRFAx0FcHFhDI5EgaCIW1v6FpuaJ+7
-         1GtRdfTDYYvA2hurfUa9Z31qLSQGxOGMO4dwzaD/OaCteIj6/AAjuLXKT98Q1vvP0Z
-         LZtM1IdKUpu+pNkMoqJWJfxZOWsURX9vQRUzqtCA=
+        b=Hi47oqYX4vIKYkMg3ND7lZ5/ILGp6nL2XpwGgCQZ7AYnhKDck3EKZT5wlUb02h7ZL
+         pLhx4U3kwMe2kTKGn6Qz9kjLrhX6tSJDgvIN374UEEM6J9MPc1Zv7VLXjE4WciQD4J
+         WEhZu/oDB4Camq7g8mllack1L8gzNtS+9Hox2lr8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Tom Yan <tom.ty89@gmail.com>,
+        =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 012/209] clk: ti: dra7-atl-clock: Remove ti_clk_add_alias call
-Date:   Wed,  4 Dec 2019 18:53:44 +0100
-Message-Id: <20191204175322.412048835@linuxfoundation.org>
+Subject: [PATCH 4.14 014/209] bridge: ebtables: dont crash when using dnat target in output chains
+Date:   Wed,  4 Dec 2019 18:53:46 +0100
+Message-Id: <20191204175322.551394957@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -60,45 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit 9982b0f69b49931b652d35f86f519be2ccfc7027 ]
+[ Upstream commit b23c0742c2ce7e33ed79d10e451f70fdb5ca85d1 ]
 
-ti_clk_register() calls it already so the driver should not create
-duplicated alias.
+xt_in() returns NULL in the output hook, skip the pkt_type change for
+that case, redirection only makes sense in broute/prerouting hooks.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lkml.kernel.org/r/20191002083436.10194-1-peter.ujfalusi@ti.com
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Reported-by: Tom Yan <tom.ty89@gmail.com>
+Cc: Linus Lüssing <linus.luessing@c0d3.blue>
+Fixes: cf3cb246e277d ("bridge: ebtables: fix reception of frames DNAT-ed to bridge device/port")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/ti/clk-dra7-atl.c | 6 ------
- 1 file changed, 6 deletions(-)
+ net/bridge/netfilter/ebt_dnat.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clk/ti/clk-dra7-atl.c b/drivers/clk/ti/clk-dra7-atl.c
-index 1488154704313..beb672a215b6c 100644
---- a/drivers/clk/ti/clk-dra7-atl.c
-+++ b/drivers/clk/ti/clk-dra7-atl.c
-@@ -174,7 +174,6 @@ static void __init of_dra7_atl_clock_setup(struct device_node *node)
- 	struct clk_init_data init = { NULL };
- 	const char **parent_names = NULL;
- 	struct clk *clk;
--	int ret;
+diff --git a/net/bridge/netfilter/ebt_dnat.c b/net/bridge/netfilter/ebt_dnat.c
+index dfc86a0199dab..1d8c834d90189 100644
+--- a/net/bridge/netfilter/ebt_dnat.c
++++ b/net/bridge/netfilter/ebt_dnat.c
+@@ -19,7 +19,6 @@ static unsigned int
+ ebt_dnat_tg(struct sk_buff *skb, const struct xt_action_param *par)
+ {
+ 	const struct ebt_nat_info *info = par->targinfo;
+-	struct net_device *dev;
  
- 	clk_hw = kzalloc(sizeof(*clk_hw), GFP_KERNEL);
- 	if (!clk_hw) {
-@@ -207,11 +206,6 @@ static void __init of_dra7_atl_clock_setup(struct device_node *node)
- 	clk = ti_clk_register(NULL, &clk_hw->hw, node->name);
+ 	if (!skb_make_writable(skb, 0))
+ 		return EBT_DROP;
+@@ -32,10 +31,22 @@ ebt_dnat_tg(struct sk_buff *skb, const struct xt_action_param *par)
+ 		else
+ 			skb->pkt_type = PACKET_MULTICAST;
+ 	} else {
+-		if (xt_hooknum(par) != NF_BR_BROUTING)
+-			dev = br_port_get_rcu(xt_in(par))->br->dev;
+-		else
++		const struct net_device *dev;
++
++		switch (xt_hooknum(par)) {
++		case NF_BR_BROUTING:
+ 			dev = xt_in(par);
++			break;
++		case NF_BR_PRE_ROUTING:
++			dev = br_port_get_rcu(xt_in(par))->br->dev;
++			break;
++		default:
++			dev = NULL;
++			break;
++		}
++
++		if (!dev) /* NF_BR_LOCAL_OUT */
++			return info->target;
  
- 	if (!IS_ERR(clk)) {
--		ret = ti_clk_add_alias(NULL, clk, node->name);
--		if (ret) {
--			clk_unregister(clk);
--			goto cleanup;
--		}
- 		of_clk_add_provider(node, of_clk_src_simple_get, clk);
- 		kfree(parent_names);
- 		return;
+ 		if (ether_addr_equal(info->mac, dev->dev_addr))
+ 			skb->pkt_type = PACKET_HOST;
 -- 
 2.20.1
 
