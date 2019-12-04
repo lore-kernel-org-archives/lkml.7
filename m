@@ -2,132 +2,154 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,PDS_BTC_ID,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C259EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEAECC2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81E0820833
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AFCC206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:57:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=qrpff.net header.i=@qrpff.net header.b="qDRuLg+s"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="aLhgRbbK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbfLDP4M (ORCPT
+        id S1728507AbfLDP5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:56:12 -0500
-Received: from egyptian.birch.relay.mailchannels.net ([23.83.209.56]:45257
-        "EHLO egyptian.birch.relay.mailchannels.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727828AbfLDP4L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:56:11 -0500
-X-Sender-Id: dreamhost|x-authsender|stevie@qrpff.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 7AFAC1A209E
-        for <linux-kernel@vger.kernel.org>; Wed,  4 Dec 2019 15:56:10 +0000 (UTC)
-Received: from pdx1-sub0-mail-a93.g.dreamhost.com (100-96-14-7.trex.outbound.svc.cluster.local [100.96.14.7])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id B6ABB1A1F01
-        for <linux-kernel@vger.kernel.org>; Wed,  4 Dec 2019 15:56:09 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|stevie@qrpff.net
-Received: from pdx1-sub0-mail-a93.g.dreamhost.com ([TEMPUNAVAIL].
- [64.90.62.162])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-        by 0.0.0.0:2500 (trex/5.18.5);
-        Wed, 04 Dec 2019 15:56:10 +0000
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|stevie@qrpff.net
-X-MailChannels-Auth-Id: dreamhost
-X-Cellar-Snatch: 3b33244459eec7ad_1575474970196_2248684031
-X-MC-Loop-Signature: 1575474970196:3262206106
-X-MC-Ingress-Time: 1575474970196
-Received: from pdx1-sub0-mail-a93.g.dreamhost.com (localhost [127.0.0.1])
-        by pdx1-sub0-mail-a93.g.dreamhost.com (Postfix) with ESMTP id 318FA818B3
-        for <linux-kernel@vger.kernel.org>; Wed,  4 Dec 2019 07:56:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=qrpff.net; h=mime-version
-        :from:date:message-id:subject:to:cc:content-type; s=qrpff.net;
-         bh=/Kn4LfddrJDyvMKQRu8wpyUc8WA=; b=qDRuLg+sjOGlLjUfxZbrjUHoHfpw
-        zT3IIn+0asZeMUTtjYxIH4oIGFYGjC3dPLc4dztZnWcuZThpUsUIudtQgxOKZd6s
-        wl7wdFMgPQ2RtS+7v65LjZhCSENAx/6wj8np565Fpi4vpZNxU0Pa5DXZ1wbmFFaQ
-        eZk1AwwSHouRGOk=
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stevie@qrpff.net)
-        by pdx1-sub0-mail-a93.g.dreamhost.com (Postfix) with ESMTPSA id 7B1AB8155F
-        for <linux-kernel@vger.kernel.org>; Wed,  4 Dec 2019 07:55:55 -0800 (PST)
-Received: by mail-lj1-f179.google.com with SMTP id z17so8653962ljk.13
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 07:55:55 -0800 (PST)
-X-Gm-Message-State: APjAAAU6pIsy9+RUIksohi883m3h9fo0q+CJNDHTAgo2TaU0c6xgOyoY
-        BnikxLcHJcpR1nJKbdD4Ge4YMZ3C23XLoikhaqY=
-X-Google-Smtp-Source: APXvYqxQkYTuc245sv1m5iD+qbiatoI2NghXpwEq2lr0SndWytpOUMy/6bKZ79GTRYts4BsJ8Y8W7Di0GXEOM/65RqM=
-X-Received: by 2002:a2e:88d6:: with SMTP id a22mr2341326ljk.163.1575474953331;
- Wed, 04 Dec 2019 07:55:53 -0800 (PST)
+        Wed, 4 Dec 2019 10:57:21 -0500
+Received: from mail-eopbgr790042.outbound.protection.outlook.com ([40.107.79.42]:23589
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727008AbfLDP5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 10:57:21 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FK+9OuQo9dgLfVhWdzuMK/ZnuzzQuakph2Ck5vODusXKejxHN05cDQ4aNfcdnVN0c0mK3VW7SVkxn9JJi5tIWZIDSSVdm71gJFkNQny6s7zJ9KxseKitM/PVwP2x2Dma43W/mMVVvMUl9two5ZvYWfoqeBwZVc5ZDK5xD6c5ywXg95oip6CiobUfS0AEjgadJpg9TVJK/Lq/0GYxhbH2v0L0OFs+DdWjtNGOBKipqKn9s0Es6vanLzsUc4KMHVHFtcpB+RPxIbc3/p6BJQbHwEnfkhmtGDM4noilU43JxAn3/h2M6L9DybcM2DZWCUsI7Rj1Lp7of7PJR1hpL75W9g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hbfMhQG78o8HkyaGhiYpQ6euyVURvLChY/j7nT0OEpc=;
+ b=ffdd9muenqWj1nFGqrUHchSc2hO5soXxrEDGj7yTD3o6Sw5bv3vfqUOJoejbYM0r2vk8w3W8OTMcZ+j733U/ZF3ip3Ia59pBcm32ME46PqGWvlIHgLT2o5Ivh1WapxBBbQshIAc8ptXeFUYtovi6q0hupYciQX7UzGmh7aiSmFzneHuSVyOklgrJYgdxSfBujzC6HBuV+lpzY2v1QMpv7D/81gVMjrigFlz4fCvF6P+PhdmwyGeiGJhMvksvUqB2xxZIlrRnKWodT5/ePnCGzXg3TPpREM5h7GdbPlHxjHT3zataDAJZo+PHR7jsfMskt4fMe7WBIQHJtdgeAXbPWQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hbfMhQG78o8HkyaGhiYpQ6euyVURvLChY/j7nT0OEpc=;
+ b=aLhgRbbKdYfiZctL3/6KsG9VdeMcfrv4n8k7FsHthSVoRcr20Lfy9VeTTf61fG5iJQ3nFT1l2N9DvnR0aIVqZ1ycIETjXnBT5YHDcbOgZgm61n3uenZyE7AIDpkl79y8jD2FYyiQCI/pZtgkYpGlgHR1IzulbKnHycbLZH8GKRE=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Thomas.Lendacky@amd.com; 
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.71.154) by
+ DM6PR12MB3257.namprd12.prod.outlook.com (20.179.105.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.19; Wed, 4 Dec 2019 15:57:18 +0000
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::dd0c:8e53:4913:8ef4]) by DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::dd0c:8e53:4913:8ef4%5]) with mapi id 15.20.2495.014; Wed, 4 Dec 2019
+ 15:57:18 +0000
+Subject: Re: [PATCH v2] KVM: x86: use CPUID to locate host page table reserved
+ bits
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     sean.j.christopherson@intel.com, stable@vger.kernel.org
+References: <1575474037-7903-1-git-send-email-pbonzini@redhat.com>
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <8f7e3e87-15dc-2269-f5ee-c3155f91983c@amd.com>
+Date:   Wed, 4 Dec 2019 09:57:16 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+In-Reply-To: <1575474037-7903-1-git-send-email-pbonzini@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DM6PR21CA0014.namprd21.prod.outlook.com
+ (2603:10b6:5:174::24) To DM6PR12MB3163.namprd12.prod.outlook.com
+ (2603:10b6:5:15e::26)
 MIME-Version: 1.0
-X-DH-BACKEND: pdx1-sub0-mail-a93
-From:   Stephen Oberholtzer <stevie@qrpff.net>
-Date:   Wed, 4 Dec 2019 10:55:42 -0500
-X-Gmail-Original-Message-ID: <CAD_xR9dfgVeBkm9PZ5gk1fB37vEj+__5O6HUoK6SW3zoOwhDiw@mail.gmail.com>
-Message-ID: <CAD_xR9dfgVeBkm9PZ5gk1fB37vEj+__5O6HUoK6SW3zoOwhDiw@mail.gmail.com>
-Subject: Re: [RFC] chromeos_laptop: Make touchscreen work on C720
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Benson Leung <bleung@chromium.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 9a79e736-6e92-4ab0-82ea-08d778d2a38d
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3257:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB3257C3B919C13B03D90CDDCBEC5D0@DM6PR12MB3257.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0241D5F98C
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(376002)(346002)(366004)(396003)(189003)(199004)(66476007)(66556008)(31696002)(6116002)(230700001)(8936002)(6512007)(3846002)(31686004)(25786009)(36756003)(4326008)(14454004)(5660300002)(6246003)(2906002)(478600001)(99286004)(81156014)(26005)(6506007)(2616005)(23676004)(53546011)(81166006)(186003)(229853002)(305945005)(50466002)(66946007)(65956001)(58126008)(8676002)(6436002)(7736002)(6486002)(52116002)(76176011)(86362001)(11346002)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3257;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: FOs8OvRqZnhTn4XQ5rCJy8PUFFmWD7xMVFxFz9b3oiP1WdSTX53VTiqcMpjnL6CNHMLub5+cGp6TtEwuamGtoMZgJmnFDQYAck4KP8EENxjktsvR6jsAEdB7+mgpCiW2n/fo1loPMx4F3DPUabIGGGos44n1ILAEb3eRpxzrLlXJ+YQtjc1TG8LGeHkgHGiG4srvt81hZf+uaJPqKI9QvqLWxaRAsmH68v4balpmoaF3DN5SDNdGfo/OVrDWLo//9/YMlPxxpZX6UmgY2LCY8vL1vRmDdqciu/xwmC1wSZLLR3Wno6fDmjdIkrPRHscsOHeNdDIXkOl4BXfo0Hiktus6C4W/Axd4y8ZsyLJibm8FUyFWVlb/TZltaYacnAoJpsOlxu8x5qLrKuJMOS5lSGTrVN/LO4P2hi1rYfbkbiJ/3UZs29wtYSbKEoyz0xlm
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a79e736-6e92-4ab0-82ea-08d778d2a38d
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2019 15:57:18.0768
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: F95ax/b/2ti/O4VU/eyRFiqem7n/ovS48pz2+29kUTNaM0aELmOnXsri27YZs2JdbPO3XssMF6Tr7ERsGMErHw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3257
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 2:36 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> Hi Stephen,
->
-> Does the new kernel work with the original firmware (it should as that's
-> what it's been tested with)?
+On 12/4/19 9:40 AM, Paolo Bonzini wrote:
+> The comment in kvm_get_shadow_phys_bits refers to MKTME, but the same is actually
+> true of SME and SEV.  Just use CPUID[0x8000_0008].EAX[7:0] unconditionally if
+> available, it is simplest and works even if memory is not encrypted.
 
-It took some finagling -- MrChromebox is UEFI, but the stock firmware
-boots with SeaBIOS -- but I was able to confirm that yes, the
-touchscreen works in 4.19 when booting from stock firmware.
+This isn't correct for AMD. The reduction in physical addressing is
+correct. You can't set, e.g. bit 45, in the nested page table, because
+that will be considered a reserved bit and generate an NPF. When memory
+encryption is enabled today, bit 47 is the encryption indicator bit and
+bits 46:43 must be zero or else an NPF is generated. The hardware uses
+these bits internally based on the whether running as the hypervisor or
+based on the ASID of the guest.
 
-> Acer C720 did not use ACPI to describe its devices, it relied on static
-> board support to instantiate touchscreen and trackpad and other devices.
+Thanks,
+Tom
 
-> I see that MrChromebox BIOS declares the peripherals on Peppy via ACPI.
-> I'd recommend reaching out and ask to update the binding (maybe switch
-> from ATML0001 to PRP0001 and full OF-style binding to avoid confusion).
-
-(This is my first-ever foray into anything involving Linux and I2C,
-ACPI, _or_ multi-module cooperation, and lucky me, I get all three!
-Good thing it's easy to verify that a touchscreen is working.  I also
-have no idea what "OF-style binding" is.)
-
-Approaching from the perspective of "I'm designing a brand new kind of
-machine that runs Linux, uses ACPI tables, and has one or more Atmel
-MXT chips", several things become apparent:
-
-* The driver expects a strange "compatible" property that communicates
-no useful information.  The property's value is not read, only its
-existence, which is one bit of information. '1' is interpreted as
-'this is a supported device', while '0' is interpreted as 'this is not
-a supported device'.  But if it's not a supported device, why was the
-driver loaded in the first place?
-
-* If it's a touchpad, the driver needs to know what buttons the
-various GPIOs are mapped to.
-  (Conceivably, it doesn't need to be a touchpad; in my hypothetical
-machine, it could also be a touchscreen that also has some input
-buttons wired up through the MXT chip, because that saved a nickel per
-unit. To support that, however, we would also need an indicator
-specifying whether it's a touchscreen or a touchpad, as the driver
-interprets 'has buttons' as 'is touchpad'.)
-
-This leads to my first question: With this in mind, couldn't simply
-removing the "compatible" check work?
-On any existing machine where this driver is loaded and working, the
-chromeos_laptop driver has already run and set up the appropriate
-device properties first.
-
---
-Stephen
+> 
+> Cc: stable@vger.kernel.org
+> Reported-by: Tom Lendacky <thomas.lendacky@amd.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/x86/kvm/mmu/mmu.c | 20 ++++++++++++--------
+>  1 file changed, 12 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 6f92b40d798c..1e4ee4f8de5f 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -538,16 +538,20 @@ void kvm_mmu_set_mask_ptes(u64 user_mask, u64 accessed_mask,
+>  static u8 kvm_get_shadow_phys_bits(void)
+>  {
+>  	/*
+> -	 * boot_cpu_data.x86_phys_bits is reduced when MKTME is detected
+> -	 * in CPU detection code, but MKTME treats those reduced bits as
+> -	 * 'keyID' thus they are not reserved bits. Therefore for MKTME
+> -	 * we should still return physical address bits reported by CPUID.
+> +	 * boot_cpu_data.x86_phys_bits is reduced when MKTME or SME are detected
+> +	 * in CPU detection code, but the processor treats those reduced bits as
+> +	 * 'keyID' thus they are not reserved bits. Therefore KVM needs to look at
+> +	 * the physical address bits reported by CPUID.
+>  	 */
+> -	if (!boot_cpu_has(X86_FEATURE_TME) ||
+> -	    WARN_ON_ONCE(boot_cpu_data.extended_cpuid_level < 0x80000008))
+> -		return boot_cpu_data.x86_phys_bits;
+> +	if (likely(boot_cpu_data.extended_cpuid_level >= 0x80000008))
+> +		return cpuid_eax(0x80000008) & 0xff;
+>  
+> -	return cpuid_eax(0x80000008) & 0xff;
+> +	/*
+> +	 * Quite weird to have VMX or SVM but not MAXPHYADDR; probably a VM with
+> +	 * custom CPUID.  Proceed with whatever the kernel found since these features
+> +	 * aren't virtualizable (SME/SEV also require CPUIDs higher than 0x80000008).
+> +	 */
+> +	return boot_cpu_data.x86_phys_bits;
+>  }
+>  
+>  static void kvm_mmu_reset_all_pte_masks(void)
+> 
