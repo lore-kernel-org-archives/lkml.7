@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADEB9C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C94BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EB862084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9D9B20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483152;
-	bh=wHJe79NNS5CsHxiLb0Fd9Du263Rb0zhqLGb4CJ3nlQs=;
+	s=default; t=1575483158;
+	bh=CwOyJhYvJ50e9gPlFXRLR7fWplvXt+Ui3hq056Pm6gE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y+7jvdyvPer6ciOPR6cx1MLFXLqccz6t0qsg4uyQXcv4yYjS9iUBMvN7HXNJzhyYI
-	 WSnPHOC5b7Y95tYsEMFkOjRludPg/jt3/SkXdRyRvsULSV59FfiPducvDal6khTvV4
-	 1rA2VrRUXQ5SjMgI8Q+ZfFG9/FuQgUzeT+GAbmQE=
+	b=AbQ0ereMhSG7BAwlxL+9fhOggBu4CQV+hWTbieoNLA4vnvgAUUaKEBJUAG+CAm7XE
+	 I3sx5VYzOMyje4aMnE+2YgkvhCcEomfrMdD+ObMBIYBIHdDQsRq/6mFzsh0VObliwp
+	 2tq+OwmPucfemCwHQP25IXofsTs7Icr5yhBGChXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731610AbfLDSMa (ORCPT
+        id S1731619AbfLDSMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:12:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41054 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:12:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730664AbfLDSMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:12:25 -0500
+        id S1731606AbfLDSMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:12:30 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AAB120674;
-        Wed,  4 Dec 2019 18:12:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5896F20863;
+        Wed,  4 Dec 2019 18:12:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483145;
-        bh=wHJe79NNS5CsHxiLb0Fd9Du263Rb0zhqLGb4CJ3nlQs=;
+        s=default; t=1575483149;
+        bh=CwOyJhYvJ50e9gPlFXRLR7fWplvXt+Ui3hq056Pm6gE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VlohIWxCClo2rupVkw8NgrJ9NjNBZg7iRKJW6BKEg4bH4J8uhrlN9L4mALgA6PRnC
-         +Ix9VtK1ltqdPodUuFa95OYhyYQ9INUle9eE5ZPhFNL4B0WT4nOVeK+ve6PKkbmlNe
-         PlcEz9ovCVV4FLfFzPLN1WB/d0dzPD8KvFR6DwwM=
+        b=Ju2s/qI61IWBauAtE+RBgdlv69ylG/udRv8TSpV8rVZHOQ/KjEFENrTLXeuVT94K7
+         ESRi31TDzL75FKOsCaNZvyoW9JcT+7mVRcagGnXxKOeg8jeY2bV23gVnHh1O5O/Eoh
+         qQDikqZz9osui+X7MuFZr5bS3h6Aey8hmftAT6XM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 069/125] regulator: tps65910: fix a missing check of return value
-Date:   Wed,  4 Dec 2019 18:56:14 +0100
-Message-Id: <20191204175323.179287296@linuxfoundation.org>
+Subject: [PATCH 4.9 071/125] powerpc/pseries: Fix node leak in update_lmb_associativity_index()
+Date:   Wed,  4 Dec 2019 18:56:16 +0100
+Message-Id: <20191204175323.343774436@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -60,36 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit cd07e3701fa6a4c68f8493ee1d12caa18d46ec6a ]
+[ Upstream commit 47918bc68b7427e961035949cc1501a864578a69 ]
 
-tps65910_reg_set_bits() may fail. The fix checks if it fails, and if so,
-returns with its error code.
+In update_lmb_associativity_index() we lookup dr_node using
+of_find_node_by_path() which takes a reference for us. In the
+non-error case we forget to drop the reference. Note that
+find_aa_index() does modify properties of the node, but doesn't need
+an extra reference held once it's returned.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/tps65910-regulator.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/powerpc/platforms/pseries/hotplug-memory.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/regulator/tps65910-regulator.c b/drivers/regulator/tps65910-regulator.c
-index 696116ebdf50a..9cde7b0757011 100644
---- a/drivers/regulator/tps65910-regulator.c
-+++ b/drivers/regulator/tps65910-regulator.c
-@@ -1102,8 +1102,10 @@ static int tps65910_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, pmic);
+diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
+index 656bbbd731d03..6c12b02f4a61d 100644
+--- a/arch/powerpc/platforms/pseries/hotplug-memory.c
++++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
+@@ -294,6 +294,7 @@ static u32 lookup_lmb_associativity_index(struct of_drconf_cell *lmb)
  
- 	/* Give control of all register to control port */
--	tps65910_reg_set_bits(pmic->mfd, TPS65910_DEVCTRL,
-+	err = tps65910_reg_set_bits(pmic->mfd, TPS65910_DEVCTRL,
- 				DEVCTRL_SR_CTL_I2C_SEL_MASK);
-+	if (err < 0)
-+		return err;
+ 	aa_index = find_aa_index(dr_node, ala_prop, lmb_assoc);
  
- 	switch (tps65910_chip_id(tps65910)) {
- 	case TPS65910:
++	of_node_put(dr_node);
+ 	dlpar_free_cc_nodes(lmb_node);
+ 	return aa_index;
+ }
 -- 
 2.20.1
 
