@@ -2,105 +2,72 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC2DC43215
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 01:05:06 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECE8720865
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2D8C432C0
 	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 01:05:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qTO+I90c"
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id C436D2073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 01:05:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbfLDBFC (ORCPT
+        id S1726365AbfLDBEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 20:05:02 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36980 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbfLDBFC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 20:05:02 -0500
-Received: by mail-wm1-f67.google.com with SMTP id f129so6064213wmf.2;
-        Tue, 03 Dec 2019 17:05:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=d1Atz/XejS8mWz5qCtXz1nNzHlSaf2idDPU/vTS2lvc=;
-        b=qTO+I90cj6g2LDEoq+53RmUOc+wQ/rvg8PCvxoHV/TKq/hlqinkmZfUVAMsUl+DbLv
-         AnyiF2eu9+uVXR+D9oUO4RmCqVifaN393leL3CJtlptPcnwUSYtujZnr1a+kCtreEywP
-         qHMvhQDKXBdNuCnVB8edTw+DGIKfcZfx64rYX8EMn7+3+vBKd+kUaJ1Qmw22kmmYrCxB
-         y2fsGhkJTNl5m1BhmLI5KzQFhYz4TckDHwV3DTKT/CwWiom+Cje3/R6Pc1elKP0cKZiY
-         NIUSrWTlJuy7x3t4PRjvXiy96BAGAUtt+7FZPawHB5ci7LHowVENZyhw87lQziArxQJL
-         DNqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=d1Atz/XejS8mWz5qCtXz1nNzHlSaf2idDPU/vTS2lvc=;
-        b=o6gWIZ1mu0Y5Qt3TmsiBdCcWZguD5pCRxNlOtXswfQoQOtdIDwKcVcXrKh/XoxgQc9
-         EOhs2H8Yxh8J65YFC5d7KVCopJ7sutDbfSM8DmSzYwxy5/2W7jfPfNeccfviJsJmfBVz
-         GKZ98ZmzwMuDXcYO+aldD5yYRI5H2aL04LL2Xajsh2FPOPQsVfVOSaZY7Zk/O7VHqstV
-         XmKdRK19RGpvPNUJzoLUClabe7zNjKlB7Be+GrZAYfooNo3WAsznVkDX3wAkv4X6eu2G
-         G9IWqHsIgl3clJFFgLf0cohAP00YaFLXNVaqqKBZ96RaoKIuElWX0GCf+5bDN8OQrn+M
-         lViw==
-X-Gm-Message-State: APjAAAX7scsm/3+/QJsB5Gg09L/m6VqZ+J26m/q/q7pZpCKqXUka1EP4
-        YMyFLVZ3t80AngF6vtsYud8=
-X-Google-Smtp-Source: APXvYqwY7LkfIYy5X6aBfUL4S1sCgNiiFrCxqm6rBAL3vy0LiScxFGOA/y8y1n7bKj3egRD5VfOyxA==
-X-Received: by 2002:a7b:c778:: with SMTP id x24mr22192300wmk.119.1575421500392;
-        Tue, 03 Dec 2019 17:05:00 -0800 (PST)
-Received: from localhost.localdomain (ip5f5bfdc6.dynamic.kabel-deutschland.de. [95.91.253.198])
-        by smtp.gmail.com with ESMTPSA id y139sm5072161wmd.24.2019.12.03.17.04.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 17:04:59 -0800 (PST)
-From:   Bean Huo <huobean@gmail.com>
-To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
-        pedrom.sousa@synopsys.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
-        cang@codeaurora.org
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: ufs: delete unsued structure filed tc
-Date:   Wed,  4 Dec 2019 02:04:14 +0100
-Message-Id: <20191204010414.3776-1-huobean@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 3 Dec 2019 20:04:30 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6742 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726060AbfLDBE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 20:04:29 -0500
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id ACC5A1C5290A53DC4202;
+        Wed,  4 Dec 2019 09:04:24 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 4 Dec 2019 09:04:14 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <jani.nikula@linux.intel.com>, <joonas.lahtinen@linux.intel.com>,
+        <rodrigo.vivi@intel.com>, <airlied@linux.ie>, <daniel@ffwll.ch>
+CC:     <intel-gfx@lists.freedesktop.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, Mao Wenan <maowenan@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH -next] drm/i915/perf: drop pointless static qualifier in i915_perf_add_config_ioctl()
+Date:   Wed, 4 Dec 2019 09:01:54 +0800
+Message-ID: <20191204010154.152396-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bean Huo <beanhuo@micron.com>
+There is no need to have the 'T *v' variable static
+since new value always be assigned before use it.
 
-Delete unused structure field tc in structure utp_upiu_req, since no person
-uses it for task management.
-
-Signed-off-by: Bean Huo <beanhuo@micron.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
 ---
- include/uapi/scsi/scsi_bsg_ufs.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/i915/i915_perf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/uapi/scsi/scsi_bsg_ufs.h b/include/uapi/scsi/scsi_bsg_ufs.h
-index 9988db6ad244..d55f2176dfd4 100644
---- a/include/uapi/scsi/scsi_bsg_ufs.h
-+++ b/include/uapi/scsi/scsi_bsg_ufs.h
-@@ -68,14 +68,13 @@ struct utp_upiu_cmd {
-  * @header:UPIU header structure DW-0 to DW-2
-  * @sc: fields structure for scsi command DW-3 to DW-7
-  * @qr: fields structure for query request DW-3 to DW-7
-+ * @uc: use utp_upiu_query to host the 4 dwords of uic command
-  */
- struct utp_upiu_req {
- 	struct utp_upiu_header header;
- 	union {
- 		struct utp_upiu_cmd		sc;
- 		struct utp_upiu_query		qr;
--		struct utp_upiu_query		tr;
--		/* use utp_upiu_query to host the 4 dwords of uic command */
- 		struct utp_upiu_query		uc;
- 	};
- };
+diff --git a/drivers/gpu/drm/i915/i915_perf.c b/drivers/gpu/drm/i915/i915_perf.c
+index 65d7c2e599de..700f6a9f2ffb 100644
+--- a/drivers/gpu/drm/i915/i915_perf.c
++++ b/drivers/gpu/drm/i915/i915_perf.c
+@@ -3955,7 +3955,7 @@ int i915_perf_add_config_ioctl(struct drm_device *dev, void *data,
+ 	struct i915_perf *perf = &to_i915(dev)->perf;
+ 	struct drm_i915_perf_oa_config *args = data;
+ 	struct i915_oa_config *oa_config, *tmp;
+-	static struct i915_oa_reg *regs;
++	struct i915_oa_reg *regs;
+ 	int err, id;
+ 
+ 	if (!perf->i915) {
 -- 
-2.17.1
+2.20.1
 
