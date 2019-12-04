@@ -2,323 +2,268 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB39EC43215
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 513E3C43215
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BB7320674
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A5C12073C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:19:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p2ovPSWb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UsR4nxLG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbfLDERm (ORCPT
+        id S1727021AbfLDETV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 23:17:42 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35730 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbfLDERm (ORCPT
+        Tue, 3 Dec 2019 23:19:21 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43213 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726804AbfLDETU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 23:17:42 -0500
-Received: by mail-pl1-f195.google.com with SMTP id s10so2595785plp.2;
-        Tue, 03 Dec 2019 20:17:41 -0800 (PST)
+        Tue, 3 Dec 2019 23:19:20 -0500
+Received: by mail-ot1-f66.google.com with SMTP id p8so5112198oth.10;
+        Tue, 03 Dec 2019 20:19:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BZZl+nxbwr7fP0x4IN+8uQwfbG13ju41LnpcMidPMaU=;
-        b=p2ovPSWb/E/cAo7fmM5XjU1B8d8NrSArymp9Q+uczj5fzm7yq+G54UR+dlyGIzX067
-         DNjJ61R8cL1SI6+e0M9ccFR9uQfTldodyekC1VeG1k/sajgcBKSkkRclwWRgrljtRZZu
-         djvYcyi3pp0+KcJS055JAqQs7y8xAfBXntwNsHxutGqbUa26zq3jy7crUoC2QN0eBMfY
-         rAGLi/p6KF04DA6C4mnY+E4BRSLL1ScLUciQMgU03NF35ttF5y1MrrVHR6m5nKtMsqCZ
-         9QQrOiF/clX5YhDlDx+J5s6VJjuzpv3Q1BK8/wxDSo/MAsahT3r2pz3U+a9FbET8pEVx
-         6lYA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=oO5aKHWqKZXgtDSzybkME6BK6jEsYJ93MQcu7wW6Ois=;
+        b=UsR4nxLGxkGDB8c1PVJMKEM9OO+Ridm9v4kB8Sovl3epF/ujjT7s3EPYaXWek871Ap
+         m3baBWk2e58Ho1eagyO56sSNRY90MUm9QRdNb7WD2BEnkJzlGMbABMjkL+JibbwXTnUq
+         NPgTfgku2xEMZjoRYeOqZNwmMvVkd8uwaj17GZjdo6j4QTNrImxHtCTbAKGVm0d69UC4
+         WUAZGyyZRnKJyCEgTHWXvPfT1GFVhT52kkiakkMmO1TcdyicBbMQOYuHLzaZwVby+JV0
+         Am+QLOtz5qR7KUVokXCwlMZr6z1f6XmDxtCxGDhsbLPZRzgm8kLQGO5p85cKTQX670YM
+         bjsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BZZl+nxbwr7fP0x4IN+8uQwfbG13ju41LnpcMidPMaU=;
-        b=UURrwIQMZJTNo2e3gx03A1KNHzK6ejHuTDp6ND9NCMfHjeHrhtkr6CLOkPRJNHBMmK
-         ra1hjoa3Lgqyl4mXrXDcGtGAvxgUV/YZBVGyV/6DMj/vD7e9A3JWAvHJ+96k+s9KAAgz
-         BwceVvgIGi0BUnTQsZ19CDObMXr4xrxxY+12GQZHBmUZ/3emd+Kbt6QrgIBu4oQ15n8c
-         MmGunKujSE56ebD6+gwASE0tV1zpAXoDK+M9MnnCVy9Jxmr4RkQPJ65pZXonLCWmsNe9
-         acni7q2hfgZcqglGDfO1q64LmTvvguOjkLO9yl8RPjabNMPcftA4A+TFYeGZ+AWtUiQ4
-         oLwA==
-X-Gm-Message-State: APjAAAVjXmklhYppfV31k0Zse6K4LoqmbVxHVKoOXyXjzEaZWFVvcYfK
-        dho4wsYxXpZhzzwJRUNpJNo=
-X-Google-Smtp-Source: APXvYqwJwwU8OYeVnqjIsdO7aH6M3H2utHGtvCkXRjIfSOxuESukx/RQnr0iPdFos638xKe8mfagjg==
-X-Received: by 2002:a17:90a:374f:: with SMTP id u73mr1200433pjb.22.1575433061004;
-        Tue, 03 Dec 2019 20:17:41 -0800 (PST)
-Received: from ?IPv6:240d:1a:90a:7900:fc86:4c94:c9d5:bfda? ([240d:1a:90a:7900:fc86:4c94:c9d5:bfda])
-        by smtp.gmail.com with ESMTPSA id p21sm5385729pfn.103.2019.12.03.20.17.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Dec 2019 20:17:40 -0800 (PST)
-Subject: Re: 5e6669387e ("of/platform: Pause/resume sync state during init
- .."): [ 3.192726] WARNING: CPU: 1 PID: 1 at drivers/base/core.c:688
- device_links_supplier_sync_state_resume
-To:     Saravana Kannan <saravanak@google.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        LKP <lkp@lists.01.org>, kernel test robot <lkp@intel.com>
-References: <20191201150015.GC18573@shao2-debian>
- <CAGETcx9r0u=-WSnQ2ZS1KmZSVQqKwvpnhO-w41=jk8iF6BdALA@mail.gmail.com>
- <7e13b7f9-6c0f-0ab5-a6f9-5fb9b41257c9@gmail.com>
- <CAGETcx_PeYi-j+=0QOQR9c=_4n4becziS8WKKi77bXuNY1hufQ@mail.gmail.com>
- <CAL_JsqKBuCfCvFwbUQwTQxYAR1WL5r5Mnm_RBhHgH0b7_Bkg6w@mail.gmail.com>
- <CAGETcx9-TZfARQgc7N4=kp1WVvMuxpmw3n3-TmwYO1YNkQKmRw@mail.gmail.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <1a30fb19-dfac-6b6c-1e92-8d972fc52b10@gmail.com>
-Date:   Tue, 3 Dec 2019 22:17:33 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=oO5aKHWqKZXgtDSzybkME6BK6jEsYJ93MQcu7wW6Ois=;
+        b=S35s0moz7Tx0MPFoOaTA+CiE2FjzSZ5B1P6sBFg5U4JG1MlT9IyReI+uJVw4fvnnug
+         LwJKROihtZ8jC5W7kGP7SNBtxFzH2X0IOhYDoS9vMjZ1Xx2zRq5EcETVhbpBpkKUeDTl
+         ATEuOflVu9CZimisZllXje63xsDq61ngsGgVGlHlJRdFQ7NmKO6bl2OC9h/a9Vs9gL+8
+         cQLbKbWjK/WBQVm/9RHEIdyC1N6gFzkN597ZEJHN9lid/Ri9J7n1l7X3vqjYnzSjYd18
+         boU+VWI7PaVmWFUEhiaH6H8Z25l9LQedw7k/KtCD2ztVOxgGANuhg3DjCJ6syDGV4H/q
+         Wz4A==
+X-Gm-Message-State: APjAAAXpQ3JfsfrezT0CbX/RhO2TOQE5lplCsZOdwYp5fxPaFlMz2+5t
+        nkcrRcZvNnW0nR4kyseE4X9dSxUMzef3UcgHFNg=
+X-Google-Smtp-Source: APXvYqytyNA2QkmAJY7xC5kFRg0u6U/Fdz8XWksN3Nv4gba/r2jxdUps87kfcX5VKf3Oss1lFcZ3soNRgEF+xYh58lc=
+X-Received: by 2002:a9d:64ce:: with SMTP id n14mr1025741otl.263.1575433159471;
+ Tue, 03 Dec 2019 20:19:19 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAGETcx9-TZfARQgc7N4=kp1WVvMuxpmw3n3-TmwYO1YNkQKmRw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190113021719.46457-1-samuel@sholland.org> <20190113021719.46457-2-samuel@sholland.org>
+ <472c5450-1b60-6ac7-b242-805c2a2f3272@arm.com>
+In-Reply-To: <472c5450-1b60-6ac7-b242-805c2a2f3272@arm.com>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Tue, 3 Dec 2019 20:18:53 -0800
+Message-ID: <CA+E=qVfaBcUN5iB3kaK5gHyURpWt7ET6_js=sLiDg4PCDXXTYA@mail.gmail.com>
+Subject: Re: [linux-sunxi] Re: [PATCH v3 1/2] arm64: arch_timer: Workaround
+ for Allwinner A64 timer instability
+To:     marc.zyngier@arm.com
+Cc:     Samuel Holland <samuel@sholland.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        devicetree <devicetree@vger.kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/3/19 4:50 PM, Saravana Kannan wrote:
-> On Tue, Dec 3, 2019 at 1:10 PM Rob Herring <robh+dt@kernel.org> wrote:
->>
->> On Tue, Dec 3, 2019 at 2:05 PM Saravana Kannan <saravanak@google.com> wrote:
->>>
->>> On Tue, Dec 3, 2019 at 1:01 AM Frank Rowand <frowand.list@gmail.com> wrote:
->>>>
->>>> On 12/2/19 3:19 PM, Saravana Kannan wrote:
->>>>> On Sun, Dec 1, 2019 at 7:00 AM kernel test robot <lkp@intel.com> wrote:
->>>>>>
->>>>>> Greetings,
->>>>>>
->>>>>> 0day kernel testing robot got the below dmesg and the first bad commit is
->>>>>>
->>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
->>>>>>
->>>>>> commit 5e6669387e2287f25f09fd0abd279dae104cfa7e
->>>>>> Author:     Saravana Kannan <saravanak@google.com>
->>>>>> AuthorDate: Wed Sep 4 14:11:24 2019 -0700
->>>>>> Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>>>> CommitDate: Fri Oct 4 17:30:19 2019 +0200
->>>>>>
->>>>>>     of/platform: Pause/resume sync state during init and of_platform_populate()
->>>>>>
->>>>>>     When all the top level devices are populated from DT during kernel
->>>>>>     init, the supplier devices could be added and probed before the
->>>>>>     consumer devices are added and linked to the suppliers. To avoid the
->>>>>>     sync_state() callback from being called prematurely, pause the
->>>>>>     sync_state() callbacks before populating the devices and resume them
->>>>>>     at late_initcall_sync().
->>>>>>
->>>>>>     Similarly, when children devices are populated from a module using
->>>>>>     of_platform_populate(), there could be supplier-consumer dependencies
->>>>>>     between the children devices that are populated. To avoid the same
->>>>>>     problem with sync_state() being called prematurely, pause and resume
->>>>>>     sync_state() callbacks across of_platform_populate().
->>>>>>
->>>>>>     Signed-off-by: Saravana Kannan <saravanak@google.com>
->>>>>>     Link: https://lore.kernel.org/r/20190904211126.47518-6-saravanak@google.com
->>>>>>     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>>>>
->>>>>> fc5a251d0f  driver core: Add sync_state driver/bus callback
->>>>>> 5e6669387e  of/platform: Pause/resume sync state during init and of_platform_populate()
->>>>>> 81b6b96475  Merge branch 'master' of git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux; tag 'dma-mapping-5.5' of git://git.infradead.org/users/hch/dma-mapping
->>>>>> +-------------------------------------------------------------------------+------------+------------+------------+
->>>>>> |                                                                         | fc5a251d0f | 5e6669387e | 81b6b96475 |
->>>>>> +-------------------------------------------------------------------------+------------+------------+------------+
->>>>>> | boot_successes                                                          | 30         | 0          | 0          |
->>>>>> | boot_failures                                                           | 1          | 11         | 22         |
->>>>>> | Oops:#[##]                                                              | 1          |            |            |
->>>>>> | EIP:unmap_vmas                                                          | 1          |            |            |
->>>>>> | PANIC:double_fault                                                      | 1          |            |            |
->>>>>> | Kernel_panic-not_syncing:Fatal_exception                                | 1          |            |            |
->>>>>> | WARNING:at_drivers/base/core.c:#device_links_supplier_sync_state_resume | 0          | 11         | 22         |
->>>>>> | EIP:device_links_supplier_sync_state_resume                             | 0          | 11         | 22         |
->>>>>> +-------------------------------------------------------------------------+------------+------------+------------+
->>>>>>
->>>>>> If you fix the issue, kindly add following tag
->>>>>> Reported-by: kernel test robot <lkp@intel.com>
->>>>>>
->>>>>> [    3.186107] OF: /testcase-data/phandle-tests/consumer-b: #phandle-cells = 2 found -1
->>>>>> [    3.188595] platform testcase-data:testcase-device2: IRQ index 0 not found
->>>>>> [    3.191047] ### dt-test ### end of unittest - 199 passed, 0 failed
->>>>>> [    3.191932] ------------[ cut here ]------------
->>>>>> [    3.192571] Unmatched sync_state pause/resume!
->>>>>> [    3.192726] WARNING: CPU: 1 PID: 1 at drivers/base/core.c:688 device_links_supplier_sync_state_resume+0x27/0xc0
->>>>>> [    3.195084] Modules linked in:
->>>>>> [    3.195494] CPU: 1 PID: 1 Comm: swapper/0 Tainted: G                T 5.4.0-rc1-00005-g5e6669387e228 #1
->>>>>> [    3.196674] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
->>>>>> [    3.197693] EIP: device_links_supplier_sync_state_resume+0x27/0xc0
->>>>>> [    3.198680] Code: 00 00 00 3e 8d 74 26 00 57 56 31 d2 53 b8 a0 d0 d9 c1 e8 6c b6 38 00 a1 e4 d0 d9 c1 85 c0 75 13 68 84 ba c4 c1 e8 29 30 b1 ff <0f> 0b 58 eb 7f 8d 74 26 00 83 e8 01 85 c0 a3 e4 d0 d9 c1 75 6f 8b
->>>>>> [    3.201560] EAX: 00000022 EBX: 00000000 ECX: 00000000 EDX: 00000000
->>>>>> [    3.202466] ESI: 000001ab EDI: c02c7f80 EBP: c1e87d27 ESP: c02c7f20
->>>>>> [    3.203301] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00010282
->>>>>> [    3.204258] CR0: 80050033 CR2: bfa1bf98 CR3: 01f28000 CR4: 00140690
->>>>>> [    3.205022] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
->>>>>> [    3.205919] DR6: fffe0ff0 DR7: 00000400
->>>>>> [    3.206529] Call Trace:
->>>>>> [    3.207011]  ? of_platform_sync_state_init+0x13/0x16
->>>>>> [    3.207719]  ? do_one_initcall+0xda/0x260
->>>>>> [    3.208247]  ? kernel_init_freeable+0x110/0x197
->>>>>> [    3.208906]  ? rest_init+0x120/0x120
->>>>>> [    3.209369]  ? kernel_init+0xa/0x100
->>>>>> [    3.209775]  ? ret_from_fork+0x19/0x24
->>>>>> [    3.210283] ---[ end trace 81d0f2d2ee65199b ]---
->>>>>> [    3.210955] ALSA device list:
->>>>>
->>>>> Rob/Frank,
->>>>>
->>>>> This seems to be an issue with the unit test code not properly
->>>>> cleaning up the state after it's done.
->>>>>
->>>>> Specifically, unittest_data_add() setting up of_root on systems where
->>>>> there's no device tree (of_root == NULL). It doesn't clean up of_root
->>>>> after the tests are done. This affects the of_have_populated_dt() API
->>>>> that in turn affects calls to
->>>>> device_links_supplier_sync_state_pause/resume(). I think unittests
->>>>> shouldn't affect the of_have_populated_dt() API.
->>>> There are at least a couple of reasons why the unittest devicetree data
->>>> needs to remain after the point where devicetree unittests currently
->>>> complete.  So cleaning up (removing the data) is not an option.
->>>>
->>>> I depend on the unittest devicetree entries still existing after the system
->>>> boots and I can log into a shell for some validation of the final result of
->>>> the devicetree data.
->>>
->>> IMHO unittests shouldn't have a residual impact on the system after
->>> they are done. So, I'll agree to disagree on this one.
->>
->> They shouldn't be enabled in a production system either. Why would you
->> want the extra boot time?
-> 
-> Should we ask the kernel test robot folks to not enable OF unittest
+On Mon, Jan 14, 2019 at 1:25 AM Marc Zyngier <marc.zyngier@arm.com> wrote:
+>
+> Hi Samuel,
 
-No.  If unittests are breaking other code I want to know that.
+Hi Samuel,
 
+> On 13/01/2019 02:17, Samuel Holland wrote:
+> > The Allwinner A64 SoC is known[1] to have an unstable architectural
+> > timer, which manifests itself most obviously in the time jumping forwar=
+d
+> > a multiple of 95 years[2][3]. This coincides with 2^56 cycles at a
+> > timer frequency of 24 MHz, implying that the time went slightly backwar=
+d
+> > (and this was interpreted by the kernel as it jumping forward and
+> > wrapping around past the epoch).
+> >
+> > Investigation revealed instability in the low bits of CNTVCT at the
+> > point a high bit rolls over. This leads to power-of-two cycle forward
+> > and backward jumps. (Testing shows that forward jumps are about twice a=
+s
+> > likely as backward jumps.) Since the counter value returns to normal
+> > after an indeterminate read, each "jump" really consists of both a
+> > forward and backward jump from the software perspective.
+> >
+> > Unless the kernel is trapping CNTVCT reads, a userspace program is able
+> > to read the register in a loop faster than it changes. A test program
+> > running on all 4 CPU cores that reported jumps larger than 100 ms was
+> > run for 13.6 hours and reported the following:
+> >
+> >  Count | Event
+> > -------+---------------------------
+> >   9940 | jumped backward      699ms
+> >    268 | jumped backward     1398ms
+> >      1 | jumped backward     2097ms
+> >  16020 | jumped forward       175ms
+> >   6443 | jumped forward       699ms
+> >   2976 | jumped forward      1398ms
+> >      9 | jumped forward    356516ms
+> >      9 | jumped forward    357215ms
+> >      4 | jumped forward    714430ms
+> >      1 | jumped forward   3578440ms
+> >
+> > This works out to a jump larger than 100 ms about every 5.5 seconds on
+> > each CPU core.
+> >
+> > The largest jump (almost an hour!) was the following sequence of reads:
+> >     0x0000007fffffffff =E2=86=92 0x00000093feffffff =E2=86=92 0x0000008=
+000000000
+> >
+> > Note that the middle bits don't necessarily all read as all zeroes or
+> > all ones during the anomalous behavior; however the low 10 bits checked
+> > by the function in this patch have never been observed with any other
+> > value.
+> >
+> > Also note that smaller jumps are much more common, with backward jumps
+> > of 2048 (2^11) cycles observed over 400 times per second on each core.
+> > (Of course, this is partially explained by lower bits rolling over more
+> > frequently.) Any one of these could have caused the 95 year time skip.
+> >
+> > Similar anomalies were observed while reading CNTPCT (after patching th=
+e
+> > kernel to allow reads from userspace). However, the CNTPCT jumps are
+> > much less frequent, and only small jumps were observed. The same progra=
+m
+> > as before (except now reading CNTPCT) observed after 72 hours:
+> >
+> >  Count | Event
+> > -------+---------------------------
+> >     17 | jumped backward      699ms
+> >     52 | jumped forward       175ms
+> >   2831 | jumped forward       699ms
+> >      5 | jumped forward      1398ms
+> >
+> > Further investigation showed that the instability in CNTPCT/CNTVCT also
+> > affected the respective timer's TVAL register. The following values wer=
+e
+> > observed immediately after writing CNVT_TVAL to 0x10000000:
+> >
+> >  CNTVCT             | CNTV_TVAL  | CNTV_CVAL          | CNTV_TVAL Error
+> > --------------------+------------+--------------------+----------------=
+-
+> >  0x000000d4a2d8bfff | 0x10003fff | 0x000000d4b2d8bfff | +0x00004000
+> >  0x000000d4a2d94000 | 0x0fffffff | 0x000000d4b2d97fff | -0x00004000
+> >  0x000000d4a2d97fff | 0x10003fff | 0x000000d4b2d97fff | +0x00004000
+> >  0x000000d4a2d9c000 | 0x0fffffff | 0x000000d4b2d9ffff | -0x00004000
+> >
+> > The pattern of errors in CNTV_TVAL seemed to depend on exactly which
+> > value was written to it. For example, after writing 0x10101010:
+> >
+> >  CNTVCT             | CNTV_TVAL  | CNTV_CVAL          | CNTV_TVAL Error
+> > --------------------+------------+--------------------+----------------=
+-
+> >  0x000001ac3effffff | 0x1110100f | 0x000001ac4f10100f | +0x1000000
+> >  0x000001ac40000000 | 0x1010100f | 0x000001ac5110100f | -0x1000000
+> >  0x000001ac58ffffff | 0x1110100f | 0x000001ac6910100f | +0x1000000
+> >  0x000001ac66000000 | 0x1010100f | 0x000001ac7710100f | -0x1000000
+> >  0x000001ac6affffff | 0x1110100f | 0x000001ac7b10100f | +0x1000000
+> >  0x000001ac6e000000 | 0x1010100f | 0x000001ac7f10100f | -0x1000000
+> >
+> > I was also twice able to reproduce the issue covered by Allwinner's
+> > workaround[4], that writing to TVAL sometimes fails, and both CVAL and
+> > TVAL are left with entirely bogus values. One was the following values:
+> >
+> >  CNTVCT             | CNTV_TVAL  | CNTV_CVAL
+> > --------------------+------------+-------------------------------------=
+-
+> >  0x000000d4a2d6014c | 0x8fbd5721 | 0x000000d132935fff (615s in the past=
+)
+> >
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >
+> > Because the CPU can read the CNTPCT/CNTVCT registers faster than they
+> > change, performing two reads of the register and comparing the high bit=
+s
+> > (like other workarounds) is not a workable solution. And because the
+> > timer can jump both forward and backward, no pair of reads can
+> > distinguish a good value from a bad one. The only way to guarantee a
+> > good value from consecutive reads would be to read _three_ times, and
+> > take the middle value only if the three values are 1) each unique and
+> > 2) increasing. This takes at minimum 3 counter cycles (125 ns), or more
+> > if an anomaly is detected.
+> >
+> > However, since there is a distinct pattern to the bad values, we can
+> > optimize the common case (1022/1024 of the time) to a single read by
+> > simply ignoring values that match the error pattern. This still takes n=
+o
+> > more than 3 cycles in the worst case, and requires much less code. As a=
+n
+> > additional safety check, we still limit the loop iteration to the numbe=
+r
+> > of max-frequency (1.2 GHz) CPU cycles in three 24 MHz counter periods.
+> >
+> > For the TVAL registers, the simple solution is to not use them. Instead=
+,
+> > read or write the CVAL and calculate the TVAL value in software.
+> >
+> > Although the manufacturer is aware of at least part of the erratum[4],
+> > there is no official name for it. For now, use the kernel-internal name
+> > "UNKNOWN1".
+> >
+> > [1]: https://github.com/armbian/build/commit/a08cd6fe7ae9
+> > [2]: https://forum.armbian.com/topic/3458-a64-datetime-clock-issue/
+> > [3]: https://irclog.whitequark.org/linux-sunxi/2018-01-26
+> > [4]: https://github.com/Allwinner-Homlet/H6-BSP4.9-linux/blob/master/dr=
+ivers/clocksource/arm_arch_timer.c#L272
+>
+> nit: In general, I'm not overly keen on URLs in commit messages, as they
+> may vanish without notice and the commit message becomes less useful. In
+> the future, please keep those in the cover letter (though in this
+> particular case, the commit message explains the issue pretty well, so
+> no harm done once GitHub dies a horrible death... ;-).
+>
+> The fix itself looks pretty solid, and will hopefully make the
+> "AllLoosers" HW more usable.
 
-> then? It broke my patch, but I wouldn't be surprised if it's silently
-> breaking other stuff too. I think we need to do option 4 below.
-> 
->>
->>>> There is also a desire for the devicetree unittests to be able to be loaded
->>>> as a module.  That work is not yet scheduled, but I do not want to preclude
->>>> the possibility.  If unittests are loaded from a module then they will
->>>> need some devicetree data to exist that is created in early boot.  That
->>>> data will be in the devicetree when of_platform_sync_state_init() is
->>>> invoked.
->>>
->>> On a normal system, FDT is parsed and of_root is set (or not set) very
->>> early on during setup_arch() before any of the initcall levels are
->>> run. The return value of of_have_populated_dt() isn't expected to
->>> change across initcall levels. But because of the way the unittest is
->>> written (the of_root is changed at late_initcall() level) the return
->>> value of of_have_populated_dt() changes across initcall levels. I
->>> think that's a real problem with the unittest -- it's breaking API
->>> semantics.
->>
->> I think what's really desired here is a 'Am I booting using DT' call.
-> 
-> I think the community has decided to use of_have_populated_dt() as
-> that call. So, we shouldn't break it.
+Unfortunately this patch doesn't completely eliminate the jumps. There
+have been reports from users who still saw 95y jump even with the
+patch applied.
 
-Have you analyzed each and every use of of_have_populated_dt() to verify
-that?  I have not yet looked at each of them.
+Personally I've seen it once or twice on my Pine64-LTS.
 
-The function was created with one user for a specific purpose and the use
-of it has grown over the years.  I was not going to modify it to have
-the specific meaning of "Am I booting using DT" (thus being able to ignore
-the existence of the unittest data in the devicetree) without first examining
-each of the users of the of_have_populated_dt().  [[ This possible change was
-one of the solutions I considered before I examined what the actual problem
-leading to the WARNing was. ]]
+Looks like we need bigger hammer. Does anyone have any idea what it could b=
+e?
 
-> 
->>
->>> of_have_populated_dt() is being used to check if DT is present in the
->>> system and different things are done based on that. We can't have that
->>> value change across initcall levels.
->>>
->>> Couple of thoughts:
->>> 1. Don't run unit test if there is no live DT in the system?
->>
->> That's pretty much the only case I do run. I use UML to run the tests.
-> 
-> Ah, makes sense.
-> 
->>> 2. If you don't want to do (1), then at least set up the unit test
->>> data during setup_arch() instead of doing it at some initcall level?
->>
->> That further breaks making it a module. The plan is also to move to
->> kunit which probably will preclude some hacky hook into setup_arch().
->> Side effects may need to be fixed for kunit though.
-> 
-> Yup.
-> 
->>> 3. Can you use overlays for the unit tests if they are loaded as a module?
->>
->> That was the idea, yes.
->>
->>
->> 4. Make running the unittests a command line option instead of running
->> if enabled. Still has side effects, but you have to explicitly run it.
-
-I am assuming "command line option" means the kernel boot command line, not
-a command line interface.
-
-I would prefer not.  It is a debug option.  There is no need to add the extra
-complexity of an additional switch to control it.  Configure it in or configure
-it out.
+Regards,
+Vasily
 
 
-> 
-> Hmm... this is another good option. I think this should be done. Do we
-> have a consensus on this?
-Why would you even ask if there was consensus on something that has not
-even been discussed?
-
-
->> A module would still be my preference. If only there was someone
->> interested in making everything a module... ;)> 
-> :)
-> 
->>>>> I was looking into writing a unittest patch to fix this, but I don't
->>>>> know enough about the FDT parsing code to make sure I don't leak any
->>>>> memory or free stuff that's in use. I'm not sure I can simply set
->>>>> of_root = NULL if it was NULL before the unittest started. Let me know
->>>>> how I should proceed or if you plan to write up a patch for this.
->>>>
->>>> Based on the above, "clean up" of the unittest data is not the solution.
->>>>
->>>> I haven't looked at the mechanism in device_links_supplier_sync_state_resume()
->>>> that leads to the WARN yet.  But is does not seem reasonable for that code
->>>> to be so sensitive to what valid data is in the devicetree that a WARN results.
->>>
->>> Sure, I could easily fix it to work around this. But this seems to be
->>> a genuine problem with the unittest setup IMO.
-> 
-> I'll go ahead and do this (basically always doing it instead of
-> checking on of_have_populated_dt()) but I don't want us to forget this
-> unittest issue.
-
-Thank you for planning to do this fix.
-
-The unittest issue will not be forgotten.  The possible impacts of unittest on
-other users of devicetree is something I am very sensitive to and have
-thought about quite a bit.
-
--Frank
-
-
-> 
-> -Saravana
-> 
-
+> Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
+>
+> Daniel, please consider this for v5.1.
+>
+> Thanks,
+>
+>         M.
+> --
+> Jazz is not dead. It just smells funny...
+>
+> --
+> You received this message because you are subscribed to the Google Groups=
+ "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to linux-sunxi+unsubscribe@googlegroups.com.
+> For more options, visit https://groups.google.com/d/optout.
