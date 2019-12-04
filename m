@@ -2,105 +2,152 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 005E2C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2EBC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5E1E2073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A88462073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:29:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WJVPmm99"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728456AbfLDP3o (ORCPT
+        id S1728281AbfLDP3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:29:44 -0500
-Received: from mga05.intel.com ([192.55.52.43]:33320 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728281AbfLDP3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:29:43 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Dec 2019 07:29:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,277,1571727600"; 
-   d="scan'208";a="201434986"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga007.jf.intel.com with ESMTP; 04 Dec 2019 07:29:43 -0800
-Date:   Wed, 4 Dec 2019 07:29:42 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] KVM: x86: use CPUID to locate host page table reserved
- bits
-Message-ID: <20191204152942.GB6323@linux.intel.com>
-References: <1575471060-55790-1-git-send-email-pbonzini@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1575471060-55790-1-git-send-email-pbonzini@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 4 Dec 2019 10:29:50 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:45898 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728388AbfLDP3s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 10:29:48 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB4FO9rZ104465;
+        Wed, 4 Dec 2019 15:28:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
+ bh=FMTka2tq0Ww+f56DW10Z393U8mQlGGQbjP9PPcNcr+w=;
+ b=WJVPmm99RigEZl9a0LBPVFtyqZYrTJwFqlTXmcod8RXlLftr49Uv9irkSqUrLdmaukTw
+ a3zPzMxDapqR7O/aGs0vm2bxmfKXnFfyZm799Hg0VNNWk5lktmcmssdrmL7LMrhtPk+i
+ j0+PaV37PeWLiz/ioIg17so4/8kbIVy+wtnrcv3HgLFWlgXHD2KbjFqVGQsltCWmb5zF
+ xgY0k1nX2YiTIpFqXvl7CB5QwnsQhDFzqa8JPBJtCq4w7fr99vboIDelvWMuQJ31KtKF
+ NVj5QyZ+BFPBdgkIsROK7KNDs4r63wSm5jt0qBth3x4iwHn+IPgOHLX7W5Kguo/MsJKv /g== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2wkh2rf0b3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Dec 2019 15:28:23 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB4FOCdq049750;
+        Wed, 4 Dec 2019 15:28:22 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2wp20c5wpr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Dec 2019 15:28:22 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xB4FSJik027653;
+        Wed, 4 Dec 2019 15:28:20 GMT
+Received: from dhcp-10-175-179-22.vpn.oracle.com (/10.175.179.22)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 04 Dec 2019 07:28:19 -0800
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     brendanhiggins@google.com, linux-kselftest@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
+        keescook@chromium.org, yzaikin@google.com,
+        akpm@linux-foundation.org, yamada.masahiro@socionext.com,
+        catalin.marinas@arm.com, joe.lawrence@redhat.com,
+        penguin-kernel@i-love.sakura.ne.jp, urezki@gmail.com,
+        andriy.shevchenko@linux.intel.com, corbet@lwn.net,
+        davidgow@google.com, adilger.kernel@dilger.ca, tytso@mit.edu,
+        mcgrof@kernel.org, linux-doc@vger.kernel.org,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Knut Omang <knut.omang@oracle.com>
+Subject: [PATCH v6 linux-kselftest-test 5/6] kunit: allow kunit to be loaded as a module
+Date:   Wed,  4 Dec 2019 15:27:13 +0000
+Message-Id: <1575473234-5443-6-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1575473234-5443-1-git-send-email-alan.maguire@oracle.com>
+References: <1575473234-5443-1-git-send-email-alan.maguire@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9461 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912040128
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9461 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912040128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 03:51:00PM +0100, Paolo Bonzini wrote:
-> The comment in kvm_get_shadow_phys_bits refers to MKTME, but the same is actually
-> true of SME and SEV.  Just use CPUID[0x8000_0008].EAX[7:0] unconditionally, it is
-> simplest and works even if memory is not encrypted.
-> 
-> Cc: stable@vger.kernel.org
-> Reported-by: Tom Lendacky <thomas.lendacky@amd.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  arch/x86/kvm/mmu/mmu.c | 12 ++++--------
->  1 file changed, 4 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 6f92b40d798c..8b8edfbdbaef 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -538,15 +538,11 @@ void kvm_mmu_set_mask_ptes(u64 user_mask, u64 accessed_mask,
->  static u8 kvm_get_shadow_phys_bits(void)
->  {
->  	/*
-> -	 * boot_cpu_data.x86_phys_bits is reduced when MKTME is detected
-> -	 * in CPU detection code, but MKTME treats those reduced bits as
-> -	 * 'keyID' thus they are not reserved bits. Therefore for MKTME
-> -	 * we should still return physical address bits reported by CPUID.
-> +	 * boot_cpu_data.x86_phys_bits is reduced when MKTME or SME are detected
-> +	 * in CPU detection code, but the processor treats those reduced bits as
-> +	 * 'keyID' thus they are not reserved bits. Therefore KVM needs to look at
-> +	 * the physical address bits reported by CPUID.
->  	 */
-> -	if (!boot_cpu_has(X86_FEATURE_TME) ||
-> -	    WARN_ON_ONCE(boot_cpu_data.extended_cpuid_level < 0x80000008))
-> -		return boot_cpu_data.x86_phys_bits;
+Making kunit itself buildable as a module allows for "always-on"
+kunit configuration; specifying CONFIG_KUNIT=m means the module
+is built but only used when loaded.  Kunit test modules will load
+kunit.ko as an implicit dependency, so simply running
+"modprobe my-kunit-tests" will load the tests along with the kunit
+module and run them.
 
-Removing this entirely will break CPUs that don't support leaf 0x80000008.
-From a VMX perspective, I'm pretty sure all Intel hardware that supports
-VMX is guaranteed to support 0x80000008, but I've no idea about SVM or any
-non-Intel CPU, and not supporting 0x80000008 in a virtual machine is
-technically legal/possible.  We conditioned doing CPUID on TME because TME
-would be reported as supported iff 0x80000008 existed.
+Co-developed-by: Knut Omang <knut.omang@oracle.com>
+Signed-off-by: Knut Omang <knut.omang@oracle.com>
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+---
+ lib/kunit/Kconfig  |  2 +-
+ lib/kunit/Makefile |  4 +++-
+ lib/kunit/test.c   | 13 +++++++++++++
+ 3 files changed, 17 insertions(+), 2 deletions(-)
 
-The extra bit of paranoia doesn't cost much, so play it safe?  E.g.:
+diff --git a/lib/kunit/Kconfig b/lib/kunit/Kconfig
+index 9ebd5e6..065aa16 100644
+--- a/lib/kunit/Kconfig
++++ b/lib/kunit/Kconfig
+@@ -3,7 +3,7 @@
+ #
+ 
+ menuconfig KUNIT
+-	bool "KUnit - Enable support for unit tests"
++	tristate "KUnit - Enable support for unit tests"
+ 	help
+ 	  Enables support for kernel unit tests (KUnit), a lightweight unit
+ 	  testing and mocking framework for the Linux kernel. These tests are
+diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
+index bc6e5e54..fab5564 100644
+--- a/lib/kunit/Makefile
++++ b/lib/kunit/Makefile
+@@ -1,4 +1,6 @@
+-obj-$(CONFIG_KUNIT) +=			test.o \
++obj-$(CONFIG_KUNIT) +=			kunit.o
++
++kunit-objs +=				test.o \
+ 					string-stream.o \
+ 					assert.o \
+ 					try-catch.o
+diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+index 87b5cf1..9242f93 100644
+--- a/lib/kunit/test.c
++++ b/lib/kunit/test.c
+@@ -486,3 +486,16 @@ void kunit_cleanup(struct kunit *test)
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(kunit_cleanup);
++
++static int __init kunit_init(void)
++{
++	return 0;
++}
++late_initcall(kunit_init);
++
++static void __exit kunit_exit(void)
++{
++}
++module_exit(kunit_exit);
++
++MODULE_LICENSE("GPL v2");
+-- 
+1.8.3.1
 
-	if (unlikely(boot_cpu_data.extended_cpuid_level < 0x80000008)) {
-		WARN_ON_ONCE(boot_cpu_has(X86_FEATURE_TME) || SME?);
-		return boot_cpu_data.x86_phys_bits;
-	}
-
-	return cpuid_eax(0x80000008) & 0xff;
-
-> -
->  	return cpuid_eax(0x80000008) & 0xff;
->  }
->  
-> -- 
-> 1.8.3.1
-> 
