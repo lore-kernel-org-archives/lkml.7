@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD78C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08FDFC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96DDD205ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFF4E205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483817;
-	bh=nqrDeAiqwjw67y0i2EHRlzpeX2mJIKdZBClni9COesA=;
+	s=default; t=1575483825;
+	bh=puEy/f7+ZYZ6FdHQS/eQpBxy58+YBZzkDNytPQt3Aww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gZ03rn64fA73ODyNxGApHSe5pK+TYZAZ6kI33hPFR3/qjFTPMvK+TZz6JkCw54zDX
-	 CbrB7HgQGp4PmUM0rYQ7yja6pATMLAGVGhDd3aicbYETLpgFA6rdVEiNKc+gSnznEs
-	 BUmVQ4B+T/lce/NtPbXt67K/pzyUb5TSqDg7sIIE=
+	b=kZHrS5BFO4ZNgcmW4nY0fVJsRyKs02X/Astc0W7xRmMUqw41hEC8kLU0FA6P3bi5r
+	 f/wWWll8fjKAeVOAY820N+B6eKg5mIV/uT6kkXbTrAsO34YuM70oz4oMEZTdTWqHHi
+	 E9nwkjL4laj4Y84fVvn473kGn4DBwFQLiABsLDE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731181AbfLDSXg (ORCPT
+        id S1730445AbfLDSXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:23:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48642 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:23:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729723AbfLDSD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:03:56 -0500
+        id S1730074AbfLDSDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:03:34 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF4792073B;
-        Wed,  4 Dec 2019 18:03:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB6072073B;
+        Wed,  4 Dec 2019 18:03:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482636;
-        bh=nqrDeAiqwjw67y0i2EHRlzpeX2mJIKdZBClni9COesA=;
+        s=default; t=1575482614;
+        bh=puEy/f7+ZYZ6FdHQS/eQpBxy58+YBZzkDNytPQt3Aww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E2ASZ2Wj1ijkpV0HIBxt8Q4FS/r47SJFer2BZYiNWsiKKShPMF6tjJDyA8y5+IWBF
-         A1R0LLdTX4CwDxGfKbxBdihZvwrJxol6TzflavsIa9DAe8SXxJk7WxYwAJrF1ileIu
-         EJNr7GyWfn2NpSH9ERy0fXnahxBAxuYRfNia2WfM=
+        b=B0ODANZP0XUHAl9jmyj6gSDlpbTD6S1QoiyTa0N8iOvS5sZKjYmUPdjdM9cT6tNhH
+         HuXPN7BaonNshDG6HdwEUuLRazURIPvG280gE/icKO7u/l1e6T4ngVZwlAq6ytMsq5
+         qThFY2vo5sud+QLGtNgSOBxFLc5LFU64JiQVQOD4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Martin Schiller <ms@dev.tdt.de>,
+        John Crispin <john@phrozen.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 048/209] rtl818x: fix potential use after free
-Date:   Wed,  4 Dec 2019 18:54:20 +0100
-Message-Id: <20191204175324.678822977@linuxfoundation.org>
+Subject: [PATCH 4.14 066/209] pinctrl: xway: fix gpio-hog related boot issues
+Date:   Wed,  4 Dec 2019 18:54:38 +0100
+Message-Id: <20191204175325.837373347@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -61,41 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Martin Schiller <ms@dev.tdt.de>
 
-[ Upstream commit afbb1947db94eacc5a13302eee88a9772fb78935 ]
+[ Upstream commit 9b4924da4711674e62d97d4f5360446cc78337af ]
 
-entry is released via usb_put_urb just after calling usb_submit_urb.
-However, entry is used if the submission fails, resulting in a use after
-free bug. The patch fixes this.
+This patch is based on commit a86caa9ba5d7 ("pinctrl: msm: fix gpio-hog
+related boot issues").
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-ACKed-by: Larry Finger <Larry.Finger@lwfinger.net>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+It fixes the issue that the gpio ranges needs to be defined before
+gpiochip_add().
+
+Therefore, we also have to swap the order of registering the pinctrl
+driver and registering the gpio chip.
+
+You also have to add the "gpio-ranges" property to the pinctrl device
+node to get it finally working.
+
+Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+Acked-by: John Crispin <john@phrozen.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pinctrl/pinctrl-xway.c | 39 +++++++++++++++++++++++-----------
+ 1 file changed, 27 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c b/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c
-index 9a1d15b3ce453..518caaaf8a987 100644
---- a/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c
-+++ b/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c
-@@ -444,12 +444,13 @@ static int rtl8187_init_urbs(struct ieee80211_hw *dev)
- 		skb_queue_tail(&priv->rx_queue, skb);
- 		usb_anchor_urb(entry, &priv->anchored);
- 		ret = usb_submit_urb(entry, GFP_KERNEL);
--		usb_put_urb(entry);
- 		if (ret) {
- 			skb_unlink(skb, &priv->rx_queue);
- 			usb_unanchor_urb(entry);
-+			usb_put_urb(entry);
- 			goto err;
- 		}
-+		usb_put_urb(entry);
+diff --git a/drivers/pinctrl/pinctrl-xway.c b/drivers/pinctrl/pinctrl-xway.c
+index f9e98a7d4f0ce..1b0c5958c56a7 100644
+--- a/drivers/pinctrl/pinctrl-xway.c
++++ b/drivers/pinctrl/pinctrl-xway.c
+@@ -1748,14 +1748,6 @@ static int pinmux_xway_probe(struct platform_device *pdev)
  	}
- 	return ret;
+ 	xway_pctrl_desc.pins = xway_info.pads;
  
+-	/* register the gpio chip */
+-	xway_chip.parent = &pdev->dev;
+-	ret = devm_gpiochip_add_data(&pdev->dev, &xway_chip, NULL);
+-	if (ret) {
+-		dev_err(&pdev->dev, "Failed to register gpio chip\n");
+-		return ret;
+-	}
+-
+ 	/* setup the data needed by pinctrl */
+ 	xway_pctrl_desc.name	= dev_name(&pdev->dev);
+ 	xway_pctrl_desc.npins	= xway_chip.ngpio;
+@@ -1777,10 +1769,33 @@ static int pinmux_xway_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	/* finish with registering the gpio range in pinctrl */
+-	xway_gpio_range.npins = xway_chip.ngpio;
+-	xway_gpio_range.base = xway_chip.base;
+-	pinctrl_add_gpio_range(xway_info.pctrl, &xway_gpio_range);
++	/* register the gpio chip */
++	xway_chip.parent = &pdev->dev;
++	xway_chip.owner = THIS_MODULE;
++	xway_chip.of_node = pdev->dev.of_node;
++	ret = devm_gpiochip_add_data(&pdev->dev, &xway_chip, NULL);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to register gpio chip\n");
++		return ret;
++	}
++
++	/*
++	 * For DeviceTree-supported systems, the gpio core checks the
++	 * pinctrl's device node for the "gpio-ranges" property.
++	 * If it is present, it takes care of adding the pin ranges
++	 * for the driver. In this case the driver can skip ahead.
++	 *
++	 * In order to remain compatible with older, existing DeviceTree
++	 * files which don't set the "gpio-ranges" property or systems that
++	 * utilize ACPI the driver has to call gpiochip_add_pin_range().
++	 */
++	if (!of_property_read_bool(pdev->dev.of_node, "gpio-ranges")) {
++		/* finish with registering the gpio range in pinctrl */
++		xway_gpio_range.npins = xway_chip.ngpio;
++		xway_gpio_range.base = xway_chip.base;
++		pinctrl_add_gpio_range(xway_info.pctrl, &xway_gpio_range);
++	}
++
+ 	dev_info(&pdev->dev, "Init done\n");
+ 	return 0;
+ }
 -- 
 2.20.1
 
