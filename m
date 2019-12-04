@@ -2,98 +2,127 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A3EC2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 776CEC2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49BCE2053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:38:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BDE42053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:38:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="CDaJqeQs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbfLDJiE (ORCPT
+        id S1727440AbfLDJiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 04:38:04 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:56304 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbfLDJiE (ORCPT
+        Wed, 4 Dec 2019 04:38:21 -0500
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:40068 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbfLDJiV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 04:38:04 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 74A261C25FD; Wed,  4 Dec 2019 10:38:02 +0100 (CET)
-Date:   Wed, 4 Dec 2019 10:38:01 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 012/321] reset: fix reset_control_ops kerneldoc
- comment
-Message-ID: <20191204093801.GB7678@amd>
-References: <20191203223427.103571230@linuxfoundation.org>
- <20191203223427.758333833@linuxfoundation.org>
+        Wed, 4 Dec 2019 04:38:21 -0500
+Received: by mail-vs1-f66.google.com with SMTP id g23so4398167vsr.7
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 01:38:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WKSRUXAknnFGuVSfHxGReWQUvxVO29cQQA2zNwSpULM=;
+        b=CDaJqeQsxOZakv4IT6D02OCbik+0JlBE+4lW70GNPFrDEFKnnoc3a8bqcNSiwepcwC
+         cbJnJpVsMMkkV7fnsnKqSi6b2MIMjGBTbQJw9WC/Sf+OKijQ7fegzoqei60yfDYakOCD
+         QHYwwu9vOBc510u62DIDNsNyh68brak/HneiZJLEhbTx3JBFur6r9Zqr0gY+gq7a9Cfn
+         ZbZHvB1xp5BrhFFyEoGJAwDj06xILJWc9gqVAk7NROWUX4cZoUix68cPuk9SNW1m45QQ
+         756cGhUjUX4q6Fgm5/5AZXXZvhghT6WshaTKrVS6kYt7GIyAcuYQsp1PtTACJAE4NqsX
+         RdEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WKSRUXAknnFGuVSfHxGReWQUvxVO29cQQA2zNwSpULM=;
+        b=Hn33oJqePS1DeXKEHlXTtYQCLGWWRVz+lCKVpbfTjiwPBFohwFrkKz/IhuQ/elCXDn
+         WHxCWBy0AVhMlcC5LxmyAfEuxdXdQNF4N0RnaoFbTeemPNxFUiOrDMJaxtlvhIGXxhD6
+         vhuXSc62oH/6ZixN9COS8NxghGp50cL/CXvKTGGXbs9+9Z0pATMtC3djWED+5HcIm1+3
+         Gx2gB5gdl8jUM4mnXazBdrS5Kt7FdSCznTq0nohFnaKKDD5d0lD/JnNSZ3bwp4qdPPx7
+         ES0MSEakRwxnSoW0QV4YBVzNE015knRsnGZJyhf+L8MEIfhjqkC5+kiHTnl1b2iO7oud
+         hC9Q==
+X-Gm-Message-State: APjAAAUCysRsRrEVkpgHfWGWUcW1HxDuQuAQzRMJi3EUZiuE7Rf8qca0
+        pyEzsJMMYPZ6OcoYcZeE8INGTLBR5JfIHMKp3rMGEA==
+X-Google-Smtp-Source: APXvYqxrL3FunHxe+ypKQfT/9GTtMwGi/xMYe45gMeFuXII2RAGl5/rsBU+x3Cj/hRM/BBU+FzxbdlSSvE4RNraI958=
+X-Received: by 2002:a67:f8cf:: with SMTP id c15mr1068522vsp.27.1575452299891;
+ Wed, 04 Dec 2019 01:38:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="6sX45UoQRIJXqkqR"
-Content-Disposition: inline
-In-Reply-To: <20191203223427.758333833@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20191030182132.25763-1-f.fainelli@gmail.com> <20191030182132.25763-6-f.fainelli@gmail.com>
+In-Reply-To: <20191030182132.25763-6-f.fainelli@gmail.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Wed, 4 Dec 2019 15:08:08 +0530
+Message-ID: <CAHLCerP=3uFsj_fxGcWiKppWfOoYQRmLq1PhEZvC8ZURr=sh5A@mail.gmail.com>
+Subject: Re: [PATCH 5/6] thermal: brcmstb_thermal: Restructure interrupt registration
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Markus Mayer <mmayer@broadcom.com>,
+        "maintainer:BROADCOM STB AVS TMON DRIVER" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:BROADCOM STB AVS TMON DRIVER" <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 30, 2019 at 11:52 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+> If we are successful grabbing the interrupt resource, then register an
+> interrupt handler, this makes it easier to support the interrupt as
+> being optional, which is it for 7216.
+>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
---6sX45UoQRIJXqkqR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-On Tue 2019-12-03 23:31:18, Greg Kroah-Hartman wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
->=20
-> [ Upstream commit f430c7ed8bc22992ed528b518da465b060b9223f ]
->=20
-> Add a missing short description to the reset_control_ops
-> documentation.
-
-Why is it pending for stable? It does not break anything, but neither
-it fixes anything, it adds to reviewer load...
-
-Sasha, what is your process for selecting commits for stable?
-
-Best regards,
-
-							Pavel
-
-> +++ b/include/linux/reset-controller.h
-> @@ -7,7 +7,7 @@
->  struct reset_controller_dev;
-> =20
->  /**
-> - * struct reset_control_ops
-> + * struct reset_control_ops - reset controller driver callbacks
->   *
->   * @reset: for self-deasserting resets, does all necessary
->   *         things to reset the device
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---6sX45UoQRIJXqkqR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl3nfnkACgkQMOfwapXb+vJvBACgl2X2MqD8ooBF9KXrkQFMeFpy
-QHEAn1PQZYiX4C+gJZGXQQYtVjiKRzpV
-=RbuH
------END PGP SIGNATURE-----
-
---6sX45UoQRIJXqkqR--
+> ---
+>  drivers/thermal/broadcom/brcmstb_thermal.c | 19 +++++++++----------
+>  1 file changed, 9 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/thermal/broadcom/brcmstb_thermal.c b/drivers/thermal/broadcom/brcmstb_thermal.c
+> index 41d4a142707c..64f715053ce9 100644
+> --- a/drivers/thermal/broadcom/brcmstb_thermal.c
+> +++ b/drivers/thermal/broadcom/brcmstb_thermal.c
+> @@ -339,16 +339,15 @@ static int brcmstb_thermal_probe(struct platform_device *pdev)
+>         priv->thermal = thermal;
+>
+>         irq = platform_get_irq(pdev, 0);
+> -       if (irq < 0) {
+> -               dev_err(&pdev->dev, "could not get IRQ\n");
+> -               return irq;
+> -       }
+> -       ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
+> -                                       brcmstb_tmon_irq_thread, IRQF_ONESHOT,
+> -                                       DRV_NAME, priv);
+> -       if (ret < 0) {
+> -               dev_err(&pdev->dev, "could not request IRQ: %d\n", ret);
+> -               return ret;
+> +       if (irq >= 0) {
+> +               ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
+> +                                               brcmstb_tmon_irq_thread,
+> +                                               IRQF_ONESHOT,
+> +                                               DRV_NAME, priv);
+> +               if (ret < 0) {
+> +                       dev_err(&pdev->dev, "could not request IRQ: %d\n", ret);
+> +                       return ret;
+> +               }
+>         }
+>
+>         dev_info(&pdev->dev, "registered AVS TMON of-sensor driver\n");
+> --
+> 2.17.1
+>
