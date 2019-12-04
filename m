@@ -2,179 +2,144 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFC3C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC59BC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FAA42073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84AF920675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:52:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eA/3o3/u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726214AbfLDAuP (ORCPT
+        id S1726388AbfLDAwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 19:50:15 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12936 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726008AbfLDAuP (ORCPT
+        Tue, 3 Dec 2019 19:52:09 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40577 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbfLDAwJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 19:50:15 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB40RJan098623
-        for <linux-kernel@vger.kernel.org>; Tue, 3 Dec 2019 19:50:14 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wnqn4u9st-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 19:50:14 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
-        Wed, 4 Dec 2019 00:50:11 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 4 Dec 2019 00:50:06 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB40nPQ949480180
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 Dec 2019 00:49:25 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4FD374204C;
-        Wed,  4 Dec 2019 00:50:05 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 80C8242041;
-        Wed,  4 Dec 2019 00:50:01 +0000 (GMT)
-Received: from oc0525413822.ibm.com (unknown [9.80.193.7])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed,  4 Dec 2019 00:50:01 +0000 (GMT)
-Date:   Tue, 3 Dec 2019 16:49:58 -0800
-From:   Ram Pai <linuxram@us.ibm.com>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, david@gibson.dropbear.id.au,
-        paulus@ozlabs.org, mdroth@linux.vnet.ibm.com, hch@lst.de,
-        andmike@us.ibm.com, sukadev@linux.vnet.ibm.com, mst@redhat.com,
-        ram.n.pai@gmail.com, cai@lca.pw, tglx@linutronix.de,
-        bauerman@linux.ibm.com, linux-kernel@vger.kernel.org
-Reply-To: Ram Pai <linuxram@us.ibm.com>
-References: <1575269124-17885-1-git-send-email-linuxram@us.ibm.com>
- <1575269124-17885-2-git-send-email-linuxram@us.ibm.com>
- <f08ace25-fa94-990b-1b6d-a1c0f30d6348@ozlabs.ru>
- <20191203020850.GA12354@oc0525413822.ibm.com>
- <0b56ce3e-6c32-5f3b-e7cc-0d419a61d71d@ozlabs.ru>
- <20191203040509.GB12354@oc0525413822.ibm.com>
- <a0f19e65-81eb-37bd-928b-7a57a8660e3d@ozlabs.ru>
- <20191203165204.GA5079@oc0525413822.ibm.com>
- <3a17372a-fcee-efbf-0a05-282ffb1adc90@ozlabs.ru>
+        Tue, 3 Dec 2019 19:52:09 -0500
+Received: by mail-pf1-f196.google.com with SMTP id q8so2705909pfh.7
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 16:52:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zz2tab3J6nQ9yBPoRKs9KWflXkGbvh+LfcpIKUx7+eU=;
+        b=eA/3o3/uD+pnExTTez4CvnXKm6n6lh6VSDxYHsK80Q96VBmIJ0xEsLkLrR89L67VAV
+         zJEy2y0QVYs4rDqdlRRKqH4BMTUL4HXNyU/8FJzZL4SCI5MGkLildXu8mZgA+DC+Mf4k
+         9T8o4U3jsiUnpPypvq9RaIM6+jrXcMrnZUYVs+f6xv/ah7Z+OmEnM2AY24gY95Sebk0G
+         X9/oxDCUYXUXeLk/P9oxO6d+fw9trRvdY9UCWE6qSgYQqBpdz/2pHzbsJJ4m9m57XKMG
+         C4fM4VMQ8m9VNW0r+0y0MlU9glonGMA0+v+h4+tf1vb1+6lpMsW1hIhi8Gtwu0ooS4ZG
+         ZcGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zz2tab3J6nQ9yBPoRKs9KWflXkGbvh+LfcpIKUx7+eU=;
+        b=gVtB77GEYvHH7qOxnNO0Po2QhEZ8OWZ4Qkk6xGIGldnnEmXZNQwlAkgl3h03zha3PT
+         TY32lB5OE9CYkO9R30GpNTTyP8cE65iKRQ334OTUpORiN0T5wYJ/IrVyW05nCW3w0NnU
+         QLLyKydCqpVSo1RSJChkwD4tBi4c67WfIbMeGdM6HQZbFlZgXLqBlHEfl7jEtmQ0ZzJ4
+         TkEsEvZjJ35nUIEF3A3/PCJbC2FuiuCuIvR3SWaIEKm20vu/uvEN5n4atLWdPUInzLX5
+         BZEJyYp4h94AIo/RfcCxDheuou5YN39xzVtPhNDWj8IS+Juw++I9z/GJIz8LqOmjumit
+         A++g==
+X-Gm-Message-State: APjAAAWq3Gct3aRHpUheqhTrBDKa/u8q7dEXCgDGw/eaGIHLCj+brpjb
+        QmSwFyGIEhy8XthoiEjmjuq5QazW3gYZ5xKFoNp+fA==
+X-Google-Smtp-Source: APXvYqy7RxbrzrMCIFdOaEEQlIYMi2ZZECPAnZPVjJ8fyaTsU7OifUNfJi3d9YUoL7gMC+WYKGfO9/G+zZRxOHBEGc8=
+X-Received: by 2002:aa7:961b:: with SMTP id q27mr796729pfg.23.1575420728406;
+ Tue, 03 Dec 2019 16:52:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3a17372a-fcee-efbf-0a05-282ffb1adc90@ozlabs.ru>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19120400-4275-0000-0000-0000038AC85F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120400-4276-0000-0000-0000389E6841
-Message-Id: <20191204004958.GB5063@oc0525413822.ibm.com>
-Subject: RE: [PATCH v4 1/2] powerpc/pseries/iommu: Share the per-cpu TCE page with
- the hypervisor.
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-03_07:2019-12-02,2019-12-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- impostorscore=0 mlxscore=0 malwarescore=0 mlxlogscore=999
- priorityscore=1501 suspectscore=18 adultscore=0 lowpriorityscore=0
- phishscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912040002
+References: <1575374868-32601-1-git-send-email-alan.maguire@oracle.com>
+ <1575374868-32601-4-git-send-email-alan.maguire@oracle.com>
+ <CAFd5g47dRP9HvsZD3sqzzfbAthNq8gxEdh57owo3CqVHLNOf6w@mail.gmail.com>
+ <20191204003851.GF86484@mit.edu> <CAFd5g46A5gyGg0g+GmLRFM1DY=ySf_85P2T7+VYqm4nD8J9wBA@mail.gmail.com>
+In-Reply-To: <CAFd5g46A5gyGg0g+GmLRFM1DY=ySf_85P2T7+VYqm4nD8J9wBA@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 3 Dec 2019 16:51:57 -0800
+Message-ID: <CAFd5g47095-kTHyd5cz1Uvxe+GtrU9=hP1=1ZUi23oCBAKY_Yw@mail.gmail.com>
+Subject: Re: [PATCH v5 linux-kselftest-test 3/6] kunit: allow kunit tests to
+ be loaded as a module
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Alan Maguire <alan.maguire@oracle.com>,
+        Iurii Zaikin <yzaikin@google.com>,
+        David Gow <davidgow@google.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        catalin.marinas@arm.com, joe.lawrence@redhat.com,
+        penguin-kernel@i-love.sakura.ne.jp, urezki@gmail.com,
+        andriy.shevchenko@linux.intel.com,
+        Jonathan Corbet <corbet@lwn.net>, adilger.kernel@dilger.ca,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Knut Omang <knut.omang@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 11:04:04AM +1100, Alexey Kardashevskiy wrote:
-> 
-> 
-> On 04/12/2019 03:52, Ram Pai wrote:
-> > On Tue, Dec 03, 2019 at 03:24:37PM +1100, Alexey Kardashevskiy wrote:
-> >>
-> >>
-> >> On 03/12/2019 15:05, Ram Pai wrote:
-> >>> On Tue, Dec 03, 2019 at 01:15:04PM +1100, Alexey Kardashevskiy wrote:
-> >>>>
-> >>>>
-> >>>> On 03/12/2019 13:08, Ram Pai wrote:
-> >>>>> On Tue, Dec 03, 2019 at 11:56:43AM +1100, Alexey Kardashevskiy wrote:
-> >>>>>>
-> >>>>>>
-> >>>>>> On 02/12/2019 17:45, Ram Pai wrote:
-> >>>>>>> H_PUT_TCE_INDIRECT hcall uses a page filled with TCE entries, as one of
-> >>>>>>> its parameters. One page is dedicated per cpu, for the lifetime of the
-> >>>>>>> kernel for this purpose. On secure VMs, contents of this page, when
-> >>>>>>> accessed by the hypervisor, retrieves encrypted TCE entries.  Hypervisor
-> >>>>>>> needs to know the unencrypted entries, to update the TCE table
-> >>>>>>> accordingly.  There is nothing secret or sensitive about these entries.
-> >>>>>>> Hence share the page with the hypervisor.
-> >>>>>>
-> >>>>>> This unsecures a page in the guest in a random place which creates an
-> >>>>>> additional attack surface which is hard to exploit indeed but
-> >>>>>> nevertheless it is there.
-> >>>>>> A safer option would be not to use the
-> >>>>>> hcall-multi-tce hyperrtas option (which translates FW_FEATURE_MULTITCE
-> >>>>>> in the guest).
-> >>>>>
-> >>>>>
-> >>>>> Hmm... How do we not use it?  AFAICT hcall-multi-tce option gets invoked
-> >>>>> automatically when IOMMU option is enabled.
-> >>>>
-> >>>> It is advertised by QEMU but the guest does not have to use it.
-> >>>
-> >>> Are you suggesting that even normal-guest, not use hcall-multi-tce?
-> >>> or just secure-guest?  
-> >>
-> >>
-> >> Just secure.
-> > 
-> > hmm..  how are the TCE entries communicated to the hypervisor, if
-> > hcall-multi-tce is disabled?
-> 
-> Via H_PUT_TCE which updates 1 entry at once (sets or clears).
-> hcall-multi-tce  enables H_PUT_TCE_INDIRECT (512 entries at once) and
-> H_STUFF_TCE (clearing, up to 4bln at once? many), these are simply an
-> optimization.
-
-Do you still think, secure-VM should use H_PUT_TCE and not
-H_PUT_TCE_INDIRECT?  And normal VM should use H_PUT_TCE_INDIRECT?
-Is there any advantage of special casing it for secure-VMs.
-In fact, we could make use of as much optimization as possible.
-
-
-> 
-> >>>> Is not this for pci+swiotlb? 
-..snip..
-> >>> This patch is purely to help the hypervisor setup the TCE table, in the
-> >>> presence of a IOMMU.
-> >>
-> >> Then the hypervisor should be able to access the guest pages mapped for
-> >> DMA and these pages should be made unsecure for this to work. Where/when
-> >> does this happen?
-> > 
-> > This happens in the SWIOTLB code.  The code to do that is already
-> > upstream.  
+On Tue, Dec 3, 2019 at 4:42 PM Brendan Higgins
+<brendanhiggins@google.com> wrote:
+>
+> On Tue, Dec 3, 2019 at 4:39 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
 > >
-> > The sharing of the pages containing the SWIOTLB bounce buffers is done
-> > in init_svm() which calls swiotlb_update_mem_attributes() which calls
-> > set_memory_decrypted().  In the case of pseries, set_memory_decrypted() calls 
-> > uv_share_page().
-> 
-> 
-> This does not seem enough as when you enforce iommu_platform=on, QEMU
-> starts accessing virtio buffers via IOMMU so bounce buffers have to be
-> mapped explicitly, via H_PUT_TCE&co, where does this happen?
-> 
+> > On Tue, Dec 03, 2019 at 09:54:25AM -0800, Brendan Higgins wrote:
+> > > On Tue, Dec 3, 2019 at 4:08 AM Alan Maguire <alan.maguire@oracle.com> wrote:
+> > > >
+> > > > As tests are added to kunit, it will become less feasible to execute
+> > > > all built tests together.  By supporting modular tests we provide
+> > > > a simple way to do selective execution on a running system; specifying
+> > > >
+> > > > CONFIG_KUNIT=y
+> > > > CONFIG_KUNIT_EXAMPLE_TEST=m
+> > > >
+> > > > ...means we can simply "insmod example-test.ko" to run the tests.
+> > > >
+> > > > To achieve this we need to do the following:
+> > > >
+> > > > o export the required symbols in kunit
+> > > > o string-stream tests utilize non-exported symbols so for now we skip
+> > > >   building them when CONFIG_KUNIT_TEST=m.
+> > > > o support a new way of declaring test suites.  Because a module cannot
+> > > >   do multiple late_initcall()s, we provide a kunit_test_suites() macro
+> > > >   to declare multiple suites within the same module at once.
+> > > > o some test module names would have been too general ("test-test"
+> > > >   and "example-test" for kunit tests, "inode-test" for ext4 tests);
+> > > >   rename these as appropriate ("kunit-test", "kunit-example-test"
+> > > >   and "ext4-inode-test" respectively).
+> > > >
+> > > > Co-developed-by: Knut Omang <knut.omang@oracle.com>
+> > > > Signed-off-by: Knut Omang <knut.omang@oracle.com>
+> > > > Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+> > >
+> > > Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+> >
+> > Acked-by: Theodore Ts'o <tytso@mit.edu> # for ext4 bits
+> >
+> >
+> > I do have one question, out of curiosity --- for people who aren't
+> > using UML to run Kunit tests, and are either running the kunit tests
+> > during boot, or when the module is loaded, is there the test framework
+> > to automatically extract the test reports out of dmesg?
+> >
+> > I can boot a kernel with kunit tests enabled using kvm, and I see it
+> > splatted intermixed with the rest of the kernel boot messages.  This
+> > is how I tested the 32-bit ext4 inode test fix.  But I had to manually
+> > find the test output.  Is that the expected way people are supposed to
+> > be using Kunit tests w/o using UML and the python runner?
+>
+> For now, yes. We do not currently have a piece that extracts the test
+> reports; however, we are planning on pulling that bit out of
+> tools/testing/kunit/; we just haven't gotten around to it yet.
 
-I think, it happens at boot time. Every page of the guest memory is TCE
-mapped, if iommu is enabled. SWIOTLB pages get implicitly TCE-mapped
-as part of that operation.
-
-RP
-
+I just added a bug for this here:
+https://bugzilla.kernel.org/show_bug.cgi?id=205761
