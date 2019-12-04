@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1131BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9812EC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCC0F20865
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CA3720862
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:09:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482975;
-	bh=fn5ihxksOkvHYhFfgCE8xyhI+MbV1Hr1ZAb+Xisteog=;
+	s=default; t=1575482979;
+	bh=dbyZp+xybfQ+kEBZ9QafyIkcBlBHcHxTME3B22Hds74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gaq2CstqPe9QqiXwK6xZdz5+FV0X/xn4QLLvQOmnoJ/QLErUzxyyniaajmbgfPkN0
-	 +H5sM3buDbETR7OoMRbcbYOAYGKaF8E8iLgvw6HBC5XmlT3ZO4kTps2Nz7wFHU+I6V
-	 dt4BJLxnh3L4A50zOqzR9tisfWH0Wjd5LAWhjiow=
+	b=MHA111Kp//9lycbLOBmxproyXZwly3RXlbpxKlwR3myJ0IoipZBkbdy1Z7jWy03BO
+	 RH4weGaeUbIOFoxx9Q/385GEjA1n+mdWRwhyXzOQdggwPwFRw5F1AETlceZk6yrgOF
+	 cTBEvjHor1ak2Pz44Akx4+QRRVjBOaV3/1p/0vro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731087AbfLDSJf (ORCPT
+        id S1731104AbfLDSJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:09:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35228 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:09:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730521AbfLDSJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:09:28 -0500
+        id S1731076AbfLDSJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:09:33 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D90F20863;
-        Wed,  4 Dec 2019 18:09:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5453320674;
+        Wed,  4 Dec 2019 18:09:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482968;
-        bh=fn5ihxksOkvHYhFfgCE8xyhI+MbV1Hr1ZAb+Xisteog=;
+        s=default; t=1575482972;
+        bh=dbyZp+xybfQ+kEBZ9QafyIkcBlBHcHxTME3B22Hds74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EiM/0bM76rHYklSSaBBMGnGZDbRUCe98LKJCiJe1r27YTcN+FHSqToyHsqbFRFaM4
-         ToLTYXjIn8qP9FsRGhjcLVQl5Ng+5Vrn5Ahevt4zcaUYSYzv8CwbXRBMWJGGQXJ3l5
-         LuNYjmeSNlVteF+hvHbBRWOFQX3F0Ow06sWDStQI=
+        b=14y6ceWTOafVBSuoOEIKtisyiFjYdm7BmowtppvT2Rr5VXg4yO5888LD266NIJPON
+         lCKkU5wEDtfOvpY+Rtx8cV68pg/CcBxtA8f+R56Cu+4GICkVp9uluKSK6v2zGaGk5w
+         pLjkwtX3XBOjN6p7oXbvtpeTo/qjlOOglpL9wD34=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 4.14 207/209] platform/x86: hp-wmi: Fix ACPI errors caused by too small buffer
-Date:   Wed,  4 Dec 2019 18:56:59 +0100
-Message-Id: <20191204175337.737546972@linuxfoundation.org>
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Fugang Duan <fugang.duan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Subject: [PATCH 4.14 209/209] net: fec: fix clock count mis-match
+Date:   Wed,  4 Dec 2019 18:57:01 +0100
+Message-Id: <20191204175337.873317389@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -59,70 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-commit 16245db1489cd9aa579506f64afeeeb13d825a93 upstream.
+commit a31eda65ba210741b598044d045480494d0ed52a upstream.
 
-The HP WMI calls may take up to 128 bytes of data as input, and
-the AML methods implementing the WMI calls, declare a couple of fields for
-accessing input in different sizes, specifycally the HWMC method contains:
+pm_runtime_put_autosuspend in probe will call runtime suspend to
+disable clks automatically if CONFIG_PM is defined. (If CONFIG_PM
+is not defined, its implementation will be empty, then runtime
+suspend will not be called.)
 
-        CreateField (Arg1, 0x80, 0x0400, D128)
+Therefore, we can call pm_runtime_get_sync to runtime resume it
+first to enable clks, which matches the runtime suspend. (Only when
+CONFIG_PM is defined, otherwise pm_runtime_get_sync will also be
+empty, then runtime resume will not be called.)
 
-Even though we do not use any of the WMI command-types which need a buffer
-of this size, the APCI interpreter still tries to create it as it is
-declared in generoc code at the top of the HWMC method which runs before
-the code looks at which command-type is requested.
+Then it is fine to disable clks without causing clock count mis-match.
 
-This results in many of these errors on many different HP laptop models:
-
-[   14.459261] ACPI Error: Field [D128] at 1152 exceeds Buffer [NULL] size 160 (bits) (20170303/dsopcode-236)
-[   14.459268] ACPI Error: Method parse/execution failed [\HWMC] (Node ffff8edcc61507f8), AE_AML_BUFFER_LIMIT (20170303/psparse-543)
-[   14.459279] ACPI Error: Method parse/execution failed [\_SB.WMID.WMAA] (Node ffff8edcc61523c0), AE_AML_BUFFER_LIMIT (20170303/psparse-543)
-
-This commit increases the size of the data element of the bios_args struct
-to 128 bytes fixing these errors.
-
-Cc: stable@vger.kernel.org
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=197007
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=201981
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1520703
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: c43eab3eddb4 ("net: fec: add missed clk_disable_unprepare in remove")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Acked-by: Fugang Duan <fugang.duan@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/platform/x86/hp-wmi.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/freescale/fec_main.c |   15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -78,7 +78,7 @@ struct bios_args {
- 	u32 command;
- 	u32 commandtype;
- 	u32 datasize;
--	u32 data;
-+	u8 data[128];
- };
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -3565,6 +3565,11 @@ fec_drv_remove(struct platform_device *p
+ 	struct net_device *ndev = platform_get_drvdata(pdev);
+ 	struct fec_enet_private *fep = netdev_priv(ndev);
+ 	struct device_node *np = pdev->dev.of_node;
++	int ret;
++
++	ret = pm_runtime_get_sync(&pdev->dev);
++	if (ret < 0)
++		return ret;
  
- enum hp_wmi_commandtype {
-@@ -229,7 +229,7 @@ static int hp_wmi_perform_query(int quer
- 		.command = command,
- 		.commandtype = query,
- 		.datasize = insize,
--		.data = 0,
-+		.data = { 0 },
- 	};
- 	struct acpi_buffer input = { sizeof(struct bios_args), &args };
- 	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-@@ -241,7 +241,7 @@ static int hp_wmi_perform_query(int quer
+ 	cancel_work_sync(&fep->tx_timeout_work);
+ 	fec_ptp_stop(pdev);
+@@ -3572,15 +3577,17 @@ fec_drv_remove(struct platform_device *p
+ 	fec_enet_mii_remove(fep);
+ 	if (fep->reg_phy)
+ 		regulator_disable(fep->reg_phy);
+-	pm_runtime_put(&pdev->dev);
+-	pm_runtime_disable(&pdev->dev);
+-	clk_disable_unprepare(fep->clk_ahb);
+-	clk_disable_unprepare(fep->clk_ipg);
++
+ 	if (of_phy_is_fixed_link(np))
+ 		of_phy_deregister_fixed_link(np);
+ 	of_node_put(fep->phy_node);
+ 	free_netdev(ndev);
  
- 	if (WARN_ON(insize > sizeof(args.data)))
- 		return -EINVAL;
--	memcpy(&args.data, buffer, insize);
-+	memcpy(&args.data[0], buffer, insize);
- 
- 	wmi_evaluate_method(HPWMI_BIOS_GUID, 0, mid, &input, &output);
++	clk_disable_unprepare(fep->clk_ahb);
++	clk_disable_unprepare(fep->clk_ipg);
++	pm_runtime_put_noidle(&pdev->dev);
++	pm_runtime_disable(&pdev->dev);
++
+ 	return 0;
+ }
  
 
 
