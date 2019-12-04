@@ -2,138 +2,119 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC17C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D50C6C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2093620675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7D6F2073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:54:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qtzjdrFq"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="JJaWHvYd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbfLDIw3 (ORCPT
+        id S1726913AbfLDIyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 03:52:29 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:38052 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbfLDIw0 (ORCPT
+        Wed, 4 Dec 2019 03:54:52 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46512 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfLDIyw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 03:52:26 -0500
-Received: by mail-qk1-f196.google.com with SMTP id k6so647344qki.5
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 00:52:25 -0800 (PST)
+        Wed, 4 Dec 2019 03:54:52 -0500
+Received: by mail-lf1-f65.google.com with SMTP id a17so5414253lfi.13
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 00:54:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eFxpjE5vqC11Qb7kVYdyl3QjT2lQv9V/mzQLuWIL6ow=;
-        b=qtzjdrFqUraz67iCJUJLMgk648tBILdd6AFOARTl4AbtEz6pGnUuLD28JHPtptGCpp
-         hrSw77YmYLT0+uRXl94NZbBnkUTyKqA02oZGjzw4WOOrGByi2ONdhTmOBspy3JJOIb+6
-         dq/sTGBjBsgjq19la6I+K/cumYUb5sX28XQg2UtQIWCuFCjpqVLv8Dirv0yIhQCEGNBk
-         odLoCo2bIbzC1rzU3BbX2Lp83PkNvKEYKmAmK375sLYvQn2Gqy4XpUZDQXTC13e2MaY7
-         3l2aZ1uEsnd3TOA7uBwo7eDG+OnomdzPuOC5hQD5tylegy4HtM903gQE3UyNJhCU+ynn
-         kbHg==
+        d=rasmusvillemoes.dk; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1owaEg/Q3EobHWa/P9ZQ3aJl+evoIYnoNwkMlvjjHb0=;
+        b=JJaWHvYdXZXSFNCwUGxfi4nXoRwMZ0oS5UnGMK+Scpgykfyh+J9OCfct5zkEH1Zfrh
+         Jvw+gAIOAu2P8Lf9SnbuNkGFSXxlGN7jTQdXmjtAVjjrgUB0fAV8i8igZe4UH+V3JoGU
+         n35GOhR/+wMuetD3quEL+6+FKHQi9qtz6hzdE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eFxpjE5vqC11Qb7kVYdyl3QjT2lQv9V/mzQLuWIL6ow=;
-        b=lO+U6qzDD55ece6/K+0Y31vA3ILIpE8Nqftp8Sy+/e7QiYarcuvUCxbxfVQjyc8JRV
-         lSlb22Bk3x6rs22T2Bmn6iZyrMTHu/MEphyxJ4AUPky9HAp0ndhTVPUHs6j/rGvzMp/6
-         bLA0t4278btFnbewgdT1pOlsoJI9tFCN+hYMgdP6y/itjb1QIx0/S4Iu0p3emdbqVz/H
-         aGJVfEAHPanUwvM3l9TwpV+I5IzRi8PJn2FyEyehrTGvKcQR/CsKUR8QstpvkcQAs09i
-         zz/cM8HoX9/ufalL3uQTkq1xasuHqf/RdVBW/lXmrKE/Ksn2sjPN6N0dAuvR7exz24F4
-         hiLw==
-X-Gm-Message-State: APjAAAWzLuDGDKjZtRsspkcaxQSsvF1p71sdhFGI58FvJNi2xsqkZ8WZ
-        nqonas9Vj7WMGun5yhNL7dqcVNcVbhaurXYEHPvOxw==
-X-Google-Smtp-Source: APXvYqzom2zVNmJsnqgeX6Zl7UU1aW7YcSnWZuVSvd+8o7mht/oFU7cWZhb+CIiGCNrQewvTP6CIAxhwhVpDXOGxL40=
-X-Received: by 2002:a37:76c5:: with SMTP id r188mr1747286qkc.256.1575449544636;
- Wed, 04 Dec 2019 00:52:24 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1owaEg/Q3EobHWa/P9ZQ3aJl+evoIYnoNwkMlvjjHb0=;
+        b=hp/Gk7T2YmUfQju67qI1NcGoMIwpYxmZrwABK1KO7sX1e05CzRGHjnzLs/49nfd2GB
+         rBcDPK3m8sghlqJoF400eiKq5VdKMK6tMmgS5YXnwVY1qdSBnTp1W+SEc4aXstDVZNKE
+         kAVqXyvTBMwyHGDQKvnd7JciRPtSfJof/wK/3Gq267DnpLlupRi4S7x+nN9NalD+daQS
+         8RKxnnXtaAojgrZ6weNP/5uDIKnb3onatgqbwavRPY6S28d8qExD1sV6JAh+y6Vy3sf/
+         3DBD3RNEJb0+z1h2m2afwxPDAAb1+EdJubzHo+GaZstvvAzYYHXMQmJDJrfeDKH/5NRh
+         CO7w==
+X-Gm-Message-State: APjAAAU6vG06uR39wYRr+HIAOqeaBm44+3yipObb3jtkRkt4nUeZYYXZ
+        vM0roaPxo+2Pd+IEpJErs/5yfQ==
+X-Google-Smtp-Source: APXvYqxQBYdHB2PyobYinLvVW1nEcg1acM+FtkltLUEzE1tjT3ZHwHaWkGyZ1Oy0DQ69aYcFZH9Lpw==
+X-Received: by 2002:a19:7b1a:: with SMTP id w26mr1281048lfc.17.1575449689914;
+        Wed, 04 Dec 2019 00:54:49 -0800 (PST)
+Received: from prevas-ravi.prevas.se ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id q25sm2732011lji.7.2019.12.04.00.54.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 00:54:49 -0800 (PST)
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Yinbo Zhu <yinbo.zhu@nxp.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mmc: sdhci-of-esdhc: Revert "mmc: sdhci-of-esdhc: add erratum A-009204 support"
+Date:   Wed,  4 Dec 2019 09:54:46 +0100
+Message-Id: <20191204085447.27491-1-linux@rasmusvillemoes.dk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <001a114372a6074e6505642b7f72@google.com> <000000000000039751059891760e@google.com>
- <CACT4Y+Yrg8JxWABi4CJgBG7GpBSCmT0DHr_eZhQA-ikLH-X5Yw@mail.gmail.com>
- <20191202183912.GC377783@localhost.localdomain> <CACT4Y+ZpZVYgA-oiE_YYC49LRA2=iTQLxOaKTA3TEYBt8KjFbw@mail.gmail.com>
- <20191203115616.GA4707@hmswarspite.think-freely.org>
-In-Reply-To: <20191203115616.GA4707@hmswarspite.think-freely.org>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 4 Dec 2019 09:52:13 +0100
-Message-ID: <CACT4Y+aRwLG2nHfzmeN=KMY6f+ihj-c73v-pdznjgz0eDDQOZg@mail.gmail.com>
-Subject: Re: kernel BUG at net/core/skbuff.c:LINE! (3)
-To:     Neil Horman <nhorman@tuxdriver.com>
-Cc:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        syzbot <syzbot+b2bf2652983d23734c5c@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        LKML <linux-kernel@vger.kernel.org>, linux-sctp@vger.kernel.org,
-        Xin Long <lucien.xin@gmail.com>, mvohra@vmware.com,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        William Tu <u9012063@gmail.com>,
-        Vladislav Yasevich <vyasevich@gmail.com>,
-        websitedesignservices4u@gmail.com,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 12:56 PM Neil Horman <nhorman@tuxdriver.com> wrote:
->
-> On Tue, Dec 03, 2019 at 09:42:14AM +0100, Dmitry Vyukov wrote:
-> > On Mon, Dec 2, 2019 at 7:39 PM Marcelo Ricardo Leitner
-> > <marcelo.leitner@gmail.com> wrote:
-> > >
-> > > On Sat, Nov 30, 2019 at 04:37:56PM +0100, Dmitry Vyukov wrote:
-> > > > On Sat, Nov 30, 2019 at 3:50 PM syzbot
-> > > > <syzbot+b2bf2652983d23734c5c@syzkaller.appspotmail.com> wrote:
-> > > > >
-> > > > > syzbot has bisected this bug to:
-> > > > >
-> > > > > commit 84e54fe0a5eaed696dee4019c396f8396f5a908b
-> > > > > Author: William Tu <u9012063@gmail.com>
-> > > > > Date:   Tue Aug 22 16:40:28 2017 +0000
-> > > > >
-> > > > >      gre: introduce native tunnel support for ERSPAN
-> > > > >
-> > > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=158a2f86e00000
-> > > > > start commit:   f9f1e414 Merge tag 'for-linus-4.16-rc1-tag' of git://git.k..
-> > > > > git tree:       upstream
-> > > > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=178a2f86e00000
-> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=138a2f86e00000
-> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=34a80ee1ac29767b
-> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=b2bf2652983d23734c5c
-> > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=147bfebd800000
-> > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13d8d543800000
-> > > > >
-> > > > > Reported-by: syzbot+b2bf2652983d23734c5c@syzkaller.appspotmail.com
-> > > > > Fixes: 84e54fe0a5ea ("gre: introduce native tunnel support for ERSPAN")
-> > > > >
-> > > > > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> > > >
-> > > > Humm... the repro contains syz_emit_ethernet, wonder if it's
-> > > > remote-triggerable...
-> > >
-> > > The call trace is still from the tx path. Packet never left the system
-> > > in this case.
-> >
-> > My understanding is that this does not necessarily mean that the
-> > remote side is not involved. There is enough state on the host for L4
-> > protocols, so that the remote side can mess things and then the bad
-> > thing will happen with local trigger. But that local trigger can be
-> > just anything trivial that everybody does.
-> >
-> But thats not really helpful.  Unless you see an explicit path from the receive
-> side to ip6_append_data, Theres no real way for a received packet to reach this
-> code, so we can't really call it remotely triggerable.
->
-> My guess is, since this is coming from the rawv6_sendmsg path, that the raw
-> protocol is somehow not marshaling its data in a way that ip6_append_data
-> expects.
+This reverts commit 5dd195522562542bc6ebe6e7bd47890d8b7ca93c.
 
-If it's in the local send path and does not use any remotely
-controllable data, then this should be good enough estimation of not
-being a remote attack vector.
+First, the fix seems to be plain wrong, since the erratum suggests
+waiting 5ms before setting setting SYSCTL[RSTD], but this msleep()
+happens after the call of sdhci_reset() which is where that bit gets
+set (if SDHCI_RESET_DATA is in mask).
+
+Second, walking the whole device tree to figure out if some node has a
+"fsl,p2020-esdhc" compatible string is hugely expensive - about 70 to
+100 us on our mpc8309 board. Walking the device tree is done under a
+raw_spin_lock, so this is obviously really bad on an -rt system, and a
+waste of time on all.
+
+In fact, since esdhc_reset() seems to get called around 100 times per
+second, that mpc8309 now spends 0.8% of its time determining that
+it is not a p2020. Whether those 100 calls/s are normal or due to some
+other bug or misconfiguration, regularly hitting a 100 us
+non-preemptible window is unacceptable.
+
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+---
+
+The errata sheet for mpc8309 also mentions A-009204, so I'm not at all
+opposed to having a fix for that. But it needs to be done properly
+without causing a huge performance or latency impact. We should
+probably just add a bit to struct sdhci_esdhc which gets initialized
+in esdhc_init.
+
+ drivers/mmc/host/sdhci-of-esdhc.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
+index 5cca3fa4610b..7f87a90bf56a 100644
+--- a/drivers/mmc/host/sdhci-of-esdhc.c
++++ b/drivers/mmc/host/sdhci-of-esdhc.c
+@@ -764,9 +764,6 @@ static void esdhc_reset(struct sdhci_host *host, u8 mask)
+ 	sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
+ 	sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
+ 
+-	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc"))
+-		mdelay(5);
+-
+ 	if (mask & SDHCI_RESET_ALL) {
+ 		val = sdhci_readl(host, ESDHC_TBCTL);
+ 		val &= ~ESDHC_TB_EN;
+-- 
+2.23.0
+
