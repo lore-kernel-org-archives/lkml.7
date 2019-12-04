@@ -2,127 +2,90 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85065C43215
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7E9C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5790920675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F2962054F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:17:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="sjADaI35"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hOm8wz2J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbfLDAPV (ORCPT
+        id S1726697AbfLDARq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 19:15:21 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34776 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbfLDAPU (ORCPT
+        Tue, 3 Dec 2019 19:17:46 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:40203 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfLDARp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 19:15:20 -0500
-Received: by mail-oi1-f195.google.com with SMTP id l136so5219699oig.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 16:15:20 -0800 (PST)
+        Tue, 3 Dec 2019 19:17:45 -0500
+Received: by mail-qv1-f66.google.com with SMTP id i3so2377348qvv.7
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 16:17:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=j9JhZIkY5UYbY9sicT+H9HLXPSEjz22qXNqZGrcjpfw=;
-        b=sjADaI35VirKvqsrqcyE6zHoNPjuN6G2m9ZEfOP0vAzlUcOZatDYa+fY1Lh7TSemxA
-         E9z4+FLH81bsPE7jhKCCKN1DmErGGdIxeh39qCg4GwDB8ZsVx4r61KmTjQwCb/UuucdY
-         MQzoUEuK07SBtKntXdJCpBk0kcT0omifR4aXFxcw7o3rx9lv7uA9aBUSsKzYL5hvmff7
-         VBUsVf8LYZp9bvzGB9w4p+HLgV4aSriJTATl3XEvLqXfP38gMCA0YJngB18JE+aJyc3p
-         AyoPpUAJe7VB1HdvyAHKuhO3bnO22MuhuJUDQ1jhzTpN+/z3jkA188FqW0RuyD6OHbD0
-         B3/g==
+        bh=QTyx2RZy7Y05cTkQC5l7sD6FLwz4Qd0lQ0nPf0EZIKQ=;
+        b=hOm8wz2JV5irNU26ecry779uLa4TiPhyZ1ZbH5BMAy/dmu7zOGoJWBAfrrXnkZ4bAI
+         i3S1GGj7B/bD+yuiGyVGBFPy0Scho66AEJzGF0Uz9gjhbCR20aK8/aD754sz5fHdycGk
+         ElbXXiBdPnpI5fmy7qTAqyOnxSjMyNU8gh6CG/lsf7crB4HjGgbZ4aTmvdRq56HBEao6
+         WiFWriZ/V4caGH9ZsSaK2SudOmSHCEnweMh/Rr4ecE0DCuWpEBcp59cbvpDBglqRURAu
+         55Rp+JxFnBZW3Y6c9elMR3Ps13iJiRCX7Pcp+gToSKg/XaWp2AXLH4rYaqVePA8HVcGI
+         Is1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=j9JhZIkY5UYbY9sicT+H9HLXPSEjz22qXNqZGrcjpfw=;
-        b=hKWYe7SbhtFdD2LSJrK5yJycB1QgtlnS7XMZTOgleInzpVDSB6VkUz+swAAbY3VL9F
-         pIHydzntlc4YNRwdCja+ienFv+xayWq676j8m3AaZqYVnaxKRuteWmp9uUWag29Zr00B
-         ePVTgoMO0GBYilAOh0ORQ6nOaucoRAYwprzwhyujUV3qbyfqL1AHSvxiZDAa7J6GPT/M
-         28c9UgeJDwpzpB/kanVnhAiCDA0W730WAaVgnp+KgSmbJbd6WD7V791gBkiWY0YYf1Hp
-         FUncm7seZqNpFROAgGzYphJKezM3kLsqHLA1UKfllYhV1rtfRVSoqyiWJSgj2msnV3fm
-         EqNA==
-X-Gm-Message-State: APjAAAVsASoVb4aAIBPdyo8cXRpTaMnpyuQ5bbP3QR51Mq4OEZKXcFvT
-        SgJyLM+BURGQfK70eqPHxnHyjS5B65yjEG5F0pVmAA==
-X-Google-Smtp-Source: APXvYqzZunLuEIN9d3ELG/cd3hfZU5berEzOo2/mUNAdgvjVy3WYCgxi0H9bamLriZ+TeAij+34DEI9woMPAH/4Z6q0=
-X-Received: by 2002:aca:2405:: with SMTP id n5mr318915oic.73.1575418519668;
- Tue, 03 Dec 2019 16:15:19 -0800 (PST)
+        bh=QTyx2RZy7Y05cTkQC5l7sD6FLwz4Qd0lQ0nPf0EZIKQ=;
+        b=YlX/XjLUCnwEFWMLDRiDvJnQQsd7SsbDd78/92pxZuNiv5czY0QTvY5oW//bwF5M2r
+         T6JYgRJI3/y62+HzpQZ+BviE+2a1t/XABgscMEpGD2Rz7WnfqCWTGLGx9rE3XdKx0i2/
+         sz9rSkdUtI1GEIkNbhLrqAUT3gqa94dwUN0lt+lXhj6t3/3uG6fIEx/X4p5bonOOwQSt
+         vocL29oDELlMTTp6bTDDLkWUqhRsOThIPYnVDbrwKrDvq1XAMCbbCyzRgWrDouu4/vQA
+         G9DMXQ32b6nqzNvUThV8jzYf1mAMaAwK2wCKGTUU5J89IjsphwxoyLO5o2ekWMj91nFZ
+         Bc0Q==
+X-Gm-Message-State: APjAAAVqU2vXAFFklV0RNS+v042hVsZdfszYW5UKrn9DonST+GtbXoM5
+        Y8n+TSPr31wP/hoGpRWTXzRLZluEh8AL9kcwWDpQ
+X-Google-Smtp-Source: APXvYqyz1zLOAzlEW9SR6UXDydhWZrLGVzqeOyJQaU/XEZFykJigtOH++7UD8tHeCTXXoGftLWGr/Iw5KbggfuWAdmA=
+X-Received: by 2002:a0c:8061:: with SMTP id 88mr411290qva.62.1575418664089;
+ Tue, 03 Dec 2019 16:17:44 -0800 (PST)
 MIME-Version: 1.0
-References: <20191203034655.51561-1-alastair@au1.ibm.com> <20191203035057.GR20752@bombadil.infradead.org>
- <1e3892815b9684e3fb4f84bd1935ea7e68cd07d8.camel@au1.ibm.com> <20191203124240.GT20752@bombadil.infradead.org>
-In-Reply-To: <20191203124240.GT20752@bombadil.infradead.org>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 3 Dec 2019 16:15:08 -0800
-Message-ID: <CAPcyv4hccpaw5fFdp7u3Z=C0zNZ1oTBtNfyLhJ16C2Dmq+Qp3Q@mail.gmail.com>
-Subject: Re: [PATCH v2 00/27] Add support for OpenCAPI SCM devices
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     "Alastair D'Silva" <alastair@au1.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
+References: <1575374868-32601-1-git-send-email-alan.maguire@oracle.com> <1575374868-32601-4-git-send-email-alan.maguire@oracle.com>
+In-Reply-To: <1575374868-32601-4-git-send-email-alan.maguire@oracle.com>
+From:   Iurii Zaikin <yzaikin@google.com>
+Date:   Tue, 3 Dec 2019 16:17:07 -0800
+Message-ID: <CAAXuY3rYZHac4o1bqqnbR_1g12dtqmJHVp8Taky00J4-+2hwZA@mail.gmail.com>
+Subject: Re: [PATCH v5 linux-kselftest-test 3/6] kunit: allow kunit tests to
+ be loaded as a module
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux MM <linux-mm@kvack.org>
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Kees Cook <keescook@chromium.org>, akpm@linux-foundation.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        catalin.marinas@arm.com, joe.lawrence@redhat.com,
+        penguin-kernel@i-love.sakura.ne.jp, urezki@gmail.com,
+        andriy.shevchenko@linux.intel.com, corbet@lwn.net,
+        David Gow <davidgow@google.com>, adilger.kernel@dilger.ca,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Knut Omang <knut.omang@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 4:43 AM Matthew Wilcox <willy@infradead.org> wrote:
->
-> On Tue, Dec 03, 2019 at 03:01:17PM +1100, Alastair D'Silva wrote:
-> > On Mon, 2019-12-02 at 19:50 -0800, Matthew Wilcox wrote:
-> > > On Tue, Dec 03, 2019 at 02:46:28PM +1100, Alastair D'Silva wrote:
-> > > > This series adds support for OpenCAPI SCM devices, exposing
-> > >
-> > > Could we _not_ introduce yet another term for persistent memory?
-> > >
-> >
-> > "Storage Class Memory" is an industry wide term, and is used repeatedly
-> > in the device specifications. It's not something that has been pulled
-> > out of thin air.
->
-> "Somebody else also wrote down Storage Class Memory".  Don't care.
-> Google gets 750k hits for Persistent Memory and 150k hits for
-> Storage Class Memory.  This term lost.
->
-> > The term is also already in use within the 'papr_scm' driver.
->
-> The acronym "SCM" is already in use.  Socket Control Messages go back
-> to early Unix (SCM_RIGHTS, SCM_CREDENTIALS, etc).  Really, you're just
-> making the case that IBM already uses the term SCM.  You should stop.
-
-I tend to agree. The naming of things under
-arch/powerpc/platforms/pseries/ is not under my purview, but
-drivers/nvdimm/ is. Since this driver is colocated with the "pmem"
-driver let's not proliferate the "scm" vs "pmem" confusion.
+> +ifeq ($(CONFIG_EXT4_KUNIT_TESTS),y)
+>  ext4-$(CONFIG_EXT4_KUNIT_TESTS)                += inode-test.o
+> +else
+> +obj-$(CONFIG_EXT4_KUNIT_TESTS)         += ext4-inode-test.o
+> +ext4-inode-test-objs                   += inode-test.o
+> +endif
+Why not rename it unconditionally?
