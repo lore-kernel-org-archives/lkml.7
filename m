@@ -2,98 +2,191 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 533A1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49956C2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 251CF207DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12B7F205ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:12:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nir7y0q9"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="NIJKPQQU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727761AbfLDKL1 (ORCPT
+        id S1727486AbfLDKMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 05:11:27 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39656 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726893AbfLDKLZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 05:11:25 -0500
-Received: by mail-pf1-f193.google.com with SMTP id x28so3414871pfo.6;
-        Wed, 04 Dec 2019 02:11:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=AGS9q87syTG/h/5Jp+lUoZikl7TZIXDyakUjgIECOMg=;
-        b=Nir7y0q96JoVJC2p7nFzB0rUwvv9vVYqzv0ZO6AYRqJbrGzhxAIbrgwZxqx8JlltWu
-         ckHbsEIG1xG0OxZxvznzLWIyBldX17e3p7o8/WvAHAoS+VQ+oGd8ecKYkWc1JDpvHOYQ
-         nVA/7rhDMUQv/N6Y+4/yKbBS98nokZsc+Pto2rgjIGfivGwYp/QRJ+NDrtx6FyNrCWx/
-         LVDoa0uVAihEp/wHo3GSCpTkkK8xxzhyrn4t1wOiM8nWtnVUnXtz8qZR1blrl/sdsdKW
-         iNPyilK06YjBPBD4EAFRffEpyyvBmYkmFs2WNJxtd9xFTTON+YAilPOanFNrWmRNnq/D
-         MjPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=AGS9q87syTG/h/5Jp+lUoZikl7TZIXDyakUjgIECOMg=;
-        b=GREoVVr1L0HYLmgj4WFbmOtDuQzEPFNL1UipfZr4EfobvD2HPIG5hegV3PPq3ZXSaA
-         2hB80UvSqqsJp6UbbnPOy+V31FMxwVGdCi1Pxv8FNv0cKEL8iEH7iKTXuQSuJSqpqO34
-         4byM1m9Z6MLg0tnZBpd1Zsg8/tZNs0cPR6xL7+K7ZBRaHdtfvQKtDssAWEnP84yRQHnk
-         XUatchkL0r6xviXKEtOgcsRaznBI6nsjKKL99QcFIghCJUNo5xfRLC76Gxd/IExj1gPL
-         7R8ZS5CZvUc+a9qHpvmi7qMQo7V/F8zq1HrB0p6THnJUxbJaiM42Ru4U6mvlKHEFk4vE
-         EpgA==
-X-Gm-Message-State: APjAAAUb1ZouRlBkr0+U49WuEOhekITLHSD7jFoCWRram+fqrEwnrZim
-        oJsYCzTjcHcLoq9m8Gz05Y4R5+Cr
-X-Google-Smtp-Source: APXvYqxr8tkwP4o8dBIsWZ9D5v+ZB2lmjogEymXMOHS7Js48JRyom4oRPJ0btznThpZgzyCuKWIhdg==
-X-Received: by 2002:a65:578e:: with SMTP id b14mr2657273pgr.444.1575454285180;
-        Wed, 04 Dec 2019 02:11:25 -0800 (PST)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id 67sm7664259pfw.82.2019.12.04.02.11.23
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 04 Dec 2019 02:11:24 -0800 (PST)
-From:   Baolin Wang <baolin.wang7@gmail.com>
-To:     ohad@wizery.com, bjorn.andersson@linaro.org
-Cc:     baolin.wang7@gmail.com, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] MAINTAINERS: Add myself as reviewer for the hwspinlock subsystem
-Date:   Wed,  4 Dec 2019 18:10:41 +0800
-Message-Id: <0a6d0c22100da5196f00dfe0eb431e5e6d6d8c65.1575454108.git.baolin.wang7@gmail.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <808692052649aa2e80693a2734cb392e5eddd83c.1575454108.git.baolin.wang7@gmail.com>
-References: <808692052649aa2e80693a2734cb392e5eddd83c.1575454108.git.baolin.wang7@gmail.com>
-In-Reply-To: <808692052649aa2e80693a2734cb392e5eddd83c.1575454108.git.baolin.wang7@gmail.com>
-References: <808692052649aa2e80693a2734cb392e5eddd83c.1575454108.git.baolin.wang7@gmail.com>
+        Wed, 4 Dec 2019 05:12:45 -0500
+Received: from mail-eopbgr30072.outbound.protection.outlook.com ([40.107.3.72]:54535
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727136AbfLDKMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 05:12:45 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ehqWJCk2dHlYvVLIWVQeifBkbafBDij79VsRp9e0YaZoHEBFsP259Wv3w+VgurCgi4ctL4uAXrfAXViAFv2Jm4sNGnqxPXuQ3wZZrLmV9TXlzcGO679H1ytF3J8DQqwAH9a/aafQq7042yQ3fjP8u/CbBIxjNT0b0zPF7HfPoAtNafenKlww0E2KVPrAucTrnO+bxrH8UHycuBVHJ3IQ0xrqRF0LRPAfdUdhcYIS/gGdfWnwmgI4kHZwYfSGAFymWtRo0DzOHNjNefo3QVXFFcpB1NNmD0sI33O0AvxaZQlUBSho/gepd1MVqYTxMypRJZkwp0QZ6e8vGvPEi8THaw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dSdjGvRbKcnEzwclY2plo2CqFjpQ+aQq/QA9bOEcPqE=;
+ b=BmMYbG0mj59h3/XD0WPgROcQWGZ0lIKaYBmj9UKDpd96lDF7ielIlYaOa5upMsFrGBpUB07XikgF/ySJ7AbjG0931kJYHGRK0CNV2GuAaLcWRhJeKWQI+SGaP5D9M1SdluTgKLnYOtPMCkcF/ks2kpjfIM5iUZIsdTBmkpeteMC//0voyDcj6K6m/h0+HeyWzJeEspv0aAplpjHwKRxFw4+ykWWpkdtGKzIpfQ7z+XAdRNqXc/L+8PogKKATAOKKuqyN/87u+HNrgbYKF95MZQksCs2l9AUR0fVYprgBt+VskiWjG/YOUGxdAZTr2HjERkyZj5/sI42TCr2gwdMlzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dSdjGvRbKcnEzwclY2plo2CqFjpQ+aQq/QA9bOEcPqE=;
+ b=NIJKPQQUAo0qdsrFOrNLwqM3VwVufjCVQ9aVLUyQfpZiAmY0SqlmunnQ/W22IvlVN0uMiZtlVNVHSVpDtoEcOq9hOZvqFfTSS5HZkS5qOx0quzrkXFufiL4hqvy6jst/9V4GBCWhva6gMtC/kz89vDoDMiF8KfdxgzIkUH/BoIM=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB5921.eurprd04.prod.outlook.com (20.178.117.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.20; Wed, 4 Dec 2019 10:12:41 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c%4]) with mapi id 15.20.2495.014; Wed, 4 Dec 2019
+ 10:12:41 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+CC:     "rjui@broadcom.com" <rjui@broadcom.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 2/2] gpio: bcm-kona: use platform_irq_count
+Thread-Topic: [PATCH v3 2/2] gpio: bcm-kona: use platform_irq_count
+Thread-Index: AQHVqoSnVgd0oV+avUOUZsuBa7eNT6epwMaAgAAAfjA=
+Date:   Wed, 4 Dec 2019 10:12:40 +0000
+Message-ID: <AM0PR04MB4481A472580A80B5244CB9C2885D0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1575451330-11112-1-git-send-email-peng.fan@nxp.com>
+ <1575451330-11112-2-git-send-email-peng.fan@nxp.com>
+ <20191204100925.sjp6cztozlm5qm6y@pengutronix.de>
+In-Reply-To: <20191204100925.sjp6cztozlm5qm6y@pengutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b52fbaed-8deb-44bd-761e-08d778a27f68
+x-ms-traffictypediagnostic: AM0PR04MB5921:|AM0PR04MB5921:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB59211269BF2B28660EA8BCA4885D0@AM0PR04MB5921.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:569;
+x-forefront-prvs: 0241D5F98C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(39860400002)(366004)(396003)(376002)(189003)(199004)(6116002)(66574012)(11346002)(7416002)(81156014)(81166006)(2906002)(33656002)(8936002)(6916009)(102836004)(478600001)(54906003)(5660300002)(66446008)(64756008)(45080400002)(66946007)(14454004)(52536014)(66556008)(316002)(966005)(66476007)(76116006)(71200400001)(14444005)(25786009)(26005)(8676002)(186003)(71190400001)(7736002)(74316002)(6246003)(9686003)(44832011)(99286004)(305945005)(76176011)(6506007)(6306002)(4326008)(55016002)(86362001)(7696005)(3846002)(229853002)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5921;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: EvMbP6JFjdoJ+J27RCuOxvtBb8Dtr/VPXC0lCrZDpFj7jFcjRV7jMUA6e4bSgnmTBFZ9rsP+zwpyGGbxgYRJr82wD9hggMOzEH1y0kFCPfruBawl8y6ghxe3M3xwzQEqLHLJev5fh0kw1SxFJfUgEiyBR6lfU4UDRTLIzCKcPWp41E68q1SHsqXPnhE+iVZ0gYBh/aRKJ3K7o5QAi53EGRCfYzhdyEfUm1wVu0YX7sfznEgOEW0uZAwFB3v0DpOdljYHdNYfvmziQN2OT9y/Veii9FTmrGI9rAlrTCbfadae/msQL6Op+2PWGAbd+bEA7nBxHC4X5QsvbD/gz9SNPIIIH/22u5MvYesI6Af0FE8cnSkhTZ/VYexvXlrrlgXio+4rcbK+BcTTBptn5k1pkgaF8HL6UNLPa9lBkQ1GZRUA0wOWmf3MgxKdwi+5oeve
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b52fbaed-8deb-44bd-761e-08d778a27f68
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2019 10:12:41.1313
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NM4BSkhEfVcqg2KkWXyYVlcuR0nocmM99VRIYVfV3dzi1B5u80DCCt6+JKILrGx7pjIkTN5vxdNWgC0cI7ekNA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5921
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I spend some time to do some optimization for the hwspinlock subsystem
-in the nearest past, and I am willing to be a reviewer.
+> Subject: Re: [PATCH v3 2/2] gpio: bcm-kona: use platform_irq_count
+>=20
+> On Wed, Dec 04, 2019 at 09:24:39AM +0000, Peng Fan wrote:
+> > From: Peng Fan <peng.fan@nxp.com>
+> >
+> > platform_irq_count() is the more generic way (independent of device
+> > trees) to determine the count of available interrupts. So use this
+> > instead.
+> >
+> > As platform_irq_count() might return an error code (which of_irq_count
+> > doesn't) some additional handling is necessary.
+> >
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > ---
+> >
+> > V3:
+> >  Use %pe
+>=20
+> Great. Note that with %pe there is a dependency on commit 57f5677e535b
+> ("printf: add support for printing symbolic error names") which was appli=
+ed
+> during the current merge window.
+>=20
+> > V2:
+> >  Update commit log, and add err handling  Not tested, just code
+> > inspection
+> >
+> >
+> >  drivers/gpio/gpio-bcm-kona.c | 12 +++++++++---
+> >  1 file changed, 9 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-bcm-kona.c
+> > b/drivers/gpio/gpio-bcm-kona.c index 4122683eb1f9..baee8c3f06ad
+> 100644
+> > --- a/drivers/gpio/gpio-bcm-kona.c
+> > +++ b/drivers/gpio/gpio-bcm-kona.c
+> > @@ -19,7 +19,6 @@
+> >  #include <linux/io.h>
+> >  #include <linux/gpio/driver.h>
+> >  #include <linux/of_device.h>
+> > -#include <linux/of_irq.h>
+> >  #include <linux/init.h>
+> >  #include <linux/irqdomain.h>
+> >  #include <linux/irqchip/chained_irq.h> @@ -586,11 +585,18 @@ static
+> > int bcm_kona_gpio_probe(struct platform_device *pdev)
+> >
+> >  	kona_gpio->gpio_chip =3D template_chip;
+> >  	chip =3D &kona_gpio->gpio_chip;
+> > -	kona_gpio->num_bank =3D of_irq_count(dev->of_node);
+> > -	if (kona_gpio->num_bank =3D=3D 0) {
+> > +	ret =3D platform_irq_count(pdev);
+> > +	if (!ret) {
+> >  		dev_err(dev, "Couldn't determine # GPIO banks\n");
+> >  		return -ENOENT;
+> > +	} else if (ret < 0) {
+> > +		if (ret !=3D -EPROBE_DEFER)
+> > +			dev_err(dev, "Couldn't determine GPIO banks: (%pe)\n",
+> > +				ERR_PTR(ret));
+>=20
+> I'd say drop either the colon or the parenthesis.
 
-Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
----
- MAINTAINERS |    1 +
- 1 file changed, 1 insertion(+)
+Like this?=20
++	dev_err(dev, "Couldn't determine GPIO banks: %pe\n",
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 061d59a..c2bd3e8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7284,6 +7284,7 @@ F:	drivers/hwtracing/
- HARDWARE SPINLOCK CORE
- M:	Ohad Ben-Cohen <ohad@wizery.com>
- M:	Bjorn Andersson <bjorn.andersson@linaro.org>
-+R:	Baolin Wang <baolin.wang7@gmail.com>
- L:	linux-remoteproc@vger.kernel.org
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc.git hwspinlock-next
--- 
-1.7.9.5
+Does it really matter?
 
+Thanks,
+Peng.
+
+>=20
+> Best regards
+> Uwe
+>=20
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=F6nig
+> |
+> Industrial Linux Solutions                 |
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fwww.
+> pengutronix.de%2F&amp;data=3D02%7C01%7Cpeng.fan%40nxp.com%7C627e1
+> 95be7f0467580f908d778a20d60%7C686ea1d3bc2b4c6fa92cd99c5c301635%
+> 7C0%7C0%7C637110509717538199&amp;sdata=3D3FuRYio8G3jtly1hWuGhJGg
+> zqaT742y%2B2H6xOwKMvJ8%3D&amp;reserved=3D0 |
