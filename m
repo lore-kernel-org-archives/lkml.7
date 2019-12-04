@@ -2,121 +2,176 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7505BC2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC10C2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C12C2073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:52:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iQxO6lcp"
+	by mail.kernel.org (Postfix) with ESMTP id 4D12620803
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:52:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575467544;
+	bh=V6Gj/Ytw+aNJbwrZb5FlzVR9x/kwppVvvzKUaj1C5X4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cLbjz02cLEu9V4ATVijO/a+EmKc3aemwCpx9aoPXDt/DH8YFAbPpT96tehbfGuuED
+	 1c2X9EhYfwCKg6P6x+zWQO2MLe7ahuwotqBrV7rk+j8qyEmrkRpGHn5cPhl02RcpgF
+	 GU//RM5tIxEVdvHbz2RXOPCtnQxkw9tKNErJsfiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbfLDNwD (ORCPT
+        id S1727980AbfLDNwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 08:52:03 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40695 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727792AbfLDNwD (ORCPT
+        Wed, 4 Dec 2019 08:52:23 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52218 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727849AbfLDNwW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 08:52:03 -0500
-Received: by mail-pg1-f193.google.com with SMTP id k25so3416643pgt.7;
-        Wed, 04 Dec 2019 05:52:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TbJ9lT2HAjMyDE1SH6CunT8N4kMbxtVJWep3/Ofx1Bc=;
-        b=iQxO6lcpt1bJ5gN8Y4kXPU0dr1c6ATyxgAG3EI+vfRJjoJwHwrwXLUiEJaKIQTeWiJ
-         F3UYh0AiufKF1rKIvNQHINl9+iu83Ghb6/HciDylFzE+lqA/Y05uht95p5Ml9dMsmiBW
-         LmVhvC1WqxEHyDikQtRY5aa/DLzmEzUGP3WajcYRhfSuSWiCmhqQJofWgjUUxhimvZSn
-         izg4tZ21p1IIh8YQpHrKl/rgkij20CilbOG/R4QdRrqb9CPVgj9rh5hJ4dp5NTjNgINr
-         9RXoUsxYqHRo0g6+BYKJsFgzQZChPUtfJBJ/0BM1AuCvPjydaTIWFhouEQ4evipa6UdD
-         kFyg==
+        Wed, 4 Dec 2019 08:52:22 -0500
+Received: by mail-wm1-f67.google.com with SMTP id g206so7089711wme.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 05:52:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TbJ9lT2HAjMyDE1SH6CunT8N4kMbxtVJWep3/Ofx1Bc=;
-        b=r7oMuwDiRF9yLKrjGYMVAtufKB9fGrXyRdy3j0pNtD8W4lo6KjIgTucYuxMsvOFike
-         4gc6Y+FoNEYGWt+tZR8VtHPD/J6yRY4T+AmLwph9XhPCvNoyiWrcPnNHSjZBFZ8BRPbC
-         GYnQeVTqIkZdis7RCbb0fkHorqwcabyKe43aG/pQs5C2oPokkudnidh+DqNsap115iTo
-         Gz8GZ14MqdHlt38tV9qFlQE89CCrK67qWkeyfv9oi6Atuhk/AEZ/maT8SVvrswmStpAC
-         FsMlF3y/rzdgDvEZGbhLdFht7lCZTJTjEjWpkfJViJU2ijROFXaOBF5pRv9P11uzLUGh
-         OVNg==
-X-Gm-Message-State: APjAAAWvTA6murU0RSYSEoe0RCkAwwbU6pxqKmc0K1q3wxlKEnZgy0n5
-        A1DsmCF5yZJl0F7rKfXxoRI=
-X-Google-Smtp-Source: APXvYqyoPrSep/q/DUOv+zINoePEiuZB7UyBS8bmOBLu+0j65jHVO2r6iBhfr9RUckMGjFizXhOFLg==
-X-Received: by 2002:a63:66c6:: with SMTP id a189mr3327547pgc.401.1575467521937;
-        Wed, 04 Dec 2019 05:52:01 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id in19sm6642985pjb.11.2019.12.04.05.52.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 04 Dec 2019 05:52:01 -0800 (PST)
-Date:   Wed, 4 Dec 2019 05:51:59 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>,
-        Shijith Thotton <sthotton@marvell.com>,
-        Andre Przywara <andre.przywara@arm.com>
-Subject: Re: [PATCH v7 16/25] arm: Add support for generic vDSO (causing
- crash)
-Message-ID: <20191204135159.GA7210@roeck-us.net>
-References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
- <20190621095252.32307-17-vincenzo.frascino@arm.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=An6Y7n87V4cec/ZG6X9jG6nGGaBG7D9uoUb5EJBRrQA=;
+        b=UaKiZtstJ1osZaQ6Q5EdGjkBXgHwl6QTE8aFiUKuypLHNVG1JJqToPTHQYvMzYp9MW
+         C1PyH4l3BuWKlk+66vfpK8GnFmQY5aAUilyaGGh2+MIG4D0A1Y4XRd+oD+xr8rf2a80y
+         bV9HkRtua9/5qI1Sq87+vYYDprU16ECbflU+xIYOuyjxaH0OXisZ6YD2QDvBmBFFpzdk
+         MpxwnsGHDFi5VSBG35BFNLnfi4dJ48i0y8HslQqV9Y8tUC0pZapfX0N/RwvB8QDqkHBl
+         D14lYo9ULq5XyPUUxAk70lFDWThXPLhU0EJP/sXNIx8Wl8ISCXSfUlpa9p5/AvErhG9H
+         4q+w==
+X-Gm-Message-State: APjAAAUGfzxNhwLIuM/u1hjrrxdGJonVcFndnJv8nLNpAe4krTERfHDd
+        jxIZOPskQz1OjFlpkBj/TOU=
+X-Google-Smtp-Source: APXvYqwf4epbEO4cSbnKP1ihntMY5E8nPmRKTpkePIJQuwds3Lx4tk/ZGOCpzc9XmafoGcaajIJcCQ==
+X-Received: by 2002:a05:600c:1109:: with SMTP id b9mr27505155wma.162.1575467540467;
+        Wed, 04 Dec 2019 05:52:20 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id z11sm8279399wrt.82.2019.12.04.05.52.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 05:52:19 -0800 (PST)
+Date:   Wed, 4 Dec 2019 14:52:19 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, pv-drivers@vmware.com,
+        linux-graphics-maintainer@vmware.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Subject: Re: [PATCH v2 2/2] drm/ttm: Fix vm page protection handling
+Message-ID: <20191204135219.GH25242@dhcp22.suse.cz>
+References: <20191203104853.4378-1-thomas_os@shipmail.org>
+ <20191203104853.4378-3-thomas_os@shipmail.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190621095252.32307-17-vincenzo.frascino@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191203104853.4378-3-thomas_os@shipmail.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 10:52:43AM +0100, Vincenzo Frascino wrote:
-> The arm vDSO library requires some adaptations to use to take advantage
-> of the newly introduced generic vDSO library.
+On Tue 03-12-19 11:48:53, Thomas Hellström (VMware) wrote:
+> From: Thomas Hellstrom <thellstrom@vmware.com>
 > 
-> Introduce the following changes:
->  - Modification vdso.c to be compliant with the common vdso datapage
->  - Use of lib/vdso for gettimeofday
->  - Implementation of elf note
+> TTM graphics buffer objects may, transparently to user-space,  move
+> between IO and system memory. When that happens, all PTEs pointing to the
+> old location are zapped before the move and then faulted in again if
+> needed. When that happens, the page protection caching mode- and
+> encryption bits may change and be different from those of
+> struct vm_area_struct::vm_page_prot.
 > 
-> Cc: Russell King <linux@armlinux.org.uk>
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> We were using an ugly hack to set the page protection correctly.
+> Fix that and instead use vmf_insert_mixed_prot() and / or
+> vmf_insert_pfn_prot().
+> Also get the default page protection from
+> struct vm_area_struct::vm_page_prot rather than using vm_get_page_prot().
+> This way we catch modifications done by the vm system for drivers that
+> want write-notification.
 
-This patch causes a crash with qemu's mcimx6ul-evk emulation while running
-imx_v6_v7_defconfig.
+So essentially this should have any new side effect on functionality it
+is just making a hacky/ugly code less so? In other words what are the
+consequences of having page protection inconsistent from vma's?
 
-[   19.976852] Run /sbin/init as init process
-[   20.044931] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000004
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Ralph Campbell <rcampbell@nvidia.com>
+> Cc: "Jérôme Glisse" <jglisse@redhat.com>
+> Cc: "Christian König" <christian.koenig@amd.com>
+> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+> Reviewed-by: Christian König <christian.koenig@amd.com>
+> ---
+>  drivers/gpu/drm/ttm/ttm_bo_vm.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_bo_vm.c
+> index e6495ca2630b..2098f8d4dfc5 100644
+> --- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
+> +++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
+> @@ -173,7 +173,6 @@ vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
+>  				    pgoff_t num_prefault)
+>  {
+>  	struct vm_area_struct *vma = vmf->vma;
+> -	struct vm_area_struct cvma = *vma;
+>  	struct ttm_buffer_object *bo = vma->vm_private_data;
+>  	struct ttm_bo_device *bdev = bo->bdev;
+>  	unsigned long page_offset;
+> @@ -244,7 +243,7 @@ vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
+>  		goto out_io_unlock;
+>  	}
+>  
+> -	cvma.vm_page_prot = ttm_io_prot(bo->mem.placement, prot);
+> +	prot = ttm_io_prot(bo->mem.placement, prot);
+>  	if (!bo->mem.bus.is_iomem) {
+>  		struct ttm_operation_ctx ctx = {
+>  			.interruptible = false,
+> @@ -260,7 +259,7 @@ vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
+>  		}
+>  	} else {
+>  		/* Iomem should not be marked encrypted */
+> -		cvma.vm_page_prot = pgprot_decrypted(cvma.vm_page_prot);
+> +		prot = pgprot_decrypted(prot);
+>  	}
+>  
+>  	/*
+> @@ -284,10 +283,11 @@ vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
+>  		}
+>  
+>  		if (vma->vm_flags & VM_MIXEDMAP)
+> -			ret = vmf_insert_mixed(&cvma, address,
+> -					__pfn_to_pfn_t(pfn, PFN_DEV));
+> +			ret = vmf_insert_mixed_prot(vma, address,
+> +						    __pfn_to_pfn_t(pfn, PFN_DEV),
+> +						    prot);
+>  		else
+> -			ret = vmf_insert_pfn(&cvma, address, pfn);
+> +			ret = vmf_insert_pfn_prot(vma, address, pfn, prot);
+>  
+>  		/* Never error on prefaulted PTEs */
+>  		if (unlikely((ret & VM_FAULT_ERROR))) {
+> @@ -319,7 +319,7 @@ vm_fault_t ttm_bo_vm_fault(struct vm_fault *vmf)
+>  	if (ret)
+>  		return ret;
+>  
+> -	prot = vm_get_page_prot(vma->vm_flags);
+> +	prot = vma->vm_page_prot;
+>  	ret = ttm_bo_vm_fault_reserved(vmf, prot, TTM_BO_VM_NUM_PREFAULT);
+>  	if (ret == VM_FAULT_RETRY && !(vmf->flags & FAULT_FLAG_RETRY_NOWAIT))
+>  		return ret;
+> -- 
+> 2.21.0
 
-There is nothing else useful in the log, unfortunately.
-
-Reverting the following three patches fixes the problem.
-
-74d06efb9c2f ARM: 8932/1: Add clock_gettime64 entry point
-052e76a31b4a ARM: 8931/1: Add clock_getres entry point
-20e2fc42312f ARM: 8930/1: Add support for generic vDSO
-
-Guenter
+-- 
+Michal Hocko
+SUSE Labs
