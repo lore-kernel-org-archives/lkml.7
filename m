@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2E1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F036C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68674205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 168E1205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483797;
-	bh=RlJ+wxX/xxhokqFDvuet9MnBPhu1UN6/NnINSGlszmo=;
+	s=default; t=1575483803;
+	bh=dem0dnbBYskFHC39U2QDOwYhTUAtk8tPl+8xAKosFFE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MU86sUEi9Ou2MV4EHrut2vCECrs6hVb00HFpiDUoo3BHkkN5WfVmooK3whK47xwFy
-	 +6rRwaqxGc+3C15yo+B4UtDDMfWYBnHpFXXcSwHYtQ0bdGsxJEdjTzhwuliwGpYTRQ
-	 3rbegMR63nONJSswwP7LMHBInONE3CUo7Zws/Tr8=
+	b=vbfoeDRMrDPOTcv7rnOTo0RW4E2rhC9fsP/pAMPs4AeDTibrQWjy8S+AtW4Z4LFgi
+	 xUnP4FCAIxshlb192Ea4M9vgcOdVRs2+7q9tWgDgpRgxwdlvkLqb8OHxQYpNzzketF
+	 /xb6va/krrkRIRCRuLd7/Adl2fV67XNw7XaYyZqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731088AbfLDSXQ (ORCPT
+        id S1730156AbfLDSEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:23:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49642 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:04:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728933AbfLDSEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:04:23 -0500
+        id S1729381AbfLDSD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:03:59 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C5692073B;
-        Wed,  4 Dec 2019 18:04:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A907206DF;
+        Wed,  4 Dec 2019 18:03:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482663;
-        bh=RlJ+wxX/xxhokqFDvuet9MnBPhu1UN6/NnINSGlszmo=;
+        s=default; t=1575482638;
+        bh=dem0dnbBYskFHC39U2QDOwYhTUAtk8tPl+8xAKosFFE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R3oU/IV22AOxXQtcF2S4+yrgulZDw/Xlfzn+3xSAVc2fd1D3rMsSo99DOC6hHOVR3
-         zOdwUeZgW5FCEgeFq3RsoKSY52sbS6wAsvGksYW21aOdEeTADztqLJBFoQ/dkdJVvo
-         J0JM9R/aoCcSloZbpZ+TXADr+OUeBqStgDc1CG4w=
+        b=Je30yOkTGJUnH74irlosmbrBVoK5UHM/W6j/mBtf9pqye0P0Z6KXa2yWZFjf56Nkz
+         4OI3uOco4AVhS7/nazlsnXnXLDh/ju3U6B/9PTRrPkjygLG2SeP5Z9iJbCmWIBZjeg
+         Wkpqer8h3ssUmSfC/4xc6N89QyOHODkx+70hcFhU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Bill ODonnell <billodo@redhat.com>,
+        stable@vger.kernel.org, John Dorminy <jdorminy@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 049/209] xfs: require both realtime inodes to mount
-Date:   Wed,  4 Dec 2019 18:54:21 +0100
-Message-Id: <20191204175324.745523898@linuxfoundation.org>
+Subject: [PATCH 4.14 075/209] dm flakey: Properly corrupt multi-page bios.
+Date:   Wed,  4 Dec 2019 18:54:47 +0100
+Message-Id: <20191204175326.559704390@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -61,43 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+From: Sweet Tea <sweettea@redhat.com>
 
-[ Upstream commit 64bafd2f1e484e27071e7584642005d56516cb77 ]
+[ Upstream commit a00f5276e26636cbf72f24f79831026d2e2868e7 ]
 
-Since mkfs always formats the filesystem with the realtime bitmap and
-summary inodes immediately after the root directory, we should expect
-that both of them are present and loadable, even if there isn't a
-realtime volume attached.  There's no reason to skip this if rbmino ==
-NULLFSINO; in fact, this causes an immediate crash if the there /is/ a
-realtime volume and someone writes to it.
+The flakey target is documented to be able to corrupt the Nth byte in
+a bio, but does not corrupt byte indices after the first biovec in the
+bio. Change the corrupting function to actually corrupt the Nth byte
+no matter in which biovec that index falls.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Bill O'Donnell <billodo@redhat.com>
+A test device generating two-page bios, atop a flakey device configured
+to corrupt a byte index on the second page, verified both the failure
+to corrupt before this patch and the expected corruption after this
+change.
+
+Signed-off-by: John Dorminy <jdorminy@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_rtalloc.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/md/dm-flakey.c | 33 ++++++++++++++++++++++-----------
+ 1 file changed, 22 insertions(+), 11 deletions(-)
 
-diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
-index 488719d43ca82..cdcb7235e41ae 100644
---- a/fs/xfs/xfs_rtalloc.c
-+++ b/fs/xfs/xfs_rtalloc.c
-@@ -1214,13 +1214,11 @@ xfs_rtmount_inodes(
- 	xfs_sb_t	*sbp;
+diff --git a/drivers/md/dm-flakey.c b/drivers/md/dm-flakey.c
+index 0c1ef63c3461b..b1b68e01b889c 100644
+--- a/drivers/md/dm-flakey.c
++++ b/drivers/md/dm-flakey.c
+@@ -282,20 +282,31 @@ static void flakey_map_bio(struct dm_target *ti, struct bio *bio)
  
- 	sbp = &mp->m_sb;
--	if (sbp->sb_rbmino == NULLFSINO)
--		return 0;
- 	error = xfs_iget(mp, NULL, sbp->sb_rbmino, 0, 0, &mp->m_rbmip);
- 	if (error)
- 		return error;
- 	ASSERT(mp->m_rbmip != NULL);
--	ASSERT(sbp->sb_rsumino != NULLFSINO);
+ static void corrupt_bio_data(struct bio *bio, struct flakey_c *fc)
+ {
+-	unsigned bio_bytes = bio_cur_bytes(bio);
+-	char *data = bio_data(bio);
++	unsigned int corrupt_bio_byte = fc->corrupt_bio_byte - 1;
 +
- 	error = xfs_iget(mp, NULL, sbp->sb_rsumino, 0, 0, &mp->m_rsumip);
- 	if (error) {
- 		IRELE(mp->m_rbmip);
++	struct bvec_iter iter;
++	struct bio_vec bvec;
++
++	if (!bio_has_data(bio))
++		return;
+ 
+ 	/*
+-	 * Overwrite the Nth byte of the data returned.
++	 * Overwrite the Nth byte of the bio's data, on whichever page
++	 * it falls.
+ 	 */
+-	if (data && bio_bytes >= fc->corrupt_bio_byte) {
+-		data[fc->corrupt_bio_byte - 1] = fc->corrupt_bio_value;
+-
+-		DMDEBUG("Corrupting data bio=%p by writing %u to byte %u "
+-			"(rw=%c bi_opf=%u bi_sector=%llu cur_bytes=%u)\n",
+-			bio, fc->corrupt_bio_value, fc->corrupt_bio_byte,
+-			(bio_data_dir(bio) == WRITE) ? 'w' : 'r', bio->bi_opf,
+-			(unsigned long long)bio->bi_iter.bi_sector, bio_bytes);
++	bio_for_each_segment(bvec, bio, iter) {
++		if (bio_iter_len(bio, iter) > corrupt_bio_byte) {
++			char *segment = (page_address(bio_iter_page(bio, iter))
++					 + bio_iter_offset(bio, iter));
++			segment[corrupt_bio_byte] = fc->corrupt_bio_value;
++			DMDEBUG("Corrupting data bio=%p by writing %u to byte %u "
++				"(rw=%c bi_opf=%u bi_sector=%llu size=%u)\n",
++				bio, fc->corrupt_bio_value, fc->corrupt_bio_byte,
++				(bio_data_dir(bio) == WRITE) ? 'w' : 'r', bio->bi_opf,
++				(unsigned long long)bio->bi_iter.bi_sector, bio->bi_iter.bi_size);
++			break;
++		}
++		corrupt_bio_byte -= bio_iter_len(bio, iter);
+ 	}
+ }
+ 
 -- 
 2.20.1
 
