@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D81C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D81E6C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF66220863
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB6B8206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:13:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483215;
-	bh=Ok3I6A0cc8kL/J20hG8eQcCcmH4Ge5h24qRJu31z9wo=;
+	s=default; t=1575483220;
+	bh=b/jHQB1x+5NehrmLNVjMgte8dWT+yjMVkd02sMqx1aQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EZjuUK/WKq1Rn34axFURnvrlLqrk9gDPWEryseuYbjvsNsikhTuWpnNYSUV1R1CJH
-	 r2U1UAEZjPX1Mtwb5SdHUKN4IEL/BubM8uRx+vu3HfiogZZuHwyEFOztpod9mlfW4G
-	 j85VVU60vzOOOX0yo+mA6zCVZWnqTRuHvLUd+0ec=
+	b=tFq5DimFQjcnxfssNFydrcxxWH2gdEaxQtfWabQ9l7HppIa3DY0diYEl0Yqf0jl+v
+	 sXX7nmex4WWqmjEr7lrpGU4jIS72rCi7ZzNfYGnTyW40Q6SUPc6Oq13vTxA0kxZHkz
+	 4YbAr5QLn3v7I2inNVhZDKGpZw5DZ173ik4iQkoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731777AbfLDSNd (ORCPT
+        id S1731782AbfLDSNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:13:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42628 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:13:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731753AbfLDSN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:13:27 -0500
+        id S1731770AbfLDSNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:13:32 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 123EF20674;
-        Wed,  4 Dec 2019 18:13:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBF5D20674;
+        Wed,  4 Dec 2019 18:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483207;
-        bh=Ok3I6A0cc8kL/J20hG8eQcCcmH4Ge5h24qRJu31z9wo=;
+        s=default; t=1575483212;
+        bh=b/jHQB1x+5NehrmLNVjMgte8dWT+yjMVkd02sMqx1aQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L6611LUK1b4ghR6PBGkCDcvm0QcwN55GWg+aHUvWHSrG62EwCybAA30barIjVS1Da
-         tPyOfl2GzAwrU7C3tCp9pUWFLKuuVZ98BGths0CMlJrKsSA1VTlEu/w1PYeYPsAdRo
-         vsXGzPUsHHSFrwVSPRgoUOCodVa9JxomPNwgQRKM=
+        b=GCrd8xQ2Q3IuiSOeL/m5V+UIRNsiJerydITjVgHk2WFNyZAsek1d3I4CmAg+JFUYe
+         IgEa3BBmvZtlfE7fvETTiHoM0oPaG3B70S37h7+FdJbw0aYB78zhR69gGwcDVaSQQC
+         x2doLCOZqAOg4Th7tIThYR05la8DHPFPLkjTHL+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcin Stojek <marcin.stojek@nokia.com>,
-        Maciej Kwiecien <maciej.kwiecien@nokia.com>,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 097/125] sctp: dont compare hb_timer expire date before starting it
-Date:   Wed,  4 Dec 2019 18:56:42 +0100
-Message-Id: <20191204175325.005448999@linuxfoundation.org>
+        stable@vger.kernel.org, Aaron Ma <aaron.ma@canonical.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 099/125] iommu/amd: Fix NULL dereference bug in match_hid_uid
+Date:   Wed,  4 Dec 2019 18:56:44 +0100
+Message-Id: <20191204175325.116801683@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -63,57 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maciej Kwiecien <maciej.kwiecien@nokia.com>
+From: Aaron Ma <aaron.ma@canonical.com>
 
-[ Upstream commit d1f20c03f48102e52eb98b8651d129b83134cae4 ]
+[ Upstream commit bb6bccba390c7d743c1e4427de4ef284c8cc6869 ]
 
-hb_timer might not start at all for a particular transport because its
-start is conditional. In a result a node is not sending heartbeats.
+Add a non-NULL check to fix potential NULL pointer dereference
+Cleanup code to call function once.
 
-Function sctp_transport_reset_hb_timer has two roles:
-    - initial start of hb_timer for a given transport,
-    - update expire date of hb_timer for a given transport.
-The function is optimized to update timer's expire only if it is before
-a new calculated one but this comparison is invalid for a timer which
-has not yet started. Such a timer has expire == 0 and if a new expire
-value is bigger than (MAX_JIFFIES / 2 + 2) then "time_before" macro will
-fail and timer will not start resulting in no heartbeat packets send by
-the node.
-
-This was found when association was initialized within first 5 mins
-after system boot due to jiffies init value which is near to MAX_JIFFIES.
-
-Test kernel version: 4.9.154 (ARCH=arm)
-hb_timer.expire = 0;                //initialized, not started timer
-new_expire = MAX_JIFFIES / 2 + 2;   //or more
-time_before(hb_timer.expire, new_expire) == false
-
-Fixes: ba6f5e33bdbb ("sctp: avoid refreshing heartbeat timer too often")
-Reported-by: Marcin Stojek <marcin.stojek@nokia.com>
-Tested-by: Marcin Stojek <marcin.stojek@nokia.com>
-Signed-off-by: Maciej Kwiecien <maciej.kwiecien@nokia.com>
-Reviewed-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+Fixes: 2bf9a0a12749b ('iommu/amd: Add iommu support for ACPI HID devices')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sctp/transport.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/iommu/amd_iommu.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/net/sctp/transport.c b/net/sctp/transport.c
-index 03d71cd97ec08..5c78942550e97 100644
---- a/net/sctp/transport.c
-+++ b/net/sctp/transport.c
-@@ -205,7 +205,8 @@ void sctp_transport_reset_hb_timer(struct sctp_transport *transport)
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index e81acb2b6ee7d..c898c70472bb2 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -176,10 +176,14 @@ static struct lock_class_key reserved_rbtree_key;
+ static inline int match_hid_uid(struct device *dev,
+ 				struct acpihid_map_entry *entry)
+ {
++	struct acpi_device *adev = ACPI_COMPANION(dev);
+ 	const char *hid, *uid;
  
- 	/* When a data chunk is sent, reset the heartbeat interval.  */
- 	expires = jiffies + sctp_transport_timeout(transport);
--	if (time_before(transport->hb_timer.expires, expires) &&
-+	if ((time_before(transport->hb_timer.expires, expires) ||
-+	     !timer_pending(&transport->hb_timer)) &&
- 	    !mod_timer(&transport->hb_timer,
- 		       expires + prandom_u32_max(transport->rto)))
- 		sctp_transport_hold(transport);
+-	hid = acpi_device_hid(ACPI_COMPANION(dev));
+-	uid = acpi_device_uid(ACPI_COMPANION(dev));
++	if (!adev)
++		return -ENODEV;
++
++	hid = acpi_device_hid(adev);
++	uid = acpi_device_uid(adev);
+ 
+ 	if (!hid || !(*hid))
+ 		return -ENODEV;
 -- 
 2.20.1
 
