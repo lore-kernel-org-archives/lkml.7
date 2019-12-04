@@ -2,116 +2,150 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 904FCC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 868B2C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BF5F20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5299E20803
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:25:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="CmP5Mrnf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbfLDNXu (ORCPT
+        id S1727865AbfLDNZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 08:23:50 -0500
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:41661 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727503AbfLDNXt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 08:23:49 -0500
-X-Originating-IP: 93.34.114.233
-Received: from uno.localdomain (93-34-114-233.ip49.fastwebnet.it [93.34.114.233])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 1981D1C000E;
-        Wed,  4 Dec 2019 13:23:46 +0000 (UTC)
-Date:   Wed, 4 Dec 2019 14:25:57 +0100
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     linux-media@vger.kernel.org, adam.ford@logicpd.com,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2] media: ov5640: Fix check for PLL1 exceeding max
- allowed rate
-Message-ID: <20191204132557.pl6rwfprtcwewato@uno.localdomain>
-References: <20191204130907.19799-1-aford173@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="pfnkt6rdap5wnatk"
+        Wed, 4 Dec 2019 08:25:46 -0500
+Received: from mail-eopbgr00133.outbound.protection.outlook.com ([40.107.0.133]:15014
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727635AbfLDNZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 08:25:45 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G5mhgU0FVSk63O2a/5Bp6PVjxo/CE3VmrtXnAO7NNTxgfSHPyJWQJaxvDgEYi8YvThSFWGMBGPV42GgMI1yX9OLoEeemko/stKzY5mpo0ocEXvdvptU3w2aB0lW01RKaTcw5FlWcl2hTw0IRDpoHNWTORv6agVEB6VUv71s1EzvIEkcNo6v42Q780vfQz1IvCOLPuTNqI6Y5EyqZ9DYpTT7bgB8Xmdkwi3KgO59oRsZu2gni+rIPES30RURi+rhbY//3c/ch4F8ZcVH26BmCfDfmqNe2BY3NMi7Za2d/PcpQbsbAuENYXLA8odaOEaawbUexvTd2MGAPAt1yLkX4Lw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lYNJ9TLX02JGfhkts0R0CAQ/wIYBSErQXgdfikilA8I=;
+ b=AO4Tk/EK/gF8jCQMHBr0iA3y22u5I2F/q1XX2eSb66bwKz8oXzHfdNZedTLM/Hu+J21pTC2dl0zNRuHYvwxvMzRgEcMX6Hp3ohXyI0/KS5UYo77psJJEzSCilhh98s8dLazVWDbAWnmL+nuvl9DySrABr3jQdq87TqXxLwWSy+z0Mx0Azec48lClTfICy4s8rKkkh4JCBpVNSF1o1GQ9IcUcvB4emWV9ac6s4JcVZ8abfm7aeqd9NYaRKWF37lQk8vOFvh/hnovANohqaqxwJIAXBPe7rLOHe2UlD+FPuSbew1UcO7FVYd5jldMJp8GYoaV8OkfGdeDS4S82zTy0BA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
+ dkim=pass header.d=nokia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lYNJ9TLX02JGfhkts0R0CAQ/wIYBSErQXgdfikilA8I=;
+ b=CmP5Mrnf4DXMxMj9NmFymUmX50Et3rjAwUztIzFbVBmU8+yO9O8rjvpRwp7nF3KLn84hOwGqj7vUaVx2J90RWqxYHKYgDpFuOZ2rJN61Pu8LE4knLVcu0zc0vdAyg92Rc2CYpU3sWkNHc7Q7tchk3RF0rBDPBOBll73jsLfQRro=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=aaro.koskinen@nokia.com; 
+Received: from VI1PR07MB6174.eurprd07.prod.outlook.com (20.178.9.83) by
+ AM6SPR01MB04.eurprd07.prod.outlook.com (52.133.25.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.4; Wed, 4 Dec 2019 13:25:39 +0000
+Received: from VI1PR07MB6174.eurprd07.prod.outlook.com
+ ([fe80::952d:44a4:f9ab:4056]) by VI1PR07MB6174.eurprd07.prod.outlook.com
+ ([fe80::952d:44a4:f9ab:4056%3]) with mapi id 15.20.2516.013; Wed, 4 Dec 2019
+ 13:25:39 +0000
+Date:   Wed, 4 Dec 2019 15:25:31 +0200
+From:   Aaro Koskinen <aaro.koskinen@nokia.com>
+To:     Thor Thayer <thor.thayer@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
+Subject: Re: [Bisected] altera_edac crash on a system without ECC
+Message-ID: <20191204132531.GA22600@ak-laptop.emea.nsn-net.net>
+References: <20191129165739.GA2583@ak-laptop.emea.nsn-net.net>
+ <3bbd2890-ffcc-39df-8ab6-ecf72d92a006@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191204130907.19799-1-aford173@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <3bbd2890-ffcc-39df-8ab6-ecf72d92a006@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: HE1PR0402CA0001.eurprd04.prod.outlook.com
+ (2603:10a6:3:d0::11) To VI1PR07MB6174.eurprd07.prod.outlook.com
+ (2603:10a6:803:a5::19)
+MIME-Version: 1.0
+Received: from ak-laptop.emea.nsn-net.net (131.228.2.10) by HE1PR0402CA0001.eurprd04.prod.outlook.com (2603:10a6:3:d0::11) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Wed, 4 Dec 2019 13:25:39 +0000
+X-Originating-IP: [131.228.2.10]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: d439247d-8267-4577-2b71-08d778bd7478
+X-MS-TrafficTypeDiagnostic: AM6SPR01MB04:
+X-Microsoft-Antispam-PRVS: <AM6SPR01MB04F9128134A19CF38F1099F45D0@AM6SPR01MB04.eurprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:873;
+X-Forefront-PRVS: 0241D5F98C
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(396003)(376002)(346002)(366004)(39860400002)(136003)(189003)(199004)(51444003)(66946007)(4326008)(16586007)(25786009)(58126008)(33656002)(6436002)(66556008)(66476007)(6506007)(229853002)(53546011)(6116002)(7696005)(81166006)(81156014)(3846002)(6666004)(478600001)(6246003)(76176011)(52116002)(8936002)(316002)(8676002)(23726003)(86362001)(14444005)(1076003)(956004)(2906002)(9686003)(305945005)(55016002)(5660300002)(6916009)(50466002)(26005)(186003)(16526019)(44832011)(7736002)(11346002);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6SPR01MB04;H:VI1PR07MB6174.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: nokia.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ZOLRyEMuqRJ/kyFHrluvZg1vMV/cTgSMmu3BwrUbqXqFpmwkDIDFg/+KmQncXxxILnr5vgFUAWXcoRYVXwWT6U09XVsMyYk1ZgVn1gc5ZLBwQdkUHi7Q16XVDKYAchUzeXKlHsrHqX0rC/xigXNzZ9rEO8nLyRm0qJiQwMvD5I5XjJ3qRd8SzF7YzpoPAHCLRAg5wHVpTNtRA1MrrdXGkAf/mHVvU9P8+YS3G8LkFCJRUDTZAZLR/UQMAZLE3iGmlb8/5SgdN+F5GMJdbgL5bNMJ3ZxZ6NokmV8cgMr9psA/Mk7l1SexgdOJsr1dAnNVP2tm+zU2y6nYu1PmmR5GWC5IHkXOK4yrar81Ja/irQ43Qozx4WhdH/0gX3NCRYnI6M3aA7+FXbsWy9HaVt1c2YHcETtK5HDhPTYaWcJy5SnNwNkzurR+QyKhv9uYHDUSutcTTrtYc/4NwLQgUT9ErCL30e+kja7fvFEfWOjsLK8Tgo2TPS/rYI9OfCLZRlZr
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d439247d-8267-4577-2b71-08d778bd7478
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2019 13:25:39.5328
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wkVi3mBZjIuuqFPj7ct9zuad6hrCvjIrj2Ck0AleP3bgAIbZURu46rFXBnUi8Gi+wOYLYsOxnEdgQcbKLhXcLg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6SPR01MB04
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---pfnkt6rdap5wnatk
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+On Tue, Dec 03, 2019 at 05:09:48PM -0600, Thor Thayer wrote:
+> On 11/29/19 10:57 AM, Aaro Koskinen wrote:
+> >Hi,
+> >
+> >I tried booting v5.4 mainline kernel on a stratix10 board with ECC
+> >disabled, and the altera-edac driver (with only SDRAM enabled) is
+> >now crashing the system instead of failing the probe with "No ECC/ECC
+> >disabled".
+> >
+> I apologize for the late reply. I was on vacation.
+> 
+> ECC disabled means the sof/jic that you're loading has ECC disabled,
+> correct?
 
-Hi Adam,
+Yes.
 
-On Wed, Dec 04, 2019 at 07:09:07AM -0600, Adam Ford wrote:
-> The PLL calculation routine checks the wrong variable name 'rate'
-> when it should be called '_rate' when checking to see whether or
-> not the PLL1 output frequency exceeds 1GHz.
->
-> This patch changes it to the correct variable '_rate'
->
-> Acked-by: Jacopo Mondi <jacopo@jmondi.org>
-> Signed-off-by: Adam Ford <aford173@gmail.com>
+> >This seems to have started with commit 08f08bfb7b4c ("EDAC, altera:
+> >Merge Stratix10 into the Arria10 SDRAM probe routine"). With the change,
+> >looks like sdram probe no longer uses SMC calls and instead accesses
+> >the registers directly. The crash looks like this:
+> 
+> I haven't seen this. I'd expect both ECC enabled and disabled to fail with
+> the dumps you have below since they'd both need to use the regmap functions.
 
-Why have you dropped the fixes tag you had in v1?
+With ECC enabled it doesn't fail, as the direct register access appears
+to work then (I also checked by reading 0xf8011101 from userspace -
+and it works without an abort).
 
-Fixes: aa2882481cad ("media: ov5640: Adjust the clock based on the expected rate")
+> Yes, this does look like it is using the register accesses instead of the
+> SMC call. Line 2206 sets the SMC call after determining from the if()
+> statement if it is a Stratix10 or Arria10 and from below it seems to take
+> the Arria10 path.
 
-I'm not the one who collects patches, so maybe wait for Sakari or Hans
-to tell you if you need to resend or not :)
+But that's setting the ecc_mgr_map. I think that altr_check_ecc_deps
+and altr_sdram_probe use a different mapping. Before commit 08f08bfb7b4c
+there was S10 specific altr_s10_sdram_probe() that took care of the SMC,
+but I cannot see how the current code doing that unless I'm missing some
+special magic.
 
-Thanks
-   j
+> The altr_check_ecc_deps() call is checking whether ECC is enabled so the
+> probe should fail.
+> 
+> I suspect the device tree. Can you verify the following node is in your
+> device tree?
+> 
+> 	sdramedac {
+> 		compatible = "altr,sdram-edac-s10";
+> 		altr,sdr-syscon = <&sdr>;
+> 		interrupts = <16 4>;
+> 	};
 
-> ---
-> V2:  No code change.  Only change commit description to be less confusing.
->
-> diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-> index 5e495c833d32..bb968e764f31 100644
-> --- a/drivers/media/i2c/ov5640.c
-> +++ b/drivers/media/i2c/ov5640.c
-> @@ -874,7 +874,7 @@ static unsigned long ov5640_calc_sys_clk(struct ov5640_dev *sensor,
->  			 * We have reached the maximum allowed PLL1 output,
->  			 * increase sysdiv.
->  			 */
-> -			if (!rate)
-> +			if (!_rate)
->  				break;
->
->  			/*
-> --
-> 2.20.1
->
+Yes, I'm using the in-tree socfpga_stratix10.dtsi.
 
---pfnkt6rdap5wnatk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl3ns+UACgkQcjQGjxah
-Vjx7YQ//Sg6XzeO8UFJxAJwhfAJEh3cA00oW7HjzsxIlwH3LeNSYNjALQXhFKfhX
-pDFmF9tkj8ybix0dqaGRgB9KYbokIRIyEWhjoBDOqWkxXOrkYeZFG9l4dyGMpggg
-+4B5v280dkpL3y9y1rgJEUaXJZe5P2q4t1LEElfhxuOirrfzrWFYg1WaDEPmynwF
-Zlt+zpsT0brKbouqN/okbaJmnqhnYvdIHfL2fWNOJJaokZLVKNGSBorZ3DdD6jFL
-MJ6yRy3pPbP9EsQzOGrE1FMd2LQRSCInzi7kIiwcszaTs1/1Bu2guS+F41NpT2pW
-L57uxvasgHoB/7C4OTq7XQuhJ9PYWP10kp3EvH1/joS3YSJUybkEUaqN3PvmkuKn
-uEmzBFU/Km7lSJ8pfdforEgvczhpGkeZvP5QvdZQ4uH4S3RT5mgZuCiVHlDPYf6h
-LSEw3XARKz7fyhiug+EfjrFViYuMHXCw5HVkCjbPn+ELyRefeJ4mWH9x8tIQOwqN
-rSZCWndQhQp6/QUzUH3uMvZPXZfhCXk33njwoN0uMsm7EGLNmjDqCQblz39VYe7w
-tMWQBN2V5gbZiX2V4Eq215Q5On6tlwEHTqdcJvQFRjNjGgBTC72dp9Kcyp48i1yy
-GVBf9l1/DWAkO1EuCFvDWW0gAKK7JThzWjaQVD7l/F2Zmsn54Q8=
-=9DB8
------END PGP SIGNATURE-----
-
---pfnkt6rdap5wnatk--
+A.
