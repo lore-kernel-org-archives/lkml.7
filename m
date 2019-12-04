@@ -2,118 +2,113 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4F1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B88C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA0C246A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D77302468F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:37:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="awAy7H72"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbfLDGjz (ORCPT
+        id S1727131AbfLDGhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 01:39:55 -0500
-Received: from mga11.intel.com ([192.55.52.93]:60765 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbfLDGjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 01:39:54 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Dec 2019 22:39:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,276,1571727600"; 
-   d="scan'208";a="236171027"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by fmsmga004.fm.intel.com with ESMTP; 03 Dec 2019 22:39:54 -0800
-Received: from fmsmsx154.amr.corp.intel.com (10.18.116.70) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 3 Dec 2019 22:39:53 -0800
-Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
- FMSMSX154.amr.corp.intel.com (10.18.116.70) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 3 Dec 2019 22:39:53 -0800
-Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.109]) by
- SHSMSX151.ccr.corp.intel.com ([169.254.3.214]) with mapi id 14.03.0439.000;
- Wed, 4 Dec 2019 14:39:51 +0800
-From:   "Zhao, Shirley" <shirley.zhao@intel.com>
-To:     James Bottomley <jejb@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>
-CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
-        "Zhu, Bing" <bing.zhu@intel.com>,
-        "Chen, Luhai" <luhai.chen@intel.com>
-Subject: RE: One question about trusted key of keyring in Linux kernel.
-Thread-Topic: One question about trusted key of keyring in Linux kernel.
-Thread-Index: AdWZwFKzDBwFOydYTGGk+Aqs+6BIxAANhxEAAoxRZMAAOKaagABSSevwABZzFQAAgRP1kP//pW0A//9ftMCAAMH6gP//eLrAgACO1ID//3k2UAAqYIQA//8FitD//nrPAP/64XgQ//Y+3YD/68PYUA==
-Date:   Wed, 4 Dec 2019 06:39:50 +0000
-Message-ID: <A888B25CD99C1141B7C254171A953E8E4909E8B8@shsmsx102.ccr.corp.intel.com>
-References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
-         <1573659978.17949.83.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
-         <1574877977.3551.5.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E49096521@shsmsx102.ccr.corp.intel.com>
-         <1575057916.6220.7.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909BA3B@shsmsx102.ccr.corp.intel.com>
-         <1575260220.4080.17.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909D360@shsmsx102.ccr.corp.intel.com>
-         <1575267453.4080.26.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909E381@shsmsx102.ccr.corp.intel.com>
-         <1575269075.4080.31.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909E399@shsmsx102.ccr.corp.intel.com>
-         <1575312932.24227.13.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909E62E@shsmsx102.ccr.corp.intel.com>
-         <1575342724.24227.41.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909E877@shsmsx102.ccr.corp.intel.com>
- <1575430389.14163.27.camel@linux.ibm.com>
-In-Reply-To: <1575430389.14163.27.camel@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZTcxOWVjYTMtN2VlYS00NmVjLTkwYTMtZWYxYzQ3ZmU4OWEyIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiWURiU25iYSs0RmZ5Q3VwUG9LRUFwemtiQlwvMVRWUnRKeExrcVlKZEF4NW5WdUZMTXRwcWpsb2hra1U5Q2R6azMifQ==
-x-ctpclassification: CTP_NT
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 4 Dec 2019 01:37:21 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:49060 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbfLDGhV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 01:37:21 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB46YkGL057001;
+        Wed, 4 Dec 2019 06:36:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=yG0uO4UflwgTcea/waIQnEHCSa54PpQUZzE3UTh8gjU=;
+ b=awAy7H72frQh/Ubir0MQ7Yg/Djd/bP6Cb2Q6IDZ0aC0a223v4OrGitrQBXKjxQBCxT66
+ 7Yik4vWDyAmhq6OTdUz8Oh9ZwH03WuoiQc/GGsZeibbCs8xFFH8DC22+e33YYXUj/O8L
+ 7bY/X1QQC4Hrxyva6Y+plLT5dWA/7CHto0Ju3rpsq9s1dsLfOpIuQe02JY98f0HBrm0G
+ qXYt7/sR2zK6IPzmLy+7Hiyb0u+ArW7UPoTLz76SijKWdvD1fS8PrZZOkYDtt8WavggA
+ 5zR/84qjlzzUFs0B+bgV2hJzbjRIGWBatb3etxzSH0T1IuATsJsGdiNdDFbwatUFT4s5 ww== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2wkh2rc7m6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Dec 2019 06:36:46 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB46TClM062802;
+        Wed, 4 Dec 2019 06:36:46 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2wp17csvwu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Dec 2019 06:36:46 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xB46ahDX004121;
+        Wed, 4 Dec 2019 06:36:44 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 04 Dec 2019 06:36:42 +0000
+Date:   Wed, 4 Dec 2019 09:35:28 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Mao Wenan <maowenan@huawei.com>
+Cc:     eddie.huang@mediatek.com, sean.wang@mediatek.com,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH -next] rtc: mt6397: drop free_irq of devm_xx allocated irq
+Message-ID: <20191204063444.GF1765@kadam>
+References: <20191204020209.10363-1-maowenan@huawei.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191204020209.10363-1-maowenan@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9460 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912040046
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9460 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912040047
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T2gsIGdldCB5b3UsIEphbWVzLiANClVuZGVyc3RhbmQsIHRoYW5rcyBmb3IgeW91ciBmZWVkYmFj
-ay4gDQpMb29raW5nIGZvcndhcmQgZm9yIHlvdXIgcHJvcG9zZWQgQVBJLiANCg0KLSBTaGlybGV5
-IA0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogSmFtZXMgQm90dG9tbGV5IDxq
-ZWpiQGxpbnV4LmlibS5jb20+IA0KU2VudDogV2VkbmVzZGF5LCBEZWNlbWJlciA0LCAyMDE5IDEx
-OjMzIEFNDQpUbzogWmhhbywgU2hpcmxleSA8c2hpcmxleS56aGFvQGludGVsLmNvbT47IE1pbWkg
-Wm9oYXIgPHpvaGFyQGxpbnV4LmlibS5jb20+OyBKYXJra28gU2Fra2luZW4gPGphcmtrby5zYWtr
-aW5lbkBsaW51eC5pbnRlbC5jb20+OyBKb25hdGhhbiBDb3JiZXQgPGNvcmJldEBsd24ubmV0Pg0K
-Q2M6IGxpbnV4LWludGVncml0eUB2Z2VyLmtlcm5lbC5vcmc7IGtleXJpbmdzQHZnZXIua2VybmVs
-Lm9yZzsgbGludXgtZG9jQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVs
-Lm9yZzsgJ01hdXJvIENhcnZhbGhvIENoZWhhYicgPG1jaGVoYWIrc2Ftc3VuZ0BrZXJuZWwub3Jn
-PjsgWmh1LCBCaW5nIDxiaW5nLnpodUBpbnRlbC5jb20+OyBDaGVuLCBMdWhhaSA8bHVoYWkuY2hl
-bkBpbnRlbC5jb20+DQpTdWJqZWN0OiBSZTogT25lIHF1ZXN0aW9uIGFib3V0IHRydXN0ZWQga2V5
-IG9mIGtleXJpbmcgaW4gTGludXgga2VybmVsLg0KDQpPbiBXZWQsIDIwMTktMTItMDQgYXQgMDM6
-MDEgKzAwMDAsIFpoYW8sIFNoaXJsZXkgd3JvdGU6DQo+IEhpLCBKYW1lcywNCj4gDQo+IFVzaW5n
-IHBvbGljeSBkaWdlc3QgdG8gcmVsb2FkIHRydXN0ZWQga2V5LCBkb2Vzbid0IHdvcmssIGVpdGhl
-ci4gDQo+IFBsZWFzZSBjaGVjayB0aGUgc3RlcHMgYmVsb3cuIA0KPiBJIHRoaW5rIHBvbGljeSBk
-aWdlc3Qgc2hvdWxkIGJlIGNhbGN1bGF0ZWQgYnkgVFBNIHdoZW4gdmVyaWZ5aW5nIHRoZSANCj4g
-cG9saWN5IHRvIHJlbG9hZCBrZXkuDQoNCllvdSBtaXN1bmRlcnN0YW5kIG15IG1lYW5pbmc6IHRo
-ZSBBUEkgd2UgaGF2ZSBub3cgZG9lc24ndCB3b3JrOyB0aGUga2V5IGJsb2IgdGhlIGtlcm5lbCBy
-ZXR1cm5zIGN1cnJlbnRseSBhZnRlciBrZXkgY3JlYXRlIHdvbid0IHJlbG9hZCBiZWNhdXNlIGl0
-IGNvbnRhaW5zIGV4dHJhbmVvdXMgZGF0YS4gIEkgd2FzIHByb3Bvc2luZyBhIHdvcmtpbmcgQVBJ
-IEkgdGhvdWdodCBtaWdodCByZXBsYWNlIGl0LCBidXQgb2J2aW91c2x5IGl0IGhhcyB0byBiZSBj
-b2RlZCB1cCBhbmQgYWNjZXB0ZWQgaW50byBhIGtlcm5lbCB2ZXJzaW9uIGJlZm9yZSB5b3UgY2Fu
-IHVzZSBpdC4NCg0KSWYgeW91IHdhbnQgdG8gZ2V0IHRydXN0ZWQga2V5cyB3b3JraW5nIHRvZGF5
-LCBJIHRoaW5rIHRoZSBUUE0gMS4yIEFQSSBzdGlsbCB3b3JrcyBpZiB5b3UgaGF2ZSBhIFRQTSAx
-LjIgc3lzdGVtLg0KDQpKYW1lcw0KDQo=
+On Wed, Dec 04, 2019 at 10:02:09AM +0800, Mao Wenan wrote:
+> rtc->irq is requested by devm_request_threaded_irq,
+> and request_threaded_irq. IRQs requested with this
+> function will be automatically freed on driver detach.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> ---
+>  drivers/rtc/rtc-mt6397.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+> index 5249fc99fd5f..d6a10111137a 100644
+> --- a/drivers/rtc/rtc-mt6397.c
+> +++ b/drivers/rtc/rtc-mt6397.c
+> @@ -293,7 +293,6 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+>  	return 0;
+>  
+>  out_free_irq:
+> -	free_irq(rtc->irq, rtc);
+>  	return ret;
+
+Please get rid of the error label as well.
+
+regards,
+dan carpenter
+
