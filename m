@@ -2,94 +2,146 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27336C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBB5C2BBE2
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E08502073C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F19220803
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:58:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="kEWbENSK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y9y/UgQP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727724AbfLDK4n (ORCPT
+        id S1727615AbfLDK6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 05:56:43 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:50618 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727445AbfLDK4m (ORCPT
+        Wed, 4 Dec 2019 05:58:04 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26576 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727268AbfLDK6E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 05:56:42 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB4AqbBm000700;
-        Wed, 4 Dec 2019 11:56:32 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=rJSQOyKapDq+fBaxlzb265FeaVRs5hLYOgiTghRAZAk=;
- b=kEWbENSKsYE5KWxPGPGjJUJE52f1lMJ6mXkJcCxSr77KqphCsZu0ghrnjU/7Voa5yakK
- EHA/8MhSCbU2CPxRen+4HC7zsjhExP1yVZE0ZttsZDOkvq3FrzSVIbMOxOpxrlSE+RaV
- bv9NP+IJo500y7Sr0M+IIJsN7RB6B8O9ph6i7Cssi7bhMK+amN6ETA5SHn5OD4j5NjeM
- WFH7YCatSov8IBgEAlY7FTVyiytnnQ+A3GP6Bq+Q2kPdZJZ+RLQNJ4w2LFHsVhJtzhfx
- 73XGnu0zWtMfdO6BrxajEguXmUHPDMZzE9/65wrpm1bvkxiov52i57NuOHCFOdREDfPb Fw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wkg6kmk01-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Dec 2019 11:56:32 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 946F710002A;
-        Wed,  4 Dec 2019 11:56:31 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8C2312AFD07;
-        Wed,  4 Dec 2019 11:56:31 +0100 (CET)
-Received: from localhost (10.75.127.47) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 4 Dec 2019 11:56:31
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <bbrezillon@kernel.org>
-CC:     <linux-i3c@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <benjamin.gaignard@st.com>
-Subject: [PATCH] i3c: master: make i3c_bus_set_mode static
-Date:   Wed, 4 Dec 2019 11:56:30 +0100
-Message-ID: <20191204105630.27445-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Wed, 4 Dec 2019 05:58:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575457083;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3gDaTecph8Rh/JPKwYat9tHBvAWnUrZz+amifETT1mc=;
+        b=Y9y/UgQPscYx3WRbYw1/UznfJJ3lfd5OqToJ1Ihejd+/GPQflcNtTzvNNkcacuxhf+fnPK
+        5ahNtrjlDIwsyGfpgWI7fbkTExAmAponLE0W+xzyoDGIJwrdXL/geHbYETo1ivQpN8Sp7D
+        XPCgZfDclkRAtPT1OkRP5zooJEupoL0=
+Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
+ [209.85.208.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-104-6aMZrit_NrG4vAUastoutQ-1; Wed, 04 Dec 2019 05:58:02 -0500
+Received: by mail-lj1-f197.google.com with SMTP id l10so851558ljb.15
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 02:58:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=KcON+ZnXbOaneQXDnO49ePrfIssRevwFNRCOp04UDIY=;
+        b=C0mciZe1hRNjabM+ZwxnvgySdIiALMOD6vBP+sBII1np51LATFnzKLRD/yK/Cv9jtN
+         qYDk2jHiS8Rx92bV3LQpX/uggo5peWs/lD7uT2Atmgk9NkVjwvMu8z0j/6mlzzMum+qG
+         WW5W+a62MguEo9ZsBi1xp/ItcxvM9URwW/ka/tSPb/eJ9CKr9GmQXsXUGuBA7VWYEUK1
+         ihmkp/6657YdC7/zIyh3ggn5b/TaK7lyy3U3GlwdVfm1xW0BZv5tnjoFsLy11OvVR8Tp
+         D/IMQwX2la3Z9I8HNHccu4CruC+0kVTbYEzX3qH6GGw06eZi8fhi0LYvPQuPsRvyKZaB
+         MWXA==
+X-Gm-Message-State: APjAAAXLlF+tBBrJOcu3+I7Sy1S9VWSevytxs7MBTUCCrSWqN75Rydjr
+        mdLtqu+i1E2+tgb8AefM8Ln2XcsNNlE4DlxHouFZsPx9YcaejY6aP53o8x45U3Ac0LU11iiYcao
+        0zAnEXKRjZqgPiUozNCfS0ieb
+X-Received: by 2002:a19:3f16:: with SMTP id m22mr1657991lfa.116.1575457081272;
+        Wed, 04 Dec 2019 02:58:01 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyHZ8fnHzSVuQR8PFFMiyJUuqZkRB6SDCXCj2xWgrNiCr7mlTw0t1+qB55Wz0CH2MG5OdhDnQ==
+X-Received: by 2002:a19:3f16:: with SMTP id m22mr1657976lfa.116.1575457081085;
+        Wed, 04 Dec 2019 02:58:01 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id c12sm2938420ljk.77.2019.12.04.02.58.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 02:58:00 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 5BD7118193A; Wed,  4 Dec 2019 11:57:58 +0100 (CET)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>
+Subject: Re: [PATCHv4 0/6] perf/bpftool: Allow to link libbpf dynamically
+In-Reply-To: <CAADnVQK-arrrNrgtu48_f--WCwR5ki2KGaX=mN2qmW_AcRyb=w@mail.gmail.com>
+References: <20191202131847.30837-1-jolsa@kernel.org> <CAEf4BzY_D9JHjuU6K=ciS70NSy2UvSm_uf1NfN_tmFz1445Jiw@mail.gmail.com> <87wobepgy0.fsf@toke.dk> <CAADnVQK-arrrNrgtu48_f--WCwR5ki2KGaX=mN2qmW_AcRyb=w@mail.gmail.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Wed, 04 Dec 2019 11:57:58 +0100
+Message-ID: <877e3cpdc9.fsf@toke.dk>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-04_03:2019-12-04,2019-12-04 signatures=0
+X-MC-Unique: 6aMZrit_NrG4vAUastoutQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i3c_bus_set_mode function is only used in master.c.
-Make it static to avoid warning when compiling with W=1.
+Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- drivers/i3c/master.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> On Mon, Dec 2, 2019 at 1:15 PM Toke H=C3=B8iland-J=C3=B8rgensen <toke@red=
+hat.com> wrote:
+>>
+>> Ah, that is my mistake: I was getting dynamic libbpf symbols with this
+>> approach, but that was because I had the version of libbpf.so in my
+>> $LIBDIR that had the patch to expose the netlink APIs as versioned
+>> symbols; so it was just pulling in everything from the shared library.
+>>
+>> So what I was going for was exactly what you described above; but it
+>> seems that doesn't actually work. Too bad, and sorry for wasting your
+>> time on this :/
+>
+> bpftool is currently tightly coupled with libbpf and very likely
+> in the future the dependency will be even tighter.
+> In that sense bpftool is an extension of libbpf and libbpf is an extensio=
+n
+> of bpftool.
+> Andrii is working on set of patches to generate user space .c code
+> from bpf program.
+> bpftool will be generating the code that is specific for the version
+> bpftool and for
+> the version of libbpf. There will be compatibility layers as usual.
+> But in general the situation where a bug in libbpf is so criticial
+> that bpftool needs to repackaged is imo less likely than a bug in
+> bpftool that will require re-packaging of libbpf.
+> bpftool is quite special. It's not a typical user of libbpf.
+> The other way around is more correct. libbpf is a user of the code
+> that bpftool generates and both depend on each other.
+> perf on the other side is what typical user space app that uses
+> libbpf will look like.
+> I think keeping bpftool in the kernel while packaging libbpf
+> out of github was an oversight.
+> I think we need to mirror bpftool into github/libbpf as well
+> and make sure they stay together. The version of libbpf =3D=3D version of=
+ bpftool.
+> Both should come from the same package and so on.
+> May be they can be two different packages but
+> upgrading one should trigger upgrade of another and vice versa.
+> I think one package would be easier though.
+> Thoughts?
 
-diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-index 043691656245..7f8f896fa0c3 100644
---- a/drivers/i3c/master.c
-+++ b/drivers/i3c/master.c
-@@ -527,8 +527,8 @@ static const struct device_type i3c_masterdev_type = {
- 	.groups	= i3c_masterdev_groups,
- };
- 
--int i3c_bus_set_mode(struct i3c_bus *i3cbus, enum i3c_bus_mode mode,
--		     unsigned long max_i2c_scl_rate)
-+static int i3c_bus_set_mode(struct i3c_bus *i3cbus, enum i3c_bus_mode mode,
-+			    unsigned long max_i2c_scl_rate)
- {
- 	struct i3c_master_controller *master = i3c_bus_to_i3c_master(i3cbus);
- 
--- 
-2.15.0
+Yup, making bpftool explicitly the "libbpf command line interface" makes
+sense and would help clarify the relationship between the two. As Jiri
+said, we are already moving in that direction packaging-wise...
+
+-Toke
 
