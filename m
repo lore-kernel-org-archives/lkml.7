@@ -2,76 +2,102 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F776C2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4A5C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 264F92084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:47:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 836832073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:48:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728256AbfLDPrc (ORCPT
+        id S1728353AbfLDPsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:47:32 -0500
-Received: from ms.lwn.net ([45.79.88.28]:59874 "EHLO ms.lwn.net"
+        Wed, 4 Dec 2019 10:48:07 -0500
+Received: from mga12.intel.com ([192.55.52.136]:58121 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727878AbfLDPrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:47:31 -0500
-Received: from localhost.localdomain (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 7F2D22D5;
-        Wed,  4 Dec 2019 15:47:30 +0000 (UTC)
-Date:   Wed, 4 Dec 2019 08:47:29 -0700
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Amol Grover <frextrite@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>, rcu@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-Subject: Re: [PATCH] doc: listRCU: Add some more listRCU patterns in the
- kernel
-Message-ID: <20191204084729.184480f3@lwn.net>
-In-Reply-To: <20191204153958.GA17404@google.com>
-References: <20191203063941.6981-1-frextrite@gmail.com>
-        <20191203064132.38d75348@lwn.net>
-        <20191204082412.GA6959@workstation-kernel-dev>
-        <20191204074833.44bcc079@lwn.net>
-        <20191204153958.GA17404@google.com>
-Organization: LWN.net
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1727878AbfLDPsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 10:48:07 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Dec 2019 07:48:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,277,1571727600"; 
+   d="scan'208";a="262988929"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by FMSMGA003.fm.intel.com with ESMTP; 04 Dec 2019 07:48:06 -0800
+Date:   Wed, 4 Dec 2019 07:48:06 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        thomas.lendacky@amd.com, stable@vger.kernel.org
+Subject: Re: [PATCH v2] KVM: x86: use CPUID to locate host page table
+ reserved bits
+Message-ID: <20191204154806.GC6323@linux.intel.com>
+References: <1575474037-7903-1-git-send-email-pbonzini@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1575474037-7903-1-git-send-email-pbonzini@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Dec 2019 10:39:58 -0500
-Joel Fernandes <joel@joelfernandes.org> wrote:
+On Wed, Dec 04, 2019 at 04:40:37PM +0100, Paolo Bonzini wrote:
+> The comment in kvm_get_shadow_phys_bits refers to MKTME, but the same is actually
+> true of SME and SEV.  Just use CPUID[0x8000_0008].EAX[7:0] unconditionally if
+> available, it is simplest and works even if memory is not encrypted.
+> 
+> Cc: stable@vger.kernel.org
+> Reported-by: Tom Lendacky <thomas.lendacky@amd.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/x86/kvm/mmu/mmu.c | 20 ++++++++++++--------
+>  1 file changed, 12 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 6f92b40d798c..1e4ee4f8de5f 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -538,16 +538,20 @@ void kvm_mmu_set_mask_ptes(u64 user_mask, u64 accessed_mask,
+>  static u8 kvm_get_shadow_phys_bits(void)
+>  {
+>  	/*
+> -	 * boot_cpu_data.x86_phys_bits is reduced when MKTME is detected
+> -	 * in CPU detection code, but MKTME treats those reduced bits as
+> -	 * 'keyID' thus they are not reserved bits. Therefore for MKTME
+> -	 * we should still return physical address bits reported by CPUID.
+> +	 * boot_cpu_data.x86_phys_bits is reduced when MKTME or SME are detected
+> +	 * in CPU detection code, but the processor treats those reduced bits as
+> +	 * 'keyID' thus they are not reserved bits. Therefore KVM needs to look at
+> +	 * the physical address bits reported by CPUID.
+>  	 */
+> -	if (!boot_cpu_has(X86_FEATURE_TME) ||
+> -	    WARN_ON_ONCE(boot_cpu_data.extended_cpuid_level < 0x80000008))
+> -		return boot_cpu_data.x86_phys_bits;
+> +	if (likely(boot_cpu_data.extended_cpuid_level >= 0x80000008))
+> +		return cpuid_eax(0x80000008) & 0xff;
+>  
+> -	return cpuid_eax(0x80000008) & 0xff;
+> +	/*
+> +	 * Quite weird to have VMX or SVM but not MAXPHYADDR; probably a VM with
+> +	 * custom CPUID.  Proceed with whatever the kernel found since these features
+> +	 * aren't virtualizable (SME/SEV also require CPUIDs higher than 0x80000008).
 
-> Actually I had asked Amol privately to add the backticks. It appeared
-> super weird in my browser when some function calls were rendered
-> monospace while others weren't. Not all functions were successfully
-> cross referenced for me. May be it is my kernel version?
+No love for MKTME?  :-D
 
-If you have an example of a failure to cross-reference a function that
-has kerneldoc comments *that are included in the toctree*, I'd like to see
-it; that's a bug.
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Changing the font on functions without anything to cross-reference to is
-easy enough and should probably be done; I'll look into it when I get a
-chance.
-
-Thanks,
-
-jon
+> +	 */
+> +	return boot_cpu_data.x86_phys_bits;
+>  }
+>  
+>  static void kvm_mmu_reset_all_pte_masks(void)
+> -- 
+> 1.8.3.1
+> 
