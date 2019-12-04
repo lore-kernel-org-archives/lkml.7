@@ -4,447 +4,198 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BE4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC346C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09F05205ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B51D12077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:11:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="GXS6IijC"
+	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="iHGSY+G9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727704AbfLDKLJ (ORCPT
+        id S1727736AbfLDKLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 05:11:09 -0500
-Received: from zimbra2.kalray.eu ([92.103.151.219]:56806 "EHLO
+        Wed, 4 Dec 2019 05:11:13 -0500
+Received: from zimbra2.kalray.eu ([92.103.151.219]:56790 "EHLO
         zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727601AbfLDKLG (ORCPT
+        with ESMTP id S1726893AbfLDKLF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 05:11:06 -0500
+        Wed, 4 Dec 2019 05:11:05 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 2483D27E1615;
-        Wed,  4 Dec 2019 11:11:04 +0100 (CET)
+        by zimbra2.kalray.eu (Postfix) with ESMTP id B6A3827E1512;
+        Wed,  4 Dec 2019 11:11:03 +0100 (CET)
 Received: from zimbra2.kalray.eu ([127.0.0.1])
         by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id gvrRT0rHAEdz; Wed,  4 Dec 2019 11:11:03 +0100 (CET)
+        with ESMTP id QBr2ZZHpmmH9; Wed,  4 Dec 2019 11:11:03 +0100 (CET)
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 5C27827E105F;
-        Wed,  4 Dec 2019 11:11:03 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 5C27827E105F
+        by zimbra2.kalray.eu (Postfix) with ESMTP id E5BD327E1514;
+        Wed,  4 Dec 2019 11:11:02 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu E5BD327E1514
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
-        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1575454263;
-        bh=kqlc+GicvRWTqiGeSKGpuPVSyUpC4IzwPGGUuISpl68=;
+        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1575454262;
+        bh=f9BmQnKca9zYSdX+q4rJqbMj658y7CcwGNmmAXtMQP4=;
         h=From:To:Date:Message-Id;
-        b=GXS6IijCHokzvT81WLifrL15YEhumVEqgNupy1qlzhwJU7414cOBS/g3xhjzQudLD
-         vDGPUNl2Paf44yvFPtBEHfvK2OqbPeJp2Tfo5kZ1Uj17oLBnpLa/U6lEOt1xwtz3lE
-         MXlucV8okAfuZ6YsarYdOBRraNyebMgiwVr+6vzw=
+        b=iHGSY+G9emUlkNeDaTTBswj7Q7yfNOOse6jfttP/Vx4D3tYs7OZbMwqw56ktsOQms
+         ELMwCEKi3KEoPhi3O1oc3USspOScjEK1YUn8lJ2HsObNvhJBA+Ztp6LSBP9g3fkcQh
+         mB2IkpnMfAwGR6oas1suOSSMxDeNrTJuNfw8GkZI=
 X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
 Received: from zimbra2.kalray.eu ([127.0.0.1])
         by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id G4zHnzc5Esd0; Wed,  4 Dec 2019 11:11:03 +0100 (CET)
+        with ESMTP id tofpMMaoXJ43; Wed,  4 Dec 2019 11:11:02 +0100 (CET)
 Received: from triton.lin.mbt.kalray.eu (unknown [192.168.37.25])
-        by zimbra2.kalray.eu (Postfix) with ESMTPSA id 45CE827E0E3A;
-        Wed,  4 Dec 2019 11:11:03 +0100 (CET)
+        by zimbra2.kalray.eu (Postfix) with ESMTPSA id C94F627E1512;
+        Wed,  4 Dec 2019 11:11:02 +0100 (CET)
 From:   Clement Leger <cleger@kalray.eu>
 To:     linux-kernel@vger.kernel.org
 Cc:     Clement Leger <cleger@kalray.eu>,
         Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Hoan Tran <hoan@os.amperecomputing.com>,
         linux-gpio@vger.kernel.org
-Subject: [PATCH 4/5] pinctrl: dw: add pinctrl support for dwapb gpio driver
-Date:   Wed,  4 Dec 2019 11:10:38 +0100
-Message-Id: <20191204101042.4275-5-cleger@kalray.eu>
+Subject: [PATCH 2/5] pinctrl: dw: move gpio-dwapb.c to pinctrl folder
+Date:   Wed,  4 Dec 2019 11:10:36 +0100
+Message-Id: <20191204101042.4275-3-cleger@kalray.eu>
 X-Mailer: git-send-email 2.15.0.276.g89ea799
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Synopsys designware gpio controller also has pinmuxing functionnality.
-Pinmuxing allows to choose between software and hardware mode. When
-using hardware mode, an external signal controls the pin output.
-
-This patch adds support for pinctrl framework in the gpio driver. This
-support is conditionned by the snps,has-pinctrl device tree property.
-Indeed, the functionnality can be detected only if the gpio IP has been
-configured using paremeters encoding which is not always present. If
-property is present, then the pinctrl will be registered and will
-allow switching to the "hw" functionnality and hence enable the
-alternate function.
+dwapb-gpio block also have alternate function selection possibility.
+In order to convert it pinctrl support, move it to pinctrl folder.
 
 Signed-off-by: Clement Leger <cleger@kalray.eu>
 ---
- drivers/pinctrl/dw/Kconfig               |   2 +
- drivers/pinctrl/dw/pinctrl-dwapb.c       | 263 ++++++++++++++++++++++++++++++-
- include/linux/platform_data/gpio-dwapb.h |   1 +
- 3 files changed, 260 insertions(+), 6 deletions(-)
+ MAINTAINERS                                               | 4 ++--
+ drivers/gpio/Kconfig                                      | 8 --------
+ drivers/gpio/Makefile                                     | 1 -
+ drivers/pinctrl/Kconfig                                   | 1 +
+ drivers/pinctrl/Makefile                                  | 1 +
+ drivers/pinctrl/dw/Kconfig                                | 9 +++++++++
+ drivers/pinctrl/dw/Makefile                               | 4 ++++
+ drivers/{gpio/gpio-dwapb.c => pinctrl/dw/pinctrl-dwapb.c} | 3 ---
+ 8 files changed, 17 insertions(+), 14 deletions(-)
+ create mode 100644 drivers/pinctrl/dw/Kconfig
+ create mode 100644 drivers/pinctrl/dw/Makefile
+ rename drivers/{gpio/gpio-dwapb.c => pinctrl/dw/pinctrl-dwapb.c} (99%)
 
-diff --git a/drivers/pinctrl/dw/Kconfig b/drivers/pinctrl/dw/Kconfig
-index 8b57c27eab1f..2bcc51813d80 100644
---- a/drivers/pinctrl/dw/Kconfig
-+++ b/drivers/pinctrl/dw/Kconfig
-@@ -4,6 +4,8 @@ config GPIO_DWAPB
- 	select GPIOLIB
- 	select GPIOLIB_IRQCHIP
- 	select GPIO_GENERIC
-+	select PINMUX
-+	select GENERIC_PINCONF
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f9a81b9de40a..35b90ad9f594 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15868,11 +15868,11 @@ R:	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+ S:	Maintained
+ F:	drivers/tty/serial/8250/8250_dw.c
+ 
+-SYNOPSYS DESIGNWARE APB GPIO DRIVER
++SYNOPSYS DESIGNWARE APB PINCTRL & GPIO DRIVER
+ M:	Hoan Tran <hoan@os.amperecomputing.com>
+ L:	linux-gpio@vger.kernel.org
+ S:	Maintained
+-F:	drivers/gpio/gpio-dwapb.c
++F:	drivers/pinctrl/dw/pinctrl-dwapb.c
+ F:	Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+ 
+ SYNOPSYS DESIGNWARE AXI DMAC DRIVER
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 8adffd42f8cb..982583615d11 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -195,14 +195,6 @@ config GPIO_DAVINCI
  	help
- 	  Say Y or M here to build support for the Synopsys DesignWare APB
- 	  GPIO block.
-diff --git a/drivers/pinctrl/dw/pinctrl-dwapb.c b/drivers/pinctrl/dw/pinctrl-dwapb.c
-index 3750205408e3..063bc36319d7 100644
---- a/drivers/pinctrl/dw/pinctrl-dwapb.c
+ 	  Say yes here to enable GPIO support for TI Davinci/Keystone SoCs.
+ 
+-config GPIO_DWAPB
+-	tristate "Synopsys DesignWare APB GPIO driver"
+-	select GPIO_GENERIC
+-	select GENERIC_IRQ_CHIP
+-	help
+-	  Say Y or M here to build support for the Synopsys DesignWare APB
+-	  GPIO block.
+-
+ config GPIO_EIC_SPRD
+ 	tristate "Spreadtrum EIC support"
+ 	depends on ARCH_SPRD || COMPILE_TEST
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 34eb8b2b12dd..2ceb7eb2bf18 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -49,7 +49,6 @@ obj-$(CONFIG_GPIO_DA9052)		+= gpio-da9052.o
+ obj-$(CONFIG_GPIO_DA9055)		+= gpio-da9055.o
+ obj-$(CONFIG_GPIO_DAVINCI)		+= gpio-davinci.o
+ obj-$(CONFIG_GPIO_DLN2)			+= gpio-dln2.o
+-obj-$(CONFIG_GPIO_DWAPB)		+= gpio-dwapb.o
+ obj-$(CONFIG_GPIO_EIC_SPRD)		+= gpio-eic-sprd.o
+ obj-$(CONFIG_GPIO_EM)			+= gpio-em.o
+ obj-$(CONFIG_GPIO_EP93XX)		+= gpio-ep93xx.o
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index 3bfbf2ff6e2b..70d7329c2942 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -388,6 +388,7 @@ source "drivers/pinctrl/actions/Kconfig"
+ source "drivers/pinctrl/aspeed/Kconfig"
+ source "drivers/pinctrl/bcm/Kconfig"
+ source "drivers/pinctrl/berlin/Kconfig"
++source "drivers/pinctrl/dw/Kconfig"
+ source "drivers/pinctrl/freescale/Kconfig"
+ source "drivers/pinctrl/intel/Kconfig"
+ source "drivers/pinctrl/mvebu/Kconfig"
+diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+index 879f312bfb75..ceed62c6f784 100644
+--- a/drivers/pinctrl/Makefile
++++ b/drivers/pinctrl/Makefile
+@@ -52,6 +52,7 @@ obj-y				+= actions/
+ obj-$(CONFIG_ARCH_ASPEED)	+= aspeed/
+ obj-y				+= bcm/
+ obj-$(CONFIG_PINCTRL_BERLIN)	+= berlin/
++obj-y				+= dw/
+ obj-y				+= freescale/
+ obj-$(CONFIG_X86)		+= intel/
+ obj-y				+= mvebu/
+diff --git a/drivers/pinctrl/dw/Kconfig b/drivers/pinctrl/dw/Kconfig
+new file mode 100644
+index 000000000000..8b57c27eab1f
+--- /dev/null
++++ b/drivers/pinctrl/dw/Kconfig
+@@ -0,0 +1,9 @@
++# SPDX-License-Identifier: GPL-2.0-only
++config GPIO_DWAPB
++	tristate "Synopsys DesignWare APB GPIO driver"
++	select GPIOLIB
++	select GPIOLIB_IRQCHIP
++	select GPIO_GENERIC
++	help
++	  Say Y or M here to build support for the Synopsys DesignWare APB
++	  GPIO block.
+diff --git a/drivers/pinctrl/dw/Makefile b/drivers/pinctrl/dw/Makefile
+new file mode 100644
+index 000000000000..6bda37902e23
+--- /dev/null
++++ b/drivers/pinctrl/dw/Makefile
+@@ -0,0 +1,4 @@
++# SPDX-License-Identifier: GPL-2.0
++# DesignWare pinctrl support
++
++obj-$(CONFIG_PINCTRL_DWAPB)	+= pinctrl-dwapb.o
+diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/pinctrl/dw/pinctrl-dwapb.c
+similarity index 99%
+rename from drivers/gpio/gpio-dwapb.c
+rename to drivers/pinctrl/dw/pinctrl-dwapb.c
+index 92e127e74813..62e598bdd9ff 100644
+--- a/drivers/gpio/gpio-dwapb.c
 +++ b/drivers/pinctrl/dw/pinctrl-dwapb.c
-@@ -25,15 +25,22 @@
- #include <linux/spinlock.h>
+@@ -26,9 +26,6 @@
  #include <linux/platform_data/gpio-dwapb.h>
  #include <linux/slab.h>
-+#include <linux/pinctrl/pinmux.h>
-+
-+#include "../pinctrl-utils.h"
  
+-#include "gpiolib.h"
+-#include "gpiolib-acpi.h"
+-
  #define GPIO_SWPORTA_DR		0x00
  #define GPIO_SWPORTA_DDR	0x04
-+#define GPIO_SWPORTA_CTL	0x08
  #define GPIO_SWPORTB_DR		0x0c
- #define GPIO_SWPORTB_DDR	0x10
-+#define GPIO_SWPORTB_CTL	0x14
- #define GPIO_SWPORTC_DR		0x18
- #define GPIO_SWPORTC_DDR	0x1c
-+#define GPIO_SWPORTC_CTL	0x20
- #define GPIO_SWPORTD_DR		0x24
- #define GPIO_SWPORTD_DDR	0x28
-+#define GPIO_SWPORTD_CTL	0x2c
- #define GPIO_INTEN		0x30
- #define GPIO_INTMASK		0x34
- #define GPIO_INTTYPE_LEVEL	0x38
-@@ -45,11 +52,16 @@
- #define GPIO_EXT_PORTB		0x54
- #define GPIO_EXT_PORTC		0x58
- #define GPIO_EXT_PORTD		0x5c
-+#define GPIO_CONFIG_REG1	0x74
-+
-+#define GPIO_CONFIG_REG1_HW_BIT		8
-+#define GPIO_CONFIG_REG1_SINGLE_CTL_BIT	4
- 
- #define DWAPB_MAX_PORTS		4
- #define GPIO_EXT_PORT_STRIDE	0x04 /* register stride 32 bits */
- #define GPIO_SWPORT_DR_STRIDE	0x0c /* register stride 3*32 bits */
- #define GPIO_SWPORT_DDR_STRIDE	0x0c /* register stride 3*32 bits */
-+#define GPIO_SWPORT_CTL_STRIDE	0x0c /* register stride 3*32 bits */
- 
- #define GPIO_REG_OFFSET_V2	1
- 
-@@ -77,13 +89,16 @@ struct dwapb_context {
- #endif
- 
- struct dwapb_gpio_port {
--	struct gpio_chip	gc;
--	bool			is_registered;
--	struct dwapb_gpio	*gpio;
-+	struct gpio_chip		gc;
-+	bool				is_registered;
-+	struct dwapb_gpio		*gpio;
- #ifdef CONFIG_PM_SLEEP
--	struct dwapb_context	*ctx;
-+	struct dwapb_context		*ctx;
- #endif
--	unsigned int		idx;
-+	unsigned int			idx;
-+	struct pinctrl_dev		*pctl;
-+	struct pinctrl_desc		pctldesc;
-+	struct pinctrl_gpio_range	range;
- };
- 
- struct dwapb_gpio {
-@@ -97,6 +112,89 @@ struct dwapb_gpio {
- 	struct clk		*clk;
- };
- 
-+enum dwapb_gpio_func {
-+	DWAPB_GPIO_SW_FUNC = 0,
-+	DWAPB_GPIO_HW_FUNC = 1,
-+};
-+
-+#define DWAPB_PINCTRL_PIN(pin) PINCTRL_PIN(pin, "pin" #pin)
-+
-+static const struct pinctrl_pin_desc dwapb_pins[] = {
-+	DWAPB_PINCTRL_PIN(0),
-+	DWAPB_PINCTRL_PIN(1),
-+	DWAPB_PINCTRL_PIN(2),
-+	DWAPB_PINCTRL_PIN(3),
-+	DWAPB_PINCTRL_PIN(4),
-+	DWAPB_PINCTRL_PIN(5),
-+	DWAPB_PINCTRL_PIN(6),
-+	DWAPB_PINCTRL_PIN(7),
-+	DWAPB_PINCTRL_PIN(8),
-+	DWAPB_PINCTRL_PIN(9),
-+	DWAPB_PINCTRL_PIN(10),
-+	DWAPB_PINCTRL_PIN(11),
-+	DWAPB_PINCTRL_PIN(12),
-+	DWAPB_PINCTRL_PIN(13),
-+	DWAPB_PINCTRL_PIN(14),
-+	DWAPB_PINCTRL_PIN(15),
-+	DWAPB_PINCTRL_PIN(16),
-+	DWAPB_PINCTRL_PIN(17),
-+	DWAPB_PINCTRL_PIN(18),
-+	DWAPB_PINCTRL_PIN(19),
-+	DWAPB_PINCTRL_PIN(20),
-+	DWAPB_PINCTRL_PIN(21),
-+	DWAPB_PINCTRL_PIN(22),
-+	DWAPB_PINCTRL_PIN(23),
-+	DWAPB_PINCTRL_PIN(24),
-+	DWAPB_PINCTRL_PIN(25),
-+	DWAPB_PINCTRL_PIN(26),
-+	DWAPB_PINCTRL_PIN(27),
-+	DWAPB_PINCTRL_PIN(28),
-+	DWAPB_PINCTRL_PIN(29),
-+	DWAPB_PINCTRL_PIN(30),
-+	DWAPB_PINCTRL_PIN(31)
-+};
-+
-+/* One pin per group */
-+static const char * const dwapb_gpio_groups[] = {
-+	"pin0",
-+	"pin1",
-+	"pin2",
-+	"pin3",
-+	"pin4",
-+	"pin5",
-+	"pin6",
-+	"pin7",
-+	"pin8",
-+	"pin9",
-+	"pin10",
-+	"pin11",
-+	"pin12",
-+	"pin13",
-+	"pin14",
-+	"pin15",
-+	"pin16",
-+	"pin17",
-+	"pin18",
-+	"pin19",
-+	"pin20",
-+	"pin21",
-+	"pin22",
-+	"pin23",
-+	"pin24",
-+	"pin25",
-+	"pin26",
-+	"pin27",
-+	"pin28",
-+	"pin29",
-+	"pin30",
-+	"pin31"
-+};
-+
-+static const char *const dwapb_gpio_functions[] = {
-+	[DWAPB_GPIO_SW_FUNC] = "sw",
-+	[DWAPB_GPIO_HW_FUNC] = "hw",
-+};
-+
- static inline u32 gpio_reg_v2_convert(unsigned int offset)
- {
- 	switch (offset) {
-@@ -484,6 +582,151 @@ static void dwapb_irq_teardown(struct dwapb_gpio *gpio)
- 	gpio->domain = NULL;
- }
- 
-+static int dwapb_pctl_get_groups_count(struct pinctrl_dev *pctldev)
-+{
-+	struct dwapb_gpio_port *port = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return port->gc.ngpio;
-+}
-+
-+static const char *dwapb_pctl_get_group_name(struct pinctrl_dev *pctldev,
-+		unsigned selector)
-+{
-+	struct dwapb_gpio_port *port = pinctrl_dev_get_drvdata(pctldev);
-+
-+	/* Exactly one group per pin */
-+	return port->pctldesc.pins[selector].name;
-+}
-+
-+static int dwapb_pctl_get_group_pins(struct pinctrl_dev *pctldev,
-+		unsigned selector,
-+		const unsigned **pins,
-+		unsigned *num_pins)
-+{
-+	struct dwapb_gpio_port *port = pinctrl_dev_get_drvdata(pctldev);
-+
-+	*pins = &port->pctldesc.pins[selector].number;
-+	*num_pins = 1;
-+
-+	return 0;
-+}
-+
-+static const struct pinctrl_ops dwapb_pctl_ops = {
-+	.get_groups_count = dwapb_pctl_get_groups_count,
-+	.get_group_name = dwapb_pctl_get_group_name,
-+	.get_group_pins = dwapb_pctl_get_group_pins,
-+	.dt_node_to_map = pinconf_generic_dt_node_to_map_all,
-+	.dt_free_map = pinctrl_utils_free_map,
-+};
-+
-+static int dwapb_gpio_get_function_count(struct pinctrl_dev *pctldev)
-+{
-+	return ARRAY_SIZE(dwapb_gpio_functions);
-+}
-+
-+static const char *dwapb_gpio_get_function_name(struct pinctrl_dev *pctldev,
-+						unsigned selector)
-+{
-+	return dwapb_gpio_functions[selector];
-+}
-+
-+static int dwapb_gpio_get_function_groups(struct pinctrl_dev *pctldev,
-+					  unsigned selector,
-+					  const char * const **groups,
-+					  unsigned * const num_groups)
-+{
-+	struct dwapb_gpio_port *port = pinctrl_dev_get_drvdata(pctldev);
-+
-+	*groups = dwapb_gpio_groups;
-+	*num_groups = port->gc.ngpio;
-+
-+	return 0;
-+}
-+
-+static int dwapb_gpio_set_mux(struct pinctrl_dev *pctldev, unsigned selector,
-+		unsigned group)
-+{
-+	struct dwapb_gpio_port *port = pinctrl_dev_get_drvdata(pctldev);
-+	struct dwapb_gpio *gpio = port->gpio;
-+	struct gpio_chip *gc = &port->gc;
-+	unsigned int reg_off;
-+	unsigned long flags;
-+	u32 val;
-+
-+	dev_info(gpio->dev, "Setting func %s on pin %d",
-+		dwapb_gpio_functions[selector], group);
-+
-+	reg_off = GPIO_SWPORTA_CTL + (port->idx * GPIO_SWPORT_CTL_STRIDE);
-+	spin_lock_irqsave(&gc->bgpio_lock, flags);
-+	val = dwapb_read(gpio, reg_off);
-+	if (selector == 0)
-+		val &= ~BIT(group);
-+	else
-+		val |= BIT(group);
-+	dwapb_write(gpio, reg_off, val);
-+	spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-+
-+	return 0;
-+}
-+
-+static int dwapb_gpio_pmx_gpio_request(struct pinctrl_dev *pctldev,
-+				    struct pinctrl_gpio_range *range,
-+				    unsigned int pin)
-+{
-+	return dwapb_gpio_set_mux(pctldev, DWAPB_GPIO_SW_FUNC, pin);
-+}
-+
-+struct pinmux_ops dwapb_pmux_ops = {
-+	.get_functions_count = dwapb_gpio_get_function_count,
-+	.get_function_name = dwapb_gpio_get_function_name,
-+	.get_function_groups = dwapb_gpio_get_function_groups,
-+	.set_mux = dwapb_gpio_set_mux,
-+	.gpio_request_enable = dwapb_gpio_pmx_gpio_request,
-+};
-+
-+static int dwapb_gpio_add_pinctrl(struct dwapb_gpio *gpio,
-+				  struct dwapb_port_property *pp,
-+				  struct dwapb_gpio_port *port)
-+{
-+	struct pinctrl_desc *desc;
-+	struct pinctrl_gpio_range *range;
-+	int ret;
-+
-+	desc = &port->pctldesc;
-+
-+	desc->pins = dwapb_pins;
-+	desc->npins = pp->ngpio;
-+	desc->name = dev_name(gpio->dev);
-+	desc->owner = THIS_MODULE;
-+	desc->pctlops = &dwapb_pctl_ops;
-+	desc->pmxops = &dwapb_pmux_ops;
-+
-+	ret = devm_pinctrl_register_and_init(gpio->dev, &port->pctldesc, port,
-+					     &port->pctl);
-+	if (ret) {
-+		dev_err(gpio->dev, "Failed to register pinctrl device\n");
-+		return ret;
-+	}
-+
-+	ret = pinctrl_enable(port->pctl);
-+	if (ret) {
-+		dev_err(gpio->dev, "pinctrl enable failed\n");
-+		return ret;
-+	}
-+
-+	range = &port->range;
-+	range->name = dev_name(gpio->dev);
-+	range->id = port->idx;
-+	range->pin_base = 0;
-+	range->base = port->gc.base;
-+	range->npins = pp->ngpio;
-+	range->gc = &port->gc;
-+
-+	pinctrl_add_gpio_range(port->pctl, range);
-+
-+	return 0;
-+}
-+
- static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
- 			       struct dwapb_port_property *pp,
- 			       unsigned int offs)
-@@ -536,6 +779,12 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
- 	else
- 		port->is_registered = true;
- 
-+	if (!err && pp->has_pinctrl) {
-+		err = dwapb_gpio_add_pinctrl(gpio, pp, port);
-+		if (err)
-+			return err;
-+	}
-+
- 	/* Add GPIO-signaled ACPI event support */
- 	if (pp->has_irq)
- 		acpi_gpiochip_request_interrupts(&port->gc);
-@@ -589,6 +838,8 @@ dwapb_gpio_get_pdata(struct device *dev)
- 			pp->ngpio = 32;
- 		}
- 
-+		pp->has_pinctrl = fwnode_property_read_bool(fwnode,
-+						"snps,has-pinctrl");
- 		pp->irq_shared	= false;
- 		pp->gpio_base	= -1;
- 
-@@ -822,7 +1073,7 @@ static SIMPLE_DEV_PM_OPS(dwapb_gpio_pm_ops, dwapb_gpio_suspend,
- 
- static struct platform_driver dwapb_gpio_driver = {
- 	.driver		= {
--		.name	= "gpio-dwapb",
-+		.name	= "pinctrl-dwapb",
- 		.pm	= &dwapb_gpio_pm_ops,
- 		.of_match_table = of_match_ptr(dwapb_of_match),
- 		.acpi_match_table = ACPI_PTR(dwapb_acpi_match),
-diff --git a/include/linux/platform_data/gpio-dwapb.h b/include/linux/platform_data/gpio-dwapb.h
-index 3c606c450d05..2633bb745317 100644
---- a/include/linux/platform_data/gpio-dwapb.h
-+++ b/include/linux/platform_data/gpio-dwapb.h
-@@ -14,6 +14,7 @@ struct dwapb_port_property {
- 	int		irq[32];
- 	bool		has_irq;
- 	bool		irq_shared;
-+	bool		has_pinctrl;
- };
- 
- struct dwapb_platform_data {
 -- 
 2.15.0.276.g89ea799
 
