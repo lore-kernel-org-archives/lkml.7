@@ -2,58 +2,107 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B432FC2BBE2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 514BDC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 945F8207DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28AA62068E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:37:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbfLDKg4 (ORCPT
+        id S1727692AbfLDKhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 05:36:56 -0500
-Received: from mx2.suse.de ([195.135.220.15]:40110 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727268AbfLDKg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 05:36:56 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 71EC2B25E;
-        Wed,  4 Dec 2019 10:36:54 +0000 (UTC)
-Subject: Re: [PATCH v3 2/2] xen-blkback: allow module to be cleanly unloaded
-To:     Paul Durrant <pdurrant@amazon.com>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
-Cc:     =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>
-References: <20191202114117.1264-1-pdurrant@amazon.com>
- <20191202114117.1264-3-pdurrant@amazon.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <db120726-1347-438d-7bd7-737380641960@suse.com>
-Date:   Wed, 4 Dec 2019 11:36:52 +0100
+        Wed, 4 Dec 2019 05:37:00 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24892 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727268AbfLDKg7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 05:36:59 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB4AXi8j010461
+        for <linux-kernel@vger.kernel.org>; Wed, 4 Dec 2019 05:36:58 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wnqn5cnxx-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 05:36:58 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Wed, 4 Dec 2019 10:36:56 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 4 Dec 2019 10:36:53 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB4AaqI247775788
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Dec 2019 10:36:52 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2E5AB11C052;
+        Wed,  4 Dec 2019 10:36:52 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C9E3A11C054;
+        Wed,  4 Dec 2019 10:36:49 +0000 (GMT)
+Received: from [9.199.53.54] (unknown [9.199.53.54])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Dec 2019 10:36:49 +0000 (GMT)
+Subject: Re: [PATCH v2 0/3] perf report: Few fixes
+To:     acme@kernel.org, jolsa@redhat.com
+Cc:     kan.liang@intel.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        ak@linux.intel.com, yao.jin@linux.intel.com,
+        linux-kernel@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20191114132213.5419-1-ravi.bangoria@linux.ibm.com>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Date:   Wed, 4 Dec 2019 16:06:40 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20191202114117.1264-3-pdurrant@amazon.com>
+In-Reply-To: <20191114132213.5419-1-ravi.bangoria@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19120410-0028-0000-0000-000003C4A377
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120410-0029-0000-0000-00002487C11D
+Message-Id: <a2915a45-8dcf-af26-ff95-6b7bc68f0313@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-04_03:2019-12-04,2019-12-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
+ impostorscore=0 mlxscore=0 malwarescore=0 mlxlogscore=764
+ priorityscore=1501 suspectscore=0 adultscore=0 lowpriorityscore=0
+ phishscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912040083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02.12.19 12:41, Paul Durrant wrote:
-> Add a module_exit() to perform the necessary clean-up.
+Arnaldo, Jiri,
+
+Any feedback?
+
+Ravi
+
+On 11/14/19 6:52 PM, Ravi Bangoria wrote:
+> v1: https://lore.kernel.org/r/20191112054946.5869-1-ravi.bangoria@linux.ibm.com
 > 
-> Signed-off-by: Paul Durrant <pdurrant@amazon.com>
-> Reviewed-by: "Roger Pau Monné" <roger.pau@citrix.com>
-> Reviewed-by: Juergen Gross <jgross@suse.com>
+> v1 fixed a segfault when -F phys_daddr is used in perf report without
+> --mem-mode. Arnaldo suggested to bail out the option completely in
+> such case instead of showing 0 values.
+> 
+> Ravi Bangoria (3):
+>    perf hists: Replace pr_err with ui__error
+>    perf report: Make -F more strict like -s
+>    perf report: Error out for mem mode fields if mem info is not
+>      available
+> 
+>   tools/perf/builtin-report.c |  8 ++++++++
+>   tools/perf/util/sort.c      | 16 +++++++++++-----
+>   2 files changed, 19 insertions(+), 5 deletions(-)
+> 
 
-Pushed to xen/tip.git for-linus-5.5b
-
-
-Juergen
