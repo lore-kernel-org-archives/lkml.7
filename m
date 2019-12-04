@@ -2,382 +2,169 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB9EC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78163C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04B5D2084F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B6B920640
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:13:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="xIZ14m5g"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="cYXUZNfJ";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="uyLBqutA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfLDHMU (ORCPT
+        id S1727256AbfLDHNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 02:12:20 -0500
-Received: from mail-eopbgr680043.outbound.protection.outlook.com ([40.107.68.43]:59426
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727322AbfLDHMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 02:12:18 -0500
+        Wed, 4 Dec 2019 02:13:06 -0500
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:26016 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726599AbfLDHNF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 02:13:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1575443585; x=1606979585;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=zP/QANpMdBLvnNprMnSG+WGFn9a1TbYeLrqVu8MI7uQ=;
+  b=cYXUZNfJLLM6Gc+jvMClbwUCTq8FOX2AfRLL26Oih1yFC0gMgeescUzb
+   +ls66oQ2x8H27KLDeBb9Z9Nd6tQQ8F5SyFQ44gCW8H0TP/me4K9gvkyWd
+   VezGvVuejWrEA+yIDZ9oqbanZK3EHVM3Zx2Vm/q3CtAUpv7VKSXG2c6ZO
+   KCzNTMoYFYE46jxbLMOfeAIM78fiquy8eSIa+CIFv2wWMW3NzM5nPgtWQ
+   H1wBcKFzU5YicDTmLMhbj1Tvw08pfh2FRrI0cgK9OEQyRvT33pTykosTn
+   KGAJeJf0yyOaz9h1/mGi02rJndol/ZbelJ5QYG3rNr3TJjv/UQs9DWaGy
+   g==;
+IronPort-SDR: OWwmMcgNv92L2tGRe3sXIG+Ykyhd66GWN+EsJOcsQt7UKYItzAai370jvwhnuIWl86nb9u9TMc
+ 0fLgVx+DXD7PazKKhg4inS8+DfEFZuJeMt1zwvO9063X2Rlq4mM1EOE4RVvs722Hu39HYPKwXL
+ vwavUU7Nmm7r+SMXI5LXQE6RxtEvkN1o/cFEJjZlkT9BPUuyNFjSWHx5ZTHVVGZRx3Cgy5vXR4
+ wabNHss1NrWG+9OU51LXRsa4xnCuob686lswHZFiGG5eY8m0T/gevXot0FaMnmWHfxueIYkQdl
+ W1M=
+X-IronPort-AV: E=Sophos;i="5.69,276,1571673600"; 
+   d="scan'208";a="129012732"
+Received: from mail-sn1nam02lp2053.outbound.protection.outlook.com (HELO NAM02-SN1-obe.outbound.protection.outlook.com) ([104.47.36.53])
+  by ob1.hgst.iphmx.com with ESMTP; 04 Dec 2019 15:13:00 +0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jW5uoA+03Hm3yoC9j1cA5Zb1oMIsJc40kxuMGM0aXTTMFTxLt3qmv0T/e0EdtyQKGt7h4J6Z+62Tu8TKXEHfq6xDCMjbFSpvHdl5TFX5oIN0wLhQELGk0RR7Xfby4817AkNA4bRmL/2j1k9W8Mkh9/bp+cnPtgy0V/23CE1ZpIoZxKB0A/wthPLNH3xPQYAUewXOLCVnb7dfuHsUrG4VB/qB10pzVuL0nJrn3GA2zdgv+PzCjie5B83cwWLGequhV9KW3coxPUu6FcjGdFDj4VBzdX9fTRY3pab89gBJE2J0mhWYKl9z/JNx6cYC6yWpRqpM1MfpMt/T1xVl5XlpxQ==
+ b=HGe7Suzi9QPZfT+KzCXN6ExKhvG2FX9zjoEYQyQ82B0gutsXEq0pSNRU/PsBkURD9VW+ZGaJ4poeeqZJF5hmgfUNuHhRkMK4zeFLraha9Cq9XDLgcmxjrr/5yN5p15oP+6AklNWamNzqMVUzb/2V1hWGTucI49QADWJfPWMDY7IKX06z44addMovd09JZc4A56C9Duu1UB6Pn2OzcgvoMv3764Lg/4kPvY1ZCzfrsvvAPrznbQ40jTfrD8EVx5Pbr/OVyUiGwsFgKRYmGXLDu5mNubiGxhiOzjeH7GM14dvZ4Xq7iHserF99IzZmBsNPGxunsWg3raOfULA+1oB/2A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B4XD5hAhqMgNiPoU6VxiBcvHcktkCvxlrCVD7SgPmow=;
- b=WyJserXtn+habpRdPKs8c2VBUE4K0zkvJXOuIVBzt8CA9xesqP6vYMdPgOx3LYW3UPOxRjCfDXoY7fpowboqRMTHYb3kjhK6kUzzPPMlc18ApXRf8put5mi3ybleVEtts3mKXfJByNsarks5urEifXRkXXl/I9Th/vuER1oUyXdYHqQ0BdaYcCjW5JAGhgIIEyey+ulfw3kY4wBHCIZlBORtC8s7/qNkG9pcsl40E0IDLF6BUDF79yc/WyUj6fZy+HBQU5eJ6kJe84h6vBe3O/ugVUyg4C0QESnQdZNK8ar52vEJuIL8WzJ4UhI4PuNqXvoWlog+oudzgopdbBp3xw==
+ bh=LqJm8s1Oj2cJV6Xj/fM7N/M3rOYj4LesTPCWZ3O6xVA=;
+ b=j6ujCVuu1pQMIDWGPenEQd3N98Jkaey95Oe/nvypG7FOXFF3IdtoMyvXu3RLM7G98+fxzItHG8EanCTJUdfPvf5sGFBlXPVe+xpsh31clfjxrAkTjRz+B1wNfDZs5ZhPjBJ5pL3sqWw1us5TVaoqx4PgFtuB/aRlPCip4p8rfDi8jYdXh+tS3QUoFicGtztjKMKh+2YnkoTc8CQKJDWRYeNzrKpAWe3R+z7R4D6VTVPyx8/t0uSDqNUitOi2a27VjifRzZj2UQuxrsGos7uFXED+8IHQaRZpepG7qrxBMn82KXEdAZ/RAyfA+UQ7ub0fTBSO8oJtBiXlF8wCTeqwSg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B4XD5hAhqMgNiPoU6VxiBcvHcktkCvxlrCVD7SgPmow=;
- b=xIZ14m5gKaUQAF/oAQCpkBZucL5WuXM24zSSrJVSMFQeDjs+tfGMJI1x6T1ga2hGWMXB39pWy389M8B04HEFedcNb48M5lluPQgDTdd1PURXh5rqHyNZNJs6wzyN/Boo6aSsSyYxoRpRIXNAhPuC5UIXcJ3W+NZXDZM8Vf0RDVI=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Rijo-john.Thomas@amd.com; 
-Received: from CY4PR12MB1925.namprd12.prod.outlook.com (10.175.62.7) by
- CY4PR12MB1400.namprd12.prod.outlook.com (10.168.165.138) with Microsoft SMTP
+ bh=LqJm8s1Oj2cJV6Xj/fM7N/M3rOYj4LesTPCWZ3O6xVA=;
+ b=uyLBqutAii7mvI6BrFnkHDBTz7hUrYcCGo4ICAf7+8/FTgaCGrKCjEenKJvv7zPVMbiy6i5f5U/M/SC3ZhgDBAE9QvU6tB8bwguKZk9Y870AlLzr9tBn+aGkV2eIqzMK2j0ssENErENFKo6xq7Ah6fKA1736BcM4uQZUGcisQg0=
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com (10.186.144.209) by
+ MN2PR04MB6846.namprd04.prod.outlook.com (10.186.145.150) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.12; Wed, 4 Dec 2019 07:11:56 +0000
-Received: from CY4PR12MB1925.namprd12.prod.outlook.com
- ([fe80::cd8b:1d7e:31c2:e8b4]) by CY4PR12MB1925.namprd12.prod.outlook.com
- ([fe80::cd8b:1d7e:31c2:e8b4%7]) with mapi id 15.20.2495.014; Wed, 4 Dec 2019
- 07:11:56 +0000
-From:   Rijo Thomas <Rijo-john.Thomas@amd.com>
-To:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Gary Hook <gary.hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
-Cc:     Rijo Thomas <Rijo-john.Thomas@amd.com>,
-        Nimesh Easow <Nimesh.Easow@amd.com>,
-        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [RFC PATCH v3 6/6] crypto: ccp - provide in-kernel API to submit TEE commands
-Date:   Wed,  4 Dec 2019 11:49:03 +0530
-Message-Id: <8bde26314458954e1f229f5c737063692744a6cc.1575438845.git.Rijo-john.Thomas@amd.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1575438845.git.Rijo-john.Thomas@amd.com>
-References: <cover.1575438845.git.Rijo-john.Thomas@amd.com>
-Content-Type: text/plain
-X-ClientProxiedBy: MAXPR0101CA0065.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:e::27) To CY4PR12MB1925.namprd12.prod.outlook.com
- (2603:10b6:903:120::7)
+ 15.20.2516.13; Wed, 4 Dec 2019 07:12:59 +0000
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::9447:fa71:53df:f866]) by MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::9447:fa71:53df:f866%3]) with mapi id 15.20.2495.014; Wed, 4 Dec 2019
+ 07:12:59 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Bean Huo <huobean@gmail.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "pedrom.sousa@synopsys.com" <pedrom.sousa@synopsys.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH RESEND] scsi: ufs: delete unused structure filed tc
+Thread-Topic: [PATCH RESEND] scsi: ufs: delete unused structure filed tc
+Thread-Index: AQHVqkBQqDGlHgUBgECpOiaklQka/6epj7gQ
+Date:   Wed, 4 Dec 2019 07:12:59 +0000
+Message-ID: <MN2PR04MB699129A4ADCCA58322AD8EDDFC5D0@MN2PR04MB6991.namprd04.prod.outlook.com>
+References: <20191204011507.4662-1-huobean@gmail.com>
+In-Reply-To: <20191204011507.4662-1-huobean@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Avri.Altman@wdc.com; 
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 513c29da-054c-47b8-2406-08d778896520
+x-ms-traffictypediagnostic: MN2PR04MB6846:
+x-microsoft-antispam-prvs: <MN2PR04MB68465D4203E5DA06215E1A3AFC5D0@MN2PR04MB6846.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0241D5F98C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(39860400002)(346002)(396003)(136003)(366004)(199004)(189003)(2501003)(6506007)(478600001)(2906002)(229853002)(7736002)(74316002)(305945005)(8936002)(8676002)(81166006)(11346002)(81156014)(25786009)(33656002)(446003)(4326008)(9686003)(55016002)(54906003)(110136005)(6246003)(76116006)(66946007)(64756008)(66476007)(66556008)(66446008)(14444005)(256004)(6436002)(316002)(71190400001)(71200400001)(52536014)(5660300002)(26005)(6116002)(102836004)(186003)(3846002)(76176011)(7696005)(7416002)(86362001)(14454004)(99286004)(2201001)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6846;H:MN2PR04MB6991.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: hRIBWdeWC8zEreyZ4R8PR2yKywSUdDdN3jE0HldyQgIp9Ubnk9TeUC7Y/Yjwo0Wg7nuDuBOuUHzgLJAl3GU6CdZYY+mojUOk86OIHuYzn03/nCi9pvvYph49SISDqOgUQ9egqlNUeXn6phmzaCtO0a5j/zwuPRssrFkycOptU6h5Dm7at95glauOHfEVIrQWeZ9w90+MQQhY5TuamWCLAGsfdJlbwa2Aq1vIk+rJl2DucYPrzmbaBhLzNG6YfIrvt+JLrZ60PkJeVbrdo3bIo1rAmFgx+7q68Kf6eJ2kZtGz4QMVLfwWfINlBED38K8W1v+mj1iolN6w7g3ZJNK+hoaYOIcOvKZF4sYtH9LGwpxOw4Je8BQgJNdZRBc38MbmwyqCShuQeAvyhnQ1joOz3YPbJukN1vR8uFTrZ6n7BL+igk9zM7WWY14UbnNoQrTDYLN563QZNN5cNJvol3RpTIpHHKfOsDwhyZZtyoGz/OS6JTMqQNxTkulaEStW0wEe
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Mailer: git-send-email 1.9.1
-X-Originating-IP: [165.204.156.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 375a00a7-99ba-4dbe-13f7-08d778893ee2
-X-MS-TrafficTypeDiagnostic: CY4PR12MB1400:|CY4PR12MB1400:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CY4PR12MB1400AE98FF28BCADC3D342D4CF5D0@CY4PR12MB1400.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
-X-Forefront-PRVS: 0241D5F98C
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(366004)(39860400002)(396003)(346002)(199004)(189003)(2616005)(66556008)(2906002)(66476007)(50466002)(48376002)(478600001)(14454004)(50226002)(11346002)(36756003)(81156014)(26005)(54906003)(110136005)(81166006)(3846002)(66946007)(8936002)(446003)(8676002)(5660300002)(6486002)(6116002)(386003)(186003)(6436002)(4326008)(99286004)(25786009)(6506007)(14444005)(118296001)(76176011)(16586007)(316002)(86362001)(52116002)(7736002)(51416003)(6666004)(6512007)(305945005)(134885004);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1400;H:CY4PR12MB1925.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 8Gl3Zm7d7GxtLbjg9K6HJhmgD+S6Ui8PFPCATlesuLOlPDB52oeZsw8eAeyVeKQe597nD1BKgzL/7KRmBVfcT8w9+CmdIpZOZetwP1j45iqiW7yRE7cUp2Qc6kO2UI9QKt4Q+d1UBgLACf1kZBVahqKfxF0sOW8+APKElDSOuyZzJLOvJgDNeV2u/3mVXcFqVpTufuy0KPHPgbQN8W34UAjbSfLc0CRj6Xf8U7YTgKtFd8ZTqRr/KgfjAr4+RUAuTTN5lQKNpGJsvu2XLHTCHvt5LBcEesUTtRE4o1JvTBVsY9DZpcyySeUWsBvPfLd9ydYnZ5/Vw9wmcaMkbn6xeE6dPkQeWmsBcXur/yTEuNw06U/7G3JsS2hBykpsTvTW9QxjJQzihIZDfn2P68e00xdjxoq5NmNPcN0Hn5eIveX9hf5dF1CZ8JTN8J6mllIxikYEKYPm46QrcrCaaA0RI8eZuvCW3OuoLAcsglwQy836eU7QDjXamfq59WiKalbF
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 375a00a7-99ba-4dbe-13f7-08d778893ee2
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2019 07:11:56.2898
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 513c29da-054c-47b8-2406-08d778896520
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2019 07:12:59.7248
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xdbMivMscJoJkI+OeRNNRPPeXbBwVYB0nT7WJGGTlcuT9gtMkCeuDeJ1EEjqggwVoQlR5wIvo2Fz7zpjvNlE6A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1400
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pafZZKEmVqVqRd63QWzawjq4BdrT9LsoxbHc4z2+lH8e8RKsjU5hrbtn/59KHPsDTDryIL6PcYlIQkb0mrgL/g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6846
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extend the functionality of AMD Secure Processor (SP) driver by
-providing an in-kernel API to submit commands to TEE ring buffer for
-processing by Trusted OS running on AMD Secure Processor.
+> From: Bean Huo <beanhuo@micron.com>
+>=20
+> Delete unused structure field tc in structure utp_upiu_req, since no pers=
+on uses
+Typo tc -> tr
 
-Following TEE commands are supported by Trusted OS:
+Thanks,
+Avri
 
-* TEE_CMD_ID_LOAD_TA : Load Trusted Application (TA) binary into
-  TEE environment
-* TEE_CMD_ID_UNLOAD_TA : Unload TA binary from TEE environment
-* TEE_CMD_ID_OPEN_SESSION : Open session with loaded TA
-* TEE_CMD_ID_CLOSE_SESSION : Close session with loaded TA
-* TEE_CMD_ID_INVOKE_CMD : Invoke a command with loaded TA
-* TEE_CMD_ID_MAP_SHARED_MEM : Map shared memory
-* TEE_CMD_ID_UNMAP_SHARED_MEM : Unmap shared memory
 
-Linux AMD-TEE driver will use this API to submit command buffers
-for processing in Trusted Execution Environment. The AMD-TEE driver
-shall be introduced in a separate patch.
-
-Cc: Jens Wiklander <jens.wiklander@linaro.org>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Co-developed-by: Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>
-Signed-off-by: Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>
-Signed-off-by: Rijo Thomas <Rijo-john.Thomas@amd.com>
----
- drivers/crypto/ccp/tee-dev.c | 126 +++++++++++++++++++++++++++++++++++++++++++
- drivers/crypto/ccp/tee-dev.h |   1 +
- include/linux/psp-tee.h      |  73 +++++++++++++++++++++++++
- 3 files changed, 200 insertions(+)
- create mode 100644 include/linux/psp-tee.h
-
-diff --git a/drivers/crypto/ccp/tee-dev.c b/drivers/crypto/ccp/tee-dev.c
-index ccbc2ce..555c8a7 100644
---- a/drivers/crypto/ccp/tee-dev.c
-+++ b/drivers/crypto/ccp/tee-dev.c
-@@ -14,6 +14,7 @@
- #include <linux/slab.h>
- #include <linux/gfp.h>
- #include <linux/psp-sev.h>
-+#include <linux/psp-tee.h>
- 
- #include "psp-dev.h"
- #include "tee-dev.h"
-@@ -38,6 +39,7 @@ static int tee_alloc_ring(struct psp_tee_device *tee, int ring_size)
- 	rb_mgr->ring_start = start_addr;
- 	rb_mgr->ring_size = ring_size;
- 	rb_mgr->ring_pa = __psp_pa(start_addr);
-+	mutex_init(&rb_mgr->mutex);
- 
- 	return 0;
- }
-@@ -55,6 +57,7 @@ static void tee_free_ring(struct psp_tee_device *tee)
- 	rb_mgr->ring_start = NULL;
- 	rb_mgr->ring_size = 0;
- 	rb_mgr->ring_pa = 0;
-+	mutex_destroy(&rb_mgr->mutex);
- }
- 
- static int tee_wait_cmd_poll(struct psp_tee_device *tee, unsigned int timeout,
-@@ -236,3 +239,126 @@ void tee_dev_destroy(struct psp_device *psp)
- 
- 	tee_destroy_ring(tee);
- }
-+
-+static int tee_submit_cmd(struct psp_tee_device *tee, enum tee_cmd_id cmd_id,
-+			  void *buf, size_t len, struct tee_ring_cmd **resp)
-+{
-+	struct tee_ring_cmd *cmd;
-+	u32 rptr, wptr;
-+	int nloop = 1000, ret = 0;
-+
-+	*resp = NULL;
-+
-+	mutex_lock(&tee->rb_mgr.mutex);
-+
-+	wptr = tee->rb_mgr.wptr;
-+
-+	/* Check if ring buffer is full */
-+	do {
-+		rptr = ioread32(tee->io_regs + tee->vdata->ring_rptr_reg);
-+
-+		if (!(wptr + sizeof(struct tee_ring_cmd) == rptr))
-+			break;
-+
-+		dev_info(tee->dev, "tee: ring buffer full. rptr = %u wptr = %u\n",
-+			 rptr, wptr);
-+
-+		/* Wait if ring buffer is full */
-+		mutex_unlock(&tee->rb_mgr.mutex);
-+		schedule_timeout_interruptible(msecs_to_jiffies(10));
-+		mutex_lock(&tee->rb_mgr.mutex);
-+
-+	} while (--nloop);
-+
-+	if (!nloop && (wptr + sizeof(struct tee_ring_cmd) == rptr)) {
-+		dev_err(tee->dev, "tee: ring buffer full. rptr = %u wptr = %u\n",
-+			rptr, wptr);
-+		ret = -EBUSY;
-+		goto unlock;
-+	}
-+
-+	/* Pointer to empty data entry in ring buffer */
-+	cmd = (struct tee_ring_cmd *)(tee->rb_mgr.ring_start + wptr);
-+
-+	/* Write command data into ring buffer */
-+	cmd->cmd_id = cmd_id;
-+	cmd->cmd_state = TEE_CMD_STATE_INIT;
-+	memset(&cmd->buf[0], 0, sizeof(cmd->buf));
-+	memcpy(&cmd->buf[0], buf, len);
-+
-+	/* Update local copy of write pointer */
-+	tee->rb_mgr.wptr += sizeof(struct tee_ring_cmd);
-+	if (tee->rb_mgr.wptr >= tee->rb_mgr.ring_size)
-+		tee->rb_mgr.wptr = 0;
-+
-+	/* Trigger interrupt to Trusted OS */
-+	iowrite32(tee->rb_mgr.wptr, tee->io_regs + tee->vdata->ring_wptr_reg);
-+
-+	/* The response is provided by Trusted OS in same
-+	 * location as submitted data entry within ring buffer.
-+	 */
-+	*resp = cmd;
-+
-+unlock:
-+	mutex_unlock(&tee->rb_mgr.mutex);
-+
-+	return ret;
-+}
-+
-+static int tee_wait_cmd_completion(struct psp_tee_device *tee,
-+				   struct tee_ring_cmd *resp,
-+				   unsigned int timeout)
-+{
-+	/* ~5ms sleep per loop => nloop = timeout * 200 */
-+	int nloop = timeout * 200;
-+
-+	while (--nloop) {
-+		if (resp->cmd_state == TEE_CMD_STATE_COMPLETED)
-+			return 0;
-+
-+		usleep_range(5000, 5100);
-+	}
-+
-+	dev_err(tee->dev, "tee: command 0x%x timed out, disabling PSP\n",
-+		resp->cmd_id);
-+
-+	psp_dead = true;
-+
-+	return -ETIMEDOUT;
-+}
-+
-+int psp_tee_process_cmd(enum tee_cmd_id cmd_id, void *buf, size_t len,
-+			u32 *status)
-+{
-+	struct psp_device *psp = psp_get_master_device();
-+	struct psp_tee_device *tee;
-+	struct tee_ring_cmd *resp;
-+	int ret;
-+
-+	if (!buf || !status || !len || len > sizeof(resp->buf))
-+		return -EINVAL;
-+
-+	*status = 0;
-+
-+	if (!psp || !psp->tee_data)
-+		return -ENODEV;
-+
-+	if (psp_dead)
-+		return -EBUSY;
-+
-+	tee = psp->tee_data;
-+
-+	ret = tee_submit_cmd(tee, cmd_id, buf, len, &resp);
-+	if (ret)
-+		return ret;
-+
-+	ret = tee_wait_cmd_completion(tee, resp, TEE_DEFAULT_TIMEOUT);
-+	if (ret)
-+		return ret;
-+
-+	memcpy(buf, &resp->buf[0], len);
-+	*status = resp->status;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(psp_tee_process_cmd);
-diff --git a/drivers/crypto/ccp/tee-dev.h b/drivers/crypto/ccp/tee-dev.h
-index b3db0fc..f099601 100644
---- a/drivers/crypto/ccp/tee-dev.h
-+++ b/drivers/crypto/ccp/tee-dev.h
-@@ -54,6 +54,7 @@ struct tee_init_ring_cmd {
-  * @wptr:        index to the last written entry in ring buffer
-  */
- struct ring_buf_manager {
-+	struct mutex mutex;	/* synchronizes access to ring buffer */
- 	void *ring_start;
- 	u32 ring_size;
- 	phys_addr_t ring_pa;
-diff --git a/include/linux/psp-tee.h b/include/linux/psp-tee.h
-new file mode 100644
-index 0000000..63bb221
---- /dev/null
-+++ b/include/linux/psp-tee.h
-@@ -0,0 +1,73 @@
-+/* SPDX-License-Identifier: MIT */
-+/*
-+ * AMD Trusted Execution Environment (TEE) interface
-+ *
-+ * Author: Rijo Thomas <Rijo-john.Thomas@amd.com>
-+ *
-+ * Copyright 2019 Advanced Micro Devices, Inc.
-+ *
-+ */
-+
-+#ifndef __PSP_TEE_H_
-+#define __PSP_TEE_H_
-+
-+#include <linux/types.h>
-+#include <linux/errno.h>
-+
-+/* This file defines the Trusted Execution Environment (TEE) interface commands
-+ * and the API exported by AMD Secure Processor driver to communicate with
-+ * AMD-TEE Trusted OS.
-+ */
-+
-+/**
-+ * enum tee_cmd_id - TEE Interface Command IDs
-+ * @TEE_CMD_ID_LOAD_TA:          Load Trusted Application (TA) binary into
-+ *                               TEE environment
-+ * @TEE_CMD_ID_UNLOAD_TA:        Unload TA binary from TEE environment
-+ * @TEE_CMD_ID_OPEN_SESSION:     Open session with loaded TA
-+ * @TEE_CMD_ID_CLOSE_SESSION:    Close session with loaded TA
-+ * @TEE_CMD_ID_INVOKE_CMD:       Invoke a command with loaded TA
-+ * @TEE_CMD_ID_MAP_SHARED_MEM:   Map shared memory
-+ * @TEE_CMD_ID_UNMAP_SHARED_MEM: Unmap shared memory
-+ */
-+enum tee_cmd_id {
-+	TEE_CMD_ID_LOAD_TA = 1,
-+	TEE_CMD_ID_UNLOAD_TA,
-+	TEE_CMD_ID_OPEN_SESSION,
-+	TEE_CMD_ID_CLOSE_SESSION,
-+	TEE_CMD_ID_INVOKE_CMD,
-+	TEE_CMD_ID_MAP_SHARED_MEM,
-+	TEE_CMD_ID_UNMAP_SHARED_MEM,
-+};
-+
-+#ifdef CONFIG_CRYPTO_DEV_SP_PSP
-+/**
-+ * psp_tee_process_cmd() - Process command in Trusted Execution Environment
-+ * @cmd_id:     TEE command ID (&enum tee_cmd_id)
-+ * @buf:        Command buffer for TEE processing. On success, is updated
-+ *              with the response
-+ * @len:        Length of command buffer in bytes
-+ * @status:     On success, holds the TEE command execution status
-+ *
-+ * This function submits a command to the Trusted OS for processing in the
-+ * TEE environment and waits for a response or until the command times out.
-+ *
-+ * Returns:
-+ * 0 if TEE successfully processed the command
-+ * -%ENODEV    if PSP device not available
-+ * -%EINVAL    if invalid input
-+ * -%ETIMEDOUT if TEE command timed out
-+ * -%EBUSY     if PSP device is not responsive
-+ */
-+int psp_tee_process_cmd(enum tee_cmd_id cmd_id, void *buf, size_t len,
-+			u32 *status);
-+
-+#else /* !CONFIG_CRYPTO_DEV_SP_PSP */
-+
-+static inline int psp_tee_process_cmd(enum tee_cmd_id cmd_id, void *buf,
-+				      size_t len, u32 *status)
-+{
-+	return -ENODEV;
-+}
-+#endif /* CONFIG_CRYPTO_DEV_SP_PSP */
-+#endif /* __PSP_TEE_H_ */
--- 
-1.9.1
+> it for task management.
+>=20
+> Fixes: df032bf27a41 ("scsi: ufs: Add a bsg endpoint that supports UPIUs")
+> Signed-off-by: Bean Huo <beanhuo@micron.com>
+> ---
+>  include/uapi/scsi/scsi_bsg_ufs.h | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>=20
+> diff --git a/include/uapi/scsi/scsi_bsg_ufs.h b/include/uapi/scsi/scsi_bs=
+g_ufs.h
+> index 9988db6ad244..d55f2176dfd4 100644
+> --- a/include/uapi/scsi/scsi_bsg_ufs.h
+> +++ b/include/uapi/scsi/scsi_bsg_ufs.h
+> @@ -68,14 +68,13 @@ struct utp_upiu_cmd {
+>   * @header:UPIU header structure DW-0 to DW-2
+>   * @sc: fields structure for scsi command DW-3 to DW-7
+>   * @qr: fields structure for query request DW-3 to DW-7
+> + * @uc: use utp_upiu_query to host the 4 dwords of uic command
+>   */
+>  struct utp_upiu_req {
+>         struct utp_upiu_header header;
+>         union {
+>                 struct utp_upiu_cmd             sc;
+>                 struct utp_upiu_query           qr;
+> -               struct utp_upiu_query           tr;
+> -               /* use utp_upiu_query to host the 4 dwords of uic command=
+ */
+>                 struct utp_upiu_query           uc;
+>         };
+>  };
+> --
+> 2.17.1
 
