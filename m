@@ -2,122 +2,118 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C84C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4F1C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A52E22468D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BA0C246A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:39:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbfLDGhK (ORCPT
+        id S1727207AbfLDGjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 01:37:10 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:55610 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725791AbfLDGhK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 01:37:10 -0500
-Received: by mail-io1-f72.google.com with SMTP id z21so4320534iob.22
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 22:37:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=j0gq/2gGYT4L1Q+bpX6PwWBD0674R9BZnHG5rWPn0xk=;
-        b=dTKyj0fISq1jb5fOHi4lU8fzl7pyoreTCNGuR/Gg/GhH0G0/USiAF2U6L9zBtSr7RX
-         8GerJ5W6Xt3K4INH8AB5iUH3McKr9DnVH2pgvYDgFJKQyuVfDQk8hlAkZ0NHin2FLIa8
-         whqj300gPbeXNumhDz1ZF4f1E6bksxwMXAUeZil1WkjanIFtxqInjiRXqfa7OSmeDr9X
-         pd6pHu/EnMAWRrsSvCb0uL1uAEVZs2uMn74y4k8eIFFoNH6H8hZxN+1I+pDbEyMqSZnX
-         OLRWSf529f8vruuCAP/ys/dIR3xcZa2UPmobZqx47c3LFR/DuapX/myTUxxk9Hy8Mfl1
-         pASw==
-X-Gm-Message-State: APjAAAW46ox06MJNGFsL0KxTFQu2j9Rr4tN9lp8Mh/FWycoxbZ3EUh26
-        FstgaQfn2L+mCO8uY9vS05+Pn032UdLL6g1gEN/APb9PXi34
-X-Google-Smtp-Source: APXvYqz2elRUjqdBYAGygCnebDlcZAd5kvfX5JkZr0/lvExB95JFzMvzqAhHpqBKiqAAfkRTkkI4PZQWWJm0UsQHzn5aOK/1tdVX
+        Wed, 4 Dec 2019 01:39:55 -0500
+Received: from mga11.intel.com ([192.55.52.93]:60765 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbfLDGjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 01:39:54 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Dec 2019 22:39:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,276,1571727600"; 
+   d="scan'208";a="236171027"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by fmsmga004.fm.intel.com with ESMTP; 03 Dec 2019 22:39:54 -0800
+Received: from fmsmsx154.amr.corp.intel.com (10.18.116.70) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 3 Dec 2019 22:39:53 -0800
+Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
+ FMSMSX154.amr.corp.intel.com (10.18.116.70) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 3 Dec 2019 22:39:53 -0800
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.109]) by
+ SHSMSX151.ccr.corp.intel.com ([169.254.3.214]) with mapi id 14.03.0439.000;
+ Wed, 4 Dec 2019 14:39:51 +0800
+From:   "Zhao, Shirley" <shirley.zhao@intel.com>
+To:     James Bottomley <jejb@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>
+CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
+        "Zhu, Bing" <bing.zhu@intel.com>,
+        "Chen, Luhai" <luhai.chen@intel.com>
+Subject: RE: One question about trusted key of keyring in Linux kernel.
+Thread-Topic: One question about trusted key of keyring in Linux kernel.
+Thread-Index: AdWZwFKzDBwFOydYTGGk+Aqs+6BIxAANhxEAAoxRZMAAOKaagABSSevwABZzFQAAgRP1kP//pW0A//9ftMCAAMH6gP//eLrAgACO1ID//3k2UAAqYIQA//8FitD//nrPAP/64XgQ//Y+3YD/68PYUA==
+Date:   Wed, 4 Dec 2019 06:39:50 +0000
+Message-ID: <A888B25CD99C1141B7C254171A953E8E4909E8B8@shsmsx102.ccr.corp.intel.com>
+References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
+         <1573659978.17949.83.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
+         <1574877977.3551.5.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E49096521@shsmsx102.ccr.corp.intel.com>
+         <1575057916.6220.7.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909BA3B@shsmsx102.ccr.corp.intel.com>
+         <1575260220.4080.17.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909D360@shsmsx102.ccr.corp.intel.com>
+         <1575267453.4080.26.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909E381@shsmsx102.ccr.corp.intel.com>
+         <1575269075.4080.31.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909E399@shsmsx102.ccr.corp.intel.com>
+         <1575312932.24227.13.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909E62E@shsmsx102.ccr.corp.intel.com>
+         <1575342724.24227.41.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909E877@shsmsx102.ccr.corp.intel.com>
+ <1575430389.14163.27.camel@linux.ibm.com>
+In-Reply-To: <1575430389.14163.27.camel@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZTcxOWVjYTMtN2VlYS00NmVjLTkwYTMtZWYxYzQ3ZmU4OWEyIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiWURiU25iYSs0RmZ5Q3VwUG9LRUFwemtiQlwvMVRWUnRKeExrcVlKZEF4NW5WdUZMTXRwcWpsb2hra1U5Q2R6azMifQ==
+x-ctpclassification: CTP_NT
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1002:: with SMTP id n2mr1992378ilj.249.1575441429856;
- Tue, 03 Dec 2019 22:37:09 -0800 (PST)
-Date:   Tue, 03 Dec 2019 22:37:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ca89a80598db0ae5@google.com>
-Subject: general protection fault in gcmaes_crypt_by_sg (2)
-From:   syzbot <syzbot+675c45cea768b3819803@syzkaller.appspotmail.com>
-To:     bp@alien8.de, davem@davemloft.net, herbert@gondor.apana.org.au,
-        hpa@zytor.com, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    76bb8b05 Merge tag 'kbuild-v5.5' of git://git.kernel.org/p..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=148a7aeae00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=dd226651cb0f364b
-dashboard link: https://syzkaller.appspot.com/bug?extid=675c45cea768b3819803
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+675c45cea768b3819803@syzkaller.appspotmail.com
-
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 560 Comm: kworker/u4:10 Not tainted 5.4.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: pencrypt_parallel padata_parallel_worker
-RIP: 0010:scatterwalk_start include/crypto/scatterwalk.h:68 [inline]
-RIP: 0010:scatterwalk_pagedone include/crypto/scatterwalk.h:93 [inline]
-RIP: 0010:scatterwalk_done include/crypto/scatterwalk.h:101 [inline]
-RIP: 0010:gcmaes_crypt_by_sg.constprop.0+0x1035/0x1aa0  
-arch/x86/crypto/aesni-intel_glue.c:786
-Code: e8 b0 02 52 02 48 89 84 24 a8 00 00 00 48 83 c0 08 48 89 c2 48 89 84  
-24 90 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 04 02 84  
-c0 74 08 3c 03 0f 8e 30 09 00 00 48 8b 84 24 a8 00
-RSP: 0000:ffffc90002cb7750 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: 0000000000003006 RCX: ffffffff838ba9f9
-RDX: 0000000000000001 RSI: ffffffff838baa4b RDI: 0000000000000007
-RBP: ffffc90002cb7b20 R08: ffff8880a8332000 R09: 0000000000000005
-R10: 0000000000000000 R11: 0000000000000ffb R12: 0000000000003006
-R13: 0000000000000000 R14: ffff888053c33300 R15: 0000000000003006
-FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fa6ece55330 CR3: 0000000094c3d000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  gcmaes_encrypt arch/x86/crypto/aesni-intel_glue.c:840 [inline]
-  generic_gcmaes_encrypt+0x10d/0x160 arch/x86/crypto/aesni-intel_glue.c:1019
-  crypto_aead_encrypt+0xaf/0xf0 crypto/aead.c:94
-  simd_aead_encrypt+0x1a6/0x2b0 crypto/simd.c:335
-  crypto_aead_encrypt+0xaf/0xf0 crypto/aead.c:94
-  pcrypt_aead_enc+0x19/0x80 crypto/pcrypt.c:76
-  padata_parallel_worker+0x28f/0x470 kernel/padata.c:81
-  process_one_work+0x9af/0x1740 kernel/workqueue.c:2264
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2410
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Modules linked in:
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 560 at kernel/locking/mutex.c:1419  
-mutex_trylock+0x279/0x2f0 kernel/locking/mutex.c:1427
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+T2gsIGdldCB5b3UsIEphbWVzLiANClVuZGVyc3RhbmQsIHRoYW5rcyBmb3IgeW91ciBmZWVkYmFj
+ay4gDQpMb29raW5nIGZvcndhcmQgZm9yIHlvdXIgcHJvcG9zZWQgQVBJLiANCg0KLSBTaGlybGV5
+IA0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogSmFtZXMgQm90dG9tbGV5IDxq
+ZWpiQGxpbnV4LmlibS5jb20+IA0KU2VudDogV2VkbmVzZGF5LCBEZWNlbWJlciA0LCAyMDE5IDEx
+OjMzIEFNDQpUbzogWmhhbywgU2hpcmxleSA8c2hpcmxleS56aGFvQGludGVsLmNvbT47IE1pbWkg
+Wm9oYXIgPHpvaGFyQGxpbnV4LmlibS5jb20+OyBKYXJra28gU2Fra2luZW4gPGphcmtrby5zYWtr
+aW5lbkBsaW51eC5pbnRlbC5jb20+OyBKb25hdGhhbiBDb3JiZXQgPGNvcmJldEBsd24ubmV0Pg0K
+Q2M6IGxpbnV4LWludGVncml0eUB2Z2VyLmtlcm5lbC5vcmc7IGtleXJpbmdzQHZnZXIua2VybmVs
+Lm9yZzsgbGludXgtZG9jQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVs
+Lm9yZzsgJ01hdXJvIENhcnZhbGhvIENoZWhhYicgPG1jaGVoYWIrc2Ftc3VuZ0BrZXJuZWwub3Jn
+PjsgWmh1LCBCaW5nIDxiaW5nLnpodUBpbnRlbC5jb20+OyBDaGVuLCBMdWhhaSA8bHVoYWkuY2hl
+bkBpbnRlbC5jb20+DQpTdWJqZWN0OiBSZTogT25lIHF1ZXN0aW9uIGFib3V0IHRydXN0ZWQga2V5
+IG9mIGtleXJpbmcgaW4gTGludXgga2VybmVsLg0KDQpPbiBXZWQsIDIwMTktMTItMDQgYXQgMDM6
+MDEgKzAwMDAsIFpoYW8sIFNoaXJsZXkgd3JvdGU6DQo+IEhpLCBKYW1lcywNCj4gDQo+IFVzaW5n
+IHBvbGljeSBkaWdlc3QgdG8gcmVsb2FkIHRydXN0ZWQga2V5LCBkb2Vzbid0IHdvcmssIGVpdGhl
+ci4gDQo+IFBsZWFzZSBjaGVjayB0aGUgc3RlcHMgYmVsb3cuIA0KPiBJIHRoaW5rIHBvbGljeSBk
+aWdlc3Qgc2hvdWxkIGJlIGNhbGN1bGF0ZWQgYnkgVFBNIHdoZW4gdmVyaWZ5aW5nIHRoZSANCj4g
+cG9saWN5IHRvIHJlbG9hZCBrZXkuDQoNCllvdSBtaXN1bmRlcnN0YW5kIG15IG1lYW5pbmc6IHRo
+ZSBBUEkgd2UgaGF2ZSBub3cgZG9lc24ndCB3b3JrOyB0aGUga2V5IGJsb2IgdGhlIGtlcm5lbCBy
+ZXR1cm5zIGN1cnJlbnRseSBhZnRlciBrZXkgY3JlYXRlIHdvbid0IHJlbG9hZCBiZWNhdXNlIGl0
+IGNvbnRhaW5zIGV4dHJhbmVvdXMgZGF0YS4gIEkgd2FzIHByb3Bvc2luZyBhIHdvcmtpbmcgQVBJ
+IEkgdGhvdWdodCBtaWdodCByZXBsYWNlIGl0LCBidXQgb2J2aW91c2x5IGl0IGhhcyB0byBiZSBj
+b2RlZCB1cCBhbmQgYWNjZXB0ZWQgaW50byBhIGtlcm5lbCB2ZXJzaW9uIGJlZm9yZSB5b3UgY2Fu
+IHVzZSBpdC4NCg0KSWYgeW91IHdhbnQgdG8gZ2V0IHRydXN0ZWQga2V5cyB3b3JraW5nIHRvZGF5
+LCBJIHRoaW5rIHRoZSBUUE0gMS4yIEFQSSBzdGlsbCB3b3JrcyBpZiB5b3UgaGF2ZSBhIFRQTSAx
+LjIgc3lzdGVtLg0KDQpKYW1lcw0KDQo=
