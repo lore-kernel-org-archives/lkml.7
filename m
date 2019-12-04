@@ -4,100 +4,166 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4A5C2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D56BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 836832073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E57702073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:48:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbfLDPsH (ORCPT
+        id S1728390AbfLDPsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:48:07 -0500
-Received: from mga12.intel.com ([192.55.52.136]:58121 "EHLO mga12.intel.com"
+        Wed, 4 Dec 2019 10:48:18 -0500
+Received: from smtp.gentoo.org ([140.211.166.183]:44894 "EHLO smtp.gentoo.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727878AbfLDPsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:48:07 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Dec 2019 07:48:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,277,1571727600"; 
-   d="scan'208";a="262988929"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by FMSMGA003.fm.intel.com with ESMTP; 04 Dec 2019 07:48:06 -0800
-Date:   Wed, 4 Dec 2019 07:48:06 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        thomas.lendacky@amd.com, stable@vger.kernel.org
-Subject: Re: [PATCH v2] KVM: x86: use CPUID to locate host page table
- reserved bits
-Message-ID: <20191204154806.GC6323@linux.intel.com>
-References: <1575474037-7903-1-git-send-email-pbonzini@redhat.com>
+        id S1727878AbfLDPsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 10:48:18 -0500
+Received: from [IPv6:2601:2c1:380:2390:953d:2f64:f809:46b1] (unknown [IPv6:2601:2c1:380:2390:953d:2f64:f809:46b1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: anarchy)
+        by smtp.gentoo.org (Postfix) with ESMTPSA id 021CC34D7C4
+        for <linux-kernel@vger.kernel.org>; Wed,  4 Dec 2019 15:48:16 +0000 (UTC)
+To:     linux-kernel@vger.kernel.org
+From:   "Jory A. Pratt" <anarchy@gentoo.org>
+Subject: [PATCH]gen_initramfs_list.sh
+Autocrypt: addr=anarchy@gentoo.org; keydata=
+ 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
+ ywhqU77N5mk6PLfTTfg=
+Message-ID: <0e13a1b9-c1f7-5255-e7cd-507c62ed767f@gentoo.org>
+Date:   Wed, 4 Dec 2019 09:48:14 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1575474037-7903-1-git-send-email-pbonzini@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: multipart/mixed;
+ boundary="------------9514A1770210466D433AF779"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 04:40:37PM +0100, Paolo Bonzini wrote:
-> The comment in kvm_get_shadow_phys_bits refers to MKTME, but the same is actually
-> true of SME and SEV.  Just use CPUID[0x8000_0008].EAX[7:0] unconditionally if
-> available, it is simplest and works even if memory is not encrypted.
-> 
-> Cc: stable@vger.kernel.org
-> Reported-by: Tom Lendacky <thomas.lendacky@amd.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  arch/x86/kvm/mmu/mmu.c | 20 ++++++++++++--------
->  1 file changed, 12 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 6f92b40d798c..1e4ee4f8de5f 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -538,16 +538,20 @@ void kvm_mmu_set_mask_ptes(u64 user_mask, u64 accessed_mask,
->  static u8 kvm_get_shadow_phys_bits(void)
->  {
->  	/*
-> -	 * boot_cpu_data.x86_phys_bits is reduced when MKTME is detected
-> -	 * in CPU detection code, but MKTME treats those reduced bits as
-> -	 * 'keyID' thus they are not reserved bits. Therefore for MKTME
-> -	 * we should still return physical address bits reported by CPUID.
-> +	 * boot_cpu_data.x86_phys_bits is reduced when MKTME or SME are detected
-> +	 * in CPU detection code, but the processor treats those reduced bits as
-> +	 * 'keyID' thus they are not reserved bits. Therefore KVM needs to look at
-> +	 * the physical address bits reported by CPUID.
->  	 */
-> -	if (!boot_cpu_has(X86_FEATURE_TME) ||
-> -	    WARN_ON_ONCE(boot_cpu_data.extended_cpuid_level < 0x80000008))
-> -		return boot_cpu_data.x86_phys_bits;
-> +	if (likely(boot_cpu_data.extended_cpuid_level >= 0x80000008))
-> +		return cpuid_eax(0x80000008) & 0xff;
->  
-> -	return cpuid_eax(0x80000008) & 0xff;
-> +	/*
-> +	 * Quite weird to have VMX or SVM but not MAXPHYADDR; probably a VM with
-> +	 * custom CPUID.  Proceed with whatever the kernel found since these features
-> +	 * aren't virtualizable (SME/SEV also require CPUIDs higher than 0x80000008).
+This is a multi-part message in MIME format.
+--------------9514A1770210466D433AF779
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-No love for MKTME?  :-D
+As stated in patch the script is a non posix bash script and should use
+bash instead of config_shell
 
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-> +	 */
-> +	return boot_cpu_data.x86_phys_bits;
->  }
->  
->  static void kvm_mmu_reset_all_pte_masks(void)
-> -- 
-> 1.8.3.1
-> 
+
+
+--------------9514A1770210466D433AF779
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0001-gen_initramfs_list.sh-is-a-bash-script-that-isn-t-po.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename*0="0001-gen_initramfs_list.sh-is-a-bash-script-that-isn-t-po.pa";
+ filename*1="tch"
+
+From 6a7ef73882393e23e966e7b53e7b03397ad18e63 Mon Sep 17 00:00:00 2001
+From: Jory Pratt <anarchy@gentoo.org>
+Date: Wed, 4 Dec 2019 09:30:17 -0600
+Subject: [PATCH] gen_initramfs_list.sh is a bash script that isn't posix
+ compliant.
+
+This ensures we call bash instead of sh which could be dash or any other
+shell that is not compatible with the script.
+
+Signed-off-by: Jory Pratt <anarchy@gentoo.org>
+---
+ usr/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/usr/Makefile b/usr/Makefile
+index e6f7cb2f81db..27987f18eb20 100644
+--- a/usr/Makefile
++++ b/usr/Makefile
+@@ -27,7 +27,7 @@ $(obj)/initramfs_data.o: $(obj)/$(datafile_y) FORCE
+ # Generate the initramfs cpio archive
+ 
+ hostprogs-y := gen_init_cpio
+-initramfs   := $(CONFIG_SHELL) $(srctree)/$(src)/gen_initramfs_list.sh
++initramfs   := $(BASH) $(srctree)/$(src)/gen_initramfs_list.sh
+ ramfs-input := $(if $(filter-out "",$(CONFIG_INITRAMFS_SOURCE)), \
+ 			$(shell echo $(CONFIG_INITRAMFS_SOURCE)),-d)
+ ramfs-args  := \
+-- 
+2.24.0
+
+
+--------------9514A1770210466D433AF779--
