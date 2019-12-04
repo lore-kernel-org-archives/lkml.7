@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A778DC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51ABFC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A87205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A43205ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575484006;
-	bh=5PDxv2/YHr0FuhBfzhJ5z8m8H8XgdsUBLgg/TREY904=;
+	s=default; t=1575484012;
+	bh=r7wqaF6k5AKKWznTAOwQ33pGuMlmJ/ecwfN0IvJdRUw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u7lDAfu3rYWiHinPaoig9+Vdl1sDvOfjPD9uu3Kx7fMaJhWxdDN1UckQ2TATG8v3K
-	 WRAMbhdvZiUEQvZwtfQQTkKqKxZl7cLy6XgkDiWHpoUtWA6dWOU4hgmAYt9+cRNTQH
-	 PxreHW0fyBL9Wn1f8+/ggF8s+DQLIwFrRcdXMTo0=
+	b=x8GVOK6wVl383BXNahID1xauHcZJwXmdr9eW80w+LBmAtsDEuuYKk8urB0FnTGZnu
+	 KLn6cYqq3fTCR6hujcO9y/P3WVj7EuKeiOZ66waPxtbVGYUiJYFKjbdKWGcGHKbaR0
+	 nU0E0PpJxSvYxPxpHW8WW1PMgvOJGOz52eJLJrPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730172AbfLDS0l (ORCPT
+        id S1730038AbfLDS0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:26:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35288 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:26:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729054AbfLDR7N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:59:13 -0500
+        id S1728358AbfLDR67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 12:58:59 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E173F2081B;
-        Wed,  4 Dec 2019 17:59:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4641420863;
+        Wed,  4 Dec 2019 17:58:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482353;
-        bh=5PDxv2/YHr0FuhBfzhJ5z8m8H8XgdsUBLgg/TREY904=;
+        s=default; t=1575482338;
+        bh=r7wqaF6k5AKKWznTAOwQ33pGuMlmJ/ecwfN0IvJdRUw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KU2+0clrtJO89CxL08NHR/JETP6taS4kUKnbjIRophGiFi1HSkMJzv3WmNAZ7UHFp
-         ljf/sdgh/SKy8s3j3VeoMYPbuGaeWWFcXwZA2BvEzFMPYuI4KlVS/N/AxjG1CeEske
-         HlwkA48krzJCKj0/HVl9uEDjqGdnt8+TKanz21/k=
+        b=LF1WPbnU7rirtLM8uoc1F3OaAel2ucuLPRDrJBXHkyvMgq015Q1W9SHjoh+Gdi+Kk
+         lmLjcO8QZlopMqMkYp0pwA8UQvvIAj60fj23js9oo9ZCkKPFJHE5Q4Zr0De/cDnTFl
+         CFhKykznCBy52sA4ddqcIlhd2jPlCDlcTRH45jAo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        "Reported-by: Marian Mihailescu" <mihailescu2m@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 54/92] net/net_namespace: Check the return value of register_pernet_subsys()
-Date:   Wed,  4 Dec 2019 18:49:54 +0100
-Message-Id: <20191204174333.689045762@linuxfoundation.org>
+Subject: [PATCH 4.4 03/92] clk: samsung: exynos5420: Preserve PLL configuration during suspend/resume
+Date:   Wed,  4 Dec 2019 18:49:03 +0100
+Message-Id: <20191204174328.318163643@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204174327.215426506@linuxfoundation.org>
 References: <20191204174327.215426506@linuxfoundation.org>
@@ -61,36 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 0eb987c874dc93f9c9d85a6465dbde20fdd3884c ]
+[ Upstream commit e9323b664ce29547d996195e8a6129a351c39108 ]
 
-In net_ns_init(), register_pernet_subsys() could fail while registering
-network namespace subsystems. The fix checks the return value and
-sends a panic() on failure.
+Properly save and restore all top PLL related configuration registers
+during suspend/resume cycle. So far driver only handled EPLL and RPLL
+clocks, all other were reset to default values after suspend/resume cycle.
+This caused for example lower G3D (MALI Panfrost) performance after system
+resume, even if performance governor has been selected.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Reported-by: Marian Mihailescu <mihailescu2m@gmail.com>
+Fixes: 773424326b51 ("clk: samsung: exynos5420: add more registers to restore list")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/net_namespace.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/clk/samsung/clk-exynos5420.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
-index 087ce1598b746..01bfe28b20a19 100644
---- a/net/core/net_namespace.c
-+++ b/net/core/net_namespace.c
-@@ -778,7 +778,8 @@ static int __init net_ns_init(void)
- 
- 	mutex_unlock(&net_mutex);
- 
--	register_pernet_subsys(&net_ns_ops);
-+	if (register_pernet_subsys(&net_ns_ops))
-+		panic("Could not register network namespace subsystems");
- 
- 	rtnl_register(PF_UNSPEC, RTM_NEWNSID, rtnl_net_newid, NULL, NULL);
- 	rtnl_register(PF_UNSPEC, RTM_GETNSID, rtnl_net_getid, rtnl_net_dumpid,
+diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+index bde71b07f15e7..c94de13ce3627 100644
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -166,12 +166,18 @@ static unsigned long exynos5x_clk_regs[] __initdata = {
+ 	GATE_BUS_CPU,
+ 	GATE_SCLK_CPU,
+ 	CLKOUT_CMU_CPU,
++	CPLL_CON0,
++	DPLL_CON0,
+ 	EPLL_CON0,
+ 	EPLL_CON1,
+ 	EPLL_CON2,
+ 	RPLL_CON0,
+ 	RPLL_CON1,
+ 	RPLL_CON2,
++	IPLL_CON0,
++	SPLL_CON0,
++	VPLL_CON0,
++	MPLL_CON0,
+ 	SRC_TOP0,
+ 	SRC_TOP1,
+ 	SRC_TOP2,
 -- 
 2.20.1
 
