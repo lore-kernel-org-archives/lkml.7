@@ -2,227 +2,110 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D05C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9DBC2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD6820661
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E742324668
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:31:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ubAR+keA"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZfBIirHv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbfLDGuU (ORCPT
+        id S1727073AbfLDGbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 01:50:20 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36937 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbfLDGuT (ORCPT
+        Wed, 4 Dec 2019 01:31:19 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:44238 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbfLDGbT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 01:50:19 -0500
-Received: by mail-wm1-f67.google.com with SMTP id f129so6570300wmf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 22:50:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VMtFfNaDx2oQbuDbsEhYc0lGTSp37MnP2fz0v39AX38=;
-        b=ubAR+keAfnqKsKRDax35KDypRtW1p4omzCQbjDV0j6l5ZWClhQonZQ3XJZ6+WJPigv
-         JR57d2F9hBaspWrC7wXL3RtPnKSBzz6sOtSRVN/77+c+0BLe9q+2Byl16C35ykFdLa9F
-         6Z/zvGFvmPrYD17rtWxc/+Qgk8v24ivMiCz0ViX6mj581M6ACT4mY9ORLPirq4y72iXY
-         fMwqrB98LQ4iKFTfxm6u1K3SKdf4TtAzWW/NVTjf8BKyAzPWuawNBFXIIjS073kUy6Z8
-         sSz8HYgeTN/BkiUAbe1fpV97JhSMyKyZQALPzTWNsZ2kBqAVRr/7xC8SSynPoMwntVKI
-         nBbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=VMtFfNaDx2oQbuDbsEhYc0lGTSp37MnP2fz0v39AX38=;
-        b=b2cev61qZ7WhF3+CryY7Nbh/kMXcCljOP66RT7MoJ4RkdCNtwIe1ch/93xjhybE1wX
-         lV4pzPisJ0u111f8OnO19M3GmVsrvG7mxBt3xVqd+REOjMpj13f77pSK76GogwjdRbdX
-         jhWhUsIIdHl5e6rWikT+avLfXr8QkmXtejfp+BPe9o+G3LpizMxb9YhvXCY5LVY/hsvN
-         uk12kdgV20rOKcd/Q4P7hP8hdUUQVy30iLi1SozLiWAYrl2fx8E28qkrP6XlKVeUnUD4
-         llW0iTjM/0Mcl/Pyd6/S/tAdNXL1gHkQYZVIL2JBDx4pG+2r70dZLNo9GFmyINwza7Or
-         gbIw==
-X-Gm-Message-State: APjAAAVlt6D5W1Y6qcT4Xrr4v+W4587Z9tYePS9oacz44m//XYI4cM4D
-        6jtOWamdeig2pWOwu8ZdMqeAhxxTBVA=
-X-Google-Smtp-Source: APXvYqzODzsaM1aq4feIQfYsxRLRXvV+5Nl/RsGmQqd9AUtp5aYNvfTSQD6LHYKGokZZMY4/NYOYQg==
-X-Received: by 2002:a1c:ed05:: with SMTP id l5mr40539160wmh.161.1575442216099;
-        Tue, 03 Dec 2019 22:50:16 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:b5a4:1c65:b54:363a? ([2a01:e34:ed2f:f020:b5a4:1c65:b54:363a])
-        by smtp.googlemail.com with ESMTPSA id n14sm5529954wmi.26.2019.12.03.22.50.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Dec 2019 22:50:15 -0800 (PST)
-Subject: Re: [PATCH V3 2/4] thermal/drivers/cpu_cooling: Add idle cooling
- device documentation
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20191203093704.7037-1-daniel.lezcano@linaro.org>
- <20191203093704.7037-2-daniel.lezcano@linaro.org>
- <CAP245DV=kd=LdvgZ2x1Q8-ZahpS3423Z9vHXw91N20aQ6DKxAQ@mail.gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <7e851d43-ecb5-179a-ebfd-847dffd29636@linaro.org>
-Date:   Wed, 4 Dec 2019 07:50:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 4 Dec 2019 01:31:19 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB46T5E5052836;
+        Wed, 4 Dec 2019 06:31:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=LDsen7ptk7tsQBaPePRbudj2yMR0eeO7aaitOS++uvc=;
+ b=ZfBIirHvT+CBVUpviIxxWVRERbBcCuLUMeemPOprZ6ZePnjFrHFv9HHNtM8pxpW2AB32
+ QGsSvJpW3QD1u2YQH0BoMM7UcAPg6hpZFxy0Gz1Yg+KmS9sIPKKHfLt2bKzxkvY3tlnr
+ 5ymOougA72MrPOB/eArziWAT0nuXgOu4u09lJmhnfN1mK4wMhubGyXz6jnLbEbQX9uPU
+ 41vvStCnHvrCNpEuIxsmI6J1i0qXyk0JSEDTqvEQDyvHRRUmbAghf8YTzwSW+DxhxMcV
+ Ir1DV96OPsrQXklDaxDfkodkoWaGccw5i2Rww0nqroHHAZ4dXyW5iLryNAgAV5HHgElV pQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2wkh2rc6xf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Dec 2019 06:31:07 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB46Sj6S030440;
+        Wed, 4 Dec 2019 06:31:06 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2wnvqxq21w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Dec 2019 06:31:06 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xB46V5X3007232;
+        Wed, 4 Dec 2019 06:31:05 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 03 Dec 2019 22:31:05 -0800
+Date:   Wed, 4 Dec 2019 09:30:58 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Mao Wenan <maowenan@huawei.com>
+Cc:     sre@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH -next] power: supply: ab8500: Drop pointless static
+ qualifier in ab8500_btemp_batctrl_volt_to_res()
+Message-ID: <20191204063058.GE1765@kadam>
+References: <20191204010506.159128-1-maowenan@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <CAP245DV=kd=LdvgZ2x1Q8-ZahpS3423Z9vHXw91N20aQ6DKxAQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191204010506.159128-1-maowenan@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9460 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912040046
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9460 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912040046
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Hi Amit,
-
-thanks for the review.
-
-
-On 04/12/2019 05:24, Amit Kucheria wrote:
-
-[ ... ]
-
->> +the CPUs will have to wakeup from a deep sleep state.
->> +
->> +     ^
->> +     |
->> +     |
->> +     |-------       -------       -------
->> +     |_______|_____|_______|_____|_______|___________
->> +
->> +      <----->
->> +       idle  <---->
->> +              running
->> +
->> +With the fixed idle injection duration, we can give a value which is
->> +an acceptable performance drop off or latency when we reach a specific
->> +temperature and we begin to mitigate by varying the Idle injection
->> +period.
->> +
+On Wed, Dec 04, 2019 at 09:05:06AM +0800, Mao Wenan wrote:
+> There is no need to have the 'T *v' variable static
+> since new value always be assigned before use it.
 > 
-> I'm not sure what it the purpose of this statement. You've described
-> how the period value starts at a maximum and is adjusted dynamically
-> below.
-
-We can have different way to inject idle periods. We can increase the
-idle duration and/or keep this duration constant but make a variation of
-the period. This statement clarify the method which is the latter
-because we want to have a constant latency per period easier to deal with.
-
->> +The mitigation begins with a maximum period value which decrease when
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> ---
+>  drivers/power/supply/ab8500_btemp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Shouldn't the idle injection period increase to get more cooling effect?
+> diff --git a/drivers/power/supply/ab8500_btemp.c b/drivers/power/supply/ab8500_btemp.c
+> index 909f0242bacb..d3d4f7327d1b 100644
+> --- a/drivers/power/supply/ab8500_btemp.c
+> +++ b/drivers/power/supply/ab8500_btemp.c
+> @@ -180,7 +180,7 @@ static int ab8500_btemp_batctrl_volt_to_res(struct ab8500_btemp *di,
+>  static int ab8500_btemp_read_batctrl_voltage(struct ab8500_btemp *di)
+>  {
+>  	int vbtemp, ret;
+> -	static int prev;
+> +	int prev;
 
-The period is the opposite of the frequency. The highest the period, the
-lowest the frequency, thus less idle cycles and lesser cooling effect.
+No.  We use it first on linux-next (yesterday).  It needs to be static.
 
->> +more cooling effect is requested. When the period duration is equal to
->> +the idle duration, then we are in a situation the platform can’t
->> +dissipate the heat enough and the mitigation fails. In this case the
->> +situation is considered critical and there is nothing to do. The idle
->> +injection duration must be changed by configuration and until we reach
->> +the cooling effect, otherwise an additionnal cooling device must be
-> 
-> typo: additional
-> 
->> +used or ultimately decrease the SoC performance by dropping the
->> +highest OPP point of the SoC.
->> +
->> +The idle injection duration value must comply with the constraints:
->> +
->> +- It is lesser or equal to the latency we tolerate when the mitigation
-> 
-> s/lesser/less than/
-> 
->> +  begins. It is platform dependent and will depend on the user
->> +  experience, reactivity vs performance trade off we want. This value
->> +  should be specified.
->> +
->> +- It is greater than the idle state’s target residency we want to go
->> +  for thermal mitigation, otherwise we end up consuming more energy.
->> +
->> +Minimum period
->> +--------------
->> +
->> +The idle injection duration being fixed, it is obvious the minimum
-> 
-> Change to:
-> When the idle injection duration is fixed,
-> 
-
-The idle duration is always fixed in the cpuidle cooling device, why do
-you want to add the sentence above?
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+regards,
+dan carpenter
 
