@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C46C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 698A2C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAD952084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 406A32084B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:11:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483066;
-	bh=6gBP4j6U7yeNBj0eNTpRBUArgZTCEi7eTGuf8x+3BP4=;
+	s=default; t=1575483072;
+	bh=WbqjUggnJDh4A988fik+6/iGaJLlVSosFqW9yVNwscw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1DnE1l77H+JBF2aDm1YXF3R4h+72wFH+u/Y5Xyn8QRouNEjSD9Eo0nLT4pS4Uc++Y
-	 O3CArtkqeRaIbnMItfwFpCSr+6WQ3XQ6Xbq9VzB8mdijBxO1E/Xy+CrMN3zTn8XbyB
-	 EIvh/Yy5whCH23+KIh0s5Bez4tlDrxm1y0NqYShk=
+	b=RpfdsbyTEclZUm8/coQWTVX4JXmrnlj5N/LwgVacSW4BS4XjQHjpGEsfKRB1EMFuX
+	 3xdIVLK+pl8lfAlrnijjNrpLnp1JQp889xTX5J4IVC8yk4sUjoFUtIWK6vt9g0J5Ib
+	 YFfTa7CtmNzch54YoAP24KyLV1aQT5A4zGBw5fYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730696AbfLDSLF (ORCPT
+        id S1731397AbfLDSLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:11:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38898 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:11:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731362AbfLDSLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:11:00 -0500
+        id S1731382AbfLDSLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:11:07 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EB482084B;
-        Wed,  4 Dec 2019 18:10:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C87E920865;
+        Wed,  4 Dec 2019 18:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483060;
-        bh=6gBP4j6U7yeNBj0eNTpRBUArgZTCEi7eTGuf8x+3BP4=;
+        s=default; t=1575483067;
+        bh=WbqjUggnJDh4A988fik+6/iGaJLlVSosFqW9yVNwscw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CQdhwcH4OUh+xPKeauQuhTC/dfVvMm46Cq6lgIJv6cLvkd9cBBUPpxTubbifaC9Zg
-         PCPlo7U7E51ONyVVUqSutNoBETixLFCpFBgRqHboVnYuMa7IwAODFVqwJupO621d3u
-         0rtYTaPge8SUvjYXZ89h20AGQKCI0AZ4jG6kTodU=
+        b=RmGrkZghHZeUhTQgVtPzM0G0UktqPJ7PmdBDq3PR+pXPqM5izVhIegwC+Ce7uKrZn
+         TwlqBJCMl8oulNVo+lq04TCoF6tVZaBqiDf09f7j3M7nb1ON+3JAiXMyXNRI3i5rAh
+         84RpMm6TsL8Ja2LOESvf4Dld8xE3HG+0FVAlX70k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        stable@vger.kernel.org,
+        Jeroen Hofstee <jhofstee@victronenergy.com>,
+        Stephane Grosjean <s.grosjean@peak-system.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 004/125] reset: fix reset_control_ops kerneldoc comment
-Date:   Wed,  4 Dec 2019 18:55:09 +0100
-Message-Id: <20191204175310.486489838@linuxfoundation.org>
+Subject: [PATCH 4.9 007/125] can: peak_usb: report bus recovery as well
+Date:   Wed,  4 Dec 2019 18:55:12 +0100
+Message-Id: <20191204175312.017613060@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -60,33 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Jeroen Hofstee <jhofstee@victronenergy.com>
 
-[ Upstream commit f430c7ed8bc22992ed528b518da465b060b9223f ]
+[ Upstream commit 128a1b87d3ceb2ba449d5aadb222fe22395adeb0 ]
 
-Add a missing short description to the reset_control_ops documentation.
+While the state changes are reported when the error counters increase
+and decrease, there is no event when the bus recovers and the error
+counters decrease again. So add those as well.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-[p.zabel@pengutronix.de: rebased and updated commit message]
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Change the state going downward to be ERROR_PASSIVE -> ERROR_WARNING ->
+ERROR_ACTIVE instead of directly to ERROR_ACTIVE again.
+
+Signed-off-by: Jeroen Hofstee <jhofstee@victronenergy.com>
+Cc: Stephane Grosjean <s.grosjean@peak-system.com>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/reset-controller.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/can/usb/peak_usb/pcan_usb.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/reset-controller.h b/include/linux/reset-controller.h
-index db1fe6772ad50..b5542aff192cd 100644
---- a/include/linux/reset-controller.h
-+++ b/include/linux/reset-controller.h
-@@ -6,7 +6,7 @@
- struct reset_controller_dev;
+diff --git a/drivers/net/can/usb/peak_usb/pcan_usb.c b/drivers/net/can/usb/peak_usb/pcan_usb.c
+index e626c2afbbb11..0e1fc6c4360e7 100644
+--- a/drivers/net/can/usb/peak_usb/pcan_usb.c
++++ b/drivers/net/can/usb/peak_usb/pcan_usb.c
+@@ -441,8 +441,8 @@ static int pcan_usb_decode_error(struct pcan_usb_msg_context *mc, u8 n,
+ 		}
+ 		if ((n & PCAN_USB_ERROR_BUS_LIGHT) == 0) {
+ 			/* no error (back to active state) */
+-			mc->pdev->dev.can.state = CAN_STATE_ERROR_ACTIVE;
+-			return 0;
++			new_state = CAN_STATE_ERROR_ACTIVE;
++			break;
+ 		}
+ 		break;
  
- /**
-- * struct reset_control_ops
-+ * struct reset_control_ops - reset controller driver callbacks
-  *
-  * @reset: for self-deasserting resets, does all necessary
-  *         things to reset the device
+@@ -465,9 +465,9 @@ static int pcan_usb_decode_error(struct pcan_usb_msg_context *mc, u8 n,
+ 		}
+ 
+ 		if ((n & PCAN_USB_ERROR_BUS_HEAVY) == 0) {
+-			/* no error (back to active state) */
+-			mc->pdev->dev.can.state = CAN_STATE_ERROR_ACTIVE;
+-			return 0;
++			/* no error (back to warning state) */
++			new_state = CAN_STATE_ERROR_WARNING;
++			break;
+ 		}
+ 		break;
+ 
+@@ -506,6 +506,11 @@ static int pcan_usb_decode_error(struct pcan_usb_msg_context *mc, u8 n,
+ 		mc->pdev->dev.can.can_stats.error_warning++;
+ 		break;
+ 
++	case CAN_STATE_ERROR_ACTIVE:
++		cf->can_id |= CAN_ERR_CRTL;
++		cf->data[1] = CAN_ERR_CRTL_ACTIVE;
++		break;
++
+ 	default:
+ 		/* CAN_STATE_MAX (trick to handle other errors) */
+ 		cf->can_id |= CAN_ERR_CRTL;
 -- 
 2.20.1
 
