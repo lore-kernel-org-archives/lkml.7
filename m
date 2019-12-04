@@ -2,220 +2,129 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0250C2D0BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0DAC2D0BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74F9C2073C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FC3C20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:02:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="jTQIKrnx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728426AbfLDW7X (ORCPT
+        id S1728395AbfLDXB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 17:59:23 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:41601 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728053AbfLDW7X (ORCPT
+        Wed, 4 Dec 2019 18:01:59 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:41415 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728011AbfLDXB6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 17:59:23 -0500
-Received: from dread.disaster.area (pa49-179-150-192.pa.nsw.optusnet.com.au [49.179.150.192])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 31B6E3A1476;
-        Thu,  5 Dec 2019 09:59:17 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1icdc3-0006dP-VE; Thu, 05 Dec 2019 09:59:15 +1100
-Date:   Thu, 5 Dec 2019 09:59:15 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Ming Lei <ming.lei@redhat.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-fs <linux-fsdevel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rong Chen <rong.a.chen@intel.com>, Tejun Heo <tj@kernel.org>
-Subject: Re: single aio thread is migrated crazily by scheduler
-Message-ID: <20191204225915.GO2695@dread.disaster.area>
-References: <20191114113153.GB4213@ming.t460p>
- <20191114235415.GL4614@dread.disaster.area>
- <20191115010824.GC4847@ming.t460p>
- <20191115045634.GN4614@dread.disaster.area>
- <20191115070843.GA24246@ming.t460p>
- <20191128094003.752-1-hdanton@sina.com>
- <20191202090158.15016-1-hdanton@sina.com>
- <20191203131514.5176-1-hdanton@sina.com>
- <20191204102903.896-1-hdanton@sina.com>
+        Wed, 4 Dec 2019 18:01:58 -0500
+Received: by mail-lf1-f68.google.com with SMTP id m30so879633lfp.8
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 15:01:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=J0ucEi1G0QnviAHmx5pW9x6HCfetITK2+jAEtIBDfrI=;
+        b=jTQIKrnxHb/vY1zX7oguKswg6y2Sv/0RLFLCXXLBLnXxv+Mq8gGIViTnbLaifwF8QS
+         bS8o2l7KJnVGLsbTPSvJb7yzHApIt8X2ZaFyq1q16oumzSWVOQfAP4HC9mv868ouRM1O
+         05f2cS+n8ZB3TdYJs/drIK67c8yWqvSHYXL237lZ9Em8Jeqz8+8xjf9QVxXj78tpLNrQ
+         jKJdSboYvAK38WOwwmzbbMBXwTACGNAKA5d3Xd7ErwNM+eqOhGKs6HOJvEG3+KCzU6go
+         FWjQ0SUcpBy5SyPBhfw+YJ/jbD6rehZCIApmSBUOvapgn0rKsUKeB51W9ToTF+tXypv+
+         gZjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=J0ucEi1G0QnviAHmx5pW9x6HCfetITK2+jAEtIBDfrI=;
+        b=XqkO47s3XRQqHVQsfkCDkkEUS2aKI2EmpPAXqjTMBHocye84T8jQ+ZvxLxj5dJyvey
+         YKynNrBfx+iUUa8TZmjapEdowhXWlZAoKZrB6kLyEBu9i60CCpPkIuxNZy9pMr7em6NR
+         WN/8GYE0a1Mz0IPXyIeqGKBbYbtKKAKw2NSd5IN9Jg/xPOEmdx9M6kddMqzYGtRIZ7mS
+         JTDG9C2j1mL0rI5Kebq04U3aKVk5SWXru7eUr4zJuJa9ccKbGU3vlM6BdNh8DXnxIKu7
+         LRyqSdiKOIBefJTzq06HAuHMLdrjYkPKDdLOuYnCvKSIt8aUVQhtW9Ac35JmXT+lOQVE
+         qWBg==
+X-Gm-Message-State: APjAAAX9r59e3/J7B372mBzG1HoiFTOfPahjQ0/64Oxr8G2cnMlguC2/
+        sDjPtlPPEuU5UJ8MilKxEVtJ6w==
+X-Google-Smtp-Source: APXvYqxySJ7CXdTZalDskjNmsGdbbjR3D5tX2IaT+1GugoeOTw3GDKdUgKpg4BA7d25Cv6FtxtJ9WA==
+X-Received: by 2002:ac2:5107:: with SMTP id q7mr3389886lfb.177.1575500516805;
+        Wed, 04 Dec 2019 15:01:56 -0800 (PST)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id 138sm4101307lfa.76.2019.12.04.15.01.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 15:01:56 -0800 (PST)
+Date:   Wed, 4 Dec 2019 15:01:36 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     willemdebruijn.kernel@gmail.com, vvidic@valentin-vidic.from.hr,
+        borisp@mellanox.com, aviadye@mellanox.com,
+        john.fastabend@gmail.com, daniel@iogearbox.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net/tls: Fix return values for setsockopt
+Message-ID: <20191204150136.2f001242@cakuba.netronome.com>
+In-Reply-To: <20191204.125135.750458923752225025.davem@davemloft.net>
+References: <CA+FuTSdcDW1oJU=BK-rifxm1n4kh0tkj0qQQfOGSoUOkkBKrFg@mail.gmail.com>
+        <20191204113544.2d537bf7@cakuba.netronome.com>
+        <CA+FuTSdhtGZtTnuncpYaoOROF7L=coGawCPSLv7jzos2Q+Tb=Q@mail.gmail.com>
+        <20191204.125135.750458923752225025.davem@davemloft.net>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191204102903.896-1-hdanton@sina.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=ZXpxJgW8/q3NVgupyyvOCQ==:117 a=ZXpxJgW8/q3NVgupyyvOCQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pxVhFHJ0LMsA:10
-        a=7-415B0cAAAA:8 a=3OwV-sDklMwd061yJKAA:9 a=7Zwj6sZBwVKJAoWSPKxL6X1jA+E=:19
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 06:29:03PM +0800, Hillf Danton wrote:
+On Wed, 04 Dec 2019 12:51:35 -0800 (PST), David Miller wrote:
+> From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+> Date: Wed, 4 Dec 2019 15:43:00 -0500
+> > On Wed, Dec 4, 2019 at 2:36 PM Jakub Kicinski wrote:  
+> >> On Wed, 4 Dec 2019 14:22:55 -0500, Willem de Bruijn wrote:  
+> >> > On Tue, Dec 3, 2019 at 6:08 PM Jakub Kicinski wrote:  
+> >> > > On Tue,  3 Dec 2019 23:44:58 +0100, Valentin Vidic wrote:  
+> >> > > > ENOTSUPP is not available in userspace:
+> >> > > >
+> >> > > >   setsockopt failed, 524, Unknown error 524
+> >> > > >
+> >> > > > Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>  
+> >> > >
+> >> > > I'm not 100% clear on whether we can change the return codes after they
+> >> > > had been exposed to user space for numerous releases..  
+> >> >
+> >> > This has also come up in the context of SO_ZEROCOPY in the past. In my
+> >> > opinion the answer is no. A quick grep | wc -l in net/ shows 99
+> >> > matches for this error code. Only a fraction of those probably make it
+> >> > to userspace, but definitely more than this single case.
+> >> >
+> >> > If anything, it may be time to define it in uapi?  
+> >>
+> >> No opinion but FWIW I'm toying with some CI for netdev, I've added a
+> >> check for use of ENOTSUPP, apparently checkpatch already sniffs out
+> >> uses of ENOSYS, so seems appropriate to add this one.  
+> > 
+> > Good idea if not exposing this in UAPI.  
 > 
-> On Wed, 4 Dec 2019 09:29:25 +1100 Dave Chinner wrote:
-> > 
-> > If we really want to hack around the load balancer problems in this
-> > way, then we need to add a new workqueue concurrency management type
-> > with behaviour that lies between the default of bound and WQ_UNBOUND.
-> > 
-> > WQ_UNBOUND limits scheduling to within a numa node - see
-> > wq_update_unbound_numa() for how it sets up the cpumask attributes
-> > it applies to it's workers - but we need the work to be bound to
-> > within the local cache domain rather than a numa node. IOWs, set up
-> > the kworker task pool management structure with the right attributes
-> > (e.g. cpu masks) to define the cache domains, add all the hotplug
-> > code to make it work with CPU hotplug, then simply apply those
-> > attributes to the kworker task that is selected to execute the work.
-> > 
-> > This allows the scheduler to migrate the kworker away from the local
-> > run queue without interrupting the currently scheduled task. The
-> > cpumask limits the task is configured with limit the scheduler to
-> > selecting the best CPU within the local cache domain, and we don't
-> > have to bind work to CPUs to get CPU cache friendly work scheduling.
-> > This also avoids overhead of per-queue_work_on() sibling CPU
-> > calculation, and all the code that wants to use this functionality
-> > needs to do is add a single flag at work queue init time (e.g.
-> > WQ_CACHEBOUND).
-> > 
-> > IOWs, if the task migration behaviour cannot be easily fixed and so
-> > we need work queue users to be more flexible about work placement,
-> > then the solution needed here is "cpu cache local work queue
-> > scheduling" implemented in the work queue infrastructure, not in
-> > every workqueue user.
+> I'm trying to understand this part of the discussion.
 > 
-> Add WQ_CACHE_BOUND and a user of it and a helper to find cpus that
-> share cache.
+> If we have been returning a non-valid error code, this 524 internal
+> kernel thing, it is _NOT_ an exposed UAPI.
+> 
+> It is a kernel bug and we should fix it.
 
-<sigh>
+I agree. We should just fix this.
 
-If you are going to quote my suggestion in full, then please
-implement it in full. This patch does almost none of what you quoted
-above - it still has all the problems of the previous version that
-lead me to write the above.
+As Willem points out the use of this error code has spread, but in
+theory I'm a co-maintainer of the TLS code now, and my maintainer 
+gut says "just fix it" :)
 
-> --- a/kernel/workqueue.c
-> +++ b/kernel/workqueue.c
-> @@ -1358,16 +1358,42 @@ static bool is_chained_work(struct workq
->  	return worker && worker->current_pwq->wq == wq;
->  }
->  
-> +static DEFINE_PER_CPU(int, wq_sel_cbc_cnt);
-> +static DEFINE_PER_CPU(int, wq_sel_cbc_cpu);
-> +#define WQ_SEL_CBC_BATCH 7
-> +
-> +static int wq_select_cache_bound_cpu(int this_cpu)
-> +{
-> +	int *cntp, *cpup;
-> +	int cpu;
-> +
-> +	cntp = get_cpu_ptr(&wq_sel_cbc_cnt);
-> +	cpup = this_cpu_ptr(&wq_sel_cbc_cpu);
-> +	cpu = *cpup;
-> +
-> +	if (!(*cntp & WQ_SEL_CBC_BATCH)) {
-> +		cpu = cpus_share_cache_next_cpu(this_cpu, cpu);
-> +		*cpup = cpu;
-> +	}
-> +	(*cntp)++;
-> +	put_cpu_ptr(&wq_sel_cbc_cnt);
-> +
-> +	return cpu;
-> +}
+> If userspace anywhere is checking for 524, that is what needs to be fixed.
 
-This selects a specific CPU in the local cache domain at
-queue_work() time, just like the previous patch. It does not do what
-I suggested above in reponse to the scalability issues this approach
-has...
+FWIW I did a quick grep through openssl and gnutls and fbthrift and I
+see no references to ENOTSUPP or 524.
 
->  /*
->   * When queueing an unbound work item to a wq, prefer local CPU if allowed
->   * by wq_unbound_cpumask.  Otherwise, round robin among the allowed ones to
->   * avoid perturbing sensitive tasks.
->   */
-> -static int wq_select_unbound_cpu(int cpu)
-> +static int wq_select_unbound_cpu(int cpu, bool cache_bound)
->  {
->  	static bool printed_dbg_warning;
->  	int new_cpu;
->  
-> +	if (cache_bound)
-> +		return wq_select_cache_bound_cpu(cpu);
-> +
->  	if (likely(!wq_debug_force_rr_cpu)) {
->  		if (cpumask_test_cpu(cpu, wq_unbound_cpumask))
->  			return cpu;
-> @@ -1417,7 +1443,8 @@ static void __queue_work(int cpu, struct
->  	rcu_read_lock();
->  retry:
->  	if (req_cpu == WORK_CPU_UNBOUND)
-> -		cpu = wq_select_unbound_cpu(raw_smp_processor_id());
-> +		cpu = wq_select_unbound_cpu(raw_smp_processor_id(),
-> +					wq->flags & WQ_CACHE_BOUND);
-
-And the per-cpu  kworker pool selection after we've selected a CPU
-here binds it to that specific CPU or (if WQ_UNBOUND) the local
-node. IOWs, this is exactly the same functionality as the last
-patch, just moved inside the work queue infrastructure.
-
-IOWs, apart from the WQ_CACHE_BOUND flag, this patch doesn't
-implement any of what I suggested above. It does not solve the the
-problem of bound kworkers kicking running tasks off a CPU so the
-bound task can run, and it does not allow the scheduler to select
-the best CPU in the local cache scheduling domain for the kworker to
-run on. i.e. it still behaves like bound work rather than WQ_UNBOUND
-work.
-
-IMO, this adds the CPU selection to the -wrong function-.  We still
-want the local CPU selected when req_cpu == WORK_CPU_UNBOUND.  The
-following code selects where the kworker will be bound based on the
-task pool that the workqueue is configured to use:
-
-	/* pwq which will be used unless @work is executing elsewhere */
-	if (!(wq->flags & WQ_UNBOUND))
-		pwq = per_cpu_ptr(wq->cpu_pwqs, cpu);
-	else
-		pwq = unbound_pwq_by_node(wq, cpu_to_node(cpu));
-
-i.e. the local CPU is the key we need to look up the task pool for
-running tasks in the local cache domain - we do not use it as the
-CPU we want to run work on. IOWs, what we really want is this:
-
-	if (wq->flags & WQ_UNBOUND)
-		pwq = unbound_pwq_by_node(wq, cpu_to_node(cpu));
-	else if (wq->flags & WQ_CACHE_BOUND)
-		pwq = unbound_pwq_by_cache(wq, cpu);
-	else
-		pwq = per_cpu_ptr(wq->cpu_pwqs, cpu);
-
-And then unbound_pwq_by_cache() is implemented in a similar manner
-to unbound_pwq_by_node() where there is a separate worker pool per
-cache domain. THe scheduler domain attributes (cpumask) is held by
-the task pool, and they are applied to the kworker task when it's
-given the task to run. This, like WQ_UNBOUND, allows the scheduler
-to select the best CPU in the cpumask for the task to run on.
-
-Binding kworkers to a single CPU is exactly the problem we need to
-avoid here - we need to let the scheduler choose the best CPU in the
-local cache domain based on the current load. That means the
-implementation needs to behave like a WQ_UNBOUND workqueue, just
-with a more restrictive cpumask.
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Valentin, what's the strategy you're using for this fix? There's a
+bunch of ENOTSUPP in net/tls/tls_sw.c as well, could you convert those,
+too?
