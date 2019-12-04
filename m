@@ -2,400 +2,116 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F63C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 21:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DE7C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B0C02073C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 21:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEA3121823
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 21:59:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DPe+k9NM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IHbjuMkc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbfLDV7x (ORCPT
+        id S1728359AbfLDV77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 16:59:53 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:42571 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbfLDV7x (ORCPT
+        Wed, 4 Dec 2019 16:59:59 -0500
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:35321 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbfLDV76 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 16:59:53 -0500
-Received: by mail-qk1-f196.google.com with SMTP id a10so1462650qko.9
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 13:59:52 -0800 (PST)
+        Wed, 4 Dec 2019 16:59:58 -0500
+Received: by mail-vk1-f193.google.com with SMTP id o187so478866vka.2;
+        Wed, 04 Dec 2019 13:59:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Xhsb/454JtQYlTd/19xK0PIFn/uzrhAWOQqSoQzRQM8=;
-        b=DPe+k9NMt1Bx9v57Bz90nNDhp4QUVISBllZgLdoSwyBI+XohoTL31bs/mbBkxbTZpQ
-         CqssGsUQkqrzslTzAXnKBWgrCJHo65jhcwyY8yY707Wsa+vHk7qWrml1AEmHpQBTDW3b
-         DzoCEQLtA9y0+XRvdYy1bFBoPQK4WjdLZw0ok=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pKw4WEjtZZ+ACrJvt8REFVw2T1voAJU2FAajhV3nbNM=;
+        b=IHbjuMkcZRvwD6xr8tpR8Fw6a1bd47WRYIsOp8XZY82ivdoauVqCTkQDURYAOgfRt0
+         0ybeNBsSQ+wKn+UALDsjm51m1MNsA4oMT2VE3QBdljChIN891+fXUtKjCiH/oxY8KOSx
+         RBTSggyxcr9sYZ8m4DIp1OsDFbsI484ct/LTj9LvEwpcjjQbVVLDeOPgGpEHzxcOLVGL
+         gAu/fP8LkNflcKBbrh7jV2by42AJVCYGY8KgB3OjcAxM9QsIcTi6xJn9FtEgH5QpzR6B
+         8REUVgXuZeX/4Cy6QCaCITTKDmu4BLeA5B7rkGn65pHgPujliGc4ik7eKcRIkQ1GlDPz
+         pmlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Xhsb/454JtQYlTd/19xK0PIFn/uzrhAWOQqSoQzRQM8=;
-        b=F8ryp1Q9OYSRjTJIIp3f5AzWESHDQc+Q6+Lerl+tyrqf+nfZ9KYR/h1IIegIrGanlu
-         euct1j/zSUDmrNqHSWoz011tbtwMNNodGNQpx7EHWqwxa+WUJzhBBJbuMTixQUgpaZ5w
-         t2Nd9niuCSVu85ygpkXq+9Le968kGnqy5VFdDh3gSWEBc3JjygPJDsdmPnYuUXh+6EBm
-         ZGRgvmrco80vgumj49X2xnaFK70eDd6ee0cLLcl0I9H5PwzRaJLh0ciH2eMsRsCP0zoF
-         NUTYz+rNjFOSwrht9fnHNn+qBnJO79X/y0dMijL7D6Ilil6/NSBaEcdFlv99j0yPTGJ/
-         orqw==
-X-Gm-Message-State: APjAAAUxjCxVY2vtiYOmj4iAw7WzcfTAQ8oQPZoVg6Uj/zHC/zrFhicm
-        INfxrUpbDb2ru2Ahff/IoMaqm/O3yZIIaG69W0p/JA==
-X-Google-Smtp-Source: APXvYqxLeYDvv4dM77hPSxrEpEMbhVRs9zTyT+09pku8yoPYS29T9A90DXN5YEL/ScBYqrfg1onOAhy/2AsNOQDg2fQ=
-X-Received: by 2002:a05:620a:796:: with SMTP id 22mr5199952qka.419.1575496791912;
- Wed, 04 Dec 2019 13:59:51 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pKw4WEjtZZ+ACrJvt8REFVw2T1voAJU2FAajhV3nbNM=;
+        b=oLxgiismnapPl3hh1LDZHuM5bOkG+sBwidRyjUCuVjo9qPSUBw9pSk+Ah52yVZPnxb
+         I7YBoXAybBmDLJvI4Y+SFIfHktix1BsK4TEjtUzQ1Vy3NQ4OWp7uf1j69dcKTEcXjNxz
+         yHybHJoO4Mewz4+UnKPlFkf8XrfF4kzSm5xNmSiPHMuSunx/iWrWiEk6PSRFBdXkT6LM
+         jPxsvosqGqeJqwmqpaU8KCp7UJVliPGNlYmpiaSYhc6IG6jOzqudECVN3CT2LjaXfhfF
+         SH8x6LinlZaLXghUNKPj2kEcXRHXcqzlr/rhsQ/ryygPVQw5v37qpsXNl4NbedsOkBEq
+         thVQ==
+X-Gm-Message-State: APjAAAXhhCddfgQoTiZM56w56Uo5LTlt773k0L3WaGmqm/BZmclqbI1s
+        UykiO/XE51Azit/l60/0JmQ=
+X-Google-Smtp-Source: APXvYqxyKYTN6LNLmiTZDvYFxhKu2IirTtOTFhUAzjcl98Cz3zJ4dbSCd+11Ii/p63J9ZE3PxGYJMA==
+X-Received: by 2002:a1f:8f0c:: with SMTP id r12mr3868068vkd.78.1575496796827;
+        Wed, 04 Dec 2019 13:59:56 -0800 (PST)
+Received: from smtp.gmail.com (gwcrusp.semfio.usp.br. [143.107.150.86])
+        by smtp.gmail.com with ESMTPSA id a63sm2627634vka.30.2019.12.04.13.59.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 13:59:56 -0800 (PST)
+Date:   Wed, 4 Dec 2019 18:59:52 -0300
+From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     jic23@kernel.org, dragos.bogdan@analog.com,
+        alexandru.ardelean@analog.com, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        kernel-usp@googlegroups.com
+Subject: Re: [PATCH v2 1/2] dt-bindings: iio: adc: ad7292: fix channel
+ constraint
+Message-ID: <20191204215951.n5sfpej2thk37ipc@smtp.gmail.com>
+References: <20191204155918.5ot4tplceqjeul6a@smtp.gmail.com>
+ <20191204185753.GA19409@bogus>
 MIME-Version: 1.0
-References: <20191127185139.65048-1-abhishekpandit@chromium.org>
- <20191201145357.ybq5gfty4ulnfasq@pali> <20191202012305.GQ248138@dtor-ws>
- <20191202084750.k7lafzzrf3yq2tqs@pali> <20191202175440.GA50317@dtor-ws>
- <20191202185340.nae4lljten5jqp3y@pali> <20191202193628.GI50317@dtor-ws>
- <20191202230947.ld5ibnczdpkekfcm@pali> <20191203173821.4u6uzxeaqnt3gyz3@pali> <20191203191112.GJ50317@dtor-ws>
-In-Reply-To: <20191203191112.GJ50317@dtor-ws>
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Date:   Wed, 4 Dec 2019 13:59:41 -0800
-Message-ID: <CANFp7mVLJCwaVJGqe899G=3CgWntoG0+A8YgSdSTocVOBwRchg@mail.gmail.com>
-Subject: Re: [PATCH] Input: uinput - Add UI_SET_UNIQ ioctl handler
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        linux-input@vger.kernel.org,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Kirill Smelkov <kirr@nexedi.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191204185753.GA19409@bogus>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry and Pali,
+I see now that I had misunderstood part of the last thread.
+Sorry for the unnecessary spamming. Please, ignore this V2 series.
 
-I refactored the ioctl handlers as described above and tested it. It
-seems to be working without any compat changes.
-
-I compiled the following code in both 32-bit (gcc -m32 test.c) and
-64-bit to test.
-
-Please take a look at the new patch.
-
-Thanks
-Abhishek
-
-test.c
----
-#include <errno.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/ioctl.h>
-#include <unistd.h>
-
-#include "uinput.h"
-
-int foo(int fd) {
-        struct uinput_dev dev;
-        int ret;
-
-        memset(&dev, 0, sizeof(dev));
-
-        dev.id.bustype =3D BUS_BLUETOOTH;
-        dev.id.vendor =3D 0x3;
-        dev.id.product =3D 0x4;
-        dev.id.version =3D 0x5;
-
-        memcpy(dev.name, "Test", 4);
-
-        printf("Setting bus/vendor/product/version\n");
-        if (write(fd, &dev, sizeof(dev)) < 0) {
-                perror("write");
-                return errno;
-        }
-
-        printf("Making ioctl calls\n");
-        ioctl(fd, UI_SET_EVBIT, EV_KEY);
-        ioctl(fd, UI_SET_EVBIT, EV_REL);
-        ioctl(fd, UI_SET_EVBIT, EV_REP);
-        ioctl(fd, UI_SET_EVBIT, EV_SYN);
-
-        /* I also replaced this with UI_SET_PHYS to check for the
-deprecation notice. */
-        if (ioctl(fd, UI_SET_PHYS_STR(18), "00:00:00:33:44:55") < 0) {
-                perror("ioctl UI_SET_PHYS");
-                return errno;
-        }
-
-        if (ioctl(fd, UI_SET_UNIQ_STR(18), "00:11:22:00:00:00") < 0) {
-                perror("ioctl UI_SET_UNIQ");
-                return errno;
-        }
-
-        if (ioctl(fd, UI_DEV_CREATE, NULL) < 0) {
-                perror("ioctl UI_DEV_CREATE");
-                return errno;
-        }
-
-        return 0;
-}
-
-int main() {
-        int fd, ret;
-
-        fd =3D open("/dev/uinput", O_RDWR);
-
-        if (fd < 0) {
-                perror("open");
-                return fd;
-        }
-
-        printf("Opened fd %d for write\n", fd);
-        ret =3D foo(fd);
-
-        if (!ret) {
-                printf("Uinput has been prepared. Check the uniq value.\n")=
-;
-                printf("Sleeping for 15s...\n");
-                sleep(20);
-        }
-
-        close(fd);
-        return ret;
-}
-
-On Tue, Dec 3, 2019 at 11:11 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> On Tue, Dec 03, 2019 at 06:38:21PM +0100, Pali Roh=C3=A1r wrote:
-> > On Tuesday 03 December 2019 00:09:47 Pali Roh=C3=A1r wrote:
-> > > On Monday 02 December 2019 11:36:28 Dmitry Torokhov wrote:
-> > > > On Mon, Dec 02, 2019 at 07:53:40PM +0100, Pali Roh=C3=A1r wrote:
-> > > > > On Monday 02 December 2019 09:54:40 Dmitry Torokhov wrote:
-> > > > > > On Mon, Dec 02, 2019 at 09:47:50AM +0100, Pali Roh=C3=A1r wrote=
-:
-> > > > > > > On Sunday 01 December 2019 17:23:05 Dmitry Torokhov wrote:
-> > > > > > > > Hi Pali,
-> > > > > > > >
-> > > > > > > > On Sun, Dec 01, 2019 at 03:53:57PM +0100, Pali Roh=C3=A1r w=
-rote:
-> > > > > > > > > Hello!
-> > > > > > > > >
-> > > > > > > > > On Wednesday 27 November 2019 10:51:39 Abhishek Pandit-Su=
-bedi wrote:
-> > > > > > > > > > Support setting the uniq attribute of the input device.=
- The uniq
-> > > > > > > > > > attribute is used as a unique identifier for the connec=
-ted device.
-> > > > > > > > > >
-> > > > > > > > > > For example, uinput devices created by BlueZ will store=
- the address of
-> > > > > > > > > > the connected device as the uniq property.
-> > > > > > > > > >
-> > > > > > > > > > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@c=
-hromium.org>
-> > > > > > > > >
-> > > > > > > > > ...
-> > > > > > > > >
-> > > > > > > > > > diff --git a/include/uapi/linux/uinput.h b/include/uapi=
-/linux/uinput.h
-> > > > > > > > > > index c9e677e3af1d..d5b7767c1b02 100644
-> > > > > > > > > > --- a/include/uapi/linux/uinput.h
-> > > > > > > > > > +++ b/include/uapi/linux/uinput.h
-> > > > > > > > > > @@ -145,6 +145,7 @@ struct uinput_abs_setup {
-> > > > > > > > > >  #define UI_SET_PHYS          _IOW(UINPUT_IOCTL_BASE, 1=
-08, char*)
-> > > > > > > > > >  #define UI_SET_SWBIT         _IOW(UINPUT_IOCTL_BASE, 1=
-09, int)
-> > > > > > > > > >  #define UI_SET_PROPBIT               _IOW(UINPUT_IOCTL=
-_BASE, 110, int)
-> > > > > > > > > > +#define UI_SET_UNIQ          _IOW(UINPUT_IOCTL_BASE, 1=
-11, char*)
-> > > > > > > > >
-> > > > > > > > > I think that usage of char* as type in _IOW would cause c=
-ompatibility
-> > > > > > > > > problems like it is for UI_SET_PHYS (there is UI_SET_PHYS=
-_COMPAT). Size
-> > > > > > > > > of char* pointer depends on userspace (32 vs 64bit), so 3=
-2bit process on
-> > > > > > > > > 64bit kernel would not be able to call this new UI_SET_UN=
-IQ ioctl.
-> > > > > > > > >
-> > > > > > > > > I would suggest to define this ioctl as e.g.:
-> > > > > > > > >
-> > > > > > > > >   #define UI_SET_UNIQ           _IOW(_IOC_WRITE, UINPUT_I=
-OCTL_BASE, 111, 0)
-> > > > > > > > >
-> > > > > > > > > And then in uinput.c code handle it as:
-> > > > > > > > >
-> > > > > > > > >   case UI_SET_UNIQ & ~IOCSIZE_MASK:
-> > > > > > > > >
-> > > > > > > > > as part of section /* Now check variable-length commands =
-*/
-> > > > > > > >
-> > > > > > > > If we did not have UI_SET_PHYS in its current form, I'd agr=
-ee with you,
-> > > > > > > > but I think there is benefit in having UI_SET_UNIQ be simil=
-ar to
-> > > > > > > > UI_SET_PHYS.
-> > > > > > >
-> > > > > > > I thought that ioctl is just number, so we can define it as w=
-e want. And
-> > > > > > > because uinput.c has already switch for variable-length comma=
-nds it
-> > > > > > > would be easy to use it. Final handling can be in separate fu=
-nction like
-> > > > > > > for UI_SET_PHYS which can look like same.
-> > > > > >
-> > > > > > Yes, we can define ioctl number as whatever we want. What I was=
- trying
-> > > > > > to say, right now users do this:
-> > > > > >
-> > > > > >       rc =3D ioctl(fd, UI_SET_PHYS, "whatever");
-> > > > > >       ...
-> > > > > >
-> > > > > > and with UI_SET_UNIQ they expect the following to work:
-> > > > > >
-> > > > > >       rc =3D ioctl(fd, UI_SET_UNIQ, "whatever");
-> > > > > >       ...
-> > > > >
-> > > > > And would not following definition
-> > > > >
-> > > > >   #define UI_SET_UNIQ _IOW(_IOC_WRITE, UINPUT_IOCTL_BASE, 111, 0)
-> > > > >
-> > > > > allow userspace to call
-> > > > >
-> > > > >   rc =3D ioctl(fd, UI_SET_UNIQ, "whatever");
-> > > > >
-> > > > > as you want?
-> > > >
-> > > > OK, so what you are saying is that we can have whatever in the size
-> > > > portion of ioctl number and simply ignore it in the driver
-> > >
-> > > Yes.
-> > >
-> > > > (and I do not
-> > > > think we need to do any of "UI_SET_UNIQ & ~IOCSIZE_MASK" really).
-> > >
-> > > You are right, we do not need to clear any IOCSIZE_MASK. As ioctl num=
-ber
-> > > would be always sam constant number. So it would be really simple. So
-> > > original patch would work if UI_SET_UNIQ define would be changed to
-> > > above with _IOW() macro.
-> > >
-> > > > While this would work, I am not sure it is the best option as I thi=
-nk
-> > > > we'd have to comment extensively why we have arbitrary number in pl=
-ace
-> > > > of the size.
-> > >
-> > > Comment can be added. But this is as ioctl is going to accept variabl=
-e
-> > > length array (not fixed array), zero value make sense for me (zero as=
- we
-> > > do not know exact size).
-> > >
-> > > > And we still do not really save anything, as we still have to go th=
-rough
-> > > > compat ioctl handler (since we have it already) and it is very simp=
-le to
-> > > > add a case for UI_SET_UNIQ there...
-> > >
-> > > Yes, compat ioctl is still used. But my proposed solution does not
-> > > involve to define a new compact ioctl number just for sizeof(char *).
-> > >
-> > > I'm looking at this particular problem from side, that there is no
-> > > reason to define two new ioctl numbers for UI_SET_UNIQ (one normal
-> > > number and one compat number), when one number is enough. It is one n=
-ew
-> > > ioctl call, so one ioctl number should be enough.
-> > >
-> > > And also with my proposed solution with ioctl size=3D0 it simplify
-> > > implementation of UI_SET_UNIQ as it is not needed to implement also
-> > > UI_SET_UNIQ_COMPAT ioctl nor touch compat ioct code path. Basically
-> > > original patch (with changed UI_SET_UNIQ macro) is enough.
-> > >
-> > > But of of course, this is my view of this problem and I would not be
-> > > against your decision from maintainer position. Both solutions would
-> > > work correctly and bring same behavior for userspace applications.
-> >
-> >
-> > Hi Dmitry!
-> >
-> > I was looking again at those _IOW defines for ioctl calls and I have
-> > another argument why not specify 'char *' in _IOW:
-> >
-> > All ioctls in _IOW() specify as a third macro argument type which is
-> > passed as pointer to the third argument for ioctl() syscall.
-> >
-> > So e.g.:
-> >
-> >   #define EVIOCSCLOCKID _IOW('E', 0xa0, int)
-> >
-> > is called from userspace as:
-> >
-> >   int val;
-> >   ioctl(fd, EVIOCSCLOCKID, &val);
-> >
-> > Or
-> >
-> >   #define EVIOCSMASK _IOW('E', 0x93, struct input_mask)
-> >
-> > is called as:
-> >
-> >   struct input_mask val;
-> >   ioctl(fd, EVIOCSMASK, &val);
-> >
-> > So basically third argument for _IOW specify size of byte buffer passed
-> > as third argument for ioctl(). In _IOW is not specified pointer to
-> > struct input_mask, but struct input_mask itself.
-> >
-> > And in case you define
-> >
-> >   #define MY_NEW_IOCTL _IOW(UINPUT_IOCTL_BASE, 200, char*)
-> >
-> > then you by above usage you should pass data as:
-> >
-> >   char *val =3D "DATA";
-> >   ioctl(fd, MY_NEW_IOCTL, &val);
-> >
-> > Which is not same as just:
-> >
-> >   ioctl(fd, MY_NEW_IOCTL, "DATA");
-> >
-> > As in former case you passed pointer to pointer to data and in later
-> > case you passed only pointer to data.
-> >
-> > It just mean that UI_SET_PHYS is already defined inconsistently which i=
-s
-> > also reason why compat ioctl for it was introduced.
->
-> Yes, you are right. UI_SET_PHYS is messed up. I guess the question is
-> what to do with all of this...
->
-> Maybe we should define
->
-> #define UI_SET_PHYS_STR(len)    _IOC(_IOC_WRITE, UINPUT_IOCTL_BASE, 111, =
-len)
-> #define UI_SET_UNIQ_STR(len)    _IOC(_IOC_WRITE, UINPUT_IOCTL_BASE, 112, =
-len)
->
-> and mark UI_SET_PHYS as deprecated/wrong? This will allow us to specify
-> exactly how much data kernel is supposed to fetch from userspace instead
-> of trying to rely on a null-terminated string.
->
-> It would also be very helpful if BlueZ did not accept changes that use
-> this brand new ioctl until after we agreed on how it should look like.
-> Luiz, can it be reverted for now please?
->
-> Thanks.
->
-> --
-> Dmitry
+On 12/04, Rob Herring wrote:
+> On Wed, Dec 04, 2019 at 12:59:23PM -0300, Marcelo Schmitt wrote:
+> > Change items property of AD7292 channels to correctly constrain their
+> > quantity.
+> > 
+> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> > ---
+> > Changelog V2
+> > - Shortened the message to make it closer to 50 columns.
+> > 
+> >  Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> I think Jonathan already applied this series.
+> 
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> > index b68be3aaf587..18f1032b86f3 100644
+> > --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> > @@ -53,7 +53,8 @@ patternProperties:
+> >          description: |
+> >            The channel number. It can have up to 8 channels numbered from 0 to 7.
+> >          items:
+> > -          maximum: 7
+> > +          - minimum: 0
+> > +            maximum: 7
+> >  
+> >        diff-channels:
+> >          description: see Documentation/devicetree/bindings/iio/adc/adc.txt
+> > -- 
+> > 2.23.0
+> > 
