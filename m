@@ -2,127 +2,99 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F0DC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 21:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F29DDC2D0BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 21:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61336206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 21:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B943C2073C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 21:44:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ljabVyo9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbfLDVoc (ORCPT
+        id S1728339AbfLDVow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 16:44:32 -0500
-Received: from mail.phunq.net ([66.183.183.73]:47326 "EHLO phunq.net"
+        Wed, 4 Dec 2019 16:44:52 -0500
+Received: from ozlabs.org ([203.11.71.1]:34703 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727982AbfLDVoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 16:44:32 -0500
-Received: from [172.16.1.14]
-        by phunq.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-        (Exim 4.92.3)
-        (envelope-from <daniel@phunq.net>)
-        id 1iccRi-0007lz-Dk; Wed, 04 Dec 2019 13:44:30 -0800
-Subject: Re: [RFC] Thing 1: Shardmap fox Ext4
-To:     Andreas Dilger <adilger@dilger.ca>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-References: <176a1773-f5ea-e686-ec7b-5f0a46c6f731@phunq.net>
- <20191127142508.GB5143@mit.edu>
- <c3636a43-6ae9-25d4-9483-34770b6929d0@phunq.net>
- <20191128022817.GE22921@mit.edu>
- <3b5f28e5-2b88-47bb-1b32-5c2fed989f0b@phunq.net>
- <20191130175046.GA6655@mit.edu>
- <76ddbdba-55ba-3426-2e29-0fa17db9b6d8@phunq.net>
- <23F33101-065E-445A-AE5C-D05E35E2B78B@dilger.ca>
-From:   Daniel Phillips <daniel@phunq.net>
-Message-ID: <f385445b-4941-cc48-e05d-51480a01f4aa@phunq.net>
-Date:   Wed, 4 Dec 2019 13:44:30 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1727982AbfLDVow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 16:44:52 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Ssns0sfHz9sPT;
+        Thu,  5 Dec 2019 08:44:48 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1575495889;
+        bh=uA8eVLm8OL/wsGD7lo1Mt9Zb2Yma2lJuOdQyi3QyBUI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ljabVyo91OMUruCfb/Qh0treE1vGHbbQwaaBZmjEyGrHRipdh5qR0usGsbU6cP3Zd
+         vLoND+sZkUOu1OBmQkflFi3clcLiZIJ41HjBKljfGXsJzrzNjJA59EYo1R0/GcnhYC
+         J2vEJPyMMvYfddCe6G7saUDG2Isb1JDNrQyMUpxN4TrmmrjoxwphhSCMRNkP9owneO
+         PQcQlPS2Zut30OL7LZRm6vQeModInKIMvCqBPNVulPsVlbq557AqdmjR+pYsNeJ8eH
+         XRPJU5xOqyJnmiWA8YQ265e+A3YEon+LLK/X7R6AQazjkg7BOP5J6xNH50kiISYag2
+         0XcTBYgJbZnBw==
+Date:   Thu, 5 Dec 2019 08:44:40 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sabrina Dubroca <sd@queasysnail.net>
+Subject: linux-next: build warning after merge of the net tree
+Message-ID: <20191205084440.1d2bb0fa@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <23F33101-065E-445A-AE5C-D05E35E2B78B@dilger.ca>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/ycwelL/amL7DWg+TMsX/aXK";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-04 10:31 a.m., Andreas Dilger wrote:
-> One important use case that we have for Lustre that is not yet in the
-> upstream ext4[*] is the ability to do parallel directory operations.
-> This means we can create, lookup, and/or unlink entries in the same
-> directory concurrently, to increase parallelism for large directories.
+--Sig_/ycwelL/amL7DWg+TMsX/aXK
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This is a requirement for an upcoming transactional version of user space
-Shardmap. In the database world they call it "row locking". I am working
-on a hash based scheme with single record granularity that maps onto the
-existing shard buckets, which should be nice and efficient, maybe a bit
-tricky with respect to rehash but looks not too bad.
+Hi all,
 
-Per-shard rw locks are a simpler alternative, but might get a bit fiddly
-if you need to lock multiple entries in the same directory at the same
-time, which is required for mv is it not?
+After merging the net tree, today's linux-next build (x86_64 allmodconfig)
+produced this warning:
 
-> This is implemented by progressively locking the htree root and index
-> blocks (typically read-only), then leaf blocks (read-only for lookup,
-> read-write for insert/delete).  This provides improved parallelism
-> as the directory grows in size.
+drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun.c: In function 'mlx5e_tc_=
+tun_create_header_ipv6':
+drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun.c:332:20: warning: 'n' ma=
+y be used uninitialized in this function [-Wmaybe-uninitialized]
+  332 |  struct neighbour *n;
+      |                    ^
 
-This will be much easier and more efficient with Shardmap because there
-are only three levels: top level shard array; shard hash bucket; record
-block. Locking applies only to cache, so no need to worry about possible
-upper tier during incremental "reshard".
+Introduced by commit
 
-I think Shardmap will also split more cleanly across metadata nodes than
-HTree.
+  6c8991f41546 ("net: ipv6_stub: use ip6_dst_lookup_flow instead of ip6_dst=
+_lookup")
 
-> Will there be some similar ability in Shardmap to have parallel ops?
+It looks like a false positive.
 
-This work is already in progress for user space Shardmap. If there is
-also a kernel use case then we can just go forward assuming that this
-work or some variation of it applies to both.
+--=20
+Cheers,
+Stephen Rothwell
 
-We need VFS changes to exploit parallel dirops in general, I think,
-confirmed by your comment below. Seems like a good bit of work for
-somebody. I bet the benchmarks will show well, suitable grist for a
-master's thesis I would think.
+--Sig_/ycwelL/amL7DWg+TMsX/aXK
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Fine-grained directory locking may have a small enough footprint in
-the Shardmap kernel port that there is no strong argument for getting
-rid of it, just because VFS doesn't support it yet. Really, this has
-the smell of a VFS flaw (interested in Al's comments...)
+-----BEGIN PGP SIGNATURE-----
 
-> Also, does Shardmap have the ability to shrink as entries are removed?
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3oKMgACgkQAVBC80lX
+0Gwuagf/dwTzdNY0ZdBpgEh3JIFmhEXUn34yRJy3fVMo3YRWjzb3yUQduB+kSun1
+fu/cbdifMmQCmBFbmvVep3zyzo9oX1xeagP/syWSfLRUIPw9TE25MHiaOXS0+aIa
+bfuOS8WhDDHf9NFePAP9siyrH2YT5fZimLhU6TUeB3Cn4Fl/robGE6JPLtQtbzuR
+oLHRTdMgY13qM9bAZd8FeR3JXHXaGGWNs8iQpSKaZPEV7Le6rGxZGezmjo9DTINd
+Ix3XCIqkfb06D/HN3al8sAWjHKgeIqoIIxGuNVYFg8AbdaEYdtdWtcWZJlVJw+/S
+H0IYcKAGxUuLhV8THoE1t3rHlcg7Qw==
+=azJe
+-----END PGP SIGNATURE-----
 
-No shrink so far. What would you suggest? Keeping in mind that POSIX+NFS
-semantics mean that we cannot in general defrag on the fly. I planned to
-just hole_punch blocks that happen to become completely empty.
-
-This aspect has so far not gotten attention because, historically, we
-just never shrink a directory except via fsck/tools. What would you
-like to see here? Maybe an ioctl to invoke directory defrag? A mode
-bit to indicate we don't care about persistent telldir cookies?
-
-How about automatic defrag that only runs when directory open count is
-zero, plus a flag to disable?
-
-> [*] we've tried to submit the pdirops patch a couple of times, but the
-> main blocker is that the VFS has a single directory mutex and couldn't
-> use the added functionality without significant VFS changes.
-
-How significant would it be, really nasty or just somewhat nasty? I bet
-the resulting efficiencies would show up in some general use cases.
-
-> Patch at https://git.whamcloud.com/?p=fs/lustre-release.git;f=ldiskfs/kernel_patches/patches/rhel8/ext4-pdirop.patch;hb=HEAD
-
-This URL gives me git://git.whamcloud.com/fs/lustre-release.git/summary,
-am I missing something?
-
-Regards,
-
-Daniel
+--Sig_/ycwelL/amL7DWg+TMsX/aXK--
