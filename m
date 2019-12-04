@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D73A4C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 608DFC2D0BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7B86206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2349E2073C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:21:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xzmv/Qpd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q9HjnBCx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbfLDWVC (ORCPT
+        id S1728400AbfLDWVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 17:21:02 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41908 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbfLDWVC (ORCPT
+        Wed, 4 Dec 2019 17:21:30 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:40412 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbfLDWVa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 17:21:02 -0500
-Received: by mail-pg1-f195.google.com with SMTP id x8so533741pgk.8;
-        Wed, 04 Dec 2019 14:21:01 -0800 (PST)
+        Wed, 4 Dec 2019 17:21:30 -0500
+Received: by mail-pj1-f65.google.com with SMTP id s35so385147pjb.7;
+        Wed, 04 Dec 2019 14:21:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TfzWmUKLkvL8hNreIPlb3Fho1EmywWcMoeImerdOggQ=;
-        b=Xzmv/Qpd7aqGazlDsRyZOFAKj0S386WV6/PyIWZTfIYU0VdEWdEvEIEF9Dq0Wg5oIy
-         g+evKKRz1+kbC/ELd59/PEtFQ0HEK2puo54rt06EGIuGZfS5rrbklCkSZvzDBydqZ0pv
-         1vniJPezHANFsQlupXEwU5fMIMgWArfJ6GC8I0WuVKcoFWmhCaPN3LS28NZhlpHsniuY
-         JtTq8VAme+mr2D9YgEP8HIFrQYYrEH9XUd9ba5eKXMKdaQm4iI7CXEy9/4eJdXK6LxwN
-         UjIwp0HCPwk/Jwu5Q+5ExwhcA2Ib5jaVwuCrWjDGffhEcQbY9GC8SjpBHPqAeIJWE8va
-         EWeQ==
+        bh=7uOomMuI9mkDudH3/Tq6vnvg4y88VOc+n31E0loZH7M=;
+        b=Q9HjnBCxmvtNN8zxZWRDX8eLbJV4OsaK5gxztSXJYkHjTHmyIpNvLrI0NHllqHts5c
+         xyrM4D+RoPqMBdeSto4J++yqHZB9xXrznc87VYDtPsx0Clm88S85PBpaLb52mkBqAvAh
+         sTboRlR75EDz6iPZGMjhGrfnFUvLW47CqDPo/5OIYyH4HxvLV3dTwZSprxXchio0OaHt
+         AktQN+DoraG71O2+hZVnXkPIFiF4j4nxRHEcwVqltSufoE6tJcf9wSHYF9h10/b9yBtB
+         PZxBoHxoD65eKVfjWBdbJ+GmntIXP0mnbJ22Mhonc896p1hGgLxN3r6b+T5pVBnJTn+C
+         ajDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TfzWmUKLkvL8hNreIPlb3Fho1EmywWcMoeImerdOggQ=;
-        b=M2nd0f9wdS2pwW1bA5bGqpcEzb6zHu4pQwgb6CM0Oj9Yr5NZnJ63HpMxY6tz7gJaQg
-         1fov6+qdBTCP1kb6N/HrIDwP2nO7zAcmdXBl8AnAyJzfG2TQL2bfOB0D3iq0amPfuQmd
-         iS5xHxvXG/D8dgLoUC5DgnGiapxp1DHzLTSs2kufJej8RmQz0tEPZl3Nk5xO04ZpL2Kr
-         8m3JIxZToeyyGkwfhqaT9LdXjxnP5qTRvMkhctkWmJu9Jch0e1EvBn/W+JxlGUndVw+m
-         9x13qVy60pC64INUExEUNCA6bZFabXy665elHKCCxkHXDgIvd0kJP0wsCnHOyd8GdMDx
-         CTrQ==
-X-Gm-Message-State: APjAAAXuBvaw2IIaZnr+l0hoXF5TR3aODZnLy8BSP/kc8YDkOORUqft1
-        HQlIAT7Pky3Hyh8/3JwDAEOTSJrieo+N3ks3vCI=
-X-Google-Smtp-Source: APXvYqwhOCQEb7KrTQyi4ejpAuRRjiQoNRglsDRk788ae0sKtfP7kpJoli+bFd+uAye/avJD/GQb4QYqvPS8aoTuPdY=
-X-Received: by 2002:a63:941:: with SMTP id 62mr6106336pgj.203.1575498061439;
- Wed, 04 Dec 2019 14:21:01 -0800 (PST)
+        bh=7uOomMuI9mkDudH3/Tq6vnvg4y88VOc+n31E0loZH7M=;
+        b=eQLdF65BUuPQ1SL/Ftc/YMmcm6QDyGm5d145159823uLAaqvT5cFn4Q0K+BuADkHmV
+         ruML5GfcoKTZ5Dv2C6ILmvHbsJHLBjRvHnDQ1VWHUtVCaDEfUPSKIA9j7MyesTgVsbWt
+         BLtNtJb7W1UOAF46hs+ansm7gwhDcGyGMEiKJP6+i3HOqI1tBwArUzQvwNXHoCZmZwBO
+         yZNO1MLazqsHWUfR6NHR7atc4/U3UqD+/4d9P+qapHTrUZ1iU3/N1gR3W1AIbCBNCABV
+         U3lMRhmAswtBPAhnS0TiVKIHxLxEcSNRnq0tyH3w7eWB30pI2Dx/Saf5rV9qzgPkQN78
+         XLsA==
+X-Gm-Message-State: APjAAAWK/jJuB/2/7UVGSPKok/bd8qbNtc++5kW1QTLVahcArSyRZPhx
+        QO33vaM0LgdfAcn232oVHXsL1vCaINyyMXx1xGC+0GbjaVw=
+X-Google-Smtp-Source: APXvYqzD5GzHOaXAQ/z8VrRalXeZYbNVadalCl/ap48T7RwiTRRlKy35Rxp/hvF2rcRRw0/MO2zggU6fUWh7uChFCLA=
+X-Received: by 2002:a17:90b:3109:: with SMTP id gc9mr5773604pjb.30.1575498089340;
+ Wed, 04 Dec 2019 14:21:29 -0800 (PST)
 MIME-Version: 1.0
-References: <20191204155912.17590-1-brgl@bgdev.pl> <20191204155912.17590-6-brgl@bgdev.pl>
-In-Reply-To: <20191204155912.17590-6-brgl@bgdev.pl>
+References: <20191204155912.17590-1-brgl@bgdev.pl> <20191204155912.17590-7-brgl@bgdev.pl>
+In-Reply-To: <20191204155912.17590-7-brgl@bgdev.pl>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 5 Dec 2019 00:20:50 +0200
-Message-ID: <CAHp75VeMY2TRKOmz6WTA+8q2UYu+6sw4Xi_9SiiKur1ND8pMuA@mail.gmail.com>
-Subject: Re: [PATCH v2 05/11] gpiolib: use gpiochip_get_desc() in lineevent_create()
+Date:   Thu, 5 Dec 2019 00:21:17 +0200
+Message-ID: <CAHp75Ve00HXD6Zm6Ypy4oapAZTJk99tzDSu-=c5NG4iOjK8KzQ@mail.gmail.com>
+Subject: Re: [PATCH v2 06/11] gpiolib: use gpiochip_get_desc() in gpio_ioctl()
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -71,45 +71,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 6:05 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Wed, Dec 4, 2019 at 6:04 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
 > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 >
-> Unduplicate the ngpio check by simply calling gpiochip_get_desc() and
+> Unduplicate the offset check by simply calling gpiochip_get_desc() and
 > checking its return value.
 >
 
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
+
 > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > ---
->  drivers/gpio/gpiolib.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  drivers/gpio/gpiolib.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 >
 > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 6ef55cc1188b..17796437d7be 100644
+> index 17796437d7be..b7043946c029 100644
 > --- a/drivers/gpio/gpiolib.c
 > +++ b/drivers/gpio/gpiolib.c
-> @@ -1009,8 +1009,9 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
->         lflags = eventreq.handleflags;
->         eflags = eventreq.eventflags;
+> @@ -1175,10 +1175,11 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 >
-> -       if (offset >= gdev->ngpio)
-> -               return -EINVAL;
-> +       desc = gpiochip_get_desc(gdev->chip, offset);
-> +       if (IS_ERR(desc))
-> +               return PTR_ERR(desc);
+>                 if (copy_from_user(&lineinfo, ip, sizeof(lineinfo)))
+>                         return -EFAULT;
+> -               if (lineinfo.line_offset >= gdev->ngpio)
+> -                       return -EINVAL;
 >
->         /* Return an error if a unknown flag is set */
->         if ((lflags & ~GPIOHANDLE_REQUEST_VALID_FLAGS) ||
-> @@ -1048,7 +1049,6 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
->                 }
->         }
->
-> -       desc = &gdev->descs[offset];
->         ret = gpiod_request(desc, le->label);
->         if (ret)
->                 goto out_free_label;
+> -               desc = &gdev->descs[lineinfo.line_offset];
+> +               desc = gpiochip_get_desc(chip, lineinfo.line_offset);
+> +               if (IS_ERR(desc))
+> +                       return PTR_ERR(desc);
+> +
+>                 if (desc->name) {
+>                         strncpy(lineinfo.name, desc->name,
+>                                 sizeof(lineinfo.name));
 > --
 > 2.23.0
 >
