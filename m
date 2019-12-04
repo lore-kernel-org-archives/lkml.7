@@ -2,69 +2,76 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFBCC2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D32BBC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D48220865
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A402F2077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="ewH5ytkf"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="a8S4mBC3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728682AbfLDP7u (ORCPT
+        id S1728713AbfLDP7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:59:50 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34033 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728663AbfLDP7s (ORCPT
+        Wed, 4 Dec 2019 10:59:52 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:37006 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728669AbfLDP7r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:59:48 -0500
-Received: by mail-wr1-f68.google.com with SMTP id t2so9277024wrr.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 07:59:46 -0800 (PST)
+        Wed, 4 Dec 2019 10:59:47 -0500
+Received: by mail-qt1-f196.google.com with SMTP id w47so238055qtk.4
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 07:59:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
+        d=soleen.com; s=google;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=GSTWzaYxR+LU0fQn09ValmDemRZs9E3PLImmxyhYvGI=;
-        b=ewH5ytkfd3GaOGJYjRvi03EiSqU6jhugqKVSmtl63atlBdfCp+FhmlaHm5KooNxRj+
-         5P6LAWm3vZp3Jyj91uZyQDEtqmYfPZ+UiyDW57FvOsPvZUmHS5C37Gr87z8CCWHxtsNW
-         BOUHDRYOKYdkyOsLysaHvH5akREhncbAxlgCJ9YQv3A9oAB9cCwcdDGe7nBtovS6tlWF
-         yV6G7fN5OPbPgigpSEsSQQRYn5a3+z/HkbWlMTbr7DW6WzcLXXfp3o+vka4bWrIRS1xO
-         wxUX46tviLu9gLRo8JDPchAuwg1LsaeIYJ3EE+g4LCQYn6lTa7SX7uvNNtHtx7Sv8fVp
-         5DHA==
+        bh=2gHoWz5U3gDvwOIWS+f4ZdY50s/vcrKHXb/YTJoNTqU=;
+        b=a8S4mBC3Dt23xxnDE1I9wz9WiyUF1CmXE2b5cIfPza4Al587zhEJsQ3/UfRwm9U+G/
+         rRRqctcvpDnT6sJ4PjIsg0jEuIdwrHHFaf9DZrY+XcZa5X5HqfADC4/ZE/fK2jOaAWgU
+         W2eTwrnf5+BiTNu9IleEmtU0sXaYA1ww/f2Z04R08eCD67sNZB4PEOIQ3156ZCKhqt1Q
+         F/b9ovj2Jub3p4xim85ROV4ZHUG0gj54u/9VbLyh6qveLWICy/KpXEvfQm/MlfKFqDLS
+         8vFiPKLYJ57TxShn7SFwh0QWW3AfkDec3XUS+DjVhJwEFPhmbNHzu28bBSQFiNURWkoT
+         4eLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GSTWzaYxR+LU0fQn09ValmDemRZs9E3PLImmxyhYvGI=;
-        b=A/a6k01Op7hw8qXxn9+fRLC55KGHTEPrfRE5YpTufiGxsc7pLOjLwJhZ7u8F5jAnQy
-         P6OsNvPDMnv7xGG657uuizcvaFU32nTpI8fYomt850c76e6cC0FtQ6Z5XbYVDTJQcHTw
-         fGacC1Dap/ERJPErFpTa1gxkZpC5g5eysN4qi7w4BwzWhw3+i3ETeSyfxY8rGZdWJuSZ
-         lThWxFHdRbvv+37uPlBW1cryYkPA/L0Tb3KBrJ7GnQJK6SM3CctdX8SyEth2G8tB6rEp
-         u6rnLANCwuSHi4smYQmBF9e3XLeUIe1gV5nxN56KxyhewLzu8xqI3HDT0DF8vka2CILe
-         D6xg==
-X-Gm-Message-State: APjAAAXFtx6FSGw/W3gGkNMSBuTGFt49aTr89a3fAntYoFavoVuprzQJ
-        FkTy4KqveMuHtnHZ8hTFIF5bhA==
-X-Google-Smtp-Source: APXvYqxuyU4sbJw3DaabgGc1/OmTWGhSSlCNAels+NTfq3axxx4cdGLp1Tw2HwrWmmopbsbK+EjnBg==
-X-Received: by 2002:a5d:4e0a:: with SMTP id p10mr4781273wrt.229.1575475185410;
-        Wed, 04 Dec 2019 07:59:45 -0800 (PST)
-Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id s10sm8769070wrw.12.2019.12.04.07.59.44
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=2gHoWz5U3gDvwOIWS+f4ZdY50s/vcrKHXb/YTJoNTqU=;
+        b=fTd6JIRjGyvOckWcrXllUlzUBt6eJXJOrfaB7M6QjktHAH2YoOvpmBxDX5N7Yde2/a
+         rkC3UG830dBBA+o35THvZOrqrmpHWhu1KdmP0rOPqznYAvFA8XRQdltBEe2Yt2ZSK3Gi
+         2H2UodustRR/LCJ0pjClIns+MylCKpOmkPGcAv8S8TWElqtilv38fMAs55bcSWwEfEF/
+         lLYUYtaWwlKurA+vyOQU0r36gxp0UX+dP0elJV5409IBTytHfWdVsg3fEDdVxCUdyTEi
+         kYedQFKJyRWqaLfEam+vaUo7h0SyDm66heqv4ogHPM6m+xBiWAmgaVjPNJTA3N1llEZZ
+         iBrw==
+X-Gm-Message-State: APjAAAWSjYgVzFl6ZSD+uU3LuuRr9YVU7bouNEapdg4urE+9E0BtGAdJ
+        CFrl+KHqDneU8lTF91ZoS6J1FA==
+X-Google-Smtp-Source: APXvYqx9KAIwGf5i0C+05hdOsoH1Qz53bF4Ua1D78Kp4D5OsFHhBK4l+6RncFcIz1n4N/yJalTasNg==
+X-Received: by 2002:ac8:5319:: with SMTP id t25mr3419613qtn.242.1575475186888;
+        Wed, 04 Dec 2019 07:59:46 -0800 (PST)
+Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
+        by smtp.gmail.com with ESMTPSA id w21sm4177585qth.17.2019.12.04.07.59.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 07:59:44 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 10/11] gpiolib: add new ioctl() for monitoring changes in line info
-Date:   Wed,  4 Dec 2019 16:59:40 +0100
-Message-Id: <20191204155941.17814-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
+        Wed, 04 Dec 2019 07:59:46 -0800 (PST)
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
+        ebiederm@xmission.com, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, corbet@lwn.net,
+        catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
+        james.morse@arm.com, vladimir.murzin@arm.com,
+        matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org,
+        mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com,
+        tglx@linutronix.de
+Subject: [PATCH v8 04/25] arm64: kexec: make dtb_mem always enabled
+Date:   Wed,  4 Dec 2019 10:59:17 -0500
+Message-Id: <20191204155938.2279686-5-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191204155938.2279686-1-pasha.tatashin@soleen.com>
+References: <20191204155938.2279686-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,381 +79,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Currently, dtb_mem is enabled only when CONFIG_KEXEC_FILE is
+enabled. This adds ugly ifdefs to c files.
 
-Currently there is no way for user-space to be informed about changes
-in status of GPIO lines e.g. when someone else requests the line or its
-config changes. We can only periodically re-read the line-info. This
-is fine for simple one-off user-space tools, but any daemon that provides
-a centralized access to GPIO chips would benefit hugely from an event
-driven line info synchronization.
+Always enabled dtb_mem, when it is not used, it is NULL.
+Change the dtb_mem to phys_addr_t, as it is a physical address.
 
-This patch adds a new ioctl() that allows user-space processes to reuse
-the file descriptor associated with the character device for watching
-any changes in line properties. Every such event contains the updated
-line information.
-
-Currently the events are generated on three types of status changes: when
-a line is requested, when it's released and when its config is changed.
-The first two are self-explanatory. For the third one: this will only
-happen when another user-space process calls the new SET_CONFIG ioctl()
-as any changes that can happen from within the kernel (i.e.
-set_transitory() or set_debounce()) are of no interest to user-space.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- drivers/gpio/gpiolib.c    | 177 ++++++++++++++++++++++++++++++++++++--
- drivers/gpio/gpiolib.h    |   2 +
- include/uapi/linux/gpio.h |  24 ++++++
- 3 files changed, 195 insertions(+), 8 deletions(-)
+ arch/arm64/include/asm/kexec.h    | 4 ++--
+ arch/arm64/kernel/machine_kexec.c | 6 +-----
+ 2 files changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 711963aa9239..2ff15ef0bbe0 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -547,6 +547,9 @@ static long linehandle_set_config(struct linehandle_state *lh,
- 			if (ret)
- 				return ret;
- 		}
-+
-+		atomic_notifier_call_chain(&desc->gdev->notifier,
-+					   GPIOLINE_CHANGED_CONFIG, desc);
- 	}
- 	return 0;
- }
-@@ -1199,14 +1202,24 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
- 	spin_unlock_irqrestore(&gpio_lock, flags);
- }
- 
-+struct gpio_chardev_data {
-+	struct gpio_device *gdev;
-+	wait_queue_head_t wait;
-+	DECLARE_KFIFO(events, struct gpioline_info_changed, 32);
-+	struct notifier_block lineinfo_changed_nb;
-+};
-+
- /*
-  * gpio_ioctl() - ioctl handler for the GPIO chardev
-  */
- static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- {
--	struct gpio_device *gdev = filp->private_data;
-+	struct gpio_chardev_data *priv = filp->private_data;
-+	struct gpio_device *gdev = priv->gdev;
- 	struct gpio_chip *chip = gdev->chip;
- 	void __user *ip = (void __user *)arg;
-+	struct gpio_desc *desc;
-+	__u32 offset;
- 
- 	/* We fail any subsequent ioctl():s when the chip is gone */
- 	if (!chip)
-@@ -1228,9 +1241,9 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 		if (copy_to_user(ip, &chipinfo, sizeof(chipinfo)))
- 			return -EFAULT;
- 		return 0;
--	} else if (cmd == GPIO_GET_LINEINFO_IOCTL) {
-+	} else if (cmd == GPIO_GET_LINEINFO_IOCTL ||
-+		   cmd == GPIO_GET_LINEINFO_WATCH_IOCTL) {
- 		struct gpioline_info lineinfo;
--		struct gpio_desc *desc;
- 
- 		if (copy_from_user(&lineinfo, ip, sizeof(lineinfo)))
- 			return -EFAULT;
-@@ -1243,11 +1256,25 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 
- 		if (copy_to_user(ip, &lineinfo, sizeof(lineinfo)))
- 			return -EFAULT;
-+
-+		if (cmd == GPIO_GET_LINEINFO_WATCH_IOCTL)
-+			set_bit(FLAG_WATCHED, &desc->flags);
-+
- 		return 0;
- 	} else if (cmd == GPIO_GET_LINEHANDLE_IOCTL) {
- 		return linehandle_create(gdev, ip);
- 	} else if (cmd == GPIO_GET_LINEEVENT_IOCTL) {
- 		return lineevent_create(gdev, ip);
-+	} else if (cmd == GPIO_GET_LINEINFO_UNWATCH_IOCTL) {
-+		if (copy_from_user(&offset, ip, sizeof(offset)))
-+			return -EFAULT;
-+
-+		desc = gpiochip_get_desc(chip, offset);
-+		if (IS_ERR(desc))
-+			return PTR_ERR(desc);
-+
-+		clear_bit(FLAG_WATCHED, &desc->flags);
-+		return 0;
- 	}
- 	return -EINVAL;
- }
-@@ -1260,6 +1287,99 @@ static long gpio_ioctl_compat(struct file *filp, unsigned int cmd,
- }
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index 12a561a54128..ad6afed69078 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -90,14 +90,14 @@ static inline void crash_prepare_suspend(void) {}
+ static inline void crash_post_resume(void) {}
  #endif
  
-+static struct gpio_chardev_data *
-+to_gpio_chardev_data(struct notifier_block *nb)
-+{
-+	return container_of(nb, struct gpio_chardev_data, lineinfo_changed_nb);
-+}
-+
-+static int lineinfo_changed_notify(struct notifier_block *nb,
-+				   unsigned long action, void *data)
-+{
-+	struct gpio_chardev_data *priv = to_gpio_chardev_data(nb);
-+	struct gpioline_info_changed chg;
-+	struct gpio_desc *desc = data;
-+	int ret = NOTIFY_DONE;
-+
-+	if (test_bit(FLAG_WATCHED, &desc->flags)) {
-+		memset(&chg, 0, sizeof(chg));
-+		chg.info.line_offset = gpio_chip_hwgpio(desc);
-+		chg.event_type = action;
-+		chg.timestamp = ktime_get_real_ns();
-+		gpio_desc_to_lineinfo(desc, &chg.info);
-+
-+		ret = kfifo_in_spinlocked(&priv->events, &chg,
-+					  1, &priv->wait.lock);
-+		if (ret)
-+			wake_up_poll(&priv->wait, EPOLLIN);
-+		else
-+			pr_debug_ratelimited(
-+				"%s: lineinfo event FIFO is full - event dropped\n",
-+				__func__);
-+
-+		ret = NOTIFY_OK;
-+	}
-+
-+	return ret;
-+}
-+
-+static __poll_t lineinfo_watch_poll(struct file *filep,
-+				    struct poll_table_struct *pollt)
-+{
-+	struct gpio_chardev_data *priv = filep->private_data;
-+	__poll_t events = 0;
-+
-+	poll_wait(filep, &priv->wait, pollt);
-+
-+	spin_lock(&priv->wait.lock);
-+	if (!kfifo_is_empty(&priv->events))
-+		events = EPOLLIN | EPOLLRDNORM;
-+	spin_unlock(&priv->wait.lock);
-+
-+	return events;
-+}
-+
-+static ssize_t lineinfo_watch_read(struct file *filep, char __user *buf,
-+				   size_t count, loff_t *off)
-+{
-+	struct gpio_chardev_data *priv = filep->private_data;
-+	struct gpioline_info_changed event;
-+	int ret;
-+
-+	if (count < sizeof(event))
-+		return -EINVAL;
-+
-+	for (;;) {
-+		spin_lock(&priv->wait.lock);
-+		if (kfifo_is_empty(&priv->events)) {
-+			if (filep->f_flags & O_NONBLOCK) {
-+				spin_unlock(&priv->wait.lock);
-+				return -EAGAIN;
-+			}
-+
-+			ret = wait_event_interruptible_locked(priv->wait,
-+					!kfifo_is_empty(&priv->events));
-+			if (ret) {
-+				spin_unlock(&priv->wait.lock);
-+				return ret;
-+			}
-+		}
-+
-+		ret = kfifo_out(&priv->events, &event, 1);
-+		spin_unlock(&priv->wait.lock);
-+		if (ret == 1)
-+			break;
-+
-+		/* We should never get here. See lineevent_read(). */
-+	}
-+
-+	ret = copy_to_user(buf, &event, sizeof(event));
-+	if (ret)
-+		return -EFAULT;
-+
-+	return sizeof(event);
-+}
-+
- /**
-  * gpio_chrdev_open() - open the chardev for ioctl operations
-  * @inode: inode for this chardev
-@@ -1270,14 +1390,42 @@ static int gpio_chrdev_open(struct inode *inode, struct file *filp)
- {
- 	struct gpio_device *gdev = container_of(inode->i_cdev,
- 					      struct gpio_device, chrdev);
-+	struct gpio_chardev_data *priv;
-+	int ret;
+-#ifdef CONFIG_KEXEC_FILE
+ #define ARCH_HAS_KIMAGE_ARCH
  
- 	/* Fail on open if the backing gpiochip is gone */
- 	if (!gdev->chip)
- 		return -ENODEV;
-+
-+	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	init_waitqueue_head(&priv->wait);
-+	INIT_KFIFO(priv->events);
-+	priv->gdev = gdev;
-+
-+	priv->lineinfo_changed_nb.notifier_call = lineinfo_changed_notify;
-+	ret = atomic_notifier_chain_register(&gdev->notifier,
-+					     &priv->lineinfo_changed_nb);
-+	if (ret)
-+		goto out_free_priv;
-+
- 	get_device(&gdev->dev);
--	filp->private_data = gdev;
-+	filp->private_data = priv;
-+
-+	ret = nonseekable_open(inode, filp);
-+	if (ret)
-+		goto out_unregister_notifier;
+ struct kimage_arch {
+ 	void *dtb;
+-	unsigned long dtb_mem;
++	phys_addr_t dtb_mem;
+ };
  
--	return nonseekable_open(inode, filp);
-+	return ret;
-+
-+out_unregister_notifier:
-+	atomic_notifier_chain_unregister(&gdev->notifier,
-+					 &priv->lineinfo_changed_nb);
-+out_free_priv:
-+	kfree(priv);
-+	return ret;
++#ifdef CONFIG_KEXEC_FILE
+ extern const struct kexec_file_ops kexec_image_ops;
+ 
+ struct kimage;
+diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+index 8e9c924423b4..ae1bad0156cd 100644
+--- a/arch/arm64/kernel/machine_kexec.c
++++ b/arch/arm64/kernel/machine_kexec.c
+@@ -203,11 +203,7 @@ void machine_kexec(struct kimage *kimage)
+ 	 * In kexec_file case, the kernel starts directly without purgatory.
+ 	 */
+ 	cpu_soft_restart(reboot_code_buffer_phys, kimage->head, kimage->start,
+-#ifdef CONFIG_KEXEC_FILE
+-						kimage->arch.dtb_mem);
+-#else
+-						0);
+-#endif
++			 kimage->arch.dtb_mem);
+ 
+ 	BUG(); /* Should never get here. */
  }
- 
- /**
-@@ -1288,17 +1436,22 @@ static int gpio_chrdev_open(struct inode *inode, struct file *filp)
-  */
- static int gpio_chrdev_release(struct inode *inode, struct file *filp)
- {
--	struct gpio_device *gdev = container_of(inode->i_cdev,
--					      struct gpio_device, chrdev);
-+	struct gpio_chardev_data *priv = filp->private_data;
-+	struct gpio_device *gdev = priv->gdev;
- 
-+	atomic_notifier_chain_unregister(&gdev->notifier,
-+					 &priv->lineinfo_changed_nb);
- 	put_device(&gdev->dev);
-+	kfree(priv);
-+
- 	return 0;
- }
- 
--
- static const struct file_operations gpio_fileops = {
- 	.release = gpio_chrdev_release,
- 	.open = gpio_chrdev_open,
-+	.poll = lineinfo_watch_poll,
-+	.read = lineinfo_watch_read,
- 	.owner = THIS_MODULE,
- 	.llseek = no_llseek,
- 	.unlocked_ioctl = gpio_ioctl,
-@@ -1509,6 +1662,8 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
- 	for (i = 0; i < chip->ngpio; i++)
- 		gdev->descs[i].gdev = gdev;
- 
-+	ATOMIC_INIT_NOTIFIER_HEAD(&gdev->notifier);
-+
- #ifdef CONFIG_PINCTRL
- 	INIT_LIST_HEAD(&gdev->pin_ranges);
- #endif
-@@ -2848,6 +3003,8 @@ static int gpiod_request_commit(struct gpio_desc *desc, const char *label)
- 	}
- done:
- 	spin_unlock_irqrestore(&gpio_lock, flags);
-+	atomic_notifier_call_chain(&desc->gdev->notifier,
-+				   GPIOLINE_CHANGED_REQUESTED, desc);
- 	return ret;
- }
- 
-@@ -2945,6 +3102,9 @@ static bool gpiod_free_commit(struct gpio_desc *desc)
- 	}
- 
- 	spin_unlock_irqrestore(&gpio_lock, flags);
-+	atomic_notifier_call_chain(&desc->gdev->notifier,
-+				   GPIOLINE_CHANGED_RELEASED, desc);
-+
- 	return ret;
- }
- 
-@@ -3107,6 +3267,7 @@ static int gpio_set_bias(struct gpio_chip *chip, struct gpio_desc *desc)
- 		if (ret != -ENOTSUPP)
- 			return ret;
- 	}
-+
- 	return 0;
- }
- 
-diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-index a1cbeabadc69..4fca77241fb0 100644
---- a/drivers/gpio/gpiolib.h
-+++ b/drivers/gpio/gpiolib.h
-@@ -54,6 +54,7 @@ struct gpio_device {
- 	const char		*label;
- 	void			*data;
- 	struct list_head        list;
-+	struct atomic_notifier_head notifier;
- 
- #ifdef CONFIG_PINCTRL
- 	/*
-@@ -112,6 +113,7 @@ struct gpio_desc {
- #define FLAG_PULL_UP    13	/* GPIO has pull up enabled */
- #define FLAG_PULL_DOWN  14	/* GPIO has pull down enabled */
- #define FLAG_BIAS_DISABLE    15	/* GPIO has pull disabled */
-+#define FLAG_WATCHED	16	/* GPIO line is being watched by user-space */
- 
- 	/* Connection label */
- 	const char		*label;
-diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
-index 799cf823d493..2401028ae7de 100644
---- a/include/uapi/linux/gpio.h
-+++ b/include/uapi/linux/gpio.h
-@@ -59,6 +59,28 @@ struct gpioline_info {
- /* Maximum number of requested handles */
- #define GPIOHANDLES_MAX 64
- 
-+/* Possible line status change events */
-+enum {
-+	GPIOLINE_CHANGED_REQUESTED = 1,
-+	GPIOLINE_CHANGED_RELEASED,
-+	GPIOLINE_CHANGED_CONFIG,
-+};
-+
-+/**
-+ * struct gpioline_info_changed - Information about a change in status
-+ * of a GPIO line
-+ * @timestamp: estimate of time of status change occurrence, in nanoseconds
-+ * @event_type: one of GPIOLINE_CHANGED_REQUESTED, GPIOLINE_CHANGED_RELEASED
-+ * and GPIOLINE_CHANGED_CONFIG
-+ * @info: updated line information
-+ */
-+struct gpioline_info_changed {
-+	__u64 timestamp;
-+	__u32 event_type;
-+	struct gpioline_info info;
-+	__u32 padding[4]; /* for future use */
-+};
-+
- /* Linerequest flags */
- #define GPIOHANDLE_REQUEST_INPUT	(1UL << 0)
- #define GPIOHANDLE_REQUEST_OUTPUT	(1UL << 1)
-@@ -176,6 +198,8 @@ struct gpioevent_data {
- 
- #define GPIO_GET_CHIPINFO_IOCTL _IOR(0xB4, 0x01, struct gpiochip_info)
- #define GPIO_GET_LINEINFO_IOCTL _IOWR(0xB4, 0x02, struct gpioline_info)
-+#define GPIO_GET_LINEINFO_WATCH_IOCTL _IOWR(0xB4, 0x0b, struct gpioline_info)
-+#define GPIO_GET_LINEINFO_UNWATCH_IOCTL _IOWR(0xB4, 0x0c, __u32)
- #define GPIO_GET_LINEHANDLE_IOCTL _IOWR(0xB4, 0x03, struct gpiohandle_request)
- #define GPIO_GET_LINEEVENT_IOCTL _IOWR(0xB4, 0x04, struct gpioevent_request)
- 
 -- 
-2.23.0
+2.24.0
 
