@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B40EC2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 672A3C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50B7C20863
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CF5120863
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:07:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482867;
-	bh=DU7MvmuyjIM500TZs1Pz44i3dTsS+4h9iMSmMU/yTuA=;
+	s=default; t=1575482872;
+	bh=Nyk+2Is+5yTrW7bgCbDpJPRVHk3eBtaas59ZWBHLOfs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d/NbHymIpGNhhMwdHoyMT4ZxrV2tp7HVXMmvpTK7v7+hKJ0GCdu0a/KW7hGa2oWMN
-	 W/TZl7FFF177OEiRupqjxmmeJmJQrHO1qxNJ3/FfN2X9P9ly+AxeyjzoFLhqvLz1N5
-	 /b4Hf674B9DBI8Zsg53q4cXbfPUw2cIGTYwYAZzY=
+	b=rHkuQyMjJvdzxF6hi4oGSVKyIzo66NtUHnwYB+o+QQjRmknWFFQA3BuPpJtfEzlko
+	 Se2UoNyqFjDe+w5QtCxK7CsE/z+XyftxSG5ELrevZ/+jGq0QqTYlBHRvSjBvLVEVYa
+	 2MICFpjjzG9QR/Ou+i1x+ed5d0Gg3J/Cogl9umcw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730799AbfLDSHq (ORCPT
+        id S1730820AbfLDSHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:07:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58274 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:07:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730804AbfLDSHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:07:45 -0500
+        id S1730233AbfLDSHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:07:47 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC0A22086D;
-        Wed,  4 Dec 2019 18:07:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52CCF20675;
+        Wed,  4 Dec 2019 18:07:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482864;
-        bh=DU7MvmuyjIM500TZs1Pz44i3dTsS+4h9iMSmMU/yTuA=;
+        s=default; t=1575482866;
+        bh=Nyk+2Is+5yTrW7bgCbDpJPRVHk3eBtaas59ZWBHLOfs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GEHpPwAAg1Zydh+jV8/7oCffbL7itrJZuZm3+JjVPdNLgVF+UnVXn1PT0Xa+7DNRY
-         7lOPvtDOIeeBiptOb86lL0Aa9pqlNoRG81zqCF7uNKqTEig9nlsMiTDUnW2WMkvAfN
-         wP8J/QmYZ9mPDiBCsDwbzDlN4uZt+oxQ648taBBw=
+        b=mS6+s8p5eIYAkJNqwkWGJTVvN6+IIG0dl1mQY1Dl7L1iF3T+PEAun63wz8vwyt24G
+         wXgOnzFcAwPhILN8yQyFH8Wyv3rtITKfwGYaO4IgvRZxxzjhKzD+gveCBdbOpC2gnx
+         nM4CaydaNyW/PvzpscFBx7iDTYl5wtIOq1Nx9F34=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luca Ceresoli <luca@lucaceresoli.net>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.14 165/209] net: macb: fix error format in dev_err()
-Date:   Wed,  4 Dec 2019 18:56:17 +0100
-Message-Id: <20191204175334.842614967@linuxfoundation.org>
+Subject: [PATCH 4.14 166/209] pwm: Clear chip_data in pwm_put()
+Date:   Wed,  4 Dec 2019 18:56:18 +0100
+Message-Id: <20191204175334.909576588@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -62,88 +62,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luca Ceresoli <luca@lucaceresoli.net>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-commit f413cbb332a0b5251a790f396d0eb4ebcade5dec upstream.
+commit e926b12c611c2095c7976e2ed31753ad6eb5ff1a upstream.
 
-Errors are negative numbers. Using %u shows them as very large positive
-numbers such as 4294967277 that don't make sense. Use the %d format
-instead, and get a much nicer -19.
+After a PWM is disposed by its user the per chip data becomes invalid.
+Clear the data in common code instead of the device drivers to get
+consistent behaviour. Before this patch only three of nine drivers
+cleaned up here.
 
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-Fixes: b48e0bab142f ("net: macb: Migrate to devm clock interface")
-Fixes: 93b31f48b3ba ("net/macb: unify clock management")
-Fixes: 421d9df0628b ("net/macb: merge at91_ether driver into macb driver")
-Fixes: aead88bd0e99 ("net: ethernet: macb: Add support for rx_clk")
-Fixes: f5473d1d44e4 ("net: macb: Support clock management for tsu_clk")
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/cadence/macb_main.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/pwm/core.c        |    1 +
+ drivers/pwm/pwm-berlin.c  |    1 -
+ drivers/pwm/pwm-pca9685.c |    1 -
+ drivers/pwm/pwm-samsung.c |    1 -
+ 4 files changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -2822,7 +2822,7 @@ static int macb_clk_init(struct platform
- 		if (!err)
- 			err = -ENODEV;
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -874,6 +874,7 @@ void pwm_put(struct pwm_device *pwm)
+ 	if (pwm->chip->ops->free)
+ 		pwm->chip->ops->free(pwm->chip, pwm);
  
--		dev_err(&pdev->dev, "failed to get macb_clk (%u)\n", err);
-+		dev_err(&pdev->dev, "failed to get macb_clk (%d)\n", err);
- 		return err;
- 	}
++	pwm_set_chip_data(pwm, NULL);
+ 	pwm->label = NULL;
  
-@@ -2831,7 +2831,7 @@ static int macb_clk_init(struct platform
- 		if (!err)
- 			err = -ENODEV;
+ 	module_put(pwm->chip->ops->owner);
+--- a/drivers/pwm/pwm-berlin.c
++++ b/drivers/pwm/pwm-berlin.c
+@@ -78,7 +78,6 @@ static void berlin_pwm_free(struct pwm_c
+ {
+ 	struct berlin_pwm_channel *channel = pwm_get_chip_data(pwm);
  
--		dev_err(&pdev->dev, "failed to get hclk (%u)\n", err);
-+		dev_err(&pdev->dev, "failed to get hclk (%d)\n", err);
- 		return err;
- 	}
+-	pwm_set_chip_data(pwm, NULL);
+ 	kfree(channel);
+ }
  
-@@ -2845,25 +2845,25 @@ static int macb_clk_init(struct platform
+--- a/drivers/pwm/pwm-pca9685.c
++++ b/drivers/pwm/pwm-pca9685.c
+@@ -176,7 +176,6 @@ static void pca9685_pwm_gpio_free(struct
+ 	pm_runtime_put(pca->chip.dev);
+ 	mutex_lock(&pca->lock);
+ 	pwm = &pca->chip.pwms[offset];
+-	pwm_set_chip_data(pwm, NULL);
+ 	mutex_unlock(&pca->lock);
+ }
  
- 	err = clk_prepare_enable(*pclk);
- 	if (err) {
--		dev_err(&pdev->dev, "failed to enable pclk (%u)\n", err);
-+		dev_err(&pdev->dev, "failed to enable pclk (%d)\n", err);
- 		return err;
- 	}
+--- a/drivers/pwm/pwm-samsung.c
++++ b/drivers/pwm/pwm-samsung.c
+@@ -238,7 +238,6 @@ static int pwm_samsung_request(struct pw
+ static void pwm_samsung_free(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
+ 	devm_kfree(chip->dev, pwm_get_chip_data(pwm));
+-	pwm_set_chip_data(pwm, NULL);
+ }
  
- 	err = clk_prepare_enable(*hclk);
- 	if (err) {
--		dev_err(&pdev->dev, "failed to enable hclk (%u)\n", err);
-+		dev_err(&pdev->dev, "failed to enable hclk (%d)\n", err);
- 		goto err_disable_pclk;
- 	}
- 
- 	err = clk_prepare_enable(*tx_clk);
- 	if (err) {
--		dev_err(&pdev->dev, "failed to enable tx_clk (%u)\n", err);
-+		dev_err(&pdev->dev, "failed to enable tx_clk (%d)\n", err);
- 		goto err_disable_hclk;
- 	}
- 
- 	err = clk_prepare_enable(*rx_clk);
- 	if (err) {
--		dev_err(&pdev->dev, "failed to enable rx_clk (%u)\n", err);
-+		dev_err(&pdev->dev, "failed to enable rx_clk (%d)\n", err);
- 		goto err_disable_txclk;
- 	}
- 
-@@ -3298,7 +3298,7 @@ static int at91ether_clk_init(struct pla
- 
- 	err = clk_prepare_enable(*pclk);
- 	if (err) {
--		dev_err(&pdev->dev, "failed to enable pclk (%u)\n", err);
-+		dev_err(&pdev->dev, "failed to enable pclk (%d)\n", err);
- 		return err;
- 	}
- 
+ static int pwm_samsung_enable(struct pwm_chip *chip, struct pwm_device *pwm)
 
 
