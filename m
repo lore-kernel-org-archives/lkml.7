@@ -2,143 +2,126 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,PDS_BTC_ID,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58746C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB014C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AB302084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:31:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575462715;
-	bh=BqmufO685yzxrGMkexQbTJa/wGdgpCJGHEB1cLv5CEg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FgAAQYb+kbnlpwHvbrZc9TcVzaohDfZqAox293icZXX4rwFjmT4kOhAFn9oMIdg/4
-	 CcxdBErlvxVssbutZ6fCLleHoICECo+RnMw3GdTQP84ZlPNzAPpbpjLY6lFMWVXSZB
-	 vVYAPc1FMMpNBq32t6CAXFvaEH6bMGITODHSVWRg=
+	by mail.kernel.org (Postfix) with ESMTP id 9DB1220833
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:32:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="VtOUQDUS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbfLDMby (ORCPT
+        id S1727797AbfLDMcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 07:31:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33050 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726604AbfLDMbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 07:31:53 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B738420833;
-        Wed,  4 Dec 2019 12:31:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575462712;
-        bh=BqmufO685yzxrGMkexQbTJa/wGdgpCJGHEB1cLv5CEg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=w653gOaA/Kti/YNygsEQd45vn9R/cMuK4nEMFi9bhVIt2aDRiaj++apNi/2c0+AVx
-         rIqYyyUrwPaR82ufsCa7CjqBxvo/G7+e6Da6dSkK3q5DUsNQupgkc+fImV4R1GpG+h
-         zaucSmROx+KhRWRIpcfxCSQvwxofT/K9Tm2zGer8=
-Date:   Wed, 4 Dec 2019 13:31:48 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     syzbot <syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        hdanton@sina.com, akpm@linux-foundation.org
-Subject: Re: WARNING: refcount bug in cdev_get
-Message-ID: <20191204123148.GA3626092@kroah.com>
-References: <000000000000bf410005909463ff@google.com>
- <20191204115055.GA24783@willie-the-truck>
+        Wed, 4 Dec 2019 07:32:15 -0500
+Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:39275 "EHLO
+        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726604AbfLDMcP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 07:32:15 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 5B7EE48749;
+        Wed,  4 Dec 2019 13:32:13 +0100 (CET)
+Authentication-Results: ste-pvt-msa1.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=VtOUQDUS;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
+        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id CXe1WEAFpsSI; Wed,  4 Dec 2019 13:32:12 +0100 (CET)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 4CEC048748;
+        Wed,  4 Dec 2019 13:32:08 +0100 (CET)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 4B4E2360608;
+        Wed,  4 Dec 2019 13:32:08 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1575462728; bh=LYhit8ToubKk0QgCgXtdE9QywuXKbd7AYpsvoNTHpF8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=VtOUQDUSHGDnRjVQQTOXPWOKG1GPg7X3aXX24xXApU5wpb2efYc4q2cjNC507RBm2
+         H7vQ2x06V5nvSi44lD232WnoVbZmVpnYArHV9VkQX0vv6yRGUDzXpWuV/2v7uP60cu
+         acj+1pbggGd0tzLuFJhSWXOo3pL6Ds2HANrQiE8o=
+Subject: Re: [PATCH 6/8] drm: Add a drm_get_unmapped_area() helper
+To:     =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Cc:     pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
+References: <20191203132239.5910-1-thomas_os@shipmail.org>
+ <20191203132239.5910-7-thomas_os@shipmail.org>
+ <e091063c-2c4a-866e-acdb-9efb1e20d737@amd.com>
+ <98af5b11-1034-91fa-aa38-5730f116d1cd@shipmail.org>
+ <3cc5b796-20c6-9f4c-3f62-d844f34d81b7@amd.com>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <90a8d09a-b3ab-cd00-0cfb-1a4c72e91836@shipmail.org>
+Date:   Wed, 4 Dec 2019 13:32:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191204115055.GA24783@willie-the-truck>
+In-Reply-To: <3cc5b796-20c6-9f4c-3f62-d844f34d81b7@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 11:50:56AM +0000, Will Deacon wrote:
-> Hi all,
-> 
-> [+Hillf, +akpm, +Greg]
-> 
-> On Tue, Aug 20, 2019 at 03:58:06PM -0700, syzbot wrote:
-> > syzbot found the following crash on:
-> > 
-> > HEAD commit:    2d63ba3e Merge tag 'pm-5.3-rc5' of git://git.kernel.org/pu..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=165d3302600000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3ff364e429585cf2
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=82defefbbd8527e1c2cb
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16c8ab3c600000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16be0c4c600000
-> > 
-> > Bisection is inconclusive: the bug happens on the oldest tested release.
-> > 
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11de3622600000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=15de3622600000
-> > 
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com
-> > 
-> > ------------[ cut here ]------------
-> > refcount_t: increment on 0; use-after-free.
-> > WARNING: CPU: 1 PID: 11828 at lib/refcount.c:156 refcount_inc_checked
-> > lib/refcount.c:156 [inline]
-> > WARNING: CPU: 1 PID: 11828 at lib/refcount.c:156
-> > refcount_inc_checked+0x61/0x70 lib/refcount.c:154
-> > Kernel panic - not syncing: panic_on_warn set ...
-> 
-> [...]
-> 
-> > RIP: 0010:refcount_inc_checked lib/refcount.c:156 [inline]
-> > RIP: 0010:refcount_inc_checked+0x61/0x70 lib/refcount.c:154
-> > Code: 1d 8e c6 64 06 31 ff 89 de e8 ab 9c 35 fe 84 db 75 dd e8 62 9b 35 fe
-> > 48 c7 c7 00 05 c6 87 c6 05 6e c6 64 06 01 e8 67 26 07 fe <0f> 0b eb c1 90 90
-> > 90 90 90 90 90 90 90 90 90 55 48 89 e5 41 57 41
-> > RSP: 0018:ffff8880907d78b8 EFLAGS: 00010282
-> > RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-> > RDX: 0000000000000000 RSI: ffffffff815c2466 RDI: ffffed10120faf09
-> > RBP: ffff8880907d78c8 R08: ffff8880a771a200 R09: fffffbfff134ae48
-> > R10: fffffbfff134ae47 R11: ffffffff89a5723f R12: ffff88809ea2bb80
-> > R13: 0000000000000000 R14: ffff88809ff6cd40 R15: ffff8880a1c56480
-> >  kref_get include/linux/kref.h:45 [inline]
-> >  kobject_get+0x66/0xc0 lib/kobject.c:644
-> >  cdev_get+0x60/0xb0 fs/char_dev.c:355
-> >  chrdev_open+0xb0/0x6b0 fs/char_dev.c:400
-> >  do_dentry_open+0x4df/0x1250 fs/open.c:797
-> >  vfs_open+0xa0/0xd0 fs/open.c:906
-> >  do_last fs/namei.c:3416 [inline]
-> >  path_openat+0x10e9/0x4630 fs/namei.c:3533
-> >  do_filp_open+0x1a1/0x280 fs/namei.c:3563
-> >  do_sys_open+0x3fe/0x5d0 fs/open.c:1089
-> 
-> FWIW, we've run into this same crash on arm64 so it would be nice to see it
-> fixed upstream. It looks like Hillf's reply (which included a patch) didn't
-> make it to the kernel mailing lists for some reason, but it is available
-> here:
-> 
-> https://groups.google.com/forum/#!original/syzkaller-bugs/PnQNxBrWv_8/X1ygj8d8DgAJ
+On 12/4/19 1:08 PM, Christian König wrote:
+> Am 04.12.19 um 12:36 schrieb Thomas Hellström (VMware):
+>> On 12/4/19 12:11 PM, Christian König wrote:
+>>> Am 03.12.19 um 14:22 schrieb Thomas Hellström (VMware):
+>>>> From: Thomas Hellstrom <thellstrom@vmware.com>
+>>>>
+>>>> This helper is used to align user-space buffer object addresses to
+>>>> huge page boundaries, minimizing the chance of alignment mismatch
+>>>> between user-space addresses and physical addresses.
+>>>
+>>> Mhm, I'm wondering if that is really such a good idea.
+>>
+>> Could you elaborate? What drawbacks do you see?
+>
+> Main problem for me seems to be that I don't fully understand what the 
+> get_unmapped_area callback is doing.
 
-No one is going to go and dig a patch out of google groups :(
+It makes sure that, if there is a chance that we could use huge 
+page-table entries, virtual address huge page boundaries are perfectly 
+aligned to physical address huge page boundaries, which is if not a CPU 
+hardware requirement, at least a kernel requirement currently.
 
-> A simpler fix would just be to use kobject_get_unless_zero() directly in
-> cdev_get(), but that looks odd in this specific case because chrdev_open()
-> holds the 'cdev_lock' and you'd hope that finding the kobject in the inode
-> with that held would mean that it's not being freed at the same time.
 
-When using kref_get_unless_zero() that implies that a lock is not being
-used and you are relying on the kobject only instead.
+>
+> For example why do we need to use drm_vma_offset_lookup_locked() to 
+> adjust the pgoff?
+>
+> The mapped offset should be completely irrelevant for finding some 
+> piece of userspace address space or am I totally off here?
 
-But I thought we had a lock in play here, so why would changing this
-actually fix anything?
 
-This code hasn't changed in 15+ years, what suddenly changed that causes
-problems here?
+Because the unmodified pgoff assumes that physical address boundaries 
+are perfectly aligned with file offset boundaries, which is typical for 
+all other subsystems.
 
-thanks,
+That's not true for TTM, however, where a buffer object start physical 
+address may be huge page aligned, but the file offset is always page 
+aligned. We could of course change that to align also file offsets to 
+huge page size boundaries, but with the above adjustment, that's not 
+needed. I opted for the adjustment.
 
-greg k-h
+Thanks,
+
+Thomas
+
+
