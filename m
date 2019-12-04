@@ -2,197 +2,172 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CFBC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 975D6C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56C072073C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F6C320803
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:41:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BLs9BMtp"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="KzQqsxoX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbfLDTjf (ORCPT
+        id S1728120AbfLDTlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 14:39:35 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40323 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727867AbfLDTjf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 14:39:35 -0500
-Received: by mail-pf1-f193.google.com with SMTP id q8so330962pfh.7;
-        Wed, 04 Dec 2019 11:39:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fJWeLkLuqn4L5JEDRR7KjBHbe7AW4CyLEe/hVRYrZI4=;
-        b=BLs9BMtpT9xJCfPWS4k/zMk0BzS1Hu5U5A1qoNQ6Rwu7MPivoVOHLX+Yrp98dWcMWL
-         vjBL8r/v7FNUJAxd/NxyjrqsB8cp/7ytqpDIPXGMW2gQZJ6lU3auztlbE8Xmsx1tptDI
-         8ybMxX9qhvGsGmgpfqX0688XkR5KDWtBdXKOSraV4yc8L0DtIBuZfKyrOXx9+0RdqKqe
-         y7Jkq7s4PCQTo6b9Pr+wnf2zLz4LYS+Qlk6ROd4UPj5f2kqC4qV460HYiVzzgwq8OPKs
-         2LxJdKo1q/d5ID7gKaaj7BuhT0H+S3TPwaAwcc1CMkO+DGTyKLbLLzw8TBkhd4PyV2Jb
-         891A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fJWeLkLuqn4L5JEDRR7KjBHbe7AW4CyLEe/hVRYrZI4=;
-        b=U+MFPruBG3mhye/T8ZKYEa12ZkJ0GS4ZXLRTXNzw4R2aryV8RkHmRIdetsU/L/50fk
-         BGx4LPk8TQCnvbwduB6+d1yrqX+h/o5IxNZ3+Npf9qjUG1MtFTbUw3Fo/cdW/jlu4AXn
-         6HJ2MKH+lksNwaT00Fd9wxXyOgZAgwyM4RLUXOhxlJQhav/3rqfCrFdZd8Ku47kjstPe
-         hwwxWsPAA2DSwzdhVYKiJY+Vy34+RQprAHuCPDahKB2sXZN/1khJXxUSve3s0UY7hO7x
-         fm8hXh3A34O3Ts/gIIYodLzSBoPexMxlQC0F6fYJApbLXa/BWd+VuHxb0lIM0R/R5Rp/
-         2h+g==
-X-Gm-Message-State: APjAAAWQ2qINfEEr4L22EbYz7K1ssF6xy6VPlnhvxY0KPb7TKxEYNd9B
-        5xSMbnqf+IFEC/140QA8ADQ=
-X-Google-Smtp-Source: APXvYqwd/ffPkow4NUdKx5Nq3OfOi5xz1CSYUUhtNrYnvK2aV6fHYyHDFSFKVGGN99BM3e/y76XrJA==
-X-Received: by 2002:a63:115c:: with SMTP id 28mr5235205pgr.6.1575488373928;
-        Wed, 04 Dec 2019 11:39:33 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id w12sm2527704pfd.58.2019.12.04.11.39.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 04 Dec 2019 11:39:32 -0800 (PST)
-Date:   Wed, 4 Dec 2019 11:39:31 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>,
-        Shijith Thotton <sthotton@marvell.com>,
-        Andre Przywara <andre.przywara@arm.com>
-Subject: Re: [PATCH v7 16/25] arm: Add support for generic vDSO (causing
- crash)
-Message-ID: <20191204193931.GA16809@roeck-us.net>
-References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
- <20190621095252.32307-17-vincenzo.frascino@arm.com>
- <20191204135159.GA7210@roeck-us.net>
- <6cdf4734-4065-09c1-8623-1bf523b38c1b@arm.com>
- <20191204161641.GA28130@roeck-us.net>
- <e35a7f71-2477-fa52-01e4-301199e99c2e@arm.com>
+        Wed, 4 Dec 2019 14:41:31 -0500
+Received: from mail-eopbgr690102.outbound.protection.outlook.com ([40.107.69.102]:24322
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727867AbfLDTlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 14:41:31 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OoCUvFmCymUg6Gkjxmt0BRjBj5AhwMI1rHOuzsg0QLFvVvxQFFulhLZesX9Ls7mp6hd8RJKp+RNL9SKjJFbF0Lx+EBLBH97sce+iw73oVNeU4WDyzlxojyd3AOjLAQ0wAYcDgS1rFUcAgv7t7i/w25X1FCBszEcVyA1drofrpN9+vmnONom3Tgpc8GRynA+WN16wIoFGZMMs8QcPvsdMSeYLdcW/zwFZAHjtSozLbhCrAK3DqsUOPwfDlmZx/0ZsFWcCazOshk+jw/4DqIAsOlqDrFt2qwsAuYpyhXu5F4TPOKaedAb0DpQu9sNVe5slBjMoq7dItHYuDD6A82mgjQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BDoEM7EgNd6eOXCaY4bLJsYyW1U3Lz2SQMA3P3LXDv8=;
+ b=LHD967lccKQeBnLtR2wWfeMOAg0je5fWh3glaso5ynjfo/9+AR67s7y4IN+58n8VnIkZi0rahOijdKmIo6WOvosUO2bwRhuWIzYq7Jw/KEyc1eMl4WecCuIayeM84Ti9/sEyv6Jk9X+P+OoI5Q7gpXqTUQJxZ6fpCgtu499XyQkGzSAno35ZsBjo3r6NqTIYZ87yyJq0OvKhqBBpfQD4wjwchRwKmAzB2Qz/1M7+A1l6TRf9CUbTJIFQgQmfL8zKOJ1knlLrgOSCOsGKhodESNQY6phNWY7+3i/iIv5YDbsYO+EmGgpcPDbYyU2LWiFU37pUeRoB9QCTJlHmaq3YpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BDoEM7EgNd6eOXCaY4bLJsYyW1U3Lz2SQMA3P3LXDv8=;
+ b=KzQqsxoXrnO8/37roOs/4rUfBMu7pIjufkb4fwLpeX4e3JXADS3TrEMRieuONt2T+/knBuJ4+TWqKGr0JvKGcHz+UBGYCPPaGmgF3pZypq3ikC9yOUZkIvsbPxQ3RyY/6HPmgSSNzHAF8NBxoGqVAgRMNfFfAx2HEsxMTGJjQpU=
+Received: from CY4PR21MB0629.namprd21.prod.outlook.com (10.175.115.19) by
+ CY4PR21MB0823.namprd21.prod.outlook.com (10.173.192.9) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.8; Wed, 4 Dec 2019 19:41:27 +0000
+Received: from CY4PR21MB0629.namprd21.prod.outlook.com
+ ([fe80::ed94:4b6d:5371:285c]) by CY4PR21MB0629.namprd21.prod.outlook.com
+ ([fe80::ed94:4b6d:5371:285c%4]) with mapi id 15.20.2516.003; Wed, 4 Dec 2019
+ 19:41:27 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Long Li <longli@microsoft.com>
+Subject: RE: [Patch v2 1/2] PCI: hv: decouple the func definition in
+ hv_dr_state from VSP message
+Thread-Topic: [Patch v2 1/2] PCI: hv: decouple the func definition in
+ hv_dr_state from VSP message
+Thread-Index: AQHVqk4NaxK6CpnVL0m95xDbFY0JxKeqYMPA
+Date:   Wed, 4 Dec 2019 19:41:27 +0000
+Message-ID: <CY4PR21MB0629F44348FF838E261932BCD75D0@CY4PR21MB0629.namprd21.prod.outlook.com>
+References: <1575428017-87914-1-git-send-email-longli@linuxonhyperv.com>
+In-Reply-To: <1575428017-87914-1-git-send-email-longli@linuxonhyperv.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-12-04T19:41:25.7087183Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b21d9c28-862c-4501-a145-112dc716f4a8;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:3:5d27:4b38:668e:1019]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 1cd25bc4-7b5e-46b3-feb7-08d778f1f42c
+x-ms-traffictypediagnostic: CY4PR21MB0823:|CY4PR21MB0823:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR21MB0823AB1F32876CC92E64A243D75D0@CY4PR21MB0823.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0241D5F98C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(376002)(39860400002)(396003)(136003)(189003)(199004)(7736002)(99286004)(66946007)(52536014)(14454004)(8676002)(2201001)(76116006)(66476007)(478600001)(110136005)(33656002)(102836004)(81156014)(229853002)(81166006)(66556008)(5660300002)(64756008)(4744005)(66446008)(55016002)(6116002)(10290500003)(4326008)(22452003)(86362001)(186003)(25786009)(305945005)(7696005)(76176011)(8936002)(14444005)(10090500001)(15650500001)(9686003)(2906002)(71200400001)(2501003)(74316002)(11346002)(71190400001)(316002)(6246003)(6506007)(6436002)(107886003)(8990500004)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0823;H:CY4PR21MB0629.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: =?us-ascii?Q?q0nYnwAM2OQNJN+U/iIx3EFjdwlqFu7X15rhQbOZXjF5KZLFnfCb5/pcIpO5?=
+ =?us-ascii?Q?GqB19E0Nih5eAc4TJYN+sDr1iAT8R+lnTfqMuUHw3FzgHlAUkB7PO3Odq5Ur?=
+ =?us-ascii?Q?xI1VN6K7flXIMMXzitTbQZQLpOjo3KOw3GDpGqebrcivsxVz/S5Uf0J+rsMv?=
+ =?us-ascii?Q?qUF+BnilKShitZaoxxOQJ3CPV5NE7vh02CpdLhIIT7YiNQFKHvplxSZ9gpIA?=
+ =?us-ascii?Q?n75v8OKA7FNngR77kaQdDPKos9L4PJnOXRxSBpFff5mtrdQWx978mOANioSd?=
+ =?us-ascii?Q?9VIJOvvP4EZr/QGH73qqKAU2XuQ1Xpwtig3J0bZRdeHRQgHjee0HS/woq+xS?=
+ =?us-ascii?Q?ii8HQZP7UeeU7ABMjmLbaNQwp5aQ6asfn2cY5lnC78YfOtMP+f7/I2od9vWs?=
+ =?us-ascii?Q?ay4b7KejxNlIftrDXfgKqhWdo5XBnuGMeBnVgiyau2Cb6QXkOm52+QMOepYA?=
+ =?us-ascii?Q?+gZu/0GwvM7nx2SSV5tDZ3/4MdmcIwbSOQAIMuZHH/w+wh/9xhhGn2+DkATs?=
+ =?us-ascii?Q?72HDX9qGDgfRb0k2hVafVoHgqkJanCUmuVjhpEerC37SDnmQf6LbcASnvgD3?=
+ =?us-ascii?Q?i5MLcflccZR8ECS+b4gOZmAgrrdx+qm2mPjEFASL4YxISXsSUijJMoY4g8nv?=
+ =?us-ascii?Q?pv8ByvsQiXkZPjd8RABa8rMXwYScY/ssNoH3+lOuF5DYVBVGIIAL2XA0LHK/?=
+ =?us-ascii?Q?B1HarK2s6lUE98+ZhqtJsUpsYIiTEvSPCO5ynBIXDbsz6exURQa4lfjKwyZT?=
+ =?us-ascii?Q?xqFzHE+Iq5ylvTaOmuV+NJJTPB0ivP7hAlgcCUcMCP+eLgA+9BHjYXvOAcJR?=
+ =?us-ascii?Q?whbzkOSP8LVNrNIHC0XEdmb1g5d6HPkYqexy+5EbOHp+RKFRUgD+ciYCA3W0?=
+ =?us-ascii?Q?psbv9j2VDyXFQmDZm9f2LkFA56cPevY3wWJQj1kOkuac0GCwFICpZKr7T3oH?=
+ =?us-ascii?Q?KZcMMItvMEhrH5095js0qsgZ252JwiSic8VmOhL0MQhpzKMaIJejkpf1jCwm?=
+ =?us-ascii?Q?YJ8OOAP62MS9IBIwfyGpIBKFd0d9QHpg/UIabOR4B3nMFKgnnnapj7JLQLkr?=
+ =?us-ascii?Q?vMc+KxbmgevGNG+uFRSmKMcMcw3DAFwV7wtRqce0QBX9bi6Bkcyhc8Tvinhf?=
+ =?us-ascii?Q?IZaOFzNjUssiIJm5M+PYn6obJO8/xo/ysI84R/pI3JN/iXnKiwrvK2w6+J4J?=
+ =?us-ascii?Q?HDQdS5aryqX4zS833tnt/5v1WOB3gl41mMGrDr1iRZ0UR6D7UUCIFrV7qPXS?=
+ =?us-ascii?Q?P7PcIkPQxKcBbpMTglnHbXDMtcJjFbh0e8d9W4fbfc9csvkk3T0Wnx46+nPE?=
+ =?us-ascii?Q?7366I6KVxBSyJ8ddGzuaQxt+Szq1+tSZ3iPJG6sXylSvmmGrY1jN6AGfCAFN?=
+ =?us-ascii?Q?gC2WC7Dz1hbpaL+75hCbq+KjxEASfQnalGf8S6qLm3nPWJV9gMblsABWDGES?=
+ =?us-ascii?Q?UFrrYWhGeOPbiSw/hzMtVOWw9S9qzZ9L0Vp9JIZEEFGM1UeiowdHssna4b3F?=
+ =?us-ascii?Q?AVoOZZquF6ckZzQe69LcWWvao+xaJqL3VPt73lUMX4Btf89sco+glEOjLIx3?=
+ =?us-ascii?Q?bgxlxGFLbRpq0Gd+7pmHnPGTpY2Xy8Eovp7SFxz4HfPBSVsFF6PkAShzNGyv?=
+ =?us-ascii?Q?hD33kpd55EcbRFiBbi9t0wapH8e2jaGZuwhMm4SqVujzFT4YSMRO91stTPau?=
+ =?us-ascii?Q?1ohogQQjFjJQlNBrkbfl8K7bbf8uP3zsVL/GMwhNr7IukWzHprVeqkmVy9R2?=
+ =?us-ascii?Q?AyEV2j4sc89M+54z8qmA1YdkkbKUyjO0qRgu3y6fxr/P370nb5q8h1APcrsc?=
+ =?us-ascii?Q?+q46M0FAMiB+EAVGu/eEc6tPXeYOpz+DEQEYQu9Ozu3EwRRtVD5aSMA8a9LX?=
+ =?us-ascii?Q?roPSszmA6LSt0hJU4A=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e35a7f71-2477-fa52-01e4-301199e99c2e@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1cd25bc4-7b5e-46b3-feb7-08d778f1f42c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2019 19:41:27.3846
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: upd1SGVkvtknhJS3KW7A4FyUBgGzm/Xb/7/rTqpiKG7HJagVig7/r0h1r7pxWrLeFESfLO7mJYFaHFN887HB1hmDB5gk4qjUFp+fB0kmL9E=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0823
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 05:15:26PM +0000, Vincenzo Frascino wrote:
-> Hi Guenter,
-> 
-> On 12/4/19 4:16 PM, Guenter Roeck wrote:
-> > On Wed, Dec 04, 2019 at 01:58:25PM +0000, Vincenzo Frascino wrote:
-> >> Hi Guenter,
-> >>
-> >> On 12/4/19 1:51 PM, Guenter Roeck wrote:
-> >>> On Fri, Jun 21, 2019 at 10:52:43AM +0100, Vincenzo Frascino wrote:
-> >>>> The arm vDSO library requires some adaptations to use to take advantage
-> >>>> of the newly introduced generic vDSO library.
-> >>>>
-> >>>> Introduce the following changes:
-> >>>>  - Modification vdso.c to be compliant with the common vdso datapage
-> >>>>  - Use of lib/vdso for gettimeofday
-> >>>>  - Implementation of elf note
-> >>>>
-> >>>> Cc: Russell King <linux@armlinux.org.uk>
-> >>>> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> >>>
-> >>> This patch causes a crash with qemu's mcimx6ul-evk emulation while running
-> >>> imx_v6_v7_defconfig.
-> >>>
-> >>
-> >> Thank you for reporting this. Could you please provide some details on how I can
-> >> reproduce the scenario you are describing?
-> >>
-> > - Build imx_v6_v7_defconfig
-> > - Get root file system or initrd, for example from
-> >   https://github.com/groeck/linux-build-test/tree/master/rootfs/arm
-> > - Run image. Example, with initrd:
-> > 	qemu-system-arm -M mcimx6ul-evk -kernel arch/arm/boot/zImage \
-> > 		-no-reboot -initrd rootfs-armv7a.cpio \
-> > 		-m 256 -display none -serial null \
-> > 		--append 'rdinit=/sbin/init earlycon=ec_imx6q,mmio,0x21e8000,115200n8 console=ttymxc1,115200'
-> > 		-dtb arch/arm/boot/dts/imx6ul-14x14-evk.dtb \
-> > 		-nographic -monitor null -serial stdio
-> > 
-> > qemu has to be v3.1 or later to support the machine.
-> > 
-> 
-> Thanks for this. Could you please try the patch below the scissors? Seems fixing
-> the issue for me.
-> 
-> > Hope this helps,
-> > Guenter
-> > 
-> 
-> -- 
-> Regards,
-> Vincenzo
-> 
-> --->8---
-> 
-> Author: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> Date:   Wed Dec 4 16:58:55 2019 +0000
-> 
->     arm: Fix __arch_get_hw_counter() access to CNTVCT
-> 
->     __arch_get_hw_counter() should check clock_mode to see if it can access
->     CNTVCT. With the conversion to unified vDSO this check has been left out.
-> 
->     This causes on imx v6 and v7 (imx_v6_v7_defconfig) and other platforms to
->     hang at boot during the execution of the init process as per below:
-> 
->     [   19.976852] Run /sbin/init as init process
->     [   20.044931] Kernel panic - not syncing: Attempted to kill init!
->     exitcode=0x00000004
-> 
->     Fix the problem verifying that clock_mode is set coherently before
->     accessing CNTVCT.
-> 
->     Cc: Russell King <linux@armlinux.org.uk>
->     Reported-by: Guenter Roeck <linux@roeck-us.net>
->     Investigated-by: Arnd Bergmann <arnd@arndb.de>
->     Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> 
-WFM.
+From: Long Li <longli@microsoft.com> Sent: Tuesday, December 3, 2019 6:54 P=
+M
+>=20
+> hv_dr_state is used to find present PCI devices on the bus. The structure
+> reuses struct pci_function_description from VSP message to describe a dev=
+ice.
+>=20
+> To prepare support for pci_function_description v2, we need to decouple t=
+his
+> dependence in hv_dr_state so it can work with both v1 and v2 VSP messages=
+.
+>=20
+> There is no functionality change.
+>=20
+> Signed-off-by: Long Li <longli@microsoft.com>
+> ---
+>=20
+> Changes
+> v2: changed some spaces to tabs, changed failure code to -ENOMEM
+>=20
+>  drivers/pci/controller/pci-hyperv.c | 100 +++++++++++++++++++---------
+>  1 file changed, 69 insertions(+), 31 deletions(-)
+>=20
 
-Tested-by: Guenter Roeck <linux@roeck-us.net>
-
-Guenter
-
-> diff --git a/arch/arm/include/asm/vdso/gettimeofday.h
-> b/arch/arm/include/asm/vdso/gettimeofday.h
-> index 5b879ae7afc1..0ad2429c324f 100644
-> --- a/arch/arm/include/asm/vdso/gettimeofday.h
-> +++ b/arch/arm/include/asm/vdso/gettimeofday.h
-> @@ -75,6 +75,9 @@ static __always_inline u64 __arch_get_hw_counter(int clock_mode)
->  #ifdef CONFIG_ARM_ARCH_TIMER
->         u64 cycle_now;
-> 
-> +       if (!clock_mode)
-> +               return -EINVAL;
-> +
->         isb();
->         cycle_now = read_sysreg(CNTVCT);
-> 
-> 
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
