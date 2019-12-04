@@ -2,164 +2,70 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F9FC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 01:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9018C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 01:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 507C9206E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 01:06:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r26EnM3T"
+	by mail.kernel.org (Postfix) with ESMTP id A08C2206E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 01:07:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbfLDBGm (ORCPT
+        id S1726796AbfLDBHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 20:06:42 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35688 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfLDBGl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 20:06:41 -0500
-Received: by mail-wr1-f66.google.com with SMTP id g17so6509317wro.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 17:06:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BUhWP41gAQ+u6lqrVAb//FnSSw9Q7UZjagkqlU3jNOs=;
-        b=r26EnM3TD+cn4FCMQ0z4rvYXPIYxZgjzo5RSNJ3thwWSK52RbjKhiP5xmWbX52dCIl
-         Fj1PCIwJkfcpqjEXezfZzlhlKZZ9MDznT7iAN2TcP4iVX6luTwlL/RgiVNbArnAhhKHF
-         /LlaBRq7RpN26BnEhK9zZxFsa7w+hGQVCrXKMZophce/83Ui7OeTzO1i7V4J1cJ4uHZl
-         mAywlg/kNTs8kSFHaZCZictQX9A9Oz9473ire8c4FPt8g9bekgLY33b0fvV/ZnsLW+ME
-         eX2FIHy+SrUV7gLIfU9YRqaGwFgsXl7/h5RZD1zT4Qac05aDdVo94Z8xyC2eNuhjrCq2
-         MZvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BUhWP41gAQ+u6lqrVAb//FnSSw9Q7UZjagkqlU3jNOs=;
-        b=Yv9y289hW6P7a7RDHnG14O+vsXLqJN+7ccffGR5nT2Ai2DShAAfqLyZ6hcnZfH+bvj
-         KAmnbkvCn/orwocOQAQkaati9j1QvoPVZgVJQMeGRvFn0dMNZQHTembZ6WOhXDSl9XFj
-         d06nHeb31t06wi8YJuCW+v17Ace+QGXWy8M0tbKp5qJBFgImjSxsRa/VgktJCz5oXucJ
-         YPQk3AApHvo+YYoBSWxkDRinjkJ3OgMb+HdKHlSyIrXwfMrgZ2ncE/SUGsodI+wn06v5
-         kD/wnen9NaJgEftU0qQx9D2tZDHvf6DWsZDeXy90WuUJiVC076Z5JA3IeuTIVXKn+veZ
-         aYAw==
-X-Gm-Message-State: APjAAAXiEQaN5IRuZTmUObmjyKSy3Ds7e9rQAYDyE0NX2UyGFn2NEyp+
-        iN+gLlGUBUYI5U/8Kc9PENg=
-X-Google-Smtp-Source: APXvYqyf/uccJvEUMMLfo99TGyYEpirWwEE+MFH84DyJ/7sT73gav5viQ/axrWMAmsdpnTwDZOwIoQ==
-X-Received: by 2002:adf:e3c7:: with SMTP id k7mr1024751wrm.80.1575421599971;
-        Tue, 03 Dec 2019 17:06:39 -0800 (PST)
-Received: from localhost.localdomain ([2a02:a03f:404e:f500:a9e5:6fa:6c43:150b])
-        by smtp.gmail.com with ESMTPSA id t13sm5024147wmt.23.2019.12.03.17.06.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 17:06:38 -0800 (PST)
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Dennis Zhou <dennis@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Christoph Lameter <cl@linux.com>, Tejun Heo <tj@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: [PATCH v2] fix __percpu annotation in asm-generic
-Date:   Wed,  4 Dec 2019 02:06:23 +0100
-Message-Id: <20191204010623.65384-1-luc.vanoostenryck@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Tue, 3 Dec 2019 20:07:36 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:40670 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726086AbfLDBHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 20:07:36 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6BFE199094A260B0DC59;
+        Wed,  4 Dec 2019 09:07:33 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 4 Dec 2019 09:07:23 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <sre@kernel.org>
+CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, Mao Wenan <maowenan@huawei.com>,
+        "Hulk Robot" <hulkci@huawei.com>
+Subject: [PATCH -next] power: supply: ab8500: Drop pointless static qualifier in ab8500_btemp_batctrl_volt_to_res()
+Date:   Wed, 4 Dec 2019 09:05:06 +0800
+Message-ID: <20191204010506.159128-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The generic implementation of raw_cpu_generic_add_return() is:
+There is no need to have the 'T *v' variable static
+since new value always be assigned before use it.
 
-        #define raw_cpu_generic_add_return(pcp, val)            \
-        ({                                                      \
-                typeof(&(pcp)) __p = raw_cpu_ptr(&(pcp));       \
-                                                                \
-                *__p += val;                                    \
-                *__p;                                           \
-        })
-
-where the 'pcp' argument is a __percpu lvalue.
-There, the variable '__p' is declared as a __percpu pointer
-the type of the address of 'pcp') but:
-1) the value assigned to it, the return value of raw_cpu_ptr(), is
-   a plain (__kernel) pointer, not a __percpu one.
-2) this variable is dereferenced just after while a __percpu
-   pointer is implicitly __noderef.
-
-So, fix the declaration of the 'pcp' variable to its correct type:
-the plain (non-percpu) pointer corresponding to pcp's address,
-using the fact that typeof() ignores the address space and the
-'noderef' attribute of its agument.
-
-Same for raw_cpu_generic_xchg(), raw_cpu_generic_cmpxchg() &
-raw_cpu_generic_cmpxchg_double().
-
-This removes 209 warnings on ARM, 525 on ARM64, 220 on x86 &
-more than 2600 on ppc64 (all of them with the default config).
-
-Cc: Dennis Zhou <dennis@kernel.org>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Reported-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
 ---
+ drivers/power/supply/ab8500_btemp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Change since v1:
-* use the fact that typeof() ignore the address space of its argument.
-
- include/asm-generic/percpu.h | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/include/asm-generic/percpu.h b/include/asm-generic/percpu.h
-index c2de013b2cf4..35e4a53b83e6 100644
---- a/include/asm-generic/percpu.h
-+++ b/include/asm-generic/percpu.h
-@@ -74,7 +74,7 @@ do {									\
+diff --git a/drivers/power/supply/ab8500_btemp.c b/drivers/power/supply/ab8500_btemp.c
+index 909f0242bacb..d3d4f7327d1b 100644
+--- a/drivers/power/supply/ab8500_btemp.c
++++ b/drivers/power/supply/ab8500_btemp.c
+@@ -180,7 +180,7 @@ static int ab8500_btemp_batctrl_volt_to_res(struct ab8500_btemp *di,
+ static int ab8500_btemp_read_batctrl_voltage(struct ab8500_btemp *di)
+ {
+ 	int vbtemp, ret;
+-	static int prev;
++	int prev;
  
- #define raw_cpu_generic_add_return(pcp, val)				\
- ({									\
--	typeof(&(pcp)) __p = raw_cpu_ptr(&(pcp));			\
-+	typeof(pcp) *__p = raw_cpu_ptr(&(pcp));				\
- 									\
- 	*__p += val;							\
- 	*__p;								\
-@@ -82,7 +82,7 @@ do {									\
- 
- #define raw_cpu_generic_xchg(pcp, nval)					\
- ({									\
--	typeof(&(pcp)) __p = raw_cpu_ptr(&(pcp));			\
-+	typeof(pcp) *__p = raw_cpu_ptr(&(pcp));				\
- 	typeof(pcp) __ret;						\
- 	__ret = *__p;							\
- 	*__p = nval;							\
-@@ -91,7 +91,7 @@ do {									\
- 
- #define raw_cpu_generic_cmpxchg(pcp, oval, nval)			\
- ({									\
--	typeof(&(pcp)) __p = raw_cpu_ptr(&(pcp));			\
-+	typeof(pcp) *__p = raw_cpu_ptr(&(pcp));				\
- 	typeof(pcp) __ret;						\
- 	__ret = *__p;							\
- 	if (__ret == (oval))						\
-@@ -101,8 +101,8 @@ do {									\
- 
- #define raw_cpu_generic_cmpxchg_double(pcp1, pcp2, oval1, oval2, nval1, nval2) \
- ({									\
--	typeof(&(pcp1)) __p1 = raw_cpu_ptr(&(pcp1));			\
--	typeof(&(pcp2)) __p2 = raw_cpu_ptr(&(pcp2));			\
-+	typeof(pcp1) *__p1 = raw_cpu_ptr(&(pcp1));			\
-+	typeof(pcp2) *__p2 = raw_cpu_ptr(&(pcp2));			\
- 	int __ret = 0;							\
- 	if (*__p1 == (oval1) && *__p2  == (oval2)) {			\
- 		*__p1 = nval1;						\
+ 	ret = iio_read_channel_processed(di->bat_ctrl, &vbtemp);
+ 	if (ret < 0) {
 -- 
-2.24.0
+2.20.1
 
