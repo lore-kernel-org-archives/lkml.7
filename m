@@ -2,93 +2,140 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9567C2BBE2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E4CC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B1CC20661
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:17:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AoaXn3dD"
+	by mail.kernel.org (Postfix) with ESMTP id E603B20661
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:17:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbfLDJRH (ORCPT
+        id S1727379AbfLDJRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 04:17:07 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:36312 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726679AbfLDJRG (ORCPT
+        Wed, 4 Dec 2019 04:17:52 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46235 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbfLDJRw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 04:17:06 -0500
-Received: by mail-pj1-f68.google.com with SMTP id n96so2753818pjc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 01:17:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lMKKy9t0iWSR4/z3gVbW2YwCWQytCz8n363Y9SgDkLg=;
-        b=AoaXn3dDFHX0ZWRCrotiHldBlB/HrbAlLuyfSzBLpifiSH9AVjZ1dj8Z7BaKH9srKf
-         +nfYSDrlBV6KEf5TTRTVE940MSjDQV5a16P6WEbM93mSde6KBiZeA6nRAxw5Y25B/vnZ
-         T5iVOgAJFmwHkTXfejyEXhk0jryeVIjlkrgZDB+IANQ7Ppjjw+WCfSoIoPyOmBk5/SC3
-         m/4WwJOBPjBTvU3lKW7RnA9rmf7fJOKSPmSgGfctK+2LjzCuZV2ewflB92JKr429LENu
-         2QaqPrTAuB5bm8jp/Y8wRk+pRvFHvaKUThzf3wRGmFAoCUvm0aIETHDh35mLioE6VHZK
-         diMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lMKKy9t0iWSR4/z3gVbW2YwCWQytCz8n363Y9SgDkLg=;
-        b=WowwScHsLVUk+4zxPy6ZLdE/q5gMNwf6WnbJbeKZ3CaZEpD9iW1sFx8Hc9o6pi2gKL
-         VAC9WtSpDZNQZpLN6wnkOav66MT+lECBZ1GkCF6t7/NKCMsEH99j57413BnQpPLD7ngM
-         msMLaiH8Ywlnl/H5HI+hYF+EW6E4J1vFDBIcxSIRu5eVFTvyjTPrz8YwW/CiiM+bQGWb
-         ZKbEE2DlxfT0LHon/Ckf/LiBLK2wKAtbcBT0PArpH+aGCy3UkWdB6XCyu7Ftwq5LP/UE
-         p7iZ6ioumjbB+54X/znecrEEXEzmdI7CS9v9ygUcWDmVOLkNGQAt/cTeiBLbLomiP0Zv
-         fwdw==
-X-Gm-Message-State: APjAAAUnN8/Zmt7ADwreCcTXMn2qJlejT/0ip4i2THT3YYRsAf/G7aBk
-        wDxZrxIQO27aaiXpnWiB8DTGoA==
-X-Google-Smtp-Source: APXvYqyPYVArtaO2xDdvtLX/Iko7lEdMxiXPCNH/Ly1Vnt2lfYUTEc78zQ+nQkBgCTp9YuIdrXgr5g==
-X-Received: by 2002:a17:902:8507:: with SMTP id bj7mr2349143plb.69.1575451025955;
-        Wed, 04 Dec 2019 01:17:05 -0800 (PST)
-Received: from localhost ([122.171.112.123])
-        by smtp.gmail.com with ESMTPSA id n26sm6717142pgd.46.2019.12.04.01.17.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 04 Dec 2019 01:17:04 -0800 (PST)
-Date:   Wed, 4 Dec 2019 14:47:03 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Mikko Perttunen <cyndis@kapsi.fi>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sumit Gupta <sumitg@nvidia.com>, rjw@rjwysocki.net,
-        catalin.marinas@arm.com, will@kernel.org, jonathanh@nvidia.com,
-        talho@nvidia.com, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, bbasu@nvidia.com,
-        mperttunen@nvidia.com
-Subject: Re: [TEGRA194_CPUFREQ Patch 1/3] firmware: tegra: adding function to
- get BPMP data
-Message-ID: <20191204091703.d32to5omdm3eynon@vireshk-i7>
-References: <1575394348-17649-1-git-send-email-sumitg@nvidia.com>
- <20191203174229.GA1721849@ulmo>
- <9404232d-84ce-a117-89dd-f2d8de80993e@kapsi.fi>
+        Wed, 4 Dec 2019 04:17:52 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1icQn5-0007vG-6A; Wed, 04 Dec 2019 10:17:47 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1icQn4-0004L3-9K; Wed, 04 Dec 2019 10:17:46 +0100
+Date:   Wed, 4 Dec 2019 10:17:46 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "rjui@broadcom.com" <rjui@broadcom.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alice Guo <alice.guo@nxp.com>
+Subject: Re: [PATCH v2 2/2] gpio: bcm-kona: use platform_irq_count
+Message-ID: <20191204091746.vql5yuajtzmr25lp@pengutronix.de>
+References: <1575433106-16171-1-git-send-email-peng.fan@nxp.com>
+ <1575433106-16171-2-git-send-email-peng.fan@nxp.com>
+ <20191204072744.b7ytzi5gffjcq6sj@pengutronix.de>
+ <AM0PR04MB4481D76A9779C2DA7B1331C3885D0@AM0PR04MB4481.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <9404232d-84ce-a117-89dd-f2d8de80993e@kapsi.fi>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM0PR04MB4481D76A9779C2DA7B1331C3885D0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04-12-19, 10:45, Mikko Perttunen wrote:
-> Now, my original patchset (which this series is based on) did add
-> nvidia,bpmp properties on the CPU DT nodes itself and query BPMP based on
-> that. A change is still required for that since tegra_bpmp_get() currently
-> takes a 'struct device *' which we don't have for a CPU DT node.
+On Wed, Dec 04, 2019 at 08:41:14AM +0000, Peng Fan wrote:
+> > Subject: Re: [PATCH v2 2/2] gpio: bcm-kona: use platform_irq_count
+> > 
+> > On Wed, Dec 04, 2019 at 04:20:45AM +0000, Peng Fan wrote:
+> > > From: Peng Fan <peng.fan@nxp.com>
+> > >
+> > > platform_irq_count() is the more generic way (independent of device
+> > > trees) to determine the count of available interrupts. So use this
+> > > instead.
+> > >
+> > > As platform_irq_count() might return an error code (which of_irq_count
+> > > doesn't) some additional handling is necessary.
+> > >
+> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > ---
+> > >
+> > > V2:
+> > >  Update commit log, and add err handling  Not tested, just code
+> > > inspection
+> > >
+> > >  drivers/gpio/gpio-bcm-kona.c | 12 +++++++++---
+> > >  1 file changed, 9 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/gpio/gpio-bcm-kona.c
+> > > b/drivers/gpio/gpio-bcm-kona.c index 4122683eb1f9..52ff56166263
+> > 100644
+> > > --- a/drivers/gpio/gpio-bcm-kona.c
+> > > +++ b/drivers/gpio/gpio-bcm-kona.c
+> > > @@ -19,7 +19,6 @@
+> > >  #include <linux/io.h>
+> > >  #include <linux/gpio/driver.h>
+> > >  #include <linux/of_device.h>
+> > > -#include <linux/of_irq.h>
+> > >  #include <linux/init.h>
+> > >  #include <linux/irqdomain.h>
+> > >  #include <linux/irqchip/chained_irq.h> @@ -586,11 +585,18 @@ static
+> > > int bcm_kona_gpio_probe(struct platform_device *pdev)
+> > >
+> > >  	kona_gpio->gpio_chip = template_chip;
+> > >  	chip = &kona_gpio->gpio_chip;
+> > > -	kona_gpio->num_bank = of_irq_count(dev->of_node);
+> > > -	if (kona_gpio->num_bank == 0) {
+> > > +	ret = platform_irq_count(pdev);
+> > > +	if (!ret) {
+> > >  		dev_err(dev, "Couldn't determine # GPIO banks\n");
+> > >  		return -ENOENT;
+> > > +	} else if (ret < 0) {
+> > > +		if (ret != -EPROBE_DEFER)
+> > > +			dev_err(dev, "Couldn't determine GPIO banks: %d\n",
+> > > +				ret);
+> > 
+> > You can use the new %pe feature here:
+> 
+> Checkpatch reports warning:
+> 
+> WARNING: Invalid vsprintf pointer extension '%pe'
+> #49: FILE: drivers/gpio/gpio-bcm-kona.c:593:
+> +               if (ret != -EPROBE_DEFER)
+> +                       dev_err(dev, "Couldn't determine GPIO banks: (%pe)\n",
+> +                               ERR_PTR(ret));
 
-I may be missing the context, but the CPUs always have a struct device
-* for them, which we get via a call to get_cpu_device(cpu), isn't ?
+Then you test with a tree older than
+1d28122131b263f169a7f2d288178a56c69ee076. Then you also might not have
+57f5677e535ba24b8926a7125be2ef8d7f09323c which you need to make %pe
+work.
+
+Best regards
+Uwe
 
 -- 
-viresh
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
