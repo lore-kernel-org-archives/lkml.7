@@ -7,82 +7,81 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD16DC2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 380CBC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0D69206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AC3B206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:01:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575486063;
-	bh=eU1k5f7V8J8S9HTgAkmD0YJDV5rlPKCA6Ru4znN2V08=;
+	s=default; t=1575486081;
+	bh=l6ErBjnZumLkaElYuNpK3LicSZ4Ej7jBj0jrNw7T4+w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wr2+/OhB054wwFnzooueTQMslM1Ni70+liWkm15BYdNBnt5w+AVmXegAtWPwml9UO
-	 Br+WFBVoKZTucIFBxE1pEmmfFPL5qUzeGJILE0RCOJ2Cn5uCIXfLkvO5crZQVDcTiB
-	 S8zILsV3xQYLPbVszx2xQ8RxUUZGa6dXhzias41E=
+	b=dNYXCo/kt+fiVq/9MWFyF0EUqsidw2Xlub6XrqRPlzC6DQmC4dUnJc/jLL48b76P1
+	 d6INUayAxUgpDhg5wDsnVkKxLpKqv1+P6IOXDw83HIrfbPftXTB3EyZrfPsRnXOAV3
+	 cxWd1HL7mkETaEuGP1QdLyI8rDfSN9iJ5l8zKVkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbfLDTBC (ORCPT
+        id S1728366AbfLDTBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 14:01:02 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35514 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727978AbfLDTBC (ORCPT
+        Wed, 4 Dec 2019 14:01:20 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:42628 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727978AbfLDTBT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 14:01:02 -0500
-Received: by mail-ot1-f68.google.com with SMTP id o9so257022ote.2;
-        Wed, 04 Dec 2019 11:01:02 -0800 (PST)
+        Wed, 4 Dec 2019 14:01:19 -0500
+Received: by mail-oi1-f196.google.com with SMTP id j22so234824oij.9;
+        Wed, 04 Dec 2019 11:01:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GwBhK4ah0i/Ig7V+1zYwmmj4biw+P5iHg9PENmdCa7c=;
-        b=DcAyBtZdgmq35p36freH/E5pUv5ar2Ra9IFEPmx0ujEQiw7ko4rnUouv+CruKWqVDT
-         rL+XsrCAz/wCSP56crjtxv0EwIqAwL/m4dslGPk4OUbNRRk16bIUbdIEh/E6sUt17Eo5
-         QNKDse9sDd2sARZSiVunHc4em7z92amzp9uTblwFkLHjD3caodY9Ia807pnqmGXnvacO
-         TqX/cDALCl0OF7/BWR9MZeNXjh3chOYD0C2xXJXjMVlPdSwec/vRBfNRGbXndFkKJQAY
-         WXfaKAcvbln+0WTmiWvQGH/hTZkvch4LDPl9/Il7/bVMnnj08cda+kZLEnN5RX6HR/GX
-         hqfA==
-X-Gm-Message-State: APjAAAX1eLDzkuvZ6Q9+NrOBYUzk4tO6+f8Y7xejpBf6IoPygpX97dOC
-        kgqcoZ1fAy107/xU5Lldrw==
-X-Google-Smtp-Source: APXvYqykaXzIiV7E1St6j6MMG1XrHs3Z1lg6Qp5Z5odvxnUvdStDByxIHHh+z9HCbxikKEPYNojVGw==
-X-Received: by 2002:a05:6830:1e75:: with SMTP id m21mr3582520otr.36.1575486061635;
-        Wed, 04 Dec 2019 11:01:01 -0800 (PST)
+        bh=r+Knz4MyENgBauzAurW2Z6R5O7gCJrRGn09yM5JkLrg=;
+        b=NNzJwt1T2pVB9YggVtdSGtw/u4O8W9tV8F7Ee+M39r5uQo3nSg6kDK471y8IZGEPYJ
+         zkbWIoBjpViNgz6c2k5oL8s9zKr1LRoAF7APNWdqUw3q5aFauVrRx7/wJWAoFtzqyZaU
+         RmNAbkPfA75evIUGwy8ZkGgUG/gp8f8kUvpQYHtp00iJqIn365DxG9bOKAh4is8jDURQ
+         h3fB8ZJaETA9bNFXLg4wd5FMqVzS6Wu9RKjzZEqkXRsKAkB9imARUZdg8BSWKgjtyQyJ
+         rBOk3S1U90H2R3CIEKdf4eOga+PajdWEAVVt5rqOEN+Cy+uzRti1/zZm2fcU7vlsWcOA
+         ekTw==
+X-Gm-Message-State: APjAAAXKz+u/x5NCpkdZsqTVStmoZ4JU/sBOGmEeoxyixltAIgwcPYBy
+        4ldAtwyyKevkt25iXYkibQ==
+X-Google-Smtp-Source: APXvYqyaHVSgRRfXaE/jHqQeLeMpOPe0UJG4spkvdr76QInpH+RixZhPrk28zWuEjpN8gLV0skGkqQ==
+X-Received: by 2002:aca:3755:: with SMTP id e82mr4116064oia.19.1575486078517;
+        Wed, 04 Dec 2019 11:01:18 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r124sm2656329oie.9.2019.12.04.11.01.01
+        by smtp.gmail.com with ESMTPSA id b3sm2583051oie.25.2019.12.04.11.01.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 11:01:01 -0800 (PST)
-Date:   Wed, 4 Dec 2019 13:01:00 -0600
+        Wed, 04 Dec 2019 11:01:17 -0800 (PST)
+Date:   Wed, 4 Dec 2019 13:01:17 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Stephan Gerhold <stephan@gerhold.net>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
-Subject: Re: [PATCH v2 2/4] dt-bindings: vendor-prefixes: Deprecate "ste" and
- "st-ericsson"
-Message-ID: <20191204190100.GA28640@bogus>
+Subject: Re: [PATCH v2 3/4] dt-bindings: vendor-prefixes: Add "calaosystems"
+ for CALAO Systems SAS
+Message-ID: <20191204190117.GA29217@bogus>
 References: <20191120181857.97174-1-stephan@gerhold.net>
- <20191120181857.97174-2-stephan@gerhold.net>
+ <20191120181857.97174-3-stephan@gerhold.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191120181857.97174-2-stephan@gerhold.net>
+In-Reply-To: <20191120181857.97174-3-stephan@gerhold.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Nov 2019 19:18:55 +0100, Stephan Gerhold wrote:
-> Until now, device tree bindings for ST-Ericsson have been added
-> inconsistently with one of 3 possible vendor prefixes.
+On Wed, 20 Nov 2019 19:18:56 +0100, Stephan Gerhold wrote:
+> The Snowball SBC supported by arch/arm/boot/dts/ste-snowball.dts
+> was made by CALAO Systems and uses the "calaosystems,snowball-a9500"
+> compatible. Prepare for documenting the compatible by adding
+> "calaosystems" to the list of vendor prefixes.
 > 
-> "stericsson" is the most commonly used vendor prefix,
-> so deprecate "ste" and "st-ericsson".
-> 
-> Suggested-by: Rob Herring <robh+dt@kernel.org>
 > Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 > ---
-> Changes in v2: new patch
+> Changes in v2: none
+> v1: https://lore.kernel.org/linux-devicetree/20191120121720.72845-2-stephan@gerhold.net/
 > ---
 >  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
 >  1 file changed, 2 insertions(+)
