@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4C9C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD1EC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63E0E206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB4F120674
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:10:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483022;
-	bh=bn7fpoGbsr5yYxne9+e9O//N48LFYLbM1CQiyWwEfes=;
+	s=default; t=1575483025;
+	bh=nPEWjF0dK8mtdwVv8wVLGr4RFLQuZAZNFBZ6cZq1WZ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lzMb4WP009bbpAM29d3iKvtJ9ycDJr5RNzxP4zJYAySQBNw4CMjWBGW8RYn/WjqJ9
-	 W+Oiem/7U9APs2Is1/9G7JTUCRXy32raF5BYg7BQ5Sz0TFyLhaf2doDprNUzZIm2aM
-	 Yii9V6TNPZdP1iETR7JjHOAErpU40ssAg7jHosT4=
+	b=TQFZmXFhUGBYDpk6TBrnDDqms3Lglif0J3v46GEwkE3XH3jj6ZG6YQSHHYU21eXu3
+	 rHAXpLxIE4D8Uy/jR6pJ/iZ1nhLS4hioYInLwd/et7gozUtPYoxSt5f8wS0qBqbvnd
+	 QEU0RjbwMQ75ks+UgbJQ+Rc9MyHE8zj+WhKOcrYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731252AbfLDSKV (ORCPT
+        id S1730767AbfLDSKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:10:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37382 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:10:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728611AbfLDSKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:10:19 -0500
+        id S1731251AbfLDSKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:10:21 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 524FF20674;
-        Wed,  4 Dec 2019 18:10:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B680A20675;
+        Wed,  4 Dec 2019 18:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483018;
-        bh=bn7fpoGbsr5yYxne9+e9O//N48LFYLbM1CQiyWwEfes=;
+        s=default; t=1575483021;
+        bh=nPEWjF0dK8mtdwVv8wVLGr4RFLQuZAZNFBZ6cZq1WZ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vzFin4lGef9ESNEzuu+GB1MxIMnxoRP/dULVZ2/YvTOoPOLTg3z1JILK6jy0Mpuia
-         9MK7e2u8m4eSsZXY6t4WHdCbvys0nUxPk0CTO/T95pDmHYFLqV2j92zO1Wfdvk8dld
-         STM0ehFxCmeZ1PgoZqlW5KEA2JdBpiGG14b5iWmQ=
+        b=AtHz7VeC/wJneye7pa5irX4lrNYPM85WIRwrtAQKVuRVyp1YfzSeMcM1UnGkUdPsa
+         UckkAE1z1jZ2IPgUIzPU7g0Fu3ywihlnEYJl6qDCS1fUv7HwmTKApmQsxHtSNkXGYR
+         AxIgX7mFz7JxUpsS+aB9FsH21ycV2Hu1ZlRgV3L8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve Capper <steve.capper@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 019/125] arm64: mm: Prevent mismatched 52-bit VA support
-Date:   Wed,  4 Dec 2019 18:55:24 +0100
-Message-Id: <20191204175318.025202869@linuxfoundation.org>
+Subject: [PATCH 4.9 002/125] ASoC: kirkwood: fix external clock probe defer
+Date:   Wed,  4 Dec 2019 18:55:07 +0100
+Message-Id: <20191204175309.653122850@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -60,99 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Capper <steve.capper@arm.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit a96a33b1ca57dbea4285893dedf290aeb8eb090b ]
+[ Upstream commit 4523817d51bc3b2ef38da768d004fda2c8bc41de ]
 
-For cases where there is a mismatch in ARMv8.2-LVA support between CPUs
-we have to be careful in allowing secondary CPUs to boot if 52-bit
-virtual addresses have already been enabled on the boot CPU.
+When our call to get the external clock fails, we forget to clean up
+the enabled internal clock correctly.  Enable the clock after we have
+obtained all our resources.
 
-This patch adds code to the secondary startup path. If the boot CPU has
-enabled 52-bit VAs then ID_AA64MMFR2_EL1 is checked to see if the
-secondary can also enable 52-bit support. If not, the secondary is
-prevented from booting and an error message is displayed indicating why.
-
-Technically this patch could be implemented using the cpufeature code
-when considering 52-bit userspace support. However, we employ low level
-checks here as the cpufeature code won't be able to run if we have
-mismatched 52-bit kernel va support.
-
-Signed-off-by: Steve Capper <steve.capper@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Fixes: 84aac6c79bfd ("ASoC: kirkwood: fix loss of external clock at probe time")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Link: https://lore.kernel.org/r/E1iNGyK-0004oF-6A@rmk-PC.armlinux.org.uk
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/head.S | 26 ++++++++++++++++++++++++++
- arch/arm64/kernel/smp.c  |  5 +++++
- 2 files changed, 31 insertions(+)
+ sound/soc/kirkwood/kirkwood-i2s.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
-index db6ff1944c412..3b10b93959607 100644
---- a/arch/arm64/kernel/head.S
-+++ b/arch/arm64/kernel/head.S
-@@ -686,6 +686,7 @@ secondary_startup:
- 	/*
- 	 * Common entry point for secondary CPUs.
- 	 */
-+	bl	__cpu_secondary_check52bitva
- 	bl	__cpu_setup			// initialise processor
- 	bl	__enable_mmu
- 	ldr	x8, =__secondary_switched
-@@ -759,6 +760,31 @@ ENTRY(__enable_mmu)
- 	ret
- ENDPROC(__enable_mmu)
+diff --git a/sound/soc/kirkwood/kirkwood-i2s.c b/sound/soc/kirkwood/kirkwood-i2s.c
+index 3a36d60e17850..0a5d9fb6fc84b 100644
+--- a/sound/soc/kirkwood/kirkwood-i2s.c
++++ b/sound/soc/kirkwood/kirkwood-i2s.c
+@@ -570,10 +570,6 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
+ 		return PTR_ERR(priv->clk);
+ 	}
  
-+ENTRY(__cpu_secondary_check52bitva)
-+#ifdef CONFIG_ARM64_52BIT_VA
-+	ldr_l	x0, vabits_user
-+	cmp	x0, #52
-+	b.ne	2f
-+
-+	mrs_s	x0, SYS_ID_AA64MMFR2_EL1
-+	and	x0, x0, #(0xf << ID_AA64MMFR2_LVA_SHIFT)
-+	cbnz	x0, 2f
-+
-+	adr_l	x0, va52mismatch
-+	mov	w1, #1
-+	strb	w1, [x0]
-+	dmb	sy
-+	dc	ivac, x0	// Invalidate potentially stale cache line
-+
-+	update_early_cpu_boot_status CPU_STUCK_IN_KERNEL, x0, x1
-+1:	wfe
-+	wfi
-+	b	1b
-+
-+#endif
-+2:	ret
-+ENDPROC(__cpu_secondary_check52bitva)
-+
- __no_granule_support:
- 	/* Indicate that this CPU can't boot and is stuck in the kernel */
- 	update_early_cpu_boot_status CPU_STUCK_IN_KERNEL, x1, x2
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index cfd33f18f4378..f0c41524b052f 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -136,6 +136,7 @@ static int boot_secondary(unsigned int cpu, struct task_struct *idle)
- }
- 
- static DECLARE_COMPLETION(cpu_running);
-+bool va52mismatch __ro_after_init;
- 
- int __cpu_up(unsigned int cpu, struct task_struct *idle)
- {
-@@ -164,6 +165,10 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
- 
- 		if (!cpu_online(cpu)) {
- 			pr_crit("CPU%u: failed to come online\n", cpu);
-+
-+			if (IS_ENABLED(CONFIG_ARM64_52BIT_VA) && va52mismatch)
-+				pr_crit("CPU%u: does not support 52-bit VAs\n", cpu);
-+
- 			ret = -EIO;
+-	err = clk_prepare_enable(priv->clk);
+-	if (err < 0)
+-		return err;
+-
+ 	priv->extclk = devm_clk_get(&pdev->dev, "extclk");
+ 	if (IS_ERR(priv->extclk)) {
+ 		if (PTR_ERR(priv->extclk) == -EPROBE_DEFER)
+@@ -589,6 +585,10 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
  		}
- 	} else {
+ 	}
+ 
++	err = clk_prepare_enable(priv->clk);
++	if (err < 0)
++		return err;
++
+ 	/* Some sensible defaults - this reflects the powerup values */
+ 	priv->ctl_play = KIRKWOOD_PLAYCTL_SIZE_24;
+ 	priv->ctl_rec = KIRKWOOD_RECCTL_SIZE_24;
 -- 
 2.20.1
 
