@@ -2,135 +2,115 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5BBC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838E7C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D02262073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F3782073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:04:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jf765RLV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YZ5GJZ16"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbfLDUCk (ORCPT
+        id S1728144AbfLDUEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 15:02:40 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42211 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbfLDUCj (ORCPT
+        Wed, 4 Dec 2019 15:04:00 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33437 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbfLDUEA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 15:02:39 -0500
-Received: by mail-wr1-f65.google.com with SMTP id a15so678276wrf.9;
-        Wed, 04 Dec 2019 12:02:37 -0800 (PST)
+        Wed, 4 Dec 2019 15:04:00 -0500
+Received: by mail-pf1-f194.google.com with SMTP id y206so381007pfb.0;
+        Wed, 04 Dec 2019 12:03:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cT11YIcdkgYhqPU2AoD2MILDuUK9k9JrX8T2PQ0wiok=;
-        b=Jf765RLV+6LVYeO1/qjODFKvDMtjuXP3EMmCo7Za5XuSjYXPGcSDIqj9EAJC0wfmH+
-         A5KTCr1znLUPapknCAEF/9GJ+6yUaqT5b6hOXZ2NCR18/Mtc7W2epI9+3zwUIRE842JF
-         UwspeWXaJzFHAKhQYMVxboRVvv4KLS7/IXTImHPU2TgXO+D0h237IGbpFsTwiam+hMTp
-         imsxzTHAEjKhEnICuarTPb59P16aMrcBPiZ19jheMna6rz1EfUVmAmojQ5eqU+O0r1Ui
-         ffGW3VdC+v6i4mQYxHaZdSEjLijsRNOewLOX/0aivPBydQ4VdZT7zcf8pAZLtm9NXoKe
-         ejww==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+OdMqVzUj6WvcnoNuOeLlw4Z2rBRaftuL3BvYZInvZ8=;
+        b=YZ5GJZ16ZLo8TmIpcoHWo0OH5dVqqXeCM8U+/V+JOOcoBUppCWNR+9VOLemCcFLFoO
+         B19Ejz1697SpvZq0siV/srTDU+bGp913SLV/h3TwIPeqBet/9EcIgBQHTe2yQ4/pGmmU
+         YUfBROgB7Xpi0ynDkqfQJa9uDIDnT3k47sg0UDeBeWvOF2k1nREuPfEUFb8hySmugQQQ
+         Qa4V2F0LBSS+EElrf8J/7BOxriKxwIEXqX56v1LPYbpxmNXbThqPJGhfzRJJB5aFTozV
+         W/O/Tm+bEwSaujOGTE4hAcGx+wHqe/MMvAQArBaO0h43IH8RBkMM2Koo28Vqh9XOJhjZ
+         +ddA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=cT11YIcdkgYhqPU2AoD2MILDuUK9k9JrX8T2PQ0wiok=;
-        b=OL/1ST6agOxpW/PuEVoY2zIQkrb50u5FbwIwM/o1mEkMTsojFcdRO6hr9sgMLKmyff
-         T9Ss/eH8Ag5i+/5cZt0nkdCg/FS8svQ+beYpcUiQJm7W8Rz52R4JSeBkBlShfZTlkXFi
-         GR5GFZGpq+hsk+xCZ6wx/WVwCz6edFtnwANPtndlK5PdamXEa1ts0wVjE5Pf1skxn+AO
-         TZlQqgI+pFN9/lW9TcujruV0nlL+LBRom9Dg8vSLxPf4FrQrthGhQDlQfw3xuib5a47+
-         21TmdpG5d91/yqJW7S89CX20brPf27AUwUKYHLMTWTjY7RLOdMN4Dsq8lJSAwX08kitB
-         +s9g==
-X-Gm-Message-State: APjAAAVT+IIhosIhl6eBs0DCJqiLlgAUh45gCwbCyEMm8IWf5aCV3B2o
-        LIqYXwktev/VvmljCeIbYLLTGkED3Bg=
-X-Google-Smtp-Source: APXvYqwhsXbE+16pnIoX7jXk6Byem86Plk7+CaoB3dZ6j2EiZAPM+gx1eDZb1yscAtBwka2A7+qm4g==
-X-Received: by 2002:adf:9b83:: with SMTP id d3mr6072634wrc.54.1575489757346;
-        Wed, 04 Dec 2019 12:02:37 -0800 (PST)
-Received: from kwango.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id h127sm7962492wme.31.2019.12.04.12.02.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 12:02:36 -0800 (PST)
-From:   Ilya Dryomov <idryomov@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Ceph updates for 5.5-rc1
-Date:   Wed,  4 Dec 2019 21:03:07 +0100
-Message-Id: <20191204200307.21047-1-idryomov@gmail.com>
-X-Mailer: git-send-email 2.19.2
+        bh=+OdMqVzUj6WvcnoNuOeLlw4Z2rBRaftuL3BvYZInvZ8=;
+        b=PjeBbxTaREdlqANVL5CwEmsBskFidQFqRCLRpY3LNFGMQQjjvvcKmOfH+tWJZe03O4
+         oatxFT5Kvqwd/5JsMPZb8+ZXKbiH7a94DH/f03kRUaLViR9xX758F5F+i50MN5wc9gbf
+         sOI5zY7H6VyR4s+xqDotOXQGMEqJHfuqR20zq8fZ5e1Yk5IPAHfCQdRS82fie9Jw8soM
+         wOE5QvW+aabH6iAL9dTaGtZg+4B3SZFSNsXGWbpKxgbBv5g4+xWg9UOB6zj6hJwI36Ii
+         GCd2gnRhXf/fd6Z+4ZSkmNH+fiBDU7jZxLEL/DM2G81Z3C+aggn3WVRU6YGqOSR99UO6
+         C6IQ==
+X-Gm-Message-State: APjAAAWIWaKBCWl4UZr3ZQ4Fo/rUzfr+6zTP6eJAQRkAOZDpb6HKMaV5
+        YujWLvuqa5UIcxi6VL2DfdE=
+X-Google-Smtp-Source: APXvYqxIhnX8thQjmt8iuhBBU6ma7W8uPSUf7YesCllGRzMI6W6eaFebhaDb+YyKeNwrbljnm4XNsw==
+X-Received: by 2002:a63:f961:: with SMTP id q33mr5403005pgk.350.1575489839279;
+        Wed, 04 Dec 2019 12:03:59 -0800 (PST)
+Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
+        by smtp.gmail.com with ESMTPSA id r14sm8994697pfh.10.2019.12.04.12.03.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Dec 2019 12:03:58 -0800 (PST)
+Subject: Re: [PATCH] selftests: net: ip_defrag: increase netdev_max_backlog
+To:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
+        netdev@vger.kernel.org
+Cc:     davem@davemloft.net, shuah@kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        posk@google.com
+References: <20191204195321.406365-1-cascardo@canonical.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <483097a3-92ec-aedd-60d9-ab7f58b9708d@gmail.com>
+Date:   Wed, 4 Dec 2019 12:03:57 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191204195321.406365-1-cascardo@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
 
-The following changes since commit 219d54332a09e8d8741c1e1982f5eae56099de85:
 
-  Linux 5.4 (2019-11-24 16:32:01 -0800)
+On 12/4/19 11:53 AM, Thadeu Lima de Souza Cascardo wrote:
+> When using fragments with size 8 and payload larger than 8000, the backlog
+> might fill up and packets will be dropped, causing the test to fail. This
+> happens often enough when conntrack is on during the IPv6 test.
+> 
+> As the larger payload in the test is 10000, using a backlog of 1250 allow
+> the test to run repeatedly without failure. At least a 1000 runs were
+> possible with no failures, when usually less than 50 runs were good enough
+> for showing a failure.
+> 
+> As netdev_max_backlog is not a pernet setting, this sets the backlog to
+> 1000 during exit to prevent disturbing following tests.
+> 
 
-are available in the Git repository at:
+Hmmm... I would prefer not changing a global setting like that.
+This is going to be flaky since we often run tests in parallel (using different netns)
 
-  https://github.com/ceph/ceph-client.git tags/ceph-for-5.5-rc1
+What about adding a small delay after each sent packet ?
 
-for you to fetch changes up to 82995cc6c5ae4bf4d72edef381a085e52d5b5905:
+diff --git a/tools/testing/selftests/net/ip_defrag.c b/tools/testing/selftests/net/ip_defrag.c
+index c0c9ecb891e1d78585e0db95fd8783be31bc563a..24d0723d2e7e9b94c3e365ee2ee30e9445deafa8 100644
+--- a/tools/testing/selftests/net/ip_defrag.c
++++ b/tools/testing/selftests/net/ip_defrag.c
+@@ -198,6 +198,7 @@ static void send_fragment(int fd_raw, struct sockaddr *addr, socklen_t alen,
+                error(1, 0, "send_fragment: %d vs %d", res, frag_len);
+ 
+        frag_counter++;
++       usleep(1000);
+ }
+ 
+ static void send_udp_frags(int fd_raw, struct sockaddr *addr,
 
-  libceph, rbd, ceph: convert to use the new mount API (2019-11-27 22:28:37 +0100)
-
-----------------------------------------------------------------
-The two highlights are a set of improvements to how rbd read-only
-mappings are handled and a conversion to the new mount API (slightly
-complicated by the fact that we had a common option parsing framework
-that called out into rbd and the filesystem instead of them calling
-into it).  Also included a few scattered fixes and a MAINTAINERS update
-for rbd, adding Dongsheng as a reviewer.
-
-----------------------------------------------------------------
-Colin Ian King (1):
-      rbd: fix spelling mistake "requeueing" -> "requeuing"
-
-David Howells (1):
-      libceph, rbd, ceph: convert to use the new mount API
-
-Ilya Dryomov (11):
-      libceph: drop unnecessary check from dispatch() in mon_client.c
-      rbd: update MAINTAINERS info
-      rbd: introduce rbd_is_snap()
-      rbd: introduce RBD_DEV_FLAG_READONLY
-      rbd: treat images mapped read-only seriously
-      rbd: disallow read-write partitions on images mapped read-only
-      rbd: don't acquire exclusive lock for read-only mappings
-      rbd: don't establish watch for read-only mappings
-      rbd: remove snapshot existence validation code
-      rbd: don't query snapshot features
-      rbd: ask for a weaker incompat mask for read-only mappings
-
-Jeff Layton (3):
-      ceph: make several helper accessors take const pointers
-      ceph: tone down loglevel on ceph_mdsc_build_path warning
-      ceph: don't leave ino field in ceph_mds_request_head uninitialized
-
-Xiubo Li (1):
-      ceph: fix geting random mds from mdsmap
-
- MAINTAINERS                  |   2 +-
- drivers/block/rbd.c          | 467 ++++++++++++++++---------------
- fs/ceph/cache.c              |   9 +-
- fs/ceph/cache.h              |   5 +-
- fs/ceph/mds_client.c         |  19 +-
- fs/ceph/mdsmap.c             |  11 +-
- fs/ceph/super.c              | 646 ++++++++++++++++++++++---------------------
- fs/ceph/super.h              |  13 +-
- include/linux/ceph/libceph.h |  10 +-
- net/ceph/ceph_common.c       | 419 +++++++++++++---------------
- net/ceph/messenger.c         |   2 -
- net/ceph/mon_client.c        |   3 -
- 12 files changed, 803 insertions(+), 803 deletions(-)
