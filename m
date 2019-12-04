@@ -2,107 +2,129 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5476C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FEDC2BBE2
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0729206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 270952054F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:05:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727462AbfLDKFq (ORCPT
+        id S1727492AbfLDKFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 05:05:46 -0500
-Received: from foss.arm.com ([217.140.110.172]:53838 "EHLO foss.arm.com"
+        Wed, 4 Dec 2019 05:05:51 -0500
+Received: from mx.socionext.com ([202.248.49.38]:25693 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726893AbfLDKFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 05:05:46 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C507E1FB;
-        Wed,  4 Dec 2019 02:05:45 -0800 (PST)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7776C3F52E;
-        Wed,  4 Dec 2019 02:05:44 -0800 (PST)
-Subject: Re: Null pointer crash at find_idlest_group on db845c w/ linus/master
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Quentin Perret <qperret@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Patrick Bellasi <Patrick.Bellasi@arm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-References: <CALAqxLXrWWnWi32BR1F8JOtrGt1y2Kzj__zWopLx1ZfRy3EZKA@mail.gmail.com>
- <c61cf647-ecb6-b9fa-51f2-8efa36134757@arm.com>
- <14a8e456-1f89-0dff-ae89-61e8b6d5593b@arm.com>
- <7548a890-d32b-7e7d-4f84-4ebf635c3e8a@arm.com>
- <CALAqxLVDaiJWd7W5+FBKs=Mq8AHw52fApPc_Xu2gTq9DTn0vgQ@mail.gmail.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <e4760a3f-4035-30b1-8464-645fbfa441ce@arm.com>
-Date:   Wed, 4 Dec 2019 10:05:43 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1727420AbfLDKFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 05:05:50 -0500
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 04 Dec 2019 19:05:48 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 7D8B2603AB;
+        Wed,  4 Dec 2019 19:05:48 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 4 Dec 2019 19:06:21 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id E71B11A01CF;
+        Wed,  4 Dec 2019 19:05:47 +0900 (JST)
+Received: from [10.213.132.48] (unknown [10.213.132.48])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id B6A79120456;
+        Wed,  4 Dec 2019 19:05:47 +0900 (JST)
+Date:   Wed, 04 Dec 2019 19:05:47 +0900
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 2/2] PCI: uniphier: Add checking whether PERST# is deasserted
+Cc:     <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+In-Reply-To: <20191122205316.297B.4A936039@socionext.com>
+References: <20191121164705.GA14229@e121166-lin.cambridge.arm.com> <20191122205316.297B.4A936039@socionext.com>
+Message-Id: <20191204190547.333C.4A936039@socionext.com>
 MIME-Version: 1.0
-In-Reply-To: <CALAqxLVDaiJWd7W5+FBKs=Mq8AHw52fApPc_Xu2gTq9DTn0vgQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.70 [ja]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/12/2019 03:46, John Stultz wrote:
-> Thanks for the quick patch! Unfortunately I still managed to trip it
-> with this patch :(
+On Fri, 22 Nov 2019 20:53:16 +0900 <hayashi.kunihiko@socionext.com> wrote:
+
+> Hello Lorenzo,
 > 
+> On Thu, 21 Nov 2019 16:47:05 +0000 <lorenzo.pieralisi@arm.com> wrote:
+> 
+> > On Fri, Nov 08, 2019 at 04:30:27PM +0900, Kunihiko Hayashi wrote:
+> > > > However, If I understand correctly, doesn't your solution only work some
+> > > > of the time? What happens if you boot both machines at the same time,
+> > > > and PERST# isn't asserted prior to the kernel booting?
+> > > 
+> > > I think it contains an annoying problem.
+> > > 
+> > > If PERST# isn't toggled prior to the kernel booting, PERST# remains asserted
+> > > and the RC driver can't access PCI bus.
+> > > 
+> > > As a result, this patch works and deasserts PERST# (and EP configuration will
+> > > be lost). So boot sequence needs to include deasserting PERST#.
+> > 
+> > I am sorry but I have lost you. Can you explain to us why checking
+> > that PERST# is deasserted guarantees you that:
+> > 
+> > - The EP has bootstrapped
+> > - It is safe not to toggle it again (and also skip
+> >   uniphier_pcie_ltssm_enable())
+> > 
+> > Please provide details of the HW configuration so that we understand
+> > what's actually supposed to happen and why this patch fixes the
+> > issue you are facing.
+> 
+> I tried to connect between the following boards, and do pci-epf-test:
+>  - "RC board": UniPhier ld20 board that has DWC RC controller
+>  - "EP board": UniPhier legacy board that has DWC EP controller
+> 
+> This EP has power-on-state configuration, but it's necessary to set
+> class ID, BAR sizes, etc. after starting up.
+> 
+> In case of that starting up RC board before EP board, the RC driver
+> can't establish link. So we need to boot EP board first.
 
-I think I would've been more confused if it had fixed it than if it hadn't.
-Figured it was worth a shot anyway.
+At that point, I've considered why RC can't establish link,
+and found that the waitng time was too short.
 
+- EP/RC: power on both boards
 
-I have a DB845 stashed somewhere but I've never used one, so it's probably
-going to take me some time to get it up and running.
+- RC: start up the kernel on RC board
 
-In the meantime, I'd suggest running it again with the following appended
-patch. It gets rid of the unused parameter, which gets rid of the isra,
-which should let us get a faulty line number more easily than by rummaging
-through objdump.
+- RC: wait for link up (long time enough)
+
+- EP: start up the kernel on EP board
+
+- EP: configurate pci-epf-test
+
+When the endpoint  configuration is done and the EP driver enables LTSSM,
+the RC driver will quit from waiting for link up.
+
+Currently DWC RC driver calls dwc_pcie_wait_for_link(), however,
+the function tries to link up 10 times only, that is defined
+as LINK_WAIT_MAX_RETRIES in pcie-designware.h, it's too short
+to configurate the endpoint.
+
+Now the patch to bypass PERST# is not necessary.
+
+Instead for DWC RC drivers, I think that the number of retries
+should be changed according to the usage.
+And the same issue remains with other RC drivers.
+
+Thank you,
 
 ---
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 08a233e97a01..4c3a8f188d45 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5575,8 +5575,7 @@ static int wake_affine(struct sched_domain *sd, struct task_struct *p,
- }
- 
- static struct sched_group *
--find_idlest_group(struct sched_domain *sd, struct task_struct *p,
--		  int this_cpu, int sd_flag);
-+find_idlest_group(struct sched_domain *sd, struct task_struct *p, int this_cpu);
- 
- /*
-  * find_idlest_group_cpu - find the idlest CPU among the CPUs in the group.
-@@ -5665,7 +5664,7 @@ static inline int find_idlest_cpu(struct sched_domain *sd, struct task_struct *p
- 			continue;
- 		}
- 
--		group = find_idlest_group(sd, p, cpu, sd_flag);
-+		group = find_idlest_group(sd, p, cpu);
- 		if (!group) {
- 			sd = sd->child;
- 			continue;
-@@ -8370,8 +8369,7 @@ static bool update_pick_idlest(struct sched_group *idlest,
-  * Assumes p is allowed on at least one CPU in sd.
-  */
- static struct sched_group *
--find_idlest_group(struct sched_domain *sd, struct task_struct *p,
--		  int this_cpu, int sd_flag)
-+find_idlest_group(struct sched_domain *sd, struct task_struct *p, int this_cpu)
- {
- 	struct sched_group *idlest = NULL, *local = NULL, *group = sd->groups;
- 	struct sg_lb_stats local_sgs, tmp_sgs;
+Best Regards,
+Kunihiko Hayashi
+
