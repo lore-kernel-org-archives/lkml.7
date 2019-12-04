@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 972F7C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B35C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6606D20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67BEF2084B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:07:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482821;
-	bh=XnpCKP1VGa9Neef0VB7/f4VFR7F6r56u+ItKvz+RVng=;
+	s=default; t=1575482824;
+	bh=gmEmMwBpratgRQVW/qWF9gmbRLer7I/p+Mnl3cfi5xk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DKPHgJeTD5uQlUcg3TzuxvlAM32TrsvzYKRl+HRjFwvKTqj6AxPsv9p4uqPm/pcQO
-	 vFjnjuLABxc2uKXuf22/KAxNF4mEcYbzRJHMVLfAipKLMs1aJ/5T0haQgiumMvs8Lb
-	 JDNpTSOf/q6/02NHcjqZZdyVMQ0Rjil+vuMxAzXY=
+	b=zF+oH88RlGOcJZZLIjZRlWUSpsNZhJk7Om1sWvTQ1CAkizQcDkm+XKYQG8QraGFAC
+	 mPb1GwLs5NKRt4yuNRxCwUZBRrxFiYtSc5A58z/i+2f0uZYBExaZDbU0fqAXgqJGzp
+	 yM6EVerN7/2jctztvdhrn9ecT8gvdcNN+pCoDoYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730684AbfLDSG7 (ORCPT
+        id S1730693AbfLDSHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:06:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56026 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:07:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730668AbfLDSG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:06:57 -0500
+        id S1730686AbfLDSHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:07:00 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD6F120675;
-        Wed,  4 Dec 2019 18:06:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DE8E20674;
+        Wed,  4 Dec 2019 18:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482817;
-        bh=XnpCKP1VGa9Neef0VB7/f4VFR7F6r56u+ItKvz+RVng=;
+        s=default; t=1575482819;
+        bh=gmEmMwBpratgRQVW/qWF9gmbRLer7I/p+Mnl3cfi5xk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QSbjyACFzGWZBBRg/Iiszip03l2qI3cddaNr/evZFaJXP0z26nN/7dujsFRHzTFSt
-         c8AuH6FHnODtF9lbJc3XxSLnZ1Y1yRb9+TASxT2QXI1J8xlEdU8YPRUM9bPW42tgfC
-         EaeBBJk2RV5kRThS9sPC8E7zU6sY90AHNI5NL26c=
+        b=wmR8FX3UOcFS0Q/Def3bV/MC3MHt6VUiHTzew3VfL6mX34Tm7IwAF0WT4bhmMAo0d
+         U+S6TrQRmOcyPqSYXMf240t+324nvhLqb+87ZBSimrzzG5D9NHsQD3ilTosjDfd+Rf
+         ECxCt9BypuPIkux509n7xfZ8YNUbEx7Ni9oQ0+gg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kyle Roeschley <kyle.roeschley@ni.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 092/209] ath6kl: Fix off by one error in scan completion
-Date:   Wed,  4 Dec 2019 18:55:04 +0100
-Message-Id: <20191204175328.182621418@linuxfoundation.org>
+Subject: [PATCH 4.14 140/209] net: fix possible overflow in __sk_mem_raise_allocated()
+Date:   Wed,  4 Dec 2019 18:55:52 +0100
+Message-Id: <20191204175332.945381018@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -60,36 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kyle Roeschley <kyle.roeschley@ni.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 5803c12816c43bd09e5f4247dd9313c2d9a2c41b ]
+[ Upstream commit 5bf325a53202b8728cf7013b72688c46071e212e ]
 
-When ath6kl was reworked to share code between regular and scheduled scans
-in commit 3b8ffc6a22ba ("ath6kl: Configure probed SSID list consistently"),
-probed SSID entry changed from 1-index to 0-indexed. However,
-ath6kl_cfg80211_scan_complete_event() was missed in that change. Fix its
-indexing so that we correctly clear out the probed SSID list.
+With many active TCP sockets, fat TCP sockets could fool
+__sk_mem_raise_allocated() thanks to an overflow.
 
-Signed-off-by: Kyle Roeschley <kyle.roeschley@ni.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+They would increase their share of the memory, instead
+of decreasing it.
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath6kl/cfg80211.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/net/sock.h | 2 +-
+ net/core/sock.c    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath6kl/cfg80211.c b/drivers/net/wireless/ath/ath6kl/cfg80211.c
-index f790d8021fa17..37deb9bae3643 100644
---- a/drivers/net/wireless/ath/ath6kl/cfg80211.c
-+++ b/drivers/net/wireless/ath/ath6kl/cfg80211.c
-@@ -1093,7 +1093,7 @@ void ath6kl_cfg80211_scan_complete_event(struct ath6kl_vif *vif, bool aborted)
- 	if (vif->scan_req->n_ssids && vif->scan_req->ssids[0].ssid_len) {
- 		for (i = 0; i < vif->scan_req->n_ssids; i++) {
- 			ath6kl_wmi_probedssid_cmd(ar->wmi, vif->fw_vif_idx,
--						  i + 1, DISABLE_SSID_FLAG,
-+						  i, DISABLE_SSID_FLAG,
- 						  0, NULL);
- 		}
+diff --git a/include/net/sock.h b/include/net/sock.h
+index 780c6c0a86f04..0af46cbd3649c 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -1232,7 +1232,7 @@ static inline void sk_sockets_allocated_inc(struct sock *sk)
+ 	percpu_counter_inc(sk->sk_prot->sockets_allocated);
+ }
+ 
+-static inline int
++static inline u64
+ sk_sockets_allocated_read_positive(struct sock *sk)
+ {
+ 	return percpu_counter_read_positive(sk->sk_prot->sockets_allocated);
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 7ccbcd853cbce..90ccbbf9e6b00 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -2357,7 +2357,7 @@ int __sk_mem_raise_allocated(struct sock *sk, int size, int amt, int kind)
  	}
+ 
+ 	if (sk_has_memory_pressure(sk)) {
+-		int alloc;
++		u64 alloc;
+ 
+ 		if (!sk_under_memory_pressure(sk))
+ 			return 1;
 -- 
 2.20.1
 
