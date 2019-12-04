@@ -2,186 +2,135 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9163FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 14:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8625DC2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 14:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AF9E206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 14:14:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="i++zUqCM"
+	by mail.kernel.org (Postfix) with ESMTP id 5AB2E2073C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 14:14:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575468897;
+	bh=NqBGe6Sv6wTyUXzOxX9rDh/sNVl/hYS/XAALT4ejUXI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rNSnMFKo8h6FTRjiQPffZZAS82M5YSar8XHel76sLxOWVzpv57kTD6yRAcmdlYnEo
+	 V+axxyoqZublTmSSYkZV5eg0wzC4POR9rD98vLW5ShA/6Ca6o1m1dZDOqYRmXqaGTv
+	 SHDDft7xXDp+G5wpF1UQjhiIEJ+iNSNis4WH9uKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbfLDOOQ (ORCPT
+        id S1727999AbfLDOO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 09:14:16 -0500
-Received: from mail-eopbgr50135.outbound.protection.outlook.com ([40.107.5.135]:47938
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727792AbfLDOOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 09:14:16 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=edS9cMkwP000cuieK1BS0/zOfc1mzDjQtZn9PwfdMdV6iN5XM5QPlaDX63LqMpIr5pRhEHb3GXkAjWI28dgnZYmEUt0LR/LoksdtUC1fP6Nku/Jm0fiqeWgmp+Q0Igvoh2+etB9i7PR1bIIk1vXy/nYv4yVhDuEyAG2K2uKzOkj7RrG6TM1V3xSz39YAM0+pUmHHNs9dle8XdYsXDM9K2nrXcKqmnPoc5/NyWHl72/a+2zkjL+Fu5geXzjS2o4XYmvackvuBg6uyNKUJWlLTIrgKg+6Zz35SEum7mK3z4bGpzrENpHKF9bXxI+9xZ7iucvMjJYm8bbK31QrKrDYSRg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PKatfycn8kFcMaxcJmJFD+gdkxGNMujVjoUu8W3HaBg=;
- b=RfCGmFCgI/suu9QCqkSuPyL4enq22zyUTYKf/Ar5Ip3lgzaUYQexNmU8mM+slBjzAsWb4MlX168aUQFp9u9prjg4hpAM9oGHO8MSEaSVNAmtHYx7Yh72TNXj5LInbku8mRL/8TmTO3WKk4ZTdpQk61NrfoqojFCzDKT+CjGRG7imGJjNz+JdebcO64XzKhUa15c9+8Igey/5YOamucZrHGc11DAxtHGyPLquuAMyUHuiBh5t3jLl0ZGBDngjBAfBBCaHGqMoyCufu7607MDTG3fhBKylH9fbKa5THTYc7TCoAVlt1hrOZeMDWUeQIDf0nwk0pJgQjFTaV+WlyAzaWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PKatfycn8kFcMaxcJmJFD+gdkxGNMujVjoUu8W3HaBg=;
- b=i++zUqCMln1fE5XsRBGTka9c788pmV/ehFn4QBKQ52gaBP7kip1kQuxC+Shane7/HYttALzE2mbkz9jmI7i7vDAce6aGo4e4fc/uUJaNdbgevrXefXsjb+1Qw2jsNF2Ep8LBYp7OTx5LMS/pmCemzpas+rKtWubhcvxzSBTDgfM=
-Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com (52.134.19.20) by
- VI1PR0502MB3902.eurprd05.prod.outlook.com (52.134.4.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.13; Wed, 4 Dec 2019 14:13:33 +0000
-Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com
- ([fe80::e5f9:4b15:8e72:1ae9]) by VI1PR0502MB3965.eurprd05.prod.outlook.com
- ([fe80::e5f9:4b15:8e72:1ae9%6]) with mapi id 15.20.2516.013; Wed, 4 Dec 2019
- 14:13:33 +0000
-From:   Philippe Schenker <philippe.schenker@toradex.com>
-To:     Mark Brown <broonie@kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Clark Wang <xiaoning.wang@nxp.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH] spi: fsl-lpspi: fix only one cs-gpio working
-Thread-Topic: [PATCH] spi: fsl-lpspi: fix only one cs-gpio working
-Thread-Index: AQHVqq0CSRsyKaIE6UakTAYaVfL3DA==
-Date:   Wed, 4 Dec 2019 14:13:33 +0000
-Message-ID: <20191204141312.1411251-1-philippe.schenker@toradex.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: ZR0P278CA0018.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:16::28) To VI1PR0502MB3965.eurprd05.prod.outlook.com
- (2603:10a6:803:26::20)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=philippe.schenker@toradex.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.24.0
-x-originating-ip: [31.10.206.124]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 18fc6534-9f57-41a5-8f07-08d778c4252d
-x-ms-traffictypediagnostic: VI1PR0502MB3902:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0502MB39022C00FF4A227D986DE0A5F45D0@VI1PR0502MB3902.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:773;
-x-forefront-prvs: 0241D5F98C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(396003)(366004)(376002)(136003)(39850400004)(189003)(199004)(186003)(1076003)(2501003)(110136005)(6116002)(478600001)(6506007)(25786009)(26005)(102836004)(14454004)(99286004)(4326008)(66446008)(64756008)(50226002)(66946007)(54906003)(86362001)(66556008)(66476007)(107886003)(2616005)(81156014)(81166006)(44832011)(5660300002)(8676002)(8936002)(6512007)(71200400001)(6486002)(3846002)(316002)(36756003)(7736002)(71190400001)(6436002)(52116002)(305945005)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0502MB3902;H:VI1PR0502MB3965.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: MWObIHroWBQAFwg4qFOPp+FBz0ZJwrP6zuLk9rYfmtm4CuQPuRDiefq0/RJilTACxF3EWBNrG71oPqQavhOjL/ViIEGQ6JMAmlD4s6zkrecm488+TrflslE2SoE97wcRf4HO6dduSz3wNBDy+2YO2AzKw5fGSctsvg8HmV/FtApbZHQO0EzIypxD7uhR1vijxF3/1sPVgfM3eu8IAKAuIYE4TlIQQ+subMJic8qUPk+BZDKTgj8gTzYmetOM89rGiBV1cOtA3wSbsvt4ZLZP2Nb1rBMeWKxaQ+qimPAEiLg15T6J2Z5cPJiLmbP+l/Sgb7W8suOqEsBC79O/yHYr82oW0IZrz5VTl24tVNxBVjiSQj/AXcpz2Kw2lASj7AikzmRW7uWPT2CDsMqHsUjiZUTFddZequ+iV0/hEl77n1ChNwMHnpMp2HTeOAZniQgk
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 4 Dec 2019 09:14:56 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55236 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727792AbfLDOOz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 09:14:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=NqBGe6Sv6wTyUXzOxX9rDh/sNVl/hYS/XAALT4ejUXI=; b=Apkm/2we9LPbnYBcBOrJgyc0O
+        NbgXGmUd9oQMVhO4Fpez4qiBbjt3MgJbAbGNYNtO1mIiFm7Uz5joyJkKgug1+3FBKPpXP+obwEvPk
+        kruNQwoeQbblSr9iuI2BoIUxKTKE6FEDdeIIezL1vutBt0K+8qrAOz0TKaEluLLCKTQns=;
+Received: from fw-tnat-cam6.arm.com ([217.140.106.54] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1icVQH-0000he-IS; Wed, 04 Dec 2019 14:14:33 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 4977BD003B4; Wed,  4 Dec 2019 14:14:33 +0000 (GMT)
+Date:   Wed, 4 Dec 2019 14:14:33 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "corbet@lwn.net" <corbet@lwn.net>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "hofrat@osadl.org" <hofrat@osadl.org>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
+ regulator bindings
+Message-ID: <20191204141433.GU1998@sirena.org.uk>
+References: <20191119181325.GD3634@sirena.org.uk>
+ <fa69d01504817e3260d2b023ae2637aa2f1b2862.camel@fi.rohmeurope.com>
+ <20191119193636.GH3634@sirena.org.uk>
+ <eb685cc78b936bc61ed9f7fbfa18c96398b00909.camel@fi.rohmeurope.com>
+ <20191129120925.GA5747@sirena.org.uk>
+ <297fa021fb243072dbbb7bca455e57c13e8c6843.camel@fi.rohmeurope.com>
+ <20191202131140.GD1998@sirena.org.uk>
+ <72a1f4c5768b8c08c2669ea01e60d1b614095a43.camel@fi.rohmeurope.com>
+ <20191204124717.GR1998@sirena.org.uk>
+ <6f7b96c71bd1257b0b218a092f8aca7f32ef5468.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 18fc6534-9f57-41a5-8f07-08d778c4252d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2019 14:13:33.0547
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2RtSpCMRa9syAIdMh8cosACgLOnKQK4LKKx9UUvfxlrGz5Klnueki3ug+xINyN0dhSq17PovqzoBvjQ8sEdGgnYHbBwGSfCkULUtg32G4No=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB3902
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="b9dEYEwnDXkv9lSy"
+Content-Disposition: inline
+In-Reply-To: <6f7b96c71bd1257b0b218a092f8aca7f32ef5468.camel@fi.rohmeurope.com>
+X-Cookie: Cleanliness is next to impossible.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Why it does not work at the moment:
-- num_chipselect sets the number of cs-gpios that are in the DT.
-  This comes from drivers/spi/spi.c
-- num_chipselect gets set with devm_spi_register_controller, that is
-  called in drivers/spi/spi.c
-- devm_spi_register_controller got called after num_chipselect has
-  been used.
 
-How this commit fixes the issue:
-- devm_spi_register_controller gets called before num_chipselect is
-  being used.
+--b9dEYEwnDXkv9lSy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Fixes: c7a402599504 ("spi: lpspi: use the core way to implement cs-gpio fun=
-ction")
-Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+On Wed, Dec 04, 2019 at 01:13:08PM +0000, Vaittinen, Matti wrote:
 
----
+> I think I once again explained myself badly. There can be only one
+> group with 4 RUN states selected by combination of 2 GPIO lines. bucks
+> 1,2,6 and 7 can each either be assigned into this one group or
+> controlled individually via I2C. But I doubt assigning only one of the
+> bucks in this group is the typical use-case. What we would need would
 
- drivers/spi/spi-fsl-lpspi.c | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+I don't think this is as unusual as you're thinking - the
+regulators people want to control quickly are usually the main
+CPU supply regulators and these often vary independently of
+anything else.
 
-diff --git a/drivers/spi/spi-fsl-lpspi.c b/drivers/spi/spi-fsl-lpspi.c
-index 2cc0ddb4a988..1375bdfc587b 100644
---- a/drivers/spi/spi-fsl-lpspi.c
-+++ b/drivers/spi/spi-fsl-lpspi.c
-@@ -862,6 +862,22 @@ static int fsl_lpspi_probe(struct platform_device *pde=
-v)
- 	fsl_lpspi->dev =3D &pdev->dev;
- 	fsl_lpspi->is_slave =3D is_slave;
-=20
-+	controller->bits_per_word_mask =3D SPI_BPW_RANGE_MASK(8, 32);
-+	controller->transfer_one =3D fsl_lpspi_transfer_one;
-+	controller->prepare_transfer_hardware =3D lpspi_prepare_xfer_hardware;
-+	controller->unprepare_transfer_hardware =3D lpspi_unprepare_xfer_hardware=
-;
-+	controller->mode_bits =3D SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
-+	controller->flags =3D SPI_MASTER_MUST_RX | SPI_MASTER_MUST_TX;
-+	controller->dev.of_node =3D pdev->dev.of_node;
-+	controller->bus_num =3D pdev->id;
-+	controller->slave_abort =3D fsl_lpspi_slave_abort;
-+
-+	ret =3D devm_spi_register_controller(&pdev->dev, controller);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "spi_register_controller error.\n");
-+		goto out_controller_put;
-+	}
-+
- 	if (!fsl_lpspi->is_slave) {
- 		for (i =3D 0; i < controller->num_chipselect; i++) {
- 			int cs_gpio =3D of_get_named_gpio(np, "cs-gpios", i);
-@@ -885,16 +901,6 @@ static int fsl_lpspi_probe(struct platform_device *pde=
-v)
- 		controller->prepare_message =3D fsl_lpspi_prepare_message;
- 	}
-=20
--	controller->bits_per_word_mask =3D SPI_BPW_RANGE_MASK(8, 32);
--	controller->transfer_one =3D fsl_lpspi_transfer_one;
--	controller->prepare_transfer_hardware =3D lpspi_prepare_xfer_hardware;
--	controller->unprepare_transfer_hardware =3D lpspi_unprepare_xfer_hardware=
-;
--	controller->mode_bits =3D SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
--	controller->flags =3D SPI_MASTER_MUST_RX | SPI_MASTER_MUST_TX;
--	controller->dev.of_node =3D pdev->dev.of_node;
--	controller->bus_num =3D pdev->id;
--	controller->slave_abort =3D fsl_lpspi_slave_abort;
--
- 	init_completion(&fsl_lpspi->xfer_done);
-=20
- 	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -952,12 +958,6 @@ static int fsl_lpspi_probe(struct platform_device *pde=
-v)
- 	if (ret < 0)
- 		dev_err(&pdev->dev, "dma setup error %d, use pio\n", ret);
-=20
--	ret =3D devm_spi_register_controller(&pdev->dev, controller);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "spi_register_controller error.\n");
--		goto out_controller_put;
--	}
--
- 	return 0;
-=20
- out_controller_put:
---=20
-2.24.0
+--b9dEYEwnDXkv9lSy
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3nv0gACgkQJNaLcl1U
+h9Bidgf+JmJlmuyYk4HvvR+RXTF/LJMH+3BvZucpl9loKpF5zI4HySCJdL/apiLp
+N5OogFNqhJpzh/RoOiZOncfXinT/nO8ZE9sv5Xfq+2gXb9fcReutNFi71oYuBQoX
+SeihA1H/gvu9WEp0JGNZ4qn/mfxLSa5ZV5PsBZOTYihLVw6GsSnP1uZeb6EuvKSN
+3zecgHr5LDb8xdqfomgPLSP70jvkkX/0Mlk1LjaS0uCo3ozHi9Gg9NP4yS1hIOjo
+9z6f4jNleLrQ9YGV+OjfpXOsx4QuyDg5Tvk9CNd7Oy522ZCWbBHu78Y4IoKzLrgw
+R61Ph6IhTgRyzufu4R0X2Y62I+X8yQ==
+=+XL6
+-----END PGP SIGNATURE-----
+
+--b9dEYEwnDXkv9lSy--
