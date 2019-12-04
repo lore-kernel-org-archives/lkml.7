@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5450CC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16670C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2269320659
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD21D2081B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:03:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482614;
-	bh=+101NAiM32AfaI/JI1P5ZDUUQ7lZCyxXo7+NbrFvf4Q=;
+	s=default; t=1575482618;
+	bh=VAQuNsQmSre+s2/0iXEv1rQrYfM5/lf41sEGigsfDzA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r7lG8upqBuOaDrcj4dIDcFj4TAxjk4NrJVeUIJFCQzrlkwqUQfVn2iNbShRueVl27
-	 H2i0eBE/0ApodIZKIFuwxieIyjpD1GmUOz+mPICcrbdYUmLM4GV2/YJqNxh4VgkrE3
-	 t4GgTli/nNzA70Sd1Iugn1PSkMzSO9pcHrUwXYhM=
+	b=SOwNdhfe7vrBpdZGKntYY19ZU6lyOgVCJ64Rx5s0rD6DKkVNI/qqynyUhm+XMiSJH
+	 sX1H21CrnAyYUAd+KBiWIEfTVmqvmu5+rSokyUecb5skxXzzHvR791o15u3li+oDwO
+	 FRuFbR7f2tFOkOofgBcpA5GKpTso37kg7XOtEgWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730072AbfLDSDd (ORCPT
+        id S1730081AbfLDSDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:03:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47370 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:03:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730061AbfLDSDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:03:30 -0500
+        id S1730071AbfLDSDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:03:32 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19FA620659;
-        Wed,  4 Dec 2019 18:03:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DD1B20659;
+        Wed,  4 Dec 2019 18:03:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482609;
-        bh=+101NAiM32AfaI/JI1P5ZDUUQ7lZCyxXo7+NbrFvf4Q=;
+        s=default; t=1575482611;
+        bh=VAQuNsQmSre+s2/0iXEv1rQrYfM5/lf41sEGigsfDzA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ioVxT41OcHk3S3zK2GsZoL4sqOzUkIlkJNWv6F4VeAP7y8Meofed9NZWlrJ3/97xw
-         rzHYBgnKReewHZ+oW+sCr1T5Ck4yy+WnL3q4iUokEkVawg2nCAp6JD4C+qANo3Xeyp
-         8xxwzwBxlh5bJWcyrMqOqrtfOQw8AU30HKqBwN/w=
+        b=tZw+ioX7xlOo+cwgnDcvmvGFVNfy6AjFxzf7P7WU6SCCgmckAdGjpHSAKoIUogscg
+         sC95ZDZMwn/CwqT/KdJ5k8Pe5xXsStdqvn1GnXz9TjRnqOdpQ41ihQsI9JEs0XkAiF
+         2cHJyjxxLyMOjzm6F9C3igMH100J3nmP1MxivNAM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 047/209] mwifiex: debugfs: correct histogram spacing, formatting
-Date:   Wed,  4 Dec 2019 18:54:19 +0100
-Message-Id: <20191204175324.623121841@linuxfoundation.org>
+Subject: [PATCH 4.14 065/209] vfio-mdev/samples: Use u8 instead of char for handle functions
+Date:   Wed,  4 Dec 2019 18:54:37 +0100
+Message-Id: <20191204175325.771756882@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -60,65 +61,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 4cb777c64e030778c569f605398d7604d8aabc0f ]
+[ Upstream commit 8ba35b3a0046d6573c98f00461d9bd1b86250d35 ]
 
-Currently, snippets of this file look like:
+Clang warns:
 
-rx rates (in Mbps): 0=1M   1=2M2=5.5M  3=11M   4=6M   5=9M  6=12M
-7=18M  8=24M  9=36M  10=48M  11=54M12-27=MCS0-15(BW20) 28-43=MCS0-15(BW40)
-44-53=MCS0-9(VHT:BW20)54-63=MCS0-9(VHT:BW40)64-73=MCS0-9(VHT:BW80)
-...
-noise_flr[--96dBm] = 22
-noise_flr[--95dBm] = 149
-noise_flr[--94dBm] = 9
-noise_flr[--93dBm] = 2
+samples/vfio-mdev/mtty.c:592:39: warning: implicit conversion from 'int'
+to 'char' changes value from 162 to -94 [-Wconstant-conversion]
+                *buf = UART_MSR_DSR | UART_MSR_DDSR | UART_MSR_DCD;
+                     ~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~
+1 warning generated.
 
-We're missing some spaces, and we're adding a minus sign ('-') on values
-that are already negative signed integers.
+Turns out that all uses of buf in this function ultimately end up stored
+or cast to an unsigned type. Just use u8, which has the same number of
+bits but can store this larger number so Clang no longer warns.
 
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/debugfs.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ samples/vfio-mdev/mtty.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/debugfs.c b/drivers/net/wireless/marvell/mwifiex/debugfs.c
-index 6f4239be609d0..49ca84ef1a992 100644
---- a/drivers/net/wireless/marvell/mwifiex/debugfs.c
-+++ b/drivers/net/wireless/marvell/mwifiex/debugfs.c
-@@ -296,15 +296,13 @@ mwifiex_histogram_read(struct file *file, char __user *ubuf,
- 		     "total samples = %d\n",
- 		     atomic_read(&phist_data->num_samples));
+diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c
+index ca495686b9c31..f8c7249fa705d 100644
+--- a/samples/vfio-mdev/mtty.c
++++ b/samples/vfio-mdev/mtty.c
+@@ -171,7 +171,7 @@ static struct mdev_state *find_mdev_state_by_uuid(uuid_le uuid)
+ 	return NULL;
+ }
  
--	p += sprintf(p, "rx rates (in Mbps): 0=1M   1=2M");
--	p += sprintf(p, "2=5.5M  3=11M   4=6M   5=9M  6=12M\n");
--	p += sprintf(p, "7=18M  8=24M  9=36M  10=48M  11=54M");
--	p += sprintf(p, "12-27=MCS0-15(BW20) 28-43=MCS0-15(BW40)\n");
-+	p += sprintf(p,
-+		     "rx rates (in Mbps): 0=1M   1=2M 2=5.5M  3=11M   4=6M   5=9M  6=12M\n"
-+		     "7=18M  8=24M  9=36M  10=48M  11=54M 12-27=MCS0-15(BW20) 28-43=MCS0-15(BW40)\n");
+-void dump_buffer(char *buf, uint32_t count)
++void dump_buffer(u8 *buf, uint32_t count)
+ {
+ #if defined(DEBUG)
+ 	int i;
+@@ -250,7 +250,7 @@ static void mtty_create_config_space(struct mdev_state *mdev_state)
+ }
  
- 	if (ISSUPP_11ACENABLED(priv->adapter->fw_cap_info)) {
--		p += sprintf(p, "44-53=MCS0-9(VHT:BW20)");
--		p += sprintf(p, "54-63=MCS0-9(VHT:BW40)");
--		p += sprintf(p, "64-73=MCS0-9(VHT:BW80)\n\n");
-+		p += sprintf(p,
-+			     "44-53=MCS0-9(VHT:BW20) 54-63=MCS0-9(VHT:BW40) 64-73=MCS0-9(VHT:BW80)\n\n");
- 	} else {
- 		p += sprintf(p, "\n");
+ static void handle_pci_cfg_write(struct mdev_state *mdev_state, u16 offset,
+-				 char *buf, u32 count)
++				 u8 *buf, u32 count)
+ {
+ 	u32 cfg_addr, bar_mask, bar_index = 0;
+ 
+@@ -304,7 +304,7 @@ static void handle_pci_cfg_write(struct mdev_state *mdev_state, u16 offset,
+ }
+ 
+ static void handle_bar_write(unsigned int index, struct mdev_state *mdev_state,
+-				u16 offset, char *buf, u32 count)
++				u16 offset, u8 *buf, u32 count)
+ {
+ 	u8 data = *buf;
+ 
+@@ -475,7 +475,7 @@ static void handle_bar_write(unsigned int index, struct mdev_state *mdev_state,
+ }
+ 
+ static void handle_bar_read(unsigned int index, struct mdev_state *mdev_state,
+-			    u16 offset, char *buf, u32 count)
++			    u16 offset, u8 *buf, u32 count)
+ {
+ 	/* Handle read requests by guest */
+ 	switch (offset) {
+@@ -650,7 +650,7 @@ static void mdev_read_base(struct mdev_state *mdev_state)
  	}
-@@ -333,7 +331,7 @@ mwifiex_histogram_read(struct file *file, char __user *ubuf,
- 	for (i = 0; i < MWIFIEX_MAX_NOISE_FLR; i++) {
- 		value = atomic_read(&phist_data->noise_flr[i]);
- 		if (value)
--			p += sprintf(p, "noise_flr[-%02ddBm] = %d\n",
-+			p += sprintf(p, "noise_flr[%02ddBm] = %d\n",
- 				(int)(i-128), value);
- 	}
- 	for (i = 0; i < MWIFIEX_MAX_SIG_STRENGTH; i++) {
+ }
+ 
+-static ssize_t mdev_access(struct mdev_device *mdev, char *buf, size_t count,
++static ssize_t mdev_access(struct mdev_device *mdev, u8 *buf, size_t count,
+ 			   loff_t pos, bool is_write)
+ {
+ 	struct mdev_state *mdev_state;
+@@ -698,7 +698,7 @@ static ssize_t mdev_access(struct mdev_device *mdev, char *buf, size_t count,
+ #if defined(DEBUG_REGS)
+ 			pr_info("%s: BAR%d  WR @0x%llx %s val:0x%02x dlab:%d\n",
+ 				__func__, index, offset, wr_reg[offset],
+-				(u8)*buf, mdev_state->s[index].dlab);
++				*buf, mdev_state->s[index].dlab);
+ #endif
+ 			handle_bar_write(index, mdev_state, offset, buf, count);
+ 		} else {
+@@ -708,7 +708,7 @@ static ssize_t mdev_access(struct mdev_device *mdev, char *buf, size_t count,
+ #if defined(DEBUG_REGS)
+ 			pr_info("%s: BAR%d  RD @0x%llx %s val:0x%02x dlab:%d\n",
+ 				__func__, index, offset, rd_reg[offset],
+-				(u8)*buf, mdev_state->s[index].dlab);
++				*buf, mdev_state->s[index].dlab);
+ #endif
+ 		}
+ 		break;
+@@ -827,7 +827,7 @@ ssize_t mtty_read(struct mdev_device *mdev, char __user *buf, size_t count,
+ 		if (count >= 4 && !(*ppos % 4)) {
+ 			u32 val;
+ 
+-			ret =  mdev_access(mdev, (char *)&val, sizeof(val),
++			ret =  mdev_access(mdev, (u8 *)&val, sizeof(val),
+ 					   *ppos, false);
+ 			if (ret <= 0)
+ 				goto read_err;
+@@ -839,7 +839,7 @@ ssize_t mtty_read(struct mdev_device *mdev, char __user *buf, size_t count,
+ 		} else if (count >= 2 && !(*ppos % 2)) {
+ 			u16 val;
+ 
+-			ret = mdev_access(mdev, (char *)&val, sizeof(val),
++			ret = mdev_access(mdev, (u8 *)&val, sizeof(val),
+ 					  *ppos, false);
+ 			if (ret <= 0)
+ 				goto read_err;
+@@ -851,7 +851,7 @@ ssize_t mtty_read(struct mdev_device *mdev, char __user *buf, size_t count,
+ 		} else {
+ 			u8 val;
+ 
+-			ret = mdev_access(mdev, (char *)&val, sizeof(val),
++			ret = mdev_access(mdev, (u8 *)&val, sizeof(val),
+ 					  *ppos, false);
+ 			if (ret <= 0)
+ 				goto read_err;
+@@ -889,7 +889,7 @@ ssize_t mtty_write(struct mdev_device *mdev, const char __user *buf,
+ 			if (copy_from_user(&val, buf, sizeof(val)))
+ 				goto write_err;
+ 
+-			ret = mdev_access(mdev, (char *)&val, sizeof(val),
++			ret = mdev_access(mdev, (u8 *)&val, sizeof(val),
+ 					  *ppos, true);
+ 			if (ret <= 0)
+ 				goto write_err;
+@@ -901,7 +901,7 @@ ssize_t mtty_write(struct mdev_device *mdev, const char __user *buf,
+ 			if (copy_from_user(&val, buf, sizeof(val)))
+ 				goto write_err;
+ 
+-			ret = mdev_access(mdev, (char *)&val, sizeof(val),
++			ret = mdev_access(mdev, (u8 *)&val, sizeof(val),
+ 					  *ppos, true);
+ 			if (ret <= 0)
+ 				goto write_err;
+@@ -913,7 +913,7 @@ ssize_t mtty_write(struct mdev_device *mdev, const char __user *buf,
+ 			if (copy_from_user(&val, buf, sizeof(val)))
+ 				goto write_err;
+ 
+-			ret = mdev_access(mdev, (char *)&val, sizeof(val),
++			ret = mdev_access(mdev, (u8 *)&val, sizeof(val),
+ 					  *ppos, true);
+ 			if (ret <= 0)
+ 				goto write_err;
 -- 
 2.20.1
 
