@@ -2,122 +2,125 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 358C9C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45995C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10E8B205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A97A20661
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:27:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575484069;
+	bh=H1WBjtuVHU+q1pByMDCrOf3M0NmQW+pm/fk8+btGKfY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nVd+74GtiON+GuQPXOnvHy/3OWP9x3QcrQZrAtk/TfdZlZwQyM5C/xywkOAWFlYdu
+	 mHLQFktwiSGIlh51uSQ4lyqmxmleQE/YGndDOHS43M5oveN2ZorCQ3oGjwZtvkHZ5B
+	 Mr9Z+Xqh4BwyH6yP/nfSK+4HoQkRvykfWAv3uAIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729307AbfLDS1m (ORCPT
+        id S1728642AbfLDR6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:27:42 -0500
-Received: from www62.your-server.de ([213.133.104.62]:40604 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729345AbfLDS1k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:27:40 -0500
-Received: from [194.230.159.159] (helo=localhost)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1icZN2-0004rF-GG; Wed, 04 Dec 2019 19:27:28 +0100
-Date:   Wed, 4 Dec 2019 19:27:27 +0100
-From:   Daniel Borkmann <daniel@iogearbox.net>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>
-Subject: Re: [PATCHv4 0/6] perf/bpftool: Allow to link libbpf dynamically
-Message-ID: <20191204182727.GA29780@localhost.localdomain>
-References: <20191202131847.30837-1-jolsa@kernel.org>
- <CAEf4BzY_D9JHjuU6K=ciS70NSy2UvSm_uf1NfN_tmFz1445Jiw@mail.gmail.com>
- <87wobepgy0.fsf@toke.dk>
- <CAADnVQK-arrrNrgtu48_f--WCwR5ki2KGaX=mN2qmW_AcRyb=w@mail.gmail.com>
- <877e3cpdc9.fsf@toke.dk>
- <CAADnVQJeC9FQDXhv34KTiFSRq-=x4cBaspj-bTXdQ1=7prphcA@mail.gmail.com>
+        Wed, 4 Dec 2019 12:58:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60266 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728512AbfLDR6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 12:58:08 -0500
+Received: from localhost (unknown [217.68.49.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 632B120675;
+        Wed,  4 Dec 2019 17:58:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575482287;
+        bh=H1WBjtuVHU+q1pByMDCrOf3M0NmQW+pm/fk8+btGKfY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=N0ONHXjFaMUWRXiAX6TYNJumSNatMdPxDbDsEKIgZ9cTka3NLXkNrTVx2kZlryfvF
+         PxZbc+JFiQce6jzjS3osxPXMXo43VeSRvUYE/fAfc2HzKljGNj2ze94ygm+PlPkrvD
+         FmNWkUKV3jTmhdNN4b/EeBctz+0TWuq+ehZxCmbg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 26/92] microblaze: move "... is ready" messages to arch/microblaze/Makefile
+Date:   Wed,  4 Dec 2019 18:49:26 +0100
+Message-Id: <20191204174332.091899977@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191204174327.215426506@linuxfoundation.org>
+References: <20191204174327.215426506@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAADnVQJeC9FQDXhv34KTiFSRq-=x4cBaspj-bTXdQ1=7prphcA@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25653/Wed Dec  4 10:46:42 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 09:39:59AM -0800, Alexei Starovoitov wrote:
-> On Wed, Dec 4, 2019 at 2:58 AM Toke Høiland-Jørgensen <toke@redhat.com> wrote:
-> > Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
-> > > On Mon, Dec 2, 2019 at 1:15 PM Toke Høiland-Jørgensen <toke@redhat.com> wrote:
-> > >>
-> > >> Ah, that is my mistake: I was getting dynamic libbpf symbols with this
-> > >> approach, but that was because I had the version of libbpf.so in my
-> > >> $LIBDIR that had the patch to expose the netlink APIs as versioned
-> > >> symbols; so it was just pulling in everything from the shared library.
-> > >>
-> > >> So what I was going for was exactly what you described above; but it
-> > >> seems that doesn't actually work. Too bad, and sorry for wasting your
-> > >> time on this :/
-> > >
-> > > bpftool is currently tightly coupled with libbpf and very likely
-> > > in the future the dependency will be even tighter.
-> > > In that sense bpftool is an extension of libbpf and libbpf is an extension
-> > > of bpftool.
-> > > Andrii is working on set of patches to generate user space .c code
-> > > from bpf program.
-> > > bpftool will be generating the code that is specific for the version
-> > > bpftool and for
-> > > the version of libbpf. There will be compatibility layers as usual.
-> > > But in general the situation where a bug in libbpf is so criticial
-> > > that bpftool needs to repackaged is imo less likely than a bug in
-> > > bpftool that will require re-packaging of libbpf.
-> > > bpftool is quite special. It's not a typical user of libbpf.
-> > > The other way around is more correct. libbpf is a user of the code
-> > > that bpftool generates and both depend on each other.
-> > > perf on the other side is what typical user space app that uses
-> > > libbpf will look like.
-> > > I think keeping bpftool in the kernel while packaging libbpf
-> > > out of github was an oversight.
-> > > I think we need to mirror bpftool into github/libbpf as well
-> > > and make sure they stay together. The version of libbpf == version of bpftool.
-> > > Both should come from the same package and so on.
-> > > May be they can be two different packages but
-> > > upgrading one should trigger upgrade of another and vice versa.
-> > > I think one package would be easier though.
-> > > Thoughts?
-> >
-> > Yup, making bpftool explicitly the "libbpf command line interface" makes
-> > sense and would help clarify the relationship between the two. As Jiri
-> > said, we are already moving in that direction packaging-wise...
-> 
-> Awesome. Let's figure out the logistics.
-> Should we do:
-> git mv tools/bpf/bpftool/ tools/lib/bpf/
-> and appropriate adjustment to Makefiles ?
-> or keep it where it is and only add to
-> https://github.com/libbpf/libbpf/blob/master/scripts/sync-kernel.sh ?
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-I'd be in preference of the latter aka keeping where it is.
+[ Upstream commit 2e14f94cf4bc2f15ca5362e81ca3a987c79e3062 ]
 
-Thanks,
-Daniel
+To prepare for more fixes, move this to arch/microblaze/Makefile.
+Otherwise, the same "... is ready" would be printed multiple times.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/microblaze/Makefile      | 2 ++
+ arch/microblaze/boot/Makefile | 4 ----
+ 2 files changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/arch/microblaze/Makefile b/arch/microblaze/Makefile
+index 5e1e18540a571..491676a6cde57 100644
+--- a/arch/microblaze/Makefile
++++ b/arch/microblaze/Makefile
+@@ -75,9 +75,11 @@ archclean:
+ 
+ linux.bin linux.bin.gz linux.bin.ub: vmlinux
+ 	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
++	@echo 'Kernel: $(boot)/$@ is ready' ' (#'`cat .version`')'
+ 
+ simpleImage.%: vmlinux
+ 	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
++	@echo 'Kernel: $(boot)/$@ is ready' ' (#'`cat .version`')'
+ 
+ define archhelp
+   echo '* linux.bin    - Create raw binary'
+diff --git a/arch/microblaze/boot/Makefile b/arch/microblaze/boot/Makefile
+index 0f3fe6a151dce..22bed08ec7f28 100644
+--- a/arch/microblaze/boot/Makefile
++++ b/arch/microblaze/boot/Makefile
+@@ -8,15 +8,12 @@ OBJCOPYFLAGS := -R .note -R .comment -R .note.gnu.build-id -O binary
+ 
+ $(obj)/linux.bin: vmlinux FORCE
+ 	$(call if_changed,objcopy)
+-	@echo 'Kernel: $@ is ready' ' (#'`cat .version`')'
+ 
+ $(obj)/linux.bin.ub: $(obj)/linux.bin FORCE
+ 	$(call if_changed,uimage)
+-	@echo 'Kernel: $@ is ready' ' (#'`cat .version`')'
+ 
+ $(obj)/linux.bin.gz: $(obj)/linux.bin FORCE
+ 	$(call if_changed,gzip)
+-	@echo 'Kernel: $@ is ready' ' (#'`cat .version`')'
+ 
+ quiet_cmd_cp = CP      $< $@$2
+ 	cmd_cp = cat $< >$@$2 || (rm -f $@ && echo false)
+@@ -34,6 +31,5 @@ $(obj)/simpleImage.%: vmlinux FORCE
+ 	$(call if_changed,objcopy)
+ 	$(call if_changed,uimage)
+ 	$(call if_changed,strip,.strip)
+-	@echo 'Kernel: $(UIMAGE_OUT) is ready' ' (#'`cat .version`')'
+ 
+ clean-files += simpleImage.*.unstrip linux.bin.ub dts/*.dtb
+-- 
+2.20.1
+
+
+
