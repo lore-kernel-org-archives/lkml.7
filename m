@@ -2,128 +2,122 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB309C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CE1C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9274420674
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44D0620674
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:39:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DFVeuZX8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbfLDRhQ (ORCPT
+        id S1728090AbfLDRj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:37:16 -0500
-Received: from mga06.intel.com ([134.134.136.31]:43219 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727033AbfLDRhQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:37:16 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Dec 2019 09:37:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,278,1571727600"; 
-   d="scan'208";a="223306093"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga002.jf.intel.com with ESMTP; 04 Dec 2019 09:37:15 -0800
-Date:   Wed, 4 Dec 2019 09:41:59 -0800
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>, ashok.raj@intel.com,
-        kevin.tian@intel.com, Eric Auger <eric.auger@redhat.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH 0/5] iommu/vt-d: Consolidate various cache flush ops
-Message-ID: <20191204094159.7b3e4100@jacob-builder>
-In-Reply-To: <d6ff346e-6b6b-d9cd-c7c8-0e54614c1b37@linux.intel.com>
-References: <20191122030449.28892-1-baolu.lu@linux.intel.com>
-        <20191202120252.45606c47@jacob-builder>
-        <f703c267-c946-30cf-7e0e-4de16edcde18@linux.intel.com>
-        <20191203085026.1785292b@jacob-builder>
-        <d6ff346e-6b6b-d9cd-c7c8-0e54614c1b37@linux.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Wed, 4 Dec 2019 12:39:27 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:36084 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726934AbfLDRj1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 12:39:27 -0500
+Received: by mail-pj1-f68.google.com with SMTP id n96so108956pjc.3;
+        Wed, 04 Dec 2019 09:39:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LiJocrhksCvpO+19ZdExpChYK8w6nQgoAmY+U1ToVCw=;
+        b=DFVeuZX8iTexCHx8t3r9+DFmLx/hWSshdMstwuBvqeXm/taPQxGkeLpYDDdOktV7KC
+         y6oi9Y38zDn3633Eya9Ka5B6eJZSkvOO/saG/83igdkdtK/Xpf4QyZowDVvxVYdFQQ90
+         /vBCnSAbNsyWNm8sVmkVRIyfl+3n3caPM/xCmkuibaIORcQY8Hrfwvd4HjWa1n7yOQUw
+         Bt5yhDjKtOFzuthd9dVDDxbAmYbj16C/BrI8xzpXOBkI15DizyUT+rSOsE93HxZW+KNQ
+         ImGZhsnVhOd6cys76qCNeHLTRKEVdFaqD688dS4wskjOocqD9JrzmKQTAgfG5PgOHmVI
+         J+KA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LiJocrhksCvpO+19ZdExpChYK8w6nQgoAmY+U1ToVCw=;
+        b=ISVsFWAVHjsACFml5DM6kViYQJ0tXEIV/IPOisRbwpUnc6gorkY0jF30c2JSEoZ/rC
+         NbCeUHw8/wVl0iitzh1lfMSEFYStVzn0Wrn1RevkD//XVwh84UW4uzVWmCCFdLELJVHF
+         PQohA0gIrYEKGNIxVcZRte9uiMvYXIdEjVKLZycfRCWWeogVAr5hssGZLMsoUPtciEmF
+         iq57tqadijDoT66ivoFpUFFsByCcOR4/fh4uBWqWux1pPoIKhyOuDWe8whnUJIP0RBs4
+         3qfhUj+jQP4iE3IihGiUT+3sIsqppHBzE+LWZTNF2oRlMfZsRULpVhOUZLE6mTrb+T3y
+         Uf4A==
+X-Gm-Message-State: APjAAAWAEI58tk62hBdVbV3QikgdjVqPONYvWFTV/8HeptP2EI+Yob/q
+        ndMKaDjeqVjG+Z/B6zK47W3a+ZEr
+X-Google-Smtp-Source: APXvYqwe3IcNYdntM1drGvi5vv9cb2mBcY251MgrD5fiAgLt2Jx1ESE7j+6W8y9jVGNETF4QVvvsuQ==
+X-Received: by 2002:a17:90a:bf81:: with SMTP id d1mr4465454pjs.125.1575481166109;
+        Wed, 04 Dec 2019 09:39:26 -0800 (PST)
+Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
+        by smtp.gmail.com with ESMTPSA id j20sm8350166pff.182.2019.12.04.09.39.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Dec 2019 09:39:25 -0800 (PST)
+Subject: Re: [PATCH] net/decnet: fix -EFAULT error that is not getting
+ returned
+To:     Colin King <colin.king@canonical.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        linux-decnet-user@lists.sourceforge.net, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191204151144.1434209-1-colin.king@canonical.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <b75479fd-055e-3758-fc59-3385185a705b@gmail.com>
+Date:   Wed, 4 Dec 2019 09:39:24 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191204151144.1434209-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Dec 2019 08:32:17 +0800
-Lu Baolu <baolu.lu@linux.intel.com> wrote:
 
-> Hi Jacob,
+
+On 12/4/19 7:11 AM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> On 12/4/19 12:50 AM, Jacob Pan wrote:
-> > On Tue, 3 Dec 2019 10:44:45 +0800
-> > Lu Baolu <baolu.lu@linux.intel.com> wrote:
-> >   
-> >> Hi Jacob,
-> >>
-> >> On 12/3/19 4:02 AM, Jacob Pan wrote:  
-> >>> On Fri, 22 Nov 2019 11:04:44 +0800
-> >>> Lu Baolu<baolu.lu@linux.intel.com>  wrote:
-> >>>      
-> >>>> Intel VT-d 3.0 introduces more caches and interfaces for software
-> >>>> to flush when it runs in the scalable mode. Currently various
-> >>>> cache flush helpers are scattered around. This consolidates them
-> >>>> by putting them in the existing iommu_flush structure.
-> >>>>
-> >>>> /* struct iommu_flush - Intel IOMMU cache invalidation ops
-> >>>>    *
-> >>>>    * @cc_inv: invalidate context cache
-> >>>>    * @iotlb_inv: Invalidate IOTLB and paging structure caches
-> >>>> when software
-> >>>>    *             has changed second-level tables.
-> >>>>    * @p_iotlb_inv: Invalidate IOTLB and paging structure caches
-> >>>> when software
-> >>>>    *               has changed first-level tables.
-> >>>>    * @pc_inv: invalidate pasid cache
-> >>>>    * @dev_tlb_inv: invalidate cached mappings used by
-> >>>> requests-without-PASID
-> >>>>    *               from the Device-TLB on a endpoint device.
-> >>>>    * @p_dev_tlb_inv: invalidate cached mappings used by
-> >>>> requests-with-PASID
-> >>>>    *                 from the Device-TLB on an endpoint device
-> >>>>    */
-> >>>> struct iommu_flush {
-> >>>>           void (*cc_inv)(struct intel_iommu *iommu, u16 did,
-> >>>>                          u16 sid, u8 fm, u64 type);
-> >>>>           void (*iotlb_inv)(struct intel_iommu *iommu, u16 did,
-> >>>> u64 addr, unsigned int size_order, u64 type);
-> >>>>           void (*p_iotlb_inv)(struct intel_iommu *iommu, u16 did,
-> >>>> u32 pasid, u64 addr, unsigned long npages, bool ih);
-> >>>>           void (*pc_inv)(struct intel_iommu *iommu, u16 did, u32
-> >>>> pasid, u64 granu);
-> >>>>           void (*dev_tlb_inv)(struct intel_iommu *iommu, u16 sid,
-> >>>> u16 pfsid, u16 qdep, u64 addr, unsigned int mask);
-> >>>>           void (*p_dev_tlb_inv)(struct intel_iommu *iommu, u16
-> >>>> sid, u16 pfsid, u32 pasid, u16 qdep, u64 addr,
-> >>>>                                 unsigned long npages);
-> >>>> };
-> >>>>
-> >>>> The name of each cache flush ops is defined according to the spec
-> >>>> section 6.5 so that people are easy to look up them in the spec.
-> >>>>     
-> >>> Nice consolidation. For nested SVM, I also introduced cache
-> >>> flushed helpers as needed.
-> >>> https://lkml.org/lkml/2019/10/24/857
-> >>>
-> >>> Should I wait for yours to be merged or you want to extend the
-> >>> this consolidation after SVA/SVM cache flush? I expect to send my
-> >>> v8 shortly.  
-> >>
-> >> Please base your v8 patch on this series. So it could get more
-> >> chances for test.
-> >>  
-> > Sounds good.  
+> Currently an -EFAULT error on a memcpy_to_msg is not being returned
+> because it is being overwritten when variable rv is being re-assigned
+> to the number of bytes copied after breaking out of a loop. Fix this
+> by instead assigning the error to variable copied so that this error
+> code propegated to rv and hence is returned at the end of the function.
 > 
-> I am sorry I need to spend more time on this patch series. Please go
-> ahead without it.
+> [ This bug was was introduced before the current git history ]
 > 
-NP, let me know when you need testing.
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  net/decnet/af_decnet.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/decnet/af_decnet.c b/net/decnet/af_decnet.c
+> index e19a92a62e14..e23d9f219597 100644
+> --- a/net/decnet/af_decnet.c
+> +++ b/net/decnet/af_decnet.c
+> @@ -1759,7 +1759,7 @@ static int dn_recvmsg(struct socket *sock, struct msghdr *msg, size_t size,
+>  			chunk = size - copied;
+>  
+>  		if (memcpy_to_msg(msg, skb->data, chunk)) {
+> -			rv = -EFAULT;
+> +			copied = -EFAULT;
+
+This does not look right.
+
+We probably want :
+		if (!copied)
+			copied = -EFAULT;
+
+>  			break;
+>  		}
+>  		copied += chunk;
+> 
