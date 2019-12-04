@@ -7,92 +7,110 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC51C2BBE2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 656D4C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76D742073C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3615320863
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:01:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575442691;
-	bh=7seXlS1sOOZzrxTvwmuY87kLA2KWFaeWkHCkND/6oSU=;
+	s=default; t=1575442874;
+	bh=Uz+eGmxI1QvDSjH59/5hQQsWRPvnzIDSoxgFIiTw4zg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yQGW1lPv5hLBjP8n1FyV+yInCzMlw6nmtfQwXaOiEmjnUI/qVgnPZL+3NkOR7dk9E
-	 YKKiwLM1uKPmlJPkBbdxPlqo/+WFeIZCy48x/BeVhYTJq+p+NYJHZzkAUN9QAl1/O1
-	 1Ur9t1n7XlwV/QZIBIiH1YGjr2CiEWIqNAyLdjsw=
+	b=wk86rg1VQW/uYOw0jgAFxfyZ6QQ9Lr3XW/ApgP7h/6lLczkeAMGj6dDo27V9pJFcO
+	 N0GzLMp1S2EmoKIwTJ71vB+hNaZAcsqjopE3J/+xS+LCPx1KV1X/IxAdxb1bXIhChB
+	 xm7FjF/qP0nBEyklr+f5zDr75rsrmCtzvaWB4fvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbfLDG6K (ORCPT
+        id S1727381AbfLDHBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 01:58:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34134 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 02:01:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725958AbfLDG6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 01:58:10 -0500
+        id S1726217AbfLDHBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 02:01:11 -0500
 Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
         (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76671206DB;
-        Wed,  4 Dec 2019 06:58:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDFF820863;
+        Wed,  4 Dec 2019 07:01:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575442689;
-        bh=7seXlS1sOOZzrxTvwmuY87kLA2KWFaeWkHCkND/6oSU=;
+        s=default; t=1575442871;
+        bh=Uz+eGmxI1QvDSjH59/5hQQsWRPvnzIDSoxgFIiTw4zg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qSIx10rTxmfaITCR9DxHpGeoYI5fkNuXBro6H2BESFMsiCASc1/AI8J6ylZJY3ODn
-         xFsey2dXosB68ISVWrW/gzSm1l7SPZstwTqMcCeVS5H+755aiRLTqoXmWdWq6u4/xk
-         N5aKsXoF4ZekmMH33dUoa6pcNgigi1oMiz3ovJOE=
-Date:   Wed, 4 Dec 2019 14:58:03 +0800
+        b=neZfJDKuEc1u5SMT1pvNbpZIi3eCK5kKOH1f/e7E8GfpEd4ccJZcKLZq9UcDDojgK
+         5iVByjNd3N0iwdKzd3g0c067ZHmGkzxsEir/bKD5+GkqJneP3f2fzRFe3rgxuJw8I8
+         cQTDef2S+CqP7AhWBEyvUfKoPdFFKIlK6UzFVJ9k=
+Date:   Wed, 4 Dec 2019 15:01:05 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
 To:     Ioana Ciornei <ioana.ciornei@nxp.com>
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] arm64: dts: lx2160a: add emdio1 node
-Message-ID: <20191204065802.GB3365@dragon>
+Subject: Re: [PATCH 2/2] arm64: dts: lx2160a: add RGMII phy nodes
+Message-ID: <20191204070103.GC3365@dragon>
 References: <1573055536-21786-1-git-send-email-ioana.ciornei@nxp.com>
- <1573055536-21786-2-git-send-email-ioana.ciornei@nxp.com>
+ <1573055536-21786-3-git-send-email-ioana.ciornei@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1573055536-21786-2-git-send-email-ioana.ciornei@nxp.com>
+In-Reply-To: <1573055536-21786-3-git-send-email-ioana.ciornei@nxp.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 05:52:15PM +0200, Ioana Ciornei wrote:
-> Add the External MDIO1 device node found in the WRIOP global memory
-> region. This is needed for management of external PHYs.
+On Wed, Nov 06, 2019 at 05:52:16PM +0200, Ioana Ciornei wrote:
+> Annotate the EMDIO1 node and describe the 2 AR8035 RGMII PHYs.
+> Also, add phy-handles for dpmac17 and dpmac18 to its associated PHY.
+> The MAC is not capable to add the needed RGMII delays, thus the
+> "rgmii-id" phy-connection-type is used.
 > 
 > Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
 > ---
->  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts | 27 +++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> index 80268c6ed5fb..8b87a0122b54 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> @@ -478,6 +478,17 @@
->  			little-endian;
->  		};
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+> index c2817b784232..1e2a7c4031fd 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+> @@ -35,6 +35,33 @@
+>  	status = "okay";
+>  };
 >  
-> +		/* WRIOP0: 0x8b8_0000, E-MDIO1: 0x1_6000 */
-> +		emdio1: mdio@8b96000 {
+> +&dpmac17 {
+> +	phy-handle = <&rgmii_phy1>;
+> +	phy-connection-type = "rgmii-id";
+> +};
+> +
+> +&dpmac18 {
+> +	phy-handle = <&rgmii_phy2>;
+> +	phy-connection-type = "rgmii-id";
+> +};
+> +
+> +&emdio1 {
+> +	status = "okay";
+> +
+> +	rgmii_phy1: ethernet-phy@1 {
+> +		/* AR8035 PHY */
+> +		compatible = "ethernet-phy-id004d.d072";
+> +		reg = <0x1>;
+> +		eee-broken-1000t;
+> +	};
 
-Please find the place for the node in order of unit-address.
+Please have a newline between nodes.
 
 Shawn
 
-> +			compatible = "fsl,fman-memac-mdio";
-> +			reg = <0x0 0x8b96000 0x0 0x1000>;
-> +			interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			little-endian;
-> +			status = "disabled";
-> +		};
+> +	rgmii_phy2: ethernet-phy@2 {
+> +		/* AR8035 PHY */
+> +		compatible = "ethernet-phy-id004d.d072";
+> +		reg = <0x2>;
+> +		eee-broken-1000t;
+> +	};
+> +};
 > +
->  		i2c0: i2c@2000000 {
->  			compatible = "fsl,vf610-i2c";
->  			#address-cells = <1>;
+>  &esdhc0 {
+>  	sd-uhs-sdr104;
+>  	sd-uhs-sdr50;
 > -- 
 > 1.9.1
 > 
