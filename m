@@ -2,99 +2,78 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60412C2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 901F9C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2867F2077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E9BD2077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:42:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbfLDMiS (ORCPT
+        id S1727554AbfLDMmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 07:38:18 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:54932 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbfLDMiR (ORCPT
+        Wed, 4 Dec 2019 07:42:19 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:55337 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfLDMmT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 07:38:17 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 4DD3F1C25CF; Wed,  4 Dec 2019 13:38:16 +0100 (CET)
-Date:   Wed, 4 Dec 2019 13:38:15 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 187/306] net: hns3: bugfix for
- is_valid_csq_clean_head()
-Message-ID: <20191204123815.GC29179@duo.ucw.cz>
-References: <20191127203114.766709977@linuxfoundation.org>
- <20191127203128.927710566@linuxfoundation.org>
+        Wed, 4 Dec 2019 07:42:19 -0500
+Received: from [123.118.212.115] (helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <aaron.ma@canonical.com>)
+        id 1icTyx-00038u-5Y; Wed, 04 Dec 2019 12:42:15 +0000
+From:   Aaron Ma <aaron.ma@canonical.com>
+To:     jikos@kernel.org, benjamin.tissoires@redhat.com,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] HID: multitouch: Add LG MELF0410 I2C touchscreen support
+Date:   Wed,  4 Dec 2019 20:42:07 +0800
+Message-Id: <20191204124207.5369-1-aaron.ma@canonical.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ZARJHfwaSJQLOEUz"
-Content-Disposition: inline
-In-Reply-To: <20191127203128.927710566@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add multitouch support for LG MELF I2C touchscreen.
+Apply the same workaround as LG USB touchscreen.
 
---ZARJHfwaSJQLOEUz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+---
+ drivers/hid/hid-ids.h        | 1 +
+ drivers/hid/hid-multitouch.c | 3 +++
+ 2 files changed, 4 insertions(+)
 
-Hi!
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 7e1689ef35f5..1664700bde9e 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -730,6 +730,7 @@
+ #define USB_DEVICE_ID_LG_MULTITOUCH	0x0064
+ #define USB_DEVICE_ID_LG_MELFAS_MT	0x6007
+ #define I2C_DEVICE_ID_LG_8001		0x8001
++#define I2C_DEVICE_ID_LG_7010		0x7010
+ 
+ #define USB_VENDOR_ID_LOGITECH		0x046d
+ #define USB_DEVICE_ID_LOGITECH_AUDIOHUB 0x0a0e
+diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+index 3cfeb1629f79..f0d4172d5131 100644
+--- a/drivers/hid/hid-multitouch.c
++++ b/drivers/hid/hid-multitouch.c
+@@ -1985,6 +1985,9 @@ static const struct hid_device_id mt_devices[] = {
+ 	{ .driver_data = MT_CLS_LG,
+ 		HID_USB_DEVICE(USB_VENDOR_ID_LG,
+ 			USB_DEVICE_ID_LG_MELFAS_MT) },
++	{ .driver_data = MT_CLS_LG,
++		HID_DEVICE(BUS_I2C, HID_GROUP_GENERIC,
++			USB_VENDOR_ID_LG, I2C_DEVICE_ID_LG_7010) },
+ 
+ 	/* MosArt panels */
+ 	{ .driver_data = MT_CLS_CONFIDENCE_MINUS_ONE,
+-- 
+2.24.0
 
-> From: Huazhong Tan <tanhuazhong@huawei.com>
->=20
-> [ Upstream commit 6d71ec6cbf74ac9c2823ef751b1baa5b889bb3ac ]
->=20
-> The HEAD pointer of the hardware command queue maybe equal to the command
-> queue's next_to_use in the driver, so that does not belong to the invalid
-> HEAD pointer, since the hardware may not process the command in time,
-> causing the HEAD pointer to be too late to update. The variables' name
-> in this function is unreadable, so give them a more readable one.
->=20
-
-> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-> @@ -24,15 +24,15 @@ static int hclge_ring_space(struct hclge_cmq_ring *ri=
-ng)
->  	return ring->desc_num - used - 1;
->  }
-> =20
-> -static int is_valid_csq_clean_head(struct hclge_cmq_ring *ring, int h)
-> +static int is_valid_csq_clean_head(struct hclge_cmq_ring *ring, int head)
->  {
-=2E..
-> -	if (unlikely(h >=3D ring->desc_num))
-> -		return 0;
-
-This sanity check was removed, and it is not mentioned in the
-changelog. Is it intended?
-
-Best regards,
-							Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---ZARJHfwaSJQLOEUz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXeeotwAKCRAw5/Bqldv6
-8kw6AJ9lWCvcGClFCqWfamchhJ0Pm6qXagCdHMT7YH7MJa/eTaWTgXzxi06CY0U=
-=9rax
------END PGP SIGNATURE-----
-
---ZARJHfwaSJQLOEUz--
