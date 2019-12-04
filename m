@@ -2,88 +2,147 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C230C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA96FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D5FB2081B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:53:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482008;
-	bh=nJjRT7RzV2oFiV0GMR0TfWueKCr+f9VxjX2fzvD24VU=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=QgT37M1CWuDfR886Uj8WuuBpOb+58xWFU3+fIT2ZcYcVD1fiDwnO5eil4kkanSN/q
-	 jx+TlHV9Stf5XPVqJo35IgyGWXZuialWhP6+/X5hOKkhJ/PUxd/LpUe9JXRDejk1Qh
-	 lGZJDPLc/OumD3CIkNnQiYXs/6oOKwhT2JXyVIO8=
+	by mail.kernel.org (Postfix) with ESMTP id B05A82081B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:53:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TRXATRf5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbfLDRx1 (ORCPT
+        id S1728182AbfLDRxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:53:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49202 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728104AbfLDRxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:53:24 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA8332073B;
-        Wed,  4 Dec 2019 17:53:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482003;
-        bh=nJjRT7RzV2oFiV0GMR0TfWueKCr+f9VxjX2fzvD24VU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Z1MauNYRFHTxGpWZ6cY4MpiPFEbAdxWxFZGcslTvzCoUsBR+/JsVPHrdp/q7m8lQr
-         /3J/Du0W+AsxP0qrBU/zbXCdjJVM4wOXYootkId1e374bZkgwPuKhsssYsZPQP6XNB
-         2I16AhLeZ6VuEmZNUSUJfNrgbPTJ8j9UO3izXDJM=
-Subject: Re: [PATCH 5.3 000/135] 5.3.15-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20191203213005.828543156@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <d2fed422-b8f1-fc0c-ab7b-ff61a75302f2@kernel.org>
-Date:   Wed, 4 Dec 2019 10:53:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 4 Dec 2019 12:53:25 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50742 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726934AbfLDRxW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 12:53:22 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB4HrFpX079687;
+        Wed, 4 Dec 2019 11:53:15 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575481995;
+        bh=AnC853RFFoxs00i8fMk3eDa7i0nyPwZrTi1e2WCpjj8=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=TRXATRf5F6o/rVNB7WveJsgTC6EOTmznGk1WH/p4zF4NDAyRamYyJetXDo2rKhno6
+         4/ohZEpEXJPbR8fYIXHx4OGUwf5nZJZem5qYJc6gUY2hMpsGuWp/UHT1RhHp/JWQqb
+         VtNMDs2gU38WZxfEeiZoHTqzA+5/NoG85pOMxIXk=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB4HrF2D040848
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 4 Dec 2019 11:53:15 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Dec
+ 2019 11:53:15 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 4 Dec 2019 11:53:15 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4HrFp4034157;
+        Wed, 4 Dec 2019 11:53:15 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <mkl@pengutronix.de>
+CC:     <linux-can@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>,
+        Sean Nyekjaer <sean@geanix.com>
+Subject: [PATCH 2/2] net: m_can: Make wake-up gpio an optional
+Date:   Wed, 4 Dec 2019 11:51:12 -0600
+Message-ID: <20191204175112.7308-2-dmurphy@ti.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191204175112.7308-1-dmurphy@ti.com>
+References: <20191204175112.7308-1-dmurphy@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20191203213005.828543156@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/3/19 3:34 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.3.15 release.
-> There are 135 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 05 Dec 2019 21:20:36 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.15-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+The device has the ability to disable the wake-up pin option.
+The wake-up pin can be either force to GND or Vsup and does not have to
+be tied to a GPIO.  In order for the device to not use the wake-up feature
+write the register to disable the WAKE_CONFIG option.
 
-Compiled and booted on my test system. No dmesg regressions.
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+CC: Sean Nyekjaer <sean@geanix.com>
+---
+ drivers/net/can/m_can/tcan4x5x.c | 25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
 
-thanks,
--- Shuah
+diff --git a/drivers/net/can/m_can/tcan4x5x.c b/drivers/net/can/m_can/tcan4x5x.c
+index 3db619209fe1..6e37c3fd87af 100644
+--- a/drivers/net/can/m_can/tcan4x5x.c
++++ b/drivers/net/can/m_can/tcan4x5x.c
+@@ -101,6 +101,8 @@
+ #define TCAN4X5X_MODE_STANDBY BIT(6)
+ #define TCAN4X5X_MODE_NORMAL BIT(7)
+ 
++#define TCAN4X5X_DISABLE_WAKE_MSK	(BIT(31) | BIT(30))
++
+ #define TCAN4X5X_SW_RESET BIT(2)
+ 
+ #define TCAN4X5X_MCAN_CONFIGURED BIT(5)
+@@ -338,6 +340,15 @@ static int tcan4x5x_init(struct m_can_classdev *cdev)
+ 	return ret;
+ }
+ 
++static int tcan4x5x_disable_wake(struct m_can_classdev *cdev)
++{
++	struct tcan4x5x_priv *tcan4x5x = cdev->device_data;
++
++	return regmap_update_bits(tcan4x5x->regmap, TCAN4X5X_CONFIG,
++				  TCAN4X5X_DISABLE_WAKE_MSK, 0x00);
++
++}
++
+ static int tcan4x5x_parse_config(struct m_can_classdev *cdev)
+ {
+ 	struct tcan4x5x_priv *tcan4x5x = cdev->device_data;
+@@ -345,8 +356,10 @@ static int tcan4x5x_parse_config(struct m_can_classdev *cdev)
+ 	tcan4x5x->device_wake_gpio = devm_gpiod_get(cdev->dev, "device-wake",
+ 						    GPIOD_OUT_HIGH);
+ 	if (IS_ERR(tcan4x5x->device_wake_gpio)) {
+-		dev_err(cdev->dev, "device-wake gpio not defined\n");
+-		return -EINVAL;
++		if (PTR_ERR(tcan4x5x->power) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++
++		tcan4x5x_disable_wake(cdev);
+ 	}
+ 
+ 	tcan4x5x->reset_gpio = devm_gpiod_get_optional(cdev->dev, "reset",
+@@ -428,10 +441,6 @@ static int tcan4x5x_can_probe(struct spi_device *spi)
+ 
+ 	spi_set_drvdata(spi, priv);
+ 
+-	ret = tcan4x5x_parse_config(mcan_class);
+-	if (ret)
+-		goto out_clk;
+-
+ 	/* Configure the SPI bus */
+ 	spi->bits_per_word = 32;
+ 	ret = spi_setup(spi);
+@@ -441,6 +450,10 @@ static int tcan4x5x_can_probe(struct spi_device *spi)
+ 	priv->regmap = devm_regmap_init(&spi->dev, &tcan4x5x_bus,
+ 					&spi->dev, &tcan4x5x_regmap);
+ 
++	ret = tcan4x5x_parse_config(mcan_class);
++	if (ret)
++		goto out_clk;
++
+ 	tcan4x5x_power_enable(priv->power, 1);
+ 
+ 	ret = m_can_class_register(mcan_class);
+-- 
+2.23.0
 
