@@ -2,95 +2,111 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8B6C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55858C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A66CA22464
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F41D20656
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:52:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728242AbfLDUvh (ORCPT
+        id S1728285AbfLDUwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 15:51:37 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:36442 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727889AbfLDUvh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 15:51:37 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3211B14D9599A;
-        Wed,  4 Dec 2019 12:51:36 -0800 (PST)
-Date:   Wed, 04 Dec 2019 12:51:35 -0800 (PST)
-Message-Id: <20191204.125135.750458923752225025.davem@davemloft.net>
-To:     willemdebruijn.kernel@gmail.com
-Cc:     jakub.kicinski@netronome.com, vvidic@valentin-vidic.from.hr,
-        borisp@mellanox.com, aviadye@mellanox.com,
-        john.fastabend@gmail.com, daniel@iogearbox.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net/tls: Fix return values for setsockopt
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <CA+FuTSdhtGZtTnuncpYaoOROF7L=coGawCPSLv7jzos2Q+Tb=Q@mail.gmail.com>
-References: <CA+FuTSdcDW1oJU=BK-rifxm1n4kh0tkj0qQQfOGSoUOkkBKrFg@mail.gmail.com>
-        <20191204113544.2d537bf7@cakuba.netronome.com>
-        <CA+FuTSdhtGZtTnuncpYaoOROF7L=coGawCPSLv7jzos2Q+Tb=Q@mail.gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Wed, 4 Dec 2019 15:52:31 -0500
+Received: from relay.sw.ru ([185.231.240.75]:50772 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727889AbfLDUwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 15:52:31 -0500
+Received: from [192.168.15.5]
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <aryabinin@virtuozzo.com>)
+        id 1icbcl-0001ny-LQ; Wed, 04 Dec 2019 23:51:51 +0300
+Subject: Re: KASAN: slab-out-of-bounds Read in fbcon_get_font
+To:     Dmitry Vyukov <dvyukov@google.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Cc:     syzbot <syzbot+4455ca3b3291de891abc@syzkaller.appspotmail.com>,
+        Kentaro Takeda <takedakn@nttdata.co.jp>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>, ghalat@redhat.com,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+References: <0000000000002cfc3a0598d42b70@google.com>
+ <CAKMK7uFAfw4M6B8WaHx6FBkYDmUBTQ6t3D8RE5BbMt=_5vyp9A@mail.gmail.com>
+ <CACT4Y+aV9vzJ6gs9r2RAQP+dQ_vkOc5H6hWu-prF1ECruAE_5w@mail.gmail.com>
+From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
+Message-ID: <6632ddb6-37bf-dc42-e355-2443c17e6da0@virtuozzo.com>
+Date:   Wed, 4 Dec 2019 23:49:42 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <CACT4Y+aV9vzJ6gs9r2RAQP+dQ_vkOc5H6hWu-prF1ECruAE_5w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 04 Dec 2019 12:51:36 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date: Wed, 4 Dec 2019 15:43:00 -0500
 
-> On Wed, Dec 4, 2019 at 2:36 PM Jakub Kicinski
-> <jakub.kicinski@netronome.com> wrote:
+
+On 12/4/19 9:33 AM, Dmitry Vyukov wrote:
+> On Tue, Dec 3, 2019 at 11:37 PM Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
 >>
->> (there is a v2, in case you missed)
-> 
-> Thanks. I meant to respond to your comment. (but should have done sooner :)
-> 
->> On Wed, 4 Dec 2019 14:22:55 -0500, Willem de Bruijn wrote:
->> > On Tue, Dec 3, 2019 at 6:08 PM Jakub Kicinski wrote:
->> > > On Tue,  3 Dec 2019 23:44:58 +0100, Valentin Vidic wrote:
->> > > > ENOTSUPP is not available in userspace:
->> > > >
->> > > >   setsockopt failed, 524, Unknown error 524
->> > > >
->> > > > Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
->> > >
->> > > I'm not 100% clear on whether we can change the return codes after they
->> > > had been exposed to user space for numerous releases..
->> >
->> > This has also come up in the context of SO_ZEROCOPY in the past. In my
->> > opinion the answer is no. A quick grep | wc -l in net/ shows 99
->> > matches for this error code. Only a fraction of those probably make it
->> > to userspace, but definitely more than this single case.
->> >
->> > If anything, it may be time to define it in uapi?
+>> On Tue, Dec 3, 2019 at 11:25 PM syzbot
+>> <syzbot+4455ca3b3291de891abc@syzkaller.appspotmail.com> wrote:
+>>>
+>>> Hello,
+>>>
+>>> syzbot found the following crash on:
+>>>
+>>> HEAD commit:    76bb8b05 Merge tag 'kbuild-v5.5' of git://git.kernel.org/p..
+>>> git tree:       upstream
+>>> console output: https://syzkaller.appspot.com/x/log.txt?x=10bfe282e00000
+>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=dd226651cb0f364b
+>>> dashboard link: https://syzkaller.appspot.com/bug?extid=4455ca3b3291de891abc
+>>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11181edae00000
+>>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=105cbb7ae00000
+>>>
+>>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>>> Reported-by: syzbot+4455ca3b3291de891abc@syzkaller.appspotmail.com
+>>>
+>>> ==================================================================
+>>> BUG: KASAN: slab-out-of-bounds in memcpy include/linux/string.h:380 [inline]
+>>> BUG: KASAN: slab-out-of-bounds in fbcon_get_font+0x2b2/0x5e0
+>>> drivers/video/fbdev/core/fbcon.c:2465
+>>> Read of size 16 at addr ffff888094b0aa10 by task syz-executor414/9999
 >>
->> No opinion but FWIW I'm toying with some CI for netdev, I've added a
->> check for use of ENOTSUPP, apparently checkpatch already sniffs out
->> uses of ENOSYS, so seems appropriate to add this one.
+>> So fbcon allocates some memory, security/tomoyo goes around and frees
+>> it, fbcon goes boom because the memory is gone. I'm kinda leaning
+>> towards "not an fbcon bug". Adding relevant security folks and mailing
+>> lists.
+>>
+>> But from a very quick look in tomoyo it loosk more like "machine on
+>> fire, random corruption all over". No idea what's going on here.
 > 
-> Good idea if not exposing this in UAPI.
+> Hi Daniel,
+> 
+> This is an out-of-bounds access, not use-after-free.
+> I don't know why we print the free stack at all (maybe +Andrey knows),
+> but that's what KASAN did from day one. I filed
+> https://bugzilla.kernel.org/show_bug.cgi?id=198425 which I think is a
+> good idea, I will add your confusion as a data point :)
 
-I'm trying to understand this part of the discussion.
-
-If we have been returning a non-valid error code, this 524 internal
-kernel thing, it is _NOT_ an exposed UAPI.
-
-It is a kernel bug and we should fix it.
-
-If userspace anywhere is checking for 524, that is what needs to be fixed.
-
-Do we agree on this point?
+Because we have that information (free stack) and it usually better to provide
+all the information we have rather than hide it. You never known what information
+might be needed to fix the bug.
+Free memory might be reused and what we report as OOB might be an UAF and free stack
+could be useful in such case.
