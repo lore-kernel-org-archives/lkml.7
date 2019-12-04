@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C768C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB88C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10005206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1FFD206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="T6VXt8MI"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="X+uook1k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728602AbfLDP7a (ORCPT
+        id S1728633AbfLDP7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:59:30 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53829 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728539AbfLDP70 (ORCPT
+        Wed, 4 Dec 2019 10:59:34 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39810 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728608AbfLDP7c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:59:26 -0500
-Received: by mail-wm1-f66.google.com with SMTP id u18so247520wmc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 07:59:25 -0800 (PST)
+        Wed, 4 Dec 2019 10:59:32 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y11so9227006wrt.6
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 07:59:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=PwQtKdAUQY+SBl5OsHs80mv2U9tLV35lkOjHDH8uz/U=;
-        b=T6VXt8MIgYcU7MsY3TdXMqG4/4HRWYESABPYgT0VZoaE8H5/6QTNNqzLD5Fongh5Tb
-         b5c6LbaV+5bgyTMxcNS6MkTu6OfOzoVpNioIMUXWSWd90IWYsnDEpqZfY/23mJoRMli7
-         JIk+qU5sKkCujWkOd5jh43Xg3azL//AlEYWP7TzpLe7pvRmELIiukwSk/bxGz4HuAdfe
-         6dkSfCEPXYp5Z8FfDp+FUAu4y8/065sYSdQbVu2Q0+Rk8Xdxi6rvgiv9el7E0+qH+Y8I
-         lkBW1FXom8XEsWCOoity9VRoOjQxd0/TZ4qcBcuS2TIzgZIzvCfP0o4iZ1ourYKA0Ux0
-         IvMQ==
+        bh=UOWwdCy6TVkju/XVgGYrNAwqmnFLPpHnEAl2yx/CBt8=;
+        b=X+uook1kRgRvmE3McO9/BVwAAZr04AoodqHjOIAmN5n2dNHYyv9wnrCFc7p4ZfwIUq
+         aIftfQ1yxXnKD2DorRPeTA2RzHIg7M+efba4oCK6k8QdovXqUfPIwq9AJ2Qcs8h/38P1
+         Gb3TB4LynazhBAZfqLQitm3PilyB3+RxPvaZNs5PmTNpwaxAWxLT9Tz0Sv7q3jdT2JrL
+         oA8c6D9J6F9wE4DAaC4/mcXHOBgKvTBV0uPpCsUHd6W3tCXuuZR0onSsA3vSQ3+aAgDP
+         ABki0FN/bur1VoZtBz0Pou7Aijz60w1Sw0jkPp5WxVj2yH3ry+Qsrkk6WVwfFsBcXoK3
+         JQIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=PwQtKdAUQY+SBl5OsHs80mv2U9tLV35lkOjHDH8uz/U=;
-        b=qzxal3fvRU+K1Y7ER0v+tZbCRlAn9tDOHGn7Sdc/C8OMYC8BXONljqAbBV4EjY0dJC
-         gw4mTlK/bnryzqmj0Mp8vkczGvwWJuiTXpgXsLB5xN7MkuW6qVHxilnTyRTM3nYJo6rI
-         D6tw4SXLotBDWun4kVRM0SD4PRXc1eJOeZM/gNO8QY5xfwRAzBm6bhXYLxKbx/3VuhFa
-         oInq42f9WQRu1d2uE/q9nkT+Zyms9ICBR3JX2aucyeKtPhsHHRyp4LfyGa9NYHJ53nAR
-         DrNizyMhmyzHRgR5UezSry1OVoqeHNRCaex768Gfpkqo7NTpjXp+X/MPCH4CdENDJz8s
-         SbGA==
-X-Gm-Message-State: APjAAAU3Hm8WBwFsVtbrIUn22f4KmVRRYRNiQGp6QZ/LgLBeXSokl4j6
-        95F5hGYN/GdswD4d9AQOiUXgDw==
-X-Google-Smtp-Source: APXvYqw3j9t+sv27rxv6BsQ+49qDiWvcgmeoGIG7o/TNn3GxBxvIPxAHFn+65IIuWJboL7cqmVfOJw==
-X-Received: by 2002:a1c:8055:: with SMTP id b82mr159701wmd.127.1575475164550;
-        Wed, 04 Dec 2019 07:59:24 -0800 (PST)
+        bh=UOWwdCy6TVkju/XVgGYrNAwqmnFLPpHnEAl2yx/CBt8=;
+        b=lZs/qVAMZId9V9kayYYu9JjnwHUBy8momXbDxNi7d+XmLXMXZJoHXtxrgwrgAOt6O+
+         xKu+q9Gs90ntoAlCiz7bxQ8nG36MOE4Plcb362MqzSx2wW8uCx5+Y/Dhkothm2bmrJ0F
+         x4bmHGZVdONXdjC2JCTwXmoRArhEwC8P2obcGdh/bFNgXCiZz0pfETvXmlR3rPJVLZ+a
+         FSnKD8dXHGV5c9SXBRh0vzAto+afemgMMt0U2mzUS32s2Ir0TPiM9EvpA7IXoPI/4/Iu
+         j2lSdUYjC+UOzHDj50SQIo1WIAdf7c/pTkZceF5Zke7CL6KfC3qDEa9v/WYEq4WUyKXE
+         oVdw==
+X-Gm-Message-State: APjAAAV3O/OArnEUaJ9fMQ1gv4GThuDhv2n9cZ9e5jWjUcnDWMA+gXUM
+        cE3autMAzivQsNBDtchf4E+CKw==
+X-Google-Smtp-Source: APXvYqyuvpUu6t8eK96hpQZQvg2O8GUu1xSz5TTabWxuZMWlPkfAxDcV1SufBPt83Rn9kt6rWiUy0A==
+X-Received: by 2002:a05:6000:160d:: with SMTP id u13mr5041318wrb.22.1575475169910;
+        Wed, 04 Dec 2019 07:59:29 -0800 (PST)
 Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id u18sm8640508wrt.26.2019.12.04.07.59.23
+        by smtp.gmail.com with ESMTPSA id u18sm8640508wrt.26.2019.12.04.07.59.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 07:59:23 -0800 (PST)
+        Wed, 04 Dec 2019 07:59:28 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 05/11] gpiolib: use gpiochip_get_desc() in lineevent_create()
-Date:   Wed,  4 Dec 2019 16:59:08 +0100
-Message-Id: <20191204155912.17590-6-brgl@bgdev.pl>
+Subject: [PATCH v2 09/11] gpiolib: provide a dedicated function for setting lineinfo
+Date:   Wed,  4 Dec 2019 16:59:12 +0100
+Message-Id: <20191204155912.17590-10-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191204155912.17590-1-brgl@bgdev.pl>
 References: <20191204155912.17590-1-brgl@bgdev.pl>
@@ -76,38 +76,131 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Unduplicate the ngpio check by simply calling gpiochip_get_desc() and
-checking its return value.
+We'll soon be filling out the gpioline_info structure in multiple
+places. Add a separate function that given a gpio_desc sets all relevant
+fields.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/gpio/gpiolib.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpio/gpiolib.c | 98 ++++++++++++++++++++++++------------------
+ 1 file changed, 55 insertions(+), 43 deletions(-)
 
 diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 6ef55cc1188b..17796437d7be 100644
+index c89d297da270..711963aa9239 100644
 --- a/drivers/gpio/gpiolib.c
 +++ b/drivers/gpio/gpiolib.c
-@@ -1009,8 +1009,9 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
- 	lflags = eventreq.handleflags;
- 	eflags = eventreq.eventflags;
+@@ -1145,6 +1145,60 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+ 	return ret;
+ }
  
--	if (offset >= gdev->ngpio)
--		return -EINVAL;
-+	desc = gpiochip_get_desc(gdev->chip, offset);
-+	if (IS_ERR(desc))
-+		return PTR_ERR(desc);
++static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
++				  struct gpioline_info *info)
++{
++	struct gpio_chip *chip = desc->gdev->chip;
++	unsigned long flags;
++
++	spin_lock_irqsave(&gpio_lock, flags);
++
++	if (desc->name) {
++		strncpy(info->name, desc->name, sizeof(info->name));
++		info->name[sizeof(info->name) - 1] = '\0';
++	} else {
++		info->name[0] = '\0';
++	}
++
++	if (desc->label) {
++		strncpy(info->consumer, desc->label, sizeof(info->consumer));
++		info->consumer[sizeof(info->consumer) - 1] = '\0';
++	} else {
++		info->consumer[0] = '\0';
++	}
++
++	/*
++	 * Userspace only need to know that the kernel is using this GPIO so
++	 * it can't use it.
++	 */
++	info->flags = 0;
++	if (test_bit(FLAG_REQUESTED, &desc->flags) ||
++	    test_bit(FLAG_IS_HOGGED, &desc->flags) ||
++	    test_bit(FLAG_USED_AS_IRQ, &desc->flags) ||
++	    test_bit(FLAG_EXPORT, &desc->flags) ||
++	    test_bit(FLAG_SYSFS, &desc->flags) ||
++	    !pinctrl_gpio_can_use_line(chip->base + info->line_offset))
++		info->flags |= GPIOLINE_FLAG_KERNEL;
++	if (test_bit(FLAG_IS_OUT, &desc->flags))
++		info->flags |= GPIOLINE_FLAG_IS_OUT;
++	if (test_bit(FLAG_ACTIVE_LOW, &desc->flags))
++		info->flags |= GPIOLINE_FLAG_ACTIVE_LOW;
++	if (test_bit(FLAG_OPEN_DRAIN, &desc->flags))
++		info->flags |= (GPIOLINE_FLAG_OPEN_DRAIN |
++				GPIOLINE_FLAG_IS_OUT);
++	if (test_bit(FLAG_OPEN_SOURCE, &desc->flags))
++		info->flags |= (GPIOLINE_FLAG_OPEN_SOURCE |
++				GPIOLINE_FLAG_IS_OUT);
++	if (test_bit(FLAG_BIAS_DISABLE, &desc->flags))
++		info->flags |= GPIOLINE_FLAG_BIAS_DISABLE;
++	if (test_bit(FLAG_PULL_DOWN, &desc->flags))
++		info->flags |= GPIOLINE_FLAG_BIAS_PULL_DOWN;
++	if (test_bit(FLAG_PULL_UP, &desc->flags))
++		info->flags |= GPIOLINE_FLAG_BIAS_PULL_UP;
++
++	spin_unlock_irqrestore(&gpio_lock, flags);
++}
++
+ /*
+  * gpio_ioctl() - ioctl handler for the GPIO chardev
+  */
+@@ -1185,49 +1239,7 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 		if (IS_ERR(desc))
+ 			return PTR_ERR(desc);
  
- 	/* Return an error if a unknown flag is set */
- 	if ((lflags & ~GPIOHANDLE_REQUEST_VALID_FLAGS) ||
-@@ -1048,7 +1049,6 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
- 		}
- 	}
+-		if (desc->name) {
+-			strncpy(lineinfo.name, desc->name,
+-				sizeof(lineinfo.name));
+-			lineinfo.name[sizeof(lineinfo.name)-1] = '\0';
+-		} else {
+-			lineinfo.name[0] = '\0';
+-		}
+-		if (desc->label) {
+-			strncpy(lineinfo.consumer, desc->label,
+-				sizeof(lineinfo.consumer));
+-			lineinfo.consumer[sizeof(lineinfo.consumer)-1] = '\0';
+-		} else {
+-			lineinfo.consumer[0] = '\0';
+-		}
+-
+-		/*
+-		 * Userspace only need to know that the kernel is using
+-		 * this GPIO so it can't use it.
+-		 */
+-		lineinfo.flags = 0;
+-		if (test_bit(FLAG_REQUESTED, &desc->flags) ||
+-		    test_bit(FLAG_IS_HOGGED, &desc->flags) ||
+-		    test_bit(FLAG_USED_AS_IRQ, &desc->flags) ||
+-		    test_bit(FLAG_EXPORT, &desc->flags) ||
+-		    test_bit(FLAG_SYSFS, &desc->flags) ||
+-		    !pinctrl_gpio_can_use_line(chip->base + lineinfo.line_offset))
+-			lineinfo.flags |= GPIOLINE_FLAG_KERNEL;
+-		if (test_bit(FLAG_IS_OUT, &desc->flags))
+-			lineinfo.flags |= GPIOLINE_FLAG_IS_OUT;
+-		if (test_bit(FLAG_ACTIVE_LOW, &desc->flags))
+-			lineinfo.flags |= GPIOLINE_FLAG_ACTIVE_LOW;
+-		if (test_bit(FLAG_OPEN_DRAIN, &desc->flags))
+-			lineinfo.flags |= (GPIOLINE_FLAG_OPEN_DRAIN |
+-					   GPIOLINE_FLAG_IS_OUT);
+-		if (test_bit(FLAG_OPEN_SOURCE, &desc->flags))
+-			lineinfo.flags |= (GPIOLINE_FLAG_OPEN_SOURCE |
+-					   GPIOLINE_FLAG_IS_OUT);
+-		if (test_bit(FLAG_BIAS_DISABLE, &desc->flags))
+-			lineinfo.flags |= GPIOLINE_FLAG_BIAS_DISABLE;
+-		if (test_bit(FLAG_PULL_DOWN, &desc->flags))
+-			lineinfo.flags |= GPIOLINE_FLAG_BIAS_PULL_DOWN;
+-		if (test_bit(FLAG_PULL_UP, &desc->flags))
+-			lineinfo.flags |= GPIOLINE_FLAG_BIAS_PULL_UP;
++		gpio_desc_to_lineinfo(desc, &lineinfo);
  
--	desc = &gdev->descs[offset];
- 	ret = gpiod_request(desc, le->label);
- 	if (ret)
- 		goto out_free_label;
+ 		if (copy_to_user(ip, &lineinfo, sizeof(lineinfo)))
+ 			return -EFAULT;
 -- 
 2.23.0
 
