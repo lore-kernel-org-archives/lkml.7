@@ -2,124 +2,121 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B53F2C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF9BC2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B2D820656
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:09:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="a3RVxmLZ"
+	by mail.kernel.org (Postfix) with ESMTP id DA56F20674
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:15:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575461743;
+	bh=1ED1R/cUDd4gwFpkgu7qT90wPlhKtqXVaWit5W7jXR4=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=Kji3ZF5/4WyQJl4lRL1gRiKawytbGehOohXdMiRHiEKHys34EgzxOprl+hJWmM69n
+	 L10f0888zOBou6F62mHYQ9EBknNSZTLnCnSPcTECpCHxK1Q/ivUHM1Sa0taSyEmTqx
+	 /XmLW51seoPAZ7ynLPzbM/JI15UFzcVJf90F5kEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbfLDMJd (ORCPT
+        id S1727742AbfLDMPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 07:09:33 -0500
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:46507 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727445AbfLDMJd (ORCPT
+        Wed, 4 Dec 2019 07:15:43 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52450 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727445AbfLDMPm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 07:09:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1575461372; x=1606997372;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=0XU4I7wfx1XBSj0BFbZC9Xa7eD2pt9HXv+vFrvgGosk=;
-  b=a3RVxmLZJ+QxCLCZlYVTFQDTFxjReRRcSMKyx2VCUIJP2OhJvugZfhZm
-   kOABMbEsKxc5DpJOe+AH5T1rw7v835nZn3dgwAWUnPcmgmAEoC4orkNLV
-   DdV4xQ6WXJR8EGjzJr5StI93RhxJM31E21b+DvQyYGNW38qxzDRptK2y0
-   A=;
-IronPort-SDR: pPAh3VyOKYzmvWOsJiLjzYBAm32158CHQmvaLASrfxIVhw/Vd2V9GFkK4QdemQZ6v2teZ/0XXt
- hOgcUUWlP9RQ==
-X-IronPort-AV: E=Sophos;i="5.69,277,1571702400"; 
-   d="scan'208";a="11545631"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 04 Dec 2019 12:09:19 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com (Postfix) with ESMTPS id 86FCCA26C9;
-        Wed,  4 Dec 2019 12:09:17 +0000 (UTC)
-Received: from EX13D32EUC002.ant.amazon.com (10.43.164.94) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 4 Dec 2019 12:09:16 +0000
-Received: from EX13MTAUEE001.ant.amazon.com (10.43.62.200) by
- EX13D32EUC002.ant.amazon.com (10.43.164.94) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 4 Dec 2019 12:09:15 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.28.85.76) by
- mail-relay.amazon.com (10.43.62.226) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Wed, 4 Dec 2019 12:09:13 +0000
-Subject: Re: [Xen-devel] [PATCH 0/2] xen/blkback: Aggressively shrink page
- pools if a memory pressure is detected
-To:     "Durrant, Paul" <pdurrant@amazon.com>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "roger.pau@citrix.com" <roger.pau@citrix.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>
-CC:     "sj38.park@gmail.com" <sj38.park@gmail.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20191204113419.2298-1-sjpark@amazon.com>
- <62c68f53cc0145ad9d0dfb167b50eac4@EX13D32EUC003.ant.amazon.com>
-From:   <sjpark@amazon.com>
-Message-ID: <fcf414ab-4ee4-bafc-6683-5527df7a9731@amazon.com>
-Date:   Wed, 4 Dec 2019 13:09:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <62c68f53cc0145ad9d0dfb167b50eac4@EX13D32EUC003.ant.amazon.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Wed, 4 Dec 2019 07:15:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=nJI9bFopWb7W81ncH/qoxkAYT5bre4TUTX6Zr90oAKg=; b=mDD+AJe531Ju
+        DCfXeQkdUwL0LFlYTBn7QHCuvSeLMKpcpFQmbvXvjyXtFSdhThL7SO72Bwt6RRx/XewFtnUX/qC2x
+        ZZhxsIYFVcxkKnHj+Jhiwn8Fe2k6T2oFtZUzPX3Md+cshV1PbHLcEOHM9CzDjSf64LmoiIaP1w3kv
+        kakwI=;
+Received: from fw-tnat-cam3.arm.com ([217.140.106.51] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1icTZA-0000AV-ST; Wed, 04 Dec 2019 12:15:36 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 383D3D003B4; Wed,  4 Dec 2019 12:15:36 +0000 (GMT)
+From:   Mark Brown <broonie@kernel.org>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     broonie@kernel.org, b.zolnierkie@samsung.com,
+        kernel-janitors@vger.kernel.org, krzk@kernel.org,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        sbkim73@samsung.com
+Subject: Applied "regulator: s5m8767: Fix a warning message" to the regulator tree
+In-Reply-To: <20191203214838.9680-1-christophe.jaillet@wanadoo.fr>
+Message-Id: <applied-20191203214838.9680-1-christophe.jaillet@wanadoo.fr>
+X-Patchwork-Hint: ignore
+Date:   Wed,  4 Dec 2019 12:15:36 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.12.19 12:52, Durrant, Paul wrote:
->> -----Original Message-----
->> From: Xen-devel <xen-devel-bounces@lists.xenproject.org> On Behalf Of
->> SeongJae Park
->> Sent: 04 December 2019 11:34
->> To: konrad.wilk@oracle.com; roger.pau@citrix.com; axboe@kernel.dk
->> Cc: sj38.park@gmail.com; xen-devel@lists.xenproject.org; linux-
->> block@vger.kernel.org; linux-kernel@vger.kernel.org; Park, Seongjae
->> <sjpark@amazon.com>
->> Subject: [Xen-devel] [PATCH 0/2] xen/blkback: Aggressively shrink page
->> pools if a memory pressure is detected
->>
->> Each `blkif` has a free pages pool for the grant mapping.  The size of
->> the pool starts from zero and be increased on demand while processing
->> the I/O requests.  If current I/O requests handling is finished or 100
->> milliseconds has passed since last I/O requests handling, it checks and
->> shrinks the pool to not exceed the size limit, `max_buffer_pages`.
->>
->> Therefore, `blkfront` running guests can cause a memory pressure in the
->> `blkback` running guest by attaching arbitrarily large number of block
->> devices and inducing I/O.
-> OOI... How do guests unilaterally cause the attachment of arbitrary numbers of PV devices?
-Good point.  Many systems have their limit for the maximum number of the
-devices.  Thus, 'arbitrarily' large number of devices cannot be attached.  So,
-there is the upperbound.  System administrators might be able to avoid the
-memory pressure problem by setting the limit low enough or giving more memory
-to the 'blkback' running guest.
+The patch
 
-However, many systems also tempt to set the limit high enough so that guests
-can satisfy and to give minimal memory to the 'blkback' running guest for cost
-efficiency.
+   regulator: s5m8767: Fix a warning message
 
-I believe this patchset can be helpful for such situations.
+has been applied to the regulator tree at
 
-Anyway, using the term 'arbitrarily' is obvisously my fault.  I will update the
-description in the next version of patchset.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.5
 
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
 Thanks,
-SeongJae Park
+Mark
 
->
->   Paul
->
+From f3c7f7b636ef5061906aa119eccc2b8dbbaf7199 Mon Sep 17 00:00:00 2001
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Date: Tue, 3 Dec 2019 22:48:38 +0100
+Subject: [PATCH] regulator: s5m8767: Fix a warning message
+
+Axe a duplicated word ("property") in a warning message.
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Link: https://lore.kernel.org/r/20191203214838.9680-1-christophe.jaillet@wanadoo.fr
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/s5m8767.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/regulator/s5m8767.c b/drivers/regulator/s5m8767.c
+index bdc07739e9a2..12d6b8d2e97e 100644
+--- a/drivers/regulator/s5m8767.c
++++ b/drivers/regulator/s5m8767.c
+@@ -588,7 +588,7 @@ static int s5m8767_pmic_dt_parse_pdata(struct platform_device *pdev,
+ 		if (of_property_read_u32(reg_np, "op_mode",
+ 				&rmode->mode)) {
+ 			dev_warn(iodev->dev,
+-				"no op_mode property property at %pOF\n",
++				"no op_mode property at %pOF\n",
+ 				reg_np);
+ 
+ 			rmode->mode = S5M8767_OPMODE_NORMAL_MODE;
+-- 
+2.20.1
 
