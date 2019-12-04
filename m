@@ -2,194 +2,260 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E9CC2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 11:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE698C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 11:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 918D820659
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 11:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 700D320659
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 11:48:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="3VbH8seW";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="3VbH8seW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbfLDLr6 (ORCPT
+        id S1727753AbfLDLsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 06:47:58 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58128 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727268AbfLDLr5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 06:47:57 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB4BfsOx144541
-        for <linux-kernel@vger.kernel.org>; Wed, 4 Dec 2019 06:47:56 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wnsuvy9mc-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 06:47:55 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ubraun@linux.ibm.com>;
-        Wed, 4 Dec 2019 11:47:54 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 4 Dec 2019 11:47:50 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB4BlnWn36503584
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 Dec 2019 11:47:49 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D14E74C044;
-        Wed,  4 Dec 2019 11:47:49 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 901574C040;
-        Wed,  4 Dec 2019 11:47:49 +0000 (GMT)
-Received: from oc5311105230.ibm.com (unknown [9.152.224.131])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  4 Dec 2019 11:47:49 +0000 (GMT)
-Subject: Re: WARNING: refcount bug in smc_release (2)
-To:     Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+96d3f9ff6a86d37e44c8@syzkaller.appspotmail.com>
-Cc:     davem@davemloft.net, kgraul@linux.ibm.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-References: <20191201122517.18720-1-hdanton@sina.com>
-From:   Ursula Braun <ubraun@linux.ibm.com>
-Date:   Wed, 4 Dec 2019 12:47:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
-MIME-Version: 1.0
-In-Reply-To: <20191201122517.18720-1-hdanton@sina.com>
-Content-Type: text/plain; charset=utf-8
+        Wed, 4 Dec 2019 06:48:19 -0500
+Received: from mail-eopbgr80051.outbound.protection.outlook.com ([40.107.8.51]:22144
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727268AbfLDLsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 06:48:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xjhaa9GsGlM51nJym8bd1M2smCmftsU3gd0F6TVRRuk=;
+ b=3VbH8seW3SUQSdYBl/EKbcaiOIiGiuRTmEK+qiSp1hwKPJ18Mg6Md5+1oqmiUQlz+ap8Ir3YwNUbqxWxIMy/RaRJrMciCygesYe74XUfCiXZv2urC1I6gZ7bTefAEADUTlk69rY1p8Lis8CkQTkes6S3ujY1i1+AspD2FXzKtIc=
+Received: from VI1PR08CA0234.eurprd08.prod.outlook.com (2603:10a6:802:15::43)
+ by VI1PR0801MB1998.eurprd08.prod.outlook.com (2603:10a6:800:89::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.13; Wed, 4 Dec
+ 2019 11:48:13 +0000
+Received: from AM5EUR03FT033.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e08::203) by VI1PR08CA0234.outlook.office365.com
+ (2603:10a6:802:15::43) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.20 via Frontend
+ Transport; Wed, 4 Dec 2019 11:48:13 +0000
+Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
+ action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM5EUR03FT033.mail.protection.outlook.com (10.152.16.99) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.18 via Frontend Transport; Wed, 4 Dec 2019 11:48:13 +0000
+Received: ("Tessian outbound 92d30e517f5d:v37"); Wed, 04 Dec 2019 11:48:11 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: a7ad29d86ff89491
+X-CR-MTA-TID: 64aa7808
+Received: from b2b246179d1c.1
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 696D05E8-EFF3-4838-9822-C32CE7880CCB.1;
+        Wed, 04 Dec 2019 11:48:05 +0000
+Received: from EUR02-AM5-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id b2b246179d1c.1
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Wed, 04 Dec 2019 11:48:05 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G5GTdsb3ofk+B3vK0M0cuo2S+aWyGE/tpIXwTkJ0Upy0wwrMND5vom3780OvGU37CE9tbJJVjfl4rg4n26YYbinfcIisO61Cy8Ai+RToOcoToF0IqKCzeRhrUuFu+vN5y/S6VmpNdaFKMujUuU1AAq65du31XeQAjn6STpu7V/n2EPvY6IBqq/Gfk/w8Vt194F6oYikX2r2LXGjN9RS3vqPAHrmQbn0rQsWsVevJqpcw8eqf3tRBmIB2zKi3eD41Bja81qIk6fLnwwgYcxOdjjPFGeK0cBoi4PTj7ycOZqlB11VQJnnCCCA0iNv6W/zSiyJqCbztbA/LfDUCVMmEzw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xjhaa9GsGlM51nJym8bd1M2smCmftsU3gd0F6TVRRuk=;
+ b=Ycd/zRGkqocpK2ffSjywdeMDt8ihIdcbNlF66QsiSffQZFGq9ZGINMA+E3Mywp0bvguMRmgqNx3znwkFoTHPt5Z0TrWOquHPag/NmuUrOAF75j6XmNqoJzkTz3v/V81ifPe8KtzEoFe6UHEjv26IETuqxBOmHOSAH+eMtc8YdN05BM2XerInU2h6LSIDvhEpM0vucTvMqXdbqcrcCvVOT8UiVoDur90x0VtLWvDFAyw5BTA1eFfBvZydrgOBGqtoS7MRbkrXrEOunyNZJK6wZueU2AGGlYkyOXov107VsbfjfjO/qMsykLncCFLfOQAUFw7zycdCgVQcPMF0QAxEZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xjhaa9GsGlM51nJym8bd1M2smCmftsU3gd0F6TVRRuk=;
+ b=3VbH8seW3SUQSdYBl/EKbcaiOIiGiuRTmEK+qiSp1hwKPJ18Mg6Md5+1oqmiUQlz+ap8Ir3YwNUbqxWxIMy/RaRJrMciCygesYe74XUfCiXZv2urC1I6gZ7bTefAEADUTlk69rY1p8Lis8CkQTkes6S3ujY1i1+AspD2FXzKtIc=
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com (20.178.127.92) by
+ VI1PR08MB3085.eurprd08.prod.outlook.com (52.133.15.153) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.19; Wed, 4 Dec 2019 11:48:04 +0000
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::8191:f0ac:574a:d24d]) by VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::8191:f0ac:574a:d24d%3]) with mapi id 15.20.2495.014; Wed, 4 Dec 2019
+ 11:48:04 +0000
+From:   Mihail Atanassov <Mihail.Atanassov@arm.com>
+To:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+CC:     Mihail Atanassov <Mihail.Atanassov@arm.com>, nd <nd@arm.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 01/28] drm: Introduce drm_bridge_init()
+Thread-Topic: [PATCH v2 01/28] drm: Introduce drm_bridge_init()
+Thread-Index: AQHVqpiuVXCS0RRq1UGHN2fVy/u6Kw==
+Date:   Wed, 4 Dec 2019 11:48:02 +0000
+Message-ID: <20191204114732.28514-2-mihail.atanassov@arm.com>
+References: <20191204114732.28514-1-mihail.atanassov@arm.com>
+In-Reply-To: <20191204114732.28514-1-mihail.atanassov@arm.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19120411-4275-0000-0000-0000038B1234
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120411-4276-0000-0000-0000389EB3AD
-Message-Id: <e943de9d-a81a-e709-e228-64eaddc328da@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-04_03:2019-12-04,2019-12-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 mlxlogscore=999 phishscore=0 clxscore=1011 adultscore=0
- suspectscore=0 bulkscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912040094
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [217.140.106.55]
+x-clientproxiedby: LNXP265CA0055.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:5d::19) To VI1PR08MB4078.eurprd08.prod.outlook.com
+ (2603:10a6:803:e5::28)
+x-mailer: git-send-email 2.23.0
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Mihail.Atanassov@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: bc99de28-cdaa-4ef2-7115-08d778afd7fc
+X-MS-TrafficTypeDiagnostic: VI1PR08MB3085:|VI1PR08MB3085:|VI1PR0801MB1998:
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0801MB1998378F34D65A9B1F7022238F5D0@VI1PR0801MB1998.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:431;OLM:431;
+x-forefront-prvs: 0241D5F98C
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(136003)(39860400002)(366004)(396003)(199004)(189003)(2501003)(1076003)(478600001)(6436002)(6512007)(8936002)(6486002)(54906003)(44832011)(4326008)(316002)(50226002)(8676002)(5660300002)(2906002)(81156014)(81166006)(6116002)(3846002)(66946007)(66476007)(66556008)(66446008)(64756008)(11346002)(186003)(2616005)(14454004)(52116002)(76176011)(99286004)(2351001)(25786009)(86362001)(26005)(5640700003)(6916009)(102836004)(71200400001)(305945005)(7736002)(71190400001)(14444005)(6506007)(36756003)(5024004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB3085;H:VI1PR08MB4078.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: tISuevjz7NtKVm3vNsVGGFDDvSps0mtU0Rvzq8nxLdXLYu2S0NyXbQ5OGoXPubW1p/DiQmRg3HanYZh6Roh6GRS5ljt50lzN4GolVX/83qBDGmSGFRASA00bjJ0G8jg6C98W9NQpBSYYGFCzmmNGjQEMCOmD1RFuKX8v15A9vGaFnk/Vy2RF2jkJ+qqCHqLSY9zZoZ93FxtHHYhzb4R4pzvClQ7c6/6xcuVZPyP8Hd471SEFtV6kcEv+4D4bKkC6nbxTu8sgl6cKdJDc9/S98bszwn8YIlEJoP37D9NpA++1JHwXCV0r4xf8yghdIGbaMP2mwKQQGpCjdhtPXUamCRFGoHGuemx6m6CQnsIl3I+R2VL+U/+hz5hOK4iKjtBL7TL03i/p5hTHa0LxMmPPpJxYgikwRXcsbxgiGIUwplB/96MfflVak1RP4yigjUkt
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3085
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Mihail.Atanassov@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT033.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(396003)(136003)(376002)(199004)(189003)(1076003)(5660300002)(6116002)(26005)(3846002)(102836004)(186003)(70206006)(70586007)(76130400001)(356004)(5640700003)(316002)(14444005)(5024004)(99286004)(14454004)(6486002)(86362001)(36906005)(336012)(76176011)(22756006)(7736002)(305945005)(26826003)(23756003)(2501003)(6512007)(50466002)(2351001)(2906002)(6506007)(478600001)(6862004)(4326008)(50226002)(54906003)(2616005)(8676002)(8936002)(8746002)(81156014)(81166006)(36756003)(25786009)(11346002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0801MB1998;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Pass;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 477886ba-b609-44f2-f6e5-08d778afd143
+NoDisclaimer: True
+X-Forefront-PRVS: 0241D5F98C
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: wfLz5VjR1H0Qo0cngHcRI1sDJjgw2hKjg975fanGqyFHGEv2B9pN2whJciuZn9qzRcXfBgV6FIv5o5k4EMMLAOged0qJzmgymxzXGMP2pjjpYn2cMCY/T5AjBdiroqNoYRjO+n17Og6BQV9ydjdBKXhHeQJwNdN7pv2iEHWbzP/LQWuTrvA9gQL/xOC7/f17o1FhgvPLD+IC+hGlWOjxxh/K6KW8OonOvffFx1oIJTtxVNVhcFne0vHv7dNS4x3j1kiFb0QHPohOuCEha+DbqaHTer74ha2ASASFyhbuFZeUsiUSV9TiNKVFPPpHeqOMHMZbZfXsf0hAmw92F3zJVH+o/KkFrMlB8yyLdD6uGsU6vA5x3KPrBC+NHJD1hs5fWXEFv/913XCOx1TOpm2LYAQ5uICUm8inkO95GijF+t/8ysNE4XtANN+qhZau7u7f
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2019 11:48:13.3899
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: bc99de28-cdaa-4ef2-7115-08d778afd7fc
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0801MB1998
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+A simple convenience function to initialize the struct drm_bridge. The
+goal is to standardize initialization for any bridge registered with
+drm_bridge_add() so that we can later add device links for consumers of
+those bridges.
 
+v2:
+ - s/WARN_ON(!funcs)/WARN_ON(!funcs || !dev)/ as suggested by Daniel
+ - expand on some kerneldoc comments as suggested by Daniel
+ - update commit message as suggested by Daniel
 
-On 12/1/19 1:25 PM, Hillf Danton wrote:
-> 
-> On Sat, 30 Nov 2019 20:37:09 -0800
->>
->> syzbot has found a reproducer for the following crash on:
->>
->> HEAD commit:    32ef9553 Merge tag 'fsnotify_for_v5.5-rc1' of git://git.ke..
->> git tree:       upstream
->> console output: https://syzkaller.appspot.com/x/log.txt?x=15f6d82ae00000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=ff560c3de405258c
->> dashboard link: https://syzkaller.appspot.com/bug?extid=96d3f9ff6a86d37e44c8
->> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->> userspace arch: i386
->> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14b57336e00000
->> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=149e357ae00000
->>
->> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->> Reported-by: syzbot+96d3f9ff6a86d37e44c8@syzkaller.appspotmail.com
->>
->> ------------[ cut here ]------------
->> refcount_t: underflow; use-after-free.
->> WARNING: CPU: 1 PID: 9807 at lib/refcount.c:28  
->> refcount_warn_saturate+0x1dc/0x1f0 lib/refcount.c:28
->> Kernel panic - not syncing: panic_on_warn set ...
->> CPU: 1 PID: 9807 Comm: syz-executor293 Not tainted 5.4.0-syzkaller #0
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
->> Google 01/01/2011
->> Call Trace:
->>   __dump_stack lib/dump_stack.c:77 [inline]
->>   dump_stack+0x197/0x210 lib/dump_stack.c:118
->>   panic+0x2e3/0x75c kernel/panic.c:221
->>   __warn.cold+0x2f/0x3e kernel/panic.c:582
->>   report_bug+0x289/0x300 lib/bug.c:195
->>   fixup_bug arch/x86/kernel/traps.c:174 [inline]
->>   fixup_bug arch/x86/kernel/traps.c:169 [inline]
->>   do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
->>   do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
->>   invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
->> RIP: 0010:refcount_warn_saturate+0x1dc/0x1f0 lib/refcount.c:28
->> Code: e9 d8 fe ff ff 48 89 df e8 c1 5a 24 fe e9 85 fe ff ff e8 e7 08 e7 fd  
->> 48 c7 c7 a0 6f 4f 88 c6 05 60 b8 a4 06 01 e8 53 bd b7 fd <0f> 0b e9 ac fe  
->> ff ff 0f 1f 00 66 2e 0f 1f 84 00 00 00 00 00 55 48
->> RSP: 0018:ffff888093c97998 EFLAGS: 00010286
->> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
->> RDX: 0000000000000000 RSI: ffffffff815e4316 RDI: ffffed1012792f25
->> RBP: ffff888093c979a8 R08: ffff8880a04d4380 R09: ffffed1015d26621
->> R10: ffffed1015d26620 R11: ffff8880ae933107 R12: 0000000000000003
->> R13: 0000000000000000 R14: ffff8880a118d380 R15: ffff88809427e558
->>   refcount_sub_and_test include/linux/refcount.h:261 [inline]
->>   refcount_dec_and_test include/linux/refcount.h:281 [inline]
->>   sock_put include/net/sock.h:1728 [inline]
->>   smc_release+0x445/0x520 net/smc/af_smc.c:202
->>   __sock_release+0xce/0x280 net/socket.c:591
->>   sock_close+0x1e/0x30 net/socket.c:1269
->>   __fput+0x2ff/0x890 fs/file_table.c:280
->>   ____fput+0x16/0x20 fs/file_table.c:313
->>   task_work_run+0x145/0x1c0 kernel/task_work.c:113
->>   exit_task_work include/linux/task_work.h:22 [inline]
->>   do_exit+0x8e7/0x2ef0 kernel/exit.c:797
->>   do_group_exit+0x135/0x360 kernel/exit.c:895
->>   get_signal+0x47c/0x24f0 kernel/signal.c:2734
->>   do_signal+0x87/0x1700 arch/x86/kernel/signal.c:815
->>   exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:160
->>   prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
->>   syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
->>   do_syscall_32_irqs_on arch/x86/entry/common.c:352 [inline]
->>   do_fast_syscall_32+0xbbd/0xe16 arch/x86/entry/common.c:408
->>   entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-> 
-> Prevent repeated release using cmpxchg and the sock_hold/put pair is
-> cut off as a bonus cleanup (which would go in another seperate one if
-> necessary).
-> 
+Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
+---
+ drivers/gpu/drm/drm_bridge.c | 34 +++++++++++++++++++++++++++++++++-
+ include/drm/drm_bridge.h     | 15 ++++++++++++++-
+ 2 files changed, 47 insertions(+), 2 deletions(-)
 
-Thanks, Hilff, for this cmpxchg() idea. We keep it in mind, but analyzing
-possible scenarios of the C reproducer I detected an errorneous duplicate
-refcount decrease possibility for the combination of non-blocking connect()
-and FASTOPEN_KEY setsockopt(). I am working on a fix.
-
-Thus I assume the syzbot problem is not caused by a repeated release.
-
-Kind regards, Ursula
-
-> --- a/net/smc/af_smc.c
-> +++ b/net/smc/af_smc.c
-> @@ -172,10 +172,9 @@ static int smc_release(struct socket *so
->  	struct smc_sock *smc;
->  	int rc = 0;
->  
-> -	if (!sk)
-> -		goto out;
-> +	if (!sk || sk != cmpxchg(&sock->sk, sk, NULL))
-> +		return 0;
->  
-> -	sock_hold(sk); /* sock_put below */
->  	smc = smc_sk(sk);
->  
->  	/* cleanup for a dangling non-blocking connect */
-> @@ -198,9 +197,7 @@ static int smc_release(struct socket *so
->  	sock->sk = NULL;
->  	release_sock(sk);
->  
-> -	sock_put(sk); /* sock_hold above */
->  	sock_put(sk); /* final sock_put */
-> -out:
->  	return rc;
->  }
->  
-> 
+diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
+index cba537c99e43..50e1c1b46e20 100644
+--- a/drivers/gpu/drm/drm_bridge.c
++++ b/drivers/gpu/drm/drm_bridge.c
+@@ -64,7 +64,10 @@ static DEFINE_MUTEX(bridge_lock);
+ static LIST_HEAD(bridge_list);
+=20
+ /**
+- * drm_bridge_add - add the given bridge to the global bridge list
++ * drm_bridge_add - add the given bridge to the global bridge list.
++ *
++ * Drivers should call drm_bridge_init() prior adding it to the list.
++ * Drivers should call drm_bridge_remove() to clean up the bridge list.
+  *
+  * @bridge: bridge control structure
+  */
+@@ -89,6 +92,35 @@ void drm_bridge_remove(struct drm_bridge *bridge)
+ }
+ EXPORT_SYMBOL(drm_bridge_remove);
+=20
++/**
++ * drm_bridge_init - initialise a drm_bridge structure
++ *
++ * @bridge: bridge control structure
++ * @funcs: control functions
++ * @dev: device associated with this drm_bridge
++ * @timings: timing specification for the bridge; optional (may be NULL)
++ * @driver_private: pointer to the bridge driver internal context (may be =
+NULL)
++ */
++void drm_bridge_init(struct drm_bridge *bridge, struct device *dev,
++		     const struct drm_bridge_funcs *funcs,
++		     const struct drm_bridge_timings *timings,
++		     void *driver_private)
++{
++	WARN_ON(!funcs || !dev);
++
++	bridge->dev =3D NULL;
++	bridge->encoder =3D NULL;
++	bridge->next =3D NULL;
++
++#ifdef CONFIG_OF
++	bridge->of_node =3D dev->of_node;
++#endif
++	bridge->timings =3D timings;
++	bridge->funcs =3D funcs;
++	bridge->driver_private =3D driver_private;
++}
++EXPORT_SYMBOL(drm_bridge_init);
++
+ /**
+  * drm_bridge_attach - attach the bridge to an encoder's chain
+  *
+diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+index c0a2286a81e9..949e4f401a53 100644
+--- a/include/drm/drm_bridge.h
++++ b/include/drm/drm_bridge.h
+@@ -373,7 +373,16 @@ struct drm_bridge_timings {
+ };
+=20
+ /**
+- * struct drm_bridge - central DRM bridge control structure
++ * struct drm_bridge - central DRM bridge control structure.
++ *
++ * Bridge drivers should call drm_bridge_init() to initialize a bridge
++ * driver, and then register it with drm_bridge_add().
++ *
++ * Users of bridges link a bridge driver into their overall display output
++ * pipeline by calling drm_bridge_attach().
++ *
++ * Modular drivers in OF systems can query the list of registered bridges
++ * with of_drm_find_bridge().
+  */
+ struct drm_bridge {
+ 	/** @dev: DRM device this bridge belongs to */
+@@ -402,6 +411,10 @@ struct drm_bridge {
+=20
+ void drm_bridge_add(struct drm_bridge *bridge);
+ void drm_bridge_remove(struct drm_bridge *bridge);
++void drm_bridge_init(struct drm_bridge *bridge, struct device *dev,
++		     const struct drm_bridge_funcs *funcs,
++		     const struct drm_bridge_timings *timings,
++		     void *driver_private);
+ struct drm_bridge *of_drm_find_bridge(struct device_node *np);
+ int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *brid=
+ge,
+ 		      struct drm_bridge *previous);
+--=20
+2.23.0
 
