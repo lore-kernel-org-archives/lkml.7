@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D72B0C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB804C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6C34206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85507206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:10:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483015;
-	bh=4zJzF9AtaNj9CW3fTyKEQVjeVe/cS5aIQNEL2T+/l6s=;
+	s=default; t=1575483019;
+	bh=pBD8D54Jh+aAZ584Gec2gIdMiQfp2n7SefwZdXpySxQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uBzMCgsii+W0gCvO0ha9EZl7PCo6z5Hfd2QSnTr9yEyZ6ZqR+0dOZ5VLkB7MO4iqq
-	 MlnXY0Pkq2ok4eyMwnwRh0+wubauIlxANc9/GGp2eEcGFyGLFOgxdyRF9L7qr8y5QC
-	 BdchbUX37GkUFJ3Ee/VDi9ogsdRkDr3QzBQM9fis=
+	b=b7cG0xCY06O8iH2AoOckNJgbglM7U44Jf7I2Iv4FCA2nXDPZ+S3uGnMWgT8wqT/i0
+	 5oqkk0zyDfvosgpOzDQSi5HS6v+14TEaJfud8W+C7Dl18lfduUOo7fVBgJA425H0jh
+	 Nu0gmxfSDncvqCP/9eLWKA2VHUbiPt0aY/s7Wm2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731227AbfLDSKN (ORCPT
+        id S1730252AbfLDSKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:10:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37050 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:10:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729091AbfLDSKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:10:09 -0500
+        id S1729763AbfLDSKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:10:14 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A01C720833;
-        Wed,  4 Dec 2019 18:10:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7878E20674;
+        Wed,  4 Dec 2019 18:10:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483009;
-        bh=4zJzF9AtaNj9CW3fTyKEQVjeVe/cS5aIQNEL2T+/l6s=;
+        s=default; t=1575483013;
+        bh=pBD8D54Jh+aAZ584Gec2gIdMiQfp2n7SefwZdXpySxQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VXui5IFnsDR7RQkDP6tnxLSAl5G1h9lRZJjbJqXwGCeYaek6KWlBDVdR72eX8ef5v
-         ql1sfhm1XQvvmS3MC9ClB/4nf+c2ejLmfXyJ/mUMpHbXUjyRBu9ISFPDIkFUJP+KA+
-         bwCIIrmTJ1mGqIGd2oDInnbDCywfoBA+DL8NVPU4=
+        b=UjgYreU687s0kGO9I0YzU+OHZ7K/QDn9afyrCZFuWTZ14LK1JcjZAzkM9IE7bF0IB
+         uoeu/xjfpKtYHutmnBH/r/xd0QiKYIuPNvza3ZqcNQQ+Wc/A/BdZtGVs2msZakJSCz
+         RBtHshN4q3HeuESfCI2UfBKppf6RLSTy2rLGQHag=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>,
+        stable@vger.kernel.org, Helge Deller <deller@gmx.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 015/125] ARM: debug-imx: only define DEBUG_IMX_UART_PORT if needed
-Date:   Wed,  4 Dec 2019 18:55:20 +0100
-Message-Id: <20191204175316.117261641@linuxfoundation.org>
+Subject: [PATCH 4.9 017/125] parisc: Fix serio address output
+Date:   Wed,  4 Dec 2019 18:55:22 +0100
+Message-Id: <20191204175317.366024596@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -61,65 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Helge Deller <deller@gmx.de>
 
-[ Upstream commit 7c41ea57beb2aee96fa63091a457b1a2826f3c42 ]
+[ Upstream commit 785145171d17af2554128becd6a7c8f89e101141 ]
 
-If debugging on i.MX is enabled DEBUG_IMX_UART_PORT defines which UART
-is used for the debug output. If however debugging is off don't only
-hide the then unused config item but drop it completely by using a
-dependency instead of a conditional prompt.
+We want the hpa addresses printed in the serio modules, not some
+virtual ioremap()ed address, e.g.:
 
-This fixes DEBUG_IMX_UART_PORT being present in the kernel config even
-if DEBUG_LL is disabled.
+ serio: gsc-ps2-keyboard port at 0xf0108000 irq 22 @ 2:0:11
+ serio: gsc-ps2-mouse port at 0xf0108100 irq 22 @ 2:0:12
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/Kconfig.debug | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ drivers/input/serio/gscps2.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index d83f7c369e514..a5625430bef64 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -1340,21 +1340,21 @@ config DEBUG_OMAP2PLUS_UART
- 	depends on ARCH_OMAP2PLUS
+diff --git a/drivers/input/serio/gscps2.c b/drivers/input/serio/gscps2.c
+index ecba666afadb7..cca26e6f38b36 100644
+--- a/drivers/input/serio/gscps2.c
++++ b/drivers/input/serio/gscps2.c
+@@ -382,9 +382,9 @@ static int gscps2_probe(struct parisc_device *dev)
+ 		goto fail;
+ #endif
  
- config DEBUG_IMX_UART_PORT
--	int "i.MX Debug UART Port Selection" if DEBUG_IMX1_UART || \
--						DEBUG_IMX25_UART || \
--						DEBUG_IMX21_IMX27_UART || \
--						DEBUG_IMX31_UART || \
--						DEBUG_IMX35_UART || \
--						DEBUG_IMX50_UART || \
--						DEBUG_IMX51_UART || \
--						DEBUG_IMX53_UART || \
--						DEBUG_IMX6Q_UART || \
--						DEBUG_IMX6SL_UART || \
--						DEBUG_IMX6SX_UART || \
--						DEBUG_IMX6UL_UART || \
--						DEBUG_IMX7D_UART
-+	int "i.MX Debug UART Port Selection"
-+	depends on DEBUG_IMX1_UART || \
-+		   DEBUG_IMX25_UART || \
-+		   DEBUG_IMX21_IMX27_UART || \
-+		   DEBUG_IMX31_UART || \
-+		   DEBUG_IMX35_UART || \
-+		   DEBUG_IMX50_UART || \
-+		   DEBUG_IMX51_UART || \
-+		   DEBUG_IMX53_UART || \
-+		   DEBUG_IMX6Q_UART || \
-+		   DEBUG_IMX6SL_UART || \
-+		   DEBUG_IMX6SX_UART || \
-+		   DEBUG_IMX6UL_UART || \
-+		   DEBUG_IMX7D_UART
- 	default 1
--	depends on ARCH_MXC
- 	help
- 	  Choose UART port on which kernel low-level debug messages
- 	  should be output.
+-	printk(KERN_INFO "serio: %s port at 0x%p irq %d @ %s\n",
++	pr_info("serio: %s port at 0x%08lx irq %d @ %s\n",
+ 		ps2port->port->name,
+-		ps2port->addr,
++		hpa,
+ 		ps2port->padev->irq,
+ 		ps2port->port->phys);
+ 
 -- 
 2.20.1
 
