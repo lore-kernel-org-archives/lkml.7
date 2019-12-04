@@ -2,102 +2,116 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,PDS_BTC_ID,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4447AC2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 11:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D3DC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 11:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1979D20833
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 11:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F405920833
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 11:05:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="tMB/Rov2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gwpa7N+Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbfLDLCd (ORCPT
+        id S1727633AbfLDLFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 06:02:33 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:36490 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727268AbfLDLCc (ORCPT
+        Wed, 4 Dec 2019 06:05:02 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:37128 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727466AbfLDLFB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 06:02:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:Content-Type:MIME-Version:
-        Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=FERLaxZUxyP72Jvm9tSRCjsYA68i6+0dGt84HtQCKYc=; b=tMB/Rov2jut9SYIQWR2KinbOy
-        2s5FbXddNAOcEZDNnZVJ7bQT/Sw0ZiWWjZWYNQbzFU0vbKRWpK0Q3OSrXeBB3qT9iDHo4GUPuUOpd
-        F6ELFzYkyoSgGBU2Xs6cBoRmoDMf0Rhw9ZBHu/vy9Bn6v6vk8ROEkVG4onNAgsDkUavi0NHKIxxG9
-        THZJyCJFm7qwYomcwmaljlnhkGVr2q5A2e3dRrGVg9ECbA/xEMJiHWyiRpLF1dM00C+r5QcpSGCw5
-        MvcytmyZkk6Eiot+0r2BrqsFEpwqG879jioPn6cOdkDQOgMSCFzbyCb3Tih0knyn6Sta54+xn4a3w
-        O+r3gliXg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:48382)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1icSQI-00049b-HR; Wed, 04 Dec 2019 11:02:22 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1icSQF-00071j-NR; Wed, 04 Dec 2019 11:02:19 +0000
-Date:   Wed, 4 Dec 2019 11:02:19 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: "leds: gpio: Use generic support for composing LED names" breaks
- gpio debugfs
-Message-ID: <20191204110219.GV25745@shell.armlinux.org.uk>
+        Wed, 4 Dec 2019 06:05:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575457500;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=T19X4nvS8o6/QCGqV5cYH9dB5ySF6S5McpcQOxAuM1Y=;
+        b=gwpa7N+QlyvEwAyLuFjR2Cj+LU1whkt2XeyQiywvnZOMe8YA3NqDqC2DrSPwHWBOUPMevC
+        sp1wI9JFrbGgVFHUu9/YxeJRzyKcD5OUzzziJ3J7n+veP9XB8JXZ7J0waVS15edQ7+mUOb
+        BpKEXOtICPYrs0T+NVnDvBvRrBaANc8=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-232-BNCD6OTNNSOUBu-pIXxETg-1; Wed, 04 Dec 2019 06:04:56 -0500
+Received: by mail-wr1-f72.google.com with SMTP id d8so3456334wrq.12
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 03:04:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/mPzTUYV/4/AeMFkskqxn26gUIegqrDV8tBrRpiOjJE=;
+        b=E4VsriG9/ACm7rdPZsqOshtkuSXDcRoGdPCq5Ui4BDqGjMGtM7YVQ4DMjky5A+zee4
+         hZX3yvFUoUCyllgWktBctKjel1R0cUaWC3/VNMDI3t2uW7fXZL+6jmRar8G8T7XmoiAw
+         xDJnnESYFSB7haE9l9bMVZO8mbWeclbN1uH8hnhsUZGuErLGilL/yC8ius79Zv9kEcwl
+         lNuIu4AyyIaUj5gvCm+sWUeFK6gwsrjYcnsP9rxgZMHQ6BhOcB2L+D5bxmcJ4y883Xus
+         ybnPXX3fXJgJ788KxLgQMFNSsBDz9nty1/jW5M8ysJE/rGnOCq07VLh+WJYZMjV7ysIr
+         XQOA==
+X-Gm-Message-State: APjAAAUKyfb9uMOjSYMfweUJQijbdTOp301R6lWWRHcQgKHsWYLt2DxR
+        PBTZLIz5B00hdkppHT/akTTu6KU7zTett/QDSYX5Zgs62/B3c3lAxgdKIk11AjQMfbFpOXzYXr0
+        pd464HbCEqqvMAiFfN6LfZtQS
+X-Received: by 2002:adf:cf0a:: with SMTP id o10mr3157138wrj.325.1575457495740;
+        Wed, 04 Dec 2019 03:04:55 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxZej/ubogLxmoGHCyzT2M4jWD3RKQn+Hr3K0Odb3wHdjAp8chAUWwQGUSBl7gRSN6mqYV+jA==
+X-Received: by 2002:adf:cf0a:: with SMTP id o10mr3157105wrj.325.1575457495413;
+        Wed, 04 Dec 2019 03:04:55 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:8dc6:5dd5:2c0a:6a9a? ([2001:b07:6468:f312:8dc6:5dd5:2c0a:6a9a])
+        by smtp.gmail.com with ESMTPSA id k19sm6238150wmi.42.2019.12.04.03.04.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Dec 2019 03:04:54 -0800 (PST)
+Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
+To:     Jason Wang <jasowang@redhat.com>, Peter Xu <peterx@redhat.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+References: <20191129213505.18472-1-peterx@redhat.com>
+ <20191129213505.18472-5-peterx@redhat.com>
+ <1355422f-ab62-9dc3-2b48-71a6e221786b@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <a3e83e6b-4bfa-3a6b-4b43-5dd451e03254@redhat.com>
+Date:   Wed, 4 Dec 2019 12:04:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1355422f-ab62-9dc3-2b48-71a6e221786b@redhat.com>
+Content-Language: en-US
+X-MC-Unique: BNCD6OTNNSOUBu-pIXxETg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 04/12/19 11:38, Jason Wang wrote:
+>>
+>> +=C2=A0=C2=A0=C2=A0 entry =3D &ring->dirty_gfns[ring->dirty_index & (rin=
+g->size - 1)];
+>> +=C2=A0=C2=A0=C2=A0 entry->slot =3D slot;
+>> +=C2=A0=C2=A0=C2=A0 entry->offset =3D offset;
+>=20
+>=20
+> Haven't gone through the whole series, sorry if it was a silly question
+> but I wonder things like this will suffer from similar issue on
+> virtually tagged archs as mentioned in [1].
 
-Patch d7235f5feaa0 ("leds: gpio: Use generic support for composing LED
-names") changed the way labels are used.
+There is no new infrastructure to track the dirty pages---it's just a
+different way to pass them to userspace.
 
-devm_fwnode_get_gpiod_from_child() is passed led.name, which used to be
-set to the label or node name, resulting in /sys/kernel/debug/gpio
-containing useful information.  For example:
+> Is this better to allocate the ring from userspace and set to KVM
+> instead? Then we can use copy_to/from_user() friends (a little bit slow
+> on recent CPUs).
 
- gpio-487 (                    |udpu:green:power    ) out lo
- gpio-488 (                    |udpu:red:power      ) out hi
- gpio-489 (                    |udpu:green:network  ) out hi
- gpio-490 (                    |udpu:red:network    ) out hi
- gpio-491 (                    |udpu:green:alarm    ) out hi
- gpio-492 (                    |udpu:red:alarm      ) out hi
+Yeah, I don't think that would be better than mmap.
 
-After this commit, it now contains a rather less useful:
+Paolo
 
- gpio-487 (                    |?                   ) out hi ACTIVE LOW
- gpio-488 (                    |?                   ) out hi ACTIVE LOW
- gpio-489 (                    |?                   ) out hi ACTIVE LOW
- gpio-490 (                    |?                   ) out hi ACTIVE LOW
- gpio-491 (                    |?                   ) out hi ACTIVE LOW
- gpio-492 (                    |?                   ) out hi ACTIVE LOW
 
-This is because led.name is now NULL prior to the call to
-devm_fwnode_get_gpiod_from_child().
+> [1] https://lkml.org/lkml/2019/4/9/5
 
-While this is not an API, it is useful for debugging, and given the
-dynamic allocation of GPIOs to physical GPIOs, having the labels
-present is an advantage.
-
-Can this be fixed / old behaviour restored?
-
-Thanks.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
