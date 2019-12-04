@@ -2,85 +2,83 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C25C2BBE2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 401F7C3E8AF
 	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18846206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5243720866
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:30:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbfLDHYc (ORCPT
+        id S1727117AbfLDHa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 02:24:32 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:42191 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfLDHYa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 02:24:30 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1icP1M-0004T6-5Q; Wed, 04 Dec 2019 08:24:24 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1icP1K-0007HP-Jt; Wed, 04 Dec 2019 08:24:22 +0100
-Date:   Wed, 4 Dec 2019 08:24:22 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "rjui@broadcom.com" <rjui@broadcom.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "sbranden@broadcom.com" <sbranden@broadcom.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alice Guo <alice.guo@nxp.com>, kernel@pengutronix.de
-Subject: Re: [PATCH v2 1/2] gpio: mvebu: use platform_irq_count
-Message-ID: <20191204072422.vfo3mrrcaav75jv4@pengutronix.de>
-References: <1575433106-16171-1-git-send-email-peng.fan@nxp.com>
+        Wed, 4 Dec 2019 02:30:58 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6746 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725958AbfLDHa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 02:30:57 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D9EB019BD49D9D2B1B99;
+        Wed,  4 Dec 2019 15:30:54 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 4 Dec 2019 15:30:44 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <eddie.huang@mediatek.com>, <sean.wang@mediatek.com>,
+        <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>,
+        <matthias.bgg@gmail.com>, <dan.carpenter@oracle.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-rtc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        Mao Wenan <maowenan@huawei.com>, Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH v2 -next] rtc: mt6397: drop free_irq of devm_xx allocated irq
+Date:   Wed, 4 Dec 2019 15:28:26 +0800
+Message-ID: <20191204072826.117432-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191204063444.GF1765@kadam>
+References: <20191204063444.GF1765@kadam>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1575433106-16171-1-git-send-email-peng.fan@nxp.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 04:20:41AM +0000, Peng Fan wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> platform_irq_count() is the more generic way (independent of
-> device trees) to determine the count of available interrupts. So
-> use this instead.
-> 
-> As platform_irq_count() might return an error code (which
-> of_irq_count doesn't) some additional handling is necessary.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Reviewed-and-Commit-Log-Provided-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+rtc->irq is requested by devm_request_threaded_irq,
+and request_threaded_irq. IRQs requested with this
+function will be automatically freed on driver detach.
+This patch remove unused error label as well.
 
-:-)
-Best regards
-Uwe
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+---
+ v2: remove error label as Dan Carpenter suggest.
+ drivers/rtc/rtc-mt6397.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
+diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+index 5249fc99fd5f..14f3c4915260 100644
+--- a/drivers/rtc/rtc-mt6397.c
++++ b/drivers/rtc/rtc-mt6397.c
+@@ -287,13 +287,6 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+ 	rtc->rtc_dev->ops = &mtk_rtc_ops;
+ 
+ 	ret = rtc_register_device(rtc->rtc_dev);
+-	if (ret)
+-		goto out_free_irq;
+-
+-	return 0;
+-
+-out_free_irq:
+-	free_irq(rtc->irq, rtc);
+ 	return ret;
+ }
+ 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.20.1
+
