@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38DB8C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9ABC2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09A31205ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC71E205ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:18:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483503;
-	bh=cUBxm5bpX3BNZcvYOv8A70HiYFqDP/A/TSE0hj9URx0=;
+	s=default; t=1575483511;
+	bh=abcTTU0ULRcd4e5L+QK2oU5epvpjofTCLsSbQ+zVTFs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JJ01rrYRgPx2/Q80zFbGqXkO3mACu/tKHsCPyfIVlA0hOhQzhldHOzzn7+jMtEYXV
-	 BbfRm/E01n56Eubw9liqm63eOA6E76LvXr3kpPffVUxF2R3dq/0ukGEW9hfT2tnT5o
-	 DzpR50FyYvGysTAxYpI0AjPv+ADQmH4T8JjP+aYs=
+	b=iOH+nakei3hH2e3p8HBUVJ7hv3Ue0EgzIqlYZU70d7WXPwl6iqCKHL8MmYgGa2PWG
+	 SSxp7oDmvlXERHWmofOv+tr+OChXA/iJHvwOOO0HhNa0O5TKWbcMuUorxbL5R74VGy
+	 0apWQnb56VaK55LPRjAbOWwpG0pwEx9M393fSn+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731760AbfLDSSW (ORCPT
+        id S1731330AbfLDSKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:18:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38962 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:10:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731347AbfLDSLD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:11:03 -0500
+        id S1730829AbfLDSKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:10:45 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F255E20833;
-        Wed,  4 Dec 2019 18:11:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9FAA2084B;
+        Wed,  4 Dec 2019 18:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483062;
-        bh=cUBxm5bpX3BNZcvYOv8A70HiYFqDP/A/TSE0hj9URx0=;
+        s=default; t=1575483045;
+        bh=abcTTU0ULRcd4e5L+QK2oU5epvpjofTCLsSbQ+zVTFs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=evaGfYGMbhNnpOD7FwetbXtcSb4V0w0a/U1Uq1Beb/f5qr6BnEdBiCqIJf0n8TdI2
-         8ephrmCHwqiF9vq3vhMcyAkzpSaO2diHBX/XAU6HJVmhqJm+fU4dsu3Gm9mkiLcSs0
-         AD6cD79b4Ot0yqvxeWNq0ClVoL2G54h9aX6FoG1w=
+        b=dQX6TbCjPOeCeHgPOzrGN5WWrU7vN6hNDEOqGT47oYMQo8EhlbiXCWyi884zPiwQL
+         g30SpjexZGHtdORme+gtAfeeRCtiCR8LzTyGxVfSABnCb8/CrEpsdhaV60hm/jrxit
+         vhKXcmdKizcPs+P0TCYH40YGDW/3NkDSi81e3WsM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
+        Boris Brezillon <boris.brezillon@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 005/125] clk: at91: avoid sleeping early
-Date:   Wed,  4 Dec 2019 18:55:10 +0100
-Message-Id: <20191204175311.107996817@linuxfoundation.org>
+Subject: [PATCH 4.9 029/125] ubi: Put MTD device after it is not used
+Date:   Wed,  4 Dec 2019 18:55:34 +0100
+Message-Id: <20191204175320.270359604@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -63,99 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit 658fd65cf0b0d511de1718e48d9a28844c385ae0 ]
+[ Upstream commit b95f83ab762dd6211351b9140f99f43644076ca8 ]
 
-It is not allowed to sleep to early in the boot process and this may lead
-to kernel issues if the bootloader didn't prepare the slow clock and main
-clock.
+The MTD device reference is dropped via put_mtd_device, however its
+field ->index is read and passed to ubi_msg. To fix this, the patch
+moves the reference dropping after calling ubi_msg.
 
-This results in the following error and dump stack on the AriettaG25:
-   bad: scheduling from the idle thread!
-
-Ensure it is possible to sleep, else simply have a delay.
-
-Reported-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Link: https://lkml.kernel.org/r/20190920153906.20887-1-alexandre.belloni@bootlin.com
-Fixes: 80eded6ce8bb ("clk: at91: add slow clks driver")
-Tested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Reviewed-by: Boris Brezillon <boris.brezillon@bootlin.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/at91/clk-main.c |  5 ++++-
- drivers/clk/at91/sckc.c     | 20 ++++++++++++++++----
- 2 files changed, 20 insertions(+), 5 deletions(-)
+ drivers/mtd/ubi/build.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/at91/clk-main.c b/drivers/clk/at91/clk-main.c
-index 2f97a843d6d6b..fb5c14af8cc8d 100644
---- a/drivers/clk/at91/clk-main.c
-+++ b/drivers/clk/at91/clk-main.c
-@@ -354,7 +354,10 @@ static int clk_main_probe_frequency(struct regmap *regmap)
- 		regmap_read(regmap, AT91_CKGR_MCFR, &mcfr);
- 		if (mcfr & AT91_PMC_MAINRDY)
- 			return 0;
--		usleep_range(MAINF_LOOP_MIN_WAIT, MAINF_LOOP_MAX_WAIT);
-+		if (system_state < SYSTEM_RUNNING)
-+			udelay(MAINF_LOOP_MIN_WAIT);
-+		else
-+			usleep_range(MAINF_LOOP_MIN_WAIT, MAINF_LOOP_MAX_WAIT);
- 	} while (time_before(prep_time, timeout));
- 
- 	return -ETIMEDOUT;
-diff --git a/drivers/clk/at91/sckc.c b/drivers/clk/at91/sckc.c
-index ab6ecefc49ad8..43ba2a8b03faf 100644
---- a/drivers/clk/at91/sckc.c
-+++ b/drivers/clk/at91/sckc.c
-@@ -74,7 +74,10 @@ static int clk_slow_osc_prepare(struct clk_hw *hw)
- 
- 	writel(tmp | AT91_SCKC_OSC32EN, sckcr);
- 
--	usleep_range(osc->startup_usec, osc->startup_usec + 1);
-+	if (system_state < SYSTEM_RUNNING)
-+		udelay(osc->startup_usec);
-+	else
-+		usleep_range(osc->startup_usec, osc->startup_usec + 1);
- 
+diff --git a/drivers/mtd/ubi/build.c b/drivers/mtd/ubi/build.c
+index ad2b57c6b13fd..211ee13d36ed4 100644
+--- a/drivers/mtd/ubi/build.c
++++ b/drivers/mtd/ubi/build.c
+@@ -1146,10 +1146,10 @@ int ubi_detach_mtd_dev(int ubi_num, int anyway)
+ 	ubi_wl_close(ubi);
+ 	ubi_free_internal_volumes(ubi);
+ 	vfree(ubi->vtbl);
+-	put_mtd_device(ubi->mtd);
+ 	vfree(ubi->peb_buf);
+ 	vfree(ubi->fm_buf);
+ 	ubi_msg(ubi, "mtd%d is detached", ubi->mtd->index);
++	put_mtd_device(ubi->mtd);
+ 	put_device(&ubi->dev);
  	return 0;
  }
-@@ -197,7 +200,10 @@ static int clk_slow_rc_osc_prepare(struct clk_hw *hw)
- 
- 	writel(readl(sckcr) | AT91_SCKC_RCEN, sckcr);
- 
--	usleep_range(osc->startup_usec, osc->startup_usec + 1);
-+	if (system_state < SYSTEM_RUNNING)
-+		udelay(osc->startup_usec);
-+	else
-+		usleep_range(osc->startup_usec, osc->startup_usec + 1);
- 
- 	return 0;
- }
-@@ -310,7 +316,10 @@ static int clk_sam9x5_slow_set_parent(struct clk_hw *hw, u8 index)
- 
- 	writel(tmp, sckcr);
- 
--	usleep_range(SLOWCK_SW_TIME_USEC, SLOWCK_SW_TIME_USEC + 1);
-+	if (system_state < SYSTEM_RUNNING)
-+		udelay(SLOWCK_SW_TIME_USEC);
-+	else
-+		usleep_range(SLOWCK_SW_TIME_USEC, SLOWCK_SW_TIME_USEC + 1);
- 
- 	return 0;
- }
-@@ -443,7 +452,10 @@ static int clk_sama5d4_slow_osc_prepare(struct clk_hw *hw)
- 		return 0;
- 	}
- 
--	usleep_range(osc->startup_usec, osc->startup_usec + 1);
-+	if (system_state < SYSTEM_RUNNING)
-+		udelay(osc->startup_usec);
-+	else
-+		usleep_range(osc->startup_usec, osc->startup_usec + 1);
- 	osc->prepared = true;
- 
- 	return 0;
 -- 
 2.20.1
 
