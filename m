@@ -2,66 +2,105 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E98C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 01:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC13AC43215
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 01:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EA5520674
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 01:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89406206E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 01:53:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfLDBtk (ORCPT
+        id S1726605AbfLDBxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 20:49:40 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:44440 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfLDBtk (ORCPT
+        Tue, 3 Dec 2019 20:53:46 -0500
+Received: from lgeamrelo13.lge.com ([156.147.23.53]:47107 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726189AbfLDBxp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 20:49:40 -0500
-Received: from marcel-macbook.fritz.box (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
-        by mail.holtmann.org (Postfix) with ESMTPSA id E5263CEC82;
-        Wed,  4 Dec 2019 02:58:47 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
-Subject: Re: [PATCH] Input: uinput - Add UI_SET_UNIQ ioctl handler
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20191127185139.65048-1-abhishekpandit@chromium.org>
-Date:   Wed, 4 Dec 2019 02:49:37 +0100
-Cc:     linux-input@vger.kernel.org,
-        =?utf-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Kirill Smelkov <kirr@nexedi.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <581F56B1-035C-4339-AF10-464BD3E984F4@holtmann.org>
-References: <20191127185139.65048-1-abhishekpandit@chromium.org>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-X-Mailer: Apple Mail (2.3601.0.10)
+        Tue, 3 Dec 2019 20:53:45 -0500
+Received: from unknown (HELO lgemrelse6q.lge.com) (156.147.1.121)
+        by 156.147.23.53 with ESMTP; 4 Dec 2019 10:53:43 +0900
+X-Original-SENDERIP: 156.147.1.121
+X-Original-MAILFROM: taejoon.song@lge.com
+Received: from unknown (HELO ubuntu0.156.147.1.1) (10.177.220.34)
+        by 156.147.1.121 with ESMTP; 4 Dec 2019 10:53:43 +0900
+X-Original-SENDERIP: 10.177.220.34
+X-Original-MAILFROM: taejoon.song@lge.com
+From:   Taejoon Song <taejoon.song@lge.com>
+To:     minchan@kernel.org, ngupta@vflare.org,
+        sergey.senozhatsky.work@gmail.com, axboe@kernel.dk
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        yjay.kim@lge.com, Taejoon Song <taejoon.song@lge.com>
+Subject: [PATCH] zram: try to avoid worst-case scenario on same element pages
+Date:   Wed,  4 Dec 2019 10:53:38 +0900
+Message-Id: <1575424418-16119-1-git-send-email-taejoon.song@lge.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Abhishek,
+The worst-case scenario on finding same element pages is that almost
+all elements are same at the first glance but only last few elements
+are different.
 
-> Support setting the uniq attribute of the input device. The uniq
-> attribute is used as a unique identifier for the connected device.
-> 
-> For example, uinput devices created by BlueZ will store the address of
-> the connected device as the uniq property.
+Since the same element tends to be grouped from the beginning of the
+pages, if we check the first element with the last element before
+looping through all elements, we might have some chances to quickly
+detect non-same element pages.
 
-you might also then want to add HIDIOCGRAWUNIQ support to the hidraw driver.
+1. Test is done under LG webOS TV (64-bit arch)
+2. Dump the swap-out pages (~819200 pages)
+3. Analyze the pages with simple test script which counts the iteration
+   number and measures the speed at off-line
 
-Regards
+Under 64-bit arch, the worst iteration count is PAGE_SIZE / 8 bytes = 512.
+The speed is based on the time to consume page_same_filled() function only.
+The result, on average, is listed as below:
 
-Marcel
+                                   Num of Iter    Speed(MB/s)
+Looping-Forward (Orig)                 38            99265
+Looping-Backward                       36           102725
+Last-element-check (This Patch)        33           125072
+
+The result shows that the average iteration count decreases by 13% and
+the speed increases by 25% with this patch. This patch does not increase
+the overall time complexity, though.
+
+I also ran simpler version which uses backward loop. Just looping backward
+also makes some improvement, but less than this patch.
+
+Signed-off-by: Taejoon Song <taejoon.song@lge.com>
+---
+ drivers/block/zram/zram_drv.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index 4285e75..afadd7f 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -207,14 +207,17 @@ static inline void zram_fill_page(void *ptr, unsigned long len,
+ 
+ static bool page_same_filled(void *ptr, unsigned long *element)
+ {
+-	unsigned int pos;
+ 	unsigned long *page;
+ 	unsigned long val;
++	unsigned int pos, last_pos = PAGE_SIZE / sizeof(*page) - 1;
+ 
+ 	page = (unsigned long *)ptr;
+ 	val = page[0];
+ 
+-	for (pos = 1; pos < PAGE_SIZE / sizeof(*page); pos++) {
++	if (val != page[last_pos])
++		return false;
++
++	for (pos = 1; pos < last_pos - 1; pos++) {
+ 		if (val != page[pos])
+ 			return false;
+ 	}
+-- 
+2.7.4
 
