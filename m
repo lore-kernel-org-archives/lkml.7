@@ -2,134 +2,113 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BE1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F419CC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8087B20656
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:11:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Dho7oe/x"
+	by mail.kernel.org (Postfix) with ESMTP id C4ADE2084F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:12:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575475961;
+	bh=7xsuEGPTK6tCQyu2Zfo67N6YL+YrQ/lBOC8bOlpdWnc=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=dXBvbDtUAVFPqAIrKmw8UJmGdZIQEzjk6iGR/+uKVm2wCbx0xgvkRouMY6Wvd9saY
+	 Ffc7LPt0P8qZnivbV12LQGx1njxN6nlimyuOmHtiD8AoFgeAvCz9tFwbFBotWyv6Je
+	 uygMpP1sMDNfyy9eQVs6zU/Yfl67fka/BTIgxm6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728595AbfLDQLP (ORCPT
+        id S1728615AbfLDQMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 11:11:15 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:48462 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727912AbfLDQLO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 11:11:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=72LNbJrxc9NI8EQkst4zx3kMXmKGJx6Z/v7rruWC6F4=; b=Dho7oe/xPqW/+92cUdOOQdss5
-        4v7DPRlIQ/N+zdLdeHA5TTlkPd8hvvyn6BLDy/s+ZjbXRj/ON8avYZ7JjWlcVaNNao+dI/o6bOwhP
-        Dzyt+m6odRb+AHboYFEPLOTegx2jYevNrsdch2w+zfLr6MaXb+q+i06raBMpjCFjtFUb8j/D35Qst
-        mXkaSzdkE1kuSBsSNAK918xniqhWSEyVfBq0xUmrZmEr1ysF7p/YNWsFcX4Pi39EPcUH2+MW+YMzM
-        7pnilJ4OS7D4UCnH2jLxC1ERSkClK7zS+UjRkLV5NyHuRCXtMBXVYITTHzZPJ0MC0Cj3ygaPvlcsY
-        pPMkNsqaQ==;
-Received: from [2601:1c0:6280:3f0::3deb]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1icXFA-0003VC-Ta; Wed, 04 Dec 2019 16:11:12 +0000
-Subject: Re: linux-next: Tree for Dec 3 (switchdev & TI_CPSW_SWITCHDEV)
-To:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Ivan Vecera <ivecera@redhat.com>, linux-omap@vger.kernel.org
-References: <20191203155405.31404722@canb.auug.org.au>
- <58aebf62-54f8-9084-147b-801ea65327bb@infradead.org>
- <f2700b07-df9b-94ce-0323-a4fece236838@ti.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <af707faa-7f95-0d6f-3f72-1746161e09a8@infradead.org>
-Date:   Wed, 4 Dec 2019 08:11:11 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 4 Dec 2019 11:12:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37654 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728149AbfLDQMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 11:12:40 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B43472081B;
+        Wed,  4 Dec 2019 16:12:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575475959;
+        bh=7xsuEGPTK6tCQyu2Zfo67N6YL+YrQ/lBOC8bOlpdWnc=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=eQQvkck+Enrg19F6wOGlibvLmhgYoaeog1JKTTtO/SOD0zMidcuO9sP2YGJI5XbbC
+         0XaX3r0jbwAPz83JkFPBJcv3eVouzZzyPrOSZqVnq0J3yiIOUthOe6jATE5jDIurmo
+         NKg4u+4n7oePPG905bwM43N2RICammERV/tV7FMk=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 08FB735227A5; Wed,  4 Dec 2019 08:12:39 -0800 (PST)
+Date:   Wed, 4 Dec 2019 08:12:39 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        David Miller <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -tip] kprobes: Lock rcu_read_lock() while searching kprobe
+Message-ID: <20191204161239.GL2889@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <157527193358.11113.14859628506665612104.stgit@devnote2>
+ <20191202210854.GD17234@google.com>
+ <20191203071329.GC115767@gmail.com>
+ <20191203175712.GI2889@paulmck-ThinkPad-P72>
+ <20191204100549.GB114697@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <f2700b07-df9b-94ce-0323-a4fece236838@ti.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191204100549.GB114697@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/4/19 7:35 AM, Grygorii Strashko wrote:
+On Wed, Dec 04, 2019 at 11:05:50AM +0100, Ingo Molnar wrote:
 > 
+> * Paul E. McKenney <paulmck@kernel.org> wrote:
 > 
-> On 04/12/2019 01:43, Randy Dunlap wrote:
->> On 12/2/19 8:54 PM, Stephen Rothwell wrote:
->>> Hi all,
->>>
->>> Please do not add any material for v5.6 to your linux-next included
->>> trees until after v5.5-rc1 has been released.
->>>
->>> Changes since 20191202:
->>
->> I am seeing this (happens to be on i386; I doubt that it matters):
->> CONFIG_COMPILE_TEST=y
->>
->>
->> WARNING: unmet direct dependencies detected for NET_SWITCHDEV
->>    Depends on [n]: NET [=y] && INET [=n]
->>    Selected by [y]:
->>    - TI_CPSW_SWITCHDEV [=y] && NETDEVICES [=y] && ETHERNET [=y] && NET_VENDOR_TI [=y] && (ARCH_DAVINCI || ARCH_OMAP2PLUS || COMPILE_TEST [=y])
->>
->> because TI_CPSW_SWITCHDEV blindly selects NET_SWITCHDEV even though
->> INET is not set/enabled, while NET_SWITCHDEV depends on INET.
->>
->> However, the build succeeds, including net/switchdev/*.
->>
->> So why does NET_SWITCHDEV depend on INET?
->>
->> It looks like TI_CPSW_SWITCHDEV should depend on INET (based on the
->> Kconfig rules), but in practice it doesn't seem to matter to the build.
->>
+> > >  * This list-traversal primitive may safely run concurrently with
+> > >  * the _rcu list-mutation primitives such as hlist_add_head_rcu()
+> > >  * as long as the traversal is guarded by rcu_read_lock().
+> > >  */
+> > > #define hlist_for_each_entry_rcu(pos, head, member, cond...)            \
+> > > 
+> > > is actively harmful. Why is it there?
+> > 
+> > For cases where common code might be invoked both from the reader
+> > (with RCU protection) and from the updater (protected by some
+> > lock).  This common code can then use the optional argument to
+> > hlist_for_each_entry_rcu() to truthfully tell lockdep that it might be
+> > called with either form of protection in place.
+> > 
+> > This also combines with the __rcu tag used to mark RCU-protected
+> > pointers, in which case sparse complains when a non-RCU API is applied
+> > to these pointers, to get back to your earlier question about use of
+> > hlist_for_each_entry_rcu() within the update-side lock.
+> > 
+> > But what are you seeing as actively harmful about all of this?
+> > What should we be doing instead?
 > 
-> Thanks for reporting this. I'd like to ask for some advice of how to proceed?
-> a) change it to "depends on NET_SWITCHDEV" (as it's done in other drivers),
-> but this will require to add NET_SWITCHDEV in defconfig
+> Yeah, so basically in the write-locked path hlist_for_each_entry() 
+> generates (slightly) more efficient code than hlist_for_each_entry_rcu(), 
+> correct?
 
-IMO TI_CPSW_SWITCHDEV should depend on NET_SWITCHDEV, as other drivers do that.
+Potentially yes, if the READ_ONCE() constrains the compiler.  Or not,
+depending of course on the compiler and the surrounding code.
 
-That will require to add NET_SWITCHDEV in what defconfig?
-To me, it just means that whoever is doing the kernel config must enable/set
-NET_SWITCHDEV first, same as other drivers that depend on NET_SWITCHDEV.
+> Also, the principle of passing warning flags around is problematic - but 
+> I can see the point in this specific case.
 
-> b) change it to "imply NET_SWITCHDEV", but then NET_SWITCHDEV can be switched off
-> manually or by random build and cause build failure of cpsw_new.
-> To fix build below diff can be used, but TI_CPSW_SWITCHDEV will not be functional
-> 
-> ---
-> diff --git a/drivers/net/ethernet/ti/cpsw_new.c b/drivers/net/ethernet/ti/cpsw_new.c
-> index 71215db7934b..22e8fc548d48 100644
-> --- a/drivers/net/ethernet/ti/cpsw_new.c
-> +++ b/drivers/net/ethernet/ti/cpsw_new.c
-> @@ -368,8 +368,9 @@ static void cpsw_rx_handler(void *token, int len, int status)
->                 page_pool_recycle_direct(pool, page);
->                 goto requeue;
->         }
-> -
-> +#ifdef CONFIG_NET_SWITCHDEV
->         skb->offload_fwd_mark = priv->offload_fwd_mark;
-> +#endif
->         skb_reserve(skb, headroom);
->         skb_put(skb, len);
->         skb->dev = ndev;
-> 
-> Thank you.
-> 
+Would it help to add an hlist_for_each_entry_protected() that expected
+RCU-protected pointers and write-side protection, analogous to
+rcu_dereference_protected()?  Or would that expansion of the RCU API
+outweigh any benefits?
 
-
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+							Thanx, Paul
