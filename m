@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DBAC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2E1C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C7012073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68674205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483792;
-	bh=kqpzJnTxRpyBYOpXv54CkIzJJid5vTn2KtSckSJ5ySM=;
+	s=default; t=1575483797;
+	bh=RlJ+wxX/xxhokqFDvuet9MnBPhu1UN6/NnINSGlszmo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zw09uTcVkCeQDlvWyq2PBdkElzOK2hyd3Ax+RzBFGKuIyqNNuerFLv+NEsMiDOrB5
-	 4C2a08YKwaisqe89uDyj1nU6BPuHQse+HnSdZwlAuykUXQiJpOYiPs1eOKtPucA4/l
-	 Y8II9qwbPZ3yitilU7MfYSqYoOsh+sknNOmseOZU=
+	b=MU86sUEi9Ou2MV4EHrut2vCECrs6hVb00HFpiDUoo3BHkkN5WfVmooK3whK47xwFy
+	 +6rRwaqxGc+3C15yo+B4UtDDMfWYBnHpFXXcSwHYtQ0bdGsxJEdjTzhwuliwGpYTRQ
+	 3rbegMR63nONJSswwP7LMHBInONE3CUo7Zws/Tr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730193AbfLDSE3 (ORCPT
+        id S1731088AbfLDSXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:04:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49276 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:23:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730154AbfLDSEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:04:14 -0500
+        id S1728933AbfLDSEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:04:23 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A7AF20675;
-        Wed,  4 Dec 2019 18:04:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C5692073B;
+        Wed,  4 Dec 2019 18:04:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482653;
-        bh=kqpzJnTxRpyBYOpXv54CkIzJJid5vTn2KtSckSJ5ySM=;
+        s=default; t=1575482663;
+        bh=RlJ+wxX/xxhokqFDvuet9MnBPhu1UN6/NnINSGlszmo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FupoDx1cisAZbV9EoC2phTzbcgYX21xO/PGr+8z51Gvmr0+CwsoK/3veyc0iQIlbc
-         HWWOdfPuJNUqoFogMYM7gTgal3ZgNGxgcqKCQydNez5mP2qjb4zuMRz8BmdqUAr3f7
-         4/XcDbHpN+fk8aN/OlFjyORbexRYL9JN5oUQ4MbQ=
+        b=R3oU/IV22AOxXQtcF2S4+yrgulZDw/Xlfzn+3xSAVc2fd1D3rMsSo99DOC6hHOVR3
+         zOdwUeZgW5FCEgeFq3RsoKSY52sbS6wAsvGksYW21aOdEeTADztqLJBFoQ/dkdJVvo
+         J0JM9R/aoCcSloZbpZ+TXADr+OUeBqStgDc1CG4w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Bill ODonnell <billodo@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 081/209] vxlan: Fix error path in __vxlan_dev_create()
-Date:   Wed,  4 Dec 2019 18:54:53 +0100
-Message-Id: <20191204175327.105634330@linuxfoundation.org>
+Subject: [PATCH 4.14 049/209] xfs: require both realtime inodes to mount
+Date:   Wed,  4 Dec 2019 18:54:21 +0100
+Message-Id: <20191204175324.745523898@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -60,81 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Machata <petrm@mellanox.com>
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-[ Upstream commit 6db9246871394b3a136cd52001a0763676563840 ]
+[ Upstream commit 64bafd2f1e484e27071e7584642005d56516cb77 ]
 
-When a failure occurs in rtnl_configure_link(), the current code
-calls unregister_netdevice() to roll back the earlier call to
-register_netdevice(), and jumps to errout, which calls
-vxlan_fdb_destroy().
+Since mkfs always formats the filesystem with the realtime bitmap and
+summary inodes immediately after the root directory, we should expect
+that both of them are present and loadable, even if there isn't a
+realtime volume attached.  There's no reason to skip this if rbmino ==
+NULLFSINO; in fact, this causes an immediate crash if the there /is/ a
+realtime volume and someone writes to it.
 
-However unregister_netdevice() calls transitively ndo_uninit, which is
-vxlan_uninit(), and that already takes care of deleting the default FDB
-entry by calling vxlan_fdb_delete_default(). Since the entry added
-earlier in __vxlan_dev_create() is exactly the default entry, the
-cleanup code in the errout block always leads to double free and thus a
-panic.
-
-Besides, since vxlan_fdb_delete_default() always destroys the FDB entry
-with notification enabled, the deletion of the default entry is notified
-even before the addition was notified.
-
-Instead, move the unregister_netdevice() call after the manual destroy,
-which solves both problems.
-
-Fixes: 0241b836732f ("vxlan: fix default fdb entry netlink notify ordering during netdev create")
-Signed-off-by: Petr Machata <petrm@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Bill O'Donnell <billodo@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/vxlan.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_rtalloc.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
-index 6d26bbd190dd6..153a81ece9fe4 100644
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -3217,6 +3217,7 @@ static int __vxlan_dev_create(struct net *net, struct net_device *dev,
- 	struct vxlan_net *vn = net_generic(net, vxlan_net_id);
- 	struct vxlan_dev *vxlan = netdev_priv(dev);
- 	struct vxlan_fdb *f = NULL;
-+	bool unregister = false;
- 	int err;
+diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
+index 488719d43ca82..cdcb7235e41ae 100644
+--- a/fs/xfs/xfs_rtalloc.c
++++ b/fs/xfs/xfs_rtalloc.c
+@@ -1214,13 +1214,11 @@ xfs_rtmount_inodes(
+ 	xfs_sb_t	*sbp;
  
- 	err = vxlan_dev_configure(net, dev, conf, false, extack);
-@@ -3242,12 +3243,11 @@ static int __vxlan_dev_create(struct net *net, struct net_device *dev,
- 	err = register_netdevice(dev);
- 	if (err)
- 		goto errout;
-+	unregister = true;
- 
- 	err = rtnl_configure_link(dev, NULL);
--	if (err) {
--		unregister_netdevice(dev);
-+	if (err)
- 		goto errout;
--	}
- 
- 	/* notify default fdb entry */
- 	if (f)
-@@ -3255,9 +3255,16 @@ static int __vxlan_dev_create(struct net *net, struct net_device *dev,
- 
- 	list_add(&vxlan->next, &vn->vxlan_list);
- 	return 0;
+ 	sbp = &mp->m_sb;
+-	if (sbp->sb_rbmino == NULLFSINO)
+-		return 0;
+ 	error = xfs_iget(mp, NULL, sbp->sb_rbmino, 0, 0, &mp->m_rbmip);
+ 	if (error)
+ 		return error;
+ 	ASSERT(mp->m_rbmip != NULL);
+-	ASSERT(sbp->sb_rsumino != NULLFSINO);
 +
- errout:
-+	/* unregister_netdevice() destroys the default FDB entry with deletion
-+	 * notification. But the addition notification was not sent yet, so
-+	 * destroy the entry by hand here.
-+	 */
- 	if (f)
- 		vxlan_fdb_destroy(vxlan, f, false);
-+	if (unregister)
-+		unregister_netdevice(dev);
- 	return err;
- }
- 
+ 	error = xfs_iget(mp, NULL, sbp->sb_rsumino, 0, 0, &mp->m_rsumip);
+ 	if (error) {
+ 		IRELE(mp->m_rbmip);
 -- 
 2.20.1
 
