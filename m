@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAFC1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D235C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F2F9206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D756A2073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:04:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482687;
-	bh=3QMdufV80+4d+hL2KT7BVZFNM0dt7I/JcvPcovucgcc=;
+	s=default; t=1575482691;
+	bh=YdGv6BHbiAyg5m/uwizGoIGICsNQiynSDOuoUttgDfw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wWnvYi5GqHIXxv9K4YheWm5OSSYL2HTPCljpVOr8FQpPXMNAVKGCZHIR2ss37W6Gh
-	 l/j6bCN8GTwAKYlvQpzYLgAy+LG6g4gQWhLvaSNK4JJdhYwShQ8ahAI+fhyDxUu8xX
-	 eY/30QLPPyMJLrMdM9kgvMioDDjtdhJcLCFfZstY=
+	b=wMVnmEXBu6Cw8mJ5hkbquuqRQQzmFv3ag5BxM8bou3n8MEP6pM9973MNyuLbCjJPn
+	 gTjxEuy7s+thOQDkEa3Cpl1PgxvHMJjg3KBXdvdUVlP+JGqxTPJtkEt8A2UaCDR1XP
+	 O1jh38wuEfpcAIdtpuGrmwnN5ow14AOWHD1T81Go=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730262AbfLDSEq (ORCPT
+        id S1730272AbfLDSEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:04:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50220 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:04:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730242AbfLDSEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:04:42 -0500
+        id S1729039AbfLDSEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:04:46 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C60D206DF;
-        Wed,  4 Dec 2019 18:04:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5EA52073B;
+        Wed,  4 Dec 2019 18:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482681;
-        bh=3QMdufV80+4d+hL2KT7BVZFNM0dt7I/JcvPcovucgcc=;
+        s=default; t=1575482686;
+        bh=YdGv6BHbiAyg5m/uwizGoIGICsNQiynSDOuoUttgDfw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=APir3mACw7GzvowYUbgTtpkp/mceSVKKryyMgEi9U2w7lY5GmOkMm2M4iuJW/fSbr
-         sFMPireU568r5m4V7HIMh8QOCMiRmGyACb1RBhp/KYEd/jcTBabgkREMS7Hx3Be5Ko
-         NXTazFPqVH5ts37h1PfY2VfQaE2KlrMwhhiX1x1I=
+        b=PBwPJwXB4BcDKUf/7k5jA+m21Ovx8CtG0nqblil0HEEf52KDhTLYSid3Zad0JNAlB
+         jRcfDvC3ZIOuSX4HFWgCQNxen2jaPoMw4DNFKvNppoCn2dK87j7N63cO5AeVegP9oV
+         gqSPdbKKW8DZOfEpF2rjVSt+S7aA0c5phAGsTEow=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kyle Roeschley <kyle.roeschley@ni.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
+        Boris Brezillon <boris.brezillon@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 091/209] ath6kl: Only use match sets when firmware supports it
-Date:   Wed,  4 Dec 2019 18:55:03 +0100
-Message-Id: <20191204175328.020098178@linuxfoundation.org>
+Subject: [PATCH 4.14 051/209] ubi: Do not drop UBI device reference before using
+Date:   Wed,  4 Dec 2019 18:54:23 +0100
+Message-Id: <20191204175324.889445451@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -60,38 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kyle Roeschley <kyle.roeschley@ni.com>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit fb376a495fbdb886f38cfaf5a3805401b9e46f13 ]
+[ Upstream commit e542087701f09418702673631a908429feb3eae0 ]
 
-Commit dd45b7598f1c ("ath6kl: Include match ssid list in scheduled scan")
-merged the probed and matched SSID lists before sending them to the
-firmware. In the process, it assumed match set support is always available
-in ath6kl_set_probed_ssids, which breaks scans for hidden SSIDs. Now, check
-that the firmware supports matching SSIDs in scheduled scans before setting
-MATCH_SSID_FLAG.
+The UBI device reference is dropped but then the device is used as a
+parameter of ubi_err. The bug is introduced in changing ubi_err's
+behavior. The old ubi_err does not require a UBI device as its first
+parameter, but the new one does.
 
-Fixes: dd45b7598f1c ("ath6kl: Include match ssid list in scheduled scan")
-Signed-off-by: Kyle Roeschley <kyle.roeschley@ni.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 32608703310 ("UBI: Extend UBI layer debug/messaging capabilities")
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Reviewed-by: Boris Brezillon <boris.brezillon@bootlin.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath6kl/cfg80211.c | 2 +-
+ drivers/mtd/ubi/kapi.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath6kl/cfg80211.c b/drivers/net/wireless/ath/ath6kl/cfg80211.c
-index 414b5b596efcd..f790d8021fa17 100644
---- a/drivers/net/wireless/ath/ath6kl/cfg80211.c
-+++ b/drivers/net/wireless/ath/ath6kl/cfg80211.c
-@@ -939,7 +939,7 @@ static int ath6kl_set_probed_ssids(struct ath6kl *ar,
- 		else
- 			ssid_list[i].flag = ANY_SSID_FLAG;
- 
--		if (n_match_ssid == 0)
-+		if (ar->wiphy->max_match_sets != 0 && n_match_ssid == 0)
- 			ssid_list[i].flag |= MATCH_SSID_FLAG;
- 	}
- 
+diff --git a/drivers/mtd/ubi/kapi.c b/drivers/mtd/ubi/kapi.c
+index d4b2e87444986..c2cf6bd3c162a 100644
+--- a/drivers/mtd/ubi/kapi.c
++++ b/drivers/mtd/ubi/kapi.c
+@@ -227,9 +227,9 @@ out_unlock:
+ out_free:
+ 	kfree(desc);
+ out_put_ubi:
+-	ubi_put_device(ubi);
+ 	ubi_err(ubi, "cannot open device %d, volume %d, error %d",
+ 		ubi_num, vol_id, err);
++	ubi_put_device(ubi);
+ 	return ERR_PTR(err);
+ }
+ EXPORT_SYMBOL_GPL(ubi_open_volume);
 -- 
 2.20.1
 
