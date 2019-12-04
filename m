@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA218C2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08713C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77B422084F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:00:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5ACC2084F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:00:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="Sok0tvbQ"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="PpcLyfVP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728752AbfLDP77 (ORCPT
+        id S1728767AbfLDQAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:59:59 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:46957 "EHLO
+        Wed, 4 Dec 2019 11:00:01 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40202 "EHLO
         mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728709AbfLDP7w (ORCPT
+        with ESMTP id S1728731AbfLDP75 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:59:52 -0500
-Received: by mail-qk1-f193.google.com with SMTP id f5so298821qkm.13
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 07:59:51 -0800 (PST)
+        Wed, 4 Dec 2019 10:59:57 -0500
+Received: by mail-qk1-f193.google.com with SMTP id a137so346359qkc.7
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 07:59:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=soleen.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=CRoxRB8IFeyVTKMx5ypVP5zpyTfws7d6gsb5dpS33vY=;
-        b=Sok0tvbQLMnworXiNYVhIsHwglGthkb3F+IhAdIcuhFulkUCzxnNQoenHOV9jZOFjI
-         j+LhEcYyCn9ROvSInEYKmOhJuEOPmmQ08vXVphxlZ2ehSYtzVB52PEXPd228QW3V74bh
-         cAaSTg7fOOZQ3NITCQCB1rwrp/WGVCUOy6xrabpfn66awnzPzV69K6GT9ulg6YMTgbXj
-         uRAuoIS70KFRfBdgKsaRb61RQkg7X6LVBK5drx/E0YOZIem865LxPGCr5r703CATQc8U
-         rOrWA2d25zRlVOYA7M4U9udGrIjq30jlrkiJt8irQv3CKskg4Iik/g8iaoL+WRUNkLv6
-         6VXw==
+        bh=4v2ls0lyos9MZGs+//3x7zxDKOqLDJgg7MnUzIGC47I=;
+        b=PpcLyfVPM+0RjLkhUEpRdReq0hjBlr6u5zYaco/FGk0jDM7rg+tZSyHitbMvg+dM77
+         nn+F020fK6oQ7+Y/CBChin10OmfODTipj0Mpd0CqrrXZpXwFXUPB+CZqSsdx85czOVTl
+         ou+byKkWXclpkh+f5TL2zch+sRXFnpsj3ZTv42FQ8AycoVbReGHsKEYrX6y3FF27SeBg
+         UY9XBnrMv/9mlnlDCzQrxtaERvYwvxviobKQHW49yiF6jwJ8NPJrfoQDdyXaIk/bOyzc
+         BcVzhhDAFOeSSU+44AK7nBKs7NoAFkIC41nAOk0LtqRskjLvYcMv3cF7mR7Snf/2NW5i
+         vzaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=CRoxRB8IFeyVTKMx5ypVP5zpyTfws7d6gsb5dpS33vY=;
-        b=CGQbDs8h22ETHpX/gH7HcuAzMHnfSq9TnPC1Se6CJifmPOsMQCCIzXR3OAMMUY5b2r
-         iLbBuUZMjVgoLoQzJhNAjaxJuH2K5JxlHPxU9O1RZRFKP6ue5bQeovZokMk/rhdneHsJ
-         EKA/eRFSKc8HdO9RYW8Etuoe1uhqJao0UcDyXG1U6MZ67lOjc3tUiRHSE5bv5I7bTneA
-         nYluRkv8ZEt3QHPkxgsalxIlG1wSilZAp92kL3hlMypQH7oZS3A3KiKtC6fBEv8c7ag4
-         OJEJZbXvdbuoX6ockIfkqJmA/bmHbSTCeOQ+XcMNSkBmBzPQB++N3QH+6kZJD5wFL2DM
-         8u2w==
-X-Gm-Message-State: APjAAAW3x4/2/iGGQPi+rTPZVKjxCF9ikW09Ec6oPCTWqJ36pvHASgCI
-        lhfPzenl4Tdkbe30e1VCWf+QMA==
-X-Google-Smtp-Source: APXvYqyVmMQxr7dKNkbJcOcAyAvUUs0ErG6tRUeh+GTtJpJDytBoHcBnlTjVSMoH9TY9Eceuj5dpxQ==
-X-Received: by 2002:a37:514:: with SMTP id 20mr3502735qkf.321.1575475191178;
-        Wed, 04 Dec 2019 07:59:51 -0800 (PST)
+        bh=4v2ls0lyos9MZGs+//3x7zxDKOqLDJgg7MnUzIGC47I=;
+        b=LE+AOl0h0mtW0aGrkW4gRtxn8F0g9HhXjAqaqnU5OBH5UYCo3v3DaOBsf2T6AIMf1Y
+         KGSeiSFJhrNivw8z5Mpf4oZRfpNvuM3JvIy6gANEj992rEWg4AlmXLPCXkpwgB/QlevE
+         7xSohzOfkusv9+KBNQ7YDEQluiGe7/B20ctFYwO449Em26xUrGbnExgZt8e5O/hASL7U
+         rLzINQAsEGATpOUG7opVkaKc/kQk9j7EyMoQEKMSLZq1et51B+vTQIGjt93cRs5zbkVL
+         /a7rQVRYaQU1PZtDFurNQ5Txx6XUqqoyfSSyxUYIfnMN3qsp1dHt46Z7G0rvucr2M9wY
+         VKEQ==
+X-Gm-Message-State: APjAAAUcao39u9KQGtKiOerevbYPrsnJ0LV9vAhBd63ioWazGKkIO46V
+        2aPRKDggcF087noWV7bkXsQP+w==
+X-Google-Smtp-Source: APXvYqwbIZH2Pw6NCDLNA8Nh4oH03q5E8aWmq1ENaNGNkYabuHhdPEYYGggkf/SKqVVDwqr5I2fwww==
+X-Received: by 2002:a37:411:: with SMTP id 17mr3875404qke.40.1575475195526;
+        Wed, 04 Dec 2019 07:59:55 -0800 (PST)
 Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id w21sm4177585qth.17.2019.12.04.07.59.49
+        by smtp.gmail.com with ESMTPSA id w21sm4177585qth.17.2019.12.04.07.59.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 07:59:50 -0800 (PST)
+        Wed, 04 Dec 2019 07:59:54 -0800 (PST)
 From:   Pavel Tatashin <pasha.tatashin@soleen.com>
 To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         ebiederm@xmission.com, kexec@lists.infradead.org,
@@ -66,9 +66,9 @@ To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org,
         mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com,
         tglx@linutronix.de
-Subject: [PATCH v8 07/25] arm64: hibernate: remove gotos as they are not needed
-Date:   Wed,  4 Dec 2019 10:59:20 -0500
-Message-Id: <20191204155938.2279686-8-pasha.tatashin@soleen.com>
+Subject: [PATCH v8 10/25] arm64: hibernate: add trans_pgd public functions
+Date:   Wed,  4 Dec 2019 10:59:23 -0500
+Message-Id: <20191204155938.2279686-11-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204155938.2279686-1-pasha.tatashin@soleen.com>
 References: <20191204155938.2279686-1-pasha.tatashin@soleen.com>
@@ -79,149 +79,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Usually, gotos are used to handle cleanup after exception, but in case of
-create_safe_exec_page and swsusp_arch_resume there are no clean-ups. So,
-simply return the errors directly.
+trans_pgd_create_copy() and trans_pgd_map_page() are going to be
+the basis for new shared code that handles page tables for cases
+which are between kernels: kexec, and hibernate.
+
+Note: Eventually, get_safe_page() will be moved into a function pointer
+passed via argument, but for now keep it as is.
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 Reviewed-by: James Morse <james.morse@arm.com>
 ---
- arch/arm64/kernel/hibernate.c | 49 ++++++++++++-----------------------
- 1 file changed, 17 insertions(+), 32 deletions(-)
+ arch/arm64/kernel/hibernate.c | 93 ++++++++++++++++++++++-------------
+ 1 file changed, 60 insertions(+), 33 deletions(-)
 
 diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
-index 34297716643f..83c41a2f8400 100644
+index ce60bceed357..ee1442a60945 100644
 --- a/arch/arm64/kernel/hibernate.c
 +++ b/arch/arm64/kernel/hibernate.c
-@@ -198,7 +198,6 @@ static int create_safe_exec_page(void *src_start, size_t length,
- 				 unsigned long dst_addr,
- 				 phys_addr_t *phys_dst_addr)
+@@ -182,39 +182,15 @@ int arch_hibernation_header_restore(void *addr)
+ }
+ EXPORT_SYMBOL(arch_hibernation_header_restore);
+ 
+-/*
+- * Copies length bytes, starting at src_start into an new page,
+- * perform cache maintentance, then maps it at the specified address low
+- * address as executable.
+- *
+- * This is used by hibernate to copy the code it needs to execute when
+- * overwriting the kernel text. This function generates a new set of page
+- * tables, which it loads into ttbr0.
+- *
+- * Length is provided as we probably only want 4K of data, even on a 64K
+- * page system.
+- */
+-static int create_safe_exec_page(void *src_start, size_t length,
+-				 unsigned long dst_addr,
+-				 phys_addr_t *phys_dst_addr)
++int trans_pgd_map_page(pgd_t *trans_pgd, void *page,
++		       unsigned long dst_addr,
++		       pgprot_t pgprot)
  {
--	int rc = 0;
- 	pgd_t *trans_pgd;
+-	void *page = (void *)get_safe_page(GFP_ATOMIC);
+-	pgd_t *trans_pgd;
  	pgd_t *pgdp;
  	pud_t *pudp;
-@@ -206,47 +205,37 @@ static int create_safe_exec_page(void *src_start, size_t length,
+ 	pmd_t *pmdp;
  	pte_t *ptep;
- 	unsigned long dst = get_safe_page(GFP_ATOMIC);
  
--	if (!dst) {
--		rc = -ENOMEM;
--		goto out;
--	}
-+	if (!dst)
-+		return -ENOMEM;
- 
- 	memcpy((void *)dst, src_start, length);
- 	__flush_icache_range(dst, dst + length);
- 
- 	trans_pgd = (void *)get_safe_page(GFP_ATOMIC);
--	if (!trans_pgd) {
--		rc = -ENOMEM;
--		goto out;
--	}
-+	if (!trans_pgd)
-+		return -ENOMEM;
- 
+-	if (!page)
+-		return -ENOMEM;
+-
+-	memcpy(page, src_start, length);
+-	__flush_icache_range((unsigned long)page, (unsigned long)page + length);
+-
+-	trans_pgd = (void *)get_safe_page(GFP_ATOMIC);
+-	if (!trans_pgd)
+-		return -ENOMEM;
+-
  	pgdp = pgd_offset_raw(trans_pgd, dst_addr);
  	if (pgd_none(READ_ONCE(*pgdp))) {
  		pudp = (void *)get_safe_page(GFP_ATOMIC);
--		if (!pudp) {
--			rc = -ENOMEM;
--			goto out;
--		}
-+		if (!pudp)
-+			return -ENOMEM;
- 		pgd_populate(&init_mm, pgdp, pudp);
- 	}
+@@ -242,6 +218,44 @@ static int create_safe_exec_page(void *src_start, size_t length,
+ 	ptep = pte_offset_kernel(pmdp, dst_addr);
+ 	set_pte(ptep, pfn_pte(virt_to_pfn(page), PAGE_KERNEL_EXEC));
  
- 	pudp = pud_offset(pgdp, dst_addr);
- 	if (pud_none(READ_ONCE(*pudp))) {
- 		pmdp = (void *)get_safe_page(GFP_ATOMIC);
--		if (!pmdp) {
--			rc = -ENOMEM;
--			goto out;
--		}
-+		if (!pmdp)
-+			return -ENOMEM;
- 		pud_populate(&init_mm, pudp, pmdp);
- 	}
- 
- 	pmdp = pmd_offset(pudp, dst_addr);
- 	if (pmd_none(READ_ONCE(*pmdp))) {
- 		ptep = (void *)get_safe_page(GFP_ATOMIC);
--		if (!ptep) {
--			rc = -ENOMEM;
--			goto out;
--		}
-+		if (!ptep)
-+			return -ENOMEM;
- 		pmd_populate_kernel(&init_mm, pmdp, ptep);
- 	}
- 
-@@ -272,8 +261,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
- 
- 	*phys_dst_addr = virt_to_phys((void *)dst);
- 
--out:
--	return rc;
 +	return 0;
- }
- 
- #define dcache_clean_range(start, end)	__flush_dcache_area(start, (end - start))
-@@ -482,7 +470,7 @@ static int copy_page_tables(pgd_t *dst_pgdp, unsigned long start,
-  */
- int swsusp_arch_resume(void)
- {
--	int rc = 0;
++}
++
++/*
++ * Copies length bytes, starting at src_start into an new page,
++ * perform cache maintenance, then maps it at the specified address low
++ * address as executable.
++ *
++ * This is used by hibernate to copy the code it needs to execute when
++ * overwriting the kernel text. This function generates a new set of page
++ * tables, which it loads into ttbr0.
++ *
++ * Length is provided as we probably only want 4K of data, even on a 64K
++ * page system.
++ */
++static int create_safe_exec_page(void *src_start, size_t length,
++				 unsigned long dst_addr,
++				 phys_addr_t *phys_dst_addr)
++{
++	void *page = (void *)get_safe_page(GFP_ATOMIC);
++	pgd_t *trans_pgd;
 +	int rc;
- 	void *zero_page;
- 	size_t exit_size;
- 	pgd_t *tmp_pg_dir;
-@@ -498,12 +486,11 @@ int swsusp_arch_resume(void)
- 	tmp_pg_dir = (pgd_t *)get_safe_page(GFP_ATOMIC);
- 	if (!tmp_pg_dir) {
- 		pr_err("Failed to allocate memory for temporary page tables.\n");
--		rc = -ENOMEM;
--		goto out;
++
++	if (!page)
 +		return -ENOMEM;
- 	}
- 	rc = copy_page_tables(tmp_pg_dir, PAGE_OFFSET, PAGE_END);
- 	if (rc)
--		goto out;
-+		return rc;
- 
- 	/*
- 	 * We need a zero page that is zero before & after resume in order to
-@@ -512,8 +499,7 @@ int swsusp_arch_resume(void)
- 	zero_page = (void *)get_safe_page(GFP_ATOMIC);
- 	if (!zero_page) {
- 		pr_err("Failed to allocate zero page.\n");
--		rc = -ENOMEM;
--		goto out;
++
++	memcpy(page, src_start, length);
++	__flush_icache_range((unsigned long)page, (unsigned long)page + length);
++
++	trans_pgd = (void *)get_safe_page(GFP_ATOMIC);
++	if (!trans_pgd)
 +		return -ENOMEM;
- 	}
- 
- 	/*
-@@ -531,7 +517,7 @@ int swsusp_arch_resume(void)
- 				   &phys_hibernate_exit);
- 	if (rc) {
- 		pr_err("Failed to create safe executable page for hibernate_exit code.\n");
--		goto out;
++
++	rc = trans_pgd_map_page(trans_pgd, page, dst_addr,
++				PAGE_KERNEL_EXEC);
++	if (rc)
 +		return rc;
- 	}
- 
++
  	/*
-@@ -558,8 +544,7 @@ int swsusp_arch_resume(void)
- 		       resume_hdr.reenter_kernel, restore_pblist,
- 		       resume_hdr.__hyp_stub_vectors, virt_to_phys(zero_page));
- 
--out:
--	return rc;
-+	return 0;
+ 	 * Load our new page tables. A strict BBM approach requires that we
+ 	 * ensure that TLBs are free of any entries that may overlap with the
+@@ -462,6 +476,24 @@ static int copy_page_tables(pgd_t *dst_pgdp, unsigned long start,
+ 	return 0;
  }
  
- int hibernate_resume_nonboot_cpu_disable(void)
++int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
++			  unsigned long end)
++{
++	int rc;
++	pgd_t *trans_pgd = (pgd_t *)get_safe_page(GFP_ATOMIC);
++
++	if (!trans_pgd) {
++		pr_err("Failed to allocate memory for temporary page tables.\n");
++		return -ENOMEM;
++	}
++
++	rc = copy_page_tables(trans_pgd, start, end);
++	if (!rc)
++		*dst_pgdp = trans_pgd;
++
++	return rc;
++}
++
+ /*
+  * Setup then Resume from the hibernate image using swsusp_arch_suspend_exit().
+  *
+@@ -483,12 +515,7 @@ int swsusp_arch_resume(void)
+ 	 * Create a second copy of just the linear map, and use this when
+ 	 * restoring.
+ 	 */
+-	tmp_pg_dir = (pgd_t *)get_safe_page(GFP_ATOMIC);
+-	if (!tmp_pg_dir) {
+-		pr_err("Failed to allocate memory for temporary page tables.\n");
+-		return -ENOMEM;
+-	}
+-	rc = copy_page_tables(tmp_pg_dir, PAGE_OFFSET, PAGE_END);
++	rc = trans_pgd_create_copy(&tmp_pg_dir, PAGE_OFFSET, PAGE_END);
+ 	if (rc)
+ 		return rc;
+ 
 -- 
 2.24.0
 
