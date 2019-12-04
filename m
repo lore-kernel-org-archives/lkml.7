@@ -2,113 +2,143 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B88C3F68F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67007C43603
 	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D77302468F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:37:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="awAy7H72"
+	by mail.kernel.org (Postfix) with ESMTP id D7C5D24697
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:39:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727131AbfLDGhV (ORCPT
+        id S1727065AbfLDGjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 01:37:21 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:49060 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725791AbfLDGhV (ORCPT
+        Wed, 4 Dec 2019 01:39:09 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:56764 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbfLDGjI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 01:37:21 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB46YkGL057001;
-        Wed, 4 Dec 2019 06:36:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=yG0uO4UflwgTcea/waIQnEHCSa54PpQUZzE3UTh8gjU=;
- b=awAy7H72frQh/Ubir0MQ7Yg/Djd/bP6Cb2Q6IDZ0aC0a223v4OrGitrQBXKjxQBCxT66
- 7Yik4vWDyAmhq6OTdUz8Oh9ZwH03WuoiQc/GGsZeibbCs8xFFH8DC22+e33YYXUj/O8L
- 7bY/X1QQC4Hrxyva6Y+plLT5dWA/7CHto0Ju3rpsq9s1dsLfOpIuQe02JY98f0HBrm0G
- qXYt7/sR2zK6IPzmLy+7Hiyb0u+ArW7UPoTLz76SijKWdvD1fS8PrZZOkYDtt8WavggA
- 5zR/84qjlzzUFs0B+bgV2hJzbjRIGWBatb3etxzSH0T1IuATsJsGdiNdDFbwatUFT4s5 ww== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2wkh2rc7m6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Dec 2019 06:36:46 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB46TClM062802;
-        Wed, 4 Dec 2019 06:36:46 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2wp17csvwu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Dec 2019 06:36:46 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xB46ahDX004121;
-        Wed, 4 Dec 2019 06:36:44 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 04 Dec 2019 06:36:42 +0000
-Date:   Wed, 4 Dec 2019 09:35:28 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Mao Wenan <maowenan@huawei.com>
-Cc:     eddie.huang@mediatek.com, sean.wang@mediatek.com,
-        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Hulk Robot <hulkci@huawei.com>
-Subject: Re: [PATCH -next] rtc: mt6397: drop free_irq of devm_xx allocated irq
-Message-ID: <20191204063444.GF1765@kadam>
-References: <20191204020209.10363-1-maowenan@huawei.com>
+        Wed, 4 Dec 2019 01:39:08 -0500
+Received: by mail-il1-f197.google.com with SMTP id e5so5011879ile.23
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 22:39:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=6MrFjmAUs8q+JuxhUcHMoFYDZHCeKWA92wbX92h6xAY=;
+        b=dy+ZVLQaFLo5sbz6RBwHrLUpXVdeBHALIwyGeHWCGst08RKGa5dUG6aTgfMwcJFmZk
+         pz62FtzcwYmBg84zWDbiRlphSec3LkJyM9SpcIPxGfYWLvDY4XHjUu53pWystZxRIj1v
+         AUNN+pOho5cOQgCi+Ubf2gcNhk130VfRWz3b+Quc3tIbkiZecSNp36bMBToqEMSXmtFL
+         aYXilqfdqlZ+T/ywuZfosfSZRFCTwfZqWYkp5xYH/5fUxqx+IoEmZMg8oSpyg8bbsY88
+         ys5JxQ5B15M7Pgu7Zgzg2We0a9I5Hwfw4QjeS5JAqI61hrw8TQNu14QnGQfMkBLxYeTJ
+         WUgw==
+X-Gm-Message-State: APjAAAX0oyEu9cwEaVm84zXjGtIrmJ91dGLL5xjM4b+66R+0rQlIXkEF
+        l0hIdgp2lTJs4T6IxXjynmB5SN1O6ampSrQ8NnDGxD3Sx5nk
+X-Google-Smtp-Source: APXvYqxU7F/G4HQpCmgCl6VMhHLxzWV8DaaedviICUwi+ZTtF2Sg3TxrPUxI7MDqH/iC+rVEaoDCsqX6X5w4ukzbgRQUz5P/qLMi
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191204020209.10363-1-maowenan@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9460 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912040046
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9460 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912040047
+X-Received: by 2002:a92:45d2:: with SMTP id z79mr2120571ilj.76.1575441547914;
+ Tue, 03 Dec 2019 22:39:07 -0800 (PST)
+Date:   Tue, 03 Dec 2019 22:39:07 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d3f9030598db1101@google.com>
+Subject: WARNING in mark_buffer_dirty (2)
+From:   syzbot <syzbot+60da3d6a696457b98553@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 10:02:09AM +0800, Mao Wenan wrote:
-> rtc->irq is requested by devm_request_threaded_irq,
-> and request_threaded_irq. IRQs requested with this
-> function will be automatically freed on driver detach.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> ---
->  drivers/rtc/rtc-mt6397.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> index 5249fc99fd5f..d6a10111137a 100644
-> --- a/drivers/rtc/rtc-mt6397.c
-> +++ b/drivers/rtc/rtc-mt6397.c
-> @@ -293,7 +293,6 @@ static int mtk_rtc_probe(struct platform_device *pdev)
->  	return 0;
->  
->  out_free_irq:
-> -	free_irq(rtc->irq, rtc);
->  	return ret;
+Hello,
 
-Please get rid of the error label as well.
+syzbot found the following crash on:
 
-regards,
-dan carpenter
+HEAD commit:    81b6b964 Merge branch 'master' of git://git.kernel.org/pub..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14d35a96e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=333b76551307b2a0
+dashboard link: https://syzkaller.appspot.com/bug?extid=60da3d6a696457b98553
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+60da3d6a696457b98553@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 8537 at fs/buffer.c:1088 mark_buffer_dirty+0x524/0x6c0  
+fs/buffer.c:1088
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 8537 Comm: syz-executor.1 Not tainted 5.4.0-syzkaller #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS  
+rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  panic+0x2e3/0x75c kernel/panic.c:221
+  __warn.cold+0x2f/0x3e kernel/panic.c:582
+  report_bug+0x289/0x300 lib/bug.c:195
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  fixup_bug arch/x86/kernel/traps.c:169 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:mark_buffer_dirty+0x524/0x6c0 fs/buffer.c:1088
+Code: 02 00 0f 85 9e 01 00 00 48 8b 3b be 04 00 00 00 e8 51 e7 fc ff e8 4c  
+d2 a8 ff 5b 41 5c 41 5d 41 5e 41 5f 5d c3 e8 3c d2 a8 ff <0f> 0b e9 2c fb  
+ff ff e8 30 d2 a8 ff 0f 0b e9 53 fb ff ff e8 24 d2
+RSP: 0000:ffff8880656d72f8 EFLAGS: 00010293
+RAX: ffff88806dd68140 RBX: ffff888077cd9738 RCX: ffffffff81cc070e
+RDX: 0000000000000000 RSI: ffffffff81cc0be4 RDI: 0000000000000001
+RBP: ffff8880656d7320 R08: ffff88806dd68140 R09: ffffed100ef9b2e8
+R10: ffffed100ef9b2e7 R11: ffff888077cd973f R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: ffff888070b421f8
+  __ext4_handle_dirty_metadata+0x3f7/0x600 fs/ext4/ext4_jbd2.c:298
+  ext4_free_blocks+0xeab/0x24d0 fs/ext4/mballoc.c:4940
+  ext4_remove_blocks fs/ext4/extents.c:2678 [inline]
+  ext4_ext_rm_leaf fs/ext4/extents.c:2831 [inline]
+  ext4_ext_remove_space+0x2491/0x5650 fs/ext4/extents.c:3076
+  ext4_ext_truncate+0x1b5/0x200 fs/ext4/extents.c:4599
+  ext4_truncate+0xc6e/0x13c0 fs/ext4/inode.c:4511
+  ext4_evict_inode+0x9d4/0x14e0 fs/ext4/inode.c:289
+  evict+0x306/0x680 fs/inode.c:574
+  iput_final fs/inode.c:1563 [inline]
+  iput+0x55d/0x900 fs/inode.c:1589
+  dentry_unlink_inode+0x2d9/0x400 fs/dcache.c:374
+  __dentry_kill+0x38b/0x600 fs/dcache.c:579
+  dentry_kill fs/dcache.c:698 [inline]
+  dput+0x62f/0xe10 fs/dcache.c:859
+  path_put+0x31/0x70 fs/namei.c:482
+  free_fs_struct+0x25/0x70 fs/fs_struct.c:91
+  exit_fs+0xf0/0x130 fs/fs_struct.c:108
+  do_exit+0x8bd/0x2ef0 kernel/exit.c:793
+  do_group_exit+0x135/0x360 kernel/exit.c:895
+  get_signal+0x47c/0x24f0 kernel/signal.c:2734
+  do_signal+0x87/0x1700 arch/x86/kernel/signal.c:815
+  exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:160
+  prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+  do_syscall_64+0x676/0x790 arch/x86/entry/common.c:304
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45a759
+Code: Bad RIP value.
+RSP: 002b:00007faf7cbeacf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: fffffffffffffe00 RBX: 000000000071bf08 RCX: 000000000045a759
+RDX: 0000000000000000 RSI: 0000000000000080 RDI: 000000000071bf08
+RBP: 000000000071bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000071bf0c
+R13: 00007ffc79ee6e9f R14: 00007faf7cbcb000 R15: 0000000000000003
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
