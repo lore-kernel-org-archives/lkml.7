@@ -2,94 +2,127 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDFC8C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B60C2BBE2
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8D1620675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89C542086D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:56:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="P4H8jDxr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727621AbfLDKzW (ORCPT
+        id S1727654AbfLDK4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 05:55:22 -0500
-Received: from mx2.suse.de ([195.135.220.15]:52978 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727445AbfLDKzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 05:55:22 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 50AA6B280;
-        Wed,  4 Dec 2019 10:55:20 +0000 (UTC)
-Subject: Re: [PATCH] bcache: add REQ_FUA to avoid data lost in writeback mode
-From:   Coly Li <colyli@suse.de>
-To:     Eric Wheeler <bcache@lists.ewheeler.net>
-Cc:     kungf <wings.wyang@gmail.com>, kent.overstreet@gmail.com,
-        linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191202102409.3980-1-wings.wyang@gmail.com>
- <785fe04f-f841-3083-66db-53fab7bc0577@suse.de>
- <alpine.LRH.2.11.1912021932570.11561@mx.ewheeler.net>
- <1a728329-1b12-0ebf-21a4-058ef6f65ead@suse.de>
-Organization: SUSE Labs
-Message-ID: <2d085823-57ac-dba9-6d2e-1cf01c949875@suse.de>
-Date:   Wed, 4 Dec 2019 18:55:08 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.2.2
+        Wed, 4 Dec 2019 05:56:05 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14728 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727446AbfLDK4F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 05:56:05 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5de790b50000>; Wed, 04 Dec 2019 02:55:49 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 04 Dec 2019 02:56:04 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 04 Dec 2019 02:56:04 -0800
+Received: from [10.24.37.103] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 4 Dec
+ 2019 10:56:00 +0000
+Subject: Re: [TEGRA194_CPUFREQ Patch 2/3] cpufreq: Add Tegra194 cpufreq driver
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+CC:     <rjw@rjwysocki.net>, <catalin.marinas@arm.com>, <will@kernel.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <talho@nvidia.com>, <linux-pm@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <bbasu@nvidia.com>,
+        <mperttunen@nvidia.com>
+References: <1575394348-17649-1-git-send-email-sumitg@nvidia.com>
+ <1575394348-17649-2-git-send-email-sumitg@nvidia.com>
+ <20191204054043.o4ff7pnqec3fwdgu@vireshk-i7>
+From:   sumitg <sumitg@nvidia.com>
+Message-ID: <7347caa6-43a3-f761-de83-481b45f7b22a@nvidia.com>
+Date:   Wed, 4 Dec 2019 16:25:57 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <1a728329-1b12-0ebf-21a4-058ef6f65ead@suse.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191204054043.o4ff7pnqec3fwdgu@vireshk-i7>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1575456949; bh=ro08D4nTCDKA4g/LLllSz/rbWxxm0KL/lEFg2RZ47Wg=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=P4H8jDxrbYNjwagumhpUnHqnetpmMZzW87JXeCX1JSxVhjfywTV1YyPYsSFU4yJV5
+         98IVAqHE8ZEO4q26s7lq/9ZFuZi2cgn7mQNFNRcL3oJYTrYYGmPV9OsxjpvgcOGJEH
+         BACSgNHLeZmwUmxT3ZEm3ZNxvDPnJgEPxItaiwELRwh9fah9jVpBwyo50jyP/rEjWj
+         yNj8tu4mSPYFpY6pOlxMIXcNPQIjADM3ba4CAozwjR+xqyI5AC0eNPFlUwnflDgfCg
+         CpwT45CN/exfjs9u0qLC+GtyrqbO/OJg+EuisdZ4a9x3OTEY0dJ+nqaMkZknpFY+xR
+         I2TyXKPywKNoQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/12/3 10:21 下午, Coly Li wrote:
-> On 2019/12/3 3:34 上午, Eric Wheeler wrote:
->> On Mon, 2 Dec 2019, Coly Li wrote:
->>> On 2019/12/2 6:24 下午, kungf wrote:
->>>> data may lost when in the follow scene of writeback mode:
->>>> 1. client write data1 to bcache
->>>> 2. client fdatasync
->>>> 3. bcache flush cache set and backing device
->>>> if now data1 was not writed back to backing, it was only guaranteed safe in cache.
->>>> 4.then cache writeback data1 to backing with only REQ_OP_WRITE
->>>> So data1 was not guaranteed in non-volatile storage,  it may lost if  power interruption 
->>>>
->>>
->>> Hi,
->>>
->>> Do you encounter such problem in real work load ? With bcache journal, I
->>> don't see the possibility of data lost with your description.
->>>
->>> Correct me if I am wrong.
->>>
->>> Coly Li
+Hi Viresh,
+
+On 04/12/19 11:10 AM, Viresh Kumar wrote:
+> Hi Sumit,
+>
+> On 03-12-19, 23:02, Sumit Gupta wrote:
+>> Add support for CPU frequency scaling on Tegra194. The frequency
+>> of each core can be adjusted by writing a clock divisor value to
+>> an MSR on the core. The range of valid divisors is queried from
+>> the BPMP.
 >>
->> If this does become necessary, then we should have a sysfs or superblock 
->> flag to disable FUA for those with RAID BBUs.
-> 
-> Hi Eric,
-> 
-> I doubt it is necessary to add FUA tag for all writeback bios, it is
-> unnecessary. If power failure happens after dirty data written to
-> backing device and the bkey turns into clean, a following read request
-> will go to cache device because the LBA can be indexed no matter it is
-> dirty or clean. Unless the bkey is invalidated from the B+tree, read
-> will always go to cache device firstly in writeback mode. If a power
-> failure happens before the cached bkey turns from dirty to clean, just
-> an extra writeback bio flushed from cache device to backing device with
-> identical data. Comparing the FUA tag for all writeback bios (it will be
-> really slow), the extra writeback IOs after a power failure is more
-> acceptable to me.
+>> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
+>> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+>> ---
+>>   drivers/cpufreq/Kconfig.arm        |   6 +
+>>   drivers/cpufreq/Makefile           |   1 +
+>>   drivers/cpufreq/tegra194-cpufreq.c | 423 +++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 430 insertions(+)
+>>   create mode 100644 drivers/cpufreq/tegra194-cpufreq.c
+> Overall these are the things that you are doing here in the driver:
+>
+> - open coded clk_{get|set}_rate(), why can't you implement a clock
+>    driver for the CPU and use the clk framework? You may not need the
+>    (hacky) work-queue usage then probably.
 
-Hi Eric,
+In T194, CCPLEX doesn't have access to set clocks and the
 
-I come to realize what the problem is. Yes there is potential
-possibility.With FUA the writeback performance will be very low, it is
-quite tricky....
+clk_{get|set}_rate() functions set clocks by hook to BPMP R5.
 
-Coly Li
+CPU freq can be directly set by CCPLEX using MSR(NVFREQ_REQ_EL1).
+
+As DVFS run's on BPMP, another MSR (NVFREQ_FEEDBACK_EL1) is
+
+used to read the counters and calculate "actual" cpu freq at CCPLEX.
+
+So, "cpuinfo_cur_freq" node gives the actual cpu frequency and not
+
+given by node "scaling_cur_freq".
+
+>
+> - populating cpufreq table, you can probably add OPPs instead using
+>    the same mechanism
+
+We are reading available frequencies from BPMP to populate
+
+cpufreq table and not using static opp table.
+
+>
+> - And then you can reuse the cpufreq-dt driver for your platform as
+>    well, as is the case for few other tegra platforms.
+>
