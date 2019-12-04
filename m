@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8695CC2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C58C2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53BD62084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05A3420675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:15:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483340;
-	bh=/JEUComnzssphgvapKlCGUknhFpfg98LRpewh02rEns=;
+	s=default; t=1575483346;
+	bh=Nf0DVFVuptbAyQMUFY7AZ2jp/QtCcsFowue809GM62E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vTd4DX81mlqPZlwJ/NnNU5heZNqlCx6/3OjyGTgWiYbgzq59+5x75AeHqbWATyZIy
-	 2W6G/AkTp2XwqasiFv6BusA8ZsIKILB+GbALUQVVl5AeGxi6ESPDtgcMwnycEOP5LP
-	 mzhQO68PIsAc6hbwutqDadfVpKCVRHFpbaYf9rOc=
+	b=G86Jj+BJpaqClUIeAV8cvGpzJpS5F8x9yj/HnwibBMvKUBQBEqqYH4+S6JyABNUR+
+	 7JHES32QEU4Izr8NFqrs7HnnZ/Too5JoT5mwhUDIeYIq/8+XRzOYmFpiVsBv9pXe7M
+	 B68Fry5Mvz1Zo5hdDG/BE1u7bu4j/rAnTtyyGvSo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731426AbfLDSPj (ORCPT
+        id S1731846AbfLDSN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:15:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43558 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:13:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731885AbfLDSOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:14:14 -0500
+        id S1729497AbfLDSNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:13:52 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23B982084B;
-        Wed,  4 Dec 2019 18:14:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D4E820674;
+        Wed,  4 Dec 2019 18:13:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483253;
-        bh=/JEUComnzssphgvapKlCGUknhFpfg98LRpewh02rEns=;
+        s=default; t=1575483231;
+        bh=Nf0DVFVuptbAyQMUFY7AZ2jp/QtCcsFowue809GM62E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LY4/AtuTItifIR4Xsv8pZHlrwTYWtnR32B0NXDYKMHVq6vUBL2wTURYwZ9PZtHT1u
-         9rKPs70CD/tSvOXmlcFTidm98+IfbXiPcvvS23cbtzs3dB6XJ2cgbqOE4FPqHZP6ky
-         KPbHreYtut3PN02Lllu54ohmyHay3gY1m+ZTshmY=
+        b=gpScb04dAu9gjAUbmRltamSV679CqOlSsDFmWxJHUS2WXG4pF0J5bJlpLE/u/z9Da
+         LPNGmyXPKmjQfm6CS8snct+enLrJWcMuNvw0wZ8cInrJFzW2pz/0aKhz3M4g+TBDC1
+         32kTEBsZH9ZJkSxXTDD16BBYfnm1+gDFIazX0t0Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Menglong Dong <dong.menglong@zte.com.cn>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 114/125] macvlan: schedule bc_work even if error
-Date:   Wed,  4 Dec 2019 18:56:59 +0100
-Message-Id: <20191204175326.065506336@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.9 106/125] clk: at91: fix update bit maps on CFG_MOR write
+Date:   Wed,  4 Dec 2019 18:56:51 +0100
+Message-Id: <20191204175325.558671905@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -59,52 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Menglong Dong <dong.menglong@zte.com.cn>
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-[ Upstream commit 1d7ea55668878bb350979c377fc72509dd6f5b21 ]
+commit 263eaf8f172d9f44e15d6aca85fe40ec18d2c477 upstream.
 
-While enqueueing a broadcast skb to port->bc_queue, schedule_work()
-is called to add port->bc_work, which processes the skbs in
-bc_queue, to "events" work queue. If port->bc_queue is full, the
-skb will be discarded and schedule_work(&port->bc_work) won't be
-called. However, if port->bc_queue is full and port->bc_work is not
-running or pending, port->bc_queue will keep full and schedule_work()
-won't be called any more, and all broadcast skbs to macvlan will be
-discarded. This case can happen:
+The regmap update bits call was not selecting the proper mask, considering
+the bits which was updating.
+Update the mask from call to also include OSCBYPASS.
+Removed MOSCEN which was not updated.
 
-macvlan_process_broadcast() is the pending function of port->bc_work,
-it moves all the skbs in port->bc_queue to the queue "list", and
-processes the skbs in "list". During this, new skbs will keep being
-added to port->bc_queue in macvlan_broadcast_enqueue(), and
-port->bc_queue may already full when macvlan_process_broadcast()
-return. This may happen, especially when there are a lot of real-time
-threads and the process is preempted.
-
-Fix this by calling schedule_work(&port->bc_work) even if
-port->bc_work is full in macvlan_broadcast_enqueue().
-
-Fixes: 412ca1550cbe ("macvlan: Move broadcasts into a work queue")
-Signed-off-by: Menglong Dong <dong.menglong@zte.com.cn>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 1bdf02326b71 ("clk: at91: make use of syscon/regmap internally")
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Link: https://lkml.kernel.org/r/1568042692-11784-1-git-send-email-eugen.hristev@microchip.com
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Reviewed-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/macvlan.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/macvlan.c
-+++ b/drivers/net/macvlan.c
-@@ -334,10 +334,11 @@ static void macvlan_broadcast_enqueue(st
- 	}
- 	spin_unlock(&port->bc_queue.lock);
+---
+ drivers/clk/at91/clk-main.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/clk/at91/clk-main.c
++++ b/drivers/clk/at91/clk-main.c
+@@ -162,7 +162,7 @@ at91_clk_register_main_osc(struct regmap
+ 	if (bypass)
+ 		regmap_update_bits(regmap,
+ 				   AT91_CKGR_MOR, MOR_KEY_MASK |
+-				   AT91_PMC_MOSCEN,
++				   AT91_PMC_OSCBYPASS,
+ 				   AT91_PMC_OSCBYPASS | AT91_PMC_KEY);
  
-+	schedule_work(&port->bc_work);
-+
- 	if (err)
- 		goto free_nskb;
- 
--	schedule_work(&port->bc_work);
- 	return;
- 
- free_nskb:
+ 	hw = &osc->hw;
 
 
