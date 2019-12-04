@@ -2,79 +2,166 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E97C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0F1C2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92AF02077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:37:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VSpWWV6N"
+	by mail.kernel.org (Postfix) with ESMTP id 6B65E20803
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:38:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbfLDMhK (ORCPT
+        id S1727774AbfLDMiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 07:37:10 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:53138 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbfLDMhK (ORCPT
+        Wed, 4 Dec 2019 07:38:01 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:54886 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbfLDMiA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 07:37:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ZzCSk1fVGYsKa4mpW0zBDhBYag2lMaeRmgfUQsjzofc=; b=VSpWWV6N9rXAO9kLKhiJRE3F5
-        iNh1HYE80pUy8AL8f7MyKpGWxahVW3jZovgSnjqrsDu5CTJvnzkfTUzcapUndYxtdLHqHL0pektto
-        Hg71pS/EaXlZnEXOoTPG/FJkGiEkp8o+wHDAMoHzPIz/avdrp/kqEbAyWcBLB3gNZiR0K/hF7g1JW
-        EqbSuLG4eKQwqvd9dUsk8QdoWfZKtIKyGYr1lIrbaHalcQPHyezC7jqTN0zY/AFXKjIuF714XZVr6
-        +0Bopg2tiJnCr7YGp9F9OWXAu85mTPRcNXdxGU4zqBzWcwZBKANgXPsV8HYL9AnYv1diEDW+MrEAE
-        KmiZ4bCAg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1icTtr-00087U-6I; Wed, 04 Dec 2019 12:36:59 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3961D3011E0;
-        Wed,  4 Dec 2019 13:35:40 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D4BC82024721C; Wed,  4 Dec 2019 13:36:56 +0100 (CET)
-Date:   Wed, 4 Dec 2019 13:36:56 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     mingo@redhat.com, acme@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, linux-kernel@vger.kernel.org, eranian@google.com,
-        alexey.budankov@linux.intel.com, vitaly.slobodskoy@intel.com,
-        ak@linux.intel.com
-Subject: Re: [RFC PATCH 2/8] perf: Helpers for alloc/init/fini PMU specific
- data
-Message-ID: <20191204123656.GU2844@hirez.programming.kicks-ass.net>
-References: <1574954071-6321-1-git-send-email-kan.liang@linux.intel.com>
- <1574954071-6321-2-git-send-email-kan.liang@linux.intel.com>
- <20191202131646.GD2827@hirez.programming.kicks-ass.net>
- <2d036aa5-542a-8c01-762c-3b68136887f5@linux.intel.com>
+        Wed, 4 Dec 2019 07:38:00 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 39BFF1C25EC; Wed,  4 Dec 2019 13:37:58 +0100 (CET)
+Date:   Wed, 4 Dec 2019 13:37:57 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Jean-Jacques Hiblot <jjhiblot@ti.com>
+Cc:     jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tomi.valkeinen@ti.com
+Subject: Re: [PATCH v7 2/2] leds: Add control of the voltage/current
+ regulator to the LED core
+Message-ID: <20191125163738.GC3816@amd>
+References: <20191021174751.4421-1-jjhiblot@ti.com>
+ <20191021174751.4421-3-jjhiblot@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="CdrF4e02JqNVZeln"
 Content-Disposition: inline
-In-Reply-To: <2d036aa5-542a-8c01-762c-3b68136887f5@linux.intel.com>
+In-Reply-To: <20191021174751.4421-3-jjhiblot@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 03:35:00PM -0500, Liang, Kan wrote:
 
-> Could you please give me an example?
+--CdrF4e02JqNVZeln
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-There's a ton of refcounting in perf, none of it follows this pattern.
+Hi!
 
-> I think we do need something to protect the refcount. Are you suggesting
-> atomic_*?
+> A LED is usually powered by a voltage/current regulator. Let the LED core
+> know about it. This allows the LED core to turn on or off the power supply
+> as needed.
+>=20
+> Because turning ON/OFF a regulator might block, it is not done
+> synchronously but done in a workqueue. Turning ON the regulator is
+> always
 
-refcount_t comes to mind.
+How will this interact with LEDs that can be used from atomic context?
+
+> +static ssize_t regulator_auto_off_store(struct device *dev,
+> +		struct device_attribute *attr, const char *buf, size_t size)
+> +{
+> +	struct led_classdev *led_cdev =3D dev_get_drvdata(dev);
+> +	ssize_t ret =3D size;
+> +	bool auto_off;
+> +
+> +	if (strncmp(buf, "enable\n", size) =3D=3D 0)
+> +		auto_off =3D true;
+> +	else if (strncmp(buf, "disable\n", size) =3D=3D 0)
+> +		auto_off =3D false;
+> +	else
+> +		return -EINVAL;
+
+Sounds like device power management to me. Is it compatible with that?
+
+> @@ -135,6 +203,8 @@ static void set_brightness_delayed(struct work_struct=
+ *ws)
+>  	    (led_cdev->flags & LED_HW_PLUGGABLE)))
+>  		dev_err(led_cdev->dev,
+>  			"Setting an LED's brightness failed (%d)\n", ret);
+> +
+> +	 led_handle_regulator(led_cdev);
+>  }
+>
+
+You only modify set_brigthness_delays, so this will not work at all
+for non-blocking LEDs, right?
+
+>  static void led_set_software_blink(struct led_classdev *led_cdev,
+> @@ -189,6 +259,7 @@ static void led_blink_setup(struct led_classdev *led_=
+cdev,
+>  void led_init_core(struct led_classdev *led_cdev)
+>  {
+>  	INIT_WORK(&led_cdev->set_brightness_work, set_brightness_delayed);
+> +	INIT_DELAYED_WORK(&led_cdev->reg_off_work, turn_off_regulator_delayed);
+> =20
+
+Could this re-use the workqueue? Many systems will not need
+regulators, so this is overhead...
+
+> +			/*
+> +			 * the regulator must  be turned off. This cannot be
+
+Use "The", and fix double spaces between must and be.
+
+> +		} else if (regulator_on && old =3D=3D REG_R_OFF_U_OFF) {
+> +			/*
+> +			 * the regulator must be enabled. This cannot be here
+
+"The"
+
+> +		/*
+> +		 * small optimization. Cancel the work that had been started
+
+"Small."
+
+> +#include <linux/regulator/consumer.h>
+> +
+> +/*
+> + * The regulator state tracks 2 boolean variables:
+> + * - the state of regulator (or more precisely the state required by
+> + *   led core layer, as many users can interact with the same regulator).
+> + *   It is tracked by bit 0.
+> + * - the state last asked-for by the LED user. It is tracked by bit 1.
+> + */
+> +#define REG_R_ON BIT(0)
+> +#define REG_U_ON BIT(1)
+> +
+> +enum {	REG_R_OFF_U_OFF =3D 0,
+> +	REG_R_ON_U_OFF =3D REG_R_ON,
+> +	REG_R_OFF_U_ON =3D REG_U_ON,
+> +	REG_R_ON_U_ON =3D REG_R_ON | REG_U_ON
+> +};
+
+That's quite weird use of enum.
+
+> +++ b/include/linux/leds.h
+> @@ -149,6 +149,15 @@ struct led_classdev {
+> =20
+>  	/* Ensures consistent access to the LED Flash Class device */
+>  	struct mutex		led_access;
+> +
+> +	/* regulator */
+
+"Regulator".
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--CdrF4e02JqNVZeln
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXeeopQAKCRAw5/Bqldv6
+8uypAJ9qIc1TE8M1YLh8IbRiajmjRpCowACcDMrhUrZ+kLOC4MH0sIilzbC58Bo=
+=AhQV
+-----END PGP SIGNATURE-----
+
+--CdrF4e02JqNVZeln--
