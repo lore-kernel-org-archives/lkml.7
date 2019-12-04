@@ -2,51 +2,55 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DBD5C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FEDC2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E385F206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7A63206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:15:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483325;
-	bh=Fqy2V9pstkUaLR5WHnRKMDI0Hyl7tpgth3ERKdbjpQw=;
+	s=default; t=1575483327;
+	bh=ZK8IW9ixll6gcK15zLwQ+Fsl2kqOkRxWzoox6wnNZ+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AC1bmjQRBYHLZ96wciwsThLwvyPf6quQMW0njSQwaQgWdfTPLO1QPATtyWDlLQHlh
-	 TupKvY8dr77Aw4/pn8oBSRvtGwF9PI4LnGi8coUmOI5hpYvskS0GYG0pnqwc0nkvLh
-	 Akg+EEHV3sFoUJh9e0VMdZNCDm/ZzU0ZfwfiNQp0=
+	b=c2exPYkVMyvBMrHfgw1IivvLs2XqeQ8BOwRH3V6ORZvt4hoeV0zgjhIKntXpbpb+C
+	 qkNuHOhvsYXQvXKe1J7bt0FjXRnVOicgW7bsDd1dAyxmcM3IeOanpGIICFtbO6IXDf
+	 Bp8oSXDYNZzhoARQYOG82yXtW7JWM/dWU7MncPOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731501AbfLDSO2 (ORCPT
+        id S1731891AbfLDSOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:14:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43738 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:14:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731902AbfLDSOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:14:23 -0500
+        id S1731591AbfLDSOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:14:07 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE0DA2084B;
-        Wed,  4 Dec 2019 18:14:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBE9B20675;
+        Wed,  4 Dec 2019 18:14:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483263;
-        bh=Fqy2V9pstkUaLR5WHnRKMDI0Hyl7tpgth3ERKdbjpQw=;
+        s=default; t=1575483246;
+        bh=ZK8IW9ixll6gcK15zLwQ+Fsl2kqOkRxWzoox6wnNZ+g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xByFWaflxGdA1VQQ1e/7nmP/TrgxYXPCb84kyEKj3QOVz6zYQLRW6kwJBRSMeg3qP
-         s2ddEeYwwuWKK47IaYQLjbMlqv+0Rn9ao4Jg7hw/uS6P/TxrrDdNEZAr1oInGpewjN
-         9AUKBr4gWIsXfXtOq4ecUVEMJ6cb0a9mJhcKu5tg=
+        b=MEfKwVJL6dkcZgOsJjbrGzV68OWLkfugFaD+4JinIlpOE/ftvlMgCZUOA7hgZgPT3
+         VtbXR3RKr7t8Je9Cp80owV7Fqa9dAEHLMxs5IhCEbyqC71L+pA+yO44HXR7/N3CE6w
+         C0B+mv9540Rh3ronXusUpxc0+f28iHun135ldYtM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 118/125] openvswitch: remove another BUG_ON()
-Date:   Wed,  4 Dec 2019 18:57:03 +0100
-Message-Id: <20191204175326.412838887@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@gmx.us>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 085/125] drivers/base/platform.c: kmemleak ignore a known leak
+Date:   Wed,  4 Dec 2019 18:56:30 +0100
+Message-Id: <20191204175324.230810674@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -59,49 +63,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Qian Cai <cai@gmx.us>
 
-[ Upstream commit 8a574f86652a4540a2433946ba826ccb87f398cc ]
+[ Upstream commit 967d3010df8b6f6f9aa95c198edc5fe3646ebf36 ]
 
-If we can't build the flow del notification, we can simply delete
-the flow, no need to crash the kernel. Still keep a WARN_ON to
-preserve debuggability.
+unreferenced object 0xffff808ec6dc5a80 (size 128):
+  comm "swapper/0", pid 1, jiffies 4294938063 (age 2560.530s)
+  hex dump (first 32 bytes):
+    ff ff ff ff 00 00 00 00 6b 6b 6b 6b 6b 6b 6b 6b  ........kkkkkkkk
+    6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
+  backtrace:
+    [<00000000476dcf8c>] kmem_cache_alloc_trace+0x430/0x500
+    [<000000004f708d37>] platform_device_register_full+0xbc/0x1e8
+    [<000000006c2a7ec7>] acpi_create_platform_device+0x370/0x450
+    [<00000000ef135642>] acpi_default_enumeration+0x34/0x78
+    [<000000003bd9a052>] acpi_bus_attach+0x2dc/0x3e0
+    [<000000003cf4f7f2>] acpi_bus_attach+0x108/0x3e0
+    [<000000003cf4f7f2>] acpi_bus_attach+0x108/0x3e0
+    [<000000002968643e>] acpi_bus_scan+0xb0/0x110
+    [<0000000010dd0bd7>] acpi_scan_init+0x1a8/0x410
+    [<00000000965b3c5a>] acpi_init+0x408/0x49c
+    [<00000000ed4b9fe2>] do_one_initcall+0x178/0x7f4
+    [<00000000a5ac5a74>] kernel_init_freeable+0x9d4/0xa9c
+    [<0000000070ea6c15>] kernel_init+0x18/0x138
+    [<00000000fb8fff06>] ret_from_fork+0x10/0x1c
+    [<0000000041273a0d>] 0xffffffffffffffff
 
-Note: the BUG_ON() predates the Fixes tag, but this change
-can be applied only after the mentioned commit.
+Then, faddr2line pointed out this line,
 
-v1 -> v2:
- - do not leak an skb on error
+/*
+ * This memory isn't freed when the device is put,
+ * I don't have a nice idea for that though.  Conceptually
+ * dma_mask in struct device should not be a pointer.
+ * See http://thread.gmane.org/gmane.linux.kernel.pci/9081
+ */
+pdev->dev.dma_mask =
+	kmalloc(sizeof(*pdev->dev.dma_mask), GFP_KERNEL);
 
-Fixes: aed067783e50 ("openvswitch: Minimize ovs_flow_cmd_del critical section.")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Since this leak has existed for more than 8 years and it does not
+reference other parts of the memory, let kmemleak ignore it, so users
+don't need to waste time reporting this in the future.
+
+Link: http://lkml.kernel.org/r/20181206160751.36211-1-cai@gmx.us
+Signed-off-by: Qian Cai <cai@gmx.us>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/openvswitch/datapath.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/base/platform.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/net/openvswitch/datapath.c
-+++ b/net/openvswitch/datapath.c
-@@ -1350,7 +1350,10 @@ static int ovs_flow_cmd_del(struct sk_bu
- 						     OVS_FLOW_CMD_DEL,
- 						     ufid_flags);
- 			rcu_read_unlock();
--			BUG_ON(err < 0);
-+			if (WARN_ON_ONCE(err < 0)) {
-+				kfree_skb(reply);
-+				goto out_free;
-+			}
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 14ff40371f013..f90b1b9bbad0d 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -27,6 +27,7 @@
+ #include <linux/clk/clk-conf.h>
+ #include <linux/limits.h>
+ #include <linux/property.h>
++#include <linux/kmemleak.h>
  
- 			ovs_notify(&dp_flow_genl_family, reply, info);
- 		} else {
-@@ -1358,6 +1361,7 @@ static int ovs_flow_cmd_del(struct sk_bu
- 		}
+ #include "base.h"
+ #include "power/power.h"
+@@ -516,6 +517,8 @@ struct platform_device *platform_device_register_full(
+ 		if (!pdev->dev.dma_mask)
+ 			goto err;
+ 
++		kmemleak_ignore(pdev->dev.dma_mask);
++
+ 		*pdev->dev.dma_mask = pdevinfo->dma_mask;
+ 		pdev->dev.coherent_dma_mask = pdevinfo->dma_mask;
  	}
- 
-+out_free:
- 	ovs_flow_free(flow, true);
- 	return 0;
- unlock:
+-- 
+2.20.1
+
 
 
