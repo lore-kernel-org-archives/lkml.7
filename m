@@ -2,127 +2,83 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C43C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8165AC2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 310A32077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:23:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CrD+oDZB"
+	by mail.kernel.org (Postfix) with ESMTP id 5AE0F2081B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:25:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbfLDRXR (ORCPT
+        id S1728266AbfLDRZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:23:17 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45479 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727033AbfLDRXR (ORCPT
+        Wed, 4 Dec 2019 12:25:01 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:51770 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727961AbfLDRZB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:23:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575480195;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=/ijlA2Y8tQ65LgRVW6J4BfY/7PWvTIeCK61lJ/PdESM=;
-        b=CrD+oDZBaxW4pXqFvJjLEUt6gowQGtqFYv1d7PQFfDobn18wdpEF2efDhQSzClqAqX1Qr9
-        QIQnZ/dKcJyXcYix5uEYHkhG+sfkwhsMFTD1uA74ypRNzgxaeIpptmU8SCv9g3QopQR+gO
-        Ust9fEdmCRy7jWF14zWNRJQ2onCUxKc=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-281-i0WXJIHWMYKmw-OksvUNPQ-1; Wed, 04 Dec 2019 12:23:14 -0500
-Received: by mail-qk1-f197.google.com with SMTP id a186so177177qkb.18
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 09:23:14 -0800 (PST)
+        Wed, 4 Dec 2019 12:25:01 -0500
+Received: by mail-il1-f198.google.com with SMTP id x2so234246ilk.18
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 09:25:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WImDtnT/OC0iIgg7U312qsc7ZNGeTEU307A4KTpQNWQ=;
-        b=kMLj/WuP15lJHX60zVipWRYLPTs6QMN9RspnykHVgn3RwdwiGCJ07bJxHey0uYsEkJ
-         mN9ETegckwvdq+HZkmX5skW85db66UiRUSamckH4wL/2NfxeRq/86jmRO5Ta2LESt255
-         OKeDOY6bWIrnnGNgzxqjiMXEVBk1mcyK7asXx/mI18rGPaRv9uB/69MtoxHw0ytkdkID
-         jWjQVXvhHKb5kHK6c9AW3pAoO9AwWt8rs6a1dJOeYiUCPSSA+vKpOFl32mlzxznj8YJN
-         6ZFUP2SJZrnZ8iUgXriuES2+FV/JdTY22QbdMVwDNGxpHLC/9eMEB0kYNneo/3Hr/ZOV
-         DxCw==
-X-Gm-Message-State: APjAAAWySucqpY3i/gqplXrLtRlB40DsLR1jBmXA4NiCKxqj53c1xrVG
-        1tLhWz9V1VZS9+f5C5dCJLYWoJEQ4Dzn/aTvSLybHzs3SkrYfUQUGnLu+T8TGGxehUEZQDp2iPS
-        IE1C672BpA1UuLj/8LMSNn/9+
-X-Received: by 2002:ac8:5448:: with SMTP id d8mr3793159qtq.205.1575480194386;
-        Wed, 04 Dec 2019 09:23:14 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwjZllkTJMVO8gUft4TF37TJtGxExThuw0OqUtgK8eLV5ii8XWfVEyUSs8xU1asSX8TohyEuQ==
-X-Received: by 2002:ac8:5448:: with SMTP id d8mr3793143qtq.205.1575480194184;
-        Wed, 04 Dec 2019 09:23:14 -0800 (PST)
-Received: from trix.remote.csb ([75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id d13sm3964871qkk.136.2019.12.04.09.23.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 09:23:13 -0800 (PST)
-From:   trix@redhat.com
-To:     bigeasy@linutronix.de, tglx@linutronix.de, rostedt@goodmis.org,
-        linux-kernel@vger.kernel.org
-Cc:     Tom Rix <trix@redhat.com>
-Subject: [PATCH RT 5.2] signal: remove noop call to __sigqueue_free
-Date:   Wed,  4 Dec 2019 09:22:42 -0800
-Message-Id: <20191204172242.21058-1-trix@redhat.com>
-X-Mailer: git-send-email 2.18.1
-X-MC-Unique: i0WXJIHWMYKmw-OksvUNPQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=7EBHqRzY74ZGF4tFe8/2rCfanQYl+zaLWG2jjw2sqJU=;
+        b=G/oPQdzY757+LZ4Xpn7DhN1rXuodH6vXsqFWaUD8yluXgOgpAHkX4lWEPDxDpxIn0B
+         ItdBsObq/w0n5u095gK2TVydoewuI1/F84Dt2LHfsUBgnwQlE39x4kEdZTTnl83ug6jC
+         59NwtX5d9I0blKYk0VNt/SD8SLVE/3aVrxp+qQcsoXZI2U+cCC5hwRL3+cETL5Q6j9M+
+         w2CuhI5moSfEvSrlTiGbr+GCWHoAAMjBA5ldtOq6wDoRXfMXFTWhWnMj9HF2mzZmI8ei
+         t7TuuqkYQ7id5PU2pctP0Hfaic5QxH++Ay0by67eRNYV7JNAJbQMNS3naCG6F7wv6TkG
+         Xo6w==
+X-Gm-Message-State: APjAAAVOjOOfeZnXcv19LhOQXaJGgVWCIJfzwkeS7nyxZrQetMczVnkB
+        54uhChsTiRzm6n5YtUH10iAq7jM6PYF9SiWKuL8Wim/lsKAM
+X-Google-Smtp-Source: APXvYqwbE8j0A1R4STA165xAE2o2CZhzCyPUxcpg0HmtPL7kxTLcb8QkM0tXoiQbRnp/I+pW3xAbBYhdXQBcSkEqCJmXhPMwQnNb
+MIME-Version: 1.0
+X-Received: by 2002:a05:6602:187:: with SMTP id m7mr3058050ioo.16.1575480300753;
+ Wed, 04 Dec 2019 09:25:00 -0800 (PST)
+Date:   Wed, 04 Dec 2019 09:25:00 -0800
+In-Reply-To: <000000000000314c120598dc69bd@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ad595a0598e417a6@google.com>
+Subject: Re: BUG: unable to handle kernel paging request in pcpu_alloc
+From:   syzbot <syzbot+82e323920b78d54aaed5@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, andriin@fb.com, aryabinin@virtuozzo.com,
+        ast@kernel.org, bpf@vger.kernel.org, christophe.leroy@c-s.fr,
+        daniel@iogearbox.net, dja@axtens.net, dvyukov@google.com,
+        glider@google.com, gor@linux.ibm.com, kafai@fb.com,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
+        torvalds@linux-foundation.org, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+syzbot has bisected this bug to:
 
-By inspection, this call does not do anything.
+commit 0609ae011deb41c9629b7f5fd626dfa1ac9d16b0
+Author: Daniel Axtens <dja@axtens.net>
+Date:   Sun Dec 1 01:55:00 2019 +0000
 
-static void __sigqueue_free(struct sigqueue *q)
-{
-=09if (q->flags & SIGQUEUE_PREALLOC)  <-- redundant flag check --+
-=09=09return;                                               |
-=09atomic_dec(&q->user->sigpending);                             |
-=09free_uid(q->user);                                            |
-=09kmem_cache_free(sigqueue_cachep, q);                          |
-}                                                                     |
-                                                                      |
-static void sigqueue_free_current(struct sigqueue *q)                 |
-{                                                                     |
-=09struct user_struct *up;                                       |
-                                                                      |
-=09if (q->flags & SIGQUEUE_PREALLOC)  <-- first flag check ------+
-=09=09return;                                               |
-                                                                      |
-=09up =3D q->user;                                                 |
-=09if (rt_prio(current->normal_prio) && !put_task_cache(current, |
-=09=09atomic_dec(&up->sigpending);                          |
-=09=09free_uid(up);                                         |
-=09} else                                                        |
-=09=09__sigqueue_free(q);  <--- this call will noop --------+
-}
+     x86/kasan: support KASAN_VMALLOC
 
-Signed-off-by: Tom Rix <trix@redhat.com>
----
- kernel/signal.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=166cf97ee00000
+start commit:   1ab75b2e Add linux-next specific files for 20191203
+git tree:       linux-next
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=156cf97ee00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=116cf97ee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=de1505c727f0ec20
+dashboard link: https://syzkaller.appspot.com/bug?extid=82e323920b78d54aaed5
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=156ef061e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11641edae00000
 
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 7bf4b399d307..4389cfde3f86 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -486,8 +486,7 @@ static void sigqueue_free_current(struct sigqueue *q)
- =09if (rt_prio(current->normal_prio) && !put_task_cache(current, q)) {
- =09=09atomic_dec(&up->sigpending);
- =09=09free_uid(up);
--=09} else
--=09=09  __sigqueue_free(q);
-+=09}
- }
-=20
- void flush_sigqueue(struct sigpending *queue)
---=20
-2.18.1
+Reported-by: syzbot+82e323920b78d54aaed5@syzkaller.appspotmail.com
+Fixes: 0609ae011deb ("x86/kasan: support KASAN_VMALLOC")
 
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
