@@ -2,191 +2,168 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B49C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E91C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 937A3206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:53:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A223E206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:55:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="vWFQ5tp5"
+	dkim=pass (2048-bit key) header.d=dubeyko-com.20150623.gappssmtp.com header.i=@dubeyko-com.20150623.gappssmtp.com header.b="dpvYNX1v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728424AbfLDPxy (ORCPT
+        id S1728350AbfLDPz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:53:54 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:23494 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728117AbfLDPxx (ORCPT
+        Wed, 4 Dec 2019 10:55:26 -0500
+Received: from mail-lj1-f181.google.com ([209.85.208.181]:46962 "EHLO
+        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727828AbfLDPzZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:53:53 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB4Fq3HQ009177;
-        Wed, 4 Dec 2019 16:53:43 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=z9I4jPl8HjaZ0yib1NGkHMebDD7rdFp1Yx8caA9mL2s=;
- b=vWFQ5tp5SjERfKg5VmepTHf8WgmNTsYFEraKs7tBghBcVEH10M9DMtwK859lImxVI4aJ
- JZ9ry+ManGJd8nOpmuPcePlsyAduKF6ttde9uZxdUAqsdJYZe2CuqXP7KmrnjQY/QwPe
- bbEc2dMFmPy1b07QNr831Ook21k939UpTaP4uhLy2dC386zN23dYoUUjzYPbMerp9qwZ
- WFD0en0XzLCgbL8YeS6LVgiP5QhRzoCqklhmmA6PO3LybL/3vZD6x5ORi63vIM+R6V1w
- Yt0Z6xncY9nXD2dXSkG+2f3MPtAzRBShW5slGf4yee2QHSAQaDtob2OE4/IpzogwhvIH ow== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2wkf2xwxf5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Dec 2019 16:53:43 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id F3226100034;
-        Wed,  4 Dec 2019 16:53:42 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E655E2C7E89;
-        Wed,  4 Dec 2019 16:53:42 +0100 (CET)
-Received: from localhost (10.75.127.45) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 4 Dec 2019 16:53:42
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <alexandre.torgue@st.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v2] ARM: dts: stm32: remove "@" and "_" from stm32f7 pinmux groups
-Date:   Wed, 4 Dec 2019 16:53:33 +0100
-Message-ID: <20191204155333.25401-2-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20191204155333.25401-1-benjamin.gaignard@st.com>
-References: <20191204155333.25401-1-benjamin.gaignard@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-04_03:2019-12-04,2019-12-04 signatures=0
+        Wed, 4 Dec 2019 10:55:25 -0500
+Received: by mail-lj1-f181.google.com with SMTP id z17so8652075ljk.13
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 07:55:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dubeyko-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wk62nr6sbOubH5V981U5bO4DJZQBAJzhc3G8JnkhcXc=;
+        b=dpvYNX1vc4sOsBjpwU9IS/ZDKlXUNagdF4ysbJ/RDb2GyI2GGnkGQzSJ0yOXjBD43I
+         Y3pS4licyZea9QXxVa+f4vDBKKKCVtz8KKa43rp3sIThqOIfZnp9gCBs1qrUGAFcdOnW
+         yhQW6FudRKNtFcYJvSJYRdBbccw+3DbkXp7Ia2++GCXyJt0MlLbB71ZI8WDKR6kvfAzh
+         oc0FyJjadzsX4sBRykCx98C1Za//o/4g4Uv1uN3PYSw4DfMUSrd1fsNArRG9u94UB0Iq
+         lNuFtdzPeGOnCqXo5c9q3qCCgJ9YD4x2d50ZVdtNkba/9uMZ1zL3qbLYegj7tWDbiMOV
+         gAqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wk62nr6sbOubH5V981U5bO4DJZQBAJzhc3G8JnkhcXc=;
+        b=PcfxpyBwbWWTrJg6joplNP00T39sejHpS5qSVBxlI13L+86jSnucBRO2CcLLmYmc/S
+         8ycNmPgPjbhFIKbYZ4QsJ59pY8ipjUn31MBpsw6G4OTFp87S4bNXhKcpAY2zOGEjao1w
+         kG9R0Wyo15My5SMVZcTc607KMLDcJpcToYL33rtKvB/Wbzy5nUaMyYrEcLgWXj5pFWTr
+         jgFFrEOTTCMqpWudxI3GrFH4Smh0QG5q05Opvo4SQPE/0JxBHzcrXVGiP/IZPsooJXdi
+         FwM7lVuRK/DzPX7crLBvE8Dq4mLS/j++Pxs9Z5KL+VCMAzg3YGHBJhez3V3Ipc7BvJ3V
+         Y7rw==
+X-Gm-Message-State: APjAAAVaiF5vax8ZUD1m0CrTg1qa2pqEO1fts5Aoj6gF+TMUKDxmCwM7
+        Amojm0iV7n9cUlDCWnX+aNfJ9Q==
+X-Google-Smtp-Source: APXvYqxhqLtPOowpum4KN4g7ig/X0+ftjB1WE0M/T4ebVegWv8K4yETmgOmPjz6PG5wwpZ224NeclQ==
+X-Received: by 2002:a2e:81c7:: with SMTP id s7mr2471914ljg.3.1575474922031;
+        Wed, 04 Dec 2019 07:55:22 -0800 (PST)
+Received: from msk1wst115n.omp.ru (mail.omprussia.ru. [5.134.221.218])
+        by smtp.gmail.com with ESMTPSA id 22sm3829543ljw.9.2019.12.04.07.55.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 04 Dec 2019 07:55:21 -0800 (PST)
+Message-ID: <9ed62cfea37bfebfb76e378d482bd521c7403c1f.camel@dubeyko.com>
+Subject: Re: [RFC] Thing 1: Shardmap fox Ext4
+From:   Vyacheslav Dubeyko <slava@dubeyko.com>
+To:     Daniel Phillips <daniel@phunq.net>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Date:   Wed, 04 Dec 2019 18:55:20 +0300
+In-Reply-To: <6b6242d9-f88b-824d-afe9-d42382a93b34@phunq.net>
+References: <176a1773-f5ea-e686-ec7b-5f0a46c6f731@phunq.net>
+         <20191127142508.GB5143@mit.edu>
+         <6b6242d9-f88b-824d-afe9-d42382a93b34@phunq.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace all "@" and "_" by "-" in pinmux groups for stm32f7 family.
-This avoid errors when using yaml to check the bindings.
+On Sun, 2019-12-01 at 17:45 -0800, Daniel Phillips wrote:
+> On 2019-11-27 6:25 a.m., Theodore Y. Ts'o wrote:
+> > (3) It's not particularly well documented...
+> 
+> We regard that as an issue needing attention. Here is a pretty
+> picture
+> to get started:
+> 
+>    https://github.com/danielbot/Shardmap/wiki/Shardmap-media-format
+> 
+> This needs some explaining. The bottom part of the directory file is
+> a simple linear range of directory blocks, with a freespace map block
+> appearing once every 4K blocks or so. This freespace mapping needs a
+> post of its own, it is somewhat subtle. This will be a couple of
+> posts
+> in the future.
+> 
+> The Shardmap index appears at a higher logical address, sufficiently
+> far above the directory base to accommodate a reasonable number of
+> record entry blocks below it. We try not to place the index at so
+> high
+> an address that the radix tree gets extra levels, slowing everything
+> down.
+> 
+> When the index needs to be expanded, either because some shard
+> exceeded
+> a threshold number of entries, or the record entry blocks ran into
+> the
+> the bottom of the index, then a new index tier with more shards is
+> created at a higher logical address. The lower index tier is not
+> copied
+> immediately to the upper tier, but rather, each shard is
+> incrementally
+> split when it hits the threshold because of an insert. This bounds
+> the
+> latency of any given insert to the time needed to split one shard,
+> which
+> we target nominally at less than one millisecond. Thus, Shardmap
+> takes a
+> modest step in the direction of real time response.
+> 
+> Each index tier is just a simple array of shards, each of which fills
+> up with 8 byte entries from bottom to top. The count of entries in
+> each
+> shard is stored separately in a table just below the shard array. So
+> at
+> shard load time, we can determine rapidly from the count table which
+> tier a given shard belongs to. There are other advantages to breaking
+> the shard counts out separately having to do with the persistent
+> memory
+> version of Shardmap, interesting details that I will leave for later.
+> 
+> When all lower tier shards have been deleted, the lower tier may be
+> overwritten by the expanding record entry block region. In practice,
+> a Shardmap file normally has just one tier most of the time, the
+> other
+> tier existing only long enough to complete the incremental expansion
+> of the shard table, insert by insert.
+> 
+> There is a small header in the lowest record entry block, giving the
+> positions of the one or two index tiers, count of entry blocks, and
+> various tuning parameters such as maximum shard size and average
+> depth
+> of cache hash collision lists.
+> 
+> That is it for media format. Very simple, is it not? My next post
+> will explain the Shardmap directory block format, with a focus on
+> deficiencies of the traditional Ext2 format that were addressed.
+> 
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
-changes in version 2:
-- replace @ and _ by -
+I've tried to take a look into the source code. And it was not easy
+try. :) I expected to have the bird-fly understanding from shardmap.h
+file. My expectation was to find the initial set of structure
+declarations with the good comments. But, frankly speaking, it's very
+complicated path for the concept understanding. Even from C++ point of
+view, the class declarations look very complicated if there are mixing
+of fields with methods declarations. It's tough to read such
+implementation.
 
- arch/arm/boot/dts/stm32f7-pinctrl.dtsi | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+So, I believe it makes sense to declare the necessary set of structures
+in the file's beginning with the good comments. Even it will be good to
+split the structure declarations and methods in different files. I
+believe it will ease the way to understand the concept. Otherwise, it
+will be tough to review such code.
 
-diff --git a/arch/arm/boot/dts/stm32f7-pinctrl.dtsi b/arch/arm/boot/dts/stm32f7-pinctrl.dtsi
-index 9314128df185..fe4cfda72a47 100644
---- a/arch/arm/boot/dts/stm32f7-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32f7-pinctrl.dtsi
-@@ -127,7 +127,7 @@
- 				st,bank-name = "GPIOK";
- 			};
- 
--			cec_pins_a: cec@0 {
-+			cec_pins_a: cec-0 {
- 				pins {
- 					pinmux = <STM32_PINMUX('A', 15, AF4)>; /* HDMI CEC */
- 					slew-rate = <0>;
-@@ -136,7 +136,7 @@
- 				};
- 			};
- 
--			usart1_pins_a: usart1@0 {
-+			usart1_pins_a: usart1-0 {
- 				pins1 {
- 					pinmux = <STM32_PINMUX('A', 9, AF7)>; /* USART1_TX */
- 					bias-disable;
-@@ -149,7 +149,7 @@
- 				};
- 			};
- 
--			usart1_pins_b: usart1@1 {
-+			usart1_pins_b: usart1-1 {
- 				pins1 {
- 					pinmux = <STM32_PINMUX('A', 9, AF7)>; /* USART1_TX */
- 					bias-disable;
-@@ -162,7 +162,7 @@
- 				};
- 			};
- 
--			i2c1_pins_b: i2c1@0 {
-+			i2c1_pins_b: i2c1-0 {
- 				pins {
- 					pinmux = <STM32_PINMUX('B', 9, AF4)>, /* I2C1 SDA */
- 						 <STM32_PINMUX('B', 8, AF4)>; /* I2C1 SCL */
-@@ -172,7 +172,7 @@
- 				};
- 			};
- 
--			usbotg_hs_pins_a: usbotg-hs@0 {
-+			usbotg_hs_pins_a: usbotg-hs-0 {
- 				pins {
- 					pinmux = <STM32_PINMUX('H', 4, AF10)>, /* OTG_HS_ULPI_NXT */
- 						 <STM32_PINMUX('I', 11, AF10)>, /* OTG_HS_ULPI_DIR */
-@@ -192,7 +192,7 @@
- 				};
- 			};
- 
--			usbotg_hs_pins_b: usbotg-hs@1 {
-+			usbotg_hs_pins_b: usbotg-hs-1 {
- 				pins {
- 					pinmux = <STM32_PINMUX('H', 4, AF10)>, /* OTG_HS_ULPI_NXT */
- 						 <STM32_PINMUX('C', 2, AF10)>, /* OTG_HS_ULPI_DIR */
-@@ -212,7 +212,7 @@
- 				};
- 			};
- 
--			usbotg_fs_pins_a: usbotg-fs@0 {
-+			usbotg_fs_pins_a: usbotg-fs-0 {
- 				pins {
- 					pinmux = <STM32_PINMUX('A', 10, AF10)>, /* OTG_FS_ID */
- 						 <STM32_PINMUX('A', 11, AF10)>, /* OTG_FS_DM */
-@@ -223,7 +223,7 @@
- 				};
- 			};
- 
--			sdio_pins_a: sdio_pins_a@0 {
-+			sdio_pins_a: sdio-pins-a-0 {
- 				pins {
- 					pinmux = <STM32_PINMUX('C', 8, AF12)>, /* SDMMC1 D0 */
- 						 <STM32_PINMUX('C', 9, AF12)>, /* SDMMC1 D1 */
-@@ -236,7 +236,7 @@
- 				};
- 			};
- 
--			sdio_pins_od_a: sdio_pins_od_a@0 {
-+			sdio_pins_od_a: sdio-pins-od-a-0 {
- 				pins1 {
- 					pinmux = <STM32_PINMUX('C', 8, AF12)>, /* SDMMC1 D0 */
- 						 <STM32_PINMUX('C', 9, AF12)>, /* SDMMC1 D1 */
-@@ -254,7 +254,7 @@
- 				};
- 			};
- 
--			sdio_pins_b: sdio_pins_b@0 {
-+			sdio_pins_b: sdio-pins-b-0 {
- 				pins {
- 					pinmux = <STM32_PINMUX('G', 9, AF11)>, /* SDMMC2 D0 */
- 						 <STM32_PINMUX('G', 10, AF11)>, /* SDMMC2 D1 */
-@@ -267,7 +267,7 @@
- 				};
- 			};
- 
--			sdio_pins_od_b: sdio_pins_od_b@0 {
-+			sdio_pins_od_b: sdio-pins-od-b-0 {
- 				pins1 {
- 					pinmux = <STM32_PINMUX('G', 9, AF11)>, /* SDMMC2 D0 */
- 						 <STM32_PINMUX('G', 10, AF11)>, /* SDMMC2 D1 */
--- 
-2.15.0
+Thanks,
+Viacheslav Dubeyko.
+
 
