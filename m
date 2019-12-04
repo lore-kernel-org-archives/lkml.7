@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B23C2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F337EC2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE17920659
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A910B20659
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482733;
-	bh=AdbyIqRS5cklHI4/34lbBdZESZsUf8IC0zfP30HwNIY=;
+	s=default; t=1575482739;
+	bh=lm4JUrKaHoWWUev9vI4Y+B/zYy7vn/Rm5z1uWi8gAJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xHv8QFcn5d00TKlyqpMeNDfoZV/xHrqAr9v1faOpIwl6gOmsUH8XlMBVKp/eBK3/3
-	 HrPB3GwGu773DAWwDfJfwvkYe9twHh30K2WdMIEb9JV0SLJSogUQkkoEUcjTSVpKfW
-	 e/PzTlhQa/W/5Nw7uAkgkKK13ty5sPlvcxDAnqm8=
+	b=F/u9a9cZDEQvC5B27AcwyAH+IBXs7bgQ2a7mnAJjmT9vzAN+rL15xfidjnw6JfG+7
+	 xcHkjhTIW3g/qFva0n9P9+HB16tTy86tvxNTAS7+auUlMpcRBoxSw1rJyr4pq6U64d
+	 H7Bo4n8kZF2JCgtWIHjCxTrKfXI3J8A6dU/XlqVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730396AbfLDSFb (ORCPT
+        id S1728517AbfLDSFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:05:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52170 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:05:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730373AbfLDSF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:05:28 -0500
+        id S1730400AbfLDSFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:05:33 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6653720659;
-        Wed,  4 Dec 2019 18:05:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A492720833;
+        Wed,  4 Dec 2019 18:05:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482727;
-        bh=AdbyIqRS5cklHI4/34lbBdZESZsUf8IC0zfP30HwNIY=;
+        s=default; t=1575482733;
+        bh=lm4JUrKaHoWWUev9vI4Y+B/zYy7vn/Rm5z1uWi8gAJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f/Fshp6K2Dn23GB3EQ4a5maSOWXdk1KGOUKAj3YVpZqQU82wUhHXs8oh61vxdwG4L
-         imgkEOiTO/sOoMTwAmWL50918sLHjE7cUlG8kd8MkI2yJQ//AbXYfuOmC2dSxrZKkP
-         kvHcS7NbF+GASiimYBIDBYT/PyECe/d0FMPHupy8=
+        b=GHnusgb1kgvbmhFk1r9I9oFnlyYBLwyiZekhzxFpH2KhPFJidSMJ7FqWzl/GdRpsE
+         XV8GEVL/ohQgRh+IcWS1Jzh0RWkqRqcHUGbEWsDnw6AvBhifqpUWVLl95iYC9XaM/m
+         zPkEW7c12pzniO7wI/FsWUbk3kzmofIMoDsFq+dA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 094/209] powerpc/prom: fix early DEBUG messages
-Date:   Wed,  4 Dec 2019 18:55:06 +0100
-Message-Id: <20191204175328.337796602@linuxfoundation.org>
+Subject: [PATCH 4.14 113/209] net: (cpts) fix a missing check of clk_prepare
+Date:   Wed,  4 Dec 2019 18:55:25 +0100
+Message-Id: <20191204175330.787733040@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -60,53 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit b18f0ae92b0a1db565c3e505fa87b6971ad3b641 ]
+[ Upstream commit 2d822f2dbab7f4c820f72eb8570aacf3f35855bd ]
 
-This patch fixes early DEBUG messages in prom.c:
-- Use %px instead of %p to see the addresses
-- Cast memblock_phys_mem_size() with (unsigned long long) to
-avoid build failure when phys_addr_t is not 64 bits.
+clk_prepare() could fail, so let's check its status, and if it fails,
+return its error code upstream.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/prom.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/ti/cpts.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
-index f830562974417..d96b284150904 100644
---- a/arch/powerpc/kernel/prom.c
-+++ b/arch/powerpc/kernel/prom.c
-@@ -128,7 +128,7 @@ static void __init move_device_tree(void)
- 		p = __va(memblock_alloc(size, PAGE_SIZE));
- 		memcpy(p, initial_boot_params, size);
- 		initial_boot_params = p;
--		DBG("Moved device tree to 0x%p\n", p);
-+		DBG("Moved device tree to 0x%px\n", p);
+diff --git a/drivers/net/ethernet/ti/cpts.c b/drivers/net/ethernet/ti/cpts.c
+index e7b76f6b4f67e..7d1281d812480 100644
+--- a/drivers/net/ethernet/ti/cpts.c
++++ b/drivers/net/ethernet/ti/cpts.c
+@@ -567,7 +567,9 @@ struct cpts *cpts_create(struct device *dev, void __iomem *regs,
+ 		return ERR_PTR(PTR_ERR(cpts->refclk));
  	}
  
- 	DBG("<- move_device_tree\n");
-@@ -662,7 +662,7 @@ void __init early_init_devtree(void *params)
- {
- 	phys_addr_t limit;
+-	clk_prepare(cpts->refclk);
++	ret = clk_prepare(cpts->refclk);
++	if (ret)
++		return ERR_PTR(ret);
  
--	DBG(" -> early_init_devtree(%p)\n", params);
-+	DBG(" -> early_init_devtree(%px)\n", params);
- 
- 	/* Too early to BUG_ON(), do it by hand */
- 	if (!early_init_dt_verify(params))
-@@ -722,7 +722,7 @@ void __init early_init_devtree(void *params)
- 	memblock_allow_resize();
- 	memblock_dump_all();
- 
--	DBG("Phys. mem: %llx\n", memblock_phys_mem_size());
-+	DBG("Phys. mem: %llx\n", (unsigned long long)memblock_phys_mem_size());
- 
- 	/* We may need to relocate the flat tree, do it now.
- 	 * FIXME .. and the initrd too? */
+ 	cpts->cc.read = cpts_systim_read;
+ 	cpts->cc.mask = CLOCKSOURCE_MASK(32);
 -- 
 2.20.1
 
