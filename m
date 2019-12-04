@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F64C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43286C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C19720833
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FF132073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:00:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482399;
-	bh=2FKCwtfQ/zR6VWzJaxtMgHi64PjCKJ4x79baPcmlda4=;
+	s=default; t=1575482403;
+	bh=rQ5ldQcxVnKsALniRRUFyzeOtkp1YGSrRvd9GjrfY3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fMubNU5wUJQ68fJYdZnJe4pGsheSXXH2PiTggj14ak3x1m7yyE3s9Rhn7r4D/VVej
-	 d7ZPnQaVa6tREXfw45l277WJIxFxUoUmCBEAn0C3ERY7bjnY7WZ0prZCSSsa3AtBNU
-	 YzCbC7xnBBlGQJM93Am1wRrS1E9BYs3fF22nGFzs=
+	b=Rj9binHhDg/NS3SodMK4Lw+WNcs8TtncX4d59JG9g0VHsn5x4KzsJGhciA770n5d7
+	 q5xKc0c3maaI5mWhgorBtk8hoqRB9dwYwIe9h/T0iIWue85Of5guwmYQ4a+1KLH9Xg
+	 PCqKz6eCecHdCryBqj1VNy/TSD0YiUzSOqeJ6us8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729228AbfLDR76 (ORCPT
+        id S1729255AbfLDSAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:59:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37352 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:00:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728666AbfLDR7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:59:55 -0500
+        id S1729220AbfLDR75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 12:59:57 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 201FF2081B;
-        Wed,  4 Dec 2019 17:59:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CD2F2073B;
+        Wed,  4 Dec 2019 17:59:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482394;
-        bh=2FKCwtfQ/zR6VWzJaxtMgHi64PjCKJ4x79baPcmlda4=;
+        s=default; t=1575482397;
+        bh=rQ5ldQcxVnKsALniRRUFyzeOtkp1YGSrRvd9GjrfY3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1N3yjhMBvrcirYjUBK4WKLkyRwi2q+cPhJPoVGop4TZLr1Isgiclq1GGUoxg75zcl
-         RaMQ/MzWMWltftBtSPKO89jkoQdtAMVRN2i6UXOZp3PRRDXml4vQsSAe6jVBUDjJzy
-         sh0HdYIdDH5xr6uy0dDEFiMvGJkyBtoVggF5NNNw=
+        b=iMk95Z780lR5msphRm0cfobc7Hov/vS5mqtz9vWL19eQ8Amxv8dXIrkl5yNjBKPF5
+         Z4fhCqxYazbiS1pHyS3w+fQw699dIOqxbXEUNMnxROvJXpBq+pEAYGlItfJgQ7hFOK
+         jV9ZX6qtUQtlEpfqsubgyxBE5MVPvskqvUIyZ8c4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sergey Gorenko <sergeygo@mellanox.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Laurence Oberman <loberman@redhat.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Doug Ledford <dledford@redhat.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 43/92] RDMA/srp: Propagate ib_post_send() failures to the SCSI mid-layer
-Date:   Wed,  4 Dec 2019 18:49:43 +0100
-Message-Id: <20191204174333.107999137@linuxfoundation.org>
+Subject: [PATCH 4.4 70/92] net: fix possible overflow in __sk_mem_raise_allocated()
+Date:   Wed,  4 Dec 2019 18:50:10 +0100
+Message-Id: <20191204174334.516953712@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204174327.215426506@linuxfoundation.org>
 References: <20191204174327.215426506@linuxfoundation.org>
@@ -63,36 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 2ee00f6a98c36f7e4ba07cc33f24cc5a69060cc9 ]
+[ Upstream commit 5bf325a53202b8728cf7013b72688c46071e212e ]
 
-This patch avoids that the SCSI mid-layer keeps retrying forever if
-ib_post_send() fails. This was discovered while testing immediate
-data support and passing a too large num_sge value to ib_post_send().
+With many active TCP sockets, fat TCP sockets could fool
+__sk_mem_raise_allocated() thanks to an overflow.
 
-Cc: Sergey Gorenko <sergeygo@mellanox.com>
-Cc: Max Gurtovoy <maxg@mellanox.com>
-Cc: Laurence Oberman <loberman@redhat.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+They would increase their share of the memory, instead
+of decreasing it.
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/srp/ib_srp.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/net/sock.h | 2 +-
+ net/core/sock.c    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/ulp/srp/ib_srp.c b/drivers/infiniband/ulp/srp/ib_srp.c
-index 3dbc3ed263c21..3b4188efc2835 100644
---- a/drivers/infiniband/ulp/srp/ib_srp.c
-+++ b/drivers/infiniband/ulp/srp/ib_srp.c
-@@ -2135,6 +2135,7 @@ static int srp_queuecommand(struct Scsi_Host *shost, struct scsi_cmnd *scmnd)
+diff --git a/include/net/sock.h b/include/net/sock.h
+index 5ed4786a2058b..de4434284a34b 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -1282,7 +1282,7 @@ static inline void sk_sockets_allocated_inc(struct sock *sk)
+ 	percpu_counter_inc(prot->sockets_allocated);
+ }
  
- 	if (srp_post_send(ch, iu, len)) {
- 		shost_printk(KERN_ERR, target->scsi_host, PFX "Send failed\n");
-+		scmnd->result = DID_ERROR << 16;
- 		goto err_unmap;
+-static inline int
++static inline u64
+ sk_sockets_allocated_read_positive(struct sock *sk)
+ {
+ 	struct proto *prot = sk->sk_prot;
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 8aa4a5f895723..0f4c15fcd87d3 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -2122,7 +2122,7 @@ int __sk_mem_schedule(struct sock *sk, int size, int kind)
  	}
  
+ 	if (sk_has_memory_pressure(sk)) {
+-		int alloc;
++		u64 alloc;
+ 
+ 		if (!sk_under_memory_pressure(sk))
+ 			return 1;
 -- 
 2.20.1
 
