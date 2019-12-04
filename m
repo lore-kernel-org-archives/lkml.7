@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C6AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 11:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FB6C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 11:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB91020659
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 11:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA62C20661
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 11:49:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="gjkhBQkl";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="gjkhBQkl"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="B1rYgWsz";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="B1rYgWsz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbfLDLtH (ORCPT
+        id S1727601AbfLDLtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 06:49:07 -0500
-Received: from mail-eopbgr150085.outbound.protection.outlook.com ([40.107.15.85]:36582
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        Wed, 4 Dec 2019 06:49:05 -0500
+Received: from mail-eopbgr70074.outbound.protection.outlook.com ([40.107.7.74]:26646
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727883AbfLDLsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 06:48:43 -0500
+        id S1727878AbfLDLsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 06:48:42 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U5WCE2P1/Ewa/uQFzzi0Jlc3+KKSsTwCAJn/FZJulyM=;
- b=gjkhBQklYpQsyBAjs90nPQ0PBQ7SL1KVIWblXPZI3eg+Uen+LQ8wqibrAYXklxVrwvEfVYX3XpLfQmgNNoUOJjCb9iT5ZsKwgEd3q9mW/BaQZhWvaD/pUImDfgMsWsIKGB0Zxkf2puFVwnXqzFapc81uA6nQgW0G1Irm9Ap6S3U=
-Received: from VI1PR08CA0162.eurprd08.prod.outlook.com (2603:10a6:800:d1::16)
- by AM7PR08MB5320.eurprd08.prod.outlook.com (2603:10a6:20b:103::24) with
+ bh=Fxo3+RzQSfhOefcNBomfpRFJ4IJWVvT6Vr/vLAaxzWU=;
+ b=B1rYgWszkhTJjE2gQVMKWzmn92fQEwWvRD1DPY+MgW2JQtmlzLrfK5gvjfsyjmXbZOhzxj679psQl2UQw0Qt72+Xra1kXFBfVIyR1eDh+u3yuTnC/QZQfdvPdB2GQiNWJIFABbO9qQYRral+z2HANrQoQVH9kOMvVe1Y8THzYKU=
+Received: from DB6PR0802CA0033.eurprd08.prod.outlook.com (2603:10a6:4:a3::19)
+ by VE1PR08MB5215.eurprd08.prod.outlook.com (2603:10a6:803:10a::33) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.13; Wed, 4 Dec
  2019 11:48:37 +0000
-Received: from AM5EUR03FT061.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e08::204) by VI1PR08CA0162.outlook.office365.com
- (2603:10a6:800:d1::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.12 via Frontend
+Received: from VE1EUR03FT063.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e09::208) by DB6PR0802CA0033.outlook.office365.com
+ (2603:10a6:4:a3::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.22 via Frontend
  Transport; Wed, 4 Dec 2019 11:48:37 +0000
 Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
@@ -47,56 +47,59 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM5EUR03FT061.mail.protection.outlook.com (10.152.16.247) with Microsoft SMTP
+ VE1EUR03FT063.mail.protection.outlook.com (10.152.18.236) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
  15.20.2495.18 via Frontend Transport; Wed, 4 Dec 2019 11:48:37 +0000
-Received: ("Tessian outbound a8ced1463995:v37"); Wed, 04 Dec 2019 11:48:33 +0000
+Received: ("Tessian outbound 224ffa173bf0:v37"); Wed, 04 Dec 2019 11:48:34 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: e4efc0fee19f085a
+X-CR-MTA-CID: 5acb59b5d3ab0914
 X-CR-MTA-TID: 64aa7808
-Received: from de4fd4e6043b.2
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id F94B99F8-FAC5-4333-90A5-0E540A7D282A.1;
-        Wed, 04 Dec 2019 11:48:28 +0000
+Received: from 27b0b5ea6d36.8
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 6BCBC33A-A306-46EF-AA00-F67C455BA3BB.1;
+        Wed, 04 Dec 2019 11:48:29 +0000
 Received: from EUR04-HE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id de4fd4e6043b.2
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 27b0b5ea6d36.8
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Wed, 04 Dec 2019 11:48:28 +0000
+    Wed, 04 Dec 2019 11:48:29 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R82Py72BOK4PRkvD6Mq3AHPqBEgffFNbDSQK81+H5/a+xpNLdwIvZNaIiTnSmh22fvuydZPY0ntgf/Ou1vc1DPXDCYlZbzocVhNESPKrAYmhQJ2Udn7DBvKkqlbhyjW95gywCNcWkzyJeIHYGwCQXJ6y1HhVSOOKN5r2dheEuaPPg5Qri2t702VQ5R7vAe3t9LdTclZTDqLBsCz9BRUWvr3hYPhSoTDla909MdstGEYG/CU4TxgG61AQr4LoQxj4ogTg2/QVR9bIS21VQVH+bFiIdr+ENnAynhaLCHGyKNHFzqVlZgy6CSIeVX/FWevNecA6q7C7EXupoxQGdMimxw==
+ b=iSyJIHM/g84h9uPKgoy4iCKjJx+I+PniyVmIpWES8rEXFfUOJswmIxH4wGhu/kjk+2IrWRag/FGcTPhRGLUP37meYRfjwui4jVrSpSumxAE5biVVnCXzZZrXjMSubeqQHAL/CCu0uMuLPbwNVvm+Qxjg612EJJaASpsg+0B6HpZffGbAxmsD7fENPKZaHJKOiaEvF8JSSxiotV/CmBgTmiQVy97akKjGpY+jUMg3zkTtxxNOf29r/m9EvOSTCusn5vSMsbou6yddw0OV8VrVVmVmx6Q4VoDVdWT9rYf5Kom83qYiALMw2p/OkMll5dB3O0ks26s4NEiGwpgyfRMnzg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U5WCE2P1/Ewa/uQFzzi0Jlc3+KKSsTwCAJn/FZJulyM=;
- b=XWIut7RxFlPrYIXj7pSm1zvl0fcNDiaDpXw0j6XgancvaHp7tapPdHHh+mSpr+u2i6Ujs6CsdxKG7joaxPvbQLlDPi00gZxjXXEYKhREzbwUt0F14H9idz20KVDSpHCzM76l479PLv6XOP30Csm5ZHfkS27dfkaeElm0Q4qRBMoRWPbLvTQ8i4FF9M0oL6e87qVLFP1EVup1HbrL1dKhPDTaCl4OTTDW2M+PPMTS1y2M8f1KJdY/6NTRH8c8MMD1bo8Pxh2+GiOzo9Rd/ifGWZfOmEf4ELLdhloA28yerR76fYDFHbWgJIIAIrkT45TDoK7W0jIVVUncAr+5pcn/Jg==
+ bh=Fxo3+RzQSfhOefcNBomfpRFJ4IJWVvT6Vr/vLAaxzWU=;
+ b=ca6vJvTuQ9ICiri/nSY8O8EGGWMtsR4zfIf/bWkAfwqe2wpgLNGk0709jRdwXl5ch/ssm5BQxo4vSM20JYTXcvmkxpSRVLRghWiXpUQQqrywxvpSsizW5YSbrlNMsm0RVhtOjlfPvZWxjoMzAROWjNuAoAXbNHTui+4HSZTz84n+//TvNJIy+NxcsDd70L6wHKhUW8i0UFEUN8OEU+uqzE0zgqKk1rZnNUmKhimT6Et3znlfU1XRLDjFRzxPaOBRqp9ak0R+9/OUa34nGNEX1OW9Korvt3KiS/Tp7yMM3cqoyECuLMcGs7paJ0rbbdDBmy8k/rRx86cyVhmBhEkOnQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U5WCE2P1/Ewa/uQFzzi0Jlc3+KKSsTwCAJn/FZJulyM=;
- b=gjkhBQklYpQsyBAjs90nPQ0PBQ7SL1KVIWblXPZI3eg+Uen+LQ8wqibrAYXklxVrwvEfVYX3XpLfQmgNNoUOJjCb9iT5ZsKwgEd3q9mW/BaQZhWvaD/pUImDfgMsWsIKGB0Zxkf2puFVwnXqzFapc81uA6nQgW0G1Irm9Ap6S3U=
+ bh=Fxo3+RzQSfhOefcNBomfpRFJ4IJWVvT6Vr/vLAaxzWU=;
+ b=B1rYgWszkhTJjE2gQVMKWzmn92fQEwWvRD1DPY+MgW2JQtmlzLrfK5gvjfsyjmXbZOhzxj679psQl2UQw0Qt72+Xra1kXFBfVIyR1eDh+u3yuTnC/QZQfdvPdB2GQiNWJIFABbO9qQYRral+z2HANrQoQVH9kOMvVe1Y8THzYKU=
 Received: from VI1PR08MB4078.eurprd08.prod.outlook.com (20.178.127.92) by
  VI1PR08MB4624.eurprd08.prod.outlook.com (20.178.13.212) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.17; Wed, 4 Dec 2019 11:48:25 +0000
+ 15.20.2495.17; Wed, 4 Dec 2019 11:48:26 +0000
 Received: from VI1PR08MB4078.eurprd08.prod.outlook.com
  ([fe80::8191:f0ac:574a:d24d]) by VI1PR08MB4078.eurprd08.prod.outlook.com
  ([fe80::8191:f0ac:574a:d24d%3]) with mapi id 15.20.2495.014; Wed, 4 Dec 2019
- 11:48:25 +0000
+ 11:48:26 +0000
 From:   Mihail Atanassov <Mihail.Atanassov@arm.com>
 To:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
 CC:     Mihail Atanassov <Mihail.Atanassov@arm.com>, nd <nd@arm.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Vincent Abriou <vincent.abriou@st.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 27/28] drm/sti: Use drm_bridge_init()
-Thread-Topic: [PATCH v2 27/28] drm/sti: Use drm_bridge_init()
-Thread-Index: AQHVqpi89ZSI0/jtHUG0V0fAqzMiWA==
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <freedreno@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 28/28] drm/msm: Use drm_bridge_init()
+Thread-Topic: [PATCH v2 28/28] drm/msm: Use drm_bridge_init()
+Thread-Index: AQHVqpi8TVGRoIDoh0OFCoA0pbs6IA==
 Date:   Wed, 4 Dec 2019 11:48:25 +0000
-Message-ID: <20191204114732.28514-28-mihail.atanassov@arm.com>
+Message-ID: <20191204114732.28514-29-mihail.atanassov@arm.com>
 References: <20191204114732.28514-1-mihail.atanassov@arm.com>
 In-Reply-To: <20191204114732.28514-1-mihail.atanassov@arm.com>
 Accept-Language: en-GB, en-US
@@ -113,19 +116,19 @@ Authentication-Results-Original: spf=none (sender IP is )
 x-ms-exchange-messagesentrepresentingtype: 1
 x-ms-publictraffictype: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: c704ff17-c680-42a5-4a9e-08d778afe676
-X-MS-TrafficTypeDiagnostic: VI1PR08MB4624:|VI1PR08MB4624:|AM7PR08MB5320:
+X-MS-Office365-Filtering-Correlation-Id: fafbc93d-cef5-4894-0d31-08d778afe659
+X-MS-TrafficTypeDiagnostic: VI1PR08MB4624:|VI1PR08MB4624:|VE1PR08MB5215:
 x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <AM7PR08MB53201CCD8892BD68498AF8B78F5D0@AM7PR08MB5320.eurprd08.prod.outlook.com>
+X-Microsoft-Antispam-PRVS: <VE1PR08MB5215888B6227D6C9B826155A8F5D0@VE1PR08MB5215.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
-x-ms-oob-tlc-oobclassifiers: OLM:1169;OLM:1169;
+x-ms-oob-tlc-oobclassifiers: OLM:6108;OLM:6108;
 x-forefront-prvs: 0241D5F98C
 X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(136003)(346002)(376002)(366004)(199004)(189003)(2351001)(305945005)(316002)(6436002)(81166006)(7736002)(6916009)(4326008)(186003)(99286004)(6486002)(66446008)(5640700003)(66476007)(1076003)(66556008)(54906003)(2501003)(5660300002)(66946007)(64756008)(6512007)(86362001)(11346002)(2906002)(44832011)(2616005)(14454004)(50226002)(6506007)(36756003)(25786009)(5024004)(81156014)(8676002)(3846002)(71190400001)(52116002)(26005)(478600001)(71200400001)(8936002)(102836004)(6116002)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB4624;H:VI1PR08MB4078.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: arm.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: v233dY/6lxNaaPA0Yk15MvBwRrVKY2JKpR3dvlr0WV+6wh9755I4tMiFwOTEg+pBmuzZOdSFo9C0G2/KGNz6aKd89iccKGDW29jnb9nBN7jFcX6IrWjwx3ITkJUjBhg3ViTSXew42KdL+wZrCic2lRVaVRWnU43JBIfTqyV7Qd7ej2LU3JDhILocFW3kDO5lvNZP6ke7BvQcT8rvYWhj9FB8Dz4H04VPuSTBxE2CSI+NjOJf8FWiMgRd253KMajm8CckEHaasOrKxtZqGiWo8LySHWZ56PzX4QXhez0TF8v8RByHcGJ7bEjtYsRfRfx4L7KVPdfEccZW2BpMs9mxlj9OzMPeroKwhiwU/1hVZnbizncSeN6asdDL5Y7qposhEigAGDF3+hsvGMpa3HCGqz92oZ3s2PgFlXySxHmnyJl/WV7rJnw3DgokbqDBkl/b
+X-Microsoft-Antispam-Message-Info-Original: Lez9SUM230WUagT5ubKBLA86pC51KWmbiO8LPtuTEmv3r1p+zwBFKqEh6p0eFOoF+lZ0DQ1a1gryVTSfUUSRCGH9kDuq7BOP+1VygsvpwJo5CAAFeO77n2JOrsG3MzdM7+C5RMEWGxyEWDOUbN1y4rAO5BEHlU8wAtzTooWWwSAMefzZv3FiJiqYHlwSS7mvqg70kj9t0hnRe17W5ONZiAagrwePC8oWdHkb4E6aKEZ4uIAkj18A2eKGF7Htkvfr38aGC4+YSQ8QzYRdJFrizZ5GoAiPnS5RUlwncuFunW/jFvLENsF6ojXPVlBtawPJHexNGCx/qn59T+2o3CQY1S0kdbde1q1Gc690zxg06v3E2i8OMhQinD8EGLmw+3F1sSr9t5GrQFNzfIj3XaUwWyFje1+lyKBhzkSSRVWO2VOLFxUaonJU3UjU+IdwaSkQ
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
@@ -133,86 +136,86 @@ X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB4624
 Original-Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=Mihail.Atanassov@arm.com; 
 X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT061.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(39860400002)(376002)(346002)(189003)(199004)(186003)(1076003)(2501003)(50466002)(76130400001)(26826003)(6116002)(478600001)(6506007)(25786009)(26005)(102836004)(14454004)(2351001)(99286004)(4326008)(70586007)(50226002)(6862004)(70206006)(86362001)(54906003)(336012)(2616005)(8746002)(81156014)(81166006)(5660300002)(8676002)(8936002)(11346002)(305945005)(7736002)(6512007)(36756003)(6486002)(3846002)(316002)(36906005)(22756006)(5024004)(5640700003)(356004)(2906002)(23756003)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:AM7PR08MB5320;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Pass;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: c52ba38a-ccd5-49d0-5f49-08d778afdef1
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT063.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(39860400002)(136003)(346002)(189003)(199004)(14454004)(6116002)(36906005)(5024004)(50466002)(22756006)(478600001)(23756003)(3846002)(2501003)(81156014)(2351001)(8746002)(81166006)(8676002)(8936002)(336012)(50226002)(26826003)(1076003)(76176011)(36756003)(5640700003)(11346002)(2616005)(6862004)(25786009)(4326008)(450100002)(6506007)(186003)(26005)(102836004)(70206006)(86362001)(2906002)(76130400001)(54906003)(6486002)(70586007)(7736002)(356004)(305945005)(5660300002)(99286004)(6512007)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB5215;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Pass;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 1ea17270-feb6-4e97-0518-08d778afdf5f
 NoDisclaimer: True
 X-Forefront-PRVS: 0241D5F98C
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ZLMnZWMV+12z+zqGGxbaVbCJuI3KC22Kff8y3426NXsjTOfWGtQq73dzL5VYirlJZ0yA4KsG6HAIitFMkrjXBOBoZPGb9iGDijj5jabJ/XqTsJCd6B4nBB9+kfdQO7FaBN43zTTRpo4XnbMcX+j1gdZj6MiuX2FplI2lzuQjd3Bj+oTct5v1FtNef9qQ4K42zTIwym5YyO35Jv/mnphaKWkLRlAD6QKZWG/JKaNID40J4BpvFWgqFQHtAzTXjeeMTfHFuIyVOx7VOLzFfZvXaythBNNvOd4F/3WXZv+zT8srARRxQypSP8FPOgjlMNOB/v72ak2xsyKL8wXnwiGcSSASwXwbsMYLyAG8BQit3URGgmPv59mTjbjeF47qGTwOkc6MCkZb/j5V6HfNHz3/jMSB6lDKMDtrSIg7lcrmXtpCqIhXBQMYhnN9VtW6ZdEg
+X-Microsoft-Antispam-Message-Info: WlMvxF+RZBIeH/lAhCINEwsbdkHEeE4SPf4UCslnokKR+s/lCJardcNfd1TdOmG4p6ZUnnYmN92z9ioxa/LLpKQpsZbXfKoMLlSIcrluucafJxv+QrDXL27cF/l30sd1eBXY3l5DOSEKEUrTZw24KvLVd+irAjLlFh15x48ti4sMJWN4gzsfVF1XJlQW3hTzCoqoHFQ/iWfO8iAqZYS5X4aRTEJY7jaYRiFNw1E+VXsLCcFhSWxVXzp6KzsQ8WnnfbrrHbTbIcEMnpyxRiZUBTFx48GbI1MRMkox1dVFky09RF04Roh9RJG5BuP9TpCF/geEFPV5A/plmUsjnZRCGT+fz24PhbLEqCHhUSWXLmKZVAiavoM7Ek16olKpJ8Ixler2YY5pg0lr9UjAgk1Aiaylds0MBq3/nRnXE2SelEsS3RYMURC/SLiZqhDbJ395
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2019 11:48:37.6796
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2019 11:48:37.3959
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c704ff17-c680-42a5-4a9e-08d778afe676
+X-MS-Exchange-CrossTenant-Network-Message-Id: fafbc93d-cef5-4894-0d31-08d778afe659
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR08MB5320
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB5215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No functional change.
-
-v2:
- - Also apply drm_bridge_init() in sti_hdmi.c and sti_hda.c (Sam,
-   Benjamin)
+No functional change: drm_bridge_init() sets bridge->of_node, but that's
+not used by msm anywhere, and the bridges aren't published with
+drm_bridge_add() for it to matter.
 
 Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
 ---
- drivers/gpu/drm/sti/sti_dvo.c  | 4 +---
- drivers/gpu/drm/sti/sti_hda.c  | 3 +--
- drivers/gpu/drm/sti/sti_hdmi.c | 3 +--
- 3 files changed, 3 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/msm/dsi/dsi_manager.c  | 4 ++--
+ drivers/gpu/drm/msm/edp/edp_bridge.c   | 3 +--
+ drivers/gpu/drm/msm/hdmi/hdmi_bridge.c | 4 ++--
+ 3 files changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/sti/sti_dvo.c b/drivers/gpu/drm/sti/sti_dvo.c
-index 68289b0b063a..20a3956b33bc 100644
---- a/drivers/gpu/drm/sti/sti_dvo.c
-+++ b/drivers/gpu/drm/sti/sti_dvo.c
-@@ -462,9 +462,7 @@ static int sti_dvo_bind(struct device *dev, struct devi=
-ce *master, void *data)
- 	if (!bridge)
- 		return -ENOMEM;
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/ds=
+i/dsi_manager.c
+index 271aa7bbca92..ba54049a6338 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+@@ -662,8 +662,8 @@ struct drm_bridge *msm_dsi_manager_bridge_init(u8 id)
+ 	encoder =3D msm_dsi->encoder;
 =20
--	bridge->driver_private =3D dvo;
--	bridge->funcs =3D &sti_dvo_bridge_funcs;
--	bridge->of_node =3D dvo->dev.of_node;
-+	drm_bridge_init(bridge, &dvo->dev, &sti_dvo_bridge_funcs, NULL, dvo);
- 	drm_bridge_add(bridge);
+ 	bridge =3D &dsi_bridge->base;
+-	bridge->funcs =3D &dsi_mgr_bridge_funcs;
+-
++	drm_bridge_init(bridge, msm_dsi->dev->dev, &dsi_mgr_bridge_funcs,
++			NULL, NULL);
+ 	ret =3D drm_bridge_attach(encoder, bridge, NULL);
+ 	if (ret)
+ 		goto fail;
+diff --git a/drivers/gpu/drm/msm/edp/edp_bridge.c b/drivers/gpu/drm/msm/edp=
+/edp_bridge.c
+index 2950bba4aca9..53d4dc591bd2 100644
+--- a/drivers/gpu/drm/msm/edp/edp_bridge.c
++++ b/drivers/gpu/drm/msm/edp/edp_bridge.c
+@@ -89,8 +89,7 @@ struct drm_bridge *msm_edp_bridge_init(struct msm_edp *ed=
+p)
+ 	edp_bridge->edp =3D edp;
 =20
- 	err =3D drm_bridge_attach(encoder, bridge, NULL);
-diff --git a/drivers/gpu/drm/sti/sti_hda.c b/drivers/gpu/drm/sti/sti_hda.c
-index 8f7bf33815fd..c7296e354a34 100644
---- a/drivers/gpu/drm/sti/sti_hda.c
-+++ b/drivers/gpu/drm/sti/sti_hda.c
-@@ -699,8 +699,7 @@ static int sti_hda_bind(struct device *dev, struct devi=
-ce *master, void *data)
- 	if (!bridge)
- 		return -ENOMEM;
+ 	bridge =3D &edp_bridge->base;
+-	bridge->funcs =3D &edp_bridge_funcs;
+-
++	drm_bridge_init(bridge, edp->dev->dev, &edp_bridge_funcs, NULL, NULL);
+ 	ret =3D drm_bridge_attach(edp->encoder, bridge, NULL);
+ 	if (ret)
+ 		goto fail;
+diff --git a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c b/drivers/gpu/drm/msm/h=
+dmi/hdmi_bridge.c
+index ba81338a9bf8..d038599279bc 100644
+--- a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
++++ b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
+@@ -285,8 +285,8 @@ struct drm_bridge *msm_hdmi_bridge_init(struct hdmi *hd=
+mi)
+ 	hdmi_bridge->hdmi =3D hdmi;
 =20
--	bridge->driver_private =3D hda;
--	bridge->funcs =3D &sti_hda_bridge_funcs;
-+	drm_bridge_init(bridge, dev, &sti_hda_bridge_funcs, NULL, hda);
- 	drm_bridge_attach(encoder, bridge, NULL);
-=20
- 	connector->encoder =3D encoder;
-diff --git a/drivers/gpu/drm/sti/sti_hdmi.c b/drivers/gpu/drm/sti/sti_hdmi.=
-c
-index 814560ead4e1..c9ae3e18fa5d 100644
---- a/drivers/gpu/drm/sti/sti_hdmi.c
-+++ b/drivers/gpu/drm/sti/sti_hdmi.c
-@@ -1279,8 +1279,7 @@ static int sti_hdmi_bind(struct device *dev, struct d=
-evice *master, void *data)
- 	if (!bridge)
- 		return -EINVAL;
-=20
--	bridge->driver_private =3D hdmi;
--	bridge->funcs =3D &sti_hdmi_bridge_funcs;
-+	drm_bridge_init(bridge, dev, &sti_hdmi_bridge_funcs, NULL, hdmi);
- 	drm_bridge_attach(encoder, bridge, NULL);
-=20
- 	connector->encoder =3D encoder;
+ 	bridge =3D &hdmi_bridge->base;
+-	bridge->funcs =3D &msm_hdmi_bridge_funcs;
+-
++	drm_bridge_init(bridge, hdmi->dev->dev, &msm_hdmi_bridge_funcs,
++			NULL, NULL);
+ 	ret =3D drm_bridge_attach(hdmi->encoder, bridge, NULL);
+ 	if (ret)
+ 		goto fail;
 --=20
 2.23.0
 
