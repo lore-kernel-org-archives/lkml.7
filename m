@@ -2,118 +2,123 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC655C2D0BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B301C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82E10206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:54:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575500096;
-	bh=a45N71Qn9JrZvMI/vOhox37/PylKc+JyGeyvvna+jwc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PtInBA/45iMWfnYfrIupyBz89CfhIu4yn178GG+af2KTB3ES1lo0K4f/qvY3l5BcB
-	 g51os9FhLXIl2jQlpZ9xkoPX4HWubskYvv+QUkMBY8feci0i6+7pDaA7SeTVjIXaMV
-	 AO4JLj7sTMwDkJwgHNFQbo4yVIt970NnoKT7YS70=
+	by mail.kernel.org (Postfix) with ESMTP id 0BC23206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:55:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=golovin.in header.i=@golovin.in header.b="jE0Xif/F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728344AbfLDWyz (ORCPT
+        id S1728415AbfLDWzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 17:54:55 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45197 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728011AbfLDWyy (ORCPT
+        Wed, 4 Dec 2019 17:55:32 -0500
+Received: from forward104j.mail.yandex.net ([5.45.198.247]:58843 "EHLO
+        forward104j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728284AbfLDWzb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 17:54:54 -0500
-Received: by mail-pl1-f196.google.com with SMTP id w7so335962plz.12;
-        Wed, 04 Dec 2019 14:54:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=71fWNQ0DN1swwIGhbCZ65wzcZtX6q09U8VNbO3XVJ2E=;
-        b=SEGp8TaZeiMDrnk6zAQ1kjGALOWEMQna4WdC85fGpk+uNwpO7tnZKkB+prOLYvB99y
-         yEDkQI6y3v+Gsg4ipXwU+fKGNa8ao5QdJCUNJNuwdzk5i1VlcJ7Y9ZPpMD3sx4S7J6Kd
-         rrIApoCSFgyMoQ9quKG+bxKCUc8I7GT6YB39VejvQ0+WePek+AmGHQyEEh3AXOsCqQMd
-         LBJGwaR/9exSzOsBLf78EckGi1fDZrS1Ux0sV7tyMe57LfeKq78R2mkfF8tRC/fHPFlC
-         HTFeV0Ggvr+LZxLln7KIxLKFwIzwmTq2cgjO0IGA1l5wbdMLBSt+c0/X+FFnIzVUe0kT
-         EpDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=71fWNQ0DN1swwIGhbCZ65wzcZtX6q09U8VNbO3XVJ2E=;
-        b=tYdqwupMlPnwx3dSxZJxn4+WNhdaXG3xICeur+feUC0MmQRna24p8j1ROkQ4vYhAUR
-         WYeIra7Rr0v0+3u+6YWHdJGRnMQYMTdZSYGbrb5T9nV2iX2d7tdvG3uH8e/0IBeCQQUs
-         qg5F163cCK5ABrI71sEJJGiBwLIsT/LLk5J5G+ewB/5NLKN5r6aDYvwOSMqEvtKH4sjB
-         KMM8jGKWghiXAhnfnbBLxuYhHUHaXgOKLwnIyt7WZcaKWggiu+uCMcJdHCsKMzEzRO0w
-         WiXKm6klS899ALhqM5cH9swkV6fgrnKTUsECeflSOAeIGKF/N57Cp1z6hQ8osjPw0EQN
-         JWDA==
-X-Gm-Message-State: APjAAAWz+2EPQOMgHF2P9/+YFNy7Hqv2pAa0LcucTpg6GeXCbTpezcsi
-        E6T9MzLUeFwY+aIGLtcFZJ4=
-X-Google-Smtp-Source: APXvYqxBqYdBKxl+V2SCEjcz4KN8KXwHybwTQg8WM67jtRfnnhU6nU4LkNayv6vE7Jk2ZYUz3LM9VA==
-X-Received: by 2002:a17:902:d204:: with SMTP id t4mr5897686ply.167.1575500094029;
-        Wed, 04 Dec 2019 14:54:54 -0800 (PST)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id l18sm8916725pff.79.2019.12.04.14.54.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 14:54:53 -0800 (PST)
-Date:   Wed, 4 Dec 2019 14:54:51 -0800
-From:   Minchan Kim <minchan@kernel.org>
-To:     Taejoon Song <taejoon.song@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     ngupta@vflare.org, sergey.senozhatsky.work@gmail.com,
-        axboe@kernel.dk, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, yjay.kim@lge.com
-Subject: Re: [PATCH] zram: try to avoid worst-case scenario on same element
- pages
-Message-ID: <20191204225451.GA42672@google.com>
-References: <1575424418-16119-1-git-send-email-taejoon.song@lge.com>
+        Wed, 4 Dec 2019 17:55:31 -0500
+Received: from mxback26o.mail.yandex.net (mxback26o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::77])
+        by forward104j.mail.yandex.net (Yandex) with ESMTP id 100914A0BFF;
+        Thu,  5 Dec 2019 01:55:27 +0300 (MSK)
+Received: from myt2-416899e1d7e0.qloud-c.yandex.net (myt2-416899e1d7e0.qloud-c.yandex.net [2a02:6b8:c00:1caf:0:640:4168:99e1])
+        by mxback26o.mail.yandex.net (mxback/Yandex) with ESMTP id CiCpCrHJu0-tQXeZx5L;
+        Thu, 05 Dec 2019 01:55:27 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=golovin.in; s=mail; t=1575500127;
+        bh=A0Ogu7gZHOBeP65sd0xtu2h11UWTeto1NUvcxcTaNio=;
+        h=Subject:To:From:Cc:Date:Message-Id;
+        b=jE0Xif/Fuj4dQpqsnEzIGuJnf00yVfKn/AwRBBClcsTLclfG67clFYiNlw4uGFxUz
+         UrJD01D870ksmiuhUS7sNWx59LOmwf5ywibSBqWUF+Pv9NeRGVi4Cq2Kvfx+o5AM8j
+         6etU6pOBx1cRhpNOfFkV/QXjuHZonbXPVLWh1btk=
+Authentication-Results: mxback26o.mail.yandex.net; dkim=pass header.i=@golovin.in
+Received: by myt2-416899e1d7e0.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id QEcSBchbvx-tOVumEJ1;
+        Thu, 05 Dec 2019 01:55:25 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+From:   Dmitry Golovin <dima@golovin.in>
+Cc:     Dmitry Golovin <dima@golovin.in>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Ross Philipson <ross.philipson@oracle.com>,
+        Ross Burton <ross.burton@intel.com>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH] x86/boot: kbuild: allow readelf executable to be specified
+Date:   Thu,  5 Dec 2019 00:54:41 +0200
+Message-Id: <20191204225446.202981-1-dima@golovin.in>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1575424418-16119-1-git-send-email-taejoon.song@lge.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 10:53:38AM +0900, Taejoon Song wrote:
-> The worst-case scenario on finding same element pages is that almost
-> all elements are same at the first glance but only last few elements
-> are different.
-> 
-> Since the same element tends to be grouped from the beginning of the
-> pages, if we check the first element with the last element before
-> looping through all elements, we might have some chances to quickly
-> detect non-same element pages.
-> 
-> 1. Test is done under LG webOS TV (64-bit arch)
-> 2. Dump the swap-out pages (~819200 pages)
-> 3. Analyze the pages with simple test script which counts the iteration
->    number and measures the speed at off-line
-> 
-> Under 64-bit arch, the worst iteration count is PAGE_SIZE / 8 bytes = 512.
-> The speed is based on the time to consume page_same_filled() function only.
-> The result, on average, is listed as below:
-> 
->                                    Num of Iter    Speed(MB/s)
-> Looping-Forward (Orig)                 38            99265
-> Looping-Backward                       36           102725
-> Last-element-check (This Patch)        33           125072
-> 
-> The result shows that the average iteration count decreases by 13% and
-> the speed increases by 25% with this patch. This patch does not increase
-> the overall time complexity, though.
-> 
-> I also ran simpler version which uses backward loop. Just looping backward
-> also makes some improvement, but less than this patch.
-> 
-> Signed-off-by: Taejoon Song <taejoon.song@lge.com>
-Acked-by: Minchan Kim <minchan@kernel.org>
+Introduce a new READELF variable to top-level Makefile, so the name of
+readelf binary can be specified.
 
-I think it's very reasonable optimization with small cost.
+Before this change the name of the binary was hardcoded to
+"$(CROSS_COMPILE)readelf" which might not be present for every
+toolchain.
+
+This allows to build with LLVM Object Reader by using make parameter
+READELF=llvm-readelf.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/771
+Signed-off-by: Dmitry Golovin <dima@golovin.in>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+---
+ Makefile                          | 3 ++-
+ arch/x86/boot/compressed/Makefile | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 999a197d67d2..612a55d25442 100644
+--- a/Makefile
++++ b/Makefile
+@@ -414,6 +414,7 @@ STRIP		= $(CROSS_COMPILE)strip
+ OBJCOPY		= $(CROSS_COMPILE)objcopy
+ OBJDUMP		= $(CROSS_COMPILE)objdump
+ OBJSIZE		= $(CROSS_COMPILE)size
++READELF		= $(CROSS_COMPILE)readelf
+ PAHOLE		= pahole
+ LEX		= flex
+ YACC		= bison
+@@ -472,7 +473,7 @@ GCC_PLUGINS_CFLAGS :=
+ CLANG_FLAGS :=
+ 
+ export ARCH SRCARCH CONFIG_SHELL BASH HOSTCC KBUILD_HOSTCFLAGS CROSS_COMPILE AS LD CC
+-export CPP AR NM STRIP OBJCOPY OBJDUMP OBJSIZE PAHOLE LEX YACC AWK INSTALLKERNEL
++export CPP AR NM STRIP OBJCOPY OBJDUMP OBJSIZE READELF PAHOLE LEX YACC AWK INSTALLKERNEL
+ export PERL PYTHON PYTHON2 PYTHON3 CHECK CHECKFLAGS MAKE UTS_MACHINE HOSTCXX
+ export KBUILD_HOSTCXXFLAGS KBUILD_HOSTLDFLAGS KBUILD_HOSTLDLIBS LDFLAGS_MODULE
+ 
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index aa976adb7094..1dac210f7d44 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -103,7 +103,7 @@ vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_thunk_$(BITS).o
+ quiet_cmd_check_data_rel = DATAREL $@
+ define cmd_check_data_rel
+ 	for obj in $(filter %.o,$^); do \
+-		${CROSS_COMPILE}readelf -S $$obj | grep -qF .rel.local && { \
++		$(READELF) -S $$obj | grep -qF .rel.local && { \
+ 			echo "error: $$obj has data relocations!" >&2; \
+ 			exit 1; \
+ 		} || true; \
+-- 
+2.23.0
+
