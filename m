@@ -2,96 +2,108 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51ECDC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C529C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 266BE2084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:13:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rvfdm8IA"
+	by mail.kernel.org (Postfix) with ESMTP id 2E0C3206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:13:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575483211;
+	bh=jBC81i7U8izKqPJ1jAPMmeyW0nekulh1PNMe8Er95Kk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Fl2/m9t+HvcdD+rhlXg25wD4Op0MW7S/+aQI7Sh//z+BLbt+EJl+OrksZh2K8NDLP
+	 xgUI8Ecw8K6mkxM7JRFMSnlzyZj7QZsPLPVZMVkS0TPIEX5cZFaq1GAlFdLjR0kA/N
+	 yBaEM4eKxFKEAccOX+MkfJ5Kq1bcajn4Mf666S4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731519AbfLDSN0 (ORCPT
+        id S1731756AbfLDSN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:13:26 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38404 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730848AbfLDSNT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:13:19 -0500
-Received: by mail-io1-f66.google.com with SMTP id u7so621046iop.5
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 10:13:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KbjMhMLQ8ZXCsns4nZuVxnFXeq+4FdUf6xW1nrBKHDw=;
-        b=Rvfdm8IAQbF27G90nuZjBxEtcEwJxiB+bs/eGLAXjvZ3cwULZ8T/egv/YLoZKttmIj
-         o1UWTzyXjGfnAMRtOhBpUqnTaJP57qFcUyVVwmBiTDAs5V6Zhw8PuczWhc03XzKEtNSZ
-         8vJVYsZKIQpZn4jXmdJBTjqCcmM6WRAm+LTyZvla3DgF+BexG/WPMWfQNgP9XBWhEGRC
-         SR+miCcfuOkXH+qpUZ4L3/+E0wZ2WHflhUTlS7EgoOwhWMSiNhnpwRLi7xOZKojlV4Kw
-         2QzONISlvHJdT/DQE+/uFSGIvTNWqGVS/y/1LKJr/wxuCC8AU3AavkB4gcEpPngiZ5Rg
-         jBpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KbjMhMLQ8ZXCsns4nZuVxnFXeq+4FdUf6xW1nrBKHDw=;
-        b=cVpEBePu0vUF23DYvWfeOf1HcWpL7Lk0qw7WlL1cstEL+yUzgYvZWeo/5xTyO8fB6f
-         W5RpRW5LI2w4QP/UT2NUlN8x0K6wEylFoR5PQj6+xCg4aVxzWUBG67Smwm/OlLOswQ+P
-         umCP/FEsizoVOndCFUBTumuGaYPpM24CZTWZFYYZ7G0nhl682sCWdJ0ESFLiY1iR99dA
-         JARWeOESkfhtPHt8DVwbj8s7dNxyQg+j19cpnZYbi3l1IWw2tcczf/7z14a0jqKeM1/H
-         YYyWXf73EfLl8ygdMHJ2KEiF7tZtgYLpASa7K5AM6AQvd3/LJQIT7zYWfRAVzi1sRa/T
-         Oz7g==
-X-Gm-Message-State: APjAAAX27Bp+uNdyrDjF1V3+HoLgkXcxx2ixOg46Ml3jcsGDQLaAHzr1
-        5722/aE3AzGEJbZVdmDw4gl1eW3lg4fz3NbXtay+VA==
-X-Google-Smtp-Source: APXvYqxckBA87s67w7YakD4b8GgZOryNfAxTyy+qPNdE82bEdoxtjPjZlJ/tt5IIpRik/K/Mqv7mj95v0hKcPAjDjZo=
-X-Received: by 2002:a02:3309:: with SMTP id c9mr4378013jae.52.1575483198285;
- Wed, 04 Dec 2019 10:13:18 -0800 (PST)
+        Wed, 4 Dec 2019 13:13:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42402 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731741AbfLDSNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:13:21 -0500
+Received: from localhost (unknown [217.68.49.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8771206DF;
+        Wed,  4 Dec 2019 18:13:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575483200;
+        bh=jBC81i7U8izKqPJ1jAPMmeyW0nekulh1PNMe8Er95Kk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GX4Fh+F31+lbZtSzHPcfU1CO9a9whGaJt/Yvp15OOsUBnn7+BqIaS9XqTUu5yRTfR
+         YxGzzNpPesYLXoSzP0nuiI5QoBr87P8Otv0MID5PaHRLVFucVe91elzZOegY+DJov4
+         QSCs+KXDudmFDeBzTtCeZL5KB9lR5Ydaa77zdpUs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ying Xue <ying.xue@windriver.com>,
+        Jon Maloy <maloy@donjonn.com>,
+        Hoang Le <hoang.h.le@dektech.com.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 094/125] tipc: fix skb may be leaky in tipc_link_input
+Date:   Wed,  4 Dec 2019 18:56:39 +0100
+Message-Id: <20191204175324.790391062@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
+References: <20191204175308.377746305@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20191128165002.6234-1-mathieu.poirier@linaro.org>
- <20191128165002.6234-7-mathieu.poirier@linaro.org> <20191203194330.GA2847072@kroah.com>
-In-Reply-To: <20191203194330.GA2847072@kroah.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Wed, 4 Dec 2019 11:13:05 -0700
-Message-ID: <CANLsYkyBBp_bAjsEuS=ZDY=Qza67PrwyWJUaDdBHTe1ZM1=2jw@mail.gmail.com>
-Subject: Re: [stable 4.19][PATCH 06/17] remoteproc: fix rproc_da_to_va in case
- of unallocated carveout
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     "# 4 . 7" <stable@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Dec 2019 at 12:43, Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Nov 28, 2019 at 09:49:51AM -0700, Mathieu Poirier wrote:
-> > From: Loic Pallardy <loic.pallardy@st.com>
-> >
-> > commit 74457c40f97a98142bb13153395d304ad3c85cdd upstream
-> >
-> > With introduction of rproc_alloc_registered_carveouts() which
-> > delays carveout allocation just before the start of the remote
-> > processor, rproc_da_to_va() could be called before all carveouts
-> > are allocated.
-> > This patch adds a check in rproc_da_to_va() to return NULL if
-> > carveout is not allocated.
-> >
-> > Fixes: d7c51706d095 ("remoteproc: add alloc ops in rproc_mem_entry struct")
->
-> This commit only shows up in 4.20, not 4.19, so why is this patch
-> relevant for 4.19?
+From: Hoang Le <hoang.h.le@dektech.com.au>
 
-Your scripts are better than mine...
+[ Upstream commit 7384b538d3aed2ed49d3575483d17aeee790fb06 ]
 
->
-> thanks,
->
-> greg k-h
+When we free skb at tipc_data_input, we return a 'false' boolean.
+Then, skb passed to subcalling tipc_link_input in tipc_link_rcv,
+
+<snip>
+1303 int tipc_link_rcv:
+...
+1354    if (!tipc_data_input(l, skb, l->inputq))
+1355        rc |= tipc_link_input(l, skb, l->inputq);
+</snip>
+
+Fix it by simple changing to a 'true' boolean when skb is being free-ed.
+Then, tipc_link_rcv will bypassed to subcalling tipc_link_input as above
+condition.
+
+Acked-by: Ying Xue <ying.xue@windriver.com>
+Acked-by: Jon Maloy <maloy@donjonn.com>
+Signed-off-by: Hoang Le <hoang.h.le@dektech.com.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/tipc/link.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/tipc/link.c b/net/tipc/link.c
+index 4e8647aef01c1..c7406c1fdc14b 100644
+--- a/net/tipc/link.c
++++ b/net/tipc/link.c
+@@ -1063,7 +1063,7 @@ static bool tipc_data_input(struct tipc_link *l, struct sk_buff *skb,
+ 	default:
+ 		pr_warn("Dropping received illegal msg type\n");
+ 		kfree_skb(skb);
+-		return false;
++		return true;
+ 	};
+ }
+ 
+-- 
+2.20.1
+
+
+
