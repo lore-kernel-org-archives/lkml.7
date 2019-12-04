@@ -2,126 +2,222 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EBAC2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94FA0C2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B3C920803
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6204B2077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:59:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DQlqMhee"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u25w6Zjt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbfLDN6z (ORCPT
+        id S1728041AbfLDN73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 08:58:55 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:53804 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727838AbfLDN6z (ORCPT
+        Wed, 4 Dec 2019 08:59:29 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:33364 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727838AbfLDN73 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 08:58:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Mime-Version:Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:
-        Message-ID:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1O3RASwSBQtukZSsiULD4Oz8VPMmlubHuY7PxIAb5yg=; b=DQlqMhee5t6rs7/yLDNfMIzRx
-        2PC5TdPG/McP0TnA7ja0ZmSD6npxQ7/Vxl60N407jJm82Ly/lFfjczxz27RjppptRB12qVMYbnyve
-        cywGhi/oMKg6zgHUAgzo1886oi0C3ZlEjc1+4B42dFffXprOj++Ht0NIaM87lzg63sxti+ekXbhlj
-        MQ1efmvUdK2e8xxFbXIWeNd2ebuUcvF1kXF49ZrubBVX9V2M3y5C5FbOATt/OPJ1MJnAIjqQgyOWb
-        cR25AeTiCXfoOE6gWsgV+6gM1ko7oplDCjzaX/nhfDq6UVFWTsPgfhcjmhhR7q2oqWQImqnrMHTCI
-        e4c+pIbOw==;
-Received: from [54.239.6.185] (helo=u0c626add9cce5a.drs10.amazon.com)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1icVB8-0001fV-4J; Wed, 04 Dec 2019 13:58:54 +0000
-Message-ID: <108357faa8d7add057a8dc0870b42c482eec34ee.camel@infradead.org>
-Subject: Re: [PATCH v3] virtio_console: allocate inbufs in add_port() only
- if it is needed
-From:   Amit Shah <amit@infradead.org>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Laurent Vivier <lvivier@redhat.com>, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org
-Date:   Wed, 04 Dec 2019 14:58:51 +0100
-In-Reply-To: <20191203103840-mutt-send-email-mst@kernel.org>
-References: <20191114122548.24364-1-lvivier@redhat.com>
-         <ae3451423c18f2e408245d745d1f28e311a2845c.camel@infradead.org>
-         <20191203103840-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 4 Dec 2019 08:59:29 -0500
+Received: by mail-lf1-f68.google.com with SMTP id n25so6260955lfl.0;
+        Wed, 04 Dec 2019 05:59:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8zHhqf7R6W4VbEhK1Fh6EJVqgzLfv6MucTwQijoUla4=;
+        b=u25w6ZjtBuftoUXGN+MQuIu1d46T6/KHTNrMtyvHVxXJxRP7x9pv303uGL/dIlrASk
+         eoptMCAfnCZnhRA3sWpYTjniGobb1ABtfR29mxPNJZRBk9x5zlgzFQBm8CnB5GSFNTNI
+         YDovwdYxZzWedDtsinctosqJGgXGI6G4Yry+H3Wk9DGUqsJdxCLUjx79U9C5pjqpv3fF
+         PDalB5S6CcW9Rc7AtgEE8MkvfCNnpjbfAI1VpuDxNpWWPic9K8ThOxs0/yanGnPoVFzB
+         YGlB48uBOJLR6pGO1Hw8sJzx9OdkFe8vreCcRV+B092zRYa+bUKw0dUppBwHgl3waiD6
+         vgFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8zHhqf7R6W4VbEhK1Fh6EJVqgzLfv6MucTwQijoUla4=;
+        b=PtyIMCMoFz4fIa+vmyp1C71Sabmwxw7YO6xtl7jol9h5VkVt/41o8fSZU5WINsLXEP
+         7HD3QGN2yeOV49mznUFdT8RfPZh29bZ03+XvElAbXZReOShP4/yoGENTpAU/hKOgvkJd
+         B0OKoqbmPSy4VWH+9R27w7XJIwxi4vfPcm0zYZ+cb8Pf7pROArbw1l+F3vv2XQksZL6m
+         yBDl2CrmRYoen2xqIxB6hjfsD7MT7ssFHeA7PrRcYEfsnC32IM9SGzDnnMmCsBsByPmb
+         D43JdY9gVaOgdqlKKWZtUHhoq/ez81/j3JGlZZ9PnZ7ollar9q1dwpwK3X3DOpRIIvx1
+         8WrQ==
+X-Gm-Message-State: APjAAAVHWy6PYYnAz8Kr9VEm1h4Kh6EWF/KiO8zeOo9CEUnpCWgG985r
+        ZcL6zs5LCD2SgmQ1zrVY+Jc=
+X-Google-Smtp-Source: APXvYqy85kPBJwLxdxCzYJ15kSt0dID8nFQF26japTZRpeRsDnFxO4T5/D/z9IZj52UxSN1iJcQxUg==
+X-Received: by 2002:ac2:4884:: with SMTP id x4mr2153525lfc.92.1575467966393;
+        Wed, 04 Dec 2019 05:59:26 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id l28sm3317173lfk.21.2019.12.04.05.59.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Dec 2019 05:59:25 -0800 (PST)
+Subject: Re: [TEGRA194_CPUFREQ Patch 2/3] cpufreq: Add Tegra194 cpufreq driver
+To:     Sumit Gupta <sumitg@nvidia.com>, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, catalin.marinas@arm.com, will@kernel.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, talho@nvidia.com,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     bbasu@nvidia.com, mperttunen@nvidia.com
+References: <1575394348-17649-1-git-send-email-sumitg@nvidia.com>
+ <1575394348-17649-2-git-send-email-sumitg@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <9f7521aa-4f9a-6dc2-60e0-2f9916656748@gmail.com>
+Date:   Wed, 4 Dec 2019 16:59:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <1575394348-17649-2-git-send-email-sumitg@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-12-03 at 10:42 -0500, Michael S. Tsirkin wrote:
-> On Tue, Dec 03, 2019 at 03:46:50PM +0100, Amit Shah wrote:
-> > On Thu, 2019-11-14 at 13:25 +0100, Laurent Vivier wrote:
-> > > When we hot unplug a virtserialport and then try to hot plug
-> > > again,
-> > > it fails:
-> > > 
-> > > (qemu) chardev-add
-> > > socket,id=serial0,path=/tmp/serial0,server,nowait
-> > > (qemu) device_add virtserialport,bus=virtio-serial0.0,nr=2,\
-> > >                   chardev=serial0,id=serial0,name=serial0
-> > > (qemu) device_del serial0
-> > > (qemu) device_add virtserialport,bus=virtio-serial0.0,nr=2,\
-> > >                   chardev=serial0,id=serial0,name=serial0
-> > > kernel error:
-> > >   virtio-ports vport2p2: Error allocating inbufs
-> > > qemu error:
-> > >   virtio-serial-bus: Guest failure in adding port 2 for device \
-> > >                      virtio-serial0.0
-> > > 
-> > > This happens because buffers for the in_vq are allocated when the
-> > > port is
-> > > added but are not released when the port is unplugged.
-> > > 
-> > > They are only released when virtconsole is removed (see
-> > > a7a69ec0d8e4)
-> > > 
-> > > To avoid the problem and to be symmetric, we could allocate all
-> > > the
-> > > buffers
-> > > in init_vqs() as they are released in remove_vqs(), but it sounds
-> > > like
-> > > a waste of memory.
-> > > 
-> > > Rather than that, this patch changes add_port() logic to ignore
-> > > ENOSPC
-> > > error in fill_queue(), which means queue has already been filled.
-> > > 
-> > > Fixes: a7a69ec0d8e4 ("virtio_console: free buffers after reset")
-> > > Cc: mst@redhat.com
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Laurent Vivier <lvivier@redhat.com>
-> > 
-> > Reviewed-by: Amit Shah <amit@kernel.org>
-> > 
-> > Thanks!
+03.12.2019 20:32, Sumit Gupta пишет:
+> Add support for CPU frequency scaling on Tegra194. The frequency
+> of each core can be adjusted by writing a clock divisor value to
+> an MSR on the core. The range of valid divisors is queried from
+> the BPMP.
 > 
+> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
+> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+> ---
+>  drivers/cpufreq/Kconfig.arm        |   6 +
+>  drivers/cpufreq/Makefile           |   1 +
+>  drivers/cpufreq/tegra194-cpufreq.c | 423 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 430 insertions(+)
+>  create mode 100644 drivers/cpufreq/tegra194-cpufreq.c
 > 
-> Thanks, however this has already been merged by Linus.
-> I can't add the tag retroactively, sorry about that.
+> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+> index a905796..4bcd47c 100644
+> --- a/drivers/cpufreq/Kconfig.arm
+> +++ b/drivers/cpufreq/Kconfig.arm
+> @@ -320,6 +320,12 @@ config ARM_TEGRA186_CPUFREQ
+>  	help
+>  	  This adds the CPUFreq driver support for Tegra186 SOCs.
+>  
+> +config ARM_TEGRA194_CPUFREQ
+> +	tristate "Tegra194 CPUFreq support"
+> +	depends on ARCH_TEGRA && TEGRA_BPMP
+> +	help
+> +	  This adds CPU frequency driver support for Tegra194 SOCs.
+> +
+>  config ARM_TI_CPUFREQ
+>  	bool "Texas Instruments CPUFreq support"
+>  	depends on ARCH_OMAP2PLUS
+> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+> index 9a9f5cc..433d492 100644
+> --- a/drivers/cpufreq/Makefile
+> +++ b/drivers/cpufreq/Makefile
+> @@ -85,6 +85,7 @@ obj-$(CONFIG_ARM_TANGO_CPUFREQ)		+= tango-cpufreq.o
+>  obj-$(CONFIG_ARM_TEGRA20_CPUFREQ)	+= tegra20-cpufreq.o
+>  obj-$(CONFIG_ARM_TEGRA124_CPUFREQ)	+= tegra124-cpufreq.o
+>  obj-$(CONFIG_ARM_TEGRA186_CPUFREQ)	+= tegra186-cpufreq.o
+> +obj-$(CONFIG_ARM_TEGRA194_CPUFREQ)	+= tegra194-cpufreq.o
+>  obj-$(CONFIG_ARM_TI_CPUFREQ)		+= ti-cpufreq.o
+>  obj-$(CONFIG_ARM_VEXPRESS_SPC_CPUFREQ)	+= vexpress-spc-cpufreq.o
+>  
+> diff --git a/drivers/cpufreq/tegra194-cpufreq.c b/drivers/cpufreq/tegra194-cpufreq.c
+> new file mode 100644
+> index 0000000..9df12f4
+> --- /dev/null
+> +++ b/drivers/cpufreq/tegra194-cpufreq.c
+> @@ -0,0 +1,423 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved
+> + */
+> +
+> +#include <linux/cpu.h>
+> +#include <linux/cpufreq.h>
+> +#include <linux/delay.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +
+> +#include <asm/smp_plat.h>
+> +
+> +#include <soc/tegra/bpmp.h>
+> +#include <soc/tegra/bpmp-abi.h>
+> +
+> +#define KHZ                     1000
+> +#define REF_CLK_MHZ             408 /* 408 MHz */
+> +#define US_DELAY                2000
+> +#define US_DELAY_MIN            2
+> +#define CPUFREQ_TBL_STEP_HZ     (50 * KHZ * KHZ)
+> +#define MAX_CNT                 ~0U
+> +
+> +/* cpufreq transisition latency */
+> +#define TEGRA_CPUFREQ_TRANSITION_LATENCY (300 * 1000) /* unit in nanoseconds */
+> +
+> +enum cluster {
+> +	CLUSTER0,
+> +	CLUSTER1,
+> +	CLUSTER2,
+> +	CLUSTER3,
+> +	MAX_CLUSTERS,
+> +};
+> +
+> +struct tegra194_cpufreq_data {
+> +	void __iomem *regs;
+> +	size_t num_clusters;
+> +	struct cpufreq_frequency_table **tables;
+> +};
+> +
+> +static DEFINE_MUTEX(cpufreq_lock);
+> +
+> +struct tegra_cpu_ctr {
+> +	u32 cpu;
+> +	u32 delay;
+> +	u32 coreclk_cnt, last_coreclk_cnt;
+> +	u32 refclk_cnt, last_refclk_cnt;
+> +};
+> +
+> +static struct workqueue_struct *read_counters_wq;
+> +struct read_counters_work {
+> +	struct work_struct work;
+> +	struct tegra_cpu_ctr c;
+> +};
+> +
+> +static enum cluster get_cpu_cluster(u8 cpu)
+> +{
+> +	return MPIDR_AFFINITY_LEVEL(cpu_logical_map(cpu), 1);
+> +}
+> +
+> +/*
+> + * Read per-core Read-only system register NVFREQ_FEEDBACK_EL1.
+> + * The register provides frequency feedback information to
+> + * determine the average actual frequency a core has run at over
+> + * a period of time.
+> + *	[31:0] PLLP counter: Counts at fixed frequency (408 MHz)
+> + *	[63:32] Core clock counter: counts on every core clock cycle
+> + *			where the core is architecturally clocking
+> + */
+> +static u64 read_freq_feedback(void)
+> +{
+> +	u64 val = 0;
+> +
+> +	asm volatile("mrs %0, s3_0_c15_c0_5" : "=r" (val) : );
+> +
+> +	return val;
+> +}
+> +
+> +u16 map_freq_to_ndiv(struct mrq_cpu_ndiv_limits_response *nltbl, u32 freq)
+> +{
+> +	return DIV_ROUND_UP(freq * nltbl->pdiv * nltbl->mdiv,
+> +			    nltbl->ref_clk_hz / KHZ);
+> +}
 
-Right, no problem - but I wanted to ensure it's on-list :)
-
-> 
-> For bugfix patches like that, I think we can reasonably
-> target a turn around of a couple of days, these
-> shouldn't really need to wait weeks for review.
-
-Sure, thanks for picking it up fast enough.  Life happens, etc., and
-it's not always possible to reply in a couple of days.  Since we had
-already covered the main comments in v1 and v2, v3 wasn't going to need
-much attention anyway.
-
-
+This function isn't used anywhere.
