@@ -2,162 +2,115 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D04C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38DE1C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1726E206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0969220833
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:40:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="MnN7qOb/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LkEmcI4T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728568AbfLDPkp (ORCPT
+        id S1728580AbfLDPkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:40:45 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:43817 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728366AbfLDPkn (ORCPT
+        Wed, 4 Dec 2019 10:40:49 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42430 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728357AbfLDPkl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:40:43 -0500
-Received: by mail-qk1-f196.google.com with SMTP id q28so256094qkn.10
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 07:40:42 -0800 (PST)
+        Wed, 4 Dec 2019 10:40:41 -0500
+Received: by mail-wr1-f68.google.com with SMTP id a15so9144050wrf.9;
+        Wed, 04 Dec 2019 07:40:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=TKYIamcANZtYnmd1DLMg7mRBVJgMxnDC2sAqJEPIU6o=;
-        b=MnN7qOb/Aw5hzyId41e+MvM96sCf/2c9FL9dits2novfdCy38l1/jJBsE1+wc4CuQQ
-         wJ6Niv+OzgPFjhdWNvF5jLiIqcA7oN//EoCsfCB2ZNOzcq2M0zI0Orgz+dmeNVH+GvJA
-         gOc3ooWHdDMsuUfWywZwnY2gzvT3IzCIpuqxFfrlccfJKdFW91lXLM9Y1u/dy9s7T3KN
-         I6AgMBz1p0Pf1QQ+UK8fEJlZv5SO1z74BKGRINlVNqAT55wfRmGFV5SECzpLWjlYfb2b
-         FCgn29hXTwL/HXrrQzMlDGu/tGJqh/6IB/UcRDvmaC1OeHDCYh5IHIA7Z096X8tbng5F
-         Wmyw==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=3CWC98h+5raJqQO+ka9hGiDloggJe6dDITvR1rS981E=;
+        b=LkEmcI4TGNSbygcJ7Cko+s9jE4BlWzkAAeKiWUTHaBfr1yAo7wjnpKwN1v9UuMx65t
+         pVyFemQvkAQP4sTma62IrTHQJ7WI6CHPm+t8RcqfXnJ+Edn+3dAu6Ay138Uq+Nd+BG8W
+         7F+vqfv2mPGubnmF3tOpfnqMAxKjleNr67b4Y2neErbm/mGF4i4RitGjxfgNhn/cZOIL
+         zKT/Uk9ijI5xzkpnLzA0o6iXP0ECKT4myNr9sII/seqoKUdblE2IyonZ8c1j72peaK5I
+         RB6Ih+LIi+kJiwXcwP4pgSCroZKNZGxPGP6yU8fAj0vW54DCYUInhLM7NL1c3eEfJZEe
+         SXvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=TKYIamcANZtYnmd1DLMg7mRBVJgMxnDC2sAqJEPIU6o=;
-        b=TATWlqhTsjIoLxAyOtX1YqTF1eKnTI17FWUUp3kzGnzV3j/hGT+kH37jM5ZpNf6pv4
-         oa25y2j5nZWwCJSpNihLW7fvanbe3OixyQ6mqW1BA/Qmq3ozBMWb9DtCYke09EQhHkIY
-         WXI7v3GWBTWcuhbfyReuTkuu/aMjDiwL667oW5Fq3i5nErDbzQJqtEkb8LULW4DDWCDS
-         VuVWg7/AEtkTBCxnvg1mD8/phrSpk51yKFmGd3lM0ivZzPiyZdY6P+Zzu/kpkydhF6RD
-         r4Q6uQG8D8hSMl09vTMawvOv7hzu0cHFcWv/zxgK0AEPm6OwZ0KYMRG5v29SgNAuvc9J
-         2M1g==
-X-Gm-Message-State: APjAAAUK03IsEP5RbD/RPzTSvvWpp6rFcQa6PJpAhEisgHswXttUj4Q+
-        Lppv43DJiacpSiQ91MD6BhA73w==
-X-Google-Smtp-Source: APXvYqzaHMZ7ljtRRla518W1B2GOaSGHFhofv7ElsnTVyzHk/MSaxlYFr3gvMJQ2QFU6avcGGFW/IA==
-X-Received: by 2002:a37:7186:: with SMTP id m128mr3526332qkc.384.1575474042150;
-        Wed, 04 Dec 2019 07:40:42 -0800 (PST)
-Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id y28sm3937692qtk.65.2019.12.04.07.40.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 07:40:41 -0800 (PST)
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
-        peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@microsoft.com,
-        thiruan@microsoft.com, bryankel@microsoft.com,
-        tee-dev@lists.linaro.org, ilias.apalodimas@linaro.org,
-        sumit.garg@linaro.org, rdunlap@infradead.org
-Subject: [PATCH v4 1/1] tpm/tpm_ftpm_tee: add shutdown call back
-Date:   Wed,  4 Dec 2019 10:40:38 -0500
-Message-Id: <20191204154038.2276810-2-pasha.tatashin@soleen.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191204154038.2276810-1-pasha.tatashin@soleen.com>
-References: <20191204154038.2276810-1-pasha.tatashin@soleen.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=3CWC98h+5raJqQO+ka9hGiDloggJe6dDITvR1rS981E=;
+        b=G71MsSE1Kf4zhZRgrYj1D5afo77NuagSHrufcg+dxhsVt4IQBlpmclsMQCvsR+/sbn
+         nLE3vxtDdgaHzuOmfnhgBV1lafXTygDXPoTsPo8hB6xa4uOxr3T4N67moT48MczYi0SL
+         8E1ii1MZrAyApvLfYIXHd5Wxe2i9yVc0+5+F7yos48aQ+BGcKx9aFk2BmnTwdngF2v5L
+         BIfUljgtGr2Ij413xipgasS9OEySMNH3RL+grbg14lrsQJJhdg1M07dgN2Xa5DCpFlOb
+         Gd3kpgtpm/AEnPxDM192h5FI5erqBZN+LgSuDS2ix3dCTrgn9RGKUxtEe1Dt7i56Asae
+         Ubpg==
+X-Gm-Message-State: APjAAAV4b7fkitg52YnUMkMRaLEGBW8/gMyhcMu13XWXmua8RMM7AM1H
+        c97RwdYhUKjmK88oRSLxENnm2brc
+X-Google-Smtp-Source: APXvYqzZo5rJU83WbGx4l8YKrQdA+4qX4BShmaAoOAj76qDv2/BdhY3tSWVbfAfWwkcKl922ZsNHhQ==
+X-Received: by 2002:adf:dd52:: with SMTP id u18mr4805400wrm.131.1575474038983;
+        Wed, 04 Dec 2019 07:40:38 -0800 (PST)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id d19sm2372235wmd.38.2019.12.04.07.40.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Dec 2019 07:40:38 -0800 (PST)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     thomas.lendacky@amd.com, sean.j.christopherson@intel.com,
+        stable@vger.kernel.org
+Subject: [PATCH v2] KVM: x86: use CPUID to locate host page table reserved bits
+Date:   Wed,  4 Dec 2019 16:40:37 +0100
+Message-Id: <1575474037-7903-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add shutdown call back to close existing session with fTPM TA
-to support kexec scenario.
+The comment in kvm_get_shadow_phys_bits refers to MKTME, but the same is actually
+true of SME and SEV.  Just use CPUID[0x8000_0008].EAX[7:0] unconditionally if
+available, it is simplest and works even if memory is not encrypted.
 
-Add parentheses to function names in comments as specified in kdoc.
-
-Signed-off-by: Thirupathaiah Annapureddy <thiruan@microsoft.com>
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Tested-by: Sasha Levin <sashal@kernel.org>
+Cc: stable@vger.kernel.org
+Reported-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- drivers/char/tpm/tpm_ftpm_tee.c | 22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
+ arch/x86/kvm/mmu/mmu.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/char/tpm/tpm_ftpm_tee.c b/drivers/char/tpm/tpm_ftpm_tee.c
-index 6640a14dbe48..22bf553ccf9d 100644
---- a/drivers/char/tpm/tpm_ftpm_tee.c
-+++ b/drivers/char/tpm/tpm_ftpm_tee.c
-@@ -32,7 +32,7 @@ static const uuid_t ftpm_ta_uuid =
- 		  0x82, 0xCB, 0x34, 0x3F, 0xB7, 0xF3, 0x78, 0x96);
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 6f92b40d798c..1e4ee4f8de5f 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -538,16 +538,20 @@ void kvm_mmu_set_mask_ptes(u64 user_mask, u64 accessed_mask,
+ static u8 kvm_get_shadow_phys_bits(void)
+ {
+ 	/*
+-	 * boot_cpu_data.x86_phys_bits is reduced when MKTME is detected
+-	 * in CPU detection code, but MKTME treats those reduced bits as
+-	 * 'keyID' thus they are not reserved bits. Therefore for MKTME
+-	 * we should still return physical address bits reported by CPUID.
++	 * boot_cpu_data.x86_phys_bits is reduced when MKTME or SME are detected
++	 * in CPU detection code, but the processor treats those reduced bits as
++	 * 'keyID' thus they are not reserved bits. Therefore KVM needs to look at
++	 * the physical address bits reported by CPUID.
+ 	 */
+-	if (!boot_cpu_has(X86_FEATURE_TME) ||
+-	    WARN_ON_ONCE(boot_cpu_data.extended_cpuid_level < 0x80000008))
+-		return boot_cpu_data.x86_phys_bits;
++	if (likely(boot_cpu_data.extended_cpuid_level >= 0x80000008))
++		return cpuid_eax(0x80000008) & 0xff;
  
- /**
-- * ftpm_tee_tpm_op_recv - retrieve fTPM response.
-+ * ftpm_tee_tpm_op_recv() - retrieve fTPM response.
-  * @chip:	the tpm_chip description as specified in driver/char/tpm/tpm.h.
-  * @buf:	the buffer to store data.
-  * @count:	the number of bytes to read.
-@@ -61,7 +61,7 @@ static int ftpm_tee_tpm_op_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+-	return cpuid_eax(0x80000008) & 0xff;
++	/*
++	 * Quite weird to have VMX or SVM but not MAXPHYADDR; probably a VM with
++	 * custom CPUID.  Proceed with whatever the kernel found since these features
++	 * aren't virtualizable (SME/SEV also require CPUIDs higher than 0x80000008).
++	 */
++	return boot_cpu_data.x86_phys_bits;
  }
  
- /**
-- * ftpm_tee_tpm_op_send - send TPM commands through the TEE shared memory.
-+ * ftpm_tee_tpm_op_send() - send TPM commands through the TEE shared memory.
-  * @chip:	the tpm_chip description as specified in driver/char/tpm/tpm.h
-  * @buf:	the buffer to send.
-  * @len:	the number of bytes to send.
-@@ -208,7 +208,7 @@ static int ftpm_tee_match(struct tee_ioctl_version_data *ver, const void *data)
- }
- 
- /**
-- * ftpm_tee_probe - initialize the fTPM
-+ * ftpm_tee_probe() - initialize the fTPM
-  * @pdev: the platform_device description.
-  *
-  * Return:
-@@ -298,7 +298,7 @@ static int ftpm_tee_probe(struct platform_device *pdev)
- }
- 
- /**
-- * ftpm_tee_remove - remove the TPM device
-+ * ftpm_tee_remove() - remove the TPM device
-  * @pdev: the platform_device description.
-  *
-  * Return:
-@@ -328,6 +328,19 @@ static int ftpm_tee_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+/**
-+ * ftpm_tee_shutdown() - shutdown the TPM device
-+ * @pdev: the platform_device description.
-+ */
-+static void ftpm_tee_shutdown(struct platform_device *pdev)
-+{
-+	struct ftpm_tee_private *pvt_data = dev_get_drvdata(&pdev->dev);
-+
-+	tee_shm_free(pvt_data->shm);
-+	tee_client_close_session(pvt_data->ctx, pvt_data->session);
-+	tee_client_close_context(pvt_data->ctx);
-+}
-+
- static const struct of_device_id of_ftpm_tee_ids[] = {
- 	{ .compatible = "microsoft,ftpm" },
- 	{ }
-@@ -341,6 +354,7 @@ static struct platform_driver ftpm_tee_driver = {
- 	},
- 	.probe = ftpm_tee_probe,
- 	.remove = ftpm_tee_remove,
-+	.shutdown = ftpm_tee_shutdown,
- };
- 
- module_platform_driver(ftpm_tee_driver);
+ static void kvm_mmu_reset_all_pte_masks(void)
 -- 
-2.24.0
+1.8.3.1
 
