@@ -2,71 +2,73 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AF8C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B9EC2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A3BB2086D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BA70206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="rmBYXtdu"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="c4j+Ztgm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728617AbfLDP7c (ORCPT
+        id S1728653AbfLDP7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:59:32 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45364 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728593AbfLDP7a (ORCPT
+        Wed, 4 Dec 2019 10:59:44 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:45858 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728149AbfLDP7m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:59:30 -0500
-Received: by mail-wr1-f68.google.com with SMTP id j42so9179386wrj.12
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 07:59:28 -0800 (PST)
+        Wed, 4 Dec 2019 10:59:42 -0500
+Received: by mail-qv1-f68.google.com with SMTP id c2so8007qvp.12
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 07:59:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=CdsiFTfek5xLI09RRog+58+WxPNQjw5a0l6zl3ADLU8=;
-        b=rmBYXtduNWBjbJdBB+q6r8IPnN9IU+yx+mQDtMjrL6H4bTPot1sIMDnhXMoAJg8zR1
-         MWtQXlxfH1Lo+XbbhWyVrezj+c8MS5InDMMXyMEkMFKiwiZ3jxn214vTKImaqO814FHS
-         ML5WqrnkJaDMVU9EvxqemBXs7quBnEfMdz5rpNlXNxspdd7N4Zhtx0W5Gl4Vl9iTlrzr
-         aBB+6xVLC+Rg2FJcTlkkgXyzMHveem+THF9aBXQo0fvoq/AKIQQzXLt0DGSaP7mnrVHf
-         qs4X4sIz7Ylf3KCih22Pl+za7oHFWJuoNuREYki9j/GxBoQ9+9uuthx2b2ud7hAR9iyI
-         bRMQ==
+        d=soleen.com; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=B4XIlwcPKUsoqosCadFXztpXMTvT+T/4U+sjmBi4tLg=;
+        b=c4j+Ztgm/EvqQLOxtKNqB50ES4jyTK9ImbsYQeM27McLxxmjLsWHkq2CDJ61QvcZGt
+         TSIg2UFfd540i8b/2Z2Hwi6KewsIrl8M+ZMjkmmz0AH3RyNkWXu/TBra3btjM+RowpF2
+         lnR5e8wiMu1dyuZ6luT/JMhyCrfigRtUhQOx9We3Lf9xM24sNtzXqGMSL097Sx7gEsLg
+         KwvdkQsiGyhqYhHzQ9FyvKhSizAN4GC5hkTN39uyLIFnQV3bocA8Anl0lwk/n+BOmXay
+         AECzz0n+kpA3/KWiJo6E1bQT0t0hx8B3Afv+IG07qqEdkwhCJu8TrTDPpCW+68QH0zsW
+         TyXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=CdsiFTfek5xLI09RRog+58+WxPNQjw5a0l6zl3ADLU8=;
-        b=kfoc0g6lDLNtVLiSfBbQp8QnWZNaTlUSgTuEBs0tJuLTUTth+cJbCN/UagC96E6efU
-         zcxuklqC8KKryzODq+AzqM/5mmjL6f2K/xqsPhjGzsDI3zABemSwZ/qsam/yU+IveMDc
-         om8L5rb+0U5R1eVx8hVXeqQ16kv3C4A4sjdsFhlbOSytvzGaw79MX3qwxMOjdk4jHq4Y
-         4s+7putYfSggzmGluqsFq3icwAAdF4PqyX27fWy8O9wnrJnjKmilm4BZC4VN0e1eGQJ7
-         JXgBzQ9nnWjj6oRISDFWQRuPz+qRcbMH9ZJ1D2/qQJeNfo7+w6ZL9I52u11horjApzrq
-         UMQA==
-X-Gm-Message-State: APjAAAXWcJrK27audmeQbEsQIaeIo17kO8JOI7blkgBX6KnyMtMiCrLL
-        3OhmZRsanr/3QSg84Mi5Ovwmkg==
-X-Google-Smtp-Source: APXvYqzgSN35FsKw+z4ACL3rPKUl4UEmfcPcuA9exxMvkFs/K/t3RLZn3dchtV+0t9ZL9bpN7xdjUg==
-X-Received: by 2002:adf:ec48:: with SMTP id w8mr4976853wrn.19.1575475167360;
-        Wed, 04 Dec 2019 07:59:27 -0800 (PST)
-Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id u18sm8640508wrt.26.2019.12.04.07.59.26
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=B4XIlwcPKUsoqosCadFXztpXMTvT+T/4U+sjmBi4tLg=;
+        b=CUQhi3S3EvEeJuvaie/8xOyZISRP1BV07mLqOS7N/1zNMlr4XsCKoI8xlBnAJTIZRH
+         8WUEu/xKNDO2OPNdUZtLC2/wT+mWxDcEQ3Sc/DAuI4Wgc6b/uKFFwOqQOsiKL4No8vwF
+         tluf+0PooPIEkKLzOzlU48OcT25pkeXCgOn7C6Z7TCYhTOHN35HswHiQhI1MmG5KT4U5
+         OuJ7k2jyeO7SsW0D1WV4syyEjdMre+DdH+GESiOJshR7YNZpa0Kv4+2MNAYVsRUKkwJ5
+         oayQGkW9CNqBf3FBmTRpXZiuNReIPdZTc1g4QDfykupA0D/sn6nZStqdVXfAbYgQcu8D
+         X/ww==
+X-Gm-Message-State: APjAAAVz62S2VFrD5mTe8WctdAOhIl+pQTExa2VWoRAfTYOj1ZiFlMZI
+        mm20GdqM1NWrY/tfsKZEJBAOBg==
+X-Google-Smtp-Source: APXvYqy9Sv7OweVlEwUACniS9sI2NTJhlhLVmJJdo8rkykaqd/Z79m3Kw4c7KPnxKcrd/ZJF72LzCg==
+X-Received: by 2002:a0c:a9cc:: with SMTP id c12mr3320318qvb.222.1575475180740;
+        Wed, 04 Dec 2019 07:59:40 -0800 (PST)
+Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
+        by smtp.gmail.com with ESMTPSA id w21sm4177585qth.17.2019.12.04.07.59.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 07:59:26 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 07/11] gpiolib: rework the locking mechanism for lineevent kfifo
-Date:   Wed,  4 Dec 2019 16:59:10 +0100
-Message-Id: <20191204155912.17590-8-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191204155912.17590-1-brgl@bgdev.pl>
-References: <20191204155912.17590-1-brgl@bgdev.pl>
+        Wed, 04 Dec 2019 07:59:40 -0800 (PST)
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
+        ebiederm@xmission.com, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, corbet@lwn.net,
+        catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
+        james.morse@arm.com, vladimir.murzin@arm.com,
+        matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org,
+        mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com,
+        tglx@linutronix.de
+Subject: [PATCH v8 00/25] arm64: MMU enabled kexec relocation
+Date:   Wed,  4 Dec 2019 10:59:13 -0500
+Message-Id: <20191204155938.2279686-1-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,141 +76,243 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Many changes compared to version 6, so I decided to send it out now.
+James Morse raised an important issue to which I do not have a solution
+yet. But would like to discuss it.
 
-The read_lock mutex is supposed to prevent collisions between reading
-and writing to the line event kfifo but it's actually only taken when
-the events are being read from it.
-
-Drop the mutex entirely and reuse the spinlock made available to us in
-the waitqueue struct. Take the lock whenever the fifo is modified or
-inspected. Drop the call to kfifo_to_user() and instead first extract
-the new element from kfifo when the lock is taken and only then pass
-it on to the user after the spinlock is released.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/gpio/gpiolib.c | 54 ++++++++++++++++++++++--------------------
- 1 file changed, 28 insertions(+), 26 deletions(-)
+https://lore.kernel.org/lkml/45a2f0b8-5bac-8b5d-d595-f92e9acb27ad@arm.com
+> +	/* Map relocation function va == pa */
+> +	rc = trans_pgd_map_page(&info, trans_ttbr0,  __va(kern_reloc),
+> +				kern_reloc, PAGE_KERNEL_EXEC);
+> +	if (rc)
+> +		return rc;
+James wrote:
+You can't do this with the page table helpers. We support platforms
+with no memory in range of TTBR0's VA space. See dd006da21646f
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index b7043946c029..43f90eca6d45 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -788,8 +788,6 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
-  * @irq: the interrupt that trigger in response to events on this GPIO
-  * @wait: wait queue that handles blocking reads of events
-  * @events: KFIFO for the GPIO events
-- * @read_lock: mutex lock to protect reads from colliding with adding
-- * new events to the FIFO
-  * @timestamp: cache for the timestamp storing it between hardirq
-  * and IRQ thread, used to bring the timestamp close to the actual
-  * event
-@@ -802,7 +800,6 @@ struct lineevent_state {
- 	int irq;
- 	wait_queue_head_t wait;
- 	DECLARE_KFIFO(events, struct gpioevent_data, 16);
--	struct mutex read_lock;
- 	u64 timestamp;
- };
- 
-@@ -818,8 +815,10 @@ static __poll_t lineevent_poll(struct file *filep,
- 
- 	poll_wait(filep, &le->wait, wait);
- 
-+	spin_lock(&le->wait.lock);
- 	if (!kfifo_is_empty(&le->events))
- 		events = EPOLLIN | EPOLLRDNORM;
-+	spin_unlock(&le->wait.lock);
- 
- 	return events;
- }
-@@ -831,43 +830,47 @@ static ssize_t lineevent_read(struct file *filep,
- 			      loff_t *f_ps)
- {
- 	struct lineevent_state *le = filep->private_data;
--	unsigned int copied;
-+	struct gpioevent_data event;
- 	int ret;
- 
--	if (count < sizeof(struct gpioevent_data))
-+	if (count < sizeof(event))
- 		return -EINVAL;
- 
--	do {
-+	for (;;) {
-+		spin_lock(&le->wait.lock);
- 		if (kfifo_is_empty(&le->events)) {
--			if (filep->f_flags & O_NONBLOCK)
-+			if (filep->f_flags & O_NONBLOCK) {
-+				spin_unlock(&le->wait.lock);
- 				return -EAGAIN;
-+			}
- 
--			ret = wait_event_interruptible(le->wait,
-+			ret = wait_event_interruptible_locked(le->wait,
- 					!kfifo_is_empty(&le->events));
--			if (ret)
-+			if (ret) {
-+				spin_unlock(&le->wait.lock);
- 				return ret;
--		}
-+			}
- 
--		if (mutex_lock_interruptible(&le->read_lock))
--			return -ERESTARTSYS;
--		ret = kfifo_to_user(&le->events, buf, count, &copied);
--		mutex_unlock(&le->read_lock);
-+		}
- 
--		if (ret)
--			return ret;
-+		ret = kfifo_out(&le->events, &event, 1);
-+		spin_unlock(&le->wait.lock);
-+		if (ret == 1)
-+			break;
- 
- 		/*
--		 * If we couldn't read anything from the fifo (a different
--		 * thread might have been faster) we either return -EAGAIN if
--		 * the file descriptor is non-blocking, otherwise we go back to
--		 * sleep and wait for more data to arrive.
-+		 * We should never get here since we're holding the lock from
-+		 * the moment we noticed a new event until calling kfifo_out()
-+		 * but we must check the return value. On the off-chance - just
-+		 * go back to waiting.
- 		 */
--		if (copied == 0 && (filep->f_flags & O_NONBLOCK))
--			return -EAGAIN;
-+	}
- 
--	} while (copied == 0);
-+	ret = copy_to_user(buf, &event, sizeof(event));
-+	if (ret)
-+		return -EFAULT;
- 
--	return copied;
-+	return sizeof(event);
- }
- 
- static int lineevent_release(struct inode *inode, struct file *filep)
-@@ -969,7 +972,7 @@ static irqreturn_t lineevent_irq_thread(int irq, void *p)
- 		return IRQ_NONE;
- 	}
- 
--	ret = kfifo_put(&le->events, ge);
-+	ret = kfifo_in_spinlocked(&le->events, &ge, 1, &le->wait.lock);
- 	if (ret)
- 		wake_up_poll(&le->wait, EPOLLIN);
- 
-@@ -1084,7 +1087,6 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
- 
- 	INIT_KFIFO(le->events);
- 	init_waitqueue_head(&le->wait);
--	mutex_init(&le->read_lock);
- 
- 	/* Request a thread to read the events */
- 	ret = request_threaded_irq(le->irq,
+You will need some idmapped memory to turn the MMU off on a system
+that booted at EL1. This will need to be in a set of page tables
+that the helpers can't easily touch - so it should only be a single
+page. (like the arch code's existing idmap - although that may
+have been overwritten).
+
+(I have a machine where this is a problem, if I get the time I will
+have a stab at making hibernate's safe page idmaped).
+---
+
+As I understand, there are platforms where TTBR0 cannot include all
+physical memory for idmap. However, kexec must have at least one page
+idmapped (kimage->control_code_page) to be able to relocate kernel
+while MMU is enabled:
+
+I am still trying to fully understand the problem:
+CONFIG_ARM64_VA_BITS must be smaller than 48 and physical memory must
+start at a high address for this problem to occur.
+
+Why can't we simply decrease T0SZ to cover all physical memory?
+
+Changelog:
+v8:
+	- Synced with mainline to keep series up-to-date
+v7:
+	-- Addressed comments from James Morse
+	- arm64: hibernate: pass the allocated pgdp to ttbr0
+	  Removed "Fixes" tag, and added Added Reviewed-by: James Morse
+	- arm64: hibernate: check pgd table allocation
+	  Sent out as a standalone patch so it can be sent to stable
+	  Series applies on mainline + this patch
+	- arm64: hibernate: add trans_pgd public functions
+	  Remove second allocation of tmp_pg_dir in swsusp_arch_resume
+	  Added Reviewed-by: James Morse <james.morse@arm.com>
+	- arm64: kexec: move relocation function setup and clean up
+	  Fixed typo in commit log
+	  Changed kern_reloc to phys_addr_t types.
+	  Added explanation why kern_reloc is needed.
+	  Split into four patches:
+	  arm64: kexec: make dtb_mem always enabled
+	  arm64: kexec: remove unnecessary debug prints
+	  arm64: kexec: call kexec_image_info only once
+	  arm64: kexec: move relocation function setup
+	- arm64: kexec: add expandable argument to relocation function
+	  Changed types of new arguments from unsigned long to phys_addr_t.
+	  Changed offset prefix to KEXEC_*
+	  Split into four patches:
+	  arm64: kexec: cpu_soft_restart change argument types
+	  arm64: kexec: arm64_relocate_new_kernel clean-ups
+	  arm64: kexec: arm64_relocate_new_kernel don't use x0 as temp
+	  arm64: kexec: add expandable argument to relocation function
+	- arm64: kexec: configure trans_pgd page table for kexec
+	  Added invalid entries into EL2 vector table
+	  Removed KEXEC_EL2_VECTOR_TABLE_SIZE and KEXEC_EL2_VECTOR_TABLE_OFFSET
+	  Copy relocation functions and table into separate pages
+	  Changed types in kern_reloc_arg.
+	  Split into three patches:
+	  arm64: kexec: offset for relocation function
+	  arm64: kexec: kexec EL2 vectors
+	  arm64: kexec: configure trans_pgd page table for kexec
+	- arm64: kexec: enable MMU during kexec relocation
+	  Split into two patches:
+	  arm64: kexec: enable MMU during kexec relocation
+	  arm64: kexec: remove head from relocation argument
+v6:
+	- Sync with mainline tip
+	- Added Acked's from Dave Young
+v5:
+	- Addressed comments from Matthias Brugger: added review-by's, improved
+	  comments, and made cleanups to swsusp_arch_resume() in addition to
+	  create_safe_exec_page().
+	- Synced with mainline tip.
+v4:
+	- Addressed comments from James Morse.
+	- Split "check pgd table allocation" into two patches, and moved to
+	  the beginning of series  for simpler backport of the fixes.
+	  Added "Fixes:" tags to commit logs.
+	- Changed "arm64, hibernate:" to "arm64: hibernate:"
+	- Added Reviewed-by's
+	- Moved "add PUD_SECT_RDONLY" earlier in series to be with other
+	  clean-ups
+	- Added "Derived from:" to arch/arm64/mm/trans_pgd.c
+	- Removed "flags" from trans_info
+	- Changed .trans_alloc_page assumption to return zeroed page.
+	- Simplify changes to trans_pgd_map_page(), by keeping the old
+	  code.
+	- Simplify changes to trans_pgd_create_copy, by keeping the old
+	  code.
+	- Removed: "add trans_pgd_create_empty"
+	- replace init_mm with NULL, and keep using non "__" version of
+	  populate functions.
+v3:
+	- Split changes to create_safe_exec_page() into several patches for
+	  easier review as request by Mark Rutland. This is why this series
+	  has 3 more patches.
+	- Renamed trans_table to tans_pgd as agreed with Mark. The header
+	  comment in trans_pgd.c explains that trans stands for
+	  transitional page tables. Meaning they are used in transition
+	  between two kernels.
+v2:
+	- Fixed hibernate bug reported by James Morse
+	- Addressed comments from James Morse:
+	  * More incremental changes to trans_table
+	  * Removed TRANS_FORCEMAP
+	  * Added kexec reboot data for image with 380M in size.
+
+Enable MMU during kexec relocation in order to improve reboot performance.
+
+If kexec functionality is used for a fast system update, with a minimal
+downtime, the relocation of kernel + initramfs takes a significant portion
+of reboot.
+
+The reason for slow relocation is because it is done without MMU, and thus
+not benefiting from D-Cache.
+
+Performance data
+----------------
+For this experiment, the size of kernel plus initramfs is small, only 25M.
+If initramfs was larger, than the improvements would be greater, as time
+spent in relocation is proportional to the size of relocation.
+
+Previously:
+kernel shutdown	0.022131328s
+relocation	0.440510736s
+kernel startup	0.294706768s
+
+Relocation was taking: 58.2% of reboot time
+
+Now:
+kernel shutdown	0.032066576s
+relocation	0.022158152s
+kernel startup	0.296055880s
+
+Now: Relocation takes 6.3% of reboot time
+
+Total reboot is x2.16 times faster.
+
+With bigger userland (fitImage 380M), the reboot time is improved by 3.57s,
+and is reduced from 3.9s down to 0.33s
+
+Previous approaches and discussions
+-----------------------------------
+https://lore.kernel.org/lkml/20191016200034.1342308-1-pasha.tatashin@soleen.com
+version 7 of this series
+
+https://lore.kernel.org/lkml/20191004185234.31471-1-pasha.tatashin@soleen.com
+version 6 of this series
+
+https://lore.kernel.org/lkml/20190923203427.294286-1-pasha.tatashin@soleen.com
+version 5 of this series
+
+https://lore.kernel.org/lkml/20190909181221.309510-1-pasha.tatashin@soleen.com
+version 4 of this series
+
+https://lore.kernel.org/lkml/20190821183204.23576-1-pasha.tatashin@soleen.com
+version 3 of this series
+
+https://lore.kernel.org/lkml/20190817024629.26611-1-pasha.tatashin@soleen.com
+version 2 of this series
+
+https://lore.kernel.org/lkml/20190801152439.11363-1-pasha.tatashin@soleen.com
+version 1 of this series
+
+https://lore.kernel.org/lkml/20190709182014.16052-1-pasha.tatashin@soleen.com
+reserve space for kexec to avoid relocation, involves changes to generic code
+to optimize a problem that exists on arm64 only:
+
+https://lore.kernel.org/lkml/20190716165641.6990-1-pasha.tatashin@soleen.com
+The first attempt to enable MMU, some bugs that prevented performance
+improvement. The page tables unnecessary configured idmap for the whole
+physical space.
+
+https://lore.kernel.org/lkml/20190731153857.4045-1-pasha.tatashin@soleen.com
+No linear copy, bug with EL2 reboots.
+
+Pavel Tatashin (25):
+  kexec: quiet down kexec reboot
+  kexec: add machine_kexec_post_load()
+  arm64: kexec: remove unnecessary debug prints
+  arm64: kexec: make dtb_mem always enabled
+  arm64: hibernate: pass the allocated pgdp to ttbr0
+  arm64: hibernate: use get_safe_page directly
+  arm64: hibernate: remove gotos as they are not needed
+  arm64: hibernate: rename dst to page in create_safe_exec_page
+  arm64: hibernate: add PUD_SECT_RDONLY
+  arm64: hibernate: add trans_pgd public functions
+  arm64: hibernate: move page handling function to new trans_pgd.c
+  arm64: trans_pgd: make trans_pgd_map_page generic
+  arm64: trans_pgd: pass allocator trans_pgd_create_copy
+  arm64: trans_pgd: pass NULL instead of init_mm to *_populate functions
+  arm64: kexec: move relocation function setup
+  arm64: kexec: call kexec_image_info only once
+  arm64: kexec: cpu_soft_restart change argument types
+  arm64: kexec: arm64_relocate_new_kernel clean-ups
+  arm64: kexec: arm64_relocate_new_kernel don't use x0 as temp
+  arm64: kexec: add expandable argument to relocation function
+  arm64: kexec: offset for relocation function
+  arm64: kexec: kexec EL2 vectors
+  arm64: kexec: configure trans_pgd page table for kexec
+  arm64: kexec: enable MMU during kexec relocation
+  arm64: kexec: remove head from relocation argument
+
+ arch/arm64/Kconfig                     |   4 +
+ arch/arm64/include/asm/kexec.h         |  47 ++++-
+ arch/arm64/include/asm/pgtable-hwdef.h |   1 +
+ arch/arm64/include/asm/trans_pgd.h     |  34 ++++
+ arch/arm64/kernel/asm-offsets.c        |  14 ++
+ arch/arm64/kernel/cpu-reset.S          |   8 +-
+ arch/arm64/kernel/cpu-reset.h          |  14 +-
+ arch/arm64/kernel/hibernate.c          | 255 ++++---------------------
+ arch/arm64/kernel/machine_kexec.c      | 186 ++++++++++++++----
+ arch/arm64/kernel/relocate_kernel.S    | 233 ++++++++++++----------
+ arch/arm64/mm/Makefile                 |   1 +
+ arch/arm64/mm/trans_pgd.c              | 244 +++++++++++++++++++++++
+ kernel/kexec.c                         |   4 +
+ kernel/kexec_core.c                    |   8 +-
+ kernel/kexec_file.c                    |   4 +
+ kernel/kexec_internal.h                |   2 +
+ 16 files changed, 690 insertions(+), 369 deletions(-)
+ create mode 100644 arch/arm64/include/asm/trans_pgd.h
+ create mode 100644 arch/arm64/mm/trans_pgd.c
+
 -- 
-2.23.0
+2.24.0
 
