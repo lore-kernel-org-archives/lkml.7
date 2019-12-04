@@ -2,256 +2,98 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 169B4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20724C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C248320661
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA46020661
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:28:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="uMS/NAAQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nfKG/bbA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbfLDW0W (ORCPT
+        id S1728237AbfLDW2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 17:26:22 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41283 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728071AbfLDW0W (ORCPT
+        Wed, 4 Dec 2019 17:28:19 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:32842 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728053AbfLDW2S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 17:26:22 -0500
-Received: by mail-pg1-f194.google.com with SMTP id x8so539848pgk.8
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 14:26:21 -0800 (PST)
+        Wed, 4 Dec 2019 17:28:18 -0500
+Received: by mail-pf1-f196.google.com with SMTP id y206so561177pfb.0;
+        Wed, 04 Dec 2019 14:28:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WuS+epwtlykmkeLsdcdL+jgUGc7m71KuRzIwHTzO75U=;
-        b=uMS/NAAQcVsPCZpzd51ky8GrMVlkWa8WVFzC8FoZdxq5FNcwlqEnjsrHPswlamOprW
-         UvUTkdze6o+kq19ps1Og2ihLF9eI+p4dvHQTSzdWvVusFCHuSZXu74btoNi2GnT63t00
-         zOvxH8dvkmK5ov7BG8IbOiKQCkf/eMnbMqBJtNMinzdRyUrTuIkFKseDA9kkq/izCG8w
-         aIPdVqFJM6gRmnQ06k1J1SMqtJKZv3BIw/vDUIGPQESKJqZFItYPD0cxm8OT6XCeVgKX
-         CDUh8T8E3PtWgqyQ0DyF7jPlEM/jrkkeGm3ETrOmB0x6JSPDCj5iciDXtpnpdqcUOjz4
-         EEcw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AiGWSuLOFBQ4k5wKIT3jlmc1KWiqycxf7Nfr0tXx5d8=;
+        b=nfKG/bbABLOMg3FJRiXUhFFOqjPegCenXZFj8pLWkhZ3UW6y1VkbbnuHtpfeyGquVl
+         NFeA9+8GvuZvJB1emgkRGHQBBJ3vlKnUvNhRSUoM9ZSWer26+1AIskD5WHzMxo6+bTGd
+         zxUHUfzF+0TIpR9CFUruXqXCjZeOCLr+ieDE/AmfXyabct+SmX66sW9/s77MA6rF9WUE
+         9sQCx/ihqYfuTfCWBHhBLsYyUvn/k37lE15RSnvNQ2MbuVSLD7DDDUXuO0MzWAhMCRoJ
+         FtCURkRKpY7ai4ncFE6DaH/eAiXnJTPpCY/y4twPmsI4VLudBYyJyXfHt8bACJyTlPTt
+         OaRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=WuS+epwtlykmkeLsdcdL+jgUGc7m71KuRzIwHTzO75U=;
-        b=tMHCMHoWJM4Yv8fxsiQxUM6xJG2DYFCq+KmVaFFyCS3TWa0eZVyQZ5WmDmJtZh8N+s
-         pLZi38QzE7EHdzXp0U5nxRwzrAZJrGzplw/9as4aVKEMfxOemnob3WrV//aD5+t7/lPn
-         qJ99Aey29qtQmNbGBhLfMKJot2BOyEjZSoAejsXfZVxO6Ohh5CEbC3VIXkb3PSAqtID6
-         a0OYrPY9K2F2n7i/OTagQVW8tRYEmBjI0eXGiyJqt0GYWUaPaSi63bprpbquNKrp/BRl
-         3zKvf1Czi+FzXULu2Y21GWONhRiJMpl3GF2P/w6OsuKrG7pU8LWsyCxisdwovlMO0i6q
-         XEpw==
-X-Gm-Message-State: APjAAAUK7/bZsfQ15Z93TAqzcfbP3wTS0fVPi/7nIsmR6ZpBITMSwGgF
-        ZaDyi8xnyElK5SvN2WNlKXCd7kcJf80=
-X-Google-Smtp-Source: APXvYqynl2RRnkwLmzKxlgHMHjXddBtPWQGOBV2CJG+0t0BsdTfOpBeuZ/mOgCFtitHewZHrjb2WxQ==
-X-Received: by 2002:a63:4a1a:: with SMTP id x26mr5523761pga.298.1575498381278;
-        Wed, 04 Dec 2019 14:26:21 -0800 (PST)
-Received: from [10.61.2.175] ([122.99.82.10])
-        by smtp.gmail.com with ESMTPSA id o7sm10014067pfg.138.2019.12.04.14.26.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Dec 2019 14:26:20 -0800 (PST)
-Subject: Re: [PATCH v4 1/2] powerpc/pseries/iommu: Share the per-cpu TCE page
- with the hypervisor.
-To:     Ram Pai <linuxram@us.ibm.com>,
-        David Gibson <david@gibson.dropbear.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, paulus@ozlabs.org,
-        mdroth@linux.vnet.ibm.com, hch@lst.de, andmike@us.ibm.com,
-        sukadev@linux.vnet.ibm.com, mst@redhat.com, ram.n.pai@gmail.com,
-        cai@lca.pw, tglx@linutronix.de, bauerman@linux.ibm.com,
-        linux-kernel@vger.kernel.org
-References: <f08ace25-fa94-990b-1b6d-a1c0f30d6348@ozlabs.ru>
- <20191203020850.GA12354@oc0525413822.ibm.com>
- <0b56ce3e-6c32-5f3b-e7cc-0d419a61d71d@ozlabs.ru>
- <20191203040509.GB12354@oc0525413822.ibm.com>
- <a0f19e65-81eb-37bd-928b-7a57a8660e3d@ozlabs.ru>
- <20191203165204.GA5079@oc0525413822.ibm.com>
- <3a17372a-fcee-efbf-0a05-282ffb1adc90@ozlabs.ru>
- <20191204004958.GB5063@oc0525413822.ibm.com>
- <5963ff32-2119-be7c-d1e5-63457888a73b@ozlabs.ru>
- <20191204033618.GA5031@umbus.fritz.box>
- <20191204204232.GE5063@oc0525413822.ibm.com>
-From:   Alexey Kardashevskiy <aik@ozlabs.ru>
-Autocrypt: addr=aik@ozlabs.ru; keydata=
- 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
-Message-ID: <c2dda233-2a11-a066-5d44-68e2a0b5121e@ozlabs.ru>
-Date:   Thu, 5 Dec 2019 09:26:14 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AiGWSuLOFBQ4k5wKIT3jlmc1KWiqycxf7Nfr0tXx5d8=;
+        b=p6Zsq4kuWHa5FbfS25f1bPhHMAKasr+C7RYL0Sc6Ts3fvkmhQSNlqSz1j9U805pLY7
+         kyRxVLUVYez1r2H5QTNnZwsAjCQkaeN7Os5B5cUsqaCTQcj3sZlrD2sscaiEMGgK6fCM
+         /MJgXB16bdsS7XUqjl3PiBygq06dROPBepB0N79iSZbjDB4HAoPMKtmvJf5S0eE+FAau
+         Iq5BYQwMC/PwTtf74K6VWcdMV57HbrOHjN5RTtO+j+wC4QOCLPzB0Yf55Q9YEyiSlspB
+         LMkKKrv19JgzASSE/PFU1gaq1OWDS3yqYIkESkMZcy6/6FoW9aZEAtFzpn6BLIMQermM
+         FrAw==
+X-Gm-Message-State: APjAAAWf40v31HxwVYtn6p8gM7DgPMhvKLCJmaOn3oVSxqP74ZK80UYm
+        bte1yQ2mY+7YMJYV8QIyk0krAHTTzy9t8svFquo=
+X-Google-Smtp-Source: APXvYqwUv5IrrJRXQngWj0b3tWm2la0iej/Xs+XUI/m5bVTkSGf4SmMIgIU1NBe1scpg8POOwNv/g0pwPlLW9OaCN9U=
+X-Received: by 2002:a63:941:: with SMTP id 62mr6137453pgj.203.1575498498205;
+ Wed, 04 Dec 2019 14:28:18 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191204204232.GE5063@oc0525413822.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191204155912.17590-1-brgl@bgdev.pl> <20191204155912.17590-9-brgl@bgdev.pl>
+In-Reply-To: <20191204155912.17590-9-brgl@bgdev.pl>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 5 Dec 2019 00:28:06 +0200
+Message-ID: <CAHp75VfVHr2LGZYSVhQ+KmhvGrnH=1ZNAPzJOTdZDh7wsjFddw@mail.gmail.com>
+Subject: Re: [PATCH v2 08/11] gpiolib: emit a debug message when adding events
+ to a full kfifo
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Dec 4, 2019 at 6:04 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Currently if the line-event kfifo is full, we just silently drop any new
+> events. Add a ratelimited debug message so that we at least have some
+> trace in the kernel log of event overflow.
+>
 
+Hmm... I don't like prints in IRQ context (even threaded).
+Can we rather switch to trace points at some point?
 
-On 05/12/2019 07:42, Ram Pai wrote:
-> On Wed, Dec 04, 2019 at 02:36:18PM +1100, David Gibson wrote:
->> On Wed, Dec 04, 2019 at 12:08:09PM +1100, Alexey Kardashevskiy wrote:
->>>
->>>
->>> On 04/12/2019 11:49, Ram Pai wrote:
->>>> On Wed, Dec 04, 2019 at 11:04:04AM +1100, Alexey Kardashevskiy wrote:
->>>>>
->>>>>
->>>>> On 04/12/2019 03:52, Ram Pai wrote:
->>>>>> On Tue, Dec 03, 2019 at 03:24:37PM +1100, Alexey Kardashevskiy wrote:
->>>>>>>
->>>>>>>
->>>>>>> On 03/12/2019 15:05, Ram Pai wrote:
->>>>>>>> On Tue, Dec 03, 2019 at 01:15:04PM +1100, Alexey Kardashevskiy wrote:
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> On 03/12/2019 13:08, Ram Pai wrote:
->>>>>>>>>> On Tue, Dec 03, 2019 at 11:56:43AM +1100, Alexey Kardashevskiy wrote:
->>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> On 02/12/2019 17:45, Ram Pai wrote:
->>>>>>>>>>>> H_PUT_TCE_INDIRECT hcall uses a page filled with TCE entries, as one of
->>>>>>>>>>>> its parameters. One page is dedicated per cpu, for the lifetime of the
->>>>>>>>>>>> kernel for this purpose. On secure VMs, contents of this page, when
->>>>>>>>>>>> accessed by the hypervisor, retrieves encrypted TCE entries.  Hypervisor
->>>>>>>>>>>> needs to know the unencrypted entries, to update the TCE table
->>>>>>>>>>>> accordingly.  There is nothing secret or sensitive about these entries.
->>>>>>>>>>>> Hence share the page with the hypervisor.
->>>>>>>>>>>
->>>>>>>>>>> This unsecures a page in the guest in a random place which creates an
->>>>>>>>>>> additional attack surface which is hard to exploit indeed but
->>>>>>>>>>> nevertheless it is there.
->>>>>>>>>>> A safer option would be not to use the
->>>>>>>>>>> hcall-multi-tce hyperrtas option (which translates FW_FEATURE_MULTITCE
->>>>>>>>>>> in the guest).
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> Hmm... How do we not use it?  AFAICT hcall-multi-tce option gets invoked
->>>>>>>>>> automatically when IOMMU option is enabled.
->>>>>>>>>
->>>>>>>>> It is advertised by QEMU but the guest does not have to use it.
->>>>>>>>
->>>>>>>> Are you suggesting that even normal-guest, not use hcall-multi-tce?
->>>>>>>> or just secure-guest?  
->>>>>>>
->>>>>>>
->>>>>>> Just secure.
->>>>>>
->>>>>> hmm..  how are the TCE entries communicated to the hypervisor, if
->>>>>> hcall-multi-tce is disabled?
->>>>>
->>>>> Via H_PUT_TCE which updates 1 entry at once (sets or clears).
->>>>> hcall-multi-tce  enables H_PUT_TCE_INDIRECT (512 entries at once) and
->>>>> H_STUFF_TCE (clearing, up to 4bln at once? many), these are simply an
->>>>> optimization.
->>>>
->>>> Do you still think, secure-VM should use H_PUT_TCE and not
->>>> H_PUT_TCE_INDIRECT?  And normal VM should use H_PUT_TCE_INDIRECT?
->>>> Is there any advantage of special casing it for secure-VMs.
->>>
->>>
->>> Reducing the amount of insecure memory at random location.
->>
->> The other approach we could use for that - which would still allow
->> H_PUT_TCE_INDIRECT, would be to allocate the TCE buffer page from the
->> same pool that we use for the bounce buffers.  I assume there must
->> already be some sort of allocator for that?
-> 
-> The allocator for swiotlb is buried deep in the swiotlb code. It is 
-> not exposed to the outside-swiotlb world. Will have to do major surgery
-> to expose it.
-> 
-> I was thinking, maybe we share the page, finish the INDIRECT_TCE call,
-> and unshare the page.  This will address Alexey's concern of having
-> shared pages at random location, and will also give me my performance
-> optimization.  Alexey: ok?
-
-
-I really do not see the point. I really think we should to 1:1 mapping
-of swtiotlb buffers using the default 32bit window using H_PUT_TCE and
-this should be more than enough, I do not think the amount of code will
-be dramatically different compared to unsecuring and securing a page or
-using one of swtiotlb pages for this purpose. Thanks,
-
+> @@ -975,6 +975,9 @@ static irqreturn_t lineevent_irq_thread(int irq, void *p)
+>         ret = kfifo_in_spinlocked(&le->events, &ge, 1, &le->wait.lock);
+>         if (ret)
+>                 wake_up_poll(&le->wait, EPOLLIN);
+> +       else
+> +               pr_debug_ratelimited(
+> +                       "%s: event FIFO is full - event dropped\n", __func__);
+>
+>         return IRQ_HANDLED;
 
 -- 
-Alexey
+With Best Regards,
+Andy Shevchenko
