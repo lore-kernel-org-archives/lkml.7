@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC60FC2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2781AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE2E2089C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFBF02073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:57:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482258;
-	bh=2pvz7k7ks7n8vDwaO2xAszVgOitfYuzPzhsoGkM5liE=;
+	s=default; t=1575482260;
+	bh=+4ZYxgp6JPeEo+Ag+AOKVeFQr15T9Pdm9jbIOQcVegU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jfvxcv/UIMWFg+yqJCSW4FJ8C4wUfOEIW6ojpHqEmoZkM8pEVzTejpQNFvQVIx3dT
-	 24UJPCB1cubadPygGVzpe0CvYjPqQ0ye97qmAV2k/OSD93c4ADC8oBszpkNnbEOVOz
-	 EKzEvqZCglOYkQfzRUs2V/NKyqbWFU4O1WzPKy0c=
+	b=RaVaxXzBxYnjPJhrfQnbztrjsnGpsSvPpi31I8xEwcbGXychIyTAtgcG3+3/OS90z
+	 H3QB8DmELbMILQ3y3PEumdpWRnk5fAz+Q6OeAyVC8TbPwLkDJT7bFCMNEkrkLI9FYa
+	 1zfX/7UzgwlvF3mn7O4U6GAMJyrmgX1mQo1g1hp4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728323AbfLDR5h (ORCPT
+        id S1728333AbfLDR5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:57:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58392 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 12:57:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728272AbfLDR5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:57:31 -0500
+        id S1728311AbfLDR5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 12:57:36 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D39722081B;
-        Wed,  4 Dec 2019 17:57:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B370D2081B;
+        Wed,  4 Dec 2019 17:57:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482251;
-        bh=2pvz7k7ks7n8vDwaO2xAszVgOitfYuzPzhsoGkM5liE=;
+        s=default; t=1575482256;
+        bh=+4ZYxgp6JPeEo+Ag+AOKVeFQr15T9Pdm9jbIOQcVegU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NWCOBEy3cFWTAAdIJfp7XphLxsUCpC4E1IaaLuxUQ1Zt9+DBWiS/UGMOEAg3yQDeX
-         uBL1Qg8ybgm8RjjkJlUhYbP/3c19whbXsKd7JlFSpebmAs79pEhIrtoZB6BrgpJNlU
-         YHyH4fpnXPh3K+aVlxbvxJP7y8FT+O75RNCIRRGo=
+        b=joItWs5kKSpB99nZCpMWH63l1R3FRvun2eUrFQyP6WTIJFGGEbbXmqarfmGsyjjXh
+         8dDxu+lu9n6bNCBrQNnOtfFWc2sn3JRY0JpEVaAlkkBJIsb4aPsECVoxrQiG5ctYva
+         XWWcr99ZHc55KnzIWoWt8bT4+T+ErWN6iaeKReqE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        stable@vger.kernel.org, Steve Capper <steve.capper@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 04/92] reset: fix reset_control_ops kerneldoc comment
-Date:   Wed,  4 Dec 2019 18:49:04 +0100
-Message-Id: <20191204174328.643568539@linuxfoundation.org>
+Subject: [PATCH 4.4 14/92] arm64: smp: Handle errors reported by the firmware
+Date:   Wed,  4 Dec 2019 18:49:14 +0100
+Message-Id: <20191204174330.241834671@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204174327.215426506@linuxfoundation.org>
 References: <20191204174327.215426506@linuxfoundation.org>
@@ -60,33 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
 
-[ Upstream commit f430c7ed8bc22992ed528b518da465b060b9223f ]
+[ Upstream commit f357b3a7e17af7736d67d8267edc1ed3d1dd9391 ]
 
-Add a missing short description to the reset_control_ops documentation.
+The __cpu_up() routine ignores the errors reported by the firmware
+for a CPU bringup operation and looks for the error status set by the
+booting CPU. If the CPU never entered the kernel, we could end up
+in assuming stale error status, which otherwise would have been
+set/cleared appropriately by the booting CPU.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-[p.zabel@pengutronix.de: rebased and updated commit message]
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Reported-by: Steve Capper <steve.capper@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/reset-controller.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/smp.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/reset-controller.h b/include/linux/reset-controller.h
-index ce6b962ffed43..842f70fcfc486 100644
---- a/include/linux/reset-controller.h
-+++ b/include/linux/reset-controller.h
-@@ -6,7 +6,7 @@
- struct reset_controller_dev;
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index 03c0946b79d20..7e90f429f7e5c 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -115,6 +115,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
+ 		}
+ 	} else {
+ 		pr_err("CPU%u: failed to boot: %d\n", cpu, ret);
++		return ret;
+ 	}
  
- /**
-- * struct reset_control_ops
-+ * struct reset_control_ops - reset controller driver callbacks
-  *
-  * @reset: for self-deasserting resets, does all necessary
-  *         things to reset the device
+ 	secondary_data.stack = NULL;
 -- 
 2.20.1
 
