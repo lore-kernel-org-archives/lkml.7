@@ -3,256 +3,146 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDADAC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAF1C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 849612077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D88E2077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:15:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PLmW5gI7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uh0tXDGD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbfLDQNl (ORCPT
+        id S1728376AbfLDQPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 11:13:41 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40188 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727912AbfLDQNl (ORCPT
+        Wed, 4 Dec 2019 11:15:45 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46239 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727912AbfLDQPo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 11:13:41 -0500
-Received: by mail-ot1-f66.google.com with SMTP id i15so6809820oto.7
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 08:13:40 -0800 (PST)
+        Wed, 4 Dec 2019 11:15:44 -0500
+Received: by mail-wr1-f65.google.com with SMTP id z7so9234633wrl.13
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 08:15:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zAp/OfIcdhHiVfey2BQfd9GRAX5eQwP1sGtcPfd5nTI=;
-        b=PLmW5gI7IMkg8SJI9WFzZcNZnku+L7lt++BL/4Sg6cQ7jUUHMY7+3JTTpbtnoLH5b7
-         rP/Hp8YaFvrQUiIyUxlEjwmoAzPNgiFtnxN8ZoEUSgruX0ydXCX8rgFaGHPyIHg+NJMF
-         16OVCkG45fgTE9lJRk5IRyMdv3HYX/jc6xm8yxsYvic90Ihh8AqG3WsgWWXzfRGW95dB
-         wZHMWjaCesV1LgZvEx55pfzpIQ1RR2TJ8DvNtMH2PVa7NP4sEhMM25cpNyKtybab6xrh
-         qg9NQfXAFEkwiR3MzoQd3Rn0Y8zK9wpmrC01Pa3FS8GalkYuOgxCarhqUycw6k1zWCNq
-         EoAw==
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LpERCrm1/3lW3B/NMaAhmFoj8gAA8nEH09a9cGgD218=;
+        b=uh0tXDGD42RtYaLl669MFjmJTp6lWsnt+L+8L28UUPMNhLfjpz0fjAlEbtMGikpzrn
+         378D4FrTmBnDBA6v2RRFMVhjqprXNCX1O5QiyasRdtOvSwig2c7GJV3oZXQFvmkMy1QW
+         yHb7wYeqEEZMGz/wnl3MZw3ZRTHsrMBh3+iwJS4/dbt2guIK9ccCybPa3LaeD6Ku2FE+
+         1KbqyddxV/kstusYXKeUtQBEadOclPeR+1BSNriFQaRgLbOZcQ8KY4xdmqYCAREe+s36
+         oKV2IEs5Yr1hO8o/6hag5tSDrdqbg4Tj4gzZekHKA/mHqcF3uiT/KGRA1OnMBKyHPHPN
+         UxdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zAp/OfIcdhHiVfey2BQfd9GRAX5eQwP1sGtcPfd5nTI=;
-        b=lZHLvTjSzy0FA/OKM09ATlJ5Hk1SK71PF9DmUEUnRWj1acAqY1DwX4HVuap3MK8Uin
-         r24C8vv0aPsmBykHPmarYyi+odk7K4nfkVONTVy60HcDcnLOL/hp2BOZjRJJoXTnZKRg
-         Vr80jrUVWvpe40Y90g0WDWzEMzC+7KNuDKGN3PSBXWBxR8QBsNaqkftrscjwXm+b5nRv
-         Y8ggGVWEtmZDjJnxQsN6vxOoU1TlXJgIuuSq6siESJnqWog22HU6QEkk8+NZX+t5QVTh
-         nVAlJ13fG8g+PLQvQ/4Tu7hWNBFA/bVwFvFN9a1tblhqvqeXXpUSNRzCdI4gLLpDyn8T
-         fZDQ==
-X-Gm-Message-State: APjAAAXAr9sIf0dvLP1NBJbX5QmS9dno2kRGUI0fxUxKNuzECEk0R0wq
-        9FZbBHbtJ4TeZPSWCm8qFvUwiQ==
-X-Google-Smtp-Source: APXvYqwB1vlrYc/VPdkLcgOM7DJT6JQsrtZO7rrvUbe0kFALn4mMYOzIKl1ChoMbpzBkqgMuxKrMcQ==
-X-Received: by 2002:a05:6830:1582:: with SMTP id i2mr3139990otr.50.1575476019954;
-        Wed, 04 Dec 2019 08:13:39 -0800 (PST)
-Received: from leoy-ThinkPad-X240s (li1058-79.members.linode.com. [45.33.121.79])
-        by smtp.gmail.com with ESMTPSA id s83sm1498372oif.33.2019.12.04.08.13.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 04 Dec 2019 08:13:39 -0800 (PST)
-Date:   Thu, 5 Dec 2019 00:13:30 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Nicolas Dechesne <nicolas.dechesne@linaro.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        linux-serial@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] tty: serial: msm_serial: Fix deadlock caused by
- recursive output
-Message-ID: <20191204161330.GA28567@leoy-ThinkPad-X240s>
-References: <20191127141544.4277-1-leo.yan@linaro.org>
- <20191127141544.4277-3-leo.yan@linaro.org>
- <CAOCk7NqZmBYN4tY0_V8xzvBfWShDCP8gTa60Aoc78wK2tXx=6A@mail.gmail.com>
- <20191203082325.GC28241@leoy-ThinkPad-X240s>
- <CAOCk7NpYt_OVYB7yZz+U9OE7jdtdm4sKG9wzKY7_YvKKx2Q4fg@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=LpERCrm1/3lW3B/NMaAhmFoj8gAA8nEH09a9cGgD218=;
+        b=UC0mG8BDRi9LMjFSsdhkmnfHe+GqN0mitOH4sKBlh66zw4DimW23Gw7le87j/B4kmo
+         Mdwh9F5AlEb9KRdHYD1pd4Pw1FLF5nFumKVJ/yL8dmnU7ARvdpjjln+GZTuaO9YtJFIN
+         9mtJ1kZ2UJjP7ii5KDX8e/fAzKJPK97h9cZFyPDhJOkh+7OgaUcnOTq/UN3d3JgsP93c
+         EAi6Flq1XpzawrS/lZkNqu5L5R9y7A/pzXYPJD9cJCX1MUzYdQIdXUbcRYHkNIpxHin8
+         yelIMW4IOqluY5ESREL/qLedS/8OC08Q77+wMoMCjBiQxBigUJWKXPpOkdva8pimRnDf
+         QvlQ==
+X-Gm-Message-State: APjAAAWJKoCaERIrHR82/D1ZdFtCLcCIPpg3jkbG3Qtky84bgwGhgLfP
+        8qK8wyYZ3gR2eURNKSvrgeGzXNJnyEA=
+X-Google-Smtp-Source: APXvYqyVFw2aBkJrXHKsZ/e0Gvjy9M2K+e9Nvz1dM9ZE4iV1zBD8Bai8/0w/Ta6LNYPvazQDjy4OUw==
+X-Received: by 2002:a5d:4651:: with SMTP id j17mr5131640wrs.237.1575476141739;
+        Wed, 04 Dec 2019 08:15:41 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:d965:ceae:a314:6edb? ([2a01:e34:ed2f:f020:d965:ceae:a314:6edb])
+        by smtp.googlemail.com with ESMTPSA id k127sm7474810wmk.31.2019.12.04.08.15.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Dec 2019 08:15:41 -0800 (PST)
+Subject: Re: [PATCH] clocksource: Fix Kconfig indentation
+To:     Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>
+References: <20191120134236.15959-1-krzk@kernel.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <a6f8015b-eccc-fc1a-fc54-10105f0bfbc1@linaro.org>
+Date:   Wed, 4 Dec 2019 17:15:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOCk7NpYt_OVYB7yZz+U9OE7jdtdm4sKG9wzKY7_YvKKx2Q4fg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191120134236.15959-1-krzk@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 03:42:31PM -0700, Jeffrey Hugo wrote:
-
-[...]
-
-> > > > This patch fixes the deadlock issue for recursive output; it adds a
-> > > > variable 'curr_user' to indicate the uart port is used by which CPU, if
-> > > > the CPU has acquired spinlock and wants to execute recursive output,
-> > > > it will directly bail out.  Here we don't choose to avoid locking and
-> > > > print out log, the reason is in this case we don't want to reset the
-> > > > uart port with function msm_reset_dm_count(); otherwise it can introduce
-> > > > confliction with other flows and results in uart port malfunction and
-> > > > later cannot output anymore.
-> > >
-> > > Is this not fixable?  Sure, fixing the deadlock is an improvement, but
-> > > dropping logs (particularly a memory warning like in your example)
-> > > seems undesirable.
-> >
-> > Thanks a lot for your reviewing, Jeffrey.
-> >
-> > Agreed with you for the concern.
-> >
-> > To be honest, I am not familiar with the msm uart driver, so have no
-> > confidence which is the best way for uart port operations.  I can
-> > think out one possible fixing is shown in below, if detects the lock
-> > is not acquired then it will force to reset UART port before exit the
-> > function __msm_console_write().
-> >
-> > This approach is not tested yet and it looks too arbitrary; I will
-> > give a try for it.  At the meantime, welcome any insight suggestion
-> > with proper register operations.
+On 20/11/2019 14:42, Krzysztof Kozlowski wrote:
+> Adjust indentation from spaces to tab (+optional two spaces) as in
+> coding style with command like:
+> 	$ sed -e 's/^        /\t/' -i */Kconfig
 > 
-> According to the documentation, NCF_TX is only needed for SW transmit
-> mode, where software is directly puttting characters in the fifo.  Its
-> not needed for BAM mode.  According to your example, recursive console
-> printing will only happen in BAM mode, and not in SW mode.  Perhaps if
-> we put the NCF_TX uses to just the SW mode, we avoid the issue and can
-> allow recursive printing?
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Thanks for the suggestion!  But based on the suggestion, I tried to
-change code as below, the console even cannot work when boot the
-kernel:
+Applied, thank!
 
- static void msm_reset_dm_count(struct uart_port *port, int count)
- {
-+       u32 val;
-+
-        msm_wait_for_xmitr(port);
--       msm_write(port, count, UARTDM_NCF_TX);
--       msm_read(port, UARTDM_NCF_TX);
-+
-+       val = msm_read(port, UARTDM_DMEN);
-+
-+       /*
-+        * NCF is only enabled for SW transmit mode and is
-+        * skipped for BAM mode.
-+        */
-+       if (!(val & UARTDM_DMEN_TX_BAM_ENABLE) &&
-+           !(val & UARTDM_DMEN_RX_BAM_ENABLE)) {
-+               msm_write(port, count, UARTDM_NCF_TX);
-+               msm_read(port, UARTDM_NCF_TX);
-+       }
- }
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
-Alternatively, when exit from __msm_console_write() and if detect the
-case for without acquiring spinlock, invoke msm_wait_for_xmitr() to wait
-for transmit completion looks a good candidate solution. The updated
-patch is as below.  Please let me know if this is doable?
-
-diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
-index 1db79ee8a886..aa6a494c898d 100644
---- a/drivers/tty/serial/msm_serial.c
-+++ b/drivers/tty/serial/msm_serial.c
-@@ -190,6 +190,7 @@ struct msm_port {
- 	bool			break_detected;
- 	struct msm_dma		tx_dma;
- 	struct msm_dma		rx_dma;
-+	struct cpumask		curr_user;
- };
- 
- #define UART_TO_MSM(uart_port)	container_of(uart_port, struct msm_port, uart)
-@@ -440,6 +441,7 @@ static void msm_complete_tx_dma(void *args)
- 	u32 val;
- 
- 	spin_lock_irqsave(&port->lock, flags);
-+	cpumask_set_cpu(smp_processor_id(), &msm_port->curr_user);
- 
- 	/* Already stopped */
- 	if (!dma->count)
-@@ -474,6 +476,7 @@ static void msm_complete_tx_dma(void *args)
- 
- 	msm_handle_tx(port);
- done:
-+	cpumask_clear_cpu(smp_processor_id(), &msm_port->curr_user);
- 	spin_unlock_irqrestore(&port->lock, flags);
- }
- 
-@@ -548,6 +551,7 @@ static void msm_complete_rx_dma(void *args)
- 	u32 val;
- 
- 	spin_lock_irqsave(&port->lock, flags);
-+	cpumask_set_cpu(smp_processor_id(), &msm_port->curr_user);
- 
- 	/* Already stopped */
- 	if (!dma->count)
-@@ -594,6 +598,7 @@ static void msm_complete_rx_dma(void *args)
- 
- 	msm_start_rx_dma(msm_port);
- done:
-+	cpumask_clear_cpu(smp_processor_id(), &msm_port->curr_user);
- 	spin_unlock_irqrestore(&port->lock, flags);
- 
- 	if (count)
-@@ -932,6 +937,7 @@ static irqreturn_t msm_uart_irq(int irq, void *dev_id)
- 	u32 val;
- 
- 	spin_lock_irqsave(&port->lock, flags);
-+	cpumask_set_cpu(smp_processor_id(), &msm_port->curr_user);
- 	misr = msm_read(port, UART_MISR);
- 	msm_write(port, 0, UART_IMR); /* disable interrupt */
- 
-@@ -963,6 +969,7 @@ static irqreturn_t msm_uart_irq(int irq, void *dev_id)
- 		msm_handle_delta_cts(port);
- 
- 	msm_write(port, msm_port->imr, UART_IMR); /* restore interrupt */
-+	cpumask_clear_cpu(smp_processor_id(), &msm_port->curr_user);
- 	spin_unlock_irqrestore(&port->lock, flags);
- 
- 	return IRQ_HANDLED;
-@@ -1573,10 +1580,12 @@ static inline struct uart_port *msm_get_port_from_line(unsigned int line)
- static void __msm_console_write(struct uart_port *port, const char *s,
- 				unsigned int count, bool is_uartdm)
- {
-+	struct msm_port *msm_port = UART_TO_MSM(port);
- 	int i;
- 	int num_newlines = 0;
- 	bool replaced = false;
- 	void __iomem *tf;
-+	int locked = 1;
- 
- 	if (is_uartdm)
- 		tf = port->membase + UARTDM_TF;
-@@ -1589,7 +1598,15 @@ static void __msm_console_write(struct uart_port *port, const char *s,
- 			num_newlines++;
- 	count += num_newlines;
- 
--	spin_lock(&port->lock);
-+	if (port->sysrq)
-+		locked = 0;
-+	else if (oops_in_progress)
-+		locked = spin_trylock(&port->lock);
-+	else if (cpumask_test_cpu(smp_processor_id(), &msm_port->curr_user))
-+		locked = 0;
-+	else
-+		spin_lock(&port->lock);
-+
- 	if (is_uartdm)
- 		msm_reset_dm_count(port, count);
- 
-@@ -1625,7 +1642,12 @@ static void __msm_console_write(struct uart_port *port, const char *s,
- 		iowrite32_rep(tf, buf, 1);
- 		i += num_chars;
- 	}
--	spin_unlock(&port->lock);
-+
-+	if (!locked)
-+		msm_wait_for_xmitr(port);
-+
-+	if (locked)
-+		spin_unlock(&port->lock);
- }
