@@ -2,134 +2,90 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D60C2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B51E0C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E0C92084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 878D22084F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:35:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NI0Fvbud"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbfLDMdV convert rfc822-to-8bit (ORCPT
+        id S1727600AbfLDMfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 07:33:21 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45354 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbfLDMdV (ORCPT
+        Wed, 4 Dec 2019 07:35:11 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:52118 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbfLDMfL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 07:33:21 -0500
-Received: by mail-oi1-f195.google.com with SMTP id v10so4597557oiv.12;
-        Wed, 04 Dec 2019 04:33:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=S0UWQ5eiPole4dtyMpW+QWxdEfHVw9PtKgJf/N5G9BE=;
-        b=SonrTHC0vp7Sgvtcx4CF3OKoS2va/b1Qcq7FYck7P2eQIFF19+VITPX511q2sKk26I
-         qTzToMfleDujWMCFeSusEjeGAUpQ/9eMGYmiNr++UhC3swkJ6OUXIRXakQOajp7+Xcz4
-         kP1h4HI9rT0cBTu/Yj38v2hUP3bxNQwiKeGZ6QWordh9i4IX6iTWTPcIeITnrWjomlyQ
-         KYzOmsU6ut7sOVkStBDoDTmHCZQnHBV892u4jUZmvuoMJqPHWNzBeJHswsyoSltLIhEO
-         XRohnK4aFMZX+rSIL0ODpM6kCii7cwzxSxDi1yunwX+ZxZ/SX4aXth6CA5ss299eLStp
-         Kgig==
-X-Gm-Message-State: APjAAAXeoMexw2L4p4g1Q4VZwcjCQinlLQSsBxo0xonglcqpoESDIjMc
-        PIfyArQRPa4BbfC3L+X86nPao5r++wC3vXm6pVM=
-X-Google-Smtp-Source: APXvYqzb0EPNSu3UgjjKauWV01/SR7f84yg5f0P7XG0wUME17ghX3UNDGcccyOdk37JFXAIVeBt6IZuJXPTA7xlaSIc=
-X-Received: by 2002:aca:36c5:: with SMTP id d188mr2423967oia.54.1575462799999;
- Wed, 04 Dec 2019 04:33:19 -0800 (PST)
+        Wed, 4 Dec 2019 07:35:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=J/WQVy4sVaQLO7VIHTnenUpwaZjanvaxoH0c5Hwc9nw=; b=NI0FvbudZLi4D4imzicu27gs4
+        9ia9drai1ik6o8TO554McoiXs1W8pzSzyYUlzhct+Xygw3ZCzZJz9CReyckDMe4k0LoWvoaNpjaid
+        00gqF7Eg/fLDXqAZ9K472g8O4q+pDI+mpRRh14gzMTr2mGC3auFX9881Jzz2dyd+BjEQL50FhmoEj
+        yT30m9e2O2VC2cGdCH9ve42N0dxmYp2EvQAxQILsbEiBTt9RjFlTkNzMXAOIXOyopFOMIuwh/drqF
+        Prvh9QdNyU5YcdvnIw2n6NhgTH9Qb7LR+8GahKM3YEOLlRREIJbN5pLvxeHUCcdetnfwqwCqmJrXS
+        xqSVJwCfQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1icTs0-00076q-Vu; Wed, 04 Dec 2019 12:35:05 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 07FF03011E0;
+        Wed,  4 Dec 2019 13:33:43 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A04C62B25FE23; Wed,  4 Dec 2019 13:35:00 +0100 (CET)
+Date:   Wed, 4 Dec 2019 13:35:00 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Liu Song <fishland@aliyun.com>
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
+        liu.song11@zte.com.cn
+Subject: Re: [PATCH] psi: Only collect online cpu time in collect_percpu_times
+Message-ID: <20191204123500.GT2844@hirez.programming.kicks-ass.net>
+References: <20191202130928.2971-1-fishland@aliyun.com>
 MIME-Version: 1.0
-References: <20190219103148.192029670@infradead.org> <20190219103233.443069009@infradead.org>
- <CAMuHMdW3nwckjA9Bt-_Dmf50B__sZH+9E5s0_ziK1U_y9onN=g@mail.gmail.com> <20191204104733.GR2844@hirez.programming.kicks-ass.net>
-In-Reply-To: <20191204104733.GR2844@hirez.programming.kicks-ass.net>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 4 Dec 2019 13:32:58 +0100
-Message-ID: <CAMuHMdXs_Fm93t=O9jJPLxcREZy-T53Z_U_RtHcvaWyV+ESdjg@mail.gmail.com>
-Subject: Re: [PATCH v6 10/18] sh/tlb: Convert SH to generic mmu_gather
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Rik van Riel <riel@surriel.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191202130928.2971-1-fishland@aliyun.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hoi Peter,
+On Mon, Dec 02, 2019 at 09:09:28PM +0800, Liu Song wrote:
+> From: Liu Song <liu.song11@zte.com.cn>
+> 
+> Tasks can only run on the online cpu, so only need to
+> collect the time of the online cpu.
+> 
+> Signed-off-by: Liu Song <liu.song11@zte.com.cn>
+> ---
+>  kernel/sched/psi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+> index 7acc632c3b82..605f02facb7b 100644
+> --- a/kernel/sched/psi.c
+> +++ b/kernel/sched/psi.c
+> @@ -316,7 +316,7 @@ static void collect_percpu_times(struct psi_group *group,
+>  	 * the sampling period. This eliminates artifacts from uneven
+>  	 * loading, or even entirely idle CPUs.
+>  	 */
+> -	for_each_possible_cpu(cpu) {
+> +	for_each_online_cpu(cpu) {
+>  		u32 times[NR_PSI_STATES];
+>  		u32 nonidle;
+>  		u32 cpu_changed_states;
 
-On Wed, Dec 4, 2019 at 11:48 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> On Tue, Dec 03, 2019 at 12:19:00PM +0100, Geert Uytterhoeven wrote:
-> > On Tue, Feb 19, 2019 at 11:35 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> > > Generic mmu_gather provides everything SH needs (range tracking and
-> > > cache coherency).
-> > >
-> > > Cc: Will Deacon <will.deacon@arm.com>
-> > > Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>
-> > > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > Cc: Nick Piggin <npiggin@gmail.com>
-> > > Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-> > > Cc: Rich Felker <dalias@libc.org>
-> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> >
-> > I got remote access to an SH7722-based Migo-R again, which spews a long
-> > sequence of BUGs during userspace startup.  I've bisected this to commit
-> > c5b27a889da92f4a ("sh/tlb: Convert SH to generic mmu_gather").
->
-> Whoopsy.. also, is this really the first time anybody booted an SH
-> kernel in over a year ?!?
-
-Nah, but the v5.4-rc3 I booted recently on qemu -M r2d had
-CONFIG_PGTABLE_LEVELS=2, so it didn't show the problem.
-
-> > Do you have a clue?
->
-> Does the below help?
-
-Unfortunately not.
-
-> diff --git a/arch/sh/include/asm/pgalloc.h b/arch/sh/include/asm/pgalloc.h
-> index 22d968bfe9bb..73a2c00de6c5 100644
-> --- a/arch/sh/include/asm/pgalloc.h
-> +++ b/arch/sh/include/asm/pgalloc.h
-> @@ -36,9 +36,8 @@ do {                                                  \
->  #if CONFIG_PGTABLE_LEVELS > 2
->  #define __pmd_free_tlb(tlb, pmdp, addr)                        \
->  do {                                                   \
-> -       struct page *page = virt_to_page(pmdp);         \
-> -       pgtable_pmd_page_dtor(page);                    \
-> -       tlb_remove_page((tlb), page);                   \
-> +       pgtable_pmd_page_dtor(pmdp);                    \
-
-expected ‘struct page *’ but argument is of type ‘pmd_t * {aka struct
-<anonymous> *}’
-
-> +       tlb_remove_page((tlb), (pmdp));                 \
-
-likewise
-
->  } while (0);
->  #endif
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+And who collects the deltas that remain after offline?
