@@ -2,52 +2,52 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	PDS_BTC_ID,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A7BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F428C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7774320833
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD397206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482794;
-	bh=m46hbcDViVWHgP9ujJrVxd/nsrnZXJ5GEUJVDJ3t0e8=;
+	s=default; t=1575482798;
+	bh=fIDkp3nQknwUGs/jEnpCYRRi9+4jX4CW2Ox9ygyMYls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LbTEm73iVJNUeBDbn0RZ1T9xj0Y3WskVySe5A3Ub8IUJzw8zkHeSbOxQ9fPZ1USaF
-	 j+JFBeAQucDAQ+yjNqJ+zjc1fqfZRgn0vuS/t+D7lSkH8fr36bByi95oc/JznYfc/q
-	 hv6ss3pIkOQXnae185la6e8lOJ76MjBWgyfFWq6s=
+	b=qomVuVVNp7S79E+wVQHZ07MOZNGSelKMwHEncOisOa2SI7/0SUhVgeijM3D1z3Kdm
+	 D9XL6yjUcddWLle6zpTsnvrBNlIJu6CZegCyLPv3oEx7bMJb/YxuwGRpvlUx/K0sls
+	 vtNYAvGpHHgbVKRcfbuy7G4ZAewYVNEXuOPQlpMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730565AbfLDSGd (ORCPT
+        id S1730582AbfLDSGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:06:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54840 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:06:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730024AbfLDSG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:06:28 -0500
+        id S1729976AbfLDSGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:06:36 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B2D620833;
-        Wed,  4 Dec 2019 18:06:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D989421772;
+        Wed,  4 Dec 2019 18:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482787;
-        bh=m46hbcDViVWHgP9ujJrVxd/nsrnZXJ5GEUJVDJ3t0e8=;
+        s=default; t=1575482795;
+        bh=fIDkp3nQknwUGs/jEnpCYRRi9+4jX4CW2Ox9ygyMYls=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SmbCPz05r2JuORJNQdc/y4Tnxi/VKpw3DOW3TuG+/D39ktQHz2wEO+JglIVaKeUqu
-         koGAthXDKtUTzKRsvlP2+ZDS3OlXv531QJZvE5ICsuUIPYXVf7fHcCEhoYpUPQ9aAh
-         jsC0lgxhg6sCB/LdS7MzP53UWOTiyPlt1kIij2HA=
+        b=Cibv5LKQ94tqGT2y4C9E6vgHXrjyfjsBGahICzSIMs0BI/yxhuv/XiRmbZqszTruK
+         Dg08Y7mOF3835YNdOtrw/yWjTIJyaXr/eTwUkK+1cKPX4hgiIHy+BhH3sJ3LCh6ONt
+         YCBBrmx53c8dkEoynN+XUqIWecBvBuhD/MkxnqZQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 132/209] gpu: ipu-v3: pre: dont trigger update if buffer address doesnt change
-Date:   Wed,  4 Dec 2019 18:55:44 +0100
-Message-Id: <20191204175332.267410745@linuxfoundation.org>
+Subject: [PATCH 4.14 135/209] decnet: fix DN_IFREQ_SIZE
+Date:   Wed,  4 Dec 2019 18:55:47 +0100
+Message-Id: <20191204175332.530697021@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -60,59 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit eb0200a4357da100064971689d3a0e9e3cf57f33 ]
+[ Upstream commit 50c2936634bcb1db78a8ca63249236810c11a80f ]
 
-On a NOP double buffer update where current buffer address is the same
-as the next buffer address, the SDW_UPDATE bit clears too late. As we
-are now using this bit to determine when it is safe to signal flip
-completion to userspace this will delay completion of atomic commits
-where one plane doesn't change the buffer by a whole frame period.
+Digging through the ioctls with Al because of the previous
+patches, we found that on 64-bit decnet's dn_dev_ioctl()
+is wrong, because struct ifreq::ifr_ifru is actually 24
+bytes (not 16 as expected from struct sockaddr) due to the
+ifru_map and ifru_settings members.
 
-Fix this by remembering the last buffer address and just skip the
-double buffer update if it would not change the buffer address.
+Clearly, decnet expects the ioctl to be called with a struct
+like
+  struct ifreq_dn {
+    char ifr_name[IFNAMSIZ];
+    struct sockaddr_dn ifr_addr;
+  };
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-[p.zabel@pengutronix.de: initialize last_bufaddr in ipu_pre_configure]
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+since it does
+  struct ifreq *ifr = ...;
+  struct sockaddr_dn *sdn = (struct sockaddr_dn *)&ifr->ifr_addr;
+
+This means that DN_IFREQ_SIZE is too big for what it wants on
+64-bit, as it is
+  sizeof(struct ifreq) - sizeof(struct sockaddr) +
+  sizeof(struct sockaddr_dn)
+
+This assumes that sizeof(struct sockaddr) is the size of ifr_ifru
+but that isn't true.
+
+Fix this to use offsetof(struct ifreq, ifr_ifru).
+
+This indeed doesn't really matter much - the result is that we
+copy in/out 8 bytes more than we should on 64-bit platforms. In
+case the "struct ifreq_dn" lands just on the end of a page though
+it might lead to faults.
+
+As far as I can tell, it has been like this forever, so it seems
+very likely that nobody cares.
+
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/ipu-v3/ipu-pre.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ net/decnet/dn_dev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/ipu-v3/ipu-pre.c b/drivers/gpu/ipu-v3/ipu-pre.c
-index 1d1612e28854b..6fd4af647f599 100644
---- a/drivers/gpu/ipu-v3/ipu-pre.c
-+++ b/drivers/gpu/ipu-v3/ipu-pre.c
-@@ -102,6 +102,7 @@ struct ipu_pre {
- 	void			*buffer_virt;
- 	bool			in_use;
- 	unsigned int		safe_window_end;
-+	unsigned int		last_bufaddr;
- };
+diff --git a/net/decnet/dn_dev.c b/net/decnet/dn_dev.c
+index df042b6d80b83..22876a197ebec 100644
+--- a/net/decnet/dn_dev.c
++++ b/net/decnet/dn_dev.c
+@@ -56,7 +56,7 @@
+ #include <net/dn_neigh.h>
+ #include <net/dn_fib.h>
  
- static DEFINE_MUTEX(ipu_pre_list_mutex);
-@@ -177,6 +178,7 @@ void ipu_pre_configure(struct ipu_pre *pre, unsigned int width,
+-#define DN_IFREQ_SIZE (sizeof(struct ifreq) - sizeof(struct sockaddr) + sizeof(struct sockaddr_dn))
++#define DN_IFREQ_SIZE (offsetof(struct ifreq, ifr_ifru) + sizeof(struct sockaddr_dn))
  
- 	writel(bufaddr, pre->regs + IPU_PRE_CUR_BUF);
- 	writel(bufaddr, pre->regs + IPU_PRE_NEXT_BUF);
-+	pre->last_bufaddr = bufaddr;
- 
- 	val = IPU_PRE_PREF_ENG_CTRL_INPUT_PIXEL_FORMAT(0) |
- 	      IPU_PRE_PREF_ENG_CTRL_INPUT_ACTIVE_BPP(active_bpp) |
-@@ -218,7 +220,11 @@ void ipu_pre_update(struct ipu_pre *pre, unsigned int bufaddr)
- 	unsigned short current_yblock;
- 	u32 val;
- 
-+	if (bufaddr == pre->last_bufaddr)
-+		return;
-+
- 	writel(bufaddr, pre->regs + IPU_PRE_NEXT_BUF);
-+	pre->last_bufaddr = bufaddr;
- 
- 	do {
- 		if (time_after(jiffies, timeout)) {
+ static char dn_rt_all_end_mcast[ETH_ALEN] = {0xAB,0x00,0x00,0x04,0x00,0x00};
+ static char dn_rt_all_rt_mcast[ETH_ALEN]  = {0xAB,0x00,0x00,0x03,0x00,0x00};
 -- 
 2.20.1
 
