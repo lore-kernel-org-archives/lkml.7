@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2EBC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6157C2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A88462073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 749C02073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:30:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WJVPmm99"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="n5pdumj4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728281AbfLDP3u (ORCPT
+        id S1728310AbfLDPab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:29:50 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:45898 "EHLO
+        Wed, 4 Dec 2019 10:30:31 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:46994 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728388AbfLDP3s (ORCPT
+        with ESMTP id S1728300AbfLDPaa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:29:48 -0500
+        Wed, 4 Dec 2019 10:30:30 -0500
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB4FO9rZ104465;
-        Wed, 4 Dec 2019 15:28:23 GMT
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB4FTPDj109069;
+        Wed, 4 Dec 2019 15:30:09 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=FMTka2tq0Ww+f56DW10Z393U8mQlGGQbjP9PPcNcr+w=;
- b=WJVPmm99RigEZl9a0LBPVFtyqZYrTJwFqlTXmcod8RXlLftr49Uv9irkSqUrLdmaukTw
- a3zPzMxDapqR7O/aGs0vm2bxmfKXnFfyZm799Hg0VNNWk5lktmcmssdrmL7LMrhtPk+i
- j0+PaV37PeWLiz/ioIg17so4/8kbIVy+wtnrcv3HgLFWlgXHD2KbjFqVGQsltCWmb5zF
- xgY0k1nX2YiTIpFqXvl7CB5QwnsQhDFzqa8JPBJtCq4w7fr99vboIDelvWMuQJ31KtKF
- NVj5QyZ+BFPBdgkIsROK7KNDs4r63wSm5jt0qBth3x4iwHn+IPgOHLX7W5Kguo/MsJKv /g== 
+ bh=UtF7imOhmPSAXDklZ55E8gWyotvBGV1fxPBlvWgNXg4=;
+ b=n5pdumj4Mw2048MY+69ukuI/PbQZ0CyjrSljs4+NubLZfFJgiuy0A7+8fXzr9U3ahcBf
+ nZUSYK+1nBPRwsT5FNvIpOpKvONfNNvHlQwpAziqlbzopeZX0vCGtXVMGh6TbvFx/M/r
+ 8GAWzDlKndEgksZBn2M9E7E4ihn/Ijb3wsqO3As94TJOMFoVfiUGmUx6nDq7ABg9/QUi
+ zQ6l3yOJI+eVD11dyT/oxriqm4916/HSP7j4W7HO3iNP+l0j/cNhl54k/Jko44CeY5pr
+ ST764schAcf8bTtmuZuDUeBLKx1TH6Hei1k8v2oHvIpZJF+lyh0SjbYlltds2V419+6l VQ== 
 Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2wkh2rf0b3-1
+        by userp2120.oracle.com with ESMTP id 2wkh2rf0px-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Dec 2019 15:28:23 +0000
+        Wed, 04 Dec 2019 15:30:09 +0000
 Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB4FOCdq049750;
-        Wed, 4 Dec 2019 15:28:22 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2wp20c5wpr-1
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB4FTc6s063177;
+        Wed, 4 Dec 2019 15:30:08 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2wp20c5wuh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Dec 2019 15:28:22 +0000
+        Wed, 04 Dec 2019 15:30:08 +0000
 Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xB4FSJik027653;
-        Wed, 4 Dec 2019 15:28:20 GMT
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xB4FSSIj001633;
+        Wed, 4 Dec 2019 15:28:28 GMT
 Received: from dhcp-10-175-179-22.vpn.oracle.com (/10.175.179.22)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 04 Dec 2019 07:28:19 -0800
+        with ESMTP ; Wed, 04 Dec 2019 07:28:28 -0800
 From:   Alan Maguire <alan.maguire@oracle.com>
 To:     brendanhiggins@google.com, linux-kselftest@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
@@ -63,91 +63,97 @@ Cc:     linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
         mcgrof@kernel.org, linux-doc@vger.kernel.org,
         Alan Maguire <alan.maguire@oracle.com>,
         Knut Omang <knut.omang@oracle.com>
-Subject: [PATCH v6 linux-kselftest-test 5/6] kunit: allow kunit to be loaded as a module
-Date:   Wed,  4 Dec 2019 15:27:13 +0000
-Message-Id: <1575473234-5443-6-git-send-email-alan.maguire@oracle.com>
+Subject: [PATCH v6 linux-kselftest-test 6/6] kunit: update documentation to describe module-based build
+Date:   Wed,  4 Dec 2019 15:27:14 +0000
+Message-Id: <1575473234-5443-7-git-send-email-alan.maguire@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1575473234-5443-1-git-send-email-alan.maguire@oracle.com>
 References: <1575473234-5443-1-git-send-email-alan.maguire@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9461 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=4 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912040128
+ engine=8.0.1-1911140001 definitions=main-1912040129
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9461 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=4 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912040128
+ definitions=main-1912040129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Making kunit itself buildable as a module allows for "always-on"
-kunit configuration; specifying CONFIG_KUNIT=m means the module
-is built but only used when loaded.  Kunit test modules will load
-kunit.ko as an implicit dependency, so simply running
-"modprobe my-kunit-tests" will load the tests along with the kunit
-module and run them.
+Documentation should describe how to build kunit and tests as
+modules.
 
 Co-developed-by: Knut Omang <knut.omang@oracle.com>
 Signed-off-by: Knut Omang <knut.omang@oracle.com>
 Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
 ---
- lib/kunit/Kconfig  |  2 +-
- lib/kunit/Makefile |  4 +++-
- lib/kunit/test.c   | 13 +++++++++++++
- 3 files changed, 17 insertions(+), 2 deletions(-)
+ Documentation/dev-tools/kunit/faq.rst   |  3 ++-
+ Documentation/dev-tools/kunit/index.rst |  3 +++
+ Documentation/dev-tools/kunit/usage.rst | 16 ++++++++++++++++
+ 3 files changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/lib/kunit/Kconfig b/lib/kunit/Kconfig
-index 9ebd5e6..065aa16 100644
---- a/lib/kunit/Kconfig
-+++ b/lib/kunit/Kconfig
-@@ -3,7 +3,7 @@
- #
+diff --git a/Documentation/dev-tools/kunit/faq.rst b/Documentation/dev-tools/kunit/faq.rst
+index bf20951..ea55b24 100644
+--- a/Documentation/dev-tools/kunit/faq.rst
++++ b/Documentation/dev-tools/kunit/faq.rst
+@@ -29,7 +29,8 @@ Yes, well, mostly.
  
- menuconfig KUNIT
--	bool "KUnit - Enable support for unit tests"
-+	tristate "KUnit - Enable support for unit tests"
- 	help
- 	  Enables support for kernel unit tests (KUnit), a lightweight unit
- 	  testing and mocking framework for the Linux kernel. These tests are
-diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
-index bc6e5e54..fab5564 100644
---- a/lib/kunit/Makefile
-+++ b/lib/kunit/Makefile
-@@ -1,4 +1,6 @@
--obj-$(CONFIG_KUNIT) +=			test.o \
-+obj-$(CONFIG_KUNIT) +=			kunit.o
+ For the most part, the KUnit core framework (what you use to write the tests)
+ can compile to any architecture; it compiles like just another part of the
+-kernel and runs when the kernel boots. However, there is some infrastructure,
++kernel and runs when the kernel boots, or when built as a module, when the
++module is loaded.  However, there is some infrastructure,
+ like the KUnit Wrapper (``tools/testing/kunit/kunit.py``) that does not support
+ other architectures.
+ 
+diff --git a/Documentation/dev-tools/kunit/index.rst b/Documentation/dev-tools/kunit/index.rst
+index 26ffb46..7ddc385 100644
+--- a/Documentation/dev-tools/kunit/index.rst
++++ b/Documentation/dev-tools/kunit/index.rst
+@@ -48,6 +48,9 @@ to a standalone program that can be run like any other program directly inside
+ of a host operating system; to be clear, it does not require any virtualization
+ support; it is just a regular program.
+ 
++Alternatively, kunit and kunit tests can be built as modules and tests will
++run when the test module is loaded.
 +
-+kunit-objs +=				test.o \
- 					string-stream.o \
- 					assert.o \
- 					try-catch.o
-diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-index 87b5cf1..9242f93 100644
---- a/lib/kunit/test.c
-+++ b/lib/kunit/test.c
-@@ -486,3 +486,16 @@ void kunit_cleanup(struct kunit *test)
- 	}
- }
- EXPORT_SYMBOL_GPL(kunit_cleanup);
+ KUnit is fast. Excluding build time, from invocation to completion KUnit can run
+ several dozen tests in only 10 to 20 seconds; this might not sound like a big
+ deal to some people, but having such fast and easy to run tests fundamentally
+diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
+index c6e6963..82f9213 100644
+--- a/Documentation/dev-tools/kunit/usage.rst
++++ b/Documentation/dev-tools/kunit/usage.rst
+@@ -539,6 +539,22 @@ Interspersed in the kernel logs you might see the following:
+ 
+ Congratulations, you just ran a KUnit test on the x86 architecture!
+ 
++In a similar manner, kunit and kunit tests can also be built as modules,
++so if you wanted to run tests in this way you might add the following config
++options to your ``.config``:
 +
-+static int __init kunit_init(void)
-+{
-+	return 0;
-+}
-+late_initcall(kunit_init);
++.. code-block:: none
 +
-+static void __exit kunit_exit(void)
-+{
-+}
-+module_exit(kunit_exit);
++	CONFIG_KUNIT=m
++	CONFIG_KUNIT_EXAMPLE_TEST=m
 +
-+MODULE_LICENSE("GPL v2");
++Once the kernel is built and installed, a simple
++
++.. code-block:: bash
++	modprobe example-test
++
++...will run the tests.
++
+ Writing new tests for other architectures
+ -----------------------------------------
+ 
 -- 
 1.8.3.1
 
