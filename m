@@ -2,161 +2,328 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95336C2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 230F6C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BFEC20659
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:42:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YzSukzBJ"
+	by mail.kernel.org (Postfix) with ESMTP id E0DEA2081B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:45:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728866AbfLDQmS (ORCPT
+        id S1728877AbfLDQpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 11:42:18 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:33556 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbfLDQmS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 11:42:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yrRU3PisMm2st1jba/Bb8HxzI37AaG7nr9igFrhou+0=; b=YzSukzBJzdqU/YRJch4sntx/E
-        sCZkgAXqyU8Ej6+v4ETINlSOyOuAcafjK2W4U6Fs//ZIYBczlusZ/pgQ44bR+n0nAlFM5eO8MirWJ
-        qIjAFz6sXyFenhc9WNLc4StTDHvzQCcnIDggAMNIzuK8vkIlf24fOfOOlgl1Iz+UA11rQ08SXyC+w
-        G1c3Dr+c8/Q/M6YpvfUOh3xnFX89tF5/200Y85jgFFVYZK0RQqPmSFlx+U6ud+y1xRZMmXFkg9eJb
-        mG5q2RuAIdcWaLcilm+sE8on/C9JnC3syLBE4KkjSLE60YV8AStvK2Pb7JqHReYLAWBPh9Yjy6TQe
-        BG0N42Dhg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1icXil-0007xP-5G; Wed, 04 Dec 2019 16:41:47 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8ABC93006E3;
-        Wed,  4 Dec 2019 17:40:26 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5D67A20B83957; Wed,  4 Dec 2019 17:41:43 +0100 (CET)
-Date:   Wed, 4 Dec 2019 17:41:43 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Rik van Riel <riel@surriel.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v6 10/18] sh/tlb: Convert SH to generic mmu_gather
-Message-ID: <20191204164143.GB2810@hirez.programming.kicks-ass.net>
-References: <20190219103148.192029670@infradead.org>
- <20190219103233.443069009@infradead.org>
- <CAMuHMdW3nwckjA9Bt-_Dmf50B__sZH+9E5s0_ziK1U_y9onN=g@mail.gmail.com>
- <20191204104733.GR2844@hirez.programming.kicks-ass.net>
- <CAMuHMdXs_Fm93t=O9jJPLxcREZy-T53Z_U_RtHcvaWyV+ESdjg@mail.gmail.com>
- <20191204133454.GW2844@hirez.programming.kicks-ass.net>
- <CAMuHMdVnhNFBqPQXKYCQbCnoQjZPSXRkuxbsbaguZ7_TcXXmVg@mail.gmail.com>
+        Wed, 4 Dec 2019 11:45:03 -0500
+Received: from foss.arm.com ([217.140.110.172]:58800 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726934AbfLDQpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 11:45:03 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6138231B;
+        Wed,  4 Dec 2019 08:45:02 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 675A83F52E;
+        Wed,  4 Dec 2019 08:45:01 -0800 (PST)
+Subject: Re: [PATCH v2 4/8] iommu/arm-smmu: Add split pagetables for Adreno
+ IOMMU implementations
+To:     Jordan Crouse <jcrouse@codeaurora.org>,
+        iommu@lists.linux-foundation.org
+Cc:     will@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joerg Roedel <joro@8bytes.org>
+References: <1574465484-7115-1-git-send-email-jcrouse@codeaurora.org>
+ <0101016e95752703-78491f46-41db-441c-b0fb-9a760e4d56cb-000000@us-west-2.amazonses.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <2a43c49e-064e-1e95-6726-8d1e761f6749@arm.com>
+Date:   Wed, 4 Dec 2019 16:44:59 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVnhNFBqPQXKYCQbCnoQjZPSXRkuxbsbaguZ7_TcXXmVg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <0101016e95752703-78491f46-41db-441c-b0fb-9a760e4d56cb-000000@us-west-2.amazonses.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 04:07:53PM +0100, Geert Uytterhoeven wrote:
-> On Wed, Dec 4, 2019 at 2:35 PM Peter Zijlstra <peterz@infradead.org> wrote:
-
-> > Does this fare better?
+On 22/11/2019 11:31 pm, Jordan Crouse wrote:
+> Add implementation specific support to enable split pagetables for
+> SMMU implementations attached to Adreno GPUs on Qualcomm targets.
 > 
-> Yes. Migo-R is happy again.
-> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> To enable split pagetables the driver will set an attribute on the domain.
+> if conditions are correct, set up the hardware to support equally sized
+> TTBR0 and TTBR1 regions and programs the domain pagetable to TTBR1 to make
+> it available for global buffers while allowing the GPU the chance to
+> switch the TTBR0 at runtime for per-context pagetables.
 > 
-> > --- a/arch/sh/include/asm/pgalloc.h
-> > +++ b/arch/sh/include/asm/pgalloc.h
-> > @@ -36,9 +36,7 @@ do {                                                  \
-> >  #if CONFIG_PGTABLE_LEVELS > 2
-> >  #define __pmd_free_tlb(tlb, pmdp, addr)                        \
-> >  do {                                                   \
-> > -       struct page *page = virt_to_page(pmdp);         \
-> > -       pgtable_pmd_page_dtor(page);                    \
-> > -       tlb_remove_page((tlb), page);                   \
-> > +       pmd_free((tlb)->mm, (pmdp));                    \
-> >  } while (0);
-> >  #endif
+> After programming the context, the value of the domain attribute can be
+> queried to see if split pagetables were successfully programmed. The
+> domain geometry will be updated so that the caller can determine the
+> start of the region to generate correct virtual addresses.
 
-OK, so I was going to write a Changelog to go with that, but then I
-realized that while this works and is similar to before the patch, I'm
-not sure this is in fact correct.
+Why is any of this in impl? It all looks like perfectly generic 
+architectural TTBR1 setup to me. As long as DOMAIN_ATTR_SPLIT_TABLES is 
+explicitly an opt-in for callers, I'm OK with them having to trust that 
+SEP_UPSTREAM is good enough. Or, even better, make the value of 
+DOMAIN_ATTR_SPLIT_TABLES not a boolean but the actual split point, where 
+the default of 0 would logically mean "no split".
 
-With this on (and also before) we're freeing the PMD before we've done
-the TLB invalidate, that seems wrong!
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> ---
+> 
+>   drivers/iommu/arm-smmu-impl.c |  3 ++
+>   drivers/iommu/arm-smmu-qcom.c | 96 +++++++++++++++++++++++++++++++++++++++++++
+>   drivers/iommu/arm-smmu.c      | 41 ++++++++++++++----
+>   drivers/iommu/arm-smmu.h      | 11 +++++
+>   4 files changed, 143 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu-impl.c b/drivers/iommu/arm-smmu-impl.c
+> index 33ed682..1e91231 100644
+> --- a/drivers/iommu/arm-smmu-impl.c
+> +++ b/drivers/iommu/arm-smmu-impl.c
+> @@ -174,5 +174,8 @@ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
+>   	if (of_device_is_compatible(smmu->dev->of_node, "qcom,sdm845-smmu-500"))
+>   		return qcom_smmu_impl_init(smmu);
+>   
+> +	if (of_device_is_compatible(smmu->dev->of_node, "qcom,adreno-smmu-v2"))
+> +		return adreno_smmu_impl_init(smmu);
+> +
+>   	return smmu;
+>   }
+> diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
+> index 24c071c..6591e49 100644
+> --- a/drivers/iommu/arm-smmu-qcom.c
+> +++ b/drivers/iommu/arm-smmu-qcom.c
+> @@ -11,6 +11,102 @@ struct qcom_smmu {
+>   	struct arm_smmu_device smmu;
+>   };
+>   
+> +#define TG0_4K  0
+> +#define TG0_64K 1
+> +#define TG0_16K 2
+> +
+> +#define TG1_16K 1
+> +#define TG1_4K  2
+> +#define TG1_64K 3
+> +
+> +/*
+> + * Set up split pagetables for Adreno SMMUs that will keep a static TTBR1 for
+> + * global buffers and dynamically switch TTBR0 from the GPU for context specific
+> + * pagetables.
+> + */
+> +static int adreno_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
+> +		struct io_pgtable_cfg *pgtbl_cfg)
+> +{
+> +	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
+> +	struct arm_smmu_cb *cb = &smmu_domain->smmu->cbs[cfg->cbndx];
+> +	u32 tcr, tg0;
+> +
+> +	/*
+> +	 * Return error if split pagetables are not enabled so that arm-smmu
+> +	 * do the default configuration
+> +	 */
+> +	if (!(pgtbl_cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1))
+> +		return -EINVAL;
+> +
+> +	/* Get the bank configuration from the pagetable config */
+> +	tcr = arm_smmu_lpae_tcr(pgtbl_cfg) & 0xffff;
 
-Looking at the size of that pmd_cache, that looks to be 30-(12+12-3)+3
-== 12, which is exactly 1 page, for PAGE_SIZE_4K, less for the larger
-pages.
+The intent is that arm_smmu_lpae_tcr() should inherently return the 
+appropriate half of the TCR based on pgtable_cfg. It seems like a lot of 
+this complexity stems from missing that; sorry if it was unclear.
 
-I'm thinking perhaps we should do something like the below instead?
+Robin.
 
-
----
- arch/sh/mm/pgtable.c | 16 ++--------------
- 1 file changed, 2 insertions(+), 14 deletions(-)
-
-diff --git a/arch/sh/mm/pgtable.c b/arch/sh/mm/pgtable.c
-index 5c8f9247c3c2..fac7e822fd0c 100644
---- a/arch/sh/mm/pgtable.c
-+++ b/arch/sh/mm/pgtable.c
-@@ -5,9 +5,6 @@
- #define PGALLOC_GFP GFP_KERNEL | __GFP_ZERO
- 
- static struct kmem_cache *pgd_cachep;
--#if PAGETABLE_LEVELS > 2
--static struct kmem_cache *pmd_cachep;
--#endif
- 
- void pgd_ctor(void *x)
- {
-@@ -23,11 +20,6 @@ void pgtable_cache_init(void)
- 	pgd_cachep = kmem_cache_create("pgd_cache",
- 				       PTRS_PER_PGD * (1<<PTE_MAGNITUDE),
- 				       PAGE_SIZE, SLAB_PANIC, pgd_ctor);
--#if PAGETABLE_LEVELS > 2
--	pmd_cachep = kmem_cache_create("pmd_cache",
--				       PTRS_PER_PMD * (1<<PTE_MAGNITUDE),
--				       PAGE_SIZE, SLAB_PANIC, NULL);
--#endif
- }
- 
- pgd_t *pgd_alloc(struct mm_struct *mm)
-@@ -48,11 +40,7 @@ void pud_populate(struct mm_struct *mm, pud_t *pud, pmd_t *pmd)
- 
- pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long address)
- {
--	return kmem_cache_alloc(pmd_cachep, PGALLOC_GFP);
--}
--
--void pmd_free(struct mm_struct *mm, pmd_t *pmd)
--{
--	kmem_cache_free(pmd_cachep, pmd);
-+	BUILD_BUG_ON(PTRS_PER_PMD * (1<<PTE_MAGNITUDE) <= PAGE_SIZE);
-+	return (pmd_t *)__get_free_page(PGALLOC_GFP);
- }
- #endif /* PAGETABLE_LEVELS > 2 */
+> +
+> +	/*
+> +	 * The TCR configuration for TTBR0 and TTBR1 is (almost) identical so
+> +	 * just duplicate the T0 configuration and shift it
+> +	 */
+> +	cb->tcr[0] = (tcr << 16) | tcr;
+> +
+> +	/*
+> +	 * The (almost) above refers to the granule size field which is
+> +	 * different for TTBR0 and TTBR1. With the TTBR1 quirk enabled,
+> +	 * io-pgtable-arm will write the T1 appropriate granule size for tg.
+> +	 * Translate the configuration from the T1 field to get the right value
+> +	 * for T0
+> +	 */
+> +	if (pgtbl_cfg->arm_lpae_s1_cfg.tcr.tg == TG1_4K)
+> +		tg0 = TG0_4K;
+> +	else if (pgtbl_cfg->arm_lpae_s1_cfg.tcr.tg == TG1_16K)
+> +		tg0 = TG0_16K;
+> +	else
+> +		tg0 = TG0_64K;
+> +
+> +	/* clear and set the correct value for TG0  */
+> +	cb->tcr[0] &= ~TCR_TG0;
+> +	cb->tcr[0] |= FIELD_PREP(TCR_TG0, tg0);
+> +
+> +	/*
+> +	 * arm_smmu_lape_tcr2 sets SEP_UPSTREAM which is always the appropriate
+> +	 * SEP for Adreno IOMMU
+> +	 */
+> +	cb->tcr[1] = arm_smmu_lpae_tcr2(pgtbl_cfg);
+> +	cb->tcr[1] |= TCR2_AS;
+> +
+> +	/* TTBRs */
+> +	cb->ttbr[0] = FIELD_PREP(TTBRn_ASID, cfg->asid);
+> +	cb->ttbr[1] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
+> +	cb->ttbr[1] |= FIELD_PREP(TTBRn_ASID, cfg->asid);
+> +
+> +	/* MAIRs */
+> +	cb->mair[0] = pgtbl_cfg->arm_lpae_s1_cfg.mair;
+> +	cb->mair[1] = pgtbl_cfg->arm_lpae_s1_cfg.mair >> 32;
+> +
+> +	return 0;
+> +}
+> +
+> +static int adreno_smmu_init_context(struct arm_smmu_domain *smmu_domain,
+> +		struct io_pgtable_cfg *pgtbl_cfg)
+> +{
+> +	/* Enable split pagetables if the flag is set and the format matches */
+> +	if (smmu_domain->split_pagetables)
+> +		if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1 &&
+> +			smmu_domain->cfg.fmt == ARM_SMMU_CTX_FMT_AARCH64)
+> +			pgtbl_cfg->quirks |= IO_PGTABLE_QUIRK_ARM_TTBR1;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct arm_smmu_impl adreno_smmu_impl = {
+> +	.init_context = adreno_smmu_init_context,
+> +	.init_context_bank = adreno_smmu_init_context_bank,
+> +};
+> +
+> +struct arm_smmu_device *adreno_smmu_impl_init(struct arm_smmu_device *smmu)
+> +{
+> +	smmu->impl = &adreno_smmu_impl;
+> +	return smmu;
+> +}
+> +
+>   static int qcom_sdm845_smmu500_reset(struct arm_smmu_device *smmu)
+>   {
+>   	int ret;
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 5c7c32b..f5dc950 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -91,13 +91,6 @@ struct arm_smmu_smr {
+>   	bool				valid;
+>   };
+>   
+> -struct arm_smmu_cb {
+> -	u64				ttbr[2];
+> -	u32				tcr[2];
+> -	u32				mair[2];
+> -	struct arm_smmu_cfg		*cfg;
+> -};
+> -
+>   struct arm_smmu_master_cfg {
+>   	struct arm_smmu_device		*smmu;
+>   	s16				smendx[];
+> @@ -512,10 +505,20 @@ static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
+>   {
+>   	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
+>   	struct arm_smmu_cb *cb = &smmu_domain->smmu->cbs[cfg->cbndx];
+> +	struct arm_smmu_device *smmu = smmu_domain->smmu;
+>   	bool stage1 = cfg->cbar != CBAR_TYPE_S2_TRANS;
+>   
+>   	cb->cfg = cfg;
+>   
+> +	if (smmu->impl && smmu->impl->init_context_bank) {
+> +		/*
+> +		 * If the implementation specific function returns non-zero then
+> +		 * fall back to the default configuration
+> +		 */
+> +		if (!smmu->impl->init_context_bank(smmu_domain, pgtbl_cfg))
+> +			return; > +	}
+> +
+>   	/* TCR */
+>   	if (stage1) {
+>   		if (cfg->fmt == ARM_SMMU_CTX_FMT_AARCH32_S) {
+> @@ -802,7 +805,17 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+>   
+>   	/* Update the domain's page sizes to reflect the page table format */
+>   	domain->pgsize_bitmap = pgtbl_cfg.pgsize_bitmap;
+> -	domain->geometry.aperture_end = (1UL << ias) - 1;
+> +
+> +	if (pgtbl_cfg.quirks & IO_PGTABLE_QUIRK_ARM_TTBR1) {
+> +		domain->geometry.aperture_start = ~((1UL << ias) - 1);
+> +		domain->geometry.aperture_end = ~0UL;
+> +	} else {
+> +		domain->geometry.aperture_start = 0;
+> +		domain->geometry.aperture_end = (1UL << ias) - 1;
+> +
+> +		smmu_domain->split_pagetables = false;
+> +	}
+> +
+>   	domain->geometry.force_aperture = true;
+>   
+>   	/* Initialise the context bank with our page table cfg */
+> @@ -1485,6 +1498,9 @@ static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
+>   		case DOMAIN_ATTR_NESTING:
+>   			*(int *)data = (smmu_domain->stage == ARM_SMMU_DOMAIN_NESTED);
+>   			return 0;
+> +		case DOMAIN_ATTR_SPLIT_TABLES:
+> +			*(int *)data = smmu_domain->split_pagetables;
+> +			return 0;
+>   		default:
+>   			return -ENODEV;
+>   		}
+> @@ -1525,6 +1541,15 @@ static int arm_smmu_domain_set_attr(struct iommu_domain *domain,
+>   			else
+>   				smmu_domain->stage = ARM_SMMU_DOMAIN_S1;
+>   			break;
+> +		case DOMAIN_ATTR_SPLIT_TABLES:
+> +			if (smmu_domain->smmu) {
+> +				return -EPERM;
+> +				goto out_unlock;
+> +			}
+> +
+> +			if (*(int *) data)
+> +				smmu_domain->split_pagetables = true;
+> +			break;
+>   		default:
+>   			ret = -ENODEV;
+>   		}
+> diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+> index 0eb498f..35158ee 100644
+> --- a/drivers/iommu/arm-smmu.h
+> +++ b/drivers/iommu/arm-smmu.h
+> @@ -329,6 +329,14 @@ struct arm_smmu_domain {
+>   	struct mutex			init_mutex; /* Protects smmu pointer */
+>   	spinlock_t			cb_lock; /* Serialises ATS1* ops and TLB syncs */
+>   	struct iommu_domain		domain;
+> +	bool				split_pagetables;
+> +};
+> +
+> +struct arm_smmu_cb {
+> +	u64				ttbr[2];
+> +	u32				tcr[2];
+> +	u32				mair[2];
+> +	struct arm_smmu_cfg		*cfg;
+>   };
+>   
+>   static inline u32 arm_smmu_lpae_tcr(struct io_pgtable_cfg *cfg)
+> @@ -359,6 +367,8 @@ struct arm_smmu_impl {
+>   	int (*reset)(struct arm_smmu_device *smmu);
+>   	int (*init_context)(struct arm_smmu_domain *smmu_domain,
+>   			struct io_pgtable_cfg *pgtbl_cfg);
+> +	int (*init_context_bank)(struct arm_smmu_domain *smmu_domain,
+> +			struct io_pgtable_cfg *pgtable_cfg);
+>   	void (*tlb_sync)(struct arm_smmu_device *smmu, int page, int sync,
+>   			 int status);
+>   };
+> @@ -425,6 +435,7 @@ static inline void arm_smmu_writeq(struct arm_smmu_device *smmu, int page,
+>   
+>   struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu);
+>   struct arm_smmu_device *qcom_smmu_impl_init(struct arm_smmu_device *smmu);
+> +struct arm_smmu_device *adreno_smmu_impl_init(struct arm_smmu_device *smmu);
+>   
+>   int arm_mmu500_reset(struct arm_smmu_device *smmu);
+>   
+> 
