@@ -2,120 +2,138 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 893FDC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85977C2BBE2
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58E0F20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41326206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:24:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SJQU3xhD"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="GNIoMjSs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbfLDJWq (ORCPT
+        id S1727377AbfLDJYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 04:22:46 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41706 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbfLDJWn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 04:22:43 -0500
-Received: by mail-pl1-f196.google.com with SMTP id bd4so2917975plb.8;
-        Wed, 04 Dec 2019 01:22:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=hZU5YxHkU3BPXm/EGoWnc2P2DRdz8maIfOi1+S2ITKQ=;
-        b=SJQU3xhDgVQLlqA2PNtmG0PvjtPCUUFyIjwfkUQwJg5y6Fl0apVSgQohqruxl80yaA
-         NacX44nKHdGBRWHkNNaneKAV4PnO+SJTAafIId/KbpgyqXo80LHYLyXBIw63Yr7x+gHK
-         HD1IQot5k1EHAs8UY1vJJHSEbmazKaoWAvOwd7ukxsb+HUfx+Ou1ZggyA13Z9dO07PRy
-         B2hGCqKEjrQ4Gxwsey6NMhd33mkrPBZUsIhFJMYatvKVpescHhkzXJLJq4Sw55z8vgEL
-         CDNTul6c6XPKAzzstA7BfEMYZD1QPZSeFagu620532gYaqEg9tfFvVCZb2Ty07wSAhVN
-         ySTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=hZU5YxHkU3BPXm/EGoWnc2P2DRdz8maIfOi1+S2ITKQ=;
-        b=ivP1dZRfGmDxnhoTg6p7dJeLygml8ECqLneeZWdWMX5yOJFp+O1qJaQaXmSJmGAKXL
-         Ie2ZhBae7m+ClSU232KG2PJAM9t+x8tH4aojrSwlowBfLZkvQ9pOw6xpVQpt2WD7d9c1
-         1bqUrGx+kRi/hfawW1EuTIXWyPTN/zHUgciSFBX0zjlCJ/Y5OaqugkuVoYLAOn40f24w
-         36Uaq4slMJVOJG0gbxjX0zdLigBfBNyyDpkr8NFUtJAwNuQlxKpfc/ueGyu/4Ss8H59I
-         cQX2upS1wijn+LD1QhnHHpxaNqKkbjPLAcO+KvVeTddFA804oh1ryd9V6K8yGy6CRnXM
-         oaYw==
-X-Gm-Message-State: APjAAAUfnZhte2wan2T/q/ESFMjuh0Ae7Mc7jprUBLdU3AesP1YVzQAx
-        wfq3X0oV4YXEjRNfr7hxEWY=
-X-Google-Smtp-Source: APXvYqwtJxyIzM+0Lur95xbbn08J833jO87snr2ayTE6zkLZjZzC/85XdLOqOU6pNai9yJyCEFTX1w==
-X-Received: by 2002:a17:902:968b:: with SMTP id n11mr125690plp.120.1575451362767;
-        Wed, 04 Dec 2019 01:22:42 -0800 (PST)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id k21sm6482914pgt.22.2019.12.04.01.22.40
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 04 Dec 2019 01:22:42 -0800 (PST)
-From:   Baolin Wang <baolin.wang7@gmail.com>
-To:     agross@kernel.org, ohad@wizery.com, bjorn.andersson@linaro.org
-Cc:     baolin.wang7@gmail.com, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] hwspinlock: qcom: Use devm_hwspin_lock_register() to register hwlock controller
-Date:   Wed,  4 Dec 2019 17:21:57 +0800
-Message-Id: <b75f06a1a9d91762cbeb041203d47f1ffc2f8204.1575450802.git.baolin.wang7@gmail.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1575450802.git.baolin.wang7@gmail.com>
-References: <cover.1575450802.git.baolin.wang7@gmail.com>
-In-Reply-To: <cover.1575450802.git.baolin.wang7@gmail.com>
-References: <cover.1575450802.git.baolin.wang7@gmail.com>
+        Wed, 4 Dec 2019 04:24:39 -0500
+Received: from mail-eopbgr50074.outbound.protection.outlook.com ([40.107.5.74]:2354
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725922AbfLDJYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 04:24:39 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eLCkORnw3wfAY39IIFl5K92sOxN0OthgFb8fMPH3tFnevY9URfP0gjEWxCZ+QUpVjTiuMDInHeL/oH0XYWPxjEk+4fGW5PaQTLrCmrwCRDXu4QkLqekKUj7Kt2x5PFV7FiNAJCD4F1GGvFFRWHadWVnZA+MA1F8wq4LfJBF3WRlTj64Df27bQRnatsgoIzJcVbtB5ejJrxzimq2nkrMJmumbuQQM13tSKMbeCLv1FvsiiWoVN0qa+QTwi4vPCDRjKY6upMXvAQVmeALfpDWLJTM0FFAQnVPmlVKhdLttDVwgucRh2+IM7WtuX0N4fWy1+eCzh0QTTZ34/rMy+fgV0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NWtC2nXLlM3gbHrtMYMIsU0P90rPCLA9RvOC271f0R4=;
+ b=FBbD9zVRe5nxfxtKzvESrxaIpNUItVhnzpLyQ2uDvNBDk33xxmQroMVQfN7gY0SqWzunIM2n5g2zkcjisEaIVq/qKirbngEBgzHtWzLD717eADDpDYZr3qkwVt4QZpdIsfBshBwfoIPd7w0RpdoBaNcWevLM4YjgbTWU1b49oZh0s8fuCYmDvsKbZCrKrqxI542sbCXtbDFxf/5tzOjme2P5edfg5QOjfoU53ZSkh8wgbjBgmgyWHpHQyVTa4fOa/XFIOmnUKnxr4GvJtTwS7vYFk/hOMzYoKmraV37MP4Ql8Xrbv5TGuQUavga1woIx/HjPKRcJmHsLLvklEWxKkw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NWtC2nXLlM3gbHrtMYMIsU0P90rPCLA9RvOC271f0R4=;
+ b=GNIoMjSsOqz754A2LYyZHL5nD8+QhZ+gjQYBio0kqeKg4sV6iRuKup2R+tZIQ34ylIx1Q2BAwNMIomlW65Qj1/CtKFU71RVoMcwupMJSn8WoegmRADLo2ubiWXphIT9lw0z0BR9Nev86LRRv1fcPIyvkUBe/DvGVH3/uJDBJ2pk=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB5812.eurprd04.prod.outlook.com (20.178.119.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.21; Wed, 4 Dec 2019 09:24:35 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c%4]) with mapi id 15.20.2495.014; Wed, 4 Dec 2019
+ 09:24:35 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "rjui@broadcom.com" <rjui@broadcom.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh@kernel.org" <robh@kernel.org>
+CC:     "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH v3 1/2] gpio: mvebu: use platform_irq_count
+Thread-Topic: [PATCH v3 1/2] gpio: mvebu: use platform_irq_count
+Thread-Index: AQHVqoSkBJcTHD8ix06RBDAwXsOZyQ==
+Date:   Wed, 4 Dec 2019 09:24:35 +0000
+Message-ID: <1575451330-11112-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR03CA0060.apcprd03.prod.outlook.com
+ (2603:1096:202:17::30) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: aa00214c-eacd-4496-5cc9-08d7789bc6f8
+x-ms-traffictypediagnostic: AM0PR04MB5812:|AM0PR04MB5812:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB58121F69A80ED19B56C7DE1A885D0@AM0PR04MB5812.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:132;
+x-forefront-prvs: 0241D5F98C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(366004)(376002)(396003)(346002)(189003)(199004)(110136005)(14444005)(316002)(2501003)(305945005)(7736002)(50226002)(8676002)(81156014)(81166006)(8936002)(86362001)(2906002)(3846002)(7416002)(6116002)(54906003)(4326008)(6512007)(2201001)(25786009)(52116002)(478600001)(6486002)(5660300002)(6436002)(44832011)(2616005)(102836004)(26005)(6506007)(386003)(186003)(66574012)(71200400001)(66446008)(66476007)(66556008)(64756008)(66946007)(99286004)(71190400001)(36756003)(256004)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5812;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: y8nsuZdeStsFsUSYn0+DJYRrZGszenMKK/4YqkG4741KetRx6nYJqL8+4VvAoG8VTCfJP/txt2iUgQRzl03d6X5olfMCJMQiqAzoUL6PKOvk7a+4wxVmYJ/DA+fIkLwYXafxIguZurBZLmgwqlKuwJCPVGI+9EHkkPQPm2lC3ehAbg1321MDqpc+RB2fCQmzoAJoUdIJI3UGJbTrW7gFlSSTcPmzAxxlCdsRsERZk18yMcefMVISUfrBis+3oO5NEBkn+0zYFpAaNBVbN+aofA6Sd4krEqCx6WZ7buyyHfP0VgzoYO4tLNcD8h80HzbQ6Lys/xYafcJ8s+Bmat6HWEsLdVvtFRCbpKJhvH5CdR6bZcDQ8wjZYiDvXtmtkJXk0lZIBia3O0QToZ2Lboy023f6TaWVeMEmlp9KBf9/X0gRWK9UWBwpoM0FJ76eT57M
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <225D19D2BDA71E469714620A2E966AED@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aa00214c-eacd-4496-5cc9-08d7789bc6f8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2019 09:24:35.1782
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /8bsLxnmeQp6hpfVu1keAo0FvpVB1lUqFtDhxs6JYXMRE33XJ/44vcG3NQsU6BEvgxvLng2EQSLJyeznZdLLTA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5812
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_hwspin_lock_register() to register the hwlock controller instead of
-unregistering the hwlock controller explicitly when removing the device.
-
-Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
----
- drivers/hwspinlock/qcom_hwspinlock.c |   19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/hwspinlock/qcom_hwspinlock.c b/drivers/hwspinlock/qcom_hwspinlock.c
-index 5a736b0..f0da544 100644
---- a/drivers/hwspinlock/qcom_hwspinlock.c
-+++ b/drivers/hwspinlock/qcom_hwspinlock.c
-@@ -121,27 +121,12 @@ static int qcom_hwspinlock_probe(struct platform_device *pdev)
- 							     regmap, field);
- 	}
- 
--	return hwspin_lock_register(bank, &pdev->dev, &qcom_hwspinlock_ops,
--				    0, QCOM_MUTEX_NUM_LOCKS);
--}
--
--static int qcom_hwspinlock_remove(struct platform_device *pdev)
--{
--	struct hwspinlock_device *bank = platform_get_drvdata(pdev);
--	int ret;
--
--	ret = hwspin_lock_unregister(bank);
--	if (ret) {
--		dev_err(&pdev->dev, "%s failed: %d\n", __func__, ret);
--		return ret;
--	}
--
--	return 0;
-+	return devm_hwspin_lock_register(&pdev->dev, bank, &qcom_hwspinlock_ops,
-+					 0, QCOM_MUTEX_NUM_LOCKS);
- }
- 
- static struct platform_driver qcom_hwspinlock_driver = {
- 	.probe		= qcom_hwspinlock_probe,
--	.remove		= qcom_hwspinlock_remove,
- 	.driver		= {
- 		.name	= "qcom_hwspinlock",
- 		.of_match_table = qcom_hwspinlock_of_match,
--- 
-1.7.9.5
-
+RnJvbTogUGVuZyBGYW4gPHBlbmcuZmFuQG54cC5jb20+DQoNCnBsYXRmb3JtX2lycV9jb3VudCgp
+IGlzIHRoZSBtb3JlIGdlbmVyaWMgd2F5IChpbmRlcGVuZGVudCBvZg0KZGV2aWNlIHRyZWVzKSB0
+byBkZXRlcm1pbmUgdGhlIGNvdW50IG9mIGF2YWlsYWJsZSBpbnRlcnJ1cHRzLiBTbw0KdXNlIHRo
+aXMgaW5zdGVhZC4NCg0KQXMgcGxhdGZvcm1faXJxX2NvdW50KCkgbWlnaHQgcmV0dXJuIGFuIGVy
+cm9yIGNvZGUgKHdoaWNoDQpvZl9pcnFfY291bnQgZG9lc24ndCkgc29tZSBhZGRpdGlvbmFsIGhh
+bmRsaW5nIGlzIG5lY2Vzc2FyeS4NCg0KUmV2aWV3ZWQtYW5kLUNvbW1pdC1Mb2ctUHJvdmlkZWQt
+Ynk6IFV3ZSBLbGVpbmUtS8O2bmlnIDx1LmtsZWluZS1rb2VuaWdAcGVuZ3V0cm9uaXguZGU+DQpT
+aWduZWQtb2ZmLWJ5OiBQZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNvbT4NCi0tLQ0KDQpWMzogQWRk
+IHRhZw0KDQpWMjoNCiBVcGRhdGUgY29tbWl0IGxvZywgYWRkIGVyciBoYW5kbGluZw0KIE5vdCB0
+ZXN0ZWQsIGp1c3QgY29kZSBpbnNwZWN0aW9uDQoNCg0KIGRyaXZlcnMvZ3Bpby9ncGlvLW12ZWJ1
+LmMgfCA3ICsrKysrLS0NCiAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCAyIGRlbGV0
+aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncGlvL2dwaW8tbXZlYnUuYyBiL2RyaXZl
+cnMvZ3Bpby9ncGlvLW12ZWJ1LmMNCmluZGV4IDk5M2JiZWIzYzAwNi4uZjBmZDgyYjM0MTdjIDEw
+MDY0NA0KLS0tIGEvZHJpdmVycy9ncGlvL2dwaW8tbXZlYnUuYw0KKysrIGIvZHJpdmVycy9ncGlv
+L2dwaW8tbXZlYnUuYw0KQEAgLTQ2LDcgKzQ2LDYgQEANCiAjaW5jbHVkZSA8bGludXgvaXJxZG9t
+YWluLmg+DQogI2luY2x1ZGUgPGxpbnV4L21mZC9zeXNjb24uaD4NCiAjaW5jbHVkZSA8bGludXgv
+b2ZfZGV2aWNlLmg+DQotI2luY2x1ZGUgPGxpbnV4L29mX2lycS5oPg0KICNpbmNsdWRlIDxsaW51
+eC9waW5jdHJsL2NvbnN1bWVyLmg+DQogI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5o
+Pg0KICNpbmNsdWRlIDxsaW51eC9wd20uaD4NCkBAIC0xMTAyLDcgKzExMDEsMTEgQEAgc3RhdGlj
+IGludCBtdmVidV9ncGlvX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogCQlz
+b2NfdmFyaWFudCA9IE1WRUJVX0dQSU9fU09DX1ZBUklBTlRfT1JJT047DQogDQogCS8qIFNvbWUg
+Z3BpbyBjb250cm9sbGVycyBkbyBub3QgcHJvdmlkZSBpcnEgc3VwcG9ydCAqLw0KLQloYXZlX2ly
+cXMgPSBvZl9pcnFfY291bnQobnApICE9IDA7DQorCWVyciA9IHBsYXRmb3JtX2lycV9jb3VudChw
+ZGV2KTsNCisJaWYgKGVyciA8IDApDQorCQlyZXR1cm4gZXJyOw0KKw0KKwloYXZlX2lycXMgPSBl
+cnIgIT0gMDsNCiANCiAJbXZjaGlwID0gZGV2bV9remFsbG9jKCZwZGV2LT5kZXYsIHNpemVvZihz
+dHJ1Y3QgbXZlYnVfZ3Bpb19jaGlwKSwNCiAJCQkgICAgICBHRlBfS0VSTkVMKTsNCi0tIA0KMi4x
+Ni40DQoNCg==
