@@ -2,162 +2,119 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9D5C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 435D8C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FFD32077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:36:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575466567;
-	bh=hhS3x/nQokGlDFdYclj2m2H/jf3hjjXulqb9PxxX57Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rYwtAxSAl5E07cQjseL+LleXZk0JIwJhP+VYnmytHUR7R1fnbY7HpeABxEyZgL354
-	 aJLjVqGH4/Ecr0O9/BlAl/4ysHBMn//ZFUVW0TY1Oqnx0ITfYu8Wyu7Hb4NUriLXP+
-	 UnAsBgrCxvWd0AW+p2jZFOpfkz4W4Nr1f2MMjANA=
+	by mail.kernel.org (Postfix) with ESMTP id 195262077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:36:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Le1QT0gf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbfLDNgG (ORCPT
+        id S1727987AbfLDNgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 08:36:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47536 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727530AbfLDNgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 08:36:05 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1CA220803;
-        Wed,  4 Dec 2019 13:36:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575466564;
-        bh=hhS3x/nQokGlDFdYclj2m2H/jf3hjjXulqb9PxxX57Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VM3bKeJVv1dMN6BeNojFvP27GvGyoglch+wwSXnXDFY/s5xnZYluPEgtqHP1pLHBI
-         prruJCVl6wz31+G2JpEHajZiBcCrji9q39He3EbAsK9BXkpwSrx5p+SQ1JDEwO4TWm
-         sgG9X/iJN40+bL1pbEAPl8nAtd7FykAUiOZeYSMg=
-Date:   Wed, 4 Dec 2019 14:36:00 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        michael@amarulasolutions.com, Icenowy Zheng <icenowy@aosc.io>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-amarula@amarulasolutions.com
-Subject: Re: [PATCH v12 1/7] dt-bindings: sun6i-dsi: Document A64 MIPI-DSI
- controller
-Message-ID: <20191204133600.gnv6dnhk6upe7xod@gilmour.lan>
-References: <20191203134816.5319-1-jagan@amarulasolutions.com>
- <20191203134816.5319-2-jagan@amarulasolutions.com>
+        Wed, 4 Dec 2019 08:36:21 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:53522 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727530AbfLDNgU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 08:36:20 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB4DZgfg076462;
+        Wed, 4 Dec 2019 07:35:42 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575466542;
+        bh=xCS1lfwtIPofr9BfV2xLTa/QhcNCHCI0ym0C/edSDAw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Le1QT0gfKf0J1Zmr9pgZT9X4k12QhPopGG8dlQQnQX17lGcjpYaQEaHQIDQIuB5SZ
+         Nau+DeyJIwhRkh8TnJxm2B8csKx1i7fkqPQeKFe6wB/yfcqY/zD+yUO53XMcrzdyz6
+         FvNdmCsdCiPdp3KBEcryhCKib2EYO0TMAtA5OIg4=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4DZg7J115194;
+        Wed, 4 Dec 2019 07:35:42 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Dec
+ 2019 07:35:42 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 4 Dec 2019 07:35:42 -0600
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4DZcZa084113;
+        Wed, 4 Dec 2019 07:35:38 -0600
+Subject: Re: [PATCH] scsi: ufs: Disable autohibern8 feature in Cadence UFS
+To:     sheebab <sheebab@cadence.com>, <alim.akhtar@samsung.com>,
+        <avri.altman@wdc.com>, <pedrom.sousa@synopsys.com>,
+        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
+        <stanley.chu@mediatek.com>, <beanhuo@micron.com>,
+        <yuehaibing@huawei.com>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <mparab@cadence.com>, <rafalc@cadence.com>
+References: <1575367635-22662-1-git-send-email-sheebab@cadence.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <38cfe842-c07a-410f-97f1-f2bf13fd2655@ti.com>
+Date:   Wed, 4 Dec 2019 19:06:09 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yzyy5rpvlreslc45"
-Content-Disposition: inline
-In-Reply-To: <20191203134816.5319-2-jagan@amarulasolutions.com>
+In-Reply-To: <1575367635-22662-1-git-send-email-sheebab@cadence.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---yzyy5rpvlreslc45
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Tue, Dec 03, 2019 at 07:18:10PM +0530, Jagan Teki wrote:
-> The MIPI DSI controller in Allwinner A64 is similar to A33.
->
-> But unlike A33, A64 doesn't have DSI_SCLK gating so it is valid
-> to have separate compatible for A64 on the same driver.
->
-> DSI_SCLK uses mod clock-names on dt-bindings, so the same
-> is not required for A64.
->
-> On that note
-> - A64 require minimum of 1 clock like the bus clock
-> - A33 require minimum of 2 clocks like both bus, mod clocks
->
-> So, update dt-bindings so-that it can document both A33,
-> A64 bindings requirements.
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+On 03/12/19 3:37 pm, sheebab wrote:
+> This patch disables autohibern8 feature in Cadence UFS. 
+> The autohibern8 feature has issues due to which unexpected interrupt
+> trigger is happening. After the interrupt issue is sorted out autohibern8
+> feature will be re-enabled
+> 
+> Signed-off-by: sheebab <sheebab@cadence.com>
 > ---
-> Changes for v12:
-> - Use 'enum' instead of oneOf+const
->
->  .../display/allwinner,sun6i-a31-mipi-dsi.yaml | 20 +++++++++++++++++--
->  1 file changed, 18 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-> index dafc0980c4fa..b91446475f35 100644
-> --- a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-> +++ b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-> @@ -15,7 +15,9 @@ properties:
->    "#size-cells": true
->
->    compatible:
-> -    const: allwinner,sun6i-a31-mipi-dsi
-> +    enum:
-> +      - allwinner,sun6i-a31-mipi-dsi
-> +      - allwinner,sun50i-a64-mipi-dsi
->
->    reg:
->      maxItems: 1
-> @@ -24,6 +26,8 @@ properties:
->      maxItems: 1
->
->    clocks:
-> +    minItems: 1
-> +    maxItems: 2
->      items:
->        - description: Bus Clock
->        - description: Module Clock
-> @@ -63,13 +67,25 @@ required:
->    - reg
->    - interrupts
->    - clocks
-> -  - clock-names
->    - phys
->    - phy-names
->    - resets
->    - vcc-dsi-supply
->    - port
->
-> +allOf:
-> +  - if:
-> +      properties:
-> +         compatible:
-> +           contains:
-> +             const: allwinner,sun6i-a31-mipi-dsi
-> +      then:
-> +        properties:
-> +          clocks:
-> +            minItems: 2
-> +        required:
-> +          - clock-names
+
+Tested-by: Vignesh Raghavendra <vigneshr@ti.com>
+
+You will have to repost patch 2/2[1] of your previous series as that
+patch no longer applies cleanly anymore given that we no longer want 1/2
+to be merged.
+
+[1]
+https://lore.kernel.org/linux-scsi/1574147082-22725-3-git-send-email-sheebab@cadence.com/
+
+
+>  drivers/scsi/ufs/cdns-pltfrm.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/scsi/ufs/cdns-pltfrm.c b/drivers/scsi/ufs/cdns-pltfrm.c
+> index b2af04c57a39..882425d1166b 100644
+> --- a/drivers/scsi/ufs/cdns-pltfrm.c
+> +++ b/drivers/scsi/ufs/cdns-pltfrm.c
+> @@ -98,6 +98,12 @@ static int cdns_ufs_link_startup_notify(struct ufs_hba *hba,
+>  	 * completed.
+>  	 */
+>  	ufshcd_dme_set(hba, UIC_ARG_MIB(PA_LOCAL_TX_LCC_ENABLE), 0);
 > +
+> +	/*
+> +	 * Disabling Autohibern8 feature in cadence UFS
+> +	 * to mask unexpected interrupt trigger.
+> +	 */
+> +	hba->ahit = 0;
+>  
+>  	return 0;
+>  }
+> 
 
-Your else condition should check that the number of clocks items is 1
-on the A64
-
-Maxime
-
---yzyy5rpvlreslc45
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXee2QAAKCRDj7w1vZxhR
-xRIbAPsHrDR0oltRHkGKak8qtw0Ade9i9chYBdVFnWgbieqG2gEAt+EUUqKul0A7
-TU9F3HI8vSkhOj8LTLq1pThpUu6Hcgo=
-=6XAi
------END PGP SIGNATURE-----
-
---yzyy5rpvlreslc45--
+-- 
+Regards
+Vignesh
