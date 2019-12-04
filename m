@@ -2,124 +2,148 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13745C2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5BFC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE15820833
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483575;
-	bh=45pYFyKcVPl9aq3G/+/M2pqNf9Ix+NuT7eye5i+f9yo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TDo4QgYpsQ6xEH2B4I4aAEVsbI99E4Q+T7HoYMOskFyO45qPSrvGc0HO6B11J/6Ip
-	 Df8YuBFFiNag0F/wp9WLlSBtC16/ohUrEhn8RrSuOKwUwFrqY5lpPyktR9ERABrFLu
-	 eujrQ8ZchR3Ghp2g0FIdL+wURasNUuN7ok6c+X9U=
+	by mail.kernel.org (Postfix) with ESMTP id 511C520675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JdRLHNFl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730779AbfLDSJe (ORCPT
+        id S1731180AbfLDSTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:09:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35080 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730544AbfLDSJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:09:26 -0500
-Received: from localhost (unknown [217.68.49.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 054CD20833;
-        Wed,  4 Dec 2019 18:09:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482965;
-        bh=45pYFyKcVPl9aq3G/+/M2pqNf9Ix+NuT7eye5i+f9yo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JZQls3f2KRrwg5xirkBQe4+g00YgmSfmoovTGmQLwQjDeSaoIKZF1S9eKePm3KrFY
-         98Vj0MRdZHKqOVRwIhHKL/3MG9z8mVtqh72t/ER4XxRxGvMNSYw26IKLcWmVM/kX+2
-         hsECOcyAaJm70dRtFcRwuThpjPhlPI7hDiIZ0mJo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH 4.14 206/209] ASoC: stm32: i2s: fix IRQ clearing
-Date:   Wed,  4 Dec 2019 18:56:58 +0100
-Message-Id: <20191204175337.669141996@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
-References: <20191204175321.609072813@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 4 Dec 2019 13:19:45 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33140 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728482AbfLDSTm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:19:42 -0500
+Received: by mail-lj1-f195.google.com with SMTP id 21so441833ljr.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 10:19:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=TO3M4JRDwYEQYalzC1JJGfXlWb3K9ShCnnIC37XGBvg=;
+        b=JdRLHNFl/zP5IdAJrHumL9k5kT+8N/SXMgaszfW6wKBo84jtVsc8GDMDEnHdUfzsxb
+         UH5/xrbFYWjsnujb1VgNV0ifwdAa6m2rUr/VbbeTKuNW4BHdAB17wKII+KD6isEytVz9
+         8kEgho3g4wpnYqC27M7LDRh8voiRk1Fr197UjvGqnmez4aSHveJEcfdpWGs4ON0Kb58l
+         TPd/YkqWWyCAHUvV5oZqSTPSe4c20GL8w5run9Fva+GzuNglr8j/ZmchkzY5PT9zY4le
+         EKDlDTR/jCYBd92gms9jcyKKt3MPmcpzYfYz25tbx2QBYpR3qsI/DNV9BYYPR+kf4+gG
+         D2TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=TO3M4JRDwYEQYalzC1JJGfXlWb3K9ShCnnIC37XGBvg=;
+        b=eFceCEEcKDk31XPZB9pzxAfByFDxzcDbVvfwmiE79m+Gfk0jmb7cgXRemmzcn4jQGG
+         PKxW3hfcQW+Wrzqz32mJzKAkG50Zd1hpx6CQbBdnewRo5d+eobdOddM/KWZwFCbs6ybZ
+         TGvAa6LJ2S/5am3WWA7izWmViPrCUcLQMbu6AVTAShAWyV/DPBUhTuUTydAr7wnwxW9y
+         dhrrYRVnZ7GPLVWPSoQrRMCWD4kcs1XuOShsiZCtM86RVF/+NrDiQAVfbKlNSMBzxOg7
+         QQQdj0KTXZ6vrPMVhO1TLIP8Ay5NmWOGODEhwmn/zhoK787opfK4X2GiUj0tF6XSxiiq
+         za0w==
+X-Gm-Message-State: APjAAAXxt1cx4+7IcbaGJgDHVDChPJ4FxOaxF9pr50iA5bk01Jp31EMU
+        XC2vPU89JjHeVwhX5UvFclXpiLIpMNDIuGquxxVvSA==
+X-Google-Smtp-Source: APXvYqyzBiR+Ed0b5BcuFC05QaXCBuLCHt63QfZjPhGoegC3WP3wGNcc6ShbnjkYko3wnz8eotLLdLInGe+67+UCcjQ=
+X-Received: by 2002:a05:651c:239:: with SMTP id z25mr510830ljn.48.1575483580174;
+ Wed, 04 Dec 2019 10:19:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <CALAqxLXrWWnWi32BR1F8JOtrGt1y2Kzj__zWopLx1ZfRy3EZKA@mail.gmail.com>
+ <CAKfTPtAvnLY3brp9iy_aHNu0rMM8nLfgeLc3CXEkMk3bwU1weA@mail.gmail.com>
+ <20191204094216.u7yld5r3zelp22lf@e107158-lin.cambridge.arm.com>
+ <20191204100925.GA15727@linaro.org> <CALAqxLWCFNJzNvgrSKSs3s42O=D6EPmnvwPTWV_k-QH7v7VNtQ@mail.gmail.com>
+In-Reply-To: <CALAqxLWCFNJzNvgrSKSs3s42O=D6EPmnvwPTWV_k-QH7v7VNtQ@mail.gmail.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 4 Dec 2019 19:19:26 +0100
+Message-ID: <CAKfTPtC-G+avBrixS35emnqUvW_MMjRBLyy=WxRB=bvS62zg_w@mail.gmail.com>
+Subject: Re: Null pointer crash at find_idlest_group on db845c w/ linus/master
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Qais Yousef <qais.yousef@arm.com>,
+        Quentin Perret <qperret@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <Patrick.Bellasi@arm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olivier Moysan <olivier.moysan@st.com>
+On Wed, 4 Dec 2019 at 19:16, John Stultz <john.stultz@linaro.org> wrote:
+>
+> On Wed, Dec 4, 2019 at 2:09 AM Vincent Guittot
+> <vincent.guittot@linaro.org> wrote:
+> >
+> > Le Wednesday 04 Dec 2019 =C3=A0 09:42:17 (+0000), Qais Yousef a =C3=A9c=
+rit :
+> > > On 12/04/19 09:06, Vincent Guittot wrote:
+> > > > Hi John,
+> > > >
+> > > > On Tue, 3 Dec 2019 at 20:15, John Stultz <john.stultz@linaro.org> w=
+rote:
+> > > > >
+> > > > > With today's linus/master on db845c running android, I'm able to
+> > > > > fairly easily reproduce the following crash. I've not had a chanc=
+e to
+> > > > > bisect it yet, but I'm suspecting its connected to Vincent's rece=
+nt
+> > > > > rework.
+> > > >
+> > > > Does the crash happen randomly or after a specific action ?
+> > > > I have a db845 so I can try to reproduce it locally.
+> > >
+> > > Isn't there a chance we use local_sgs without initializing it in that=
+ function?
+> >
+> > Normally not because the cpu belongs to its sched_domain
+> >
+> > Now, we test that a group has at least one allowed CPU for the task so =
+we
+> > could skip the local group with the correct/wrong p->cpus_ptr
+> >
+> > The path is used for fork/exec ibut also for wakeup path for b.L when t=
+he task doesn't fit in the CPUs
+> >
+> > So we can probably imagine a scenario where we change task affinity whi=
+le
+> > sleeping. If the wakeup happens on a CPU that belongs to the group that=
+ is not
+> > allowed, we can imagine that we skip the local_group
+> >
+> > John,
+> >
+> > Could you try the fix below ?
+> >
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index 08a233e..bcd216d 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -8417,6 +8417,10 @@ find_idlest_group(struct sched_domain *sd, struc=
+t task_struct *p,
+> >         if (!idlest)
+> >                 return NULL;
+> >
+> > +       /* The local group has been skipped because of cpu affinity */
+> > +       if (!local)
+> > +               return idlest;
+> > +
+> >         /*
+> >          * If the local group is idler than the selected idlest group
+> >          * don't try and push the task.
+>
+> This patch does seem to solve the issue for me! Thanks so much!
 
-commit 8ba3c5215d69c09f5c39783ff3b78347769822ad upstream.
+Thanks for testing
 
-Because of regmap cache, interrupts may not be cleared
-as expected.
-Declare IFCR register as write only and make writings
-to IFCR register unconditional.
-
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- sound/soc/stm/stm32_i2s.c |   13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
-
---- a/sound/soc/stm/stm32_i2s.c
-+++ b/sound/soc/stm/stm32_i2s.c
-@@ -246,8 +246,8 @@ static irqreturn_t stm32_i2s_isr(int irq
- 		return IRQ_NONE;
- 	}
- 
--	regmap_update_bits(i2s->regmap, STM32_I2S_IFCR_REG,
--			   I2S_IFCR_MASK, flags);
-+	regmap_write_bits(i2s->regmap, STM32_I2S_IFCR_REG,
-+			  I2S_IFCR_MASK, flags);
- 
- 	if (flags & I2S_SR_OVR) {
- 		dev_dbg(&pdev->dev, "Overrun\n");
-@@ -276,7 +276,6 @@ static bool stm32_i2s_readable_reg(struc
- 	case STM32_I2S_CFG2_REG:
- 	case STM32_I2S_IER_REG:
- 	case STM32_I2S_SR_REG:
--	case STM32_I2S_IFCR_REG:
- 	case STM32_I2S_TXDR_REG:
- 	case STM32_I2S_RXDR_REG:
- 	case STM32_I2S_CGFR_REG:
-@@ -547,8 +546,8 @@ static int stm32_i2s_startup(struct snd_
- 	i2s->refcount++;
- 	spin_unlock(&i2s->lock_fd);
- 
--	return regmap_update_bits(i2s->regmap, STM32_I2S_IFCR_REG,
--				  I2S_IFCR_MASK, I2S_IFCR_MASK);
-+	return regmap_write_bits(i2s->regmap, STM32_I2S_IFCR_REG,
-+				 I2S_IFCR_MASK, I2S_IFCR_MASK);
- }
- 
- static int stm32_i2s_hw_params(struct snd_pcm_substream *substream,
-@@ -603,8 +602,8 @@ static int stm32_i2s_trigger(struct snd_
- 			return ret;
- 		}
- 
--		regmap_update_bits(i2s->regmap, STM32_I2S_IFCR_REG,
--				   I2S_IFCR_MASK, I2S_IFCR_MASK);
-+		regmap_write_bits(i2s->regmap, STM32_I2S_IFCR_REG,
-+				  I2S_IFCR_MASK, I2S_IFCR_MASK);
- 
- 		if (playback_flg) {
- 			ier = I2S_IER_UDRIE;
-
-
+>
+> Tested-by: John Stultz <john.stultz@linaro.org>
+> -john
