@@ -2,87 +2,77 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBAF6C2D0BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B92A6C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A229A2077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:37:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575491837;
-	bh=zpttg4wTmrnmWgU+meM5WiRudYKWetdf+Ntkr9iOltw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RG9KULcUmJMNDrCXiiwv/YtXDQPu3MpWjDBVqBbaGl+v64P8MzGwmr1JSc4dn4WXa
-	 9/AN9Ghk74SdsaoEpV9OeF65RhkxKME9rZWwYRZQA5/CQwfNekz4sOA5XeczgJz5++
-	 0ZDhDPSaYdpQDj7Ek+WnSLzzBF0nscRmy0Y+hnHs=
+	by mail.kernel.org (Postfix) with ESMTP id 963D52073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:37:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbfLDUhQ (ORCPT
+        id S1728282AbfLDUhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 15:37:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45330 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727911AbfLDUhQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 15:37:16 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 561702073B;
-        Wed,  4 Dec 2019 20:37:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575491835;
-        bh=zpttg4wTmrnmWgU+meM5WiRudYKWetdf+Ntkr9iOltw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=USu9K8erfGC8SMJC/MfMFdcIf1GKAZkQOFnddGA30OdAYK+wWmqkyQ4B4z4VWfkZW
-         RoiaCwzQJbBwKAbypjfdQIoMePdJWgqr92eDLe1cwxM05mwAsyr1/nIhuJgU9v5El4
-         RcAibY98n3unHuw0IhgV5UM3t6pTIyWHzI25fciM=
-Date:   Wed, 4 Dec 2019 21:37:11 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: Re: [PATCH 4.9 105/125] mm, gup: add missing refcount overflow
- checks on x86 and s390
-Message-ID: <20191204203711.GA3685601@kroah.com>
-References: <20191204175308.377746305@linuxfoundation.org>
- <20191204175325.500930880@linuxfoundation.org>
- <7ca516fa-c526-b5e6-4b7c-855f229112ac@suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7ca516fa-c526-b5e6-4b7c-855f229112ac@suse.cz>
+        Wed, 4 Dec 2019 15:37:20 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:36328 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727911AbfLDUhT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 15:37:19 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id EF65414D78C45;
+        Wed,  4 Dec 2019 12:37:18 -0800 (PST)
+Date:   Wed, 04 Dec 2019 12:37:18 -0800 (PST)
+Message-Id: <20191204.123718.1152659362924451799.davem@davemloft.net>
+To:     grygorii.strashko@ti.com
+Cc:     netdev@vger.kernel.org, ivan.khoronzhuk@linaro.org, nsekhar@ti.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] net: ethernet: ti: davinci_cpdma: fix warning
+ "device driver frees DMA memory with different size"
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191204165029.9264-1-grygorii.strashko@ti.com>
+References: <20191204165029.9264-1-grygorii.strashko@ti.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 04 Dec 2019 12:37:19 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 07:27:44PM +0100, Vlastimil Babka wrote:
-> On 12/4/19 6:56 PM, Greg Kroah-Hartman wrote:
-> > From: Vlastimil Babka <vbabka@suse.cz>
-> > 
-> > The mainline commit 8fde12ca79af ("mm: prevent get_user_pages() from
-> > overflowing page refcount") was backported to 4.9.y stable as commit
-> > 2ed768cfd895. The backport however missed that in 4.9, there are several
-> > arch-specific gup.c versions with fast gup implementations, so these do not
-> > prevent refcount overflow.
-> > 
-> > This is partially fixed for x86 in stable-only commit d73af79742e7 ("x86, mm,
-> > gup: prevent get_page() race with munmap in paravirt guest"). This stable-only
-> > commit adds missing parts to x86 version, as well as s390 version, both taken
-> > from the SUSE SLES/openSUSE 4.12-based kernels.
-> > 
-> > The remaining architectures with own gup.c are sparc, mips, sh. It's unlikely
-> > the known overflow scenario based on FUSE, which needs 140GB of RAM, is a
-> > problem for those architectures, and I don't feel confident enough to patch
-> > them.
-> > 
-> > Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> 
-> No, this one had a leak bug and I've sent updated version:
-> https://lore.kernel.org/linux-mm/e274291b-054f-2fad-28e8-59fabf312e61@suse.cz/
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Date: Wed, 4 Dec 2019 18:50:29 +0200
 
-Ugh.  Ok, let me go fix that up...
+> @@ -1018,7 +1018,7 @@ static int cpdma_chan_submit_si(struct submit_info *si)
+>  	struct cpdma_chan		*chan = si->chan;
+>  	struct cpdma_ctlr		*ctlr = chan->ctlr;
+>  	int				len = si->len;
+> -	int				swlen = len;
+> +	int				swlen;
+>  	struct cpdma_desc __iomem	*desc;
+>  	dma_addr_t			buffer;
+>  	u32				mode;
+> @@ -1040,6 +1040,7 @@ static int cpdma_chan_submit_si(struct submit_info *si)
+>  		chan->stats.runt_transmit_buff++;
+>  	}
+>  
+> +	swlen = len;
+>  	mode = CPDMA_DESC_OWNER | CPDMA_DESC_SOP | CPDMA_DESC_EOP;
+>  	cpdma_desc_to_port(chan, mode, si->directed);
+>  
+> -- 
+> 2.17.1
+> 
+
+Now there is no reason to keep a separate swlen variable.
+
+The integral value is always consumed as the length before the descriptor bits
+are added to it.
+
+Therefore you can just use 'len' everywhere in this function now.
