@@ -2,140 +2,323 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF59C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB39EC43215
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B1842073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BB7320674
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:17:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p2ovPSWb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfLDEPK (ORCPT
+        id S1727015AbfLDERm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 23:15:10 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:54904 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726835AbfLDEPJ (ORCPT
+        Tue, 3 Dec 2019 23:17:42 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35730 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726834AbfLDERm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 23:15:09 -0500
-Received: by mail-il1-f197.google.com with SMTP id t4so4813707ili.21
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 20:15:09 -0800 (PST)
+        Tue, 3 Dec 2019 23:17:42 -0500
+Received: by mail-pl1-f195.google.com with SMTP id s10so2595785plp.2;
+        Tue, 03 Dec 2019 20:17:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BZZl+nxbwr7fP0x4IN+8uQwfbG13ju41LnpcMidPMaU=;
+        b=p2ovPSWb/E/cAo7fmM5XjU1B8d8NrSArymp9Q+uczj5fzm7yq+G54UR+dlyGIzX067
+         DNjJ61R8cL1SI6+e0M9ccFR9uQfTldodyekC1VeG1k/sajgcBKSkkRclwWRgrljtRZZu
+         djvYcyi3pp0+KcJS055JAqQs7y8xAfBXntwNsHxutGqbUa26zq3jy7crUoC2QN0eBMfY
+         rAGLi/p6KF04DA6C4mnY+E4BRSLL1ScLUciQMgU03NF35ttF5y1MrrVHR6m5nKtMsqCZ
+         9QQrOiF/clX5YhDlDx+J5s6VJjuzpv3Q1BK8/wxDSo/MAsahT3r2pz3U+a9FbET8pEVx
+         6lYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=VdLPHplMVsVl+WlOVsGf2sKVRxVRuxnwgs0jCt2nif4=;
-        b=Uctm1OAstpcnbtBclr6tiZdvupLWO8hXbv+U5tTZ34g4j6bNDG8NXG/O2SExnWKU96
-         BC8LlQE2U+rD5YLez6M9HLxBP3a+tli/kEZRFXBAVhd5iYx3AOz9m/K288k1J9uw/50y
-         CNC1JuZT4gQEyxin2UdletNLy7ZqiNYInQ8SktX/R93oolmsHp2JUvCPKVmvOTr3YDP0
-         0PGbpWyJzw70stYcgJqFfJLFr1kqjeVy5NuwAXn1abRWT0ImpSvZLyJ28bcU1o4ebSZR
-         nf6Tqv/G8uyov52AV9/4SEfGtbhlJ8el+ycl2vJZ6OpXphGvnOL7MVCyMjU5gBSTMzoh
-         J+Bw==
-X-Gm-Message-State: APjAAAUYyawOYiLib1yMVkIhhUyUVJmQeJ/ReWz4JOp3qlESK7U5odP9
-        Yv5xl582E8DuDT1Q9JHroi4xvhLWH2CBF/32SL4uptZDeOk0
-X-Google-Smtp-Source: APXvYqzeIvGu/yNE0BUV2pKlhsrk2vzxeUv9IQ64GsXDF0KB5XQbnNvLZAyOqS9dnWMwMWmCQDWTNeZRvItsw9hi1x8sW58C5vyf
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BZZl+nxbwr7fP0x4IN+8uQwfbG13ju41LnpcMidPMaU=;
+        b=UURrwIQMZJTNo2e3gx03A1KNHzK6ejHuTDp6ND9NCMfHjeHrhtkr6CLOkPRJNHBMmK
+         ra1hjoa3Lgqyl4mXrXDcGtGAvxgUV/YZBVGyV/6DMj/vD7e9A3JWAvHJ+96k+s9KAAgz
+         BwceVvgIGi0BUnTQsZ19CDObMXr4xrxxY+12GQZHBmUZ/3emd+Kbt6QrgIBu4oQ15n8c
+         MmGunKujSE56ebD6+gwASE0tV1zpAXoDK+M9MnnCVy9Jxmr4RkQPJ65pZXonLCWmsNe9
+         acni7q2hfgZcqglGDfO1q64LmTvvguOjkLO9yl8RPjabNMPcftA4A+TFYeGZ+AWtUiQ4
+         oLwA==
+X-Gm-Message-State: APjAAAVjXmklhYppfV31k0Zse6K4LoqmbVxHVKoOXyXjzEaZWFVvcYfK
+        dho4wsYxXpZhzzwJRUNpJNo=
+X-Google-Smtp-Source: APXvYqwJwwU8OYeVnqjIsdO7aH6M3H2utHGtvCkXRjIfSOxuESukx/RQnr0iPdFos638xKe8mfagjg==
+X-Received: by 2002:a17:90a:374f:: with SMTP id u73mr1200433pjb.22.1575433061004;
+        Tue, 03 Dec 2019 20:17:41 -0800 (PST)
+Received: from ?IPv6:240d:1a:90a:7900:fc86:4c94:c9d5:bfda? ([240d:1a:90a:7900:fc86:4c94:c9d5:bfda])
+        by smtp.gmail.com with ESMTPSA id p21sm5385729pfn.103.2019.12.03.20.17.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Dec 2019 20:17:40 -0800 (PST)
+Subject: Re: 5e6669387e ("of/platform: Pause/resume sync state during init
+ .."): [ 3.192726] WARNING: CPU: 1 PID: 1 at drivers/base/core.c:688
+ device_links_supplier_sync_state_resume
+To:     Saravana Kannan <saravanak@google.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        LKP <lkp@lists.01.org>, kernel test robot <lkp@intel.com>
+References: <20191201150015.GC18573@shao2-debian>
+ <CAGETcx9r0u=-WSnQ2ZS1KmZSVQqKwvpnhO-w41=jk8iF6BdALA@mail.gmail.com>
+ <7e13b7f9-6c0f-0ab5-a6f9-5fb9b41257c9@gmail.com>
+ <CAGETcx_PeYi-j+=0QOQR9c=_4n4becziS8WKKi77bXuNY1hufQ@mail.gmail.com>
+ <CAL_JsqKBuCfCvFwbUQwTQxYAR1WL5r5Mnm_RBhHgH0b7_Bkg6w@mail.gmail.com>
+ <CAGETcx9-TZfARQgc7N4=kp1WVvMuxpmw3n3-TmwYO1YNkQKmRw@mail.gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <1a30fb19-dfac-6b6c-1e92-8d972fc52b10@gmail.com>
+Date:   Tue, 3 Dec 2019 22:17:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9f05:: with SMTP id q5mr683388iot.295.1575432909116;
- Tue, 03 Dec 2019 20:15:09 -0800 (PST)
-Date:   Tue, 03 Dec 2019 20:15:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ea5ec20598d90e50@google.com>
-Subject: KASAN: vmalloc-out-of-bounds Write in kvm_dev_ioctl_get_cpuid
-From:   syzbot <syzbot+e3f4897236c4eeb8af4f@syzkaller.appspotmail.com>
-To:     bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, pbonzini@redhat.com, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
-        x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <CAGETcx9-TZfARQgc7N4=kp1WVvMuxpmw3n3-TmwYO1YNkQKmRw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 12/3/19 4:50 PM, Saravana Kannan wrote:
+> On Tue, Dec 3, 2019 at 1:10 PM Rob Herring <robh+dt@kernel.org> wrote:
+>>
+>> On Tue, Dec 3, 2019 at 2:05 PM Saravana Kannan <saravanak@google.com> wrote:
+>>>
+>>> On Tue, Dec 3, 2019 at 1:01 AM Frank Rowand <frowand.list@gmail.com> wrote:
+>>>>
+>>>> On 12/2/19 3:19 PM, Saravana Kannan wrote:
+>>>>> On Sun, Dec 1, 2019 at 7:00 AM kernel test robot <lkp@intel.com> wrote:
+>>>>>>
+>>>>>> Greetings,
+>>>>>>
+>>>>>> 0day kernel testing robot got the below dmesg and the first bad commit is
+>>>>>>
+>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+>>>>>>
+>>>>>> commit 5e6669387e2287f25f09fd0abd279dae104cfa7e
+>>>>>> Author:     Saravana Kannan <saravanak@google.com>
+>>>>>> AuthorDate: Wed Sep 4 14:11:24 2019 -0700
+>>>>>> Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>>>>> CommitDate: Fri Oct 4 17:30:19 2019 +0200
+>>>>>>
+>>>>>>     of/platform: Pause/resume sync state during init and of_platform_populate()
+>>>>>>
+>>>>>>     When all the top level devices are populated from DT during kernel
+>>>>>>     init, the supplier devices could be added and probed before the
+>>>>>>     consumer devices are added and linked to the suppliers. To avoid the
+>>>>>>     sync_state() callback from being called prematurely, pause the
+>>>>>>     sync_state() callbacks before populating the devices and resume them
+>>>>>>     at late_initcall_sync().
+>>>>>>
+>>>>>>     Similarly, when children devices are populated from a module using
+>>>>>>     of_platform_populate(), there could be supplier-consumer dependencies
+>>>>>>     between the children devices that are populated. To avoid the same
+>>>>>>     problem with sync_state() being called prematurely, pause and resume
+>>>>>>     sync_state() callbacks across of_platform_populate().
+>>>>>>
+>>>>>>     Signed-off-by: Saravana Kannan <saravanak@google.com>
+>>>>>>     Link: https://lore.kernel.org/r/20190904211126.47518-6-saravanak@google.com
+>>>>>>     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>>>>>
+>>>>>> fc5a251d0f  driver core: Add sync_state driver/bus callback
+>>>>>> 5e6669387e  of/platform: Pause/resume sync state during init and of_platform_populate()
+>>>>>> 81b6b96475  Merge branch 'master' of git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux; tag 'dma-mapping-5.5' of git://git.infradead.org/users/hch/dma-mapping
+>>>>>> +-------------------------------------------------------------------------+------------+------------+------------+
+>>>>>> |                                                                         | fc5a251d0f | 5e6669387e | 81b6b96475 |
+>>>>>> +-------------------------------------------------------------------------+------------+------------+------------+
+>>>>>> | boot_successes                                                          | 30         | 0          | 0          |
+>>>>>> | boot_failures                                                           | 1          | 11         | 22         |
+>>>>>> | Oops:#[##]                                                              | 1          |            |            |
+>>>>>> | EIP:unmap_vmas                                                          | 1          |            |            |
+>>>>>> | PANIC:double_fault                                                      | 1          |            |            |
+>>>>>> | Kernel_panic-not_syncing:Fatal_exception                                | 1          |            |            |
+>>>>>> | WARNING:at_drivers/base/core.c:#device_links_supplier_sync_state_resume | 0          | 11         | 22         |
+>>>>>> | EIP:device_links_supplier_sync_state_resume                             | 0          | 11         | 22         |
+>>>>>> +-------------------------------------------------------------------------+------------+------------+------------+
+>>>>>>
+>>>>>> If you fix the issue, kindly add following tag
+>>>>>> Reported-by: kernel test robot <lkp@intel.com>
+>>>>>>
+>>>>>> [    3.186107] OF: /testcase-data/phandle-tests/consumer-b: #phandle-cells = 2 found -1
+>>>>>> [    3.188595] platform testcase-data:testcase-device2: IRQ index 0 not found
+>>>>>> [    3.191047] ### dt-test ### end of unittest - 199 passed, 0 failed
+>>>>>> [    3.191932] ------------[ cut here ]------------
+>>>>>> [    3.192571] Unmatched sync_state pause/resume!
+>>>>>> [    3.192726] WARNING: CPU: 1 PID: 1 at drivers/base/core.c:688 device_links_supplier_sync_state_resume+0x27/0xc0
+>>>>>> [    3.195084] Modules linked in:
+>>>>>> [    3.195494] CPU: 1 PID: 1 Comm: swapper/0 Tainted: G                T 5.4.0-rc1-00005-g5e6669387e228 #1
+>>>>>> [    3.196674] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+>>>>>> [    3.197693] EIP: device_links_supplier_sync_state_resume+0x27/0xc0
+>>>>>> [    3.198680] Code: 00 00 00 3e 8d 74 26 00 57 56 31 d2 53 b8 a0 d0 d9 c1 e8 6c b6 38 00 a1 e4 d0 d9 c1 85 c0 75 13 68 84 ba c4 c1 e8 29 30 b1 ff <0f> 0b 58 eb 7f 8d 74 26 00 83 e8 01 85 c0 a3 e4 d0 d9 c1 75 6f 8b
+>>>>>> [    3.201560] EAX: 00000022 EBX: 00000000 ECX: 00000000 EDX: 00000000
+>>>>>> [    3.202466] ESI: 000001ab EDI: c02c7f80 EBP: c1e87d27 ESP: c02c7f20
+>>>>>> [    3.203301] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00010282
+>>>>>> [    3.204258] CR0: 80050033 CR2: bfa1bf98 CR3: 01f28000 CR4: 00140690
+>>>>>> [    3.205022] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
+>>>>>> [    3.205919] DR6: fffe0ff0 DR7: 00000400
+>>>>>> [    3.206529] Call Trace:
+>>>>>> [    3.207011]  ? of_platform_sync_state_init+0x13/0x16
+>>>>>> [    3.207719]  ? do_one_initcall+0xda/0x260
+>>>>>> [    3.208247]  ? kernel_init_freeable+0x110/0x197
+>>>>>> [    3.208906]  ? rest_init+0x120/0x120
+>>>>>> [    3.209369]  ? kernel_init+0xa/0x100
+>>>>>> [    3.209775]  ? ret_from_fork+0x19/0x24
+>>>>>> [    3.210283] ---[ end trace 81d0f2d2ee65199b ]---
+>>>>>> [    3.210955] ALSA device list:
+>>>>>
+>>>>> Rob/Frank,
+>>>>>
+>>>>> This seems to be an issue with the unit test code not properly
+>>>>> cleaning up the state after it's done.
+>>>>>
+>>>>> Specifically, unittest_data_add() setting up of_root on systems where
+>>>>> there's no device tree (of_root == NULL). It doesn't clean up of_root
+>>>>> after the tests are done. This affects the of_have_populated_dt() API
+>>>>> that in turn affects calls to
+>>>>> device_links_supplier_sync_state_pause/resume(). I think unittests
+>>>>> shouldn't affect the of_have_populated_dt() API.
+>>>> There are at least a couple of reasons why the unittest devicetree data
+>>>> needs to remain after the point where devicetree unittests currently
+>>>> complete.  So cleaning up (removing the data) is not an option.
+>>>>
+>>>> I depend on the unittest devicetree entries still existing after the system
+>>>> boots and I can log into a shell for some validation of the final result of
+>>>> the devicetree data.
+>>>
+>>> IMHO unittests shouldn't have a residual impact on the system after
+>>> they are done. So, I'll agree to disagree on this one.
+>>
+>> They shouldn't be enabled in a production system either. Why would you
+>> want the extra boot time?
+> 
+> Should we ask the kernel test robot folks to not enable OF unittest
 
-syzbot found the following crash on:
-
-HEAD commit:    596cf45c Merge branch 'akpm' (patches from Andrew)
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=103acb7ae00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8eb54eee6e6ca4a7
-dashboard link: https://syzkaller.appspot.com/bug?extid=e3f4897236c4eeb8af4f
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15b87c82e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11250f36e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+e3f4897236c4eeb8af4f@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: vmalloc-out-of-bounds in __do_cpuid_func_emulated  
-arch/x86/kvm/cpuid.c:323 [inline]
-BUG: KASAN: vmalloc-out-of-bounds in do_cpuid_func arch/x86/kvm/cpuid.c:814  
-[inline]
-BUG: KASAN: vmalloc-out-of-bounds in do_cpuid_func arch/x86/kvm/cpuid.c:810  
-[inline]
-BUG: KASAN: vmalloc-out-of-bounds in kvm_dev_ioctl_get_cpuid+0xad7/0xb0b  
-arch/x86/kvm/cpuid.c:891
-Write of size 4 at addr ffffc90000d36050 by task syz-executor490/9767
-
-CPU: 1 PID: 9767 Comm: syz-executor490 Not tainted 5.4.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  print_address_description.constprop.0.cold+0x5/0x30b mm/kasan/report.c:374
-  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-  kasan_report+0x12/0x20 mm/kasan/common.c:638
-  __asan_report_store4_noabort+0x17/0x20 mm/kasan/generic_report.c:139
-  __do_cpuid_func_emulated arch/x86/kvm/cpuid.c:323 [inline]
-  do_cpuid_func arch/x86/kvm/cpuid.c:814 [inline]
-  do_cpuid_func arch/x86/kvm/cpuid.c:810 [inline]
-  kvm_dev_ioctl_get_cpuid+0xad7/0xb0b arch/x86/kvm/cpuid.c:891
-  kvm_arch_dev_ioctl+0x300/0x4b0 arch/x86/kvm/x86.c:3387
-  kvm_dev_ioctl+0x127/0x17d0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3593
-  vfs_ioctl fs/ioctl.c:47 [inline]
-  file_ioctl fs/ioctl.c:539 [inline]
-  do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:726
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:743
-  __do_sys_ioctl fs/ioctl.c:750 [inline]
-  __se_sys_ioctl fs/ioctl.c:748 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:748
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x440159
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffd106332c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440159
-RDX: 0000000020000080 RSI: 00000000c008ae09 RDI: 0000000000000003
-RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004019e0
-R13: 0000000000401a70 R14: 0000000000000000 R15: 0000000000000000
+No.  If unittests are breaking other code I want to know that.
 
 
-Memory state around the buggy address:
-  ffffc90000d35f00: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-  ffffc90000d35f80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-> ffffc90000d36000: 00 00 00 00 00 00 00 00 00 00 f9 f9 f9 f9 f9 f9
-                                                  ^
-  ffffc90000d36080: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-  ffffc90000d36100: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-==================================================================
+> then? It broke my patch, but I wouldn't be surprised if it's silently
+> breaking other stuff too. I think we need to do option 4 below.
+> 
+>>
+>>>> There is also a desire for the devicetree unittests to be able to be loaded
+>>>> as a module.  That work is not yet scheduled, but I do not want to preclude
+>>>> the possibility.  If unittests are loaded from a module then they will
+>>>> need some devicetree data to exist that is created in early boot.  That
+>>>> data will be in the devicetree when of_platform_sync_state_init() is
+>>>> invoked.
+>>>
+>>> On a normal system, FDT is parsed and of_root is set (or not set) very
+>>> early on during setup_arch() before any of the initcall levels are
+>>> run. The return value of of_have_populated_dt() isn't expected to
+>>> change across initcall levels. But because of the way the unittest is
+>>> written (the of_root is changed at late_initcall() level) the return
+>>> value of of_have_populated_dt() changes across initcall levels. I
+>>> think that's a real problem with the unittest -- it's breaking API
+>>> semantics.
+>>
+>> I think what's really desired here is a 'Am I booting using DT' call.
+> 
+> I think the community has decided to use of_have_populated_dt() as
+> that call. So, we shouldn't break it.
+
+Have you analyzed each and every use of of_have_populated_dt() to verify
+that?  I have not yet looked at each of them.
+
+The function was created with one user for a specific purpose and the use
+of it has grown over the years.  I was not going to modify it to have
+the specific meaning of "Am I booting using DT" (thus being able to ignore
+the existence of the unittest data in the devicetree) without first examining
+each of the users of the of_have_populated_dt().  [[ This possible change was
+one of the solutions I considered before I examined what the actual problem
+leading to the WARNing was. ]]
+
+> 
+>>
+>>> of_have_populated_dt() is being used to check if DT is present in the
+>>> system and different things are done based on that. We can't have that
+>>> value change across initcall levels.
+>>>
+>>> Couple of thoughts:
+>>> 1. Don't run unit test if there is no live DT in the system?
+>>
+>> That's pretty much the only case I do run. I use UML to run the tests.
+> 
+> Ah, makes sense.
+> 
+>>> 2. If you don't want to do (1), then at least set up the unit test
+>>> data during setup_arch() instead of doing it at some initcall level?
+>>
+>> That further breaks making it a module. The plan is also to move to
+>> kunit which probably will preclude some hacky hook into setup_arch().
+>> Side effects may need to be fixed for kunit though.
+> 
+> Yup.
+> 
+>>> 3. Can you use overlays for the unit tests if they are loaded as a module?
+>>
+>> That was the idea, yes.
+>>
+>>
+>> 4. Make running the unittests a command line option instead of running
+>> if enabled. Still has side effects, but you have to explicitly run it.
+
+I am assuming "command line option" means the kernel boot command line, not
+a command line interface.
+
+I would prefer not.  It is a debug option.  There is no need to add the extra
+complexity of an additional switch to control it.  Configure it in or configure
+it out.
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> Hmm... this is another good option. I think this should be done. Do we
+> have a consensus on this?
+Why would you even ask if there was consensus on something that has not
+even been discussed?
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+
+>> A module would still be my preference. If only there was someone
+>> interested in making everything a module... ;)> 
+> :)
+> 
+>>>>> I was looking into writing a unittest patch to fix this, but I don't
+>>>>> know enough about the FDT parsing code to make sure I don't leak any
+>>>>> memory or free stuff that's in use. I'm not sure I can simply set
+>>>>> of_root = NULL if it was NULL before the unittest started. Let me know
+>>>>> how I should proceed or if you plan to write up a patch for this.
+>>>>
+>>>> Based on the above, "clean up" of the unittest data is not the solution.
+>>>>
+>>>> I haven't looked at the mechanism in device_links_supplier_sync_state_resume()
+>>>> that leads to the WARN yet.  But is does not seem reasonable for that code
+>>>> to be so sensitive to what valid data is in the devicetree that a WARN results.
+>>>
+>>> Sure, I could easily fix it to work around this. But this seems to be
+>>> a genuine problem with the unittest setup IMO.
+> 
+> I'll go ahead and do this (basically always doing it instead of
+> checking on of_have_populated_dt()) but I don't want us to forget this
+> unittest issue.
+
+Thank you for planning to do this fix.
+
+The unittest issue will not be forgotten.  The possible impacts of unittest on
+other users of devicetree is something I am very sensitive to and have
+thought about quite a bit.
+
+-Frank
+
+
+> 
+> -Saravana
+> 
+
