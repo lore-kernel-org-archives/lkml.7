@@ -2,71 +2,93 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 379FFC2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89984C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 159C12073C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C0AB2073C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:32:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbfLDNbB (ORCPT
+        id S1727924AbfLDNca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 08:31:01 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:49673 "EHLO ozlabs.org"
+        Wed, 4 Dec 2019 08:32:30 -0500
+Received: from foss.arm.com ([217.140.110.172]:55918 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727850AbfLDNa6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 08:30:58 -0500
-Received: by ozlabs.org (Postfix, from userid 1034)
-        id 47Sfqz4ZrXz9sRK; Thu,  5 Dec 2019 00:30:55 +1100 (AEDT)
-X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 552263456215ada7ee8700ce022d12b0cffe4802
-In-Reply-To: <a55eca3a5e85233838c2349783bcb5164dae1d09.1575273217.git.christophe.leroy@c-s.fr>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        arnd@arndb.de
-Subject: Re: [PATCH v4 3/8] powerpc: Fix vDSO clock_getres()
-Message-Id: <47Sfqz4ZrXz9sRK@ozlabs.org>
-Date:   Thu,  5 Dec 2019 00:30:55 +1100 (AEDT)
+        id S1727798AbfLDNca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 08:32:30 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2781B1FB;
+        Wed,  4 Dec 2019 05:32:29 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CBA633F68E;
+        Wed,  4 Dec 2019 05:32:27 -0800 (PST)
+Date:   Wed, 4 Dec 2019 13:32:25 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Quentin Perret <qperret@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Patrick Bellasi <Patrick.Bellasi@arm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Null pointer crash at find_idlest_group on db845c w/ linus/master
+Message-ID: <20191204133224.uiqbkbpseree7xou@e107158-lin.cambridge.arm.com>
+References: <CALAqxLXrWWnWi32BR1F8JOtrGt1y2Kzj__zWopLx1ZfRy3EZKA@mail.gmail.com>
+ <CAKfTPtAvnLY3brp9iy_aHNu0rMM8nLfgeLc3CXEkMk3bwU1weA@mail.gmail.com>
+ <20191204094216.u7yld5r3zelp22lf@e107158-lin.cambridge.arm.com>
+ <20191204100925.GA15727@linaro.org>
+ <629cca09-dde7-5d77-42e1-c68f2c1820d2@arm.com>
+ <CAKfTPtDZLFn7msw88pTE_wr-BJo2ErqxpOW+ah0Jjcg6vE3SLw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtDZLFn7msw88pTE_wr-BJo2ErqxpOW+ah0Jjcg6vE3SLw@mail.gmail.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-12-02 at 07:57:29 UTC, Christophe Leroy wrote:
-> From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+On 12/04/19 13:08, Vincent Guittot wrote:
+> On Wed, 4 Dec 2019 at 11:41, Valentin Schneider
+> <valentin.schneider@arm.com> wrote:
+> >
+> > On 04/12/2019 10:09, Vincent Guittot wrote:
+> > > Now, we test that a group has at least one allowed CPU for the task so we
+> > > could skip the local group with the correct/wrong p->cpus_ptr
+> > >
+> > > The path is used for fork/exec ibut also for wakeup path for b.L when the task doesn't fit in the CPUs
+> > >
+> > > So we can probably imagine a scenario where we change task affinity while
+> > > sleeping. If the wakeup happens on a CPU that belongs to the group that is not
+> > > allowed, we can imagine that we skip the local_group
+> > >
+> >
+> > Shoot, I think you're right. If it is the local group that is NULL, then
+> > we most likely splat on:
+> >
+> >                 if (local->sgc->max_capacity >= idlest->sgc->max_capacity)
+> >                         return NULL;
+> >
+> > We don't splat before because we just use local_sgs, which is uninitialized
+> > but on the stack.
+> >
+> > Also; does it really have to involve an affinity "race"? AFAIU affinity
+> > could have been changed a while back, but the waking CPU isn't allowed
+> > so we skip the local_group (in simpler cases where each CPU is a group).
 > 
-> clock_getres in the vDSO library has to preserve the same behaviour
-> of posix_get_hrtimer_res().
-> 
-> In particular, posix_get_hrtimer_res() does:
->     sec = 0;
->     ns = hrtimer_resolution;
-> and hrtimer_resolution depends on the enablement of the high
-> resolution timers that can happen either at compile or at run time.
-> 
-> Fix the powerpc vdso implementation of clock_getres keeping a copy of
-> hrtimer_resolution in vdso data and using that directly.
-> 
-> Fixes: a7f290dad32e ("[PATCH] powerpc: Merge vdso's and add vdso support
-> to 32 bits kernel")
-> Cc: stable@vger.kernel.org
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Acked-by: Shuah Khan <skhan@linuxfoundation.org>
-> [chleroy: changed CLOCK_REALTIME_RES to CLOCK_HRTIMER_RES]
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> In fact, this will depend of the uninitialized values of local_sgs. I
+> have been able to reproduce the situation where we skip local group
+> but not to trigger the crash because the values already in the stack
+> don't trigger the misfit comparison.
 
-Applied to powerpc fixes, thanks.
+Will it be expensive to initialize local_sgs = {0}?
 
-https://git.kernel.org/powerpc/c/552263456215ada7ee8700ce022d12b0cffe4802
-
-cheers
+--
+Qais Yousef
