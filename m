@@ -2,104 +2,96 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF62C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FC0C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A471206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3890206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:00:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575485877;
-	bh=tZxI1dUVWV8eBDheOf3hqB6QZPFtWFcd+3y4NEeujmQ=;
+	s=default; t=1575486052;
+	bh=kdaXtWn3Cct2aWhfMg/TIE+X3NfFrEC4qPtmAeDBDas=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h/J5yv7NCQMJ00/blEgJfbor5+6uL6blXMoSybYfreJYUx2//aUpEW28i223c4gmW
-	 2NbQEX0tx9ci9kZifJbClEMt+5ZfQWm1Dhc6NGdN3s0IUVtZ4Tv3RcxwDa7mwKfJNy
-	 pO1ZGwpRcswbAol3h4jFSUg78u6JXJxQFUY0eh1w=
+	b=Tret0lVpBGI+GhJiTWHT+qTYEMnmARZAn/2Z5Rr20JV+1FJIa8LEwR1GVgWiIlmHf
+	 xA65n9FwF/VbuYreZXiJGkgzhoIAO+uavo3RRZP3N5X+NCTcZevj0Tv6EvCd82oon7
+	 5T1LPN4rwUyEqkiLC1sMYWyzSO56PVg8TZrBjqyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbfLDS54 (ORCPT
+        id S1728230AbfLDTAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:57:56 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33650 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbfLDS5z (ORCPT
+        Wed, 4 Dec 2019 14:00:51 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40808 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727978AbfLDTAu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:57:55 -0500
-Received: by mail-ot1-f67.google.com with SMTP id d17so262972otc.0;
-        Wed, 04 Dec 2019 10:57:55 -0800 (PST)
+        Wed, 4 Dec 2019 14:00:50 -0500
+Received: by mail-ot1-f65.google.com with SMTP id i15so226989oto.7;
+        Wed, 04 Dec 2019 11:00:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TyFlWZtZeRnOIyikDPfUJupGzxrSsorOBrT8gOUOV5w=;
-        b=UUZaNQowzSRR2f2MZOIqeklA5y9J6oI+kHQSsEezq4NzzwXLtJ743wl4MXGz7Ax6au
-         1m22x+9gvTH3hfdtFdzk7KLiSo2cmW0EZyamdEKUO6JaFWDE3VibmjhNbbeqhskyx14x
-         coaPdasAcYCP1HIIgW3s8hFhMN5FmcjHgZGeq3AMjtXUGxXU33ibN+k1/9CaJnlKhpzd
-         TqcCdA5rsuSSPQUoD2hsjDJG1cEaN7mKpjAgKuxWHA0zN3RkvTxrwIek2hWxNYGLNxgQ
-         hCjpASN+YZhlVJMUs6ty46VuMVWcRz/+y5QBrdtJUJ+fdxBnjC9cBbmFUjiMrKYP0YHg
-         Gx2Q==
-X-Gm-Message-State: APjAAAU/Kn8SSlg4Oc26o6aoPwBtouny/GvIlbR8CPYmO1/F5l74rCk1
-        u3cfhg9Syz/J5o0lZhPtHA==
-X-Google-Smtp-Source: APXvYqzLrsljAw6xaQR9Yy1mWF3DkGaOVeVWuG61van3Eri4fGDE3iohUXta2mlOKmmOk1xZ5gGWuw==
-X-Received: by 2002:a05:6830:1cf:: with SMTP id r15mr3876151ota.231.1575485874840;
-        Wed, 04 Dec 2019 10:57:54 -0800 (PST)
+        bh=NH9P71jaSYwbdiuvHT3KsqpBTP1sBzRBr3S4xZfrqbs=;
+        b=taR/08V6NmRQ51ByzAW4WRWmJUsZQDGXTjXGqioLUso3bsBAozyeE7NUx53dsmZV/5
+         JvLinkdloNOO0MnqcQde8QDqgl6oSkvw4xcd5rp4pdELmqBzT5k1SGIBsPHZmVs2M+i2
+         YKs0/ahOq2hGLZk2V04jDd6y1yNkB0ahg6SofBOXpC0vyAy8EbMRziPusP7obdLDhmEz
+         6JEIup0dL7uc6jAGyrVlGfpK+gcxF9+5gW2nwupe1uu7o+dVogDddlNvmmMcp+YsN6cC
+         b8ymgl22thP3z7bDTeXhFxQEWR96Sck7vLIAzOj5PT61i8d+0ND6ssKuU9J4SPXzXHcX
+         fJcg==
+X-Gm-Message-State: APjAAAX0QgqlzH8Y/Quxfw6hfS1iTSdY3bz3+PVzxLPW3tvPamjIjxyB
+        dlIB5trzzcu4EjXaoMkQoHmaE/o=
+X-Google-Smtp-Source: APXvYqzblcedlB6VcbjUSVI+aOesYy+s6U2KKJdMQ/zRFaTgEEQAiavskZ46/ytzN8GzzTKG4671vQ==
+X-Received: by 2002:a05:6830:154c:: with SMTP id l12mr3676333otp.275.1575486049903;
+        Wed, 04 Dec 2019 11:00:49 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i7sm2571659oib.42.2019.12.04.10.57.53
+        by smtp.gmail.com with ESMTPSA id l81sm1705081oih.5.2019.12.04.11.00.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 10:57:54 -0800 (PST)
-Date:   Wed, 4 Dec 2019 12:57:53 -0600
+        Wed, 04 Dec 2019 11:00:49 -0800 (PST)
+Date:   Wed, 4 Dec 2019 13:00:48 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc:     jic23@kernel.org, dragos.bogdan@analog.com,
-        alexandru.ardelean@analog.com, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        kernel-usp@googlegroups.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: iio: adc: ad7292: fix channel
- constraint
-Message-ID: <20191204185753.GA19409@bogus>
-References: <20191204155918.5ot4tplceqjeul6a@smtp.gmail.com>
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
+Subject: Re: [PATCH v2 1/4] dt-bindings: vendor-prefixes: Add yet another for
+ ST-Ericsson
+Message-ID: <20191204190048.GA28062@bogus>
+References: <20191120181857.97174-1-stephan@gerhold.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191204155918.5ot4tplceqjeul6a@smtp.gmail.com>
+In-Reply-To: <20191120181857.97174-1-stephan@gerhold.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 12:59:23PM -0300, Marcelo Schmitt wrote:
-> Change items property of AD7292 channels to correctly constrain their
-> quantity.
+On Wed, 20 Nov 2019 19:18:54 +0100, Stephan Gerhold wrote:
+> Unfortunately the vendor prefix for ST-Ericsson is used very
+> inconsistently. "ste," and "stericsson," are already documented,
+> but some things in the kernel use "st-ericsson," which is not
+> documented yet.
 > 
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> st-ericsson,u8500 is documented in bindings/arm/ux500/boards.txt,
+> and is used to match the machine code and the generic DT cpufreq
+> driver.
+> 
+> Add it to the list of vendor prefixes.
+> 
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 > ---
-> Changelog V2
-> - Shortened the message to make it closer to 50 columns.
+> Changes in v2: none, added new patch to deprecate other vendor prefixes
+> v1: https://lore.kernel.org/linux-devicetree/20191120121720.72845-1-stephan@gerhold.net/
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
->  Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
 
-I think Jonathan already applied this series.
+Applied, thanks.
 
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> index b68be3aaf587..18f1032b86f3 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> @@ -53,7 +53,8 @@ patternProperties:
->          description: |
->            The channel number. It can have up to 8 channels numbered from 0 to 7.
->          items:
-> -          maximum: 7
-> +          - minimum: 0
-> +            maximum: 7
->  
->        diff-channels:
->          description: see Documentation/devicetree/bindings/iio/adc/adc.txt
-> -- 
-> 2.23.0
-> 
+Rob
