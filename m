@@ -2,130 +2,287 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E99BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2C3C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA7B20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16A8120675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:48:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DOABLru4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XFKFxuIo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbfLDNs3 (ORCPT
+        id S1727967AbfLDNsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 08:48:29 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:39242 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727792AbfLDNs2 (ORCPT
+        Wed, 4 Dec 2019 08:48:42 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46597 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727792AbfLDNsl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 08:48:28 -0500
-Received: by mail-lj1-f195.google.com with SMTP id e10so8183682ljj.6
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 05:48:27 -0800 (PST)
+        Wed, 4 Dec 2019 08:48:41 -0500
+Received: by mail-qk1-f196.google.com with SMTP id f5so7102112qkm.13
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 05:48:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZUCgkZkQGlomAJOzbgMFScKepIlz1LFeHjuD70SyCDU=;
-        b=DOABLru4O3YLSC1Udp2kl5pZ+lWsZIGKvq5CRAFXe2rMUOCADT30wVieq72PNjLVBo
-         DebY7P0Ttqsf2TDtWHJlpAW78tod/eky8WZdj3Frxhiq+BPU5iZme2DGk3lSVk36o4Vs
-         3jDHwJF0yLZZrx6XEayGFjFGLaaAENOhpVP3SqGBQEtpDYPAGMfKSSykXOt9hsBOUrvD
-         pgYaUuuALfDemB2IUMmBVsK5XQNNlRxBc3R7Pul2f9Al+Ar1wDuzyDcOpubWc2kv1lkI
-         TIqBxjAIjzfF4pSyyTOaSf265a9FZ49biREUrILtvmD/v4WeL3KSLEb5lFZMhSI3G3dx
-         bEyw==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=kjtKZQgAJfat4nV98ffIVr09JJKAt0JciPj76qkRygI=;
+        b=XFKFxuIo/3r2okVn4VRckypd5Xj1FM40gNcjly+L3J+v08sH5ihWzpmww7VLOw/C2l
+         q6XbKx4vxxo3VS8nIqw6iROMGlX8cSiqJ7tCowWUOMlQzXCGs8kx/DQ7Htr6rx5vhzmy
+         /rc7Dd6EPvm78K3dxyNWlmp1v+ZQR1RUIU2z1dmJTfQL9AIjmKbfk/Rs+lbiUDrgaTn3
+         W8/dMwIPyq66HHivmDrZk90DfxV9vEz5bV8pofHqzhlV/JK9BTQpbwmm1dk8AxymxNWO
+         ruNX72M+ehyeOZ23olIWcY9SrAeS7sbi6YfYucbsLJhwqwTTmp4ZVRxzFSdug2pyRiyv
+         9sJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZUCgkZkQGlomAJOzbgMFScKepIlz1LFeHjuD70SyCDU=;
-        b=dOQ1zGamZ2/9mQnyKCBWIi66FWS90lsCIesOapcYzF7xl5setwa5+i3SdpxHnGRkQV
-         wrAQzhruPEbf6EfdsmjQaut5g84C6KsFsBlDPkB2n/5boqtkX82OE+Y3ZfUZ0Di5vHin
-         nLEq1krFXf5CrzL3TRes6a2ZdNwgZVC24eJajHIwfnwt52XdUyLCBx+o1auBDFfgXv5o
-         iu2R2vUEQR0oLkk0OENMUkpoRkl4ewufNN9o+ldqPtSdgLInJJ/90CK+3W3U/KIAXIPi
-         gOQmYFn9Y7S7ziOl1YobP3ILO5P8Z4wmiWMGCDLolVQb9kVzewcFtFSb8N/cD20kGdCs
-         CENg==
-X-Gm-Message-State: APjAAAUZTpULeVIITXhvGUekERr6Wc6VZ4U0+D9CxQzMt8ZKZGyuAzzy
-        SbQZ1nkNHvEP1SLklz14YuBPmLTRvQgpjnmgC9CG1g==
-X-Google-Smtp-Source: APXvYqyrors0Lqeum2YuOO9Y8I+L0AwkZy7afmR5sEZYatmvTAx4oky7L2jHZKumkSC+T6KuYakYrUq5tskDHSP4HeQ=
-X-Received: by 2002:a2e:9a51:: with SMTP id k17mr2001305ljj.206.1575467306357;
- Wed, 04 Dec 2019 05:48:26 -0800 (PST)
-MIME-Version: 1.0
-References: <CALAqxLXrWWnWi32BR1F8JOtrGt1y2Kzj__zWopLx1ZfRy3EZKA@mail.gmail.com>
- <CAKfTPtAvnLY3brp9iy_aHNu0rMM8nLfgeLc3CXEkMk3bwU1weA@mail.gmail.com>
- <20191204094216.u7yld5r3zelp22lf@e107158-lin.cambridge.arm.com>
- <20191204100925.GA15727@linaro.org> <629cca09-dde7-5d77-42e1-c68f2c1820d2@arm.com>
- <CAKfTPtDZLFn7msw88pTE_wr-BJo2ErqxpOW+ah0Jjcg6vE3SLw@mail.gmail.com> <20191204133224.uiqbkbpseree7xou@e107158-lin.cambridge.arm.com>
-In-Reply-To: <20191204133224.uiqbkbpseree7xou@e107158-lin.cambridge.arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 4 Dec 2019 14:48:13 +0100
-Message-ID: <CAKfTPtBP1wm706ZjZhW+BV5XUcONfJcGteeyoJQUhQsYPsY4tg@mail.gmail.com>
-Subject: Re: Null pointer crash at find_idlest_group on db845c w/ linus/master
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Quentin Perret <qperret@google.com>,
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kjtKZQgAJfat4nV98ffIVr09JJKAt0JciPj76qkRygI=;
+        b=cPpWx62zBOm9xmkho7tROrxY4qVZ1fZPA3mMXJwpjaEdFxKXu4FjK3pxAIWRyheB9u
+         x1tynAzKe/alvJcdvogJGbJqNTmYe1hVv2LbHw27MYaqEhZUrU+zKyYEUVSnDOYnh0yy
+         ieWZLm70YqfupEpFj2d9U08flge1AA9lpznPiV77RlTG6EZvi+s638t8T+ghtNJ2DZfp
+         3KIgvS1srAcj/hCVn7cG6friX4aaD/TmZfsKtl6mKenw2meLfp0huq5Ks71sVloTlC/1
+         T0/Bzl8nGIO6r92l1ZI3nr57+BHPDmXg98VcPJT0aFitLZ+tqp3rtEsonXoBOKeQIw7m
+         BykA==
+X-Gm-Message-State: APjAAAVkBfEjYX8/pRPQjpwNunp2J6RJVuHzYdwqDb064Y0TrNJuYtep
+        W/kFSTjNpvGRJL3ziwr2enw=
+X-Google-Smtp-Source: APXvYqw7cx0tldR19GNFpsQEo5p2LaTIklKafAx1hbJVFKwcgq63Ng/ykKiJlEnqx0H3pCPUhlJ05w==
+X-Received: by 2002:a37:b4c6:: with SMTP id d189mr2969324qkf.33.1575467320335;
+        Wed, 04 Dec 2019 05:48:40 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id y28sm3761003qtk.65.2019.12.04.05.48.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 05:48:39 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 635EA4121E; Wed,  4 Dec 2019 10:48:36 -0300 (-03)
+Date:   Wed, 4 Dec 2019 10:48:36 -0300
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Patrick Bellasi <Patrick.Bellasi@arm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 3/3] perf record: adapt affinity to machines with
+ #CPUs > 1K
+Message-ID: <20191204134836.GA31283@kernel.org>
+References: <d1aead99-474a-46d3-36be-36dbb8e5581b@linux.intel.com>
+ <96d7e2ff-ce8b-c1e0-d52c-aa59ea96f0ea@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <96d7e2ff-ce8b-c1e0-d52c-aa59ea96f0ea@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Dec 2019 at 14:32, Qais Yousef <qais.yousef@arm.com> wrote:
->
-> On 12/04/19 13:08, Vincent Guittot wrote:
-> > On Wed, 4 Dec 2019 at 11:41, Valentin Schneider
-> > <valentin.schneider@arm.com> wrote:
-> > >
-> > > On 04/12/2019 10:09, Vincent Guittot wrote:
-> > > > Now, we test that a group has at least one allowed CPU for the task so we
-> > > > could skip the local group with the correct/wrong p->cpus_ptr
-> > > >
-> > > > The path is used for fork/exec ibut also for wakeup path for b.L when the task doesn't fit in the CPUs
-> > > >
-> > > > So we can probably imagine a scenario where we change task affinity while
-> > > > sleeping. If the wakeup happens on a CPU that belongs to the group that is not
-> > > > allowed, we can imagine that we skip the local_group
-> > > >
-> > >
-> > > Shoot, I think you're right. If it is the local group that is NULL, then
-> > > we most likely splat on:
-> > >
-> > >                 if (local->sgc->max_capacity >= idlest->sgc->max_capacity)
-> > >                         return NULL;
-> > >
-> > > We don't splat before because we just use local_sgs, which is uninitialized
-> > > but on the stack.
-> > >
-> > > Also; does it really have to involve an affinity "race"? AFAIU affinity
-> > > could have been changed a while back, but the waking CPU isn't allowed
-> > > so we skip the local_group (in simpler cases where each CPU is a group).
-> >
-> > In fact, this will depend of the uninitialized values of local_sgs. I
-> > have been able to reproduce the situation where we skip local group
-> > but not to trigger the crash because the values already in the stack
-> > don't trigger the misfit comparison.
->
-> Will it be expensive to initialize local_sgs = {0}?
+Em Tue, Dec 03, 2019 at 02:45:27PM +0300, Alexey Budankov escreveu:
+> 
+> Use struct mmap_cpu_mask type for tool's thread and mmap data
+> buffers to overcome current 1024 CPUs mask size limitation of
+> cpu_set_t type.
+> 
+> Currently glibc cpu_set_t type has internal mask size limit
+> of 1024 CPUs. Moving to struct mmap_cpu_mask type allows
+> overcoming that limit. tools bitmap API is used to manipulate
+> objects of struct mmap_cpu_mask type.
 
-if we want to initialize local_sgs, it should be something like
-local_sgs =  {
-.avg_load = UINT_MAX,
-.group_type = group_overloaded,
-};
+Had to apply this to fix the build in some toolchains/arches:
 
-to make sure that we will not select local. This doesn't reflect any
-kind of reality whereas local=NULL is more meaningful and more robust
-IMO
+[acme@quaco perf]$ git diff
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 7bc83755ef8c..4c301466101b 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -2508,10 +2508,10 @@ int cmd_record(int argc, const char **argv)
+                rec->affinity_mask.nbits = cpu__max_cpu();
+                rec->affinity_mask.bits = bitmap_alloc(rec->affinity_mask.nbits);
+                if (!rec->affinity_mask.bits) {
+-                       pr_err("Failed to allocate thread mask for %ld cpus\n", rec->affinity_mask.nbits);
++                       pr_err("Failed to allocate thread mask for %zd cpus\n", rec->affinity_mask.nbits);
+                        return -ENOMEM;
+                }
+-               pr_debug2("thread mask[%ld]: empty\n", rec->affinity_mask.nbits);
++               pr_debug2("thread mask[%zd]: empty\n", rec->affinity_mask.nbits);
+        }
+
+        err = record__auxtrace_init(rec);
 
 
->
-> --
-> Qais Yousef
+ 
+> Reported-by: Andi Kleen <ak@linux.intel.com>
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+> ---
+>  tools/perf/builtin-record.c | 28 ++++++++++++++++++++++------
+>  tools/perf/util/mmap.c      | 28 ++++++++++++++++++++++------
+>  tools/perf/util/mmap.h      |  2 +-
+>  3 files changed, 45 insertions(+), 13 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index fb19ef63cc35..7bc83755ef8c 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -62,6 +62,7 @@
+>  #include <linux/string.h>
+>  #include <linux/time64.h>
+>  #include <linux/zalloc.h>
+> +#include <linux/bitmap.h>
+>  
+>  struct switch_output {
+>  	bool		 enabled;
+> @@ -93,7 +94,7 @@ struct record {
+>  	bool			timestamp_boundary;
+>  	struct switch_output	switch_output;
+>  	unsigned long long	samples;
+> -	cpu_set_t		affinity_mask;
+> +	struct mmap_cpu_mask	affinity_mask;
+>  	unsigned long		output_max_size;	/* = 0: unlimited */
+>  };
+>  
+> @@ -961,10 +962,15 @@ static struct perf_event_header finished_round_event = {
+>  static void record__adjust_affinity(struct record *rec, struct mmap *map)
+>  {
+>  	if (rec->opts.affinity != PERF_AFFINITY_SYS &&
+> -	    !CPU_EQUAL(&rec->affinity_mask, &map->affinity_mask)) {
+> -		CPU_ZERO(&rec->affinity_mask);
+> -		CPU_OR(&rec->affinity_mask, &rec->affinity_mask, &map->affinity_mask);
+> -		sched_setaffinity(0, sizeof(rec->affinity_mask), &rec->affinity_mask);
+> +	    !bitmap_equal(rec->affinity_mask.bits, map->affinity_mask.bits,
+> +			  rec->affinity_mask.nbits)) {
+> +		bitmap_zero(rec->affinity_mask.bits, rec->affinity_mask.nbits);
+> +		bitmap_or(rec->affinity_mask.bits, rec->affinity_mask.bits,
+> +			  map->affinity_mask.bits, rec->affinity_mask.nbits);
+> +		sched_setaffinity(0, MMAP_CPU_MASK_BYTES(&rec->affinity_mask),
+> +				  (cpu_set_t *)rec->affinity_mask.bits);
+> +		if (verbose == 2)
+> +			mmap_cpu_mask__scnprintf(&rec->affinity_mask, "thread");
+>  	}
+>  }
+>  
+> @@ -2433,7 +2439,6 @@ int cmd_record(int argc, const char **argv)
+>  # undef REASON
+>  #endif
+>  
+> -	CPU_ZERO(&rec->affinity_mask);
+>  	rec->opts.affinity = PERF_AFFINITY_SYS;
+>  
+>  	rec->evlist = evlist__new();
+> @@ -2499,6 +2504,16 @@ int cmd_record(int argc, const char **argv)
+>  
+>  	symbol__init(NULL);
+>  
+> +	if (rec->opts.affinity != PERF_AFFINITY_SYS) {
+> +		rec->affinity_mask.nbits = cpu__max_cpu();
+> +		rec->affinity_mask.bits = bitmap_alloc(rec->affinity_mask.nbits);
+> +		if (!rec->affinity_mask.bits) {
+> +			pr_err("Failed to allocate thread mask for %ld cpus\n", rec->affinity_mask.nbits);
+> +			return -ENOMEM;
+> +		}
+> +		pr_debug2("thread mask[%ld]: empty\n", rec->affinity_mask.nbits);
+> +	}
+> +
+>  	err = record__auxtrace_init(rec);
+>  	if (err)
+>  		goto out;
+> @@ -2613,6 +2628,7 @@ int cmd_record(int argc, const char **argv)
+>  
+>  	err = __cmd_record(&record, argc, argv);
+>  out:
+> +	bitmap_free(rec->affinity_mask.bits);
+>  	evlist__delete(rec->evlist);
+>  	symbol__exit();
+>  	auxtrace_record__free(rec->itr);
+> diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+> index 43c12b4a3e17..832d2cb94b2c 100644
+> --- a/tools/perf/util/mmap.c
+> +++ b/tools/perf/util/mmap.c
+> @@ -219,6 +219,8 @@ static void perf_mmap__aio_munmap(struct mmap *map __maybe_unused)
+>  
+>  void mmap__munmap(struct mmap *map)
+>  {
+> +	bitmap_free(map->affinity_mask.bits);
+> +
+>  	perf_mmap__aio_munmap(map);
+>  	if (map->data != NULL) {
+>  		munmap(map->data, mmap__mmap_len(map));
+> @@ -227,7 +229,7 @@ void mmap__munmap(struct mmap *map)
+>  	auxtrace_mmap__munmap(&map->auxtrace_mmap);
+>  }
+>  
+> -static void build_node_mask(int node, cpu_set_t *mask)
+> +static void build_node_mask(int node, struct mmap_cpu_mask *mask)
+>  {
+>  	int c, cpu, nr_cpus;
+>  	const struct perf_cpu_map *cpu_map = NULL;
+> @@ -240,17 +242,23 @@ static void build_node_mask(int node, cpu_set_t *mask)
+>  	for (c = 0; c < nr_cpus; c++) {
+>  		cpu = cpu_map->map[c]; /* map c index to online cpu index */
+>  		if (cpu__get_node(cpu) == node)
+> -			CPU_SET(cpu, mask);
+> +			set_bit(cpu, mask->bits);
+>  	}
+>  }
+>  
+> -static void perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_params *mp)
+> +static int perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_params *mp)
+>  {
+> -	CPU_ZERO(&map->affinity_mask);
+> +	map->affinity_mask.nbits = cpu__max_cpu();
+> +	map->affinity_mask.bits = bitmap_alloc(map->affinity_mask.nbits);
+> +	if (!map->affinity_mask.bits)
+> +		return -1;
+> +
+>  	if (mp->affinity == PERF_AFFINITY_NODE && cpu__max_node() > 1)
+>  		build_node_mask(cpu__get_node(map->core.cpu), &map->affinity_mask);
+>  	else if (mp->affinity == PERF_AFFINITY_CPU)
+> -		CPU_SET(map->core.cpu, &map->affinity_mask);
+> +		set_bit(map->core.cpu, map->affinity_mask.bits);
+> +
+> +	return 0;
+>  }
+>  
+>  int mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu)
+> @@ -261,7 +269,15 @@ int mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu)
+>  		return -1;
+>  	}
+>  
+> -	perf_mmap__setup_affinity_mask(map, mp);
+> +	if (mp->affinity != PERF_AFFINITY_SYS &&
+> +		perf_mmap__setup_affinity_mask(map, mp)) {
+> +		pr_debug2("failed to alloc mmap affinity mask, error %d\n",
+> +			  errno);
+> +		return -1;
+> +	}
+> +
+> +	if (verbose == 2)
+> +		mmap_cpu_mask__scnprintf(&map->affinity_mask, "mmap");
+>  
+>  	map->core.flush = mp->flush;
+>  
+> diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
+> index ef51667fabcb..9d5f589f02ae 100644
+> --- a/tools/perf/util/mmap.h
+> +++ b/tools/perf/util/mmap.h
+> @@ -40,7 +40,7 @@ struct mmap {
+>  		int		 nr_cblocks;
+>  	} aio;
+>  #endif
+> -	cpu_set_t	affinity_mask;
+> +	struct mmap_cpu_mask	affinity_mask;
+>  	void		*data;
+>  	int		comp_level;
+>  };
+> -- 
+> 2.20.1
+> 
+
+-- 
+
+- Arnaldo
