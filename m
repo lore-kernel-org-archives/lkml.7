@@ -4,103 +4,206 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC13AC43215
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 01:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 205B3C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 01:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89406206E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 01:53:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDB5E2073C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 01:54:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfLDBxq (ORCPT
+        id S1726806AbfLDByB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 20:53:46 -0500
-Received: from lgeamrelo13.lge.com ([156.147.23.53]:47107 "EHLO
-        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726189AbfLDBxp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 20:53:45 -0500
-Received: from unknown (HELO lgemrelse6q.lge.com) (156.147.1.121)
-        by 156.147.23.53 with ESMTP; 4 Dec 2019 10:53:43 +0900
-X-Original-SENDERIP: 156.147.1.121
-X-Original-MAILFROM: taejoon.song@lge.com
-Received: from unknown (HELO ubuntu0.156.147.1.1) (10.177.220.34)
-        by 156.147.1.121 with ESMTP; 4 Dec 2019 10:53:43 +0900
-X-Original-SENDERIP: 10.177.220.34
-X-Original-MAILFROM: taejoon.song@lge.com
-From:   Taejoon Song <taejoon.song@lge.com>
-To:     minchan@kernel.org, ngupta@vflare.org,
-        sergey.senozhatsky.work@gmail.com, axboe@kernel.dk
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        yjay.kim@lge.com, Taejoon Song <taejoon.song@lge.com>
-Subject: [PATCH] zram: try to avoid worst-case scenario on same element pages
-Date:   Wed,  4 Dec 2019 10:53:38 +0900
-Message-Id: <1575424418-16119-1-git-send-email-taejoon.song@lge.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 3 Dec 2019 20:54:01 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33952 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726189AbfLDByB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 20:54:01 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 03EB8429D63B65EB084F;
+        Wed,  4 Dec 2019 09:53:59 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 4 Dec 2019 09:53:50 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>, Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH] f2fs: introduce private bioset
+Date:   Wed, 4 Dec 2019 09:52:58 +0800
+Message-ID: <20191204015258.104738-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The worst-case scenario on finding same element pages is that almost
-all elements are same at the first glance but only last few elements
-are different.
+In low memory scenario, we can allocate multiple bios without
+submitting any of them.
 
-Since the same element tends to be grouped from the beginning of the
-pages, if we check the first element with the last element before
-looping through all elements, we might have some chances to quickly
-detect non-same element pages.
+- f2fs_write_checkpoint()
+ - block_operations()
+  - f2fs_sync_node_pages()
+   step 1) flush cold nodes, allocate new bio from mempool
+   - bio_alloc()
+    - mempool_alloc()
+   step 2) flush hot nodes, allocate a bio from mempool
+   - bio_alloc()
+    - mempool_alloc()
+   step 3) flush warm nodes, be stuck in below call path
+   - bio_alloc()
+    - mempool_alloc()
+     - loop to wait mempool element release, as we only
+       reserved memory for two bio allocation, however above
+       allocated two bios may never be submitted.
 
-1. Test is done under LG webOS TV (64-bit arch)
-2. Dump the swap-out pages (~819200 pages)
-3. Analyze the pages with simple test script which counts the iteration
-   number and measures the speed at off-line
+So we need avoid using default bioset, in this patch we introduce a
+private bioset, in where we enlarg mempool element count to total
+number of log header, so that we can make sure we have enough
+backuped memory pool in scenario of allocating/holding multiple
+bios.
 
-Under 64-bit arch, the worst iteration count is PAGE_SIZE / 8 bytes = 512.
-The speed is based on the time to consume page_same_filled() function only.
-The result, on average, is listed as below:
-
-                                   Num of Iter    Speed(MB/s)
-Looping-Forward (Orig)                 38            99265
-Looping-Backward                       36           102725
-Last-element-check (This Patch)        33           125072
-
-The result shows that the average iteration count decreases by 13% and
-the speed increases by 25% with this patch. This patch does not increase
-the overall time complexity, though.
-
-I also ran simpler version which uses backward loop. Just looping backward
-also makes some improvement, but less than this patch.
-
-Signed-off-by: Taejoon Song <taejoon.song@lge.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
 ---
- drivers/block/zram/zram_drv.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ fs/f2fs/data.c  | 43 ++++++++++++++++++++++++++++++++++++++++++-
+ fs/f2fs/f2fs.h  | 23 +++--------------------
+ fs/f2fs/super.c |  7 ++++++-
+ 3 files changed, 51 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index 4285e75..afadd7f 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -207,14 +207,17 @@ static inline void zram_fill_page(void *ptr, unsigned long len,
- 
- static bool page_same_filled(void *ptr, unsigned long *element)
- {
--	unsigned int pos;
- 	unsigned long *page;
- 	unsigned long val;
-+	unsigned int pos, last_pos = PAGE_SIZE / sizeof(*page) - 1;
- 
- 	page = (unsigned long *)ptr;
- 	val = page[0];
- 
--	for (pos = 1; pos < PAGE_SIZE / sizeof(*page); pos++) {
-+	if (val != page[last_pos])
-+		return false;
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index a034cd0ce021..22fc45c36613 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -31,6 +31,47 @@
+ static struct kmem_cache *bio_post_read_ctx_cache;
+ static struct kmem_cache *bio_entry_slab;
+ static mempool_t *bio_post_read_ctx_pool;
++static struct bio_set f2fs_bioset;
 +
-+	for (pos = 1; pos < last_pos - 1; pos++) {
- 		if (val != page[pos])
- 			return false;
- 	}
++#define	F2FS_BIO_POOL_SIZE	NR_CURSEG_TYPE
++
++int __init f2fs_init_bioset(void)
++{
++	if (bioset_init(&f2fs_bioset, F2FS_BIO_POOL_SIZE,
++					0, BIOSET_NEED_BVECS))
++		return -ENOMEM;
++	return 0;
++}
++
++void f2fs_destroy_bioset(void)
++{
++	bioset_exit(&f2fs_bioset);
++}
++
++static inline struct bio *__f2fs_bio_alloc(gfp_t gfp_mask,
++						unsigned int nr_iovecs)
++{
++	return bio_alloc_bioset(gfp_mask, nr_iovecs, &f2fs_bioset);
++}
++
++struct bio *f2fs_bio_alloc(struct f2fs_sb_info *sbi, int npages, bool no_fail)
++{
++	struct bio *bio;
++
++	if (no_fail) {
++		/* No failure on bio allocation */
++		bio = __f2fs_bio_alloc(GFP_NOIO, npages);
++		if (!bio)
++			bio = __f2fs_bio_alloc(GFP_NOIO | __GFP_NOFAIL, npages);
++		return bio;
++	}
++	if (time_to_inject(sbi, FAULT_ALLOC_BIO)) {
++		f2fs_show_injection_info(sbi, FAULT_ALLOC_BIO);
++		return NULL;
++	}
++
++	return __f2fs_bio_alloc(GFP_KERNEL, npages);
++}
+ 
+ static bool __is_cp_guaranteed(struct page *page)
+ {
+@@ -3328,7 +3369,7 @@ int __init f2fs_init_bio_entry_cache(void)
+ 	return 0;
+ }
+ 
+-void __exit f2fs_destroy_bio_entry_cache(void)
++void f2fs_destroy_bio_entry_cache(void)
+ {
+ 	kmem_cache_destroy(bio_entry_slab);
+ }
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 5a888a063c7f..a1bf53ddcfc8 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -2222,26 +2222,6 @@ static inline void *f2fs_kmem_cache_alloc(struct kmem_cache *cachep,
+ 	return entry;
+ }
+ 
+-static inline struct bio *f2fs_bio_alloc(struct f2fs_sb_info *sbi,
+-						int npages, bool no_fail)
+-{
+-	struct bio *bio;
+-
+-	if (no_fail) {
+-		/* No failure on bio allocation */
+-		bio = bio_alloc(GFP_NOIO, npages);
+-		if (!bio)
+-			bio = bio_alloc(GFP_NOIO | __GFP_NOFAIL, npages);
+-		return bio;
+-	}
+-	if (time_to_inject(sbi, FAULT_ALLOC_BIO)) {
+-		f2fs_show_injection_info(sbi, FAULT_ALLOC_BIO);
+-		return NULL;
+-	}
+-
+-	return bio_alloc(GFP_KERNEL, npages);
+-}
+-
+ static inline bool is_idle(struct f2fs_sb_info *sbi, int type)
+ {
+ 	if (sbi->gc_mode == GC_URGENT)
+@@ -3205,6 +3185,9 @@ void f2fs_destroy_checkpoint_caches(void);
+ /*
+  * data.c
+  */
++int __init f2fs_init_bioset(void);
++void f2fs_destroy_bioset(void);
++struct bio *f2fs_bio_alloc(struct f2fs_sb_info *sbi, int npages, bool no_fail);
+ int f2fs_init_post_read_processing(void);
+ void f2fs_destroy_post_read_processing(void);
+ int f2fs_init_bio_entry_cache(void);
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 75a3b7220ecb..715c91b11946 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -3767,8 +3767,12 @@ static int __init init_f2fs_fs(void)
+ 	err = f2fs_init_bio_entry_cache();
+ 	if (err)
+ 		goto free_post_read;
++	err = f2fs_init_bioset();
++	if (err)
++		goto free_bio_enrty_cache;
+ 	return 0;
+-
++free_bio_enrty_cache:
++	f2fs_destroy_bio_entry_cache();
+ free_post_read:
+ 	f2fs_destroy_post_read_processing();
+ free_root_stats:
+@@ -3794,6 +3798,7 @@ static int __init init_f2fs_fs(void)
+ 
+ static void __exit exit_f2fs_fs(void)
+ {
++	f2fs_destroy_bioset();
+ 	f2fs_destroy_bio_entry_cache();
+ 	f2fs_destroy_post_read_processing();
+ 	f2fs_destroy_root_stats();
 -- 
-2.7.4
+2.18.0.rc1
 
